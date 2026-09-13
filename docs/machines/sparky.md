@@ -20,10 +20,19 @@ developer's home directory, not the repository.
 - Rust/Cargo 1.98.1 through rustup, with rustfmt and Clippy.
 - Rust target `wasm32-unknown-unknown` installed.
 - wasm-bindgen CLI 0.2.128; match the future project's crate and CLI versions.
+- wasm-pack 0.15.0.
+- Binaryen 132, including `wasm-opt`, installed from the
+  [native ARM64 release][binaryen-release] at
+  `~/.local/share/binaryen-version_132`; `~/.local/bin/wasm-opt` is the wrapper.
+  Archive SHA-256:
+  `c58562417836c5d0493d89bdefc434933bdc097db641b483df86bcfa557a107f`.
+- cargo-nextest 0.9.144 and cargo-audit 0.22.2.
 - just 1.58.0; Make is also installed.
+- ripgrep 14.1.0 with PCRE2 support.
 - GCC/G++ 13.3, CMake 3.28.3, pkg-config, and OpenSSL development headers.
 - Python 3.12.3 and pip 24.0.
-- Remote VS Code Rust Analyzer 0.3.3041.
+- Remote VS Code extensions: Rust Analyzer 0.3.3041, Red Hat Java 1.56.0,
+  and Gradle for Java 3.18.0.
 
 Cargo's environment is sourced by `~/.bashrc` and `~/.profile`. For terminals
 opened before installation:
@@ -138,26 +147,146 @@ Recheck browser versions and GPU behavior when the driver or browser changes.
 
 ## Java and RuneLite
 
-The system currently has a Java 8 runtime but no JDK. RuneLite tooling is being
-provisioned and tested; it must not yet be considered verified on this host.
+### JDKs
 
-Installing or launching upstream RuneLite is not ClubScape compatibility proof.
-There is no ClubScape server, scene bridge, or plugin integration yet. The
-compatibility acceptance criteria remain in section 12 of
-[the project specification](../../prompt.md).
+Two Eclipse Temurin JDKs are installed user-locally. Their archives were native
+ARM64 downloads from the [Temurin 11 release][temurin-11-release] and
+[Temurin 17 release][temurin-17-release] and were checked before extraction.
+
+JDK 11 for RuneLite client compatibility:
+
+- Version: 11.0.32.1+1.
+- Installation: `~/.local/share/jdks/temurin-11.0.32.1+1`.
+- SHA-256: `f27033e6f7523c1b0b2565a78e9c0e0abe5596a854ce00ca04ec1b06ece7a935`.
+
+JDK 17 for the launcher and default Java development:
+
+- Version: 17.0.20.1+1.
+- Installation: `~/.local/share/jdks/temurin-17.0.20.1+1`.
+- SHA-256: `457b57af8f9c93ec39080bb8c764f559dc8c89a6da1a39d718a400b7890d3e41`.
+
+Login and interactive Bash shells export these variables:
+
+```bash
+JAVA_HOME_11="$HOME/.local/share/jdks/temurin-11.0.32.1+1"
+JAVA_HOME_17="$HOME/.local/share/jdks/temurin-17.0.20.1+1"
+JAVA_HOME="$JAVA_HOME_17"
+```
+
+JDK 17 is the default `java` and `javac`. The `java11`, `javac11`, `java17`,
+and `javac17` wrappers select a version explicitly. The pre-existing system Java
+8 runtime was not removed. Java 11 and 17 compile/run checks passed, as did JDK
+17 compilation with `--release 11`.
+
+Do not install a global Gradle. Upstream supplies checksum-pinned wrappers:
+Gradle 8.8 for the client and Gradle 8.12 for launcher 2.8.0.
+
+### Installed Launcher
+
+The [official RuneLite 2.8.0 ARM64 AppImage][runelite-release] is installed at:
+
+```text
+~/.local/share/runelite/2.8.0/RuneLite-aarch64.AppImage
+```
+
+The `runelite` wrapper launches it. The release SHA-256 was verified as:
+
+```text
+ef7cbf54ea8e37728f750aa526040288aeb59a849ef401c787454f110e50ca10
+```
+
+The AppImage uses its bundled Temurin 17.0.19+10 JRE. These native packages are
+installed for mounting and shader-related tests:
+
+```bash
+sudo apt install -y --no-install-recommends libfuse2t64 glslang-tools
+```
+
+### Source Build Evidence
+
+Disposable upstream source checkouts are retained outside the repository:
+
+RuneLite client 1.12.39-SNAPSHOT:
+
+- Revision: `ac79ed8bd8926bec7bf172aa291574b4d944b0e7`.
+- Location: `~/.cache/clubscape/upstream/runelite`.
+
+Launcher 2.8.0:
+
+- Revision: `c2f65013059e68e90bc9ee64d3634059cac03cec`.
+- Location: `~/.cache/clubscape/upstream/launcher-2.8.0`.
+
+The client aggregate build passed 65 tasks with JDK 17:
+
+```bash
+JAVA_HOME="$JAVA_HOME_17" \
+  "$HOME/.cache/clubscape/upstream/runelite/gradlew" \
+  --project-dir "$HOME/.cache/clubscape/upstream/runelite" \
+  --no-daemon -PglslangPath=/usr/bin/glslangValidator buildAll
+```
+
+`:client:compileJava` also passed when Gradle ran on JDK 11. The built client
+class version is 55 (Java 11). The launcher's full `clean build` passed 14 tasks
+on JDK 17, and its class version is 61 (Java 17):
+
+```bash
+JAVA_HOME="$JAVA_HOME_17" \
+  "$HOME/.cache/clubscape/upstream/launcher-2.8.0/gradlew" \
+  --project-dir "$HOME/.cache/clubscape/upstream/launcher-2.8.0" \
+  --no-daemon clean build
+```
+
+The launcher tag's `native/arm64-linux-gcc.cmake` hardcodes GCC 9, which Ubuntu
+24.04 does not provide. After initializing `native/dropt` and `native/sajson`,
+the native C bootstrap built successfully by replacing only those compiler names
+with `/usr/bin/aarch64-linux-gnu-gcc` and `g++` 13.3.0. The resulting executable
+is ARM64. Do not run `build-linux-aarch64.sh` unmodified on Sparky; the full
+AppImage packaging script was not needed because the verified official artifact
+is installed.
+
+### Runtime Evidence and Limits
+
+The official AppImage mounted through FUSE and launched on an isolated Xvfb
+display. Launcher 2.8.0 downloaded RuneLite 1.12.38, verified every downloaded
+artifact hash, selected the Linux ARM64 LWJGL natives, and reached the live OSRS
+first-run EULA screen in a nonblank 796x503 window. No EULA action or login was
+performed. The test processes and display were stopped afterward.
+
+Expected observed limitations:
+
+- Discord native integration was unavailable and disabled.
+- The client reports that its self-updater does not support Linux; the AppImage
+  launcher handles updates.
+- Xvfb caused the launcher to select software rendering. This proves native
+  launch and UI rendering, not RuneLite GPU-plugin operation.
+- Changing the shell `HOME` did not change Java's `user.home`; the launch created
+  and populated `~/.runelite`. Do not assume `HOME=...` isolates RuneLite state.
+
+Installing, compiling, or launching upstream RuneLite is not ClubScape
+compatibility proof. There is no ClubScape server, scene bridge, state/event
+adapter, or plugin integration yet. The compatibility acceptance criteria remain
+in section 12 of [the project specification](../../prompt.md).
 
 ## Verified Core Smoke Tests
 
 - Native Rust compilation, unit test, rustfmt, and Clippy with warnings denied.
 - Rust WASM compilation and wasm-bindgen execution in Node and Chromium.
 - Native ARM64 TypeScript compilation through pnpm and just.
+- cargo-nextest execution and a RustSec cargo-audit scan on a disposable crate.
+- wasm-pack output execution plus Binaryen optimization and validation.
 - PostgreSQL startup, transaction, and shutdown in an isolated ARM64 container.
 - Native Vulkan device discovery and sandboxed NVIDIA WebGPU execution.
 - Windowed WebGPU screenshot-pixel validation under Xvfb.
 - Blender CPU/CUDA/OptiX renders and glTF export/import.
+- JDK 11/JDK 17 compilation, RuneLite and launcher source builds, and the
+  official ARM64 RuneLite GUI launch through its bundled runtime.
 
 The original test files, test containers, browsers, and servers were disposable
 and were cleaned up. These checks establish machine capabilities, not game
 completion. No game workspace was scaffolded during provisioning.
 
 [blender-release]: https://github.com/CoconutMacaroon/blender-arm64/releases/tag/v10-5.1
+[binaryen-release]: https://github.com/WebAssembly/binaryen/releases/tag/version_132
+[runelite-release]: https://github.com/runelite/launcher/releases/tag/2.8.0
+[temurin-11-release]: https://github.com/adoptium/temurin11-binaries/releases/tag/jdk-11.0.32.1%2B1
+[temurin-17-release]: https://github.com/adoptium/temurin17-binaries/releases/tag/jdk-17.0.20.1%2B1
