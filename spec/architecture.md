@@ -2,6 +2,10 @@
 
 ## Boundaries
 
+The fleet continuation adds the shared [game contracts](game-contracts.md).
+They preserve these account boundaries while defining the source-driven
+simulation/content and authoritative persistence extensions needed for M1.
+
 Use a Cargo workspace with Rust 2024, pinned by `rust-toolchain.toml` and
 `Cargo.lock`. The first independent infrastructure increment consists of:
 
