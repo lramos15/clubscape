@@ -17,6 +17,9 @@ configuration. The service does not start or stop Docker.
   Port `0` is supported and the actual address appears in the JSON `listening`
   event. No public plaintext bind, trusted forwarding headers or CORS policy is
   provided. Production TLS/proxy deployment is not implemented.
+- Transient TCP accept failures are logged and retried without discarding the
+  listener. Other accept failures, including descriptor/buffer exhaustion, use
+  a one-second backoff. Shutdown remains selectable during either retry mode.
 - `CLUBSCAPE_BUILD_REVISION`: optional exact revision string, returned unchanged
   by `hello`. When absent it is `unversioned-development`, not an inferred commit.
   Blank, control-character or greater-than-256-byte values fail configuration.
