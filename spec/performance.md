@@ -15,8 +15,11 @@ are not supplied at kickoff and must not be filled with invented measurements.
 The visual/audio pack must also be approved before that implementation.
 
 Sparky was rechecked on 2026-09-13: Ubuntu 24.04.4 ARM64 and NVIDIA GB10 with
-driver 580.173.02. It is useful for development but is not an integrated-GPU
-acceptance machine. Access to a qualifying test environment remains required.
+driver 580.173.02. It has not been established as the representative Section 36
+target, and no complete hardware/browser contract or rendered-workload evidence
+exists. Do not infer a desktop GPU classification or benchmark equivalence from
+the NVIDIA model name. Pin a qualifying representative environment and measure
+both required browsers before treating any host as acceptance evidence.
 
 The independent account-service increment uses bounded correctness workloads,
 not release-performance certification: one client, five concurrent synthetic

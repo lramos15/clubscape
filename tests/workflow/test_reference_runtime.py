@@ -1,8 +1,13 @@
 import copy
 import importlib.util
+import contextlib
+import io
 import json
+import stat
 import sys
+import tempfile
 import unittest
+from unittest import mock
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -37,6 +42,20 @@ class ReferenceRuntimeTests(unittest.TestCase):
             reference_runtime.build_id_section("public class client {}")
         output = "  public int getBuildID();\n    Code:\n       0: sipush 240\n       3: ireturn\n\n  public void other();"
         self.assertEqual(reference_runtime.build_id_section(output), output.splitlines()[:4])
+
+    def test_reference_acquisition_keeps_later_credentials_private(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            (root / "research").mkdir()
+            (root / "research/reference-runtime.json").write_text(json.dumps(self.manifest))
+            with (
+                mock.patch.object(reference_runtime, "ROOT", root),
+                mock.patch.object(reference_runtime.reference_inputs, "fetch_one", return_value=True),
+                mock.patch.object(sys, "argv", ["reference_runtime.py", "fetch"]),
+                contextlib.redirect_stdout(io.StringIO()),
+            ):
+                self.assertEqual(reference_runtime.main(), 0)
+            self.assertEqual(stat.S_IMODE((root / ".local").stat().st_mode), 0o700)
 
 
 if __name__ == "__main__":

@@ -94,6 +94,17 @@ class MilestoneTests(unittest.TestCase):
         self.assertTrue(any("require evidence" in error for error in errors))
         self.assertIn("Missing owner presentation_acceptance.", errors)
 
+    def test_account_foundations_cannot_substitute_for_browser_gameplay_evidence(self):
+        self.accepted_fixture()
+        gate = next(g for g in self.state["gates"] if g["id"] == "real-ui-account-creation")
+        gate["evidence"] = [self.write_record("foundations.json", {
+            "kind": "account_foundations", "result": "passed", "revision": "1" * 40,
+            "gameplay_verified": False, "browser_signup_verified": False,
+            "milestone_accepted": False,
+        })]
+        errors = milestone.acceptance_errors(self.state, self.tasks, self.root, False)
+        self.assertTrue(any("Evidence must report this exact gate" in error for error in errors))
+
     def test_agent_self_approval_stale_build_and_changed_evidence_fail(self):
         for mutation in ("agent", "stale_build", "bundle"):
             self.accepted_fixture()

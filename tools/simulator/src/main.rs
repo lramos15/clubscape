@@ -52,6 +52,7 @@ impl Connection {
         endpoint.set_path("/v1/rpc");
         Ok(Self {
             client: Client::builder()
+                .no_proxy()
                 .timeout(Duration::from_secs(20))
                 .redirect(reqwest::redirect::Policy::none())
                 .build()?,

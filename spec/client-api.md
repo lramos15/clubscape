@@ -23,3 +23,8 @@ malformed/protocol/authentication errors.
 The future real browser signup must use this service, not substitute a seed or
 development login. Its approved OSRS-composition UI, character creation,
 tutorial and world transition are pending Section 30 requirements.
+
+The local synthetic client restricts its destination to loopback, disables
+environment proxies and redirects, and never places credentials in a URL or
+command line. These are controlled-test boundaries, not a production transport
+or browser-session implementation.

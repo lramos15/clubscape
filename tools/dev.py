@@ -167,7 +167,8 @@ def wait_server(process, log_path):
                     if not re.fullmatch(r"127\.0\.0\.1:[0-9]+", address):
                         raise DevelopmentError("Test server did not announce its loopback listener.")
                     origin = "http://" + address
-                    with urllib.request.urlopen(origin + "/healthz", timeout=5) as response:
+                    opener = urllib.request.build_opener(urllib.request.ProxyHandler({}))
+                    with opener.open(origin + "/healthz", timeout=5) as response:
                         if response.status != 200:
                             raise DevelopmentError("Test server failed its real database readiness check.")
                     return origin

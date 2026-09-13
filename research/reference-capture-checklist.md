@@ -68,5 +68,7 @@ window and frame-time/stall acceptance contract before implementation. Run
 actual tutorial/Lumbridge workloads with approved stock settings at 1920x1080
 and measure rendered FPS, not a configured frame limit.
 
-Sparky's NVIDIA GB10 can support local development but does not satisfy this
-hardware gate. Dedicated-GPU or software results must remain separately labeled.
+Sparky's NVIDIA GB10 supports local development, but its availability does not
+establish a representative target contract or measured acceptance. Do not
+classify the platform or infer performance equivalence from its model name.
+Dedicated-GPU or software results must remain separately labeled.

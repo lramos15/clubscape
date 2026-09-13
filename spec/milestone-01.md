@@ -47,8 +47,9 @@ blocked. Source-dependent gameplay must retain visible reference gaps.
 
 Before presentation/performance implementation, Section 36 requires the
 benchmark contract and pinned representative hardware/browser configuration.
-Sparky has an NVIDIA GB10, not the required representative integrated GPU.
-Local measurements cannot satisfy the integrated-GPU gate.
+Sparky has an NVIDIA GB10; no representative integrated-graphics benchmark
+contract has been pinned for this execution. Host/tool availability alone
+cannot satisfy that gate, and the GPU model name is not proof of equivalence.
 
 Every acceptance record must link actual evidence and its tested revision.
 Pending, blocked, deferred, or unexecuted checks are not passes. Final owner

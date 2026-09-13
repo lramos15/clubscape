@@ -16,8 +16,9 @@ db-stop:
 server:
     python3 tools/dev.py server
 
+[positional-arguments]
 sim url="http://127.0.0.1:4010":
-    cargo run --quiet --locked -p clubscape-sim -- account-lifecycle --url '{{url}}'
+    cargo run --quiet --locked -p clubscape-sim -- account-lifecycle --url "$1"
 
 fmt:
     cargo fmt --all

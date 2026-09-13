@@ -12,6 +12,7 @@ import sys
 from pathlib import Path
 
 import reference_inputs
+from dev import DevelopmentError, private_directory
 
 ROOT = Path(__file__).resolve().parents[1]
 NAMESPACE = ".local/reference-runtime/"
@@ -65,6 +66,8 @@ def main():
         manifest_path = ROOT / "research/reference-runtime.json"
         manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
         artifacts = validate_manifest(manifest)
+        if args.operation == "fetch":
+            private_directory(ROOT / ".local")
         downloaded = 0
         paths = []
         for item in artifacts:
@@ -101,7 +104,7 @@ def main():
             report["get_build_id_bytecode"] = build_id_section(output.stdout)
         print(json.dumps(report, indent=2))
         return 0
-    except (OSError, ValueError, subprocess.SubprocessError) as error:
+    except (DevelopmentError, OSError, ValueError, subprocess.SubprocessError) as error:
         print(f"Reference runtime error: {error}", file=sys.stderr)
         return 1
 

@@ -52,6 +52,8 @@ just milestone-status
 login/logout/relogin and leaves no active session. It is **not** the full
 headless gameplay simulator. See [API](spec/client-api.md) and
 [security boundaries](spec/security.md).
+Local synthetic-client traffic ignores environment HTTP proxies and does not
+follow redirects to other services.
 
 Stop the server with Ctrl-C and use `just db-stop` for the project database.
 Neither command deletes persistent account data. Never delete its volume or

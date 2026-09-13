@@ -28,3 +28,8 @@ dependencies rather than silently skipping or substituting mocks.
 identify commands, outcomes, tested revision and relevant artifacts. The
 acceptance command must fail closed if a gate, required approval or matching
 build is absent; a status command may report incomplete work without passing it.
+
+Content compilation/ID uniqueness, asset manifests, interface controls/resizing,
+unsupported-capability feedback and migration/extension behavior have explicit
+unpassed M1 gates. The account-only schema and two source-index integrity checks
+do not satisfy those full-journey requirements.
