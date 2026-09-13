@@ -18,6 +18,10 @@ developer's home directory, not the repository.
 - GitHub Copilot CLI 1.0.81 was present in VS Code's managed installation.
 - Node.js 24.18.0, npm 11.16.0, Corepack 0.35.0, pnpm 12.4.1.
 - Rust/Cargo 1.98.1 through rustup, with rustfmt and Clippy.
+- The first-milestone workspace pins the named `1.98.1` toolchain in
+  `rust-toolchain.toml`. Rustup installed that named toolchain alongside the
+  existing stable installation on 2026-09-13, including rustfmt, Clippy and
+  `wasm32-unknown-unknown`; no system compiler or graphics settings changed.
 - Rust target `wasm32-unknown-unknown` installed.
 - wasm-bindgen CLI 0.2.128; match the future project's crate and CLI versions.
 - wasm-pack 0.15.0.
