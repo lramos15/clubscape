@@ -1,6 +1,6 @@
+import contextlib
 import copy
 import importlib.util
-import contextlib
 import io
 import json
 import stat
@@ -56,6 +56,16 @@ class ReferenceRuntimeTests(unittest.TestCase):
             ):
                 self.assertEqual(reference_runtime.main(), 0)
             self.assertEqual(stat.S_IMODE((root / ".local").stat().st_mode), 0o700)
+            (root / ".local").chmod(0o755)
+            with (
+                mock.patch.object(reference_runtime, "ROOT", root),
+                mock.patch.object(reference_runtime.reference_inputs, "fetch_one") as fetch,
+                mock.patch.object(sys, "argv", ["reference_runtime.py", "fetch"]),
+                contextlib.redirect_stderr(io.StringIO()) as diagnostic,
+            ):
+                self.assertEqual(reference_runtime.main(), 1)
+                self.assertIn("0700", diagnostic.getvalue())
+                fetch.assert_not_called()
 
 
 if __name__ == "__main__":

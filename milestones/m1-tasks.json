@@ -6,7 +6,7 @@
     "effective_limit": 25,
     "active": [
       {"id": "director", "task": "M1-TOOLING"},
-      {"id": "20a115ef-0586-4ca1-9505-c1840fc02365", "task": "M1-DB-DEADLINES"}
+      {"id": "31d6526b-89a8-4bad-bf54-15ccc64ab410", "task": "M1-DB-DEADLINE-REVIEW"}
     ],
     "reserved": [],
     "queued": [],
@@ -150,7 +150,7 @@
     {
       "id": "M1-DB-DEADLINES",
       "goal": "Repair the reviewed unbounded database-operation/shutdown behavior and prove recovery for established connections that withhold responses.",
-      "status": "IMPLEMENTING",
+      "status": "DONE",
       "specs": ["spec/security.md", "spec/architecture.md", "spec/testing.md"],
       "dependencies": ["M1-ACCOUNT-REVIEW"],
       "allowed_paths": ["crates/server/**"],
@@ -161,6 +161,29 @@
       "acceptance": ["Reviewed defect repaired at root with actual stalled-connection evidence", "No deadline expiration reported as success"],
       "reserved_namespaces": [],
       "source_notes": ["Independent review by 31d6526b-89a8-4bad-bf54-15ccc64ab410"],
+      "parity_entries": [],
+      "adaptations": [],
+      "evidence": [
+        "905b02047fc02566b3831cb2d0d86c70383d2bba",
+        "18 unit tests, 9 live PostgreSQL/HTTP tests, independent client, format and Clippy passed",
+        ".local/evidence/accounts-deadline-fix.json",
+        "Worker parked; bounded independent repair review pending"
+      ]
+    },
+    {
+      "id": "M1-DB-DEADLINE-REVIEW",
+      "goal": "Independently verify closure of the stalled-database review finding and regressions introduced by its bounded repair.",
+      "status": "REVIEW",
+      "specs": ["spec/architecture.md", "spec/security.md", "spec/testing.md"],
+      "dependencies": ["M1-DB-DEADLINES", "M1-ACCOUNT-REVIEW"],
+      "allowed_paths": [],
+      "forbidden_paths": ["**"],
+      "outputs": ["Revision-bound finding closure or specific remaining defects"],
+      "validation_commands": ["Read-only review of be4cd7282732ac4b48f351cc20ad4b4ce8f15627..905b02047fc02566b3831cb2d0d86c70383d2bba"],
+      "test_requirements": ["Established silent transport", "Bounded startup/request/shutdown", "Unknown write outcomes not retried or reported as success"],
+      "acceptance": ["No unresolved high-confidence defect in the reviewed repair before integration"],
+      "reserved_namespaces": [],
+      "source_notes": [".local/evidence/accounts-deadline-fix.json"],
       "parity_entries": [],
       "adaptations": [],
       "evidence": []

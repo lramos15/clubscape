@@ -143,6 +143,8 @@ def stop_process(process):
             process.kill()
             process.wait(timeout=10)
             raise DevelopmentError("The owned test-server process required forced termination.")
+    if process.returncode != 0:
+        raise DevelopmentError(f"The owned test server exited unsuccessfully ({process.returncode}).")
 
 
 def reset_test_database(container):

@@ -90,6 +90,20 @@ class DevelopmentTests(unittest.TestCase):
                     dev.reset_test_database(foreign)
                 run.assert_not_called()
 
+    def test_failed_server_exit_cannot_be_reported_as_successful_cleanup(self):
+        process = mock.Mock()
+        process.poll.return_value = 1
+        process.returncode = 1
+        with self.assertRaisesRegex(dev.DevelopmentError, "exited unsuccessfully"):
+            dev.stop_process(process)
+        process.terminate.assert_not_called()
+        process.poll.return_value = None
+        process.returncode = 2
+        with self.assertRaisesRegex(dev.DevelopmentError, "exited unsuccessfully"):
+            dev.stop_process(process)
+        process.terminate.assert_called_once()
+        process.wait.assert_called_once_with(timeout=15)
+
 
 if __name__ == "__main__":
     unittest.main()
