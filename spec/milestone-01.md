@@ -2,6 +2,16 @@
 
 Status: **in progress, not accepted**.
 
+## Fleet continuation
+
+The owner's 2026-09-13T23:30:04.367Z request reopens M1 execution in fleet mode
+and permits the latest usable verified gamepacks/cache instead of requiring
+cache 2695. Record the replacement identity and any material source-contract
+differences; retain previous evidence as historical rather than silently
+rewriting it. This changes the reference-selection constraint, not the full
+journey, fidelity, approval, browser or performance acceptance requirements.
+See `milestones/m1-fleet-resumption.json`.
+
 ## Authority and boundary
 
 The owner's 2026-09-13 execution request approves only the first milestone.

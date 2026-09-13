@@ -1,0 +1,51 @@
+{
+  "schema_version": 1,
+  "milestone": "m1-starter-journey",
+  "owner_request_at": "2026-09-13T23:30:04.367Z",
+  "owner_request": "Complete M1, use the latest gamepacks you can find it doesn't need to be exactly 2695.",
+  "starting_revision": "228fbb3",
+  "approved_change": "The source gamepack/cache identity may be updated to the newest usable verified reference combination; cache 2695 is no longer a blocking constraint.",
+  "unchanged_requirements": [
+    "Complete Section 30 journey, not a reduced account or Lumbridge-only prototype",
+    "Concrete owner-approved visual/audio reference pack before presentation implementation",
+    "Real browser/server/headless gameplay and persistence",
+    "Source-faithful visuals/audio and representative Chrome/Edge performance",
+    "Independent reviews and explicit owner presentation acceptance",
+    "No automatically authorized later milestone"
+  ],
+  "coordination": {
+    "mode": "fleet via task tool",
+    "source_of_truth": "Session SQL todos and todo_deps; durable repository ledger/checkpoints mirror decisions and outcomes",
+    "max_active_ai_agents": 25,
+    "nested_delegation": false,
+    "owner_ai_spending_cap": null
+  },
+  "initial_independent_tasks": [
+    {
+      "todo_id": "m1-current-runtime",
+      "worktree": ".worktrees/m1-runtime-inputs",
+      "branch": "task/m1-runtime-inputs",
+      "goal": "Acquire a usable current reference runtime/cache and implement actual asset/world extraction, rather than only reporting retrieval URLs.",
+      "dependencies": ["m1-contract"],
+      "specs": ["prompt.md sections 2, 14, 15, 30", "spec/reference-baseline.md", "research/reference-capture-checklist.md"],
+      "allowed_paths": ["research/current-source/**", "tools/cache-import/**", "assets/source/osrs/**", "assets/manifests/osrs/**"],
+      "forbidden_paths": ["prompt.md", "crates/**", "web/**", "spec/**", "Cargo.toml", "milestones/**"],
+      "reserved_namespaces": ["asset.source.osrs.*"],
+      "outputs": ["Verified source identity/hashes", "Executable selective extraction", "Original terrain/model/sprite/font/audio inputs and representative source outputs"],
+      "validation": ["Run the actual extractor against the identified snapshot", "Verify hashes and nonempty decoded outputs", "Record source and conversion gaps without claiming presentation acceptance"]
+    },
+    {
+      "todo_id": "m1-journey-rules",
+      "worktree": ".worktrees/m1-journey-rules",
+      "branch": "task/m1-journey-rules",
+      "goal": "Produce complete actionable source-backed starter rules and machine-readable behavior fixtures to unblock shared game implementation.",
+      "dependencies": ["m1-contract"],
+      "specs": ["prompt.md sections 3.2, 24, 26, 30", "research/first-slice-mechanics.md"],
+      "allowed_paths": ["research/journey-rules/**"],
+      "forbidden_paths": ["prompt.md", "crates/**", "web/**", "assets/**", "spec/**", "Cargo.toml", "milestones/**"],
+      "reserved_namespaces": [],
+      "outputs": ["Initial-state and tutorial rules", "Complete quest/acquisition/death-recovery contracts", "Source-based expected outcomes and explicit bounded assumptions"],
+      "validation": ["Validate the structured fixture files", "Cross-check non-obvious rules with identifiable sources", "Never label inferred or missing behavior as verified"]
+    }
+  ]
+}

@@ -4,9 +4,12 @@
   "agent_budget": {
     "max_active_ai_agents": 25,
     "effective_limit": 25,
-    "admissions_open": false,
-    "active": [],
-    "reserved": [],
+    "admissions_open": true,
+    "active": [{"id": "director", "task": "M1-FLEET-CONTRACTS"}],
+    "reserved": [
+      {"id": "fleet-runtime-worker", "task": "M1-FLEET-RUNTIME"},
+      {"id": "fleet-rules-worker", "task": "M1-FLEET-RULES"}
+    ],
     "queued": [],
     "parked": [
       {"id": "598d83d0-6ce2-40ac-b6d5-01d566c68b99", "reason": "Reference research complete; no automatic resumption."},
@@ -19,6 +22,60 @@
     "usage_accounting": "milestones/evidence/m1-usage-snapshot.json records the available delayed session snapshot; final project-wide credits/currency are unavailable."
   },
   "tasks": [
+    {
+      "id": "M1-FLEET-RUNTIME",
+      "goal": "Acquire current usable source runtime/cache and executable source extraction under the owner's updated reference-selection permission.",
+      "status": "READY",
+      "specs": ["milestones/m1-fleet-resumption.json"],
+      "dependencies": ["M1-CONTRACT"],
+      "allowed_paths": ["research/current-source/**", "tools/cache-import/**", "assets/source/osrs/**", "assets/manifests/osrs/**"],
+      "forbidden_paths": ["prompt.md", "crates/**", "web/**", "spec/**", "Cargo.toml", "milestones/**"],
+      "outputs": ["Actual source inputs and tested extraction", "Reconciled current reference proposal"],
+      "validation_commands": [],
+      "test_requirements": ["Actual nonempty extraction with hashes", "No unsupported visual or compatibility claim"],
+      "acceptance": ["SQL m1-current-runtime is completed or precisely blocked with executable evidence"],
+      "reserved_namespaces": ["asset.source.osrs.*"],
+      "source_notes": ["milestones/m1-fleet-resumption.json"],
+      "parity_entries": [],
+      "adaptations": [],
+      "evidence": []
+    },
+    {
+      "id": "M1-FLEET-RULES",
+      "goal": "Resolve starter behavior contracts and source fixtures for complete shared gameplay implementation.",
+      "status": "READY",
+      "specs": ["milestones/m1-fleet-resumption.json", "research/first-slice-mechanics.md"],
+      "dependencies": ["M1-CONTRACT"],
+      "allowed_paths": ["research/journey-rules/**"],
+      "forbidden_paths": ["prompt.md", "crates/**", "web/**", "assets/**", "spec/**", "Cargo.toml", "milestones/**"],
+      "outputs": ["Source-grounded machine-readable full journey rules and expected outcomes"],
+      "validation_commands": [],
+      "test_requirements": ["No invented starting state, shortened tutorial or fake acquisition paths"],
+      "acceptance": ["SQL m1-journey-rules is completed or precisely blocked with useful remaining work"],
+      "reserved_namespaces": [],
+      "source_notes": ["milestones/m1-fleet-resumption.json"],
+      "parity_entries": [],
+      "adaptations": [],
+      "evidence": []
+    },
+    {
+      "id": "M1-FLEET-CONTRACTS",
+      "goal": "Define and integrate shared game contracts, preserve working accounts and coordinate the remaining approved M1 implementation.",
+      "status": "IMPLEMENTING",
+      "specs": ["prompt.md", "spec/architecture.md", "spec/milestone-01.md"],
+      "dependencies": ["M1-FOUNDATIONS"],
+      "allowed_paths": ["spec/**", "crates/protocol/**", "crates/game-types/**", "Cargo.toml", "Cargo.lock", "milestones/**", "docs/checkpoints/**", "tests/**", "tools/**", "README.md"],
+      "forbidden_paths": ["prompt.md"],
+      "outputs": ["Versioned game state/action/event/content contracts", "Safe parallel ownership and integration"],
+      "validation_commands": ["just lint", "just test-fast", "just test-integration"],
+      "test_requirements": ["Preserve account behavior", "No unchecked client outcomes or fabricated game state", "All original M1 gates retained"],
+      "acceptance": ["Shared contracts allow independent source-faithful implementation without unrelated rewrites"],
+      "reserved_namespaces": ["item.*", "npc.*", "object.*", "quest.*", "region.*", "skill.*", "interface.*"],
+      "source_notes": ["milestones/m1-fleet-resumption.json"],
+      "parity_entries": [],
+      "adaptations": [],
+      "evidence": []
+    },
     {
       "id": "M1-CONTRACT",
       "goal": "Record complete approved scope, acceptance gates, task dependencies and durable checkpoints.",

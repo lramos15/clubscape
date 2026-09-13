@@ -2,6 +2,13 @@
 
 Status: **reference identity frozen; inventory and behavior gaps remain open**.
 
+The owner authorized replacing this exact cache/gamepack identity during the
+2026-09-13 fleet continuation. The record below remains the historical source
+pin until the newest usable verified combination is selected and its changes
+are reconciled. Do not block implementation solely on matching cache 2695.
+See `milestones/m1-fleet-resumption.json`; presentation approval is still
+separate.
+
 M1-REF verified OSRS **build 240**, OpenRS2 **cache 2695**, dated
 **2026-09-08T10:30:08.897945Z**, on 2026-09-13. The official September 8 update
 is date-aligned; build identity comes from the archive metadata, not the
