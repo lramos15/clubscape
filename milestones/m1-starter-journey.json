@@ -1,0 +1,43 @@
+{
+  "schema_version": 1,
+  "milestone": "m1-starter-journey",
+  "specification": "spec/milestone-01.md",
+  "source_contract": "prompt.md#30-starting-vertical-slice",
+  "status": "in_progress",
+  "starting_revision": "973c872",
+  "candidate_revision": null,
+  "accepted_revision": null,
+  "scope_approval": {
+    "authority": "owner",
+    "record": "2026-09-13T16:05:01.176Z user execution request; prompt.md Section 44 approved default",
+    "scope": "Complete Section 30 only"
+  },
+  "reference_pack_approval": null,
+  "presentation_acceptance": null,
+  "later_milestone_authorized": false,
+  "gates": [
+    {"id": "reference-baseline", "status": "blocked", "evidence": [], "blocker": "No identifiable frozen source/data snapshot in the repository."},
+    {"id": "reference-pack", "status": "blocked", "evidence": [], "blocker": "Concrete Section 30.2 visual/audio pack and owner approval required before presentation implementation."},
+    {"id": "benchmark-contract", "status": "blocked", "evidence": [], "blocker": "Representative integrated-GPU hardware, driver and both browser versions are not supplied."},
+    {"id": "early-presentation-benchmark", "status": "blocked", "evidence": [], "blocker": "Requires approved source pack and real browser renderer/audio."},
+    {"id": "real-ui-account-creation", "status": "not_started", "evidence": [], "blocker": null},
+    {"id": "complete-tutorial", "status": "not_started", "evidence": [], "blocker": null},
+    {"id": "legitimate-lumbridge-arrival", "status": "not_started", "evidence": [], "blocker": null},
+    {"id": "lumbridge-activities", "status": "not_started", "evidence": [], "blocker": null},
+    {"id": "death-and-recovery", "status": "not_started", "evidence": [], "blocker": null},
+    {"id": "complete-cooks-assistant", "status": "not_started", "evidence": [], "blocker": null},
+    {"id": "shared-authoritative-headless-path", "status": "not_started", "evidence": [], "blocker": null},
+    {"id": "tutorial-and-quest-persistence", "status": "not_started", "evidence": [], "blocker": null},
+    {"id": "chrome-fresh-account-journey", "status": "not_started", "evidence": [], "blocker": null},
+    {"id": "edge-fresh-account-journey", "status": "not_started", "evidence": [], "blocker": null},
+    {"id": "source-visual-comparisons", "status": "not_started", "evidence": [], "blocker": null},
+    {"id": "runtime-animation-evidence", "status": "not_started", "evidence": [], "blocker": null},
+    {"id": "runtime-audio-evidence", "status": "not_started", "evidence": [], "blocker": null},
+    {"id": "chrome-integrated-gpu-performance", "status": "blocked", "evidence": [], "blocker": "Sparky's dedicated GB10 cannot substitute for the required integrated-GPU measurements."},
+    {"id": "edge-integrated-gpu-performance", "status": "blocked", "evidence": [], "blocker": "Representative integrated-GPU Edge environment unavailable."},
+    {"id": "independent-style-review", "status": "not_started", "evidence": [], "blocker": null},
+    {"id": "independent-technical-review", "status": "not_started", "evidence": [], "blocker": null},
+    {"id": "security-and-recovery", "status": "not_started", "evidence": [], "blocker": null},
+    {"id": "owner-presentation-acceptance", "status": "blocked", "evidence": [], "blocker": "Owner must review and explicitly accept visuals and audio against the tested build."}
+  ]
+}
