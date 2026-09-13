@@ -4,10 +4,7 @@
   "agent_budget": {
     "max_active_ai_agents": 25,
     "effective_limit": 25,
-    "active": [
-      {"id": "director", "task": "M1-TOOLING"},
-      {"id": "31d6526b-89a8-4bad-bf54-15ccc64ab410", "task": "M1-DB-DEADLINE-REVIEW"}
-    ],
+    "active": [{"id": "director", "task": "M1-FOUNDATIONS"}],
     "reserved": [],
     "queued": [],
     "nested_delegation_allowed": false,
@@ -173,7 +170,7 @@
     {
       "id": "M1-DB-DEADLINE-REVIEW",
       "goal": "Independently verify closure of the stalled-database review finding and regressions introduced by its bounded repair.",
-      "status": "REVIEW",
+      "status": "DONE",
       "specs": ["spec/architecture.md", "spec/security.md", "spec/testing.md"],
       "dependencies": ["M1-DB-DEADLINES", "M1-ACCOUNT-REVIEW"],
       "allowed_paths": [],
@@ -181,12 +178,39 @@
       "outputs": ["Revision-bound finding closure or specific remaining defects"],
       "validation_commands": ["Read-only review of be4cd7282732ac4b48f351cc20ad4b4ce8f15627..905b02047fc02566b3831cb2d0d86c70383d2bba"],
       "test_requirements": ["Established silent transport", "Bounded startup/request/shutdown", "Unknown write outcomes not retried or reported as success"],
-      "acceptance": ["No unresolved high-confidence defect in the reviewed repair before integration"],
+      "acceptance": ["Revision-bound review completed; remaining defects are tracked and block integration"],
       "reserved_namespaces": [],
       "source_notes": [".local/evidence/accounts-deadline-fix.json"],
       "parity_entries": [],
       "adaptations": [],
-      "evidence": []
+      "evidence": [
+        "Reviewer confirmed original unlimited database wait is closed in 905b02047fc02566b3831cb2d0d86c70383d2bba",
+        "One medium regression found: transport.rs accept loop treats recoverable accept errors as fatal; M1-ACCEPT-RETRY must pass before integration",
+        "Reviewer parked; no automatic resumption"
+      ]
+    },
+    {
+      "id": "M1-ACCEPT-RETRY",
+      "goal": "Restore transient TCP accept-error retry/backoff without weakening bounded shutdown, and integrate only after the focused regressions and real service checks pass.",
+      "status": "DONE",
+      "specs": ["spec/architecture.md", "spec/security.md", "spec/testing.md"],
+      "dependencies": ["M1-DB-DEADLINE-REVIEW"],
+      "allowed_paths": ["crates/server/src/transport.rs", "crates/server/README.md"],
+      "forbidden_paths": ["prompt.md", "crates/protocol/**", "content/**", "assets/**"],
+      "outputs": ["Logged cancellable accept retry/backoff", "Deterministic transient/resource-error regressions"],
+      "validation_commands": ["cargo test -p clubscape-server", "cargo clippy -p clubscape-server --all-targets -- -D warnings", "just test-integration"],
+      "test_requirements": ["Connection abort/reset/refusal/interruption retry", "Backoff on resource exhaustion", "Shutdown interrupts every retry mode"],
+      "acceptance": ["Recovered errors no longer terminate the service", "No busy loop or unbounded shutdown introduced"],
+      "reserved_namespaces": [],
+      "source_notes": ["Independent follow-up review by 31d6526b-89a8-4bad-bf54-15ccc64ab410"],
+      "parity_entries": [],
+      "adaptations": [],
+      "evidence": [
+        "41b39d85ba1602783acf9ccbd922c284e7209642; integrated as 03ffc33",
+        "21 server unit tests including three retry/backoff/shutdown regressions passed; format and Clippy passed",
+        "Nine real PostgreSQL/HTTP tests and independent native account lifecycle passed after the repair",
+        ".local/evidence/accounts-accept-retry.json"
+      ]
     },
     {
       "id": "M1-SOURCE-INPUTS",

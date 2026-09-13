@@ -3,7 +3,7 @@
   "milestone": "m1-starter-journey",
   "specification": "spec/milestone-01.md",
   "source_contract": "prompt.md#30-starting-vertical-slice",
-  "status": "in_progress",
+  "status": "blocked",
   "starting_revision": "973c872",
   "candidate_revision": null,
   "accepted_revision": null,
