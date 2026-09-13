@@ -8,7 +8,11 @@ Do not stop after generating plans, scaffolding, prototypes, TODOs, mockups, or 
 
 Full-game completion is measured against the frozen OSRS baseline and the approved Club Penguin content contract in Sections 3 and 40-43. A smaller, owner-approved launch scope may define an early-access release, but must never redefine the full-game target. Milestones are progress checkpoints, not substitutes for a finished game.
 
+The first deliverable is the presentation-complete, gameplay-limited Lumbridge slice in Section 30. Its visual acceptance gate is mandatory before content expansion. A working pipeline, graybox, or generic low-poly prototype is not an accepted vertical slice.
+
 Use parallel AI agents where tasks can be isolated safely, with a hard project-wide maximum of 25 concurrent AI agents.
+
+When choosing what model to use for agents use GPT 6 astra for most tasks, Opus 5 for easy tasks, and Claude Fable 5.1 for extremely challenging tasks. Please note Claude Fable 5.1 is quite expensive so use it sparingly.
 
 The 25-agent ceiling includes the Director, leads, implementation workers, researchers, reviewers, integration agents, and AI playtesters across all worktrees and nested teams.
 
@@ -236,10 +240,11 @@ Existing baseline solo variants, built-in scaling, and source-defined NPC roles 
 
 ## 3.3 Interface parity
 
-The browser client must deliver the OSRS in-game interface experience, not a generic web dashboard around an OSRS-like simulation. RuneLite availability does not determine whether browser interface parity is required.
+The browser client must deliver the OSRS client entry sequence and in-game interface experience, not a generic web dashboard around an OSRS-like simulation. RuneLite availability does not determine whether browser interface parity is required.
 
 Inventory the baseline's interfaces and their variants. At minimum, cover:
 
+* title/login screens, authentication feedback, loading/connecting, reconnecting, and startup error states
 * fixed/resizable layouts, viewport framing, minimap, navigation, tabs, and chat
 * inventory, equipment, skills, combat controls, prayers, spellbooks, and action selection
 * banking, tabs, search, placeholders, stack/note handling, and amount selection
@@ -253,6 +258,8 @@ Inventory the baseline's interfaces and their variants. At minimum, cover:
 Preserve layout, artwork, proportions, information hierarchy, menu ordering, and interaction behavior using the frozen reference. Only necessary penguin/content adaptations are permitted by default. Do not replace the visual language with Club Penguin colors, new navigation, or modernized panels without an approved design change.
 
 Adapt names, quest text, item/character imagery, and equipment presentation where the penguin world requires it. Retain the information and actions players need, including every functional equipment slot.
+
+For the first slice, the narrower presentation adaptation rules in Section 30 take precedence over these general retheming permissions.
 
 Document supported viewport, browser, device/input, and interface configurations. Browser availability alone is not evidence of mobile support. Additive accessibility controls must not silently replace or remove required baseline interactions.
 
@@ -870,6 +877,8 @@ The browser should be capable of joining the same world/account as RuneLite.
 
 Implement the complete in-game interface contract in Section 3.3. Account pages, a launcher, or a generic inventory panel are not substitutes for the baseline game interfaces. Choose the rendering/UI boundary to meet fidelity, input, accessibility, and performance requirements without duplicating authoritative gameplay rules.
 
+TypeScript ownership of login and launcher behavior is an implementation boundary, not permission to use generic website forms or loading spinners for the game entry sequence. Title/login, loading/connecting, authentication failures, and reconnect states must satisfy the same visual contract as the game itself. Display real authentication and loading outcomes; visual fidelity must not depend on fake progress or cosmetic-only controls.
+
 Use TypeScript for:
 
 * login
@@ -910,6 +919,8 @@ Use a reuse-first asset pipeline:
 3. Create novel ClubScape assets for the approved penguin/Club Penguin presentation where suitable existing assets or technical adaptations cannot serve it. Examples include penguins, puffles, igloos, rethemed quest characters, locations, clothing, and props. Present these in an OSRS art style where applicable, with animations and sounds consistent with that presentation. Ordinary matching OSRS assets remain reuse-first.
 
 For example, runite ore, runite rocks, and their associated mining interactions can use existing OSRS textures, animations, and sounds directly wherever applicable, without a ClubScape-specific redesign.
+
+Asset reuse alone does not establish visual fidelity. Validate converted assets in the actual browser renderer against the approved reference, including scale, materials, lighting/shading, texture sampling, camera framing, and animation playback. A successful model import or a generic low-poly appearance is not sufficient. Prove the representative tree, goblin, terrain, and penguin rendering in Section 30 before bulk asset conversion or generation.
 
 Every runtime asset should have a manifest containing:
 
@@ -1392,6 +1403,7 @@ Launch compatibility environment and test expected plugins/API behavior.
 
 Automated screenshots for:
 
+* title/login, loading/connecting, authentication failures, and reconnect states
 * characters
 * equipment
 * UI
@@ -1399,6 +1411,8 @@ Automated screenshots for:
 * animations
 * rendering regressions
 * imported and original assets
+
+Use the traceable reference fixtures and pre-agreed comparison tolerances in Sections 3.3 and 30. Distinguish fidelity checks against the approved source references from regression checks against earlier ClubScape builds; passing the latter does not prove the former.
 
 ## Security/adversarial tests
 
@@ -1562,10 +1576,18 @@ Do not include them in reported real-player population or use them to bypass gro
 
 Do not begin by building the entire game.
 
-First prove the factory with a microscopic slice containing:
+First deliver a presentation-complete, gameplay-limited Lumbridge slice. It must match the approved OSRS visual reference from the initial title/login screen through gameplay, subject only to the explicit adaptations below. Proving the development factory supports this deliverable; it is not a substitute for it. Do not defer the slice's appearance as later polish.
+
+## 30.1 Location and working content
+
+Anchor the slice in Lumbridge, with its castle, grounds, paths, and nearby river/bridge providing the recognizable starter-area setting. Record exact baseline region/tile bounds, the player spawn, and the initial camera. Include the connected baseline areas and legitimate travel needed for the selected resources, bank, shop, and quest dependencies; do not relocate them into an arbitrary demonstration square.
+
+Reduce implemented interactions, not the visual completeness of the visible environment. Preserve the reference layout, terrain, elevation, landmarks, object placement, and surrounding scenery needed by the approved views, including scenery beyond the playable boundary where necessary. The small content subset below does not authorize an otherwise empty map with one example of each asset.
+
+The initial content subset contains:
 
 * one penguin player
-* one mapped starter area with a limited working content subset
+* one reference-mapped Lumbridge starter area with a limited working content subset
 * one copper rock
 * one bronze pickaxe
 * one tree
@@ -1579,7 +1601,7 @@ The presence of a tree or fish does not count as completed Woodcutting or Fishin
 
 Required functionality:
 
-* login
+* login and accurate loading/connecting, authentication-error, and reconnect states
 * movement
 * interaction
 * Mining
@@ -1593,7 +1615,8 @@ Required functionality:
 * persistence
 * content compilation
 * asset manifest validation
-* OSRS-faithful interfaces for the slice's inventory, skills, combat, bank, shop, and quest interactions
+* OSRS-faithful title/login presentation, game frame, minimap, chat, tabs, and context menus
+* OSRS-faithful interfaces for the slice's inventory, equipment used by the slice, skills, combat, bank, shop, and quest interactions
 
 Choose a baseline quest and include the dependencies needed to complete it legitimately. Do not shorten its state graph or grant missing rewards/items through test-only mechanisms to make it fit the slice.
 
@@ -1602,15 +1625,50 @@ The same authoritative server must support:
 * headless simulator
 * browser client
 
+## 30.2 Frozen visual target and allowed adaptations
+
+Before visual implementation, establish an owner-approved visual reference pack linked from the canonical reference, interface, art, and world specifications. Freeze concrete inputs rather than leaving each worker to interpret "OSRS-like." The pack must contain:
+
+* the reference build, dated source captures, and identifiable source/asset snapshots, with concrete paths or retrieval instructions for the required terrain, models, animations, textures, interface sprites, icons, and fonts
+* one selected stock OSRS client/interface configuration, with exact viewport dimensions, logical resolution, UI scale, and browser capture settings; exclude HD or other appearance-changing plugins unless explicitly approved
+* world scale, camera projection/pitch/rotation/zoom, draw distance, lighting/shading, material and texture-sampling settings, sprite scaling, font metrics, and animation timing sufficient to reproduce the target appearance
+* reference captures for title/login, loading/connecting, authentication feedback, reconnect states, the initial Lumbridge view and HUD, and each interface used by the slice
+* representative tree and goblin views and animation references, with reproducible positions, camera settings, account/UI state, and animation frames for comparisons
+* per-case numeric visual tolerances and the comparison procedure, established before evaluating ClubScape output, with narrowly defined allowances for approved adaptations and unavoidable dynamic differences
+
+Selecting one interface configuration for this slice does not remove the full fixed/resizable contract in Section 3.3. Where a web-only loading or error state has no direct source equivalent, include an explicitly approved composition consistent with the reference visual language; do not invent source evidence or substitute a generic web page.
+
+The only default presentation departures for this slice are the penguin player, necessary equipment fitting to that player, and ClubScape name/logo substitutions within the existing composition. Keep ordinary trees, goblins, rocks, terrain, buildings, interface frames, sprites, and fonts faithful to their matching source assets. Do not infer permission for snowy terrain, remodeled creatures, cartoon trees, new interface layouts, or broader location/quest retheming from the general penguin-world vision. Any additional departure requires a specific approved adaptation-register entry.
+
+Compare unchanged scene/interface regions against the actual source references and review the approved adaptations separately. Do not mask whole panels, creatures, or scenery to hide fidelity failures, or bless the first ClubScape render as its own reference.
+
+Missing source inputs, unresolved conversion/rendering differences, and generic substitutes are blockers to visual acceptance. Temporary debug assets must remain clearly identified as unfinished; their existence does not authorize accepting the slice.
+
+## 30.3 Early presentation checkpoint and slice acceptance
+
+Build the startup-to-world visual benchmark in the real browser renderer early, before filling out all slice mechanics. It must include the title/login and loading presentation, the mapped Lumbridge scene, a reference-faithful tree and animated goblin, the penguin player, and the game frame/HUD. Review matched reference and candidate captures side by side, with overlays or image differences where appropriate. Static mockups or reference screenshots embedded in a page are not a renderer demonstration.
+
+This early checkpoint validates presentation only. It does not replace the complete slice's live gameplay, authoritative-state, or persistence requirements.
+
+Before declaring the slice complete, require:
+
+* the complete browser/server/headless gameplay checks, including real account/player persistence and reconnect behavior
+* reproducible captures from the running browser client for every required startup, scene, and interface case, plus evidence of the required animation behavior
+* source references, candidate captures, comparison results against the pre-agreed tolerances, and explicit records of any approved differences
+* independent style and technical review, with visual failures repaired rather than moved into an unspecified polish backlog
+* explicit owner visual acceptance recorded against the reviewed build and evidence; implementation-agent self-certification is not a substitute
+
+The reference-pack approval and slice visual acceptance are bounded product checkpoints, not recurring approval requests for routine engineering or every asset. If required inputs or owner review are unavailable, record the blocker and continue independent unblocked slice/infrastructure work without claiming acceptance or advancing content milestones.
+
 Pursue the RuneLite demonstration in Section 12 against that server independently. Browser/server/headless slice acceptance does not depend on RuneLite completion or a deferral decision.
 
-Do not scale content until the browser/server/headless pipeline works. Then prove an integrated Club Penguin social/cosmetic loop under Section 3.4 before bulk Club Penguin content production; the penguin avatar alone is not proof of that gameplay layer.
+Do not scale content or proceed to later content milestones until the browser/server/headless pipeline works and all of this section's visual acceptance requirements pass. Then prove an integrated Club Penguin social/cosmetic loop under Section 3.4 before bulk Club Penguin content production; the penguin avatar alone is not proof of that gameplay layer.
 
 ---
 
 # 31. SECOND MILESTONE: MINING 1-99
 
-Once the vertical slice is stable, prove legitimate Mining progression from 1-99 using verified baseline methods and working acquisition paths. This is a progression milestone, not permission to call Mining fully complete while source methods or dependent activities are missing.
+Once the vertical slice is stable and has passed Section 30, including owner visual acceptance, prove legitimate Mining progression from 1-99 using verified baseline methods and working acquisition paths. This is a progression milestone, not permission to call Mining fully complete while source methods or dependent activities are missing.
 
 Automatically decompose Mining into:
 
@@ -1978,6 +2036,7 @@ The following do not count as completion:
 * fake persistence
 * hardcoded test-only values
 * placeholder assets presented as final
+* a mechanically working slice whose startup screens, scene, or interfaces fail its approved visual contract
 * unfinished quests
 * menus that do not function
 * buttons that do nothing
@@ -2018,6 +2077,7 @@ Before declaring a feature complete, require:
 * feature-parity acceptance criteria validated where applicable
 * source mappings and any behavior/presentation adaptations recorded
 * interface visual and interaction evidence complete where applicable
+* Section 30 reference-pack approval and owner visual acceptance recorded before completing the first slice or advancing beyond it
 * Club Penguin reward/crossover boundaries validated where applicable
 * asset reuse and novel asset creation follow Section 14
 * relevant source notes and asset/import records complete
@@ -2071,7 +2131,7 @@ Require:
 When given this prompt:
 
 1. Inspect the current machine and repository.
-2. Determine which milestone currently applies.
+2. Determine which milestone currently applies, checking any existing slice-completion claim against Section 30 rather than assuming previous functional tests establish visual acceptance.
 3. Create or update the architecture, frozen reference record, full-scope contract, release proposal, and milestone acceptance criteria.
 4. Build the dependency graph.
 5. Identify tasks that can run independently.
@@ -2083,7 +2143,7 @@ When given this prompt:
 11. Run post-merge regression tests.
 12. Turn failures into new tasks automatically.
 13. Update feature-parity and extensibility coverage.
-14. Continue to the next milestone.
+14. Continue to the next milestone only after its prerequisite acceptance gates pass, including the owner visual acceptance required by Section 30.
 15. Accept clearly labeled releases when their own criteria pass; continue toward the full-game contract while keeping post-baseline expansions separate.
 
 Do not repeatedly ask the project owner to make routine engineering decisions.
@@ -2094,6 +2154,7 @@ Escalate only when a decision:
 
 * materially changes product direction
 * establishes or materially changes the full scope, adaptations, or release scope in Section 40
+* establishes or materially changes the first-slice visual reference pack, or requests the owner visual acceptance required by Section 30
 * recommends RuneLite deferral or a different desktop strategy under Section 12, with supporting evidence
 * would raise the 25-agent ceiling
 * creates significant irreversible cost
@@ -2110,18 +2171,20 @@ When execution limits or unavailable external dependencies prevent further progr
 
 On an empty machine/repository, begin with the sequence below. If work already exists, inspect and continue from its verified state instead of recreating it.
 
+For an existing first-slice implementation, audit its startup screens, rendered world, assets, and interfaces against Section 30 before expanding. Reopen missing or failed visual work and repair the existing implementation; do not grandfather a graybox into acceptance because its mechanics work, or discard working server/persistence systems solely because its presentation needs repair.
+
 1. Bootstrap the dependencies needed for the first milestone.
 2. Create the monorepo and Cargo workspace.
-3. Establish the frozen OSRS reference baseline, source inventories, canonical specification, full-scope proposal, draft release scope, and milestone acceptance criteria.
+3. Establish the frozen OSRS reference baseline, source inventories, canonical specification, full-scope proposal, draft release scope, and milestone acceptance criteria, including the Section 30 visual reference pack and its owner approval.
 4. Create the initial GitHub/Copilot instructions.
 5. Create `justfile` or equivalent commands and Docker local infrastructure.
 6. Establish minimal CI and the durable task ledger described in Section 17.
 7. Define shared protocol, simulation, persistence, and stable-ID contracts before parallel implementation.
 8. Create content, parity/mapping, and asset-manifest schemas with the lightweight source/build records in Section 15.
-9. Build the complete vertical slice in Section 30 in dependency order, including real account/player persistence.
-10. Prove the headless and browser paths, including faithful slice interfaces, against the same authoritative server while separately pursuing the bounded RuneLite feasibility milestone in Section 12.
+9. Build the Section 30 startup-to-world visual benchmark early, then complete the slice in dependency order, including real account/player persistence.
+10. Prove the headless and browser paths against the same authoritative server and validate startup, world, asset, and interface fidelity against the approved references while separately pursuing the bounded RuneLite feasibility milestone in Section 12.
 11. Add the relevant security, feature-parity, and extensibility tests as each subsystem is implemented.
-12. Validate the browser/server/headless pipeline and prove the first integrated Club Penguin social/cosmetic loop under Sections 3.4 and 30.
+12. Complete browser/server/headless and visual validation, obtain the Section 30 owner visual acceptance, then prove the first integrated Club Penguin social/cosmetic loop under Sections 3.4 and 30.
 13. Build the WaddleWorks MVP around the proven task-ledger and integration workflow.
 14. Verify Mining 1-99 progression with functional dependencies, tracking remaining Mining parity entries explicitly.
 15. Refine the full and release contracts using verified inventories and milestone evidence, then obtain the scope approval described in Section 40.
