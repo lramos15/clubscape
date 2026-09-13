@@ -55,9 +55,19 @@ Docker Engine 29.2.1, Compose 5.0.2, and Buildx 0.31.1 are available to the user
 without `sudo`. The cached `postgres:16-alpine` image is native ARM64 and contains
 PostgreSQL 16.15. An isolated SQL transaction smoke test passed.
 
-No project database or other game service is running. Use project-specific
-Compose configuration when implementation begins. Redis remains conditional on
-an actual caching or ephemeral-state requirement in the project specification.
+No project database or other game service was running after initial
+provisioning. The first-milestone account workspace now provides project-specific
+`compose.yaml` and `just` commands. Its `clubscape-m1-postgres-1` container and
+`clubscape-m1_postgres_data` volume were created and restart-checked on
+2026-09-13 with synthetic account data; the container is stopped at the
+checkpoint. Development ports are loopback-only 55432 (PostgreSQL) and 4010
+(account service). Credentials are generated under ignored `.local/`, not
+stored in this document or Git. See the repository README before restarting.
+
+Integration checks use separately named disposable containers and random
+loopback ports. The pinned PostgreSQL image has native ARM64 and AMD64
+manifests. Account-service evidence is not gameplay or graphical acceptance.
+Redis remains conditional on an actual caching or ephemeral-state requirement.
 
 ## Blender
 

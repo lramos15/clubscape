@@ -7,6 +7,12 @@
   "starting_revision": "973c872",
   "candidate_revision": null,
   "accepted_revision": null,
+  "checkpoint": {
+    "report": "docs/checkpoints/2026-09-13-m1-blocked.md",
+    "verified_infrastructure_revision": "275d3cc83d6a7c2118d0afcf82490f364e5d2986",
+    "infrastructure_evidence": "milestones/evidence/m1-account-foundations.json",
+    "scope_note": "Account foundations only; no accepted starter journey, presentation or performance."
+  },
   "scope_approval": {
     "authority": "owner",
     "record": "2026-09-13T16:05:01.176Z user execution request; prompt.md Section 44 approved default",

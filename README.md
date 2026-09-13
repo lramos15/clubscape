@@ -6,6 +6,10 @@ Tutorial Island-to-Lumbridge/Cook's Assistant journey in
 accepted visual/audio slice yet. Account infrastructure is not a reduced
 vertical slice.
 
+The current [blocked checkpoint](docs/checkpoints/2026-09-13-m1-blocked.md)
+identifies the verified infrastructure revision, exact results, remaining
+source/gameplay/presentation work, owner gates and safe resume boundary.
+
 Read [AGENTS.md](AGENTS.md), the [machine setup](docs/machines/sparky.md) and
 [active milestone](spec/milestone-01.md) before working. The fixed source
 identity is OSRS build 240/cache 2695; see

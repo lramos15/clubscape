@@ -1,0 +1,45 @@
+{
+  "browser_signup_verified": false,
+  "cargo_lock_sha256": "62ae6df0e42bd04445970e2521a95e94cb0c27bca1d8426a944ce169b1304581",
+  "cleanup": "Owned test server/container stopped; disposable database removed.",
+  "commands": [
+    {
+      "command": "cargo build --quiet --locked -p clubscape-server -p clubscape-sim",
+      "result": "passed"
+    },
+    {
+      "command": "cargo test --quiet -p clubscape-server --test postgres --locked -- --ignored --test-threads=1",
+      "passed_tests": 9,
+      "result": "passed"
+    },
+    {
+      "checks": [
+        "capability_negotiation",
+        "registration",
+        "case_insensitive_uniqueness",
+        "login",
+        "persistent_identity",
+        "no_fabricated_character",
+        "logout_revocation",
+        "relogin",
+        "token_rotation"
+      ],
+      "command": "clubscape-sim account-lifecycle --url <isolated-loopback-server>",
+      "result": "passed"
+    }
+  ],
+  "database_image": "postgres:16-alpine@sha256:cf78e76683b9ca8c5733cbbdce6c9262b45b6767934dd0a95e671f9a0fc20685",
+  "gameplay_verified": false,
+  "independent_client_database": "Fresh isolated database after adversarial integration fixtures.",
+  "kind": "account_foundations",
+  "milestone_accepted": false,
+  "recorded_at": "2026-09-13T18:44:06.604780+00:00",
+  "resource_limits": {
+    "database_cpus": 2,
+    "database_memory_mib": 512
+  },
+  "result": "passed",
+  "revision": "275d3cc83d6a7c2118d0afcf82490f364e5d2986",
+  "schema_version": 1,
+  "workspace_dirty": false
+}

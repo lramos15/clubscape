@@ -1,0 +1,22 @@
+{
+  "schema_version": 1,
+  "kind": "available_session_usage_snapshot",
+  "source": "session_store session_usage materialized view",
+  "session_id": "d1bec4ca-ccff-428d-8810-9e0bdf0b9958",
+  "queried_on": "2026-09-13",
+  "last_used_at_in_returned_row": "2026-09-13T18:36:44.552Z",
+  "usage_model": "gpt-6-astra",
+  "api_call_count": 134,
+  "input_tokens": 17081546,
+  "output_tokens": 374184,
+  "cost_billing_multiplier_aggregate": 134,
+  "active_duration_ms": 8842524,
+  "final_accounting_available": false,
+  "verified_project_wide_descendant_accounting": false,
+  "currency_total": null,
+  "ai_credit_total": null,
+  "limitations": "Delayed whole-session materialized snapshot, not a final execution total or a separately verified aggregate of all workers. The cost field is not a dollar/AI-credit amount.",
+  "owner_ai_spending_cap": null,
+  "visible_peak_concurrent_agents_including_director": 3,
+  "shared_agent_ceiling": 25
+}

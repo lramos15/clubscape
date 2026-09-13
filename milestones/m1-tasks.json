@@ -4,13 +4,19 @@
   "agent_budget": {
     "max_active_ai_agents": 25,
     "effective_limit": 25,
-    "active": [{"id": "director", "task": "M1-FOUNDATIONS"}],
+    "admissions_open": false,
+    "active": [],
     "reserved": [],
     "queued": [],
+    "parked": [
+      {"id": "598d83d0-6ce2-40ac-b6d5-01d566c68b99", "reason": "Reference research complete; no automatic resumption."},
+      {"id": "20a115ef-0586-4ca1-9505-c1840fc02365", "reason": "Account implementation and deadline repair complete; no automatic resumption."},
+      {"id": "31d6526b-89a8-4bad-bf54-15ccc64ab410", "reason": "Both scoped review turns complete; no automatic resumption."}
+    ],
     "nested_delegation_allowed": false,
     "throttled": false,
     "backoff_until": null,
-    "usage_accounting": "Exact provider request/token/credit totals unavailable to the Director."
+    "usage_accounting": "milestones/evidence/m1-usage-snapshot.json records the available delayed session snapshot; final project-wide credits/currency are unavailable."
   },
   "tasks": [
     {
@@ -52,7 +58,7 @@
     {
       "id": "M1-FOUNDATIONS",
       "goal": "Implement real authoritative account/session persistence and shared binary protocol with isolated PostgreSQL and live-server headless validation.",
-      "status": "IMPLEMENTING",
+      "status": "DONE",
       "specs": ["prompt.md#6", "prompt.md#7", "prompt.md#8", "prompt.md#30", "prompt.md#37"],
       "dependencies": ["M1-SHARED-CONTRACTS"],
       "allowed_paths": ["Cargo.toml", "Cargo.lock", "rust-toolchain.toml", ".gitignore", "justfile", "compose.yaml", ".github/**", "crates/**", "tools/**", "tests/**", "schemas/**", "migrations/**", "README.md", "spec/**", "milestones/**", "docs/checkpoints/**"],
@@ -65,7 +71,7 @@
       "source_notes": ["spec/architecture.md", "spec/networking.md", "spec/security.md"],
       "parity_entries": [],
       "adaptations": [],
-      "evidence": []
+      "evidence": ["275d3cc83d6a7c2118d0afcf82490f364e5d2986", "milestones/evidence/m1-account-foundations.json", "docs/checkpoints/2026-09-13-m1-blocked.md"]
     },
     {
       "id": "M1-PROTOCOL",
@@ -88,7 +94,7 @@
     {
       "id": "M1-ACCOUNTS",
       "goal": "Implement and test the PostgreSQL-backed account/session service against the frozen infrastructure protocol, without inventing character/gameplay state.",
-      "status": "VALIDATING",
+      "status": "DONE",
       "specs": ["spec/architecture.md", "spec/networking.md", "spec/security.md", "spec/client-api.md", "spec/testing.md"],
       "dependencies": ["M1-SHARED-CONTRACTS", "M1-PROTOCOL"],
       "allowed_paths": ["crates/server/**"],
@@ -103,15 +109,16 @@
       "adaptations": [],
       "evidence": [
         "Implementation commit be4cd7282732ac4b48f351cc20ad4b4ce8f15627",
-        "15 Rust unit checks; 6 real PostgreSQL/HTTP integration tests; independent account lifecycle client passed",
+        "Final integrated build: 21 server unit checks; 9 real PostgreSQL/HTTP integration tests; independent account lifecycle client passed",
         "Research/implementation worker parked; new admission required for any follow-up",
-        ".local/evidence/accounts-preintegration.json; independent review and parent integration still pending"
+        "Both review findings repaired and covered by regressions; parent integration and post-integration validation complete",
+        "milestones/evidence/m1-account-foundations.json"
       ]
     },
     {
       "id": "M1-TOOLING",
       "goal": "Provide isolated reproducible local services, CI, commands, bounded integration runs and fail-closed durable milestone gate checks.",
-      "status": "IMPLEMENTING",
+      "status": "DONE",
       "specs": ["spec/milestone-01.md", "spec/agent-rules.md", "spec/testing.md", "spec/performance.md"],
       "dependencies": ["M1-SHARED-CONTRACTS"],
       "allowed_paths": ["tools/*.py", "tests/workflow/**", "justfile", "compose.yaml", ".github/**", "README.md", "milestones/**", "docs/checkpoints/**", "docs/machines/sparky.md"],
@@ -124,7 +131,7 @@
       "source_notes": ["docs/machines/sparky.md"],
       "parity_entries": [],
       "adaptations": [],
-      "evidence": []
+      "evidence": ["31 Python regression tests passed", "just bootstrap, lint, check-wasm, reference-verify and the real integration runner passed", "milestones/evidence/m1-local-bootstrap.json", "Incomplete milestone acceptance correctly rejected; no later milestone authorized"]
     },
     {
       "id": "M1-ACCOUNT-REVIEW",
