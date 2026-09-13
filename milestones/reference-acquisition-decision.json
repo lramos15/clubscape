@@ -1,0 +1,13 @@
+{
+  "schema_version": 1,
+  "recorded_on": "2026-09-13",
+  "authority": "owner",
+  "kind": "source_acquisition_instruction",
+  "owner_record": "You can grab your own capture pack from online sources such as https://github.com/runetech/osrs-gamepacks and https://archive.openrs2.org/caches",
+  "action": "Acquire and investigate the public source inputs directly; do not wait for an owner-supplied capture pack.",
+  "integrated_gpu_environment_response": "",
+  "reference_pack_approval_granted": false,
+  "presentation_acceptance_granted": false,
+  "scope_changed": false,
+  "limits": "This instruction supplies acquisition direction, not approval of an unseen pack, baseline downgrade, credentials, or a substitute performance target."
+}

@@ -1,21 +1,31 @@
 # Reference baseline
 
-Status at kickoff: **not frozen; source research in progress**.
+Status: **reference identity frozen; inventory and behavior gaps remain open**.
 
-The repository has no OSRS cache, exported content inventory, dated reference
-captures, source recordings or asset input hashes. The machine's tested
-RuneLite builds are toolchain evidence, not the game's frozen baseline.
+M1-REF verified OSRS **build 240**, OpenRS2 **cache 2695**, dated
+**2026-09-08T10:30:08.897945Z**, on 2026-09-13. The official September 8 update
+is date-aligned; build identity comes from the archive metadata, not the
+newspost. Do not repeatedly refetch "latest" or silently adopt newer content.
 
-M1-REF owns read-only discovery of a verifiable release/build, identifiable
-snapshot retrieval paths and starter-journey mechanic evidence. Preserve its
-dated findings under `research/` when available. Do not invent a current release
-from the host date or count a cache entry as verified live gameplay.
+The canonical source/input record is
+[`research/first-slice-sources.json`](../research/first-slice-sources.json).
+It records exact snapshot URLs, master/map-index hashes, the decoder tooling
+pin and dated wiki revisions. Equivalent identities for other imported inputs
+must be recorded before conversion. The full-cache hash and full
+player-facing inventory are not established.
 
-Freezing requires the build identity, verification date, source identities and
-hashes, import versions, inclusion rules, inventory reconciliation and explicit
-gaps from Section 3.1. The visual/audio pack additionally requires the concrete
-inputs and owner approval in Section 30.2.
+[Mechanic notes](../research/first-slice-mechanics.md) identify the current
+Learning the Ropes tutorial, source-supported starting XP and quest
+dependencies, and material missing/contradictory observations. Do not replace
+those gaps with remembered historical tutorial or death behavior.
 
-Until those requirements are met, source-dependent implementation and coverage
-remain unverified. Independently testable account/protocol/persistence work does
-not redefine the missing reference contract.
+Archive completeness is not gameplay coverage. Full inventory reconciliation,
+inclusion dispositions, seasonal/CP selection and Section 40 scope approval
+remain outstanding. The machine's upstream RuneLite smoke tests are neither
+this baseline nor ClubScape compatibility evidence.
+
+The [capture checklist](../research/reference-capture-checklist.md) records
+missing initial-state, transition, world/camera and audio observations. No
+concrete owner-approved Section 30.2 pack exists yet. Only independently
+source-verified work may proceed; no accepted journey, presentation or full
+baseline coverage is claimed.

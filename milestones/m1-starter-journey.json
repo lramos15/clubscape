@@ -16,7 +16,7 @@
   "presentation_acceptance": null,
   "later_milestone_authorized": false,
   "gates": [
-    {"id": "reference-baseline", "status": "blocked", "evidence": [], "blocker": "No identifiable frozen source/data snapshot in the repository."},
+    {"id": "reference-baseline", "status": "in_progress", "evidence": [], "blocker": "Build 240/cache 2695 identity and two index hashes established; full inventory reconciliation and source behavior gaps remain."},
     {"id": "reference-pack", "status": "blocked", "evidence": [], "blocker": "Concrete Section 30.2 visual/audio pack and owner approval required before presentation implementation."},
     {"id": "benchmark-contract", "status": "blocked", "evidence": [], "blocker": "Representative integrated-GPU hardware, driver and both browser versions are not supplied."},
     {"id": "early-presentation-benchmark", "status": "blocked", "evidence": [], "blocker": "Requires approved source pack and real browser renderer/audio."},
