@@ -12,6 +12,8 @@ base64.workspace = true
 clubscape-protocol.workspace = true
 getrandom.workspace = true
 http-body-util = "0.1"
+hyper = { version = "1", features = ["server", "http1"] }
+hyper-util = { version = "0.1", features = ["tokio", "service"] }
 prost.workspace = true
 serde_json.workspace = true
 sha2.workspace = true
@@ -25,7 +27,7 @@ uuid = { workspace = true, features = ["v4"] }
 [dev-dependencies]
 futures-util = "0.3"
 reqwest = { workspace = true, features = ["stream"] }
-tokio = { workspace = true, features = ["io-util"] }
+tokio = { workspace = true, features = ["io-util", "test-util"] }
 
 [lints]
 workspace = true

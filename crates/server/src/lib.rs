@@ -1,8 +1,10 @@
 mod config;
 mod crypto;
+mod database;
 mod error;
 mod rate_limit;
 mod store;
+mod transport;
 
 use std::{
     error::Error as _,
@@ -40,8 +42,8 @@ pub use config::{Config, ConfigError, DEFAULT_BIND, UNVERSIONED_BUILD};
 pub use error::{ServeError, StartupError};
 
 static MIGRATIONS: Migrator = sqlx::migrate!("./migrations");
-const DATABASE_TIMEOUT: Duration = Duration::from_secs(5);
 const BODY_TIMEOUT: Duration = Duration::from_secs(10);
+const COMMAND_TIMEOUT: Duration = Duration::from_secs(10);
 
 struct AppState {
     pool: PgPool,
@@ -60,61 +62,70 @@ pub struct Service {
 
 impl Service {
     pub async fn bind(config: Config) -> Result<Self, StartupError> {
-        let pool = match timeout(
-            DATABASE_TIMEOUT,
-            PgPoolOptions::new()
-                .min_connections(1)
-                .max_connections(8)
-                .acquire_timeout(DATABASE_TIMEOUT)
-                .after_connect(|connection, _| {
-                    Box::pin(async move {
-                        sqlx::query("SET statement_timeout = '5s'")
-                            .execute(&mut *connection)
-                            .await?;
-                        sqlx::query("SET lock_timeout = '5s'")
-                            .execute(connection)
-                            .await?;
-                        Ok(())
-                    })
+        let pool = PgPoolOptions::new()
+            // All acquisition, release and cleanup work is owned and timed, not background upkeep.
+            .min_connections(0)
+            .max_connections(8)
+            .idle_timeout(None)
+            .max_lifetime(None)
+            .acquire_timeout(database::IO_TIMEOUT)
+            .after_connect(|connection, _| {
+                Box::pin(async move {
+                    sqlx::query("SET statement_timeout = '5s'")
+                        .execute(&mut *connection)
+                        .await?;
+                    sqlx::query("SET lock_timeout = '5s'")
+                        .execute(connection)
+                        .await?;
+                    Ok(())
                 })
-                .connect_with(config.database),
-        )
-        .await
-        {
-            Ok(Ok(pool)) => pool,
-            Ok(Err(error)) => return Err(StartupError::database("database", &error)),
-            Err(_) => return Err(StartupError::new("database", "connection_timeout")),
-        };
-        if let Err(error) = MIGRATIONS.run(&pool).await {
-            let startup_error = match &error {
+            })
+            .connect_lazy_with(config.database);
+        let initialized = async {
+            let acquired = timeout(database::IO_TIMEOUT, pool.acquire())
+                .await
+                .map_err(|_| StartupError::new("database", "connection_deadline"))?
+                .map_err(|error| StartupError::database("database", &error))?;
+            let mut connection = database::Connection::new(acquired);
+            timeout(
+                database::MIGRATION_TIMEOUT,
+                MIGRATIONS.run_direct(&mut *connection),
+            )
+            .await
+            .map_err(|_| StartupError::new("migrations", "database_deadline"))?
+            .map_err(|error| match &error {
                 sqlx::migrate::MigrateError::Execute(source)
                 | sqlx::migrate::MigrateError::ExecuteMigration(source, _) => {
                     StartupError::database("migrations", source)
                 }
                 _ => StartupError::new("migrations", "migration_validation"),
-            };
-            pool.close().await;
-            return Err(startup_error);
+            })?;
+            if !connection.release().await {
+                return Err(StartupError::new(
+                    "migrations",
+                    "connection_release_deadline",
+                ));
+            }
+            let passwords = timeout(database::IO_TIMEOUT, Passwords::new())
+                .await
+                .map_err(|_| StartupError::new("passwords", "password_deadline"))?
+                .map_err(|_| StartupError::new("passwords", "password_initialization"))?;
+            let listener = TcpListener::bind(config.bind)
+                .await
+                .map_err(|_| StartupError::new("listener", "bind"))?;
+            let local_addr = listener
+                .local_addr()
+                .map_err(|_| StartupError::new("listener", "local_address"))?;
+            Ok((passwords, listener, local_addr))
         }
-        let passwords = match Passwords::new().await {
-            Ok(passwords) => passwords,
-            Err(_) => {
-                pool.close().await;
-                return Err(StartupError::new("passwords", "password_initialization"));
-            }
-        };
-        let listener = match TcpListener::bind(config.bind).await {
-            Ok(listener) => listener,
-            Err(_) => {
-                pool.close().await;
-                return Err(StartupError::new("listener", "bind"));
-            }
-        };
-        let local_addr = match listener.local_addr() {
-            Ok(address) => address,
-            Err(_) => {
-                pool.close().await;
-                return Err(StartupError::new("listener", "local_address"));
+        .await;
+        let (passwords, listener, local_addr) = match initialized {
+            Ok(initialized) => initialized,
+            Err(error) => {
+                if !database::close_pool(pool).await {
+                    StartupError::new("cleanup", "pool_close_deadline");
+                }
+                return Err(error);
             }
         };
         let state = Arc::new(AppState {
@@ -149,46 +160,33 @@ impl Service {
             address = %self.local_addr,
             "account service listening on loopback"
         );
-        let result = axum::serve(
-            self.listener,
-            self.router
-                .into_make_service_with_connect_info::<SocketAddr>(),
-        )
-        .with_graceful_shutdown(async move {
-            shutdown.await;
-            tracing::info!(event = "shutdown_started", "account service shutting down");
-        })
-        .await;
-        self.pool.close().await;
-        match result {
-            Ok(()) => {
-                tracing::info!(event = "shutdown_complete", "account service stopped");
-                Ok(())
-            }
-            Err(_) => {
-                let error = ServeError {
-                    error_id: Uuid::new_v4(),
-                };
-                tracing::error!(
-                    event = "listener_failure",
-                    error_id = %error.error_id,
-                    error_kind = "serve_io",
-                    "account service stopped unexpectedly"
-                );
-                Err(error)
-            }
+        let mut result = transport::serve(self.listener, self.router, shutdown).await;
+        if !database::close_pool(self.pool).await {
+            result = Err(ServeError::new("pool_close_deadline"));
         }
+        tracing::info!(
+            event = "shutdown_complete",
+            clean = result.is_ok(),
+            "account service stopped"
+        );
+        result
     }
 }
 
 async fn health(State(state): State<Arc<AppState>>) -> Response {
-    match sqlx::query_scalar::<_, i32>("SELECT 1")
-        .fetch_one(&state.pool)
-        .await
+    match database::run(&state.pool, "readiness", false, |connection| {
+        Box::pin(async move {
+            sqlx::query_scalar::<_, i32>("SELECT 1")
+                .fetch_one(connection)
+                .await
+                .map_err(ApiError::database)
+        })
+    })
+    .await
     {
         Ok(1) => Json(serde_json::json!({"status": "ready"})).into_response(),
         Ok(_) => ApiError::internal("readiness_result").into_response(String::new()),
-        Err(error) => ApiError::database(error).into_response(String::new()),
+        Err(error) => error.into_response(String::new()),
     }
 }
 
@@ -253,6 +251,26 @@ async fn handle_rpc(
     let command = message
         .command
         .ok_or_else(|| ApiError::invalid("A supported command is required."))?;
+    let (operation, mutation) = match &command {
+        client_message::Command::Hello(_) => ("hello", false),
+        client_message::Command::Register(_) => ("registration", true),
+        client_message::Command::Login(_) => ("login", true),
+        client_message::Command::CurrentAccount(_) => ("current_account", false),
+        client_message::Command::Logout(_) => ("logout", true),
+    };
+    timeout(
+        COMMAND_TIMEOUT,
+        execute_command(state, &parts.headers, command),
+    )
+    .await
+    .map_err(|_| ApiError::deadline(operation, "command", mutation, COMMAND_TIMEOUT))?
+}
+
+async fn execute_command(
+    state: &AppState,
+    headers: &HeaderMap,
+    command: client_message::Command,
+) -> Result<server_message::Result, ApiError> {
     match command {
         client_message::Command::Hello(_) => Ok(server_message::Result::Hello(ServerHello {
             capabilities: CAPABILITIES
@@ -287,7 +305,7 @@ async fn handle_rpc(
             Ok(server_message::Result::LoggedIn(logged_in))
         }
         client_message::Command::CurrentAccount(_) => {
-            let digest = authorization_digest(&parts.headers)?;
+            let digest = authorization_digest(headers)?;
             let account = store::current_account(&state.pool, &digest).await?;
             Ok(server_message::Result::Account(AccountSnapshot {
                 account: Some(account),
@@ -296,7 +314,7 @@ async fn handle_rpc(
             }))
         }
         client_message::Command::Logout(_) => {
-            let digest = authorization_digest(&parts.headers)?;
+            let digest = authorization_digest(headers)?;
             store::logout(&state.pool, &digest).await?;
             Ok(server_message::Result::LoggedOut(LoggedOut {}))
         }

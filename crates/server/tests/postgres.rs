@@ -4,7 +4,11 @@ use std::{
     net::{IpAddr, Ipv4Addr, SocketAddr},
     process::{Child, Command, Stdio},
     str::FromStr,
-    sync::mpsc,
+    sync::{
+        Arc,
+        atomic::{AtomicUsize, Ordering},
+        mpsc,
+    },
     thread,
     time::Duration,
 };
@@ -25,8 +29,9 @@ use reqwest::{
 use sha2::{Digest, Sha256};
 use sqlx::{ConnectOptions, PgPool, postgres::PgConnectOptions, postgres::PgPoolOptions};
 use tokio::{
+    io::{AsyncRead, AsyncReadExt, AsyncWrite, AsyncWriteExt},
     net::{TcpListener, TcpStream},
-    sync::{Mutex, MutexGuard, oneshot},
+    sync::{Mutex, MutexGuard, oneshot, watch},
     task::{JoinHandle, JoinSet},
     time::{sleep, timeout},
 };
@@ -381,14 +386,18 @@ impl TestService {
         }
     }
 
-    async fn stop(mut self) {
+    async fn stop(self) {
+        self.stop_result().await.expect("service shutdown");
+    }
+
+    async fn stop_result(mut self) -> Result<(), ServeError> {
         self.shutdown.take().unwrap().send(()).unwrap();
-        timeout(WAIT, self.task.as_mut().unwrap())
+        let result = timeout(WAIT, self.task.as_mut().unwrap())
             .await
             .expect("bounded graceful service shutdown")
-            .expect("service task")
-            .expect("service shutdown");
+            .expect("service task");
         self.task.take();
+        result
     }
 }
 
@@ -487,7 +496,8 @@ impl ChildCapture {
         for line in logs.lines() {
             let value: serde_json::Value =
                 serde_json::from_str(line).expect("server output must be structured JSON");
-            assert_eq!(value["target"], "clubscape_server");
+            let target = value["target"].as_str().expect("application log target");
+            assert!(target == "clubscape_server" || target.starts_with("clubscape_server::"));
         }
         logs
     }
@@ -509,6 +519,29 @@ struct DatabaseProxy {
     address: SocketAddr,
     shutdown: Option<oneshot::Sender<()>>,
     task: Option<JoinHandle<()>>,
+    control: Arc<ProxyControl>,
+}
+
+#[derive(Clone, Copy, PartialEq, Eq)]
+enum HoldPoint {
+    None,
+    Execute,
+    ReleasePing,
+    Migration,
+}
+
+struct ProxyControl {
+    point: watch::Sender<HoldPoint>,
+    held: watch::Sender<bool>,
+    active: AtomicUsize,
+}
+
+struct ProxyConnection(Arc<ProxyControl>);
+
+impl Drop for ProxyConnection {
+    fn drop(&mut self) {
+        self.0.active.fetch_sub(1, Ordering::SeqCst);
+    }
 }
 
 impl DatabaseProxy {
@@ -517,22 +550,33 @@ impl DatabaseProxy {
         let listener = TcpListener::bind("127.0.0.1:0").await.unwrap();
         let address = listener.local_addr().unwrap();
         let (shutdown, mut receive) = oneshot::channel();
+        let control = Arc::new(ProxyControl {
+            point: watch::channel(HoldPoint::None).0,
+            held: watch::channel(false).0,
+            active: AtomicUsize::new(0),
+        });
+        let task_control = control.clone();
         let task = tokio::spawn(async move {
             let mut connections = JoinSet::new();
             loop {
                 tokio::select! {
                     _ = &mut receive => break,
                     accepted = listener.accept() => {
-                        let Ok((mut downstream, _)) = accepted else { break };
+                        let Ok((downstream, _)) = accepted else { break };
                         if connections.len() >= 16 {
                             continue;
                         }
+                        let control = task_control.clone();
                         connections.spawn(async move {
-                            if let Ok(mut upstream) = TcpStream::connect(target).await {
-                                let _ = tokio::io::copy_bidirectional(
-                                    &mut downstream,
-                                    &mut upstream,
-                                ).await;
+                            if let Ok(upstream) = TcpStream::connect(target).await {
+                                control.active.fetch_add(1, Ordering::SeqCst);
+                                let _active = ProxyConnection(control.clone());
+                                let (client_read, client_write) = downstream.into_split();
+                                let (server_read, server_write) = upstream.into_split();
+                                tokio::select! {
+                                    _ = forward_requests(client_read, server_write, control.clone()) => {},
+                                    _ = forward_responses(server_read, client_write, control.held.subscribe()) => {},
+                                }
                             }
                         });
                     },
@@ -546,7 +590,40 @@ impl DatabaseProxy {
             address,
             shutdown: Some(shutdown),
             task: Some(task),
+            control,
         }
+    }
+
+    fn arm(&self, point: HoldPoint) {
+        assert!(!*self.control.held.borrow());
+        self.control.point.send_replace(point);
+    }
+
+    fn resume(&self) {
+        self.control.point.send_replace(HoldPoint::None);
+        self.control.held.send_replace(false);
+    }
+
+    async fn wait_stalled(&self) {
+        let mut held = self.control.held.subscribe();
+        timeout(WAIT, held.wait_for(|held| *held))
+            .await
+            .expect("the proxy must reach the selected post-acquisition response")
+            .unwrap();
+        assert!(
+            self.control.active.load(Ordering::SeqCst) > 0,
+            "the regression must withhold a response on an open connection"
+        );
+    }
+
+    async fn wait_disconnected(&self) {
+        timeout(Duration::from_secs(2), async {
+            while self.control.active.load(Ordering::SeqCst) != 0 {
+                sleep(Duration::from_millis(10)).await;
+            }
+        })
+        .await
+        .expect("timed-out connections must not leave background release/rollback waiters");
     }
 
     async fn stop(mut self) {
@@ -570,11 +647,134 @@ impl Drop for DatabaseProxy {
     }
 }
 
+async fn forward_requests(
+    mut client: impl AsyncRead + Unpin,
+    mut server: impl AsyncWrite + Unpin,
+    control: Arc<ProxyControl>,
+) -> std::io::Result<()> {
+    let startup = client.read_u32().await?;
+    let body = proxy_frame(&mut client, startup).await?;
+    server.write_all(&startup.to_be_bytes()).await?;
+    server.write_all(&body).await?;
+    let mut executed = false;
+    let mut syncs = 0;
+    loop {
+        let kind = client.read_u8().await?;
+        let length = client.read_u32().await?;
+        let body = proxy_frame(&mut client, length).await?;
+        let point = *control.point.borrow();
+        if point == HoldPoint::ReleasePing {
+            if kind == b'E' {
+                executed = true;
+                syncs = 0;
+            } else if kind == b'S' && executed {
+                syncs += 1;
+            }
+        }
+        let hold = match point {
+            HoldPoint::None => false,
+            HoldPoint::Execute => kind == b'E',
+            HoldPoint::ReleasePing => kind == b'S' && executed && syncs == 2,
+            HoldPoint::Migration => {
+                matches!(kind, b'P' | b'Q')
+                    && body
+                        .windows(b"pg_advisory_lock".len())
+                        .any(|bytes| bytes == b"pg_advisory_lock")
+            }
+        };
+        if hold {
+            control.held.send_replace(true);
+        }
+        server.write_all(&[kind]).await?;
+        server.write_all(&length.to_be_bytes()).await?;
+        server.write_all(&body).await?;
+    }
+}
+
+async fn proxy_frame(
+    reader: &mut (impl AsyncRead + Unpin),
+    length: u32,
+) -> std::io::Result<Vec<u8>> {
+    if !(4..=65_536).contains(&length) {
+        return Err(std::io::ErrorKind::InvalidData.into());
+    }
+    let mut body = vec![0; length as usize - 4];
+    reader.read_exact(&mut body).await?;
+    Ok(body)
+}
+
+async fn forward_responses(
+    mut server: impl AsyncRead + Unpin,
+    mut client: impl AsyncWrite + Unpin,
+    mut held: watch::Receiver<bool>,
+) -> std::io::Result<()> {
+    let mut buffer = [0; 8192];
+    loop {
+        let length = server.read(&mut buffer).await?;
+        if length == 0 {
+            return Ok(());
+        }
+        while *held.borrow_and_update() {
+            held.changed()
+                .await
+                .map_err(|_| std::io::ErrorKind::BrokenPipe)?;
+        }
+        client.write_all(&buffer[..length]).await?;
+    }
+}
+
 fn replace_port(url: &str, port: u16) -> String {
     let mut url = reqwest::Url::parse(url).unwrap();
     url.set_host(Some("127.0.0.1")).unwrap();
     url.set_port(Some(port)).unwrap();
+    let parameters: Vec<_> = url
+        .query_pairs()
+        .filter(|(key, _)| key != "sslmode")
+        .map(|(key, value)| (key.into_owned(), value.into_owned()))
+        .collect();
+    url.query_pairs_mut()
+        .clear()
+        .extend_pairs(parameters)
+        .append_pair("sslmode", "disable");
     url.to_string()
+}
+
+async fn stalled_reply(
+    proxy: &DatabaseProxy,
+    endpoint: &Endpoint,
+    point: HoldPoint,
+    command: Option<client_message::Command>,
+    token: Option<&str>,
+) -> Reply {
+    proxy.arm(point);
+    let start = tokio::time::Instant::now();
+    let endpoint = endpoint.clone();
+    let token = token.map(str::to_owned);
+    let request = tokio::spawn(async move {
+        match command {
+            Some(command) => endpoint.call(command, token.as_deref()).await,
+            None => read_reply(endpoint.health().await).await,
+        }
+    });
+    proxy.wait_stalled().await;
+    let reply = timeout(Duration::from_secs(8), request)
+        .await
+        .expect("an established but silent database must not hang the HTTP request")
+        .unwrap();
+    let minimum = if point == HoldPoint::ReleasePing {
+        2
+    } else {
+        5
+    };
+    assert!(start.elapsed() >= Duration::from_secs(minimum));
+    assert!(start.elapsed() < Duration::from_secs(8));
+    let error = reply.error(StatusCode::SERVICE_UNAVAILABLE, ErrorCode::Unavailable);
+    assert!(error.message.contains("deadline"));
+    assert_eq!(error.retry_after_seconds, 0);
+    assert!(!reply.headers.contains_key(header::RETRY_AFTER));
+    proxy.resume();
+    proxy.wait_disconnected().await;
+    reply
 }
 
 #[tokio::test(flavor = "multi_thread", worker_threads = 2)]
@@ -1267,6 +1467,232 @@ async fn lost_database_transport_fails_readiness_and_mutations_without_fallback(
         account
     );
     fresh.stop().await;
+    database.pool.close().await;
+}
+
+#[tokio::test(flavor = "multi_thread", worker_threads = 2)]
+#[ignore = "requires isolated PostgreSQL; run just test-integration"]
+async fn stalled_responses_bound_runtime_failures_unknown_writes_and_process_shutdown() {
+    let database = TestDatabase::reset().await;
+    let proxy = DatabaseProxy::start(database.address).await;
+    let url = replace_port(&database.url, proxy.address.port());
+    let (process, endpoint) = ChildCapture::start(&url);
+    assert_eq!(endpoint.health().await.status(), StatusCode::OK);
+    let secret = password();
+    endpoint
+        .register("deadline_keeper", &secret)
+        .await
+        .registered();
+    let session = endpoint.login("deadline_keeper", &secret).await.logged_in();
+    let mut failures = Vec::new();
+
+    failures.push(stalled_reply(&proxy, &endpoint, HoldPoint::Execute, None, None).await);
+    assert_eq!(endpoint.health().await.status(), StatusCode::OK);
+    failures.push(
+        stalled_reply(
+            &proxy,
+            &endpoint,
+            HoldPoint::Execute,
+            Some(current()),
+            Some(&session.session_token),
+        )
+        .await,
+    );
+    assert_eq!(endpoint.health().await.status(), StatusCode::OK);
+    failures.push(
+        stalled_reply(
+            &proxy,
+            &endpoint,
+            HoldPoint::Execute,
+            Some(login("deadline_keeper", &secret)),
+            None,
+        )
+        .await,
+    );
+    assert_eq!(database.session_count().await, 1);
+    assert_eq!(endpoint.health().await.status(), StatusCode::OK);
+    failures.push(
+        stalled_reply(
+            &proxy,
+            &endpoint,
+            HoldPoint::Execute,
+            Some(register("deadline_signup", &secret)),
+            None,
+        )
+        .await,
+    );
+    assert!(
+        failures
+            .last()
+            .unwrap()
+            .error(StatusCode::SERVICE_UNAVAILABLE, ErrorCode::Unavailable)
+            .message
+            .contains("unknown")
+    );
+    assert_eq!(
+        database.account_count().await,
+        2,
+        "withheld acknowledgment must not be mistaken for a rolled-back registration"
+    );
+    endpoint
+        .register("deadline_signup", &secret)
+        .await
+        .error(StatusCode::CONFLICT, ErrorCode::Conflict);
+    assert_eq!(endpoint.health().await.status(), StatusCode::OK);
+    failures.push(
+        stalled_reply(
+            &proxy,
+            &endpoint,
+            HoldPoint::Execute,
+            Some(client_message::Command::Logout(Logout {})),
+            Some(&session.session_token),
+        )
+        .await,
+    );
+    assert!(
+        failures
+            .last()
+            .unwrap()
+            .error(StatusCode::SERVICE_UNAVAILABLE, ErrorCode::Unavailable)
+            .message
+            .contains("unknown")
+    );
+    assert!(
+        !database.has_session(&session.session_token).await,
+        "logout may have committed even though its acknowledgment timed out"
+    );
+    assert_eq!(endpoint.health().await.status(), StatusCode::OK);
+    failures.push(stalled_reply(&proxy, &endpoint, HoldPoint::ReleasePing, None, None).await);
+
+    assert_eq!(endpoint.health().await.status(), StatusCode::OK);
+    proxy.arm(HoldPoint::Execute);
+    let pending_endpoint = endpoint.clone();
+    let pending = tokio::spawn(async move { read_reply(pending_endpoint.health().await).await });
+    proxy.wait_stalled().await;
+    let shutdown_start = tokio::time::Instant::now();
+    process.signal("-TERM");
+    let (reply, logs) = tokio::join!(pending, process.finish(true));
+    failures.push(reply.unwrap());
+    assert!(shutdown_start.elapsed() < Duration::from_secs(9));
+    assert!(logs.contains("shutdown_complete"));
+    proxy.wait_disconnected().await;
+
+    let records: Vec<serde_json::Value> = logs
+        .lines()
+        .map(|line| serde_json::from_str(line).unwrap())
+        .collect();
+    for reply in &failures {
+        let error = reply.error(StatusCode::SERVICE_UNAVAILABLE, ErrorCode::Unavailable);
+        assert!(records.iter().any(|record| {
+            record["fields"]["event"] == "database_deadline"
+                && record["fields"]["error_id"] == error.error_id
+                && record["fields"]["error_kind"] == "client_deadline"
+        }));
+        if !reply.message.request_id.is_empty() {
+            assert!(records.iter().any(|record| {
+                record["fields"]["event"] == "rpc_completed"
+                    && record["fields"]["error_id"] == error.error_id
+                    && record["fields"]["request_id"] == reply.message.request_id
+                    && record["fields"]["status"] == 503
+            }));
+        }
+    }
+    assert!(records.iter().any(|record| {
+        record["fields"]["event"] == "database_deadline"
+            && record["fields"]["phase"] == "database_release"
+            && record["fields"]["deadline_ms"] == 2000
+    }));
+    for sensitive in [&secret, &session.session_token, &url, &database.url] {
+        assert!(
+            !logs.contains(sensitive),
+            "deadline diagnostics must remain sanitized"
+        );
+    }
+    proxy.stop().await;
+    database.pool.close().await;
+}
+
+#[tokio::test(flavor = "multi_thread", worker_threads = 2)]
+#[ignore = "requires isolated PostgreSQL; run just test-integration"]
+async fn stalled_migration_response_aborts_startup_without_background_waiters() {
+    let database = TestDatabase::reset().await;
+    let proxy = DatabaseProxy::start(database.address).await;
+    proxy.arm(HoldPoint::Migration);
+    let url = replace_port(&database.url, proxy.address.port());
+    let config = Config::new(&url, "127.0.0.1:0", None).unwrap();
+    let start = tokio::time::Instant::now();
+    let startup = tokio::spawn(Service::bind(config));
+    proxy.wait_stalled().await;
+    let failure = timeout(Duration::from_secs(8), startup)
+        .await
+        .expect("migration waits must have a client-side deadline")
+        .unwrap()
+        .err()
+        .expect("withheld migration responses must prevent startup");
+    assert_eq!(failure.stage(), "migrations");
+    assert!(!failure.error_id().is_nil());
+    assert!(start.elapsed() >= Duration::from_secs(5));
+    assert!(start.elapsed() < Duration::from_secs(8));
+    assert!(!format!("{failure:?} {failure}").contains(&url));
+    proxy.wait_disconnected().await;
+    timeout(Duration::from_secs(2), async {
+        loop {
+            let connections: i64 = sqlx::query_scalar(
+                "SELECT count(*) FROM pg_stat_activity
+                 WHERE datname = current_database() AND application_name = 'clubscape-server'",
+            )
+            .fetch_one(&database.pool)
+            .await
+            .unwrap();
+            if connections == 0 {
+                break;
+            }
+            sleep(Duration::from_millis(10)).await;
+        }
+    })
+    .await
+    .expect("failed startup must release its own database connections");
+    proxy.stop().await;
+    database.pool.close().await;
+}
+
+#[tokio::test(flavor = "multi_thread", worker_threads = 2)]
+#[ignore = "requires isolated PostgreSQL; run just test-integration"]
+async fn stalled_http_body_is_force_closed_at_the_shutdown_drain_deadline() {
+    let database = TestDatabase::reset().await;
+    let service = TestService::start(&database.url).await;
+    let authority = service.endpoint.base_url.strip_prefix("http://").unwrap();
+    let mut socket = TcpStream::connect(authority).await.unwrap();
+    socket
+        .write_all(
+            format!(
+                "POST /v1/rpc HTTP/1.1\r\nHost: {authority}\r\nContent-Type: {MEDIA_TYPE}\r\n\
+                 Content-Length: 1024\r\nExpect: 100-continue\r\n\r\n"
+            )
+            .as_bytes(),
+        )
+        .await
+        .unwrap();
+    let mut interim = [0; 25];
+    timeout(Duration::from_secs(2), socket.read_exact(&mut interim))
+        .await
+        .expect("the request must enter body receipt before shutdown")
+        .unwrap();
+    assert_eq!(&interim, b"HTTP/1.1 100 Continue\r\n\r\n");
+    let start = tokio::time::Instant::now();
+    let failure = service.stop_result().await.unwrap_err();
+    assert_eq!(failure.kind(), "shutdown_drain_deadline");
+    assert!(start.elapsed() >= Duration::from_secs(6));
+    assert!(start.elapsed() < Duration::from_secs(9));
+    let mut byte = [0];
+    let closed = timeout(Duration::from_secs(1), socket.read(&mut byte))
+        .await
+        .expect("aborted HTTP tasks must close their sockets");
+    assert!(
+        matches!(closed, Ok(0))
+            || closed.is_err_and(|error| error.kind() == std::io::ErrorKind::ConnectionReset)
+    );
+    assert_eq!(database.account_count().await, 0);
     database.pool.close().await;
 }
 

@@ -66,13 +66,7 @@ impl Passwords {
     ) -> Result<bool, CryptoError> {
         let permit = self.admit()?;
         let hash = stored_hash.unwrap_or_else(|| self.dummy_hash.to_string());
-        tokio::task::spawn_blocking(move || {
-            // Cancellation must not release capacity while this worker is still hashing.
-            let _permit = permit;
-            verify_sync(&password, &hash)
-        })
-        .await
-        .map_err(|_| CryptoError::Worker)?
+        password_worker(permit, move || verify_sync(&password, &hash)).await
     }
 }
 
@@ -80,9 +74,17 @@ async fn hash_in_worker(
     password: String,
     permit: OwnedSemaphorePermit,
 ) -> Result<String, CryptoError> {
+    password_worker(permit, move || hash_sync(&password)).await
+}
+
+async fn password_worker<T: Send + 'static>(
+    permit: OwnedSemaphorePermit,
+    work: impl FnOnce() -> Result<T, CryptoError> + Send + 'static,
+) -> Result<T, CryptoError> {
     tokio::task::spawn_blocking(move || {
+        // Cancellation must not release capacity while this worker is still hashing.
         let _permit = permit;
-        hash_sync(&password)
+        work()
     })
     .await
     .map_err(|_| CryptoError::Worker)?
@@ -200,6 +202,40 @@ mod tests {
         ));
         drop(permits);
         assert!(passwords.admit().is_ok());
+    }
+
+    #[tokio::test]
+    async fn cancelled_requests_keep_their_permits_until_blocking_work_finishes() {
+        let passwords = Passwords::new().await.unwrap();
+        let held: Vec<_> = (0..PASSWORD_CONCURRENCY - 1)
+            .map(|_| passwords.admit().unwrap())
+            .collect();
+        let permit = passwords.admit().unwrap();
+        let (started, receive_started) = tokio::sync::oneshot::channel();
+        let (finish, receive_finish) = std::sync::mpsc::sync_channel(1);
+        let worker = tokio::spawn(password_worker(permit, move || {
+            started.send(()).map_err(|_| CryptoError::Worker)?;
+            receive_finish
+                .recv_timeout(std::time::Duration::from_secs(2))
+                .map_err(|_| CryptoError::Worker)?;
+            Ok(())
+        }));
+        receive_started.await.unwrap();
+        worker.abort();
+        assert!(worker.await.unwrap_err().is_cancelled());
+        assert!(matches!(
+            passwords.verify("password".into(), None).await,
+            Err(CryptoError::Busy)
+        ));
+        finish.send(()).unwrap();
+        let released = tokio::time::timeout(
+            std::time::Duration::from_secs(2),
+            passwords.permits.clone().acquire_owned(),
+        )
+        .await
+        .unwrap()
+        .unwrap();
+        drop((released, held));
     }
 
     #[test]

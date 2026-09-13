@@ -29,12 +29,61 @@ configuration. The service does not start or stop Docker.
 
 Startup applies embedded, versioned PostgreSQL migrations before binding.
 Invalid configuration, failed migrations, failed database access and occupied
-ports fail closed. Database acquisition and SQL statements have five-second
-bounds. Ctrl-C and SIGTERM drain HTTP work and close the database pool.
+ports fail closed. Ctrl-C and SIGTERM stop acceptance, drain HTTP work and close
+the database pool within the deadlines below.
 
 The library's `Config::new`, `Service::bind`, `Service::local_addr` and
 `Service::serve(shutdown_future)` support in-process service ownership without
-global configuration changes. `serve` closes its pool after graceful shutdown.
+global configuration changes. `serve` owns all HTTP/1 connection tasks and closes
+its pool after shutdown; it does not leave detached Axum connection tasks running.
+
+## Deadlines and uncertain outcomes
+
+Deadlines use Tokio's monotonic client-side clock, not PostgreSQL responses.
+The server-side five-second statement/lock timeouts remain defense in depth:
+they cannot protect a client from an open connection that withholds responses.
+
+| Wait | Client-side limit |
+| --- | --- |
+| Startup database acquisition, including connect/authentication/setup | 5 seconds |
+| Entire embedded migration run, including migration locks | 5 seconds |
+| Startup dummy-password initialization | 5 seconds |
+| Each database operation group, including acquisition and response receipt | 5 seconds total |
+| Complete account command after body validation, including password work | 10 seconds total |
+| Returning a successful connection to the pool, including its release ping | 2 seconds, inside its operation's remaining deadline |
+| Pool close, including startup-failure cleanup | 2 seconds |
+| HTTP graceful draining after shutdown signal | 6 seconds |
+| Joining force-aborted HTTP tasks after drain expiry | 1 second |
+
+Login's credential lookup and entire session-issuance transaction are separate
+database groups; the account lock, pruning, insert **and commit** share the latter
+group's single five-second deadline. Readiness, registration, account lookup and
+logout each use one group. Request-body receipt still has its separate ten-second
+limit. On shutdown, connection acceptance stops immediately; remaining HTTP work
+is force-aborted after six seconds, followed by at most one second of joining and
+two seconds of pool cleanup (nine seconds total for these async shutdown phases).
+A forced drain/cleanup failure is logged and returns `ServeError`/nonzero process
+status, not a claim of clean draining.
+
+Runtime database/command/release deadlines return HTTP 503 with an `UNAVAILABLE`
+Protobuf error and a fresh error UUID. Valid request UUIDs remain correlated with
+sanitized JSON diagnostics containing the operation, phase and deadline. These
+timeouts do **not** claim a mutation rolled back: a write or commit may already
+have reached PostgreSQL while its acknowledgment was withheld. Write responses
+explicitly report an unknown outcome; these client-deadline responses supply no
+`Retry-After` and never automatically retry a write. Reconcile with authoritative
+account/session state before taking another action. Correlation UUIDs are not
+idempotency keys.
+A forced HTTP disconnect can likewise leave a write's outcome unknown.
+
+Cancelled or failed database operations detach and drop their physical
+connections rather than leaving SQLx's unbounded release/rollback response wait
+running in a background task. Successful release pings are explicitly owned and
+timed. The eight-connection pool has no background minimum-connection maintenance
+or idle/lifetime reaper; connections are checked on acquisition and closed on
+shutdown. Password-worker permits remain owned by their blocking jobs even when
+the requesting future times out or is aborted; fixed-cost hashing finishes before
+its permit is returned.
 
 ## Authentication boundaries
 
@@ -91,8 +140,11 @@ cargo test --quiet -p clubscape-server --test postgres --locked -- --ignored --t
 Tests include two actual binary process launches against the same database,
 SIGTERM/Ctrl-C shutdown, persistent identities/sessions, PostgreSQL constraints,
 bounded concurrent registration/issuance, expiry and scoped pruning, malformed
-HTTP/Protobuf/authentication, actual-peer limits, unavailable database transport
-and startup failures. Test credentials are generated in memory and no services
+HTTP/Protobuf/authentication, actual-peer limits, unavailable database transport,
+open-socket response withholding (including committed writes with lost
+acknowledgments), migration deadlines and bounded/forced shutdown. The proxy
+regressions use only local test connections; they do not pause PostgreSQL or
+modify other services. Test credentials are generated in memory and no services
 are intentionally left running. Passing unit tests does not imply these ignored
 tests ran. Neither evidence class establishes browser signup, a character,
 gameplay, visual fidelity, performance acceptance or RuneLite compatibility.

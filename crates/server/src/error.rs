@@ -1,3 +1,5 @@
+use std::time::Duration;
+
 use axum::{
     body::Body,
     http::{HeaderValue, StatusCode, header},
@@ -91,6 +93,34 @@ impl ApiError {
             error_kind = kind,
             database_code = code,
             "account database operation failed"
+        );
+        error
+    }
+
+    pub(crate) fn deadline(
+        operation: &'static str,
+        phase: &'static str,
+        outcome_unknown: bool,
+        deadline: Duration,
+    ) -> Self {
+        let error = Self::new(
+            StatusCode::SERVICE_UNAVAILABLE,
+            ErrorCode::Unavailable,
+            if outcome_unknown {
+                "The operation deadline expired; its outcome may be unknown. Do not automatically retry."
+            } else {
+                "The account database response deadline expired."
+            },
+        );
+        tracing::error!(
+            event = "database_deadline",
+            error_id = %error.error_id,
+            error_kind = "client_deadline",
+            operation,
+            phase,
+            outcome_unknown,
+            deadline_ms = deadline.as_millis() as u64,
+            "account operation deadline expired"
         );
         error
     }
@@ -262,9 +292,30 @@ impl StartupError {
 }
 
 #[derive(Debug, thiserror::Error)]
-#[error("server listener failed (error ID {error_id})")]
+#[error("server stopped with {kind} (error ID {error_id})")]
 pub struct ServeError {
     pub(crate) error_id: Uuid,
+    kind: &'static str,
+}
+
+impl ServeError {
+    pub(crate) fn new(kind: &'static str) -> Self {
+        let error = Self {
+            error_id: Uuid::new_v4(),
+            kind,
+        };
+        tracing::error!(
+            event = "server_failure",
+            error_id = %error.error_id,
+            error_kind = kind,
+            "account service failure"
+        );
+        error
+    }
+
+    pub fn kind(&self) -> &'static str {
+        self.kind
+    }
 }
 
 #[cfg(test)]
