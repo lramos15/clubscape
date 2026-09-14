@@ -11,7 +11,7 @@
       {"id": "0f5ddddf-0aa0-4908-b0d3-1ffc6b1f7a20", "task": "M1-FLEET-ENGINE-CLOSURE"}
     ],
     "reserved": [
-      {"id": "fdda1fb0-1135-4cf8-8cff-3db550e48f54", "task": "M1-FLEET-BINDING-APPLICATION"}
+      {"id": "ac0f0856-44af-445b-bd90-6db7a1f4fc74", "task": "M1-FLEET-POTION-ASSETS"}
     ],
     "queued": [],
     "parked": [
@@ -26,9 +26,27 @@
   },
   "tasks": [
     {
+      "id": "M1-FLEET-POTION-ASSETS",
+      "goal": "Publish only the additional original source inputs needed by the approved 1-4-dose potion loot adaptation.",
+      "status": "READY",
+      "specs": ["milestones/m1-goblin-loot-approval.json", "tools/cache-import/CONTENT_CLOSURE.md"],
+      "dependencies": ["M1-FLEET-ASSET-CLOSURE"],
+      "allowed_paths": ["tools/cache-import/**", "research/current-source/**", "assets/source/osrs/cache2695/**", "assets/manifests/osrs/**"],
+      "forbidden_paths": ["prompt.md", "crates/**", "content/**", "web/**", "spec/**", "milestones/**", "assets/source/osrs/audio-runtime/**"],
+      "outputs": ["Original item3010/3011/model2697 inputs, dependency closure and source hashes"],
+      "validation_commands": ["python3 tools/cache-import/import_cache.py validate-published"],
+      "test_requirements": ["Original bytes and precise requested IDs", "Existing source/reference/audio outputs unchanged"],
+      "acceptance": ["SQL m1-potion-assets done with no remaining requested source IDs"],
+      "reserved_namespaces": ["asset.source.osrs.*"],
+      "source_notes": ["New IDs were identified by the canonical owner-approved potion pool, not arbitrary content expansion."],
+      "parity_entries": [],
+      "adaptations": ["adaptation.m1.goblin_energy_potion_provisional"],
+      "evidence": []
+    },
+    {
       "id": "M1-FLEET-BINDING-APPLICATION",
       "goal": "Apply source resolutions and the explicit goblin adaptation to canonical content generation without losing coupled state/value updates or provenance.",
-      "status": "READY",
+      "status": "BLOCKED",
       "specs": ["research/runtime-bindings/**", "milestones/m1-goblin-loot-approval.json", "spec/adaptations.md"],
       "dependencies": ["M1-FLEET-SOURCE-BINDINGS", "M1-FLEET-CONTENT-ASSET-REFRESH"],
       "allowed_paths": ["content/m1/**", "tools/m1-content/**", "research/m1-bindings/**", "tools/runtime-bindings/**", "research/runtime-bindings/application*.json"],
@@ -41,7 +59,7 @@
       "source_notes": ["Owner explicitly approved independent1/16 potion event/equal1-4doseweights; no other inference became an approval."],
       "parity_entries": [],
       "adaptations": ["adaptation.m1.goblin_energy_potion_provisional"],
-      "evidence": []
+      "evidence": ["eaf9f926 integrated;104sourcebindings+7coupledupdates and approvedpotioneventapplied.47tests,195sourcechecks,8192lootvectors,5currencycases,23oracles,30routespassed.", "Only one conditional HP/Prayer enum remains active; six dependencies have explicit inactive-scope proofs."]
     },
     {
       "id": "M1-FLEET-ENGINE-CLOSURE",
