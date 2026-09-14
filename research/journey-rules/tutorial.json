@@ -1,0 +1,3675 @@
+{
+  "schema_version": 1,
+  "id": "contract.journey.tutorial",
+  "quest_ref": "quest.learning_the_ropes",
+  "profile_ref": "profile.osrs.current_normal_f2p",
+  "start_ref": "stage.tutorial.appearance",
+  "terminal_refs": [
+    "stage.tutorial.mainland"
+  ],
+  "states": [
+    {
+      "id": "stage.tutorial.appearance",
+      "location_ref": "location.tutorial.start_house",
+      "source_numeric_progress": null,
+      "instruction": "Confirm actual character appearance.",
+      "ui_unlock_refs": [
+        "ui.appearance"
+      ],
+      "basis": {
+        "classification": "verified_reference",
+        "source_refs": [
+          "source.wiki.tutorial_transcript"
+        ]
+      }
+    },
+    {
+      "id": "stage.tutorial.experience",
+      "location_ref": "location.tutorial.start_house",
+      "source_numeric_progress": null,
+      "instruction": "Select one of the three source experience choices.",
+      "ui_unlock_refs": [
+        "ui.experience"
+      ],
+      "basis": {
+        "classification": "verified_reference",
+        "source_refs": [
+          "source.wiki.tutorial_transcript"
+        ]
+      }
+    },
+    {
+      "id": "stage.tutorial.guide_greeting",
+      "location_ref": "location.tutorial.start_house",
+      "source_numeric_progress": null,
+      "instruction": "Speak to the Gielinor Guide; introducing settings is a real dialogue.",
+      "ui_unlock_refs": [],
+      "basis": {
+        "classification": "verified_reference",
+        "source_refs": [
+          "source.wiki.tutorial_transcript"
+        ]
+      }
+    },
+    {
+      "id": "stage.tutorial.settings_open",
+      "location_ref": "location.tutorial.start_house",
+      "source_numeric_progress": null,
+      "instruction": "Open Settings, not merely click the guide again.",
+      "ui_unlock_refs": [
+        "ui.settings"
+      ],
+      "basis": {
+        "classification": "verified_reference",
+        "source_refs": [
+          "source.wiki.tutorial_transcript"
+        ]
+      }
+    },
+    {
+      "id": "stage.tutorial.guide_settings",
+      "location_ref": "location.tutorial.start_house",
+      "source_numeric_progress": null,
+      "instruction": "Hear guide's explanation and permission to use the door.",
+      "ui_unlock_refs": [],
+      "basis": {
+        "classification": "verified_reference",
+        "source_refs": [
+          "source.wiki.tutorial_transcript"
+        ]
+      }
+    },
+    {
+      "id": "stage.tutorial.starting_exit",
+      "location_ref": "location.tutorial.start_house",
+      "source_numeric_progress": null,
+      "instruction": "Walk to and pass the indicated eastern door.",
+      "ui_unlock_refs": [],
+      "basis": {
+        "classification": "verified_reference",
+        "source_refs": [
+          "source.wiki.tutorial_transcript"
+        ]
+      }
+    },
+    {
+      "id": "stage.tutorial.survival_greeting",
+      "location_ref": "location.tutorial.survival",
+      "source_numeric_progress": null,
+      "instruction": "Receive a small fishing net from the Survival Expert.",
+      "ui_unlock_refs": [],
+      "basis": {
+        "classification": "verified_reference",
+        "source_refs": [
+          "source.wiki.tutorial_transcript"
+        ]
+      }
+    },
+    {
+      "id": "stage.tutorial.inventory_open",
+      "location_ref": "location.tutorial.survival",
+      "source_numeric_progress": null,
+      "instruction": "Open inventory to view the net.",
+      "ui_unlock_refs": [
+        "ui.inventory"
+      ],
+      "basis": {
+        "classification": "verified_reference",
+        "source_refs": [
+          "source.wiki.tutorial_transcript"
+        ]
+      }
+    },
+    {
+      "id": "stage.tutorial.catch_shrimp",
+      "location_ref": "location.tutorial.survival",
+      "source_numeric_progress": null,
+      "instruction": "Actually catch raw shrimps using the net.",
+      "ui_unlock_refs": [],
+      "basis": {
+        "classification": "verified_reference",
+        "source_refs": [
+          "source.wiki.tutorial_transcript"
+        ]
+      }
+    },
+    {
+      "id": "stage.tutorial.skills_open",
+      "location_ref": "location.tutorial.survival",
+      "source_numeric_progress": null,
+      "instruction": "Open Skills after the catch.",
+      "ui_unlock_refs": [
+        "ui.skills"
+      ],
+      "basis": {
+        "classification": "verified_reference",
+        "source_refs": [
+          "source.wiki.tutorial_transcript"
+        ]
+      }
+    },
+    {
+      "id": "stage.tutorial.survival_tools",
+      "location_ref": "location.tutorial.survival",
+      "source_numeric_progress": null,
+      "instruction": "Receive bronze axe and tinderbox after the skill explanation.",
+      "ui_unlock_refs": [],
+      "basis": {
+        "classification": "verified_reference",
+        "source_refs": [
+          "source.wiki.tutorial_transcript"
+        ]
+      }
+    },
+    {
+      "id": "stage.tutorial.cut_logs",
+      "location_ref": "location.tutorial.survival",
+      "source_numeric_progress": null,
+      "instruction": "Actually chop a normal tree using the bronze axe.",
+      "ui_unlock_refs": [],
+      "basis": {
+        "classification": "verified_reference",
+        "source_refs": [
+          "source.wiki.tutorial_transcript"
+        ]
+      }
+    },
+    {
+      "id": "stage.tutorial.light_fire",
+      "location_ref": "location.tutorial.survival",
+      "source_numeric_progress": null,
+      "instruction": "Use tinderbox/logs to successfully create a real fire.",
+      "ui_unlock_refs": [],
+      "basis": {
+        "classification": "verified_reference",
+        "source_refs": [
+          "source.wiki.tutorial_transcript"
+        ]
+      }
+    },
+    {
+      "id": "stage.tutorial.cook_shrimp",
+      "location_ref": "location.tutorial.survival",
+      "source_numeric_progress": null,
+      "instruction": "Cook raw shrimps on a fire. Source accepts a resolved burn as well as success.",
+      "ui_unlock_refs": [],
+      "basis": {
+        "classification": "verified_reference",
+        "source_refs": [
+          "source.wiki.tutorial_transcript"
+        ]
+      }
+    },
+    {
+      "id": "stage.tutorial.survival_exit",
+      "location_ref": "location.tutorial.survival",
+      "source_numeric_progress": null,
+      "instruction": "Use the western gate after the cooking attempt.",
+      "ui_unlock_refs": [],
+      "basis": {
+        "classification": "verified_reference",
+        "source_refs": [
+          "source.wiki.tutorial_transcript"
+        ]
+      }
+    },
+    {
+      "id": "stage.tutorial.chef_entry",
+      "location_ref": "location.tutorial.kitchen",
+      "source_numeric_progress": null,
+      "instruction": "Reach and enter the Chef's kitchen via its real door.",
+      "ui_unlock_refs": [],
+      "basis": {
+        "classification": "verified_reference",
+        "source_refs": [
+          "source.wiki.tutorial_transcript"
+        ]
+      }
+    },
+    {
+      "id": "stage.tutorial.chef_greeting",
+      "location_ref": "location.tutorial.kitchen",
+      "source_numeric_progress": null,
+      "instruction": "Receive flour and water from the Master Chef.",
+      "ui_unlock_refs": [],
+      "basis": {
+        "classification": "verified_reference",
+        "source_refs": [
+          "source.wiki.tutorial_transcript"
+        ]
+      }
+    },
+    {
+      "id": "stage.tutorial.make_dough",
+      "location_ref": "location.tutorial.kitchen",
+      "source_numeric_progress": null,
+      "instruction": "Combine pot of flour and bucket of water into dough.",
+      "ui_unlock_refs": [
+        "ui.cooking"
+      ],
+      "basis": {
+        "classification": "verified_reference",
+        "source_refs": [
+          "source.wiki.tutorial_transcript"
+        ]
+      }
+    },
+    {
+      "id": "stage.tutorial.bake_bread",
+      "location_ref": "location.tutorial.kitchen",
+      "source_numeric_progress": null,
+      "instruction": "Use the range for a real bread cooking attempt.",
+      "ui_unlock_refs": [],
+      "basis": {
+        "classification": "assumption",
+        "source_refs": [
+          "source.wiki.tutorial_transcript",
+          "source.wiki.bread"
+        ],
+        "assumption_refs": [
+          "assumption.bread_first_attempt"
+        ]
+      }
+    },
+    {
+      "id": "stage.tutorial.chef_exit",
+      "location_ref": "location.tutorial.kitchen",
+      "source_numeric_progress": null,
+      "instruction": "Leave through the north-west door.",
+      "ui_unlock_refs": [],
+      "basis": {
+        "classification": "verified_reference",
+        "source_refs": [
+          "source.wiki.tutorial_transcript"
+        ]
+      }
+    },
+    {
+      "id": "stage.tutorial.run_toggle",
+      "location_ref": "location.tutorial.kitchen",
+      "source_numeric_progress": null,
+      "instruction": "Use the run orb; running still consumes real energy.",
+      "ui_unlock_refs": [],
+      "basis": {
+        "classification": "inference",
+        "source_refs": [
+          "source.wiki.tutorial_transcript"
+        ]
+      }
+    },
+    {
+      "id": "stage.tutorial.quest_entry",
+      "location_ref": "location.tutorial.quest_house",
+      "source_numeric_progress": null,
+      "instruction": "Follow the path and enter the Quest Guide house.",
+      "ui_unlock_refs": [],
+      "basis": {
+        "classification": "verified_reference",
+        "source_refs": [
+          "source.wiki.tutorial_transcript"
+        ]
+      }
+    },
+    {
+      "id": "stage.tutorial.quest_greeting",
+      "location_ref": "location.tutorial.quest_house",
+      "source_numeric_progress": null,
+      "instruction": "Talk to the Quest Guide and start tracked Learning the Ropes.",
+      "ui_unlock_refs": [],
+      "basis": {
+        "classification": "verified_reference",
+        "source_refs": [
+          "source.wiki.tutorial_transcript"
+        ]
+      }
+    },
+    {
+      "id": "stage.tutorial.journal_open",
+      "location_ref": "location.tutorial.quest_house",
+      "source_numeric_progress": null,
+      "instruction": "Open Quest List/journal.",
+      "ui_unlock_refs": [
+        "ui.quests"
+      ],
+      "basis": {
+        "classification": "verified_reference",
+        "source_refs": [
+          "source.wiki.tutorial_transcript"
+        ]
+      }
+    },
+    {
+      "id": "stage.tutorial.quest_explanation",
+      "location_ref": "location.tutorial.quest_house",
+      "source_numeric_progress": null,
+      "instruction": "Hear the explanation of not-started, active and complete quests.",
+      "ui_unlock_refs": [],
+      "basis": {
+        "classification": "verified_reference",
+        "source_refs": [
+          "source.wiki.tutorial_transcript"
+        ]
+      }
+    },
+    {
+      "id": "stage.tutorial.quest_ladder",
+      "location_ref": "location.tutorial.quest_house",
+      "source_numeric_progress": null,
+      "instruction": "Descend the actual ladder to the dungeon.",
+      "ui_unlock_refs": [],
+      "basis": {
+        "classification": "verified_reference",
+        "source_refs": [
+          "source.wiki.tutorial_transcript"
+        ]
+      }
+    },
+    {
+      "id": "stage.tutorial.mining_greeting",
+      "location_ref": "location.tutorial.mine",
+      "source_numeric_progress": null,
+      "instruction": "Receive bronze pickaxe and mining instruction.",
+      "ui_unlock_refs": [],
+      "basis": {
+        "classification": "verified_reference",
+        "source_refs": [
+          "source.wiki.tutorial_transcript"
+        ]
+      }
+    },
+    {
+      "id": "stage.tutorial.mine_first",
+      "location_ref": "location.tutorial.mine",
+      "source_numeric_progress": null,
+      "instruction": "Mine an actual tin or copper ore. Tin is prompted first.",
+      "ui_unlock_refs": [],
+      "basis": {
+        "classification": "verified_reference",
+        "source_refs": [
+          "source.wiki.tutorial_transcript"
+        ]
+      }
+    },
+    {
+      "id": "stage.tutorial.mine_second",
+      "location_ref": "location.tutorial.mine",
+      "source_numeric_progress": null,
+      "instruction": "Mine until currently holding one of each ore.",
+      "ui_unlock_refs": [],
+      "basis": {
+        "classification": "verified_reference",
+        "source_refs": [
+          "source.wiki.tutorial_transcript"
+        ]
+      }
+    },
+    {
+      "id": "stage.tutorial.smelt_bronze",
+      "location_ref": "location.tutorial.mine",
+      "source_numeric_progress": null,
+      "instruction": "Use the furnace; consume tin+copper and make bronze.",
+      "ui_unlock_refs": [],
+      "basis": {
+        "classification": "verified_reference",
+        "source_refs": [
+          "source.wiki.tutorial_transcript"
+        ]
+      }
+    },
+    {
+      "id": "stage.tutorial.mining_hammer",
+      "location_ref": "location.tutorial.mine",
+      "source_numeric_progress": null,
+      "instruction": "Talk to the instructor for hammer and smithing explanation.",
+      "ui_unlock_refs": [],
+      "basis": {
+        "classification": "verified_reference",
+        "source_refs": [
+          "source.wiki.tutorial_transcript"
+        ]
+      }
+    },
+    {
+      "id": "stage.tutorial.anvil_open",
+      "location_ref": "location.tutorial.mine",
+      "source_numeric_progress": null,
+      "instruction": "Open the smithing interface at an actual anvil.",
+      "ui_unlock_refs": [
+        "ui.smithing"
+      ],
+      "basis": {
+        "classification": "verified_reference",
+        "source_refs": [
+          "source.wiki.tutorial_transcript"
+        ]
+      }
+    },
+    {
+      "id": "stage.tutorial.smith_dagger",
+      "location_ref": "location.tutorial.mine",
+      "source_numeric_progress": null,
+      "instruction": "Select and actually smith a bronze dagger.",
+      "ui_unlock_refs": [],
+      "basis": {
+        "classification": "verified_reference",
+        "source_refs": [
+          "source.wiki.tutorial_transcript"
+        ]
+      }
+    },
+    {
+      "id": "stage.tutorial.mining_exit",
+      "location_ref": "location.tutorial.mine",
+      "source_numeric_progress": null,
+      "instruction": "Pass the mining-to-combat gate.",
+      "ui_unlock_refs": [],
+      "basis": {
+        "classification": "verified_reference",
+        "source_refs": [
+          "source.wiki.tutorial_transcript"
+        ]
+      }
+    },
+    {
+      "id": "stage.tutorial.combat_greeting",
+      "location_ref": "location.tutorial.rat_cave",
+      "source_numeric_progress": null,
+      "instruction": "Talk to Vannaka about wielding equipment.",
+      "ui_unlock_refs": [],
+      "basis": {
+        "classification": "verified_reference",
+        "source_refs": [
+          "source.wiki.tutorial_transcript"
+        ]
+      }
+    },
+    {
+      "id": "stage.tutorial.equipment_open",
+      "location_ref": "location.tutorial.rat_cave",
+      "source_numeric_progress": null,
+      "instruction": "Open Worn Equipment.",
+      "ui_unlock_refs": [
+        "ui.equipment"
+      ],
+      "basis": {
+        "classification": "verified_reference",
+        "source_refs": [
+          "source.wiki.tutorial_transcript"
+        ]
+      }
+    },
+    {
+      "id": "stage.tutorial.equipment_stats_open",
+      "location_ref": "location.tutorial.rat_cave",
+      "source_numeric_progress": null,
+      "instruction": "Open the shield/helmet Equipment Stats button.",
+      "ui_unlock_refs": [
+        "ui.equipment_stats"
+      ],
+      "basis": {
+        "classification": "verified_reference",
+        "source_refs": [
+          "source.wiki.tutorial_transcript"
+        ]
+      }
+    },
+    {
+      "id": "stage.tutorial.equip_dagger",
+      "location_ref": "location.tutorial.rat_cave",
+      "source_numeric_progress": null,
+      "instruction": "Equip the dagger using real inventory/slot ownership.",
+      "ui_unlock_refs": [],
+      "basis": {
+        "classification": "verified_reference",
+        "source_refs": [
+          "source.wiki.tutorial_transcript"
+        ]
+      }
+    },
+    {
+      "id": "stage.tutorial.melee_supply",
+      "location_ref": "location.tutorial.rat_cave",
+      "source_numeric_progress": null,
+      "instruction": "Receive sword/shield, with explicit partial grants if space is limited.",
+      "ui_unlock_refs": [],
+      "basis": {
+        "classification": "verified_reference",
+        "source_refs": [
+          "source.wiki.tutorial_transcript"
+        ]
+      }
+    },
+    {
+      "id": "stage.tutorial.equip_melee",
+      "location_ref": "location.tutorial.rat_cave",
+      "source_numeric_progress": null,
+      "instruction": "Equip bronze sword and wooden shield; replace dagger.",
+      "ui_unlock_refs": [],
+      "basis": {
+        "classification": "verified_reference",
+        "source_refs": [
+          "source.wiki.tutorial_transcript"
+        ]
+      }
+    },
+    {
+      "id": "stage.tutorial.combat_open",
+      "location_ref": "location.tutorial.rat_cave",
+      "source_numeric_progress": null,
+      "instruction": "Open Combat Options; preserve source styles and XP selection.",
+      "ui_unlock_refs": [
+        "ui.combat"
+      ],
+      "basis": {
+        "classification": "verified_reference",
+        "source_refs": [
+          "source.wiki.tutorial_transcript"
+        ]
+      }
+    },
+    {
+      "id": "stage.tutorial.enter_rat_pen",
+      "location_ref": "location.tutorial.rat_cave",
+      "source_numeric_progress": null,
+      "instruction": "Pass through the pen gate with instructor permission.",
+      "ui_unlock_refs": [],
+      "basis": {
+        "classification": "verified_reference",
+        "source_refs": [
+          "source.wiki.tutorial_transcript"
+        ]
+      }
+    },
+    {
+      "id": "stage.tutorial.melee_rat",
+      "location_ref": "location.tutorial.rat_cave",
+      "source_numeric_progress": null,
+      "instruction": "Kill one tutorial rat using actual melee combat; tutorial cannot kill the player.",
+      "ui_unlock_refs": [],
+      "basis": {
+        "classification": "verified_reference",
+        "source_refs": [
+          "source.wiki.tutorial_transcript"
+        ]
+      }
+    },
+    {
+      "id": "stage.tutorial.leave_rat_pen",
+      "location_ref": "location.tutorial.rat_cave",
+      "source_numeric_progress": null,
+      "instruction": "Leave the pen and return to Vannaka.",
+      "ui_unlock_refs": [],
+      "basis": {
+        "classification": "verified_reference",
+        "source_refs": [
+          "source.wiki.tutorial_transcript"
+        ]
+      }
+    },
+    {
+      "id": "stage.tutorial.ranged_supply",
+      "location_ref": "location.tutorial.rat_cave",
+      "source_numeric_progress": null,
+      "instruction": "Receive shortbow and 50 bronze arrows; one free slot yields bow alone.",
+      "ui_unlock_refs": [],
+      "basis": {
+        "classification": "verified_reference",
+        "source_refs": [
+          "source.wiki.tutorial_transcript"
+        ]
+      }
+    },
+    {
+      "id": "stage.tutorial.equip_ranged",
+      "location_ref": "location.tutorial.rat_cave",
+      "source_numeric_progress": null,
+      "instruction": "Equip shortbow and ammunition; a bow must displace weapon AND shield.",
+      "ui_unlock_refs": [],
+      "basis": {
+        "classification": "verified_reference",
+        "source_refs": [
+          "source.wiki.tutorial_transcript"
+        ]
+      }
+    },
+    {
+      "id": "stage.tutorial.ranged_rat",
+      "location_ref": "location.tutorial.rat_cave",
+      "source_numeric_progress": null,
+      "instruction": "Kill a second rat with ranged from outside the pen.",
+      "ui_unlock_refs": [],
+      "basis": {
+        "classification": "verified_reference",
+        "source_refs": [
+          "source.wiki.tutorial_transcript"
+        ]
+      }
+    },
+    {
+      "id": "stage.tutorial.combat_exit",
+      "location_ref": "location.tutorial.rat_cave",
+      "source_numeric_progress": null,
+      "instruction": "Climb the eastern ladder after both combat lessons.",
+      "ui_unlock_refs": [],
+      "basis": {
+        "classification": "verified_reference",
+        "source_refs": [
+          "source.wiki.tutorial_transcript"
+        ]
+      }
+    },
+    {
+      "id": "stage.tutorial.bank_open",
+      "location_ref": "location.tutorial.bank",
+      "source_numeric_progress": null,
+      "instruction": "Open the bank booth; first bank already has 25 coins.",
+      "ui_unlock_refs": [
+        "ui.bank"
+      ],
+      "basis": {
+        "classification": "verified_reference",
+        "source_refs": [
+          "source.wiki.tutorial_transcript"
+        ]
+      }
+    },
+    {
+      "id": "stage.tutorial.bank_close",
+      "location_ref": "location.tutorial.bank",
+      "source_numeric_progress": null,
+      "instruction": "Use real banking if desired, then close it.",
+      "ui_unlock_refs": [],
+      "basis": {
+        "classification": "verified_reference",
+        "source_refs": [
+          "source.wiki.tutorial_transcript"
+        ]
+      }
+    },
+    {
+      "id": "stage.tutorial.poll_inspect",
+      "location_ref": "location.tutorial.bank",
+      "source_numeric_progress": null,
+      "instruction": "Inspect the poll booth and explanation; do not fabricate a vote.",
+      "ui_unlock_refs": [
+        "ui.poll"
+      ],
+      "basis": {
+        "classification": "verified_reference",
+        "source_refs": [
+          "source.wiki.tutorial_transcript"
+        ]
+      }
+    },
+    {
+      "id": "stage.tutorial.account_entry",
+      "location_ref": "location.tutorial.bank",
+      "source_numeric_progress": null,
+      "instruction": "Pass the eastern door only after bank and poll inspection.",
+      "ui_unlock_refs": [],
+      "basis": {
+        "classification": "verified_reference",
+        "source_refs": [
+          "source.wiki.tutorial_transcript"
+        ]
+      }
+    },
+    {
+      "id": "stage.tutorial.account_greeting",
+      "location_ref": "location.tutorial.account_room",
+      "source_numeric_progress": null,
+      "instruction": "Talk to Account Guide.",
+      "ui_unlock_refs": [],
+      "basis": {
+        "classification": "verified_reference",
+        "source_refs": [
+          "source.wiki.tutorial_transcript"
+        ]
+      }
+    },
+    {
+      "id": "stage.tutorial.account_open",
+      "location_ref": "location.tutorial.account_room",
+      "source_numeric_progress": null,
+      "instruction": "Open Account Management.",
+      "ui_unlock_refs": [
+        "ui.account"
+      ],
+      "basis": {
+        "classification": "verified_reference",
+        "source_refs": [
+          "source.wiki.tutorial_transcript"
+        ]
+      }
+    },
+    {
+      "id": "stage.tutorial.account_explanation",
+      "location_ref": "location.tutorial.account_room",
+      "source_numeric_progress": null,
+      "instruction": "Hear membership/worlds/bonds/inbox/security explanation; demonstrated tabs actually open.",
+      "ui_unlock_refs": [
+        "ui.logout",
+        "ui.account_links"
+      ],
+      "basis": {
+        "classification": "verified_reference",
+        "source_refs": [
+          "source.wiki.tutorial_transcript"
+        ]
+      }
+    },
+    {
+      "id": "stage.tutorial.account_exit",
+      "location_ref": "location.tutorial.account_room",
+      "source_numeric_progress": null,
+      "instruction": "Pass the eastern exit.",
+      "ui_unlock_refs": [],
+      "basis": {
+        "classification": "verified_reference",
+        "source_refs": [
+          "source.wiki.tutorial_transcript"
+        ]
+      }
+    },
+    {
+      "id": "stage.tutorial.chapel_entry",
+      "location_ref": "location.tutorial.chapel",
+      "source_numeric_progress": null,
+      "instruction": "Walk to and enter the chapel.",
+      "ui_unlock_refs": [],
+      "basis": {
+        "classification": "verified_reference",
+        "source_refs": [
+          "source.wiki.tutorial_transcript"
+        ]
+      }
+    },
+    {
+      "id": "stage.tutorial.prayer_greeting",
+      "location_ref": "location.tutorial.chapel",
+      "source_numeric_progress": null,
+      "instruction": "Talk to Brother Brace.",
+      "ui_unlock_refs": [],
+      "basis": {
+        "classification": "verified_reference",
+        "source_refs": [
+          "source.wiki.tutorial_transcript"
+        ]
+      }
+    },
+    {
+      "id": "stage.tutorial.prayer_open",
+      "location_ref": "location.tutorial.chapel",
+      "source_numeric_progress": null,
+      "instruction": "Open Prayer.",
+      "ui_unlock_refs": [
+        "ui.prayer"
+      ],
+      "basis": {
+        "classification": "verified_reference",
+        "source_refs": [
+          "source.wiki.tutorial_transcript"
+        ]
+      }
+    },
+    {
+      "id": "stage.tutorial.prayer_explanation",
+      "location_ref": "location.tutorial.chapel",
+      "source_numeric_progress": null,
+      "instruction": "Hear activation, draining, altar recharge and burying bones. Actually praying/burying is optional.",
+      "ui_unlock_refs": [],
+      "basis": {
+        "classification": "verified_reference",
+        "source_refs": [
+          "source.wiki.tutorial_transcript"
+        ]
+      }
+    },
+    {
+      "id": "stage.tutorial.chapel_exit",
+      "location_ref": "location.tutorial.chapel",
+      "source_numeric_progress": null,
+      "instruction": "Leave the chapel by its southern door.",
+      "ui_unlock_refs": [],
+      "basis": {
+        "classification": "verified_reference",
+        "source_refs": [
+          "source.wiki.tutorial_transcript"
+        ]
+      }
+    },
+    {
+      "id": "stage.tutorial.magic_entry",
+      "location_ref": "location.tutorial.magic_house",
+      "source_numeric_progress": null,
+      "instruction": "Follow the real path to the Magic Instructor; Ironman information is optional for normal accounts.",
+      "ui_unlock_refs": [],
+      "basis": {
+        "classification": "verified_reference",
+        "source_refs": [
+          "source.wiki.tutorial_transcript"
+        ]
+      }
+    },
+    {
+      "id": "stage.tutorial.magic_greeting",
+      "location_ref": "location.tutorial.magic_house",
+      "source_numeric_progress": null,
+      "instruction": "Talk to Terrova.",
+      "ui_unlock_refs": [],
+      "basis": {
+        "classification": "verified_reference",
+        "source_refs": [
+          "source.wiki.tutorial_transcript"
+        ]
+      }
+    },
+    {
+      "id": "stage.tutorial.magic_open",
+      "location_ref": "location.tutorial.magic_house",
+      "source_numeric_progress": null,
+      "instruction": "Open spellbook; initial list is filtered by available Magic level.",
+      "ui_unlock_refs": [
+        "ui.magic"
+      ],
+      "basis": {
+        "classification": "verified_reference",
+        "source_refs": [
+          "source.wiki.tutorial_transcript"
+        ]
+      }
+    },
+    {
+      "id": "stage.tutorial.magic_supply",
+      "location_ref": "location.tutorial.magic_house",
+      "source_numeric_progress": null,
+      "instruction": "Receive five air and five mind runes.",
+      "ui_unlock_refs": [],
+      "basis": {
+        "classification": "verified_reference",
+        "source_refs": [
+          "source.wiki.tutorial_transcript"
+        ]
+      }
+    },
+    {
+      "id": "stage.tutorial.wind_strike",
+      "location_ref": "location.tutorial.magic_house",
+      "source_numeric_progress": null,
+      "instruction": "Select Wind Strike and target a tutorial chicken; actually cast once.",
+      "ui_unlock_refs": [],
+      "basis": {
+        "classification": "verified_reference",
+        "source_refs": [
+          "source.wiki.tutorial_transcript"
+        ]
+      }
+    },
+    {
+      "id": "stage.tutorial.departure_offer",
+      "location_ref": "location.tutorial.magic_house",
+      "source_numeric_progress": null,
+      "instruction": "Learning the Ropes is complete and pays 1 QP; still on island until authorized departure.",
+      "ui_unlock_refs": [
+        "ui.quest_reward"
+      ],
+      "basis": {
+        "classification": "verified_reference",
+        "source_refs": [
+          "source.wiki.tutorial_transcript"
+        ]
+      }
+    },
+    {
+      "id": "stage.tutorial.departure_confirmation",
+      "location_ref": "location.tutorial.magic_house",
+      "source_numeric_progress": null,
+      "instruction": "Confirm mainland travel and normal-account status, or ask about Ironman and return later.",
+      "ui_unlock_refs": [],
+      "basis": {
+        "classification": "verified_reference",
+        "source_refs": [
+          "source.wiki.tutorial_transcript"
+        ]
+      }
+    },
+    {
+      "id": "stage.tutorial.home_teleport",
+      "location_ref": "location.tutorial.magic_house",
+      "source_numeric_progress": null,
+      "instruction": "Cast real Lumbridge Home Teleport; no runes, no XP, not an instant stage command.",
+      "ui_unlock_refs": [],
+      "basis": {
+        "classification": "verified_reference",
+        "source_refs": [
+          "source.wiki.tutorial_transcript"
+        ]
+      }
+    },
+    {
+      "id": "stage.tutorial.teleport_channel",
+      "location_ref": "location.tutorial.magic_house",
+      "source_numeric_progress": null,
+      "instruction": "Complete default 24-tick Home Teleport or retry after interruption.",
+      "ui_unlock_refs": [],
+      "basis": {
+        "classification": "verified_reference",
+        "source_refs": [
+          "source.wiki.tutorial_transcript"
+        ]
+      }
+    },
+    {
+      "id": "stage.tutorial.mainland",
+      "location_ref": "location.lumbridge.castle_arrival",
+      "source_numeric_progress": null,
+      "instruction": "Arrive on the selected experience branch with reconciled possessions; tutorial is permanently complete.",
+      "ui_unlock_refs": [],
+      "basis": {
+        "classification": "verified_reference",
+        "source_refs": [
+          "source.wiki.tutorial_transcript"
+        ]
+      },
+      "location_alternative_refs": [
+        "location.lumbridge.castle_arrival",
+        "location.lumbridge.jon_arrival"
+      ]
+    }
+  ],
+  "transitions": [
+    {
+      "id": "transition.tutorial.appearance",
+      "from_ref": "stage.tutorial.appearance",
+      "to_ref": "stage.tutorial.experience",
+      "event_ref": "event.appearance.confirmed",
+      "guard": {
+        "all": [
+          {
+            "path": "event.validated",
+            "op": "eq",
+            "value": true
+          }
+        ]
+      },
+      "effects": [
+        {
+          "op": "set",
+          "path": "state.appearance_confirmed",
+          "value": true
+        }
+      ],
+      "basis": {
+        "classification": "verified_reference",
+        "source_refs": [
+          "source.wiki.tutorial_transcript"
+        ]
+      }
+    },
+    {
+      "id": "transition.tutorial.experience",
+      "from_ref": "stage.tutorial.experience",
+      "to_ref": "stage.tutorial.guide_greeting",
+      "event_ref": "event.experience.selected",
+      "guard": {
+        "all": [
+          {
+            "path": "event.choice",
+            "op": "in",
+            "value": [
+              "brand_new",
+              "returning",
+              "experienced"
+            ]
+          }
+        ]
+      },
+      "effects": [
+        {
+          "op": "mark",
+          "key": "selected_experience",
+          "from_path": "event.choice"
+        }
+      ],
+      "basis": {
+        "classification": "verified_reference",
+        "source_refs": [
+          "source.wiki.tutorial_transcript"
+        ]
+      }
+    },
+    {
+      "id": "transition.tutorial.guide_intro",
+      "from_ref": "stage.tutorial.guide_greeting",
+      "to_ref": "stage.tutorial.settings_open",
+      "event_ref": "event.dialogue.completed",
+      "guard": {
+        "all": [
+          {
+            "path": "event.npc_ref",
+            "op": "eq",
+            "value": "npc.gielinor_guide"
+          },
+          {
+            "path": "event.topic",
+            "op": "eq",
+            "value": "greeting_and_settings"
+          }
+        ]
+      },
+      "effects": [],
+      "basis": {
+        "classification": "verified_reference",
+        "source_refs": [
+          "source.wiki.tutorial_transcript"
+        ]
+      }
+    },
+    {
+      "id": "transition.tutorial.settings",
+      "from_ref": "stage.tutorial.settings_open",
+      "to_ref": "stage.tutorial.guide_settings",
+      "event_ref": "event.ui.opened",
+      "guard": {
+        "all": [
+          {
+            "path": "event.ui_ref",
+            "op": "eq",
+            "value": "ui.settings"
+          }
+        ]
+      },
+      "effects": [],
+      "basis": {
+        "classification": "verified_reference",
+        "source_refs": [
+          "source.wiki.tutorial_transcript"
+        ]
+      }
+    },
+    {
+      "id": "transition.tutorial.guide_exit_permission",
+      "from_ref": "stage.tutorial.guide_settings",
+      "to_ref": "stage.tutorial.starting_exit",
+      "event_ref": "event.dialogue.completed",
+      "guard": {
+        "all": [
+          {
+            "path": "event.npc_ref",
+            "op": "eq",
+            "value": "npc.gielinor_guide"
+          },
+          {
+            "path": "event.topic",
+            "op": "eq",
+            "value": "settings_and_next_instructor"
+          }
+        ]
+      },
+      "effects": [],
+      "basis": {
+        "classification": "verified_reference",
+        "source_refs": [
+          "source.wiki.tutorial_transcript"
+        ]
+      }
+    },
+    {
+      "id": "transition.tutorial.starting_door",
+      "from_ref": "stage.tutorial.starting_exit",
+      "to_ref": "stage.tutorial.survival_greeting",
+      "event_ref": "event.world.transitioned",
+      "guard": {
+        "all": [
+          {
+            "path": "event.to_ref",
+            "op": "eq",
+            "value": "location.tutorial.survival"
+          },
+          {
+            "path": "event.link_ref",
+            "op": "eq",
+            "value": "object.tutorial.start_door"
+          }
+        ]
+      },
+      "effects": [],
+      "basis": {
+        "classification": "verified_reference",
+        "source_refs": [
+          "source.wiki.tutorial_transcript"
+        ]
+      }
+    },
+    {
+      "id": "transition.tutorial.net",
+      "from_ref": "stage.tutorial.survival_greeting",
+      "to_ref": "stage.tutorial.inventory_open",
+      "event_ref": "event.dialogue.completed",
+      "guard": {
+        "all": [
+          {
+            "path": "event.npc_ref",
+            "op": "eq",
+            "value": "npc.survival_expert"
+          },
+          {
+            "path": "event.topic",
+            "op": "eq",
+            "value": "fishing_intro"
+          },
+          {
+            "path": "state.inventory.free_slots",
+            "op": "gte",
+            "value": 1
+          }
+        ]
+      },
+      "effects": [
+        {
+          "op": "grant",
+          "grant_ref": "grant.tutorial.net"
+        }
+      ],
+      "basis": {
+        "classification": "verified_reference",
+        "source_refs": [
+          "source.wiki.tutorial_transcript"
+        ]
+      }
+    },
+    {
+      "id": "transition.tutorial.inventory",
+      "from_ref": "stage.tutorial.inventory_open",
+      "to_ref": "stage.tutorial.catch_shrimp",
+      "event_ref": "event.ui.opened",
+      "guard": {
+        "all": [
+          {
+            "path": "event.ui_ref",
+            "op": "eq",
+            "value": "ui.inventory"
+          }
+        ]
+      },
+      "effects": [],
+      "basis": {
+        "classification": "verified_reference",
+        "source_refs": [
+          "source.wiki.tutorial_transcript"
+        ]
+      }
+    },
+    {
+      "id": "transition.tutorial.shrimp",
+      "from_ref": "stage.tutorial.catch_shrimp",
+      "to_ref": "stage.tutorial.skills_open",
+      "event_ref": "event.gather.succeeded",
+      "guard": {
+        "all": [
+          {
+            "path": "event.rule_ref",
+            "op": "eq",
+            "value": "rule.fishing.shrimps"
+          },
+          {
+            "path": "event.item_ref",
+            "op": "eq",
+            "value": "item.shrimps.raw"
+          }
+        ]
+      },
+      "effects": [
+        {
+          "op": "mark",
+          "key": "caught_shrimp"
+        }
+      ],
+      "basis": {
+        "classification": "verified_reference",
+        "source_refs": [
+          "source.wiki.tutorial_transcript"
+        ]
+      }
+    },
+    {
+      "id": "transition.tutorial.skills",
+      "from_ref": "stage.tutorial.skills_open",
+      "to_ref": "stage.tutorial.survival_tools",
+      "event_ref": "event.ui.opened",
+      "guard": {
+        "all": [
+          {
+            "path": "event.ui_ref",
+            "op": "eq",
+            "value": "ui.skills"
+          }
+        ]
+      },
+      "effects": [],
+      "basis": {
+        "classification": "verified_reference",
+        "source_refs": [
+          "source.wiki.tutorial_transcript"
+        ]
+      }
+    },
+    {
+      "id": "transition.tutorial.survival_tools",
+      "from_ref": "stage.tutorial.survival_tools",
+      "to_ref": "stage.tutorial.cut_logs",
+      "event_ref": "event.dialogue.completed",
+      "guard": {
+        "all": [
+          {
+            "path": "event.npc_ref",
+            "op": "eq",
+            "value": "npc.survival_expert"
+          },
+          {
+            "path": "event.topic",
+            "op": "eq",
+            "value": "woodcutting_firemaking_intro"
+          },
+          {
+            "path": "state.inventory.free_slots",
+            "op": "gte",
+            "value": 2
+          }
+        ]
+      },
+      "effects": [
+        {
+          "op": "grant",
+          "grant_ref": "grant.tutorial.survival_tools"
+        }
+      ],
+      "basis": {
+        "classification": "assumption",
+        "source_refs": [
+          "source.wiki.tutorial_transcript"
+        ],
+        "assumption_refs": [
+          "assumption.multi_item_grant_capacity"
+        ]
+      }
+    },
+    {
+      "id": "transition.tutorial.logs",
+      "from_ref": "stage.tutorial.cut_logs",
+      "to_ref": "stage.tutorial.light_fire",
+      "event_ref": "event.gather.succeeded",
+      "guard": {
+        "all": [
+          {
+            "path": "event.rule_ref",
+            "op": "eq",
+            "value": "rule.woodcutting.normal"
+          },
+          {
+            "path": "event.item_ref",
+            "op": "eq",
+            "value": "item.logs.normal"
+          }
+        ]
+      },
+      "effects": [],
+      "basis": {
+        "classification": "verified_reference",
+        "source_refs": [
+          "source.wiki.tutorial_transcript"
+        ]
+      }
+    },
+    {
+      "id": "transition.tutorial.fire",
+      "from_ref": "stage.tutorial.light_fire",
+      "to_ref": "stage.tutorial.cook_shrimp",
+      "event_ref": "event.fire.lit",
+      "guard": {
+        "all": [
+          {
+            "path": "event.rule_ref",
+            "op": "eq",
+            "value": "rule.firemaking.normal"
+          }
+        ]
+      },
+      "effects": [],
+      "basis": {
+        "classification": "verified_reference",
+        "source_refs": [
+          "source.wiki.tutorial_transcript"
+        ]
+      }
+    },
+    {
+      "id": "transition.tutorial.shrimp_cooked",
+      "from_ref": "stage.tutorial.cook_shrimp",
+      "to_ref": "stage.tutorial.survival_exit",
+      "event_ref": "event.cook.resolved",
+      "guard": {
+        "all": [
+          {
+            "path": "event.rule_ref",
+            "op": "eq",
+            "value": "rule.cooking.shrimps"
+          },
+          {
+            "path": "event.outcome",
+            "op": "in",
+            "value": [
+              "cooked",
+              "burnt"
+            ]
+          },
+          {
+            "path": "event.facility",
+            "op": "eq",
+            "value": "fire"
+          }
+        ]
+      },
+      "effects": [
+        {
+          "op": "mark",
+          "key": "shrimp_attempt"
+        }
+      ],
+      "basis": {
+        "classification": "verified_reference",
+        "source_refs": [
+          "source.wiki.tutorial_transcript"
+        ]
+      }
+    },
+    {
+      "id": "transition.tutorial.survival_gate",
+      "from_ref": "stage.tutorial.survival_exit",
+      "to_ref": "stage.tutorial.chef_entry",
+      "event_ref": "event.world.transitioned",
+      "guard": {
+        "all": [
+          {
+            "path": "event.to_ref",
+            "op": "eq",
+            "value": "location.tutorial.kitchen"
+          },
+          {
+            "path": "event.link_ref",
+            "op": "eq",
+            "value": "object.tutorial.survival_gate"
+          }
+        ]
+      },
+      "effects": [],
+      "basis": {
+        "classification": "verified_reference",
+        "source_refs": [
+          "source.wiki.tutorial_transcript"
+        ]
+      }
+    },
+    {
+      "id": "transition.tutorial.chef_door",
+      "from_ref": "stage.tutorial.chef_entry",
+      "to_ref": "stage.tutorial.chef_greeting",
+      "event_ref": "event.world.transitioned",
+      "guard": {
+        "all": [
+          {
+            "path": "event.to_ref",
+            "op": "eq",
+            "value": "location.tutorial.kitchen"
+          },
+          {
+            "path": "event.link_ref",
+            "op": "eq",
+            "value": "object.tutorial.chef_entry"
+          }
+        ]
+      },
+      "effects": [],
+      "basis": {
+        "classification": "verified_reference",
+        "source_refs": [
+          "source.wiki.tutorial_transcript"
+        ]
+      }
+    },
+    {
+      "id": "transition.tutorial.chef_ingredients",
+      "from_ref": "stage.tutorial.chef_greeting",
+      "to_ref": "stage.tutorial.make_dough",
+      "event_ref": "event.dialogue.completed",
+      "guard": {
+        "all": [
+          {
+            "path": "event.npc_ref",
+            "op": "eq",
+            "value": "npc.master_chef"
+          },
+          {
+            "path": "event.topic",
+            "op": "eq",
+            "value": "bread_intro"
+          },
+          {
+            "path": "state.inventory.free_slots",
+            "op": "gte",
+            "value": 2
+          }
+        ]
+      },
+      "effects": [
+        {
+          "op": "grant",
+          "grant_ref": "grant.tutorial.chef_ingredients"
+        }
+      ],
+      "basis": {
+        "classification": "verified_reference",
+        "source_refs": [
+          "source.wiki.tutorial_transcript"
+        ]
+      }
+    },
+    {
+      "id": "transition.tutorial.dough",
+      "from_ref": "stage.tutorial.make_dough",
+      "to_ref": "stage.tutorial.bake_bread",
+      "event_ref": "event.craft.succeeded",
+      "guard": {
+        "all": [
+          {
+            "path": "event.rule_ref",
+            "op": "eq",
+            "value": "rule.cooking.dough"
+          },
+          {
+            "path": "event.output_item_ref",
+            "op": "eq",
+            "value": "item.bread.dough"
+          }
+        ]
+      },
+      "effects": [],
+      "basis": {
+        "classification": "verified_reference",
+        "source_refs": [
+          "source.wiki.tutorial_transcript"
+        ]
+      }
+    },
+    {
+      "id": "transition.tutorial.bread",
+      "from_ref": "stage.tutorial.bake_bread",
+      "to_ref": "stage.tutorial.chef_exit",
+      "event_ref": "event.cook.resolved",
+      "guard": {
+        "all": [
+          {
+            "path": "event.rule_ref",
+            "op": "eq",
+            "value": "rule.cooking.bread"
+          },
+          {
+            "path": "event.outcome",
+            "op": "in",
+            "value": [
+              "cooked",
+              "burnt"
+            ]
+          },
+          {
+            "path": "event.facility",
+            "op": "eq",
+            "value": "range"
+          }
+        ]
+      },
+      "effects": [],
+      "basis": {
+        "classification": "assumption",
+        "source_refs": [
+          "source.wiki.tutorial_transcript",
+          "source.wiki.bread"
+        ],
+        "assumption_refs": [
+          "assumption.bread_first_attempt"
+        ]
+      }
+    },
+    {
+      "id": "transition.tutorial.chef_exit",
+      "from_ref": "stage.tutorial.chef_exit",
+      "to_ref": "stage.tutorial.run_toggle",
+      "event_ref": "event.world.transitioned",
+      "guard": {
+        "all": [
+          {
+            "path": "event.to_ref",
+            "op": "eq",
+            "value": "location.tutorial.kitchen"
+          },
+          {
+            "path": "event.link_ref",
+            "op": "eq",
+            "value": "object.tutorial.chef_exit"
+          }
+        ]
+      },
+      "effects": [],
+      "basis": {
+        "classification": "verified_reference",
+        "source_refs": [
+          "source.wiki.tutorial_transcript"
+        ]
+      }
+    },
+    {
+      "id": "transition.tutorial.run",
+      "from_ref": "stage.tutorial.run_toggle",
+      "to_ref": "stage.tutorial.quest_entry",
+      "event_ref": "event.setting.changed",
+      "guard": {
+        "all": [
+          {
+            "path": "event.setting",
+            "op": "eq",
+            "value": "run_enabled"
+          },
+          {
+            "path": "event.value",
+            "op": "eq",
+            "value": true
+          }
+        ]
+      },
+      "effects": [],
+      "basis": {
+        "classification": "inference",
+        "source_refs": [
+          "source.wiki.tutorial_transcript"
+        ]
+      }
+    },
+    {
+      "id": "transition.tutorial.quest_door",
+      "from_ref": "stage.tutorial.quest_entry",
+      "to_ref": "stage.tutorial.quest_greeting",
+      "event_ref": "event.world.transitioned",
+      "guard": {
+        "all": [
+          {
+            "path": "event.to_ref",
+            "op": "eq",
+            "value": "location.tutorial.quest_house"
+          },
+          {
+            "path": "event.link_ref",
+            "op": "eq",
+            "value": "object.tutorial.quest_entry"
+          }
+        ]
+      },
+      "effects": [],
+      "basis": {
+        "classification": "verified_reference",
+        "source_refs": [
+          "source.wiki.tutorial_transcript"
+        ]
+      }
+    },
+    {
+      "id": "transition.tutorial.quest_intro",
+      "from_ref": "stage.tutorial.quest_greeting",
+      "to_ref": "stage.tutorial.journal_open",
+      "event_ref": "event.dialogue.completed",
+      "guard": {
+        "all": [
+          {
+            "path": "event.npc_ref",
+            "op": "eq",
+            "value": "npc.quest_guide"
+          },
+          {
+            "path": "event.topic",
+            "op": "eq",
+            "value": "quest_intro"
+          }
+        ]
+      },
+      "effects": [
+        {
+          "op": "set",
+          "path": "state.quests.learning_the_ropes.status",
+          "value": "in_progress"
+        }
+      ],
+      "basis": {
+        "classification": "assumption",
+        "source_refs": [
+          "source.wiki.learning_the_ropes",
+          "source.wiki.tutorial_transcript"
+        ],
+        "assumption_refs": [
+          "assumption.quest_tracking_start"
+        ]
+      }
+    },
+    {
+      "id": "transition.tutorial.journal",
+      "from_ref": "stage.tutorial.journal_open",
+      "to_ref": "stage.tutorial.quest_explanation",
+      "event_ref": "event.ui.opened",
+      "guard": {
+        "all": [
+          {
+            "path": "event.ui_ref",
+            "op": "eq",
+            "value": "ui.quests"
+          }
+        ]
+      },
+      "effects": [],
+      "basis": {
+        "classification": "verified_reference",
+        "source_refs": [
+          "source.wiki.tutorial_transcript"
+        ]
+      }
+    },
+    {
+      "id": "transition.tutorial.quest_explanation",
+      "from_ref": "stage.tutorial.quest_explanation",
+      "to_ref": "stage.tutorial.quest_ladder",
+      "event_ref": "event.dialogue.completed",
+      "guard": {
+        "all": [
+          {
+            "path": "event.npc_ref",
+            "op": "eq",
+            "value": "npc.quest_guide"
+          },
+          {
+            "path": "event.topic",
+            "op": "eq",
+            "value": "quest_journal_explanation"
+          }
+        ]
+      },
+      "effects": [],
+      "basis": {
+        "classification": "verified_reference",
+        "source_refs": [
+          "source.wiki.tutorial_transcript"
+        ]
+      }
+    },
+    {
+      "id": "transition.tutorial.quest_ladder",
+      "from_ref": "stage.tutorial.quest_ladder",
+      "to_ref": "stage.tutorial.mining_greeting",
+      "event_ref": "event.world.transitioned",
+      "guard": {
+        "all": [
+          {
+            "path": "event.to_ref",
+            "op": "eq",
+            "value": "location.tutorial.mine"
+          },
+          {
+            "path": "event.link_ref",
+            "op": "eq",
+            "value": "object.tutorial.quest_ladder"
+          }
+        ]
+      },
+      "effects": [],
+      "basis": {
+        "classification": "verified_reference",
+        "source_refs": [
+          "source.wiki.tutorial_transcript"
+        ]
+      }
+    },
+    {
+      "id": "transition.tutorial.pickaxe",
+      "from_ref": "stage.tutorial.mining_greeting",
+      "to_ref": "stage.tutorial.mine_first",
+      "event_ref": "event.dialogue.completed",
+      "guard": {
+        "all": [
+          {
+            "path": "event.npc_ref",
+            "op": "eq",
+            "value": "npc.mining_instructor"
+          },
+          {
+            "path": "event.topic",
+            "op": "eq",
+            "value": "mining_intro"
+          },
+          {
+            "path": "state.inventory.free_slots",
+            "op": "gte",
+            "value": 1
+          }
+        ]
+      },
+      "effects": [
+        {
+          "op": "grant",
+          "grant_ref": "grant.tutorial.pickaxe"
+        }
+      ],
+      "basis": {
+        "classification": "verified_reference",
+        "source_refs": [
+          "source.wiki.tutorial_transcript"
+        ]
+      }
+    },
+    {
+      "id": "transition.tutorial.first_ore",
+      "from_ref": "stage.tutorial.mine_first",
+      "to_ref": "stage.tutorial.mine_second",
+      "event_ref": "event.gather.succeeded",
+      "guard": {
+        "all": [
+          {
+            "path": "event.rule_ref",
+            "op": "in",
+            "value": [
+              "rule.mining.copper",
+              "rule.mining.tin"
+            ]
+          }
+        ]
+      },
+      "effects": [],
+      "basis": {
+        "classification": "inference",
+        "source_refs": [
+          "source.wiki.tutorial_transcript"
+        ]
+      }
+    },
+    {
+      "id": "transition.tutorial.both_ores",
+      "from_ref": "stage.tutorial.mine_second",
+      "to_ref": "stage.tutorial.smelt_bronze",
+      "event_ref": "event.gather.succeeded",
+      "guard": {
+        "all": [
+          {
+            "path": "event.rule_ref",
+            "op": "in",
+            "value": [
+              "rule.mining.copper",
+              "rule.mining.tin"
+            ]
+          },
+          {
+            "path": "state.inventory.tin_ore",
+            "op": "gte",
+            "value": 1
+          },
+          {
+            "path": "state.inventory.copper_ore",
+            "op": "gte",
+            "value": 1
+          }
+        ]
+      },
+      "effects": [],
+      "basis": {
+        "classification": "inference",
+        "source_refs": [
+          "source.wiki.tutorial_transcript"
+        ]
+      }
+    },
+    {
+      "id": "transition.tutorial.bronze_bar",
+      "from_ref": "stage.tutorial.smelt_bronze",
+      "to_ref": "stage.tutorial.mining_hammer",
+      "event_ref": "event.craft.succeeded",
+      "guard": {
+        "all": [
+          {
+            "path": "event.rule_ref",
+            "op": "eq",
+            "value": "rule.smelting.bronze"
+          },
+          {
+            "path": "event.output_item_ref",
+            "op": "eq",
+            "value": "item.bar.bronze"
+          }
+        ]
+      },
+      "effects": [],
+      "basis": {
+        "classification": "verified_reference",
+        "source_refs": [
+          "source.wiki.tutorial_transcript"
+        ]
+      }
+    },
+    {
+      "id": "transition.tutorial.hammer",
+      "from_ref": "stage.tutorial.mining_hammer",
+      "to_ref": "stage.tutorial.anvil_open",
+      "event_ref": "event.dialogue.completed",
+      "guard": {
+        "all": [
+          {
+            "path": "event.npc_ref",
+            "op": "eq",
+            "value": "npc.mining_instructor"
+          },
+          {
+            "path": "event.topic",
+            "op": "eq",
+            "value": "smithing_intro"
+          },
+          {
+            "any": [
+              {
+                "path": "state.inventory.hammer",
+                "op": "gte",
+                "value": 1
+              },
+              {
+                "path": "state.inventory.free_slots",
+                "op": "gte",
+                "value": 1
+              }
+            ]
+          }
+        ]
+      },
+      "effects": [
+        {
+          "op": "grant",
+          "grant_ref": "grant.tutorial.hammer"
+        }
+      ],
+      "basis": {
+        "classification": "verified_reference",
+        "source_refs": [
+          "source.wiki.tutorial_transcript"
+        ]
+      }
+    },
+    {
+      "id": "transition.tutorial.smithing_menu",
+      "from_ref": "stage.tutorial.anvil_open",
+      "to_ref": "stage.tutorial.smith_dagger",
+      "event_ref": "event.ui.opened",
+      "guard": {
+        "all": [
+          {
+            "path": "event.ui_ref",
+            "op": "eq",
+            "value": "ui.smithing"
+          }
+        ]
+      },
+      "effects": [],
+      "basis": {
+        "classification": "verified_reference",
+        "source_refs": [
+          "source.wiki.tutorial_transcript"
+        ]
+      }
+    },
+    {
+      "id": "transition.tutorial.dagger",
+      "from_ref": "stage.tutorial.smith_dagger",
+      "to_ref": "stage.tutorial.mining_exit",
+      "event_ref": "event.craft.succeeded",
+      "guard": {
+        "all": [
+          {
+            "path": "event.rule_ref",
+            "op": "eq",
+            "value": "rule.smithing.bronze_dagger"
+          },
+          {
+            "path": "event.output_item_ref",
+            "op": "eq",
+            "value": "item.dagger.bronze"
+          }
+        ]
+      },
+      "effects": [],
+      "basis": {
+        "classification": "verified_reference",
+        "source_refs": [
+          "source.wiki.tutorial_transcript"
+        ]
+      }
+    },
+    {
+      "id": "transition.tutorial.mining_gate",
+      "from_ref": "stage.tutorial.mining_exit",
+      "to_ref": "stage.tutorial.combat_greeting",
+      "event_ref": "event.world.transitioned",
+      "guard": {
+        "all": [
+          {
+            "path": "event.to_ref",
+            "op": "eq",
+            "value": "location.tutorial.rat_cave"
+          },
+          {
+            "path": "event.link_ref",
+            "op": "eq",
+            "value": "object.tutorial.mine_gate"
+          }
+        ]
+      },
+      "effects": [],
+      "basis": {
+        "classification": "verified_reference",
+        "source_refs": [
+          "source.wiki.tutorial_transcript"
+        ]
+      }
+    },
+    {
+      "id": "transition.tutorial.combat_intro",
+      "from_ref": "stage.tutorial.combat_greeting",
+      "to_ref": "stage.tutorial.equipment_open",
+      "event_ref": "event.dialogue.completed",
+      "guard": {
+        "all": [
+          {
+            "path": "event.npc_ref",
+            "op": "eq",
+            "value": "npc.combat_instructor"
+          },
+          {
+            "path": "event.topic",
+            "op": "eq",
+            "value": "equipment_intro"
+          }
+        ]
+      },
+      "effects": [],
+      "basis": {
+        "classification": "verified_reference",
+        "source_refs": [
+          "source.wiki.tutorial_transcript"
+        ]
+      }
+    },
+    {
+      "id": "transition.tutorial.equipment",
+      "from_ref": "stage.tutorial.equipment_open",
+      "to_ref": "stage.tutorial.equipment_stats_open",
+      "event_ref": "event.ui.opened",
+      "guard": {
+        "all": [
+          {
+            "path": "event.ui_ref",
+            "op": "eq",
+            "value": "ui.equipment"
+          }
+        ]
+      },
+      "effects": [],
+      "basis": {
+        "classification": "verified_reference",
+        "source_refs": [
+          "source.wiki.tutorial_transcript"
+        ]
+      }
+    },
+    {
+      "id": "transition.tutorial.equipment_stats",
+      "from_ref": "stage.tutorial.equipment_stats_open",
+      "to_ref": "stage.tutorial.equip_dagger",
+      "event_ref": "event.ui.opened",
+      "guard": {
+        "all": [
+          {
+            "path": "event.ui_ref",
+            "op": "eq",
+            "value": "ui.equipment_stats"
+          }
+        ]
+      },
+      "effects": [],
+      "basis": {
+        "classification": "verified_reference",
+        "source_refs": [
+          "source.wiki.tutorial_transcript"
+        ]
+      }
+    },
+    {
+      "id": "transition.tutorial.dagger_equipped",
+      "from_ref": "stage.tutorial.equip_dagger",
+      "to_ref": "stage.tutorial.melee_supply",
+      "event_ref": "event.equipment.changed",
+      "guard": {
+        "all": [
+          {
+            "path": "state.equipment.weapon",
+            "op": "eq",
+            "value": "item.dagger.bronze"
+          }
+        ]
+      },
+      "effects": [],
+      "basis": {
+        "classification": "verified_reference",
+        "source_refs": [
+          "source.wiki.tutorial_transcript"
+        ]
+      }
+    },
+    {
+      "id": "transition.tutorial.melee_gear",
+      "from_ref": "stage.tutorial.melee_supply",
+      "to_ref": "stage.tutorial.equip_melee",
+      "event_ref": "event.dialogue.completed",
+      "guard": {
+        "all": [
+          {
+            "path": "event.npc_ref",
+            "op": "eq",
+            "value": "npc.combat_instructor"
+          },
+          {
+            "path": "event.topic",
+            "op": "eq",
+            "value": "melee_gear"
+          },
+          {
+            "path": "state.inventory.free_slots",
+            "op": "gte",
+            "value": 1
+          }
+        ]
+      },
+      "effects": [
+        {
+          "op": "grant",
+          "grant_ref": "grant.tutorial.melee_gear"
+        }
+      ],
+      "basis": {
+        "classification": "verified_reference",
+        "source_refs": [
+          "source.wiki.tutorial_transcript"
+        ]
+      }
+    },
+    {
+      "id": "transition.tutorial.melee_equipped",
+      "from_ref": "stage.tutorial.equip_melee",
+      "to_ref": "stage.tutorial.combat_open",
+      "event_ref": "event.equipment.changed",
+      "guard": {
+        "all": [
+          {
+            "path": "state.equipment.weapon",
+            "op": "eq",
+            "value": "item.sword.bronze"
+          },
+          {
+            "path": "state.equipment.shield",
+            "op": "eq",
+            "value": "item.shield.wooden"
+          }
+        ]
+      },
+      "effects": [],
+      "basis": {
+        "classification": "verified_reference",
+        "source_refs": [
+          "source.wiki.tutorial_transcript"
+        ]
+      }
+    },
+    {
+      "id": "transition.tutorial.combat_options",
+      "from_ref": "stage.tutorial.combat_open",
+      "to_ref": "stage.tutorial.enter_rat_pen",
+      "event_ref": "event.ui.opened",
+      "guard": {
+        "all": [
+          {
+            "path": "event.ui_ref",
+            "op": "eq",
+            "value": "ui.combat"
+          }
+        ]
+      },
+      "effects": [],
+      "basis": {
+        "classification": "verified_reference",
+        "source_refs": [
+          "source.wiki.tutorial_transcript"
+        ]
+      }
+    },
+    {
+      "id": "transition.tutorial.rat_pen_entry",
+      "from_ref": "stage.tutorial.enter_rat_pen",
+      "to_ref": "stage.tutorial.melee_rat",
+      "event_ref": "event.world.transitioned",
+      "guard": {
+        "all": [
+          {
+            "path": "event.to_ref",
+            "op": "eq",
+            "value": "location.tutorial.rat_cave"
+          },
+          {
+            "path": "event.link_ref",
+            "op": "eq",
+            "value": "object.tutorial.rat_gate"
+          },
+          {
+            "path": "event.side",
+            "op": "eq",
+            "value": "inside"
+          }
+        ]
+      },
+      "effects": [],
+      "basis": {
+        "classification": "verified_reference",
+        "source_refs": [
+          "source.wiki.tutorial_transcript"
+        ]
+      }
+    },
+    {
+      "id": "transition.tutorial.melee_kill",
+      "from_ref": "stage.tutorial.melee_rat",
+      "to_ref": "stage.tutorial.leave_rat_pen",
+      "event_ref": "event.combat.kill_credited",
+      "guard": {
+        "all": [
+          {
+            "path": "event.npc_ref",
+            "op": "eq",
+            "value": "npc.tutorial_rat"
+          },
+          {
+            "path": "event.method",
+            "op": "eq",
+            "value": "melee"
+          }
+        ]
+      },
+      "effects": [
+        {
+          "op": "set",
+          "path": "state.tutorial.melee_kill",
+          "value": true
+        }
+      ],
+      "basis": {
+        "classification": "verified_reference",
+        "source_refs": [
+          "source.wiki.tutorial_transcript"
+        ]
+      }
+    },
+    {
+      "id": "transition.tutorial.rat_pen_exit",
+      "from_ref": "stage.tutorial.leave_rat_pen",
+      "to_ref": "stage.tutorial.ranged_supply",
+      "event_ref": "event.world.transitioned",
+      "guard": {
+        "all": [
+          {
+            "path": "event.to_ref",
+            "op": "eq",
+            "value": "location.tutorial.rat_cave"
+          },
+          {
+            "path": "event.link_ref",
+            "op": "eq",
+            "value": "object.tutorial.rat_gate"
+          },
+          {
+            "path": "event.side",
+            "op": "eq",
+            "value": "outside"
+          }
+        ]
+      },
+      "effects": [],
+      "basis": {
+        "classification": "verified_reference",
+        "source_refs": [
+          "source.wiki.tutorial_transcript"
+        ]
+      }
+    },
+    {
+      "id": "transition.tutorial.ranged_gear",
+      "from_ref": "stage.tutorial.ranged_supply",
+      "to_ref": "stage.tutorial.equip_ranged",
+      "event_ref": "event.dialogue.completed",
+      "guard": {
+        "all": [
+          {
+            "path": "event.npc_ref",
+            "op": "eq",
+            "value": "npc.combat_instructor"
+          },
+          {
+            "path": "event.topic",
+            "op": "eq",
+            "value": "ranged_intro"
+          },
+          {
+            "path": "state.inventory.free_slots",
+            "op": "gte",
+            "value": 1
+          }
+        ]
+      },
+      "effects": [
+        {
+          "op": "grant",
+          "grant_ref": "grant.tutorial.ranged_gear"
+        }
+      ],
+      "basis": {
+        "classification": "verified_reference",
+        "source_refs": [
+          "source.wiki.tutorial_transcript"
+        ]
+      }
+    },
+    {
+      "id": "transition.tutorial.ranged_equipped",
+      "from_ref": "stage.tutorial.equip_ranged",
+      "to_ref": "stage.tutorial.ranged_rat",
+      "event_ref": "event.equipment.changed",
+      "guard": {
+        "all": [
+          {
+            "path": "state.equipment.weapon",
+            "op": "eq",
+            "value": "item.shortbow"
+          },
+          {
+            "path": "state.equipment.ammo",
+            "op": "eq",
+            "value": "item.arrow.bronze"
+          },
+          {
+            "path": "state.equipment.ammo_quantity",
+            "op": "gte",
+            "value": 1
+          }
+        ]
+      },
+      "effects": [],
+      "basis": {
+        "classification": "verified_reference",
+        "source_refs": [
+          "source.wiki.tutorial_transcript"
+        ]
+      }
+    },
+    {
+      "id": "transition.tutorial.ranged_kill",
+      "from_ref": "stage.tutorial.ranged_rat",
+      "to_ref": "stage.tutorial.combat_exit",
+      "event_ref": "event.combat.kill_credited",
+      "guard": {
+        "all": [
+          {
+            "path": "event.npc_ref",
+            "op": "eq",
+            "value": "npc.tutorial_rat"
+          },
+          {
+            "path": "event.method",
+            "op": "eq",
+            "value": "ranged"
+          },
+          {
+            "path": "event.player_outside_pen",
+            "op": "eq",
+            "value": true
+          }
+        ]
+      },
+      "effects": [
+        {
+          "op": "set",
+          "path": "state.tutorial.ranged_kill",
+          "value": true
+        }
+      ],
+      "basis": {
+        "classification": "verified_reference",
+        "source_refs": [
+          "source.wiki.tutorial_transcript"
+        ]
+      }
+    },
+    {
+      "id": "transition.tutorial.combat_ladder",
+      "from_ref": "stage.tutorial.combat_exit",
+      "to_ref": "stage.tutorial.bank_open",
+      "event_ref": "event.world.transitioned",
+      "guard": {
+        "all": [
+          {
+            "path": "event.to_ref",
+            "op": "eq",
+            "value": "location.tutorial.bank"
+          },
+          {
+            "path": "event.link_ref",
+            "op": "eq",
+            "value": "object.tutorial.combat_ladder"
+          }
+        ]
+      },
+      "effects": [],
+      "basis": {
+        "classification": "verified_reference",
+        "source_refs": [
+          "source.wiki.tutorial_transcript"
+        ]
+      }
+    },
+    {
+      "id": "transition.tutorial.bank",
+      "from_ref": "stage.tutorial.bank_open",
+      "to_ref": "stage.tutorial.bank_close",
+      "event_ref": "event.ui.opened",
+      "guard": {
+        "all": [
+          {
+            "path": "event.ui_ref",
+            "op": "eq",
+            "value": "ui.bank"
+          },
+          {
+            "path": "state.bank.seed_claimed",
+            "op": "eq",
+            "value": true
+          }
+        ]
+      },
+      "effects": [
+        {
+          "op": "mark",
+          "key": "bank_opened"
+        }
+      ],
+      "basis": {
+        "classification": "verified_reference",
+        "source_refs": [
+          "source.wiki.tutorial_transcript"
+        ]
+      }
+    },
+    {
+      "id": "transition.tutorial.bank_closed",
+      "from_ref": "stage.tutorial.bank_close",
+      "to_ref": "stage.tutorial.poll_inspect",
+      "event_ref": "event.ui.closed",
+      "guard": {
+        "all": [
+          {
+            "path": "event.ui_ref",
+            "op": "eq",
+            "value": "ui.bank"
+          }
+        ]
+      },
+      "effects": [],
+      "basis": {
+        "classification": "verified_reference",
+        "source_refs": [
+          "source.wiki.tutorial_transcript"
+        ]
+      }
+    },
+    {
+      "id": "transition.tutorial.poll",
+      "from_ref": "stage.tutorial.poll_inspect",
+      "to_ref": "stage.tutorial.account_entry",
+      "event_ref": "event.object.inspected",
+      "guard": {
+        "all": [
+          {
+            "path": "event.object_ref",
+            "op": "eq",
+            "value": "object.tutorial.poll_booth"
+          },
+          {
+            "path": "event.explanation_completed",
+            "op": "eq",
+            "value": true
+          }
+        ]
+      },
+      "effects": [],
+      "basis": {
+        "classification": "verified_reference",
+        "source_refs": [
+          "source.wiki.tutorial_transcript"
+        ]
+      }
+    },
+    {
+      "id": "transition.tutorial.account_door",
+      "from_ref": "stage.tutorial.account_entry",
+      "to_ref": "stage.tutorial.account_greeting",
+      "event_ref": "event.world.transitioned",
+      "guard": {
+        "all": [
+          {
+            "path": "event.to_ref",
+            "op": "eq",
+            "value": "location.tutorial.account_room"
+          },
+          {
+            "path": "event.link_ref",
+            "op": "eq",
+            "value": "object.tutorial.account_entry"
+          }
+        ]
+      },
+      "effects": [],
+      "basis": {
+        "classification": "verified_reference",
+        "source_refs": [
+          "source.wiki.tutorial_transcript"
+        ]
+      }
+    },
+    {
+      "id": "transition.tutorial.account_intro",
+      "from_ref": "stage.tutorial.account_greeting",
+      "to_ref": "stage.tutorial.account_open",
+      "event_ref": "event.dialogue.completed",
+      "guard": {
+        "all": [
+          {
+            "path": "event.npc_ref",
+            "op": "eq",
+            "value": "npc.account_guide"
+          },
+          {
+            "path": "event.topic",
+            "op": "eq",
+            "value": "account_intro"
+          }
+        ]
+      },
+      "effects": [],
+      "basis": {
+        "classification": "verified_reference",
+        "source_refs": [
+          "source.wiki.tutorial_transcript"
+        ]
+      }
+    },
+    {
+      "id": "transition.tutorial.account",
+      "from_ref": "stage.tutorial.account_open",
+      "to_ref": "stage.tutorial.account_explanation",
+      "event_ref": "event.ui.opened",
+      "guard": {
+        "all": [
+          {
+            "path": "event.ui_ref",
+            "op": "eq",
+            "value": "ui.account"
+          }
+        ]
+      },
+      "effects": [],
+      "basis": {
+        "classification": "verified_reference",
+        "source_refs": [
+          "source.wiki.tutorial_transcript"
+        ]
+      }
+    },
+    {
+      "id": "transition.tutorial.account_explanation",
+      "from_ref": "stage.tutorial.account_explanation",
+      "to_ref": "stage.tutorial.account_exit",
+      "event_ref": "event.dialogue.completed",
+      "guard": {
+        "all": [
+          {
+            "path": "event.npc_ref",
+            "op": "eq",
+            "value": "npc.account_guide"
+          },
+          {
+            "path": "event.topic",
+            "op": "eq",
+            "value": "membership_worlds_bonds_security"
+          }
+        ]
+      },
+      "effects": [],
+      "basis": {
+        "classification": "verified_reference",
+        "source_refs": [
+          "source.wiki.tutorial_transcript"
+        ]
+      }
+    },
+    {
+      "id": "transition.tutorial.account_exit",
+      "from_ref": "stage.tutorial.account_exit",
+      "to_ref": "stage.tutorial.chapel_entry",
+      "event_ref": "event.world.transitioned",
+      "guard": {
+        "all": [
+          {
+            "path": "event.to_ref",
+            "op": "eq",
+            "value": "location.tutorial.chapel"
+          },
+          {
+            "path": "event.link_ref",
+            "op": "eq",
+            "value": "object.tutorial.account_exit"
+          }
+        ]
+      },
+      "effects": [],
+      "basis": {
+        "classification": "verified_reference",
+        "source_refs": [
+          "source.wiki.tutorial_transcript"
+        ]
+      }
+    },
+    {
+      "id": "transition.tutorial.chapel_door",
+      "from_ref": "stage.tutorial.chapel_entry",
+      "to_ref": "stage.tutorial.prayer_greeting",
+      "event_ref": "event.world.transitioned",
+      "guard": {
+        "all": [
+          {
+            "path": "event.to_ref",
+            "op": "eq",
+            "value": "location.tutorial.chapel"
+          },
+          {
+            "path": "event.link_ref",
+            "op": "eq",
+            "value": "object.tutorial.chapel_entry"
+          }
+        ]
+      },
+      "effects": [],
+      "basis": {
+        "classification": "verified_reference",
+        "source_refs": [
+          "source.wiki.tutorial_transcript"
+        ]
+      }
+    },
+    {
+      "id": "transition.tutorial.prayer_intro",
+      "from_ref": "stage.tutorial.prayer_greeting",
+      "to_ref": "stage.tutorial.prayer_open",
+      "event_ref": "event.dialogue.completed",
+      "guard": {
+        "all": [
+          {
+            "path": "event.npc_ref",
+            "op": "eq",
+            "value": "npc.brother_brace"
+          },
+          {
+            "path": "event.topic",
+            "op": "eq",
+            "value": "prayer_intro"
+          }
+        ]
+      },
+      "effects": [],
+      "basis": {
+        "classification": "verified_reference",
+        "source_refs": [
+          "source.wiki.tutorial_transcript"
+        ]
+      }
+    },
+    {
+      "id": "transition.tutorial.prayer",
+      "from_ref": "stage.tutorial.prayer_open",
+      "to_ref": "stage.tutorial.prayer_explanation",
+      "event_ref": "event.ui.opened",
+      "guard": {
+        "all": [
+          {
+            "path": "event.ui_ref",
+            "op": "eq",
+            "value": "ui.prayer"
+          }
+        ]
+      },
+      "effects": [],
+      "basis": {
+        "classification": "verified_reference",
+        "source_refs": [
+          "source.wiki.tutorial_transcript"
+        ]
+      }
+    },
+    {
+      "id": "transition.tutorial.prayer_explanation",
+      "from_ref": "stage.tutorial.prayer_explanation",
+      "to_ref": "stage.tutorial.chapel_exit",
+      "event_ref": "event.dialogue.completed",
+      "guard": {
+        "all": [
+          {
+            "path": "event.npc_ref",
+            "op": "eq",
+            "value": "npc.brother_brace"
+          },
+          {
+            "path": "event.topic",
+            "op": "eq",
+            "value": "prayer_activation_points_bones"
+          }
+        ]
+      },
+      "effects": [],
+      "basis": {
+        "classification": "verified_reference",
+        "source_refs": [
+          "source.wiki.tutorial_transcript"
+        ]
+      }
+    },
+    {
+      "id": "transition.tutorial.chapel_exit",
+      "from_ref": "stage.tutorial.chapel_exit",
+      "to_ref": "stage.tutorial.magic_entry",
+      "event_ref": "event.world.transitioned",
+      "guard": {
+        "all": [
+          {
+            "path": "event.to_ref",
+            "op": "eq",
+            "value": "location.tutorial.magic_house"
+          },
+          {
+            "path": "event.link_ref",
+            "op": "eq",
+            "value": "object.tutorial.chapel_exit"
+          }
+        ]
+      },
+      "effects": [],
+      "basis": {
+        "classification": "verified_reference",
+        "source_refs": [
+          "source.wiki.tutorial_transcript"
+        ]
+      }
+    },
+    {
+      "id": "transition.tutorial.magic_entry",
+      "from_ref": "stage.tutorial.magic_entry",
+      "to_ref": "stage.tutorial.magic_greeting",
+      "event_ref": "event.world.transitioned",
+      "guard": {
+        "all": [
+          {
+            "path": "event.to_ref",
+            "op": "eq",
+            "value": "location.tutorial.magic_house"
+          },
+          {
+            "path": "event.link_ref",
+            "op": "eq",
+            "value": "object.tutorial.magic_entry"
+          }
+        ]
+      },
+      "effects": [],
+      "basis": {
+        "classification": "verified_reference",
+        "source_refs": [
+          "source.wiki.tutorial_transcript"
+        ]
+      }
+    },
+    {
+      "id": "transition.tutorial.magic_intro",
+      "from_ref": "stage.tutorial.magic_greeting",
+      "to_ref": "stage.tutorial.magic_open",
+      "event_ref": "event.dialogue.completed",
+      "guard": {
+        "all": [
+          {
+            "path": "event.npc_ref",
+            "op": "eq",
+            "value": "npc.magic_instructor"
+          },
+          {
+            "path": "event.topic",
+            "op": "eq",
+            "value": "magic_intro"
+          }
+        ]
+      },
+      "effects": [],
+      "basis": {
+        "classification": "verified_reference",
+        "source_refs": [
+          "source.wiki.tutorial_transcript"
+        ]
+      }
+    },
+    {
+      "id": "transition.tutorial.magic",
+      "from_ref": "stage.tutorial.magic_open",
+      "to_ref": "stage.tutorial.magic_supply",
+      "event_ref": "event.ui.opened",
+      "guard": {
+        "all": [
+          {
+            "path": "event.ui_ref",
+            "op": "eq",
+            "value": "ui.magic"
+          }
+        ]
+      },
+      "effects": [],
+      "basis": {
+        "classification": "verified_reference",
+        "source_refs": [
+          "source.wiki.tutorial_transcript"
+        ]
+      }
+    },
+    {
+      "id": "transition.tutorial.runes",
+      "from_ref": "stage.tutorial.magic_supply",
+      "to_ref": "stage.tutorial.wind_strike",
+      "event_ref": "event.dialogue.completed",
+      "guard": {
+        "all": [
+          {
+            "path": "event.npc_ref",
+            "op": "eq",
+            "value": "npc.magic_instructor"
+          },
+          {
+            "path": "event.topic",
+            "op": "eq",
+            "value": "wind_strike_intro"
+          },
+          {
+            "path": "state.inventory.free_slots",
+            "op": "gte",
+            "value": 2
+          }
+        ]
+      },
+      "effects": [
+        {
+          "op": "grant",
+          "grant_ref": "grant.tutorial.runes"
+        }
+      ],
+      "basis": {
+        "classification": "verified_reference",
+        "source_refs": [
+          "source.wiki.tutorial_transcript"
+        ]
+      }
+    },
+    {
+      "id": "transition.tutorial.chicken_cast",
+      "from_ref": "stage.tutorial.wind_strike",
+      "to_ref": "stage.tutorial.departure_offer",
+      "event_ref": "event.spell.resolved",
+      "guard": {
+        "all": [
+          {
+            "path": "event.spell_ref",
+            "op": "eq",
+            "value": "spell.wind_strike"
+          },
+          {
+            "path": "event.npc_ref",
+            "op": "eq",
+            "value": "npc.tutorial_chicken"
+          },
+          {
+            "path": "event.outcome",
+            "op": "in",
+            "value": [
+              "hit",
+              "splash"
+            ]
+          }
+        ]
+      },
+      "effects": [
+        {
+          "op": "set",
+          "path": "state.tutorial.chicken_cast",
+          "value": true
+        },
+        {
+          "op": "set",
+          "path": "state.quests.learning_the_ropes.status",
+          "value": "completed"
+        },
+        {
+          "op": "reward",
+          "reward_ref": "reward.learning_the_ropes"
+        }
+      ],
+      "basis": {
+        "classification": "inference",
+        "source_refs": [
+          "source.wiki.tutorial_transcript",
+          "source.wiki.combat_spells"
+        ]
+      }
+    },
+    {
+      "id": "transition.tutorial.departure_offer",
+      "from_ref": "stage.tutorial.departure_offer",
+      "to_ref": "stage.tutorial.departure_confirmation",
+      "event_ref": "event.dialogue.completed",
+      "guard": {
+        "all": [
+          {
+            "path": "event.npc_ref",
+            "op": "eq",
+            "value": "npc.magic_instructor"
+          },
+          {
+            "path": "event.topic",
+            "op": "eq",
+            "value": "offer_mainland"
+          }
+        ]
+      },
+      "effects": [],
+      "basis": {
+        "classification": "verified_reference",
+        "source_refs": [
+          "source.wiki.tutorial_transcript"
+        ]
+      }
+    },
+    {
+      "id": "transition.tutorial.decline_departure",
+      "from_ref": "stage.tutorial.departure_confirmation",
+      "to_ref": "stage.tutorial.departure_offer",
+      "event_ref": "event.dialogue.completed",
+      "guard": {
+        "all": [
+          {
+            "path": "event.npc_ref",
+            "op": "eq",
+            "value": "npc.magic_instructor"
+          },
+          {
+            "path": "event.topic",
+            "op": "eq",
+            "value": "stay_on_island"
+          }
+        ]
+      },
+      "effects": [],
+      "basis": {
+        "classification": "verified_reference",
+        "source_refs": [
+          "source.wiki.tutorial_transcript"
+        ]
+      }
+    },
+    {
+      "id": "transition.tutorial.ironman_information",
+      "from_ref": "stage.tutorial.departure_confirmation",
+      "to_ref": "stage.tutorial.departure_offer",
+      "event_ref": "event.dialogue.completed",
+      "guard": {
+        "all": [
+          {
+            "path": "event.npc_ref",
+            "op": "eq",
+            "value": "npc.magic_instructor"
+          },
+          {
+            "path": "event.topic",
+            "op": "eq",
+            "value": "ask_ironman_tutor"
+          }
+        ]
+      },
+      "effects": [],
+      "basis": {
+        "classification": "verified_reference",
+        "source_refs": [
+          "source.wiki.tutorial_transcript"
+        ]
+      }
+    },
+    {
+      "id": "transition.tutorial.confirm_normal_departure",
+      "from_ref": "stage.tutorial.departure_confirmation",
+      "to_ref": "stage.tutorial.home_teleport",
+      "event_ref": "event.dialogue.completed",
+      "guard": {
+        "all": [
+          {
+            "path": "event.npc_ref",
+            "op": "eq",
+            "value": "npc.magic_instructor"
+          },
+          {
+            "path": "event.topic",
+            "op": "eq",
+            "value": "confirm_normal_mainland"
+          },
+          {
+            "path": "state.account.mode",
+            "op": "eq",
+            "value": "normal"
+          }
+        ]
+      },
+      "effects": [
+        {
+          "op": "set",
+          "path": "state.tutorial.departure_authorized",
+          "value": true
+        }
+      ],
+      "basis": {
+        "classification": "assumption",
+        "source_refs": [
+          "source.wiki.tutorial_transcript"
+        ],
+        "assumption_refs": [
+          "assumption.departure_missing_dialogue"
+        ]
+      }
+    },
+    {
+      "id": "transition.tutorial.start_home_teleport",
+      "from_ref": "stage.tutorial.home_teleport",
+      "to_ref": "stage.tutorial.teleport_channel",
+      "event_ref": "event.teleport.started",
+      "guard": {
+        "all": [
+          {
+            "path": "event.spell_ref",
+            "op": "eq",
+            "value": "spell.lumbridge_home_teleport"
+          },
+          {
+            "path": "state.tutorial.departure_authorized",
+            "op": "eq",
+            "value": true
+          }
+        ]
+      },
+      "effects": [],
+      "basis": {
+        "classification": "verified_reference",
+        "source_refs": [
+          "source.wiki.tutorial_transcript"
+        ]
+      }
+    },
+    {
+      "id": "transition.tutorial.interrupt_home_teleport",
+      "from_ref": "stage.tutorial.teleport_channel",
+      "to_ref": "stage.tutorial.home_teleport",
+      "event_ref": "event.teleport.interrupted",
+      "guard": {
+        "all": [
+          {
+            "path": "event.spell_ref",
+            "op": "eq",
+            "value": "spell.lumbridge_home_teleport"
+          }
+        ]
+      },
+      "effects": [],
+      "basis": {
+        "classification": "verified_reference",
+        "source_refs": [
+          "source.wiki.tutorial_transcript"
+        ]
+      }
+    },
+    {
+      "id": "transition.tutorial.arrive",
+      "from_ref": "stage.tutorial.teleport_channel",
+      "to_ref": "stage.tutorial.mainland",
+      "event_ref": "event.teleport.completed",
+      "guard": {
+        "all": [
+          {
+            "path": "event.spell_ref",
+            "op": "eq",
+            "value": "spell.lumbridge_home_teleport"
+          },
+          {
+            "path": "state.tutorial.departure_authorized",
+            "op": "eq",
+            "value": true
+          },
+          {
+            "path": "state.quests.learning_the_ropes.status",
+            "op": "eq",
+            "value": "completed"
+          },
+          {
+            "path": "event.destination_matches_experience",
+            "op": "eq",
+            "value": true
+          }
+        ]
+      },
+      "effects": [
+        {
+          "op": "reconcile_departure",
+          "rule_ref": "rule.tutorial.departure"
+        },
+        {
+          "op": "set",
+          "path": "state.tutorial.departed",
+          "value": true
+        }
+      ],
+      "basis": {
+        "classification": "assumption",
+        "source_refs": [
+          "source.wiki.tutorial_transcript",
+          "source.wiki.learning_the_ropes"
+        ],
+        "assumption_refs": [
+          "assumption.departure_reconciliation"
+        ]
+      }
+    }
+  ],
+  "grant_definitions": [
+    {
+      "id": "grant.tutorial.net",
+      "npc_ref": "npc.survival_expert",
+      "items": [
+        {
+          "item_ref": "item.fishing_net.small",
+          "quantity": 1
+        }
+      ],
+      "policy": "one_initial; missing-only replacement per recovery policy",
+      "basis": {
+        "classification": "verified_reference",
+        "source_refs": [
+          "source.wiki.tutorial_transcript"
+        ]
+      }
+    },
+    {
+      "id": "grant.tutorial.survival_tools",
+      "npc_ref": "npc.survival_expert",
+      "items": [
+        {
+          "item_ref": "item.axe.bronze",
+          "quantity": 1
+        },
+        {
+          "item_ref": "item.tinderbox",
+          "quantity": 1
+        }
+      ],
+      "policy": "one_initial_each; all-or-none unless both missing replacements fit",
+      "basis": {
+        "classification": "assumption",
+        "source_refs": [
+          "source.wiki.tutorial_transcript"
+        ],
+        "assumption_refs": [
+          "assumption.multi_item_grant_capacity"
+        ]
+      }
+    },
+    {
+      "id": "grant.tutorial.chef_ingredients",
+      "npc_ref": "npc.master_chef",
+      "items": [
+        {
+          "item_ref": "item.flour.pot",
+          "quantity": 1
+        },
+        {
+          "item_ref": "item.water.bucket",
+          "quantity": 1
+        }
+      ],
+      "policy": "missing_each_only while dough/bread absent and lesson not exited; never duplicate the present ingredient",
+      "basis": {
+        "classification": "verified_reference",
+        "source_refs": [
+          "source.wiki.tutorial_transcript"
+        ]
+      }
+    },
+    {
+      "id": "grant.tutorial.pickaxe",
+      "npc_ref": "npc.mining_instructor",
+      "items": [
+        {
+          "item_ref": "item.pickaxe.bronze",
+          "quantity": 1
+        }
+      ],
+      "policy": "one_initial; missing-only replacement per recovery policy",
+      "basis": {
+        "classification": "verified_reference",
+        "source_refs": [
+          "source.wiki.tutorial_transcript"
+        ]
+      }
+    },
+    {
+      "id": "grant.tutorial.hammer",
+      "npc_ref": "npc.mining_instructor",
+      "items": [
+        {
+          "item_ref": "item.hammer",
+          "quantity": 1
+        }
+      ],
+      "policy": "one_if_missing_in_inventory_and_free_slot; repeat dialogue supported after dagger",
+      "basis": {
+        "classification": "verified_reference",
+        "source_refs": [
+          "source.wiki.tutorial_transcript"
+        ]
+      }
+    },
+    {
+      "id": "grant.tutorial.melee_gear",
+      "npc_ref": "npc.combat_instructor",
+      "items": [
+        {
+          "item_ref": "item.sword.bronze",
+          "quantity": 1
+        },
+        {
+          "item_ref": "item.shield.wooden",
+          "quantity": 1
+        }
+      ],
+      "policy": "missing_each_over_inventory_and_equipment; sword_first; 0 slots=none,1 slot=first_missing,2 slots=both_missing",
+      "basis": {
+        "classification": "verified_reference",
+        "source_refs": [
+          "source.wiki.tutorial_transcript"
+        ]
+      }
+    },
+    {
+      "id": "grant.tutorial.ranged_gear",
+      "npc_ref": "npc.combat_instructor",
+      "items": [
+        {
+          "item_ref": "item.shortbow",
+          "quantity": 1
+        },
+        {
+          "item_ref": "item.arrow.bronze",
+          "quantity": 50
+        }
+      ],
+      "policy": "missing_bow_first; top_up_total_inventory_plus_equipped_arrows_to_50; 1 free slot with neither grants bow_only; existing arrow stack needs no free slot",
+      "basis": {
+        "classification": "verified_reference",
+        "source_refs": [
+          "source.wiki.tutorial_transcript"
+        ]
+      }
+    },
+    {
+      "id": "grant.tutorial.runes",
+      "npc_ref": "npc.magic_instructor",
+      "items": [
+        {
+          "item_ref": "item.rune.air",
+          "quantity": 5
+        },
+        {
+          "item_ref": "item.rune.mind",
+          "quantity": 5
+        }
+      ],
+      "policy": "initial_5_each; replacement_if_cannot_pay_one_cast; provisional_top_up_each_to_5_not_add_5",
+      "basis": {
+        "classification": "assumption",
+        "source_refs": [
+          "source.wiki.tutorial_transcript"
+        ],
+        "assumption_refs": [
+          "assumption.multi_item_grant_capacity"
+        ]
+      }
+    },
+    {
+      "id": "grant.tutorial.bank_coins",
+      "npc_ref": null,
+      "items": [
+        {
+          "item_ref": "item.coins",
+          "quantity": 25
+        }
+      ],
+      "policy": "bank_only; entitlement_once_before_first_visible_open; no_reseed_on_close/reopen",
+      "basis": {
+        "classification": "assumption",
+        "source_refs": [
+          "source.wiki.learning_the_ropes"
+        ],
+        "assumption_refs": [
+          "assumption.fresh_containers"
+        ]
+      }
+    }
+  ],
+  "recovery_handlers": [
+    {
+      "id": "recovery.tutorial.tools",
+      "event_ref": "event.dialogue.completed",
+      "scope": "after original grant unlock, before departure, owning instructor reachable",
+      "missing_items": [
+        {
+          "item_ref": "item.fishing_net.small",
+          "quantity": 1
+        },
+        {
+          "item_ref": "item.axe.bronze",
+          "quantity": 1
+        },
+        {
+          "item_ref": "item.tinderbox",
+          "quantity": 1
+        },
+        {
+          "item_ref": "item.pickaxe.bronze",
+          "quantity": 1
+        }
+      ],
+      "policy": "Return only each missing unlocked tool. Full inventory: explicit refusal, unchanged stage; nearby dropped tools may be picked up first.",
+      "basis": {
+        "classification": "assumption",
+        "source_refs": [
+          "source.wiki.tutorial_transcript"
+        ],
+        "assumption_refs": [
+          "assumption.missing_tutorial_tools"
+        ]
+      }
+    },
+    {
+      "id": "recovery.tutorial.ingredients",
+      "event_ref": "event.dialogue.completed",
+      "grant_refs": [
+        "grant.tutorial.chef_ingredients"
+      ],
+      "scope": "Master Chef lesson, no dough/bread; even if stage is bake_bread and dough was lost",
+      "policy": "Replenish only missing flour/water; actually remake dough and bake. Losing inputs never completes the lesson.",
+      "basis": {
+        "classification": "verified_reference",
+        "source_refs": [
+          "source.wiki.tutorial_transcript"
+        ]
+      }
+    },
+    {
+      "id": "recovery.tutorial.ore_bar_dagger",
+      "rule_refs": [
+        "rule.mining.tin",
+        "rule.mining.copper",
+        "rule.smelting.bronze",
+        "rule.smithing.bronze_dagger"
+      ],
+      "policy": "Unlocked earlier activities remain usable on their reachable tutorial objects until departure; a lost ore/bar/dagger must be mined/smelted/smithed again. Reopen smithing UI if needed. Hammer replacement does not mint a bar. Last-resort instructor dagger replacement is provisional, not used by ordinary journey fixtures.",
+      "basis": {
+        "classification": "assumption",
+        "source_refs": [
+          "source.wiki.tutorial_transcript"
+        ],
+        "assumption_refs": [
+          "assumption.missing_tutorial_tools"
+        ]
+      }
+    },
+    {
+      "id": "recovery.tutorial.combat",
+      "event_ref": "event.dialogue.completed",
+      "grant_refs": [
+        "grant.tutorial.melee_gear",
+        "grant.tutorial.ranged_gear"
+      ],
+      "scope": "after original respective lesson grant, before corresponding required kill",
+      "policy": "Count equipped items as owned; fill only missing gear and arrows up to 50; never grant after every attack. One-slot partial grants persist across retries.",
+      "basis": {
+        "classification": "verified_reference",
+        "source_refs": [
+          "source.wiki.tutorial_transcript"
+        ]
+      }
+    },
+    {
+      "id": "recovery.tutorial.runes",
+      "event_ref": "event.dialogue.completed",
+      "grant_refs": [
+        "grant.tutorial.runes"
+      ],
+      "scope": "after rune lesson, before departure",
+      "policy": "If air>=1 and mind>=1, instructor refuses more. Otherwise top up each to 5 if resulting stacks fit. Exact asymmetric depleted-rune count is not in source; do not label the top-up as verified.",
+      "basis": {
+        "classification": "assumption",
+        "source_refs": [
+          "source.wiki.tutorial_transcript"
+        ],
+        "assumption_refs": [
+          "assumption.multi_item_grant_capacity"
+        ]
+      }
+    }
+  ],
+  "rule_refs": [
+    "rule.tutorial.restrictions",
+    "rule.tutorial.xp_cap",
+    "rule.tutorial.departure",
+    "rule.magic.home_teleport"
+  ],
+  "action_unlocks": [
+    {
+      "at_stage_ref": "stage.tutorial.catch_shrimp",
+      "rule_refs": [
+        "rule.fishing.shrimps"
+      ],
+      "sticky_until_departure": true
+    },
+    {
+      "at_stage_ref": "stage.tutorial.cut_logs",
+      "rule_refs": [
+        "rule.woodcutting.normal"
+      ],
+      "sticky_until_departure": true
+    },
+    {
+      "at_stage_ref": "stage.tutorial.light_fire",
+      "rule_refs": [
+        "rule.firemaking.normal"
+      ],
+      "sticky_until_departure": true
+    },
+    {
+      "at_stage_ref": "stage.tutorial.cook_shrimp",
+      "rule_refs": [
+        "rule.cooking.shrimps"
+      ],
+      "sticky_until_departure": true
+    },
+    {
+      "at_stage_ref": "stage.tutorial.make_dough",
+      "rule_refs": [
+        "rule.cooking.dough"
+      ],
+      "sticky_until_departure": true
+    },
+    {
+      "at_stage_ref": "stage.tutorial.bake_bread",
+      "rule_refs": [
+        "rule.cooking.bread"
+      ],
+      "sticky_until_departure": true
+    },
+    {
+      "at_stage_ref": "stage.tutorial.mine_first",
+      "rule_refs": [
+        "rule.mining.tin",
+        "rule.mining.copper"
+      ],
+      "sticky_until_departure": true
+    },
+    {
+      "at_stage_ref": "stage.tutorial.smelt_bronze",
+      "rule_refs": [
+        "rule.smelting.bronze"
+      ],
+      "sticky_until_departure": true
+    },
+    {
+      "at_stage_ref": "stage.tutorial.anvil_open",
+      "rule_refs": [
+        "rule.smithing.bronze_dagger"
+      ],
+      "sticky_until_departure": true
+    },
+    {
+      "at_stage_ref": "stage.tutorial.equip_dagger",
+      "rule_refs": [
+        "rule.equipment.equip",
+        "rule.equipment.unequip"
+      ],
+      "sticky_until_departure": true
+    },
+    {
+      "at_stage_ref": "stage.tutorial.melee_rat",
+      "rule_refs": [
+        "rule.combat.melee"
+      ],
+      "sticky_until_departure": false,
+      "only_target_ref": "npc.tutorial_rat",
+      "until_flag": "state.tutorial.melee_kill"
+    },
+    {
+      "at_stage_ref": "stage.tutorial.ranged_rat",
+      "rule_refs": [
+        "rule.combat.ranged"
+      ],
+      "sticky_until_departure": false,
+      "only_target_ref": "npc.tutorial_rat",
+      "until_flag": "state.tutorial.ranged_kill",
+      "must_be_outside_pen": true
+    },
+    {
+      "at_stage_ref": "stage.tutorial.prayer_explanation",
+      "rule_refs": [
+        "rule.prayer.thick_skin"
+      ],
+      "sticky_until_departure": true
+    },
+    {
+      "at_stage_ref": "stage.tutorial.wind_strike",
+      "rule_refs": [
+        "rule.magic.wind_strike"
+      ],
+      "sticky_until_departure": true,
+      "allowed_target_refs": [
+        "npc.tutorial_chicken",
+        "npc.tutorial_rat"
+      ],
+      "chicken_until_flag": "state.tutorial.chicken_cast"
+    },
+    {
+      "at_stage_ref": "stage.tutorial.home_teleport",
+      "rule_refs": [
+        "rule.magic.home_teleport"
+      ],
+      "sticky_until_departure": true
+    }
+  ],
+  "action_unlock_basis": {
+    "classification": "inference",
+    "source_refs": [
+      "source.wiki.tutorial_transcript",
+      "source.wiki.tutorial_island"
+    ]
+  },
+  "action_unlock_limits": "Sticky unlocks do not override source area/object restrictions, level caps, equipment requirements or rat/chicken repeat-action guards. Returning to an earlier workshop uses real travel. Mainland removes tutorial-specific locks, not ordinary level/quest requirements.",
+  "exit_permissions": [
+    {
+      "object_ref": "object.tutorial.start_door",
+      "requires_completed_transition_ref": "transition.tutorial.guide_exit_permission"
+    },
+    {
+      "object_ref": "object.tutorial.survival_gate",
+      "requires_completed_transition_ref": "transition.tutorial.shrimp_cooked"
+    },
+    {
+      "object_ref": "object.tutorial.chef_exit",
+      "requires_completed_transition_ref": "transition.tutorial.bread"
+    },
+    {
+      "object_ref": "object.tutorial.quest_ladder",
+      "requires_completed_transition_ref": "transition.tutorial.quest_explanation"
+    },
+    {
+      "object_ref": "object.tutorial.mine_gate",
+      "requires_completed_transition_ref": "transition.tutorial.dagger"
+    },
+    {
+      "object_ref": "object.tutorial.combat_ladder",
+      "requires_completed_transition_ref": "transition.tutorial.ranged_kill"
+    },
+    {
+      "object_ref": "object.tutorial.account_entry",
+      "requires_completed_transition_ref": "transition.tutorial.poll"
+    },
+    {
+      "object_ref": "object.tutorial.account_exit",
+      "requires_completed_transition_ref": "transition.tutorial.account_explanation"
+    },
+    {
+      "object_ref": "object.tutorial.chapel_exit",
+      "requires_completed_transition_ref": "transition.tutorial.prayer_explanation"
+    }
+  ],
+  "rat_pen_permission": {
+    "object_ref": "object.tutorial.rat_gate",
+    "entry_stage_refs": [
+      "stage.tutorial.enter_rat_pen",
+      "stage.tutorial.melee_rat"
+    ],
+    "exit_allowed": true,
+    "entry_denied_after_ranged_supply": true,
+    "basis": {
+      "classification": "verified_reference",
+      "source_refs": [
+        "source.wiki.tutorial_transcript"
+      ]
+    }
+  },
+  "source_progress_policy": "All numeric values are intentionally null. No source numeric stage/varp was established by these public transcripts.",
+  "entry_guards": [
+    "Entry to the graph requires a new persisted normal account, not a test seed.",
+    "Each noninitial state requires its immediately preceding transition or a persisted acknowledged checkpoint; stage numbers are never accepted as player commands.",
+    "Result events require the shared system's actual item/tool/level/range/LOS/timing checks. A graph match alone is insufficient.",
+    "UI unlocks on state entry persist. Refresh/reconnect projects the same state and does not run grants again."
+  ],
+  "dialogue_policy": "Topics are semantic/paraphrased beats, not purported exact source strings. Required dialogue must actually be completed; recap loops and rejected earlier actions do not progress. Presentation text, timing, highlighting, chatheads and audio still need the approved reference pack.",
+  "bank_seed_hook": {
+    "before_event_ref": "event.ui.opened",
+    "ui_ref": "ui.bank",
+    "grant_ref": "grant.tutorial.bank_coins",
+    "guard": {
+      "all": [
+        {
+          "path": "state.bank.seed_claimed",
+          "op": "eq",
+          "value": false
+        },
+        {
+          "path": "state.tutorial.departed",
+          "op": "eq",
+          "value": false
+        }
+      ]
+    },
+    "effects": [
+      {
+        "op": "set",
+        "path": "state.bank.seed_claimed",
+        "value": true
+      }
+    ],
+    "note": "Seeding, first bank opening and stage acknowledgement are one transaction."
+  },
+  "optional_controls": {
+    "chosen_graph_tasks": [
+      "run toggle demonstration"
+    ],
+    "not_reintroduced_as_mandatory": [
+      "music selection",
+      "emote",
+      "friends list",
+      "ignore list"
+    ],
+    "run_gate_caveat": "The transcript describes a run prompt and the after-toggle prompt, but not a refusal when walking to the next door. Requiring the demonstrated toggle is a labeled graph inference, not a captured source door lock.",
+    "basis": {
+      "classification": "inference",
+      "source_refs": [
+        "source.wiki.tutorial_transcript",
+        "source.wiki.tutorial_island"
+      ]
+    }
+  },
+  "dialogue_fact_parameters": {
+    "poll": {
+      "membership_required_to_vote": true,
+      "skill_total_required_to_vote": 300,
+      "support_percent": 70
+    },
+    "account": {
+      "free_by_default": true,
+      "typical_world_capacity": 2000,
+      "topics_in_order": [
+        "membership",
+        "worlds_and_logout_switcher",
+        "bonds",
+        "inbox",
+        "name_changer",
+        "bank_pin_and_two_factor",
+        "support_links"
+      ]
+    },
+    "basis": {
+      "classification": "verified_reference",
+      "source_refs": [
+        "source.wiki.tutorial_transcript"
+      ]
+    }
+  },
+  "journey_evidence": "Structural reachability is not a passed journey. All live/headless acceptance runs must emit the full real event trace."
+}

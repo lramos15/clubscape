@@ -1,0 +1,589 @@
+{
+  "schema_version": 1,
+  "id": "contract.journey.initial_state",
+  "profile_ref": "profile.osrs.current_normal_f2p",
+  "account": {
+    "mode": "normal",
+    "membership": false,
+    "appearance_confirmed": false,
+    "experience_choice_ref": null,
+    "basis": {
+      "classification": "verified_reference",
+      "source_refs": [
+        "source.wiki.learning_the_ropes",
+        "source.wiki.tutorial_transcript"
+      ]
+    }
+  },
+  "skills": [
+    {
+      "id": "skill.attack",
+      "xp_tenths": 0,
+      "base_level": 1,
+      "current_level": 1,
+      "basis": {
+        "classification": "verified_reference",
+        "source_refs": [
+          "source.wiki.skills",
+          "source.wiki.hitpoints"
+        ]
+      }
+    },
+    {
+      "id": "skill.strength",
+      "xp_tenths": 0,
+      "base_level": 1,
+      "current_level": 1,
+      "basis": {
+        "classification": "verified_reference",
+        "source_refs": [
+          "source.wiki.skills",
+          "source.wiki.hitpoints"
+        ]
+      }
+    },
+    {
+      "id": "skill.defence",
+      "xp_tenths": 0,
+      "base_level": 1,
+      "current_level": 1,
+      "basis": {
+        "classification": "verified_reference",
+        "source_refs": [
+          "source.wiki.skills",
+          "source.wiki.hitpoints"
+        ]
+      }
+    },
+    {
+      "id": "skill.ranged",
+      "xp_tenths": 0,
+      "base_level": 1,
+      "current_level": 1,
+      "basis": {
+        "classification": "verified_reference",
+        "source_refs": [
+          "source.wiki.skills",
+          "source.wiki.hitpoints"
+        ]
+      }
+    },
+    {
+      "id": "skill.prayer",
+      "xp_tenths": 0,
+      "base_level": 1,
+      "current_level": 1,
+      "basis": {
+        "classification": "verified_reference",
+        "source_refs": [
+          "source.wiki.skills",
+          "source.wiki.hitpoints"
+        ]
+      }
+    },
+    {
+      "id": "skill.magic",
+      "xp_tenths": 0,
+      "base_level": 1,
+      "current_level": 1,
+      "basis": {
+        "classification": "verified_reference",
+        "source_refs": [
+          "source.wiki.skills",
+          "source.wiki.hitpoints"
+        ]
+      }
+    },
+    {
+      "id": "skill.runecraft",
+      "xp_tenths": 0,
+      "base_level": 1,
+      "current_level": 1,
+      "basis": {
+        "classification": "verified_reference",
+        "source_refs": [
+          "source.wiki.skills",
+          "source.wiki.hitpoints"
+        ]
+      }
+    },
+    {
+      "id": "skill.construction",
+      "xp_tenths": 0,
+      "base_level": 1,
+      "current_level": 1,
+      "basis": {
+        "classification": "verified_reference",
+        "source_refs": [
+          "source.wiki.skills",
+          "source.wiki.hitpoints"
+        ]
+      }
+    },
+    {
+      "id": "skill.hitpoints",
+      "xp_tenths": 11540,
+      "base_level": 10,
+      "current_level": 10,
+      "basis": {
+        "classification": "verified_reference",
+        "source_refs": [
+          "source.wiki.skills",
+          "source.wiki.hitpoints"
+        ]
+      }
+    },
+    {
+      "id": "skill.agility",
+      "xp_tenths": 0,
+      "base_level": 1,
+      "current_level": 1,
+      "basis": {
+        "classification": "verified_reference",
+        "source_refs": [
+          "source.wiki.skills",
+          "source.wiki.hitpoints"
+        ]
+      }
+    },
+    {
+      "id": "skill.herblore",
+      "xp_tenths": 0,
+      "base_level": 1,
+      "current_level": 1,
+      "basis": {
+        "classification": "verified_reference",
+        "source_refs": [
+          "source.wiki.skills",
+          "source.wiki.hitpoints"
+        ]
+      }
+    },
+    {
+      "id": "skill.thieving",
+      "xp_tenths": 0,
+      "base_level": 1,
+      "current_level": 1,
+      "basis": {
+        "classification": "verified_reference",
+        "source_refs": [
+          "source.wiki.skills",
+          "source.wiki.hitpoints"
+        ]
+      }
+    },
+    {
+      "id": "skill.crafting",
+      "xp_tenths": 0,
+      "base_level": 1,
+      "current_level": 1,
+      "basis": {
+        "classification": "verified_reference",
+        "source_refs": [
+          "source.wiki.skills",
+          "source.wiki.hitpoints"
+        ]
+      }
+    },
+    {
+      "id": "skill.fletching",
+      "xp_tenths": 0,
+      "base_level": 1,
+      "current_level": 1,
+      "basis": {
+        "classification": "verified_reference",
+        "source_refs": [
+          "source.wiki.skills",
+          "source.wiki.hitpoints"
+        ]
+      }
+    },
+    {
+      "id": "skill.slayer",
+      "xp_tenths": 0,
+      "base_level": 1,
+      "current_level": 1,
+      "basis": {
+        "classification": "verified_reference",
+        "source_refs": [
+          "source.wiki.skills",
+          "source.wiki.hitpoints"
+        ]
+      }
+    },
+    {
+      "id": "skill.hunter",
+      "xp_tenths": 0,
+      "base_level": 1,
+      "current_level": 1,
+      "basis": {
+        "classification": "verified_reference",
+        "source_refs": [
+          "source.wiki.skills",
+          "source.wiki.hitpoints"
+        ]
+      }
+    },
+    {
+      "id": "skill.mining",
+      "xp_tenths": 0,
+      "base_level": 1,
+      "current_level": 1,
+      "basis": {
+        "classification": "verified_reference",
+        "source_refs": [
+          "source.wiki.skills",
+          "source.wiki.hitpoints"
+        ]
+      }
+    },
+    {
+      "id": "skill.smithing",
+      "xp_tenths": 0,
+      "base_level": 1,
+      "current_level": 1,
+      "basis": {
+        "classification": "verified_reference",
+        "source_refs": [
+          "source.wiki.skills",
+          "source.wiki.hitpoints"
+        ]
+      }
+    },
+    {
+      "id": "skill.fishing",
+      "xp_tenths": 0,
+      "base_level": 1,
+      "current_level": 1,
+      "basis": {
+        "classification": "verified_reference",
+        "source_refs": [
+          "source.wiki.skills",
+          "source.wiki.hitpoints"
+        ]
+      }
+    },
+    {
+      "id": "skill.cooking",
+      "xp_tenths": 0,
+      "base_level": 1,
+      "current_level": 1,
+      "basis": {
+        "classification": "verified_reference",
+        "source_refs": [
+          "source.wiki.skills",
+          "source.wiki.hitpoints"
+        ]
+      }
+    },
+    {
+      "id": "skill.firemaking",
+      "xp_tenths": 0,
+      "base_level": 1,
+      "current_level": 1,
+      "basis": {
+        "classification": "verified_reference",
+        "source_refs": [
+          "source.wiki.skills",
+          "source.wiki.hitpoints"
+        ]
+      }
+    },
+    {
+      "id": "skill.woodcutting",
+      "xp_tenths": 0,
+      "base_level": 1,
+      "current_level": 1,
+      "basis": {
+        "classification": "verified_reference",
+        "source_refs": [
+          "source.wiki.skills",
+          "source.wiki.hitpoints"
+        ]
+      }
+    },
+    {
+      "id": "skill.farming",
+      "xp_tenths": 0,
+      "base_level": 1,
+      "current_level": 1,
+      "basis": {
+        "classification": "verified_reference",
+        "source_refs": [
+          "source.wiki.skills",
+          "source.wiki.hitpoints"
+        ]
+      }
+    },
+    {
+      "id": "skill.sailing",
+      "xp_tenths": 0,
+      "base_level": 1,
+      "current_level": 1,
+      "basis": {
+        "classification": "verified_reference",
+        "source_refs": [
+          "source.wiki.skills",
+          "source.wiki.hitpoints"
+        ]
+      }
+    }
+  ],
+  "derived": {
+    "total_level": 33,
+    "basis": {
+      "classification": "inference",
+      "source_refs": [
+        "source.wiki.skills",
+        "source.wiki.hitpoints"
+      ]
+    }
+  },
+  "inventory": {
+    "slot_count": 28,
+    "items": [],
+    "basis": {
+      "classification": "assumption",
+      "source_refs": [
+        "source.wiki.inventory",
+        "source.wiki.tutorial_transcript"
+      ],
+      "assumption_refs": [
+        "assumption.fresh_containers"
+      ]
+    }
+  },
+  "equipment": {
+    "slots": {
+      "slot.head": null,
+      "slot.cape": null,
+      "slot.neck": null,
+      "slot.weapon": null,
+      "slot.body": null,
+      "slot.shield": null,
+      "slot.legs": null,
+      "slot.hands": null,
+      "slot.feet": null,
+      "slot.ring": null,
+      "slot.ammo": null
+    },
+    "appearance_is_not_equipment": true,
+    "basis": {
+      "classification": "assumption",
+      "source_refs": [
+        "source.wiki.equipment",
+        "source.wiki.learning_the_ropes"
+      ],
+      "assumption_refs": [
+        "assumption.fresh_containers"
+      ]
+    }
+  },
+  "bank": {
+    "base_capacity": 400,
+    "items": [],
+    "seed_entitlement_ref": "grant.tutorial.bank_coins",
+    "seed_claimed": false,
+    "first_visible_contents": [
+      {
+        "item_ref": "item.coins",
+        "quantity": 25
+      }
+    ],
+    "security_bonus_slots": 0,
+    "basis": {
+      "classification": "assumption",
+      "source_refs": [
+        "source.wiki.bank",
+        "source.wiki.learning_the_ropes"
+      ],
+      "assumption_refs": [
+        "assumption.fresh_containers"
+      ]
+    },
+    "note": "No Jagex-account/Authenticator/PIN bonus is silently awarded to a ClubScape account. Base 400 is source-backed; identity-provider bonus mapping is outside these mechanics."
+  },
+  "tutorial": {
+    "stage_ref": "stage.tutorial.appearance",
+    "source_numeric_progress": null,
+    "departed": false,
+    "melee_kill": false,
+    "ranged_kill": false,
+    "chicken_cast": false,
+    "departure_authorized": false,
+    "grant_ledger": [],
+    "reward_ledger": [],
+    "basis": {
+      "classification": "inference",
+      "source_refs": [
+        "source.wiki.tutorial_transcript"
+      ]
+    }
+  },
+  "quests": [
+    {
+      "id": "quest.learning_the_ropes",
+      "status": "not_started",
+      "reward_claimed": false,
+      "basis": {
+        "classification": "assumption",
+        "source_refs": [
+          "source.wiki.learning_the_ropes"
+        ],
+        "assumption_refs": [
+          "assumption.quest_tracking_start"
+        ]
+      }
+    },
+    {
+      "id": "quest.cooks_assistant",
+      "status": "not_started",
+      "delivered": {
+        "milk": false,
+        "flour": false,
+        "egg": false
+      },
+      "reward_claimed": false,
+      "basis": {
+        "classification": "verified_reference",
+        "source_refs": [
+          "source.wiki.cooks_transcript",
+          "source.wiki.cooks_journal"
+        ]
+      }
+    }
+  ],
+  "quest_points": 0,
+  "vitals": {
+    "hitpoints": 10,
+    "prayer_points": 1,
+    "run_energy_units": 10000,
+    "run_enabled": false,
+    "basis": {
+      "classification": "assumption",
+      "source_refs": [
+        "source.wiki.hitpoints",
+        "source.wiki.prayer",
+        "source.wiki.energy"
+      ],
+      "assumption_refs": [
+        "assumption.initial_ui_defaults"
+      ]
+    }
+  },
+  "world": {
+    "location_ref": "location.tutorial.start_house",
+    "tile": null,
+    "camera": null,
+    "binding_ref": "binding.world.source_layout",
+    "basis": {
+      "classification": "verified_reference",
+      "source_refs": [
+        "source.wiki.learning_the_ropes"
+      ]
+    }
+  },
+  "ui": {
+    "visible_lesson_ref": "ui.appearance",
+    "initially_available_refs": [
+      "ui.appearance",
+      "ui.logout"
+    ],
+    "unlock_policy": "tutorial.json stage.ui_unlock_refs; never treat unavailable tabs as successful opens",
+    "basis": {
+      "classification": "assumption",
+      "source_refs": [
+        "source.wiki.tutorial_transcript"
+      ],
+      "assumption_refs": [
+        "assumption.initial_ui_defaults"
+      ]
+    }
+  },
+  "death": {
+    "tutorial_seen": false,
+    "topics": {
+      "fees": false,
+      "timer": false,
+      "kept_items": false
+    },
+    "grave": null,
+    "office_items": [],
+    "food_supply_pile_setting": null,
+    "basis": {
+      "classification": "verified_reference",
+      "source_refs": [
+        "source.wiki.death_dialogue",
+        "source.wiki.grave"
+      ]
+    },
+    "note": "Food-supply-pile default is not observed. Both source settings are supported in activities; tests select the setting explicitly."
+  },
+  "mill": {
+    "hopper": null,
+    "flour_units": 0,
+    "basis": {
+      "classification": "assumption",
+      "source_refs": [
+        "source.wiki.mill_lane_mill"
+      ],
+      "assumption_refs": [
+        "assumption.mill_ownership_overflow"
+      ]
+    }
+  },
+  "experience_branches": [
+    {
+      "choice_ref": "choice.experience.brand_new",
+      "source_option": "I'm brand new! This is my first time here.",
+      "adventure_paths_eligible": true,
+      "arrival_ref": "location.lumbridge.jon_arrival",
+      "arrival_npc_ref": "npc.adventurer_jon"
+    },
+    {
+      "choice_ref": "choice.experience.returning",
+      "source_option": "I've played in the past, but not recently.",
+      "adventure_paths_eligible": true,
+      "arrival_ref": "location.lumbridge.jon_arrival",
+      "arrival_npc_ref": "npc.adventurer_jon"
+    },
+    {
+      "choice_ref": "choice.experience.experienced",
+      "source_option": "I'm an experienced player.",
+      "adventure_paths_eligible": false,
+      "arrival_ref": "location.lumbridge.castle_arrival",
+      "arrival_npc_ref": "npc.lumbridge_guide"
+    }
+  ],
+  "experience_branch_basis": {
+    "classification": "verified_reference",
+    "source_refs": [
+      "source.wiki.tutorial_transcript",
+      "source.wiki.tutorial_island",
+      "source.wiki.adventure_paths"
+    ]
+  },
+  "experience_branch_scope": "All choices require the same complete tutorial. Jon's introduction is triggered for eligible arrivals; starting Adventure Paths is optional, never a prerequisite or a silent extra reward. The source has A/B path variants, so do not choose a random rewards program.",
+  "persistence": {
+    "preserve": [
+      "skills",
+      "inventory order",
+      "equipment",
+      "bank",
+      "tutorial stage/flags/unlocks",
+      "experience choice",
+      "quests/delivered bits",
+      "grant/reward ledgers",
+      "mill counts",
+      "death tutorial topics/grave state",
+      "world position"
+    ],
+    "acknowledged_operations": "Persist atomically before acknowledgement. Reconnect/server restart never reseeds normal-account defaults.",
+    "basis": {
+      "classification": "engineering_contract",
+      "source_refs": [
+        "source.project.prompt"
+      ]
+    }
+  }
+}

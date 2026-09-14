@@ -1,0 +1,2222 @@
+{
+  "schema_version": 1,
+  "id": "contract.journey.cooks_assistant",
+  "quest_ref": "quest.cooks_assistant",
+  "profile_ref": "profile.osrs.current_normal_f2p",
+  "start_ref": "stage.cooks.not_started",
+  "terminal_refs": [
+    "stage.cooks.completed"
+  ],
+  "states": [
+    {
+      "id": "stage.cooks.not_started",
+      "status": "not_started",
+      "basis": {
+        "classification": "verified_reference",
+        "source_refs": [
+          "source.wiki.cooks_transcript",
+          "source.wiki.cooks_journal"
+        ]
+      }
+    },
+    {
+      "id": "stage.cooks.delivered.none",
+      "status": "in_progress",
+      "delivered": {
+        "milk": false,
+        "flour": false,
+        "egg": false
+      },
+      "ready_for_thanks_dialogue": false,
+      "basis": {
+        "classification": "inference",
+        "source_refs": [
+          "source.wiki.cooks_transcript",
+          "source.wiki.cooks_journal"
+        ]
+      }
+    },
+    {
+      "id": "stage.cooks.delivered.egg",
+      "status": "in_progress",
+      "delivered": {
+        "milk": false,
+        "flour": false,
+        "egg": true
+      },
+      "ready_for_thanks_dialogue": false,
+      "basis": {
+        "classification": "inference",
+        "source_refs": [
+          "source.wiki.cooks_transcript",
+          "source.wiki.cooks_journal"
+        ]
+      }
+    },
+    {
+      "id": "stage.cooks.delivered.flour",
+      "status": "in_progress",
+      "delivered": {
+        "milk": false,
+        "flour": true,
+        "egg": false
+      },
+      "ready_for_thanks_dialogue": false,
+      "basis": {
+        "classification": "inference",
+        "source_refs": [
+          "source.wiki.cooks_transcript",
+          "source.wiki.cooks_journal"
+        ]
+      }
+    },
+    {
+      "id": "stage.cooks.delivered.flour_egg",
+      "status": "in_progress",
+      "delivered": {
+        "milk": false,
+        "flour": true,
+        "egg": true
+      },
+      "ready_for_thanks_dialogue": false,
+      "basis": {
+        "classification": "inference",
+        "source_refs": [
+          "source.wiki.cooks_transcript",
+          "source.wiki.cooks_journal"
+        ]
+      }
+    },
+    {
+      "id": "stage.cooks.delivered.milk",
+      "status": "in_progress",
+      "delivered": {
+        "milk": true,
+        "flour": false,
+        "egg": false
+      },
+      "ready_for_thanks_dialogue": false,
+      "basis": {
+        "classification": "inference",
+        "source_refs": [
+          "source.wiki.cooks_transcript",
+          "source.wiki.cooks_journal"
+        ]
+      }
+    },
+    {
+      "id": "stage.cooks.delivered.milk_egg",
+      "status": "in_progress",
+      "delivered": {
+        "milk": true,
+        "flour": false,
+        "egg": true
+      },
+      "ready_for_thanks_dialogue": false,
+      "basis": {
+        "classification": "inference",
+        "source_refs": [
+          "source.wiki.cooks_transcript",
+          "source.wiki.cooks_journal"
+        ]
+      }
+    },
+    {
+      "id": "stage.cooks.delivered.milk_flour",
+      "status": "in_progress",
+      "delivered": {
+        "milk": true,
+        "flour": true,
+        "egg": false
+      },
+      "ready_for_thanks_dialogue": false,
+      "basis": {
+        "classification": "inference",
+        "source_refs": [
+          "source.wiki.cooks_transcript",
+          "source.wiki.cooks_journal"
+        ]
+      }
+    },
+    {
+      "id": "stage.cooks.delivered.milk_flour_egg",
+      "status": "in_progress",
+      "delivered": {
+        "milk": true,
+        "flour": true,
+        "egg": true
+      },
+      "ready_for_thanks_dialogue": true,
+      "basis": {
+        "classification": "inference",
+        "source_refs": [
+          "source.wiki.cooks_transcript",
+          "source.wiki.cooks_journal"
+        ]
+      }
+    },
+    {
+      "id": "stage.cooks.completed",
+      "status": "completed",
+      "basis": {
+        "classification": "verified_reference",
+        "source_refs": [
+          "source.wiki.cooks_assistant",
+          "source.wiki.cooks_journal"
+        ]
+      }
+    }
+  ],
+  "transitions": [
+    {
+      "id": "transition.cooks.accept",
+      "from_ref": "stage.cooks.not_started",
+      "to_ref": "stage.cooks.delivered.none",
+      "event_ref": "event.quest.accepted",
+      "guard": {
+        "all": [
+          {
+            "path": "event.quest_ref",
+            "op": "eq",
+            "value": "quest.cooks_assistant"
+          },
+          {
+            "path": "event.npc_ref",
+            "op": "eq",
+            "value": "npc.cook"
+          },
+          {
+            "path": "state.tutorial.departed",
+            "op": "eq",
+            "value": true
+          }
+        ]
+      },
+      "effects": [
+        {
+          "op": "set",
+          "path": "state.quests.cooks_assistant.status",
+          "value": "in_progress"
+        },
+        {
+          "op": "project_journal",
+          "quest_ref": "quest.cooks_assistant"
+        }
+      ],
+      "basis": {
+        "classification": "verified_reference",
+        "source_refs": [
+          "source.wiki.cooks_transcript"
+        ]
+      }
+    },
+    {
+      "id": "transition.cooks.decline",
+      "from_ref": "stage.cooks.not_started",
+      "to_ref": "stage.cooks.not_started",
+      "event_ref": "event.quest.declined",
+      "guard": {
+        "all": [
+          {
+            "path": "event.quest_ref",
+            "op": "eq",
+            "value": "quest.cooks_assistant"
+          },
+          {
+            "path": "event.npc_ref",
+            "op": "eq",
+            "value": "npc.cook"
+          }
+        ]
+      },
+      "effects": [],
+      "basis": {
+        "classification": "verified_reference",
+        "source_refs": [
+          "source.wiki.cooks_transcript"
+        ]
+      }
+    },
+    {
+      "id": "transition.cooks.deliver.none_to_egg",
+      "from_ref": "stage.cooks.delivered.none",
+      "to_ref": "stage.cooks.delivered.egg",
+      "event_ref": "event.quest.delivered",
+      "guard": {
+        "all": [
+          {
+            "path": "event.quest_ref",
+            "op": "eq",
+            "value": "quest.cooks_assistant"
+          },
+          {
+            "path": "event.npc_ref",
+            "op": "eq",
+            "value": "npc.cook"
+          },
+          {
+            "path": "event.delivered",
+            "op": "eq",
+            "value": [
+              "egg"
+            ]
+          },
+          {
+            "path": "event.owned_items_consumed",
+            "op": "eq",
+            "value": true
+          }
+        ]
+      },
+      "effects": [
+        {
+          "op": "set",
+          "path": "state.quests.cooks_assistant.delivered.egg",
+          "value": true
+        },
+        {
+          "op": "project_journal",
+          "quest_ref": "quest.cooks_assistant"
+        }
+      ],
+      "basis": {
+        "classification": "inference",
+        "source_refs": [
+          "source.wiki.cooks_transcript",
+          "source.wiki.cooks_journal"
+        ]
+      }
+    },
+    {
+      "id": "transition.cooks.deliver.none_to_flour",
+      "from_ref": "stage.cooks.delivered.none",
+      "to_ref": "stage.cooks.delivered.flour",
+      "event_ref": "event.quest.delivered",
+      "guard": {
+        "all": [
+          {
+            "path": "event.quest_ref",
+            "op": "eq",
+            "value": "quest.cooks_assistant"
+          },
+          {
+            "path": "event.npc_ref",
+            "op": "eq",
+            "value": "npc.cook"
+          },
+          {
+            "path": "event.delivered",
+            "op": "eq",
+            "value": [
+              "flour"
+            ]
+          },
+          {
+            "path": "event.owned_items_consumed",
+            "op": "eq",
+            "value": true
+          }
+        ]
+      },
+      "effects": [
+        {
+          "op": "set",
+          "path": "state.quests.cooks_assistant.delivered.flour",
+          "value": true
+        },
+        {
+          "op": "project_journal",
+          "quest_ref": "quest.cooks_assistant"
+        }
+      ],
+      "basis": {
+        "classification": "inference",
+        "source_refs": [
+          "source.wiki.cooks_transcript",
+          "source.wiki.cooks_journal"
+        ]
+      }
+    },
+    {
+      "id": "transition.cooks.deliver.none_to_flour_egg",
+      "from_ref": "stage.cooks.delivered.none",
+      "to_ref": "stage.cooks.delivered.flour_egg",
+      "event_ref": "event.quest.delivered",
+      "guard": {
+        "all": [
+          {
+            "path": "event.quest_ref",
+            "op": "eq",
+            "value": "quest.cooks_assistant"
+          },
+          {
+            "path": "event.npc_ref",
+            "op": "eq",
+            "value": "npc.cook"
+          },
+          {
+            "path": "event.delivered",
+            "op": "eq",
+            "value": [
+              "flour",
+              "egg"
+            ]
+          },
+          {
+            "path": "event.owned_items_consumed",
+            "op": "eq",
+            "value": true
+          }
+        ]
+      },
+      "effects": [
+        {
+          "op": "set",
+          "path": "state.quests.cooks_assistant.delivered.flour",
+          "value": true
+        },
+        {
+          "op": "set",
+          "path": "state.quests.cooks_assistant.delivered.egg",
+          "value": true
+        },
+        {
+          "op": "project_journal",
+          "quest_ref": "quest.cooks_assistant"
+        }
+      ],
+      "basis": {
+        "classification": "inference",
+        "source_refs": [
+          "source.wiki.cooks_transcript",
+          "source.wiki.cooks_journal"
+        ]
+      }
+    },
+    {
+      "id": "transition.cooks.deliver.none_to_milk",
+      "from_ref": "stage.cooks.delivered.none",
+      "to_ref": "stage.cooks.delivered.milk",
+      "event_ref": "event.quest.delivered",
+      "guard": {
+        "all": [
+          {
+            "path": "event.quest_ref",
+            "op": "eq",
+            "value": "quest.cooks_assistant"
+          },
+          {
+            "path": "event.npc_ref",
+            "op": "eq",
+            "value": "npc.cook"
+          },
+          {
+            "path": "event.delivered",
+            "op": "eq",
+            "value": [
+              "milk"
+            ]
+          },
+          {
+            "path": "event.owned_items_consumed",
+            "op": "eq",
+            "value": true
+          }
+        ]
+      },
+      "effects": [
+        {
+          "op": "set",
+          "path": "state.quests.cooks_assistant.delivered.milk",
+          "value": true
+        },
+        {
+          "op": "project_journal",
+          "quest_ref": "quest.cooks_assistant"
+        }
+      ],
+      "basis": {
+        "classification": "inference",
+        "source_refs": [
+          "source.wiki.cooks_transcript",
+          "source.wiki.cooks_journal"
+        ]
+      }
+    },
+    {
+      "id": "transition.cooks.deliver.none_to_milk_egg",
+      "from_ref": "stage.cooks.delivered.none",
+      "to_ref": "stage.cooks.delivered.milk_egg",
+      "event_ref": "event.quest.delivered",
+      "guard": {
+        "all": [
+          {
+            "path": "event.quest_ref",
+            "op": "eq",
+            "value": "quest.cooks_assistant"
+          },
+          {
+            "path": "event.npc_ref",
+            "op": "eq",
+            "value": "npc.cook"
+          },
+          {
+            "path": "event.delivered",
+            "op": "eq",
+            "value": [
+              "milk",
+              "egg"
+            ]
+          },
+          {
+            "path": "event.owned_items_consumed",
+            "op": "eq",
+            "value": true
+          }
+        ]
+      },
+      "effects": [
+        {
+          "op": "set",
+          "path": "state.quests.cooks_assistant.delivered.milk",
+          "value": true
+        },
+        {
+          "op": "set",
+          "path": "state.quests.cooks_assistant.delivered.egg",
+          "value": true
+        },
+        {
+          "op": "project_journal",
+          "quest_ref": "quest.cooks_assistant"
+        }
+      ],
+      "basis": {
+        "classification": "inference",
+        "source_refs": [
+          "source.wiki.cooks_transcript",
+          "source.wiki.cooks_journal"
+        ]
+      }
+    },
+    {
+      "id": "transition.cooks.deliver.none_to_milk_flour",
+      "from_ref": "stage.cooks.delivered.none",
+      "to_ref": "stage.cooks.delivered.milk_flour",
+      "event_ref": "event.quest.delivered",
+      "guard": {
+        "all": [
+          {
+            "path": "event.quest_ref",
+            "op": "eq",
+            "value": "quest.cooks_assistant"
+          },
+          {
+            "path": "event.npc_ref",
+            "op": "eq",
+            "value": "npc.cook"
+          },
+          {
+            "path": "event.delivered",
+            "op": "eq",
+            "value": [
+              "milk",
+              "flour"
+            ]
+          },
+          {
+            "path": "event.owned_items_consumed",
+            "op": "eq",
+            "value": true
+          }
+        ]
+      },
+      "effects": [
+        {
+          "op": "set",
+          "path": "state.quests.cooks_assistant.delivered.milk",
+          "value": true
+        },
+        {
+          "op": "set",
+          "path": "state.quests.cooks_assistant.delivered.flour",
+          "value": true
+        },
+        {
+          "op": "project_journal",
+          "quest_ref": "quest.cooks_assistant"
+        }
+      ],
+      "basis": {
+        "classification": "inference",
+        "source_refs": [
+          "source.wiki.cooks_transcript",
+          "source.wiki.cooks_journal"
+        ]
+      }
+    },
+    {
+      "id": "transition.cooks.deliver.none_to_milk_flour_egg",
+      "from_ref": "stage.cooks.delivered.none",
+      "to_ref": "stage.cooks.delivered.milk_flour_egg",
+      "event_ref": "event.quest.delivered",
+      "guard": {
+        "all": [
+          {
+            "path": "event.quest_ref",
+            "op": "eq",
+            "value": "quest.cooks_assistant"
+          },
+          {
+            "path": "event.npc_ref",
+            "op": "eq",
+            "value": "npc.cook"
+          },
+          {
+            "path": "event.delivered",
+            "op": "eq",
+            "value": [
+              "milk",
+              "flour",
+              "egg"
+            ]
+          },
+          {
+            "path": "event.owned_items_consumed",
+            "op": "eq",
+            "value": true
+          }
+        ]
+      },
+      "effects": [
+        {
+          "op": "set",
+          "path": "state.quests.cooks_assistant.delivered.milk",
+          "value": true
+        },
+        {
+          "op": "set",
+          "path": "state.quests.cooks_assistant.delivered.flour",
+          "value": true
+        },
+        {
+          "op": "set",
+          "path": "state.quests.cooks_assistant.delivered.egg",
+          "value": true
+        },
+        {
+          "op": "project_journal",
+          "quest_ref": "quest.cooks_assistant"
+        }
+      ],
+      "basis": {
+        "classification": "inference",
+        "source_refs": [
+          "source.wiki.cooks_transcript",
+          "source.wiki.cooks_journal"
+        ]
+      }
+    },
+    {
+      "id": "transition.cooks.deliver.egg_to_flour_egg",
+      "from_ref": "stage.cooks.delivered.egg",
+      "to_ref": "stage.cooks.delivered.flour_egg",
+      "event_ref": "event.quest.delivered",
+      "guard": {
+        "all": [
+          {
+            "path": "event.quest_ref",
+            "op": "eq",
+            "value": "quest.cooks_assistant"
+          },
+          {
+            "path": "event.npc_ref",
+            "op": "eq",
+            "value": "npc.cook"
+          },
+          {
+            "path": "event.delivered",
+            "op": "eq",
+            "value": [
+              "flour"
+            ]
+          },
+          {
+            "path": "event.owned_items_consumed",
+            "op": "eq",
+            "value": true
+          }
+        ]
+      },
+      "effects": [
+        {
+          "op": "set",
+          "path": "state.quests.cooks_assistant.delivered.flour",
+          "value": true
+        },
+        {
+          "op": "project_journal",
+          "quest_ref": "quest.cooks_assistant"
+        }
+      ],
+      "basis": {
+        "classification": "inference",
+        "source_refs": [
+          "source.wiki.cooks_transcript",
+          "source.wiki.cooks_journal"
+        ]
+      }
+    },
+    {
+      "id": "transition.cooks.deliver.egg_to_milk_egg",
+      "from_ref": "stage.cooks.delivered.egg",
+      "to_ref": "stage.cooks.delivered.milk_egg",
+      "event_ref": "event.quest.delivered",
+      "guard": {
+        "all": [
+          {
+            "path": "event.quest_ref",
+            "op": "eq",
+            "value": "quest.cooks_assistant"
+          },
+          {
+            "path": "event.npc_ref",
+            "op": "eq",
+            "value": "npc.cook"
+          },
+          {
+            "path": "event.delivered",
+            "op": "eq",
+            "value": [
+              "milk"
+            ]
+          },
+          {
+            "path": "event.owned_items_consumed",
+            "op": "eq",
+            "value": true
+          }
+        ]
+      },
+      "effects": [
+        {
+          "op": "set",
+          "path": "state.quests.cooks_assistant.delivered.milk",
+          "value": true
+        },
+        {
+          "op": "project_journal",
+          "quest_ref": "quest.cooks_assistant"
+        }
+      ],
+      "basis": {
+        "classification": "inference",
+        "source_refs": [
+          "source.wiki.cooks_transcript",
+          "source.wiki.cooks_journal"
+        ]
+      }
+    },
+    {
+      "id": "transition.cooks.deliver.egg_to_milk_flour_egg",
+      "from_ref": "stage.cooks.delivered.egg",
+      "to_ref": "stage.cooks.delivered.milk_flour_egg",
+      "event_ref": "event.quest.delivered",
+      "guard": {
+        "all": [
+          {
+            "path": "event.quest_ref",
+            "op": "eq",
+            "value": "quest.cooks_assistant"
+          },
+          {
+            "path": "event.npc_ref",
+            "op": "eq",
+            "value": "npc.cook"
+          },
+          {
+            "path": "event.delivered",
+            "op": "eq",
+            "value": [
+              "milk",
+              "flour"
+            ]
+          },
+          {
+            "path": "event.owned_items_consumed",
+            "op": "eq",
+            "value": true
+          }
+        ]
+      },
+      "effects": [
+        {
+          "op": "set",
+          "path": "state.quests.cooks_assistant.delivered.milk",
+          "value": true
+        },
+        {
+          "op": "set",
+          "path": "state.quests.cooks_assistant.delivered.flour",
+          "value": true
+        },
+        {
+          "op": "project_journal",
+          "quest_ref": "quest.cooks_assistant"
+        }
+      ],
+      "basis": {
+        "classification": "inference",
+        "source_refs": [
+          "source.wiki.cooks_transcript",
+          "source.wiki.cooks_journal"
+        ]
+      }
+    },
+    {
+      "id": "transition.cooks.deliver.flour_to_flour_egg",
+      "from_ref": "stage.cooks.delivered.flour",
+      "to_ref": "stage.cooks.delivered.flour_egg",
+      "event_ref": "event.quest.delivered",
+      "guard": {
+        "all": [
+          {
+            "path": "event.quest_ref",
+            "op": "eq",
+            "value": "quest.cooks_assistant"
+          },
+          {
+            "path": "event.npc_ref",
+            "op": "eq",
+            "value": "npc.cook"
+          },
+          {
+            "path": "event.delivered",
+            "op": "eq",
+            "value": [
+              "egg"
+            ]
+          },
+          {
+            "path": "event.owned_items_consumed",
+            "op": "eq",
+            "value": true
+          }
+        ]
+      },
+      "effects": [
+        {
+          "op": "set",
+          "path": "state.quests.cooks_assistant.delivered.egg",
+          "value": true
+        },
+        {
+          "op": "project_journal",
+          "quest_ref": "quest.cooks_assistant"
+        }
+      ],
+      "basis": {
+        "classification": "inference",
+        "source_refs": [
+          "source.wiki.cooks_transcript",
+          "source.wiki.cooks_journal"
+        ]
+      }
+    },
+    {
+      "id": "transition.cooks.deliver.flour_to_milk_flour",
+      "from_ref": "stage.cooks.delivered.flour",
+      "to_ref": "stage.cooks.delivered.milk_flour",
+      "event_ref": "event.quest.delivered",
+      "guard": {
+        "all": [
+          {
+            "path": "event.quest_ref",
+            "op": "eq",
+            "value": "quest.cooks_assistant"
+          },
+          {
+            "path": "event.npc_ref",
+            "op": "eq",
+            "value": "npc.cook"
+          },
+          {
+            "path": "event.delivered",
+            "op": "eq",
+            "value": [
+              "milk"
+            ]
+          },
+          {
+            "path": "event.owned_items_consumed",
+            "op": "eq",
+            "value": true
+          }
+        ]
+      },
+      "effects": [
+        {
+          "op": "set",
+          "path": "state.quests.cooks_assistant.delivered.milk",
+          "value": true
+        },
+        {
+          "op": "project_journal",
+          "quest_ref": "quest.cooks_assistant"
+        }
+      ],
+      "basis": {
+        "classification": "inference",
+        "source_refs": [
+          "source.wiki.cooks_transcript",
+          "source.wiki.cooks_journal"
+        ]
+      }
+    },
+    {
+      "id": "transition.cooks.deliver.flour_to_milk_flour_egg",
+      "from_ref": "stage.cooks.delivered.flour",
+      "to_ref": "stage.cooks.delivered.milk_flour_egg",
+      "event_ref": "event.quest.delivered",
+      "guard": {
+        "all": [
+          {
+            "path": "event.quest_ref",
+            "op": "eq",
+            "value": "quest.cooks_assistant"
+          },
+          {
+            "path": "event.npc_ref",
+            "op": "eq",
+            "value": "npc.cook"
+          },
+          {
+            "path": "event.delivered",
+            "op": "eq",
+            "value": [
+              "milk",
+              "egg"
+            ]
+          },
+          {
+            "path": "event.owned_items_consumed",
+            "op": "eq",
+            "value": true
+          }
+        ]
+      },
+      "effects": [
+        {
+          "op": "set",
+          "path": "state.quests.cooks_assistant.delivered.milk",
+          "value": true
+        },
+        {
+          "op": "set",
+          "path": "state.quests.cooks_assistant.delivered.egg",
+          "value": true
+        },
+        {
+          "op": "project_journal",
+          "quest_ref": "quest.cooks_assistant"
+        }
+      ],
+      "basis": {
+        "classification": "inference",
+        "source_refs": [
+          "source.wiki.cooks_transcript",
+          "source.wiki.cooks_journal"
+        ]
+      }
+    },
+    {
+      "id": "transition.cooks.deliver.flour_egg_to_milk_flour_egg",
+      "from_ref": "stage.cooks.delivered.flour_egg",
+      "to_ref": "stage.cooks.delivered.milk_flour_egg",
+      "event_ref": "event.quest.delivered",
+      "guard": {
+        "all": [
+          {
+            "path": "event.quest_ref",
+            "op": "eq",
+            "value": "quest.cooks_assistant"
+          },
+          {
+            "path": "event.npc_ref",
+            "op": "eq",
+            "value": "npc.cook"
+          },
+          {
+            "path": "event.delivered",
+            "op": "eq",
+            "value": [
+              "milk"
+            ]
+          },
+          {
+            "path": "event.owned_items_consumed",
+            "op": "eq",
+            "value": true
+          }
+        ]
+      },
+      "effects": [
+        {
+          "op": "set",
+          "path": "state.quests.cooks_assistant.delivered.milk",
+          "value": true
+        },
+        {
+          "op": "project_journal",
+          "quest_ref": "quest.cooks_assistant"
+        }
+      ],
+      "basis": {
+        "classification": "inference",
+        "source_refs": [
+          "source.wiki.cooks_transcript",
+          "source.wiki.cooks_journal"
+        ]
+      }
+    },
+    {
+      "id": "transition.cooks.deliver.milk_to_milk_egg",
+      "from_ref": "stage.cooks.delivered.milk",
+      "to_ref": "stage.cooks.delivered.milk_egg",
+      "event_ref": "event.quest.delivered",
+      "guard": {
+        "all": [
+          {
+            "path": "event.quest_ref",
+            "op": "eq",
+            "value": "quest.cooks_assistant"
+          },
+          {
+            "path": "event.npc_ref",
+            "op": "eq",
+            "value": "npc.cook"
+          },
+          {
+            "path": "event.delivered",
+            "op": "eq",
+            "value": [
+              "egg"
+            ]
+          },
+          {
+            "path": "event.owned_items_consumed",
+            "op": "eq",
+            "value": true
+          }
+        ]
+      },
+      "effects": [
+        {
+          "op": "set",
+          "path": "state.quests.cooks_assistant.delivered.egg",
+          "value": true
+        },
+        {
+          "op": "project_journal",
+          "quest_ref": "quest.cooks_assistant"
+        }
+      ],
+      "basis": {
+        "classification": "inference",
+        "source_refs": [
+          "source.wiki.cooks_transcript",
+          "source.wiki.cooks_journal"
+        ]
+      }
+    },
+    {
+      "id": "transition.cooks.deliver.milk_to_milk_flour",
+      "from_ref": "stage.cooks.delivered.milk",
+      "to_ref": "stage.cooks.delivered.milk_flour",
+      "event_ref": "event.quest.delivered",
+      "guard": {
+        "all": [
+          {
+            "path": "event.quest_ref",
+            "op": "eq",
+            "value": "quest.cooks_assistant"
+          },
+          {
+            "path": "event.npc_ref",
+            "op": "eq",
+            "value": "npc.cook"
+          },
+          {
+            "path": "event.delivered",
+            "op": "eq",
+            "value": [
+              "flour"
+            ]
+          },
+          {
+            "path": "event.owned_items_consumed",
+            "op": "eq",
+            "value": true
+          }
+        ]
+      },
+      "effects": [
+        {
+          "op": "set",
+          "path": "state.quests.cooks_assistant.delivered.flour",
+          "value": true
+        },
+        {
+          "op": "project_journal",
+          "quest_ref": "quest.cooks_assistant"
+        }
+      ],
+      "basis": {
+        "classification": "inference",
+        "source_refs": [
+          "source.wiki.cooks_transcript",
+          "source.wiki.cooks_journal"
+        ]
+      }
+    },
+    {
+      "id": "transition.cooks.deliver.milk_to_milk_flour_egg",
+      "from_ref": "stage.cooks.delivered.milk",
+      "to_ref": "stage.cooks.delivered.milk_flour_egg",
+      "event_ref": "event.quest.delivered",
+      "guard": {
+        "all": [
+          {
+            "path": "event.quest_ref",
+            "op": "eq",
+            "value": "quest.cooks_assistant"
+          },
+          {
+            "path": "event.npc_ref",
+            "op": "eq",
+            "value": "npc.cook"
+          },
+          {
+            "path": "event.delivered",
+            "op": "eq",
+            "value": [
+              "flour",
+              "egg"
+            ]
+          },
+          {
+            "path": "event.owned_items_consumed",
+            "op": "eq",
+            "value": true
+          }
+        ]
+      },
+      "effects": [
+        {
+          "op": "set",
+          "path": "state.quests.cooks_assistant.delivered.flour",
+          "value": true
+        },
+        {
+          "op": "set",
+          "path": "state.quests.cooks_assistant.delivered.egg",
+          "value": true
+        },
+        {
+          "op": "project_journal",
+          "quest_ref": "quest.cooks_assistant"
+        }
+      ],
+      "basis": {
+        "classification": "inference",
+        "source_refs": [
+          "source.wiki.cooks_transcript",
+          "source.wiki.cooks_journal"
+        ]
+      }
+    },
+    {
+      "id": "transition.cooks.deliver.milk_egg_to_milk_flour_egg",
+      "from_ref": "stage.cooks.delivered.milk_egg",
+      "to_ref": "stage.cooks.delivered.milk_flour_egg",
+      "event_ref": "event.quest.delivered",
+      "guard": {
+        "all": [
+          {
+            "path": "event.quest_ref",
+            "op": "eq",
+            "value": "quest.cooks_assistant"
+          },
+          {
+            "path": "event.npc_ref",
+            "op": "eq",
+            "value": "npc.cook"
+          },
+          {
+            "path": "event.delivered",
+            "op": "eq",
+            "value": [
+              "flour"
+            ]
+          },
+          {
+            "path": "event.owned_items_consumed",
+            "op": "eq",
+            "value": true
+          }
+        ]
+      },
+      "effects": [
+        {
+          "op": "set",
+          "path": "state.quests.cooks_assistant.delivered.flour",
+          "value": true
+        },
+        {
+          "op": "project_journal",
+          "quest_ref": "quest.cooks_assistant"
+        }
+      ],
+      "basis": {
+        "classification": "inference",
+        "source_refs": [
+          "source.wiki.cooks_transcript",
+          "source.wiki.cooks_journal"
+        ]
+      }
+    },
+    {
+      "id": "transition.cooks.deliver.milk_flour_to_milk_flour_egg",
+      "from_ref": "stage.cooks.delivered.milk_flour",
+      "to_ref": "stage.cooks.delivered.milk_flour_egg",
+      "event_ref": "event.quest.delivered",
+      "guard": {
+        "all": [
+          {
+            "path": "event.quest_ref",
+            "op": "eq",
+            "value": "quest.cooks_assistant"
+          },
+          {
+            "path": "event.npc_ref",
+            "op": "eq",
+            "value": "npc.cook"
+          },
+          {
+            "path": "event.delivered",
+            "op": "eq",
+            "value": [
+              "egg"
+            ]
+          },
+          {
+            "path": "event.owned_items_consumed",
+            "op": "eq",
+            "value": true
+          }
+        ]
+      },
+      "effects": [
+        {
+          "op": "set",
+          "path": "state.quests.cooks_assistant.delivered.egg",
+          "value": true
+        },
+        {
+          "op": "project_journal",
+          "quest_ref": "quest.cooks_assistant"
+        }
+      ],
+      "basis": {
+        "classification": "inference",
+        "source_refs": [
+          "source.wiki.cooks_transcript",
+          "source.wiki.cooks_journal"
+        ]
+      }
+    },
+    {
+      "id": "transition.cooks.complete",
+      "from_ref": "stage.cooks.delivered.milk_flour_egg",
+      "to_ref": "stage.cooks.completed",
+      "event_ref": "event.dialogue.completed",
+      "guard": {
+        "all": [
+          {
+            "path": "event.npc_ref",
+            "op": "eq",
+            "value": "npc.cook"
+          },
+          {
+            "path": "event.topic",
+            "op": "eq",
+            "value": "all_ingredients_thanks"
+          },
+          {
+            "path": "state.quests.cooks_assistant.delivered.milk",
+            "op": "eq",
+            "value": true
+          },
+          {
+            "path": "state.quests.cooks_assistant.delivered.flour",
+            "op": "eq",
+            "value": true
+          },
+          {
+            "path": "state.quests.cooks_assistant.delivered.egg",
+            "op": "eq",
+            "value": true
+          },
+          {
+            "path": "state.rewards.cooks_assistant",
+            "op": "eq",
+            "value": false
+          }
+        ]
+      },
+      "effects": [
+        {
+          "op": "set",
+          "path": "state.quests.cooks_assistant.status",
+          "value": "completed"
+        },
+        {
+          "op": "reward",
+          "reward_ref": "reward.cooks_assistant"
+        },
+        {
+          "op": "project_journal",
+          "quest_ref": "quest.cooks_assistant"
+        }
+      ],
+      "basis": {
+        "classification": "verified_reference",
+        "source_refs": [
+          "source.wiki.cooks_transcript",
+          "source.wiki.cooks_assistant"
+        ]
+      }
+    }
+  ],
+  "ingredients": [
+    {
+      "name": "milk",
+      "item_ref": "item.milk.bucket",
+      "quantity": 1,
+      "alternative": {
+        "item_ref": "item.milk.bottomless_bucket",
+        "consume_charges": 1,
+        "retain_container": true,
+        "requires_bound_item_definition": true
+      }
+    },
+    {
+      "name": "flour",
+      "item_ref": "item.flour.pot",
+      "quantity": 1
+    },
+    {
+      "name": "egg",
+      "item_ref": "item.egg",
+      "quantity": 1
+    }
+  ],
+  "rules": [
+    {
+      "id": "rule.cooks.start",
+      "family": "quest",
+      "event_ref": "event.quest.accepted",
+      "guard": {
+        "all": [
+          {
+            "path": "event.npc_ref",
+            "op": "eq",
+            "value": "npc.cook"
+          },
+          {
+            "path": "event.reachable",
+            "op": "eq",
+            "value": true
+          },
+          {
+            "path": "state.quests.cooks_assistant.status",
+            "op": "eq",
+            "value": "not_started"
+          }
+        ]
+      },
+      "contract": [
+        "No skill, combat, quest-point, or ingredient-acquisition prerequisite.",
+        "Start via Cook's problem dialogue and explicit Yes; No leaves the quest unstarted.",
+        "Already carrying all ingredients enables the special start dialogue followed by real transfer and completion; never require gathering after start.",
+        "Partial ingredients at initial acceptance do not count as delivered until actually transferred."
+      ],
+      "basis": {
+        "classification": "verified_reference",
+        "source_refs": [
+          "source.wiki.cooks_transcript",
+          "source.wiki.cooks_assistant"
+        ]
+      }
+    },
+    {
+      "id": "rule.cooks.deliver",
+      "family": "quest",
+      "event_ref": "event.quest.delivered",
+      "guard": {
+        "all": [
+          {
+            "path": "state.quests.cooks_assistant.status",
+            "op": "eq",
+            "value": "in_progress"
+          },
+          {
+            "path": "event.npc_ref",
+            "op": "eq",
+            "value": "npc.cook"
+          },
+          {
+            "path": "event.reachable",
+            "op": "eq",
+            "value": true
+          }
+        ]
+      },
+      "contract": [
+        "Cook accepts any currently carried, usable, unnoted requested ingredients not already delivered; partial deliveries in any order persist.",
+        "The shared turn-in transaction chooses ALL eligible missing held ingredients in source dialogue order milk, flour, egg, removes exactly one of each and sets those delivered bits.",
+        "It then emits event.quest.delivered with its actual new ingredient list. The event cannot be supplied as a client assertion.",
+        "Do not consume a second egg/milk/flour after its bit is true. Do not require proof of self-gathering: legitimately purchased/traded/pre-collected ingredients also satisfy the source quest.",
+        "Normal milk and flour deliveries consume the filled container item; no empty container return is shown by source. Bottomless milk consumes one charge and retains the container.",
+        "Banked or noted items cannot be silently withdrawn/unnoted by dialogue. A missing item gets a reminder, not a magical replacement.",
+        "A transfer acknowledged before disconnect remains delivered even if death/restart happens before reward dialogue."
+      ],
+      "ingredients": [
+        {
+          "name": "milk",
+          "item_ref": "item.milk.bucket",
+          "quantity": 1,
+          "alternative": {
+            "item_ref": "item.milk.bottomless_bucket",
+            "consume_charges": 1,
+            "retain_container": true,
+            "requires_bound_item_definition": true
+          }
+        },
+        {
+          "name": "flour",
+          "item_ref": "item.flour.pot",
+          "quantity": 1
+        },
+        {
+          "name": "egg",
+          "item_ref": "item.egg",
+          "quantity": 1
+        }
+      ],
+      "basis": {
+        "classification": "verified_reference",
+        "source_refs": [
+          "source.wiki.cooks_transcript",
+          "source.wiki.cooks_journal",
+          "source.wiki.cooks_assistant"
+        ]
+      }
+    },
+    {
+      "id": "rule.cooks.milk",
+      "family": "ingredient",
+      "event_ref": "event.activity.requested",
+      "guard": {
+        "all": [
+          {
+            "path": "state.inventory.empty_bucket",
+            "op": "gte",
+            "value": 1
+          },
+          {
+            "path": "event.target_is_dairy_cow",
+            "op": "eq",
+            "value": true
+          },
+          {
+            "path": "event.reachable",
+            "op": "eq",
+            "value": true
+          }
+        ]
+      },
+      "consumed": [
+        {
+          "item_ref": "item.bucket",
+          "quantity": 1
+        }
+      ],
+      "produced": [
+        {
+          "item_ref": "item.milk.bucket",
+          "quantity": 1
+        }
+      ],
+      "xp_awards": [],
+      "timing": {
+        "left_click_ticks": 3,
+        "use_bucket_ticks": 4,
+        "auto_repeat_ticks": 8
+      },
+      "contract": [
+        "One existing bucket transforms in place; full inventory still permits this net-zero-slot conversion.",
+        "An ordinary cow attack target, bucket of water, missing bucket or unreachable cow produces no milk.",
+        "No quest-start requirement; milk can be obtained before speaking to Cook."
+      ],
+      "basis": {
+        "classification": "verified_reference",
+        "source_refs": [
+          "source.wiki.bucket_of_milk",
+          "source.wiki.cooks_assistant"
+        ]
+      }
+    },
+    {
+      "id": "rule.cooks.grain",
+      "family": "ingredient",
+      "event_ref": "event.activity.requested",
+      "guard": {
+        "all": [
+          {
+            "path": "event.target_is_pickable_wheat",
+            "op": "eq",
+            "value": true
+          },
+          {
+            "path": "event.reachable",
+            "op": "eq",
+            "value": true
+          },
+          {
+            "path": "state.inventory.free_slots",
+            "op": "gte",
+            "value": 1
+          }
+        ]
+      },
+      "consumed": [],
+      "produced": [
+        {
+          "item_ref": "item.grain",
+          "quantity": 1
+        }
+      ],
+      "xp_awards": [],
+      "contract": [
+        "Pick real wheat to receive grain. No Farming XP, Farming level or quest-start requirement is imposed.",
+        "A full inventory doesn't remove the wheat or set a milled/quest-delivered flag."
+      ],
+      "basis": {
+        "classification": "verified_reference",
+        "source_refs": [
+          "source.wiki.grain",
+          "source.wiki.cooks_assistant"
+        ]
+      }
+    },
+    {
+      "id": "rule.cooks.hopper",
+      "family": "ingredient",
+      "event_ref": "event.mill.hopper_filled",
+      "guard": {
+        "all": [
+          {
+            "path": "state.location",
+            "op": "eq",
+            "value": "mill_top"
+          },
+          {
+            "path": "state.mill.hopper",
+            "op": "eq",
+            "value": null
+          },
+          {
+            "path": "state.inventory.grain",
+            "op": "gte",
+            "value": 1
+          },
+          {
+            "path": "state.mill.flour_units",
+            "op": "lte",
+            "value": 29
+          },
+          {
+            "path": "event.reachable",
+            "op": "eq",
+            "value": true
+          }
+        ]
+      },
+      "consumed": [
+        {
+          "item_ref": "item.grain",
+          "quantity": 1
+        }
+      ],
+      "produced": [],
+      "xp_awards": [],
+      "effects": [
+        {
+          "op": "set",
+          "path": "state.mill.hopper",
+          "value": "grain"
+        }
+      ],
+      "contract": [
+        "Hopper accepts one grain. A second fill before processing is refused without consuming another grain.",
+        "Filling does not itself mill flour; controls must operate next. The 30-flour overflow policy is provisional."
+      ],
+      "basis": {
+        "classification": "assumption",
+        "source_refs": [
+          "source.wiki.hopper_transcript",
+          "source.wiki.mill_lane_mill"
+        ],
+        "assumption_refs": [
+          "assumption.mill_ownership_overflow"
+        ]
+      }
+    },
+    {
+      "id": "rule.cooks.mill_controls",
+      "family": "ingredient",
+      "event_ref": "event.mill.controls_operated",
+      "guard": {
+        "all": [
+          {
+            "path": "state.location",
+            "op": "eq",
+            "value": "mill_top"
+          },
+          {
+            "path": "state.mill.hopper",
+            "op": "eq",
+            "value": "grain"
+          },
+          {
+            "path": "state.mill.flour_units",
+            "op": "lte",
+            "value": 29
+          },
+          {
+            "path": "event.reachable",
+            "op": "eq",
+            "value": true
+          }
+        ]
+      },
+      "effects": [
+        {
+          "op": "set",
+          "path": "state.mill.hopper",
+          "value": null
+        },
+        {
+          "op": "set",
+          "path": "state.mill.flour_units",
+          "expression": "previous+1"
+        }
+      ],
+      "xp_awards": [],
+      "contract": [
+        "Convert hopper grain to one unit in the ground-floor flour bin, not directly into inventory.",
+        "Operating empty controls creates no flour; repeat/replayed operations cannot duplicate it.",
+        "Flour count persists across logout and is shared across ordinary windmills for that character."
+      ],
+      "basis": {
+        "classification": "assumption",
+        "source_refs": [
+          "source.wiki.mill_lane_mill",
+          "source.wiki.flour_bin"
+        ],
+        "assumption_refs": [
+          "assumption.mill_ownership_overflow"
+        ]
+      }
+    },
+    {
+      "id": "rule.cooks.collect_flour",
+      "family": "ingredient",
+      "event_ref": "event.mill.flour_collected",
+      "guard": {
+        "all": [
+          {
+            "path": "state.location",
+            "op": "eq",
+            "value": "mill_ground"
+          },
+          {
+            "path": "state.mill.flour_units",
+            "op": "gte",
+            "value": 1
+          },
+          {
+            "path": "state.inventory.empty_pot",
+            "op": "gte",
+            "value": 1
+          },
+          {
+            "path": "event.reachable",
+            "op": "eq",
+            "value": true
+          }
+        ]
+      },
+      "consumed": [
+        {
+          "item_ref": "item.pot",
+          "quantity": 1
+        }
+      ],
+      "produced": [
+        {
+          "item_ref": "item.flour.pot",
+          "quantity": 1
+        }
+      ],
+      "xp_awards": [],
+      "effects": [
+        {
+          "op": "set",
+          "path": "state.mill.flour_units",
+          "expression": "previous-1"
+        }
+      ],
+      "contract": [
+        "Replace one empty pot with flour and decrement flour count once. No free inventory slot needed for the replacement.",
+        "No pot, no flour or wrong floor means no mutation. A full flour bin is not a full inventory item until collected.",
+        "Losing the pot is recoverable through kitchen spawn or shop; the processed flour remains available."
+      ],
+      "basis": {
+        "classification": "verified_reference",
+        "source_refs": [
+          "source.wiki.mill_lane_mill",
+          "source.wiki.flour_bin",
+          "source.wiki.pot_of_flour"
+        ]
+      }
+    },
+    {
+      "id": "rule.cooks.range_access",
+      "family": "quest",
+      "event_ref": "event.activity.requested",
+      "guard": {
+        "all": [
+          {
+            "path": "state.quests.cooks_assistant.status",
+            "op": "eq",
+            "value": "completed"
+          },
+          {
+            "path": "event.reachable",
+            "op": "eq",
+            "value": true
+          }
+        ]
+      },
+      "contract": [
+        "Cook-o-matic 100 permission is granted only at completed quest, not at first partial delivery.",
+        "Before permission, range use refuses without consuming raw food/XP. After permission use the shared recipe's Lumbridge-specific burn parameters.",
+        "This permission does not unlock the Recipe for Disaster chest, invent extra rewards or give free cooking ingredients."
+      ],
+      "object_ref": "object.range.lumbridge",
+      "rule_refs": [
+        "rule.cooking.shrimps",
+        "rule.cooking.bread"
+      ],
+      "basis": {
+        "classification": "verified_reference",
+        "source_refs": [
+          "source.wiki.cooks_assistant",
+          "source.wiki.cooks_journal",
+          "source.wiki.bread",
+          "source.wiki.shrimps"
+        ]
+      }
+    }
+  ],
+  "routes": [
+    {
+      "id": "route.cooks.pot_spawn",
+      "location_refs": [
+        "location.lumbridge.kitchen"
+      ],
+      "object_ref": "object.pot_spawn",
+      "steps": [
+        {
+          "event_ref": "event.inventory.pickup_requested",
+          "item_ref": "item.pot",
+          "quantity": 1
+        }
+      ],
+      "guard": {
+        "all": [
+          {
+            "path": "event.spawn_present",
+            "op": "eq",
+            "value": true
+          },
+          {
+            "path": "state.inventory.free_slots",
+            "op": "gte",
+            "value": 1
+          },
+          {
+            "path": "event.reachable",
+            "op": "eq",
+            "value": true
+          }
+        ]
+      },
+      "basis": {
+        "classification": "verified_reference",
+        "source_refs": [
+          "source.wiki.cooks_assistant",
+          "source.wiki.pot"
+        ]
+      }
+    },
+    {
+      "id": "route.cooks.bucket_spawn",
+      "location_refs": [
+        "location.lumbridge.kitchen",
+        "location.lumbridge.cellar"
+      ],
+      "object_ref": "object.bucket_spawn",
+      "steps": [
+        {
+          "event_ref": "event.world.transitioned",
+          "link_ref": "object.lumbridge.kitchen_trapdoor",
+          "to_ref": "location.lumbridge.cellar"
+        },
+        {
+          "event_ref": "event.inventory.pickup_requested",
+          "item_ref": "item.bucket",
+          "quantity": 1
+        }
+      ],
+      "guard": {
+        "all": [
+          {
+            "path": "event.spawn_present",
+            "op": "eq",
+            "value": true
+          },
+          {
+            "path": "state.inventory.free_slots",
+            "op": "gte",
+            "value": 1
+          },
+          {
+            "path": "event.reachable",
+            "op": "eq",
+            "value": true
+          }
+        ]
+      },
+      "basis": {
+        "classification": "verified_reference",
+        "source_refs": [
+          "source.wiki.cooks_assistant",
+          "source.wiki.bucket"
+        ]
+      }
+    },
+    {
+      "id": "route.cooks.shop_containers",
+      "location_refs": [
+        "location.lumbridge.bank",
+        "location.lumbridge.general_store"
+      ],
+      "steps": [
+        {
+          "event_ref": "event.bank.withdraw_requested",
+          "item_ref": "item.coins",
+          "quantity": 3
+        },
+        {
+          "event_ref": "event.shop.buy_requested",
+          "item_ref": "item.pot",
+          "quantity": 1
+        },
+        {
+          "event_ref": "event.shop.buy_requested",
+          "item_ref": "item.bucket",
+          "quantity": 1
+        }
+      ],
+      "guard": {
+        "all": [
+          {
+            "path": "event.legitimate_bank_and_shop_access",
+            "op": "eq",
+            "value": true
+          }
+        ]
+      },
+      "rule_refs": [
+        "rule.bank.withdraw",
+        "rule.shop.lumbridge"
+      ],
+      "basis": {
+        "classification": "verified_reference",
+        "source_refs": [
+          "source.wiki.cooks_assistant",
+          "source.wiki.lumbridge_general_store"
+        ]
+      },
+      "note": "3 coins buys both only at these source prices/stock. Starter bank money must actually be withdrawn; quest does not grant it."
+    },
+    {
+      "id": "route.cooks.egg",
+      "location_refs": [
+        "location.lumbridge.kitchen",
+        "location.lumbridge.west_coop"
+      ],
+      "object_ref": "object.egg_spawn",
+      "steps": [
+        {
+          "event_ref": "event.inventory.pickup_requested",
+          "item_ref": "item.egg",
+          "quantity": 1
+        }
+      ],
+      "guard": {
+        "all": [
+          {
+            "path": "event.spawn_present",
+            "op": "eq",
+            "value": true
+          },
+          {
+            "path": "state.inventory.free_slots",
+            "op": "gte",
+            "value": 1
+          },
+          {
+            "path": "event.reachable",
+            "op": "eq",
+            "value": true
+          }
+        ]
+      },
+      "basis": {
+        "classification": "verified_reference",
+        "source_refs": [
+          "source.wiki.cooks_assistant",
+          "source.wiki.egg"
+        ]
+      },
+      "note": "Pick up a real chicken-coop egg; killing a chicken is neither required nor a guaranteed egg-grant action."
+    },
+    {
+      "id": "route.cooks.milk_west",
+      "location_refs": [
+        "location.lumbridge.west_coop",
+        "location.lumbridge.north_cows"
+      ],
+      "npc_ref": "npc.dairy_cow",
+      "rule_ref": "rule.cooks.milk",
+      "basis": {
+        "classification": "verified_reference",
+        "source_refs": [
+          "source.wiki.cooks_assistant"
+        ]
+      }
+    },
+    {
+      "id": "route.cooks.milk_east",
+      "location_refs": [
+        "location.lumbridge.kitchen",
+        "location.lumbridge.east_cows"
+      ],
+      "object_ref": "object.lumbridge.bridge",
+      "npc_ref": "npc.dairy_cow",
+      "rule_ref": "rule.cooks.milk",
+      "optional_tutor_ref": "npc.gillie_groats",
+      "basis": {
+        "classification": "verified_reference",
+        "source_refs": [
+          "source.wiki.cooks_transcript",
+          "source.wiki.bucket_of_milk"
+        ]
+      },
+      "note": "Keep the bridge/river travel relationship. Do not put Gillie beside the west-field cow."
+    },
+    {
+      "id": "route.cooks.flour",
+      "location_refs": [
+        "location.lumbridge.wheat",
+        "location.lumbridge.mill_ground",
+        "location.lumbridge.mill_middle",
+        "location.lumbridge.mill_top"
+      ],
+      "steps": [
+        {
+          "event_ref": "event.gather.succeeded",
+          "rule_ref": "rule.cooks.grain",
+          "item_ref": "item.grain"
+        },
+        {
+          "event_ref": "event.world.transitioned",
+          "link_ref": "object.mill.ladder_lower",
+          "to_ref": "location.lumbridge.mill_middle"
+        },
+        {
+          "event_ref": "event.world.transitioned",
+          "link_ref": "object.mill.ladder_upper",
+          "to_ref": "location.lumbridge.mill_top"
+        },
+        {
+          "event_ref": "event.mill.hopper_filled",
+          "item_ref": "item.grain"
+        },
+        {
+          "event_ref": "event.mill.controls_operated",
+          "object_ref": "object.mill.controls"
+        },
+        {
+          "event_ref": "event.world.transitioned",
+          "link_ref": "object.mill.ladder_upper",
+          "to_ref": "location.lumbridge.mill_middle"
+        },
+        {
+          "event_ref": "event.world.transitioned",
+          "link_ref": "object.mill.ladder_lower",
+          "to_ref": "location.lumbridge.mill_ground"
+        },
+        {
+          "event_ref": "event.mill.flour_collected",
+          "object_ref": "object.mill.flour_bin"
+        }
+      ],
+      "optional_tutor_ref": "npc.millie_miller",
+      "basis": {
+        "classification": "verified_reference",
+        "source_refs": [
+          "source.wiki.cooks_assistant",
+          "source.wiki.mill_lane_mill",
+          "source.wiki.hopper",
+          "source.wiki.flour_bin"
+        ]
+      },
+      "note": "Flour bin on floor 0, millstones on 1, hopper/controls on 2. Millie's explanation is optional, using hopper then controls is not."
+    }
+  ],
+  "rewards": [
+    {
+      "id": "reward.learning_the_ropes",
+      "quest_ref": "quest.learning_the_ropes",
+      "claim_key": "quest.learning_the_ropes",
+      "guard": {
+        "all": [
+          {
+            "path": "state.quests.learning_the_ropes.status",
+            "op": "eq",
+            "value": "completed"
+          },
+          {
+            "path": "state.tutorial.chicken_cast",
+            "op": "eq",
+            "value": true
+          },
+          {
+            "path": "state.rewards.learning_the_ropes",
+            "op": "eq",
+            "value": false
+          }
+        ]
+      },
+      "quest_points": 1,
+      "xp_awards": [],
+      "items": [],
+      "unlocks": [
+        "mainland departure through authorized Home Teleport"
+      ],
+      "sets": {
+        "state.rewards.learning_the_ropes": true,
+        "state.vitals.run_energy_units": 10000
+      },
+      "basis": {
+        "classification": "verified_reference",
+        "source_refs": [
+          "source.wiki.learning_the_ropes",
+          "source.wiki.tutorial_transcript",
+          "source.wiki.energy"
+        ]
+      }
+    },
+    {
+      "id": "reward.cooks_assistant",
+      "quest_ref": "quest.cooks_assistant",
+      "claim_key": "quest.cooks_assistant",
+      "guard": {
+        "all": [
+          {
+            "path": "state.quests.cooks_assistant.status",
+            "op": "eq",
+            "value": "completed"
+          },
+          {
+            "path": "state.quests.cooks_assistant.delivered.milk",
+            "op": "eq",
+            "value": true
+          },
+          {
+            "path": "state.quests.cooks_assistant.delivered.flour",
+            "op": "eq",
+            "value": true
+          },
+          {
+            "path": "state.quests.cooks_assistant.delivered.egg",
+            "op": "eq",
+            "value": true
+          },
+          {
+            "path": "state.rewards.cooks_assistant",
+            "op": "eq",
+            "value": false
+          }
+        ]
+      },
+      "quest_points": 1,
+      "xp_awards": [
+        {
+          "skill_ref": "skill.cooking",
+          "xp_tenths": 3000
+        }
+      ],
+      "items": [],
+      "unlocks": [
+        "Cook-o-matic 100 range permission"
+      ],
+      "sets": {
+        "state.rewards.cooks_assistant": true,
+        "state.vitals.run_energy_units": 10000
+      },
+      "basis": {
+        "classification": "verified_reference",
+        "source_refs": [
+          "source.wiki.cooks_assistant",
+          "source.wiki.cooks_journal",
+          "source.wiki.energy"
+        ]
+      }
+    }
+  ],
+  "delivery_order": [
+    "milk",
+    "flour",
+    "egg"
+  ],
+  "reward_atomicity": "Complete status, once-only claim ledger, 1 QP, 3000 Cooking XP tenths and range permission commit together before the completion acknowledgement. Transaction failure must leave the prior ready-for-thanks state, not half a reward.",
+  "journal": {
+    "not_started": "Locate Cook in Lumbridge Castle.",
+    "in_progress": {
+      "intro": "Help Cook make the Duke's birthday cake by bringing three ordinary ingredients.",
+      "ingredient_projection_order": [
+        "delivered -> crossed out",
+        "currently held usable unnoted -> found, ready to give",
+        "otherwise -> missing, route hint"
+      ],
+      "milk_hint": "Bring an empty bucket to a dairy cow; source journal points east of Lumbridge.",
+      "flour_hint": "Bring an empty pot to the mill north-west of Lumbridge.",
+      "egg_hint": "A chicken coop at Groats' farm/west of the cattle field."
+    },
+    "completed": "All ingredients delivered, quest complete, high-quality range available.",
+    "basis": {
+      "classification": "assumption",
+      "source_refs": [
+        "source.wiki.cooks_journal"
+      ],
+      "assumption_refs": [
+        "assumption.journal_inventory_scope"
+      ]
+    },
+    "not_exact_dialogue_text": true
+  },
+  "dialogue_routes": [
+    {
+      "topic": "whats_wrong",
+      "opens": "explicit yes/no quest offer"
+    },
+    {
+      "topic": "cake_or_unhappy_or_hat",
+      "opens": "alternate introductions converge on same quest offer; not distinct quests"
+    },
+    {
+      "topic": "where_flour_milk_eggs",
+      "opens": "optional route reminders; pot/bucket-specific advice depends on currently held containers"
+    },
+    {
+      "topic": "already_have_everything",
+      "opens": "special premature-acquisition dialogue, then normal item-transfer and thanks events"
+    },
+    {
+      "topic": "progress",
+      "opens": "transfer eligible partial ingredients and list the undelivered remainder"
+    },
+    {
+      "topic": "all_ingredients_thanks",
+      "opens": "finish quest; source does not require baking the cake, attending the party or collecting a coin reward"
+    },
+    {
+      "topic": "talk_after_complete",
+      "opens": "no replay of ingredient consumption or rewards; later quest content remains separately scoped"
+    }
+  ],
+  "map_markers": [
+    {
+      "location_ref": "location.lumbridge.kitchen",
+      "source_marker": [
+        3208,
+        3214
+      ]
+    },
+    {
+      "location_ref": "location.lumbridge.west_coop",
+      "source_marker": [
+        3181,
+        3288
+      ]
+    },
+    {
+      "location_ref": "location.lumbridge.north_cows",
+      "source_marker": [
+        3177,
+        3315
+      ]
+    },
+    {
+      "location_ref": "location.lumbridge.wheat",
+      "source_marker": [
+        3163,
+        3289
+      ]
+    },
+    {
+      "location_ref": "location.lumbridge.mill_top",
+      "hopper_marker": [
+        3166,
+        3307,
+        2
+      ]
+    }
+  ],
+  "marker_basis": {
+    "classification": "verified_reference",
+    "source_refs": [
+      "source.wiki.cooks_assistant",
+      "source.wiki.hopper"
+    ]
+  },
+  "marker_warning": "Guide/source rows are navigation anchors, not certified collision/object-origin coordinates; bind placements and every stair/ladder from actual source data.",
+  "source_numeric_progress": null,
+  "journey_vs_quest_guard": "M1 acceptance must actually acquire the egg/milk/flour through legitimate mapped routes. The quest itself must NOT require post-start gathering or provenance flags absent from the source."
+}
