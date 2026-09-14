@@ -1,0 +1,183 @@
+syntax = "proto3";
+
+package clubscape.game.v1;
+
+message CreateCharacter {
+  map<string, uint32> appearance = 1;
+  string experience_choice = 2;
+}
+message JoinWorld {}
+message PollWorld {
+  string world_session_id = 1;
+  uint64 after_revision = 2;
+}
+message LeaveWorld { string world_session_id = 1; }
+
+message WorldInput {
+  string world_session_id = 1;
+  uint64 sequence = 2;
+  optional uint64 expected_character_revision = 3;
+  oneof action {
+    Walk walk = 10;
+    Interact interact = 11;
+    DialogueChoice dialogue_choice = 12;
+    OpenInterface open_interface = 13;
+    Empty close_interface = 14;
+    InventorySlot equip = 15;
+    Unequip unequip = 16;
+    Drop drop = 17;
+    TakeGroundItem take_ground_item = 18;
+    UseItem use_item = 19;
+    MoveInventory move_inventory = 20;
+    InventorySlot eat = 21;
+    Produce produce = 22;
+    BankDeposit bank_deposit = 23;
+    BankWithdraw bank_withdraw = 24;
+    ShopBuy shop_buy = 25;
+    ShopSell shop_sell = 26;
+    SetCombatStyle set_combat_style = 27;
+    Cast cast = 28;
+    SetPrayer set_prayer = 29;
+    Empty cancel_activity = 30;
+    Empty request_logout = 31;
+  }
+}
+
+message Empty {}
+message Tile {
+  uint32 x = 1;
+  uint32 y = 2;
+  uint32 plane = 3;
+}
+message Walk { Tile destination = 1; bool running = 2; }
+message Interact { string target = 1; string action = 2; }
+message DialogueChoice { string speaker = 1; string choice = 2; }
+message OpenInterface { string interface = 1; }
+message InventorySlot { uint32 slot = 1; }
+message Unequip { string slot = 1; }
+message Drop { uint32 inventory_slot = 1; uint32 quantity = 2; }
+message TakeGroundItem { string ground_item_id = 1; }
+message UseItem {
+  uint32 inventory_slot = 1;
+  oneof target {
+    uint32 other_inventory_slot = 2;
+    string world_spawn = 3;
+  }
+}
+message MoveInventory { uint32 from = 1; uint32 to = 2; }
+message Produce { string recipe = 1; optional string target = 2; uint32 quantity = 3; }
+message BankDeposit { string banker = 1; uint32 inventory_slot = 2; uint32 quantity = 3; }
+message BankWithdraw { string banker = 1; uint32 bank_slot = 2; uint32 quantity = 3; bool noted = 4; }
+message ShopBuy { string shop = 1; uint32 item_index = 2; uint32 quantity = 3; }
+message ShopSell { string shop = 1; uint32 inventory_slot = 2; uint32 quantity = 3; }
+message SetCombatStyle { string style = 1; }
+message Cast { string spell = 1; optional string target = 2; }
+message SetPrayer { string prayer = 1; bool enabled = 2; }
+
+message CharacterCreated {
+  string actor_id = 1;
+  string content_revision = 2;
+}
+message WorldJoined {
+  string world_session_id = 1;
+  uint64 next_sequence = 2;
+  string content_revision = 3;
+  string content_manifest_path = 4;
+  WorldSnapshot snapshot = 5;
+}
+message WorldLeft {}
+message ActionResult {
+  uint64 sequence = 1;
+  string operation_id = 2;
+  bool duplicate = 3;
+  WorldSnapshot snapshot = 4;
+}
+message WorldSnapshot {
+  uint64 revision = 1;
+  uint64 tick = 2;
+  uint64 character_revision = 3;
+  Player player = 4;
+  repeated Entity entities = 5;
+  repeated GroundItem ground_items = 6;
+  Dialogue dialogue = 7;
+  repeated Event events = 8;
+  bool full_snapshot = 9;
+  repeated string removed_entities = 10;
+}
+message Stack {
+  string item = 1;
+  uint32 quantity = 2;
+}
+message ItemSlot { uint32 index = 1; Stack stack = 2; }
+message EquipmentSlot { string slot = 1; Stack stack = 2; }
+message Skill {
+  string id = 1;
+  uint64 xp_tenths = 2;
+  uint32 base_level = 3;
+  uint32 current_level = 4;
+}
+message Quest {
+  string id = 1;
+  string stage = 2;
+  string journal = 3;
+}
+message Player {
+  string actor_id = 1;
+  string display_name = 2;
+  map<string, uint32> appearance = 3;
+  string region = 4;
+  Tile tile = 5;
+  repeated ItemSlot inventory = 6;
+  repeated EquipmentSlot equipment = 7;
+  repeated ItemSlot bank = 8;
+  bool bank_open = 9;
+  repeated Skill skills = 10;
+  uint32 hitpoints = 11;
+  uint32 prayer_points = 12;
+  uint32 run_energy = 13;
+  uint32 quest_points = 14;
+  string tutorial_stage = 15;
+  string tutorial_instruction = 16;
+  repeated Quest quests = 17;
+  repeated string unlocked_interfaces = 18;
+  string activity = 19;
+  string animation = 20;
+}
+message Entity {
+  string id = 1;
+  string definition_id = 2;
+  string name = 3;
+  Tile tile = 4;
+  uint32 hitpoints = 5;
+  uint32 max_hitpoints = 6;
+  bool available = 7;
+  string animation = 8;
+  repeated string actions = 9;
+  map<string, uint32> appearance = 10;
+  repeated EquipmentSlot equipment = 11;
+}
+message GroundItem {
+  string id = 1;
+  Tile tile = 2;
+  Stack stack = 3;
+  bool can_take = 4;
+}
+message Dialogue {
+  string id = 1;
+  string speaker = 2;
+  string speaker_name = 3;
+  string text = 4;
+  repeated Choice choices = 5;
+}
+message Choice { string id = 1; string text = 2; }
+message Event {
+  string kind = 1;
+  string target = 2;
+  string text = 3;
+  Stack item = 4;
+  string skill = 5;
+  uint64 xp_tenths = 6;
+  uint32 damage = 7;
+  string sound_asset = 8;
+  string animation_asset = 9;
+}

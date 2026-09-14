@@ -261,14 +261,20 @@ def integration(workspace, report_path):
             env["DATABASE_URL"] = url
             env["CLUBSCAPE_BUILD_REVISION"] = revision
             tests = [
-                "cargo", "test", "--quiet", "-p", "clubscape-server", "--test", "postgres",
+                "cargo", "test", "--quiet", "-p", "clubscape-server", "--tests",
                 "--locked", "--", "--ignored", "--test-threads=1",
             ]
             output = run(tests, cwd=workspace, env=env, show=True)
             counts = re.findall(r"test result: ok\. (\d+) passed; (\d+) failed; (\d+) ignored", output)
-            if len(counts) != 1 or int(counts[0][0]) == 0 or counts[0][1:] != ("0", "0"):
+            if not counts or sum(int(count[0]) for count in counts) == 0 or any(
+                count[1:] != ("0", "0") for count in counts
+            ):
                 raise DevelopmentError("The real database integration suite did not run and pass all selected tests.")
-            report["commands"].append({"command": " ".join(tests), "passed_tests": int(counts[0][0]), "result": "passed"})
+            report["commands"].append({
+                "command": " ".join(tests),
+                "passed_tests": sum(int(count[0]) for count in counts),
+                "result": "passed",
+            })
             # Adversarial cases deliberately corrupt schema; the independent client owns a fresh database.
             reset_test_database(container)
             report["independent_client_database"] = "Fresh isolated database after adversarial integration fixtures."

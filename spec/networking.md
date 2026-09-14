@@ -34,3 +34,24 @@ Schema changes must reserve removed tags and keep old messages decodable.
 Add new capabilities explicitly; do not infer support from version alone.
 World-update deltas and authoritative gameplay sequencing remain future work
 inside M1, not implemented features of this account protocol.
+
+## Additive game protocol
+
+`crates/protocol/proto/game.proto` adds typed character creation, world-session
+join/poll/leave, sequenced intents and public snapshots/events. Existing account
+tags remain unchanged; game envelope tags start at 100. The protocol crate
+maps bounded wire intents to the shared game types and rejects invalid session
+IDs, sequences, slots, quantities, identifiers and coordinates.
+
+The `game.v1` capability must not be advertised until actual configured,
+validated game content and an authoritative runtime are available. The current
+account-only service explicitly rejects otherwise valid game commands as
+unavailable after authentication; that rejection is not gameplay
+implementation. Public game responses have a separate bounded 256 KiB budget;
+large static content/assets stream separately.
+
+Operation IDs come from the existing request UUID, but game commands require
+durable per-character sequence and intent-hash deduplication, a valid exclusive
+world-session lease and transactionally committed state. Reconnects cannot
+replay rewards. The server, not a request field, chooses character ownership,
+source initial state, world tick and action outcomes.

@@ -2,6 +2,8 @@ syntax = "proto3";
 
 package clubscape.account.v1;
 
+import "game.proto";
+
 message ClientMessage {
   uint32 protocol_version = 1;
   string request_id = 2;
@@ -12,6 +14,11 @@ message ClientMessage {
     Login login = 12;
     CurrentAccount current_account = 13;
     Logout logout = 14;
+    clubscape.game.v1.CreateCharacter create_character = 100;
+    clubscape.game.v1.JoinWorld join_world = 101;
+    clubscape.game.v1.PollWorld poll_world = 102;
+    clubscape.game.v1.WorldInput world_input = 103;
+    clubscape.game.v1.LeaveWorld leave_world = 104;
   }
 }
 
@@ -41,6 +48,11 @@ message ServerMessage {
     AccountSnapshot account = 13;
     LoggedOut logged_out = 14;
     Error error = 20;
+    clubscape.game.v1.CharacterCreated character_created = 100;
+    clubscape.game.v1.WorldJoined world_joined = 101;
+    clubscape.game.v1.WorldSnapshot world_snapshot = 102;
+    clubscape.game.v1.ActionResult action_result = 103;
+    clubscape.game.v1.WorldLeft world_left = 104;
   }
 }
 

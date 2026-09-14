@@ -1,11 +1,17 @@
 mod generated {
-    include!(concat!(env!("OUT_DIR"), "/clubscape.account.v1.rs"));
+    include!(concat!(env!("OUT_DIR"), "/clubscape.rs"));
 }
 
-pub use generated::*;
+mod game_input;
+
+pub use game_input::{game_intent, validate_character_options, validate_world_session};
+pub use generated::clubscape::account::v1::*;
+pub use generated::clubscape::game::v1 as game;
 
 pub const PROTOCOL_VERSION: u32 = 1;
 pub const MAX_REQUEST_BYTES: usize = 16 * 1024;
+pub const MAX_GAME_RESPONSE_BYTES: usize = 256 * 1024;
+pub const GAME_CAPABILITY: &str = "game.v1";
 pub const MEDIA_TYPE: &str = "application/x-protobuf";
 pub const CAPABILITIES: &[&str] = &["accounts.v1", "sessions.v1"];
 pub const GAMEPLAY_UNAVAILABLE_REASON: &str =
@@ -69,6 +75,18 @@ pub fn validate_client_message(message: &ClientMessage) -> Result<(), Validation
             if login.password.is_empty() || login.password.len() > 128 {
                 return Err(invalid("Login passwords must contain 1-128 UTF-8 bytes."));
             }
+        }
+        Some(client_message::Command::CreateCharacter(options)) => {
+            validate_character_options(options)?;
+        }
+        Some(client_message::Command::PollWorld(poll)) => {
+            validate_world_session(&poll.world_session_id)?;
+        }
+        Some(client_message::Command::WorldInput(input)) => {
+            game_intent(input)?;
+        }
+        Some(client_message::Command::LeaveWorld(leave)) => {
+            validate_world_session(&leave.world_session_id)?;
         }
         Some(_) => {}
         None => return Err(invalid("A supported command is required.")),

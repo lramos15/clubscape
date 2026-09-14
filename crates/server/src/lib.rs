@@ -257,6 +257,11 @@ async fn handle_rpc(
         client_message::Command::Login(_) => ("login", true),
         client_message::Command::CurrentAccount(_) => ("current_account", false),
         client_message::Command::Logout(_) => ("logout", true),
+        client_message::Command::CreateCharacter(_) => ("create_character", true),
+        client_message::Command::JoinWorld(_) => ("join_world", true),
+        client_message::Command::PollWorld(_) => ("poll_world", false),
+        client_message::Command::WorldInput(_) => ("world_input", true),
+        client_message::Command::LeaveWorld(_) => ("leave_world", true),
     };
     timeout(
         COMMAND_TIMEOUT,
@@ -317,6 +322,19 @@ async fn execute_command(
             let digest = authorization_digest(headers)?;
             store::logout(&state.pool, &digest).await?;
             Ok(server_message::Result::LoggedOut(LoggedOut {}))
+        }
+        client_message::Command::CreateCharacter(_)
+        | client_message::Command::JoinWorld(_)
+        | client_message::Command::PollWorld(_)
+        | client_message::Command::WorldInput(_)
+        | client_message::Command::LeaveWorld(_) => {
+            let digest = authorization_digest(headers)?;
+            store::current_account(&state.pool, &digest).await?;
+            Err(ApiError::new(
+                StatusCode::SERVICE_UNAVAILABLE,
+                ErrorCode::Unavailable,
+                GAMEPLAY_UNAVAILABLE_REASON,
+            ))
         }
     }
 }

@@ -8,13 +8,12 @@
     "active": [
       {"id": "director", "task": "M1-FLEET-CONTRACTS"},
       {"id": "ac0f0856-44af-445b-bd90-6db7a1f4fc74", "task": "M1-FLEET-RUNTIME"},
-      {"id": "9c5d43e0-7701-466f-97cf-0bc3cfca9345", "task": "M1-FLEET-RULES"}
+      {"id": "9c5d43e0-7701-466f-97cf-0bc3cfca9345", "task": "M1-FLEET-RULES"},
+      {"id": "ba4b3ca5-0344-4122-92ed-0e4fccb23a66", "task": "M1-FLEET-SIMULATION"},
+      {"id": "f3cc7dc3-56bc-4786-98d5-bba14b428229", "task": "M1-FLEET-CONTENT"},
+      {"id": "6c58b841-a767-41ff-bef5-2abbd5b1a087", "task": "M1-FLEET-BROWSER"}
     ],
-    "reserved": [
-      {"id": "fleet-simulation-worker", "task": "M1-FLEET-SIMULATION"},
-      {"id": "fleet-content-worker", "task": "M1-FLEET-CONTENT"},
-      {"id": "fleet-browser-worker", "task": "M1-FLEET-BROWSER"}
-    ],
+    "reserved": [{"id": "fleet-game-storage-worker", "task": "M1-FLEET-STORAGE"}],
     "queued": [],
     "parked": [
       {"id": "598d83d0-6ce2-40ac-b6d5-01d566c68b99", "reason": "Reference research complete; no automatic resumption."},
@@ -27,6 +26,24 @@
     "usage_accounting": "milestones/evidence/m1-usage-snapshot.json records the available delayed session snapshot; final project-wide credits/currency are unavailable."
   },
   "tasks": [
+    {
+      "id": "M1-FLEET-STORAGE",
+      "goal": "Implement transactional game-state persistence, character ownership, world-session leases and durable intent deduplication using the existing database boundaries.",
+      "status": "READY",
+      "specs": ["spec/game-contracts.md", "spec/networking.md", "spec/security.md"],
+      "dependencies": ["M1-FOUNDATIONS"],
+      "allowed_paths": ["crates/server/src/game_storage.rs", "crates/server/src/lib.rs", "crates/server/Cargo.toml", "crates/server/migrations/**", "crates/server/tests/**", "crates/server/README.md"],
+      "forbidden_paths": ["prompt.md", "crates/game-types/**", "crates/protocol/**", "tools/**", "content/**", "assets/**", "web/**", "Cargo.toml", "milestones/**"],
+      "outputs": ["Actual PostgreSQL game repository and live regression tests"],
+      "validation_commands": ["cargo test -p clubscape-server", "cargo clippy -p clubscape-server --all-targets -- -D warnings", "python3 tools/dev.py integration"],
+      "test_requirements": ["Atomic source-state initialization", "Exclusive session ownership", "Duplicate operation hash/sequence safety", "Persisted game mutations survive restart without grants replay"],
+      "acceptance": ["SQL m1-game-storage done with real persistence; no unimplemented world or UI advertised"],
+      "reserved_namespaces": ["actor.*", "world.*"],
+      "source_notes": ["spec/game-contracts.md"],
+      "parity_entries": [],
+      "adaptations": [],
+      "evidence": []
+    },
     {
       "id": "M1-FLEET-SIMULATION",
       "goal": "Implement reusable atomic inventory/equipment/bank, XP, navigation and collision primitives against the shared game-types contract.",

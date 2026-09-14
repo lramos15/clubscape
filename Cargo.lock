@@ -301,6 +301,7 @@ dependencies = [
 name = "clubscape-protocol"
 version = "0.1.0"
 dependencies = [
+ "clubscape-game-types",
  "prost",
  "prost-build",
  "protoc-bin-vendored",
