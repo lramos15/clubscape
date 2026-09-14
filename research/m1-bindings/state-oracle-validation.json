@@ -1,7 +1,7 @@
 {
   "cook_source_edges_bound": 22,
   "death_source_edges_bound": 6,
-  "game_content_sha256": "fd2b0842e3102cd8b357c689d70fb13940757b6438024b6f4d8cb820b35653d8",
+  "game_content_sha256": "e16610724b18ac6164a3d094085a0e28e843f31c00c45763bb95be6d35590b12",
   "independent_graph_oracles": [
     {
       "expected_stage": "stage.tutorial.guide_greeting",

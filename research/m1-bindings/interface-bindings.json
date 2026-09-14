@@ -1,9 +1,9 @@
 {
   "interface.account": {
-    "assets": [],
-    "missing_source_groups": [
-      712
+    "assets": [
+      "asset.source.osrs.cache2695.interface.712"
     ],
+    "missing_source_groups": [],
     "presentation_status": "not_approved",
     "source_groups": [
       712
@@ -13,10 +13,10 @@
     ]
   },
   "interface.account_links": {
-    "assets": [],
-    "missing_source_groups": [
-      109
+    "assets": [
+      "asset.source.osrs.cache2695.interface.109"
     ],
+    "missing_source_groups": [],
     "presentation_status": "not_approved",
     "source_groups": [
       109
@@ -26,12 +26,12 @@
     ]
   },
   "interface.adventure_paths": {
-    "assets": [],
-    "missing_source_groups": [
-      642,
-      644,
-      643
+    "assets": [
+      "asset.source.osrs.cache2695.interface.642",
+      "asset.source.osrs.cache2695.interface.644",
+      "asset.source.osrs.cache2695.interface.643"
     ],
+    "missing_source_groups": [],
     "presentation_status": "not_approved",
     "source_groups": [
       642,
@@ -45,10 +45,10 @@
     ]
   },
   "interface.appearance": {
-    "assets": [],
-    "missing_source_groups": [
-      679
+    "assets": [
+      "asset.source.osrs.cache2695.interface.679"
     ],
+    "missing_source_groups": [],
     "presentation_status": "not_approved",
     "source_groups": [
       679
@@ -87,10 +87,10 @@
     ]
   },
   "interface.cooking": {
-    "assets": [],
-    "missing_source_groups": [
-      270
+    "assets": [
+      "asset.source.osrs.cache2695.interface.270"
     ],
+    "missing_source_groups": [],
     "presentation_status": "not_approved",
     "source_groups": [
       270
@@ -126,10 +126,10 @@
     ]
   },
   "interface.equipment": {
-    "assets": [],
-    "missing_source_groups": [
-      387
+    "assets": [
+      "asset.source.osrs.cache2695.interface.387"
     ],
+    "missing_source_groups": [],
     "presentation_status": "not_approved",
     "source_groups": [
       387
@@ -168,10 +168,10 @@
     ]
   },
   "interface.grave": {
-    "assets": [],
-    "missing_source_groups": [
-      602
+    "assets": [
+      "asset.source.osrs.cache2695.interface.602"
     ],
+    "missing_source_groups": [],
     "presentation_status": "not_approved",
     "source_groups": [
       602
@@ -246,10 +246,10 @@
     ]
   },
   "interface.poll": {
-    "assets": [],
-    "missing_source_groups": [
-      928
+    "assets": [
+      "asset.source.osrs.cache2695.interface.928"
     ],
+    "missing_source_groups": [],
     "presentation_status": "not_approved",
     "source_groups": [
       928
@@ -301,11 +301,11 @@
     ]
   },
   "interface.settings": {
-    "assets": [],
-    "missing_source_groups": [
-      116,
-      134
+    "assets": [
+      "asset.source.osrs.cache2695.interface.116",
+      "asset.source.osrs.cache2695.interface.134"
     ],
+    "missing_source_groups": [],
     "presentation_status": "not_approved",
     "source_groups": [
       116,
@@ -346,10 +346,10 @@
     ]
   },
   "interface.smithing": {
-    "assets": [],
-    "missing_source_groups": [
-      312
+    "assets": [
+      "asset.source.osrs.cache2695.interface.312"
     ],
+    "missing_source_groups": [],
     "presentation_status": "not_approved",
     "source_groups": [
       312

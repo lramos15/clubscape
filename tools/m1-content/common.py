@@ -4,6 +4,7 @@ import gzip
 import hashlib
 import json
 from pathlib import Path
+import sys
 
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -12,6 +13,20 @@ BINDINGS = ROOT / "research/m1-bindings"
 SOURCE = ROOT / "assets/source/osrs/cache2695"
 JOURNEY = ROOT / "research/journey-rules"
 ASSET_PREFIX = "asset.source.osrs.cache2695."
+PUBLICATION = ROOT / "assets/manifests/osrs/cache2695-content-v2-published.json"
+
+
+def published_inputs():
+    previous_path = list(sys.path)
+    previous_bytecode = sys.dont_write_bytecode
+    try:
+        sys.dont_write_bytecode = True
+        sys.path.insert(0, str(ROOT / "tools/cache-import"))
+        from content_closure import load_published_inputs
+        return load_published_inputs(PUBLICATION)
+    finally:
+        sys.path[:] = previous_path
+        sys.dont_write_bytecode = previous_bytecode
 
 
 def sha(data):
@@ -156,12 +171,21 @@ class Inputs:
             numbers = list(self.selection[category].values())
             if len(set(numbers)) != len(numbers):
                 raise ValueError(f"Ambiguous semantic IDs for a source {category} definition")
-        self.bundle = load(ROOT / "assets/manifests/osrs/cache2695-full-bundle.json.gz")
+        self.publication = load(PUBLICATION)
+        self.bundle, source_collections = published_inputs()
+        self.catalog_path = self.publication["merged_inventory"]["path"]
         self.assets = {record["asset_id"]: record for record in self.bundle["records"]}
         self.collections = {
-            kind: {value["id"]: value for value in load(SOURCE / f"collections/{kind}.json.gz").values()}
+            kind: {value["id"]: value for value in source_collections[kind].values()}
             for kind in ("item", "npc", "object", "sequence", "texture", "underlay", "overlay")
         }
+        self.collection_sources = {
+            identifier: str((SOURCE / f"collections/{kind}.json.gz").relative_to(ROOT))
+            for kind, values in source_collections.items() for identifier in values
+        }
+        for kind, shard in self.publication["collection_extensions"].items():
+            for identifier in load(ROOT / shard["path"]):
+                self.collection_sources[identifier] = shard["path"]
         self.supplement = load(BINDINGS / "definitions.json.gz")
         for number, record in self.supplement["items"].items():
             number = int(number)
@@ -169,8 +193,12 @@ class Inputs:
             if existing is not None and existing != record["definition"]:
                 raise ValueError(f"Supplement disagrees with original item {number}")
             self.collections["item"][number] = record["definition"]
-        self.collections["npc"].update(
-            {int(number): record for number, record in self.supplement["npcs"].items()})
+        for number, record in self.supplement["npcs"].items():
+            number = int(number)
+            existing = self.collections["npc"].get(number)
+            if existing is not None and existing != record:
+                raise ValueError(f"Supplement disagrees with original NPC {number}")
+            self.collections["npc"][number] = record
         self.rules = {name: load(JOURNEY / f"{name}.json") for name in (
             "initial-state", "activities", "tutorial", "cooks-assistant",
             "vocabulary", "decisions", "expected-scenarios")}
@@ -200,7 +228,7 @@ class Inputs:
 
     def definition_source(self, kind, number):
         asset = self.asset(kind, number)
-        reference = (f"assets/source/osrs/cache2695/collections/{kind}.json.gz#{asset}" if asset else
+        reference = (f"{self.collection_sources[asset]}#{asset}" if asset else
                      f"research/m1-bindings/definitions.json.gz#{kind}s/{number}")
         return [source_record(reference, f"Original selected-cache {kind} definition {number}; "
                               "source assets, not approved presentation or observed gameplay.")]

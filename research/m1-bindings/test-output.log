@@ -1,4 +1,5 @@
 ----------------------------------------------------------------------
-Ran 29 tests in 3.006s
+Ran 36 tests in 8.754s
 
 OK
+{"asset_refresh": "passed", "requested_resolved": {"item_definition_ids": 72, "model_ids": 68, "npc_definition_ids": 6, "interface_groups": 13}, "product_assets": 5254, "missing": [], "behavior_unchanged": true, "unresolved_behavior_bindings": 111}

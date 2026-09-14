@@ -8,7 +8,7 @@ import subprocess
 import sys
 
 from common import (
-    ASSET_PREFIX, BINDINGS, CONTENT, JOURNEY, ROOT, SOURCE, Inputs, canonical, load,
+    ASSET_PREFIX, BINDINGS, CONTENT, JOURNEY, PUBLICATION, ROOT, SOURCE, Inputs, canonical, load,
     position, sha, unique_sources, write,
 )
 from definitions import (
@@ -35,6 +35,22 @@ def input_lock(inputs):
     paths += list(JOURNEY.glob("*.json"))
     paths += [ROOT / "assets/manifests/osrs/cache2695-full-bundle.json.gz",
               ROOT / "assets/manifests/osrs/cache2695-published.json"]
+    extension = inputs.publication
+    closure_request = load(ROOT / extension["request"]["path"])
+    extension_records = [
+        *extension["published_files"], *extension["collection_extensions"].values(),
+        *[extension[key] for key in ("base_bundle", "base_publication", "merged_inventory",
+                                    "extraction_inventory", "request", "closure_report", "dependency_graph")],
+        closure_request["product_definitions_snapshot"], closure_request["selection"], closure_request["decoder_lock"],
+    ]
+    for record in extension_records:
+        previous = indexed.get(record["path"])
+        if previous and (previous["sha256"], previous["size_bytes"]) != (record["sha256"], record["size_bytes"]):
+            raise ValueError(f"Conflicting publication input hashes: {record['path']}")
+        indexed[record["path"]] = record
+    paths += [ROOT / record["path"] for record in extension_records]
+    paths += [PUBLICATION, ROOT / "tools/cache-import/content_closure.py", ROOT / "tools/cache-import/import_cache.py",
+              ROOT / "research/current-source/m1-content-closure-validation.json"]
     paths += [ROOT / f"research/current-source/{name}.json" for name in
               ("selection", "extraction-contract", "m1-request")]
     paths += [BINDINGS / name for name in ("selection.json", "definitions.json.gz", "wiki-sources.json",
@@ -349,10 +365,24 @@ def build(args):
             for item in value:
                 collect(item)
     collect(content)
+    for category in ("items", "npcs"):
+        for binding in bindings[category].values():
+            asset_ids.add(binding["source_asset"])
+            asset_ids.update(f"{ASSET_PREFIX}model.{number}" for number in binding["models"])
+    for binding in bindings["interfaces"].values():
+        asset_ids.update(f"{ASSET_PREFIX}interface.{number}" for number in binding["source_groups"])
+    missing_assets = sorted(asset_ids - inputs.assets.keys())
+    if missing_assets:
+        raise ValueError(f"Product asset references absent from validated merged catalog: {missing_assets}")
     emit(CONTENT / "asset-references.json", {
         "assets": [{"id": identifier, "kind": inputs.assets[identifier]["kind"],
                     "outputs": inputs.assets[identifier]["outputs"]} for identifier in sorted(asset_ids)],
-        "manifest": "assets/manifests/osrs/cache2695-full-bundle.json.gz",
+        "manifest": inputs.catalog_path,
+        "publications": [inputs.publication["base_publication"]["path"], str(PUBLICATION.relative_to(ROOT))],
+        "collection_extensions": inputs.publication["collection_extensions"],
+        "output_path_policy": "Asset outputs keep their canonical extraction-relative paths. Resolve committed "
+                              "closure bytes with published_files[].extraction_path -> path in the additive publication; "
+                              "definition provenance names the exact original or extension collection shard.",
         "source_closure_missing": {
             "item_definition_ids": [value["source_id"] for value in bindings["items"].values() if not value["asset_available"]],
             "npc_definition_ids": [value["source_id"] for value in bindings["npcs"].values() if not value["asset_available"]],

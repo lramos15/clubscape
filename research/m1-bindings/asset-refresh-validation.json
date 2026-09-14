@@ -1,0 +1,101 @@
+{
+  "behavior_and_geometry_unchanged": true,
+  "behavior_sha256": "5d4552cce62e04653ce62fa4caead91e1a1dce0b823af1dbee262d0454c7e3c9",
+  "bound_wind_strike_table": {
+    "source": [
+      {
+        "notes": "Pinned behavioral reference; not an executed game trace.",
+        "reference": "https://oldschool.runescape.wiki/w/Wind_Strike?oldid=15341514",
+        "revision": "15341514",
+        "status": "verified_reference"
+      },
+      {
+        "notes": "Pinned behavioral reference; not an executed game trace.",
+        "reference": "https://oldschool.runescape.wiki/w/Combat_spells?oldid=15336309",
+        "revision": "15336309",
+        "status": "verified_reference"
+      },
+      {
+        "notes": "Pinned behavioral reference; not an executed game trace.",
+        "reference": "https://oldschool.runescape.wiki/w/Magic?oldid=15337462",
+        "revision": "15337462",
+        "status": "verified_reference"
+      },
+      {
+        "notes": "Pinned behavioral reference; not an executed game trace.",
+        "reference": "https://oldschool.runescape.wiki/w/Damage_per_second/Magic?oldid=15321382",
+        "revision": "15321382",
+        "status": "verified_reference"
+      },
+      {
+        "notes": "Typed source rule binding; arithmetic/content validation is not observed runtime gameplay.",
+        "reference": "research/journey-rules/activities.json#rule.magic.wind_strike",
+        "revision": "source-contract-v1",
+        "status": "verified_reference"
+      }
+    ],
+    "status": "bound",
+    "value": {
+      "basis": "current",
+      "hits": {
+        "1": 2,
+        "13": 8,
+        "5": 4,
+        "9": 6
+      },
+      "kind": "level_table",
+      "skill": "skill.magic"
+    }
+  },
+  "compiled_artifact": {
+    "artifact_version": 2,
+    "bytes": 474824,
+    "path": "content/m1/game-content.csc.gz",
+    "schema_version": 2,
+    "sha256": "af89733bf26b2d71154af4b6f1dd5974a1e351a0b51b7c79f523e4d98f186320",
+    "uncompressed_bytes": 11190792,
+    "uncompressed_sha256": "b71a287706ddd151be918081a1c6fdb4cb2fe7b8934b20da40e45ea5ba349e83"
+  },
+  "gameplay_executed": false,
+  "merged_catalog": {
+    "path": "assets/manifests/osrs/cache2695-content-v2-bundle.json.gz",
+    "sha256": "5f429fecea1b2526a146adb8e96c6c564343cd248f3a12c75911e17c57054b7b",
+    "size_bytes": 1900496
+  },
+  "merged_inventory_records": 12396,
+  "new_original_assets": 268,
+  "new_original_outputs": 1129,
+  "original_catalog_records_preserved": 12128,
+  "original_source_files_validated": 559,
+  "presentation_approved": false,
+  "product_assets_resolved": 5254,
+  "protected_audio_file_count": 258,
+  "protected_reference_image_count": 109,
+  "protected_source_closure_evidence": {
+    "path": "research/current-source/content-closure-commands/protected-input-integrity.json",
+    "sha256": "cabaeaf8faa09b1b9f2d35d7aca2a1b9105359d0a3a3966b0e25ca08930dcffc",
+    "size_bytes": 1233
+  },
+  "publication_sha256": "0ecaa8905b2e54a5b956cfe077303931c734ac55d5b155859cb74bc18f677fce",
+  "remaining_data_hookup": "Consumers resolve the merged catalog and its additive publication/shards; 111 behavior policies and precise runtime selectors remain with their owners. Original assets are not scene/render/audio acceptance.",
+  "remaining_missing_inputs": [],
+  "requested": {
+    "interface_groups": 13,
+    "item_definition_ids": 72,
+    "model_ids": 68,
+    "npc_definition_ids": 6
+  },
+  "resolved": {
+    "interface_groups": 13,
+    "item_definition_ids": 72,
+    "model_ids": 68,
+    "npc_definition_ids": 6
+  },
+  "result": "passed",
+  "revision": "m1.source-backed.v2.8ca86c21110e51a1",
+  "runtime_compile_passed": true,
+  "schema_version": 1,
+  "scope": "Asset/provenance refresh only; not full M1 source or gameplay certification.",
+  "task": "m1-content-asset-refresh",
+  "unresolved_behavior_bindings_unchanged": 111
+}

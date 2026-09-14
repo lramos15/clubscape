@@ -27,11 +27,9 @@
       }
     },
     "item.ashes": {
-      "asset_available": false,
+      "asset_available": true,
       "interpretation": "Notes use the source template/base composition. Item models, recolors, retextures, icon framing and wear attachments remain in the original definition.",
-      "missing_model_ids": [
-        2742
-      ],
+      "missing_model_ids": [],
       "models": [
         2742
       ],
@@ -50,11 +48,9 @@
       "source_params": {}
     },
     "item.ashes.noted": {
-      "asset_available": false,
+      "asset_available": true,
       "interpretation": "Notes use the source template/base composition. Item models, recolors, retextures, icon framing and wear attachments remain in the original definition.",
-      "missing_model_ids": [
-        2742
-      ],
+      "missing_model_ids": [],
       "models": [
         2742
       ],
@@ -197,12 +193,9 @@
       }
     },
     "item.beer": {
-      "asset_available": false,
+      "asset_available": true,
       "interpretation": "Notes use the source template/base composition. Item models, recolors, retextures, icon framing and wear attachments remain in the original definition.",
-      "missing_model_ids": [
-        2491,
-        6098
-      ],
+      "missing_model_ids": [],
       "models": [
         2491,
         6098
@@ -225,12 +218,9 @@
       }
     },
     "item.beer.noted": {
-      "asset_available": false,
+      "asset_available": true,
       "interpretation": "Notes use the source template/base composition. Item models, recolors, retextures, icon framing and wear attachments remain in the original definition.",
-      "missing_model_ids": [
-        2491,
-        6098
-      ],
+      "missing_model_ids": [],
       "models": [
         2491,
         6098
@@ -253,11 +243,9 @@
       }
     },
     "item.bolts.bronze": {
-      "asset_available": false,
+      "asset_available": true,
       "interpretation": "Notes use the source template/base composition. Item models, recolors, retextures, icon framing and wear attachments remain in the original definition.",
-      "missing_model_ids": [
-        16862
-      ],
+      "missing_model_ids": [],
       "models": [
         16862
       ],
@@ -279,11 +267,9 @@
       }
     },
     "item.bones": {
-      "asset_available": false,
+      "asset_available": true,
       "interpretation": "Notes use the source template/base composition. Item models, recolors, retextures, icon framing and wear attachments remain in the original definition.",
-      "missing_model_ids": [
-        2674
-      ],
+      "missing_model_ids": [],
       "models": [
         2674
       ],
@@ -302,11 +288,9 @@
       "source_params": {}
     },
     "item.bones.noted": {
-      "asset_available": false,
+      "asset_available": true,
       "interpretation": "Notes use the source template/base composition. Item models, recolors, retextures, icon framing and wear attachments remain in the original definition.",
-      "missing_model_ids": [
-        2674
-      ],
+      "missing_model_ids": [],
       "models": [
         2674
       ],
@@ -325,11 +309,9 @@
       "source_params": {}
     },
     "item.bones.tutorial": {
-      "asset_available": false,
+      "asset_available": true,
       "interpretation": "Notes use the source template/base composition. Item models, recolors, retextures, icon framing and wear attachments remain in the original definition.",
-      "missing_model_ids": [
-        2674
-      ],
+      "missing_model_ids": [],
       "models": [
         2674
       ],
@@ -348,11 +330,9 @@
       "source_params": {}
     },
     "item.bones.tutorial.noted": {
-      "asset_available": false,
+      "asset_available": true,
       "interpretation": "Notes use the source template/base composition. Item models, recolors, retextures, icon framing and wear attachments remain in the original definition.",
-      "missing_model_ids": [
-        2674
-      ],
+      "missing_model_ids": [],
       "models": [
         2674
       ],
@@ -371,11 +351,9 @@
       "source_params": {}
     },
     "item.bowl": {
-      "asset_available": false,
+      "asset_available": true,
       "interpretation": "Notes use the source template/base composition. Item models, recolors, retextures, icon framing and wear attachments remain in the original definition.",
-      "missing_model_ids": [
-        2807
-      ],
+      "missing_model_ids": [],
       "models": [
         2807
       ],
@@ -394,11 +372,9 @@
       "source_params": {}
     },
     "item.bowl.noted": {
-      "asset_available": false,
+      "asset_available": true,
       "interpretation": "Notes use the source template/base composition. Item models, recolors, retextures, icon framing and wear attachments remain in the original definition.",
-      "missing_model_ids": [
-        2807
-      ],
+      "missing_model_ids": [],
       "models": [
         2807
       ],
@@ -417,13 +393,9 @@
       "source_params": {}
     },
     "item.brass_necklace": {
-      "asset_available": false,
+      "asset_available": true,
       "interpretation": "Notes use the source template/base composition. Item models, recolors, retextures, icon framing and wear attachments remain in the original definition.",
-      "missing_model_ids": [
-        281,
-        445,
-        2506
-      ],
+      "missing_model_ids": [],
       "models": [
         281,
         445,
@@ -444,13 +416,9 @@
       "source_params": {}
     },
     "item.brass_necklace.noted": {
-      "asset_available": false,
+      "asset_available": true,
       "interpretation": "Notes use the source template/base composition. Item models, recolors, retextures, icon framing and wear attachments remain in the original definition.",
-      "missing_model_ids": [
-        281,
-        445,
-        2506
-      ],
+      "missing_model_ids": [],
       "models": [
         281,
         445,
@@ -492,7 +460,7 @@
       "source_params": {}
     },
     "item.bread.burnt": {
-      "asset_available": false,
+      "asset_available": true,
       "interpretation": "Notes use the source template/base composition. Item models, recolors, retextures, icon framing and wear attachments remain in the original definition.",
       "missing_model_ids": [],
       "models": [
@@ -513,7 +481,7 @@
       "source_params": {}
     },
     "item.bread.burnt.noted": {
-      "asset_available": false,
+      "asset_available": true,
       "interpretation": "Notes use the source template/base composition. Item models, recolors, retextures, icon framing and wear attachments remain in the original definition.",
       "missing_model_ids": [],
       "models": [
@@ -534,11 +502,9 @@
       "source_params": {}
     },
     "item.bread.dough": {
-      "asset_available": false,
+      "asset_available": true,
       "interpretation": "Notes use the source template/base composition. Item models, recolors, retextures, icon framing and wear attachments remain in the original definition.",
-      "missing_model_ids": [
-        2756
-      ],
+      "missing_model_ids": [],
       "models": [
         2756
       ],
@@ -557,11 +523,9 @@
       "source_params": {}
     },
     "item.bread.dough.noted": {
-      "asset_available": false,
+      "asset_available": true,
       "interpretation": "Notes use the source template/base composition. Item models, recolors, retextures, icon framing and wear attachments remain in the original definition.",
-      "missing_model_ids": [
-        2756
-      ],
+      "missing_model_ids": [],
       "models": [
         2756
       ],
@@ -645,11 +609,9 @@
       "source_params": {}
     },
     "item.bucket.pack": {
-      "asset_available": false,
+      "asset_available": true,
       "interpretation": "Notes use the source template/base composition. Item models, recolors, retextures, icon framing and wear attachments remain in the original definition.",
-      "missing_model_ids": [
-        36013
-      ],
+      "missing_model_ids": [],
       "models": [
         36013
       ],
@@ -668,11 +630,9 @@
       "source_params": {}
     },
     "item.bucket.pack.noted": {
-      "asset_available": false,
+      "asset_available": true,
       "interpretation": "Notes use the source template/base composition. Item models, recolors, retextures, icon framing and wear attachments remain in the original definition.",
-      "missing_model_ids": [
-        36013
-      ],
+      "missing_model_ids": [],
       "models": [
         36013
       ],
@@ -691,11 +651,9 @@
       "source_params": {}
     },
     "item.cake_tin": {
-      "asset_available": false,
+      "asset_available": true,
       "interpretation": "Notes use the source template/base composition. Item models, recolors, retextures, icon framing and wear attachments remain in the original definition.",
-      "missing_model_ids": [
-        2596
-      ],
+      "missing_model_ids": [],
       "models": [
         2596
       ],
@@ -714,11 +672,9 @@
       "source_params": {}
     },
     "item.cake_tin.noted": {
-      "asset_available": false,
+      "asset_available": true,
       "interpretation": "Notes use the source template/base composition. Item models, recolors, retextures, icon framing and wear attachments remain in the original definition.",
-      "missing_model_ids": [
-        2596
-      ],
+      "missing_model_ids": [],
       "models": [
         2596
       ],
@@ -737,13 +693,9 @@
       "source_params": {}
     },
     "item.chefs_hat": {
-      "asset_available": false,
+      "asset_available": true,
       "interpretation": "Notes use the source template/base composition. Item models, recolors, retextures, icon framing and wear attachments remain in the original definition.",
-      "missing_model_ids": [
-        99,
-        374,
-        2782
-      ],
+      "missing_model_ids": [],
       "models": [
         41,
         99,
@@ -766,13 +718,9 @@
       "source_params": {}
     },
     "item.chefs_hat.noted": {
-      "asset_available": false,
+      "asset_available": true,
       "interpretation": "Notes use the source template/base composition. Item models, recolors, retextures, icon framing and wear attachments remain in the original definition.",
-      "missing_model_ids": [
-        99,
-        374,
-        2782
-      ],
+      "missing_model_ids": [],
       "models": [
         41,
         99,
@@ -795,11 +743,9 @@
       "source_params": {}
     },
     "item.chisel": {
-      "asset_available": false,
+      "asset_available": true,
       "interpretation": "Notes use the source template/base composition. Item models, recolors, retextures, icon framing and wear attachments remain in the original definition.",
-      "missing_model_ids": [
-        2489
-      ],
+      "missing_model_ids": [],
       "models": [
         2489
       ],
@@ -818,11 +764,9 @@
       "source_params": {}
     },
     "item.chisel.noted": {
-      "asset_available": false,
+      "asset_available": true,
       "interpretation": "Notes use the source template/base composition. Item models, recolors, retextures, icon framing and wear attachments remain in the original definition.",
-      "missing_model_ids": [
-        2489
-      ],
+      "missing_model_ids": [],
       "models": [
         2489
       ],
@@ -980,11 +924,9 @@
       "source_params": {}
     },
     "item.energy_potion.four_dose": {
-      "asset_available": false,
+      "asset_available": true,
       "interpretation": "Notes use the source template/base composition. Item models, recolors, retextures, icon framing and wear attachments remain in the original definition.",
-      "missing_model_ids": [
-        2789
-      ],
+      "missing_model_ids": [],
       "models": [
         2789
       ],
@@ -1005,11 +947,9 @@
       }
     },
     "item.energy_potion.four_dose.noted": {
-      "asset_available": false,
+      "asset_available": true,
       "interpretation": "Notes use the source template/base composition. Item models, recolors, retextures, icon framing and wear attachments remain in the original definition.",
-      "missing_model_ids": [
-        2789
-      ],
+      "missing_model_ids": [],
       "models": [
         2789
       ],
@@ -1030,11 +970,9 @@
       }
     },
     "item.energy_potion.one_dose": {
-      "asset_available": false,
+      "asset_available": true,
       "interpretation": "Notes use the source template/base composition. Item models, recolors, retextures, icon framing and wear attachments remain in the original definition.",
-      "missing_model_ids": [
-        2621
-      ],
+      "missing_model_ids": [],
       "models": [
         2621
       ],
@@ -1055,11 +993,9 @@
       }
     },
     "item.energy_potion.one_dose.noted": {
-      "asset_available": false,
+      "asset_available": true,
       "interpretation": "Notes use the source template/base composition. Item models, recolors, retextures, icon framing and wear attachments remain in the original definition.",
-      "missing_model_ids": [
-        2621
-      ],
+      "missing_model_ids": [],
       "models": [
         2621
       ],
@@ -1080,11 +1016,9 @@
       }
     },
     "item.energy_potion.two_dose": {
-      "asset_available": false,
+      "asset_available": true,
       "interpretation": "Notes use the source template/base composition. Item models, recolors, retextures, icon framing and wear attachments remain in the original definition.",
-      "missing_model_ids": [
-        2384
-      ],
+      "missing_model_ids": [],
       "models": [
         2384
       ],
@@ -1105,11 +1039,9 @@
       }
     },
     "item.energy_potion.two_dose.noted": {
-      "asset_available": false,
+      "asset_available": true,
       "interpretation": "Notes use the source template/base composition. Item models, recolors, retextures, icon framing and wear attachments remain in the original definition.",
-      "missing_model_ids": [
-        2384
-      ],
+      "missing_model_ids": [],
       "models": [
         2384
       ],
@@ -1130,11 +1062,9 @@
       }
     },
     "item.ensouled_goblin_head": {
-      "asset_available": false,
+      "asset_available": true,
       "interpretation": "Notes use the source template/base composition. Item models, recolors, retextures, icon framing and wear attachments remain in the original definition.",
-      "missing_model_ids": [
-        30544
-      ],
+      "missing_model_ids": [],
       "models": [
         30544
       ],
@@ -1153,11 +1083,9 @@
       "source_params": {}
     },
     "item.ensouled_goblin_head.tradable": {
-      "asset_available": false,
+      "asset_available": true,
       "interpretation": "Notes use the source template/base composition. Item models, recolors, retextures, icon framing and wear attachments remain in the original definition.",
-      "missing_model_ids": [
-        30544
-      ],
+      "missing_model_ids": [],
       "models": [
         30544
       ],
@@ -1178,11 +1106,9 @@
       }
     },
     "item.ensouled_goblin_head.tradable.noted": {
-      "asset_available": false,
+      "asset_available": true,
       "interpretation": "Notes use the source template/base composition. Item models, recolors, retextures, icon framing and wear attachments remain in the original definition.",
-      "missing_model_ids": [
-        30544
-      ],
+      "missing_model_ids": [],
       "models": [
         30544
       ],
@@ -1289,11 +1215,9 @@
       "source_params": {}
     },
     "item.goblin_book": {
-      "asset_available": false,
+      "asset_available": true,
       "interpretation": "Notes use the source template/base composition. Item models, recolors, retextures, icon framing and wear attachments remain in the original definition.",
-      "missing_model_ids": [
-        23887
-      ],
+      "missing_model_ids": [],
       "models": [
         23887
       ],
@@ -1312,11 +1236,9 @@
       "source_params": {}
     },
     "item.goblin_book.noted": {
-      "asset_available": false,
+      "asset_available": true,
       "interpretation": "Notes use the source template/base composition. Item models, recolors, retextures, icon framing and wear attachments remain in the original definition.",
-      "missing_model_ids": [
-        23887
-      ],
+      "missing_model_ids": [],
       "models": [
         23887
       ],
@@ -1335,11 +1257,9 @@
       "source_params": {}
     },
     "item.goblin_champion_scroll": {
-      "asset_available": false,
+      "asset_available": true,
       "interpretation": "Notes use the source template/base composition. Item models, recolors, retextures, icon framing and wear attachments remain in the original definition.",
-      "missing_model_ids": [
-        10347
-      ],
+      "missing_model_ids": [],
       "models": [
         10347
       ],
@@ -1358,12 +1278,10 @@
       "source_params": {}
     },
     "item.goblin_mail": {
-      "asset_available": false,
+      "asset_available": true,
       "equipment_disposition": "Source wear-position metadata is not permission for a normal player to wear goblin mail.",
       "interpretation": "Notes use the source template/base composition. Item models, recolors, retextures, icon framing and wear attachments remain in the original definition.",
-      "missing_model_ids": [
-        24514
-      ],
+      "missing_model_ids": [],
       "models": [
         24514
       ],
@@ -1382,11 +1300,9 @@
       "source_params": {}
     },
     "item.goblin_mail.noted": {
-      "asset_available": false,
+      "asset_available": true,
       "interpretation": "Notes use the source template/base composition. Item models, recolors, retextures, icon framing and wear attachments remain in the original definition.",
-      "missing_model_ids": [
-        24514
-      ],
+      "missing_model_ids": [],
       "models": [
         24514
       ],
@@ -1447,13 +1363,9 @@
       "source_params": {}
     },
     "item.hammer": {
-      "asset_available": false,
+      "asset_available": true,
       "interpretation": "Notes use the source template/base composition. Item models, recolors, retextures, icon framing and wear attachments remain in the original definition.",
-      "missing_model_ids": [
-        2376,
-        34036,
-        34037
-      ],
+      "missing_model_ids": [],
       "models": [
         2376,
         34036,
@@ -1474,13 +1386,9 @@
       "source_params": {}
     },
     "item.hammer.noted": {
-      "asset_available": false,
+      "asset_available": true,
       "interpretation": "Notes use the source template/base composition. Item models, recolors, retextures, icon framing and wear attachments remain in the original definition.",
-      "missing_model_ids": [
-        2376,
-        34036,
-        34037
-      ],
+      "missing_model_ids": [],
       "models": [
         2376,
         34036,
@@ -1501,11 +1409,9 @@
       "source_params": {}
     },
     "item.jug": {
-      "asset_available": false,
+      "asset_available": true,
       "interpretation": "Notes use the source template/base composition. Item models, recolors, retextures, icon framing and wear attachments remain in the original definition.",
-      "missing_model_ids": [
-        2390
-      ],
+      "missing_model_ids": [],
       "models": [
         2390
       ],
@@ -1524,11 +1430,9 @@
       "source_params": {}
     },
     "item.jug.noted": {
-      "asset_available": false,
+      "asset_available": true,
       "interpretation": "Notes use the source template/base composition. Item models, recolors, retextures, icon framing and wear attachments remain in the original definition.",
-      "missing_model_ids": [
-        2390
-      ],
+      "missing_model_ids": [],
       "models": [
         2390
       ],
@@ -1547,11 +1451,9 @@
       "source_params": {}
     },
     "item.jug.pack": {
-      "asset_available": false,
+      "asset_available": true,
       "interpretation": "Notes use the source template/base composition. Item models, recolors, retextures, icon framing and wear attachments remain in the original definition.",
-      "missing_model_ids": [
-        32304
-      ],
+      "missing_model_ids": [],
       "models": [
         32304
       ],
@@ -1570,11 +1472,9 @@
       "source_params": {}
     },
     "item.jug.pack.noted": {
-      "asset_available": false,
+      "asset_available": true,
       "interpretation": "Notes use the source template/base composition. Item models, recolors, retextures, icon framing and wear attachments remain in the original definition.",
-      "missing_model_ids": [
-        32304
-      ],
+      "missing_model_ids": [],
       "models": [
         32304
       ],
@@ -1593,12 +1493,9 @@
       "source_params": {}
     },
     "item.knife": {
-      "asset_available": false,
+      "asset_available": true,
       "interpretation": "Notes use the source template/base composition. Item models, recolors, retextures, icon framing and wear attachments remain in the original definition.",
-      "missing_model_ids": [
-        2559,
-        4045
-      ],
+      "missing_model_ids": [],
       "models": [
         2559,
         4045
@@ -1618,12 +1515,9 @@
       "source_params": {}
     },
     "item.knife.noted": {
-      "asset_available": false,
+      "asset_available": true,
       "interpretation": "Notes use the source template/base composition. Item models, recolors, retextures, icon framing and wear attachments remain in the original definition.",
-      "missing_model_ids": [
-        2559,
-        4045
-      ],
+      "missing_model_ids": [],
       "models": [
         2559,
         4045
@@ -1693,11 +1587,9 @@
       }
     },
     "item.milk.bottomless_bucket": {
-      "asset_available": false,
+      "asset_available": true,
       "interpretation": "Notes use the source template/base composition. Item models, recolors, retextures, icon framing and wear attachments remain in the original definition.",
-      "missing_model_ids": [
-        36305
-      ],
+      "missing_model_ids": [],
       "models": [
         2504,
         36305
@@ -1718,11 +1610,9 @@
       "source_params": {}
     },
     "item.milk.bottomless_bucket.empty": {
-      "asset_available": false,
+      "asset_available": true,
       "interpretation": "Notes use the source template/base composition. Item models, recolors, retextures, icon framing and wear attachments remain in the original definition.",
-      "missing_model_ids": [
-        36305
-      ],
+      "missing_model_ids": [],
       "models": [
         2397,
         36305
@@ -1785,11 +1675,9 @@
       "source_params": {}
     },
     "item.newcomer_map": {
-      "asset_available": false,
+      "asset_available": true,
       "interpretation": "Notes use the source template/base composition. Item models, recolors, retextures, icon framing and wear attachments remain in the original definition.",
-      "missing_model_ids": [
-        2774
-      ],
+      "missing_model_ids": [],
       "models": [
         2774
       ],
@@ -1808,11 +1696,9 @@
       "source_params": {}
     },
     "item.newcomer_map.noted": {
-      "asset_available": false,
+      "asset_available": true,
       "interpretation": "Notes use the source template/base composition. Item models, recolors, retextures, icon framing and wear attachments remain in the original definition.",
-      "missing_model_ids": [
-        2774
-      ],
+      "missing_model_ids": [],
       "models": [
         2774
       ],
@@ -2064,11 +1950,9 @@
       "source_params": {}
     },
     "item.rune.body": {
-      "asset_available": false,
+      "asset_available": true,
       "interpretation": "Notes use the source template/base composition. Item models, recolors, retextures, icon framing and wear attachments remain in the original definition.",
-      "missing_model_ids": [
-        2340
-      ],
+      "missing_model_ids": [],
       "models": [
         2340
       ],
@@ -2087,11 +1971,9 @@
       "source_params": {}
     },
     "item.rune.earth": {
-      "asset_available": false,
+      "asset_available": true,
       "interpretation": "Notes use the source template/base composition. Item models, recolors, retextures, icon framing and wear attachments remain in the original definition.",
-      "missing_model_ids": [
-        2737
-      ],
+      "missing_model_ids": [],
       "models": [
         2737
       ],
@@ -2131,11 +2013,9 @@
       "source_params": {}
     },
     "item.rune.water": {
-      "asset_available": false,
+      "asset_available": true,
       "interpretation": "Notes use the source template/base composition. Item models, recolors, retextures, icon framing and wear attachments remain in the original definition.",
-      "missing_model_ids": [
-        2652
-      ],
+      "missing_model_ids": [],
       "models": [
         2652
       ],
@@ -2154,11 +2034,9 @@
       "source_params": {}
     },
     "item.security_book": {
-      "asset_available": false,
+      "asset_available": true,
       "interpretation": "Notes use the source template/base composition. Item models, recolors, retextures, icon framing and wear attachments remain in the original definition.",
-      "missing_model_ids": [
-        16013
-      ],
+      "missing_model_ids": [],
       "models": [
         16013
       ],
@@ -2177,11 +2055,9 @@
       "source_params": {}
     },
     "item.security_book.noted": {
-      "asset_available": false,
+      "asset_available": true,
       "interpretation": "Notes use the source template/base composition. Item models, recolors, retextures, icon framing and wear attachments remain in the original definition.",
-      "missing_model_ids": [
-        16013
-      ],
+      "missing_model_ids": [],
       "models": [
         16013
       ],
@@ -2200,12 +2076,9 @@
       "source_params": {}
     },
     "item.shears": {
-      "asset_available": false,
+      "asset_available": true,
       "interpretation": "Notes use the source template/base composition. Item models, recolors, retextures, icon framing and wear attachments remain in the original definition.",
-      "missing_model_ids": [
-        525,
-        2620
-      ],
+      "missing_model_ids": [],
       "models": [
         525,
         2620
@@ -2225,12 +2098,9 @@
       "source_params": {}
     },
     "item.shears.noted": {
-      "asset_available": false,
+      "asset_available": true,
       "interpretation": "Notes use the source template/base composition. Item models, recolors, retextures, icon framing and wear attachments remain in the original definition.",
-      "missing_model_ids": [
-        525,
-        2620
-      ],
+      "missing_model_ids": [],
       "models": [
         525,
         2620
@@ -2250,12 +2120,9 @@
       "source_params": {}
     },
     "item.shield.bronze_square": {
-      "asset_available": false,
+      "asset_available": true,
       "interpretation": "Notes use the source template/base composition. Item models, recolors, retextures, icon framing and wear attachments remain in the original definition.",
-      "missing_model_ids": [
-        541,
-        2720
-      ],
+      "missing_model_ids": [],
       "models": [
         541,
         2720
@@ -2287,12 +2154,9 @@
       }
     },
     "item.shield.bronze_square.noted": {
-      "asset_available": false,
+      "asset_available": true,
       "interpretation": "Notes use the source template/base composition. Item models, recolors, retextures, icon framing and wear attachments remain in the original definition.",
-      "missing_model_ids": [
-        541,
-        2720
-      ],
+      "missing_model_ids": [],
       "models": [
         541,
         2720
@@ -2324,12 +2188,9 @@
       }
     },
     "item.shield.wooden": {
-      "asset_available": false,
+      "asset_available": true,
       "interpretation": "Notes use the source template/base composition. Item models, recolors, retextures, icon framing and wear attachments remain in the original definition.",
-      "missing_model_ids": [
-        517,
-        2601
-      ],
+      "missing_model_ids": [],
       "models": [
         517,
         2601
@@ -2361,12 +2222,9 @@
       }
     },
     "item.shield.wooden.noted": {
-      "asset_available": false,
+      "asset_available": true,
       "interpretation": "Notes use the source template/base composition. Item models, recolors, retextures, icon framing and wear attachments remain in the original definition.",
-      "missing_model_ids": [
-        517,
-        2601
-      ],
+      "missing_model_ids": [],
       "models": [
         517,
         2601
@@ -2452,7 +2310,7 @@
       }
     },
     "item.shrimps.burnt": {
-      "asset_available": false,
+      "asset_available": true,
       "interpretation": "Notes use the source template/base composition. Item models, recolors, retextures, icon framing and wear attachments remain in the original definition.",
       "missing_model_ids": [],
       "models": [
@@ -2473,7 +2331,7 @@
       "source_params": {}
     },
     "item.shrimps.burnt.noted": {
-      "asset_available": false,
+      "asset_available": true,
       "interpretation": "Notes use the source template/base composition. Item models, recolors, retextures, icon framing and wear attachments remain in the original definition.",
       "missing_model_ids": [],
       "models": [
@@ -2578,12 +2436,9 @@
       "source_params": {}
     },
     "item.spade": {
-      "asset_available": false,
+      "asset_available": true,
       "interpretation": "Notes use the source template/base composition. Item models, recolors, retextures, icon framing and wear attachments remain in the original definition.",
-      "missing_model_ids": [
-        496,
-        7304
-      ],
+      "missing_model_ids": [],
       "models": [
         496,
         7304
@@ -2603,12 +2458,9 @@
       "source_params": {}
     },
     "item.spade.noted": {
-      "asset_available": false,
+      "asset_available": true,
       "interpretation": "Notes use the source template/base composition. Item models, recolors, retextures, icon framing and wear attachments remain in the original definition.",
-      "missing_model_ids": [
-        496,
-        7304
-      ],
+      "missing_model_ids": [],
       "models": [
         496,
         7304
@@ -2628,12 +2480,9 @@
       "source_params": {}
     },
     "item.spear.bronze": {
-      "asset_available": false,
+      "asset_available": true,
       "interpretation": "Notes use the source template/base composition. Item models, recolors, retextures, icon framing and wear attachments remain in the original definition.",
-      "missing_model_ids": [
-        540,
-        2719
-      ],
+      "missing_model_ids": [],
       "models": [
         540,
         2719
@@ -2669,12 +2518,9 @@
       }
     },
     "item.spear.bronze.noted": {
-      "asset_available": false,
+      "asset_available": true,
       "interpretation": "Notes use the source template/base composition. Item models, recolors, retextures, icon framing and wear attachments remain in the original definition.",
-      "missing_model_ids": [
-        540,
-        2719
-      ],
+      "missing_model_ids": [],
       "models": [
         540,
         2719
@@ -2784,11 +2630,9 @@
       }
     },
     "item.talisman.air": {
-      "asset_available": false,
+      "asset_available": true,
       "interpretation": "Notes use the source template/base composition. Item models, recolors, retextures, icon framing and wear attachments remain in the original definition.",
-      "missing_model_ids": [
-        2441
-      ],
+      "missing_model_ids": [],
       "models": [
         2441
       ],
@@ -2809,11 +2653,9 @@
       }
     },
     "item.talisman.air.noted": {
-      "asset_available": false,
+      "asset_available": true,
       "interpretation": "Notes use the source template/base composition. Item models, recolors, retextures, icon framing and wear attachments remain in the original definition.",
-      "missing_model_ids": [
-        2441
-      ],
+      "missing_model_ids": [],
       "models": [
         2441
       ],
@@ -2878,7 +2720,7 @@
       "source_params": {}
     },
     "item.water.bucket": {
-      "asset_available": false,
+      "asset_available": true,
       "interpretation": "Notes use the source template/base composition. Item models, recolors, retextures, icon framing and wear attachments remain in the original definition.",
       "missing_model_ids": [],
       "models": [
@@ -2899,7 +2741,7 @@
       "source_params": {}
     },
     "item.water.bucket.noted": {
-      "asset_available": false,
+      "asset_available": true,
       "interpretation": "Notes use the source template/base composition. Item models, recolors, retextures, icon framing and wear attachments remain in the original definition.",
       "missing_model_ids": [],
       "models": [

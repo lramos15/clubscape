@@ -16,6 +16,7 @@ not a replacement validator.
 ```sh
 python3 tools/m1-content/build.py
 python3 tools/m1-content/check.py
+python3 tools/m1-content/verify_assets.py
 python3 -m unittest discover -s tools/m1-content -p 'test_*.py' -q
 python3 tools/m1-content/verify_routes.py
 python3 tools/m1-content/verify_state_oracles.py
@@ -80,7 +81,27 @@ and every pinned library hash, and never opens a writable cache `Store`. It
 does not regenerate models or alter source-worker assets. Ordinary source
 stackability stays boolean; mode 2 is a real conditional record, not coercion.
 
-`input-lock.json` hashes source/schema/generator inputs. The content manifest
+The content input adapter calls the source worker's `load_published_inputs()`.
+It validates the original and additive publications, overlays only nonconflicting
+collection shards, and retains exact equality checks against the original
+item/NPC supplement. New definition provenance points at the actual
+`content-v2/collections/{kind}.json.gz#asset_id`, never the unchanged old
+collection. No source-worker file is overwritten or reaggregated.
+
+`asset-references.json` identifies the merged catalog and both publication
+manifests. Its asset output records keep canonical extraction-relative paths;
+consumers resolve committed extension files through the additive publication's
+`published_files[].extraction_path -> path` mapping. All original item/NPC model
+references and interface groups are included without invented mesh links.
+
+`verify_assets.py` checks the frozen parent behavior/geometry/graph hashes,
+the exact72/68/6/13 requested closure roots, all5254 product references, shard
+provenance and unchanged111 behavior bindings. `asset-refresh-baseline.json`
+is the immutable pre-refresh evidence, not an alternative game dataset.
+
+`input-lock.json` hashes source/schema/generator inputs, including the merged
+catalog, additive publication, frozen closure request/definition snapshot,
+all1129 new source outputs, collection shards and dependency graph. The content manifest
 records compressed/uncompressed output hashes. Ordering and gzip metadata are
 deterministic. Source inference is not approval; successful compile, geometry
 and reference-model checks remain separate from executing the complete

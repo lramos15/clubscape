@@ -1,18 +1,14 @@
 {
-  "snapshot_scope": "Historical product-worker handoff at 101af26. Subsequent binding/compiler repairs are recorded in the current content manifest and validation reports; do not reuse this snapshot's older artifact hashes as current.",
-  "current_manifest": "content/m1/manifest.json",
-  "current_binding_report": "research/m1-bindings/unresolved-bindings.json",
-  "authored_v2_data_compiled": true,
-  "base": "ecd1973",
-  "branch": "task/m1-content-completion",
+  "base": "34c8ef4",
+  "branch": "task/m1-content-assets",
   "compiled_artifact": {
     "artifact_version": 2,
-    "bytes": 474479,
+    "bytes": 474824,
     "path": "content/m1/game-content.csc.gz",
     "schema_version": 2,
-    "sha256": "6b6b50176fd8ecfcbc2eb378671f8dbf7d07fe7e38d192e2436a55dd13eda6cf",
-    "uncompressed_bytes": 11179824,
-    "uncompressed_sha256": "6e2d5f431857ac535f126b50334881f9f289aa29b4e045c428b31b6d15cd5284"
+    "sha256": "af89733bf26b2d71154af4b6f1dd5974a1e351a0b51b7c79f523e4d98f186320",
+    "uncompressed_bytes": 11190792,
+    "uncompressed_sha256": "b71a287706ddd151be918081a1c6fdb4cb2fe7b8934b20da40e45ea5ba349e83"
   },
   "counts": {
     "cooks_projected_edges": 22,
@@ -60,77 +56,76 @@
     "tutorial_source_transitions": 73,
     "tutorial_states": 71
   },
+  "current_authority": [
+    "content/m1/manifest.json",
+    "research/m1-bindings/asset-refresh-validation.json",
+    "research/m1-bindings/compiler-validation.json",
+    "research/m1-bindings/schema-validation.json"
+  ],
   "evidence_hashes": {
-    "content/m1/game-content.csc.gz": "6b6b50176fd8ecfcbc2eb378671f8dbf7d07fe7e38d192e2436a55dd13eda6cf",
-    "content/m1/game-content.json.gz": "18a617a855e6b8dfa07ea5cee5faa1cd6a1d7dd65ecc83d6f1d3eb0c8fbcaf92",
-    "content/m1/manifest.json": "6233d9e6e1719be8624bb56714917564379518ae990aaacee1409caf5b1c0f88",
-    "research/m1-bindings/compiler-validation.json": "c3e5da3c3452a2d2d7358dfdf6c09a2f869df7d413226b2d0cccc6c21b22860b",
-    "research/m1-bindings/repeatability.json": "186cfe3d62de35542df6a3683b7a363c0c001cbdf7949f5ca8681f318cf122a5",
-    "research/m1-bindings/route-validation.json": "185d67bba2498931ce67593e5bb28f9250ab84ce7815b376c56d1d1092852218",
-    "research/m1-bindings/schema-validation.json": "e565f5c43600346e7e38186c1d88e41ea37a86e755a3675781197af6c7295ef1",
-    "research/m1-bindings/state-oracle-validation.json": "e216ab2ec75ad7cb7d518fd7e0ad0cab58ec4276c78b717f19963f4e2fed1713",
-    "research/m1-bindings/test-output.log": "2da79eafb0cb75cabae63c7602e993652cc58e143b78f40f6e099116187b61a9"
+    "content/m1/asset-references.json": "ea46cbbd39edd7722b3b3d55f4fb5cd2d3dbf31ccf8bab2fe03fd014dc98347b",
+    "content/m1/game-content.csc.gz": "af89733bf26b2d71154af4b6f1dd5974a1e351a0b51b7c79f523e4d98f186320",
+    "content/m1/game-content.json.gz": "e16610724b18ac6164a3d094085a0e28e843f31c00c45763bb95be6d35590b12",
+    "content/m1/manifest.json": "6069e7db58e0bbc9144a699a7c61347f68ca9a461431b371a05ff7ffc6d37196",
+    "research/m1-bindings/asset-refresh-validation.json": "be9b071636871079a90a90817ba7c64bdb06238d7bd9938b3b3c022253447b48",
+    "research/m1-bindings/repeatability.json": "f181dc8b902084041fbf1858fe633fcd4805bd3c6a313fe4ee7361f4711006b1",
+    "research/m1-bindings/route-validation.json": "2a2f13758fc2fcd98edf7e942a5ec799c834ec95fca56c71e25d190e0cd6b5f8",
+    "research/m1-bindings/schema-validation.json": "63da6c64a55e55b614d661a5f2cf3c8fa87f8a052656c429bc6334a05350cfb4",
+    "research/m1-bindings/state-oracle-validation.json": "8021715b91aa708b21705bdbd9addf98fc599ace6fdb037e66e396a2aa85d814",
+    "research/m1-bindings/test-output.log": "cba203219b834140a43065fe5f0a8c22a4ffda1799d81b8cd096c69e46f7f046"
   },
-  "full_source_geometry": {
-    "below_bridge_placements": 3081,
-    "blocking_floor_decorations": 50,
-    "blocking_objects": 56727,
-    "bridge_columns": 3950,
-    "clipping_past_source_envelope": 285,
-    "explicit_full_cells": 999424,
-    "floor_blocks": 73372,
-    "nonclipping_wall_decorations": 3449,
-    "openable_wall_placements": 230,
-    "source_placements": 151019,
-    "source_regions": 61,
-    "walls": 21619
-  },
-  "fully_done": false,
-  "parent_actions": [
-    "Integrate owned-path commit and use content/m1/game-content.csc.gz or rebuild with python3 tools/m1-content/build.py.",
-    "Review contract-gaps.json and unresolved-bindings.json; no old registry/tools/chance/death/navigation representation remains the blocker.",
-    "Do not clear source clipping, move stationary NPCs, use fixture mode or normalize unapproved source policies to force runtime readiness."
+  "fully_done": true,
+  "historical_baseline": "research/m1-bindings/asset-refresh-baseline.json",
+  "overall_m1_product_content_status": "blocked",
+  "ownership": "Only content/m1, tools/m1-content and research/m1-bindings changed; no agents, factories or peer messages.",
+  "remaining_data_hookup": [
+    "Content now references the validated merged catalog and additive definition shards. Consumers must follow both publication manifests and resolve extension extraction_path to committed path; no original asset is fabricated or overwritten.",
+    "The separately owned resolver still handles111 localized behavior policies. This task changed no rule, geometry, tutorial/Cook graph, provisional policy or repaired Wind Strike table.",
+    "Engine finalization owns remaining precise selectors; source/render/audio/live-journey/owner-approval gates remain separate."
   ],
-  "prior_owned_commit": "5013bd8",
-  "remaining_required_action_blockers": [
-    "Fix the shared tagged LevelTable numeric JSON-key decoder; source Wind Strike1/5/9/13=>2/4/6/8 remains known, not substituted.",
-    "Bind source projectile, NPC damage/respawn/movement, travel/cooking phase, shop phase/overstock and death valuation/restoration/overflow/repeat inputs; unresolved fields remain unavailable.",
-    "Select the entitled source departure inventory/equipment/bank reconciliation and verify exact source arrivals/initial settings/door hinges.",
-    "Close source-worker asset dependencies; execute authoritative schema2 runtime plus real headless/server/browser persistence and recovery before claiming full M1 success."
-  ],
-  "revision": "m1.source-backed.v2.ba3932d67434a92b",
+  "revision": "m1.source-backed.v2.8ca86c21110e51a1",
   "runtime_ready": false,
   "schema_version": 2,
-  "source_asset_closure_missing": {
-    "interface_groups": 13,
-    "item_definition_ids": 72,
-    "model_ids": 68,
-    "npc_definition_ids": 6
+  "scope": "Bounded completed original-asset/provenance refresh only. Not blanket full-M1 source certification.",
+  "source_asset_coverage": {
+    "merged_catalog": {
+      "path": "assets/manifests/osrs/cache2695-content-v2-bundle.json.gz",
+      "sha256": "5f429fecea1b2526a146adb8e96c6c564343cd248f3a12c75911e17c57054b7b",
+      "size_bytes": 1900496
+    },
+    "merged_inventory_records": 12396,
+    "new_original_assets": 268,
+    "new_original_outputs": 1129,
+    "product_asset_ids_resolved": 5254,
+    "remaining_missing_inputs": [],
+    "requested": {
+      "interface_groups": 13,
+      "item_definition_ids": 72,
+      "model_ids": 68,
+      "npc_definition_ids": 6
+    },
+    "resolved": {
+      "interface_groups": 13,
+      "item_definition_ids": 72,
+      "model_ids": 68,
+      "npc_definition_ids": 6
+    }
   },
-  "source_assumptions": {
-    "approval": "No owner approval or observation inferred.",
-    "explicit_profile_candidates": "research/m1-bindings/profile-v2.json",
-    "original_count": 20,
-    "preserved_record": "research/m1-bindings/policy-bindings.json"
-  },
-  "status": "blocked",
-  "task": "m1-product-content",
-  "unresolved_source_bindings": {
-    "count": 112,
-    "exact_paths_reasons_and_provenance": "research/m1-bindings/unresolved-bindings.json"
-  },
+  "status": "done",
+  "task": "m1-content-asset-refresh",
   "validation": {
     "artifact_reloaded": true,
-    "door_roundtrip_preserves_source_cells": true,
-    "independent_source_graph_oracles_passed": 23,
+    "behavior_and_geometry_unchanged": true,
+    "behavior_sha256": "5d4552cce62e04653ce62fa4caead91e1a1dce0b823af1dbee262d0454c7e3c9",
+    "content_tests_passed": 36,
+    "independent_source_state_oracles_passed": 23,
     "presentation_approved": false,
-    "repeatable_output_hashes": 82,
+    "repeatable_outputs": 83,
     "required_walk_segments": 30,
-    "runtime_journey_passed": false,
-    "source_numeric_hit_table_json_error": "definition: invalid type: string \"1\", expected u16",
-    "source_numeric_hit_table_json_supported": false,
+    "source_gameplay_executed": false,
+    "source_numeric_hit_table_json_supported": true,
     "source_routes_connected": 30,
     "strict_runtime_compile_passed": true,
-    "unit_tests_passed": 29
+    "unresolved_behavior_bindings_unchanged": 111
   }
 }

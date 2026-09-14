@@ -9,7 +9,10 @@ are replaced by typed mechanics, not ignored fields or a permissive parser.
 and `code-sources.json` retain exact source identities and evidence. Original
 cache placements, wiki location rows and inferred map-radius/landing candidates
 remain distinct. The 146-definition original supplement and six original NPC
-records retain hashes; neither is a substitute asset pack.
+records retain hashes; neither is a substitute asset pack. The current adapter
+uses `load_published_inputs()` and the validated merged source catalog. All72
+item/68 requested model/6 NPC/13 interface roots are now connected; all5254
+product asset IDs resolve and every missing-ID list is empty.
 
 `world-bindings.json.gz` retains all151019 source object placements, all4837
 definitions and all61 source scenes. `door-bindings.json` records the actual
@@ -34,11 +37,17 @@ the artifact is version2, and the source JSON is actual schema2.
 paths with reasons/provenance. Unresolved values are **unavailable at runtime**,
 not zeros, fixed timers, guaranteed drops or blanket source exclusions.
 
-The source Wind Strike maximum-hit table is known, but its numeric JSON map
-currently exposes an internally tagged shared-decoder issue. The schema check
-reproduces that exact failure; only that field is withheld as unresolved pending
-the Director's shared fix. It is not falsely described as an unknown source
-formula or replaced by a fixed value.
+The parent repaired the tagged numeric-map decoder in7150464 and rebound the
+actual Wind Strike table1/5/9/13=>2/4/6/8. This asset refresh preserves it and
+all111 remaining localized behavior bindings. Older status/hash records are
+historical; the current manifest, compiler/reload reports and
+`asset-refresh-validation.json` describe the refreshed artifact.
+
+`asset-refresh-baseline.json` freezes the supplied parent artifact and its
+non-asset behavior, geometry and graph hashes. `verify_assets.py` checks those
+invariants, exact source catalog/publication/output hashes, requested closure
+counts, resolved assets and correct collection-shard provenance. The bounded
+refresh does not change mechanics policies or preempt runtime-selector work.
 
 Thirty source walking dependencies connect through declared open-state clipping;
 all door states restore the exact source masks on close. These are topology and

@@ -13,6 +13,7 @@ From the worktree root, with the documented existing Python/Rust toolchains:
 ```sh
 python3 tools/m1-content/build.py
 python3 tools/m1-content/check.py
+python3 tools/m1-content/verify_assets.py
 python3 -m unittest discover -s tools/m1-content -p 'test_*.py' -q
 python3 tools/m1-content/verify_routes.py
 python3 tools/m1-content/verify_state_oracles.py
@@ -125,8 +126,18 @@ The shared tagged numeric-key decoder is now repaired. Wind Strike's known
 not an unresolved field or a constant
 max hit.
 
-Current original asset references are retained. Missing model/definition/widget
-closure is listed exactly in `asset-references.json`; no substitute art is made.
+The completed source closure is now connected through the validated merged
+`cache2695-content-v2-bundle.json.gz` catalog and its additive collection shards.
+All **5,254 requested product asset references** resolve, including the formerly
+missing 72 item definitions, 68 requested models, six NPC definitions (Cook4626)
+and 13 interface groups. All four missing-ID lists in `asset-references.json`
+are empty. The source publication supplies 268 additional original assets and
+1,129 outputs; no substitute models or icon links are made.
+
+`asset-refresh-validation.json` records the exact source/output hashes and the
+unchanged parent behavior fingerprint. This bounded refresh preserves the
+71/73 tutorial graph, Cook10/22, source geometry, repaired Wind Strike table and
+all111 unresolved behavior policies. It is not full M1 source certification.
 Penguin NPC 2063/model 21547 remains a candidate, not an approved player.
 Source captures, live mechanics execution, persistence, presentation/audio,
 browser performance, owner approval and RuneLite acceptance remain separate.

@@ -47,14 +47,10 @@
   },
   "npc.adventurer_jon": {
     "animations": {},
-    "asset_available": false,
+    "asset_available": true,
     "combat_binding_status": "noncombatant_or_outside_working_combat_scope",
     "height_scale": 128,
-    "missing_model_ids": [
-      43,
-      4012,
-      18187
-    ],
+    "missing_model_ids": [],
     "models": [
       4012,
       52,
@@ -230,12 +226,10 @@
       "standingAnimation": 808,
       "walkingAnimation": 819
     },
-    "asset_available": false,
+    "asset_available": true,
     "combat_binding_status": "noncombatant_or_outside_working_combat_scope",
     "height_scale": 128,
-    "missing_model_ids": [
-      13897
-    ],
+    "missing_model_ids": [],
     "models": [
       199,
       215,
@@ -406,15 +400,10 @@
       "standingAnimation": 3950,
       "walkingAnimation": 3997
     },
-    "asset_available": false,
+    "asset_available": true,
     "combat_binding_status": "noncombatant_or_outside_working_combat_scope",
     "height_scale": 128,
-    "missing_model_ids": [
-      136,
-      417,
-      14588,
-      14794
-    ],
+    "missing_model_ids": [],
     "models": [
       391,
       417,
@@ -499,16 +488,10 @@
   },
   "npc.ironman_tutor": {
     "animations": {},
-    "asset_available": false,
+    "asset_available": true,
     "combat_binding_status": "noncombatant_or_outside_working_combat_scope",
     "height_scale": 128,
-    "missing_model_ids": [
-      530,
-      2342,
-      2662,
-      4954,
-      13307
-    ],
+    "missing_model_ids": [],
     "models": [
       215,
       246,
@@ -549,16 +532,10 @@
       "standingAnimation": 808,
       "walkingAnimation": 819
     },
-    "asset_available": false,
+    "asset_available": true,
     "combat_binding_status": "noncombatant_or_outside_working_combat_scope",
     "height_scale": 128,
-    "missing_model_ids": [
-      557,
-      558,
-      2444,
-      4954,
-      13307
-    ],
+    "missing_model_ids": [],
     "models": [
       235,
       246,
@@ -599,16 +576,10 @@
       "standingAnimation": 813,
       "walkingAnimation": 1205
     },
-    "asset_available": false,
+    "asset_available": true,
     "combat_binding_status": "noncombatant_or_outside_working_combat_scope",
     "height_scale": 128,
-    "missing_model_ids": [
-      5668,
-      5672,
-      5674,
-      7123,
-      7127
-    ],
+    "missing_model_ids": [],
     "models": [
       214,
       250,
