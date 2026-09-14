@@ -6,6 +6,7 @@ pub mod game_storage;
 mod rate_limit;
 mod store;
 mod transport;
+mod web_assets;
 
 use std::{
     error::Error as _,
@@ -51,6 +52,7 @@ struct AppState {
     passwords: Passwords,
     limiter: RateLimiter,
     build_revision: String,
+    web_assets: Option<Arc<web_assets::WebAssets>>,
 }
 
 /// A migrated, loopback-bound service. `serve` owns graceful listener/pool shutdown.
@@ -63,6 +65,11 @@ pub struct Service {
 
 impl Service {
     pub async fn bind(config: Config) -> Result<Self, StartupError> {
+        let web_assets = config.web_root.as_deref().map(web_assets::WebAssets::load)
+            .transpose().map_err(|error| {
+                tracing::error!(event = "web_bundle_failure", error_kind = %error, "configured web bundle failed validation");
+                StartupError::new("web_assets", "invalid_web_bundle")
+            })?.map(Arc::new);
         let pool = PgPoolOptions::new()
             // All acquisition, release and cleanup work is owned and timed, not background upkeep.
             .min_connections(0)
@@ -134,11 +141,12 @@ impl Service {
             passwords,
             limiter: RateLimiter::default(),
             build_revision: config.build_revision,
+            web_assets,
         });
         let router = Router::new()
             .route("/healthz", get(health))
             .route("/v1/rpc", post(rpc).fallback(method_not_allowed))
-            .fallback(not_found)
+            .fallback(web_or_not_found)
             .with_state(state);
         Ok(Self {
             listener,
@@ -407,7 +415,13 @@ async fn method_not_allowed() -> Response {
     .into_response(String::new())
 }
 
-async fn not_found() -> Response {
+async fn web_or_not_found(State(state): State<Arc<AppState>>, request: Request<Body>) -> Response {
+    if let Some(assets) = &state.web_assets
+        && let Some(response) =
+            assets.response(request.uri().path(), request.method(), request.headers())
+    {
+        return response;
+    }
     ApiError::new(
         StatusCode::NOT_FOUND,
         ErrorCode::InvalidArgument,

@@ -1,4 +1,4 @@
-use std::{env, fmt, net::SocketAddr, str::FromStr};
+use std::{env, fmt, net::SocketAddr, path::PathBuf, str::FromStr};
 
 use sqlx::{ConnectOptions, postgres::PgConnectOptions};
 
@@ -10,6 +10,7 @@ pub struct Config {
     pub(crate) bind: SocketAddr,
     pub(crate) database: PgConnectOptions,
     pub(crate) build_revision: String,
+    pub(crate) web_root: Option<PathBuf>,
 }
 
 impl fmt::Debug for Config {
@@ -19,6 +20,7 @@ impl fmt::Debug for Config {
             .field("bind", &self.bind)
             .field("database", &"[redacted]")
             .field("build_revision", &self.build_revision)
+            .field("web_root", &self.web_root)
             .finish()
     }
 }
@@ -37,6 +39,8 @@ pub enum ConfigError {
     InvalidBuildRevision,
     #[error("server configuration environment values must be valid Unicode")]
     NonUnicodeEnvironment,
+    #[error("CLUBSCAPE_WEB_ROOT must be a nonempty path")]
+    InvalidWebRoot,
 }
 
 impl Config {
@@ -44,7 +48,14 @@ impl Config {
         let database_url = optional_env("DATABASE_URL")?.ok_or(ConfigError::MissingDatabaseUrl)?;
         let bind = optional_env("CLUBSCAPE_BIND")?.unwrap_or_else(|| DEFAULT_BIND.to_owned());
         let revision = optional_env("CLUBSCAPE_BUILD_REVISION")?;
-        Self::new(&database_url, &bind, revision.as_deref())
+        let mut config = Self::new(&database_url, &bind, revision.as_deref())?;
+        if let Some(root) = optional_env("CLUBSCAPE_WEB_ROOT")? {
+            if root.trim().is_empty() || root.chars().any(char::is_control) {
+                return Err(ConfigError::InvalidWebRoot);
+            }
+            config = config.with_web_root(PathBuf::from(root))?;
+        }
+        Ok(config)
     }
 
     pub fn new(
@@ -77,6 +88,7 @@ impl Config {
             bind,
             database,
             build_revision: build_revision.to_owned(),
+            web_root: None,
         })
     }
 
@@ -86,6 +98,15 @@ impl Config {
 
     pub fn build_revision(&self) -> &str {
         &self.build_revision
+    }
+
+    pub fn with_web_root(mut self, root: impl Into<PathBuf>) -> Result<Self, ConfigError> {
+        let root = root.into();
+        if root.as_os_str().is_empty() {
+            return Err(ConfigError::InvalidWebRoot);
+        }
+        self.web_root = Some(root);
+        Ok(self)
     }
 }
 

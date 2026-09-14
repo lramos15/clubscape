@@ -13,6 +13,12 @@ not source-content, gameplay, presentation, performance or milestone acceptance.
 
 ## Running locally
 
+An optional `CLUBSCAPE_WEB_ROOT` serves a hash-validated, explicitly enumerated
+public browser bundle from the same loopback origin. Its manifest contract,
+security headers and limits are documented in
+[`spec/web-delivery.md`](../../spec/web-delivery.md). The default account-only
+configuration is unchanged; no graphical client is implied by this option.
+
 Use the pinned workspace toolchain and a separately managed PostgreSQL database.
 The `clubscape-server` binary requires `DATABASE_URL`, including an explicit
 database name. Do not put credentials on command lines, in source control or in

@@ -5,11 +5,12 @@
     "max_active_ai_agents": 25,
     "effective_limit": 25,
     "admissions_open": true,
-    "active": [{"id": "director", "task": "M1-FLEET-CONTRACTS"}],
-    "reserved": [
-      {"id": "fleet-mechanics-contract-worker", "task": "M1-FLEET-MECHANICS-CONTRACTS"},
-      {"id": "fleet-public-reference-worker", "task": "M1-FLEET-PUBLIC-REFERENCES"}
+    "active": [
+      {"id": "director", "task": "M1-FLEET-CONTRACTS"},
+      {"id": "5609da2e-44f0-4a9e-9829-08bf4f16acd7", "task": "M1-FLEET-MECHANICS-CONTRACTS"},
+      {"id": "56283b56-0ae0-4839-a961-1a23a850dd1b", "task": "M1-FLEET-PUBLIC-REFERENCES"}
     ],
+    "reserved": [],
     "queued": [],
     "parked": [
       {"id": "598d83d0-6ce2-40ac-b6d5-01d566c68b99", "reason": "Reference research complete; no automatic resumption."},
@@ -23,9 +24,27 @@
   },
   "tasks": [
     {
+      "id": "M1-FLEET-WEB-DELIVERY",
+      "goal": "Provide verified same-origin delivery for the eventual approved browser build while preserving account-only service behavior.",
+      "status": "DONE",
+      "specs": ["spec/web-delivery.md", "spec/security.md"],
+      "dependencies": ["M1-FOUNDATIONS"],
+      "allowed_paths": ["crates/server/src/web_assets.rs", "crates/server/src/config.rs", "crates/server/src/lib.rs", "crates/server/README.md", "spec/web-delivery.md"],
+      "forbidden_paths": ["prompt.md", "assets/**", "web/**"],
+      "outputs": ["Hash-validated optional asset bundle route", "Bounded file/path handling and security headers"],
+      "validation_commands": ["cargo test -p clubscape-server", "cargo clippy -p clubscape-server --all-targets -- -D warnings", "python3 tools/dev.py integration"],
+      "test_requirements": ["Configured-root integrity", "Traversal/private-file/symlink rejection", "Real HTTP ETag/method tests", "Unchanged account-only behavior"],
+      "acceptance": ["26 server unit tests and 23 real database/listener tests passed; no presentation claim"],
+      "reserved_namespaces": [],
+      "source_notes": ["spec/web-delivery.md"],
+      "parity_entries": [],
+      "adaptations": [],
+      "evidence": [".local/evidence/m1-web-delivery.json"]
+    },
+    {
       "id": "M1-FLEET-MECHANICS-CONTRACTS",
       "goal": "Resolve complete M1 source-mechanic representations and strict validation without weakening existing invariants or fabricating runtime success.",
-      "status": "READY",
+      "status": "IMPLEMENTING",
       "specs": ["spec/game-contracts.md", "research/journey-rules/**", "crates/world-engine/README.md", ".worktrees/m1-product-content/research/m1-bindings/contract-gaps.json"],
       "dependencies": ["M1-FLEET-CONTENT", "M1-FLEET-SIMULATION"],
       "allowed_paths": ["crates/game-types/**", "crates/content/**", "crates/simulation/tests/**", "crates/world-engine/tests/**", "crates/world-engine/src/**", "crates/server/tests/game_storage.rs", "crates/server/src/game_storage.rs", "spec/game-contracts.md"],
@@ -43,7 +62,7 @@
     {
       "id": "M1-FLEET-PUBLIC-REFERENCES",
       "goal": "Complete a traceable public/source-fixture reference pack and source-case gallery for bounded owner approval.",
-      "status": "READY",
+      "status": "IMPLEMENTING",
       "specs": ["prompt.md section 30.2", "milestones/m1-owner-followups.json", "research/source-capture/handoff.json"],
       "dependencies": ["M1-FLEET-SOURCE-CAPTURES", "M1-FLEET-AUDIO"],
       "allowed_paths": ["research/reference-pack/**", "assets/reference/wiki/**", "tools/reference-pack/**"],
