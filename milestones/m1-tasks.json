@@ -8,13 +8,14 @@
     "active": [
       {"id": "director", "task": "M1-FLEET-CONTRACTS"},
       {"id": "0f5ddddf-0aa0-4908-b0d3-1ffc6b1f7a20", "task": "M1-FLEET-ENGINE"},
-      {"id": "fdda1fb0-1135-4cf8-8cff-3db550e48f54", "task": "M1-FLEET-PRODUCT-CONTENT"},
       {"id": "e9ed6a96-6bcb-4d27-8b4c-d504edda327c", "task": "M1-FLEET-AUDIO-BINDINGS"},
-      {"id": "56283b56-0ae0-4839-a961-1a23a850dd1b", "task": "M1-FLEET-PUBLIC-REFERENCES"}
-    ],
-    "reserved": [
+      {"id": "56283b56-0ae0-4839-a961-1a23a850dd1b", "task": "M1-FLEET-PUBLIC-REFERENCES"},
       {"id": "2766e089-44e5-4a1d-974e-7b03ad9c269d", "task": "M1-FLEET-LIVE-SERVER"},
       {"id": "6c58b841-a767-41ff-bef5-2abbd5b1a087", "task": "M1-FLEET-MAC-HANDOFF"}
+    ],
+    "reserved": [
+      {"id": "9c5d43e0-7701-466f-97cf-0bc3cfca9345", "task": "M1-FLEET-SOURCE-BINDINGS"},
+      {"id": "ac0f0856-44af-445b-bd90-6db7a1f4fc74", "task": "M1-FLEET-ASSET-CLOSURE"}
     ],
     "queued": [],
     "parked": [
@@ -29,9 +30,45 @@
   },
   "tasks": [
     {
+      "id": "M1-FLEET-SOURCE-BINDINGS",
+      "goal": "Resolve concrete source-value/policy bindings required by the ordinary M1 journey without blanket blockers or fabricated observations.",
+      "status": "READY",
+      "specs": ["research/journey-rules/**", "research/m1-bindings/unresolved-bindings.json", "spec/game-contracts.md"],
+      "dependencies": ["M1-FLEET-RULES"],
+      "allowed_paths": ["research/runtime-bindings/**", "tools/runtime-bindings/**"],
+      "forbidden_paths": ["prompt.md", "crates/**", "content/**", "assets/**", "web/**", "spec/**", "milestones/**"],
+      "outputs": ["Source-backed binding resolutions and scoped inference decisions", "Exact unresolved material choices after targeted source checks"],
+      "validation_commands": [],
+      "test_requirements": ["No known formula replaced by a substitute", "Source citations/hashes and independent numeric cases", "No inaccessible alternative broadens M1 silently"],
+      "acceptance": ["SQL m1-runtime-source-bindings records usable resolutions and precise residual source decisions"],
+      "reserved_namespaces": [],
+      "source_notes": ["The shared numeric LevelTable decoder defect is already fixed in 7150464."],
+      "parity_entries": [],
+      "adaptations": [],
+      "evidence": []
+    },
+    {
+      "id": "M1-FLEET-ASSET-CLOSURE",
+      "goal": "Extract the exact additional source assets required by the real M1 content while preserving all existing reference hashes.",
+      "status": "READY",
+      "specs": ["research/m1-bindings/**", "tools/cache-import/README.md"],
+      "dependencies": ["M1-FLEET-RUNTIME"],
+      "allowed_paths": ["tools/cache-import/**", "research/current-source/**", "assets/source/osrs/cache2695/**", "assets/manifests/osrs/**"],
+      "forbidden_paths": ["prompt.md", "crates/**", "content/**", "web/**", "spec/**", "milestones/**"],
+      "outputs": ["Original missing item/NPC/model/interface closure and hashes"],
+      "validation_commands": ["python3 tools/cache-import/import_cache.py validate-published"],
+      "test_requirements": ["Original bytes only", "No model/widget substitutions", "Existing source/reference evidence unchanged"],
+      "acceptance": ["SQL m1-asset-closure done or exact original-input blocker identified"],
+      "reserved_namespaces": ["asset.source.osrs.*"],
+      "source_notes": ["Product-content missing-ID inventories are the bounded input list."],
+      "parity_entries": [],
+      "adaptations": [],
+      "evidence": []
+    },
+    {
       "id": "M1-FLEET-LIVE-SERVER",
       "goal": "Wire compiled source content, the headless engine and fenced transactional persistence into real game RPCs and source-cadence scheduling.",
-      "status": "READY",
+      "status": "IMPLEMENTING",
       "specs": ["spec/game-contracts.md", "spec/networking.md", "crates/server/README.md"],
       "dependencies": ["M1-FLEET-STORAGE", "M1-FLEET-MECHANICS-CONTRACTS"],
       "allowed_paths": ["crates/server/**", "crates/protocol/**", "crates/client-core/tests/**", "spec/game-networking.md"],
@@ -49,7 +86,7 @@
     {
       "id": "M1-FLEET-MAC-HANDOFF",
       "goal": "Prepare explicit owner-run native Mac Chrome/Edge acceptance tooling without inventing measurements or bypassing browser isolation.",
-      "status": "READY",
+      "status": "IMPLEMENTING",
       "specs": ["milestones/m1-owner-followups.json", "tools/browser-harness/README.md", "spec/performance.md"],
       "dependencies": ["M1-FLEET-BROWSER"],
       "allowed_paths": ["tools/browser-harness/**", "research/browser-platform/**"],
@@ -193,7 +230,7 @@
     {
       "id": "M1-FLEET-PRODUCT-CONTENT",
       "goal": "Assemble complete actual M1 source-backed content and world/collision/asset bindings, not a demonstration square or fixture character.",
-      "status": "IMPLEMENTING",
+      "status": "BLOCKED",
       "specs": ["spec/game-contracts.md", "research/journey-rules/**", "research/current-source/extraction-contract.json"],
       "dependencies": ["M1-FLEET-RUNTIME", "M1-FLEET-RULES"],
       "allowed_paths": ["content/m1/**", "tools/m1-content/**", "research/m1-bindings/**"],
