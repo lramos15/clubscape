@@ -1,0 +1,2 @@
+Actual original model container passes; corrupted bytes and wrong CRC both rejected.
+[main] WARN net.runelite.cache.fs.Archive - crc mismatch for archive 7/1570

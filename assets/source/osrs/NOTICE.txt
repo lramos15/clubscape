@@ -1,0 +1,22 @@
+Original Old School RuneScape source assets and data
+
+Copyright © 1999 - 2026 Jagex Ltd. All rights reserved.
+
+The source client configuration states:
+"This game is copyright © 1999 - 2026 Jagex Ltd."
+The original configuration, including its terms/privacy notices, is preserved
+byte-for-byte in research/current-source/runtime-config.ws.
+
+These are owner-authorized original source inputs for the ClubScape task.
+Source acquisition and mechanical decoding do not create an open-source grant,
+transfer ownership, imply Jagex endorsement, or accept account/game terms.
+RuneLite's code license must not be applied to these game assets.
+
+Original binary payload hashes and exact sources/conversions are recorded in
+research/current-source/selection.json and assets/manifests/osrs/.
+Geometry, palette/glyph data, source coordinates and original source payloads
+have not been replaced with generated substitutes.
+
+No source-game screenshot pack, ClubScape renderer, visual/audio comparison,
+gameplay result, RuneLite compatibility claim or owner presentation approval
+is established by these files.

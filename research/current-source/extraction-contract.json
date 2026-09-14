@@ -1,0 +1,83 @@
+{
+  "schema_version": 1,
+  "status": "Original source-data interchange; not a runtime asset approval or renderer contract.",
+  "source_selection": "research/current-source/selection.json",
+  "namespace": "asset.source.osrs.cache{cache_id}.{kind}.{source_id}",
+  "identity": {
+    "archive": "JS5 index number, e.g. 7 models, 5 maps, 8 sprites, 13 font metrics",
+    "group": "Archive/group ID within that index",
+    "file": "Inner file ID, not assumed identical to the group ID",
+    "integrity": "Whole ZIP SHA-256; every original disk-file SHA-256; selected compressed group CRC/full revision/version trailer and SHA-256; original decompressed payload SHA-256; output and uncompressed JSON hashes.",
+    "definition_files": "Config index 2: underlays group1, overlays4, objects6, NPCs9, items10, sequences12.",
+    "source_empty_meshes": "Explicitly retained and marked; never counted as representative renderable geometry."
+  },
+  "world": {
+    "file_pattern": "world/{region_id}.json.gz",
+    "region_id": "(region_x << 8) | region_y",
+    "source_group": "index5/group=region_id, inner file0 terrain and file1 locations",
+    "dimensions": [4, 64, 64],
+    "array_order": "(plane * 64 + local_x) * 64 + local_y",
+    "world_coordinates": "world_x=region_x*64+local_x, world_y=region_y*64+local_y; x increases east, y north; plane is separate.",
+    "heights": "Original client height units; negative is up. One tile is 128 model/local units. Explicit height bytes or RuneLite's pinned source noise/upper-plane derivation produce the heights; encoded_heights also preserve source bytes (-1 denotes implicit height).",
+    "tile_fields": ["heights", "underlay_ids", "overlay_ids", "overlay_shapes", "overlay_rotations", "tile_settings", "encoded_heights"],
+    "floor_definition_lookup": "Tile underlay/overlay 0 means absent; positive tile ID references definition ID minus1. Preserve source shape, rotation, settings/bridge/roof information.",
+    "placements_columns": ["object_id", "world_x", "world_y", "plane", "type", "orientation"],
+    "placements": "All source placements, including scenery and upper floors. No coordinate recentering, relocation or density sampling.",
+    "object_closure": "Every placed object definition, all source morph destinations, their model IDs, animation IDs and ambient sounds. Morph/varbit state is not guessed.",
+    "instances": "Source map squares are not live instance chunk-copy maps. Death's Office source square12633 is identified by coffer39550 at3179,5729; live entry/instance state remains unverified.",
+    "boundary": "Conservative extraction rectangles are not approved game boundaries or camera/draw-distance settings; absent source-index squares are listed, not synthesized."
+  },
+  "models": {
+    "file_pattern": "models/{id}.json.gz",
+    "raw_file": "raw/7/{id}/0.bin",
+    "coordinates": "Native signed integer model X,Y,Z. X and Z are horizontal local axes, Y is vertical with negative up. No axis/handedness conversion, resizing, centering, rotation, smoothing, welding or decimation was applied.",
+    "topology": "vertexX/Y/Z and faceIndices1/2/3 preserve source vertex/triangle order and winding. Signed short/byte storage is retained in source fields; apply unsigned masks where the original client does.",
+    "materials": "faceColors are packed unsigned16 OSRS HSL, not RGB/PBR base colors; faceTextures use -1 for none. Keep render types, priorities, transparency, depth offsets and texture coordinate/triangle metadata.",
+    "hsl_layout": "Hue=(value>>10)&63, saturation=(value>>7)&7, lightness=value&127. Original lighting/brightness/palette behavior must be reproduced, not replaced by a generic PBR shader.",
+    "transparency": "Interpret source byte modulo256: source0 is opaque, source255 transparent. Preserve native compositing and face priority behavior.",
+    "derived_data": "Pinned RuneLite computeNormals/computeTextureUVCoordinates outputs are provided separately as vertex_normals, face_normals, face_texture_u/v. They are not reference rendering proof.",
+    "assembly": "Object definitions retain type-specific model selection, rotations, sizes, offsets, contouring, recolors and retextures. NPC definitions retain ordered parts, scales, recolors/retextures and animations. Item definitions retain model/icon rotations/zoom/offsets/equipment/note/stack links.",
+    "representative_tree": "Object1277 -> model1570 (90 vertices,110 faces); recolor3470->5029 must be applied.",
+    "representative_goblin": "NPC3028 -> models24458,24482,24431,24472,24441,24448. Preserve part assembly and source animation groups.",
+    "penguin_candidate": "NPC2063 -> model21547 (200 vertices,396 faces), widthScale=heightScale=75 relative to128. No player adaptation, recoloring or equipment fitting approved.",
+    "geometry_limits": "Per-model vertex/face counts and native bounds are in the canonical full-bundle records.",
+    "pivot": "Original model origin retained; definition offsets/contouring not baked.",
+    "attachments": "Original transform/skin groups retained. No invented penguin attachment points or completed modular equipment contract.",
+    "lod_and_optimization": "No LOD generation or optimization; original source inputs only."
+  },
+  "textures": {
+    "source": "index9/group0/file=texture_id plus referenced index8 sprite groups",
+    "payload": "Original texture definition layer IDs, color/tint fields and animation fields; referenced RGBA sprites, palettes and pixel indices.",
+    "sampling_and_shading": "No filtering, gamma, brightness or animation speed baked. Source renderer calibration remains an approval prerequisite."
+  },
+  "sprites_fonts_interfaces": {
+    "sprite_files": "sprites/{group}.png and sprites/{group}.json.gz; at most16 atlas columns, cell size equals max source canvas dimensions.",
+    "pixels": "RGBA8 PNG with straight alpha. Native palettes and unsigned palette indices are also retained. No replacement artwork or smoothing.",
+    "frame_metadata": ["frame", "atlas_x", "atlas_y", "width", "height", "offset_x", "offset_y", "canvas_width", "canvas_height", "palette", "pixel_indices_unsigned"],
+    "font_files": "fonts/{group}.json references the same numbered glyph sprite group; 256 CP1252-indexed glyphs, exact advances and ascent.",
+    "font_ids": {"p11_full": 494, "p12_full": 495, "b12_full": 496},
+    "kerning": "All selected metrics use original257-byte format, which contains no kerning table. Extended unsupported metrics fail rather than dropping data.",
+    "interfaces": "Source widget IDs are (group<<16)|file. All original coordinates/layout flags/text/colors/visibility/listeners and direct sprite/font references are retained.",
+    "limitations": "Decoded widgets do not establish dynamic script effects, stock Resizable-Classic behavior or generated item icons. The383x503 title.jpg is a source component, not a calibrated screen capture."
+  },
+  "animations": {
+    "legacy": "Sequences retain native frame IDs/lengths, looping/interleave/priority and source sound-event data. packed_frame=(index0_group<<16)|file. FrameDefinition stores translator arrays/count, indexFrameIds and framemap.",
+    "skeletons": "Index1/group=skeleton_id/file0. Legacy types/frameMaps/length are decoded; original bytes also remain in full output. Model packed vertex/transparency groups and animaya group/scale arrays are retained.",
+    "timing": "Frame lengths remain native client-cycle quantities; they are not converted to server ticks or asserted to match captured wall-clock playback.",
+    "cached_curves": "Sequence animMayaID is packed (index22_group<<16)|file. The original versioned curve bytes and referenced skeleton are preserved; curve decoder/playback and extended bind-pose semantics are not claimed complete.",
+    "rendering": "No retargeting, interpolation rewrite, animation playback acceptance or equipment-fit validation."
+  },
+  "audio": {
+    "music": "Index6 named groups decoded from Jagex track encoding to Standard MIDI, retaining original source bytes. Name/hash assertions select Scape Main0, Newbie Melody62, Scape Cave144, Harmony76, Autumn Voyage2.",
+    "sfx": "Index4 source sound bytes plus decoded envelope/oscillator/filter definitions for requested and scene/sequence referenced sounds.",
+    "synthesis_inputs": "Every original index14 compressed sample and Vorbis setup group0, and all index15 instrument patches, are preserved in full extraction.",
+    "limitations": "No generic soundfont, synthesized replacement, source recording or actual playback claim. Original synthesis, triggers, volumes, transitions and loop timing remain to be validated."
+  },
+  "publication": {
+    "full_bundle": "assets/manifests/osrs/cache2695-full-bundle.json.gz lists all actual output files, including ignored full model and audio inputs.",
+    "published_manifest": "assets/manifests/osrs/cache2695-published.json",
+    "collections": "collections/{kind}.json.gz is an asset-ID-keyed map aggregating original decoded JSON values without semantic modification.",
+    "reproduction": "python3 tools/cache-import/import_cache.py fetch && python3 tools/cache-import/import_cache.py extract && python3 tools/cache-import/import_cache.py publish",
+    "approval": "Owner reference-pack approval and final presentation/gameplay acceptance remain separate and false."
+  }
+}
