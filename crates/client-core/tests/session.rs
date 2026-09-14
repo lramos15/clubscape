@@ -312,6 +312,7 @@ fn malformed_protocol_and_inventory_state_fail_without_losing_last_good_state() 
             stack: Some(game::Stack {
                 item: "item.test".into(),
                 quantity: 1,
+                ..Default::default()
             }),
         });
     assert!(poll(&mut core, 4, state).is_err());

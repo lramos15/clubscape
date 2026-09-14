@@ -1,6 +1,7 @@
 use clubscape_game_types::{
-    GameIntent, INVENTORY_SLOTS, InterfaceId, ItemTarget, Quantity, RecipeId, ShopId, SlotId,
-    SpawnId, Tile,
+    CharacterSetting, DeathId, DynamicObjectId, ExperienceId, GameIntent, INVENTORY_SLOTS,
+    InterfaceId, ItemTarget, Quantity, RecipeId, RecoveryItemId, RecoveryStorage, ShopId, SlotId,
+    SpawnId, Tile, WorldTarget,
 };
 
 use crate::{ValidationError, game, invalid};
@@ -51,10 +52,16 @@ fn optional_spawn(value: &Option<String>) -> Result<Option<SpawnId>, ValidationE
 
 pub fn validate_character_options(options: &game::CreateCharacter) -> Result<(), ValidationError> {
     bounded_text(&options.experience_choice, 64)?;
-    if options.appearance.len() > 16 {
+    validate_appearance(&options.appearance)
+}
+
+fn validate_appearance(
+    appearance: &std::collections::HashMap<String, u32>,
+) -> Result<(), ValidationError> {
+    if appearance.len() > 16 {
         return Err(invalid("Too many character appearance options."));
     }
-    for (key, value) in &options.appearance {
+    for (key, value) in appearance {
         if key.is_empty()
             || key.len() > 32
             || !key
@@ -66,6 +73,22 @@ pub fn validate_character_options(options: &game::CreateCharacter) -> Result<(),
         }
     }
     Ok(())
+}
+
+fn world_target(target: &game::WorldTarget) -> Result<WorldTarget, ValidationError> {
+    match target
+        .target
+        .as_ref()
+        .ok_or_else(|| invalid("A world target is required."))?
+    {
+        game::world_target::Target::Spawn(value) => Ok(WorldTarget::Spawn {
+            spawn: spawn(value)?,
+        }),
+        game::world_target::Target::TemporaryObject(value) => Ok(WorldTarget::TemporaryObject {
+            object: DynamicObjectId::new(value)
+                .map_err(|_| invalid("Invalid dynamic object ID."))?,
+        }),
+    }
 }
 
 pub fn game_intent(input: &game::WorldInput) -> Result<GameIntent, ValidationError> {
@@ -137,6 +160,13 @@ pub fn game_intent(input: &game::WorldInput) -> Result<GameIntent, ValidationErr
                     game::use_item::Target::WorldSpawn(target) => ItemTarget::World {
                         spawn: spawn(target)?,
                     },
+                    game::use_item::Target::TemporaryObject(value) => ItemTarget::TemporaryObject {
+                        object: DynamicObjectId::new(value)
+                            .map_err(|_| invalid("Invalid dynamic object ID."))?,
+                    },
+                    game::use_item::Target::GroundItem(value) => ItemTarget::Ground {
+                        ground_item_id: bounded_text(value, 192)?,
+                    },
                 },
             },
             Action::MoveInventory(action) => GameIntent::MoveInventory {
@@ -185,6 +215,82 @@ pub fn game_intent(input: &game::WorldInput) -> Result<GameIntent, ValidationErr
             },
             Action::CancelActivity(_) => GameIntent::CancelActivity,
             Action::RequestLogout(_) => GameIntent::RequestLogout,
+            Action::InteractWith(action) => GameIntent::InteractWith {
+                target: world_target(
+                    action
+                        .target
+                        .as_ref()
+                        .ok_or_else(|| invalid("A world target is required."))?,
+                )?,
+                action: bounded_text(&action.action, 64)?,
+            },
+            Action::ProduceAt(action) => GameIntent::ProduceAt {
+                recipe: RecipeId::new(&action.recipe).map_err(|_| invalid("Invalid recipe ID."))?,
+                target: action.target.as_ref().map(world_target).transpose()?,
+                quantity: quantity(action.quantity)?,
+            },
+            Action::SetSetting(action) => {
+                let setting = match game::SettingKind::try_from(action.setting) {
+                    Ok(game::SettingKind::Run) => CharacterSetting::Run(action.enabled),
+                    Ok(game::SettingKind::AutoRetaliate) => {
+                        CharacterSetting::AutoRetaliate(action.enabled)
+                    }
+                    Ok(game::SettingKind::DeathAutoEquip) => {
+                        CharacterSetting::DeathAutoEquip(action.enabled)
+                    }
+                    Ok(game::SettingKind::DeathSupplyPiles) => {
+                        CharacterSetting::DeathSupplyPiles(action.enabled)
+                    }
+                    _ => return Err(invalid("A supported character setting is required.")),
+                };
+                GameIntent::SetSetting { setting }
+            }
+            Action::ConfirmAppearance(action) => {
+                validate_appearance(&action.appearance)?;
+                GameIntent::ConfirmAppearance {
+                    appearance: action
+                        .appearance
+                        .iter()
+                        .map(|(key, value)| (key.clone(), *value))
+                        .collect(),
+                }
+            }
+            Action::SelectExperience(action) => GameIntent::SelectExperience {
+                experience: ExperienceId::new(&action.experience)
+                    .map_err(|_| invalid("Invalid experience choice ID."))?,
+            },
+            Action::Reclaim(action) => {
+                if action.items.is_empty() || action.items.len() > 256 {
+                    return Err(invalid(
+                        "Recovery requests require 1-256 distinct item identities.",
+                    ));
+                }
+                let storage = match game::RecoveryStorage::try_from(action.storage) {
+                    Ok(game::RecoveryStorage::Grave) => RecoveryStorage::Grave,
+                    Ok(game::RecoveryStorage::DeathOffice) => RecoveryStorage::DeathOffice,
+                    _ => return Err(invalid("A supported recovery storage is required.")),
+                };
+                let items: Vec<_> = action
+                    .items
+                    .iter()
+                    .map(|item| {
+                        RecoveryItemId::new(item).map_err(|_| invalid("Invalid recovery item ID."))
+                    })
+                    .collect::<Result<_, _>>()?;
+                if items
+                    .iter()
+                    .collect::<std::collections::BTreeSet<_>>()
+                    .len()
+                    != items.len()
+                {
+                    return Err(invalid("Recovery item identities cannot be duplicated."));
+                }
+                GameIntent::Reclaim {
+                    death: DeathId::new(&action.death).map_err(|_| invalid("Invalid death ID."))?,
+                    storage,
+                    items,
+                }
+            }
         },
     )
 }

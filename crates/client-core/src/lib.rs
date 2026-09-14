@@ -40,7 +40,7 @@ pub enum ClientEvent {
     AccountChanged,
     CharacterCreated(String),
     WorldChanged,
-    Gameplay(game::Event),
+    Gameplay(Box<game::Event>),
     SignedOut,
 }
 
@@ -558,7 +558,7 @@ impl ClientCore {
         for event in &snapshot.events {
             if self.seen_events.insert(event.event_id.clone()) {
                 self.event_order.push_back(event.event_id.clone());
-                events.push(ClientEvent::Gameplay(event.clone()));
+                events.push(ClientEvent::Gameplay(Box::new(event.clone())));
             }
         }
         while self.event_order.len() > 1024 {

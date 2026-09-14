@@ -40,6 +40,12 @@ message WorldInput {
     SetPrayer set_prayer = 29;
     Empty cancel_activity = 30;
     Empty request_logout = 31;
+    InteractWith interact_with = 32;
+    ProduceAt produce_at = 33;
+    SetSetting set_setting = 34;
+    ConfirmAppearance confirm_appearance = 35;
+    SelectExperience select_experience = 36;
+    Reclaim reclaim = 37;
   }
 }
 
@@ -62,6 +68,8 @@ message UseItem {
   oneof target {
     uint32 other_inventory_slot = 2;
     string world_spawn = 3;
+    string temporary_object = 4;
+    string ground_item = 5;
   }
 }
 message MoveInventory { uint32 from = 1; uint32 to = 2; }
@@ -73,6 +81,30 @@ message ShopSell { string shop = 1; uint32 inventory_slot = 2; uint32 quantity =
 message SetCombatStyle { string style = 1; }
 message Cast { string spell = 1; optional string target = 2; }
 message SetPrayer { string prayer = 1; bool enabled = 2; }
+message WorldTarget {
+  oneof target {
+    string spawn = 1;
+    string temporary_object = 2;
+  }
+}
+message InteractWith { WorldTarget target = 1; string action = 2; }
+message ProduceAt { string recipe = 1; WorldTarget target = 2; uint32 quantity = 3; }
+enum SettingKind {
+  SETTING_UNSPECIFIED = 0;
+  RUN = 1;
+  AUTO_RETALIATE = 2;
+  DEATH_AUTO_EQUIP = 3;
+  DEATH_SUPPLY_PILES = 4;
+}
+message SetSetting { SettingKind setting = 1; bool enabled = 2; }
+message ConfirmAppearance { map<string, uint32> appearance = 1; }
+message SelectExperience { string experience = 1; }
+enum RecoveryStorage {
+  RECOVERY_UNSPECIFIED = 0;
+  GRAVE = 1;
+  DEATH_OFFICE = 2;
+}
+message Reclaim { string death = 1; RecoveryStorage storage = 2; repeated string items = 3; }
 
 message CharacterCreated {
   string actor_id = 1;
@@ -107,6 +139,8 @@ message WorldSnapshot {
 message Stack {
   string item = 1;
   uint32 quantity = 2;
+  optional string instance_id = 3;
+  optional uint32 charges = 4;
 }
 message ItemSlot { uint32 index = 1; Stack stack = 2; }
 message EquipmentSlot { string slot = 1; Stack stack = 2; }
@@ -142,6 +176,12 @@ message Player {
   repeated string unlocked_interfaces = 18;
   string activity = 19;
   string animation = 20;
+  uint32 bank_capacity = 21;
+  repeated SetSetting settings = 22;
+  optional string experience = 23;
+  optional string instance = 24;
+  repeated string active_prayers = 25;
+  optional string active_death = 26;
 }
 message Entity {
   string id = 1;
