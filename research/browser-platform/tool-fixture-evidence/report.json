@@ -1,0 +1,829 @@
+{
+  "schemaVersion": 1,
+  "runId": "tool-fixture-receipt-2026-09-14",
+  "startedAt": "2026-09-14T00:29:46.881Z",
+  "status": "valid-measurement",
+  "purpose": "tool-fixture",
+  "m1Acceptance": "not-evaluated",
+  "baselineApproved": false,
+  "evidenceLimits": "TOOL FIXTURE ONLY. Not a game renderer, source fidelity, representative workload, or performance acceptance.",
+  "configuration": {
+    "version": 1,
+    "purpose": "tool-fixture",
+    "mode": "benchmark",
+    "url": "http://127.0.0.1:40553/?case=requires-input",
+    "allowedOrigins": [
+      "http://127.0.0.1:40553"
+    ],
+    "captureCaseId": "tool-fixture-only",
+    "browser": {
+      "product": "chrome",
+      "expectedVersion": "153.0.8010.12",
+      "executableEnv": "BROWSER_EXECUTABLE",
+      "graphicsProfile": "sparky-vulkan-x11"
+    },
+    "contract": {
+      "id": "tool-fixture-plumbing-v1-NOT-M1",
+      "ownerApprovalRef": null,
+      "sourcePack": null,
+      "buildId": "harness-fixture/v1",
+      "sceneId": "tool-fixture-one-triangle",
+      "routeId": "no-gameplay-route",
+      "workloadId": "tool-fixture-colored-split",
+      "settingsSha256": "d46b69dad523a26c7e50190d609e8c2b04c32f46e8fe95b3a43a7d86c99a0166",
+      "assetManifestSha256": "6754fb4837812768eafc60a6946d19b99d62d81c2afc0b5db1b1f2e91b845384",
+      "requiredAssets": [
+        {
+          "id": "fixture-triangle.wgsl",
+          "sha256": "ca39137aa60de88329dea5d705e15de08fdb377cb21c015166d4324582a21fca"
+        }
+      ],
+      "minimumEntities": {
+        "fixtureTriangles": 1
+      },
+      "viewport": {
+        "width": 1920,
+        "height": 1080,
+        "deviceScaleFactor": 1
+      },
+      "resizeRange": {
+        "min": {
+          "width": 1280,
+          "height": 720
+        },
+        "max": {
+          "width": 2560,
+          "height": 1440
+        }
+      },
+      "resizeChecks": [
+        {
+          "width": 1280,
+          "height": 720
+        },
+        {
+          "width": 2560,
+          "height": 1440
+        }
+      ],
+      "surfaceSelector": "#fixture-surface",
+      "setupActions": [
+        {
+          "type": "mouse-move",
+          "x": 400,
+          "y": 300
+        },
+        {
+          "type": "mouse-click",
+          "x": 400,
+          "y": 300,
+          "button": "left"
+        },
+        {
+          "type": "key-press",
+          "key": "k"
+        }
+      ],
+      "imageChecks": {
+        "minSurfaceAreaFraction": 0.5,
+        "minOpaqueFraction": 0.99,
+        "maxDominantColorFraction": 0.995,
+        "minChannelStdDev": 2
+      },
+      "measurement": {
+        "warmupMs": 500,
+        "durationMs": 2500,
+        "pollMs": 100,
+        "staleAfterMs": 1000,
+        "readinessTimeoutMs": 10000,
+        "minimumFps": 60,
+        "p95FrameMs": 20,
+        "p99FrameMs": 33.333333333333336,
+        "stallThresholdMs": 50,
+        "maxStallsPerMinute": 1,
+        "maxGapMs": 100
+      },
+      "hardware": {
+        "id": "sparky-tool-observation-NOT-an-approved-representative-contract",
+        "representativeIntegratedGraphics": false,
+        "ownerApprovalRef": null,
+        "evidenceRefs": [
+          "research/browser-platform/sparky-2026-09-13.md"
+        ],
+        "gpu": "NVIDIA GB10; Vulkan reports INTEGRATED_GPU; representativeness unapproved",
+        "cpu": "20 ARM cores: 10 Cortex-X925 + 10 Cortex-A725",
+        "memory": "127600748 KiB visible system RAM; GB10 unified-memory architecture",
+        "os": "Ubuntu 24.04.4 aarch64; Linux 6.17.0-1026-nvidia",
+        "driver": "NVIDIA 580.173.02",
+        "expectedAdapter": null
+      }
+    }
+  },
+  "benchmarkContract": {
+    "id": "tool-fixture-plumbing-v1-NOT-M1",
+    "sha256": "4a4a25ba19d5c65ce22b725621804c6f22dbae4de133ca52af168b36c2e03c7f",
+    "canonicalization": "recursive lexicographic JSON keys; UTF-8; no whitespace"
+  },
+  "sourcePack": null,
+  "display": {
+    "mode": "Xvfb 2720x1600x24; abstract Unix transport; cookie auth; no TCP/filesystem socket",
+    "display": ":0"
+  },
+  "input": {
+    "keyboard": true,
+    "mouse": true,
+    "mobile": false,
+    "touch": false
+  },
+  "captureSettings": {
+    "headless": false,
+    "chromiumSandbox": true,
+    "locale": "en-US",
+    "timezoneId": "UTC",
+    "colorScheme": "light",
+    "animations": "allow",
+    "caret": "initial"
+  },
+  "host": {
+    "hostname": "sparky",
+    "platform": "linux",
+    "release": "6.17.0-1026-nvidia",
+    "arch": "arm64",
+    "cpuModels": [
+      "unknown"
+    ],
+    "logicalCpus": 20,
+    "totalMemoryBytes": 130663165952
+  },
+  "captures": [
+    {
+      "label": "primary-before",
+      "startedAt": "2026-09-14T00:29:48.237Z",
+      "finishedAt": "2026-09-14T00:29:48.563Z",
+      "viewport": {
+        "width": 1920,
+        "height": 1080,
+        "deviceScaleFactor": 1
+      },
+      "surfaceBounds": {
+        "x": 0,
+        "y": 32,
+        "width": 1920,
+        "height": 1048
+      },
+      "viewportImage": {
+        "path": "tool-fixture-primary-before-viewport.png",
+        "sha256": "79b3e55ce2b079294d5b2e18fa31d8c59c6a6ef835994e35ff85f546ad1c7e94",
+        "pixels": {
+          "width": 1920,
+          "height": 1080,
+          "opaqueFraction": 1,
+          "dominantColorFraction": 0.5064120370370371,
+          "channelStdDev": [
+            99.77831319390734,
+            49.70353484523195,
+            71.12560952405475
+          ]
+        }
+      },
+      "surfaceImage": {
+        "path": "tool-fixture-primary-before-surface.png",
+        "sha256": "55dfa8112e7feb20b384ceac9a35ca1f391a0b68554aec61b5406d31837933f0",
+        "pixels": {
+          "width": 1920,
+          "height": 1048,
+          "opaqueFraction": 1,
+          "dominantColorFraction": 0.5348958333333333,
+          "channelStdDev": [
+            98.75859728200565,
+            44.890271491820755,
+            67.33540723773113
+          ]
+        }
+      }
+    },
+    {
+      "label": "primary-after",
+      "startedAt": "2026-09-14T00:29:51.592Z",
+      "finishedAt": "2026-09-14T00:29:51.934Z",
+      "viewport": {
+        "width": 1920,
+        "height": 1080,
+        "deviceScaleFactor": 1
+      },
+      "surfaceBounds": {
+        "x": 0,
+        "y": 32,
+        "width": 1920,
+        "height": 1048
+      },
+      "viewportImage": {
+        "path": "tool-fixture-primary-after-viewport.png",
+        "sha256": "805de8a7bbadd46805d1a8d4d37a37f104f9cf1f397ba129b147b8490cab6259",
+        "pixels": {
+          "width": 1920,
+          "height": 1080,
+          "opaqueFraction": 1,
+          "dominantColorFraction": 0.527133487654321,
+          "channelStdDev": [
+            99.0921949889686,
+            49.17431809700809,
+            71.47694326988456
+          ]
+        }
+      },
+      "surfaceImage": {
+        "path": "tool-fixture-primary-after-surface.png",
+        "sha256": "f1407508e0f7d31df1c379808698b0d57974c9e5974f0a1df6b546b758f9b6e9",
+        "pixels": {
+          "width": 1920,
+          "height": 1048,
+          "opaqueFraction": 1,
+          "dominantColorFraction": 0.553125,
+          "channelStdDev": [
+            98.4396053346289,
+            44.74527515210405,
+            67.11791272815607
+          ]
+        }
+      }
+    },
+    {
+      "label": "resize-1280x720",
+      "startedAt": "2026-09-14T00:29:51.961Z",
+      "finishedAt": "2026-09-14T00:29:52.205Z",
+      "viewport": {
+        "width": 1280,
+        "height": 720,
+        "deviceScaleFactor": 1
+      },
+      "surfaceBounds": {
+        "x": 0,
+        "y": 32,
+        "width": 1280,
+        "height": 688
+      },
+      "viewportImage": {
+        "path": "tool-fixture-resize-1280x720-viewport.png",
+        "sha256": "d3ed0ac8ff3b6ae79b062b11f264fe8187e46ce15b6a814ce363b2cd664f035e",
+        "pixels": {
+          "width": 1280,
+          "height": 720,
+          "opaqueFraction": 1,
+          "dominantColorFraction": 0.5472048611111111,
+          "channelStdDev": [
+            98.35767148791079,
+            50.4710258244727,
+            73.15187313977563
+          ]
+        }
+      },
+      "surfaceImage": {
+        "path": "tool-fixture-resize-1280x720-surface.png",
+        "sha256": "5ba7061b689ab4facb1918c17e68274506a8efe09a740cb4343d8fa47e7cdd66",
+        "pixels": {
+          "width": 1280,
+          "height": 688,
+          "opaqueFraction": 1,
+          "dominantColorFraction": 0.58046875,
+          "channelStdDev": [
+            97.70949537194345,
+            44.413406987247036,
+            66.62011048087055
+          ]
+        }
+      }
+    },
+    {
+      "label": "resize-2560x1440",
+      "startedAt": "2026-09-14T00:29:52.225Z",
+      "finishedAt": "2026-09-14T00:29:52.710Z",
+      "viewport": {
+        "width": 2560,
+        "height": 1440,
+        "deviceScaleFactor": 1
+      },
+      "surfaceBounds": {
+        "x": 0,
+        "y": 32,
+        "width": 2560,
+        "height": 1408
+      },
+      "viewportImage": {
+        "path": "tool-fixture-resize-2560x1440-viewport.png",
+        "sha256": "9ce79bcff0798fd130e00d20c0ecbb8ca2f7603bcf887462ff2da1bf22818de4",
+        "pixels": {
+          "width": 2560,
+          "height": 1440,
+          "opaqueFraction": 1,
+          "dominantColorFraction": 0.5752083333333333,
+          "channelStdDev": [
+            97.63535017042743,
+            47.47558315026477,
+            70.0660936094418
+          ]
+        }
+      },
+      "surfaceImage": {
+        "path": "tool-fixture-resize-2560x1440-surface.png",
+        "sha256": "684aca44011d95e9245cd275adbf1baf79f33fdcbabd172eeae29e784b7aee87",
+        "pixels": {
+          "width": 2560,
+          "height": 1408,
+          "opaqueFraction": 1,
+          "dominantColorFraction": 0.594140625,
+          "channelStdDev": [
+            97.22940000316562,
+            44.19518181962074,
+            66.29277272943112
+          ]
+        }
+      }
+    }
+  ],
+  "failures": [],
+  "harness": {
+    "version": "0.1.0",
+    "sourceSha256": "007a1f40315521849fad7bff86385fc5e604db816f5e0575b189a3b552d0685c",
+    "node": "v24.18.0",
+    "playwright": "1.63.0"
+  },
+  "executable": {
+    "path": "/home/lramos15/.cache/ms-playwright/chromium-1243/chrome-linux-arm64/chrome",
+    "versionOutput": "Google Chrome for Testing 153.0.8010.12",
+    "sha256": "839efe5fd8b6a773dd81b2e10afdc15f3c0a17316fb82b5908c0533306c4ed9e"
+  },
+  "browser": {
+    "actualVersion": {
+      "protocolVersion": "1.3",
+      "product": "Chrome/153.0.8010.12",
+      "revision": "@971a7443b0c9b0a9b2860529b33331b76077ec62",
+      "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/153.0.0.0 Safari/537.36",
+      "jsVersion": "15.3.76.4"
+    },
+    "userAgentData": {
+      "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/153.0.0.0 Safari/537.36",
+      "brands": [
+        {
+          "brand": "Chromium",
+          "version": "153.0.8010.12"
+        },
+        {
+          "brand": "Not_A Brand",
+          "version": "8.0.0.0"
+        }
+      ]
+    },
+    "commandLine": [
+      "/home/lramos15/.cache/ms-playwright/chromium-1243/chrome-linux-arm64/chrome",
+      "--disable-field-trial-config",
+      "--disable-background-networking",
+      "--disable-background-timer-throttling",
+      "--disable-backgrounding-occluded-windows",
+      "--disable-back-forward-cache",
+      "--disable-breakpad",
+      "--disable-client-side-phishing-detection",
+      "--disable-component-extensions-with-background-pages",
+      "--disable-component-update",
+      "--no-default-browser-check",
+      "--disable-default-apps",
+      "--disable-dev-shm-usage",
+      "--disable-edgeupdater",
+      "--disable-extensions",
+      "--disable-features=AvoidUnnecessaryBeforeUnloadCheckSync,DestroyProfileOnBrowserClose,DialMediaRouteProvider,GlobalMediaControls,HttpsUpgrades,LensOverlay,MediaRouter,PaintHolding,ThirdPartyStoragePartitioning,BlockOriginHeaderModificationOnRedirect,Translate,AutoDeElevate,OptimizationHints,msForceBrowserSignIn,msEdgeUpdateLaunchServicesPreferredVersion",
+      "--enable-features=CDPScreenshotNewSurface",
+      "--allow-pre-commit-input",
+      "--disable-hang-monitor",
+      "--disable-ipc-flooding-protection",
+      "--disable-popup-blocking",
+      "--disable-prompt-on-repost",
+      "--disable-renderer-backgrounding",
+      "--disable-updater-scheduler",
+      "--force-color-profile=srgb",
+      "--metrics-recording-only",
+      "--no-first-run",
+      "--password-store=basic",
+      "--use-mock-keychain",
+      "--no-service-autorun",
+      "--export-tagged-pdf",
+      "--disable-search-engine-choice-screen",
+      "--unsafely-disable-devtools-self-xss-warnings",
+      "--edge-skip-compat-layer-relaunch",
+      "--disable-infobars",
+      "--disable-search-engine-choice-screen",
+      "--disable-sync",
+      "--enable-automation",
+      "--enable-unsafe-webgpu",
+      "--enable-features=Vulkan",
+      "--use-angle=vulkan",
+      "--enable-gpu",
+      "--ignore-gpu-blocklist",
+      "--ozone-platform=x11",
+      "--user-data-dir=/home/lramos15/clubscape/.worktrees/m1-browser-platform/tools/browser-harness/.runtime/b-a8c6cd83/profile",
+      "--remote-debugging-pipe",
+      "--flag-switches-begin",
+      "--flag-switches-end",
+      "about:blank"
+    ],
+    "gpu": {
+      "devices": [
+        {
+          "vendorId": 4318,
+          "deviceId": 11794,
+          "vendorString": "Google Inc. (NVIDIA)",
+          "deviceString": "ANGLE (NVIDIA, Vulkan 1.4.312 (NVIDIA NVIDIA GB10 (0x00002E12)), NVIDIA-580.173.2.0)",
+          "driverVendor": "NVIDIA",
+          "driverVersion": "580.173.2.0"
+        }
+      ],
+      "auxAttributes": {
+        "amdSwitchable": false,
+        "canSupportThreadedTextureMailbox": false,
+        "directRenderingVersion": "",
+        "displayType": "ANGLE_VULKAN",
+        "glExtensions": "GL_AMD_performance_monitor GL_ANGLE_base_vertex_base_instance_shader_builtin GL_ANGLE_blob_cache GL_ANGLE_client_arrays GL_ANGLE_compressed_texture_etc GL_ANGLE_copy_texture_3d GL_ANGLE_depth_texture GL_ANGLE_framebuffer_blit GL_ANGLE_framebuffer_multisample GL_ANGLE_get_image GL_ANGLE_get_serialized_context_string GL_ANGLE_get_tex_level_parameter GL_ANGLE_instanced_arrays GL_ANGLE_logic_op GL_ANGLE_memory_object_flags GL_ANGLE_memory_size GL_ANGLE_multi_draw GL_ANGLE_pack_reverse_row_order GL_ANGLE_polygon_mode GL_ANGLE_program_binary_readiness_query GL_ANGLE_program_cache_control GL_ANGLE_read_only_depth_stencil_feedback_loops GL_ANGLE_relaxed_vertex_attribute_type GL_ANGLE_renderability_validation GL_ANGLE_request_extension GL_ANGLE_rgbx_internal_format GL_ANGLE_robust_client_memory GL_ANGLE_robust_fragment_shader_output GL_ANGLE_shader_pixel_local_storage GL_ANGLE_shader_pixel_local_storage_coherent GL_ANGLE_stencil_texturing GL_ANGLE_texture_compression_dxt3 GL_ANGLE_texture_compression_dxt5 GL_ANGLE_texture_multisample GL_ANGLE_texture_usage GL_ANGLE_translated_shader_source GL_ANGLE_vulkan_image GL_ANGLE_yuv_internal_format GL_ARM_rgba8 GL_ARM_shader_framebuffer_fetch GL_CHROMIUM_bind_generates_resource GL_CHROMIUM_bind_uniform_location GL_CHROMIUM_copy_compressed_texture GL_CHROMIUM_copy_texture GL_CHROMIUM_lose_context GL_EXT_EGL_image_array GL_EXT_EGL_image_external_wrap_modes GL_EXT_EGL_image_storage GL_EXT_base_instance GL_EXT_blend_func_extended GL_EXT_blend_minmax GL_EXT_buffer_storage GL_EXT_clear_texture GL_EXT_clip_control GL_EXT_color_buffer_float GL_EXT_color_buffer_half_float GL_EXT_compressed_ETC1_RGB8_sub_texture GL_EXT_conservative_depth GL_EXT_copy_image GL_EXT_debug_label GL_EXT_debug_marker GL_EXT_depth_clamp GL_EXT_discard_framebuffer GL_EXT_disjoint_timer_query GL_EXT_draw_buffers GL_EXT_draw_buffers_indexed GL_EXT_draw_elements_base_vertex GL_EXT_float_blend GL_EXT_frag_depth GL_EXT_fragment_shading_rate GL_EXT_fragment_shading_rate_primitive GL_EXT_instanced_arrays GL_EXT_map_buffer_range GL_EXT_memory_object GL_EXT_memory_object_fd GL_EXT_multisample_compatibility GL_EXT_occlusion_query_boolean GL_EXT_polygon_offset_clamp GL_EXT_read_format_bgra GL_EXT_render_snorm GL_EXT_robustness GL_EXT_sRGB GL_EXT_sRGB_write_control GL_EXT_semaphore GL_EXT_semaphore_fd GL_EXT_separate_shader_objects GL_EXT_shader_framebuffer_fetch GL_EXT_shader_framebuffer_fetch_non_coherent GL_EXT_shader_non_constant_global_initializers GL_EXT_shader_texture_lod GL_EXT_shadow_samplers GL_EXT_texture_border_clamp GL_EXT_texture_compression_bptc GL_EXT_texture_compression_dxt1 GL_EXT_texture_compression_rgtc GL_EXT_texture_compression_s3tc_srgb GL_EXT_texture_filter_anisotropic GL_EXT_texture_format_BGRA8888 GL_EXT_texture_lod_bias GL_EXT_texture_mirror_clamp_to_edge GL_EXT_texture_norm16 GL_EXT_texture_rg GL_EXT_texture_sRGB_R8 GL_EXT_texture_sRGB_decode GL_EXT_texture_shadow_lod GL_EXT_texture_storage GL_EXT_texture_type_2_10_10_10_REV GL_EXT_unpack_subimage GL_KHR_blend_equation_advanced GL_KHR_blend_equation_advanced_coherent GL_KHR_debug GL_KHR_robustness GL_KHR_texture_compression_astc_ldr GL_NV_fence GL_NV_framebuffer_blit GL_NV_pack_subimage GL_NV_pixel_buffer_object GL_NV_polygon_mode GL_NV_read_depth GL_NV_read_depth_stencil GL_NV_read_stencil GL_NV_shader_noperspective_interpolation GL_OES_EGL_image GL_OES_EGL_image_external GL_OES_EGL_image_external_essl3 GL_OES_EGL_sync GL_OES_compressed_ETC1_RGB8_texture GL_OES_compressed_paletted_texture GL_OES_copy_image GL_OES_depth24 GL_OES_depth32 GL_OES_depth_texture GL_OES_depth_texture_cube_map GL_OES_draw_buffers_indexed GL_OES_draw_elements_base_vertex GL_OES_element_index_uint GL_OES_fbo_render_mipmap GL_OES_get_program_binary GL_OES_mapbuffer GL_OES_packed_depth_stencil GL_OES_required_internalformat GL_OES_rgb8_rgba8 GL_OES_sample_shading GL_OES_sample_variables GL_OES_shader_multisample_interpolation GL_OES_standard_derivatives GL_OES_surfaceless_context GL_OES_texture_3D GL_OES_texture_border_clamp GL_OES_texture_float GL_OES_texture_float_linear GL_OES_texture_half_float GL_OES_texture_half_float_linear GL_OES_texture_npot GL_OES_texture_stencil8 GL_OES_texture_storage_multisample_2d_array GL_OES_vertex_array_object GL_OES_vertex_half_float GL_OES_vertex_type_10_10_10_2 GL_OVR_multiview GL_OVR_multiview2 GL_QCOM_shading_rate GL_QCOM_texture_lod_bias ",
+        "glImplementationParts": "(gl=egl-angle,angle=vulkan)",
+        "glRenderer": "ANGLE (NVIDIA, Vulkan 1.4.312 (NVIDIA NVIDIA GB10 (0x00002E12)), NVIDIA-580.173.2.0)",
+        "glResetNotificationStrategy": 33362,
+        "glVendor": "Google Inc. (NVIDIA)",
+        "glVersion": "OpenGL ES 3.0 (ANGLE 2.1.28646 git hash: a6bc9eff8444)",
+        "glWsExtensions": "EGL_EXT_create_context_robustness EGL_ANGLE_surface_orientation EGL_KHR_create_context EGL_KHR_image EGL_KHR_image_base EGL_EXT_image_gl_colorspace EGL_KHR_gl_colorspace EGL_KHR_gl_texture_2D_image EGL_KHR_gl_texture_cubemap_image EGL_KHR_gl_texture_3D_image EGL_KHR_gl_renderbuffer_image EGL_KHR_get_all_proc_addresses EGL_KHR_fence_sync EGL_KHR_wait_sync EGL_ANGLE_create_context_webgl_compatibility EGL_CHROMIUM_create_context_bind_generates_resource EGL_KHR_swap_buffers_with_damage EGL_EXT_pixel_format_float EGL_KHR_surfaceless_context EGL_ANGLE_display_texture_share_group EGL_ANGLE_display_semaphore_share_group EGL_ANGLE_create_context_client_arrays EGL_ANGLE_program_cache_control EGL_ANGLE_robust_resource_initialization EGL_ANGLE_create_context_extensions_enabled EGL_ANDROID_blob_cache EGL_ANDROID_recordable EGL_ANGLE_create_context_backwards_compatible EGL_KHR_no_config_context EGL_IMG_context_priority EGL_KHR_create_context_no_error EGL_KHR_reusable_sync EGL_EXT_buffer_age EGL_KHR_mutable_render_buffer EGL_ANGLE_create_surface_swap_interval EGL_ANGLE_vulkan_image EGL_KHR_partial_update EGL_ANGLE_global_fence_sync EGL_ANGLE_memory_usage_report ",
+        "glWsVendor": "Google Inc. (NVIDIA)",
+        "glWsVersion": "1.5 (ANGLE 2.1.28646 git hash: a6bc9eff8444)",
+        "hardwareSupportsVulkan": true,
+        "inProcessGpu": false,
+        "initializationTime": 0.155849,
+        "isAsan": false,
+        "isClangCoverage": false,
+        "jpegDecodeAcceleratorSupported": false,
+        "maxMsaaSamples": "8",
+        "optimus": false,
+        "passthroughCmdDecoder": true,
+        "pixelShaderVersion": "3.00",
+        "processCrashCount": 0,
+        "sandboxed": false,
+        "skiaBackendType": "GaneshVulkan",
+        "subpixelFontRendering": true,
+        "targetCpuBits": 64,
+        "vertexShaderVersion": "3.00",
+        "visibilityCallbackCallCount": 0
+      },
+      "featureStatus": {
+        "2d_canvas": "enabled",
+        "direct_rendering_display_compositor": "disabled_off_ok",
+        "gpu_compositing": "enabled",
+        "multiple_raster_threads": "enabled_on",
+        "opengl": "enabled_on",
+        "rasterization": "enabled",
+        "raw_draw": "disabled_off_ok",
+        "skia_graphite": "disabled_off",
+        "trees_in_viz": "disabled_off",
+        "video_decode": "enabled",
+        "video_encode": "disabled_software",
+        "vulkan": "enabled_on",
+        "webgl": "enabled",
+        "webgpu": "enabled",
+        "webgpu_on_vk_via_gl_interop": "disabled_off",
+        "webnn": "disabled_off"
+      },
+      "driverBugWorkarounds": [
+        "enable_webgl_timer_query_extensions",
+        "exit_on_context_lost",
+        "disabled_extension_GL_KHR_blend_equation_advanced",
+        "disabled_extension_GL_KHR_blend_equation_advanced_coherent"
+      ],
+      "videoDecoding": [],
+      "videoEncoding": []
+    },
+    "sandbox": {
+      "namespaceAndSeccompVerified": true,
+      "gpuProcessSandboxed": false,
+      "diagnosticText": "Sandbox Status\nLayer 1 Sandbox\tNamespace\nPID namespaces\tYes\nNetwork namespaces\tYes\nSeccomp-BPF sandbox\tYes\nSeccomp-BPF sandbox supports TSYNC\tYes\nPtrace Protection with Yama LSM (Broker)\tYes\nPtrace Protection with Yama LSM (Non-broker)\tNo\n\nYou are adequately sandboxed."
+    },
+    "linuxProcessIsolation": [
+      {
+        "type": "renderer",
+        "pid": 2867866,
+        "fields": [
+          "NoNewPrivs:\t1",
+          "Seccomp:\t2",
+          "Seccomp_filters:\t1"
+        ]
+      },
+      {
+        "type": "renderer",
+        "pid": 2867867,
+        "fields": [
+          "NoNewPrivs:\t1",
+          "Seccomp:\t2",
+          "Seccomp_filters:\t1"
+        ]
+      },
+      {
+        "type": "renderer",
+        "pid": 2867856,
+        "fields": [
+          "NoNewPrivs:\t1",
+          "Seccomp:\t2",
+          "Seccomp_filters:\t1"
+        ]
+      },
+      {
+        "type": "GPU",
+        "pid": 2867820,
+        "fields": [
+          "NoNewPrivs:\t1",
+          "Seccomp:\t0",
+          "Seccomp_filters:\t0"
+        ]
+      }
+    ],
+    "browserPid": 2867786
+  },
+  "actualUrl": "http://127.0.0.1:40553/?case=requires-input",
+  "desktopCapabilities": {
+    "finePointer": true,
+    "hover": true,
+    "maxTouchPoints": 0
+  },
+  "lastRendererSample": {
+    "snapshot": {
+      "version": 1,
+      "clock": "performance.now",
+      "application": "harness-fixture",
+      "identity": {
+        "buildId": "harness-fixture/v1",
+        "sceneId": "tool-fixture-one-triangle",
+        "routeId": "no-gameplay-route",
+        "workloadId": "tool-fixture-colored-split",
+        "sourcePackSha256": null,
+        "benchmarkContractSha256": "4a4a25ba19d5c65ce22b725621804c6f22dbae4de133ca52af168b36c2e03c7f",
+        "settingsSha256": "d46b69dad523a26c7e50190d609e8c2b04c32f46e8fe95b3a43a7d86c99a0166",
+        "assetManifestSha256": "6754fb4837812768eafc60a6946d19b99d62d81c2afc0b5db1b1f2e91b845384"
+      },
+      "ready": true,
+      "backend": "webgpu",
+      "viewport": {
+        "width": 1920,
+        "height": 1080,
+        "deviceScaleFactor": 1
+      },
+      "assets": [
+        {
+          "id": "fixture-triangle.wgsl",
+          "sha256": "ca39137aa60de88329dea5d705e15de08fdb377cb21c015166d4324582a21fca",
+          "loaded": true
+        }
+      ],
+      "entities": {
+        "fixtureTriangles": 1
+      },
+      "deviceEpoch": "tool-fixture-device-1",
+      "renderedFrames": 203,
+      "lastSubmittedAtMs": 3504.7549998760223,
+      "lastCompletedAtMs": 3506.805000066757,
+      "nowMs": 3508.994999885559,
+      "frames": [
+        {
+          "sequence": 203,
+          "submittedAtMs": 3504.7549998760223,
+          "completedAtMs": 3506.805000066757,
+          "drawCalls": 1,
+          "primitives": 1,
+          "cpuEncodeMs": 0.1099998950958252
+        }
+      ]
+    },
+    "observedAtMs": 3509,
+    "viewport": {
+      "width": 1920,
+      "height": 1080,
+      "deviceScaleFactor": 1
+    },
+    "gpu": {
+      "secureContext": true,
+      "webgpuAvailable": true,
+      "canvas": {
+        "width": 1920,
+        "height": 1048,
+        "cssWidth": 1920,
+        "cssHeight": 1048
+      },
+      "device": {
+        "id": 1,
+        "adapter": {
+          "vendor": "nvidia",
+          "architecture": "",
+          "device": "",
+          "description": ""
+        },
+        "fallbackAdapter": false,
+        "features": [
+          "core-features-and-limits"
+        ],
+        "adapterFeatures": [
+          "bgra8unorm-storage",
+          "chromium-experimental-multi-draw-indirect",
+          "chromium-experimental-sampling-resource-table",
+          "chromium-experimental-subgroup-matrix",
+          "chromium-experimental-timestamp-query-inside-passes",
+          "clip-distances",
+          "core-features-and-limits",
+          "depth-clip-control",
+          "depth32float-stencil8",
+          "dual-source-blending",
+          "float32-blendable",
+          "float32-filterable",
+          "indirect-first-instance",
+          "primitive-index",
+          "rg11b10ufloat-renderable",
+          "subgroup-size-control",
+          "subgroups",
+          "texture-component-swizzle",
+          "texture-compression-astc",
+          "texture-compression-astc-sliced-3d",
+          "texture-compression-bc",
+          "texture-compression-bc-sliced-3d",
+          "texture-compression-etc2",
+          "texture-compression-unaligned",
+          "texture-formats-tier1",
+          "texture-formats-tier2",
+          "timestamp-query"
+        ],
+        "submissions": 203,
+        "completedSubmissions": 203,
+        "lastCompletedAtMs": 3506.7999999523163,
+        "canvasAcquisitions": 203,
+        "canvasConfigurations": 1,
+        "lost": false
+      },
+      "errors": []
+    }
+  },
+  "initialRenderer": {
+    "snapshot": {
+      "version": 1,
+      "clock": "performance.now",
+      "application": "harness-fixture",
+      "identity": {
+        "buildId": "harness-fixture/v1",
+        "sceneId": "tool-fixture-one-triangle",
+        "routeId": "no-gameplay-route",
+        "workloadId": "tool-fixture-colored-split",
+        "sourcePackSha256": null,
+        "benchmarkContractSha256": "4a4a25ba19d5c65ce22b725621804c6f22dbae4de133ca52af168b36c2e03c7f",
+        "assetManifestSha256": "6754fb4837812768eafc60a6946d19b99d62d81c2afc0b5db1b1f2e91b845384",
+        "settingsSha256": "d46b69dad523a26c7e50190d609e8c2b04c32f46e8fe95b3a43a7d86c99a0166"
+      },
+      "ready": true,
+      "backend": "webgpu",
+      "viewport": {
+        "width": 1920,
+        "height": 1080,
+        "deviceScaleFactor": 1
+      },
+      "assets": [
+        {
+          "id": "fixture-triangle.wgsl",
+          "sha256": "ca39137aa60de88329dea5d705e15de08fdb377cb21c015166d4324582a21fca",
+          "loaded": true
+        }
+      ],
+      "entities": {
+        "fixtureTriangles": 1
+      },
+      "deviceEpoch": "tool-fixture-device-1",
+      "renderedFrames": 2,
+      "lastSubmittedAtMs": 154.5699999332428,
+      "lastCompletedAtMs": 156.57500004768372,
+      "nowMs": 158.23499989509583,
+      "frames": []
+    },
+    "observedAtMs": 158.25,
+    "viewport": {
+      "width": 1920,
+      "height": 1080,
+      "deviceScaleFactor": 1
+    },
+    "gpu": {
+      "secureContext": true,
+      "webgpuAvailable": true,
+      "canvas": {
+        "width": 1920,
+        "height": 1048,
+        "cssWidth": 1920,
+        "cssHeight": 1048
+      },
+      "device": {
+        "id": 1,
+        "adapter": {
+          "vendor": "nvidia",
+          "architecture": "",
+          "device": "",
+          "description": ""
+        },
+        "fallbackAdapter": false,
+        "features": [
+          "core-features-and-limits"
+        ],
+        "adapterFeatures": [
+          "bgra8unorm-storage",
+          "chromium-experimental-multi-draw-indirect",
+          "chromium-experimental-sampling-resource-table",
+          "chromium-experimental-subgroup-matrix",
+          "chromium-experimental-timestamp-query-inside-passes",
+          "clip-distances",
+          "core-features-and-limits",
+          "depth-clip-control",
+          "depth32float-stencil8",
+          "dual-source-blending",
+          "float32-blendable",
+          "float32-filterable",
+          "indirect-first-instance",
+          "primitive-index",
+          "rg11b10ufloat-renderable",
+          "subgroup-size-control",
+          "subgroups",
+          "texture-component-swizzle",
+          "texture-compression-astc",
+          "texture-compression-astc-sliced-3d",
+          "texture-compression-bc",
+          "texture-compression-bc-sliced-3d",
+          "texture-compression-etc2",
+          "texture-compression-unaligned",
+          "texture-formats-tier1",
+          "texture-formats-tier2",
+          "timestamp-query"
+        ],
+        "submissions": 2,
+        "completedSubmissions": 2,
+        "lastCompletedAtMs": 156.57500004768372,
+        "canvasAcquisitions": 2,
+        "canvasConfigurations": 1,
+        "lost": false
+      },
+      "errors": []
+    }
+  },
+  "measurement": {
+    "elapsedMs": 2503.25,
+    "renderedFrames": 151,
+    "renderedFps": 60.32158194347348,
+    "counterMeaning": "GPU-completed rendered frames; NOT RAF callbacks, submit-only throughput, or physical display presents",
+    "frameIntervalMs": {
+      "samples": 151,
+      "min": 11.21999979019165,
+      "mean": 16.682549669253117,
+      "p50": 16.664999961853027,
+      "p95": 18.15500020980835,
+      "p99": 20.865000009536743,
+      "max": 21.360000133514404
+    },
+    "trailingGapMs": 2.194999933242798,
+    "maxGapMs": 21.360000133514404,
+    "stalls": {
+      "thresholdMs": 50,
+      "count": 0,
+      "perMinute": 0,
+      "wholeGapTotalMs": 0
+    },
+    "cpuEncodeMs": {
+      "samples": 151,
+      "min": 0.04499983787536621,
+      "mean": 0.11758278695163348,
+      "p50": 0.11500000953674316,
+      "p95": 0.18499994277954102,
+      "p99": 0.22499990463256836,
+      "max": 0.22500014305114746
+    },
+    "gpuRenderPassDurationMs": null,
+    "gpuTimestampCoverage": 0,
+    "gpuCompletionLatencyMs": {
+      "samples": 151,
+      "min": 0.804999828338623,
+      "mean": 1.7802317821426896,
+      "p50": 1.6000001430511475,
+      "p95": 2.7300000190734863,
+      "p99": 6.539999961853027,
+      "max": 7.764999866485596
+    },
+    "gpuCompletionMeaning": "Submission-to-onSubmittedWorkDone wall time, including queue backlog, IPC, and callback scheduling; NOT isolated GPU execution time",
+    "gpuTimingMeaning": "Optional timestamp-query render-pass duration; not display/presentation latency",
+    "budgetFailures": [],
+    "budgetDecision": "not-applicable-tool-fixture"
+  },
+  "queueCompletion": {
+    "available": true,
+    "kind": "queue-completion-wall-time-after-window",
+    "elapsedMs": 0.46000003814697266,
+    "throughSubmission": 203,
+    "meaning": "Completion of all previously submitted queue work, including backlog; NOT per-frame GPU execution or presentation time"
+  },
+  "finishedAt": "2026-09-14T00:29:52.881Z",
+  "cleanup": {
+    "browserCloseRequested": true,
+    "browserPid": 2867786,
+    "browserExitVerified": true,
+    "runtimeRemoved": true
+  }
+}

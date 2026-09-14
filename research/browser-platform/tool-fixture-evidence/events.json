@@ -1,0 +1,41 @@
+[
+  {
+    "at": "2026-09-14T00:29:48.069Z",
+    "kind": "response",
+    "message": "200 GET",
+    "url": "http://127.0.0.1:40553/?case=requires-input"
+  },
+  {
+    "at": "2026-09-14T00:29:48.100Z",
+    "kind": "response",
+    "message": "200 GET",
+    "url": "http://127.0.0.1:40553/fixture-config.json"
+  },
+  {
+    "at": "2026-09-14T00:29:48.106Z",
+    "kind": "response",
+    "message": "200 GET",
+    "url": "http://127.0.0.1:40553/asset-manifest.json"
+  },
+  {
+    "at": "2026-09-14T00:29:48.110Z",
+    "kind": "response",
+    "message": "200 GET",
+    "url": "http://127.0.0.1:40553/triangle.wgsl"
+  },
+  {
+    "at": "2026-09-14T00:29:48.114Z",
+    "kind": "desktop-input",
+    "message": "{\"type\":\"mouse-move\",\"x\":400,\"y\":300}"
+  },
+  {
+    "at": "2026-09-14T00:29:48.117Z",
+    "kind": "desktop-input",
+    "message": "{\"type\":\"mouse-click\",\"x\":400,\"y\":300,\"button\":\"left\"}"
+  },
+  {
+    "at": "2026-09-14T00:29:48.119Z",
+    "kind": "desktop-input",
+    "message": "{\"type\":\"key-press\",\"key\":\"k\"}"
+  }
+]

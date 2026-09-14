@@ -1,0 +1,69 @@
+{
+  "purpose": "TOOL FIXTURE ONLY — never game/source/M1 evidence",
+  "m1Acceptance": "not-evaluated",
+  "baselineApproved": false,
+  "sourceRun": "tools/browser-harness/runs/tool-fixture-receipt-2026-09-14",
+  "harnessSourceSha256": "007a1f40315521849fad7bff86385fc5e604db816f5e0575b189a3b552d0685c",
+  "benchmarkContract": {
+    "id": "tool-fixture-plumbing-v1-NOT-M1",
+    "sha256": "4a4a25ba19d5c65ce22b725621804c6f22dbae4de133ca52af168b36c2e03c7f",
+    "canonicalization": "recursive lexicographic JSON keys; UTF-8; no whitespace"
+  },
+  "artifacts": [
+    {
+      "file": "report.json",
+      "sha256": "6c0acc2d0895ced9d0871f723836cb18f29ebc91c1876bbcb7ce38e00815c98b",
+      "bytes": 31613
+    },
+    {
+      "file": "events.json",
+      "sha256": "0fbf4e3bcb094cab78f3fcd09cc3fec0c5bccc49c7f24787a0ccddab6092d047",
+      "bytes": 1040
+    },
+    {
+      "file": "rendered-frames.json",
+      "sha256": "df53d70b98f7177d1c4fe376ec1752bf2abf56781bc978498be45bf4b3309a64",
+      "bytes": 94920
+    },
+    {
+      "file": "tool-fixture-primary-before-viewport.png",
+      "sha256": "79b3e55ce2b079294d5b2e18fa31d8c59c6a6ef835994e35ff85f546ad1c7e94",
+      "bytes": 17750
+    },
+    {
+      "file": "tool-fixture-primary-before-surface.png",
+      "sha256": "55dfa8112e7feb20b384ceac9a35ca1f391a0b68554aec61b5406d31837933f0",
+      "bytes": 8264
+    },
+    {
+      "file": "tool-fixture-primary-after-viewport.png",
+      "sha256": "805de8a7bbadd46805d1a8d4d37a37f104f9cf1f397ba129b147b8490cab6259",
+      "bytes": 17749
+    },
+    {
+      "file": "tool-fixture-primary-after-surface.png",
+      "sha256": "f1407508e0f7d31df1c379808698b0d57974c9e5974f0a1df6b546b758f9b6e9",
+      "bytes": 8264
+    },
+    {
+      "file": "tool-fixture-resize-1280x720-viewport.png",
+      "sha256": "d3ed0ac8ff3b6ae79b062b11f264fe8187e46ce15b6a814ce363b2cd664f035e",
+      "bytes": 13466
+    },
+    {
+      "file": "tool-fixture-resize-1280x720-surface.png",
+      "sha256": "5ba7061b689ab4facb1918c17e68274506a8efe09a740cb4343d8fa47e7cdd66",
+      "bytes": 4072
+    },
+    {
+      "file": "tool-fixture-resize-2560x1440-viewport.png",
+      "sha256": "9ce79bcff0798fd130e00d20c0ecbb8ca2f7603bcf887462ff2da1bf22818de4",
+      "bytes": 23208
+    },
+    {
+      "file": "tool-fixture-resize-2560x1440-surface.png",
+      "sha256": "684aca44011d95e9245cd275adbf1baf79f33fdcbabd172eeae29e784b7aee87",
+      "bytes": 13733
+    }
+  ]
+}

@@ -1,0 +1,126 @@
+<!doctype html>
+<html lang="en" data-evidence-kind="tool-fixture">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<link rel="icon" href="data:,">
+<title>Browser harness TOOL FIXTURE — not ClubScape or source evidence</title>
+<style>
+  * { box-sizing: border-box; }
+  html, body { margin: 0; width: 100%; height: 100%; overflow: hidden; }
+  header { height: 32px; padding: 5px 12px; background: white; color: black; font: 16px monospace; }
+  canvas { display: block; width: 100vw; height: calc(100vh - 32px); }
+</style>
+<header>TOOL FIXTURE ONLY — one GPU triangle; NOT a game, source reference, or M1 performance result.</header>
+<canvas id="fixture-surface"></canvas>
+<script type="module">
+  const scenario = new URL(location.href).searchParams.get("case") ?? "valid";
+  let keys = 0;
+  let clicks = 0;
+  addEventListener("keydown", () => keys++);
+  addEventListener("pointerdown", () => clicks++);
+  try {
+    const config = await (await fetch("/fixture-config.json")).json();
+    const manifest = await (await fetch("/asset-manifest.json")).text();
+    const manifestDigest = [...new Uint8Array(await crypto.subtle.digest("SHA-256", new TextEncoder().encode(manifest)))]
+      .map((byte) => byte.toString(16).padStart(2, "0")).join("");
+    if (manifestDigest !== config.identity.assetManifestSha256) throw new Error("Fixture manifest digest mismatch");
+    const assets = JSON.parse(manifest);
+    const shader = await (await fetch("/triangle.wgsl")).text();
+    const digest = [...new Uint8Array(await crypto.subtle.digest("SHA-256", new TextEncoder().encode(shader)))]
+      .map((byte) => byte.toString(16).padStart(2, "0")).join("");
+    if (digest !== assets[0].sha256) throw new Error("Fixture shader digest mismatch");
+    if (!navigator.gpu) throw new Error("Fixture requires actual WebGPU; no fallback");
+    const adapter = await navigator.gpu.requestAdapter();
+    if (!adapter) throw new Error("No WebGPU adapter");
+    const device = await adapter.requestDevice();
+    const canvas = document.querySelector("canvas");
+    const context = canvas.getContext("webgpu");
+    const format = navigator.gpu.getPreferredCanvasFormat();
+    const size = () => {
+      canvas.width = Math.round(canvas.clientWidth);
+      canvas.height = Math.round(canvas.clientHeight);
+      context.configure({ device, format, alphaMode: "opaque" });
+    };
+    size();
+    addEventListener("resize", size);
+    const module = device.createShaderModule({ code: shader });
+    const pipeline = await device.createRenderPipelineAsync({
+      layout: "auto",
+      vertex: { module, entryPoint: "vertexMain" },
+      fragment: { module, entryPoint: "fragmentMain", targets: [{ format }] },
+    });
+    const parameters = device.createBuffer({ size: 16, usage: GPUBufferUsage.UNIFORM | GPUBufferUsage.COPY_DST });
+    const group = device.createBindGroup({
+      layout: pipeline.getBindGroupLayout(0),
+      entries: [{ binding: 0, resource: { buffer: parameters } }],
+    });
+    let renderedFrames = 0;
+    let submittedFrames = 0;
+    let lastSubmittedAtMs = 0;
+    let lastCompletedAtMs = 0;
+    const frames = [];
+    function render() {
+      const encodeStart = performance.now();
+      if (scenario !== "raf-only" || submittedFrames === 0) {
+        device.queue.writeBuffer(parameters, 0, new Float32Array([
+          scenario === "blank" ? 0 : 1, performance.now() / 1000, canvas.width, canvas.height,
+        ]));
+        const encoder = device.createCommandEncoder();
+        const pass = encoder.beginRenderPass({
+          colorAttachments: [{ view: context.getCurrentTexture().createView(), clearValue: [0, 0, 0, 1], loadOp: "clear", storeOp: "store" }],
+        });
+        pass.setPipeline(pipeline);
+        pass.setBindGroup(0, group);
+        pass.draw(3);
+        pass.end();
+        device.queue.submit([encoder.finish()]);
+      }
+      const sequence = ++submittedFrames;
+      const submittedAtMs = performance.now();
+      const receipt = scenario === "raf-only" && sequence > 1 ? Promise.resolve() : device.queue.onSubmittedWorkDone();
+      receipt.then(() => {
+        if (scenario !== "stale" || renderedFrames === 0) {
+          renderedFrames = sequence;
+          lastSubmittedAtMs = submittedAtMs;
+          lastCompletedAtMs = performance.now();
+          frames.push({
+            sequence, submittedAtMs, completedAtMs: lastCompletedAtMs, drawCalls: 1, primitives: 1,
+            cpuEncodeMs: submittedAtMs - encodeStart,
+          });
+          if (frames.length > 4096) frames.shift();
+        }
+      }).catch((error) => console.error(error));
+      requestAnimationFrame(render);
+    }
+    if (scenario !== "missing") {
+      window.__clubscapeBenchmarkV1 = {
+        read(afterFrame) {
+          return {
+            version: 1, clock: "performance.now", application: "harness-fixture",
+            identity: { ...config.identity, ...(scenario === "wrong-workload" ? { workloadId: "wrong-workload" } : {}) },
+            ready: renderedFrames > 0 && (scenario !== "requires-input" || keys > 0 && clicks > 0),
+            backend: scenario === "wrong-backend" ? "webgl" : "webgpu",
+            viewport: { width: innerWidth, height: innerHeight, deviceScaleFactor: devicePixelRatio },
+            assets: scenario === "missing-assets" ? [] : assets.map((asset) => ({ ...asset, loaded: true })),
+            entities: config.entities,
+            deviceEpoch: "tool-fixture-device-1",
+            renderedFrames, lastSubmittedAtMs, lastCompletedAtMs,
+            nowMs: scenario === "bad-metric" ? NaN : performance.now(),
+            frames: afterFrame === null ? [] : frames.filter((frame) => frame.sequence > afterFrame),
+          };
+        },
+      };
+    }
+    requestAnimationFrame(render);
+    if (scenario === "external-request") {
+      if (!config.forbiddenUrl) throw new Error("External-request fixture needs the second owned test server");
+      fetch(config.forbiddenUrl).catch(() => {});
+    }
+    if (scenario === "console-error") console.error("Intentional fixture console error");
+    if (scenario === "page-error") setTimeout(() => { throw new Error("Intentional uncaught fixture error"); }, 0);
+    if (scenario === "http-error") fetch("/intentional-404").catch(() => {});
+  } catch (error) {
+    console.error(error);
+  }
+</script>
+</html>
