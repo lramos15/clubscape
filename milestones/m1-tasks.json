@@ -9,11 +9,13 @@
       {"id": "director", "task": "M1-FLEET-CONTRACTS"},
       {"id": "f3cc7dc3-56bc-4786-98d5-bba14b428229", "task": "M1-FLEET-CONTENT"},
       {"id": "6c58b841-a767-41ff-bef5-2abbd5b1a087", "task": "M1-FLEET-BROWSER"},
-      {"id": "2766e089-44e5-4a1d-974e-7b03ad9c269d", "task": "M1-FLEET-STORAGE"}
+      {"id": "2766e089-44e5-4a1d-974e-7b03ad9c269d", "task": "M1-FLEET-STORAGE"},
+      {"id": "ac0f0856-44af-445b-bd90-6db7a1f4fc74", "task": "M1-FLEET-SOURCE-CAPTURES"},
+      {"id": "e9ed6a96-6bcb-4d27-8b4c-d504edda327c", "task": "M1-FLEET-AUDIO"}
     ],
     "reserved": [
-      {"id": "ac0f0856-44af-445b-bd90-6db7a1f4fc74", "task": "M1-FLEET-SOURCE-CAPTURES"},
-      {"id": "fleet-audio-worker", "task": "M1-FLEET-AUDIO"}
+      {"id": "fleet-world-engine", "task": "M1-FLEET-ENGINE"},
+      {"id": "fleet-product-content", "task": "M1-FLEET-PRODUCT-CONTENT"}
     ],
     "queued": [],
     "parked": [
@@ -28,9 +30,45 @@
   },
   "tasks": [
     {
+      "id": "M1-FLEET-ENGINE",
+      "goal": "Implement the complete source-driven headless world action/tick engine over validated content and reusable primitives.",
+      "status": "READY",
+      "specs": ["spec/game-contracts.md", "research/journey-rules/**", "crates/simulation/README.md"],
+      "dependencies": ["M1-FLEET-SIMULATION", "M1-FLEET-RULES"],
+      "allowed_paths": ["crates/world-engine/**"],
+      "forbidden_paths": ["prompt.md", "crates/game-types/**", "crates/protocol/**", "crates/server/**", "content/**", "assets/**", "web/**", "Cargo.toml", "milestones/**"],
+      "outputs": ["Real movement/gather/production/combat/progression/bank/shop/death action engine", "Deterministic source-based and invariant tests"],
+      "validation_commands": ["cargo test -p clubscape-world-engine", "cargo clippy -p clubscape-world-engine --all-targets -- -D warnings"],
+      "test_requirements": ["No direct stage-advance command", "Source timings/requirements/failure outcomes", "Atomic effects and source progression guards", "Missing bindings fail explicitly"],
+      "acceptance": ["SQL m1-world-engine records implemented behavior and remaining source/contract gaps accurately"],
+      "reserved_namespaces": [],
+      "source_notes": ["research/journey-rules/README.md"],
+      "parity_entries": [],
+      "adaptations": [],
+      "evidence": []
+    },
+    {
+      "id": "M1-FLEET-PRODUCT-CONTENT",
+      "goal": "Assemble complete actual M1 source-backed content and world/collision/asset bindings, not a demonstration square or fixture character.",
+      "status": "READY",
+      "specs": ["spec/game-contracts.md", "research/journey-rules/**", "research/current-source/extraction-contract.json"],
+      "dependencies": ["M1-FLEET-RUNTIME", "M1-FLEET-RULES"],
+      "allowed_paths": ["content/m1/**", "tools/m1-content/**", "research/m1-bindings/**"],
+      "forbidden_paths": ["prompt.md", "crates/**", "assets/**", "web/**", "spec/**", "Cargo.toml", "milestones/**"],
+      "outputs": ["Actual source-backed GameContent and source bindings", "Reproducible compiler input generation and content validation"],
+      "validation_commands": [],
+      "test_requirements": ["Full tutorial and Cooks Assistant dependencies", "Original region/collision/travel relationships", "Source NPC/item/animation/UI identities", "Explicit inference/adaptation labels"],
+      "acceptance": ["SQL m1-product-content records complete compiled definitions or exact unresolved prerequisites"],
+      "reserved_namespaces": ["item.*", "npc.*", "object.*", "spawn.*", "region.*", "skill.*", "recipe.*", "dialogue.*", "slot.*", "shop.*", "quest.*", "stage.*", "interface.*"],
+      "source_notes": ["research/current-source/selection.json", "research/journey-rules/decisions.json"],
+      "parity_entries": [],
+      "adaptations": [],
+      "evidence": []
+    },
+    {
       "id": "M1-FLEET-SOURCE-CAPTURES",
       "goal": "Produce calibrated original-runtime source captures without generic replacement rendering or unapproved external account/terms actions.",
-      "status": "READY",
+      "status": "IMPLEMENTING",
       "specs": ["prompt.md section 30.2", "research/current-source/selection.json", "research/reference-capture-checklist.md"],
       "dependencies": ["M1-FLEET-RUNTIME"],
       "allowed_paths": ["tools/source-capture/**", "research/source-capture/**", "assets/reference/**"],
@@ -48,7 +86,7 @@
     {
       "id": "M1-FLEET-AUDIO",
       "goal": "Produce source-faithful browser-playable music/SFX inputs and reproducible synthesis or recording provenance.",
-      "status": "READY",
+      "status": "IMPLEMENTING",
       "specs": ["prompt.md sections 14, 24, 30", "research/current-source/extraction-contract.json"],
       "dependencies": ["M1-FLEET-RUNTIME"],
       "allowed_paths": ["tools/audio-import/**", "research/audio-source/**", "assets/source/osrs/audio-runtime/**", "assets/manifests/osrs/audio-runtime.json"],
