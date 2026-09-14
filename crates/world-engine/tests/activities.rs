@@ -100,6 +100,106 @@ fn invalid_rng_rolls_back_tick_entities_xp_and_items() {
 }
 
 #[test]
+fn already_advanced_ticks_match_standalone_scheduling_without_changing_reserved_metadata() {
+    let (engine, mut standalone) = setup(content());
+    standalone.revision = 37;
+    state_mut(&mut standalone).last_command_sequence = 11;
+    standalone.characters.insert(
+        actor_two(),
+        engine
+            .character_from_initial(actor_two(), "Synthetic competitor", Default::default())
+            .unwrap(),
+    );
+    standalone
+        .shops
+        .get_mut(&shop())
+        .unwrap()
+        .stock
+        .insert(item("pot"), 3);
+    standalone.ground_items.push(GroundItem {
+        id: "synthetic.expiring".into(),
+        tile: tile(10, 10, 0),
+        stack: stack("egg", 1),
+        owner: None,
+        public_at_tick: 0,
+        expires_at_tick: 3,
+        instance: None,
+    });
+    apply(&engine, &mut standalone, interact("rock"));
+    engine
+        .apply_intent(
+            &mut standalone,
+            &actor_two(),
+            &interact("rock"),
+            &mut NeverDraw,
+        )
+        .unwrap();
+    let mut authoritative = standalone.clone();
+    for tick in 1..=12 {
+        authoritative.tick = tick;
+        let expected = engine.tick(&mut standalone, &mut Fixed(0)).unwrap();
+        let actual = engine
+            .process_advanced_tick(&mut authoritative, &mut Fixed(0))
+            .unwrap();
+        assert_eq!(actual, expected);
+        assert_eq!(authoritative, standalone);
+        assert_eq!(authoritative.tick, tick);
+        assert_eq!(authoritative.revision, 37);
+        assert_eq!(state(&authoritative).last_command_sequence, 11);
+        assert_eq!(count(&engine, &authoritative, "ore"), u32::from(tick >= 8));
+    }
+    assert_eq!(state(&authoritative).skills[&skill()].xp_tenths, 175);
+    assert_eq!(
+        authoritative.characters[&actor_two()].skills[&skill()].xp_tenths,
+        0
+    );
+    assert_eq!(authoritative.shops[&shop()].stock[&item("pot")], 5);
+    assert!(authoritative.ground_items.is_empty());
+}
+
+#[test]
+fn already_advanced_tick_failure_preserves_the_supplied_tick_and_all_pending_state() {
+    let (engine, mut world) = setup(content());
+    apply(&engine, &mut world, interact("rock"));
+    ticks(&engine, &mut world, 7, &mut NeverDraw);
+    world.tick = 8;
+    world
+        .shops
+        .get_mut(&shop())
+        .unwrap()
+        .stock
+        .insert(item("pot"), 1);
+    let before = world.clone();
+    assert_eq!(
+        engine
+            .process_advanced_tick(&mut world, &mut Fixed(256))
+            .unwrap_err()
+            .code,
+        GameErrorCode::InvalidInput,
+    );
+    assert_eq!(world, before);
+    engine
+        .process_advanced_tick(&mut world, &mut Fixed(0))
+        .unwrap();
+    assert_eq!(world.tick, 8);
+    assert_eq!(count(&engine, &world, "ore"), 1);
+}
+
+#[test]
+fn already_advanced_tick_rejects_the_unadvanced_initial_world() {
+    let (engine, mut world) = setup(content());
+    let before = world.clone();
+    assert_eq!(
+        engine
+            .process_advanced_tick(&mut world, &mut NeverDraw)
+            .unwrap_err()
+            .code,
+        GameErrorCode::InvalidInput,
+    );
+    assert_eq!(world, before);
+}
+
+#[test]
 fn full_inventory_refuses_to_start_without_depleting() {
     let mut content = content();
     give_initial(&mut content, &[stack("pebble", 26)]);

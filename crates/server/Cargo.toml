@@ -27,6 +27,7 @@ tracing-subscriber.workspace = true
 uuid = { workspace = true, features = ["v4", "serde"] }
 
 [dev-dependencies]
+clubscape-world-engine = { path = "../world-engine" }
 futures-util = "0.3"
 reqwest = { workspace = true, features = ["stream"] }
 tokio = { workspace = true, features = ["io-util", "test-util"] }

@@ -32,6 +32,10 @@ engine.tick(
     world: &mut WorldState,
     random: &mut impl RandomSource,
 ) -> GameResult<Vec<ActorEvent>>;
+engine.process_advanced_tick(
+    world: &mut WorldState,
+    random: &mut impl RandomSource,
+) -> GameResult<Vec<ActorEvent>>;
 ```
 
 `ActorEvent { actor_id, event: GameEvent }` is serializable. `RandomSource` has
@@ -47,8 +51,8 @@ The caller authorizes name/appearance choices; appearance never changes
 mechanics, flags, stages or possessions.
 
 The server owns authentication, active-session leases, operation deduplication,
-command sequences, durability, content migrations and world revisions. Neither
-method changes `WorldState.revision` or `last_command_sequence`. There is no
+command sequences, durability, content migrations and world revisions. No engine
+operation changes `WorldState.revision` or `last_command_sequence`. There is no
 grant-items/set-flags/advance-stage client intent.
 
 World time starts at zero. `tick` advances exactly one source tick; the caller
@@ -58,6 +62,29 @@ is accepted at a given world tick. Activity cadence is separate; canceling or
 switching a target never brings a pending action forward. Requests accepted at
 tick zero can have their first eight-tick gathering attempt at tick eight.
 Actor iteration is sorted by `ActorId`, not a claim to reproduce OSRS PID ties.
+
+### Storage-owned tick advancement
+
+`GameStore::commit_tick(&lease, expected_tick, callback)` advances
+`WorldState.tick` to `expected_tick + 1` **before** invoking the callback.
+Inside that callback, call **`engine.process_advanced_tick(world, random)`**,
+not `engine.tick`. The new entry point processes all due work at that supplied
+positive tick without advancing or decrementing it. Tick zero is rejected.
+Standalone/headless schedulers continue to use `tick`, which advances once and
+executes the same extracted tick body.
+
+Both paths are transactional. On error, `process_advanced_tick` leaves the
+callback's supplied world (including its already advanced tick) unchanged; the
+store then rolls back its transaction/clock advancement. Standalone `tick`
+instead leaves the caller's pre-advance world unchanged. Neither path changes
+reserved revisions or command sequences. Actor-tagged results still require the
+server's routing/receipt adaptation and publication only after durable commit.
+
+The engine entry point does not deduplicate repeated processing of the same
+tick. Storage retains ownership of expected-tick admission, latest-receipt
+replay and fencing; retries use the same `expected_tick`, and a stored replay
+does not invoke the callback. Do not decrement reserved metadata to compensate
+for two clock owners.
 
 ## Transaction and persistence contract
 
@@ -311,7 +338,7 @@ delivery orders and reward replay. Numeric literals were independently authored
 in `research/journey-rules/expected-scenarios.json`, not captured from this
 implementation. The fixture generator does not generate those oracles.
 
-The current implementation passes 81 native tests, formatting, warnings-denied
+The current implementation passes 84 native tests, formatting, warnings-denied
 Clippy, and WASM library/test-binary compilation.
 Native unit/Clippy and WASM **compilation** are code/portability gates only.
 WASM execution, real compiled-content integration, full M1 gameplay, durable

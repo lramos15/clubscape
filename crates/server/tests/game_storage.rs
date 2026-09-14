@@ -44,6 +44,9 @@ use tokio::{
 };
 use uuid::Uuid;
 
+#[path = "../../content/tests/common/mod.rs"]
+mod engine_content;
+
 const TEST_DATABASE: &str = "clubscape_m1_test";
 const FIXTURE_REVISION: &str = "synthetic-storage-fixture-v2-not-gameplay-evidence";
 const WAIT: Duration = Duration::from_secs(15);
@@ -555,6 +558,175 @@ fn assert_error(error: GameStorageError, status: StatusCode, code: ErrorCode) {
 
 fn assert_conflict(error: GameStorageError) {
     assert_error(error, StatusCode::CONFLICT, ErrorCode::Conflict);
+}
+
+#[tokio::test(flavor = "multi_thread", worker_threads = 2)]
+#[ignore = "requires isolated PostgreSQL; run just test-integration"]
+async fn engine_processes_store_advanced_ticks_once_with_rollback_and_receipt_replay() {
+    use clubscape_world_engine::{RandomSource, WorldEngine};
+
+    struct Draw(u32);
+    impl RandomSource for Draw {
+        fn draw_below(&mut self, _: u32) -> GameResult<u32> {
+            Ok(self.0)
+        }
+    }
+
+    let database = TestDatabase::reset().await;
+    let mut content = engine_content::fixture();
+    content.initial_state.tile = engine_content::tile(1002, 1003);
+    for stage in content.tutorial.values_mut() {
+        stage.allowed_actions = vec!["*".into()];
+    }
+    let source = SourceCharacter {
+        content_revision: content.revision.clone(),
+        initial_state: content.initial_state.clone(),
+        appearance: BTreeMap::new(),
+    };
+    let engine = Arc::new(WorldEngine::new(Arc::new(content)).unwrap());
+    let world_id = Uuid::new_v4();
+    database
+        .store
+        .initialize_world(world_id, engine.initial_world().unwrap())
+        .await
+        .unwrap();
+    let lease = database
+        .store
+        .acquire_world_lease(world_id, MAX_WORLD_LEASE)
+        .await
+        .unwrap();
+    let account = database.account("tick_engine").await;
+    let character = database
+        .store
+        .create_character(&lease, account.authentication(), source)
+        .await
+        .unwrap();
+    let actor = character.state.actor_id.clone();
+    let session = database
+        .store
+        .join_session(
+            world_id,
+            actor.clone(),
+            account.authentication(),
+            MAX_SESSION_LEASE,
+        )
+        .await
+        .unwrap();
+    let action_engine = engine.clone();
+    database
+        .store
+        .commit_command(
+            &lease,
+            &session.access(account.authentication()),
+            GameCommand {
+                operation_id: Uuid::new_v4(),
+                sequence: 1,
+                intent: GameIntent::Interact {
+                    target: engine_content::id("spawn.test.rock"),
+                    action: "Mine".into(),
+                },
+            },
+            move |world, actor, intent| {
+                action_engine
+                    .apply_intent(world, actor, intent, &mut Draw(0))
+                    .map(|events| events.into_iter().map(|event| event.event).collect())
+            },
+        )
+        .await
+        .unwrap();
+    let started = database.store.load_world(world_id).await.unwrap();
+    assert_eq!(started.state.tick, 0);
+    assert!(matches!(
+        started.state.characters[&actor].activity,
+        clubscape_game_types::Activity::Gathering { next_tick: 2, .. }
+    ));
+    let tick_engine = engine.clone();
+    let first = database
+        .store
+        .commit_tick(&lease, 0, move |world| {
+            assert_eq!(world.tick, 1);
+            tick_engine
+                .process_advanced_tick(world, &mut Draw(0))
+                .map(|events| events.into_iter().map(|event| event.event).collect())
+        })
+        .await
+        .unwrap();
+    assert_eq!(first.receipt.tick, 1);
+    assert_eq!(first.receipt.world_revision, started.state.revision + 1);
+    assert!(!first.duplicate);
+    assert!(first.receipt.events.is_empty());
+    let before_attempt = database.store.load_world(world_id).await.unwrap();
+    assert_eq!(
+        before_attempt.state.characters[&actor].skills[&engine_content::id("skill.test.mining")]
+            .xp_tenths,
+        0
+    );
+    let invalid_engine = engine.clone();
+    let failure = database
+        .store
+        .commit_tick(&lease, 1, move |world| {
+            assert_eq!(world.tick, 2);
+            invalid_engine
+                .process_advanced_tick(world, &mut Draw(u32::MAX))
+                .map(|events| events.into_iter().map(|event| event.event).collect())
+        })
+        .await
+        .unwrap_err();
+    assert_error(failure, StatusCode::BAD_REQUEST, ErrorCode::InvalidArgument);
+    assert_eq!(
+        database.store.load_world(world_id).await.unwrap(),
+        before_attempt
+    );
+    let second = database
+        .store
+        .commit_tick(&lease, 1, move |world| {
+            assert_eq!(world.tick, 2);
+            engine
+                .process_advanced_tick(world, &mut Draw(0))
+                .map(|events| events.into_iter().map(|event| event.event).collect())
+        })
+        .await
+        .unwrap();
+    assert_eq!(second.receipt.tick, 2);
+    assert_eq!(
+        second.receipt.world_revision,
+        first.receipt.world_revision + 1
+    );
+    assert_eq!(
+        second
+            .receipt
+            .events
+            .iter()
+            .filter(|event| matches!(event, GameEvent::Gathered { .. }))
+            .count(),
+        1
+    );
+    let completed = database.store.load_world(world_id).await.unwrap();
+    assert_eq!(completed.state.tick, 2);
+    assert_eq!(completed.state.characters[&actor].last_command_sequence, 1);
+    assert_eq!(
+        completed.state.characters[&actor].skills[&engine_content::id("skill.test.mining")]
+            .xp_tenths,
+        100
+    );
+    assert_eq!(
+        completed.state.entities[&engine_content::id("spawn.test.rock")].available_at_tick,
+        6
+    );
+    let duplicate = database
+        .store
+        .commit_tick(&lease, 1, |_| {
+            panic!("stored tick replay must not process engine work again")
+        })
+        .await
+        .unwrap();
+    assert!(duplicate.duplicate);
+    assert_eq!(duplicate.receipt, second.receipt);
+    assert_eq!(
+        database.store.load_world(world_id).await.unwrap(),
+        completed
+    );
+    database.stop().await;
 }
 
 #[tokio::test(flavor = "multi_thread", worker_threads = 2)]

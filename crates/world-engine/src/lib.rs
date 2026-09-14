@@ -212,7 +212,9 @@ impl WorldEngine {
         Ok(tag(actor, events))
     }
 
-    /// Advance exactly one source tick. Neither API changes `WorldState::revision`.
+    /// Standalone scheduler: advance exactly one source tick, then process its due work.
+    /// Use `process_advanced_tick` when the storage transaction already advanced the clock.
+    /// Neither entry point changes revisions or command sequences.
     /// Expected activity interruption returns a Message, not a forged success event.
     pub fn tick(
         &self,
@@ -222,8 +224,38 @@ impl WorldEngine {
         self.check_world(world)?;
         let mut draft = world.clone();
         draft.tick = runtime::deadline(draft.tick, 1)?;
-        self.advance_entities(&mut draft)?;
-        self.restock(&mut draft)?;
+        let events = self.process_tick_draft(&mut draft, random)?;
+        *world = draft;
+        Ok(events)
+    }
+
+    /// Process due work at the positive tick already supplied by authoritative storage.
+    /// Leaves `WorldState::tick` unchanged, including on error; the caller owns advancement,
+    /// exactly-once admission and durable rollback/acknowledgement.
+    pub fn process_advanced_tick(
+        &self,
+        world: &mut WorldState,
+        random: &mut impl RandomSource,
+    ) -> GameResult<Vec<ActorEvent>> {
+        self.check_world(world)?;
+        if world.tick == 0 {
+            return Err(invalid_state(
+                "Tick processing requires an authoritatively advanced positive tick.",
+            ));
+        }
+        let mut draft = world.clone();
+        let events = self.process_tick_draft(&mut draft, random)?;
+        *world = draft;
+        Ok(events)
+    }
+
+    fn process_tick_draft(
+        &self,
+        draft: &mut WorldState,
+        random: &mut impl RandomSource,
+    ) -> GameResult<Vec<ActorEvent>> {
+        self.advance_entities(draft)?;
+        self.restock(draft)?;
         draft
             .ground_items
             .retain(|item| item.expires_at_tick > draft.tick);
@@ -272,7 +304,7 @@ impl WorldEngine {
             match operation {
                 Ok(events) => {
                     attempt.characters.insert(actor.clone(), character);
-                    draft = attempt;
+                    *draft = attempt;
                     result.extend(tag(&actor, events));
                 }
                 Err(error) if is_interruption(&error.code) => {
@@ -291,7 +323,6 @@ impl WorldEngine {
                 Err(error) => return Err(error),
             }
         }
-        *world = draft;
         Ok(result)
     }
 

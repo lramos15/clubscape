@@ -106,6 +106,23 @@ not configured, report unavailability explicitly. When configured content is
 invalid, fail startup instead of silently falling back to account-only mode.
 Gameplay availability is not presentation or milestone acceptance.
 
+### Storage/engine tick boundary
+
+`GameStore::commit_tick(lease, expected_tick, callback)` advances the stored
+draft to `expected_tick + 1` before invoking its callback. Call
+`WorldEngine::process_advanced_tick(&mut WorldState, &mut impl RandomSource)
+-> GameResult<Vec<ActorEvent>>` inside that callback. It processes due work at
+the supplied positive tick without changing the tick, revision or command
+sequences. It rejects tick zero and rolls back all engine mutations on error;
+the store owns rollback of its preceding clock advancement and durable
+acknowledgement. Actor-event routing remains the server adapter's responsibility.
+
+`WorldEngine::tick` remains the standalone/headless wrapper: it advances one
+tick and runs the same shared processing body atomically. Never call it inside
+`commit_tick` or decrement reserved metadata to compensate. The engine does
+not deduplicate this processing API; storage retains expected-tick validation,
+latest tick-receipt replay and lease fencing unchanged.
+
 ## Parallel implementation
 
 The Director serializes changes to this contract, `crates/game-types`,
