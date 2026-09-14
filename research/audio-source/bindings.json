@@ -49,10 +49,11 @@
       "attack_candidate": 710,
       "frame_events": [],
       "public_matches": {
+        "attack_peak": 0.9880185670344562,
         "death_peak": 0.8224174870665013,
         "hit_peak": 0.9421424429479718
       },
-      "residual": "Attack710 lacks a decisive recording match; server-trigger phase/delay is not encoded in493x. Legacy138/139/141 is not this source NPC's animation family.",
+      "residual": "Game-triggered attack/hit/death cues, not embedded493x frame events; dated source observation qualification retained.",
       "source_npc_ids": [
         3313,
         3314,
@@ -64,34 +65,51 @@
         "hit": 4934
       },
       "source_sound_ids": {
+        "attack": 710,
         "death": 711,
         "hit": 713
       },
-      "status": "identified_original_hit_death_signals_with_historical_tutorial_evidence"
+      "status": "source_attack_hit_death_signals_and_public_events_identified"
     },
     {
       "action": "ordinary_shortbow",
+      "correlation": 0.994381682692452,
+      "event_boundary": "ordinary shortbow projectile release",
       "frame_events": [],
       "independently_named_candidates": {
         "arrow_launch": 2692,
         "arrowlaunch2": 2693,
         "shortbow": 2702
       },
-      "residual": "Names and weak/nonunique historical recording correlations do not identify whether draw/release/projectile callbacks emit one or several cues, or their exact delay.",
+      "recording_date": "20240521",
+      "residual": "No animation426 frame cue; retain source game-trigger/received queue delay. Recording date is not relabeled as build240.",
       "source_sequence": 426,
-      "status": "unresolved_source_event_selector"
+      "source_sound_ids": [
+        2693
+      ],
+      "status": "source_signal_and_public_event_identified"
     },
     {
       "action": "bronze_smelting",
       "candidate_sound": 2725,
+      "event_boundary": "accepted copper/tin furnace operation starts",
       "other_source_sequence": 3243,
       "public_candidate_peak": 0.2568288958395292,
+      "recording_date": "20240521",
       "relationship": "Same frame lengths/other sequence settings, different actual frame IDs, no embedded sound in either",
-      "residual": "The named furnace candidate and weak historical correlation are not a verified current899 bronze-smelt callback. Do not relabel3243 evidence as899.",
+      "residual": "Bound by sample-coherent recording and actual smelt-start state, not by treating3243 as899. Current server-build capture is not claimed.",
       "source_sequence": 899,
-      "status": "unresolved_current_game_trigger"
+      "source_sound_ids": [
+        2725
+      ],
+      "status": "source_signal_and_public_smelt_start_identified"
     }
   ],
+  "latest_selector_observations": {
+    "path": "research/audio-source/selector-observations.json",
+    "sha256": "b50d7f68fa34efbb3ba86caad0eb684f0177bedad2caf21b9954d194d694c340",
+    "size_bytes": 6907
+  },
   "m1_accepted": false,
   "native_evidence": {
     "path": "research/audio-source/binding-native-evidence.json.gz",
@@ -151,8 +169,42 @@
       153,
       154
     ],
+    "cooks_assistant_source_observation": {
+      "excluded_counterexample": "fu46Z8ECdVg has a Quest Speedrunning results interface and audible34; it is not promoted to the normal-account quest ordering.",
+      "five_second_correlation": 0.9810391310274564,
+      "later_actual_cooking_levelup": {
+        "correlation": 0.9207284175007333,
+        "cue_start_seconds": 715.7616326530613,
+        "jingle": 34,
+        "level": 5,
+        "not_a_simultaneous_quest_reward": true
+      },
+      "levelup_after_scroll_dismissal": {
+        "correlation": 0.9822065977733833,
+        "cue_start_seconds": 690.1516553287981,
+        "dialog_visible_at_seconds": [
+          690.2,
+          691.5
+        ],
+        "jingle": 33,
+        "level": 4
+      },
+      "native_queue_rule_unchanged": "No quest/skill rank or auxiliary priority parameter. Last accepted native jingle request wins; the observed ordering comes from when the game submits requests.",
+      "normal_account_video": "ppHJckQj7Vk",
+      "not_154_by_novice_guess": true,
+      "ordering_rule_observed": "Quest completion/152 precedes the reward-caused level-up dialog/33; the level-up is shown and sounded after the quest scroll is dismissed.",
+      "quest": "quest.cooks_assistant",
+      "quest_cue_start_seconds": 681.5116553287982,
+      "quest_jingle": 152,
+      "quest_scroll_visible_at_seconds": [
+        681.566,
+        683.0,
+        688.0
+      ],
+      "recording_date": "20170301"
+    },
     "current_script_corpus": "9801 valid native-decoded scripts; zero opcode3202 occurrences; source script0 payload0009 is rejected by native parser and not in required closure",
-    "exact_residual": "Actual server-emitted MIDI_JINGLE group/no-request and packet order after valid tutorial Wind Strike and Cook's Assistant reward commit, relative to skill-level jingle emissions. This is not recoverable from the quest widget or the numeric receiver alone.",
+    "exact_residual": "Learning-the-Ropes actual current quest-jingle/no-request selector and its emission order against simultaneous level-ups. Cook's Assistant152 followed by modal-deferred level-up33 is now source-observed, with the2017 recording qualification retained.",
     "packet_selector_boundary": "Original client.ia's jingle branch reads numeric group and auxiliary value, maps65535 to-1, then calls bl.bp. No quest ID or skill class is passed.",
     "possible_no_request_outcome_retained": true,
     "priority_closed": "Generic last-accepted-request-wins, no class priority and no use of the auxiliary integer",
@@ -168,8 +220,13 @@
     "input.required_effect_bindings",
     "input.quest_jingle_binding"
   ],
+  "remaining_selector_rules": [
+    "quest.learning_the_ropes",
+    "rule.food.healing"
+  ],
   "runtime_browser_audio_accepted": false,
   "schema_version": 1,
   "source_selection": "osrs-live-240-cache2695-injected1.12.38-20260913",
+  "superseded_candidate_notes": "The dated, source-state-verified observations identify2693 for ordinary shortbow release, 710 for tutorial-rat attack,2725 for copper/tin smelt start, and152 for a normal Cook's Assistant completion. Use the attached observations rather than the earlier weak-match notes. Their recording dates remain explicit; Learning-the-Ropes and literal315/2309 selectors remain unresolved.",
   "task": "m1-audio-bindings"
 }

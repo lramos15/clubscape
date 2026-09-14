@@ -55,6 +55,16 @@ def correlate(recording, template, rate, count=5):
     return result
 
 
+def bandpass(samples, low_hz, high_hz, rate=22050, transition_hz=200):
+    if not 0 <= low_hz < high_hz <= rate / 2 or transition_hz <= 0:
+        raise ValueError("Invalid fixed analysis band")
+    size = 1 << (len(samples) - 1).bit_length()
+    frequencies = np.fft.rfftfreq(size, 1 / rate)
+    weights = np.clip((frequencies - low_hz) / transition_hz, 0, 1)
+    weights *= np.clip((high_hz - frequencies) / transition_hz, 0, 1)
+    return np.fft.irfft(np.fft.rfft(samples, size) * weights, size)[:len(samples)].astype(np.float32)
+
+
 def spectral_features(samples, fft_size=2048, hop=256):
     windows = np.lib.stride_tricks.sliding_window_view(samples, fft_size)[::hop]
     frequencies = np.fft.rfftfreq(fft_size, 1 / 22050)

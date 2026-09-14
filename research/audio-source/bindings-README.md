@@ -6,6 +6,16 @@ browser audio. [`bindings.json`](bindings.json) separates proven native behavior
 identified original signals, historical recording observations and exact
 remaining selectors.
 
+**Latest handoff follow-up:** see
+[`selector-observations-README.md`](selector-observations-README.md).
+Fixed-band waveform matching plus source-state frames now identify ordinary
+shortbow release2693, tutorial-rat attack710 and copper/tin furnace-start2725.
+A normal-account completion conclusively identifies Cook's Assistant
+**jingle152**, followed by reward-level-up33 after the quest scroll closes.
+These supersede the earlier weak/candidate notes below, while retaining the
+2017/2024 recording dates. Exact Learning-the-Ropes and literal315/2309 food
+selectors are still not fabricated.
+
 ## Closed technical questions
 
 * **Current eating cue:** sequence12526 is the same original motion/timing as829,

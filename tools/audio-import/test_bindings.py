@@ -52,7 +52,7 @@ class BindingEvidenceTests(unittest.TestCase):
         self.assertEqual(a["frameSounds"], {})
         self.assertEqual(b["frameSounds"], {})
         entry = next(row for row in self.bindings["cue_bindings"] if row["action"] == "bronze_smelting")
-        self.assertEqual(entry["status"], "unresolved_current_game_trigger")
+        self.assertEqual(entry["status"], "source_signal_and_public_smelt_start_identified")
 
     def test_tutorial_rat_uses_current_source_family(self):
         npcs = json.loads(gzip.decompress(Path("assets/source/osrs/cache2695/collections/npc.json.gz").read_bytes()))
@@ -102,10 +102,11 @@ class BindingEvidenceTests(unittest.TestCase):
     def test_published_sound_roles_use_actual_matched_ids(self):
         records = {row["action"]: row for row in self.bindings["cue_bindings"]}
         self.assertEqual(records["ordinary_unarmed_goblin"]["source_sound_ids"], [469, 472, 471])
-        self.assertEqual(records["tutorial_rat"]["source_sound_ids"], {"hit": 713, "death": 711})
+        self.assertEqual(records["tutorial_rat"]["source_sound_ids"], {"attack": 710, "hit": 713, "death": 711})
         self.assertGreater(records["ordinary_unarmed_goblin"]["public_matches"]["hit_peak"], 0.97)
         self.assertGreater(records["tutorial_rat"]["public_matches"]["hit_peak"], 0.94)
-        self.assertEqual(records["ordinary_shortbow"]["status"], "unresolved_source_event_selector")
+        self.assertEqual(records["ordinary_shortbow"]["source_sound_ids"], [2693])
+        self.assertEqual(records["ordinary_shortbow"]["status"], "source_signal_and_public_event_identified")
 
 
 @unittest.skipUnless(MEDIA_AVAILABLE, "Use the pinned project-local analysis requirements for recording tests")

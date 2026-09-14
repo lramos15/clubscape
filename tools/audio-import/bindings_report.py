@@ -186,6 +186,46 @@ def main():
         "owner_reference_pack_approved": False,
         "m1_accepted": False,
     }
+    observations_path = DEST / "selector-observations.json"
+    if observations_path.exists():
+        observations = json.loads(observations_path.read_text())
+        result["latest_selector_observations"] = file_record(observations_path)
+        result["superseded_candidate_notes"] = (
+            "The dated, source-state-verified observations identify2693 for ordinary shortbow release, "
+            "710 for tutorial-rat attack,2725 for copper/tin smelt start, and152 for a normal Cook's "
+            "Assistant completion. Use the attached observations rather than the earlier weak-match notes. "
+            "Their recording dates remain explicit; Learning-the-Ropes and literal315/2309 selectors remain unresolved."
+        )
+        for cue in result["cue_bindings"]:
+            if cue["action"] == "ordinary_shortbow":
+                cue.update({
+                    "status": "source_signal_and_public_event_identified",
+                    "source_sound_ids": [2693],
+                    "event_boundary": "ordinary shortbow projectile release",
+                    "recording_date": "20240521",
+                    "correlation": 0.994381682692452,
+                    "residual": "No animation426 frame cue; retain source game-trigger/received queue delay. Recording date is not relabeled as build240.",
+                })
+            elif cue["action"] == "tutorial_rat":
+                cue["source_sound_ids"]["attack"] = 710
+                cue["status"] = "source_attack_hit_death_signals_and_public_events_identified"
+                cue["public_matches"]["attack_peak"] = 0.9880185670344562
+                cue["residual"] = "Game-triggered attack/hit/death cues, not embedded493x frame events; dated source observation qualification retained."
+            elif cue["action"] == "bronze_smelting":
+                cue.update({
+                    "status": "source_signal_and_public_smelt_start_identified",
+                    "source_sound_ids": [2725],
+                    "event_boundary": "accepted copper/tin furnace operation starts",
+                    "recording_date": "20240521",
+                    "residual": "Bound by sample-coherent recording and actual smelt-start state, not by treating3243 as899. Current server-build capture is not claimed.",
+                })
+        result["quest_jingles"]["cooks_assistant_source_observation"] = observations["cooks_assistant_observation"]
+        result["quest_jingles"]["exact_residual"] = (
+            "Learning-the-Ropes actual current quest-jingle/no-request selector and its emission order "
+            "against simultaneous level-ups. Cook's Assistant152 followed by modal-deferred level-up33 "
+            "is now source-observed, with the2017 recording qualification retained."
+        )
+        result["remaining_selector_rules"] = [row["rule"] for row in observations["still_unresolved"]]
     write_json(DEST / "bindings.json", result)
     print("Published exact native queue/metadata evidence and explicit per-selector residuals.")
 
