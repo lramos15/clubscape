@@ -288,5 +288,30 @@
     ],
     "source_role": "review_contact_sheet_not_a_baseline",
     "transformation": "Full original frame 0, aspect-preserving thumbnail; no source crop."
+  },
+  {
+    "path": "research/reference-pack/v1/gallery/contact-11.png",
+    "sha256": "4b645fafea39ecef5b99f0618eba622622874f7b30513a3f1fbb7ec1a108db23",
+    "size_bytes": 444068,
+    "input_ids": [
+      "native-hud.native-inventory",
+      "native-hud.native-equipment",
+      "native-hud.native-skills",
+      "native-hud.native-combat",
+      "native-hud.native-prayer",
+      "native-hud.native-magic",
+      "native-hud.native-quest-list",
+      "native-hud.native-bank",
+      "native-hud.native-shop",
+      "native-hud.native-guide-dialogue",
+      "native-hud.family-guide",
+      "native-hud.family-survival",
+      "native-hud.family-quest-guide",
+      "native-hud.family-combat",
+      "native-hud.family-prayer",
+      "native-hud.family-magic"
+    ],
+    "source_role": "review_contact_sheet_not_a_baseline",
+    "transformation": "Full original frame 0, aspect-preserving thumbnail; no source crop."
   }
 ]

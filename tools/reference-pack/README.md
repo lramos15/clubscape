@@ -26,6 +26,13 @@ It writes only `research/reference-pack/**`. Existing original images, audio,
 source schemas, game code, canonical specs and approval records are unchanged.
 Exact source-matching results do not compare any product candidate.
 
+The parent-authorized source-input commit `db103ba` has been integrated.
+`native_hud.py` consumes its16 original full-frame Classic HUD/panel/family
+images, validates their actual frame and64 native UI-region pixel hashes,
+and binds the source metadata into the existing126 cases/29 families.
+It does not rerender or edit source-capture code. The original93 fixtures,
+100 public images,258 FLACs and seven proposals are preserved.
+
 `factoring.py` audits literal Section30.2. It retains126 cases and71 tutorial
 states while declaring29 visual families,180 distinct variants,11 instructor
 phases and11 HUD signatures. `text_oracles.py` projects698 exact pinned
@@ -35,7 +42,8 @@ runs and native-font metrics; it never renders a new "source capture."
 candidate state/source-fidelity/behavior/platform/owner acceptance evidence.
 
 The stricter completeness command deliberately exits nonzero while the
-three documented source input/calibration requirements remain. It does not
+two documented audio-binding requirements remain. The native HUD/panel
+source-calibration requirement is now satisfied. The gate does not
 demand71 separately captured source microstates or an authenticated
 arrival-container screenshot:
 
@@ -52,6 +60,10 @@ Tests deliberately remove/duplicate cases, remove actual inputs, change
 hashes/dimensions, relabel icons/crops as panels/full frames, fabricate
 settings/dates, change native metadata, relax tolerances, add masks, promote
 proposals, alter silence and falsely assert Mac/owner results. They also
+remove a native HUD frame, falsify native region/attachment data, or promote
+synthetic fixture text into source dialogue. The native body strings are
+for replaying their controlled pixel state only; actual dialogue still uses
+the698 pinned transcript records. Tests also
 remove family variants (including player/NPC dialogue, spell filtering and
 quest ingredient states), lose phases/signatures, reintroduce per-state
 screenshot demands, change text/values/glyphs or leave holes in full-panel
@@ -124,7 +136,7 @@ python3 tools/reference-pack/validate.py --report
 `--gallery-only` preserves the existing original recording/frame provenance.
 It records the reviewed manifest hash in `v1/gallery-validation.json`, checks
 all126 case IDs,29 family IDs and11 HUD signature IDs at all four viewports,
-and exercises the71-state filter. Use `--gallery` only when deliberately
+all16 native HUD frame IDs, and exercises the71-state filter. Use `--gallery` only when deliberately
 reproducing the original source-recording decode as well.
 
 Other hosts must supply their own existing compatible browser/Playwright
@@ -140,3 +152,9 @@ autoplays audio or video. Full source links preserve native pixels; contact
 sheets are identified as scaled navigational previews, not comparison
 baselines. Product implementation, live journey, native script/state
 calibration, final Mac Chrome/Edge results and all approvals remain separate.
+
+The precise audio handoff is `research/reference-pack/v1/audio-handoff.json`:
+ordinary shortbow/goblin/tutorial-rat/eating/bronze-smelting cue/event
+bindings, plus exact Learning the Ropes/Cook's Assistant jingle selection
+and precedence. No source-account or new broad-image-search prerequisite
+is introduced by these remaining named inputs.

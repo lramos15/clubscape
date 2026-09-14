@@ -23,6 +23,10 @@ from factoring import (
     assess_source_requirements, review_ready, stage_visual_map, text_selectors,
 )
 from text_oracles import make_text_oracles
+from native_hud import (
+    FAMILY_PANELS, calibration as native_hud_calibration, case_input_ids as native_hud_case_ids,
+    input_id as native_hud_id, validate_records as validate_native_hud,
+)
 
 
 class EvidenceError(ValueError):
@@ -58,7 +62,7 @@ def unique(records, key, label):
 
 
 def structural(manifest):
-    require(manifest["schema_version"] == 1 and manifest["pack_version"] == "1.1.0", "Unsupported pack schema/version")
+    require(manifest["schema_version"] == 1 and manifest["pack_version"] == "1.2.0", "Unsupported pack schema/version")
     require(manifest["status"] == "awaiting_owner_approval", "Pack must remain awaiting_owner_approval")
     factoring = manifest["evidence_factorization"]
     ready = review_ready(factoring["source_review_requirements"])
@@ -75,12 +79,13 @@ def structural(manifest):
     require(not manifest["browsers_and_hardware"]["mac_chrome_tested"]
             and not manifest["browsers_and_hardware"]["mac_edge_tested"], "Unrun Mac result asserted")
     original_ids = unique(manifest["original_inputs"], "id", "original input ID")
+    native_hud_ids = unique(manifest["native_hud_inputs"], "id", "native HUD input ID")
     public_ids = unique(manifest["public_inputs"], "id", "public input ID")
     proposal_ids = unique(manifest["proposal_inputs"], "id", "proposal ID")
     frame_ids = unique(manifest["recording_frames"], "id", "recording frame ID")
     audio_ids = unique(manifest["audio"]["assets"], "asset_id", "audio asset ID")
-    all_ids = original_ids | public_ids | proposal_ids | frame_ids | audio_ids
-    require(len(all_ids) == sum(map(len, (original_ids, public_ids, proposal_ids, frame_ids, audio_ids))),
+    all_ids = original_ids | native_hud_ids | public_ids | proposal_ids | frame_ids | audio_ids
+    require(len(all_ids) == sum(map(len, (original_ids, native_hud_ids, public_ids, proposal_ids, frame_ids, audio_ids))),
             "Cross-class duplicate input ID")
     cases = manifest["cases"]
     ids = unique(cases, "id", "required case ID")
@@ -95,7 +100,7 @@ def structural(manifest):
     require(len(states) == 71, "Unexpected tutorial contract state count")
     require(manifest["counts"]["required_cases"] == len(ids), "Incorrect required case count")
     role_by_id = {entry["id"]: entry["source_role"] for entry in
-                  manifest["original_inputs"] + manifest["public_inputs"] + manifest["proposal_inputs"]}
+                  manifest["original_inputs"] + manifest["native_hud_inputs"] + manifest["public_inputs"] + manifest["proposal_inputs"]}
     role_by_id.update({entry["asset_id"]: "current_original_audio_input" for entry in manifest["audio"]["assets"]})
     for case in cases:
         require(case["input_ids"] and set(case["input_ids"]) <= all_ids, f"Missing case input: {case['id']}")
@@ -110,6 +115,8 @@ def structural(manifest):
             require(reference["source_role"] == role_by_id[reference["input_id"]], "Incorrect per-case source role")
             require(reference["numeric_tolerances"] == NUMERIC_PROFILES[reference["comparison_profile"]],
                     "Missing/changed per-input numeric policy")
+            if reference["input_id"] in native_hud_ids:
+                require(reference["comparison_profile"] == "native_hud", "Native full-frame tolerance profile changed")
         if case["family"] == "tutorial":
             state = states[case["journey_state_id"]]
             require(case["declared_controls"] == state.get("ui_unlock_refs", []), "Changed tutorial unlock declaration")
@@ -157,6 +164,13 @@ def structural(manifest):
                 and entry["source_capture_build"] == 240 and not entry["full_resizable_classic_frame"],
                 "Original controlled fixture misclassified as a complete source journey/HUD")
         require(entry["browser"] is None and entry["browser_dpr"] is None, "Invented original browser settings")
+    try:
+        validate_native_hud(manifest["native_hud_inputs"])
+    except ValueError as error:
+        raise EvidenceError(str(error)) from error
+    require(manifest["counts"]["original_pre_hud_images"] == 93
+            and manifest["counts"]["native_hud_original_images"] == 16
+            and manifest["counts"]["original_runtime_images"] == 109, "Wrong original/native image inventory")
     audio = json.loads((ROOT / "assets/manifests/osrs/audio-runtime.json").read_text())
     require(manifest["audio"]["assets"] == audio["assets"], "Existing original audio inventory changed")
     require(len(audio_ids) == 258, "Missing playable audio files")
@@ -199,7 +213,7 @@ def validate_factoring(manifest, factoring):
     families = {row["id"]: row for row in factoring["families"]}
     require(len(families) == len(factoring["families"]) and set(families) == set(definitions),
             "Missing/duplicate required visual family")
-    input_ids = {row["id"] for row in manifest["original_inputs"] + manifest["public_inputs"]
+    input_ids = {row["id"] for row in manifest["original_inputs"] + manifest["native_hud_inputs"] + manifest["public_inputs"]
                  + manifest["proposal_inputs"] + manifest["recording_frames"]}
     input_ids |= {row["asset_id"] for row in manifest["audio"]["assets"]}
     case_map = {case["id"]: case for case in manifest["cases"]}
@@ -220,6 +234,10 @@ def validate_factoring(manifest, factoring):
                 "Dynamic factoring removed the whole-source-state comparison")
         expected_cases = {case["id"] for case in manifest["cases"] if identifier in case["reference_family_ids"]}
         require(set(family["case_ids"]) == expected_cases, "Incorrect family-to-case map")
+        expected_native = [native_hud_id(name) for name in FAMILY_PANELS.get(identifier, [])]
+        require(family["native_hud_input_ids"] == expected_native
+                and set(expected_native) <= set(family["pixel_or_audio_input_ids"]),
+                "Native panel/family evidence omitted")
         all_variants.update(identifier + "." + variant for variant in family["required_visual_variants"])
     require(factoring["counts"]["families"] == len(families)
             and factoring["counts"]["distinct_visual_variants"] == len(all_variants), "Incorrect family/variant count")
@@ -233,6 +251,10 @@ def validate_factoring(manifest, factoring):
     require(len(phase_members) == 71 and set(phase_members) == expected_states
             and len(factoring["phases"]) == 11, "Instructor phase/state coverage changed")
     phases = {phase["id"]: phase for phase in factoring["phases"]}
+    for case in manifest["cases"]:
+        expected_native = native_hud_case_ids(case, phases)
+        require(case["native_hud_input_ids"] == expected_native
+                and set(expected_native) <= set(case["input_ids"]), "Native evidence dropped from an applicable case")
     signatures = {row["id"]: row for row in factoring["hud_signatures"]}
     signature_members = [state for row in signatures.values() for state in row["state_ids"]]
     require(len(signature_members) == 71 and set(signature_members) == expected_states
@@ -284,7 +306,7 @@ def validate_factoring(manifest, factoring):
     require(factoring["acceptance_obligations"] == ACCEPTANCE_OBLIGATIONS,
             "Final live journey/source-fidelity/platform/owner gates disappeared")
     require(factoring["source_review_requirements"] ==
-            assess_source_requirements(manifest["original_inputs"], manifest["public_inputs"]),
+            assess_source_requirements(manifest["original_inputs"], manifest["public_inputs"], manifest["native_hud_inputs"]),
             "Source input readiness was changed without qualifying source evidence")
     values = factoring["dynamic_value_oracles"]
     require(values["source_facts"] == {
@@ -424,7 +446,7 @@ def require_complete(manifest):
 def validate(manifest, *, full_audio=True):
     metrics = structural(manifest)
     records = []
-    for key in ("bound_existing_documents", "source_asset_inventory", "original_inputs", "public_inputs",
+    for key in ("bound_existing_documents", "source_asset_inventory", "original_inputs", "native_hud_inputs", "public_inputs",
                 "proposal_inputs", "recording_frames", "tool_inputs", "source_snapshot_inventory", "owned_document_inputs"):
         records.extend(manifest[key])
     records.extend(manifest["audio"]["assets"])
@@ -432,6 +454,7 @@ def validate(manifest, *, full_audio=True):
     records.extend(entry["source_snapshot"] for entry in manifest["public_inputs"])
     records += [manifest["source_widget_symbols"]["source"], manifest["comparison_policy"],
                 manifest["factorization_document"], manifest["dynamic_text_oracles"], manifest["audio_binding_audit_sources"],
+                manifest["native_hud_calibration"], manifest["remaining_audio_handoff"],
                 manifest["audio"]["browser_source_recording_decode"]]
     unique_files = {}
     for record in records:
@@ -443,6 +466,7 @@ def validate(manifest, *, full_audio=True):
             verify_file(record)
     for entry in manifest["original_inputs"]:
         decode_original(entry)
+    native_regions = validate_native_hud(manifest["native_hud_inputs"], pixels=True)
     for entry in manifest["public_inputs"]:
         decode_public(entry)
     for entry in manifest["proposal_inputs"]:
@@ -471,6 +495,12 @@ def validate(manifest, *, full_audio=True):
     expected_text = make_text_oracles(manifest["public_page_revisions"])
     actual_text = json.loads(verify_file(manifest["dynamic_text_oracles"]).read_text())
     require(actual_text == expected_text, "Pinned dynamic text, style, native metrics or source lines changed")
+    actual_calibration = json.loads(verify_file(manifest["native_hud_calibration"]).read_text())
+    require(actual_calibration == native_hud_calibration(manifest["native_hud_inputs"]),
+            "Native source geometry/font/background calibration differs")
+    synthetic = {text for entry in manifest["native_hud_inputs"] for text in entry["synthetic_dialogue_strings"]}
+    require(not any(record["desktop_text"] in synthetic for record in actual_text["records"]),
+            "Synthetic native fixture body was promoted to source dialogue")
     for notice in manifest["notices"]:
         require(checked_path(notice).is_file(), f"Missing source notice: {notice}")
     contact_sheets = json.loads((OUT / "gallery/contact-sheets.json").read_text())
@@ -484,6 +514,8 @@ def validate(manifest, *, full_audio=True):
         "manifest": digest(OUT / "manifest.json"),
         "hash_bound_files_checked": len(unique_files),
         "original_images_decoded": len(manifest["original_inputs"]),
+        "native_hud_images_decoded": len(manifest["native_hud_inputs"]),
+        "native_ui_region_hashes_checked": native_regions,
         "public_images_decoded": sum(entry["decoded"]["format"] != "MP4" for entry in manifest["public_inputs"]),
         "public_recording_containers_checked": sum(entry["decoded"]["format"] == "MP4" for entry in manifest["public_inputs"]),
         "recording_frames_decoded": len(manifest["recording_frames"]),

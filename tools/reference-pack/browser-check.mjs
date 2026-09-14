@@ -154,6 +154,7 @@ try {
     const expectedTutorialIds = expectedCaseIds.filter((id) => id.startsWith('case.tutorial.'));
     const expectedFamilyIds = manifest.evidence_factorization.families.map((entry) => entry.id).sort();
     const expectedSignatureIds = manifest.evidence_factorization.hud_signatures.map((entry) => entry.id).sort();
+    const expectedNativeHudIds = manifest.native_hud_inputs.map((entry) => entry.id).sort();
     report.gallery = [];
     for (const [width, height] of [[1024, 768], [1280, 800], [1920, 1080], [2560, 1440]]) {
       await page.setViewportSize({ width, height });
@@ -167,6 +168,8 @@ try {
           .map((entry) => entry.dataset.referenceFamilyId).sort(),
         hud_signature_ids: [...document.querySelectorAll('[data-hud-signature-id]')]
           .map((entry) => entry.dataset.hudSignatureId).sort(),
+        native_hud_ids: [...document.querySelectorAll('[data-native-hud-id]')]
+          .map((entry) => entry.dataset.nativeHudId).sort(),
         autoplay_media: [...document.querySelectorAll('audio,video')].filter((entry) => entry.autoplay).length,
       }));
       assert.deepEqual(result.broken_images, []);
@@ -174,6 +177,7 @@ try {
       assert.deepEqual(result.case_ids, expectedCaseIds);
       assert.deepEqual(result.reference_family_ids, expectedFamilyIds);
       assert.deepEqual(result.hud_signature_ids, expectedSignatureIds);
+      assert.deepEqual(result.native_hud_ids, expectedNativeHudIds);
       assert.equal(result.autoplay_media, 0);
       await page.locator('#search').fill('case.tutorial.');
       const visibleTutorial = await page.evaluate(() =>

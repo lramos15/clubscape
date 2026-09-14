@@ -15,6 +15,7 @@ from media import mp4_facts
 from validate import EvidenceError, checked_path, decode_public, require_complete, structural, verify_file, verify_proposal
 from factoring import review_ready
 from text_oracles import check_full_panel_partition, check_source_values, check_text_projection, project_record
+from native_hud import FAMILY_SLOTS, validate_records as validate_native_hud, calibration as native_hud_calibration
 
 
 class PackTests(unittest.TestCase):
@@ -174,6 +175,57 @@ class PackTests(unittest.TestCase):
     def test_source_completeness_gate_stays_blocked(self):
         with self.assertRaisesRegex(EvidenceError, "Mandatory source evidence"):
             require_complete(self.manifest)
+
+    def test_native_hud_gap_is_closed_without_authenticated_progression(self):
+        rows = {row["id"]: row for row in self.manifest["evidence_factorization"]["source_review_requirements"]}
+        hud = rows["input.classic_frame_calibration"]
+        self.assertEqual(hud["status"], "available")
+        self.assertEqual(len(hud["evidence_ids"]), 16)
+        self.assertNotIn(hud["id"], {row["id"] for row in self.manifest["source_gaps"]})
+        self.assertFalse(any(row["authenticated_source_journey"] for row in self.manifest["native_hud_inputs"]))
+
+    def test_missing_native_frame_rejected(self):
+        self.rejects(lambda value: value["native_hud_inputs"].pop())
+
+    def test_changed_native_layout_rejected(self):
+        self.rejects(lambda value: value["native_hud_inputs"][0]["source"]["native_ui_regions"][0].update(
+            bounds=[0, 0, 211, 207]))
+
+    def test_native_panel_not_masked_by_nonblank_world(self):
+        self.rejects(lambda value: value["native_hud_inputs"][0]["source"]["native_ui_regions"][-1].update(colors=1))
+
+    def test_synthetic_native_text_cannot_be_source_dialogue(self):
+        self.rejects(lambda value: value["native_hud_inputs"][0].update(
+            fixture_text_origin="verified_source_dialogue"))
+
+    def test_native_families_are_six_recorded_sets_not_71_captures(self):
+        frames = self.manifest["native_hud_inputs"]
+        actual = {row["id"].removeprefix("native-hud.family-"): row["settings"]["enabled_tab_slots"]
+                  for row in frames if row["id"].startswith("native-hud.family-")}
+        self.assertEqual(actual, FAMILY_SLOTS)
+        self.assertEqual(len(self.manifest["evidence_factorization"]["state_bindings"]), 71)
+        self.assertEqual(len(self.manifest["evidence_factorization"]["hud_signatures"]), 11)
+
+    def test_native_fixture_not_mislabeled_live_state(self):
+        self.rejects(lambda value: value["native_hud_inputs"][0]["settings"].update(authenticated=True))
+
+    def test_native_evidence_cannot_disappear_from_case(self):
+        def mutation(value):
+            case = next(case for case in value["cases"] if case["id"] == "case.ui.bank")
+            case["native_hud_input_ids"] = []
+        self.rejects(mutation)
+
+    def test_exact_native_region_pixels(self):
+        self.assertEqual(validate_native_hud(self.manifest["native_hud_inputs"], pixels=True), 64)
+        data = native_hud_calibration(self.manifest["native_hud_inputs"])
+        self.assertEqual(data["native_region_rectangles"]["active-panel"], [1704, 782, 190, 261])
+        self.assertEqual(data["dialogue_anchor"]["native_panel_rectangle"], [8, 922, 506, 129])
+        self.assertEqual(data["scene_preparation"]["per_hud_camera_readbacks"], None)
+
+    def test_native_synthetic_body_never_enters_transcript_oracles(self):
+        fixture_strings = {text for row in self.manifest["native_hud_inputs"] for text in row["synthetic_dialogue_strings"]}
+        self.assertTrue(fixture_strings)
+        self.assertFalse(any(row["desktop_text"] in fixture_strings for row in self.oracles["records"]))
 
     def test_no_microstate_capture_gate(self):
         factor = self.manifest["evidence_factorization"]

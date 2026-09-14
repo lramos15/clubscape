@@ -1,7 +1,7 @@
-# M1 public reference pack, v1.1
+# M1 public reference pack, v1.2
 
-**Status: `awaiting_owner_approval`; three named source input/calibration
-requirements remain.** All **126 case IDs / 71 tutorial states** are retained
+**Status: `awaiting_owner_approval`; only two source-audio requirements
+remain. The native HUD/panel calibration gap is closed.** All **126 case IDs / 71 tutorial states** are retained
 and factored into **29 visual families, 180 distinct required visual
 variants, 11 instructor phases and 11 progressive HUD signatures**. The
 previous demand for 69 further micro-state screenshots was an invented
@@ -61,6 +61,7 @@ Chrome/Edge performance are later acceptance gates; they remain unrun.
 | Inventory | Actual inputs |
 | --- | ---: |
 | Existing original build-240/cache-2695 runtime PNGs | 93 |
+| Additional original full1920x1080 Classic HUD/panel/family PNGs | 16 |
 | Retrieved exact-original public wiki/official-archive images and GIFs | 100 |
 | Retrieved official 2026 music-transition MP4, including audio | 1 |
 | Explicitly derived full recording frames at 0, 5, ... 40 seconds | 9 |
@@ -72,8 +73,10 @@ Chrome/Edge performance are later acceptance gates; they remain unrun.
 The source selection is
 `osrs-live-240-cache2695-injected1.12.38-20260913`, unchanged from
 [`../current-source/selection.json`](../current-source/selection.json).
-The 93 original files and their exact capture metadata are reused, not
-recaptured. Full extraction retrieval remains the existing
+The 93 original files and their exact capture metadata are reused unchanged.
+The authorized source-input commit
+`db103ba838cc954ce9adbbaecff4cc70d6d0962c` supplies the additional16; no source
+renderer or cache acquisition is repeated by this integration. Full extraction retrieval remains the existing
 [`extraction contract`](../current-source/extraction-contract.json); this task
 does not reacquire the cache or implement another renderer.
 
@@ -84,6 +87,43 @@ bindings where present, expected state, pre-candidate numeric tolerances and
 comparison procedure. `input_usage` maps every selected image, recording,
 frame, proposal and audio asset to cases or an explicit supplementary role.
 The 559-file source inventory remains complete, not a new game asset schema.
+
+## Integrated original native HUD and panels
+
+[`v1/native-hud-integration.json`](v1/native-hud-integration.json) binds the
+source `captures.json`, provenance, input contract, native scripts, validation
+and16 actual full-frame images. The supplied native renderer runs root161,
+CS2 onload901/redraw907/tab914, the original widget-update traversal and
+original scene/minimap/chat/sidebar/panel painting. It is not a composed
+screenshot or a redesigned web UI.
+
+The native readbacks at1920x1080 are minimap `[1709,0,211,207]`, chat
+`[0,915,519,165]`, sidebar `[1679,745,241,335]` and standard side content
+`[1704,782,190,261]`. The actual dialogue231 attachment is162:567, with panel
+`[8,922,506,129]`. Its body rectangle is `[116,955,380,67]`; source widget
+definition231:6 supplies font497. The metadata distinguishes actual coordinate
+readbacks from static font definitions and source-code camera configuration.
+
+Inventory, equipment (actual source group387), skills, sword combat, prayer,
+magic, quest list, bank, shop and NPC dialogue are mapped into the existing
+families/cases. Six additional source attachment families retain their actual
+native parent links and enabled slots. They are **controlled examples**, not
+the exact71-state source timing/visibility table or a replacement for the11
+semantic HUD signatures.
+
+**Dialogue body text is synthetic fixture text, not source dialogue.**
+The698 pinned transcript/native-font records remain authoritative for actual
+text. Reproducing a declared fixture can compare its synthetic body pixels,
+but those strings cannot become gameplay dialogue or prove a legitimate
+journey. The fixture player, containers, quest counters, shop stock and NPC
+choices are likewise explicit rendering inputs, not actual grants/prices or
+verified source spawns. In particular, a named instructor attachment example
+does not override the pinned tutorial instructor identity.
+
+The source fixture executes an explicitly selected Lumbridge preparation.
+Its per-frame HUD metadata does not include camera readbacks; the integration
+points to the hash-bound original preparation code and existing calibrated
+scene, without inventing new measured camera values.
 
 [`v1/public-media.json`](v1/public-media.json) and the compressed snapshots in
 `v1/sources/` preserve exact file/page revisions, timestamps, original URLs,
@@ -110,7 +150,8 @@ runtime's visuals.
 The current native Classic frame has a **241x335** side-panel container,
 **211x207** minimap container and **519x165** chat container. The actual 2026
 Classic music side-panel crop is traceably reconciled to current source
-components. The full RuneLite image, 2015 resizable example and official
+components. The16 integrated original full frames now provide the complete
+Classic baseline geometry and backgrounds. The full RuneLite image, 2015 resizable example and official
 music recording instead show **Modern layout**, so they are explicitly
 rejected as full Classic-frame baselines. A cropped panel is never called a
 full frame. Historical fixed-panel artwork can support only its identified
@@ -174,12 +215,13 @@ tree, goblin, terrain, building or source-interface requirements.
 
 | Input | Evidence still required |
 | --- | --- |
-| `input.classic_frame_calibration` | Complete controlled stock **Resizable - Classic** frame and native dialogue/message panel font/geometry/background calibration, retaining NPC/player/item-message variants. `CHAT_RIGHT`217 is named in the pinned symbols but its widget payload is absent from the30 published groups. The separate native-HUD/panel commit is awaiting parent integration/relay; no paths or capture metadata are invented. |
 | `input.required_effect_bindings` | Source cue IDs/event boundaries for ordinary shortbow, goblin, tutorial rat, eating and bronze smelting. Existing PCM/sequence/ambient evidence is retained; smelting2725 is only a candidate. Candidate playback cannot establish an unknown source identity. |
 | `input.quest_jingle_binding` | Exact Learning the Ropes/Cook's Assistant cue selection and quest/level-up precedence. The three already-pinned wiki descriptions were rechecked:154 **usually** accompanies Beginner/Easy quests,152 Master,153 Intermediate/Expert. This narrows the candidate, not the per-quest binding. |
 
-These are **three input requirements / five representative case entries**,
-not 75 individually uncaptured states. Known native frame-event sound
+These are **two audio input requirements / three representative case entries**.
+The native HUD requirement is satisfied, not awaiting another source session.
+[`v1/audio-handoff.json`](v1/audio-handoff.json) lists the exact remaining
+rule/item/NPC/sequence anchors and quest precedence question. Known native frame-event sound
 bindings do not require another source session; they retain their recorded
 cycle offsets. Browser/device gain, latency, actual event scheduling and
 live journey fidelity are separate checks against those inputs.

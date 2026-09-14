@@ -1,0 +1,127 @@
+{
+  "schema_version": 1,
+  "scope": "Only remaining source-audio identity/event/precedence inputs; no HUD blocker.",
+  "source_map": {
+    "path": "research/audio-source/source-map.json",
+    "sha256": "3ca6416ed62e9f9791327ea4ab2ce29da8f7f50230af2278007d457ccdc8b602",
+    "size_bytes": 120777
+  },
+  "playable_source_manifest": {
+    "path": "assets/manifests/osrs/audio-runtime.json",
+    "sha256": "1e7c37af6d303eb5db9407c9318ee532cbd4f823427fed02c89612dfefaa23b5",
+    "size_bytes": 826585
+  },
+  "unresolved_actions": [
+    {
+      "rule_id": "rule.combat.ranged",
+      "item_ids": [
+        841
+      ],
+      "retained_sequence_ids": [
+        426
+      ],
+      "sequence_role": "Existing source-map anchors/candidates, not a newly verified event binding.",
+      "identified_sound_ids": [],
+      "source_note": "No verified bow-specific sound binding in the selected source sequence; do not substitute a melee sound.",
+      "needed": "Actual source sound ID/variant and source-relative event boundary, with loops/weights where relevant. Do not replace it with a generic click, grunt, silence or plausible candidate."
+    },
+    {
+      "rule_id": "rule.goblin.level_2",
+      "npc_ids": [
+        3028
+      ],
+      "retained_sequence_ids": [
+        6182,
+        6184,
+        6185,
+        309,
+        310,
+        312,
+        313
+      ],
+      "sequence_role": "Existing source-map anchors/candidates, not a newly verified event binding.",
+      "identified_sound_ids": [],
+      "source_note": "Original combat sequence candidates have no embedded SFX. NPC-specific grunts/variant/timing remain unbound, not substituted by player hits.",
+      "needed": "Actual source sound ID/variant and source-relative event boundary, with loops/weights where relevant. Do not replace it with a generic click, grunt, silence or plausible candidate."
+    },
+    {
+      "rule_id": "rule.combat.tutorial_rat",
+      "npc_ids": [
+        3313,
+        3314,
+        3315
+      ],
+      "retained_sequence_ids": [
+        138,
+        139,
+        141
+      ],
+      "sequence_role": "Existing source-map anchors/candidates, not a newly verified event binding.",
+      "identified_sound_ids": [],
+      "source_note": "No verified rat-specific SFX binding in these source sequences.",
+      "needed": "Actual source sound ID/variant and source-relative event boundary, with loops/weights where relevant. Do not replace it with a generic click, grunt, silence or plausible candidate."
+    },
+    {
+      "rule_id": "rule.food.healing",
+      "item_ids": [
+        315,
+        2309
+      ],
+      "retained_sequence_ids": [],
+      "sequence_role": "Existing source-map anchors/candidates, not a newly verified event binding.",
+      "identified_sound_ids": [],
+      "source_note": "No verified eating sound binding; do not invent one.",
+      "needed": "Actual source sound ID/variant and source-relative event boundary, with loops/weights where relevant. Do not replace it with a generic click, grunt, silence or plausible candidate."
+    },
+    {
+      "rule_id": "rule.smelting.bronze",
+      "item_ids": [
+        436,
+        438,
+        2349
+      ],
+      "candidate_sound_ids": [
+        2725
+      ],
+      "retained_sequence_ids": [
+        899
+      ],
+      "sequence_role": "Existing source-map anchors/candidates, not a newly verified event binding.",
+      "identified_sound_ids": [],
+      "source_note": "No verified current sound binding. Candidate2725 is prepared separately, based only on an independent server implementation using a different animation.",
+      "needed": "Actual source sound ID/variant and source-relative event boundary, with loops/weights where relevant. Do not replace it with a generic click, grunt, silence or plausible candidate."
+    }
+  ],
+  "quest_selection": {
+    "quest_refs": [
+      "quest.learning_the_ropes",
+      "quest.cooks_assistant"
+    ],
+    "retained_source_jingle_ids": [
+      152,
+      153,
+      154
+    ],
+    "current_best_candidate": 154,
+    "candidate_basis": "Pinned wiki says154 usually accompanies Beginner/Easy quests; not a per-quest selector.",
+    "needed": [
+      "exact per-quest jingle ID/selection rule",
+      "quest-completion versus simultaneous level-up jingle ordering/interrupt/queue precedence"
+    ]
+  },
+  "not_requested_again": [
+    "cache acquisition",
+    "audio conversion",
+    "native HUD/panel rendering",
+    "per-microstate authenticated screenshots",
+    "a blanket source account handoff"
+  ],
+  "later_candidate_checks": [
+    "audible output",
+    "gain/device latency",
+    "bound event synchronization",
+    "region transitions/loops",
+    "gesture and reconnect behavior"
+  ],
+  "owner_approved": false
+}

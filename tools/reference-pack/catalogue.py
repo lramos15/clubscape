@@ -237,6 +237,18 @@ NUMERIC_PROFILES = {
                          "candidate's first screenshot. Every dynamic rectangle includes checked source "
                          "background; no entire text box, slot grid or panel is ignored.",
     },
+    "native_hud": {
+        "alignment_translation_px": 0, "scale": 1,
+        "native_widget_bounds_error_px": 0, "native_attachment_mismatches": 0,
+        "unchanged_ui_pixel_error": 0, "glyph_advance_error_px": 0,
+        "source_sprite_or_font_substitutions": 0, "unchecked_frame_pixel_fraction": 0,
+        "world_profile": "native_scene_model",
+        "dynamic_text_profile": "dynamic_state_text",
+        "justification": "Compare the full original frame at its declared controlled state. UI regions retain "
+                         "exact source pixels/geometry/attachments; scene rasterization uses the existing narrow "
+                         "native-scene profile, never a scenery mask. Synthetic fixture text is usable for that "
+                         "fixture's pixel replay only; journey dialogue comes from pinned transcript/native-font oracles.",
+    },
 }
 
 

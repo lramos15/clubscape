@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "evidence_scope": "Public source-media decode and reference-gallery usability only",
-  "observed_at": "2026-09-14T17:52:43.131Z",
+  "observed_at": "2026-09-14T19:44:15.261Z",
   "browser": "153.0.8010.12",
   "executable": "/home/lramos15/.cache/ms-playwright/chromium-1243/chrome-linux-arm64/chrome",
   "playwright_module": "/home/lramos15/clubscape/.worktrees/m1-browser-platform/tools/browser-harness/node_modules/playwright-core/index.mjs",
@@ -14,7 +14,7 @@
   "owner_reference_pack_approved": false,
   "final_presentation_accepted": false,
   "source_media_decoded_this_run": false,
-  "manifest_sha256": "088bf7aac5df98f5012f23bfadb4c3d2fbc14d8ec9a54c072412c143ebf3d981",
+  "manifest_sha256": "dc4b0c9b91e3fccb6a77f7bcf30361e103dfc9c8bb0c24b2bda8861e8e0e48ff",
   "gallery": [
     {
       "viewport": [
@@ -194,6 +194,24 @@
         "hud.signature.e3b0c44298fc",
         "hud.signature.eccd45481804",
         "hud.signature.fea76d760919"
+      ],
+      "native_hud_ids": [
+        "native-hud.family-combat",
+        "native-hud.family-guide",
+        "native-hud.family-magic",
+        "native-hud.family-prayer",
+        "native-hud.family-quest-guide",
+        "native-hud.family-survival",
+        "native-hud.native-bank",
+        "native-hud.native-combat",
+        "native-hud.native-equipment",
+        "native-hud.native-guide-dialogue",
+        "native-hud.native-inventory",
+        "native-hud.native-magic",
+        "native-hud.native-prayer",
+        "native-hud.native-quest-list",
+        "native-hud.native-shop",
+        "native-hud.native-skills"
       ],
       "autoplay_media": 0
     },
@@ -376,6 +394,24 @@
         "hud.signature.eccd45481804",
         "hud.signature.fea76d760919"
       ],
+      "native_hud_ids": [
+        "native-hud.family-combat",
+        "native-hud.family-guide",
+        "native-hud.family-magic",
+        "native-hud.family-prayer",
+        "native-hud.family-quest-guide",
+        "native-hud.family-survival",
+        "native-hud.native-bank",
+        "native-hud.native-combat",
+        "native-hud.native-equipment",
+        "native-hud.native-guide-dialogue",
+        "native-hud.native-inventory",
+        "native-hud.native-magic",
+        "native-hud.native-prayer",
+        "native-hud.native-quest-list",
+        "native-hud.native-shop",
+        "native-hud.native-skills"
+      ],
       "autoplay_media": 0
     },
     {
@@ -557,6 +593,24 @@
         "hud.signature.eccd45481804",
         "hud.signature.fea76d760919"
       ],
+      "native_hud_ids": [
+        "native-hud.family-combat",
+        "native-hud.family-guide",
+        "native-hud.family-magic",
+        "native-hud.family-prayer",
+        "native-hud.family-quest-guide",
+        "native-hud.family-survival",
+        "native-hud.native-bank",
+        "native-hud.native-combat",
+        "native-hud.native-equipment",
+        "native-hud.native-guide-dialogue",
+        "native-hud.native-inventory",
+        "native-hud.native-magic",
+        "native-hud.native-prayer",
+        "native-hud.native-quest-list",
+        "native-hud.native-shop",
+        "native-hud.native-skills"
+      ],
       "autoplay_media": 0
     },
     {
@@ -737,6 +791,24 @@
         "hud.signature.e3b0c44298fc",
         "hud.signature.eccd45481804",
         "hud.signature.fea76d760919"
+      ],
+      "native_hud_ids": [
+        "native-hud.family-combat",
+        "native-hud.family-guide",
+        "native-hud.family-magic",
+        "native-hud.family-prayer",
+        "native-hud.family-quest-guide",
+        "native-hud.family-survival",
+        "native-hud.native-bank",
+        "native-hud.native-combat",
+        "native-hud.native-equipment",
+        "native-hud.native-guide-dialogue",
+        "native-hud.native-inventory",
+        "native-hud.native-magic",
+        "native-hud.native-prayer",
+        "native-hud.native-quest-list",
+        "native-hud.native-shop",
+        "native-hud.native-skills"
       ],
       "autoplay_media": 0
     }

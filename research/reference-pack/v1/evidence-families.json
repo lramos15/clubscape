@@ -42,7 +42,9 @@
       "required_panel_pixel_coverage": 1.0,
       "candidate_panel_pixel_coverage_measured": null,
       "missing_input_requirement_ids": [],
-      "agreement_input_status": "factored_inputs_available"
+      "agreement_input_status": "factored_inputs_available",
+      "native_hud_input_ids": [],
+      "native_evidence_scope": "actual native geometry/background/font/panel/attachment examples; source text and exact semantic state stay independently checked"
     },
     {
       "id": "entry.web",
@@ -92,7 +94,9 @@
       "required_panel_pixel_coverage": 1.0,
       "candidate_panel_pixel_coverage_measured": null,
       "missing_input_requirement_ids": [],
-      "agreement_input_status": "factored_inputs_available"
+      "agreement_input_status": "factored_inputs_available",
+      "native_hud_input_ids": [],
+      "native_evidence_scope": "actual native geometry/background/font/panel/attachment examples; source text and exact semantic state stay independently checked"
     },
     {
       "id": "entry.reconnect",
@@ -126,7 +130,9 @@
       "required_panel_pixel_coverage": 1.0,
       "candidate_panel_pixel_coverage_measured": null,
       "missing_input_requirement_ids": [],
-      "agreement_input_status": "factored_inputs_available"
+      "agreement_input_status": "factored_inputs_available",
+      "native_hud_input_ids": [],
+      "native_evidence_scope": "actual native geometry/background/font/panel/attachment examples; source text and exact semantic state stay independently checked"
     },
     {
       "id": "hud.classic",
@@ -220,6 +226,13 @@
         "case.tutorial.wind_strike"
       ],
       "pixel_or_audio_input_ids": [
+        "native-hud.family-combat",
+        "native-hud.family-guide",
+        "native-hud.family-magic",
+        "native-hud.family-prayer",
+        "native-hud.family-quest-guide",
+        "native-hud.family-survival",
+        "native-hud.native-inventory",
         "original.items.1205",
         "original.items.1265",
         "original.items.1277",
@@ -300,6 +313,13 @@
         "wiki.worn-equipment-tab-png"
       ],
       "representative_input_ids": [
+        "native-hud.native-inventory",
+        "native-hud.family-guide",
+        "native-hud.family-survival",
+        "native-hud.family-quest-guide",
+        "native-hud.family-combat",
+        "native-hud.family-prayer",
+        "native-hud.family-magic",
         "wiki.music-system-improvements-deadman-tweaks-4-png",
         "wiki.minimap-png",
         "wiki.chat-interface-png",
@@ -333,10 +353,18 @@
       ],
       "required_panel_pixel_coverage": 1.0,
       "candidate_panel_pixel_coverage_measured": null,
-      "missing_input_requirement_ids": [
-        "input.classic_frame_calibration"
+      "missing_input_requirement_ids": [],
+      "agreement_input_status": "factored_inputs_available",
+      "native_hud_input_ids": [
+        "native-hud.native-inventory",
+        "native-hud.family-guide",
+        "native-hud.family-survival",
+        "native-hud.family-quest-guide",
+        "native-hud.family-combat",
+        "native-hud.family-prayer",
+        "native-hud.family-magic"
       ],
-      "agreement_input_status": "awaiting_named_source_input"
+      "native_evidence_scope": "actual native geometry/background/font/panel/attachment examples; source text and exact semantic state stay independently checked"
     },
     {
       "id": "hud.minimenu",
@@ -355,6 +383,7 @@
         "case.hud.context_menu"
       ],
       "pixel_or_audio_input_ids": [
+        "native-hud.native-inventory",
         "wiki.choose-option-interface-png",
         "wiki.choose-option-monster-interface-png",
         "wiki.choose-option-object-interface-png",
@@ -363,6 +392,7 @@
         "wiki.choose-option-weapon-interface-png"
       ],
       "representative_input_ids": [
+        "native-hud.native-inventory",
         "wiki.choose-option-interface-png",
         "wiki.choose-option-monster-interface-png",
         "wiki.choose-option-object-interface-png",
@@ -379,7 +409,11 @@
       "required_panel_pixel_coverage": 1.0,
       "candidate_panel_pixel_coverage_measured": null,
       "missing_input_requirement_ids": [],
-      "agreement_input_status": "factored_inputs_available"
+      "agreement_input_status": "factored_inputs_available",
+      "native_hud_input_ids": [
+        "native-hud.native-inventory"
+      ],
+      "native_evidence_scope": "actual native geometry/background/font/panel/attachment examples; source text and exact semantic state stay independently checked"
     },
     {
       "id": "tutorial.appearance",
@@ -457,7 +491,9 @@
       "required_panel_pixel_coverage": 1.0,
       "candidate_panel_pixel_coverage_measured": null,
       "missing_input_requirement_ids": [],
-      "agreement_input_status": "factored_inputs_available"
+      "agreement_input_status": "factored_inputs_available",
+      "native_hud_input_ids": [],
+      "native_evidence_scope": "actual native geometry/background/font/panel/attachment examples; source text and exact semantic state stay independently checked"
     },
     {
       "id": "tutorial.experience",
@@ -491,7 +527,9 @@
       "required_panel_pixel_coverage": 1.0,
       "candidate_panel_pixel_coverage_measured": null,
       "missing_input_requirement_ids": [],
-      "agreement_input_status": "factored_inputs_available"
+      "agreement_input_status": "factored_inputs_available",
+      "native_hud_input_ids": [],
+      "native_evidence_scope": "actual native geometry/background/font/panel/attachment examples; source text and exact semantic state stay independently checked"
     },
     {
       "id": "dialogue.flow",
@@ -547,6 +585,13 @@
         "case.ui.dialogue"
       ],
       "pixel_or_audio_input_ids": [
+        "native-hud.family-combat",
+        "native-hud.family-guide",
+        "native-hud.family-magic",
+        "native-hud.family-prayer",
+        "native-hud.family-quest-guide",
+        "native-hud.family-survival",
+        "native-hud.native-guide-dialogue",
         "original.items.1205",
         "original.items.1265",
         "original.items.1277",
@@ -622,6 +667,13 @@
         "wiki.worn-equipment-tab-png"
       ],
       "representative_input_ids": [
+        "native-hud.native-guide-dialogue",
+        "native-hud.family-guide",
+        "native-hud.family-survival",
+        "native-hud.family-quest-guide",
+        "native-hud.family-combat",
+        "native-hud.family-prayer",
+        "native-hud.family-magic",
         "wiki.grid-master-rewards-poll-new-player-improvements-4-png",
         "wiki.grid-master-rewards-poll-new-player-improvements-9-png",
         "wiki.grid-master-rewards-poll-new-player-improvements-12-png"
@@ -655,10 +707,18 @@
       ],
       "required_panel_pixel_coverage": 1.0,
       "candidate_panel_pixel_coverage_measured": null,
-      "missing_input_requirement_ids": [
-        "input.classic_frame_calibration"
+      "missing_input_requirement_ids": [],
+      "agreement_input_status": "factored_inputs_available",
+      "native_hud_input_ids": [
+        "native-hud.native-guide-dialogue",
+        "native-hud.family-guide",
+        "native-hud.family-survival",
+        "native-hud.family-quest-guide",
+        "native-hud.family-combat",
+        "native-hud.family-prayer",
+        "native-hud.family-magic"
       ],
-      "agreement_input_status": "awaiting_named_source_input"
+      "native_evidence_scope": "actual native geometry/background/font/panel/attachment examples; source text and exact semantic state stay independently checked"
     },
     {
       "id": "ui.inventory",
@@ -691,6 +751,7 @@
         "case.ui.inventory"
       ],
       "pixel_or_audio_input_ids": [
+        "native-hud.native-inventory",
         "original.items.1205",
         "original.items.1265",
         "original.items.1277",
@@ -744,6 +805,7 @@
         "wiki.worn-equipment-tab-png"
       ],
       "representative_input_ids": [
+        "native-hud.native-inventory",
         "wiki.inventory-tab-png",
         "wiki.choose-option-use-interface-png"
       ],
@@ -762,7 +824,11 @@
       "required_panel_pixel_coverage": 1.0,
       "candidate_panel_pixel_coverage_measured": null,
       "missing_input_requirement_ids": [],
-      "agreement_input_status": "factored_inputs_available"
+      "agreement_input_status": "factored_inputs_available",
+      "native_hud_input_ids": [
+        "native-hud.native-inventory"
+      ],
+      "native_evidence_scope": "actual native geometry/background/font/panel/attachment examples; source text and exact semantic state stay independently checked"
     },
     {
       "id": "ui.equipment",
@@ -783,6 +849,7 @@
         "case.ui.equipment"
       ],
       "pixel_or_audio_input_ids": [
+        "native-hud.native-equipment",
         "original.items.1205",
         "original.items.1265",
         "original.items.1277",
@@ -815,6 +882,7 @@
         "wiki.worn-equipment-tab-png"
       ],
       "representative_input_ids": [
+        "native-hud.native-equipment",
         "wiki.worn-equipment-tab-png",
         "wiki.equipment-stats-interface-png"
       ],
@@ -838,7 +906,11 @@
       "required_panel_pixel_coverage": 1.0,
       "candidate_panel_pixel_coverage_measured": null,
       "missing_input_requirement_ids": [],
-      "agreement_input_status": "factored_inputs_available"
+      "agreement_input_status": "factored_inputs_available",
+      "native_hud_input_ids": [
+        "native-hud.native-equipment"
+      ],
+      "native_evidence_scope": "actual native geometry/background/font/panel/attachment examples; source text and exact semantic state stay independently checked"
     },
     {
       "id": "ui.skills",
@@ -855,6 +927,7 @@
         "case.ui.skills"
       ],
       "pixel_or_audio_input_ids": [
+        "native-hud.native-skills",
         "original.items.1205",
         "original.items.1265",
         "original.items.1277",
@@ -891,6 +964,7 @@
         "wiki.survival-expert-chathead-png"
       ],
       "representative_input_ids": [
+        "native-hud.native-skills",
         "wiki.skills-tab-png",
         "wiki.cow-boss-and-skill-guide-level-up-changes-5-png",
         "wiki.cow-boss-and-skill-guide-level-up-changes-8-gif",
@@ -911,7 +985,11 @@
       "required_panel_pixel_coverage": 1.0,
       "candidate_panel_pixel_coverage_measured": null,
       "missing_input_requirement_ids": [],
-      "agreement_input_status": "factored_inputs_available"
+      "agreement_input_status": "factored_inputs_available",
+      "native_hud_input_ids": [
+        "native-hud.native-skills"
+      ],
+      "native_evidence_scope": "actual native geometry/background/font/panel/attachment examples; source text and exact semantic state stay independently checked"
     },
     {
       "id": "ui.combat",
@@ -931,6 +1009,7 @@
         "case.ui.combat"
       ],
       "pixel_or_audio_input_ids": [
+        "native-hud.native-combat",
         "original.items.1205",
         "original.items.1265",
         "original.items.1277",
@@ -963,6 +1042,7 @@
         "wiki.worn-equipment-tab-png"
       ],
       "representative_input_ids": [
+        "native-hud.native-combat",
         "wiki.attack-style-tab-png",
         "wiki.combatstyles-slash-sword-png"
       ],
@@ -981,7 +1061,11 @@
       "required_panel_pixel_coverage": 1.0,
       "candidate_panel_pixel_coverage_measured": null,
       "missing_input_requirement_ids": [],
-      "agreement_input_status": "factored_inputs_available"
+      "agreement_input_status": "factored_inputs_available",
+      "native_hud_input_ids": [
+        "native-hud.native-combat"
+      ],
+      "native_evidence_scope": "actual native geometry/background/font/panel/attachment examples; source text and exact semantic state stay independently checked"
     },
     {
       "id": "ui.prayer",
@@ -1001,6 +1085,7 @@
         "case.ui.prayer"
       ],
       "pixel_or_audio_input_ids": [
+        "native-hud.native-prayer",
         "original.items.1205",
         "original.items.1265",
         "original.items.1277",
@@ -1031,6 +1116,7 @@
         "wiki.tutorial-island-chapel-png"
       ],
       "representative_input_ids": [
+        "native-hud.native-prayer",
         "wiki.prayer-tab-png",
         "wiki.activating-quick-prayers-gif"
       ],
@@ -1049,7 +1135,11 @@
       "required_panel_pixel_coverage": 1.0,
       "candidate_panel_pixel_coverage_measured": null,
       "missing_input_requirement_ids": [],
-      "agreement_input_status": "factored_inputs_available"
+      "agreement_input_status": "factored_inputs_available",
+      "native_hud_input_ids": [
+        "native-hud.native-prayer"
+      ],
+      "native_evidence_scope": "actual native geometry/background/font/panel/attachment examples; source text and exact semantic state stay independently checked"
     },
     {
       "id": "ui.magic",
@@ -1071,6 +1161,7 @@
         "case.ui.magic"
       ],
       "pixel_or_audio_input_ids": [
+        "native-hud.native-magic",
         "original.items.1205",
         "original.items.1265",
         "original.items.1277",
@@ -1105,6 +1196,7 @@
         "wiki.wind-strike-gif"
       ],
       "representative_input_ids": [
+        "native-hud.native-magic",
         "wiki.standard-spells-png",
         "wiki.choose-option-spell-interface-png",
         "wiki.wind-strike-gif"
@@ -1124,7 +1216,11 @@
       "required_panel_pixel_coverage": 1.0,
       "candidate_panel_pixel_coverage_measured": null,
       "missing_input_requirement_ids": [],
-      "agreement_input_status": "factored_inputs_available"
+      "agreement_input_status": "factored_inputs_available",
+      "native_hud_input_ids": [
+        "native-hud.native-magic"
+      ],
+      "native_evidence_scope": "actual native geometry/background/font/panel/attachment examples; source text and exact semantic state stay independently checked"
     },
     {
       "id": "ui.production",
@@ -1200,7 +1296,9 @@
       "required_panel_pixel_coverage": 1.0,
       "candidate_panel_pixel_coverage_measured": null,
       "missing_input_requirement_ids": [],
-      "agreement_input_status": "factored_inputs_available"
+      "agreement_input_status": "factored_inputs_available",
+      "native_hud_input_ids": [],
+      "native_evidence_scope": "actual native geometry/background/font/panel/attachment examples; source text and exact semantic state stay independently checked"
     },
     {
       "id": "ui.bank",
@@ -1223,6 +1321,7 @@
         "case.ui.bank"
       ],
       "pixel_or_audio_input_ids": [
+        "native-hud.native-bank",
         "original.items.1205",
         "original.items.1265",
         "original.items.1277",
@@ -1256,6 +1355,7 @@
         "wiki.tutorial-island-bank-png"
       ],
       "representative_input_ids": [
+        "native-hud.native-bank",
         "wiki.bank-interface-png",
         "wiki.bank-settings-menu-png"
       ],
@@ -1289,7 +1389,11 @@
       "required_panel_pixel_coverage": 1.0,
       "candidate_panel_pixel_coverage_measured": null,
       "missing_input_requirement_ids": [],
-      "agreement_input_status": "factored_inputs_available"
+      "agreement_input_status": "factored_inputs_available",
+      "native_hud_input_ids": [
+        "native-hud.native-bank"
+      ],
+      "native_evidence_scope": "actual native geometry/background/font/panel/attachment examples; source text and exact semantic state stay independently checked"
     },
     {
       "id": "ui.shop",
@@ -1307,9 +1411,11 @@
         "case.ui.shop"
       ],
       "pixel_or_audio_input_ids": [
+        "native-hud.native-shop",
         "wiki.lumbridge-general-store-stock-png"
       ],
       "representative_input_ids": [
+        "native-hud.native-shop",
         "wiki.lumbridge-general-store-stock-png"
       ],
       "current_widget_inputs": [
@@ -1332,7 +1438,11 @@
       "required_panel_pixel_coverage": 1.0,
       "candidate_panel_pixel_coverage_measured": null,
       "missing_input_requirement_ids": [],
-      "agreement_input_status": "factored_inputs_available"
+      "agreement_input_status": "factored_inputs_available",
+      "native_hud_input_ids": [
+        "native-hud.native-shop"
+      ],
+      "native_evidence_scope": "actual native geometry/background/font/panel/attachment examples; source text and exact semantic state stay independently checked"
     },
     {
       "id": "ui.quests",
@@ -1357,6 +1467,7 @@
         "case.ui.quests"
       ],
       "pixel_or_audio_input_ids": [
+        "native-hud.native-quest-list",
         "original.items.1205",
         "original.items.1265",
         "original.items.1277",
@@ -1396,6 +1507,7 @@
         "wiki.wind-strike-gif"
       ],
       "representative_input_ids": [
+        "native-hud.native-quest-list",
         "wiki.quest-tab-png",
         "wiki.grid-master-rewards-poll-new-player-improvements-5-png",
         "wiki.grid-master-rewards-poll-new-player-improvements-6-png",
@@ -1427,7 +1539,11 @@
       "required_panel_pixel_coverage": 1.0,
       "candidate_panel_pixel_coverage_measured": null,
       "missing_input_requirement_ids": [],
-      "agreement_input_status": "factored_inputs_available"
+      "agreement_input_status": "factored_inputs_available",
+      "native_hud_input_ids": [
+        "native-hud.native-quest-list"
+      ],
+      "native_evidence_scope": "actual native geometry/background/font/panel/attachment examples; source text and exact semantic state stay independently checked"
     },
     {
       "id": "ui.settings",
@@ -1442,6 +1558,7 @@
         "case.ui.settings"
       ],
       "pixel_or_audio_input_ids": [
+        "native-hud.family-guide",
         "original.items.1205",
         "original.items.1265",
         "original.items.1277",
@@ -1473,6 +1590,7 @@
         "wiki.settings-interface-png"
       ],
       "representative_input_ids": [
+        "native-hud.family-guide",
         "wiki.settings-interface-png",
         "wiki.display-options-interface-png"
       ],
@@ -1485,7 +1603,11 @@
       "required_panel_pixel_coverage": 1.0,
       "candidate_panel_pixel_coverage_measured": null,
       "missing_input_requirement_ids": [],
-      "agreement_input_status": "factored_inputs_available"
+      "agreement_input_status": "factored_inputs_available",
+      "native_hud_input_ids": [
+        "native-hud.family-guide"
+      ],
+      "native_evidence_scope": "actual native geometry/background/font/panel/attachment examples; source text and exact semantic state stay independently checked"
     },
     {
       "id": "ui.account_poll",
@@ -1564,7 +1686,9 @@
       "required_panel_pixel_coverage": 1.0,
       "candidate_panel_pixel_coverage_measured": null,
       "missing_input_requirement_ids": [],
-      "agreement_input_status": "factored_inputs_available"
+      "agreement_input_status": "factored_inputs_available",
+      "native_hud_input_ids": [],
+      "native_evidence_scope": "actual native geometry/background/font/panel/attachment examples; source text and exact semantic state stay independently checked"
     },
     {
       "id": "ui.death",
@@ -1626,7 +1750,9 @@
       "required_panel_pixel_coverage": 1.0,
       "candidate_panel_pixel_coverage_measured": null,
       "missing_input_requirement_ids": [],
-      "agreement_input_status": "factored_inputs_available"
+      "agreement_input_status": "factored_inputs_available",
+      "native_hud_input_ids": [],
+      "native_evidence_scope": "actual native geometry/background/font/panel/attachment examples; source text and exact semantic state stay independently checked"
     },
     {
       "id": "world.scenery",
@@ -1826,7 +1952,9 @@
       "required_panel_pixel_coverage": 1.0,
       "candidate_panel_pixel_coverage_measured": null,
       "missing_input_requirement_ids": [],
-      "agreement_input_status": "factored_inputs_available"
+      "agreement_input_status": "factored_inputs_available",
+      "native_hud_input_ids": [],
+      "native_evidence_scope": "actual native geometry/background/font/panel/attachment examples; source text and exact semantic state stay independently checked"
     },
     {
       "id": "world.activities",
@@ -2067,7 +2195,9 @@
       "required_panel_pixel_coverage": 1.0,
       "candidate_panel_pixel_coverage_measured": null,
       "missing_input_requirement_ids": [],
-      "agreement_input_status": "factored_inputs_available"
+      "agreement_input_status": "factored_inputs_available",
+      "native_hud_input_ids": [],
+      "native_evidence_scope": "actual native geometry/background/font/panel/attachment examples; source text and exact semantic state stay independently checked"
     },
     {
       "id": "model.ordinary",
@@ -2166,7 +2296,9 @@
       "required_panel_pixel_coverage": 1.0,
       "candidate_panel_pixel_coverage_measured": null,
       "missing_input_requirement_ids": [],
-      "agreement_input_status": "factored_inputs_available"
+      "agreement_input_status": "factored_inputs_available",
+      "native_hud_input_ids": [],
+      "native_evidence_scope": "actual native geometry/background/font/panel/attachment examples; source text and exact semantic state stay independently checked"
     },
     {
       "id": "model.penguin",
@@ -2236,7 +2368,9 @@
       "required_panel_pixel_coverage": 1.0,
       "candidate_panel_pixel_coverage_measured": null,
       "missing_input_requirement_ids": [],
-      "agreement_input_status": "factored_inputs_available"
+      "agreement_input_status": "factored_inputs_available",
+      "native_hud_input_ids": [],
+      "native_evidence_scope": "actual native geometry/background/font/panel/attachment examples; source text and exact semantic state stay independently checked"
     },
     {
       "id": "audio.music",
@@ -2278,7 +2412,9 @@
       "required_panel_pixel_coverage": 1.0,
       "candidate_panel_pixel_coverage_measured": null,
       "missing_input_requirement_ids": [],
-      "agreement_input_status": "factored_inputs_available"
+      "agreement_input_status": "factored_inputs_available",
+      "native_hud_input_ids": [],
+      "native_evidence_scope": "actual native geometry/background/font/panel/attachment examples; source text and exact semantic state stay independently checked"
     },
     {
       "id": "audio.effects",
@@ -2720,7 +2856,9 @@
       "missing_input_requirement_ids": [
         "input.required_effect_bindings"
       ],
-      "agreement_input_status": "awaiting_named_source_input"
+      "agreement_input_status": "awaiting_named_source_input",
+      "native_hud_input_ids": [],
+      "native_evidence_scope": "actual native geometry/background/font/panel/attachment examples; source text and exact semantic state stay independently checked"
     },
     {
       "id": "audio.jingles",
@@ -2809,7 +2947,9 @@
       "missing_input_requirement_ids": [
         "input.quest_jingle_binding"
       ],
-      "agreement_input_status": "awaiting_named_source_input"
+      "agreement_input_status": "awaiting_named_source_input",
+      "native_hud_input_ids": [],
+      "native_evidence_scope": "actual native geometry/background/font/panel/attachment examples; source text and exact semantic state stay independently checked"
     },
     {
       "id": "audio.playback",
@@ -2869,7 +3009,9 @@
       "required_panel_pixel_coverage": 1.0,
       "candidate_panel_pixel_coverage_measured": null,
       "missing_input_requirement_ids": [],
-      "agreement_input_status": "factored_inputs_available"
+      "agreement_input_status": "factored_inputs_available",
+      "native_hud_input_ids": [],
+      "native_evidence_scope": "actual native geometry/background/font/panel/attachment examples; source text and exact semantic state stay independently checked"
     }
   ],
   "phases": [
@@ -6048,16 +6190,29 @@
         "case.ui.dialogue"
       ],
       "literal_basis": "30.2: baseline Resizable - Classic stock layout, exact settings and reference HUD captures.",
-      "status": "missing_native_reference",
-      "available": "Current widget161 anchors, complete Classic side-panel crop, native sprites/fonts, minimap/chat pixels and original scene calibration. Modern/fixed examples remain nonbaseline.",
-      "missing": "A complete controlled stock Classic frame and runtime-resolved dialogue/message panel font/geometry/background inputs, retaining NPC/player and item-message variants. CHAT_RIGHT217 is identified in the pinned symbols but its widget payload is not in the30 published groups. The parent will integrate/relay the separate native-HUD/panel fixture commit; it is not yet an input here.",
+      "status": "available",
+      "available": "Authorized source commit db103ba supplies16 original complete1920x1080 Classic frame/panel/attachment-family fixtures, native161/CS2/layout readbacks, source font/dialogue geometry and hash-bound script/input contracts. Public images and pinned text oracles remain complementary.",
+      "missing": "The complete native HUD collection/calibration must be present and hash-valid; no separate authenticated micro-state or per-speaker screenshot is required.",
       "not_required": "No authenticated account, no per-micro-transition capture and no implemented ClubScape screenshot.",
-      "evidence_ids": [],
-      "missing_dialogue_calibration_variants": [
-        "item_grant",
-        "player_speaker",
-        "speaker_chathead"
-      ]
+      "evidence_ids": [
+        "native-hud.native-inventory",
+        "native-hud.native-equipment",
+        "native-hud.native-skills",
+        "native-hud.native-combat",
+        "native-hud.native-prayer",
+        "native-hud.native-magic",
+        "native-hud.native-quest-list",
+        "native-hud.native-bank",
+        "native-hud.native-shop",
+        "native-hud.native-guide-dialogue",
+        "native-hud.family-guide",
+        "native-hud.family-survival",
+        "native-hud.family-quest-guide",
+        "native-hud.family-combat",
+        "native-hud.family-prayer",
+        "native-hud.family-magic"
+      ],
+      "demonstrated_scope": "Original complete frame/panels, NPC dialogue231, source-font/native-coordinate background calibration and6 actual attachment families; synthetic fixture text is not source dialogue and these are not71 authenticated progression captures."
     },
     {
       "id": "input.required_effect_bindings",
@@ -6196,5 +6351,10 @@
       "literal_basis": "Reference readiness and owner approval are separate bounded checkpoints.",
       "replacement": "Compute readiness from actual source-review requirement satisfaction; leave every approval flag false."
     }
-  ]
+  ],
+  "native_hud_calibration": {
+    "path": "research/reference-pack/v1/native-hud-integration.json",
+    "sha256": "e81920ca30d5108c5397076a7acca4239872216af4e3286d1dbe67bde2e174dc",
+    "size_bytes": 15001
+  }
 }

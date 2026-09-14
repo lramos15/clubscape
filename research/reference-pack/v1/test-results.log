@@ -3,6 +3,7 @@ test_actual_decode_rejects_wrong_dimensions (test_reference_pack.PackTests.test_
 test_actual_structure (test_reference_pack.PackTests.test_actual_structure) ... ok
 test_case_cannot_replace_required_panel_with_icon (test_reference_pack.PackTests.test_case_cannot_replace_required_panel_with_icon) ... ok
 test_changed_actual_file_hash (test_reference_pack.PackTests.test_changed_actual_file_hash) ... ok
+test_changed_native_layout_rejected (test_reference_pack.PackTests.test_changed_native_layout_rejected) ... ok
 test_complete_inventory_not_duplicate_fixture (test_reference_pack.PackTests.test_complete_inventory_not_duplicate_fixture) ... ok
 test_conditional_source_branch_requires_explicit_selection (test_reference_pack.PackTests.test_conditional_source_branch_requires_explicit_selection) ... ok
 test_crop_cannot_be_full_classic_frame (test_reference_pack.PackTests.test_crop_cannot_be_full_classic_frame) ... ok
@@ -13,6 +14,7 @@ test_dynamic_scalar_wrong_reward_rejected (test_reference_pack.PackTests.test_dy
 test_dynamic_source_text_selector_required (test_reference_pack.PackTests.test_dynamic_source_text_selector_required) ... ok
 test_dynamic_value_oracle_checks_actual_values (test_reference_pack.PackTests.test_dynamic_value_oracle_checks_actual_values) ... ok
 test_empty_panel_cannot_vacuously_pass (test_reference_pack.PackTests.test_empty_panel_cannot_vacuously_pass) ... ok
+test_exact_native_region_pixels (test_reference_pack.PackTests.test_exact_native_region_pixels) ... ok
 test_factoring_cannot_demand_71_source_screens (test_reference_pack.PackTests.test_factoring_cannot_demand_71_source_screens) ... ok
 test_factoring_cannot_drop_semantic_state (test_reference_pack.PackTests.test_factoring_cannot_drop_semantic_state) ... ok
 test_family_cannot_mask_panel (test_reference_pack.PackTests.test_family_cannot_mask_panel) ... ok
@@ -28,9 +30,16 @@ test_journal_carried_not_collapsed_into_delivered (test_reference_pack.PackTests
 test_journal_source_strikethrough_and_colour_preserved (test_reference_pack.PackTests.test_journal_source_strikethrough_and_colour_preserved) ... ok
 test_missing_actual_file (test_reference_pack.PackTests.test_missing_actual_file) ... ok
 test_missing_case_input (test_reference_pack.PackTests.test_missing_case_input) ... ok
+test_missing_native_frame_rejected (test_reference_pack.PackTests.test_missing_native_frame_rejected) ... ok
 test_missing_required_case (test_reference_pack.PackTests.test_missing_required_case) ... ok
 test_missing_source_asset (test_reference_pack.PackTests.test_missing_source_asset) ... ok
 test_missing_visual_family (test_reference_pack.PackTests.test_missing_visual_family) ... ok
+test_native_evidence_cannot_disappear_from_case (test_reference_pack.PackTests.test_native_evidence_cannot_disappear_from_case) ... ok
+test_native_families_are_six_recorded_sets_not_71_captures (test_reference_pack.PackTests.test_native_families_are_six_recorded_sets_not_71_captures) ... ok
+test_native_fixture_not_mislabeled_live_state (test_reference_pack.PackTests.test_native_fixture_not_mislabeled_live_state) ... ok
+test_native_hud_gap_is_closed_without_authenticated_progression (test_reference_pack.PackTests.test_native_hud_gap_is_closed_without_authenticated_progression) ... ok
+test_native_panel_not_masked_by_nonblank_world (test_reference_pack.PackTests.test_native_panel_not_masked_by_nonblank_world) ... ok
+test_native_synthetic_body_never_enters_transcript_oracles (test_reference_pack.PackTests.test_native_synthetic_body_never_enters_transcript_oracles) ... ok
 test_no_incomplete_ready_flag (test_reference_pack.PackTests.test_no_incomplete_ready_flag) ... ok
 test_no_invented_camera (test_reference_pack.PackTests.test_no_invented_camera) ... ok
 test_no_invented_capture_date (test_reference_pack.PackTests.test_no_invented_capture_date) ... ok
@@ -52,6 +61,7 @@ test_source_completeness_gate_stays_blocked (test_reference_pack.PackTests.test_
 test_source_font_metrics_exact (test_reference_pack.PackTests.test_source_font_metrics_exact) ... ok
 test_source_mp4_container_and_truncation (test_reference_pack.PackTests.test_source_mp4_container_and_truncation) ... ok
 test_stage_evidence_not_promoted (test_reference_pack.PackTests.test_stage_evidence_not_promoted) ... ok
+test_synthetic_native_text_cannot_be_source_dialogue (test_reference_pack.PackTests.test_synthetic_native_text_cannot_be_source_dialogue) ... ok
 test_unmentioned_tabs_not_guessed_hidden (test_reference_pack.PackTests.test_unmentioned_tabs_not_guessed_hidden) ... ok
 test_unrecorded_source_line_is_not_fabricated (test_reference_pack.PackTests.test_unrecorded_source_line_is_not_fabricated) ... ok
 test_unrun_mac_not_certified (test_reference_pack.PackTests.test_unrun_mac_not_certified) ... ok
@@ -59,6 +69,6 @@ test_wrong_public_capture_role (test_reference_pack.PackTests.test_wrong_public_
 test_wrong_public_file_identity (test_reference_pack.PackTests.test_wrong_public_file_identity) ... ok
 
 ----------------------------------------------------------------------
-Ran 59 tests in 1.701s
+Ran 69 tests in 3.331s
 
 OK

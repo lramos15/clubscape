@@ -7,6 +7,7 @@ import json
 from catalogue import TUTORIAL_GROUPS, wiki, update, music_update
 from components import ROOT, SOURCE, digest, load_gzip
 from text_oracles import make_text_oracles
+from native_hud import validate_records as validate_native_hud_records
 
 
 FAMILY_DEFINITIONS = [
@@ -205,12 +206,11 @@ SOURCE_REVIEW_INPUTS = {
         "case_ids": ["case.hud.resizable_classic", "case.ui.dialogue"],
         "literal_basis": "30.2: baseline Resizable - Classic stock layout, exact settings and reference HUD captures.",
         "status": "missing_native_reference",
-        "available": "Current widget161 anchors, complete Classic side-panel crop, native sprites/fonts, minimap/chat "
-                     "pixels and original scene calibration. Modern/fixed examples remain nonbaseline.",
-        "missing": "A complete controlled stock Classic frame and runtime-resolved dialogue/message panel "
-                   "font/geometry/background inputs, retaining NPC/player and item-message variants. CHAT_RIGHT217 "
-                   "is identified in the pinned symbols but its widget payload is not in the30 published groups. "
-                   "The parent will integrate/relay the separate native-HUD/panel fixture commit; it is not yet an input here.",
+        "available": "Authorized source commit db103ba supplies16 original complete1920x1080 Classic frame/panel/"
+                     "attachment-family fixtures, native161/CS2/layout readbacks, source font/dialogue geometry "
+                     "and hash-bound script/input contracts. Public images and pinned text oracles remain complementary.",
+        "missing": "The complete native HUD collection/calibration must be present and hash-valid; no separate "
+                   "authenticated micro-state or per-speaker screenshot is required.",
         "not_required": "No authenticated account, no per-micro-transition capture and no implemented ClubScape screenshot.",
         "evidence_ids": [],
     },
@@ -364,27 +364,17 @@ def review_ready(requirements):
     return bool(requirements) and all(row["status"] == "available" and row["evidence_ids"] for row in requirements)
 
 
-def assess_source_requirements(originals, public):
+def assess_source_requirements(originals, public, native_hud_inputs=()):
     requirements = [{"id": identifier, **definition} for identifier, definition in SOURCE_REVIEW_INPUTS.items()]
     by_id = {row["id"]: row for row in requirements}
-    complete_frames = [
-        entry["id"] for entry in originals + public
-        if entry.get("full_resizable_classic_frame") is True
-        and entry.get("dimensions", entry.get("decoded", {}).get("dimensions")) == [1920, 1080]
-        and entry["source_role"] in ("current_original_runtime_fixture", "reconciled_public_source_capture")
-    ]
-    # Frame/panel records must be integrated before they can satisfy this selector.
-    dialogue_layouts = {
-        variant for entry in originals
-        for variant in entry.get("resolved_dialogue_layouts", [])
-        if entry["source_role"] == "current_original_runtime_fixture"
-    }
-    required_dialogue = {"speaker_chathead", "player_speaker", "item_grant"}
-    if complete_frames and required_dialogue <= dialogue_layouts:
+    if native_hud_inputs:
+        validate_native_hud_records(native_hud_inputs)
         row = by_id["input.classic_frame_calibration"]
         row["status"] = "available"
-        row["evidence_ids"] = complete_frames
-    by_id["input.classic_frame_calibration"]["missing_dialogue_calibration_variants"] = sorted(required_dialogue - dialogue_layouts)
+        row["evidence_ids"] = [entry["id"] for entry in native_hud_inputs]
+        row["demonstrated_scope"] = "Original complete frame/panels, NPC dialogue231, source-font/native-coordinate "
+        row["demonstrated_scope"] += "background calibration and6 actual attachment families; synthetic fixture "
+        row["demonstrated_scope"] += "text is not source dialogue and these are not71 authenticated progression captures."
     source_map = json.loads((ROOT / "research/audio-source/source-map.json").read_text())
     actions = {row["journey_rule_id"]: row for row in source_map["actions"]}
     required = ("rule.combat.ranged", "rule.goblin.level_2", "rule.combat.tutorial_rat",
@@ -402,7 +392,7 @@ def assess_source_requirements(originals, public):
     return requirements
 
 
-def make_factoring(cases, originals, public, pages):
+def make_factoring(cases, originals, public, pages, native_hud_inputs=()):
     text_oracles = make_text_oracles(pages)
     tutorial = json.loads((ROOT / "research/journey-rules/tutorial.json").read_text())
     initial = json.loads((ROOT / "research/journey-rules/initial-state.json").read_text())
@@ -542,7 +532,7 @@ def make_factoring(cases, originals, public, pages):
             case["acceptance_obligation_ids"].append("acceptance.arrival_state")
         if case["family"] == "audio":
             case["acceptance_obligation_ids"] = ["acceptance.audio_playback"]
-    requirements = assess_source_requirements(originals, public)
+    requirements = assess_source_requirements(originals, public, native_hud_inputs)
     for row in requirements:
         for case_id in row["case_ids"]:
             if row["status"] != "available":

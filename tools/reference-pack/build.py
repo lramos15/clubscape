@@ -18,6 +18,7 @@ from catalogue import EXTRA_CASES, NUMERIC_PROFILES, TUTORIAL_GROUPS, dispositio
 from components import ROOT, OUT, SOURCE, digest, load_gzip, measure, proposals
 from fetch import image_facts, write_json
 from factoring import make_factoring, review_ready
+from native_hud import load_inputs as load_native_hud_inputs, calibration as native_hud_calibration, wire_cases as wire_native_hud
 
 
 CAPTURE_PATH = ROOT / "assets/reference/osrs240/captures.json"
@@ -108,6 +109,13 @@ def document_bindings():
         "research/audio-source/conversion-evidence.json.gz", "research/audio-source/extra-inputs.json.gz",
         "research/audio-source/layout-check.json", "tools/audio-import/dependencies.json",
         "tools/audio-import/codec.py", "tools/source-capture/capture.py",
+        "tools/source-capture/NATIVE_HUD.md",
+        "assets/reference/osrs240/reference-sets.json",
+        "assets/reference/osrs240/native-hud/captures.json",
+        "assets/reference/osrs240/native-hud/provenance.json",
+        "assets/reference/osrs240/native-hud/hud-input-contract.json",
+        "research/source-capture/native-hud-bindings.json",
+        "research/source-capture/native-hud-validation.json",
         "research/journey-rules/tutorial.json", "research/journey-rules/cooks-assistant.json",
         "research/journey-rules/activities.json", "research/journey-rules/initial-state.json",
         "research/journey-rules/sources.json", "research/journey-rules/decisions.json",
@@ -340,6 +348,49 @@ def gaps(factoring):
     ]
 
 
+def audio_handoff(factoring):
+    source_map_path = ROOT / "research/audio-source/source-map.json"
+    source_map = json.loads(source_map_path.read_text())
+    by_rule = {row["journey_rule_id"]: row for row in source_map["actions"]}
+    requirement = next(row for row in factoring["source_review_requirements"]
+                       if row["id"] == "input.required_effect_bindings")
+    anchors = {
+        "rule.combat.ranged": {"item_ids": [841]},
+        "rule.goblin.level_2": {"npc_ids": [3028]},
+        "rule.combat.tutorial_rat": {"npc_ids": [3313, 3314, 3315]},
+        "rule.food.healing": {"item_ids": [315, 2309]},
+        "rule.smelting.bronze": {"item_ids": [436, 438, 2349], "candidate_sound_ids": [2725]},
+    }
+    return {
+        "schema_version": 1, "scope": "Only remaining source-audio identity/event/precedence inputs; no HUD blocker.",
+        "source_map": digest(source_map_path),
+        "playable_source_manifest": digest(AUDIO_PATH),
+        "unresolved_actions": [
+            {"rule_id": rule, **anchors[rule],
+             "retained_sequence_ids": by_rule[rule]["source_sequence_ids"],
+             "sequence_role": "Existing source-map anchors/candidates, not a newly verified event binding.",
+             "identified_sound_ids": by_rule[rule]["identified_sound_ids"],
+             "source_note": by_rule[rule]["note"],
+             "needed": "Actual source sound ID/variant and source-relative event boundary, with loops/weights "
+                       "where relevant. Do not replace it with a generic click, grunt, silence or plausible candidate."}
+            for rule in requirement["unbound_rule_ids"]
+        ],
+        "quest_selection": {
+            "quest_refs": ["quest.learning_the_ropes", "quest.cooks_assistant"],
+            "retained_source_jingle_ids": [152, 153, 154],
+            "current_best_candidate": 154,
+            "candidate_basis": "Pinned wiki says154 usually accompanies Beginner/Easy quests; not a per-quest selector.",
+            "needed": ["exact per-quest jingle ID/selection rule",
+                       "quest-completion versus simultaneous level-up jingle ordering/interrupt/queue precedence"],
+        },
+        "not_requested_again": ["cache acquisition", "audio conversion", "native HUD/panel rendering",
+                                "per-microstate authenticated screenshots", "a blanket source account handoff"],
+        "later_candidate_checks": ["audible output", "gain/device latency", "bound event synchronization",
+                                  "region transitions/loops", "gesture and reconnect behavior"],
+        "owner_approved": False,
+    }
+
+
 def search_log():
     path = OUT / "search-log.json"
     previous = json.loads(path.read_text()) if path.exists() else None
@@ -400,7 +451,7 @@ def gallery(manifest):
     directory = OUT / "gallery"
     directory.mkdir(parents=True, exist_ok=True)
     all_media = {entry["id"]: entry for entry in manifest["original_inputs"] + manifest["public_inputs"]
-                 + manifest["proposal_inputs"] + manifest["recording_frames"]}
+                 + manifest["proposal_inputs"] + manifest["recording_frames"] + manifest["native_hud_inputs"]}
     audio = {entry["asset_id"]: entry for entry in manifest["audio"]["assets"]}
     factoring = manifest["evidence_factorization"]
     text_records = {record["id"]: record for record in
@@ -460,6 +511,20 @@ def gallery(manifest):
               f'{len(family["pixel_or_audio_input_ids"])} actual input references. '
               'Full-panel source checks plus independent dynamic text/value checks; no masked panels.</p></article>'
         )
+    native_cards = []
+    for entry in manifest["native_hud_inputs"]:
+        regions = "; ".join(region["name"] + " " + str(region["bounds"])
+                            for region in entry["source"]["native_ui_regions"])
+        native_cards.append(
+            f'<article data-native-hud-id="{entry["id"]}"><h3>{html.escape(entry["id"])}</h3>'
+            + image_markup(entry)
+            + '<p><strong>Original full1920x1080 Resizable-Classic controlled fixture.</strong> '
+              'Not authenticated tutorial progression. Dialogue body is synthetic fixture text, '
+              'not a source transcript.</p>'
+            + f'<p>Native active group {entry["source"]["active_interface"]}; '
+              f'enabled slots {entry["settings"]["enabled_tab_slots"]}.</p>'
+            + f'<p>{html.escape(regions)}</p><code>{entry["sha256"]}</code></article>'
+        )
     signature_rows = ''.join(
         f'<tr data-hud-signature-id="{signature["id"]}"><td><code>{signature["id"]}</code></td>'
         f'<td>{html.escape(", ".join(signature["expected_introduced_tabs"]) or "(no introduced lesson tabs)")}</td>'
@@ -501,22 +566,33 @@ img,video{max-width:100%;height:auto;max-height:260px;object-fit:contain;image-r
 .status{font-weight:700;color:#7b3700}input,select{max-width:100%;padding:8px;font:inherit}
 table{width:100%;table-layout:fixed;border-collapse:collapse}td{border-bottom:1px solid #aaa;padding:8px}
 audio{max-width:100%;width:260px}[hidden]{display:none!important}summary{cursor:pointer}
-</style></head><body><header><h1>M1 source-reference review, v1.1</h1>
+</style></head><body><header><h1>M1 source-reference review, v1.2</h1>
 <p class="banner">AWAITING OWNER APPROVAL. Readiness follows the named source-family/calibration inputs,
 not a separate authenticated screenshot for every micro-transition. This gallery displays original
 reference media and labeled composition proposals. It is NOT the ClubScape client, a renderer demonstration,
 a passed player journey, or visual/audio acceptance. No owner approval has been granted.</p>
-<nav><a href="#families">29 visual families</a> | <a href="#signatures">Progressive HUD signatures</a> |
+<nav><a href="#native-hud">16 original native HUD/panel frames</a> | <a href="#families">29 visual families</a> | <a href="#signatures">Progressive HUD signatures</a> |
 <a href="#cases">All126 cases /71 tutorial states</a> | <a href="#sources">Public originals</a> | <a href="#audio">258 original audio files</a> |
 <a href="../manifest.json">Manifest</a> | <a href="../native-metrics.json">Exact component/font metrics</a> |
 <a href="../comparison-policy.json">Pre-candidate numeric policy</a> | <a href="../search-log.json">Acquisition/search evidence</a> |
 <a href="../evidence-families.json">Literal requirement audit</a> | <a href="../dynamic-text-oracles.json">Pinned text/value oracles</a> |
+<a href="../native-hud-integration.json">Native calibration</a> | <a href="../audio-handoff.json">Minimal remaining audio inputs</a> |
 <a href="contact-sheets.json">Contact-sheet index</a></nav>
 <p>Primary product proposal: 1920x1080 / DPR1 / UI scale1. Proposed range: 1024x768 through 2560x1440.
 Gallery resizing is not game resizing/performance evidence. Owner-run M-series Mac Chrome/Edge results are unrun.</p>
 <h2>Minimal missing reference inputs</h2><ul>""" + gap_html + """</ul>
+<p><strong>The native HUD/panel reference gap is closed.</strong> Source commit db103ba supplies the
+original full frame, native161/CS2, minimap/chat/sidebar/panel coordinate readbacks and six actual
+attachment families. These six controlled examples do not replace the71-state source text/value map
+or claim exact tutorial unlock timing.</p>
 <details><summary>Later candidate/source-fidelity/owner acceptance obligations - not invented pack prerequisites</summary>
 <ul>""" + later_rows + """</ul></details></header><main>
+<h2 id="native-hud">All16 original native full-frame inputs</h2>
+<p>Scene and UI pixels are original rendering, not pasted images. Synthetic fixture body strings are kept
+only for reproducing each controlled pixel state; the698 pinned transcript records remain the authority
+for actual dialogue. The Lumbridge location, player, containers and instructor choices are explicit fixture
+inputs, not grants, prices, spawn observations or authenticated Tutorial Island states.</p>
+<section class="grid">""" + ''.join(native_cards) + """</section>
 <h2 id="families">Required source families and distinct visual states</h2>
 <p>Evidence is factored, not gameplay. All71 semantic states and every listed variant remain required.
 Reuse a source-backed frame; check changed strings, values, highlights, filters and item fields with the pinned
@@ -543,7 +619,7 @@ search.addEventListener('input',filter);filter();
 </script></body></html>"""
     (directory / "index.html").write_text(page)
     sheets = []
-    entries = manifest["original_inputs"] + manifest["public_inputs"] + manifest["proposal_inputs"]
+    entries = manifest["original_inputs"] + manifest["public_inputs"] + manifest["proposal_inputs"] + manifest["native_hud_inputs"]
     entries = [entry for entry in entries if entry.get("decoded", {}).get("format") != "MP4"]
     for offset in range(0, len(entries), 20):
         chunk = entries[offset:offset + 20]
@@ -570,6 +646,9 @@ search.addEventListener('input',filter);filter();
 def main():
     OUT.mkdir(parents=True, exist_ok=True)
     originals = original_inputs()
+    native_hud_inputs = load_native_hud_inputs()
+    native_calibration = native_hud_calibration(native_hud_inputs)
+    write_json(OUT / "native-hud-integration.json", native_calibration)
     raw_public = json.loads((OUT / "public-media.json").read_text())
     for entry in raw_public:
         if "bytes_verified_at" not in entry:
@@ -627,10 +706,17 @@ def main():
         page["images"] = sorted({title.removeprefix("File:") for title in page["images"]
                                  if "[" not in title and "]" not in title})
     write_json(OUT / "pages.json", pages)
-    factoring, text_oracles = make_factoring(cases, originals, public, pages)
+    factoring, text_oracles = make_factoring(cases, originals, public, pages, native_hud_inputs)
+    wire_native_hud(cases, factoring, native_hud_inputs)
+    factoring["native_hud_calibration"] = digest(OUT / "native-hud-integration.json")
+    for case in cases:
+        if case["id"] == "case.hud.resizable_classic":
+            case["evidence_scope"] = "Complete original native161 frame with recorded scene/minimap/chat/sidebar "
+            case["evidence_scope"] += "and source panel geometry. Controlled offline inputs, not a live account."
     write_json(OUT / "evidence-families.json", factoring)
     write_json(OUT / "dynamic-text-oracles.json", text_oracles)
     source_gaps = gaps(factoring)
+    write_json(OUT / "audio-handoff.json", audio_handoff(factoring))
     ready = review_ready(factoring["source_review_requirements"])
     for case in cases:
         if case["family"] not in ("audio", "model", "scene"):
@@ -650,7 +736,7 @@ def main():
     write_json(OUT / "comparison-policy.json", policy_record)
     write_json(OUT / "search-log.json", search_log())
     manifest = {
-        "schema_version": 1, "pack_id": "m1-public-reference-pack-v1", "pack_version": "1.1.0",
+        "schema_version": 1, "pack_id": "m1-public-reference-pack-v1", "pack_version": "1.2.0",
         "assembled_on": "2026-09-14",
         "status": "awaiting_owner_approval",
         "ready_for_owner_review": ready,
@@ -661,6 +747,9 @@ def main():
         "factorization_document": digest(OUT / "evidence-families.json"),
         "dynamic_text_oracles": digest(OUT / "dynamic-text-oracles.json"),
         "audio_binding_audit_sources": digest(OUT / "audio-binding-audit-sources.json"),
+        "native_hud_calibration": digest(OUT / "native-hud-integration.json"),
+        "native_hud_inputs": native_hud_inputs,
+        "remaining_audio_handoff": digest(OUT / "audio-handoff.json"),
         "source_selection": json.loads((ROOT / "research/current-source/selection.json").read_text())["selection_id"],
         "source_build": 240, "source_cache": 2695,
         "source_runtime": "SHA-pinned original injected-client-1.12.38",
@@ -756,7 +845,10 @@ def main():
                      "gameplay_accepted": False, "performance_accepted": False, "runelite_compatibility_accepted": False},
         "counts": {
             "required_cases": len(cases), "tutorial_cases": sum(case["family"] == "tutorial" for case in cases),
-            "original_runtime_images": len(originals),
+            "original_runtime_images": len(originals) + len(native_hud_inputs),
+            "original_pre_hud_images": len(originals),
+            "native_hud_original_images": len(native_hud_inputs),
+            "native_attachment_families": len(native_calibration["attachment_families"]),
             "retrieved_public_images": sum(entry["decoded"]["format"] != "MP4" for entry in public),
             "retrieved_public_recordings": sum(entry["decoded"]["format"] == "MP4" for entry in public),
             "derived_recording_frames": len(frames), "owner_review_proposals": len(proposal_inputs),
@@ -782,7 +874,7 @@ def main():
          "case_ids": [case["id"] for case in cases
                       if entry.get("id", entry.get("asset_id")) in case["input_ids"]],
          "unassigned_role": "explicit_supplementary_source_inventory_not_used_to_claim_case_completion"}
-        for entry in originals + public + proposal_inputs + frames + audio["assets"]
+        for entry in originals + native_hud_inputs + public + proposal_inputs + frames + audio["assets"]
     ]
     required = {"schema_version": 1, "source_contract": digest(TUTORIAL_PATH),
                 "required_ids": [case["id"] for case in cases],
