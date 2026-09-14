@@ -8,13 +8,10 @@
     "active": [
       {"id": "director", "task": "M1-FLEET-CONTRACTS"},
       {"id": "e9ed6a96-6bcb-4d27-8b4c-d504edda327c", "task": "M1-FLEET-AUDIO-BINDINGS"},
-      {"id": "56283b56-0ae0-4839-a961-1a23a850dd1b", "task": "M1-FLEET-PUBLIC-REFERENCES"},
-      {"id": "2766e089-44e5-4a1d-974e-7b03ad9c269d", "task": "M1-FLEET-LIVE-SERVER"},
-      {"id": "9c5d43e0-7701-466f-97cf-0bc3cfca9345", "task": "M1-FLEET-SOURCE-BINDINGS"}
+      {"id": "0f5ddddf-0aa0-4908-b0d3-1ffc6b1f7a20", "task": "M1-FLEET-ENGINE-CLOSURE"}
     ],
     "reserved": [
-      {"id": "0f5ddddf-0aa0-4908-b0d3-1ffc6b1f7a20", "task": "M1-FLEET-ENGINE-CLOSURE"},
-      {"id": "fdda1fb0-1135-4cf8-8cff-3db550e48f54", "task": "M1-FLEET-CONTENT-ASSET-REFRESH"}
+      {"id": "fdda1fb0-1135-4cf8-8cff-3db550e48f54", "task": "M1-FLEET-BINDING-APPLICATION"}
     ],
     "queued": [],
     "parked": [
@@ -29,9 +26,27 @@
   },
   "tasks": [
     {
+      "id": "M1-FLEET-BINDING-APPLICATION",
+      "goal": "Apply source resolutions and the explicit goblin adaptation to canonical content generation without losing coupled state/value updates or provenance.",
+      "status": "READY",
+      "specs": ["research/runtime-bindings/**", "milestones/m1-goblin-loot-approval.json", "spec/adaptations.md"],
+      "dependencies": ["M1-FLEET-SOURCE-BINDINGS", "M1-FLEET-CONTENT-ASSET-REFRESH"],
+      "allowed_paths": ["content/m1/**", "tools/m1-content/**", "research/m1-bindings/**", "tools/runtime-bindings/**", "research/runtime-bindings/application*.json"],
+      "forbidden_paths": ["prompt.md", "crates/**", "assets/**", "web/**", "spec/**", "milestones/**"],
+      "outputs": ["Applied source-bound ordinary M1 profile", "Currency-conserving departure and approved independent potion pool", "Precise proof-scoped inactive bindings and current artifact evidence"],
+      "validation_commands": ["python3 tools/m1-content/build.py", "python3 tools/m1-content/check.py", "python3 tools/m1-content/verify_state_oracles.py"],
+      "test_requirements": ["All coupled updates atomic", "Do not label inferences/adaptation as source observations", "No erased primary loot/currency duplication", "Strict Runtime compile and source oracles"],
+      "acceptance": ["SQL m1-apply-runtime-bindings describes actual active-path binding completion and any remaining exact parent type need"],
+      "reserved_namespaces": [],
+      "source_notes": ["Owner explicitly approved independent1/16 potion event/equal1-4doseweights; no other inference became an approval."],
+      "parity_entries": [],
+      "adaptations": ["adaptation.m1.goblin_energy_potion_provisional"],
+      "evidence": []
+    },
+    {
       "id": "M1-FLEET-ENGINE-CLOSURE",
       "goal": "Finish the remaining precise M1 runtime selectors, source traversal/engagement/recovery UI and compatible compiler restrictions.",
-      "status": "READY",
+      "status": "IMPLEMENTING",
       "specs": ["crates/world-engine/README.md", "spec/game-contracts.md", "research/journey-rules/**"],
       "dependencies": ["M1-FLEET-MECHANICS-CONTRACTS"],
       "allowed_paths": ["crates/world-engine/**", "crates/game-types/**", "crates/content/**", "crates/simulation/tests/**", "crates/server/tests/game_storage.rs", "spec/game-contracts.md"],
@@ -49,7 +64,7 @@
     {
       "id": "M1-FLEET-CONTENT-ASSET-REFRESH",
       "goal": "Refresh real M1 content references from the completed original source closure without changing gameplay policies or source geometry.",
-      "status": "READY",
+      "status": "DONE",
       "specs": ["tools/cache-import/CONTENT_CLOSURE.md", "content/m1/README.md"],
       "dependencies": ["M1-FLEET-ASSET-CLOSURE"],
       "allowed_paths": ["content/m1/**", "tools/m1-content/**", "research/m1-bindings/**"],
@@ -62,12 +77,12 @@
       "source_notes": ["9f5f9c5 source closure is integrated as be98d44."],
       "parity_entries": [],
       "adaptations": [],
-      "evidence": []
+      "evidence": ["d500ac5 integrated;5254productassetrefsresolve,strictcompile/reload,36tests,23oracles,30routespassed."]
     },
     {
       "id": "M1-FLEET-SOURCE-BINDINGS",
       "goal": "Resolve concrete source-value/policy bindings required by the ordinary M1 journey without blanket blockers or fabricated observations.",
-      "status": "IMPLEMENTING",
+      "status": "DONE",
       "specs": ["research/journey-rules/**", "research/m1-bindings/unresolved-bindings.json", "spec/game-contracts.md"],
       "dependencies": ["M1-FLEET-RULES"],
       "allowed_paths": ["research/runtime-bindings/**", "tools/runtime-bindings/**"],
@@ -80,7 +95,7 @@
       "source_notes": ["The shared numeric LevelTable decoder defect is already fixed in 7150464."],
       "parity_entries": [],
       "adaptations": [],
-      "evidence": []
+      "evidence": ["42b23999 integratedas41d3919;112/112dispositions,104proposedbindings+7coupledupdatespassstrictRuntimechecks;195checks/77sourcesreported.98inferencesremainlabeled;ownerapprovedonlyexplicitgoblinodds."]
     },
     {
       "id": "M1-FLEET-ASSET-CLOSURE",
@@ -103,7 +118,7 @@
     {
       "id": "M1-FLEET-LIVE-SERVER",
       "goal": "Wire compiled source content, the headless engine and fenced transactional persistence into real game RPCs and source-cadence scheduling.",
-      "status": "IMPLEMENTING",
+      "status": "BLOCKED",
       "specs": ["spec/game-contracts.md", "spec/networking.md", "crates/server/README.md"],
       "dependencies": ["M1-FLEET-STORAGE", "M1-FLEET-MECHANICS-CONTRACTS"],
       "allowed_paths": ["crates/server/**", "crates/protocol/**", "crates/client-core/tests/**", "spec/game-networking.md"],
@@ -116,7 +131,7 @@
       "source_notes": ["Owner-run final presentation/browser testing remains separate."],
       "parity_entries": [],
       "adaptations": [],
-      "evidence": []
+      "evidence": ["594722d integratedas2030e97;fenced600mscoordinator,authgameRPCs,routedevents/privateRNG/strictassets.31livePG/HTTPtestsreported. Engine-owned lifecycle/public-view APIs remain required before fullgameplay."]
     },
     {
       "id": "M1-FLEET-MAC-HANDOFF",
