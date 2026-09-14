@@ -17,6 +17,15 @@ Source acquisition is underway, but calibrated startup/scene/UI captures and
 runtime audio observations are not yet assembled. This is not a claim that
 public sources are unavailable or that reference capture is impossible.
 
+The fleet has subsequently produced 93 original-runtime offline fixtures and
+258 playable original audio inputs. The owner explicitly directs completing
+the remaining pack from public/wiki screenshots rather than assuming a live
+account is required for every reference. Source terms acceptance is authorized,
+but no external account credentials/login/creation were supplied or authorized.
+Every public capture must retain identifiable provenance and any uncertainty;
+it must not be relabeled as a build-240 authenticated observation. The complete
+pack still needs its own bounded owner approval before presentation code.
+
 ## Source journey observations
 
 Use the frozen OSRS build-240/cache-2695 reference and record the actual client

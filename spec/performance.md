@@ -32,3 +32,14 @@ concurrency workloads and record server tick time, memory/bandwidth per player,
 CPU/entity cost, WASM startup, frame distributions/stalls, streaming/download
 size, content builds and integration/CI throughput under Section 36.
 The launch concurrency target remains a draft release-contract input.
+
+## Owner-run final browser target
+
+During the fleet continuation the owner selected their M-series Mac for
+testing after implementation, and authorized continuing available Sparky
+engineering checks. Apple Silicon supplies integrated graphics. The final
+target's exact chip, memory, macOS and real Chrome/Edge versions must be
+recorded by the owner-run harness; no unexecuted measurement is certified here.
+Local Sparky results remain separately identified, including any sandbox
+diagnostic limitations. No sandbox-disabling flag or security-policy bypass
+was authorized. See `milestones/m1-owner-followups.json`.

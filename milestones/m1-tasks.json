@@ -5,17 +5,11 @@
     "max_active_ai_agents": 25,
     "effective_limit": 25,
     "admissions_open": true,
-    "active": [
-      {"id": "director", "task": "M1-FLEET-CONTRACTS"},
-      {"id": "f3cc7dc3-56bc-4786-98d5-bba14b428229", "task": "M1-FLEET-CONTENT"},
-      {"id": "6c58b841-a767-41ff-bef5-2abbd5b1a087", "task": "M1-FLEET-BROWSER"},
-      {"id": "2766e089-44e5-4a1d-974e-7b03ad9c269d", "task": "M1-FLEET-STORAGE"},
-      {"id": "ac0f0856-44af-445b-bd90-6db7a1f4fc74", "task": "M1-FLEET-SOURCE-CAPTURES"},
-      {"id": "e9ed6a96-6bcb-4d27-8b4c-d504edda327c", "task": "M1-FLEET-AUDIO"},
-      {"id": "0f5ddddf-0aa0-4908-b0d3-1ffc6b1f7a20", "task": "M1-FLEET-ENGINE"},
-      {"id": "fdda1fb0-1135-4cf8-8cff-3db550e48f54", "task": "M1-FLEET-PRODUCT-CONTENT"}
+    "active": [{"id": "director", "task": "M1-FLEET-CONTRACTS"}],
+    "reserved": [
+      {"id": "fleet-mechanics-contract-worker", "task": "M1-FLEET-MECHANICS-CONTRACTS"},
+      {"id": "fleet-public-reference-worker", "task": "M1-FLEET-PUBLIC-REFERENCES"}
     ],
-    "reserved": [],
     "queued": [],
     "parked": [
       {"id": "598d83d0-6ce2-40ac-b6d5-01d566c68b99", "reason": "Reference research complete; no automatic resumption."},
@@ -28,6 +22,42 @@
     "usage_accounting": "milestones/evidence/m1-usage-snapshot.json records the available delayed session snapshot; final project-wide credits/currency are unavailable."
   },
   "tasks": [
+    {
+      "id": "M1-FLEET-MECHANICS-CONTRACTS",
+      "goal": "Resolve complete M1 source-mechanic representations and strict validation without weakening existing invariants or fabricating runtime success.",
+      "status": "READY",
+      "specs": ["spec/game-contracts.md", "research/journey-rules/**", "crates/world-engine/README.md", ".worktrees/m1-product-content/research/m1-bindings/contract-gaps.json"],
+      "dependencies": ["M1-FLEET-CONTENT", "M1-FLEET-SIMULATION"],
+      "allowed_paths": ["crates/game-types/**", "crates/content/**", "crates/simulation/tests/**", "crates/world-engine/tests/**", "crates/world-engine/src/**", "crates/server/tests/game_storage.rs", "crates/server/src/game_storage.rs", "spec/game-contracts.md"],
+      "forbidden_paths": ["prompt.md", "assets/**", "content/**", "web/**", "crates/protocol/**", "milestones/**"],
+      "outputs": ["Complete typed mechanics/state/guard/effect schema", "Strict compiler/state validation and consumer compatibility"],
+      "validation_commands": ["cargo test -p clubscape-game-types -p clubscape-content -p clubscape-simulation -p clubscape-world-engine", "cargo clippy --workspace --all-targets -- -D warnings"],
+      "test_requirements": ["No clamps replacing source formulas", "Correct stationary NPC navigation", "No hidden grant/counter hacks", "Backward-compatible explicit state defaults/migrations"],
+      "acceptance": ["SQL m1-mechanics-contracts records resolved schemas and any precise remaining gaps"],
+      "reserved_namespaces": [],
+      "source_notes": ["Full behavioral source contracts and original extraction are already available."],
+      "parity_entries": [],
+      "adaptations": [],
+      "evidence": []
+    },
+    {
+      "id": "M1-FLEET-PUBLIC-REFERENCES",
+      "goal": "Complete a traceable public/source-fixture reference pack and source-case gallery for bounded owner approval.",
+      "status": "READY",
+      "specs": ["prompt.md section 30.2", "milestones/m1-owner-followups.json", "research/source-capture/handoff.json"],
+      "dependencies": ["M1-FLEET-SOURCE-CAPTURES", "M1-FLEET-AUDIO"],
+      "allowed_paths": ["research/reference-pack/**", "assets/reference/wiki/**", "tools/reference-pack/**"],
+      "forbidden_paths": ["prompt.md", "crates/**", "web/**", "spec/**", "milestones/**"],
+      "outputs": ["Actual public screenshots with provenance", "Complete source-case manifest and predeclared comparison tolerances", "Clearly labeled original web-only composition proposals and review gallery"],
+      "validation_commands": [],
+      "test_requirements": ["No fabricated source captures/build identity", "All required cases mapped", "No source baseline auto-approval or generic substitutes"],
+      "acceptance": ["SQL m1-public-reference-pack done or exact remaining input gaps after public-source search; owner approval remains separate"],
+      "reserved_namespaces": ["asset.reference.wiki.*"],
+      "source_notes": ["Owner explicitly requests wiki/public references instead of a blanket live-account requirement."],
+      "parity_entries": [],
+      "adaptations": [],
+      "evidence": []
+    },
     {
       "id": "M1-FLEET-CLIENT",
       "goal": "Implement safe native/WASM client protocol/session/state reconciliation without premature presentation.",
@@ -49,7 +79,7 @@
     {
       "id": "M1-FLEET-ENGINE",
       "goal": "Implement the complete source-driven headless world action/tick engine over validated content and reusable primitives.",
-      "status": "IMPLEMENTING",
+      "status": "BLOCKED",
       "specs": ["spec/game-contracts.md", "research/journey-rules/**", "crates/simulation/README.md"],
       "dependencies": ["M1-FLEET-SIMULATION", "M1-FLEET-RULES"],
       "allowed_paths": ["crates/world-engine/**"],
@@ -62,12 +92,12 @@
       "source_notes": ["research/journey-rules/README.md"],
       "parity_entries": [],
       "adaptations": [],
-      "evidence": []
+      "evidence": ["078587e: 81 passing tests for implemented headless mechanisms; full combat/running/prayer/death/dynamic-state/source pricing remain explicitly unavailable pending shared contracts."]
     },
     {
       "id": "M1-FLEET-PRODUCT-CONTENT",
       "goal": "Assemble complete actual M1 source-backed content and world/collision/asset bindings, not a demonstration square or fixture character.",
-      "status": "IMPLEMENTING",
+      "status": "BLOCKED",
       "specs": ["spec/game-contracts.md", "research/journey-rules/**", "research/current-source/extraction-contract.json"],
       "dependencies": ["M1-FLEET-RUNTIME", "M1-FLEET-RULES"],
       "allowed_paths": ["content/m1/**", "tools/m1-content/**", "research/m1-bindings/**"],
@@ -80,12 +110,12 @@
       "source_notes": ["research/current-source/selection.json", "research/journey-rules/decisions.json"],
       "parity_entries": [],
       "adaptations": [],
-      "evidence": []
+      "evidence": ["5013bd8: 114 items, 24 skills, 26 NPC definitions, 4837 objects, 478 spawns, five recipes, 61 regions/999424 cells authored. 22 tests and 78 output hashes passed; compiler/death-anchor and 17 shared-contract gaps remain."]
     },
     {
       "id": "M1-FLEET-SOURCE-CAPTURES",
       "goal": "Produce calibrated original-runtime source captures without generic replacement rendering or unapproved external account/terms actions.",
-      "status": "IMPLEMENTING",
+      "status": "DONE",
       "specs": ["prompt.md section 30.2", "research/current-source/selection.json", "research/reference-capture-checklist.md"],
       "dependencies": ["M1-FLEET-RUNTIME"],
       "allowed_paths": ["tools/source-capture/**", "research/source-capture/**", "assets/reference/**"],
@@ -98,12 +128,12 @@
       "source_notes": ["tools/cache-import/README.md"],
       "parity_entries": [],
       "adaptations": [],
-      "evidence": []
+      "evidence": ["cd8fe74e783128eaf811361f18375b2053dfb6a9 integrated as 1cb5072; 93 original-runtime fixtures and 11 tests, byte-identical repeat captures; not full live source HUD or owner approval."]
     },
     {
       "id": "M1-FLEET-AUDIO",
       "goal": "Produce source-faithful browser-playable music/SFX inputs and reproducible synthesis or recording provenance.",
-      "status": "IMPLEMENTING",
+      "status": "DONE",
       "specs": ["prompt.md sections 14, 24, 30", "research/current-source/extraction-contract.json"],
       "dependencies": ["M1-FLEET-RUNTIME"],
       "allowed_paths": ["tools/audio-import/**", "research/audio-source/**", "assets/source/osrs/audio-runtime/**", "assets/manifests/osrs/audio-runtime.json"],
@@ -116,12 +146,12 @@
       "source_notes": ["tools/cache-import/README.md"],
       "parity_entries": [],
       "adaptations": [],
-      "evidence": []
+      "evidence": ["ad48aa1156 integrated as 7b8c29b; 258 original FLAC outputs, 25 tests and Chrome decoding passed; source/live-browser timing acceptance remains separate."]
     },
     {
       "id": "M1-FLEET-STORAGE",
       "goal": "Implement transactional game-state persistence, character ownership, world-session leases and durable intent deduplication using the existing database boundaries.",
-      "status": "IMPLEMENTING",
+      "status": "DONE",
       "specs": ["spec/game-contracts.md", "spec/networking.md", "spec/security.md"],
       "dependencies": ["M1-FOUNDATIONS"],
       "allowed_paths": ["crates/server/src/game_storage.rs", "crates/server/src/lib.rs", "crates/server/Cargo.toml", "crates/server/migrations/**", "crates/server/tests/**", "crates/server/README.md"],
@@ -134,7 +164,7 @@
       "source_notes": ["spec/game-contracts.md"],
       "parity_entries": [],
       "adaptations": [],
-      "evidence": []
+      "evidence": ["858d8a4 + 5494a8b integrated as 5f510f1 + 32bfea6; fenced world/player leases, atomic character/command/tick storage; 13 real storage and nine account tests reported passed."]
     },
     {
       "id": "M1-FLEET-SIMULATION",
@@ -157,7 +187,7 @@
     {
       "id": "M1-FLEET-CONTENT",
       "goal": "Implement strict content compilation and indexed runtime definitions with source and state validation.",
-      "status": "IMPLEMENTING",
+      "status": "DONE",
       "specs": ["spec/game-contracts.md", "crates/game-types"],
       "dependencies": ["M1-FOUNDATIONS"],
       "allowed_paths": ["crates/content/**", "schemas/game-content.schema.json"],
@@ -170,12 +200,12 @@
       "source_notes": ["spec/game-contracts.md"],
       "parity_entries": [],
       "adaptations": [],
-      "evidence": []
+      "evidence": ["edb4122 + 723a5c2 integrated as f2dee60 + 1e09484; strict content compiler, 57 tests, native/WASM checks passed; represented contracts now include interfaces, recipe tools, energy and event identities."]
     },
     {
       "id": "M1-FLEET-BROWSER",
       "goal": "Establish executable browser capture/performance tooling and concrete host/browser prerequisites without implementing unapproved presentation.",
-      "status": "IMPLEMENTING",
+      "status": "BLOCKED",
       "specs": ["spec/performance.md", "docs/machines/sparky.md", "prompt.md sections 24, 30, 36"],
       "dependencies": ["M1-CONTRACT"],
       "allowed_paths": ["tools/browser-harness/**", "research/browser-platform/**"],
@@ -188,7 +218,7 @@
       "source_notes": ["docs/machines/sparky.md"],
       "parity_entries": [],
       "adaptations": [],
-      "evidence": []
+      "evidence": ["abb536b integrated as e02fd61; 60 unit and 14 browser tests reported passed. Native ARM64 Linux Edge and GPU-process sandbox attestation blocked; owner subsequently chose an M-series Mac for final testing."]
     },
     {
       "id": "M1-FLEET-RUNTIME",
