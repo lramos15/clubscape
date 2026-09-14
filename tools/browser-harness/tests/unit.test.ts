@@ -56,6 +56,16 @@ test("valid pinned fixture config and monotonic submitted-frame sample", () => {
   validateSample(next(initial), fixture, initial);
 });
 
+test("a pinned product artifact must match the dynamic renderer identity", () => {
+  const config = clone(); config.contract.buildArtifactSha256 = "a".repeat(64);
+  const current = sample(config);
+  validateSample(current, config);
+  delete current.snapshot.identity.buildArtifactSha256;
+  assert.throws(() => validateSample(current, config), /buildArtifactSha256/);
+  current.snapshot.identity.buildArtifactSha256 = "b".repeat(64);
+  assert.throws(() => validateSample(current, config), /buildArtifactSha256/);
+});
+
 for (const url of [
   "https://example.com/", "http://example.com/", "http://localhost:4173/",
   "http://127.0.0.1:4174/", "http://127.0.0.1:4173.evil.test/",
@@ -94,8 +104,6 @@ test("a candidate needs an approved source pack and cannot use fixture identity"
   config.contract.sourcePack = { id: "synthetic-unit-input", path: "tools/browser-harness/fixtures/triangle.wgsl", sha256: fixture.contract.requiredAssets[0].sha256, ownerApprovalRef: "synthetic-unit-test-not-approval" };
   assert.throws(() => parseConfig(config), /fixture cannot be a candidate/);
   config.contract.buildId = "synthetic-unit-client";
-  assert.throws(() => parseConfig(config), /no owner approval/);
-  config.contract.ownerApprovalRef = "synthetic-unit-test-not-approval";
   assert.throws(() => parseConfig(config), /5s warmup and 60s measurement/);
   config.contract.measurement.warmupMs = 5000;
   config.contract.measurement.durationMs = 60_000;

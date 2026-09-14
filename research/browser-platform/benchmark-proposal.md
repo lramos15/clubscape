@@ -4,6 +4,13 @@ Authored 2026-09-13 EDT, before any real ClubScape candidate measurement.
 Only a labeled tool fixture has been measured. No presentation implementation
 or source reference pack is supplied by this workstream.
 
+Update 2026-09-14: the owner selected their M-series Mac for final testing and
+allowed available Sparky engineering checks. See
+`milestones/m1-owner-followups.json` and the
+[native Mac handoff](owner-mac-handoff.md). Exact native results remain unrun
+here. This supersedes any implication that Linux Edge availability or another
+hardware-selection approval must precede that owner-run path.
+
 ## Unchanged mandatory target
 
 60 **rendered** FPS, 1920×1080 browser viewport, desktop keyboard/mouse,
@@ -56,9 +63,11 @@ Before a real candidate run, the Director/owner must pin:
    source captures, pack file SHA-256, allowed adaptations and approval.
    A latest usable gamepack may be selected; no hard-coded 2695 requirement
    is introduced here.
-2. Benchmark contract ID and digest, owner approval reference, actual client
-   build/settings/asset-manifest digests, matched capture case and source
+2. Benchmark contract ID and digest, actual client
+   build/artifact/settings/asset-manifest digests, matched capture case and source
    reference identity. Freeze these before measuring.
+   A separate benchmark-owner approval reference is optional metadata, not
+   an added approval gate. Source-pack approval remains mandatory.
 3. Representative environment: actual GPU/model/device-type and memory
    architecture evidence, CPU, capacity, OS/driver, exact Chrome/Edge builds,
    sandbox/graphics flags, display/viewport/UI settings, and an explicit
@@ -72,9 +81,12 @@ Before a real candidate run, the Director/owner must pin:
    tolerances, fixed before candidate evaluation. This package provides
    captures and blank-output rejection, **not source-image tolerances**.
 
-The CLI refuses candidate benchmarks without approved source/contract/hardware
-references, the minimum window/warmup, an observed nonfallback renderer device
-and a verified GPU-process sandbox. It never grants M1 acceptance.
+The CLI refuses candidate benchmarks without approved source inputs, pinned
+contract/hardware references, the minimum window/warmup and an observed
+nonfallback renderer device. Linux retains the existing GPU sandbox guard.
+Mac uses appropriate native observations: unknown Seatbelt attestation is
+reported without claiming a security pass; an explicit unsandboxed GPU
+still fails. No sandbox-disabling switches are accepted. It never grants M1 acceptance.
 Reference strings are reviewable attestations, not proof of owner identity.
 
 ## Separate acceptance gates

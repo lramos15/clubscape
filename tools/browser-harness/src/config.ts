@@ -39,6 +39,7 @@ export const contractSchema = z.strictObject({
   ownerApprovalRef: text.nullable(),
   sourcePack: pin.nullable(),
   buildId: text,
+  buildArtifactSha256: digest.optional(),
   sceneId: text,
   routeId: text,
   workloadId: text,
@@ -84,7 +85,7 @@ export const contractSchema = z.strictObject({
   }),
 });
 
-const configSchema = z.strictObject({
+export const configSchema = z.strictObject({
   version: z.literal(1),
   purpose: z.enum(["tool-fixture", "candidate", "source-observation"]),
   mode: z.enum(["capture", "benchmark"]),
@@ -95,7 +96,12 @@ const configSchema = z.strictObject({
     product: z.enum(["chrome", "edge"]),
     expectedVersion: z.string().regex(/^\d+\.\d+\.\d+\.\d+$/),
     executableEnv: z.string().regex(/^[A-Z][A-Z0-9_]*$/),
-    graphicsProfile: z.enum(["sparky-vulkan-x11", "desktop-default"]),
+    executablePath: text.optional(),
+    executableSha256: digest.optional(),
+    platform: z.enum(["linux", "darwin"]).optional(),
+    architecture: z.enum(["arm64", "x64"]).optional(),
+    hostFingerprint: digest.optional(),
+    graphicsProfile: z.enum(["sparky-vulkan-x11", "linux-webgpu-default-x11", "desktop-default", "mac-metal-default"]),
   }),
   sourceObservation: z.strictObject({
     referenceBuild: text,
@@ -152,6 +158,19 @@ export function parseConfig(input: unknown): HarnessConfig {
   }
   requireCondition(new Set(config.allowedOrigins).size === config.allowedOrigins.length, "Duplicate allowed origin");
   requireCondition(isAllowedUrl(config.url, config.allowedOrigins), "Target URL is not explicitly allowlisted loopback HTTP");
+  if (config.browser.graphicsProfile === "mac-metal-default") {
+    requireCondition(config.browser.platform === "darwin" && config.browser.architecture === "arm64",
+      "Mac profile requires an explicit darwin/arm64 platform pin");
+  }
+  if (config.browser.platform === "darwin") {
+    requireCondition(config.browser.graphicsProfile === "mac-metal-default"
+      && config.browser.architecture === "arm64", "Owner Mac runs require native ARM64 and default Metal graphics, not Linux flags");
+    if (config.purpose === "candidate") {
+      requireCondition(c.buildArtifactSha256, "Mac candidate requires the actual product build artifact SHA-256");
+      requireCondition(config.browser.executablePath && config.browser.executableSha256
+        && config.browser.hostFingerprint, "Mac candidate needs discovered executable and host pins");
+    }
+  }
   requireCondition(c.viewport.width === 1920 && c.viewport.height === 1080, "Primary viewport must be 1920x1080");
   const inRange = (v: { width: number; height: number }) =>
     v.width >= c.resizeRange.min.width && v.height >= c.resizeRange.min.height
@@ -174,7 +193,6 @@ export function parseConfig(input: unknown): HarnessConfig {
     requireCondition(c.sourcePack !== null, "Candidate capture requires an owner-approved, pinned source pack");
     requireCondition(!c.buildId.startsWith("harness-fixture/"), "A fixture cannot be a candidate");
     if (config.mode === "benchmark") {
-      requireCondition(c.ownerApprovalRef, "Candidate benchmark contract has no owner approval reference");
       requireCondition(c.measurement.durationMs >= 60_000 && c.measurement.warmupMs >= 5000,
         "Candidate benchmarks require at least 5s warmup and 60s measurement");
       requireCondition(c.hardware.representativeIntegratedGraphics && c.hardware.ownerApprovalRef

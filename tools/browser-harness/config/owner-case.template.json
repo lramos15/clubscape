@@ -1,26 +1,19 @@
 {
   "version": 1,
-  "purpose": "candidate",
   "mode": "benchmark",
   "url": "http://127.0.0.1:4173/",
   "allowedOrigins": ["http://127.0.0.1:4173"],
   "captureCaseId": "REQUIRED_SOURCE_MATCHED_CASE",
-  "browser": {
-    "product": "chrome",
-    "expectedVersion": "0.0.0.0",
-    "executableEnv": "BROWSER_EXECUTABLE",
-    "graphicsProfile": "desktop-default"
-  },
   "contract": {
-    "id": "REQUIRED_FROZEN_BENCHMARK_CONTRACT_ID",
+    "id": "REQUIRED_PREMEASUREMENT_CONTRACT_ID",
     "ownerApprovalRef": null,
     "sourcePack": null,
-    "buildId": "REQUIRED_REAL_CLIENT_BUILD",
+    "buildId": "REQUIRED_ACTUAL_PRODUCT_BUILD_ID",
     "buildArtifactSha256": "REQUIRED_DEPLOYED_PRODUCT_ARTIFACT_SHA256",
     "sceneId": "REQUIRED_SOURCE_DEFINED_SCENE",
     "routeId": "REQUIRED_REPRESENTATIVE_TUTORIAL_OR_LUMBRIDGE_ROUTE",
-    "workloadId": "REQUIRED_LOADED_WORKLOAD",
-    "settingsSha256": "REQUIRED_REAL_SETTINGS_SHA256",
+    "workloadId": "REQUIRED_LOADED_WORLD_WORKLOAD",
+    "settingsSha256": "REQUIRED_REAL_RENDER_SETTINGS_SHA256",
     "assetManifestSha256": "REQUIRED_REAL_ASSET_MANIFEST_SHA256",
     "requiredAssets": [{ "id": "REQUIRED_REAL_ASSET", "sha256": "REQUIRED_REAL_ASSET_SHA256" }],
     "minimumEntities": { "REQUIRED_REAL_SCENE_ENTITY": 1 },
@@ -53,18 +46,6 @@
       "stallThresholdMs": 50,
       "maxStallsPerMinute": 1,
       "maxGapMs": 100
-    },
-    "hardware": {
-      "id": "REQUIRED_REPRESENTATIVE_INTEGRATED_GRAPHICS_CONTRACT",
-      "representativeIntegratedGraphics": false,
-      "ownerApprovalRef": null,
-      "evidenceRefs": [],
-      "gpu": "REQUIRED_GPU_MODEL_AND_DEVICE_TYPE_EVIDENCE",
-      "cpu": "REQUIRED_CPU_MODEL",
-      "memory": "REQUIRED_MEMORY_ARCHITECTURE_AND_CAPACITY",
-      "os": "REQUIRED_OS_VERSION_AND_ARCHITECTURE",
-      "driver": "REQUIRED_DRIVER_VERSION",
-      "expectedAdapter": null
     }
   }
 }

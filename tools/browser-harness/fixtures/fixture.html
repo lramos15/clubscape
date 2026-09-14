@@ -58,6 +58,7 @@
     let submittedFrames = 0;
     let lastSubmittedAtMs = 0;
     let lastCompletedAtMs = 0;
+    let contractSha256 = scenario === "bind-run" ? "0".repeat(64) : config.identity.benchmarkContractSha256;
     const frames = [];
     function render() {
       const encodeStart = performance.now();
@@ -94,10 +95,16 @@
     }
     if (scenario !== "missing") {
       window.__clubscapeBenchmarkV1 = {
+        ...(scenario === "bind-run" ? {
+          bindRun(binding) {
+            if (Object.keys(binding).sort().join(",") !== "contractId,contractSha256") throw new Error("Fixture bindRun must receive audit identity only");
+            contractSha256 = binding.contractSha256;
+          },
+        } : {}),
         read(afterFrame) {
           return {
             version: 1, clock: "performance.now", application: "harness-fixture",
-            identity: { ...config.identity, ...(scenario === "wrong-workload" ? { workloadId: "wrong-workload" } : {}) },
+            identity: { ...config.identity, benchmarkContractSha256: contractSha256, ...(scenario === "wrong-workload" ? { workloadId: "wrong-workload" } : {}) },
             ready: renderedFrames > 0 && (scenario !== "requires-input" || keys > 0 && clicks > 0),
             backend: scenario === "wrong-backend" ? "webgl" : "webgpu",
             viewport: { width: innerWidth, height: innerHeight, deviceScaleFactor: devicePixelRatio },

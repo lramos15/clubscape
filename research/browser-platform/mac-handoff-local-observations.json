@@ -1,0 +1,135 @@
+{
+  "schemaVersion": 1,
+  "scope": "Sparky Linux tooling observations only; NOT Mac, Edge, product, source-fidelity or M1 acceptance",
+  "nativeMacExecution": "not-performed",
+  "securityCertification": "not-performed",
+  "m1Acceptance": "not-evaluated",
+  "reports": [
+    {
+      "runId": "sparky-default-graphics-trial",
+      "startedAt": "2026-09-14T20:01:30.889Z",
+      "finishedAt": "2026-09-14T20:01:33.112Z",
+      "status": "failed",
+      "purpose": "tool-fixture",
+      "harness": {
+        "version": "0.1.0",
+        "sourceSha256": "9a971a2652550d85d7b4e06ecd94016335921687251a017b09619c7ebea49259",
+        "node": "v24.18.0",
+        "playwright": "1.63.0"
+      },
+      "host": {
+        "platform": "linux",
+        "architecture": "arm64",
+        "nodeVersion": "v24.18.0",
+        "osVersion": "Ubuntu 24.04.4 LTS",
+        "osBuild": null,
+        "kernel": "6.17.0-1026-nvidia",
+        "model": null,
+        "chip": "Cortex-X925 + Cortex-A725",
+        "cpuCores": 20,
+        "memoryBytes": 130663165952,
+        "arm64Hardware": null,
+        "appleSilicon": null,
+        "gpus": [],
+        "issues": [],
+        "sources": [
+          "/etc/os-release",
+          "lscpu --json",
+          "Node os.cpus/os.totalmem"
+        ]
+      },
+      "executable": {
+        "path": "/home/lramos15/.cache/ms-playwright/chromium-1243/chrome-linux-arm64/chrome",
+        "version": "153.0.8010.12",
+        "versionOutput": "Google Chrome for Testing 153.0.8010.12",
+        "sha256": "839efe5fd8b6a773dd81b2e10afdc15f3c0a17316fb82b5908c0533306c4ed9e"
+      },
+      "profile": "linux-webgpu-default-x11",
+      "webgpu": "enabled",
+      "compositor": "ANGLE (Mesa, llvmpipe (LLVM 20.1.2 128 bits), OpenGL 4.5 (Core Profile) Mesa 25.2.8-0ubuntu0.24.04.2)",
+      "gpuSandboxed": false,
+      "gpuProcessIsolation": [
+        {
+          "type": "GPU",
+          "pid": 3625553,
+          "fields": [
+            "NoNewPrivs:\t1",
+            "Seccomp:\t0",
+            "Seccomp_filters:\t0"
+          ]
+        }
+      ],
+      "failures": [
+        "Browser graphics backend indicates software rendering"
+      ],
+      "cleanup": {
+        "browserCloseRequested": true,
+        "browserPid": 3625518,
+        "browserExitVerified": true,
+        "runtimeRemoved": true
+      }
+    },
+    {
+      "runId": "sparky-owner-handoff-probe",
+      "startedAt": "2026-09-14T20:08:06.087Z",
+      "finishedAt": "2026-09-14T20:08:13.102Z",
+      "status": "valid-measurement",
+      "purpose": "tool-fixture",
+      "harness": {
+        "version": "0.1.0",
+        "sourceSha256": "1b6eccd1b9e50b397d1a68f141b032622556230bee4d561108044e217b83fdce",
+        "node": "v24.18.0",
+        "playwright": "1.63.0"
+      },
+      "host": {
+        "platform": "linux",
+        "architecture": "arm64",
+        "nodeVersion": "v24.18.0",
+        "osVersion": "Ubuntu 24.04.4 LTS",
+        "osBuild": null,
+        "kernel": "6.17.0-1026-nvidia",
+        "model": null,
+        "chip": "Cortex-X925 + Cortex-A725",
+        "cpuCores": 20,
+        "memoryBytes": 130663165952,
+        "arm64Hardware": null,
+        "appleSilicon": null,
+        "gpus": [],
+        "issues": [],
+        "sources": [
+          "/etc/os-release",
+          "lscpu --json",
+          "Node os.cpus/os.totalmem"
+        ]
+      },
+      "executable": {
+        "path": "/home/lramos15/.cache/ms-playwright/chromium-1243/chrome-linux-arm64/chrome",
+        "version": "153.0.8010.12",
+        "versionOutput": "Google Chrome for Testing 153.0.8010.12",
+        "sha256": "839efe5fd8b6a773dd81b2e10afdc15f3c0a17316fb82b5908c0533306c4ed9e"
+      },
+      "profile": "sparky-vulkan-x11",
+      "webgpu": "enabled",
+      "compositor": "ANGLE (NVIDIA, Vulkan 1.4.312 (NVIDIA NVIDIA GB10 (0x00002E12)), NVIDIA-580.173.2.0)",
+      "gpuSandboxed": false,
+      "gpuProcessIsolation": [
+        {
+          "type": "GPU",
+          "pid": 3634602,
+          "fields": [
+            "NoNewPrivs:\t1",
+            "Seccomp:\t0",
+            "Seccomp_filters:\t0"
+          ]
+        }
+      ],
+      "failures": [],
+      "cleanup": {
+        "browserCloseRequested": true,
+        "browserPid": 3634448,
+        "browserExitVerified": true,
+        "runtimeRemoved": true
+      }
+    }
+  ]
+}

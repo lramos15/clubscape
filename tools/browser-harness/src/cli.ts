@@ -32,6 +32,7 @@ async function main() {
     const result = await runHarness(config, { runId: values["run-id"], signal: controller.signal });
     console.log(JSON.stringify({
       status: result.report.status, purpose: config.purpose, m1Acceptance: "not-evaluated",
+      securityCertification: "not-performed", securityEvidence: result.report.securityEvidenceStatus ?? "see report",
       report: `${result.directory}/report.json`,
       failures: result.failures.map((message) => message.slice(0, 500)),
     }));

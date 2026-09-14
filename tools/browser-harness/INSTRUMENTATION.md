@@ -31,6 +31,9 @@ workload and required assets really finish loading.
 `identity` must match the configuration exactly:
 
 * `buildId`, `sceneId`, `routeId`, `workloadId`;
+* `buildArtifactSha256` when pinned by the run contract (mandatory for the
+  owner Mac handoff): the actual deployed product artifact/build manifest,
+  not the tool fixture or a guessed build ID;
 * `sourcePackSha256`: digest of the approved source-pack file;
 * `benchmarkContractSha256`: digest of canonical JSON for the whole
   `config.contract` object (recursive lexicographic object keys, compact
@@ -40,6 +43,33 @@ workload and required assets really finish loading.
 The contract digest covers workloads, pins, settings, hardware declarations,
 resizing, input setup and numeric budgets. Changing them after seeing a run
 creates a different contract and does not repair that run.
+
+### Optional owner-run audit binding
+
+Mac hardware/browser information becomes concrete when the owner runs
+discovery. Chrome and Edge configurations can therefore have different
+contract digests after the product was built. Do not hard-code a speculative
+Mac contract digest into the renderer.
+
+The interface may expose this synchronous method:
+
+```ts
+bindRun(binding: { contractId: string; contractSha256: string }): void
+```
+
+The harness calls it once before readiness validation/warmup, if present.
+The method may bind **only the audit contract identity** returned by `read`.
+It must not set the build/source/artifact/settings/asset identity, change
+workloads, mark missing assets ready, synthesize frames, or reset counters.
+Those fields must still come from the real build/loader/renderer. Publish
+the interface before waiting for this binding; a rebind during measurement
+should be refused. Echoing the supplied audit digest is not source evidence.
+
+Existing clients without `bindRun` remain supported when their preconfigured
+digest matches the generated contract. The Director must either implement
+this narrow binding or provide the appropriate preconfigured case/URL for
+each browser. The harness never overwrites the snapshot or expected source
+identity to make a comparison pass.
 
 Expose current `viewport: { width, height, deviceScaleFactor }`, loaded
 `assets: [{ id, sha256, loaded }]`, actual `entities` by the contract's count
@@ -135,3 +165,6 @@ See [the pre-measurement proposal](../../research/browser-platform/benchmark-pro
 for draft budgets and pending approval inputs. Real acceptance still requires
 the actual approved source pack, world workloads, both browser runs and the
 Director's separate acceptance record.
+
+Owner execution and native/macOS evidence collection are documented in the
+[Mac handoff](../../research/browser-platform/owner-mac-handoff.md).

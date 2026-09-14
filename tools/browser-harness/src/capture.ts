@@ -10,7 +10,8 @@ import {
   canonicalJson, contractHash, harnessRoot, isAllowedUrl, parseConfig, requireCondition, sha256, verifySourcePack,
 } from "./config.ts";
 import type { HarnessConfig, Viewport } from "./config.ts";
-import { browserMetadata, executableMetadata, graphicsProfiles } from "./browser.ts";
+import { browserMetadata, executableMetadata, graphicsProfiles, validateBrowserBackend, validateCandidateSandbox } from "./browser.ts";
+import { assertNativeConfiguration, collectHostFacts, hostFingerprint, requireOwnerMac, runtimeEnvironment } from "./platform.ts";
 import { installGpuObserver } from "./observer.ts";
 import { inspectImage, summarizeFrames, validateGpu, validateSample, validateViewport } from "./metrics.ts";
 import type { Sample } from "./metrics.ts";
@@ -83,8 +84,13 @@ async function harnessDigest(): Promise<string> {
   return sha256(canonicalJson(hashes));
 }
 
-export async function runHarness(input: HarnessConfig, options: { runId?: string; signal?: AbortSignal } = {}) {
+export async function runHarness(input: HarnessConfig, options: { runId?: string; signal?: AbortSignal; inspectionMs?: number } = {}) {
   const config = parseConfig(input);
+  assertNativeConfiguration(config);
+  const inspectionMs = options.inspectionMs ?? 0;
+  requireCondition(Number.isInteger(inspectionMs) && inspectionMs >= 0 && inspectionMs <= 300_000,
+    "Owner inspection hold must be 0..300000 ms");
+  requireCondition(!inspectionMs || config.purpose === "tool-fixture", "Manual inspection is probe-only, never inside a candidate benchmark");
   requireCondition(await realpath(process.cwd()) === await realpath(harnessRoot), "Run the harness from tools/browser-harness (short local socket paths)");
   const runId = options.runId ?? `${timestamp().replace(/[:.]/g, "-").toLowerCase()}-${randomUUID().slice(0, 8)}`;
   requireCondition(/^[a-z0-9][a-z0-9_-]{0,100}$/.test(runId), "Run ID must be a simple lowercase identifier, not a path");
@@ -96,7 +102,7 @@ export async function runHarness(input: HarnessConfig, options: { runId?: string
   const runtime = path.join(harnessRoot, ".runtime", `b-${randomUUID().slice(0, 8)}`);
   await mkdir(runtime, { recursive: true, mode: 0o700 });
   const originalTmp = process.env.TMPDIR;
-  process.env.TMPDIR = path.relative(harnessRoot, runtime);
+  process.env.TMPDIR = runtimeEnvironment(process.platform, runtime, process.env).TMPDIR;
   let context: BrowserContext | undefined;
   let browserPid: number | null = null;
   let browserExitVerified: boolean | null = null;
@@ -120,6 +126,7 @@ export async function runHarness(input: HarnessConfig, options: { runId?: string
     status: "running",
     purpose: config.purpose,
     m1Acceptance: "not-evaluated",
+    securityCertification: "not-performed",
     baselineApproved: false,
     evidenceLimits: config.purpose === "tool-fixture"
       ? "TOOL FIXTURE ONLY. Not a game renderer, source fidelity, representative workload, or performance acceptance."
@@ -127,14 +134,24 @@ export async function runHarness(input: HarnessConfig, options: { runId?: string
     configuration: config,
     benchmarkContract: { id: config.contract.id, sha256: contractHash(config.contract), canonicalization: "recursive lexicographic JSON keys; UTF-8; no whitespace" },
     sourcePack: config.contract.sourcePack,
-    display: { mode: process.env.CLUBSCAPE_DISPLAY_MODE ?? "unmanaged", display: process.env.DISPLAY ?? null },
+    display: { mode: process.env.CLUBSCAPE_DISPLAY_MODE ?? "unmanaged", display: process.platform === "linux" ? process.env.DISPLAY ?? null : null },
     input: { keyboard: true, mouse: true, mobile: false, touch: false },
     captureSettings: { headless: false, chromiumSandbox: true, locale: "en-US", timezoneId: "UTC", colorScheme: "light", animations: "allow", caret: "initial" },
-    host: { hostname: os.hostname(), platform: os.platform(), release: os.release(), arch: os.arch(), cpuModels: [...new Set(os.cpus().map((c) => c.model))], logicalCpus: os.cpus().length, totalMemoryBytes: os.totalmem() },
+    host: {
+      ...(process.platform === "linux" ? { hostname: os.hostname() } : {}),
+      platform: os.platform(), release: os.release(), arch: os.arch(),
+      cpuModels: [...new Set(os.cpus().map((c) => c.model))], logicalCpus: os.cpus().length, totalMemoryBytes: os.totalmem(),
+    },
     captures, failures,
   };
   try {
     await verifySourcePack(config);
+    const nativeHost = await collectHostFacts();
+    report.nativeHost = nativeHost;
+    report.hostFingerprint = hostFingerprint(nativeHost);
+    if (process.platform === "darwin") requireOwnerMac(nativeHost);
+    requireCondition(!config.browser.hostFingerprint || config.browser.hostFingerprint === report.hostFingerprint,
+      "Host model/chip/memory/OS/GPU inventory changed; recollect and repin before measurement");
     report.harness = { version: "0.1.0", sourceSha256: await harnessDigest(), node: process.version, playwright: createRequire(import.meta.url)("playwright-core/package.json").version };
     const executable = await executableMetadata(config);
     report.executable = executable;
@@ -156,16 +173,20 @@ export async function runHarness(input: HarnessConfig, options: { runId?: string
       acceptDownloads: false,
       serviceWorkers: "block",
       timeout: 45_000,
-      env: { ...process.env, HOME: runtime, XDG_RUNTIME_DIR: runtime, XDG_CACHE_HOME: path.join(runtime, "cache"), XDG_CONFIG_HOME: path.join(runtime, "config") },
+      env: runtimeEnvironment(process.platform, runtime, process.env),
     });
     context.setDefaultTimeout(config.contract.measurement.readinessTimeoutMs);
     const browser = await browserMetadata(context, config);
     report.browser = browser;
     browserPid = browser.browserPid;
-    if (config.purpose === "candidate" && config.mode === "benchmark") {
-      requireCondition(browser.sandbox.gpuProcessSandboxed === true,
-        "GPU process sandbox is not established for a candidate benchmark; this browser/profile is observation-only");
-    }
+    validateBrowserBackend(browser.gpu, config);
+    validateCandidateSandbox(config, browser.sandbox);
+    report.securityEvidenceStatus = browser.sandbox.nativeAttestation;
+    report.graphicsEvidence = {
+      expectedProfile: config.browser.graphicsProfile,
+      compositorBackend: browser.gpu.auxAttributes?.displayType ?? null,
+      note: "CDP compositor/ANGLE metadata and the configured WebGPU device are separate observations; neither proves physical presentation",
+    };
     await context.addInitScript(installGpuObserver);
     await context.route("**/*", async (route) => {
       const url = route.request().url();
@@ -203,6 +224,19 @@ export async function runHarness(input: HarnessConfig, options: { runId?: string
     }));
     let initial: Sample | undefined;
     if (config.mode === "benchmark") {
+      await page.waitForFunction(() => typeof window.__clubscapeBenchmarkV1?.read === "function",
+        undefined, { timeout: config.contract.measurement.readinessTimeoutMs }).catch(() => {
+        throw new Error("Missing or unready rendered-frame instrumentation");
+      });
+      report.contractBinding = await bounded(page.evaluate((binding) => {
+        const api = window.__clubscapeBenchmarkV1!;
+        if (!api.bindRun) return "preconfigured-by-client";
+        const result: unknown = api.bindRun(binding);
+        if (result !== null && typeof result === "object" && "then" in result) {
+          throw new Error("Benchmark bindRun() must be synchronous and bind audit identity only");
+        }
+        return "renderer-bindRun-audit-identity-only";
+      }, { contractId: config.contract.id, contractSha256: contractHash(config.contract) }), "Benchmark audit binding", 5000);
       await page.waitForFunction(() => {
         try { return window.__clubscapeBenchmarkV1?.read(null)?.ready === true; } catch { return false; }
       }, undefined, { timeout: config.contract.measurement.readinessTimeoutMs }).catch(() => {
@@ -279,6 +313,23 @@ export async function runHarness(input: HarnessConfig, options: { runId?: string
     }
     await page.setViewportSize(config.contract.viewport);
     assertHealthy();
+    if (inspectionMs) {
+      const session = await context.browser()!.newBrowserCDPSession();
+      try {
+        const processes = await session.send("SystemInfo.getProcessInfo");
+        const inspection = {
+          purpose: "owner-native-inspection-only; outside measurement",
+          startedAt: timestamp(), maximumDurationMs: inspectionMs,
+          executable, sandbox: browser.sandbox,
+          processes: processes.processInfo.map(({ id, type }) => ({ pid: id, type })),
+          instructions: "Use these owned PIDs in Activity Monitor; record Kind/Sandbox if offered. Missing fields remain unknown. Do not disable SIP, Gatekeeper or Seatbelt.",
+        };
+        report.inspection = inspection;
+        await writeFile(path.join(directory, "live-inspection.json"), JSON.stringify(inspection, null, 2), { flag: "wx" });
+        console.log(`Owner inspection window: ${inspectionMs / 1000}s; ${directory}/live-inspection.json`);
+        await delay(inspectionMs, undefined, { signal: options.signal });
+      } finally { await session.detach(); }
+    }
     report.status = failures.length ? "failed" : config.mode === "benchmark" ? "valid-measurement" : "valid-capture";
   } catch (error) {
     failures.push(error instanceof Error ? error.message : String(error));
@@ -297,7 +348,12 @@ export async function runHarness(input: HarnessConfig, options: { runId?: string
     }
     if (browserPid) {
       const alive = () => {
-        try { process.kill(browserPid!, 0); return true; } catch { return false; }
+        try { process.kill(browserPid!, 0); return true; } catch (error) {
+          if ((error as NodeJS.ErrnoException).code === "ESRCH") return false;
+          const message = `Cannot verify owned browser exit: ${String(error)}`;
+          if (!failures.includes(message)) failures.push(message);
+          return true;
+        }
       };
       for (let attempt = 0; attempt < 40 && alive(); attempt++) {
         try {

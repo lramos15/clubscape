@@ -27,6 +27,7 @@ async function stop(child?: ChildProcess, graceMs = 3000): Promise<void> {
 
 async function main() {
   if (process.argv.length < 3) throw new Error("Usage: node src/desktop.ts <node arguments>");
+  if (process.platform !== "linux" && process.platform !== "darwin") throw new Error("Only native macOS and Linux are supported");
   const runtime = path.join(harnessRoot, ".runtime", `d-${randomUUID().slice(0, 8)}`);
   await mkdir(runtime, { recursive: true, mode: 0o700 });
   let displayServer: ChildProcess | undefined;
@@ -39,7 +40,9 @@ async function main() {
   try {
     // Chromium's Unix singleton socket has a short path limit. A relative, owned
     // runtime path avoids that limit without moving files outside this package.
-    const env: NodeJS.ProcessEnv = { ...process.env, TMPDIR: path.relative(harnessRoot, runtime), XDG_RUNTIME_DIR: runtime };
+    const env: NodeJS.ProcessEnv = process.platform === "darwin"
+      ? { ...process.env, TMPDIR: runtime, MAC_CHROMIUM_TMPDIR: path.relative(harnessRoot, runtime) }
+      : { ...process.env, TMPDIR: path.relative(harnessRoot, runtime), XDG_RUNTIME_DIR: runtime };
     if (!env.DISPLAY && process.platform === "linux") {
       const cookie = randomBytes(16);
       const serverAuth = path.join(runtime, "server.xauthority");
@@ -66,7 +69,9 @@ async function main() {
       env.XAUTHORITY = clientAuth;
       env.CLUBSCAPE_DISPLAY_MODE = "Xvfb 2720x1600x24; abstract Unix transport; cookie auth; no TCP/filesystem socket";
     } else {
-      env.CLUBSCAPE_DISPLAY_MODE = "existing desktop display (not managed by harness)";
+      env.CLUBSCAPE_DISPLAY_MODE = process.platform === "darwin"
+        ? "native macOS WindowServer desktop; no Xvfb/XQuartz; physical scanout not measured"
+        : "existing desktop display (not managed by harness)";
     }
     if (interrupted) throw new Error("Interrupted before browser command");
     command = spawn(process.execPath, process.argv.slice(2), { env, cwd: harnessRoot, stdio: "inherit" });

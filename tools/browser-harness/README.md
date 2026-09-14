@@ -10,6 +10,14 @@ and [the instrumentation contract](INSTRUMENTATION.md) before using results.
 The master requirements remain `prompt.md` §§24, 30, 36 and
 `spec/performance.md`; this package does not replace them.
 
+For the owner's selected M-series Mac, use the
+[owner-run Chrome/Edge handoff](../../research/browser-platform/owner-mac-handoff.md).
+It includes native discovery, original app verification, probes, per-browser
+configuration generation, forwarded-loopback operation, bundling and cleanup.
+Mac paths are implemented and unit-tested but **not natively executed on
+Sparky**. `pnpm test:browser` and the checked-in fixture config are Linux
+validation, not a substitute for the Mac workflow.
+
 ## Install and verify
 
 Run from this package directory, not the repository root. Node 24.18+ is
@@ -47,7 +55,7 @@ The two-column image from `smoke` must never be treated as a game screenshot.
 
 ## Headful display and sandbox
 
-`src/desktop.ts` uses an existing `DISPLAY`, or starts installed Xvfb on an
+On Linux, `src/desktop.ts` uses an existing `DISPLAY`, or starts installed Xvfb on an
 automatically selected display for the entire child process. The reproducible
 screen is 2720×1600×24, large enough for the maximum 2560×1440 viewport plus
 browser chrome. It uses MIT-MAGIC-COOKIE-1 authorization, no TCP listener,
@@ -58,7 +66,11 @@ file, no `mktemp`, and no external scratch directory.
 Chromium needs a short Unix singleton-socket path: the child is run from this
 package with a short **relative** `TMPDIR` under `.runtime/`. Profiles, home,
 configuration and caches are isolated there and removed after the run.
-The executable itself remains at its original AppArmor-covered path.
+The Linux executable itself remains at its original AppArmor-covered path.
+On macOS the wrapper uses the native WindowServer desktop, not Xvfb/XQuartz.
+It preserves `HOME` and the installed vendor app, isolates the browser profile,
+and supplies Chromium's documented `MAC_CHROMIUM_TMPDIR` override for owned
+temporary files. It does not apply Linux XDG/sandbox assumptions to macOS.
 
 The browser is always `headless: false`, `chromiumSandbox: true`. Arbitrary
 launch arguments are not accepted. `--enable-automation` enables command-line
@@ -66,12 +78,18 @@ attestation. Playwright's default `--enable-unsafe-swiftshader` is removed.
 The exact effective command line is recorded, and sandbox-disabling switches
 are rejected. No user-agent override exists.
 
-Two launch profiles are available:
+Launch profiles are:
 
 * `desktop-default`: installed desktop browser defaults, plus automation.
 * `sparky-vulkan-x11`: the machine-record arguments
   `--enable-unsafe-webgpu --enable-features=Vulkan --use-angle=vulkan
   --enable-gpu --ignore-gpu-blocklist --ozone-platform=x11`.
+* `mac-metal-default`: **no graphics overrides**, only the normal automation
+  argument; macOS/ARM64 must be pinned and actual Metal compositor metadata
+  observed. The renderer's WebGPU device is separately recorded.
+* `linux-webgpu-default-x11`: a bounded diagnostic alternative without forced
+  Vulkan/ANGLE selection. On Sparky it produced software llvmpipe and was
+  rejected; it is not a verified replacement profile.
 
 Linux namespace/PID/network/seccomp sandbox diagnostics are required.
 **These do not imply the GPU process is sandboxed.** The working Sparky
@@ -81,28 +99,39 @@ observations are not an all-process-isolation certificate. The attempted
 early-GPU-sandbox option disabled hardware WebGPU and was not adopted.
 The wrapper does not alter host security to address this.
 
-Automated sandbox attestation currently supports Linux only. The default
-profile is available for a qualifying, supported Linux desktop environment,
-but only the recorded Sparky profile has actually been exercised here.
-Windows/macOS need native sandbox attestation added before this harness can
-produce candidate benchmark results there.
+macOS uses Chromium's Seatbelt sandbox, not Linux seccomp or the App Sandbox
+entitlement. `chrome://sandbox` is not queried on Mac. Original app signatures
+and ARM64 slices can be checked with native APIs, but they do not attest
+runtime Seatbelt policies. Mac renderer attestation stays explicitly unknown;
+the owner can collect native observations during a bounded probe hold.
+Unknown Mac attestation does not masquerade as a pass or prevent measurement
+solely because Linux diagnostics are absent. An explicit unsandboxed-GPU
+report still rejects a candidate benchmark. The existing Linux GPU sandbox
+guard is unchanged. All reports say `securityCertification: not-performed`.
 
 ## Real-client invocation
 
 `config/candidate.template.json` is **deliberately incomplete and rejected**.
 Before implementation/measurement, the Director must replace every required
-input and freeze the approved contract. Its numeric defaults are proposals,
+input and freeze the pre-measurement contract. Its numeric defaults are proposals,
 not owner approval. In particular provide:
 
 * approved source-pack ID, repository-relative file path, SHA-256 of that
   file's exact bytes, and owner approval reference;
-* real build, asset-manifest/settings digests, capture case, loaded scene,
+* real build/artifact, asset-manifest/settings digests, capture case, loaded scene,
   representative route/workload, required asset IDs/hashes and entity counts;
 * a reviewed representative integrated-graphics hardware/browser contract,
   model/CPU/memory/OS/driver evidence and exact observed adapter fields;
 * approved viewport/layout/scale, resizing range, settings and sampling
   budgets; the example range 1280×720–2560×1440 is only a tool proposal;
 * actual browser product, exact version and original executable location.
+
+The source-pack approval is mandatory. A separate benchmark-owner approval
+reference is optional metadata, not another product checkpoint; do not
+fabricate one. The Mac generator uses the existing owner's hardware-direction
+record for the selected M-series family and actual discovery/probe data for
+the exact machine/browser. It never treats that record as source-pack or
+final presentation approval.
 
 The source-pack object has this shape (values must be real, not placeholders):
 
@@ -132,6 +161,8 @@ Use a separately version-pinned config with `"product": "edge"` and the
 Chromium presented as Google Chrome, mismatched executable versions, and
 software backends are rejected. Microsoft does not currently publish the
 needed native Linux ARM64 Edge package; see the findings.
+That Linux availability limitation does not apply to the owner's supported
+native Mac Edge path.
 
 ## Capture classifications and output
 
@@ -155,6 +186,13 @@ Prefixes and report purposes distinguish `tool-fixture`, `candidate` and
 `source-observation`. All reports set `baselineApproved: false` and
 `m1Acceptance: "not-evaluated"`. There is no baseline-promotion command.
 The fixture marker cannot be used as a candidate or source reference.
+
+Generated inventories/configs and bundle directories live under ignored
+`owner-runs/`. `pnpm run handoff bundle` copies only ordinary JSON/PNG artifacts,
+preserves failed results, records platform labels and SHA-256 hashes, and
+excludes browser profiles/storage. `pnpm run handoff cleanup` verifies the
+bundle and raw-run bytes before removing only the named raw run directories.
+See the owner handoff for exact commands and privacy review.
 
 `"mode": "capture"` does not assert rendered-frame performance. A
 `source-observation` is capture-only and additionally requires

@@ -22,6 +22,7 @@ const snapshotSchema = z.strictObject({
   application: z.enum(["clubscape", "harness-fixture"]),
   identity: z.strictObject({
     buildId: z.string(),
+    buildArtifactSha256: digest.optional(),
     sceneId: z.string(),
     routeId: z.string(),
     workloadId: z.string(),
@@ -54,6 +55,7 @@ export function expectedIdentity(config: HarnessConfig): RenderSnapshot["identit
   const c = config.contract;
   return {
     buildId: c.buildId,
+    ...(c.buildArtifactSha256 ? { buildArtifactSha256: c.buildArtifactSha256 } : {}),
     sceneId: c.sceneId,
     routeId: c.routeId,
     workloadId: c.workloadId,

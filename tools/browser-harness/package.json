@@ -9,10 +9,12 @@
   },
   "scripts": {
     "check": "tsc --noEmit",
-    "test": "node --test --test-reporter=spec tests/unit.test.ts",
+    "test": "node --test --test-reporter=spec tests/unit.test.ts tests/platform.test.ts tests/owner.test.ts",
     "test:browser": "node src/desktop.ts --test --test-reporter=spec tests/browser.test.ts",
     "smoke": "node src/desktop.ts src/cli.ts --config config/fixture.json --tool-fixture",
     "capture": "node src/desktop.ts src/cli.ts",
+    "handoff": "node src/owner.ts",
+    "owner:probe": "node src/desktop.ts src/owner.ts probe",
     "fixture": "node src/fixture-server.ts"
   },
   "dependencies": {

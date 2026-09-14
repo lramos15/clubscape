@@ -98,3 +98,11 @@ test("an actual tool fixture cannot be captured as a source reference", { timeou
     await server.close();
   }
 });
+
+test("optional runtime binding passes only the predeclared audit contract, not scene identity or metrics", { timeout: 60_000 }, async () => {
+  const result = await exercise("bind-run");
+  assert.equal(result.ok, true, result.failures.join("\n"));
+  assert.equal(result.report.contractBinding, "renderer-bindRun-audit-identity-only");
+  assert.equal(result.report.m1Acceptance, "not-evaluated");
+  await rm(result.directory, { recursive: true, force: true });
+});

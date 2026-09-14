@@ -1,5 +1,7 @@
 /** Read synchronously on the main thread; do not advance the renderer in read(). */
 export interface ClubscapeBenchmarkV1 {
+  /** Binds audit identity only; must not alter actual build, scene, assets or counters. */
+  bindRun?(binding: { contractId: string; contractSha256: string }): void;
   read(afterFrame: number | null): RenderSnapshot;
 }
 
@@ -21,6 +23,8 @@ export interface RenderSnapshot {
   application: "clubscape" | "harness-fixture";
   identity: {
     buildId: string;
+    /** Required when the run contract pins the deployed product artifact. */
+    buildArtifactSha256?: string;
     sceneId: string;
     routeId: string;
     workloadId: string;
