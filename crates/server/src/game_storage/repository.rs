@@ -4,12 +4,15 @@ use clubscape_game_types::{
     Activity, ActorId, CharacterState, GAME_SCHEMA_VERSION, GameEvent, GameIntent, GameResult,
     WorldState,
 };
+use clubscape_world_engine::ActorEvent;
+use sha2::{Digest, Sha256};
 use sqlx::{Connection as _, PgConnection, PgPool};
 use uuid::Uuid;
 
 use super::{
-    AuthTokenDigest, CharacterSnapshot, CommandCommit, CommandReceipt, GameCommand, GameSession,
-    GameStorageError, MAX_SESSION_LEASE, MAX_WORLD_LEASE, SessionAccess, SourceCharacter,
+    AuthTokenDigest, CharacterSnapshot, CommandCommit, CommandReceipt, CommittedActorEvent,
+    GameCommand, GameSession, GameStorageError, MAX_SESSION_LEASE, MAX_WORLD_LEASE,
+    RoutedCommandCommit, RoutedTickCommit, SessionAccess, SessionSnapshot, SourceCharacter,
     TickCommit, TickReceipt, WorldLease, WorldSnapshot,
     codec::{
         self, MAX_CHARACTERS, MAX_RESULT_BYTES, MAX_WORLD_BYTES, callback_error, conflict, decode,
@@ -474,7 +477,9 @@ impl GameStore {
         &self,
         access: &SessionAccess,
     ) -> Result<GameSession, GameStorageError> {
-        self.session(access, None).await
+        self.session_snapshot(access, None)
+            .await
+            .map(|snapshot| snapshot.session)
     }
 
     /// Heartbeats are capped at the actual auth token's expiry and never revive an expired lease.
@@ -483,14 +488,17 @@ impl GameStore {
         access: &SessionAccess,
         duration: Duration,
     ) -> Result<GameSession, GameStorageError> {
-        self.session(access, Some(duration)).await
+        self.session_snapshot(access, Some(duration))
+            .await
+            .map(|snapshot| snapshot.session)
     }
 
-    async fn session(
+    /// Authenticated view data and optional heartbeat share the same locked transaction.
+    pub async fn session_snapshot(
         &self,
         access: &SessionAccess,
         duration: Option<Duration>,
-    ) -> Result<GameSession, GameStorageError> {
+    ) -> Result<SessionSnapshot, GameStorageError> {
         validate_access(access)?;
         let milliseconds = duration
             .map(|duration| lease_milliseconds(duration, MAX_SESSION_LEASE))
@@ -509,6 +517,14 @@ impl GameStore {
                     let mut transaction = connection.begin().await.map_err(ApiError::database)?;
                     let world = lock_world(&mut transaction, access.world_id).await?;
                     let player = lock_player(&mut transaction, &world, &access).await?;
+                    let character = character_snapshot(
+                        &world,
+                        owned_character(
+                            &player.characters,
+                            player.account.account_id,
+                            &access.actor_id,
+                        )?,
+                    )?;
                     let session = if let Some(milliseconds) = milliseconds {
                         put_session(
                             &mut transaction,
@@ -522,7 +538,11 @@ impl GameStore {
                     };
                     validate_player(&mut transaction, &access, player.account.account_id).await?;
                     transaction.commit().await.map_err(ApiError::database)?;
-                    session.public()
+                    Ok(SessionSnapshot {
+                        session: session.public()?,
+                        character,
+                        world,
+                    })
                 })
             },
         )
@@ -590,6 +610,51 @@ impl GameStore {
             + Send
             + 'static,
     {
+        self.commit_command_inner(lease, access, command, None, move |world, actor, intent| {
+            apply(world, actor, intent).map(EventOutput::Legacy)
+        })
+        .await
+        .map(|outcome| outcome.commit)
+    }
+
+    /// An observed revision may be older than a source tick; a future observation is rejected.
+    /// Sequences and intent hashes remain strict. Replays never invoke the routed callback.
+    pub async fn commit_routed_command<F>(
+        &self,
+        lease: &WorldLease,
+        access: &SessionAccess,
+        command: GameCommand,
+        observed_revision: Option<u64>,
+        apply: F,
+    ) -> Result<RoutedCommandCommit, GameStorageError>
+    where
+        F: FnOnce(&mut WorldState, &ActorId, &GameIntent) -> GameResult<Vec<ActorEvent>>
+            + Send
+            + 'static,
+    {
+        self.commit_command_inner(
+            lease,
+            access,
+            command,
+            observed_revision,
+            move |world, actor, intent| apply(world, actor, intent).map(EventOutput::Routed),
+        )
+        .await
+    }
+
+    async fn commit_command_inner<F>(
+        &self,
+        lease: &WorldLease,
+        access: &SessionAccess,
+        command: GameCommand,
+        observed_revision: Option<u64>,
+        apply: F,
+    ) -> Result<RoutedCommandCommit, GameStorageError>
+    where
+        F: FnOnce(&mut WorldState, &ActorId, &GameIntent) -> GameResult<EventOutput>
+            + Send
+            + 'static,
+    {
         self.local_lease(lease)?;
         validate_access(access)?;
         codec::uuid(command.operation_id)?;
@@ -620,19 +685,27 @@ impl GameStore {
                     validate_player(&mut transaction, &access, player.account.account_id).await?;
                     ensure_fence(&mut transaction, &lease).await?;
                     transaction.commit().await.map_err(ApiError::database)?;
-                    return Ok(CommandCommit {
-                        receipt,
-                        duplicate: true,
+                    return Ok(RoutedCommandCommit {
+                        commit: CommandCommit {
+                            receipt,
+                            duplicate: true,
+                        },
+                        snapshot: world,
+                        character_revision: character.revision as u64,
                     });
+                }
+                if observed_revision.is_some_and(|revision| revision > character.revision as u64) {
+                    return Err(conflict(
+                        "The observed character revision is ahead of authoritative state.",
+                    ));
                 }
                 if command.sequence != increment(character.last_sequence as u64)? {
                     return Err(conflict("The command sequence is stale or has a gap."));
                 }
                 let previous = world.state.clone();
-                let events = apply(&mut world.state, &access.actor_id, &command.intent)
+                let output = apply(&mut world.state, &access.actor_id, &command.intent)
                     .map_err(callback_error)?;
                 validate_transition(&previous, &world.state, previous.tick)?;
-                validate_events(&events)?;
                 world
                     .state
                     .characters
@@ -640,6 +713,7 @@ impl GameStore {
                     .ok_or_else(|| ApiError::internal("game_callback_identity"))?
                     .last_command_sequence = command.sequence;
                 world.state.revision = increment(previous.revision)?;
+                let (events, routed_events) = commit_events(output, &world)?;
                 let changed = changed_characters(&previous, &world.state, &player.characters)?;
                 let updated =
                     owned_character(&changed, player.account.account_id, &access.actor_id)?;
@@ -652,6 +726,7 @@ impl GameStore {
                     character_revision: updated.revision as u64,
                     character: world.state.characters[&access.actor_id].clone(),
                     events,
+                    routed_events,
                 };
                 let result_json = encode(&receipt, MAX_RESULT_BYTES)?;
                 let world_json = encode(&world.state, MAX_WORLD_BYTES)?;
@@ -687,9 +762,13 @@ impl GameStore {
                 validate_player(&mut transaction, &access, player.account.account_id).await?;
                 ensure_fence(&mut transaction, &lease).await?;
                 transaction.commit().await.map_err(ApiError::database)?;
-                Ok(CommandCommit {
-                    receipt,
-                    duplicate: false,
+                Ok(RoutedCommandCommit {
+                    character_revision: receipt.character_revision,
+                    commit: CommandCommit {
+                        receipt,
+                        duplicate: false,
+                    },
+                    snapshot: world,
                 })
             })
         })
@@ -710,6 +789,41 @@ impl GameStore {
     where
         F: FnOnce(&mut WorldState) -> GameResult<Vec<GameEvent>> + Send + 'static,
     {
+        self.commit_tick_inner(lease, expected_tick, None, move |world| {
+            apply(world).map(EventOutput::Legacy)
+        })
+        .await
+        .map(|outcome| outcome.commit)
+    }
+
+    /// The optional sessions are an infrastructure safety precondition, not a source presence
+    /// policy. If supplied, every stored actor must have its exact, still-live authenticated lease.
+    pub async fn commit_routed_tick<F>(
+        &self,
+        lease: &WorldLease,
+        expected_tick: u64,
+        sessions: Vec<SessionAccess>,
+        apply: F,
+    ) -> Result<RoutedTickCommit, GameStorageError>
+    where
+        F: FnOnce(&mut WorldState) -> GameResult<Vec<ActorEvent>> + Send + 'static,
+    {
+        self.commit_tick_inner(lease, expected_tick, Some(sessions), move |world| {
+            apply(world).map(EventOutput::Routed)
+        })
+        .await
+    }
+
+    async fn commit_tick_inner<F>(
+        &self,
+        lease: &WorldLease,
+        expected_tick: u64,
+        sessions: Option<Vec<SessionAccess>>,
+        apply: F,
+    ) -> Result<RoutedTickCommit, GameStorageError>
+    where
+        F: FnOnce(&mut WorldState) -> GameResult<EventOutput> + Send + 'static,
+    {
         self.local_lease(lease)?;
         let next_tick = increment(expected_tick)?;
         let lease = lease.clone();
@@ -720,30 +834,37 @@ impl GameStore {
                 ensure_fence(&mut transaction, &lease).await?;
                 let characters = lock_characters(&mut transaction, &world).await?;
                 if world.state.tick == next_tick
-                    && let Some(receipt) = world.last_tick
+                    && let Some(receipt) = world.last_tick.clone()
                 {
                     ensure_fence(&mut transaction, &lease).await?;
                     transaction.commit().await.map_err(ApiError::database)?;
-                    return Ok(TickCommit {
-                        receipt,
-                        duplicate: true,
+                    return Ok(RoutedTickCommit {
+                        commit: TickCommit {
+                            receipt,
+                            duplicate: true,
+                        },
+                        snapshot: world,
                     });
                 }
                 if world.state.tick != expected_tick {
                     return Err(conflict("The expected world tick is stale or has a gap."));
                 }
+                if let Some(sessions) = &sessions {
+                    lock_tick_sessions(&mut transaction, &world, sessions).await?;
+                }
                 let previous = world.state.clone();
                 world.state.tick = next_tick;
-                let events = apply(&mut world.state).map_err(callback_error)?;
+                let output = apply(&mut world.state).map_err(callback_error)?;
                 validate_transition(&previous, &world.state, next_tick)?;
-                validate_events(&events)?;
                 world.state.revision = increment(previous.revision)?;
+                let (events, routed_events) = commit_events(output, &world)?;
                 let changed = changed_characters(&previous, &world.state, &characters)?;
                 let receipt = TickReceipt {
                     world_id: lease.world_id,
                     world_revision: world.state.revision,
                     tick: next_tick,
                     events,
+                    routed_events,
                 };
                 let result_json = encode(&receipt, MAX_RESULT_BYTES)?;
                 let world_json = encode(&world.state, MAX_WORLD_BYTES)?;
@@ -757,16 +878,62 @@ impl GameStore {
                 )
                 .await?;
                 save_characters(&mut transaction, lease.world_id, &changed).await?;
+                if let Some(sessions) = &sessions {
+                    check_tick_sessions(&mut transaction, &world, sessions).await?;
+                }
                 ensure_fence(&mut transaction, &lease).await?;
                 transaction.commit().await.map_err(ApiError::database)?;
-                Ok(TickCommit {
-                    receipt,
-                    duplicate: false,
+                world.last_tick = Some(receipt.clone());
+                Ok(RoutedTickCommit {
+                    commit: TickCommit {
+                        receipt,
+                        duplicate: false,
+                    },
+                    snapshot: world,
                 })
             })
         })
         .await
         .map_err(Into::into)
+    }
+
+    /// Pins immutable source identity and a private PRF key. Neither is part of a public world view.
+    pub(crate) async fn runtime_key(
+        &self,
+        lease: &WorldLease,
+        artifact_hash: String,
+    ) -> Result<[u8; 32], GameStorageError> {
+        self.local_lease(lease)?;
+        if artifact_hash.len() != 64
+            || !artifact_hash
+                .bytes()
+                .all(|b| b.is_ascii_digit() || (b'a'..=b'f').contains(&b))
+        {
+            return Err(ApiError::invalid("A SHA-256 artifact identity is required.").into());
+        }
+        let mut candidate = [0; 32];
+        getrandom::fill(&mut candidate).map_err(|_| ApiError::internal("game_random_entropy"))?;
+        let lease = lease.clone();
+        database::run(&self.pool, "game_runtime_identity", true, move |connection| Box::pin(async move {
+            let mut transaction = connection.begin().await.map_err(ApiError::database)?;
+            lock_world(&mut transaction, lease.world_id).await?;
+            ensure_fence(&mut transaction, &lease).await?;
+            sqlx::query(
+                "UPDATE game_worlds SET runtime_artifact_sha256 = $2, runtime_random_key = $3
+                 WHERE world_id = $1 AND runtime_artifact_sha256 IS NULL",
+            ).bind(lease.world_id).bind(&artifact_hash).bind(candidate.as_slice())
+                .execute(&mut *transaction).await.map_err(ApiError::database)?;
+            let (stored_hash, key): (String, Vec<u8>) = sqlx::query_as(
+                "SELECT runtime_artifact_sha256, runtime_random_key FROM game_worlds WHERE world_id = $1",
+            ).bind(lease.world_id).fetch_one(&mut *transaction).await.map_err(ApiError::database)?;
+            if stored_hash != artifact_hash {
+                return Err(conflict("This world is pinned to a different compiled artifact."));
+            }
+            let key = key.try_into().map_err(|_| ApiError::internal("game_random_key_shape"))?;
+            ensure_fence(&mut transaction, &lease).await?;
+            transaction.commit().await.map_err(ApiError::database)?;
+            Ok(key)
+        })).await.map_err(Into::into)
     }
 
     fn local_lease(&self, lease: &WorldLease) -> Result<(), ApiError> {
@@ -828,6 +995,14 @@ async fn lock_world(
             || receipt.world_revision == 0
             || receipt.world_revision > state.revision
             || validate_events(&receipt.events).is_err()
+            || validate_routing(
+                &receipt.routed_events,
+                &receipt.events,
+                world_id,
+                receipt.world_revision,
+                &state,
+            )
+            .is_err()
     }) || (state.tick > 0 && last_tick.is_none())
     {
         return Err(ApiError::internal("game_stored_tick_result"));
@@ -1323,8 +1498,157 @@ async fn journal_result(
         || receipt.character_revision > character.revision as u64
         || validate_character(&receipt.character, receipt.world_tick).is_err()
         || validate_events(&receipt.events).is_err()
+        || validate_routing(
+            &receipt.routed_events,
+            &receipt.events,
+            world.world_id,
+            receipt.world_revision,
+            &world.state,
+        )
+        .is_err()
     {
         return Err(ApiError::internal("game_journal_result_metadata"));
     }
     Ok(Some(receipt))
+}
+
+enum EventOutput {
+    Legacy(Vec<GameEvent>),
+    Routed(Vec<ActorEvent>),
+}
+
+fn event_id(world: Uuid, revision: u64, index: usize, actor: &ActorId) -> String {
+    let mut hash = Sha256::new();
+    hash.update(b"clubscape.actor-event.v1\0");
+    hash.update(world.as_bytes());
+    hash.update(revision.to_be_bytes());
+    hash.update((index as u64).to_be_bytes());
+    hash.update(actor.as_str().as_bytes());
+    format!("event:{:x}", hash.finalize())
+}
+
+fn commit_events(
+    output: EventOutput,
+    world: &WorldSnapshot,
+) -> Result<(Vec<GameEvent>, Vec<CommittedActorEvent>), ApiError> {
+    match &output {
+        EventOutput::Legacy(events) => validate_events(events)?,
+        EventOutput::Routed(events) if events.len() > 1024 => {
+            return Err(ApiError::invalid(
+                "The event result exceeds its storage bounds.",
+            ));
+        }
+        EventOutput::Routed(_) => {}
+    }
+    let (legacy, routed) = match output {
+        EventOutput::Legacy(events) => (events, Vec::new()),
+        EventOutput::Routed(events) => (
+            Vec::new(),
+            events
+                .into_iter()
+                .enumerate()
+                .map(|(index, event)| CommittedActorEvent {
+                    event_id: event_id(
+                        world.world_id,
+                        world.state.revision,
+                        index,
+                        &event.actor_id,
+                    ),
+                    actor_id: event.actor_id,
+                    event: event.event,
+                })
+                .collect(),
+        ),
+    };
+    validate_routing(
+        &routed,
+        &legacy,
+        world.world_id,
+        world.state.revision,
+        &world.state,
+    )?;
+    Ok((legacy, routed))
+}
+
+fn validate_routing(
+    routed: &[CommittedActorEvent],
+    legacy: &[GameEvent],
+    world: Uuid,
+    revision: u64,
+    state: &WorldState,
+) -> Result<(), ApiError> {
+    if routed.len() + legacy.len() > 1024
+        || (!routed.is_empty() && !legacy.is_empty())
+        || routed.iter().enumerate().any(|(index, event)| {
+            !state.characters.contains_key(&event.actor_id)
+                || event.event_id != event_id(world, revision, index, &event.actor_id)
+        })
+    {
+        return Err(ApiError::internal("game_event_routing_integrity"));
+    }
+    Ok(())
+}
+
+async fn lock_tick_sessions(
+    connection: &mut PgConnection,
+    world: &WorldSnapshot,
+    sessions: &[SessionAccess],
+) -> Result<(), ApiError> {
+    // World locking already excludes character/session writers. Token-only shared locks do not
+    // acquire account locks afterward and therefore cannot invert account login's lock order.
+    let _: Vec<Vec<u8>> = sqlx::query_scalar(
+        "SELECT a.token_digest FROM account_sessions a JOIN game_sessions s
+             ON s.account_id = a.account_id AND s.token_digest = a.token_digest
+         WHERE s.world_id = $1 ORDER BY a.token_digest FOR SHARE OF a",
+    )
+    .bind(world.world_id)
+    .fetch_all(&mut *connection)
+    .await
+    .map_err(ApiError::database)?;
+    check_tick_sessions(connection, world, sessions).await
+}
+
+async fn check_tick_sessions(
+    connection: &mut PgConnection,
+    world: &WorldSnapshot,
+    sessions: &[SessionAccess],
+) -> Result<(), ApiError> {
+    let actors: std::collections::BTreeSet<_> =
+        sessions.iter().map(|session| &session.actor_id).collect();
+    if sessions.len() != world.state.characters.len()
+        || actors.len() != sessions.len()
+        || !actors.into_iter().eq(world.state.characters.keys())
+        || sessions
+            .iter()
+            .any(|session| session.world_id != world.world_id)
+    {
+        return Err(ApiError::new(
+            axum::http::StatusCode::SERVICE_UNAVAILABLE,
+            clubscape_protocol::ErrorCode::Unavailable,
+            "Source presence handling is unavailable; offline actors cannot be advanced.",
+        ));
+    }
+    for access in sessions {
+        let valid: bool = sqlx::query_scalar(
+            "SELECT EXISTS (SELECT 1 FROM game_sessions s JOIN account_sessions a
+                ON a.account_id = s.account_id AND a.token_digest = s.token_digest
+             WHERE s.world_id = $1 AND s.actor_id = $2 AND s.session_id = $3 AND s.token_digest = $4
+                AND s.expires_at > clock_timestamp() AND a.expires_at > clock_timestamp())",
+        )
+        .bind(world.world_id)
+        .bind(access.actor_id.as_str())
+        .bind(access.session_id)
+        .bind(access.authentication.0.as_slice())
+        .fetch_one(&mut *connection)
+        .await
+        .map_err(ApiError::database)?;
+        if !valid {
+            return Err(ApiError::new(
+                axum::http::StatusCode::SERVICE_UNAVAILABLE,
+                clubscape_protocol::ErrorCode::Unavailable,
+                "Source presence handling is unavailable; an actor's live session was lost.",
+            ));
+        }
+    }
+    Ok(())
 }

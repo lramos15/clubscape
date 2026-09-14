@@ -11,13 +11,25 @@ use uuid::Uuid;
 
 use crate::{crypto::CryptoError, rate_limit::LimitError};
 
-#[derive(Debug)]
+#[derive(Clone, Debug)]
 pub(crate) struct ApiError {
     pub(crate) status: StatusCode,
     pub(crate) code: ErrorCode,
     pub(crate) message: &'static str,
     pub(crate) error_id: Uuid,
     pub(crate) retry_after_seconds: u32,
+}
+
+impl From<crate::game_storage::GameStorageError> for ApiError {
+    fn from(error: crate::game_storage::GameStorageError) -> Self {
+        Self {
+            status: error.status,
+            code: error.code,
+            message: error.message,
+            error_id: error.error_id,
+            retry_after_seconds: error.retry_after_seconds,
+        }
+    }
 }
 
 impl ApiError {

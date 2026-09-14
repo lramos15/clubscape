@@ -3,6 +3,7 @@ syntax = "proto3";
 package clubscape.game.v1;
 
 message CreateCharacter {
+  // New servers require empty options here: confirmation/selection are sequenced source intents.
   map<string, uint32> appearance = 1;
   string experience_choice = 2;
 }
@@ -135,6 +136,24 @@ message WorldSnapshot {
   repeated Event events = 8;
   bool full_snapshot = 9;
   repeated string removed_entities = 10;
+  // Player and ground_items are always complete. A gap resets entity state and omits old audio.
+  bool event_history_gap = 11;
+  uint64 event_history_floor_revision = 12;
+  repeated DynamicObject dynamic_objects = 13;
+  repeated UnavailableView unavailable_views = 14;
+  uint64 next_sequence = 15;
+}
+message UnavailableView { string view = 1; string reason = 2; }
+message DynamicObject {
+  string id = 1;
+  string definition_id = 2;
+  optional string object_id = 3;
+  Tile tile = 4;
+  optional string instance = 5;
+  optional string state = 6;
+  optional bool door_open = 7;
+  uint32 quarter_turns = 8;
+  optional uint64 expires_at_tick = 9;
 }
 message Stack {
   string item = 1;
@@ -182,6 +201,14 @@ message Player {
   optional string instance = 24;
   repeated string active_prayers = 25;
   optional string active_death = 26;
+  bool appearance_confirmed = 27;
+  optional string combat_style = 28;
+}
+enum EntityKind {
+  ENTITY_KIND_UNSPECIFIED = 0;
+  NPC = 1;
+  OBJECT = 2;
+  PLAYER = 3;
 }
 message Entity {
   string id = 1;
@@ -195,12 +222,17 @@ message Entity {
   repeated string actions = 9;
   map<string, uint32> appearance = 10;
   repeated EquipmentSlot equipment = 11;
+  optional string instance = 12;
+  bool actions_evaluated = 13;
+  EntityKind kind = 14;
 }
 message GroundItem {
   string id = 1;
   Tile tile = 2;
   Stack stack = 3;
   bool can_take = 4;
+  optional string instance = 5;
+  bool permissions_evaluated = 6;
 }
 message Dialogue {
   string id = 1;
@@ -221,4 +253,6 @@ message Event {
   string sound_asset = 8;
   string animation_asset = 9;
   string event_id = 10;
+  repeated Stack items = 11;
+  string actor_id = 12;
 }

@@ -51,7 +51,9 @@ fn optional_spawn(value: &Option<String>) -> Result<Option<SpawnId>, ValidationE
 }
 
 pub fn validate_character_options(options: &game::CreateCharacter) -> Result<(), ValidationError> {
-    bounded_text(&options.experience_choice, 64)?;
+    if !options.experience_choice.is_empty() {
+        bounded_text(&options.experience_choice, 64)?;
+    }
     validate_appearance(&options.appearance)
 }
 
@@ -93,8 +95,15 @@ fn world_target(target: &game::WorldTarget) -> Result<WorldTarget, ValidationErr
 
 pub fn game_intent(input: &game::WorldInput) -> Result<GameIntent, ValidationError> {
     validate_world_session(&input.world_session_id)?;
-    if input.sequence == 0 {
-        return Err(invalid("Game command sequences start at one."));
+    if input.sequence == 0
+        || input.sequence > i64::MAX as u64
+        || input
+            .expected_character_revision
+            .is_some_and(|value| value > i64::MAX as u64)
+    {
+        return Err(invalid(
+            "Game sequences must be positive and sequences/revisions must fit signed 64-bit storage.",
+        ));
     }
     use game::world_input::Action;
     Ok(
@@ -307,6 +316,19 @@ mod tests {
             expected_character_revision: Some(0),
             action: Some(action),
         }
+    }
+
+    #[test]
+    fn deferred_creation_and_storage_revision_bounds_are_explicit() {
+        assert!(validate_character_options(&game::CreateCharacter::default()).is_ok());
+        let mut value = input(game::world_input::Action::CancelActivity(game::Empty {}));
+        value.sequence = i64::MAX as u64;
+        assert!(game_intent(&value).is_ok());
+        value.sequence += 1;
+        assert!(game_intent(&value).is_err());
+        value.sequence = 1;
+        value.expected_character_revision = Some(i64::MAX as u64 + 1);
+        assert!(game_intent(&value).is_err());
     }
 
     #[test]

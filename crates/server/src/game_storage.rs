@@ -177,6 +177,8 @@ pub struct CommandReceipt {
     pub character_revision: u64,
     pub character: CharacterState,
     pub events: Vec<GameEvent>,
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    pub routed_events: Vec<CommittedActorEvent>,
 }
 
 #[derive(Clone, Debug, PartialEq, Eq)]
@@ -192,10 +194,42 @@ pub struct TickReceipt {
     pub world_revision: u64,
     pub tick: u64,
     pub events: Vec<GameEvent>,
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    pub routed_events: Vec<CommittedActorEvent>,
 }
 
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub struct TickCommit {
     pub receipt: TickReceipt,
     pub duplicate: bool,
+}
+
+/// Routing and identity are committed with the effect, never inferred from an event's target.
+#[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub struct CommittedActorEvent {
+    pub actor_id: ActorId,
+    pub event_id: String,
+    pub event: GameEvent,
+}
+
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub struct RoutedCommandCommit {
+    pub commit: CommandCommit,
+    /// The transaction's current world, including when the receipt is historical.
+    pub snapshot: WorldSnapshot,
+    pub character_revision: u64,
+}
+
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub struct RoutedTickCommit {
+    pub commit: TickCommit,
+    pub snapshot: WorldSnapshot,
+}
+
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub struct SessionSnapshot {
+    pub session: GameSession,
+    pub character: CharacterSnapshot,
+    pub world: WorldSnapshot,
 }

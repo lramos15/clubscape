@@ -923,7 +923,7 @@ async fn world_initialization_and_source_character_creation_are_atomic_and_never
         .fetch_one(&database.pool)
         .await
         .unwrap();
-    assert_eq!(migration_count, 2);
+    assert_eq!(migration_count, 3);
     let initial = database.store.load_world(database.world_id).await.unwrap();
     let copies = join_all((0..8).map(|_| {
         database

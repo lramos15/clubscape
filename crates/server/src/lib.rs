@@ -2,6 +2,7 @@ mod config;
 mod crypto;
 mod database;
 mod error;
+mod game_service;
 pub mod game_storage;
 mod rate_limit;
 mod store;
@@ -53,6 +54,7 @@ struct AppState {
     limiter: RateLimiter,
     build_revision: String,
     web_assets: Option<Arc<web_assets::WebAssets>>,
+    game: Option<game_service::GameHandle>,
 }
 
 /// A migrated, loopback-bound service. `serve` owns graceful listener/pool shutdown.
@@ -61,6 +63,7 @@ pub struct Service {
     local_addr: SocketAddr,
     pool: PgPool,
     router: Router,
+    game: Option<game_service::PreparedGame>,
 }
 
 impl Service {
@@ -70,6 +73,15 @@ impl Service {
                 tracing::error!(event = "web_bundle_failure", error_kind = %error, "configured web bundle failed validation");
                 StartupError::new("web_assets", "invalid_web_bundle")
             })?.map(Arc::new);
+        let game_content = game_service::PreparedGame::load(&config)?;
+        if let (Some(game), Some(web)) = (&game_content, &web_assets)
+            && game.assets.overlaps(web)
+        {
+            return Err(StartupError::new(
+                "game_content",
+                "conflicting_static_routes",
+            ));
+        }
         let pool = PgPoolOptions::new()
             // All acquisition, release and cleanup work is owned and timed, not background upkeep.
             .min_connections(0)
@@ -124,10 +136,16 @@ impl Service {
             let local_addr = listener
                 .local_addr()
                 .map_err(|_| StartupError::new("listener", "local_address"))?;
-            Ok((passwords, listener, local_addr))
+            let game = match game_content {
+                Some(content) => {
+                    Some(game_service::PreparedGame::initialize(content, pool.clone()).await?)
+                }
+                None => None,
+            };
+            Ok((passwords, listener, local_addr, game))
         }
         .await;
-        let (passwords, listener, local_addr) = match initialized {
+        let (passwords, listener, local_addr, game) = match initialized {
             Ok(initialized) => initialized,
             Err(error) => {
                 if !database::close_pool(pool).await {
@@ -142,6 +160,7 @@ impl Service {
             limiter: RateLimiter::default(),
             build_revision: config.build_revision,
             web_assets,
+            game: game.as_ref().map(|game| game.handle.clone()),
         });
         let router = Router::new()
             .route("/healthz", get(health))
@@ -153,6 +172,7 @@ impl Service {
             local_addr,
             pool,
             router,
+            game,
         })
     }
 
@@ -169,7 +189,20 @@ impl Service {
             address = %self.local_addr,
             "account service listening on loopback"
         );
-        let mut result = transport::serve(self.listener, self.router, shutdown).await;
+        let game_task = self.game.map(game_service::PreparedGame::start);
+        let game_stop = game_task.as_ref().map(game_service::GameTask::stop_signal);
+        let mut result = transport::serve(self.listener, self.router, async move {
+            shutdown.await;
+            if let Some(stop) = game_stop {
+                stop.send_replace(true);
+            }
+        })
+        .await;
+        if let Some(game) = game_task
+            && let Err(error) = game.finish().await
+        {
+            result = Err(error);
+        }
         if !database::close_pool(self.pool).await {
             result = Err(ServeError::new("pool_close_deadline"));
         }
@@ -183,6 +216,11 @@ impl Service {
 }
 
 async fn health(State(state): State<Arc<AppState>>) -> Response {
+    if let Some(game) = &state.game
+        && let Err(error) = game.availability()
+    {
+        return error.into_response(String::new());
+    }
     match database::run(&state.pool, "readiness", false, |connection| {
         Box::pin(async move {
             sqlx::query_scalar::<_, i32>("SELECT 1")
@@ -257,6 +295,8 @@ async fn handle_rpc(
         state.limiter.admit(peer)?;
     }
     validate_client_message(&message)?;
+    let operation_id = Uuid::parse_str(&message.request_id)
+        .map_err(|_| ApiError::invalid("A request UUID is required."))?;
     let command = message
         .command
         .ok_or_else(|| ApiError::invalid("A supported command is required."))?;
@@ -274,7 +314,13 @@ async fn handle_rpc(
     };
     timeout(
         COMMAND_TIMEOUT,
-        execute_command(state, &parts.headers, command),
+        execute_command(
+            state,
+            &parts.headers,
+            command,
+            operation_id,
+            &message.request_id,
+        ),
     )
     .await
     .map_err(|_| ApiError::deadline(operation, "command", mutation, COMMAND_TIMEOUT))?
@@ -284,18 +330,33 @@ async fn execute_command(
     state: &AppState,
     headers: &HeaderMap,
     command: client_message::Command,
+    operation_id: Uuid,
+    request_id: &str,
 ) -> Result<server_message::Result, ApiError> {
     match command {
-        client_message::Command::Hello(_) => Ok(server_message::Result::Hello(ServerHello {
-            capabilities: CAPABILITIES
+        client_message::Command::Hello(_) => {
+            let mut capabilities: Vec<_> = CAPABILITIES
                 .iter()
                 .map(|value| (*value).to_owned())
-                .collect(),
-            max_request_bytes: MAX_REQUEST_BYTES as u32,
-            gameplay_available: false,
-            gameplay_unavailable_reason: GAMEPLAY_UNAVAILABLE_REASON.to_owned(),
-            build_revision: state.build_revision.clone(),
-        })),
+                .collect();
+            let (available, reason) = match &state.game {
+                Some(game) => match game.availability() {
+                    Ok(()) => (true, String::new()),
+                    Err(error) => (false, error.message.to_owned()),
+                },
+                None => (false, GAMEPLAY_UNAVAILABLE_REASON.to_owned()),
+            };
+            if available {
+                capabilities.push(clubscape_protocol::GAME_CAPABILITY.to_owned());
+            }
+            Ok(server_message::Result::Hello(ServerHello {
+                capabilities,
+                max_request_bytes: MAX_REQUEST_BYTES as u32,
+                gameplay_available: available,
+                gameplay_unavailable_reason: reason,
+                build_revision: state.build_revision.clone(),
+            }))
+        }
         client_message::Command::Register(register) => {
             let account = store::register(
                 &state.pool,
@@ -320,25 +381,43 @@ async fn execute_command(
         }
         client_message::Command::CurrentAccount(_) => {
             let digest = authorization_digest(headers)?;
-            let account = store::current_account(&state.pool, &digest).await?;
+            let (account, character_initialized) =
+                store::account_snapshot(&state.pool, &digest).await?;
+            let reason = if let Some(game) = &state.game {
+                game.availability()
+                    .err()
+                    .map_or_else(String::new, |error| error.message.to_owned())
+            } else if character_initialized {
+                "Gameplay content is not configured.".to_owned()
+            } else {
+                GAMEPLAY_UNAVAILABLE_REASON.to_owned()
+            };
             Ok(server_message::Result::Account(AccountSnapshot {
                 account: Some(account),
-                character_initialized: false,
-                gameplay_unavailable_reason: GAMEPLAY_UNAVAILABLE_REASON.to_owned(),
+                character_initialized,
+                gameplay_unavailable_reason: reason,
             }))
         }
         client_message::Command::Logout(_) => {
             let digest = authorization_digest(headers)?;
+            if let Some(game) = &state.game {
+                game.allow_account_logout(digest).await?;
+            }
             store::logout(&state.pool, &digest).await?;
             Ok(server_message::Result::LoggedOut(LoggedOut {}))
         }
-        client_message::Command::CreateCharacter(_)
+        command @ (client_message::Command::CreateCharacter(_)
         | client_message::Command::JoinWorld(_)
         | client_message::Command::PollWorld(_)
         | client_message::Command::WorldInput(_)
-        | client_message::Command::LeaveWorld(_) => {
+        | client_message::Command::LeaveWorld(_)) => {
             let digest = authorization_digest(headers)?;
             store::current_account(&state.pool, &digest).await?;
+            if let Some(game) = &state.game {
+                return game
+                    .request(operation_id, request_id, digest, command)
+                    .await;
+            }
             Err(ApiError::new(
                 StatusCode::SERVICE_UNAVAILABLE,
                 ErrorCode::Unavailable,
@@ -416,6 +495,13 @@ async fn method_not_allowed() -> Response {
 }
 
 async fn web_or_not_found(State(state): State<Arc<AppState>>, request: Request<Body>) -> Response {
+    if let Some(game) = &state.game
+        && let Some(response) =
+            game.assets
+                .response(request.uri().path(), request.method(), request.headers())
+    {
+        return response;
+    }
     if let Some(assets) = &state.web_assets
         && let Some(response) =
             assets.response(request.uri().path(), request.method(), request.headers())

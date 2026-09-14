@@ -176,6 +176,36 @@ pub(crate) async fn current_account(pool: &PgPool, digest: &[u8; 32]) -> Result<
     .await
 }
 
+pub(crate) async fn account_snapshot(
+    pool: &PgPool,
+    digest: &[u8; 32],
+) -> Result<(Account, bool), ApiError> {
+    let digest = *digest;
+    database::run(pool, "current_account", false, move |connection| {
+        Box::pin(async move {
+            let account: Option<(Uuid, String, bool)> = sqlx::query_as(
+                "SELECT a.account_id, a.login_name,
+                 EXISTS (SELECT 1 FROM game_characters c WHERE c.account_id = a.account_id)
+             FROM accounts a JOIN account_sessions s ON s.account_id = a.account_id
+             WHERE s.token_digest = $1 AND s.expires_at > clock_timestamp()",
+            )
+            .bind(digest.as_slice())
+            .fetch_optional(connection)
+            .await
+            .map_err(ApiError::database)?;
+            let (id, login_name, initialized) = account.ok_or_else(ApiError::unauthenticated)?;
+            Ok((
+                Account {
+                    account_id: id.to_string(),
+                    login_name,
+                },
+                initialized,
+            ))
+        })
+    })
+    .await
+}
+
 pub(crate) async fn logout(pool: &PgPool, digest: &[u8; 32]) -> Result<(), ApiError> {
     let digest = *digest;
     database::run(pool, "logout", true, move |connection| {

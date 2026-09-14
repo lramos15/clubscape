@@ -1,14 +1,21 @@
 # Account service (M1-ACCOUNTS)
 
-This is account/session infrastructure, **not accepted M1 gameplay**. It creates
-no character, world, tutorial progress, content, UI, or assets. The frozen API is
+This is account/session infrastructure with an optional live-world adapter,
+**not accepted M1 gameplay**. Account-only mode creates no character, world,
+tutorial progress, content, UI, or assets. The frozen account API is
 [`account.proto`](../protocol/proto/account.proto); `hello` and account snapshots
 explicitly report the protocol's gameplay-unavailable reason.
 
-The public `game_storage` library module additionally provides real PostgreSQL
-world/character/session persistence for a future authoritative runtime. The
-running account service does **not** call it to create characters or run gameplay.
-Game RPCs remain unavailable and `game.v1` is not advertised. Storage tests are
+The public `game_storage` library module provides real PostgreSQL
+world/character/session persistence. Without `CLUBSCAPE_GAME_ROOT`, game RPCs
+remain unavailable and `game.v1` is not advertised. With an explicit validated
+artifact and asset bundle, the bounded coordinator executes the available
+`WorldEngine` actions/ticks through that store. Source presence and guarded
+public-view APIs are still missing; the adapter fails those boundaries explicitly
+and is **not yet a completed live-world integration**. See
+[`spec/game-networking.md`](../../spec/game-networking.md) for configuration,
+ordering, routing, privacy, reconnect/shutdown and the exact remaining blockers.
+Storage and live-world synthetic tests are
 not source-content, gameplay, presentation, performance or milestone acceptance.
 
 ## Running locally
@@ -69,6 +76,14 @@ they cannot protect a client from an open connection that withholds responses.
 | Pool close, including startup-failure cleanup | 2 seconds |
 | HTTP graceful draining after shutdown signal | 6 seconds |
 | Joining force-aborted HTTP tasks after drain expiry | 1 second |
+
+Those HTTP/account bounds are unchanged. With a configured game, coordinator
+requests additionally have a nine-second reply bound inside the ten-second RPC
+limit. Shutdown also signals the owned game task; its five-second lease-release
+operation overlaps HTTP draining where possible, followed by a bounded
+six-second coordinator join (and at most one second joining an abort) before
+pool close. Missing source presence/view APIs and game-loop failures remain
+explicitly unavailable, as detailed in the live-world contract.
 
 Login's credential lookup and entire session-issuance transaction are separate
 database groups; the account lock, pruning, insert **and commit** share the latter

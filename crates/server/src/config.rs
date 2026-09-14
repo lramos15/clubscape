@@ -11,6 +11,9 @@ pub struct Config {
     pub(crate) database: PgConnectOptions,
     pub(crate) build_revision: String,
     pub(crate) web_root: Option<PathBuf>,
+    pub(crate) game_root: Option<PathBuf>,
+    #[cfg(test)]
+    pub(crate) game_test_fixture: bool,
 }
 
 impl fmt::Debug for Config {
@@ -21,6 +24,7 @@ impl fmt::Debug for Config {
             .field("database", &"[redacted]")
             .field("build_revision", &self.build_revision)
             .field("web_root", &self.web_root)
+            .field("game_root", &self.game_root)
             .finish()
     }
 }
@@ -41,6 +45,8 @@ pub enum ConfigError {
     NonUnicodeEnvironment,
     #[error("CLUBSCAPE_WEB_ROOT must be a nonempty path")]
     InvalidWebRoot,
+    #[error("CLUBSCAPE_GAME_ROOT must be a nonempty printable path")]
+    InvalidGameRoot,
 }
 
 impl Config {
@@ -52,6 +58,9 @@ impl Config {
         if let Some(root) = optional_env("CLUBSCAPE_WEB_ROOT")? {
             if root.trim().is_empty() || root.chars().any(char::is_control) {
                 return Err(ConfigError::InvalidWebRoot);
+            }
+            if let Some(root) = optional_env("CLUBSCAPE_GAME_ROOT")? {
+                config = config.with_game_root(PathBuf::from(root))?;
             }
             config = config.with_web_root(PathBuf::from(root))?;
         }
@@ -89,6 +98,9 @@ impl Config {
             database,
             build_revision: build_revision.to_owned(),
             web_root: None,
+            game_root: None,
+            #[cfg(test)]
+            game_test_fixture: false,
         })
     }
 
@@ -106,6 +118,19 @@ impl Config {
             return Err(ConfigError::InvalidWebRoot);
         }
         self.web_root = Some(root);
+        Ok(self)
+    }
+
+    pub fn with_game_root(mut self, root: impl Into<PathBuf>) -> Result<Self, ConfigError> {
+        let root = root.into();
+        if root.as_os_str().is_empty()
+            || root
+                .to_str()
+                .is_none_or(|value| value.trim().is_empty() || value.chars().any(char::is_control))
+        {
+            return Err(ConfigError::InvalidGameRoot);
+        }
+        self.game_root = Some(root);
         Ok(self)
     }
 }

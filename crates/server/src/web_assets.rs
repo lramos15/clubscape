@@ -92,13 +92,18 @@ fn allowed_extension(path: &Path) -> bool {
 
 impl WebAssets {
     pub(crate) fn load(root: &Path) -> Result<Self, WebAssetError> {
+        Self::load_manifest(root, "clubscape-web.json", false)
+    }
+
+    pub(crate) fn load_game(root: &Path) -> Result<Self, WebAssetError> {
+        Self::load_manifest(root, "clubscape-game-assets.json", true)
+    }
+
+    fn load_manifest(root: &Path, manifest_name: &str, game: bool) -> Result<Self, WebAssetError> {
         let root = root.canonicalize()?;
-        let manifest_path = root.join("clubscape-web.json");
-        if fs::symlink_metadata(&manifest_path)?
-            .file_type()
-            .is_symlink()
-            || fs::metadata(&manifest_path)?.len() > 2 * 1024 * 1024
-        {
+        let manifest_path = root.join(manifest_name);
+        let manifest_metadata = fs::symlink_metadata(&manifest_path)?;
+        if !manifest_metadata.file_type().is_file() || manifest_metadata.len() > 2 * 1024 * 1024 {
             return Err(WebAssetError::Invalid(
                 "web manifest must be a bounded regular file",
             ));
@@ -128,6 +133,9 @@ impl WebAssets {
                 "asset URLs must be same-origin paths",
             ))?;
             if (!route.is_empty() && !public_path(route))
+                || (game
+                    && !entry.url.starts_with("/content/")
+                    && !entry.url.starts_with("/assets/"))
                 || entry.url.starts_with("/v1/")
                 || entry.url == "/healthz"
                 || !public_path(&entry.path)
@@ -197,15 +205,24 @@ impl WebAssets {
                 return Err(WebAssetError::Invalid("duplicate public asset route"));
             }
         }
-        if files
-            .get("/")
-            .is_none_or(|asset| !asset.content_type.as_bytes().starts_with(b"text/html"))
+        if !game
+            && files
+                .get("/")
+                .is_none_or(|asset| !asset.content_type.as_bytes().starts_with(b"text/html"))
         {
             return Err(WebAssetError::Invalid(
                 "web bundle requires an explicit HTML entry at /",
             ));
         }
         Ok(Self { files })
+    }
+
+    pub(crate) fn contains(&self, path: &str) -> bool {
+        self.files.contains_key(path)
+    }
+
+    pub(crate) fn overlaps(&self, other: &Self) -> bool {
+        self.files.keys().any(|path| other.contains(path))
     }
 
     pub(crate) fn response(
