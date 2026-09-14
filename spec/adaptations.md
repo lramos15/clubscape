@@ -25,3 +25,21 @@ dose outcomes and independence from the primary selection.
 
 No other source inference is automatically approved by this decision.
 Reference-pack and final owner presentation acceptance remain separate gates.
+
+## Provisional M1 audio triggers
+
+**Owner approved for review**, recorded in
+[`milestones/m1-audio-trigger-approval.json`](../milestones/m1-audio-trigger-approval.json):
+
+- `adaptation.m1.learning_the_ropes_completion_audio`: use original quest
+  jingle 152 once at legitimate Learning the Ropes completion.
+- `adaptation.m1.ordinary_food_audio`: use original eating cue 2393 once for
+  ordinary cooked shrimp/bread at the first sound cue of source animation
+  12526 (frame 1, after four source client cycles), without duplicate dispatch
+  or double-applied waveform offsets.
+
+These choices affect only the two audio trigger selections. They do not change
+gameplay, replace source audio with generated sounds, or claim that the
+previously uncertain current selectors have been observed. Cook's Assistant's
+separately observed jingle/dialogue ordering remains unchanged. Keep the
+provisional labels visible through the owner playtest and final acceptance.

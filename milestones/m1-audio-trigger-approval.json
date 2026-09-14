@@ -1,0 +1,34 @@
+{
+  "schema_version": 1,
+  "milestone": "m1-starter-journey",
+  "authority": "owner",
+  "decision": "approved",
+  "owner_record": "Use the proposed original sounds provisionally and document them for review",
+  "scope": "Two narrowly defined provisional audio trigger choices only; original source sound payloads are unchanged by this decision.",
+  "adaptations": [
+    {
+      "id": "adaptation.m1.learning_the_ropes_completion_audio",
+      "event": "Legitimate Learning the Ropes quest completion",
+      "source_audio": "Original quest-completion jingle 152",
+      "policy": "Play once when the source-bound quest completion is committed. Do not replay it on duplicate completion, reconnect or state reload.",
+      "classification": "approved_adaptation",
+      "verified_current_source_selector": false
+    },
+    {
+      "id": "adaptation.m1.ordinary_food_audio",
+      "items": ["Shrimps", "Bread"],
+      "source_item_ids": [315, 2309],
+      "source_audio": "Original eating sound 2393",
+      "policy": "Emit once using the sound-enabled eating animation's first sound cue: source sequence 12526, frame 1, after four source client cycles. Never emit it twice from both animation and a game-trigger callback, and do not double-add the waveform's baked source offset.",
+      "classification": "approved_adaptation",
+      "verified_current_ordinary_food_selector": false
+    }
+  ],
+  "unchanged": [
+    "No changes to XP, item consumption, combat or quest progression",
+    "Cook's Assistant retains observed jingle 152, with its reward-caused level-up sound/dialogue after quest-scroll dismissal",
+    "Native last-accepted-jingle-request-wins behavior and source SFX queue semantics remain",
+    "Reference-pack approval and final visual/audio owner acceptance are still separate"
+  ],
+  "review_requirement": "Disclose these two provisional trigger choices in the owner Mac playtest and source/parity records; they are not promoted to verified OSRS behavior."
+}
