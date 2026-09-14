@@ -1,0 +1,52 @@
+{
+  "browser_float_models": {
+    "positive-peak-f32-reciprocal:16": 35,
+    "signed-power-of-two:32": 223
+  },
+  "commands": [
+    {
+      "command": "python3 tools/audio-import/audio_import.py convert",
+      "exit_code": 0,
+      "playable_outputs": 258
+    },
+    {
+      "command": "AUDIO_IMPORT_INTEGRATION=1 python3 -m unittest discover -s tools/audio-import -p test_*.py -q",
+      "exit_code": 0,
+      "log_sha256": "18cf7a96af0c715595414527c70b9a88102831761417198c48678b6bb423127a",
+      "tests": 25
+    },
+    {
+      "command": "node tools/audio-import/browser_check.mjs /path/to/verified/Chrome153.0.8010.12",
+      "decoded_files": 258,
+      "exit_code": 0
+    }
+  ],
+  "human_perceptual_equivalence_claimed": false,
+  "live_trigger_timing_or_audible_browser_playback_accepted": false,
+  "manifest_sha256": "1e7c37af6d303eb5db9407c9318ee532cbd4f823427fed02c89612dfefaa23b5",
+  "maximum_measured_browser_float_representation_deviation": 2.282857894897461e-05,
+  "original_runtime_rerender_tests": {
+    "complete_jingle_groups": [
+      154
+    ],
+    "complete_music_groups": [
+      0
+    ],
+    "sound_groups": [
+      220,
+      2603,
+      2725,
+      2735,
+      3220,
+      3790
+    ]
+  },
+  "original_source_silences_preserved_not_counted_as_playable": 1,
+  "owner_reference_pack_approved": false,
+  "repeated_full_conversion": {
+    "all_file_and_original_pcm_hashes_identical": true,
+    "files": 258
+  },
+  "schema_version": 1,
+  "source_audio_preparation_verified": true
+}

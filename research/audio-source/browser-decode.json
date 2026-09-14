@@ -1,0 +1,4735 @@
+{
+  "schema_version": 1,
+  "scope": "OfflineAudioContext.decodeAudioData source-file check only; no audible playback, UI/game presentation, autoplay, region events or owner acceptance.",
+  "result": "passed",
+  "manifest_sha256": "1e7c37af6d303eb5db9407c9318ee532cbd4f823427fed02c89612dfefaa23b5",
+  "browser": {
+    "protocolVersion": "1.3",
+    "product": "Chrome/153.0.8010.12",
+    "revision": "@971a7443b0c9b0a9b2860529b33331b76077ec62",
+    "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/153.0.0.0 Safari/537.36",
+    "jsVersion": "15.3.76.4"
+  },
+  "sandbox_not_disabled": true,
+  "original_pcm_representation_verified": true,
+  "source_recording": false,
+  "runtime_browser_audio_accepted": false,
+  "conversion_note": "Every browser float channel exactly matches an independently computed integer-to-float codec model. Chromium's positive int16 samples use a float32 reciprocal of32767 rather than32768; this numerical representation difference is recorded, not hidden behind an error tolerance or claimed as presentation acceptance.",
+  "count": 258,
+  "records": [
+    {
+      "asset_id": "asset.source.osrs.cache2695.audio-runtime.music.0",
+      "sample_rate": 22050,
+      "frames": 4363488,
+      "channels": 2,
+      "peak": 0.5153355598449707,
+      "float32_channel_sha256": [
+        "741b3adc7d94b858b486df12ba23d89dba7acc8b5dd3b61bf2f4268de7e87b58",
+        "61a3d32f1384cd8b2b1b40c085dcd193c2dcc4424791cdcbbe5eb5dfa45e20fc"
+      ],
+      "exact_integer_to_float_model": {
+        "float32_channel_sha256": [
+          "741b3adc7d94b858b486df12ba23d89dba7acc8b5dd3b61bf2f4268de7e87b58",
+          "61a3d32f1384cd8b2b1b40c085dcd193c2dcc4424791cdcbbe5eb5dfa45e20fc"
+        ],
+        "integer_width": 16,
+        "maximum_deviation_from_power_of_two_float": 0.000015735626220703125,
+        "mode": "positive-peak-f32-reciprocal"
+      }
+    },
+    {
+      "asset_id": "asset.source.osrs.cache2695.audio-runtime.music.62",
+      "sample_rate": 22050,
+      "frames": 4930540,
+      "channels": 2,
+      "peak": 0.4448988437652588,
+      "float32_channel_sha256": [
+        "34d57089bb3086a5d0a1279439d5d445dc5df56ea7099214fa2a2b007ab84e88",
+        "c8c72a958ad49ef5c18cfedf5c8298c8f2c8b9271d841155b3121ad58b1f9d10"
+      ],
+      "exact_integer_to_float_model": {
+        "float32_channel_sha256": [
+          "34d57089bb3086a5d0a1279439d5d445dc5df56ea7099214fa2a2b007ab84e88",
+          "c8c72a958ad49ef5c18cfedf5c8298c8f2c8b9271d841155b3121ad58b1f9d10"
+        ],
+        "integer_width": 16,
+        "maximum_deviation_from_power_of_two_float": 0.000013589859008789062,
+        "mode": "positive-peak-f32-reciprocal"
+      }
+    },
+    {
+      "asset_id": "asset.source.osrs.cache2695.audio-runtime.music.144",
+      "sample_rate": 22050,
+      "frames": 3519485,
+      "channels": 2,
+      "peak": 0.311920166015625,
+      "float32_channel_sha256": [
+        "498cb34bf3491852d2d8c2d5ab5e179ec0ff3c2f2f3c220c499ac1be1f3fff63",
+        "fca53e90aa88ecffdb6b1e76c5f6520abef6c8ee8ac591977efe9cff56066af7"
+      ],
+      "exact_integer_to_float_model": {
+        "float32_channel_sha256": [
+          "498cb34bf3491852d2d8c2d5ab5e179ec0ff3c2f2f3c220c499ac1be1f3fff63",
+          "fca53e90aa88ecffdb6b1e76c5f6520abef6c8ee8ac591977efe9cff56066af7"
+        ],
+        "integer_width": 16,
+        "maximum_deviation_from_power_of_two_float": 0.000008255243301391602,
+        "mode": "positive-peak-f32-reciprocal"
+      }
+    },
+    {
+      "asset_id": "asset.source.osrs.cache2695.audio-runtime.music.76",
+      "sample_rate": 22050,
+      "frames": 4785005,
+      "channels": 2,
+      "peak": 0.279022216796875,
+      "float32_channel_sha256": [
+        "56fc3c66f30fad1d08ce6d03d251ec426fb89a4df0aa5336f406c901da1b40fd",
+        "438de7c2f18173292129f01c6110422fb16d8da1e065f233af559bbecba987ae"
+      ],
+      "exact_integer_to_float_model": {
+        "float32_channel_sha256": [
+          "56fc3c66f30fad1d08ce6d03d251ec426fb89a4df0aa5336f406c901da1b40fd",
+          "438de7c2f18173292129f01c6110422fb16d8da1e065f233af559bbecba987ae"
+        ],
+        "integer_width": 16,
+        "maximum_deviation_from_power_of_two_float": 0.000008285045623779297,
+        "mode": "positive-peak-f32-reciprocal"
+      }
+    },
+    {
+      "asset_id": "asset.source.osrs.cache2695.audio-runtime.music.2",
+      "sample_rate": 22050,
+      "frames": 3020948,
+      "channels": 2,
+      "peak": 0.1994079351425171,
+      "float32_channel_sha256": [
+        "6fea967a57cfa3c2bf2380ea4e3b31408d81157cf77808fe435847ad7e73126b",
+        "a0209113cbcb1ed851dcfc809d32047d6de04c68dd337a77f1b324ff68f3023e"
+      ],
+      "exact_integer_to_float_model": {
+        "float32_channel_sha256": [
+          "6fea967a57cfa3c2bf2380ea4e3b31408d81157cf77808fe435847ad7e73126b",
+          "a0209113cbcb1ed851dcfc809d32047d6de04c68dd337a77f1b324ff68f3023e"
+        ],
+        "integer_width": 16,
+        "maximum_deviation_from_power_of_two_float": 0.000006079673767089844,
+        "mode": "positive-peak-f32-reciprocal"
+      }
+    },
+    {
+      "asset_id": "asset.source.osrs.cache2695.audio-runtime.jingle.29",
+      "sample_rate": 22050,
+      "frames": 101433,
+      "channels": 2,
+      "peak": 0.2634968161582947,
+      "float32_channel_sha256": [
+        "117f1e2fa1943266f0acc4b418157beb10dfbb827c955585946c03e9aa51e47a",
+        "50d774c3ea9bdbd16bf86986b47c19bf09582afe729e8cd8760b126f4fd8084b"
+      ],
+      "exact_integer_to_float_model": {
+        "float32_channel_sha256": [
+          "117f1e2fa1943266f0acc4b418157beb10dfbb827c955585946c03e9aa51e47a",
+          "50d774c3ea9bdbd16bf86986b47c19bf09582afe729e8cd8760b126f4fd8084b"
+        ],
+        "integer_width": 16,
+        "maximum_deviation_from_power_of_two_float": 0.000008046627044677734,
+        "mode": "positive-peak-f32-reciprocal"
+      }
+    },
+    {
+      "asset_id": "asset.source.osrs.cache2695.audio-runtime.jingle.30",
+      "sample_rate": 22050,
+      "frames": 190438,
+      "channels": 2,
+      "peak": 0.4842677116394043,
+      "float32_channel_sha256": [
+        "675799606f16530ca5c22f13c0b497188765574dab2ae31c6004b7d571fb98f6",
+        "3a33641dfc5407315959e9792b26514b0ef3f119f96ad0e6e55004571b67dc69"
+      ],
+      "exact_integer_to_float_model": {
+        "float32_channel_sha256": [
+          "675799606f16530ca5c22f13c0b497188765574dab2ae31c6004b7d571fb98f6",
+          "3a33641dfc5407315959e9792b26514b0ef3f119f96ad0e6e55004571b67dc69"
+        ],
+        "integer_width": 16,
+        "maximum_deviation_from_power_of_two_float": 0.000014781951904296875,
+        "mode": "positive-peak-f32-reciprocal"
+      }
+    },
+    {
+      "asset_id": "asset.source.osrs.cache2695.audio-runtime.jingle.33",
+      "sample_rate": 22050,
+      "frames": 110253,
+      "channels": 2,
+      "peak": 0.4819483160972595,
+      "float32_channel_sha256": [
+        "bafd9cc8e0c8de36ec43f568ef11e2fb2d229e781ac03b8290a45483969f2b13",
+        "12aeeb191cad8025bf5ecbcdd2f94a526d5157626020746d477285f1cf55fe86"
+      ],
+      "exact_integer_to_float_model": {
+        "float32_channel_sha256": [
+          "bafd9cc8e0c8de36ec43f568ef11e2fb2d229e781ac03b8290a45483969f2b13",
+          "12aeeb191cad8025bf5ecbcdd2f94a526d5157626020746d477285f1cf55fe86"
+        ],
+        "integer_width": 16,
+        "maximum_deviation_from_power_of_two_float": 0.000014722347259521484,
+        "mode": "positive-peak-f32-reciprocal"
+      }
+    },
+    {
+      "asset_id": "asset.source.osrs.cache2695.audio-runtime.jingle.34",
+      "sample_rate": 22050,
+      "frames": 99228,
+      "channels": 2,
+      "peak": 0.3763427734375,
+      "float32_channel_sha256": [
+        "554357259c881dd1f3176e350deefa4523b878b748b694175a04e456150a49d1",
+        "42455ad1ba789cf9d7f92b36b1cbca59c8a7881447d64918fdffa6fa6766266d"
+      ],
+      "exact_integer_to_float_model": {
+        "float32_channel_sha256": [
+          "554357259c881dd1f3176e350deefa4523b878b748b694175a04e456150a49d1",
+          "42455ad1ba789cf9d7f92b36b1cbca59c8a7881447d64918fdffa6fa6766266d"
+        ],
+        "integer_width": 16,
+        "maximum_deviation_from_power_of_two_float": 0.000010848045349121094,
+        "mode": "positive-peak-f32-reciprocal"
+      }
+    },
+    {
+      "asset_id": "asset.source.osrs.cache2695.audio-runtime.jingle.37",
+      "sample_rate": 22050,
+      "frames": 137817,
+      "channels": 2,
+      "peak": 0.50146484375,
+      "float32_channel_sha256": [
+        "c287650709e879405984498810e163344445c64e08b55ef6f9f368d3ff9f1c15",
+        "7cdfb8b0eef86f4d7dcca6978cdcae94ae5e870808f7cb8a0cd233b06e2155d6"
+      ],
+      "exact_integer_to_float_model": {
+        "float32_channel_sha256": [
+          "c287650709e879405984498810e163344445c64e08b55ef6f9f368d3ff9f1c15",
+          "7cdfb8b0eef86f4d7dcca6978cdcae94ae5e870808f7cb8a0cd233b06e2155d6"
+        ],
+        "integer_width": 16,
+        "maximum_deviation_from_power_of_two_float": 0.000013142824172973633,
+        "mode": "positive-peak-f32-reciprocal"
+      }
+    },
+    {
+      "asset_id": "asset.source.osrs.cache2695.audio-runtime.jingle.38",
+      "sample_rate": 22050,
+      "frames": 176406,
+      "channels": 2,
+      "peak": 0.46403393149375916,
+      "float32_channel_sha256": [
+        "f7af6a33339d03f21e518776b64d1b22495494d94f8e0e74b70ac4159bd63fea",
+        "ae4b29d33530e3ed1b56503033ac4ef8a19f20c79af669f07e0e13c574ab74eb"
+      ],
+      "exact_integer_to_float_model": {
+        "float32_channel_sha256": [
+          "f7af6a33339d03f21e518776b64d1b22495494d94f8e0e74b70ac4159bd63fea",
+          "ae4b29d33530e3ed1b56503033ac4ef8a19f20c79af669f07e0e13c574ab74eb"
+        ],
+        "integer_width": 16,
+        "maximum_deviation_from_power_of_two_float": 0.000014156103134155273,
+        "mode": "positive-peak-f32-reciprocal"
+      }
+    },
+    {
+      "asset_id": "asset.source.osrs.cache2695.audio-runtime.jingle.39",
+      "sample_rate": 22050,
+      "frames": 149945,
+      "channels": 2,
+      "peak": 0.4136478900909424,
+      "float32_channel_sha256": [
+        "e127a3416e86f76f53905c06173853b7aea15bd8d8aa73f1b41ddcd359380a5f",
+        "d2a7de4b573a2e8dd61061bb11cd6aceb498d2346839ba8b07e2b184b673eab1"
+      ],
+      "exact_integer_to_float_model": {
+        "float32_channel_sha256": [
+          "e127a3416e86f76f53905c06173853b7aea15bd8d8aa73f1b41ddcd359380a5f",
+          "d2a7de4b573a2e8dd61061bb11cd6aceb498d2346839ba8b07e2b184b673eab1"
+        ],
+        "integer_width": 16,
+        "maximum_deviation_from_power_of_two_float": 0.000012636184692382812,
+        "mode": "positive-peak-f32-reciprocal"
+      }
+    },
+    {
+      "asset_id": "asset.source.osrs.cache2695.audio-runtime.jingle.40",
+      "sample_rate": 22050,
+      "frames": 149945,
+      "channels": 2,
+      "peak": 0.5955076813697815,
+      "float32_channel_sha256": [
+        "bcc6782109aeabb2e656242c5a717dce3f866c98cb32f25507291616c62df08a",
+        "472ad863ffa37f0d0ddfa7dca95419608fca673f26b64efa928ca18ee30979ef"
+      ],
+      "exact_integer_to_float_model": {
+        "float32_channel_sha256": [
+          "bcc6782109aeabb2e656242c5a717dce3f866c98cb32f25507291616c62df08a",
+          "472ad863ffa37f0d0ddfa7dca95419608fca673f26b64efa928ca18ee30979ef"
+        ],
+        "integer_width": 16,
+        "maximum_deviation_from_power_of_two_float": 0.00001817941665649414,
+        "mode": "positive-peak-f32-reciprocal"
+      }
+    },
+    {
+      "asset_id": "asset.source.osrs.cache2695.audio-runtime.jingle.41",
+      "sample_rate": 22050,
+      "frames": 167585,
+      "channels": 2,
+      "peak": 0.123382568359375,
+      "float32_channel_sha256": [
+        "7633c439b93620eb4ec9cdd4b216edb679a5689b06f1d75ee31a0859f1e75819",
+        "50918f9dbf09f2eebbe9af7834844083f2de24df74f36a2654efd9a1c21aa596"
+      ],
+      "exact_integer_to_float_model": {
+        "float32_channel_sha256": [
+          "7633c439b93620eb4ec9cdd4b216edb679a5689b06f1d75ee31a0859f1e75819",
+          "50918f9dbf09f2eebbe9af7834844083f2de24df74f36a2654efd9a1c21aa596"
+        ],
+        "integer_width": 16,
+        "maximum_deviation_from_power_of_two_float": 0.000003293156623840332,
+        "mode": "positive-peak-f32-reciprocal"
+      }
+    },
+    {
+      "asset_id": "asset.source.osrs.cache2695.audio-runtime.jingle.42",
+      "sample_rate": 22050,
+      "frames": 137817,
+      "channels": 2,
+      "peak": 0.292327880859375,
+      "float32_channel_sha256": [
+        "f6f94783198c8d31bcc43af4324e4fed65dae03c1507a3c472da736adb399e72",
+        "e60f87b71a9b3548f373d81a327b7a05e757edd4808c792008b88281a2fd9e10"
+      ],
+      "exact_integer_to_float_model": {
+        "float32_channel_sha256": [
+          "f6f94783198c8d31bcc43af4324e4fed65dae03c1507a3c472da736adb399e72",
+          "e60f87b71a9b3548f373d81a327b7a05e757edd4808c792008b88281a2fd9e10"
+        ],
+        "integer_width": 16,
+        "maximum_deviation_from_power_of_two_float": 0.000007539987564086914,
+        "mode": "positive-peak-f32-reciprocal"
+      }
+    },
+    {
+      "asset_id": "asset.source.osrs.cache2695.audio-runtime.jingle.47",
+      "sample_rate": 22050,
+      "frames": 88203,
+      "channels": 2,
+      "peak": 0.2927945852279663,
+      "float32_channel_sha256": [
+        "39a89ff23eae7a7fb800434e5b81b765d30aca03110719cad0a32723809db4ab",
+        "1f0f93c22b1bb4bbe01c7088a0fefac76cd8b5b4d9b63bfaa28441430a0d9189"
+      ],
+      "exact_integer_to_float_model": {
+        "float32_channel_sha256": [
+          "39a89ff23eae7a7fb800434e5b81b765d30aca03110719cad0a32723809db4ab",
+          "1f0f93c22b1bb4bbe01c7088a0fefac76cd8b5b4d9b63bfaa28441430a0d9189"
+        ],
+        "integer_width": 16,
+        "maximum_deviation_from_power_of_two_float": 0.000008940696716308594,
+        "mode": "positive-peak-f32-reciprocal"
+      }
+    },
+    {
+      "asset_id": "asset.source.osrs.cache2695.audio-runtime.jingle.51",
+      "sample_rate": 22050,
+      "frames": 167585,
+      "channels": 2,
+      "peak": 0.282379150390625,
+      "float32_channel_sha256": [
+        "8caad0bfb0d52a218af15a9725f69a88a9750eabf3fb087dee00808b7d4d4194",
+        "651a734ac7e4e6ee1754ea4ee11b489ecab7b1983fc9a6c9d811a12b31064003"
+      ],
+      "exact_integer_to_float_model": {
+        "float32_channel_sha256": [
+          "8caad0bfb0d52a218af15a9725f69a88a9750eabf3fb087dee00808b7d4d4194",
+          "651a734ac7e4e6ee1754ea4ee11b489ecab7b1983fc9a6c9d811a12b31064003"
+        ],
+        "integer_width": 16,
+        "maximum_deviation_from_power_of_two_float": 0.00000762939453125,
+        "mode": "positive-peak-f32-reciprocal"
+      }
+    },
+    {
+      "asset_id": "asset.source.osrs.cache2695.audio-runtime.jingle.52",
+      "sample_rate": 22050,
+      "frames": 167585,
+      "channels": 2,
+      "peak": 0.45551925897598267,
+      "float32_channel_sha256": [
+        "0749acc17b54362aa208bdda51aadaaf6ae7c10e2b3671ccf9bf793dcf9ede1e",
+        "0b0826885e4f599b2565f813adf4a14b30029d6de5f2b4a8a7eb71f19a150d15"
+      ],
+      "exact_integer_to_float_model": {
+        "float32_channel_sha256": [
+          "0749acc17b54362aa208bdda51aadaaf6ae7c10e2b3671ccf9bf793dcf9ede1e",
+          "0b0826885e4f599b2565f813adf4a14b30029d6de5f2b4a8a7eb71f19a150d15"
+        ],
+        "integer_width": 16,
+        "maximum_deviation_from_power_of_two_float": 0.000013887882232666016,
+        "mode": "positive-peak-f32-reciprocal"
+      }
+    },
+    {
+      "asset_id": "asset.source.osrs.cache2695.audio-runtime.jingle.53",
+      "sample_rate": 22050,
+      "frames": 154355,
+      "channels": 2,
+      "peak": 0.244140625,
+      "float32_channel_sha256": [
+        "3254d688326df7aadbea1032fa0317d406e7aef970da472d783c229fdd023b32",
+        "c3766e217be22b300c41a54d3ffa605aa40a1d514bc8f7cfa0e67ea0f89c53a6"
+      ],
+      "exact_integer_to_float_model": {
+        "float32_channel_sha256": [
+          "3254d688326df7aadbea1032fa0317d406e7aef970da472d783c229fdd023b32",
+          "c3766e217be22b300c41a54d3ffa605aa40a1d514bc8f7cfa0e67ea0f89c53a6"
+        ],
+        "integer_width": 16,
+        "maximum_deviation_from_power_of_two_float": 0.000006943941116333008,
+        "mode": "positive-peak-f32-reciprocal"
+      }
+    },
+    {
+      "asset_id": "asset.source.osrs.cache2695.audio-runtime.jingle.54",
+      "sample_rate": 22050,
+      "frames": 154355,
+      "channels": 2,
+      "peak": 0.748863160610199,
+      "float32_channel_sha256": [
+        "97b3789ce90efb05280edc4ce10f26ed44da7bea11232d76c259824ffddff8b7",
+        "f2cc22345d20d0dd270dcf5a3baa6db264a7930804e45a5679e608f3831e632a"
+      ],
+      "exact_integer_to_float_model": {
+        "float32_channel_sha256": [
+          "97b3789ce90efb05280edc4ce10f26ed44da7bea11232d76c259824ffddff8b7",
+          "f2cc22345d20d0dd270dcf5a3baa6db264a7930804e45a5679e608f3831e632a"
+        ],
+        "integer_width": 16,
+        "maximum_deviation_from_power_of_two_float": 0.00002282857894897461,
+        "mode": "positive-peak-f32-reciprocal"
+      }
+    },
+    {
+      "asset_id": "asset.source.osrs.cache2695.audio-runtime.jingle.55",
+      "sample_rate": 22050,
+      "frames": 180816,
+      "channels": 2,
+      "peak": 0.39280372858047485,
+      "float32_channel_sha256": [
+        "c49f41ebf71f51b25c5d9b5634a884ecc94dc69058019373f8709a88ce5f845d",
+        "3f66c9701db286f5812d5f87e7b0d00ebb46a1d1e90144ee3be8bd1589499dc6"
+      ],
+      "exact_integer_to_float_model": {
+        "float32_channel_sha256": [
+          "c49f41ebf71f51b25c5d9b5634a884ecc94dc69058019373f8709a88ce5f845d",
+          "3f66c9701db286f5812d5f87e7b0d00ebb46a1d1e90144ee3be8bd1589499dc6"
+        ],
+        "integer_width": 16,
+        "maximum_deviation_from_power_of_two_float": 0.000011980533599853516,
+        "mode": "positive-peak-f32-reciprocal"
+      }
+    },
+    {
+      "asset_id": "asset.source.osrs.cache2695.audio-runtime.jingle.56",
+      "sample_rate": 22050,
+      "frames": 180816,
+      "channels": 2,
+      "peak": 0.4683370590209961,
+      "float32_channel_sha256": [
+        "85ead26cc2264f40830a42d8b6fbda7c4bc37034997a482c5e3ab35484db8eac",
+        "cf86c9a88223f75310ef99887af8e8905857791640e280fc28942bfe11576ce8"
+      ],
+      "exact_integer_to_float_model": {
+        "float32_channel_sha256": [
+          "85ead26cc2264f40830a42d8b6fbda7c4bc37034997a482c5e3ab35484db8eac",
+          "cf86c9a88223f75310ef99887af8e8905857791640e280fc28942bfe11576ce8"
+        ],
+        "integer_width": 16,
+        "maximum_deviation_from_power_of_two_float": 0.00001430511474609375,
+        "mode": "positive-peak-f32-reciprocal"
+      }
+    },
+    {
+      "asset_id": "asset.source.osrs.cache2695.audio-runtime.jingle.57",
+      "sample_rate": 22050,
+      "frames": 127894,
+      "channels": 2,
+      "peak": 0.396331787109375,
+      "float32_channel_sha256": [
+        "82e3f717d0c25ce078bc8d1a31bff9e9c652065ea2fa87ac154ad49f2b6c947c",
+        "4efbe4fd8bef5a59b76356cb94de229e739c5ca7d081deb930060615b669d4cb"
+      ],
+      "exact_integer_to_float_model": {
+        "float32_channel_sha256": [
+          "82e3f717d0c25ce078bc8d1a31bff9e9c652065ea2fa87ac154ad49f2b6c947c",
+          "4efbe4fd8bef5a59b76356cb94de229e739c5ca7d081deb930060615b669d4cb"
+        ],
+        "integer_width": 16,
+        "maximum_deviation_from_power_of_two_float": 0.000008016824722290039,
+        "mode": "positive-peak-f32-reciprocal"
+      }
+    },
+    {
+      "asset_id": "asset.source.osrs.cache2695.audio-runtime.jingle.58",
+      "sample_rate": 22050,
+      "frames": 138478,
+      "channels": 2,
+      "peak": 0.58563232421875,
+      "float32_channel_sha256": [
+        "f0aac0e332b8c45e1993627e6ade3fd73cd4f09625491dfa289390594b8039ba",
+        "9063430b7390b95913fa59fabcc84e7fa9488cca9e15d1678f2c8761641fdc33"
+      ],
+      "exact_integer_to_float_model": {
+        "float32_channel_sha256": [
+          "f0aac0e332b8c45e1993627e6ade3fd73cd4f09625491dfa289390594b8039ba",
+          "9063430b7390b95913fa59fabcc84e7fa9488cca9e15d1678f2c8761641fdc33"
+        ],
+        "integer_width": 16,
+        "maximum_deviation_from_power_of_two_float": 0.000016868114471435547,
+        "mode": "positive-peak-f32-reciprocal"
+      }
+    },
+    {
+      "asset_id": "asset.source.osrs.cache2695.audio-runtime.jingle.63",
+      "sample_rate": 22050,
+      "frames": 180816,
+      "channels": 2,
+      "peak": 0.38873291015625,
+      "float32_channel_sha256": [
+        "8056b0c5e54a587a42f2ca13f51b568efd782e81695ace84007d847cbab33b3f",
+        "b8cf80d250e01666a30e453d221f4a47342ed80659bd322bd84bba9f6299c0b0"
+      ],
+      "exact_integer_to_float_model": {
+        "float32_channel_sha256": [
+          "8056b0c5e54a587a42f2ca13f51b568efd782e81695ace84007d847cbab33b3f",
+          "b8cf80d250e01666a30e453d221f4a47342ed80659bd322bd84bba9f6299c0b0"
+        ],
+        "integer_width": 16,
+        "maximum_deviation_from_power_of_two_float": 0.000009447336196899414,
+        "mode": "positive-peak-f32-reciprocal"
+      }
+    },
+    {
+      "asset_id": "asset.source.osrs.cache2695.audio-runtime.jingle.64",
+      "sample_rate": 22050,
+      "frames": 139654,
+      "channels": 2,
+      "peak": 0.94610595703125,
+      "float32_channel_sha256": [
+        "adaa08e537ebc21535ff09345f8bc95cd37f3b2b5569ce390d8d6c6a9b8de9aa",
+        "e2115166c47a3011ed249c04d07671914da44358655d25effcb66357e4075329"
+      ],
+      "exact_integer_to_float_model": {
+        "float32_channel_sha256": [
+          "adaa08e537ebc21535ff09345f8bc95cd37f3b2b5569ce390d8d6c6a9b8de9aa",
+          "e2115166c47a3011ed249c04d07671914da44358655d25effcb66357e4075329"
+        ],
+        "integer_width": 16,
+        "maximum_deviation_from_power_of_two_float": 0.00002181529998779297,
+        "mode": "positive-peak-f32-reciprocal"
+      }
+    },
+    {
+      "asset_id": "asset.source.osrs.cache2695.audio-runtime.jingle.65",
+      "sample_rate": 22050,
+      "frames": 154355,
+      "channels": 2,
+      "peak": 0.740814208984375,
+      "float32_channel_sha256": [
+        "4332ad3cf588e2a72d7a77120ba9382be5e0b366d3e54f6f7d7bc3d570aa7a9b",
+        "d5f70d6ee253ed9ab8222101cbf6ba9cf4ecab4b4415097034fb136cdb7bfa5a"
+      ],
+      "exact_integer_to_float_model": {
+        "float32_channel_sha256": [
+          "4332ad3cf588e2a72d7a77120ba9382be5e0b366d3e54f6f7d7bc3d570aa7a9b",
+          "d5f70d6ee253ed9ab8222101cbf6ba9cf4ecab4b4415097034fb136cdb7bfa5a"
+        ],
+        "integer_width": 16,
+        "maximum_deviation_from_power_of_two_float": 0.000019669532775878906,
+        "mode": "positive-peak-f32-reciprocal"
+      }
+    },
+    {
+      "asset_id": "asset.source.osrs.cache2695.audio-runtime.jingle.69",
+      "sample_rate": 22050,
+      "frames": 154355,
+      "channels": 2,
+      "peak": 0.27880859375,
+      "float32_channel_sha256": [
+        "e88b354564e3dec825f9a72788aeb4f88c05492479a9db3faaf84e70f8d62f7f",
+        "9ef680c9c8171330c9f2cc860ea8976f90e2a293d506163ff59ba34522a8a7a5"
+      ],
+      "exact_integer_to_float_model": {
+        "float32_channel_sha256": [
+          "e88b354564e3dec825f9a72788aeb4f88c05492479a9db3faaf84e70f8d62f7f",
+          "9ef680c9c8171330c9f2cc860ea8976f90e2a293d506163ff59ba34522a8a7a5"
+        ],
+        "integer_width": 16,
+        "maximum_deviation_from_power_of_two_float": 0.000006109476089477539,
+        "mode": "positive-peak-f32-reciprocal"
+      }
+    },
+    {
+      "asset_id": "asset.source.osrs.cache2695.audio-runtime.jingle.70",
+      "sample_rate": 22050,
+      "frames": 167585,
+      "channels": 2,
+      "peak": 0.354583740234375,
+      "float32_channel_sha256": [
+        "72ed230831e05b1fd96bc4b2e80c7d76bc4b56853877d0f71b224de5407ec9d7",
+        "080f81d14e8b8935a7dbff8f3d1ee1c8f617dc3a6935a240dd190639d1d8e495"
+      ],
+      "exact_integer_to_float_model": {
+        "float32_channel_sha256": [
+          "72ed230831e05b1fd96bc4b2e80c7d76bc4b56853877d0f71b224de5407ec9d7",
+          "080f81d14e8b8935a7dbff8f3d1ee1c8f617dc3a6935a240dd190639d1d8e495"
+        ],
+        "integer_width": 16,
+        "maximum_deviation_from_power_of_two_float": 0.000008851289749145508,
+        "mode": "positive-peak-f32-reciprocal"
+      }
+    },
+    {
+      "asset_id": "asset.source.osrs.cache2695.audio-runtime.jingle.89",
+      "sample_rate": 22050,
+      "frames": 154355,
+      "channels": 2,
+      "peak": 0.395825058221817,
+      "float32_channel_sha256": [
+        "a2c473c8e67fdf8b5ee95e3e9e132f999500a79c2cf62537a021b89446e11305",
+        "bef100b43f3bf7f9612bd0d4a9c0e0cee03509d6ce16bfca6c9e10b9d60bcc18"
+      ],
+      "exact_integer_to_float_model": {
+        "float32_channel_sha256": [
+          "a2c473c8e67fdf8b5ee95e3e9e132f999500a79c2cf62537a021b89446e11305",
+          "bef100b43f3bf7f9612bd0d4a9c0e0cee03509d6ce16bfca6c9e10b9d60bcc18"
+        ],
+        "integer_width": 16,
+        "maximum_deviation_from_power_of_two_float": 0.000012069940567016602,
+        "mode": "positive-peak-f32-reciprocal"
+      }
+    },
+    {
+      "asset_id": "asset.source.osrs.cache2695.audio-runtime.jingle.90",
+      "sample_rate": 22050,
+      "frames": 139654,
+      "channels": 2,
+      "peak": 0.504043698310852,
+      "float32_channel_sha256": [
+        "cddbd48d90677d5b8723ceac23fa922965678d4ca74eef2cab25b55825d12b2e",
+        "aa81a4051c5473cf3148615bbdbde80f3704d3b151de213096041c27e76b27ea"
+      ],
+      "exact_integer_to_float_model": {
+        "float32_channel_sha256": [
+          "cddbd48d90677d5b8723ceac23fa922965678d4ca74eef2cab25b55825d12b2e",
+          "aa81a4051c5473cf3148615bbdbde80f3704d3b151de213096041c27e76b27ea"
+        ],
+        "integer_width": 16,
+        "maximum_deviation_from_power_of_two_float": 0.00001537799835205078,
+        "mode": "positive-peak-f32-reciprocal"
+      }
+    },
+    {
+      "asset_id": "asset.source.osrs.cache2695.audio-runtime.jingle.152",
+      "sample_rate": 22050,
+      "frames": 167585,
+      "channels": 2,
+      "peak": 0.49745169281959534,
+      "float32_channel_sha256": [
+        "46a70419094d7c0d0d56341040878eeea896660ff0815a5220335921d39a2696",
+        "7532c65c74a5e6de38656d3caaee036a09068db4dd39fba9dd1a8450eac8d2a9"
+      ],
+      "exact_integer_to_float_model": {
+        "float32_channel_sha256": [
+          "46a70419094d7c0d0d56341040878eeea896660ff0815a5220335921d39a2696",
+          "7532c65c74a5e6de38656d3caaee036a09068db4dd39fba9dd1a8450eac8d2a9"
+        ],
+        "integer_width": 16,
+        "maximum_deviation_from_power_of_two_float": 0.000015169382095336914,
+        "mode": "positive-peak-f32-reciprocal"
+      }
+    },
+    {
+      "asset_id": "asset.source.osrs.cache2695.audio-runtime.jingle.153",
+      "sample_rate": 22050,
+      "frames": 246968,
+      "channels": 2,
+      "peak": 0.3194580078125,
+      "float32_channel_sha256": [
+        "5da8411cf93e99c19a0027e8a345152deef6c71792d66cac402f9f06f4276790",
+        "e3455fc51c4d96917e60a0e7109830ceecdd1914b9248e399063af801a20e21c"
+      ],
+      "exact_integer_to_float_model": {
+        "float32_channel_sha256": [
+          "5da8411cf93e99c19a0027e8a345152deef6c71792d66cac402f9f06f4276790",
+          "e3455fc51c4d96917e60a0e7109830ceecdd1914b9248e399063af801a20e21c"
+        ],
+        "integer_width": 16,
+        "maximum_deviation_from_power_of_two_float": 0.000009238719940185547,
+        "mode": "positive-peak-f32-reciprocal"
+      }
+    },
+    {
+      "asset_id": "asset.source.osrs.cache2695.audio-runtime.jingle.154",
+      "sample_rate": 22050,
+      "frames": 154355,
+      "channels": 2,
+      "peak": 0.504669189453125,
+      "float32_channel_sha256": [
+        "796b9c57efe6365444c238c94e54018329c16922d409d5897772ddc3dc03bc49",
+        "7a4a0d336c048ebebcf345aa4701ff0f684d52c7edafec4a9eef234f45a1e877"
+      ],
+      "exact_integer_to_float_model": {
+        "float32_channel_sha256": [
+          "796b9c57efe6365444c238c94e54018329c16922d409d5897772ddc3dc03bc49",
+          "7a4a0d336c048ebebcf345aa4701ff0f684d52c7edafec4a9eef234f45a1e877"
+        ],
+        "integer_width": 16,
+        "maximum_deviation_from_power_of_two_float": 0.000012487173080444336,
+        "mode": "positive-peak-f32-reciprocal"
+      }
+    },
+    {
+      "asset_id": "asset.source.osrs.cache2695.audio-runtime.jingle.299",
+      "sample_rate": 22050,
+      "frames": 123821,
+      "channels": 2,
+      "peak": 0.610992431640625,
+      "float32_channel_sha256": [
+        "fc6ec71417427caa2181abc48c2cb28a60c28dbb08dc90f7ef3470fc03cd3caf",
+        "eccd05de485cf307c0516837e8e1ab54aff09f002ffcde8a6061a6528a5fc96e"
+      ],
+      "exact_integer_to_float_model": {
+        "float32_channel_sha256": [
+          "fc6ec71417427caa2181abc48c2cb28a60c28dbb08dc90f7ef3470fc03cd3caf",
+          "eccd05de485cf307c0516837e8e1ab54aff09f002ffcde8a6061a6528a5fc96e"
+        ],
+        "integer_width": 16,
+        "maximum_deviation_from_power_of_two_float": 0.000018298625946044922,
+        "mode": "positive-peak-f32-reciprocal"
+      }
+    },
+    {
+      "asset_id": "asset.source.osrs.cache2695.audio-runtime.sfx.60",
+      "sample_rate": 22050,
+      "frames": 3307,
+      "channels": 1,
+      "peak": 0.233001708984375,
+      "float32_channel_sha256": [
+        "deb556dc756ee39013f37e703e9557185602013d50a08591c7a0c8cf8184cedb"
+      ],
+      "exact_integer_to_float_model": {
+        "float32_channel_sha256": [
+          "deb556dc756ee39013f37e703e9557185602013d50a08591c7a0c8cf8184cedb"
+        ],
+        "integer_width": 32,
+        "maximum_deviation_from_power_of_two_float": 0,
+        "mode": "signed-power-of-two"
+      }
+    },
+    {
+      "asset_id": "asset.source.osrs.cache2695.audio-runtime.sfx.62",
+      "sample_rate": 22050,
+      "frames": 3307,
+      "channels": 1,
+      "peak": 0.2499847412109375,
+      "float32_channel_sha256": [
+        "04002c7bfe99f6f2748624d193b11d9e5cabec9884064d70626a0d058fcfbeb1"
+      ],
+      "exact_integer_to_float_model": {
+        "float32_channel_sha256": [
+          "04002c7bfe99f6f2748624d193b11d9e5cabec9884064d70626a0d058fcfbeb1"
+        ],
+        "integer_width": 32,
+        "maximum_deviation_from_power_of_two_float": 0,
+        "mode": "signed-power-of-two"
+      }
+    },
+    {
+      "asset_id": "asset.source.osrs.cache2695.audio-runtime.sfx.193",
+      "sample_rate": 22050,
+      "frames": 50715,
+      "channels": 1,
+      "peak": 0.0526275634765625,
+      "float32_channel_sha256": [
+        "2ae2268e28465f374026e9290f916baade71f483630c5c8a04b652c6e063c023"
+      ],
+      "exact_integer_to_float_model": {
+        "float32_channel_sha256": [
+          "2ae2268e28465f374026e9290f916baade71f483630c5c8a04b652c6e063c023"
+        ],
+        "integer_width": 32,
+        "maximum_deviation_from_power_of_two_float": 0,
+        "mode": "signed-power-of-two"
+      }
+    },
+    {
+      "asset_id": "asset.source.osrs.cache2695.audio-runtime.sfx.194",
+      "sample_rate": 22050,
+      "frames": 14332,
+      "channels": 1,
+      "peak": 0.079742431640625,
+      "float32_channel_sha256": [
+        "49f5665738175fd6b666b03c19114459d8467da100e80a625821b35e57598034"
+      ],
+      "exact_integer_to_float_model": {
+        "float32_channel_sha256": [
+          "49f5665738175fd6b666b03c19114459d8467da100e80a625821b35e57598034"
+        ],
+        "integer_width": 32,
+        "maximum_deviation_from_power_of_two_float": 0,
+        "mode": "signed-power-of-two"
+      }
+    },
+    {
+      "asset_id": "asset.source.osrs.cache2695.audio-runtime.sfx.195",
+      "sample_rate": 22050,
+      "frames": 98122,
+      "channels": 1,
+      "peak": 0.18865966796875,
+      "float32_channel_sha256": [
+        "cbe669787b74a69fa353a5ce07d2c7105622a5fe58e71aecaa0e215c0e58167f"
+      ],
+      "exact_integer_to_float_model": {
+        "float32_channel_sha256": [
+          "cbe669787b74a69fa353a5ce07d2c7105622a5fe58e71aecaa0e215c0e58167f"
+        ],
+        "integer_width": 32,
+        "maximum_deviation_from_power_of_two_float": 0,
+        "mode": "signed-power-of-two"
+      }
+    },
+    {
+      "asset_id": "asset.source.osrs.cache2695.audio-runtime.sfx.196",
+      "sample_rate": 22050,
+      "frames": 15986,
+      "channels": 1,
+      "peak": 0.1147613525390625,
+      "float32_channel_sha256": [
+        "10fdaf604e9b90a267cf738351a1631723c3046cecba6631159754b57e184a74"
+      ],
+      "exact_integer_to_float_model": {
+        "float32_channel_sha256": [
+          "10fdaf604e9b90a267cf738351a1631723c3046cecba6631159754b57e184a74"
+        ],
+        "integer_width": 32,
+        "maximum_deviation_from_power_of_two_float": 0,
+        "mode": "signed-power-of-two"
+      }
+    },
+    {
+      "asset_id": "asset.source.osrs.cache2695.audio-runtime.sfx.200",
+      "sample_rate": 22050,
+      "frames": 42997,
+      "channels": 1,
+      "peak": 0.18865966796875,
+      "float32_channel_sha256": [
+        "d45bb21ffad0cd2cd367f11c795092ec56c1fc27de78df178bbcf07f1f475661"
+      ],
+      "exact_integer_to_float_model": {
+        "float32_channel_sha256": [
+          "d45bb21ffad0cd2cd367f11c795092ec56c1fc27de78df178bbcf07f1f475661"
+        ],
+        "integer_width": 32,
+        "maximum_deviation_from_power_of_two_float": 0,
+        "mode": "signed-power-of-two"
+      }
+    },
+    {
+      "asset_id": "asset.source.osrs.cache2695.audio-runtime.sfx.220",
+      "sample_rate": 22050,
+      "frames": 33516,
+      "channels": 1,
+      "peak": 0.41064453125,
+      "float32_channel_sha256": [
+        "fb8af52d3bcb097987356f360bf3a0287e5783e1e22fce025b2f36e7cf35fb41"
+      ],
+      "exact_integer_to_float_model": {
+        "float32_channel_sha256": [
+          "fb8af52d3bcb097987356f360bf3a0287e5783e1e22fce025b2f36e7cf35fb41"
+        ],
+        "integer_width": 32,
+        "maximum_deviation_from_power_of_two_float": 0,
+        "mode": "signed-power-of-two"
+      }
+    },
+    {
+      "asset_id": "asset.source.osrs.cache2695.audio-runtime.sfx.221",
+      "sample_rate": 22050,
+      "frames": 15435,
+      "channels": 1,
+      "peak": 0.5,
+      "float32_channel_sha256": [
+        "d7e63be0868c4c4babf5a77be43cfbcddd60c082160f86d61c3dfda5553455d0"
+      ],
+      "exact_integer_to_float_model": {
+        "float32_channel_sha256": [
+          "d7e63be0868c4c4babf5a77be43cfbcddd60c082160f86d61c3dfda5553455d0"
+        ],
+        "integer_width": 32,
+        "maximum_deviation_from_power_of_two_float": 0,
+        "mode": "signed-power-of-two"
+      }
+    },
+    {
+      "asset_id": "asset.source.osrs.cache2695.audio-runtime.sfx.227",
+      "sample_rate": 22050,
+      "frames": 24255,
+      "channels": 1,
+      "peak": 0.5,
+      "float32_channel_sha256": [
+        "8c0d288d04f0e06d38fc0a7d21c5c3826a13e5cf66ffae6e9d95df3c2360cd24"
+      ],
+      "exact_integer_to_float_model": {
+        "float32_channel_sha256": [
+          "8c0d288d04f0e06d38fc0a7d21c5c3826a13e5cf66ffae6e9d95df3c2360cd24"
+        ],
+        "integer_width": 32,
+        "maximum_deviation_from_power_of_two_float": 0,
+        "mode": "signed-power-of-two"
+      }
+    },
+    {
+      "asset_id": "asset.source.osrs.cache2695.audio-runtime.sfx.372",
+      "sample_rate": 22050,
+      "frames": 84892,
+      "channels": 1,
+      "peak": 0.0257568359375,
+      "float32_channel_sha256": [
+        "455bbaecd76238ad4abb0ebb653aa74f93cbd904eee62d2ae80cf92219701371"
+      ],
+      "exact_integer_to_float_model": {
+        "float32_channel_sha256": [
+          "455bbaecd76238ad4abb0ebb653aa74f93cbd904eee62d2ae80cf92219701371"
+        ],
+        "integer_width": 32,
+        "maximum_deviation_from_power_of_two_float": 0,
+        "mode": "signed-power-of-two"
+      }
+    },
+    {
+      "asset_id": "asset.source.osrs.cache2695.audio-runtime.sfx.509",
+      "sample_rate": 22050,
+      "frames": 6615,
+      "channels": 1,
+      "peak": 0.21185302734375,
+      "float32_channel_sha256": [
+        "22aaf5147796aa073174ad5b3582c1af7a7df51b08546d23ea19977df20a65b6"
+      ],
+      "exact_integer_to_float_model": {
+        "float32_channel_sha256": [
+          "22aaf5147796aa073174ad5b3582c1af7a7df51b08546d23ea19977df20a65b6"
+        ],
+        "integer_width": 32,
+        "maximum_deviation_from_power_of_two_float": 0,
+        "mode": "signed-power-of-two"
+      }
+    },
+    {
+      "asset_id": "asset.source.osrs.cache2695.audio-runtime.sfx.510",
+      "sample_rate": 22050,
+      "frames": 6615,
+      "channels": 1,
+      "peak": 0.200958251953125,
+      "float32_channel_sha256": [
+        "86c901d73cfb74e3372ab985d22ee6f75338781935de49dc6c9fca18080a080e"
+      ],
+      "exact_integer_to_float_model": {
+        "float32_channel_sha256": [
+          "86c901d73cfb74e3372ab985d22ee6f75338781935de49dc6c9fca18080a080e"
+        ],
+        "integer_width": 32,
+        "maximum_deviation_from_power_of_two_float": 0,
+        "mode": "signed-power-of-two"
+      }
+    },
+    {
+      "asset_id": "asset.source.osrs.cache2695.audio-runtime.sfx.511",
+      "sample_rate": 22050,
+      "frames": 5512,
+      "channels": 1,
+      "peak": 0.5,
+      "float32_channel_sha256": [
+        "728dcbfc38b9559b530a3a3281f303ac7f6f735c39bef3420a393bfbdde1b5b4"
+      ],
+      "exact_integer_to_float_model": {
+        "float32_channel_sha256": [
+          "728dcbfc38b9559b530a3a3281f303ac7f6f735c39bef3420a393bfbdde1b5b4"
+        ],
+        "integer_width": 32,
+        "maximum_deviation_from_power_of_two_float": 0,
+        "mode": "signed-power-of-two"
+      }
+    },
+    {
+      "asset_id": "asset.source.osrs.cache2695.audio-runtime.sfx.512",
+      "sample_rate": 22050,
+      "frames": 26460,
+      "channels": 1,
+      "peak": 0.391448974609375,
+      "float32_channel_sha256": [
+        "f52536c47ff582bcb3ecbd9c724f087193c90e8118f25a3f5b1b7f29be5b2023"
+      ],
+      "exact_integer_to_float_model": {
+        "float32_channel_sha256": [
+          "f52536c47ff582bcb3ecbd9c724f087193c90e8118f25a3f5b1b7f29be5b2023"
+        ],
+        "integer_width": 32,
+        "maximum_deviation_from_power_of_two_float": 0,
+        "mode": "signed-power-of-two"
+      }
+    },
+    {
+      "asset_id": "asset.source.osrs.cache2695.audio-runtime.sfx.518",
+      "sample_rate": 22050,
+      "frames": 4410,
+      "channels": 1,
+      "peak": 0.2969970703125,
+      "float32_channel_sha256": [
+        "2dc58feeae70ae61bef77a7f389b353f0f147f4e4fc6600bd3d1f24a3419b4b4"
+      ],
+      "exact_integer_to_float_model": {
+        "float32_channel_sha256": [
+          "2dc58feeae70ae61bef77a7f389b353f0f147f4e4fc6600bd3d1f24a3419b4b4"
+        ],
+        "integer_width": 32,
+        "maximum_deviation_from_power_of_two_float": 0,
+        "mode": "signed-power-of-two"
+      }
+    },
+    {
+      "asset_id": "asset.source.osrs.cache2695.audio-runtime.sfx.519",
+      "sample_rate": 22050,
+      "frames": 5512,
+      "channels": 1,
+      "peak": 0.41436767578125,
+      "float32_channel_sha256": [
+        "e5baff86ff34c66d04f8a28c281032b3e3979c31761f70a2edbcd518b76799de"
+      ],
+      "exact_integer_to_float_model": {
+        "float32_channel_sha256": [
+          "e5baff86ff34c66d04f8a28c281032b3e3979c31761f70a2edbcd518b76799de"
+        ],
+        "integer_width": 32,
+        "maximum_deviation_from_power_of_two_float": 0,
+        "mode": "signed-power-of-two"
+      }
+    },
+    {
+      "asset_id": "asset.source.osrs.cache2695.audio-runtime.sfx.520",
+      "sample_rate": 22050,
+      "frames": 6615,
+      "channels": 1,
+      "peak": 0.3376617431640625,
+      "float32_channel_sha256": [
+        "61b7bcb32da8c1e574f9ba666addf011709f6b91c9006beea9fb8abc3f7bf1df"
+      ],
+      "exact_integer_to_float_model": {
+        "float32_channel_sha256": [
+          "61b7bcb32da8c1e574f9ba666addf011709f6b91c9006beea9fb8abc3f7bf1df"
+        ],
+        "integer_width": 32,
+        "maximum_deviation_from_power_of_two_float": 0,
+        "mode": "signed-power-of-two"
+      }
+    },
+    {
+      "asset_id": "asset.source.osrs.cache2695.audio-runtime.sfx.521",
+      "sample_rate": 22050,
+      "frames": 6615,
+      "channels": 1,
+      "peak": 0.30609130859375,
+      "float32_channel_sha256": [
+        "921590df7634986c1d35cb2249d6d2f38e864287ac1bbd89dee64aa4bf9df065"
+      ],
+      "exact_integer_to_float_model": {
+        "float32_channel_sha256": [
+          "921590df7634986c1d35cb2249d6d2f38e864287ac1bbd89dee64aa4bf9df065"
+        ],
+        "integer_width": 32,
+        "maximum_deviation_from_power_of_two_float": 0,
+        "mode": "signed-power-of-two"
+      }
+    },
+    {
+      "asset_id": "asset.source.osrs.cache2695.audio-runtime.sfx.880",
+      "sample_rate": 22050,
+      "frames": 37485,
+      "channels": 1,
+      "peak": 0.1147918701171875,
+      "float32_channel_sha256": [
+        "1562e94117aa04124156fbdf5c2df149e8e49b4329bbe8f6da87edb576904d10"
+      ],
+      "exact_integer_to_float_model": {
+        "float32_channel_sha256": [
+          "1562e94117aa04124156fbdf5c2df149e8e49b4329bbe8f6da87edb576904d10"
+        ],
+        "integer_width": 32,
+        "maximum_deviation_from_power_of_two_float": 0,
+        "mode": "signed-power-of-two"
+      }
+    },
+    {
+      "asset_id": "asset.source.osrs.cache2695.audio-runtime.sfx.1984",
+      "sample_rate": 22050,
+      "frames": 12127,
+      "channels": 1,
+      "peak": 0.127227783203125,
+      "float32_channel_sha256": [
+        "4ca2fc232a03354c455a2a38468629e353bc890b3fb7820c207eac9fc9712f2c"
+      ],
+      "exact_integer_to_float_model": {
+        "float32_channel_sha256": [
+          "4ca2fc232a03354c455a2a38468629e353bc890b3fb7820c207eac9fc9712f2c"
+        ],
+        "integer_width": 32,
+        "maximum_deviation_from_power_of_two_float": 0,
+        "mode": "signed-power-of-two"
+      }
+    },
+    {
+      "asset_id": "asset.source.osrs.cache2695.audio-runtime.sfx.1985",
+      "sample_rate": 22050,
+      "frames": 9922,
+      "channels": 1,
+      "peak": 0.0975341796875,
+      "float32_channel_sha256": [
+        "ca601b709cf4d37327e6be6b1327b44d9484d431bb588e1e39c25787a5ea5d4a"
+      ],
+      "exact_integer_to_float_model": {
+        "float32_channel_sha256": [
+          "ca601b709cf4d37327e6be6b1327b44d9484d431bb588e1e39c25787a5ea5d4a"
+        ],
+        "integer_width": 32,
+        "maximum_deviation_from_power_of_two_float": 0,
+        "mode": "signed-power-of-two"
+      }
+    },
+    {
+      "asset_id": "asset.source.osrs.cache2695.audio-runtime.sfx.1986",
+      "sample_rate": 22050,
+      "frames": 28665,
+      "channels": 1,
+      "peak": 0.14056396484375,
+      "float32_channel_sha256": [
+        "ebd9072865e59fcb14381f516552235cb30684e67ac6c73824d4f086a5ced809"
+      ],
+      "exact_integer_to_float_model": {
+        "float32_channel_sha256": [
+          "ebd9072865e59fcb14381f516552235cb30684e67ac6c73824d4f086a5ced809"
+        ],
+        "integer_width": 32,
+        "maximum_deviation_from_power_of_two_float": 0,
+        "mode": "signed-power-of-two"
+      }
+    },
+    {
+      "asset_id": "asset.source.osrs.cache2695.audio-runtime.sfx.1987",
+      "sample_rate": 22050,
+      "frames": 26460,
+      "channels": 1,
+      "peak": 0.08062744140625,
+      "float32_channel_sha256": [
+        "3d227addf6d8794ab885f0bf89fb2ab199a94e05900aece58e7ea3bc284d4542"
+      ],
+      "exact_integer_to_float_model": {
+        "float32_channel_sha256": [
+          "3d227addf6d8794ab885f0bf89fb2ab199a94e05900aece58e7ea3bc284d4542"
+        ],
+        "integer_width": 32,
+        "maximum_deviation_from_power_of_two_float": 0,
+        "mode": "signed-power-of-two"
+      }
+    },
+    {
+      "asset_id": "asset.source.osrs.cache2695.audio-runtime.sfx.1988",
+      "sample_rate": 22050,
+      "frames": 28665,
+      "channels": 1,
+      "peak": 0.08172607421875,
+      "float32_channel_sha256": [
+        "fdc47ccbdee4c1eb289c74f3b2ee8f44a990a7acaf8d01616d25a97d7f892b01"
+      ],
+      "exact_integer_to_float_model": {
+        "float32_channel_sha256": [
+          "fdc47ccbdee4c1eb289c74f3b2ee8f44a990a7acaf8d01616d25a97d7f892b01"
+        ],
+        "integer_width": 32,
+        "maximum_deviation_from_power_of_two_float": 0,
+        "mode": "signed-power-of-two"
+      }
+    },
+    {
+      "asset_id": "asset.source.osrs.cache2695.audio-runtime.sfx.1991",
+      "sample_rate": 22050,
+      "frames": 11025,
+      "channels": 1,
+      "peak": 0.1229400634765625,
+      "float32_channel_sha256": [
+        "dfc4053ae3d2673b0e81ddbfddee5fd61e51fa88e3535e46b960e3dfc37a2829"
+      ],
+      "exact_integer_to_float_model": {
+        "float32_channel_sha256": [
+          "dfc4053ae3d2673b0e81ddbfddee5fd61e51fa88e3535e46b960e3dfc37a2829"
+        ],
+        "integer_width": 32,
+        "maximum_deviation_from_power_of_two_float": 0,
+        "mode": "signed-power-of-two"
+      }
+    },
+    {
+      "asset_id": "asset.source.osrs.cache2695.audio-runtime.sfx.1992",
+      "sample_rate": 22050,
+      "frames": 13230,
+      "channels": 1,
+      "peak": 0.0567474365234375,
+      "float32_channel_sha256": [
+        "8894eba5deaf8c959fac4725f0bceb48c94f4baf7b44565d5d2034fafce5fdf3"
+      ],
+      "exact_integer_to_float_model": {
+        "float32_channel_sha256": [
+          "8894eba5deaf8c959fac4725f0bceb48c94f4baf7b44565d5d2034fafce5fdf3"
+        ],
+        "integer_width": 32,
+        "maximum_deviation_from_power_of_two_float": 0,
+        "mode": "signed-power-of-two"
+      }
+    },
+    {
+      "asset_id": "asset.source.osrs.cache2695.audio-runtime.sfx.1994",
+      "sample_rate": 22050,
+      "frames": 11025,
+      "channels": 1,
+      "peak": 0.112335205078125,
+      "float32_channel_sha256": [
+        "ca65aadc7bcffcafc811b21fb8bb134236ca23809fb1d83137b961753c70bc41"
+      ],
+      "exact_integer_to_float_model": {
+        "float32_channel_sha256": [
+          "ca65aadc7bcffcafc811b21fb8bb134236ca23809fb1d83137b961753c70bc41"
+        ],
+        "integer_width": 32,
+        "maximum_deviation_from_power_of_two_float": 0,
+        "mode": "signed-power-of-two"
+      }
+    },
+    {
+      "asset_id": "asset.source.osrs.cache2695.audio-runtime.sfx.1995",
+      "sample_rate": 22050,
+      "frames": 11025,
+      "channels": 1,
+      "peak": 0.353790283203125,
+      "float32_channel_sha256": [
+        "e0c58cd0f1c6bcde8378fdcb43e79fb673d74d59d28112e7ba439a36b8a66ea0"
+      ],
+      "exact_integer_to_float_model": {
+        "float32_channel_sha256": [
+          "e0c58cd0f1c6bcde8378fdcb43e79fb673d74d59d28112e7ba439a36b8a66ea0"
+        ],
+        "integer_width": 32,
+        "maximum_deviation_from_power_of_two_float": 0,
+        "mode": "signed-power-of-two"
+      }
+    },
+    {
+      "asset_id": "asset.source.osrs.cache2695.audio-runtime.sfx.1996",
+      "sample_rate": 22050,
+      "frames": 5512,
+      "channels": 1,
+      "peak": 0.128814697265625,
+      "float32_channel_sha256": [
+        "226699f951bea439600104ca1574e5122cdc79c8f005cc7de1aebab582cb3130"
+      ],
+      "exact_integer_to_float_model": {
+        "float32_channel_sha256": [
+          "226699f951bea439600104ca1574e5122cdc79c8f005cc7de1aebab582cb3130"
+        ],
+        "integer_width": 32,
+        "maximum_deviation_from_power_of_two_float": 0,
+        "mode": "signed-power-of-two"
+      }
+    },
+    {
+      "asset_id": "asset.source.osrs.cache2695.audio-runtime.sfx.1997",
+      "sample_rate": 22050,
+      "frames": 11025,
+      "channels": 1,
+      "peak": 0.380767822265625,
+      "float32_channel_sha256": [
+        "4309b873e1f47d4aabe48dd265be4dd740901b38eb49d2578c7a0a807790b43c"
+      ],
+      "exact_integer_to_float_model": {
+        "float32_channel_sha256": [
+          "4309b873e1f47d4aabe48dd265be4dd740901b38eb49d2578c7a0a807790b43c"
+        ],
+        "integer_width": 32,
+        "maximum_deviation_from_power_of_two_float": 0,
+        "mode": "signed-power-of-two"
+      }
+    },
+    {
+      "asset_id": "asset.source.osrs.cache2695.audio-runtime.sfx.1999",
+      "sample_rate": 22050,
+      "frames": 26460,
+      "channels": 1,
+      "peak": 0.0426788330078125,
+      "float32_channel_sha256": [
+        "20692abbc3c87d475fa3136d8aa450711cb6a67f1cf76382b978cd4cf003a5a0"
+      ],
+      "exact_integer_to_float_model": {
+        "float32_channel_sha256": [
+          "20692abbc3c87d475fa3136d8aa450711cb6a67f1cf76382b978cd4cf003a5a0"
+        ],
+        "integer_width": 32,
+        "maximum_deviation_from_power_of_two_float": 0,
+        "mode": "signed-power-of-two"
+      }
+    },
+    {
+      "asset_id": "asset.source.osrs.cache2695.audio-runtime.sfx.2003",
+      "sample_rate": 22050,
+      "frames": 22050,
+      "channels": 1,
+      "peak": 0.1784515380859375,
+      "float32_channel_sha256": [
+        "d6161de451174dda8caaaf569670c91a16582d3ffa1954c09678a78d01380925"
+      ],
+      "exact_integer_to_float_model": {
+        "float32_channel_sha256": [
+          "d6161de451174dda8caaaf569670c91a16582d3ffa1954c09678a78d01380925"
+        ],
+        "integer_width": 32,
+        "maximum_deviation_from_power_of_two_float": 0,
+        "mode": "signed-power-of-two"
+      }
+    },
+    {
+      "asset_id": "asset.source.osrs.cache2695.audio-runtime.sfx.2004",
+      "sample_rate": 22050,
+      "frames": 13230,
+      "channels": 1,
+      "peak": 0.1782684326171875,
+      "float32_channel_sha256": [
+        "9590ba06b98e61b2757ba7f7fca752c865d393486cf4a899f58bb40143153f5b"
+      ],
+      "exact_integer_to_float_model": {
+        "float32_channel_sha256": [
+          "9590ba06b98e61b2757ba7f7fca752c865d393486cf4a899f58bb40143153f5b"
+        ],
+        "integer_width": 32,
+        "maximum_deviation_from_power_of_two_float": 0,
+        "mode": "signed-power-of-two"
+      }
+    },
+    {
+      "asset_id": "asset.source.osrs.cache2695.audio-runtime.sfx.2005",
+      "sample_rate": 22050,
+      "frames": 11025,
+      "channels": 1,
+      "peak": 0.1324615478515625,
+      "float32_channel_sha256": [
+        "283e2cef7edc9048151800a626331ac145139c1e3a04b52501174bf6c84edaf1"
+      ],
+      "exact_integer_to_float_model": {
+        "float32_channel_sha256": [
+          "283e2cef7edc9048151800a626331ac145139c1e3a04b52501174bf6c84edaf1"
+        ],
+        "integer_width": 32,
+        "maximum_deviation_from_power_of_two_float": 0,
+        "mode": "signed-power-of-two"
+      }
+    },
+    {
+      "asset_id": "asset.source.osrs.cache2695.audio-runtime.sfx.2006",
+      "sample_rate": 22050,
+      "frames": 14883,
+      "channels": 1,
+      "peak": 0.124786376953125,
+      "float32_channel_sha256": [
+        "bb640c53a534b690432cd4cb3ae8379bc3ba08b13dfa179a92d07df23f239925"
+      ],
+      "exact_integer_to_float_model": {
+        "float32_channel_sha256": [
+          "bb640c53a534b690432cd4cb3ae8379bc3ba08b13dfa179a92d07df23f239925"
+        ],
+        "integer_width": 32,
+        "maximum_deviation_from_power_of_two_float": 0,
+        "mode": "signed-power-of-two"
+      }
+    },
+    {
+      "asset_id": "asset.source.osrs.cache2695.audio-runtime.sfx.2007",
+      "sample_rate": 22050,
+      "frames": 22050,
+      "channels": 1,
+      "peak": 0.1473541259765625,
+      "float32_channel_sha256": [
+        "fbfc90b7b622a1a12a27aaedf1b1c6c4bddfafa71442c90483e4b186240ff60d"
+      ],
+      "exact_integer_to_float_model": {
+        "float32_channel_sha256": [
+          "fbfc90b7b622a1a12a27aaedf1b1c6c4bddfafa71442c90483e4b186240ff60d"
+        ],
+        "integer_width": 32,
+        "maximum_deviation_from_power_of_two_float": 0,
+        "mode": "signed-power-of-two"
+      }
+    },
+    {
+      "asset_id": "asset.source.osrs.cache2695.audio-runtime.sfx.2008",
+      "sample_rate": 22050,
+      "frames": 30870,
+      "channels": 1,
+      "peak": 0.05926513671875,
+      "float32_channel_sha256": [
+        "de334bd5c2a0d7ccba8beebfa978f15db3071ee52a40a61a831d257cfeb78877"
+      ],
+      "exact_integer_to_float_model": {
+        "float32_channel_sha256": [
+          "de334bd5c2a0d7ccba8beebfa978f15db3071ee52a40a61a831d257cfeb78877"
+        ],
+        "integer_width": 32,
+        "maximum_deviation_from_power_of_two_float": 0,
+        "mode": "signed-power-of-two"
+      }
+    },
+    {
+      "asset_id": "asset.source.osrs.cache2695.audio-runtime.sfx.2009",
+      "sample_rate": 22050,
+      "frames": 24916,
+      "channels": 1,
+      "peak": 0.0810089111328125,
+      "float32_channel_sha256": [
+        "89c2389d6943725accecd7d015fd0a48be2f41e34b306973d684f8d25006f1c9"
+      ],
+      "exact_integer_to_float_model": {
+        "float32_channel_sha256": [
+          "89c2389d6943725accecd7d015fd0a48be2f41e34b306973d684f8d25006f1c9"
+        ],
+        "integer_width": 32,
+        "maximum_deviation_from_power_of_two_float": 0,
+        "mode": "signed-power-of-two"
+      }
+    },
+    {
+      "asset_id": "asset.source.osrs.cache2695.audio-runtime.sfx.2010",
+      "sample_rate": 22050,
+      "frames": 44100,
+      "channels": 1,
+      "peak": 0.2159881591796875,
+      "float32_channel_sha256": [
+        "1179f9a05ded30e9b1803030d2d6b1a3c237274e9eb28e1dfe5314361b95669d"
+      ],
+      "exact_integer_to_float_model": {
+        "float32_channel_sha256": [
+          "1179f9a05ded30e9b1803030d2d6b1a3c237274e9eb28e1dfe5314361b95669d"
+        ],
+        "integer_width": 32,
+        "maximum_deviation_from_power_of_two_float": 0,
+        "mode": "signed-power-of-two"
+      }
+    },
+    {
+      "asset_id": "asset.source.osrs.cache2695.audio-runtime.sfx.2011",
+      "sample_rate": 22050,
+      "frames": 33075,
+      "channels": 1,
+      "peak": 0.1872406005859375,
+      "float32_channel_sha256": [
+        "8a2d2afe16c8f7f0c89e0c73b8bcd667736320e3e7f53a66110122941c008ad2"
+      ],
+      "exact_integer_to_float_model": {
+        "float32_channel_sha256": [
+          "8a2d2afe16c8f7f0c89e0c73b8bcd667736320e3e7f53a66110122941c008ad2"
+        ],
+        "integer_width": 32,
+        "maximum_deviation_from_power_of_two_float": 0,
+        "mode": "signed-power-of-two"
+      }
+    },
+    {
+      "asset_id": "asset.source.osrs.cache2695.audio-runtime.sfx.2012",
+      "sample_rate": 22050,
+      "frames": 33075,
+      "channels": 1,
+      "peak": 0.169097900390625,
+      "float32_channel_sha256": [
+        "560f041486985aae8f908fd0942d000f559f8297c98d21c07b40730c680a84e8"
+      ],
+      "exact_integer_to_float_model": {
+        "float32_channel_sha256": [
+          "560f041486985aae8f908fd0942d000f559f8297c98d21c07b40730c680a84e8"
+        ],
+        "integer_width": 32,
+        "maximum_deviation_from_power_of_two_float": 0,
+        "mode": "signed-power-of-two"
+      }
+    },
+    {
+      "asset_id": "asset.source.osrs.cache2695.audio-runtime.sfx.2013",
+      "sample_rate": 22050,
+      "frames": 15435,
+      "channels": 1,
+      "peak": 0.1721343994140625,
+      "float32_channel_sha256": [
+        "03b1e714855ded2b2bd1a3745bd8820aced878dd613a4e399f758dcd91db707f"
+      ],
+      "exact_integer_to_float_model": {
+        "float32_channel_sha256": [
+          "03b1e714855ded2b2bd1a3745bd8820aced878dd613a4e399f758dcd91db707f"
+        ],
+        "integer_width": 32,
+        "maximum_deviation_from_power_of_two_float": 0,
+        "mode": "signed-power-of-two"
+      }
+    },
+    {
+      "asset_id": "asset.source.osrs.cache2695.audio-runtime.sfx.2014",
+      "sample_rate": 22050,
+      "frames": 22050,
+      "channels": 1,
+      "peak": 0.378814697265625,
+      "float32_channel_sha256": [
+        "de734eb4228cdfbc11af0f3a986d6e1c7029a2a51137cd17fabb45ce8c3436c9"
+      ],
+      "exact_integer_to_float_model": {
+        "float32_channel_sha256": [
+          "de734eb4228cdfbc11af0f3a986d6e1c7029a2a51137cd17fabb45ce8c3436c9"
+        ],
+        "integer_width": 32,
+        "maximum_deviation_from_power_of_two_float": 0,
+        "mode": "signed-power-of-two"
+      }
+    },
+    {
+      "asset_id": "asset.source.osrs.cache2695.audio-runtime.sfx.2015",
+      "sample_rate": 22050,
+      "frames": 11686,
+      "channels": 1,
+      "peak": 0.084320068359375,
+      "float32_channel_sha256": [
+        "0fe7759eb88eec0229ce5be0667bb54f23607834a06bfa6d44fa742b3f7b7d94"
+      ],
+      "exact_integer_to_float_model": {
+        "float32_channel_sha256": [
+          "0fe7759eb88eec0229ce5be0667bb54f23607834a06bfa6d44fa742b3f7b7d94"
+        ],
+        "integer_width": 32,
+        "maximum_deviation_from_power_of_two_float": 0,
+        "mode": "signed-power-of-two"
+      }
+    },
+    {
+      "asset_id": "asset.source.osrs.cache2695.audio-runtime.sfx.2016",
+      "sample_rate": 22050,
+      "frames": 31972,
+      "channels": 1,
+      "peak": 0.1859893798828125,
+      "float32_channel_sha256": [
+        "bfdc2c014329be5feb7699ff65630a05506b195c7af0e844b2400504f6c6bd17"
+      ],
+      "exact_integer_to_float_model": {
+        "float32_channel_sha256": [
+          "bfdc2c014329be5feb7699ff65630a05506b195c7af0e844b2400504f6c6bd17"
+        ],
+        "integer_width": 32,
+        "maximum_deviation_from_power_of_two_float": 0,
+        "mode": "signed-power-of-two"
+      }
+    },
+    {
+      "asset_id": "asset.source.osrs.cache2695.audio-runtime.sfx.2017",
+      "sample_rate": 22050,
+      "frames": 31972,
+      "channels": 1,
+      "peak": 0.1915130615234375,
+      "float32_channel_sha256": [
+        "a187d2164124114a122cec69af2543eb2d3b43ed90dc9d0b0e588365cc2cf1f1"
+      ],
+      "exact_integer_to_float_model": {
+        "float32_channel_sha256": [
+          "a187d2164124114a122cec69af2543eb2d3b43ed90dc9d0b0e588365cc2cf1f1"
+        ],
+        "integer_width": 32,
+        "maximum_deviation_from_power_of_two_float": 0,
+        "mode": "signed-power-of-two"
+      }
+    },
+    {
+      "asset_id": "asset.source.osrs.cache2695.audio-runtime.sfx.2018",
+      "sample_rate": 22050,
+      "frames": 11025,
+      "channels": 1,
+      "peak": 0.249908447265625,
+      "float32_channel_sha256": [
+        "63c59f55bac3d660d1a9ef3bdbdf7b6fb9dd4023edb6482da20aac68c0b7e7bd"
+      ],
+      "exact_integer_to_float_model": {
+        "float32_channel_sha256": [
+          "63c59f55bac3d660d1a9ef3bdbdf7b6fb9dd4023edb6482da20aac68c0b7e7bd"
+        ],
+        "integer_width": 32,
+        "maximum_deviation_from_power_of_two_float": 0,
+        "mode": "signed-power-of-two"
+      }
+    },
+    {
+      "asset_id": "asset.source.osrs.cache2695.audio-runtime.sfx.2019",
+      "sample_rate": 22050,
+      "frames": 11025,
+      "channels": 1,
+      "peak": 0.2983551025390625,
+      "float32_channel_sha256": [
+        "63782f94abdf54a2957df23d0d478de9d7fb8ab715cdc5b92a1558be3f45907d"
+      ],
+      "exact_integer_to_float_model": {
+        "float32_channel_sha256": [
+          "63782f94abdf54a2957df23d0d478de9d7fb8ab715cdc5b92a1558be3f45907d"
+        ],
+        "integer_width": 32,
+        "maximum_deviation_from_power_of_two_float": 0,
+        "mode": "signed-power-of-two"
+      }
+    },
+    {
+      "asset_id": "asset.source.osrs.cache2695.audio-runtime.sfx.2020",
+      "sample_rate": 22050,
+      "frames": 16537,
+      "channels": 1,
+      "peak": 0.298553466796875,
+      "float32_channel_sha256": [
+        "25c2b5922138f114002b34ef80562dc2c564de68fa319458b3968363cb0b07b0"
+      ],
+      "exact_integer_to_float_model": {
+        "float32_channel_sha256": [
+          "25c2b5922138f114002b34ef80562dc2c564de68fa319458b3968363cb0b07b0"
+        ],
+        "integer_width": 32,
+        "maximum_deviation_from_power_of_two_float": 0,
+        "mode": "signed-power-of-two"
+      }
+    },
+    {
+      "asset_id": "asset.source.osrs.cache2695.audio-runtime.sfx.2021",
+      "sample_rate": 22050,
+      "frames": 7717,
+      "channels": 1,
+      "peak": 0.04400634765625,
+      "float32_channel_sha256": [
+        "93f5381bfb7ed2fdc63ccc9baf239d11b1a087eab2ff15d8b8ef3f3aa287a6d0"
+      ],
+      "exact_integer_to_float_model": {
+        "float32_channel_sha256": [
+          "93f5381bfb7ed2fdc63ccc9baf239d11b1a087eab2ff15d8b8ef3f3aa287a6d0"
+        ],
+        "integer_width": 32,
+        "maximum_deviation_from_power_of_two_float": 0,
+        "mode": "signed-power-of-two"
+      }
+    },
+    {
+      "asset_id": "asset.source.osrs.cache2695.audio-runtime.sfx.2023",
+      "sample_rate": 22050,
+      "frames": 17640,
+      "channels": 1,
+      "peak": 0.018463134765625,
+      "float32_channel_sha256": [
+        "1525808b7fcaf66c03934709c81180a057f6bbbc2f431d551225e626f5d19f24"
+      ],
+      "exact_integer_to_float_model": {
+        "float32_channel_sha256": [
+          "1525808b7fcaf66c03934709c81180a057f6bbbc2f431d551225e626f5d19f24"
+        ],
+        "integer_width": 32,
+        "maximum_deviation_from_power_of_two_float": 0,
+        "mode": "signed-power-of-two"
+      }
+    },
+    {
+      "asset_id": "asset.source.osrs.cache2695.audio-runtime.sfx.2024",
+      "sample_rate": 22050,
+      "frames": 2205,
+      "channels": 1,
+      "peak": 0.0835418701171875,
+      "float32_channel_sha256": [
+        "1a51db95ec717e8e5d4d7b4d4f4febea23d78b4bbfb94a8c59c57ead64c5417e"
+      ],
+      "exact_integer_to_float_model": {
+        "float32_channel_sha256": [
+          "1a51db95ec717e8e5d4d7b4d4f4febea23d78b4bbfb94a8c59c57ead64c5417e"
+        ],
+        "integer_width": 32,
+        "maximum_deviation_from_power_of_two_float": 0,
+        "mode": "signed-power-of-two"
+      }
+    },
+    {
+      "asset_id": "asset.source.osrs.cache2695.audio-runtime.sfx.2025",
+      "sample_rate": 22050,
+      "frames": 11025,
+      "channels": 1,
+      "peak": 0.01336669921875,
+      "float32_channel_sha256": [
+        "430357da623d7f2dfd3afe06e043945b120babb2cd3aff2c2c1ea9f22b69899d"
+      ],
+      "exact_integer_to_float_model": {
+        "float32_channel_sha256": [
+          "430357da623d7f2dfd3afe06e043945b120babb2cd3aff2c2c1ea9f22b69899d"
+        ],
+        "integer_width": 32,
+        "maximum_deviation_from_power_of_two_float": 0,
+        "mode": "signed-power-of-two"
+      }
+    },
+    {
+      "asset_id": "asset.source.osrs.cache2695.audio-runtime.sfx.2026",
+      "sample_rate": 22050,
+      "frames": 10143,
+      "channels": 1,
+      "peak": 0.073638916015625,
+      "float32_channel_sha256": [
+        "aec80f3cf4c6a5e1a2991512ee98d6bbf1c49328d3431ffd2c94044a6fd969c9"
+      ],
+      "exact_integer_to_float_model": {
+        "float32_channel_sha256": [
+          "aec80f3cf4c6a5e1a2991512ee98d6bbf1c49328d3431ffd2c94044a6fd969c9"
+        ],
+        "integer_width": 32,
+        "maximum_deviation_from_power_of_two_float": 0,
+        "mode": "signed-power-of-two"
+      }
+    },
+    {
+      "asset_id": "asset.source.osrs.cache2695.audio-runtime.sfx.2027",
+      "sample_rate": 22050,
+      "frames": 6615,
+      "channels": 1,
+      "peak": 0.07550048828125,
+      "float32_channel_sha256": [
+        "2f6af588524acda4dace60a8fa2d1abc120cf8ec8a1c33e63a0d7bafb366f544"
+      ],
+      "exact_integer_to_float_model": {
+        "float32_channel_sha256": [
+          "2f6af588524acda4dace60a8fa2d1abc120cf8ec8a1c33e63a0d7bafb366f544"
+        ],
+        "integer_width": 32,
+        "maximum_deviation_from_power_of_two_float": 0,
+        "mode": "signed-power-of-two"
+      }
+    },
+    {
+      "asset_id": "asset.source.osrs.cache2695.audio-runtime.sfx.2040",
+      "sample_rate": 22050,
+      "frames": 63063,
+      "channels": 1,
+      "peak": 0.144012451171875,
+      "float32_channel_sha256": [
+        "62e2e401892cbfa3b76ab1d964be78f6b809ea1046faf5df907cd9e1da6ac7c7"
+      ],
+      "exact_integer_to_float_model": {
+        "float32_channel_sha256": [
+          "62e2e401892cbfa3b76ab1d964be78f6b809ea1046faf5df907cd9e1da6ac7c7"
+        ],
+        "integer_width": 32,
+        "maximum_deviation_from_power_of_two_float": 0,
+        "mode": "signed-power-of-two"
+      }
+    },
+    {
+      "asset_id": "asset.source.osrs.cache2695.audio-runtime.sfx.2041",
+      "sample_rate": 22050,
+      "frames": 27121,
+      "channels": 1,
+      "peak": 0.107513427734375,
+      "float32_channel_sha256": [
+        "5db764f84344bc950e6c016c8136123d4f6ab73fef092a53dac270729070b2c7"
+      ],
+      "exact_integer_to_float_model": {
+        "float32_channel_sha256": [
+          "5db764f84344bc950e6c016c8136123d4f6ab73fef092a53dac270729070b2c7"
+        ],
+        "integer_width": 32,
+        "maximum_deviation_from_power_of_two_float": 0,
+        "mode": "signed-power-of-two"
+      }
+    },
+    {
+      "asset_id": "asset.source.osrs.cache2695.audio-runtime.sfx.2043",
+      "sample_rate": 22050,
+      "frames": 44100,
+      "channels": 1,
+      "peak": 0.1862640380859375,
+      "float32_channel_sha256": [
+        "c1e69ad8af86e1193c522d18cc7eb6fec2183a5ad7e7b3f752b9017db378103c"
+      ],
+      "exact_integer_to_float_model": {
+        "float32_channel_sha256": [
+          "c1e69ad8af86e1193c522d18cc7eb6fec2183a5ad7e7b3f752b9017db378103c"
+        ],
+        "integer_width": 32,
+        "maximum_deviation_from_power_of_two_float": 0,
+        "mode": "signed-power-of-two"
+      }
+    },
+    {
+      "asset_id": "asset.source.osrs.cache2695.audio-runtime.sfx.2044",
+      "sample_rate": 22050,
+      "frames": 44100,
+      "channels": 1,
+      "peak": 0.178314208984375,
+      "float32_channel_sha256": [
+        "8edc3a416bd4e0b8f4a9825414be620601fb198f78503263771510aa9956c53e"
+      ],
+      "exact_integer_to_float_model": {
+        "float32_channel_sha256": [
+          "8edc3a416bd4e0b8f4a9825414be620601fb198f78503263771510aa9956c53e"
+        ],
+        "integer_width": 32,
+        "maximum_deviation_from_power_of_two_float": 0,
+        "mode": "signed-power-of-two"
+      }
+    },
+    {
+      "asset_id": "asset.source.osrs.cache2695.audio-runtime.sfx.2045",
+      "sample_rate": 22050,
+      "frames": 44100,
+      "channels": 1,
+      "peak": 0.0545196533203125,
+      "float32_channel_sha256": [
+        "767c754cfd9b0dc0f4f442a447b868a708207484c2522b1a056d5556452da6c9"
+      ],
+      "exact_integer_to_float_model": {
+        "float32_channel_sha256": [
+          "767c754cfd9b0dc0f4f442a447b868a708207484c2522b1a056d5556452da6c9"
+        ],
+        "integer_width": 32,
+        "maximum_deviation_from_power_of_two_float": 0,
+        "mode": "signed-power-of-two"
+      }
+    },
+    {
+      "asset_id": "asset.source.osrs.cache2695.audio-runtime.sfx.2046",
+      "sample_rate": 22050,
+      "frames": 30870,
+      "channels": 1,
+      "peak": 0.035400390625,
+      "float32_channel_sha256": [
+        "18390ba4914a975bd405ebf6bb9659ef4f31bc20d65614010bdc6256f4d959cc"
+      ],
+      "exact_integer_to_float_model": {
+        "float32_channel_sha256": [
+          "18390ba4914a975bd405ebf6bb9659ef4f31bc20d65614010bdc6256f4d959cc"
+        ],
+        "integer_width": 32,
+        "maximum_deviation_from_power_of_two_float": 0,
+        "mode": "signed-power-of-two"
+      }
+    },
+    {
+      "asset_id": "asset.source.osrs.cache2695.audio-runtime.sfx.2048",
+      "sample_rate": 22050,
+      "frames": 44100,
+      "channels": 1,
+      "peak": 0.019439697265625,
+      "float32_channel_sha256": [
+        "8f91eda2ff76bb50cc797b8b1825b008339a8fb61a25f328ef1c0ddc2b77b111"
+      ],
+      "exact_integer_to_float_model": {
+        "float32_channel_sha256": [
+          "8f91eda2ff76bb50cc797b8b1825b008339a8fb61a25f328ef1c0ddc2b77b111"
+        ],
+        "integer_width": 32,
+        "maximum_deviation_from_power_of_two_float": 0,
+        "mode": "signed-power-of-two"
+      }
+    },
+    {
+      "asset_id": "asset.source.osrs.cache2695.audio-runtime.sfx.2049",
+      "sample_rate": 22050,
+      "frames": 44100,
+      "channels": 1,
+      "peak": 0.0446014404296875,
+      "float32_channel_sha256": [
+        "5ad906e1075843627185bd7a01e01d6f0eb5e6c8ed796bcacb6f72bc4c6ef606"
+      ],
+      "exact_integer_to_float_model": {
+        "float32_channel_sha256": [
+          "5ad906e1075843627185bd7a01e01d6f0eb5e6c8ed796bcacb6f72bc4c6ef606"
+        ],
+        "integer_width": 32,
+        "maximum_deviation_from_power_of_two_float": 0,
+        "mode": "signed-power-of-two"
+      }
+    },
+    {
+      "asset_id": "asset.source.osrs.cache2695.audio-runtime.sfx.2050",
+      "sample_rate": 22050,
+      "frames": 11025,
+      "channels": 1,
+      "peak": 0.0553741455078125,
+      "float32_channel_sha256": [
+        "847490e7e277c085d467ebb284d7b78f2b0179bd3ac1d10b3302cb8b793f3836"
+      ],
+      "exact_integer_to_float_model": {
+        "float32_channel_sha256": [
+          "847490e7e277c085d467ebb284d7b78f2b0179bd3ac1d10b3302cb8b793f3836"
+        ],
+        "integer_width": 32,
+        "maximum_deviation_from_power_of_two_float": 0,
+        "mode": "signed-power-of-two"
+      }
+    },
+    {
+      "asset_id": "asset.source.osrs.cache2695.audio-runtime.sfx.2052",
+      "sample_rate": 22050,
+      "frames": 44100,
+      "channels": 1,
+      "peak": 0.0455322265625,
+      "float32_channel_sha256": [
+        "0f08ce3107432425256e6a62d1d2f7debfb78324cb1a27e18d2cca490213ab07"
+      ],
+      "exact_integer_to_float_model": {
+        "float32_channel_sha256": [
+          "0f08ce3107432425256e6a62d1d2f7debfb78324cb1a27e18d2cca490213ab07"
+        ],
+        "integer_width": 32,
+        "maximum_deviation_from_power_of_two_float": 0,
+        "mode": "signed-power-of-two"
+      }
+    },
+    {
+      "asset_id": "asset.source.osrs.cache2695.audio-runtime.sfx.2057",
+      "sample_rate": 22050,
+      "frames": 24255,
+      "channels": 1,
+      "peak": 0.0788116455078125,
+      "float32_channel_sha256": [
+        "73ebf25bc5d9cc667ede958ee95dd6f5d5195d7ebceb6bb37f1a4ef88d643c5f"
+      ],
+      "exact_integer_to_float_model": {
+        "float32_channel_sha256": [
+          "73ebf25bc5d9cc667ede958ee95dd6f5d5195d7ebceb6bb37f1a4ef88d643c5f"
+        ],
+        "integer_width": 32,
+        "maximum_deviation_from_power_of_two_float": 0,
+        "mode": "signed-power-of-two"
+      }
+    },
+    {
+      "asset_id": "asset.source.osrs.cache2695.audio-runtime.sfx.2063",
+      "sample_rate": 22050,
+      "frames": 44100,
+      "channels": 1,
+      "peak": 0.0604248046875,
+      "float32_channel_sha256": [
+        "2c199c1e9eaa185c122583a02957a65c1c59df92ef4898db84ee04c4241d02de"
+      ],
+      "exact_integer_to_float_model": {
+        "float32_channel_sha256": [
+          "2c199c1e9eaa185c122583a02957a65c1c59df92ef4898db84ee04c4241d02de"
+        ],
+        "integer_width": 32,
+        "maximum_deviation_from_power_of_two_float": 0,
+        "mode": "signed-power-of-two"
+      }
+    },
+    {
+      "asset_id": "asset.source.osrs.cache2695.audio-runtime.sfx.2065",
+      "sample_rate": 22050,
+      "frames": 44100,
+      "channels": 1,
+      "peak": 0.0139923095703125,
+      "float32_channel_sha256": [
+        "42b2e045de3dd08aadbfcab1ded35d71c1d80665d7c164052d59cbb9d2582f9c"
+      ],
+      "exact_integer_to_float_model": {
+        "float32_channel_sha256": [
+          "42b2e045de3dd08aadbfcab1ded35d71c1d80665d7c164052d59cbb9d2582f9c"
+        ],
+        "integer_width": 32,
+        "maximum_deviation_from_power_of_two_float": 0,
+        "mode": "signed-power-of-two"
+      }
+    },
+    {
+      "asset_id": "asset.source.osrs.cache2695.audio-runtime.sfx.2066",
+      "sample_rate": 22050,
+      "frames": 44100,
+      "channels": 1,
+      "peak": 0.01251220703125,
+      "float32_channel_sha256": [
+        "8ee98efb8d556fa3680fa8f3c8de39d8f9a01f7381fa3c2d0a1632ca7a6613c8"
+      ],
+      "exact_integer_to_float_model": {
+        "float32_channel_sha256": [
+          "8ee98efb8d556fa3680fa8f3c8de39d8f9a01f7381fa3c2d0a1632ca7a6613c8"
+        ],
+        "integer_width": 32,
+        "maximum_deviation_from_power_of_two_float": 0,
+        "mode": "signed-power-of-two"
+      }
+    },
+    {
+      "asset_id": "asset.source.osrs.cache2695.audio-runtime.sfx.2067",
+      "sample_rate": 22050,
+      "frames": 17640,
+      "channels": 1,
+      "peak": 0.053436279296875,
+      "float32_channel_sha256": [
+        "b5f8b31bc9a788290ca4e42ad149859814087a83e4b5405eecae0660682cf927"
+      ],
+      "exact_integer_to_float_model": {
+        "float32_channel_sha256": [
+          "b5f8b31bc9a788290ca4e42ad149859814087a83e4b5405eecae0660682cf927"
+        ],
+        "integer_width": 32,
+        "maximum_deviation_from_power_of_two_float": 0,
+        "mode": "signed-power-of-two"
+      }
+    },
+    {
+      "asset_id": "asset.source.osrs.cache2695.audio-runtime.sfx.2068",
+      "sample_rate": 22050,
+      "frames": 22050,
+      "channels": 1,
+      "peak": 0.303497314453125,
+      "float32_channel_sha256": [
+        "f15f18245164af136a4529bd48a3f1c1bde99d3796727e18461c4bf38e40406f"
+      ],
+      "exact_integer_to_float_model": {
+        "float32_channel_sha256": [
+          "f15f18245164af136a4529bd48a3f1c1bde99d3796727e18461c4bf38e40406f"
+        ],
+        "integer_width": 32,
+        "maximum_deviation_from_power_of_two_float": 0,
+        "mode": "signed-power-of-two"
+      }
+    },
+    {
+      "asset_id": "asset.source.osrs.cache2695.audio-runtime.sfx.2069",
+      "sample_rate": 22050,
+      "frames": 6615,
+      "channels": 1,
+      "peak": 0.019317626953125,
+      "float32_channel_sha256": [
+        "23bd8beda72abe5e1bc25ad23cd6a680d8ee55b19e98e9b757df137a9c6bb0eb"
+      ],
+      "exact_integer_to_float_model": {
+        "float32_channel_sha256": [
+          "23bd8beda72abe5e1bc25ad23cd6a680d8ee55b19e98e9b757df137a9c6bb0eb"
+        ],
+        "integer_width": 32,
+        "maximum_deviation_from_power_of_two_float": 0,
+        "mode": "signed-power-of-two"
+      }
+    },
+    {
+      "asset_id": "asset.source.osrs.cache2695.audio-runtime.sfx.2070",
+      "sample_rate": 22050,
+      "frames": 35280,
+      "channels": 1,
+      "peak": 0.0760040283203125,
+      "float32_channel_sha256": [
+        "3fe37dbaa0ad6fb7030e8f1b69384abfe0a0ea28a70eec09f51a548819bffc66"
+      ],
+      "exact_integer_to_float_model": {
+        "float32_channel_sha256": [
+          "3fe37dbaa0ad6fb7030e8f1b69384abfe0a0ea28a70eec09f51a548819bffc66"
+        ],
+        "integer_width": 32,
+        "maximum_deviation_from_power_of_two_float": 0,
+        "mode": "signed-power-of-two"
+      }
+    },
+    {
+      "asset_id": "asset.source.osrs.cache2695.audio-runtime.sfx.2071",
+      "sample_rate": 22050,
+      "frames": 13230,
+      "channels": 1,
+      "peak": 0.0663909912109375,
+      "float32_channel_sha256": [
+        "248f68acc68f731917dc296e51a3b9e7b607dba83fd97e535d379d7d0d5f0263"
+      ],
+      "exact_integer_to_float_model": {
+        "float32_channel_sha256": [
+          "248f68acc68f731917dc296e51a3b9e7b607dba83fd97e535d379d7d0d5f0263"
+        ],
+        "integer_width": 32,
+        "maximum_deviation_from_power_of_two_float": 0,
+        "mode": "signed-power-of-two"
+      }
+    },
+    {
+      "asset_id": "asset.source.osrs.cache2695.audio-runtime.sfx.2072",
+      "sample_rate": 22050,
+      "frames": 44100,
+      "channels": 1,
+      "peak": 0.1598663330078125,
+      "float32_channel_sha256": [
+        "59268b1485dd423835f55ce1751033c4563bf41dfac71cfff99eeed67b7dcf72"
+      ],
+      "exact_integer_to_float_model": {
+        "float32_channel_sha256": [
+          "59268b1485dd423835f55ce1751033c4563bf41dfac71cfff99eeed67b7dcf72"
+        ],
+        "integer_width": 32,
+        "maximum_deviation_from_power_of_two_float": 0,
+        "mode": "signed-power-of-two"
+      }
+    },
+    {
+      "asset_id": "asset.source.osrs.cache2695.audio-runtime.sfx.2073",
+      "sample_rate": 22050,
+      "frames": 88200,
+      "channels": 1,
+      "peak": 0.01763916015625,
+      "float32_channel_sha256": [
+        "d6855e7781240a26c0197495c780f9c4d80a99b6c3da44a69e24e6d5bca5aeab"
+      ],
+      "exact_integer_to_float_model": {
+        "float32_channel_sha256": [
+          "d6855e7781240a26c0197495c780f9c4d80a99b6c3da44a69e24e6d5bca5aeab"
+        ],
+        "integer_width": 32,
+        "maximum_deviation_from_power_of_two_float": 0,
+        "mode": "signed-power-of-two"
+      }
+    },
+    {
+      "asset_id": "asset.source.osrs.cache2695.audio-runtime.sfx.2074",
+      "sample_rate": 22050,
+      "frames": 88200,
+      "channels": 1,
+      "peak": 0.0179595947265625,
+      "float32_channel_sha256": [
+        "e5ced5a5c5e091b9ff225bd5e81491abf9f12fbfa4363939f11efa65d25a6cc1"
+      ],
+      "exact_integer_to_float_model": {
+        "float32_channel_sha256": [
+          "e5ced5a5c5e091b9ff225bd5e81491abf9f12fbfa4363939f11efa65d25a6cc1"
+        ],
+        "integer_width": 32,
+        "maximum_deviation_from_power_of_two_float": 0,
+        "mode": "signed-power-of-two"
+      }
+    },
+    {
+      "asset_id": "asset.source.osrs.cache2695.audio-runtime.sfx.2075",
+      "sample_rate": 22050,
+      "frames": 110250,
+      "channels": 1,
+      "peak": 0.0302734375,
+      "float32_channel_sha256": [
+        "d37acba1936a91aa96e1523f0328fb880366a8293cb6c0f1aae80220fc964c5f"
+      ],
+      "exact_integer_to_float_model": {
+        "float32_channel_sha256": [
+          "d37acba1936a91aa96e1523f0328fb880366a8293cb6c0f1aae80220fc964c5f"
+        ],
+        "integer_width": 32,
+        "maximum_deviation_from_power_of_two_float": 0,
+        "mode": "signed-power-of-two"
+      }
+    },
+    {
+      "asset_id": "asset.source.osrs.cache2695.audio-runtime.sfx.2076",
+      "sample_rate": 22050,
+      "frames": 13230,
+      "channels": 1,
+      "peak": 0.211944580078125,
+      "float32_channel_sha256": [
+        "1c8a26157c0138079a21c7f398cbf152c7362c7211e1a3d361e90330a12446fe"
+      ],
+      "exact_integer_to_float_model": {
+        "float32_channel_sha256": [
+          "1c8a26157c0138079a21c7f398cbf152c7362c7211e1a3d361e90330a12446fe"
+        ],
+        "integer_width": 32,
+        "maximum_deviation_from_power_of_two_float": 0,
+        "mode": "signed-power-of-two"
+      }
+    },
+    {
+      "asset_id": "asset.source.osrs.cache2695.audio-runtime.sfx.2077",
+      "sample_rate": 22050,
+      "frames": 88200,
+      "channels": 1,
+      "peak": 0.1596832275390625,
+      "float32_channel_sha256": [
+        "81b5c67682d49480ac12ee6c445b761121f79c25253356b5f2fbcaad5fa184da"
+      ],
+      "exact_integer_to_float_model": {
+        "float32_channel_sha256": [
+          "81b5c67682d49480ac12ee6c445b761121f79c25253356b5f2fbcaad5fa184da"
+        ],
+        "integer_width": 32,
+        "maximum_deviation_from_power_of_two_float": 0,
+        "mode": "signed-power-of-two"
+      }
+    },
+    {
+      "asset_id": "asset.source.osrs.cache2695.audio-runtime.sfx.2079",
+      "sample_rate": 22050,
+      "frames": 88200,
+      "channels": 1,
+      "peak": 0.282379150390625,
+      "float32_channel_sha256": [
+        "d522b6f36f28c894cd650174174a164f4c05092298696c00227d6befe7b5af45"
+      ],
+      "exact_integer_to_float_model": {
+        "float32_channel_sha256": [
+          "d522b6f36f28c894cd650174174a164f4c05092298696c00227d6befe7b5af45"
+        ],
+        "integer_width": 32,
+        "maximum_deviation_from_power_of_two_float": 0,
+        "mode": "signed-power-of-two"
+      }
+    },
+    {
+      "asset_id": "asset.source.osrs.cache2695.audio-runtime.sfx.2080",
+      "sample_rate": 22050,
+      "frames": 88200,
+      "channels": 1,
+      "peak": 0.0270538330078125,
+      "float32_channel_sha256": [
+        "c07476c0a071d0743a3a1e3c60c048d4747ba10f8de883f7953f78e21070b599"
+      ],
+      "exact_integer_to_float_model": {
+        "float32_channel_sha256": [
+          "c07476c0a071d0743a3a1e3c60c048d4747ba10f8de883f7953f78e21070b599"
+        ],
+        "integer_width": 32,
+        "maximum_deviation_from_power_of_two_float": 0,
+        "mode": "signed-power-of-two"
+      }
+    },
+    {
+      "asset_id": "asset.source.osrs.cache2695.audio-runtime.sfx.2083",
+      "sample_rate": 22050,
+      "frames": 22050,
+      "channels": 1,
+      "peak": 0.0320587158203125,
+      "float32_channel_sha256": [
+        "4b30775ae3e934acee7ed85a997b03903c8c6365a79533b78650f5fbaa9324d3"
+      ],
+      "exact_integer_to_float_model": {
+        "float32_channel_sha256": [
+          "4b30775ae3e934acee7ed85a997b03903c8c6365a79533b78650f5fbaa9324d3"
+        ],
+        "integer_width": 32,
+        "maximum_deviation_from_power_of_two_float": 0,
+        "mode": "signed-power-of-two"
+      }
+    },
+    {
+      "asset_id": "asset.source.osrs.cache2695.audio-runtime.sfx.2084",
+      "sample_rate": 22050,
+      "frames": 17640,
+      "channels": 1,
+      "peak": 0.048675537109375,
+      "float32_channel_sha256": [
+        "bd5d2282dc9d0b2e54bc2a1efe45b168abe9129a4156ea44687c845c21486f3b"
+      ],
+      "exact_integer_to_float_model": {
+        "float32_channel_sha256": [
+          "bd5d2282dc9d0b2e54bc2a1efe45b168abe9129a4156ea44687c845c21486f3b"
+        ],
+        "integer_width": 32,
+        "maximum_deviation_from_power_of_two_float": 0,
+        "mode": "signed-power-of-two"
+      }
+    },
+    {
+      "asset_id": "asset.source.osrs.cache2695.audio-runtime.sfx.2085",
+      "sample_rate": 22050,
+      "frames": 13230,
+      "channels": 1,
+      "peak": 0.1327056884765625,
+      "float32_channel_sha256": [
+        "5da01a0dab92fd7622eacedf5f9ecdec7422e5bcb6737ad01b07b66a0bbfa853"
+      ],
+      "exact_integer_to_float_model": {
+        "float32_channel_sha256": [
+          "5da01a0dab92fd7622eacedf5f9ecdec7422e5bcb6737ad01b07b66a0bbfa853"
+        ],
+        "integer_width": 32,
+        "maximum_deviation_from_power_of_two_float": 0,
+        "mode": "signed-power-of-two"
+      }
+    },
+    {
+      "asset_id": "asset.source.osrs.cache2695.audio-runtime.sfx.2086",
+      "sample_rate": 22050,
+      "frames": 3858,
+      "channels": 1,
+      "peak": 0.0605926513671875,
+      "float32_channel_sha256": [
+        "da7fe9d13d999506c2944a35fa4f684cd100cdea2f6030e842b77218a88c1e0f"
+      ],
+      "exact_integer_to_float_model": {
+        "float32_channel_sha256": [
+          "da7fe9d13d999506c2944a35fa4f684cd100cdea2f6030e842b77218a88c1e0f"
+        ],
+        "integer_width": 32,
+        "maximum_deviation_from_power_of_two_float": 0,
+        "mode": "signed-power-of-two"
+      }
+    },
+    {
+      "asset_id": "asset.source.osrs.cache2695.audio-runtime.sfx.2087",
+      "sample_rate": 22050,
+      "frames": 6615,
+      "channels": 1,
+      "peak": 0.2486572265625,
+      "float32_channel_sha256": [
+        "4eea887751a9ac72f1819dc7e1985241f859ee2234727c98c5dfec9f980a8813"
+      ],
+      "exact_integer_to_float_model": {
+        "float32_channel_sha256": [
+          "4eea887751a9ac72f1819dc7e1985241f859ee2234727c98c5dfec9f980a8813"
+        ],
+        "integer_width": 32,
+        "maximum_deviation_from_power_of_two_float": 0,
+        "mode": "signed-power-of-two"
+      }
+    },
+    {
+      "asset_id": "asset.source.osrs.cache2695.audio-runtime.sfx.2088",
+      "sample_rate": 22050,
+      "frames": 22050,
+      "channels": 1,
+      "peak": 0.0819091796875,
+      "float32_channel_sha256": [
+        "66fe757c469ecf13f2769fa43b22e9c48a5769a04c669c93e2a113ae2f477844"
+      ],
+      "exact_integer_to_float_model": {
+        "float32_channel_sha256": [
+          "66fe757c469ecf13f2769fa43b22e9c48a5769a04c669c93e2a113ae2f477844"
+        ],
+        "integer_width": 32,
+        "maximum_deviation_from_power_of_two_float": 0,
+        "mode": "signed-power-of-two"
+      }
+    },
+    {
+      "asset_id": "asset.source.osrs.cache2695.audio-runtime.sfx.2089",
+      "sample_rate": 22050,
+      "frames": 26460,
+      "channels": 1,
+      "peak": 0.1649017333984375,
+      "float32_channel_sha256": [
+        "0138dbe72f9f1393b578ec27843921a72a4cb858aae5d616131c87ff9709eb97"
+      ],
+      "exact_integer_to_float_model": {
+        "float32_channel_sha256": [
+          "0138dbe72f9f1393b578ec27843921a72a4cb858aae5d616131c87ff9709eb97"
+        ],
+        "integer_width": 32,
+        "maximum_deviation_from_power_of_two_float": 0,
+        "mode": "signed-power-of-two"
+      }
+    },
+    {
+      "asset_id": "asset.source.osrs.cache2695.audio-runtime.sfx.2090",
+      "sample_rate": 22050,
+      "frames": 26460,
+      "channels": 1,
+      "peak": 0.0620269775390625,
+      "float32_channel_sha256": [
+        "37b41183943e0ef8d6cab3ebc16ff140e6ecef6734a47dd52af608b32f4e2e1e"
+      ],
+      "exact_integer_to_float_model": {
+        "float32_channel_sha256": [
+          "37b41183943e0ef8d6cab3ebc16ff140e6ecef6734a47dd52af608b32f4e2e1e"
+        ],
+        "integer_width": 32,
+        "maximum_deviation_from_power_of_two_float": 0,
+        "mode": "signed-power-of-two"
+      }
+    },
+    {
+      "asset_id": "asset.source.osrs.cache2695.audio-runtime.sfx.2091",
+      "sample_rate": 22050,
+      "frames": 33075,
+      "channels": 1,
+      "peak": 0.2539825439453125,
+      "float32_channel_sha256": [
+        "1427da57e613efa305f95f1949d31e5be780b68ebdacb1f4df7ac481b69de4cd"
+      ],
+      "exact_integer_to_float_model": {
+        "float32_channel_sha256": [
+          "1427da57e613efa305f95f1949d31e5be780b68ebdacb1f4df7ac481b69de4cd"
+        ],
+        "integer_width": 32,
+        "maximum_deviation_from_power_of_two_float": 0,
+        "mode": "signed-power-of-two"
+      }
+    },
+    {
+      "asset_id": "asset.source.osrs.cache2695.audio-runtime.sfx.2092",
+      "sample_rate": 22050,
+      "frames": 33075,
+      "channels": 1,
+      "peak": 0.0794830322265625,
+      "float32_channel_sha256": [
+        "433cc78b009733f809416031626a85ebc15fc14e7cf876337d2f3de0be7350c3"
+      ],
+      "exact_integer_to_float_model": {
+        "float32_channel_sha256": [
+          "433cc78b009733f809416031626a85ebc15fc14e7cf876337d2f3de0be7350c3"
+        ],
+        "integer_width": 32,
+        "maximum_deviation_from_power_of_two_float": 0,
+        "mode": "signed-power-of-two"
+      }
+    },
+    {
+      "asset_id": "asset.source.osrs.cache2695.audio-runtime.sfx.2093",
+      "sample_rate": 22050,
+      "frames": 13230,
+      "channels": 1,
+      "peak": 0.19085693359375,
+      "float32_channel_sha256": [
+        "42e7f3c3e3539265b8f9031338c279ec0abba38665ae53d889c09e5b861d1e96"
+      ],
+      "exact_integer_to_float_model": {
+        "float32_channel_sha256": [
+          "42e7f3c3e3539265b8f9031338c279ec0abba38665ae53d889c09e5b861d1e96"
+        ],
+        "integer_width": 32,
+        "maximum_deviation_from_power_of_two_float": 0,
+        "mode": "signed-power-of-two"
+      }
+    },
+    {
+      "asset_id": "asset.source.osrs.cache2695.audio-runtime.sfx.2094",
+      "sample_rate": 22050,
+      "frames": 13230,
+      "channels": 1,
+      "peak": 0.496307373046875,
+      "float32_channel_sha256": [
+        "442a2d728e9175f8a5b77f4c1babf565a2c7ce71d984ef2604d453f16b90c352"
+      ],
+      "exact_integer_to_float_model": {
+        "float32_channel_sha256": [
+          "442a2d728e9175f8a5b77f4c1babf565a2c7ce71d984ef2604d453f16b90c352"
+        ],
+        "integer_width": 32,
+        "maximum_deviation_from_power_of_two_float": 0,
+        "mode": "signed-power-of-two"
+      }
+    },
+    {
+      "asset_id": "asset.source.osrs.cache2695.audio-runtime.sfx.2095",
+      "sample_rate": 22050,
+      "frames": 22050,
+      "channels": 1,
+      "peak": 0.208587646484375,
+      "float32_channel_sha256": [
+        "28bfc6a5b872b38ac3f27d8d71fea7188f91711dc2d1096a1902a827db120d10"
+      ],
+      "exact_integer_to_float_model": {
+        "float32_channel_sha256": [
+          "28bfc6a5b872b38ac3f27d8d71fea7188f91711dc2d1096a1902a827db120d10"
+        ],
+        "integer_width": 32,
+        "maximum_deviation_from_power_of_two_float": 0,
+        "mode": "signed-power-of-two"
+      }
+    },
+    {
+      "asset_id": "asset.source.osrs.cache2695.audio-runtime.sfx.2115",
+      "sample_rate": 22050,
+      "frames": 18522,
+      "channels": 1,
+      "peak": 0.21630859375,
+      "float32_channel_sha256": [
+        "a54ed5d4d0d4ec66d0900e8719af567d903f1f9f34c7f7fcebe749ef80e3ac0c"
+      ],
+      "exact_integer_to_float_model": {
+        "float32_channel_sha256": [
+          "a54ed5d4d0d4ec66d0900e8719af567d903f1f9f34c7f7fcebe749ef80e3ac0c"
+        ],
+        "integer_width": 32,
+        "maximum_deviation_from_power_of_two_float": 0,
+        "mode": "signed-power-of-two"
+      }
+    },
+    {
+      "asset_id": "asset.source.osrs.cache2695.audio-runtime.sfx.2116",
+      "sample_rate": 22050,
+      "frames": 22601,
+      "channels": 1,
+      "peak": 0.210052490234375,
+      "float32_channel_sha256": [
+        "309466d67f137f2eb7e9747852859e49c3e6cbbe89c0584a97ab4fc2a2c4d087"
+      ],
+      "exact_integer_to_float_model": {
+        "float32_channel_sha256": [
+          "309466d67f137f2eb7e9747852859e49c3e6cbbe89c0584a97ab4fc2a2c4d087"
+        ],
+        "integer_width": 32,
+        "maximum_deviation_from_power_of_two_float": 0,
+        "mode": "signed-power-of-two"
+      }
+    },
+    {
+      "asset_id": "asset.source.osrs.cache2695.audio-runtime.sfx.2119",
+      "sample_rate": 22050,
+      "frames": 18742,
+      "channels": 1,
+      "peak": 0.4999847412109375,
+      "float32_channel_sha256": [
+        "4caa62543149601c4b7ae6ba04fe2e0e3bbd012e5d15b2aa4c3105f8a2ad4536"
+      ],
+      "exact_integer_to_float_model": {
+        "float32_channel_sha256": [
+          "4caa62543149601c4b7ae6ba04fe2e0e3bbd012e5d15b2aa4c3105f8a2ad4536"
+        ],
+        "integer_width": 32,
+        "maximum_deviation_from_power_of_two_float": 0,
+        "mode": "signed-power-of-two"
+      }
+    },
+    {
+      "asset_id": "asset.source.osrs.cache2695.audio-runtime.sfx.2135",
+      "sample_rate": 22050,
+      "frames": 11025,
+      "channels": 1,
+      "peak": 0.13720703125,
+      "float32_channel_sha256": [
+        "a3a44214042c4da70f10aa8e03c819af3a7fbf67f6df7cef42b65d7148ae3eaa"
+      ],
+      "exact_integer_to_float_model": {
+        "float32_channel_sha256": [
+          "a3a44214042c4da70f10aa8e03c819af3a7fbf67f6df7cef42b65d7148ae3eaa"
+        ],
+        "integer_width": 32,
+        "maximum_deviation_from_power_of_two_float": 0,
+        "mode": "signed-power-of-two"
+      }
+    },
+    {
+      "asset_id": "asset.source.osrs.cache2695.audio-runtime.sfx.2136",
+      "sample_rate": 22050,
+      "frames": 5512,
+      "channels": 1,
+      "peak": 0.18011474609375,
+      "float32_channel_sha256": [
+        "ed4fe2680ffc647edfba11705092f736b2baafb39eb592d4bfe5338dc370d0b5"
+      ],
+      "exact_integer_to_float_model": {
+        "float32_channel_sha256": [
+          "ed4fe2680ffc647edfba11705092f736b2baafb39eb592d4bfe5338dc370d0b5"
+        ],
+        "integer_width": 32,
+        "maximum_deviation_from_power_of_two_float": 0,
+        "mode": "signed-power-of-two"
+      }
+    },
+    {
+      "asset_id": "asset.source.osrs.cache2695.audio-runtime.sfx.2137",
+      "sample_rate": 22050,
+      "frames": 11025,
+      "channels": 1,
+      "peak": 0.0933837890625,
+      "float32_channel_sha256": [
+        "36f663e55c8014b162ad2b027949f78afe89d0d92bae31479fc56358f1bfb952"
+      ],
+      "exact_integer_to_float_model": {
+        "float32_channel_sha256": [
+          "36f663e55c8014b162ad2b027949f78afe89d0d92bae31479fc56358f1bfb952"
+        ],
+        "integer_width": 32,
+        "maximum_deviation_from_power_of_two_float": 0,
+        "mode": "signed-power-of-two"
+      }
+    },
+    {
+      "asset_id": "asset.source.osrs.cache2695.audio-runtime.sfx.2138",
+      "sample_rate": 22050,
+      "frames": 22050,
+      "channels": 1,
+      "peak": 0.1145172119140625,
+      "float32_channel_sha256": [
+        "7359a4054675c48bd7cbe73c49e47d3064c1de35ebd02ff2c744c191aea48cb6"
+      ],
+      "exact_integer_to_float_model": {
+        "float32_channel_sha256": [
+          "7359a4054675c48bd7cbe73c49e47d3064c1de35ebd02ff2c744c191aea48cb6"
+        ],
+        "integer_width": 32,
+        "maximum_deviation_from_power_of_two_float": 0,
+        "mode": "signed-power-of-two"
+      }
+    },
+    {
+      "asset_id": "asset.source.osrs.cache2695.audio-runtime.sfx.2141",
+      "sample_rate": 22050,
+      "frames": 22050,
+      "channels": 1,
+      "peak": 0.0892791748046875,
+      "float32_channel_sha256": [
+        "9d302f10f5a6958fc061c60609f5e8086ea67b999ea82868e9d2acae6bb7108c"
+      ],
+      "exact_integer_to_float_model": {
+        "float32_channel_sha256": [
+          "9d302f10f5a6958fc061c60609f5e8086ea67b999ea82868e9d2acae6bb7108c"
+        ],
+        "integer_width": 32,
+        "maximum_deviation_from_power_of_two_float": 0,
+        "mode": "signed-power-of-two"
+      }
+    },
+    {
+      "asset_id": "asset.source.osrs.cache2695.audio-runtime.sfx.2143",
+      "sample_rate": 22050,
+      "frames": 33075,
+      "channels": 1,
+      "peak": 0.0345611572265625,
+      "float32_channel_sha256": [
+        "3583ae8b329f45a153e6e6a23d02ef4fa9cd4e5a28abde85569ac5db20fe9152"
+      ],
+      "exact_integer_to_float_model": {
+        "float32_channel_sha256": [
+          "3583ae8b329f45a153e6e6a23d02ef4fa9cd4e5a28abde85569ac5db20fe9152"
+        ],
+        "integer_width": 32,
+        "maximum_deviation_from_power_of_two_float": 0,
+        "mode": "signed-power-of-two"
+      }
+    },
+    {
+      "asset_id": "asset.source.osrs.cache2695.audio-runtime.sfx.2144",
+      "sample_rate": 22050,
+      "frames": 16537,
+      "channels": 1,
+      "peak": 0.1598052978515625,
+      "float32_channel_sha256": [
+        "e7978305da71f99fd01fdb5fcb170a8356e7e2307b203a8f2d81ec2b4ee076ef"
+      ],
+      "exact_integer_to_float_model": {
+        "float32_channel_sha256": [
+          "e7978305da71f99fd01fdb5fcb170a8356e7e2307b203a8f2d81ec2b4ee076ef"
+        ],
+        "integer_width": 32,
+        "maximum_deviation_from_power_of_two_float": 0,
+        "mode": "signed-power-of-two"
+      }
+    },
+    {
+      "asset_id": "asset.source.osrs.cache2695.audio-runtime.sfx.2145",
+      "sample_rate": 22050,
+      "frames": 11025,
+      "channels": 1,
+      "peak": 0.2338409423828125,
+      "float32_channel_sha256": [
+        "c4c67e1398cecb5206621212771369a56d1fff0269bc87e7c166dddc999a5480"
+      ],
+      "exact_integer_to_float_model": {
+        "float32_channel_sha256": [
+          "c4c67e1398cecb5206621212771369a56d1fff0269bc87e7c166dddc999a5480"
+        ],
+        "integer_width": 32,
+        "maximum_deviation_from_power_of_two_float": 0,
+        "mode": "signed-power-of-two"
+      }
+    },
+    {
+      "asset_id": "asset.source.osrs.cache2695.audio-runtime.sfx.2147",
+      "sample_rate": 22050,
+      "frames": 22050,
+      "channels": 1,
+      "peak": 0.0276641845703125,
+      "float32_channel_sha256": [
+        "644bb886faeaa66584b9b5b7697b4ce1086824bba63c1f666a0d11afe7dda8bd"
+      ],
+      "exact_integer_to_float_model": {
+        "float32_channel_sha256": [
+          "644bb886faeaa66584b9b5b7697b4ce1086824bba63c1f666a0d11afe7dda8bd"
+        ],
+        "integer_width": 32,
+        "maximum_deviation_from_power_of_two_float": 0,
+        "mode": "signed-power-of-two"
+      }
+    },
+    {
+      "asset_id": "asset.source.osrs.cache2695.audio-runtime.sfx.2148",
+      "sample_rate": 22050,
+      "frames": 66150,
+      "channels": 1,
+      "peak": 0.014984130859375,
+      "float32_channel_sha256": [
+        "d009b9f17de1a49980245c402ac97c6a1aba759eb4c2262edf9f8425df1d0fcf"
+      ],
+      "exact_integer_to_float_model": {
+        "float32_channel_sha256": [
+          "d009b9f17de1a49980245c402ac97c6a1aba759eb4c2262edf9f8425df1d0fcf"
+        ],
+        "integer_width": 32,
+        "maximum_deviation_from_power_of_two_float": 0,
+        "mode": "signed-power-of-two"
+      }
+    },
+    {
+      "asset_id": "asset.source.osrs.cache2695.audio-runtime.sfx.2149",
+      "sample_rate": 22050,
+      "frames": 25357,
+      "channels": 1,
+      "peak": 0.0653076171875,
+      "float32_channel_sha256": [
+        "a5272ee4b810f9025a656ff49721a8ee34f74ab681cbcc60b5b6a88b3c4a441d"
+      ],
+      "exact_integer_to_float_model": {
+        "float32_channel_sha256": [
+          "a5272ee4b810f9025a656ff49721a8ee34f74ab681cbcc60b5b6a88b3c4a441d"
+        ],
+        "integer_width": 32,
+        "maximum_deviation_from_power_of_two_float": 0,
+        "mode": "signed-power-of-two"
+      }
+    },
+    {
+      "asset_id": "asset.source.osrs.cache2695.audio-runtime.sfx.2150",
+      "sample_rate": 22050,
+      "frames": 25357,
+      "channels": 1,
+      "peak": 0.0447235107421875,
+      "float32_channel_sha256": [
+        "a787687777a69e741717d581eb6c4739b43c0d3faa2a74f673e2d65311b51141"
+      ],
+      "exact_integer_to_float_model": {
+        "float32_channel_sha256": [
+          "a787687777a69e741717d581eb6c4739b43c0d3faa2a74f673e2d65311b51141"
+        ],
+        "integer_width": 32,
+        "maximum_deviation_from_power_of_two_float": 0,
+        "mode": "signed-power-of-two"
+      }
+    },
+    {
+      "asset_id": "asset.source.osrs.cache2695.audio-runtime.sfx.2151",
+      "sample_rate": 22050,
+      "frames": 25357,
+      "channels": 1,
+      "peak": 0.0658111572265625,
+      "float32_channel_sha256": [
+        "6b21afa46db83a60f487c3e6dafaafa5d2cf2995b98d3e41717deacbbb214752"
+      ],
+      "exact_integer_to_float_model": {
+        "float32_channel_sha256": [
+          "6b21afa46db83a60f487c3e6dafaafa5d2cf2995b98d3e41717deacbbb214752"
+        ],
+        "integer_width": 32,
+        "maximum_deviation_from_power_of_two_float": 0,
+        "mode": "signed-power-of-two"
+      }
+    },
+    {
+      "asset_id": "asset.source.osrs.cache2695.audio-runtime.sfx.2152",
+      "sample_rate": 22050,
+      "frames": 11025,
+      "channels": 1,
+      "peak": 0.109710693359375,
+      "float32_channel_sha256": [
+        "5835f6479e9473a71a6ae5708f77cfb31c7b87cb269f72e1d60546b323ba6101"
+      ],
+      "exact_integer_to_float_model": {
+        "float32_channel_sha256": [
+          "5835f6479e9473a71a6ae5708f77cfb31c7b87cb269f72e1d60546b323ba6101"
+        ],
+        "integer_width": 32,
+        "maximum_deviation_from_power_of_two_float": 0,
+        "mode": "signed-power-of-two"
+      }
+    },
+    {
+      "asset_id": "asset.source.osrs.cache2695.audio-runtime.sfx.2153",
+      "sample_rate": 22050,
+      "frames": 22050,
+      "channels": 1,
+      "peak": 0.2112579345703125,
+      "float32_channel_sha256": [
+        "9857ac9709d7afe7dbeeb57be93afff84ac867a98268f27c2b61345bbfe0b7ff"
+      ],
+      "exact_integer_to_float_model": {
+        "float32_channel_sha256": [
+          "9857ac9709d7afe7dbeeb57be93afff84ac867a98268f27c2b61345bbfe0b7ff"
+        ],
+        "integer_width": 32,
+        "maximum_deviation_from_power_of_two_float": 0,
+        "mode": "signed-power-of-two"
+      }
+    },
+    {
+      "asset_id": "asset.source.osrs.cache2695.audio-runtime.sfx.2154",
+      "sample_rate": 22050,
+      "frames": 28665,
+      "channels": 1,
+      "peak": 0.2213592529296875,
+      "float32_channel_sha256": [
+        "791279f0ea3fb28c6c929ada412c910b6c9f8665a68ce04d7510f2826cd6c277"
+      ],
+      "exact_integer_to_float_model": {
+        "float32_channel_sha256": [
+          "791279f0ea3fb28c6c929ada412c910b6c9f8665a68ce04d7510f2826cd6c277"
+        ],
+        "integer_width": 32,
+        "maximum_deviation_from_power_of_two_float": 0,
+        "mode": "signed-power-of-two"
+      }
+    },
+    {
+      "asset_id": "asset.source.osrs.cache2695.audio-runtime.sfx.2160",
+      "sample_rate": 22050,
+      "frames": 55125,
+      "channels": 1,
+      "peak": 0.3720703125,
+      "float32_channel_sha256": [
+        "4406207a835de9976110a5b0c464e45e1872854e34b64a3eba4b743218354427"
+      ],
+      "exact_integer_to_float_model": {
+        "float32_channel_sha256": [
+          "4406207a835de9976110a5b0c464e45e1872854e34b64a3eba4b743218354427"
+        ],
+        "integer_width": 32,
+        "maximum_deviation_from_power_of_two_float": 0,
+        "mode": "signed-power-of-two"
+      }
+    },
+    {
+      "asset_id": "asset.source.osrs.cache2695.audio-runtime.sfx.2167",
+      "sample_rate": 22050,
+      "frames": 44100,
+      "channels": 1,
+      "peak": 0.3194122314453125,
+      "float32_channel_sha256": [
+        "673ec15ac78914a534adcf6102d898014316f8b87d964b3c506e2af504c2abd5"
+      ],
+      "exact_integer_to_float_model": {
+        "float32_channel_sha256": [
+          "673ec15ac78914a534adcf6102d898014316f8b87d964b3c506e2af504c2abd5"
+        ],
+        "integer_width": 32,
+        "maximum_deviation_from_power_of_two_float": 0,
+        "mode": "signed-power-of-two"
+      }
+    },
+    {
+      "asset_id": "asset.source.osrs.cache2695.audio-runtime.sfx.2168",
+      "sample_rate": 22050,
+      "frames": 22050,
+      "channels": 1,
+      "peak": 0.01348876953125,
+      "float32_channel_sha256": [
+        "0499b5b27f8c9b7c28dabec353922bac94b8e38843753dd0c5c38f0168fe8229"
+      ],
+      "exact_integer_to_float_model": {
+        "float32_channel_sha256": [
+          "0499b5b27f8c9b7c28dabec353922bac94b8e38843753dd0c5c38f0168fe8229"
+        ],
+        "integer_width": 32,
+        "maximum_deviation_from_power_of_two_float": 0,
+        "mode": "signed-power-of-two"
+      }
+    },
+    {
+      "asset_id": "asset.source.osrs.cache2695.audio-runtime.sfx.2169",
+      "sample_rate": 22050,
+      "frames": 22050,
+      "channels": 1,
+      "peak": 0.0251922607421875,
+      "float32_channel_sha256": [
+        "7e82668383fdbb530f65e21399577823c9e4280228e3038c674784ffdbee518d"
+      ],
+      "exact_integer_to_float_model": {
+        "float32_channel_sha256": [
+          "7e82668383fdbb530f65e21399577823c9e4280228e3038c674784ffdbee518d"
+        ],
+        "integer_width": 32,
+        "maximum_deviation_from_power_of_two_float": 0,
+        "mode": "signed-power-of-two"
+      }
+    },
+    {
+      "asset_id": "asset.source.osrs.cache2695.audio-runtime.sfx.2170",
+      "sample_rate": 22050,
+      "frames": 22050,
+      "channels": 1,
+      "peak": 0.0235137939453125,
+      "float32_channel_sha256": [
+        "56c4bac42ad95e08aa1d614b32e0d45c7cd70e974c160cae1ad164c7a52b36e3"
+      ],
+      "exact_integer_to_float_model": {
+        "float32_channel_sha256": [
+          "56c4bac42ad95e08aa1d614b32e0d45c7cd70e974c160cae1ad164c7a52b36e3"
+        ],
+        "integer_width": 32,
+        "maximum_deviation_from_power_of_two_float": 0,
+        "mode": "signed-power-of-two"
+      }
+    },
+    {
+      "asset_id": "asset.source.osrs.cache2695.audio-runtime.sfx.2171",
+      "sample_rate": 22050,
+      "frames": 33075,
+      "channels": 1,
+      "peak": 0.089447021484375,
+      "float32_channel_sha256": [
+        "f19537d7f80fe62f1fdaa548054ab85c0965bfda2c5dae1276376dc47fd38346"
+      ],
+      "exact_integer_to_float_model": {
+        "float32_channel_sha256": [
+          "f19537d7f80fe62f1fdaa548054ab85c0965bfda2c5dae1276376dc47fd38346"
+        ],
+        "integer_width": 32,
+        "maximum_deviation_from_power_of_two_float": 0,
+        "mode": "signed-power-of-two"
+      }
+    },
+    {
+      "asset_id": "asset.source.osrs.cache2695.audio-runtime.sfx.2179",
+      "sample_rate": 22050,
+      "frames": 88200,
+      "channels": 1,
+      "peak": 0.1348724365234375,
+      "float32_channel_sha256": [
+        "10489da7ad1d91e2df8b81c743c7bdccb739faaf0c7674382f336ac8a251d63b"
+      ],
+      "exact_integer_to_float_model": {
+        "float32_channel_sha256": [
+          "10489da7ad1d91e2df8b81c743c7bdccb739faaf0c7674382f336ac8a251d63b"
+        ],
+        "integer_width": 32,
+        "maximum_deviation_from_power_of_two_float": 0,
+        "mode": "signed-power-of-two"
+      }
+    },
+    {
+      "asset_id": "asset.source.osrs.cache2695.audio-runtime.sfx.2180",
+      "sample_rate": 22050,
+      "frames": 88200,
+      "channels": 1,
+      "peak": 0.029815673828125,
+      "float32_channel_sha256": [
+        "b521c092c3d59a22eae49f63ebbb712ef02efc7292b476c1509565d9cdc7f294"
+      ],
+      "exact_integer_to_float_model": {
+        "float32_channel_sha256": [
+          "b521c092c3d59a22eae49f63ebbb712ef02efc7292b476c1509565d9cdc7f294"
+        ],
+        "integer_width": 32,
+        "maximum_deviation_from_power_of_two_float": 0,
+        "mode": "signed-power-of-two"
+      }
+    },
+    {
+      "asset_id": "asset.source.osrs.cache2695.audio-runtime.sfx.2181",
+      "sample_rate": 22050,
+      "frames": 33075,
+      "channels": 1,
+      "peak": 0.280120849609375,
+      "float32_channel_sha256": [
+        "667509a6190d10ea10102f881778377dce096797e17aa46a7658f0eba2e4e917"
+      ],
+      "exact_integer_to_float_model": {
+        "float32_channel_sha256": [
+          "667509a6190d10ea10102f881778377dce096797e17aa46a7658f0eba2e4e917"
+        ],
+        "integer_width": 32,
+        "maximum_deviation_from_power_of_two_float": 0,
+        "mode": "signed-power-of-two"
+      }
+    },
+    {
+      "asset_id": "asset.source.osrs.cache2695.audio-runtime.sfx.2182",
+      "sample_rate": 22050,
+      "frames": 110250,
+      "channels": 1,
+      "peak": 0.0230255126953125,
+      "float32_channel_sha256": [
+        "a6bd7d9d0e1366d1620e1d659c10f936a644c4b8e9e248f39c0415044e70fae6"
+      ],
+      "exact_integer_to_float_model": {
+        "float32_channel_sha256": [
+          "a6bd7d9d0e1366d1620e1d659c10f936a644c4b8e9e248f39c0415044e70fae6"
+        ],
+        "integer_width": 32,
+        "maximum_deviation_from_power_of_two_float": 0,
+        "mode": "signed-power-of-two"
+      }
+    },
+    {
+      "asset_id": "asset.source.osrs.cache2695.audio-runtime.sfx.2183",
+      "sample_rate": 22050,
+      "frames": 110250,
+      "channels": 1,
+      "peak": 0.01275634765625,
+      "float32_channel_sha256": [
+        "9553442d0d4de77ebc14156ffbaf83add7ffc623bed39ba45821b39f99284aa6"
+      ],
+      "exact_integer_to_float_model": {
+        "float32_channel_sha256": [
+          "9553442d0d4de77ebc14156ffbaf83add7ffc623bed39ba45821b39f99284aa6"
+        ],
+        "integer_width": 32,
+        "maximum_deviation_from_power_of_two_float": 0,
+        "mode": "signed-power-of-two"
+      }
+    },
+    {
+      "asset_id": "asset.source.osrs.cache2695.audio-runtime.sfx.2184",
+      "sample_rate": 22050,
+      "frames": 88200,
+      "channels": 1,
+      "peak": 0.0077056884765625,
+      "float32_channel_sha256": [
+        "8c9c0cffcbeaa75986e5d1d043cc040616fac39a249b5c7119a48ea86bd261cb"
+      ],
+      "exact_integer_to_float_model": {
+        "float32_channel_sha256": [
+          "8c9c0cffcbeaa75986e5d1d043cc040616fac39a249b5c7119a48ea86bd261cb"
+        ],
+        "integer_width": 32,
+        "maximum_deviation_from_power_of_two_float": 0,
+        "mode": "signed-power-of-two"
+      }
+    },
+    {
+      "asset_id": "asset.source.osrs.cache2695.audio-runtime.sfx.2185",
+      "sample_rate": 22050,
+      "frames": 88200,
+      "channels": 1,
+      "peak": 0.0122222900390625,
+      "float32_channel_sha256": [
+        "b11a0146073516edd3499723de6180b485be86f9e478c8bd37637d41df878a29"
+      ],
+      "exact_integer_to_float_model": {
+        "float32_channel_sha256": [
+          "b11a0146073516edd3499723de6180b485be86f9e478c8bd37637d41df878a29"
+        ],
+        "integer_width": 32,
+        "maximum_deviation_from_power_of_two_float": 0,
+        "mode": "signed-power-of-two"
+      }
+    },
+    {
+      "asset_id": "asset.source.osrs.cache2695.audio-runtime.sfx.2186",
+      "sample_rate": 22050,
+      "frames": 88200,
+      "channels": 1,
+      "peak": 0.10174560546875,
+      "float32_channel_sha256": [
+        "44993e210039ed26d16a64d9ee22cb82817801c4ee3484a13c6c9f2eea5e27fb"
+      ],
+      "exact_integer_to_float_model": {
+        "float32_channel_sha256": [
+          "44993e210039ed26d16a64d9ee22cb82817801c4ee3484a13c6c9f2eea5e27fb"
+        ],
+        "integer_width": 32,
+        "maximum_deviation_from_power_of_two_float": 0,
+        "mode": "signed-power-of-two"
+      }
+    },
+    {
+      "asset_id": "asset.source.osrs.cache2695.audio-runtime.sfx.2187",
+      "sample_rate": 22050,
+      "frames": 88200,
+      "channels": 1,
+      "peak": 0.0401153564453125,
+      "float32_channel_sha256": [
+        "828891affee376a36cc53b72ebeeeefe472c8094fd33c44773a4441e5ebcd067"
+      ],
+      "exact_integer_to_float_model": {
+        "float32_channel_sha256": [
+          "828891affee376a36cc53b72ebeeeefe472c8094fd33c44773a4441e5ebcd067"
+        ],
+        "integer_width": 32,
+        "maximum_deviation_from_power_of_two_float": 0,
+        "mode": "signed-power-of-two"
+      }
+    },
+    {
+      "asset_id": "asset.source.osrs.cache2695.audio-runtime.sfx.2188",
+      "sample_rate": 22050,
+      "frames": 88200,
+      "channels": 1,
+      "peak": 0.0412750244140625,
+      "float32_channel_sha256": [
+        "caf71b6777dabb182f748d8083b524f731f7d63a514f0aee9ad8e7c370b0d75a"
+      ],
+      "exact_integer_to_float_model": {
+        "float32_channel_sha256": [
+          "caf71b6777dabb182f748d8083b524f731f7d63a514f0aee9ad8e7c370b0d75a"
+        ],
+        "integer_width": 32,
+        "maximum_deviation_from_power_of_two_float": 0,
+        "mode": "signed-power-of-two"
+      }
+    },
+    {
+      "asset_id": "asset.source.osrs.cache2695.audio-runtime.sfx.2194",
+      "sample_rate": 22050,
+      "frames": 22050,
+      "channels": 1,
+      "peak": 0.082855224609375,
+      "float32_channel_sha256": [
+        "5f2027b421b34a2da96e95138676e913c2795dff3ec730875b1cc73022bf8924"
+      ],
+      "exact_integer_to_float_model": {
+        "float32_channel_sha256": [
+          "5f2027b421b34a2da96e95138676e913c2795dff3ec730875b1cc73022bf8924"
+        ],
+        "integer_width": 32,
+        "maximum_deviation_from_power_of_two_float": 0,
+        "mode": "signed-power-of-two"
+      }
+    },
+    {
+      "asset_id": "asset.source.osrs.cache2695.audio-runtime.sfx.2197",
+      "sample_rate": 22050,
+      "frames": 22050,
+      "channels": 1,
+      "peak": 0.1035003662109375,
+      "float32_channel_sha256": [
+        "e8709f06506ce827680cf56d1b186d790f4d2c94506eadd59c7ab6964c3a2d1f"
+      ],
+      "exact_integer_to_float_model": {
+        "float32_channel_sha256": [
+          "e8709f06506ce827680cf56d1b186d790f4d2c94506eadd59c7ab6964c3a2d1f"
+        ],
+        "integer_width": 32,
+        "maximum_deviation_from_power_of_two_float": 0,
+        "mode": "signed-power-of-two"
+      }
+    },
+    {
+      "asset_id": "asset.source.osrs.cache2695.audio-runtime.sfx.2198",
+      "sample_rate": 22050,
+      "frames": 24255,
+      "channels": 1,
+      "peak": 0.0106964111328125,
+      "float32_channel_sha256": [
+        "1dab9aceb9b72834645936c46e6aaad707518d0c4a82ee12c8e5e6d0226ff86a"
+      ],
+      "exact_integer_to_float_model": {
+        "float32_channel_sha256": [
+          "1dab9aceb9b72834645936c46e6aaad707518d0c4a82ee12c8e5e6d0226ff86a"
+        ],
+        "integer_width": 32,
+        "maximum_deviation_from_power_of_two_float": 0,
+        "mode": "signed-power-of-two"
+      }
+    },
+    {
+      "asset_id": "asset.source.osrs.cache2695.audio-runtime.sfx.2199",
+      "sample_rate": 22050,
+      "frames": 24255,
+      "channels": 1,
+      "peak": 0.0037078857421875,
+      "float32_channel_sha256": [
+        "7ba2c154652727763f753a9f0a60222c0099ebb3bef09540b3d186829e46b98c"
+      ],
+      "exact_integer_to_float_model": {
+        "float32_channel_sha256": [
+          "7ba2c154652727763f753a9f0a60222c0099ebb3bef09540b3d186829e46b98c"
+        ],
+        "integer_width": 32,
+        "maximum_deviation_from_power_of_two_float": 0,
+        "mode": "signed-power-of-two"
+      }
+    },
+    {
+      "asset_id": "asset.source.osrs.cache2695.audio-runtime.sfx.2200",
+      "sample_rate": 22050,
+      "frames": 24255,
+      "channels": 1,
+      "peak": 0.0085296630859375,
+      "float32_channel_sha256": [
+        "4737227aed1aea6c8cb09c9c58c304734ac922e487a2107f81b10a8e6f26fe0d"
+      ],
+      "exact_integer_to_float_model": {
+        "float32_channel_sha256": [
+          "4737227aed1aea6c8cb09c9c58c304734ac922e487a2107f81b10a8e6f26fe0d"
+        ],
+        "integer_width": 32,
+        "maximum_deviation_from_power_of_two_float": 0,
+        "mode": "signed-power-of-two"
+      }
+    },
+    {
+      "asset_id": "asset.source.osrs.cache2695.audio-runtime.sfx.2204",
+      "sample_rate": 22050,
+      "frames": 2756,
+      "channels": 1,
+      "peak": 0.242584228515625,
+      "float32_channel_sha256": [
+        "45dd7c8431e81f55d3d3c69bc8d4a266d0544412541d424b2039d2cc3786c98c"
+      ],
+      "exact_integer_to_float_model": {
+        "float32_channel_sha256": [
+          "45dd7c8431e81f55d3d3c69bc8d4a266d0544412541d424b2039d2cc3786c98c"
+        ],
+        "integer_width": 32,
+        "maximum_deviation_from_power_of_two_float": 0,
+        "mode": "signed-power-of-two"
+      }
+    },
+    {
+      "asset_id": "asset.source.osrs.cache2695.audio-runtime.sfx.2208",
+      "sample_rate": 22050,
+      "frames": 22050,
+      "channels": 1,
+      "peak": 0.011322021484375,
+      "float32_channel_sha256": [
+        "81a4425311d10d3cdce686774b5a2f389733521c908bc997e97a5a359a2df6bc"
+      ],
+      "exact_integer_to_float_model": {
+        "float32_channel_sha256": [
+          "81a4425311d10d3cdce686774b5a2f389733521c908bc997e97a5a359a2df6bc"
+        ],
+        "integer_width": 32,
+        "maximum_deviation_from_power_of_two_float": 0,
+        "mode": "signed-power-of-two"
+      }
+    },
+    {
+      "asset_id": "asset.source.osrs.cache2695.audio-runtime.sfx.2209",
+      "sample_rate": 22050,
+      "frames": 22050,
+      "channels": 1,
+      "peak": 0.0709075927734375,
+      "float32_channel_sha256": [
+        "51658c4f271807f24066027bfe4d7137bcfa2d9eb2b431399379d07a7e30939c"
+      ],
+      "exact_integer_to_float_model": {
+        "float32_channel_sha256": [
+          "51658c4f271807f24066027bfe4d7137bcfa2d9eb2b431399379d07a7e30939c"
+        ],
+        "integer_width": 32,
+        "maximum_deviation_from_power_of_two_float": 0,
+        "mode": "signed-power-of-two"
+      }
+    },
+    {
+      "asset_id": "asset.source.osrs.cache2695.audio-runtime.sfx.2220",
+      "sample_rate": 22050,
+      "frames": 66150,
+      "channels": 1,
+      "peak": 0.0514984130859375,
+      "float32_channel_sha256": [
+        "5f253f921f33e451092e13d229ba1ab3b1bc50a40a330a0edbc96df5101ea758"
+      ],
+      "exact_integer_to_float_model": {
+        "float32_channel_sha256": [
+          "5f253f921f33e451092e13d229ba1ab3b1bc50a40a330a0edbc96df5101ea758"
+        ],
+        "integer_width": 32,
+        "maximum_deviation_from_power_of_two_float": 0,
+        "mode": "signed-power-of-two"
+      }
+    },
+    {
+      "asset_id": "asset.source.osrs.cache2695.audio-runtime.sfx.2223",
+      "sample_rate": 22050,
+      "frames": 22050,
+      "channels": 1,
+      "peak": 0.0930023193359375,
+      "float32_channel_sha256": [
+        "a51c261441ebaa2c5b772cbdd9df24a6559c3b36f4614ca14d5c4e3f3c47c675"
+      ],
+      "exact_integer_to_float_model": {
+        "float32_channel_sha256": [
+          "a51c261441ebaa2c5b772cbdd9df24a6559c3b36f4614ca14d5c4e3f3c47c675"
+        ],
+        "integer_width": 32,
+        "maximum_deviation_from_power_of_two_float": 0,
+        "mode": "signed-power-of-two"
+      }
+    },
+    {
+      "asset_id": "asset.source.osrs.cache2695.audio-runtime.sfx.2224",
+      "sample_rate": 22050,
+      "frames": 44100,
+      "channels": 1,
+      "peak": 0.07806396484375,
+      "float32_channel_sha256": [
+        "696b52cfca7791b30cbf2c72a35d07d9856d693676cc792d0b5e1bbdd1130028"
+      ],
+      "exact_integer_to_float_model": {
+        "float32_channel_sha256": [
+          "696b52cfca7791b30cbf2c72a35d07d9856d693676cc792d0b5e1bbdd1130028"
+        ],
+        "integer_width": 32,
+        "maximum_deviation_from_power_of_two_float": 0,
+        "mode": "signed-power-of-two"
+      }
+    },
+    {
+      "asset_id": "asset.source.osrs.cache2695.audio-runtime.sfx.2226",
+      "sample_rate": 22050,
+      "frames": 14332,
+      "channels": 1,
+      "peak": 0.1019134521484375,
+      "float32_channel_sha256": [
+        "e8261e416f8acf5922fe887b7a9695d57e759af00ed5e84cc33068bb7b1f44ab"
+      ],
+      "exact_integer_to_float_model": {
+        "float32_channel_sha256": [
+          "e8261e416f8acf5922fe887b7a9695d57e759af00ed5e84cc33068bb7b1f44ab"
+        ],
+        "integer_width": 32,
+        "maximum_deviation_from_power_of_two_float": 0,
+        "mode": "signed-power-of-two"
+      }
+    },
+    {
+      "asset_id": "asset.source.osrs.cache2695.audio-runtime.sfx.2227",
+      "sample_rate": 22050,
+      "frames": 14332,
+      "channels": 1,
+      "peak": 0.39947509765625,
+      "float32_channel_sha256": [
+        "b20233a9fdd0b4174c756938fbe2f53f00fd03b495e6ce42c130411abd428ddc"
+      ],
+      "exact_integer_to_float_model": {
+        "float32_channel_sha256": [
+          "b20233a9fdd0b4174c756938fbe2f53f00fd03b495e6ce42c130411abd428ddc"
+        ],
+        "integer_width": 32,
+        "maximum_deviation_from_power_of_two_float": 0,
+        "mode": "signed-power-of-two"
+      }
+    },
+    {
+      "asset_id": "asset.source.osrs.cache2695.audio-runtime.sfx.2238",
+      "sample_rate": 22050,
+      "frames": 4410,
+      "channels": 1,
+      "peak": 0.1134490966796875,
+      "float32_channel_sha256": [
+        "9d1cff9931cf0f2346a53bcf25ac9e740127fc90da7e8c9b312f597af0eec9a4"
+      ],
+      "exact_integer_to_float_model": {
+        "float32_channel_sha256": [
+          "9d1cff9931cf0f2346a53bcf25ac9e740127fc90da7e8c9b312f597af0eec9a4"
+        ],
+        "integer_width": 32,
+        "maximum_deviation_from_power_of_two_float": 0,
+        "mode": "signed-power-of-two"
+      }
+    },
+    {
+      "asset_id": "asset.source.osrs.cache2695.audio-runtime.sfx.2266",
+      "sample_rate": 22050,
+      "frames": 2756,
+      "channels": 1,
+      "peak": 0.2181243896484375,
+      "float32_channel_sha256": [
+        "3541184a15c74781d1570829680a52d5fdaec788802be6bf4e37b180ce9bb0d3"
+      ],
+      "exact_integer_to_float_model": {
+        "float32_channel_sha256": [
+          "3541184a15c74781d1570829680a52d5fdaec788802be6bf4e37b180ce9bb0d3"
+        ],
+        "integer_width": 32,
+        "maximum_deviation_from_power_of_two_float": 0,
+        "mode": "signed-power-of-two"
+      }
+    },
+    {
+      "asset_id": "asset.source.osrs.cache2695.audio-runtime.sfx.2422",
+      "sample_rate": 22050,
+      "frames": 22050,
+      "channels": 1,
+      "peak": 0.0832977294921875,
+      "float32_channel_sha256": [
+        "86cd323e7604b7a5e4a548f5f4be7e7bc251447cb548670a9c22bd1201ee4afc"
+      ],
+      "exact_integer_to_float_model": {
+        "float32_channel_sha256": [
+          "86cd323e7604b7a5e4a548f5f4be7e7bc251447cb548670a9c22bd1201ee4afc"
+        ],
+        "integer_width": 32,
+        "maximum_deviation_from_power_of_two_float": 0,
+        "mode": "signed-power-of-two"
+      }
+    },
+    {
+      "asset_id": "asset.source.osrs.cache2695.audio-runtime.sfx.2498",
+      "sample_rate": 22050,
+      "frames": 20947,
+      "channels": 1,
+      "peak": 0.5,
+      "float32_channel_sha256": [
+        "95d47fea7d9e4a3407d346f2bd34fab55c55c791d6cca627e63598bd7d2d7912"
+      ],
+      "exact_integer_to_float_model": {
+        "float32_channel_sha256": [
+          "95d47fea7d9e4a3407d346f2bd34fab55c55c791d6cca627e63598bd7d2d7912"
+        ],
+        "integer_width": 32,
+        "maximum_deviation_from_power_of_two_float": 0,
+        "mode": "signed-power-of-two"
+      }
+    },
+    {
+      "asset_id": "asset.source.osrs.cache2695.audio-runtime.sfx.2564",
+      "sample_rate": 22050,
+      "frames": 15435,
+      "channels": 1,
+      "peak": 0.5,
+      "float32_channel_sha256": [
+        "85d0f265da2eac23e481bdad54b2f8a52610c12d89f691a5aba8bfd4fd1a7844"
+      ],
+      "exact_integer_to_float_model": {
+        "float32_channel_sha256": [
+          "85d0f265da2eac23e481bdad54b2f8a52610c12d89f691a5aba8bfd4fd1a7844"
+        ],
+        "integer_width": 32,
+        "maximum_deviation_from_power_of_two_float": 0,
+        "mode": "signed-power-of-two"
+      }
+    },
+    {
+      "asset_id": "asset.source.osrs.cache2695.audio-runtime.sfx.2565",
+      "sample_rate": 22050,
+      "frames": 15435,
+      "channels": 1,
+      "peak": 0.5,
+      "float32_channel_sha256": [
+        "48e902981c204230d31b84cf8b0febf9f0701d93905130fc1b699889dda474ba"
+      ],
+      "exact_integer_to_float_model": {
+        "float32_channel_sha256": [
+          "48e902981c204230d31b84cf8b0febf9f0701d93905130fc1b699889dda474ba"
+        ],
+        "integer_width": 32,
+        "maximum_deviation_from_power_of_two_float": 0,
+        "mode": "signed-power-of-two"
+      }
+    },
+    {
+      "asset_id": "asset.source.osrs.cache2695.audio-runtime.sfx.2566",
+      "sample_rate": 22050,
+      "frames": 15435,
+      "channels": 1,
+      "peak": 0.5,
+      "float32_channel_sha256": [
+        "85d0f265da2eac23e481bdad54b2f8a52610c12d89f691a5aba8bfd4fd1a7844"
+      ],
+      "exact_integer_to_float_model": {
+        "float32_channel_sha256": [
+          "85d0f265da2eac23e481bdad54b2f8a52610c12d89f691a5aba8bfd4fd1a7844"
+        ],
+        "integer_width": 32,
+        "maximum_deviation_from_power_of_two_float": 0,
+        "mode": "signed-power-of-two"
+      }
+    },
+    {
+      "asset_id": "asset.source.osrs.cache2695.audio-runtime.sfx.2577",
+      "sample_rate": 22050,
+      "frames": 47407,
+      "channels": 1,
+      "peak": 0.0955810546875,
+      "float32_channel_sha256": [
+        "4e3327457cbe817b2cb38920390ad7ee4ef50ae1c08c2f23e09f76cf2a802451"
+      ],
+      "exact_integer_to_float_model": {
+        "float32_channel_sha256": [
+          "4e3327457cbe817b2cb38920390ad7ee4ef50ae1c08c2f23e09f76cf2a802451"
+        ],
+        "integer_width": 32,
+        "maximum_deviation_from_power_of_two_float": 0,
+        "mode": "signed-power-of-two"
+      }
+    },
+    {
+      "asset_id": "asset.source.osrs.cache2695.audio-runtime.sfx.2581",
+      "sample_rate": 22050,
+      "frames": 5512,
+      "channels": 1,
+      "peak": 0.3393402099609375,
+      "float32_channel_sha256": [
+        "bcce08a550945faaf937f45124c5be2e500b5fb6c42b6dd69196cb1f1b7bfa50"
+      ],
+      "exact_integer_to_float_model": {
+        "float32_channel_sha256": [
+          "bcce08a550945faaf937f45124c5be2e500b5fb6c42b6dd69196cb1f1b7bfa50"
+        ],
+        "integer_width": 32,
+        "maximum_deviation_from_power_of_two_float": 0,
+        "mode": "signed-power-of-two"
+      }
+    },
+    {
+      "asset_id": "asset.source.osrs.cache2695.audio-runtime.sfx.2582",
+      "sample_rate": 22050,
+      "frames": 1102,
+      "channels": 1,
+      "peak": 0.215911865234375,
+      "float32_channel_sha256": [
+        "ee0e785a67c478c203640e839f5ece1c8325163f3353c5455972628b02ad7142"
+      ],
+      "exact_integer_to_float_model": {
+        "float32_channel_sha256": [
+          "ee0e785a67c478c203640e839f5ece1c8325163f3353c5455972628b02ad7142"
+        ],
+        "integer_width": 32,
+        "maximum_deviation_from_power_of_two_float": 0,
+        "mode": "signed-power-of-two"
+      }
+    },
+    {
+      "asset_id": "asset.source.osrs.cache2695.audio-runtime.sfx.2596",
+      "sample_rate": 22050,
+      "frames": 44100,
+      "channels": 1,
+      "peak": 0.016998291015625,
+      "float32_channel_sha256": [
+        "4a2da1254e33f8612545d8e66ff80b7d4b40713ef3642d493a30f3c12db54835"
+      ],
+      "exact_integer_to_float_model": {
+        "float32_channel_sha256": [
+          "4a2da1254e33f8612545d8e66ff80b7d4b40713ef3642d493a30f3c12db54835"
+        ],
+        "integer_width": 32,
+        "maximum_deviation_from_power_of_two_float": 0,
+        "mode": "signed-power-of-two"
+      }
+    },
+    {
+      "asset_id": "asset.source.osrs.cache2695.audio-runtime.sfx.2597",
+      "sample_rate": 22050,
+      "frames": 2205,
+      "channels": 1,
+      "peak": 0.10699462890625,
+      "float32_channel_sha256": [
+        "c34b8ed349d5649e9ef7ebc612cc493685f63b7dc863547eaf3fec5c7eab1c82"
+      ],
+      "exact_integer_to_float_model": {
+        "float32_channel_sha256": [
+          "c34b8ed349d5649e9ef7ebc612cc493685f63b7dc863547eaf3fec5c7eab1c82"
+        ],
+        "integer_width": 32,
+        "maximum_deviation_from_power_of_two_float": 0,
+        "mode": "signed-power-of-two"
+      }
+    },
+    {
+      "asset_id": "asset.source.osrs.cache2695.audio-runtime.sfx.2603",
+      "sample_rate": 22050,
+      "frames": 13230,
+      "channels": 1,
+      "peak": 0.059234619140625,
+      "float32_channel_sha256": [
+        "e0ff4def6823019adf009fe30100447065cadb39611450b38563d2088e509aea"
+      ],
+      "exact_integer_to_float_model": {
+        "float32_channel_sha256": [
+          "e0ff4def6823019adf009fe30100447065cadb39611450b38563d2088e509aea"
+        ],
+        "integer_width": 32,
+        "maximum_deviation_from_power_of_two_float": 0,
+        "mode": "signed-power-of-two"
+      }
+    },
+    {
+      "asset_id": "asset.source.osrs.cache2695.audio-runtime.sfx.2663",
+      "sample_rate": 22050,
+      "frames": 11025,
+      "channels": 1,
+      "peak": 0.0870208740234375,
+      "float32_channel_sha256": [
+        "f8418127c600deaab498aacac14188fabc39c12c9c77a05d9f11940b0aced57d"
+      ],
+      "exact_integer_to_float_model": {
+        "float32_channel_sha256": [
+          "f8418127c600deaab498aacac14188fabc39c12c9c77a05d9f11940b0aced57d"
+        ],
+        "integer_width": 32,
+        "maximum_deviation_from_power_of_two_float": 0,
+        "mode": "signed-power-of-two"
+      }
+    },
+    {
+      "asset_id": "asset.source.osrs.cache2695.audio-runtime.sfx.2664",
+      "sample_rate": 22050,
+      "frames": 27562,
+      "channels": 1,
+      "peak": 0.355499267578125,
+      "float32_channel_sha256": [
+        "3cce9f2056cdb53aa5c14094cac991cf1358e9a8d199fb241319a28b273f4812"
+      ],
+      "exact_integer_to_float_model": {
+        "float32_channel_sha256": [
+          "3cce9f2056cdb53aa5c14094cac991cf1358e9a8d199fb241319a28b273f4812"
+        ],
+        "integer_width": 32,
+        "maximum_deviation_from_power_of_two_float": 0,
+        "mode": "signed-power-of-two"
+      }
+    },
+    {
+      "asset_id": "asset.source.osrs.cache2695.audio-runtime.sfx.2672",
+      "sample_rate": 22050,
+      "frames": 46305,
+      "channels": 1,
+      "peak": 0.4999847412109375,
+      "float32_channel_sha256": [
+        "10ec4b4122a6825e9d490ee955a5d8847581fd0e7c4d100569289d1284d681c3"
+      ],
+      "exact_integer_to_float_model": {
+        "float32_channel_sha256": [
+          "10ec4b4122a6825e9d490ee955a5d8847581fd0e7c4d100569289d1284d681c3"
+        ],
+        "integer_width": 32,
+        "maximum_deviation_from_power_of_two_float": 0,
+        "mode": "signed-power-of-two"
+      }
+    },
+    {
+      "asset_id": "asset.source.osrs.cache2695.audio-runtime.sfx.2688",
+      "sample_rate": 22050,
+      "frames": 19845,
+      "channels": 1,
+      "peak": 0.19805908203125,
+      "float32_channel_sha256": [
+        "355a376ce4b7300bda64a28720b89eb3d484b3ed19a3c3b9950f3c0cf8903cd3"
+      ],
+      "exact_integer_to_float_model": {
+        "float32_channel_sha256": [
+          "355a376ce4b7300bda64a28720b89eb3d484b3ed19a3c3b9950f3c0cf8903cd3"
+        ],
+        "integer_width": 32,
+        "maximum_deviation_from_power_of_two_float": 0,
+        "mode": "signed-power-of-two"
+      }
+    },
+    {
+      "asset_id": "asset.source.osrs.cache2695.audio-runtime.sfx.2690",
+      "sample_rate": 22050,
+      "frames": 19845,
+      "channels": 1,
+      "peak": 0.2267608642578125,
+      "float32_channel_sha256": [
+        "fde26fe83e31ae41223ed9baf5456a3814c1261eb540ea9d6ffead3d04d582f9"
+      ],
+      "exact_integer_to_float_model": {
+        "float32_channel_sha256": [
+          "fde26fe83e31ae41223ed9baf5456a3814c1261eb540ea9d6ffead3d04d582f9"
+        ],
+        "integer_width": 32,
+        "maximum_deviation_from_power_of_two_float": 0,
+        "mode": "signed-power-of-two"
+      }
+    },
+    {
+      "asset_id": "asset.source.osrs.cache2695.audio-runtime.sfx.2725",
+      "sample_rate": 22050,
+      "frames": 51817,
+      "channels": 1,
+      "peak": 0.032989501953125,
+      "float32_channel_sha256": [
+        "2a68adc0dcf9ac813d84b0803a74911a55d8a35ff03c4d9b00c1b8cda9c816f6"
+      ],
+      "exact_integer_to_float_model": {
+        "float32_channel_sha256": [
+          "2a68adc0dcf9ac813d84b0803a74911a55d8a35ff03c4d9b00c1b8cda9c816f6"
+        ],
+        "integer_width": 32,
+        "maximum_deviation_from_power_of_two_float": 0,
+        "mode": "signed-power-of-two"
+      }
+    },
+    {
+      "asset_id": "asset.source.osrs.cache2695.audio-runtime.sfx.2734",
+      "sample_rate": 22050,
+      "frames": 36382,
+      "channels": 1,
+      "peak": 0.225128173828125,
+      "float32_channel_sha256": [
+        "af8beb83144f4a8945add22ed9057ffcecb8ca422e24e3b8dd905924eef1720b"
+      ],
+      "exact_integer_to_float_model": {
+        "float32_channel_sha256": [
+          "af8beb83144f4a8945add22ed9057ffcecb8ca422e24e3b8dd905924eef1720b"
+        ],
+        "integer_width": 32,
+        "maximum_deviation_from_power_of_two_float": 0,
+        "mode": "signed-power-of-two"
+      }
+    },
+    {
+      "asset_id": "asset.source.osrs.cache2695.audio-runtime.sfx.2735",
+      "sample_rate": 22050,
+      "frames": 3307,
+      "channels": 1,
+      "peak": 0.5,
+      "float32_channel_sha256": [
+        "66b7d0656aa7ac38392a70bdc6b4df2c68c7041ed58a8b09a47f5877ebb367cf"
+      ],
+      "exact_integer_to_float_model": {
+        "float32_channel_sha256": [
+          "66b7d0656aa7ac38392a70bdc6b4df2c68c7041ed58a8b09a47f5877ebb367cf"
+        ],
+        "integer_width": 32,
+        "maximum_deviation_from_power_of_two_float": 0,
+        "mode": "signed-power-of-two"
+      }
+    },
+    {
+      "asset_id": "asset.source.osrs.cache2695.audio-runtime.sfx.2738",
+      "sample_rate": 22050,
+      "frames": 16537,
+      "channels": 1,
+      "peak": 0.11279296875,
+      "float32_channel_sha256": [
+        "47ee45cccec2e95a157b62f274c8b751c3ef39c7edf6d42543e21234070517fd"
+      ],
+      "exact_integer_to_float_model": {
+        "float32_channel_sha256": [
+          "47ee45cccec2e95a157b62f274c8b751c3ef39c7edf6d42543e21234070517fd"
+        ],
+        "integer_width": 32,
+        "maximum_deviation_from_power_of_two_float": 0,
+        "mode": "signed-power-of-two"
+      }
+    },
+    {
+      "asset_id": "asset.source.osrs.cache2695.audio-runtime.sfx.2739",
+      "sample_rate": 22050,
+      "frames": 6615,
+      "channels": 1,
+      "peak": 0.125091552734375,
+      "float32_channel_sha256": [
+        "ac5c3aea0b2175d50154cf3f8660c4daa1ad151ffca49e8873d3f0afa431b864"
+      ],
+      "exact_integer_to_float_model": {
+        "float32_channel_sha256": [
+          "ac5c3aea0b2175d50154cf3f8660c4daa1ad151ffca49e8873d3f0afa431b864"
+        ],
+        "integer_width": 32,
+        "maximum_deviation_from_power_of_two_float": 0,
+        "mode": "signed-power-of-two"
+      }
+    },
+    {
+      "asset_id": "asset.source.osrs.cache2695.audio-runtime.sfx.3046",
+      "sample_rate": 22050,
+      "frames": 44100,
+      "channels": 1,
+      "peak": 0.011260986328125,
+      "float32_channel_sha256": [
+        "359f82babb150e465fcf02ea94ef67dec421fc2154c51311e8b8272a27f95666"
+      ],
+      "exact_integer_to_float_model": {
+        "float32_channel_sha256": [
+          "359f82babb150e465fcf02ea94ef67dec421fc2154c51311e8b8272a27f95666"
+        ],
+        "integer_width": 32,
+        "maximum_deviation_from_power_of_two_float": 0,
+        "mode": "signed-power-of-two"
+      }
+    },
+    {
+      "asset_id": "asset.source.osrs.cache2695.audio-runtime.sfx.3047",
+      "sample_rate": 22050,
+      "frames": 11025,
+      "channels": 1,
+      "peak": 0.0544586181640625,
+      "float32_channel_sha256": [
+        "815005a1935c3fe83838cd34356274a6340871d09a0d511152e27c343883fd66"
+      ],
+      "exact_integer_to_float_model": {
+        "float32_channel_sha256": [
+          "815005a1935c3fe83838cd34356274a6340871d09a0d511152e27c343883fd66"
+        ],
+        "integer_width": 32,
+        "maximum_deviation_from_power_of_two_float": 0,
+        "mode": "signed-power-of-two"
+      }
+    },
+    {
+      "asset_id": "asset.source.osrs.cache2695.audio-runtime.sfx.3048",
+      "sample_rate": 22050,
+      "frames": 55125,
+      "channels": 1,
+      "peak": 0.0871429443359375,
+      "float32_channel_sha256": [
+        "cab1e401a09d3e4addc5fce5213d30a310652188414f3975869abea9f7e3dfb9"
+      ],
+      "exact_integer_to_float_model": {
+        "float32_channel_sha256": [
+          "cab1e401a09d3e4addc5fce5213d30a310652188414f3975869abea9f7e3dfb9"
+        ],
+        "integer_width": 32,
+        "maximum_deviation_from_power_of_two_float": 0,
+        "mode": "signed-power-of-two"
+      }
+    },
+    {
+      "asset_id": "asset.source.osrs.cache2695.audio-runtime.sfx.3049",
+      "sample_rate": 22050,
+      "frames": 55125,
+      "channels": 1,
+      "peak": 0.13641357421875,
+      "float32_channel_sha256": [
+        "5f20e490de3f39df987f932b2c197a9eeca62afc8c3b8496006d73d33b68bb13"
+      ],
+      "exact_integer_to_float_model": {
+        "float32_channel_sha256": [
+          "5f20e490de3f39df987f932b2c197a9eeca62afc8c3b8496006d73d33b68bb13"
+        ],
+        "integer_width": 32,
+        "maximum_deviation_from_power_of_two_float": 0,
+        "mode": "signed-power-of-two"
+      }
+    },
+    {
+      "asset_id": "asset.source.osrs.cache2695.audio-runtime.sfx.3056",
+      "sample_rate": 22050,
+      "frames": 2205,
+      "channels": 1,
+      "peak": 0.0607452392578125,
+      "float32_channel_sha256": [
+        "9205df256c51d78c3534f494d0629cea728f251f1e5a594c844c5c538615141c"
+      ],
+      "exact_integer_to_float_model": {
+        "float32_channel_sha256": [
+          "9205df256c51d78c3534f494d0629cea728f251f1e5a594c844c5c538615141c"
+        ],
+        "integer_width": 32,
+        "maximum_deviation_from_power_of_two_float": 0,
+        "mode": "signed-power-of-two"
+      }
+    },
+    {
+      "asset_id": "asset.source.osrs.cache2695.audio-runtime.sfx.3057",
+      "sample_rate": 22050,
+      "frames": 2205,
+      "channels": 1,
+      "peak": 0.0611724853515625,
+      "float32_channel_sha256": [
+        "508c6c6aa83014c2824ec21943273ea53baef7132ac07258d618159d29748a21"
+      ],
+      "exact_integer_to_float_model": {
+        "float32_channel_sha256": [
+          "508c6c6aa83014c2824ec21943273ea53baef7132ac07258d618159d29748a21"
+        ],
+        "integer_width": 32,
+        "maximum_deviation_from_power_of_two_float": 0,
+        "mode": "signed-power-of-two"
+      }
+    },
+    {
+      "asset_id": "asset.source.osrs.cache2695.audio-runtime.sfx.3058",
+      "sample_rate": 22050,
+      "frames": 2205,
+      "channels": 1,
+      "peak": 0.06195068359375,
+      "float32_channel_sha256": [
+        "3b3f57ff1a6bea9a0e2f78c53968078a5ffd47472c8201722374aa503ce7a6ab"
+      ],
+      "exact_integer_to_float_model": {
+        "float32_channel_sha256": [
+          "3b3f57ff1a6bea9a0e2f78c53968078a5ffd47472c8201722374aa503ce7a6ab"
+        ],
+        "integer_width": 32,
+        "maximum_deviation_from_power_of_two_float": 0,
+        "mode": "signed-power-of-two"
+      }
+    },
+    {
+      "asset_id": "asset.source.osrs.cache2695.audio-runtime.sfx.3059",
+      "sample_rate": 22050,
+      "frames": 2205,
+      "channels": 1,
+      "peak": 0.12139892578125,
+      "float32_channel_sha256": [
+        "b60c773c01cd39cb7b232fe0adb2794a856df24d2746228ae2c495ed52d14578"
+      ],
+      "exact_integer_to_float_model": {
+        "float32_channel_sha256": [
+          "b60c773c01cd39cb7b232fe0adb2794a856df24d2746228ae2c495ed52d14578"
+        ],
+        "integer_width": 32,
+        "maximum_deviation_from_power_of_two_float": 0,
+        "mode": "signed-power-of-two"
+      }
+    },
+    {
+      "asset_id": "asset.source.osrs.cache2695.audio-runtime.sfx.3060",
+      "sample_rate": 22050,
+      "frames": 2205,
+      "channels": 1,
+      "peak": 0.0833740234375,
+      "float32_channel_sha256": [
+        "3537aab0ef9e46a62e5284cf7ea912806e861d4286b28974085c18334d91af19"
+      ],
+      "exact_integer_to_float_model": {
+        "float32_channel_sha256": [
+          "3537aab0ef9e46a62e5284cf7ea912806e861d4286b28974085c18334d91af19"
+        ],
+        "integer_width": 32,
+        "maximum_deviation_from_power_of_two_float": 0,
+        "mode": "signed-power-of-two"
+      }
+    },
+    {
+      "asset_id": "asset.source.osrs.cache2695.audio-runtime.sfx.3061",
+      "sample_rate": 22050,
+      "frames": 99225,
+      "channels": 1,
+      "peak": 0.0205841064453125,
+      "float32_channel_sha256": [
+        "2654863e5ee4fb4b35b851766a05fbd45a62e215a7c407c8f1041a7cd9aee7a0"
+      ],
+      "exact_integer_to_float_model": {
+        "float32_channel_sha256": [
+          "2654863e5ee4fb4b35b851766a05fbd45a62e215a7c407c8f1041a7cd9aee7a0"
+        ],
+        "integer_width": 32,
+        "maximum_deviation_from_power_of_two_float": 0,
+        "mode": "signed-power-of-two"
+      }
+    },
+    {
+      "asset_id": "asset.source.osrs.cache2695.audio-runtime.sfx.3073",
+      "sample_rate": 22050,
+      "frames": 11025,
+      "channels": 1,
+      "peak": 0.0078582763671875,
+      "float32_channel_sha256": [
+        "4a45dea85f041f4bb4c28d030dd4672ddf9d821f127b469c242f85eabc6763dd"
+      ],
+      "exact_integer_to_float_model": {
+        "float32_channel_sha256": [
+          "4a45dea85f041f4bb4c28d030dd4672ddf9d821f127b469c242f85eabc6763dd"
+        ],
+        "integer_width": 32,
+        "maximum_deviation_from_power_of_two_float": 0,
+        "mode": "signed-power-of-two"
+      }
+    },
+    {
+      "asset_id": "asset.source.osrs.cache2695.audio-runtime.sfx.3077",
+      "sample_rate": 22050,
+      "frames": 33075,
+      "channels": 1,
+      "peak": 0.083831787109375,
+      "float32_channel_sha256": [
+        "3c6fb0612769dd0ab5f7dfe870d8685980b92642cafaf23be194bf9ec085db44"
+      ],
+      "exact_integer_to_float_model": {
+        "float32_channel_sha256": [
+          "3c6fb0612769dd0ab5f7dfe870d8685980b92642cafaf23be194bf9ec085db44"
+        ],
+        "integer_width": 32,
+        "maximum_deviation_from_power_of_two_float": 0,
+        "mode": "signed-power-of-two"
+      }
+    },
+    {
+      "asset_id": "asset.source.osrs.cache2695.audio-runtime.sfx.3078",
+      "sample_rate": 22050,
+      "frames": 22050,
+      "channels": 1,
+      "peak": 0.0458526611328125,
+      "float32_channel_sha256": [
+        "c3c9617e1915eeef8009b962ee6a14ff6512c2a4bec84974ce70f829f9c34332"
+      ],
+      "exact_integer_to_float_model": {
+        "float32_channel_sha256": [
+          "c3c9617e1915eeef8009b962ee6a14ff6512c2a4bec84974ce70f829f9c34332"
+        ],
+        "integer_width": 32,
+        "maximum_deviation_from_power_of_two_float": 0,
+        "mode": "signed-power-of-two"
+      }
+    },
+    {
+      "asset_id": "asset.source.osrs.cache2695.audio-runtime.sfx.3080",
+      "sample_rate": 22050,
+      "frames": 32634,
+      "channels": 1,
+      "peak": 0.09466552734375,
+      "float32_channel_sha256": [
+        "22b80270442a0a4c8ff45b2d5fe9e43d0681d08b7692f1b6369c3af4e9a2d4bc"
+      ],
+      "exact_integer_to_float_model": {
+        "float32_channel_sha256": [
+          "22b80270442a0a4c8ff45b2d5fe9e43d0681d08b7692f1b6369c3af4e9a2d4bc"
+        ],
+        "integer_width": 32,
+        "maximum_deviation_from_power_of_two_float": 0,
+        "mode": "signed-power-of-two"
+      }
+    },
+    {
+      "asset_id": "asset.source.osrs.cache2695.audio-runtime.sfx.3081",
+      "sample_rate": 22050,
+      "frames": 32634,
+      "channels": 1,
+      "peak": 0.0957489013671875,
+      "float32_channel_sha256": [
+        "dc027f0e4a4b9de44506b38fa1b988af9a234e350cb257580b5e4bba479f39fe"
+      ],
+      "exact_integer_to_float_model": {
+        "float32_channel_sha256": [
+          "dc027f0e4a4b9de44506b38fa1b988af9a234e350cb257580b5e4bba479f39fe"
+        ],
+        "integer_width": 32,
+        "maximum_deviation_from_power_of_two_float": 0,
+        "mode": "signed-power-of-two"
+      }
+    },
+    {
+      "asset_id": "asset.source.osrs.cache2695.audio-runtime.sfx.3083",
+      "sample_rate": 22050,
+      "frames": 88200,
+      "channels": 1,
+      "peak": 0.1028594970703125,
+      "float32_channel_sha256": [
+        "573d3f8934426fba2fb2ada6e82df4c40f12fbbf1e7027a6f7129fe208de3e1f"
+      ],
+      "exact_integer_to_float_model": {
+        "float32_channel_sha256": [
+          "573d3f8934426fba2fb2ada6e82df4c40f12fbbf1e7027a6f7129fe208de3e1f"
+        ],
+        "integer_width": 32,
+        "maximum_deviation_from_power_of_two_float": 0,
+        "mode": "signed-power-of-two"
+      }
+    },
+    {
+      "asset_id": "asset.source.osrs.cache2695.audio-runtime.sfx.3084",
+      "sample_rate": 22050,
+      "frames": 110250,
+      "channels": 1,
+      "peak": 0.113525390625,
+      "float32_channel_sha256": [
+        "852e59581b8d98fcba4f31337065030f992dba81b5cef303bd8f434a0ac45e8f"
+      ],
+      "exact_integer_to_float_model": {
+        "float32_channel_sha256": [
+          "852e59581b8d98fcba4f31337065030f992dba81b5cef303bd8f434a0ac45e8f"
+        ],
+        "integer_width": 32,
+        "maximum_deviation_from_power_of_two_float": 0,
+        "mode": "signed-power-of-two"
+      }
+    },
+    {
+      "asset_id": "asset.source.osrs.cache2695.audio-runtime.sfx.3085",
+      "sample_rate": 22050,
+      "frames": 110250,
+      "channels": 1,
+      "peak": 0.294921875,
+      "float32_channel_sha256": [
+        "a8fa9abf50931c50ea9822af44b7db820388486c5c1038bdd46c659e816bbf5d"
+      ],
+      "exact_integer_to_float_model": {
+        "float32_channel_sha256": [
+          "a8fa9abf50931c50ea9822af44b7db820388486c5c1038bdd46c659e816bbf5d"
+        ],
+        "integer_width": 32,
+        "maximum_deviation_from_power_of_two_float": 0,
+        "mode": "signed-power-of-two"
+      }
+    },
+    {
+      "asset_id": "asset.source.osrs.cache2695.audio-runtime.sfx.3086",
+      "sample_rate": 22050,
+      "frames": 110250,
+      "channels": 1,
+      "peak": 0.4423828125,
+      "float32_channel_sha256": [
+        "2f360dc84fa961671479ec9f06f434373efc21eb4f57aa5a189eebb9f0da01a7"
+      ],
+      "exact_integer_to_float_model": {
+        "float32_channel_sha256": [
+          "2f360dc84fa961671479ec9f06f434373efc21eb4f57aa5a189eebb9f0da01a7"
+        ],
+        "integer_width": 32,
+        "maximum_deviation_from_power_of_two_float": 0,
+        "mode": "signed-power-of-two"
+      }
+    },
+    {
+      "asset_id": "asset.source.osrs.cache2695.audio-runtime.sfx.3087",
+      "sample_rate": 22050,
+      "frames": 22050,
+      "channels": 1,
+      "peak": 0.0012969970703125,
+      "float32_channel_sha256": [
+        "393f9269031c6cf94f04762d193ee27ad2ff7205b588f70dbe78c54916f7d179"
+      ],
+      "exact_integer_to_float_model": {
+        "float32_channel_sha256": [
+          "393f9269031c6cf94f04762d193ee27ad2ff7205b588f70dbe78c54916f7d179"
+        ],
+        "integer_width": 32,
+        "maximum_deviation_from_power_of_two_float": 0,
+        "mode": "signed-power-of-two"
+      }
+    },
+    {
+      "asset_id": "asset.source.osrs.cache2695.audio-runtime.sfx.3093",
+      "sample_rate": 22050,
+      "frames": 88200,
+      "channels": 1,
+      "peak": 0.01220703125,
+      "float32_channel_sha256": [
+        "265ec89122155c28cd2e838faf0dc29fcf4bcc5a4c43428ad028b328b9a94bdf"
+      ],
+      "exact_integer_to_float_model": {
+        "float32_channel_sha256": [
+          "265ec89122155c28cd2e838faf0dc29fcf4bcc5a4c43428ad028b328b9a94bdf"
+        ],
+        "integer_width": 32,
+        "maximum_deviation_from_power_of_two_float": 0,
+        "mode": "signed-power-of-two"
+      }
+    },
+    {
+      "asset_id": "asset.source.osrs.cache2695.audio-runtime.sfx.3094",
+      "sample_rate": 22050,
+      "frames": 88200,
+      "channels": 1,
+      "peak": 0.0794525146484375,
+      "float32_channel_sha256": [
+        "370762466536533d7e7ae9965931718ffc8ac6c5a295ebc8461f918267fcf47c"
+      ],
+      "exact_integer_to_float_model": {
+        "float32_channel_sha256": [
+          "370762466536533d7e7ae9965931718ffc8ac6c5a295ebc8461f918267fcf47c"
+        ],
+        "integer_width": 32,
+        "maximum_deviation_from_power_of_two_float": 0,
+        "mode": "signed-power-of-two"
+      }
+    },
+    {
+      "asset_id": "asset.source.osrs.cache2695.audio-runtime.sfx.3095",
+      "sample_rate": 22050,
+      "frames": 66150,
+      "channels": 1,
+      "peak": 0.0151519775390625,
+      "float32_channel_sha256": [
+        "b858aeb640fcbe82e5159a68c3c1519c32602a7bbf03c09e34641c8e0c3498d2"
+      ],
+      "exact_integer_to_float_model": {
+        "float32_channel_sha256": [
+          "b858aeb640fcbe82e5159a68c3c1519c32602a7bbf03c09e34641c8e0c3498d2"
+        ],
+        "integer_width": 32,
+        "maximum_deviation_from_power_of_two_float": 0,
+        "mode": "signed-power-of-two"
+      }
+    },
+    {
+      "asset_id": "asset.source.osrs.cache2695.audio-runtime.sfx.3096",
+      "sample_rate": 22050,
+      "frames": 88200,
+      "channels": 1,
+      "peak": 0.02337646484375,
+      "float32_channel_sha256": [
+        "65b992f38a155ccaf8a32b04ce801423d1c890c4ad4cc74bc179798b28594b78"
+      ],
+      "exact_integer_to_float_model": {
+        "float32_channel_sha256": [
+          "65b992f38a155ccaf8a32b04ce801423d1c890c4ad4cc74bc179798b28594b78"
+        ],
+        "integer_width": 32,
+        "maximum_deviation_from_power_of_two_float": 0,
+        "mode": "signed-power-of-two"
+      }
+    },
+    {
+      "asset_id": "asset.source.osrs.cache2695.audio-runtime.sfx.3105",
+      "sample_rate": 22050,
+      "frames": 55125,
+      "channels": 1,
+      "peak": 0.0916595458984375,
+      "float32_channel_sha256": [
+        "9b204a4cbc006fcfe52b26d277d850f8427cced943a0cb991b2e0691f5a5898d"
+      ],
+      "exact_integer_to_float_model": {
+        "float32_channel_sha256": [
+          "9b204a4cbc006fcfe52b26d277d850f8427cced943a0cb991b2e0691f5a5898d"
+        ],
+        "integer_width": 32,
+        "maximum_deviation_from_power_of_two_float": 0,
+        "mode": "signed-power-of-two"
+      }
+    },
+    {
+      "asset_id": "asset.source.osrs.cache2695.audio-runtime.sfx.3106",
+      "sample_rate": 22050,
+      "frames": 88200,
+      "channels": 1,
+      "peak": 0.0957489013671875,
+      "float32_channel_sha256": [
+        "35932ea7f9ee5643c9081e81d4f9fa5df5d432c52efae70faa8a273e16d34455"
+      ],
+      "exact_integer_to_float_model": {
+        "float32_channel_sha256": [
+          "35932ea7f9ee5643c9081e81d4f9fa5df5d432c52efae70faa8a273e16d34455"
+        ],
+        "integer_width": 32,
+        "maximum_deviation_from_power_of_two_float": 0,
+        "mode": "signed-power-of-two"
+      }
+    },
+    {
+      "asset_id": "asset.source.osrs.cache2695.audio-runtime.sfx.3107",
+      "sample_rate": 22050,
+      "frames": 88200,
+      "channels": 1,
+      "peak": 0.0360260009765625,
+      "float32_channel_sha256": [
+        "8dcc7f309622ce5643851e6d40e48435ea09766b1687400c11f73635cc8c5318"
+      ],
+      "exact_integer_to_float_model": {
+        "float32_channel_sha256": [
+          "8dcc7f309622ce5643851e6d40e48435ea09766b1687400c11f73635cc8c5318"
+        ],
+        "integer_width": 32,
+        "maximum_deviation_from_power_of_two_float": 0,
+        "mode": "signed-power-of-two"
+      }
+    },
+    {
+      "asset_id": "asset.source.osrs.cache2695.audio-runtime.sfx.3108",
+      "sample_rate": 22050,
+      "frames": 110250,
+      "channels": 1,
+      "peak": 0.0424957275390625,
+      "float32_channel_sha256": [
+        "63e2a9e6d960c346a929fe765c080320a5b84f8e54e4244e91d0f44ff6194134"
+      ],
+      "exact_integer_to_float_model": {
+        "float32_channel_sha256": [
+          "63e2a9e6d960c346a929fe765c080320a5b84f8e54e4244e91d0f44ff6194134"
+        ],
+        "integer_width": 32,
+        "maximum_deviation_from_power_of_two_float": 0,
+        "mode": "signed-power-of-two"
+      }
+    },
+    {
+      "asset_id": "asset.source.osrs.cache2695.audio-runtime.sfx.3109",
+      "sample_rate": 22050,
+      "frames": 88200,
+      "channels": 1,
+      "peak": 0.0142364501953125,
+      "float32_channel_sha256": [
+        "efce04877469e9a492bc15f022c9fd0025b079230533c00f1bc0f4df5d9751eb"
+      ],
+      "exact_integer_to_float_model": {
+        "float32_channel_sha256": [
+          "efce04877469e9a492bc15f022c9fd0025b079230533c00f1bc0f4df5d9751eb"
+        ],
+        "integer_width": 32,
+        "maximum_deviation_from_power_of_two_float": 0,
+        "mode": "signed-power-of-two"
+      }
+    },
+    {
+      "asset_id": "asset.source.osrs.cache2695.audio-runtime.sfx.3110",
+      "sample_rate": 22050,
+      "frames": 24255,
+      "channels": 1,
+      "peak": 0.0410614013671875,
+      "float32_channel_sha256": [
+        "5723a5a6dbb8e41bfadd4060c02ad5c57ca97ae5e8639a0fd9fb445f5761b3cc"
+      ],
+      "exact_integer_to_float_model": {
+        "float32_channel_sha256": [
+          "5723a5a6dbb8e41bfadd4060c02ad5c57ca97ae5e8639a0fd9fb445f5761b3cc"
+        ],
+        "integer_width": 32,
+        "maximum_deviation_from_power_of_two_float": 0,
+        "mode": "signed-power-of-two"
+      }
+    },
+    {
+      "asset_id": "asset.source.osrs.cache2695.audio-runtime.sfx.3111",
+      "sample_rate": 22050,
+      "frames": 55125,
+      "channels": 1,
+      "peak": 0.0552825927734375,
+      "float32_channel_sha256": [
+        "e3c46826c80e4e2683be05683802ae95a1daa14cfd07ae0251815f5af7c06d96"
+      ],
+      "exact_integer_to_float_model": {
+        "float32_channel_sha256": [
+          "e3c46826c80e4e2683be05683802ae95a1daa14cfd07ae0251815f5af7c06d96"
+        ],
+        "integer_width": 32,
+        "maximum_deviation_from_power_of_two_float": 0,
+        "mode": "signed-power-of-two"
+      }
+    },
+    {
+      "asset_id": "asset.source.osrs.cache2695.audio-runtime.sfx.3112",
+      "sample_rate": 22050,
+      "frames": 44100,
+      "channels": 1,
+      "peak": 0.11773681640625,
+      "float32_channel_sha256": [
+        "c6f480b79790b190ddd2a2c3542bc2303d179c10ad0c4e77e8c09dc966802f22"
+      ],
+      "exact_integer_to_float_model": {
+        "float32_channel_sha256": [
+          "c6f480b79790b190ddd2a2c3542bc2303d179c10ad0c4e77e8c09dc966802f22"
+        ],
+        "integer_width": 32,
+        "maximum_deviation_from_power_of_two_float": 0,
+        "mode": "signed-power-of-two"
+      }
+    },
+    {
+      "asset_id": "asset.source.osrs.cache2695.audio-runtime.sfx.3113",
+      "sample_rate": 22050,
+      "frames": 11025,
+      "channels": 1,
+      "peak": 0.1478729248046875,
+      "float32_channel_sha256": [
+        "ace61447ccaf3cdf1ef6db497227a4efee797b16c85c8aa7b8a318e150412fc6"
+      ],
+      "exact_integer_to_float_model": {
+        "float32_channel_sha256": [
+          "ace61447ccaf3cdf1ef6db497227a4efee797b16c85c8aa7b8a318e150412fc6"
+        ],
+        "integer_width": 32,
+        "maximum_deviation_from_power_of_two_float": 0,
+        "mode": "signed-power-of-two"
+      }
+    },
+    {
+      "asset_id": "asset.source.osrs.cache2695.audio-runtime.sfx.3120",
+      "sample_rate": 22050,
+      "frames": 22050,
+      "channels": 1,
+      "peak": 0.141998291015625,
+      "float32_channel_sha256": [
+        "d1b9dd66dd5eca10b01021a177896790fc42d3b108c8a04c4c02e8c29840b4e0"
+      ],
+      "exact_integer_to_float_model": {
+        "float32_channel_sha256": [
+          "d1b9dd66dd5eca10b01021a177896790fc42d3b108c8a04c4c02e8c29840b4e0"
+        ],
+        "integer_width": 32,
+        "maximum_deviation_from_power_of_two_float": 0,
+        "mode": "signed-power-of-two"
+      }
+    },
+    {
+      "asset_id": "asset.source.osrs.cache2695.audio-runtime.sfx.3121",
+      "sample_rate": 22050,
+      "frames": 33075,
+      "channels": 1,
+      "peak": 0.0346832275390625,
+      "float32_channel_sha256": [
+        "b1e7384a57f175552ddf3479f5d1deb002782ea8bb79ec63145db1f950f13781"
+      ],
+      "exact_integer_to_float_model": {
+        "float32_channel_sha256": [
+          "b1e7384a57f175552ddf3479f5d1deb002782ea8bb79ec63145db1f950f13781"
+        ],
+        "integer_width": 32,
+        "maximum_deviation_from_power_of_two_float": 0,
+        "mode": "signed-power-of-two"
+      }
+    },
+    {
+      "asset_id": "asset.source.osrs.cache2695.audio-runtime.sfx.3134",
+      "sample_rate": 22050,
+      "frames": 71662,
+      "channels": 1,
+      "peak": 0.13482666015625,
+      "float32_channel_sha256": [
+        "8bf78bf36eff95bd02fcea92729c8ee3867524ae99d237ce6995647b77f85c3a"
+      ],
+      "exact_integer_to_float_model": {
+        "float32_channel_sha256": [
+          "8bf78bf36eff95bd02fcea92729c8ee3867524ae99d237ce6995647b77f85c3a"
+        ],
+        "integer_width": 32,
+        "maximum_deviation_from_power_of_two_float": 0,
+        "mode": "signed-power-of-two"
+      }
+    },
+    {
+      "asset_id": "asset.source.osrs.cache2695.audio-runtime.sfx.3139",
+      "sample_rate": 22050,
+      "frames": 44100,
+      "channels": 1,
+      "peak": 0.0671539306640625,
+      "float32_channel_sha256": [
+        "e1cd7b708862f9ef23cdc4449fe0af5a9259f08ce316e8a7a916936fc7a06804"
+      ],
+      "exact_integer_to_float_model": {
+        "float32_channel_sha256": [
+          "e1cd7b708862f9ef23cdc4449fe0af5a9259f08ce316e8a7a916936fc7a06804"
+        ],
+        "integer_width": 32,
+        "maximum_deviation_from_power_of_two_float": 0,
+        "mode": "signed-power-of-two"
+      }
+    },
+    {
+      "asset_id": "asset.source.osrs.cache2695.audio-runtime.sfx.3141",
+      "sample_rate": 22050,
+      "frames": 26460,
+      "channels": 1,
+      "peak": 0.05023193359375,
+      "float32_channel_sha256": [
+        "7b58bacbe4115a7d8839239bc1ad40fef59dea5015bc785313c44b8cdce800ba"
+      ],
+      "exact_integer_to_float_model": {
+        "float32_channel_sha256": [
+          "7b58bacbe4115a7d8839239bc1ad40fef59dea5015bc785313c44b8cdce800ba"
+        ],
+        "integer_width": 32,
+        "maximum_deviation_from_power_of_two_float": 0,
+        "mode": "signed-power-of-two"
+      }
+    },
+    {
+      "asset_id": "asset.source.osrs.cache2695.audio-runtime.sfx.3142",
+      "sample_rate": 22050,
+      "frames": 11025,
+      "channels": 1,
+      "peak": 0.064208984375,
+      "float32_channel_sha256": [
+        "662546d0abf79e1bc6781998481b0f0020b97fe2f87a1b96493db45c4ff7a8e5"
+      ],
+      "exact_integer_to_float_model": {
+        "float32_channel_sha256": [
+          "662546d0abf79e1bc6781998481b0f0020b97fe2f87a1b96493db45c4ff7a8e5"
+        ],
+        "integer_width": 32,
+        "maximum_deviation_from_power_of_two_float": 0,
+        "mode": "signed-power-of-two"
+      }
+    },
+    {
+      "asset_id": "asset.source.osrs.cache2695.audio-runtime.sfx.3144",
+      "sample_rate": 22050,
+      "frames": 33075,
+      "channels": 1,
+      "peak": 0.0302734375,
+      "float32_channel_sha256": [
+        "37465fa5c547a151d65244af1843560a1e7235a68230a46f463fe86953e6c17f"
+      ],
+      "exact_integer_to_float_model": {
+        "float32_channel_sha256": [
+          "37465fa5c547a151d65244af1843560a1e7235a68230a46f463fe86953e6c17f"
+        ],
+        "integer_width": 32,
+        "maximum_deviation_from_power_of_two_float": 0,
+        "mode": "signed-power-of-two"
+      }
+    },
+    {
+      "asset_id": "asset.source.osrs.cache2695.audio-runtime.sfx.3146",
+      "sample_rate": 22050,
+      "frames": 22050,
+      "channels": 1,
+      "peak": 0.07952880859375,
+      "float32_channel_sha256": [
+        "1a0e7594fab09374150b74fcc8846bf08d643014b859b8a922808d132f9f3dd0"
+      ],
+      "exact_integer_to_float_model": {
+        "float32_channel_sha256": [
+          "1a0e7594fab09374150b74fcc8846bf08d643014b859b8a922808d132f9f3dd0"
+        ],
+        "integer_width": 32,
+        "maximum_deviation_from_power_of_two_float": 0,
+        "mode": "signed-power-of-two"
+      }
+    },
+    {
+      "asset_id": "asset.source.osrs.cache2695.audio-runtime.sfx.3220",
+      "sample_rate": 22050,
+      "frames": 2976,
+      "channels": 1,
+      "peak": 0.5,
+      "float32_channel_sha256": [
+        "ed0a3aa7206902ed333ca84c54f8bafb4c029682ba3b58eebc1edc729888c3c8"
+      ],
+      "exact_integer_to_float_model": {
+        "float32_channel_sha256": [
+          "ed0a3aa7206902ed333ca84c54f8bafb4c029682ba3b58eebc1edc729888c3c8"
+        ],
+        "integer_width": 32,
+        "maximum_deviation_from_power_of_two_float": 0,
+        "mode": "signed-power-of-two"
+      }
+    },
+    {
+      "asset_id": "asset.source.osrs.cache2695.audio-runtime.sfx.3595",
+      "sample_rate": 22050,
+      "frames": 4410,
+      "channels": 1,
+      "peak": 0.016754150390625,
+      "float32_channel_sha256": [
+        "be81bbffed3d348562a770e5db90aa79cba1b5b5fb9f7944121a6a724ef7d114"
+      ],
+      "exact_integer_to_float_model": {
+        "float32_channel_sha256": [
+          "be81bbffed3d348562a770e5db90aa79cba1b5b5fb9f7944121a6a724ef7d114"
+        ],
+        "integer_width": 32,
+        "maximum_deviation_from_power_of_two_float": 0,
+        "mode": "signed-power-of-two"
+      }
+    },
+    {
+      "asset_id": "asset.source.osrs.cache2695.audio-runtime.sfx.3596",
+      "sample_rate": 22050,
+      "frames": 4410,
+      "channels": 1,
+      "peak": 0.0278167724609375,
+      "float32_channel_sha256": [
+        "d0d813005eb0f8f2756c0c161d92ca1831da2d1f5e7bf6e1a395751a85b0ec00"
+      ],
+      "exact_integer_to_float_model": {
+        "float32_channel_sha256": [
+          "d0d813005eb0f8f2756c0c161d92ca1831da2d1f5e7bf6e1a395751a85b0ec00"
+        ],
+        "integer_width": 32,
+        "maximum_deviation_from_power_of_two_float": 0,
+        "mode": "signed-power-of-two"
+      }
+    },
+    {
+      "asset_id": "asset.source.osrs.cache2695.audio-runtime.sfx.3597",
+      "sample_rate": 22050,
+      "frames": 7717,
+      "channels": 1,
+      "peak": 0.246307373046875,
+      "float32_channel_sha256": [
+        "670d2eea7754c6e87df6ba08ce4e05df05e5754e17ff1851e35c978dffa9a6e4"
+      ],
+      "exact_integer_to_float_model": {
+        "float32_channel_sha256": [
+          "670d2eea7754c6e87df6ba08ce4e05df05e5754e17ff1851e35c978dffa9a6e4"
+        ],
+        "integer_width": 32,
+        "maximum_deviation_from_power_of_two_float": 0,
+        "mode": "signed-power-of-two"
+      }
+    },
+    {
+      "asset_id": "asset.source.osrs.cache2695.audio-runtime.sfx.3598",
+      "sample_rate": 22050,
+      "frames": 7717,
+      "channels": 1,
+      "peak": 0.250213623046875,
+      "float32_channel_sha256": [
+        "3cbba4d840152f2236d68d5d6b9286e19ba3c2be5e89a04b69afaea3e1af2e84"
+      ],
+      "exact_integer_to_float_model": {
+        "float32_channel_sha256": [
+          "3cbba4d840152f2236d68d5d6b9286e19ba3c2be5e89a04b69afaea3e1af2e84"
+        ],
+        "integer_width": 32,
+        "maximum_deviation_from_power_of_two_float": 0,
+        "mode": "signed-power-of-two"
+      }
+    },
+    {
+      "asset_id": "asset.source.osrs.cache2695.audio-runtime.sfx.3599",
+      "sample_rate": 22050,
+      "frames": 7717,
+      "channels": 1,
+      "peak": 0.23577880859375,
+      "float32_channel_sha256": [
+        "ec9e37230ad3584036399d4a69209654978501bd9cbe9dc36869367c2af310e3"
+      ],
+      "exact_integer_to_float_model": {
+        "float32_channel_sha256": [
+          "ec9e37230ad3584036399d4a69209654978501bd9cbe9dc36869367c2af310e3"
+        ],
+        "integer_width": 32,
+        "maximum_deviation_from_power_of_two_float": 0,
+        "mode": "signed-power-of-two"
+      }
+    },
+    {
+      "asset_id": "asset.source.osrs.cache2695.audio-runtime.sfx.3672",
+      "sample_rate": 22050,
+      "frames": 22050,
+      "channels": 1,
+      "peak": 0.0196380615234375,
+      "float32_channel_sha256": [
+        "5ecd098e0d0603d9213289346c050f7fcda5ae3606f488ac09ae830653f2d286"
+      ],
+      "exact_integer_to_float_model": {
+        "float32_channel_sha256": [
+          "5ecd098e0d0603d9213289346c050f7fcda5ae3606f488ac09ae830653f2d286"
+        ],
+        "integer_width": 32,
+        "maximum_deviation_from_power_of_two_float": 0,
+        "mode": "signed-power-of-two"
+      }
+    },
+    {
+      "asset_id": "asset.source.osrs.cache2695.audio-runtime.sfx.3673",
+      "sample_rate": 22050,
+      "frames": 2205,
+      "channels": 1,
+      "peak": 0.0220794677734375,
+      "float32_channel_sha256": [
+        "d12121d7c1fd91170ba51ef56b7af431dcc4b31f1ab4de8e543551b6171b7ee3"
+      ],
+      "exact_integer_to_float_model": {
+        "float32_channel_sha256": [
+          "d12121d7c1fd91170ba51ef56b7af431dcc4b31f1ab4de8e543551b6171b7ee3"
+        ],
+        "integer_width": 32,
+        "maximum_deviation_from_power_of_two_float": 0,
+        "mode": "signed-power-of-two"
+      }
+    },
+    {
+      "asset_id": "asset.source.osrs.cache2695.audio-runtime.sfx.3790",
+      "sample_rate": 22050,
+      "frames": 2205,
+      "channels": 1,
+      "peak": 0.5,
+      "float32_channel_sha256": [
+        "96aa0f7be5d55847412814111db1c2d0b0a425457f5f2ddcb88d9bdb5ea771bc"
+      ],
+      "exact_integer_to_float_model": {
+        "float32_channel_sha256": [
+          "96aa0f7be5d55847412814111db1c2d0b0a425457f5f2ddcb88d9bdb5ea771bc"
+        ],
+        "integer_width": 32,
+        "maximum_deviation_from_power_of_two_float": 0,
+        "mode": "signed-power-of-two"
+      }
+    },
+    {
+      "asset_id": "asset.source.osrs.cache2695.audio-runtime.sfx.3791",
+      "sample_rate": 22050,
+      "frames": 4851,
+      "channels": 1,
+      "peak": 0.30517578125,
+      "float32_channel_sha256": [
+        "8d1a9f6a7faad79c4cd49fa236dedbc9907d0abd4b815c5382558dc5a6d6d783"
+      ],
+      "exact_integer_to_float_model": {
+        "float32_channel_sha256": [
+          "8d1a9f6a7faad79c4cd49fa236dedbc9907d0abd4b815c5382558dc5a6d6d783"
+        ],
+        "integer_width": 32,
+        "maximum_deviation_from_power_of_two_float": 0,
+        "mode": "signed-power-of-two"
+      }
+    },
+    {
+      "asset_id": "asset.source.osrs.cache2695.audio-runtime.sfx.10983",
+      "sample_rate": 22050,
+      "frames": 55125,
+      "channels": 1,
+      "peak": 0.4046478271484375,
+      "float32_channel_sha256": [
+        "f06a4b2a0dfa13dfc7f502076515c6e15013362b422e7d82579dcfe490737ead"
+      ],
+      "exact_integer_to_float_model": {
+        "float32_channel_sha256": [
+          "f06a4b2a0dfa13dfc7f502076515c6e15013362b422e7d82579dcfe490737ead"
+        ],
+        "integer_width": 32,
+        "maximum_deviation_from_power_of_two_float": 0,
+        "mode": "signed-power-of-two"
+      }
+    },
+    {
+      "asset_id": "asset.source.osrs.cache2695.audio-runtime.sfx.10984",
+      "sample_rate": 22050,
+      "frames": 55125,
+      "channels": 1,
+      "peak": 0.185516357421875,
+      "float32_channel_sha256": [
+        "ff3523003ab0122daabdf651b505401ff08746337b71812842ed8eccdf572b74"
+      ],
+      "exact_integer_to_float_model": {
+        "float32_channel_sha256": [
+          "ff3523003ab0122daabdf651b505401ff08746337b71812842ed8eccdf572b74"
+        ],
+        "integer_width": 32,
+        "maximum_deviation_from_power_of_two_float": 0,
+        "mode": "signed-power-of-two"
+      }
+    },
+    {
+      "asset_id": "asset.source.osrs.cache2695.audio-runtime.sfx.10985",
+      "sample_rate": 22050,
+      "frames": 55125,
+      "channels": 1,
+      "peak": 0.1508941650390625,
+      "float32_channel_sha256": [
+        "6678da571dee119a621fcfdd0a9b28b5ed95b10698f351ea94bca8d2233a9d69"
+      ],
+      "exact_integer_to_float_model": {
+        "float32_channel_sha256": [
+          "6678da571dee119a621fcfdd0a9b28b5ed95b10698f351ea94bca8d2233a9d69"
+        ],
+        "integer_width": 32,
+        "maximum_deviation_from_power_of_two_float": 0,
+        "mode": "signed-power-of-two"
+      }
+    },
+    {
+      "asset_id": "asset.source.osrs.cache2695.audio-runtime.sfx.10986",
+      "sample_rate": 22050,
+      "frames": 19845,
+      "channels": 1,
+      "peak": 0.1236419677734375,
+      "float32_channel_sha256": [
+        "8b4533daeeeb7137d21a2e3dbcb4f678214b94c9cd6c0379cddadb8f42280317"
+      ],
+      "exact_integer_to_float_model": {
+        "float32_channel_sha256": [
+          "8b4533daeeeb7137d21a2e3dbcb4f678214b94c9cd6c0379cddadb8f42280317"
+        ],
+        "integer_width": 32,
+        "maximum_deviation_from_power_of_two_float": 0,
+        "mode": "signed-power-of-two"
+      }
+    },
+    {
+      "asset_id": "asset.source.osrs.cache2695.audio-runtime.sfx.10987",
+      "sample_rate": 22050,
+      "frames": 22050,
+      "channels": 1,
+      "peak": 0.219818115234375,
+      "float32_channel_sha256": [
+        "95cede712862df3d6100d0fea2c4c7d70a9c8d5504dc4499f128e8dcef15aab6"
+      ],
+      "exact_integer_to_float_model": {
+        "float32_channel_sha256": [
+          "95cede712862df3d6100d0fea2c4c7d70a9c8d5504dc4499f128e8dcef15aab6"
+        ],
+        "integer_width": 32,
+        "maximum_deviation_from_power_of_two_float": 0,
+        "mode": "signed-power-of-two"
+      }
+    }
+  ]
+}

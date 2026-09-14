@@ -1,0 +1,23 @@
+{
+  "actual_decoded_outputs": {
+    "jingle": 30,
+    "music": 5,
+    "sfx": 223
+  },
+  "all_original_pcm_relationships_exact": true,
+  "all_output_and_decoded_pcm_hashes_verified": true,
+  "all_signals_measured_nonempty_and_below_full_scale": true,
+  "live_browser_playback_or_source_trigger_acceptance": false,
+  "manifest": {
+    "path": "assets/manifests/osrs/audio-runtime.json",
+    "sha256": "1e7c37af6d303eb5db9407c9318ee532cbd4f823427fed02c89612dfefaa23b5",
+    "size_bytes": 826585
+  },
+  "owner_reference_pack_approval": false,
+  "result": "passed",
+  "schema_version": 1,
+  "source_recordings_or_human_perceptual_comparison": false,
+  "total_duration_seconds": 1468.461995448,
+  "validation_command": "python3 tools/audio-import/audio_import.py validate",
+  "verified_silent_source_effects_not_counted_as_playable": 1
+}
