@@ -1003,6 +1003,19 @@
     ]
   },
   {
+    "title": "Transcript:Cook's Assistant",
+    "page_id": 284647,
+    "revision": 15263168,
+    "revision_timestamp": "2026-07-14T17:06:32Z",
+    "url": "https://oldschool.runescape.wiki/w/Transcript:Cook%27s_Assistant?oldid=15263168",
+    "snapshot": {
+      "path": "research/reference-pack/v1/sources/284647-15263168.json.gz",
+      "sha256": "11ac26607f5fcf131f89c2cc4c296908e9d8cd97bc9a7f5decabcf7564f63960",
+      "size_bytes": 2625
+    },
+    "images": []
+  },
+  {
     "title": "Transcript:Cook's Assistant/Journal",
     "page_id": 338668,
     "revision": 15105447,
@@ -1012,6 +1025,19 @@
       "path": "research/reference-pack/v1/sources/338668-15105447.json.gz",
       "sha256": "0d644ff7d913a6ebe54f4becc75c427495489356d8e4a14f0c93e71beda80776",
       "size_bytes": 1201
+    },
+    "images": []
+  },
+  {
+    "title": "Transcript:Death (NPC)",
+    "page_id": 268272,
+    "revision": 15255834,
+    "revision_timestamp": "2026-07-07T09:47:47Z",
+    "url": "https://oldschool.runescape.wiki/w/Transcript:Death_%28NPC%29?oldid=15255834",
+    "snapshot": {
+      "path": "research/reference-pack/v1/sources/268272-15255834.json.gz",
+      "sha256": "dbbd29077303f8c9fa4bc043f1b4d802246a0812edb4ea44370ebdd2a531ffb6",
+      "size_bytes": 3671
     },
     "images": []
   },

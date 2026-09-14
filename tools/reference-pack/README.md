@@ -26,21 +26,37 @@ It writes only `research/reference-pack/**`. Existing original images, audio,
 source schemas, game code, canonical specs and approval records are unchanged.
 Exact source-matching results do not compare any product candidate.
 
+`factoring.py` audits literal Section30.2. It retains126 cases and71 tutorial
+states while declaring29 visual families,180 distinct variants,11 instructor
+phases and11 HUD signatures. `text_oracles.py` projects698 exact pinned
+transcript records into independently checked desktop text, source style
+runs and native-font metrics; it never renders a new "source capture."
+`evidence-families.json` separates missing reference inputs from later
+candidate state/source-fidelity/behavior/platform/owner acceptance evidence.
+
 The stricter completeness command deliberately exits nonzero while the
-documented mandatory source gaps remain:
+three documented source input/calibration requirements remain. It does not
+demand71 separately captured source microstates or an authenticated
+arrival-container screenshot:
 
 ```sh
 python3 tools/reference-pack/validate.py --require-complete
 ```
 
 Passing normal validation means bytes, decoded images, source classification,
-current component/font proofs, original PCM and the complete **case index**
+current component/font proofs, original PCM, all distinct visual
+families/states/signatures and the complete **case index**
 are sound. It does **not** mean the source case evidence is complete, owner
 approved, or accepted as a product. `validation.json` records both facts.
 Tests deliberately remove/duplicate cases, remove actual inputs, change
 hashes/dimensions, relabel icons/crops as panels/full frames, fabricate
 settings/dates, change native metadata, relax tolerances, add masks, promote
-proposals, alter silence and falsely assert Mac/owner results.
+proposals, alter silence and falsely assert Mac/owner results. They also
+remove family variants (including player/NPC dialogue, spell filtering and
+quest ingredient states), lose phases/signatures, reintroduce per-state
+screenshot demands, change text/values/glyphs or leave holes in full-panel
+pixel partitions. A positive unit case proves that readiness can be true
+when real input requirements are satisfied, without marking approval.
 
 ## Exact public retrieval
 
@@ -99,12 +115,17 @@ The existing read-only Playwright installation used on this host was:
 node tools/reference-pack/browser-check.mjs \
   --chrome /home/lramos15/.cache/ms-playwright/chromium-1243/chrome-linux-arm64/chrome \
   --playwright /home/lramos15/clubscape/.worktrees/m1-browser-platform/tools/browser-harness/node_modules/playwright-core/index.mjs \
-  --gallery
+  --gallery-only
 
-# Rebind the final browser evidence, then verify the final pack:
-python3 tools/reference-pack/build.py
+# Validate the final pack (no source images/audio/proposals are rewritten):
 python3 tools/reference-pack/validate.py --report
 ```
+
+`--gallery-only` preserves the existing original recording/frame provenance.
+It records the reviewed manifest hash in `v1/gallery-validation.json`, checks
+all126 case IDs,29 family IDs and11 HUD signature IDs at all four viewports,
+and exercises the71-state filter. Use `--gallery` only when deliberately
+reproducing the original source-recording decode as well.
 
 Other hosts must supply their own existing compatible browser/Playwright
 paths rather than assume Sparky paths. This is ordinary source-image/video

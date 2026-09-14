@@ -180,7 +180,8 @@ NUMERIC_PROFILES = {
         "edge_band_radius_px": 1, "edge_mean_abs_channel_error_8bit_max": 1,
         "changed_pixel_fraction_max": 0.002,
         "justification": "Only explicitly reconciled unchanged components are normative. The complete "
-                         "supplied panel remains visible and every unreconciled part is a gap, not a mask. "
+                         "supplied panel remains checked. Dynamic text/values use independent pinned source "
+                         "oracles and native glyphs, not another screenshot or an exclusion mask. "
                          "A historical crop does not establish a current full-frame layout.",
     },
     "public_lossy_motion": {
@@ -224,6 +225,17 @@ NUMERIC_PROFILES = {
         "justification": "The original NPC is a reuse-first OWNER-REVIEW candidate, not an approved player. "
                          "Attachment/contact thresholds are separate proposals and do not relax ordinary "
                          "tree/goblin/scene fidelity or permit deleting functional equipment slots.",
+    },
+    "dynamic_state_text": {
+        "text_codepoint_mismatches": 0, "dynamic_value_mismatches": 0,
+        "glyph_advance_error_px": 0, "glyph_mask_different_pixels": 0,
+        "source_font_id_mismatches": 0, "source_colour_run_mismatches": 0,
+        "strikethrough_flag_mismatches": 0, "required_panel_pixel_coverage": 1.0,
+        "unverified_font_or_background_substitutions": 0,
+        "justification": "Reuse source-backed panel geometry, source pixels/components and native fonts. "
+                         "Validate data-only changes from pinned transcripts/contracts, never from the "
+                         "candidate's first screenshot. Every dynamic rectangle includes checked source "
+                         "background; no entire text box, slot grid or panel is ignored.",
     },
 }
 

@@ -17,6 +17,7 @@ from PIL import Image, ImageDraw
 from catalogue import EXTRA_CASES, NUMERIC_PROFILES, TUTORIAL_GROUPS, dispositions, music_update, update, wiki
 from components import ROOT, OUT, SOURCE, digest, load_gzip, measure, proposals
 from fetch import image_facts, write_json
+from factoring import make_factoring, review_ready
 
 
 CAPTURE_PATH = ROOT / "assets/reference/osrs240/captures.json"
@@ -126,7 +127,8 @@ def case_base(identifier, title, family, input_ids, widget_groups, profile):
             "Validate exact source hashes, dimensions and declared source role before opening any candidate.",
             "Use the native-size source inputs and recorded fixture settings. Do not fit/scale/warp a candidate to the source.",
             "Compare every unchanged source region. Native sprites/fonts use the zero-error profile in addition to this case profile.",
-            "Unknown state/camera/build or unreconciled historical content is a declared gap, not an exclusion mask.",
+            "Unknown public settings remain unknown. Factor data-only states through independent source "
+            "text/value/font oracles; absent genuine layout/calibration inputs remain explicit, never masks.",
             "Evaluate penguin/equipment, name/logo and web-only proposals separately after owner approval.",
             "Store source/candidate hashes, state, full images, overlay, difference, per-region numeric results and failures.",
         ],
@@ -192,12 +194,9 @@ def make_cases(originals, public, proposal_inputs, audio):
             "cumulative_expected_tabs": sorted(unlocked),
             "unlock_evidence_role": "inference_from_symbolic_contract_not_observed_numeric_widget_visibility",
             "source_numeric_progress": state["source_numeric_progress"],
-            "exact_stage_screenshot_available": suffix in ("experience", "departure_offer"),
             "evidence_scope": "Public lesson/interface/portrait pixels plus exact current assets and transcript. "
                               "Not a manufactured full-stage source screenshot or proof of legitimate progression.",
         })
-        if suffix not in ("experience", "departure_offer"):
-            case["source_gap_refs"].append("gap.tutorial_matched_states")
         if suffix == "experience":
             case["input_ids"] = [by_title[update(4)]]
         if suffix == "departure_offer":
@@ -209,7 +208,6 @@ def make_cases(originals, public, proposal_inputs, audio):
             case["variant_note"] = "Official October 2025 parchment/list says Tutorial Island. Use only its "
             case["variant_note"] += "components; current source names the quest Learning the Ropes."
         if suffix == "mainland":
-            case["source_gap_refs"].append("gap.arrival_state")
             case["input_ids"].extend([original_id("scenes/lumbridge-castle-plaza.png"),
                                       by_title["Adventure Paths interface.png"]])
         cases.append(case)
@@ -279,15 +277,10 @@ def make_cases(originals, public, proposal_inputs, audio):
             case["evidence_status"] = "owner_review_proposal"
             case["approval_required"] = True
         if suffix == "hud.resizable_classic":
-            case["source_gap_refs"] = ["gap.full_classic_frame"]
             case["evidence_scope"] = (
                 "Complete Classic side-panel crop + actual minimap/chat inputs + "
                 "current native root anchors. No retrieved full Classic frame is asserted."
             )
-        if suffix == "hud.tabs_unlocks":
-            case["source_gap_refs"] = ["gap.tutorial_matched_states"]
-        if suffix == "world.lumbridge_arrival":
-            case["source_gap_refs"] = ["gap.arrival_state"]
         if suffix == "world.cooks_route":
             case["input_ids"].extend(by_title[name] for name in (
                 "Cook's Assistant.png", "Mill Lane Mill (interior, ground floor).png",
@@ -297,8 +290,6 @@ def make_cases(originals, public, proposal_inputs, audio):
             case["approval_required"] = True
             case["adaptation_note"] = "NPC2063 is a source reference, not self-approved as the player. "
             case["adaptation_note"] += "Retain every equipment slot; attachments and fitting remain product work."
-        if suffix in ("audio.effects.production", "audio.effects.combat", "audio.jingles"):
-            case["source_gap_refs"] = ["gap.required_audio_bindings"]
         if kind == "audio":
             case["source_map"] = "research/audio-source/source-map.json"
             case["action_rule_ids"] = audio_rules
@@ -339,49 +330,19 @@ def make_cases(originals, public, proposal_inputs, audio):
     return cases
 
 
-def gaps(cases):
-    details = [
-        ("gap.full_classic_frame",
-         "A complete public stock Resizable - Classic game frame containing viewport, minimap, chat and both tab rows.",
-         "Current native group161 anchors and an exact 241x335 Classic side-panel crop are present, with minimap/chat crops. "
-         "The 2015 resizable example, RuneLite screenshot and 2026 recording use Modern layout; Steam images omit the HUD. "
-         "None is relabeled as a Classic full-frame.",
-         "One identifiable public stock Classic full-frame at native scale, or a bounded additional original "
-         "offline UI capture with its actual script/widget state. This is not a blanket source-account requirement."),
-        ("gap.tutorial_matched_states",
-         "Current-client matched per-stage visible HUD/dialogue/instruction/locked-tab states for the explicitly listed cases.",
-         "All 71 semantic cases are indexed with current transcript/recovery rules, 11 lesson source sets, original "
-         "icons/models/scenery and released official tutorial examples. These examples do not show each declared state. "
-         "Official-only yellow outlines and the former Tutorial Island quest title are explicitly not adopted.",
-         "A public complete current stock tutorial recording with readable UI/state milestones, or bounded additional "
-         "original widget-state captures. Existing pictures remain useful; no stage skips or invented captures."),
-        ("gap.arrival_state",
-         "Experience-branch arrival state/camera and exact post-departure inventory/equipment/bank presentation.",
-         "Original calibrated Lumbridge scenery and public arrival-branch rules exist. The existing rules explicitly "
-         "mark container normalization provisional; a scenery fixture does not observe either player's arrival camera.",
-         "Source evidence for brand-new/returning versus experienced normal-account departure/arrival; a public "
-         "recording or source state trace is sufficient if identifiable. Do not normalize both branches silently."),
-        ("gap.required_audio_bindings",
-         "Bow, goblin/rat, eating, bronze-smelting trigger identities plus exact tutorial/Cook's Assistant jingle selection/precedence.",
-         "258 original playable files, source animation/ambient event fields, named independent candidates and a real "
-         "official audio-transition recording are bound. Relevant server-trigger bindings are absent from current "
-         "sequence definitions; a candidate ID or unrelated player grunt is not proof.",
-         "Public recordings/source documentation resolving these particular IDs/variants and scheduling. Calibrate "
-         "gain, frame entry, music boundaries and fades separately; do not redo conversion or invent generic sounds."),
+def gaps(factoring):
+    return [
+        {"id": row["id"], "status": row["status"], "required_case_ids": row["case_ids"],
+         "source_family_ids": row["family_ids"], "literal_basis": row["literal_basis"],
+         "exact_deficit": row["missing"], "useful_evidence_already_in_pack": row["available"],
+         "bounded_resolution": row["not_required"], "account_login_required_by_pack": False}
+        for row in factoring["source_review_requirements"] if row["status"] != "available"
     ]
-    result = []
-    for identifier, missing, available, resolution in details:
-        result.append({
-            "id": identifier, "status": "unresolved_source_evidence",
-            "required_case_ids": [case["id"] for case in cases if identifier in case["source_gap_refs"]],
-            "exact_deficit": missing, "useful_evidence_already_in_pack": available,
-            "bounded_resolution": resolution, "account_login_required_by_pack": False,
-        })
-    return result
 
 
 def search_log():
     path = OUT / "search-log.json"
+    previous = json.loads(path.read_text()) if path.exists() else None
     records = []
     for cache in sorted((ROOT / ".local/reference-pack/api").glob("*.json")):
         record = json.loads(cache.read_text())
@@ -398,8 +359,11 @@ def search_log():
             "continuation": response.get("continue"),
             "scope": "Bounded discovery; no assumption that an unconsumed continuation was exhausted.",
         })
-    if not records and path.exists():
-        return json.loads(path.read_text())
+    if previous is not None:
+        merged = {(row["api_url"], row["retrieved_at"]): row for row in previous["mediawiki_queries"]}
+        merged.update({(row["api_url"], row["retrieved_at"]): row for row in records})
+        previous["mediawiki_queries"] = sorted(merged.values(), key=lambda row: (row["retrieved_at"], row["api_url"]))
+        return previous
     return {
         "schema_version": 1, "mediawiki_queries": records,
         "distinct_alternatives": [
@@ -438,6 +402,9 @@ def gallery(manifest):
     all_media = {entry["id"]: entry for entry in manifest["original_inputs"] + manifest["public_inputs"]
                  + manifest["proposal_inputs"] + manifest["recording_frames"]}
     audio = {entry["asset_id"]: entry for entry in manifest["audio"]["assets"]}
+    factoring = manifest["evidence_factorization"]
+    text_records = {record["id"]: record for record in
+                    json.loads((ROOT / manifest["dynamic_text_oracles"]["path"]).read_text())["records"]}
 
     def link(path):
         return html.escape(os.path.relpath(ROOT / path, directory).replace(os.sep, "/"), quote=True)
@@ -465,8 +432,42 @@ def gallery(manifest):
             + ''.join(image_markup(entry) for entry in previews)
             + f'<p>Profile: <code>{case["comparison_profile"]}</code>. '
               f'Gaps: {html.escape(", ".join(case["source_gap_refs"]) or "none for the declared reference scope")}.</p>'
+            + '<p>Shared families: ' + ', '.join(
+                f'<a href="#family-{identifier}">{html.escape(identifier)}</a>'
+                for identifier in case["reference_family_ids"]) + '</p>'
+            + ('<p><strong>Data-factored state, not a separate captured session.</strong> '
+               f'HUD signature: <code>{case["hud_signature_id"]}</code>. '
+               f'{len(case["source_text_record_ids"])} pinned source text records.</p>'
+               + '<details><summary>Source text examples (not generated screenshots)</summary>'
+               + ''.join('<p>' + html.escape(
+                   text_records[identifier]["desktop_text"] or "Explicit unrecorded source line; do not invent it."
+               ) + '</p>' for identifier in case["source_text_record_ids"][:3])
+               + '<a href="../dynamic-text-oracles.json">All exact records, source lines and native-font metrics</a></details>'
+               if case["family"] == "tutorial" else '')
             + '<details><summary>Every input and hash</summary><ul>' + ''.join(refs) + '</ul></details></article>'
         )
+    family_cards = []
+    for family in factoring["families"]:
+        previews = [all_media[identifier] for identifier in family["representative_input_ids"]
+                    if identifier in all_media][:2]
+        family_cards.append(
+            f'<article data-reference-family-id="{family["id"]}"><h3 id="family-{family["id"]}">'
+            f'{html.escape(family["title"])}</h3><p class="status">{family["agreement_input_status"]}</p>'
+            + ''.join(image_markup(entry) for entry in previews)
+            + '<p><strong>Required distinct states:</strong> '
+            + html.escape(', '.join(family["required_visual_variants"])) + '</p>'
+            + f'<p>{len(family["case_ids"])} case bindings; '
+              f'{len(family["pixel_or_audio_input_ids"])} actual input references. '
+              'Full-panel source checks plus independent dynamic text/value checks; no masked panels.</p></article>'
+        )
+    signature_rows = ''.join(
+        f'<tr data-hud-signature-id="{signature["id"]}"><td><code>{signature["id"]}</code></td>'
+        f'<td>{html.escape(", ".join(signature["expected_introduced_tabs"]) or "(no introduced lesson tabs)")}</td>'
+        f'<td>{len(signature["state_ids"])}</td><td>Unmentioned controls remain unknown, never presumed hidden.</td></tr>'
+        for signature in factoring["hud_signatures"])
+    later_rows = ''.join(
+        f'<li><strong>{entry["id"]}</strong>: {html.escape(entry["scope"])} '
+        f'{html.escape(entry["proof_needed"])}</li>' for entry in factoring["acceptance_obligations"])
     inventory = []
     for entry in manifest["public_inputs"]:
         inventory.append(
@@ -500,17 +501,30 @@ img,video{max-width:100%;height:auto;max-height:260px;object-fit:contain;image-r
 .status{font-weight:700;color:#7b3700}input,select{max-width:100%;padding:8px;font:inherit}
 table{width:100%;table-layout:fixed;border-collapse:collapse}td{border-bottom:1px solid #aaa;padding:8px}
 audio{max-width:100%;width:260px}[hidden]{display:none!important}summary{cursor:pointer}
-</style></head><body><header><h1>M1 source-reference review, v1</h1>
-<p class="banner">AWAITING OWNER APPROVAL. Source-evidence gaps remain. This gallery displays original
+</style></head><body><header><h1>M1 source-reference review, v1.1</h1>
+<p class="banner">AWAITING OWNER APPROVAL. Readiness follows the named source-family/calibration inputs,
+not a separate authenticated screenshot for every micro-transition. This gallery displays original
 reference media and labeled composition proposals. It is NOT the ClubScape client, a renderer demonstration,
 a passed player journey, or visual/audio acceptance. No owner approval has been granted.</p>
-<nav><a href="#cases">Case index</a> | <a href="#sources">Public originals</a> | <a href="#audio">258 original audio files</a> |
+<nav><a href="#families">29 visual families</a> | <a href="#signatures">Progressive HUD signatures</a> |
+<a href="#cases">All126 cases /71 tutorial states</a> | <a href="#sources">Public originals</a> | <a href="#audio">258 original audio files</a> |
 <a href="../manifest.json">Manifest</a> | <a href="../native-metrics.json">Exact component/font metrics</a> |
 <a href="../comparison-policy.json">Pre-candidate numeric policy</a> | <a href="../search-log.json">Acquisition/search evidence</a> |
-<a href="contact-sheets.json">Contact-sheet index</a> | <a href="contact-01.png">First contact sheet</a></nav>
+<a href="../evidence-families.json">Literal requirement audit</a> | <a href="../dynamic-text-oracles.json">Pinned text/value oracles</a> |
+<a href="contact-sheets.json">Contact-sheet index</a></nav>
 <p>Primary product proposal: 1920x1080 / DPR1 / UI scale1. Proposed range: 1024x768 through 2560x1440.
 Gallery resizing is not game resizing/performance evidence. Owner-run M-series Mac Chrome/Edge results are unrun.</p>
-<h2>Exact remaining evidence deficits</h2><ul>""" + gap_html + """</ul></header><main>
+<h2>Minimal missing reference inputs</h2><ul>""" + gap_html + """</ul>
+<details><summary>Later candidate/source-fidelity/owner acceptance obligations - not invented pack prerequisites</summary>
+<ul>""" + later_rows + """</ul></details></header><main>
+<h2 id="families">Required source families and distinct visual states</h2>
+<p>Evidence is factored, not gameplay. All71 semantic states and every listed variant remain required.
+Reuse a source-backed frame; check changed strings, values, highlights, filters and item fields with the pinned
+source transcripts, rules and native glyphs. Every unchanged panel pixel is checked; nothing is masked.</p>
+<section class="grid">""" + ''.join(family_cards) + """</section>
+<h2 id="signatures">Progressive HUD introduction signatures</h2><p>Named introductions are source/contract-backed.
+This is not a claim of observed numeric source progress, nor a licence to hide optional or unimplemented controls.</p>
+<table><thead><tr><th>Signature</th><th>Introduced tabs</th><th>States</th><th>Limit</th></tr></thead><tbody>""" + signature_rows + """</tbody></table>
 <h2 id="cases">Required case index</h2><label>Filter cases <input id="search" type="search" placeholder="case ID or subject"></label>
 <p id="count"></p><section class="grid" id="case-grid">""" + ''.join(cards) + """</section>
 <h2 id="sources">Every retrieved public original</h2><p>Native originals are linked; the scaled previews are navigation
@@ -613,6 +627,14 @@ def main():
         page["images"] = sorted({title.removeprefix("File:") for title in page["images"]
                                  if "[" not in title and "]" not in title})
     write_json(OUT / "pages.json", pages)
+    factoring, text_oracles = make_factoring(cases, originals, public, pages)
+    write_json(OUT / "evidence-families.json", factoring)
+    write_json(OUT / "dynamic-text-oracles.json", text_oracles)
+    source_gaps = gaps(factoring)
+    ready = review_ready(factoring["source_review_requirements"])
+    for case in cases:
+        if case["family"] not in ("audio", "model", "scene"):
+            case["dynamic_comparison_profile"] = "dynamic_state_text"
     policy_record = {
         "schema_version": 1, "established_before_candidate_evaluation": True,
         "candidate_evaluations_performed": 0, "owner_approved": False,
@@ -621,17 +643,24 @@ def main():
                                    "Source reference approval, candidate fidelity, behavior, performance and "
                                    "RuneLite compatibility are separate gates.",
         "mask_policy": "No whole-panel/creature/scenery masks; no post-hoc tolerances. Store full images and "
-                       "explicit source-derived edge bands. A missing state is a gap, never a masked success.",
+                       "explicit source-derived edge bands. Data-only states use source-backed glyph/value "
+                       "checks with full panel pixel accounting, never a masked success.",
+        "factorization": factoring["comparison_factorization"],
     }
     write_json(OUT / "comparison-policy.json", policy_record)
     write_json(OUT / "search-log.json", search_log())
     manifest = {
-        "schema_version": 1, "pack_id": "m1-public-reference-pack-v1", "pack_version": "1.0.0",
+        "schema_version": 1, "pack_id": "m1-public-reference-pack-v1", "pack_version": "1.1.0",
         "assembled_on": "2026-09-14",
         "status": "awaiting_owner_approval",
-        "ready_for_owner_approval": False,
-        "readiness_reason": "All required case IDs are indexed with real useful inputs, but the explicitly "
-                            "listed mandatory source evidence deficits prevent claiming a complete source pack.",
+        "ready_for_owner_review": ready,
+        "ready_for_owner_approval": ready,
+        "readiness_reason": "Readiness is computed from the literal source-family/calibration requirements, not "
+                            "71 separately matched source screenshots, branch container dumps or unrun candidate/Mac tests.",
+        "evidence_factorization": factoring,
+        "factorization_document": digest(OUT / "evidence-families.json"),
+        "dynamic_text_oracles": digest(OUT / "dynamic-text-oracles.json"),
+        "audio_binding_audit_sources": digest(OUT / "audio-binding-audit-sources.json"),
         "source_selection": json.loads((ROOT / "research/current-source/selection.json").read_text())["selection_id"],
         "source_build": 240, "source_cache": 2695,
         "source_runtime": "SHA-pinned original injected-client-1.12.38",
@@ -715,7 +744,7 @@ def main():
         },
         "comparison_policy": digest(OUT / "comparison-policy.json"),
         "component_reconciliation": digest(OUT / "native-metrics.json"),
-        "cases": cases, "source_gaps": gaps(cases),
+        "cases": cases, "source_gaps": source_gaps,
         "product_decisions": [
             "Bounded owner reference-pack approval remains ungranted; source gaps are not a waiver request.",
             "Review the seven explicit web-only/title composition proposals and logo substitution direction.",
@@ -735,7 +764,13 @@ def main():
             "verified_source_silences_without_file": len(audio["source_silences"]),
             "published_original_asset_files": len(inventory),
             "source_gap_cases": sum(bool(case["source_gap_refs"]) for case in cases),
-            "source_gap_categories": 4,
+            "source_gap_categories": len(source_gaps),
+            "visual_families": factoring["counts"]["families"],
+            "distinct_visual_variants": factoring["counts"]["distinct_visual_variants"],
+            "instructor_phases": factoring["counts"]["phases"],
+            "progressive_hud_signatures": factoring["counts"]["hud_signatures"],
+            "source_text_records": len(text_oracles["records"]),
+            "separate_tutorial_microstate_source_captures_required": 0,
         },
         "notices": ["assets/source/osrs/NOTICE.txt", "assets/source/osrs/audio-runtime/NOTICE.txt",
                     "assets/reference/wiki/NOTICE.txt", "research/reference-pack/README.md"],
@@ -762,7 +797,7 @@ def main():
         "schema_version": 1, "manifest": digest(OUT / "manifest.json"),
         "meaning": "Immutable review identity, NOT an approval record; changing inputs requires regenerating/reviewing the pack.",
     })
-    print(json.dumps({"status": manifest["status"], "ready_for_owner_approval": False, **manifest["counts"]}))
+    print(json.dumps({"status": manifest["status"], "ready_for_owner_review": ready, **manifest["counts"]}))
 
 
 if __name__ == "__main__":

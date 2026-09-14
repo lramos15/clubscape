@@ -1,11 +1,12 @@
-# M1 public reference pack, v1
+# M1 public reference pack, v1.1
 
-**Status: `awaiting_owner_approval`; not yet a complete approval-ready source
-pack.** The useful evidence and all **126 required case IDs**, including all
-**71 tutorial states**, are assembled. Four exact source-evidence deficits
-remain, affecting 75 case entries; they are not hidden by the case-count check.
-No source account is required as a blanket condition, and no account was
-created or logged into.
+**Status: `awaiting_owner_approval`; three named source input/calibration
+requirements remain.** All **126 case IDs / 71 tutorial states** are retained
+and factored into **29 visual families, 180 distinct required visual
+variants, 11 instructor phases and 11 progressive HUD signatures**. The
+previous demand for 69 further micro-state screenshots was an invented
+prerequisite, not literal Section 30.2, and has been removed. No source
+account is required as a blanket condition; none was created or logged into.
 The later owner direction in `milestones/m1-owner-followups.json` supersedes
 the older source-capture handoff's account/terms request. That older file is
 retained only as hash-bound historical context, not imposed as this pack's gate.
@@ -16,6 +17,44 @@ a renderer demonstration, or an accepted baseline**. It works from a checkout
 with relative local links. The case filter, original-file links, public media
 catalogue, contact sheets, source recording and 258 audio controls are for
 review only. Scaled previews are never comparison inputs.
+
+## Literal requirements and evidence factoring
+
+[`v1/evidence-families.json`](v1/evidence-families.json) contains the literal
+30.2 audit, every required family/variant, all 71 state bindings, instructor
+phase mappings, progressive HUD signatures, remaining input requirements
+and separate candidate/owner acceptance obligations.
+
+Section 30.2 requires concrete source presentation inputs; it does **not**
+require a separately matched authenticated screenshot for every gameplay
+micro-transition. Reused frames can be parameterized by **independently
+pinned source** text, numbers, item contents, selected controls and status.
+This does not remove a state, merge genuinely different layouts or allow
+the implementation's output to define its own expected result.
+
+[`v1/dynamic-text-oracles.json`](v1/dynamic-text-oracles.json) retains **698
+source display records**, their exact source blocks/lines/revisions, desktop
+alternatives, colour/strikethrough runs and native-font advances. Two
+explicitly unrecorded source lines remain unrecorded, not fabricated. The
+Tutorial, Cook's Assistant dialogue/journal and Death transcripts are
+hash-checked against their existing pins. Each tutorial state has a narrow
+source-section selector; an instructor corpus is not permission to display
+any of that instructor's lines at every state.
+
+The HUD signatures describe **source/contract-backed introductions**, not
+observed numeric varps or a complete inferred visibility bitmap. Unmentioned
+optional controls are **unknown, not automatically hidden**. NPC/player
+dialogue, instruction/item messages, bank modes, filtered/unfiltered
+spellbooks, active/unavailable prayers, cooking success/burn and
+missing/carried/delivered quest ingredients remain distinct required modes.
+
+The existing original Lumbridge scene supplies a recorded comparison camera.
+It is not relabeled as a live arrival camera. Legitimate experience-branch
+arrival state, the explicitly provisional departure-container policy and
+per-transition behavior remain source-fidelity/behavior checks with the
+implemented candidate, not demands for another reference-layout screenshot.
+Likewise, actual game resizing, audible playback, scheduling and final Mac
+Chrome/Edge performance are later acceptance gates; they remain unrun.
 
 ## Frozen evidence
 
@@ -62,7 +101,8 @@ of those images or turn them into build-240 authenticated captures.
 The official October 2025 update supplies actual experience-choice, tutorial
 journal, controls-guide, departure and poll images. The current transcript
 maps all 71 stages. Those sources do **not** demonstrate every current
-stage's complete HUD state. Their former **Tutorial Island** quest title is
+stage's complete HUD state, nor is that demanded as 71 separate inputs.
+Their former **Tutorial Island** quest title is
 not substituted for **Learning the Ropes**. Soft scene outlines documented as
 **Official Client only** are not silently added to the selected injected Java
 runtime's visuals.
@@ -94,6 +134,22 @@ allowance and exact camera/geometry/frame inputs. JPEG/H.264/GIF allowances
 are separate and cannot justify changed controls, fonts, missing scenery or
 unidentified camera settings. No whole panels, creatures or scenery are masked.
 
+There are two complementary comparison lanes: reproduce a representative
+source state and compare its complete unchanged panel; then exercise every
+required dynamic state using the same frozen frame/components and independent
+source text/value/visibility oracles. A dynamic rectangle includes its
+**source background**, not a blank exclusion. Pixel partitions must cover
+100% of the unchanged panel with zero gaps/overlaps and an identified source
+verifier for every pixel. Missing source-resolved font/background/geometry
+must be supplied, not guessed or chosen to fit a candidate.
+
+Dynamic strings, values, glyph advances/masks, source font choice, colour
+runs and strikethrough flags permit **zero mismatches**. Native static font
+bindings are checked where present (for example NPC body widget231:6 uses
+font497). Metrics for four available fonts do not make those fonts
+interchangeable; script-resolved assignments require actual native metadata
+before pixel acceptance.
+
 Primary proposal: **1920x1080 logical pixels, DPR1, UI scale1, 100% browser
 zoom, stock Resizable - Classic**. Proposed supported range: both dimensions
 between **1024x768 and 2560x1440**, with explicit 1024x768, 1280x800,
@@ -114,20 +170,24 @@ Equipment attachment/fitting, all functional slots, branding and web-only
 wording receive separate bounded owner review. They do not relax ordinary
 tree, goblin, terrain, building or source-interface requirements.
 
-## Exact remaining source deficits
+## Minimal remaining source inputs
 
-| Gap | Evidence still required |
+| Input | Evidence still required |
 | --- | --- |
-| `gap.full_classic_frame` | One identifiable complete stock **Resizable - Classic** source frame, not the supplied Modern/fixed/scaled examples. Actual native Classic anchors and component crops already exist. |
-| `gap.tutorial_matched_states` | Matched current visible instruction/dialogue/HUD-lock states for the 69 explicitly listed tutorial cases not directly captured by the two current component examples. The full 71-state source rules and useful lesson/media inputs are already mapped. |
-| `gap.arrival_state` | Branch-specific arrival camera/state and departure inventory/equipment/bank evidence. Original Lumbridge geometry and public branch rules do not resolve the existing provisional container policy. |
-| `gap.required_audio_bindings` | Actual bow, goblin/rat, eating and bronze-smelting sound bindings; tutorial/Cook's Assistant jingle selection and precedence. Gain, offsets, region transitions and fades remain explicitly uncalibrated. |
+| `input.classic_frame_calibration` | Complete controlled stock **Resizable - Classic** frame and native dialogue/message panel font/geometry/background calibration, retaining NPC/player/item-message variants. `CHAT_RIGHT`217 is named in the pinned symbols but its widget payload is absent from the30 published groups. The separate native-HUD/panel commit is awaiting parent integration/relay; no paths or capture metadata are invented. |
+| `input.required_effect_bindings` | Source cue IDs/event boundaries for ordinary shortbow, goblin, tutorial rat, eating and bronze smelting. Existing PCM/sequence/ambient evidence is retained; smelting2725 is only a candidate. Candidate playback cannot establish an unknown source identity. |
+| `input.quest_jingle_binding` | Exact Learning the Ropes/Cook's Assistant cue selection and quest/level-up precedence. The three already-pinned wiki descriptions were rechecked:154 **usually** accompanies Beginner/Easy quests,152 Master,153 Intermediate/Expert. This narrows the candidate, not the per-quest binding. |
 
-The manifest enumerates the exact affected case IDs and useful evidence for
-each gap. A public recording, archived stock capture or bounded additional
-original offline UI-state capture can resolve appropriate deficits; a live
-account is **not** imposed on every case. No uncertain source input is
-silently replaced with a design choice. The
+These are **three input requirements / five representative case entries**,
+not 75 individually uncaptured states. Known native frame-event sound
+bindings do not require another source session; they retain their recorded
+cycle offsets. Browser/device gain, latency, actual event scheduling and
+live journey fidelity are separate checks against those inputs.
+
+The manifest computes `ready_for_owner_review` from qualifying source-input
+satisfaction, instead of hardcoding false forever. Readiness would not grant
+approval. No uncertain source input is silently replaced with a design choice.
+The
 [`search log`](v1/search-log.json) records bounded wiki searches, revision and
 file-history checks, official material, rejected HDOS archive footage,
 HUD-free Steam images, unsuitable upstream screenshots and rejected

@@ -9,6 +9,7 @@ import { fileURLToPath, pathToFileURL } from 'node:url';
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '../..');
 const argv = process.argv.slice(2);
+const galleryOnly = argv.includes('--gallery-only');
 const value = (key) => {
   const index = argv.indexOf(key);
   assert(index >= 0 && argv[index + 1], `${key} requires an existing local path`);
@@ -59,7 +60,7 @@ try {
   page.on('pageerror', (error) => errors.push(String(error)));
   await page.goto(`${origin}/research/reference-pack/v1/public-media.json`);
   const recordings = [];
-  for (const asset of media.filter((item) => item.decoded.format === 'MP4')) {
+  for (const asset of (galleryOnly ? [] : media.filter((item) => item.decoded.format === 'MP4'))) {
     const bytes = await readFile(resolve(root, asset.path));
     assert.equal(hash(bytes), asset.sha256);
     const metadata = await page.evaluate(async (url) => {
@@ -144,11 +145,15 @@ try {
     sandbox_enabled: true, headless: true, dpr: 1, recordings,
     mac_chrome_or_edge_run: false, clubscape_renderer_run: false,
     owner_reference_pack_approved: false, final_presentation_accepted: false,
+    source_media_decoded_this_run: !galleryOnly,
   };
-  if (argv.includes('--gallery')) {
+  if (argv.includes('--gallery') || galleryOnly) {
     const manifest = JSON.parse(await readFile(resolve(root, 'research/reference-pack/v1/manifest.json')));
+    report.manifest_sha256 = hash(await readFile(resolve(root, 'research/reference-pack/v1/manifest.json')));
     const expectedCaseIds = manifest.cases.map((entry) => entry.id).sort();
     const expectedTutorialIds = expectedCaseIds.filter((id) => id.startsWith('case.tutorial.'));
+    const expectedFamilyIds = manifest.evidence_factorization.families.map((entry) => entry.id).sort();
+    const expectedSignatureIds = manifest.evidence_factorization.hud_signatures.map((entry) => entry.id).sort();
     report.gallery = [];
     for (const [width, height] of [[1024, 768], [1280, 800], [1920, 1080], [2560, 1440]]) {
       await page.setViewportSize({ width, height });
@@ -158,11 +163,17 @@ try {
         broken_images: [...document.images].filter((image) => !image.naturalWidth).map((image) => image.src),
         horizontal_overflow: document.documentElement.scrollWidth > innerWidth,
         case_ids: [...document.querySelectorAll('[data-case-id]')].map((entry) => entry.dataset.caseId).sort(),
+        reference_family_ids: [...document.querySelectorAll('[data-reference-family-id]')]
+          .map((entry) => entry.dataset.referenceFamilyId).sort(),
+        hud_signature_ids: [...document.querySelectorAll('[data-hud-signature-id]')]
+          .map((entry) => entry.dataset.hudSignatureId).sort(),
         autoplay_media: [...document.querySelectorAll('audio,video')].filter((entry) => entry.autoplay).length,
       }));
       assert.deepEqual(result.broken_images, []);
       assert.equal(result.horizontal_overflow, false);
       assert.deepEqual(result.case_ids, expectedCaseIds);
+      assert.deepEqual(result.reference_family_ids, expectedFamilyIds);
+      assert.deepEqual(result.hud_signature_ids, expectedSignatureIds);
       assert.equal(result.autoplay_media, 0);
       await page.locator('#search').fill('case.tutorial.');
       const visibleTutorial = await page.evaluate(() =>
@@ -177,11 +188,13 @@ try {
   }
   assert.deepEqual(errors, []);
   assert.deepEqual(requests, []);
-  await writeFile(resolve(root, 'research/reference-pack/v1/browser-media.json'),
+  const reportPath = galleryOnly ? 'research/reference-pack/v1/gallery-validation.json'
+    : 'research/reference-pack/v1/browser-media.json';
+  await writeFile(resolve(root, reportPath),
     JSON.stringify(report, null, 2) + '\n');
   console.log(JSON.stringify({ browser: report.browser, decoded_recordings: recordings.length,
     source_frames: recordings.reduce((sum, item) => sum + item.frames.length, 0),
-    gallery_viewports: report.gallery?.length ?? 0, source_only: true }));
+    gallery_viewports: report.gallery?.length ?? 0, source_only: true, report: reportPath }));
 } finally {
   await browser?.close();
   await new Promise((done) => server.close(done));

@@ -18,6 +18,11 @@ from catalogue import EXTRA_CASES, NUMERIC_PROFILES, dispositions, wiki
 from components import ROOT, OUT, digest, load_gzip, sprite, text_width, widget_label
 from fetch import image_facts, write_json
 from media import mp4_facts
+from factoring import (
+    ACCEPTANCE_OBLIGATIONS, COMPARISON_FACTORIZATION, FAMILY_DEFINITIONS,
+    assess_source_requirements, review_ready, stage_visual_map, text_selectors,
+)
+from text_oracles import make_text_oracles
 
 
 class EvidenceError(ValueError):
@@ -53,9 +58,12 @@ def unique(records, key, label):
 
 
 def structural(manifest):
-    require(manifest["schema_version"] == 1 and manifest["pack_version"] == "1.0.0", "Unsupported pack schema/version")
+    require(manifest["schema_version"] == 1 and manifest["pack_version"] == "1.1.0", "Unsupported pack schema/version")
     require(manifest["status"] == "awaiting_owner_approval", "Pack must remain awaiting_owner_approval")
-    require(manifest["ready_for_owner_approval"] is False, "Known mandatory source deficits cannot be self-cleared")
+    factoring = manifest["evidence_factorization"]
+    ready = review_ready(factoring["source_review_requirements"])
+    require(manifest["ready_for_owner_review"] == ready and manifest["ready_for_owner_approval"] == ready,
+            "Readiness must follow actual source-input satisfaction, not a fixed flag or candidate results")
     require(not any(manifest["approval"].values()), "Evidence preparation cannot grant product/owner acceptance")
     require(manifest["source_build"] == 240 and manifest["source_cache"] == 2695, "Wrong current source selection")
     require(manifest["primary_target"]["logical_viewport"] == [1920, 1080], "Wrong primary target")
@@ -107,9 +115,10 @@ def structural(manifest):
             require(case["declared_controls"] == state.get("ui_unlock_refs", []), "Changed tutorial unlock declaration")
             require(case["expected_instruction"] == state["instruction"], "Changed source semantic stage")
             require(case["source_numeric_progress"] is None, "Invented numeric source tutorial progress")
-            suffix = case["id"].removeprefix("case.tutorial.")
-            require(case["exact_stage_screenshot_available"] == (suffix in ("experience", "departure_offer")),
-                    "Lesson/component image incorrectly promoted to exact stage capture")
+            require("exact_stage_screenshot_available" not in case, "Per-microstate screenshot predicate reintroduced")
+            require(case["source_pixel_evidence"] ==
+                    "shared_actual_family_inputs; no separate source-session capture claimed",
+                    "Shared evidence relabeled as a captured source session")
     by_case = {case["id"]: case for case in cases}
     for suffix, _, kind, names, _, _ in EXTRA_CASES:
         if kind == "public":
@@ -155,9 +164,11 @@ def structural(manifest):
     require(manifest["audio"]["source_silences"][0]["playable_output"] is None, "Silence falsely assigned playable file")
     require(not manifest["audio"]["conversion_repeated"]
             and not manifest["audio"]["live_source_mixer_calibrated"], "False audio conversion/calibration claim")
+    validate_factoring(manifest, factoring)
+    requirements = {row["id"]: row for row in factoring["source_review_requirements"]}
     gaps = {entry["id"]: entry for entry in manifest["source_gaps"]}
-    require(set(gaps) == {"gap.full_classic_frame", "gap.tutorial_matched_states",
-                         "gap.arrival_state", "gap.required_audio_bindings"}, "Known source deficits disappeared")
+    require(set(gaps) == {key for key, row in requirements.items() if row["status"] != "available"},
+            "Source gaps must be exactly the unsatisfied literal input requirements")
     for identifier, gap in gaps.items():
         affected = {case["id"] for case in cases if identifier in case["source_gap_refs"]}
         require(affected and affected == set(gap["required_case_ids"]), f"Incomplete exact gap mapping: {identifier}")
@@ -181,6 +192,113 @@ def structural(manifest):
     require({entry["path"]: entry["sha256"] for entry in inventory} ==
             {entry["path"]: entry["sha256"] for entry in actual_inventory}, "Original source inventory altered")
     return metrics
+
+
+def validate_factoring(manifest, factoring):
+    definitions = {row[0]: row for row in FAMILY_DEFINITIONS}
+    families = {row["id"]: row for row in factoring["families"]}
+    require(len(families) == len(factoring["families"]) and set(families) == set(definitions),
+            "Missing/duplicate required visual family")
+    input_ids = {row["id"] for row in manifest["original_inputs"] + manifest["public_inputs"]
+                 + manifest["proposal_inputs"] + manifest["recording_frames"]}
+    input_ids |= {row["asset_id"] for row in manifest["audio"]["assets"]}
+    case_map = {case["id"]: case for case in manifest["cases"]}
+    all_variants = set()
+    for identifier, definition in definitions.items():
+        family = families[identifier]
+        require(family["required_visual_variants"] == definition[2].split(),
+                f"Distinct visual state disappeared/changed: {identifier}")
+        require(family["pixel_or_audio_input_ids"] and set(family["pixel_or_audio_input_ids"]) <= input_ids,
+                f"Missing source inputs for family: {identifier}")
+        require(family["representative_input_ids"] and set(family["representative_input_ids"]) <=
+                set(family["pixel_or_audio_input_ids"]), "Family representative is not an actual input")
+        require(family["required_panel_pixel_coverage"] == 1.0
+                and family["candidate_panel_pixel_coverage_measured"] is None,
+                "Whole-panel checking was relaxed or an unrun candidate result asserted")
+        require(family["comparison_lanes"] ==
+                ["whole_representative_source_state", "full_coverage_dynamic_state_projection"],
+                "Dynamic factoring removed the whole-source-state comparison")
+        expected_cases = {case["id"] for case in manifest["cases"] if identifier in case["reference_family_ids"]}
+        require(set(family["case_ids"]) == expected_cases, "Incorrect family-to-case map")
+        all_variants.update(identifier + "." + variant for variant in family["required_visual_variants"])
+    require(factoring["counts"]["families"] == len(families)
+            and factoring["counts"]["distinct_visual_variants"] == len(all_variants), "Incorrect family/variant count")
+    tutorial = json.loads((ROOT / "research/journey-rules/tutorial.json").read_text())
+    expected_states = {state["id"] for state in tutorial["states"]}
+    bindings = {row["state_id"]: row for row in factoring["state_bindings"]}
+    require(len(bindings) == len(factoring["state_bindings"]) == 71 and set(bindings) == expected_states,
+            "A factored tutorial state disappeared or was duplicated")
+    require(factoring["counts"]["tutorial_states"] == 71, "Factoring reduced the tutorial")
+    phase_members = [state for phase in factoring["phases"] for state in phase["state_ids"]]
+    require(len(phase_members) == 71 and set(phase_members) == expected_states
+            and len(factoring["phases"]) == 11, "Instructor phase/state coverage changed")
+    phases = {phase["id"]: phase for phase in factoring["phases"]}
+    signatures = {row["id"]: row for row in factoring["hud_signatures"]}
+    signature_members = [state for row in signatures.values() for state in row["state_ids"]]
+    require(len(signature_members) == 71 and set(signature_members) == expected_states
+            and len(signatures) == len(factoring["hud_signatures"]), "Missing/duplicate progressive HUD signature state")
+    visual_map = stage_visual_map()
+    selectors = text_selectors()
+    text = json.loads(verify_file(manifest["dynamic_text_oracles"]).read_text())
+    text_ids = {record["id"] for record in text["records"]}
+    introduced = set()
+    permanent = {"ui.settings", "ui.inventory", "ui.skills", "ui.quests", "ui.equipment",
+                 "ui.combat", "ui.account", "ui.logout", "ui.prayer", "ui.magic"}
+    for state in tutorial["states"]:
+        suffix = state["id"].removeprefix("stage.tutorial.")
+        binding = bindings[state["id"]]
+        case = case_map["case.tutorial." + suffix]
+        require(binding["case_id"] == case["id"], "Factored state points at another case")
+        require(not binding["separate_source_screenshot_required"] and binding["distinct_layout_still_required"],
+                "Invented screenshot gate or omitted distinct visual state")
+        require(set(visual_map[suffix]) <= set(binding["visual_variant_ids"]) <= all_variants,
+                "A genuinely distinct state variant was collapsed")
+        require(binding["visual_variant_ids"] == case["distinct_visual_variant_ids"]
+                and set(binding["family_ids"]) == set(case["reference_family_ids"]), "Case/family factoring inconsistent")
+        require(state["id"] in phases[binding["phase_id"]]["state_ids"], "Wrong instructor phase")
+        selector = selectors[suffix]
+        chapter = selector["chapter_override"] or phases[binding["phase_id"]]["source_section"]
+        require(binding["source_text_selector"] == {"chapter": chapter, "sections": selector["sections"]},
+                "Incorrect source text section assigned to state")
+        selected_records = {
+            record["id"] for record in text["records"]
+            if record["source_page"] == "Transcript:Learning the Ropes" and record["section_path"]
+            and record["section_path"][0] == chapter
+            and any((len(record["section_path"]) == 1 if section is None else section in record["section_path"][1:])
+                    for section in selector["sections"])
+        }
+        require(selected_records and set(binding["source_text_record_ids"]) == selected_records
+                and set(case["source_text_record_ids"]) == selected_records, "Dynamic text lost its exact source selector")
+        introduced.update(set(state.get("ui_unlock_refs", [])) & permanent)
+        signature = signatures[binding["hud_signature_id"]]
+        require(signature["expected_introduced_tabs"] == sorted(introduced)
+                and state["id"] in signature["state_ids"], "Progressive HUD unlock family disappeared/changed")
+        require(signature["unmentioned_controls"].startswith("unknown"), "Unmentioned controls guessed hidden")
+        require(signature["display_states_required"] == ["source_locked", "source_highlighted", "unlocked"],
+                "Locked/highlighted/unlocked distinction omitted")
+        require(binding["declared_controls"] == state.get("ui_unlock_refs", []), "Source control introduction changed")
+        require(set(binding["source_text_record_ids"]) <= text_ids, "Unknown text oracle")
+    require(factoring["counts"]["hud_signatures"] == len(signatures), "Wrong progressive signature count")
+    require(factoring["comparison_factorization"] == COMPARISON_FACTORIZATION,
+            "Factoring relaxed numeric pixel/value/whole-panel requirements")
+    require(factoring["acceptance_obligations"] == ACCEPTANCE_OBLIGATIONS,
+            "Final live journey/source-fidelity/platform/owner gates disappeared")
+    require(factoring["source_review_requirements"] ==
+            assess_source_requirements(manifest["original_inputs"], manifest["public_inputs"]),
+            "Source input readiness was changed without qualifying source evidence")
+    values = factoring["dynamic_value_oracles"]
+    require(values["source_facts"] == {
+        "skill_count": 24, "inventory_slots": 28, "tutorial_bank_first_open_coins": 25,
+        "initial_ranged_arrow_grant": 50, "initial_magic_grant_air": 5, "initial_magic_grant_mind": 5,
+        "learning_the_ropes_quest_points": 1, "cooks_assistant_quest_points": 1,
+        "cooks_assistant_cooking_xp_tenths": 3000, "poll_vote_skill_total": 300, "poll_support_percent": 70,
+    }, "Pinned dynamic scalar facts changed")
+    require(values["quest_journal_distinct_states"]["per_ingredient_states"] == ["missing", "carried", "delivered"],
+            "Carried/delivered journal distinction disappeared")
+    require(values["arrival"]["camera_role"].startswith("actual recorded controlled fixture"),
+            "Arrival fixture relabeled as observed live camera")
+    require(manifest["counts"]["separate_tutorial_microstate_source_captures_required"] == 0,
+            "A separate source capture was demanded for each micro-transition")
 
 
 def decode_original(entry):
@@ -298,7 +416,8 @@ def decode_audio(manifest):
 
 
 def require_complete(manifest):
-    require(manifest["ready_for_owner_approval"] and not manifest["source_gaps"],
+    require(review_ready(manifest["evidence_factorization"]["source_review_requirements"])
+            and manifest["ready_for_owner_review"] and not manifest["source_gaps"],
             "Mandatory source evidence remains: " + ", ".join(gap["id"] for gap in manifest["source_gaps"]))
 
 
@@ -312,6 +431,7 @@ def validate(manifest, *, full_audio=True):
     records.extend(entry["snapshot"] for entry in manifest["public_page_revisions"])
     records.extend(entry["source_snapshot"] for entry in manifest["public_inputs"])
     records += [manifest["source_widget_symbols"]["source"], manifest["comparison_policy"],
+                manifest["factorization_document"], manifest["dynamic_text_oracles"], manifest["audio_binding_audit_sources"],
                 manifest["audio"]["browser_source_recording_decode"]]
     unique_files = {}
     for record in records:
@@ -346,6 +466,11 @@ def validate(manifest, *, full_audio=True):
         source = load_gzip(verify_file(page["snapshot"]))["page"]
         require(source["pageid"] == page["page_id"] and source["revisions"][0]["revid"] == page["revision"],
                 "Wrong public behavior-page revision")
+    factored_file = json.loads(verify_file(manifest["factorization_document"]).read_text())
+    require(factored_file == manifest["evidence_factorization"], "Factoring handoff differs from reviewed manifest")
+    expected_text = make_text_oracles(manifest["public_page_revisions"])
+    actual_text = json.loads(verify_file(manifest["dynamic_text_oracles"]).read_text())
+    require(actual_text == expected_text, "Pinned dynamic text, style, native metrics or source lines changed")
     for notice in manifest["notices"]:
         require(checked_path(notice).is_file(), f"Missing source notice: {notice}")
     contact_sheets = json.loads((OUT / "gallery/contact-sheets.json").read_text())
@@ -365,8 +490,14 @@ def validate(manifest, *, full_audio=True):
         "published_source_sprite_atlases_decoded": source_pngs,
         "exact_component_or_text_proofs_rechecked": verify_matches(manifest, metrics),
         "audio": audio, "required_case_ids_checked": len(manifest["cases"]),
-        "tutorial_states_mapped": 71, "complete_reference_pack": False,
-        "ready_for_owner_approval": False, "status": "awaiting_owner_approval",
+        "tutorial_states_mapped": 71,
+        "visual_families_checked": manifest["counts"]["visual_families"],
+        "distinct_visual_variants_checked": manifest["counts"]["distinct_visual_variants"],
+        "progressive_hud_signatures_checked": manifest["counts"]["progressive_hud_signatures"],
+        "source_text_records_checked": len(actual_text["records"]),
+        "complete_reference_pack": manifest["ready_for_owner_review"],
+        "ready_for_owner_review": manifest["ready_for_owner_review"],
+        "ready_for_owner_approval": manifest["ready_for_owner_approval"], "status": "awaiting_owner_approval",
         "source_gap_categories": len(manifest["source_gaps"]),
         "source_gap_cases": manifest["counts"]["source_gap_cases"],
         "owner_approved": False, "candidate_tested": False, "mac_target_tested": False,

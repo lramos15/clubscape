@@ -1,0 +1,32 @@
+[
+  {
+    "title": "Quest Complete 1",
+    "revision": 15341508,
+    "snapshot": {
+      "path": "research/reference-pack/v1/sources/650215-15341508.json.gz",
+      "sha256": "db6a4579a470a71ffd48fad4a6a0b36b2186bedd1828d604bba1aa7e44ebfa91",
+      "size_bytes": 752
+    },
+    "url": "https://oldschool.runescape.wiki/w/Quest_Complete_1?oldid=15341508"
+  },
+  {
+    "title": "Quest Complete 2",
+    "revision": 15341509,
+    "snapshot": {
+      "path": "research/reference-pack/v1/sources/650216-15341509.json.gz",
+      "sha256": "f12d15bccd620c2bbf70f8591821894071b9044aa8950008206e8d8d40d822c4",
+      "size_bytes": 753
+    },
+    "url": "https://oldschool.runescape.wiki/w/Quest_Complete_2?oldid=15341509"
+  },
+  {
+    "title": "Quest Complete 3",
+    "revision": 15341507,
+    "snapshot": {
+      "path": "research/reference-pack/v1/sources/650217-15341507.json.gz",
+      "sha256": "6471311f556b017a41a3f9306ea9a1d9cb56bf9aa3f767598c76e930d2fb84b7",
+      "size_bytes": 767
+    },
+    "url": "https://oldschool.runescape.wiki/w/Quest_Complete_3?oldid=15341507"
+  }
+]
