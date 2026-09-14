@@ -84,6 +84,17 @@ impl CharacterState {
         counters(&self.runtime.counters, content, CounterScope::Character)?;
         let definitions = &content.mechanics;
         let runtime = &self.runtime;
+        if matches!(runtime.presence, PresenceState::Offline { .. })
+            && (!matches!(self.activity, Activity::Idle)
+                || self.dialogue.is_some()
+                || runtime.pending_travel.is_some()
+                || runtime.pending_fire.is_some()
+                || matches!(&runtime.engine, EngineMetadata::Typed { schedule } if schedule.access.is_some()))
+        {
+            return Err(invalid(
+                "Offline state cannot discard an active gameplay operation or interface.",
+            ));
+        }
         if runtime
             .settings
             .experience
@@ -697,7 +708,8 @@ impl WorldState {
                 }
                 match &provenance.producer {
                     GroundProducer::PlayerDrop { actor, at_tick }
-                    | GroundProducer::Activity { actor, at_tick } => {
+                    | GroundProducer::Activity { actor, at_tick }
+                    | GroundProducer::DeathSupply { actor, at_tick } => {
                         if ground.owner.as_ref() != Some(actor) || *at_tick > self.tick {
                             return Err(invalid("Ground producer ownership/time mismatch."));
                         }
@@ -808,8 +820,25 @@ impl WorldState {
                     "Pending projectile references missing content; preserve it for migration.",
                 ));
             }
+            if let Some(snapshot) = &projectile.target_snapshot
+                && (!content.npcs.contains_key(&snapshot.npc)
+                    || content
+                        .regions
+                        .get(&snapshot.location.region)
+                        .is_none_or(|region| {
+                            !region
+                                .cells
+                                .iter()
+                                .any(|cell| cell.tile == snapshot.location.tile)
+                        })
+                    || !matches!(&projectile.target, Combatant::Npc { instance, .. } if instance == &snapshot.location.instance))
+            {
+                return Err(invalid(
+                    "Projectile target identity/location snapshot is invalid.",
+                ));
+            }
         }
-        let mut office_counts = BTreeMap::<&ActorId, usize>::new();
+        let mut office_counts = BTreeMap::<&ActorId, BTreeSet<RecoverySlotKey>>::new();
         for death in self.runtime.deaths.values() {
             self.validate_runtime_location(&death.origin, content)?;
             self.validate_runtime_location(&death.respawn, content)?;
@@ -842,8 +871,13 @@ impl WorldState {
                 self.validate_runtime_location(&grave.location, content)?;
             }
             let count = office_counts.entry(&death.owner).or_default();
-            *count += death.office.len();
-            if *count > usize::from(policy.office_capacity) {
+            count.extend(
+                death
+                    .office
+                    .iter()
+                    .map(|item| recovery_slot_key(&item.stack)),
+            );
+            if count.len() > usize::from(policy.office_capacity) {
                 return Err(invalid(
                     "Owner's combined Death Office storage exceeds capacity.",
                 ));

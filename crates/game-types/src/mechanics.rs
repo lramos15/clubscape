@@ -1059,6 +1059,7 @@ pub enum LevelUpVitalPolicy {
     PreserveCurrent,
     IncreaseByBaseDifference,
     RestoreToBase,
+    RaiseIfAtOldBaseOtherwisePreserve,
 }
 
 #[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]

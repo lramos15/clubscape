@@ -202,6 +202,8 @@ pub struct CharacterRuntime {
     pub regeneration_deadlines: BTreeMap<Vital, u64>,
     pub death_coffer: u64,
     pub last_active_tick: Option<u64>,
+    #[serde(default)]
+    pub presence: PresenceState,
 }
 
 impl Default for CharacterRuntime {
@@ -227,6 +229,7 @@ impl Default for CharacterRuntime {
             regeneration_deadlines: BTreeMap::new(),
             death_coffer: 0,
             last_active_tick: None,
+            presence: PresenceState::Untracked,
         }
     }
 }
@@ -247,6 +250,26 @@ impl CharacterRuntime {
 
     pub fn validate_shape(&self) -> GameResult<()> {
         let tick = |tick: u64| tick <= i64::MAX as u64;
+        match self.presence {
+            PresenceState::Connected { joined_at_tick }
+                if !tick(joined_at_tick) || self.last_active_tick.is_none() =>
+            {
+                return Err(GameError::new(
+                    GameErrorCode::InvalidInput,
+                    "Connected presence requires a valid join/input clock.",
+                ));
+            }
+            PresenceState::Disconnecting { since_tick, .. }
+            | PresenceState::Offline { since_tick }
+                if !tick(since_tick) =>
+            {
+                return Err(GameError::new(
+                    GameErrorCode::InvalidInput,
+                    "Presence deadline is out of range.",
+                ));
+            }
+            _ => {}
+        }
         let valid = self.schema_version == RUNTIME_SCHEMA_VERSION
             && self.counters.len() <= 2048
             && self.entitlements.len() <= 2048
@@ -577,6 +600,8 @@ pub struct PendingProjectile {
     pub outcome: CombatOutcome,
     pub damage: u16,
     pub resources_spent: Vec<ItemStack>,
+    #[serde(default)]
+    pub target_snapshot: Option<ProjectileTargetSnapshot>,
 }
 
 #[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]

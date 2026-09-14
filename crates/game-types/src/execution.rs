@@ -172,6 +172,10 @@ pub enum GroundProducer {
         actor: ActorId,
         at_tick: u64,
     },
+    DeathSupply {
+        actor: ActorId,
+        at_tick: u64,
+    },
     NpcLoot {
         spawn: SpawnId,
         life: u64,
@@ -195,6 +199,52 @@ pub struct DeathArrival {
     pub dying_until_tick: u64,
     pub arrives_at_tick: u64,
     pub completed_at_tick: Option<u64>,
+}
+
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(rename_all = "snake_case")]
+pub enum ConnectionLoss {
+    TransportLost,
+    AuthenticationRevoked,
+    CoordinatorRestart,
+}
+
+#[derive(Clone, Debug, Default, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(tag = "kind", rename_all = "snake_case", deny_unknown_fields)]
+pub enum PresenceState {
+    /// Legacy callers must supply authoritative TickContext; this is not online.
+    #[default]
+    Untracked,
+    Connected {
+        joined_at_tick: u64,
+    },
+    Disconnecting {
+        reason: ConnectionLoss,
+        since_tick: u64,
+    },
+    Offline {
+        since_tick: u64,
+    },
+}
+
+#[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub struct ProjectileTargetSnapshot {
+    pub npc: NpcId,
+    pub location: RuntimeLocation,
+}
+
+#[derive(Clone, Debug, PartialEq, Eq, PartialOrd, Ord)]
+pub enum RecoverySlotKey {
+    Ordinary(ItemId),
+    Instance(ItemInstanceId),
+}
+
+pub fn recovery_slot_key(stack: &ItemStack) -> RecoverySlotKey {
+    stack.instance.as_ref().map_or_else(
+        || RecoverySlotKey::Ordinary(stack.item.clone()),
+        |instance| RecoverySlotKey::Instance(instance.id.clone()),
+    )
 }
 
 #[cfg(test)]

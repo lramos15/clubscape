@@ -10,9 +10,11 @@ mod death;
 mod engagement;
 mod entities;
 mod grants;
+mod lifecycle;
 mod navigation;
 mod permissions;
 mod progression;
+mod queries;
 mod recovery_ui;
 mod runtime;
 mod traversal;
@@ -31,6 +33,8 @@ use clubscape_simulation::navigation::CollisionMap;
 use serde::{Deserialize, Serialize};
 
 pub use context::{ActorPresence, TickContext};
+pub use lifecycle::{LifecycleTransition, PresenceView};
+pub use queries::*;
 pub use random::RandomSource;
 
 #[cfg(test)]
@@ -192,6 +196,7 @@ impl WorldEngine {
         })?;
         character.migrate_engine_metadata(&self.content)?;
         validation::character(&character, &self.content)?;
+        self.input_permission(&character)?;
         if !self
             .collision_for(&draft, character.runtime.instance.as_ref())?
             .cell(character.tile)
@@ -318,8 +323,12 @@ impl WorldEngine {
         for character in draft.characters.values_mut() {
             character.migrate_engine_metadata(&self.content)?;
         }
+        let mut lifecycle_events = self.advance_presence(draft)?;
+        let effective = self.effective_context(draft, context)?;
+        let context = &effective;
         self.advance_entities(draft, random)?;
         self.expire_objects(draft)?;
+        self.advance_ground_clocks(draft, context)?;
         self.restock(draft)?;
         draft
             .ground_items
@@ -334,6 +343,7 @@ impl WorldEngine {
             .ground_provenance
             .retain(|id, _| ground_ids.contains(id));
         let mut result = self.advance_projectiles(draft, random)?;
+        result.append(&mut lifecycle_events);
         result.extend(self.refresh_recovery_sessions(draft)?);
         let actors: Vec<_> = draft.characters.keys().cloned().collect();
         for actor in actors {
@@ -435,6 +445,7 @@ impl WorldEngine {
         result.extend(self.advance_npcs(draft, random, context)?);
         result.extend(self.advance_graves(draft, context)?);
         result.extend(self.refresh_recovery_sessions(draft)?);
+        result.extend(self.advance_presence(draft)?);
         Ok(result)
     }
 

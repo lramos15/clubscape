@@ -170,6 +170,67 @@ impl WorldEngine {
         })
     }
 
+    pub(crate) fn travel_permission(
+        &self,
+        world: &WorldState,
+        character: &CharacterState,
+        id: &TravelId,
+    ) -> GameResult<()> {
+        let definition = self
+            .content
+            .mechanics
+            .travels
+            .get(id)
+            .ok_or_else(|| unknown("Unknown source travel."))?;
+        self.require_guard(world, character, &definition.guard)?;
+        if character.runtime.pending_travel.is_some() {
+            return Err(GameError::new(
+                GameErrorCode::Busy,
+                "A source transport is already pending.",
+            ));
+        }
+        if character
+            .runtime
+            .travel_cooldowns
+            .get(id)
+            .is_some_and(|ready| *ready > world.tick)
+            || definition
+                .interruptions
+                .contains(&InterruptionCause::Combat)
+                && self.combat_locked(world, character, crate::combat::CombatLock::Travel)?
+        {
+            return Err(GameError::new(
+                GameErrorCode::Busy,
+                "Source transport is blocked by its cooldown or combat lock.",
+            ));
+        }
+        definition.channel_ticks.require()?;
+        definition.cooldown_ticks.require()?;
+        definition.cooldown_start.require()?;
+        match definition.destination.require()? {
+            TravelDestination::Fixed { .. } => {}
+            TravelDestination::Experience { branches } => {
+                if character
+                    .runtime
+                    .settings
+                    .experience
+                    .as_ref()
+                    .is_none_or(|experience| !branches.contains_key(experience))
+                {
+                    return Err(GameError::new(
+                        GameErrorCode::RequirementNotMet,
+                        "Source travel has no selected experience destination.",
+                    ));
+                }
+            }
+            TravelDestination::PreviousRespawn if character.runtime.previous_respawn.is_none() => {
+                return Err(invalid_state("Previous respawn is not recorded."));
+            }
+            TravelDestination::PreviousRespawn => {}
+        }
+        Ok(())
+    }
+
     pub(crate) fn start_travel(
         &self,
         world: &mut WorldState,
@@ -177,6 +238,7 @@ impl WorldEngine {
         id: &TravelId,
         rng: &mut impl RandomSource,
     ) -> GameResult<Vec<GameEvent>> {
+        self.travel_permission(world, character, id)?;
         let definition = self
             .content
             .mechanics
@@ -573,6 +635,28 @@ impl WorldEngine {
             instance: location.instance.clone(),
         });
         Ok(id)
+    }
+
+    pub(crate) fn advance_ground_clocks(
+        &self,
+        world: &mut WorldState,
+        context: &crate::TickContext,
+    ) -> GameResult<()> {
+        for item in &mut world.ground_items {
+            if let Some(GroundProvenance {
+                producer: GroundProducer::DeathSupply { actor, .. },
+                ..
+            }) = world.runtime.ground_provenance.get(&item.id)
+            {
+                let presence = context.actors.get(actor).ok_or_else(|| {
+                    unavailable("Death-supply active clocks require authoritative owner presence.")
+                })?;
+                if !presence.online && item.expires_at_tick != u64::MAX {
+                    item.expires_at_tick = runtime::deadline(item.expires_at_tick, 1)?;
+                }
+            }
+        }
+        Ok(())
     }
 
     pub(crate) fn expire_objects(&self, world: &mut WorldState) -> GameResult<()> {

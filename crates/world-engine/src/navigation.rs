@@ -30,6 +30,22 @@ pub(crate) struct TargetShape {
     pub blocked_access: u8,
 }
 
+impl TargetShape {
+    pub(crate) fn distance_from(&self, actor: Tile) -> Option<u16> {
+        if self.tile.plane() != actor.plane() || self.width == 0 || self.height == 0 {
+            return None;
+        }
+        let right = self.tile.x().checked_add(u16::from(self.width) - 1)?;
+        let top = self.tile.y().checked_add(u16::from(self.height) - 1)?;
+        Some(
+            actor
+                .x()
+                .abs_diff(actor.x().clamp(self.tile.x(), right))
+                .max(actor.y().abs_diff(actor.y().clamp(self.tile.y(), top))),
+        )
+    }
+}
+
 impl WorldEngine {
     pub(crate) fn spawn_dimensions(&self, spawn: &SpawnDefinition) -> GameResult<(u8, u8)> {
         match &spawn.kind {
@@ -319,6 +335,16 @@ impl WorldEngine {
         character: &CharacterState,
         target: &WorldTarget,
     ) -> GameResult<TargetShape> {
+        self.resolve_shape(world, character, target, true)
+    }
+
+    pub(crate) fn resolve_shape(
+        &self,
+        world: &WorldState,
+        character: &CharacterState,
+        target: &WorldTarget,
+        require_available: bool,
+    ) -> GameResult<TargetShape> {
         if let WorldTarget::TemporaryObject { object } = target {
             let dynamic = world.runtime.temporary_objects.get(object).ok_or_else(|| {
                 GameError::new(
@@ -340,7 +366,8 @@ impl WorldEngine {
                 .temporary_objects
                 .get(&dynamic.definition)
                 .ok_or_else(|| unknown("Undefined temporary object."))?;
-            if definition.owner_only_use && dynamic.owner != character.actor_id {
+            if require_available && definition.owner_only_use && dynamic.owner != character.actor_id
+            {
                 return Err(GameError::new(
                     GameErrorCode::NotOwned,
                     "Temporary object is private.",
@@ -373,7 +400,7 @@ impl WorldEngine {
             .get(id)
             .ok_or_else(|| unknown(format!("Unknown spawn {id}.")))?;
         let entity = runtime::entity(world, character.runtime.instance.as_ref(), id)?;
-        if entity.available_at_tick > world.tick {
+        if require_available && entity.available_at_tick > world.tick {
             return Err(GameError::new(
                 GameErrorCode::Busy,
                 "Target is depleted or respawning.",
@@ -521,7 +548,7 @@ impl WorldEngine {
                         .get(id)
                         .ok_or_else(|| unknown("Unknown NPC morph."))?;
                 }
-                if definition.combat.is_some() && entity.hitpoints == 0 {
+                if require_available && definition.combat.is_some() && entity.hitpoints == 0 {
                     return Err(GameError::new(GameErrorCode::Busy, "NPC is defeated."));
                 }
                 let access = match &definition.navigation {

@@ -332,12 +332,16 @@ impl WorldEngine {
                 let mut counts = BTreeMap::<ItemId, u32>::new();
                 for mut item in previous_grave.items {
                     if repeat.supply_items.contains(&item.stack.item) {
-                        self.put_ground(
+                        self.put_ground_from(
                             world,
                             item.stack,
                             &character.actor_id,
                             &previous_grave.location,
                             &repeat.supply_ground_policy,
+                            GroundProducer::DeathSupply {
+                                actor: character.actor_id.clone(),
+                                at_tick: world.tick,
+                            },
                         )?;
                     } else if repeat.old_items_to_office.contains(&item.stack.item) {
                         office.push(item);
@@ -399,12 +403,16 @@ impl WorldEngine {
                 let mut keep = Vec::new();
                 for item in std::mem::take(&mut grave.items) {
                     if repeat.supply_items.contains(&item.stack.item) {
-                        self.put_ground(
+                        self.put_ground_from(
                             world,
                             item.stack,
                             &character.actor_id,
                             &origin,
                             &repeat.supply_ground_policy,
+                            GroundProducer::DeathSupply {
+                                actor: character.actor_id.clone(),
+                                at_tick: world.tick,
+                            },
                         )?;
                     } else {
                         keep.push(item);
@@ -614,13 +622,15 @@ impl WorldEngine {
             .death
             .as_ref()
             .ok_or_else(|| unknown("Missing Office policy."))?;
-        let count: usize = world
+        let count = world
             .runtime
             .deaths
             .values()
             .filter(|record| &record.owner == actor)
-            .map(|record| record.office.len())
-            .sum();
+            .flat_map(|record| &record.office)
+            .map(|item| recovery_slot_key(&item.stack))
+            .collect::<BTreeSet<_>>()
+            .len();
         let excess = count.saturating_sub(usize::from(policy.office_capacity));
         if excess == 0 {
             return Ok(());
@@ -641,7 +651,7 @@ impl WorldEngine {
                 record.office.iter().enumerate().map(move |(order, item)| {
                     (
                         id.clone(),
-                        item.id.clone(),
+                        recovery_slot_key(&item.stack),
                         item.effective_unit_value,
                         record.occurred_at_tick,
                         order,
@@ -653,14 +663,22 @@ impl WorldEngine {
             RecoveryOverflow::DeleteLowestValue => (entry.2, entry.3, entry.4),
             _ => (0, entry.3, entry.4),
         });
-        for (death, item, ..) in entries.into_iter().take(excess) {
-            world
-                .runtime
-                .deaths
-                .get_mut(&death)
-                .ok_or_else(|| invalid_state("Office record disappeared."))?
+        let mut removed = BTreeSet::new();
+        for (_, key, ..) in entries {
+            removed.insert(key);
+            if removed.len() == excess {
+                break;
+            }
+        }
+        for record in world
+            .runtime
+            .deaths
+            .values_mut()
+            .filter(|record| &record.owner == actor)
+        {
+            record
                 .office
-                .retain(|entry| entry.id != item);
+                .retain(|entry| !removed.contains(&recovery_slot_key(&entry.stack)));
         }
         Ok(())
     }
@@ -1069,7 +1087,11 @@ fn layout_key(layout: &ItemLayout) -> (u8, String) {
     }
 }
 
-fn recovery_fee(rule: &RecoveryFee, item: &RecoveryItem, quantity: u32) -> GameResult<u64> {
+pub(crate) fn recovery_fee(
+    rule: &RecoveryFee,
+    item: &RecoveryItem,
+    quantity: u32,
+) -> GameResult<u64> {
     let fee = match rule {
         RecoveryFee::Bands {
             bands,

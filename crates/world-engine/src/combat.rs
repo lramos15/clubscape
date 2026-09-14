@@ -15,6 +15,7 @@ struct Strike<'a> {
     outcome: CombatOutcome,
     damage: u16,
     instance: Option<InstanceId>,
+    snapshot: Option<&'a ProjectileTargetSnapshot>,
 }
 
 pub(crate) enum CombatLock {
@@ -24,6 +25,112 @@ pub(crate) enum CombatLock {
 }
 
 impl WorldEngine {
+    pub(crate) fn attack_permission(
+        &self,
+        world: &WorldState,
+        character: &CharacterState,
+        target: &SpawnId,
+    ) -> GameResult<()> {
+        let id = character.runtime.combat.style.as_ref().ok_or_else(|| {
+            GameError::new(
+                GameErrorCode::RequirementNotMet,
+                "Select a source combat style.",
+            )
+        })?;
+        let style = self
+            .content
+            .mechanics
+            .combat_styles
+            .get(id)
+            .ok_or_else(|| unknown("Unknown selected style."))?;
+        if style.method == AttackMethod::Magic {
+            return Err(GameError::new(
+                GameErrorCode::RequirementNotMet,
+                "Select a source spell to cast.",
+            ));
+        }
+        let weapon = self.equipped_weapon(character, id)?;
+        if !matches!(character.runtime.life, LifeState::Alive | LifeState::Legacy)
+            || character.hitpoints == 0
+        {
+            return Err(GameError::new(
+                GameErrorCode::RequirementNotMet,
+                "This life state cannot attack.",
+            ));
+        }
+        if world.tick
+            < character
+                .runtime
+                .combat
+                .attack_ready
+                .max(character.runtime.combat.spell_ready)
+        {
+            return Err(GameError::new(
+                GameErrorCode::Busy,
+                "Attack cooldown is not ready.",
+            ));
+        }
+        let interaction = self.attack_interaction(world, character, target, style.reach)?;
+        self.require_target(world, character, target, &interaction)?;
+        let shape = self.target_shape(
+            world,
+            character,
+            &WorldTarget::Spawn {
+                spawn: target.clone(),
+            },
+        )?;
+        if style.method == AttackMethod::Melee
+            && style.reach == 1
+            && !melee_adjacent(character.tile, shape.tile, shape.width, shape.height)
+        {
+            return Err(GameError::new(
+                GameErrorCode::OutOfReach,
+                "Melee requires a cardinal target edge.",
+            ));
+        }
+        let mechanics = shape
+            .npc
+            .as_ref()
+            .and_then(|npc| self.content.npcs.get(npc))
+            .and_then(|npc| npc.combat.as_ref())
+            .and_then(|combat| combat.mechanics.as_ref())
+            .ok_or_else(|| unavailable("Target has no typed combat policy."))?;
+        self.attack_eligible(world, character, mechanics, id, style.method)?;
+        mechanics.engagement.require()?;
+        style.accuracy.require()?;
+        style.negative_rolls.require()?;
+        style.damage.require()?;
+        style.cycle_ticks.require()?;
+        self.maximum_player_hit(character, style)?;
+        if let Some(projectile) = &style.projectile {
+            self.content
+                .mechanics
+                .projectiles
+                .get(projectile)
+                .ok_or_else(|| unknown("Unknown projectile."))?
+                .timing
+                .require()?;
+        }
+        if let Some(ammo) = &weapon.ammunition {
+            let stack = character.equipment.get(&ammo.slot).ok_or_else(|| {
+                GameError::new(
+                    GameErrorCode::InsufficientItems,
+                    "Compatible ammunition must be equipped.",
+                )
+            })?;
+            if !ammo.compatible_items.contains(&stack.item)
+                || stack.quantity.get() < ammo.per_attack.get()
+            {
+                return Err(GameError::new(
+                    GameErrorCode::InsufficientItems,
+                    "Insufficient compatible ammunition.",
+                ));
+            }
+            ammo.break_chance.require()?;
+        }
+        Ok(())
+    }
+
     pub(crate) fn select_style(
         &self,
         character: &mut CharacterState,
@@ -186,6 +293,9 @@ impl WorldEngine {
             .combat_styles
             .get(style_id)
             .ok_or_else(|| unknown("Unknown combat style."))?;
+        if spell_id.is_none() {
+            self.attack_permission(world, character, target)?;
+        }
         if !matches!(character.runtime.life, LifeState::Alive | LifeState::Legacy)
             || character.hitpoints == 0
         {
@@ -471,12 +581,12 @@ impl WorldEngine {
             outcome,
             damage,
             instance: character.runtime.instance.clone(),
+            snapshot: None,
         };
         if let (Some(id), Some(timing)) = (projectile_id, timing) {
             let launch = runtime::deadline(world.tick, u64::from(timing.launch_delay_ticks))?;
-            let distance = character
-                .tile
-                .distance(shape.tile)
+            let distance = shape
+                .distance_from(character.tile)
                 .ok_or_else(|| invalid_state("Projectile crosses planes."))?;
             let flight = u64::from(timing.base_flight_ticks)
                 + source_math::rounded(
@@ -519,6 +629,18 @@ impl WorldEngine {
                     outcome,
                     damage,
                     resources_spent: spent,
+                    target_snapshot: Some(ProjectileTargetSnapshot {
+                        npc: npc_id.clone(),
+                        location: RuntimeLocation {
+                            region: self
+                                .regions_by_tile
+                                .get(&shape.tile)
+                                .ok_or_else(|| unknown("Target has no source region."))?
+                                .clone(),
+                            tile: shape.tile,
+                            instance: character.runtime.instance.clone(),
+                        },
+                    }),
                 });
             }
         } else {
@@ -696,21 +818,44 @@ impl WorldEngine {
         strike: &Strike<'_>,
         rng: &mut impl RandomSource,
     ) -> GameResult<Vec<GameEvent>> {
-        let entity = runtime::entity(world, strike.instance.as_ref(), strike.target)?;
-        let viable = entity.runtime.life == strike.life
-            && entity.hitpoints > 0
-            && entity.available_at_tick <= world.tick;
+        let entity = match runtime::entity(world, strike.instance.as_ref(), strike.target) {
+            Ok(entity) => Some(entity),
+            Err(error)
+                if strike.snapshot.is_some()
+                    && matches!(
+                        error.code,
+                        GameErrorCode::UnknownContent | GameErrorCode::InvalidInput
+                    ) =>
+            {
+                None
+            }
+            Err(error) => return Err(error),
+        };
+        let viable = entity.is_some_and(|entity| {
+            entity.runtime.life == strike.life
+                && entity.hitpoints > 0
+                && entity.available_at_tick <= world.tick
+        });
         let outcome = if viable {
             strike.outcome
         } else {
             CombatOutcome::Invalidated
         };
         let damage = if viable && outcome == CombatOutcome::Hit {
-            strike.damage.min(entity.hitpoints)
+            strike.damage.min(
+                entity
+                    .ok_or_else(|| invalid_state("Viable target disappeared."))?
+                    .hitpoints,
+            )
         } else {
             0
         };
-        let tile = entity.tile;
+        let tile = entity
+            .map(|entity| entity.tile)
+            .or_else(|| strike.snapshot.map(|snapshot| snapshot.location.tile))
+            .ok_or_else(|| {
+                invalid_state("Invalidated legacy projectile has no target location snapshot.")
+            })?;
         let mut events = vec![GameEvent::CombatResolved {
             target: strike.target.clone(),
             life: strike.life,
@@ -1101,55 +1246,34 @@ impl WorldEngine {
             if due {
                 let mut outcome = projectile.outcome;
                 if timing.recheck_target_on_impact {
-                    if character.runtime.instance != *instance {
-                        outcome = CombatOutcome::Invalidated;
-                    } else {
-                        let contact = InteractionDefinition {
-                            name: "projectile_contact".into(),
-                            reach: style.reach,
-                            guard: Guard::Always,
-                            action: InteractionAction::Attack,
-                        };
-                        match self.require_target(world, &character, spawn, &contact) {
-                            Ok(()) => {}
-                            Err(error) if crate::is_interruption(&error.code) => {
-                                outcome = CombatOutcome::Invalidated
-                            }
-                            Err(error) => return Err(error),
+                    let mut perspective = character.clone();
+                    perspective.runtime.instance = instance.clone();
+                    match self.resolve_shape(
+                        world,
+                        &perspective,
+                        &WorldTarget::Spawn {
+                            spawn: spawn.clone(),
+                        },
+                        true,
+                    ) {
+                        Ok(shape)
+                            if projectile.target_snapshot.as_ref().is_none_or(|snapshot| {
+                                shape.npc.as_ref() == Some(&snapshot.npc)
+                            }) => {}
+                        Ok(_) => outcome = CombatOutcome::Invalidated,
+                        Err(error)
+                            if matches!(
+                                error.code,
+                                GameErrorCode::Busy
+                                    | GameErrorCode::NotOwned
+                                    | GameErrorCode::OutOfReach
+                                    | GameErrorCode::UnknownContent
+                                    | GameErrorCode::InvalidInput
+                            ) =>
+                        {
+                            outcome = CombatOutcome::Invalidated
                         }
-                        if outcome != CombatOutcome::Invalidated {
-                            let shape = self.target_shape(
-                                world,
-                                &character,
-                                &WorldTarget::Spawn {
-                                    spawn: spawn.clone(),
-                                },
-                            )?;
-                            let mechanics = shape
-                                .npc
-                                .as_ref()
-                                .and_then(|id| self.content.npcs.get(id))
-                                .and_then(|npc| npc.combat.as_ref())
-                                .and_then(|combat| combat.mechanics.as_ref())
-                                .ok_or_else(|| {
-                                    invalid_state(
-                                        "Projectile target lost its source combat definition.",
-                                    )
-                                })?;
-                            match self.attack_eligible(
-                                world,
-                                &character,
-                                mechanics,
-                                &style.id,
-                                style.method,
-                            ) {
-                                Ok(()) => {}
-                                Err(error) if error.code == GameErrorCode::RequirementNotMet => {
-                                    outcome = CombatOutcome::Invalidated
-                                }
-                                Err(error) => return Err(error),
-                            }
-                        }
+                        Err(error) => return Err(error),
                     }
                 }
                 own.extend(self.apply_strike(
@@ -1163,6 +1287,7 @@ impl WorldEngine {
                         outcome,
                         damage: projectile.damage,
                         instance: instance.clone(),
+                        snapshot: projectile.target_snapshot.as_ref(),
                     },
                     rng,
                 )?);
@@ -1216,13 +1341,13 @@ impl WorldEngine {
             return Ok(true);
         }
         if let Some(policy) = &self.content.mechanics.player_combat {
-            let policy = policy.engagement.require()?;
-            let delay = match lock {
-                CombatLock::State => policy.combat_state_ticks,
-                CombatLock::Logout => policy.logout_lock_ticks,
-                CombatLock::Travel => policy.travel_lock_ticks,
-            };
             if let Some(last) = character.runtime.combat.last_combat_tick {
+                let policy = policy.engagement.require()?;
+                let delay = match lock {
+                    CombatLock::State => policy.combat_state_ticks,
+                    CombatLock::Logout => policy.logout_lock_ticks,
+                    CombatLock::Travel => policy.travel_lock_ticks,
+                };
                 return Ok(world.tick < runtime::deadline(last, u64::from(delay))?);
             }
             return Ok(false);

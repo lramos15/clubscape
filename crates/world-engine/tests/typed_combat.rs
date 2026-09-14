@@ -564,7 +564,7 @@ fn damage_on_launch_projectile_does_not_apply_damage_again_on_visual_impact() {
 }
 
 #[test]
-fn impact_recheck_invalidates_new_out_of_range_target_without_returning_spent_runes() {
+fn source_impact_recheck_keeps_a_live_target_even_after_it_moves_out_of_old_range() {
     let mut content = v::content();
     v::with_combat(&mut content);
     give_initial(&mut content, &[stack("rune", 1), stack("coins", 1)]);
@@ -582,12 +582,12 @@ fn impact_recheck_invalidates_new_out_of_range_target_without_returning_spent_ru
         .unwrap();
     world.entities.get_mut(&spawn("enemy")).unwrap().tile = tile(24, 24, 0);
     let events = v::tick_n(&engine, &mut world, 2, &mut NeverDraw);
-    assert_eq!(world.entities[&spawn("enemy")].hitpoints, 5);
+    assert_eq!(world.entities[&spawn("enemy")].hitpoints, 3);
     assert_eq!(count(&engine, &world, "rune"), 0);
     assert!(events.iter().any(|event| matches!(
         event.event,
         GameEvent::SpellResolved {
-            outcome: SpellOutcome::Invalidated,
+            outcome: SpellOutcome::Hit,
             ..
         }
     )));

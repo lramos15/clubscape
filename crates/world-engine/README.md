@@ -25,6 +25,10 @@ engine.process_advanced_tick(world, rng) -> GameResult<Vec<ActorEvent>>;
 engine.tick_with_context(world, rng, &TickContext) -> GameResult<Vec<ActorEvent>>;
 engine.process_advanced_tick_with_context(world, rng, &TickContext)
     -> GameResult<Vec<ActorEvent>>;
+engine.apply_lifecycle(world, actor, LifecycleTransition) -> GameResult<Vec<ActorEvent>>;
+engine.reconcile_presence(world, &verified_connected_actors) -> GameResult<Vec<ActorEvent>>;
+engine.presence_view(world, actor) -> GameResult<PresenceView>;
+engine.tick_context(world) -> GameResult<TickContext>;
 ```
 
 `ActorEvent { actor_id, event: GameEvent }` includes routing for credited actors
@@ -44,6 +48,50 @@ decrement exists. The original advanced-tick regression tests remain.
 Ranges are checked, and no seeded generator or player-supplied draw is exported.
 The caller also owns durable RNG cursor handling: a cloned gameplay draft
 cannot roll back an external RNG.
+
+## Live adapter: lifecycle and read-only views
+
+The parent `2030e97` adapter can use `apply_lifecycle` for authenticated
+join/rejoin, admitted real activity, requested logout, transport loss and auth
+revocation. At coordinator restart, reconcile the verified connection set.
+These control-plane transitions do not consume gameplay command sequences or
+award progress. Repeated polls/reconciliation do not refresh idle time.
+
+Tracked presence is Connected, Disconnecting or Offline; absent old state is
+Untracked, not an assumption that the actor is online. Loss/revocation forbids
+new input and closes UI, but acknowledged combat/projectiles and source life
+phases remain mechanically present until existing source logout/engagement/
+interruption rules allow departure. NPC combat does not disappear when an auth
+token is revoked. Rejoin preserves acknowledged state. Tick entry points derive
+tracked mechanical presence/idle clocks; a supplied legacy context cannot force
+an offline actor online. The server still owns auth, leases and durable commit.
+
+Read-only, serializable projections are exposed by `context_view`,
+`dialogue_view`, `bank_view`, `bank_deposit_quote`, `bank_withdraw_quote`,
+`shop_view`, `shop_buy_quote`, `shop_sell_quote`, `recovery_view`,
+`recovery_quote`, `target_view`, `interaction_options` and `ground_item_views`.
+Exact public signatures are in
+[`spec/game-contracts.md`](../../spec/game-contracts.md#live-lifecycle-and-read-only-projection-boundary).
+They reuse the actual engine guards, morph resolution, price formulas and pure
+container plans. They never execute an intent, effects/progression, tick or RNG,
+and never mutate world state. The server need not copy source price or access
+logic. Recovery quotes label full selected quantities; actual partial-capacity
+transfers reprice only what commits. Permissions evaluate source preconditions,
+not invented outcomes of random/stateful effects.
+
+The precise vital policy `raise_if_at_old_base_otherwise_preserve` implements
+the `41d3919` inference: base 10 -> 11 maps current 5/10/15 to 5/11/15.
+Mining/Cooking-only awards never require an unrelated HP/Prayer level-up policy.
+That source resolution also corrects projectile impact checks to original
+identity/life/presence, not old range/LOS or rerolled accuracy. New projectiles
+retain target snapshots and use same-edge footprint distance. Death supplies
+have tagged, offline-paused active lifetimes in retained world state; ordinary
+Office entries share capacity by item key without losing recovery identities.
+
+The `594a4fd` potion decision is **approved_adaptation**, not verified OSRS odds.
+Tests independently materialize its 1/16 event/equal 1-4-dose distribution as a
+separate 64-weight pool, leaving the 128-weight primary pool unchanged. Product
+binding supplies the source items and policy; the runtime hardcodes neither.
 
 ## Source and wire changes for parent integration
 
@@ -95,8 +143,8 @@ ActorPresence { online, idle_milliseconds, grave_interface }
 The last field is retained only for adapter source compatibility and is
 **ignored for authority**. Grave pause is derived from the validated engine
 session. Closing, moving, leaving the instance, expiry and interruption revoke
-that session. The original tick wrappers do not invent absent online/idle
-facts; use context variants for policies requiring them.
+that session. The original tick wrappers do not invent absent online/idle facts. Tracked
+lifecycle state supplies them; legacy callers can use explicit context variants.
 `TickContext::all_active` is an explicit standalone-test/simulator opt-in.
 
 ## Actual execution coverage
@@ -190,9 +238,11 @@ until fully reclaimed; `ItemTransferred` records the actual moved quantity.
 The seven **code/selector integration gaps are closed**. Source inputs still
 require capture/binding; unresolved projectile timings, particular loot
 supplements, valuation/overflow, exact arrivals and departure policies are not
-guessed. The parent's last content-2 reload reported 111 unresolved bindings;
-that is source evidence, not a count of missing executor mechanisms. Recompute
-the source report after generating content 3.
+guessed. The parent's source-resolution inventory in `41d3919` gives exact dispositions
+for the original binding paths. The vital enum and approved potion policy are
+implemented here; inactive alternatives remain distinct from active requirements.
+Product integration must apply the source data and recompute its actual report,
+not treat the historical unresolved count as missing executor mechanisms.
 
 Departure normalization and goblin supplement assumptions remain explicit,
 not observations. Optional inaccessible charged/bottomless milk alternatives
@@ -209,11 +259,11 @@ browser/performance or RuneLite gates.
 
 ## Reproduce validation
 
-The closure revision passes 169 engine tests (the previous 148 plus 21 direct
-closure scenarios), 107 simulation tests, 81 compiler tests and 12 shared-type
-tests. Warnings-denied native/WASM Clippy and both builds pass. The parent
-isolated PostgreSQL runner also passed 26 selected integration tests and its
-independent account lifecycle, with owned resources cleaned up.
+The current native suite passes 185 engine tests, 107 simulation tests, 82
+compiler tests and 12 shared-type tests. The prior closure also passed the
+parent isolated PostgreSQL suite and independent account lifecycle; repeat it
+for lifecycle/storage integration changes. WASM checks remain compilation/lint,
+not browser execution.
 
 From the worktree root, keeping build/scratch/evidence under this crate:
 

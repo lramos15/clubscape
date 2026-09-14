@@ -3,8 +3,16 @@ use clubscape_simulation::{bank, inventory};
 
 use crate::{WorldEngine, invalid_content, invalid_state, runtime, source_math, unknown};
 
+pub(crate) struct TradePlan {
+    pub character: CharacterState,
+    pub stock: u32,
+    pub quantity: u32,
+    pub currency: u32,
+    pub refusal: Option<GameError>,
+}
+
 impl WorldEngine {
-    fn bank_access(
+    pub(crate) fn bank_access(
         &self,
         world: &WorldState,
         character: &CharacterState,
@@ -41,7 +49,7 @@ impl WorldEngine {
         transfer_up_to(
             character,
             Quantity::new(quantity.get().min(available))?,
-            |draft, quantity| bank::deposit(draft, &self.content, slot, quantity).map(|_| ()),
+            |draft, quantity| bank::deposit(draft, &self.content, slot, quantity),
         )?;
         Ok(())
     }
@@ -57,12 +65,12 @@ impl WorldEngine {
     ) -> GameResult<()> {
         self.bank_access(world, character, banker)?;
         transfer_up_to(character, quantity, |draft, quantity| {
-            bank::withdraw(draft, &self.content, slot, quantity, noted).map(|_| ())
+            bank::withdraw(draft, &self.content, slot, quantity, noted)
         })?;
         Ok(())
     }
 
-    fn shop_access(
+    pub(crate) fn shop_access(
         &self,
         world: &WorldState,
         character: &CharacterState,
@@ -113,6 +121,16 @@ impl WorldEngine {
             .get(shop)
             .ok_or_else(|| unknown("Unknown shop."))?;
         let item = &inventory::stack_at(&character.inventory, slot)?.item;
+        let row = self.sale_row(world, definition, item)?;
+        self.trade(world, character, definition, &row, quantity, Some(slot))
+    }
+
+    pub(crate) fn sale_row(
+        &self,
+        world: &WorldState,
+        definition: &ShopDefinition,
+        item: &ItemId,
+    ) -> GameResult<ShopItem> {
         let item_definition = self
             .content
             .items
@@ -179,7 +197,7 @@ impl WorldEngine {
                 }
             }
         };
-        self.trade(world, character, definition, &row, quantity, Some(slot))
+        Ok(row)
     }
 
     fn trade(
@@ -191,6 +209,33 @@ impl WorldEngine {
         quantity: Quantity,
         sale_slot: Option<usize>,
     ) -> GameResult<()> {
+        let plan = self.trade_plan(world, character, shop, row, quantity, sale_slot)?;
+        *character = plan.character;
+        world
+            .shops
+            .get_mut(&shop.id)
+            .ok_or_else(|| unknown("Missing shop state."))?
+            .stock
+            .insert(row.item.clone(), plan.stock);
+        self.reset_stock_clock(world, shop, row)
+    }
+
+    pub(crate) fn trade_plan(
+        &self,
+        world: &WorldState,
+        original_character: &CharacterState,
+        shop: &ShopDefinition,
+        row: &ShopItem,
+        quantity: Quantity,
+        sale_slot: Option<usize>,
+    ) -> GameResult<TradePlan> {
+        let before_currency = inventory::count(
+            &original_character.inventory,
+            &self.content.items,
+            &shop.currency,
+        )?;
+        let mut draft_character = original_character.clone();
+        let character = &mut draft_character;
         if quantity.get() > 50 {
             return Err(invalid_state(
                 "M1 shop operations support the source 1/5/10/50 quantities; submit a bounded batch.",
@@ -380,17 +425,29 @@ impl WorldEngine {
         if moved == 0 {
             return Err(refusal.unwrap_or_else(|| invalid_state("No shop transfer occurred.")));
         }
-        world
-            .shops
-            .get_mut(&shop.id)
-            .ok_or_else(|| unknown("Missing shop state."))?
-            .stock
-            .insert(row.item.clone(), stock);
-        self.reset_stock_clock(world, shop, row)?;
-        Ok(())
+        let after_currency =
+            inventory::count(&character.inventory, &self.content.items, &shop.currency)?;
+        let currency = if sale_slot.is_some() {
+            after_currency.checked_sub(before_currency)
+        } else {
+            before_currency.checked_sub(after_currency)
+        }
+        .ok_or_else(|| invalid_state("Trade currency moved in the wrong direction."))?;
+        self.stock_deadline(row, world.tick)?;
+        Ok(TradePlan {
+            character: draft_character,
+            stock,
+            quantity: moved,
+            currency,
+            refusal: if moved == quantity.get() {
+                None
+            } else {
+                refusal
+            },
+        })
     }
 
-    fn shop_row(
+    pub(crate) fn shop_row(
         &self,
         world: &WorldState,
         shop: &ShopDefinition,
@@ -624,16 +681,16 @@ impl WorldEngine {
     }
 }
 
-fn transfer_up_to(
+pub(crate) fn transfer_up_to<T>(
     character: &mut CharacterState,
     quantity: Quantity,
-    operation: impl Fn(&mut CharacterState, Quantity) -> GameResult<()>,
-) -> GameResult<u32> {
+    operation: impl Fn(&mut CharacterState, Quantity) -> GameResult<T>,
+) -> GameResult<(u32, T)> {
     let mut full = character.clone();
     let first_error = match operation(&mut full, quantity) {
-        Ok(()) => {
+        Ok(value) => {
             *character = full;
-            return Ok(quantity.get());
+            return Ok((quantity.get(), value));
         }
         Err(error) if capacity_error(&error.code) => error,
         Err(error) => return Err(error),
@@ -644,17 +701,17 @@ fn transfer_up_to(
         let mid = low + (high - low) / 2;
         let mut draft = character.clone();
         match operation(&mut draft, Quantity::new(mid)?) {
-            Ok(()) => {
-                best = Some((mid, draft));
+            Ok(value) => {
+                best = Some((mid, draft, value));
                 low = mid + 1;
             }
             Err(error) if capacity_error(&error.code) => high = mid - 1,
             Err(error) => return Err(error),
         }
     }
-    if let Some((count, draft)) = best {
+    if let Some((count, draft, value)) = best {
         *character = draft;
-        Ok(count)
+        Ok((count, value))
     } else {
         Err(first_error)
     }

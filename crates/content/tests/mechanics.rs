@@ -1544,6 +1544,7 @@ fn complete_event_contract_and_scoped_permissions_validate_registry_targets() {
         transition.target = target.map(str::to_owned);
         compile(content);
     }
+
     let mut content = content;
     content
         .tutorial
@@ -1564,6 +1565,30 @@ fn complete_event_contract_and_scoped_permissions_validate_registry_targets() {
     .map(str::to_owned)
     .collect();
     compile(content);
+}
+
+#[test]
+fn conditional_old_base_vital_policy_is_strictly_compilable_and_roundtrips() {
+    let mut content = closure_fixture();
+    content.mechanics.vitals.as_mut().unwrap().level_up =
+        bound(LevelUpVitalPolicy::RaiseIfAtOldBaseOtherwisePreserve);
+    let json = serde_json::to_vec(&content).unwrap();
+    assert!(String::from_utf8_lossy(&json).contains("raise_if_at_old_base_otherwise_preserve"));
+    let compiled = compile(read_content_json(&json).unwrap());
+    let bytes = encode_compiled(&compiled).unwrap();
+    let reloaded = load_compiled(&bytes, ValidationMode::TestFixture).unwrap();
+    assert_eq!(
+        reloaded
+            .definition()
+            .mechanics
+            .vitals
+            .as_ref()
+            .unwrap()
+            .level_up
+            .require()
+            .unwrap(),
+        &LevelUpVitalPolicy::RaiseIfAtOldBaseOtherwisePreserve
+    );
 }
 
 #[test]

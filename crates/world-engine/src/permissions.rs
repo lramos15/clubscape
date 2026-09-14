@@ -345,8 +345,10 @@ impl WorldEngine {
                                 .deaths
                                 .values()
                                 .filter(|record| record.owner == character.actor_id)
-                                .map(|record| record.office.len())
-                                .sum(),
+                                .flat_map(|record| &record.office)
+                                .map(|item| recovery_slot_key(&item.stack))
+                                .collect::<std::collections::BTreeSet<_>>()
+                                .len(),
                         ),
                     ContainerKind::Ground => {
                         return Err(invalid_content("Ground has no finite slot-capacity guard."));

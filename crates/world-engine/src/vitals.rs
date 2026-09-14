@@ -65,6 +65,8 @@ impl WorldEngine {
         rewards: &[XpReward],
     ) -> GameResult<Vec<GameEvent>> {
         let before = character.skills.clone();
+        let prior_hitpoints = character.hitpoints;
+        let prior_prayer = character.prayer_points;
         let events = skills::award_character_xp(
             character,
             &self.content,
@@ -76,6 +78,9 @@ impl WorldEngine {
                 (&policy.hitpoints_skill, Vital::Hitpoints),
                 (&policy.prayer_skill, Vital::Prayer),
             ] {
+                if !rewards.iter().any(|reward| &reward.skill == skill) {
+                    continue;
+                }
                 let definition = self
                     .content
                     .skills
@@ -96,6 +101,28 @@ impl WorldEngine {
                         )?,
                         LevelUpVitalPolicy::RestoreToBase => {
                             self.restore_vital(character, vital, &VitalRestoration::ToBaseMaximum)?
+                        }
+                        LevelUpVitalPolicy::RaiseIfAtOldBaseOtherwisePreserve => {
+                            let old_current = if vital == Vital::Hitpoints {
+                                prior_hitpoints
+                            } else {
+                                prior_prayer
+                            };
+                            let current = if old_current == old { new } else { old_current };
+                            match vital {
+                                Vital::Hitpoints => character.hitpoints = current,
+                                Vital::Prayer => character.prayer_points = current,
+                                Vital::RunEnergy => unreachable!(),
+                            }
+                            let state = character
+                                .skills
+                                .get_mut(skill)
+                                .ok_or_else(|| invalid_state("Missing awarded vital skill."))?;
+                            state.current_level = if prior.current_level == old {
+                                new
+                            } else {
+                                prior.current_level
+                            };
                         }
                     }
                 }

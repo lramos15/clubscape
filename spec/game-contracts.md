@@ -518,3 +518,115 @@ Runtime validation checks the accepting policy, item form, line limit and
 actual stock row instead of rejecting all non-default lines. Source JSON also
 rejects collection entries that would be silently normalized away, such as
 duplicate members of a declared set.
+
+### Live lifecycle and read-only projection boundary
+
+`LevelUpVitalPolicy::RaiseIfAtOldBaseOtherwisePreserve` encodes the
+source-supported inference from `41d3919`: on a base increase, raise current
+HP/Prayer to the new base only when it equaled the old base. For base 10 -> 11,
+current 5/10/15 becomes 5/11/15. The same conditional applies to that vital
+skill's current-level projection. Do not read the vital policy for awards to
+unrelated skills or when the vital base level did not increase.
+
+The following engine-owned APIs supplement the existing transactional intent
+and advanced-tick APIs. They do not authenticate tokens/leases; callers must
+validate authority and durably commit lifecycle changes before acknowledgment.
+They never increment world revision or command sequences.
+
+```rust,ignore
+apply_lifecycle(&mut WorldState, &ActorId, LifecycleTransition)
+    -> GameResult<Vec<ActorEvent>>;
+reconcile_presence(&mut WorldState, &BTreeSet<ActorId>)
+    -> GameResult<Vec<ActorEvent>>;
+presence_view(&WorldState, &ActorId) -> GameResult<PresenceView>;
+tick_context(&WorldState) -> GameResult<TickContext>;
+```
+
+`LifecycleTransition` is Join, Rejoin, Activity, RequestedLogout, TransportLost,
+AuthenticationRevoked or CoordinatorRestart. It is a **trusted control-plane**
+transition, not a `GameIntent` outcome setter. Join/rejoin preserves gameplay
+state, with no repeated grants, XP or activity restart. Repeated reconciliation
+of an already-connected actor does not refresh its idle clock. Admitted real
+input can report Activity; automatic polls/heartbeats must not.
+
+Additive `CharacterRuntime.presence` is Untracked (legacy absence), Connected,
+Disconnecting or Offline. Transport loss/revocation immediately prevents new
+input and closes interfaces. Noncombat activity is interrupted; already
+acknowledged combat/projectiles and source life phases remain mechanically
+present until the existing source logout/combat/travel interruption rules permit
+departure. There is no invented disconnect grace/forced-logout timer, erased
+retaliation target or forced-online assumption. Requested logout remains
+rejectable while combat/projectiles/life phases prevent it.
+
+At coordinator restart, reconcile the **verified live connection set**, rather
+than waiting indefinitely for every persisted actor to rejoin. Disconnected
+combat bodies continue source processing; safely inactive actors become offline.
+The engine derives tracked mechanical presence and idle milliseconds from
+acknowledged state on each tick. A supplied legacy TickContext cannot override
+tracked offline state. Pending-disconnect presence means a vulnerable simulated
+body, not an authenticated connection. Untracked actors still require explicit
+legacy TickContext or lifecycle reconciliation.
+
+Read-only engine query APIs return serializable source-owned views:
+
+```rust,ignore
+dialogue_view(&WorldState, &ActorId) -> GameResult<Option<DialogueView>>;
+bank_view(&WorldState, &ActorId) -> GameResult<BankView>;
+bank_deposit_quote(&WorldState, &ActorId, u8, Quantity) -> GameResult<BankQuote>;
+bank_withdraw_quote(&WorldState, &ActorId, u16, Quantity, bool)
+    -> GameResult<BankQuote>;
+shop_view(&WorldState, &ActorId) -> GameResult<ShopView>;
+shop_buy_quote(&WorldState, &ActorId, &ShopId, u16, Quantity)
+    -> GameResult<ShopQuote>;
+shop_sell_quote(&WorldState, &ActorId, &ShopId, u8, Quantity)
+    -> GameResult<ShopQuote>;
+recovery_view(&WorldState, &ActorId, &DeathId, RecoveryStorage)
+    -> GameResult<RecoveryView>;
+recovery_quote(&WorldState, &ActorId, &DeathId, RecoveryStorage, &[RecoveryItemId])
+    -> GameResult<RecoveryQuote>;
+target_view(&WorldState, &ActorId, &WorldTarget) -> GameResult<Option<TargetView>>;
+interaction_options(&WorldState, &ActorId, &WorldTarget)
+    -> GameResult<Vec<InteractionView>>;
+ground_item_views(&WorldState, &ActorId) -> GameResult<Vec<GroundItemView>>;
+context_view(&WorldState, &ActorId) -> GameResult<ContextView>;
+```
+
+These queries reuse the executor's actual guards, resolved morphs, access
+sessions, source prices and container/fee planners. They do not execute a
+speculative intent, effects/progression, tick or RNG and do not mutate world
+state. Bank/shop quotes use the same pure container plans as execution, including
+per-unit stock changes and partial quantities. The server must not duplicate
+prices or infer permissions. Recovery quotes explicitly price **full selected
+quantities**, not promise a future partial transfer will fit. Office views can
+show owned remote-grave entries with the Office fee policy; actual transfer and
+capacity enforcement remain transactional.
+
+`Permission` carries an allowed flag and typed denial; malformed content remains
+an error, not a fabricated empty view. Dialogue exposes only eligible choices
+from the actually opened speaker/node. Target views resolve current source
+object/NPC identity and availability for the observer. Ground lists omit
+private/expired/other-instance items and return checked pickup permissions.
+Interaction permission evaluates source preconditions, not an invented outcome
+of random or stateful effects. The server still owns interest-window/wire bounds.
+
+The source hit-delay resolution in `41d3919` clarifies that projectile impact
+rechecking means original target identity/life/presence, **not old range/LOS or a
+second accuracy roll**. Flight uses nearest target-footprint Chebyshev distance.
+New projectiles retain an additive target identity/location snapshot; a missing
+target invalidates rather than rerolling or spending resources again.
+
+Death-supply ground origins are explicitly tagged; their active expiration
+deadline pauses with an offline owner in the retained world. Office capacity
+counts ordinary merged item keys (or unique item-instance keys), while original
+recovery identities/layouts/fees remain separately recorded. The source's
+116-item/120-slot inactive-overflow argument is not valid if that universe or
+merge rule changes.
+
+The owner-approved potion policy in `594a4fd` is **approved_adaptation**, not
+verified OSRS odds: an independent 1/16 event with equal 1-4-dose weights and
+the original 128-weight primary pool unchanged. Existing independent pool
+composition supports its exact distribution as a separate 64-weight pool
+(four one-weight dose entries and a 60-weight no-drop entry). Runtime code does
+not choose those values or source item identities; product binding supplies
+them. Executable tests verify independence, one dose, actual ground ownership
+and replay safety.

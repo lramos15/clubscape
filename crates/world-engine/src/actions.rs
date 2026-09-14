@@ -371,13 +371,7 @@ impl WorldEngine {
             GameIntent::OpenDeathOffice => events.extend(self.open_death_office(world, character)?),
             GameIntent::CancelActivity => runtime::interrupt(character)?,
             GameIntent::RequestLogout => {
-                if self.combat_locked(world, character, crate::combat::CombatLock::Logout)? {
-                    return Err(GameError::new(
-                        GameErrorCode::Busy,
-                        "Cannot log out during source combat.",
-                    ));
-                }
-                runtime::interrupt(character)?;
+                events.extend(self.source_logout(world, character)?);
             }
         }
         Ok(events)
@@ -551,7 +545,7 @@ impl WorldEngine {
         Ok(frame.events)
     }
 
-    fn require_context_interface(
+    pub(crate) fn require_context_interface(
         &self,
         character: &CharacterState,
         id: &InterfaceId,
@@ -636,6 +630,23 @@ impl WorldEngine {
         id: &DialogueId,
         index: usize,
     ) -> GameResult<()> {
+        let node = self.dialogue_entry(world, character, id)?;
+        character.dialogue = Some(OpenDialogue {
+            id: id.clone(),
+            speaker: speaker.clone(),
+            node,
+        });
+        runtime::schedule_mut(character)?.dialogue_interaction =
+            Some(u32::try_from(index + 1).map_err(|_| invalid_state("Dialogue index overflow."))?);
+        Ok(())
+    }
+
+    pub(crate) fn dialogue_entry(
+        &self,
+        world: &WorldState,
+        character: &CharacterState,
+        id: &DialogueId,
+    ) -> GameResult<String> {
         let definition = self
             .content
             .dialogues
@@ -651,20 +662,12 @@ impl WorldEngine {
                 entry = Some(node.id.clone());
             }
         }
-        let node = entry.ok_or_else(|| {
+        entry.ok_or_else(|| {
             GameError::new(
                 GameErrorCode::RequirementNotMet,
                 "No dialogue entry is unlocked.",
             )
-        })?;
-        character.dialogue = Some(OpenDialogue {
-            id: id.clone(),
-            speaker: speaker.clone(),
-            node,
-        });
-        runtime::schedule_mut(character)?.dialogue_interaction =
-            Some(u32::try_from(index + 1).map_err(|_| invalid_state("Dialogue index overflow."))?);
-        Ok(())
+        })
     }
 
     fn select_dialogue(
@@ -751,7 +754,7 @@ impl WorldEngine {
         )
     }
 
-    fn dialogue_node<'a>(
+    pub(crate) fn dialogue_node<'a>(
         &self,
         definition: &'a DialogueDefinition,
         node: &str,
@@ -763,12 +766,12 @@ impl WorldEngine {
             .ok_or_else(|| unknown("Undefined dialogue node."))
     }
 
-    fn take_ground_item(
+    pub(crate) fn ground_access<'a>(
         &self,
-        world: &mut WorldState,
-        character: &mut CharacterState,
+        world: &'a WorldState,
+        character: &CharacterState,
         id: &str,
-    ) -> GameResult<ItemStack> {
+    ) -> GameResult<(usize, &'a GroundItem)> {
         let mut matches = world
             .ground_items
             .iter()
@@ -829,6 +832,16 @@ impl WorldEngine {
                 "Walk onto this ground item's tile in its instance.",
             ));
         }
+        Ok((index, item))
+    }
+
+    fn take_ground_item(
+        &self,
+        world: &mut WorldState,
+        character: &mut CharacterState,
+        id: &str,
+    ) -> GameResult<ItemStack> {
+        let (index, item) = self.ground_access(world, character, id)?;
         let stack = item.stack.clone();
         inventory::add(&mut character.inventory, &self.content.items, &stack)?;
         if let Some(source) = id.strip_prefix("source:") {
