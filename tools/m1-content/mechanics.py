@@ -229,11 +229,10 @@ def build_styles(inputs, mechanics):
         "attack": effective("skill.magic"), "defence": effective("skill.defence"),
         "accuracy": bound("inclusive_opposed_rolls", source),
         "negative_rolls": bound("clamp_to_zero", inputs.assumption("assumption.negative_combat_roll")),
-        "maximum_hit": unresolved(
-            "The source max-hit table is known (levels1/5/9/13 =>2/4/6/8), but the current strict shared JSON "
-            "decoder rejects its internally-tagged LevelTable numeric map keys (string1, expectedu16). "
-            "Source values remain in mechanics-bindings; no fixed-hit substitute is executable. "
-            "Restore the bound LevelTable after the serialized shared decoder fix.", source),
+        "maximum_hit": bound({
+            "kind": "level_table", "skill": "skill.magic", "basis": "current",
+            "hits": {"1": 2, "5": 4, "9": 6, "13": 8},
+        }, source),
         "damage": bound({"successful_minimum": 1, "cap_to_remaining_hitpoints": True}, source),
         "cycle_ticks": bound(5, source), "reach": 10,
         "damage_xp": [damage_xp("skill.magic", 20), damage_xp("skill.hitpoints", 40, 3)],

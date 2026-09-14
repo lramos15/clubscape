@@ -37,42 +37,6 @@
       ]
     },
     {
-      "path": "mechanics.combat_styles.style.magic.wind_strike.maximum_hit",
-      "reason": "The source max-hit table is known (levels1/5/9/13 =>2/4/6/8), but the current strict shared JSON decoder rejects its internally-tagged LevelTable numeric map keys (string1, expectedu16). Source values remain in mechanics-bindings; no fixed-hit substitute is executable. Restore the bound LevelTable after the serialized shared decoder fix.",
-      "source": [
-        {
-          "notes": "Pinned behavioral reference; not an executed game trace.",
-          "reference": "https://oldschool.runescape.wiki/w/Wind_Strike?oldid=15341514",
-          "revision": "15341514",
-          "status": "verified_reference"
-        },
-        {
-          "notes": "Pinned behavioral reference; not an executed game trace.",
-          "reference": "https://oldschool.runescape.wiki/w/Combat_spells?oldid=15336309",
-          "revision": "15336309",
-          "status": "verified_reference"
-        },
-        {
-          "notes": "Pinned behavioral reference; not an executed game trace.",
-          "reference": "https://oldschool.runescape.wiki/w/Magic?oldid=15337462",
-          "revision": "15337462",
-          "status": "verified_reference"
-        },
-        {
-          "notes": "Pinned behavioral reference; not an executed game trace.",
-          "reference": "https://oldschool.runescape.wiki/w/Damage_per_second/Magic?oldid=15321382",
-          "revision": "15321382",
-          "status": "verified_reference"
-        },
-        {
-          "notes": "Typed source rule binding; arithmetic/content validation is not observed runtime gameplay.",
-          "reference": "research/journey-rules/activities.json#rule.magic.wind_strike",
-          "revision": "source-contract-v1",
-          "status": "verified_reference"
-        }
-      ]
-    },
-    {
       "path": "mechanics.death.office_overflow",
       "reason": "Deletion order above120 Office entries is not source-bound.",
       "source": [
@@ -2143,8 +2107,8 @@
       ]
     }
   ],
-  "content_sha256": "18a617a855e6b8dfa07ea5cee5faa1cd6a1d7dd65ecc83d6f1d3eb0c8fbcaf92",
-  "count": 112,
+  "content_sha256": "fd2b0842e3102cd8b357c689d70fb13940757b6438024b6f4d8cb820b35653d8",
+  "count": 111,
   "profile_candidates": "research/m1-bindings/profile-v2.json",
   "runtime_compile_passed": true,
   "runtime_success_claimed": false,

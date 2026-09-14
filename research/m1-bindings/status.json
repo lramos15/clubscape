@@ -1,4 +1,7 @@
 {
+  "snapshot_scope": "Historical product-worker handoff at 101af26. Subsequent binding/compiler repairs are recorded in the current content manifest and validation reports; do not reuse this snapshot's older artifact hashes as current.",
+  "current_manifest": "content/m1/manifest.json",
+  "current_binding_report": "research/m1-bindings/unresolved-bindings.json",
   "authored_v2_data_compiled": true,
   "base": "ecd1973",
   "branch": "task/m1-content-completion",

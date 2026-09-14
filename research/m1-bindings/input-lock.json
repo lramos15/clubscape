@@ -1,5 +1,5 @@
 {
-  "aggregate_sha256": "ba3932d67434a92b5c88b9d545d24835c9e003e92b4547f318acc661b075a663",
+  "aggregate_sha256": "13073fd18ea07abee62099ad731b01f17885783537d6cb1d3edf0c0bd04e8049",
   "inputs": [
     {
       "bytes": 1808403,
@@ -387,14 +387,19 @@
       "sha256": "b03cc646d7ae25261ffdd9403deeb8477785e031e95d1f118a20d9f6dfd2d4e9"
     },
     {
-      "bytes": 630,
+      "bytes": 648,
       "path": "crates/game-types/src/lib.rs",
-      "sha256": "de2890abf57377af62aa4ac3787391ba46679af5123f67d4c5bd14849fb6ea2d"
+      "sha256": "62e98db5ee4fa0282f4e61b20697ec5fe2b9dc9b15edc9911366be6f6adb237c"
     },
     {
-      "bytes": 42544,
+      "bytes": 42615,
       "path": "crates/game-types/src/mechanics.rs",
-      "sha256": "d2a00443a7bf7ed07295b3d0a20b8bee379918148f8727c52b6e92cfd54b4686"
+      "sha256": "d98c3b980d54828c25582eca4b32fe512d9b06523c60bec1277f43e0f6db1e67"
+    },
+    {
+      "bytes": 4526,
+      "path": "crates/game-types/src/numeric_keys.rs",
+      "sha256": "dade5ea9bf5b40bf88717ec93711a9277e8d56b14f30dec74634506549ac35f7"
     },
     {
       "bytes": 23605,
@@ -567,9 +572,9 @@
       "sha256": "e41283a30b1958d598e18ed8f15e05b7d580ed105a06051bcf440cb95019466e"
     },
     {
-      "bytes": 20801,
+      "bytes": 20542,
       "path": "tools/m1-content/mechanics.py",
-      "sha256": "88ecc5054851e1b2c64fa76ff59cf71535d6baf410aeeaeda39fbe3da4ed7ba7"
+      "sha256": "b5472c22c109db346a8cda64347a03f353b94a59022c026c47acf027dd09453a"
     },
     {
       "bytes": 30870,

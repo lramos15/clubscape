@@ -120,10 +120,9 @@ valuation/recovery details. They are compile-valid, **not runtime permission**.
 Initial setting/arrival/hinge candidates and all 20 source assumptions retain
 their inference and approval status.
 
-There is also a concrete shared decoder issue: bound `MaximumHitFormula::LevelTable`
-with numeric JSON keys currently fails inside its tagged binding. Wind Strike's
-known 1/5/9/13 → 2/4/6/8 source table is retained; only that field is explicitly
-unresolved pending the serialized shared fix. It is never replaced by a constant
+The shared tagged numeric-key decoder is now repaired. Wind Strike's known
+1/5/9/13 → 2/4/6/8 source table is bound as `MaximumHitFormula::LevelTable`,
+not an unresolved field or a constant
 max hit.
 
 Current original asset references are retained. Missing model/definition/widget
