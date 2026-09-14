@@ -1,0 +1,62 @@
+{
+  "schema_version": 1,
+  "todo": "m1-native-hud-reference",
+  "runtime": "Unchanged injected-client1.12.38/cache2695, hashes retained in capture provenance",
+  "native_widget_repository": {
+    "class": "vv extends ly",
+    "archives": [3, 7, 8, 13],
+    "optional_archive": {"index": 23, "source_groups": 0, "disposition": "Native optional null, not invented data"},
+    "binding": "wk.cy",
+    "root": 161,
+    "source_enum": 1130
+  },
+  "native_lifecycle": [
+    "ly.zt source interface decode",
+    "cn.ae original recursive sizing",
+    "Original widget on-load ScriptEvents with native source widget context",
+    "Client.openInterface / closeInterface native parent links",
+    "Native side-tab on-op listener914 and top-level redraw907",
+    "pq.as original widget update/input traversal and render-coordinate publication",
+    "gp.az original complete widget-tree painting, including native scene/minimap paths"
+  ],
+  "resource_bindings": [
+    {"field": "wn.hs", "archive": 12, "role": "native CS2 scripts"},
+    {"field": "lh.aa", "archive": 2, "group": 8, "role": "source enums"},
+    {"field": "pa.ae", "archive": 2, "group": 19, "role": "source Varcs schema"},
+    {"field": "pn.ax", "archive": 2, "group": 11, "role": "parameters"},
+    {"field": "zw.ae", "archive": 2, "group": 5, "role": "inventory definitions"},
+    {"field": "pr.af", "archive": 2, "group": 34, "role": "structs"},
+    {"field": "be.in", "archive": 21, "role": "DB table indexes"},
+    {"field": "ze.ab", "archive": 2, "group": 38, "role": "DB rows"},
+    {"field": "zu.ae", "archive": 2, "group": 39, "role": "DB table definitions"},
+    {"field": "yo.ir", "archive": 13, "role": "native paragraph/font metrics"},
+    {"field": "lp.aw / ox.ak", "archives": [2, 7], "role": "original default appearance kits/models"},
+    {"role": "minimap", "path": "Original gq scratch setup + client.bm map rendering + native widget handler"}
+  ],
+  "native_input_state": {
+    "player": "Original ct/lc default-kit player named Reference, registered in native worldview/player collections and engine local-player lookup.",
+    "world_registry": "Native root reference, intrusive collection and encoded cardinality all consistent; missing cardinality was caught by native widget update.",
+    "inventory_containers": [93, 94, 95, 3],
+    "stats": "All source skills1 except Hitpoints10/1154XP; controlled rendering inputs only.",
+    "combat": {"varbit": 357, "value": 17, "source_row": 3959, "weapon": 1277, "styles": ["Stab", "Lunge", "Slash", "Block"]},
+    "side_opacity": {"source_varbit": 4609, "value": 1, "source_logic": "Script907 selects original sprite897 and opacity0"},
+    "quest_counters": "Source table0 type0, parent quests counted once, all quest points retained:187 available/347maximum; completed and earned values0.",
+    "progression_families": "Actual native tab attachment sets, explicitly not a claim about exact live tutorial-stage mappings."
+  },
+  "isolated_boundaries": [
+    "FixtureVarcs overrides only persisted UI-settings reads; source schema/defaults and VM operations are native.",
+    "FixturePreferenceWrites records only identified mw.af preference-save tasks; unexpected async work fails.",
+    "Native UI packet construction uses a local zero-key ISAAC and an unconnected dj packet writer; no transport/flush/login handlers.",
+    "Original JAR and browser/global security configuration are unchanged."
+  ],
+  "important_failures_repaired": [
+    "Native source script errors surfaced missing enum/param/struct/inventory/DB/font contexts; no partial frame was used to excuse them.",
+    "An API-only player override did not satisfy original engine lookup; the actual world/player registry was populated and checked.",
+    "Uninitialized source weapon category showed unarmed buttons with a sword name; source row3959/category17 fixes the fixture inconsistency.",
+    "The wrong chat layer produced an invisible dialogue; original chat-modal162:567 and rebuild216 now produce the real panel.",
+    "Source API canvas positions remained unset without pq.as; original update traversal now publishes the actual coordinates used by region checks.",
+    "World-registry count did not initially match its native intrusive collection; native update caught it and the declared one-world state was corrected."
+  ],
+  "source_pack_approved": false,
+  "authenticated_progression_observed": false
+}

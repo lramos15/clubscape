@@ -21,6 +21,7 @@ import zlib
 ROOT = Path(__file__).resolve().parents[2]
 LOCAL = ROOT / ".local/source-capture"
 TOOL = ROOT / "tools/source-capture"
+HUD_OUTPUT = ROOT / "assets/reference/osrs240/native-hud"
 
 
 def sha(path: Path) -> str:
@@ -60,6 +61,9 @@ def prepare(source: Path) -> list[Path]:
     capture_lock = json.loads((TOOL / "dependencies.json").read_text())
     for record in capture_lock["additional_artifacts"]:
         target = LOCAL / "tooling" / record["name"]
+        reused = ROOT.parent / "m1-source-captures/.local/source-capture/tooling" / record["name"]
+        if not target.exists() and reused.exists():
+            link(reused, target, record)
         if not target.exists():
             partial = target.with_suffix(".jar.part")
             try:
@@ -124,6 +128,7 @@ def png_dimensions(data: bytes) -> tuple[int, int]:
 def native_render_errors(log: str) -> list[str]:
     errors = []
     lines = log.splitlines()
+    errors.extend(line for line in lines if "ERROR injected-client - Client error:" in line)
     for index, line in enumerate(lines):
         if "thrown in " not in line or "method <" not in line:
             continue
@@ -136,11 +141,57 @@ def native_render_errors(log: str) -> list[str]:
     return errors
 
 
+def validate_hud_record(record: dict) -> None:
+    source, settings = record["source"], record["settings"]
+    if source["root_interface"] != 161 or settings["layout"] != "Original Resizable-Classic group161":
+        raise ValueError("HUD is not the original Resizable-Classic root")
+    if not settings["resized"] or settings["network_transport_connected"] or settings["login_handler_invoked"]:
+        raise ValueError("Native HUD fixture state/transport contract violated")
+    links = {int(node["parent_component"]): node["interface_group"] for node in source["component_links"]}
+    for component, group in [(96, 162), (33, 160)]:
+        if links.get((161 << 16) | component) != group:
+            raise ValueError("Native chatbox/orbs interface is missing from the full frame")
+    actual_tabs = sorted((parent & 65535) - 76 for parent in links
+                         if parent >> 16 == 161 and 76 <= (parent & 65535) <= 89)
+    if actual_tabs != settings["enabled_tab_slots"]:
+        raise ValueError("Declared unlock family disagrees with native interface attachments")
+    regions = {region["name"]: region for region in source["native_ui_regions"]}
+    if set(regions) != {"minimap", "chat", "sidebar", "active-panel"}:
+        raise ValueError("Incomplete native HUD pixel-region coverage")
+    for region in regions.values():
+        x, y, width, height = region["bounds"]
+        if width <= 0 or height <= 0 or x < 0 or y < 0 or x + width > 1920 or y + height > 1080:
+            raise ValueError("Native HUD widget bounds are invalid")
+        if region["colors"] < 5 or region["nonblack_pixels"] < 100:
+            raise ValueError("A required native HUD region is blank")
+    active = [widget for widget in source["visible_widgets"] if widget["id"] >> 16 == source["active_interface"]]
+    if not active:
+        raise ValueError("Active native interface has no visible source widgets")
+    texts = " ".join(widget["text"] for widget in active if widget["text"])
+    group = source["active_interface"]
+    if group == 149 and sum(widget["item"] >= 0 for widget in active) < 12:
+        raise ValueError("Native inventory item widgets were not populated")
+    if group == 320 and "Total level: 33" not in texts:
+        raise ValueError("Native skill values are missing")
+    if group == 593 and not all(text in texts for text in ["Bronze sword", "Stab", "Lunge", "Slash", "Block"]):
+        raise ValueError("Native weapon and source combat-category data disagree")
+    if group == 399 and not all(text in texts for text in ["Cook's Assistant", "Completed: 0/187", "Quest Points: 0/347"]):
+        raise ValueError("Native quest content/counters are incomplete")
+    if group == 12 and "The Bank of Gielinor" not in texts:
+        raise ValueError("Native bank frame did not initialize")
+    if group == 300 and ("General Store" not in texts or sum(widget["item"] >= 0 for widget in active) < 8):
+        raise ValueError("Native shop frame/stock did not initialize")
+    if group == 231 and not any(widget["type"] == 6 for widget in active):
+        raise ValueError("Native instructor portrait was omitted")
+
+
 def validate(directory: Path) -> dict:
     manifest = json.loads((directory / "captures.json").read_text())
     if manifest["owner_reference_pack_approved"] or manifest.get("gpu_plugin_enabled"):
         raise ValueError("Unexpected approval or non-stock GPU-plugin state")
     records = manifest["captures"]
+    if manifest.get("profile") == "hud" and not records:
+        raise ValueError("Native HUD experiment has not produced a complete capture yet")
     counts = collections.Counter()
     paths = set()
     animation_groups = collections.defaultdict(list)
@@ -187,6 +238,8 @@ def validate(directory: Path) -> dict:
             if settings["camera_world_tile_xz"] != [record["source"]["base_x"] + local[0] // 128,
                                                     record["source"]["base_y"] + local[2] // 128]:
                 raise ValueError("Source scene coordinates were relocated")
+        if record["kind"] == "original-runtime-hud-fixture":
+            validate_hud_record(record)
     for sequence, frames in animation_groups.items():
         lengths = frames[0]["source"]["frame_lengths_client_cycles"]
         if sorted(frame["source"]["frame_index"] for frame in frames) != list(range(len(lengths))):
@@ -199,6 +252,12 @@ def validate(directory: Path) -> dict:
                     "original-runtime-title-state-fixture": 5}
         if dict(counts) != expected:
             raise ValueError(f"Incomplete capture set: {dict(counts)}")
+    if manifest["profile"] == "hud":
+        names = {"native-inventory", "native-equipment", "native-skills", "native-combat", "native-prayer",
+                 "native-magic", "native-quest-list", "native-bank", "native-shop", "native-guide-dialogue",
+                 "family-guide", "family-survival", "family-quest-guide", "family-combat", "family-prayer", "family-magic"}
+        if paths != {f"hud/{name}.png" for name in names} or counts != {"original-runtime-hud-fixture": 16}:
+            raise ValueError("Incomplete native HUD/panel/progression-family capture set")
     return {"schema_version": 1, "result": "passed", "captures": len(records), "counts": dict(counts),
             "complete_native_animation_cycles": sorted(animation_groups),
             "manifest_sha256": sha(directory / "captures.json"),
@@ -212,13 +271,15 @@ def input_record(path: Path) -> dict:
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--source", type=Path)
-    parser.add_argument("--output", type=Path, default=ROOT / "assets/reference/osrs240")
-    parser.add_argument("--profile", choices=["all", "models", "scenes", "title"], default="all")
+    parser.add_argument("--output", type=Path)
+    parser.add_argument("--profile", choices=["all", "models", "scenes", "title", "hud"], default="all")
     parser.add_argument("--seed", type=int, default=0)
     parser.add_argument("--verify-only", action="store_true", help="Validate captured files without loading the runtime/cache")
     parser.add_argument("--java-home", type=Path,
                         default=Path.home() / ".local/share/jdks/temurin-17.0.20.1+1")
     args = parser.parse_args()
+    if args.output is None:
+        args.output = HUD_OUTPUT if args.profile == "hud" else ROOT / "assets/reference/osrs240"
     if not args.output.resolve().is_relative_to(ROOT):
         raise ValueError("Capture output must stay inside this worktree")
     if args.verify_only:

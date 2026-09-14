@@ -1,0 +1,185 @@
+{
+  "schema_version": 1,
+  "captured_at": "2026-09-14T19:01:20.865459+00:00",
+  "runtime_source_selection": {
+    "path": "research/current-source/selection.json",
+    "size_bytes": 8853,
+    "sha256": "b1a8d65cec6143946dba7172bc29142c8aa47cc4383abaffefef5b2ea3b2b028"
+  },
+  "base_dependency_lock": {
+    "path": "tools/cache-import/dependencies.json",
+    "size_bytes": 2950,
+    "sha256": "cd3d731fc45b12d7515d7ded9df6b5c53d70e27a33011a78d254c3421be0d8e4"
+  },
+  "capture_dependency_lock": {
+    "path": "tools/source-capture/dependencies.json",
+    "size_bytes": 713,
+    "sha256": "540d4966ce3baaab346edce246a26ca5fe7b8d59f42d29cb4867389c7780c072"
+  },
+  "runtime_artifacts": [
+    {
+      "path": ".local/source-capture/tooling/cache-1.12.39-SNAPSHOT.jar",
+      "size_bytes": 444766,
+      "sha256": "8056039bee74da629e596896048645085f7753159a064da51c24e9bd99f13e8e"
+    },
+    {
+      "path": ".local/source-capture/tooling/gson-2.8.5.jar",
+      "size_bytes": 241622,
+      "sha256": "233a0149fc365c9f6edbd683cfe266b19bdc773be98eabdaf6b3c924b48e7d81"
+    },
+    {
+      "path": ".local/source-capture/tooling/guava-23.2-jre.jar",
+      "size_bytes": 2649860,
+      "sha256": "5be9a7d05ba0ccd74708bc8018ae412255f85843c0b92302e9b9befa6ed52564"
+    },
+    {
+      "path": ".local/source-capture/tooling/slf4j-api-1.7.25.jar",
+      "size_bytes": 41203,
+      "sha256": "18c4a0095d5c1da6b817592e767bb23d29dd2f560ad74df75ff3961dbde25b79"
+    },
+    {
+      "path": ".local/source-capture/tooling/slf4j-simple-1.7.25.jar",
+      "size_bytes": 15257,
+      "sha256": "0966e86fffa5be52d3d9e7b89dd674d98a03eed0a454fbaf7c1bd9493bd9d874"
+    },
+    {
+      "path": ".local/source-capture/tooling/commons-compress-1.10.jar",
+      "size_bytes": 409475,
+      "sha256": "807c95293e41e8159477442077da6d0962a7f486d4b980be61f60a8db9cb290f"
+    },
+    {
+      "path": ".local/source-capture/tooling/jna-5.9.0.jar",
+      "size_bytes": 1729586,
+      "sha256": "eafcc780b445434d3c5ae7fa2fb6665de1a7560d537d2c408a8e80cd14d27161"
+    },
+    {
+      "path": ".local/source-capture/tooling/json-20090211.jar",
+      "size_bytes": 45944,
+      "sha256": "055be110a570f9cda3eba8d70a006ff46c77a048bc67868524879211c48b330a"
+    },
+    {
+      "path": ".local/source-capture/tooling/injected-client-1.12.38.jar",
+      "size_bytes": 4235748,
+      "sha256": "7fdedf1194261cc5b99faa35e0d2b4e45b6d56665402ccbde7f3aa6207c3f947"
+    },
+    {
+      "path": ".local/source-capture/tooling/runelite-api-1.12.38-runtime.jar",
+      "size_bytes": 272846,
+      "sha256": "6d50aa843c070120a5093c5ead29d72e92742074346241e0359a133dad008852"
+    },
+    {
+      "path": ".local/source-capture/tooling/client-1.12.38.jar",
+      "size_bytes": 5261401,
+      "sha256": "6dcd0da2fdbf48d35c3d8f666d801d05afa964030c553e806eb173dba97323d5"
+    }
+  ],
+  "capture_sources": [
+    {
+      "path": "tools/source-capture/FixturePreferenceWrites.java",
+      "size_bytes": 905,
+      "sha256": "7ca846b781906131e57594db73c57db0f87d17bfaf0fa9f06f200ec87135391a"
+    },
+    {
+      "path": "tools/source-capture/FixtureVarcs.java",
+      "size_bytes": 310,
+      "sha256": "f63d746a5ad20933b8645fb70c6ac430c14d1d9c56b395793d31e7c8f833cf97"
+    },
+    {
+      "path": "tools/source-capture/HudCapture.java",
+      "size_bytes": 26746,
+      "sha256": "1acce05b4e2437677cbf447f292740a647e12fde14d75d6337bdf019b08c55a7"
+    },
+    {
+      "path": "tools/source-capture/HudSourceCatalog.java",
+      "size_bytes": 3360,
+      "sha256": "f7a413c7efd299acda3534f50d18883c0e34a975f0670c27a6370ccf3c4713df"
+    },
+    {
+      "path": "tools/source-capture/MutedAnimationAudio.java",
+      "size_bytes": 565,
+      "sha256": "5c6fa7c9853215420c542dd1b5cb65903a888af3d3350ec7ee112f5340f07bcb"
+    },
+    {
+      "path": "tools/source-capture/NATIVE_HUD.md",
+      "size_bytes": 8200,
+      "sha256": "a2cf4f147d1461ec00b37e4a9a8cd2f03c434ff7bfe350ffc91a0eade68f397f"
+    },
+    {
+      "path": "tools/source-capture/OriginalCache.java",
+      "size_bytes": 2798,
+      "sha256": "44be32c02c097ae8872426e0a052707dd625194c696d0babeaf58c710091e2c3"
+    },
+    {
+      "path": "tools/source-capture/OriginalCapture.java",
+      "size_bytes": 17582,
+      "sha256": "972dbe38f17e96cab592cae44676ea67b163ed181f5ac41fb8a9b2d6437fe45a"
+    },
+    {
+      "path": "tools/source-capture/README.md",
+      "size_bytes": 10172,
+      "sha256": "061a02d43669c0f8eb6aeff7985af8ad97c5c8011928c7cee1e30c70f63e3478"
+    },
+    {
+      "path": "tools/source-capture/TitleCapture.java",
+      "size_bytes": 5590,
+      "sha256": "4e187c56c0f44ecdbb25724c73a29be7088ed2b407cec368be30999f082b868d"
+    },
+    {
+      "path": "tools/source-capture/WorldCapture.java",
+      "size_bytes": 10051,
+      "sha256": "4f75d9f1a4427a07b4fe26077a390ff572473ae7e4e4a57ecd3e9ddef490b4e1"
+    },
+    {
+      "path": "tools/source-capture/capture.py",
+      "size_bytes": 19522,
+      "sha256": "2691a3be70704eb4d6d9fd33bca7d189ade022c7b31368d4225075e5c8dbef2a"
+    },
+    {
+      "path": "tools/source-capture/dependencies.json",
+      "size_bytes": 713,
+      "sha256": "540d4966ce3baaab346edce246a26ca5fe7b8d59f42d29cb4867389c7780c072"
+    },
+    {
+      "path": "tools/source-capture/test_capture.py",
+      "size_bytes": 4079,
+      "sha256": "43bd067efce756cc38eb3828a9ee1bb6636f4060b73f56f69b16dbcf081f6515"
+    },
+    {
+      "path": "tools/source-capture/test_hud.py",
+      "size_bytes": 4071,
+      "sha256": "023762699638e5c8c52541540d996c90581dba3b22dad80d8d22b38247c7d4fe"
+    }
+  ],
+  "jvm_arguments": [
+    "-ea",
+    "-Xmx3g",
+    "-Djava.awt.headless=true",
+    "--add-opens=java.base/java.lang=ALL-UNNAMED",
+    "-Dclubscape.capture.seed=0",
+    "-Xlog:exceptions=info",
+    "-Duser.home=/home/lramos15/clubscape/.worktrees/m1-native-hud/.local/source-capture/java-home",
+    "-Djava.io.tmpdir=/home/lramos15/clubscape/.worktrees/m1-native-hud/.local/source-capture/java-work"
+  ],
+  "source_cache_id": 2695,
+  "source_cache_sha256": "8f6bd170d2f97e310aaa7700626f7140647a97ce926195ef7625d738f4aa4157",
+  "fixture_seed": 0,
+  "profile": "hud",
+  "native_render_exceptions": [],
+  "input_hashes_unchanged_after_capture": true,
+  "personal_runelite_state_read": false,
+  "terms_accepted": false,
+  "authenticated": false,
+  "owner_reference_pack_approved": false,
+  "validation": {
+    "schema_version": 1,
+    "result": "passed",
+    "captures": 16,
+    "counts": {
+      "original-runtime-hud-fixture": 16
+    },
+    "complete_native_animation_cycles": [],
+    "manifest_sha256": "f70232054d6e4213dcaf5d83bed667c0cd7771e6832993fbd7824dd3463b8218",
+    "owner_reference_pack_approved": false,
+    "source_journey_verified": false
+  }
+}

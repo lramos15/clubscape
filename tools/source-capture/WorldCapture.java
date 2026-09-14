@@ -42,7 +42,7 @@ public final class WorldCapture
         throw new IllegalStateException("Missing exact native static field " + owner.getName() + "." + name);
     }
 
-    void run() throws Exception
+    private void initializeVariables() throws Exception
     {
         int maximumVarp = 0;
         vp configurations = capture.cache.archive(2);
@@ -62,6 +62,19 @@ public final class WorldCapture
                 method.invoke(null);
             }
         }
+    }
+
+    void prepareForHud() throws Exception
+    {
+        initializeVariables();
+        fq.ab(32768);
+        ez.cc(25);
+        view("lumbridge-hud", 3168, 3168, 3222, -1300, 3208, 3222, 3218, 0, false);
+    }
+
+    void run() throws Exception
+    {
+        initializeVariables();
         fq.ab(32768);
         ez.cc(25);
         view("lumbridge-castle-plaza", 3168, 3168, 3222, -1300, 3208, 3222, 3218, 0);
@@ -73,6 +86,12 @@ public final class WorldCapture
 
     private void view(String name, int baseX, int baseY, int cameraWorldX, int cameraHeightOffset, int cameraWorldY,
                       int focalWorldX, int focalWorldY, int yawInput) throws Exception
+    {
+        view(name, baseX, baseY, cameraWorldX, cameraHeightOffset, cameraWorldY, focalWorldX, focalWorldY, yawInput, true);
+    }
+
+    private void view(String name, int baseX, int baseY, int cameraWorldX, int cameraHeightOffset, int cameraWorldY,
+                      int focalWorldX, int focalWorldY, int yawInput, boolean renderCapture) throws Exception
     {
         dz world = new dz(0, 104, 104, 25, ex.az);
         logicalInt(world, dz.class, "ac", -1444178379, baseX);
@@ -159,6 +178,7 @@ public final class WorldCapture
         staticField(client.class, "jj", up.class, pitch);
         staticField(client.class, "jt", up.class, yaw);
         staticField(client.class, "kb", boolean.class, true);
+        if (!renderCapture) return;
         loader.gb.dh(cameraX, cameraY, cameraZ, pitch, yaw, 0, focalX, focalY, true);
         capture.save("scenes/" + name, pixels, 1920, 1080, 0, "original-runtime-scene-fixture",
             OriginalCapture.map("region_ids", squares, "base_x", baseX, "base_y", baseY,

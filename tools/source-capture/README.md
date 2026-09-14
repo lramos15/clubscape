@@ -28,7 +28,8 @@ cache/JAR sizes and SHA-256 values are verified before reuse and cache hashes
 again afterward. Only the matching `client-1.12.38.jar` resource dependency was
 newly downloaded; its bootstrap hash is locked in `dependencies.json`.
 `/runelite/index` is required by the real archive API. Its 33 overlays concern
-clientscripts (index 12); these fixtures do not invoke those scripts.
+clientscripts (index 12). The original model/scene/title profile does not invoke
+them; the new HUD profile drives native scripts and records relevant overlays.
 
 For another checkout with the integrated importer inputs already prepared:
 
@@ -41,7 +42,17 @@ commands as documented under `tools/cache-import/`. The capture tool fails
 nonzero for absent/corrupt inputs rather than changing source identity or using
 substitutes. It never reads personal `~/.runelite`.
 
-Optional flags: `--profile models|scenes|title|all`, `--output PATH`,
+The focused native HUD extension is documented in [NATIVE_HUD.md](NATIVE_HUD.md):
+
+```bash
+python3 tools/source-capture/capture.py --profile hud
+python3 tools/source-capture/capture.py --profile hud --verify-only
+```
+
+It writes a separate 16-image set under `assets/reference/osrs240/native-hud/`
+without overwriting the original 93 fixtures.
+
+Optional flags: `--profile models|scenes|title|all|hud`, `--output PATH`,
 `--seed INTEGER`, and `--java-home PATH`. Output must remain in this worktree.
 `--verify-only` validates committed captures without Java or a cache download.
 
@@ -161,10 +172,13 @@ logging detects **swallowed native rendering errors**: nonblank pixels alone
 previously hid a missing native framebuffer dependency, and are not sufficient
 for acceptance.
 
-## Remaining owner handoff
+## Remaining reference scope
 
 See `research/source-capture/handoff.json` and `coverage.json`. The Director
-still needs one explicit account/terms handoff for legitimate source progression,
-actual Resizable-Classic HUD/interface state, branch-specific arrival/cameras,
-dialogue and transition timing. No source pack, candidate presentation,
-gameplay, performance or RuneLite compatibility is approved by these fixtures.
+can combine public/wiki references with controlled original-runtime fixtures.
+The owner permits terms acceptance; no live account is a blanket prerequisite
+for source reference preparation. The native HUD profile now supplies the full
+Resizable-Classic frame and representative interface/unlock families. Exact
+server-state mappings and observed timing remain separately labeled. No source
+pack, candidate presentation, gameplay, performance or RuneLite compatibility
+is approved by these fixtures.

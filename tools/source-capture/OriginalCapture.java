@@ -50,6 +50,7 @@ public final class OriginalCapture
                 OriginalCapture capture = new OriginalCapture(cache, Path.of(args[2]));
                 if (args.length > 3 && args[3].equals("scenes")) new WorldCapture(capture).run();
                 else if (args.length > 3 && args[3].equals("title")) new TitleCapture(capture).run();
+                else if (args.length > 3 && args[3].equals("hud")) new HudCapture(capture).run();
                 else if (args.length > 3 && args[3].equals("all"))
                 {
                     capture.run();

@@ -1,0 +1,98 @@
+{
+  "schema_version": 1,
+  "task": "m1-native-hud-reference",
+  "verified_at": "2026-09-14T19:01:42.095610+00:00",
+  "result": "passed",
+  "commands": [
+    {
+      "command": [
+        "python3",
+        "tools/source-capture/capture.py",
+        "--profile",
+        "hud"
+      ],
+      "exit_code": 0,
+      "log": "research/source-capture/native-hud-commands/capture.log",
+      "sha256": "27ca2b2c8563d95c8a5b1c091dfa1d39d1a702590520a5b899a4933b73468934"
+    },
+    {
+      "command": [
+        "python3",
+        "tools/source-capture/capture.py",
+        "--profile",
+        "hud",
+        "--verify-only"
+      ],
+      "exit_code": 0,
+      "log": "research/source-capture/native-hud-commands/verify.log",
+      "sha256": "27ca2b2c8563d95c8a5b1c091dfa1d39d1a702590520a5b899a4933b73468934"
+    },
+    {
+      "command": [
+        "python3",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "tools/source-capture",
+        "-p",
+        "test_*.py",
+        "-q"
+      ],
+      "exit_code": 0,
+      "log": "research/source-capture/native-hud-commands/tests.log",
+      "sha256": "0827dc24ab4361761eab1bdbc961d42a691715bea053d49eb26b811f76494c9a"
+    },
+    {
+      "command": [
+        "python3",
+        "tools/source-capture/capture.py",
+        "--profile",
+        "hud",
+        "--output",
+        ".local/native-hud/final-repeat"
+      ],
+      "exit_code": 0,
+      "log": "research/source-capture/native-hud-commands/repeat.log",
+      "sha256": "27ca2b2c8563d95c8a5b1c091dfa1d39d1a702590520a5b899a4933b73468934"
+    },
+    {
+      "command": [
+        "python3",
+        "tools/source-capture/capture.py",
+        "--profile",
+        "all",
+        "--output",
+        ".local/native-hud/original93-regression"
+      ],
+      "exit_code": 0,
+      "log": "research/source-capture/native-hud-commands/original93-regression.log",
+      "sha256": "ca663457bc1b697a10833652d401c2a3da01a397d04143a96d6e04fbfea3827f"
+    }
+  ],
+  "unit_tests": 20,
+  "native_hud_images": 16,
+  "native_hud_repeat_byte_identical": 16,
+  "hud_manifest_sha256": "f70232054d6e4213dcaf5d83bed667c0cd7771e6832993fbd7824dd3463b8218",
+  "native_hud_pixel_bytes": 19480343,
+  "original_93_regression": {
+    "count": 93,
+    "byte_identical": 93,
+    "different": []
+  },
+  "native_ui_gates": [
+    "Source root161 and original layout/update/painter",
+    "All14 native side controls in unlocked frames",
+    "Native minimap/chat/sidebar/panel geometry and nonblank region checks",
+    "Source inventory/combat/quest/bank/shop/dialogue contents",
+    "Actual native interface-parent links for6 availability families",
+    "No caught source-script/render errors",
+    "No network transport or login handlers"
+  ],
+  "native_runtime_unchanged": true,
+  "owner_terms_permission_recorded": true,
+  "terms_actually_accepted": false,
+  "authenticated_progression_observed": false,
+  "reference_pack_approved": false,
+  "m1_accepted": false
+}
