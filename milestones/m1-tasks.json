@@ -7,12 +7,14 @@
     "admissions_open": true,
     "active": [
       {"id": "director", "task": "M1-FLEET-CONTRACTS"},
-      {"id": "ac0f0856-44af-445b-bd90-6db7a1f4fc74", "task": "M1-FLEET-NATIVE-HUD"}
-    ],
-    "reserved": [
       {"id": "0f5ddddf-0aa0-4908-b0d3-1ffc6b1f7a20", "task": "M1-FLEET-ENGINE"},
       {"id": "fdda1fb0-1135-4cf8-8cff-3db550e48f54", "task": "M1-FLEET-PRODUCT-CONTENT"},
-      {"id": "e9ed6a96-6bcb-4d27-8b4c-d504edda327c", "task": "M1-FLEET-AUDIO-BINDINGS"}
+      {"id": "e9ed6a96-6bcb-4d27-8b4c-d504edda327c", "task": "M1-FLEET-AUDIO-BINDINGS"},
+      {"id": "56283b56-0ae0-4839-a961-1a23a850dd1b", "task": "M1-FLEET-PUBLIC-REFERENCES"}
+    ],
+    "reserved": [
+      {"id": "2766e089-44e5-4a1d-974e-7b03ad9c269d", "task": "M1-FLEET-LIVE-SERVER"},
+      {"id": "6c58b841-a767-41ff-bef5-2abbd5b1a087", "task": "M1-FLEET-MAC-HANDOFF"}
     ],
     "queued": [],
     "parked": [
@@ -27,9 +29,45 @@
   },
   "tasks": [
     {
+      "id": "M1-FLEET-LIVE-SERVER",
+      "goal": "Wire compiled source content, the headless engine and fenced transactional persistence into real game RPCs and source-cadence scheduling.",
+      "status": "READY",
+      "specs": ["spec/game-contracts.md", "spec/networking.md", "crates/server/README.md"],
+      "dependencies": ["M1-FLEET-STORAGE", "M1-FLEET-MECHANICS-CONTRACTS"],
+      "allowed_paths": ["crates/server/**", "crates/protocol/**", "crates/client-core/tests/**", "spec/game-networking.md"],
+      "forbidden_paths": ["prompt.md", "crates/game-types/**", "crates/world-engine/**", "content/**", "assets/**", "web/**", "Cargo.toml", "milestones/**"],
+      "outputs": ["Optional real game service with bounded coordinator/tick ownership", "Authenticated game RPCs and private-safe snapshots/event routing", "Real PostgreSQL/socket recovery tests"],
+      "validation_commands": ["cargo test -p clubscape-server -p clubscape-protocol", "cargo clippy -p clubscape-server -p clubscape-protocol --all-targets -- -D warnings", "python3 tools/dev.py integration"],
+      "test_requirements": ["No double tick/sequence/commit", "No offline activity farming", "No authority leakage or wrong-actor events", "Configured invalid content fails instead of falling back"],
+      "acceptance": ["SQL m1-live-world-server describes actual working integration and any remaining engine/content prerequisites"],
+      "reserved_namespaces": ["world.*", "actor.*"],
+      "source_notes": ["Owner-run final presentation/browser testing remains separate."],
+      "parity_entries": [],
+      "adaptations": [],
+      "evidence": []
+    },
+    {
+      "id": "M1-FLEET-MAC-HANDOFF",
+      "goal": "Prepare explicit owner-run native Mac Chrome/Edge acceptance tooling without inventing measurements or bypassing browser isolation.",
+      "status": "READY",
+      "specs": ["milestones/m1-owner-followups.json", "tools/browser-harness/README.md", "spec/performance.md"],
+      "dependencies": ["M1-FLEET-BROWSER"],
+      "allowed_paths": ["tools/browser-harness/**", "research/browser-platform/**"],
+      "forbidden_paths": ["prompt.md", "crates/**", "web/**", "assets/**", "spec/**", "milestones/**"],
+      "outputs": ["macOS-aware harness/handoff and exact pending owner evidence"],
+      "validation_commands": ["pnpm check", "pnpm test", "pnpm test:browser"],
+      "test_requirements": ["Real product/version/backend identity", "No Linux-only seccomp assumption on macOS", "Unknown sandbox/native results remain unverified", "No spoofed Edge/software substitute"],
+      "acceptance": ["SQL m1-mac-handoff accurately separates implemented tooling from unrun owner Mac measurements"],
+      "reserved_namespaces": [],
+      "source_notes": ["Owner selected an M-series Mac and permitted available Sparky engineering checks."],
+      "parity_entries": [],
+      "adaptations": [],
+      "evidence": []
+    },
+    {
       "id": "M1-FLEET-AUDIO-BINDINGS",
       "goal": "Resolve the exact remaining M1 source sound and quest-jingle selectors/timing relationships before reference-pack approval.",
-      "status": "READY",
+      "status": "IMPLEMENTING",
       "specs": ["research/audio-source/**", "research/reference-pack/v1/**", "research/journey-rules/**"],
       "dependencies": ["M1-FLEET-AUDIO"],
       "allowed_paths": ["tools/audio-import/**", "research/audio-source/**", "assets/source/osrs/audio-runtime/**", "assets/manifests/osrs/audio-runtime.json"],
@@ -47,7 +85,7 @@
     {
       "id": "M1-FLEET-NATIVE-HUD",
       "goal": "Close the specific original Resizable-Classic HUD/interface fixture gap using native source rendering rather than generic replacements.",
-      "status": "IMPLEMENTING",
+      "status": "DONE",
       "specs": ["prompt.md section 30.2", "research/source-capture/handoff.json", "milestones/m1-owner-followups.json"],
       "dependencies": ["M1-FLEET-SOURCE-CAPTURES"],
       "allowed_paths": ["tools/source-capture/**", "research/source-capture/**", "assets/reference/osrs240/**"],
@@ -60,7 +98,7 @@
       "source_notes": ["Owner directs public/offline source evidence; no account login was supplied."],
       "parity_entries": [],
       "adaptations": [],
-      "evidence": []
+      "evidence": ["db103ba838cc954ce9adbbaecff4cc70d6d0962c integrated as b38ea17", "16 native full Classic HUD/panel/family fixtures verified after integration; 20 tests passed; 93 earlier captures unchanged"]
     },
     {
       "id": "M1-FLEET-WEB-DELIVERY",
@@ -101,7 +139,7 @@
     {
       "id": "M1-FLEET-PUBLIC-REFERENCES",
       "goal": "Complete a traceable public/source-fixture reference pack and source-case gallery for bounded owner approval.",
-      "status": "BLOCKED",
+      "status": "READY",
       "specs": ["prompt.md section 30.2", "milestones/m1-owner-followups.json", "research/source-capture/handoff.json"],
       "dependencies": ["M1-FLEET-SOURCE-CAPTURES", "M1-FLEET-AUDIO"],
       "allowed_paths": ["research/reference-pack/**", "assets/reference/wiki/**", "tools/reference-pack/**"],
@@ -137,7 +175,7 @@
     {
       "id": "M1-FLEET-ENGINE",
       "goal": "Implement the complete source-driven headless world action/tick engine over validated content and reusable primitives.",
-      "status": "READY",
+      "status": "IMPLEMENTING",
       "specs": ["spec/game-contracts.md", "research/journey-rules/**", "crates/simulation/README.md"],
       "dependencies": ["M1-FLEET-SIMULATION", "M1-FLEET-RULES"],
       "allowed_paths": ["crates/world-engine/**"],
@@ -155,7 +193,7 @@
     {
       "id": "M1-FLEET-PRODUCT-CONTENT",
       "goal": "Assemble complete actual M1 source-backed content and world/collision/asset bindings, not a demonstration square or fixture character.",
-      "status": "READY",
+      "status": "IMPLEMENTING",
       "specs": ["spec/game-contracts.md", "research/journey-rules/**", "research/current-source/extraction-contract.json"],
       "dependencies": ["M1-FLEET-RUNTIME", "M1-FLEET-RULES"],
       "allowed_paths": ["content/m1/**", "tools/m1-content/**", "research/m1-bindings/**"],
