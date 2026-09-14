@@ -7,11 +7,10 @@
     "admissions_open": true,
     "active": [
       {"id": "director", "task": "M1-FLEET-CONTRACTS"},
-      {"id": "e9ed6a96-6bcb-4d27-8b4c-d504edda327c", "task": "M1-FLEET-AUDIO-BINDINGS"},
       {"id": "0f5ddddf-0aa0-4908-b0d3-1ffc6b1f7a20", "task": "M1-FLEET-ENGINE-CLOSURE"}
     ],
     "reserved": [
-      {"id": "ac0f0856-44af-445b-bd90-6db7a1f4fc74", "task": "M1-FLEET-POTION-ASSETS"}
+      {"id": "56283b56-0ae0-4839-a961-1a23a850dd1b", "task": "M1-FLEET-PUBLIC-REFERENCES"}
     ],
     "queued": [],
     "parked": [
@@ -28,7 +27,7 @@
     {
       "id": "M1-FLEET-POTION-ASSETS",
       "goal": "Publish only the additional original source inputs needed by the approved 1-4-dose potion loot adaptation.",
-      "status": "READY",
+      "status": "DONE",
       "specs": ["milestones/m1-goblin-loot-approval.json", "tools/cache-import/CONTENT_CLOSURE.md"],
       "dependencies": ["M1-FLEET-ASSET-CLOSURE"],
       "allowed_paths": ["tools/cache-import/**", "research/current-source/**", "assets/source/osrs/cache2695/**", "assets/manifests/osrs/**"],
@@ -41,7 +40,7 @@
       "source_notes": ["New IDs were identified by the canonical owner-approved potion pool, not arbitrary content expansion."],
       "parity_entries": [],
       "adaptations": ["adaptation.m1.goblin_energy_potion_provisional"],
-      "evidence": []
+      "evidence": ["4a14619b integrated; source3010/3011/model2697 and necessaryplaceholder19365 published;59tests reportedpassed; parentvalidate-published passed andallprior source/reference filesretained."]
     },
     {
       "id": "M1-FLEET-BINDING-APPLICATION",
@@ -172,7 +171,7 @@
     {
       "id": "M1-FLEET-AUDIO-BINDINGS",
       "goal": "Resolve the exact remaining M1 source sound and quest-jingle selectors/timing relationships before reference-pack approval.",
-      "status": "IMPLEMENTING",
+      "status": "DONE",
       "specs": ["research/audio-source/**", "research/reference-pack/v1/**", "research/journey-rules/**"],
       "dependencies": ["M1-FLEET-AUDIO"],
       "allowed_paths": ["tools/audio-import/**", "research/audio-source/**", "assets/source/osrs/audio-runtime/**", "assets/manifests/osrs/audio-runtime.json"],
@@ -185,7 +184,7 @@
       "source_notes": ["Public-reference pack's remaining bounded cue list"],
       "parity_entries": [],
       "adaptations": [],
-      "evidence": []
+      "evidence": ["3b2634376b+2d4dcdc9 integrated; corrected nativepercussion,264decoded signals,46testswith6integration-onlyskips inparent.", "Exactremaining two triggeruncertainties covered ONLY by explicit owner-approved adaptations in milestones/m1-audio-trigger-approval.json, not claimed source observations."]
     },
     {
       "id": "M1-FLEET-NATIVE-HUD",
@@ -244,7 +243,7 @@
     {
       "id": "M1-FLEET-PUBLIC-REFERENCES",
       "goal": "Complete a traceable public/source-fixture reference pack and source-case gallery for bounded owner approval.",
-      "status": "READY",
+      "status": "IMPLEMENTING",
       "specs": ["prompt.md section 30.2", "milestones/m1-owner-followups.json", "research/source-capture/handoff.json"],
       "dependencies": ["M1-FLEET-SOURCE-CAPTURES", "M1-FLEET-AUDIO"],
       "allowed_paths": ["research/reference-pack/**", "assets/reference/wiki/**", "tools/reference-pack/**"],
