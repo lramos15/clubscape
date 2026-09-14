@@ -1,6 +1,8 @@
 {
   "connected_with_source_doors_open": 30,
-  "game_content_sha256": "1d77b55bd56bf2f03a8b5204707c49f8dd49ae39c76cc11c0eacde6a34ec618e",
+  "door_roundtrip_preserves_source_cells": true,
+  "door_transform_definitions": 68,
+  "game_content_sha256": "18a617a855e6b8dfa07ea5cee5faa1cd6a1d7dd65ecc83d6f1d3eb0c8fbcaf92",
   "presentation_approved": false,
   "required_walk_segments": 30,
   "routes": [
@@ -32,7 +34,7 @@
         0
       ],
       "id": "tutorial_survival_to_chef",
-      "path_sha256": "c839a32f5211a8395d404e8109aea834de34bee8307a53b5eef655d1b6c51415",
+      "path_sha256": "00a4afc2d8ae1e2a9b7210c4a531d5931e4a430b4b86332f1a89e3f90a2344c0",
       "source_doors_open_path_exists": true,
       "start": [
         3103,
@@ -40,7 +42,7 @@
         0
       ],
       "static_closed_path_exists": false,
-      "steps": 32,
+      "steps": 34,
       "to": "location.tutorial.kitchen",
       "within_explicit_runtime_cells": true
     },
@@ -52,7 +54,7 @@
         0
       ],
       "id": "tutorial_chef_to_quest_guide",
-      "path_sha256": "8fad42c8304a47fe9bc88ea4987e74308a717a030ee0c025367c10b86630386f",
+      "path_sha256": "7bbbfbaf736f6d69d4afee2b383c939e8e90d6fdaceb09ae10a7ec8d499b8186",
       "source_doors_open_path_exists": true,
       "start": [
         3075,
@@ -232,7 +234,7 @@
         0
       ],
       "id": "tutorial_chapel_to_magic",
-      "path_sha256": "e6bb20dfb5c78a28e0280b2e8272348442810eeecbede15a5a1d40b052a6c1f8",
+      "path_sha256": "b532812fde7fc0a0b55fe37eea75cb661fcbb95ffd0c125a808a4577138a6a95",
       "source_doors_open_path_exists": true,
       "start": [
         3125,
@@ -240,7 +242,7 @@
         0
       ],
       "static_closed_path_exists": false,
-      "steps": 28,
+      "steps": 29,
       "to": "location.tutorial.magic_house",
       "within_explicit_runtime_cells": true
     },
@@ -352,7 +354,7 @@
         0
       ],
       "id": "castle_to_swamp_copper",
-      "path_sha256": "1c57290ec0aaa92ecf72106a1aebccefa45c8b2114a6ed10caa019da1c4f3051",
+      "path_sha256": "7e2761cde7b3b51ce68f83fd3e0eb37076cb55471af8bd1d2600fd7d4ab36fe0",
       "source_doors_open_path_exists": true,
       "start": [
         3222,
@@ -412,7 +414,7 @@
         0
       ],
       "id": "coop_to_west_dairy_cow",
-      "path_sha256": "ebc5a83c737c45a3b13845b529dd4d774d4b47c5aa29d4ad59144de8090cea16",
+      "path_sha256": "edc751b567277cba56156627a4ed46d63264c8c781fb211d603ae1784e103621",
       "source_doors_open_path_exists": true,
       "start": [
         3172,
@@ -432,7 +434,7 @@
         0
       ],
       "id": "castle_across_river_to_east_cow",
-      "path_sha256": "5742baf50526a84408b3f104e64bc34d7715d39a08fb20d7d2f7696ad7d4f13a",
+      "path_sha256": "29d511016c010cd19b8f223fd47d793d7c29b2d5e2df1e62872c9c20cf259bdc",
       "source_doors_open_path_exists": true,
       "start": [
         3222,
@@ -440,7 +442,7 @@
         0
       ],
       "static_closed_path_exists": false,
-      "steps": 84,
+      "steps": 85,
       "to": "location.lumbridge.east_cows",
       "within_explicit_runtime_cells": true
     },
@@ -452,7 +454,7 @@
         0
       ],
       "id": "coop_to_wheat",
-      "path_sha256": "b73d3d35cebac64effafcbe2d1ea34465e781f505dd598b6f781e05a3babae10",
+      "path_sha256": "53b2dd87bdb5e2f59cff2066f961004624e6abbceaa5bce4b35eae90d479a75c",
       "source_doors_open_path_exists": true,
       "start": [
         3172,
@@ -472,7 +474,7 @@
         0
       ],
       "id": "wheat_to_mill",
-      "path_sha256": "de3f35af152a75bd2cd9cd64f07af99926c3797764f1bf7649e978b18ec20d3a",
+      "path_sha256": "fd19398aaa03d200e61362dde82de10d2d186a5889ae66c88e4c925e2cb30700",
       "source_doors_open_path_exists": true,
       "start": [
         3160,
@@ -592,7 +594,7 @@
         0
       ],
       "id": "castle_to_death_entrance",
-      "path_sha256": "136aeffac3dd45c8d4972860bd2c3377458da417eddcd111530a2f69c4412ac2",
+      "path_sha256": "4c515a5f35219d1a3bc8a3a3f4da8d4652b8defc332d384aa6816adf32b897b9",
       "source_doors_open_path_exists": true,
       "start": [
         3222,
@@ -607,7 +609,7 @@
   ],
   "runtime_journey_passed": false,
   "schema_version": 1,
-  "scope": "Potential geometry connectivity only: rebuild actual source clipping while omitting precisely the source Open-able wall-door leaves. The runtime content is NOT mutated and no door is approved or silently unlocked. Actual access guards, open/close state, arrival timing and live gameplay still require shared mechanics and source validation.",
+  "scope": "Source geometry connectivity through the actual schema2 ObjectTransform open-state collisions, not an empty map or wholesale door deletion. Open/close restores exact source cells. This topology check does not bypass access guards in gameplay, execute unbound source timing or certify inferred hinge/arrival/renderer fidelity.",
   "source_transit_pairs": [
     "tutorial_quest_ladder",
     "tutorial_combat_ladder",

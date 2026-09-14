@@ -1,0 +1,36 @@
+{
+  "schema_version": 2,
+  "source_profile": "profile.osrs.current_normal_f2p",
+  "world_members": false,
+  "initial_settings": {
+    "run_enabled": false,
+    "auto_retaliate": true,
+    "death_auto_equip": false,
+    "death_supply_piles": false,
+    "experience": null,
+    "appearance_confirmed": false
+  },
+  "settings_basis": {
+    "status": "inference",
+    "source": "research/journey-rules/initial-state.json",
+    "approval": "not_owner_approved",
+    "notes": "Run-off follows the existing explicit source-contract assumption. Auto-retaliate/on and death auto-equip/supply-piles off are named provisional creation-profile choices, not source observations or implicit serde defaults. Both source death settings remain configurable. Exact fresh-account defaults require source/parent confirmation; the original unknown values remain in policy-bindings."
+  },
+  "appearance": {
+    "body_type_choices": [0, 1],
+    "source_identity": "Original source body-type selector, not a selected Penguin NPC or approved equipment adaptation.",
+    "acceptance_impact": "Full source kit/color/UI controls and the approved player adaptation remain the reference-pack/presentation surface."
+  },
+  "shop_unstocked_line_capacity_candidate": {
+    "value": 40,
+    "status": "inference",
+    "approval": "not_owner_approved",
+    "notes": "The shared unstocked shop policy requires a finite line bound.40 is an explicit provisional content-capacity candidate, not a certified source-server limit; confirm it before source shop acceptance. The destock interval100 is independently source-backed as one per minute, and unresolved restock phase/overstock policy remains non-executable."
+  },
+  "ordinary_m1_ingredients": ["item.bucket", "item.milk.bucket", "item.pot", "item.flour.pot", "item.egg", "item.grain"],
+  "retained_rare_alternatives": {
+    "item.milk.bottomless_bucket": "Source33089/33091, 10000-charge capacity and mode2 are retained. Acquiring Brutus' post-quest drop is not added to the ordinary starter journey; enabling that alternative requires the parent's source/scope decision.",
+    "item.ensouled_goblin_head": "Source13447/mode2 retained; source member/ownership eligibility and conditional stacking are not fabricated."
+  },
+  "unresolved_policy": "Only explicit SourceBinding::Unresolved fields are non-executable. No tutorial edge stays disabled because schema1 lacked a field. Compilation is a data-contract gate, never source gameplay or presentation acceptance."
+}

@@ -1,6 +1,6 @@
 {
   "counts": {
-    "cooks_projected_edges": 21,
+    "cooks_projected_edges": 22,
     "cooks_source_transitions": 22,
     "cooks_states": 10,
     "death_source_states": 4,
@@ -8,12 +8,29 @@
     "dialogues": 21,
     "equipment_slots": 11,
     "interfaces": 26,
-    "items": 114,
+    "items": 116,
+    "mechanics": {
+      "combat_styles": 24,
+      "counters": 134,
+      "entitlements": 12,
+      "experiences": 3,
+      "grants": 17,
+      "ground_policies": 4,
+      "instances": 1,
+      "object_transforms": 68,
+      "prayers": 1,
+      "projectiles": 2,
+      "reconciliations": 1,
+      "spells": 2,
+      "temporary_objects": 1,
+      "travels": 26,
+      "value_providers": 1
+    },
     "normal_note_pairs": 52,
     "npcs": 26,
     "objects": 4837,
     "quests": 2,
-    "recipes": 5,
+    "recipes": 11,
     "regions": 29,
     "runtime_blocked_cells": 16544,
     "runtime_collision_cells": 46358,
@@ -22,15 +39,15 @@
     "skills": 24,
     "source_rules": 52,
     "source_transit_pairs": 11,
-    "spawns": 478,
-    "tutorial_blocked_edges": 36,
-    "tutorial_projected_edges": 37,
+    "spawns": 536,
+    "tutorial_blocked_edges": 0,
+    "tutorial_projected_edges": 73,
     "tutorial_source_transitions": 73,
     "tutorial_states": 71
   },
   "exact_geometry_scope": "Explicit imported cells and source-bound object placement equality, not an observed live clipping dump.",
   "gameplay_executed": false,
-  "known_blockers": "research/m1-bindings/contract-gaps.json",
+  "known_blockers": "research/m1-bindings/unresolved-bindings.json",
   "presentation_approved": false,
   "runtime_compile_passed": false,
   "schema_version": 1,
@@ -39,12 +56,11 @@
     "spawn.death",
     "spawn.tutorial.fishing_spot.3099.3090.p0",
     "spawn.tutorial.fishing_spot.3101.3092.p0",
-    "spawn.tutorial.fishing_spot.3103.3092.p0",
-    "spawn.goblin.level_2.3248.3229.p0"
+    "spawn.tutorial.fishing_spot.3103.3092.p0"
   ],
   "source_status_occurrences": {
-    "inference": 651,
-    "verified_reference": 5548
+    "inference": 2450,
+    "verified_reference": 11569
   },
   "structural_checks_passed": true
 }

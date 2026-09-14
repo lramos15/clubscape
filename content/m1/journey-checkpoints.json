@@ -397,44 +397,59 @@
       "bound_spawn_ids": [],
       "expected_stage_after": "stage.tutorial.experience",
       "expected_stage_before": "stage.tutorial.appearance",
-      "gaps": [
-        "authoritative_events"
+      "gaps": [],
+      "runtime_hooks": [
+        {
+          "index": 0,
+          "kind": "tutorial_transition",
+          "stage": "stage.tutorial.appearance"
+        }
       ],
-      "runtime_hooks": [],
       "source_event": "event.appearance.confirmed",
       "source_transition": "transition.tutorial.appearance",
-      "status": "blocked"
+      "status": "bound_not_gameplay_verified"
     },
     {
       "bound_spawn_ids": [],
       "expected_stage_after": "stage.tutorial.guide_greeting",
       "expected_stage_before": "stage.tutorial.experience",
-      "gaps": [
-        "authoritative_events"
+      "gaps": [],
+      "runtime_hooks": [
+        {
+          "index": 0,
+          "kind": "tutorial_transition",
+          "stage": "stage.tutorial.experience"
+        },
+        {
+          "index": 1,
+          "kind": "tutorial_transition",
+          "stage": "stage.tutorial.experience"
+        },
+        {
+          "index": 2,
+          "kind": "tutorial_transition",
+          "stage": "stage.tutorial.experience"
+        }
       ],
-      "runtime_hooks": [],
       "source_event": "event.experience.selected",
       "source_transition": "transition.tutorial.experience",
-      "status": "blocked"
+      "status": "bound_not_gameplay_verified"
     },
     {
-      "bound_spawn_ids": [
-        "spawn.gielinor_guide"
-      ],
+      "bound_spawn_ids": [],
       "expected_stage_after": "stage.tutorial.settings_open",
       "expected_stage_before": "stage.tutorial.guide_greeting",
       "gaps": [],
       "runtime_hooks": [
         {
-          "choice": "greeting_and_settings",
-          "dialogue": "dialogue.gielinor_guide",
-          "kind": "dialogue_choice",
-          "node": "transition.tutorial.guide_intro"
+          "index": 0,
+          "kind": "tutorial_transition",
+          "stage": "stage.tutorial.guide_greeting"
         }
       ],
       "source_event": "event.dialogue.completed",
       "source_transition": "transition.tutorial.guide_intro",
-      "status": "projected_not_executed"
+      "status": "bound_not_gameplay_verified"
     },
     {
       "bound_spawn_ids": [],
@@ -450,57 +465,55 @@
       ],
       "source_event": "event.ui.opened",
       "source_transition": "transition.tutorial.settings",
-      "status": "projected_not_executed"
+      "status": "bound_not_gameplay_verified"
     },
     {
-      "bound_spawn_ids": [
-        "spawn.gielinor_guide"
-      ],
+      "bound_spawn_ids": [],
       "expected_stage_after": "stage.tutorial.starting_exit",
       "expected_stage_before": "stage.tutorial.guide_settings",
       "gaps": [],
       "runtime_hooks": [
         {
-          "choice": "settings_and_next_instructor",
-          "dialogue": "dialogue.gielinor_guide",
-          "kind": "dialogue_choice",
-          "node": "transition.tutorial.guide_exit_permission"
+          "index": 0,
+          "kind": "tutorial_transition",
+          "stage": "stage.tutorial.guide_settings"
         }
       ],
       "source_event": "event.dialogue.completed",
       "source_transition": "transition.tutorial.guide_exit_permission",
-      "status": "projected_not_executed"
+      "status": "bound_not_gameplay_verified"
     },
     {
       "bound_spawn_ids": [],
       "expected_stage_after": "stage.tutorial.survival_greeting",
       "expected_stage_before": "stage.tutorial.starting_exit",
-      "gaps": [
-        "dynamic_travel_and_crossing"
+      "gaps": [],
+      "runtime_hooks": [
+        {
+          "index": 0,
+          "kind": "tutorial_transition",
+          "stage": "stage.tutorial.starting_exit"
+        }
       ],
-      "runtime_hooks": [],
       "source_event": "event.world.transitioned",
       "source_transition": "transition.tutorial.starting_door",
-      "status": "blocked"
+      "status": "bound_not_gameplay_verified"
     },
     {
-      "bound_spawn_ids": [
-        "spawn.survival_expert"
-      ],
+      "bound_spawn_ids": [],
       "expected_stage_after": "stage.tutorial.inventory_open",
       "expected_stage_before": "stage.tutorial.survival_greeting",
       "gaps": [],
       "runtime_hooks": [
         {
-          "choice": "fishing_intro",
-          "dialogue": "dialogue.survival_expert",
-          "kind": "dialogue_choice",
-          "node": "transition.tutorial.net"
+          "index": 0,
+          "kind": "tutorial_transition",
+          "stage": "stage.tutorial.survival_greeting"
         }
       ],
       "source_event": "event.dialogue.completed",
       "source_transition": "transition.tutorial.net",
-      "status": "projected_not_executed"
+      "status": "bound_not_gameplay_verified"
     },
     {
       "bound_spawn_ids": [],
@@ -516,19 +529,33 @@
       ],
       "source_event": "event.ui.opened",
       "source_transition": "transition.tutorial.inventory",
-      "status": "projected_not_executed"
+      "status": "bound_not_gameplay_verified"
     },
     {
       "bound_spawn_ids": [],
       "expected_stage_after": "stage.tutorial.skills_open",
       "expected_stage_before": "stage.tutorial.catch_shrimp",
-      "gaps": [
-        "source_chance_and_timing"
+      "gaps": [],
+      "runtime_hooks": [
+        {
+          "index": 0,
+          "kind": "tutorial_transition",
+          "stage": "stage.tutorial.catch_shrimp"
+        },
+        {
+          "index": 1,
+          "kind": "tutorial_transition",
+          "stage": "stage.tutorial.catch_shrimp"
+        },
+        {
+          "index": 2,
+          "kind": "tutorial_transition",
+          "stage": "stage.tutorial.catch_shrimp"
+        }
       ],
-      "runtime_hooks": [],
       "source_event": "event.gather.succeeded",
       "source_transition": "transition.tutorial.shrimp",
-      "status": "blocked"
+      "status": "bound_not_gameplay_verified"
     },
     {
       "bound_spawn_ids": [],
@@ -544,107 +571,644 @@
       ],
       "source_event": "event.ui.opened",
       "source_transition": "transition.tutorial.skills",
-      "status": "projected_not_executed"
+      "status": "bound_not_gameplay_verified"
     },
     {
-      "bound_spawn_ids": [
-        "spawn.survival_expert"
-      ],
+      "bound_spawn_ids": [],
       "expected_stage_after": "stage.tutorial.cut_logs",
       "expected_stage_before": "stage.tutorial.survival_tools",
       "gaps": [],
       "runtime_hooks": [
         {
-          "choice": "woodcutting_firemaking_intro",
-          "dialogue": "dialogue.survival_expert",
-          "kind": "dialogue_choice",
-          "node": "transition.tutorial.survival_tools"
+          "index": 0,
+          "kind": "tutorial_transition",
+          "stage": "stage.tutorial.survival_tools"
         }
       ],
       "source_event": "event.dialogue.completed",
       "source_transition": "transition.tutorial.survival_tools",
-      "status": "projected_not_executed"
+      "status": "bound_not_gameplay_verified"
     },
     {
       "bound_spawn_ids": [],
       "expected_stage_after": "stage.tutorial.light_fire",
       "expected_stage_before": "stage.tutorial.cut_logs",
-      "gaps": [
-        "source_chance_and_timing"
+      "gaps": [],
+      "runtime_hooks": [
+        {
+          "index": 0,
+          "kind": "tutorial_transition",
+          "stage": "stage.tutorial.cut_logs"
+        },
+        {
+          "index": 1,
+          "kind": "tutorial_transition",
+          "stage": "stage.tutorial.cut_logs"
+        },
+        {
+          "index": 2,
+          "kind": "tutorial_transition",
+          "stage": "stage.tutorial.cut_logs"
+        },
+        {
+          "index": 3,
+          "kind": "tutorial_transition",
+          "stage": "stage.tutorial.cut_logs"
+        },
+        {
+          "index": 4,
+          "kind": "tutorial_transition",
+          "stage": "stage.tutorial.cut_logs"
+        },
+        {
+          "index": 5,
+          "kind": "tutorial_transition",
+          "stage": "stage.tutorial.cut_logs"
+        },
+        {
+          "index": 6,
+          "kind": "tutorial_transition",
+          "stage": "stage.tutorial.cut_logs"
+        },
+        {
+          "index": 7,
+          "kind": "tutorial_transition",
+          "stage": "stage.tutorial.cut_logs"
+        },
+        {
+          "index": 8,
+          "kind": "tutorial_transition",
+          "stage": "stage.tutorial.cut_logs"
+        },
+        {
+          "index": 9,
+          "kind": "tutorial_transition",
+          "stage": "stage.tutorial.cut_logs"
+        },
+        {
+          "index": 10,
+          "kind": "tutorial_transition",
+          "stage": "stage.tutorial.cut_logs"
+        },
+        {
+          "index": 11,
+          "kind": "tutorial_transition",
+          "stage": "stage.tutorial.cut_logs"
+        },
+        {
+          "index": 12,
+          "kind": "tutorial_transition",
+          "stage": "stage.tutorial.cut_logs"
+        },
+        {
+          "index": 13,
+          "kind": "tutorial_transition",
+          "stage": "stage.tutorial.cut_logs"
+        },
+        {
+          "index": 14,
+          "kind": "tutorial_transition",
+          "stage": "stage.tutorial.cut_logs"
+        },
+        {
+          "index": 15,
+          "kind": "tutorial_transition",
+          "stage": "stage.tutorial.cut_logs"
+        },
+        {
+          "index": 16,
+          "kind": "tutorial_transition",
+          "stage": "stage.tutorial.cut_logs"
+        },
+        {
+          "index": 17,
+          "kind": "tutorial_transition",
+          "stage": "stage.tutorial.cut_logs"
+        },
+        {
+          "index": 18,
+          "kind": "tutorial_transition",
+          "stage": "stage.tutorial.cut_logs"
+        },
+        {
+          "index": 19,
+          "kind": "tutorial_transition",
+          "stage": "stage.tutorial.cut_logs"
+        },
+        {
+          "index": 20,
+          "kind": "tutorial_transition",
+          "stage": "stage.tutorial.cut_logs"
+        },
+        {
+          "index": 21,
+          "kind": "tutorial_transition",
+          "stage": "stage.tutorial.cut_logs"
+        },
+        {
+          "index": 22,
+          "kind": "tutorial_transition",
+          "stage": "stage.tutorial.cut_logs"
+        },
+        {
+          "index": 23,
+          "kind": "tutorial_transition",
+          "stage": "stage.tutorial.cut_logs"
+        },
+        {
+          "index": 24,
+          "kind": "tutorial_transition",
+          "stage": "stage.tutorial.cut_logs"
+        },
+        {
+          "index": 25,
+          "kind": "tutorial_transition",
+          "stage": "stage.tutorial.cut_logs"
+        },
+        {
+          "index": 26,
+          "kind": "tutorial_transition",
+          "stage": "stage.tutorial.cut_logs"
+        },
+        {
+          "index": 27,
+          "kind": "tutorial_transition",
+          "stage": "stage.tutorial.cut_logs"
+        },
+        {
+          "index": 28,
+          "kind": "tutorial_transition",
+          "stage": "stage.tutorial.cut_logs"
+        },
+        {
+          "index": 29,
+          "kind": "tutorial_transition",
+          "stage": "stage.tutorial.cut_logs"
+        },
+        {
+          "index": 30,
+          "kind": "tutorial_transition",
+          "stage": "stage.tutorial.cut_logs"
+        },
+        {
+          "index": 31,
+          "kind": "tutorial_transition",
+          "stage": "stage.tutorial.cut_logs"
+        },
+        {
+          "index": 32,
+          "kind": "tutorial_transition",
+          "stage": "stage.tutorial.cut_logs"
+        },
+        {
+          "index": 33,
+          "kind": "tutorial_transition",
+          "stage": "stage.tutorial.cut_logs"
+        },
+        {
+          "index": 34,
+          "kind": "tutorial_transition",
+          "stage": "stage.tutorial.cut_logs"
+        },
+        {
+          "index": 35,
+          "kind": "tutorial_transition",
+          "stage": "stage.tutorial.cut_logs"
+        },
+        {
+          "index": 36,
+          "kind": "tutorial_transition",
+          "stage": "stage.tutorial.cut_logs"
+        },
+        {
+          "index": 37,
+          "kind": "tutorial_transition",
+          "stage": "stage.tutorial.cut_logs"
+        },
+        {
+          "index": 38,
+          "kind": "tutorial_transition",
+          "stage": "stage.tutorial.cut_logs"
+        },
+        {
+          "index": 39,
+          "kind": "tutorial_transition",
+          "stage": "stage.tutorial.cut_logs"
+        },
+        {
+          "index": 40,
+          "kind": "tutorial_transition",
+          "stage": "stage.tutorial.cut_logs"
+        },
+        {
+          "index": 41,
+          "kind": "tutorial_transition",
+          "stage": "stage.tutorial.cut_logs"
+        },
+        {
+          "index": 42,
+          "kind": "tutorial_transition",
+          "stage": "stage.tutorial.cut_logs"
+        },
+        {
+          "index": 43,
+          "kind": "tutorial_transition",
+          "stage": "stage.tutorial.cut_logs"
+        },
+        {
+          "index": 44,
+          "kind": "tutorial_transition",
+          "stage": "stage.tutorial.cut_logs"
+        },
+        {
+          "index": 45,
+          "kind": "tutorial_transition",
+          "stage": "stage.tutorial.cut_logs"
+        },
+        {
+          "index": 46,
+          "kind": "tutorial_transition",
+          "stage": "stage.tutorial.cut_logs"
+        },
+        {
+          "index": 47,
+          "kind": "tutorial_transition",
+          "stage": "stage.tutorial.cut_logs"
+        },
+        {
+          "index": 48,
+          "kind": "tutorial_transition",
+          "stage": "stage.tutorial.cut_logs"
+        },
+        {
+          "index": 49,
+          "kind": "tutorial_transition",
+          "stage": "stage.tutorial.cut_logs"
+        },
+        {
+          "index": 50,
+          "kind": "tutorial_transition",
+          "stage": "stage.tutorial.cut_logs"
+        },
+        {
+          "index": 51,
+          "kind": "tutorial_transition",
+          "stage": "stage.tutorial.cut_logs"
+        },
+        {
+          "index": 52,
+          "kind": "tutorial_transition",
+          "stage": "stage.tutorial.cut_logs"
+        },
+        {
+          "index": 53,
+          "kind": "tutorial_transition",
+          "stage": "stage.tutorial.cut_logs"
+        },
+        {
+          "index": 54,
+          "kind": "tutorial_transition",
+          "stage": "stage.tutorial.cut_logs"
+        },
+        {
+          "index": 55,
+          "kind": "tutorial_transition",
+          "stage": "stage.tutorial.cut_logs"
+        },
+        {
+          "index": 56,
+          "kind": "tutorial_transition",
+          "stage": "stage.tutorial.cut_logs"
+        },
+        {
+          "index": 57,
+          "kind": "tutorial_transition",
+          "stage": "stage.tutorial.cut_logs"
+        },
+        {
+          "index": 58,
+          "kind": "tutorial_transition",
+          "stage": "stage.tutorial.cut_logs"
+        },
+        {
+          "index": 59,
+          "kind": "tutorial_transition",
+          "stage": "stage.tutorial.cut_logs"
+        },
+        {
+          "index": 60,
+          "kind": "tutorial_transition",
+          "stage": "stage.tutorial.cut_logs"
+        },
+        {
+          "index": 61,
+          "kind": "tutorial_transition",
+          "stage": "stage.tutorial.cut_logs"
+        },
+        {
+          "index": 62,
+          "kind": "tutorial_transition",
+          "stage": "stage.tutorial.cut_logs"
+        },
+        {
+          "index": 63,
+          "kind": "tutorial_transition",
+          "stage": "stage.tutorial.cut_logs"
+        },
+        {
+          "index": 64,
+          "kind": "tutorial_transition",
+          "stage": "stage.tutorial.cut_logs"
+        },
+        {
+          "index": 65,
+          "kind": "tutorial_transition",
+          "stage": "stage.tutorial.cut_logs"
+        },
+        {
+          "index": 66,
+          "kind": "tutorial_transition",
+          "stage": "stage.tutorial.cut_logs"
+        },
+        {
+          "index": 67,
+          "kind": "tutorial_transition",
+          "stage": "stage.tutorial.cut_logs"
+        },
+        {
+          "index": 68,
+          "kind": "tutorial_transition",
+          "stage": "stage.tutorial.cut_logs"
+        },
+        {
+          "index": 69,
+          "kind": "tutorial_transition",
+          "stage": "stage.tutorial.cut_logs"
+        },
+        {
+          "index": 70,
+          "kind": "tutorial_transition",
+          "stage": "stage.tutorial.cut_logs"
+        },
+        {
+          "index": 71,
+          "kind": "tutorial_transition",
+          "stage": "stage.tutorial.cut_logs"
+        },
+        {
+          "index": 72,
+          "kind": "tutorial_transition",
+          "stage": "stage.tutorial.cut_logs"
+        },
+        {
+          "index": 73,
+          "kind": "tutorial_transition",
+          "stage": "stage.tutorial.cut_logs"
+        },
+        {
+          "index": 74,
+          "kind": "tutorial_transition",
+          "stage": "stage.tutorial.cut_logs"
+        },
+        {
+          "index": 75,
+          "kind": "tutorial_transition",
+          "stage": "stage.tutorial.cut_logs"
+        },
+        {
+          "index": 76,
+          "kind": "tutorial_transition",
+          "stage": "stage.tutorial.cut_logs"
+        },
+        {
+          "index": 77,
+          "kind": "tutorial_transition",
+          "stage": "stage.tutorial.cut_logs"
+        },
+        {
+          "index": 78,
+          "kind": "tutorial_transition",
+          "stage": "stage.tutorial.cut_logs"
+        },
+        {
+          "index": 79,
+          "kind": "tutorial_transition",
+          "stage": "stage.tutorial.cut_logs"
+        },
+        {
+          "index": 80,
+          "kind": "tutorial_transition",
+          "stage": "stage.tutorial.cut_logs"
+        },
+        {
+          "index": 81,
+          "kind": "tutorial_transition",
+          "stage": "stage.tutorial.cut_logs"
+        },
+        {
+          "index": 82,
+          "kind": "tutorial_transition",
+          "stage": "stage.tutorial.cut_logs"
+        },
+        {
+          "index": 83,
+          "kind": "tutorial_transition",
+          "stage": "stage.tutorial.cut_logs"
+        },
+        {
+          "index": 84,
+          "kind": "tutorial_transition",
+          "stage": "stage.tutorial.cut_logs"
+        },
+        {
+          "index": 85,
+          "kind": "tutorial_transition",
+          "stage": "stage.tutorial.cut_logs"
+        },
+        {
+          "index": 86,
+          "kind": "tutorial_transition",
+          "stage": "stage.tutorial.cut_logs"
+        },
+        {
+          "index": 87,
+          "kind": "tutorial_transition",
+          "stage": "stage.tutorial.cut_logs"
+        },
+        {
+          "index": 88,
+          "kind": "tutorial_transition",
+          "stage": "stage.tutorial.cut_logs"
+        },
+        {
+          "index": 89,
+          "kind": "tutorial_transition",
+          "stage": "stage.tutorial.cut_logs"
+        },
+        {
+          "index": 90,
+          "kind": "tutorial_transition",
+          "stage": "stage.tutorial.cut_logs"
+        },
+        {
+          "index": 91,
+          "kind": "tutorial_transition",
+          "stage": "stage.tutorial.cut_logs"
+        },
+        {
+          "index": 92,
+          "kind": "tutorial_transition",
+          "stage": "stage.tutorial.cut_logs"
+        },
+        {
+          "index": 93,
+          "kind": "tutorial_transition",
+          "stage": "stage.tutorial.cut_logs"
+        },
+        {
+          "index": 94,
+          "kind": "tutorial_transition",
+          "stage": "stage.tutorial.cut_logs"
+        },
+        {
+          "index": 95,
+          "kind": "tutorial_transition",
+          "stage": "stage.tutorial.cut_logs"
+        },
+        {
+          "index": 96,
+          "kind": "tutorial_transition",
+          "stage": "stage.tutorial.cut_logs"
+        },
+        {
+          "index": 97,
+          "kind": "tutorial_transition",
+          "stage": "stage.tutorial.cut_logs"
+        },
+        {
+          "index": 98,
+          "kind": "tutorial_transition",
+          "stage": "stage.tutorial.cut_logs"
+        },
+        {
+          "index": 99,
+          "kind": "tutorial_transition",
+          "stage": "stage.tutorial.cut_logs"
+        },
+        {
+          "index": 100,
+          "kind": "tutorial_transition",
+          "stage": "stage.tutorial.cut_logs"
+        },
+        {
+          "index": 101,
+          "kind": "tutorial_transition",
+          "stage": "stage.tutorial.cut_logs"
+        },
+        {
+          "index": 102,
+          "kind": "tutorial_transition",
+          "stage": "stage.tutorial.cut_logs"
+        },
+        {
+          "index": 103,
+          "kind": "tutorial_transition",
+          "stage": "stage.tutorial.cut_logs"
+        },
+        {
+          "index": 104,
+          "kind": "tutorial_transition",
+          "stage": "stage.tutorial.cut_logs"
+        },
+        {
+          "index": 105,
+          "kind": "tutorial_transition",
+          "stage": "stage.tutorial.cut_logs"
+        }
       ],
-      "runtime_hooks": [],
       "source_event": "event.gather.succeeded",
       "source_transition": "transition.tutorial.logs",
-      "status": "blocked"
+      "status": "bound_not_gameplay_verified"
     },
     {
       "bound_spawn_ids": [],
       "expected_stage_after": "stage.tutorial.cook_shrimp",
       "expected_stage_before": "stage.tutorial.light_fire",
-      "gaps": [
-        "conditional_recipes"
+      "gaps": [],
+      "runtime_hooks": [
+        {
+          "index": 0,
+          "kind": "tutorial_transition",
+          "stage": "stage.tutorial.light_fire"
+        }
       ],
-      "runtime_hooks": [],
       "source_event": "event.fire.lit",
       "source_transition": "transition.tutorial.fire",
-      "status": "blocked"
+      "status": "bound_not_gameplay_verified"
     },
     {
       "bound_spawn_ids": [],
       "expected_stage_after": "stage.tutorial.survival_exit",
       "expected_stage_before": "stage.tutorial.cook_shrimp",
-      "gaps": [
-        "conditional_recipes"
+      "gaps": [],
+      "runtime_hooks": [
+        {
+          "index": 0,
+          "kind": "tutorial_transition",
+          "stage": "stage.tutorial.cook_shrimp"
+        }
       ],
-      "runtime_hooks": [],
       "source_event": "event.cook.resolved",
       "source_transition": "transition.tutorial.shrimp_cooked",
-      "status": "blocked"
+      "status": "bound_not_gameplay_verified"
     },
     {
       "bound_spawn_ids": [],
       "expected_stage_after": "stage.tutorial.chef_entry",
       "expected_stage_before": "stage.tutorial.survival_exit",
-      "gaps": [
-        "dynamic_travel_and_crossing"
+      "gaps": [],
+      "runtime_hooks": [
+        {
+          "index": 0,
+          "kind": "tutorial_transition",
+          "stage": "stage.tutorial.survival_exit"
+        }
       ],
-      "runtime_hooks": [],
       "source_event": "event.world.transitioned",
       "source_transition": "transition.tutorial.survival_gate",
-      "status": "blocked"
+      "status": "bound_not_gameplay_verified"
     },
     {
       "bound_spawn_ids": [],
       "expected_stage_after": "stage.tutorial.chef_greeting",
       "expected_stage_before": "stage.tutorial.chef_entry",
-      "gaps": [
-        "dynamic_travel_and_crossing"
-      ],
-      "runtime_hooks": [],
-      "source_event": "event.world.transitioned",
-      "source_transition": "transition.tutorial.chef_door",
-      "status": "blocked"
-    },
-    {
-      "bound_spawn_ids": [
-        "spawn.master_chef"
-      ],
-      "expected_stage_after": "stage.tutorial.make_dough",
-      "expected_stage_before": "stage.tutorial.chef_greeting",
-      "gaps": [
-        "partial_and_missing_grants"
-      ],
+      "gaps": [],
       "runtime_hooks": [
         {
-          "choice": "bread_intro",
-          "dialogue": "dialogue.master_chef",
-          "kind": "dialogue_choice",
-          "node": "transition.tutorial.chef_ingredients"
+          "index": 0,
+          "kind": "tutorial_transition",
+          "stage": "stage.tutorial.chef_entry"
+        }
+      ],
+      "source_event": "event.world.transitioned",
+      "source_transition": "transition.tutorial.chef_door",
+      "status": "bound_not_gameplay_verified"
+    },
+    {
+      "bound_spawn_ids": [],
+      "expected_stage_after": "stage.tutorial.make_dough",
+      "expected_stage_before": "stage.tutorial.chef_greeting",
+      "gaps": [],
+      "runtime_hooks": [
+        {
+          "index": 0,
+          "kind": "tutorial_transition",
+          "stage": "stage.tutorial.chef_greeting"
         }
       ],
       "source_event": "event.dialogue.completed",
       "source_transition": "transition.tutorial.chef_ingredients",
-      "status": "blocked"
+      "status": "bound_not_gameplay_verified"
     },
     {
       "bound_spawn_ids": [],
@@ -660,74 +1224,87 @@
       ],
       "source_event": "event.craft.succeeded",
       "source_transition": "transition.tutorial.dough",
-      "status": "projected_not_executed"
+      "status": "bound_not_gameplay_verified"
     },
     {
       "bound_spawn_ids": [],
       "expected_stage_after": "stage.tutorial.chef_exit",
       "expected_stage_before": "stage.tutorial.bake_bread",
-      "gaps": [
-        "conditional_recipes"
+      "gaps": [],
+      "runtime_hooks": [
+        {
+          "index": 0,
+          "kind": "tutorial_transition",
+          "stage": "stage.tutorial.bake_bread"
+        }
       ],
-      "runtime_hooks": [],
       "source_event": "event.cook.resolved",
       "source_transition": "transition.tutorial.bread",
-      "status": "blocked"
+      "status": "bound_not_gameplay_verified"
     },
     {
       "bound_spawn_ids": [],
       "expected_stage_after": "stage.tutorial.run_toggle",
       "expected_stage_before": "stage.tutorial.chef_exit",
-      "gaps": [
-        "dynamic_travel_and_crossing"
+      "gaps": [],
+      "runtime_hooks": [
+        {
+          "index": 0,
+          "kind": "tutorial_transition",
+          "stage": "stage.tutorial.chef_exit"
+        }
       ],
-      "runtime_hooks": [],
       "source_event": "event.world.transitioned",
       "source_transition": "transition.tutorial.chef_exit",
-      "status": "blocked"
+      "status": "bound_not_gameplay_verified"
     },
     {
       "bound_spawn_ids": [],
       "expected_stage_after": "stage.tutorial.quest_entry",
       "expected_stage_before": "stage.tutorial.run_toggle",
-      "gaps": [
-        "authoritative_events"
+      "gaps": [],
+      "runtime_hooks": [
+        {
+          "index": 0,
+          "kind": "tutorial_transition",
+          "stage": "stage.tutorial.run_toggle"
+        }
       ],
-      "runtime_hooks": [],
       "source_event": "event.setting.changed",
       "source_transition": "transition.tutorial.run",
-      "status": "blocked"
+      "status": "bound_not_gameplay_verified"
     },
     {
       "bound_spawn_ids": [],
       "expected_stage_after": "stage.tutorial.quest_greeting",
       "expected_stage_before": "stage.tutorial.quest_entry",
-      "gaps": [
-        "dynamic_travel_and_crossing"
+      "gaps": [],
+      "runtime_hooks": [
+        {
+          "index": 0,
+          "kind": "tutorial_transition",
+          "stage": "stage.tutorial.quest_entry"
+        }
       ],
-      "runtime_hooks": [],
       "source_event": "event.world.transitioned",
       "source_transition": "transition.tutorial.quest_door",
-      "status": "blocked"
+      "status": "bound_not_gameplay_verified"
     },
     {
-      "bound_spawn_ids": [
-        "spawn.quest_guide"
-      ],
+      "bound_spawn_ids": [],
       "expected_stage_after": "stage.tutorial.journal_open",
       "expected_stage_before": "stage.tutorial.quest_greeting",
       "gaps": [],
       "runtime_hooks": [
         {
-          "choice": "quest_intro",
-          "dialogue": "dialogue.quest_guide",
-          "kind": "dialogue_choice",
-          "node": "transition.tutorial.quest_intro"
+          "index": 0,
+          "kind": "tutorial_transition",
+          "stage": "stage.tutorial.quest_greeting"
         }
       ],
       "source_event": "event.dialogue.completed",
       "source_transition": "transition.tutorial.quest_intro",
-      "status": "projected_not_executed"
+      "status": "bound_not_gameplay_verified"
     },
     {
       "bound_spawn_ids": [],
@@ -743,87 +1320,557 @@
       ],
       "source_event": "event.ui.opened",
       "source_transition": "transition.tutorial.journal",
-      "status": "projected_not_executed"
+      "status": "bound_not_gameplay_verified"
     },
     {
-      "bound_spawn_ids": [
-        "spawn.quest_guide"
-      ],
+      "bound_spawn_ids": [],
       "expected_stage_after": "stage.tutorial.quest_ladder",
       "expected_stage_before": "stage.tutorial.quest_explanation",
       "gaps": [],
       "runtime_hooks": [
         {
-          "choice": "quest_journal_explanation",
-          "dialogue": "dialogue.quest_guide",
-          "kind": "dialogue_choice",
-          "node": "transition.tutorial.quest_explanation"
+          "index": 0,
+          "kind": "tutorial_transition",
+          "stage": "stage.tutorial.quest_explanation"
         }
       ],
       "source_event": "event.dialogue.completed",
       "source_transition": "transition.tutorial.quest_explanation",
-      "status": "projected_not_executed"
+      "status": "bound_not_gameplay_verified"
     },
     {
-      "bound_spawn_ids": [
-        "spawn.tutorial.quest_ladder.3088.3119.p0.t10.r3"
-      ],
+      "bound_spawn_ids": [],
       "expected_stage_after": "stage.tutorial.mining_greeting",
       "expected_stage_before": "stage.tutorial.quest_ladder",
       "gaps": [],
       "runtime_hooks": [
         {
-          "action": "Climb-down",
-          "kind": "source_bound_travel",
-          "spawn": "spawn.tutorial.quest_ladder.3088.3119.p0.t10.r3"
+          "index": 0,
+          "kind": "tutorial_transition",
+          "stage": "stage.tutorial.quest_ladder"
         }
       ],
       "source_event": "event.world.transitioned",
       "source_transition": "transition.tutorial.quest_ladder",
-      "status": "projected_not_executed"
+      "status": "bound_not_gameplay_verified"
     },
     {
-      "bound_spawn_ids": [
-        "spawn.mining_instructor"
-      ],
+      "bound_spawn_ids": [],
       "expected_stage_after": "stage.tutorial.mine_first",
       "expected_stage_before": "stage.tutorial.mining_greeting",
       "gaps": [],
       "runtime_hooks": [
         {
-          "choice": "mining_intro",
-          "dialogue": "dialogue.mining_instructor",
-          "kind": "dialogue_choice",
-          "node": "transition.tutorial.pickaxe"
+          "index": 0,
+          "kind": "tutorial_transition",
+          "stage": "stage.tutorial.mining_greeting"
         }
       ],
       "source_event": "event.dialogue.completed",
       "source_transition": "transition.tutorial.pickaxe",
-      "status": "projected_not_executed"
+      "status": "bound_not_gameplay_verified"
     },
     {
       "bound_spawn_ids": [],
       "expected_stage_after": "stage.tutorial.mine_second",
       "expected_stage_before": "stage.tutorial.mine_first",
-      "gaps": [
-        "source_chance_and_timing"
+      "gaps": [],
+      "runtime_hooks": [
+        {
+          "index": 0,
+          "kind": "tutorial_transition",
+          "stage": "stage.tutorial.mine_first"
+        },
+        {
+          "index": 1,
+          "kind": "tutorial_transition",
+          "stage": "stage.tutorial.mine_first"
+        },
+        {
+          "index": 2,
+          "kind": "tutorial_transition",
+          "stage": "stage.tutorial.mine_first"
+        },
+        {
+          "index": 3,
+          "kind": "tutorial_transition",
+          "stage": "stage.tutorial.mine_first"
+        },
+        {
+          "index": 4,
+          "kind": "tutorial_transition",
+          "stage": "stage.tutorial.mine_first"
+        },
+        {
+          "index": 5,
+          "kind": "tutorial_transition",
+          "stage": "stage.tutorial.mine_first"
+        },
+        {
+          "index": 6,
+          "kind": "tutorial_transition",
+          "stage": "stage.tutorial.mine_first"
+        },
+        {
+          "index": 7,
+          "kind": "tutorial_transition",
+          "stage": "stage.tutorial.mine_first"
+        },
+        {
+          "index": 8,
+          "kind": "tutorial_transition",
+          "stage": "stage.tutorial.mine_first"
+        },
+        {
+          "index": 9,
+          "kind": "tutorial_transition",
+          "stage": "stage.tutorial.mine_first"
+        },
+        {
+          "index": 10,
+          "kind": "tutorial_transition",
+          "stage": "stage.tutorial.mine_first"
+        },
+        {
+          "index": 11,
+          "kind": "tutorial_transition",
+          "stage": "stage.tutorial.mine_first"
+        },
+        {
+          "index": 12,
+          "kind": "tutorial_transition",
+          "stage": "stage.tutorial.mine_first"
+        },
+        {
+          "index": 13,
+          "kind": "tutorial_transition",
+          "stage": "stage.tutorial.mine_first"
+        },
+        {
+          "index": 14,
+          "kind": "tutorial_transition",
+          "stage": "stage.tutorial.mine_first"
+        },
+        {
+          "index": 15,
+          "kind": "tutorial_transition",
+          "stage": "stage.tutorial.mine_first"
+        },
+        {
+          "index": 16,
+          "kind": "tutorial_transition",
+          "stage": "stage.tutorial.mine_first"
+        },
+        {
+          "index": 17,
+          "kind": "tutorial_transition",
+          "stage": "stage.tutorial.mine_first"
+        },
+        {
+          "index": 18,
+          "kind": "tutorial_transition",
+          "stage": "stage.tutorial.mine_first"
+        },
+        {
+          "index": 19,
+          "kind": "tutorial_transition",
+          "stage": "stage.tutorial.mine_first"
+        },
+        {
+          "index": 20,
+          "kind": "tutorial_transition",
+          "stage": "stage.tutorial.mine_first"
+        },
+        {
+          "index": 21,
+          "kind": "tutorial_transition",
+          "stage": "stage.tutorial.mine_first"
+        },
+        {
+          "index": 22,
+          "kind": "tutorial_transition",
+          "stage": "stage.tutorial.mine_first"
+        },
+        {
+          "index": 23,
+          "kind": "tutorial_transition",
+          "stage": "stage.tutorial.mine_first"
+        },
+        {
+          "index": 24,
+          "kind": "tutorial_transition",
+          "stage": "stage.tutorial.mine_first"
+        },
+        {
+          "index": 25,
+          "kind": "tutorial_transition",
+          "stage": "stage.tutorial.mine_first"
+        },
+        {
+          "index": 26,
+          "kind": "tutorial_transition",
+          "stage": "stage.tutorial.mine_first"
+        },
+        {
+          "index": 27,
+          "kind": "tutorial_transition",
+          "stage": "stage.tutorial.mine_first"
+        },
+        {
+          "index": 28,
+          "kind": "tutorial_transition",
+          "stage": "stage.tutorial.mine_first"
+        },
+        {
+          "index": 29,
+          "kind": "tutorial_transition",
+          "stage": "stage.tutorial.mine_first"
+        },
+        {
+          "index": 30,
+          "kind": "tutorial_transition",
+          "stage": "stage.tutorial.mine_first"
+        },
+        {
+          "index": 31,
+          "kind": "tutorial_transition",
+          "stage": "stage.tutorial.mine_first"
+        },
+        {
+          "index": 32,
+          "kind": "tutorial_transition",
+          "stage": "stage.tutorial.mine_first"
+        },
+        {
+          "index": 33,
+          "kind": "tutorial_transition",
+          "stage": "stage.tutorial.mine_first"
+        },
+        {
+          "index": 34,
+          "kind": "tutorial_transition",
+          "stage": "stage.tutorial.mine_first"
+        },
+        {
+          "index": 35,
+          "kind": "tutorial_transition",
+          "stage": "stage.tutorial.mine_first"
+        },
+        {
+          "index": 36,
+          "kind": "tutorial_transition",
+          "stage": "stage.tutorial.mine_first"
+        },
+        {
+          "index": 37,
+          "kind": "tutorial_transition",
+          "stage": "stage.tutorial.mine_first"
+        },
+        {
+          "index": 38,
+          "kind": "tutorial_transition",
+          "stage": "stage.tutorial.mine_first"
+        },
+        {
+          "index": 39,
+          "kind": "tutorial_transition",
+          "stage": "stage.tutorial.mine_first"
+        },
+        {
+          "index": 40,
+          "kind": "tutorial_transition",
+          "stage": "stage.tutorial.mine_first"
+        },
+        {
+          "index": 41,
+          "kind": "tutorial_transition",
+          "stage": "stage.tutorial.mine_first"
+        },
+        {
+          "index": 42,
+          "kind": "tutorial_transition",
+          "stage": "stage.tutorial.mine_first"
+        },
+        {
+          "index": 43,
+          "kind": "tutorial_transition",
+          "stage": "stage.tutorial.mine_first"
+        },
+        {
+          "index": 44,
+          "kind": "tutorial_transition",
+          "stage": "stage.tutorial.mine_first"
+        },
+        {
+          "index": 45,
+          "kind": "tutorial_transition",
+          "stage": "stage.tutorial.mine_first"
+        },
+        {
+          "index": 46,
+          "kind": "tutorial_transition",
+          "stage": "stage.tutorial.mine_first"
+        },
+        {
+          "index": 47,
+          "kind": "tutorial_transition",
+          "stage": "stage.tutorial.mine_first"
+        }
       ],
-      "runtime_hooks": [],
       "source_event": "event.gather.succeeded",
       "source_transition": "transition.tutorial.first_ore",
-      "status": "blocked"
+      "status": "bound_not_gameplay_verified"
     },
     {
       "bound_spawn_ids": [],
       "expected_stage_after": "stage.tutorial.smelt_bronze",
       "expected_stage_before": "stage.tutorial.mine_second",
-      "gaps": [
-        "source_chance_and_timing"
+      "gaps": [],
+      "runtime_hooks": [
+        {
+          "index": 0,
+          "kind": "tutorial_transition",
+          "stage": "stage.tutorial.mine_second"
+        },
+        {
+          "index": 1,
+          "kind": "tutorial_transition",
+          "stage": "stage.tutorial.mine_second"
+        },
+        {
+          "index": 2,
+          "kind": "tutorial_transition",
+          "stage": "stage.tutorial.mine_second"
+        },
+        {
+          "index": 3,
+          "kind": "tutorial_transition",
+          "stage": "stage.tutorial.mine_second"
+        },
+        {
+          "index": 4,
+          "kind": "tutorial_transition",
+          "stage": "stage.tutorial.mine_second"
+        },
+        {
+          "index": 5,
+          "kind": "tutorial_transition",
+          "stage": "stage.tutorial.mine_second"
+        },
+        {
+          "index": 6,
+          "kind": "tutorial_transition",
+          "stage": "stage.tutorial.mine_second"
+        },
+        {
+          "index": 7,
+          "kind": "tutorial_transition",
+          "stage": "stage.tutorial.mine_second"
+        },
+        {
+          "index": 8,
+          "kind": "tutorial_transition",
+          "stage": "stage.tutorial.mine_second"
+        },
+        {
+          "index": 9,
+          "kind": "tutorial_transition",
+          "stage": "stage.tutorial.mine_second"
+        },
+        {
+          "index": 10,
+          "kind": "tutorial_transition",
+          "stage": "stage.tutorial.mine_second"
+        },
+        {
+          "index": 11,
+          "kind": "tutorial_transition",
+          "stage": "stage.tutorial.mine_second"
+        },
+        {
+          "index": 12,
+          "kind": "tutorial_transition",
+          "stage": "stage.tutorial.mine_second"
+        },
+        {
+          "index": 13,
+          "kind": "tutorial_transition",
+          "stage": "stage.tutorial.mine_second"
+        },
+        {
+          "index": 14,
+          "kind": "tutorial_transition",
+          "stage": "stage.tutorial.mine_second"
+        },
+        {
+          "index": 15,
+          "kind": "tutorial_transition",
+          "stage": "stage.tutorial.mine_second"
+        },
+        {
+          "index": 16,
+          "kind": "tutorial_transition",
+          "stage": "stage.tutorial.mine_second"
+        },
+        {
+          "index": 17,
+          "kind": "tutorial_transition",
+          "stage": "stage.tutorial.mine_second"
+        },
+        {
+          "index": 18,
+          "kind": "tutorial_transition",
+          "stage": "stage.tutorial.mine_second"
+        },
+        {
+          "index": 19,
+          "kind": "tutorial_transition",
+          "stage": "stage.tutorial.mine_second"
+        },
+        {
+          "index": 20,
+          "kind": "tutorial_transition",
+          "stage": "stage.tutorial.mine_second"
+        },
+        {
+          "index": 21,
+          "kind": "tutorial_transition",
+          "stage": "stage.tutorial.mine_second"
+        },
+        {
+          "index": 22,
+          "kind": "tutorial_transition",
+          "stage": "stage.tutorial.mine_second"
+        },
+        {
+          "index": 23,
+          "kind": "tutorial_transition",
+          "stage": "stage.tutorial.mine_second"
+        },
+        {
+          "index": 24,
+          "kind": "tutorial_transition",
+          "stage": "stage.tutorial.mine_second"
+        },
+        {
+          "index": 25,
+          "kind": "tutorial_transition",
+          "stage": "stage.tutorial.mine_second"
+        },
+        {
+          "index": 26,
+          "kind": "tutorial_transition",
+          "stage": "stage.tutorial.mine_second"
+        },
+        {
+          "index": 27,
+          "kind": "tutorial_transition",
+          "stage": "stage.tutorial.mine_second"
+        },
+        {
+          "index": 28,
+          "kind": "tutorial_transition",
+          "stage": "stage.tutorial.mine_second"
+        },
+        {
+          "index": 29,
+          "kind": "tutorial_transition",
+          "stage": "stage.tutorial.mine_second"
+        },
+        {
+          "index": 30,
+          "kind": "tutorial_transition",
+          "stage": "stage.tutorial.mine_second"
+        },
+        {
+          "index": 31,
+          "kind": "tutorial_transition",
+          "stage": "stage.tutorial.mine_second"
+        },
+        {
+          "index": 32,
+          "kind": "tutorial_transition",
+          "stage": "stage.tutorial.mine_second"
+        },
+        {
+          "index": 33,
+          "kind": "tutorial_transition",
+          "stage": "stage.tutorial.mine_second"
+        },
+        {
+          "index": 34,
+          "kind": "tutorial_transition",
+          "stage": "stage.tutorial.mine_second"
+        },
+        {
+          "index": 35,
+          "kind": "tutorial_transition",
+          "stage": "stage.tutorial.mine_second"
+        },
+        {
+          "index": 36,
+          "kind": "tutorial_transition",
+          "stage": "stage.tutorial.mine_second"
+        },
+        {
+          "index": 37,
+          "kind": "tutorial_transition",
+          "stage": "stage.tutorial.mine_second"
+        },
+        {
+          "index": 38,
+          "kind": "tutorial_transition",
+          "stage": "stage.tutorial.mine_second"
+        },
+        {
+          "index": 39,
+          "kind": "tutorial_transition",
+          "stage": "stage.tutorial.mine_second"
+        },
+        {
+          "index": 40,
+          "kind": "tutorial_transition",
+          "stage": "stage.tutorial.mine_second"
+        },
+        {
+          "index": 41,
+          "kind": "tutorial_transition",
+          "stage": "stage.tutorial.mine_second"
+        },
+        {
+          "index": 42,
+          "kind": "tutorial_transition",
+          "stage": "stage.tutorial.mine_second"
+        },
+        {
+          "index": 43,
+          "kind": "tutorial_transition",
+          "stage": "stage.tutorial.mine_second"
+        },
+        {
+          "index": 44,
+          "kind": "tutorial_transition",
+          "stage": "stage.tutorial.mine_second"
+        },
+        {
+          "index": 45,
+          "kind": "tutorial_transition",
+          "stage": "stage.tutorial.mine_second"
+        },
+        {
+          "index": 46,
+          "kind": "tutorial_transition",
+          "stage": "stage.tutorial.mine_second"
+        },
+        {
+          "index": 47,
+          "kind": "tutorial_transition",
+          "stage": "stage.tutorial.mine_second"
+        }
       ],
-      "runtime_hooks": [],
       "source_event": "event.gather.succeeded",
       "source_transition": "transition.tutorial.both_ores",
-      "status": "blocked"
+      "status": "bound_not_gameplay_verified"
     },
     {
       "bound_spawn_ids": [],
@@ -839,26 +1886,23 @@
       ],
       "source_event": "event.craft.succeeded",
       "source_transition": "transition.tutorial.bronze_bar",
-      "status": "projected_not_executed"
+      "status": "bound_not_gameplay_verified"
     },
     {
-      "bound_spawn_ids": [
-        "spawn.mining_instructor"
-      ],
+      "bound_spawn_ids": [],
       "expected_stage_after": "stage.tutorial.anvil_open",
       "expected_stage_before": "stage.tutorial.mining_hammer",
       "gaps": [],
       "runtime_hooks": [
         {
-          "choice": "smithing_intro",
-          "dialogue": "dialogue.mining_instructor",
-          "kind": "dialogue_choice",
-          "node": "transition.tutorial.hammer"
+          "index": 0,
+          "kind": "tutorial_transition",
+          "stage": "stage.tutorial.mining_hammer"
         }
       ],
       "source_event": "event.dialogue.completed",
       "source_transition": "transition.tutorial.hammer",
-      "status": "projected_not_executed"
+      "status": "bound_not_gameplay_verified"
     },
     {
       "bound_spawn_ids": [],
@@ -874,7 +1918,7 @@
       ],
       "source_event": "event.ui.opened",
       "source_transition": "transition.tutorial.smithing_menu",
-      "status": "projected_not_executed"
+      "status": "bound_not_gameplay_verified"
     },
     {
       "bound_spawn_ids": [],
@@ -890,38 +1934,39 @@
       ],
       "source_event": "event.craft.succeeded",
       "source_transition": "transition.tutorial.dagger",
-      "status": "projected_not_executed"
+      "status": "bound_not_gameplay_verified"
     },
     {
       "bound_spawn_ids": [],
       "expected_stage_after": "stage.tutorial.combat_greeting",
       "expected_stage_before": "stage.tutorial.mining_exit",
-      "gaps": [
-        "dynamic_travel_and_crossing"
+      "gaps": [],
+      "runtime_hooks": [
+        {
+          "index": 0,
+          "kind": "tutorial_transition",
+          "stage": "stage.tutorial.mining_exit"
+        }
       ],
-      "runtime_hooks": [],
       "source_event": "event.world.transitioned",
       "source_transition": "transition.tutorial.mining_gate",
-      "status": "blocked"
+      "status": "bound_not_gameplay_verified"
     },
     {
-      "bound_spawn_ids": [
-        "spawn.combat_instructor"
-      ],
+      "bound_spawn_ids": [],
       "expected_stage_after": "stage.tutorial.equipment_open",
       "expected_stage_before": "stage.tutorial.combat_greeting",
       "gaps": [],
       "runtime_hooks": [
         {
-          "choice": "equipment_intro",
-          "dialogue": "dialogue.combat_instructor",
-          "kind": "dialogue_choice",
-          "node": "transition.tutorial.combat_intro"
+          "index": 0,
+          "kind": "tutorial_transition",
+          "stage": "stage.tutorial.combat_greeting"
         }
       ],
       "source_event": "event.dialogue.completed",
       "source_transition": "transition.tutorial.combat_intro",
-      "status": "projected_not_executed"
+      "status": "bound_not_gameplay_verified"
     },
     {
       "bound_spawn_ids": [],
@@ -937,7 +1982,7 @@
       ],
       "source_event": "event.ui.opened",
       "source_transition": "transition.tutorial.equipment",
-      "status": "projected_not_executed"
+      "status": "bound_not_gameplay_verified"
     },
     {
       "bound_spawn_ids": [],
@@ -953,7 +1998,7 @@
       ],
       "source_event": "event.ui.opened",
       "source_transition": "transition.tutorial.equipment_stats",
-      "status": "projected_not_executed"
+      "status": "bound_not_gameplay_verified"
     },
     {
       "bound_spawn_ids": [],
@@ -969,28 +2014,23 @@
       ],
       "source_event": "event.equipment.changed",
       "source_transition": "transition.tutorial.dagger_equipped",
-      "status": "projected_not_executed"
+      "status": "bound_not_gameplay_verified"
     },
     {
-      "bound_spawn_ids": [
-        "spawn.combat_instructor"
-      ],
+      "bound_spawn_ids": [],
       "expected_stage_after": "stage.tutorial.equip_melee",
       "expected_stage_before": "stage.tutorial.melee_supply",
-      "gaps": [
-        "partial_and_missing_grants"
-      ],
+      "gaps": [],
       "runtime_hooks": [
         {
-          "choice": "melee_gear",
-          "dialogue": "dialogue.combat_instructor",
-          "kind": "dialogue_choice",
-          "node": "transition.tutorial.melee_gear"
+          "index": 0,
+          "kind": "tutorial_transition",
+          "stage": "stage.tutorial.melee_supply"
         }
       ],
       "source_event": "event.dialogue.completed",
       "source_transition": "transition.tutorial.melee_gear",
-      "status": "blocked"
+      "status": "bound_not_gameplay_verified"
     },
     {
       "bound_spawn_ids": [],
@@ -1006,7 +2046,7 @@
       ],
       "source_event": "event.equipment.changed",
       "source_transition": "transition.tutorial.melee_equipped",
-      "status": "projected_not_executed"
+      "status": "bound_not_gameplay_verified"
     },
     {
       "bound_spawn_ids": [],
@@ -1022,65 +2062,71 @@
       ],
       "source_event": "event.ui.opened",
       "source_transition": "transition.tutorial.combat_options",
-      "status": "projected_not_executed"
+      "status": "bound_not_gameplay_verified"
     },
     {
       "bound_spawn_ids": [],
       "expected_stage_after": "stage.tutorial.melee_rat",
       "expected_stage_before": "stage.tutorial.enter_rat_pen",
-      "gaps": [
-        "dynamic_travel_and_crossing"
+      "gaps": [],
+      "runtime_hooks": [
+        {
+          "index": 0,
+          "kind": "tutorial_transition",
+          "stage": "stage.tutorial.enter_rat_pen"
+        }
       ],
-      "runtime_hooks": [],
       "source_event": "event.world.transitioned",
       "source_transition": "transition.tutorial.rat_pen_entry",
-      "status": "blocked"
+      "status": "bound_not_gameplay_verified"
     },
     {
       "bound_spawn_ids": [],
       "expected_stage_after": "stage.tutorial.leave_rat_pen",
       "expected_stage_before": "stage.tutorial.melee_rat",
-      "gaps": [
-        "authoritative_events",
-        "npc_combat"
+      "gaps": [],
+      "runtime_hooks": [
+        {
+          "index": 0,
+          "kind": "tutorial_transition",
+          "stage": "stage.tutorial.melee_rat"
+        }
       ],
-      "runtime_hooks": [],
       "source_event": "event.combat.kill_credited",
       "source_transition": "transition.tutorial.melee_kill",
-      "status": "blocked"
+      "status": "bound_not_gameplay_verified"
     },
     {
       "bound_spawn_ids": [],
       "expected_stage_after": "stage.tutorial.ranged_supply",
       "expected_stage_before": "stage.tutorial.leave_rat_pen",
-      "gaps": [
-        "dynamic_travel_and_crossing"
-      ],
-      "runtime_hooks": [],
-      "source_event": "event.world.transitioned",
-      "source_transition": "transition.tutorial.rat_pen_exit",
-      "status": "blocked"
-    },
-    {
-      "bound_spawn_ids": [
-        "spawn.combat_instructor"
-      ],
-      "expected_stage_after": "stage.tutorial.equip_ranged",
-      "expected_stage_before": "stage.tutorial.ranged_supply",
-      "gaps": [
-        "partial_and_missing_grants"
-      ],
+      "gaps": [],
       "runtime_hooks": [
         {
-          "choice": "ranged_intro",
-          "dialogue": "dialogue.combat_instructor",
-          "kind": "dialogue_choice",
-          "node": "transition.tutorial.ranged_gear"
+          "index": 0,
+          "kind": "tutorial_transition",
+          "stage": "stage.tutorial.leave_rat_pen"
+        }
+      ],
+      "source_event": "event.world.transitioned",
+      "source_transition": "transition.tutorial.rat_pen_exit",
+      "status": "bound_not_gameplay_verified"
+    },
+    {
+      "bound_spawn_ids": [],
+      "expected_stage_after": "stage.tutorial.equip_ranged",
+      "expected_stage_before": "stage.tutorial.ranged_supply",
+      "gaps": [],
+      "runtime_hooks": [
+        {
+          "index": 0,
+          "kind": "tutorial_transition",
+          "stage": "stage.tutorial.ranged_supply"
         }
       ],
       "source_event": "event.dialogue.completed",
       "source_transition": "transition.tutorial.ranged_gear",
-      "status": "blocked"
+      "status": "bound_not_gameplay_verified"
     },
     {
       "bound_spawn_ids": [],
@@ -1096,105 +2142,134 @@
       ],
       "source_event": "event.equipment.changed",
       "source_transition": "transition.tutorial.ranged_equipped",
-      "status": "projected_not_executed"
+      "status": "bound_not_gameplay_verified"
     },
     {
       "bound_spawn_ids": [],
       "expected_stage_after": "stage.tutorial.combat_exit",
       "expected_stage_before": "stage.tutorial.ranged_rat",
-      "gaps": [
-        "authoritative_events",
-        "npc_combat"
+      "gaps": [],
+      "runtime_hooks": [
+        {
+          "index": 0,
+          "kind": "tutorial_transition",
+          "stage": "stage.tutorial.ranged_rat"
+        }
       ],
-      "runtime_hooks": [],
       "source_event": "event.combat.kill_credited",
       "source_transition": "transition.tutorial.ranged_kill",
-      "status": "blocked"
+      "status": "bound_not_gameplay_verified"
     },
     {
-      "bound_spawn_ids": [
-        "spawn.tutorial.combat_ladder.3111.9526.p0.t10.r0"
-      ],
+      "bound_spawn_ids": [],
       "expected_stage_after": "stage.tutorial.bank_open",
       "expected_stage_before": "stage.tutorial.combat_exit",
       "gaps": [],
       "runtime_hooks": [
         {
-          "action": "Climb-up",
-          "kind": "source_bound_travel",
-          "spawn": "spawn.tutorial.combat_ladder.3111.9526.p0.t10.r0"
+          "index": 0,
+          "kind": "tutorial_transition",
+          "stage": "stage.tutorial.combat_exit"
         }
       ],
       "source_event": "event.world.transitioned",
       "source_transition": "transition.tutorial.combat_ladder",
-      "status": "projected_not_executed"
+      "status": "bound_not_gameplay_verified"
     },
     {
       "bound_spawn_ids": [],
       "expected_stage_after": "stage.tutorial.bank_close",
       "expected_stage_before": "stage.tutorial.bank_open",
-      "gaps": [
-        "bank_first_open_entitlement"
+      "gaps": [],
+      "runtime_hooks": [
+        {
+          "index": 0,
+          "kind": "tutorial_transition",
+          "stage": "stage.tutorial.bank_open"
+        },
+        {
+          "index": 1,
+          "kind": "tutorial_transition",
+          "stage": "stage.tutorial.bank_open"
+        },
+        {
+          "index": 2,
+          "kind": "tutorial_transition",
+          "stage": "stage.tutorial.bank_open"
+        },
+        {
+          "index": 3,
+          "kind": "tutorial_transition",
+          "stage": "stage.tutorial.bank_open"
+        }
       ],
-      "runtime_hooks": [],
       "source_event": "event.ui.opened",
       "source_transition": "transition.tutorial.bank",
-      "status": "blocked"
+      "status": "bound_not_gameplay_verified"
     },
     {
       "bound_spawn_ids": [],
       "expected_stage_after": "stage.tutorial.poll_inspect",
       "expected_stage_before": "stage.tutorial.bank_close",
-      "gaps": [
-        "authoritative_events"
+      "gaps": [],
+      "runtime_hooks": [
+        {
+          "index": 0,
+          "kind": "tutorial_transition",
+          "stage": "stage.tutorial.bank_close"
+        }
       ],
-      "runtime_hooks": [],
       "source_event": "event.ui.closed",
       "source_transition": "transition.tutorial.bank_closed",
-      "status": "blocked"
+      "status": "bound_not_gameplay_verified"
     },
     {
       "bound_spawn_ids": [],
       "expected_stage_after": "stage.tutorial.account_entry",
       "expected_stage_before": "stage.tutorial.poll_inspect",
-      "gaps": [
-        "authoritative_events"
+      "gaps": [],
+      "runtime_hooks": [
+        {
+          "index": 0,
+          "kind": "tutorial_transition",
+          "stage": "stage.tutorial.poll_inspect"
+        }
       ],
-      "runtime_hooks": [],
       "source_event": "event.object.inspected",
       "source_transition": "transition.tutorial.poll",
-      "status": "blocked"
+      "status": "bound_not_gameplay_verified"
     },
     {
       "bound_spawn_ids": [],
       "expected_stage_after": "stage.tutorial.account_greeting",
       "expected_stage_before": "stage.tutorial.account_entry",
-      "gaps": [
-        "dynamic_travel_and_crossing"
+      "gaps": [],
+      "runtime_hooks": [
+        {
+          "index": 0,
+          "kind": "tutorial_transition",
+          "stage": "stage.tutorial.account_entry"
+        }
       ],
-      "runtime_hooks": [],
       "source_event": "event.world.transitioned",
       "source_transition": "transition.tutorial.account_door",
-      "status": "blocked"
+      "status": "bound_not_gameplay_verified"
     },
     {
-      "bound_spawn_ids": [
-        "spawn.account_guide"
-      ],
+      "bound_spawn_ids": [],
       "expected_stage_after": "stage.tutorial.account_open",
       "expected_stage_before": "stage.tutorial.account_greeting",
       "gaps": [],
       "runtime_hooks": [
         {
-          "choice": "account_intro",
-          "dialogue": "dialogue.account_guide",
-          "kind": "dialogue_choice",
-          "node": "transition.tutorial.account_intro"
+          "index": 0,
+          "kind": "tutorial_transition",
+          "stage": "stage.tutorial.account_greeting"
         }
       ],
       "source_event": "event.dialogue.completed",
       "source_transition": "transition.tutorial.account_intro",
-      "status": "projected_not_executed"
+      "status": "bound_not_gameplay_verified"
     },
     {
       "bound_spawn_ids": [],
@@ -1210,69 +2285,71 @@
       ],
       "source_event": "event.ui.opened",
       "source_transition": "transition.tutorial.account",
-      "status": "projected_not_executed"
+      "status": "bound_not_gameplay_verified"
     },
     {
-      "bound_spawn_ids": [
-        "spawn.account_guide"
-      ],
+      "bound_spawn_ids": [],
       "expected_stage_after": "stage.tutorial.account_exit",
       "expected_stage_before": "stage.tutorial.account_explanation",
       "gaps": [],
       "runtime_hooks": [
         {
-          "choice": "membership_worlds_bonds_security",
-          "dialogue": "dialogue.account_guide",
-          "kind": "dialogue_choice",
-          "node": "transition.tutorial.account_explanation"
+          "index": 0,
+          "kind": "tutorial_transition",
+          "stage": "stage.tutorial.account_explanation"
         }
       ],
       "source_event": "event.dialogue.completed",
       "source_transition": "transition.tutorial.account_explanation",
-      "status": "projected_not_executed"
+      "status": "bound_not_gameplay_verified"
     },
     {
       "bound_spawn_ids": [],
       "expected_stage_after": "stage.tutorial.chapel_entry",
       "expected_stage_before": "stage.tutorial.account_exit",
-      "gaps": [
-        "dynamic_travel_and_crossing"
+      "gaps": [],
+      "runtime_hooks": [
+        {
+          "index": 0,
+          "kind": "tutorial_transition",
+          "stage": "stage.tutorial.account_exit"
+        }
       ],
-      "runtime_hooks": [],
       "source_event": "event.world.transitioned",
       "source_transition": "transition.tutorial.account_exit",
-      "status": "blocked"
+      "status": "bound_not_gameplay_verified"
     },
     {
       "bound_spawn_ids": [],
       "expected_stage_after": "stage.tutorial.prayer_greeting",
       "expected_stage_before": "stage.tutorial.chapel_entry",
-      "gaps": [
-        "dynamic_travel_and_crossing"
+      "gaps": [],
+      "runtime_hooks": [
+        {
+          "index": 0,
+          "kind": "tutorial_transition",
+          "stage": "stage.tutorial.chapel_entry"
+        }
       ],
-      "runtime_hooks": [],
       "source_event": "event.world.transitioned",
       "source_transition": "transition.tutorial.chapel_door",
-      "status": "blocked"
+      "status": "bound_not_gameplay_verified"
     },
     {
-      "bound_spawn_ids": [
-        "spawn.brother_brace"
-      ],
+      "bound_spawn_ids": [],
       "expected_stage_after": "stage.tutorial.prayer_open",
       "expected_stage_before": "stage.tutorial.prayer_greeting",
       "gaps": [],
       "runtime_hooks": [
         {
-          "choice": "prayer_intro",
-          "dialogue": "dialogue.brother_brace",
-          "kind": "dialogue_choice",
-          "node": "transition.tutorial.prayer_intro"
+          "index": 0,
+          "kind": "tutorial_transition",
+          "stage": "stage.tutorial.prayer_greeting"
         }
       ],
       "source_event": "event.dialogue.completed",
       "source_transition": "transition.tutorial.prayer_intro",
-      "status": "projected_not_executed"
+      "status": "bound_not_gameplay_verified"
     },
     {
       "bound_spawn_ids": [],
@@ -1288,69 +2365,71 @@
       ],
       "source_event": "event.ui.opened",
       "source_transition": "transition.tutorial.prayer",
-      "status": "projected_not_executed"
+      "status": "bound_not_gameplay_verified"
     },
     {
-      "bound_spawn_ids": [
-        "spawn.brother_brace"
-      ],
+      "bound_spawn_ids": [],
       "expected_stage_after": "stage.tutorial.chapel_exit",
       "expected_stage_before": "stage.tutorial.prayer_explanation",
       "gaps": [],
       "runtime_hooks": [
         {
-          "choice": "prayer_activation_points_bones",
-          "dialogue": "dialogue.brother_brace",
-          "kind": "dialogue_choice",
-          "node": "transition.tutorial.prayer_explanation"
+          "index": 0,
+          "kind": "tutorial_transition",
+          "stage": "stage.tutorial.prayer_explanation"
         }
       ],
       "source_event": "event.dialogue.completed",
       "source_transition": "transition.tutorial.prayer_explanation",
-      "status": "projected_not_executed"
+      "status": "bound_not_gameplay_verified"
     },
     {
       "bound_spawn_ids": [],
       "expected_stage_after": "stage.tutorial.magic_entry",
       "expected_stage_before": "stage.tutorial.chapel_exit",
-      "gaps": [
-        "dynamic_travel_and_crossing"
+      "gaps": [],
+      "runtime_hooks": [
+        {
+          "index": 0,
+          "kind": "tutorial_transition",
+          "stage": "stage.tutorial.chapel_exit"
+        }
       ],
-      "runtime_hooks": [],
       "source_event": "event.world.transitioned",
       "source_transition": "transition.tutorial.chapel_exit",
-      "status": "blocked"
+      "status": "bound_not_gameplay_verified"
     },
     {
       "bound_spawn_ids": [],
       "expected_stage_after": "stage.tutorial.magic_greeting",
       "expected_stage_before": "stage.tutorial.magic_entry",
-      "gaps": [
-        "dynamic_travel_and_crossing"
+      "gaps": [],
+      "runtime_hooks": [
+        {
+          "index": 0,
+          "kind": "tutorial_transition",
+          "stage": "stage.tutorial.magic_entry"
+        }
       ],
-      "runtime_hooks": [],
       "source_event": "event.world.transitioned",
       "source_transition": "transition.tutorial.magic_entry",
-      "status": "blocked"
+      "status": "bound_not_gameplay_verified"
     },
     {
-      "bound_spawn_ids": [
-        "spawn.magic_instructor"
-      ],
+      "bound_spawn_ids": [],
       "expected_stage_after": "stage.tutorial.magic_open",
       "expected_stage_before": "stage.tutorial.magic_greeting",
       "gaps": [],
       "runtime_hooks": [
         {
-          "choice": "magic_intro",
-          "dialogue": "dialogue.magic_instructor",
-          "kind": "dialogue_choice",
-          "node": "transition.tutorial.magic_intro"
+          "index": 0,
+          "kind": "tutorial_transition",
+          "stage": "stage.tutorial.magic_greeting"
         }
       ],
       "source_event": "event.dialogue.completed",
       "source_transition": "transition.tutorial.magic_intro",
-      "status": "projected_not_executed"
+      "status": "bound_not_gameplay_verified"
     },
     {
       "bound_spawn_ids": [],
@@ -1366,155 +2445,151 @@
       ],
       "source_event": "event.ui.opened",
       "source_transition": "transition.tutorial.magic",
-      "status": "projected_not_executed"
+      "status": "bound_not_gameplay_verified"
     },
     {
-      "bound_spawn_ids": [
-        "spawn.magic_instructor"
-      ],
+      "bound_spawn_ids": [],
       "expected_stage_after": "stage.tutorial.wind_strike",
       "expected_stage_before": "stage.tutorial.magic_supply",
-      "gaps": [
-        "partial_and_missing_grants"
-      ],
+      "gaps": [],
       "runtime_hooks": [
         {
-          "choice": "wind_strike_intro",
-          "dialogue": "dialogue.magic_instructor",
-          "kind": "dialogue_choice",
-          "node": "transition.tutorial.runes"
+          "index": 0,
+          "kind": "tutorial_transition",
+          "stage": "stage.tutorial.magic_supply"
         }
       ],
       "source_event": "event.dialogue.completed",
       "source_transition": "transition.tutorial.runes",
-      "status": "blocked"
+      "status": "bound_not_gameplay_verified"
     },
     {
       "bound_spawn_ids": [],
       "expected_stage_after": "stage.tutorial.departure_offer",
       "expected_stage_before": "stage.tutorial.wind_strike",
-      "gaps": [
-        "authoritative_events",
-        "npc_combat",
-        "quest_reward_run_energy"
+      "gaps": [],
+      "runtime_hooks": [
+        {
+          "index": 0,
+          "kind": "tutorial_transition",
+          "stage": "stage.tutorial.wind_strike"
+        }
       ],
-      "runtime_hooks": [],
       "source_event": "event.spell.resolved",
       "source_transition": "transition.tutorial.chicken_cast",
-      "status": "blocked"
+      "status": "bound_not_gameplay_verified"
     },
     {
-      "bound_spawn_ids": [
-        "spawn.magic_instructor"
-      ],
+      "bound_spawn_ids": [],
       "expected_stage_after": "stage.tutorial.departure_confirmation",
       "expected_stage_before": "stage.tutorial.departure_offer",
       "gaps": [],
       "runtime_hooks": [
         {
-          "choice": "offer_mainland",
-          "dialogue": "dialogue.magic_instructor",
-          "kind": "dialogue_choice",
-          "node": "transition.tutorial.departure_offer"
+          "index": 0,
+          "kind": "tutorial_transition",
+          "stage": "stage.tutorial.departure_offer"
         }
       ],
       "source_event": "event.dialogue.completed",
       "source_transition": "transition.tutorial.departure_offer",
-      "status": "projected_not_executed"
+      "status": "bound_not_gameplay_verified"
     },
     {
-      "bound_spawn_ids": [
-        "spawn.magic_instructor"
-      ],
+      "bound_spawn_ids": [],
       "expected_stage_after": "stage.tutorial.departure_offer",
       "expected_stage_before": "stage.tutorial.departure_confirmation",
       "gaps": [],
       "runtime_hooks": [
         {
-          "choice": "stay_on_island",
-          "dialogue": "dialogue.magic_instructor",
-          "kind": "dialogue_choice",
-          "node": "transition.tutorial.decline_departure"
+          "index": 0,
+          "kind": "tutorial_transition",
+          "stage": "stage.tutorial.departure_confirmation"
         }
       ],
       "source_event": "event.dialogue.completed",
       "source_transition": "transition.tutorial.decline_departure",
-      "status": "projected_not_executed"
+      "status": "bound_not_gameplay_verified"
     },
     {
-      "bound_spawn_ids": [
-        "spawn.magic_instructor"
-      ],
+      "bound_spawn_ids": [],
       "expected_stage_after": "stage.tutorial.departure_offer",
       "expected_stage_before": "stage.tutorial.departure_confirmation",
       "gaps": [],
       "runtime_hooks": [
         {
-          "choice": "ask_ironman_tutor",
-          "dialogue": "dialogue.magic_instructor",
-          "kind": "dialogue_choice",
-          "node": "transition.tutorial.ironman_information"
+          "index": 1,
+          "kind": "tutorial_transition",
+          "stage": "stage.tutorial.departure_confirmation"
         }
       ],
       "source_event": "event.dialogue.completed",
       "source_transition": "transition.tutorial.ironman_information",
-      "status": "projected_not_executed"
+      "status": "bound_not_gameplay_verified"
     },
     {
-      "bound_spawn_ids": [
-        "spawn.magic_instructor"
-      ],
+      "bound_spawn_ids": [],
       "expected_stage_after": "stage.tutorial.home_teleport",
       "expected_stage_before": "stage.tutorial.departure_confirmation",
       "gaps": [],
       "runtime_hooks": [
         {
-          "choice": "confirm_normal_mainland",
-          "dialogue": "dialogue.magic_instructor",
-          "kind": "dialogue_choice",
-          "node": "transition.tutorial.confirm_normal_departure"
+          "index": 2,
+          "kind": "tutorial_transition",
+          "stage": "stage.tutorial.departure_confirmation"
         }
       ],
       "source_event": "event.dialogue.completed",
       "source_transition": "transition.tutorial.confirm_normal_departure",
-      "status": "projected_not_executed"
+      "status": "bound_not_gameplay_verified"
     },
     {
       "bound_spawn_ids": [],
       "expected_stage_after": "stage.tutorial.teleport_channel",
       "expected_stage_before": "stage.tutorial.home_teleport",
-      "gaps": [
-        "authoritative_events"
+      "gaps": [],
+      "runtime_hooks": [
+        {
+          "index": 0,
+          "kind": "tutorial_transition",
+          "stage": "stage.tutorial.home_teleport"
+        }
       ],
-      "runtime_hooks": [],
       "source_event": "event.teleport.started",
       "source_transition": "transition.tutorial.start_home_teleport",
-      "status": "blocked"
+      "status": "bound_not_gameplay_verified"
     },
     {
       "bound_spawn_ids": [],
       "expected_stage_after": "stage.tutorial.home_teleport",
       "expected_stage_before": "stage.tutorial.teleport_channel",
-      "gaps": [
-        "authoritative_events"
+      "gaps": [],
+      "runtime_hooks": [
+        {
+          "index": 0,
+          "kind": "tutorial_transition",
+          "stage": "stage.tutorial.teleport_channel"
+        }
       ],
-      "runtime_hooks": [],
       "source_event": "event.teleport.interrupted",
       "source_transition": "transition.tutorial.interrupt_home_teleport",
-      "status": "blocked"
+      "status": "bound_not_gameplay_verified"
     },
     {
       "bound_spawn_ids": [],
       "expected_stage_after": "stage.tutorial.mainland",
       "expected_stage_before": "stage.tutorial.teleport_channel",
-      "gaps": [
-        "authoritative_events",
-        "departure_reconciliation"
+      "gaps": [],
+      "runtime_hooks": [
+        {
+          "index": 1,
+          "kind": "tutorial_transition",
+          "stage": "stage.tutorial.teleport_channel"
+        }
       ],
-      "runtime_hooks": [],
       "source_event": "event.teleport.completed",
       "source_transition": "transition.tutorial.arrive",
-      "status": "blocked"
+      "status": "bound_not_gameplay_verified"
     }
   ]
 }

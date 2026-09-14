@@ -3,10 +3,13 @@
 
 from bisect import bisect_right
 from collections import Counter
+import gzip
 import json
+import os
 import re
+import subprocess
 
-from common import BINDINGS, CONTENT, Inputs, load, position, sha
+from common import BINDINGS, CONTENT, ROOT, Inputs, load, position, sha, write
 from geometry import World
 
 
@@ -16,7 +19,11 @@ REGISTRIES = {
     "interface": "interfaces", "shop": "shops",
 }
 EVENTS = {"interacted", "dialogue_selected", "interface_opened", "gathered", "produced", "equipped",
-          "xp_gained", "hit", "defeated", "moved", "died", "recovered", "tutorial_advanced", "quest_advanced"}
+          "xp_gained", "hit", "defeated", "moved", "died", "recovered", "tutorial_advanced", "quest_advanced",
+          "appearance_confirmed", "experience_selected", "interface_closed", "interface_presented",
+          "setting_changed", "inspected", "production_resolved", "combat_resolved", "npc_killed",
+          "spell_resolved", "teleport", "temporary_object_created", "object_transformed", "counter_changed",
+          "death_occurred", "death_topic_completed", "recovery_completed", "grave_expired"}
 ID = re.compile(r"[a-z][a-z0-9_-]*(?:\.[a-z0-9_-]+)+\Z")
 
 
@@ -28,6 +35,15 @@ def require(value, message):
 def check_content(content, inputs, world, bindings):
     ids = {kind: set(content[field]) for kind, field in REGISTRIES.items()}
     ids["slot"] = set(content["equipment_slots"])
+    mechanics_fields = {"counter": "counters", "grant": "grants", "entitlement": "entitlements",
+                        "reconciliation": "reconciliations", "transform": "object_transforms",
+                        "temporary_object": "temporary_objects", "ground_policy": "ground_policies",
+                        "instance_template": "instances", "travel": "travels", "experience": "experiences",
+                        "style": "combat_styles", "spell": "spells", "projectile": "projectiles",
+                        "prayer": "prayers", "value_provider": "value_providers"}
+    ids.update({kind: set(content["mechanics"][field]) for kind, field in mechanics_fields.items()})
+    ids["object_state"] = {state for transform in content["mechanics"]["object_transforms"].values() for state in transform["states"]}
+    require(content["schema_version"] == 2, "Expected actual content schema2")
     ids["stage"] = set(content["tutorial"])
     for quest in content["quests"].values():
         ids["stage"].update(quest["journal"])
@@ -47,6 +63,7 @@ def check_content(content, inputs, world, bindings):
                         "recipes": "recipe", "tutorial_stage": "stage", "initial_stage": "stage",
                         "completed_stage": "stage"}
     reference_fields.update({kind: kind for kind in ids})
+    reference_fields.pop("instance_template", None)
     def reference(value, kind, path):
         if value is None:
             return
@@ -163,6 +180,7 @@ def check_content(content, inputs, world, bindings):
             content["npcs"]["npc.tutorial_chicken"]["source_id"] == 3316 and
             content["npcs"]["npc.cook"]["source_id"] == 4626, "Wrong required source variant")
     counts = {field: len(content[field]) for field in REGISTRIES.values()}
+    counts["mechanics"] = {field: len(content["mechanics"][field]) for field in mechanics_fields.values()}
     counts.update({
         "runtime_collision_cells": len(cells), "runtime_walkable_cells": walkable, "runtime_blocked_cells": blocked,
         "equipment_slots": len(content["equipment_slots"]), "tutorial_states": len(content["tutorial"]),
@@ -181,7 +199,7 @@ def check_content(content, inputs, world, bindings):
         "source_npc_nonwalkable_anchors": nonwalking,
         "exact_geometry_scope": "Explicit imported cells and source-bound object placement equality, not an observed live clipping dump.",
         "runtime_compile_passed": False, "gameplay_executed": False, "presentation_approved": False,
-        "known_blockers": "research/m1-bindings/contract-gaps.json",
+        "known_blockers": "research/m1-bindings/unresolved-bindings.json",
         "scope": "ID/reference/note/initial-state/source-geometry/graph-preservation checks only. "
                  "Not a replacement for the real strict content compiler or the live/headless journey.",
     }
@@ -201,7 +219,29 @@ def main():
         require(sha((CONTENT.parents[1] / output["path"]).read_bytes()) == output["sha256"],
                 f"Generated output changed: {output['path']}")
     report = check_content(content, inputs, world, bindings)
-    print(json.dumps(report))
+    artifact = manifest["compiled_artifact"]
+    compressed = (ROOT / artifact["path"]).read_bytes()
+    require(sha(compressed) == artifact["sha256"] and sha(gzip.decompress(compressed)) == artifact["uncompressed_sha256"],
+            "Compiled artifact hash mismatch")
+    work = ROOT / "tools/m1-content/.local"
+    work.mkdir(parents=True, exist_ok=True)
+    input_path = work / "schema-input.json"
+    input_path.write_bytes(gzip.decompress((CONTENT / "game-content.json.gz").read_bytes()))
+    result = subprocess.run(
+        ["cargo", "run", "--quiet", "--locked", "--offline", "--manifest-path",
+         str(ROOT / "tools/m1-content/schema-check/Cargo.toml"), "--", str(input_path)],
+        cwd=ROOT, env={**os.environ, "CARGO_TARGET_DIR": str(work / "schema-target"), "TMPDIR": str(work)},
+        text=True, capture_output=True, check=True)
+    schema = json.loads(result.stdout)
+    require(schema["artifact_reloaded"] and schema["artifact_sha256"] == artifact["uncompressed_sha256"],
+            "Real compiler/library roundtrip mismatch")
+    write(BINDINGS / "schema-validation.json", schema, pretty=True)
+    report["runtime_compile_passed"] = True
+    report["artifact_reloaded"] = True
+    write(BINDINGS / "check-result.json", report, pretty=True)
+    print(json.dumps({"structural_checks_passed": True, "strict_runtime_compiler_passed": True,
+                      "artifact_reloaded": True, "artifact_sha256": artifact["uncompressed_sha256"],
+                      "unresolved_bindings": len(schema["unresolved_bindings"]), "gameplay_executed": False}))
 
 
 if __name__ == "__main__":

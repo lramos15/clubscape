@@ -1,10 +1,21 @@
 {
+  "artifact_version": 2,
   "baseline": "OSRS live build 240 / cache 2695; post-July-2026 normal F2P behavior contracts",
   "build_command": "python3 tools/m1-content/build.py",
   "check_command": "python3 tools/m1-content/check.py",
+  "compiled_artifact": {
+    "artifact_version": 2,
+    "bytes": 474479,
+    "path": "content/m1/game-content.csc.gz",
+    "schema_version": 2,
+    "sha256": "6b6b50176fd8ecfcbc2eb378671f8dbf7d07fe7e38d192e2436a55dd13eda6cf",
+    "uncompressed_bytes": 11179824,
+    "uncompressed_sha256": "6e2d5f431857ac535f126b50334881f9f289aa29b4e045c428b31b6d15cd5284"
+  },
   "compiler_command": "python3 tools/m1-content/compile.py --compiler-manifest crates/content/Cargo.toml",
+  "content_schema_version": 2,
   "counts": {
-    "cooks_projected_edges": 21,
+    "cooks_projected_edges": 22,
     "cooks_source_transitions": 22,
     "cooks_states": 10,
     "death_source_states": 4,
@@ -12,12 +23,29 @@
     "dialogues": 21,
     "equipment_slots": 11,
     "interfaces": 26,
-    "items": 114,
+    "items": 116,
+    "mechanics": {
+      "combat_styles": 24,
+      "counters": 134,
+      "entitlements": 12,
+      "experiences": 3,
+      "grants": 17,
+      "ground_policies": 4,
+      "instances": 1,
+      "object_transforms": 68,
+      "prayers": 1,
+      "projectiles": 2,
+      "reconciliations": 1,
+      "spells": 2,
+      "temporary_objects": 1,
+      "travels": 26,
+      "value_providers": 1
+    },
     "normal_note_pairs": 52,
     "npcs": 26,
     "objects": 4837,
     "quests": 2,
-    "recipes": 5,
+    "recipes": 11,
     "regions": 29,
     "runtime_blocked_cells": 16544,
     "runtime_collision_cells": 46358,
@@ -26,28 +54,28 @@
     "skills": 24,
     "source_rules": 52,
     "source_transit_pairs": 11,
-    "spawns": 478,
-    "tutorial_blocked_edges": 36,
-    "tutorial_projected_edges": 37,
+    "spawns": 536,
+    "tutorial_blocked_edges": 0,
+    "tutorial_projected_edges": 73,
     "tutorial_source_transitions": 73,
     "tutorial_states": 71
   },
-  "input_aggregate_sha256": "9ffbb5434bef41eda44a55c71c8fc74d52e6b7fc4b696b4e8a0096b33bac25ec",
+  "input_aggregate_sha256": "ba3932d67434a92b5c88b9d545d24835c9e003e92b4547f318acc661b075a663",
   "milestone_accepted": false,
   "outputs": [
     {
-      "bytes": 20509,
-      "json_bytes": 20509,
-      "json_sha256": "f80c86d52964001b6c6ec92f6bafae91bb94290873d4809118a876380fba5d8a",
+      "bytes": 22238,
+      "json_bytes": 22238,
+      "json_sha256": "669bbccb53e7033e13798899880efabe3017e6c5620daf7aafd47b15216ef1ad",
       "path": "research/m1-bindings/input-lock.json",
-      "sha256": "f80c86d52964001b6c6ec92f6bafae91bb94290873d4809118a876380fba5d8a"
+      "sha256": "669bbccb53e7033e13798899880efabe3017e6c5620daf7aafd47b15216ef1ad"
     },
     {
-      "bytes": 365946,
-      "json_bytes": 8117147,
-      "json_sha256": "3a0fba37d8b9758a5fc1255aaa519ce1394964df8c84a51160411354ce132985",
+      "bytes": 462730,
+      "json_bytes": 13461640,
+      "json_sha256": "8703adf013982e2db886642c5dd36a3f7ab1249bb61ac88c46a290aad1cd697f",
       "path": "content/m1/game-content.json.gz",
-      "sha256": "1d77b55bd56bf2f03a8b5204707c49f8dd49ae39c76cc11c0eacde6a34ec618e"
+      "sha256": "18a617a855e6b8dfa07ea5cee5faa1cd6a1d7dd65ecc83d6f1d3eb0c8fbcaf92"
     },
     {
       "bytes": 52366,
@@ -477,18 +505,18 @@
       "sha256": "aab8341ed233c3151d1c395d1c98681c112c0c12a74cf5352e766db604da2639"
     },
     {
-      "bytes": 78926,
-      "json_bytes": 78926,
-      "json_sha256": "a1061a32d903efcc4af46129f53848a6032a25120dbc648b5720407e6e5c36cf",
+      "bytes": 80249,
+      "json_bytes": 80249,
+      "json_sha256": "4fe23fa89079ff731c03550799a84b56bfa4563bb65ecad3fab69a469b43b7ad",
       "path": "research/m1-bindings/item-bindings.json",
-      "sha256": "a1061a32d903efcc4af46129f53848a6032a25120dbc648b5720407e6e5c36cf"
+      "sha256": "4fe23fa89079ff731c03550799a84b56bfa4563bb65ecad3fab69a469b43b7ad"
     },
     {
-      "bytes": 21612,
-      "json_bytes": 21612,
-      "json_sha256": "932461261927d563aa809d14ccf2adeb19e869f8243cb4520c8f0fc4db8d2f25",
+      "bytes": 22354,
+      "json_bytes": 22354,
+      "json_sha256": "03822e39159f0ab8b585a225866b01a9168dbc88d355059f0c4588a3d11b1d89",
       "path": "research/m1-bindings/npc-bindings.json",
-      "sha256": "932461261927d563aa809d14ccf2adeb19e869f8243cb4520c8f0fc4db8d2f25"
+      "sha256": "03822e39159f0ab8b585a225866b01a9168dbc88d355059f0c4588a3d11b1d89"
     },
     {
       "bytes": 6914,
@@ -498,11 +526,11 @@
       "sha256": "1f5478a580c9f46719d4a889fbde2de7bb8746fbc912635235f497e7937ab52c"
     },
     {
-      "bytes": 12011,
-      "json_bytes": 424413,
-      "json_sha256": "79d5774b326e161effbf8c065d77c795a0cd6b6f76f80c22ca553dead96b08d0",
+      "bytes": 13431,
+      "json_bytes": 443077,
+      "json_sha256": "837902799a8bd2a2994a5c8550a451e1bed820d75f72626731c5eda34387e78b",
       "path": "research/m1-bindings/spawn-bindings.json.gz",
-      "sha256": "a5f4144516e67321f620b92cddff154b1410aa622980b8049e6bea65609f124c"
+      "sha256": "38a1001730b8a73f6b934bef7806c976c53c1dbd721a712c478accc55d38adb8"
     },
     {
       "bytes": 10443,
@@ -512,32 +540,39 @@
       "sha256": "47e89010516afd1bca4cef727cb2eebb0cdc5d542029fc66cb655dde38529f90"
     },
     {
-      "bytes": 9164,
-      "json_bytes": 9164,
-      "json_sha256": "0c77f8c7a6d999fafa31e7b6a35acfa15ee48d028b241fbbb9bc58cef765c82b",
-      "path": "research/m1-bindings/location-bindings.json",
-      "sha256": "0c77f8c7a6d999fafa31e7b6a35acfa15ee48d028b241fbbb9bc58cef765c82b"
+      "bytes": 62324,
+      "json_bytes": 62324,
+      "json_sha256": "34d4608dd387876a33a69b993445bbe449f4f9bf31804715652c464b54b1da51",
+      "path": "research/m1-bindings/door-bindings.json",
+      "sha256": "34d4608dd387876a33a69b993445bbe449f4f9bf31804715652c464b54b1da51"
     },
     {
-      "bytes": 77660,
-      "json_bytes": 77660,
-      "json_sha256": "2335950c6e6571835a3da6196f10d524b205899125346b46aedef5880cc570cc",
+      "bytes": 9466,
+      "json_bytes": 9466,
+      "json_sha256": "eaa32ef2b1f72bd78c2121a46877e48a9f17052d18b0b5f8c55d836bc5c5d37b",
+      "path": "research/m1-bindings/location-bindings.json",
+      "sha256": "eaa32ef2b1f72bd78c2121a46877e48a9f17052d18b0b5f8c55d836bc5c5d37b"
+    },
+    {
+      "bytes": 110408,
+      "json_bytes": 110408,
+      "json_sha256": "602e1bddb3ab14a1d13c69e83a4aad56584cc4c037d8aa0640fc56ed758db022",
       "path": "research/m1-bindings/graph-bindings.json",
-      "sha256": "2335950c6e6571835a3da6196f10d524b205899125346b46aedef5880cc570cc"
+      "sha256": "602e1bddb3ab14a1d13c69e83a4aad56584cc4c037d8aa0640fc56ed758db022"
     },
     {
       "bytes": 26170,
-      "json_bytes": 107395,
-      "json_sha256": "1b48edbd7d73423fb0af9d5ce618f1c8e1ae0b6fccfc03eaaea846f92f4d7999",
+      "json_bytes": 107385,
+      "json_sha256": "32befdb249329050c219f3b2875abc55d403fb998665828f1c5f695b6b0e6234",
       "path": "research/m1-bindings/mechanics-bindings.json.gz",
-      "sha256": "0a7eafc2800c8f58471d752d3717986fe06d75116a02ef32ed5cdd7249599b3b"
+      "sha256": "b0697775a585dbdaea244599a78ea4f28f9f7e44cf11602ec9de69ceb3e9086d"
     },
     {
-      "bytes": 47565,
-      "json_bytes": 47565,
-      "json_sha256": "7bcb0cd42df51b9fe0c167c2d9bc19ad88a52252556840532e43cc3d768681ac",
+      "bytes": 75742,
+      "json_bytes": 75742,
+      "json_sha256": "c7b82924a26d34b78f613370ba5d22b4c09195915ee79be114fb5c17f7780ae6",
       "path": "content/m1/journey-checkpoints.json",
-      "sha256": "7bcb0cd42df51b9fe0c167c2d9bc19ad88a52252556840532e43cc3d768681ac"
+      "sha256": "c7b82924a26d34b78f613370ba5d22b4c09195915ee79be114fb5c17f7780ae6"
     },
     {
       "bytes": 1415,
@@ -554,31 +589,33 @@
       "sha256": "96a227b69689be770c80f657888e06d6f10428ed140c327f7f8c7008f821e483"
     },
     {
-      "bytes": 1299673,
-      "json_bytes": 14044090,
-      "json_sha256": "04585e54e386bac83eb469591fa41bfff061ce1f41505971d21fd9dd406faaa3",
+      "bytes": 1299960,
+      "json_bytes": 14046156,
+      "json_sha256": "b1d9bee3589d6ef7675b50c682692fa8d81e2c1b46d90c0dd74465bfa90a358b",
       "path": "research/m1-bindings/world-bindings.json.gz",
-      "sha256": "68bfa3679591051b778c9a5de30b6d3fb4406f35df9bcaba2534e6e7f1f55fb9"
+      "sha256": "77556ad0703b50d58289f495db911c53be4fa8b7f4c86adf55b5e86264ad9a33"
     },
     {
-      "bytes": 1644356,
-      "json_bytes": 1644356,
-      "json_sha256": "3a56500b2f36edabe0c9fc2a5a0fe4ecd9ae0f848f205eb2afb1c47f0e4ee1ce",
+      "bytes": 1644368,
+      "json_bytes": 1644368,
+      "json_sha256": "f4f70f9ca2aa15be0f6251863a9f825d93612dc23ace5f2701c63442dc0ca45a",
       "path": "content/m1/asset-references.json",
-      "sha256": "3a56500b2f36edabe0c9fc2a5a0fe4ecd9ae0f848f205eb2afb1c47f0e4ee1ce"
+      "sha256": "f4f70f9ca2aa15be0f6251863a9f825d93612dc23ace5f2701c63442dc0ca45a"
     },
     {
-      "bytes": 1613,
-      "json_bytes": 1613,
-      "json_sha256": "c42a4acc63cb77483d2efc35d3a65e94ea430a692a478f453f8526a27301865e",
+      "bytes": 1976,
+      "json_bytes": 1976,
+      "json_sha256": "0eec31894214dd016396a1d28c668b3ef53fd051f6d8f038ced26755bbf79173",
       "path": "research/m1-bindings/structural-validation.json",
-      "sha256": "c42a4acc63cb77483d2efc35d3a65e94ea430a692a478f453f8526a27301865e"
+      "sha256": "0eec31894214dd016396a1d28c668b3ef53fd051f6d8f038ced26755bbf79173"
     }
   ],
   "presentation_approved": false,
   "readiness_dependency": "research/m1-bindings/contract-gaps.json",
-  "revision": "m1.source-backed.v1.9ffbb5434bef41ed",
+  "revision": "m1.source-backed.v2.ba3932d67434a92b",
+  "runtime_compile_passed": true,
   "runtime_ready": false,
+  "runtime_schema_version": 1,
   "schema_version": 1,
   "scope_policy": "Compilation envelopes cover the complete required route and dependencies, not owner-approved fences. Full four-plane collision and all scenery from all 61 source squares are retained separately. Unlisted runtime cells remain blocked. Out-of-scope travel needs the separately approved feedback policy, never a visual void.",
   "source_gameplay_verified": false,
@@ -595,5 +632,6 @@
     "source_placements": 151019,
     "source_regions": 61,
     "walls": 21619
-  }
+  },
+  "unresolved_binding_count": 112
 }

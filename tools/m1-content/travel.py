@@ -1,10 +1,10 @@
 """Pair actual source stairs/ladders; keep doors and live instance copies distinct."""
 
 from common import (
-    region_id, source_record, tile,
-    tutorial_at, unique_sources,
+    bound, counter_guard, location, region_id, source_record, tile,
+    tutorial_at, unique_sources, unresolved,
 )
-from progression import completed_flag, enter_stage, flag, set_flag
+from mechanics import completed_counter
 from spawns import interaction
 
 
@@ -43,12 +43,12 @@ def adjacent(world, point, radius=2):
     return next((p for p in points if (cell := world.cell(*p)) and cell["walkable"]), None)
 
 
-def build_travel(inputs, world, spawns, graph_bindings, flags):
+def build_travel(inputs, world, content):
+    spawns = content["spawns"]
     object_numbers = {inputs.object_id(number): number for number in inputs.collections["object"]}
     objects = {(object_numbers[spawn["kind"]["object"]],
                 spawn["tile"]["x"], spawn["tile"]["y"], spawn["tile"]["plane"]): identifier
                for identifier, spawn in spawns.items() if spawn["kind"]["kind"] == "object"}
-    source_edges = {edge["id"]: edge for edge in inputs.rules["tutorial"]["transitions"]}
     records, missing = [], []
     for name, first, second, forward, backward, transition in PAIRINGS:
         if first not in objects or second not in objects:
@@ -66,33 +66,32 @@ def build_travel(inputs, world, spawns, graph_bindings, flags):
         if not first_landing or not second_landing:
             missing.append({"id": name, "reason": "No explicit walkable landing beside the actual source object."})
             continue
-        for source, destination, action_name, event_id in (
-            (first, second_landing, forward, transition),
-            (second, first_landing, backward, None),
+        for source, destination, action_name, direction in (
+            (first, second_landing, forward, "forward"),
+            (second, first_landing, backward, "backward"),
         ):
             identifier = objects[source]
-            effects = [{"kind": "travel", "region": region_id(destination[0], destination[1]),
-                        "tile": tile(*destination)}]
             if name == "tutorial_quest_ladder":
-                guard = flag(completed_flag("transition.tutorial.quest_explanation"))
+                guard = counter_guard(completed_counter("transition.tutorial.quest_explanation"))
             elif name == "tutorial_combat_ladder":
-                guard = flag(completed_flag("transition.tutorial.ranged_kill"))
+                guard = counter_guard(completed_counter("transition.tutorial.ranged_kill"))
             else:
                 guard = tutorial_at("stage.tutorial.mainland")
-            if event_id:
-                edge = source_edges[event_id]
-                completion = completed_flag(event_id)
-                flags[completion] = 0
-                effects.append({
-                    "kind": "conditional", "guard": tutorial_at(edge["from_ref"]),
-                    "effects": [set_flag(completion), *enter_stage(inputs, edge["to_ref"])],
-                })
-                binding = next(record for record in graph_bindings if record["id"] == event_id)
-                binding["gaps"] = []
-                binding["status"] = "projected_not_executed"
-                binding["runtime_hooks"] = [{"kind": "source_bound_travel", "spawn": identifier, "action": action_name}]
-                binding["landing_status"] = "inference; exact live landing/cycle not observed"
-            replacement = interaction(action_name, {"kind": "effects", "effects": effects}, guard, reach=1)
+            travel_id = f"travel.{name}.{direction}"
+            provenance = [source_record(
+                "research/m1-bindings/travel-bindings.json#" + name,
+                "Matched original source objects and planes, with an explicit collision-valid adjacent landing candidate. "
+                "Neither the landing nor server animation/channel phase is claimed as observed.",
+                "inference", "240/cache2695")]
+            content["mechanics"]["travels"][travel_id] = {
+                "id": travel_id, "guard": guard,
+                "destination": bound({"kind": "fixed", "location": location(tile(*destination))}, provenance),
+                "channel_ticks": unresolved("Exact source stair/ladder server transit phase is not encoded in cache placement data.", provenance),
+                "cooldown_ticks": bound(0, provenance), "cooldown_start": bound("completed", provenance),
+                "interruptions": ["combat", "logout", "movement", "another_action"],
+                "completion_effects": [], "source": provenance,
+            }
+            replacement = interaction(action_name, {"kind": "travel_via", "travel": travel_id}, guard, reach=1)
             actions = spawns[identifier]["interactions"]
             if not any(action["name"] == action_name for action in actions):
                 raise ValueError(f"Transit action {action_name} is not on source object {source}")

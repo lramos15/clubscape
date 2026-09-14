@@ -1,162 +1,133 @@
-# Source-bound M1 content
+# Source-bound M1 content, schema 2
 
-**Actual generated definitions and geometry; not a runnable or accepted M1.**
-`game-content.json.gz` deserializes as the current shared `GameContent`, including
-`interfaces` and recipe `tools`. The real Runtime compiler has been executed and
-rejects the retained nonwalkable Death anchor. Other explicitly recorded
-mechanic/source gaps also remain. Do not bypass compilation to load this pack.
+**The actual schema-2 pack compiles in strict Runtime mode and roundtrips through
+the version-2 artifact loader.** It contains real definitions and typed mechanics,
+not a relabeled v1 envelope. This is not full gameplay, presentation or source
+acceptance: exact non-executable source bindings are listed in
+[`unresolved-bindings.json`](../../research/m1-bindings/unresolved-bindings.json).
 
-## Contents
+## Build and verify
 
-| Authored data | Count |
-| --- | ---: |
-| Items, including reciprocal notes | 114 |
-| Ordinary note pairs | 52 |
-| Skills / normal equipment slots | 24 / 11 |
-| NPC / object definitions | 26 / 4,837 |
-| Runtime object, NPC and item anchors | 478 |
-| Recipes / dialogues / interfaces / shops | 5 / 21 / 26 / 1 |
-| Runtime navigation regions / explicit cells | 29 / 46,358 |
-| Full source regions / explicit cells | 61 / 999,424 |
-| Individually retained source object placements | 151,019 |
-| Source staircase/ladder pairs | 11 |
-| Tutorial states / source transitions | 71 / 73 |
-| Tutorial edges with existing-schema hooks | 37 |
-| Cook states / source transitions | 10 / 22 |
-| Cook edges with existing-schema hooks | 21 |
-| Death source states / transitions | 4 / 6 |
-| Source activity rules with actual-ID bindings | 52 |
-
-Counts distinguish **authored/source-bound** from **implemented or executed**.
-The five recipes are deterministic source conversions/modes, not substitute
-100%-success fishing, mining or cooking. Source chance vectors and all missing
-mechanic requirements are in the binding records.
-
-The full source graph is retained in
-[`graph-bindings.json`](../../research/m1-bindings/graph-bindings.json).
-Unsupported edges have explicit gaps rather than a client `advance_tutorial`
-command, invented event flags or collapsed stages. Existing hooks use real
-dialogue choices, interface opens, equipment changes, successful production and
-source-bound travel. They have not been exercised by a complete server journey.
-
-## Build and validate
-
-Read the repository's machine setup before builds. From the worktree root:
+From the worktree root, with the documented existing Python/Rust toolchains:
 
 ```sh
 python3 tools/m1-content/build.py
-python3 -m unittest discover -s tools/m1-content -p 'test_*.py' -q
 python3 tools/m1-content/check.py
+python3 -m unittest discover -s tools/m1-content -p 'test_*.py' -q
 python3 tools/m1-content/verify_routes.py
-python3 tools/m1-content/compile.py --compiler-manifest crates/content/Cargo.toml
+python3 tools/m1-content/verify_state_oracles.py
 ```
 
-The final command needs the **actual independently maintained compiler**, after
-the Director integrates it. An existing compiler worktree can be supplied by
-path. It runs Runtime mode without field stripping or fixture allowances and
-persists the actual result. Failure is expected while the recorded gaps remain.
-The ordinary Python build is offline and uses only the standard library and
-committed source inputs; it does not fetch or re-extract the cache.
+The build uses committed inputs, then invokes the **actual** `clubscape-content`
+Runtime compiler. No fixture mode, permissive validator or field-stripping is
+used. `check.py` invokes the real strict parser/compiler and artifact loader.
+`game-content.json.gz` is the source-format product; `game-content.csc.gz` is the
+compressed compiled artifact. The manifest records their exact versions and
+compressed/uncompressed hashes. Gzip timestamps/filenames are normalized.
 
-To produce an explicit JSON input and check the actual shared Rust type:
+| Content | Count |
+| --- | ---: |
+| Items / reciprocal ordinary note pairs | 116 / 52 |
+| Skills / normal equipment slots | 24 / 11 |
+| NPC / object definitions | 26 / 4,837 |
+| Runtime spawns: NPC / object / item | 166 / 360 / 10 |
+| Recipes / dialogues / interfaces / shops | 11 / 21 / 26 / 1 |
+| Typed counters / grants / entitlements | 134 / 17 / 12 |
+| Physical door transforms / source door groups | 68 / 49 |
+| Transit pairs / typed travel definitions | 11 / 26 |
+| Combat styles / spells / projectiles / prayers | 24 / 2 / 2 / 1 |
+| Runtime navigation regions / explicit cells | 29 / 46,358 |
+| Full source regions / explicit cells | 61 / 999,424 |
+| Individually retained source object placements | 151,019 |
+| Tutorial states / source edges, all bound | 71 / 73 |
+| Cook states / source edges, all bound | 10 / 22 |
+| Death source states / source edges | 4 / 6 |
 
-```sh
-python3 tools/m1-content/build.py \
-  --json-output tools/m1-content/.local/game-content.json
-CARGO_TARGET_DIR="$PWD/tools/m1-content/.local/schema-target" \
-TMPDIR="$PWD/tools/m1-content/.local" \
-  cargo run --locked --offline --manifest-path \
-  tools/m1-content/schema-check/Cargo.toml -- \
-  tools/m1-content/.local/game-content.json
-```
+`manifest.json` is authoritative if generation changes counts.
 
-This Rust check is **deserialization, not a replacement compiler**.
-The content manifest records source/tool/schema input hashes and compressed and
-uncompressed output hashes. Gzip timestamps and embedded filenames are removed;
-ordering and derivation are deterministic.
+## What is now represented
 
-## World and source fidelity
+Source skilling curves retain unclamped endpoints including `+1`: copper/tin
+**101/351/256**, shrimp **49/257/256**, with exact level domains and round-nearest
+interpolation. Typed cadence distinguishes single/first/repeat/menu delays,
+per-tool ownership and bounded respawn distributions. Five cooking/facility
+variants preserve success/burn outputs, XP and source range guards; firemaking
+creates an owned temporary fire, retains the ground log on failure, and uses
+the source cardinal step order. No stochastic activity is replaced by guaranteed
+success.
 
-The selected source remains live **build 240 / cache 2695**, because current
-discovery selected it, not because the owner imposed that number. Original
-terrain, object definitions, models, interface assets and fonts belong to the
-source worker's asset namespace; no replacement meshes or icons are generated.
+Every tutorial edge now has an authoritative schema-2 hook. Real dialogue
+choices, source actor targets, UI contexts, production method/outcome, credited
+kill method, valid Wind Strike hit/splash and completed source travel are checked.
+There is no client stage-advance command or v1-disabled group of 36 edges.
+Interacting is not interchangeable with succeeding, and a generic hit/kill or
+invalidated cast cannot award Learning the Ropes.
 
-`geometry/*.json.gz` contains full four-plane `RegionDefinition` records.
-The GameContent navigation projection retains explicit ground cells and source
-upper-floor/placement cells in the connected tutorial/Lumbridge envelope.
-Unlisted navigation cells have no walkability fallback. The full scene envelope
-and all placements remain in
-[`world-bindings.json.gz`](../../research/m1-bindings/world-bindings.json.gz),
-including scenery beyond navigation bounds.
+Ordered grants, line satisfaction and durable entitlements implement partial
+Vannaka supplies and missing-only/top-up recovery. The normal inventory remains
+empty at creation. **25 bank coins are granted once before first presentation**,
+not repeatedly seeded or placed in inventory. Quest rewards use `Once` and
+source run-energy restoration. Canonical full energy is **10,000**, not 100.
 
-Coordinates are X east, Y north, planes 0–3 and 128 source units per tile.
-Clipping reconstruction preserves separate movement/sight masks, directional
-walls, diagonal restrictions, rotated footprints and bridge plane projection.
-Its published algorithm reference is older than build 240; it is explicitly
-an **inference**, not an observed live collision dump. Tile settings, source
-heights, roof/floor/bridge metadata and all original model transforms remain in
-the source assets. Blank source object names have descriptive registry labels;
-the exact original names remain in world bindings, not invented source tooltips.
+The mill uses character counters for hopper grain and flour units 0–30,
+source varbit 5325 and the actual empty/full flour-bin variants. Loading consumes
+grain; controls process only a filled hopper; collecting consumes a pot and one
+flour unit. Its original three floors and both ladders remain connected. There is
+no grain-plus-pot-to-flour shortcut.
 
-The route checker finds all 30 required walking segments **only with the
-declared source Open-able door leaves removed from a separate check map**.
-It does not mutate the authored closed-door geometry, approve doors or execute
-the tutorial. The 11 actual staircase/ladder pairs connect the cave, cellar,
-castle bank and all three mill floors. Landing tiles are explicit inferred
-candidates. Death's Office live instancing and tutorial departure remain separate
-unrepresented connections.
+Cook's ordinary milk/flour/egg graph accepts precollected ingredients and every
+partial-delivery order. Rewards are exactly 1 QP, 300 Cooking XP, source energy
+restoration and range permission, never coins. Bottomless milk 33089/33091 and
+its 10,000-charge capacity are retained as a charged full-target alternative.
+No Brutus/Ides of Milk acquisition is invented or made a new starter requirement.
 
-## Important source identities
+Death has a private source-chunk instance, a separate walkable **player** arrival,
+all three required topics, guarded portal exit, retained-item/valuation policy,
+grave/Office fees, clock pauses and storage limits. It is not a fake quest or a
+tutorial reset. Unbound valuation, overflow/restoration and other policies remain
+explicitly unavailable rather than giving free recovery.
 
-- Lumbridge Cook is **4626**, not the initially extracted 225/2895/2896 candidates.
-- Current Survival Expert is **8503**; Henja **3306** is a different location.
-- The normal used rat is **3313**; 3314/3315 are unused and 9483 is the 2020 variant.
-- Tutorial chicken is **3316**. Fishing spots are **NPC 3317**, not cache objects,
-  and remain at the three published water coordinates.
-- Milkable cows are **objects 8689/60788**, not ordinary Cow NPCs.
-- Tree **1277 → model 1570**, recolor **3470 → 5029**, is preserved.
-- Goblin **3028** is a level-2 visual-variant candidate; location rows do not prove
-  that exact variant at every tile. Its weighted primary loot and uncertain
-  potion supplement are not rewritten into independent or guaranteed drops.
-- Penguin **2063/model 21547** remains a source candidate, not an approved player.
-- Burnt shrimp is **7954**. The valid charged milk alternative is full **33089** /
-  empty **33091**; full 33089 and ensouled head 13447 use source stackability
-  opcode 160/mode 2 and are not silently coerced into boolean runtime items.
+## Coordinates, doors and stationary NPCs
 
-## Starting state, quests and remaining work
+X increases east, Y north; planes are 0–3 and source scale is 128 units per tile.
+Unlisted cells are blocked. Every original scenery placement remains in the full
+source bindings, including beyond the navigation envelope. Movement/sight masks,
+source placement shape/layer/quarter-turn, bridge-plane data and model transforms
+remain separate.
 
-Normal initial state has 24 skills, Hitpoints 10 / 1,154 XP, other skills level 1
-with zero XP, zero QP and **10,000 = 100% run energy**. No tutorial or quest is
-precompleted and no ingredients or starter kit are injected. Empty fresh
-containers and the walkable starting-house coordinate are explicitly provisional.
-The source requires 25 bank coins **before the first visible opening**; that
-once-only bank entitlement is retained, not repeatedly seeded or placed in
-inventory.
+Door states change actual source leaf placement and explicit clipping, without
+deleting whole walls or clearing terrain. Double leaves share consistent collision
+coverage. Open/close roundtrips restore source cells. Thirty source route segments
+connect through those **actual declared open-state masks**, not the v1 door-omission
+check map. Source hinge/landing candidates remain inferences, not captured
+observations or owner-approved rendering.
 
-Both tutorial XP rules are preserved: stop additional awards once base level 3
-is reached, and the source contract's provisional ceiling of 275.9 XP. This is
-not a clamp to exactly 174 XP. All 20 source assumptions, including initial
-containers, departure's 18-kind kit/bank normalization alternatives, first-bread
-behavior, rune top-ups, mill ownership and death ties, remain unapproved in
-[`policy-bindings.json`](../../research/m1-bindings/policy-bindings.json).
+Death remains at source map pin **3180,5727**, using `ScriptedActor` navigation and
+walkable access tiles. Player arrival is a different, walkable candidate
+**3174,5726** inside the private source mapping. Fishing NPC **3317** stays at all
+three water coordinates with `NonWalkingResource` policy and real gather
+interactions. One published mobile goblin candidate conflicting with source
+clipping is retained in the source-only candidate ledger, not moved or exempted
+as a stationary combat actor.
 
-Cook's ordinary ingredient graph accepts precollected items and all partial
-delivery orders; it does not require self-gathering or gathering after quest
-acceptance. Ground pot/bucket/egg spawns, dairy cows, wheat, hopper, controls,
-per-player flour-bin morph and the complete three-floor route are bound.
-There is **no grain-plus-pot-to-flour shortcut**. Charged milk needs actual charge
-state. Completion retains 1 QP, 300 Cooking XP and range permission, but is blocked
-until its source energy refill can be atomic. Learning the Ropes completion
-remains tied to valid chicken Wind Strike, not a kill or arbitrary hit.
+## Remaining limits
 
-The Director must resolve the precise
-[`contract-gaps.json`](../../research/m1-bindings/contract-gaps.json) requests:
-source chance/timing, conditional recipes, authoritative input/result events,
-partial/top-up and bank grants, run/departure/death/charged-item state, mill
-counters, weighted loot, stock-sensitive prices, dynamic door/morph/interaction
-geometry, stationary NPC anchors and source asset closure. Exact source NPC and
-arrival/camera observations also remain open; map pins are not observations.
+The former 17 missing v1 representation categories are implemented with v2
+registries. Localized `SourceBinding::Unresolved` records remain for observations
+such as projectile/NPC/transit phases, exact cooking phases, departure
+reconciliation, conditional stacking, price/stock phase conflicts and death
+valuation/recovery details. They are compile-valid, **not runtime permission**.
+Initial setting/arrival/hinge candidates and all 20 source assumptions retain
+their inference and approval status.
 
-No ClubScape presentation, source-account login, EULA acceptance, GPU test,
-audio playback claim, owner approval or gameplay/RuneLite acceptance is supplied.
+There is also a concrete shared decoder issue: bound `MaximumHitFormula::LevelTable`
+with numeric JSON keys currently fails inside its tagged binding. Wind Strike's
+known 1/5/9/13 → 2/4/6/8 source table is retained; only that field is explicitly
+unresolved pending the serialized shared fix. It is never replaced by a constant
+max hit.
+
+Current original asset references are retained. Missing model/definition/widget
+closure is listed exactly in `asset-references.json`; no substitute art is made.
+Penguin NPC 2063/model 21547 remains a candidate, not an approved player.
+Source captures, live mechanics execution, persistence, presentation/audio,
+browser performance, owner approval and RuneLite acceptance remain separate.

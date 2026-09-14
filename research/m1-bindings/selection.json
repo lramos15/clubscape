@@ -143,6 +143,7 @@
     "object.tutorial.account_exit": 9722,
     "object.tutorial.chapel_exit": 9723,
     "object.tree.normal": 1277,
+    "object.fire.normal": 26185,
     "object.tree.tutorial": 9730,
     "object.tree.tutorial.9731": 9731,
     "object.tree.tutorial.9733": 9733,

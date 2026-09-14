@@ -63,7 +63,7 @@ def source_record(reference, notes, status="verified_reference", revision="240/c
 
 
 def item_stack(item, quantity=1):
-    return {"item": item, "quantity": quantity}
+    return {"item": item, "quantity": quantity, "instance": None}
 
 
 def stack(source):
@@ -100,9 +100,58 @@ def has_items(items):
     return {"kind": "has_items", "items": items}
 
 
+def bound(value, source):
+    return {"status": "bound", "value": value, "source": unique_sources(source)}
+
+
+def unresolved(reason, source):
+    return {"status": "unresolved", "reason": reason, "source": unique_sources(source)}
+
+
+def level_domain(maximum=99, minimum=1, basis="current"):
+    return {"minimum": minimum, "maximum": maximum, "basis": basis}
+
+
+def requirement(skill, level=1, basis="current"):
+    return {"skill": skill, "level": level, "basis": basis}
+
+
+def constant_chance(numerator=1, denominator=1):
+    return {"numerator_at_level_1": numerator, "numerator_at_level_99": numerator,
+            "denominator": denominator, "domain": {"kind": "constant"}}
+
+
+def skill_chance(low, high, maximum=99, minimum=1):
+    return {"numerator_at_level_1": low + 1, "numerator_at_level_99": high + 1,
+            "denominator": 256, "domain": {"kind": "skill", "levels": level_domain(maximum, minimum)}}
+
+
+def counter_value(value):
+    return {"type": "boolean" if type(value) is bool else "integer", "value": value}
+
+
+def counter_guard(identifier, value=True, minimum=None, maximum=None):
+    predicate = ({"kind": "equals", "value": counter_value(value)} if minimum is None else
+                 {"kind": "integer_range", "minimum": minimum, "maximum": maximum})
+    return {"kind": "counter", "counter": identifier, "predicate": predicate}
+
+
+def set_counter(identifier, value=True):
+    return {"kind": "set_counter", "counter": identifier, "value": counter_value(value)}
+
+
+def restore_run():
+    return {"kind": "restore_vital", "vital": "run_energy", "restoration": {"kind": "to_base_maximum"}}
+
+
+def location(point, instance=None):
+    return {"region": region_id(point["x"], point["y"]), "tile": point, "instance": instance}
+
+
 class Inputs:
     def __init__(self):
         self.selection = load(BINDINGS / "selection.json")
+        self.profile = load(BINDINGS / "profile-v2.json")
         for category in ("items", "npcs", "objects"):
             numbers = list(self.selection[category].values())
             if len(set(numbers)) != len(numbers):
@@ -127,11 +176,16 @@ class Inputs:
             "vocabulary", "decisions", "expected-scenarios")}
         self.wiki_sources = {record["id"]: record for record in load(JOURNEY / "sources.json")["sources"]}
         self.wiki_sources.update({record["id"]: record for record in load(BINDINGS / "wiki-sources.json")["sources"]})
+        runtime_sources = BINDINGS / "runtime-source-facts.json"
+        if runtime_sources.exists():
+            self.wiki_sources.update({entry["source"]["id"]: entry["source"] for entry in load(runtime_sources)["sources"]})
         self.by_page = {record.get("page"): record for record in self.wiki_sources.values()}
         self.code_sources = load(BINDINGS / "code-sources.json")
         self.object_ids = {number: identifier for identifier, number in self.selection["objects"].items()}
         self.item_ids = {number: identifier for identifier, number in self.selection["items"].items()}
         self.npc_ids = {number: identifier for identifier, number in self.selection["npcs"].items()}
+        self.activity_rules = {rule["id"]: rule for name in ("activities", "cooks-assistant")
+                               for rule in self.rules[name]["rules"]}
 
     def object_id(self, number):
         return self.object_ids.get(number, f"object.scenery.{number}")
@@ -170,6 +224,21 @@ class Inputs:
     def wiki(self, page, notes, status="verified_reference"):
         source = self.by_page[page]
         return source_record(source["url"], notes, status, str(source["revision"]))
+
+    def rule_source(self, identifier, notes=None, inference=False):
+        rule = self.activity_rules[identifier]
+        filename = "cooks-assistant" if identifier.startswith("rule.cooks.") else "activities"
+        records = self.basis(rule.get("basis"))
+        records.append(source_record(
+            f"research/journey-rules/{filename}.json#{identifier}",
+            notes or "Typed source rule binding; arithmetic/content validation is not observed runtime gameplay.",
+            "inference" if inference else "verified_reference", "source-contract-v1"))
+        return unique_sources(records)
+
+    def assumption(self, identifier, notes=None):
+        return [source_record("research/journey-rules/decisions.json#" + identifier,
+                              notes or "Explicit source-contract inference, not owner approval or a live observation.",
+                              "inference", "source-contract-v1")]
 
 
 def unique_sources(records):

@@ -2,16 +2,45 @@
 """Verify source-layout route dependencies, keeping dynamic-door assumptions explicit."""
 
 import json
+from copy import deepcopy
 
 from common import BINDINGS, CONTENT, Inputs, canonical, load, position, sha, write
 from geometry import World
 from travel import adjacent
 
 
+class ContentCollisionMap(World):
+    def __init__(self, content):
+        self.cells = {position(cell["tile"]): deepcopy(cell) for region in content["regions"].values() for cell in region["cells"]}
+
+    def cell(self, x, y, plane):
+        return self.cells.get((x, y, plane))
+
+    def transform(self, state):
+        for cell in state["collision"]:
+            point = position(cell["tile"])
+            if point not in self.cells:
+                raise ValueError("Transform attempted to synthesize an unlisted navigation cell")
+            self.cells[point] = deepcopy(cell)
+
+
 def verify():
     inputs = Inputs()
-    closed, doors_open = World(inputs), World(inputs, omit_openable_doors=True)
     content = load(CONTENT / "game-content.json.gz")
+    closed, doors_open = ContentCollisionMap(content), ContentCollisionMap(content)
+    transforms = content["mechanics"]["object_transforms"]
+    for definition in transforms.values():
+        initial = definition["states"][definition["initial"]]
+        if any(closed.cell(**cell["tile"]) != cell for cell in initial["collision"]):
+            raise ValueError("Transform's initial geometry differs from immutable source navigation")
+        doors_open.transform(definition["states"]["object_state.open"])
+    restored = ContentCollisionMap(content)
+    for definition in transforms.values():
+        restored.transform(definition["states"]["object_state.open"])
+    for definition in transforms.values():
+        restored.transform(definition["states"][definition["initial"]])
+    if restored.cells != closed.cells:
+        raise ValueError("Door open/close roundtrip changed source geometry")
     locations = load(BINDINGS / "location-bindings.json")
     transit = {record["id"]: record for record in load(BINDINGS / "travel-bindings.json")["links"]}
     allowed = {position(cell["tile"]) for region in content["regions"].values() for cell in region["cells"]}
@@ -71,10 +100,12 @@ def verify():
         "routes": results, "source_transit_pairs": list(transit),
         "connected_with_source_doors_open": sum(result["source_doors_open_path_exists"] for result in results),
         "required_walk_segments": len(results),
-        "scope": "Potential geometry connectivity only: rebuild actual source clipping while omitting precisely "
-                 "the source Open-able wall-door leaves. The runtime content is NOT mutated and no door is approved "
-                 "or silently unlocked. Actual access guards, open/close state, arrival timing and live gameplay "
-                 "still require shared mechanics and source validation.",
+        "door_transform_definitions": len(transforms),
+        "door_roundtrip_preserves_source_cells": True,
+        "scope": "Source geometry connectivity through the actual schema2 ObjectTransform open-state collisions, "
+                 "not an empty map or wholesale door deletion. Open/close restores exact source cells. "
+                 "This topology check does not bypass access guards in gameplay, execute unbound source timing "
+                 "or certify inferred hinge/arrival/renderer fidelity.",
         "unrepresented_connections": [
             "Experience-branch tutorial departure/Home Teleport and reconciliation",
             "Death's Office live instance entry/exit and first-item-losing-death state",

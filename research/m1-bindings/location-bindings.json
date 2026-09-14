@@ -10,6 +10,16 @@
       "y": 5727
     }
   },
+  "location.death.player_arrival": {
+    "classification": "inference",
+    "purpose": "Walkable player arrival, distinct from nonwalking Death NPC anchor; source capture remains required.",
+    "region": "region.osrs.12633",
+    "tile": {
+      "plane": 0,
+      "x": 3174,
+      "y": 5726
+    }
+  },
   "location.lumbridge.bank": {
     "classification": "inference",
     "purpose": "Route checkpoint beside source-bound objects. Not an observed arrival or camera.",

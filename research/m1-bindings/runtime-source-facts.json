@@ -1,0 +1,72 @@
+{
+  "sources": [
+    {
+      "infobox_fields": {
+        "id1": "26185",
+        "id2": "26576",
+        "id3": "26575",
+        "id4": "20001",
+        "id5": "26186",
+        "id6": "20000",
+        "name": "Fire"
+      },
+      "source": {
+        "bytes_utf8_wikitext": 12679,
+        "id": "source.wiki.fire",
+        "kind": "wiki_revision",
+        "page": "Fire",
+        "revision": 15340299,
+        "revision_timestamp": "2026-09-11T06:54:40Z",
+        "sha256_utf8_wikitext": "d123957bfad5d347bf7dc4c49e7152816a9e657bdaf3097fecc5f660ae4cb1a6",
+        "url": "https://oldschool.runescape.wiki/w/Fire?oldid=15340299"
+      }
+    },
+    {
+      "infobox_fields": {},
+      "source": {
+        "bytes_utf8_wikitext": 51367,
+        "id": "source.wiki.shop",
+        "kind": "wiki_revision",
+        "page": "Shop",
+        "revision": 15329432,
+        "revision_timestamp": "2026-09-03T13:21:30Z",
+        "sha256_utf8_wikitext": "f7d433cd8a5c0553954eadeed313a85c8d85e4fedc82bcc2b4cc34b91a42f5d6",
+        "url": "https://oldschool.runescape.wiki/w/Shop?oldid=15329432"
+      }
+    },
+    {
+      "infobox_fields": {
+        "id1": "33091",
+        "id2": "33089",
+        "name1": "Bottomless milk bucket (empty)",
+        "name2": "Bottomless milk bucket",
+        "stackable": "No",
+        "value": "15000",
+        "weight": "1.000"
+      },
+      "source": {
+        "bytes_utf8_wikitext": 5409,
+        "id": "source.wiki.binding.15320471",
+        "kind": "wiki_revision",
+        "page": "Bottomless milk bucket",
+        "revision": 15320471,
+        "revision_timestamp": "2026-08-26T06:46:12Z",
+        "sha256_utf8_wikitext": "d71b1b72502b6ff4673ad57c444d96bbdf992ba9984227d5f75ac71a0ccd4fb5",
+        "url": "https://oldschool.runescape.wiki/w/Bottomless_milk_bucket?oldid=15320471"
+      }
+    },
+    {
+      "infobox_fields": {},
+      "source": {
+        "bytes_utf8_wikitext": 11367,
+        "id": "source.wiki.runtime.general_store",
+        "kind": "wiki_revision",
+        "page": "General store",
+        "revision": 15301711,
+        "revision_timestamp": "2026-08-15T02:38:57Z",
+        "sha256_utf8_wikitext": "2709925add87347ee2f34471f229faa4ec23cd4a5489425b56e1b1ee27fd80dc",
+        "url": "https://oldschool.runescape.wiki/w/General_store?oldid=15301711"
+      }
+    }
+  ]
+}

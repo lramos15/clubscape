@@ -1,0 +1,128 @@
+{
+  "cook_source_edges_bound": 22,
+  "death_source_edges_bound": 6,
+  "game_content_sha256": "18a617a855e6b8dfa07ea5cee5faa1cd6a1d7dd65ecc83d6f1d3eb0c8fbcaf92",
+  "independent_graph_oracles": [
+    {
+      "expected_stage": "stage.tutorial.guide_greeting",
+      "id": "scenario.graph.settings_before_guide",
+      "passed": true
+    },
+    {
+      "expected_stage": "stage.tutorial.catch_shrimp",
+      "id": "scenario.graph.inventory_after_net",
+      "passed": true
+    },
+    {
+      "expected_stage": "stage.tutorial.catch_shrimp",
+      "id": "scenario.graph.fishing_click_not_catch",
+      "passed": true
+    },
+    {
+      "expected_stage": "stage.tutorial.survival_exit",
+      "id": "scenario.graph.burnt_shrimp_advances",
+      "passed": true
+    },
+    {
+      "expected_stage": "stage.tutorial.quest_greeting",
+      "id": "scenario.graph.quest_ladder_early",
+      "passed": true
+    },
+    {
+      "expected_stage": "stage.tutorial.mine_second",
+      "id": "scenario.graph.copper_first_allowed",
+      "passed": true
+    },
+    {
+      "expected_stage": "stage.tutorial.mine_second",
+      "id": "scenario.graph.ore_lost_before_second",
+      "passed": true
+    },
+    {
+      "expected_stage": "stage.tutorial.smelt_bronze",
+      "id": "scenario.graph.ore_recovered_by_mining",
+      "passed": true
+    },
+    {
+      "expected_stage": "stage.tutorial.bank_open",
+      "id": "scenario.graph.poll_before_bank",
+      "passed": true
+    },
+    {
+      "expected_stage": "stage.tutorial.bank_close",
+      "id": "scenario.graph.bank_requires_seed_before_visible",
+      "passed": true
+    },
+    {
+      "expected_stage": "stage.tutorial.chapel_exit",
+      "id": "scenario.graph.prayer_no_forced_burial",
+      "passed": true
+    },
+    {
+      "expected_stage": "stage.tutorial.departure_offer",
+      "id": "scenario.graph.chicken_splash_completes",
+      "passed": true
+    },
+    {
+      "expected_stage": "stage.tutorial.departure_offer",
+      "id": "scenario.graph.chicken_second_cast_no_reward",
+      "passed": true
+    },
+    {
+      "expected_stage": "stage.tutorial.magic_supply",
+      "id": "scenario.graph.home_spell_early",
+      "passed": true
+    },
+    {
+      "expected_stage": "stage.tutorial.home_teleport",
+      "id": "scenario.graph.interrupted_home_teleport",
+      "passed": true
+    },
+    {
+      "expected_stage": "stage.tutorial.teleport_channel",
+      "id": "scenario.graph.wrong_arrival_branch",
+      "passed": true
+    },
+    {
+      "expected_stage": "stage.cooks.delivered.milk",
+      "id": "scenario.graph.cooks_partial_milk",
+      "passed": true
+    },
+    {
+      "expected_stage": "stage.cooks.delivered.milk",
+      "id": "scenario.graph.cooks_repeat_milk",
+      "passed": true
+    },
+    {
+      "expected_stage": "stage.cooks.delivered.milk_flour_egg",
+      "id": "scenario.graph.cooks_precollected_all",
+      "passed": true
+    },
+    {
+      "expected_stage": "stage.cooks.delivered.none",
+      "id": "scenario.graph.cooks_fabricated_delivery",
+      "passed": true
+    },
+    {
+      "expected_stage": "stage.cooks.completed",
+      "id": "scenario.graph.cooks_reward_replay",
+      "passed": true
+    },
+    {
+      "expected_stage": "stage.death.topics",
+      "id": "scenario.graph.death_done_too_soon",
+      "passed": true
+    },
+    {
+      "expected_stage": "stage.death.exit_ready",
+      "id": "scenario.graph.death_topics_done",
+      "passed": true
+    }
+  ],
+  "passed": 23,
+  "runtime_journey_passed": false,
+  "schema_version": 2,
+  "source_boundary_policy": "Fixtures are independently supplied post-authoritative operation/state facts. They test actual schema2 guards/effects against source expectations, not unbound projectile/timing/departure/death execution. No public client event injection, source-observation claim or whole-gameplay acceptance is made.",
+  "source_oracles_sha256": "cf5c735399c9dae19bdadb16c7b16f0e5b9d4b11b5f1d208a1fec831312e2409",
+  "tutorial_source_edges_bound": 73
+}

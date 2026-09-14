@@ -3,8 +3,8 @@
 from decimal import Decimal, localcontext
 
 from common import (
-    ASSET_PREFIX, BINDINGS, load, source_record,
-    stack, unique_sources,
+    ASSET_PREFIX, BINDINGS, all_of, bound, constant_chance, load, requirement,
+    skill_chance, source_record, stack, unique_sources, unresolved,
 )
 
 
@@ -78,13 +78,8 @@ def build_items(inputs):
                 ids[other["id"]] = identifier + ".noted"
     for number, identifier in sorted(ids.items()):
         raw = inputs.collections["item"][number]
-        if raw["stackable"] not in (0, 1):
-            excluded[identifier] = {
-                "source_id": number, "gap": "conditional_stackability",
-                "source_stackable_mode": raw["stackable"],
-                "reason": "A source stackability mode other than 0/1 is not coerced to a boolean.",
-            }
-            continue
+        if raw["stackable"] not in (0, 1, 2):
+            raise ValueError(f"Unsupported source stack mode for {identifier}: {raw['stackable']}")
         noted = raw["notedTemplate"] >= 0
         base = inputs.collections["item"][raw["notedID"]] if noted else raw
         name = base["name"]
@@ -99,13 +94,15 @@ def build_items(inputs):
             speed = params.get("14") if slots[0] == "slot.weapon" else None
             requirements = []
             if slots[0] == "slot.weapon":
-                requirements = [{"skill": "skill.ranged" if identifier == "item.shortbow" else "skill.attack", "level": 1}]
+                requirements = [requirement("skill.ranged" if identifier == "item.shortbow" else "skill.attack", basis="base")]
             elif identifier in ("item.shield.bronze_square", "item.shield.wooden"):
-                requirements = [{"skill": "skill.defence", "level": 1}]
+                requirements = [requirement("skill.defence", basis="base")]
+            from mechanics import weapon
             equip = {
                 "slot": slots[0], "occupied_slots": list(dict.fromkeys(slots)),
                 "requirements": requirements, "bonuses": bonuses(params),
-                "attack_speed_ticks": speed, "attack_styles": STYLE_NAMES.get(identifier, []) if speed else [],
+                "attack_speed_ticks": None, "attack_styles": [],
+                "weapon": weapon(inputs, identifier) if speed else None,
             }
         reference = source_items.get(identifier, {})
         sources = unique_sources(inputs.definition_source("item", number) +
@@ -118,12 +115,20 @@ def build_items(inputs):
         note = base["notedID"] if not noted else -1
         definition = {
             "id": identifier, "name": name + (" (noted)" if noted else ""),
-            "source_id": number, "stackable": noted or raw["stackable"] == 1,
+            "source_id": number,
+            "stackable": ({"source_mode": 2, "rule": unresolved(
+                "Source opcode160/mode2 container-specific stacking/origin rules remain unbound. "
+                "The source identity is retained; no ordinary M1 grant or acquisition is invented.",
+                sources)} if raw["stackable"] == 2 else noted or raw["stackable"] == 1),
             "tradable": bool(base["tradeable"]), "base_value": base["cost"],
             "equipment": equip,
             "noted_variant": ids[note] if note in ids and not noted else None,
             "unnoted_variant": ids[raw["notedID"]] if noted else None,
             "healing": {"item.shrimps.cooked": 3, "item.bread": 5}.get(identifier),
+            "weight": bound({"grams": 0 if noted else base["weight"],
+                             "inventory": "none" if noted or base["weight"] == 0 else "per_unit",
+                             "equipment": "none" if noted or base["weight"] == 0 else "per_unit"}, sources),
+            "charges": None,
             "asset": inputs.asset("item", number), "source": unique_sources(sources),
         }
         result[identifier] = definition
@@ -143,6 +148,18 @@ def build_items(inputs):
         }
         if identifier == "item.goblin_mail":
             bindings[identifier]["equipment_disposition"] = "Source wear-position metadata is not permission for a normal player to wear goblin mail."
+        if identifier.startswith("item.milk.bottomless_bucket"):
+            definition["charges"] = {
+                "kind": "charge.milk", "maximum": 10000,
+                "empty_variant": "item.milk.bottomless_bucket.empty", "charged_variant": "item.milk.bottomless_bucket",
+                "trade_with_charges": False,
+                "source": [inputs.wiki("Bottomless milk bucket",
+                                      "Source empty33091/full33089 and capacity10000 milk uses. "
+                                      "Ordinary M1 acquires a bucket of milk; rare acquisition is not granted or required.")],
+            }
+            bindings[identifier]["scope_disposition"] = (
+                "Retained full-target charged-container alternative. The ordinary M1 route uses item.milk.bucket; "
+                "parent must select reachable acquisition/charge metadata before enabling rare-container delivery.")
     return result, bindings, excluded
 
 
@@ -180,6 +197,10 @@ def build_objects(inputs):
             "id": inputs.object_id(number),
             "name": raw["name"].strip() if raw["name"].strip() not in ("", "null") else f"Unnamed source object {number}",
             "source_id": number, "size_x": raw["sizeX"], "size_y": raw["sizeY"],
+            "clip": {"blocks_movement": bool(raw["interactType"]) and not raw["isHollow"],
+                     "blocks_projectiles": raw["blocksProjectile"] and not raw["isHollow"],
+                     "access_blocked_sides": raw["blockingMask"] & 15},
+            "morph": None,
             "asset": inputs.asset("object", number), "source": inputs.definition_source("object", number),
         } for number, raw in sorted(inputs.collections["object"].items())
     }
@@ -190,17 +211,16 @@ def build_npcs(inputs):
     for identifier, number in sorted(inputs.selection["npcs"].items()):
         raw = inputs.collections["npc"][number]
         source = inputs.definition_source("npc", number)
-        combat = None
-        if identifier in ("npc.tutorial_rat", "npc.tutorial_chicken", "npc.goblin.level_2", "npc.chicken"):
-            source.append(source_record(
-                "research/m1-bindings/contract-gaps.json#npc_combat",
-                "Original stats/bonuses are bound separately. Combat remains unarmed in this projection: "
-                "unverified tutorial respawn timing and weighted/conditional loot cannot be replaced with "
-                "arbitrary timers, independent primary rolls or bones-only live combat.",
-                "inference", "m1-bindings-v1"))
+        from mechanics import npc_combat
+        combat = npc_combat(inputs, identifier, raw)
         npcs[identifier] = {
             "id": identifier, "name": raw["name"], "source_id": number, "size": raw["size"],
-            "combat": combat, "asset": inputs.asset("npc", number), "source": source,
+            "combat": combat,
+            "navigation": {"kind": "mobile", "wander_radius": 0,
+                           "step_ticks": unresolved("Source wandering radius/step cadence is not observed; "
+                                                    "zero radius is the recorded anchor-only bound, not free movement.", source),
+                           "clip": "movement_and_actors"},
+            "morph": None, "asset": inputs.asset("npc", number), "source": source,
         }
         models = (raw["models"] or []) + (raw["chatheadModels"] or [])
         animations = {key: value for key, value in raw.items() if "Animation" in key and isinstance(value, int) and value >= 0}
@@ -212,8 +232,7 @@ def build_npcs(inputs):
             "source_stats": raw["stats"], "source_combat_level": raw["combatLevel"],
             "source_params": raw["params"], "width_scale": raw["widthScale"],
             "height_scale": raw["heightScale"],
-            "combat_binding_status": "blocked_npc_combat" if identifier in (
-                "npc.tutorial_rat", "npc.tutorial_chicken", "npc.goblin.level_2", "npc.chicken") else "noncombatant",
+            "combat_binding_status": "typed_source_mechanics" if combat else "noncombatant_or_outside_working_combat_scope",
         }
     return npcs, bindings
 
@@ -232,7 +251,10 @@ def build_interfaces(inputs):
                 "research/journey-rules/tutorial.json#bank_seed_hook",
                 "Poll-booth lesson widget group remains unbound; an empty source-ID list is not a claimed screen.",
                 "inference", "source-contract-v1"))
-        values[identifier] = {"id": identifier, "name": name.replace("_", " ").title(), "source_ids": groups, "source": source}
+        contextual = name in ("appearance", "experience", "equipment_stats", "bank", "poll", "smithing", "cooking",
+                              "shop", "quest_reward", "items_kept_on_death", "grave", "death_retrieval")
+        values[identifier] = {"id": identifier, "name": name.replace("_", " ").title(),
+                              "access": "contextual" if contextual else "tab", "source_ids": groups, "source": source}
         bindings[identifier] = {
             "symbols": list(symbols), "source_groups": groups,
             "assets": [inputs.asset("interface", number) for number in groups if inputs.asset("interface", number)],
@@ -242,40 +264,75 @@ def build_interfaces(inputs):
     return values, bindings
 
 
-def recipe(rule, identifier, name, objects, ticks, inputs):
+def recipe(rule, identifier, name, objects, inputs, timing, guard, chance=None, lifecycle=None, tools=None):
+    from mechanics import cadence
+    source = inputs.rule_source(rule["id"])
     return {
         "id": identifier, "name": name,
         "inputs": [stack(item) for item in rule["consumed"]],
-        "outputs": [stack(item) for item in rule["produced"]], "failed_outputs": [],
-        "tools": [tool["item_ref"] for tool in rule.get("tools", [])],
-        "requirements": [{"skill": rule["skill_ref"], "level": rule["required_level"]}] if "skill_ref" in rule else [],
+        "outputs": [stack(item) for item in rule.get("produced", [])],
+        "failed_outputs": [stack(item) for item in rule.get("failure_produced", [])],
+        "tools": tools if tools is not None else [tool["item_ref"] for tool in rule.get("tools", [])],
+        "requirements": [requirement(rule["skill_ref"], rule["required_level"])] if "skill_ref" in rule else [],
         "xp": [{"skill": reward["skill_ref"], "amount_tenths": reward["xp_tenths"]} for reward in rule["xp_awards"]],
-        "ticks": ticks,
-        "success": {"numerator_at_level_1": 1, "numerator_at_level_99": 1, "denominator": 1},
+        "ticks": None,
+        "success": chance or constant_chance(),
         "target_objects": objects,
-        "source": unique_sources(inputs.basis(rule["basis"]) + [source_record(
-            "research/journey-rules/" + ("cooks-assistant.json" if "cooks." in rule["id"] else "activities.json") + "#" + rule["id"],
-            "Deterministic source conversion, not a manufactured success roll. This duration is the named single-action mode; "
-            "mode-specific Make-X timing and direct Produce authorization remain integration gates.",
-            "inference", "source-contract-v1")]),
+        "mechanics": {"method": rule["id"].replace("rule.", "action.", 1), "guard": guard,
+                      "chance_skill": rule.get("skill_ref") if chance else None,
+                      "cadence": cadence(source, **timing), "tool_ownership": "inventory_and_equipment",
+                      "failed_xp": [], "success_effects": [], "failure_effects": [],
+                      "lifecycle": lifecycle or {"kind": "inventory_conversion"}},
+        "source": source,
     }
 
 
 def build_recipes(inputs):
     rules = {rule["id"]: rule for file in ("activities", "cooks-assistant") for rule in inputs.rules[file]["rules"]}
     recipes = {}
-    for rule_id, identifier, name, objects, ticks in (
-        ("rule.cooking.dough", "recipe.cooking.dough", "Make bread dough", [], 1),
-        ("rule.smelting.bronze", "recipe.smelting.bronze", "Smelt a bronze bar", ["object.furnace.tutorial"], 6),
-        ("rule.smithing.bronze_dagger", "recipe.smithing.bronze_dagger", "Smith a bronze dagger", ["object.anvil.tutorial"], 5),
-        ("rule.cooks.milk", "recipe.cooks.milk", "Milk a dairy cow", ["object.dairy_cow", "object.dairy_cow.east"], 3),
-        ("rule.cooks.milk", "recipe.cooks.milk.use_bucket", "Use a bucket on a dairy cow", ["object.dairy_cow", "object.dairy_cow.east"], 4),
+    from spawns import stage_from
+    for rule_id, identifier, name, objects, timing, first in (
+        ("rule.cooking.dough", "recipe.cooking.dough", "Make bread dough", [], {"single": 1, "first": 1, "repeat": 1}, "stage.tutorial.make_dough"),
+        ("rule.smelting.bronze", "recipe.smelting.bronze", "Smelt a bronze bar", ["object.furnace.tutorial"],
+         {"single": 6, "first": 4, "repeat": 5}, "stage.tutorial.smelt_bronze"),
+        ("rule.smithing.bronze_dagger", "recipe.smithing.bronze_dagger", "Smith a bronze dagger", ["object.anvil.tutorial"],
+         {"single": 5, "first": 5, "repeat": 5, "menu": 1}, "stage.tutorial.anvil_open"),
+        ("rule.cooks.milk", "recipe.cooks.milk", "Milk a dairy cow", ["object.dairy_cow", "object.dairy_cow.east"],
+         {"single": 3, "first": 3, "repeat": 8}, "stage.tutorial.mainland"),
+        ("rule.cooks.milk", "recipe.cooks.milk.use_bucket", "Use a bucket on a dairy cow", ["object.dairy_cow", "object.dairy_cow.east"],
+         {"single": 4, "first": 4, "repeat": 8}, "stage.tutorial.mainland"),
     ):
-        recipes[identifier] = recipe(rules[rule_id], identifier, name, objects, ticks, inputs)
+        recipes[identifier] = recipe(rules[rule_id], identifier, name, objects, inputs, timing,
+                                     stage_from(inputs, first, include_mainland=True))
+    for product, first in (("shrimps", "stage.tutorial.cook_shrimp"), ("bread", "stage.tutorial.bake_bread")):
+        rule = rules["rule.cooking." + product]
+        for facility, objects in (("fire", ["object.fire.normal"]), ("range", ["object.range.tutorial"]),
+                                  ("lumbridge_range", ["object.range.lumbridge"])):
+            if product == "bread" and facility == "fire":
+                continue
+            identifier = "recipe.cooking." + product + "." + facility
+            roll = rule["roll"]["lumbridge_range"] if facility == "lumbridge_range" else rule["roll"]
+            guard = stage_from(inputs, first, include_mainland=True)
+            if facility == "lumbridge_range":
+                guard = all_of(guard, {"kind": "quest_stage", "quest": "quest.cooks_assistant", "stage": "stage.cooks.completed"})
+            timing = rule["timing"]
+            recipes[identifier] = recipe(
+                rule, identifier, "Cook " + product + " on " + facility.replace("_", " "), objects, inputs,
+                {"single": timing["single_ticks"], "first": timing["make_x_first_ticks"],
+                 "repeat": timing["make_x_repeat_ticks"]}, guard, skill_chance(roll["low"], roll["high"]))
+    fire = rules["rule.firemaking.normal"]
+    recipes["recipe.firemaking.normal"] = recipe(
+        fire, "recipe.firemaking.normal", "Light logs", [], inputs, {"single": 4, "first": 4, "repeat": 4},
+        stage_from(inputs, "stage.tutorial.light_fire", include_mainland=True),
+        skill_chance(fire["roll"]["low"], fire["roll"]["high"]),
+        {"kind": "firemaking", "ground_input": "item.logs.normal", "fire": "temporary_object.fire.normal",
+         "step_priority": ["west", "east", "south", "north"], "retain_ground_input_on_failure": True},
+        tools=["item.tinderbox"])
     return recipes
 
 
 def build_shop(inputs, items):
+    from mechanics import shop_line
     facts = load(BINDINGS / "wiki-facts.json")
     by_name = {definition["name"]: definition for definition in items.values() if not definition["unnoted_variant"]}
     stock = []
@@ -285,16 +342,21 @@ def build_shop(inputs, items):
         stock.append({
             "item": definition["id"], "base_stock": line["stock"], "restock_ticks": line["restock_ticks"],
             "buy_price": max(1, value * 1300 // 1000), "sell_price": value * 400 // 1000,
+            "mechanics": shop_line(inputs, line["restock_ticks"]),
         })
     return {
         "shop.lumbridge.general_store": {
             "id": "shop.lumbridge.general_store", "name": "Lumbridge General Store", "currency": "item.coins",
             "stock": stock, "accepts_general_items": True,
+            "unstocked": {"kind": "accept", "maximum_lines": inputs.profile["shop_unstocked_line_capacity_candidate"]["value"],
+                          "rule": shop_line(inputs, 100), "base_stock": 0},
             "source": [
                 inputs.wiki("Lumbridge General Store", "All 15 actual stock lines and source restock ticks; prices below are at base stock."),
+                inputs.wiki("General store", "Player-sold unstocked items destock one per minute:100 source600ms ticks. "
+                            "The bounded unstocked line-count candidate is recorded separately, not inferred from the timer."),
                 source_record("research/journey-rules/activities.json#formula.shop.buy",
-                              "Shared ShopDefinition has fixed prices, so this base-stock projection is not enabled "
-                              "for live trading until stock-sensitive buy/sell formulas are represented.",
+                              "Typed per-unit stock-sensitive pricing; base-stock prices agree with the source. "
+                              "Exact restock phase and overstock conflict remain explicitly unresolved.",
                               "inference", "source-contract-v1"),
             ],
         }

@@ -1,46 +1,71 @@
-# M1 source content builder
+# Deterministic M1 source compiler input
 
-See [`content/m1/README.md`](../../content/m1/README.md) for the product data,
-counts, validation commands and explicit readiness limits. This directory owns
-the deterministic importer/binder/generator, not shared types or game mechanics.
+The product and counts are documented in
+[`content/m1/README.md`](../../content/m1/README.md). This directory owns source
+binding/generation and bounded reference checks, not shared types or the
+production executor.
 
-| Tool | Purpose |
-| --- | --- |
-| `build.py` | Generate actual `GameContent`, 61 full geometry shards and hash-bound source bindings |
-| `check.py` | ID, reference, note, initial-state, exact geometry and graph-preservation checks |
-| `test_content.py` | Independent source arithmetic, masks, variants, grants/quests and negative assertions |
-| `verify_routes.py` | Qualified 30-segment source-layout connectivity; never opens runtime doors |
-| `compile.py` | Run the real `clubscape-content` Runtime compiler and persist its exact outcome |
-| `schema-check/` | Deserialize through the actual shared Rust `GameContent`, without pretending to compile it |
-| `import_references.py` | Reproduce bounded pinned wiki identity/coordinate revisions |
-| `bind_wiki.py` | Extract factual source location rows, separate map anchors and 15 real shop stock lines |
-| `import_code_references.py` | Pin source interface IDs and inspectable clipping/decoder references |
-| `import_definitions.py`, `DefinitionSupplement.java` | Decode only missing item identities/links from existing original bytes |
+`build.py` generates actual `GameContent` schema 2 and typed mechanics from the
+committed cache/source contracts, checks source geometry/IDs and invokes the real
+strict Runtime compiler. `compile.py` preserves compiler diagnostics, the
+version-2 compressed artifact and the exact unresolved-binding paths/reasons.
+`check.py` uses `schema-check/` to run `read_content_json`, `compile_content`,
+`encode_compiled` and `load_compiled` against the actual shared library. It is
+not a replacement validator.
 
-The ordinary build needs Python 3.12 and **no downloads**. Shared-type and real
-compiler checks need the existing pinned Rust toolchain. All scratch/output
-files stay under an owned project directory; no temporary-system directory,
-global installation or graphics change is required.
+```sh
+python3 tools/m1-content/build.py
+python3 tools/m1-content/check.py
+python3 -m unittest discover -s tools/m1-content -p 'test_*.py' -q
+python3 tools/m1-content/verify_routes.py
+python3 tools/m1-content/verify_state_oracles.py
+```
+
+All normal build inputs are committed and generation is offline. Read the
+machine setup before builds. Existing Rust dependencies are used with
+`--locked --offline`; scratch/targets stay under the owned `.local/` directory.
+No global tools, graphics changes or source-account operations are needed.
+
+The route checker uses actual `ObjectTransformState.collision` records, verifies
+closed-state equality and open/close restoration, and checks all 30 source
+walking dependencies. It does not make closed runtime doors disappear.
+`state_oracles.py` is a strict **post-authoritative-event reference model** for
+testing authored guards, entitlements, counters and atomic inventory effects.
+Unknown operations are errors; it never executes unresolved transport/valuation
+or claims a production game run. `verify_state_oracles.py` maps the 23 separately
+authored source graph vectors to actual content IDs and schema-2 events.
+
+## Module ownership
+
+- `common.py`: source records, checked inputs and deterministic serialization.
+- `definitions.py`, `mechanics.py`: real item/skill/NPC/recipe/style/grant/shop/
+  vital definitions and localized bound/unresolved source values.
+- `geometry.py`, `world_mechanics.py`: native clipping, source placement, typed
+  stationary policy, physical doors, real gather sites, mill counters and fire.
+- `travel.py`, `travel_policies.py`: actual stairs/ladders, experience branches,
+  source departure/reconciliation and private Death's Office dependencies.
+- `progression.py`: all 71/73 tutorial and 10/22 Cook source graphs, rewards,
+  recovery and death topics; no stage-skip command.
 
 ## Optional source reproduction
 
-These are input-reproduction commands, not another freshness search or full
-cache extraction:
+The source cache is not fetched again. The existing decoded source and small
+original-definition supplement have pinned group, payload and decoder hashes.
 
 ```sh
 python3 tools/m1-content/import_references.py
 python3 tools/m1-content/bind_wiki.py
 python3 tools/m1-content/import_code_references.py
+python3 tools/m1-content/import_runtime_sources.py
 ```
 
-`--discover` is only for a deliberate first acquisition of the small named
-missing-reference list. Ordinary replay uses exact revisions and checks the
-committed hashes. Raw wiki prose stays in the owned ignored `.local/wiki`;
-committed facts retain their revision/row hashes and attribution.
+The last command replays only the pinned Fire, Shop and Bottomless milk bucket
+pages to close concrete runtime identity/limit questions. Raw prose stays in
+owned ignored storage; factual revisions/hashes remain committed. `--discover`
+on the earlier importer is for explicit new research, not routine freshness
+checks.
 
-The source worker's original request omitted required items such as hammer,
-water, dough, burnt food, shield and ordinary shop stock. The supplement closes
-those **definitions**, not their missing render-asset conversions:
+To reproduce the bounded additional original definitions:
 
 ```sh
 python3 tools/m1-content/import_definitions.py \
@@ -50,36 +75,13 @@ python3 tools/m1-content/import_definitions.py \
   --java-home /path/to/verified/jdk-17
 ```
 
-On the recorded development worktrees, the read-only inputs are under
-`.worktrees/m1-runtime-inputs/.local/current-source/`. Read and verify the machine
-setup before choosing any host-specific JDK path. The importer checks every
-decoder-library hash against `tools/cache-import/dependencies.json`, reads JS5
-disk sectors using `rb` only, verifies the actual selected group SHA/CRC/revision,
-and never instantiates a writable cache `Store`. It does not download a cache,
-regenerate models, modify assets or overwrite source-worker outputs.
+The importer reads JS5 sectors with `rb`, checks selected group SHA/CRC/revision
+and every pinned library hash, and never opens a writable cache `Store`. It
+does not regenerate models or alter source-worker assets. Ordinary source
+stackability stays boolean; mode 2 is a real conditional record, not coercion.
 
-`definitions.json.gz` contains 146 unmodified selected item/mapping definitions
-and six additional NPC definitions from the already decoded catalogue. The main
-product selection is narrower; named duplicates, minigame variants, note
-templates, placeholders and conditional stackability are not blindly promoted
-to gameplay identities. Model/animation/interface gaps are exact ID lists in
-the generated bindings and `content/m1/asset-references.json`.
-
-## Reproducibility and safety
-
-`research/m1-bindings/input-lock.json` records all consumed source, shared-schema
-and generator hashes. `content/m1/manifest.json` records compressed/uncompressed
-output hashes. Gzip mtime is zero, filename is absent and OS byte is normalized;
-dictionary order, cell order and placement identities are stable. The optional
-plain JSON output must stay inside an owned M1 directory.
-
-Compiler validation is deliberately not replaced by Python assertions.
-`compile.py` uses the real compiler's source and Runtime CLI, records its source
-hashes and preserves nonzero failure. It does not use `--test-fixture`, remove
-unrepresentable fields, move source actors onto invented walkable cells or claim
-that structural reachability is gameplay acceptance.
-
-The old clipping algorithm reference is explicit inference against the current
-source tile/object flags. Source loop guards, probability/timing precision,
-stateful mechanics, live NPC origins and source presentation approvals remain
-separate gates even when all generator tests pass.
+`input-lock.json` hashes source/schema/generator inputs. The content manifest
+records compressed/uncompressed output hashes. Ordering and gzip metadata are
+deterministic. Source inference is not approval; successful compile, geometry
+and reference-model checks remain separate from executing the complete
+headless/server/browser journey and approving its presentation.

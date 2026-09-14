@@ -1,414 +1,501 @@
-"""Safe existing-schema projections of the complete source graphs.
+"""Lower every source graph edge to schema-2 authoritative facts, guards and effects."""
 
-Unrepresentable edges stay in the binding ledger, not a client stage-advance shortcut.
-"""
+from collections import deque
 
 from common import (
-    all_of, always, has_items, item_stack, never, quest_at, region_id, source_record,
-    stack, tutorial_at, unique_sources,
+    all_of, always, counter_guard, has_items, item_stack, position, quest_at,
+    region_id, restore_run, set_counter, source_record, tutorial_at, unique_sources,
 )
+from mechanics import completed_counter
 from spawns import dialogue_id
 
 
-LEARNING_STAGES = {
-    "not_started": "stage.learning_the_ropes.not_started",
-    "in_progress": "stage.learning_the_ropes.in_progress",
-    "completed": "stage.learning_the_ropes.completed",
-}
-BASE_ACTIONS = ["walk", "interact", "select_dialogue", "open_interface", "close_interface",
-                "cancel_activity", "request_logout"]
+LEARNING_STAGES = {name: "stage.learning_the_ropes." + name for name in ("not_started", "in_progress", "completed")}
 RECIPE_RULES = {
     "rule.cooking.dough": "recipe.cooking.dough",
     "rule.smelting.bronze": "recipe.smelting.bronze",
     "rule.smithing.bronze_dagger": "recipe.smithing.bronze_dagger",
+    "rule.cooking.shrimps": "recipe.cooking.shrimps.fire",
+    "rule.cooking.bread": "recipe.cooking.bread.range",
 }
-SIMPLE_GRANTS = {
-    "grant.tutorial.net", "grant.tutorial.survival_tools", "grant.tutorial.pickaxe", "grant.tutorial.hammer",
+CROSSINGS = {
+    "transition.tutorial.starting_door": [(3098, 3107, 0)],
+    "transition.tutorial.survival_gate": [(3089, 3091, 0), (3089, 3092, 0)],
+    "transition.tutorial.chef_door": [(3078, 3084, 0)],
+    "transition.tutorial.chef_exit": [(3072, 3090, 0)],
+    "transition.tutorial.quest_door": [(3086, 3125, 0)],
+    "transition.tutorial.mining_gate": [(3095, 9502, 0), (3095, 9503, 0)],
+    "transition.tutorial.rat_pen_entry": [(3110, 9518, 0), (3110, 9519, 0)],
+    "transition.tutorial.rat_pen_exit": [(3111, 9518, 0), (3111, 9519, 0)],
+    "transition.tutorial.account_door": [(3125, 3124, 0)],
+    "transition.tutorial.account_exit": [(3130, 3124, 0)],
+    "transition.tutorial.chapel_door": [(3125, 3107, 0)],
+    "transition.tutorial.chapel_exit": [(3122, 3102, 0)],
+    "transition.tutorial.magic_entry": [(3140, 3087, 0)],
 }
 
 
-def flag(name, value=1):
-    return {"kind": "flag", "name": name, "equals": value}
+def event_guard(kind, **fields):
+    return {"kind": "event", "condition": {"kind": kind, **fields}}
 
 
-def set_flag(name, value=1):
-    return {"kind": "set_flag", "name": name, "value": value}
-
-
-def completed_flag(edge):
-    return edge.removeprefix("transition.") + ".completed"
-
-
-def enter_stage(inputs, stage):
-    definition = next(s for s in inputs.rules["tutorial"]["states"] if s["id"] == stage)
-    return [{"kind": "set_tutorial_stage", "stage": stage}] + [
-        {"kind": "unlock_interface", "interface": identifier.replace("ui.", "interface.", 1)}
-        for identifier in definition["ui_unlock_refs"]]
+def within_points(points):
+    return {"kind": "any", "guards": [{"kind": "within", "tile": {"x": x, "y": y, "plane": plane}, "distance": 0}
+                                      for x, y, plane in points]}
 
 
 def source_predicates(guard):
     if "all" in guard:
-        result = []
-        for nested in guard["all"]:
-            result.extend(source_predicates(nested))
-        return result
+        return [predicate for child in guard["all"] for predicate in source_predicates(child)]
     return [guard]
 
 
 def predicate_value(edge, path):
-    return next((predicate.get("value") for predicate in source_predicates(edge["guard"])
-                 if predicate.get("path") == path), None)
+    return next((predicate["value"] for predicate in source_predicates(edge["guard"]) if predicate.get("path") == path), None)
 
 
-def translated_effects(inputs, edge, flags):
-    effects, gaps = [], []
-    grants = {grant["id"]: grant for grant in inputs.rules["tutorial"]["grant_definitions"]}
-    for source in edge["effects"]:
-        operation = source["op"]
+def enter_stage(inputs, stage):
+    original = next(state for state in inputs.rules["tutorial"]["states"] if state["id"] == stage)
+    return [{"kind": "set_tutorial_stage", "stage": stage}] + [
+        {"kind": "unlock_interface", "interface": interface.replace("ui.", "interface.", 1)}
+        for interface in original["ui_unlock_refs"]]
+
+
+def source_state_guard(inputs, guard):
+    if "all" in guard:
+        return all_of(*[source_state_guard(inputs, nested) for nested in guard["all"]])
+    if "any" in guard:
+        return {"kind": "any", "guards": [source_state_guard(inputs, nested) for nested in guard["any"]]}
+    path, operation, value = guard["path"], guard["op"], guard["value"]
+    if path.startswith("event."):
+        return always()
+    if path == "state.inventory.free_slots":
+        if operation != "gte":
+            raise ValueError("Source inventory capacity operator is not represented")
+        return {"kind": "free_capacity", "container": "inventory", "slots": value}
+    if path.startswith("state.inventory."):
+        alias = path.removeprefix("state.inventory.")
+        item = inputs.rules["vocabulary"]["guard_projection"]["inventory_count_aliases"][alias]
+        return has_items([item_stack(item, value)])
+    if path.startswith("state.equipment."):
+        if path.endswith("ammo_quantity"):
+            if value != 1 or operation != "gte":
+                raise ValueError("Unexpected source ammo count guard")
+            return {"kind": "equipped", "item": "item.arrow.bronze"}
+        return {"kind": "equipped", "item": value}
+    if path.startswith("state.tutorial."):
+        return counter_guard("counter." + path.removeprefix("state."), value)
+    if path == "state.bank.seed_claimed":
+        return {"kind": "entitlement_claimed", "entitlement": "entitlement.tutorial.bank_coins"}
+    if path == "state.quests.learning_the_ropes.status":
+        return {"kind": "quest_stage", "quest": "quest.learning_the_ropes", "stage": LEARNING_STAGES[value]}
+    if path == "state.account.mode" and value == "normal":
+        return always()
+    raise ValueError(f"Untranslated source state guard: {guard}")
+
+
+def source_effects(inputs, edge):
+    effects = []
+    for effect in edge["effects"]:
+        operation = effect["op"]
         if operation == "grant":
-            identifier = source["grant_ref"]
-            if identifier not in SIMPLE_GRANTS:
-                gaps.append("partial_and_missing_grants")
-                continue
-            grant = grants[identifier]
-            effect = {"kind": "give_items", "items": [stack(value) for value in grant["items"]]}
-            if identifier == "grant.tutorial.hammer":
-                effect = {"kind": "conditional", "guard": {"kind": "not", "guard": has_items([item_stack("item.hammer")])},
-                          "effects": [effect]}
-            effects.append(effect)
+            effects.append({"kind": "grant", "grant": effect["grant_ref"]})
         elif operation == "set":
-            path, value = source["path"], source["value"]
-            if path == "state.quests.learning_the_ropes.status":
-                effects.append({"kind": "set_quest_stage", "quest": "quest.learning_the_ropes",
-                                "stage": LEARNING_STAGES[value]})
-            elif path.startswith("state.tutorial."):
-                name = path.removeprefix("state.")
-                flags[name] = 0
-                effects.append(set_flag(name, int(value)))
-            elif path == "state.appearance_confirmed":
-                flags["tutorial.appearance_confirmed"] = 0
-                effects.append(set_flag("tutorial.appearance_confirmed"))
-            else:
-                gaps.append("unrepresented_effect:" + path)
-        elif operation == "mark" and "from_path" not in source:
-            name = "tutorial." + source["key"]
-            flags[name] = 0
-            effects.append(set_flag(name))
-        elif operation == "reward":
-            gaps.append("quest_reward_run_energy")
+            path, value = effect["path"], effect["value"]
+            if path.startswith("state.tutorial."):
+                effects.append(set_counter("counter." + path.removeprefix("state."), value))
+            elif path == "state.quests.learning_the_ropes.status":
+                if value != "completed":
+                    effects.append({"kind": "set_quest_stage", "quest": "quest.learning_the_ropes", "stage": LEARNING_STAGES[value]})
+            elif path != "state.appearance_confirmed":
+                raise ValueError(f"Untranslated source effect {effect}")
+        elif operation == "mark":
+            if effect["key"] != "selected_experience":
+                effects.append(set_counter("counter.tutorial." + effect["key"]))
+        elif operation == "reward" and effect["reward_ref"] == "reward.learning_the_ropes":
+            effects.append({"kind": "once", "entitlement": "entitlement.quest.learning_the_ropes",
+                            "effects": [{"kind": "set_quest_stage", "quest": "quest.learning_the_ropes",
+                                         "stage": LEARNING_STAGES["completed"]},
+                                        {"kind": "add_quest_points", "amount": 1}, restore_run()]})
         elif operation == "reconcile_departure":
-            gaps.append("departure_reconciliation")
+            # Travel completion owns the entitled container transaction before the completed event.
+            continue
         else:
-            gaps.append("authoritative_events")
-    name = completed_flag(edge["id"])
-    flags[name] = 0
-    effects.extend([set_flag(name), *enter_stage(inputs, edge["to_ref"])])
-    return effects, sorted(set(gaps))
-
-
-def build_tutorial(inputs, dialogues, spawns, flags):
-    data = inputs.rules["tutorial"]
-    stage_index = {value["id"]: index for index, value in enumerate(data["states"])}
-    caps = next(r for r in inputs.rules["activities"]["rules"] if r["id"] == "rule.tutorial.xp_cap")
-    stages = {}
-    for source in data["states"]:
-        stage = source["id"]
-        island = stage != "stage.tutorial.mainland"
-        allowed = list(BASE_ACTIONS)
-        if stage_index[stage] >= stage_index["stage.tutorial.inventory_open"]:
-            allowed += ["drop", "take_ground_item", "use_item", "move_inventory", "eat"]
-        if stage_index[stage] >= stage_index["stage.tutorial.make_dough"]:
-            allowed += ["produce"]
-        if stage_index[stage] >= stage_index["stage.tutorial.equip_dagger"]:
-            allowed += ["equip", "unequip", "set_combat_style"]
-        if stage_index[stage] >= stage_index["stage.tutorial.bank_open"]:
-            allowed += ["bank_deposit", "bank_withdraw"]
-        if stage_index[stage] >= stage_index["stage.tutorial.prayer_explanation"]:
-            allowed += ["set_prayer"]
-        if stage_index[stage] >= stage_index["stage.tutorial.wind_strike"]:
-            allowed += ["cast"]
-        if not island:
-            allowed += ["shop_buy", "shop_sell"]
-        xp_caps = {}
-        if island:
-            xp_caps = {f"skill.{name}": 0 for name in (
-                "agility", "herblore", "thieving", "crafting", "fletching", "slayer", "farming",
-                "runecraft", "hunter", "construction", "sailing")}
-            xp_caps["skill.hitpoints"] = 11540
-            xp_caps.update({skill: caps["cap_below_next_level_tenths"] for skill in caps["skill_refs"]})
-        stages[stage] = {
-            "id": stage, "instruction": source["instruction"], "allowed_actions": allowed,
-            "xp_caps_tenths": xp_caps,
-            "xp_stop_levels": {skill: caps["level_cap"] for skill in caps["skill_refs"]} if island else {},
-            "nonfatal_combat": island, "transitions": [],
-            "source": unique_sources(inputs.basis(source["basis"]) + inputs.basis(caps["basis"])),
-        }
-    bindings = []
-    for edge in data["transitions"]:
-        record = {"id": edge["id"], "from": edge["from_ref"], "to": edge["to_ref"],
-                  "source_event": edge["event_ref"], "source_guard": edge["guard"],
-                  "source_effects": edge["effects"], "runtime_hooks": [], "gaps": []}
-        effects, effect_gaps = translated_effects(inputs, edge, flags)
-        record["gaps"].extend(effect_gaps)
-        event = edge["event_ref"]
-        if event == "event.dialogue.completed":
-            npc, topic = predicate_value(edge, "event.npc_ref"), predicate_value(edge, "event.topic")
-            if npc not in inputs.selection["npcs"]:
-                record["gaps"].append("npc_origin")
-            else:
-                guard = tutorial_at(edge["from_ref"])
-                # Initial single/batch grants enforce the source free-slot precondition atomically.
-                # Partial/top-up policies are not equivalent and are deliberately blocked above.
-                for predicate in source_predicates(edge["guard"]):
-                    path = predicate.get("path")
-                    if path in ("event.npc_ref", "event.topic", "state.inventory.free_slots"):
-                        continue
-                    if path == "state.account.mode" and predicate["value"] == "normal":
-                        continue
-                    if "any" in predicate and edge["id"] == "transition.tutorial.hammer":
-                        continue
-                    record["gaps"].append("guard:" + str(path))
-                if record["gaps"]:
-                    guard = all_of(guard, never())
-                node = {
-                    "id": edge["id"], "text": stages[edge["from_ref"]]["instruction"],
-                    "guard": tutorial_at(edge["from_ref"]),
-                    "choices": [{"id": topic, "text": topic.replace("_", " ").capitalize(),
-                                 "guard": guard, "effects": effects, "next_node": None}],
-                }
-                target = dialogue_id(npc)
-                dialogues[target]["nodes"].append(node)
-                dialogues[target]["entry_nodes"].append(node["id"])
-                record["runtime_hooks"].append({"kind": "dialogue_choice", "dialogue": target,
-                                                "node": node["id"], "choice": topic})
-        elif event == "event.ui.opened":
-            interface = predicate_value(edge, "event.ui_ref").replace("ui.", "interface.", 1)
-            if edge["id"] == "transition.tutorial.bank":
-                record["gaps"].append("bank_first_open_entitlement")
-            if not record["gaps"]:
-                transition = {"event": "interface_opened", "target": interface,
-                              "guard": tutorial_at(edge["from_ref"]), "effects": effects}
-                stages[edge["from_ref"]]["transitions"].append(transition)
-                record["runtime_hooks"].append({"kind": "tutorial_transition", "stage": edge["from_ref"],
-                                                "index": len(stages[edge["from_ref"]]["transitions"]) - 1})
-        elif event == "event.equipment.changed":
-            required = [predicate["value"] for predicate in source_predicates(edge["guard"])
-                        if predicate.get("path", "").startswith("state.equipment.") and
-                        predicate["op"] == "eq"]
-            guard = all_of(tutorial_at(edge["from_ref"]), *[{"kind": "equipped", "item": item} for item in required])
-            stages[edge["from_ref"]]["transitions"].append(
-                {"event": "equipped", "target": None, "guard": guard, "effects": effects})
-            record["runtime_hooks"].append({"kind": "tutorial_transition", "stage": edge["from_ref"],
-                                            "index": len(stages[edge["from_ref"]]["transitions"]) - 1})
-        elif event == "event.craft.succeeded":
-            recipe = RECIPE_RULES.get(predicate_value(edge, "event.rule_ref"))
-            if recipe:
-                stages[edge["from_ref"]]["transitions"].append(
-                    {"event": "produced", "target": recipe,
-                     "guard": tutorial_at(edge["from_ref"]), "effects": effects})
-                record["runtime_hooks"].append({"kind": "tutorial_transition", "stage": edge["from_ref"],
-                                                "index": len(stages[edge["from_ref"]]["transitions"]) - 1})
-            else:
-                record["gaps"].append("conditional_recipes")
-        elif event == "event.world.transitioned":
-            record["gaps"].append("dynamic_travel_and_crossing")
-        elif event == "event.gather.succeeded":
-            record["gaps"].append("source_chance_and_timing")
-        elif event in ("event.cook.resolved", "event.fire.lit"):
-            record["gaps"].append("conditional_recipes")
-        elif event in ("event.combat.kill_credited", "event.spell.resolved"):
-            record["gaps"].extend(["authoritative_events", "npc_combat"])
-        else:
-            record["gaps"].append("authoritative_events")
-        record["gaps"] = sorted(set(record["gaps"]))
-        record["status"] = "blocked" if record["gaps"] else "projected_not_executed"
-        bindings.append(record)
-    add_recovery_dialogue(inputs, dialogues, flags)
-    return stages, bindings
-
-
-def add_recovery_dialogue(inputs, dialogues, flags):
-    entries = (
-        ("npc.survival_expert", "item.fishing_net.small", "transition.tutorial.net"),
-        ("npc.survival_expert", "item.axe.bronze", "transition.tutorial.survival_tools"),
-        ("npc.survival_expert", "item.tinderbox", "transition.tutorial.survival_tools"),
-        ("npc.mining_instructor", "item.pickaxe.bronze", "transition.tutorial.pickaxe"),
-        ("npc.mining_instructor", "item.hammer", "transition.tutorial.hammer"),
-    )
-    for npc, item, original in entries:
-        original_flag = completed_flag(original)
-        flags[original_flag] = 0
-        missing = all_of(
-            flag(original_flag), {"kind": "not", "guard": tutorial_at("stage.tutorial.mainland")},
-            {"kind": "not", "guard": has_items([item_stack(item)])},
-            {"kind": "not", "guard": {"kind": "equipped", "item": item}},
-        )
-        node_id = "recovery." + item
-        node = {"id": node_id, "text": "Replace a missing, previously unlocked tutorial tool.",
-                "guard": missing, "choices": [{"id": "replace", "text": "Replace the missing tool",
-                "guard": missing, "effects": [{"kind": "give_items", "items": [item_stack(item)]}],
-                "next_node": None}]}
-        dialogue = dialogues[dialogue_id(npc)]
-        dialogue["nodes"].append(node)
-        dialogue["entry_nodes"].append(node_id)
-        dialogue["source"] = unique_sources(dialogue["source"] + [source_record(
-            "research/journey-rules/tutorial.json#recovery.tutorial.tools",
-            "Missing-only replacement, after the real original grant; atomic inventory capacity failure leaves "
-            "stage and possessions unchanged. This source-contract recovery fallback remains an inference.",
-            "inference", "source-contract-v1")])
+            raise ValueError(f"Untranslated source effect {effect}")
+    return effects + [set_counter(completed_counter(edge["id"])), *enter_stage(inputs, edge["to_ref"])]
 
 
 def build_dialogues(inputs):
-    dialogues = {}
+    result = {}
     for npc, number in inputs.selection["npcs"].items():
-        if npc in ("npc.tutorial_rat", "npc.tutorial_chicken", "npc.goblin.level_2",
-                   "npc.chicken", "npc.tutorial.fishing_spot"):
+        if npc in ("npc.tutorial_rat", "npc.tutorial_chicken", "npc.goblin.level_2", "npc.chicken", "npc.tutorial.fishing_spot"):
             continue
         identifier = dialogue_id(npc)
-        dialogues[identifier] = {
+        result[identifier] = {
             "id": identifier, "nodes": [], "entry_nodes": [],
             "source": inputs.definition_source("npc", number) + [source_record(
                 "research/journey-rules/tutorial.json#dialogue_policy",
-                "Semantic/paraphrased source dialogue beats only, not approved source strings, chatheads, "
-                "control layout or presentation. No progression is attached to arbitrary Continue clicks.",
+                "Paraphrased source dialogue beats and actual choice guards/effects, not approved rendered strings or layout.",
                 "inference", "source-contract-v1")],
         }
-    return dialogues
+    return result
 
 
-def build_cooks(inputs, dialogues, flags):
+def build_tutorial(inputs, world, content, bindings):
+    original = inputs.rules["tutorial"]
+    stages, records = {}, []
+    ordered = [state["id"] for state in original["states"]]
+    cap = inputs.activity_rules["rule.tutorial.xp_cap"]
+    noncombat_interactions = sorted(
+        f"interact:{spawn['id']}:{interaction['name']}"
+        for spawn in content["spawns"].values() for interaction in spawn["interactions"]
+        if interaction["action"]["kind"] != "attack")
+    rat_attacks = sorted(f"interact:{spawn['id']}:Attack" for spawn in content["spawns"].values()
+                         if spawn["kind"].get("npc") == "npc.tutorial_rat")
+    for state in original["states"]:
+        identifier = state["id"]
+        island = identifier != "stage.tutorial.mainland"
+        actions = ["walk", "dialogue", "select_dialogue", "open_interface", "close_interface", "cancel_activity", "request_logout"]
+        actions += noncombat_interactions if island else ["interact"]
+        if identifier in ("stage.tutorial.melee_rat", "stage.tutorial.ranged_rat"):
+            actions += rat_attacks
+        if identifier == "stage.tutorial.appearance":
+            actions.append("confirm_appearance")
+        if identifier == "stage.tutorial.experience":
+            actions.append("select_experience")
+        if ordered.index(identifier) >= ordered.index("stage.tutorial.inventory_open"):
+            actions += ["drop", "take_ground_item", "use_item", "move_inventory", "eat"]
+        if ordered.index(identifier) >= ordered.index("stage.tutorial.catch_shrimp"):
+            actions += ["gather"]
+        if ordered.index(identifier) >= ordered.index("stage.tutorial.light_fire"):
+            actions += ["produce", "produce_at", "interact_with"]
+        if ordered.index(identifier) >= ordered.index("stage.tutorial.equip_dagger"):
+            actions += ["equip", "unequip", "set_combat_style", "combat_style"]
+        if ordered.index(identifier) >= ordered.index("stage.tutorial.bank_open"):
+            actions += ["bank_deposit", "bank_withdraw", "bank"]
+        if ordered.index(identifier) >= ordered.index("stage.tutorial.prayer_explanation"):
+            actions += ["set_prayer", "prayer"]
+        if ordered.index(identifier) >= ordered.index("stage.tutorial.wind_strike"):
+            actions += ["cast"]
+        actions += ["set_setting"]
+        if not island:
+            actions += ["shop_buy", "shop_sell", "shop", "reclaim"]
+        ceilings = {}
+        if island:
+            ceilings = {skill: 0 for skill in content["skills"] if skill not in cap["skill_refs"]}
+            ceilings["skill.hitpoints"] = 11540
+            ceilings.update({skill: cap["cap_below_next_level_tenths"] for skill in cap["skill_refs"]})
+        stages[identifier] = {
+            "id": identifier, "instruction": state["instruction"], "allowed_actions": actions,
+            "xp_caps_tenths": ceilings,
+            "xp_stop_levels": {skill: 3 for skill in cap["skill_refs"]} if island else {},
+            "nonfatal_combat": island, "transitions": [],
+            "source": unique_sources(inputs.basis(state["basis"]) + inputs.basis(cap["basis"])),
+        }
+    npc_spawns = {}
+    for spawn in content["spawns"].values():
+        if spawn["kind"]["kind"] == "npc":
+            npc_spawns.setdefault(spawn["kind"]["npc"], []).append(spawn["id"])
+    target_rules = {}
+    for spawn in content["spawns"].values():
+        for action in spawn["interactions"]:
+            if action["action"]["kind"] == "gather":
+                method = action["action"]["rule"]["mechanics"]["method"].replace("action.", "rule.", 1)
+                target_rules.setdefault(method, []).append(spawn["id"])
+    pen = rat_pen(world, content)
+    bindings["rat_pen_cells"] = [list(point) for point in sorted(pen)]
+    for edge in original["transitions"]:
+        event = edge["event_ref"]
+        base = all_of(tutorial_at(edge["from_ref"]), source_state_guard(inputs, edge["guard"]))
+        if edge["id"] == "transition.tutorial.quest_intro":
+            base = all_of(base, {"kind": "quest_stage", "quest": "quest.learning_the_ropes",
+                                 "stage": LEARNING_STAGES["not_started"]})
+        if edge["id"] == "transition.tutorial.arrive":
+            destinations = content["mechanics"]["travels"]["travel.tutorial.departure"]["destination"]["value"]["branches"]
+            base = all_of(base, {"kind": "any", "guards": [
+                all_of({"kind": "experience", "experience": experience},
+                       {"kind": "within", "tile": destination["tile"], "distance": 0})
+                for experience, destination in destinations.items()]})
+        effects = source_effects(inputs, edge)
+        hooks = []
+        def add(kind, target=None, guard=None):
+            index = len(stages[edge["from_ref"]]["transitions"])
+            stages[edge["from_ref"]]["transitions"].append(
+                {"event": kind, "target": target, "guard": all_of(base, guard or always()), "effects": effects})
+            hooks.append({"kind": "tutorial_transition", "stage": edge["from_ref"], "index": index})
+        if event == "event.appearance.confirmed":
+            add("appearance_confirmed")
+        elif event == "event.experience.selected":
+            for experience in content["mechanics"]["experiences"]:
+                add("experience_selected", experience, {"kind": "experience", "experience": experience})
+        elif event == "event.dialogue.completed":
+            npc, topic = predicate_value(edge, "event.npc_ref"), predicate_value(edge, "event.topic")
+            if not npc_spawns.get(npc):
+                raise ValueError(f"Required tutorial NPC has no source-bound spawn: {npc}")
+            for speaker in npc_spawns[npc]:
+                add("dialogue_selected", speaker, event_guard("dialogue_choice", speaker=speaker, choice=topic))
+            node = {
+                "id": edge["id"], "text": stages[edge["from_ref"]]["instruction"],
+                "guard": base, "choices": [{"id": topic, "text": topic.replace("_", " ").capitalize(),
+                                          "guard": base, "effects": [], "next_node": None}],
+            }
+            dialogue = content["dialogues"][dialogue_id(npc)]
+            dialogue["nodes"].append(node)
+            dialogue["entry_nodes"].append(node["id"])
+        elif event == "event.ui.opened":
+            interface = predicate_value(edge, "event.ui_ref").replace("ui.", "interface.", 1)
+            if interface == "interface.bank":
+                for spawn in content["spawns"].values():
+                    if any(action["action"]["kind"] == "open_bank" for action in spawn["interactions"]):
+                        add("interface_presented", interface, event_guard(
+                            "interface", interface=interface, context={"kind": "bank", "banker": spawn["id"]}))
+            else:
+                add("interface_opened", interface)
+        elif event == "event.ui.closed":
+            add("interface_closed", predicate_value(edge, "event.ui_ref").replace("ui.", "interface.", 1))
+        elif event == "event.equipment.changed":
+            add("equipped")
+        elif event == "event.gather.succeeded":
+            rules = predicate_value(edge, "event.rule_ref")
+            rules = [rules] if isinstance(rules, str) else rules
+            for rule in rules:
+                for spawn in target_rules[rule]:
+                    add("gathered", spawn)
+        elif event in ("event.craft.succeeded", "event.cook.resolved"):
+            rule = predicate_value(edge, "event.rule_ref")
+            recipe = RECIPE_RULES[rule]
+            definition = content["recipes"][recipe]
+            outcomes = [("success", definition["outputs"])]
+            if event == "event.cook.resolved":
+                outcomes.append(("failure", definition["failed_outputs"]))
+            condition = {"kind": "any", "guards": [
+                event_guard("production", recipe=recipe, method=definition["mechanics"]["method"],
+                            facility=None, outcome=outcome, output=items[0]["item"] if items else None)
+                for outcome, items in outcomes]}
+            add("production_resolved", recipe, condition)
+        elif event == "event.fire.lit":
+            add("temporary_object_created", "temporary_object.fire.normal")
+        elif event == "event.setting.changed":
+            add("setting_changed", guard=event_guard("setting", setting={"setting": "run", "enabled": True}))
+        elif event == "event.object.inspected":
+            for spawn in content["spawns"].values():
+                if spawn["kind"].get("object") == "object.tutorial.poll_booth":
+                    add("inspected", spawn["id"], event_guard("inspection", target=spawn["id"], explanation="tutorial_poll_explanation"))
+        elif event == "event.combat.kill_credited":
+            method = predicate_value(edge, "event.method")
+            condition = event_guard("kill", npc="npc.tutorial_rat", method=method, credited=True)
+            if method == "ranged":
+                condition = all_of(condition, {"kind": "not", "guard": within_points(sorted(pen))})
+            add("npc_killed", guard=condition)
+        elif event == "event.spell.resolved":
+            condition = {"kind": "any", "guards": [
+                event_guard("spell", spell="spell.wind_strike", target=spawn, outcomes=["hit", "splash"])
+                for spawn in npc_spawns["npc.tutorial_chicken"]]}
+            add("spell_resolved", "spell.wind_strike", all_of(
+                condition, {"kind": "quest_stage", "quest": "quest.learning_the_ropes", "stage": LEARNING_STAGES["in_progress"]},
+                {"kind": "not", "guard": {"kind": "entitlement_claimed", "entitlement": "entitlement.quest.learning_the_ropes"}}))
+        elif event.startswith("event.teleport."):
+            phase = event.removeprefix("event.teleport.")
+            add("teleport", "travel.tutorial.departure", event_guard("teleport", travel="travel.tutorial.departure", phase=phase))
+        elif event == "event.world.transitioned":
+            link = predicate_value(edge, "event.link_ref")
+            transit = {"object.tutorial.quest_ladder": "travel.tutorial_quest_ladder.forward",
+                       "object.tutorial.combat_ladder": "travel.tutorial_combat_ladder.forward"}.get(link)
+            if transit:
+                add("teleport", transit, event_guard("teleport", travel=transit, phase="completed"))
+            else:
+                points = CROSSINGS[edge["id"]]
+                related = [group for group in bindings["doors"] if group["status"] == "bound_inference" and any(
+                    content["spawns"][spawn]["kind"].get("object") == link for spawn in group["spawns"])]
+                door_guards = [counter_guard(group["counter"]) for group in related]
+                add("moved", guard=all_of(within_points(points), *door_guards))
+        else:
+            raise ValueError(f"No schema-2 lowering for {edge['id']}: {event}")
+        records.append({
+            "id": edge["id"], "from": edge["from_ref"], "to": edge["to_ref"],
+            "source_event": event, "source_guard": edge["guard"], "source_effects": edge["effects"],
+            "runtime_hooks": hooks, "gaps": [], "status": "bound_not_gameplay_verified",
+            "coordinate_basis": "Source door/area crossing coordinates are preserved explicit inferences, not observations."
+                                if event == "event.world.transitioned" else None,
+        })
+    add_recovery(inputs, content)
+    return stages, records
+
+
+def rat_pen(world, content):
+    available = {position(cell["tile"]) for region in content["regions"].values() for cell in region["cells"]}
+    start = (3105, 9514, 0)
+    frontier, visited = deque([start]), {start}
+    while frontier:
+        point = frontier.popleft()
+        for dx, dy in ((0, 1), (1, 0), (0, -1), (-1, 0)):
+            other = point[0] + dx, point[1] + dy, point[2]
+            if other in available and other not in visited and world.can_step(point, other):
+                visited.add(other)
+                frontier.append(other)
+    if not 20 <= len(visited) <= 500 or (3112, 9518, 0) in visited:
+        raise ValueError("Source rat pen did not resolve to a bounded closed-geometry component")
+    return visited
+
+
+def add_recovery(inputs, content):
+    def append(npc, key, guard, effects, text):
+        dialogue = content["dialogues"][dialogue_id(npc)]
+        dialogue["nodes"].append({"id": key, "text": text, "guard": guard, "choices": [
+            {"id": key, "text": text, "guard": guard, "effects": effects, "next_node": None}]})
+        dialogue["entry_nodes"].append(key)
+    island = {"kind": "not", "guard": tutorial_at("stage.tutorial.mainland")}
+    for original in inputs.rules["tutorial"]["grant_definitions"]:
+        if original["npc_ref"] is None:
+            continue
+        grant = original["id"]
+        suffix = {"grant.tutorial.net": "net", "grant.tutorial.survival_tools": "survival_tools",
+                  "grant.tutorial.chef_ingredients": "chef_ingredients", "grant.tutorial.pickaxe": "pickaxe",
+                  "grant.tutorial.hammer": "hammer", "grant.tutorial.melee_gear": "melee_gear",
+                  "grant.tutorial.ranged_gear": "ranged_gear", "grant.tutorial.runes": "runes"}[grant]
+        guard = all_of(island, counter_guard(completed_counter("transition.tutorial." + suffix)))
+        if suffix == "chef_ingredients":
+            guard = all_of(guard, {"kind": "any", "guards": [
+                tutorial_at("stage.tutorial.make_dough"), tutorial_at("stage.tutorial.bake_bread")]},
+                {"kind": "not", "guard": has_items([item_stack("item.bread.dough")])},
+                {"kind": "not", "guard": has_items([item_stack("item.bread")])})
+        if suffix in ("melee_gear", "ranged_gear"):
+            kill = "melee_kill" if suffix == "melee_gear" else "ranged_kill"
+            guard = all_of(guard, counter_guard("counter.tutorial." + kill, False))
+        if suffix == "runes":
+            guard = all_of(guard, {"kind": "not", "guard": has_items([
+                item_stack("item.rune.air"), item_stack("item.rune.mind")])})
+        entitlement = "entitlement." + grant.removeprefix("grant.")
+        claimed = {"kind": "entitlement_claimed", "entitlement": entitlement}
+        append(original["npc_ref"], "finish." + suffix, all_of(guard, {"kind": "not", "guard": claimed}),
+               [{"kind": "grant", "grant": grant}], "Finish the original source supply without reclaiming satisfied lines.")
+        append(original["npc_ref"], "replace." + suffix, all_of(guard, claimed),
+               [{"kind": "grant", "grant": grant + ".recovery"}], "Replace only missing eligible supplies.")
+
+
+def build_cooks(inputs, content):
     contract = inputs.rules["cooks-assistant"]
-    dialogue = dialogues["dialogue.cook"]
+    dialogue = content["dialogues"]["dialogue.cook"]
     states = {state["id"]: state for state in contract["states"]}
     items = {"milk": "item.milk.bucket", "flour": "item.flour.pot", "egg": "item.egg"}
-    bindings = []
-    for state_id, state in states.items():
-        delivered = state.get("delivered", {})
-        description = "Cook's Assistant: " + state["status"].replace("_", " ")
-        if delivered:
-            description += "; delivered " + (", ".join(name for name, yes in delivered.items() if yes) or "none")
-        dialogue["nodes"].append({"id": state_id, "text": description,
-                                  "guard": quest_at(state_id), "choices": []})
-        dialogue["entry_nodes"].append(state_id)
-    nodes = {node["id"]: node for node in dialogue["nodes"]}
+    nodes, bindings = {}, []
+    for identifier, state in states.items():
+        delivered = [name for name, yes in state.get("delivered", {}).items() if yes]
+        node = {"id": identifier, "text": "Cook's Assistant: " + state["status"].replace("_", " ") +
+                (("; delivered " + ", ".join(delivered)) if delivered else ""),
+                "guard": quest_at(identifier), "choices": []}
+        dialogue["nodes"].append(node)
+        dialogue["entry_nodes"].append(identifier)
+        nodes[identifier] = node
     for edge in contract["transitions"]:
-        guard, effects, gaps = quest_at(edge["from_ref"]), [], []
+        guard, effects = quest_at(edge["from_ref"]), []
         if edge["event_ref"] == "event.quest.accepted":
             guard = all_of(guard, tutorial_at("stage.tutorial.mainland"))
             text = "Agree to help the Cook"
         elif edge["event_ref"] == "event.quest.declined":
             text = "Decline to help"
         elif edge["event_ref"] == "event.quest.delivered":
-            before = states[edge["from_ref"]]["delivered"]
-            after = states[edge["to_ref"]]["delivered"]
-            new = [name for name in items if after[name] and not before[name]]
-            carried = [item_stack(items[name]) for name in new]
-            still_missing = [name for name in items if not after[name]]
+            before, after = states[edge["from_ref"]]["delivered"], states[edge["to_ref"]]["delivered"]
+            newly = [name for name in items if after[name] and not before[name]]
+            carried = [item_stack(items[name]) for name in newly]
             guard = all_of(guard, has_items(carried), *[
-                {"kind": "not", "guard": has_items([item_stack(items[name])])} for name in still_missing])
+                {"kind": "not", "guard": has_items([item_stack(items[name])])} for name in items if not after[name]])
             effects.append({"kind": "take_items", "items": carried})
-            text = "Hand over " + ", ".join(new)
+            text = "Hand over " + ", ".join(newly)
         else:
-            flags["reward.cooks_assistant"] = 0
-            guard = all_of(guard, flag("reward.cooks_assistant", 0), never())
-            effects.extend([{"kind": "add_quest_points", "amount": 1},
-                            {"kind": "award_xp", "rewards": [{"skill": "skill.cooking", "amount_tenths": 3000}]},
-                            set_flag("reward.cooks_assistant")])
-            gaps = ["quest_reward_run_energy"]
-            text = "Thank the Cook and receive the quest reward"
-        if edge["from_ref"] != edge["to_ref"]:
+            guard = all_of(guard, {"kind": "not", "guard": {"kind": "entitlement_claimed", "entitlement": "entitlement.quest.cooks_assistant"}})
+            effects = [{"kind": "once", "entitlement": "entitlement.quest.cooks_assistant", "effects": [
+                {"kind": "set_quest_stage", "quest": "quest.cooks_assistant", "stage": "stage.cooks.completed"},
+                {"kind": "award_xp", "rewards": [{"skill": "skill.cooking", "amount_tenths": 3000}]},
+                {"kind": "add_quest_points", "amount": 1}, restore_run()]}]
+            text = "Thank the Cook"
+        if edge["from_ref"] != edge["to_ref"] and edge["to_ref"] != "stage.cooks.completed":
             effects.append({"kind": "set_quest_stage", "quest": "quest.cooks_assistant", "stage": edge["to_ref"]})
-        choice = {"id": edge["id"], "text": text, "guard": guard, "effects": effects, "next_node": None}
-        nodes[edge["from_ref"]]["choices"].append(choice)
-        bindings.append({
-            "id": edge["id"], "from": edge["from_ref"], "to": edge["to_ref"],
-            "source_event": edge["event_ref"],
-            "runtime_hooks": [{"kind": "dialogue_choice", "dialogue": "dialogue.cook",
-                               "node": edge["from_ref"], "choice": edge["id"]}],
-            "status": "blocked" if gaps else "projected_not_executed", "gaps": gaps,
-            "basis": edge["basis"],
+        nodes[edge["from_ref"]]["choices"].append({
+            "id": edge["id"], "text": text, "guard": guard, "effects": effects, "next_node": None,
         })
+        bindings.append({"id": edge["id"], "from": edge["from_ref"], "to": edge["to_ref"], "source_event": edge["event_ref"],
+                         "runtime_hooks": [{"kind": "dialogue_choice", "dialogue": "dialogue.cook",
+                                            "node": edge["from_ref"], "choice": edge["id"]}],
+                         "status": "bound_not_gameplay_verified", "gaps": [], "basis": edge["basis"]})
     dialogue["source"] = unique_sources(inputs.basis(contract["journal"]["basis"]) + [source_record(
-        "research/journey-rules/cooks-assistant.json#dialogue_routes",
-        "All ten states and 22 edges retained. All carried, still-required ingredients are atomically delivered "
-        "without requiring self-gathering or post-start acquisition. Completion is blocked until its run-energy "
-        "effect can accompany the once-only 1 QP, 300 Cooking XP and range permission.",
+        "research/journey-rules/cooks-assistant.json",
+        "All ten states and22 edges; ordinary milk/flour/egg subsets can be precollected and delivered in any order. "
+        "Exactly-once reward includes source run-energy restoration. Charged milk remains a retained, "
+        "parent-scoped rare alternative, not a new starter grant/acquisition.",
         "inference", "source-contract-v1")])
-    quest = {
-        "id": "quest.cooks_assistant", "name": "Cook's Assistant",
-        "initial_stage": contract["start_ref"], "completed_stage": "stage.cooks.completed",
-        "journal": {state: nodes[state]["text"] for state in states}, "transitions": [],
-        "source": dialogue["source"],
-    }
-    return quest, bindings
+    return {"id": "quest.cooks_assistant", "name": "Cook's Assistant", "initial_stage": contract["start_ref"],
+            "completed_stage": "stage.cooks.completed", "journal": {identifier: nodes[identifier]["text"] for identifier in nodes},
+            "transitions": [], "source": dialogue["source"]}, bindings
 
 
-def finish_dialogues(inputs, dialogues):
-    for identifier, dialogue in dialogues.items():
+def finish_dialogues(inputs, content):
+    for identifier, dialogue in content["dialogues"].items():
         if not dialogue["nodes"]:
             npc = "npc." + identifier.removeprefix("dialogue.")
             name = inputs.collections["npc"][inputs.selection["npcs"][npc]]["name"]
-            dialogue["nodes"] = [{"id": "information", "text": name + ": source dialogue binding.",
+            dialogue["nodes"] = [{"id": "information", "text": name + ": source information.",
                                   "guard": always(), "choices": []}]
             dialogue["entry_nodes"] = ["information"]
-    death = dialogues["dialogue.death"]
-    death["nodes"] = [{
-        "id": "first_item_losing_death", "text": "Death's Office: fees, timers and kept items must all be explained.",
-        "guard": always(),
-        "choices": [{"id": topic, "text": text, "guard": never(), "effects": [], "next_node": None}
-                    for topic, text in (("fees", "Explain recovery fees"), ("timer", "Explain the grave timer"),
-                                        ("kept_items", "Explain items kept on death"))],
-    }]
-    death["entry_nodes"] = ["first_item_losing_death"]
-    death["source"] = unique_sources(death["source"] + [source_record(
-        "research/journey-rules/activities.json#graph.death.first_office",
-        "The four-state/six-edge source death graph is bound separately. Never mark it complete using "
-        "an unrelated quest, tutorial stage, empty-inventory death or three unguarded flags.",
-        "inference", "source-contract-v1")])
+    source = inputs.rule_source("rule.death.first_office")
+    first_death = {"kind": "life", "phase": "first_death_office"}
+    intro_guard = all_of(first_death, counter_guard("counter.death.introduction_heard", False))
+    topics_guard = all_of(first_death, counter_guard("counter.death.introduction_heard"))
+    death = content["dialogues"]["dialogue.death"]
+    death["nodes"] = [
+        {"id": "ordinary_office_information", "text": "Death explains owned-item retrieval, the grave and Office fees.",
+         "guard": {"kind": "life", "phase": "alive"}, "choices": []},
+        {"id": "stage.death.introduction", "text": "Death explains your first item loss and the grave.",
+         "guard": intro_guard, "choices": [{"id": "first_item_loss_intro", "text": "Continue",
+          "guard": intro_guard, "effects": [set_counter("counter.death.introduction_heard")],
+          "next_node": "stage.death.topics"}]},
+        {"id": "stage.death.topics", "text": "Ask about fees, active grave time and items kept on death.",
+         "guard": topics_guard, "choices": [
+             {"id": topic, "text": topic.replace("_", " "), "guard": topics_guard,
+              "effects": [{"kind": "complete_death_topic", "topic": topic}], "next_node": "stage.death.topics"}
+             for topic in ("fees", "timer", "kept_items")] + [
+             {"id": "done", "text": "I understand. Leave through the portal.",
+              "guard": all_of(topics_guard, {"kind": "death_topics", "topics": ["fees", "timer", "kept_items"]}),
+              "effects": [set_counter("counter.death.exit_confirmed")], "next_node": None}]},
+    ]
+    death["entry_nodes"] = ["ordinary_office_information", "stage.death.introduction", "stage.death.topics"]
+    death["source"] = source
 
 
-def build_initial_state(inputs, flags):
+def build_initial_state(inputs, content):
     source = inputs.rules["initial-state"]
     point = inputs.selection["initial_tile"]
-    flags.update({"tutorial.departed": 0, "tutorial.departure_authorized": 0,
-                  "tutorial.melee_kill": 0, "tutorial.ranged_kill": 0, "tutorial.chicken_cast": 0,
-                  "tutorial.bank_seed_claimed": 0, "reward.learning_the_ropes": 0,
-                  "reward.cooks_assistant": 0})
     return {
         "region": region_id(point["x"], point["y"]), "tile": point,
         "inventory": {"slots": [None] * 28}, "equipment": {},
         "bank": {"capacity": source["bank"]["base_capacity"], "slots": []},
-        "skills": {s["id"]: {"xp_tenths": s["xp_tenths"], "current_level": s["current_level"]} for s in source["skills"]},
+        "skills": {skill["id"]: {"xp_tenths": skill["xp_tenths"], "current_level": skill["current_level"]} for skill in source["skills"]},
         "hitpoints": source["vitals"]["hitpoints"], "prayer_points": source["vitals"]["prayer_points"],
-        "run_energy": source["vitals"]["run_energy_units"], "tutorial_stage": source["tutorial"]["stage_ref"],
-        "quest_points": 0,
-        "quests": {
-            "quest.learning_the_ropes": {"stage": LEARNING_STAGES["not_started"], "flags": {}},
-            "quest.cooks_assistant": {"stage": "stage.cooks.not_started", "flags": {}},
+        "run_energy": source["vitals"]["run_energy_units"], "tutorial_stage": source["tutorial"]["stage_ref"], "quest_points": 0,
+        "quests": {"quest.learning_the_ropes": {"stage": LEARNING_STAGES["not_started"], "flags": {}},
+                   "quest.cooks_assistant": {"stage": "stage.cooks.not_started", "flags": {}}},
+        "flags": {},
+        "interfaces": [identifier.replace("ui.", "interface.", 1) for identifier in source["ui"]["initially_available_refs"]],
+        "runtime": {
+            "settings": dict(inputs.profile["initial_settings"]),
+            "counters": {identifier: definition["initial"] for identifier, definition in content["mechanics"]["counters"].items()
+                         if definition["scope"] == "character"},
         },
-        "flags": dict(sorted(flags.items())),
-        "interfaces": [item.replace("ui.", "interface.", 1) for item in source["ui"]["initially_available_refs"]],
-        "source": unique_sources(
-            inputs.basis(source["inventory"]["basis"]) + inputs.basis(source["bank"]["basis"]) +
-            inputs.basis(source["vitals"]["basis"]) + [
-                source_record("research/m1-bindings/selection.json#initial_tile",
-                              inputs.selection["initial_tile_note"], "inference", "m1-bindings-v1"),
-                source_record("research/journey-rules/decisions.json#assumption.fresh_containers",
-                              "Fresh containers and departure alternatives remain provisional. The 25-coin "
-                              "first-open bank entitlement is NOT preseeded, repeated on open, granted in "
-                              "inventory or silently reconciled at departure.",
-                              "inference", "source-contract-v1"),
-            ]),
+        "source": unique_sources(inputs.basis(source["inventory"]["basis"]) + inputs.basis(source["bank"]["basis"]) +
+                                 inputs.basis(source["vitals"]["basis"]) + [
+            source_record("research/m1-bindings/selection.json#initial_tile", inputs.selection["initial_tile_note"], "inference", "240/cache2695"),
+            source_record("research/m1-bindings/profile-v2.json",
+                          "Initial auto-retaliate/death settings are explicit provisional profile selections, "
+                          "not source observations or approvals. Original unbound settings and the capture impact "
+                          "are retained. No appearance, experience, tutorial, quest or bank entitlement is precompleted.",
+                          "inference", "m1-profile-v2")]),
     }
 
 
 def learning_quest(inputs):
-    return {
-        "id": "quest.learning_the_ropes", "name": "Learning the Ropes",
-        "initial_stage": LEARNING_STAGES["not_started"], "completed_stage": LEARNING_STAGES["completed"],
-        "journal": {value: "Learning the Ropes: " + key.replace("_", " ") for key, value in LEARNING_STAGES.items()},
-        "transitions": [],
-        "source": [inputs.wiki("Learning the Ropes", "1 QP is earned by the valid tutorial chicken Wind Strike, "
-                               "before departure and without requiring a kill. Its authoritative spell event and "
-                               "run-energy reward cannot be replaced with a generic hit/kill or dialogue advance.")],
-    }
+    return {"id": "quest.learning_the_ropes", "name": "Learning the Ropes",
+            "initial_stage": LEARNING_STAGES["not_started"], "completed_stage": LEARNING_STAGES["completed"],
+            "journal": {value: "Learning the Ropes: " + key.replace("_", " ") for key, value in LEARNING_STAGES.items()},
+            "transitions": [], "source": [inputs.wiki("Learning the Ropes",
+                "Valid chicken Wind Strike (hit or source-inferred splash) awards1QP before departure, "
+                "without requiring a kill. Its entitlement and source energy refill commit together.")]}

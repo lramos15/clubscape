@@ -8,7 +8,7 @@
       "walkingAnimation": 819
     },
     "asset_available": true,
-    "combat_binding_status": "noncombatant",
+    "combat_binding_status": "noncombatant_or_outside_working_combat_scope",
     "height_scale": 128,
     "missing_model_ids": [],
     "models": [
@@ -48,7 +48,7 @@
   "npc.adventurer_jon": {
     "animations": {},
     "asset_available": false,
-    "combat_binding_status": "noncombatant",
+    "combat_binding_status": "noncombatant_or_outside_working_combat_scope",
     "height_scale": 128,
     "missing_model_ids": [
       43,
@@ -92,7 +92,7 @@
       "walkingAnimation": 819
     },
     "asset_available": true,
-    "combat_binding_status": "noncombatant",
+    "combat_binding_status": "noncombatant_or_outside_working_combat_scope",
     "height_scale": 128,
     "missing_model_ids": [],
     "models": [
@@ -137,7 +137,7 @@
       "walkingAnimation": 5385
     },
     "asset_available": true,
-    "combat_binding_status": "blocked_npc_combat",
+    "combat_binding_status": "noncombatant_or_outside_working_combat_scope",
     "height_scale": 85,
     "missing_model_ids": [],
     "models": [
@@ -182,7 +182,7 @@
       "walkingAnimation": 819
     },
     "asset_available": true,
-    "combat_binding_status": "noncombatant",
+    "combat_binding_status": "noncombatant_or_outside_working_combat_scope",
     "height_scale": 128,
     "missing_model_ids": [],
     "models": [
@@ -231,7 +231,7 @@
       "walkingAnimation": 819
     },
     "asset_available": false,
-    "combat_binding_status": "noncombatant",
+    "combat_binding_status": "noncombatant_or_outside_working_combat_scope",
     "height_scale": 128,
     "missing_model_ids": [
       13897
@@ -277,7 +277,7 @@
       "walkingAnimation": 8748
     },
     "asset_available": true,
-    "combat_binding_status": "noncombatant",
+    "combat_binding_status": "noncombatant_or_outside_working_combat_scope",
     "height_scale": 128,
     "missing_model_ids": [],
     "models": [
@@ -315,7 +315,7 @@
       "walkingAnimation": 1205
     },
     "asset_available": true,
-    "combat_binding_status": "noncombatant",
+    "combat_binding_status": "noncombatant_or_outside_working_combat_scope",
     "height_scale": 128,
     "missing_model_ids": [],
     "models": [
@@ -362,7 +362,7 @@
       "walkingAnimation": 819
     },
     "asset_available": true,
-    "combat_binding_status": "noncombatant",
+    "combat_binding_status": "noncombatant_or_outside_working_combat_scope",
     "height_scale": 128,
     "missing_model_ids": [],
     "models": [
@@ -407,7 +407,7 @@
       "walkingAnimation": 3997
     },
     "asset_available": false,
-    "combat_binding_status": "noncombatant",
+    "combat_binding_status": "noncombatant_or_outside_working_combat_scope",
     "height_scale": 128,
     "missing_model_ids": [
       136,
@@ -456,7 +456,7 @@
       "walkingAnimation": 6180
     },
     "asset_available": true,
-    "combat_binding_status": "blocked_npc_combat",
+    "combat_binding_status": "typed_source_mechanics",
     "height_scale": 128,
     "missing_model_ids": [],
     "models": [
@@ -500,7 +500,7 @@
   "npc.ironman_tutor": {
     "animations": {},
     "asset_available": false,
-    "combat_binding_status": "noncombatant",
+    "combat_binding_status": "noncombatant_or_outside_working_combat_scope",
     "height_scale": 128,
     "missing_model_ids": [
       530,
@@ -550,7 +550,7 @@
       "walkingAnimation": 819
     },
     "asset_available": false,
-    "combat_binding_status": "noncombatant",
+    "combat_binding_status": "noncombatant_or_outside_working_combat_scope",
     "height_scale": 128,
     "missing_model_ids": [
       557,
@@ -600,7 +600,7 @@
       "walkingAnimation": 1205
     },
     "asset_available": false,
-    "combat_binding_status": "noncombatant",
+    "combat_binding_status": "noncombatant_or_outside_working_combat_scope",
     "height_scale": 128,
     "missing_model_ids": [
       5668,
@@ -651,7 +651,7 @@
       "walkingAnimation": 819
     },
     "asset_available": true,
-    "combat_binding_status": "noncombatant",
+    "combat_binding_status": "noncombatant_or_outside_working_combat_scope",
     "height_scale": 128,
     "missing_model_ids": [],
     "models": [
@@ -700,7 +700,7 @@
       "walkingAnimation": 819
     },
     "asset_available": true,
-    "combat_binding_status": "noncombatant",
+    "combat_binding_status": "noncombatant_or_outside_working_combat_scope",
     "height_scale": 128,
     "missing_model_ids": [],
     "models": [
@@ -749,7 +749,7 @@
       "walkingAnimation": 819
     },
     "asset_available": true,
-    "combat_binding_status": "noncombatant",
+    "combat_binding_status": "noncombatant_or_outside_working_combat_scope",
     "height_scale": 128,
     "missing_model_ids": [],
     "models": [
@@ -793,7 +793,7 @@
       "walkingAnimation": 819
     },
     "asset_available": true,
-    "combat_binding_status": "noncombatant",
+    "combat_binding_status": "noncombatant_or_outside_working_combat_scope",
     "height_scale": 128,
     "missing_model_ids": [],
     "models": [
@@ -840,7 +840,7 @@
       "walkingAnimation": 819
     },
     "asset_available": true,
-    "combat_binding_status": "noncombatant",
+    "combat_binding_status": "noncombatant_or_outside_working_combat_scope",
     "height_scale": 128,
     "missing_model_ids": [],
     "models": [
@@ -885,7 +885,7 @@
       "walkingAnimation": 819
     },
     "asset_available": true,
-    "combat_binding_status": "noncombatant",
+    "combat_binding_status": "noncombatant_or_outside_working_combat_scope",
     "height_scale": 128,
     "missing_model_ids": [],
     "models": [
@@ -929,7 +929,7 @@
       "walkingAnimation": 819
     },
     "asset_available": true,
-    "combat_binding_status": "noncombatant",
+    "combat_binding_status": "noncombatant_or_outside_working_combat_scope",
     "height_scale": 128,
     "missing_model_ids": [],
     "models": [
@@ -973,7 +973,7 @@
       "walkingAnimation": 819
     },
     "asset_available": true,
-    "combat_binding_status": "noncombatant",
+    "combat_binding_status": "noncombatant_or_outside_working_combat_scope",
     "height_scale": 128,
     "missing_model_ids": [],
     "models": [
@@ -1019,7 +1019,7 @@
       "walkingAnimation": 819
     },
     "asset_available": true,
-    "combat_binding_status": "noncombatant",
+    "combat_binding_status": "noncombatant_or_outside_working_combat_scope",
     "height_scale": 128,
     "missing_model_ids": [],
     "models": [
@@ -1060,7 +1060,7 @@
       "walkingAnimation": 7634
     },
     "asset_available": true,
-    "combat_binding_status": "noncombatant",
+    "combat_binding_status": "noncombatant_or_outside_working_combat_scope",
     "height_scale": 128,
     "missing_model_ids": [],
     "models": [
@@ -1094,7 +1094,7 @@
       "walkingAnimation": 5385
     },
     "asset_available": true,
-    "combat_binding_status": "blocked_npc_combat",
+    "combat_binding_status": "typed_source_mechanics",
     "height_scale": 80,
     "missing_model_ids": [],
     "models": [
@@ -1132,7 +1132,7 @@
       "walkingAnimation": 4931
     },
     "asset_available": true,
-    "combat_binding_status": "blocked_npc_combat",
+    "combat_binding_status": "typed_source_mechanics",
     "height_scale": 128,
     "missing_model_ids": [],
     "models": [

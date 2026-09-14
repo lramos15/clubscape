@@ -1,18 +1,5 @@
 {
-  "excluded": {
-    "item.ensouled_goblin_head": {
-      "gap": "conditional_stackability",
-      "reason": "A source stackability mode other than 0/1 is not coerced to a boolean.",
-      "source_id": 13447,
-      "source_stackable_mode": 2
-    },
-    "item.milk.bottomless_bucket": {
-      "gap": "conditional_stackability",
-      "reason": "A source stackability mode other than 0/1 is not coerced to a boolean.",
-      "source_id": 33089,
-      "source_stackable_mode": 2
-    }
-  },
+  "excluded": {},
   "items": {
     "item.arrow.bronze": {
       "asset_available": true,
@@ -1142,6 +1129,29 @@
         "468": 17
       }
     },
+    "item.ensouled_goblin_head": {
+      "asset_available": false,
+      "interpretation": "Notes use the source template/base composition. Item models, recolors, retextures, icon framing and wear attachments remain in the original definition.",
+      "missing_model_ids": [
+        30544
+      ],
+      "models": [
+        30544
+      ],
+      "native_weight_grams": 453,
+      "note_template": -1,
+      "source_asset": "asset.source.osrs.cache2695.item.13447",
+      "source_id": 13447,
+      "source_members": true,
+      "source_options": [
+        null,
+        null,
+        null,
+        null,
+        "Drop"
+      ],
+      "source_params": {}
+    },
     "item.ensouled_goblin_head.tradable": {
       "asset_available": false,
       "interpretation": "Notes use the source template/base composition. Item models, recolors, retextures, icon framing and wear attachments remain in the original definition.",
@@ -1682,6 +1692,31 @@
         "436": 1
       }
     },
+    "item.milk.bottomless_bucket": {
+      "asset_available": false,
+      "interpretation": "Notes use the source template/base composition. Item models, recolors, retextures, icon framing and wear attachments remain in the original definition.",
+      "missing_model_ids": [
+        36305
+      ],
+      "models": [
+        2504,
+        36305
+      ],
+      "native_weight_grams": 1000,
+      "note_template": -1,
+      "scope_disposition": "Retained full-target charged-container alternative. The ordinary M1 route uses item.milk.bucket; parent must select reachable acquisition/charge metadata before enabling rare-container delivery.",
+      "source_asset": "asset.source.osrs.cache2695.item.33089",
+      "source_id": 33089,
+      "source_members": true,
+      "source_options": [
+        null,
+        null,
+        "Fill",
+        "Check",
+        "Empty"
+      ],
+      "source_params": {}
+    },
     "item.milk.bottomless_bucket.empty": {
       "asset_available": false,
       "interpretation": "Notes use the source template/base composition. Item models, recolors, retextures, icon framing and wear attachments remain in the original definition.",
@@ -1694,6 +1729,7 @@
       ],
       "native_weight_grams": 1000,
       "note_template": -1,
+      "scope_disposition": "Retained full-target charged-container alternative. The ordinary M1 route uses item.milk.bucket; parent must select reachable acquisition/charge metadata before enabling rare-container delivery.",
       "source_asset": "asset.source.osrs.cache2695.item.33091",
       "source_id": 33091,
       "source_members": true,

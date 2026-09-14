@@ -70,7 +70,11 @@ def build_spawns(inputs, world, regions):
     for number, row in sorted(world.placements, key=lambda entry: (entry[0], entry[1])):
         oid, x, y, plane, kind, rotation = row
         object_id = inputs.object_id(oid)
-        if (x, y, plane) not in cells or not object_id.startswith(RUNTIME_OBJECT_PREFIXES):
+        raw = inputs.collections["object"][oid]
+        operations = [op["text"] for op in raw["ops"]["ops"] if op]
+        door = kind <= 3 and any(name in operations for name in ("Open", "Close")) and any(
+            name in raw["name"].lower() for name in ("door", "gate"))
+        if (x, y, plane) not in cells or not (object_id.startswith(RUNTIME_OBJECT_PREFIXES) or door):
             continue
         key = (oid, x, y, plane)
         if key in object_keys:
@@ -78,11 +82,9 @@ def build_spawns(inputs, world, regions):
             continue
         object_keys.add(key)
         identifier = inputs.object_spawn_id(row)
-        raw = inputs.collections["object"][oid]
-        operations = [op["text"] for op in raw["ops"]["ops"] if op]
         actions = []
         for name in operations:
-            reason = "Required source interaction is not yet represented by shared mechanics; see its source binding."
+            reason = "This ancillary source interaction is outside the currently bound working methods; source scenery is retained."
             action = unavailable(reason)
             guard = always()
             if object_id == "object.lumbridge.bank_booth" and name == "Bank":
@@ -101,17 +103,20 @@ def build_spawns(inputs, world, regions):
                 action = {"kind": "production", "recipes": ["recipe.smithing.bronze_dagger"]}
                 guard = stage_from(inputs, "stage.tutorial.anvil_open")
             elif object_id.startswith("object.tree.") or object_id.startswith("object.rock."):
-                action = unavailable("Source skilling chance/respawn rules cannot be flattened to the current ChanceRule; no guaranteed gather substitute.")
+                action = unavailable("Source gather binding must be attached before this placement is usable.")
             elif "bank" in object_id and object_id.startswith("object.tutorial"):
-                action = unavailable("The first visible bank must contain a once-only 25-coin entitlement. Bank-target grant/replay state is missing.")
+                action = unavailable("Source contextual bank binding must be attached before this placement is usable.")
             elif "mill" in object_id and "ladder" not in object_id:
-                action = unavailable("The mill requires persistent hopper/flour-unit state. No grain-to-flour shortcut is installed.")
+                action = unavailable("Source mill counter/morph binding must be attached before this placement is usable.")
             elif "door" in object_id or "gate" in object_id or name in ("Open", "Close"):
-                action = unavailable("Source door leaves/clipping must change authoritatively. Closed walls are not cleared or replaced with a teleport.")
+                action = unavailable("No source-backed opening/closing state is assigned to this ancillary placement; its real clipping is retained.")
             actions.append(interaction(name, action, guard))
         result[identifier] = {
             "id": identifier, "region": region_id(x, y), "tile": tile(x, y, plane),
             "facing": (3, 0, 1, 2)[rotation],
+            "placement": {"shape": kind, "quarter_turns": rotation,
+                          "layer": "wall" if kind < 4 else "wall_decoration" if kind < 9 else
+                                   "game_object" if kind < 22 else "floor_decoration"},
             "kind": {"kind": "object", "object": object_id},
             "interactions": actions,
             "source": [source_record(f"assets/source/osrs/cache2695/world/{number}.json.gz#placements",
@@ -199,6 +204,7 @@ def build_spawns(inputs, world, regions):
             identifier = f"spawn.{item[5:]}.{x}.{y}.p{plane}"
             result[identifier] = {
                 "id": identifier, "region": region_id(x, y), "tile": tile(x, y, plane), "facing": 0,
+                "placement": None,
                 "kind": {"kind": "item", "stack": item_stack(item), "respawn_ticks": 25 if item == "item.egg" else 100},
                 "interactions": [],
                 "source": [inputs.wiki(row["page"], "Exact source ItemSpawnLine and source infobox respawn ticks; "
@@ -217,19 +223,19 @@ def build_spawns(inputs, world, regions):
 def add_npc(result, identifier, npc, point, source):
     actions = [interaction("Talk-to", {"kind": "dialogue", "dialogue": dialogue_id(npc)})]
     if npc in ("npc.tutorial_rat", "npc.tutorial_chicken", "npc.goblin.level_2", "npc.chicken"):
-        actions = [interaction("Attack", unavailable("Source NPC combat/loot/respawn is not completely represented; no scripted wins or invented drops."))]
+        actions = [interaction("Attack", unavailable("No working combat scope is assigned to this source NPC variant."))]
     elif npc == "npc.tutorial.fishing_spot":
-        actions = [interaction("Net", unavailable("Source fishing chance needs round-nearest +1/clamp and level domain; the NPC remains at its water source coordinates."))]
+        actions = [interaction("Net", unavailable("Source netting binding must be attached before this placement is usable."))]
     elif npc in ("npc.shopkeeper", "npc.shop_assistant"):
-        actions.append(interaction("Trade", unavailable("Stock-sensitive ordinary pricing is not representable by fixed ShopItem prices.")))
+        actions.append(interaction("Trade", unavailable("Source contextual shop binding must be attached before this placement is usable.")))
     elif npc == "npc.tutorial.banker":
-        actions.append(interaction("Bank", unavailable("Once-only first-visible 25 bank coins require the bank-target entitlement hook.")))
+        actions.append(interaction("Bank", unavailable("Source contextual bank binding must be attached before this placement is usable.")))
     x, y, plane = point
     if identifier in result:
         raise ValueError(f"Duplicate source-bound NPC spawn {identifier}")
     result[identifier] = {
         "id": identifier, "region": region_id(x, y), "tile": tile(x, y, plane), "facing": 0,
-        "kind": {"kind": "npc", "npc": npc}, "interactions": actions,
+        "placement": None, "kind": {"kind": "npc", "npc": npc}, "interactions": actions,
         "source": unique_sources(source + [source_record(
             "research/m1-bindings/spawn-bindings.json#" + identifier,
             "Facing zero is an unresolved initial-facing candidate, not a measured orientation. "

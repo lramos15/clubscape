@@ -38,7 +38,7 @@ def clipped_footprint(definition, orientation):
 
 
 class World:
-    def __init__(self, inputs, omit_openable_doors=False):
+    def __init__(self, inputs, omit_openable_doors=False, omit_placements=()):
         self.inputs = inputs
         self.raw = {value["region_id"]: value for value in (
             load(path) for path in sorted((SOURCE / "world").glob("*.json.gz")))}
@@ -51,6 +51,7 @@ class World:
         self.outside_clipping = Counter()
         self.placement_tiles = {(row[1], row[2], row[3])
                                 for raw in self.raw.values() for row in raw["placements"]}
+        omitted = set(omit_placements)
         for number, raw in self.raw.items():
             if raw["dimensions"] != [4, 64, 64]:
                 raise ValueError(f"Unexpected source square dimensions: {number}")
@@ -89,7 +90,7 @@ class World:
                     "door" in definition["name"].lower() or "gate" in definition["name"].lower())
                 if is_door:
                     self.openable_doors.append(inputs.object_spawn_id(row))
-                if not (omit_openable_doors and is_door):
+                if tuple(row) not in omitted and not (omit_openable_doors and is_door):
                     self.add_object(number, row, definition)
         self.statistics["source_regions"] = len(self.raw)
         self.statistics["explicit_full_cells"] = 16384 * len(self.raw)

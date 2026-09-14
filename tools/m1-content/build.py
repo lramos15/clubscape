@@ -4,10 +4,12 @@
 import argparse
 from collections import Counter, defaultdict
 from pathlib import Path
+import subprocess
+import sys
 
 from common import (
     ASSET_PREFIX, BINDINGS, CONTENT, JOURNEY, ROOT, SOURCE, Inputs, canonical, load,
-    position, sha, write,
+    position, sha, unique_sources, write,
 )
 from definitions import (
     WEAR_SLOTS, build_interfaces, build_items, build_npcs, build_objects, build_recipes,
@@ -20,6 +22,9 @@ from progression import (
 )
 from spawns import build_spawns
 from travel import build_travel, location_anchors
+from mechanics import base_mechanics
+from travel_policies import wire_travel_policies
+from world_mechanics import build_doors, wire_world
 
 
 def input_lock(inputs):
@@ -33,7 +38,8 @@ def input_lock(inputs):
     paths += [ROOT / f"research/current-source/{name}.json" for name in
               ("selection", "extraction-contract", "m1-request")]
     paths += [BINDINGS / name for name in ("selection.json", "definitions.json.gz", "wiki-sources.json",
-                                         "wiki-facts.json", "code-sources.json", "contract-gaps.json")]
+                                         "wiki-facts.json", "code-sources.json", "runtime-source-facts.json",
+                                         "profile-v2.json")]
     paths += list((ROOT / "crates/game-types/src").glob("*.rs"))
     paths += sorted((ROOT / "tools/m1-content").glob("*.py"))
     paths += sorted((ROOT / "tools/m1-content").glob("*.java"))
@@ -59,28 +65,52 @@ def assemble(inputs, world, revision):
     npcs, npc_bindings = build_npcs(inputs)
     interfaces, interface_bindings = build_interfaces(inputs)
     spawns, spawn_bindings, placement_issues = build_spawns(inputs, world, regions)
-    flags = {}
     dialogues = build_dialogues(inputs)
-    tutorial, tutorial_bindings = build_tutorial(inputs, dialogues, spawns, flags)
-    cooks, cook_bindings = build_cooks(inputs, dialogues, flags)
-    travel, travel_issues = build_travel(inputs, world, spawns, tutorial_bindings, flags)
-    finish_dialogues(inputs, dialogues)
     content = {
-        "schema_version": 1, "revision": revision, "baseline": inputs.selection["baseline"],
+        "schema_version": 2, "revision": revision, "baseline": inputs.selection["baseline"],
         "items": items, "skills": build_skills(inputs), "objects": build_objects(inputs),
         "npcs": npcs, "interfaces": interfaces, "regions": regions, "spawns": spawns,
         "recipes": build_recipes(inputs), "shops": build_shop(inputs, items),
-        "dialogues": dialogues, "tutorial": tutorial,
-        "quests": {"quest.cooks_assistant": cooks, "quest.learning_the_ropes": learning_quest(inputs)},
+        "dialogues": dialogues, "tutorial": {},
+        "quests": {"quest.learning_the_ropes": learning_quest(inputs)},
         "equipment_slots": equipment_slots(inputs),
-        "initial_state": build_initial_state(inputs, flags),
+        "initial_state": None, "mechanics": base_mechanics(inputs),
     }
-    return content, {
+    bindings = {
         "items": item_bindings, "npcs": npc_bindings, "interfaces": interface_bindings,
-        "spawns": spawn_bindings, "tutorial": tutorial_bindings, "cooks": cook_bindings,
-        "travel": travel, "travel_issues": travel_issues, "placement_issues": placement_issues,
-        "excluded_items": excluded_items, "locations": location_anchors(inputs, world, spawns, travel),
+        "spawns": spawn_bindings, "placement_issues": placement_issues, "excluded_items": excluded_items,
     }
+    wire_world(inputs, world, content, bindings)
+    build_doors(inputs, world, content, bindings)
+    travel, travel_issues = build_travel(inputs, world, content)
+    bindings.update({"travel": travel, "travel_issues": travel_issues})
+    wire_travel_policies(inputs, world, content)
+    tutorial, tutorial_bindings = build_tutorial(inputs, world, content, bindings)
+    content["tutorial"] = tutorial
+    cooks, cook_bindings = build_cooks(inputs, content)
+    content["quests"]["quest.cooks_assistant"] = cooks
+    finish_dialogues(inputs, content)
+    content["initial_state"] = build_initial_state(inputs, content)
+    bindings.update({"tutorial": tutorial_bindings, "cooks": cook_bindings,
+                     "locations": location_anchors(inputs, world, content["spawns"], travel)})
+    bindings["locations"]["location.death.player_arrival"] = {
+        "tile": content["mechanics"]["death"]["first_office"]["value"]["tile"],
+        "region": "region.osrs.12633", "classification": "inference",
+        "purpose": "Walkable player arrival, distinct from nonwalking Death NPC anchor; source capture remains required.",
+    }
+    def normalize_sources(value):
+        if isinstance(value, dict):
+            for key, child in value.items():
+                if key == "source" and isinstance(child, list) and all(
+                        isinstance(record, dict) and "reference" in record for record in child):
+                    value[key] = unique_sources(child)
+                else:
+                    normalize_sources(child)
+        elif isinstance(value, list):
+            for child in value:
+                normalize_sources(child)
+    normalize_sources(content)
+    return content, bindings
 
 
 def object_bindings(inputs):
@@ -242,7 +272,7 @@ def build(args):
     inputs = Inputs()
     lock = input_lock(inputs)
     world = World(inputs)
-    revision = "m1.source-backed.v1." + lock["aggregate_sha256"][:16]
+    revision = "m1.source-backed.v2." + lock["aggregate_sha256"][:16]
     content, bindings = assemble(inputs, world, revision)
     from check import check_content
     checks = check_content(content, inputs, world, bindings)
@@ -261,6 +291,7 @@ def build(args):
     emit(BINDINGS / "interface-bindings.json", bindings["interfaces"], True)
     emit(BINDINGS / "spawn-bindings.json.gz", {"spawns": bindings["spawns"], "issues": bindings["placement_issues"]})
     emit(BINDINGS / "travel-bindings.json", {"links": bindings["travel"], "unresolved": bindings["travel_issues"]}, True)
+    emit(BINDINGS / "door-bindings.json", {"groups": bindings["doors"], "rat_pen_cells": bindings["rat_pen_cells"]}, True)
     emit(BINDINGS / "location-bindings.json", bindings["locations"], True)
     emit(BINDINGS / "graph-bindings.json", {"tutorial": bindings["tutorial"], "cooks": bindings["cooks"],
                                           "death": inputs.rules["activities"]["death_graph"]}, True)
@@ -341,6 +372,7 @@ def build(args):
         "compiler_command": "python3 tools/m1-content/compile.py --compiler-manifest crates/content/Cargo.toml",
         "outputs": outputs, "counts": checks["counts"],
         "source_geometry": dict(world.statistics),
+        "content_schema_version": 2, "artifact_version": 2, "runtime_schema_version": 1,
         "runtime_ready": False, "source_gameplay_verified": False,
         "presentation_approved": False, "milestone_accepted": False,
         "readiness_dependency": "research/m1-bindings/contract-gaps.json",
@@ -349,8 +381,16 @@ def build(args):
     write(CONTENT / "manifest.json", manifest, True)
     if args.json_output:
         write(args.json_output, content)
+    subprocess.run([sys.executable, str(ROOT / "tools/m1-content/compile.py")], cwd=ROOT, check=True)
+    compiler = load(BINDINGS / "compiler-validation.json")
+    manifest.update({"runtime_compile_passed": compiler["runtime_compile_passed"],
+                     "compiled_artifact": compiler["artifact"],
+                     "unresolved_binding_count": compiler["unresolved_binding_count"]})
+    write(CONTENT / "manifest.json", manifest, True)
     print(__import__("json").dumps({"revision": revision, "counts": checks["counts"],
-                                   "runtime_ready": False, "structural_checks": "passed"}))
+                                   "runtime_ready": False, "structural_checks": "passed",
+                                   "runtime_compile_passed": True,
+                                   "unresolved_binding_count": compiler["unresolved_binding_count"]}))
 
 
 def main():

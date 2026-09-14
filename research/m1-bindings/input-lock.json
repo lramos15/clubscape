@@ -1,5 +1,5 @@
 {
-  "aggregate_sha256": "9ffbb5434bef41eda44a55c71c8fc74d52e6b7fc4b696b4e8a0096b33bac25ec",
+  "aggregate_sha256": "ba3932d67434a92b5c88b9d545d24835c9e003e92b4547f318acc661b075a663",
   "inputs": [
     {
       "bytes": 1808403,
@@ -367,9 +367,9 @@
       "sha256": "90671bea204c9e583fa84e280d42b1203725aee6f0f4dba42a2c23357e3f3f7e"
     },
     {
-      "bytes": 11130,
+      "bytes": 14658,
       "path": "crates/game-types/src/content.rs",
-      "sha256": "1b7675ade30a2a2f1812b051045b47f9113a68a9e84c64accd1eb660ac50f1bc"
+      "sha256": "701f41904db9a44e206f592f4ad821343e071f9a41fc5207bac2325a070396bb"
     },
     {
       "bytes": 826,
@@ -377,24 +377,39 @@
       "sha256": "34e1a16d3f664d589da055772efc5cae89cb6b0a1bf57878ad146435b3881df2"
     },
     {
-      "bytes": 3165,
+      "bytes": 4073,
       "path": "crates/game-types/src/ids.rs",
-      "sha256": "440ad253fed0dabf45b679ac9340fe751736bb47e8290f028d88e84af7e4cb75"
+      "sha256": "497827772fbfb13fdf356d4831d3ca3c189e029cf1e254d7529f39c76762ff7e"
     },
     {
-      "bytes": 5965,
+      "bytes": 20639,
       "path": "crates/game-types/src/intent.rs",
-      "sha256": "cc801f4c0fd1527984761cac005ba3d3bb60ba13a8bbf6523c59f11f8328e3c3"
+      "sha256": "b03cc646d7ae25261ffdd9403deeb8477785e031e95d1f118a20d9f6dfd2d4e9"
     },
     {
-      "bytes": 361,
+      "bytes": 630,
       "path": "crates/game-types/src/lib.rs",
-      "sha256": "0bbc1a86e230195e2ff5afeaf82ab463b214e496c81a679166a4662811167a9d"
+      "sha256": "de2890abf57377af62aa4ac3787391ba46679af5123f67d4c5bd14849fb6ea2d"
     },
     {
-      "bytes": 9063,
+      "bytes": 42544,
+      "path": "crates/game-types/src/mechanics.rs",
+      "sha256": "d2a00443a7bf7ed07295b3d0a20b8bee379918148f8727c52b6e92cfd54b4686"
+    },
+    {
+      "bytes": 23605,
+      "path": "crates/game-types/src/runtime_state.rs",
+      "sha256": "38fd19619ec1c883e3e5a6900134465337a769ffffc5d4285976337f37984af2"
+    },
+    {
+      "bytes": 27262,
+      "path": "crates/game-types/src/runtime_validation.rs",
+      "sha256": "41e1ce47e4a9457d8ba3da3918dbe65d14dcc15f103e80dad0bb5c8bb7306200"
+    },
+    {
+      "bytes": 9565,
       "path": "crates/game-types/src/state.rs",
-      "sha256": "bc4a9b2e8de8aa22a421fa3bd1385e08c7222ce156f33812ef2a86542b7842ed"
+      "sha256": "16ee6cad012123528429cd537bc494772e30da96571aab590dddaaf5717a21ff"
     },
     {
       "bytes": 9339,
@@ -462,19 +477,24 @@
       "sha256": "19e34244977f7f9d1f5316748689099cd49fd94711a825e3a223f5d22777f6e2"
     },
     {
-      "bytes": 13211,
-      "path": "research/m1-bindings/contract-gaps.json",
-      "sha256": "016dc3e0f6cd7cb62f59c24fe4213c02e2a2cedd3fb1437b30ad63800be91ee3"
-    },
-    {
       "bytes": 15083,
       "path": "research/m1-bindings/definitions.json.gz",
       "sha256": "9836e98898794c9d99de4117efe2a6155603631fe10efb8fd4b56f68eb0d6f6a"
     },
     {
-      "bytes": 8662,
+      "bytes": 2485,
+      "path": "research/m1-bindings/profile-v2.json",
+      "sha256": "cffca728885106de57766522552a9dd50d0b43b714940d6a24dbe0aa070b7fde"
+    },
+    {
+      "bytes": 2314,
+      "path": "research/m1-bindings/runtime-source-facts.json",
+      "sha256": "299a330d5f6ff3876b2668cff58d7c58c41776239e4851d7558d8d8e781e9738"
+    },
+    {
+      "bytes": 8695,
       "path": "research/m1-bindings/selection.json",
-      "sha256": "6bcefbab16080632f9ce460ed8351614c550ae1a46202e00c8a9c63945233424"
+      "sha256": "964a11710e7be38224dfdc27ae38b2127b9dba0477d92a25cc3c1fd04b19b465"
     },
     {
       "bytes": 43318,
@@ -497,34 +517,34 @@
       "sha256": "3ccf42326831b8d396fed6b843c9ace2cdc298a36b85323cc0bc91490b5c0898"
     },
     {
-      "bytes": 22623,
+      "bytes": 24900,
       "path": "tools/m1-content/build.py",
-      "sha256": "297915c8bb50e9e4285866d2fa372c2506b8d08c7fba604d4f4909ff621271ae"
+      "sha256": "5fca252d4b3f20a7115d99004d001b824e220594ee8c450d76a254ec8bac8468"
     },
     {
-      "bytes": 12924,
+      "bytes": 15984,
       "path": "tools/m1-content/check.py",
-      "sha256": "6c04e3b55b0224052919573520b59c8d87130a8978562c182b276d4338e6c07a"
+      "sha256": "575ec765d52ab1e8f0904d5ac342fb4a88018456c9535b5bd67ba40b89cfa5d9"
     },
     {
-      "bytes": 7401,
+      "bytes": 10538,
       "path": "tools/m1-content/common.py",
-      "sha256": "53de328cc7db59b5033f7e5dbb8b61d329cc3d4446ff35b920b4ac0e509ac45e"
+      "sha256": "e694459059c226a9acfa53aaefb042013616fce4475de22f4952abaca5154a20"
     },
     {
-      "bytes": 2976,
+      "bytes": 5222,
       "path": "tools/m1-content/compile.py",
-      "sha256": "43454b579bdc1258805c0e7a91762198511d11f92b93be70824bfec4ed577c92"
+      "sha256": "86255c9167415c9996777c43af8189843dc130dd990f958e1796125ae7484a19"
     },
     {
-      "bytes": 16641,
+      "bytes": 21559,
       "path": "tools/m1-content/definitions.py",
-      "sha256": "e9b0ba1e4c6ac6752d2d73705d684df1b75a62e2b9a3edb00310681106c84955"
+      "sha256": "7c011d42ce5dbccc317d0d8ff121980f8dce976697bd9d1626fe1cf2244cc253"
     },
     {
-      "bytes": 12294,
+      "bytes": 12383,
       "path": "tools/m1-content/geometry.py",
-      "sha256": "8d7eb46e5ade7a5c31737c77e8a573214e135d3410ce0da2dc4871c7e0a922e0"
+      "sha256": "a77ce32922e30f76da6c5607efd74472d012a623b4bd9e5fbdbea0563529ec9c"
     },
     {
       "bytes": 2980,
@@ -542,29 +562,59 @@
       "sha256": "048c2cba6e9b08fa74923cc4b9ecd9458cc2df6a16670e757a5334e34c8e0acd"
     },
     {
-      "bytes": 22873,
+      "bytes": 3829,
+      "path": "tools/m1-content/import_runtime_sources.py",
+      "sha256": "e41283a30b1958d598e18ed8f15e05b7d580ed105a06051bcf440cb95019466e"
+    },
+    {
+      "bytes": 20801,
+      "path": "tools/m1-content/mechanics.py",
+      "sha256": "88ecc5054851e1b2c64fa76ff59cf71535d6baf410aeeaeda39fbe3da4ed7ba7"
+    },
+    {
+      "bytes": 30870,
       "path": "tools/m1-content/progression.py",
-      "sha256": "b9cd66395cbcd4ac6a59a75bfa770cbbf344e6f8f50f0a300400560809210336"
+      "sha256": "e52feb3a1c073a028196ac9741834e9faed21a96c2bbab92362594f8d80fd5d0"
     },
     {
-      "bytes": 14865,
+      "bytes": 15187,
       "path": "tools/m1-content/spawns.py",
-      "sha256": "ba362eb87cde1c2f90ea46d8634eb7e013f660d34f4165ff0d22d1a9e3145bbe"
+      "sha256": "a2eb361608b61425e2b90c512f107b02bc1dff42e09ad8f45bb2d362676f480f"
     },
     {
-      "bytes": 15977,
+      "bytes": 15914,
+      "path": "tools/m1-content/state_oracles.py",
+      "sha256": "dd122b151dfaddcbb69ed1a7d0b8d26f46e2a4fccdcaa91ecae53cd8dbdbd833"
+    },
+    {
+      "bytes": 26149,
       "path": "tools/m1-content/test_content.py",
-      "sha256": "29404a9dcb2e7f5cb441646798721442292ef2893bef7bf4d3ea0cc3bc66b6ab"
+      "sha256": "42f8221c73c2115537813de680873e00b932486c4520c47f6fe358a18fe4c538"
     },
     {
-      "bytes": 9352,
+      "bytes": 9439,
       "path": "tools/m1-content/travel.py",
-      "sha256": "88546982ce4103225333f848eb52e742887512556cce3357f9595e41e2b87ac6"
+      "sha256": "79c1eab16a4c3b292f5a750b9f0f09a2fff6ac392bdc997298390c8693895d94"
     },
     {
-      "bytes": 6571,
+      "bytes": 9887,
+      "path": "tools/m1-content/travel_policies.py",
+      "sha256": "f7a0176dd033cb96288c1d2def3aaf0f88a86ec7d15d04f6ea66b2c8c6b259c0"
+    },
+    {
+      "bytes": 8090,
       "path": "tools/m1-content/verify_routes.py",
-      "sha256": "e90608ee269702f4780d8dc73ae18bda06b5332cc51160449837c06ec21f4d83"
+      "sha256": "e09f698120ae32e795a8c0a7ac7ba797513beea226672b32a8bb60a4dae3f6c8"
+    },
+    {
+      "bytes": 9146,
+      "path": "tools/m1-content/verify_state_oracles.py",
+      "sha256": "44544b645236aa770f517b481d8a4af0004e41d64a729c7ff9b4db28c69e0121"
+    },
+    {
+      "bytes": 21043,
+      "path": "tools/m1-content/world_mechanics.py",
+      "sha256": "feb0cde147cd15f5170de296a674d6980dd3ec5373591950b7291ad393bd2fb9"
     }
   ],
   "schema_version": 1,

@@ -1,111 +1,36 @@
 {
-  "schema_version": 1,
-  "runtime_ready": false,
-  "policy": "Author real definitions now; do not substitute fixture data, a stage-advance command, guaranteed stochastic outcomes, invisible grants or fake quest/flag containers. These are requests to the serialized shared-contract owner, not alternate shared types.",
-  "gaps": [
+  "content_schema_version": 2,
+  "artifact_version": 2,
+  "runtime_schema_version": 1,
+  "former_v1_representation_gap_count": 17,
+  "former_v1_gaps_resolved_by_shared_contracts": true,
+  "tutorial_edges_disabled_for_v1_schema": 0,
+  "strict_runtime_compilation_required": true,
+  "source_binding_inventory": "research/m1-bindings/unresolved-bindings.json",
+  "source_assumptions": "research/m1-bindings/policy-bindings.json",
+  "explicit_profile_candidates": "research/m1-bindings/profile-v2.json",
+  "remaining_shared_limitations": [
     {
-      "id": "source_chance_and_timing",
-      "shared_fields": ["ChanceRule", "GatherRule.respawn_ticks", "GatherRule.attempt_ticks"],
-      "required": "Represent source skilling low/high inputs, round-nearest with +1, then clamp to 0..256. Copper/tin low100 high350, shrimp48/256, normal tree64/200; level-1 copper101/256 and shrimp49/256. ChanceRule's bounded level99 numerator cannot encode endpoints above256 or this rounding. Preserve method level domains, first/repeat cadence and bounded tree respawn60..100 rather than a fixed invented respawn.",
-      "affected_rules": ["rule.mining.copper", "rule.mining.tin", "rule.woodcutting.normal", "rule.fishing.shrimps"],
-      "current_disposition": "Exact 99-level numerical success vectors and source parameters are bound in mechanics-bindings; stochastic gather actions are unavailable, never 100%-success substitutes."
-    },
-    {
-      "id": "conditional_recipes",
-      "shared_fields": ["RecipeDefinition", "GameIntent.Produce", "GameIntent.UseItem", "CharacterState", "WorldState"],
-      "required": "Recipe guards must be checked for direct Produce as well as object menus; first/repeat/single action timing, tool ownership mode, cooking range/fire condition, success/failure XP and source low/high chance are needed. Firemaking also needs per-character/tile fire creation, stepping, lifetime and ashes; a recipe cannot create a dynamic object. Preserve separate water-container byproduct alternatives rather than hiding them.",
-      "affected_rules": ["rule.firemaking.normal", "rule.cooking.shrimps", "rule.cooking.bread", "rule.cooking.dough", "rule.smelting.bronze", "rule.smithing.bronze_dagger", "rule.cooks.milk"],
-      "current_disposition": "Five deterministic single-mode RecipeDefinitions are authored, including nonconsumed hammer tools. They are not a claim that arbitrary Make-X quantities or direct intents are already source-correct."
-    },
-    {
-      "id": "authoritative_events",
-      "shared_fields": ["GameIntent", "GameEvent", "Guard", "ProgressTransition"],
-      "required": "Validated appearance and experience selection; interface-closed identity; setting/run-toggle change; inspected poll explanation completion; successful or failed production method/facility; NPC kill method/credit/location; spell resolved with spell/target/outcome; Home Teleport started/interrupted/completed and source experience branch. Existing kind()/primary_target() is used where sufficient. Do not store unchecked client event payloads in global flags or map every cast/kill to Wind Strike.",
-      "current_disposition": "All71 tutorial states and all73 source edges are retained. Exactly representable UI/equipment/recipe/dialogue/travel edges have real hooks; unrepresentable edges have explicit binding gaps and no stage-skip hook."
-    },
-    {
-      "id": "partial_and_missing_grants",
-      "shared_fields": ["Guard", "Effect", "CharacterState.bank"],
-      "required": "Inventory free-capacity and combined inventory/equipment ownership predicates; missing-only, ordered partial grants and bounded top-ups; durable grant entitlement keys. Vannaka gives sword/bow first with one slot, arrows total50 at initial supply, five rune pairs initially; do not replace this with all-or-nothing rewards or repeated additions. Source asymmetric rune top-up assumptions stay unapproved.",
-      "current_disposition": "Single missing-tool recovery and safely atomic initial grants are authored. Multi-container top-ups, partial combat grants and source-specific chef replacement policies remain blocked."
-    },
-    {
-      "id": "bank_first_open_entitlement",
-      "shared_fields": ["Effect", "InteractionAction.Bank", "GameEvent.InterfaceOpened"],
-      "required": "Once-only bank-target25-coin entitlement committed before the first visible bank opens, including bank capacity and durable replay/close/reopen behavior. GiveItems only targets backpack and cannot implement this. Initial-storage vs deferred-seeding alternatives are source assumptions, not observed facts.",
-      "current_disposition": "Normal initial bank is empty with an unclaimed entitlement; no coins are repeatedly seeded or placed in the backpack. Tutorial bank opening is not falsely enabled."
-    },
-    {
-      "id": "quest_reward_run_energy",
-      "shared_fields": ["Effect", "CharacterState.run_energy"],
-      "required": "Set/restore canonical run energy to10000 atomically with the exact once-only quest reward. Learning the Ropes awards1QP on valid chicken Wind Strike before departure. Cook gives1QP+3000 Cooking XP tenths+range permission, no coins. Quest completion and the reward ledger must be atomic.",
-      "current_disposition": "The full Cook subset-delivery graph, guards, item consumption and represented reward effects are authored. Its completion choice is blocked instead of silently losing the source energy refill. Learning completion is not mapped to an arbitrary hit or kill."
-    },
-    {
-      "id": "departure_reconciliation",
-      "shared_fields": ["Effect", "InitialStateDefinition", "CharacterState"],
-      "required": "A source-selected atomic inventory/equipment/bank reconciliation, tutorial departure and experience-dependent arrival. Preserve source initial50/departure25 arrow and initial5-pair/departure-rune differences. Capture the drop/deposit/withdraw/duplicate-item matrix before selecting among unverified policies. The current contract's normalization and25-bank-coin restoration are assumptions, not approval.",
-      "current_disposition": "Verbatim source initial/departure policies and alternatives are hash-bound in policy-bindings. No kit is granted, quest precompleted or experience arrival silently normalized."
-    },
-    {
-      "id": "dynamic_travel_and_crossing",
-      "shared_fields": ["SpawnDefinition", "ObjectDefinition", "Effect", "EntityState", "RegionDefinition"],
-      "required": "Preserve source placement type/orientation, authoritative open/closed door leaves and clipping, source varbit/varp morph state, object-side/footprint interaction access, guarded area crossings and travel timing. A static source scene is not a live morph state. Add a separate live instance chunk/plane mapping for Death's Office rather than moving ordinary world content.",
-      "current_disposition": "Native clipping and all scenery are retained. Actual staircase/ladder pairs are connected with explicit inferred landing records; doors remain closed/unavailable. Missing chapel/magic area-crossing bindings are not invented doors."
-    },
-    {
-      "id": "mill_state",
-      "shared_fields": ["CharacterState", "WorldState", "Guard", "Effect"],
-      "required": "Persist source hopper grain/empty state and player mill flour units0..30; fill consumes grain, operate empties hopper/increments flour, empty bin consumes an empty pot/decrements flour/produces flour. Support concurrent actors, overflow, ownership and restart. Do not make a fake inventory item for flour units, fake quest or arbitrary global flag counter.",
-      "current_disposition": "Exact hopper24961, controls24964, flour-bin parent1781/varbit5325/morphs5792+1782 and three-floor ladders are bound. The seven-step source mill route is retained; no direct grain+pot-to-flour shortcut."
-    },
-    {
-      "id": "npc_combat",
-      "shared_fields": ["NpcCombatDefinition", "DropDefinition", "NpcDefinition", "GameEvent"],
-      "required": "Weighted mutually exclusive primary loot group plus independent/conditional tertiary drops and members/item-ownership predicates. Existing DropDefinition entries are independent rolls and cannot encode the goblin128-weight table. Resolve Common energy-potion supplement and exact visual spawn variant. Bind tutorial rat/chicken source respawn timing and cache/wiki bonus conflicts instead of inventing them. Combat style definitions need source accuracy, XP, ammo, cycle and range; projectile launch/impact timing remains unbound.",
-      "current_disposition": "Raw numeric source stats/bonuses/animations and all source combat/drop rules are bound. Combat actions stay unavailable, not scripted wins, guaranteed coins or bones-only live monsters."
-    },
-    {
-      "id": "npc_navigation_policy",
-      "shared_fields": ["NpcDefinition", "SpawnDefinition", "content compiler NPC anchor validation"],
-      "required": "Distinguish stationary nonwalking fishing-spot NPCs from mobile actors. NPC3317 source locations are in water. Requiring every NPC anchor to be walkable must not move fishing spots onto shore or clear water clipping. Mobile footprint/wander bounds/facing also need precise source binding.",
-      "current_disposition": "The three source fishing locations remain unchanged, including nonwalkable water cells. Wiki map-radius candidates are explicitly inferred; exact LocLine coordinates and rejected conflicts remain separate."
-    },
-    {
-      "id": "stock_sensitive_shop",
-      "shared_fields": ["ShopDefinition", "ShopItem", "ShopState"],
-      "required": "Per-unit stock-sensitive shop buy/sell formulas, restock clock per stock line, price flooring/caps, overstock interpretation and concurrent/replay behavior. Fixed base-stock prices must not be used after stock changes. Normal currency is actual owned coins.",
-      "current_disposition": "All15 real Lumbridge General Store stock lines/restock rates and base-stock prices are authored. Live trade is unavailable until formulas are supported; shop stock is not free inventory."
-    },
-    {
-      "id": "death_state",
-      "shared_fields": ["CharacterState", "WorldState", "Guard", "Effect", "GameEvent"],
-      "required": "Source death instance, prior respawn/region, kept vs lost items, valuation provider/ties, first-item-losing-death topics/portal gate, paused15-minute grave timer, offline/idle rules, grave/Death's Office storage/fees/overflow/repeat deaths and reclaim ownership. Empty-inventory death need not trigger the tutorial.",
-      "current_disposition": "All four source death states/six edges and original source square12633/Death9855/portal39549/entrance38426 are retained. No fake death quest, tutorial-stage reuse, loose global flags or free recovery grants."
-    },
-    {
-      "id": "charged_items",
-      "shared_fields": ["ItemDefinition", "ItemStack", "Guard", "Effect"],
-      "required": "Bottomless milk bucket33089/empty33091 is a valid Cook milk alternative, consuming one milk charge rather than the item. Preserve per-bucket milk type/charges and delivery eligibility. Existing ItemStack contains only item ID and quantity; neither a global flag nor consuming the bucket is equivalent.",
-      "current_disposition": "The exact current IDs were resolved through the wiki redirect to Bottomless milk bucket and decoded from existing original bytes. Ordinary bucket-of-milk delivery is authored; charged-container delivery is explicitly blocked."
-    },
-    {
-      "id": "conditional_stackability",
-      "shared_fields": ["ItemDefinition.stackable"],
-      "required": "Interpret selected cache stackability mode2 without coercing it to true or false, including ensouled head13447 and its tradable13448 counterpart.",
-      "current_disposition": "Mode2 remains an explicit excluded runtime projection with original source bytes/hash and ID. Other selected ordinary items and reciprocal source note mappings are authored."
-    },
-    {
-      "id": "source_asset_closure",
-      "shared_fields": ["asset manifests", "GameContent.interfaces"],
-      "required": "Source-worker manifest/asset closure for newly selected real Cook4626, necessary NPC/item definitions/models and missing interface groups679/387/312/116/134/712/etc. Use the generated exact missing-ID lists, not regenerated placeholders. Preserve model parts, recolors, textures, animations and source note/template composition. Render/audio/reference-pack approval remains separate.",
-      "current_disposition": "Only existing source-worker asset IDs are non-null GameContent asset references. Additional original item definitions were decoded from existing verified bytes read-only; unavailable asset dependencies are explicit, never fabricated."
-    },
-    {
-      "id": "source_coordinates_and_approval",
-      "shared_fields": ["InitialStateDefinition", "source-binding manifest", "scope adaptation register"],
-      "required": "Verify exact new-character spawn/camera, experience-branch Lumbridge arrivals, normal NPC origins/wandering/facing and transit landing/cycle. Author navigation scope feedback separately from scenery. Source map pins/translated2020 markers/inferred clipping are not observations or approvals.",
-      "current_disposition": "Candidate coordinates carry inference records and acceptance impact; all61 source squares and151019 object placements remain visible bindings. No ClubScape presentation was implemented or approved."
+      "field": "mechanics.combat_styles.style.magic.wind_strike.maximum_hit",
+      "required_type": "SourceBinding::Bound(MaximumHitFormula::LevelTable)",
+      "known_source_values": {"1": 2, "5": 4, "9": 6, "13": 8},
+      "observed_error": "definition: invalid type: string \"1\", expected u16",
+      "cause": "Numeric BTreeMap keys inside the internally tagged binding/formula JSON deserializer are not decoded as integer keys.",
+      "scope": "Shared type/strict-decoder ownership belongs to the Director, not this content task.",
+      "current_disposition": "Explicit unresolved binding with the known source values retained, not a fixed-hit substitute or a relaxed parser.",
+      "reproduction": "tools/m1-content/schema-check constructs and serializes the exact typed bound table, then calls the real read_content_json; schema-validation.json records the result.",
+      "acceptance_impact": "Wind Strike cannot claim actual runtime execution until the source table binds through the shared decoder."
     }
-  ]
+  ],
+  "remaining_acceptance_dependencies": [
+    "Resolve the exact typed source timing, projectile, NPC movement/respawn, price/restock and valuation/recovery bindings listed by the compiler; do not substitute placeholder values.",
+    "Select/verify the source departure reconciliation and preserve the original inventory/equipment/bank alternatives and once-only entitlement.",
+    "Confirm source player/NPC arrivals, inferred door hinges, live Office mapping and initial setting candidates independently of collision validity.",
+    "Keep rare charged/conditional alternatives in the full target; do not invent or require their acquisition for the ordinary M1 starter route.",
+    "Close the exact current source-worker asset ID list without regenerated placeholders.",
+    "Execute schema2 mechanics in the authoritative runtime and validate the complete real headless/server/browser journey, persistence and recovery.",
+    "Source reference-pack approval, visual/audio/performance evidence and final owner acceptance remain separate."
+  ],
+  "runtime_success_claimed": false,
+  "presentation_approved": false
 }

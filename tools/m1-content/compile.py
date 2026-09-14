@@ -48,12 +48,47 @@ def main():
                 "field-stripping, synthetic content or substitute validator.",
     }
     if result.returncode == 0:
-        record["artifact_sha256"] = sha(output_path.read_bytes())
+        artifact = output_path.read_bytes()
+        parsed = json.loads(result.stdout)
+        if parsed["schema_version"] != 2 or parsed["artifact_version"] != 2 or sha(artifact) != parsed["sha256"]:
+            raise ValueError("Actual compiler artifact identity/version mismatch")
+        compressed = bytearray(gzip.compress(artifact, compresslevel=9, mtime=0))
+        compressed[9] = 255
+        committed_path = CONTENT / "game-content.csc.gz"
+        committed_path.write_bytes(compressed)
+        record["artifact_sha256"] = sha(artifact)
+        record["artifact"] = {"path": str(committed_path.relative_to(ROOT)), "bytes": len(compressed),
+                              "sha256": sha(compressed), "uncompressed_bytes": len(artifact),
+                              "uncompressed_sha256": sha(artifact), "artifact_version": 2, "schema_version": 2}
+        decoded = json.loads(data)
+        unresolved = []
+        def find_bindings(value, path=""):
+            if isinstance(value, dict):
+                if value.get("status") == "unresolved" or value.get("kind") == "unresolved":
+                    unresolved.append({"path": path, "reason": value["reason"], "source": value["source"]})
+                for key, child in value.items():
+                    find_bindings(child, (path + "." if path else "") + key)
+            elif isinstance(value, list):
+                for index, child in enumerate(value):
+                    find_bindings(child, f"{path}[{index}]")
+        find_bindings(decoded)
+        reported = parsed["validation"]["unresolved_bindings"]
+        if {value["path"] for value in unresolved} != set(reported):
+            raise ValueError("Compiler unresolved-binding report differs from authored source binding paths")
+        record["unresolved_binding_count"] = len(unresolved)
+        write(BINDINGS / "unresolved-bindings.json", {
+            "schema_version": 2, "content_sha256": sha(source.read_bytes()),
+            "runtime_compile_passed": True, "runtime_success_claimed": False,
+            "bindings": unresolved, "count": len(unresolved),
+            "profile_candidates": "research/m1-bindings/profile-v2.json",
+        }, True)
     write(BINDINGS / "compiler-validation.json", record, True)
     print(json.dumps({
         "runtime_compile_passed": record["runtime_compile_passed"],
         "exit_code": result.returncode,
-        "diagnostic": (result.stderr or result.stdout)[:2400],
+        "diagnostic": result.stderr[:2400] if result.returncode else None,
+        "artifact": record.get("artifact"),
+        "unresolved_binding_count": record.get("unresolved_binding_count"),
         "record": "research/m1-bindings/compiler-validation.json",
     }))
     raise SystemExit(result.returncode)

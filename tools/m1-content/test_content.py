@@ -4,10 +4,11 @@ from collections import Counter
 from copy import deepcopy
 import unittest
 
-from common import BINDINGS, CONTENT, Inputs, load, position
+from common import BINDINGS, CONTENT, Inputs, counter_value, item_stack, load, position
 from definitions import xp_thresholds
 from geometry import World, canonical_mask, clipped_footprint, wall_edges
 from check import check_content
+from state_oracles import Oracle, OracleRefusal
 
 
 def evaluate(guard, stage, items, flags=None):
@@ -28,6 +29,8 @@ def evaluate(guard, stage, items, flags=None):
         return all(items[item["item"]] >= item["quantity"] for item in guard["items"])
     if kind == "flag":
         return (flags or {}).get(guard["name"], 0) == guard["equals"]
+    if kind == "entitlement_claimed":
+        return False
     raise AssertionError(f"Test interpreter does not silently permit {kind}")
 
 
@@ -110,8 +113,9 @@ class AuthoredContentTests(unittest.TestCase):
             npc["source_id"] for npc in npcs.values()))
         self.assertEqual(items["item.shrimps.burnt"]["source_id"], 7954)
         self.assertEqual(items["item.bones.tutorial"]["source_id"], 2530)
-        excluded = load(BINDINGS / "item-bindings.json")["excluded"]
-        self.assertEqual(excluded["item.milk.bottomless_bucket"]["source_id"], 33089)
+        self.assertEqual(items["item.milk.bottomless_bucket"]["source_id"], 33089)
+        self.assertEqual(items["item.milk.bottomless_bucket"]["stackable"]["source_mode"], 2)
+        self.assertEqual(items["item.milk.bottomless_bucket"]["charges"]["maximum"], 10000)
         self.assertEqual(self.inputs.collections["item"][33089]["stackable"], 2)
 
     def test_source_dairy_cows_are_objects_and_fishing_spots_are_npcs(self):
@@ -148,7 +152,10 @@ class AuthoredContentTests(unittest.TestCase):
         self.assertEqual(initial["skills"]["skill.hitpoints"], {"current_level": 10, "xp_tenths": 11540})
         self.assertEqual(len(initial["skills"]), 24)
         self.assertEqual(initial["skills"]["skill.sailing"]["xp_tenths"], 0)
-        self.assertEqual(initial["flags"]["tutorial.bank_seed_claimed"], 0)
+        self.assertEqual(initial["flags"], {})
+        self.assertIsNone(initial["runtime"]["settings"]["experience"])
+        self.assertFalse(initial["runtime"]["settings"]["appearance_confirmed"])
+        self.assertEqual(initial["runtime"]["counters"]["counter.tutorial.departed"], counter_value(False))
 
     def test_xp_stop_and_ceiling_are_not_conflated(self):
         for stage in self.content["tutorial"].values():
@@ -185,7 +192,7 @@ class AuthoredContentTests(unittest.TestCase):
     def test_hammer_is_required_not_consumed(self):
         recipe = self.content["recipes"]["recipe.smithing.bronze_dagger"]
         self.assertEqual(recipe["tools"], ["item.hammer"])
-        self.assertEqual(recipe["inputs"], [{"item": "item.bar.bronze", "quantity": 1}])
+        self.assertEqual(recipe["inputs"], [item_stack("item.bar.bronze")])
         self.assertEqual(recipe["xp"], [{"skill": "skill.smithing", "amount_tenths": 125}])
         smelt = self.content["recipes"]["recipe.smelting.bronze"]
         self.assertEqual(smelt["xp"], [{"skill": "skill.smithing", "amount_tenths": 62}])
@@ -234,11 +241,25 @@ class AuthoredContentTests(unittest.TestCase):
     def test_no_coin_reward_or_duplicate_completion_escape(self):
         nodes = {node["id"]: node for node in self.content["dialogues"]["dialogue.cook"]["nodes"]}
         ready = nodes["stage.cooks.delivered.milk_flour_egg"]["choices"][0]
-        self.assertFalse(evaluate(ready["guard"], "stage.cooks.delivered.milk_flour_egg", Counter()))
+        self.assertTrue(evaluate(ready["guard"], "stage.cooks.delivered.milk_flour_egg", Counter()))
         self.assertEqual(nodes["stage.cooks.completed"]["choices"], [])
-        self.assertFalse(any(effect["kind"] == "give_items" for effect in ready["effects"]))
-        self.assertIn({"kind": "add_quest_points", "amount": 1}, ready["effects"])
-        self.assertIn({"kind": "award_xp", "rewards": [{"skill": "skill.cooking", "amount_tenths": 3000}]}, ready["effects"])
+        reward = ready["effects"][0]
+        self.assertEqual(reward["kind"], "once")
+        self.assertFalse(any(effect["kind"] == "give_items" for effect in reward["effects"]))
+        self.assertIn({"kind": "add_quest_points", "amount": 1}, reward["effects"])
+        self.assertIn({"kind": "award_xp", "rewards": [{"skill": "skill.cooking", "amount_tenths": 3000}]}, reward["effects"])
+        model = Oracle(self.content)
+        model.data["tutorial_stage"] = "stage.tutorial.mainland"
+        model.data["quests"]["quest.cooks_assistant"]["stage"] = "stage.cooks.delivered.milk_flour_egg"
+        model.data["run_energy"] = 120
+        model.effects(ready["effects"])
+        self.assertEqual(model.data["quest_points"], 1)
+        self.assertEqual(model.data["skills"]["skill.cooking"]["xp_tenths"], 3000)
+        self.assertEqual(model.data["run_energy"], 10000)
+        self.assertFalse(model.guard(ready["guard"]))
+        with self.assertRaisesRegex(OracleRefusal, "already claimed"):
+            model.effects(ready["effects"])
+        self.assertEqual(model.data["quest_points"], 1)
 
     def test_full_graphs_and_three_floor_mill_no_shortcut(self):
         self.assertEqual(len(self.graph["tutorial"]), 73)
@@ -246,6 +267,8 @@ class AuthoredContentTests(unittest.TestCase):
         self.assertEqual(len(self.content["tutorial"]), 71)
         self.assertEqual(len(self.content["quests"]["quest.cooks_assistant"]["journal"]), 10)
         self.assertEqual(len(self.bindings["travel"]), 11)
+        self.assertTrue(all(edge["runtime_hooks"] and not edge["gaps"] for edge in self.graph["tutorial"]))
+        self.assertEqual(self.content["schema_version"], 2)
         self.assertFalse(any(recipe["outputs"] == [{"item": "item.flour.pot", "quantity": 1}]
                              for recipe in self.content["recipes"].values()))
         pairs = {record["id"]: record for record in self.bindings["travel"]}
@@ -261,6 +284,145 @@ class AuthoredContentTests(unittest.TestCase):
         self.assertEqual(stock["item.bucket"]["buy_price"], 2)
         self.assertEqual(stock["item.bucket"]["base_stock"], 3)
         self.assertEqual(stock["item.hammer"]["restock_ticks"], 100)
+        self.assertEqual(stock["item.bucket"]["mechanics"]["pricing"]["kind"], "stock_sensitive")
+
+    def test_first_visible_bank_entitlement_is_atomic_and_never_reseeded(self):
+        model = Oracle(self.content)
+        self.assertEqual(model.count("item.coins", "bank"), 0)
+        bank = next(action for action in self.content["spawns"]["spawn.tutorial.banker"]["interactions"]
+                    if action["action"]["kind"] == "open_bank")
+        model.data["tutorial_stage"] = "stage.tutorial.bank_open"
+        self.assertFalse(model.event({"kind": "interface_opened", "interface": "interface.bank"}))
+        model.effects(bank["action"]["before_open"])
+        self.assertEqual(model.count("item.coins", "bank"), 25)
+        self.assertTrue(model.event({"kind": "interface_presented", "interface": "interface.bank",
+                                    "context": {"kind": "bank", "banker": "spawn.tutorial.banker"}}))
+        model.take("item.coins", 25, "bank")
+        model.give("item.coins", 25)
+        model.effects(bank["action"]["before_open"])
+        self.assertEqual(model.count("item.coins", "bank"), 0)
+        self.assertEqual(model.count("item.coins"), 25)
+
+    def test_partial_initial_supply_does_not_regrant_satisfied_dropped_line(self):
+        model = Oracle(self.content)
+        model.give("item.logs.normal", 27)
+        grant = [{"kind": "grant", "grant": "grant.tutorial.melee_gear"}]
+        model.effects(grant)
+        self.assertEqual(model.count("item.sword.bronze"), 1)
+        self.assertEqual(model.count("item.shield.wooden"), 0)
+        self.assertFalse(model.grant_claimed("entitlement.tutorial.melee_gear"))
+        model.take("item.sword.bronze", 1)
+        model.effects(grant)
+        self.assertEqual(model.count("item.sword.bronze"), 0)
+        self.assertEqual(model.count("item.shield.wooden"), 1)
+        self.assertTrue(model.grant_claimed("entitlement.tutorial.melee_gear"))
+        model.take("item.logs.normal", 1)
+        model.effects([{"kind": "grant", "grant": "grant.tutorial.melee_gear.recovery"}])
+        self.assertEqual(model.count("item.sword.bronze"), 1)
+        self.assertEqual(model.count("item.shield.wooden"), 1)
+
+    def test_ranged_top_up_counts_equipped_arrows_and_atomic_failure_rolls_back(self):
+        model = Oracle(self.content)
+        model.data["equipment"]["slot.ammo"] = item_stack("item.arrow.bronze", 10)
+        model.effects([{"kind": "grant", "grant": "grant.tutorial.ranged_gear"}])
+        self.assertEqual(model.count("item.arrow.bronze", "inventory_and_equipment"), 50)
+        model.effects([{"kind": "grant", "grant": "grant.tutorial.ranged_gear.recovery"}])
+        self.assertEqual(model.count("item.arrow.bronze", "inventory_and_equipment"), 50)
+        full = Oracle(self.content)
+        full.give("item.logs.normal", 27)
+        before = deepcopy(full.data)
+        with self.assertRaisesRegex(OracleRefusal, "Container full"):
+            full.effects([{"kind": "grant", "grant": "grant.tutorial.survival_tools"}])
+        self.assertEqual(full.data, before)
+
+    def test_real_mill_hopper_controls_bin_conserve_items_and_reject_overflow(self):
+        model = Oracle(self.content)
+        model.data["tutorial_stage"] = "stage.tutorial.mainland"
+        def operation(object_id, action):
+            return next(action_definition for spawn in self.content["spawns"].values()
+                        if spawn["kind"].get("object") == object_id for action_definition in spawn["interactions"]
+                        if action_definition["name"] == action)
+        hopper = operation("object.mill.hopper", "Fill")
+        controls = operation("object.mill.controls", "Operate")
+        bin_action = operation("object.mill.flour_bin", "Empty")
+        self.assertFalse(model.guard(hopper["guard"]))
+        model.give("item.grain", 1)
+        self.assertTrue(model.guard(hopper["guard"]))
+        model.effects(hopper["action"]["effects"])
+        self.assertEqual(model.count("item.grain"), 0)
+        self.assertEqual(model.count("item.flour.pot"), 0)
+        self.assertTrue(model.guard(controls["guard"]))
+        model.effects(controls["action"]["effects"])
+        self.assertFalse(model.guard(controls["guard"]))
+        self.assertEqual(model.counter("counter.mill.flour"), counter_value(1))
+        self.assertFalse(model.guard(bin_action["guard"]))
+        model.give("item.pot", 1)
+        self.assertTrue(model.guard(bin_action["guard"]))
+        model.effects(bin_action["action"]["effects"])
+        self.assertEqual(model.count("item.flour.pot"), 1)
+        self.assertEqual(model.count("item.pot"), 0)
+        self.assertEqual(model.counter("counter.mill.flour"), counter_value(0))
+        model.data["runtime"]["counters"]["counter.mill.flour"] = counter_value(30)
+        model.give("item.grain", 1)
+        self.assertFalse(model.guard(hopper["guard"]))
+        before = deepcopy(model.data)
+        with self.assertRaisesRegex(OracleRefusal, "Counter overflow"):
+            model.effects([{"kind": "add_counter", "counter": "counter.mill.flour", "delta": 1}])
+        self.assertEqual(model.data, before)
+
+    def test_learning_reward_requires_valid_selected_spell_not_kill_or_generic_hit(self):
+        model = Oracle(self.content)
+        model.data["tutorial_stage"] = "stage.tutorial.wind_strike"
+        model.data["quests"]["quest.learning_the_ropes"]["stage"] = "stage.learning_the_ropes.in_progress"
+        model.data["run_energy"] = 500
+        target = "spawn.tutorial_chicken.3138.3093.p0"
+        self.assertFalse(model.event({"kind": "hit", "target": target, "damage": 2, "style": "magic"}))
+        self.assertFalse(model.event({"kind": "npc_killed", "target": target, "npc": "npc.tutorial_chicken",
+                                      "life": 1, "method": "magic", "credited": True, "tile": {"x": 3138, "y": 3093, "plane": 0}}))
+        event = {"kind": "spell_resolved", "spell": "spell.wind_strike", "target": target,
+                 "outcome": "invalidated", "damage": 0, "tile": {"x": 3138, "y": 3093, "plane": 0}}
+        self.assertFalse(model.event(event))
+        event["outcome"] = "splash"
+        self.assertTrue(model.event(event))
+        self.assertEqual(model.data["quest_points"], 1)
+        self.assertEqual(model.data["run_energy"], 10000)
+        self.assertEqual(model.data["tutorial_stage"], "stage.tutorial.departure_offer")
+        self.assertFalse(model.event(event))
+        self.assertEqual(model.data["quest_points"], 1)
+
+    def test_burnt_shrimp_is_an_authoritative_failed_recipe_not_a_stage_shortcut(self):
+        model = Oracle(self.content)
+        model.data["tutorial_stage"] = "stage.tutorial.cook_shrimp"
+        self.assertFalse(model.event({"kind": "produced", "recipe": "recipe.cooking.shrimps.fire",
+                                      "outputs": [item_stack("item.shrimps.burnt")]}))
+        self.assertTrue(model.event({
+            "kind": "production_resolved", "recipe": "recipe.cooking.shrimps.fire",
+            "method": "action.cooking.shrimps", "facility": {"kind": "temporary_object", "object": "dynamic_object.oracle.fire"},
+            "outcome": "failure", "outputs": [item_stack("item.shrimps.burnt")],
+        }))
+        self.assertEqual(model.data["tutorial_stage"], "stage.tutorial.survival_exit")
+        self.assertEqual(model.data["skills"]["skill.cooking"]["xp_tenths"], 0)
+
+    def test_death_topics_gate_portal_and_do_not_use_fake_quest_stages(self):
+        model = Oracle(self.content)
+        model.data["life"] = "first_death_office"
+        death = self.content["dialogues"]["dialogue.death"]
+        intro = next(node for node in death["nodes"] if node["id"] == "stage.death.introduction")["choices"][0]
+        model.effects(intro["effects"])
+        topics = next(node for node in death["nodes"] if node["id"] == "stage.death.topics")["choices"]
+        done = topics[-1]
+        self.assertFalse(model.guard(done["guard"]))
+        for choice in topics[:3]:
+            model.effects(choice["effects"])
+        self.assertTrue(model.guard(done["guard"]))
+        model.effects(done["effects"])
+        self.assertTrue(model.guard(self.content["mechanics"]["travels"]["travel.death.exit"]["guard"]))
+        self.assertEqual(model.data["tutorial_stage"], "stage.tutorial.appearance")
+        self.assertEqual(set(model.data["quests"]), {"quest.cooks_assistant", "quest.learning_the_ropes"})
+        self.assertEqual(self.content["mechanics"]["death"]["first_office"]["value"]["tile"],
+                         {"x": 3174, "y": 5726, "plane": 0})
+        self.assertNotEqual(self.content["spawns"]["spawn.death"]["tile"],
+                            self.content["mechanics"]["death"]["first_office"]["value"]["tile"])
 
     def test_reject_dangling_ids(self):
         content = deepcopy(self.content)
