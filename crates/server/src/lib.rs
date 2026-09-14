@@ -2,6 +2,7 @@ mod config;
 mod crypto;
 mod database;
 mod error;
+pub mod game_storage;
 mod rate_limit;
 mod store;
 mod transport;

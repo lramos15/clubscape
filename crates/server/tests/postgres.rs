@@ -97,7 +97,11 @@ impl TestDatabase {
         assert_eq!(database, TEST_DATABASE, "unexpected connected database");
         assert_eq!(schema, "public", "unexpected test schema");
         sqlx::raw_sql(
-            "DROP TABLE IF EXISTS public.account_sessions;
+            "DROP TABLE IF EXISTS public.processed_game_commands;
+             DROP TABLE IF EXISTS public.game_sessions;
+             DROP TABLE IF EXISTS public.game_characters;
+             DROP TABLE IF EXISTS public.game_worlds;
+             DROP TABLE IF EXISTS public.account_sessions;
              DROP TABLE IF EXISTS public.accounts;
              DROP TABLE IF EXISTS public._sqlx_migrations;",
         )
