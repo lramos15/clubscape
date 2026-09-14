@@ -1,0 +1,361 @@
+{
+  "interface.account": {
+    "assets": [],
+    "missing_source_groups": [
+      712
+    ],
+    "presentation_status": "not_approved",
+    "source_groups": [
+      712
+    ],
+    "symbols": [
+      "ACCOUNT_SUMMARY_SIDEPANEL"
+    ]
+  },
+  "interface.account_links": {
+    "assets": [],
+    "missing_source_groups": [
+      109
+    ],
+    "presentation_status": "not_approved",
+    "source_groups": [
+      109
+    ],
+    "symbols": [
+      "ACCOUNT"
+    ]
+  },
+  "interface.adventure_paths": {
+    "assets": [],
+    "missing_source_groups": [
+      642,
+      644,
+      643
+    ],
+    "presentation_status": "not_approved",
+    "source_groups": [
+      642,
+      644,
+      643
+    ],
+    "symbols": [
+      "ADVENTUREPATH",
+      "ADVENTUREPATH_SIDE",
+      "ADVENTUREPATH_REWARD"
+    ]
+  },
+  "interface.appearance": {
+    "assets": [],
+    "missing_source_groups": [
+      679
+    ],
+    "presentation_status": "not_approved",
+    "source_groups": [
+      679
+    ],
+    "symbols": [
+      "PLAYER_DESIGN"
+    ]
+  },
+  "interface.bank": {
+    "assets": [
+      "asset.source.osrs.cache2695.interface.12",
+      "asset.source.osrs.cache2695.interface.15"
+    ],
+    "missing_source_groups": [],
+    "presentation_status": "not_approved",
+    "source_groups": [
+      12,
+      15
+    ],
+    "symbols": [
+      "BANKMAIN",
+      "BANKSIDE"
+    ]
+  },
+  "interface.combat": {
+    "assets": [
+      "asset.source.osrs.cache2695.interface.593"
+    ],
+    "missing_source_groups": [],
+    "presentation_status": "not_approved",
+    "source_groups": [
+      593
+    ],
+    "symbols": [
+      "COMBAT_INTERFACE"
+    ]
+  },
+  "interface.cooking": {
+    "assets": [],
+    "missing_source_groups": [
+      270
+    ],
+    "presentation_status": "not_approved",
+    "source_groups": [
+      270
+    ],
+    "symbols": [
+      "SKILLMULTI"
+    ]
+  },
+  "interface.death_retrieval": {
+    "assets": [
+      "asset.source.osrs.cache2695.interface.669"
+    ],
+    "missing_source_groups": [],
+    "presentation_status": "not_approved",
+    "source_groups": [
+      669
+    ],
+    "symbols": [
+      "DEATH_OFFICE"
+    ]
+  },
+  "interface.emotes": {
+    "assets": [
+      "asset.source.osrs.cache2695.interface.216"
+    ],
+    "missing_source_groups": [],
+    "presentation_status": "not_approved",
+    "source_groups": [
+      216
+    ],
+    "symbols": [
+      "EMOTE"
+    ]
+  },
+  "interface.equipment": {
+    "assets": [],
+    "missing_source_groups": [
+      387
+    ],
+    "presentation_status": "not_approved",
+    "source_groups": [
+      387
+    ],
+    "symbols": [
+      "WORNITEMS"
+    ]
+  },
+  "interface.equipment_stats": {
+    "assets": [
+      "asset.source.osrs.cache2695.interface.84",
+      "asset.source.osrs.cache2695.interface.85"
+    ],
+    "missing_source_groups": [],
+    "presentation_status": "not_approved",
+    "source_groups": [
+      84,
+      85
+    ],
+    "symbols": [
+      "EQUIPMENT",
+      "EQUIPMENT_SIDE"
+    ]
+  },
+  "interface.experience": {
+    "assets": [
+      "asset.source.osrs.cache2695.interface.929"
+    ],
+    "missing_source_groups": [],
+    "presentation_status": "not_approved",
+    "source_groups": [
+      929
+    ],
+    "symbols": [
+      "TUTORIAL_PLAYER_EXPERIENCE"
+    ]
+  },
+  "interface.grave": {
+    "assets": [],
+    "missing_source_groups": [
+      602
+    ],
+    "presentation_status": "not_approved",
+    "source_groups": [
+      602
+    ],
+    "symbols": [
+      "GRAVESTONE_RETRIEVAL"
+    ]
+  },
+  "interface.inventory": {
+    "assets": [
+      "asset.source.osrs.cache2695.interface.149"
+    ],
+    "missing_source_groups": [],
+    "presentation_status": "not_approved",
+    "source_groups": [
+      149
+    ],
+    "symbols": [
+      "INVENTORY"
+    ]
+  },
+  "interface.items_kept_on_death": {
+    "assets": [
+      "asset.source.osrs.cache2695.interface.4"
+    ],
+    "missing_source_groups": [],
+    "presentation_status": "not_approved",
+    "source_groups": [
+      4
+    ],
+    "symbols": [
+      "DEATHKEEP"
+    ]
+  },
+  "interface.logout": {
+    "assets": [
+      "asset.source.osrs.cache2695.interface.182"
+    ],
+    "missing_source_groups": [],
+    "presentation_status": "not_approved",
+    "source_groups": [
+      182
+    ],
+    "symbols": [
+      "LOGOUT"
+    ]
+  },
+  "interface.magic": {
+    "assets": [
+      "asset.source.osrs.cache2695.interface.218"
+    ],
+    "missing_source_groups": [],
+    "presentation_status": "not_approved",
+    "source_groups": [
+      218
+    ],
+    "symbols": [
+      "MAGIC_SPELLBOOK"
+    ]
+  },
+  "interface.music": {
+    "assets": [
+      "asset.source.osrs.cache2695.interface.239"
+    ],
+    "missing_source_groups": [],
+    "presentation_status": "not_approved",
+    "source_groups": [
+      239
+    ],
+    "symbols": [
+      "MUSIC"
+    ]
+  },
+  "interface.poll": {
+    "assets": [],
+    "missing_source_groups": [
+      928
+    ],
+    "presentation_status": "not_approved",
+    "source_groups": [
+      928
+    ],
+    "symbols": [
+      "BALLOT"
+    ]
+  },
+  "interface.prayer": {
+    "assets": [
+      "asset.source.osrs.cache2695.interface.541"
+    ],
+    "missing_source_groups": [],
+    "presentation_status": "not_approved",
+    "source_groups": [
+      541
+    ],
+    "symbols": [
+      "PRAYERBOOK"
+    ]
+  },
+  "interface.quest_reward": {
+    "assets": [
+      "asset.source.osrs.cache2695.interface.153"
+    ],
+    "missing_source_groups": [],
+    "presentation_status": "not_approved",
+    "source_groups": [
+      153
+    ],
+    "symbols": [
+      "QUESTSCROLL"
+    ]
+  },
+  "interface.quests": {
+    "assets": [
+      "asset.source.osrs.cache2695.interface.399",
+      "asset.source.osrs.cache2695.interface.119"
+    ],
+    "missing_source_groups": [],
+    "presentation_status": "not_approved",
+    "source_groups": [
+      399,
+      119
+    ],
+    "symbols": [
+      "QUESTLIST",
+      "QUESTJOURNAL"
+    ]
+  },
+  "interface.settings": {
+    "assets": [],
+    "missing_source_groups": [
+      116,
+      134
+    ],
+    "presentation_status": "not_approved",
+    "source_groups": [
+      116,
+      134
+    ],
+    "symbols": [
+      "SETTINGS_SIDE",
+      "SETTINGS"
+    ]
+  },
+  "interface.shop": {
+    "assets": [
+      "asset.source.osrs.cache2695.interface.300",
+      "asset.source.osrs.cache2695.interface.301"
+    ],
+    "missing_source_groups": [],
+    "presentation_status": "not_approved",
+    "source_groups": [
+      300,
+      301
+    ],
+    "symbols": [
+      "SHOPMAIN",
+      "SHOPSIDE"
+    ]
+  },
+  "interface.skills": {
+    "assets": [
+      "asset.source.osrs.cache2695.interface.320"
+    ],
+    "missing_source_groups": [],
+    "presentation_status": "not_approved",
+    "source_groups": [
+      320
+    ],
+    "symbols": [
+      "STATS"
+    ]
+  },
+  "interface.smithing": {
+    "assets": [],
+    "missing_source_groups": [
+      312
+    ],
+    "presentation_status": "not_approved",
+    "source_groups": [
+      312
+    ],
+    "symbols": [
+      "SMITHING"
+    ]
+  }
+}

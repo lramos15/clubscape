@@ -1,0 +1,1580 @@
+{
+  "bank_seed_hook": {
+    "before_event_ref": "event.ui.opened",
+    "effects": [
+      {
+        "op": "set",
+        "path": "state.bank.seed_claimed",
+        "value": true
+      }
+    ],
+    "grant_ref": "grant.tutorial.bank_coins",
+    "guard": {
+      "all": [
+        {
+          "op": "eq",
+          "path": "state.bank.seed_claimed",
+          "value": false
+        },
+        {
+          "op": "eq",
+          "path": "state.tutorial.departed",
+          "value": false
+        }
+      ]
+    },
+    "note": "Seeding, first bank opening and stage acknowledgement are one transaction.",
+    "ui_ref": "ui.bank"
+  },
+  "decisions": {
+    "acceptance": {
+      "implementation_executed": false,
+      "journey_executed": false,
+      "milestone_accepted": false,
+      "note": "This task supplies bounded source contracts and validates their internal consistency only. Separate Section 30 gates remain.",
+      "presentation_approved": false
+    },
+    "assumptions": [
+      {
+        "approval": "not_owner_approved; not an adaptation approval",
+        "basis": {
+          "classification": "assumption",
+          "source_refs": [
+            "source.wiki.tutorial_transcript",
+            "source.wiki.learning_the_ropes"
+          ]
+        },
+        "chosen_policy": "Pre-dialogue inventory/equipment are empty; seed the 25-coin bank entitlement exactly once before its first visible opening. Clothing is appearance, not equipment. Use the documented base 400 bank spaces provisionally; exact fresh-account identity-provider/security bonus mapping is not observed.",
+        "critical_for_exact_fidelity": false,
+        "id": "assumption.fresh_containers",
+        "reason": "The transcript calls the net the first given item; the quest guide explicitly shows 25 bank coins at first opening, but neither is a fresh-account dump. Lazy versus creation-time bank seeding is unobservable before access.",
+        "reversal": "Replace defaults from an authorized fresh-account state capture; keep already acknowledged ownership changes."
+      },
+      {
+        "approval": "not_owner_approved; not an adaptation approval",
+        "basis": {
+          "classification": "assumption",
+          "source_refs": [
+            "source.wiki.tutorial_island",
+            "source.wiki.experience",
+            "source.wiki.copper_rocks"
+          ]
+        },
+        "chosen_policy": "If base level is already 3, award zero tutorial XP. Otherwise award normal tenths, capped below the level-4 threshold (2759 tenths). HP awards are always zero on the island.",
+        "critical_for_exact_fidelity": false,
+        "id": "assumption.tutorial_xp_boundary",
+        "reason": "Sources specify level 3, not an exact XP total. This deliberately does not invent a hard cap of 174.0 XP; a final ordinary action can pass 174.0 without reaching level 4.",
+        "reversal": "Measure boundary actions; change this policy without changing prior earned XP or tutorial stage."
+      },
+      {
+        "approval": "not_owner_approved; not an adaptation approval",
+        "basis": {
+          "classification": "assumption",
+          "source_refs": [
+            "source.wiki.tutorial_transcript",
+            "source.wiki.tutorial_island"
+          ]
+        },
+        "chosen_policy": "The owning instructor returns one missing net/axe/tinderbox/pickaxe/dagger as specified in recovery handlers, only after its original lesson unlocked it and while still on Tutorial Island.",
+        "critical_for_exact_fidelity": false,
+        "id": "assumption.missing_tutorial_tools",
+        "reason": "Hammer, Chef ingredients, sword/shield, bow/arrows and rune replacements are explicit. Other lost-tool branches are not in the transcript. Prefer re-gathering/re-smithing a lost dagger; instructor replacement is the last recoverability fallback.",
+        "reversal": "Replace only missing-tool handlers after a source capture; never blanket-grant a starter kit to advance a stage."
+      },
+      {
+        "approval": "not_owner_approved; not an adaptation approval",
+        "basis": {
+          "classification": "assumption",
+          "source_refs": [
+            "source.wiki.tutorial_transcript",
+            "source.wiki.inventory"
+          ]
+        },
+        "chosen_policy": "Undocumented multi-item instructor grants are all-or-none; explicit sword/shield and bow/arrows grants remain sequential and partial.",
+        "critical_for_exact_fidelity": false,
+        "id": "assumption.multi_item_grant_capacity",
+        "reason": "Transcript explicitly permits a sword or bow alone in one free slot. It does not describe every survival/Chef/rune overflow branch.",
+        "reversal": "Observe individual overflow cases. Preserve the explicit partial branches regardless."
+      },
+      {
+        "approval": "not_owner_approved; not an adaptation approval",
+        "basis": {
+          "classification": "assumption",
+          "source_refs": [
+            "source.wiki.learning_the_ropes",
+            "source.wiki.tutorial_island"
+          ]
+        },
+        "chosen_policy": "On successful authorized Home Teleport, replace tutorial-carried/equipped possessions with the 18-kind standard kit in inventory, clear tutorial bank contents, then set bank coins to 25. Preserve skills, quest point and completed tutorial flags. Commit once.",
+        "critical_for_exact_fidelity": true,
+        "id": "assumption.departure_reconciliation",
+        "reason": "Sources say gathered items are lost and list standard provisions, but do not prove equipment placement, bank-deposit retention, withdrawn coins, duplicate tools or exact reconciliation. This is a reversible provisional normalization, NOT an observed inventory dump.",
+        "reversal": "Capture departure after deposits/drops/withdrawal and with equipped bow; swap reconciliation policy and migrate tutorial-owned provenance, not ordinary mainland possessions."
+      },
+      {
+        "approval": "not_owner_approved; not an adaptation approval",
+        "basis": {
+          "classification": "assumption",
+          "source_refs": [
+            "source.wiki.tutorial_transcript",
+            "source.wiki.learning_the_ropes"
+          ]
+        },
+        "chosen_policy": "Keep the documented mainland confirmation and normal-account/Ironman-information choices; an omitted brand-new dialogue span is explanatory, not a grant or skill gate.",
+        "critical_for_exact_fidelity": false,
+        "id": "assumption.departure_missing_dialogue",
+        "reason": "The current transcript explicitly marks missing text, but guide and remaining transcript agree on Home Teleport and arrival. No full dialogue reproduction is claimed.",
+        "reversal": "Replace the paraphrased missing span from approved reference dialogue; retain actual spell completion."
+      },
+      {
+        "approval": "not_owner_approved; not an adaptation approval",
+        "basis": {
+          "classification": "assumption",
+          "source_refs": [
+            "source.wiki.learning_the_ropes",
+            "source.wiki.tutorial_transcript"
+          ]
+        },
+        "chosen_policy": "Track onboarding internally from appearance; Learning the Ropes journal status changes to in_progress on first Quest Guide dialogue, and to completed on the first valid chicken Wind Strike resolution.",
+        "critical_for_exact_fidelity": false,
+        "id": "assumption.quest_tracking_start",
+        "reason": "Quest details name the Quest Guide as start. Exact hidden varp/journal initialization is not provided; the conversion to a tracked quest and the completion condition are explicit.",
+        "reversal": "Bind hidden progress/journal values when extracted or captured; do not use remembered historical varp numbers."
+      },
+      {
+        "approval": "not_owner_approved; not an adaptation approval",
+        "basis": {
+          "classification": "assumption",
+          "source_refs": [
+            "source.wiki.tutorial_transcript",
+            "source.wiki.tutorial_island",
+            "source.wiki.bread"
+          ]
+        },
+        "chosen_policy": "Use the ordinary shared range-cooking roll. A resolved bread attempt may advance, including a burn; never boost success secretly.",
+        "critical_for_exact_fidelity": false,
+        "id": "assumption.bread_first_attempt",
+        "reason": "The current transcript shows first bread success and later burned bread allowing exit. The older guide says bread cannot burn before an obsolete music step. Whether current first-bread success is guaranteed remains unverified.",
+        "reversal": "If a current source demonstrates a first-attempt guarantee, add that explicit source-defined override and change only its fixture."
+      },
+      {
+        "approval": "not_owner_approved; not an adaptation approval",
+        "basis": {
+          "classification": "assumption",
+          "source_refs": [
+            "source.wiki.bread_dough",
+            "source.wiki.pot_of_flour",
+            "source.wiki.pot",
+            "source.wiki.bucket"
+          ]
+        },
+        "chosen_policy": "Mixing flour and water leaves an empty pot and bucket plus dough: net +1 inventory slot. Reject before mutation if that extra slot cannot fit.",
+        "critical_for_exact_fidelity": false,
+        "id": "assumption.dough_containers",
+        "reason": "Recipe pages list the dough output but omit container byproducts. Returning these containers is an inference from ordinary Cooking container behavior, not a verified recipe-output capture.",
+        "reversal": "Capture mixing with 27 and 28 slots used; adjust byproducts without changing the flour/water ingredient requirements."
+      },
+      {
+        "approval": "not_owner_approved; not an adaptation approval",
+        "basis": {
+          "classification": "assumption",
+          "source_refs": [
+            "source.wiki.energy"
+          ]
+        },
+        "chosen_policy": "Store run energy in 0..10000 units. Apply the published post-2025 drain expression then floor its final result once; regenerate floor(Agility/10)+15 units on eligible non-running ticks.",
+        "critical_for_exact_fidelity": false,
+        "id": "assumption.run_rounding",
+        "reason": "Energy page is under construction and flags exact drain rounding/tick boundaries as needing confirmation. The old pre-2025 drain formula is not acceptable.",
+        "reversal": "Resolve rounding from a dated controlled source run; keep weight and agility inputs explicit."
+      },
+      {
+        "approval": "not_owner_approved; not an adaptation approval",
+        "basis": {
+          "classification": "assumption",
+          "source_refs": [
+            "source.wiki.firemaking",
+            "source.wiki.skilling_success_rate"
+          ]
+        },
+        "chosen_policy": "Use the published crowdsourced skilling parameters low=64, high=512 for normal logs, with the shared success function. No guaranteed instant lighting.",
+        "critical_for_exact_fidelity": false,
+        "id": "assumption.fire_success",
+        "reason": "Firemaking explicitly describes this as a belief and carries a citation-needed warning. It is not labeled verified here.",
+        "reversal": "Replace parameters with source-server evidence; the rest of the fire lifecycle and 40 XP remain independently usable."
+      },
+      {
+        "approval": "not_owner_approved; not an adaptation approval",
+        "basis": {
+          "classification": "assumption",
+          "source_refs": [
+            "source.wiki.tree",
+            "source.wiki.fire",
+            "source.wiki.action_lengths"
+          ]
+        },
+        "chosen_policy": "Use normal-tree respawn 60..100 ticks and fire lifetime 100..199 ticks, uniformly. Firelighting retries consume 4 ticks. First gathering-roll phase is one full cycle after action acceptance.",
+        "critical_for_exact_fidelity": false,
+        "id": "assumption.environment_timers",
+        "reason": "Tree prose cites 36-60 seconds but its infobox differs. Fire developer quote gives 60-119 seconds, without a tick distribution. Action-length table gives steady cadence, not every initial/retry phase. These chosen integer schedules are inferences, not measured boundaries.",
+        "reversal": "Bind captured initial/retry phases and distributions; do not change XP or guaranteed tree depletion."
+      },
+      {
+        "approval": "not_owner_approved; not an adaptation approval",
+        "basis": {
+          "classification": "assumption",
+          "source_refs": [
+            "source.wiki.tutorial_rat",
+            "source.wiki.melee_dps"
+          ]
+        },
+        "chosen_policy": "Clamp maximum accuracy/defence rolls to at least zero before inclusive random rolls. This affects Tutorial Island rats' -100 defence bonuses.",
+        "critical_for_exact_fidelity": false,
+        "id": "assumption.negative_combat_roll",
+        "reason": "Rat stats explicitly contain -100 defence, but the wiki's simplified positive-roll hit-chance formula cannot directly handle negative maxima. The clamp is a labeled implementation assumption.",
+        "reversal": "Resolve negative-roll handling from a trusted current combat calculation/source test; positive-roll vectors remain valid."
+      },
+      {
+        "approval": "not_owner_approved; not an adaptation approval",
+        "basis": {
+          "classification": "assumption",
+          "source_refs": [
+            "source.wiki.combat_options",
+            "source.wiki.combat_spells",
+            "source.wiki.experience"
+          ]
+        },
+        "chosen_policy": "For the published 1.33-XP-per-damage terms, use floor(40*credited_damage/3) tenths per hit. Cap credited damage to HP actually removed. Do not round each point separately.",
+        "critical_for_exact_fidelity": false,
+        "id": "assumption.combat_xp_thirds",
+        "reason": "Combat Options publishes 1.33 and Experience documents tenths/flooring, but they do not distinguish exact 4/3 from decimal 1.33 at three damage or every overkill case.",
+        "reversal": "Capture 1/2/3-damage and overkill XP. Retain exact fixed-point storage and source XP family selection."
+      },
+      {
+        "approval": "not_owner_approved; not an adaptation approval",
+        "basis": {
+          "classification": "assumption",
+          "source_refs": [
+            "source.wiki.shop",
+            "source.wiki.shop_module",
+            "source.wiki.lumbridge_general_store"
+          ]
+        },
+        "chosen_policy": "Use the Shop article's linear stock-delta pricing for overstock as well as understock, with explicit bounds; use integer base item values, not rounded displayed prices as inputs.",
+        "critical_for_exact_fidelity": false,
+        "id": "assumption.shop_overstock",
+        "reason": "The wiki calculator's overstock buy branch divides instead of subtracting and can disagree with the Shop article's worked example. Understock/default starter prices do not require resolving this conflict.",
+        "reversal": "Capture a known value>=100 item at surplus stock; replace only overstock pricing. Do not report it as verified."
+      },
+      {
+        "approval": "not_owner_approved; not an adaptation approval",
+        "basis": {
+          "classification": "assumption",
+          "source_refs": [
+            "source.wiki.goblin"
+          ]
+        },
+        "chosen_policy": "Choose the ordinary unarmed level-2 Lumbridge goblin, primary 128-weight table 1. In the F2P profile, member-only table results become no primary item; tertiary rolls stay separately represented. The newly listed common energy-potion drops have no usable weights and remain an explicit unresolved supplement, not a made-up probability.",
+        "critical_for_exact_fidelity": true,
+        "id": "assumption.goblin_loot_variant",
+        "reason": "Current table's numeric weights sum to 128 before three unweighted energy-potion rows. Some level-2 variants use table 2. Exact selected spawn/table and conditional potion logic must be bound; guaranteed bones and listed weights are useful independently.",
+        "reversal": "Verify chosen source spawn and the potion-drop condition. Never substitute a guaranteed coin reward or pretend bones-only is the full drop table."
+      },
+      {
+        "approval": "not_owner_approved; not an adaptation approval",
+        "basis": {
+          "classification": "assumption",
+          "source_refs": [
+            "source.wiki.items_kept_on_death",
+            "source.wiki.stackable_items"
+          ]
+        },
+        "chosen_policy": "For equal source-provided per-unit kept-on-death values, use original carried/equipment slot order as a stable tie-breaker; protect individual units, not an entire arbitrary stack.",
+        "critical_for_exact_fidelity": false,
+        "id": "assumption.death_tie_break",
+        "reason": "The source defines three valuable items and value ranking, not every equal-value stack/slot tie. The fixture values are synthetic reference inputs, not GE observations.",
+        "reversal": "Bind the exact tie/stack behavior from Items Kept on Death source output. Do not use total stack price as a shortcut."
+      },
+      {
+        "approval": "not_owner_approved; not an adaptation approval",
+        "basis": {
+          "classification": "assumption",
+          "source_refs": [
+            "source.wiki.mill_lane_mill",
+            "source.wiki.flour_bin",
+            "source.wiki.hopper_transcript"
+          ]
+        },
+        "chosen_policy": "Track the ordinary mill hopper and shared-across-windmills flour count per character. Reject grain loading/processing when it would exceed the 30-flour capacity; do not lose grain silently.",
+        "critical_for_exact_fidelity": false,
+        "id": "assumption.mill_ownership_overflow",
+        "reason": "The flour source states sharing between mills, not players. Hopper capacity one is explicit; account ownership, overflow and disconnect timing are not fully documented.",
+        "reversal": "Capture two-character ownership and full-bin controls. Keep the three-floor route and material conservation."
+      },
+      {
+        "approval": "not_owner_approved; not an adaptation approval",
+        "basis": {
+          "classification": "assumption",
+          "source_refs": [
+            "source.wiki.cooks_journal",
+            "source.wiki.cooks_transcript"
+          ]
+        },
+        "chosen_policy": "Journal 'held' means currently carried, unnoted ingredients; delivered takes precedence. Banked/ground/lost items do not satisfy turn-in guards.",
+        "critical_for_exact_fidelity": false,
+        "id": "assumption.journal_inventory_scope",
+        "reason": "Journal differentiates found and delivered, but does not explicitly describe its bank visibility or what it displays after losing a previously found ingredient. Actual turn-ins must own usable items.",
+        "reversal": "Adjust only journal projection if source uses broader ownership; never allow remote bank consumption."
+      },
+      {
+        "approval": "not_owner_approved; not an adaptation approval",
+        "basis": {
+          "classification": "assumption",
+          "source_refs": [
+            "source.wiki.tutorial_transcript",
+            "source.wiki.tutorial_island",
+            "source.wiki.energy"
+          ]
+        },
+        "chosen_policy": "Run starts off, Logout remains usable, ordinary music/emote controls are not mandatory progress tasks. Other lesson tabs unlock at their documented step.",
+        "critical_for_exact_fidelity": false,
+        "id": "assumption.initial_ui_defaults",
+        "reason": "No fresh-account UI/settings dump exists. The current detailed transcript lacks old music/emote/friends lessons; treating their absence as a modern variant choice is stronger than reintroducing obsolete mandatory tasks.",
+        "reversal": "Bind actual default settings and optional-control visibility to current client captures; do not remove required documented unlocks."
+      }
+    ],
+    "evidence_classes": {
+      "adaptation": "A deliberate departure requiring the relevant approval. None are approved by these documents.",
+      "assumption": "A reversible provisional choice needed to make a bounded contract actionable.",
+      "engineering_contract": "Project-required authority/persistence/transaction behavior, not a claim about OSRS internals.",
+      "inference": "A stated derivation/translation of source facts; not verified behavior.",
+      "verified_reference": "Explicit fact in a retrieved, pinned source; NOT an observed live-server result and NOT automatic wiki authority."
+    },
+    "external_bindings": [
+      {
+        "id": "binding.world.source_layout",
+        "required": "Actual reachable tiles, floors, collision/LOS flags, gates/ladders/stairs, region closure and initial/arrival cameras; wiki markers are not certified placements.",
+        "value": null
+      },
+      {
+        "id": "binding.tutorial.source_progress",
+        "required": "Numeric tutorial progress/varbits and interface IDs if source client wiring needs them. Semantic stages do not depend on guessed numbers.",
+        "value": null
+      },
+      {
+        "id": "binding.combat.projectile_timing",
+        "required": "Current attack-animation launch/hit/projectile travel offsets and range/LOS mapping; do not replace with zero-delay hits.",
+        "value": null
+      },
+      {
+        "id": "binding.death.valuation",
+        "required": "Pinned effective per-unit GE/alchemy values for the chosen content. Fixture values are inputs, not a current market snapshot.",
+        "value": null
+      }
+    ],
+    "id": "contract.journey.decisions",
+    "profile": {
+      "basis": {
+        "classification": "verified_reference",
+        "source_refs": [
+          "source.wiki.skills",
+          "source.wiki.learning_the_ropes",
+          "source.wiki.tutorial_island",
+          "source.wiki.grave",
+          "source.wiki.energy"
+        ]
+      },
+      "historical_identity": "osrs-240-cache-2695 from first-slice-sources.json is historical, not a retrieval prerequisite.",
+      "id": "profile.osrs.current_normal_f2p",
+      "material_choice": "Prefer a matching current runtime/cache. If only an older client is usable, keep these behavior contracts and explicitly record missing client UI/data as a version mismatch; an old client does not silently authorize historical tutorial mechanics or 23 skills.",
+      "required_features": [
+        "24 skills including Sailing",
+        "Learning the Ropes tracking and 1 QP",
+        "post-2025 run energy",
+        "post-2026-01 tutorial combat cap",
+        "2026-07 grave inventory restoration"
+      ],
+      "runtime_binding": null,
+      "runtime_binding_owner": "Independent source-runtime/cache/asset worker and Director",
+      "selected": "Post-2026-07 normal F2P journey; reference facts frozen by sources.json, not by a client jar's age."
+    },
+    "schema_version": 1,
+    "variant_resolutions": [
+      {
+        "basis": {
+          "classification": "inference",
+          "source_refs": [
+            "source.wiki.learning_the_ropes",
+            "source.wiki.tutorial_transcript",
+            "source.wiki.tutorial_island"
+          ]
+        },
+        "choice": "Current Learning the Ropes transcript, not remembered pre-quest Tutorial Island.",
+        "deltas": [
+          "experience has its own screen",
+          "quest tracker + 1 QP",
+          "run instruction retained",
+          "no mandatory music/emote/friends/ignore lesson in current transcript",
+          "burnt shrimp advances",
+          "bank precedes poll",
+          "5 initial rune pairs, 50 initial arrows versus standardized departure kit",
+          "chicken cast completes quest before authorized Home Teleport"
+        ],
+        "id": "decision.tutorial.modern_flow"
+      },
+      {
+        "basis": {
+          "classification": "inference",
+          "source_refs": [
+            "source.wiki.tutorial_transcript"
+          ]
+        },
+        "choice": "Tin is the prompted first ore; either order can satisfy possession of both after real mining.",
+        "id": "decision.mining.ore_order",
+        "reason": "Mining messages substitute tin/copper symmetrically. Never grant the second ore or assume clicking a rock succeeded."
+      },
+      {
+        "basis": {
+          "classification": "inference",
+          "source_refs": [
+            "source.wiki.tutorial_transcript",
+            "source.wiki.learning_the_ropes",
+            "source.wiki.combat_spells"
+          ]
+        },
+        "choice": "A valid resolved Wind Strike on the tutorial chicken is required; a chicken kill is not. A splash counts provisionally.",
+        "id": "decision.magic.cast_not_kill",
+        "reason": "Transcript says after casting, not after damaging/killing. Splash completion is inferred, not independently captured."
+      },
+      {
+        "basis": {
+          "classification": "verified_reference",
+          "source_refs": [
+            "source.wiki.cooks_assistant",
+            "source.wiki.cooks_transcript",
+            "source.wiki.cooks_journal"
+          ]
+        },
+        "choice": "1 QP + 300 Cooking XP + range permission only; no invented money, ingredients or cake-making step.",
+        "id": "decision.cooks.no_coin_reward"
+      },
+      {
+        "basis": {
+          "classification": "verified_reference",
+          "source_refs": [
+            "source.wiki.death_dialogue",
+            "source.wiki.grave"
+          ]
+        },
+        "choice": "First item-losing death, not necessarily first zero-HP event, triggers the forced Death tutorial. All three optional-looking topics must be covered before exit.",
+        "id": "decision.death.first_item_loss"
+      }
+    ]
+  },
+  "departure": {
+    "bank": [
+      {
+        "item_ref": "item.coins",
+        "quantity": 25
+      }
+    ],
+    "basis": {
+      "assumption_refs": [
+        "assumption.departure_reconciliation"
+      ],
+      "classification": "assumption",
+      "source_refs": [
+        "source.wiki.learning_the_ropes",
+        "source.wiki.tutorial_island"
+      ]
+    },
+    "contract": [
+      "The listed 18-kind kit is source-backed as standard provisions, NOT a source-observed pre-dialogue inventory.",
+      "Tutorial-gathered resources and extra runes do not transfer as unlimited mainland stock.",
+      "Provisional reconciliation clears tutorial inventory/equipment/bank and places this kit in inventory with exactly 25 bank coins. No hammer is listed in the source kit.",
+      "One 'shrimps' item represents the source couple of shrimp; it is not two inventory items.",
+      "Keep all earned skill XP, Learning the Ropes' 1 QP and completion. Do not reset skills to an invented fixed departure level.",
+      "Replaying teleport completion, reconnecting or re-reading reward UI must never reapply reconciliation to mainland possessions."
+    ],
+    "event_ref": "event.teleport.completed",
+    "family": "tutorial",
+    "guard": {
+      "all": [
+        {
+          "op": "eq",
+          "path": "state.tutorial.departure_authorized",
+          "value": true
+        },
+        {
+          "op": "eq",
+          "path": "state.quests.learning_the_ropes.status",
+          "value": "completed"
+        },
+        {
+          "op": "eq",
+          "path": "state.tutorial.departed",
+          "value": false
+        },
+        {
+          "op": "eq",
+          "path": "event.destination_matches_experience",
+          "value": true
+        }
+      ]
+    },
+    "id": "rule.tutorial.departure",
+    "kit": [
+      {
+        "item_ref": "item.axe.bronze",
+        "quantity": 1
+      },
+      {
+        "item_ref": "item.pickaxe.bronze",
+        "quantity": 1
+      },
+      {
+        "item_ref": "item.tinderbox",
+        "quantity": 1
+      },
+      {
+        "item_ref": "item.fishing_net.small",
+        "quantity": 1
+      },
+      {
+        "item_ref": "item.shrimps.cooked",
+        "quantity": 1
+      },
+      {
+        "item_ref": "item.dagger.bronze",
+        "quantity": 1
+      },
+      {
+        "item_ref": "item.sword.bronze",
+        "quantity": 1
+      },
+      {
+        "item_ref": "item.shield.wooden",
+        "quantity": 1
+      },
+      {
+        "item_ref": "item.shortbow",
+        "quantity": 1
+      },
+      {
+        "item_ref": "item.arrow.bronze",
+        "quantity": 25
+      },
+      {
+        "item_ref": "item.rune.air",
+        "quantity": 25
+      },
+      {
+        "item_ref": "item.rune.mind",
+        "quantity": 15
+      },
+      {
+        "item_ref": "item.bucket",
+        "quantity": 1
+      },
+      {
+        "item_ref": "item.pot",
+        "quantity": 1
+      },
+      {
+        "item_ref": "item.bread",
+        "quantity": 1
+      },
+      {
+        "item_ref": "item.rune.water",
+        "quantity": 6
+      },
+      {
+        "item_ref": "item.rune.earth",
+        "quantity": 4
+      },
+      {
+        "item_ref": "item.rune.body",
+        "quantity": 2
+      }
+    ],
+    "ledger_key": "tutorial_departure_v1"
+  },
+  "initial_state": {
+    "account": {
+      "appearance_confirmed": false,
+      "basis": {
+        "classification": "verified_reference",
+        "source_refs": [
+          "source.wiki.learning_the_ropes",
+          "source.wiki.tutorial_transcript"
+        ]
+      },
+      "experience_choice_ref": null,
+      "membership": false,
+      "mode": "normal"
+    },
+    "bank": {
+      "base_capacity": 400,
+      "basis": {
+        "assumption_refs": [
+          "assumption.fresh_containers"
+        ],
+        "classification": "assumption",
+        "source_refs": [
+          "source.wiki.bank",
+          "source.wiki.learning_the_ropes"
+        ]
+      },
+      "first_visible_contents": [
+        {
+          "item_ref": "item.coins",
+          "quantity": 25
+        }
+      ],
+      "items": [],
+      "note": "No Jagex-account/Authenticator/PIN bonus is silently awarded to a ClubScape account. Base 400 is source-backed; identity-provider bonus mapping is outside these mechanics.",
+      "security_bonus_slots": 0,
+      "seed_claimed": false,
+      "seed_entitlement_ref": "grant.tutorial.bank_coins"
+    },
+    "death": {
+      "basis": {
+        "classification": "verified_reference",
+        "source_refs": [
+          "source.wiki.death_dialogue",
+          "source.wiki.grave"
+        ]
+      },
+      "food_supply_pile_setting": null,
+      "grave": null,
+      "note": "Food-supply-pile default is not observed. Both source settings are supported in activities; tests select the setting explicitly.",
+      "office_items": [],
+      "topics": {
+        "fees": false,
+        "kept_items": false,
+        "timer": false
+      },
+      "tutorial_seen": false
+    },
+    "derived": {
+      "basis": {
+        "classification": "inference",
+        "source_refs": [
+          "source.wiki.skills",
+          "source.wiki.hitpoints"
+        ]
+      },
+      "total_level": 33
+    },
+    "equipment": {
+      "appearance_is_not_equipment": true,
+      "basis": {
+        "assumption_refs": [
+          "assumption.fresh_containers"
+        ],
+        "classification": "assumption",
+        "source_refs": [
+          "source.wiki.equipment",
+          "source.wiki.learning_the_ropes"
+        ]
+      },
+      "slots": {
+        "slot.ammo": null,
+        "slot.body": null,
+        "slot.cape": null,
+        "slot.feet": null,
+        "slot.hands": null,
+        "slot.head": null,
+        "slot.legs": null,
+        "slot.neck": null,
+        "slot.ring": null,
+        "slot.shield": null,
+        "slot.weapon": null
+      }
+    },
+    "experience_branch_basis": {
+      "classification": "verified_reference",
+      "source_refs": [
+        "source.wiki.tutorial_transcript",
+        "source.wiki.tutorial_island",
+        "source.wiki.adventure_paths"
+      ]
+    },
+    "experience_branch_scope": "All choices require the same complete tutorial. Jon's introduction is triggered for eligible arrivals; starting Adventure Paths is optional, never a prerequisite or a silent extra reward. The source has A/B path variants, so do not choose a random rewards program.",
+    "experience_branches": [
+      {
+        "adventure_paths_eligible": true,
+        "arrival_npc_ref": "npc.adventurer_jon",
+        "arrival_ref": "location.lumbridge.jon_arrival",
+        "choice_ref": "choice.experience.brand_new",
+        "source_option": "I'm brand new! This is my first time here."
+      },
+      {
+        "adventure_paths_eligible": true,
+        "arrival_npc_ref": "npc.adventurer_jon",
+        "arrival_ref": "location.lumbridge.jon_arrival",
+        "choice_ref": "choice.experience.returning",
+        "source_option": "I've played in the past, but not recently."
+      },
+      {
+        "adventure_paths_eligible": false,
+        "arrival_npc_ref": "npc.lumbridge_guide",
+        "arrival_ref": "location.lumbridge.castle_arrival",
+        "choice_ref": "choice.experience.experienced",
+        "source_option": "I'm an experienced player."
+      }
+    ],
+    "id": "contract.journey.initial_state",
+    "inventory": {
+      "basis": {
+        "assumption_refs": [
+          "assumption.fresh_containers"
+        ],
+        "classification": "assumption",
+        "source_refs": [
+          "source.wiki.inventory",
+          "source.wiki.tutorial_transcript"
+        ]
+      },
+      "items": [],
+      "slot_count": 28
+    },
+    "mill": {
+      "basis": {
+        "assumption_refs": [
+          "assumption.mill_ownership_overflow"
+        ],
+        "classification": "assumption",
+        "source_refs": [
+          "source.wiki.mill_lane_mill"
+        ]
+      },
+      "flour_units": 0,
+      "hopper": null
+    },
+    "persistence": {
+      "acknowledged_operations": "Persist atomically before acknowledgement. Reconnect/server restart never reseeds normal-account defaults.",
+      "basis": {
+        "classification": "engineering_contract",
+        "source_refs": [
+          "source.project.prompt"
+        ]
+      },
+      "preserve": [
+        "skills",
+        "inventory order",
+        "equipment",
+        "bank",
+        "tutorial stage/flags/unlocks",
+        "experience choice",
+        "quests/delivered bits",
+        "grant/reward ledgers",
+        "mill counts",
+        "death tutorial topics/grave state",
+        "world position"
+      ]
+    },
+    "profile_ref": "profile.osrs.current_normal_f2p",
+    "quest_points": 0,
+    "quests": [
+      {
+        "basis": {
+          "assumption_refs": [
+            "assumption.quest_tracking_start"
+          ],
+          "classification": "assumption",
+          "source_refs": [
+            "source.wiki.learning_the_ropes"
+          ]
+        },
+        "id": "quest.learning_the_ropes",
+        "reward_claimed": false,
+        "status": "not_started"
+      },
+      {
+        "basis": {
+          "classification": "verified_reference",
+          "source_refs": [
+            "source.wiki.cooks_transcript",
+            "source.wiki.cooks_journal"
+          ]
+        },
+        "delivered": {
+          "egg": false,
+          "flour": false,
+          "milk": false
+        },
+        "id": "quest.cooks_assistant",
+        "reward_claimed": false,
+        "status": "not_started"
+      }
+    ],
+    "schema_version": 1,
+    "skills": [
+      {
+        "base_level": 1,
+        "basis": {
+          "classification": "verified_reference",
+          "source_refs": [
+            "source.wiki.skills",
+            "source.wiki.hitpoints"
+          ]
+        },
+        "current_level": 1,
+        "id": "skill.attack",
+        "xp_tenths": 0
+      },
+      {
+        "base_level": 1,
+        "basis": {
+          "classification": "verified_reference",
+          "source_refs": [
+            "source.wiki.skills",
+            "source.wiki.hitpoints"
+          ]
+        },
+        "current_level": 1,
+        "id": "skill.strength",
+        "xp_tenths": 0
+      },
+      {
+        "base_level": 1,
+        "basis": {
+          "classification": "verified_reference",
+          "source_refs": [
+            "source.wiki.skills",
+            "source.wiki.hitpoints"
+          ]
+        },
+        "current_level": 1,
+        "id": "skill.defence",
+        "xp_tenths": 0
+      },
+      {
+        "base_level": 1,
+        "basis": {
+          "classification": "verified_reference",
+          "source_refs": [
+            "source.wiki.skills",
+            "source.wiki.hitpoints"
+          ]
+        },
+        "current_level": 1,
+        "id": "skill.ranged",
+        "xp_tenths": 0
+      },
+      {
+        "base_level": 1,
+        "basis": {
+          "classification": "verified_reference",
+          "source_refs": [
+            "source.wiki.skills",
+            "source.wiki.hitpoints"
+          ]
+        },
+        "current_level": 1,
+        "id": "skill.prayer",
+        "xp_tenths": 0
+      },
+      {
+        "base_level": 1,
+        "basis": {
+          "classification": "verified_reference",
+          "source_refs": [
+            "source.wiki.skills",
+            "source.wiki.hitpoints"
+          ]
+        },
+        "current_level": 1,
+        "id": "skill.magic",
+        "xp_tenths": 0
+      },
+      {
+        "base_level": 1,
+        "basis": {
+          "classification": "verified_reference",
+          "source_refs": [
+            "source.wiki.skills",
+            "source.wiki.hitpoints"
+          ]
+        },
+        "current_level": 1,
+        "id": "skill.runecraft",
+        "xp_tenths": 0
+      },
+      {
+        "base_level": 1,
+        "basis": {
+          "classification": "verified_reference",
+          "source_refs": [
+            "source.wiki.skills",
+            "source.wiki.hitpoints"
+          ]
+        },
+        "current_level": 1,
+        "id": "skill.construction",
+        "xp_tenths": 0
+      },
+      {
+        "base_level": 10,
+        "basis": {
+          "classification": "verified_reference",
+          "source_refs": [
+            "source.wiki.skills",
+            "source.wiki.hitpoints"
+          ]
+        },
+        "current_level": 10,
+        "id": "skill.hitpoints",
+        "xp_tenths": 11540
+      },
+      {
+        "base_level": 1,
+        "basis": {
+          "classification": "verified_reference",
+          "source_refs": [
+            "source.wiki.skills",
+            "source.wiki.hitpoints"
+          ]
+        },
+        "current_level": 1,
+        "id": "skill.agility",
+        "xp_tenths": 0
+      },
+      {
+        "base_level": 1,
+        "basis": {
+          "classification": "verified_reference",
+          "source_refs": [
+            "source.wiki.skills",
+            "source.wiki.hitpoints"
+          ]
+        },
+        "current_level": 1,
+        "id": "skill.herblore",
+        "xp_tenths": 0
+      },
+      {
+        "base_level": 1,
+        "basis": {
+          "classification": "verified_reference",
+          "source_refs": [
+            "source.wiki.skills",
+            "source.wiki.hitpoints"
+          ]
+        },
+        "current_level": 1,
+        "id": "skill.thieving",
+        "xp_tenths": 0
+      },
+      {
+        "base_level": 1,
+        "basis": {
+          "classification": "verified_reference",
+          "source_refs": [
+            "source.wiki.skills",
+            "source.wiki.hitpoints"
+          ]
+        },
+        "current_level": 1,
+        "id": "skill.crafting",
+        "xp_tenths": 0
+      },
+      {
+        "base_level": 1,
+        "basis": {
+          "classification": "verified_reference",
+          "source_refs": [
+            "source.wiki.skills",
+            "source.wiki.hitpoints"
+          ]
+        },
+        "current_level": 1,
+        "id": "skill.fletching",
+        "xp_tenths": 0
+      },
+      {
+        "base_level": 1,
+        "basis": {
+          "classification": "verified_reference",
+          "source_refs": [
+            "source.wiki.skills",
+            "source.wiki.hitpoints"
+          ]
+        },
+        "current_level": 1,
+        "id": "skill.slayer",
+        "xp_tenths": 0
+      },
+      {
+        "base_level": 1,
+        "basis": {
+          "classification": "verified_reference",
+          "source_refs": [
+            "source.wiki.skills",
+            "source.wiki.hitpoints"
+          ]
+        },
+        "current_level": 1,
+        "id": "skill.hunter",
+        "xp_tenths": 0
+      },
+      {
+        "base_level": 1,
+        "basis": {
+          "classification": "verified_reference",
+          "source_refs": [
+            "source.wiki.skills",
+            "source.wiki.hitpoints"
+          ]
+        },
+        "current_level": 1,
+        "id": "skill.mining",
+        "xp_tenths": 0
+      },
+      {
+        "base_level": 1,
+        "basis": {
+          "classification": "verified_reference",
+          "source_refs": [
+            "source.wiki.skills",
+            "source.wiki.hitpoints"
+          ]
+        },
+        "current_level": 1,
+        "id": "skill.smithing",
+        "xp_tenths": 0
+      },
+      {
+        "base_level": 1,
+        "basis": {
+          "classification": "verified_reference",
+          "source_refs": [
+            "source.wiki.skills",
+            "source.wiki.hitpoints"
+          ]
+        },
+        "current_level": 1,
+        "id": "skill.fishing",
+        "xp_tenths": 0
+      },
+      {
+        "base_level": 1,
+        "basis": {
+          "classification": "verified_reference",
+          "source_refs": [
+            "source.wiki.skills",
+            "source.wiki.hitpoints"
+          ]
+        },
+        "current_level": 1,
+        "id": "skill.cooking",
+        "xp_tenths": 0
+      },
+      {
+        "base_level": 1,
+        "basis": {
+          "classification": "verified_reference",
+          "source_refs": [
+            "source.wiki.skills",
+            "source.wiki.hitpoints"
+          ]
+        },
+        "current_level": 1,
+        "id": "skill.firemaking",
+        "xp_tenths": 0
+      },
+      {
+        "base_level": 1,
+        "basis": {
+          "classification": "verified_reference",
+          "source_refs": [
+            "source.wiki.skills",
+            "source.wiki.hitpoints"
+          ]
+        },
+        "current_level": 1,
+        "id": "skill.woodcutting",
+        "xp_tenths": 0
+      },
+      {
+        "base_level": 1,
+        "basis": {
+          "classification": "verified_reference",
+          "source_refs": [
+            "source.wiki.skills",
+            "source.wiki.hitpoints"
+          ]
+        },
+        "current_level": 1,
+        "id": "skill.farming",
+        "xp_tenths": 0
+      },
+      {
+        "base_level": 1,
+        "basis": {
+          "classification": "verified_reference",
+          "source_refs": [
+            "source.wiki.skills",
+            "source.wiki.hitpoints"
+          ]
+        },
+        "current_level": 1,
+        "id": "skill.sailing",
+        "xp_tenths": 0
+      }
+    ],
+    "tutorial": {
+      "basis": {
+        "classification": "inference",
+        "source_refs": [
+          "source.wiki.tutorial_transcript"
+        ]
+      },
+      "chicken_cast": false,
+      "departed": false,
+      "departure_authorized": false,
+      "grant_ledger": [],
+      "melee_kill": false,
+      "ranged_kill": false,
+      "reward_ledger": [],
+      "source_numeric_progress": null,
+      "stage_ref": "stage.tutorial.appearance"
+    },
+    "ui": {
+      "basis": {
+        "assumption_refs": [
+          "assumption.initial_ui_defaults"
+        ],
+        "classification": "assumption",
+        "source_refs": [
+          "source.wiki.tutorial_transcript"
+        ]
+      },
+      "initially_available_refs": [
+        "ui.appearance",
+        "ui.logout"
+      ],
+      "unlock_policy": "tutorial.json stage.ui_unlock_refs; never treat unavailable tabs as successful opens",
+      "visible_lesson_ref": "ui.appearance"
+    },
+    "vitals": {
+      "basis": {
+        "assumption_refs": [
+          "assumption.initial_ui_defaults"
+        ],
+        "classification": "assumption",
+        "source_refs": [
+          "source.wiki.hitpoints",
+          "source.wiki.prayer",
+          "source.wiki.energy"
+        ]
+      },
+      "hitpoints": 10,
+      "prayer_points": 1,
+      "run_enabled": false,
+      "run_energy_units": 10000
+    },
+    "world": {
+      "basis": {
+        "classification": "verified_reference",
+        "source_refs": [
+          "source.wiki.learning_the_ropes"
+        ]
+      },
+      "binding_ref": "binding.world.source_layout",
+      "camera": null,
+      "location_ref": "location.tutorial.start_house",
+      "tile": null
+    }
+  },
+  "quest_rewards": [
+    {
+      "basis": {
+        "classification": "verified_reference",
+        "source_refs": [
+          "source.wiki.learning_the_ropes",
+          "source.wiki.tutorial_transcript",
+          "source.wiki.energy"
+        ]
+      },
+      "claim_key": "quest.learning_the_ropes",
+      "guard": {
+        "all": [
+          {
+            "op": "eq",
+            "path": "state.quests.learning_the_ropes.status",
+            "value": "completed"
+          },
+          {
+            "op": "eq",
+            "path": "state.tutorial.chicken_cast",
+            "value": true
+          },
+          {
+            "op": "eq",
+            "path": "state.rewards.learning_the_ropes",
+            "value": false
+          }
+        ]
+      },
+      "id": "reward.learning_the_ropes",
+      "items": [],
+      "quest_points": 1,
+      "quest_ref": "quest.learning_the_ropes",
+      "sets": {
+        "state.rewards.learning_the_ropes": true,
+        "state.vitals.run_energy_units": 10000
+      },
+      "unlocks": [
+        "mainland departure through authorized Home Teleport"
+      ],
+      "xp_awards": []
+    },
+    {
+      "basis": {
+        "classification": "verified_reference",
+        "source_refs": [
+          "source.wiki.cooks_assistant",
+          "source.wiki.cooks_journal",
+          "source.wiki.energy"
+        ]
+      },
+      "claim_key": "quest.cooks_assistant",
+      "guard": {
+        "all": [
+          {
+            "op": "eq",
+            "path": "state.quests.cooks_assistant.status",
+            "value": "completed"
+          },
+          {
+            "op": "eq",
+            "path": "state.quests.cooks_assistant.delivered.milk",
+            "value": true
+          },
+          {
+            "op": "eq",
+            "path": "state.quests.cooks_assistant.delivered.flour",
+            "value": true
+          },
+          {
+            "op": "eq",
+            "path": "state.quests.cooks_assistant.delivered.egg",
+            "value": true
+          },
+          {
+            "op": "eq",
+            "path": "state.rewards.cooks_assistant",
+            "value": false
+          }
+        ]
+      },
+      "id": "reward.cooks_assistant",
+      "items": [],
+      "quest_points": 1,
+      "quest_ref": "quest.cooks_assistant",
+      "sets": {
+        "state.rewards.cooks_assistant": true,
+        "state.vitals.run_energy_units": 10000
+      },
+      "unlocks": [
+        "Cook-o-matic 100 range permission"
+      ],
+      "xp_awards": [
+        {
+          "skill_ref": "skill.cooking",
+          "xp_tenths": 3000
+        }
+      ]
+    }
+  ],
+  "recovery_handlers": [
+    {
+      "basis": {
+        "assumption_refs": [
+          "assumption.missing_tutorial_tools"
+        ],
+        "classification": "assumption",
+        "source_refs": [
+          "source.wiki.tutorial_transcript"
+        ]
+      },
+      "event_ref": "event.dialogue.completed",
+      "id": "recovery.tutorial.tools",
+      "missing_items": [
+        {
+          "item_ref": "item.fishing_net.small",
+          "quantity": 1
+        },
+        {
+          "item_ref": "item.axe.bronze",
+          "quantity": 1
+        },
+        {
+          "item_ref": "item.tinderbox",
+          "quantity": 1
+        },
+        {
+          "item_ref": "item.pickaxe.bronze",
+          "quantity": 1
+        }
+      ],
+      "policy": "Return only each missing unlocked tool. Full inventory: explicit refusal, unchanged stage; nearby dropped tools may be picked up first.",
+      "scope": "after original grant unlock, before departure, owning instructor reachable"
+    },
+    {
+      "basis": {
+        "classification": "verified_reference",
+        "source_refs": [
+          "source.wiki.tutorial_transcript"
+        ]
+      },
+      "event_ref": "event.dialogue.completed",
+      "grant_refs": [
+        "grant.tutorial.chef_ingredients"
+      ],
+      "id": "recovery.tutorial.ingredients",
+      "policy": "Replenish only missing flour/water; actually remake dough and bake. Losing inputs never completes the lesson.",
+      "scope": "Master Chef lesson, no dough/bread; even if stage is bake_bread and dough was lost"
+    },
+    {
+      "basis": {
+        "assumption_refs": [
+          "assumption.missing_tutorial_tools"
+        ],
+        "classification": "assumption",
+        "source_refs": [
+          "source.wiki.tutorial_transcript"
+        ]
+      },
+      "id": "recovery.tutorial.ore_bar_dagger",
+      "policy": "Unlocked earlier activities remain usable on their reachable tutorial objects until departure; a lost ore/bar/dagger must be mined/smelted/smithed again. Reopen smithing UI if needed. Hammer replacement does not mint a bar. Last-resort instructor dagger replacement is provisional, not used by ordinary journey fixtures.",
+      "rule_refs": [
+        "rule.mining.tin",
+        "rule.mining.copper",
+        "rule.smelting.bronze",
+        "rule.smithing.bronze_dagger"
+      ]
+    },
+    {
+      "basis": {
+        "classification": "verified_reference",
+        "source_refs": [
+          "source.wiki.tutorial_transcript"
+        ]
+      },
+      "event_ref": "event.dialogue.completed",
+      "grant_refs": [
+        "grant.tutorial.melee_gear",
+        "grant.tutorial.ranged_gear"
+      ],
+      "id": "recovery.tutorial.combat",
+      "policy": "Count equipped items as owned; fill only missing gear and arrows up to 50; never grant after every attack. One-slot partial grants persist across retries.",
+      "scope": "after original respective lesson grant, before corresponding required kill"
+    },
+    {
+      "basis": {
+        "assumption_refs": [
+          "assumption.multi_item_grant_capacity"
+        ],
+        "classification": "assumption",
+        "source_refs": [
+          "source.wiki.tutorial_transcript"
+        ]
+      },
+      "event_ref": "event.dialogue.completed",
+      "grant_refs": [
+        "grant.tutorial.runes"
+      ],
+      "id": "recovery.tutorial.runes",
+      "policy": "If air>=1 and mind>=1, instructor refuses more. Otherwise top up each to 5 if resulting stacks fit. Exact asymmetric depleted-rune count is not in source; do not label the top-up as verified.",
+      "scope": "after rune lesson, before departure"
+    }
+  ],
+  "selection_policy": "Source assumptions/conflicts are carried verbatim; none is silently promoted to approval or an observed result.",
+  "tutorial_grants": [
+    {
+      "basis": {
+        "classification": "verified_reference",
+        "source_refs": [
+          "source.wiki.tutorial_transcript"
+        ]
+      },
+      "id": "grant.tutorial.net",
+      "items": [
+        {
+          "item_ref": "item.fishing_net.small",
+          "quantity": 1
+        }
+      ],
+      "npc_ref": "npc.survival_expert",
+      "policy": "one_initial; missing-only replacement per recovery policy"
+    },
+    {
+      "basis": {
+        "assumption_refs": [
+          "assumption.multi_item_grant_capacity"
+        ],
+        "classification": "assumption",
+        "source_refs": [
+          "source.wiki.tutorial_transcript"
+        ]
+      },
+      "id": "grant.tutorial.survival_tools",
+      "items": [
+        {
+          "item_ref": "item.axe.bronze",
+          "quantity": 1
+        },
+        {
+          "item_ref": "item.tinderbox",
+          "quantity": 1
+        }
+      ],
+      "npc_ref": "npc.survival_expert",
+      "policy": "one_initial_each; all-or-none unless both missing replacements fit"
+    },
+    {
+      "basis": {
+        "classification": "verified_reference",
+        "source_refs": [
+          "source.wiki.tutorial_transcript"
+        ]
+      },
+      "id": "grant.tutorial.chef_ingredients",
+      "items": [
+        {
+          "item_ref": "item.flour.pot",
+          "quantity": 1
+        },
+        {
+          "item_ref": "item.water.bucket",
+          "quantity": 1
+        }
+      ],
+      "npc_ref": "npc.master_chef",
+      "policy": "missing_each_only while dough/bread absent and lesson not exited; never duplicate the present ingredient"
+    },
+    {
+      "basis": {
+        "classification": "verified_reference",
+        "source_refs": [
+          "source.wiki.tutorial_transcript"
+        ]
+      },
+      "id": "grant.tutorial.pickaxe",
+      "items": [
+        {
+          "item_ref": "item.pickaxe.bronze",
+          "quantity": 1
+        }
+      ],
+      "npc_ref": "npc.mining_instructor",
+      "policy": "one_initial; missing-only replacement per recovery policy"
+    },
+    {
+      "basis": {
+        "classification": "verified_reference",
+        "source_refs": [
+          "source.wiki.tutorial_transcript"
+        ]
+      },
+      "id": "grant.tutorial.hammer",
+      "items": [
+        {
+          "item_ref": "item.hammer",
+          "quantity": 1
+        }
+      ],
+      "npc_ref": "npc.mining_instructor",
+      "policy": "one_if_missing_in_inventory_and_free_slot; repeat dialogue supported after dagger"
+    },
+    {
+      "basis": {
+        "classification": "verified_reference",
+        "source_refs": [
+          "source.wiki.tutorial_transcript"
+        ]
+      },
+      "id": "grant.tutorial.melee_gear",
+      "items": [
+        {
+          "item_ref": "item.sword.bronze",
+          "quantity": 1
+        },
+        {
+          "item_ref": "item.shield.wooden",
+          "quantity": 1
+        }
+      ],
+      "npc_ref": "npc.combat_instructor",
+      "policy": "missing_each_over_inventory_and_equipment; sword_first; 0 slots=none,1 slot=first_missing,2 slots=both_missing"
+    },
+    {
+      "basis": {
+        "classification": "verified_reference",
+        "source_refs": [
+          "source.wiki.tutorial_transcript"
+        ]
+      },
+      "id": "grant.tutorial.ranged_gear",
+      "items": [
+        {
+          "item_ref": "item.shortbow",
+          "quantity": 1
+        },
+        {
+          "item_ref": "item.arrow.bronze",
+          "quantity": 50
+        }
+      ],
+      "npc_ref": "npc.combat_instructor",
+      "policy": "missing_bow_first; top_up_total_inventory_plus_equipped_arrows_to_50; 1 free slot with neither grants bow_only; existing arrow stack needs no free slot"
+    },
+    {
+      "basis": {
+        "assumption_refs": [
+          "assumption.multi_item_grant_capacity"
+        ],
+        "classification": "assumption",
+        "source_refs": [
+          "source.wiki.tutorial_transcript"
+        ]
+      },
+      "id": "grant.tutorial.runes",
+      "items": [
+        {
+          "item_ref": "item.rune.air",
+          "quantity": 5
+        },
+        {
+          "item_ref": "item.rune.mind",
+          "quantity": 5
+        }
+      ],
+      "npc_ref": "npc.magic_instructor",
+      "policy": "initial_5_each; replacement_if_cannot_pay_one_cast; provisional_top_up_each_to_5_not_add_5"
+    },
+    {
+      "basis": {
+        "assumption_refs": [
+          "assumption.fresh_containers"
+        ],
+        "classification": "assumption",
+        "source_refs": [
+          "source.wiki.learning_the_ropes"
+        ]
+      },
+      "id": "grant.tutorial.bank_coins",
+      "items": [
+        {
+          "item_ref": "item.coins",
+          "quantity": 25
+        }
+      ],
+      "npc_ref": null,
+      "policy": "bank_only; entitlement_once_before_first_visible_open; no_reseed_on_close/reopen"
+    }
+  ]
+}

@@ -1,0 +1,572 @@
+{
+  "aggregate_sha256": "9ffbb5434bef41eda44a55c71c8fc74d52e6b7fc4b696b4e8a0096b33bac25ec",
+  "inputs": [
+    {
+      "bytes": 1808403,
+      "path": "assets/manifests/osrs/cache2695-full-bundle.json.gz",
+      "sha256": "5d55cdeef8d4e1af1a1215c19d606a3aace0c10c47fc280559aaf8cfb13dbd70"
+    },
+    {
+      "bytes": 121738,
+      "path": "assets/manifests/osrs/cache2695-published.json",
+      "sha256": "84f48642594a6805f5f89c341d178345b7b0ca33f056242f4cb624517cafdb87"
+    },
+    {
+      "bytes": 110186,
+      "path": "assets/source/osrs/cache2695/collections/frame.json.gz",
+      "sha256": "3c2118bcb5b1b36a9cb22ba598c6e62ea7a108e51511a773496c8aa3214644c9"
+    },
+    {
+      "bytes": 3715,
+      "path": "assets/source/osrs/cache2695/collections/item.json.gz",
+      "sha256": "e82cd4af6e9c626473ca19f494b78356dc5e3ebf38353a603b07b3168481bff8"
+    },
+    {
+      "bytes": 2729,
+      "path": "assets/source/osrs/cache2695/collections/npc.json.gz",
+      "sha256": "afabe3081a27bd69dc87f759d152b89cb8fb8ceee103ae63216580ed4d112ba9"
+    },
+    {
+      "bytes": 138361,
+      "path": "assets/source/osrs/cache2695/collections/object.json.gz",
+      "sha256": "d8b0212b1fa5fe34dff300f731de356f51562b58f08d7512c74fe560c4fff021"
+    },
+    {
+      "bytes": 1265,
+      "path": "assets/source/osrs/cache2695/collections/overlay.json.gz",
+      "sha256": "1c3211c8f5814c56e8c9f3dbcb38970cfc838cd65bdbda06fe19e1e3dcfa6fac"
+    },
+    {
+      "bytes": 7738,
+      "path": "assets/source/osrs/cache2695/collections/sequence.json.gz",
+      "sha256": "a37a35e05256558ac4edc7b228a34143377119af873de8f4f4bc2037665f6845"
+    },
+    {
+      "bytes": 13922,
+      "path": "assets/source/osrs/cache2695/collections/skeleton.json.gz",
+      "sha256": "28eec5b2f17468ad61dceb442de83ec5bccf4418abbb07c772413b68a083c7c6"
+    },
+    {
+      "bytes": 37073,
+      "path": "assets/source/osrs/cache2695/collections/sound.json.gz",
+      "sha256": "5108be2aa94547d1d4a50737b921d30d1684655479c8a77c7d2ac6f2f8bd6bf3"
+    },
+    {
+      "bytes": 679,
+      "path": "assets/source/osrs/cache2695/collections/texture.json.gz",
+      "sha256": "a796b8993d582b76dc88fc3e050829ea930f52001136da6ddbdf43cedf5c45d0"
+    },
+    {
+      "bytes": 570,
+      "path": "assets/source/osrs/cache2695/collections/underlay.json.gz",
+      "sha256": "b78996885a8664d12ea6e2321621e8bd17fd30a4356673623e3bc5168f919736"
+    },
+    {
+      "bytes": 9176,
+      "path": "assets/source/osrs/cache2695/world/11822.json.gz",
+      "sha256": "78e75c07460af2452d0895da9a1ada6a922915d3c808b3b46f64ee86600c348a"
+    },
+    {
+      "bytes": 16294,
+      "path": "assets/source/osrs/cache2695/world/11823.json.gz",
+      "sha256": "3b4ebc18dca855cb002285e28385f1acd40066d7deef8880c65b07bee60aa7c9"
+    },
+    {
+      "bytes": 5612,
+      "path": "assets/source/osrs/cache2695/world/11824.json.gz",
+      "sha256": "ef612dbcca96086db5589aef847c9b9096e2dc92d65352a24bae6e520326daf4"
+    },
+    {
+      "bytes": 20333,
+      "path": "assets/source/osrs/cache2695/world/11825.json.gz",
+      "sha256": "17e28ba68d46d092ccb82b3c131111816e91157ec6b81db90cce85bd164c30a1"
+    },
+    {
+      "bytes": 35660,
+      "path": "assets/source/osrs/cache2695/world/11826.json.gz",
+      "sha256": "20fb37e0c06751e9f4a6baa44b959dc1919a8a3b65c3467c0b55a69b08c7ae19"
+    },
+    {
+      "bytes": 19327,
+      "path": "assets/source/osrs/cache2695/world/12078.json.gz",
+      "sha256": "4d0a78c3ac4168b9ab294bf5615bb23b40119b8936be756edb4ab71f7666d833"
+    },
+    {
+      "bytes": 5842,
+      "path": "assets/source/osrs/cache2695/world/12079.json.gz",
+      "sha256": "09950fa89679d88838d7ed6e126480dc3f5e2544862a46fd8a08162c93e48001"
+    },
+    {
+      "bytes": 9734,
+      "path": "assets/source/osrs/cache2695/world/12080.json.gz",
+      "sha256": "46a29e55a35737ff9b21fd02d1acf17cef819d0b6ef333865299d544f9df5510"
+    },
+    {
+      "bytes": 16274,
+      "path": "assets/source/osrs/cache2695/world/12081.json.gz",
+      "sha256": "f0e8b3cbb0e21c0f2414b2c765bb13ff18df50e684163cb81cf7d812706dc6ef"
+    },
+    {
+      "bytes": 28385,
+      "path": "assets/source/osrs/cache2695/world/12082.json.gz",
+      "sha256": "bd29cb976ea01e0fcc1f03b1bcb22fdd55d26398143df32d54caf82e5e745e71"
+    },
+    {
+      "bytes": 1500,
+      "path": "assets/source/osrs/cache2695/world/12179.json.gz",
+      "sha256": "90ca12c6ff98ee8a977f898da86078c3f80766b2d33717b57385c6136088be33"
+    },
+    {
+      "bytes": 21052,
+      "path": "assets/source/osrs/cache2695/world/12180.json.gz",
+      "sha256": "8f9feb686fe9de47a558a56969c6964766a5e96522d98eeafb025de00e2b28ff"
+    },
+    {
+      "bytes": 32141,
+      "path": "assets/source/osrs/cache2695/world/12181.json.gz",
+      "sha256": "693dbb9ffc4c0fab19832889a1f2d4f2714ed989ee5ad51ab570bf3c3bbda1c5"
+    },
+    {
+      "bytes": 1935,
+      "path": "assets/source/osrs/cache2695/world/12334.json.gz",
+      "sha256": "ac69ca17bf88fba59b65ded02bcc03251693796398b25e9648ebc5c4e780ba54"
+    },
+    {
+      "bytes": 20081,
+      "path": "assets/source/osrs/cache2695/world/12335.json.gz",
+      "sha256": "fd7b3eb90ef6397aea808c4979ebac37329cc0fec10c12c41efab8ab44f4e3ea"
+    },
+    {
+      "bytes": 39088,
+      "path": "assets/source/osrs/cache2695/world/12336.json.gz",
+      "sha256": "9fd3f8f64aad06e3056920d698635c12ffb80bbc750e931bd7676d029a4e9dbb"
+    },
+    {
+      "bytes": 13831,
+      "path": "assets/source/osrs/cache2695/world/12337.json.gz",
+      "sha256": "3df58a0b839cb8c167a1e29438ef0185a3afecbcb2e4cc2d63f8febf390fae2d"
+    },
+    {
+      "bytes": 27058,
+      "path": "assets/source/osrs/cache2695/world/12338.json.gz",
+      "sha256": "57f432f60282bd2ece58cba5ab1d2ce837d4afb1cece14d40cd67e5c927b8e26"
+    },
+    {
+      "bytes": 32692,
+      "path": "assets/source/osrs/cache2695/world/12339.json.gz",
+      "sha256": "9e618383b62c2138b2344b6b6d5062567142e9e275143434b12f4090a698d8a2"
+    },
+    {
+      "bytes": 35033,
+      "path": "assets/source/osrs/cache2695/world/12340.json.gz",
+      "sha256": "af819d564f5369ea37e26ae74735c0cb4a6476d070d09d036c076cad33e40091"
+    },
+    {
+      "bytes": 33391,
+      "path": "assets/source/osrs/cache2695/world/12341.json.gz",
+      "sha256": "2171fe8197c8d1c46ccb117399e222608fe91cbcff453dd47fd8182202324a96"
+    },
+    {
+      "bytes": 2189,
+      "path": "assets/source/osrs/cache2695/world/12435.json.gz",
+      "sha256": "12d9b651a915b921fc46441ef05b72e4fbb80220e6f35003932902c910f8aed0"
+    },
+    {
+      "bytes": 36236,
+      "path": "assets/source/osrs/cache2695/world/12436.json.gz",
+      "sha256": "017c2fdd1a02e1375eade431c840e686096e34f17a026da5c59b55185202e1d1"
+    },
+    {
+      "bytes": 24663,
+      "path": "assets/source/osrs/cache2695/world/12437.json.gz",
+      "sha256": "9e01920b0c32d83c8a3e1900e8f55739b48afef5692a1a0b906984f75c10ebe9"
+    },
+    {
+      "bytes": 24437,
+      "path": "assets/source/osrs/cache2695/world/12590.json.gz",
+      "sha256": "45de2c1298e644bc494214e466ac267d22bc4e48626fa152a2c88d76af904e04"
+    },
+    {
+      "bytes": 16759,
+      "path": "assets/source/osrs/cache2695/world/12591.json.gz",
+      "sha256": "d3073dd02664af96619c89822843f2f85d06b19e55f9c348fab40ee89ea99725"
+    },
+    {
+      "bytes": 12622,
+      "path": "assets/source/osrs/cache2695/world/12592.json.gz",
+      "sha256": "935eafe01f6fea4e31557ead15cecbd0a7687c674cc4def715f9c0389b889ec3"
+    },
+    {
+      "bytes": 27137,
+      "path": "assets/source/osrs/cache2695/world/12593.json.gz",
+      "sha256": "e6211df67971cf896482a1efe022a54a679a4abd8f36c164be4f2f8327394a6d"
+    },
+    {
+      "bytes": 31026,
+      "path": "assets/source/osrs/cache2695/world/12594.json.gz",
+      "sha256": "b1214bfe8b87e7357b0c01c3e84b5303ea893769a5fd9bdaf9338ab39fb432d6"
+    },
+    {
+      "bytes": 31899,
+      "path": "assets/source/osrs/cache2695/world/12595.json.gz",
+      "sha256": "caf0135ddc519e03f6ed278850edd14d83a080ef35569c05bd9e36e60e62ff44"
+    },
+    {
+      "bytes": 31425,
+      "path": "assets/source/osrs/cache2695/world/12596.json.gz",
+      "sha256": "6f72913d2457e91cf1cae7fe5f7bbddea5520e7a3765dcad7fa53217e11c2c40"
+    },
+    {
+      "bytes": 37943,
+      "path": "assets/source/osrs/cache2695/world/12597.json.gz",
+      "sha256": "1fb1e01cae479696ee55838a0e1ce4d83fc0d27c68c25a51480d652cc09d46de"
+    },
+    {
+      "bytes": 2624,
+      "path": "assets/source/osrs/cache2695/world/12633.json.gz",
+      "sha256": "380585d7ed17110943be67e593e5adf952584547b46bc7b6667d029b327aafdb"
+    },
+    {
+      "bytes": 38664,
+      "path": "assets/source/osrs/cache2695/world/12693.json.gz",
+      "sha256": "017570c44bc9150d1062fff32d4cb1cbbfea7ef746237626e6f01045ef1ea5e8"
+    },
+    {
+      "bytes": 37791,
+      "path": "assets/source/osrs/cache2695/world/12694.json.gz",
+      "sha256": "52e03d49b2899c0a4fab0df5859637f7ced47109a2e1f15214a2c338d63b11ea"
+    },
+    {
+      "bytes": 21197,
+      "path": "assets/source/osrs/cache2695/world/12695.json.gz",
+      "sha256": "9a61c77130b962b1743a55d581a28044baaf13c13faf758bb8a66b9aaa8bd447"
+    },
+    {
+      "bytes": 29816,
+      "path": "assets/source/osrs/cache2695/world/12846.json.gz",
+      "sha256": "430f62c5fa43de3b3b14a2561d2b3c0e4e03ec29f31900810ad55b45028d13de"
+    },
+    {
+      "bytes": 18637,
+      "path": "assets/source/osrs/cache2695/world/12847.json.gz",
+      "sha256": "4769a04eb306542da8f55d7a391da0d50111085b8e1851e44a6325d7b4d11844"
+    },
+    {
+      "bytes": 18089,
+      "path": "assets/source/osrs/cache2695/world/12848.json.gz",
+      "sha256": "85b00c5f196e0f20f729401554194c8e4327f07d9e3101b6a59e017ebcc3c9d2"
+    },
+    {
+      "bytes": 26004,
+      "path": "assets/source/osrs/cache2695/world/12849.json.gz",
+      "sha256": "05674b54c1cff148f71b21f9aea5e7c65500cae90f2e4bbf7ecb11b68bb20897"
+    },
+    {
+      "bytes": 36664,
+      "path": "assets/source/osrs/cache2695/world/12850.json.gz",
+      "sha256": "b1e8c8e44273ffa23766131fcc31e645da5bb1f7d47fa1a893fcd7624c8f05e5"
+    },
+    {
+      "bytes": 29081,
+      "path": "assets/source/osrs/cache2695/world/12851.json.gz",
+      "sha256": "2a2c5c1c1c59763b4d75e22e0925035aa7debfa44897d59bb36b20ea8fe29b3f"
+    },
+    {
+      "bytes": 36063,
+      "path": "assets/source/osrs/cache2695/world/12852.json.gz",
+      "sha256": "023679333427e56a0cfe02d3b7423ea2f1e0b06e2797fea42a2fc6f7615a615d"
+    },
+    {
+      "bytes": 38454,
+      "path": "assets/source/osrs/cache2695/world/12853.json.gz",
+      "sha256": "a7890ecd30732e6773ddb7e4b50384ea4076ab69a916d6eb3c2cf7c2f1576a0c"
+    },
+    {
+      "bytes": 38717,
+      "path": "assets/source/osrs/cache2695/world/12949.json.gz",
+      "sha256": "3b97f6d1a6f8628b9e75864d7e152406d22bac46b178ebb37e7ef5231871187a"
+    },
+    {
+      "bytes": 40828,
+      "path": "assets/source/osrs/cache2695/world/12950.json.gz",
+      "sha256": "21d5648de7826a211796579de6e7205df9afd32b9aa1fa37d13f1c25a5a4f68a"
+    },
+    {
+      "bytes": 27569,
+      "path": "assets/source/osrs/cache2695/world/12951.json.gz",
+      "sha256": "8dcdae6cde436c10c0e9043080b895742dad3db209c3e766d1b03976ec75360f"
+    },
+    {
+      "bytes": 21958,
+      "path": "assets/source/osrs/cache2695/world/13104.json.gz",
+      "sha256": "79a5bba6c4b949f11ff0ad2ba3a523580942c935d627b0e22fbd8254954da7fd"
+    },
+    {
+      "bytes": 28237,
+      "path": "assets/source/osrs/cache2695/world/13105.json.gz",
+      "sha256": "fa3b7533dd262fbd85a9c4bb2933bd173ac52835ffc84423fa44446c44baeda3"
+    },
+    {
+      "bytes": 25186,
+      "path": "assets/source/osrs/cache2695/world/13106.json.gz",
+      "sha256": "bc363e367f5d156ab24e0d3b101a5535a691abac55aaef1bfa8bdaf67771c6c7"
+    },
+    {
+      "bytes": 21417,
+      "path": "assets/source/osrs/cache2695/world/13107.json.gz",
+      "sha256": "6d09bb327880ae52bed377ac1235e594819a3d063d5dafd2500fc4e7dc6ea3d4"
+    },
+    {
+      "bytes": 37504,
+      "path": "assets/source/osrs/cache2695/world/13108.json.gz",
+      "sha256": "82944ea27c49bfab6ad49e67b9667ebcc5e8116a66cb4be7f112b513cd6f8f40"
+    },
+    {
+      "bytes": 34776,
+      "path": "assets/source/osrs/cache2695/world/13109.json.gz",
+      "sha256": "1981d1fb0974bc8db58633fb3da70f03c30d698f38411f10a3f57366b39dc7a6"
+    },
+    {
+      "bytes": 18627,
+      "path": "assets/source/osrs/cache2695/world/13205.json.gz",
+      "sha256": "b867e33167f56b6d6dcf0af2c72a776c66437069e5f2142f1d73bb26d08234aa"
+    },
+    {
+      "bytes": 41448,
+      "path": "assets/source/osrs/cache2695/world/13206.json.gz",
+      "sha256": "a29dff269cfc0c4a1cdef67c3222c00fdf98211a469ddb91f04af9b61d6d3c18"
+    },
+    {
+      "bytes": 21696,
+      "path": "assets/source/osrs/cache2695/world/13360.json.gz",
+      "sha256": "6e768c05d6b8b7e3d58b75c3171484019344ab2fdeea76ca9ba90e751a159c35"
+    },
+    {
+      "bytes": 34459,
+      "path": "assets/source/osrs/cache2695/world/13361.json.gz",
+      "sha256": "253a37d61a3a878a8ac180f61eb411fa3b59c910e2796c8575d6a5ca49ebbd5a"
+    },
+    {
+      "bytes": 27743,
+      "path": "assets/source/osrs/cache2695/world/13362.json.gz",
+      "sha256": "f778a1fc8f6bba0da9c0c22e3a3f5d47d3448aa7f6b0df55947470d4105a295a"
+    },
+    {
+      "bytes": 31403,
+      "path": "assets/source/osrs/cache2695/world/13363.json.gz",
+      "sha256": "38576c4f0c9681003b563339b7326d0ef8e14033aaa093be0e15e69de13b8ece"
+    },
+    {
+      "bytes": 27402,
+      "path": "assets/source/osrs/cache2695/world/13364.json.gz",
+      "sha256": "b79ca6755fe85038ad5816f649558893188122ad8c036a3ad9644e9b3740c63c"
+    },
+    {
+      "bytes": 27568,
+      "path": "assets/source/osrs/cache2695/world/13365.json.gz",
+      "sha256": "90671bea204c9e583fa84e280d42b1203725aee6f0f4dba42a2c23357e3f3f7e"
+    },
+    {
+      "bytes": 11130,
+      "path": "crates/game-types/src/content.rs",
+      "sha256": "1b7675ade30a2a2f1812b051045b47f9113a68a9e84c64accd1eb660ac50f1bc"
+    },
+    {
+      "bytes": 826,
+      "path": "crates/game-types/src/error.rs",
+      "sha256": "34e1a16d3f664d589da055772efc5cae89cb6b0a1bf57878ad146435b3881df2"
+    },
+    {
+      "bytes": 3165,
+      "path": "crates/game-types/src/ids.rs",
+      "sha256": "440ad253fed0dabf45b679ac9340fe751736bb47e8290f028d88e84af7e4cb75"
+    },
+    {
+      "bytes": 5965,
+      "path": "crates/game-types/src/intent.rs",
+      "sha256": "cc801f4c0fd1527984761cac005ba3d3bb60ba13a8bbf6523c59f11f8328e3c3"
+    },
+    {
+      "bytes": 361,
+      "path": "crates/game-types/src/lib.rs",
+      "sha256": "0bbc1a86e230195e2ff5afeaf82ab463b214e496c81a679166a4662811167a9d"
+    },
+    {
+      "bytes": 9063,
+      "path": "crates/game-types/src/state.rs",
+      "sha256": "bc4a9b2e8de8aa22a421fa3bd1385e08c7222ce156f33812ef2a86542b7842ed"
+    },
+    {
+      "bytes": 9339,
+      "path": "research/current-source/extraction-contract.json",
+      "sha256": "a499a1cbef2af341193b35835b6da60420d1c06739a4c435e3e3bd03594ab59c"
+    },
+    {
+      "bytes": 4379,
+      "path": "research/current-source/m1-request.json",
+      "sha256": "53a20dc22a9c92c60f9ea3ad6b2345404d3e581199ebdde87fb627ae9e54cdef"
+    },
+    {
+      "bytes": 8853,
+      "path": "research/current-source/selection.json",
+      "sha256": "b1a8d65cec6143946dba7172bc29142c8aa47cc4383abaffefef5b2ea3b2b028"
+    },
+    {
+      "bytes": 127856,
+      "path": "research/journey-rules/activities.json",
+      "sha256": "a0eb67f8615642161f7ba05ecfda99bd1ba62102f5fc23f335a340df4645f6f7"
+    },
+    {
+      "bytes": 58266,
+      "path": "research/journey-rules/cooks-assistant.json",
+      "sha256": "ccb21048828e1d1a774f09c809d01aaf6900425bc52ea2e1bc471142ff4295cf"
+    },
+    {
+      "bytes": 24363,
+      "path": "research/journey-rules/decisions.json",
+      "sha256": "d5b77043a3d00d024231aca6fcc2360056a38d59718c281df173fdb09037553f"
+    },
+    {
+      "bytes": 42438,
+      "path": "research/journey-rules/expected-scenarios.json",
+      "sha256": "c9dc703ab7ad139d6df90791d13bcb3cbfcdd518973517e3bdabcbc93ba29a68"
+    },
+    {
+      "bytes": 14269,
+      "path": "research/journey-rules/initial-state.json",
+      "sha256": "3f6cefa5f68f226878df5286d1689c1ebe5a2fa28b4d6c5d0fd34a7741447ad3"
+    },
+    {
+      "bytes": 40250,
+      "path": "research/journey-rules/sources.json",
+      "sha256": "bf919e5d46e1dab02d7719f8caee0c1353d56006ba096679bc56dfe4fcba574d"
+    },
+    {
+      "bytes": 100089,
+      "path": "research/journey-rules/tutorial.json",
+      "sha256": "774789d1559f438f3db6036d831d4b341a093d77949d416ff9bc8bfe48d0087b"
+    },
+    {
+      "bytes": 2259,
+      "path": "research/journey-rules/validation-result.json",
+      "sha256": "2e3dc2551576554aa10a9bd923e1e1a459aeef9b0fee701c0a8bb0e36419058e"
+    },
+    {
+      "bytes": 30523,
+      "path": "research/journey-rules/vocabulary.json",
+      "sha256": "590d12348952c41dbbf9772a08537926bb6dfcda3c2a29bd4e881265a2313a6b"
+    },
+    {
+      "bytes": 29188,
+      "path": "research/m1-bindings/code-sources.json",
+      "sha256": "19e34244977f7f9d1f5316748689099cd49fd94711a825e3a223f5d22777f6e2"
+    },
+    {
+      "bytes": 13211,
+      "path": "research/m1-bindings/contract-gaps.json",
+      "sha256": "016dc3e0f6cd7cb62f59c24fe4213c02e2a2cedd3fb1437b30ad63800be91ee3"
+    },
+    {
+      "bytes": 15083,
+      "path": "research/m1-bindings/definitions.json.gz",
+      "sha256": "9836e98898794c9d99de4117efe2a6155603631fe10efb8fd4b56f68eb0d6f6a"
+    },
+    {
+      "bytes": 8662,
+      "path": "research/m1-bindings/selection.json",
+      "sha256": "6bcefbab16080632f9ce460ed8351614c550ae1a46202e00c8a9c63945233424"
+    },
+    {
+      "bytes": 43318,
+      "path": "research/m1-bindings/wiki-facts.json",
+      "sha256": "006bf33bfec4c5ebe5c4cc972fc362c5198fd64e001f56c65f20a86f20b0e19f"
+    },
+    {
+      "bytes": 19197,
+      "path": "research/m1-bindings/wiki-sources.json",
+      "sha256": "d691a9316238d85e14ad7197b2b83b358beb068543b24690d26f45a4a005674e"
+    },
+    {
+      "bytes": 4236,
+      "path": "tools/m1-content/DefinitionSupplement.java",
+      "sha256": "6abbbd0a2be3a0a9758b004135521e07e4de3d65eab7b98952e4edfe05f283e0"
+    },
+    {
+      "bytes": 4533,
+      "path": "tools/m1-content/bind_wiki.py",
+      "sha256": "3ccf42326831b8d396fed6b843c9ace2cdc298a36b85323cc0bc91490b5c0898"
+    },
+    {
+      "bytes": 22623,
+      "path": "tools/m1-content/build.py",
+      "sha256": "297915c8bb50e9e4285866d2fa372c2506b8d08c7fba604d4f4909ff621271ae"
+    },
+    {
+      "bytes": 12924,
+      "path": "tools/m1-content/check.py",
+      "sha256": "6c04e3b55b0224052919573520b59c8d87130a8978562c182b276d4338e6c07a"
+    },
+    {
+      "bytes": 7401,
+      "path": "tools/m1-content/common.py",
+      "sha256": "53de328cc7db59b5033f7e5dbb8b61d329cc3d4446ff35b920b4ac0e509ac45e"
+    },
+    {
+      "bytes": 2976,
+      "path": "tools/m1-content/compile.py",
+      "sha256": "43454b579bdc1258805c0e7a91762198511d11f92b93be70824bfec4ed577c92"
+    },
+    {
+      "bytes": 16641,
+      "path": "tools/m1-content/definitions.py",
+      "sha256": "e9b0ba1e4c6ac6752d2d73705d684df1b75a62e2b9a3edb00310681106c84955"
+    },
+    {
+      "bytes": 12294,
+      "path": "tools/m1-content/geometry.py",
+      "sha256": "8d7eb46e5ade7a5c31737c77e8a573214e135d3410ce0da2dc4871c7e0a922e0"
+    },
+    {
+      "bytes": 2980,
+      "path": "tools/m1-content/import_code_references.py",
+      "sha256": "e3b879cbd55c5f616b2f945943d3ef707b5ec3e5e01268b884e3c280aa9da0d0"
+    },
+    {
+      "bytes": 6782,
+      "path": "tools/m1-content/import_definitions.py",
+      "sha256": "4611f2cc2edb35bbb3d50468448fd6f2780e47b062240e9c7064d6cb13366c50"
+    },
+    {
+      "bytes": 5480,
+      "path": "tools/m1-content/import_references.py",
+      "sha256": "048c2cba6e9b08fa74923cc4b9ecd9458cc2df6a16670e757a5334e34c8e0acd"
+    },
+    {
+      "bytes": 22873,
+      "path": "tools/m1-content/progression.py",
+      "sha256": "b9cd66395cbcd4ac6a59a75bfa770cbbf344e6f8f50f0a300400560809210336"
+    },
+    {
+      "bytes": 14865,
+      "path": "tools/m1-content/spawns.py",
+      "sha256": "ba362eb87cde1c2f90ea46d8634eb7e013f660d34f4165ff0d22d1a9e3145bbe"
+    },
+    {
+      "bytes": 15977,
+      "path": "tools/m1-content/test_content.py",
+      "sha256": "29404a9dcb2e7f5cb441646798721442292ef2893bef7bf4d3ea0cc3bc66b6ab"
+    },
+    {
+      "bytes": 9352,
+      "path": "tools/m1-content/travel.py",
+      "sha256": "88546982ce4103225333f848eb52e742887512556cce3357f9595e41e2b87ac6"
+    },
+    {
+      "bytes": 6571,
+      "path": "tools/m1-content/verify_routes.py",
+      "sha256": "e90608ee269702f4780d8dc73ae18bda06b5332cc51160449837c06ec21f4d83"
+    }
+  ],
+  "schema_version": 1,
+  "source_selection": "osrs-live-240-cache2695-injected1.12.38-20260913"
+}

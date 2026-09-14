@@ -1,0 +1,628 @@
+{
+  "connected_with_source_doors_open": 30,
+  "game_content_sha256": "1d77b55bd56bf2f03a8b5204707c49f8dd49ae39c76cc11c0eacde6a34ec618e",
+  "presentation_approved": false,
+  "required_walk_segments": 30,
+  "routes": [
+    {
+      "from": "location.tutorial.start_house",
+      "goal": [
+        3103,
+        3095,
+        0
+      ],
+      "id": "tutorial_start_to_survival",
+      "path_sha256": "f28532502d0711fd097d0ecf6592d593e9c5ca26384df49c1486f44ea1fd60cb",
+      "source_doors_open_path_exists": true,
+      "start": [
+        3094,
+        3107,
+        0
+      ],
+      "static_closed_path_exists": false,
+      "steps": 17,
+      "to": "location.tutorial.survival",
+      "within_explicit_runtime_cells": true
+    },
+    {
+      "from": "location.tutorial.survival",
+      "goal": [
+        3075,
+        3085,
+        0
+      ],
+      "id": "tutorial_survival_to_chef",
+      "path_sha256": "c839a32f5211a8395d404e8109aea834de34bee8307a53b5eef655d1b6c51415",
+      "source_doors_open_path_exists": true,
+      "start": [
+        3103,
+        3095,
+        0
+      ],
+      "static_closed_path_exists": false,
+      "steps": 32,
+      "to": "location.tutorial.kitchen",
+      "within_explicit_runtime_cells": true
+    },
+    {
+      "from": "location.tutorial.kitchen",
+      "goal": [
+        3086,
+        3122,
+        0
+      ],
+      "id": "tutorial_chef_to_quest_guide",
+      "path_sha256": "8fad42c8304a47fe9bc88ea4987e74308a717a030ee0c025367c10b86630386f",
+      "source_doors_open_path_exists": true,
+      "start": [
+        3075,
+        3085,
+        0
+      ],
+      "static_closed_path_exists": false,
+      "steps": 54,
+      "to": "location.tutorial.quest_house",
+      "within_explicit_runtime_cells": true
+    },
+    {
+      "from": "location.tutorial.quest_house",
+      "goal": [
+        3088,
+        3118,
+        0
+      ],
+      "id": "tutorial_quest_guide_to_ladder",
+      "path_sha256": "76b6d045e7d80550cbe8a54ff9f9061031d10978bb90d308d2cfa27ab247be90",
+      "source_doors_open_path_exists": true,
+      "start": [
+        3086,
+        3122,
+        0
+      ],
+      "static_closed_path_exists": false,
+      "steps": 18,
+      "to": "transit.tutorial_quest_ladder.0",
+      "within_explicit_runtime_cells": true
+    },
+    {
+      "from": "transit.tutorial_quest_ladder.1",
+      "goal": [
+        3081,
+        9504,
+        0
+      ],
+      "id": "tutorial_ladder_to_mining",
+      "path_sha256": "d59916f09aa43fd9d5caa2f911fdb7468b391a83e038bfcb537f1d797b657f55",
+      "source_doors_open_path_exists": true,
+      "start": [
+        3088,
+        9520,
+        0
+      ],
+      "static_closed_path_exists": true,
+      "steps": 22,
+      "to": "location.tutorial.mine",
+      "within_explicit_runtime_cells": true
+    },
+    {
+      "from": "location.tutorial.mine",
+      "goal": [
+        3105,
+        9508,
+        0
+      ],
+      "id": "tutorial_mining_to_combat",
+      "path_sha256": "96184573a0ed9cfb7ac003bdbd61ad5e92d0263f4da40837974de1e0f47267b3",
+      "source_doors_open_path_exists": true,
+      "start": [
+        3081,
+        9504,
+        0
+      ],
+      "static_closed_path_exists": false,
+      "steps": 25,
+      "to": "location.tutorial.rat_cave",
+      "within_explicit_runtime_cells": true
+    },
+    {
+      "from": "location.tutorial.rat_cave",
+      "goal": [
+        3105,
+        9514,
+        0
+      ],
+      "id": "tutorial_combat_to_rat_pen",
+      "path_sha256": "c10f89a971c12f04c2e45a90abb74f1d81f095ed8cd8a3633c1364ff455da35d",
+      "source_doors_open_path_exists": true,
+      "start": [
+        3105,
+        9508,
+        0
+      ],
+      "static_closed_path_exists": false,
+      "steps": 17,
+      "to": "location.tutorial.rat_pen",
+      "within_explicit_runtime_cells": true
+    },
+    {
+      "from": "location.tutorial.rat_cave",
+      "goal": [
+        3110,
+        9526,
+        0
+      ],
+      "id": "tutorial_combat_to_bank_ladder",
+      "path_sha256": "7bbd36b654f1a2fa881e2d904268606dddbd00276fa8d74da5f9889d45f11b96",
+      "source_doors_open_path_exists": true,
+      "start": [
+        3105,
+        9508,
+        0
+      ],
+      "static_closed_path_exists": true,
+      "steps": 18,
+      "to": "transit.tutorial_combat_ladder.0",
+      "within_explicit_runtime_cells": true
+    },
+    {
+      "from": "transit.tutorial_combat_ladder.1",
+      "goal": [
+        3119,
+        3123,
+        0
+      ],
+      "id": "tutorial_bank_ladder_to_bank",
+      "path_sha256": "b5f73db056dc7241493a38894e1516caa7b28976ea2fbda363f5d2263b598cb6",
+      "source_doors_open_path_exists": true,
+      "start": [
+        3110,
+        3126,
+        0
+      ],
+      "static_closed_path_exists": true,
+      "steps": 24,
+      "to": "location.tutorial.bank",
+      "within_explicit_runtime_cells": true
+    },
+    {
+      "from": "location.tutorial.bank",
+      "goal": [
+        3128,
+        3124,
+        0
+      ],
+      "id": "tutorial_bank_to_account",
+      "path_sha256": "2d3cd02bc1a36b73ac3ca2d89ac89aadf943009753b43f50de529827240d8ea2",
+      "source_doors_open_path_exists": true,
+      "start": [
+        3119,
+        3123,
+        0
+      ],
+      "static_closed_path_exists": false,
+      "steps": 9,
+      "to": "location.tutorial.account_room",
+      "within_explicit_runtime_cells": true
+    },
+    {
+      "from": "location.tutorial.account_room",
+      "goal": [
+        3125,
+        3106,
+        0
+      ],
+      "id": "tutorial_account_to_chapel",
+      "path_sha256": "d2b2c0a30248a75ce4f949f7d68b43fa11a6eb4a0397da87698e89174d85860a",
+      "source_doors_open_path_exists": true,
+      "start": [
+        3128,
+        3124,
+        0
+      ],
+      "static_closed_path_exists": false,
+      "steps": 27,
+      "to": "location.tutorial.chapel",
+      "within_explicit_runtime_cells": true
+    },
+    {
+      "from": "location.tutorial.chapel",
+      "goal": [
+        3141,
+        3087,
+        0
+      ],
+      "id": "tutorial_chapel_to_magic",
+      "path_sha256": "e6bb20dfb5c78a28e0280b2e8272348442810eeecbede15a5a1d40b052a6c1f8",
+      "source_doors_open_path_exists": true,
+      "start": [
+        3125,
+        3106,
+        0
+      ],
+      "static_closed_path_exists": false,
+      "steps": 28,
+      "to": "location.tutorial.magic_house",
+      "within_explicit_runtime_cells": true
+    },
+    {
+      "from": "location.lumbridge.castle_arrival",
+      "goal": [
+        3209,
+        3213,
+        0
+      ],
+      "id": "arrival_to_cook",
+      "path_sha256": "2463d383ede8e6d2e8e7732498d42d9819e1c01dccd60a5921b2832447d17fb1",
+      "source_doors_open_path_exists": true,
+      "start": [
+        3222,
+        3218,
+        0
+      ],
+      "static_closed_path_exists": true,
+      "steps": 23,
+      "to": "location.lumbridge.kitchen",
+      "within_explicit_runtime_cells": true
+    },
+    {
+      "from": "location.lumbridge.kitchen",
+      "goal": [
+        3205,
+        3209,
+        0
+      ],
+      "id": "cook_to_bank_stairs",
+      "path_sha256": "332ea4a6c0249971f266630831e0e8cc7483a6dda7f65201feb1089603e76a64",
+      "source_doors_open_path_exists": true,
+      "start": [
+        3209,
+        3213,
+        0
+      ],
+      "static_closed_path_exists": true,
+      "steps": 6,
+      "to": "transit.castle_south_lower.0",
+      "within_explicit_runtime_cells": true
+    },
+    {
+      "from": "transit.castle_south_lower.1",
+      "goal": [
+        3205,
+        3209,
+        1
+      ],
+      "id": "castle_first_floor_connection",
+      "path_sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570",
+      "source_doors_open_path_exists": true,
+      "start": [
+        3205,
+        3209,
+        1
+      ],
+      "static_closed_path_exists": true,
+      "steps": 0,
+      "to": "transit.castle_south_upper.0",
+      "within_explicit_runtime_cells": true
+    },
+    {
+      "from": "transit.castle_south_upper.1",
+      "goal": [
+        3208,
+        3220,
+        2
+      ],
+      "id": "castle_top_floor_to_bank",
+      "path_sha256": "4cbcbcdae579027e790f2d4478f82cca3025e05b8c8cbc2096117741089a141a",
+      "source_doors_open_path_exists": true,
+      "start": [
+        3205,
+        3209,
+        2
+      ],
+      "static_closed_path_exists": true,
+      "steps": 12,
+      "to": "location.lumbridge.bank",
+      "within_explicit_runtime_cells": true
+    },
+    {
+      "from": "location.lumbridge.castle_arrival",
+      "goal": [
+        3211,
+        3247,
+        0
+      ],
+      "id": "castle_to_shop",
+      "path_sha256": "944e24c498d87098c9dc0aeb669292560632428a73c579a398dcfa9c45933554",
+      "source_doors_open_path_exists": true,
+      "start": [
+        3222,
+        3218,
+        0
+      ],
+      "static_closed_path_exists": true,
+      "steps": 43,
+      "to": "location.lumbridge.general_store",
+      "within_explicit_runtime_cells": true
+    },
+    {
+      "from": "location.lumbridge.castle_arrival",
+      "goal": [
+        3228,
+        3146,
+        0
+      ],
+      "id": "castle_to_swamp_copper",
+      "path_sha256": "1c57290ec0aaa92ecf72106a1aebccefa45c8b2114a6ed10caa019da1c4f3051",
+      "source_doors_open_path_exists": true,
+      "start": [
+        3222,
+        3218,
+        0
+      ],
+      "static_closed_path_exists": true,
+      "steps": 87,
+      "to": "location.lumbridge.east_swamp_mine",
+      "within_explicit_runtime_cells": true
+    },
+    {
+      "from": "location.lumbridge.castle_arrival",
+      "goal": [
+        3246,
+        3235,
+        0
+      ],
+      "id": "castle_across_river_to_goblins",
+      "path_sha256": "71ba75721fe2bb8c9c7fe82a647c564006cdd27a8163aba30413f36ce35d4c07",
+      "source_doors_open_path_exists": true,
+      "start": [
+        3222,
+        3218,
+        0
+      ],
+      "static_closed_path_exists": true,
+      "steps": 53,
+      "to": "location.lumbridge.east_bridge_goblins",
+      "within_explicit_runtime_cells": true
+    },
+    {
+      "from": "location.lumbridge.castle_arrival",
+      "goal": [
+        3172,
+        3300,
+        0
+      ],
+      "id": "castle_to_west_coop",
+      "path_sha256": "03f147410a76f758bfcd9556c69e1be8f023ca09184846eb98357e9475de8104",
+      "source_doors_open_path_exists": true,
+      "start": [
+        3222,
+        3218,
+        0
+      ],
+      "static_closed_path_exists": false,
+      "steps": 110,
+      "to": "location.lumbridge.west_coop",
+      "within_explicit_runtime_cells": true
+    },
+    {
+      "from": "location.lumbridge.west_coop",
+      "goal": [
+        3171,
+        3317,
+        0
+      ],
+      "id": "coop_to_west_dairy_cow",
+      "path_sha256": "ebc5a83c737c45a3b13845b529dd4d774d4b47c5aa29d4ad59144de8090cea16",
+      "source_doors_open_path_exists": true,
+      "start": [
+        3172,
+        3300,
+        0
+      ],
+      "static_closed_path_exists": false,
+      "steps": 54,
+      "to": "location.lumbridge.north_cows",
+      "within_explicit_runtime_cells": true
+    },
+    {
+      "from": "location.lumbridge.castle_arrival",
+      "goal": [
+        3253,
+        3275,
+        0
+      ],
+      "id": "castle_across_river_to_east_cow",
+      "path_sha256": "5742baf50526a84408b3f104e64bc34d7715d39a08fb20d7d2f7696ad7d4f13a",
+      "source_doors_open_path_exists": true,
+      "start": [
+        3222,
+        3218,
+        0
+      ],
+      "static_closed_path_exists": false,
+      "steps": 84,
+      "to": "location.lumbridge.east_cows",
+      "within_explicit_runtime_cells": true
+    },
+    {
+      "from": "location.lumbridge.west_coop",
+      "goal": [
+        3160,
+        3296,
+        0
+      ],
+      "id": "coop_to_wheat",
+      "path_sha256": "b73d3d35cebac64effafcbe2d1ea34465e781f505dd598b6f781e05a3babae10",
+      "source_doors_open_path_exists": true,
+      "start": [
+        3172,
+        3300,
+        0
+      ],
+      "static_closed_path_exists": false,
+      "steps": 36,
+      "to": "location.lumbridge.wheat",
+      "within_explicit_runtime_cells": true
+    },
+    {
+      "from": "location.lumbridge.wheat",
+      "goal": [
+        3165,
+        3307,
+        0
+      ],
+      "id": "wheat_to_mill",
+      "path_sha256": "de3f35af152a75bd2cd9cd64f07af99926c3797764f1bf7649e978b18ec20d3a",
+      "source_doors_open_path_exists": true,
+      "start": [
+        3160,
+        3296,
+        0
+      ],
+      "static_closed_path_exists": false,
+      "steps": 28,
+      "to": "location.lumbridge.mill_ground",
+      "within_explicit_runtime_cells": true
+    },
+    {
+      "from": "location.lumbridge.mill_ground",
+      "goal": [
+        3164,
+        3306,
+        0
+      ],
+      "id": "mill_ground_to_first_ladder",
+      "path_sha256": "6525db7771b614cec0954de068411962ca63533f7ee10706979e56e4c0856724",
+      "source_doors_open_path_exists": true,
+      "start": [
+        3165,
+        3307,
+        0
+      ],
+      "static_closed_path_exists": true,
+      "steps": 2,
+      "to": "transit.mill_lower.0",
+      "within_explicit_runtime_cells": true
+    },
+    {
+      "from": "transit.mill_lower.1",
+      "goal": [
+        3164,
+        3306,
+        1
+      ],
+      "id": "mill_first_to_second_ladder",
+      "path_sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570",
+      "source_doors_open_path_exists": true,
+      "start": [
+        3164,
+        3306,
+        1
+      ],
+      "static_closed_path_exists": true,
+      "steps": 0,
+      "to": "transit.mill_upper.0",
+      "within_explicit_runtime_cells": true
+    },
+    {
+      "from": "transit.mill_upper.1",
+      "goal": [
+        3165,
+        3307,
+        2
+      ],
+      "id": "mill_second_ladder_to_hopper",
+      "path_sha256": "57a397666e06e954bd118366be34788935464a00f228dd132d79f3860474e968",
+      "source_doors_open_path_exists": true,
+      "start": [
+        3164,
+        3306,
+        2
+      ],
+      "static_closed_path_exists": true,
+      "steps": 2,
+      "to": "location.lumbridge.mill_top",
+      "within_explicit_runtime_cells": true
+    },
+    {
+      "from": "location.lumbridge.kitchen",
+      "goal": [
+        3208,
+        3216,
+        0
+      ],
+      "id": "cook_to_cellar_trapdoor",
+      "path_sha256": "7be03f4c820757bc474ca781ca8e0589074f350742641270d4ec58e56456f3b8",
+      "source_doors_open_path_exists": true,
+      "start": [
+        3209,
+        3213,
+        0
+      ],
+      "static_closed_path_exists": true,
+      "steps": 5,
+      "to": "transit.lumbridge_cellar.0",
+      "within_explicit_runtime_cells": true
+    },
+    {
+      "from": "transit.lumbridge_cellar.1",
+      "goal": [
+        3210,
+        9616,
+        0
+      ],
+      "id": "cellar_ladder_to_bucket_area",
+      "path_sha256": "8143d2acdf1a49835b2186ab687b022ae2546df4ee66101849afc43b99b26193",
+      "source_doors_open_path_exists": true,
+      "start": [
+        3208,
+        9616,
+        0
+      ],
+      "static_closed_path_exists": true,
+      "steps": 4,
+      "to": "location.lumbridge.cellar",
+      "within_explicit_runtime_cells": true
+    },
+    {
+      "from": "location.lumbridge.castle_arrival",
+      "goal": [
+        3237,
+        3194,
+        0
+      ],
+      "id": "castle_to_death_entrance",
+      "path_sha256": "136aeffac3dd45c8d4972860bd2c3377458da417eddcd111530a2f69c4412ac2",
+      "source_doors_open_path_exists": true,
+      "start": [
+        3222,
+        3218,
+        0
+      ],
+      "static_closed_path_exists": true,
+      "steps": 52,
+      "to": "location.lumbridge.death_entrance",
+      "within_explicit_runtime_cells": true
+    }
+  ],
+  "runtime_journey_passed": false,
+  "schema_version": 1,
+  "scope": "Potential geometry connectivity only: rebuild actual source clipping while omitting precisely the source Open-able wall-door leaves. The runtime content is NOT mutated and no door is approved or silently unlocked. Actual access guards, open/close state, arrival timing and live gameplay still require shared mechanics and source validation.",
+  "source_transit_pairs": [
+    "tutorial_quest_ladder",
+    "tutorial_combat_ladder",
+    "lumbridge_cellar",
+    "mill_lower",
+    "mill_upper",
+    "castle_south_lower",
+    "castle_south_upper",
+    "castle_north_lower",
+    "castle_north_upper",
+    "castle_south_top_floor",
+    "castle_north_top_floor"
+  ],
+  "unrepresented_connections": [
+    "Experience-branch tutorial departure/Home Teleport and reconciliation",
+    "Death's Office live instance entry/exit and first-item-losing-death state"
+  ]
+}

@@ -1,0 +1,468 @@
+{
+  "schema_version": 1,
+  "purpose": "Bounded source identity, variant and spawn-position evidence; not source gameplay observations.",
+  "license": "Old School RuneScape Wiki contributors; linked revision histories and https://oldschool.runescape.wiki/w/Old_School_RuneScape_Wiki:Copyrights",
+  "sources": [
+    {
+      "id": "source.wiki.binding.15333807",
+      "kind": "wiki_revision",
+      "page": "Account Guide",
+      "revision": 15333807,
+      "revision_timestamp": "2026-09-08T06:48:21Z",
+      "url": "https://oldschool.runescape.wiki/w/Account_Guide?oldid=15333807",
+      "sha256_utf8_wikitext": "78c4478acf1e3cf1139111a11d2aecae6b32035845e820008131a637774e9378",
+      "bytes_utf8_wikitext": 1278
+    },
+    {
+      "id": "source.wiki.binding.15239659",
+      "kind": "wiki_revision",
+      "page": "Adventurer Jon",
+      "revision": 15239659,
+      "revision_timestamp": "2026-06-25T21:56:09Z",
+      "url": "https://oldschool.runescape.wiki/w/Adventurer_Jon?oldid=15239659",
+      "sha256_utf8_wikitext": "700f49567666554140f92d0a620bbb47a05b6dcb83b36ec5366345e247662517",
+      "bytes_utf8_wikitext": 7624
+    },
+    {
+      "id": "source.wiki.binding.15148288",
+      "kind": "wiki_revision",
+      "page": "Banker",
+      "revision": 15148288,
+      "revision_timestamp": "2026-03-13T01:52:35Z",
+      "url": "https://oldschool.runescape.wiki/w/Banker?oldid=15148288",
+      "sha256_utf8_wikitext": "4413e1ad1ddae49abb30272e23d7dcf8ba89c83c854d5b77a33a577b04f22a7e",
+      "bytes_utf8_wikitext": 5905
+    },
+    {
+      "id": "source.wiki.tutorial_bones",
+      "kind": "wiki_revision",
+      "page": "Bones (Tutorial Island)",
+      "revision": 15190476,
+      "revision_timestamp": "2026-04-22T04:37:50Z",
+      "url": "https://oldschool.runescape.wiki/w/Bones_%28Tutorial_Island%29?oldid=15190476",
+      "sha256_utf8_wikitext": "15b79d0e03154e5cd349d62253d3c41e017e3a8e589abbb36760cab4c27b1023",
+      "bytes_utf8_wikitext": 944
+    },
+    {
+      "id": "source.wiki.binding.15320471",
+      "kind": "wiki_revision",
+      "page": "Bottomless milk bucket",
+      "revision": 15320471,
+      "revision_timestamp": "2026-08-26T06:46:12Z",
+      "url": "https://oldschool.runescape.wiki/w/Bottomless_milk_bucket?oldid=15320471",
+      "sha256_utf8_wikitext": "d71b1b72502b6ff4673ad57c444d96bbdf992ba9984227d5f75ac71a0ccd4fb5",
+      "bytes_utf8_wikitext": 5409
+    },
+    {
+      "id": "source.wiki.bread",
+      "kind": "wiki_revision",
+      "page": "Bread",
+      "revision": 15182634,
+      "revision_timestamp": "2026-04-22T02:45:07Z",
+      "url": "https://oldschool.runescape.wiki/w/Bread?oldid=15182634",
+      "sha256_utf8_wikitext": "d38357d74245d6c6ae624ba5ec5b453ae0ec8bdea449833d217dbd777e882a71",
+      "bytes_utf8_wikitext": 4626
+    },
+    {
+      "id": "source.wiki.bread_dough",
+      "kind": "wiki_revision",
+      "page": "Bread dough",
+      "revision": 15182635,
+      "revision_timestamp": "2026-04-22T02:45:07Z",
+      "url": "https://oldschool.runescape.wiki/w/Bread_dough?oldid=15182635",
+      "sha256_utf8_wikitext": "db4110b372539e27fa2f3195e298e2f00d121c66eedd116815b3412aba293cf7",
+      "bytes_utf8_wikitext": 1364
+    },
+    {
+      "id": "source.wiki.binding.15250579",
+      "kind": "wiki_revision",
+      "page": "Brother Brace",
+      "revision": 15250579,
+      "revision_timestamp": "2026-07-03T19:26:09Z",
+      "url": "https://oldschool.runescape.wiki/w/Brother_Brace?oldid=15250579",
+      "sha256_utf8_wikitext": "64dc94d2fba0f099a2671d98cee7e54aba4b0d87b4d52cc1ff65f3089b0e8e58",
+      "bytes_utf8_wikitext": 2031
+    },
+    {
+      "id": "source.wiki.bucket",
+      "kind": "wiki_revision",
+      "page": "Bucket",
+      "revision": 15324824,
+      "revision_timestamp": "2026-08-29T20:59:10Z",
+      "url": "https://oldschool.runescape.wiki/w/Bucket?oldid=15324824",
+      "sha256_utf8_wikitext": "7090244135ed323a77017a96edbbbfc3d3d3492dad61898448ece6fadba7a10a",
+      "bytes_utf8_wikitext": 9843
+    },
+    {
+      "id": "source.wiki.bucket_of_milk",
+      "kind": "wiki_revision",
+      "page": "Bucket of milk",
+      "revision": 15281482,
+      "revision_timestamp": "2026-07-29T21:42:13Z",
+      "url": "https://oldschool.runescape.wiki/w/Bucket_of_milk?oldid=15281482",
+      "sha256_utf8_wikitext": "62169ae0622ec4b685e7c4d2020404818ce644131aa45c66c56632c8f19bf690",
+      "bytes_utf8_wikitext": 4090
+    },
+    {
+      "id": "source.wiki.binding.15185362",
+      "kind": "wiki_revision",
+      "page": "Burnt bread",
+      "revision": 15185362,
+      "revision_timestamp": "2026-04-22T03:11:23Z",
+      "url": "https://oldschool.runescape.wiki/w/Burnt_bread?oldid=15185362",
+      "sha256_utf8_wikitext": "88c654e68cfb44f727ecd6c666e8c9969f795f24ae5f5aa7c5e55643ef587b67",
+      "bytes_utf8_wikitext": 1594
+    },
+    {
+      "id": "source.wiki.binding.15188224",
+      "kind": "wiki_revision",
+      "page": "Burnt shrimp",
+      "revision": 15188224,
+      "revision_timestamp": "2026-04-22T04:20:21Z",
+      "url": "https://oldschool.runescape.wiki/w/Burnt_shrimp?oldid=15188224",
+      "sha256_utf8_wikitext": "e8fc0b0c1f34e784ac413d31265fd793076b7b7e85f42536491c6d8009a487fe",
+      "bytes_utf8_wikitext": 1983
+    },
+    {
+      "id": "source.wiki.tutorial_chicken",
+      "kind": "wiki_revision",
+      "page": "Chicken (Tutorial Island)",
+      "revision": 15204773,
+      "revision_timestamp": "2026-05-02T06:24:27Z",
+      "url": "https://oldschool.runescape.wiki/w/Chicken_%28Tutorial_Island%29?oldid=15204773",
+      "sha256_utf8_wikitext": "4b6a7730368fe71b7bdf638f40c0fbef7ddc3bbe8bc373816b5732eb63d7e99d",
+      "bytes_utf8_wikitext": 2033
+    },
+    {
+      "id": "source.wiki.cook_lumbridge",
+      "kind": "wiki_revision",
+      "page": "Cook (Lumbridge)",
+      "revision": 15303539,
+      "revision_timestamp": "2026-08-16T23:03:56Z",
+      "url": "https://oldschool.runescape.wiki/w/Cook_%28Lumbridge%29?oldid=15303539",
+      "sha256_utf8_wikitext": "cea2990b67e5b1e74fe68f0587f1a68b95f0da20baf421e00c7d5dbb6fa9f63a",
+      "bytes_utf8_wikitext": 5541
+    },
+    {
+      "id": "source.wiki.binding.15319339",
+      "kind": "wiki_revision",
+      "page": "Dairy cow",
+      "revision": 15319339,
+      "revision_timestamp": "2026-08-25T05:36:32Z",
+      "url": "https://oldschool.runescape.wiki/w/Dairy_cow?oldid=15319339",
+      "sha256_utf8_wikitext": "e9350aa29d9d09094ebdb18587474fd36436b6545ee4c1cfdddb21ccf92281e4",
+      "bytes_utf8_wikitext": 5358
+    },
+    {
+      "id": "source.wiki.death_npc",
+      "kind": "wiki_revision",
+      "page": "Death (NPC)",
+      "revision": 15324492,
+      "revision_timestamp": "2026-08-29T13:59:31Z",
+      "url": "https://oldschool.runescape.wiki/w/Death_%28NPC%29?oldid=15324492",
+      "sha256_utf8_wikitext": "1d66fcc131fc58a7cd81c4f91f77596faa675de4036bda5bcc683c1ee4743edb",
+      "bytes_utf8_wikitext": 7665
+    },
+    {
+      "id": "source.wiki.deaths_office",
+      "kind": "wiki_revision",
+      "page": "Death's Office",
+      "revision": 15273706,
+      "revision_timestamp": "2026-07-24T02:58:30Z",
+      "url": "https://oldschool.runescape.wiki/w/Death%27s_Office?oldid=15273706",
+      "sha256_utf8_wikitext": "85c6f336166dfd728dcfbc0665ae63ac9939afef980489fc840bcb65f6ecb851",
+      "bytes_utf8_wikitext": 5191
+    },
+    {
+      "id": "source.wiki.egg",
+      "kind": "wiki_revision",
+      "page": "Egg",
+      "revision": 15203418,
+      "revision_timestamp": "2026-04-29T06:54:56Z",
+      "url": "https://oldschool.runescape.wiki/w/Egg?oldid=15203418",
+      "sha256_utf8_wikitext": "48c527f68fc2591d137be5ddb2ea1fb8e184eabab2d8cb6840106d0fb4b4c613",
+      "bytes_utf8_wikitext": 3088
+    },
+    {
+      "id": "source.wiki.binding.15312575",
+      "kind": "wiki_revision",
+      "page": "Fishing spot (Tutorial Island)",
+      "revision": 15312575,
+      "revision_timestamp": "2026-08-20T03:53:49Z",
+      "url": "https://oldschool.runescape.wiki/w/Fishing_spot_%28Tutorial_Island%29?oldid=15312575",
+      "sha256_utf8_wikitext": "599eb16196597ced0807460f4c76a47a69161a28e353e190d27c4238ef60e789",
+      "bytes_utf8_wikitext": 1066
+    },
+    {
+      "id": "source.wiki.flour_bin",
+      "kind": "wiki_revision",
+      "page": "Flour bin",
+      "revision": 15334216,
+      "revision_timestamp": "2026-09-08T07:54:42Z",
+      "url": "https://oldschool.runescape.wiki/w/Flour_bin?oldid=15334216",
+      "sha256_utf8_wikitext": "7a6c97f4c3d4b9f1cd59c381887c135a6d607f63128c268df87fec1374b35b1f",
+      "bytes_utf8_wikitext": 5629
+    },
+    {
+      "id": "source.wiki.tutorial_rat",
+      "kind": "wiki_revision",
+      "page": "Giant rat (Tutorial Island)",
+      "revision": 15324458,
+      "revision_timestamp": "2026-08-29T13:00:22Z",
+      "url": "https://oldschool.runescape.wiki/w/Giant_rat_%28Tutorial_Island%29?oldid=15324458",
+      "sha256_utf8_wikitext": "b5c3d128b7d1456ac69be04dcf27b510f858a53496598258faea8c136355a0cd",
+      "bytes_utf8_wikitext": 2640
+    },
+    {
+      "id": "source.wiki.binding.15319049",
+      "kind": "wiki_revision",
+      "page": "Gielinor Guide",
+      "revision": 15319049,
+      "revision_timestamp": "2026-08-25T03:23:07Z",
+      "url": "https://oldschool.runescape.wiki/w/Gielinor_Guide?oldid=15319049",
+      "sha256_utf8_wikitext": "d0d31716b8eb94055b7ccbb12f04816a8a566f76b32a1d4c357abd453e6e346b",
+      "bytes_utf8_wikitext": 2531
+    },
+    {
+      "id": "source.wiki.binding.15246817",
+      "kind": "wiki_revision",
+      "page": "Gillie Groats",
+      "revision": 15246817,
+      "revision_timestamp": "2026-07-01T14:47:15Z",
+      "url": "https://oldschool.runescape.wiki/w/Gillie_Groats?oldid=15246817",
+      "sha256_utf8_wikitext": "24980440cc6590c13910cfb8c45a20c7bf373498fbe272675f328138ac7516c4",
+      "bytes_utf8_wikitext": 1581
+    },
+    {
+      "id": "source.wiki.goblin",
+      "kind": "wiki_revision",
+      "page": "Goblin",
+      "revision": 15318086,
+      "revision_timestamp": "2026-08-24T13:44:18Z",
+      "url": "https://oldschool.runescape.wiki/w/Goblin?oldid=15318086",
+      "sha256_utf8_wikitext": "961e706cc6c4f82a4465138596bcdf99eb6b7baac80b34e3b3234111f0a22776",
+      "bytes_utf8_wikitext": 19494
+    },
+    {
+      "id": "source.wiki.grain",
+      "kind": "wiki_revision",
+      "page": "Grain",
+      "revision": 15315164,
+      "revision_timestamp": "2026-08-21T04:35:34Z",
+      "url": "https://oldschool.runescape.wiki/w/Grain?oldid=15315164",
+      "sha256_utf8_wikitext": "6e93e6f6e0e9a70bde9c4af2d9fa048c0b8b9ccb6c1a2b9a87fdf5b9111ddc3f",
+      "bytes_utf8_wikitext": 10493
+    },
+    {
+      "id": "source.wiki.binding.15001937",
+      "kind": "wiki_revision",
+      "page": "Henja",
+      "revision": 15001937,
+      "revision_timestamp": "2025-10-11T08:25:17Z",
+      "url": "https://oldschool.runescape.wiki/w/Henja?oldid=15001937",
+      "sha256_utf8_wikitext": "9c2f6b1a199fb2dde0308b114b7775c896d83eb386f05ab0541c520fe88922c7",
+      "bytes_utf8_wikitext": 1211
+    },
+    {
+      "id": "source.wiki.hopper",
+      "kind": "wiki_revision",
+      "page": "Hopper",
+      "revision": 15334231,
+      "revision_timestamp": "2026-09-08T07:55:41Z",
+      "url": "https://oldschool.runescape.wiki/w/Hopper?oldid=15334231",
+      "sha256_utf8_wikitext": "5b86d5bb3baac749dfde5fe052c3584c57b8411b4a580d9abb9ff67310057929",
+      "bytes_utf8_wikitext": 3823
+    },
+    {
+      "id": "source.wiki.binding.15313833",
+      "kind": "wiki_revision",
+      "page": "Ironman tutor",
+      "revision": 15313833,
+      "revision_timestamp": "2026-08-20T10:12:03Z",
+      "url": "https://oldschool.runescape.wiki/w/Ironman_tutor?oldid=15313833",
+      "sha256_utf8_wikitext": "b34993a101e492e5ac751b3fdf1e0ebda80209bc1e12c32156215a7375290f35",
+      "bytes_utf8_wikitext": 4419
+    },
+    {
+      "id": "source.wiki.lumbridge_castle",
+      "kind": "wiki_revision",
+      "page": "Lumbridge Castle",
+      "revision": 15142176,
+      "revision_timestamp": "2026-03-04T00:37:21Z",
+      "url": "https://oldschool.runescape.wiki/w/Lumbridge_Castle?oldid=15142176",
+      "sha256_utf8_wikitext": "ff0888c872f4442456c2d2e7817f6fbece7b8763ff94bd607a3b4b3cdc9c04b6",
+      "bytes_utf8_wikitext": 5686
+    },
+    {
+      "id": "source.wiki.lumbridge_general_store",
+      "kind": "wiki_revision",
+      "page": "Lumbridge General Store",
+      "revision": 15318670,
+      "revision_timestamp": "2026-08-25T01:44:11Z",
+      "url": "https://oldschool.runescape.wiki/w/Lumbridge_General_Store?oldid=15318670",
+      "sha256_utf8_wikitext": "517e27bfcfce60447b93b89fd930bb19193f6abd273cf0377b26e1dcee8cd7bd",
+      "bytes_utf8_wikitext": 2249
+    },
+    {
+      "id": "source.wiki.binding.15314702",
+      "kind": "wiki_revision",
+      "page": "Lumbridge Guide",
+      "revision": 15314702,
+      "revision_timestamp": "2026-08-21T00:08:20Z",
+      "url": "https://oldschool.runescape.wiki/w/Lumbridge_Guide?oldid=15314702",
+      "sha256_utf8_wikitext": "700ab93719582b0691437d13f8f194d5b38353aa0c9931c58bfabd44d469c86d",
+      "bytes_utf8_wikitext": 1822
+    },
+    {
+      "id": "source.wiki.binding.15220378",
+      "kind": "wiki_revision",
+      "page": "Magic Instructor",
+      "revision": 15220378,
+      "revision_timestamp": "2026-05-29T12:24:47Z",
+      "url": "https://oldschool.runescape.wiki/w/Magic_Instructor?oldid=15220378",
+      "sha256_utf8_wikitext": "c83d910650aa34ef9fa05db9745fca22574c8f01109be2154b8256a47e2602e5",
+      "bytes_utf8_wikitext": 1994
+    },
+    {
+      "id": "source.wiki.binding.15319046",
+      "kind": "wiki_revision",
+      "page": "Master Chef",
+      "revision": 15319046,
+      "revision_timestamp": "2026-08-25T03:22:44Z",
+      "url": "https://oldschool.runescape.wiki/w/Master_Chef?oldid=15319046",
+      "sha256_utf8_wikitext": "b3661abdeae6863210b24e24729fcf2da2a739b9956eb63de259304192058b1a",
+      "bytes_utf8_wikitext": 1984
+    },
+    {
+      "id": "source.wiki.mill_lane_mill",
+      "kind": "wiki_revision",
+      "page": "Mill Lane Mill",
+      "revision": 15264815,
+      "revision_timestamp": "2026-07-16T02:28:20Z",
+      "url": "https://oldschool.runescape.wiki/w/Mill_Lane_Mill?oldid=15264815",
+      "sha256_utf8_wikitext": "92c83dd1d9ff833599a86ca1fe08002f8558287e2b985bf52cedeedf838d0df0",
+      "bytes_utf8_wikitext": 2100
+    },
+    {
+      "id": "source.wiki.binding.15258541",
+      "kind": "wiki_revision",
+      "page": "Millie Miller",
+      "revision": 15258541,
+      "revision_timestamp": "2026-07-09T12:16:31Z",
+      "url": "https://oldschool.runescape.wiki/w/Millie_Miller?oldid=15258541",
+      "sha256_utf8_wikitext": "bacd7bad4930814ec61ba0e70c67f1f09aefcd92124f7ede9179f77c64657dcb",
+      "bytes_utf8_wikitext": 853
+    },
+    {
+      "id": "source.wiki.binding.15285366",
+      "kind": "wiki_revision",
+      "page": "Mining Instructor",
+      "revision": 15285366,
+      "revision_timestamp": "2026-08-01T20:53:02Z",
+      "url": "https://oldschool.runescape.wiki/w/Mining_Instructor?oldid=15285366",
+      "sha256_utf8_wikitext": "b95c4143156b789c3137cdd82b6ceeb3b76c2579644a09e9b74a627233c0a3f0",
+      "bytes_utf8_wikitext": 1650
+    },
+    {
+      "id": "source.wiki.pot",
+      "kind": "wiki_revision",
+      "page": "Pot",
+      "revision": 15321421,
+      "revision_timestamp": "2026-08-26T18:58:44Z",
+      "url": "https://oldschool.runescape.wiki/w/Pot?oldid=15321421",
+      "sha256_utf8_wikitext": "036916075432f78edbf12ab39c411a211e0bc7cb9d905a9f4721e16eeae554a6",
+      "bytes_utf8_wikitext": 6103
+    },
+    {
+      "id": "source.wiki.binding.15220370",
+      "kind": "wiki_revision",
+      "page": "Quest Guide",
+      "revision": 15220370,
+      "revision_timestamp": "2026-05-29T12:22:32Z",
+      "url": "https://oldschool.runescape.wiki/w/Quest_Guide?oldid=15220370",
+      "sha256_utf8_wikitext": "7c5f9c840585577fada08dccf476292440c5e18a8523373b75bc44fff8e3920a",
+      "bytes_utf8_wikitext": 2022
+    },
+    {
+      "id": "source.wiki.binding.14715546",
+      "kind": "wiki_revision",
+      "page": "Shop assistant",
+      "revision": 14715546,
+      "revision_timestamp": "2024-08-10T02:19:11Z",
+      "url": "https://oldschool.runescape.wiki/w/Shop_assistant?oldid=14715546",
+      "sha256_utf8_wikitext": "a8e43da0dffa75202131c0eae57f072b8f10a686f1e61c740860a431c7302188",
+      "bytes_utf8_wikitext": 978
+    },
+    {
+      "id": "source.wiki.binding.14992646",
+      "kind": "wiki_revision",
+      "page": "Shop assistant (Lumbridge)",
+      "revision": 14992646,
+      "revision_timestamp": "2025-09-25T18:03:52Z",
+      "url": "https://oldschool.runescape.wiki/w/Shop_assistant_%28Lumbridge%29?oldid=14992646",
+      "sha256_utf8_wikitext": "18efdb9e99cf508c16eeb3ef2a0b7770f6ff3266ab7f523f937877fac98636e2",
+      "bytes_utf8_wikitext": 1827
+    },
+    {
+      "id": "source.wiki.binding.15127132",
+      "kind": "wiki_revision",
+      "page": "Shop keeper",
+      "revision": 15127132,
+      "revision_timestamp": "2026-02-15T00:46:55Z",
+      "url": "https://oldschool.runescape.wiki/w/Shop_keeper?oldid=15127132",
+      "sha256_utf8_wikitext": "4ea42f1234607cd3c69a769202648071ec3512b51e84fb975367e304a829b75e",
+      "bytes_utf8_wikitext": 991
+    },
+    {
+      "id": "source.wiki.binding.14992629",
+      "kind": "wiki_revision",
+      "page": "Shop keeper (Lumbridge)",
+      "revision": 14992629,
+      "revision_timestamp": "2025-09-25T18:03:34Z",
+      "url": "https://oldschool.runescape.wiki/w/Shop_keeper_%28Lumbridge%29?oldid=14992629",
+      "sha256_utf8_wikitext": "f0c0c92704cab31b5c8250cdf8a1e1d771c47dfb9365bc677a4d13a65b4bc4ce",
+      "bytes_utf8_wikitext": 2119
+    },
+    {
+      "id": "source.wiki.shrimps",
+      "kind": "wiki_revision",
+      "page": "Shrimps",
+      "revision": 15183319,
+      "revision_timestamp": "2026-04-22T02:53:05Z",
+      "url": "https://oldschool.runescape.wiki/w/Shrimps?oldid=15183319",
+      "sha256_utf8_wikitext": "4a5901ebee7a6f1cc558bc1aa22fbacecaa43f0f6f60a4e2fc7a09cdb0343998",
+      "bytes_utf8_wikitext": 2230
+    },
+    {
+      "id": "source.wiki.binding.15319047",
+      "kind": "wiki_revision",
+      "page": "Survival Expert",
+      "revision": 15319047,
+      "revision_timestamp": "2026-08-25T03:22:50Z",
+      "url": "https://oldschool.runescape.wiki/w/Survival_Expert?oldid=15319047",
+      "sha256_utf8_wikitext": "3c7b34df62415f0451a279faa08a1e6eef8e0fc5d0a20c8ba31db8ae544dc62e",
+      "bytes_utf8_wikitext": 2835
+    },
+    {
+      "id": "source.wiki.tutorial_island",
+      "kind": "wiki_revision",
+      "page": "Tutorial Island",
+      "revision": 15275369,
+      "revision_timestamp": "2026-07-25T22:14:32Z",
+      "url": "https://oldschool.runescape.wiki/w/Tutorial_Island?oldid=15275369",
+      "sha256_utf8_wikitext": "d4f2ce269218c736ae2fb195d147be9d869d52f764737b8cbe11205a9b0f7f35",
+      "bytes_utf8_wikitext": 24727
+    },
+    {
+      "id": "source.wiki.binding.15332812",
+      "kind": "wiki_revision",
+      "page": "Vannaka",
+      "revision": 15332812,
+      "revision_timestamp": "2026-09-06T21:45:59Z",
+      "url": "https://oldschool.runescape.wiki/w/Vannaka?oldid=15332812",
+      "sha256_utf8_wikitext": "fd9b2c5c4b75613b11efce67f10f3cf33ff7bf674d116148b6ef17e64c3e3014",
+      "bytes_utf8_wikitext": 17175
+    }
+  ],
+  "unresolved_titles": []
+}

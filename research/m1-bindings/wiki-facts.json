@@ -1,0 +1,1898 @@
+{
+  "coordinate_rows": [
+    {
+      "classification": "verified_reference",
+      "drop_table": null,
+      "evidence_scope": "Published source location rows, not observed current server spawns; visual NPC variant and live wandering are separate bindings.",
+      "level": null,
+      "location": "[[Lumbridge]] - farm house south of the hops patch",
+      "page": "Bucket",
+      "row_kind": "ItemSpawnLine",
+      "row_sha256": "90e4adf16d894d70b47df8cae540700c0862e113fd301ece5100457de44fe61b",
+      "source_ref": "source.wiki.bucket",
+      "source_revision": 15324824,
+      "tiles": [
+        [
+          3225,
+          3294,
+          0
+        ]
+      ]
+    },
+    {
+      "classification": "verified_reference",
+      "drop_table": null,
+      "evidence_scope": "Published source location rows, not observed current server spawns; visual NPC variant and live wandering are separate bindings.",
+      "level": null,
+      "location": "[[Lumbridge Castle]] cellar",
+      "page": "Bucket",
+      "row_kind": "ItemSpawnLine",
+      "row_sha256": "5afa1164294354a88dffa88b9195da99849faefdead70934fa9990f0ded97f08",
+      "source_ref": "source.wiki.bucket",
+      "source_revision": 15324824,
+      "tiles": [
+        [
+          3216,
+          9625,
+          0
+        ]
+      ]
+    },
+    {
+      "classification": "verified_reference",
+      "drop_table": null,
+      "evidence_scope": "Published source location rows, not observed current server spawns; visual NPC variant and live wandering are separate bindings.",
+      "level": "3",
+      "location": "[[Tutorial Island]]",
+      "page": "Chicken (Tutorial Island)",
+      "row_kind": "LocLine",
+      "row_sha256": "a5ba66db4a0596471f802394a16521ed59567addc74840b0a322e965e2c4ad0d",
+      "source_ref": "source.wiki.tutorial_chicken",
+      "source_revision": 15204773,
+      "tiles": [
+        [
+          3138,
+          3093,
+          0
+        ],
+        [
+          3138,
+          3095,
+          0
+        ],
+        [
+          3140,
+          3093,
+          0
+        ],
+        [
+          3140,
+          3094,
+          0
+        ],
+        [
+          3140,
+          3096,
+          0
+        ]
+      ]
+    },
+    {
+      "classification": "verified_reference",
+      "drop_table": null,
+      "evidence_scope": "Published source location rows, not observed current server spawns; visual NPC variant and live wandering are separate bindings.",
+      "level": null,
+      "location": "[[Lumbridge]] East farm",
+      "page": "Dairy cow",
+      "row_kind": "ObjectLocLine",
+      "row_sha256": "019d52249500d9548477252509329fd0f973efeee6c25512cd27bb4cda94345f",
+      "source_ref": "source.wiki.binding.15319339",
+      "source_revision": 15319339,
+      "tiles": [
+        [
+          3254,
+          3272,
+          0
+        ],
+        [
+          3252,
+          3275,
+          0
+        ]
+      ]
+    },
+    {
+      "classification": "verified_reference",
+      "drop_table": null,
+      "evidence_scope": "Published source location rows, not observed current server spawns; visual NPC variant and live wandering are separate bindings.",
+      "level": null,
+      "location": "[[Lumbridge]] West farm",
+      "page": "Dairy cow",
+      "row_kind": "ObjectLocLine",
+      "row_sha256": "4b7c7b0c874bdb22119445c08f3c1faa094d869caf613ab562611f0a18c12ea5",
+      "source_ref": "source.wiki.binding.15319339",
+      "source_revision": 15319339,
+      "tiles": [
+        [
+          3172,
+          3317,
+          0
+        ]
+      ]
+    },
+    {
+      "classification": "verified_reference",
+      "drop_table": null,
+      "evidence_scope": "Published source location rows, not observed current server spawns; visual NPC variant and live wandering are separate bindings.",
+      "level": null,
+      "location": "[[Lumbridge]] - north-west of [[Fred the Farmer]]'s house",
+      "page": "Egg",
+      "row_kind": "ItemSpawnLine",
+      "row_sha256": "e22ef1eed2b298e2d19f0aa45a9c1b22631f07b3d9fafd11e2b091b07d467a49",
+      "source_ref": "source.wiki.egg",
+      "source_revision": 15203418,
+      "tiles": [
+        [
+          3169,
+          3291,
+          0
+        ],
+        [
+          3172,
+          3301,
+          0
+        ],
+        [
+          3175,
+          3305,
+          0
+        ],
+        [
+          3185,
+          3297,
+          0
+        ]
+      ]
+    },
+    {
+      "classification": "verified_reference",
+      "drop_table": null,
+      "evidence_scope": "Published source location rows, not observed current server spawns; visual NPC variant and live wandering are separate bindings.",
+      "level": null,
+      "location": "[[Lumbridge]] - farm house south of the hops patch",
+      "page": "Egg",
+      "row_kind": "ItemSpawnLine",
+      "row_sha256": "6a1f447ce98de6330fdc685cd181e76928f33a83cd501f211ec9e849cb3b6582",
+      "source_ref": "source.wiki.egg",
+      "source_revision": 15203418,
+      "tiles": [
+        [
+          3226,
+          3301,
+          0
+        ],
+        [
+          3229,
+          3299,
+          0
+        ]
+      ]
+    },
+    {
+      "classification": "verified_reference",
+      "drop_table": null,
+      "evidence_scope": "Published source location rows, not observed current server spawns; visual NPC variant and live wandering are separate bindings.",
+      "level": null,
+      "location": "[[Tutorial Island]]",
+      "page": "Fishing spot (Tutorial Island)",
+      "row_kind": "ObjectLocLine",
+      "row_sha256": "da831d088a6611d76d66941e434baaabfe9938499fa4eab7abddcb8348b1c4fd",
+      "source_ref": "source.wiki.binding.15312575",
+      "source_revision": 15312575,
+      "tiles": [
+        [
+          3099,
+          3090,
+          0
+        ],
+        [
+          3101,
+          3092,
+          0
+        ],
+        [
+          3103,
+          3092,
+          0
+        ]
+      ]
+    },
+    {
+      "classification": "verified_reference",
+      "drop_table": null,
+      "evidence_scope": "Published source location rows, not observed current server spawns; visual NPC variant and live wandering are separate bindings.",
+      "level": null,
+      "location": "North of [[Lumbridge]]",
+      "page": "Flour bin",
+      "row_kind": "ObjectLocLine",
+      "row_sha256": "78ca822709734d3c98185e4cf4be1df1f3fee03fb2733d2e077d029503fc94cf",
+      "source_ref": "source.wiki.flour_bin",
+      "source_revision": 15334216,
+      "tiles": [
+        [
+          3166,
+          3306,
+          0
+        ]
+      ]
+    },
+    {
+      "classification": "verified_reference",
+      "drop_table": null,
+      "evidence_scope": "Published source location rows, not observed current server spawns; visual NPC variant and live wandering are separate bindings.",
+      "level": "3",
+      "location": "[[Tutorial Island mine]]",
+      "page": "Giant rat (Tutorial Island)",
+      "row_kind": "LocLine",
+      "row_sha256": "89bdd8877347654bd355a21806b5f06acf9ef69d15e7b34cce0c85a3a038de7f",
+      "source_ref": "source.wiki.tutorial_rat",
+      "source_revision": 15324458,
+      "tiles": [
+        [
+          3098,
+          9519,
+          0
+        ],
+        [
+          3099,
+          9514,
+          0
+        ],
+        [
+          3100,
+          9517,
+          0
+        ],
+        [
+          3100,
+          9521,
+          0
+        ],
+        [
+          3102,
+          9513,
+          0
+        ],
+        [
+          3103,
+          9518,
+          0
+        ],
+        [
+          3103,
+          9521,
+          0
+        ],
+        [
+          3104,
+          9512,
+          0
+        ],
+        [
+          3105,
+          9514,
+          0
+        ],
+        [
+          3105,
+          9518,
+          0
+        ],
+        [
+          3107,
+          9516,
+          0
+        ],
+        [
+          3107,
+          9521,
+          0
+        ],
+        [
+          3109,
+          9518,
+          0
+        ]
+      ]
+    },
+    {
+      "classification": "verified_reference",
+      "drop_table": "Drop table 1",
+      "evidence_scope": "Published source location rows, not observed current server spawns; visual NPC variant and live wandering are separate bindings.",
+      "level": "2",
+      "location": "[[Lumbridge]]",
+      "page": "Goblin",
+      "row_kind": "LocLine",
+      "row_sha256": "ece851f42461e3ffadef728b6b685f151e4473c7fb5d933b87a3087d6b600d95",
+      "source_ref": "source.wiki.goblin",
+      "source_revision": 15318086,
+      "tiles": [
+        [
+          3202,
+          3253,
+          0
+        ],
+        [
+          3206,
+          3252,
+          0
+        ],
+        [
+          3183,
+          3244,
+          0
+        ],
+        [
+          3183,
+          3246,
+          0
+        ],
+        [
+          3185,
+          3244,
+          0
+        ],
+        [
+          3185,
+          3246,
+          0
+        ],
+        [
+          3187,
+          3244,
+          0
+        ],
+        [
+          3187,
+          3246,
+          0
+        ],
+        [
+          3192,
+          3245,
+          0
+        ],
+        [
+          3194,
+          3248,
+          0
+        ],
+        [
+          3197,
+          3250,
+          0
+        ],
+        [
+          3198,
+          3255,
+          0
+        ],
+        [
+          3241,
+          3244,
+          0
+        ],
+        [
+          3241,
+          3251,
+          0
+        ],
+        [
+          3242,
+          3242,
+          0
+        ],
+        [
+          3244,
+          3245,
+          0
+        ],
+        [
+          3244,
+          3247,
+          0
+        ],
+        [
+          3244,
+          3251,
+          0
+        ],
+        [
+          3246,
+          3235,
+          0
+        ],
+        [
+          3246,
+          3236,
+          0
+        ],
+        [
+          3246,
+          3241,
+          0
+        ],
+        [
+          3246,
+          3244,
+          0
+        ],
+        [
+          3246,
+          3245,
+          0
+        ],
+        [
+          3247,
+          3240,
+          0
+        ],
+        [
+          3247,
+          3245,
+          0
+        ],
+        [
+          3247,
+          3247,
+          0
+        ],
+        [
+          3248,
+          3229,
+          0
+        ],
+        [
+          3248,
+          3241,
+          0
+        ],
+        [
+          3249,
+          3243,
+          0
+        ],
+        [
+          3249,
+          3252,
+          0
+        ],
+        [
+          3249,
+          3256,
+          0
+        ],
+        [
+          3250,
+          3227,
+          0
+        ],
+        [
+          3250,
+          3228,
+          0
+        ],
+        [
+          3250,
+          3238,
+          0
+        ],
+        [
+          3250,
+          3256,
+          0
+        ],
+        [
+          3251,
+          3243,
+          0
+        ],
+        [
+          3251,
+          3252,
+          0
+        ],
+        [
+          3252,
+          3228,
+          0
+        ],
+        [
+          3252,
+          3246,
+          0
+        ],
+        [
+          3253,
+          3234,
+          0
+        ],
+        [
+          3253,
+          3241,
+          0
+        ],
+        [
+          3253,
+          3250,
+          0
+        ],
+        [
+          3255,
+          3222,
+          0
+        ],
+        [
+          3255,
+          3245,
+          0
+        ],
+        [
+          3255,
+          3247,
+          0
+        ],
+        [
+          3255,
+          3249,
+          0
+        ],
+        [
+          3255,
+          3252,
+          0
+        ],
+        [
+          3256,
+          3226,
+          0
+        ],
+        [
+          3258,
+          3220,
+          0
+        ],
+        [
+          3258,
+          3228,
+          0
+        ],
+        [
+          3258,
+          3245,
+          0
+        ],
+        [
+          3258,
+          3249,
+          0
+        ],
+        [
+          3259,
+          3223,
+          0
+        ],
+        [
+          3259,
+          3230,
+          0
+        ],
+        [
+          3260,
+          3229,
+          0
+        ],
+        [
+          3260,
+          3233,
+          0
+        ],
+        [
+          3260,
+          3237,
+          0
+        ],
+        [
+          3260,
+          3240,
+          0
+        ],
+        [
+          3262,
+          3218,
+          0
+        ],
+        [
+          3263,
+          3220,
+          0
+        ],
+        [
+          3263,
+          3228,
+          0
+        ],
+        [
+          3263,
+          3243,
+          0
+        ],
+        [
+          3137,
+          3287,
+          0
+        ],
+        [
+          3137,
+          3297,
+          0
+        ],
+        [
+          3141,
+          3304,
+          0
+        ],
+        [
+          3142,
+          3294,
+          0
+        ],
+        [
+          3142,
+          3297,
+          0
+        ],
+        [
+          3142,
+          3302,
+          0
+        ],
+        [
+          3144,
+          3299,
+          0
+        ],
+        [
+          3144,
+          3300,
+          0
+        ],
+        [
+          3144,
+          3308,
+          0
+        ],
+        [
+          3145,
+          3294,
+          0
+        ],
+        [
+          3145,
+          3303,
+          0
+        ],
+        [
+          3145,
+          3305,
+          0
+        ],
+        [
+          3145,
+          3310,
+          0
+        ],
+        [
+          3146,
+          3296,
+          0
+        ],
+        [
+          3146,
+          3298,
+          0
+        ],
+        [
+          3146,
+          3302,
+          0
+        ],
+        [
+          3147,
+          3302,
+          0
+        ],
+        [
+          3147,
+          3308,
+          0
+        ],
+        [
+          3148,
+          3296,
+          0
+        ],
+        [
+          3148,
+          3300,
+          0
+        ],
+        [
+          3149,
+          3310,
+          0
+        ],
+        [
+          3150,
+          3302,
+          0
+        ],
+        [
+          3151,
+          3305,
+          0
+        ],
+        [
+          3154,
+          3309,
+          0
+        ],
+        [
+          3156,
+          3293,
+          0
+        ],
+        [
+          3160,
+          3289,
+          0
+        ],
+        [
+          3161,
+          3307,
+          0
+        ],
+        [
+          3162,
+          3277,
+          0
+        ],
+        [
+          3162,
+          3287,
+          0
+        ],
+        [
+          3163,
+          3286,
+          0
+        ],
+        [
+          3165,
+          3288,
+          0
+        ],
+        [
+          3165,
+          3292,
+          0
+        ],
+        [
+          3165,
+          3299,
+          0
+        ],
+        [
+          3167,
+          3287,
+          0
+        ],
+        [
+          3167,
+          3289,
+          0
+        ],
+        [
+          3167,
+          3295,
+          0
+        ],
+        [
+          3169,
+          3283,
+          0
+        ],
+        [
+          3170,
+          3286,
+          0
+        ],
+        [
+          3172,
+          3311,
+          0
+        ],
+        [
+          3175,
+          3286,
+          0
+        ],
+        [
+          3180,
+          3286,
+          0
+        ],
+        [
+          3183,
+          3284,
+          0
+        ],
+        [
+          3185,
+          3282,
+          0
+        ],
+        [
+          3185,
+          3285,
+          0
+        ],
+        [
+          3185,
+          3307,
+          0
+        ],
+        [
+          3188,
+          3290,
+          0
+        ],
+        [
+          3189,
+          3281,
+          0
+        ],
+        [
+          3189,
+          3300,
+          0
+        ],
+        [
+          3190,
+          3283,
+          0
+        ],
+        [
+          3190,
+          3296,
+          0
+        ],
+        [
+          3197,
+          3280,
+          0
+        ],
+        [
+          3141,
+          3258,
+          0
+        ],
+        [
+          3141,
+          3261,
+          0
+        ],
+        [
+          3142,
+          3260,
+          0
+        ],
+        [
+          3144,
+          3259,
+          0
+        ],
+        [
+          3146,
+          3260,
+          0
+        ],
+        [
+          3215,
+          3276,
+          0
+        ],
+        [
+          3217,
+          3278,
+          0
+        ],
+        [
+          3224,
+          3262,
+          0
+        ]
+      ]
+    },
+    {
+      "classification": "verified_reference",
+      "drop_table": "Drop table 1",
+      "evidence_scope": "Published source location rows, not observed current server spawns; visual NPC variant and live wandering are separate bindings.",
+      "level": "2",
+      "location": "South-east of [[Draynor Village]]",
+      "page": "Goblin",
+      "row_kind": "LocLine",
+      "row_sha256": "e86d0928abc7e69403df1c03bd241813e0addb217f815acaa56908a602b0be17",
+      "source_ref": "source.wiki.goblin",
+      "source_revision": 15318086,
+      "tiles": [
+        [
+          3142,
+          3230,
+          0
+        ],
+        [
+          3143,
+          3227,
+          0
+        ],
+        [
+          3144,
+          3231,
+          0
+        ],
+        [
+          3144,
+          3233,
+          0
+        ],
+        [
+          3145,
+          3229,
+          0
+        ],
+        [
+          3146,
+          3234,
+          0
+        ]
+      ]
+    },
+    {
+      "classification": "verified_reference",
+      "drop_table": "Drop table 2",
+      "evidence_scope": "Published source location rows, not observed current server spawns; visual NPC variant and live wandering are separate bindings.",
+      "level": "5",
+      "location": "[[Lumbridge Swamp]]",
+      "page": "Goblin",
+      "row_kind": "LocLine",
+      "row_sha256": "72d17dca94ff76c9c923b3076765d30178b13be1287bd299ae40d5e49b654993",
+      "source_ref": "source.wiki.goblin",
+      "source_revision": 15318086,
+      "tiles": [
+        [
+          3167,
+          3205,
+          0
+        ]
+      ]
+    },
+    {
+      "classification": "verified_reference",
+      "drop_table": null,
+      "evidence_scope": "Published source location rows, not observed current server spawns; visual NPC variant and live wandering are separate bindings.",
+      "level": null,
+      "location": "North-west of [[Lumbridge]]",
+      "page": "Grain",
+      "row_kind": "ObjectLocLine",
+      "row_sha256": "258607b32865287540434476167e1c16e712a320b133629fedb41c254595f2d0",
+      "source_ref": "source.wiki.grain",
+      "source_revision": 15315164,
+      "tiles": [
+        [
+          3155,
+          3308,
+          0
+        ],
+        [
+          3153,
+          3306,
+          0
+        ],
+        [
+          3153,
+          3297,
+          0
+        ],
+        [
+          3155,
+          3295,
+          0
+        ],
+        [
+          3157,
+          3295,
+          0
+        ],
+        [
+          3162,
+          3290,
+          0
+        ],
+        [
+          3164,
+          3290,
+          0
+        ],
+        [
+          3165,
+          3291,
+          0
+        ],
+        [
+          3165,
+          3292,
+          0
+        ],
+        [
+          3164,
+          3293,
+          0
+        ],
+        [
+          3164,
+          3296,
+          0
+        ],
+        [
+          3165,
+          3297,
+          0
+        ],
+        [
+          3165,
+          3299,
+          0
+        ],
+        [
+          3162,
+          3302,
+          0
+        ],
+        [
+          3162,
+          3303,
+          0
+        ],
+        [
+          3160,
+          3305,
+          0
+        ],
+        [
+          3160,
+          3306,
+          0
+        ],
+        [
+          3159,
+          3307,
+          0
+        ],
+        [
+          3158,
+          3307,
+          0
+        ],
+        [
+          3157,
+          3308,
+          0
+        ]
+      ]
+    },
+    {
+      "classification": "verified_reference",
+      "drop_table": null,
+      "evidence_scope": "Published source location rows, not observed current server spawns; visual NPC variant and live wandering are separate bindings.",
+      "level": null,
+      "location": "[[Draynor Village]]",
+      "page": "Grain",
+      "row_kind": "ObjectLocLine",
+      "row_sha256": "44b8ddf920ecb27acca1eefad61874b08f9c6d0b55f79a1b7a6648172760cc1f",
+      "source_ref": "source.wiki.grain",
+      "source_revision": 15315164,
+      "tiles": [
+        [
+          3131,
+          3273,
+          0
+        ],
+        [
+          3131,
+          3287,
+          0
+        ],
+        [
+          3130,
+          3289,
+          0
+        ],
+        [
+          3130,
+          3291,
+          0
+        ]
+      ]
+    },
+    {
+      "classification": "verified_reference",
+      "drop_table": null,
+      "evidence_scope": "Published source location rows, not observed current server spawns; visual NPC variant and live wandering are separate bindings.",
+      "level": null,
+      "location": "North of [[Lumbridge]]",
+      "page": "Hopper",
+      "row_kind": "ObjectLocLine",
+      "row_sha256": "9585b184e7d6c6900e4bbb2eaf5a86f74b1f8584aabf2b4e2432ea5c3c408ab7",
+      "source_ref": "source.wiki.hopper",
+      "source_revision": 15334231,
+      "tiles": [
+        [
+          3166,
+          3307,
+          2
+        ]
+      ]
+    },
+    {
+      "classification": "verified_reference",
+      "drop_table": null,
+      "evidence_scope": "Published source location rows, not observed current server spawns; visual NPC variant and live wandering are separate bindings.",
+      "level": null,
+      "location": "[[Lumbridge Castle]] kitchen",
+      "page": "Pot",
+      "row_kind": "ItemSpawnLine",
+      "row_sha256": "aba8b61e0b044338c806222c330993fbfcb929e393e9e622a85a980f1da9b17f",
+      "source_ref": "source.wiki.pot",
+      "source_revision": 15321421,
+      "tiles": [
+        [
+          3209,
+          3214,
+          0
+        ]
+      ]
+    },
+    {
+      "classification": "verified_reference",
+      "drop_table": null,
+      "evidence_scope": "Published source location rows, not observed current server spawns; visual NPC variant and live wandering are separate bindings.",
+      "level": null,
+      "location": "[[Lumbridge Swamp]] - north-western end",
+      "page": "Pot",
+      "row_kind": "ItemSpawnLine",
+      "row_sha256": "9bacf772635f8e582e8355ceb4ef6fe2910888acb30a341e19c5c4a991ff8af6",
+      "source_ref": "source.wiki.pot",
+      "source_revision": 15321421,
+      "tiles": [
+        [
+          3148,
+          3211,
+          0
+        ]
+      ]
+    }
+  ],
+  "map_anchors": [
+    {
+      "classification": "inference",
+      "evidence_scope": "Published navigation/wander-area map anchor; not a certified NPC origin or player arrival tile. Never used as an observed camera or spawn.",
+      "map_type": "square",
+      "page": "Account Guide",
+      "radius": null,
+      "source_ref": "source.wiki.binding.15333807",
+      "source_revision": 15333807,
+      "square_x": 7,
+      "square_y": 5,
+      "tile": [
+        3128,
+        3125,
+        0
+      ]
+    },
+    {
+      "classification": "inference",
+      "evidence_scope": "Published navigation/wander-area map anchor; not a certified NPC origin or player arrival tile. Never used as an observed camera or spawn.",
+      "map_type": "square",
+      "page": "Adventurer Jon",
+      "radius": 3,
+      "source_ref": "source.wiki.binding.15239659",
+      "source_revision": 15239659,
+      "square_x": null,
+      "square_y": null,
+      "tile": [
+        3232,
+        3234,
+        0
+      ]
+    },
+    {
+      "classification": "inference",
+      "evidence_scope": "Published navigation/wander-area map anchor; not a certified NPC origin or player arrival tile. Never used as an observed camera or spawn.",
+      "map_type": "square",
+      "page": "Brother Brace",
+      "radius": 4,
+      "source_ref": "source.wiki.binding.15250579",
+      "source_revision": 15250579,
+      "square_x": null,
+      "square_y": null,
+      "tile": [
+        3125,
+        3106,
+        0
+      ]
+    },
+    {
+      "classification": "inference",
+      "evidence_scope": "Published navigation/wander-area map anchor; not a certified NPC origin or player arrival tile. Never used as an observed camera or spawn.",
+      "map_type": "square",
+      "page": "Brother Brace",
+      "radius": 4,
+      "source_ref": "source.wiki.binding.15250579",
+      "source_revision": 15250579,
+      "square_x": null,
+      "square_y": null,
+      "tile": [
+        1717,
+        6114,
+        0
+      ]
+    },
+    {
+      "classification": "inference",
+      "evidence_scope": "Published navigation/wander-area map anchor; not a certified NPC origin or player arrival tile. Never used as an observed camera or spawn.",
+      "map_type": "square",
+      "page": "Cook (Lumbridge)",
+      "radius": 3,
+      "source_ref": "source.wiki.cook_lumbridge",
+      "source_revision": 15303539,
+      "square_x": null,
+      "square_y": null,
+      "tile": [
+        3209,
+        3214,
+        0
+      ]
+    },
+    {
+      "classification": "inference",
+      "evidence_scope": "Published navigation/wander-area map anchor; not a certified NPC origin or player arrival tile. Never used as an observed camera or spawn.",
+      "map_type": "pin",
+      "page": "Death (NPC)",
+      "radius": null,
+      "source_ref": "source.wiki.death_npc",
+      "source_revision": 15324492,
+      "square_x": null,
+      "square_y": null,
+      "tile": [
+        3180,
+        5727,
+        0
+      ]
+    },
+    {
+      "classification": "inference",
+      "evidence_scope": "Published navigation/wander-area map anchor; not a certified NPC origin or player arrival tile. Never used as an observed camera or spawn.",
+      "map_type": null,
+      "page": "Death's Office",
+      "radius": null,
+      "source_ref": "source.wiki.deaths_office",
+      "source_revision": 15273706,
+      "square_x": null,
+      "square_y": null,
+      "tile": [
+        3176,
+        5726,
+        0
+      ]
+    },
+    {
+      "classification": "inference",
+      "evidence_scope": "Published navigation/wander-area map anchor; not a certified NPC origin or player arrival tile. Never used as an observed camera or spawn.",
+      "map_type": "pin",
+      "page": "Death's Office",
+      "radius": null,
+      "source_ref": "source.wiki.deaths_office",
+      "source_revision": 15273706,
+      "square_x": null,
+      "square_y": null,
+      "tile": [
+        3238,
+        3194,
+        0
+      ]
+    },
+    {
+      "classification": "inference",
+      "evidence_scope": "Published navigation/wander-area map anchor; not a certified NPC origin or player arrival tile. Never used as an observed camera or spawn.",
+      "map_type": "pin",
+      "page": "Death's Office",
+      "radius": null,
+      "source_ref": "source.wiki.deaths_office",
+      "source_revision": 15273706,
+      "square_x": null,
+      "square_y": null,
+      "tile": [
+        2964,
+        3331,
+        0
+      ]
+    },
+    {
+      "classification": "inference",
+      "evidence_scope": "Published navigation/wander-area map anchor; not a certified NPC origin or player arrival tile. Never used as an observed camera or spawn.",
+      "map_type": "pin",
+      "page": "Death's Office",
+      "radius": null,
+      "source_ref": "source.wiki.deaths_office",
+      "source_revision": 15273706,
+      "square_x": null,
+      "square_y": null,
+      "tile": [
+        2715,
+        3466,
+        0
+      ]
+    },
+    {
+      "classification": "inference",
+      "evidence_scope": "Published navigation/wander-area map anchor; not a certified NPC origin or player arrival tile. Never used as an observed camera or spawn.",
+      "map_type": "pin",
+      "page": "Death's Office",
+      "radius": null,
+      "source_ref": "source.wiki.deaths_office",
+      "source_revision": 15273706,
+      "square_x": null,
+      "square_y": null,
+      "tile": [
+        3096,
+        3475,
+        0
+      ]
+    },
+    {
+      "classification": "inference",
+      "evidence_scope": "Published navigation/wander-area map anchor; not a certified NPC origin or player arrival tile. Never used as an observed camera or spawn.",
+      "map_type": "pin",
+      "page": "Death's Office",
+      "radius": null,
+      "source_ref": "source.wiki.deaths_office",
+      "source_revision": 15273706,
+      "square_x": null,
+      "square_y": null,
+      "tile": [
+        3127,
+        3630,
+        0
+      ]
+    },
+    {
+      "classification": "inference",
+      "evidence_scope": "Published navigation/wander-area map anchor; not a certified NPC origin or player arrival tile. Never used as an observed camera or spawn.",
+      "map_type": "pin",
+      "page": "Death's Office",
+      "radius": null,
+      "source_ref": "source.wiki.deaths_office",
+      "source_revision": 15273706,
+      "square_x": null,
+      "square_y": null,
+      "tile": [
+        1622,
+        3663,
+        0
+      ]
+    },
+    {
+      "classification": "inference",
+      "evidence_scope": "Published navigation/wander-area map anchor; not a certified NPC origin or player arrival tile. Never used as an observed camera or spawn.",
+      "map_type": "pin",
+      "page": "Death's Office",
+      "radius": null,
+      "source_ref": "source.wiki.deaths_office",
+      "source_revision": 15273706,
+      "square_x": null,
+      "square_y": null,
+      "tile": [
+        3256,
+        6118,
+        0
+      ]
+    },
+    {
+      "classification": "inference",
+      "evidence_scope": "Published navigation/wander-area map anchor; not a certified NPC origin or player arrival tile. Never used as an observed camera or spawn.",
+      "map_type": "pin",
+      "page": "Death's Office",
+      "radius": null,
+      "source_ref": "source.wiki.deaths_office",
+      "source_revision": 15273706,
+      "square_x": null,
+      "square_y": null,
+      "tile": [
+        1654,
+        3135,
+        0
+      ]
+    },
+    {
+      "classification": "inference",
+      "evidence_scope": "Published navigation/wander-area map anchor; not a certified NPC origin or player arrival tile. Never used as an observed camera or spawn.",
+      "map_type": "square",
+      "page": "Gielinor Guide",
+      "radius": 3,
+      "source_ref": "source.wiki.binding.15319049",
+      "source_revision": 15319049,
+      "square_x": null,
+      "square_y": null,
+      "tile": [
+        3094,
+        3107,
+        0
+      ]
+    },
+    {
+      "classification": "inference",
+      "evidence_scope": "Published navigation/wander-area map anchor; not a certified NPC origin or player arrival tile. Never used as an observed camera or spawn.",
+      "map_type": "square",
+      "page": "Gielinor Guide",
+      "radius": 3,
+      "source_ref": "source.wiki.binding.15319049",
+      "source_revision": 15319049,
+      "square_x": null,
+      "square_y": null,
+      "tile": [
+        1686,
+        6115,
+        0
+      ]
+    },
+    {
+      "classification": "inference",
+      "evidence_scope": "Published navigation/wander-area map anchor; not a certified NPC origin or player arrival tile. Never used as an observed camera or spawn.",
+      "map_type": "square",
+      "page": "Gillie Groats",
+      "radius": 3,
+      "source_ref": "source.wiki.binding.15246817",
+      "source_revision": 15246817,
+      "square_x": null,
+      "square_y": null,
+      "tile": [
+        3253,
+        3275,
+        0
+      ]
+    },
+    {
+      "classification": "inference",
+      "evidence_scope": "Published navigation/wander-area map anchor; not a certified NPC origin or player arrival tile. Never used as an observed camera or spawn.",
+      "map_type": "square",
+      "page": "Henja",
+      "radius": 5,
+      "source_ref": "source.wiki.binding.15001937",
+      "source_revision": 15001937,
+      "square_x": null,
+      "square_y": null,
+      "tile": [
+        2967,
+        3213,
+        0
+      ]
+    },
+    {
+      "classification": "inference",
+      "evidence_scope": "Published navigation/wander-area map anchor; not a certified NPC origin or player arrival tile. Never used as an observed camera or spawn.",
+      "map_type": "pin",
+      "page": "Ironman tutor",
+      "radius": null,
+      "source_ref": "source.wiki.binding.15313833",
+      "source_revision": 15313833,
+      "square_x": null,
+      "square_y": null,
+      "tile": [
+        3229,
+        3227,
+        0
+      ]
+    },
+    {
+      "classification": "inference",
+      "evidence_scope": "Published navigation/wander-area map anchor; not a certified NPC origin or player arrival tile. Never used as an observed camera or spawn.",
+      "map_type": "square",
+      "page": "Lumbridge Guide",
+      "radius": 3,
+      "source_ref": "source.wiki.binding.15314702",
+      "source_revision": 15314702,
+      "square_x": null,
+      "square_y": null,
+      "tile": [
+        3238,
+        3220,
+        0
+      ]
+    },
+    {
+      "classification": "inference",
+      "evidence_scope": "Published navigation/wander-area map anchor; not a certified NPC origin or player arrival tile. Never used as an observed camera or spawn.",
+      "map_type": "square",
+      "page": "Magic Instructor",
+      "radius": 2,
+      "source_ref": "source.wiki.binding.15220378",
+      "source_revision": 15220378,
+      "square_x": null,
+      "square_y": null,
+      "tile": [
+        3141,
+        3087,
+        0
+      ]
+    },
+    {
+      "classification": "inference",
+      "evidence_scope": "Published navigation/wander-area map anchor; not a certified NPC origin or player arrival tile. Never used as an observed camera or spawn.",
+      "map_type": "square",
+      "page": "Magic Instructor",
+      "radius": 2,
+      "source_ref": "source.wiki.binding.15220378",
+      "source_revision": 15220378,
+      "square_x": null,
+      "square_y": null,
+      "tile": [
+        1733,
+        6096,
+        0
+      ]
+    },
+    {
+      "classification": "inference",
+      "evidence_scope": "Published navigation/wander-area map anchor; not a certified NPC origin or player arrival tile. Never used as an observed camera or spawn.",
+      "map_type": "square",
+      "page": "Master Chef",
+      "radius": 3,
+      "source_ref": "source.wiki.binding.15319046",
+      "source_revision": 15319046,
+      "square_x": null,
+      "square_y": null,
+      "tile": [
+        3075,
+        3085,
+        0
+      ]
+    },
+    {
+      "classification": "inference",
+      "evidence_scope": "Published navigation/wander-area map anchor; not a certified NPC origin or player arrival tile. Never used as an observed camera or spawn.",
+      "map_type": "square",
+      "page": "Millie Miller",
+      "radius": 5,
+      "source_ref": "source.wiki.binding.15258541",
+      "source_revision": 15258541,
+      "square_x": null,
+      "square_y": null,
+      "tile": [
+        3167,
+        3307,
+        0
+      ]
+    },
+    {
+      "classification": "inference",
+      "evidence_scope": "Published navigation/wander-area map anchor; not a certified NPC origin or player arrival tile. Never used as an observed camera or spawn.",
+      "map_type": "pin",
+      "page": "Mining Instructor",
+      "radius": null,
+      "source_ref": "source.wiki.binding.15285366",
+      "source_revision": 15285366,
+      "square_x": null,
+      "square_y": null,
+      "tile": [
+        3081,
+        9504,
+        0
+      ]
+    },
+    {
+      "classification": "inference",
+      "evidence_scope": "Published navigation/wander-area map anchor; not a certified NPC origin or player arrival tile. Never used as an observed camera or spawn.",
+      "map_type": "pin",
+      "page": "Mining Instructor",
+      "radius": null,
+      "source_ref": "source.wiki.binding.15285366",
+      "source_revision": 15285366,
+      "square_x": null,
+      "square_y": null,
+      "tile": [
+        1673,
+        12512,
+        0
+      ]
+    },
+    {
+      "classification": "inference",
+      "evidence_scope": "Published navigation/wander-area map anchor; not a certified NPC origin or player arrival tile. Never used as an observed camera or spawn.",
+      "map_type": "square",
+      "page": "Quest Guide",
+      "radius": 2,
+      "source_ref": "source.wiki.binding.15220370",
+      "source_revision": 15220370,
+      "square_x": null,
+      "square_y": null,
+      "tile": [
+        3086,
+        3122,
+        0
+      ]
+    },
+    {
+      "classification": "inference",
+      "evidence_scope": "Published navigation/wander-area map anchor; not a certified NPC origin or player arrival tile. Never used as an observed camera or spawn.",
+      "map_type": "square",
+      "page": "Quest Guide",
+      "radius": 2,
+      "source_ref": "source.wiki.binding.15220370",
+      "source_revision": 15220370,
+      "square_x": null,
+      "square_y": null,
+      "tile": [
+        1677,
+        6130,
+        0
+      ]
+    },
+    {
+      "classification": "inference",
+      "evidence_scope": "Published navigation/wander-area map anchor; not a certified NPC origin or player arrival tile. Never used as an observed camera or spawn.",
+      "map_type": "square",
+      "page": "Shop assistant (Lumbridge)",
+      "radius": 5,
+      "source_ref": "source.wiki.binding.14992646",
+      "source_revision": 14992646,
+      "square_x": null,
+      "square_y": null,
+      "tile": [
+        3211,
+        3246,
+        0
+      ]
+    },
+    {
+      "classification": "inference",
+      "evidence_scope": "Published navigation/wander-area map anchor; not a certified NPC origin or player arrival tile. Never used as an observed camera or spawn.",
+      "map_type": "pin",
+      "page": "Shop keeper (Lumbridge)",
+      "radius": null,
+      "source_ref": "source.wiki.binding.14992629",
+      "source_revision": 14992629,
+      "square_x": null,
+      "square_y": null,
+      "tile": [
+        3211,
+        3247,
+        0
+      ]
+    },
+    {
+      "classification": "inference",
+      "evidence_scope": "Published navigation/wander-area map anchor; not a certified NPC origin or player arrival tile. Never used as an observed camera or spawn.",
+      "map_type": "square",
+      "page": "Survival Expert",
+      "radius": 3,
+      "source_ref": "source.wiki.binding.15319047",
+      "source_revision": 15319047,
+      "square_x": null,
+      "square_y": null,
+      "tile": [
+        3103,
+        3095,
+        0
+      ]
+    },
+    {
+      "classification": "inference",
+      "evidence_scope": "Published navigation/wander-area map anchor; not a certified NPC origin or player arrival tile. Never used as an observed camera or spawn.",
+      "map_type": "square",
+      "page": "Survival Expert",
+      "radius": 3,
+      "source_ref": "source.wiki.binding.15319047",
+      "source_revision": 15319047,
+      "square_x": null,
+      "square_y": null,
+      "tile": [
+        1695,
+        6103,
+        0
+      ]
+    },
+    {
+      "classification": "inference",
+      "evidence_scope": "Published navigation/wander-area map anchor; not a certified NPC origin or player arrival tile. Never used as an observed camera or spawn.",
+      "map_type": null,
+      "page": "Tutorial Island",
+      "radius": null,
+      "source_ref": "source.wiki.tutorial_island",
+      "source_revision": 15275369,
+      "square_x": null,
+      "square_y": null,
+      "tile": [
+        3100,
+        3100,
+        0
+      ]
+    },
+    {
+      "classification": "inference",
+      "evidence_scope": "Published navigation/wander-area map anchor; not a certified NPC origin or player arrival tile. Never used as an observed camera or spawn.",
+      "map_type": null,
+      "page": "Tutorial Island",
+      "radius": null,
+      "source_ref": "source.wiki.tutorial_island",
+      "source_revision": 15275369,
+      "square_x": null,
+      "square_y": null,
+      "tile": [
+        3096,
+        9516,
+        0
+      ]
+    },
+    {
+      "classification": "inference",
+      "evidence_scope": "Published navigation/wander-area map anchor; not a certified NPC origin or player arrival tile. Never used as an observed camera or spawn.",
+      "map_type": "square",
+      "page": "Vannaka",
+      "radius": 3,
+      "source_ref": "source.wiki.binding.15332812",
+      "source_revision": 15332812,
+      "square_x": null,
+      "square_y": null,
+      "tile": [
+        3147,
+        9914,
+        0
+      ]
+    },
+    {
+      "classification": "inference",
+      "evidence_scope": "Published navigation/wander-area map anchor; not a certified NPC origin or player arrival tile. Never used as an observed camera or spawn.",
+      "map_type": "square",
+      "page": "Vannaka",
+      "radius": 2,
+      "source_ref": "source.wiki.binding.15332812",
+      "source_revision": 15332812,
+      "square_x": null,
+      "square_y": null,
+      "tile": [
+        1697,
+        12516,
+        0
+      ]
+    }
+  ],
+  "schema_version": 1,
+  "shop_stock": [
+    {
+      "name": "Pot",
+      "restock_ticks": 10,
+      "source_ref": "source.wiki.lumbridge_general_store",
+      "source_revision": 15318670,
+      "stock": 5
+    },
+    {
+      "name": "Jug",
+      "restock_ticks": 100,
+      "source_ref": "source.wiki.lumbridge_general_store",
+      "source_revision": 15318670,
+      "stock": 2
+    },
+    {
+      "name": "Empty jug pack",
+      "restock_ticks": 20,
+      "source_ref": "source.wiki.lumbridge_general_store",
+      "source_revision": 15318670,
+      "stock": 5
+    },
+    {
+      "name": "Shears",
+      "restock_ticks": 100,
+      "source_ref": "source.wiki.lumbridge_general_store",
+      "source_revision": 15318670,
+      "stock": 2
+    },
+    {
+      "name": "Knife",
+      "restock_ticks": 100,
+      "source_ref": "source.wiki.lumbridge_general_store",
+      "source_revision": 15318670,
+      "stock": 5
+    },
+    {
+      "name": "Bucket",
+      "restock_ticks": 10,
+      "source_ref": "source.wiki.lumbridge_general_store",
+      "source_revision": 15318670,
+      "stock": 3
+    },
+    {
+      "name": "Empty bucket pack",
+      "restock_ticks": 10,
+      "source_ref": "source.wiki.lumbridge_general_store",
+      "source_revision": 15318670,
+      "stock": 15
+    },
+    {
+      "name": "Bowl",
+      "restock_ticks": 50,
+      "source_ref": "source.wiki.lumbridge_general_store",
+      "source_revision": 15318670,
+      "stock": 2
+    },
+    {
+      "name": "Cake tin",
+      "restock_ticks": 50,
+      "source_ref": "source.wiki.lumbridge_general_store",
+      "source_revision": 15318670,
+      "stock": 2
+    },
+    {
+      "name": "Tinderbox",
+      "restock_ticks": 100,
+      "source_ref": "source.wiki.lumbridge_general_store",
+      "source_revision": 15318670,
+      "stock": 2
+    },
+    {
+      "name": "Chisel",
+      "restock_ticks": 100,
+      "source_ref": "source.wiki.lumbridge_general_store",
+      "source_revision": 15318670,
+      "stock": 2
+    },
+    {
+      "name": "Spade",
+      "restock_ticks": 100,
+      "source_ref": "source.wiki.lumbridge_general_store",
+      "source_revision": 15318670,
+      "stock": 5
+    },
+    {
+      "name": "Hammer",
+      "restock_ticks": 100,
+      "source_ref": "source.wiki.lumbridge_general_store",
+      "source_revision": 15318670,
+      "stock": 5
+    },
+    {
+      "name": "Newcomer map",
+      "restock_ticks": 100,
+      "source_ref": "source.wiki.lumbridge_general_store",
+      "source_revision": 15318670,
+      "stock": 5
+    },
+    {
+      "name": "Security book",
+      "restock_ticks": 100,
+      "source_ref": "source.wiki.lumbridge_general_store",
+      "source_revision": 15318670,
+      "stock": 5
+    }
+  ]
+}

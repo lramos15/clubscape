@@ -1,0 +1,74 @@
+{
+  "command": [
+    "cargo",
+    "run",
+    "--quiet",
+    "--locked",
+    "--offline",
+    "--manifest-path",
+    "/home/lramos15/clubscape/.worktrees/m1-content/crates/content/Cargo.toml",
+    "-p",
+    "clubscape-content",
+    "--",
+    "--input",
+    "/home/lramos15/clubscape/.worktrees/m1-product-content/tools/m1-content/.local/compiler/game-content.json",
+    "--output",
+    "/home/lramos15/clubscape/.worktrees/m1-product-content/tools/m1-content/.local/compiler/m1.csc"
+  ],
+  "compiler_manifest": "/home/lramos15/clubscape/.worktrees/m1-content/crates/content/Cargo.toml",
+  "compiler_manifest_sha256": "980057ed62a451bbf7eae3782ef442ce89fb54915d5f64c429802833086bdfd5",
+  "compiler_sources": [
+    {
+      "path": "src/artifact.rs",
+      "sha256": "7b9ef268d18271eddfa67758283475582a4deb2185a57c9af514f17e562b39c7"
+    },
+    {
+      "path": "src/decode.rs",
+      "sha256": "8061cec753e636ff7fc9c6cc70b6217bdb01f695eddfb8bf9a66a018f76f3e00"
+    },
+    {
+      "path": "src/lib.rs",
+      "sha256": "6631f33da061edf263a3e53a5f86177ad8ca04d572287f74fc58a9d7264ae767"
+    },
+    {
+      "path": "src/main.rs",
+      "sha256": "343c968eea444aeccbd8bc00f397fc6ecbc714ed7601a9d382e6b031db228e8e"
+    },
+    {
+      "path": "src/validation/definitions.rs",
+      "sha256": "deee04a7d1dfe57c0f3191491ddf58743c6a4e5589c0d6c95b6230e365dee598"
+    },
+    {
+      "path": "src/validation/graphs/reachability.rs",
+      "sha256": "30c73628fca6cbf8d5537f77311907f729e56c016b4f9ab262dbaa21abd9c207"
+    },
+    {
+      "path": "src/validation/graphs.rs",
+      "sha256": "2769f8ad0d4427582eb02b1096c26e186f26671ad1b955de137b6b4999072b55"
+    },
+    {
+      "path": "src/validation/mod.rs",
+      "sha256": "92f19a168d224006b50a1b4d16d9b446441bd5f12b02a282db5014626f9a7fee"
+    },
+    {
+      "path": "src/validation/rules.rs",
+      "sha256": "9ee003c298b4250cf6ae4f9191b48dad6b97294704f9d0bc5135f0a748f2f584"
+    },
+    {
+      "path": "src/validation/world.rs",
+      "sha256": "f90dda037b3d3ca087db4be65d8b910c9b5f313aae3f54ee1d549db413e63d09"
+    }
+  ],
+  "compiler_sources_aggregate_sha256": "f6997de4916f335f9ecfafba4a36911650d9f98de551e707c44890dd2a2ae697",
+  "exit_code": 1,
+  "gameplay_executed": false,
+  "input_compressed_sha256": "1d77b55bd56bf2f03a8b5204707c49f8dd49ae39c76cc11c0eacde6a34ec618e",
+  "input_sha256": "3a0fba37d8b9758a5fc1255aaa519ce1394964df8c84a51160411354ce132985",
+  "note": "Actual clubscape-content Runtime CLI, no --test-fixture, permissive mode, field-stripping, synthetic content or substitute validator.",
+  "presentation_approved": false,
+  "runtime_compile_passed": false,
+  "schema_version": 1,
+  "shared_game_types_content_sha256": "1b7675ade30a2a2f1812b051045b47f9113a68a9e84c64accd1eb660ac50f1bc",
+  "stderr": "{\"code\":\"invalid_content\",\"message\":\"spawns.spawn.death: destination/actor tile is not walkable\",\"ok\":false}\n",
+  "stdout": ""
+}
