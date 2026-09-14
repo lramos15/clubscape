@@ -7,11 +7,12 @@
     "admissions_open": true,
     "active": [
       {"id": "director", "task": "M1-FLEET-CONTRACTS"},
-      {"id": "5609da2e-44f0-4a9e-9829-08bf4f16acd7", "task": "M1-FLEET-MECHANICS-CONTRACTS"}
+      {"id": "ac0f0856-44af-445b-bd90-6db7a1f4fc74", "task": "M1-FLEET-NATIVE-HUD"}
     ],
     "reserved": [
-      {"id": "ac0f0856-44af-445b-bd90-6db7a1f4fc74", "task": "M1-FLEET-NATIVE-HUD"},
-      {"id": "56283b56-0ae0-4839-a961-1a23a850dd1b", "task": "M1-FLEET-PUBLIC-REFERENCES"}
+      {"id": "0f5ddddf-0aa0-4908-b0d3-1ffc6b1f7a20", "task": "M1-FLEET-ENGINE"},
+      {"id": "fdda1fb0-1135-4cf8-8cff-3db550e48f54", "task": "M1-FLEET-PRODUCT-CONTENT"},
+      {"id": "e9ed6a96-6bcb-4d27-8b4c-d504edda327c", "task": "M1-FLEET-AUDIO-BINDINGS"}
     ],
     "queued": [],
     "parked": [
@@ -26,9 +27,27 @@
   },
   "tasks": [
     {
+      "id": "M1-FLEET-AUDIO-BINDINGS",
+      "goal": "Resolve the exact remaining M1 source sound and quest-jingle selectors/timing relationships before reference-pack approval.",
+      "status": "READY",
+      "specs": ["research/audio-source/**", "research/reference-pack/v1/**", "research/journey-rules/**"],
+      "dependencies": ["M1-FLEET-AUDIO"],
+      "allowed_paths": ["tools/audio-import/**", "research/audio-source/**", "assets/source/osrs/audio-runtime/**", "assets/manifests/osrs/audio-runtime.json"],
+      "forbidden_paths": ["prompt.md", "crates/**", "web/**", "spec/**", "milestones/**"],
+      "outputs": ["Source-bound shortbow/NPC/eating/smelting cues", "Tutorial/Cook jingle selector and precedence evidence"],
+      "validation_commands": ["python3 tools/audio-import/audio_import.py validate"],
+      "test_requirements": ["Actual current source code/data observations", "No arbitrary jingle or repeated padded-track assumptions"],
+      "acceptance": ["SQL m1-audio-bindings done or exact residual input uncertainty recorded"],
+      "reserved_namespaces": ["asset.source.osrs.audio_runtime.*"],
+      "source_notes": ["Public-reference pack's remaining bounded cue list"],
+      "parity_entries": [],
+      "adaptations": [],
+      "evidence": []
+    },
+    {
       "id": "M1-FLEET-NATIVE-HUD",
       "goal": "Close the specific original Resizable-Classic HUD/interface fixture gap using native source rendering rather than generic replacements.",
-      "status": "READY",
+      "status": "IMPLEMENTING",
       "specs": ["prompt.md section 30.2", "research/source-capture/handoff.json", "milestones/m1-owner-followups.json"],
       "dependencies": ["M1-FLEET-SOURCE-CAPTURES"],
       "allowed_paths": ["tools/source-capture/**", "research/source-capture/**", "assets/reference/osrs240/**"],
@@ -64,7 +83,7 @@
     {
       "id": "M1-FLEET-MECHANICS-CONTRACTS",
       "goal": "Resolve complete M1 source-mechanic representations and strict validation without weakening existing invariants or fabricating runtime success.",
-      "status": "IMPLEMENTING",
+      "status": "DONE",
       "specs": ["spec/game-contracts.md", "research/journey-rules/**", "crates/world-engine/README.md", ".worktrees/m1-product-content/research/m1-bindings/contract-gaps.json"],
       "dependencies": ["M1-FLEET-CONTENT", "M1-FLEET-SIMULATION"],
       "allowed_paths": ["crates/game-types/**", "crates/content/**", "crates/simulation/tests/**", "crates/world-engine/tests/**", "crates/world-engine/src/**", "crates/server/tests/game_storage.rs", "crates/server/src/game_storage.rs", "spec/game-contracts.md"],
@@ -77,12 +96,12 @@
       "source_notes": ["Full behavioral source contracts and original extraction are already available."],
       "parity_entries": [],
       "adaptations": [],
-      "evidence": []
+      "evidence": ["640279e and 8dbaef4 integrated as 2cb707b and 0de56ad", "Typed content/artifact v2, runtime-state v1, strict compiler and compatible game storage; 25 isolated PG checks reported passed.", "WorldEngine::process_advanced_tick resolves double-tick ownership without decrementing reserved metadata."]
     },
     {
       "id": "M1-FLEET-PUBLIC-REFERENCES",
       "goal": "Complete a traceable public/source-fixture reference pack and source-case gallery for bounded owner approval.",
-      "status": "IMPLEMENTING",
+      "status": "BLOCKED",
       "specs": ["prompt.md section 30.2", "milestones/m1-owner-followups.json", "research/source-capture/handoff.json"],
       "dependencies": ["M1-FLEET-SOURCE-CAPTURES", "M1-FLEET-AUDIO"],
       "allowed_paths": ["research/reference-pack/**", "assets/reference/wiki/**", "tools/reference-pack/**"],
@@ -95,7 +114,7 @@
       "source_notes": ["Owner explicitly requests wiki/public references instead of a blanket live-account requirement."],
       "parity_entries": [],
       "adaptations": [],
-      "evidence": []
+      "evidence": ["961092f + 0aa6146: 126-case public/source pack, 29 visual families/180 variants, 698 text oracles and 59 checks.", "Remaining literal source inputs narrowed to native Classic HUD/panel calibration and exact sound/jingle bindings; no invented per-microstate live screenshot gate."]
     },
     {
       "id": "M1-FLEET-CLIENT",
@@ -118,7 +137,7 @@
     {
       "id": "M1-FLEET-ENGINE",
       "goal": "Implement the complete source-driven headless world action/tick engine over validated content and reusable primitives.",
-      "status": "BLOCKED",
+      "status": "READY",
       "specs": ["spec/game-contracts.md", "research/journey-rules/**", "crates/simulation/README.md"],
       "dependencies": ["M1-FLEET-SIMULATION", "M1-FLEET-RULES"],
       "allowed_paths": ["crates/world-engine/**"],
@@ -136,7 +155,7 @@
     {
       "id": "M1-FLEET-PRODUCT-CONTENT",
       "goal": "Assemble complete actual M1 source-backed content and world/collision/asset bindings, not a demonstration square or fixture character.",
-      "status": "BLOCKED",
+      "status": "READY",
       "specs": ["spec/game-contracts.md", "research/journey-rules/**", "research/current-source/extraction-contract.json"],
       "dependencies": ["M1-FLEET-RUNTIME", "M1-FLEET-RULES"],
       "allowed_paths": ["content/m1/**", "tools/m1-content/**", "research/m1-bindings/**"],
