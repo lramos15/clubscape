@@ -59,9 +59,17 @@ fields **before** this crate receives them. `read_content_json` detects duplicat
 keys at every nesting level, rejects unknown fields (including internally tagged
 enum fields), enforces input limits, and rejects trailing documents. The shared
 canonical JSON field is `schema_version`, not `schemaVersion`.
-Despite shared serde compatibility defaults, strict source input must explicitly
-contain `interfaces` and every recipe's `tools` list. An absent registry or an
-omitted tool declaration is not silently interpreted as complete content.
+Despite persisted-state serde compatibility defaults, content-2 source input
+must explicitly contain every definition field, including `mechanics`, recipe
+tools and intentional `null`/empty declarations. Only an ordinary stack's
+absent `instance` has the same meaning as explicit `null`; a charged stack
+cannot use that default. Missing source inputs are never supplied by parsing.
+
+The full extension API and migration contract are in
+[`spec/game-contracts.md`](../../spec/game-contracts.md#mechanics-extension-content-2-persisted-state-1runtime-1).
+New registry definitions are available through `definition().mechanics`.
+`report().unresolved_bindings` lists exact unresolved source-binding paths.
+Compiling those explicit gaps does not make them executable.
 
 ## CLI
 
@@ -91,7 +99,7 @@ directories are created only after successful compilation.
 
 ### Identity, definitions, provenance
 
-- Only shared schema version 1 is accepted. Revision and baseline are required,
+- Only content schema version 2 is accepted. Revision and baseline are required,
   bounded, non-placeholder single-line identities. No particular OSRS cache/build
   number is hardcoded; choosing/verifying the baseline remains source work.
 - Every map key equals its contained ID. All M1 definition categories and the
@@ -114,6 +122,8 @@ directories are created only after successful compilation.
   Records need an identifiable locator, revision, status, and explanatory notes.
   Duplicate `(reference, revision)` records on one owner are errors, even when
   their status/notes differ. Reuse across different owners is allowed.
+  Nested bound/unresolved mechanics and scripted stationary anchors are checked
+  too; each source-record occurrence is counted once.
 - `Runtime` (also the default/development policy) rejects `TestFixture` records
   and fixture identities. `TestFixture` permits explicit `fixture:` records;
   it does **not** relax reference, numeric, graph, or initial-state checks.
@@ -135,6 +145,9 @@ directories are created only after successful compilation.
   Nonstackable items in inventory/equipment occupy one item per slot. Stackable
   inventory entries cannot duplicate the same item across slots. Equipment may
   stack when its item definition permits it (e.g. ammunition).
+  Source mode 2 is retained as conditional stackability, not a boolean. Charged
+  items use unique per-item instance data, reciprocal variants and bounded
+  charges; they cannot be manufactured through ordinary quantity grants.
 - Banks have positive capacity and at most that many represented slots. Omitted
   trailing slots are empty, not additional capacity. A bank has one unnoted stack
   per item, including nonstackable items. This differs intentionally from ordinary
@@ -147,6 +160,8 @@ directories are created only after successful compilation.
 - Skill thresholds begin at zero, strictly increase, fit the level type, and do
   not exceed positive `maximum_xp_tenths`. Requirements and XP rewards reference
   defined skills and valid levels/maxima. XP additions are overflow-checked.
+  Every requirement declares base/current level basis. Typed weapon, style,
+  NPC stat, rune, ammunition and prayer bindings resolve their own registries.
 - Each skill and quest needs an explicit initial state, with no unknown keys.
   Initial skill levels match their unboosted XP thresholds. Initial quests must
   be at their declared initial stages, with no pre-awarded quest points. Starting
@@ -159,6 +174,9 @@ directories are created only after successful compilation.
 - Every flag read/written by a guard/effect has an explicit initial global value.
   Quest-local flag maps are retained but cannot be addressed by the shared
   global-only `Flag`/`SetFlag` types.
+  Engine-reserved flags cannot be initial source data. Typed counters separately
+  declare scope/type/bounds and exact character initial values. They are not
+  fake inventory items or quest flags.
 
 ### Regions, placements, actions, shops
 
@@ -170,14 +188,18 @@ directories are created only after successful compilation.
   `region_at` never guesses from bounds. Shared source map squares may be split
   across disjoint cell owners; duplicate map-square IDs inside one region fail.
 - Unlisted cells have no navigation definition and no walkability fallback.
-  Starting/travel destinations and NPC anchors must be explicitly walkable and
-  belong to the stated region. Objects/ground items may sit on explicitly blocked
-  cells (e.g. an item on an object). Movement and sight masks remain independent.
+  Starting/travel destinations and complete mobile NPC footprints must be
+  walkable. Stationary resources, occupied-scenery actors and source-provenanced
+  noncombat scripted actors use explicit access-tile policies without clearing
+  water/terrain/scenery clipping or relocating the anchor. Objects/ground items
+  may sit on explicit blocked cells. Movement and sight masks stay independent.
 - Spawn IDs are map-unique. Repeating the same `(tile, spawn kind, definition ID)`
   is an error regardless of facing. Different definitions/kinds may share a tile;
   these remain separate, ordered spawns. No placement silently overwrites another.
   Facing is limited to the eight canonical direction values 0–7, not source angles.
-  Rotated footprints/object layers are **not** inferred from the current fields.
+  Source object shape/layer/quarter-turn placement is separately declared and
+  checked. Dynamic transform states keep source-matching initial placement and
+  consistent explicit collision coverage, rather than inferred clipping.
 - All spawn kinds, interactions, dialogue/shop/recipe/object targets, gathering
   tools/outputs, equipment/skill requirements, and travel destinations resolve.
   Interaction names are unique per spawn. An `Attack` requires a combat NPC.
@@ -189,13 +211,21 @@ directories are created only after successful compilation.
   tools can fit inventory plus non-overlapping equipment, including two-handed
   conflicts. Compilation does not grant tools or require them at character
   creation; execution must enforce actual possession and requirements.
-- Durations/respawns and probability denominators are positive; probabilities are
-  bounded. Gathering/recipe success cannot be impossible at every level. Explicit
+- Bound durations/respawns and probability denominators are positive. Literal
+  probabilities are bounded; skill-curve success-count endpoints are **not**
+  clamped before interpolation (copper 101/351/256, shrimp 49/257/256).
+  Skill domains, rounding, single/first/repeat cadence, chance skill, bounded
+  respawn/relocation and tool-location cadence are explicit.
+  Gathering/recipe success cannot be impossible throughout its domain. Explicit
   empty gathering-tool lists mean a tool-free action, not an unknown default.
-  Recipes require inputs and successful outputs; failed outputs and XP lists may
-  be explicitly empty.
+  Inventory-conversion recipes require inputs and successful outputs; failed
+  outputs and XP may be empty. Firemaking instead has a ground-input/fire
+  lifecycle and real temporary interactions. Static and dynamic production
+  targets are distinct; a fire is not a fabricated static spawn.
 - NPC size/combat hitpoints/durations are positive; drop ranges/probabilities are
-  valid. Drop entries describe independent rolls, not one normalized table.
+  valid. Legacy drop entries describe independent rolls. Typed pools distinguish
+  guaranteed, weighted-exclusive, independent, conditional and unresolved loot;
+  they cannot coexist with legacy drop/respawn projections.
   Multiple entries for the same item are allowed only within a safe combined
   maximum quantity. Zero combat stats/max hit and zero-chance drops are representable.
 - Shop currency is an unnoted stackable item. Stock IDs are unique and not the
@@ -203,6 +233,36 @@ directories are created only after successful compilation.
   prices are positive, and sell price cannot exceed buy price. Baseline stock and
   sell price may be zero. An empty shop is allowed only when it accepts general
   items. This is not an economy/arbitrage proof across multiple shops.
+  Typed rows validate stock-sensitive coefficients, per-unit rounding/clamps,
+  base-stock price agreement and per-row restock phase/interval. Unstocked
+  acceptance requires a price formula rather than missing fixed-price rows.
+
+### Source mechanics and runtime state
+
+`GameContent.mechanics` validates typed grants/entitlements/reconciliation,
+counter/morph bindings, temporary objects, instance chunk/plane mappings,
+experience/appearance choices, travel lifecycle, combat/spell/projectile/prayer
+definitions, weight/run/vital policy and death/valuation/recovery policy.
+Unknown references, mismatched purposes/scopes, invalid bounds and missing
+provenance fail. Unresolved source policies remain identified as unavailable;
+the compiler never supplies a zero probability, fixed timer, free recovery,
+default arrival or departure kit.
+
+`EventCondition` reads resolved authoritative facts only in progression
+contexts. Wrong event kinds/targets, mismatched production outcomes/facilities
+and spell/kill definitions fail. Generic tab opening cannot claim contextual
+bank presentation. Bank pre-presentation grants require atomic bank-targeted,
+once-only accounting. Partial grants retain ordered line satisfaction instead
+of claiming an unfinished package.
+
+`Once`, recipe outcomes, temporary-object effects and travel completion effects
+participate in recursive bounds, reward and graph validation. Counter and
+entitlement dependencies must have rooted producers. Conditional loot is
+included in iterative preflight and safe destruction of rejected owned trees.
+The shared runtime validators check typed counter, item-instance, deadline,
+ledger, live-instance and recovery references in addition to storage shape.
+Legacy scheduling migration is explicit and preserves acknowledged possessions,
+XP/progression and pending operations; see the shared contract.
 
 ### Dialogue and progression
 
@@ -250,8 +310,11 @@ directories are created only after successful compilation.
 
 ### Shared event identities
 
-`allowed_actions` uses the exact snake-case `GameIntent` variant names, not
-arbitrary interaction labels. Unknown names fail.
+`allowed_actions` accepts canonical intent names, documented engine families,
+`*` and reference-checked selectors such as `gather:<SpawnId>`,
+`interact:<SpawnId>:<action>`, `produce:<RecipeId>`, `cast:<SpellId>` and
+`prayer:<PrayerId>`. Unknown names and selectors fail; allowing one does not
+enable an unimplemented runtime operation.
 
 `ProgressTransition.event` matches shared `GameEvent::kind()` and optional
 `target` matches `GameEvent::primary_target()`, as defined in
@@ -270,6 +333,18 @@ arbitrary interaction labels. Unknown names fail.
 | `sound` | Asset ID (syntax and optional manifest membership) |
 | `animation` | Defined spawn ID or syntactically valid dynamic actor ID |
 | `moved`, `died`, `recovered`, `message` | Must be absent; qualify using guards |
+| `experience_selected` | Experience ID |
+| `interface_closed`, `interface_presented` | Interface ID |
+| `production_resolved` | Recipe ID |
+| `combat_resolved`, `npc_killed`, `inspected` | Spawn ID |
+| `spell_resolved` | Spell ID |
+| `teleport` | Travel ID |
+| `food_eaten` | Item ID |
+| `prayer_changed` | Prayer ID |
+| `temporary_object_created` | Temporary-object definition ID |
+| `object_transformed` | Object-transform ID |
+| `counter_changed` | Counter ID |
+| `appearance_confirmed`, `setting_changed`, `item_transferred`, `death_occurred`, `death_topic_completed`, `recovery_completed`, `grave_expired` | Must be absent |
 
 Dialogue/gather/combat spawn filters must actually offer the corresponding
 interaction/capability. Dynamic actor existence belongs to world-state validation,
@@ -278,10 +353,12 @@ progression destinations are explicit `SetTutorialStage`/`SetQuestStage` effects
 Compilation and canonical identity checks do not implement or certify an FSM,
 event scheduling, visual/audio playback, or authoritative runtime matching.
 
-## Binary artifact version 1
+## Binary artifact version 2
 
 Gameplay data uses the mature **rmp-serde MessagePack** codec, with named
-struct maps. It supports the shared internally tagged serde enums (unlike
+maps of the typed definition's canonical JSON projection. This gives integer
+morph/level-table keys their JSON string representation and deterministically
+orders object keys. It supports the shared internally tagged serde enums (unlike
 non-self-describing codecs that cannot handle `deserialize_any`). There is no
 custom gameplay field serializer, compression, serialized index cache, or
 serialized “validated” claim.
@@ -291,16 +368,16 @@ The fixed 84-byte envelope is:
 | Offset | Bytes | Meaning |
 | --- | ---: | --- |
 | 0 | 8 | ASCII `CLSCONT` followed by NUL |
-| 8 | 2 | Little-endian artifact version, `1` |
+| 8 | 2 | Little-endian artifact version, `2` |
 | 10 | 2 | Little-endian codec ID, `1` = named MessagePack |
 | 12 | 8 | Little-endian exact payload byte length |
 | 20 | 32 | SHA-256 of payload bytes |
 | 52 | 32 | Identity SHA-256, below |
-| 84 | declared length | Canonical named MessagePack `GameContent` |
+| 84 | declared length | Named MessagePack of canonical JSON-projected `GameContent` |
 
 Identity SHA-256 covers, in order:
 
-1. the bytes `clubscape.content.identity.v1` followed by NUL;
+1. the bytes `clubscape.content.identity.v2` followed by NUL;
 2. shared schema version as little-endian `u32`;
 3. revision UTF-8 length as little-endian `u64`, then revision bytes;
 4. baseline UTF-8 length as little-endian `u64`, then baseline bytes.
@@ -329,8 +406,8 @@ migration strategy, not silent permissive decoding.
 | Any decoded collection | 250,000 entries |
 | Decoded string | 65,536 bytes |
 | Decoded map key | 256 bytes |
-| Guard/effect nesting | 32 |
-| Guard/effect nodes in the whole pack | 100,000 |
+| Guard/effect/conditional-loot nesting | 32 |
+| Rule nodes in the whole pack | 100,000 |
 | Static graph-analysis work per pass | 5,000,000 steps |
 | Tool/equipment placement search per recipe | 100,000 steps |
 
@@ -345,7 +422,7 @@ the CLI uses `Read::take(MAX_INPUT_BYTES + 1)`.
 ## Checks and acceptance boundaries
 
 Every successful compilation exposes an explicit list of checks, separate source
-status occurrence counts, asset reference/unassigned-site counts, and `false`
+status occurrence counts, unresolved-binding paths, asset counts, and `false`
 flags for source/approval/presentation verification.
 
 The Director-owned shared contract update
@@ -363,10 +440,10 @@ Scope boundaries that remain distinct from compiler completion:
 - Simulation must enforce tools' actual inventory/equipment possession without
   consuming them, and implement the shared event/FSM contracts. Compiling matching
   event identities is not runtime execution or replay-safety evidence.
-- Source-specific hitpoint/prayer skill bindings, spell/prayer behavior, exact
-  run/regeneration formulas, and object placement layers/rotated footprints are not
-  invented here. Recognizing `cast`/`set_prayer` as intent names does not validate
-  those mechanics or their source completeness.
+- Source-specific bindings/formulas/placement policies now have typed,
+  reference-checked representations. Their actual execution, source truth,
+  source completeness and unresolved choices remain separate. The legacy
+  engine's explicit unavailable arms are not an implemented M1 journey.
 - The model has no explicit tutorial completed-stage set or required/optional
   progression-node markers. Terminal tutorial stages are currently defined
   structurally, and every declared graph node is treated as required.
@@ -399,7 +476,10 @@ CLI. They include positive synthetic definitions, hundreds of invalid mutations,
 source policies, all header truncations, valid-checksum invalid payloads,
 duplicate keys/cells/source IDs, unsafe quantities/XP/graphs, deep owned-tree
 rejection, fake enormous length prefixes, round-trip determinism, and output
-preservation. CLI test files live in the crate's ignored `test-output/` directory
+preservation. Extension cases exercise unclamped chance vectors, dynamic
+facilities/anchors, typed counters, partial ledgers, combat/loot/prayer references,
+charges/mode 2, live instances/death policies and legacy metadata preservation.
+CLI test files live in the crate's ignored `test-output/` directory
 and are removed by the tests; no system temporary directory is used.
 
 Native tests and WASM code generation are compiler/toolchain evidence only, not

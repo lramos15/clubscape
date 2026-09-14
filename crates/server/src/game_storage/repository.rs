@@ -336,6 +336,7 @@ impl GameStore {
                     dialogue: None,
                     last_action_tick: world.state.tick,
                     last_command_sequence: 0,
+                    runtime: clubscape_game_types::CharacterRuntime::from_initial_definition(&initial.runtime),
                 };
                 validate_character(&character, world.state.tick)?;
                 let previous_revision = world.state.revision;
@@ -1172,6 +1173,11 @@ fn validate_transition(before: &WorldState, after: &WorldState, tick: u64) -> Re
         })
     {
         return Err(ApiError::internal("game_callback_metadata"));
+    }
+    for (id, old) in &before.characters {
+        old.runtime
+            .validate_ledger_successor(&after.characters[id].runtime)
+            .map_err(|_| ApiError::internal("game_callback_reward_ledger"))?;
     }
     validate_world(after).map_err(|_| ApiError::internal("game_callback_state"))
 }

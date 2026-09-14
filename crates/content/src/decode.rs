@@ -75,6 +75,22 @@ pub(crate) fn into_content(value: Value) -> GameResult<GameContent> {
 fn reject_unknown_fields(input: &Value, canonical: &Value, path: &str) -> GameResult<()> {
     match (input, canonical) {
         (Value::Object(input), Value::Object(canonical)) => {
+            for key in canonical.keys() {
+                if !input.contains_key(key) {
+                    if key == "instance"
+                        && canonical.len() == 3
+                        && canonical.contains_key("item")
+                        && canonical.contains_key("quantity")
+                        && canonical[key].is_null()
+                    {
+                        continue;
+                    }
+                    return Err(invalid(
+                        &format!("{path}.{key}"),
+                        "missing field; source declarations require explicit values, including null",
+                    ));
+                }
+            }
             for (key, value) in input {
                 let nested = format!("{path}.{key}");
                 let expected = canonical

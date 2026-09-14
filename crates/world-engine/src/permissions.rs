@@ -31,6 +31,10 @@ impl WorldEngine {
             GameIntent::Produce { recipe, .. } => {
                 vec!["produce".into(), format!("produce:{recipe}")]
             }
+            GameIntent::ProduceAt { recipe, .. } => {
+                vec!["produce_at".into(), format!("produce:{recipe}")]
+            }
+            GameIntent::InteractWith { .. } => vec!["interact_with".into()],
             GameIntent::BankDeposit { .. } | GameIntent::BankWithdraw { .. } => vec!["bank".into()],
             GameIntent::ShopBuy { shop, .. } | GameIntent::ShopSell { shop, .. } => {
                 vec!["shop".into(), format!("shop:{shop}")]
@@ -40,6 +44,10 @@ impl WorldEngine {
             GameIntent::SetPrayer { prayer, .. } => {
                 vec!["prayer".into(), format!("prayer:{prayer}")]
             }
+            GameIntent::SetSetting { .. } => vec!["set_setting".into()],
+            GameIntent::ConfirmAppearance { .. } => vec!["confirm_appearance".into()],
+            GameIntent::SelectExperience { .. } => vec!["select_experience".into()],
+            GameIntent::Reclaim { .. } => vec!["reclaim".into()],
             GameIntent::CancelActivity | GameIntent::RequestLogout | GameIntent::CloseInterface => {
                 return Ok(());
             }
@@ -129,7 +137,10 @@ impl WorldEngine {
                     &character.skills,
                     &self.content.skills,
                     std::slice::from_ref(requirement),
-                    skills::LevelBasis::Current,
+                    match requirement.basis {
+                        SkillLevelBasis::Base => skills::LevelBasis::Base,
+                        SkillLevelBasis::Current => skills::LevelBasis::Current,
+                    },
                 ) {
                     Ok(()) => Some(true),
                     Err(error) if error.code == GameErrorCode::RequirementNotMet => Some(false),
@@ -145,6 +156,21 @@ impl WorldEngine {
                     .distance(*tile)
                     .is_some_and(|actual| actual <= *distance),
             ),
+            Guard::FreeCapacity { .. }
+            | Guard::OwnsItems { .. }
+            | Guard::Counter { .. }
+            | Guard::EntitlementClaimed { .. }
+            | Guard::Event { .. }
+            | Guard::Experience { .. }
+            | Guard::Setting { .. }
+            | Guard::Life { .. }
+            | Guard::DeathTopics { .. }
+            | Guard::Charges { .. }
+            | Guard::MembersWorld => {
+                return Err(crate::unavailable(
+                    "This typed source guard requires mechanics-v2 evaluation.",
+                ));
+            }
         };
         Ok(value)
     }
@@ -210,6 +236,11 @@ impl WorldEngine {
                     .npcs
                     .get(npc)
                     .ok_or_else(|| unknown(format!("Unknown NPC {npc}.")))?;
+                if npc.morph.is_some() {
+                    return Err(crate::unavailable(
+                        "Source NPC morph selection requires mechanics-v2 execution.",
+                    ));
+                }
                 if npc.combat.is_some() && entity.hitpoints == 0 {
                     return Err(GameError::new(GameErrorCode::Busy, "NPC is defeated."));
                 }

@@ -24,18 +24,36 @@ fn independently_authored_skilling_probability_vectors_include_rounding_and_plus
             numerator_at_level_1: low + 1,
             numerator_at_level_99: high + 1,
             denominator: 256,
+            domain: ChanceDomain::Skill {
+                levels: LevelDomain {
+                    minimum: 1,
+                    maximum: 99,
+                    basis: SkillLevelBasis::Current,
+                },
+            },
         };
         assert_eq!(chance_numerator(&rule, level).unwrap(), expected);
     }
 }
 
 #[test]
-fn literal_probability_rules_do_not_add_one_twice_or_make_zero_chance_succeed() {
+fn chance_domains_do_not_add_one_twice_or_clamp_source_endpoints_early() {
     for (count, expected) in [(0, 0), (1, 1), (49, 49), (101, 101), (500, 256)] {
         let rule = ChanceRule {
             numerator_at_level_1: count,
             numerator_at_level_99: count,
             denominator: 256,
+            domain: if count <= 256 {
+                ChanceDomain::Constant
+            } else {
+                ChanceDomain::Skill {
+                    levels: LevelDomain {
+                        minimum: 1,
+                        maximum: 99,
+                        basis: SkillLevelBasis::Current,
+                    },
+                }
+            },
         };
         assert_eq!(chance_numerator(&rule, 1).unwrap(), expected);
     }
@@ -43,6 +61,13 @@ fn literal_probability_rules_do_not_add_one_twice_or_make_zero_chance_succeed() 
         numerator_at_level_1: 101,
         numerator_at_level_99: 3,
         denominator: 256,
+        domain: ChanceDomain::Skill {
+            levels: LevelDomain {
+                minimum: 1,
+                maximum: 99,
+                basis: SkillLevelBasis::Current,
+            },
+        },
     };
     assert_eq!(chance_numerator(&descending, 2).unwrap(), 100);
     assert_eq!(chance_numerator(&descending, 99).unwrap(), 3);

@@ -427,6 +427,7 @@ fn zero_requirement_and_invalid_xp_state_fail_before_displacement() {
         .requirements = vec![SkillRequirement {
         skill: skill("practice"),
         level: 0,
+        basis: clubscape_game_types::SkillLevelBasis::Base,
     }];
     let before = character.clone();
     assert_error(gear::equip(&mut character, &content, 0), InvalidContent);

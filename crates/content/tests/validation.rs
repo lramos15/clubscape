@@ -134,7 +134,7 @@ fn source_records_require_identifiable_references_revisions_notes_and_no_duplica
 fn requires_schema_identity_and_every_mandatory_category() {
     for (mutate, diagnostic) in [
         (
-            (|c: &mut GameContent| c.schema_version = 2) as Mutation,
+            (|c: &mut GameContent| c.schema_version = CONTENT_SCHEMA_VERSION + 1) as Mutation,
             "schema_version",
         ),
         (|c| c.revision.clear(), "revision"),
@@ -228,10 +228,10 @@ fn notes_are_reciprocal_distinct_and_not_usable_as_food_or_equipment() {
             c.items
                 .get_mut(&id("item.test.ore_note"))
                 .unwrap()
-                .stackable = false
+                .stackable = false.into()
         },
         |c| c.items.get_mut(&id("item.test.ore_note")).unwrap().healing = Some(2),
-        |c| c.items.get_mut(&id("item.test.ore")).unwrap().stackable = true,
+        |c| c.items.get_mut(&id("item.test.ore")).unwrap().stackable = true.into(),
         |c| {
             c.items
                 .get_mut(&id("item.test.ore"))
@@ -634,14 +634,14 @@ fn overlapping_bounds_and_shared_source_map_squares_have_explicit_cell_owners() 
 fn recipes_tools_spawns_npcs_shops_and_probabilities_are_checked() {
     for (mutate, diagnostic) in [
         (
-            (|c: &mut GameContent| gather(c).attempt_ticks = 0) as Mutation,
+            (|c: &mut GameContent| gather(c).attempt_ticks = Some(0)) as Mutation,
             "durations",
         ),
-        (|c| gather(c).respawn_ticks = 0, "durations"),
-        (|c| gather(c).success.denominator = 0, "denominator"),
+        (|c| gather(c).respawn_ticks = Some(0), "durations"),
+        (|c| gather(c).success.denominator = 0, "chance domain"),
         (
             |c| gather(c).depletion.numerator_at_level_99 = 4,
-            "numerators",
+            "chance domain",
         ),
         (|c| gather(c).success = chance(0, 1), "impossible"),
         (
@@ -658,7 +658,7 @@ fn recipes_tools_spawns_npcs_shops_and_probabilities_are_checked() {
         ),
         (|c| gather(c).output = stack("item.test.ore", 29), "28-slot"),
         (
-            |c| c.recipes.values_mut().next().unwrap().ticks = 0,
+            |c| c.recipes.values_mut().next().unwrap().ticks = Some(0),
             "duration",
         ),
         (
@@ -828,6 +828,7 @@ fn all_guard_and_effect_references_are_validated_recursively() {
                     requirement: SkillRequirement {
                         skill: id("skill.test.missing"),
                         level: 1,
+                        basis: SkillLevelBasis::Current,
                     },
                 }
             },

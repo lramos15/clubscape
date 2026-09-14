@@ -411,7 +411,7 @@ fn loader_revalidates_the_new_contract_even_with_valid_envelope_checksums() {
     for (mutate, diagnostic) in cases {
         let mut content = fixture();
         mutate(&mut content);
-        let payload = rmp_serde::to_vec_named(&content).unwrap();
+        let payload = rmp_serde::to_vec_named(&serde_json::to_value(&content).unwrap()).unwrap();
         let mut bytes = base[..ARTIFACT_HEADER_BYTES].to_vec();
         bytes[12..20].copy_from_slice(&(payload.len() as u64).to_le_bytes());
         bytes[20..52].copy_from_slice(&Sha256::digest(&payload));

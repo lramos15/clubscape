@@ -2,15 +2,23 @@ mod content;
 mod error;
 mod ids;
 mod intent;
+mod mechanics;
+mod runtime_state;
+mod runtime_validation;
 mod state;
 
 pub use content::*;
 pub use error::*;
 pub use ids::*;
 pub use intent::*;
+pub use mechanics::*;
+pub use runtime_state::*;
 pub use state::*;
 
+/// The additive persisted world/character envelope; not the content format.
 pub const GAME_SCHEMA_VERSION: u32 = 1;
+pub const CONTENT_SCHEMA_VERSION: u32 = 2;
+pub const RUNTIME_SCHEMA_VERSION: u32 = 1;
 pub const TICK_MILLISECONDS: u64 = 600;
 pub const INVENTORY_SLOTS: usize = 28;
 pub const MAX_RUN_ENERGY: u16 = 10_000;

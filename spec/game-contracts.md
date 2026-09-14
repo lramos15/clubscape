@@ -137,3 +137,271 @@ Transition event names match `GameEvent::kind()`. Optional targets match
 and ordinary message events have no primary identity; use explicit state
 guards for tile, actor or progression conditions. The mapping is shared rather
 than independently guessed by each content/runtime worker.
+
+## Mechanics extension: content 2, persisted state 1/runtime 1
+
+`CONTENT_SCHEMA_VERSION = 2` versions immutable definitions.
+`GAME_SCHEMA_VERSION = 1` still versions the additive character/world envelope;
+it is not a content version or a protocol-version change.
+`RUNTIME_SCHEMA_VERSION = 1` versions the new `runtime` records. The compiler
+artifact and identity-digest domain are version 2. Recompile content-1 artifacts;
+do not relabel their headers or manufacture missing source inputs.
+
+The authoritative Rust definitions are `game-types/src/mechanics.rs`,
+`runtime_state.rs`, `content.rs` and `intent.rs`. `GameContent.mechanics` holds
+typed registries, not an extensible JSON bag. Strict source JSON must contain
+every definition field, including explicit `null`/empty collections where
+absence is intentional. Ordinary `ItemStack.instance` may be omitted; it means
+an ordinary non-instanced item, never an empty charged container.
+
+`SourceBinding<T>` is either `bound { value, source }` or
+`unresolved { reason, source }`. Both require provenance. `require()` on an
+unresolved binding returns `Unavailable`. The compiler reports all such paths
+in `ValidationReport.unresolved_bindings`. A compiled unresolved timing,
+probability, valuation or policy is not permission to run a substitute. The
+compiler validates structure, references and bounded arithmetic; it does not
+authenticate a source observation or approve an inference.
+
+### Chance, requirements and activity scheduling
+
+`ChanceRule.domain` distinguishes literal constant probabilities from a
+skill-domain curve. Skill endpoints are **unclamped success counts**, already
+including the source `+1`. The source constructor takes low/high parameters:
+
+```rust,ignore
+let levels = LevelDomain {
+    minimum: 1, maximum: 99, basis: SkillLevelBasis::Current,
+};
+let copper = ChanceRule::source_skilling(100, 350, levels)?;
+assert_eq!(copper.numerator(1)?, 101); // stored endpoints 101, 351; denominator 256
+let shrimp = ChanceRule::source_skilling(48, 256, levels)?;
+assert_eq!(shrimp.numerator(1)?, 49);  // stored endpoints 49, 257
+```
+
+The curve is `min(d, (n1*(99-L) + n99*(L-1) + 49)/98)` with integer
+division, after domain validation. Do not clamp endpoints, interpolate with
+floor-only rounding, or add another `+1`. Constant rules require equal
+endpoints in `0..=d`. A level outside the declared source domain is unavailable,
+not clamped into it. `SkillRequirement.basis` is explicit base/current level;
+legacy simulation APIs with a caller-selected basis must be supplied that
+source basis.
+
+`GatherMechanics` declares the method ID, skill domain, per-tool/location
+cadence, bounded respawn distribution and optional relocation. Ordered
+alternative catches are tried before the base output's roll. This can bind the
+level-15 small-net alternative without making mainland fishing shrimp-only.
+`RecipeMechanics` declares its method, **direct-intent as well as menu guard**,
+chance skill, tool ownership, success/failure effects and XP, and lifecycle.
+`ActionCadence` separates single/first/repeat/menu timing; an unknown single
+timing is unresolved, not zero. `TickDuration::UniformInclusive` requires an
+independent bounded draw, not the midpoint or fixed minimum.
+
+Legacy uniform fields are explicit compatibility modes: gather
+`attempt_ticks`/`respawn_ticks` and recipe `ticks` must be `null` when their
+`mechanics` is present. NPC typed combat similarly excludes legacy respawn and
+independent-drop fields. A typed weapon excludes the old string-style/speed
+projection. New fields must not be ignored while executing the legacy mode.
+
+### Counters, dynamic scenery and live targets
+
+`CounterDefinition` declares character/world/instance scope, boolean or bounded
+integer type, explicit initial value and optional source varp/varbit mapping.
+Character initial counter maps must exactly match their declarations.
+`validate_value` and `checked_add` reject wrong types, underflow and overflow.
+`Guard::Counter`, `SetCounter` and `AddCounter` operate on that declared scope
+inside the same transaction as item conversion. Hopper grain and flour units
+0..30 are counters, not inventory items or quest stages. Source flags remain
+available; source definitions cannot initialize/write `__world_engine.*`.
+
+`ObjectTransformDefinition` belongs to a world or instance and supplies named
+states with an object identity, tile, placement, optional door position and
+explicit collision replacements. Initial state must agree with the source
+spawn/cells; all alternatives cover the same cells. Movement and sight
+clipping remain independent. Resolve current appearance, footprint, location
+and collision from the selected state together. Source object and NPC morphs
+reference declared source-variable counters and defined variants; they are not
+permission to mutate arbitrary flags or erase clipping.
+
+`NpcNavigation` distinguishes mobile actors from stationary anchors. Mobile
+**whole footprints** and all player/travel destinations remain explicitly
+walkable. Nonwalking resources require a real gather interaction and walkable
+access tiles. Scenery-bound actors additionally require a matching occupied
+object placement. A noncombat scripted stationary actor can instead carry
+explicit anchor provenance and access tiles. These policies preserve water,
+chairs, walls and native clipping; they do not move fishing NPC 3317 to shore or
+guess that Death's anchor walks. Choose the policy supported by the source.
+`SpawnDefinition.placement` separately records source shape, layer and
+quarter-turn orientation, rather than conflating those with NPC facing.
+
+Temporary objects have their own owned dynamic IDs, source object definition,
+legal-placement guard, interactions, lifetime, clipping and expiry outputs/
+ground policy. Firemaking's lifecycle places the owned input on the ground,
+retains it on failure, replaces it only on ignition, awards success XP once,
+then performs the declared cardinal step attempts. It does not destroy a log
+on failure or duplicate it when another actor wins the tile.
+
+`WorldTarget` distinguishes a static spawn from a live temporary object.
+Use `InteractWith`/`ProduceAt` and `ItemTarget::TemporaryObject` for a real fire;
+`ItemTarget::Ground` addresses a placed log. Static `Interact`/`Produce` and
+their persisted receipts remain compatible. `Activity::ProducingAt` retains
+dynamic-facility queues across serialization. `ProductionResolved.facility`
+identifies the actual target; a static facility predicate matches only that
+spawn, and an absent predicate is a wildcard. Never fabricate a static spawn
+ID to make a dynamic fire cookable.
+
+`WorldLocation` is a definition-time destination with an optional instance
+**template**. `RuntimeLocation` and `GroundItem.instance` use a live
+`InstanceId`. Each `InstanceState` owns its entity/counter/object-state maps.
+Chunk mappings preserve source/destination regions, coordinates, planes and
+rotation. `TravelDefinition` declares guards, destination/experience branches,
+channel time, interruption causes, cooldown start and completion effects.
+Reconciliation runs on completed transport, not on a request or animation.
+
+### Authoritative facts, grants and entitlements
+
+The new settings/appearance/experience/reclaim/dynamic-target intents are
+requests. There is still no grant, counter-write, XP-award, death-reset or
+stage-advance intent. Appearance selections must resolve the declared choices.
+Run settings are persistent; a walk request does not confer free energy.
+
+`EventCondition` checks actual interaction/choice identity, production
+method/facility/output/outcome, combat style/outcome, credited NPC kill/method,
+spell resolution, contextual interface, travel phase, setting, inspection,
+death or recovery facts. It is legal in post-event progression guards/effects,
+not pre-action state guards. Its kind/target must agree with the transition.
+Old `Produced`/`Hit` events do not satisfy resolved-production/spell predicates.
+An invalidated cast is not a hit or splash. Valid Wind Strike progression must
+use the selected spell/outcome predicate, not an arbitrary hit or chicken kill.
+
+`GameEvent::kind()`/`primary_target()` remain canonical. New targets are:
+experience, interface, recipe, spawn (combat/kill/inspection), spell, travel,
+item (food), prayer, temporary-object **definition**, transform and counter IDs.
+Death/recovery/setting/transfer/appearance events have no static primary target.
+`InterfaceAccess::Contextual` cannot be presented by generic tab opening.
+`OpenBank`/`OpenShop` establish the source context and commit their
+`before_open` effects **before** publishing `InterfacePresented`.
+
+`FreeCapacity` and `OwnsItems` distinguish capacity from combined
+inventory/equipment/bank ownership. `GrantDefinition` specifies target
+container, ordered lines, add/missing-only/top-up semantics and atomic versus
+ordered-partial capacity. Missing-only supplies one missing item; top-up is a
+target total, not repeated addition. A bank entitlement can supply exactly 25
+coins before the first presentation without changing the initial empty bank.
+Pre-presentation grants must be atomic, bank-targeted and once-only.
+
+Grant entitlements are reciprocal with their definition. Their durable ledger
+stores amounts actually delivered and the set of satisfied lines (including
+lines satisfied by already owned items); `complete` agrees with that set.
+Ordered partial supply must never mark the remaining lines claimed or supply
+the first line again after it is dropped. Missing-tool recovery is a separate
+source handler, not resetting an initial entitlement.
+
+`Effect::Once` wraps an atomic reward with an atomic-reward entitlement.
+Do not put partial grants inside it. Reusing a key for different bundles,
+nested claims, mismatched purposes, duplicate stage writes and repeatable quest
+reward branches fail compilation. `validate_ledger_successor` forbids removing,
+regressing or changing acknowledged claims; storage checks it transactionally.
+Use `RestoreVital` for HP/prayer/run-energy restoration in the same reward
+transaction. Departure uses an entitled `ReconciliationDefinition`, whose
+policy can remain explicitly unresolved instead of normalizing possessions.
+
+### Combat, prayers, loot, death and recovery
+
+Styles bind attack type/method, effective level and base/current basis, source
+accuracy/negative-roll/max-hit/damage formulas, cycle/reach, XP ratios/rounding
+and projectiles. Equipment supplies typed style IDs and compatible equipped
+ammo/cost/break/ground policy. Spells bind requirements, runes, launch XP and a
+combat or travel action. NPCs separately bind their outgoing stat/type,
+effective-level bonus, all five defence stat selectors, retaliation, respawn
+and credit policy. These declarations do not implement attacks or spend runes.
+
+Player/NPC deadlines, per-life damage contributions and first/last hit ordering,
+retaliation and resolved-loot markers persist independently of activity
+cancellation. Projectiles retain source/target life/instance, launch/impact
+deadlines, spent resources and resolved outcome. Preserve them on restart;
+never re-spend resources or award a kill from an old NPC life.
+
+Loot pools are guaranteed, weighted exclusive (including explicit no-drop
+entries), independent, conditional, or unresolved. Exclusive weights must sum
+to their declared total; simultaneous maxima cannot overflow an item stack.
+Unknown supplements block that resolution, not silently become zero chance,
+bones-only loot or guaranteed coins.
+
+Prayers bind interfaces, requirements, modifiers, reciprocal exclusions and
+fractional drain/bonus parameters. Proper fractional remainders are persisted.
+Vital policy binds HP/prayer skills, regeneration pauses, level-up behavior
+and independent ordinary-food/attack delays. Run policy binds Agility,
+hundredths-of-percent units, signed item-weight contributions, activation,
+drain rounding, exhaustion and regeneration. Eligible online/idle/UI clock
+facts come from authority, not client flags; do not infer offline progress or
+ten-second idle time merely from an activity enum.
+
+Death is `LifeState` plus owned `DeathRecord`/grave/Office storage, not a fake
+quest or tutorial reset. The policy declares its normal unsafe non-PvP domain,
+retention/ties, a pinned value-provider reference, respawn and private Office
+mapping, arrival/Office-exit restoration, all three first-item-losing-death
+topics, active-time pauses, fees/payment order, capacities, overflow and repeat
+death behavior. Stored item layouts and effective per-unit values survive.
+Retained records describe already owned items; they are not a second spendable
+container. Reclaim moves only fitting owned items, charges only that transfer,
+and records reclaimed identities. It must not supply free replacement items.
+Do not use shop `base_value` as a death-price fallback.
+
+### Instance items and M1 scope
+
+Ordinary `stackable` JSON remains a boolean (`Stackability::Simple`). Source
+mode 2 is a `Conditional { source_mode: 2, rule: SourceBinding<...> }` record,
+never a coerced boolean. Unbound contexts remain unavailable.
+`ItemStack.instance` carries a unique per-item ID, charge kind/remaining amount
+and optional origin. Charged variants must be reciprocal, quantities must be
+one, and zero charges require the empty variant. Duplicate live instance
+ownership fails validation. Charge consumption specifies its inventory-item
+selection policy; it consumes charges, not the reusable bucket.
+
+The recorded ordinary Cook route acquires an ordinary bucket of milk. The
+retained contracts also name the bottomless milk alternative but do not supply
+its acquisition as an ordinary starter-route dependency. Its source IDs
+33089/33091, charge behavior and mode-2 alternatives are not deleted from the
+full target. **Director decision:** confirm the reachable M1 acquisition/access
+boundary before enabling that alternative. This schema neither invents a rare
+acquisition/grant nor makes that acquisition a new mandatory starter step.
+
+### Persisted compatibility and downstream integration
+
+Missing `CharacterState.runtime`/`WorldState.runtime`/`EntityState.runtime` and
+ordinary instance fields deserialize through documented additive defaults.
+Character defaults explicitly mean **legacy engine/life state and unbound
+settings**, not a source choice, reset player or completed journey.
+`CharacterRuntime::from_initial_definition` copies declared settings/counters
+only for new creation. Existing creation retries return the stored character.
+
+Call `CharacterState::migrate_engine_metadata(&content)` only with the matching
+persisted content revision and when the executor supports typed scheduling:
+
+| Legacy engine key | Typed destination |
+| --- | --- |
+| `command_seen` | `runtime.engine.Typed.schedule.command_seen` |
+| `gather_interaction`, `dialogue_interaction` | same schedule, preserved one-based indices |
+| `access.bank:<SpawnId>`, `access.shop:<SpawnId>` | typed `ContainerSession` |
+| `food_ready` | `runtime.food_ready` |
+| `attack_ready` | `runtime.combat.attack_ready` |
+
+All keys above include the `__world_engine.` prefix. Migration validates
+indices, target kinds, dialogue identity, deadlines and orphaned pending work.
+Unknown keys or conflicts fail without mutation. It preserves inventory,
+equipment, bank, XP, quests, flags outside that namespace, activity, dialogue
+and acknowledged sequences, and is idempotent after success. It does not
+silently convert legacy combat/casting or choose new source counter defaults.
+Use `CharacterState::validate_runtime` and `WorldState::validate_runtime` with
+validated content, alongside existing container/XP/navigation validation.
+Storage also validates shape/bounds and append-only reward ledgers.
+
+The legacy engine compatibility arms intentionally return `Unavailable` for
+new execution and pending typed work; they do not prove M1 gameplay. Downstream
+work is: regenerate/compile source content 2; implement the declared schedulers,
+targets, guards/effects/events, formulas and death/recovery lifecycle; wire
+authoritative UI/presence and durable state/RNG ownership; then execute the
+complete real starter journey. Resolve the localized source policies already
+recorded for departure, NPC variant/loot supplements, projectile/respawn timing,
+valuation/overflow and exact origins/arrivals. Source asset closure, presentation
+approval, browser/performance and RuneLite acceptance remain separate.

@@ -48,7 +48,7 @@ impl Validator<'_> {
             }
             if let Some(note) = &item.noted_variant {
                 let note = self.item(note, &path)?;
-                if item.stackable
+                if !item.stackable.is_never()
                     || note.id == item.id
                     || note.unnoted_variant.as_ref() != Some(&item.id)
                 {
@@ -60,11 +60,11 @@ impl Validator<'_> {
             }
             if let Some(base) = &item.unnoted_variant {
                 let base = self.item(base, &path)?;
-                if !item.stackable
+                if !item.stackable.is_always()
                     || item.equipment.is_some()
                     || item.healing.is_some()
                     || base.id == item.id
-                    || base.stackable
+                    || !base.stackable.is_never()
                     || base.noted_variant.as_ref() != Some(&item.id)
                 {
                     return Err(invalid(
@@ -88,6 +88,7 @@ impl Validator<'_> {
                         return Err(invalid(&path, format!("undefined equipment slot {slot}")));
                     }
                 }
+                self.item_mechanics(item, &path)?;
                 self.requirements(&equipment.requirements, &path)?;
                 bonuses(&equipment.bonuses, &path)?;
                 bounded(equipment.attack_styles.len(), &path)?;
@@ -117,6 +118,7 @@ impl Validator<'_> {
             if object.size_x == 0 || object.size_y == 0 {
                 return Err(invalid(&path, "object dimensions must be positive"));
             }
+            self.object_mechanics(object, &path)?;
         }
         let mut npc_ids = BTreeMap::new();
         for npc in self.content.npcs.values() {
@@ -126,10 +128,12 @@ impl Validator<'_> {
             if npc.size == 0 {
                 return Err(invalid(&path, "NPC size must be positive"));
             }
+            self.npc_navigation(npc, &path)?;
             if let Some(combat) = &npc.combat {
                 if combat.hitpoints == 0
                     || combat.attack_speed_ticks == 0
-                    || combat.respawn_ticks == 0
+                    || (combat.mechanics.is_none()
+                        && combat.respawn_ticks.is_none_or(|ticks| ticks == 0))
                 {
                     return Err(invalid(
                         &path,
@@ -137,6 +141,7 @@ impl Validator<'_> {
                     ));
                 }
                 bonuses(&combat.bonuses, &path)?;
+                self.npc_combat_mechanics(combat, &path)?;
                 bounded(combat.drops.len(), &path)?;
                 let mut totals = BTreeMap::<&ItemId, u64>::new();
                 for (index, drop) in combat.drops.iter().enumerate() {
@@ -185,7 +190,11 @@ impl Validator<'_> {
             let path = format!("recipes.{}", recipe.id);
             text(&recipe.name, &path, 256)?;
             nonempty(recipe.inputs.len(), &format!("{path}.inputs"))?;
-            nonempty(recipe.outputs.len(), &format!("{path}.outputs"))?;
+            if !recipe.mechanics.as_ref().is_some_and(|mechanics| {
+                matches!(mechanics.lifecycle, RecipeLifecycle::Firemaking { .. })
+            }) {
+                nonempty(recipe.outputs.len(), &format!("{path}.outputs"))?;
+            }
             self.stacks(&recipe.inputs, &format!("{path}.inputs"), true)?;
             self.stacks(&recipe.outputs, &format!("{path}.outputs"), true)?;
             self.stacks(
@@ -214,9 +223,7 @@ impl Validator<'_> {
             self.recipe_tool_capacity(recipe, &tools_path)?;
             self.requirements(&recipe.requirements, &path)?;
             self.xp(&recipe.xp, &path)?;
-            if recipe.ticks == 0 {
-                return Err(invalid(&path, "production duration must be positive"));
-            }
+            self.recipe_mechanics(recipe, &path)?;
             chance(&recipe.success, &format!("{path}.success"), true)?;
             bounded(recipe.target_objects.len(), &path)?;
             unique(recipe.target_objects.iter(), &path)?;
@@ -234,7 +241,7 @@ impl Validator<'_> {
             .inputs
             .iter()
             .map(|input| {
-                if self.content.items[&input.item].stackable {
+                if self.content.items[&input.item].stackable.is_always() {
                     1
                 } else {
                     input.quantity.get() as usize
@@ -313,7 +320,7 @@ impl Validator<'_> {
             let path = format!("shops.{}", shop.id);
             text(&shop.name, &path, 256)?;
             let currency = self.item(&shop.currency, &path)?;
-            if !currency.stackable || currency.unnoted_variant.is_some() {
+            if !currency.stackable.is_always() || currency.unnoted_variant.is_some() {
                 return Err(invalid(
                     &path,
                     "shop currency must be an unnoted stackable item",
@@ -341,6 +348,47 @@ impl Validator<'_> {
                         "invalid currency/stock, restock duration, or buy/sell price contract",
                     ));
                 }
+                if let Some(mechanics) = &stock.mechanics {
+                    self.shop_line(mechanics, &path)?;
+                    self.stock_price_bounds(&stock.item, mechanics, &path)?;
+                    self.stock_projection(stock, &path)?;
+                }
+            }
+            if let Some(policy) = &shop.unstocked {
+                match policy {
+                    UnstockedShopPolicy::Reject if shop.accepts_general_items => {
+                        return Err(invalid(
+                            &path,
+                            "general-shop flag conflicts with rejected unstocked items",
+                        ));
+                    }
+                    UnstockedShopPolicy::Accept {
+                        maximum_lines,
+                        rule,
+                        base_stock,
+                    } => {
+                        if matches!(rule.pricing, ShopPricing::Fixed) {
+                            return Err(invalid(
+                                &path,
+                                "unstocked items need a price formula, not missing fixed-price rows",
+                            ));
+                        }
+                        if !shop.accepts_general_items
+                            || *maximum_lines == 0
+                            || *base_stock > MAX_STACK_QUANTITY
+                        {
+                            return Err(invalid(
+                                &path,
+                                "invalid general-shop stock-line capacity or base stock",
+                            ));
+                        }
+                        self.shop_line(rule, &path)?;
+                        for item in self.content.items.keys() {
+                            self.stock_price_bounds(item, rule, &path)?;
+                        }
+                    }
+                    _ => {}
+                }
             }
         }
         Ok(())
@@ -367,13 +415,13 @@ impl Validator<'_> {
             if let Some(stack) = stack {
                 let path = format!("initial_state.inventory.slots[{index}]");
                 let item = self.item(&stack.item, &path)?;
-                if !item.stackable && stack.quantity.get() != 1 {
+                if !item.stackable.is_always() && stack.quantity.get() != 1 {
                     return Err(invalid(
                         &path,
                         "nonstackable inventory items occupy separate slots",
                     ));
                 }
-                if item.stackable && !stackable.insert(&item.id) {
+                if item.stackable.is_always() && !stackable.insert(&item.id) {
                     return Err(invalid(
                         &path,
                         "a stackable item cannot occupy multiple inventory slots",
@@ -437,7 +485,7 @@ impl Validator<'_> {
                     "equipment entries must use the item's defined primary slot",
                 ));
             }
-            if !item.stackable && stack.quantity.get() != 1 {
+            if !item.stackable.is_always() && stack.quantity.get() != 1 {
                 return Err(invalid(
                     &path,
                     "nonstackable equipment quantity must be one",
@@ -497,10 +545,37 @@ impl Validator<'_> {
         bounded(initial.flags.len(), "initial_state.flags")?;
         for flag in initial.flags.keys() {
             token(flag, "initial_state.flags")?;
+            if flag.starts_with("__world_engine.") {
+                return Err(invalid(
+                    "initial_state.flags",
+                    "source flags cannot initialize reserved engine metadata",
+                ));
+            }
         }
         unique(initial.interfaces.iter(), "initial_state.interfaces")?;
         for interface in &initial.interfaces {
             self.interface(interface, "initial_state.interfaces")?;
+        }
+        self.inventory_layout(&initial.inventory, "initial_state.inventory")?;
+        self.equipment_layout(&initial.equipment, "initial_state.equipment")?;
+        self.bank_layout(&initial.bank.slots, "initial_state.bank")?;
+        let mut instances = BTreeSet::new();
+        for stack in initial
+            .inventory
+            .slots
+            .iter()
+            .flatten()
+            .chain(initial.equipment.values())
+            .chain(initial.bank.slots.iter().flatten())
+        {
+            if let Some(instance) = &stack.instance
+                && !instances.insert(&instance.id)
+            {
+                return Err(invalid(
+                    "initial_state",
+                    "item instance appears in multiple containers",
+                ));
+            }
         }
         Ok(())
     }

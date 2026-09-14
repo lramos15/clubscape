@@ -73,6 +73,9 @@ impl WorldEngine {
             Activity::Casting { .. } => Err(unavailable(
                 "Persisted spell activity lacks compiled spell/timing rules.",
             )),
+            Activity::ProducingAt { .. } => Err(unavailable(
+                "Persisted dynamic-facility production requires mechanics-v2 execution.",
+            )),
         }
     }
 
@@ -81,12 +84,24 @@ impl WorldEngine {
         character: &CharacterState,
         rule: &GatherRule,
     ) -> GameResult<()> {
+        if rule.mechanics.is_some() {
+            return Err(unavailable(
+                "Source gathering domains/cadence/outcomes require mechanics-v2 execution.",
+            ));
+        }
+        if matches!(rule.success.domain, ChanceDomain::Skill { levels } if levels.basis != SkillLevelBasis::Current)
+        {
+            return Err(unavailable(
+                "A base-level gathering chance requires mechanics-v2 skill selection.",
+            ));
+        }
         skills::check_requirements(
             &character.skills,
             &self.content.skills,
             &[SkillRequirement {
                 skill: rule.skill.clone(),
                 level: rule.required_level,
+                basis: SkillLevelBasis::Current,
             }],
             skills::LevelBasis::Current,
         )?;
@@ -136,7 +151,7 @@ impl WorldEngine {
             .get(&rule.skill)
             .ok_or_else(|| invalid_state("Gathering skill state is missing."))?
             .current_level;
-        let next_tick = runtime::deadline(world.tick, u64::from(rule.attempt_ticks))?;
+        let next_tick = runtime::deadline(world.tick, runtime::legacy_ticks(rule.attempt_ticks)?)?;
         character.activity = Activity::Gathering {
             target: target.clone(),
             next_tick,
@@ -164,7 +179,7 @@ impl WorldEngine {
                 .get_mut(target)
                 .ok_or_else(|| unknown("Gather entity is missing."))?;
             entity.available_at_tick =
-                runtime::deadline(world.tick, u64::from(rule.respawn_ticks))?;
+                runtime::deadline(world.tick, runtime::legacy_respawn(rule.respawn_ticks)?)?;
             character.activity = Activity::Idle;
             character.flags.remove(runtime::GATHER_INTERACTION);
         }
@@ -199,7 +214,7 @@ impl WorldEngine {
             recipe: recipe.id.clone(),
             target: target.cloned(),
             remaining,
-            next_tick: runtime::deadline(world.tick, u64::from(recipe.ticks))?,
+            next_tick: runtime::deadline(world.tick, runtime::legacy_ticks(recipe.ticks)?)?,
         };
         Ok(())
     }
@@ -266,7 +281,22 @@ impl WorldEngine {
         character: &CharacterState,
         recipe: &RecipeDefinition,
     ) -> GameResult<()> {
-        if recipe.ticks == 0 {
+        if recipe.mechanics.is_some() {
+            return Err(unavailable(
+                "Source recipe guards/cadence/lifecycle require mechanics-v2 execution.",
+            ));
+        }
+        if recipe
+            .requirements
+            .iter()
+            .any(|requirement| requirement.basis != SkillLevelBasis::Current)
+            || matches!(recipe.success.domain, ChanceDomain::Skill { levels } if levels.basis != SkillLevelBasis::Current)
+        {
+            return Err(unavailable(
+                "Source-specific production requirement/chance bases require mechanics-v2 execution.",
+            ));
+        }
+        if recipe.ticks == Some(0) {
             return Err(invalid_content("Zero-tick production is not supported."));
         }
         skills::check_requirements(
@@ -421,7 +451,7 @@ impl WorldEngine {
                 recipe: recipe.id.clone(),
                 target: target.cloned(),
                 remaining: remaining - 1,
-                next_tick: runtime::deadline(world.tick, u64::from(recipe.ticks))?,
+                next_tick: runtime::deadline(world.tick, runtime::legacy_ticks(recipe.ticks)?)?,
             }
         };
         Ok(events)

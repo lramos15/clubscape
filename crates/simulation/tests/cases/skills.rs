@@ -617,6 +617,7 @@ fn generic_requirements_can_explicitly_use_boosted_current_levels() {
     let requirements = [SkillRequirement {
         skill: skill("practice"),
         level: 6,
+        basis: clubscape_game_types::SkillLevelBasis::Base,
     }];
     skills::check_requirements(
         &character.skills,

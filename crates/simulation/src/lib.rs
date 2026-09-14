@@ -46,7 +46,24 @@ pub(crate) fn item_definition<'a>(
             format!("Item definition key does not match {item}."),
         ));
     }
+    definition.stackable.fixed()?;
+    if definition.charges.is_some() {
+        return Err(GameError::new(
+            GameErrorCode::Unavailable,
+            "Charged item instances require source-aware container operations.",
+        ));
+    }
     Ok(definition)
+}
+
+pub(crate) fn require_ordinary_stack(stack: &clubscape_game_types::ItemStack) -> GameResult<()> {
+    if stack.instance.is_some() {
+        return Err(GameError::new(
+            GameErrorCode::Unavailable,
+            "Per-item instances require instance-aware ownership and transfer operations.",
+        ));
+    }
+    Ok(())
 }
 
 pub(crate) fn add_quantities(left: Quantity, right: Quantity) -> GameResult<Quantity> {

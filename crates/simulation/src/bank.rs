@@ -18,6 +18,7 @@ pub fn validate(bank: &Bank, items: &ItemDefinitions) -> GameResult<()> {
     }
     let mut seen = BTreeSet::new();
     for stack in bank.slots.iter().flatten() {
+        crate::require_ordinary_stack(stack)?;
         let (unnoted, _) = forms(items, &stack.item)?;
         if unnoted.id != stack.item || !seen.insert(&stack.item) {
             return Err(GameError::new(
@@ -63,6 +64,7 @@ pub fn deposit(
     let deposited = ItemStack {
         item: unnoted.id.clone(),
         quantity,
+        instance: selected.instance.clone(),
     };
     let mut inventory = character.inventory.clone();
     let mut bank = character.bank.clone();
@@ -81,6 +83,7 @@ pub fn deposit(
             &ItemStack {
                 item: selected.item,
                 quantity: Quantity::new(remaining)?,
+                instance: selected.instance.clone(),
             },
         )?;
     }
@@ -126,6 +129,7 @@ pub fn withdraw(
     let withdrawn = ItemStack {
         item: withdrawn_item.id.clone(),
         quantity,
+        instance: stored.instance.clone(),
     };
     let replacement = if remaining == 0 {
         None
@@ -133,6 +137,7 @@ pub fn withdraw(
         Some(ItemStack {
             item: stored.item.clone(),
             quantity: Quantity::new(remaining)?,
+            instance: stored.instance.clone(),
         })
     };
     let mut inventory = character.inventory.clone();
@@ -199,7 +204,7 @@ fn forms<'a>(
         Some(id) => {
             let note = item_definition(items, id)?;
             if note.id == base.id
-                || !note.stackable
+                || !note.stackable.fixed()?
                 || note.noted_variant.is_some()
                 || note.unnoted_variant.as_ref() != Some(&base.id)
             {

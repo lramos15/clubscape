@@ -9,6 +9,26 @@ pub(crate) const DIALOGUE_INTERACTION: &str = "__world_engine.dialogue_interacti
 pub(crate) const FOOD_READY: &str = "__world_engine.food_ready";
 pub(crate) const ATTACK_READY: &str = "__world_engine.attack_ready";
 
+pub(crate) fn legacy_ticks(ticks: Option<u16>) -> GameResult<u64> {
+    ticks
+        .filter(|ticks| *ticks > 0)
+        .map(u64::from)
+        .ok_or_else(|| {
+            crate::unavailable(
+                "Source single/first/repeat cadence requires the mechanics-v2 scheduler.",
+            )
+        })
+}
+
+pub(crate) fn legacy_respawn(ticks: Option<u32>) -> GameResult<u64> {
+    ticks
+        .filter(|ticks| *ticks > 0)
+        .map(u64::from)
+        .ok_or_else(|| {
+            crate::unavailable("Source bounded respawn requires the mechanics-v2 scheduler.")
+        })
+}
+
 pub(crate) fn deadline(now: u64, delay: u64) -> GameResult<u64> {
     now.checked_add(delay)
         .filter(|tick| *tick <= i64::MAX as u64)

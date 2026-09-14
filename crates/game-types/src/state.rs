@@ -3,9 +3,9 @@ use std::collections::BTreeMap;
 use serde::{Deserialize, Serialize};
 
 use crate::{
-    ActorId, DialogueId, GameError, GameErrorCode, GameResult, INVENTORY_SLOTS, InterfaceId,
-    ItemId, MAX_STACK_QUANTITY, QuestId, RecipeId, RegionId, ShopId, SkillId, SlotId, SpawnId,
-    StageId,
+    ActorId, CharacterRuntime, DialogueId, EntityRuntime, GameError, GameErrorCode, GameResult,
+    INVENTORY_SLOTS, InterfaceId, ItemId, ItemInstance, MAX_STACK_QUANTITY, QuestId, RecipeId,
+    RegionId, ShopId, SkillId, SlotId, SpawnId, StageId, WorldRuntime,
 };
 
 #[derive(Clone, Copy, Debug, PartialEq, Eq, PartialOrd, Ord, Hash, Serialize, Deserialize)]
@@ -178,6 +178,8 @@ impl From<Quantity> for u32 {
 pub struct ItemStack {
     pub item: ItemId,
     pub quantity: Quantity,
+    #[serde(default)]
+    pub instance: Option<Box<ItemInstance>>,
 }
 
 #[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
@@ -229,6 +231,12 @@ pub enum Activity {
         remaining: u32,
         next_tick: u64,
     },
+    ProducingAt {
+        recipe: RecipeId,
+        target: Option<crate::WorldTarget>,
+        remaining: u32,
+        next_tick: u64,
+    },
     Fighting {
         target: SpawnId,
         style: String,
@@ -272,6 +280,8 @@ pub struct CharacterState {
     pub dialogue: Option<OpenDialogue>,
     pub last_action_tick: u64,
     pub last_command_sequence: u64,
+    #[serde(default)]
+    pub runtime: CharacterRuntime,
 }
 
 #[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
@@ -282,6 +292,8 @@ pub struct GroundItem {
     pub owner: Option<ActorId>,
     pub public_at_tick: u64,
     pub expires_at_tick: u64,
+    #[serde(default)]
+    pub instance: Option<crate::InstanceId>,
 }
 
 #[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
@@ -290,6 +302,8 @@ pub struct EntityState {
     pub hitpoints: u16,
     pub available_at_tick: u64,
     pub flags: BTreeMap<String, i64>,
+    #[serde(default)]
+    pub runtime: EntityRuntime,
 }
 
 #[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
@@ -308,6 +322,8 @@ pub struct WorldState {
     pub entities: BTreeMap<SpawnId, EntityState>,
     pub shops: BTreeMap<ShopId, ShopState>,
     pub ground_items: Vec<GroundItem>,
+    #[serde(default)]
+    pub runtime: WorldRuntime,
 }
 
 #[cfg(test)]

@@ -417,7 +417,7 @@ fn broken_missing_nonstackable_or_cyclic_note_pairs_are_rejected_atomically() {
                     .items
                     .get_mut(&item("shard_note"))
                     .unwrap()
-                    .stackable = false
+                    .stackable = false.into()
             }
             2 => {
                 content

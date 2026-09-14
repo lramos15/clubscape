@@ -65,7 +65,7 @@ impl WorldEngine {
                             target: target.clone(),
                             next_tick: runtime::deadline(
                                 world.tick,
-                                u64::from(rule.attempt_ticks),
+                                runtime::legacy_ticks(rule.attempt_ticks)?,
                             )?,
                         };
                         runtime::set_counter(
@@ -110,6 +110,13 @@ impl WorldEngine {
                     InteractionAction::Unavailable { reason } => {
                         return Err(unavailable(reason.clone()));
                     }
+                    InteractionAction::OpenBank { .. }
+                    | InteractionAction::OpenShop { .. }
+                    | InteractionAction::TravelVia { .. } => {
+                        return Err(unavailable(
+                            "Contextual presentation/travel requires mechanics-v2 execution.",
+                        ));
+                    }
                 }
                 events.push(GameEvent::Interacted {
                     target: target.clone(),
@@ -127,6 +134,11 @@ impl WorldEngine {
                     return Err(GameError::new(
                         GameErrorCode::RequirementNotMet,
                         "Interface is locked.",
+                    ));
+                }
+                if self.content.interfaces[interface].access != InterfaceAccess::Tab {
+                    return Err(unavailable(
+                        "A contextual interface requires its authoritative source interaction.",
                     ));
                 }
                 character.dialogue = None;
@@ -242,6 +254,16 @@ impl WorldEngine {
             GameIntent::SetPrayer { .. } => {
                 return Err(unavailable(
                     "Prayer definitions, modifiers and persisted fractional drain state are not bound.",
+                ));
+            }
+            GameIntent::SetSetting { .. }
+            | GameIntent::ConfirmAppearance { .. }
+            | GameIntent::SelectExperience { .. }
+            | GameIntent::Reclaim { .. }
+            | GameIntent::ProduceAt { .. }
+            | GameIntent::InteractWith { .. } => {
+                return Err(unavailable(
+                    "This source-defined setting/creation/recovery intent requires mechanics-v2 execution.",
                 ));
             }
             GameIntent::CancelActivity | GameIntent::RequestLogout => runtime::interrupt(character),
@@ -462,6 +484,11 @@ impl WorldEngine {
     }
 
     fn eat(&self, tick: u64, character: &mut CharacterState, slot: usize) -> GameResult<()> {
+        if self.content.mechanics.vitals.is_some() {
+            return Err(unavailable(
+                "Source vital/food policies require mechanics-v2 execution.",
+            ));
+        }
         if tick < runtime::read_counter(character, runtime::FOOD_READY)? {
             return Err(GameError::new(
                 GameErrorCode::Busy,
@@ -539,6 +566,11 @@ impl WorldEngine {
                 )
             }
             ItemTarget::World { spawn } => (None, Some(spawn)),
+            ItemTarget::TemporaryObject { .. } | ItemTarget::Ground { .. } => {
+                return Err(unavailable(
+                    "Dynamic-object/ground-item use requires mechanics-v2 execution.",
+                ));
+            }
         };
         let mut selected = None;
         let mut refusal = None;

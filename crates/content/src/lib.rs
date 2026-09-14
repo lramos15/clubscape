@@ -60,6 +60,8 @@ pub struct ValidationReport {
     pub checks: Vec<&'static str>,
     /// Counts record occurrences, not independently verified facts.
     pub evidence: EvidenceCounts,
+    /// Exact typed definition paths; compilation does not replace these with usable defaults.
+    pub unresolved_bindings: Vec<String>,
     pub referenced_assets: usize,
     pub unassigned_asset_sites: usize,
     pub asset_manifest: Option<String>,

@@ -331,6 +331,7 @@ fn equip_uses_base_level_even_when_production_uses_current_level() {
         .push(SkillRequirement {
             skill: skill(),
             level: 2,
+            basis: SkillLevelBasis::Base,
         });
     content
         .initial_state

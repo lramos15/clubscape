@@ -16,6 +16,7 @@ pub fn stack(item: &str, quantity: u32) -> ItemStack {
     ItemStack {
         item: id(item),
         quantity: Quantity::new(quantity).unwrap(),
+        instance: None,
     }
 }
 
@@ -32,6 +33,11 @@ pub fn interface(name: &str, source_id: u32) -> InterfaceDefinition {
     InterfaceDefinition {
         id: id(&format!("interface.test.{name}")),
         name: format!("Synthetic {name} interface"),
+        access: if name == "bank" {
+            InterfaceAccess::Contextual
+        } else {
+            InterfaceAccess::Tab
+        },
         source_ids: vec![source_id],
         source: sources(),
     }
@@ -42,13 +48,15 @@ fn item(name: &str, source_id: u32, stackable: bool) -> ItemDefinition {
         id: id(&format!("item.test.{name}")),
         name: format!("Synthetic {name}"),
         source_id: Some(source_id),
-        stackable,
+        stackable: stackable.into(),
         tradable: true,
         base_value: 1,
         equipment: None,
         noted_variant: None,
         unnoted_variant: None,
         healing: None,
+        weight: None,
+        charges: None,
         asset: Some(id(&format!("asset.test.{name}"))),
         source: sources(),
     }
@@ -61,6 +69,7 @@ fn equipment(primary: &str, occupied: &[&str], weapon: bool) -> EquipmentDefinit
         requirements: vec![SkillRequirement {
             skill: id("skill.test.mining"),
             level: 1,
+            basis: SkillLevelBasis::Base,
         }],
         bonuses: CombatBonuses::default(),
         attack_speed_ticks: weapon.then_some(4),
@@ -69,6 +78,7 @@ fn equipment(primary: &str, occupied: &[&str], weapon: bool) -> EquipmentDefinit
         } else {
             vec![]
         },
+        weapon: None,
     }
 }
 
@@ -77,6 +87,7 @@ pub fn chance(numerator: u32, denominator: u32) -> ChanceRule {
         numerator_at_level_1: numerator,
         numerator_at_level_99: numerator,
         denominator,
+        domain: ChanceDomain::Constant,
     }
 }
 
@@ -170,6 +181,8 @@ pub fn fixture() -> GameContent {
                 source_id: number as u32,
                 size_x: 1,
                 size_y: 1,
+                clip: None,
+                morph: None,
                 asset: None,
                 source: sources(),
             };
@@ -181,6 +194,10 @@ pub fn fixture() -> GameContent {
         name: "Synthetic guide".into(),
         source_id: 1,
         size: 1,
+        navigation: NpcNavigation::Stationary {
+            anchor: StationaryAnchor::Walkable,
+        },
+        morph: None,
         combat: None,
         asset: None,
         source: sources(),
@@ -190,6 +207,10 @@ pub fn fixture() -> GameContent {
         name: "Synthetic monster".into(),
         source_id: 2,
         size: 1,
+        navigation: NpcNavigation::Stationary {
+            anchor: StationaryAnchor::Walkable,
+        },
+        morph: None,
         combat: Some(NpcCombatDefinition {
             hitpoints: 5,
             attack: 1,
@@ -200,8 +221,9 @@ pub fn fixture() -> GameContent {
             attack_speed_ticks: 4,
             max_hit: 1,
             bonuses: CombatBonuses::default(),
-            respawn_ticks: 5,
+            respawn_ticks: Some(5),
             aggressive: false,
+            mechanics: None,
             drops: vec![DropDefinition {
                 item: id("item.test.coins"),
                 minimum_quantity: 1,
@@ -223,14 +245,16 @@ pub fn fixture() -> GameContent {
         requirements: vec![SkillRequirement {
             skill: id("skill.test.smithing"),
             level: 1,
+            basis: SkillLevelBasis::Current,
         }],
         xp: vec![XpReward {
             skill: id("skill.test.smithing"),
             amount_tenths: 200,
         }],
-        ticks: 3,
+        ticks: Some(3),
         success: chance(1, 1),
         target_objects: vec![id("object.test.furnace")],
+        mechanics: None,
         source: sources(),
     };
     let dialogue = DialogueDefinition {
@@ -285,8 +309,10 @@ pub fn fixture() -> GameContent {
             restock_ticks: 5,
             buy_price: 4,
             sell_price: 2,
+            mechanics: None,
         }],
         accepts_general_items: true,
+        unstocked: None,
         source: sources(),
     };
     let spawn = |name: &str, tile: Tile, kind: SpawnKind, interactions| SpawnDefinition {
@@ -294,6 +320,7 @@ pub fn fixture() -> GameContent {
         region: region.id.clone(),
         tile,
         facing: 0,
+        placement: None,
         kind,
         interactions,
         source: sources(),
@@ -314,19 +341,20 @@ pub fn fixture() -> GameContent {
             vec![action(
                 "Mine",
                 InteractionAction::Gather {
-                    rule: GatherRule {
+                    rule: Box::new(GatherRule {
                         skill: id("skill.test.mining"),
                         required_level: 1,
                         tools: vec![id("item.test.pickaxe")],
                         output: stack("item.test.ore", 1),
                         xp_tenths: 100,
-                        attempt_ticks: 2,
+                        attempt_ticks: Some(2),
                         success: chance(1, 2),
                         depletion: chance(1, 3),
-                        respawn_ticks: 4,
+                        respawn_ticks: Some(4),
+                        mechanics: None,
                         animation: None,
                         sound: None,
-                    },
+                    }),
                 },
             )],
         ),
@@ -518,10 +546,11 @@ pub fn fixture() -> GameContent {
         )]),
         flags: BTreeMap::from([("test_seen".into(), 0)]),
         interfaces: vec![id("interface.test.inventory")],
+        runtime: InitialRuntimeDefinition::default(),
         source: sources(),
     };
     GameContent {
-        schema_version: GAME_SCHEMA_VERSION,
+        schema_version: CONTENT_SCHEMA_VERSION,
         revision: "synthetic-v1".into(),
         baseline: "fixture:strict-content-v1".into(),
         items,
@@ -545,6 +574,7 @@ pub fn fixture() -> GameContent {
             id("slot.test.ammo"),
         ],
         initial_state,
+        mechanics: MechanicsDefinition::default(),
     }
 }
 

@@ -74,14 +74,14 @@ impl Validator<'_> {
                         format!("duplicate dialogue node {}", node.id),
                     ));
                 }
-                self.guard(&node.guard, &format!("{path}.{}.guard", node.id))?;
+                self.state_guard(&node.guard, &format!("{path}.{}.guard", node.id))?;
                 unique(node.choices.iter().map(|choice| &choice.id), &path)?;
                 for choice in &node.choices {
                     let path = format!("{path}.{}.choices.{}", node.id, choice.id);
                     token(&choice.id, &path)?;
                     text(&choice.text, &path, MAX_TEXT_BYTES)?;
-                    self.guard(&choice.guard, &path)?;
-                    self.effects(&choice.effects, &path)?;
+                    self.state_guard(&choice.guard, &path)?;
+                    self.state_effects(&choice.effects, &path)?;
                 }
             }
             let mut reachable = BTreeSet::new();
@@ -157,12 +157,7 @@ impl Validator<'_> {
             text(&stage.instruction, &path, MAX_TEXT_BYTES)?;
             unique(stage.allowed_actions.iter(), &path)?;
             for action in &stage.allowed_actions {
-                if !rules::ACTIONS.contains(&action.as_str()) {
-                    return Err(invalid(
-                        &path,
-                        format!("unknown allowed action {action:?}; use a GameIntent kind"),
-                    ));
-                }
+                self.allowed_action(action, &path)?;
             }
             bounded(stage.xp_caps_tenths.len(), &path)?;
             for (id, cap) in &stage.xp_caps_tenths {
@@ -179,6 +174,7 @@ impl Validator<'_> {
                     &SkillRequirement {
                         skill: skill.clone(),
                         level: *level,
+                        basis: SkillLevelBasis::Base,
                     },
                     &path,
                 )?;
@@ -346,9 +342,35 @@ impl Validator<'_> {
 
     fn sites(&self) -> Vec<Site<'_>> {
         let mut sites = Vec::new();
+        for object in self.content.mechanics.temporary_objects.values() {
+            for interaction in &object.interactions {
+                if let InteractionAction::Effects { effects } = &interaction.action {
+                    sites.push(Site {
+                        path: format!(
+                            "mechanics.temporary_objects.{}.{}",
+                            object.id, interaction.name
+                        ),
+                        tutorial_owner: None,
+                        quest_owner: None,
+                        guards: vec![&object.placement_guard, &interaction.guard],
+                        effects,
+                        transition: None,
+                    });
+                }
+            }
+        }
         for spawn in self.content.spawns.values() {
             for interaction in &spawn.interactions {
-                if let InteractionAction::Effects { effects } = &interaction.action {
+                if let InteractionAction::Effects { effects }
+                | InteractionAction::OpenBank {
+                    before_open: effects,
+                    ..
+                }
+                | InteractionAction::OpenShop {
+                    before_open: effects,
+                    ..
+                } = &interaction.action
+                {
                     sites.push(Site {
                         path: format!("spawns.{}.{}", spawn.id, interaction.name),
                         tutorial_owner: None,
@@ -357,6 +379,37 @@ impl Validator<'_> {
                         effects,
                         transition: None,
                     });
+                }
+                for recipe in self.content.recipes.values() {
+                    if let Some(mechanics) = &recipe.mechanics {
+                        for (outcome, effects) in [
+                            ("success", &mechanics.success_effects),
+                            ("failure", &mechanics.failure_effects),
+                        ] {
+                            if !effects.is_empty() {
+                                sites.push(Site {
+                                    path: format!("recipes.{}.{}", recipe.id, outcome),
+                                    tutorial_owner: None,
+                                    quest_owner: None,
+                                    guards: vec![&mechanics.guard],
+                                    effects,
+                                    transition: None,
+                                });
+                            }
+                        }
+                    }
+                }
+                for travel in self.content.mechanics.travels.values() {
+                    if !travel.completion_effects.is_empty() {
+                        sites.push(Site {
+                            path: format!("mechanics.travels.{}", travel.id),
+                            tutorial_owner: None,
+                            quest_owner: None,
+                            guards: vec![&travel.guard],
+                            effects: &travel.completion_effects,
+                            transition: None,
+                        });
+                    }
                 }
             }
         }
@@ -451,6 +504,10 @@ impl Validator<'_> {
                         }
                     }
                 }
+                Effect::Once { effects, .. } => {
+                    self.destinations(effects, context, quest, &active, targets, budget)?;
+                    active.clear();
+                }
                 Effect::Message { .. } | Effect::AddQuestPoints { .. } => {}
                 _ => active.clear(),
             }
@@ -477,7 +534,12 @@ impl Validator<'_> {
         let has_reward = effects.iter().any(|effect| {
             matches!(
                 effect,
-                Effect::GiveItems { .. } | Effect::AwardXp { .. } | Effect::AddQuestPoints { .. },
+                Effect::GiveItems { .. }
+                    | Effect::AwardXp { .. }
+                    | Effect::AddQuestPoints { .. }
+                    | Effect::Grant { .. }
+                    | Effect::RestoreVital { .. }
+                    | Effect::ReconcileContainers { .. },
             )
         });
         if has_reward {
@@ -520,6 +582,8 @@ impl Validator<'_> {
                 let mut guards = guards.to_vec();
                 guards.push(guard);
                 self.reward_branches(site, effects, &guards, &destinations, changed, budget)?;
+            } else if let Effect::Once { effects, .. } = effect {
+                self.reward_branches(site, effects, guards, &destinations, changed, budget)?;
             }
         }
         Ok(())
@@ -609,7 +673,9 @@ fn collect_changed<'a>(
             Effect::SetQuestStage { quest, .. } => {
                 quests.insert(quest);
             }
-            Effect::Conditional { effects, .. } => collect_changed(effects, tutorial, quests),
+            Effect::Conditional { effects, .. } | Effect::Once { effects, .. } => {
+                collect_changed(effects, tutorial, quests)
+            }
             _ => {}
         }
     }
@@ -617,7 +683,9 @@ fn collect_changed<'a>(
 
 fn mutates_guards(effects: &[Effect]) -> bool {
     effects.iter().any(|effect| match effect {
-        Effect::Conditional { effects, .. } => mutates_guards(effects),
+        Effect::Conditional { effects, .. } | Effect::Once { effects, .. } => {
+            mutates_guards(effects)
+        }
         Effect::Message { .. } | Effect::AddQuestPoints { .. } => false,
         _ => true,
     })
@@ -705,7 +773,7 @@ fn single_stage_writes(site: &Site<'_>, budget: &mut Budget) -> GameResult<()> {
             let key = match effect {
                 Effect::SetTutorialStage { .. } => Some(None),
                 Effect::SetQuestStage { quest, .. } => Some(Some(quest)),
-                Effect::Conditional { effects, .. } => {
+                Effect::Conditional { effects, .. } | Effect::Once { effects, .. } => {
                     pending.push(effects);
                     None
                 }

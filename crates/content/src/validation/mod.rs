@@ -1,5 +1,6 @@
 mod definitions;
 mod graphs;
+mod mechanics;
 mod rules;
 mod world;
 
@@ -35,10 +36,10 @@ struct Validator<'a> {
 }
 
 pub(crate) fn validate(content: &GameContent, mode: ValidationMode) -> GameResult<Validated> {
-    if content.schema_version != GAME_SCHEMA_VERSION {
+    if content.schema_version != CONTENT_SCHEMA_VERSION {
         return Err(invalid(
             "schema_version",
-            "only GameContent schema version 1 is supported",
+            "only GameContent schema version 2 is supported; complete and recompile older definitions",
         ));
     }
     identity(&content.revision, "revision")?;
@@ -78,11 +79,12 @@ pub(crate) fn validate(content: &GameContent, mode: ValidationMode) -> GameResul
         mutable_flags: scan.mutable_flags,
         collision: BTreeMap::new(),
     };
-    let evidence = validator.sources(mode)?;
+    let (evidence, unresolved_bindings) = validator.sources(mode)?;
     validator.skills()?;
     validator.items()?;
     validator.interface_definitions()?;
     validator.regions()?;
+    validator.mechanics()?;
     validator.objects_and_npcs()?;
     validator.recipes()?;
     validator.shops()?;
@@ -110,8 +112,12 @@ pub(crate) fn validate(content: &GameContent, mode: ValidationMode) -> GameResul
             "recipe_tool_references_and_nonconsumption",
             "recipe_tool_holding_capacity",
             "initial_run_energy_units_and_bounds",
+            "typed_mechanic_bindings_and_source_domains",
+            "counter_entitlement_instance_and_recovery_contracts",
+            "stationary_anchor_and_mobile_footprint_policy",
         ],
         evidence,
+        unresolved_bindings,
         referenced_assets: assets.len(),
         unassigned_asset_sites,
         asset_manifest: None,
@@ -124,7 +130,7 @@ pub(crate) fn validate(content: &GameContent, mode: ValidationMode) -> GameResul
             "Interface registry validation establishes logical identity and source mappings, not rendered controls or interface behavior.",
             "Source URLs, observations, baseline completeness, and owner approvals are not authenticated by compilation.",
             "Graph checks are conservative structural/constant-condition checks, not a gameplay planner or milestone acceptance.",
-            "Compilation does not execute an FSM, prove source-specific spell/prayer behavior, bind initial HP/prayer to skills, or validate run/regeneration formulas.",
+            "Typed formula/timing bindings are validated, not executed or source-certified; unresolved bindings remain unavailable at execution.",
             "Animation actor filters are checked as ActorId syntax; dynamic actor existence belongs to world-state validation.",
             "Optional presentation assets, asset files, geometry, audio, and visual fidelity require separate acceptance checks.",
         ],
@@ -220,7 +226,7 @@ fn fixture_reference(value: &str) -> bool {
 }
 
 impl Validator<'_> {
-    fn sources(&self, mode: ValidationMode) -> GameResult<EvidenceCounts> {
+    fn sources(&self, mode: ValidationMode) -> GameResult<(EvidenceCounts, Vec<String>)> {
         let mut counts = EvidenceCounts::default();
         macro_rules! sources {
             ($($field:ident),+ $(,)?) => {$(
@@ -244,7 +250,10 @@ impl Validator<'_> {
             mode,
             &mut counts,
         )?;
-        Ok(counts)
+        let mut unresolved = Vec::new();
+        self.mechanic_sources(mode, &mut counts, &mut unresolved)?;
+        unresolved.sort();
+        Ok((counts, unresolved))
     }
 
     fn assets(&self) -> (BTreeSet<AssetId>, usize) {
@@ -293,6 +302,13 @@ impl Validator<'_> {
                 && let Some(target) = &transition.target
             {
                 assets.insert(AssetId::new(target).expect("validated sound event asset"));
+            }
+            for projectile in self.content.mechanics.projectiles.values() {
+                if let Some(asset) = &projectile.asset {
+                    assets.insert(asset.clone());
+                } else {
+                    unassigned += 1;
+                }
             }
         }
         (assets, unassigned)
@@ -396,7 +412,8 @@ impl Validator<'_> {
             if stack.quantity.get() == 0 || stack.quantity.get() > MAX_STACK_QUANTITY {
                 return Err(invalid(path, "item quantity is outside the stack limit"));
             }
-            slots += if item.stackable {
+            self.item_instance(stack, path)?;
+            slots += if item.stackable.is_always() {
                 1
             } else {
                 u64::from(stack.quantity.get())
@@ -498,16 +515,21 @@ fn source_records(
 }
 
 fn chance(rule: &ChanceRule, path: &str, require_possible: bool) -> GameResult<()> {
-    if rule.denominator == 0
-        || rule.numerator_at_level_1 > rule.denominator
-        || rule.numerator_at_level_99 > rule.denominator
+    rule.validate().map_err(|error| invalid(path, error))?;
+    let (minimum, maximum) = match rule.domain {
+        ChanceDomain::Constant => (1, 1),
+        ChanceDomain::Skill { levels } => (levels.minimum, levels.maximum),
+    };
+    if require_possible
+        && rule
+            .numerator(minimum)
+            .map_err(|error| invalid(path, error))?
+            == 0
+        && rule
+            .numerator(maximum)
+            .map_err(|error| invalid(path, error))?
+            == 0
     {
-        return Err(invalid(
-            path,
-            "chance requires a positive denominator and numerators within it",
-        ));
-    }
-    if require_possible && rule.numerator_at_level_1 == 0 && rule.numerator_at_level_99 == 0 {
         return Err(invalid(
             path,
             "successful action is impossible at every level",
@@ -519,9 +541,6 @@ fn chance(rule: &ChanceRule, path: &str, require_possible: bool) -> GameResult<(
 fn bonuses(bonuses: &CombatBonuses, path: &str) -> GameResult<()> {
     bounded(bonuses.attack.len(), path)?;
     bounded(bonuses.defence.len(), path)?;
-    for style in bonuses.attack.keys().chain(bonuses.defence.keys()) {
-        token(style, path)?;
-    }
     Ok(())
 }
 

@@ -15,6 +15,7 @@ pub fn validate(equipment: &BTreeMap<SlotId, ItemStack>, content: &GameContent) 
     validate_slot_catalog(content)?;
     let mut occupied = BTreeSet::new();
     for (slot, stack) in equipment {
+        crate::require_ordinary_stack(stack)?;
         let item = item_definition(&content.items, &stack.item)?;
         let definition = item.equipment.as_ref().ok_or_else(|| {
             GameError::new(
@@ -22,7 +23,7 @@ pub fn validate(equipment: &BTreeMap<SlotId, ItemStack>, content: &GameContent) 
                 format!("Equipped item {} has no equipment definition.", stack.item),
             )
         })?;
-        if definition.slot != *slot || (!item.stackable && stack.quantity.get() != 1) {
+        if definition.slot != *slot || (!item.stackable.fixed()? && stack.quantity.get() != 1) {
             return Err(GameError::new(
                 GameErrorCode::InvalidInput,
                 format!(
@@ -66,6 +67,17 @@ pub fn equip(
     content: &GameContent,
     inventory_slot: usize,
 ) -> GameResult<GameEvent> {
+    let stack = inventory::stack_at(&character.inventory, inventory_slot)?;
+    if equipment_definition(content, stack)?
+        .requirements
+        .iter()
+        .any(|requirement| requirement.basis != clubscape_game_types::SkillLevelBasis::Base)
+    {
+        return Err(GameError::new(
+            GameErrorCode::Unavailable,
+            "Source equipment basis requires explicit level-basis selection.",
+        ));
+    }
     equip_with_level_basis(character, content, inventory_slot, LevelBasis::Base)
 }
 
@@ -111,7 +123,7 @@ pub fn equip_with_level_basis(
                 "Conflicting equipment disappeared.",
             )
         })?;
-        if displaced.item == incoming.item && item.stackable {
+        if displaced.item == incoming.item && item.stackable.fixed()? {
             incoming.quantity = add_quantities(incoming.quantity, displaced.quantity)?;
         } else {
             inventory::add(&mut inventory, &content.items, &displaced)?;

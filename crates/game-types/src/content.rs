@@ -25,12 +25,13 @@ pub struct SourceRecord {
 pub struct SkillRequirement {
     pub skill: SkillId,
     pub level: u16,
+    pub basis: SkillLevelBasis,
 }
 
 #[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize, Default)]
 pub struct CombatBonuses {
-    pub attack: BTreeMap<String, i16>,
-    pub defence: BTreeMap<String, i16>,
+    pub attack: BTreeMap<AttackType, i16>,
+    pub defence: BTreeMap<AttackType, i16>,
     pub melee_strength: i16,
     pub ranged_strength: i16,
     pub magic_damage_percent: i16,
@@ -45,6 +46,7 @@ pub struct EquipmentDefinition {
     pub bonuses: CombatBonuses,
     pub attack_speed_ticks: Option<u16>,
     pub attack_styles: Vec<String>,
+    pub weapon: Option<WeaponDefinition>,
 }
 
 #[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
@@ -52,13 +54,15 @@ pub struct ItemDefinition {
     pub id: ItemId,
     pub name: String,
     pub source_id: Option<u32>,
-    pub stackable: bool,
+    pub stackable: Stackability,
     pub tradable: bool,
     pub base_value: u32,
     pub equipment: Option<EquipmentDefinition>,
     pub noted_variant: Option<ItemId>,
     pub unnoted_variant: Option<ItemId>,
     pub healing: Option<u16>,
+    pub weight: Option<SourceBinding<ItemWeight>>,
+    pub charges: Option<ChargeDefinition>,
     pub asset: Option<AssetId>,
     pub source: Vec<SourceRecord>,
 }
@@ -115,6 +119,7 @@ pub struct SpawnDefinition {
     pub region: RegionId,
     pub tile: Tile,
     pub facing: u8,
+    pub placement: Option<SourceObjectPlacement>,
     pub kind: SpawnKind,
     pub interactions: Vec<InteractionDefinition>,
     pub source: Vec<SourceRecord>,
@@ -131,15 +136,42 @@ pub struct InteractionDefinition {
 #[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(tag = "kind", rename_all = "snake_case")]
 pub enum InteractionAction {
-    Effects { effects: Vec<Effect> },
-    Dialogue { dialogue: DialogueId },
-    Gather { rule: GatherRule },
-    Production { recipes: Vec<RecipeId> },
+    Effects {
+        effects: Vec<Effect>,
+    },
+    Dialogue {
+        dialogue: DialogueId,
+    },
+    Gather {
+        rule: Box<GatherRule>,
+    },
+    Production {
+        recipes: Vec<RecipeId>,
+    },
     Bank,
-    Shop { shop: ShopId },
+    Shop {
+        shop: ShopId,
+    },
     Attack,
-    Travel { destination: Tile, region: RegionId },
-    Unavailable { reason: String },
+    Travel {
+        destination: Tile,
+        region: RegionId,
+    },
+    OpenBank {
+        interface: InterfaceId,
+        before_open: Vec<Effect>,
+    },
+    OpenShop {
+        shop: ShopId,
+        interface: InterfaceId,
+        before_open: Vec<Effect>,
+    },
+    TravelVia {
+        travel: TravelId,
+    },
+    Unavailable {
+        reason: String,
+    },
 }
 
 #[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
@@ -149,10 +181,12 @@ pub struct GatherRule {
     pub tools: Vec<ItemId>,
     pub output: ItemStack,
     pub xp_tenths: u64,
-    pub attempt_ticks: u16,
+    /// Legacy uniform cadence; must be None when mechanics is present.
+    pub attempt_ticks: Option<u16>,
     pub success: ChanceRule,
     pub depletion: ChanceRule,
-    pub respawn_ticks: u32,
+    pub respawn_ticks: Option<u32>,
+    pub mechanics: Option<GatherMechanics>,
     pub animation: Option<AssetId>,
     pub sound: Option<AssetId>,
 }
@@ -162,6 +196,7 @@ pub struct ChanceRule {
     pub numerator_at_level_1: u32,
     pub numerator_at_level_99: u32,
     pub denominator: u32,
+    pub domain: ChanceDomain,
 }
 
 #[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
@@ -175,9 +210,11 @@ pub struct RecipeDefinition {
     pub tools: Vec<ItemId>,
     pub requirements: Vec<SkillRequirement>,
     pub xp: Vec<XpReward>,
-    pub ticks: u16,
+    /// Legacy uniform cadence; must be None when mechanics is present.
+    pub ticks: Option<u16>,
     pub success: ChanceRule,
     pub target_objects: Vec<ObjectId>,
+    pub mechanics: Option<RecipeMechanics>,
     pub source: Vec<SourceRecord>,
 }
 
@@ -191,33 +228,165 @@ pub struct XpReward {
 #[serde(tag = "kind", rename_all = "snake_case")]
 pub enum Guard {
     Always,
-    All { guards: Vec<Guard> },
-    Any { guards: Vec<Guard> },
-    Not { guard: Box<Guard> },
-    Flag { name: String, equals: i64 },
-    TutorialStage { stage: StageId },
-    QuestStage { quest: QuestId, stage: StageId },
-    HasItems { items: Vec<ItemStack> },
-    Equipped { item: ItemId },
-    SkillAtLeast { requirement: SkillRequirement },
-    InterfaceUnlocked { interface: InterfaceId },
-    Within { tile: Tile, distance: u16 },
+    All {
+        guards: Vec<Guard>,
+    },
+    Any {
+        guards: Vec<Guard>,
+    },
+    Not {
+        guard: Box<Guard>,
+    },
+    Flag {
+        name: String,
+        equals: i64,
+    },
+    TutorialStage {
+        stage: StageId,
+    },
+    QuestStage {
+        quest: QuestId,
+        stage: StageId,
+    },
+    HasItems {
+        items: Vec<ItemStack>,
+    },
+    Equipped {
+        item: ItemId,
+    },
+    SkillAtLeast {
+        requirement: SkillRequirement,
+    },
+    InterfaceUnlocked {
+        interface: InterfaceId,
+    },
+    Within {
+        tile: Tile,
+        distance: u16,
+    },
+    FreeCapacity {
+        container: ContainerKind,
+        slots: u16,
+    },
+    OwnsItems {
+        items: Vec<ItemStack>,
+        scope: OwnershipScope,
+    },
+    Counter {
+        counter: CounterId,
+        predicate: CounterPredicate,
+    },
+    EntitlementClaimed {
+        entitlement: EntitlementId,
+    },
+    Event {
+        condition: EventCondition,
+    },
+    Experience {
+        experience: ExperienceId,
+    },
+    Setting {
+        setting: CharacterSetting,
+    },
+    Life {
+        phase: LifePhase,
+    },
+    DeathTopics {
+        topics: std::collections::BTreeSet<DeathTopic>,
+    },
+    Charges {
+        item: ItemId,
+        charge_kind: ChargeKindId,
+        minimum: u32,
+    },
+    MembersWorld,
 }
 
 #[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(tag = "kind", rename_all = "snake_case")]
 pub enum Effect {
-    GiveItems { items: Vec<ItemStack> },
-    TakeItems { items: Vec<ItemStack> },
-    AwardXp { rewards: Vec<XpReward> },
-    SetFlag { name: String, value: i64 },
-    UnlockInterface { interface: InterfaceId },
-    SetTutorialStage { stage: StageId },
-    SetQuestStage { quest: QuestId, stage: StageId },
-    AddQuestPoints { amount: u16 },
-    Travel { region: RegionId, tile: Tile },
-    Message { text: String },
-    Conditional { guard: Guard, effects: Vec<Effect> },
+    GiveItems {
+        items: Vec<ItemStack>,
+    },
+    TakeItems {
+        items: Vec<ItemStack>,
+    },
+    AwardXp {
+        rewards: Vec<XpReward>,
+    },
+    SetFlag {
+        name: String,
+        value: i64,
+    },
+    UnlockInterface {
+        interface: InterfaceId,
+    },
+    SetTutorialStage {
+        stage: StageId,
+    },
+    SetQuestStage {
+        quest: QuestId,
+        stage: StageId,
+    },
+    AddQuestPoints {
+        amount: u16,
+    },
+    Travel {
+        region: RegionId,
+        tile: Tile,
+    },
+    Message {
+        text: String,
+    },
+    Conditional {
+        guard: Guard,
+        effects: Vec<Effect>,
+    },
+    Grant {
+        grant: GrantId,
+    },
+    Once {
+        entitlement: EntitlementId,
+        effects: Vec<Effect>,
+    },
+    RestoreVital {
+        vital: Vital,
+        restoration: VitalRestoration,
+    },
+    SetCounter {
+        counter: CounterId,
+        value: CounterValue,
+    },
+    AddCounter {
+        counter: CounterId,
+        delta: i64,
+    },
+    TransformObject {
+        transform: ObjectTransformId,
+        state: ObjectStateId,
+    },
+    CreateTemporaryObject {
+        definition: TemporaryObjectId,
+    },
+    TravelVia {
+        travel: TravelId,
+    },
+    ReconcileContainers {
+        reconciliation: ReconciliationId,
+    },
+    CompleteDeathTopic {
+        topic: DeathTopic,
+    },
+    ConsumeCharges {
+        item: ItemId,
+        charge_kind: ChargeKindId,
+        amount: u32,
+        selection: ChargeSelection,
+    },
+    Inspect {
+        target: SpawnId,
+        explanation: String,
+    },
 }
 
 #[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
@@ -283,6 +452,7 @@ pub struct ShopItem {
     pub restock_ticks: u32,
     pub buy_price: u32,
     pub sell_price: u32,
+    pub mechanics: Option<ShopLineMechanics>,
 }
 
 #[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
@@ -292,6 +462,7 @@ pub struct ShopDefinition {
     pub currency: ItemId,
     pub stock: Vec<ShopItem>,
     pub accepts_general_items: bool,
+    pub unstocked: Option<UnstockedShopPolicy>,
     pub source: Vec<SourceRecord>,
 }
 
@@ -302,6 +473,8 @@ pub struct ObjectDefinition {
     pub source_id: u32,
     pub size_x: u8,
     pub size_y: u8,
+    pub clip: Option<ObjectClipDefinition>,
+    pub morph: Option<SourceObjectMorph>,
     pub asset: Option<AssetId>,
     pub source: Vec<SourceRecord>,
 }
@@ -312,6 +485,8 @@ pub struct NpcDefinition {
     pub name: String,
     pub source_id: u32,
     pub size: u8,
+    pub navigation: NpcNavigation,
+    pub morph: Option<SourceNpcMorph>,
     pub combat: Option<NpcCombatDefinition>,
     pub asset: Option<AssetId>,
     pub source: Vec<SourceRecord>,
@@ -328,9 +503,11 @@ pub struct NpcCombatDefinition {
     pub attack_speed_ticks: u16,
     pub max_hit: u16,
     pub bonuses: CombatBonuses,
-    pub respawn_ticks: u32,
+    pub respawn_ticks: Option<u32>,
     pub aggressive: bool,
     pub drops: Vec<DropDefinition>,
+    /// When present, legacy independent drops must be empty.
+    pub mechanics: Option<NpcCombatMechanics>,
 }
 
 #[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
@@ -358,6 +535,7 @@ pub struct InitialStateDefinition {
     pub quests: BTreeMap<QuestId, QuestState>,
     pub flags: BTreeMap<String, i64>,
     pub interfaces: Vec<InterfaceId>,
+    pub runtime: InitialRuntimeDefinition,
     pub source: Vec<SourceRecord>,
 }
 
@@ -381,12 +559,21 @@ pub struct GameContent {
     pub interfaces: BTreeMap<InterfaceId, InterfaceDefinition>,
     pub equipment_slots: Vec<SlotId>,
     pub initial_state: InitialStateDefinition,
+    pub mechanics: MechanicsDefinition,
 }
 
 #[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
 pub struct InterfaceDefinition {
     pub id: InterfaceId,
     pub name: String,
+    pub access: InterfaceAccess,
     pub source_ids: Vec<u32>,
     pub source: Vec<SourceRecord>,
+}
+
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(rename_all = "snake_case")]
+pub enum InterfaceAccess {
+    Tab,
+    Contextual,
 }

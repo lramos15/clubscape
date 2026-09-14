@@ -447,10 +447,12 @@ fn world_fixture() -> WorldState {
                 hitpoints: 1,
                 available_at_tick: 0,
                 flags: BTreeMap::new(),
+                runtime: clubscape_game_types::EntityRuntime::default(),
             },
         )]),
         shops: BTreeMap::new(),
         ground_items: Vec::new(),
+        runtime: clubscape_game_types::WorldRuntime::default(),
     }
 }
 
@@ -459,6 +461,7 @@ fn character_fixture() -> SourceCharacter {
     inventory.slots[0] = Some(ItemStack {
         item: ItemId::new("item.fixture.token").unwrap(),
         quantity: Quantity::new(3).unwrap(),
+        instance: None,
     });
     SourceCharacter {
         content_revision: FIXTURE_REVISION.to_owned(),
@@ -487,6 +490,7 @@ fn character_fixture() -> SourceCharacter {
             quests: BTreeMap::new(),
             flags: BTreeMap::from([("synthetic_source_marker".to_owned(), 9)]),
             interfaces: Vec::new(),
+            runtime: clubscape_game_types::InitialRuntimeDefinition::default(),
             source: vec![SourceRecord {
                 reference: "crates/server/tests/game_storage.rs".to_owned(),
                 revision: FIXTURE_REVISION.to_owned(),
@@ -532,6 +536,7 @@ fn synthetic_gain(
             stack: ItemStack {
                 item: stack.item.clone(),
                 quantity: Quantity::new(1)?,
+                instance: None,
             },
         },
         GameEvent::XpGained {
@@ -550,6 +555,192 @@ fn assert_error(error: GameStorageError, status: StatusCode, code: ErrorCode) {
 
 fn assert_conflict(error: GameStorageError) {
     assert_error(error, StatusCode::CONFLICT, ErrorCode::Conflict);
+}
+
+#[tokio::test(flavor = "multi_thread", worker_threads = 2)]
+#[ignore = "requires isolated PostgreSQL; run just test-integration"]
+async fn typed_runtime_ledgers_and_deadlines_persist_without_replay_or_acknowledged_state_loss() {
+    use clubscape_game_types::{
+        CounterId, CounterValue, EntitlementId, EntitlementState, FractionalAccumulator,
+    };
+
+    let database = TestDatabase::reset().await;
+    let player = database.player("typed_runtime").await;
+    let operation = command(1);
+    let committed = database
+        .store
+        .commit_command(
+            &database.lease,
+            &player.access(),
+            operation.clone(),
+            |world, actor, _| {
+                // Synthetic persistence data, not execution of mill/prayer/grant mechanics.
+                let character = world.characters.get_mut(actor).unwrap();
+                character.runtime.counters.insert(
+                    CounterId::new("counter.fixture.flour")?,
+                    CounterValue::Integer(30),
+                );
+                character.runtime.food_ready = 17;
+                character.runtime.combat.attack_ready = 19;
+                character.runtime.combat.prayer_drain = Some(FractionalAccumulator {
+                    numerator: 1,
+                    denominator: 60,
+                });
+                character.runtime.entitlements.insert(
+                    EntitlementId::new("entitlement.fixture.reward")?,
+                    EntitlementState::Claimed {
+                        at_tick: world.tick,
+                    },
+                );
+                Ok(vec![GameEvent::CounterChanged {
+                    counter: CounterId::new("counter.fixture.flour")?,
+                    value: CounterValue::Integer(30),
+                }])
+            },
+        )
+        .await
+        .unwrap();
+    assert_eq!(
+        committed.receipt.character.inventory,
+        player.character.state.inventory
+    );
+    assert_eq!(
+        committed.receipt.character.skills,
+        player.character.state.skills
+    );
+    assert_eq!(
+        committed.receipt.character.quests,
+        player.character.state.quests
+    );
+    let reader = GameStore::new(database.pool.clone());
+    let restored = reader
+        .load_character(database.world_id, player.account.authentication())
+        .await
+        .unwrap()
+        .unwrap();
+    assert_eq!(restored.state, committed.receipt.character);
+    assert_eq!(restored.state.runtime.food_ready, 17);
+    assert_eq!(restored.state.runtime.combat.attack_ready, 19);
+    let duplicate = database
+        .store
+        .commit_command(&database.lease, &player.access(), operation, |_, _, _| {
+            panic!("typed runtime replay must return its durable receipt")
+        })
+        .await
+        .unwrap();
+    assert!(duplicate.duplicate);
+    assert_eq!(duplicate.receipt, committed.receipt);
+    let before = database.store.load_world(database.world_id).await.unwrap();
+    for clear_ledger in [true, false] {
+        let failure = database
+            .store
+            .commit_command(
+                &database.lease,
+                &player.access(),
+                command(2),
+                move |world, actor, _| {
+                    let runtime = &mut world.characters.get_mut(actor).unwrap().runtime;
+                    if clear_ledger {
+                        runtime.entitlements.clear();
+                    } else {
+                        runtime.combat.prayer_drain = Some(FractionalAccumulator {
+                            numerator: 1,
+                            denominator: 0,
+                        });
+                    }
+                    Ok(Vec::new())
+                },
+            )
+            .await
+            .unwrap_err();
+        assert_error(
+            failure,
+            StatusCode::INTERNAL_SERVER_ERROR,
+            ErrorCode::Internal,
+        );
+        assert_eq!(
+            database.store.load_world(database.world_id).await.unwrap(),
+            before
+        );
+    }
+    assert_eq!(database.journal_count().await, 1);
+    database.stop().await;
+}
+
+#[tokio::test(flavor = "multi_thread", worker_threads = 2)]
+#[ignore = "requires isolated PostgreSQL; run just test-integration"]
+async fn legacy_jsonb_runtime_defaults_preserve_pending_activity_inventory_xp_and_source_flags() {
+    let database = TestDatabase::reset().await;
+    let player = database.player("legacy_runtime").await;
+    let committed = database
+        .store
+        .commit_command(
+            &database.lease,
+            &player.access(),
+            command(1),
+            |world, actor, intent| {
+                let events = synthetic_gain(world, actor, intent)?;
+                let character = world.characters.get_mut(actor).unwrap();
+                character
+                    .flags
+                    .insert("__world_engine.command_seen".into(), 1);
+                character
+                    .flags
+                    .insert("__world_engine.food_ready".into(), 11);
+                character
+                    .flags
+                    .insert("__world_engine.attack_ready".into(), 13);
+                character.activity = clubscape_game_types::Activity::Producing {
+                    recipe: clubscape_game_types::RecipeId::new("recipe.fixture.pending")?,
+                    target: None,
+                    remaining: 3,
+                    next_tick: 40,
+                };
+                Ok(events)
+            },
+        )
+        .await
+        .unwrap();
+    let path = vec![
+        "characters".to_owned(),
+        player.character.state.actor_id.to_string(),
+        "runtime".to_owned(),
+    ];
+    sqlx::query(
+        "UPDATE game_worlds SET state = (state - 'runtime') #- $2::text[] WHERE world_id = $1",
+    )
+    .bind(database.world_id)
+    .bind(path)
+    .execute(&database.pool)
+    .await
+    .unwrap();
+    let restored = database
+        .store
+        .load_character(database.world_id, player.account.authentication())
+        .await
+        .unwrap()
+        .unwrap();
+    assert_eq!(
+        restored.state.inventory,
+        committed.receipt.character.inventory
+    );
+    assert_eq!(restored.state.skills, committed.receipt.character.skills);
+    assert_eq!(restored.state.flags, committed.receipt.character.flags);
+    assert_eq!(
+        restored.state.activity,
+        committed.receipt.character.activity
+    );
+    assert_eq!(restored.state.last_command_sequence, 1);
+    assert!(matches!(
+        restored.state.runtime.engine,
+        clubscape_game_types::EngineMetadata::Legacy
+    ));
+    assert!(matches!(
+        restored.state.runtime.life,
+        clubscape_game_types::LifeState::Legacy
+    ));
+    assert_eq!(database.journal_count().await, 1);
+    database.stop().await;
 }
 
 #[tokio::test(flavor = "multi_thread", worker_threads = 2)]

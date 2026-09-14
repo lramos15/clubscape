@@ -78,6 +78,28 @@ content_id!(RecipeId, "recipe");
 content_id!(ActionId, "action");
 content_id!(DialogueId, "dialogue");
 content_id!(ShopId, "shop");
+content_id!(CounterId, "counter");
+content_id!(EntitlementId, "entitlement");
+content_id!(GrantId, "grant");
+content_id!(CombatStyleId, "style");
+content_id!(SpellId, "spell");
+content_id!(ProjectileId, "projectile");
+content_id!(PrayerId, "prayer");
+content_id!(TravelId, "travel");
+content_id!(InstanceTemplateId, "instance_template");
+content_id!(InstanceId, "instance");
+content_id!(ObjectTransformId, "transform");
+content_id!(ObjectStateId, "object_state");
+content_id!(TemporaryObjectId, "temporary_object");
+content_id!(DynamicObjectId, "dynamic_object");
+content_id!(GroundPolicyId, "ground_policy");
+content_id!(ExperienceId, "experience");
+content_id!(ReconciliationId, "reconciliation");
+content_id!(ValueProviderId, "value_provider");
+content_id!(ItemInstanceId, "item_instance");
+content_id!(ChargeKindId, "charge");
+content_id!(DeathId, "death");
+content_id!(RecoveryItemId, "recovery_item");
 
 #[cfg(test)]
 mod tests {

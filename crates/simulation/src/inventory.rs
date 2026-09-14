@@ -16,8 +16,9 @@ pub enum InventoryOperation {
 pub fn validate(inventory: &Inventory, items: &ItemDefinitions) -> GameResult<()> {
     let mut stackable_items = BTreeSet::new();
     for stack in inventory.slots.iter().flatten() {
+        crate::require_ordinary_stack(stack)?;
         let definition = item_definition(items, &stack.item)?;
-        if definition.stackable {
+        if definition.stackable.fixed()? {
             if !stackable_items.insert(&stack.item) {
                 return Err(GameError::new(
                     GameErrorCode::InvalidInput,
@@ -67,8 +68,14 @@ pub fn apply_operations(
     let mut draft = inventory.clone();
     for operation in operations {
         match operation {
-            InventoryOperation::Add(stack) => add_to_draft(&mut draft, items, stack)?,
-            InventoryOperation::Remove(stack) => remove_from_draft(&mut draft, items, stack)?,
+            InventoryOperation::Add(stack) => {
+                crate::require_ordinary_stack(stack)?;
+                add_to_draft(&mut draft, items, stack)?;
+            }
+            InventoryOperation::Remove(stack) => {
+                crate::require_ordinary_stack(stack)?;
+                remove_from_draft(&mut draft, items, stack)?;
+            }
         }
     }
     *inventory = draft;
@@ -143,6 +150,7 @@ pub fn remove_from_slot(
     let removed = ItemStack {
         item: stored.item.clone(),
         quantity,
+        instance: stored.instance.clone(),
     };
     let replacement = if remaining == 0 {
         None
@@ -150,6 +158,7 @@ pub fn remove_from_slot(
         Some(ItemStack {
             item: stored.item.clone(),
             quantity: Quantity::new(remaining)?,
+            instance: stored.instance.clone(),
         })
     };
     *inventory
@@ -227,7 +236,7 @@ fn add_to_draft(
     stack: &ItemStack,
 ) -> GameResult<()> {
     let definition = item_definition(items, &stack.item)?;
-    if definition.stackable {
+    if definition.stackable.fixed()? {
         if let Some(stored) = inventory
             .slots
             .iter_mut()
@@ -251,6 +260,7 @@ fn add_to_draft(
         let single = ItemStack {
             item: stack.item.clone(),
             quantity: Quantity::new(1)?,
+            instance: stack.instance.clone(),
         };
         for slot in inventory
             .slots

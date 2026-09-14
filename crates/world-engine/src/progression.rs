@@ -171,6 +171,22 @@ impl WorldEngine {
                         self.effects(character, effects, events, depth + 1)?;
                     }
                 }
+                Effect::Grant { .. }
+                | Effect::Once { .. }
+                | Effect::RestoreVital { .. }
+                | Effect::SetCounter { .. }
+                | Effect::AddCounter { .. }
+                | Effect::TransformObject { .. }
+                | Effect::CreateTemporaryObject { .. }
+                | Effect::TravelVia { .. }
+                | Effect::ReconcileContainers { .. }
+                | Effect::CompleteDeathTopic { .. }
+                | Effect::ConsumeCharges { .. }
+                | Effect::Inspect { .. } => {
+                    return Err(crate::unavailable(
+                        "This typed source effect requires mechanics-v2 execution.",
+                    ));
+                }
             }
         }
         Ok(())

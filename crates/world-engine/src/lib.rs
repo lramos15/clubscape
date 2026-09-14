@@ -70,6 +70,7 @@ impl WorldEngine {
             entities: BTreeMap::new(),
             shops: BTreeMap::new(),
             ground_items: Vec::new(),
+            runtime: WorldRuntime::from_initial(&self.content),
         };
         for (id, spawn) in &self.content.spawns {
             let hitpoints = match &spawn.kind {
@@ -90,6 +91,7 @@ impl WorldEngine {
                     hitpoints,
                     available_at_tick: 0,
                     flags: BTreeMap::new(),
+                    runtime: EntityRuntime::default(),
                 },
             );
             if let SpawnKind::Item { stack, .. } = &spawn.kind {
@@ -145,6 +147,7 @@ impl WorldEngine {
             dialogue: None,
             last_action_tick: 0,
             last_command_sequence: 0,
+            runtime: CharacterRuntime::from_initial(&self.content),
         };
         validation::character(&character, &self.content)?;
         Ok(character)
@@ -293,6 +296,37 @@ impl WorldEngine {
     }
 
     fn check_world(&self, world: &WorldState) -> GameResult<()> {
+        world.runtime.validate_shape()?;
+        for entity in world.entities.values() {
+            entity.runtime.validate_shape()?;
+            if entity.runtime.attack_ready != 0
+                || entity.runtime.retaliation_target.is_some()
+                || !entity.runtime.contributions.is_empty()
+                || entity.runtime.loot_resolved
+                || entity.runtime.next_movement_tick.is_some()
+            {
+                return Err(unavailable(
+                    "Persisted NPC scheduling requires mechanics-v2 execution; pending state was preserved.",
+                ));
+            }
+        }
+        if !world.runtime.temporary_objects.is_empty()
+            || !world.runtime.projectiles.is_empty()
+            || !world.runtime.instances.is_empty()
+            || !world.runtime.deaths.is_empty()
+            || !world.runtime.stock_deadlines.is_empty()
+            || world.runtime.object_states.iter().any(|(id, state)| {
+                self.content
+                    .mechanics
+                    .object_transforms
+                    .get(id)
+                    .is_none_or(|definition| &definition.initial != state)
+            })
+        {
+            return Err(unavailable(
+                "Persisted dynamic mechanics require mechanics-v2 execution; pending state was preserved.",
+            ));
+        }
         if world.schema_version != GAME_SCHEMA_VERSION
             || world.content_revision != self.content.revision
         {
@@ -338,6 +372,7 @@ impl WorldEngine {
             owner: None,
             public_at_tick: tick,
             expires_at_tick: u64::MAX,
+            instance: None,
         }
     }
 }

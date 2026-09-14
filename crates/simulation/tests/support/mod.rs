@@ -24,6 +24,7 @@ pub fn stack(name: &str, amount: u32) -> ItemStack {
     ItemStack {
         item: item(name),
         quantity: quantity(amount),
+        instance: None,
     }
 }
 
@@ -45,13 +46,15 @@ pub fn item_definition(name: &str, stackable: bool) -> ItemDefinition {
         id: item(name),
         name: format!("Synthetic {name}"),
         source_id: None,
-        stackable,
+        stackable: stackable.into(),
         tradable: true,
         base_value: 0,
         equipment: None,
         noted_variant: None,
         unnoted_variant: None,
         healing: None,
+        weight: None,
+        charges: None,
         asset: None,
         source: source(),
     }
@@ -65,6 +68,7 @@ pub fn equipment_definition(primary: &str, occupied: &[&str]) -> EquipmentDefini
         bonuses: CombatBonuses::default(),
         attack_speed_ticks: None,
         attack_styles: Vec::new(),
+        weapon: None,
     }
 }
 
@@ -135,6 +139,7 @@ pub fn content() -> GameContent {
     blade.requirements.push(SkillRequirement {
         skill: skill("practice"),
         level: 2,
+        basis: SkillLevelBasis::Base,
     });
     items.get_mut(&item("blade")).unwrap().equipment = Some(blade);
     items.get_mut(&item("shield")).unwrap().equipment = Some(equipment_definition("offhand", &[]));
@@ -179,7 +184,7 @@ pub fn content() -> GameContent {
     };
     let region = region("room", tile(10, 10, 0), tile(16, 16, 0));
     GameContent {
-        schema_version: GAME_SCHEMA_VERSION,
+        schema_version: CONTENT_SCHEMA_VERSION,
         revision: "synthetic-v1".into(),
         baseline: "synthetic only; not a gamepack".into(),
         interfaces: BTreeMap::new(),
@@ -213,15 +218,17 @@ pub fn content() -> GameContent {
             quests: BTreeMap::new(),
             flags: BTreeMap::from([("synthetic_progress".into(), 41)]),
             interfaces: Vec::new(),
+            runtime: InitialRuntimeDefinition::default(),
             source: source(),
         },
+        mechanics: MechanicsDefinition::default(),
     }
 }
 
 pub fn character(content: &GameContent) -> CharacterState {
     let initial = &content.initial_state;
     CharacterState {
-        schema_version: content.schema_version,
+        schema_version: GAME_SCHEMA_VERSION,
         actor_id: ActorId::new("actor.synthetic.tester").unwrap(),
         display_name: "Synthetic tester".into(),
         appearance: BTreeMap::from([("synthetic_choice".into(), 0)]),
@@ -243,6 +250,7 @@ pub fn character(content: &GameContent) -> CharacterState {
         dialogue: None,
         last_action_tick: 12,
         last_command_sequence: 7,
+        runtime: CharacterRuntime::from_initial(content),
     }
 }
 

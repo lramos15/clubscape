@@ -118,6 +118,9 @@ pub(super) fn validate_character(character: &CharacterState, tick: u64) -> Resul
             "The character state has an unsupported shape or bound.",
         ));
     }
+    character.runtime.validate_shape().map_err(|_| {
+        ApiError::invalid("The character runtime has an unsupported shape or bound.")
+    })?;
     encode(character, MAX_CHARACTER_BYTES)?;
     Ok(())
 }
@@ -136,6 +139,15 @@ pub(super) fn validate_world(world: &WorldState) -> Result<(), ApiError> {
     }
     number(world.tick)?;
     number(world.revision)?;
+    world
+        .runtime
+        .validate_shape()
+        .map_err(|_| ApiError::invalid("The world runtime has an unsupported shape or bound."))?;
+    for entity in world.entities.values() {
+        entity.runtime.validate_shape().map_err(|_| {
+            ApiError::invalid("An entity runtime has an unsupported shape or bound.")
+        })?;
+    }
     for (actor, character) in &world.characters {
         if *actor != character.actor_id {
             return Err(ApiError::invalid(
@@ -183,10 +195,27 @@ pub(super) fn intent_hash(intent: &GameIntent) -> Result<[u8; 32], ApiError> {
                 && match target {
                     clubscape_game_types::ItemTarget::Inventory { slot: target } => slot(*target),
                     clubscape_game_types::ItemTarget::World { .. } => true,
+                    clubscape_game_types::ItemTarget::TemporaryObject { .. } => true,
+                    clubscape_game_types::ItemTarget::Ground { ground_item_id } => {
+                        text(ground_item_id, 160)
+                    }
                 }
         }
         GameIntent::MoveInventory { from, to } => slot(*from) && slot(*to),
-        GameIntent::Interact { action, .. } => text(action, 160),
+        GameIntent::Interact { action, .. } | GameIntent::InteractWith { action, .. } => {
+            text(action, 160)
+        }
+        GameIntent::ConfirmAppearance { appearance } => {
+            appearance.len() <= 64 && appearance.keys().all(|key| text(key, 160))
+        }
+        GameIntent::Reclaim { items, .. } => {
+            !items.is_empty()
+                && items
+                    .iter()
+                    .collect::<std::collections::BTreeSet<_>>()
+                    .len()
+                    == items.len()
+        }
         GameIntent::SelectDialogue { choice, .. } => text(choice, 160),
         GameIntent::TakeGroundItem { ground_item_id } => text(ground_item_id, 160),
         GameIntent::SetCombatStyle { style } => text(style, 160),

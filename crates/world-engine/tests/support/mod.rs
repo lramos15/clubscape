@@ -59,6 +59,7 @@ pub fn stack(name: &str, count: u32) -> ItemStack {
     ItemStack {
         item: item(name),
         quantity: quantity(count),
+        instance: None,
     }
 }
 pub fn certain() -> ChanceRule {
@@ -66,6 +67,7 @@ pub fn certain() -> ChanceRule {
         numerator_at_level_1: 1,
         numerator_at_level_99: 1,
         denominator: 1,
+        domain: ChanceDomain::Constant,
     }
 }
 pub fn never() -> ChanceRule {
@@ -73,6 +75,7 @@ pub fn never() -> ChanceRule {
         numerator_at_level_1: 0,
         numerator_at_level_99: 0,
         denominator: 1,
+        domain: ChanceDomain::Constant,
     }
 }
 pub fn source() -> Vec<SourceRecord> {
@@ -113,13 +116,15 @@ pub fn content() -> GameContent {
             id: item(name),
             name: format!("Synthetic {name}"),
             source_id: None,
-            stackable,
+            stackable: stackable.into(),
             tradable: true,
             base_value: 1,
             equipment: None,
             noted_variant: None,
             unnoted_variant: None,
             healing: None,
+            weight: None,
+            charges: None,
             asset: None,
             source: source(),
         };
@@ -133,6 +138,7 @@ pub fn content() -> GameContent {
             bonuses: CombatBonuses::default(),
             attack_speed_ticks: Some(4),
             attack_styles: vec!["accurate".into()],
+            weapon: None,
         });
     }
     items.get_mut(&item("arrow")).unwrap().equipment = Some(EquipmentDefinition {
@@ -142,6 +148,7 @@ pub fn content() -> GameContent {
         bonuses: CombatBonuses::default(),
         attack_speed_ticks: None,
         attack_styles: vec![],
+        weapon: None,
     });
     items.get_mut(&item("cooked")).unwrap().healing = Some(3);
     items.get_mut(&item("ore")).unwrap().noted_variant = Some(item("ore_note"));
@@ -208,7 +215,7 @@ pub fn content() -> GameContent {
         })
         .collect();
     let mut content = GameContent {
-        schema_version: GAME_SCHEMA_VERSION,
+        schema_version: CONTENT_SCHEMA_VERSION,
         revision: "synthetic-v1".into(),
         baseline: "synthetic fixture only".into(),
         items,
@@ -227,6 +234,7 @@ pub fn content() -> GameContent {
             InterfaceDefinition {
                 id: interface(),
                 name: "Synthetic tab".into(),
+                access: InterfaceAccess::Tab,
                 source_ids: vec![],
                 source: source(),
             },
@@ -265,32 +273,42 @@ pub fn content() -> GameContent {
             quests: BTreeMap::new(),
             flags: BTreeMap::new(),
             interfaces: vec![interface()],
+            runtime: InitialRuntimeDefinition::default(),
             source: source(),
         },
+        mechanics: MechanicsDefinition::default(),
     };
     give_initial(&mut content, &[stack("pick", 1), stack("hammer", 1)]);
     add_object(
         &mut content,
         "rock",
         InteractionAction::Gather {
-            rule: GatherRule {
+            rule: Box::new(GatherRule {
                 skill: skill(),
                 required_level: 1,
                 tools: vec![item("pick")],
                 output: stack("ore", 1),
                 xp_tenths: 175,
-                attempt_ticks: 8,
+                attempt_ticks: Some(8),
                 // The source formula's low/high are 100/350; endpoints already include +1.
                 success: ChanceRule {
                     numerator_at_level_1: 101,
                     numerator_at_level_99: 351,
                     denominator: 256,
+                    domain: ChanceDomain::Skill {
+                        levels: LevelDomain {
+                            minimum: 1,
+                            maximum: 99,
+                            basis: SkillLevelBasis::Current,
+                        },
+                    },
                 },
                 depletion: certain(),
-                respawn_ticks: 4,
+                respawn_ticks: Some(4),
+                mechanics: None,
                 animation: None,
                 sound: None,
-            },
+            }),
         },
     );
     add_object(
@@ -374,6 +392,7 @@ pub fn content() -> GameContent {
                 requirements: vec![SkillRequirement {
                     skill: skill(),
                     level: 1,
+                    basis: SkillLevelBasis::Current,
                 }],
                 xp: if xp == 0 {
                     vec![]
@@ -383,9 +402,10 @@ pub fn content() -> GameContent {
                         amount_tenths: xp,
                     }]
                 },
-                ticks,
+                ticks: Some(ticks),
                 success: certain(),
                 target_objects: target,
+                mechanics: None,
                 source: source(),
             },
         );
@@ -403,6 +423,7 @@ pub fn content() -> GameContent {
                     restock_ticks: 2,
                     buy_price: 2,
                     sell_price: 1,
+                    mechanics: None,
                 },
                 ShopItem {
                     item: item("arrow"),
@@ -410,9 +431,11 @@ pub fn content() -> GameContent {
                     restock_ticks: 4,
                     buy_price: 1,
                     sell_price: 0,
+                    mechanics: None,
                 },
             ],
             accepts_general_items: true,
+            unstocked: None,
             source: source(),
         },
     );
@@ -428,6 +451,8 @@ pub fn add_object(content: &mut GameContent, name: &str, action: InteractionActi
             source_id: 0,
             size_x: 1,
             size_y: 1,
+            clip: None,
+            morph: None,
             asset: None,
             source: source(),
         },
@@ -439,6 +464,7 @@ pub fn add_object(content: &mut GameContent, name: &str, action: InteractionActi
             region: content.initial_state.region.clone(),
             tile: tile(11, 10, 0),
             facing: 0,
+            placement: None,
             kind: SpawnKind::Object {
                 object: object(name),
             },
@@ -461,6 +487,7 @@ pub fn add_item_spawn(content: &mut GameContent) {
             region: content.initial_state.region.clone(),
             tile: tile(10, 10, 0),
             facing: 0,
+            placement: None,
             kind: SpawnKind::Item {
                 stack: stack("egg", 1),
                 respawn_ticks: 3,

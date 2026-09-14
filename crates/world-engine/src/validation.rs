@@ -6,7 +6,7 @@ use clubscape_simulation::{bank, equipment, inventory, skills};
 use crate::{invalid_content, invalid_state, random, runtime, unavailable, unknown};
 
 pub(crate) fn content(content: &GameContent) -> GameResult<()> {
-    if content.schema_version != GAME_SCHEMA_VERSION || content.revision.is_empty() {
+    if content.schema_version != CONTENT_SCHEMA_VERSION || content.revision.is_empty() {
         return Err(invalid_content(
             "A supported schema and nonempty content revision are required.",
         ));
@@ -52,9 +52,9 @@ pub(crate) fn content(content: &GameContent) -> GameResult<()> {
             guard(content, &interaction.guard, 0)?;
             match &interaction.action {
                 InteractionAction::Gather { rule } => {
-                    if rule.attempt_ticks == 0
+                    if rule.attempt_ticks == Some(0)
                         || rule.required_level == 0
-                        || (rule.respawn_ticks == 0
+                        || (rule.respawn_ticks == Some(0)
                             && (rule.depletion.numerator_at_level_1 != 0
                                 || rule.depletion.numerator_at_level_99 != 0))
                     {
@@ -103,7 +103,7 @@ pub(crate) fn content(content: &GameContent) -> GameResult<()> {
         }
     }
     for (id, recipe) in &content.recipes {
-        if id != &recipe.id || recipe.ticks == 0 || recipe.inputs.is_empty() {
+        if id != &recipe.id || recipe.ticks == Some(0) || recipe.inputs.is_empty() {
             return Err(invalid_content(
                 "Recipe identity, consumed inputs or cadence is invalid.",
             ));
@@ -207,6 +207,22 @@ pub(crate) fn character(character: &CharacterState, content: &GameContent) -> Ga
     if character.schema_version != GAME_SCHEMA_VERSION || character.run_energy > MAX_RUN_ENERGY {
         return Err(invalid_state("Character schema/run energy is invalid."));
     }
+    character.runtime.validate_shape()?;
+    if matches!(character.runtime.engine, EngineMetadata::Typed { .. })
+        || character.runtime.pending_travel.is_some()
+        || character.runtime.pending_fire.is_some()
+        || character.runtime.food_ready != 0
+        || character.runtime.combat.attack_ready != 0
+        || character.runtime.combat.spell_ready != 0
+        || !character.runtime.combat.active_prayers.is_empty()
+        || !character.runtime.action_cooldowns.is_empty()
+        || !character.runtime.travel_cooldowns.is_empty()
+        || matches!(character.activity, Activity::ProducingAt { .. })
+    {
+        return Err(unavailable(
+            "Persisted typed scheduling needs mechanics-v2 execution; pending work was preserved.",
+        ));
+    }
     inventory::validate(&character.inventory, &content.items)?;
     equipment::validate(&character.equipment, content)?;
     bank::validate(&character.bank, &content.items)?;
@@ -264,6 +280,27 @@ fn transition_definition(content: &GameContent, transition: &ProgressTransition)
             | "message"
             | "sound"
             | "animation"
+            | "appearance_confirmed"
+            | "experience_selected"
+            | "interface_closed"
+            | "interface_presented"
+            | "setting_changed"
+            | "inspected"
+            | "production_resolved"
+            | "combat_resolved"
+            | "npc_killed"
+            | "spell_resolved"
+            | "teleport"
+            | "item_transferred"
+            | "food_eaten"
+            | "prayer_changed"
+            | "temporary_object_created"
+            | "object_transformed"
+            | "counter_changed"
+            | "death_occurred"
+            | "death_topic_completed"
+            | "recovery_completed"
+            | "grave_expired"
     ) {
         return Err(invalid_content(format!(
             "Undefined GameEvent kind {}.",

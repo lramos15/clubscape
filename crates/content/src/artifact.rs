@@ -6,7 +6,7 @@ use sha2::{Digest, Sha256};
 
 use crate::{CompiledContent, MAX_INPUT_BYTES, ValidationMode, compile_content, decode, invalid};
 
-pub const ARTIFACT_VERSION: u16 = 1;
+pub const ARTIFACT_VERSION: u16 = 2;
 pub const ARTIFACT_HEADER_BYTES: usize = 84;
 const MAGIC: &[u8; 8] = b"CLSCONT\0";
 const CODEC_MESSAGEPACK_NAMED: u16 = 1;
@@ -91,7 +91,9 @@ pub fn load_compiled(input: &[u8], mode: ValidationMode) -> GameResult<CompiledC
 
 fn encode_definition(content: &GameContent) -> GameResult<Vec<u8>> {
     let mut writer = BoundedWriter(Vec::new());
-    content
+    // JSON-normalized keys also cover typed integer-keyed morph/level tables.
+    serde_json::to_value(content)
+        .map_err(|error| invalid("artifact.payload", error))?
         .serialize(&mut rmp_serde::Serializer::new(&mut writer).with_struct_map())
         .map_err(|error| invalid("artifact.payload", error))?;
     Ok(writer.0)
@@ -115,7 +117,7 @@ impl Write for BoundedWriter {
 
 fn identity_digest(content: &GameContent) -> [u8; 32] {
     let mut hash = Sha256::new();
-    hash.update(b"clubscape.content.identity.v1\0");
+    hash.update(b"clubscape.content.identity.v2\0");
     hash.update(content.schema_version.to_le_bytes());
     for field in [&content.revision, &content.baseline] {
         hash.update((field.len() as u64).to_le_bytes());

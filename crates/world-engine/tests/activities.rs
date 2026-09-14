@@ -435,10 +435,18 @@ fn undefined_recipe_and_unbound_multi_skill_chance_do_not_mutate() {
         numerator_at_level_1: 129,
         numerator_at_level_99: 513,
         denominator: 256,
+        domain: ChanceDomain::Skill {
+            levels: LevelDomain {
+                minimum: 1,
+                maximum: 99,
+                basis: SkillLevelBasis::Current,
+            },
+        },
     };
     cook.requirements.push(SkillRequirement {
         skill: hp_skill(),
         level: 1,
+        basis: SkillLevelBasis::Current,
     });
     let (engine, mut world) = setup(content);
     error_unchanged(
@@ -511,6 +519,7 @@ fn recipe_requirements_use_boosted_current_levels_not_equipment_base_levels() {
         .requirements = vec![SkillRequirement {
         skill: skill(),
         level: 2,
+        basis: SkillLevelBasis::Base,
     }];
     give_initial(&mut content, &[stack("bar", 1)]);
     let (engine, mut world) = setup(content);

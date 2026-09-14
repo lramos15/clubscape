@@ -20,11 +20,14 @@ struct Reachable {
     quests: BTreeMap<QuestId, BTreeSet<StageId>>,
     flags: BTreeMap<String, BTreeSet<i64>>,
     interfaces: BTreeSet<InterfaceId>,
+    presentations: BTreeSet<InterfaceId>,
     tutorial_events: BTreeSet<StageId>,
     quest_events: BTreeSet<(QuestId, StageId)>,
     messages: bool,
     sounds: BTreeSet<String>,
     animations: bool,
+    entitlements: BTreeSet<EntitlementId>,
+    counter_mutations: BTreeSet<CounterId>,
 }
 
 pub(super) fn analyze(
@@ -46,11 +49,14 @@ pub(super) fn analyze(
             .map(|(name, value)| (name.clone(), BTreeSet::from([*value])))
             .collect(),
         interfaces: initial.interfaces.iter().cloned().collect(),
+        presentations: BTreeSet::new(),
         tutorial_events: BTreeSet::new(),
         quest_events: BTreeSet::new(),
         messages: false,
         sounds: BTreeSet::new(),
         animations: false,
+        entitlements: BTreeSet::new(),
+        counter_mutations: BTreeSet::new(),
     };
     let mut enabled = BTreeSet::new();
     loop {
@@ -125,6 +131,17 @@ impl Reachable {
         for spawn in validator.content.spawns.values() {
             for interaction in &spawn.interactions {
                 budget.step()?;
+                if let InteractionAction::OpenBank { interface, .. }
+                | InteractionAction::OpenShop { interface, .. } = &interaction.action
+                    && self.possible(
+                        validator,
+                        &[&interaction.guard],
+                        Context::default(),
+                        budget,
+                    )?
+                {
+                    changed |= self.presentations.insert(interface.clone());
+                }
                 if let InteractionAction::Gather { rule } = &interaction.action
                     && (rule.sound.is_some() || rule.animation.is_some())
                     && self.possible(
@@ -194,6 +211,17 @@ impl Reachable {
                                     .expect("validated interface event target"),
                             )
                         });
+                contexts.extend(ready.then(EventContext::default));
+            }
+            "interface_closed" | "interface_presented" => {
+                let ready = transition.target.as_deref().map_or(
+                    !self.interfaces.is_empty() || !self.presentations.is_empty(),
+                    |target| {
+                        let id =
+                            InterfaceId::new(target).expect("validated interface event target");
+                        self.interfaces.contains(&id) || self.presentations.contains(&id)
+                    },
+                );
                 contexts.extend(ready.then(EventContext::default));
             }
             "message" => {
@@ -287,6 +315,35 @@ impl Reachable {
                     changed |= !self.messages;
                     self.messages = true;
                 }
+                Effect::Once {
+                    entitlement,
+                    effects,
+                } => {
+                    changed |= self.entitlements.insert(entitlement.clone());
+                    changed |=
+                        self.effects(validator, effects, context.clone(), &active, budget)?;
+                    active.clear();
+                }
+                Effect::Grant { grant } => {
+                    if let Some(entitlement) =
+                        &validator.content.mechanics.grants[grant].entitlement
+                    {
+                        changed |= self.entitlements.insert(entitlement.clone());
+                    }
+                    active.clear();
+                }
+                Effect::ReconcileContainers { reconciliation } => {
+                    changed |= self.entitlements.insert(
+                        validator.content.mechanics.reconciliations[reconciliation]
+                            .entitlement
+                            .clone(),
+                    );
+                    active.clear();
+                }
+                Effect::SetCounter { counter, .. } | Effect::AddCounter { counter, .. } => {
+                    changed |= self.counter_mutations.insert(counter.clone());
+                    active.clear();
+                }
                 Effect::AddQuestPoints { .. } => {}
                 _ => active.clear(),
             }
@@ -370,6 +427,22 @@ impl Reachable {
                 } else {
                     Truth::False
                 }
+            }
+            Guard::EntitlementClaimed { entitlement } => {
+                if self.entitlements.contains(entitlement) {
+                    Truth::Unknown
+                } else {
+                    Truth::False
+                }
+            }
+            Guard::Counter { counter, predicate } if !self.counter_mutations.contains(counter) => {
+                let value = validator.content.mechanics.counters[counter].initial;
+                known(Some(match predicate {
+                    CounterPredicate::Equals { value: required } => value == *required,
+                    CounterPredicate::IntegerRange { minimum, maximum } => {
+                        matches!(value, CounterValue::Integer(value) if (*minimum..=*maximum).contains(&value))
+                    }
+                }))
             }
             _ => Truth::Unknown,
         })

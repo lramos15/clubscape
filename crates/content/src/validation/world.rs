@@ -83,23 +83,22 @@ impl Validator<'_> {
         let mut spawns_at = BTreeMap::<Tile, Vec<SpawnId>>::new();
         for spawn in self.content.spawns.values() {
             let path = format!("spawns.{}", spawn.id);
-            self.location(
-                &spawn.region,
-                spawn.tile,
-                matches!(spawn.kind, SpawnKind::Npc { .. }),
-                &path,
-            )?;
+            self.location(&spawn.region, spawn.tile, false, &path)?;
             if spawn.facing > 7 {
                 return Err(invalid(
                     &path,
                     "facing must be a canonical 0..=7 direction, not an unmapped source angle",
                 ));
             }
+            self.source_placement(spawn, &path)?;
             let (kind, definition) = match &spawn.kind {
                 SpawnKind::Npc { npc } => {
-                    if !self.content.npcs.contains_key(npc) {
-                        return Err(invalid(&path, format!("undefined NPC {npc}")));
-                    }
+                    let definition = self
+                        .content
+                        .npcs
+                        .get(npc)
+                        .ok_or_else(|| invalid(&path, format!("undefined NPC {npc}")))?;
+                    self.npc_placement(spawn, definition, &path)?;
                     ("npc", npc.as_str())
                 }
                 SpawnKind::Object { object } => {
@@ -136,11 +135,11 @@ impl Validator<'_> {
             for (index, interaction) in spawn.interactions.iter().enumerate() {
                 let path = format!("{path}.interactions[{index}]");
                 text(&interaction.name, &path, 160)?;
-                self.guard(&interaction.guard, &format!("{path}.guard"))?;
+                self.state_guard(&interaction.guard, &format!("{path}.guard"))?;
                 match &interaction.action {
                     InteractionAction::Effects { effects } => {
                         nonempty(effects.len(), &path)?;
-                        self.effects(effects, &path)?;
+                        self.state_effects(effects, &path)?;
                     }
                     InteractionAction::Dialogue { dialogue } => {
                         if !self.content.dialogues.contains_key(dialogue) {
@@ -206,6 +205,38 @@ impl Validator<'_> {
                     } => {
                         self.location(region, *destination, true, &path)?;
                     }
+                    InteractionAction::TravelVia { travel } => self.travel(travel, &path)?,
+                    InteractionAction::OpenBank {
+                        interface,
+                        before_open,
+                    }
+                    | InteractionAction::OpenShop {
+                        interface,
+                        before_open,
+                        ..
+                    } => {
+                        if matches!(spawn.kind, SpawnKind::Item { .. }) {
+                            return Err(invalid(
+                                &path,
+                                "contextual bank/shop requires an NPC or object",
+                            ));
+                        }
+                        self.interface(interface, &path)?;
+                        if self.content.interfaces[interface].access != InterfaceAccess::Contextual
+                        {
+                            return Err(invalid(
+                                &path,
+                                "bank/shop presentation requires a contextual interface",
+                            ));
+                        }
+                        self.state_effects(before_open, &path)?;
+                        if let InteractionAction::OpenShop { shop, .. } = &interaction.action
+                            && !self.content.shops.contains_key(shop)
+                        {
+                            return Err(invalid(&path, "undefined contextual shop"));
+                        }
+                        self.before_presentation(before_open, &path)?;
+                    }
                     InteractionAction::Unavailable { reason } => {
                         text(reason, &path, MAX_TEXT_BYTES)?;
                     }
@@ -224,6 +255,10 @@ impl Validator<'_> {
             &SkillRequirement {
                 skill: rule.skill.clone(),
                 level: rule.required_level,
+                basis: rule
+                    .mechanics
+                    .as_ref()
+                    .map_or(SkillLevelBasis::Current, |mechanics| mechanics.levels.basis),
             },
             path,
         )?;
@@ -242,12 +277,7 @@ impl Validator<'_> {
             }],
             path,
         )?;
-        if rule.attempt_ticks == 0 || rule.respawn_ticks == 0 {
-            return Err(invalid(
-                path,
-                "gather attempt and respawn durations must be positive",
-            ));
-        }
+        self.gather_mechanics(rule, path)?;
         chance(&rule.success, &format!("{path}.success"), true)?;
         chance(&rule.depletion, &format!("{path}.depletion"), false)?;
         Ok(())

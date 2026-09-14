@@ -96,6 +96,11 @@ impl WorldEngine {
             .stock
             .get(index)
             .ok_or_else(|| invalid_state("Shop stock index is out of range."))?;
+        if row.mechanics.is_some() {
+            return Err(unavailable(
+                "Per-unit stock-sensitive pricing requires mechanics-v2 trade execution.",
+            ));
+        }
         let state = world
             .shops
             .get(shop)
@@ -146,10 +151,12 @@ impl WorldEngine {
                     inventory::InventoryOperation::Remove(ItemStack {
                         item: definition.currency.clone(),
                         quantity: Quantity::new(total)?,
+                        instance: None,
                     }),
                     inventory::InventoryOperation::Add(ItemStack {
                         item: row.item.clone(),
                         quantity,
+                        instance: None,
                     }),
                 ],
             )
@@ -198,6 +205,11 @@ impl WorldEngine {
                 GameError::new(GameErrorCode::RequirementNotMet, "The shop does not buy this item.")
             }
         })?;
+        if row.mechanics.is_some() {
+            return Err(unavailable(
+                "Per-unit stock-sensitive pricing requires mechanics-v2 trade execution.",
+            ));
+        }
         let stock = *world
             .shops
             .get(shop)
@@ -243,6 +255,7 @@ impl WorldEngine {
                     &ItemStack {
                         item: item.clone(),
                         quantity: Quantity::new(quantity.get() - selected_quantity)?,
+                        instance: None,
                     },
                 )?;
             }
@@ -263,6 +276,7 @@ impl WorldEngine {
                     &ItemStack {
                         item: definition.currency.clone(),
                         quantity: Quantity::new(total)?,
+                        instance: None,
                     },
                 )?;
             }
@@ -280,6 +294,11 @@ impl WorldEngine {
     pub(crate) fn next_restock(&self, shop: &ShopDefinition, tick: u64) -> GameResult<u64> {
         let mut next = i64::MAX as u64;
         for row in &shop.stock {
+            if row.mechanics.is_some() {
+                return Err(unavailable(
+                    "Per-stock-line source restock clocks require mechanics-v2 scheduling.",
+                ));
+            }
             let period = u64::from(row.restock_ticks);
             if period == 0 {
                 return Err(invalid_content("Restocking needs a positive period."));

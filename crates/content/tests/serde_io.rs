@@ -27,7 +27,7 @@ fn strict_json_round_trips_and_distinguishes_content_validation_from_decoding() 
     assert_eq!(parsed, expected);
     compile_content(parsed, ValidationMode::TestFixture).unwrap();
     let mut value = serde_json::to_value(expected).unwrap();
-    value["schema_version"] = json!(2);
+    value["schema_version"] = json!(clubscape_game_types::CONTENT_SCHEMA_VERSION + 1);
     let parsed = read_content_json(&serde_json::to_vec(&value).unwrap()).unwrap();
     assert!(compile_content(parsed, ValidationMode::TestFixture).is_err());
 }
@@ -150,7 +150,7 @@ fn artifacts_round_trip_deterministically_without_serialized_indexes_or_reports(
     let bytes = encode_compiled(&compiled).unwrap();
     assert_eq!(bytes, encode_compiled(&compiled).unwrap());
     assert_eq!(&bytes[..8], b"CLSCONT\0");
-    assert_eq!(&bytes[8..10], &1_u16.to_le_bytes());
+    assert_eq!(&bytes[8..10], &ARTIFACT_VERSION.to_le_bytes());
     assert_eq!(&bytes[10..12], &1_u16.to_le_bytes());
     let loaded = load_compiled(&bytes, ValidationMode::TestFixture).unwrap();
     assert_eq!(loaded.definition(), compiled.definition());
@@ -245,8 +245,11 @@ fn every_truncation_and_corrupt_envelope_is_rejected() {
 fn loader_revalidates_definitions_modes_identity_and_optional_manifest_checks() {
     let good = artifact();
     let mut content = fixture();
-    content.recipes.values_mut().next().unwrap().ticks = 0;
-    let corrupt = replace_payload(&good, &rmp_serde::to_vec_named(&content).unwrap());
+    content.recipes.values_mut().next().unwrap().ticks = Some(0);
+    let corrupt = replace_payload(
+        &good,
+        &rmp_serde::to_vec_named(&serde_json::to_value(&content).unwrap()).unwrap(),
+    );
     assert!(
         load_compiled(&corrupt, ValidationMode::TestFixture)
             .unwrap_err()
@@ -256,7 +259,10 @@ fn loader_revalidates_definitions_modes_identity_and_optional_manifest_checks() 
     assert!(load_compiled(&good, ValidationMode::Runtime).is_err());
     let mut content = fixture();
     content.revision = "different-content-revision".into();
-    let corrupt = replace_payload(&good, &rmp_serde::to_vec_named(&content).unwrap());
+    let corrupt = replace_payload(
+        &good,
+        &rmp_serde::to_vec_named(&serde_json::to_value(&content).unwrap()).unwrap(),
+    );
     assert!(
         load_compiled(&corrupt, ValidationMode::TestFixture)
             .unwrap_err()
@@ -311,6 +317,19 @@ fn forged_collection_and_string_lengths_are_rejected_without_declared_length_all
 
 struct DuplicateRoot(Value);
 
+struct ReversedRoot(Value);
+
+impl Serialize for ReversedRoot {
+    fn serialize<S: Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        let entries = self.0.as_object().unwrap();
+        let mut map = serializer.serialize_map(Some(entries.len()))?;
+        for (key, value) in entries.iter().rev() {
+            map.serialize_entry(key, value)?;
+        }
+        map.end()
+    }
+}
+
 impl Serialize for DuplicateRoot {
     fn serialize<S: Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         let entries = self.0.as_object().unwrap();
@@ -334,7 +353,7 @@ fn messagepack_rejects_duplicate_unknown_and_noncanonical_fields_even_with_valid
     )
     .unwrap_err();
     assert!(error.message.contains("duplicate map key"));
-    let noncanonical = rmp_serde::to_vec_named(&value).unwrap();
+    let noncanonical = rmp_serde::to_vec_named(&ReversedRoot(value.clone())).unwrap();
     let error = load_compiled(
         &replace_payload(&good, &noncanonical),
         ValidationMode::TestFixture,
