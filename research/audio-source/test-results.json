@@ -21,6 +21,7 @@
       "exit_code": 0
     }
   ],
+  "historical_scope": "Prior m1-audio-inputs baseline; musical PCM superseded by the native percussion startup correction. See binding-test-results.json for current evidence.",
   "human_perceptual_equivalence_claimed": false,
   "live_trigger_timing_or_audible_browser_playback_accepted": false,
   "manifest_sha256": "1e7c37af6d303eb5db9407c9318ee532cbd4f823427fed02c89612dfefaa23b5",

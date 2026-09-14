@@ -368,38 +368,60 @@
       "source_session_trigger_verified": false
     },
     {
-      "identified_sound_ids": [],
+      "identified_sound_ids": [
+        2393
+      ],
       "journey_rule_id": "rule.food.healing",
-      "note": "No verified eating sound binding; do not invent one.",
-      "source_frame_events": [],
-      "source_sequence_ids": [],
-      "source_session_trigger_verified": false
-    },
-    {
-      "identified_sound_ids": [],
-      "journey_rule_id": "rule.goblin.level_2",
-      "note": "Original combat sequence candidates have no embedded SFX. NPC-specific grunts/variant/timing remain unbound, not substituted by player hits.",
-      "source_frame_events": [],
+      "note": "Current sound-enabled sequence12526 is byte-semantically the same motion as829 plus frame1 cue2393 (loops1/location5/weight100). Sequence829 itself remains silent. Do not add a duplicate game-trigger cue when12526 already emits it; ordinary-food server choice of829 versus12526 is not present in client metadata.",
+      "source_frame_events": [
+        {
+          "frame": 1,
+          "id": 2393,
+          "location": 5,
+          "loops": 1,
+          "nominal_frame_start_ms": 80,
+          "retain": 0,
+          "sequence_id": 12526,
+          "source_frame_start_cycle_sum": 4,
+          "wall_clock_enqueue_offset_verified": false,
+          "weight": 100
+        }
+      ],
       "source_sequence_ids": [
-        6182,
-        6184,
-        6185,
-        309,
-        310,
-        312,
-        313
+        829,
+        12526
       ],
       "source_session_trigger_verified": false
     },
     {
-      "identified_sound_ids": [],
-      "journey_rule_id": "rule.combat.tutorial_rat",
-      "note": "No verified rat-specific SFX binding in these source sequences.",
+      "identified_sound_ids": [
+        469,
+        471,
+        472
+      ],
+      "journey_rule_id": "rule.goblin.level_2",
+      "note": "Current cue identities469(unarmed attack),472(hit),471(death) are independently named and match two public ordinary-goblin recordings; these are not animation-embedded events. Recordings are historical, not a current server packet trace. Armed-weapon substitutions and exact server delay remain unbound.",
       "source_frame_events": [],
       "source_sequence_ids": [
-        138,
-        139,
-        141
+        6182,
+        6183,
+        6184,
+        6185
+      ],
+      "source_session_trigger_verified": false
+    },
+    {
+      "identified_sound_ids": [
+        711,
+        713
+      ],
+      "journey_rule_id": "rule.combat.tutorial_rat",
+      "note": "Source NPC3313/3314/3315 uses the493x rat-update family, not legacy138/139/141. Source cue713(hit) and711(death) match a public tutorial recording strongly; attack710 remains a named candidate without a decisive recording match. No embedded frame sounds occur in4933/4934/4935.",
+      "source_frame_events": [],
+      "source_sequence_ids": [
+        4933,
+        4934,
+        4935
       ],
       "source_session_trigger_verified": false
     },
@@ -3302,6 +3324,7 @@
       "state_note": "Definition/morph candidate, not proof the object is active. Preserve native distance, retention, change-tick, visibility and fade fields; attenuation/camera/player state needs source observation."
     }
   ],
+  "binding_audit": "research/audio-source/bindings.json",
   "browser_presentation_approved": false,
   "jingles": [
     {
@@ -3515,6 +3538,16 @@
       ]
     }
   ],
+  "reference_only_candidates": {
+    "ordinary_shortbow": [
+      2692,
+      2693,
+      2702
+    ],
+    "tutorial_rat_attack": [
+      710
+    ]
+  },
   "region_reference": {
     "farms_mill_seed_region": 12595,
     "lumbridge_seed_region": 12850,
@@ -3527,9 +3560,9 @@
   },
   "remaining_observations": [
     "Stock source-session region/playlist transitions and music repeat behavior; the exported tracks are one-pass with original release.",
-    "Unbound ranged, weapon/NPC-specific combat, eating and current smelting sounds; do not use generic replacements.",
+    "Ordinary shortbow selection among named launch/draw cues2692/2693/2702; current tutorial-rat attack710 confirmation; current food selection of829/game-triggered2393 versus sound-enabled12526; current bronze-smelting2725 callback. None is inferred from a plausible sound.",
     "Event/packet delay, frame entry phase, positional attenuation, mute/volume defaults and fade behavior in the actual source session.",
-    "Exact tutorial/Cook's Assistant quest jingle and level-up precedence; browser gesture/autoplay/reconnect behavior after pack approval."
+    "Exact server MIDI_JINGLE payload (including a possible no-request outcome) for Learning the Ropes/Cook's Assistant and its emission order versus level-up jingles. Native client requests are last-wins, with no quest/skill ranking and an ignored auxiliary integer. Browser gesture/autoplay/reconnect behavior remains after pack approval."
   ],
   "schema_version": 1,
   "sequence_sound_events": [
@@ -3638,6 +3671,18 @@
       "retain": 0,
       "sequence_id": 898,
       "source_frame_start_cycle_sum": 83,
+      "wall_clock_enqueue_offset_verified": false,
+      "weight": 100
+    },
+    {
+      "frame": 1,
+      "id": 2393,
+      "location": 5,
+      "loops": 1,
+      "nominal_frame_start_ms": 80,
+      "retain": 0,
+      "sequence_id": 12526,
+      "source_frame_start_cycle_sum": 4,
       "wall_clock_enqueue_offset_verified": false,
       "weight": 100
     },

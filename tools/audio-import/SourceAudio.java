@@ -283,6 +283,11 @@ public final class SourceAudio
         kg.aj = true;
         OriginalDevice device = new OriginalDevice();
         nu synth = new nu(device.device);
+        synth.ap(9, 128, (short) -27396);
+        if (synth.ac[9] != 128 || synth.aq[9] != 128 || synth.bx[9] != 128)
+        {
+            throw new IllegalStateException("Original startup percussion-channel initialization failed");
+        }
         at cache = new at(effects, samples);
         if (!synth.ae(track, patches, cache, Integer.MAX_VALUE))
         {
@@ -349,6 +354,7 @@ public final class SourceAudio
             "original_player_scheduling_used", true,
             "release_tail_frames", preview > 0 ? null : RATE,
             "native_loop_requested", false,
+            "native_startup_percussion_channel", 9, "native_startup_percussion_bank", 128,
             "synth_master_volume", 128, "peak_mix_s24", device.peak, "device_clipped_samples", device.clipped,
             "original_device_quantization_verified", true, "pcm_s16le_sha256", hash(pcm),
             "patches", patchNotes, "decoded_samples", decoded.samples,

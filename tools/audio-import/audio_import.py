@@ -257,13 +257,23 @@ def reference_pcm_float_hashes(samples, channels):
             for channel in range(channels)]
 
 
-def convert(_args):
+def convert(args):
     lock = locks()
     prepared = verify_inputs()
     request = json.loads((RESEARCH / "request.json").read_text())
     inputs = WORK / "inputs"
     jobs = jobs_from_inputs(request, inputs)
-    write_json(WORK / "jobs.json", jobs)
+    prior_assets = {}
+    prior_silences = {}
+    prior_evidence = {}
+    render_jobs = {"tracks": jobs["tracks"], "sound_ids": jobs["sound_ids"]}
+    if getattr(args, "reuse_existing_sfx", False):
+        prior = json.loads(MANIFEST.read_text())
+        prior_assets = {row["source_group"]: row for row in prior["assets"] if row["kind"] == "sfx"}
+        prior_silences = {row["source_group"]: row for row in prior["source_silences"]}
+        prior_evidence = compressed_json(prior["conversion_evidence"]["path"])
+        render_jobs["sound_ids"] = [value for value in jobs["sound_ids"] if value not in prior_assets and value not in prior_silences]
+    write_json(WORK / "jobs.json", render_jobs)
     native = WORK / "native"
     run_java(lock, "SourceAudio", inputs, WORK / "jobs.json", native)
     codec = Flac()
@@ -276,6 +286,18 @@ def convert(_args):
     for index, group in specs:
         kind = {4: "sfx", 6: "music", 11: "jingle"}[index]
         key = f"{kind}-{group}"
+        if index == 4 and (group in prior_assets or group in prior_silences):
+            previous = prior_assets.get(group, prior_silences.get(group))
+            source = prepared["inputs"][f"raw/4/{group}/0.bin"]
+            if source["sha256"] != previous["source_input"]["sha256"]:
+                raise ValueError("Cannot reuse SFX with changed original input")
+            if group in prior_assets:
+                verify(previous["path"], previous)
+                files.append(previous)
+            else:
+                silences.append(previous)
+            evidence[key] = prior_evidence[key]
+            continue
         report = json.loads((native / f"{key}.json").read_text())
         if report["index"] != index or report["group"] != group:
             raise ValueError("Original source decoder returned a different identity")
@@ -326,6 +348,8 @@ def convert(_args):
             report["midi"] = midi.describe(published)
             if report["preview"] or report["device_clipped_samples"] or not report["original_device_quantization_verified"] or not report["original_player_scheduling_used"]:
                 raise ValueError(f"Preview, clipped or unverified original music output: {key}")
+            if report.get("native_startup_percussion_channel") != 9 or report.get("native_startup_percussion_bank") != 128:
+                raise ValueError("Native startup percussion bank is missing")
             if report["engine_end_frame"] != report["midi"]["expected_engine_end_frame"] or report["frames"] != report["engine_end_frame"] + 22050:
                 raise ValueError("Original full-track duration/release mismatch")
             loop = {
@@ -369,7 +393,8 @@ def convert(_args):
     for record in files:
         destination = Path(record["path"])
         destination.parent.mkdir(parents=True, exist_ok=True)
-        shutil.copyfile(WORK / "pack" / record["kind"] / f"{record['source_group']}.flac", destination)
+        if record["kind"] != "sfx" or record["source_group"] not in prior_assets:
+            shutil.copyfile(WORK / "pack" / record["kind"] / f"{record['source_group']}.flac", destination)
         verify(destination, record)
     RESEARCH.mkdir(parents=True, exist_ok=True)
     for name, value in (("conversion-evidence.json.gz", evidence), ("extra-inputs.json.gz", supplement)):
@@ -400,6 +425,7 @@ def convert(_args):
         "settings": {
             "sample_rate": 22050, "native_device_block_frames": 512,
             "music_synth_master_volume": 128, "music_channels": 2,
+            "native_startup_percussion_channel": 9, "native_startup_percussion_bank": 128,
             "music_release_tail_seconds": 1,
             "sfx_source_bit_depth": 16, "sfx_container_bit_depth": 24, "sfx_export_gain": 0.5,
             "sfx_gain_note": "Exact, reversible power-of-two attenuation, with all16 source bits retained. Original synth saturation is counted and preserved; no new clipping, limiting, resampling, generic samples or normalization.",
@@ -489,7 +515,9 @@ def main():
     preparation.add_argument("--artifacts", type=Path, default=Path(".local/current-source"))
     preparation.add_argument("--cache", type=Path, default=Path(".local/current-source/cache-2695"))
     preparation.add_argument("--fetch-artifacts", action="store_true")
-    commands.add_parser("convert")
+    conversion = commands.add_parser("convert")
+    conversion.add_argument("--reuse-existing-sfx", action="store_true",
+                            help="Verify/reuse unchanged existing effects and source silences; re-render musical inputs and new effects only")
     commands.add_parser("validate")
     commands.add_parser("verify-inputs")
     args = parser.parse_args()

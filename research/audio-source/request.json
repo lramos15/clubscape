@@ -9,8 +9,8 @@
     {"id": 76, "name": "Harmony", "scope": "Lumbridge"},
     {"id": 2, "name": "Autumn Voyage", "scope": "Lumbridge farms"}
   ],
-  "sound_ids": [60, 62, 193, 194, 195, 196, 200, 220, 221, 227, 372, 509, 510, 511, 512, 518, 519, 520, 521, 2238, 2266, 2498, 2564, 2565, 2566, 2577, 2581, 2582, 2596, 2597, 2663, 2664, 2672, 2688, 2690, 2725, 2734, 2735, 2738, 2739, 3220, 3790, 3791],
-  "sequence_ids": [55, 56, 57, 138, 139, 141, 309, 310, 312, 313, 386, 390, 422, 423, 426, 472, 621, 625, 711, 733, 827, 832, 879, 896, 897, 898, 899, 2305, 6182, 6184, 6185],
+  "sound_ids": [60, 62, 193, 194, 195, 196, 200, 220, 221, 227, 372, 469, 471, 472, 509, 510, 511, 512, 518, 519, 520, 521, 711, 713, 2238, 2266, 2393, 2498, 2564, 2565, 2566, 2577, 2581, 2582, 2596, 2597, 2663, 2664, 2672, 2688, 2690, 2725, 2734, 2735, 2738, 2739, 3220, 3790, 3791],
+  "sequence_ids": [55, 56, 57, 138, 139, 141, 309, 310, 312, 313, 386, 390, 422, 423, 426, 472, 621, 625, 711, 733, 827, 829, 832, 879, 896, 897, 898, 899, 2305, 3243, 4933, 4934, 4935, 6182, 6183, 6184, 6185, 12526],
   "spot_animation_ids": [90, 91, 92],
   "verified_silent_sound_ids": [2411],
   "source_silence_note": "Original sound2411 has a5ms instrument and the actual original synth returns110 zero samples. It is the74-weight branch of sequence13612/frame1. Preserve that silent outcome and the original weights; do not invent a tone, count it as playable audio, or renormalize the other choices.",

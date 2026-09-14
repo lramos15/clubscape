@@ -1,0 +1,10 @@
+{
+  "schema_version": 1,
+  "source_selection": "osrs-live-240-cache2695-injected1.12.38-20260913",
+  "pack_gap_ids": ["input.required_effect_bindings", "input.quest_jingle_binding"],
+  "sequence_ids": [138, 139, 141, 386, 390, 422, 423, 426, 829, 899, 3243, 4931, 4932, 4933, 4934, 4935, 6180, 6181, 6182, 6183, 6184, 6185, 6192, 6195, 12332, 12333, 12336, 12526],
+  "interface_groups": [149, 153, 162, 233, 320],
+  "script_roots": [118],
+  "candidate_sound_ids": [468, 469, 471, 472, 656, 710, 711, 713, 2393, 2692, 2693, 2700, 2702, 3514, 3515, 3517, 3518, 3520, 3559, 3560],
+  "scope": "Read-only source cue/selector and queue investigation; not a repeat conversion of the existing audio pack or product presentation."
+}

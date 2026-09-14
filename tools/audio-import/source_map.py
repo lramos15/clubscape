@@ -113,9 +113,9 @@ def build(inputs, request, available_ids):
         ("rule.bank.deposit", [], [], "No blanket banking sound assignment verified."),
         ("rule.bank.withdraw", [], [], "No blanket banking sound assignment verified."),
         ("rule.shop.lumbridge", [], [], "No blanket shop sound assignment verified."),
-        ("rule.food.healing", [], [], "No verified eating sound binding; do not invent one."),
-        ("rule.goblin.level_2", [6182, 6184, 6185, 309, 310, 312, 313], [], "Original combat sequence candidates have no embedded SFX. NPC-specific grunts/variant/timing remain unbound, not substituted by player hits."),
-        ("rule.combat.tutorial_rat", [138, 139, 141], [], "No verified rat-specific SFX binding in these source sequences."),
+        ("rule.food.healing", [829, 12526], [2393], "Current sound-enabled sequence12526 is byte-semantically the same motion as829 plus frame1 cue2393 (loops1/location5/weight100). Sequence829 itself remains silent. Do not add a duplicate game-trigger cue when12526 already emits it; ordinary-food server choice of829 versus12526 is not present in client metadata."),
+        ("rule.goblin.level_2", [6182, 6183, 6184, 6185], [469, 471, 472], "Current cue identities469(unarmed attack),472(hit),471(death) are independently named and match two public ordinary-goblin recordings; these are not animation-embedded events. Recordings are historical, not a current server packet trace. Armed-weapon substitutions and exact server delay remain unbound."),
+        ("rule.combat.tutorial_rat", [4933, 4934, 4935], [711, 713], "Source NPC3313/3314/3315 uses the493x rat-update family, not legacy138/139/141. Source cue713(hit) and711(death) match a public tutorial recording strongly; attack710 remains a named candidate without a decisive recording match. No embedded frame sounds occur in4933/4934/4935."),
         ("rule.death.first_office", [], [512], "Independent player-death symbol; player hit variants509/510/518..521 and jingles89/90 are prepared, but exact live selection is not observed."),
     ]
     rule_ids = {rule["id"] for rule in json.loads(Path("research/journey-rules/activities.json").read_text())["rules"]}
@@ -154,13 +154,15 @@ def build(inputs, request, available_ids):
             {"action": "UI", "sound_ids": [2266], "basis": "Named UI_BOOP input, not permission to sound every click/tab/menu"},
         ],
         "additional_prepared_candidates": {"smelting": [2725], "unarmed": [2564, 2565, 2566], "player_hits": [509, 510, 511, 518, 519, 520, 521]},
+        "binding_audit": "research/audio-source/bindings.json",
+        "reference_only_candidates": {"ordinary_shortbow": [2692, 2693, 2702], "tutorial_rat_attack": [710]},
         "sequence_sound_events": sorted(events, key=lambda value: (value["sequence_id"], value["frame"], value["id"])),
         "ambient_objects": sorted(ambient, key=lambda value: value["object_id"]),
         "jingles": request["jingles"],
         "remaining_observations": [
             "Stock source-session region/playlist transitions and music repeat behavior; the exported tracks are one-pass with original release.",
-            "Unbound ranged, weapon/NPC-specific combat, eating and current smelting sounds; do not use generic replacements.",
+            "Ordinary shortbow selection among named launch/draw cues2692/2693/2702; current tutorial-rat attack710 confirmation; current food selection of829/game-triggered2393 versus sound-enabled12526; current bronze-smelting2725 callback. None is inferred from a plausible sound.",
             "Event/packet delay, frame entry phase, positional attenuation, mute/volume defaults and fade behavior in the actual source session.",
-            "Exact tutorial/Cook's Assistant quest jingle and level-up precedence; browser gesture/autoplay/reconnect behavior after pack approval.",
+            "Exact server MIDI_JINGLE payload (including a possible no-request outcome) for Learning the Ropes/Cook's Assistant and its emission order versus level-up jingles. Native client requests are last-wins, with no quest/skill ranking and an ignored auxiliary integer. Browser gesture/autoplay/reconnect behavior remains after pack approval.",
         ],
     }

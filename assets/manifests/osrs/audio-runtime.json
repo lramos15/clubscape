@@ -6,14 +6,14 @@
         "bits_per_sample": 16,
         "codec": "FLAC",
         "decoded_pcm_hash_format": "s16le",
-        "decoded_pcm_sha256": "5d8157281106ac04c1f7111bd77689ca6d68a1a8f9538f2f2ea1f180d42bb6c8",
+        "decoded_pcm_sha256": "bf2dde4b3b3b0c0441303351f5b3d27e76606b73a7179e5e6b06924383f3672d",
         "effective_source_bits": 16,
         "gain_denominator": 1,
         "gain_exactly_reversible": true,
         "gain_numerator": 1,
         "lossless_round_trip_verified": true,
         "native_full_scale_samples": 0,
-        "source_pcm_s16le_sha256": "5d8157281106ac04c1f7111bd77689ca6d68a1a8f9538f2f2ea1f180d42bb6c8"
+        "source_pcm_s16le_sha256": "bf2dde4b3b3b0c0441303351f5b3d27e76606b73a7179e5e6b06924383f3672d"
       },
       "kind": "music",
       "live_trigger_and_presentation_accepted": false,
@@ -30,71 +30,71 @@
       "path": "assets/source/osrs/audio-runtime/music/0.flac",
       "provenance_record": "music-0",
       "reference_pcm_float32_channel_sha256": [
-        "f26cbfc98ece22f72b00cfc64eb9889f5f3b32322c3f7c8aaeb9fa915056318c",
-        "b9aa97863953e1273d39d61d7ffeb3729a19d14cd52615fde7474f08ef6dd2b9"
+        "bc488d296ec6a5199bae7d5b62d643f75af0263c82df14b48f00f05945c8ff99",
+        "8b97e137edd8751ef10e04ae066836cd8780c8be13a0b1fa9a8e4b2f5d8f63c3"
       ],
-      "sha256": "84d22f735239d804bc8f6fb847f8cecb8459bb0e72b869bbd0a4fb2755e00155",
+      "sha256": "2e28c0282533552af752d4cd4e6d1eae338bba3937d2354b2f06fefb7cc02864",
       "signal": {
         "channel_statistics": [
           {
-            "dc_offset": 0.0005864998,
-            "rms_dbfs": -25.304508,
-            "zero_crossings_per_second": 1729.9865
+            "dc_offset": 0.0004283006,
+            "rms_dbfs": -25.078157,
+            "zero_crossings_per_second": 2049.2235
           },
           {
-            "dc_offset": 0.0003868396,
-            "rms_dbfs": -25.407888,
-            "zero_crossings_per_second": 1431.2456
+            "dc_offset": 0.0002828079,
+            "rms_dbfs": -25.16714,
+            "zero_crossings_per_second": 1586.0887
           }
         ],
         "channels": 2,
-        "crest_factor_db": 19.597427,
-        "distinct_amplitudes": 21570,
+        "crest_factor_db": 20.361022,
+        "distinct_amplitudes": 22567,
         "duration_seconds": 197.890612245,
         "first_nonzero_frame": 7498,
         "frames": 4363488,
         "full_scale_samples": 0,
-        "last_nonzero_frame": 4270969,
-        "nonzero_fraction": 0.97380673,
-        "peak": 0.5153198242,
-        "peak_dbfs": -5.758463,
+        "last_nonzero_frame": 4341438,
+        "nonzero_fraction": 0.97764896,
+        "peak": 0.5780029297,
+        "peak_dbfs": -4.761399,
         "quarter_rms_dbfs": [
-          -27.091008,
-          -24.590082,
-          -24.461002,
-          -25.776448
+          -26.761085,
+          -24.317423,
+          -24.365371,
+          -25.483509
         ],
-        "rms_dbfs": -25.35589,
+        "rms_dbfs": -25.122421,
         "sample_rate": 22050,
         "spectral_windows": [
           {
-            "dominant_bin_hz": 527.5635,
-            "spectral_centroid_hz": 609.4309,
-            "spectral_flatness": 0.00058975,
+            "dominant_bin_hz": 516.7969,
+            "spectral_centroid_hz": 597.7688,
+            "spectral_flatness": 0.00507753,
             "start_frame": 872697,
             "window": "Hann",
             "window_frames": 2048
           },
           {
             "dominant_bin_hz": 592.1631,
-            "spectral_centroid_hz": 703.2478,
-            "spectral_flatness": 0.00482585,
+            "spectral_centroid_hz": 724.7129,
+            "spectral_flatness": 0.00766204,
             "start_frame": 2181744,
             "window": "Hann",
             "window_frames": 2048
           },
           {
             "dominant_bin_hz": 387.5977,
-            "spectral_centroid_hz": 420.3302,
-            "spectral_flatness": 0.00068154,
+            "spectral_centroid_hz": 409.8158,
+            "spectral_flatness": 0.00143574,
             "start_frame": 3490790,
             "window": "Hann",
             "window_frames": 2048
           }
         ],
-        "stereo_difference_rms": 0.0347528907
+        "stereo_difference_rms": 0.0348838179
       },
-      "size_bytes": 9317938,
+      "size_bytes": 10024886,
       "source_decode_verified": true,
       "source_file": 0,
       "source_group": 0,
@@ -111,14 +111,14 @@
         "bits_per_sample": 16,
         "codec": "FLAC",
         "decoded_pcm_hash_format": "s16le",
-        "decoded_pcm_sha256": "117f55170166523465b33981f64f047ef464f368ec7b48359d9a7170a476ca7d",
+        "decoded_pcm_sha256": "0c8d06cc7e63dbeb6d1ad0b3b1e38eb4584ac7b8f83c84427110ba3a1a558e33",
         "effective_source_bits": 16,
         "gain_denominator": 1,
         "gain_exactly_reversible": true,
         "gain_numerator": 1,
         "lossless_round_trip_verified": true,
         "native_full_scale_samples": 0,
-        "source_pcm_s16le_sha256": "117f55170166523465b33981f64f047ef464f368ec7b48359d9a7170a476ca7d"
+        "source_pcm_s16le_sha256": "0c8d06cc7e63dbeb6d1ad0b3b1e38eb4584ac7b8f83c84427110ba3a1a558e33"
       },
       "kind": "music",
       "live_trigger_and_presentation_accepted": false,
@@ -135,41 +135,41 @@
       "path": "assets/source/osrs/audio-runtime/music/62.flac",
       "provenance_record": "music-62",
       "reference_pcm_float32_channel_sha256": [
-        "3ff3ff34d17043344cbb0da9ab9eef9c475629d127a99e9656b10cd3648052c4",
-        "3dbcc0296e94bedef7be67c5a30add9bbc3445a3129a8aa97c0f8c5b416a6b7d"
+        "054fcd71261a0f5beddb5cf598cd692cf99053b753ce9f7fb1ea0bcbb6a18b95",
+        "c0a180065639ddef64f74fbf592c2d3b7e2e4f4a8d86f878adb1421c4b63e3d0"
       ],
-      "sha256": "e45183108bea67656a2e154077c79d935f4b21f491d10459a43450f0cf1f2574",
+      "sha256": "3174b656ec1de79c36e0943ed16f99acf36a2dd91fbda0db7d936518b5280572",
       "signal": {
         "channel_statistics": [
           {
-            "dc_offset": -0.0002819938,
-            "rms_dbfs": -26.350489,
-            "zero_crossings_per_second": 1671.1
+            "dc_offset": -0.0002825763,
+            "rms_dbfs": -26.350476,
+            "zero_crossings_per_second": 1671.3057
           },
           {
-            "dc_offset": -0.000229539,
-            "rms_dbfs": -27.783185,
-            "zero_crossings_per_second": 1957.1283
+            "dc_offset": -0.0002298535,
+            "rms_dbfs": -27.783182,
+            "zero_crossings_per_second": 1957.2267
           }
         ],
         "channels": 2,
-        "crest_factor_db": 19.972984,
-        "distinct_amplitudes": 16831,
+        "crest_factor_db": 19.972975,
+        "distinct_amplitudes": 16836,
         "duration_seconds": 223.607256236,
         "first_nonzero_frame": 0,
         "frames": 4930540,
         "full_scale_samples": 0,
         "last_nonzero_frame": 4908501,
-        "nonzero_fraction": 0.99457777,
+        "nonzero_fraction": 0.9945797,
         "peak": 0.4448852539,
         "peak_dbfs": -7.03504,
         "quarter_rms_dbfs": [
-          -29.190935,
-          -24.656663,
+          -29.19098,
+          -24.656694,
           -27.254456,
-          -28.364212
+          -28.364051
         ],
-        "rms_dbfs": -27.008024,
+        "rms_dbfs": -27.008015,
         "sample_rate": 22050,
         "spectral_windows": [
           {
@@ -197,9 +197,9 @@
             "window_frames": 2048
           }
         ],
-        "stereo_difference_rms": 0.0156231726
+        "stereo_difference_rms": 0.0156232462
       },
-      "size_bytes": 10636838,
+      "size_bytes": 10651065,
       "source_decode_verified": true,
       "source_file": 0,
       "source_group": 62,
@@ -216,14 +216,14 @@
         "bits_per_sample": 16,
         "codec": "FLAC",
         "decoded_pcm_hash_format": "s16le",
-        "decoded_pcm_sha256": "a4fb69cd2d2faaab80f47cb6f3417f93813c533e7b90ce495501e0380c4ccb4c",
+        "decoded_pcm_sha256": "d05e9568a783e3a0b4ce5a4d4396261ed03ab50537344dad990dea9e49f34293",
         "effective_source_bits": 16,
         "gain_denominator": 1,
         "gain_exactly_reversible": true,
         "gain_numerator": 1,
         "lossless_round_trip_verified": true,
         "native_full_scale_samples": 0,
-        "source_pcm_s16le_sha256": "a4fb69cd2d2faaab80f47cb6f3417f93813c533e7b90ce495501e0380c4ccb4c"
+        "source_pcm_s16le_sha256": "d05e9568a783e3a0b4ce5a4d4396261ed03ab50537344dad990dea9e49f34293"
       },
       "kind": "music",
       "live_trigger_and_presentation_accepted": false,
@@ -240,41 +240,41 @@
       "path": "assets/source/osrs/audio-runtime/music/144.flac",
       "provenance_record": "music-144",
       "reference_pcm_float32_channel_sha256": [
-        "25b56cd3a75159eade68f3ce11cc32519dcf5bd92ed3a15891e6cf44baee5486",
-        "4c3befc2bd67c56aa74d95f38b57ff07ea28e16407a1a4c0b8b907dd32d99b17"
+        "91bb001ea20481e47608b3d90e2efddf1cee2eec36439effd3913929ec0fdd5a",
+        "43d1c648817333d70d97e3b1a301d7f0c59c7efac5fedc5e193ab4aa4d599bc0"
       ],
-      "sha256": "6003f2f856b91e4df80a8939351e8a75b5e66b69ca449e739bf5881bbb45c64c",
+      "sha256": "f62a359526a67cc7532f9efe5e6d5bf54cdd36f6c18aae6fc0f5211b0fe2a041",
       "signal": {
         "channel_statistics": [
           {
-            "dc_offset": -0.0002840951,
-            "rms_dbfs": -28.120092,
-            "zero_crossings_per_second": 1405.6743
+            "dc_offset": -0.0002898258,
+            "rms_dbfs": -28.118507,
+            "zero_crossings_per_second": 1426.3868
           },
           {
-            "dc_offset": -5.9236e-05,
-            "rms_dbfs": -28.402258,
-            "zero_crossings_per_second": 1492.0829
+            "dc_offset": -6.26558e-05,
+            "rms_dbfs": -28.401038,
+            "zero_crossings_per_second": 1499.7639
           }
         ],
         "channels": 2,
-        "crest_factor_db": 18.139753,
-        "distinct_amplitudes": 14072,
+        "crest_factor_db": 18.138345,
+        "distinct_amplitudes": 14075,
         "duration_seconds": 159.6138322,
         "first_nonzero_frame": 0,
         "frames": 3519485,
         "full_scale_samples": 0,
         "last_nonzero_frame": 3497431,
-        "nonzero_fraction": 0.98860927,
+        "nonzero_fraction": 0.98861282,
         "peak": 0.311920166,
         "peak_dbfs": -10.119131,
         "quarter_rms_dbfs": [
           -27.889121,
-          -26.982525,
-          -27.175806,
+          -26.979987,
+          -27.174071,
           -33.691414
         ],
-        "rms_dbfs": -28.258884,
+        "rms_dbfs": -28.257476,
         "sample_rate": 22050,
         "spectral_windows": [
           {
@@ -287,8 +287,8 @@
           },
           {
             "dominant_bin_hz": 129.1992,
-            "spectral_centroid_hz": 213.2962,
-            "spectral_flatness": 0.00061276,
+            "spectral_centroid_hz": 224.2598,
+            "spectral_flatness": 0.0021658,
             "start_frame": 1759742,
             "window": "Hann",
             "window_frames": 2048
@@ -302,9 +302,9 @@
             "window_frames": 2048
           }
         ],
-        "stereo_difference_rms": 0.0165515849
+        "stereo_difference_rms": 0.016552913
       },
-      "size_bytes": 6107870,
+      "size_bytes": 6183170,
       "source_decode_verified": true,
       "source_file": 0,
       "source_group": 144,
@@ -321,14 +321,14 @@
         "bits_per_sample": 16,
         "codec": "FLAC",
         "decoded_pcm_hash_format": "s16le",
-        "decoded_pcm_sha256": "8d620899f59b2791107284ab1baf87520349d1791e5905d745c63d819dbe7079",
+        "decoded_pcm_sha256": "98859e9841156f8b16a54e62a7068467eae98cc3761540da92dbf67460218f79",
         "effective_source_bits": 16,
         "gain_denominator": 1,
         "gain_exactly_reversible": true,
         "gain_numerator": 1,
         "lossless_round_trip_verified": true,
         "native_full_scale_samples": 0,
-        "source_pcm_s16le_sha256": "8d620899f59b2791107284ab1baf87520349d1791e5905d745c63d819dbe7079"
+        "source_pcm_s16le_sha256": "98859e9841156f8b16a54e62a7068467eae98cc3761540da92dbf67460218f79"
       },
       "kind": "music",
       "live_trigger_and_presentation_accepted": false,
@@ -345,55 +345,55 @@
       "path": "assets/source/osrs/audio-runtime/music/76.flac",
       "provenance_record": "music-76",
       "reference_pcm_float32_channel_sha256": [
-        "204b7a2ad678abdf640b690748899ad66adf9b53dd7a4841050afee97163d18b",
-        "69d9ad33bfdeb7e8fa23e07b5994c298e3b3dab87ab85bae4169dfd85c5d5154"
+        "13395f333c0f976797dfbe9eb5ae89354a76d14d285f9c9b6093ca967fed8b8c",
+        "5b743e5ca27274c9bffe193550c7a2d37f965df17c16010b4143363be5f4a6f8"
       ],
-      "sha256": "d20160182521c03f0a64de9d458e4871e723141b7a66938cb8158f31dcd033c7",
+      "sha256": "c7de3cf6a6809130aec142ed9d467871bb89b895e359ce24a25a1ea481f88a2d",
       "signal": {
         "channel_statistics": [
           {
-            "dc_offset": -0.0001492112,
-            "rms_dbfs": -29.840981,
-            "zero_crossings_per_second": 2265.0101
+            "dc_offset": -0.0001644706,
+            "rms_dbfs": -29.745138,
+            "zero_crossings_per_second": 2310.9256
           },
           {
-            "dc_offset": -0.000138509,
-            "rms_dbfs": -30.050542,
-            "zero_crossings_per_second": 2278.5119
+            "dc_offset": -0.0001506908,
+            "rms_dbfs": -29.988438,
+            "zero_crossings_per_second": 2326.6486
           }
         ],
         "channels": 2,
-        "crest_factor_db": 18.857273,
-        "distinct_amplitudes": 12662,
+        "crest_factor_db": 18.77786,
+        "distinct_amplitudes": 12793,
         "duration_seconds": 217.007029478,
         "first_nonzero_frame": 0,
         "frames": 4785005,
         "full_scale_samples": 0,
         "last_nonzero_frame": 4763263,
-        "nonzero_fraction": 0.99487514,
+        "nonzero_fraction": 0.99487399,
         "peak": 0.2790222168,
         "peak_dbfs": -11.087224,
         "quarter_rms_dbfs": [
-          -32.030243,
-          -29.637038,
-          -29.553267,
-          -29.103205
+          -31.826964,
+          -29.571335,
+          -29.466134,
+          -29.083096
         ],
-        "rms_dbfs": -29.944498,
+        "rms_dbfs": -29.865084,
         "sample_rate": 22050,
         "spectral_windows": [
           {
             "dominant_bin_hz": 441.4307,
-            "spectral_centroid_hz": 1054.0048,
-            "spectral_flatness": 0.01119179,
+            "spectral_centroid_hz": 1063.0624,
+            "spectral_flatness": 0.01168026,
             "start_frame": 957001,
             "window": "Hann",
             "window_frames": 2048
           },
           {
             "dominant_bin_hz": 366.0645,
-            "spectral_centroid_hz": 928.8745,
-            "spectral_flatness": 0.00673584,
+            "spectral_centroid_hz": 927.6261,
+            "spectral_flatness": 0.00713543,
             "start_frame": 2392502,
             "window": "Hann",
             "window_frames": 2048
@@ -407,9 +407,9 @@
             "window_frames": 2048
           }
         ],
-        "stereo_difference_rms": 0.0068994292
+        "stereo_difference_rms": 0.0071591334
       },
-      "size_bytes": 9301368,
+      "size_bytes": 9730634,
       "source_decode_verified": true,
       "source_file": 0,
       "source_group": 76,
@@ -426,14 +426,14 @@
         "bits_per_sample": 16,
         "codec": "FLAC",
         "decoded_pcm_hash_format": "s16le",
-        "decoded_pcm_sha256": "1cfb733a274562bcb5d7db69d6fcbec6e769192f32c90ed670ba4445e117b56b",
+        "decoded_pcm_sha256": "381142e8321b333c7bb575c864bcb9b1e346e03aaa1c218526e1ffe796d82884",
         "effective_source_bits": 16,
         "gain_denominator": 1,
         "gain_exactly_reversible": true,
         "gain_numerator": 1,
         "lossless_round_trip_verified": true,
         "native_full_scale_samples": 0,
-        "source_pcm_s16le_sha256": "1cfb733a274562bcb5d7db69d6fcbec6e769192f32c90ed670ba4445e117b56b"
+        "source_pcm_s16le_sha256": "381142e8321b333c7bb575c864bcb9b1e346e03aaa1c218526e1ffe796d82884"
       },
       "kind": "music",
       "live_trigger_and_presentation_accepted": false,
@@ -450,41 +450,41 @@
       "path": "assets/source/osrs/audio-runtime/music/2.flac",
       "provenance_record": "music-2",
       "reference_pcm_float32_channel_sha256": [
-        "a6216e343b91fb3f6fcb3f49789745c8491dc781dcc18c6a8a0f005eb51cf6e0",
-        "a20861615200d56b1352931200abf3e5cd3b16df41208afc0eee0bf647b66329"
+        "c8d987894b7b3a75efc6dcc9c5331c8e9516f273c7868981de22d0e8be93f0ad",
+        "f02f2b9ab67b9a991433b1db9bef607f956bba374516f1959dc6596bc6fdc798"
       ],
-      "sha256": "fc8f5fe11899ecd6899c358a5df04ef6d3fcf71a795b6a9f24c7b29c795a7e1a",
+      "sha256": "b0de177a1be9216bcd54702ffd5991c24f703294612b9db71da42ef152e78768",
       "signal": {
         "channel_statistics": [
           {
-            "dc_offset": -0.0001661322,
-            "rms_dbfs": -33.662947,
-            "zero_crossings_per_second": 1558.658
+            "dc_offset": -0.0003045232,
+            "rms_dbfs": -33.553328,
+            "zero_crossings_per_second": 2015.1981
           },
           {
-            "dc_offset": -7.90178e-05,
-            "rms_dbfs": -33.582194,
-            "zero_crossings_per_second": 1340.0227
+            "dc_offset": -0.0002078086,
+            "rms_dbfs": -33.486786,
+            "zero_crossings_per_second": 1759.1479
           }
         ],
         "channels": 2,
-        "crest_factor_db": 19.616967,
-        "distinct_amplitudes": 8401,
+        "crest_factor_db": 19.511854,
+        "distinct_amplitudes": 8403,
         "duration_seconds": 137.004444444,
         "first_nonzero_frame": 0,
         "frames": 3020948,
         "full_scale_samples": 0,
         "last_nonzero_frame": 2999282,
-        "nonzero_fraction": 0.99207401,
-        "peak": 0.1994018555,
-        "peak_dbfs": -14.005416,
+        "nonzero_fraction": 0.99208162,
+        "peak": 0.1993408203,
+        "peak_dbfs": -14.008075,
         "quarter_rms_dbfs": [
-          -34.763168,
-          -35.102522,
-          -33.573676,
-          -31.836817
+          -34.698411,
+          -35.009548,
+          -33.430722,
+          -31.738045
         ],
-        "rms_dbfs": -33.622383,
+        "rms_dbfs": -33.51993,
         "sample_rate": 22050,
         "spectral_windows": [
           {
@@ -497,24 +497,24 @@
           },
           {
             "dominant_bin_hz": 258.3984,
-            "spectral_centroid_hz": 228.4342,
-            "spectral_flatness": 1.213e-05,
+            "spectral_centroid_hz": 233.2309,
+            "spectral_flatness": 0.00016133,
             "start_frame": 1510474,
             "window": "Hann",
             "window_frames": 2048
           },
           {
             "dominant_bin_hz": 107.666,
-            "spectral_centroid_hz": 365.0711,
-            "spectral_flatness": 0.00528087,
+            "spectral_centroid_hz": 365.5726,
+            "spectral_flatness": 0.00562136,
             "start_frame": 2416758,
             "window": "Hann",
             "window_frames": 2048
           }
         ],
-        "stereo_difference_rms": 0.0058614086
+        "stereo_difference_rms": 0.0058825468
       },
-      "size_bytes": 4884730,
+      "size_bytes": 5651441,
       "source_decode_verified": true,
       "source_file": 0,
       "source_group": 2,
@@ -531,14 +531,14 @@
         "bits_per_sample": 16,
         "codec": "FLAC",
         "decoded_pcm_hash_format": "s16le",
-        "decoded_pcm_sha256": "e4ef7664a0b0e73fb31e37e1ec40d7d848ddaeb68f95e22f6caf5f5860a131f6",
+        "decoded_pcm_sha256": "5321ada160e2d251896397f5f95a112922fee0dc56d297046bfbd247d9e97a79",
         "effective_source_bits": 16,
         "gain_denominator": 1,
         "gain_exactly_reversible": true,
         "gain_numerator": 1,
         "lossless_round_trip_verified": true,
         "native_full_scale_samples": 0,
-        "source_pcm_s16le_sha256": "e4ef7664a0b0e73fb31e37e1ec40d7d848ddaeb68f95e22f6caf5f5860a131f6"
+        "source_pcm_s16le_sha256": "5321ada160e2d251896397f5f95a112922fee0dc56d297046bfbd247d9e97a79"
       },
       "kind": "jingle",
       "live_trigger_and_presentation_accepted": false,
@@ -555,41 +555,41 @@
       "path": "assets/source/osrs/audio-runtime/jingle/29.flac",
       "provenance_record": "jingle-29",
       "reference_pcm_float32_channel_sha256": [
-        "3ec7d5d3b5b4365c675894310861e0c59751a5c96c06f9986afc903a39656bdf",
-        "dffe571a63ca0c5e41b5528758d3434e6adaa49c34ae93ed30d2aec52e48f892"
+        "55335c524b712cb200f58cf18587e87bef99d8184a39ed3d307b4643a678a664",
+        "de1493ccead44ee5275c957da210ce18b1a0d996ec7dc8cdd645b0a5be592b39"
       ],
-      "sha256": "9e0097153e4f0fad499c6c2ce9c4e5f46a0f70c528467f943eb2468ce30a37c0",
+      "sha256": "fd26027823843b775a7e352d946cb37d53546bc27b4806e164a92eab39dd4113",
       "signal": {
         "channel_statistics": [
           {
-            "dc_offset": -7.67325e-05,
-            "rms_dbfs": -30.639047,
-            "zero_crossings_per_second": 1948.0051
+            "dc_offset": -8.17467e-05,
+            "rms_dbfs": -30.452035,
+            "zero_crossings_per_second": 2603.8617
           },
           {
-            "dc_offset": -2.60576e-05,
-            "rms_dbfs": -28.549937,
-            "zero_crossings_per_second": 1730.618
+            "dc_offset": -2.65654e-05,
+            "rms_dbfs": -28.433649,
+            "zero_crossings_per_second": 2361.6926
           }
         ],
         "channels": 2,
-        "crest_factor_db": 17.88531,
-        "distinct_amplitudes": 9104,
+        "crest_factor_db": 18.162109,
+        "distinct_amplitudes": 9177,
         "duration_seconds": 4.600136054,
         "first_nonzero_frame": 0,
         "frames": 101433,
         "full_scale_samples": 0,
-        "last_nonzero_frame": 70685,
-        "nonzero_fraction": 0.69335423,
-        "peak": 0.2634887695,
-        "peak_dbfs": -11.584758,
+        "last_nonzero_frame": 79382,
+        "nonzero_fraction": 0.74811945,
+        "peak": 0.276550293,
+        "peak_dbfs": -11.164518,
         "quarter_rms_dbfs": [
-          -28.243278,
-          -25.416231,
-          -38.317047,
-          null
+          -28.114945,
+          -25.299396,
+          -37.549925,
+          -101.027956
         ],
-        "rms_dbfs": -29.470068,
+        "rms_dbfs": -29.326626,
         "sample_rate": 22050,
         "spectral_windows": [
           {
@@ -602,16 +602,16 @@
           },
           {
             "dominant_bin_hz": 667.5293,
-            "spectral_centroid_hz": 904.4219,
-            "spectral_flatness": 0.00641504,
+            "spectral_centroid_hz": 904.5399,
+            "spectral_flatness": 0.00710926,
             "start_frame": 50716,
             "window": "Hann",
             "window_frames": 2048
           }
         ],
-        "stereo_difference_rms": 0.0135859769
+        "stereo_difference_rms": 0.0135897186
       },
-      "size_bytes": 139330,
+      "size_bytes": 147810,
       "source_decode_verified": true,
       "source_file": 0,
       "source_group": 29,
@@ -628,14 +628,14 @@
         "bits_per_sample": 16,
         "codec": "FLAC",
         "decoded_pcm_hash_format": "s16le",
-        "decoded_pcm_sha256": "a581d8dd78e3b15c1f75b158faf7d6cc08ffd12c524f0240eb6eec51606dc0c0",
+        "decoded_pcm_sha256": "492eed986142ea83adcdc891cd5abe739795b4fd729e75b7ef2ae10556ac5dba",
         "effective_source_bits": 16,
         "gain_denominator": 1,
         "gain_exactly_reversible": true,
         "gain_numerator": 1,
         "lossless_round_trip_verified": true,
         "native_full_scale_samples": 0,
-        "source_pcm_s16le_sha256": "a581d8dd78e3b15c1f75b158faf7d6cc08ffd12c524f0240eb6eec51606dc0c0"
+        "source_pcm_s16le_sha256": "492eed986142ea83adcdc891cd5abe739795b4fd729e75b7ef2ae10556ac5dba"
       },
       "kind": "jingle",
       "live_trigger_and_presentation_accepted": false,
@@ -652,55 +652,55 @@
       "path": "assets/source/osrs/audio-runtime/jingle/30.flac",
       "provenance_record": "jingle-30",
       "reference_pcm_float32_channel_sha256": [
-        "28775106520f73376c96866b567656e257f47cd0306571d544c2b0e2c99a3498",
-        "d9bd4211d481fae18ef09702baf692488ae39925ba1ecabbd2480e7071baf41f"
+        "ad06055cc3e6187ca39d5159f29127d0024e4702c95eddeb4d815744facadbc0",
+        "98065820b60d8771023002e6773cfa811ec45f5f3b62d97e111d88e9e7c03888"
       ],
-      "sha256": "28e1dcd4b0c505dc21394ca941a1cbcb78798ebd164a452053613792ff6161ce",
+      "sha256": "e069c8fb6448dd98865ce59399dc7a96b72559098a9b5b1ed636e8352ad24c94",
       "signal": {
         "channel_statistics": [
           {
-            "dc_offset": -0.0002241705,
-            "rms_dbfs": -26.160621,
-            "zero_crossings_per_second": 1228.956
+            "dc_offset": -0.0003272726,
+            "rms_dbfs": -26.08916,
+            "zero_crossings_per_second": 1950.5364
           },
           {
-            "dc_offset": -0.000222671,
-            "rms_dbfs": -26.383083,
-            "zero_crossings_per_second": 1257.2079
+            "dc_offset": -0.000312546,
+            "rms_dbfs": -26.305104,
+            "zero_crossings_per_second": 1762.4994
           }
         ],
         "channels": 2,
-        "crest_factor_db": 19.971873,
-        "distinct_amplitudes": 13429,
+        "crest_factor_db": 19.967019,
+        "distinct_amplitudes": 14849,
         "duration_seconds": 8.636643991,
-        "first_nonzero_frame": 12028,
+        "first_nonzero_frame": 7493,
         "frames": 190438,
         "full_scale_samples": 0,
         "last_nonzero_frame": 168388,
-        "nonzero_fraction": 0.77078104,
-        "peak": 0.4842529297,
-        "peak_dbfs": -6.298555,
+        "nonzero_fraction": 0.79457881,
+        "peak": 0.4881591797,
+        "peak_dbfs": -6.228771,
         "quarter_rms_dbfs": [
-          -26.13383,
-          -27.225503,
-          -23.17882,
-          -35.208986
+          -25.938262,
+          -27.217515,
+          -23.135734,
+          -35.208598
         ],
-        "rms_dbfs": -26.270427,
+        "rms_dbfs": -26.19579,
         "sample_rate": 22050,
         "spectral_windows": [
           {
             "dominant_bin_hz": 473.7305,
-            "spectral_centroid_hz": 511.241,
-            "spectral_flatness": 3.708e-05,
+            "spectral_centroid_hz": 627.0659,
+            "spectral_flatness": 0.00192917,
             "start_frame": 38087,
             "window": "Hann",
             "window_frames": 2048
           },
           {
             "dominant_bin_hz": 398.3643,
-            "spectral_centroid_hz": 849.2486,
-            "spectral_flatness": 0.00476722,
+            "spectral_centroid_hz": 857.2003,
+            "spectral_flatness": 0.00859096,
             "start_frame": 95219,
             "window": "Hann",
             "window_frames": 2048
@@ -714,9 +714,9 @@
             "window_frames": 2048
           }
         ],
-        "stereo_difference_rms": 0.0041531711
+        "stereo_difference_rms": 0.0042267255
       },
-      "size_bytes": 183989,
+      "size_bytes": 285649,
       "source_decode_verified": true,
       "source_file": 0,
       "source_group": 30,
@@ -733,14 +733,14 @@
         "bits_per_sample": 16,
         "codec": "FLAC",
         "decoded_pcm_hash_format": "s16le",
-        "decoded_pcm_sha256": "19a22a9bbca23add94f11a2669612a0e227e96d4d347d24a4a989842b3485cb2",
+        "decoded_pcm_sha256": "084c6b3ead2e688c99b245a1e6dcb1088815bad79f58b85e25f262bd1c95b51f",
         "effective_source_bits": 16,
         "gain_denominator": 1,
         "gain_exactly_reversible": true,
         "gain_numerator": 1,
         "lossless_round_trip_verified": true,
         "native_full_scale_samples": 0,
-        "source_pcm_s16le_sha256": "19a22a9bbca23add94f11a2669612a0e227e96d4d347d24a4a989842b3485cb2"
+        "source_pcm_s16le_sha256": "084c6b3ead2e688c99b245a1e6dcb1088815bad79f58b85e25f262bd1c95b51f"
       },
       "kind": "jingle",
       "live_trigger_and_presentation_accepted": false,
@@ -757,55 +757,55 @@
       "path": "assets/source/osrs/audio-runtime/jingle/33.flac",
       "provenance_record": "jingle-33",
       "reference_pcm_float32_channel_sha256": [
-        "74d70e07a9e2f73933f38971518ac0286b5d0362689cc81c9369aead5945491d",
-        "dac59a52c8c16b5a3a25a5b76ad50808ea792440efe74725509ff3585a173a27"
+        "67c97fb649dc4fbc09421df7ca48455a7cd9c2247236ff61a32fa63ed6284c6a",
+        "eff7f845bf923332cc253dff5c17cd7d74806fdc06b54d7da444a1e9f5e99f7d"
       ],
-      "sha256": "b8b28642bb2066670adbe925bad486cf02de50bb28c2317bc6efac9b6a7e009b",
+      "sha256": "f268b49b511a3a62f20032d02fc1e7661f77c6effb89c8a7a4a55c5bcf1fd6a4",
       "signal": {
         "channel_statistics": [
           {
-            "dc_offset": -0.0002822471,
-            "rms_dbfs": -21.589387,
-            "zero_crossings_per_second": 1270.577
+            "dc_offset": -0.0003820788,
+            "rms_dbfs": -21.439821,
+            "zero_crossings_per_second": 1226.1778
           },
           {
-            "dc_offset": -0.0002136549,
-            "rms_dbfs": -20.254591,
-            "zero_crossings_per_second": 1165.3789
+            "dc_offset": -0.0003423843,
+            "rms_dbfs": -20.030882,
+            "zero_crossings_per_second": 1098.5801
           }
         ],
         "channels": 2,
-        "crest_factor_db": 14.530652,
-        "distinct_amplitudes": 19640,
+        "crest_factor_db": 15.205374,
+        "distinct_amplitudes": 19825,
         "duration_seconds": 5.000136054,
         "first_nonzero_frame": 0,
         "frames": 110253,
         "full_scale_samples": 0,
         "last_nonzero_frame": 88203,
-        "nonzero_fraction": 0.73866017,
-        "peak": 0.4819335938,
-        "peak_dbfs": -6.340256,
+        "nonzero_fraction": 0.73867831,
+        "peak": 0.5325317383,
+        "peak_dbfs": -5.47309,
         "quarter_rms_dbfs": [
-          -19.60749,
-          -20.102765,
-          -19.200955,
+          -19.250018,
+          -19.94907,
+          -19.132082,
           -98.063182
         ],
-        "rms_dbfs": -20.870908,
+        "rms_dbfs": -20.678464,
         "sample_rate": 22050,
         "spectral_windows": [
           {
             "dominant_bin_hz": 785.9619,
-            "spectral_centroid_hz": 724.1958,
-            "spectral_flatness": 0.00206027,
+            "spectral_centroid_hz": 591.0666,
+            "spectral_flatness": 0.00182174,
             "start_frame": 22050,
             "window": "Hann",
             "window_frames": 2048
           },
           {
             "dominant_bin_hz": 527.5635,
-            "spectral_centroid_hz": 642.8416,
-            "spectral_flatness": 0.00071788,
+            "spectral_centroid_hz": 632.9896,
+            "spectral_flatness": 0.00072546,
             "start_frame": 55126,
             "window": "Hann",
             "window_frames": 2048
@@ -819,9 +819,9 @@
             "window_frames": 2048
           }
         ],
-        "stereo_difference_rms": 0.0198835234
+        "stereo_difference_rms": 0.021179497
       },
-      "size_bytes": 174014,
+      "size_bytes": 174319,
       "source_decode_verified": true,
       "source_file": 0,
       "source_group": 33,
@@ -838,14 +838,14 @@
         "bits_per_sample": 16,
         "codec": "FLAC",
         "decoded_pcm_hash_format": "s16le",
-        "decoded_pcm_sha256": "55b849a50f1e2b5760982ca09e1614ceeee411f559bd7dcf99a454e3af4b4e73",
+        "decoded_pcm_sha256": "b0c3661666c4688a03fdb815536d8a90ef1a7edab9187dc89c9fa7a46f98f198",
         "effective_source_bits": 16,
         "gain_denominator": 1,
         "gain_exactly_reversible": true,
         "gain_numerator": 1,
         "lossless_round_trip_verified": true,
         "native_full_scale_samples": 0,
-        "source_pcm_s16le_sha256": "55b849a50f1e2b5760982ca09e1614ceeee411f559bd7dcf99a454e3af4b4e73"
+        "source_pcm_s16le_sha256": "b0c3661666c4688a03fdb815536d8a90ef1a7edab9187dc89c9fa7a46f98f198"
       },
       "kind": "jingle",
       "live_trigger_and_presentation_accepted": false,
@@ -862,41 +862,41 @@
       "path": "assets/source/osrs/audio-runtime/jingle/34.flac",
       "provenance_record": "jingle-34",
       "reference_pcm_float32_channel_sha256": [
-        "e7c0239b73c2b0163b796099f65acc0a2de3ef1c28d802ea3a618b6a47313a2f",
-        "31776732bbaadfe1bbf3253711544c3e55153a5a24ec31170bc64d3026897852"
+        "8b02b880c7682b2743d10335f177207fdfa93dd8aead8e29b3953e7e6791a4e7",
+        "7e0551fc4a32b2bd09e85e1b4640353289b91a03c48d39f86960d6203c35a30a"
       ],
-      "sha256": "d94e31a4e99d9645b175ad03657e8b387445f6051f8ad17a1515cea11abadbd2",
+      "sha256": "4b654615caa6c79f95e27893efbfdc34741f0edeed2d3abcd8e5465d67ffeb5e",
       "signal": {
         "channel_statistics": [
           {
-            "dc_offset": -0.0013196672,
-            "rms_dbfs": -28.55991,
-            "zero_crossings_per_second": 1045.09
+            "dc_offset": -0.001321201,
+            "rms_dbfs": -28.545092,
+            "zero_crossings_per_second": 1183.7539
           },
           {
-            "dc_offset": -0.0009463626,
-            "rms_dbfs": -27.718364,
-            "zero_crossings_per_second": 1044.6456
+            "dc_offset": -0.0009475833,
+            "rms_dbfs": -27.711852,
+            "zero_crossings_per_second": 1080.2004
           }
         ],
         "channels": 2,
-        "crest_factor_db": 19.630457,
-        "distinct_amplitudes": 10485,
+        "crest_factor_db": 19.380974,
+        "distinct_amplitudes": 10508,
         "duration_seconds": 4.500136054,
         "first_nonzero_frame": 0,
         "frames": 99228,
         "full_scale_samples": 0,
         "last_nonzero_frame": 77281,
-        "nonzero_fraction": 0.776943,
-        "peak": 0.3763427734,
-        "peak_dbfs": -8.488328,
+        "nonzero_fraction": 0.77698331,
+        "peak": 0.3661193848,
+        "peak_dbfs": -8.727546,
         "quarter_rms_dbfs": [
           -24.994155,
-          -25.251888,
-          -47.508829,
-          -68.011183
+          -25.230902,
+          -47.473716,
+          -68.01119
         ],
-        "rms_dbfs": -28.118785,
+        "rms_dbfs": -28.10852,
         "sample_rate": 22050,
         "spectral_windows": [
           {
@@ -909,16 +909,16 @@
           },
           {
             "dominant_bin_hz": 645.9961,
-            "spectral_centroid_hz": 740.111,
-            "spectral_flatness": 1.77e-05,
+            "spectral_centroid_hz": 790.7893,
+            "spectral_flatness": 0.00226958,
             "start_frame": 49614,
             "window": "Hann",
             "window_frames": 2048
           }
         ],
-        "stereo_difference_rms": 0.0088592294
+        "stereo_difference_rms": 0.0088786645
       },
-      "size_bytes": 117101,
+      "size_bytes": 130885,
       "source_decode_verified": true,
       "source_file": 0,
       "source_group": 34,
@@ -935,14 +935,14 @@
         "bits_per_sample": 16,
         "codec": "FLAC",
         "decoded_pcm_hash_format": "s16le",
-        "decoded_pcm_sha256": "3030d75c15107f8aeb3aa945bf0c884a024ca4ce2180ab8f9020fe6a91f713bd",
+        "decoded_pcm_sha256": "9b23f60639b284cc82e5505f0dce207439e34f327604c83603d08b8189ea8de8",
         "effective_source_bits": 16,
         "gain_denominator": 1,
         "gain_exactly_reversible": true,
         "gain_numerator": 1,
         "lossless_round_trip_verified": true,
         "native_full_scale_samples": 0,
-        "source_pcm_s16le_sha256": "3030d75c15107f8aeb3aa945bf0c884a024ca4ce2180ab8f9020fe6a91f713bd"
+        "source_pcm_s16le_sha256": "9b23f60639b284cc82e5505f0dce207439e34f327604c83603d08b8189ea8de8"
       },
       "kind": "jingle",
       "live_trigger_and_presentation_accepted": false,
@@ -959,55 +959,55 @@
       "path": "assets/source/osrs/audio-runtime/jingle/37.flac",
       "provenance_record": "jingle-37",
       "reference_pcm_float32_channel_sha256": [
-        "84525efdd9853a4ad928015e4e8dc539caefc300f2e01dee5c5ea8c334f497f7",
-        "cf0d381dd54d662f29e1d7752a1a40f4812df5303e0a4d1aabdae7b1736f88b3"
+        "c8d3f9dca5308767caff32868ff7c4d19f206338d5a7507aba85eb0b7eeb0a89",
+        "58b363dae4d4a4050ff08487480e0ea76d78232d6c1e75607022077586f43e73"
       ],
-      "sha256": "944779434d77bc6f0fc62edb239788b777b21cb29a54b664d6c0908197be6bee",
+      "sha256": "6766da2fc367b725275e4246910f226356341141e6c76fd41623132b9e5a909d",
       "signal": {
         "channel_statistics": [
           {
-            "dc_offset": 9.9746e-06,
-            "rms_dbfs": -21.842878,
-            "zero_crossings_per_second": 1250.6882
+            "dc_offset": -1.07713e-05,
+            "rms_dbfs": -21.841507,
+            "zero_crossings_per_second": 1262.5279
           },
           {
-            "dc_offset": 9.6154e-06,
-            "rms_dbfs": -21.892848,
-            "zero_crossings_per_second": 1237.5686
+            "dc_offset": -3.65942e-05,
+            "rms_dbfs": -21.885084,
+            "zero_crossings_per_second": 1298.687
           }
         ],
         "channels": 2,
-        "crest_factor_db": 15.872601,
-        "distinct_amplitudes": 18942,
+        "crest_factor_db": 15.85906,
+        "distinct_amplitudes": 18980,
         "duration_seconds": 6.250204082,
         "first_nonzero_frame": 0,
         "frames": 137817,
         "full_scale_samples": 0,
         "last_nonzero_frame": 114758,
-        "nonzero_fraction": 0.7055298,
-        "peak": 0.5014648438,
-        "peak_dbfs": -5.99519,
+        "nonzero_fraction": 0.70538468,
+        "peak": 0.5009460449,
+        "peak_dbfs": -6.004181,
         "quarter_rms_dbfs": [
-          -20.041054,
-          -18.569254,
-          -26.55455,
+          -20.031793,
+          -18.56733,
+          -26.554617,
           -96.8751
         ],
-        "rms_dbfs": -21.867791,
+        "rms_dbfs": -21.863241,
         "sample_rate": 22050,
         "spectral_windows": [
           {
             "dominant_bin_hz": 441.4307,
-            "spectral_centroid_hz": 532.3139,
-            "spectral_flatness": 0.00057231,
+            "spectral_centroid_hz": 532.8178,
+            "spectral_flatness": 0.00096863,
             "start_frame": 27563,
             "window": "Hann",
             "window_frames": 2048
           },
           {
             "dominant_bin_hz": 742.8955,
-            "spectral_centroid_hz": 745.1568,
-            "spectral_flatness": 0.00013907,
+            "spectral_centroid_hz": 745.2267,
+            "spectral_flatness": 0.00014353,
             "start_frame": 68908,
             "window": "Hann",
             "window_frames": 2048
@@ -1021,9 +1021,9 @@
             "window_frames": 2048
           }
         ],
-        "stereo_difference_rms": 0.0035724204
+        "stereo_difference_rms": 0.0040746104
       },
-      "size_bytes": 173949,
+      "size_bytes": 194042,
       "source_decode_verified": true,
       "source_file": 0,
       "source_group": 37,
@@ -1137,14 +1137,14 @@
         "bits_per_sample": 16,
         "codec": "FLAC",
         "decoded_pcm_hash_format": "s16le",
-        "decoded_pcm_sha256": "f94cd740152dfb6612658a53caef4d03a6631b2858842fbb5b598a096a99f2f8",
+        "decoded_pcm_sha256": "44004664f07d0c84f0996e366acf1092ddc08e3e961d01f00af69885099548ca",
         "effective_source_bits": 16,
         "gain_denominator": 1,
         "gain_exactly_reversible": true,
         "gain_numerator": 1,
         "lossless_round_trip_verified": true,
         "native_full_scale_samples": 0,
-        "source_pcm_s16le_sha256": "f94cd740152dfb6612658a53caef4d03a6631b2858842fbb5b598a096a99f2f8"
+        "source_pcm_s16le_sha256": "44004664f07d0c84f0996e366acf1092ddc08e3e961d01f00af69885099548ca"
       },
       "kind": "jingle",
       "live_trigger_and_presentation_accepted": false,
@@ -1161,41 +1161,41 @@
       "path": "assets/source/osrs/audio-runtime/jingle/39.flac",
       "provenance_record": "jingle-39",
       "reference_pcm_float32_channel_sha256": [
-        "dd30e3d0d321ddb213347c8c8b1451c9f775790105990e7dd3e67615bd7a226b",
-        "1f003229a9be00402ccfe0f0952b1d5c9b2857eaa61daa6f9528f62d04a7bcab"
+        "f1854422636fc80b36acd9cfdaeef76d29fa6627d470ad67d3a9416bcebdca77",
+        "fe3e0769318f03b024cbbc64e0f1a569a1997152b80098bc723e8dde0008a18c"
       ],
-      "sha256": "114dee8b506e7d902c6e4b4bde5b331a26f630b1d2673bbd9fcd85e9b74714e2",
+      "sha256": "8776e3da41e5fb7d5054fc235b44c3e7ea12d8b010afb908b5299702808b3a1d",
       "signal": {
         "channel_statistics": [
           {
-            "dc_offset": -0.0001305632,
-            "rms_dbfs": -27.623076,
-            "zero_crossings_per_second": 1245.7021
+            "dc_offset": -0.0001368102,
+            "rms_dbfs": -27.574813,
+            "zero_crossings_per_second": 4317.0907
           },
           {
-            "dc_offset": -8.06411e-05,
-            "rms_dbfs": -26.242472,
-            "zero_crossings_per_second": 1143.3519
+            "dc_offset": -8.64654e-05,
+            "rms_dbfs": -26.214012,
+            "zero_crossings_per_second": 4158.2714
           }
         ],
         "channels": 2,
-        "crest_factor_db": 19.210493,
-        "distinct_amplitudes": 12901,
+        "crest_factor_db": 19.173682,
+        "distinct_amplitudes": 12905,
         "duration_seconds": 6.800226757,
         "first_nonzero_frame": 0,
         "frames": 149945,
         "full_scale_samples": 0,
-        "last_nonzero_frame": 108958,
-        "nonzero_fraction": 0.69405449,
+        "last_nonzero_frame": 119580,
+        "nonzero_fraction": 0.7833639,
         "peak": 0.4136352539,
         "peak_dbfs": -7.667649,
         "quarter_rms_dbfs": [
           -26.138478,
           -22.729643,
-          -33.551976,
-          null
+          -32.913767,
+          -88.751097
         ],
-        "rms_dbfs": -26.878142,
+        "rms_dbfs": -26.841331,
         "sample_rate": 22050,
         "spectral_windows": [
           {
@@ -1208,16 +1208,16 @@
           },
           {
             "dominant_bin_hz": 1141.2598,
-            "spectral_centroid_hz": 1504.8943,
-            "spectral_flatness": 0.01459862,
+            "spectral_centroid_hz": 1764.5682,
+            "spectral_flatness": 0.07085389,
             "start_frame": 74972,
             "window": "Hann",
             "window_frames": 2048
           }
         ],
-        "stereo_difference_rms": 0.017559082
+        "stereo_difference_rms": 0.0175644923
       },
-      "size_bytes": 192200,
+      "size_bytes": 234186,
       "source_decode_verified": true,
       "source_file": 0,
       "source_group": 39,
@@ -1234,14 +1234,14 @@
         "bits_per_sample": 16,
         "codec": "FLAC",
         "decoded_pcm_hash_format": "s16le",
-        "decoded_pcm_sha256": "089663b8eda8ba5027a9d42947482ce54e21d52b20d1e2df73a2ed4e9f212f67",
+        "decoded_pcm_sha256": "921de6e98c794d040c7fef31f3e4ac201a66dcb6cdc74ff48f267fc2e5560649",
         "effective_source_bits": 16,
         "gain_denominator": 1,
         "gain_exactly_reversible": true,
         "gain_numerator": 1,
         "lossless_round_trip_verified": true,
         "native_full_scale_samples": 0,
-        "source_pcm_s16le_sha256": "089663b8eda8ba5027a9d42947482ce54e21d52b20d1e2df73a2ed4e9f212f67"
+        "source_pcm_s16le_sha256": "921de6e98c794d040c7fef31f3e4ac201a66dcb6cdc74ff48f267fc2e5560649"
       },
       "kind": "jingle",
       "live_trigger_and_presentation_accepted": false,
@@ -1258,41 +1258,41 @@
       "path": "assets/source/osrs/audio-runtime/jingle/40.flac",
       "provenance_record": "jingle-40",
       "reference_pcm_float32_channel_sha256": [
-        "9a9a1e912fc5ef718c21ddd7edd88a6ea4105d7c3db7c137443a777508fd8c3f",
-        "e099fb434641e1f357366af839109cc40a75e9aa60b311d66d8e765ec0765713"
+        "bd87da818da04ee248a8ab88a0a416501cc61b8f5affdd12dc5386c00a731381",
+        "99a6642303365ca00f74f10a81b47a8060812639a8891c8ac80e27a23ebfd53d"
       ],
-      "sha256": "6e8b738f0fe1cf887e25697af4a04f5562b20b981cc6f9592afba21f37b9c1e0",
+      "sha256": "8feabd3fddac72dacd6f236b1b0f931acf90a2d04b31a856acdbd320f7987d34",
       "signal": {
         "channel_statistics": [
           {
-            "dc_offset": -7.37013e-05,
-            "rms_dbfs": -25.230457,
-            "zero_crossings_per_second": 581.8962
+            "dc_offset": -7.8877e-05,
+            "rms_dbfs": -25.204118,
+            "zero_crossings_per_second": 2527.7267
           },
           {
-            "dc_offset": -2.1168e-05,
-            "rms_dbfs": -25.482805,
-            "zero_crossings_per_second": 581.6021
+            "dc_offset": -2.59208e-05,
+            "rms_dbfs": -25.459364,
+            "zero_crossings_per_second": 2500.0804
           }
         ],
         "channels": 2,
-        "crest_factor_db": 20.852281,
-        "distinct_amplitudes": 15528,
+        "crest_factor_db": 20.840692,
+        "distinct_amplitudes": 15601,
         "duration_seconds": 6.800226757,
         "first_nonzero_frame": 0,
         "frames": 149945,
         "full_scale_samples": 0,
         "last_nonzero_frame": 127895,
-        "nonzero_fraction": 0.77206309,
-        "peak": 0.595489502,
-        "peak_dbfs": -4.502518,
+        "nonzero_fraction": 0.78571476,
+        "peak": 0.5964050293,
+        "peak_dbfs": -4.489174,
         "quarter_rms_dbfs": [
           -24.70297,
           -22.295837,
-          -26.240276,
-          -98.415023
+          -26.11934,
+          -88.496683
         ],
-        "rms_dbfs": -25.354799,
+        "rms_dbfs": -25.329866,
         "sample_rate": 22050,
         "spectral_windows": [
           {
@@ -1305,8 +1305,8 @@
           },
           {
             "dominant_bin_hz": 107.666,
-            "spectral_centroid_hz": 477.9087,
-            "spectral_flatness": 0.00109302,
+            "spectral_centroid_hz": 616.7815,
+            "spectral_flatness": 0.02574889,
             "start_frame": 74972,
             "window": "Hann",
             "window_frames": 2048
@@ -1320,9 +1320,9 @@
             "window_frames": 2048
           }
         ],
-        "stereo_difference_rms": 0.0128001998
+        "stereo_difference_rms": 0.0128051118
       },
-      "size_bytes": 152100,
+      "size_bytes": 189479,
       "source_decode_verified": true,
       "source_file": 0,
       "source_group": 40,
@@ -1436,14 +1436,14 @@
         "bits_per_sample": 16,
         "codec": "FLAC",
         "decoded_pcm_hash_format": "s16le",
-        "decoded_pcm_sha256": "d9af95a5843f1acae75819d6b26db37edafab05f4af473d39fce8fe95502d8a6",
+        "decoded_pcm_sha256": "af12bebc9c42d0a564f5926c96eedbb38c84fa532f297366cde92bc06e29a3d7",
         "effective_source_bits": 16,
         "gain_denominator": 1,
         "gain_exactly_reversible": true,
         "gain_numerator": 1,
         "lossless_round_trip_verified": true,
         "native_full_scale_samples": 0,
-        "source_pcm_s16le_sha256": "d9af95a5843f1acae75819d6b26db37edafab05f4af473d39fce8fe95502d8a6"
+        "source_pcm_s16le_sha256": "af12bebc9c42d0a564f5926c96eedbb38c84fa532f297366cde92bc06e29a3d7"
       },
       "kind": "jingle",
       "live_trigger_and_presentation_accepted": false,
@@ -1460,63 +1460,63 @@
       "path": "assets/source/osrs/audio-runtime/jingle/42.flac",
       "provenance_record": "jingle-42",
       "reference_pcm_float32_channel_sha256": [
-        "6694f12b1adc9f4b24164de7b4b0cdf4443dbdfed789a35752675c76940f26ec",
-        "05c7507b445bf689bb213ab05f4af478810af614505919c40d21e707ecfdc773"
+        "feea3a754e0a95f65fe68e79708fe1a6c23d6a94213f86cab7d730a9bdcdae3f",
+        "e1deec07652e138acf61d4f633d93c1be4a5f1fc952a38b77e4edaa995dbfac9"
       ],
-      "sha256": "6c4c2777244c45225aca8760ec49cf25624c9752a788e0f3c719170ced409fca",
+      "sha256": "18694c681a8ba39ed7ee05b657b5f12da1e3684cc189ca0ba635aa3b63a6edd2",
       "signal": {
         "channel_statistics": [
           {
-            "dc_offset": -2.74075e-05,
-            "rms_dbfs": -26.209741,
-            "zero_crossings_per_second": 923.8165
+            "dc_offset": -8.37702e-05,
+            "rms_dbfs": -26.064651,
+            "zero_crossings_per_second": 942.6961
           },
           {
-            "dc_offset": -2.82434e-05,
-            "rms_dbfs": -26.290851,
-            "zero_crossings_per_second": 887.0175
+            "dc_offset": -0.0001178438,
+            "rms_dbfs": -25.862169,
+            "zero_crossings_per_second": 886.6975
           }
         ],
         "channels": 2,
-        "crest_factor_db": 15.567512,
-        "distinct_amplitudes": 11890,
+        "crest_factor_db": 15.265115,
+        "distinct_amplitudes": 12150,
         "duration_seconds": 6.250204082,
         "first_nonzero_frame": 0,
         "frames": 137817,
         "full_scale_samples": 0,
         "last_nonzero_frame": 102930,
-        "nonzero_fraction": 0.7466314,
-        "peak": 0.2923278809,
-        "peak_dbfs": -10.682595,
+        "nonzero_fraction": 0.74663503,
+        "peak": 0.2918395996,
+        "peak_dbfs": -10.697116,
         "quarter_rms_dbfs": [
-          -22.429509,
-          -25.238699,
-          -31.09726,
+          -22.427181,
+          -24.398883,
+          -31.050366,
           null
         ],
-        "rms_dbfs": -26.250107,
+        "rms_dbfs": -25.96223,
         "sample_rate": 22050,
         "spectral_windows": [
           {
             "dominant_bin_hz": 172.2656,
-            "spectral_centroid_hz": 336.2771,
-            "spectral_flatness": 6.07e-06,
+            "spectral_centroid_hz": 336.2668,
+            "spectral_flatness": 9.68e-06,
             "start_frame": 27563,
             "window": "Hann",
             "window_frames": 2048
           },
           {
             "dominant_bin_hz": 355.2979,
-            "spectral_centroid_hz": 314.0692,
-            "spectral_flatness": 3.1e-07,
+            "spectral_centroid_hz": 301.8704,
+            "spectral_flatness": 1.436e-05,
             "start_frame": 68908,
             "window": "Hann",
             "window_frames": 2048
           }
         ],
-        "stereo_difference_rms": 0.0084058364
+        "stereo_difference_rms": 0.0107413048
       },
-      "size_bytes": 143216,
+      "size_bytes": 172070,
       "source_decode_verified": true,
       "source_file": 0,
       "source_group": 42,
@@ -1533,14 +1533,14 @@
         "bits_per_sample": 16,
         "codec": "FLAC",
         "decoded_pcm_hash_format": "s16le",
-        "decoded_pcm_sha256": "2848241c108425684beacc4f7e10dc87d32ee9befdfc952867deb2d6e04c250d",
+        "decoded_pcm_sha256": "ab7abfe3c02b6adcb240b65d4a66a356983acaa8b34b842bd4a8745f15ba7491",
         "effective_source_bits": 16,
         "gain_denominator": 1,
         "gain_exactly_reversible": true,
         "gain_numerator": 1,
         "lossless_round_trip_verified": true,
         "native_full_scale_samples": 0,
-        "source_pcm_s16le_sha256": "2848241c108425684beacc4f7e10dc87d32ee9befdfc952867deb2d6e04c250d"
+        "source_pcm_s16le_sha256": "ab7abfe3c02b6adcb240b65d4a66a356983acaa8b34b842bd4a8745f15ba7491"
       },
       "kind": "jingle",
       "live_trigger_and_presentation_accepted": false,
@@ -1557,63 +1557,63 @@
       "path": "assets/source/osrs/audio-runtime/jingle/47.flac",
       "provenance_record": "jingle-47",
       "reference_pcm_float32_channel_sha256": [
-        "1b166ea470b5935677c8d3c37b8304cf690d9836aaedbbf7687c81700932adab",
-        "6cd4280515dbe8edd05a20583079ac9d6379aeb1e0eb74c36f062fbbb2aaecd2"
+        "093ece433f0ac97ccc7bc9023af4898b7c1dd23a1610ce29f8c50fee8d816ff4",
+        "4d0e699421ebbad15f20aecc4c5d771fa78f27e1cb2ec79a87b4b1ba13dd4300"
       ],
-      "sha256": "5eeb237ecc23614a2e9c92fe2df43097894cd13d50195af1bcde8370ac5f9c0f",
+      "sha256": "8ddeca8b3a0f4eddac463e16fa6e8a56c0ab782645d6716628296259f347e814",
       "signal": {
         "channel_statistics": [
           {
-            "dc_offset": 3.0544e-06,
-            "rms_dbfs": -28.418172,
-            "zero_crossings_per_second": 1991.7048
+            "dc_offset": -1.77605e-05,
+            "rms_dbfs": -28.320013,
+            "zero_crossings_per_second": 2235.6993
           },
           {
-            "dc_offset": -1.30965e-05,
-            "rms_dbfs": -27.356985,
-            "zero_crossings_per_second": 1847.7081
+            "dc_offset": -3.14922e-05,
+            "rms_dbfs": -27.295901,
+            "zero_crossings_per_second": 2035.2039
           }
         ],
         "channels": 2,
-        "crest_factor_db": 17.186242,
-        "distinct_amplitudes": 10190,
+        "crest_factor_db": 17.372767,
+        "distinct_amplitudes": 10246,
         "duration_seconds": 4.000136054,
         "first_nonzero_frame": 0,
         "frames": 88203,
         "full_scale_samples": 0,
         "last_nonzero_frame": 66196,
-        "nonzero_fraction": 0.74844393,
-        "peak": 0.2927856445,
-        "peak_dbfs": -10.669004,
+        "nonzero_fraction": 0.74839858,
+        "peak": 0.3018188477,
+        "peak_dbfs": -10.405073,
         "quarter_rms_dbfs": [
-          -25.603846,
-          -25.112577,
-          -31.418622,
-          -104.028204
+          -25.538349,
+          -25.006581,
+          -31.419063,
+          -104.025886
         ],
-        "rms_dbfs": -27.855247,
+        "rms_dbfs": -27.77784,
         "sample_rate": 22050,
         "spectral_windows": [
           {
             "dominant_bin_hz": 64.5996,
-            "spectral_centroid_hz": 648.7342,
-            "spectral_flatness": 0.00589495,
+            "spectral_centroid_hz": 662.5353,
+            "spectral_flatness": 0.01054255,
             "start_frame": 17640,
             "window": "Hann",
             "window_frames": 2048
           },
           {
             "dominant_bin_hz": 409.1309,
-            "spectral_centroid_hz": 829.3974,
-            "spectral_flatness": 0.02353644,
+            "spectral_centroid_hz": 831.2507,
+            "spectral_flatness": 0.02379918,
             "start_frame": 44101,
             "window": "Hann",
             "window_frames": 2048
           }
         ],
-        "stereo_difference_rms": 0.0112109433
+        "stereo_difference_rms": 0.01122877
       },
-      "size_bytes": 146177,
+      "size_bytes": 149763,
       "source_decode_verified": true,
       "source_file": 0,
       "source_group": 47,
@@ -1630,14 +1630,14 @@
         "bits_per_sample": 16,
         "codec": "FLAC",
         "decoded_pcm_hash_format": "s16le",
-        "decoded_pcm_sha256": "30af5c9cf3fd7e1288217c5a6b03fa196699213bbff5be6d00b2cfb573f7b0db",
+        "decoded_pcm_sha256": "373591b8a73990d7760108c85aa6452781dbc07cae99d1c9f64cbeea0b7c79fa",
         "effective_source_bits": 16,
         "gain_denominator": 1,
         "gain_exactly_reversible": true,
         "gain_numerator": 1,
         "lossless_round_trip_verified": true,
         "native_full_scale_samples": 0,
-        "source_pcm_s16le_sha256": "30af5c9cf3fd7e1288217c5a6b03fa196699213bbff5be6d00b2cfb573f7b0db"
+        "source_pcm_s16le_sha256": "373591b8a73990d7760108c85aa6452781dbc07cae99d1c9f64cbeea0b7c79fa"
       },
       "kind": "jingle",
       "live_trigger_and_presentation_accepted": false,
@@ -1654,41 +1654,41 @@
       "path": "assets/source/osrs/audio-runtime/jingle/51.flac",
       "provenance_record": "jingle-51",
       "reference_pcm_float32_channel_sha256": [
-        "5b010303dfe907ec63d89256c2dbbc34923632a09be999373aeecd50143120f8",
-        "e5cd41bf453d713f73022cfb472f517293e1ecedea4f07d45e1c7e38e0ae8d4b"
+        "c4634b9079807276106afafc61e00ab556dcbf65c61ac2940a2dbd301ee2a61a",
+        "5d2271bf8793ee76d540df3b220741204029a99db2128764d047ca96f1191e44"
       ],
-      "sha256": "539160d5e12eaf773e0ca1c34c018484eebc1810888009d9f2b8a933b31d1135",
+      "sha256": "83055a53923c09b71b2e7a9f70ceebb314d9b3e7241b43d2947ca6daa54ea1f5",
       "signal": {
         "channel_statistics": [
           {
-            "dc_offset": 9.5208e-06,
-            "rms_dbfs": -29.351197,
-            "zero_crossings_per_second": 2329.1549
+            "dc_offset": 3.6608e-06,
+            "rms_dbfs": -29.317521,
+            "zero_crossings_per_second": 3487.022
           },
           {
-            "dc_offset": 2.4172e-06,
-            "rms_dbfs": -28.553347,
-            "zero_crossings_per_second": 2538.6236
+            "dc_offset": -3.372e-06,
+            "rms_dbfs": -28.526891,
+            "zero_crossings_per_second": 3687.5436
           }
         ],
         "channels": 2,
-        "crest_factor_db": 17.950628,
+        "crest_factor_db": 17.920892,
         "distinct_amplitudes": 10824,
         "duration_seconds": 7.600226757,
         "first_nonzero_frame": 0,
         "frames": 167585,
         "full_scale_samples": 0,
-        "last_nonzero_frame": 117529,
-        "nonzero_fraction": 0.69996121,
+        "last_nonzero_frame": 145535,
+        "nonzero_fraction": 0.85378763,
         "peak": 0.2823791504,
         "peak_dbfs": -10.983347,
         "quarter_rms_dbfs": [
           -31.174205,
           -23.832869,
-          -36.726131,
-          null
+          -36.062792,
+          -72.312332
         ],
-        "rms_dbfs": -28.933975,
+        "rms_dbfs": -28.904239,
         "sample_rate": 22050,
         "spectral_windows": [
           {
@@ -1706,11 +1706,19 @@
             "start_frame": 83792,
             "window": "Hann",
             "window_frames": 2048
+          },
+          {
+            "dominant_bin_hz": 829.0283,
+            "spectral_centroid_hz": 3364.1356,
+            "spectral_flatness": 0.13483328,
+            "start_frame": 134068,
+            "window": "Hann",
+            "window_frames": 2048
           }
         ],
-        "stereo_difference_rms": 0.0108533684
+        "stereo_difference_rms": 0.0108537328
       },
-      "size_bytes": 266160,
+      "size_bytes": 292234,
       "source_decode_verified": true,
       "source_file": 0,
       "source_group": 51,
@@ -1929,14 +1937,14 @@
         "bits_per_sample": 16,
         "codec": "FLAC",
         "decoded_pcm_hash_format": "s16le",
-        "decoded_pcm_sha256": "3db54f76524bceb8af3b820c763e48549b583c3c64ab6de9a53879898cc9f4d5",
+        "decoded_pcm_sha256": "a3ccbddfe5dd0ec21a89aca8354b1ed299116b1d7861aefbf69077e71361142e",
         "effective_source_bits": 16,
         "gain_denominator": 1,
         "gain_exactly_reversible": true,
         "gain_numerator": 1,
         "lossless_round_trip_verified": true,
         "native_full_scale_samples": 0,
-        "source_pcm_s16le_sha256": "3db54f76524bceb8af3b820c763e48549b583c3c64ab6de9a53879898cc9f4d5"
+        "source_pcm_s16le_sha256": "a3ccbddfe5dd0ec21a89aca8354b1ed299116b1d7861aefbf69077e71361142e"
       },
       "kind": "jingle",
       "live_trigger_and_presentation_accepted": false,
@@ -1953,55 +1961,55 @@
       "path": "assets/source/osrs/audio-runtime/jingle/54.flac",
       "provenance_record": "jingle-54",
       "reference_pcm_float32_channel_sha256": [
-        "ca17fbddae6cebf31b30ead6231fe949d5c75faaefbadd82dc53660e8aa87321",
-        "0a0ca0f35f810e06271ac0a2482ce8418127325514229f862cd74472b910e416"
+        "faa4cd5917248ab56840f06925877f7f091ac723d808175a1905e047dac79d08",
+        "4e45e484cea0455c0a5218d83365fd905e01d30b423b57056c30fcdfc2393179"
       ],
-      "sha256": "e9b881b2eaa41a1a7eb04cebe7fe8e056dcc43307130b7d63eef2d27698f7ef9",
+      "sha256": "e6ca329b527143d6f8099b91469875209be2707c5d435f89b4ee8db3911b13a2",
       "signal": {
         "channel_statistics": [
           {
-            "dc_offset": -0.0016543981,
-            "rms_dbfs": -19.917862,
-            "zero_crossings_per_second": 596.556
+            "dc_offset": -0.0017809715,
+            "rms_dbfs": -19.796971,
+            "zero_crossings_per_second": 719.6956
           },
           {
-            "dc_offset": -0.0021876263,
-            "rms_dbfs": -19.864647,
-            "zero_crossings_per_second": 594.2703
+            "dc_offset": -0.0022555896,
+            "rms_dbfs": -19.820772,
+            "zero_crossings_per_second": 689.6964
           }
         ],
         "channels": 2,
-        "crest_factor_db": 17.378958,
-        "distinct_amplitudes": 24638,
+        "crest_factor_db": 17.039056,
+        "distinct_amplitudes": 24968,
         "duration_seconds": 7.000226757,
         "first_nonzero_frame": 0,
         "frames": 154355,
         "full_scale_samples": 0,
         "last_nonzero_frame": 126175,
-        "nonzero_fraction": 0.8095397,
-        "peak": 0.748840332,
-        "peak_dbfs": -2.512215,
+        "nonzero_fraction": 0.80952674,
+        "peak": 0.7269592285,
+        "peak_dbfs": -2.769799,
         "quarter_rms_dbfs": [
-          -16.305621,
-          -17.579653,
-          -38.42404,
+          -16.20425,
+          -17.522352,
+          -38.42254,
           -81.653108
         ],
-        "rms_dbfs": -19.891173,
+        "rms_dbfs": -19.808855,
         "sample_rate": 22050,
         "spectral_windows": [
           {
             "dominant_bin_hz": 333.7646,
-            "spectral_centroid_hz": 357.1568,
-            "spectral_flatness": 1.629e-05,
+            "spectral_centroid_hz": 354.7144,
+            "spectral_flatness": 2.012e-05,
             "start_frame": 30871,
             "window": "Hann",
             "window_frames": 2048
           },
           {
             "dominant_bin_hz": 215.332,
-            "spectral_centroid_hz": 182.7696,
-            "spectral_flatness": 3.9e-07,
+            "spectral_centroid_hz": 186.3562,
+            "spectral_flatness": 9.997e-05,
             "start_frame": 77177,
             "window": "Hann",
             "window_frames": 2048
@@ -2015,9 +2023,9 @@
             "window_frames": 2048
           }
         ],
-        "stereo_difference_rms": 0.0079527187
+        "stereo_difference_rms": 0.0110837193
       },
-      "size_bytes": 137021,
+      "size_bytes": 177962,
       "source_decode_verified": true,
       "source_file": 0,
       "source_group": 54,
@@ -2139,14 +2147,14 @@
         "bits_per_sample": 16,
         "codec": "FLAC",
         "decoded_pcm_hash_format": "s16le",
-        "decoded_pcm_sha256": "facc5a30b68bff1bf7bfb1fea3fdb659cdc4cddfef275e71e28bc7eccb438522",
+        "decoded_pcm_sha256": "724664bd5a796e5e0bc705d905d7922b1fb489a022f5e2c72aa2966eff44d883",
         "effective_source_bits": 16,
         "gain_denominator": 1,
         "gain_exactly_reversible": true,
         "gain_numerator": 1,
         "lossless_round_trip_verified": true,
         "native_full_scale_samples": 0,
-        "source_pcm_s16le_sha256": "facc5a30b68bff1bf7bfb1fea3fdb659cdc4cddfef275e71e28bc7eccb438522"
+        "source_pcm_s16le_sha256": "724664bd5a796e5e0bc705d905d7922b1fb489a022f5e2c72aa2966eff44d883"
       },
       "kind": "jingle",
       "live_trigger_and_presentation_accepted": false,
@@ -2163,41 +2171,41 @@
       "path": "assets/source/osrs/audio-runtime/jingle/56.flac",
       "provenance_record": "jingle-56",
       "reference_pcm_float32_channel_sha256": [
-        "1e9d5ee54d2780b5173dfb33740dd050be5589988ddf8067e699b29c14b33b96",
-        "1b2c79c9695b48fedbf4db86650edb541f9213af591c9b5a6ad0932e72066cc5"
+        "143db73b0dbf00af5c53607a5a3c0e43fb0c263fc0a6d26bb3ea88817cbfda33",
+        "8c18ba07d912c1259de6dedaf3b986b055faa38cba0853c9d75c192c4ea13aab"
       ],
-      "sha256": "9081f1fc3d0ece61031c06d04c4d5ec9bb455466dd7ddad5c7c8871b9d40a7cc",
+      "sha256": "b3d07b9e1bc84b5ee69252a81940f58165463e7d6c463d5ed2bc43ebceebb14d",
       "signal": {
         "channel_statistics": [
           {
-            "dc_offset": -0.0023991818,
-            "rms_dbfs": -23.272948,
-            "zero_crossings_per_second": 1922.3859
+            "dc_offset": -0.0024009756,
+            "rms_dbfs": -23.272833,
+            "zero_crossings_per_second": 2446.5177
           },
           {
-            "dc_offset": -0.0016297672,
-            "rms_dbfs": -23.903564,
-            "zero_crossings_per_second": 1648.9788
+            "dc_offset": -0.0016331259,
+            "rms_dbfs": -23.902856,
+            "zero_crossings_per_second": 2167.0132
           }
         ],
         "channels": 2,
-        "crest_factor_db": 16.987725,
+        "crest_factor_db": 16.987335,
         "distinct_amplitudes": 16939,
         "duration_seconds": 8.200272109,
         "first_nonzero_frame": 7829,
         "frames": 180816,
         "full_scale_samples": 0,
-        "last_nonzero_frame": 144514,
-        "nonzero_fraction": 0.75491384,
+        "last_nonzero_frame": 159039,
+        "nonzero_fraction": 0.79255154,
         "peak": 0.4683227539,
         "peak_dbfs": -6.589095,
         "quarter_rms_dbfs": [
           -22.945766,
           -20.449766,
           -24.606395,
-          -61.174908
+          -56.31034
         ],
-        "rms_dbfs": -23.57682,
+        "rms_dbfs": -23.57643,
         "sample_rate": 22050,
         "spectral_windows": [
           {
@@ -2217,9 +2225,9 @@
             "window_frames": 2048
           }
         ],
-        "stereo_difference_rms": 0.0160377507
+        "stereo_difference_rms": 0.0160444499
       },
-      "size_bytes": 334547,
+      "size_bytes": 347372,
       "source_decode_verified": true,
       "source_file": 0,
       "source_group": 56,
@@ -2236,14 +2244,14 @@
         "bits_per_sample": 16,
         "codec": "FLAC",
         "decoded_pcm_hash_format": "s16le",
-        "decoded_pcm_sha256": "7f35b0a26fc07c7c85d0eebbf5435a4f8b890ddafba97c4ab7be9c7139b715a8",
+        "decoded_pcm_sha256": "a5c9963807df2a023708c55bad82750a984161d3adefd4717543e7bd8f34c64e",
         "effective_source_bits": 16,
         "gain_denominator": 1,
         "gain_exactly_reversible": true,
         "gain_numerator": 1,
         "lossless_round_trip_verified": true,
         "native_full_scale_samples": 0,
-        "source_pcm_s16le_sha256": "7f35b0a26fc07c7c85d0eebbf5435a4f8b890ddafba97c4ab7be9c7139b715a8"
+        "source_pcm_s16le_sha256": "a5c9963807df2a023708c55bad82750a984161d3adefd4717543e7bd8f34c64e"
       },
       "kind": "jingle",
       "live_trigger_and_presentation_accepted": false,
@@ -2260,63 +2268,71 @@
       "path": "assets/source/osrs/audio-runtime/jingle/57.flac",
       "provenance_record": "jingle-57",
       "reference_pcm_float32_channel_sha256": [
-        "b285735f95901a606c74af5c18a810c6dc38c1213e5440f3c1d594941bd85ec2",
-        "e9ff98c85d9bb54faaeb97cf478770866803edb442b24a2b9da9e90d0d3367f7"
+        "06e4eb561eba889fd1e90ade31d5d263e131dcc8cc5b11316c2155912cb3772f",
+        "1bd63ad4d074e559a4e1ee8ca88cde0c6f9284e3522cfb45900ff9b7cf25a391"
       ],
-      "sha256": "b814a92ea0e860502c659192106d6a008ff89c51d0bb5cfa9d299f43d1ac48eb",
+      "sha256": "a0210da5921c7f4d394a1cac287a6a3e4c77e3dfc73d6c9b913c63586fd3ca55",
       "signal": {
         "channel_statistics": [
           {
-            "dc_offset": 0.0001107828,
-            "rms_dbfs": -27.327664,
-            "zero_crossings_per_second": 1098.4225
+            "dc_offset": -4.18242e-05,
+            "rms_dbfs": -27.278786,
+            "zero_crossings_per_second": 3248.0273
           },
           {
-            "dc_offset": 5.85998e-05,
-            "rms_dbfs": -28.37874,
-            "zero_crossings_per_second": 948.426
+            "dc_offset": -0.0001580813,
+            "rms_dbfs": -28.268804,
+            "zero_crossings_per_second": 3164.9258
           }
         ],
         "channels": 2,
-        "crest_factor_db": 19.78266,
-        "distinct_amplitudes": 12121,
+        "crest_factor_db": 19.862589,
+        "distinct_amplitudes": 12192,
         "duration_seconds": 5.800181406,
         "first_nonzero_frame": 0,
         "frames": 127894,
         "full_scale_samples": 0,
-        "last_nonzero_frame": 84448,
-        "nonzero_fraction": 0.60871503,
-        "peak": 0.3963317871,
-        "peak_dbfs": -8.038822,
+        "last_nonzero_frame": 105844,
+        "nonzero_fraction": 0.7654542,
+        "peak": 0.403503418,
+        "peak_dbfs": -7.883056,
         "quarter_rms_dbfs": [
-          -30.487651,
-          -29.617026,
-          -23.353876,
-          null
+          -30.267361,
+          -29.510292,
+          -23.313938,
+          -88.636267
         ],
-        "rms_dbfs": -27.821482,
+        "rms_dbfs": -27.745645,
         "sample_rate": 22050,
         "spectral_windows": [
           {
             "dominant_bin_hz": 441.4307,
-            "spectral_centroid_hz": 524.2092,
-            "spectral_flatness": 0.00030889,
+            "spectral_centroid_hz": 523.9032,
+            "spectral_flatness": 0.00032672,
             "start_frame": 25578,
             "window": "Hann",
             "window_frames": 2048
           },
           {
             "dominant_bin_hz": 441.4307,
-            "spectral_centroid_hz": 826.5758,
-            "spectral_flatness": 0.00236232,
+            "spectral_centroid_hz": 883.3558,
+            "spectral_flatness": 0.01599959,
             "start_frame": 63947,
+            "window": "Hann",
+            "window_frames": 2048
+          },
+          {
+            "dominant_bin_hz": 10.7666,
+            "spectral_centroid_hz": 4579.7755,
+            "spectral_flatness": 0.24249649,
+            "start_frame": 102315,
             "window": "Hann",
             "window_frames": 2048
           }
         ],
-        "stereo_difference_rms": 0.0298383075
+        "stereo_difference_rms": 0.0298736493
       },
-      "size_bytes": 143208,
+      "size_bytes": 182212,
       "source_decode_verified": true,
       "source_file": 0,
       "source_group": 57,
@@ -2333,14 +2349,14 @@
         "bits_per_sample": 16,
         "codec": "FLAC",
         "decoded_pcm_hash_format": "s16le",
-        "decoded_pcm_sha256": "45ac9e67b12e87d64da860a675eecee24b2cd41e813b198861affc25e040b1be",
+        "decoded_pcm_sha256": "429e27a28ea03cf39ddcfeb8bd47494fee34e79d96071cd27628091f22cdb180",
         "effective_source_bits": 16,
         "gain_denominator": 1,
         "gain_exactly_reversible": true,
         "gain_numerator": 1,
         "lossless_round_trip_verified": true,
         "native_full_scale_samples": 0,
-        "source_pcm_s16le_sha256": "45ac9e67b12e87d64da860a675eecee24b2cd41e813b198861affc25e040b1be"
+        "source_pcm_s16le_sha256": "429e27a28ea03cf39ddcfeb8bd47494fee34e79d96071cd27628091f22cdb180"
       },
       "kind": "jingle",
       "live_trigger_and_presentation_accepted": false,
@@ -2357,55 +2373,55 @@
       "path": "assets/source/osrs/audio-runtime/jingle/58.flac",
       "provenance_record": "jingle-58",
       "reference_pcm_float32_channel_sha256": [
-        "e95c42d0df828b9e5018018e972a6c7b59758916768c5b21cf14c17373fa0b3a",
-        "e2619a4009d826aca6f2edefc7d7de5762c0e9be7eb1b0359c7108abfbff903f"
+        "61ac1bb85930789baf47893998ff51bd01b3b8fa0c822c14e7184a598a9364d9",
+        "01f6d572caa1f09e1ee5796b53e34eb27573203a20243ff6bedaa2cb4055b55d"
       ],
-      "sha256": "e6325e4349c8546c3c3050d658a03820280a3e8e7f0d87bb5a74d5598a20337c",
+      "sha256": "305eeb780d6c2451761feddb2331e921b09c48384ce7229dc9f0df52c89a714c",
       "signal": {
         "channel_statistics": [
           {
-            "dc_offset": 9.39606e-05,
-            "rms_dbfs": -22.924756,
-            "zero_crossings_per_second": 1839.6098
+            "dc_offset": -0.000201312,
+            "rms_dbfs": -22.810243,
+            "zero_crossings_per_second": 1902.0289
           },
           {
-            "dc_offset": 2.53971e-05,
-            "rms_dbfs": -24.721162,
-            "zero_crossings_per_second": 1697.2562
+            "dc_offset": -0.0003906743,
+            "rms_dbfs": -24.285334,
+            "zero_crossings_per_second": 1860.6285
           }
         ],
         "channels": 2,
-        "crest_factor_db": 19.083232,
-        "distinct_amplitudes": 17682,
+        "crest_factor_db": 19.391602,
+        "distinct_amplitudes": 17926,
         "duration_seconds": 6.280181406,
         "first_nonzero_frame": 0,
         "frames": 138478,
         "full_scale_samples": 0,
         "last_nonzero_frame": 116430,
-        "nonzero_fraction": 0.83116813,
-        "peak": 0.5856323242,
-        "peak_dbfs": -4.647499,
+        "nonzero_fraction": 0.83128367,
+        "peak": 0.6241760254,
+        "peak_dbfs": -4.093858,
         "quarter_rms_dbfs": [
-          -24.446222,
-          -23.162057,
-          -20.694426,
-          -77.478221
+          -23.891387,
+          -22.800421,
+          -20.656078,
+          -77.467592
         ],
-        "rms_dbfs": -23.730731,
+        "rms_dbfs": -23.48546,
         "sample_rate": 22050,
         "spectral_windows": [
           {
             "dominant_bin_hz": 872.0947,
-            "spectral_centroid_hz": 1466.3475,
-            "spectral_flatness": 0.00554662,
+            "spectral_centroid_hz": 1487.7147,
+            "spectral_flatness": 0.01956192,
             "start_frame": 27695,
             "window": "Hann",
             "window_frames": 2048
           },
           {
             "dominant_bin_hz": 1754.9561,
-            "spectral_centroid_hz": 1174.774,
-            "spectral_flatness": 0.00309196,
+            "spectral_centroid_hz": 1209.8836,
+            "spectral_flatness": 0.01347732,
             "start_frame": 69239,
             "window": "Hann",
             "window_frames": 2048
@@ -2419,9 +2435,9 @@
             "window_frames": 2048
           }
         ],
-        "stereo_difference_rms": 0.0343291918
+        "stereo_difference_rms": 0.0350865731
       },
-      "size_bytes": 234781,
+      "size_bytes": 254161,
       "source_decode_verified": true,
       "source_file": 0,
       "source_group": 58,
@@ -2535,14 +2551,14 @@
         "bits_per_sample": 16,
         "codec": "FLAC",
         "decoded_pcm_hash_format": "s16le",
-        "decoded_pcm_sha256": "29267468d3478da525696e70c766de8b2a35b49495118d0e6f2b78121fa905e1",
+        "decoded_pcm_sha256": "3972328bedca226a2714a437bce51e2c8e0bb31dbe2da3e55b94b25b50588bb2",
         "effective_source_bits": 16,
         "gain_denominator": 1,
         "gain_exactly_reversible": true,
         "gain_numerator": 1,
         "lossless_round_trip_verified": true,
         "native_full_scale_samples": 0,
-        "source_pcm_s16le_sha256": "29267468d3478da525696e70c766de8b2a35b49495118d0e6f2b78121fa905e1"
+        "source_pcm_s16le_sha256": "3972328bedca226a2714a437bce51e2c8e0bb31dbe2da3e55b94b25b50588bb2"
       },
       "kind": "jingle",
       "live_trigger_and_presentation_accepted": false,
@@ -2559,41 +2575,41 @@
       "path": "assets/source/osrs/audio-runtime/jingle/64.flac",
       "provenance_record": "jingle-64",
       "reference_pcm_float32_channel_sha256": [
-        "41d85f2cf4000c63a261730022d76d963829388e937944e62f1cd9f52a6f4436",
-        "c22634c21fdcef932dadd9d3ceb3f85dcf848ce19c80703b21abc52ffcdf79aa"
+        "f71279d94051f35022ef20bd1774e15cd63c75838c51cefdaae133ee649514a6",
+        "3b3c5bffc734b835cc87e47d304143b268266e1afe3f485abcbb6d34048e036e"
       ],
-      "sha256": "e577cc9fdc94ee6dcb8601840f85f0abbcf2192939139d5ae8091c23b9e17b33",
+      "sha256": "2ef2b3167780bcd3e6e632071018784d8bb80cd90e7685074f2ff154a62eed57",
       "signal": {
         "channel_statistics": [
           {
-            "dc_offset": 0.0002265174,
-            "rms_dbfs": -24.926263,
-            "zero_crossings_per_second": 990.9261
+            "dc_offset": 0.0002229975,
+            "rms_dbfs": -24.924451,
+            "zero_crossings_per_second": 2181.7426
           },
           {
-            "dc_offset": 0.0002272202,
-            "rms_dbfs": -23.231406,
-            "zero_crossings_per_second": 1004.5047
+            "dc_offset": 0.0002236194,
+            "rms_dbfs": -23.22886,
+            "zero_crossings_per_second": 2230.0574
           }
         ],
         "channels": 2,
-        "crest_factor_db": 23.515471,
-        "distinct_amplitudes": 16917,
+        "crest_factor_db": 23.518263,
+        "distinct_amplitudes": 16932,
         "duration_seconds": 6.333514739,
         "first_nonzero_frame": 0,
         "frames": 139654,
         "full_scale_samples": 0,
-        "last_nonzero_frame": 74804,
-        "nonzero_fraction": 0.53457473,
-        "peak": 0.946105957,
-        "peak_dbfs": -0.481204,
+        "last_nonzero_frame": 87440,
+        "nonzero_fraction": 0.60405717,
+        "peak": 0.9466552734,
+        "peak_dbfs": -0.476163,
         "quarter_rms_dbfs": [
           -20.522233,
-          -21.506146,
-          -72.278633,
+          -21.501084,
+          -71.480003,
           null
         ],
-        "rms_dbfs": -23.996676,
+        "rms_dbfs": -23.994426,
         "sample_rate": 22050,
         "spectral_windows": [
           {
@@ -2606,16 +2622,16 @@
           },
           {
             "dominant_bin_hz": 43.0664,
-            "spectral_centroid_hz": 40.3282,
-            "spectral_flatness": 4.043e-05,
+            "spectral_centroid_hz": 611.3856,
+            "spectral_flatness": 0.01194406,
             "start_frame": 69827,
             "window": "Hann",
             "window_frames": 2048
           }
         ],
-        "stereo_difference_rms": 0.0287327726
+        "stereo_difference_rms": 0.0287337751
       },
-      "size_bytes": 163585,
+      "size_bytes": 179963,
       "source_decode_verified": true,
       "source_file": 0,
       "source_group": 64,
@@ -2632,14 +2648,14 @@
         "bits_per_sample": 16,
         "codec": "FLAC",
         "decoded_pcm_hash_format": "s16le",
-        "decoded_pcm_sha256": "eb753b3b2e058fc85656960013d3c245d7b6fccc60fab69b901255556a82f154",
+        "decoded_pcm_sha256": "bc6ec2da8a0ac4154ba85e849c19bdb44f1fb3ef8da1ba1007152a162e75126f",
         "effective_source_bits": 16,
         "gain_denominator": 1,
         "gain_exactly_reversible": true,
         "gain_numerator": 1,
         "lossless_round_trip_verified": true,
         "native_full_scale_samples": 0,
-        "source_pcm_s16le_sha256": "eb753b3b2e058fc85656960013d3c245d7b6fccc60fab69b901255556a82f154"
+        "source_pcm_s16le_sha256": "bc6ec2da8a0ac4154ba85e849c19bdb44f1fb3ef8da1ba1007152a162e75126f"
       },
       "kind": "jingle",
       "live_trigger_and_presentation_accepted": false,
@@ -2656,63 +2672,63 @@
       "path": "assets/source/osrs/audio-runtime/jingle/65.flac",
       "provenance_record": "jingle-65",
       "reference_pcm_float32_channel_sha256": [
-        "9614801d8fab62e62e197f2ee128157fecac7950ba8b9000fd9e80cd53b77095",
-        "f7f680d1ad31d4f0b276244cb9b81ef622f9ea3032deacfcaf7a6635024e3860"
+        "50f8c0c9e14f266871e336798566b7c2e829b1dc810704acf99c51f1bff5d7e0",
+        "53af5c00791f31996333d0f42baf4dc9306c82e630c8ad2a72545e58cc55b7b2"
       ],
-      "sha256": "157002ced74c4da4504b4d7d8b176df0bfca287b0495a1455cb4a9f8352a3f0c",
+      "sha256": "52d613d0d1a92bb12c00b1c66922554351e6636afff935d43ae89f182eeeb5d6",
       "signal": {
         "channel_statistics": [
           {
-            "dc_offset": 8.4549e-05,
-            "rms_dbfs": -21.459641,
-            "zero_crossings_per_second": 790.1224
+            "dc_offset": 4.86702e-05,
+            "rms_dbfs": -21.449029,
+            "zero_crossings_per_second": 1239.5393
           },
           {
-            "dc_offset": 7.82512e-05,
-            "rms_dbfs": -21.117564,
-            "zero_crossings_per_second": 805.2648
+            "dc_offset": 5.0998e-05,
+            "rms_dbfs": -21.108248,
+            "zero_crossings_per_second": 1246.682
           }
         ],
         "channels": 2,
-        "crest_factor_db": 18.679422,
-        "distinct_amplitudes": 21553,
+        "crest_factor_db": 18.616004,
+        "distinct_amplitudes": 21545,
         "duration_seconds": 7.000226757,
         "first_nonzero_frame": 0,
         "frames": 154355,
         "full_scale_samples": 0,
         "last_nonzero_frame": 122693,
-        "nonzero_fraction": 0.68615205,
-        "peak": 0.740814209,
-        "peak_dbfs": -2.605814,
+        "nonzero_fraction": 0.68622979,
+        "peak": 0.7362670898,
+        "peak_dbfs": -2.659292,
         "quarter_rms_dbfs": [
-          -21.618296,
-          -16.949309,
-          -25.723076,
+          -21.597928,
+          -16.941616,
+          -25.723085,
           -99.990015
         ],
-        "rms_dbfs": -21.285236,
+        "rms_dbfs": -21.275297,
         "sample_rate": 22050,
         "spectral_windows": [
           {
             "dominant_bin_hz": 75.3662,
-            "spectral_centroid_hz": 232.8374,
-            "spectral_flatness": 0.00024583,
+            "spectral_centroid_hz": 234.159,
+            "spectral_flatness": 0.0005008,
             "start_frame": 30871,
             "window": "Hann",
             "window_frames": 2048
           },
           {
             "dominant_bin_hz": 742.8955,
-            "spectral_centroid_hz": 617.1736,
-            "spectral_flatness": 0.0007098,
+            "spectral_centroid_hz": 617.1772,
+            "spectral_flatness": 0.00071929,
             "start_frame": 77177,
             "window": "Hann",
             "window_frames": 2048
           }
         ],
-        "stereo_difference_rms": 0.016126181
+        "stereo_difference_rms": 0.0161319832
       },
-      "size_bytes": 170356,
+      "size_bytes": 192263,
       "source_decode_verified": true,
       "source_file": 0,
       "source_group": 65,
@@ -2729,14 +2745,14 @@
         "bits_per_sample": 16,
         "codec": "FLAC",
         "decoded_pcm_hash_format": "s16le",
-        "decoded_pcm_sha256": "d7615cab284aad2376be8471d9ea7212623b819969f47e33f19f581b163cb0f7",
+        "decoded_pcm_sha256": "3dc0231c52120f3a2066a1d55623df3e96c69ec7f2ffa97981d52d75a376f8e4",
         "effective_source_bits": 16,
         "gain_denominator": 1,
         "gain_exactly_reversible": true,
         "gain_numerator": 1,
         "lossless_round_trip_verified": true,
         "native_full_scale_samples": 0,
-        "source_pcm_s16le_sha256": "d7615cab284aad2376be8471d9ea7212623b819969f47e33f19f581b163cb0f7"
+        "source_pcm_s16le_sha256": "3dc0231c52120f3a2066a1d55623df3e96c69ec7f2ffa97981d52d75a376f8e4"
       },
       "kind": "jingle",
       "live_trigger_and_presentation_accepted": false,
@@ -2753,63 +2769,63 @@
       "path": "assets/source/osrs/audio-runtime/jingle/69.flac",
       "provenance_record": "jingle-69",
       "reference_pcm_float32_channel_sha256": [
-        "687b390d06bbe23c4c40e5b4e7e110344ea2347e00c51eca5317029878d86f5b",
-        "87267d997be30cc1f2d208f4cfab645a1d4206ea9d5d3eb150d417d112d85611"
+        "6ba1081c1282fe92986180f02dc2730587b0ee930b80d099cf4262a2c28423ad",
+        "ffb406b4defee86d6217eec7d2a921e34953edbf9ad71befc2551f6e91e680cd"
       ],
-      "sha256": "86171095ee54dd21dff8ca18f9eeff35d935b3961135aefc36da87963eb2270f",
+      "sha256": "e6fdc2bdedf8b087642ca78dc55ba294cb582956289f5c299da371405c02957d",
       "signal": {
         "channel_statistics": [
           {
-            "dc_offset": 5.6765e-06,
-            "rms_dbfs": -32.591887,
-            "zero_crossings_per_second": 1601.3871
+            "dc_offset": -0.0002396324,
+            "rms_dbfs": -32.186651,
+            "zero_crossings_per_second": 2440.2225
           },
           {
-            "dc_offset": 1.42498e-05,
-            "rms_dbfs": -32.71558,
-            "zero_crossings_per_second": 1564.8166
+            "dc_offset": -0.000237582,
+            "rms_dbfs": -32.253186,
+            "zero_crossings_per_second": 2442.5081
           }
         ],
         "channels": 2,
-        "crest_factor_db": 21.559416,
-        "distinct_amplitudes": 7960,
+        "crest_factor_db": 21.212944,
+        "distinct_amplitudes": 8126,
         "duration_seconds": 7.000226757,
         "first_nonzero_frame": 0,
         "frames": 154355,
         "full_scale_samples": 0,
         "last_nonzero_frame": 113011,
-        "nonzero_fraction": 0.66532668,
-        "peak": 0.2788085938,
-        "peak_dbfs": -11.093877,
+        "nonzero_fraction": 0.72264261,
+        "peak": 0.2816162109,
+        "peak_dbfs": -11.006847,
         "quarter_rms_dbfs": [
-          -32.50093,
-          -30.073013,
-          -32.035608,
+          -31.406116,
+          -29.795633,
+          -32.022586,
           null
         ],
-        "rms_dbfs": -32.653293,
+        "rms_dbfs": -32.219791,
         "sample_rate": 22050,
         "spectral_windows": [
           {
             "dominant_bin_hz": 258.3984,
-            "spectral_centroid_hz": 1078.62,
-            "spectral_flatness": 0.00631511,
+            "spectral_centroid_hz": 1446.8302,
+            "spectral_flatness": 0.06985672,
             "start_frame": 30871,
             "window": "Hann",
             "window_frames": 2048
           },
           {
             "dominant_bin_hz": 785.9619,
-            "spectral_centroid_hz": 914.0753,
-            "spectral_flatness": 0.00110622,
+            "spectral_centroid_hz": 914.0772,
+            "spectral_flatness": 0.00110528,
             "start_frame": 77177,
             "window": "Hann",
             "window_frames": 2048
           }
         ],
-        "stereo_difference_rms": 0.0072392416
+        "stereo_difference_rms": 0.0072515044
       },
-      "size_bytes": 169890,
+      "size_bytes": 200601,
       "source_decode_verified": true,
       "source_file": 0,
       "source_group": 69,
@@ -2826,14 +2842,14 @@
         "bits_per_sample": 16,
         "codec": "FLAC",
         "decoded_pcm_hash_format": "s16le",
-        "decoded_pcm_sha256": "47980555b8aa755722c2fcf73773a50a9164c8caee83283b82a1af8e16c659b0",
+        "decoded_pcm_sha256": "803f0cdca888e84f2b6facc3a446c78d8c192ae6937c1a11e8415383083bc3d8",
         "effective_source_bits": 16,
         "gain_denominator": 1,
         "gain_exactly_reversible": true,
         "gain_numerator": 1,
         "lossless_round_trip_verified": true,
         "native_full_scale_samples": 0,
-        "source_pcm_s16le_sha256": "47980555b8aa755722c2fcf73773a50a9164c8caee83283b82a1af8e16c659b0"
+        "source_pcm_s16le_sha256": "803f0cdca888e84f2b6facc3a446c78d8c192ae6937c1a11e8415383083bc3d8"
       },
       "kind": "jingle",
       "live_trigger_and_presentation_accepted": false,
@@ -2850,63 +2866,71 @@
       "path": "assets/source/osrs/audio-runtime/jingle/70.flac",
       "provenance_record": "jingle-70",
       "reference_pcm_float32_channel_sha256": [
-        "921179abdd81dabc22875a28454067d4dd1c2bcc012f9b1e1e539e0223aaa679",
-        "db07f027e7b1f629dae42e5f8423c6e9d39b33f9761c9fb9bb92d03b36eb638a"
+        "e338b2b4148c22092db81f9ebb88a612b3821b14c5442a5cf87c4c6cc554a331",
+        "351537b5b966686830e79f589f2466bed1599928eaa7b567315df2c81906d013"
       ],
-      "sha256": "80fdd4c9b2d2228158c8429d0aa06f9e0c66363f007edccc74e4678768aec678",
+      "sha256": "0684af2adfe29a3deeecfae86ebd4a15a44236359faf404ad601e092f46b4ee7",
       "signal": {
         "channel_statistics": [
           {
-            "dc_offset": 2.02215e-05,
-            "rms_dbfs": -28.890871,
-            "zero_crossings_per_second": 1084.9741
+            "dc_offset": -0.0002167747,
+            "rms_dbfs": -28.721486,
+            "zero_crossings_per_second": 2749.9344
           },
           {
-            "dc_offset": 5.08378e-05,
-            "rms_dbfs": -29.502794,
-            "zero_crossings_per_second": 1132.3414
+            "dc_offset": -0.0002055638,
+            "rms_dbfs": -29.256485,
+            "zero_crossings_per_second": 3318.8681
           }
         ],
         "channels": 2,
-        "crest_factor_db": 20.18044,
-        "distinct_amplitudes": 10815,
+        "crest_factor_db": 19.958667,
+        "distinct_amplitudes": 10984,
         "duration_seconds": 7.600226757,
         "first_nonzero_frame": 0,
         "frames": 167585,
         "full_scale_samples": 0,
-        "last_nonzero_frame": 113011,
-        "nonzero_fraction": 0.67317182,
-        "peak": 0.3545837402,
-        "peak_dbfs": -9.005624,
+        "last_nonzero_frame": 136392,
+        "nonzero_fraction": 0.79547692,
+        "peak": 0.3539123535,
+        "peak_dbfs": -9.022086,
         "quarter_rms_dbfs": [
-          -27.990715,
-          -25.35823,
-          -34.889805,
-          null
+          -27.550543,
+          -25.286861,
+          -34.682111,
+          -88.56134
         ],
-        "rms_dbfs": -29.186064,
+        "rms_dbfs": -28.980753,
         "sample_rate": 22050,
         "spectral_windows": [
           {
             "dominant_bin_hz": 710.5957,
-            "spectral_centroid_hz": 779.4885,
-            "spectral_flatness": 0.00050765,
+            "spectral_centroid_hz": 1004.3219,
+            "spectral_flatness": 0.0274978,
             "start_frame": 33517,
             "window": "Hann",
             "window_frames": 2048
           },
           {
             "dominant_bin_hz": 1173.5596,
-            "spectral_centroid_hz": 915.068,
-            "spectral_flatness": 0.00207177,
+            "spectral_centroid_hz": 915.632,
+            "spectral_flatness": 0.00265116,
             "start_frame": 83792,
+            "window": "Hann",
+            "window_frames": 2048
+          },
+          {
+            "dominant_bin_hz": 10.7666,
+            "spectral_centroid_hz": 2475.8598,
+            "spectral_flatness": 0.16772862,
+            "start_frame": 134068,
             "window": "Hann",
             "window_frames": 2048
           }
         ],
-        "stereo_difference_rms": 0.0189792358
+        "stereo_difference_rms": 0.0190436592
       },
-      "size_bytes": 199407,
+      "size_bytes": 253477,
       "source_decode_verified": true,
       "source_file": 0,
       "source_group": 70,
@@ -3117,14 +3141,14 @@
         "bits_per_sample": 16,
         "codec": "FLAC",
         "decoded_pcm_hash_format": "s16le",
-        "decoded_pcm_sha256": "e74f70297f183df598607b8651f8f4152b25a22b2eabc8922dbacc2e084552ef",
+        "decoded_pcm_sha256": "6996222918a8d14a120ae12fad82f9504e2339b6047ee72b7408319fb6497b73",
         "effective_source_bits": 16,
         "gain_denominator": 1,
         "gain_exactly_reversible": true,
         "gain_numerator": 1,
         "lossless_round_trip_verified": true,
         "native_full_scale_samples": 0,
-        "source_pcm_s16le_sha256": "e74f70297f183df598607b8651f8f4152b25a22b2eabc8922dbacc2e084552ef"
+        "source_pcm_s16le_sha256": "6996222918a8d14a120ae12fad82f9504e2339b6047ee72b7408319fb6497b73"
       },
       "kind": "jingle",
       "live_trigger_and_presentation_accepted": false,
@@ -3141,55 +3165,55 @@
       "path": "assets/source/osrs/audio-runtime/jingle/152.flac",
       "provenance_record": "jingle-152",
       "reference_pcm_float32_channel_sha256": [
-        "e745625929b072166212aff9ac8c92d22a237a958164b08d1fc3fc2d51ee1019",
-        "1cff7524c8bece255abd71a9fd7be6a99c8952f9c152d2d510b47db6f78221a2"
+        "9774b784c39c53d8bd58eaedff5dff3079831a8a8bcddab3b9f73c30ad027d10",
+        "1c19c884b4bb827b98b278b7a4518d6b42abc845695794f544dff2dde9202f6d"
       ],
-      "sha256": "871fd4fe5564a1bafdb57428451a0da03d9ad005d90b9d666b81dbcdffc20595",
+      "sha256": "a8d2b88d773a79932902ff93a2e179079081eb9d269489813355f902bcf24f20",
       "signal": {
         "channel_statistics": [
           {
-            "dc_offset": -2.2587e-05,
-            "rms_dbfs": -23.899335,
-            "zero_crossings_per_second": 2664.6732
+            "dc_offset": -8.45433e-05,
+            "rms_dbfs": -23.878979,
+            "zero_crossings_per_second": 2734.9347
           },
           {
-            "dc_offset": -2.35717e-05,
-            "rms_dbfs": -23.313325,
-            "zero_crossings_per_second": 2680.4623
+            "dc_offset": -8.84834e-05,
+            "rms_dbfs": -23.294111,
+            "zero_crossings_per_second": 2741.5135
           }
         ],
         "channels": 2,
-        "crest_factor_db": 17.531207,
-        "distinct_amplitudes": 16461,
+        "crest_factor_db": 17.50293,
+        "distinct_amplitudes": 16526,
         "duration_seconds": 7.600226757,
         "first_nonzero_frame": 0,
         "frames": 167585,
         "full_scale_samples": 0,
         "last_nonzero_frame": 139249,
-        "nonzero_fraction": 0.8293821,
-        "peak": 0.4974365234,
-        "peak_dbfs": -6.065247,
+        "nonzero_fraction": 0.82928663,
+        "peak": 0.4969482422,
+        "peak_dbfs": -6.073777,
         "quarter_rms_dbfs": [
-          -23.162598,
-          -20.858362,
-          -23.52635,
+          -23.147606,
+          -20.825167,
+          -23.526372,
           -60.574384
         ],
-        "rms_dbfs": -23.596454,
+        "rms_dbfs": -23.576707,
         "sample_rate": 22050,
         "spectral_windows": [
           {
             "dominant_bin_hz": 527.5635,
-            "spectral_centroid_hz": 500.8111,
-            "spectral_flatness": 0.00018858,
+            "spectral_centroid_hz": 500.8353,
+            "spectral_flatness": 0.0002046,
             "start_frame": 33517,
             "window": "Hann",
             "window_frames": 2048
           },
           {
             "dominant_bin_hz": 796.7285,
-            "spectral_centroid_hz": 637.9872,
-            "spectral_flatness": 0.0124692,
+            "spectral_centroid_hz": 638.1222,
+            "spectral_flatness": 0.01248487,
             "start_frame": 83792,
             "window": "Hann",
             "window_frames": 2048
@@ -3203,9 +3227,9 @@
             "window_frames": 2048
           }
         ],
-        "stereo_difference_rms": 0.0266844471
+        "stereo_difference_rms": 0.0266850121
       },
-      "size_bytes": 287287,
+      "size_bytes": 293760,
       "source_decode_verified": true,
       "source_file": 0,
       "source_group": 152,
@@ -3222,14 +3246,14 @@
         "bits_per_sample": 16,
         "codec": "FLAC",
         "decoded_pcm_hash_format": "s16le",
-        "decoded_pcm_sha256": "328512a7932c2acb843ffa6199e395ac5d09af0c28898fdb4e5ff7f75b3f37f4",
+        "decoded_pcm_sha256": "e0acd6aec17a12fe406d7f68801c47a2464fcc4c22064796e5aa777d529c8276",
         "effective_source_bits": 16,
         "gain_denominator": 1,
         "gain_exactly_reversible": true,
         "gain_numerator": 1,
         "lossless_round_trip_verified": true,
         "native_full_scale_samples": 0,
-        "source_pcm_s16le_sha256": "328512a7932c2acb843ffa6199e395ac5d09af0c28898fdb4e5ff7f75b3f37f4"
+        "source_pcm_s16le_sha256": "e0acd6aec17a12fe406d7f68801c47a2464fcc4c22064796e5aa777d529c8276"
       },
       "kind": "jingle",
       "live_trigger_and_presentation_accepted": false,
@@ -3246,41 +3270,41 @@
       "path": "assets/source/osrs/audio-runtime/jingle/153.flac",
       "provenance_record": "jingle-153",
       "reference_pcm_float32_channel_sha256": [
-        "f2ad3667c442f18a867f4e80891b69309d2cf147702420180e46612c16b736a2",
-        "b683f25cd4fcec1332c7e0a865681b17e080b6821bf87f68c98a24703418369a"
+        "efd0bbe2074fdd056bb4faae87e6bf5940ab3bfadbfb8f536d767e3de9411832",
+        "1e0cba1986a7e1ea7cdd769d915545d9581ad4aea027c9cee0dc2b1146d07427"
       ],
-      "sha256": "e8b16effb77113ab3f83d211756f39375107b15553f352c47e2e934088696e63",
+      "sha256": "ea160212a16c8379767150985c83771f307de641d334f117e9a819a1829db892",
       "signal": {
         "channel_statistics": [
           {
-            "dc_offset": 5.0697e-06,
-            "rms_dbfs": -33.580808,
-            "zero_crossings_per_second": 2641.7108
+            "dc_offset": 2.112e-06,
+            "rms_dbfs": -33.562969,
+            "zero_crossings_per_second": 3769.7146
           },
           {
-            "dc_offset": -4.447e-07,
-            "rms_dbfs": -34.691437,
-            "zero_crossings_per_second": 2689.2095
+            "dc_offset": -3.4086e-06,
+            "rms_dbfs": -34.668463,
+            "zero_crossings_per_second": 3825.0702
           }
         ],
         "channels": 2,
-        "crest_factor_db": 24.188991,
-        "distinct_amplitudes": 7487,
+        "crest_factor_db": 24.168911,
+        "distinct_amplitudes": 7472,
         "duration_seconds": 11.200362812,
         "first_nonzero_frame": 0,
         "frames": 246968,
         "full_scale_samples": 0,
-        "last_nonzero_frame": 177073,
-        "nonzero_fraction": 0.71571418,
+        "last_nonzero_frame": 198091,
+        "nonzero_fraction": 0.78229568,
         "peak": 0.3194580078,
         "peak_dbfs": -9.911724,
         "quarter_rms_dbfs": [
           -35.27031,
-          -31.695877,
-          -32.35037,
-          null
+          -31.693472,
+          -32.299666,
+          -91.485611
         ],
-        "rms_dbfs": -34.100716,
+        "rms_dbfs": -34.080635,
         "sample_rate": 22050,
         "spectral_windows": [
           {
@@ -3293,16 +3317,24 @@
           },
           {
             "dominant_bin_hz": 1173.5596,
-            "spectral_centroid_hz": 985.0852,
-            "spectral_flatness": 0.00114868,
+            "spectral_centroid_hz": 1033.0524,
+            "spectral_flatness": 0.00510739,
             "start_frame": 123484,
+            "window": "Hann",
+            "window_frames": 2048
+          },
+          {
+            "dominant_bin_hz": 10.7666,
+            "spectral_centroid_hz": 3288.9929,
+            "spectral_flatness": 0.26777085,
+            "start_frame": 197574,
             "window": "Hann",
             "window_frames": 2048
           }
         ],
-        "stereo_difference_rms": 0.0051745653
+        "stereo_difference_rms": 0.0051745545
       },
-      "size_bytes": 319930,
+      "size_bytes": 329464,
       "source_decode_verified": true,
       "source_file": 0,
       "source_group": 153,
@@ -3319,14 +3351,14 @@
         "bits_per_sample": 16,
         "codec": "FLAC",
         "decoded_pcm_hash_format": "s16le",
-        "decoded_pcm_sha256": "0fd1b84376cb3d181a85a1971f6062e1a5a36cc5d2c2e3833113ba284bf99493",
+        "decoded_pcm_sha256": "2f0e25907aa3533a590040924165e48b2bd37ab70a57eee27c054777abc0504e",
         "effective_source_bits": 16,
         "gain_denominator": 1,
         "gain_exactly_reversible": true,
         "gain_numerator": 1,
         "lossless_round_trip_verified": true,
         "native_full_scale_samples": 0,
-        "source_pcm_s16le_sha256": "0fd1b84376cb3d181a85a1971f6062e1a5a36cc5d2c2e3833113ba284bf99493"
+        "source_pcm_s16le_sha256": "2f0e25907aa3533a590040924165e48b2bd37ab70a57eee27c054777abc0504e"
       },
       "kind": "jingle",
       "live_trigger_and_presentation_accepted": false,
@@ -3343,41 +3375,41 @@
       "path": "assets/source/osrs/audio-runtime/jingle/154.flac",
       "provenance_record": "jingle-154",
       "reference_pcm_float32_channel_sha256": [
-        "2e189d48f5a2c232423196a0c172af82686fe465930db2e7b1b3cf138a139b42",
-        "261295b9e0340604ee3b4787c4f4bb9602703690345a554c2cf2ed9bd7a42e62"
+        "37bb09fe2c0c4592e0bc967130815e4f240e52c911fb9cd425c6b2044e42d0ca",
+        "01b461b4f614f68720c2f130357ee6916b2b7526393427b2cdbe1bf1124f3271"
       ],
-      "sha256": "02ae35e35ba8168d24407909320debc885b81541e62096a96150b7230965bf8b",
+      "sha256": "faa349fd7ff508b00b00d80a2605f51d60ff02ad38dc5d4433bee2394e25ae41",
       "signal": {
         "channel_statistics": [
           {
-            "dc_offset": 3.44445e-05,
-            "rms_dbfs": -23.610092,
-            "zero_crossings_per_second": 1480.2474
+            "dc_offset": 2.76573e-05,
+            "rms_dbfs": -23.579612,
+            "zero_crossings_per_second": 1553.9597
           },
           {
-            "dc_offset": 2.75851e-05,
-            "rms_dbfs": -24.954492,
-            "zero_crossings_per_second": 1405.1064
+            "dc_offset": 2.33091e-05,
+            "rms_dbfs": -24.938806,
+            "zero_crossings_per_second": 1447.3911
           }
         ],
         "channels": 2,
-        "crest_factor_db": 18.290613,
-        "distinct_amplitudes": 16573,
+        "crest_factor_db": 18.709237,
+        "distinct_amplitudes": 16572,
         "duration_seconds": 7.000226757,
         "first_nonzero_frame": 1287,
         "frames": 154355,
         "full_scale_samples": 0,
         "last_nonzero_frame": 120078,
-        "nonzero_fraction": 0.74210424,
-        "peak": 0.5046691895,
-        "peak_dbfs": -5.939864,
+        "nonzero_fraction": 0.74209776,
+        "peak": 0.5310668945,
+        "peak_dbfs": -5.497015,
         "quarter_rms_dbfs": [
           -23.357801,
-          -20.928919,
-          -26.177347,
+          -20.883887,
+          -26.176787,
           -103.08799
         ],
-        "rms_dbfs": -24.230477,
+        "rms_dbfs": -24.206252,
         "sample_rate": 22050,
         "spectral_windows": [
           {
@@ -3390,16 +3422,16 @@
           },
           {
             "dominant_bin_hz": 75.3662,
-            "spectral_centroid_hz": 421.4751,
-            "spectral_flatness": 0.00120842,
+            "spectral_centroid_hz": 422.3691,
+            "spectral_flatness": 0.00157692,
             "start_frame": 77177,
             "window": "Hann",
             "window_frames": 2048
           }
         ],
-        "stereo_difference_rms": 0.0189743933
+        "stereo_difference_rms": 0.0190940644
       },
-      "size_bytes": 211538,
+      "size_bytes": 218937,
       "source_decode_verified": true,
       "source_file": 0,
       "source_group": 154,
@@ -4532,6 +4564,278 @@
       }
     },
     {
+      "asset_id": "asset.source.osrs.cache2695.audio-runtime.sfx.469",
+      "encoding": {
+        "bits_per_sample": 24,
+        "codec": "FLAC",
+        "decoded_pcm_hash_format": "s32le-left-aligned",
+        "decoded_pcm_sha256": "2a1cf796a8f1ead3b12709b4cd629cbe7bea08155f83a655030afebb53a5fa4e",
+        "effective_source_bits": 16,
+        "gain_denominator": 2,
+        "gain_exactly_reversible": true,
+        "gain_numerator": 1,
+        "lossless_round_trip_verified": true,
+        "native_full_scale_samples": 0,
+        "source_pcm_s16le_sha256": "6d1d013df0e577922bb01a730e4641b6fa63917f7fc0a1d6dfbc4cd665442890"
+      },
+      "kind": "sfx",
+      "live_trigger_and_presentation_accepted": false,
+      "loop": {
+        "event_repeat_count": null,
+        "loop_end_frame": 0,
+        "loop_start_frame": 0,
+        "ping_pong_loop": false
+      },
+      "name": "Original sound 469",
+      "path": "assets/source/osrs/audio-runtime/sfx/469.flac",
+      "provenance_record": "sfx-469",
+      "reference_pcm_float32_channel_sha256": [
+        "c436057eeb300c0f2a64458ff2585814d8c5b814b19dfa7e8524a3ef0f72c386"
+      ],
+      "sha256": "64abc8c2a73e48daddc39cdf92bc894633e972146248fd1b582241d22b630146",
+      "signal": {
+        "channel_statistics": [
+          {
+            "dc_offset": 6.47282e-05,
+            "rms_dbfs": -23.816507,
+            "zero_crossings_per_second": 696.7193
+          }
+        ],
+        "channels": 1,
+        "crest_factor_db": 13.617124,
+        "distinct_amplitudes": 3113,
+        "duration_seconds": 0.6,
+        "first_nonzero_frame": 9923,
+        "frames": 13230,
+        "full_scale_samples": 0,
+        "last_nonzero_frame": 13227,
+        "nonzero_fraction": 0.24981104,
+        "peak": 0.3090515137,
+        "peak_dbfs": -10.199382,
+        "quarter_rms_dbfs": [
+          null,
+          null,
+          null,
+          -17.796563
+        ],
+        "rms_dbfs": -23.816507,
+        "sample_rate": 22050,
+        "spectral_windows": [
+          {
+            "dominant_bin_hz": 785.9619,
+            "spectral_centroid_hz": 1344.0835,
+            "spectral_flatness": 0.00026025,
+            "start_frame": 10584,
+            "window": "Hann",
+            "window_frames": 2048
+          }
+        ],
+        "stereo_difference_rms": null
+      },
+      "size_bytes": 4211,
+      "source_decode_verified": true,
+      "source_file": 0,
+      "source_group": 469,
+      "source_index": 4,
+      "source_input": {
+        "path": "raw/4/469/0.bin",
+        "sha256": "e8abd92b6bf224f56aa37292a28e5572133f6e46c9c115779278d6b667fa06fa",
+        "size_bytes": 118
+      }
+    },
+    {
+      "asset_id": "asset.source.osrs.cache2695.audio-runtime.sfx.471",
+      "encoding": {
+        "bits_per_sample": 24,
+        "codec": "FLAC",
+        "decoded_pcm_hash_format": "s32le-left-aligned",
+        "decoded_pcm_sha256": "37af3d9b575ca6bd1b5f9b43e38c880772ca7a1b933f7b76f303402fe6a292af",
+        "effective_source_bits": 16,
+        "gain_denominator": 2,
+        "gain_exactly_reversible": true,
+        "gain_numerator": 1,
+        "lossless_round_trip_verified": true,
+        "native_full_scale_samples": 0,
+        "source_pcm_s16le_sha256": "24a20c1e078fd950169fcf965f93275b0c08f95bfe83fff766acc0dc2b2628e4"
+      },
+      "kind": "sfx",
+      "live_trigger_and_presentation_accepted": false,
+      "loop": {
+        "event_repeat_count": null,
+        "loop_end_frame": 0,
+        "loop_start_frame": 0,
+        "ping_pong_loop": false
+      },
+      "name": "Original sound 471",
+      "path": "assets/source/osrs/audio-runtime/sfx/471.flac",
+      "provenance_record": "sfx-471",
+      "reference_pcm_float32_channel_sha256": [
+        "7ab8d5b877948e7483ddb7d7bfdf9a2268b04321d73e439bd79a6b80d1fc8f40"
+      ],
+      "sha256": "40f8e5f752d75ad5f41141f43ccb408c61add4d781f500fbc51fc5100858d964",
+      "signal": {
+        "channel_statistics": [
+          {
+            "dc_offset": -6.30243e-05,
+            "rms_dbfs": -18.98798,
+            "zero_crossings_per_second": 2266.7809
+          }
+        ],
+        "channels": 1,
+        "crest_factor_db": 9.46885,
+        "distinct_amplitudes": 13023,
+        "duration_seconds": 0.9,
+        "first_nonzero_frame": 1,
+        "frames": 19845,
+        "full_scale_samples": 0,
+        "last_nonzero_frame": 19837,
+        "nonzero_fraction": 0.99909297,
+        "peak": 0.3342285156,
+        "peak_dbfs": -9.51913,
+        "quarter_rms_dbfs": [
+          -19.117233,
+          -16.266383,
+          -18.526634,
+          -32.353861
+        ],
+        "rms_dbfs": -18.98798,
+        "sample_rate": 22050,
+        "spectral_windows": [
+          {
+            "dominant_bin_hz": 678.2959,
+            "spectral_centroid_hz": 1136.6883,
+            "spectral_flatness": 0.00046503,
+            "start_frame": 3969,
+            "window": "Hann",
+            "window_frames": 2048
+          },
+          {
+            "dominant_bin_hz": 699.8291,
+            "spectral_centroid_hz": 1187.53,
+            "spectral_flatness": 0.00011755,
+            "start_frame": 9922,
+            "window": "Hann",
+            "window_frames": 2048
+          },
+          {
+            "dominant_bin_hz": 624.4629,
+            "spectral_centroid_hz": 1042.5459,
+            "spectral_flatness": 1.68e-05,
+            "start_frame": 15876,
+            "window": "Hann",
+            "window_frames": 2048
+          }
+        ],
+        "stereo_difference_rms": null
+      },
+      "size_bytes": 20048,
+      "source_decode_verified": true,
+      "source_file": 0,
+      "source_group": 471,
+      "source_index": 4,
+      "source_input": {
+        "path": "raw/4/471/0.bin",
+        "sha256": "491ba7c1aa54fbd62c82fa72b716d33e259897cd0a85e3cdf49272d9c8efac49",
+        "size_bytes": 122
+      }
+    },
+    {
+      "asset_id": "asset.source.osrs.cache2695.audio-runtime.sfx.472",
+      "encoding": {
+        "bits_per_sample": 24,
+        "codec": "FLAC",
+        "decoded_pcm_hash_format": "s32le-left-aligned",
+        "decoded_pcm_sha256": "1c6d04f3a1c3c2357ba91b1eedf9e5cd7187fd89a76b18e3285c7cbc3e17d985",
+        "effective_source_bits": 16,
+        "gain_denominator": 2,
+        "gain_exactly_reversible": true,
+        "gain_numerator": 1,
+        "lossless_round_trip_verified": true,
+        "native_full_scale_samples": 0,
+        "source_pcm_s16le_sha256": "fa09e5af199b1264d9c70ab7421a30c45cbfad01f220c7755c877fd83fa78459"
+      },
+      "kind": "sfx",
+      "live_trigger_and_presentation_accepted": false,
+      "loop": {
+        "event_repeat_count": null,
+        "loop_end_frame": 0,
+        "loop_start_frame": 0,
+        "ping_pong_loop": false
+      },
+      "name": "Original sound 472",
+      "path": "assets/source/osrs/audio-runtime/sfx/472.flac",
+      "provenance_record": "sfx-472",
+      "reference_pcm_float32_channel_sha256": [
+        "9ffdd691add6bfae699cd27bb9ceab7eeb92fceb28fd0039dd6ac9e32e49687c"
+      ],
+      "sha256": "0bd1ada667a72ba24fc74fd67b4dc02f337339838d68ec5c2dea03ba73c4f6d7",
+      "signal": {
+        "channel_statistics": [
+          {
+            "dc_offset": 4.26849e-05,
+            "rms_dbfs": -19.247627,
+            "zero_crossings_per_second": 920.4174
+          }
+        ],
+        "channels": 1,
+        "crest_factor_db": 10.811614,
+        "distinct_amplitudes": 2949,
+        "duration_seconds": 0.149977324,
+        "first_nonzero_frame": 1,
+        "frames": 3307,
+        "full_scale_samples": 0,
+        "last_nonzero_frame": 3305,
+        "nonzero_fraction": 0.99909283,
+        "peak": 0.378616333,
+        "peak_dbfs": -8.436013,
+        "quarter_rms_dbfs": [
+          -17.485347,
+          -16.428115,
+          -21.878769,
+          -33.175468
+        ],
+        "rms_dbfs": -19.247627,
+        "sample_rate": 22050,
+        "spectral_windows": [
+          {
+            "dominant_bin_hz": 183.0322,
+            "spectral_centroid_hz": 351.0974,
+            "spectral_flatness": 4e-08,
+            "start_frame": 661,
+            "window": "Hann",
+            "window_frames": 2048
+          },
+          {
+            "dominant_bin_hz": 172.2656,
+            "spectral_centroid_hz": 290.0722,
+            "spectral_flatness": 4e-08,
+            "start_frame": 1259,
+            "window": "Hann",
+            "window_frames": 2048
+          },
+          {
+            "dominant_bin_hz": 172.2656,
+            "spectral_centroid_hz": 290.0722,
+            "spectral_flatness": 4e-08,
+            "start_frame": 1259,
+            "window": "Hann",
+            "window_frames": 2048
+          }
+        ],
+        "stereo_difference_rms": null
+      },
+      "size_bytes": 2412,
+      "source_decode_verified": true,
+      "source_file": 0,
+      "source_group": 472,
+      "source_index": 4,
+      "source_input": {
+        "path": "raw/4/472/0.bin",
+        "sha256": "a0fe0346f190758c85bea241b8af323a385b4f9e3bd1eb949cc312111b8494a9",
+        "size_bytes": 118
+      }
+    },
+    {
       "asset_id": "asset.source.osrs.cache2695.audio-runtime.sfx.509",
       "encoding": {
         "bits_per_sample": 24,
@@ -5289,6 +5593,198 @@
         "path": "raw/4/521/0.bin",
         "sha256": "a011ad2332b24ef97c704011d09e752c7b5ed64cbcc16bebdce32473e488a874",
         "size_bytes": 130
+      }
+    },
+    {
+      "asset_id": "asset.source.osrs.cache2695.audio-runtime.sfx.711",
+      "encoding": {
+        "bits_per_sample": 24,
+        "codec": "FLAC",
+        "decoded_pcm_hash_format": "s32le-left-aligned",
+        "decoded_pcm_sha256": "8cd7abbb170aa533d207d50e22308b62ccf0f97ff9279cc3412af63e1c240bae",
+        "effective_source_bits": 16,
+        "gain_denominator": 2,
+        "gain_exactly_reversible": true,
+        "gain_numerator": 1,
+        "lossless_round_trip_verified": true,
+        "native_full_scale_samples": 0,
+        "source_pcm_s16le_sha256": "61912a92f1e65c005ccc2b80104680abe573401e40b32d40612facd783b2aa2c"
+      },
+      "kind": "sfx",
+      "live_trigger_and_presentation_accepted": false,
+      "loop": {
+        "event_repeat_count": null,
+        "loop_end_frame": 0,
+        "loop_start_frame": 0,
+        "ping_pong_loop": false
+      },
+      "name": "Original sound 711",
+      "path": "assets/source/osrs/audio-runtime/sfx/711.flac",
+      "provenance_record": "sfx-711",
+      "reference_pcm_float32_channel_sha256": [
+        "fe1cb8b3775fb42b66461efbfec800ba51c871c45fa44fc7100c912fa969be17"
+      ],
+      "sha256": "f2725b353ae35aaf16f3209b3acff99ba1cebc77fb23d4f179c32a316873fdae",
+      "signal": {
+        "channel_statistics": [
+          {
+            "dc_offset": -3.59983e-05,
+            "rms_dbfs": -23.394085,
+            "zero_crossings_per_second": 14609.0447
+          }
+        ],
+        "channels": 1,
+        "crest_factor_db": 13.041548,
+        "distinct_amplitudes": 12763,
+        "duration_seconds": 1.4,
+        "first_nonzero_frame": 1,
+        "frames": 30870,
+        "full_scale_samples": 0,
+        "last_nonzero_frame": 30857,
+        "nonzero_fraction": 0.99828312,
+        "peak": 0.3036499023,
+        "peak_dbfs": -10.352537,
+        "quarter_rms_dbfs": [
+          -18.687789,
+          -23.965023,
+          -31.37419,
+          -44.036134
+        ],
+        "rms_dbfs": -23.394085,
+        "sample_rate": 22050,
+        "spectral_windows": [
+          {
+            "dominant_bin_hz": 9313.1104,
+            "spectral_centroid_hz": 9148.3613,
+            "spectral_flatness": 9.654e-05,
+            "start_frame": 6174,
+            "window": "Hann",
+            "window_frames": 2048
+          },
+          {
+            "dominant_bin_hz": 6309.2285,
+            "spectral_centroid_hz": 6374.2159,
+            "spectral_flatness": 0.00439794,
+            "start_frame": 15435,
+            "window": "Hann",
+            "window_frames": 2048
+          },
+          {
+            "dominant_bin_hz": 8505.6152,
+            "spectral_centroid_hz": 8414.5093,
+            "spectral_flatness": 0.00734312,
+            "start_frame": 24696,
+            "window": "Hann",
+            "window_frames": 2048
+          }
+        ],
+        "stereo_difference_rms": null
+      },
+      "size_bytes": 37685,
+      "source_decode_verified": true,
+      "source_file": 0,
+      "source_group": 711,
+      "source_index": 4,
+      "source_input": {
+        "path": "raw/4/711/0.bin",
+        "sha256": "7e7b363cf8f064e211474e278de460703d89ac3f0e95cf424d2c677e8df29b15",
+        "size_bytes": 358
+      }
+    },
+    {
+      "asset_id": "asset.source.osrs.cache2695.audio-runtime.sfx.713",
+      "encoding": {
+        "bits_per_sample": 24,
+        "codec": "FLAC",
+        "decoded_pcm_hash_format": "s32le-left-aligned",
+        "decoded_pcm_sha256": "b438f0fb05e93fc693db30319a1a089c857711a7ea62854cd36cd27522461676",
+        "effective_source_bits": 16,
+        "gain_denominator": 2,
+        "gain_exactly_reversible": true,
+        "gain_numerator": 1,
+        "lossless_round_trip_verified": true,
+        "native_full_scale_samples": 0,
+        "source_pcm_s16le_sha256": "bb489406dfb3dd63442c4b17a146f0f4230ebbd7188ce27f36fdc7e94ae47639"
+      },
+      "kind": "sfx",
+      "live_trigger_and_presentation_accepted": false,
+      "loop": {
+        "event_repeat_count": null,
+        "loop_end_frame": 0,
+        "loop_start_frame": 0,
+        "ping_pong_loop": false
+      },
+      "name": "Original sound 713",
+      "path": "assets/source/osrs/audio-runtime/sfx/713.flac",
+      "provenance_record": "sfx-713",
+      "reference_pcm_float32_channel_sha256": [
+        "ffec52e31bc49cdb94048f6c685b2eb550c1ecd962099db743473f894d87cc18"
+      ],
+      "sha256": "844810254c6e6e9503dbaf6f2c23e94e0cb49d7d7503d818b5827f1333c48c12",
+      "signal": {
+        "channel_statistics": [
+          {
+            "dc_offset": -4.83232e-05,
+            "rms_dbfs": -19.185238,
+            "zero_crossings_per_second": 17748.8296
+          }
+        ],
+        "channels": 1,
+        "crest_factor_db": 8.879279,
+        "distinct_amplitudes": 4944,
+        "duration_seconds": 0.249977324,
+        "first_nonzero_frame": 1,
+        "frames": 5512,
+        "full_scale_samples": 0,
+        "last_nonzero_frame": 5510,
+        "nonzero_fraction": 0.99963716,
+        "peak": 0.3052825928,
+        "peak_dbfs": -10.305959,
+        "quarter_rms_dbfs": [
+          -17.897047,
+          -23.533404,
+          -21.788419,
+          -16.78443
+        ],
+        "rms_dbfs": -19.185238,
+        "sample_rate": 22050,
+        "spectral_windows": [
+          {
+            "dominant_bin_hz": 8074.9512,
+            "spectral_centroid_hz": 8309.9006,
+            "spectral_flatness": 5.587e-05,
+            "start_frame": 1102,
+            "window": "Hann",
+            "window_frames": 2048
+          },
+          {
+            "dominant_bin_hz": 10745.0684,
+            "spectral_centroid_hz": 9388.1131,
+            "spectral_flatness": 0.01160672,
+            "start_frame": 2756,
+            "window": "Hann",
+            "window_frames": 2048
+          },
+          {
+            "dominant_bin_hz": 9140.8447,
+            "spectral_centroid_hz": 9433.95,
+            "spectral_flatness": 2.477e-05,
+            "start_frame": 3464,
+            "window": "Hann",
+            "window_frames": 2048
+          }
+        ],
+        "stereo_difference_rms": null
+      },
+      "size_bytes": 8341,
+      "source_decode_verified": true,
+      "source_file": 0,
+      "source_group": 713,
+      "source_index": 4,
+      "source_input": {
+        "path": "raw/4/713/0.bin",
+        "sha256": "d9f93569bb38eff1828db717d3da39a2dbb3dbf36222ee8b27a1615d2f825b9a",
+        "size_bytes": 155
       }
     },
     {
@@ -17412,6 +17908,77 @@
       }
     },
     {
+      "asset_id": "asset.source.osrs.cache2695.audio-runtime.sfx.2393",
+      "encoding": {
+        "bits_per_sample": 24,
+        "codec": "FLAC",
+        "decoded_pcm_hash_format": "s32le-left-aligned",
+        "decoded_pcm_sha256": "5947a1926f6db8eff3fde82ba48b6c881a9c56e16331aa0903b46cd2229ab8e8",
+        "effective_source_bits": 16,
+        "gain_denominator": 2,
+        "gain_exactly_reversible": true,
+        "gain_numerator": 1,
+        "lossless_round_trip_verified": true,
+        "native_full_scale_samples": 0,
+        "source_pcm_s16le_sha256": "c2cdc9970584ec9fc6d14c65025877771f452a0dd979273eb527304e6e1c7fd0"
+      },
+      "kind": "sfx",
+      "live_trigger_and_presentation_accepted": false,
+      "loop": {
+        "event_repeat_count": null,
+        "loop_end_frame": 0,
+        "loop_start_frame": 0,
+        "ping_pong_loop": false
+      },
+      "name": "Original sound 2393",
+      "path": "assets/source/osrs/audio-runtime/sfx/2393.flac",
+      "provenance_record": "sfx-2393",
+      "reference_pcm_float32_channel_sha256": [
+        "5912b3468d79496f7c711b3442cf8fbf21e6acd597a6f9abbe98703f2f47949f"
+      ],
+      "sha256": "436a582df6a1a3912b20275f755a8ff799e81984926ef887666318559d858593",
+      "signal": {
+        "channel_statistics": [
+          {
+            "dc_offset": 0.0002491444,
+            "rms_dbfs": -37.263763,
+            "zero_crossings_per_second": 140.0053
+          }
+        ],
+        "channels": 1,
+        "crest_factor_db": 13.111101,
+        "distinct_amplitudes": 3501,
+        "duration_seconds": 1.2,
+        "first_nonzero_frame": 9393,
+        "frames": 26460,
+        "full_scale_samples": 0,
+        "last_nonzero_frame": 26458,
+        "nonzero_fraction": 0.19829932,
+        "peak": 0.06199646,
+        "peak_dbfs": -24.152662,
+        "quarter_rms_dbfs": [
+          null,
+          -33.707905,
+          -37.779347,
+          -37.999101
+        ],
+        "rms_dbfs": -37.263763,
+        "sample_rate": 22050,
+        "spectral_windows": [],
+        "stereo_difference_rms": null
+      },
+      "size_bytes": 7378,
+      "source_decode_verified": true,
+      "source_file": 0,
+      "source_group": 2393,
+      "source_index": 4,
+      "source_input": {
+        "path": "raw/4/2393/0.bin",
+        "sha256": "a6a4c2f187776676809e156a8a31997844db9e3d3fb05526a2ac11a37f9fc461",
+        "size_bytes": 377
+      }
+    },
+    {
       "asset_id": "asset.source.osrs.cache2695.audio-runtime.sfx.2422",
       "encoding": {
         "bits_per_sample": 24,
@@ -24607,19 +25174,19 @@
   "clubscape_presentation_implemented": false,
   "conversion_evidence": {
     "path": "research/audio-source/conversion-evidence.json.gz",
-    "sha256": "2fa32f450f3271589236a42554221b42ea537f974c806ce73d4a27c19486d6ce",
-    "size_bytes": 107608
+    "sha256": "f0e18daafab3da0a462eb07f7a331a8f4157d19198bd136b2836595f4ebb8fbf",
+    "size_bytes": 108762
   },
   "conversion_tools": [
     {
       "path": "tools/audio-import/audio_import.py",
-      "sha256": "74d76fd2dfb343ada363fe90af8e64e48ec0ce0763348c5da12744cc83152aca",
-      "size_bytes": 27128
+      "sha256": "fac7e0fc9ff825a78c5dc01f7d71d69e304ab8cbe788a74eaf23f6a3e7727565",
+      "size_bytes": 29017
     },
     {
       "path": "tools/audio-import/SourceAudio.java",
-      "sha256": "e1b40956a865e5002d1652dceb997f957d9ad42b95c7c37962853d4cb1bf9280",
-      "size_bytes": 17815
+      "sha256": "1ece6e31e04c5ea51ff899f483dbb57a08ee1565ac283c59d29adeaf26f59555",
+      "size_bytes": 18150
     },
     {
       "path": "tools/audio-import/CacheAudioInputs.java",
@@ -24643,8 +25210,8 @@
     },
     {
       "path": "tools/audio-import/source_map.py",
-      "sha256": "1ad280bccfab7edbe97a7debe5349bd1691772e3bd6a6e3822d31d47bca74895",
-      "size_bytes": 11879
+      "sha256": "7ec827204003c00e20d6cd9ef3219249588211fd68e2a0b6aec7d060fe46950e",
+      "size_bytes": 13073
     },
     {
       "path": "tools/audio-import/dependencies.json",
@@ -24655,7 +25222,7 @@
   "counts": {
     "jingle": 30,
     "music": 5,
-    "sfx": 223
+    "sfx": 229
   },
   "dependency_lock": {
     "path": "tools/audio-import/dependencies.json",
@@ -24677,14 +25244,14 @@
   "python_environment": "3.12.3",
   "remaining_bindings": [
     "Stock source-session region/playlist transitions and music repeat behavior; the exported tracks are one-pass with original release.",
-    "Unbound ranged, weapon/NPC-specific combat, eating and current smelting sounds; do not use generic replacements.",
+    "Ordinary shortbow selection among named launch/draw cues2692/2693/2702; current tutorial-rat attack710 confirmation; current food selection of829/game-triggered2393 versus sound-enabled12526; current bronze-smelting2725 callback. None is inferred from a plausible sound.",
     "Event/packet delay, frame entry phase, positional attenuation, mute/volume defaults and fade behavior in the actual source session.",
-    "Exact tutorial/Cook's Assistant quest jingle and level-up precedence; browser gesture/autoplay/reconnect behavior after pack approval."
+    "Exact server MIDI_JINGLE payload (including a possible no-request outcome) for Learning the Ropes/Cook's Assistant and its emission order versus level-up jingles. Native client requests are last-wins, with no quest/skill ranking and an ignored auxiliary integer. Browser gesture/autoplay/reconnect behavior remains after pack approval."
   ],
   "request": {
     "path": "research/audio-source/request.json",
-    "sha256": "e370725fbcd6ad1ef20b47b34dd31faa846be8bbe9ef25f0eb43cb4b3a914424",
-    "size_bytes": 3998
+    "sha256": "0b2a9c047fb8a86649c5bd493438ba9916a6b88501e252b042748f000ec1e94b",
+    "size_bytes": 4071
   },
   "runtime": "Original injected1.12.38; current16-bit music and SFX algorithms; no legacy soundfont",
   "runtime_browser_audio_accepted": false,
@@ -24694,6 +25261,8 @@
     "music_release_tail_seconds": 1,
     "music_synth_master_volume": 128,
     "native_device_block_frames": 512,
+    "native_startup_percussion_bank": 128,
+    "native_startup_percussion_channel": 9,
     "sample_rate": 22050,
     "sfx_container_bit_depth": 24,
     "sfx_export_gain": 0.5,
@@ -24707,13 +25276,13 @@
   },
   "source_file_layouts": {
     "path": "research/audio-source/layout-check.json",
-    "sha256": "ee6dffb88f30c2a9c1a0d8d56a3d47a94ca7627d42c06d9525b7757a7d5cb7de",
-    "size_bytes": 75435
+    "sha256": "4118b65b4ab1b9455c7c19d23eb129749c811b95de0d320cdc3027d541b2edf5",
+    "size_bytes": 77440
   },
   "source_map": {
     "path": "research/audio-source/source-map.json",
-    "sha256": "3ca6416ed62e9f9791327ea4ab2ce29da8f7f50230af2278007d457ccdc8b602",
-    "size_bytes": 120777
+    "sha256": "1d79acd86552ee6d50801161f172e05a343861eeaae7eee768a5bf420c9eb271",
+    "size_bytes": 122699
   },
   "source_recordings": false,
   "source_selection": "osrs-live-240-cache2695-injected1.12.38-20260913",
@@ -24741,11 +25310,11 @@
   "status": "Original source audio decoded and losslessly packaged; source binding gaps and owner/browser acceptance remain explicit.",
   "supplementary_inputs": {
     "path": "research/audio-source/extra-inputs.json.gz",
-    "sha256": "51790bc6db16a9700814349cacf871ade01a7caf919742ffb0442b33d3eec212",
-    "size_bytes": 61801
+    "sha256": "ba2328f15e458a862cdddfa42c566e422d24ac396fdf52929dfc573aed76add5",
+    "size_bytes": 63477
   },
-  "total_duration_seconds": 1468.461995448,
-  "total_frames": 32379587,
-  "total_size_bytes": 52584339,
+  "total_duration_seconds": 1472.961950096,
+  "total_frames": 32478811,
+  "total_size_bytes": 55197689,
   "verified_silent_source_effects": 1
 }

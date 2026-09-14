@@ -15,7 +15,8 @@ Playable assets are under `assets/source/osrs/audio-runtime/`:
   Scape Cave144, Harmony76, Autumn Voyage2.
 * Thirty source quest/low-level skill/combat/death jingle inputs. Some are
   explicitly alternatives, not an assertion they all play in the journey.
-* 223 audible original SFX: scene ambience plus the identified journey sounds.
+* 229 audible original SFX: scene ambience plus the identified journey sounds,
+  including the six source-identified additions in the binding audit.
 * One additionally decoded **source silence2411**, not a playable-file count.
   Its5ms definition produces110 zero samples in the original synth. Keep its
   **74/100 weight** in sequence13612/frame1; removing it and renormalizing the
@@ -27,6 +28,21 @@ exactly half gain. The24-bit container makes that attenuation **lossless and
 exactly reversible**. Original synth saturation is preserved and counted;
 there is no new limiter, normalization, clipping, resampling or replacement.
 The original unattenuated16-bit PCM hash is retained for every asset.
+
+The binding follow-up found and corrected a missing native startup call:
+`dg.ay` initializes MIDI channel9 to percussion bank128. The earlier renderer
+omitted that call. All35 musical inputs were rechecked;26 file payloads changed,
+while **all223 existing SFX hashes and silence2411 stayed unchanged**.
+See `research/audio-source/musical-startup-correction.json`. A reference pack
+containing the old musical hashes needs a parent-owned refresh; this is not an
+approval change.
+
+The narrower cue/selector audit and its remaining blockers are documented in
+[`research/audio-source/bindings-README.md`](../../research/audio-source/bindings-README.md).
+`python3 tools/audio-import/bindings.py audit` reads the original cache without
+write handles. `publish-audio` performs the necessary musical correction and
+new-cue import, using `convert --reuse-existing-sfx` rather than re-rendering
+existing effects.
 
 ## Reproduce
 
@@ -71,7 +87,7 @@ private copy after decoding. Missing/corrupt inputs are not silently replaced.
 Java `user.home`, scratch paths and compiler paths are worktree-local; JVM
 performance-file creation is disabled. No personal RuneLite settings are read.
 
-The actual file layouts of all224 selected source sound groups are inspected.
+The actual file layouts of all230 selected source sound groups are inspected.
 They have only file0. Additional/digital files would fail explicitly rather than
 silently falling back to legacy data.
 
@@ -92,14 +108,14 @@ The browser and server are closed afterwards.
 
 Chrome153 uses a float32 reciprocal of32767 for positive int16 samples, versus
 32768 for negative samples. All35 music/jingle files exactly matched that
-conversion; the223 FLAC24 effects matched the signed32-bit power-of-two model.
+conversion; the FLAC24 effects matched the signed32-bit power-of-two model.
 The largest measured difference from the symmetric reference float
-representation was **0.00002282857894897461**. Original integer PCM and the
+representation for the corrected pack was **0.000022172927856445312**. Original integer PCM and the
 lossless files are unchanged. No empirical tolerance or listening-equivalence
 claim is substituted for the exact forward-model checks. Expectations are
 generated from hash-verified source PCM **before** browser decoding.
 
-The fixture uses a short worktree-local `.local/ab` socket path to stay within
+The fixture uses the short worktree-local `.local/` socket path to stay within
 Linux's Unix-domain-socket path limit; it does not use a global scratch path.
 
 This does **not** start audible playback or exercise a ClubScape UI, autoplay,
@@ -148,7 +164,8 @@ advertised as seamless loops. Source MIDI end ticks, exact integer-clock end
 frames, instrument sample loops and the unobserved music-player repeat policy
 are distinct manifest fields. Do not blindly repeat the release-padded file.
 
-Unbound ranged/NPC/weapon-specific/eating sounds remain unbound. Smelting2725
+Unclosed current ranged/NPC-variant/weapon/eating selectors remain explicit,
+even where a cue identity has been established. Smelting2725
 is a prepared, explicitly **unverified current-binding candidate** from an
 independent implementation using a different animation. UI2266 is not a sound
 for every click. No missing action receives an arbitrary replacement.
@@ -171,11 +188,19 @@ for every click. No missing action receives an arbitrary replacement.
 The tests cover corrupt/missing inputs, unsafe paths, unknown staged files,
 nonzero CLI failures, malformed MIDI, exact event equivalence, duration-vs-echo
 field regression, original silent weighting, FFT/signal checks and lossless
-codec behavior and exact codec float-conversion models. The25-test suite's
+codec behavior and exact codec float-conversion models. The original audio suite's
 integration test re-renders a complete Scape Main, a quest
 jingle, and six representative actual effects and checks their original PCM
 hashes again. This is mechanical signal/source evidence, **not** a claim of
 human perceptual equivalence.
+
+The binding follow-up adds native opcode/queue tests, current metadata/
+callback assertions, explicit unclosed-gate checks and recording-matcher
+positive/negative controls. Install its optional, hash-pinned research packages
+only under `.local/audio-bindings/python` using
+`binding-media-requirements.txt` and `binding-analysis-requirements.txt`.
+Set `TMPDIR` and the package cache path inside `.local`; no global environment
+or personal downloader configuration is needed.
 
 Notices: [third-party dependencies](THIRD_PARTY_NOTICES.txt) and
 [original audio](../../assets/source/osrs/audio-runtime/NOTICE.txt).

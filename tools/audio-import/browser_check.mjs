@@ -8,7 +8,7 @@ const root = process.cwd();
 const chrome = process.argv[2];
 if (!chrome) throw new Error("Usage: node tools/audio-import/browser_check.mjs /path/to/verified/chrome");
 const workspace = resolve(".local/audio-import/browser-check");
-const socketWork = resolve(".local/ab");
+const socketWork = resolve(".local");
 await mkdir(workspace, { recursive: true });
 await mkdir(socketWork, { recursive: true });
 for (const name of ["profile", "home", "cache", "config", "work"]) {

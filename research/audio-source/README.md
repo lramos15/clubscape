@@ -23,14 +23,14 @@ commands, locked dependencies, tests, limitations and retained notices.
 | Exact live triggers, mute, volume, looping/transitions | **Not accepted** |
 | Source reference-pack/ClubScape presentation approval | **Not granted** |
 
-Actual playable output: **258 files,1468.461995448s,52,584,339 bytes**:
-five music tracks935.123174603s;30 jingles207.004852603s;223 audible
-SFX326.333968242s. All25 tests pass, including original-runtime re-rendering.
-All258 files were decoded in sandboxed Chrome153.0.8010.12 and checked against
-exact source-integer-to-float representations. Its positive-int16 conversion
-differs slightly from symmetric normalization; the maximum measured reference
-float deviation is0.00002282857894897461, explicitly recorded rather than
-called sample-bit-identical or human-perceptually equivalent.
+Actual playable output after the binding follow-up: **264 files,
+1472.961950096s,55,197,689 bytes**: five music tracks935.123174603s;
+30 jingles207.004852603s;229 audible SFX330.833922890s.
+The follow-up corrected native percussion-bank initialization, changing26
+musical payloads, and added six identified source effects. All223 pre-existing
+SFX hashes and the original weighted silence are preserved.
+See [`bindings-README.md`](bindings-README.md) for the exact native/public
+evidence, validation and still-unclosed per-action/per-quest selectors.
 
 ## Required music
 
@@ -79,8 +79,14 @@ wiki jingle cache IDs, and independent reference candidates. In particular:
   independently named source inputs, not observed server-trigger timing.
 * Smelting2725 is a **candidate**, not a verified current bronze-smelting
   binding. It is not automatically assigned to the journey action.
-* Ranged, weapon/NPC-specific combat and eating bindings remain unverified.
-  Do not use a generic sound, player grunt for a goblin, or UI2266 everywhere.
+* Current sound-enabled eating12526 contains2393 at frame1. The silent
+  motion-equivalent829 remains distinct; its ordinary-food server selection
+  is not inferred. Original goblin469/472/471 and tutorial-rat713/711 were
+  identified against independent recordings, with recording age and
+  current-trigger limitations explicitly retained.
+* Ordinary shortbow, rat attack, current smelting and per-quest selectors
+  are not promoted from weak/candidate evidence. Do not use a generic sound,
+  player grunt for a goblin, or UI2266 everywhere.
 * RSMod's custom654xx/655xx parameters were absent from the selected original
   NPC/item definitions; they were **not** promoted into original cache bindings.
 
