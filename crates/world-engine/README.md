@@ -17,6 +17,21 @@ No source revision/cache is hardcoded. The caller supplies validated content
 from the current selected source; historical cache 2695 is not a downgrade
 requirement or an engine pin.
 
+The authorized parent decoder fix
+`7150464f46f0771a01a32231de858fb025a7b6da` is integrated. Tagged/bound
+`MaximumHitFormula::LevelTable` now decodes canonical JSON numeric keys while
+retaining the source table, not a fixed hit. Owned regression cases deserialize
+complete synthetic content and execute Wind Strike at levels
+1/4/5/8/9/12/13/99, checking the actual 2/4/6/8 damage bands and rune spending.
+Malformed/ambiguous keys are also rejected through the full content wrapper.
+
+The parent reports the actual M1 content rebuilt and strictly reloaded with
+raw SHA-256
+`88a6f32810712b2f64e2e9a8baa5cdfe0f817e49ac8352f4e4d656c9be995e68`
+and **111** unresolved bindings, not 112. The level-table decoder is resolved,
+not a remaining engine/source blocker. That artifact verification is separate
+from this crate's synthetic execution evidence.
+
 ## API, tick boundary and authority
 
 ```rust,ignore
@@ -281,7 +296,7 @@ retaliation/Office/fees/reclaim/expiry and checked legacy migration.
 Numeric literals are independent of the implementation, from the retained
 journey oracles. Synthetic geometry/content is not a real M1 content pack.
 
-This revision passes **146 native tests**, formatting, warnings-denied Clippy
+This revision passes **148 native tests**, formatting, warnings-denied Clippy
 for native and WASM (all targets), native/WASM builds, and WASM test-binary
 compilation. The original advanced-tick regression cases remain in the suite.
 
