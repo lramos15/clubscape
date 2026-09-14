@@ -408,7 +408,13 @@ fn food_three_tick_delay_survives_cancel_and_serialization() {
         },
     );
     assert_eq!(count(&engine, &world, "cooked"), 0);
-    assert_eq!(state(&world).flags["__world_engine.attack_ready"], 6);
+    assert_eq!(state(&world).runtime.combat.attack_ready, 6);
+    assert!(
+        state(&world)
+            .flags
+            .keys()
+            .all(|key| !key.starts_with("__world_engine."))
+    );
 }
 
 #[test]
@@ -432,29 +438,44 @@ fn missing_mechanic_contracts_fail_without_mutation_or_fake_success_events() {
     let mut content = content();
     add_object(&mut content, "enemy", InteractionAction::Attack);
     let (engine, mut world) = setup(content);
-    for intent in [
-        interact("enemy"),
-        GameIntent::SetCombatStyle {
-            style: "accurate".into(),
-        },
-        GameIntent::Cast {
-            spell: "spell.wind_strike".into(),
-            target: Some(spawn("enemy")),
-        },
-        GameIntent::SetPrayer {
-            prayer: "prayer.thick_skin".into(),
-            enabled: true,
-        },
-        GameIntent::Walk {
-            destination: tile(12, 10, 0),
-            running: true,
-        },
-        GameIntent::Drop {
-            inventory_slot: 0,
-            quantity: quantity(1),
-        },
+    for (intent, expected) in [
+        (interact("enemy"), GameErrorCode::RequirementNotMet),
+        (
+            GameIntent::SetCombatStyle {
+                style: "accurate".into(),
+            },
+            GameErrorCode::InvalidInput,
+        ),
+        (
+            GameIntent::Cast {
+                spell: "spell.wind_strike".into(),
+                target: Some(spawn("enemy")),
+            },
+            GameErrorCode::UnknownContent,
+        ),
+        (
+            GameIntent::SetPrayer {
+                prayer: "prayer.thick_skin".into(),
+                enabled: true,
+            },
+            GameErrorCode::UnknownContent,
+        ),
+        (
+            GameIntent::Walk {
+                destination: tile(12, 10, 0),
+                running: true,
+            },
+            GameErrorCode::Unavailable,
+        ),
+        (
+            GameIntent::Drop {
+                inventory_slot: 0,
+                quantity: quantity(1),
+            },
+            GameErrorCode::Unavailable,
+        ),
     ] {
-        error_unchanged(&engine, &mut world, intent, GameErrorCode::Unavailable);
+        error_unchanged(&engine, &mut world, intent, expected);
     }
 }
 
@@ -474,7 +495,11 @@ fn unsupported_persisted_combat_and_death_fail_the_entire_tick() {
         let before = world.clone();
         assert_eq!(
             engine.tick(&mut world, &mut NeverDraw).unwrap_err().code,
-            GameErrorCode::Unavailable
+            if dead {
+                GameErrorCode::Unavailable
+            } else {
+                GameErrorCode::InvalidInput
+            }
         );
         assert_eq!(world, before);
     }

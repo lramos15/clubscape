@@ -3,7 +3,7 @@ use std::collections::BTreeSet;
 use clubscape_game_types::*;
 use clubscape_simulation::{bank, equipment, inventory, skills};
 
-use crate::{invalid_content, invalid_state, random, runtime, unavailable, unknown};
+use crate::{invalid_content, invalid_state, runtime, unknown};
 
 pub(crate) fn content(content: &GameContent) -> GameResult<()> {
     if content.schema_version != CONTENT_SCHEMA_VERSION || content.revision.is_empty() {
@@ -60,8 +60,8 @@ pub(crate) fn content(content: &GameContent) -> GameResult<()> {
                     {
                         return Err(invalid_content("Gather cadence/level/respawn is invalid."));
                     }
-                    random::chance_numerator(&rule.success, 1)?;
-                    random::chance_numerator(&rule.depletion, 1)?;
+                    rule.success.validate()?;
+                    rule.depletion.validate()?;
                     check_item(content, &rule.output.item)?;
                     for item in &rule.tools {
                         check_item(content, item)?;
@@ -108,7 +108,7 @@ pub(crate) fn content(content: &GameContent) -> GameResult<()> {
                 "Recipe identity, consumed inputs or cadence is invalid.",
             ));
         }
-        random::chance_numerator(&recipe.success, 1)?;
+        recipe.success.validate()?;
         for stack in recipe
             .inputs
             .iter()
@@ -124,13 +124,6 @@ pub(crate) fn content(content: &GameContent) -> GameResult<()> {
                     "A required, unconsumed recipe tool cannot also be an input.",
                 ));
             }
-        }
-    }
-    for npc in content.npcs.values() {
-        if npc.combat.as_ref().is_some_and(|combat| combat.aggressive) {
-            return Err(unavailable(
-                "NPC aggression needs an aggro/retaliation policy and persisted target/cooldown state.",
-            ));
         }
     }
     for (id, dialogue) in &content.dialogues {
@@ -207,22 +200,7 @@ pub(crate) fn character(character: &CharacterState, content: &GameContent) -> Ga
     if character.schema_version != GAME_SCHEMA_VERSION || character.run_energy > MAX_RUN_ENERGY {
         return Err(invalid_state("Character schema/run energy is invalid."));
     }
-    character.runtime.validate_shape()?;
-    if matches!(character.runtime.engine, EngineMetadata::Typed { .. })
-        || character.runtime.pending_travel.is_some()
-        || character.runtime.pending_fire.is_some()
-        || character.runtime.food_ready != 0
-        || character.runtime.combat.attack_ready != 0
-        || character.runtime.combat.spell_ready != 0
-        || !character.runtime.combat.active_prayers.is_empty()
-        || !character.runtime.action_cooldowns.is_empty()
-        || !character.runtime.travel_cooldowns.is_empty()
-        || matches!(character.activity, Activity::ProducingAt { .. })
-    {
-        return Err(unavailable(
-            "Persisted typed scheduling needs mechanics-v2 execution; pending work was preserved.",
-        ));
-    }
+    character.validate_runtime(content)?;
     inventory::validate(&character.inventory, &content.items)?;
     equipment::validate(&character.equipment, content)?;
     bank::validate(&character.bank, &content.items)?;

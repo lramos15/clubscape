@@ -3,11 +3,19 @@
 
 mod actions;
 mod activities;
+mod combat;
 mod commerce;
+mod context;
+mod death;
+mod entities;
+mod grants;
+mod navigation;
 mod permissions;
 mod progression;
 mod runtime;
 mod validation;
+mod vitals;
+mod world;
 
 pub mod random;
 pub mod source_math;
@@ -19,7 +27,14 @@ use clubscape_game_types::*;
 use clubscape_simulation::navigation::CollisionMap;
 use serde::{Deserialize, Serialize};
 
+pub use context::{ActorPresence, TickContext};
 pub use random::RandomSource;
+
+#[cfg(test)]
+extern crate self as clubscape_world_engine;
+#[cfg(test)]
+#[path = "../tests/support/mod.rs"]
+mod test_support;
 
 #[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
 pub struct ActorEvent {
@@ -124,7 +139,7 @@ impl WorldEngine {
         appearance: BTreeMap<String, u32>,
     ) -> GameResult<CharacterState> {
         let initial = &self.content.initial_state;
-        let character = CharacterState {
+        let mut character = CharacterState {
             schema_version: GAME_SCHEMA_VERSION,
             actor_id,
             display_name: display_name.into(),
@@ -149,6 +164,7 @@ impl WorldEngine {
             last_command_sequence: 0,
             runtime: CharacterRuntime::from_initial(&self.content),
         };
+        character.migrate_engine_metadata(&self.content)?;
         validation::character(&character, &self.content)?;
         Ok(character)
     }
@@ -170,46 +186,64 @@ impl WorldEngine {
                 "Authenticated actor is not in this world.",
             )
         })?;
+        character.migrate_engine_metadata(&self.content)?;
         validation::character(&character, &self.content)?;
-        self.validate_destination(&character.region, character.tile)?;
+        if !self
+            .collision_for(&draft, character.runtime.instance.as_ref())?
+            .cell(character.tile)
+            .is_some()
+        {
+            return Err(invalid_state(
+                "Character occupies an unlisted runtime tile.",
+            ));
+        }
         if &character.actor_id != actor {
             return Err(invalid_state(
                 "Character map key does not match authenticated actor.",
             ));
         }
-        if character.flags.contains_key(runtime::COMMAND_SEEN)
-            && character.last_action_tick >= draft.tick
-        {
+        if runtime::schedule(&character)?.command_seen && character.last_action_tick >= draft.tick {
             return Err(GameError::new(
                 GameErrorCode::Busy,
                 "An action was already accepted this tick.",
             ));
         }
         if character.hitpoints == 0 {
-            return Err(unavailable(
-                "Death/recovery state and source policy are not yet bound.",
+            return Err(GameError::new(
+                GameErrorCode::Busy,
+                "Actor awaits source death/arrival processing.",
             ));
         }
         if matches!(
-            character.activity,
-            Activity::Fighting { .. } | Activity::Casting { .. }
+            character.runtime.life,
+            LifeState::Dying { .. } | LifeState::Respawning { .. }
         ) {
-            return Err(unavailable(
-                "Persisted combat/spell state needs bound interruption and logout rules.",
+            return Err(GameError::new(
+                GameErrorCode::Busy,
+                "A source life transition is pending.",
             ));
         }
         self.authorize_intent(&character, intent)?;
         let before = character.clone();
         let mut events = self.intent(&mut draft, &mut character, intent, random)?;
-        self.progress(&mut character, &before, &mut events)?;
+        let mut routed = self.dispatch_kill_credit(
+            &mut draft,
+            character.runtime.instance.as_ref(),
+            &events,
+            random,
+        )?;
+        self.progress(&mut draft, &mut character, &before, &mut events, random)?;
         self.validate_open_dialogue(&draft, &character)?;
         self.check_reward_atomicity(&before, &character)?;
         validation::character(&character, &self.content)?;
         character.last_action_tick = draft.tick;
-        runtime::set_counter(&mut character, runtime::COMMAND_SEEN, 1)?;
+        character.runtime.last_active_tick = Some(draft.tick);
+        runtime::schedule_mut(&mut character)?.command_seen = true;
         draft.characters.insert(actor.clone(), character);
+        draft.validate_runtime(&self.content)?;
         *world = draft;
-        Ok(tag(actor, events))
+        routed.extend(tag(actor, events));
+        Ok(routed)
     }
 
     /// Standalone scheduler: advance exactly one source tick, then process its due work.
@@ -221,12 +255,7 @@ impl WorldEngine {
         world: &mut WorldState,
         random: &mut impl RandomSource,
     ) -> GameResult<Vec<ActorEvent>> {
-        self.check_world(world)?;
-        let mut draft = world.clone();
-        draft.tick = runtime::deadline(draft.tick, 1)?;
-        let events = self.process_tick_draft(&mut draft, random)?;
-        *world = draft;
-        Ok(events)
+        self.tick_with_context(world, random, &TickContext::default())
     }
 
     /// Process due work at the positive tick already supplied by authoritative storage.
@@ -237,6 +266,30 @@ impl WorldEngine {
         world: &mut WorldState,
         random: &mut impl RandomSource,
     ) -> GameResult<Vec<ActorEvent>> {
+        self.process_advanced_tick_with_context(world, random, &TickContext::default())
+    }
+
+    pub fn tick_with_context(
+        &self,
+        world: &mut WorldState,
+        random: &mut impl RandomSource,
+        context: &TickContext,
+    ) -> GameResult<Vec<ActorEvent>> {
+        self.check_world(world)?;
+        let mut draft = world.clone();
+        draft.tick = runtime::deadline(draft.tick, 1)?;
+        let events = self.process_tick_draft(&mut draft, random, context)?;
+        draft.validate_runtime(&self.content)?;
+        *world = draft;
+        Ok(events)
+    }
+
+    pub fn process_advanced_tick_with_context(
+        &self,
+        world: &mut WorldState,
+        random: &mut impl RandomSource,
+        context: &TickContext,
+    ) -> GameResult<Vec<ActorEvent>> {
         self.check_world(world)?;
         if world.tick == 0 {
             return Err(invalid_state(
@@ -244,7 +297,8 @@ impl WorldEngine {
             ));
         }
         let mut draft = world.clone();
-        let events = self.process_tick_draft(&mut draft, random)?;
+        let events = self.process_tick_draft(&mut draft, random, context)?;
+        draft.validate_runtime(&self.content)?;
         *world = draft;
         Ok(events)
     }
@@ -253,38 +307,31 @@ impl WorldEngine {
         &self,
         draft: &mut WorldState,
         random: &mut impl RandomSource,
+        context: &TickContext,
     ) -> GameResult<Vec<ActorEvent>> {
-        self.advance_entities(draft)?;
+        for character in draft.characters.values_mut() {
+            character.migrate_engine_metadata(&self.content)?;
+        }
+        self.advance_entities(draft, random)?;
+        self.expire_objects(draft)?;
         self.restock(draft)?;
         draft
             .ground_items
             .retain(|item| item.expires_at_tick > draft.tick);
+        let mut result = self.advance_projectiles(draft, random)?;
         let actors: Vec<_> = draft.characters.keys().cloned().collect();
-        let mut result = Vec::new();
         for actor in actors {
             let stored = draft
                 .characters
                 .get(&actor)
                 .ok_or_else(|| invalid_state("Actor disappeared during a pure tick."))?;
             validation::character(stored, &self.content)?;
-            self.validate_destination(&stored.region, stored.tile)?;
             if stored.actor_id != actor {
                 return Err(invalid_state(
                     "Tick character map key does not match its actor.",
                 ));
             }
-            if stored.hitpoints == 0 {
-                return Err(unavailable(
-                    "A dead actor requires source-defined death/recovery state.",
-                ));
-            }
-            if matches!(&stored.activity, Activity::Idle)
-                || matches!(&stored.activity,
-                    Activity::Gathering { next_tick, .. } | Activity::Producing { next_tick, .. }
-                    if *next_tick > draft.tick)
-            {
-                continue;
-            }
+            let online = context.actors.get(&actor).map(|facts| facts.online);
             // Each actor's effects may touch entities/ground stock as well as the character.
             // A failed actor operation must not leak those changes into an interruption.
             let mut attempt = draft.clone();
@@ -293,26 +340,68 @@ impl WorldEngine {
                 .remove(&actor)
                 .ok_or_else(|| invalid_state("Actor disappeared during a pure tick."))?;
             let before = character.clone();
-            let operation = self
-                .advance_activity(&mut attempt, &mut character, random)
-                .and_then(|mut events| {
-                    self.progress(&mut character, &before, &mut events)?;
-                    self.check_reward_atomicity(&before, &character)?;
-                    validation::character(&character, &self.content)?;
-                    Ok(events)
-                });
+            let ordinary_activity = character.hitpoints > 0
+                && character.runtime.pending_travel.is_none()
+                && !matches!(
+                    character.runtime.life,
+                    LifeState::Dying { .. } | LifeState::Respawning { .. }
+                );
+            let operation = (if online == Some(false) {
+                Ok(vec![])
+            } else if matches!(character.runtime.life, LifeState::Respawning { .. }) {
+                self.advance_respawn(&mut attempt, &mut character)
+            } else if character.hitpoints == 0 {
+                self.die(&mut attempt, &mut character)
+            } else if character.runtime.pending_travel.is_some() {
+                self.advance_travel(&mut attempt, &mut character, random)
+            } else {
+                self.advance_activity(&mut attempt, &mut character, random)
+            })
+            .and_then(|mut events| {
+                let running = events
+                    .iter()
+                    .filter(|event| matches!(event, GameEvent::Moved { .. }))
+                    .count()
+                    == 2;
+                let combat = self.in_combat(&attempt, &character)?;
+                if character.hitpoints > 0
+                    && !matches!(
+                        character.runtime.life,
+                        LifeState::Dying { .. } | LifeState::Respawning { .. }
+                    )
+                {
+                    events.extend(self.advance_vitals(
+                        attempt.tick,
+                        &mut character,
+                        context,
+                        running,
+                        combat,
+                    )?);
+                }
+                let other = self.dispatch_kill_credit(
+                    &mut attempt,
+                    character.runtime.instance.as_ref(),
+                    &events,
+                    random,
+                )?;
+                self.progress(&mut attempt, &mut character, &before, &mut events, random)?;
+                self.check_reward_atomicity(&before, &character)?;
+                validation::character(&character, &self.content)?;
+                Ok((events, other))
+            });
             match operation {
-                Ok(events) => {
+                Ok((events, other)) => {
                     attempt.characters.insert(actor.clone(), character);
                     *draft = attempt;
                     result.extend(tag(&actor, events));
+                    result.extend(other);
                 }
-                Err(error) if is_interruption(&error.code) => {
+                Err(error) if ordinary_activity && is_interruption(&error.code) => {
                     let character = draft
                         .characters
                         .get_mut(&actor)
                         .ok_or_else(|| invalid_state("Actor disappeared during interruption."))?;
-                    runtime::interrupt(character);
+                    runtime::interrupt(character)?;
                     result.extend(tag(
                         &actor,
                         vec![GameEvent::Message {
@@ -323,41 +412,13 @@ impl WorldEngine {
                 Err(error) => return Err(error),
             }
         }
+        result.extend(self.advance_npcs(draft, random, context)?);
+        result.extend(self.advance_graves(draft, context)?);
         Ok(result)
     }
 
     fn check_world(&self, world: &WorldState) -> GameResult<()> {
-        world.runtime.validate_shape()?;
-        for entity in world.entities.values() {
-            entity.runtime.validate_shape()?;
-            if entity.runtime.attack_ready != 0
-                || entity.runtime.retaliation_target.is_some()
-                || !entity.runtime.contributions.is_empty()
-                || entity.runtime.loot_resolved
-                || entity.runtime.next_movement_tick.is_some()
-            {
-                return Err(unavailable(
-                    "Persisted NPC scheduling requires mechanics-v2 execution; pending state was preserved.",
-                ));
-            }
-        }
-        if !world.runtime.temporary_objects.is_empty()
-            || !world.runtime.projectiles.is_empty()
-            || !world.runtime.instances.is_empty()
-            || !world.runtime.deaths.is_empty()
-            || !world.runtime.stock_deadlines.is_empty()
-            || world.runtime.object_states.iter().any(|(id, state)| {
-                self.content
-                    .mechanics
-                    .object_transforms
-                    .get(id)
-                    .is_none_or(|definition| &definition.initial != state)
-            })
-        {
-            return Err(unavailable(
-                "Persisted dynamic mechanics require mechanics-v2 execution; pending state was preserved.",
-            ));
-        }
+        world.validate_runtime(&self.content)?;
         if world.schema_version != GAME_SCHEMA_VERSION
             || world.content_revision != self.content.revision
         {

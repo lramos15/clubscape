@@ -1,5 +1,5 @@
-//! Source arithmetic, not enabled combat, movement-energy, shops or death policies.
-//! See README for the missing runtime bindings and the source's inference labels.
+//! Checked integer arithmetic used by the typed runtime.
+//! Definitions provide source policy values; standalone numeric helpers are not content.
 
 use clubscape_game_types::{GameError, GameErrorCode, GameResult};
 
@@ -157,4 +157,57 @@ fn gcd(mut a: u64, mut b: u64) -> u64 {
 
 fn invalid(message: &str) -> GameError {
     GameError::new(GameErrorCode::InvalidInput, message)
+}
+
+pub(crate) fn rounded(
+    numerator: u128,
+    denominator: u128,
+    rounding: &clubscape_game_types::IntegerRounding,
+) -> GameResult<u64> {
+    if denominator == 0 {
+        return Err(invalid("Zero arithmetic denominator."));
+    }
+    let quotient = numerator / denominator;
+    let remainder = numerator % denominator;
+    let value = quotient
+        + u128::from(
+            matches!(
+                rounding,
+                clubscape_game_types::IntegerRounding::NearestTiesUp
+            ) && remainder >= denominator - remainder,
+        );
+    u64::try_from(value).map_err(|_| invalid("Arithmetic result overflow."))
+}
+
+pub(crate) fn add_fraction(
+    a: &clubscape_game_types::FractionalAccumulator,
+    numerator: u64,
+    denominator: u64,
+) -> GameResult<(u64, clubscape_game_types::FractionalAccumulator)> {
+    a.validate()?;
+    if denominator == 0 {
+        return Err(invalid("Zero prayer-drain denominator."));
+    }
+    let divisor = gcd(a.denominator, denominator);
+    let common = u128::from(a.denominator / divisor) * u128::from(denominator);
+    let sum = (u128::from(a.numerator) * u128::from(denominator / divisor))
+        .checked_add(u128::from(numerator) * u128::from(a.denominator / divisor))
+        .ok_or_else(|| invalid("Fractional accumulation overflow."))?;
+    let whole = u64::try_from(sum / common).map_err(|_| invalid("Fractional whole overflow."))?;
+    let mut rem = sum % common;
+    let mut den = common;
+    let (mut x, mut y) = (rem, den);
+    while y != 0 {
+        (x, y) = (y, x % y);
+    }
+    rem /= x;
+    den /= x;
+    Ok((
+        whole,
+        clubscape_game_types::FractionalAccumulator {
+            numerator: u64::try_from(rem).map_err(|_| invalid("Fractional numerator overflow."))?,
+            denominator: u64::try_from(den)
+                .map_err(|_| invalid("Fractional denominator overflow."))?,
+        },
+    ))
 }

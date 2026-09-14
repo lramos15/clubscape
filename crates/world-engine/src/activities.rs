@@ -1,9 +1,9 @@
 use clubscape_game_types::*;
-use clubscape_simulation::{inventory, skills};
+use clubscape_simulation::inventory;
 
 use crate::{
-    RandomSource, WorldEngine, actions, invalid_content, invalid_state, random, runtime,
-    unavailable, unknown,
+    RandomSource, WorldEngine, invalid_content, invalid_state, progression::EffectFrame, random,
+    runtime, unavailable, unknown,
 };
 
 impl WorldEngine {
@@ -11,45 +11,58 @@ impl WorldEngine {
         &self,
         world: &mut WorldState,
         character: &mut CharacterState,
-        random: &mut impl RandomSource,
+        rng: &mut impl RandomSource,
     ) -> GameResult<Vec<GameEvent>> {
-        if character.hitpoints == 0 {
-            return Err(unavailable(
-                "A dead actor requires source-defined death/recovery state.",
-            ));
+        if character.runtime.pending_fire.is_some() {
+            return self.advance_fire(world, character, rng);
         }
         match character.activity.clone() {
-            Activity::Idle => Ok(Vec::new()),
+            Activity::Idle => Ok(vec![]),
             Activity::Walking { mut path, running } => {
                 self.authorize(character, &["walk".into()])?;
-                if running {
-                    return Err(unavailable(
-                        "Persisted running needs bound source weights/energy policy.",
-                    ));
-                }
-                let events = self
-                    .collision
-                    .step_path(&mut character.tile, &mut path, false)?;
+                let requested = running || character.runtime.settings.run_enabled == Some(true);
+                let running = requested && character.run_energy > 0 && path.len() > 1;
+                let cost = if running {
+                    self.run_cost(character)?
+                } else {
+                    0
+                };
+                let map = self.collision_for(world, character.runtime.instance.as_ref())?;
+                let events = map.step_path(&mut character.tile, &mut path, running)?;
                 character.region = self
                     .regions_by_tile
                     .get(&character.tile)
-                    .ok_or_else(|| unknown("Walked tile has no source region."))?
+                    .ok_or_else(|| unknown("Moved tile has no region."))?
                     .clone();
+                if events.len() == 2 {
+                    character.run_energy = character.run_energy.saturating_sub(cost);
+                    if character.run_energy == 0
+                        && self
+                            .content
+                            .mechanics
+                            .run
+                            .as_ref()
+                            .is_some_and(|policy| policy.disable_on_exhaustion)
+                    {
+                        character.runtime.settings.run_enabled = Some(false);
+                    }
+                }
                 character.activity = if path.is_empty() {
                     Activity::Idle
                 } else {
                     Activity::Walking {
                         path,
-                        running: false,
+                        running: requested && character.run_energy > 0,
                     }
                 };
                 Ok(events)
             }
             Activity::Gathering { target, next_tick } => {
                 if world.tick < next_tick {
-                    return Ok(Vec::new());
+                    Ok(vec![])
+                } else {
+                    self.gather(world, character, &target, rng)
                 }
-                self.gather(world, character, &target, random)
             }
             Activity::Producing {
                 recipe,
@@ -58,24 +71,70 @@ impl WorldEngine {
                 next_tick,
             } => {
                 if world.tick < next_tick {
-                    return Ok(Vec::new());
+                    Ok(vec![])
+                } else {
+                    self.produce(
+                        world,
+                        character,
+                        &recipe,
+                        target.map(|spawn| WorldTarget::Spawn { spawn }),
+                        remaining,
+                        rng,
+                    )
                 }
-                self.produce(
+            }
+            Activity::ProducingAt {
+                recipe,
+                target,
+                remaining,
+                next_tick,
+            } => {
+                if world.tick < next_tick {
+                    Ok(vec![])
+                } else {
+                    self.produce(world, character, &recipe, target, remaining, rng)
+                }
+            }
+            Activity::Fighting {
+                target,
+                style,
+                next_tick,
+            } => {
+                if world.tick < next_tick.max(character.runtime.combat.attack_ready) {
+                    return Ok(vec![]);
+                }
+                self.player_attack(
                     world,
                     character,
-                    &recipe,
-                    target.as_ref(),
-                    remaining,
-                    random,
+                    &target,
+                    &CombatStyleId::new(style)?,
+                    None,
+                    rng,
                 )
             }
-            Activity::Fighting { .. } => Err(actions::combat_unbound()),
-            Activity::Casting { .. } => Err(unavailable(
-                "Persisted spell activity lacks compiled spell/timing rules.",
-            )),
-            Activity::ProducingAt { .. } => Err(unavailable(
-                "Persisted dynamic-facility production requires mechanics-v2 execution.",
-            )),
+            Activity::Casting {
+                spell,
+                target,
+                completes_at,
+            } => {
+                if world.tick < completes_at {
+                    return Ok(vec![]);
+                }
+                let spell = SpellId::new(spell)?;
+                let definition = self
+                    .content
+                    .mechanics
+                    .spells
+                    .get(&spell)
+                    .ok_or_else(|| unknown("Unknown pending spell."))?;
+                let SpellAction::Combat { style, .. } = &definition.action else {
+                    return Err(invalid_state("Teleport was stored as a combat cast."));
+                };
+                let target =
+                    target.ok_or_else(|| invalid_state("Pending combat spell has no target."))?;
+                character.activity = Activity::Idle;
+                self.player_attack(world, character, &target, style, Some(&spell), rng)
+            }
         }
     }
 
@@ -84,42 +143,89 @@ impl WorldEngine {
         character: &CharacterState,
         rule: &GatherRule,
     ) -> GameResult<()> {
-        if rule.mechanics.is_some() {
-            return Err(unavailable(
-                "Source gathering domains/cadence/outcomes require mechanics-v2 execution.",
-            ));
-        }
-        if matches!(rule.success.domain, ChanceDomain::Skill { levels } if levels.basis != SkillLevelBasis::Current)
-        {
-            return Err(unavailable(
-                "A base-level gathering chance requires mechanics-v2 skill selection.",
-            ));
-        }
-        skills::check_requirements(
-            &character.skills,
-            &self.content.skills,
+        let basis = rule
+            .mechanics
+            .as_ref()
+            .map_or(SkillLevelBasis::Current, |m| m.levels.basis);
+        self.requirements(
+            character,
             &[SkillRequirement {
                 skill: rule.skill.clone(),
                 level: rule.required_level,
-                basis: SkillLevelBasis::Current,
+                basis,
             }],
-            skills::LevelBasis::Current,
         )?;
-        if !rule.tools.is_empty() {
-            let mut has_tool = false;
-            for tool in &rule.tools {
-                has_tool |= self.has_tool(character, tool)?;
-            }
-            if !has_tool {
-                return Err(GameError::new(
-                    GameErrorCode::RequirementNotMet,
-                    "No usable gathering tool is carried/equipped.",
+        if let Some(mechanics) = &rule.mechanics {
+            let level = self.level(character, &rule.skill, mechanics.levels.basis)?;
+            if !(mechanics.levels.minimum..=mechanics.levels.maximum).contains(&level) {
+                return Err(unavailable(
+                    "Gathering level is outside the source method domain.",
                 ));
             }
         }
+        if !rule.tools.is_empty()
+            && !rule
+                .tools
+                .iter()
+                .map(|item| {
+                    self.owned_count(character, item, &OwnershipScope::InventoryAndEquipment)
+                })
+                .collect::<GameResult<Vec<_>>>()?
+                .iter()
+                .any(|count| *count > 0)
+        {
+            return Err(GameError::new(
+                GameErrorCode::RequirementNotMet,
+                "No usable source gathering tool.",
+            ));
+        }
+        self.gather_delay(character, rule, false)?;
         let mut inventory = character.inventory.clone();
         inventory::add(&mut inventory, &self.content.items, &rule.output)?;
+        if let Some(mechanics) = &rule.mechanics {
+            for alternative in &mechanics.alternatives {
+                if self.level(
+                    character,
+                    &alternative.requirement.skill,
+                    alternative.requirement.basis,
+                )? >= alternative.requirement.level
+                {
+                    inventory::add(
+                        &mut character.inventory.clone(),
+                        &self.content.items,
+                        &alternative.output,
+                    )?;
+                }
+            }
+        }
         Ok(())
+    }
+
+    pub(crate) fn gather_delay(
+        &self,
+        character: &CharacterState,
+        rule: &GatherRule,
+        repeat: bool,
+    ) -> GameResult<u64> {
+        let Some(mechanics) = &rule.mechanics else {
+            return runtime::legacy_ticks(rule.attempt_ticks);
+        };
+        if mechanics.tool_cadences.is_empty() {
+            return runtime::cadence(&mechanics.cadence, false, repeat);
+        }
+        let mut best = None;
+        for tool in &mechanics.tool_cadences {
+            if self.owned_count(character, &tool.tool, &tool.location)? > 0 {
+                let delay = runtime::cadence(&tool.cadence, false, repeat)?;
+                best = Some(best.map_or(delay, |prior: u64| prior.min(delay)));
+            }
+        }
+        best.ok_or_else(|| {
+            GameError::new(
+                GameErrorCode::RequirementNotMet,
+                "No tool in the source-required location.",
+            )
+        })
     }
 
     fn gather(
@@ -127,95 +233,185 @@ impl WorldEngine {
         world: &mut WorldState,
         character: &mut CharacterState,
         target: &SpawnId,
-        random: &mut impl RandomSource,
+        rng: &mut impl RandomSource,
     ) -> GameResult<Vec<GameEvent>> {
         self.authorize(character, &["gather".into(), format!("gather:{target}")])?;
-        let index = runtime::read_counter(character, runtime::GATHER_INTERACTION)?
-            .checked_sub(1)
-            .ok_or_else(|| invalid_state("Gathering state lacks its chosen source interaction."))?;
-        let interaction = runtime::interaction(
-            &self.content,
-            target,
-            usize::try_from(index)
-                .map_err(|_| invalid_state("Gather interaction index overflow."))?,
-        )?;
+        let index = runtime::schedule(character)?
+            .gather_interaction
+            .ok_or_else(|| invalid_state("Gathering interaction is missing."))?;
+        let interaction = runtime::interaction(&self.content, target, index as usize - 1)?;
         let InteractionAction::Gather { rule } = &interaction.action else {
-            return Err(invalid_state(
-                "Persisted gathering refers to a different action kind.",
-            ));
+            return Err(invalid_state("Persisted gathering changed kind."));
         };
         self.require_target(world, character, target, interaction)?;
         self.check_gather(character, rule)?;
-        let level = character
-            .skills
-            .get(&rule.skill)
-            .ok_or_else(|| invalid_state("Gathering skill state is missing."))?
-            .current_level;
-        let next_tick = runtime::deadline(world.tick, runtime::legacy_ticks(rule.attempt_ticks)?)?;
+        let mut output = None;
+        if let Some(mechanics) = &rule.mechanics {
+            for alternative in &mechanics.alternatives {
+                if self.level(
+                    character,
+                    &alternative.requirement.skill,
+                    alternative.requirement.basis,
+                )? >= alternative.requirement.level
+                {
+                    let level = self.chance_level(
+                        character,
+                        &alternative.requirement.skill,
+                        &alternative.chance,
+                    )?;
+                    if random::roll(&alternative.chance, level, rng)? {
+                        output = Some((alternative.output.clone(), alternative.xp_tenths));
+                        break;
+                    }
+                }
+            }
+        }
+        if output.is_none() {
+            let level = self.chance_level(character, &rule.skill, &rule.success)?;
+            if random::roll(&rule.success, level, rng)? {
+                output = Some((rule.output.clone(), rule.xp_tenths));
+            }
+        }
+        let next_tick = runtime::deadline(world.tick, self.gather_delay(character, rule, true)?)?;
         character.activity = Activity::Gathering {
             target: target.clone(),
             next_tick,
         };
-        if !random::roll(&rule.success, level, random)? {
-            return Ok(Vec::new());
+        if let Some(mechanics) = &rule.mechanics {
+            character
+                .runtime
+                .action_cooldowns
+                .insert(mechanics.method.clone(), next_tick);
         }
-        inventory::add(&mut character.inventory, &self.content.items, &rule.output)?;
+        let Some((stack, xp)) = output else {
+            return Ok(vec![]);
+        };
+        inventory::add(&mut character.inventory, &self.content.items, &stack)?;
         let mut events = vec![GameEvent::Gathered {
             target: target.clone(),
-            stack: rule.output.clone(),
+            stack,
         }];
-        events.extend(skills::award_character_xp(
+        events.extend(self.award_xp(
             character,
-            &self.content,
             &[XpReward {
                 skill: rule.skill.clone(),
-                amount_tenths: rule.xp_tenths,
+                amount_tenths: xp,
             }],
-            skills::CurrentLevelPolicy::AddBaseLevelGains,
         )?);
-        if random::roll(&rule.depletion, level, random)? {
-            let entity = world
-                .entities
-                .get_mut(target)
-                .ok_or_else(|| unknown("Gather entity is missing."))?;
-            entity.available_at_tick =
-                runtime::deadline(world.tick, runtime::legacy_respawn(rule.respawn_ticks)?)?;
+        if random::roll(
+            &rule.depletion,
+            self.chance_level(character, &rule.skill, &rule.depletion)?,
+            rng,
+        )? {
+            let delay = match &rule.mechanics {
+                Some(mechanics) => runtime::duration(mechanics.respawn.require()?, rng)?,
+                None => runtime::legacy_respawn(rule.respawn_ticks)?,
+            };
+            runtime::entity_mut(world, character.runtime.instance.as_ref(), target)?
+                .available_at_tick = runtime::deadline(world.tick, delay)?;
             character.activity = Activity::Idle;
-            character.flags.remove(runtime::GATHER_INTERACTION);
+            runtime::schedule_mut(character)?.gather_interaction = None;
         }
         Ok(events)
     }
 
+    pub(crate) fn chance_level(
+        &self,
+        character: &CharacterState,
+        skill: &SkillId,
+        chance: &ChanceRule,
+    ) -> GameResult<u16> {
+        match chance.domain {
+            ChanceDomain::Constant => Ok(1),
+            ChanceDomain::Skill { levels } => self.level(character, skill, levels.basis),
+        }
+    }
+
     pub(crate) fn start_production(
         &self,
-        world: &WorldState,
+        world: &mut WorldState,
         character: &mut CharacterState,
-        recipe: &RecipeId,
-        target: Option<&SpawnId>,
+        recipe_id: &RecipeId,
+        target: Option<WorldTarget>,
         remaining: u32,
     ) -> GameResult<()> {
-        self.authorize(character, &["produce".into(), format!("produce:{recipe}")])?;
+        self.authorize(
+            character,
+            &["produce".into(), format!("produce:{recipe_id}")],
+        )?;
         let recipe = self
             .content
             .recipes
-            .get(recipe)
-            .ok_or_else(|| unknown(format!("Unknown recipe {recipe}.")))?;
+            .get(recipe_id)
+            .ok_or_else(|| unknown("Unknown recipe."))?;
         if remaining == 0 {
-            return Err(invalid_state(
-                "A production queue must contain at least one operation.",
-            ));
+            return Err(invalid_state("Production quantity is zero."));
         }
-        self.check_recipe_target(world, character, recipe, target)?;
-        self.check_recipe(character, recipe)?;
-        self.recipe_level(character, recipe)?;
-        self.check_outcomes_fit(character, recipe)?;
-        runtime::interrupt(character);
-        character.activity = Activity::Producing {
-            recipe: recipe.id.clone(),
-            target: target.cloned(),
-            remaining,
-            next_tick: runtime::deadline(world.tick, runtime::legacy_ticks(recipe.ticks)?)?,
-        };
+        self.check_recipe_target(world, character, recipe, target.as_ref())?;
+        self.check_recipe(world, character, recipe, false)?;
+        let delay = self.recipe_delay(recipe, remaining == 1, false)?;
+        if remaining > 1 {
+            self.recipe_delay(recipe, false, true)?;
+        }
+        let mut next_tick = runtime::deadline(world.tick, delay)?;
+        if let Some(mechanics) = &recipe.mechanics {
+            next_tick = next_tick.max(
+                character
+                    .runtime
+                    .action_cooldowns
+                    .get(&mechanics.method)
+                    .copied()
+                    .unwrap_or(0),
+            );
+        }
+        runtime::interrupt(character)?;
+        if let Some(mechanics) = &recipe.mechanics
+            && let RecipeLifecycle::Firemaking {
+                ground_input, fire, ..
+            } = &mechanics.lifecycle
+        {
+            if remaining != 1 || target.is_some() {
+                return Err(invalid_state(
+                    "Firemaking starts one owned ground input at the actor tile.",
+                ));
+            }
+            self.validate_temporary_placement(world, character, fire)?;
+            let definition = self
+                .content
+                .mechanics
+                .temporary_objects
+                .get(fire)
+                .ok_or_else(|| unknown("Unknown fire."))?;
+            let input = recipe
+                .inputs
+                .iter()
+                .find(|input| &input.item == ground_input)
+                .ok_or_else(|| invalid_content("Missing fire ground input."))?;
+            inventory::remove(&mut character.inventory, &self.content.items, input)?;
+            let ground_item = self.put_ground(
+                world,
+                input.clone(),
+                &character.actor_id,
+                &runtime::location(character),
+                &definition.ground_policy,
+            )?;
+            character.runtime.pending_fire = Some(PendingFire {
+                recipe: recipe.id.clone(),
+                ground_item,
+                tile: character.tile,
+                next_attempt_tick: next_tick,
+            });
+        } else {
+            self.check_outcomes_fit(character, recipe)?;
+            character.activity =
+                production_activity(recipe.id.clone(), target, remaining, next_tick);
+        }
+        if let Some(mechanics) = &recipe.mechanics {
+            character
+                .runtime
+                .action_cooldowns
+                .insert(mechanics.method.clone(), next_tick);
+        }
         Ok(())
     }
 
@@ -224,107 +420,90 @@ impl WorldEngine {
         world: &WorldState,
         character: &CharacterState,
         recipe: &RecipeDefinition,
-        target: Option<&SpawnId>,
+        target: Option<&WorldTarget>,
     ) -> GameResult<()> {
         let Some(target) = target else {
-            if recipe.target_objects.is_empty() {
-                return Ok(());
-            }
-            return Err(GameError::new(
-                GameErrorCode::OutOfReach,
-                "This recipe requires its source facility.",
-            ));
+            return if recipe.target_objects.is_empty() {
+                Ok(())
+            } else {
+                Err(GameError::new(
+                    GameErrorCode::OutOfReach,
+                    "Recipe needs a source facility.",
+                ))
+            };
         };
-        let spawn = self
-            .content
-            .spawns
-            .get(target)
-            .ok_or_else(|| unknown(format!("Unknown production target {target}.")))?;
+        let shape = self.target_shape(world, character, target)?;
         if !recipe.target_objects.is_empty()
-            && !matches!(&spawn.kind, SpawnKind::Object { object } if recipe.target_objects.contains(object))
+            && !shape
+                .object
+                .as_ref()
+                .is_some_and(|id| recipe.target_objects.contains(id))
         {
             return Err(GameError::new(
                 GameErrorCode::RequirementNotMet,
-                "Wrong facility for this recipe.",
+                "Wrong source facility.",
             ));
         }
-        let mut last_error = None;
-        for interaction in &spawn.interactions {
+        let mut refusal = None;
+        for interaction in self.target_interactions(world, target)? {
             if matches!(&interaction.action, InteractionAction::Production { recipes } if recipes.contains(&recipe.id))
             {
-                match self.require_target(world, character, target, interaction) {
+                match self.require_world_target(world, character, target, interaction) {
                     Ok(()) => return Ok(()),
-                    Err(error)
-                        if matches!(
-                            error.code,
-                            GameErrorCode::RequirementNotMet
-                                | GameErrorCode::OutOfReach
-                                | GameErrorCode::Busy
-                        ) =>
-                    {
-                        last_error = Some(error);
-                    }
+                    Err(error) if crate::is_interruption(&error.code) => refusal = Some(error),
                     Err(error) => return Err(error),
                 }
             }
         }
-        Err(last_error.unwrap_or_else(|| {
+        Err(refusal.unwrap_or_else(|| {
             GameError::new(
                 GameErrorCode::RequirementNotMet,
-                "The target does not offer this production recipe.",
+                "Facility does not offer the recipe.",
             )
         }))
     }
 
+    fn recipe_delay(
+        &self,
+        recipe: &RecipeDefinition,
+        single: bool,
+        repeat: bool,
+    ) -> GameResult<u64> {
+        match &recipe.mechanics {
+            Some(mechanics) => runtime::cadence(&mechanics.cadence, single, repeat),
+            None => runtime::legacy_ticks(recipe.ticks),
+        }
+    }
+
     fn check_recipe(
         &self,
+        world: &WorldState,
         character: &CharacterState,
         recipe: &RecipeDefinition,
+        ground: bool,
     ) -> GameResult<()> {
-        if recipe.mechanics.is_some() {
-            return Err(unavailable(
-                "Source recipe guards/cadence/lifecycle require mechanics-v2 execution.",
-            ));
+        self.requirements(character, &recipe.requirements)?;
+        let ownership = recipe
+            .mechanics
+            .as_ref()
+            .map_or(&OwnershipScope::InventoryAndEquipment, |m| {
+                &m.tool_ownership
+            });
+        if let Some(mechanics) = &recipe.mechanics {
+            self.require_guard(world, character, &mechanics.guard)?;
         }
-        if recipe
-            .requirements
-            .iter()
-            .any(|requirement| requirement.basis != SkillLevelBasis::Current)
-            || matches!(recipe.success.domain, ChanceDomain::Skill { levels } if levels.basis != SkillLevelBasis::Current)
-        {
-            return Err(unavailable(
-                "Source-specific production requirement/chance bases require mechanics-v2 execution.",
-            ));
-        }
-        if recipe.ticks == Some(0) {
-            return Err(invalid_content("Zero-tick production is not supported."));
-        }
-        skills::check_requirements(
-            &character.skills,
-            &self.content.skills,
-            &recipe.requirements,
-            skills::LevelBasis::Current,
-        )?;
         for tool in &recipe.tools {
-            if !self.has_tool(character, tool)? {
+            if self.owned_count(character, tool, ownership)? == 0 {
                 return Err(GameError::new(
                     GameErrorCode::RequirementNotMet,
-                    format!("Recipe requires unconsumed tool {tool}."),
+                    format!("Missing required unconsumed tool {tool}."),
                 ));
             }
         }
-        let mut inventory = character.inventory.clone();
-        inventory::remove_batch(&mut inventory, &self.content.items, &recipe.inputs)
-    }
-
-    fn has_tool(&self, character: &CharacterState, tool: &ItemId) -> GameResult<bool> {
-        Ok(
-            inventory::count(&character.inventory, &self.content.items, tool)? > 0
-                || character
-                    .equipment
-                    .values()
-                    .any(|stack| &stack.item == tool),
-        )
+        let mut draft = character.inventory.clone();
+        let inputs: Vec<_> = recipe.inputs.iter().filter(|input| !(ground && recipe.mechanics.as_ref().is_some_and(|mechanics|
+            matches!(&mechanics.lifecycle, RecipeLifecycle::Firemaking { ground_input, .. } if ground_input == &input.item)))).cloned().collect();
+        inventory::remove_batch(&mut draft, &self.content.items, &inputs)
     }
 
     fn recipe_level(
@@ -332,29 +511,33 @@ impl WorldEngine {
         character: &CharacterState,
         recipe: &RecipeDefinition,
     ) -> GameResult<u16> {
-        if recipe.success.numerator_at_level_1 == recipe.success.numerator_at_level_99 {
+        if matches!(recipe.success.domain, ChanceDomain::Constant) {
             return Ok(1);
+        }
+        if let Some(mechanics) = &recipe.mechanics {
+            return self.chance_level(
+                character,
+                mechanics
+                    .chance_skill
+                    .as_ref()
+                    .ok_or_else(|| invalid_content("Recipe chance skill is missing."))?,
+                &recipe.success,
+            );
         }
         let mut skill = None;
         for requirement in &recipe.requirements {
-            if skill
-                .as_ref()
-                .is_some_and(|skill| skill != &requirement.skill)
-            {
+            if skill.is_some_and(|prior| prior != &requirement.skill) {
                 return Err(unavailable(
-                    "A multi-skill recipe needs an explicit chance-skill binding.",
+                    "Legacy recipe chance has multiple skill candidates.",
                 ));
             }
-            skill = Some(requirement.skill.clone());
+            skill = Some(&requirement.skill);
         }
-        let skill = skill.ok_or_else(|| {
-            unavailable("Level-dependent recipe chance needs a chance-skill requirement.")
-        })?;
-        Ok(character
-            .skills
-            .get(&skill)
-            .ok_or_else(|| invalid_state("Recipe chance skill state is missing."))?
-            .current_level)
+        self.chance_level(
+            character,
+            skill.ok_or_else(|| unavailable("Legacy recipe chance skill is absent."))?,
+            &recipe.success,
+        )
     }
 
     fn check_outcomes_fit(
@@ -362,8 +545,9 @@ impl WorldEngine {
         character: &CharacterState,
         recipe: &RecipeDefinition,
     ) -> GameResult<()> {
-        let level = self.recipe_level(character, recipe)?;
-        let count = random::chance_numerator(&recipe.success, level)?;
+        let count = recipe
+            .success
+            .numerator(self.recipe_level(character, recipe)?)?;
         if count > 0 {
             self.recipe_inventory(&mut character.inventory.clone(), recipe, true)?;
         }
@@ -375,7 +559,7 @@ impl WorldEngine {
 
     fn recipe_inventory(
         &self,
-        inventory: &mut Inventory,
+        container: &mut Inventory,
         recipe: &RecipeDefinition,
         success: bool,
     ) -> GameResult<()> {
@@ -396,110 +580,280 @@ impl WorldEngine {
                     .map(inventory::InventoryOperation::Add),
             )
             .collect();
-        inventory::apply_operations(inventory, &self.content.items, &operations)
+        inventory::apply_operations(container, &self.content.items, &operations)
     }
 
     fn produce(
         &self,
-        world: &WorldState,
+        world: &mut WorldState,
         character: &mut CharacterState,
-        recipe: &RecipeId,
-        target: Option<&SpawnId>,
+        id: &RecipeId,
+        target: Option<WorldTarget>,
         remaining: u32,
-        random: &mut impl RandomSource,
+        rng: &mut impl RandomSource,
     ) -> GameResult<Vec<GameEvent>> {
-        if remaining == 0 {
-            return Err(invalid_state(
-                "Persisted production queue has zero remaining work.",
-            ));
-        }
-        self.authorize(character, &["produce".into(), format!("produce:{recipe}")])?;
+        self.authorize(character, &["produce".into(), format!("produce:{id}")])?;
         let recipe = self
             .content
             .recipes
-            .get(recipe)
-            .ok_or_else(|| unknown("Persisted recipe is undefined."))?;
-        self.check_recipe_target(world, character, recipe, target)?;
-        self.check_recipe(character, recipe)?;
+            .get(id)
+            .ok_or_else(|| unknown("Unknown pending recipe."))?;
+        if remaining == 0 {
+            return Err(invalid_state("Pending production has zero work."));
+        }
+        self.check_recipe_target(world, character, recipe, target.as_ref())?;
+        self.check_recipe(world, character, recipe, false)?;
         self.check_outcomes_fit(character, recipe)?;
-        let success = random::roll(
-            &recipe.success,
-            self.recipe_level(character, recipe)?,
-            random,
-        )?;
+        let success = random::roll(&recipe.success, self.recipe_level(character, recipe)?, rng)?;
         self.recipe_inventory(&mut character.inventory, recipe, success)?;
-        let mut events = vec![GameEvent::Produced {
+        let outputs = if success {
+            recipe.outputs.clone()
+        } else {
+            recipe.failed_outputs.clone()
+        };
+        let event = match &recipe.mechanics {
+            Some(mechanics) => GameEvent::ProductionResolved {
+                recipe: id.clone(),
+                method: mechanics.method.clone(),
+                facility: target.clone(),
+                outcome: if success {
+                    ProductionOutcome::Success
+                } else {
+                    ProductionOutcome::Failure
+                },
+                outputs,
+            },
+            None => GameEvent::Produced {
+                recipe: id.clone(),
+                outputs,
+            },
+        };
+        let mut frame = EffectFrame {
+            trigger: Some(event.clone()),
+            ..EffectFrame::default()
+        };
+        frame.events.push(event);
+        let original_location = runtime::location(character);
+        if success {
+            frame.events.extend(self.award_xp(character, &recipe.xp)?);
+        } else if let Some(mechanics) = &recipe.mechanics {
+            frame
+                .events
+                .extend(self.award_xp(character, &mechanics.failed_xp)?);
+        }
+        if let Some(mechanics) = &recipe.mechanics {
+            self.effects(
+                world,
+                character,
+                if success {
+                    &mechanics.success_effects
+                } else {
+                    &mechanics.failure_effects
+                },
+                rng,
+                &mut frame,
+            )?;
+        }
+        let finished = remaining == 1
+            || character.runtime.pending_travel.is_some()
+            || runtime::location(character) != original_location;
+        let next_tick = if finished {
+            world.tick
+        } else {
+            runtime::deadline(world.tick, self.recipe_delay(recipe, false, true)?)?
+        };
+        if let Some(mechanics) = &recipe.mechanics {
+            character
+                .runtime
+                .action_cooldowns
+                .insert(mechanics.method.clone(), next_tick);
+        }
+        character.activity = if finished {
+            Activity::Idle
+        } else {
+            production_activity(id.clone(), target, remaining - 1, next_tick)
+        };
+        Ok(frame.events)
+    }
+
+    fn advance_fire(
+        &self,
+        world: &mut WorldState,
+        character: &mut CharacterState,
+        rng: &mut impl RandomSource,
+    ) -> GameResult<Vec<GameEvent>> {
+        let pending = character
+            .runtime
+            .pending_fire
+            .clone()
+            .ok_or_else(|| invalid_state("Missing pending fire."))?;
+        if world.tick < pending.next_attempt_tick {
+            return Ok(vec![]);
+        }
+        self.authorize(
+            character,
+            &["produce".into(), format!("produce:{}", pending.recipe)],
+        )?;
+        let recipe = self
+            .content
+            .recipes
+            .get(&pending.recipe)
+            .ok_or_else(|| unknown("Unknown fire recipe."))?;
+        let mechanics = recipe
+            .mechanics
+            .as_ref()
+            .ok_or_else(|| invalid_state("Fire lifecycle vanished."))?;
+        let RecipeLifecycle::Firemaking {
+            ground_input,
+            fire,
+            step_priority,
+            retain_ground_input_on_failure,
+        } = &mechanics.lifecycle
+        else {
+            return Err(invalid_state("Fire lifecycle changed."));
+        };
+        if character.tile != pending.tile {
+            return Err(GameError::new(
+                GameErrorCode::OutOfReach,
+                "Moved away from the placed log.",
+            ));
+        }
+        let index = world
+            .ground_items
+            .iter()
+            .position(|ground| {
+                ground.id == pending.ground_item
+                    && ground.tile == pending.tile
+                    && ground.instance == character.runtime.instance
+                    && ground.owner.as_ref() == Some(&character.actor_id)
+                    && &ground.stack.item == ground_input
+            })
+            .ok_or_else(|| {
+                GameError::new(
+                    GameErrorCode::NotOwned,
+                    "Placed firemaking input is no longer owned.",
+                )
+            })?;
+        self.check_recipe(world, character, recipe, true)?;
+        self.validate_temporary_placement(world, character, fire)?;
+        let success = random::roll(&recipe.success, self.recipe_level(character, recipe)?, rng)?;
+        let event = GameEvent::ProductionResolved {
             recipe: recipe.id.clone(),
+            method: mechanics.method.clone(),
+            facility: None,
+            outcome: if success {
+                ProductionOutcome::Success
+            } else {
+                ProductionOutcome::Failure
+            },
             outputs: if success {
                 recipe.outputs.clone()
             } else {
                 recipe.failed_outputs.clone()
             },
-        }];
-        if success {
-            events.extend(skills::award_character_xp(
-                character,
-                &self.content,
-                &recipe.xp,
-                skills::CurrentLevelPolicy::AddBaseLevelGains,
-            )?);
-        }
-        character.activity = if remaining == 1 {
-            Activity::Idle
-        } else {
-            Activity::Producing {
-                recipe: recipe.id.clone(),
-                target: target.cloned(),
-                remaining: remaining - 1,
-                next_tick: runtime::deadline(world.tick, runtime::legacy_ticks(recipe.ticks)?)?,
-            }
         };
-        Ok(events)
-    }
-
-    pub(crate) fn advance_entities(&self, world: &mut WorldState) -> GameResult<()> {
-        for (id, definition) in &self.content.spawns {
-            let entity = world
-                .entities
-                .get_mut(id)
-                .ok_or_else(|| unknown(format!("World is missing spawn {id}.")))?;
-            if entity.available_at_tick == 0 || entity.available_at_tick > world.tick {
-                continue;
-            }
-            match &definition.kind {
-                SpawnKind::Item { stack, .. } => {
-                    let prefix = format!("source:{id}:");
-                    if world
-                        .ground_items
-                        .iter()
-                        .any(|item| item.id.starts_with(&prefix))
-                    {
-                        return Err(invalid_state(
-                            "A source ground item is still present at its respawn deadline.",
-                        ));
-                    }
-                    world.ground_items.push(self.spawn_ground_item(
-                        id,
-                        definition.tile,
-                        stack,
-                        world.tick,
-                    ));
+        let mut frame = EffectFrame {
+            trigger: Some(event.clone()),
+            ..EffectFrame::default()
+        };
+        frame.events.push(event);
+        if success {
+            world.ground_items.remove(index);
+            let inputs: Vec<_> = recipe
+                .inputs
+                .iter()
+                .filter(|input| &input.item != ground_input)
+                .cloned()
+                .collect();
+            inventory::remove_batch(&mut character.inventory, &self.content.items, &inputs)?;
+            inventory::add_batch(
+                &mut character.inventory,
+                &self.content.items,
+                &recipe.outputs,
+            )?;
+            frame
+                .events
+                .push(self.create_temporary(world, character, fire, rng)?);
+            frame.events.extend(self.award_xp(character, &recipe.xp)?);
+            self.effects(
+                world,
+                character,
+                &mechanics.success_effects,
+                rng,
+                &mut frame,
+            )?;
+            character.runtime.pending_fire = None;
+            let map = self.collision_for(world, character.runtime.instance.as_ref())?;
+            for direction in step_priority {
+                let (dx, dy) = direction.offset();
+                if let Some(tile) = character.tile.offset(dx, dy)
+                    && map.can_step(character.tile, tile)
+                {
+                    character.tile = tile;
+                    character.region = self
+                        .regions_by_tile
+                        .get(&tile)
+                        .ok_or_else(|| unknown("Fire step has no region."))?
+                        .clone();
+                    frame.events.push(GameEvent::Moved { tile });
+                    break;
                 }
-                SpawnKind::Npc { npc } => {
-                    let npc = self
-                        .content
-                        .npcs
-                        .get(npc)
-                        .ok_or_else(|| unknown("Respawning NPC definition is missing."))?;
-                    if let Some(combat) = &npc.combat {
-                        entity.hitpoints = combat.hitpoints;
-                        entity.tile = definition.tile;
-                    }
-                }
-                SpawnKind::Object { .. } => {}
             }
-            entity.available_at_tick = 0;
+        } else {
+            inventory::add_batch(
+                &mut character.inventory,
+                &self.content.items,
+                &recipe.failed_outputs,
+            )?;
+            frame
+                .events
+                .extend(self.award_xp(character, &mechanics.failed_xp)?);
+            self.effects(
+                world,
+                character,
+                &mechanics.failure_effects,
+                rng,
+                &mut frame,
+            )?;
+            if *retain_ground_input_on_failure {
+                let next_attempt_tick = runtime::deadline(
+                    world.tick,
+                    runtime::cadence(&mechanics.cadence, false, true)?,
+                )?;
+                character.runtime.pending_fire = Some(PendingFire {
+                    next_attempt_tick,
+                    ..pending
+                });
+            } else {
+                world.ground_items.remove(index);
+                character.runtime.pending_fire = None;
+            }
         }
-        Ok(())
+        Ok(frame.events)
+    }
+}
+
+fn production_activity(
+    recipe: RecipeId,
+    target: Option<WorldTarget>,
+    remaining: u32,
+    next_tick: u64,
+) -> Activity {
+    match target {
+        Some(WorldTarget::TemporaryObject { .. }) => Activity::ProducingAt {
+            recipe,
+            target,
+            remaining,
+            next_tick,
+        },
+        target => Activity::Producing {
+            recipe,
+            target: target.map(|target| match target {
+                WorldTarget::Spawn { spawn } => spawn,
+                _ => unreachable!(),
+            }),
+            remaining,
+            next_tick,
+        },
     }
 }

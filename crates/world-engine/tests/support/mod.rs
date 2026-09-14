@@ -1,6 +1,8 @@
 //! Synthetic rooms, actors and content only. This is not assembled M1 product content.
 #![allow(dead_code)]
 
+pub mod v2;
+
 use std::{collections::BTreeMap, sync::Arc};
 
 use clubscape_game_types::*;
