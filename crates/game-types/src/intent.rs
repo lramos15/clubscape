@@ -158,3 +158,72 @@ pub enum GameEvent {
         animation: String,
     },
 }
+
+impl GameEvent {
+    pub fn kind(&self) -> &'static str {
+        match self {
+            Self::Moved { .. } => "moved",
+            Self::Interacted { .. } => "interacted",
+            Self::DialogueSelected { .. } => "dialogue_selected",
+            Self::InterfaceOpened { .. } => "interface_opened",
+            Self::Gathered { .. } => "gathered",
+            Self::Produced { .. } => "produced",
+            Self::Equipped { .. } => "equipped",
+            Self::XpGained { .. } => "xp_gained",
+            Self::Hit { .. } => "hit",
+            Self::Defeated { .. } => "defeated",
+            Self::Died => "died",
+            Self::Recovered => "recovered",
+            Self::TutorialAdvanced { .. } => "tutorial_advanced",
+            Self::QuestAdvanced { .. } => "quest_advanced",
+            Self::Message { .. } => "message",
+            Self::Sound { .. } => "sound",
+            Self::Animation { .. } => "animation",
+        }
+    }
+
+    pub fn primary_target(&self) -> Option<&str> {
+        match self {
+            Self::Interacted { target, .. }
+            | Self::Gathered { target, .. }
+            | Self::Hit { target, .. }
+            | Self::Defeated { target, .. } => Some(target.as_str()),
+            Self::DialogueSelected { speaker, .. } => Some(speaker.as_str()),
+            Self::InterfaceOpened { interface } => Some(interface.as_str()),
+            Self::Produced { recipe, .. } => Some(recipe.as_str()),
+            Self::Equipped { slot, .. } => Some(slot.as_str()),
+            Self::XpGained { skill, .. } => Some(skill.as_str()),
+            Self::TutorialAdvanced { stage } => Some(stage.as_str()),
+            Self::QuestAdvanced { quest, .. } => Some(quest.as_str()),
+            Self::Sound { asset } => Some(asset),
+            Self::Animation { target, .. } => Some(target),
+            Self::Moved { .. } | Self::Died | Self::Recovered | Self::Message { .. } => None,
+        }
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use crate::Tile;
+
+    #[test]
+    fn transition_identity_is_shared_and_unambiguous() {
+        let event = GameEvent::DialogueSelected {
+            speaker: SpawnId::new("spawn.tutorial.guide").unwrap(),
+            choice: "continue".to_owned(),
+        };
+        assert_eq!(event.kind(), "dialogue_selected");
+        assert_eq!(event.primary_target(), Some("spawn.tutorial.guide"));
+        let event = GameEvent::Moved {
+            tile: Tile::new(1, 1, 0).unwrap(),
+        };
+        assert_eq!(event.kind(), "moved");
+        assert_eq!(event.primary_target(), None);
+        let event = GameEvent::QuestAdvanced {
+            quest: QuestId::new("quest.cooks_assistant").unwrap(),
+            stage: StageId::new("stage.quest.completed").unwrap(),
+        };
+        assert_eq!(event.primary_target(), Some("quest.cooks_assistant"));
+    }
+}

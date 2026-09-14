@@ -115,3 +115,25 @@ renderer and UI workers start only after the source pack is owner-approved.
 Every worker reports SQL todo completion/blockers and an independently
 reproducible result. The initial source/rule workers do not modify these
 shared contracts.
+
+## Runtime source bindings
+
+`GameContent.interfaces` is the logical source interface registry. Initial
+unlocks and interface guards/effects must resolve there; the registry does
+not itself claim a rendered control/state matrix. Each definition keeps its
+source widget-group IDs and provenance.
+
+`RecipeDefinition.tools` are required but not consumed, and must be held in
+inventory or equipment. They are distinct from recipe inputs. Gather-rule
+tool lists instead identify acceptable alternatives for the declared gather
+method; bait or consumed resources belong in explicit production/action rules.
+
+Canonical run energy is 0 through 10,000 hundredths of one percent. Source
+percentages/rates must be converted explicitly; this choice of units does not
+authorize a changed run/regeneration formula.
+
+Transition event names match `GameEvent::kind()`. Optional targets match
+`GameEvent::primary_target()`; `None` is a wildcard. Movement, death, recovery
+and ordinary message events have no primary identity; use explicit state
+guards for tile, actor or progression conditions. The mapping is shared rather
+than independently guessed by each content/runtime worker.

@@ -171,6 +171,8 @@ pub struct RecipeDefinition {
     pub inputs: Vec<ItemStack>,
     pub outputs: Vec<ItemStack>,
     pub failed_outputs: Vec<ItemStack>,
+    #[serde(default)]
+    pub tools: Vec<ItemId>,
     pub requirements: Vec<SkillRequirement>,
     pub xp: Vec<XpReward>,
     pub ticks: u16,
@@ -375,6 +377,16 @@ pub struct GameContent {
     pub tutorial: BTreeMap<StageId, TutorialStageDefinition>,
     pub quests: BTreeMap<QuestId, QuestDefinition>,
     pub shops: BTreeMap<ShopId, ShopDefinition>,
+    #[serde(default)]
+    pub interfaces: BTreeMap<InterfaceId, InterfaceDefinition>,
     pub equipment_slots: Vec<SlotId>,
     pub initial_state: InitialStateDefinition,
+}
+
+#[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
+pub struct InterfaceDefinition {
+    pub id: InterfaceId,
+    pub name: String,
+    pub source_ids: Vec<u32>,
+    pub source: Vec<SourceRecord>,
 }
