@@ -77,6 +77,7 @@ def write_json(path: Path, value) -> dict:
 
 
 def file_record(path: Path) -> dict:
+    path = within(ROOT, path)
     return {
         "path": str(path.relative_to(ROOT)),
         "size_bytes": path.stat().st_size,
@@ -447,8 +448,13 @@ def validate_bundle(directory: Path) -> dict:
     if dict(counters) != manifest["counts"]:
         raise InputError("Extraction counts do not match the records")
     content_closure = manifest.get("scope") == "content-asset-closure"
-    required = (["model", "sprite", "font", "npc", "item", "interface"] if content_closure else
-                ["model", "region", "sprite", "font", "sequence", "frame", "music", "sound", "npc", "object"])
+    if content_closure:
+        required = ["model", "sprite", "font"]
+        for kind, key in [("npc", "npc_ids"), ("item", "item_ids"), ("interface", "interface_groups")]:
+            if manifest["request"][key] or manifest["request"]["audit_existing"][key]:
+                required.append(kind)
+    else:
+        required = ["model", "region", "sprite", "font", "sequence", "frame", "music", "sound", "npc", "object"]
     for kind in required:
         if counters[kind] <= 0:
             raise InputError(f"No actual decoded source data for {kind}")
@@ -570,6 +576,8 @@ def validate_published(selection: dict) -> dict:
     if extension.exists():
         import content_closure
         result["content_closure"] = content_closure.validate_publication(extension)
+        if content_closure.POTION_PUBLICATION.exists():
+            result["potion_assets"] = content_closure.validate_publication(content_closure.POTION_PUBLICATION)
     return result
 
 
@@ -578,7 +586,7 @@ def main() -> int:
     parser.add_argument("command", choices=["fetch", "reuse", "prepare", "verify", "scan", "extract", "probe", "validate",
                                           "publish", "validate-published", "test-integrity", "plan-closure",
                                           "extract-closure", "publish-closure", "validate-closure",
-                                          "validate-closure-request"])
+                                          "validate-closure-request", "plan-potions"])
     parser.add_argument("--selection", type=Path, default=DEFAULT_SELECTION)
     parser.add_argument("--cache", type=Path, default=LOCAL / "cache-2695")
     parser.add_argument("--output", type=Path)
@@ -605,6 +613,9 @@ def main() -> int:
         import content_closure
         result = content_closure.plan(args.request)
         print(json.dumps(result, separators=(",", ":")))
+    elif args.command == "plan-potions":
+        import content_closure
+        print(json.dumps(content_closure.plan(content_closure.POTION_REQUEST, potions=True), separators=(",", ":")))
     elif args.command == "validate-closure-request":
         import content_closure
         request = read_json(args.request)

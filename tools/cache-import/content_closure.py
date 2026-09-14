@@ -16,6 +16,8 @@ BASE_BUNDLE = MANIFESTS / "cache2695-full-bundle.json.gz"
 BASE_PUBLICATION = MANIFESTS / "cache2695-published.json"
 PUBLICATION = MANIFESTS / "cache2695-content-v2-published.json"
 REQUEST = ROOT / "research/current-source/m1-content-closure-request.json"
+POTION_PUBLICATION = MANIFESTS / "cache2695-potions-published.json"
+POTION_REQUEST = ROOT / "research/current-source/m1-potion-request.json"
 PREFIX = "asset.source.osrs.cache2695."
 FIELDS = {
     "item_definition_ids": ("item", "item_ids"),
@@ -91,20 +93,30 @@ def required_inputs() -> tuple[dict, dict[str, set[int]], set[str], list[dict]]:
     return assets, by_kind, required, [input_record(path) for path in paths]
 
 
-def plan(path: Path = REQUEST) -> dict:
-    base = cache.read_json(BASE_BUNDLE)
+def plan(path: Path = REQUEST, *, potions: bool = False) -> dict:
+    base_publication = PUBLICATION if potions else BASE_PUBLICATION
+    if potions:
+        validate_publication(base_publication)
+    base_bundle = ROOT / cache.read_json(base_publication)["merged_inventory"]["path"] if potions else BASE_BUNDLE
+    base = cache.read_json(base_bundle)
     base_records = record_index(base["records"])
     assets, by_kind, required, inputs = required_inputs()
     reported = assets["source_closure_missing"]
     if set(reported) != set(FIELDS):
         raise cache.InputError("Unexpected compiled-content closure categories")
-    definitions = ROOT / "research/m1-bindings/definitions.json.gz"
-    snapshot = immutable_bytes(ROOT / "research/current-source/m1-content-closure-definitions.json.gz",
+    if potions and reported != {"item_definition_ids": [3010, 3011], "model_ids": [2697],
+                               "npc_definition_ids": [], "interface_groups": []}:
+        raise cache.InputError("Potion publication scope differs from the exact compiled three-ID gap")
+    definitions = ROOT / "research/m1-bindings" / ("application-item-definitions.json.gz" if potions else "definitions.json.gz")
+    if potions:
+        inputs.append(input_record(definitions))
+    snapshot_name = "m1-potion-definitions.json.gz" if potions else "m1-content-closure-definitions.json.gz"
+    snapshot = immutable_bytes(ROOT / "research/current-source" / snapshot_name,
                                definitions.read_bytes())
     request = {
         "schema_version": 1, "cache_id": base["cache_id"], "game_revision": base["revision"],
         "scope": "Source views and source-data dependencies, not running the full game or presentation approval.",
-        "base_bundle": input_record(BASE_BUNDLE), "base_publication": input_record(BASE_PUBLICATION),
+        "base_bundle": input_record(base_bundle), "base_publication": input_record(base_publication),
         "selection": input_record(cache.DEFAULT_SELECTION),
         "decoder_lock": input_record(cache.TOOL / "dependencies.json"),
         "product_inputs": inputs, "product_definitions_snapshot": snapshot,
@@ -120,12 +132,19 @@ def plan(path: Path = REQUEST) -> dict:
             raise cache.InputError(f"Stale product closure list {field}: reported={sorted(stated)}, actual={sorted(measured)}")
         request[key] = sorted(stated)
         if kind != "model":
-            request["audit_existing"][key] = sorted(by_kind[kind] - stated)
+            request["audit_existing"][key] = [] if potions else sorted(by_kind[kind] - stated)
+    if potions:
+        request["publication_tag"] = "potions"
     request["dependency_policy"] = (
         "Extract exact missing roots and re-decode already-published product item/NPC/interface roots "
         "to audit their transitive dependencies. Publish only new, nonconflicting asset IDs. "
         "Preserve every existing record/output hash; do not reaggregate the original collections."
     )
+    if potions:
+        request["dependency_policy"] = (
+            "Extract only the three exact missing roots and their source-defined prerequisites. "
+            "Reuse the verified preceding catalog; publish only new IDs and keep every prior file/record unchanged."
+        )
     validate_request(request, verify_product_inputs=True)
     immutable_json(path, request)
     return {"request": cache.file_record(path), "requested": {k: len(v) for k, v in reported.items()},
@@ -143,6 +162,8 @@ def validate_request(request: dict, verify_product_inputs: bool = False) -> dict
         raise cache.InputError("Incomplete content-closure request: missing " + ", ".join(missing))
     if (request["schema_version"], request["cache_id"], request["game_revision"]) != (1, 2695, 240):
         raise cache.InputError("Unsupported content-closure source identity/schema")
+    if request.get("publication_tag") not in (None, "potions"):
+        raise cache.InputError("Unsupported source publication tag")
     inputs = [request["base_bundle"], request["base_publication"], request["selection"],
               request["decoder_lock"], request["product_definitions_snapshot"]]
     if verify_product_inputs:
@@ -343,7 +364,10 @@ def check_graph(records: dict[str, dict], decoded: dict, extracted_ids: set[str]
 def validate_definitions(extracted: dict, decoded: dict, request: dict) -> dict:
     entry = request["product_definitions_snapshot"]
     supplement = cache.read_json(cache.checked_file(ROOT / entry["path"], entry))
-    for group, other in (("2/10", supplement["item_group"]), ("2/9", supplement["npc_source"]["group"])):
+    groups = {"2/10": supplement["item_group"]}
+    if supplement["npcs"]:
+        groups["2/9"] = supplement["npc_source"]["group"]
+    for group, other in groups.items():
         if extracted["groups"][group] != other:
             raise cache.InputError(f"Product definition archive identity/revision differs: {group}")
     records = record_index(extracted["records"])
@@ -432,12 +456,42 @@ def immutable_json(path: Path, value) -> dict:
     return immutable_bytes(path, encoded_json(path, value))
 
 
+def publication_chain(path: Path = PUBLICATION) -> list[tuple[Path, dict]]:
+    result, seen = [], set()
+    while True:
+        path = cache.within(ROOT, path)
+        if path in seen:
+            raise cache.InputError("Cyclic source publication ancestry")
+        seen.add(path)
+        manifest = cache.read_json(path)
+        result.append((path, manifest))
+        if "base_publication" not in manifest:
+            return list(reversed(result))
+        parent = manifest["base_publication"]
+        path = cache.checked_file(cache.within(ROOT, ROOT / parent["path"]), parent)
+
+
+def published_collections(path: Path) -> dict[str, dict]:
+    values = {file.name.split(".")[0]: cache.read_json(file) for file in sorted((SOURCE / "collections").glob("*.json.gz"))}
+    for _, publication in publication_chain(path):
+        for kind, shard in publication.get("collection_extensions", {}).items():
+            additions = cache.read_json(cache.checked_file(ROOT / shard["path"], shard))
+            collection = values.setdefault(kind, {})
+            if collection.keys() & additions.keys():
+                raise cache.InputError(f"Duplicate asset ID in collection extension: {kind}")
+            collection.update(additions)
+    return values
+
+
 def publish(directory: Path, request_path: Path = REQUEST) -> dict:
     report = validate_extraction(directory)
     base, extracted, records, additions, repeated, decoded = inspect_extraction(directory)
     if cache.read_json(request_path) != extracted["request"]:
         raise cache.InputError("Publication request differs from the actual extraction")
-    destination = SOURCE / "content-v2"
+    tag = extracted["request"].get("publication_tag", "content-v2")
+    destination = SOURCE / tag
+    publication_path = POTION_PUBLICATION if tag == "potions" else PUBLICATION
+    report_name = "m1-potion-closure.json" if tag == "potions" else "m1-content-closure.json"
     published = []
     for record in additions:
         for output in record["outputs"]:
@@ -458,17 +512,18 @@ def publish(directory: Path, request_path: Path = REQUEST) -> dict:
     merged["groups"] = {**base["groups"], **extracted["groups"]}
     merged["counts"] = dict(sorted(collections.Counter(row["kind"] for row in merged["records"]).items()))
     merged["counts"]["placed_objects"] = base["counts"]["placed_objects"]
-    merged["extensions"] = [{"scope": extracted["scope"], "request": extracted["request"],
-                             "new_asset_ids": [row["asset_id"] for row in additions],
-                             "source_bundle": cache.file_record(directory / "bundle.json")}]
+    merged["extensions"] = base.get("extensions", []) + [
+        {"scope": extracted["scope"], "request": extracted["request"],
+         "new_asset_ids": [row["asset_id"] for row in additions],
+         "source_bundle": cache.file_record(directory / "bundle.json")}]
     merged["closure"] = {**base["closure"], "compiled_content_v2_missing_inputs": [],
                          "compiled_content_v2_scope": extracted["closure"]}
-    merged_record = immutable_json(MANIFESTS / "cache2695-content-v2-bundle.json.gz", merged)
-    extracted_record = immutable_bytes(MANIFESTS / "cache2695-content-v2-extraction.json.gz",
+    merged_record = immutable_json(MANIFESTS / f"cache2695-{tag}-bundle.json.gz", merged)
+    extracted_record = immutable_bytes(MANIFESTS / f"cache2695-{tag}-extraction.json.gz",
                                        gzip.compress((directory / "bundle.json").read_bytes(), mtime=0))
     graph = immutable_bytes(destination / "dependency-graph.json.gz", (directory / "dependency-graph.json.gz").read_bytes())
     report["merged_inventory"] = merged_record
-    report_record = immutable_json(ROOT / "research/current-source/m1-content-closure.json", report)
+    report_record = immutable_json(ROOT / "research/current-source" / report_name, report)
     publication = {
         "schema_version": 1, "cache_id": 2695, "game_revision": 240, "scope": extracted["scope"],
         "base_bundle": extracted["request"]["base_bundle"],
@@ -490,14 +545,25 @@ def publish(directory: Path, request_path: Path = REQUEST) -> dict:
         "redecoded_existing_assets_identical": len(repeated),
         "source_gameplay_or_presentation_accepted": False, "owner_reference_pack_approved": False,
     }
-    immutable_json(PUBLICATION, publication)
-    result = validate_publication(PUBLICATION)
-    result["publication_manifest"] = cache.file_record(PUBLICATION)
+    if tag == "potions":
+        publication["publication_tag"] = tag
+        publication["extension_full_output_default_directory"] = ".local/current-source/potions"
+        publication["reproduction"] = [
+            "python3 tools/cache-import/import_cache.py reuse --reuse-source /path/to/verified/current-source",
+            "python3 tools/cache-import/import_cache.py plan-potions",
+            "python3 tools/cache-import/import_cache.py extract-closure --request research/current-source/m1-potion-request.json --output .local/current-source/potions",
+            "python3 tools/cache-import/import_cache.py publish-closure --request research/current-source/m1-potion-request.json --output .local/current-source/potions",
+            "python3 tools/cache-import/import_cache.py validate-published",
+        ]
+    immutable_json(publication_path, publication)
+    result = validate_publication(publication_path)
+    result["publication_manifest"] = cache.file_record(publication_path)
     result["closure_report"] = report_record
     return result
 
 
 def validate_publication(path: Path = PUBLICATION) -> dict:
+    ancestry = publication_chain(path)
     manifest = cache.read_json(path)
     if (manifest["schema_version"], manifest["cache_id"], manifest["game_revision"]) != (1, 2695, 240):
         raise cache.InputError("Published closure source identity/schema changed")
@@ -506,6 +572,11 @@ def validate_publication(path: Path = PUBLICATION) -> dict:
                    manifest["dependency_graph"], *manifest["collection_extensions"].values()]:
         cache.checked_file(cache.within(ROOT, ROOT / record["path"]), record)
     request = cache.read_json(ROOT / manifest["request"]["path"])
+    tag = request.get("publication_tag", "content-v2")
+    if manifest.get("publication_tag", "content-v2") != tag:
+        raise cache.InputError("Publication destination tag differs from request")
+    if len(ancestry) > 2:
+        validate_publication(ancestry[-2][0])
     base = validate_request(request)
     extracted = cache.read_json(ROOT / manifest["extraction_inventory"]["path"])
     if extracted["request"] != request:
@@ -538,7 +609,7 @@ def validate_publication(path: Path = PUBLICATION) -> dict:
         output = expected[key]
         if (published["size_bytes"], published["sha256"]) != (output["size_bytes"], output["sha256"]):
             raise cache.InputError("Published closure output differs from original extraction")
-        target = cache.checked_file(cache.within(SOURCE / "content-v2", ROOT / published["path"]), published)
+        target = cache.checked_file(cache.within(SOURCE / tag, ROOT / published["path"]), published)
         if target.suffix == ".png":
             stats = records[key[0]]["statistics"]
             if cache.validate_png(target.read_bytes()) != (stats["atlas_width"], stats["atlas_height"]):
@@ -558,6 +629,13 @@ def validate_publication(path: Path = PUBLICATION) -> dict:
     original = cache.read_json(ROOT / manifest["base_publication"]["path"])
     for published in original["published_files"]:
         cache.checked_file(cache.within(SOURCE, ROOT / published["path"]), published)
+    base_collections = published_collections(ROOT / manifest["base_publication"]["path"])
+    base_outputs = {}
+    for _, publication in ancestry[:-1]:
+        for output in publication["published_files"]:
+            if "source_asset_id" in output:
+                relative = output.get("extraction_path", str((ROOT / output["path"]).relative_to(SOURCE)))
+                base_outputs[(output["source_asset_id"], relative)] = output
     for record in extracted["records"]:
         key = record["asset_id"]
         if key in decoded:
@@ -566,13 +644,13 @@ def validate_publication(path: Path = PUBLICATION) -> dict:
         if not output:
             continue
         kind = record["kind"]
-        collection = SOURCE / "collections" / f"{kind}.json.gz"
-        if collection.is_file():
-            if kind not in decoded:
-                decoded[kind] = cache.read_json(collection)
-            decoded[key] = decoded[kind][key]
-        elif (SOURCE / output["path"]).is_file():
-            decoded[key] = cache.read_json(cache.checked_file(SOURCE / output["path"], output))
+        if kind in base_collections:
+            if key not in base_collections[kind]:
+                raise cache.InputError(f"Missing previously published collection entry: {key}")
+            decoded[key] = base_collections[kind][key]
+        elif (key, output["path"]) in base_outputs:
+            published = base_outputs[(key, output["path"])]
+            decoded[key] = cache.read_json(cache.checked_file(ROOT / published["path"], output))
         elif kind == "model":
             # Repeated model payloads stay in the unchanged full extraction; their texture edges are hash-locked below.
             continue
@@ -632,11 +710,4 @@ def load_published_inputs(path: Path = PUBLICATION) -> tuple[dict, dict[str, dic
     validate_publication(path)
     publication = cache.read_json(path)
     bundle = cache.read_json(ROOT / publication["merged_inventory"]["path"])
-    values = {file.name.split(".")[0]: cache.read_json(file) for file in sorted((SOURCE / "collections").glob("*.json.gz"))}
-    for kind, shard in publication["collection_extensions"].items():
-        additions = cache.read_json(ROOT / shard["path"])
-        collection = values.setdefault(kind, {})
-        if collection.keys() & additions.keys():
-            raise cache.InputError(f"Duplicate asset ID in collection extension: {kind}")
-        collection.update(additions)
-    return bundle, values
+    return bundle, published_collections(path)

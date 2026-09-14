@@ -136,6 +136,10 @@ The frozen request includes the original product-definition snapshot so a
 parent binding refresh does not invalidate historical source evidence.
 These are source views/data, not full-game execution or presentation approval.
 
+The subsequent [three-dose potion supplement](POTION_ASSETS.md) uses
+`plan-potions` and the same extractor. It adds items3010/3011, model2697 and the
+necessary original placeholder19365 through another immutable publication layer.
+
 ## Decoder validation
 
 The importer verifies CRC and the low 16-bit disk revision trailer before
