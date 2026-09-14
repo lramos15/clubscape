@@ -180,4 +180,5 @@ message Event {
   uint32 damage = 7;
   string sound_asset = 8;
   string animation_asset = 9;
+  string event_id = 10;
 }

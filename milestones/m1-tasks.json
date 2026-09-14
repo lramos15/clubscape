@@ -11,12 +11,11 @@
       {"id": "6c58b841-a767-41ff-bef5-2abbd5b1a087", "task": "M1-FLEET-BROWSER"},
       {"id": "2766e089-44e5-4a1d-974e-7b03ad9c269d", "task": "M1-FLEET-STORAGE"},
       {"id": "ac0f0856-44af-445b-bd90-6db7a1f4fc74", "task": "M1-FLEET-SOURCE-CAPTURES"},
-      {"id": "e9ed6a96-6bcb-4d27-8b4c-d504edda327c", "task": "M1-FLEET-AUDIO"}
+      {"id": "e9ed6a96-6bcb-4d27-8b4c-d504edda327c", "task": "M1-FLEET-AUDIO"},
+      {"id": "0f5ddddf-0aa0-4908-b0d3-1ffc6b1f7a20", "task": "M1-FLEET-ENGINE"},
+      {"id": "fdda1fb0-1135-4cf8-8cff-3db550e48f54", "task": "M1-FLEET-PRODUCT-CONTENT"}
     ],
-    "reserved": [
-      {"id": "fleet-world-engine", "task": "M1-FLEET-ENGINE"},
-      {"id": "fleet-product-content", "task": "M1-FLEET-PRODUCT-CONTENT"}
-    ],
+    "reserved": [],
     "queued": [],
     "parked": [
       {"id": "598d83d0-6ce2-40ac-b6d5-01d566c68b99", "reason": "Reference research complete; no automatic resumption."},
@@ -30,9 +29,27 @@
   },
   "tasks": [
     {
+      "id": "M1-FLEET-CLIENT",
+      "goal": "Implement safe native/WASM client protocol/session/state reconciliation without premature presentation.",
+      "status": "DONE",
+      "specs": ["spec/networking.md", "spec/game-contracts.md"],
+      "dependencies": ["M1-PROTOCOL"],
+      "allowed_paths": ["crates/client-core/**", "crates/protocol/proto/game.proto"],
+      "forbidden_paths": ["prompt.md", "assets/**", "web/**"],
+      "outputs": ["Typed client state machine with bounded request/event history and uncertain-operation recovery"],
+      "validation_commands": ["cargo test -p clubscape-client-core", "cargo clippy -p clubscape-client-core --all-targets -- -D warnings", "cargo check -p clubscape-client-core --target wasm32-unknown-unknown"],
+      "test_requirements": ["Secret-safe state", "Stale/delta snapshots", "Duplicate events", "Reconnect and unknown outcomes", "Invalid responses preserve last good state"],
+      "acceptance": ["Nine focused protocol-state tests passed; actual browser/gameplay remains separate"],
+      "reserved_namespaces": [],
+      "source_notes": ["crates/client-core/README.md"],
+      "parity_entries": [],
+      "adaptations": [],
+      "evidence": ["Native tests/Clippy/WASM check passed"]
+    },
+    {
       "id": "M1-FLEET-ENGINE",
       "goal": "Implement the complete source-driven headless world action/tick engine over validated content and reusable primitives.",
-      "status": "READY",
+      "status": "IMPLEMENTING",
       "specs": ["spec/game-contracts.md", "research/journey-rules/**", "crates/simulation/README.md"],
       "dependencies": ["M1-FLEET-SIMULATION", "M1-FLEET-RULES"],
       "allowed_paths": ["crates/world-engine/**"],
@@ -50,7 +67,7 @@
     {
       "id": "M1-FLEET-PRODUCT-CONTENT",
       "goal": "Assemble complete actual M1 source-backed content and world/collision/asset bindings, not a demonstration square or fixture character.",
-      "status": "READY",
+      "status": "IMPLEMENTING",
       "specs": ["spec/game-contracts.md", "research/journey-rules/**", "research/current-source/extraction-contract.json"],
       "dependencies": ["M1-FLEET-RUNTIME", "M1-FLEET-RULES"],
       "allowed_paths": ["content/m1/**", "tools/m1-content/**", "research/m1-bindings/**"],

@@ -55,3 +55,10 @@ durable per-character sequence and intent-hash deduplication, a valid exclusive
 world-session lease and transactionally committed state. Reconnects cannot
 replay rewards. The server, not a request field, chooses character ownership,
 source initial state, world tick and action outcomes.
+
+`clubscape-client-core` provides transport-independent native/WASM request,
+session, sequence and response reconciliation. Every snapshot supplies the
+complete local-player state and visible ground items; entity lists may be
+deltas when `full_snapshot=false`. Each emitted game event carries a stable
+`event_id` so reconnects/repeated responses cannot replay sounds or XP events.
+This client core is not a browser renderer or evidence of gameplay acceptance.
