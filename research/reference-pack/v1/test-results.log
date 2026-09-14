@@ -1,0 +1,40 @@
+test_actual_decode_rejects_non_image_bytes (test_reference_pack.PackTests.test_actual_decode_rejects_non_image_bytes) ... ok
+test_actual_decode_rejects_wrong_dimensions (test_reference_pack.PackTests.test_actual_decode_rejects_wrong_dimensions) ... ok
+test_actual_structure (test_reference_pack.PackTests.test_actual_structure) ... ok
+test_case_cannot_replace_required_panel_with_icon (test_reference_pack.PackTests.test_case_cannot_replace_required_panel_with_icon) ... ok
+test_changed_actual_file_hash (test_reference_pack.PackTests.test_changed_actual_file_hash) ... ok
+test_complete_inventory_not_duplicate_fixture (test_reference_pack.PackTests.test_complete_inventory_not_duplicate_fixture) ... ok
+test_crop_cannot_be_full_classic_frame (test_reference_pack.PackTests.test_crop_cannot_be_full_classic_frame) ... ok
+test_duplicate_required_case (test_reference_pack.PackTests.test_duplicate_required_case) ... ok
+test_gaps_cannot_be_dropped (test_reference_pack.PackTests.test_gaps_cannot_be_dropped) ... ok
+test_icon_cannot_be_equipment_panel (test_reference_pack.PackTests.test_icon_cannot_be_equipment_panel) ... ok
+test_input_usage_complete (test_reference_pack.PackTests.test_input_usage_complete) ... ok
+test_missing_actual_file (test_reference_pack.PackTests.test_missing_actual_file) ... ok
+test_missing_case_input (test_reference_pack.PackTests.test_missing_case_input) ... ok
+test_missing_required_case (test_reference_pack.PackTests.test_missing_required_case) ... ok
+test_missing_source_asset (test_reference_pack.PackTests.test_missing_source_asset) ... ok
+test_no_incomplete_ready_flag (test_reference_pack.PackTests.test_no_incomplete_ready_flag) ... ok
+test_no_invented_camera (test_reference_pack.PackTests.test_no_invented_camera) ... ok
+test_no_invented_capture_date (test_reference_pack.PackTests.test_no_invented_capture_date) ... ok
+test_no_invented_original_settings (test_reference_pack.PackTests.test_no_invented_original_settings) ... ok
+test_no_self_approval (test_reference_pack.PackTests.test_no_self_approval) ... ok
+test_no_whole_panel_mask (test_reference_pack.PackTests.test_no_whole_panel_mask) ... ok
+test_path_traversal_rejected (test_reference_pack.PackTests.test_path_traversal_rejected) ... ok
+test_predeclared_numeric_policy_cannot_be_relaxed (test_reference_pack.PackTests.test_predeclared_numeric_policy_cannot_be_relaxed) ... ok
+test_proposal_cannot_change_unchanged_source_region (test_reference_pack.PackTests.test_proposal_cannot_change_unchanged_source_region) ... ok
+test_proposal_is_not_source_capture (test_reference_pack.PackTests.test_proposal_is_not_source_capture) ... ok
+test_reconciliation_compares_entire_opaque_component (test_reference_pack.PackTests.test_reconciliation_compares_entire_opaque_component) ... ok
+test_silent_audio_is_preserved (test_reference_pack.PackTests.test_silent_audio_is_preserved) ... ok
+test_small_source_is_not_a_search_error (test_reference_pack.PackTests.test_small_source_is_not_a_search_error) ... ok
+test_source_completeness_gate_stays_blocked (test_reference_pack.PackTests.test_source_completeness_gate_stays_blocked) ... ok
+test_source_font_metrics_exact (test_reference_pack.PackTests.test_source_font_metrics_exact) ... ok
+test_source_mp4_container_and_truncation (test_reference_pack.PackTests.test_source_mp4_container_and_truncation) ... ok
+test_stage_evidence_not_promoted (test_reference_pack.PackTests.test_stage_evidence_not_promoted) ... ok
+test_unrun_mac_not_certified (test_reference_pack.PackTests.test_unrun_mac_not_certified) ... ok
+test_wrong_public_capture_role (test_reference_pack.PackTests.test_wrong_public_capture_role) ... ok
+test_wrong_public_file_identity (test_reference_pack.PackTests.test_wrong_public_file_identity) ... ok
+
+----------------------------------------------------------------------
+Ran 35 tests in 0.857s
+
+OK

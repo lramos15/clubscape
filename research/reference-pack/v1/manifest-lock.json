@@ -1,0 +1,9 @@
+{
+  "schema_version": 1,
+  "manifest": {
+    "path": "research/reference-pack/v1/manifest.json",
+    "sha256": "891b9e5a5b0b7cb5fee3c931b212b97cddc10b57d13adf6a2844b6188f31bf2d",
+    "size_bytes": 5082449
+  },
+  "meaning": "Immutable review identity, NOT an approval record; changing inputs requires regenerating/reviewing the pack."
+}

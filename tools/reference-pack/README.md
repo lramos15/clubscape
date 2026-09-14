@@ -1,0 +1,121 @@
+# Source reference-pack tooling
+
+This tooling retrieves and validates **source evidence**, makes explicitly
+unapproved reference compositions, and builds a review gallery. It never
+starts ClubScape, renders a game world, logs into OSRS, creates an account,
+re-converts source audio, or approves a baseline.
+
+Read `AGENTS.md` and `docs/machines/sparky.md` first. The executed environment
+was Linux ARM64, Python 3.12.3, Pillow 10.2.0, Node 24.18.0 and existing
+Chrome for Testing 153.0.8010.12. No dependencies were installed or host
+configuration changed. Python uses the existing Pillow package; FLAC
+validation reuses the existing checksum-locked `tools/audio-import/codec.py`
+reader and libsndfile/FLAC libraries. Encoding functions are never called.
+
+From this worktree's root:
+
+```sh
+python3 tools/reference-pack/build.py
+python3 tools/reference-pack/validate.py --report
+python3 -m unittest discover -s tools/reference-pack -p 'test_*.py' -v
+node --check tools/reference-pack/browser-check.mjs
+```
+
+`build.py` reads only current source fixtures/contracts and owned evidence.
+It writes only `research/reference-pack/**`. Existing original images, audio,
+source schemas, game code, canonical specs and approval records are unchanged.
+Exact source-matching results do not compare any product candidate.
+
+The stricter completeness command deliberately exits nonzero while the
+documented mandatory source gaps remain:
+
+```sh
+python3 tools/reference-pack/validate.py --require-complete
+```
+
+Passing normal validation means bytes, decoded images, source classification,
+current component/font proofs, original PCM and the complete **case index**
+are sound. It does **not** mean the source case evidence is complete, owner
+approved, or accepted as a product. `validation.json` records both facts.
+Tests deliberately remove/duplicate cases, remove actual inputs, change
+hashes/dimensions, relabel icons/crops as panels/full frames, fabricate
+settings/dates, change native metadata, relax tolerances, add masks, promote
+proposals, alter silence and falsely assert Mac/owner results.
+
+## Exact public retrieval
+
+The final acquisition list and every exact original blob/page identity are
+in `research/reference-pack/v1/public-media.json` and `pages.json`.
+`sources/*.json.gz` retains complete original file descriptions/notices and
+page-revision content. The full upstream widget-symbol source, including
+its BSD notice, is retained as a hash-checked gzip.
+
+```sh
+# Exact pinned originals and public page revisions, to isolated scratch:
+python3 tools/reference-pack/retrieve.py --output .local/reference-pack/retrieved
+
+# A bounded network check, without refetching every source:
+python3 tools/reference-pack/retrieve.py --output .local/reference-pack/retrieved --limit 3
+```
+
+The original MediaWiki SHA-1 and byte length are required in addition to our
+SHA-256. **Cloudflare Polish may recompress even PNGs requested from their
+original URL.** Such responses are rejected, not silently accepted as the
+original. A fresh public `reference_original` query key prevents replaying
+that optimized cached response; the returned bytes must still exactly match
+imageinfo. If a file has since changed, the retrieval tool asks MediaWiki for
+the exact recorded upload timestamp, follows its original archived URL and
+requires the pinned blob hash. No login, cookies, credentials or alternate
+private origin is used.
+
+New discovery is explicit and bounded, not routine validation:
+
+```sh
+python3 tools/reference-pack/fetch.py pages 'Learning the Ropes' 'Music Player'
+python3 tools/reference-pack/fetch.py search '"Tutorial Island"' --namespace 6
+python3 tools/reference-pack/fetch.py search '"Tutorial Island"' --namespace 6 --offset 30
+python3 tools/reference-pack/fetch.py media-info 'Learning the Ropes reward scroll.png'
+python3 tools/reference-pack/fetch.py retrieve 'Learning the Ropes reward scroll.png'
+```
+
+`media-info` retrieves the latest blob metadata, while routine reproduction
+uses `retrieve.py` and **pinned** identities. Older history continuation is
+not described as exhausted. Adding an input without an explicit disposition
+and case/supplementary mapping fails assembly. Do not refresh an approved
+version in place or treat a new upload timestamp as its capture date.
+
+## Source recording and gallery browser check
+
+The first run genuinely decoded the public 1920x1080 MP4 in sandboxed Chrome,
+extracted full source frames at 0/5/.../40 seconds and decoded nonzero audio.
+The exact recording, browser, source hash, seek times, dimensions and decoded
+signal hashes are in `research/reference-pack/v1/browser-media.json`.
+The source-frame time is a video seek timestamp, not an observed native
+animation-clock/packet offset.
+
+The existing read-only Playwright installation used on this host was:
+
+```sh
+node tools/reference-pack/browser-check.mjs \
+  --chrome /home/lramos15/.cache/ms-playwright/chromium-1243/chrome-linux-arm64/chrome \
+  --playwright /home/lramos15/clubscape/.worktrees/m1-browser-platform/tools/browser-harness/node_modules/playwright-core/index.mjs \
+  --gallery
+
+# Rebind the final browser evidence, then verify the final pack:
+python3 tools/reference-pack/build.py
+python3 tools/reference-pack/validate.py --report
+```
+
+Other hosts must supply their own existing compatible browser/Playwright
+paths rather than assume Sparky paths. This is ordinary source-image/video
+and HTML review-tool validation, **not WebGPU gameplay or a Mac benchmark**.
+The local server is bound to `127.0.0.1` on an ephemeral port, serves only the
+reference/audio paths, is checked for responsiveness and is closed in
+`finally`. Chromium's sandbox is enabled; no sandbox-disabling flags are used.
+
+To review without a server, open
+`research/reference-pack/v1/gallery/index.html` directly. The gallery never
+autoplays audio or video. Full source links preserve native pixels; contact
+sheets are identified as scaled navigational previews, not comparison
+baselines. Product implementation, live journey, native script/state
+calibration, final Mac Chrome/Edge results and all approvals remain separate.
