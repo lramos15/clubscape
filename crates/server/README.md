@@ -165,6 +165,15 @@ dialogue, the current world tick as last-action bookkeeping, and sequence zero.
 There is no default or boosted character, no tutorial completion or invented
 grant, and no fallback for missing/invalid content.
 
+Run energy uses the shared `MAX_RUN_ENERGY` contract: 0 through 10,000 in
+hundredths of one percent. Storage preserves fractional percentages exactly and
+rejects out-of-range definitions, callback state, stored snapshots and receipts;
+it never clamps or rescales them. Initial interface references must already
+resolve against `GameContent.interfaces`, and `RecipeDefinition.tools` belongs
+to validated recipe rules. This repository accepts neither a content registry
+nor recipe definitions, and does not certify absent registry entries or missing
+tool rules as resolved.
+
 ### Authority, locking and storage limits
 
 Migration `0002_game_state.sql` creates these owned tables:

@@ -3,7 +3,7 @@ use std::io::{self, Write};
 use axum::http::StatusCode;
 use clubscape_game_types::{
     Activity, CharacterState, GAME_SCHEMA_VERSION, GameError, GameErrorCode, GameEvent, GameIntent,
-    INVENTORY_SLOTS, WorldState,
+    INVENTORY_SLOTS, MAX_RUN_ENERGY, WorldState,
 };
 use clubscape_protocol::ErrorCode;
 use serde::{Serialize, de::DeserializeOwned};
@@ -96,6 +96,7 @@ pub(super) fn validate_character(character: &CharacterState, tick: u64) -> Resul
         && character.flags.len() <= 2048
         && character.flags.keys().all(|key| text(key, 160))
         && character.interfaces.len() <= 2048
+        && character.run_energy <= MAX_RUN_ENERGY
         && character.last_action_tick <= tick
         && character.last_command_sequence <= i64::MAX as u64
         && character

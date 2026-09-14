@@ -13,7 +13,8 @@ use std::{
 use clubscape_game_types::{
     ActorId, Bank, EntityState, EvidenceStatus, GAME_SCHEMA_VERSION, GameError, GameErrorCode,
     GameEvent, GameIntent, GameResult, InitialStateDefinition, Inventory, ItemId, ItemStack,
-    Quantity, RegionId, SkillId, SkillState, SourceRecord, SpawnId, StageId, Tile, WorldState,
+    MAX_RUN_ENERGY, Quantity, RegionId, SkillId, SkillState, SourceRecord, SpawnId, StageId, Tile,
+    WorldState,
 };
 use clubscape_protocol::{
     ClientMessage, ErrorCode, LoggedIn, Login, Logout, MEDIA_TYPE, PROTOCOL_VERSION, Register,
@@ -44,7 +45,7 @@ use tokio::{
 use uuid::Uuid;
 
 const TEST_DATABASE: &str = "clubscape_m1_test";
-const FIXTURE_REVISION: &str = "synthetic-storage-fixture-v1-not-gameplay-evidence";
+const FIXTURE_REVISION: &str = "synthetic-storage-fixture-v2-not-gameplay-evidence";
 const WAIT: Duration = Duration::from_secs(15);
 static DATABASE_LOCK: Mutex<()> = Mutex::const_new(());
 
@@ -480,7 +481,7 @@ fn character_fixture() -> SourceCharacter {
             )]),
             hitpoints: 5,
             prayer_points: 2,
-            run_energy: 77,
+            run_energy: 9_877,
             tutorial_stage: StageId::new("stage.fixture.initial").unwrap(),
             quest_points: 0,
             quests: BTreeMap::new(),
@@ -1183,6 +1184,213 @@ async fn command_state_revisions_and_events_commit_once_with_a_canonical_intent_
         );
     }
     assert_eq!(database.journal_count().await, 1);
+    database.stop().await;
+}
+
+#[tokio::test(flavor = "multi_thread", worker_threads = 2)]
+#[ignore = "requires isolated PostgreSQL; run just test-integration"]
+async fn canonical_run_energy_and_event_identities_survive_storage_without_clamping_or_rebinding() {
+    let database = TestDatabase::reset().await;
+    let account = database.account("canonical_state").await;
+    let auth = account.authentication();
+    let mut definition = character_fixture();
+    definition.initial_state.run_energy = MAX_RUN_ENERGY + 1;
+    assert_error(
+        database
+            .store
+            .create_character(&database.lease, auth, definition.clone())
+            .await
+            .unwrap_err(),
+        StatusCode::BAD_REQUEST,
+        ErrorCode::InvalidArgument,
+    );
+    assert!(
+        database
+            .store
+            .load_character(database.world_id, auth)
+            .await
+            .unwrap()
+            .is_none()
+    );
+    definition.initial_state.run_energy = MAX_RUN_ENERGY;
+    let character = database
+        .store
+        .create_character(&database.lease, auth, definition)
+        .await
+        .unwrap();
+    assert_eq!(character.state.run_energy, MAX_RUN_ENERGY);
+    let actor = character.state.actor_id;
+    let session = database
+        .store
+        .join_session(database.world_id, actor.clone(), auth, MAX_SESSION_LEASE)
+        .await
+        .unwrap();
+    let access = session.access(auth);
+    let first = command(1);
+    let committed = database
+        .store
+        .commit_command(
+            &database.lease,
+            &access,
+            first.clone(),
+            |world, actor, _| {
+                let character = world.characters.get_mut(actor).unwrap();
+                character.run_energy = 0;
+                Ok(vec![
+                    GameEvent::Sound {
+                        asset: "asset.fixture.sound".to_owned(),
+                    },
+                    GameEvent::Animation {
+                        target: actor.to_string(),
+                        animation: "synthetic_animation".to_owned(),
+                    },
+                    GameEvent::Moved {
+                        tile: character.tile,
+                    },
+                    GameEvent::Died,
+                    GameEvent::Recovered,
+                    GameEvent::Message {
+                        text: "Synthetic serialization fixture, not gameplay evidence.".to_owned(),
+                    },
+                ])
+            },
+        )
+        .await
+        .unwrap();
+    let duplicate = database
+        .store
+        .commit_command(&database.lease, &access, first, |_, _, _| {
+            panic!("reading canonical event identities must not replay a committed command")
+        })
+        .await
+        .unwrap();
+    assert!(duplicate.duplicate);
+    assert_eq!(duplicate.receipt, committed.receipt);
+    assert_eq!(duplicate.receipt.character.run_energy, 0);
+    let identities: Vec<_> = duplicate
+        .receipt
+        .events
+        .iter()
+        .map(|event| (event.kind(), event.primary_target()))
+        .collect();
+    assert_eq!(
+        identities,
+        [
+            ("sound", Some("asset.fixture.sound")),
+            ("animation", Some(actor.as_str())),
+            ("moved", None),
+            ("died", None),
+            ("recovered", None),
+            ("message", None),
+        ]
+    );
+
+    let before = database.store.load_world(database.world_id).await.unwrap();
+    let second = command(2);
+    assert_error(
+        database
+            .store
+            .commit_command(
+                &database.lease,
+                &access,
+                second.clone(),
+                |world, actor, _| {
+                    world.characters.get_mut(actor).unwrap().run_energy = MAX_RUN_ENERGY + 1;
+                    Ok(Vec::new())
+                },
+            )
+            .await
+            .unwrap_err(),
+        StatusCode::INTERNAL_SERVER_ERROR,
+        ErrorCode::Internal,
+    );
+    assert_eq!(
+        database.store.load_world(database.world_id).await.unwrap(),
+        before
+    );
+    assert_eq!(database.journal_count().await, 1);
+    let fractional = database
+        .store
+        .commit_command(
+            &database.lease,
+            &access,
+            second.clone(),
+            |world, actor, _| {
+                world.characters.get_mut(actor).unwrap().run_energy = 9_876;
+                Ok(Vec::new())
+            },
+        )
+        .await
+        .unwrap();
+    assert_eq!(fractional.receipt.character.run_energy, 9_876);
+    assert_eq!(
+        database
+            .store
+            .load_character(database.world_id, auth)
+            .await
+            .unwrap()
+            .unwrap()
+            .state
+            .run_energy,
+        9_876
+    );
+    let energy_path = vec![
+        "characters".to_owned(),
+        actor.to_string(),
+        "run_energy".to_owned(),
+    ];
+    sqlx::query(
+        "UPDATE game_worlds SET state = jsonb_set(state, $2::text[], to_jsonb($3::int))
+         WHERE world_id = $1",
+    )
+    .bind(database.world_id)
+    .bind(&energy_path)
+    .bind(i32::from(MAX_RUN_ENERGY) + 1)
+    .execute(&database.pool)
+    .await
+    .unwrap();
+    assert_error(
+        database
+            .store
+            .load_world(database.world_id)
+            .await
+            .unwrap_err(),
+        StatusCode::INTERNAL_SERVER_ERROR,
+        ErrorCode::Internal,
+    );
+    sqlx::query(
+        "UPDATE game_worlds SET state = jsonb_set(state, $2::text[], to_jsonb($3::int))
+         WHERE world_id = $1",
+    )
+    .bind(database.world_id)
+    .bind(energy_path)
+    .bind(9_876_i32)
+    .execute(&database.pool)
+    .await
+    .unwrap();
+    sqlx::query(
+        "UPDATE processed_game_commands SET committed_result =
+             jsonb_set(committed_result, '{character,run_energy}', to_jsonb($3::int))
+         WHERE account_id = $1 AND operation_id = $2",
+    )
+    .bind(account.account_id)
+    .bind(second.operation_id)
+    .bind(i32::from(MAX_RUN_ENERGY) + 1)
+    .execute(&database.pool)
+    .await
+    .unwrap();
+    assert_error(
+        database
+            .store
+            .commit_command(&database.lease, &access, second, |_, _, _| {
+                panic!("invalid stored energy cannot be repaired by replaying a callback")
+            })
+            .await
+            .unwrap_err(),
+        StatusCode::INTERNAL_SERVER_ERROR,
+        ErrorCode::Internal,
+    );
+    assert_eq!(database.journal_count().await, 2);
     database.stop().await;
 }
 
