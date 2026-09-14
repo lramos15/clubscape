@@ -9,6 +9,17 @@ are reconciled. Do not block implementation solely on matching cache 2695.
 See `milestones/m1-fleet-resumption.json`; presentation approval is still
 separate.
 
+The fleet selection is now recorded in
+[`research/current-source/selection.json`](../research/current-source/selection.json).
+The newest complete live/en cache in the retrieved metadata is still 2695/
+build 240; it was selected for freshness, not because the old constraint was
+retained. The actual original injected client initializes to numeric revision
+240 from the recorded official configuration. The whole cache and M1 source
+extraction are now hash-verified, including 61 regions, 151,019 placements and
+3,433 models. Original UI/font/animation/audio inputs are retained. This closes
+source acquisition/initialization gaps, not source capture, final playback,
+gameplay or owner presentation acceptance.
+
 M1-REF verified OSRS **build 240**, OpenRS2 **cache 2695**, dated
 **2026-09-08T10:30:08.897945Z**, on 2026-09-13. The official September 8 update
 is date-aligned; build identity comes from the archive metadata, not the

@@ -205,6 +205,29 @@ async fn account_lifecycle(url: &str) -> Result<()> {
         session.account.as_ref() == Some(&account),
         "Login did not recover the registered identity"
     );
+    expect_error(
+        connection
+            .request(
+                Command::CreateCharacter(clubscape_protocol::game::CreateCharacter {
+                    appearance: Default::default(),
+                    experience_choice: "new_to_runescape".to_owned(),
+                }),
+                Some(&session.session_token),
+            )
+            .await?,
+        StatusCode::SERVICE_UNAVAILABLE,
+        ErrorCode::Unavailable,
+    )?;
+    expect_error(
+        connection
+            .request(
+                Command::JoinWorld(clubscape_protocol::game::JoinWorld {}),
+                None,
+            )
+            .await?,
+        StatusCode::UNAUTHORIZED,
+        ErrorCode::Unauthenticated,
+    )?;
     let (status, snapshot) = connection
         .request(
             Command::CurrentAccount(CurrentAccount {}),
@@ -263,6 +286,7 @@ async fn account_lifecycle(url: &str) -> Result<()> {
             "checks": [
                 "capability_negotiation", "registration", "case_insensitive_uniqueness",
                 "login", "persistent_identity", "no_fabricated_character",
+                "unavailable_game_commands", "game_authentication_required",
                 "logout_revocation", "relogin", "token_rotation"
             ],
             "gameplay_verified": false,

@@ -7,13 +7,14 @@
     "admissions_open": true,
     "active": [
       {"id": "director", "task": "M1-FLEET-CONTRACTS"},
-      {"id": "ac0f0856-44af-445b-bd90-6db7a1f4fc74", "task": "M1-FLEET-RUNTIME"},
-      {"id": "9c5d43e0-7701-466f-97cf-0bc3cfca9345", "task": "M1-FLEET-RULES"},
-      {"id": "ba4b3ca5-0344-4122-92ed-0e4fccb23a66", "task": "M1-FLEET-SIMULATION"},
       {"id": "f3cc7dc3-56bc-4786-98d5-bba14b428229", "task": "M1-FLEET-CONTENT"},
-      {"id": "6c58b841-a767-41ff-bef5-2abbd5b1a087", "task": "M1-FLEET-BROWSER"}
+      {"id": "6c58b841-a767-41ff-bef5-2abbd5b1a087", "task": "M1-FLEET-BROWSER"},
+      {"id": "2766e089-44e5-4a1d-974e-7b03ad9c269d", "task": "M1-FLEET-STORAGE"}
     ],
-    "reserved": [{"id": "fleet-game-storage-worker", "task": "M1-FLEET-STORAGE"}],
+    "reserved": [
+      {"id": "ac0f0856-44af-445b-bd90-6db7a1f4fc74", "task": "M1-FLEET-SOURCE-CAPTURES"},
+      {"id": "fleet-audio-worker", "task": "M1-FLEET-AUDIO"}
+    ],
     "queued": [],
     "parked": [
       {"id": "598d83d0-6ce2-40ac-b6d5-01d566c68b99", "reason": "Reference research complete; no automatic resumption."},
@@ -27,9 +28,45 @@
   },
   "tasks": [
     {
+      "id": "M1-FLEET-SOURCE-CAPTURES",
+      "goal": "Produce calibrated original-runtime source captures without generic replacement rendering or unapproved external account/terms actions.",
+      "status": "READY",
+      "specs": ["prompt.md section 30.2", "research/current-source/selection.json", "research/reference-capture-checklist.md"],
+      "dependencies": ["M1-FLEET-RUNTIME"],
+      "allowed_paths": ["tools/source-capture/**", "research/source-capture/**", "assets/reference/**"],
+      "forbidden_paths": ["prompt.md", "crates/**", "web/**", "spec/**", "milestones/**"],
+      "outputs": ["Original source frames and exact reproducible capture settings", "Concrete remaining source-session prerequisite if required"],
+      "validation_commands": [],
+      "test_requirements": ["Actual original rendering, not embedded source images or a generic asset viewer", "No source/owner approval self-certification"],
+      "acceptance": ["SQL m1-source-captures records actual work and unresolved external gates"],
+      "reserved_namespaces": ["asset.reference.osrs.*"],
+      "source_notes": ["tools/cache-import/README.md"],
+      "parity_entries": [],
+      "adaptations": [],
+      "evidence": []
+    },
+    {
+      "id": "M1-FLEET-AUDIO",
+      "goal": "Produce source-faithful browser-playable music/SFX inputs and reproducible synthesis or recording provenance.",
+      "status": "READY",
+      "specs": ["prompt.md sections 14, 24, 30", "research/current-source/extraction-contract.json"],
+      "dependencies": ["M1-FLEET-RUNTIME"],
+      "allowed_paths": ["tools/audio-import/**", "research/audio-source/**", "assets/source/osrs/audio-runtime/**", "assets/manifests/osrs/audio-runtime.json"],
+      "forbidden_paths": ["prompt.md", "crates/**", "web/**", "spec/**", "milestones/**"],
+      "outputs": ["Original playable audio and source/timing metadata", "Decoder/input integrity tests"],
+      "validation_commands": [],
+      "test_requirements": ["No generic soundfont/replacement sounds", "Nonempty decoded audio and explicit source identity", "Do not claim running-browser audio acceptance"],
+      "acceptance": ["SQL m1-audio-inputs done or explicitly blocked with concrete outputs"],
+      "reserved_namespaces": ["asset.source.osrs.audio_runtime.*"],
+      "source_notes": ["tools/cache-import/README.md"],
+      "parity_entries": [],
+      "adaptations": [],
+      "evidence": []
+    },
+    {
       "id": "M1-FLEET-STORAGE",
       "goal": "Implement transactional game-state persistence, character ownership, world-session leases and durable intent deduplication using the existing database boundaries.",
-      "status": "READY",
+      "status": "IMPLEMENTING",
       "specs": ["spec/game-contracts.md", "spec/networking.md", "spec/security.md"],
       "dependencies": ["M1-FOUNDATIONS"],
       "allowed_paths": ["crates/server/src/game_storage.rs", "crates/server/src/lib.rs", "crates/server/Cargo.toml", "crates/server/migrations/**", "crates/server/tests/**", "crates/server/README.md"],
@@ -47,7 +84,7 @@
     {
       "id": "M1-FLEET-SIMULATION",
       "goal": "Implement reusable atomic inventory/equipment/bank, XP, navigation and collision primitives against the shared game-types contract.",
-      "status": "READY",
+      "status": "DONE",
       "specs": ["spec/game-contracts.md", "crates/game-types"],
       "dependencies": ["M1-FOUNDATIONS"],
       "allowed_paths": ["crates/simulation/**"],
@@ -60,12 +97,12 @@
       "source_notes": ["spec/game-contracts.md"],
       "parity_entries": [],
       "adaptations": [],
-      "evidence": []
+      "evidence": ["3ed2e64bc86dcf6f2ab55a9bb4f1a2250f1a2e1d; integrated as cd64f32", "107 simulation tests passed again after integration", "crates/simulation/README.md"]
     },
     {
       "id": "M1-FLEET-CONTENT",
       "goal": "Implement strict content compilation and indexed runtime definitions with source and state validation.",
-      "status": "READY",
+      "status": "IMPLEMENTING",
       "specs": ["spec/game-contracts.md", "crates/game-types"],
       "dependencies": ["M1-FOUNDATIONS"],
       "allowed_paths": ["crates/content/**", "schemas/game-content.schema.json"],
@@ -83,7 +120,7 @@
     {
       "id": "M1-FLEET-BROWSER",
       "goal": "Establish executable browser capture/performance tooling and concrete host/browser prerequisites without implementing unapproved presentation.",
-      "status": "READY",
+      "status": "IMPLEMENTING",
       "specs": ["spec/performance.md", "docs/machines/sparky.md", "prompt.md sections 24, 30, 36"],
       "dependencies": ["M1-CONTRACT"],
       "allowed_paths": ["tools/browser-harness/**", "research/browser-platform/**"],
@@ -101,7 +138,7 @@
     {
       "id": "M1-FLEET-RUNTIME",
       "goal": "Acquire current usable source runtime/cache and executable source extraction under the owner's updated reference-selection permission.",
-      "status": "IMPLEMENTING",
+      "status": "DONE",
       "specs": ["milestones/m1-fleet-resumption.json"],
       "dependencies": ["M1-CONTRACT"],
       "allowed_paths": ["research/current-source/**", "tools/cache-import/**", "assets/source/osrs/**", "assets/manifests/osrs/**"],
@@ -114,12 +151,12 @@
       "source_notes": ["milestones/m1-fleet-resumption.json"],
       "parity_entries": [],
       "adaptations": [],
-      "evidence": []
+      "evidence": ["f2bfcc9bea72b7c37e47dca3be45ab4ec020beb0; integrated as 356b440", "research/current-source/validation.json", "61 regions, 151019 placements and 3433 original models extracted; no source-scene acceptance claimed"]
     },
     {
       "id": "M1-FLEET-RULES",
       "goal": "Resolve starter behavior contracts and source fixtures for complete shared gameplay implementation.",
-      "status": "IMPLEMENTING",
+      "status": "DONE",
       "specs": ["milestones/m1-fleet-resumption.json", "research/first-slice-mechanics.md"],
       "dependencies": ["M1-CONTRACT"],
       "allowed_paths": ["research/journey-rules/**"],
@@ -132,7 +169,7 @@
       "source_notes": ["milestones/m1-fleet-resumption.json"],
       "parity_entries": [],
       "adaptations": [],
-      "evidence": []
+      "evidence": ["070682443c3b2a25a7987e89d7d8a7ee1c2a8e95; integrated as c28b2e1", "71 tutorial states, 52 activity/quest rules, 90 oracle vectors and six delivery orders validated after integration", "research/journey-rules/README.md"]
     },
     {
       "id": "M1-FLEET-CONTRACTS",

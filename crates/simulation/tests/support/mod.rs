@@ -182,6 +182,7 @@ pub fn content() -> GameContent {
         schema_version: GAME_SCHEMA_VERSION,
         revision: "synthetic-v1".into(),
         baseline: "synthetic only; not a gamepack".into(),
+        interfaces: BTreeMap::new(),
         items,
         skills,
         regions: BTreeMap::from([(region.id.clone(), region.clone())]),
