@@ -193,7 +193,7 @@ impl WorldEngine {
         if definition
             .interruptions
             .contains(&InterruptionCause::Combat)
-            && self.in_combat(world, character)?
+            && self.combat_locked(world, character, crate::combat::CombatLock::Travel)?
         {
             return Err(GameError::new(
                 GameErrorCode::Busy,
@@ -509,6 +509,28 @@ impl WorldEngine {
         location: &RuntimeLocation,
         policy_id: &GroundPolicyId,
     ) -> GameResult<String> {
+        self.put_ground_from(
+            world,
+            stack,
+            owner,
+            location,
+            policy_id,
+            GroundProducer::Activity {
+                actor: owner.clone(),
+                at_tick: world.tick,
+            },
+        )
+    }
+
+    pub(crate) fn put_ground_from(
+        &self,
+        world: &mut WorldState,
+        stack: ItemStack,
+        owner: &ActorId,
+        location: &RuntimeLocation,
+        policy_id: &GroundPolicyId,
+        producer: GroundProducer,
+    ) -> GameResult<String> {
         let policy = self
             .content
             .mechanics
@@ -523,19 +545,24 @@ impl WorldEngine {
             Some(ticks) => runtime::deadline(world.tick, u64::from(*ticks))?,
             None => u64::MAX,
         };
-        let mut ordinal = world.ground_items.len();
-        let id = loop {
-            let id = format!("policy:{policy_id}:{}:{ordinal}", world.tick);
-            if !world.ground_items.iter().any(|item| item.id == id) {
-                break id;
-            }
-            ordinal += 1;
-        };
-        if id.len() > 160 {
-            return Err(invalid_content(
-                "Ground instance identity exceeds the shared bound.",
+        if world.ground_items.len() >= 32_768 {
+            return Err(GameError::new(
+                GameErrorCode::InventoryFull,
+                "Ground capacity is full.",
             ));
         }
+        world.runtime.next_ground_id = runtime::deadline(world.runtime.next_ground_id, 1)?;
+        let id = format!("ground.engine.{}", world.runtime.next_ground_id);
+        if world.ground_items.iter().any(|item| item.id == id) {
+            return Err(invalid_state("Ground identity counter requires migration."));
+        }
+        world.runtime.ground_provenance.insert(
+            id.clone(),
+            GroundProvenance {
+                policy: policy_id.clone(),
+                producer,
+            },
+        );
         world.ground_items.push(GroundItem {
             id: id.clone(),
             tile: location.tile,

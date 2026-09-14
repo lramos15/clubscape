@@ -151,14 +151,6 @@ impl WorldEngine {
                             "Shop has no free unstocked lines.",
                         ));
                     }
-                    if matches!(
-                        rule.restock.phase.require()?,
-                        RestockPhase::SinceLastStockChange
-                    ) {
-                        return Err(crate::unavailable(
-                            "World runtime validation currently forbids persisted clocks for unstocked shop rows.",
-                        ));
-                    }
                     ShopItem {
                         item: item.clone(),
                         base_stock: *base_stock,
@@ -519,7 +511,9 @@ impl WorldEngine {
         row: &ShopItem,
     ) -> GameResult<()> {
         let deadline = self.stock_deadline(row, world.tick)?;
-        if shop.stock.iter().any(|source| source.item == row.item) {
+        if shop.stock.iter().any(|source| source.item == row.item)
+            || matches!(shop.unstocked, Some(UnstockedShopPolicy::Accept { .. }))
+        {
             let reset = row.mechanics.as_ref().is_some_and(|m| {
                 matches!(
                     &m.restock.phase,
@@ -607,6 +601,10 @@ impl WorldEngine {
                     .stock
                     .iter()
                     .any(|source| source.item == row.item)
+                    || matches!(
+                        definition.unstocked,
+                        Some(UnstockedShopPolicy::Accept { .. })
+                    )
                 {
                     world
                         .runtime

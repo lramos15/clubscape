@@ -7,12 +7,15 @@ mod combat;
 mod commerce;
 mod context;
 mod death;
+mod engagement;
 mod entities;
 mod grants;
 mod navigation;
 mod permissions;
 mod progression;
+mod recovery_ui;
 mod runtime;
+mod traversal;
 mod validation;
 mod vitals;
 mod world;
@@ -165,6 +168,7 @@ impl WorldEngine {
             runtime: CharacterRuntime::from_initial(&self.content),
         };
         character.migrate_engine_metadata(&self.content)?;
+        self.refresh_combat_style(&mut character)?;
         validation::character(&character, &self.content)?;
         Ok(character)
     }
@@ -226,6 +230,7 @@ impl WorldEngine {
         self.authorize_intent(&character, intent)?;
         let before = character.clone();
         let mut events = self.intent(&mut draft, &mut character, intent, random)?;
+        self.refresh_combat_style(&mut character)?;
         let mut routed = self.dispatch_kill_credit(
             &mut draft,
             character.runtime.instance.as_ref(),
@@ -235,6 +240,7 @@ impl WorldEngine {
         self.progress(&mut draft, &mut character, &before, &mut events, random)?;
         self.validate_open_dialogue(&draft, &character)?;
         self.check_reward_atomicity(&before, &character)?;
+        self.session_close_event(&before, &character, &mut events)?;
         validation::character(&character, &self.content)?;
         character.last_action_tick = draft.tick;
         character.runtime.last_active_tick = Some(draft.tick);
@@ -318,7 +324,17 @@ impl WorldEngine {
         draft
             .ground_items
             .retain(|item| item.expires_at_tick > draft.tick);
+        let ground_ids: std::collections::BTreeSet<_> = draft
+            .ground_items
+            .iter()
+            .map(|item| item.id.clone())
+            .collect();
+        draft
+            .runtime
+            .ground_provenance
+            .retain(|id, _| ground_ids.contains(id));
         let mut result = self.advance_projectiles(draft, random)?;
+        result.extend(self.refresh_recovery_sessions(draft)?);
         let actors: Vec<_> = draft.characters.keys().cloned().collect();
         for actor in actors {
             let stored = draft
@@ -348,8 +364,11 @@ impl WorldEngine {
                 );
             let operation = (if online == Some(false) {
                 Ok(vec![])
-            } else if matches!(character.runtime.life, LifeState::Respawning { .. }) {
-                self.advance_respawn(&mut attempt, &mut character)
+            } else if matches!(
+                character.runtime.life,
+                LifeState::Dying { .. } | LifeState::Respawning { .. }
+            ) {
+                self.advance_death(&mut attempt, &mut character)
             } else if character.hitpoints == 0 {
                 self.die(&mut attempt, &mut character)
             } else if character.runtime.pending_travel.is_some() {
@@ -386,6 +405,7 @@ impl WorldEngine {
                 )?;
                 self.progress(&mut attempt, &mut character, &before, &mut events, random)?;
                 self.check_reward_atomicity(&before, &character)?;
+                self.session_close_event(&before, &character, &mut events)?;
                 validation::character(&character, &self.content)?;
                 Ok((events, other))
             });
@@ -414,6 +434,7 @@ impl WorldEngine {
         }
         result.extend(self.advance_npcs(draft, random, context)?);
         result.extend(self.advance_graves(draft, context)?);
+        result.extend(self.refresh_recovery_sessions(draft)?);
         Ok(result)
     }
 

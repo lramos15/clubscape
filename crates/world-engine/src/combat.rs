@@ -17,6 +17,12 @@ struct Strike<'a> {
     instance: Option<InstanceId>,
 }
 
+pub(crate) enum CombatLock {
+    State,
+    Logout,
+    Travel,
+}
+
 impl WorldEngine {
     pub(crate) fn select_style(
         &self,
@@ -55,12 +61,70 @@ impl WorldEngine {
                 selected = Some(weapon);
             }
         }
-        selected.ok_or_else(|| {
-            GameError::new(
-                GameErrorCode::RequirementNotMet,
-                "Style is not offered by an equipped source weapon.",
-            )
-        })
+        if let Some(weapon) = selected {
+            return Ok(weapon);
+        }
+        let any_weapon = character.equipment.values().any(|stack| {
+            self.content
+                .items
+                .get(&stack.item)
+                .and_then(|item| item.equipment.as_ref())
+                .is_some_and(|equipment| {
+                    equipment.weapon.is_some() || !equipment.attack_styles.is_empty()
+                })
+        });
+        if !any_weapon && let Some(policy) = &self.content.mechanics.player_combat {
+            let unarmed = policy.unarmed.require()?;
+            if unarmed.styles.contains(style) {
+                return Ok(unarmed);
+            }
+        }
+        Err(GameError::new(
+            GameErrorCode::RequirementNotMet,
+            "Style is not offered by the equipped weapon or source unarmed profile.",
+        ))
+    }
+
+    pub(crate) fn refresh_combat_style(&self, character: &mut CharacterState) -> GameResult<()> {
+        let mut weapon = None;
+        let mut legacy_weapon = false;
+        for stack in character.equipment.values() {
+            let equipment = self
+                .content
+                .items
+                .get(&stack.item)
+                .and_then(|item| item.equipment.as_ref())
+                .ok_or_else(|| invalid_state("Equipped item lacks equipment data."))?;
+            if let Some(current) = &equipment.weapon
+                && weapon.replace(current).is_some()
+            {
+                return Err(invalid_content("Multiple equipped weapon profiles."));
+            }
+            legacy_weapon |= !equipment.attack_styles.is_empty();
+        }
+        if weapon.is_none()
+            && !legacy_weapon
+            && let Some(policy) = &self.content.mechanics.player_combat
+        {
+            weapon = Some(policy.unarmed.require()?);
+        }
+        if let Some(weapon) = weapon {
+            if !weapon.styles.contains(&weapon.default_style) {
+                return Err(invalid_content("Weapon default style is not offered."));
+            }
+            if character
+                .runtime
+                .combat
+                .style
+                .as_ref()
+                .is_none_or(|style| !weapon.styles.contains(style))
+            {
+                character.runtime.combat.style = Some(weapon.default_style.clone());
+            }
+        } else if !legacy_weapon {
+            character.runtime.combat.style = None;
+        }
+        Ok(())
     }
 
     pub(crate) fn cast(
@@ -247,6 +311,8 @@ impl WorldEngine {
         let mechanics = combat.mechanics.as_ref().ok_or_else(|| {
             unavailable("Legacy NPC combat is not a typed source combat contract.")
         })?;
+        self.attack_eligible(world, character, mechanics, style_id, style.method)?;
+        mechanics.engagement.require()?;
         let entity = runtime::entity(world, character.runtime.instance.as_ref(), target)?;
         let life = entity.runtime.life;
         let hp = entity.hitpoints;
@@ -352,6 +418,10 @@ impl WorldEngine {
             character.runtime.combat.spell_ready = deadline;
         }
         character.runtime.combat.target = Some(target.clone());
+        character.runtime.combat.last_combat_tick = Some(world.tick);
+        runtime::entity_mut(world, character.runtime.instance.as_ref(), target)?
+            .runtime
+            .last_combat_tick = Some(world.tick);
         if spell_id.is_none() {
             character.activity = Activity::Fighting {
                 target: target.clone(),
@@ -691,6 +761,8 @@ impl WorldEngine {
                     first_hit_order: order,
                     last_hit_tick: now,
                     last_hit_order: order,
+                    methods: BTreeMap::new(),
+                    methods_complete: true,
                 });
             entry.damage = entry
                 .damage
@@ -698,6 +770,22 @@ impl WorldEngine {
                 .ok_or_else(|| invalid_state("Damage credit overflow."))?;
             entry.last_hit_tick = now;
             entry.last_hit_order = order;
+            let method = entry
+                .methods
+                .entry(strike.style.method)
+                .or_insert(MethodContribution {
+                    damage: 0,
+                    first_hit_tick: now,
+                    first_hit_order: order,
+                    last_hit_tick: now,
+                    last_hit_order: order,
+                });
+            method.damage = method
+                .damage
+                .checked_add(u64::from(damage))
+                .ok_or_else(|| invalid_state("Method damage overflow."))?;
+            method.last_hit_tick = now;
+            method.last_hit_order = order;
             let rewards = strike
                 .style
                 .damage_xp
@@ -748,11 +836,51 @@ impl WorldEngine {
                     })?
                     .clone()
             };
+            let method = attributed_method(
+                runtime::entity(world, strike.instance.as_ref(), strike.target)?,
+                &credited,
+                strike.style.method,
+                definition.attribution.require()?,
+            )?;
             let loot = self.loot(world, &owner, &definition.loot, rng)?;
             if !loot.is_empty() {
-                return Err(unavailable(
-                    "NPC loot pools are resolved, but NpcCombatMechanics has no ground-policy selector for their owned drops.",
-                ));
+                if world
+                    .ground_items
+                    .len()
+                    .checked_add(loot.len())
+                    .is_none_or(|total| total > 32_768)
+                {
+                    return Err(GameError::new(
+                        GameErrorCode::InventoryFull,
+                        "NPC loot exceeds available ground capacity.",
+                    ));
+                }
+                let policy = definition.loot_ground_policy.require()?;
+                let location = RuntimeLocation {
+                    region: self
+                        .regions_by_tile
+                        .get(&tile)
+                        .ok_or_else(|| unknown("Loot tile has no region."))?
+                        .clone(),
+                    tile,
+                    instance: strike.instance.clone(),
+                };
+                for (ordinal, stack) in loot.into_iter().enumerate() {
+                    self.put_ground_from(
+                        world,
+                        stack,
+                        &credited,
+                        &location,
+                        policy,
+                        GroundProducer::NpcLoot {
+                            spawn: strike.target.clone(),
+                            life: strike.life,
+                            instance: strike.instance.clone(),
+                            ordinal: u32::try_from(ordinal)
+                                .map_err(|_| invalid_state("Loot ordinal overflow."))?,
+                        },
+                    )?;
+                }
             }
             let respawn = runtime::duration(definition.respawn.require()?, rng)?;
             let ready = runtime::deadline(world.tick, respawn)?;
@@ -763,11 +891,22 @@ impl WorldEngine {
             entity.runtime.loot_resolved = true;
             entity.available_at_tick = ready;
             entity.runtime.retaliation_target = None;
+            entity.runtime.kill = Some(KillResolution {
+                life: strike.life,
+                at_tick: now,
+                credited: credited.clone(),
+                method,
+                npc: npc.clone(),
+            });
             events.push(GameEvent::NpcKilled {
                 target: strike.target.clone(),
                 npc: npc.clone(),
                 life: strike.life,
-                method: strike.style.method,
+                method: if credited == character.actor_id {
+                    method
+                } else {
+                    strike.style.method
+                },
                 credited: credited == character.actor_id,
                 tile,
             });
@@ -978,6 +1117,39 @@ impl WorldEngine {
                             }
                             Err(error) => return Err(error),
                         }
+                        if outcome != CombatOutcome::Invalidated {
+                            let shape = self.target_shape(
+                                world,
+                                &character,
+                                &WorldTarget::Spawn {
+                                    spawn: spawn.clone(),
+                                },
+                            )?;
+                            let mechanics = shape
+                                .npc
+                                .as_ref()
+                                .and_then(|id| self.content.npcs.get(id))
+                                .and_then(|npc| npc.combat.as_ref())
+                                .and_then(|combat| combat.mechanics.as_ref())
+                                .ok_or_else(|| {
+                                    invalid_state(
+                                        "Projectile target lost its source combat definition.",
+                                    )
+                                })?;
+                            match self.attack_eligible(
+                                world,
+                                &character,
+                                mechanics,
+                                &style.id,
+                                style.method,
+                            ) {
+                                Ok(()) => {}
+                                Err(error) if error.code == GameErrorCode::RequirementNotMet => {
+                                    outcome = CombatOutcome::Invalidated
+                                }
+                                Err(error) => return Err(error),
+                            }
+                        }
                     }
                 }
                 own.extend(self.apply_strike(
@@ -1013,9 +1185,15 @@ impl WorldEngine {
         world: &WorldState,
         character: &CharacterState,
     ) -> GameResult<bool> {
-        if character.runtime.combat.target.is_some() {
-            return Ok(true);
-        }
+        self.combat_locked(world, character, CombatLock::State)
+    }
+
+    pub(crate) fn combat_locked(
+        &self,
+        world: &WorldState,
+        character: &CharacterState,
+        lock: CombatLock,
+    ) -> GameResult<bool> {
         let entities = match &character.runtime.instance {
             Some(id) => {
                 &world
@@ -1027,10 +1205,51 @@ impl WorldEngine {
             }
             None => &world.entities,
         };
-        Ok(entities.values().any(|entity| {
+        let active = entities.values().any(|entity| {
             entity.hitpoints > 0
                 && entity.runtime.retaliation_target.as_ref() == Some(&character.actor_id)
-        }))
+        }) || matches!(
+            character.activity,
+            Activity::Fighting { .. } | Activity::Casting { .. }
+        );
+        if active {
+            return Ok(true);
+        }
+        if let Some(policy) = &self.content.mechanics.player_combat {
+            let policy = policy.engagement.require()?;
+            let delay = match lock {
+                CombatLock::State => policy.combat_state_ticks,
+                CombatLock::Logout => policy.logout_lock_ticks,
+                CombatLock::Travel => policy.travel_lock_ticks,
+            };
+            if let Some(last) = character.runtime.combat.last_combat_tick {
+                return Ok(world.tick < runtime::deadline(last, u64::from(delay))?);
+            }
+            return Ok(false);
+        }
+        Ok(character.runtime.combat.target.is_some())
+    }
+
+    fn attack_eligible(
+        &self,
+        world: &WorldState,
+        character: &CharacterState,
+        npc: &NpcCombatMechanics,
+        style: &CombatStyleId,
+        method: AttackMethod,
+    ) -> GameResult<()> {
+        for rule in npc.eligibility.require()? {
+            if rule.method == method
+                && rule.style.as_ref().is_none_or(|id| id == style)
+                && self.guard(world, character, &rule.guard, None)?
+            {
+                return Ok(());
+            }
+        }
+        Err(GameError::new(
+            GameErrorCode::RequirementNotMet,
+            "Source target rules do not permit this requested attack method/style.",
+        ))
     }
 
     fn interrupt_travel_for_combat(
@@ -1064,6 +1283,50 @@ pub(crate) fn melee_adjacent(actor: Tile, target: Tile, width: u8, height: u8) -
     let (right, top) = (left + u32::from(width), bottom + u32::from(height));
     (y >= bottom && y < top && (x + 1 == left || x == right))
         || (x >= left && x < right && (y + 1 == bottom || y == top))
+}
+
+fn attributed_method(
+    entity: &EntityState,
+    actor: &ActorId,
+    finishing: AttackMethod,
+    policy: &KillMethodPolicy,
+) -> GameResult<AttackMethod> {
+    if *policy == KillMethodPolicy::FinishingAttack {
+        return Ok(finishing);
+    }
+    let contribution = entity
+        .runtime
+        .contributions
+        .get(actor)
+        .ok_or_else(|| invalid_state("Credited actor has no contribution."))?;
+    if !contribution.methods_complete {
+        return Err(unavailable(
+            "Legacy contribution method history needs explicit migration for this attribution policy.",
+        ));
+    }
+    contribution
+        .methods
+        .iter()
+        .min_by(|(method_a, a), (method_b, b)| {
+            let damage = match policy {
+                KillMethodPolicy::MostDamageThenFirstMethod
+                | KillMethodPolicy::MostDamageThenLastMethod => b.damage.cmp(&a.damage),
+                _ => std::cmp::Ordering::Equal,
+            };
+            damage
+                .then_with(|| match policy {
+                    KillMethodPolicy::LastContributingMethod
+                    | KillMethodPolicy::MostDamageThenLastMethod => {
+                        (b.last_hit_tick, b.last_hit_order)
+                            .cmp(&(a.last_hit_tick, a.last_hit_order))
+                    }
+                    _ => (a.first_hit_tick, a.first_hit_order)
+                        .cmp(&(b.first_hit_tick, b.first_hit_order)),
+                })
+                .then_with(|| method_a.cmp(method_b))
+        })
+        .map(|(method, _)| *method)
+        .ok_or_else(|| invalid_state("Complete contribution has no method history."))
 }
 
 fn ratio_roll(ratio: &Ratio, rng: &mut impl RandomSource) -> GameResult<bool> {

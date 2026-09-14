@@ -111,17 +111,15 @@ fn write_artifact(path: &Path, bytes: &[u8]) -> GameResult<()> {
     let mut partial_name = name.to_os_string();
     partial_name.push(format!(".clubscape-{}.part", std::process::id()));
     let partial = parent.join(partial_name);
-    let mut file = OpenOptions::new()
-        .write(true)
-        .create_new(true)
-        .open(&partial)
-        .map_err(|error| file_error(&partial, error))?;
-    let result = (|| {
-        file.write_all(bytes)?;
-        file.sync_all()?;
-        drop(file);
-        fs::rename(&partial, path)
-    })();
+    let result = {
+        let mut file = OpenOptions::new()
+            .write(true)
+            .create_new(true)
+            .open(&partial)
+            .map_err(|error| file_error(&partial, error))?;
+        file.write_all(bytes).and_then(|()| file.sync_all())
+    };
+    let result = result.and_then(|()| fs::rename(&partial, path));
     if let Err(error) = result {
         let _ = fs::remove_file(&partial);
         return Err(file_error(path, error));

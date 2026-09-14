@@ -167,21 +167,15 @@ impl WorldEngine {
                     .npcs
                     .get(npc_id)
                     .ok_or_else(|| unknown("Unknown NPC."))?;
+                self.update_engagement(world, instance.as_ref(), &id, definition, context)?;
                 let entity = runtime::entity(world, instance.as_ref(), &id)?.clone();
                 if entity.available_at_tick > world.tick
                     || definition.combat.is_some() && entity.hitpoints == 0
                 {
                     continue;
                 }
-                if definition
-                    .combat
-                    .as_ref()
-                    .is_some_and(|combat| combat.aggressive)
-                    && entity.runtime.retaliation_target.is_none()
-                {
-                    return Err(unavailable(
-                        "Aggressive NPCs still need an explicit acquisition radius/eligibility policy; M1 rats/goblins are nonaggressive.",
-                    ));
+                if entity.runtime.returning_to_spawn {
+                    continue;
                 }
                 if let Some(actor) = &entity.runtime.retaliation_target {
                     if context.actors.get(actor).is_some_and(|facts| !facts.online) {
@@ -355,6 +349,10 @@ impl WorldEngine {
                             .runtime
                             .attack_ready = deadline;
                         character.runtime.combat.last_attacker = Some(id.clone());
+                        character.runtime.combat.last_combat_tick = Some(world.tick);
+                        runtime::entity_mut(world, instance.as_ref(), &id)?
+                            .runtime
+                            .last_combat_tick = Some(world.tick);
                         if character.runtime.pending_travel.is_some() {
                             own.extend(
                                 self.interrupt_travel(&mut character, InterruptionCause::Combat)?,
@@ -389,6 +387,7 @@ impl WorldEngine {
                     }
                     self.progress(world, &mut character, &before, &mut own, rng)?;
                     self.check_reward_atomicity(&before, &character)?;
+                    self.session_close_event(&before, &character, &mut own)?;
                     world.characters.insert(actor.clone(), character);
                     events.extend(tag(actor, own));
                 } else if let NpcNavigation::Mobile {
@@ -441,7 +440,7 @@ impl WorldEngine {
         Ok(events)
     }
 
-    fn npc_can_step(
+    pub(crate) fn npc_can_step(
         &self,
         world: &WorldState,
         instance: &Option<InstanceId>,
@@ -524,27 +523,24 @@ impl WorldEngine {
                 target,
                 npc,
                 life,
-                method,
+                method: _,
                 credited: false,
                 tile,
             } = event
             else {
                 continue;
             };
-            let mechanics = self
-                .content
-                .npcs
-                .get(npc)
-                .and_then(|npc| npc.combat.as_ref())
-                .and_then(|combat| combat.mechanics.as_ref())
-                .ok_or_else(|| unknown("Missing kill-credit policy."))?;
             let entity = runtime::entity(world, instance, target)?;
             if entity.runtime.life != *life {
                 return Err(invalid_state("Kill-credit life changed."));
             }
-            let actor = self
-                .kill_winner(entity, mechanics.credit.require()?)?
-                .ok_or_else(|| invalid_state("Kill has no contributor."))?;
+            let resolution = entity
+                .runtime
+                .kill
+                .as_ref()
+                .ok_or_else(|| invalid_state("Kill has no persisted resolution."))?;
+            let actor = resolution.credited.clone();
+            let credited_method = resolution.method;
             let mut character = world.characters.remove(&actor).ok_or_else(|| {
                 unavailable("Credited actor state must be loaded for progression.")
             })?;
@@ -553,7 +549,7 @@ impl WorldEngine {
                 target: target.clone(),
                 npc: npc.clone(),
                 life: *life,
-                method: *method,
+                method: credited_method,
                 credited: true,
                 tile: *tile,
             }];

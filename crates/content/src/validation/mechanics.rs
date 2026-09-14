@@ -2,7 +2,7 @@ use serde::Serialize;
 
 use super::*;
 
-fn binding<'a, T>(value: &'a SourceBinding<T>, path: &str) -> GameResult<Option<&'a T>> {
+pub(super) fn binding<'a, T>(value: &'a SourceBinding<T>, path: &str) -> GameResult<Option<&'a T>> {
     match value {
         SourceBinding::Bound { value, .. } => Ok(Some(value)),
         SourceBinding::Unresolved { reason, .. } => {
@@ -61,7 +61,21 @@ fn placement(value: &SourceObjectPlacement, path: &str) -> GameResult<()> {
     if value.quarter_turns > 3 || value.layer != expected {
         return Err(invalid(path, "object shape/layer/orientation mismatch"));
     }
+
     Ok(())
+}
+
+fn morph_value(counter: &CounterDefinition, value: i64, path: &str) -> GameResult<()> {
+    let value = match counter.value_type {
+        CounterType::Boolean if value == 0 || value == 1 => CounterValue::Boolean(value == 1),
+        CounterType::Boolean => {
+            return Err(invalid(path, "boolean morph selectors must be zero or one"));
+        }
+        CounterType::Integer { .. } => CounterValue::Integer(value),
+    };
+    counter
+        .validate_value(value)
+        .map_err(|error| invalid(path, error))
 }
 
 impl Validator<'_> {
@@ -124,6 +138,15 @@ impl Validator<'_> {
                 source_tree(
                     &combat.mechanics,
                     &format!("{path}.combat.mechanics"),
+                    mode,
+                    counts,
+                    unresolved,
+                )?;
+            }
+            for object in self.content.objects.values() {
+                source_tree(
+                    &object.morph,
+                    &format!("objects.{}.morph", object.id),
                     mode,
                     counts,
                     unresolved,
@@ -252,6 +275,7 @@ impl Validator<'_> {
         self.combat_definitions()?;
         self.vital_definitions()?;
         self.death_definitions()?;
+        self.execution_definitions()?;
         Ok(())
     }
 
@@ -866,7 +890,7 @@ impl Validator<'_> {
             .ok_or_else(|| invalid(path, format!("undefined spawn {id}")))
     }
 
-    fn ground_policy(&self, id: &GroundPolicyId, path: &str) -> GameResult<()> {
+    pub(super) fn ground_policy(&self, id: &GroundPolicyId, path: &str) -> GameResult<()> {
         if !self.content.mechanics.ground_policies.contains_key(id) {
             return Err(invalid(path, format!("undefined ground policy {id}")));
         }
@@ -892,9 +916,31 @@ impl Validator<'_> {
                 ));
             }
             let initial = &definition.states[&definition.initial];
-            if initial.tile != spawn.tile
-                || !matches!(&spawn.kind, SpawnKind::Object { object } if initial.object.as_ref() == Some(object))
+            let source_object = match &spawn.kind {
+                SpawnKind::Object { object } => object,
+                _ => unreachable!(),
+            };
+            let mut initial_object = Some(source_object);
+            if let Some(morph) = self
+                .content
+                .objects
+                .get(source_object)
+                .and_then(|object| object.morph.as_ref())
+                && let Some(SourceBinding::Bound { value: link, .. }) = &morph.collision
+                && link.placements.get(&spawn.id) == Some(&definition.id)
             {
+                let counter = self.counter(&morph.counter, &path)?;
+                let value = match counter.initial {
+                    CounterValue::Integer(value) => value,
+                    CounterValue::Boolean(value) => i64::from(value),
+                };
+                initial_object = morph
+                    .variants
+                    .get(&value)
+                    .unwrap_or(&morph.fallback)
+                    .as_ref();
+            }
+            if initial.tile != spawn.tile || initial.object.as_ref() != initial_object {
                 return Err(invalid(
                     &path,
                     "initial transform must preserve its declared source spawn placement",
@@ -1029,9 +1075,7 @@ impl Validator<'_> {
                 ));
             }
             for (value, variant) in &morph.variants {
-                counter
-                    .validate_value(CounterValue::Integer(*value))
-                    .map_err(|error| invalid(path, error))?;
+                morph_value(counter, *value, path)?;
                 if variant
                     .as_ref()
                     .is_some_and(|id| !self.content.npcs.contains_key(id))
@@ -1201,9 +1245,7 @@ impl Validator<'_> {
                 ));
             }
             for (value, variant) in &morph.variants {
-                counter
-                    .validate_value(CounterValue::Integer(*value))
-                    .map_err(|error| invalid(path, error))?;
+                morph_value(counter, *value, path)?;
                 if let Some(variant) = variant
                     && !self.content.objects.contains_key(variant)
                 {

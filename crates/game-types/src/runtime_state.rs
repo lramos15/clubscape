@@ -48,8 +48,19 @@ pub struct InteractionSession {
 #[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(tag = "kind", rename_all = "snake_case", deny_unknown_fields)]
 pub enum ContainerSession {
-    Bank { session: InteractionSession },
-    Shop { session: InteractionSession },
+    Bank {
+        session: InteractionSession,
+    },
+    Shop {
+        session: InteractionSession,
+    },
+    Grave {
+        death: DeathId,
+        interface: InterfaceId,
+    },
+    DeathOffice {
+        interface: InterfaceId,
+    },
 }
 
 #[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize, Default)]
@@ -101,6 +112,8 @@ pub struct CharacterCombatState {
     pub last_attacker: Option<SpawnId>,
     pub active_prayers: BTreeSet<PrayerId>,
     pub prayer_drain: Option<FractionalAccumulator>,
+    #[serde(default)]
+    pub last_combat_tick: Option<u64>,
 }
 
 #[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
@@ -242,6 +255,7 @@ impl CharacterRuntime {
             && self.combat.active_prayers.len() <= 256
             && tick(self.combat.attack_ready)
             && tick(self.combat.spell_ready)
+            && self.combat.last_combat_tick.is_none_or(tick)
             && tick(self.food_ready)
             && self.action_cooldowns.values().all(|value| tick(*value))
             && self.travel_cooldowns.values().all(|value| tick(*value))
@@ -314,6 +328,7 @@ impl EngineSchedule {
                 ContainerSession::Bank { session } | ContainerSession::Shop { session } => {
                     session.interaction > 0
                 }
+                ContainerSession::Grave { .. } | ContainerSession::DeathOffice { .. } => true,
             });
         if valid {
             Ok(())
@@ -510,6 +525,10 @@ pub struct DamageContribution {
     pub first_hit_order: u32,
     pub last_hit_tick: u64,
     pub last_hit_order: u32,
+    #[serde(default)]
+    pub methods: BTreeMap<AttackMethod, MethodContribution>,
+    #[serde(default)]
+    pub methods_complete: bool,
 }
 
 #[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize, Default)]
@@ -521,6 +540,14 @@ pub struct EntityRuntime {
     pub contributions: BTreeMap<ActorId, DamageContribution>,
     pub loot_resolved: bool,
     pub next_movement_tick: Option<u64>,
+    #[serde(default)]
+    pub last_combat_tick: Option<u64>,
+    #[serde(default)]
+    pub aggression_ready: u64,
+    #[serde(default)]
+    pub returning_to_spawn: bool,
+    #[serde(default)]
+    pub kill: Option<KillResolution>,
 }
 
 #[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
@@ -603,6 +630,8 @@ pub struct GraveState {
     pub location: RuntimeLocation,
     pub active_ticks_remaining: u32,
     pub clock_started: bool,
+    #[serde(default)]
+    pub started_at_tick: Option<u64>,
     pub paused: BTreeSet<ClockPause>,
     pub items: Vec<RecoveryItem>,
 }
@@ -621,6 +650,8 @@ pub struct DeathRecord {
     pub grave: Option<GraveState>,
     pub office: Vec<RecoveryItem>,
     pub reclaimed: BTreeSet<RecoveryItemId>,
+    #[serde(default)]
+    pub arrival: Option<DeathArrival>,
 }
 
 #[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
@@ -636,6 +667,10 @@ pub struct WorldRuntime {
     pub projectiles: Vec<PendingProjectile>,
     pub deaths: BTreeMap<DeathId, DeathRecord>,
     pub stock_deadlines: BTreeMap<ShopId, BTreeMap<ItemId, u64>>,
+    #[serde(default)]
+    pub next_ground_id: u64,
+    #[serde(default)]
+    pub ground_provenance: BTreeMap<String, GroundProvenance>,
 }
 
 impl Default for WorldRuntime {
@@ -650,6 +685,8 @@ impl Default for WorldRuntime {
             projectiles: Vec::new(),
             deaths: BTreeMap::new(),
             stock_deadlines: BTreeMap::new(),
+            next_ground_id: 0,
+            ground_provenance: BTreeMap::new(),
         }
     }
 }

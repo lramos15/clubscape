@@ -272,6 +272,7 @@ fn mechanic_fixture() -> GameContent {
         counter: id("counter.test.flour"),
         variants: BTreeMap::from([(0, Some(id("object.test.rock")))]),
         fallback: Some(id("object.test.furnace")),
+        collision: None,
     });
     let InteractionAction::Gather { rule } = &mut content
         .spawns
@@ -451,6 +452,7 @@ fn mechanic_fixture() -> GameContent {
     equipment.attack_styles.clear();
     equipment.weapon = Some(WeaponDefinition {
         styles: vec![id("style.test.ranged")],
+        default_style: id("style.test.ranged"),
         ammunition: Some(AmmunitionRequirement {
             slot: id("slot.test.ammo"),
             compatible_items: vec![id("item.test.ammo")],
@@ -601,6 +603,31 @@ fn mechanic_fixture() -> GameContent {
         }),
         respawn: missing("NPC respawn is not inferred from another variant."),
         credit: bound(KillCreditPolicy::MostDamageThenFirstContributor),
+        attribution: bound(KillMethodPolicy::MostDamageThenFirstMethod),
+        eligibility: bound(
+            [
+                AttackMethod::Melee,
+                AttackMethod::Ranged,
+                AttackMethod::Magic,
+            ]
+            .into_iter()
+            .map(|method| AttackEligibility {
+                method,
+                style: None,
+                guard: Guard::Always,
+            })
+            .collect(),
+        ),
+        engagement: bound(NpcEngagementPolicy {
+            leash_range: 20,
+            inactivity_ticks: 20,
+            reacquire_delay_ticks: 4,
+            acquire_delay_ticks: 0,
+            return_to_spawn: true,
+            reset_life_on_return: false,
+            aggression: None,
+        }),
+        loot_ground_policy: bound(id("ground_policy.test.owned")),
         loot: vec![
             LootPool::Guaranteed {
                 items: vec![LootEntry {
@@ -682,6 +709,11 @@ fn mechanic_fixture() -> GameContent {
         .insert(provider.id.clone(), provider);
     content.mechanics.death = Some(DeathPolicy {
         domain: DeathDomain::NormalUnsafeNonPvp,
+        timing: bound(DeathTiming {
+            dying_ticks: 0,
+            respawn_ticks: 0,
+        }),
+        interfaces: None,
         value_provider: id("value_provider.test.death"),
         retained_unskulled: 3,
         protect_item_extra: 1,
@@ -1728,11 +1760,13 @@ fn world_runtime_checks_scoped_counters_lifetimes_instances_and_grave_ownership(
                 location: at,
                 active_ticks_remaining: 1500,
                 clock_started: false,
+                started_at_tick: None,
                 paused: BTreeSet::from([ClockPause::FirstDeathOffice]),
                 items: vec![lost],
             }),
             office: vec![],
             reclaimed: BTreeSet::new(),
+            arrival: None,
         },
     );
     world
@@ -1775,4 +1809,328 @@ fn world_runtime_checks_scoped_counters_lifetimes_instances_and_grave_ownership(
     world.validate_runtime(&content).unwrap();
     world.runtime.instances.values_mut().next().unwrap().owner = Some(id("actor.test.other"));
     assert!(world.validate_runtime(&content).is_err());
+}
+
+fn closure_fixture() -> GameContent {
+    let mut content = mechanic_fixture();
+    content.mechanics.player_drop = Some(PlayerDropPolicy {
+        ordinary: bound(id("ground_policy.test.owned")),
+        stages: BTreeMap::from([(
+            content.initial_state.tutorial_stage.clone(),
+            bound(id("ground_policy.test.owned")),
+        )]),
+        source: sources(),
+    });
+    content.mechanics.player_combat = Some(PlayerCombatPolicy {
+        unarmed: bound(WeaponDefinition {
+            styles: vec![id("style.test.melee")],
+            default_style: id("style.test.melee"),
+            ammunition: None,
+        }),
+        engagement: bound(PlayerEngagementPolicy {
+            combat_state_ticks: 4,
+            logout_lock_ticks: 6,
+            travel_lock_ticks: 8,
+        }),
+        source: sources(),
+    });
+    let traversal = TraversalDefinition {
+        id: id("traversal.test.exit"),
+        scope: CounterScope::World,
+        edges: vec![TraversalEdge {
+            from: tile(1000, 1000),
+            to: tile(1001, 1000),
+            bidirectional: true,
+        }],
+        guard: Guard::Always,
+        source: sources(),
+    };
+    content
+        .mechanics
+        .traversal
+        .insert(traversal.id.clone(), traversal);
+    let transform = &content.mechanics.object_transforms[&id("transform.test.door")];
+    let group = CollisionGroupDefinition {
+        id: id("collision_group.test.door"),
+        scope: CounterScope::World,
+        transforms: BTreeSet::from([transform.id.clone()]),
+        states: bound(
+            transform
+                .states
+                .iter()
+                .map(|(state, definition)| CombinedCollisionState {
+                    selection: BTreeMap::from([(transform.id.clone(), state.clone())]),
+                    collision: definition.collision.clone(),
+                })
+                .collect(),
+        ),
+        source: sources(),
+    };
+    content
+        .mechanics
+        .collision_groups
+        .insert(group.id.clone(), group);
+    let grave: InterfaceId = id("interface.test.grave");
+    let office: InterfaceId = id("interface.test.office");
+    for interface in [&grave, &office] {
+        content.interfaces.insert(
+            interface.clone(),
+            InterfaceDefinition {
+                id: interface.clone(),
+                name: "Synthetic recovery".into(),
+                access: InterfaceAccess::Contextual,
+                source_ids: vec![],
+                source: sources(),
+            },
+        );
+        content.initial_state.interfaces.push(interface.clone());
+    }
+    content.mechanics.death.as_mut().unwrap().interfaces =
+        Some(RecoveryInterfaces { grave, office });
+    content.mechanics.death.as_mut().unwrap().timing = bound(DeathTiming {
+        dying_ticks: 2,
+        respawn_ticks: 3,
+    });
+    content
+}
+
+#[test]
+fn closure_policies_roundtrip_strict_source_and_new_artifact_domain() {
+    let content = closure_fixture();
+    let json = serde_json::to_vec(&content).unwrap();
+    assert_eq!(read_content_json(&json).unwrap(), content);
+    let compiled = compile(content.clone());
+    let bytes = encode_compiled(&compiled).unwrap();
+    assert_eq!(clubscape_content::ARTIFACT_VERSION, 3);
+    assert_eq!(CONTENT_SCHEMA_VERSION, 3);
+    assert_eq!(
+        load_compiled(&bytes, ValidationMode::TestFixture)
+            .unwrap()
+            .definition(),
+        &content
+    );
+    let mut old = bytes;
+    old[8..10].copy_from_slice(&2_u16.to_le_bytes());
+    assert!(load_compiled(&old, ValidationMode::TestFixture).is_err());
+}
+
+#[test]
+fn closure_fields_cannot_be_omitted_or_replaced_with_unknown_nested_properties() {
+    let content = closure_fixture();
+    let mut json = serde_json::to_value(&content).unwrap();
+    json["mechanics"]
+        .as_object_mut()
+        .unwrap()
+        .remove("player_drop");
+    assert!(read_content_json(&serde_json::to_vec(&json).unwrap()).is_err());
+    let mut json = serde_json::to_value(content).unwrap();
+    json["mechanics"]["player_drop"]["ordinary"]["client_override"] = true.into();
+    assert!(read_content_json(&serde_json::to_vec(&json).unwrap()).is_err());
+}
+
+#[test]
+fn closure_references_scopes_defaults_and_combination_coverage_are_strict() {
+    type Mutation = Box<dyn Fn(&mut GameContent)>;
+    let mut cases: Vec<Mutation> = vec![
+        Box::new(|content| {
+            content.mechanics.player_drop.as_mut().unwrap().ordinary =
+                bound(id("ground_policy.test.missing"))
+        }),
+        Box::new(|content| {
+            content
+                .mechanics
+                .player_drop
+                .as_mut()
+                .unwrap()
+                .stages
+                .insert(
+                    id("stage.test.missing"),
+                    bound(id("ground_policy.test.owned")),
+                )
+                .map(|_| ())
+                .unwrap_or(())
+        }),
+        Box::new(|content| {
+            content
+                .mechanics
+                .traversal
+                .values_mut()
+                .next()
+                .unwrap()
+                .scope = CounterScope::Character
+        }),
+        Box::new(|content| {
+            content
+                .mechanics
+                .traversal
+                .values_mut()
+                .next()
+                .unwrap()
+                .edges[0]
+                .to = tile(1001, 1001)
+        }),
+        Box::new(|content| {
+            content
+                .mechanics
+                .traversal
+                .values_mut()
+                .next()
+                .unwrap()
+                .guard = Guard::Event {
+                condition: EventCondition::Death { items_lost: true },
+            }
+        }),
+        Box::new(|content| {
+            let SourceBinding::Bound { value, .. } =
+                &mut content.mechanics.player_combat.as_mut().unwrap().unarmed
+            else {
+                unreachable!()
+            };
+            value.default_style = id("style.test.magic");
+        }),
+        Box::new(|content| {
+            let SourceBinding::Bound { value, .. } = &mut content
+                .mechanics
+                .collision_groups
+                .values_mut()
+                .next()
+                .unwrap()
+                .states
+            else {
+                unreachable!()
+            };
+            value.pop();
+        }),
+        Box::new(|content| {
+            content
+                .mechanics
+                .death
+                .as_mut()
+                .unwrap()
+                .interfaces
+                .as_mut()
+                .unwrap()
+                .grave = id("interface.test.missing")
+        }),
+    ];
+    for mutate in cases.drain(..) {
+        let mut content = closure_fixture();
+        mutate(&mut content);
+        assert!(compile_content(content, ValidationMode::TestFixture).is_err());
+    }
+}
+
+#[test]
+fn explicit_consume_only_recipe_compiles_without_fake_inventory_outputs() {
+    let mut content = closure_fixture();
+    let recipe = content.recipes.get_mut(&id("recipe.test.bar")).unwrap();
+    recipe.outputs.clear();
+    recipe.mechanics.as_mut().unwrap().lifecycle = RecipeLifecycle::ConsumeOnly;
+    let compiled = compile(content.clone());
+    assert!(
+        compiled.definition().recipes[&id("recipe.test.bar")]
+            .outputs
+            .is_empty()
+    );
+    content
+        .recipes
+        .get_mut(&id("recipe.test.bar"))
+        .unwrap()
+        .outputs
+        .push(stack("item.test.bar", 1));
+    assert!(compile_content(content, ValidationMode::TestFixture).is_err());
+}
+
+#[test]
+fn new_guard_locations_cannot_bypass_iterative_recursion_preflight() {
+    let mut content = closure_fixture();
+    let mut guard = Guard::Always;
+    for _ in 0..1000 {
+        guard = Guard::Not {
+            guard: Box::new(guard),
+        };
+    }
+    content
+        .mechanics
+        .traversal
+        .values_mut()
+        .next()
+        .unwrap()
+        .guard = guard;
+    assert!(compile_content(content, ValidationMode::TestFixture).is_err());
+    let mut content = closure_fixture();
+    let mut guard = Guard::Always;
+    for _ in 0..1000 {
+        guard = Guard::Not {
+            guard: Box::new(guard),
+        };
+    }
+    let mechanics = content
+        .npcs
+        .values_mut()
+        .find_map(|npc| npc.combat.as_mut())
+        .unwrap()
+        .mechanics
+        .as_mut()
+        .unwrap();
+    let SourceBinding::Bound { value, .. } = &mut mechanics.eligibility else {
+        unreachable!()
+    };
+    value[0].guard = guard;
+    assert!(compile_content(content, ValidationMode::TestFixture).is_err());
+}
+
+#[test]
+fn geometry_changing_morph_requires_an_explicit_placement_collision_bridge() {
+    let mut content = closure_fixture();
+    content
+        .objects
+        .get_mut(&id("object.test.furnace"))
+        .unwrap()
+        .size_x = 2;
+    assert!(compile_content(content, ValidationMode::TestFixture).is_err());
+    let mut content = closure_fixture();
+    content
+        .objects
+        .get_mut(&id("object.test.furnace"))
+        .unwrap()
+        .morph = None;
+    content
+        .mechanics
+        .counters
+        .get_mut(&id("counter.test.hopper"))
+        .unwrap()
+        .source_variable = Some(SourceVariable::Varp { id: 20 });
+    content
+        .objects
+        .get_mut(&id("object.test.furnace"))
+        .unwrap()
+        .size_x = 2;
+    content
+        .objects
+        .get_mut(&id("object.test.rock"))
+        .unwrap()
+        .morph = Some(SourceObjectMorph {
+        counter: id("counter.test.hopper"),
+        variants: BTreeMap::from([
+            (0, Some(id("object.test.rock"))),
+            (1, Some(id("object.test.furnace"))),
+        ]),
+        fallback: Some(id("object.test.rock")),
+        collision: Some(bound(ObjectMorphCollision {
+            placements: BTreeMap::from([(id("spawn.test.rock"), id("transform.test.door"))]),
+            variants: vec![
+                ObjectMorphCollisionCase {
+                    value: 0,
+                    state: id("object_state.test.closed"),
+                },
+                ObjectMorphCollisionCase {
+                    value: 1,
+                    state: id("object_state.test.open"),
+                },
+            ],
+            fallback: id("object_state.test.closed"),
+        })),
+    });
+    compile(content);
 }

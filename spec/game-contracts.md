@@ -155,16 +155,16 @@ and ordinary message events have no primary identity; use explicit state
 guards for tile, actor or progression conditions. The mapping is shared rather
 than independently guessed by each content/runtime worker.
 
-## Mechanics extension: content 2, persisted state 1/runtime 1
+## Mechanics extension: content 3, persisted state 1/runtime 1
 
-`CONTENT_SCHEMA_VERSION = 2` versions immutable definitions.
+`CONTENT_SCHEMA_VERSION = 3` versions immutable definitions.
 `GAME_SCHEMA_VERSION = 1` still versions the additive character/world envelope;
 it is not a content version or a protocol-version change.
 `RUNTIME_SCHEMA_VERSION = 1` versions the new `runtime` records. The compiler
-artifact and identity-digest domain are version 2. Recompile content-1 artifacts;
+artifact and identity-digest domain are version 3. Recompile content-1/2 artifacts;
 do not relabel their headers or manufacture missing source inputs.
 
-The authoritative Rust definitions are `game-types/src/mechanics.rs`,
+The authoritative Rust definitions are `game-types/src/mechanics.rs`, `execution.rs`,
 `runtime_state.rs`, `content.rs` and `intent.rs`. `GameContent.mechanics` holds
 typed registries, not an extensible JSON bag. Strict source JSON must contain
 every definition field, including explicit `null`/empty collections where
@@ -413,12 +413,108 @@ Use `CharacterState::validate_runtime` and `WorldState::validate_runtime` with
 validated content, alongside existing container/XP/navigation validation.
 Storage also validates shape/bounds and append-only reward ledgers.
 
-The legacy engine compatibility arms intentionally return `Unavailable` for
-new execution and pending typed work; they do not prove M1 gameplay. Downstream
-work is: regenerate/compile source content 2; implement the declared schedulers,
-targets, guards/effects/events, formulas and death/recovery lifecycle; wire
-authoritative UI/presence and durable state/RNG ownership; then execute the
-complete real starter journey. Resolve the localized source policies already
-recorded for departure, NPC variant/loot supplements, projectile/respawn timing,
-valuation/overflow and exact origins/arrivals. Source asset closure, presentation
-approval, browser/performance and RuneLite acceptance remain separate.
+The executor implements the bound selectors, schedulers, effects, combat and
+death/recovery lifecycle. Integration still requires recompiling source content
+3 and wiring authoritative presence, requests and durable state/RNG ownership.
+Unresolved source bindings for departure, NPC variants/supplements, timing,
+valuation/overflow and exact arrivals remain source gates, not invented defaults.
+Source asset closure, presentation approval, browser/performance and RuneLite
+acceptance remain separate.
+
+### Final selector closure and wire requirements
+
+Content/artifact 3 deliberately rejects the old immutable shape rather than
+silently upgrading policy values. Persisted envelopes and runtime remain version
+1 with additive defaults: absent contact/history/provenance/arrival fields mean
+legacy evidence is absent, not fresh contact or a newly earned entitlement.
+Existing acknowledged inventory, XP, quest state and grant ledgers are preserved.
+
+`MechanicsDefinition` adds:
+
+| Field | Contract |
+| --- | --- |
+| `player_drop: Option<PlayerDropPolicy>` | Explicit ordinary `SourceBinding<GroundPolicyId>` and stage overrides. A selected unresolved override does not fall back to ordinary. |
+| `player_combat: Option<PlayerCombatPolicy>` | Source unarmed `WeaponDefinition` and bound combat-state/logout/travel lock durations. |
+| `traversal: BTreeMap<TraversalId, TraversalDefinition>` | World/instance-scoped source cardinal edges, directionality and actor guards, separate from opener/key guards. |
+| `collision_groups: BTreeMap<CollisionGroupId, CollisionGroupDefinition>` | Explicit combined replacements for every combination of member transform states, bounded to 4096 combinations. |
+
+Every typed weapon has `default_style`, which must be in its offered styles.
+Equipping/unequipping retains a still-valid style or selects the declared weapon/
+unarmed default without resetting attack deadlines. There is no "first registry
+entry" default.
+
+`NpcCombatMechanics` additionally requires four explicit bindings:
+`loot_ground_policy`, `eligibility`, `engagement`, and `attribution`.
+Eligibility is a list of method, optional exact style and authoritative state
+guard rules; spell/weapon ownership and costs are checked independently.
+Engagement declares source leash, inactivity, reacquisition/acquisition delay,
+return-to-spawn/reset-life behavior and optional guarded aggression. Accepted
+outgoing/incoming attacks refresh persisted contact clocks, including misses;
+pause/lock lengths remain supplied source values. Acquisition uses eligible
+online actors, source range/LOS and deterministic distance/actor ordering.
+
+Method attribution can explicitly select the finishing attack, first/last
+contributing method, or greatest damage by method with first/last ties.
+`DamageContribution.methods` retains exact per-method damage/order and
+`methods_complete` distinguishes complete new history from legacy totals.
+Non-finishing attribution cannot fabricate missing legacy history.
+`EntityRuntime.kill` persists the credited actor, method, NPC life and tick;
+the same result owns drops and routed progression.
+
+Generated ground items use a checked `WorldRuntime.next_ground_id`, with typed
+`ground_provenance` recording policy and player/activity or NPC spawn/life/
+instance/ordinal origin. IDs are opaque runtime identities, not fabricated
+content placements. Ground capacity is bounded to 32768 entries; aggregate
+quantity/capacity failure rolls back defeat/XP/loot together. Pickup/expiry
+removes live provenance but never rewinds the identity counter.
+
+Traversal guards apply while routing and again to every consumed walking/running
+step. A diagonal checks both cardinal routes. Instance rules map source edges
+through their chunk rotation; a shared open door never grants another actor
+the opener's tutorial permission. NPC physical movement does not acquire player
+progression permissions. Overlapping mutable transforms require a combined
+group; there is no last-writer-wins clipping. Geometry-changing/absent object
+morphs require a source-variable `ObjectMorphCollision` bridge for each placement,
+covering all selectors/fallback and matching initial collision. Updating that
+counter and its object identity/collision is atomic.
+
+Three new `GameIntent` variants are requests:
+
+```json
+{"kind":"produce_selected","recipe":"recipe.example","target":null,"quantity":1,"mode":"make_x"}
+{"kind":"open_grave","death":"death.example"}
+{"kind":"open_death_office"}
+```
+
+`ProductionMode` is `single` or `make_x`; single requires quantity one, while
+Make-X-of-one uses the declared first phase. `Activity::ProducingSelected`
+persists mode. Existing `Produce`/`ProduceAt` requests and pending activities
+retain quantity-derived compatibility semantics. `RecipeLifecycle::ConsumeOnly`
+allows actual input consumption with XP/counter/effects and no fake direct
+output stack. Ordinary inventory conversion still requires outputs; firemaking
+retains its distinct lifecycle. All recursive guard/effect/provenance checks
+remain in force, including newly added eligibility/aggression/traversal guards.
+
+`DeathPolicy.interfaces` binds distinct contextual grave/Office interfaces.
+Opening validates the owner, source range/LOS/instance and interface unlock,
+then persists `ContainerSession::Grave` or `DeathOffice` and emits
+`InterfacePresented`. Closing, movement, travel, invalidation and interruption
+revoke the session and emit closure. Global tab opening cannot grant it.
+`TickContext` still supplies trusted online/idle facts, but its old
+`ActorPresence.grave_interface` field is ignored: grave-clock pause comes only
+from the actual owned engine session. Reclaim remains an independently
+owner/range-checked, atomic action.
+
+`DeathPolicy.timing: SourceBinding<DeathTiming>` separately declares dying and
+respawn delays; explicit zero is permitted, unresolved is not zero. Retention
+and the owned `DeathArrival` receipt are created once at lethal damage.
+`LifeState::Dying` then `Respawning` honor recorded deadlines, restore vitals
+only on arrival, and never rerun retention after restart. `GraveState` records
+its start tick so the source 1500 active ticks begin after actual arrival or
+the authorized first-Office portal exit.
+
+Authorized unstocked shop rows may persist `SinceLastStockChange` clocks.
+Runtime validation checks the accepting policy, item form, line limit and
+actual stock row instead of rejecting all non-default lines. Source JSON also
+rejects collection entries that would be silently normalized away, such as
+duplicate members of a declared set.

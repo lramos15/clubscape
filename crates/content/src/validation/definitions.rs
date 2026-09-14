@@ -191,9 +191,23 @@ impl Validator<'_> {
             text(&recipe.name, &path, 256)?;
             nonempty(recipe.inputs.len(), &format!("{path}.inputs"))?;
             if !recipe.mechanics.as_ref().is_some_and(|mechanics| {
-                matches!(mechanics.lifecycle, RecipeLifecycle::Firemaking { .. })
+                matches!(
+                    mechanics.lifecycle,
+                    RecipeLifecycle::Firemaking { .. } | RecipeLifecycle::ConsumeOnly
+                )
             }) {
                 nonempty(recipe.outputs.len(), &format!("{path}.outputs"))?;
+            }
+            if recipe
+                .mechanics
+                .as_ref()
+                .is_some_and(|m| matches!(m.lifecycle, RecipeLifecycle::ConsumeOnly))
+                && !recipe.outputs.is_empty()
+            {
+                return Err(invalid(
+                    &path,
+                    "consume-only recipes cannot claim direct output items",
+                ));
             }
             self.stacks(&recipe.inputs, &format!("{path}.inputs"), true)?;
             self.stacks(&recipe.outputs, &format!("{path}.outputs"), true)?;

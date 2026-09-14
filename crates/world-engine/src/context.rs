@@ -14,6 +14,7 @@ pub struct TickContext {
 pub struct ActorPresence {
     pub online: bool,
     pub idle_milliseconds: u64,
+    /// Legacy adapter field, ignored for authority. OpenGrave creates the actual session.
     pub grave_interface: Option<DeathId>,
 }
 
@@ -54,7 +55,11 @@ impl TickContext {
                 }
                 ClockPause::Running => running,
                 ClockPause::Combat => combat,
-                ClockPause::Offline | ClockPause::Idle | ClockPause::GraveInterface => {
+                ClockPause::GraveInterface => {
+                    matches!(&character.runtime.engine, EngineMetadata::Typed { schedule }
+                    if matches!(&schedule.access, Some(ContainerSession::Grave { .. })))
+                }
+                ClockPause::Offline | ClockPause::Idle => {
                     let facts = self.actors.get(&character.actor_id).ok_or_else(|| unavailable(
                         "Clock requires authority-owned online/idle/interface facts; use the tick API with TickContext."))?;
                     match pause {
@@ -64,10 +69,6 @@ impl TickContext {
                                 > u64::from(idle_after.ok_or_else(|| {
                                     invalid_state("An idle-paused clock lacks an idle threshold.")
                                 })?)
-                        }
-                        ClockPause::GraveInterface => {
-                            facts.grave_interface.is_some()
-                                && facts.grave_interface == character.runtime.active_death
                         }
                         _ => unreachable!(),
                     }

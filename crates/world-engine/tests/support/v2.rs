@@ -353,6 +353,7 @@ pub fn with_combat(content: &mut GameContent) {
     dagger.attack_styles.clear();
     dagger.weapon = Some(WeaponDefinition {
         styles: vec![style("accurate")],
+        default_style: style("accurate"),
         ammunition: None,
     });
     dagger.bonuses.attack.insert(AttackType::Stab, 4);
@@ -368,6 +369,7 @@ pub fn with_combat(content: &mut GameContent) {
     bow.attack_styles.clear();
     bow.weapon = Some(WeaponDefinition {
         styles: vec![style("ranged"), style("rapid"), style("longrange")],
+        default_style: style("ranged"),
         ammunition: Some(AmmunitionRequirement {
             slot: slot("ammo"),
             compatible_items: vec![item("arrow")],
@@ -503,6 +505,31 @@ pub fn with_combat(content: &mut GameContent) {
                     }),
                     respawn: bound(TickDuration::Fixed { ticks: 35 }),
                     credit: bound(KillCreditPolicy::MostDamageThenFirstContributor),
+                    attribution: bound(KillMethodPolicy::FinishingAttack),
+                    eligibility: bound(
+                        [
+                            AttackMethod::Melee,
+                            AttackMethod::Ranged,
+                            AttackMethod::Magic,
+                        ]
+                        .into_iter()
+                        .map(|method| AttackEligibility {
+                            method,
+                            style: None,
+                            guard: Guard::Always,
+                        })
+                        .collect(),
+                    ),
+                    engagement: bound(NpcEngagementPolicy {
+                        leash_range: 50,
+                        inactivity_ticks: 100,
+                        reacquire_delay_ticks: 4,
+                        acquire_delay_ticks: 0,
+                        return_to_spawn: false,
+                        reset_life_on_return: false,
+                        aggression: None,
+                    }),
+                    loot_ground_policy: bound(ground_policy()),
                     loot: vec![],
                 }),
             }),
@@ -599,6 +626,11 @@ pub fn with_death(content: &mut GameContent) {
     );
     content.mechanics.death = Some(DeathPolicy {
         domain: DeathDomain::NormalUnsafeNonPvp,
+        timing: bound(DeathTiming {
+            dying_ticks: 0,
+            respawn_ticks: 0,
+        }),
+        interfaces: None,
         value_provider: provider,
         retained_unskulled: 3,
         protect_item_extra: 1,

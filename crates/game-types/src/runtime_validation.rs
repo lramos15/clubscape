@@ -144,12 +144,24 @@ impl CharacterState {
             remaining,
             next_tick,
             ..
+        }
+        | Activity::ProducingSelected {
+            recipe,
+            remaining,
+            next_tick,
+            ..
         } = &self.activity
             && (!content.recipes.contains_key(recipe)
                 || *remaining == 0
                 || *next_tick > i64::MAX as u64)
         {
             return Err(invalid("Invalid pending dynamic-facility production."));
+        }
+        if matches!(&self.activity, Activity::ProducingSelected { mode: ProductionMode::Single, remaining, .. } if *remaining != 1)
+        {
+            return Err(invalid(
+                "A single production cannot contain multiple operations.",
+            ));
         }
         for prayer in &runtime.combat.active_prayers {
             if definitions.prayers[prayer]
@@ -239,6 +251,29 @@ impl CharacterState {
                     "Typed schedule and pending activity/dialogue disagree.",
                 ));
             }
+            match &schedule.access {
+                Some(ContainerSession::Grave { interface, .. })
+                    if content
+                        .mechanics
+                        .death
+                        .as_ref()
+                        .and_then(|policy| policy.interfaces.as_ref())
+                        .is_none_or(|ids| &ids.grave != interface) =>
+                {
+                    return Err(invalid("Grave session has no matching source interface."));
+                }
+                Some(ContainerSession::DeathOffice { interface })
+                    if content
+                        .mechanics
+                        .death
+                        .as_ref()
+                        .and_then(|policy| policy.interfaces.as_ref())
+                        .is_none_or(|ids| &ids.office != interface) =>
+                {
+                    return Err(invalid("Office session has no matching source interface."));
+                }
+                _ => {}
+            }
         }
         Ok(())
     }
@@ -293,6 +328,13 @@ impl EntityRuntime {
         if self.life > i64::MAX as u64
             || self.attack_ready > i64::MAX as u64
             || self
+                .last_combat_tick
+                .is_some_and(|tick| tick > i64::MAX as u64)
+            || self.aggression_ready > i64::MAX as u64
+            || self.kill.as_ref().is_some_and(|kill| {
+                kill.life != self.life || kill.at_tick > i64::MAX as u64 || !self.loot_resolved
+            })
+            || self
                 .next_movement_tick
                 .is_some_and(|tick| tick > i64::MAX as u64)
             || self.contributions.len() > 256
@@ -307,6 +349,31 @@ impl EntityRuntime {
         {
             return Err(invalid("Invalid persisted NPC combat/movement state."));
         }
+        for contribution in self.contributions.values() {
+            let mut total = 0_u64;
+            for method in contribution.methods.values() {
+                if method.damage == 0
+                    || method.first_hit_tick > method.last_hit_tick
+                    || method.last_hit_tick > i64::MAX as u64
+                    || method.first_hit_tick < contribution.first_hit_tick
+                    || method.last_hit_tick > contribution.last_hit_tick
+                    || method.first_hit_tick == method.last_hit_tick
+                        && method.first_hit_order > method.last_hit_order
+                {
+                    return Err(invalid("Invalid method-specific damage history."));
+                }
+                total = total
+                    .checked_add(method.damage)
+                    .ok_or_else(|| invalid("Method damage overflow."))?;
+            }
+            if total > contribution.damage
+                || contribution.methods_complete && total != contribution.damage
+            {
+                return Err(invalid(
+                    "Contribution totals disagree with complete method history.",
+                ));
+            }
+        }
         Ok(())
     }
 }
@@ -314,6 +381,8 @@ impl EntityRuntime {
 impl WorldRuntime {
     pub fn validate_shape(&self) -> GameResult<()> {
         if self.schema_version != RUNTIME_SCHEMA_VERSION
+            || self.next_ground_id > i64::MAX as u64
+            || self.ground_provenance.len() > 32_768
             || self.counters.len() > 2048
             || self.object_states.len() > 32_768
             || self.temporary_objects.len() > 32_768
@@ -366,6 +435,14 @@ impl WorldRuntime {
                 || record.retained.len() > 64
                 || record.office.len() > 4096
                 || record.reclaimed.len() > 4096
+                || record.arrival.as_ref().is_some_and(|arrival| {
+                    arrival.dying_until_tick < record.occurred_at_tick
+                        || arrival.arrives_at_tick < arrival.dying_until_tick
+                        || arrival.arrives_at_tick > i64::MAX as u64
+                        || arrival.completed_at_tick.is_some_and(|tick| {
+                            tick < arrival.arrives_at_tick || tick > i64::MAX as u64
+                        })
+                })
                 || record
                     .grave
                     .as_ref()
@@ -475,6 +552,61 @@ impl WorldState {
                 return Err(invalid("Character map key and actor identity disagree."));
             }
             character.validate_runtime(content)?;
+            match &character.runtime.life {
+                LifeState::Dying { death, at_tick } => {
+                    let record = self
+                        .runtime
+                        .deaths
+                        .get(death)
+                        .ok_or_else(|| invalid("Dying actor has no death receipt."))?;
+                    if record.owner != *id
+                        || character.hitpoints != 0
+                        || record.arrival.as_ref().is_some_and(|arrival| {
+                            arrival.dying_until_tick != *at_tick
+                                || arrival.completed_at_tick.is_some()
+                        })
+                    {
+                        return Err(invalid(
+                            "Dying state conflicts with its owned phase receipt.",
+                        ));
+                    }
+                }
+                LifeState::Respawning {
+                    death,
+                    destination,
+                    at_tick,
+                } => {
+                    let record = self
+                        .runtime
+                        .deaths
+                        .get(death)
+                        .ok_or_else(|| invalid("Respawning actor has no death receipt."))?;
+                    self.validate_runtime_location(destination, content)?;
+                    if record.owner != *id
+                        || character.hitpoints != 0
+                        || record.arrival.as_ref().is_some_and(|arrival| {
+                            arrival.destination != *destination
+                                || arrival.arrives_at_tick != *at_tick
+                                || arrival.completed_at_tick.is_some()
+                        })
+                    {
+                        return Err(invalid(
+                            "Respawn state conflicts with its owned phase receipt.",
+                        ));
+                    }
+                }
+                LifeState::FirstDeathOffice { death, instance }
+                    if character.runtime.instance.as_ref() != Some(instance)
+                        || self
+                            .runtime
+                            .deaths
+                            .get(death)
+                            .is_none_or(|record| record.owner != *id) =>
+                {
+                    return Err(invalid("First Office life state has mismatched ownership."));
+                }
+                _ => {}
+            }
             self.validate_runtime_location(
                 &RuntimeLocation {
                     region: character.region.clone(),
@@ -515,6 +647,14 @@ impl WorldState {
                 self.validate_runtime_location(&travel.origin, content)?;
                 self.validate_runtime_location(&travel.destination, content)?;
             }
+            if let EngineMetadata::Typed { schedule } = &character.runtime.engine
+                && let Some(ContainerSession::Grave { death, .. }) = &schedule.access
+                && self.runtime.deaths.get(death).is_none_or(|record| {
+                    record.owner != character.actor_id || record.grave.is_none()
+                })
+            {
+                return Err(invalid("Grave session has no owned live grave."));
+            }
             for item in character
                 .inventory
                 .slots
@@ -526,7 +666,15 @@ impl WorldState {
                 check_item(item)?;
             }
         }
+        if self.ground_items.len() > 32_768 {
+            return Err(invalid("Ground item collection exceeds its runtime bound."));
+        }
+        let mut ground_ids = BTreeSet::new();
+        let mut life_drops = BTreeSet::new();
         for ground in &self.ground_items {
+            if !ground_ids.insert(&ground.id) {
+                return Err(invalid("Duplicate ground item identity."));
+            }
             if ground
                 .instance
                 .as_ref()
@@ -535,6 +683,49 @@ impl WorldState {
                 return Err(invalid("Ground item references an unknown live instance."));
             }
             check_item(&ground.stack)?;
+            if let Some(provenance) = self.runtime.ground_provenance.get(&ground.id) {
+                if !definitions.ground_policies.contains_key(&provenance.policy) {
+                    return Err(invalid("Unknown live ground policy."));
+                }
+                let ordinal = ground
+                    .id
+                    .strip_prefix("ground.engine.")
+                    .and_then(|value| value.parse::<u64>().ok())
+                    .ok_or_else(|| invalid("Invalid generated ground identity."))?;
+                if ordinal == 0 || ordinal > self.runtime.next_ground_id {
+                    return Err(invalid("Ground identity counter needs migration."));
+                }
+                match &provenance.producer {
+                    GroundProducer::PlayerDrop { actor, at_tick }
+                    | GroundProducer::Activity { actor, at_tick } => {
+                        if ground.owner.as_ref() != Some(actor) || *at_tick > self.tick {
+                            return Err(invalid("Ground producer ownership/time mismatch."));
+                        }
+                    }
+                    GroundProducer::NpcLoot {
+                        spawn,
+                        life,
+                        instance,
+                        ordinal,
+                    } => {
+                        if !content.spawns.contains_key(spawn)
+                            || *life > i64::MAX as u64
+                            || ground.instance != *instance
+                            || !life_drops.insert((spawn, life, instance, ordinal))
+                        {
+                            return Err(invalid("Duplicate or invalid NPC-life loot origin."));
+                        }
+                    }
+                }
+            }
+        }
+        if self
+            .runtime
+            .ground_provenance
+            .keys()
+            .any(|id| !ground_ids.contains(id))
+        {
+            return Err(invalid("Orphaned ground provenance."));
         }
         for (id, state) in &self.runtime.object_states {
             if definitions
@@ -622,6 +813,9 @@ impl WorldState {
         for death in self.runtime.deaths.values() {
             self.validate_runtime_location(&death.origin, content)?;
             self.validate_runtime_location(&death.respawn, content)?;
+            if let Some(arrival) = &death.arrival {
+                self.validate_runtime_location(&arrival.destination, content)?;
+            }
             let policy = definitions
                 .death
                 .as_ref()
@@ -670,13 +864,88 @@ impl WorldState {
                 .shops
                 .get(shop)
                 .ok_or_else(|| invalid("Unknown persisted shop clock."))?;
-            if rows
-                .keys()
-                .any(|item| !definition.stock.iter().any(|row| &row.item == item))
-            {
+            if rows.keys().any(|item| {
+                !definition.stock.iter().any(|row| &row.item == item)
+                    && !(matches!(
+                        definition.unstocked,
+                        Some(UnstockedShopPolicy::Accept { .. })
+                    ) && self
+                        .shops
+                        .get(shop)
+                        .is_some_and(|state| state.stock.contains_key(item))
+                        && content.items.get(item).is_some_and(|item| {
+                            item.tradable
+                                && item.unnoted_variant.is_none()
+                                && item.id != definition.currency
+                        }))
+            }) {
                 return Err(invalid(
                     "Stock deadline references an undefined source stock line.",
                 ));
+            }
+        }
+        for (shop, state) in &self.shops {
+            let definition = content
+                .shops
+                .get(shop)
+                .ok_or_else(|| invalid("Unknown shop state."))?;
+            if definition
+                .stock
+                .iter()
+                .any(|row| !state.stock.contains_key(&row.item))
+                || state
+                    .stock
+                    .values()
+                    .any(|quantity| *quantity > MAX_STACK_QUANTITY)
+            {
+                return Err(invalid(
+                    "Shop stock has missing rows or invalid quantities.",
+                ));
+            }
+            let extras: Vec<_> = state
+                .stock
+                .keys()
+                .filter(|item| !definition.stock.iter().any(|row| &row.item == *item))
+                .collect();
+            if !extras.is_empty() {
+                let Some(UnstockedShopPolicy::Accept {
+                    maximum_lines,
+                    rule,
+                    ..
+                }) = &definition.unstocked
+                else {
+                    return Err(invalid("Shop has unapproved extra stock rows."));
+                };
+                if extras.len() > usize::from(*maximum_lines) {
+                    return Err(invalid("Shop exceeds its unstocked line limit."));
+                }
+                for item in extras {
+                    if content.items.get(item).is_none_or(|item| {
+                        !item.tradable
+                            || item.unnoted_variant.is_some()
+                            || item.id == definition.currency
+                    }) {
+                        return Err(invalid(
+                            "Unstocked row has an untradeable or invalid item form.",
+                        ));
+                    }
+                    if matches!(
+                        &rule.restock.phase,
+                        SourceBinding::Bound {
+                            value: RestockPhase::SinceLastStockChange,
+                            ..
+                        }
+                    ) && self
+                        .runtime
+                        .stock_deadlines
+                        .get(shop)
+                        .is_none_or(|rows| !rows.contains_key(item))
+                    {
+                        return Err(invalid(
+                            "Since-change unstocked row lacks its persisted phase.",
+                        ));
+                    }
+                }
             }
         }
         Ok(())

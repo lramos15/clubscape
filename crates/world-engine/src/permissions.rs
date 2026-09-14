@@ -40,9 +40,12 @@ impl WorldEngine {
             GameIntent::UseItem { .. } => vec!["use_item".into()],
             GameIntent::MoveInventory { .. } => vec!["move_inventory".into()],
             GameIntent::Eat { .. } => vec!["eat".into()],
-            GameIntent::Produce { recipe, .. } | GameIntent::ProduceAt { recipe, .. } => vec![
+            GameIntent::Produce { recipe, .. }
+            | GameIntent::ProduceAt { recipe, .. }
+            | GameIntent::ProduceSelected { recipe, .. } => vec![
                 "produce".into(),
                 "produce_at".into(),
+                "produce_selected".into(),
                 format!("produce:{recipe}"),
             ],
             GameIntent::BankDeposit { .. } => vec!["bank".into(), "bank_deposit".into()],
@@ -66,6 +69,8 @@ impl WorldEngine {
             GameIntent::ConfirmAppearance { .. } => vec!["confirm_appearance".into()],
             GameIntent::SelectExperience { .. } => vec!["select_experience".into()],
             GameIntent::Reclaim { .. } => vec!["reclaim".into()],
+            GameIntent::OpenGrave { .. } => vec!["open_grave".into()],
+            GameIntent::OpenDeathOffice => vec!["open_death_office".into()],
             GameIntent::CancelActivity | GameIntent::RequestLogout | GameIntent::CloseInterface => {
                 return Ok(());
             }

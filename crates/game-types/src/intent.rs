@@ -55,6 +55,12 @@ pub enum GameIntent {
         target: Option<WorldTarget>,
         quantity: Quantity,
     },
+    ProduceSelected {
+        recipe: RecipeId,
+        target: Option<WorldTarget>,
+        quantity: Quantity,
+        mode: ProductionMode,
+    },
     InteractWith {
         target: WorldTarget,
         action: String,
@@ -105,6 +111,10 @@ pub enum GameIntent {
         storage: RecoveryStorage,
         items: Vec<RecoveryItemId>,
     },
+    OpenGrave {
+        death: DeathId,
+    },
+    OpenDeathOffice,
     CancelActivity,
     RequestLogout,
 }

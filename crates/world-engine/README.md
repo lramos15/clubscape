@@ -1,305 +1,237 @@
 # clubscape-world-engine
 
-Deterministic, transactional headless execution of the **content-2 /
-state-1 / runtime-1** contracts in `clubscape-game-types`. The former
-mechanics-v2 rejection arms have been replaced with typed execution. Existing
-inventory, equipment, bank, XP and collision primitives remain the mutation
-and navigation foundation.
+Transactional headless execution of **content/artifact 3, persisted state 1,
+runtime 1**. The final selector/traversal/combat-credit/recovery-UI/validation/
+mode-phase integration scope is implemented for bound source data. Unknown
+source bindings remain explicit errors; they are not unimplemented stand-ins.
 
-**The complete M1 task remains blocked by the specific integration questions
-below.** This is not a claim that the regenerated real content, full Tutorial
-Island, Cook's Assistant, source presentation or RuneLite acceptance passed.
-Tests use explicitly synthetic content and independent source numeric literals.
-There is no product content, source extraction, HTTP, DB, graphics, networking,
-wall-clock sleeping or production test-RNG implementation in this crate.
+This is not a claim of completed M1 gameplay, regenerated product-content
+acceptance, rendering, browser performance or RuneLite compatibility. Test worlds
+are explicitly synthetic, with independent source numeric vectors. No product
+definitions, source extraction, network, DB, graphics or wall-clock sleeps live
+in this crate. No gamepack/cache is pinned by the executor.
 
-No source revision/cache is hardcoded. The caller supplies validated content
-from the current selected source; historical cache 2695 is not a downgrade
-requirement or an engine pin.
-
-The authorized parent decoder fix
-`7150464f46f0771a01a32231de858fb025a7b6da` is integrated. Tagged/bound
-`MaximumHitFormula::LevelTable` now decodes canonical JSON numeric keys while
-retaining the source table, not a fixed hit. Owned regression cases deserialize
-complete synthetic content and execute Wind Strike at levels
-1/4/5/8/9/12/13/99, checking the actual 2/4/6/8 damage bands and rune spending.
-Malformed/ambiguous keys are also rejected through the full content wrapper.
-
-The parent reports the actual M1 content rebuilt and strictly reloaded with
-raw SHA-256
-`88a6f32810712b2f64e2e9a8baa5cdfe0f817e49ac8352f4e4d656c9be995e68`
-and **111** unresolved bindings, not 112. The level-table decoder is resolved,
-not a remaining engine/source blocker. That artifact verification is separate
-from this crate's synthetic execution evidence.
-
-## API, tick boundary and authority
+## Public APIs and fixed storage boundary
 
 ```rust,ignore
-WorldEngine::new(Arc<GameContent>) -> GameResult<WorldEngine>;
+WorldEngine::new(content: Arc<GameContent>) -> GameResult<WorldEngine>;
 engine.initial_world() -> GameResult<WorldState>;
-engine.character_from_initial(
-    actor: ActorId, name: impl Into<String>, appearance: BTreeMap<String, u32>,
-) -> GameResult<CharacterState>;
-engine.apply_intent(
-    world: &mut WorldState, actor: &ActorId, intent: &GameIntent,
-    rng: &mut impl RandomSource,
-) -> GameResult<Vec<ActorEvent>>;
-engine.tick(world: &mut WorldState, rng: &mut impl RandomSource)
+engine.character_from_initial(actor: ActorId, name, appearance)
+    -> GameResult<CharacterState>;
+engine.apply_intent(world, authenticated_actor, intent, rng)
     -> GameResult<Vec<ActorEvent>>;
-engine.process_advanced_tick(world: &mut WorldState, rng: &mut impl RandomSource)
+engine.tick(world, rng) -> GameResult<Vec<ActorEvent>>;
+engine.process_advanced_tick(world, rng) -> GameResult<Vec<ActorEvent>>;
+engine.tick_with_context(world, rng, &TickContext) -> GameResult<Vec<ActorEvent>>;
+engine.process_advanced_tick_with_context(world, rng, &TickContext)
     -> GameResult<Vec<ActorEvent>>;
 ```
 
-`ActorEvent { actor_id, event: GameEvent }` is serializable. A tick can return
-events for multiple authenticated characters, including the credited contributor
-when another player finishes an NPC. The server owns authentication, leases,
-operation deduplication, command sequences, content migration and durability.
-The engine never changes world revision or acknowledged command sequences.
-Do not publish returned events until the **caller's durable commit succeeds**.
+`ActorEvent { actor_id, event: GameEvent }` includes routing for credited actors
+other than the finisher. The caller supplies **compiler-validated** content and
+owns authentication, session leases, operation dedupe, command sequences,
+content migration and durable commit. Events become publishable only after
+that durable commit, never merely because the in-memory operation returned.
 
-`tick` advances one 600 ms source tick. **`process_advanced_tick` never advances
-it** and rejects tick zero. `GameStore::commit_tick` already increments its
-draft before its callback: use `process_advanced_tick`, not `tick`, inside that
-callback. There is no decrement or compensating metadata adjustment. Both
-entry points execute the same body; storage retains exactly-once admission.
+`GameStore::commit_tick` increments its draft before the callback. Call
+`process_advanced_tick` or its context variant inside it: neither changes tick,
+world revision or command sequences. Standalone `tick` advances exactly one
+source tick through the same processing body. The caller schedules the shared
+600 ms cadence; network arrival is not a game tick. No compensating metadata
+decrement exists. The original advanced-tick regression tests remain.
 
-Source clocks which pause for online/idle/UI state require trusted authority
-facts. Use:
+`RandomSource::draw_below(upper_exclusive)` must be a trusted uniform source.
+Ranges are checked, and no seeded generator or player-supplied draw is exported.
+The caller also owns durable RNG cursor handling: a cloned gameplay draft
+cannot roll back an external RNG.
+
+## Source and wire changes for parent integration
+
+The authoritative additions are in `game-types/src/execution.rs` and
+[`spec/game-contracts.md`](../../spec/game-contracts.md#final-selector-closure-and-wire-requirements).
+The definition changes are deliberately breaking: **recompile source input as
+content/artifact 3**, including every new explicit field/null. Do not relabel
+content-2 artifacts. Persisted envelope/runtime versions remain 1 with checked
+additive defaults.
+
+| New definition surface | Meaning |
+| --- | --- |
+| `MechanicsDefinition.player_drop` | Explicit ordinary and per-stage `GroundPolicyId` bindings. No registry-order/name inference or fallback from an unresolved stage override. |
+| `MechanicsDefinition.player_combat` | Bound unarmed weapon/default and combat-state/logout/travel lock periods. |
+| `WeaponDefinition.default_style` | An actually offered source style; selected on creation/gear changes when the previous style is no longer valid, without resetting deadlines. |
+| `NpcCombatMechanics.eligibility` | Method, optional exact style and state guard rules, evaluated before spending resources. |
+| `NpcCombatMechanics.engagement` | Leash, inactivity/acquisition/reacquisition timing, source return/reset policy and optional guarded aggression. |
+| `NpcCombatMechanics.attribution` | Declared finishing/first/last/most-damage method attribution, separate from actor kill-credit selection. |
+| `NpcCombatMechanics.loot_ground_policy` | Source ownership/publicity/expiry of real nonempty loot. |
+| `MechanicsDefinition.traversal` | Actor-guarded, directed/bidirectional cardinal edges in world or live-instance space. |
+| `MechanicsDefinition.collision_groups` | Complete, bounded source combinations for overlapping transform replacements. |
+| `SourceObjectMorph.collision` | Per-placement source-variable-to-transform bridge for geometry/clipping changes or disappearance. |
+| `DeathPolicy.interfaces` / `timing` | Actual contextual grave/Office UI selectors and source dying/respawn delays. |
+| `RecipeLifecycle::ConsumeOnly` | Real input consumption/XP/counter effects without fake output items. |
+
+New requests (not outcome setters):
+
+```json
+{"kind":"produce_selected","recipe":"recipe.example","target":null,"quantity":1,"mode":"make_x"}
+{"kind":"open_grave","death":"death.example"}
+{"kind":"open_death_office"}
+```
+
+`ProductionMode::{Single, MakeX}` represents Make-X-of-one independently of a
+single operation. Single requires quantity one. Existing `Produce`/`ProduceAt`
+and pending activities retain quantity-derived compatibility semantics.
+`Activity::ProducingSelected` persists explicit mode.
+
+The parent GUI adapter should send `OpenGrave`/`OpenDeathOffice` and consume
+`InterfacePresented`/`InterfaceClosed`; it must not forge access with a generic
+`OpenInterface`. Real opened sessions live in
+`EngineSchedule.access::{Grave, DeathOffice}`. `TickContext` provides trusted
+online/idle facts, not a client claim:
 
 ```rust,ignore
-TickContext {
-    actors: BTreeMap<ActorId, ActorPresence>,
-}
-ActorPresence {
-    online: bool,
-    idle_milliseconds: u64,
-    grave_interface: Option<DeathId>,
-}
-
-engine.tick_with_context(world, rng, &context);
-engine.process_advanced_tick_with_context(world, rng, &context);
+ActorPresence { online, idle_milliseconds, grave_interface }
 ```
 
-The original wrappers supply an **unbound** context, not made-up online/idle
-facts. They still support content that does not request such clock inputs;
-otherwise the missing input is explicitly unavailable. The parent server must
-capture validated session/UI facts for `process_advanced_tick_with_context`.
-`TickContext::all_active(world)` is an explicit standalone-simulation opt-in,
-not a production default or a player assertion. Loaded offline characters have
-paused regeneration deadlines advanced without being healed or acting.
-Unloading/reloading characters requires the server to preserve paused clock
-phases; the engine cannot infer a missing offline interval from `Activity`.
+The last field is retained only for adapter source compatibility and is
+**ignored for authority**. Grave pause is derived from the validated engine
+session. Closing, moving, leaving the instance, expiry and interruption revoke
+that session. The original tick wrappers do not invent absent online/idle
+facts; use context variants for policies requiring them.
+`TickContext::all_active` is an explicit standalone-test/simulator opt-in.
 
-`RandomSource::draw_below(upper_exclusive)` is trusted-only and checked for range.
-All live random outcomes come from that source, including duration, accuracy,
-damage, ammunition loss and loot. No client intent can supply rolls, give
-items, set counters, award XP or advance a stage.
+## Actual execution coverage
 
-The caller supplies **compiler-validated content**. Local checks are additional
-safeguards, not the strict source parser/compiler or source-fidelity validation.
-`SourceBinding::Unresolved` is evaluated through `require()` when that policy
-is needed. Unknown input is never a zero timer, guaranteed success, free
-recovery, invented arrival or guessed source rate.
+* **Movement and geometry:** real shared clipping/LOS primitives, source-order
+  bounded routing, one/two-tile ticks, signed weight contributions, run setting,
+  exact drain/regen rounding and exhaustion. Traversal guards are checked while
+  routing and again for every consumed step, including both diagonal cardinal
+  routes. A shared open exit does not unlock a second actor. Source edges and
+  whole object/NPC footprints rotate into live instances; ownership is preserved.
+* **World state:** explicit object/door transformations, access sides, reachable
+  closed-door faces, complete combined-state collision replacements, and atomic
+  geometry-changing morph bridges. There is no last-writer-wins clipping or
+  erased native wall fallback. Temporary owned objects have source placement,
+  interactions, lifetime, clipping and expiry products.
+* **Gathering/production:** source level domains/bases, tools/location cadence,
+  alternative catches, real success/failure and XP, contention/depletion,
+  fixed/random respawn and relocation; single/first/repeat/menu phases, direct
+  and facility guards, unconsumed tools, atomic input/output/outcome effects,
+  consume-only actions and interrupted/full-inventory behavior. Firemaking
+  retains the actual placed log on failure, creates a real cookable temporary
+  target only on success, steps legally and produces expiry outputs.
+* **Inventory, grants and progression:** existing inventory/equipment/bank/XP
+  primitives, exact slot/note/overflow behavior, bounded partial transfers;
+  typed counters, add/missing/top-up grants, ordered partial line satisfaction,
+  once-only entitlements, first-visible bank seeding and vital restoration.
+  Dialogue requires the opened speaker/node and choice guards. Transitions use
+  actual canonical event kind/identity and typed payload conditions, with at
+  most one edge per graph per operation. Pre-collected and partial quest
+  deliveries do not require fake provenance flags.
+* **Combat and loot:** source equipment/default/unarmed styles, method/style
+  eligibility, effective levels/prayer modifiers, opposed inclusive accuracy,
+  maximum-hit formula/table, cardinal melee contact, real misses/damage/XP,
+  ammo/runes and independent cooldowns. Projectiles preserve launch/impact,
+  spent resources and target life across restart. Retaliation, clipping-aware
+  chase/return, aggression eligibility and source lock/timeouts execute.
+  Contribution totals and complete per-method history choose one persisted
+  kill resolution; it drives both credited events and actual owned guaranteed/
+  exclusive/independent/conditional loot. Unknown supplements are not dropped
+  from the table or replaced by guaranteed bones/coins.
+* **Food/prayer/shops:** source healing and independent food/attack delays,
+  proper fractional prayer drain/bonus/modifier/exclusion state and HP/vital
+  policies; guarded bank/shop sessions, fixed and per-unit stock-sensitive
+  prices, partial bounded batches, zero-price sales and all declared restock
+  phases, including authorized unstocked since-change clocks.
+* **Travel/death/recovery:** source/experience/previous-respawn destinations,
+  channels/interruption/cooldowns and completion-only reconciliation. Actual
+  lethal damage creates retention/valuation/layout and a death-phase receipt
+  once; persisted dying/respawning deadlines restore vitals only at arrival.
+  First item-losing death reaches the private Office; all required topics gate
+  the portal. Source-owned grave/Office UI, active-time pauses/expiry, repeat
+  death/supplies, capacities, partial reclaim/layout/auto-equip, fee/payment
+  order and remainder identity are transactional and restartable.
 
-## Transactions and restart state
+The source Wind Strike level-table decoder fix is retained. JSON-decoded live
+spell executions verify the 1/5/9/13 -> 2/4/6/8 table and all boundaries, not a
+fixed hit. Other numeric cases preserve copper 101/256, shrimp 49/256, source
+rounding/+1, eight-tick bronze pickaxe, smelting 62/dagger 125 XP-tenths, actual
+burnt cooking progression, exact cap versus stop-level, shortbow 4/3 ticks and
+7/9 range, 20% arrow loss, food delay three and nonfatal tutorial combat.
 
-Every public operation drafts gameplay state and commits only on success.
-Inventory slots, equipment, bank, NPC lives/contributions, projectiles,
-collision transforms, counters, grants, quest rewards, travel and recovery all
-participate in the transaction. Invalid content/RNG and failed system phases
-roll back the entire tick. Expected ordinary activity interruption rolls back
-that actor's attempt and emits an explicit stop message instead of its success
-events. A later actor's fatal failure also rolls back earlier actor mutations.
+## State integrity and migration
 
-External RNG cursor state is not a member of `WorldState`; the caller must
-transactionally restore/persist it when retry-identical draws are required.
-Cloning gameplay state does not roll back a trusted external RNG, and this
-crate does not fabricate replacement draws after an error.
+Public failures preserve touched gameplay state. Expected ordinary activity
+interruption rolls back that attempt and emits a stop message; fatal
+content/RNG/system failures roll back the whole tick, including earlier actors.
+Acknowledged grant/reward ledgers remain append-only.
 
-New characters use declared initial settings/counters and typed scheduling.
-Matching-revision legacy scheduling is migrated with
-`CharacterState::migrate_engine_metadata`, including validated pending indices
-and food/attack deadlines. The engine no longer writes `__world_engine.*`
-flags. Unknown legacy keys, orphaned work and conflicting representations fail;
-inventory, XP, other flags, quests and acknowledged sequences are preserved.
-Life/counter/entitlement migrations are not silently inferred from defaults.
+Checked legacy scheduling migration removes recognized `__world_engine.*`
+metadata into typed fields and rejects unknown/conflicting/orphaned data.
+The executor writes no new legacy flags. New optional contact/arrival fields
+default to absent, and old contribution totals get **incomplete** method
+history, never invented history. A method-attribution policy requiring complete
+history fails explicitly until that legacy state is migrated.
 
-Shared `validate_runtime` and `validate_ledger_successor` enforce reference,
-instance ownership, bounds and append-only entitlement accounting. Grants track
-actual delivered quantities and satisfied lines. Dropping an acknowledged
-initial grant cannot reset its entitlement. Missing-tool recovery is a separate
-guarded grant, not a replay of the initial supply.
+Generated ground IDs use a persisted monotonic counter; typed provenance
+records the policy and actual player/activity or NPC spawn/life/instance/
+ordinal. Pickup and expiry remove live provenance, not the counter. A 32768
+ground-entry bound and aggregate stack checks prevent partial defeat/loot
+commits. `EntityRuntime.kill` records the same credited actor/method used for
+ground ownership and progression.
 
-## Mechanisms executing now
+Death receipts retain `DeathArrival` phase deadlines and completion, and
+`GraveState.started_at_tick` prevents charging the arrival tick against active
+grave duration. Restart does not repeat retention, healing, supplies or
+entitlements. A partially reclaimed entry retains its identity and remainder
+until fully reclaimed; `ItemTransferred` records the actual moved quantity.
 
-| Area | Actual execution |
-| --- | --- |
-| Movement | One/two tile ticks; signed inventory/equipment weight contributions; source run activation, rounding, drain, exhaustion, persistent toggle and regeneration. Explicit movement/sight masks and diagonal corner checks. |
-| Routing | Source W,E,S,N,SW,SE,NW,NE BFS order, 128-square search, 101-square candidate window, bounded 21-square fallback with distance/path/x/y ties, and a 25-corner route prefix. Interaction still requires authoritative reach; controllers can walk before retrying interaction. |
-| World geometry | Named object states and explicit collision replacements, closed-door face interaction without walking through it, object access sides, morph selection, whole-footprint instance rotation, private ownership and source entity/ground placements. Temporary owned objects have actual placement/lifetime/clipping/expiry outputs. |
-| Gathering | Current/base source domains, alternate catches, tool/location cadence, actual probability success/failure, XP, competition, fixed/random respawn and source relocation. No unlisted navigation or guaranteed catches. |
-| Production | Direct-intent and facility guards, required nonconsumed tools, explicit requirement bases and chance skill, single/first/repeat/menu timing, transactional inputs, real success/failure outputs/XP/effects, typed method/facility/outcome events and interruption. A completed single action does not reserve an unrelated Make-X repeat delay. |
-| Firemaking | Owned input is placed on the ground, retained on failure and retryable, removed only on ignition, converted to a real cookable temporary object, awarded XP once, followed by declared legal cardinal step attempts, expiry and ashes/declared outputs. Dynamic targets are not fake static spawn IDs. |
-| Inventory/bank | Existing primitives handle stable slots, stack limits, note conversion, equipment displacement and partial up-to transfers. Bank proximity, source guard and the actual opened interaction are rechecked. |
-| Grants/counters | Character/world/instance counters enforce declared types/bounds. Atomic and ordered-partial grants implement add/missing/top-up, source container selection, reciprocal entitlements, partial line satisfaction and once-only bank seeding. |
-| Progression/UI | Actual `EventCondition::matches`, canonical kind/primary identity, wildcard versus exact targets, post-operation snapshots, one transition per graph, bounded effects, guarded opened speaker/node/choice identity, contextual bank/shop presentation, appearance/experience choices, once-only quest/reconciliation claims and vital restoration. |
-| Player combat | Equipped source styles, effective levels/prayer modifiers, attack/defence types, opposed inclusive accuracy, maximum-hit formulas/tables, real misses/damage, damage XP/caps, equipped compatible ammunition and rune consumption. Independent attack/spell/food deadlines survive cancel/switch/restart. |
-| Projectiles | Bound launch/flight timing, launch XP, delayed or launch-time damage, source target-life and optional range/LOS/instance recheck, retained spent-resource receipts, and no second spend/XP/hit at visual impact. Unresolved timing rejects the attack. |
-| NPC combat | Retaliation, whole-footprint chasing/clipping, separate NPC stat selectors and deadlines, source outgoing damage/nonfatal tutorial constraints, contribution ordering, most-damage credit, no-drop life resolution and source respawn. One player cannot perpetually push back the NPC's retaliation deadline by attacking it. |
-| Loot selection | Guaranteed, weighted-exclusive including explicit no-drop entries, independent and guarded pools, bounded quantities, aggregate overflow and unresolved supplements. **Materializing nonempty NPC loot is blocked by the missing ground-policy selector described below.** |
-| Food/prayer/vitals | Source food restoration and independent delays, base maxima, declared level-up policy, HP regeneration, prayer requirements/interface/exclusions/modifiers, exact fractional drain with bonus and proper persisted remainders, zero-point deactivation and altar/restoration effects. |
-| Shops | Fixed and stock-sensitive per-unit pricing/rounding/clamps, finite shared stock, partial bounded batches, zero-price sales, whole-stack capacity edges and world/explicit/since-change restock phases. Unstocked rows work subject to the validator limitation below. |
-| Travel | Source/experience/previous-respawn destinations, channels, interruption causes, cooldown start, private instance creation, completion-only effects and entitled reconciliation. Unresolved reconciliation is not a guessed departure kit. |
-| Death | Actual NPC-caused lethal damage, pinned per-unit valuation/retention/layout, protected bank/XP/quest state, first item-losing-death Office, required topics, guarded portal, source restoration, owned graves, active-time pauses/expiry, Office storage and repeat-death resource/supply rules. |
-| Recovery | Owner/range/LOS/instance checks; actual fitting quantities only; original layout/optional auto-equip; source fee bands/percentage/payment order; retained remainder identity; no duplicate items/charges on replay; Office limits. Source-explicit pending `Respawning` deadlines resume without rerunning retention. |
+## Remaining acceptance and source boundaries
 
-A `RecoveryCompleted` ID can identify a partially reclaimed entry; its actual
-transferred quantity is in `ItemTransferred`. The entry remains in storage and
-is not added to the fully reclaimed ledger until empty. Fee maxima currently
-apply to the selected recovery batch, consistent with the selected-value
-arithmetic vectors; a lifetime-per-death cap would need cumulative accounting.
+The seven **code/selector integration gaps are closed**. Source inputs still
+require capture/binding; unresolved projectile timings, particular loot
+supplements, valuation/overflow, exact arrivals and departure policies are not
+guessed. The parent's last content-2 reload reported 111 unresolved bindings;
+that is source evidence, not a count of missing executor mechanisms. Recompute
+the source report after generating content 3.
 
-Normal death arrival is atomic under the current `DeathPolicy`, which does not
-declare an animation/respawn delay. Externally persisted `Respawning` has an
-explicit deadline/destination and is supported. Legacy/`Dying` state is not
-reinterpreted as a new death (which would lose items twice); it needs explicit
-life/phase migration or a source phase scheduler. No presentation timing claim
-is made from the atomic arrival.
+Departure normalization and goblin supplement assumptions remain explicit,
+not observations. Optional inaccessible charged/bottomless milk alternatives
+remain outside the ordinary M1 acquisition route and require instance-aware
+inventory primitives before enabling; their full-target parity is not removed.
+Current high-value recovery caps apply to the selected batch; ordinary starter
+values are below the fee threshold. Nonstackable bank grants are bounded when
+composing the existing exact deposit primitive. These are not full-game claims.
 
-## Source authoring and integration questions that remain
+Product-data refresh and the live server/protocol/GUI adapter remain owned by
+their respective workers. This code does not self-certify the complete real
+journey, persistence-service rollout, owner-approved source pack, presentation,
+browser/performance or RuneLite gates.
 
-These are **new, localized issues against the integrated v2 types**, not the
-old missing-combat/prayer/death/timing-type list.
+## Reproduce validation
 
-1. **Ground-policy selection is absent for two producers.**
-   `AmmunitionRequirement`, temporary objects and repeat-death supplies reference
-   a `GroundPolicyId`; `GameIntent::Drop` and `NpcCombatMechanics.loot` do not.
-   Add an explicit player/stage drop policy selection and
-   `NpcCombatMechanics.loot_ground_policy` (or equivalent typed selectors).
-   Do not choose the first registry entry or infer a policy from its name.
-   Until then ordinary drop and nonempty NPC loot materialization fail explicitly.
-   Goblin guaranteed bones cannot substitute for its primary/unknown supplement,
-   and Tutorial rat loot cannot be quietly omitted to allow a kill.
-2. **Attack eligibility and engagement boundaries need precise bindings.**
-   A spawn's `Attack` guard cannot inspect the requested style/method, and
-   `CombatStyleDefinition` has no target guard. Add a pre-action method/style
-   predicate or allowed-method/style rules for chicken magic-only and the
-   tutorial rat method restrictions. The registry also lacks an unarmed/default
-   style selector. There is no source disengagement/leash/postcombat
-   logout/Home-Teleport lock policy; active retaliation remains conservative
-   until defeat/explicit disengagement. Do not call this exact fleeing or chicken
-   departure fidelity. Aggressive acquisition likewise needs explicit source
-   radius/eligibility; ordinary M1 rat/goblin bindings are nonaggressive.
-3. **Mixed-method kill attribution is not stored.**
-   `DamageContribution` stores damage and first/last order, not method history.
-   `NpcKilled.method` currently names the actual finishing attack, including a
-   separately routed credited-owner event. A source rule requiring the credited
-   contributor's method for mixed attacks needs a declared attribution policy
-   and corresponding per-life history. Current same-method contribution/credit
-   behavior is executable; do not infer mixed-method tutorial progression.
-4. **Contextual grave UI needs a producer/session binding.**
-   `InterfaceContext::Grave` and clock pauses exist, but there is no Open-Grave
-   intent/target or grave-interface selector in `DeathPolicy`, and
-   `ContainerSession` only covers bank/shop. Reclaim itself validates physical
-   access, but a production caller must not fabricate an open grave UI to pause
-   its clock. Bind that request/session lifecycle and supply verified
-   `TickContext` facts. Global `OpenInterface` cannot bypass contextual access.
-5. **Two compiler/runtime-validation restrictions conflict with valid actions.**
-   The compiler requires nonempty successful outputs for every
-   `InventoryConversion` except firemaking. Legitimate two-tick bone burial and
-   timed counter-only mill conversions need consume-only outcomes, not fake
-   output items. The executor supports these; the compiler must permit them
-   explicitly. Separately, `UnstockedShopPolicy` allows `SinceLastStockChange`,
-   but `WorldState::validate_runtime` rejects stock deadlines for rows absent
-   from `ShopDefinition.stock`. Permit clocks for authorized unstocked rows;
-   do not replace that phase with a guessed epoch.
-6. **Mode/phase and overlapping geometry need explicit semantics where used.**
-   Shared door collision has no actor-specific traversal guard: once one actor
-   opens a shared tutorial exit, another actor can walk its cleared edge without
-   satisfying the opener's interaction guard. Add a guarded-edge/traversal
-   policy for those exits; do not reinterpret ordinary one-use-key Open guards
-   as walking permissions or assume a private tutorial despite shared rat
-   contribution behavior.
-   Existing production intents distinguish quantities, not Single versus
-   Make-X-of-one. This implementation treats quantity one as `single` and larger
-   requests as `first`/`repeat`; add a request mode for a separately represented
-   Make-X-of-one. Overlapping active object transforms require compatible
-   combined replacement cells; conflicting replacements fail instead of
-   last-writer-wins clipping. Geometry-changing morphs require explicit clipping
-   transitions, not erased native masks. A source death phase delay needs a
-   policy binding rather than relabeling an animation duration as a timer.
+The closure revision passes 169 engine tests (the previous 148 plus 21 direct
+closure scenarios), 107 simulation tests, 81 compiler tests and 12 shared-type
+tests. Warnings-denied native/WASM Clippy and both builds pass. The parent
+isolated PostgreSQL runner also passed 26 selected integration tests and its
+independent account lifecycle, with owned resources cleaned up.
 
-**Optional/full-target boundaries:** shared simulation primitives intentionally
-reject `ItemStack.instance` and conditional stackability. The optional
-bottomless/charged milk path therefore cannot be enabled just by its v2 type;
-it needs instance-aware primitives and an owner-confirmed reachable acquisition
-scope. Ordinary milk and the ordinary M1 quest path do not require that rare
-alternative. Partial bank grants are bounded to 57,344 nonstackable units when
-composing the existing exact deposit primitive; no ordinary M1 grant approaches
-that bound. These limits are not a claim of full-target parity.
-
-The following are **content/source gates**, not excuses to omit their executable
-bound counterparts: unresolved projectile timing, NPC variant/supplement,
-gather/recipe timing/domain, relocation, death valuation/overflow, exact travel
-destinations and departure reconciliation. The executor uses supplied bound
-values and preserves provenance. Departure container normalization and goblin
-supplement decisions remain explicit assumptions/gaps, not observations.
-
-## Preserved authoring rules
-
-`allowed_actions` is the current effective permitted set. Carry earlier recovery
-actions forward while retaining source locks, nonfatal protection and XP caps
-until actual departure. Empty locks actions; `*` is explicit unrestricted scope.
-Close/cancel/logout remain requests, not ways to reset combat deadlines.
-
-The engine matches `GameEvent::kind()` and `primary_target()` exactly.
-`target: None` is a wildcard. `EventCondition` is evaluated only against actual
-post-operation events. Old `Produced`/`Hit` cannot satisfy resolved
-production/spell predicates. A valid Wind Strike hit/splash can complete a
-guarded, entitled Learning the Ropes reward before a chicken kill, while island
-caps remain. No graph duplicates the XP its real operation already awarded.
-
-`ChanceRule` supplies the shared interpolation/domain implementation. Source
-low/high map to **unclamped low+1/high+1**: copper 101/351/256, shrimp
-49/257/256. Do not clamp the high endpoint before interpolation or add a second
-`+1` to constant probabilities. Equipment requirements use declared base/current
-bases, while recipes and gathering use their separately declared bases.
-The source smelting 62 XP-tenths, dagger 125, eight-tick bronze pickaxe,
-actual burnt cooking outcomes, shortbow 4/3 ticks and 7/9 range, 20% arrow
-loss and three-tick food delay have executable numeric/state cases.
-
-## Validation and ownership
-
-Run from this worktree; build and scratch output stay in the owned ignored
-directory. No root lockfile change is required by this implementation.
+From the worktree root, keeping build/scratch/evidence under this crate:
 
 ```bash
 mkdir -p crates/world-engine/target/scratch
 export CARGO_TARGET_DIR="$PWD/crates/world-engine/target"
 export TMPDIR="$PWD/crates/world-engine/target/scratch"
-cargo fmt -p clubscape-world-engine --check
-cargo test -p clubscape-world-engine --quiet
-cargo clippy -p clubscape-world-engine --all-targets --quiet -- -D warnings
-cargo clippy -p clubscape-world-engine --all-targets \
-  --target wasm32-unknown-unknown --quiet -- -D warnings
-cargo build -p clubscape-world-engine --quiet
-cargo build -p clubscape-world-engine --target wasm32-unknown-unknown --quiet
-cargo test -p clubscape-world-engine --target wasm32-unknown-unknown --no-run --quiet
+cargo fmt -p clubscape-game-types -p clubscape-content -p clubscape-world-engine --check
+cargo test -p clubscape-game-types -p clubscape-simulation -p clubscape-content -p clubscape-world-engine --quiet
+cargo clippy -p clubscape-game-types -p clubscape-content -p clubscape-world-engine --all-targets --quiet -- -D warnings
+cargo clippy -p clubscape-game-types -p clubscape-content -p clubscape-world-engine --all-targets --target wasm32-unknown-unknown --quiet -- -D warnings
+cargo build -p clubscape-game-types -p clubscape-content -p clubscape-world-engine --quiet
+cargo build -p clubscape-game-types -p clubscape-content -p clubscape-world-engine --target wasm32-unknown-unknown --quiet
+python3 tools/dev.py integration --report crates/world-engine/target/storage-integration.json
 ```
 
-Tests execute pure-state mechanics rather than mocked results, including
-negative/full-container/rollback, competing actors, single/queued timing,
-true misses/burns, projectile launch/impact/restart, resource spending,
-source XP/nonfatal constraints, dynamic doors/fires/instances, partial grants,
-typed event predicates, pre-collected/partial quest delivery, real lethal
-retaliation/Office/fees/reclaim/expiry and checked legacy migration.
-Numeric literals are independent of the implementation, from the retained
-journey oracles. Synthetic geometry/content is not a real M1 content pack.
-
-This revision passes **148 native tests**, formatting, warnings-denied Clippy
-for native and WASM (all targets), native/WASM builds, and WASM test-binary
-compilation. The original advanced-tick regression cases remain in the suite.
-
-Native/WASM compilation and strict Clippy are portability/code gates, not WASM
-execution, actual content-compiler journey integration, durable service
-acceptance, browser/presentation/performance evidence or RuneLite compatibility.
+The isolated parent PostgreSQL runner uses a uniquely named disposable,
+loopback-only database, runs the real ignored storage/account suites and an
+independent client, then removes its processes/container and secrets. Its
+report is not a gameplay/presentation acceptance claim. WASM builds and Clippy
+are portability gates, not browser execution evidence.

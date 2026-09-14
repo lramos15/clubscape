@@ -225,6 +225,7 @@ pub struct RecipeMechanics {
 #[serde(tag = "kind", rename_all = "snake_case", deny_unknown_fields)]
 pub enum RecipeLifecycle {
     InventoryConversion,
+    ConsumeOnly,
     Firemaking {
         ground_input: ItemId,
         fire: TemporaryObjectId,
@@ -582,6 +583,7 @@ pub struct SourceObjectMorph {
     pub counter: CounterId,
     pub variants: BTreeMap<i64, Option<ObjectId>>,
     pub fallback: Option<ObjectId>,
+    pub collision: Option<SourceBinding<ObjectMorphCollision>>,
 }
 
 #[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
@@ -746,7 +748,7 @@ pub enum AttackType {
     Magic,
 }
 
-#[derive(Clone, Copy, Debug, PartialEq, Eq, Serialize, Deserialize)]
+#[derive(Clone, Copy, Debug, PartialEq, Eq, PartialOrd, Ord, Serialize, Deserialize)]
 #[serde(rename_all = "snake_case")]
 pub enum AttackMethod {
     Melee,
@@ -858,6 +860,7 @@ pub struct AmmunitionRequirement {
 #[serde(deny_unknown_fields)]
 pub struct WeaponDefinition {
     pub styles: Vec<CombatStyleId>,
+    pub default_style: CombatStyleId,
     pub ammunition: Option<AmmunitionRequirement>,
 }
 
@@ -927,6 +930,10 @@ pub struct NpcCombatMechanics {
     pub damage: SourceBinding<DamagePolicy>,
     pub respawn: SourceBinding<TickDuration>,
     pub credit: SourceBinding<KillCreditPolicy>,
+    pub attribution: SourceBinding<KillMethodPolicy>,
+    pub eligibility: SourceBinding<Vec<AttackEligibility>>,
+    pub engagement: SourceBinding<NpcEngagementPolicy>,
+    pub loot_ground_policy: SourceBinding<GroundPolicyId>,
     pub loot: Vec<LootPool>,
 }
 
@@ -1247,6 +1254,8 @@ pub struct RepeatDeathPolicy {
 #[serde(deny_unknown_fields)]
 pub struct DeathPolicy {
     pub domain: DeathDomain,
+    pub timing: SourceBinding<DeathTiming>,
+    pub interfaces: Option<RecoveryInterfaces>,
     pub value_provider: ValueProviderId,
     pub retained_unskulled: u16,
     pub protect_item_extra: u16,
@@ -1288,6 +1297,10 @@ pub struct DeathVitalRestoration {
 #[serde(deny_unknown_fields)]
 pub struct MechanicsDefinition {
     pub world_members: Option<bool>,
+    pub player_drop: Option<PlayerDropPolicy>,
+    pub player_combat: Option<PlayerCombatPolicy>,
+    pub traversal: BTreeMap<TraversalId, TraversalDefinition>,
+    pub collision_groups: BTreeMap<CollisionGroupId, CollisionGroupDefinition>,
     pub counters: BTreeMap<CounterId, CounterDefinition>,
     pub grants: BTreeMap<GrantId, GrantDefinition>,
     pub entitlements: BTreeMap<EntitlementId, EntitlementDefinition>,

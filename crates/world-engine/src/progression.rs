@@ -389,6 +389,7 @@ impl WorldEngine {
             return Err(invalid_state("Missing counter needs migration."));
         }
         counters.insert(id.clone(), value);
+        events.extend(self.sync_morph_collision(world, character, id)?);
         events.push(GameEvent::CounterChanged {
             counter: id.clone(),
             value,

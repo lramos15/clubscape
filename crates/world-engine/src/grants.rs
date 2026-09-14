@@ -269,6 +269,7 @@ impl WorldEngine {
         }
         inventory::validate(&character.inventory, &self.content.items)?;
         equipment::validate(&character.equipment, &self.content)?;
+        self.refresh_combat_style(character)?;
         bank::validate(&character.bank, &self.content.items)?;
         character.runtime.entitlements.insert(
             definition.entitlement.clone(),

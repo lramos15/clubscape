@@ -144,16 +144,52 @@ impl WorldEngine {
                     equipment::equip(character, &content, usize::from(*inventory_slot))?
                 };
                 events.push(equipped);
+                self.refresh_combat_style(character)?;
                 self.close_interfaces(character, &mut events)?;
             }
             GameIntent::Unequip { slot } => {
                 equipment::unequip(character, &self.content, slot)?;
+                self.refresh_combat_style(character)?;
                 self.close_interfaces(character, &mut events)?;
             }
-            GameIntent::Drop { .. } => {
-                return Err(unavailable(
-                    "Ground policies exist, but mechanics has no ordinary/stage-specific player-drop policy selector.",
-                ));
+            GameIntent::Drop {
+                inventory_slot,
+                quantity,
+            } => {
+                let selector = self
+                    .content
+                    .mechanics
+                    .player_drop
+                    .as_ref()
+                    .ok_or_else(|| unavailable("Player drop policy is not configured."))?;
+                let policy = selector
+                    .stages
+                    .get(&character.tutorial_stage)
+                    .unwrap_or(&selector.ordinary)
+                    .require()?;
+                let removed = inventory::remove_from_slot(
+                    &mut character.inventory,
+                    &self.content.items,
+                    usize::from(*inventory_slot),
+                    *quantity,
+                )?;
+                self.put_ground_from(
+                    world,
+                    removed.clone(),
+                    &character.actor_id,
+                    &runtime::location(character),
+                    policy,
+                    GroundProducer::PlayerDrop {
+                        actor: character.actor_id.clone(),
+                        at_tick: world.tick,
+                    },
+                )?;
+                events.push(GameEvent::ItemTransferred {
+                    from: ContainerKind::Inventory,
+                    to: ContainerKind::Ground,
+                    items: vec![removed],
+                });
+                runtime::interrupt(character)?;
             }
             GameIntent::TakeGroundItem { ground_item_id } => {
                 let stack = self.take_ground_item(world, character, ground_item_id)?;
@@ -196,6 +232,19 @@ impl WorldEngine {
                 target,
                 quantity,
             } => self.start_production(world, character, recipe, target.clone(), quantity.get())?,
+            GameIntent::ProduceSelected {
+                recipe,
+                target,
+                quantity,
+                mode,
+            } => self.start_selected_production(
+                world,
+                character,
+                recipe,
+                target.clone(),
+                quantity.get(),
+                *mode,
+            )?,
             GameIntent::BankDeposit {
                 banker,
                 inventory_slot,
@@ -316,9 +365,13 @@ impl WorldEngine {
                 storage,
                 items,
             } => events.extend(self.reclaim(world, character, death, *storage, items)?),
+            GameIntent::OpenGrave { death } => {
+                events.extend(self.open_grave(world, character, death)?)
+            }
+            GameIntent::OpenDeathOffice => events.extend(self.open_death_office(world, character)?),
             GameIntent::CancelActivity => runtime::interrupt(character)?,
             GameIntent::RequestLogout => {
-                if self.in_combat(world, character)? {
+                if self.combat_locked(world, character, crate::combat::CombatLock::Logout)? {
                     return Err(GameError::new(
                         GameErrorCode::Busy,
                         "Cannot log out during source combat.",
@@ -522,31 +575,57 @@ impl WorldEngine {
         Ok(())
     }
 
-    fn close_interfaces(
+    pub(crate) fn close_interfaces(
         &self,
         character: &mut CharacterState,
         events: &mut Vec<GameEvent>,
     ) -> GameResult<()> {
-        if let Some(access) = &runtime::schedule(character)?.access {
-            let session = match access {
-                ContainerSession::Bank { session } | ContainerSession::Shop { session } => session,
-            };
-            let interaction = runtime::interaction(
-                &self.content,
-                &session.spawn,
-                session.interaction as usize - 1,
-            )?;
-            if let InteractionAction::OpenBank { interface, .. }
-            | InteractionAction::OpenShop { interface, .. } = &interaction.action
-            {
-                events.push(GameEvent::InterfaceClosed {
-                    interface: interface.clone(),
-                });
-            }
+        if let Some(interface) = self.opened_interface(character)? {
+            events.push(GameEvent::InterfaceClosed { interface });
         }
         character.dialogue = None;
         runtime::schedule_mut(character)?.dialogue_interaction = None;
         runtime::close_access(character)
+    }
+
+    pub(crate) fn opened_interface(
+        &self,
+        character: &CharacterState,
+    ) -> GameResult<Option<InterfaceId>> {
+        match &runtime::schedule(character)?.access {
+            Some(ContainerSession::Bank { session } | ContainerSession::Shop { session }) => {
+                match &runtime::interaction(
+                    &self.content,
+                    &session.spawn,
+                    session.interaction as usize - 1,
+                )?
+                .action
+                {
+                    InteractionAction::OpenBank { interface, .. }
+                    | InteractionAction::OpenShop { interface, .. } => Ok(Some(interface.clone())),
+                    _ => Ok(None),
+                }
+            }
+            Some(
+                ContainerSession::Grave { interface, .. }
+                | ContainerSession::DeathOffice { interface },
+            ) => Ok(Some(interface.clone())),
+            None => Ok(None),
+        }
+    }
+
+    pub(crate) fn session_close_event(
+        &self,
+        before: &CharacterState,
+        after: &CharacterState,
+        events: &mut Vec<GameEvent>,
+    ) -> GameResult<()> {
+        let old = self.opened_interface(before)?;
+        if old != self.opened_interface(after)? && let Some(interface) = old
+            && !events.iter().any(|event| matches!(event, GameEvent::InterfaceClosed { interface: closed } if closed == &interface)) {
+            events.push(GameEvent::InterfaceClosed { interface });
+        }
+        Ok(())
     }
 
     fn open_dialogue(
@@ -713,7 +792,20 @@ impl WorldEngine {
                 "Ground item is private or expired.",
             ));
         }
-        if let Some(rest) = id.strip_prefix("policy:") {
+        if let Some(provenance) = world.runtime.ground_provenance.get(id) {
+            let policy = self
+                .content
+                .mechanics
+                .ground_policies
+                .get(&provenance.policy)
+                .ok_or_else(|| unknown("Unknown ground policy."))?;
+            if item.owner.as_ref() == Some(&character.actor_id) && !policy.owner_can_take {
+                return Err(GameError::new(
+                    GameErrorCode::NotOwned,
+                    "Source policy does not permit owner pickup.",
+                ));
+            }
+        } else if let Some(rest) = id.strip_prefix("policy:") {
             let policy = rest
                 .split(':')
                 .next()
@@ -765,6 +857,7 @@ impl WorldEngine {
                 .available_at_tick = runtime::deadline(world.tick, u64::from(*respawn_ticks))?;
         }
         world.ground_items.remove(index);
+        world.runtime.ground_provenance.remove(id);
         runtime::interrupt(character)?;
         Ok(stack)
     }

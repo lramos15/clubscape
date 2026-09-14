@@ -1,4 +1,5 @@
 mod definitions;
+mod execution;
 mod graphs;
 mod mechanics;
 mod rules;
@@ -39,7 +40,7 @@ pub(crate) fn validate(content: &GameContent, mode: ValidationMode) -> GameResul
     if content.schema_version != CONTENT_SCHEMA_VERSION {
         return Err(invalid(
             "schema_version",
-            "only GameContent schema version 2 is supported; complete and recompile older definitions",
+            "only GameContent schema version 3 is supported; explicitly migrate and recompile older definitions",
         ));
     }
     identity(&content.revision, "revision")?;

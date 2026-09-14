@@ -237,6 +237,13 @@ pub enum Activity {
         remaining: u32,
         next_tick: u64,
     },
+    ProducingSelected {
+        recipe: RecipeId,
+        target: Option<crate::WorldTarget>,
+        remaining: u32,
+        mode: crate::ProductionMode,
+        next_tick: u64,
+    },
     Fighting {
         target: SpawnId,
         style: String,

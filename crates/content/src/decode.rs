@@ -100,6 +100,12 @@ fn reject_unknown_fields(input: &Value, canonical: &Value, path: &str) -> GameRe
             }
         }
         (Value::Array(input), Value::Array(canonical)) => {
+            if input.len() != canonical.len() {
+                return Err(invalid(
+                    path,
+                    "duplicate or normalized collection entries are not valid source declarations",
+                ));
+            }
             for (index, (value, expected)) in input.iter().zip(canonical).enumerate() {
                 reject_unknown_fields(value, expected, &format!("{path}[{index}]"))?;
             }

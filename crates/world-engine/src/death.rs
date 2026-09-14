@@ -9,6 +9,40 @@ use crate::{
 };
 
 impl WorldEngine {
+    pub(crate) fn advance_death(
+        &self,
+        world: &mut WorldState,
+        character: &mut CharacterState,
+    ) -> GameResult<Vec<GameEvent>> {
+        if let LifeState::Dying { death, at_tick } = character.runtime.life.clone() {
+            if world.tick < at_tick {
+                return Ok(vec![]);
+            }
+            let record = world
+                .runtime
+                .deaths
+                .get(&death)
+                .ok_or_else(|| invalid_state("Dying state lacks its death receipt."))?;
+            let arrival = record.arrival.as_ref().ok_or_else(|| {
+                unavailable("Legacy dying state needs explicit source phase migration.")
+            })?;
+            if record.owner != character.actor_id
+                || arrival.dying_until_tick != at_tick
+                || arrival.completed_at_tick.is_some()
+            {
+                return Err(invalid_state(
+                    "Dying state disagrees with its persisted source phases.",
+                ));
+            }
+            character.runtime.life = LifeState::Respawning {
+                death,
+                destination: arrival.destination.clone(),
+                at_tick: arrival.arrives_at_tick,
+            };
+        }
+        self.advance_respawn(world, character)
+    }
+
     pub(crate) fn advance_respawn(
         &self,
         world: &mut WorldState,
@@ -34,6 +68,15 @@ impl WorldEngine {
             return Err(GameError::new(
                 GameErrorCode::NotOwned,
                 "Respawn receipt belongs to another actor.",
+            ));
+        }
+        if let Some(arrival) = &record.arrival
+            && (arrival.destination != destination
+                || arrival.arrives_at_tick != at_tick
+                || arrival.completed_at_tick.is_some())
+        {
+            return Err(invalid_state(
+                "Respawn phase was changed or already completed.",
             ));
         }
         let policy = self
@@ -90,6 +133,15 @@ impl WorldEngine {
                 .and_then(|record| record.grave.as_mut())
         {
             grave.clock_started = true;
+            grave.started_at_tick = Some(world.tick);
+        }
+        if let Some(arrival) = world
+            .runtime
+            .deaths
+            .get_mut(&death)
+            .and_then(|record| record.arrival.as_mut())
+        {
+            arrival.completed_at_tick = Some(world.tick);
         }
         Ok(vec![GameEvent::Moved {
             tile: character.tile,
@@ -117,6 +169,9 @@ impl WorldEngine {
             .death
             .as_ref()
             .ok_or_else(|| unavailable("Source death policy is not bound."))?;
+        let timing = policy.timing.require()?;
+        let dying_until_tick = runtime::deadline(world.tick, u64::from(timing.dying_ticks))?;
+        let arrives_at_tick = runtime::deadline(dying_until_tick, u64::from(timing.respawn_ticks))?;
         if character.runtime.instance.is_some() {
             return Err(unavailable(
                 "Normal unsafe non-PvP death does not define arbitrary combat-instance retention.",
@@ -248,7 +303,8 @@ impl WorldEngine {
             Some(GraveState {
                 location: origin.clone(),
                 active_ticks_remaining: policy.grave_active_ticks,
-                clock_started: !first_office,
+                clock_started: false,
+                started_at_tick: None,
                 paused: BTreeSet::new(),
                 items: lost,
             })
@@ -379,6 +435,7 @@ impl WorldEngine {
                 grave,
                 office,
                 reclaimed: BTreeSet::new(),
+                arrival: None,
             },
         );
         self.enforce_office_capacity(world, &character.actor_id)?;
@@ -393,6 +450,7 @@ impl WorldEngine {
         character.runtime.combat.last_attacker = None;
         character.runtime.combat.attack_ready = world.tick;
         character.runtime.combat.spell_ready = world.tick;
+        character.runtime.combat.last_combat_tick = None;
         for entity in world.entities.values_mut() {
             if entity.runtime.retaliation_target.as_ref() == Some(&character.actor_id) {
                 entity.runtime.retaliation_target = None;
@@ -403,37 +461,40 @@ impl WorldEngine {
         } else {
             respawn
         };
-        character.runtime.life = LifeState::Alive;
-        self.move_to(world, character, destination.clone())?;
-        for (vital, restoration) in &policy.restoration.require()?.on_arrival {
-            self.restore_vital(character, *vital, restoration)?;
-        }
-        if character.hitpoints == 0 {
-            return Err(invalid_content(
-                "Death arrival restoration must restore live hitpoints.",
-            ));
-        }
         if first_office {
-            let instance = destination.instance.ok_or_else(|| {
-                invalid_content("First Death Office requires a private live instance.")
-            })?;
-            character.runtime.life = LifeState::FirstDeathOffice {
-                death: id.clone(),
-                instance,
-            };
+            if destination.instance.is_none() {
+                return Err(invalid_content("First Office requires a private instance."));
+            }
             character.runtime.first_item_loss_seen = true;
             character.runtime.death_topics.clear();
         }
-        Ok(vec![
+        world
+            .runtime
+            .deaths
+            .get_mut(&id)
+            .ok_or_else(|| invalid_state("Death receipt disappeared."))?
+            .arrival = Some(DeathArrival {
+            destination,
+            first_office,
+            dying_until_tick,
+            arrives_at_tick,
+            completed_at_tick: None,
+        });
+        character.runtime.life = LifeState::Dying {
+            death: id.clone(),
+            at_tick: dying_until_tick,
+        };
+        let mut events = vec![
             GameEvent::Died,
             GameEvent::DeathOccurred {
-                death: id,
+                death: id.clone(),
                 items_lost,
             },
-            GameEvent::Moved {
-                tile: character.tile,
-            },
-        ])
+        ];
+        if world.tick >= dying_until_tick {
+            events.extend(self.advance_death(world, character)?);
+        }
+        Ok(events)
     }
 
     pub(crate) fn finish_office_exit(
@@ -464,6 +525,7 @@ impl WorldEngine {
                 .and_then(|record| record.grave.as_mut())
         {
             grave.clock_started = true;
+            grave.started_at_tick = Some(world.tick);
             grave.paused.remove(&ClockPause::FirstDeathOffice);
         }
         for (vital, restoration) in &policy.restoration.require()?.on_first_office_exit {
@@ -486,7 +548,10 @@ impl WorldEngine {
         for id in ids {
             let record = &world.runtime.deaths[&id];
             let Some(grave) = &record.grave else { continue };
-            if record.occurred_at_tick == world.tick || grave.items.is_empty() {
+            if record.occurred_at_tick == world.tick
+                || grave.started_at_tick == Some(world.tick)
+                || grave.items.is_empty()
+            {
                 continue;
             }
             let owner = record.owner.clone();
@@ -495,6 +560,13 @@ impl WorldEngine {
             })?;
             let mut pauses = BTreeSet::new();
             for pause in &policy.grave_pauses {
+                if *pause == ClockPause::GraveInterface {
+                    if matches!(&runtime::schedule(character)?.access, Some(ContainerSession::Grave { death, .. }) if death == &id)
+                    {
+                        pauses.insert(*pause);
+                    }
+                    continue;
+                }
                 if context.paused(
                     character,
                     &BTreeSet::from([*pause]),

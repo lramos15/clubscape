@@ -10,6 +10,9 @@ pub(crate) fn discard_rules(mut content: GameContent) {
     let mut guards = Vec::new();
     let mut effects = Vec::new();
     let mut loot = Vec::new();
+    for traversal in content.mechanics.traversal.values_mut() {
+        guards.push(std::mem::replace(&mut traversal.guard, Guard::Always));
+    }
     for spawn in content.spawns.values_mut() {
         for interaction in &mut spawn.interactions {
             guards.push(std::mem::replace(&mut interaction.guard, Guard::Always));
@@ -104,6 +107,16 @@ pub(crate) fn discard_rules(mut content: GameContent) {
             .and_then(|combat| combat.mechanics.as_mut())
         {
             loot.extend(std::mem::take(&mut mechanics.loot));
+            if let SourceBinding::Bound { value, .. } = &mut mechanics.eligibility {
+                for rule in value {
+                    guards.push(std::mem::replace(&mut rule.guard, Guard::Always));
+                }
+            }
+            if let SourceBinding::Bound { value, .. } = &mut mechanics.engagement
+                && let Some(aggression) = &mut value.aggression
+            {
+                guards.push(std::mem::replace(&mut aggression.guard, Guard::Always));
+            }
         }
     }
     while let Some(pool) = loot.pop() {
@@ -143,6 +156,9 @@ enum Work<'a> {
 /// Iterative preflight runs before any recursive rule processing or serialization.
 pub(super) fn scan(content: &GameContent) -> GameResult<Scan> {
     let mut pending = Vec::new();
+    for traversal in content.mechanics.traversal.values() {
+        pending.push(Work::Guard(&traversal.guard, 1));
+    }
     for spawn in content.spawns.values() {
         bounded(spawn.interactions.len(), "interactions")?;
         for interaction in &spawn.interactions {
@@ -230,6 +246,15 @@ pub(super) fn scan(content: &GameContent) -> GameResult<Scan> {
         {
             bounded(mechanics.loot.len(), "loot")?;
             pending.extend(mechanics.loot.iter().map(|pool| Work::Loot(pool, 1)));
+            if let SourceBinding::Bound { value, .. } = &mechanics.eligibility {
+                bounded(value.len(), "attack_eligibility")?;
+                pending.extend(value.iter().map(|rule| Work::Guard(&rule.guard, 1)));
+            }
+            if let SourceBinding::Bound { value, .. } = &mechanics.engagement
+                && let Some(aggression) = &value.aggression
+            {
+                pending.push(Work::Guard(&aggression.guard, 1));
+            }
         }
     }
     let mut mutable_flags = BTreeSet::new();
@@ -958,6 +983,7 @@ pub(super) const ACTIONS: &[&str] = &[
     "eat",
     "produce",
     "produce_at",
+    "produce_selected",
     "interact_with",
     "bank_deposit",
     "bank_withdraw",
@@ -970,6 +996,8 @@ pub(super) const ACTIONS: &[&str] = &[
     "confirm_appearance",
     "select_experience",
     "reclaim",
+    "open_grave",
+    "open_death_office",
     "cancel_activity",
     "request_logout",
 ];

@@ -224,7 +224,7 @@ fn grave_clock_uses_authority_offline_idle_and_interface_facts_not_wall_clock() 
     kill_player(&engine, &mut world);
     let death = state(&world).runtime.active_death.clone().unwrap();
     complete_office(&engine, &mut world);
-    for presence in [
+    for (index, presence) in [
         ActorPresence {
             online: false,
             idle_milliseconds: 0,
@@ -240,7 +240,10 @@ fn grave_clock_uses_authority_offline_idle_and_interface_facts_not_wall_clock() 
             idle_milliseconds: 0,
             grave_interface: Some(death.clone()),
         },
-    ] {
+    ]
+    .into_iter()
+    .enumerate()
+    {
         let context = TickContext {
             actors: BTreeMap::from([(actor(), presence)]),
         };
@@ -253,7 +256,7 @@ fn grave_clock_uses_authority_offline_idle_and_interface_facts_not_wall_clock() 
                 .as_ref()
                 .unwrap()
                 .active_ticks_remaining,
-            1500
+            if index < 2 { 1500 } else { 1499 }
         );
     }
     v::tick(&engine, &mut world, &mut NeverDraw);
@@ -263,7 +266,7 @@ fn grave_clock_uses_authority_offline_idle_and_interface_facts_not_wall_clock() 
             .as_ref()
             .unwrap()
             .active_ticks_remaining,
-        1499
+        1498
     );
 }
 
@@ -505,6 +508,8 @@ fn persisted_explicit_respawn_deadline_resumes_without_repeating_death_retention
         destination: record.respawn.clone(),
         at_tick: world.tick + 3,
     };
+    let death = id.clone();
+    world.runtime.deaths.get_mut(&death).unwrap().arrival = None;
     let inventory = state(&world).inventory.clone();
     let equipment = state(&world).equipment.clone();
     state_mut(&mut world).hitpoints = 0;

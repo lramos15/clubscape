@@ -43,15 +43,26 @@ impl WorldEngine {
                 Ok((size, size))
             }
             SpawnKind::Object { object } => {
+                let initial = self
+                    .content
+                    .mechanics
+                    .object_transforms
+                    .values()
+                    .find(|transform| transform.spawn == spawn.id)
+                    .and_then(|transform| transform.states.get(&transform.initial));
                 let object = self
                     .content
                     .objects
-                    .get(object)
+                    .get(
+                        initial
+                            .and_then(|state| state.object.as_ref())
+                            .unwrap_or(object),
+                    )
                     .ok_or_else(|| unknown("Unknown footprint object."))?;
                 Ok(
-                    if spawn
-                        .placement
-                        .as_ref()
+                    if initial
+                        .map(|state| &state.placement)
+                        .or(spawn.placement.as_ref())
                         .is_some_and(|placement| placement.quarter_turns % 2 == 1)
                     {
                         (object.size_y, object.size_x)
@@ -206,7 +217,52 @@ impl WorldEngine {
         template: Option<&InstanceTemplateDefinition>,
     ) -> GameResult<()> {
         let mut overrides = BTreeMap::new();
+        let mut grouped = std::collections::BTreeSet::new();
+        for group in self.content.mechanics.collision_groups.values() {
+            if !group.transforms.iter().any(|id| states.contains_key(id)) {
+                continue;
+            }
+            let selection = group
+                .transforms
+                .iter()
+                .map(|id| {
+                    states
+                        .get(id)
+                        .cloned()
+                        .map(|state| (id.clone(), state))
+                        .ok_or_else(|| {
+                            invalid_state(
+                                "A live combined collision group is only partially mapped.",
+                            )
+                        })
+                })
+                .collect::<GameResult<BTreeMap<_, _>>>()?;
+            grouped.extend(group.transforms.iter().cloned());
+            if selection.iter().all(|(id, state)| {
+                self.content
+                    .mechanics
+                    .object_transforms
+                    .get(id)
+                    .is_some_and(|definition| &definition.initial == state)
+            }) {
+                continue;
+            }
+            let selected = group
+                .states
+                .require()?
+                .iter()
+                .find(|state| state.selection == selection)
+                .ok_or_else(|| {
+                    invalid_state(
+                        "No declared combined collision state matches the current selection.",
+                    )
+                })?;
+            apply_replacements(cells, &mut overrides, &selected.collision, template)?;
+        }
         for (id, state) in states {
+            if grouped.contains(id) {
+                continue;
+            }
             let definition = self
                 .content
                 .mechanics
@@ -220,35 +276,7 @@ impl WorldEngine {
                 .states
                 .get(state)
                 .ok_or_else(|| unknown("Undefined object state."))?;
-            for cell in &state.collision {
-                let mut cell = *cell;
-                if let Some(template) = template {
-                    let Some(chunk) = template
-                        .chunks
-                        .iter()
-                        .find(|chunk| map_chunk(cell.tile, chunk, template.chunk_size).is_some())
-                    else {
-                        continue;
-                    };
-                    cell.tile = map_chunk(cell.tile, chunk, template.chunk_size)
-                        .ok_or_else(|| invalid_state("Unmapped transform cell."))?;
-                    cell.blocked_movement = rotate_mask(cell.blocked_movement, chunk.quarter_turns);
-                    cell.blocked_sight = rotate_mask(cell.blocked_sight, chunk.quarter_turns);
-                }
-                if !cells.contains_key(&cell.tile) {
-                    return Err(invalid_state("Collision transform cannot invent a cell."));
-                }
-                if overrides
-                    .get(&cell.tile)
-                    .is_some_and(|prior| prior != &cell)
-                {
-                    return Err(crate::unavailable(
-                        "Overlapping active object transforms require compatible combined collision replacements.",
-                    ));
-                }
-                overrides.insert(cell.tile, cell);
-                cells.insert(cell.tile, cell);
-            }
+            apply_replacements(cells, &mut overrides, &state.collision, template)?;
         }
         Ok(())
     }
@@ -592,11 +620,22 @@ impl WorldEngine {
         goal: Tile,
     ) -> GameResult<Vec<Tile>> {
         let map = self.collision_for(world, character.runtime.instance.as_ref())?;
-        route(&map, character.tile, goal)
+        route_with(&map, character.tile, goal, |from, to| {
+            self.actor_can_step(world, character, &map, from, to)
+        })
     }
 }
 
 pub(crate) fn route(map: &CollisionMap, start: Tile, goal: Tile) -> GameResult<Vec<Tile>> {
+    route_with(map, start, goal, |from, to| Ok(map.can_step(from, to)))
+}
+
+fn route_with(
+    map: &CollisionMap,
+    start: Tile,
+    goal: Tile,
+    mut can_step: impl FnMut(Tile, Tile) -> GameResult<bool>,
+) -> GameResult<Vec<Tile>> {
     if start.plane() != goal.plane() || map.cell(goal).is_none() || map.cell(start).is_none() {
         return Err(GameError::new(
             GameErrorCode::OutOfReach,
@@ -628,7 +667,7 @@ pub(crate) fn route(map: &CollisionMap, start: Tile, goal: Tile) -> GameResult<V
             if !(-64..64).contains(&offset_x)
                 || !(-64..64).contains(&offset_y)
                 || predecessors.contains_key(&next)
-                || !map.can_step(current, next)
+                || !can_step(current, next)?
             {
                 continue;
             }
@@ -724,6 +763,44 @@ fn rotate_mask(mask: u8, rotations: u8) -> u8 {
         }
     }
     result
+}
+
+fn apply_replacements(
+    cells: &mut BTreeMap<Tile, CollisionCell>,
+    overrides: &mut BTreeMap<Tile, CollisionCell>,
+    replacements: &[CollisionCell],
+    template: Option<&InstanceTemplateDefinition>,
+) -> GameResult<()> {
+    for cell in replacements {
+        let mut cell = *cell;
+        if let Some(template) = template {
+            let Some(chunk) = template
+                .chunks
+                .iter()
+                .find(|chunk| map_chunk(cell.tile, chunk, template.chunk_size).is_some())
+            else {
+                continue;
+            };
+            cell.tile = map_chunk(cell.tile, chunk, template.chunk_size)
+                .ok_or_else(|| invalid_state("Unmapped transform cell."))?;
+            cell.blocked_movement = rotate_mask(cell.blocked_movement, chunk.quarter_turns);
+            cell.blocked_sight = rotate_mask(cell.blocked_sight, chunk.quarter_turns);
+        }
+        if !cells.contains_key(&cell.tile) {
+            return Err(invalid_state("Collision transform cannot invent a cell."));
+        }
+        if overrides
+            .get(&cell.tile)
+            .is_some_and(|previous| previous != &cell)
+        {
+            return Err(invalid_state(
+                "Conflicting collision replacements need a declared combined group.",
+            ));
+        }
+        overrides.insert(cell.tile, cell);
+        cells.insert(cell.tile, cell);
+    }
+    Ok(())
 }
 
 pub(crate) fn map_footprint(

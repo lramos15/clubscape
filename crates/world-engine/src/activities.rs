@@ -6,6 +6,13 @@ use crate::{
     runtime, unavailable, unknown,
 };
 
+struct ProductionJob<'a> {
+    id: &'a RecipeId,
+    target: Option<WorldTarget>,
+    remaining: u32,
+    mode: Option<ProductionMode>,
+}
+
 impl WorldEngine {
     pub(crate) fn advance_activity(
         &self,
@@ -28,6 +35,16 @@ impl WorldEngine {
                     0
                 };
                 let map = self.collision_for(world, character.runtime.instance.as_ref())?;
+                let mut entering = character.tile;
+                for next in path.iter().take(if running { 2 } else { 1 }) {
+                    if !self.actor_can_step(world, character, &map, entering, *next)? {
+                        return Err(GameError::new(
+                            GameErrorCode::Blocked,
+                            "Source traversal permission blocks this step.",
+                        ));
+                    }
+                    entering = *next;
+                }
                 let events = map.step_path(&mut character.tile, &mut path, running)?;
                 character.region = self
                     .regions_by_tile
@@ -76,9 +93,12 @@ impl WorldEngine {
                     self.produce(
                         world,
                         character,
-                        &recipe,
-                        target.map(|spawn| WorldTarget::Spawn { spawn }),
-                        remaining,
+                        ProductionJob {
+                            id: &recipe,
+                            target: target.map(|spawn| WorldTarget::Spawn { spawn }),
+                            remaining,
+                            mode: None,
+                        },
                         rng,
                     )
                 }
@@ -92,7 +112,40 @@ impl WorldEngine {
                 if world.tick < next_tick {
                     Ok(vec![])
                 } else {
-                    self.produce(world, character, &recipe, target, remaining, rng)
+                    self.produce(
+                        world,
+                        character,
+                        ProductionJob {
+                            id: &recipe,
+                            target,
+                            remaining,
+                            mode: None,
+                        },
+                        rng,
+                    )
+                }
+            }
+            Activity::ProducingSelected {
+                recipe,
+                target,
+                remaining,
+                mode,
+                next_tick,
+            } => {
+                if world.tick < next_tick {
+                    Ok(vec![])
+                } else {
+                    self.produce(
+                        world,
+                        character,
+                        ProductionJob {
+                            id: &recipe,
+                            target,
+                            remaining,
+                            mode: Some(mode),
+                        },
+                        rng,
+                    )
                 }
             }
             Activity::Fighting {
@@ -335,6 +388,51 @@ impl WorldEngine {
         target: Option<WorldTarget>,
         remaining: u32,
     ) -> GameResult<()> {
+        self.begin_production(
+            world,
+            character,
+            ProductionJob {
+                id: recipe_id,
+                target,
+                remaining,
+                mode: None,
+            },
+        )
+    }
+
+    pub(crate) fn start_selected_production(
+        &self,
+        world: &mut WorldState,
+        character: &mut CharacterState,
+        recipe_id: &RecipeId,
+        target: Option<WorldTarget>,
+        remaining: u32,
+        mode: ProductionMode,
+    ) -> GameResult<()> {
+        self.begin_production(
+            world,
+            character,
+            ProductionJob {
+                id: recipe_id,
+                target,
+                remaining,
+                mode: Some(mode),
+            },
+        )
+    }
+
+    fn begin_production(
+        &self,
+        world: &mut WorldState,
+        character: &mut CharacterState,
+        job: ProductionJob<'_>,
+    ) -> GameResult<()> {
+        let ProductionJob {
+            id: recipe_id,
+            target,
+            remaining,
+            mode,
+        } = job;
         self.authorize(
             character,
             &["produce".into(), format!("produce:{recipe_id}")],
@@ -347,9 +445,15 @@ impl WorldEngine {
         if remaining == 0 {
             return Err(invalid_state("Production quantity is zero."));
         }
+        if mode == Some(ProductionMode::Single) && remaining != 1 {
+            return Err(invalid_state(
+                "Single production must request exactly one operation.",
+            ));
+        }
         self.check_recipe_target(world, character, recipe, target.as_ref())?;
         self.check_recipe(world, character, recipe, false)?;
-        let delay = self.recipe_delay(recipe, remaining == 1, false)?;
+        let single = mode.map_or(remaining == 1, |mode| mode == ProductionMode::Single);
+        let delay = self.recipe_delay(recipe, single, false)?;
         if remaining > 1 {
             self.recipe_delay(recipe, false, true)?;
         }
@@ -370,7 +474,7 @@ impl WorldEngine {
                 ground_input, fire, ..
             } = &mechanics.lifecycle
         {
-            if remaining != 1 || target.is_some() {
+            if remaining != 1 || target.is_some() || mode == Some(ProductionMode::MakeX) {
                 return Err(invalid_state(
                     "Firemaking starts one owned ground input at the actor tile.",
                 ));
@@ -404,7 +508,7 @@ impl WorldEngine {
         } else {
             self.check_outcomes_fit(character, recipe)?;
             character.activity =
-                production_activity(recipe.id.clone(), target, remaining, next_tick);
+                production_activity(recipe.id.clone(), target, remaining, next_tick, mode);
         }
         if let Some(mechanics) = &recipe.mechanics {
             character
@@ -587,11 +691,15 @@ impl WorldEngine {
         &self,
         world: &mut WorldState,
         character: &mut CharacterState,
-        id: &RecipeId,
-        target: Option<WorldTarget>,
-        remaining: u32,
+        job: ProductionJob<'_>,
         rng: &mut impl RandomSource,
     ) -> GameResult<Vec<GameEvent>> {
+        let ProductionJob {
+            id,
+            target,
+            remaining,
+            mode,
+        } = job;
         self.authorize(character, &["produce".into(), format!("produce:{id}")])?;
         let recipe = self
             .content
@@ -671,7 +779,7 @@ impl WorldEngine {
         character.activity = if finished {
             Activity::Idle
         } else {
-            production_activity(id.clone(), target, remaining - 1, next_tick)
+            production_activity(id.clone(), target, remaining - 1, next_tick, mode)
         };
         Ok(frame.events)
     }
@@ -758,7 +866,8 @@ impl WorldEngine {
         };
         frame.events.push(event);
         if success {
-            world.ground_items.remove(index);
+            let ground = world.ground_items.remove(index);
+            world.runtime.ground_provenance.remove(&ground.id);
             let inputs: Vec<_> = recipe
                 .inputs
                 .iter()
@@ -787,7 +896,7 @@ impl WorldEngine {
             for direction in step_priority {
                 let (dx, dy) = direction.offset();
                 if let Some(tile) = character.tile.offset(dx, dy)
-                    && map.can_step(character.tile, tile)
+                    && self.actor_can_step(world, character, &map, character.tile, tile)?
                 {
                     character.tile = tile;
                     character.region = self
@@ -825,7 +934,8 @@ impl WorldEngine {
                     ..pending
                 });
             } else {
-                world.ground_items.remove(index);
+                let ground = world.ground_items.remove(index);
+                world.runtime.ground_provenance.remove(&ground.id);
                 character.runtime.pending_fire = None;
             }
         }
@@ -838,7 +948,17 @@ fn production_activity(
     target: Option<WorldTarget>,
     remaining: u32,
     next_tick: u64,
+    mode: Option<ProductionMode>,
 ) -> Activity {
+    if let Some(mode) = mode {
+        return Activity::ProducingSelected {
+            recipe,
+            target,
+            remaining,
+            next_tick,
+            mode,
+        };
+    }
     match target {
         Some(WorldTarget::TemporaryObject { .. }) => Activity::ProducingAt {
             recipe,

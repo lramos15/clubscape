@@ -100,6 +100,8 @@ content_id!(ItemInstanceId, "item_instance");
 content_id!(ChargeKindId, "charge");
 content_id!(DeathId, "death");
 content_id!(RecoveryItemId, "recovery_item");
+content_id!(TraversalId, "traversal");
+content_id!(CollisionGroupId, "collision_group");
 
 #[cfg(test)]
 mod tests {
