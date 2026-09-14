@@ -795,6 +795,7 @@ pub enum MaximumHitFormula {
     LevelTable {
         skill: SkillId,
         basis: SkillLevelBasis,
+        #[serde(deserialize_with = "crate::numeric_keys::level_hits")]
         hits: BTreeMap<u16, u16>,
     },
     Fixed {

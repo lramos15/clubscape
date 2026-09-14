@@ -3,6 +3,7 @@ mod error;
 mod ids;
 mod intent;
 mod mechanics;
+mod numeric_keys;
 mod runtime_state;
 mod runtime_validation;
 mod state;
