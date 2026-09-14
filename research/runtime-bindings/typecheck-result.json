@@ -1,0 +1,22 @@
+{
+  "candidate_sha256": "47a0d5b3ecdaab5e711600af7fe705ed54f6931f27d04aa4bee4c4d8634f8112",
+  "content_revision": "m1.source-backed.v2.ba3932d67434a92b",
+  "gameplay_executed": false,
+  "mode": "runtime",
+  "presentation_approved": false,
+  "remaining_unresolved_bindings": [
+    "items.item.ensouled_goblin_head.stackable.rule",
+    "items.item.milk.bottomless_bucket.stackable.rule",
+    "mechanics.death.office_overflow",
+    "mechanics.vitals.level_up",
+    "npcs.npc.goblin.level_2.combat.mechanics.loot[3]",
+    "spawns.spawn.tutorial.fishing_spot.3099.3090.p0.interactions[0].action.rule.mechanics.respawn",
+    "spawns.spawn.tutorial.fishing_spot.3101.3092.p0.interactions[0].action.rule.mechanics.respawn",
+    "spawns.spawn.tutorial.fishing_spot.3103.3092.p0.interactions[0].action.rule.mechanics.respawn"
+  ],
+  "remaining_unresolved_count": 8,
+  "source_verification_performed_by_compiler": false,
+  "strict_candidate_compile_passed": true,
+  "unimplemented_conditional_vital_enum_rejected": true,
+  "wind_strike_numeric_key_table_passed": true
+}

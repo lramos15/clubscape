@@ -1,0 +1,150 @@
+{
+  "schema_version": 1,
+  "status": "independent_source_requirements_not_game_execution",
+  "projectile_tables": {
+    "source_ref": "wiki.15319469",
+    "columns": ["distance", "bow_source_delay", "magic_source_delay", "bow_player_to_npc", "magic_player_to_npc"],
+    "rows": [
+      [1,1,1,2,2], [2,1,2,2,3], [3,2,2,3,3], [4,2,2,3,3],
+      [5,2,3,3,4], [6,2,3,3,4], [7,2,3,3,4], [8,2,4,3,5],
+      [9,3,4,4,5], [10,3,4,4,5]
+    ],
+    "edge_cases": [
+      {"id":"projectile.original_life","given":{"launched_at_tick":100,"distance":3,"target_life_at_launch":4,"target_life_at_impact":5},"expect":{"apply_damage":false,"new_life_not_hit":true,"runes_not_refunded":true}},
+      {"id":"projectile.no_second_accuracy_roll","given":{"launch_accuracy_passed":true,"launch_distance":2,"impact_distance":7},"expect":{"use_launch_distance":true,"accuracy_rerolls":0,"do_not_recheck_launch_los":true}},
+      {"id":"projectile.processing_order_once","given":{"accepted_attack_tick":100,"distance":1,"target":"npc"},"expect":{"arrow_damage_tick":102,"wind_strike_damage_tick":102,"not_tick":103}}
+    ]
+  },
+  "wind_strike": {
+    "classification": "known_fact_parent_decoder_fixed",
+    "source_fix": "7150464",
+    "rows": [[1,2],[4,2],[5,4],[8,4],[9,6],[12,6],[13,8],[99,8]],
+    "expect_numeric_json_keys_roundtrip": true
+  },
+  "shop_prices": {
+    "classification": "source_supported_inference",
+    "columns": ["base_value", "base_stock", "current_stock", "buy_from_shop", "sell_to_shop"],
+    "rows": [
+      [1,5,5,1,0], [2,3,3,2,0], [500,15,15,650,200],
+      [500,15,16,635,185], [500,15,14,665,215], [500,15,100,150,50],
+      [26,0,0,33,10], [26,0,1,33,9]
+    ],
+    "bulk": [
+      {"id":"shop.sell_two_swords","given":{"base_value":26,"base_stock":0,"current_stock":0,"quantity":2},"expect":{"paid_to_player":19,"new_stock":2}},
+      {"id":"shop.buy_two_packs","given":{"base_value":500,"base_stock":15,"current_stock":16,"quantity":2},"expect":{"paid_by_player":1285,"new_stock":14}}
+    ]
+  },
+  "restock": {
+    "classification": "source_supported_inference",
+    "cases": [
+      {"id":"restock.boundary_not_purchase_age","given":{"interval":10,"last_purchase_tick":9,"current_tick":10,"stock":1,"base_stock":3},"expect":{"restock_due":true,"stock":2}},
+      {"id":"restock.no_early_reset","given":{"interval":10,"last_purchase_tick":1,"current_tick":11,"stock":1,"base_stock":3},"expect":{"restock_due":false,"stock":1}},
+      {"id":"restock.overstock_decreases","given":{"interval":10,"last_purchase_tick":8,"current_tick":10,"stock":4,"base_stock":3},"expect":{"restock_due":true,"stock":3}},
+      {"id":"restock.one_tick_once","given":{"last_processed_boundary":100,"current_tick":100,"reconnect":true},"expect":{"additional_restock_applications":0}}
+    ]
+  },
+  "timing": {
+    "cases": [
+      {"id":"travel.stair_direct","group":"spiral_stairs_phase","expect_ticks":0,"classification":"source_supported_inference"},
+      {"id":"travel.ladder_direct","group":"direct_ladder_phase","expect_ticks":1,"classification":"source_supported_inference"},
+      {"id":"travel.office_portal","group":"office_portal_phase","expect_ticks":1,"classification":"source_supported_inference"},
+      {"id":"cooking.single_shrimp","group":"shrimp_single_cook","expect_ticks":1,"classification":"source_supported_inference"},
+      {"id":"cooking.first_bread_queue","group":"bread_make_x_first","expect_ticks":3,"classification":"source_supported_inference"},
+      {"id":"npc.walk_step","group":"npc_walk_step","expect_ticks":1,"classification":"source_supported_inference"}
+    ],
+    "queued_cooking": {
+      "given":{"first":3,"repeat":4,"menu_delay":0,"items":3},
+      "expect_completion_offsets":[3,7,11],
+      "not":[1,2,3],
+      "note":"The single-item fast path is not a bulk-cooking speed multiplier."
+    },
+    "ladder_dialogue": {
+      "given":{"method":"choice_dialogue","explicit_direct_op":false},
+      "expect":{"extra_dialogue_phase_preserved":true,"do_not_apply_direct_op_timing_to_whole_dialogue":true}
+    }
+  },
+  "npc_damage": {
+    "source_ref":"code.weirdgloop.NPCVsPlayerCalc",
+    "cases":[
+      {"id":"npc.rat_success_zero","given":{"accuracy_succeeded":true,"raw_damage":0,"maximum":1,"player_hp":10},"expect_damage":0},
+      {"id":"npc.goblin_success_one","given":{"accuracy_succeeded":true,"raw_damage":1,"maximum":1,"player_hp":10},"expect_damage":1},
+      {"id":"npc.chicken_never_one","given":{"accuracy_succeeded":true,"raw_damage":0,"maximum":0,"player_hp":10},"expect_damage":0},
+      {"id":"npc.tutorial_nonfatal","given":{"accuracy_succeeded":true,"raw_damage":1,"maximum":1,"player_hp":1,"on_tutorial":true},"expect_damage":0}
+    ],
+    "respawn_inferences":{"tutorial_chicken":25,"tutorial_rat":30}
+  },
+  "ground_origins": {
+    "cases":[
+      {"id":"ground.ammo","origin":"ammunition","expect":{"public_after":100,"expires_after":200},"classification":"source_supported_inference"},
+      {"id":"ground.ashes","origin":"fire_ashes","expect":{"public_after":0,"expires_after":300},"classification":"mixed_fact_and_visibility_inference"},
+      {"id":"ground.supplies","origin":"death_supplies","expect":{"public_after":null,"expires_after":6000,"offline_clock_paused":true,"cross_world_character_owned":true},"classification":"known_fact"},
+      {"id":"ground.tutorial","origin":"tutorial","expect":{"maximum_lifetime_ticks":50,"not_public_before_expiry":true},"classification":"known_fact"}
+    ],
+    "manual_drop_separate": {
+      "ordinary_tradeable":{"public_after":100,"expires_after":300},
+      "new_account_under_twenty_hours":{"never_public":true,"offline_clock_paused":true},
+      "note":"Do not apply automatic-ammunition timing as a generic inventory Drop policy."
+    }
+  },
+  "valuation": {
+    "source_ref":"runelite.guide_prices",
+    "rows":[
+      {"item":"item.pickaxe.bronze","expect":98},
+      {"item":"item.pickaxe.bronze.noted","expect":98},
+      {"item":"item.sword.bronze","expect":54,"not_wiki_transaction_price":97},
+      {"item":"item.shortbow","expect":45,"not_wiki_transaction_price":129},
+      {"item":"item.shield.wooden","expect":211},
+      {"item":"item.axe.bronze","expect":106},
+      {"item":"item.coins","expect":1},
+      {"item":"item.bucket.pack","expect":300,"note":"Non-GE tradeable high-alchemy value, not650 shop purchase price."},
+      {"item":"item.bread.burnt","expect":0,"note":"Explicit floor(3*1/5), not a missing-price fallback."},
+      {"item":"item.ensouled_goblin_head","expect":52,"classification":"untradeable_base_value_inference"}
+    ],
+    "ranking": {
+      "given":{"items":["item.pickaxe.bronze","item.sword.bronze","item.shortbow","item.shield.wooden","item.axe.bronze"],"kept":3},
+      "expect":["item.shield.wooden","item.axe.bronze","item.pickaxe.bronze"]
+    },
+    "tie_inference": {
+      "given":{"inventory_values":[100,100,100],"equipment_values":[100],"kept":3},
+      "expect":{"kept_inventory_slots":[0,1,2],"equipment_in_grave":true,"lost_item_count":0}
+    }
+  },
+  "death": {
+    "restoration_cases":[
+      {"id":"death.actual_arrival","given":{"base_hp":10,"current_hp":0,"base_prayer":1,"current_prayer":0,"run_energy":123},"expect":{"hp":10,"prayer":1,"run_energy":10000},"classification":"source_supported_inference"},
+      {"id":"death.no_second_office_heal","given":{"current_hp":10,"current_prayer":0,"run_energy":9800,"operation":"first_office_exit"},"expect":{"hp":10,"prayer":0,"run_energy":9800},"classification":"source_supported_inference"}
+    ],
+    "repeat_cases":[
+      {"id":"death.old_logs_cap_before_new","given":{"old_logs":35,"incoming_logs":2},"expect":{"old_logs_to_office":7,"grave_logs":30}},
+      {"id":"death.old_ore_to_office","given":{"old_copper":10,"incoming_copper":1},"expect":{"old_copper_to_office":10,"grave_copper":1}},
+      {"id":"death.old_food_supply","given":{"old_bread":2,"incoming_bread":1,"supply_setting":false},"expect":{"old_bread_in_private_supply_pile":2,"new_bread_in_grave":1}},
+      {"id":"death.source_default_supply","given":{"new_bread":1,"supply_setting":true},"expect":{"new_bread_in_private_supply_pile":1,"new_bread_in_grave":0}}
+    ],
+    "level_up_conditional_cases":[
+      {"old_base":10,"new_base":11,"current":5,"expect":5},
+      {"old_base":10,"new_base":11,"current":10,"expect":11},
+      {"old_base":10,"new_base":11,"current":15,"expect":15}
+    ],
+    "level_up_current_enum_cannot_express_all_cases":true,
+    "ordinary_overflow_proof":{"represented_item_ids":116,"office_capacity":120,"requires_plain_item_merge":true}
+  },
+  "departure": {
+    "classification":"source_supported_inference_not_observed_container_dump",
+    "cases":[
+      {"id":"departure.untouched_coins","given":{"bank_coins":25,"inventory_coins":0,"ground_coins":0},"expect":{"bank_coins":25,"inventory_coins":0,"ground_coins":0,"total_coins":25,"provision_kinds":18,"arrows":25}},
+      {"id":"departure.withdrawn_coins","given":{"bank_coins":0,"inventory_coins":25,"ground_coins":0},"expect":{"bank_coins":0,"inventory_coins":25,"ground_coins":0,"total_coins":25,"provision_kinds":18,"arrows":25}},
+      {"id":"departure.partial_deposit","given":{"bank_coins":12,"inventory_coins":13,"ground_coins":0},"expect":{"bank_coins":12,"inventory_coins":13,"ground_coins":0,"total_coins":25,"provision_kinds":18,"arrows":25}},
+      {"id":"departure.dropped_money_not_reseeded","given":{"bank_coins":0,"inventory_coins":0,"ground_coins":25},"expect":{"bank_coins":0,"inventory_coins":0,"ground_coins":25,"total_coins":25,"provision_kinds":18,"arrows":25}},
+      {"id":"departure.money_lost_to_expiry","given":{"bank_coins":0,"inventory_coins":0,"ground_coins":0},"expect":{"bank_coins":0,"inventory_coins":0,"ground_coins":0,"total_coins":0,"provision_kinds":18,"arrows":25}}
+    ],
+    "resource_cleanup":{"given":{"bank_copper":28,"inventory_extra_air_runes":100,"equipped_arrows":47,"hammer":1},"expect":{"bank_copper":0,"total_air_runes":25,"total_mind_runes":15,"total_arrows":25,"hammer":0}},
+    "replay":{"given":{"both_entitlements_claimed":true,"mainland_bank_coins":19},"expect":{"new_provision_grants":0,"mainland_bank_coins":19}},
+    "failure":{"given":{"crash_between_cleanup_and_grant":true},"expect":{"either_full_atomic_commit_or_prior_state":true,"acknowledged_partial_cleanup":false}}
+  },
+  "disposition_edges": [
+    {"id":"inactive.fishing_respawn","given":{"depletion_numerator":0,"depletion_denominator":1},"expect":{"respawn_policy_reads":0,"fish_can_still_be_caught":true}},
+    {"id":"inactive.rare_mode_two","given":{"owned_rare_alternative":false,"ordinary_bucket_and_pot_route":true},"expect":{"conditional_stack_policy_reads":0,"rare_definition_deleted":false}},
+    {"id":"decision.loot_not_empty_success","given":{"source_probability_unpublished":true,"owner_decision_recorded":false},"expect":{"replace_unresolved_with_empty_pool":false,"goblin_loot_fidelity_pass":false}},
+    {"id":"defaults.grave_auto_equip","given":{"fresh_account_after_2025_10_22":true},"expect":{"death_auto_equip":true},"classification":"known_fact"}
+  ]
+}
