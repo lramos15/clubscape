@@ -22,6 +22,9 @@ struct Reachable {
     interfaces: BTreeSet<InterfaceId>,
     tutorial_events: BTreeSet<StageId>,
     quest_events: BTreeSet<(QuestId, StageId)>,
+    messages: bool,
+    sounds: BTreeSet<String>,
+    animations: bool,
 }
 
 pub(super) fn analyze(
@@ -45,10 +48,13 @@ pub(super) fn analyze(
         interfaces: initial.interfaces.iter().cloned().collect(),
         tutorial_events: BTreeSet::new(),
         quest_events: BTreeSet::new(),
+        messages: false,
+        sounds: BTreeSet::new(),
+        animations: false,
     };
     let mut enabled = BTreeSet::new();
     loop {
-        let mut changed = false;
+        let mut changed = reachable.gather_signals(validator, budget)?;
         for (index, site) in sites.iter().enumerate() {
             budget.step()?;
             if site
@@ -110,6 +116,37 @@ pub(super) fn analyze(
 }
 
 impl Reachable {
+    fn gather_signals(
+        &mut self,
+        validator: &Validator<'_>,
+        budget: &mut Budget,
+    ) -> GameResult<bool> {
+        let mut changed = false;
+        for spawn in validator.content.spawns.values() {
+            for interaction in &spawn.interactions {
+                budget.step()?;
+                if let InteractionAction::Gather { rule } = &interaction.action
+                    && (rule.sound.is_some() || rule.animation.is_some())
+                    && self.possible(
+                        validator,
+                        &[&interaction.guard],
+                        Context::default(),
+                        budget,
+                    )?
+                {
+                    if let Some(sound) = &rule.sound {
+                        changed |= self.sounds.insert(sound.as_str().to_owned());
+                    }
+                    if rule.animation.is_some() {
+                        changed |= !self.animations;
+                        self.animations = true;
+                    }
+                }
+            }
+        }
+        Ok(changed)
+    }
+
     fn contexts(&self, site: &Site<'_>, budget: &mut Budget) -> GameResult<Vec<EventContext>> {
         let Some(transition) = site.transition else {
             return Ok(vec![EventContext::default()]);
@@ -145,6 +182,34 @@ impl Reachable {
                         });
                     }
                 }
+            }
+            "interface_opened" => {
+                let ready =
+                    transition
+                        .target
+                        .as_deref()
+                        .map_or(!self.interfaces.is_empty(), |target| {
+                            self.interfaces.contains(
+                                &InterfaceId::new(target)
+                                    .expect("validated interface event target"),
+                            )
+                        });
+                contexts.extend(ready.then(EventContext::default));
+            }
+            "message" => {
+                contexts.extend(self.messages.then(EventContext::default));
+            }
+            "sound" => {
+                let ready = transition
+                    .target
+                    .as_deref()
+                    .map_or(!self.sounds.is_empty(), |target| {
+                        self.sounds.contains(target)
+                    });
+                contexts.extend(ready.then(EventContext::default));
+            }
+            "animation" => {
+                contexts.extend(self.animations.then(EventContext::default));
             }
             _ => contexts.push(EventContext::default()),
         }
@@ -218,7 +283,11 @@ impl Reachable {
                         }
                     }
                 }
-                Effect::Message { .. } | Effect::AddQuestPoints { .. } => {}
+                Effect::Message { .. } => {
+                    changed |= !self.messages;
+                    self.messages = true;
+                }
+                Effect::AddQuestPoints { .. } => {}
                 _ => active.clear(),
             }
         }

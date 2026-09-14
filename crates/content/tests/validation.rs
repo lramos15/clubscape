@@ -839,7 +839,7 @@ fn all_guard_and_effect_references_are_validated_recursively() {
                     interface: id("interface.test.missing"),
                 }
             },
-            "unlock declaration",
+            "undefined interface",
         ),
         (
             |c| {

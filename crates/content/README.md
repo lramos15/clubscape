@@ -42,7 +42,7 @@ let loaded = load_compiled(&bytes, ValidationMode::Runtime)?;
 - `collision(Tile) -> Option<&CollisionCell>`, `region_at(Tile)`;
 - `spawn(&SpawnId)`, `spawns_at_tile(Tile)` (ordered iterator);
 - `item`, `skill`, `region`, `object`, `npc`, `recipe`, `dialogue`,
-  `dialogue_node(&DialogueId, &str)`, `tutorial_stage`, `quest`, `shop`;
+  `dialogue_node(&DialogueId, &str)`, `tutorial_stage`, `quest`, `shop`, `interface`;
 - `has_equipment_slot(&SlotId)` and `referenced_assets()`.
 
 The ID lookups take references to their corresponding shared ID types.
@@ -59,6 +59,9 @@ fields **before** this crate receives them. `read_content_json` detects duplicat
 keys at every nesting level, rejects unknown fields (including internally tagged
 enum fields), enforces input limits, and rejects trailing documents. The shared
 canonical JSON field is `schema_version`, not `schemaVersion`.
+Despite shared serde compatibility defaults, strict source input must explicitly
+contain `interfaces` and every recipe's `tools` list. An absent registry or an
+omitted tool declaration is not silently interpreted as complete content.
 
 ## CLI
 
@@ -94,11 +97,19 @@ directories are created only after successful compilation.
 - Every map key equals its contained ID. All M1 definition categories and the
   equipment-slot list must be nonempty. This necessary check is **not** proof of
   complete Tutorial Island, Cook's Assistant, or source-inventory coverage.
+- `GameContent.interfaces` is a required, independent logical registry. Initial
+  unlocks, guards, effects, and event filters must resolve there. An unlock cannot
+  declare an unknown interface, and a registry entry does not unlock itself.
+  Interface names/provenance are validated like other definitions.
 - Items' non-null numeric source IDs, and skills', NPCs', and objects' numeric
   source IDs, are unique **within their category and this content baseline**.
   Equal numbers across categories are normal. Multiple `None` item mappings are
   allowed for content with no external numeric mapping. The shared model cannot
   represent multiple source games/builds within one numeric category mapping.
+- Interface source widget-group IDs are unique within each definition and across
+  the interface registry. This format does not infer widget aliases or silently
+  choose one owner. A logical interface may map multiple distinct widget groups;
+  an explicit empty mapping is permitted for original interfaces with provenance.
 - Every definition and initial state requires source records in both modes.
   Records need an identifiable locator, revision, status, and explanatory notes.
   Duplicate `(reference, revision)` records on one owner are errors, even when
@@ -140,6 +151,9 @@ directories are created only after successful compilation.
   Initial skill levels match their unboosted XP thresholds. Initial quests must
   be at their declared initial stages, with no pre-awarded quest points. Starting
   hitpoints are positive; equipment requirements must already be satisfied.
+- Initial run energy is 0 through shared `MAX_RUN_ENERGY` (10,000), in hundredths
+  of one percent. Values are never implicitly rescaled: `100` means 1%, not 100%.
+  This validates representation/range, not source drain or regeneration formulas.
 - Tutorial XP ceilings and XP-stop levels are checked **separately**. Compilation
   never rewrites a stop-level rule into a ceiling or clamps a source XP award.
 - Every flag read/written by a guard/effect has an explicit initial global value.
@@ -168,6 +182,13 @@ directories are created only after successful compilation.
   tools/outputs, equipment/skill requirements, and travel destinations resolve.
   Interaction names are unique per spawn. An `Attack` requires a combat NPC.
   Object-targeted recipes must allow the object that offers them.
+- Every `RecipeDefinition.tools` entry is a distinct, defined, unnoted item
+  required in inventory or equipment, **not consumed**. Tools cannot also be
+  recipe inputs. All recipe tools are required; gather tools are acceptable
+  alternatives. A bounded placement search verifies that inputs and required
+  tools can fit inventory plus non-overlapping equipment, including two-handed
+  conflicts. Compilation does not grant tools or require them at character
+  creation; execution must enforce actual possession and requirements.
 - Durations/respawns and probability denominators are positive; probabilities are
   bounded. Gathering/recipe success cannot be impossible at every level. Explicit
   empty gathering-tool lists mean a tool-free action, not an unknown default.
@@ -204,6 +225,10 @@ directories are created only after successful compilation.
   whose only producer requires itself is not accepted as reachable. Non-progression
   gameplay events and item/skill/location conditions remain conservative potential
   inputs, not claims that the corresponding real journey has been executed.
+- Interface-open events require a potentially reachable unlock. Message triggers
+  need a rooted message effect; sound/animation triggers need reachable declared
+  gather sound/animation references. These are possible authoritative signals,
+  not client playback acknowledgments or proof that asset files/presentation work.
 - A single action/choice/transition may write each progression owner’s stage only
   once, including nested conditionals. Multiple conditional alternatives must be
   split into separately guarded choices/transitions, not rely on last-write-wins.
@@ -223,13 +248,15 @@ directories are created only after successful compilation.
   Event ordering/reentrancy and all guarded reward replay behavior still require
   simulation/integration tests.
 
-### String conventions pending shared typed contracts
+### Shared event identities
 
 `allowed_actions` uses the exact snake-case `GameIntent` variant names, not
 arbitrary interaction labels. Unknown names fail.
 
-`ProgressTransition.event` uses these authoritative `GameEvent` names. `target`
-is an optional filter, **never** the progression destination:
+`ProgressTransition.event` matches shared `GameEvent::kind()` and optional
+`target` matches `GameEvent::primary_target()`, as defined in
+[`spec/game-contracts.md`](../../spec/game-contracts.md). `None` is a wildcard,
+**never** the progression destination. Tests cover every current event variant:
 
 | Event | Optional target |
 | --- | --- |
@@ -237,15 +264,19 @@ is an optional filter, **never** the progression destination:
 | `produced` | Recipe ID |
 | `equipped` | Equipment slot ID |
 | `xp_gained` | Skill ID |
-| `interface_opened` | Declared interface ID |
+| `interface_opened` | Registry interface ID |
 | `tutorial_advanced` | Tutorial stage ID |
 | `quest_advanced` | Quest ID |
-| `moved`, `died`, `recovered` | Must be absent; qualify using guards |
+| `sound` | Asset ID (syntax and optional manifest membership) |
+| `animation` | Defined spawn ID or syntactically valid dynamic actor ID |
+| `moved`, `died`, `recovered`, `message` | Must be absent; qualify using guards |
 
 Dialogue/gather/combat spawn filters must actually offer the corresponding
-interaction/capability. Presentation-only `message`, `sound`, `animation` events
-are not supported progression triggers. Unknown event kinds fail. Source-defined
+interaction/capability. Dynamic actor existence belongs to world-state validation,
+not the immutable content registry. Unknown event kinds fail. Source-defined
 progression destinations are explicit `SetTutorialStage`/`SetQuestStage` effects.
+Compilation and canonical identity checks do not implement or certify an FSM,
+event scheduling, visual/audio playback, or authoritative runtime matching.
 
 ## Binary artifact version 1
 
@@ -301,6 +332,7 @@ migration strategy, not silent permissive decoding.
 | Guard/effect nesting | 32 |
 | Guard/effect nodes in the whole pack | 100,000 |
 | Static graph-analysis work per pass | 5,000,000 steps |
+| Tool/equipment placement search per recipe | 100,000 steps |
 
 Individual semantic fields have tighter limits where appropriate (shared ID
 limits, skill level representation, bank capacity, 256-byte identity/name, etc.).
@@ -310,45 +342,39 @@ cannot request their declared multi-gigabyte buffers. Encoding uses a bounded
 writer. Filesystem callers should also bound reads **before** allocating the input;
 the CLI uses `Read::take(MAX_INPUT_BYTES + 1)`.
 
-## Checks versus outstanding shared contracts
+## Checks and acceptance boundaries
 
 Every successful compilation exposes an explicit list of checks, separate source
 status occurrence counts, asset reference/unassigned-site counts, and `false`
 flags for source/approval/presentation verification.
 
-**Independent initial interface-reference validation is blocked by the shared
-contract at base `d66c900`.** `GameContent` has no interface-definition registry.
-Current validation checks ID syntax, duplicate initial unlocks, and that guard/
-event interface references have an initial unlock or `UnlockInterface` declaration.
-It cannot distinguish a misspelled new initial interface ID from an intentional
-declaration. The report explicitly sets
-`interface_definition_validation_performed = false`. This is not a substitute
-for the requested independent registry check or interface-behavior acceptance.
-The Director must add a canonical interface ID/definition registry in
-`crates/game-types`; this crate must then resolve all initial/guard/effect/event
-interface references against it. No alternate shared model was introduced here.
+The Director-owned shared contract update
+`3b2b7cdbb8afe7bffb809a7062014fdf4ae0c558` resolves the former registry, recipe-tool,
+run-energy representation, and event-identity gaps. Successful compilation now
+sets `interface_definition_validation_performed = true` and
+`recipe_tool_reference_validation_performed = true` **after actually checking**
+those definitions/references. Empty registries, unknown unlock IDs, missing source
+records, invalid tools, and out-of-range initial energy are errors, including when
+loading a checksum-valid artifact. Old incomplete packs must be completed and
+recompiled; shared serde defaults are not a migration that supplies missing data.
 
-Other precise shared-contract follow-ups:
+Scope boundaries that remain distinct from compiler completion:
 
-- `RecipeDefinition` has inputs/outputs and target objects, but **no reusable
-  tool requirements**. Gathering tools are validated; recipe tool checking is
-  explicitly reported as not performed. Do not encode an unconsumed hammer as a
-  consumed ingredient to hide this gap.
-- `ProgressTransition.event/target`, `allowed_actions`, and spawn `facing` need
-  shared typed/matching conventions. The compiler's current conventions above
-  must agree with the simulator; this crate does not redefine simulation.
-- Initial hitpoint/prayer skill bindings, run-energy units/maxima, reusable
-  spell/prayer definitions, and object placement layers/rotated footprints are
-  absent. Their source-specific behavior cannot be validated or invented here.
-  Recognizing `cast`/`set_prayer` as intent names does not validate those mechanics.
+- Simulation must enforce tools' actual inventory/equipment possession without
+  consuming them, and implement the shared event/FSM contracts. Compiling matching
+  event identities is not runtime execution or replay-safety evidence.
+- Source-specific hitpoint/prayer skill bindings, spell/prayer behavior, exact
+  run/regeneration formulas, and object placement layers/rotated footprints are not
+  invented here. Recognizing `cast`/`set_prayer` as intent names does not validate
+  those mechanics or their source completeness.
 - The model has no explicit tutorial completed-stage set or required/optional
   progression-node markers. Terminal tutorial stages are currently defined
   structurally, and every declared graph node is treated as required.
 
-These gaps prevent claiming every requested M1 shared-contract validation is
-finished, even when the independently useful compiler/loader tests pass. Missing
-mandatory represented data is an error; absent shared fields are visible blockers,
-not fabricated source rules. The component does not certify a production pack.
+The component does not certify a production pack or waive any M1 acceptance gate.
+Logical interface-registry validation does not certify rendered controls or
+their behavior. Source fidelity, real acquisition/progression routes, runtime
+atomicity, and concrete presentation remain independently verifiable requirements.
 
 `AssetManifest { identity, assets }` is only an identifiable **projection of IDs**,
 not a replacement for the asset workers’ canonical manifests. Optional absent
@@ -362,7 +388,7 @@ From the workspace root:
 
 ```sh
 cargo fmt -p clubscape-content -- --check
-cargo test -p clubscape-content
+cargo test -p clubscape-content -p clubscape-game-types
 cargo clippy -p clubscape-content --all-targets -- -D warnings
 cargo build -p clubscape-content --lib --target wasm32-unknown-unknown
 cargo clippy -p clubscape-content --lib --target wasm32-unknown-unknown -- -D warnings

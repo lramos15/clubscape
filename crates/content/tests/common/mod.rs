@@ -28,6 +28,15 @@ pub fn sources() -> Vec<SourceRecord> {
     }]
 }
 
+pub fn interface(name: &str, source_id: u32) -> InterfaceDefinition {
+    InterfaceDefinition {
+        id: id(&format!("interface.test.{name}")),
+        name: format!("Synthetic {name} interface"),
+        source_ids: vec![source_id],
+        source: sources(),
+    }
+}
+
 fn item(name: &str, source_id: u32, stackable: bool) -> ItemDefinition {
     ItemDefinition {
         id: id(&format!("item.test.{name}")),
@@ -210,6 +219,7 @@ pub fn fixture() -> GameContent {
         inputs: vec![stack("item.test.ore", 2)],
         outputs: vec![stack("item.test.bar", 1)],
         failed_outputs: vec![],
+        tools: vec![id("item.test.pickaxe")],
         requirements: vec![SkillRequirement {
             skill: id("skill.test.smithing"),
             level: 1,
@@ -496,7 +506,7 @@ pub fn fixture() -> GameContent {
             .collect(),
         hitpoints: 1,
         prayer_points: 0,
-        run_energy: 10_000,
+        run_energy: MAX_RUN_ENERGY,
         tutorial_stage: id("stage.test.start"),
         quest_points: 0,
         quests: BTreeMap::from([(
@@ -525,6 +535,10 @@ pub fn fixture() -> GameContent {
         tutorial,
         quests: BTreeMap::from([(quest.id.clone(), quest)]),
         shops: BTreeMap::from([(shop.id.clone(), shop)]),
+        interfaces: [interface("inventory", 1), interface("bank", 2)]
+            .into_iter()
+            .map(|interface| (interface.id.clone(), interface))
+            .collect(),
         equipment_slots: vec![
             id("slot.test.weapon"),
             id("slot.test.offhand"),
@@ -552,7 +566,8 @@ pub fn runtime_policy_fixture() -> GameContent {
         )+};
     }
     replace!(
-        items, skills, regions, spawns, objects, npcs, recipes, dialogues, tutorial, quests, shops
+        items, skills, regions, spawns, objects, npcs, recipes, dialogues, tutorial, quests, shops,
+        interfaces
     );
     records(&mut content.initial_state.source);
     content

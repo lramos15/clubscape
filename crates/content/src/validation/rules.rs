@@ -1,7 +1,6 @@
 use super::*;
 
 pub(super) struct Scan {
-    pub interfaces: BTreeSet<InterfaceId>,
     pub mutable_flags: BTreeSet<String>,
 }
 
@@ -102,7 +101,6 @@ pub(super) fn scan(content: &GameContent) -> GameResult<Scan> {
             push_effects(&mut pending, &transition.effects, 1)?;
         }
     }
-    let mut interfaces: BTreeSet<_> = content.initial_state.interfaces.iter().cloned().collect();
     let mut mutable_flags = BTreeSet::new();
     let mut nodes = 0;
     while let Some(work) = pending.pop() {
@@ -126,19 +124,13 @@ pub(super) fn scan(content: &GameContent) -> GameResult<Scan> {
                 pending.push(Work::Guard(guard, depth + 1));
                 push_effects(&mut pending, effects, depth + 1)?;
             }
-            Work::Effect(Effect::UnlockInterface { interface }, _) => {
-                interfaces.insert(interface.clone());
-            }
             Work::Effect(Effect::SetFlag { name, .. }, _) => {
                 mutable_flags.insert(name.clone());
             }
             _ => {}
         }
     }
-    Ok(Scan {
-        interfaces,
-        mutable_flags,
-    })
+    Ok(Scan { mutable_flags })
 }
 
 fn push_effects<'a>(
@@ -368,7 +360,24 @@ impl Validator<'_> {
                     )?;
                 }
             }
-            "moved" | "died" | "recovered" => {
+            "sound" => {
+                if let Some(target) = target {
+                    AssetId::new(target).map_err(|error| invalid(path, error))?;
+                }
+            }
+            "animation" => {
+                if let Some(target) = target {
+                    if target.starts_with("spawn.") {
+                        let spawn = SpawnId::new(target).map_err(|error| invalid(path, error))?;
+                        if !self.content.spawns.contains_key(&spawn) {
+                            return Err(invalid(path, format!("undefined event target {spawn}")));
+                        }
+                    } else {
+                        ActorId::new(target).map_err(|error| invalid(path, error))?;
+                    }
+                }
+            }
+            "moved" | "died" | "recovered" | "message" => {
                 if target.is_some() {
                     return Err(invalid(
                         path,

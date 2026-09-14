@@ -44,6 +44,27 @@ pub(crate) fn read_value<'de, D: de::Deserializer<'de>>(decoder: D) -> Result<Va
 }
 
 pub(crate) fn into_content(value: Value) -> GameResult<GameContent> {
+    if let Some(fields) = value.as_object() {
+        if !fields.contains_key("interfaces") {
+            return Err(invalid(
+                "definition.interfaces",
+                "missing field `interfaces`; an explicit logical registry is required",
+            ));
+        }
+        if let Some(recipes) = fields.get("recipes").and_then(Value::as_object) {
+            for (id, recipe) in recipes {
+                if recipe
+                    .as_object()
+                    .is_some_and(|fields| !fields.contains_key("tools"))
+                {
+                    return Err(invalid(
+                        &format!("definition.recipes.{id}.tools"),
+                        "missing field `tools`; use an explicit empty list only for tool-free recipes",
+                    ));
+                }
+            }
+        }
+    }
     let content: GameContent =
         serde_json::from_value(value.clone()).map_err(|error| invalid("definition", error))?;
     let canonical = serde_json::to_value(&content).map_err(|error| invalid("definition", error))?;

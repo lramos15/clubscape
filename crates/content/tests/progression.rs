@@ -29,6 +29,8 @@ fn advancement_events_flags_and_unlocks_cannot_bootstrap_their_own_only_producer
             });
         },
         |content| {
+            let definition = interface("circular", 3);
+            content.interfaces.insert(definition.id.clone(), definition);
             let transition = tutorial_transition(content);
             transition.guard = Guard::InterfaceUnlocked {
                 interface: id("interface.test.circular"),

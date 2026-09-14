@@ -50,6 +50,7 @@ pub struct ContentCounts {
     pub tutorial_stages: usize,
     pub quests: usize,
     pub shops: usize,
+    pub interfaces: usize,
     pub equipment_slots: usize,
 }
 
@@ -151,6 +152,7 @@ impl CompiledContent {
             tutorial_stages: content.tutorial.len(),
             quests: content.quests.len(),
             shops: content.shops.len(),
+            interfaces: content.interfaces.len(),
             equipment_slots: content.equipment_slots.len(),
         }
     }
@@ -225,6 +227,10 @@ impl CompiledContent {
 
     pub fn shop(&self, id: &ShopId) -> Option<&ShopDefinition> {
         self.definition.shops.get(id)
+    }
+
+    pub fn interface(&self, id: &InterfaceId) -> Option<&InterfaceDefinition> {
+        self.definition.interfaces.get(id)
     }
 
     pub fn has_equipment_slot(&self, id: &SlotId) -> bool {

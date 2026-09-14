@@ -17,6 +17,7 @@ use crate::{
 
 pub(crate) const MAX_RULE_DEPTH: usize = 32;
 pub(crate) const MAX_RULE_NODES: usize = 100_000;
+pub(crate) const MAX_TOOL_PLACEMENT_STEPS: usize = 100_000;
 
 pub(crate) struct Validated {
     pub collision: BTreeMap<Tile, CellIndex>,
@@ -29,7 +30,6 @@ pub(crate) struct Validated {
 struct Validator<'a> {
     content: &'a GameContent,
     slots: BTreeSet<SlotId>,
-    interfaces: BTreeSet<InterfaceId>,
     mutable_flags: BTreeSet<String>,
     collision: BTreeMap<Tile, CellIndex>,
 }
@@ -64,6 +64,7 @@ pub(crate) fn validate(content: &GameContent, mode: ValidationMode) -> GameResul
     }
     check_maps!(
         items, skills, regions, spawns, objects, npcs, recipes, dialogues, tutorial, quests, shops,
+        interfaces,
     );
     nonempty(content.equipment_slots.len(), "equipment_slots")?;
     let slots = unique(content.equipment_slots.iter(), "equipment_slots")?
@@ -74,13 +75,13 @@ pub(crate) fn validate(content: &GameContent, mode: ValidationMode) -> GameResul
     let mut validator = Validator {
         content,
         slots,
-        interfaces: scan.interfaces,
         mutable_flags: scan.mutable_flags,
         collision: BTreeMap::new(),
     };
     let evidence = validator.sources(mode)?;
     validator.skills()?;
     validator.items()?;
+    validator.interface_definitions()?;
     validator.regions()?;
     validator.objects_and_npcs()?;
     validator.recipes()?;
@@ -105,22 +106,26 @@ pub(crate) fn validate(content: &GameContent, mode: ValidationMode) -> GameResul
             "rooted_progression_event_flag_and_unlock_dependencies",
             "one_time_quest_rewards",
             "asset_id_structure",
-            "interface_unlock_declarations",
+            "interface_registry_references",
+            "recipe_tool_references_and_nonconsumption",
+            "recipe_tool_holding_capacity",
+            "initial_run_energy_units_and_bounds",
         ],
         evidence,
         referenced_assets: assets.len(),
         unassigned_asset_sites,
         asset_manifest: None,
-        interface_definition_validation_performed: false,
-        recipe_tool_reference_validation_performed: false,
+        interface_definition_validation_performed: true,
+        recipe_tool_reference_validation_performed: true,
         source_verification_performed: false,
         approval_verification_performed: false,
         presentation_verification_performed: false,
         limitations: vec![
-            "Interface IDs are declared by initial unlocks and UnlockInterface effects; shared GameContent has no interface-definition registry.",
+            "Interface registry validation establishes logical identity and source mappings, not rendered controls or interface behavior.",
             "Source URLs, observations, baseline completeness, and owner approvals are not authenticated by compilation.",
             "Graph checks are conservative structural/constant-condition checks, not a gameplay planner or milestone acceptance.",
-            "Shared GameContent has no reusable recipe-tool field, spell/prayer definitions, initial HP/prayer skill bindings, or run-energy unit contract.",
+            "Compilation does not execute an FSM, prove source-specific spell/prayer behavior, bind initial HP/prayer to skills, or validate run/regeneration formulas.",
+            "Animation actor filters are checked as ActorId syntax; dynamic actor existence belongs to world-state validation.",
             "Optional presentation assets, asset files, geometry, audio, and visual fidelity require separate acceptance checks.",
         ],
     };
@@ -231,7 +236,7 @@ impl Validator<'_> {
         }
         sources!(
             items, skills, regions, spawns, objects, npcs, recipes, dialogues, tutorial, quests,
-            shops,
+            shops, interfaces,
         );
         source_records(
             &self.content.initial_state.source,
@@ -270,6 +275,24 @@ impl Validator<'_> {
                     add(&rule.animation);
                     add(&rule.sound);
                 }
+            }
+        }
+        for transition in self
+            .content
+            .tutorial
+            .values()
+            .flat_map(|stage| &stage.transitions)
+            .chain(
+                self.content
+                    .quests
+                    .values()
+                    .flat_map(|quest| &quest.transitions),
+            )
+        {
+            if transition.event == "sound"
+                && let Some(target) = &transition.target
+            {
+                assets.insert(AssetId::new(target).expect("validated sound event asset"));
             }
         }
         (assets, unassigned)
@@ -312,10 +335,10 @@ impl Validator<'_> {
     }
 
     fn interface(&self, interface: &InterfaceId, path: &str) -> GameResult<()> {
-        if !self.interfaces.contains(interface) {
+        if !self.content.interfaces.contains_key(interface) {
             return Err(invalid(
                 path,
-                format!("interface {interface} has no initial or effect unlock declaration"),
+                format!("undefined interface {interface} in the logical interface registry"),
             ));
         }
         Ok(())

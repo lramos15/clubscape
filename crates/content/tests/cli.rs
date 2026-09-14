@@ -62,6 +62,15 @@ fn cli_is_usable_reports_machine_readable_counts_hash_and_persists_loadable_arti
     assert_eq!(summary["ok"], true);
     assert_eq!(summary["counts"]["collision_cells"], 49);
     assert_eq!(summary["counts"]["spawns"], 5);
+    assert_eq!(summary["counts"]["interfaces"], 2);
+    assert_eq!(
+        summary["validation"]["interface_definition_validation_performed"],
+        true
+    );
+    assert_eq!(
+        summary["validation"]["recipe_tool_reference_validation_performed"],
+        true
+    );
     assert_eq!(summary["validation"]["mode"], "test_fixture");
     assert_eq!(
         summary["validation"]["source_verification_performed"],

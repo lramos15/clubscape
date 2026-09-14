@@ -166,6 +166,20 @@ impl Validator<'_> {
         Ok(())
     }
 
+    pub(super) fn interface_definitions(&self) -> GameResult<()> {
+        let mut source_ids = BTreeMap::new();
+        for interface in self.content.interfaces.values() {
+            let path = format!("interfaces.{}", interface.id);
+            text(&interface.name, &format!("{path}.name"), 256)?;
+            bounded(interface.source_ids.len(), &path)?;
+            unique(interface.source_ids.iter(), &path)?;
+            for number in &interface.source_ids {
+                source_id(&mut source_ids, *number, interface.id.as_str(), &path)?;
+            }
+        }
+        Ok(())
+    }
+
     pub(super) fn recipes(&self) -> GameResult<()> {
         for recipe in self.content.recipes.values() {
             let path = format!("recipes.{}", recipe.id);
@@ -179,6 +193,25 @@ impl Validator<'_> {
                 &format!("{path}.failed_outputs"),
                 true,
             )?;
+            let tools_path = format!("{path}.tools");
+            bounded(recipe.tools.len(), &tools_path)?;
+            unique(recipe.tools.iter(), &tools_path)?;
+            for tool_id in &recipe.tools {
+                let tool = self.item(tool_id, &tools_path)?;
+                if tool.unnoted_variant.is_some() {
+                    return Err(invalid(
+                        &tools_path,
+                        "a noted item cannot be a reusable recipe tool",
+                    ));
+                }
+                if recipe.inputs.iter().any(|input| &input.item == tool_id) {
+                    return Err(invalid(
+                        &tools_path,
+                        format!("required tool {tool_id} must not be consumed as a recipe input"),
+                    ));
+                }
+            }
+            self.recipe_tool_capacity(recipe, &tools_path)?;
             self.requirements(&recipe.requirements, &path)?;
             self.xp(&recipe.xp, &path)?;
             if recipe.ticks == 0 {
@@ -194,6 +227,85 @@ impl Validator<'_> {
             }
         }
         Ok(())
+    }
+
+    fn recipe_tool_capacity(&self, recipe: &RecipeDefinition, path: &str) -> GameResult<()> {
+        let input_slots: usize = recipe
+            .inputs
+            .iter()
+            .map(|input| {
+                if self.content.items[&input.item].stackable {
+                    1
+                } else {
+                    input.quantity.get() as usize
+                }
+            })
+            .sum();
+        let equipped_needed = recipe
+            .tools
+            .len()
+            .saturating_sub(INVENTORY_SLOTS - input_slots);
+        if equipped_needed == 0 {
+            return Ok(());
+        }
+        let candidates: Vec<_> = recipe
+            .tools
+            .iter()
+            .filter_map(|id| self.content.items[id].equipment.as_ref())
+            .collect();
+        let impossible = || {
+            invalid(
+                path,
+                "required tools and inputs cannot be held in 28 inventory slots and non-overlapping equipment",
+            )
+        };
+        if equipped_needed > candidates.len() || equipped_needed > self.slots.len() {
+            return Err(impossible());
+        }
+        let mut occupied = BTreeSet::new();
+        let mut chosen = Vec::<usize>::new();
+        let mut next = 0;
+        let mut steps = MAX_TOOL_PLACEMENT_STEPS;
+        let mut step = || {
+            steps = steps
+                .checked_sub(1)
+                .ok_or_else(|| invalid(path, "recipe tool-placement work budget exceeded"))?;
+            Ok::<_, GameError>(())
+        };
+        loop {
+            step()?;
+            if chosen.len() == equipped_needed {
+                return Ok(());
+            }
+            if candidates.len() - next < equipped_needed - chosen.len() {
+                let Some(last) = chosen.pop() else {
+                    return Err(impossible());
+                };
+                for slot in &candidates[last].occupied_slots {
+                    step()?;
+                    occupied.remove(slot);
+                }
+                next = last + 1;
+                continue;
+            }
+            let candidate = next;
+            next += 1;
+            let mut available = true;
+            for slot in &candidates[candidate].occupied_slots {
+                step()?;
+                if occupied.contains(slot) {
+                    available = false;
+                    break;
+                }
+            }
+            if available {
+                for slot in &candidates[candidate].occupied_slots {
+                    step()?;
+                    occupied.insert(slot);
+                }
+                chosen.push(candidate);
+            }
+        }
     }
 
     pub(super) fn shops(&self) -> GameResult<()> {
@@ -242,6 +354,12 @@ impl Validator<'_> {
             return Err(invalid(
                 "initial_state.hitpoints",
                 "a new character must be alive",
+            ));
+        }
+        if initial.run_energy > MAX_RUN_ENERGY {
+            return Err(invalid(
+                "initial_state.run_energy",
+                format!("run energy must be 0..={MAX_RUN_ENERGY} hundredths of one percent"),
             ));
         }
         let mut stackable = BTreeSet::new();
