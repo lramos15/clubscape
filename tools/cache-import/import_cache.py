@@ -50,11 +50,20 @@ def within(root: Path, path: Path) -> Path:
     return resolved
 
 
+def unique_mapping(pairs: list[tuple]) -> dict:
+    result = {}
+    for key, value in pairs:
+        if key in result:
+            raise InputError(f"Duplicate JSON input key: {key}")
+        result[key] = value
+    return result
+
+
 def read_json(path: Path):
     if path.suffix == ".gz":
         with gzip.open(path, "rt", encoding="utf-8") as stream:
-            return json.load(stream)
-    return json.loads(path.read_text(encoding="utf-8"))
+            return json.load(stream, object_pairs_hook=unique_mapping)
+    return json.loads(path.read_text(encoding="utf-8"), object_pairs_hook=unique_mapping)
 
 
 def write_json(path: Path, value) -> dict:
@@ -164,6 +173,32 @@ def fetch(selection: dict, directory: Path) -> None:
     print(f"Verified complete cache {selection['cache']['id']} and original runtime artifacts")
 
 
+def reuse(selection: dict, source: Path, directory: Path) -> dict:
+    source_cache = source / f"cache-{selection['cache']['id']}"
+    if source_cache.resolve() == directory.resolve():
+        raise InputError("Reuse requires a separate destination cache, not the read-only source")
+    verify_cache(selection, source_cache)
+    lock = read_json(TOOL / "dependencies.json")
+    copies = [(source_cache / r["name"], directory / r["name"], r) for r in cache_files(selection)]
+    copies += [(source / r["name"], LOCAL / r["name"], r) for r in selection["runtime"]["artifacts"]]
+    copies += [(source / "tooling" / r["name"], LOCAL / "tooling" / r["name"], r)
+               for r in [lock["decoder"], *lock["libraries"]]]
+    for original, target, record in copies:
+        checked_file(original, record)
+        target = within(ROOT, target)
+        if not target.exists():
+            target.parent.mkdir(parents=True, exist_ok=True)
+            shutil.copyfile(original, target)
+        checked_file(target, record)
+    verify_cache(selection, source_cache)
+    verify_cache(selection, directory)
+    result = {"result": "passed", "files_copied_or_reverified": len(copies),
+              "source_directory": str(source.resolve()), "network_requests": 0,
+              "cache_copied_not_hardlinked": True, "original_cache_unchanged": True}
+    write_json(LOCAL / "reuse.json", result)
+    return result
+
+
 def prepare(selection: dict, upstream: Path) -> list[Path]:
     lock = read_json(TOOL / "dependencies.json")
     target = LOCAL / "tooling"
@@ -245,20 +280,47 @@ def run_java(java: str, classpath: str, arguments: list[str], log: Path, timeout
     return {"exit_code": result.returncode, "log": file_record(log)}
 
 
-def validate_model(value: dict) -> None:
+def validate_model(value: dict, statistics: dict | None = None) -> None:
     model = value["model"]
     vertices, faces = model["vertexCount"], model["faceCount"]
-    if vertices < 0 or faces < 0 or (vertices == 0 and faces):
+    if type(vertices) is not int or type(faces) is not int or vertices < 0 or faces < 0 or (vertices == 0 and faces):
         raise InputError("Invalid geometry counts")
     for axis in ["vertexX", "vertexY", "vertexZ"]:
-        if len(model[axis]) != vertices or any(abs(n) > 1_000_000 for n in model[axis]):
+        if len(model[axis]) != vertices or any(type(n) is not int or abs(n) > 1_000_000 for n in model[axis]):
             raise InputError("Invalid model vertex array/bounds")
     for indices in ["faceIndices1", "faceIndices2", "faceIndices3"]:
-        if len(model[indices]) != faces or any(n < 0 or n >= vertices for n in model[indices]):
+        if len(model[indices]) != faces or any(type(n) is not int or n < 0 or n >= vertices for n in model[indices]):
             raise InputError("Model triangle index is out of bounds")
     for field in ["faceColors", "faceTextures", "faceTransparencies", "faceRenderTypes", "faceRenderPriorities"]:
         if model.get(field) is not None and len(model[field]) != faces:
             raise InputError(f"Invalid face attribute cardinality: {field}")
+    for field in ["packedVertexGroups", "animayaGroups", "animayaScales"]:
+        if model.get(field) is not None and len(model[field]) != vertices:
+            raise InputError(f"Invalid vertex attribute cardinality: {field}")
+    for field in ["packedTransparencyVertexGroups", "textureCoords", "faceZOffsets"]:
+        if model.get(field) is not None and len(model[field]) != faces:
+            raise InputError(f"Invalid face attribute cardinality: {field}")
+    if statistics is not None:
+        minimum = [min(model[axis], default=0) for axis in ["vertexX", "vertexY", "vertexZ"]]
+        maximum = [max(model[axis], default=0) for axis in ["vertexX", "vertexY", "vertexZ"]]
+        if (statistics["vertices"], statistics["faces"], statistics["bounds_min"], statistics["bounds_max"]) != (
+                vertices, faces, minimum, maximum):
+            raise InputError("Model counts/native bounds differ from decoded geometry")
+        if statistics["source_empty_mesh"] != (vertices == 0 or faces == 0):
+            raise InputError("Source empty-mesh flag differs from decoded geometry")
+
+
+def validate_frame(value: dict) -> None:
+    count = value["translatorCount"]
+    skeleton = value["framemap"]
+    length = skeleton["length"]
+    if count < 0 or length != len(skeleton["types"]) or length != len(skeleton["frameMaps"]):
+        raise InputError("Invalid original frame/skeleton transform counts")
+    for field in ["indexFrameIds", "translator_x", "translator_y", "translator_z"]:
+        if len(value[field]) != count:
+            raise InputError(f"Frame transform cardinality differs: {field}")
+    if any(index < 0 or index >= length for index in value["indexFrameIds"]):
+        raise InputError("Frame transform index is outside the original skeleton")
 
 
 def validate_region(value: dict, objects: set[int]) -> None:
@@ -342,9 +404,10 @@ def validate_bundle(directory: Path) -> dict:
         decoded = None
         for output in record["outputs"]:
             path = within(directory, directory / output["path"])
-            if output["path"] not in checked:
-                checked_file(path, output)
-                checked.add(output["path"])
+            if output["path"] in checked:
+                raise InputError(f"Duplicate extraction output path: {output['path']}")
+            checked_file(path, output)
+            checked.add(output["path"])
             if "json_sha256" in output:
                 raw = gzip.decompress(path.read_bytes())
                 if len(raw) != output["json_size_bytes"] or hashlib.sha256(raw).hexdigest() != output["json_sha256"]:
@@ -361,8 +424,10 @@ def validate_bundle(directory: Path) -> dict:
                 if data[:8] != b"MThd\x00\x00\x00\x06" or struct.unpack_from(">H", data, 10)[0] == 0:
                     raise InputError("Empty/malformed MIDI")
         if record["kind"] == "model":
-            validate_model(decoded)
+            validate_model(decoded, record["statistics"])
             nonempty_models += bool(decoded["model"]["vertexCount"] and decoded["model"]["faceCount"])
+        elif record["kind"] == "frame":
+            validate_frame(decoded)
         elif record["kind"] == "region":
             validate_region(decoded, objects)
             counters["placed_objects"] += len(decoded["placements"])
@@ -381,12 +446,17 @@ def validate_bundle(directory: Path) -> dict:
                 source_payloads.add(raw)
     if dict(counters) != manifest["counts"]:
         raise InputError("Extraction counts do not match the records")
-    for kind in ["model", "region", "sprite", "font", "sequence", "frame", "music", "sound", "npc", "object"]:
+    content_closure = manifest.get("scope") == "content-asset-closure"
+    required = (["model", "sprite", "font", "npc", "item", "interface"] if content_closure else
+                ["model", "region", "sprite", "font", "sequence", "frame", "music", "sound", "npc", "object"])
+    for kind in required:
         if counters[kind] <= 0:
             raise InputError(f"No actual decoded source data for {kind}")
     if nonempty_models == 0:
         raise InputError("No renderable original model was decoded")
-    for kind, key, field in [("object", "tree", "objectModels"), ("npc", "goblin", "models"), ("npc", "penguin", "models")]:
+    representatives = [] if content_closure else [
+        ("object", "tree", "objectModels"), ("npc", "goblin", "models"), ("npc", "penguin", "models")]
+    for kind, key, field in representatives:
         identifier = manifest["request"]["representatives"][key][kind + "_id"]
         record = by_id[prefix + kind + "." + str(identifier)]
         definition = read_json(directory / next(o["path"] for o in record["outputs"] if o["path"].endswith(".json")))
@@ -408,6 +478,8 @@ def validate_bundle(directory: Path) -> dict:
 def publish(directory: Path) -> dict:
     validation = validate_bundle(directory)
     bundle = read_json(directory / "bundle.json")
+    if bundle.get("scope") == "content-asset-closure":
+        raise InputError("Use publish-closure for additive content assets; the original publication must not be replaced")
     tag = f"cache{bundle['cache_id']}"
     destination = ROOT / "assets/source/osrs" / tag
     manifests = ROOT / "assets/manifests/osrs"
@@ -491,27 +563,54 @@ def validate_published(selection: dict) -> dict:
             validate_model(read_json(path))
         elif path.parent.name == "world":
             validate_region(read_json(path), object_ids)
-    return {"result": "passed", "published_files": len(paths),
-            "original_source_inventory_records": len(inventory["records"]),
-            "source_capture_or_gameplay_acceptance": False}
+    result = {"result": "passed", "published_files": len(paths),
+              "original_source_inventory_records": len(inventory["records"]),
+              "source_capture_or_gameplay_acceptance": False}
+    extension = ROOT / "assets/manifests/osrs" / f"{tag}-content-v2-published.json"
+    if extension.exists():
+        import content_closure
+        result["content_closure"] = content_closure.validate_publication(extension)
+    return result
 
 
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("command", choices=["fetch", "prepare", "verify", "scan", "extract", "probe", "validate",
-                                          "publish", "validate-published", "test-integrity"])
+    parser.add_argument("command", choices=["fetch", "reuse", "prepare", "verify", "scan", "extract", "probe", "validate",
+                                          "publish", "validate-published", "test-integrity", "plan-closure",
+                                          "extract-closure", "publish-closure", "validate-closure",
+                                          "validate-closure-request"])
     parser.add_argument("--selection", type=Path, default=DEFAULT_SELECTION)
     parser.add_argument("--cache", type=Path, default=LOCAL / "cache-2695")
-    parser.add_argument("--output", type=Path, default=LOCAL / "extracted")
-    parser.add_argument("--request", type=Path, default=ROOT / "research/current-source/m1-request.json")
+    parser.add_argument("--output", type=Path)
+    parser.add_argument("--request", type=Path)
+    parser.add_argument("--reuse-source", type=Path)
     parser.add_argument("--runelite-source", type=Path,
                         default=Path.home() / ".cache/clubscape/upstream/runelite")
     parser.add_argument("--java-home")
     args = parser.parse_args()
     selection = read_json(args.selection)
+    closure_command = args.command.endswith("-closure") or args.command == "validate-closure-request"
+    if args.output is None:
+        args.output = LOCAL / ("content-closure" if closure_command else "extracted")
+    if args.request is None:
+        args.request = ROOT / "research/current-source" / ("m1-content-closure-request.json" if closure_command else "m1-request.json")
     cache, output = within(ROOT, args.cache), within(ROOT, args.output)
     if args.command == "fetch":
         fetch(selection, cache)
+    elif args.command == "reuse":
+        if args.reuse_source is None:
+            raise InputError("reuse requires --reuse-source pointing to verified existing current-source inputs")
+        print(json.dumps(reuse(selection, args.reuse_source.resolve(), cache), separators=(",", ":")))
+    elif args.command == "plan-closure":
+        import content_closure
+        result = content_closure.plan(args.request)
+        print(json.dumps(result, separators=(",", ":")))
+    elif args.command == "validate-closure-request":
+        import content_closure
+        request = read_json(args.request)
+        content_closure.validate_request(request)
+        print(json.dumps({"result": "passed", "request": file_record(args.request),
+                          "required_product_asset_ids": len(request["required_asset_ids"])}, separators=(",", ":")))
     elif args.command == "prepare":
         libraries = prepare(selection, args.runelite_source)
         print(f"Verified {len(libraries)} pinned decoder/runtime dependencies")
@@ -529,21 +628,28 @@ def main() -> int:
         java, classpath = compile_tools(selection, args.runelite_source, args.java_home)
         run_java(java, classpath, ["CacheIntegrityTest", str(cache)], LOCAL / "integrity-tests.log")
         verify_cache(selection, cache)
-    elif args.command in {"scan", "extract"}:
+    elif args.command in {"scan", "extract", "extract-closure"}:
         verify_cache(selection, cache)
         java, classpath = compile_tools(selection, args.runelite_source, args.java_home)
-        arguments = ["CacheExtractor", args.command, str(cache), str(output),
+        java_command = "closure" if args.command == "extract-closure" else args.command
+        arguments = ["CacheExtractor", java_command, str(cache), str(output),
                      str(selection["cache"]["build"]), str(selection["cache"]["id"])]
-        if args.command == "extract":
+        if args.command in {"extract", "extract-closure"}:
             request = read_json(args.request)
             if request["cache_id"] != selection["cache"]["id"] or request["game_revision"] != selection["cache"]["build"]:
                 raise InputError("Request and frozen source selection disagree")
+            if args.command == "extract-closure":
+                import content_closure
+                content_closure.validate_request(request)
             arguments.append(str(args.request.resolve()))
         run_java(java, classpath, arguments, LOCAL / (args.command + "-run.log"))
-        if args.command == "extract":
+        verify_cache(selection, cache)
+        if args.command in {"extract", "extract-closure"}:
             result = validate_bundle(output)
             result["tools"] = [file_record(TOOL / name) for name in ["CacheExtractor.java", "RuntimeProbe.java", "dependencies.json", "import_cache.py"]]
-            write_json(LOCAL / "validation.json", result)
+            if args.command == "extract-closure":
+                result["content_closure"] = content_closure.validate_extraction(output)
+            write_json(LOCAL / ("closure-validation.json" if closure_command else "validation.json"), result)
             print(json.dumps(result, separators=(",", ":")))
     elif args.command == "validate":
         result = validate_bundle(output)
@@ -551,14 +657,21 @@ def main() -> int:
         print(json.dumps(result, separators=(",", ":")))
     elif args.command == "publish":
         print(json.dumps(publish(output), separators=(",", ":")))
+    elif args.command == "publish-closure":
+        import content_closure
+        print(json.dumps(content_closure.publish(output, args.request), separators=(",", ":")))
+    elif args.command == "validate-closure":
+        import content_closure
+        print(json.dumps(content_closure.validate_extraction(output), separators=(",", ":")))
     elif args.command == "validate-published":
         print(json.dumps(validate_published(selection), separators=(",", ":")))
     return 0
 
 
 if __name__ == "__main__":
+    sys.modules["import_cache"] = sys.modules[__name__]
     try:
         sys.exit(main())
-    except (InputError, OSError, zipfile.BadZipFile, subprocess.SubprocessError) as error:
+    except (InputError, OSError, json.JSONDecodeError, zlib.error, zipfile.BadZipFile, subprocess.SubprocessError) as error:
         print(f"cache-import: {error}", file=sys.stderr)
         sys.exit(1)

@@ -113,6 +113,31 @@ The editable source-data request is
 Python alone; it needs neither the large download nor Java. It verifies hashes,
 published mesh/terrain bounds and actual PNG data without claiming rendering.
 
+## Compiled-content v2 closure
+
+The additive [content-closure pipeline](CONTENT_CLOSURE.md) resolves the exact
+missing IDs recorded by `content/m1/asset-references.json` and the M1 bindings:
+72 item definitions, 68 models, six NPC definitions (including Cook 4626), and
+13 interface groups. Their source-defined dependencies add 268 original asset
+records in total. All 12,128 original inventory records and all 559 previously
+published files remain unchanged.
+
+Use `reuse --reuse-source /path/to/verified/current-source`, `plan-closure`,
+`extract-closure`, and `publish-closure`; no latest lookup or whole-cache
+download is necessary. The new merged catalog is
+`assets/manifests/osrs/cache2695-content-v2-bundle.json.gz`, with an additive
+publication manifest and collection shards. `validate-published` checks both
+sets when the extension is present. Do not run legacy `publish` on a closure
+extraction or overwrite the original collections.
+
+The report `research/current-source/m1-content-closure.json` lists exact
+resolved IDs, transitive additions, model bounds and widget/glyph references.
+The frozen request includes the original product-definition snapshot so a
+parent binding refresh does not invalidate historical source evidence.
+These are source views/data, not full-game execution or presentation approval.
+
+## Decoder validation
+
 The importer verifies CRC and the low 16-bit disk revision trailer before
 stripping it. It preserves the full 32-bit revision from the index. Upstream
 `configureForRevision` methods take **archive/index revisions**, not game build
@@ -167,8 +192,9 @@ closed on a decoding error.
   a full title/login screenshot. Sprite sheets, geometry and this background are
   source assets, **not stock source-game reference captures**.
 
-An authorized source-account/terms handoff, calibrated stock Resizable-Classic
-captures/audio and **owner reference-pack approval** remain before ClubScape
-presentation implementation. No terms were accepted, no login performed, no
-source or ClubScape presentation self-approved, and no gameplay/RuneLite
-compatibility acceptance is claimed.
+Original native rendering and audio evidence now live in their separately owned
+reference/runtime manifests; the importer does not certify them. The owner
+permits public/wiki evidence and controlled original-renderer fixtures, so this
+data pipeline does not impose a live-account prerequisite. **Owner reference-pack
+approval** and final source-fidelity/gameplay/RuneLite acceptance remain separate.
+This importer performs no login, terms interaction or rendering.

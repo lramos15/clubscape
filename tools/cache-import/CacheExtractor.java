@@ -49,6 +49,7 @@ public final class CacheExtractor implements AutoCloseable
     private final Map<String, ArchiveFiles> loaded = new LinkedHashMap<>();
     private final Map<String, Map<String, Object>> groupSources = new LinkedHashMap<>();
     private final List<Map<String, Object>> records = new ArrayList<>();
+    private final Set<String> recordIds = new TreeSet<>();
     private final Map<String, Integer> counts = new TreeMap<>();
     private final Map<Integer, ObjectDefinition> objects = new TreeMap<>();
     private final Map<Integer, NpcDefinition> npcs = new TreeMap<>();
@@ -60,10 +61,13 @@ public final class CacheExtractor implements AutoCloseable
     private final Set<Integer> fontIds = new TreeSet<>();
     private final Set<Integer> textureIds = new TreeSet<>();
     private final Set<Integer> soundIds = new TreeSet<>();
+    private final Set<Integer> interfaceNpcIds = new TreeSet<>();
+    private final Set<Integer> interfaceItemIds = new TreeSet<>();
     private final List<Integer> absentMapSquares = new ArrayList<>();
     private final List<Integer> cachedAnimationIds = new ArrayList<>();
+    private boolean contentClosure;
 
-    private CacheExtractor(Path cache, Path output, int revision, int cacheId) throws IOException
+    CacheExtractor(Path cache, Path output, int revision, int cacheId) throws IOException
     {
         if (!Files.isRegularFile(cache.resolve("main_file_cache.dat2"))
             || !Files.isRegularFile(cache.resolve("main_file_cache.idx255")))
@@ -101,7 +105,7 @@ public final class CacheExtractor implements AutoCloseable
         Archive archive = index.getArchive(groupId);
         if (archive == null) throw new IOException("Missing archive " + key);
         byte[] data = store.getStorage().loadArchive(archive);
-        if (data == null || data.length == 0) throw new IOException("Empty archive " + key);
+        if (data == null || data.length < 7) throw new IOException("Missing/truncated archive " + key);
         int expectedRevision = archive.getRevision();
         int compressedLength = ByteBuffer.wrap(data, 1, 4).getInt();
         long containerLength = 5L + compressedLength + (data[0] == 0 ? 0 : 4);
@@ -120,7 +124,7 @@ public final class CacheExtractor implements AutoCloseable
         return files;
     }
 
-    private byte[] bytes(int index, int archive, int file) throws Exception
+    byte[] bytes(int index, int archive, int file) throws Exception
     {
         FSFile input = group(index, archive).findFile(file);
         if (input == null || input.getContents() == null || input.getContents().length == 0)
@@ -163,7 +167,9 @@ public final class CacheExtractor implements AutoCloseable
     private Map<String, Object> record(String kind, String id, List<Map<String, Object>> sources,
                                        Object statistics)
     {
-        Map<String, Object> result = map("asset_id", "asset.source.osrs.cache" + cacheId + "." + kind + "." + id,
+        String assetId = "asset.source.osrs.cache" + cacheId + "." + kind + "." + id;
+        if (!recordIds.add(assetId)) throw new IllegalArgumentException("Duplicate source asset ID: " + assetId);
+        Map<String, Object> result = map("asset_id", assetId,
             "kind", kind, "source", sources, "statistics", statistics, "outputs", new ArrayList<>());
         records.add(result);
         counts.merge(kind, 1, Integer::sum);
@@ -330,6 +336,28 @@ public final class CacheExtractor implements AutoCloseable
         }
     }
 
+    private static void textures(Set<Integer> ids, short[] values)
+    {
+        if (values != null) for (short value : values) if (value != -1) ids.add(value & 65535);
+    }
+
+    private void npcClosure(Set<Integer> ids) throws Exception
+    {
+        Set<Integer> done = new TreeSet<>();
+        while (!done.containsAll(ids))
+        {
+            for (int id : new TreeSet<>(ids))
+            {
+                if (!done.add(id)) continue;
+                npc(id);
+                NpcDefinition npc = npcs.get(id);
+                include(ids, npc.configs);
+                include(spriteIds, npc.headIconArchiveIds);
+                textures(textureIds, npc.retextureToReplace);
+            }
+        }
+    }
+
     private void terrain(int regionId, Set<Integer> objectIds, Set<Integer> underlays,
                          Set<Integer> overlays) throws Exception
     {
@@ -483,6 +511,31 @@ public final class CacheExtractor implements AutoCloseable
             if (widget.modelType == 1 && widget.modelId >= 0) modelIds.add(widget.modelId);
             if (widget.animation >= 0) sequenceIds.add(widget.animation);
             if (widget.alternateAnimation >= 0) sequenceIds.add(widget.alternateAnimation);
+            if (contentClosure)
+            {
+                if (widget.alternateModelId >= 0) modelIds.add(widget.alternateModelId);
+                if (widget.modelType == 2 && widget.modelId >= 0) interfaceNpcIds.add(widget.modelId);
+                if (widget.modelType == 4 && widget.modelId >= 0) interfaceItemIds.add(widget.modelId);
+                if (widget.itemIds != null)
+                {
+                    for (int encodedId : widget.itemIds) if (encodedId > 0) interfaceItemIds.add(encodedId - 1);
+                }
+                if (widget.clientScripts != null)
+                {
+                    for (ClientScript1Instruction[] script : widget.clientScripts)
+                    {
+                        if (script == null) continue;
+                        for (ClientScript1Instruction instruction : script)
+                        {
+                            if (instruction.opcode == ClientScript1Instruction.Opcode.WIDGET_CONTAINS_ITEM_GET_QUANTITY
+                                || instruction.opcode == ClientScript1Instruction.Opcode.WIDGET_CONTAINS_ITEM_STAR)
+                            {
+                                if (instruction.operands[2] >= 0) interfaceItemIds.add(instruction.operands[2]);
+                            }
+                        }
+                    }
+                }
+            }
         }
         var record = record("interface", "" + groupId, sources, map("widgets", widgets.size()));
         add(record, json("interfaces/" + groupId + ".json.gz", widgets));
@@ -665,6 +718,7 @@ public final class CacheExtractor implements AutoCloseable
                     item.maleHeadModel, item.maleHeadModel2, item.femaleHeadModel, item.femaleHeadModel2});
                 include(ids, new int[]{item.notedID, item.notedTemplate, item.boughtId, item.boughtTemplateId,
                     item.placeholderId, item.placeholderTemplateId});
+                if (contentClosure) textures(textureIds, item.textureReplace);
                 if (item.countObj != null)
                 {
                     for (int i = 0; i < item.countObj.length; i++)
@@ -713,6 +767,93 @@ public final class CacheExtractor implements AutoCloseable
         }
     }
 
+    private void visualDependencies() throws Exception
+    {
+        for (int id : modelIds) model(id);
+        for (int id : textureIds)
+        {
+            TextureDefinition texture = new TextureLoader().setRev233(true).load(id, bytes(9, 0, id));
+            var record = record("texture", "" + id, List.of(source(9, 0, id)), null);
+            add(record, json("textures/" + id + ".json", texture));
+            raw(record, 9, 0, id);
+            include(spriteIds, texture.getFileIds());
+        }
+        animationClosure();
+        for (int id : fontIds) font(id);
+        for (int id : spriteIds) sprite(id);
+    }
+
+    static Set<Integer> requestedIds(JsonObject request, String key)
+    {
+        Set<Integer> result = new TreeSet<>();
+        for (JsonElement value : request.getAsJsonArray(key))
+        {
+            if (!value.isJsonPrimitive() || !value.getAsJsonPrimitive().isNumber()
+                || !value.getAsString().matches("-?(0|[1-9][0-9]*)"))
+            {
+                throw new IllegalArgumentException("Noninteger requested source ID in " + key + ": " + value);
+            }
+            int id = Integer.parseInt(value.getAsString());
+            if (id < 0 || !result.add(id))
+            {
+                throw new IllegalArgumentException("Negative or duplicate requested ID in " + key + ": " + id);
+            }
+        }
+        return result;
+    }
+
+    private static Set<Integer> closureRoots(JsonObject request, String key)
+    {
+        Set<Integer> ids = requestedIds(request, key);
+        if (request.has("audit_existing"))
+        {
+            for (int id : requestedIds(request.getAsJsonObject("audit_existing"), key))
+            {
+                if (!ids.add(id)) throw new IllegalArgumentException("Duplicate new/existing closure root: " + key + "/" + id);
+            }
+        }
+        return ids;
+    }
+
+    private void contentClosure(JsonObject request) throws Exception
+    {
+        contentClosure = true;
+        readEntities();
+        modelIds.addAll(requestedIds(request, "model_ids"));
+        for (int id : closureRoots(request, "interface_groups")) interfaces(id);
+        Set<Integer> npcIds = closureRoots(request, "npc_ids");
+        npcIds.addAll(interfaceNpcIds);
+        npcClosure(npcIds);
+        Set<Integer> itemIds = closureRoots(request, "item_ids");
+        itemIds.addAll(interfaceItemIds);
+        SequenceLoader sequences = new SequenceLoader().configureForRevision(store.findIndex(2).getArchive(12).getRevision());
+        for (int id : sequenceIds)
+        {
+            SequenceDefinition sequence = sequences.load(id, bytes(2, 12, id));
+            if (sequence.leftHandItem >= 512) itemIds.add(sequence.leftHandItem - 512);
+            if (sequence.rightHandItem >= 512) itemIds.add(sequence.rightHandItem - 512);
+        }
+        JsonArray itemRequest = new JsonArray();
+        for (int id : itemIds) itemRequest.add(id);
+        items(itemRequest);
+        // Quantity labels in native generated item icons use the original small font.
+        Archive iconFont = store.findIndex(13).findArchiveByName("p11_full");
+        if (iconFont == null) throw new IOException("Missing item-icon quantity font p11_full");
+        fontIds.add(iconFont.getArchiveId());
+        visualDependencies();
+        for (int id : soundIds) sound(id);
+        json("bundle.json", map("schema_version", 1, "cache_id", cacheId, "revision", revision,
+            "scope", "content-asset-closure", "request", request, "counts", counts,
+            "groups", groupSources, "records", records,
+            "closure", map("definition_variants", "All note, bought, placeholder, stack and NPC morph links retained.",
+                "models", "Native inventory, wear, head, NPC and widget models; no transform or material baking.",
+                "item_icon_quantity_font", iconFont.getArchiveId(),
+                "cached_animation_ids_preserved_as_original_bytes", cachedAnimationIds,
+                "dynamic_interface_state", "Widget listeners and source IDs retained; no server/container state or complete CS2 execution inferred.",
+                "owner_reference_pack_approved", false, "source_game_captures", false)));
+        System.out.println(GSON.toJson(counts));
+    }
+
     private void extract(JsonObject request) throws Exception
     {
         readEntities();
@@ -751,18 +892,7 @@ public final class CacheExtractor implements AutoCloseable
             definition("overlay", id, 4, overlay);
             if (overlay.getTexture() >= 0) textureIds.add(overlay.getTexture());
         }
-        for (int id : modelIds) model(id);
-        for (int id : textureIds)
-        {
-            TextureDefinition texture = new TextureLoader().setRev233(true).load(id, bytes(9, 0, id));
-            var record = record("texture", "" + id, List.of(source(9, 0, id)), null);
-            add(record, json("textures/" + id + ".json", texture));
-            raw(record, 9, 0, id);
-            include(spriteIds, texture.getFileIds());
-        }
-        animationClosure();
-        for (int id : fontIds) font(id);
-        for (int id : spriteIds) sprite(id);
+        visualDependencies();
         for (JsonElement input : request.getAsJsonArray("music"))
         {
             JsonObject music = input.getAsJsonObject();
@@ -789,9 +919,9 @@ public final class CacheExtractor implements AutoCloseable
     public static void main(String[] args) throws Exception
     {
         ImageIO.setUseCache(false);
-        if (args.length < 5 || !(args[0].equals("scan") || args[0].equals("extract")))
+        if (args.length < 5 || !(args[0].equals("scan") || args[0].equals("extract") || args[0].equals("closure")))
         {
-            throw new IllegalArgumentException("Usage: CacheExtractor scan|extract CACHE OUTPUT REVISION CACHE_ID [REQUEST]");
+            throw new IllegalArgumentException("Usage: CacheExtractor scan|extract|closure CACHE OUTPUT REVISION CACHE_ID [REQUEST]");
         }
         try (CacheExtractor extractor = new CacheExtractor(Path.of(args[1]), Path.of(args[2]),
             Integer.parseInt(args[3]), Integer.parseInt(args[4])))
@@ -806,7 +936,8 @@ public final class CacheExtractor implements AutoCloseable
                 {
                     throw new IllegalArgumentException("Request disagrees with selected cache identity");
                 }
-                extractor.extract(request);
+                if (args[0].equals("closure")) extractor.contentClosure(request);
+                else extractor.extract(request);
             }
         }
     }
