@@ -7,15 +7,14 @@
     "admissions_open": true,
     "active": [
       {"id": "director", "task": "M1-FLEET-CONTRACTS"},
-      {"id": "0f5ddddf-0aa0-4908-b0d3-1ffc6b1f7a20", "task": "M1-FLEET-ENGINE"},
       {"id": "e9ed6a96-6bcb-4d27-8b4c-d504edda327c", "task": "M1-FLEET-AUDIO-BINDINGS"},
       {"id": "56283b56-0ae0-4839-a961-1a23a850dd1b", "task": "M1-FLEET-PUBLIC-REFERENCES"},
       {"id": "2766e089-44e5-4a1d-974e-7b03ad9c269d", "task": "M1-FLEET-LIVE-SERVER"},
-      {"id": "6c58b841-a767-41ff-bef5-2abbd5b1a087", "task": "M1-FLEET-MAC-HANDOFF"}
+      {"id": "9c5d43e0-7701-466f-97cf-0bc3cfca9345", "task": "M1-FLEET-SOURCE-BINDINGS"}
     ],
     "reserved": [
-      {"id": "9c5d43e0-7701-466f-97cf-0bc3cfca9345", "task": "M1-FLEET-SOURCE-BINDINGS"},
-      {"id": "ac0f0856-44af-445b-bd90-6db7a1f4fc74", "task": "M1-FLEET-ASSET-CLOSURE"}
+      {"id": "0f5ddddf-0aa0-4908-b0d3-1ffc6b1f7a20", "task": "M1-FLEET-ENGINE-CLOSURE"},
+      {"id": "fdda1fb0-1135-4cf8-8cff-3db550e48f54", "task": "M1-FLEET-CONTENT-ASSET-REFRESH"}
     ],
     "queued": [],
     "parked": [
@@ -30,9 +29,45 @@
   },
   "tasks": [
     {
+      "id": "M1-FLEET-ENGINE-CLOSURE",
+      "goal": "Finish the remaining precise M1 runtime selectors, source traversal/engagement/recovery UI and compatible compiler restrictions.",
+      "status": "READY",
+      "specs": ["crates/world-engine/README.md", "spec/game-contracts.md", "research/journey-rules/**"],
+      "dependencies": ["M1-FLEET-MECHANICS-CONTRACTS"],
+      "allowed_paths": ["crates/world-engine/**", "crates/game-types/**", "crates/content/**", "crates/simulation/tests/**", "crates/server/tests/game_storage.rs", "spec/game-contracts.md"],
+      "forbidden_paths": ["prompt.md", "crates/protocol/**", "crates/server/src/**", "content/**", "assets/**", "web/**", "Cargo.toml", "milestones/**"],
+      "outputs": ["Working ordinary drop/NPC loot and complete typed runtime policies", "Validated per-actor traversal/attack/recovery UI", "No consume-only/unstocked-clock validation contradiction"],
+      "validation_commands": ["cargo test -p clubscape-game-types -p clubscape-content -p clubscape-simulation -p clubscape-world-engine", "cargo clippy --workspace --all-targets -- -D warnings"],
+      "test_requirements": ["Real positive and negative mechanics, not unavailable placeholders", "No wrong-actor bypass or invented source default", "Existing storage tick/ledger semantics preserved"],
+      "acceptance": ["SQL m1-world-engine accurately records completed engine execution versus actual residual source inputs"],
+      "reserved_namespaces": [],
+      "source_notes": ["The prior broad mechanics schemas are implemented; this is a targeted final compatibility/runtime pass."],
+      "parity_entries": [],
+      "adaptations": [],
+      "evidence": []
+    },
+    {
+      "id": "M1-FLEET-CONTENT-ASSET-REFRESH",
+      "goal": "Refresh real M1 content references from the completed original source closure without changing gameplay policies or source geometry.",
+      "status": "READY",
+      "specs": ["tools/cache-import/CONTENT_CLOSURE.md", "content/m1/README.md"],
+      "dependencies": ["M1-FLEET-ASSET-CLOSURE"],
+      "allowed_paths": ["content/m1/**", "tools/m1-content/**", "research/m1-bindings/**"],
+      "forbidden_paths": ["prompt.md", "crates/**", "assets/**", "web/**", "spec/**", "milestones/**"],
+      "outputs": ["Complete actual source asset ID/provenance bindings", "Strictly compiled refreshed content and hashes"],
+      "validation_commands": ["python3 tools/m1-content/build.py", "python3 tools/m1-content/check.py"],
+      "test_requirements": ["All requested closure IDs resolve", "Existing coordinates/rules retained", "No stale decoder blocker or fake source references"],
+      "acceptance": ["SQL m1-content-asset-refresh completed with actual compiler/integrity evidence"],
+      "reserved_namespaces": [],
+      "source_notes": ["9f5f9c5 source closure is integrated as be98d44."],
+      "parity_entries": [],
+      "adaptations": [],
+      "evidence": []
+    },
+    {
       "id": "M1-FLEET-SOURCE-BINDINGS",
       "goal": "Resolve concrete source-value/policy bindings required by the ordinary M1 journey without blanket blockers or fabricated observations.",
-      "status": "READY",
+      "status": "IMPLEMENTING",
       "specs": ["research/journey-rules/**", "research/m1-bindings/unresolved-bindings.json", "spec/game-contracts.md"],
       "dependencies": ["M1-FLEET-RULES"],
       "allowed_paths": ["research/runtime-bindings/**", "tools/runtime-bindings/**"],
@@ -50,7 +85,7 @@
     {
       "id": "M1-FLEET-ASSET-CLOSURE",
       "goal": "Extract the exact additional source assets required by the real M1 content while preserving all existing reference hashes.",
-      "status": "READY",
+      "status": "DONE",
       "specs": ["research/m1-bindings/**", "tools/cache-import/README.md"],
       "dependencies": ["M1-FLEET-RUNTIME"],
       "allowed_paths": ["tools/cache-import/**", "research/current-source/**", "assets/source/osrs/cache2695/**", "assets/manifests/osrs/**"],
@@ -63,7 +98,7 @@
       "source_notes": ["Product-content missing-ID inventories are the bounded input list."],
       "parity_entries": [],
       "adaptations": [],
-      "evidence": []
+      "evidence": ["9f5f9c5 integrated as be98d44;72/72items,68/68requestedmodels,6/6NPCs,13/13interfaces resolved with1129new outputs.48closure+20capture tests reported passed; parent validate-published passed; original hashes unchanged."]
     },
     {
       "id": "M1-FLEET-LIVE-SERVER",
@@ -86,7 +121,7 @@
     {
       "id": "M1-FLEET-MAC-HANDOFF",
       "goal": "Prepare explicit owner-run native Mac Chrome/Edge acceptance tooling without inventing measurements or bypassing browser isolation.",
-      "status": "IMPLEMENTING",
+      "status": "DONE",
       "specs": ["milestones/m1-owner-followups.json", "tools/browser-harness/README.md", "spec/performance.md"],
       "dependencies": ["M1-FLEET-BROWSER"],
       "allowed_paths": ["tools/browser-harness/**", "research/browser-platform/**"],
@@ -99,7 +134,7 @@
       "source_notes": ["Owner selected an M-series Mac and permitted available Sparky engineering checks."],
       "parity_entries": [],
       "adaptations": [],
-      "evidence": []
+      "evidence": ["d0dbcb9 integrated as53b3b7a; nativeMacowner-run collection/preparation/capture workflow,79unit+15Linuxbrowser tests reported passed. ActualMacmeasurements/Seatbeltattestation remainunrun."]
     },
     {
       "id": "M1-FLEET-AUDIO-BINDINGS",
