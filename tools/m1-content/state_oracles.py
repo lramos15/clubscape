@@ -245,11 +245,32 @@ class Oracle:
                     skill, amount = reward["skill"], reward["amount_tenths"]
                     state = self.data["skills"][skill]
                     thresholds = self.content["skills"][skill]["xp_thresholds_tenths"]
-                    if bisect_right(thresholds, state["xp_tenths"]) >= stage["xp_stop_levels"].get(skill, 65535):
+                    old_base = bisect_right(thresholds, state["xp_tenths"])
+                    if old_base >= stage["xp_stop_levels"].get(skill, 65535):
                         continue
                     maximum = min(self.content["skills"][skill]["maximum_xp_tenths"], stage["xp_caps_tenths"].get(skill, 2**64 - 1))
                     state["xp_tenths"] += min(amount, max(0, maximum - state["xp_tenths"]))
-                    state["current_level"] = bisect_right(thresholds, state["xp_tenths"])
+                    new_base = bisect_right(thresholds, state["xp_tenths"])
+                    if state["current_level"] == old_base:
+                        state["current_level"] = new_base
+                    vitals = self.content["mechanics"]["vitals"]
+                    fields = {vitals["hitpoints_skill"]: "hitpoints", vitals["prayer_skill"]: "prayer_points"}
+                    if skill in fields and new_base != old_base:
+                        policy = vitals["level_up"]
+                        if policy["status"] != "bound":
+                            raise OracleUnresolved("Source current-vital policy is unresolved on an actual vital level gain")
+                        field = fields[skill]
+                        if policy["value"] == "raise_if_at_old_base_otherwise_preserve":
+                            if self.data[field] == old_base:
+                                self.data[field] = new_base
+                        elif policy["value"] == "preserve_current":
+                            pass
+                        elif policy["value"] == "increase_by_base_difference":
+                            self.data[field] += new_base - old_base
+                        elif policy["value"] == "restore_to_base":
+                            self.data[field] = new_base
+                        else:
+                            raise OracleRefusal("Unknown current-vital source policy")
             elif kind in ("set_counter", "add_counter"):
                 definition = self.content["mechanics"]["counters"][effect["counter"]]
                 value = effect["value"] if kind == "set_counter" else counter_value(self.counter(effect["counter"])["value"] + effect["delta"])
@@ -266,7 +287,27 @@ class Oracle:
                 self.data["object_states"][effect["transform"]] = effect["state"]
             elif kind in ("message", "inspect"):
                 continue
-            elif kind in ("travel_via", "reconcile_containers"):
+            elif kind == "reconcile_containers":
+                definition = self.content["mechanics"]["reconciliations"][effect["reconciliation"]]
+                if self.grant_claimed(definition["entitlement"]):
+                    continue
+                policies = definition["policies"]
+                if policies["status"] != "bound":
+                    raise OracleUnresolved("Source reconciliation policy is unresolved")
+                for policy in policies["value"]:
+                    if policy["kind"] != "remove_items":
+                        raise OracleRefusal("Reference oracle does not silently normalize source containers")
+                    removed = set(policy["items"])
+                    if policy["container"] == "equipment":
+                        self.data["equipment"] = {slot: stack for slot, stack in self.data["equipment"].items()
+                                                   if stack["item"] not in removed}
+                    else:
+                        slots = self.data[policy["container"]]["slots"]
+                        for index, stack in enumerate(slots):
+                            if stack and stack["item"] in removed:
+                                slots[index] = None
+                self.data["entitlements"][definition["entitlement"]] = {"claimed": True}
+            elif kind == "travel_via":
                 raise OracleUnresolved("Reference effects do not bypass source-unresolved transport or reconciliation")
             else:
                 raise OracleRefusal(f"Oracle does not silently implement {kind}")

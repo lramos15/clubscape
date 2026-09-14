@@ -1,0 +1,53 @@
+{
+  "exact_paths": 112,
+  "rule_groups": 29,
+  "classification_counts": {
+    "codebug_parent_fixed": 1,
+    "codebug_parent_required": 1,
+    "inactive_dependency": 6,
+    "known_fact": 5,
+    "owner_decision": 1,
+    "source_supported_inference": 98
+  },
+  "applyable_bindings": 104,
+  "coupled_updates": 7,
+  "unpromoted_dispositions": [
+    "items.item.ensouled_goblin_head.stackable.rule",
+    "items.item.milk.bottomless_bucket.stackable.rule",
+    "mechanics.death.office_overflow",
+    "mechanics.vitals.level_up",
+    "npcs.npc.goblin.level_2.combat.mechanics.loot[3]",
+    "spawns.spawn.tutorial.fishing_spot.3099.3090.p0.interactions[0].action.rule.mechanics.respawn",
+    "spawns.spawn.tutorial.fishing_spot.3101.3092.p0.interactions[0].action.rule.mechanics.respawn",
+    "spawns.spawn.tutorial.fishing_spot.3103.3092.p0.interactions[0].action.rule.mechanics.respawn"
+  ],
+  "oracle_checks": {
+    "projectile_distances": 10,
+    "wind_strike_levels": 8,
+    "shop_price_vectors": 8,
+    "shop_bulk_vectors": 2,
+    "restock_vectors": 4,
+    "timing_groups": 6,
+    "cooking_queue_vectors": 1,
+    "npc_damage_vectors": 4,
+    "ground_origin_vectors": 3,
+    "per_item_value_audits": 116,
+    "valuation_vectors": 10,
+    "valuation_rankings": 1,
+    "departure_currency_cases": 5,
+    "repeat_death_cases": 4,
+    "death_restoration_cases": 2,
+    "conditional_level_vectors": 3,
+    "existing_vital_policies_disproved": 3,
+    "inactive_fishing_proofs": 3,
+    "default_setting_bindings": 2
+  },
+  "numeric_and_edge_checks": 195,
+  "outcome": "source_binding_contract_valid",
+  "gameplay_executed": false,
+  "presentation_approved": false,
+  "source_snapshots": 77,
+  "all_raw_source_hashes_checked": false,
+  "strict_typecheck_report_sha256": "ba6424a4a19c0c9611cf4b56df00c318faa6a5a2bc72113168a3a55eed2c7960",
+  "invalid_mutations_rejected": 8
+}

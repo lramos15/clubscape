@@ -69,17 +69,41 @@ def verify():
     request = load(ROOT / inputs.publication["request"]["path"])
     closure = load(ROOT / inputs.publication["closure_report"]["path"])
     unresolved = load(BINDINGS / "unresolved-bindings.json")
+    application_path = ROOT / "research/runtime-bindings/application-result.json"
+    application = load(application_path) if application_path.exists() else None
+    extensions = application["item_extensions"] if application else {}
     require(sha((ROOT / inputs.catalog_path).read_bytes()) == CATALOG_SHA256, "Wrong merged source catalog")
-    require(sha(canonical(behavior_projection(content))) == baseline["behavior_sha256"], "Non-asset content behavior changed")
-    require(manifest["counts"] == baseline["counts"], "Bounded refresh changed content/geometry/graph counts")
-    require(unresolved["count"] == 111 and
-            [(record["path"], record["reason"]) for record in unresolved["bindings"]] ==
-            [(record["path"], record["reason"]) for record in baseline["unresolved_bindings"]],
-            "Bounded refresh changed another worker's behavior bindings")
+    if application:
+        require(application["baseline_behavior_sha256"] == baseline["behavior_sha256"], "Application changed its original behavior boundary")
+        require(application["applied_behavior_sha256"] == sha(canonical(behavior_projection(content))),
+                "Non-target behavior changed after audited source application")
+        require(application["content_compressed_sha256"] == sha((CONTENT / "game-content.json.gz").read_bytes()),
+                "Application audit describes another content artifact")
+        require(application["bound_path_count"] == 104 and application["coupled_update_count"] == 7,
+                "Incomplete canonical source application")
+        for key, count in baseline["counts"].items():
+            if key not in ("items", "normal_note_pairs", "mechanics"):
+                require(manifest["counts"][key] == count, f"Source application changed non-target count {key}")
+        require(set(extensions) == {"item.energy_potion.three_dose", "item.energy_potion.three_dose.noted"},
+                "Unapproved item-extension scope")
+    else:
+        require(sha(canonical(behavior_projection(content))) == baseline["behavior_sha256"], "Non-asset content behavior changed")
+        require(manifest["counts"] == baseline["counts"], "Bounded refresh changed content/geometry/graph counts")
+        require(unresolved["count"] == 111 and
+                [(record["path"], record["reason"]) for record in unresolved["bindings"]] ==
+                [(record["path"], record["reason"]) for record in baseline["unresolved_bindings"]],
+                "Bounded refresh changed another worker's behavior bindings")
     for name, expected in {**baseline["source_geometry_hashes"], **baseline["source_only_files"]}.items():
+        if application and name == "research/m1-bindings/selection.json":
+            continue  # The exact two verified additional item IDs are covered by the application audit.
         require(sha((ROOT / name).read_bytes()) == expected, f"Protected source content changed: {name}")
     require(references["manifest"] == inputs.catalog_path, "Product still points at the old source catalog")
-    require(all(not values for values in references["source_closure_missing"].values()), "Product asset closure is not empty")
+    if application:
+        require(references["source_closure_missing"] == {
+            "item_definition_ids": [3010, 3011], "model_ids": [2697], "npc_definition_ids": [], "interface_groups": []},
+            "Asset gap extends beyond the newly verified approved potion definition")
+    else:
+        require(all(not values for values in references["source_closure_missing"].values()), "Product asset closure is not empty")
     require(set(references["source_closure_missing"]) == set(REQUESTED), "Missing closure category")
     require(closure["requested"] == REQUESTED and closure["resolved"] == REQUESTED, "Wrong frozen source closure request")
     required = set(request["required_asset_ids"])
@@ -96,6 +120,11 @@ def verify():
     for category, kind in (("items", "item"), ("npcs", "npc"), ("objects", "object")):
         for identifier, definition in content[category].items():
             asset = inputs.asset(kind, definition["source_id"])
+            if identifier in extensions:
+                require(asset is None and definition["asset"] is None, "Invented publication for the new source potion")
+                require(any(record["reference"] == extensions[identifier]["source_definition"] for record in definition["source"]),
+                        "New original item lost its exact definition provenance")
+                continue
             require(asset is not None and definition["asset"] == asset, f"Unresolved or fabricated asset on {identifier}")
             if kind in ("item", "npc"):
                 locator = f"{inputs.collection_sources[asset]}#{asset}"
@@ -103,8 +132,9 @@ def verify():
     item_bindings = load(BINDINGS / "item-bindings.json")["items"]
     npc_bindings = load(BINDINGS / "npc-bindings.json")
     interface_bindings = load(BINDINGS / "interface-bindings.json")
-    require(all(record["asset_available"] and not record["missing_model_ids"] for record in
-                [*item_bindings.values(), *npc_bindings.values()]), "Definition/model binding still unavailable")
+    require(all(record["asset_available"] and not record["missing_model_ids"] for identifier, record in
+                list(item_bindings.items()) + list(npc_bindings.items()) if identifier not in extensions),
+            "Previously completed definition/model binding became unavailable")
     require(all(not record["missing_source_groups"] for record in interface_bindings.values()), "Interface binding still unavailable")
     for record in references["assets"]:
         require(record["outputs"] == inputs.assets[record["id"]]["outputs"], "Canonical source model/output links were altered")
@@ -146,18 +176,26 @@ def verify():
         "protected_source_closure_evidence": source_report["protected_input_integrity"],
         "protected_reference_image_count": protected["original_reference_images_unchanged"],
         "protected_audio_file_count": protected["audio_runtime_files_unchanged"],
-        "behavior_sha256": baseline["behavior_sha256"], "behavior_and_geometry_unchanged": True,
+        "behavior_sha256": baseline["behavior_sha256"], "behavior_and_geometry_unchanged": application is None,
+        "geometry_and_prior_asset_closure_preserved": True,
+        "audited_source_application": str(application_path.relative_to(ROOT)) if application else None,
+        "new_verified_definition_publication_needed": references["source_closure_missing"] if application else {},
         "bound_wind_strike_table": content["mechanics"]["combat_styles"]["style.magic.wind_strike"]["maximum_hit"],
         "unresolved_behavior_bindings_unchanged": unresolved["count"],
         "runtime_compile_passed": manifest["runtime_compile_passed"],
         "gameplay_executed": False, "presentation_approved": False,
         "remaining_data_hookup": "Consumers resolve the merged catalog and its additive publication/shards; "
-                                 "111 behavior policies and precise runtime selectors remain with their owners. "
+                                 "Canonical source application is checked separately; newly imported potion3010/3011 "
+                                 "and original model2697 require source-worker publication. "
                                  "Original assets are not scene/render/audio acceptance.",
     }
     write(BINDINGS / "asset-refresh-validation.json", report, pretty=True)
-    print(json.dumps({"asset_refresh": "passed", "requested_resolved": resolved, "product_assets": len(actual),
-                      "missing": [], "behavior_unchanged": True, "unresolved_behavior_bindings": unresolved["count"]}))
+    print(json.dumps({"prior_asset_closure": "preserved", "requested_resolved": resolved, "product_assets": len(actual),
+                      "prior_request_missing": [], "new_verified_definition_publication_needed":
+                      references["source_closure_missing"] if application else {},
+                      "behavior_unchanged": application is None,
+                      "source_application_audited": application is not None,
+                      "unresolved_behavior_bindings": unresolved["count"]}))
     return report
 
 

@@ -10,6 +10,7 @@ import hashlib
 import json
 from pathlib import Path
 import re
+import subprocess
 import urllib.parse
 
 from apply import at, canonical_hash, prepare
@@ -390,16 +391,23 @@ def main():
     parser.add_argument("--sources", action="store_true", help="Require/hash every restored raw source snapshot.")
     parser.add_argument("--self-test", action="store_true")
     parser.add_argument("--report", action="store_true")
+    parser.add_argument("--baseline-commit", help="Read the exact hash-locked original source inputs from repository history.")
     args = parser.parse_args()
     document = load("resolutions.json")
     sources = load("sources.json")["sources"]
     source_path = ROOT / document["inputs"]["unresolved_path"]
     content_path = ROOT / document["inputs"]["content_path"]
-    check(sha(source_path) == document["inputs"]["unresolved_sha256"], "Original unresolved list changed")
-    check(sha(content_path) == document["inputs"]["content_sha256"], "Original product content changed")
-    check(sha(ROOT / "crates/game-types/src/mechanics.rs") == document["inputs"]["types_sha256"], "Parent types changed; refresh the disposition")
-    original = json.loads(gzip.decompress(content_path.read_bytes()))
-    inventory = json.loads(source_path.read_text())["bindings"]
+    def original_bytes(relative):
+        return (subprocess.check_output(["git", "show", args.baseline_commit + ":" + relative], cwd=ROOT)
+                if args.baseline_commit else (ROOT / relative).read_bytes())
+    unresolved_bytes = original_bytes(document["inputs"]["unresolved_path"])
+    content_bytes = original_bytes(document["inputs"]["content_path"])
+    types_bytes = original_bytes("crates/game-types/src/mechanics.rs")
+    check(hashlib.sha256(unresolved_bytes).hexdigest() == document["inputs"]["unresolved_sha256"], "Original unresolved list changed")
+    check(hashlib.sha256(content_bytes).hexdigest() == document["inputs"]["content_sha256"], "Original product content changed")
+    check(hashlib.sha256(types_bytes).hexdigest() == document["inputs"]["types_sha256"], "Original source schema fingerprint changed")
+    original = json.loads(gzip.decompress(content_bytes))
+    inventory = json.loads(unresolved_bytes)["bindings"]
     snapshots(sources, args.sources)
     oracles, values = load("oracles.json"), load("death-values.json")
     result = validate(document, original, inventory, sources, oracles, values)

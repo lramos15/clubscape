@@ -25,6 +25,7 @@ from travel import build_travel, location_anchors
 from mechanics import base_mechanics
 from travel_policies import wire_travel_policies
 from world_mechanics import build_doors, wire_world
+from runtime_application import apply_source_bindings
 
 
 def input_lock(inputs):
@@ -55,7 +56,12 @@ def input_lock(inputs):
               ("selection", "extraction-contract", "m1-request")]
     paths += [BINDINGS / name for name in ("selection.json", "definitions.json.gz", "wiki-sources.json",
                                          "wiki-facts.json", "code-sources.json", "runtime-source-facts.json",
-                                         "profile-v2.json")]
+                                         "profile-v2.json", "application-item-definitions.json.gz")]
+    paths += [ROOT / "research/runtime-bindings" / name for name in (
+        "resolutions.json", "application-context.json", "sources.json", "oracles.json",
+        "death-values.json", "profile-resolutions.json", "inputs/guide-prices.json.gz")]
+    paths += [ROOT / "tools/runtime-bindings/apply.py", ROOT / "milestones/m1-goblin-loot-approval.json",
+              ROOT / "spec/adaptations.md"]
     paths += list((ROOT / "crates/game-types/src").glob("*.rs"))
     paths += sorted((ROOT / "tools/m1-content").glob("*.py"))
     paths += sorted((ROOT / "tools/m1-content").glob("*.java"))
@@ -126,6 +132,8 @@ def assemble(inputs, world, revision):
             for child in value:
                 normalize_sources(child)
     normalize_sources(content)
+    content, application = apply_source_bindings(content, inputs)
+    bindings["application"] = application
     return content, bindings
 
 
@@ -299,6 +307,8 @@ def build(args):
         return record
     emit(BINDINGS / "input-lock.json", lock, True)
     emit(CONTENT / "game-content.json.gz", content)
+    bindings["application"]["content_compressed_sha256"] = sha((CONTENT / "game-content.json.gz").read_bytes())
+    emit(ROOT / "research/runtime-bindings/application-result.json", bindings["application"], True)
     geometry_records = []
     for number in sorted(world.raw):
         geometry_records.append(emit(CONTENT / f"geometry/{number}.json.gz", world.region(number, full=True)))
@@ -371,15 +381,28 @@ def build(args):
             asset_ids.update(f"{ASSET_PREFIX}model.{number}" for number in binding["models"])
     for binding in bindings["interfaces"].values():
         asset_ids.update(f"{ASSET_PREFIX}interface.{number}" for number in binding["source_groups"])
-    missing_assets = sorted(asset_ids - inputs.assets.keys())
-    if missing_assets:
-        raise ValueError(f"Product asset references absent from validated merged catalog: {missing_assets}")
+    missing_assets = set(asset_ids - inputs.assets.keys())
+    additional_assets = set()
+    for identifier in bindings["application"]["item_extensions"]:
+        extra = bindings["items"][identifier]
+        additional_assets.add(extra["source_asset"])
+        additional_assets.update(f"{ASSET_PREFIX}model.{number}" for number in extra["models"])
+    if missing_assets - additional_assets:
+        raise ValueError(f"Product asset references absent from validated merged catalog: {sorted(missing_assets - additional_assets)}")
     emit(CONTENT / "asset-references.json", {
         "assets": [{"id": identifier, "kind": inputs.assets[identifier]["kind"],
-                    "outputs": inputs.assets[identifier]["outputs"]} for identifier in sorted(asset_ids)],
+                    "outputs": inputs.assets[identifier]["outputs"]} for identifier in sorted(asset_ids - missing_assets)],
         "manifest": inputs.catalog_path,
         "publications": [inputs.publication["base_publication"]["path"], str(PUBLICATION.relative_to(ROOT))],
         "collection_extensions": inputs.publication["collection_extensions"],
+        "verified_definition_extensions": {
+            "path": "research/m1-bindings/application-item-definitions.json.gz",
+            "sha256": sha((BINDINGS / "application-item-definitions.json.gz").read_bytes()),
+            "items": bindings["application"]["item_extensions"],
+            "unpublished_asset_ids": sorted(missing_assets),
+            "scope": "New owner-approved3-dose potion identity and reciprocal note only. Original assets are not fabricated; "
+                     "source-worker publication of these exact additional IDs remains a separate graphical hookup.",
+        },
         "output_path_policy": "Asset outputs keep their canonical extraction-relative paths. Resolve committed "
                               "closure bytes with published_files[].extraction_path -> path in the additive publication; "
                               "definition provenance names the exact original or extension collection shard.",
@@ -406,6 +429,14 @@ def build(args):
         "runtime_ready": False, "source_gameplay_verified": False,
         "presentation_approved": False, "milestone_accepted": False,
         "readiness_dependency": "research/m1-bindings/contract-gaps.json",
+        "source_application": {
+            "audit": "research/runtime-bindings/application-result.json",
+            "source_bindings_consumed": bindings["application"]["bound_path_count"],
+            "coupled_updates": bindings["application"]["coupled_update_count"],
+            "approved_adaptation": bindings["application"]["approved_loot"]["adaptation"],
+            "residuals": bindings["application"]["residuals"],
+            "remaining_selector_hooks": bindings["application"]["remaining_selector_hooks"],
+        },
         "scope_policy": inputs.selection["navigation_scope_note"],
     }
     write(CONTENT / "manifest.json", manifest, True)

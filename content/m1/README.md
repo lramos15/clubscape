@@ -14,6 +14,7 @@ From the worktree root, with the documented existing Python/Rust toolchains:
 python3 tools/m1-content/build.py
 python3 tools/m1-content/check.py
 python3 tools/m1-content/verify_assets.py
+python3 tools/m1-content/verify_runtime_bindings.py
 python3 -m unittest discover -s tools/m1-content -p 'test_*.py' -q
 python3 tools/m1-content/verify_routes.py
 python3 tools/m1-content/verify_state_oracles.py
@@ -28,12 +29,12 @@ compressed/uncompressed hashes. Gzip timestamps/filenames are normalized.
 
 | Content | Count |
 | --- | ---: |
-| Items / reciprocal ordinary note pairs | 116 / 52 |
+| Items / reciprocal ordinary note pairs | 118 / 53 |
 | Skills / normal equipment slots | 24 / 11 |
 | NPC / object definitions | 26 / 4,837 |
 | Runtime spawns: NPC / object / item | 166 / 360 / 10 |
 | Recipes / dialogues / interfaces / shops | 11 / 21 / 26 / 1 |
-| Typed counters / grants / entitlements | 134 / 17 / 12 |
+| Typed counters / grants / entitlements | 134 / 18 / 13 |
 | Physical door transforms / source door groups | 68 / 49 |
 | Transit pairs / typed travel definitions | 11 / 26 |
 | Combat styles / spells / projectiles / prayers | 24 / 2 / 2 / 1 |
@@ -45,6 +46,36 @@ compressed/uncompressed hashes. Gzip timestamps/filenames are normalized.
 | Death source states / source edges | 4 / 6 |
 
 `manifest.json` is authoritative if generation changes counts.
+
+## Applied source policies and approved loot
+
+Canonical generation now runs the exact source applicator **before serialization**.
+All104 available replacements and all seven coupled updates are consumed.
+The parent's already-bound Wind Strike value is preserved semantically and by its
+audited fingerprint; eight other accepted input differences are exact asset-locator
+refreshes, not permission to ignore changed source targets. The 98 source-supported
+reversible inferences remain **inference**, never observations or owner approvals.
+See `research/runtime-bindings/application-result.json`.
+
+Departure removes the documented **noncurrency** tutorial types/note variants
+from inventory, equipment and bank, then grants the 18-kind noncurrency provisions
+once. Cleanup, provision grant, reciprocal entitlements, completed transport and
+stage acknowledgement belong to the same authoritative transaction. Banked,
+withdrawn and dropped coins stay where owned; expired money is not recreated.
+There is no second25-coin reward or bank reset.
+
+Owner approval594a4fd adds one independent1/16 goblin energy-potion event with
+uniform1/2/3/4 doses. The canonical type lowers that distribution to a separate
+64-way pool:60 no-potion outcomes and one outcome for each source dose. It uses a
+fresh draw independent of the unchanged128-weight primary pool. This is
+**approved_adaptation**, not verified OSRS odds. Original item3010 and note3011
+are decoded from verified cache bytes; guide-price123, not actively traded
+wikiPrice108, extends the fixed death-value table. The3-dose item is also included
+in the source death-supply classification.
+
+The source tertiary candidates are retained separately; the potion approval does
+not certify missing clue-family/ownership or runtime ground-origin selectors.
+Invalid, uncredited and replayed NPC lives must not resolve loot twice.
 
 ## What is now represented
 
@@ -113,13 +144,24 @@ as a stationary combat actor.
 
 ## Remaining limits
 
-The former 17 missing v1 representation categories are implemented with v2
-registries. Localized `SourceBinding::Unresolved` records remain for observations
-such as projectile/NPC/transit phases, exact cooking phases, departure
-reconciliation, conditional stacking, price/stock phase conflicts and death
-valuation/recovery details. They are compile-valid, **not runtime permission**.
-Initial setting/arrival/hinge candidates and all 20 source assumptions retain
-their inference and approval status.
+The former blanket111-binding block is obsolete. Source-backed projectile,
+NPC/transit/cooking timing, stock phase/prices, guide death values, restoration,
+repeat-death behavior and currency-conserving departure are now bound. Fresh
+grave auto-equip is corrected to the documented true default; supply piles use
+the explicitly recorded inherited-default inference. Historical assumptions are
+retained, with current resolution provenance rather than rewritten history.
+
+Six residuals are inactive under explicit ordinary-route proof preconditions:
+two unacquired rare conditional alternatives, three never-depleted fishing
+respawns and Office overflow below the current118-key/120-entry bound.
+Never require these policies before their reachable branch, and recheck the
+proof if acquisitions, item universe or instance/merge rules change.
+
+The conditional HP/Prayer level-up rule is prepared: old base10 -> new11 maps
+current5/10/15 to5/11/15. It binds only after the shared enum is actually declared;
+until then that single conditional field remains explicit, not three old-policy
+substitutes. Mining/Cooking-only gains must not require a vital-level policy.
+Current active/inactive counts are in the application result and validation.
 
 The shared tagged numeric-key decoder is now repaired. Wind Strike's known
 1/5/9/13 → 2/4/6/8 source table is bound as `MaximumHitFormula::LevelTable`,
@@ -128,16 +170,17 @@ max hit.
 
 The completed source closure is now connected through the validated merged
 `cache2695-content-v2-bundle.json.gz` catalog and its additive collection shards.
-All **5,254 requested product asset references** resolve, including the formerly
+All **5,254 original requested product asset references** still resolve, including the formerly
 missing 72 item definitions, 68 requested models, six NPC definitions (Cook4626)
-and 13 interface groups. All four missing-ID lists in `asset-references.json`
-are empty. The source publication supplies 268 additional original assets and
+and 13 interface groups. The separate new publication need is exactly original
+definitions3010/3011 and model2697; no model or asset is regenerated. The source publication supplies 268 additional original assets and
 1,129 outputs; no substitute models or icon links are made.
 
 `asset-refresh-validation.json` records the exact source/output hashes and the
-unchanged parent behavior fingerprint. This bounded refresh preserves the
-71/73 tutorial graph, Cook10/22, source geometry, repaired Wind Strike table and
-all111 unresolved behavior policies. It is not full M1 source certification.
+unchanged original asset/geometry boundary. The audited source application
+preserves the71/73 tutorial graph, Cook10/22, geometry and repaired Wind Strike
+table while changing only approved/source-resolved targets and coupled values.
+It is not full M1 source certification or an executed runtime journey.
 Penguin NPC 2063/model 21547 remains a candidate, not an approved player.
 Source captures, live mechanics execution, persistence, presentation/audio,
 browser performance, owner approval and RuneLite acceptance remain separate.

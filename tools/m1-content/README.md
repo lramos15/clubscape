@@ -17,6 +17,7 @@ not a replacement validator.
 python3 tools/m1-content/build.py
 python3 tools/m1-content/check.py
 python3 tools/m1-content/verify_assets.py
+python3 tools/m1-content/verify_runtime_bindings.py
 python3 -m unittest discover -s tools/m1-content -p 'test_*.py' -q
 python3 tools/m1-content/verify_routes.py
 python3 tools/m1-content/verify_state_oracles.py
@@ -47,6 +48,35 @@ authored source graph vectors to actual content IDs and schema-2 events.
   source departure/reconciliation and private Death's Office dependencies.
 - `progression.py`: all 71/73 tutorial and 10/22 Cook source graphs, rewards,
   recovery and death topics; no stage-skip command.
+- `runtime_application.py`: applies all104 source replacements and seven coupled
+  updates before serialization, then the sole owner-approved independent potion
+  event. Source-target/coupled fingerprints remain mandatory.
+
+## Canonical source application
+
+`research/runtime-bindings/resolutions.json` is immutable source evidence.
+`tools/runtime-bindings/apply.py` consumes it with the audited
+`application-context.json`: eight exact asset-provenance updates and one exact
+already-bound parent Wind Strike value are recognized, not broadly ignored.
+The generic applicator is idempotent for exact replacements/coupled fields,
+refuses changed targets and works on a draft rather than partially mutating input.
+
+`application-result.json` records all applied/retained fingerprints, coupled
+grants/entitlements/defaults, approved loot lowering, fixed-price extension and
+active/inactive proofs. `verify_runtime_bindings.py` checks canonical equality
+against source replacements,8192 joint primary/potion outcomes, five currency
+cases, replay/capacity rollback and scoped residual proofs.
+
+The original source oracles remain reproducible against their hash-locked inputs:
+
+```sh
+PYTHONDONTWRITEBYTECODE=1 python3 tools/runtime-bindings/validate.py \
+  --baseline-commit e9073ab --self-test
+```
+
+Do not refresh that original evidence to match a new artifact. The canonical
+application adds the resolved fields and owner-approved policy separately.
+Ninety-eight source-supported inferences are not observations or owner approvals.
 
 ## Optional source reproduction
 
@@ -76,6 +106,17 @@ python3 tools/m1-content/import_definitions.py \
   --java-home /path/to/verified/jdk-17
 ```
 
+The new three-dose source definition and note are reproduced narrowly with the
+same command plus:
+
+```sh
+  --item-ids 3010 --output research/m1-bindings/application-item-definitions.json.gz
+```
+
+This uses original verified cache bytes, not regenerated model/asset data.
+Original model2697 and definitions3010/3011 need source-worker asset publication;
+the original5254-reference closure stays intact.
+
 The importer reads JS5 sectors with `rb`, checks selected group SHA/CRC/revision
 and every pinned library hash, and never opens a writable cache `Store`. It
 does not regenerate models or alter source-worker assets. Ordinary source
@@ -96,12 +137,16 @@ references and interface groups are included without invented mesh links.
 
 `verify_assets.py` checks the frozen parent behavior/geometry/graph hashes,
 the exact72/68/6/13 requested closure roots, all5254 product references, shard
-provenance and unchanged111 behavior bindings. `asset-refresh-baseline.json`
-is the immutable pre-refresh evidence, not an alternative game dataset.
+provenance. When canonical source application is present, it accepts only the
+audited before/after behavior fingerprints, exact source/coupled changes and the
+two verified approved item identities. It does not skip old asset or geometry
+checks. `asset-refresh-baseline.json` is immutable historical evidence.
 
 `input-lock.json` hashes source/schema/generator inputs, including the merged
 catalog, additive publication, frozen closure request/definition snapshot,
-all1129 new source outputs, collection shards and dependency graph. The content manifest
+all1129 new source outputs, collection shards and dependency graph, plus the
+source resolution/oracle/value/feed records, exact application context and owner
+approval. The content manifest
 records compressed/uncompressed output hashes. Ordering and gzip metadata are
 deterministic. Source inference is not approval; successful compile, geometry
 and reference-model checks remain separate from executing the complete

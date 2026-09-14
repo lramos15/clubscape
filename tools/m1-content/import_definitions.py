@@ -73,7 +73,12 @@ def main():
     parser.add_argument("--tooling-dir", type=Path, required=True)
     parser.add_argument("--npc-catalogue", type=Path, required=True)
     parser.add_argument("--java-home", type=Path)
+    parser.add_argument("--item-ids", type=int, nargs="+", help="Narrow additional IDs only, with original note/template closure.")
+    parser.add_argument("--output", type=Path, default=OUTPUT)
     args = parser.parse_args()
+    destination = args.output.resolve()
+    if not destination.is_relative_to(ROOT / "research/m1-bindings") or destination.suffix != ".gz":
+        parser.error("Definition output must be an owned research/m1-bindings/*.gz file")
     WORK.mkdir(parents=True, exist_ok=True)
     lock = json.loads((ROOT / "tools/cache-import/dependencies.json").read_text())
     jars = []
@@ -94,7 +99,8 @@ def main():
     index = disk_archive(args.cache_dir, 255, 2)
     (WORK / "index2.bin").write_bytes(index)
     (WORK / "items.bin").write_bytes(container)
-    (WORK / "request.json").write_text(json.dumps({"names": NAMES, "ids": [2530, 33089, 33091]}))
+    requested = {"names": [] if args.item_ids else NAMES, "ids": args.item_ids or [2530, 33089, 33091]}
+    (WORK / "request.json").write_text(json.dumps(requested))
     classpath = ":".join(jars)
     javac = str(args.java_home / "bin/javac") if args.java_home else "javac"
     java = str(args.java_home / "bin/java") if args.java_home else "java"
@@ -126,10 +132,12 @@ def main():
             "group": bundle["groups"]["2/9"],
         },
     }
+    if args.item_ids:
+        output["request"] = requested
     data = (json.dumps(output, sort_keys=True, separators=(",", ":")) + "\n").encode()
-    OUTPUT.write_bytes(gzip.compress(data, mtime=0))
+    destination.write_bytes(gzip.compress(data, mtime=0))
     print(json.dumps({"items": len(output["items"]), "npcs": len(output["npcs"]),
-                      "output": str(OUTPUT.relative_to(ROOT)), "sha256": sha(OUTPUT.read_bytes())}))
+                      "output": str(destination.relative_to(ROOT)), "sha256": sha(destination.read_bytes())}))
 
 
 if __name__ == "__main__":

@@ -5,12 +5,12 @@
   "check_command": "python3 tools/m1-content/check.py",
   "compiled_artifact": {
     "artifact_version": 2,
-    "bytes": 474824,
+    "bytes": 486105,
     "path": "content/m1/game-content.csc.gz",
     "schema_version": 2,
-    "sha256": "af89733bf26b2d71154af4b6f1dd5974a1e351a0b51b7c79f523e4d98f186320",
-    "uncompressed_bytes": 11190792,
-    "uncompressed_sha256": "b71a287706ddd151be918081a1c6fdb4cb2fe7b8934b20da40e45ea5ba349e83"
+    "sha256": "5217217392faf73d99197c88290cbf63a22b274688b2f0cf85d8ecfc237a6a40",
+    "uncompressed_bytes": 11334334,
+    "uncompressed_sha256": "eb50782a3221f5dbed3d691b8073fe87b7ec4e93ef233266e544ad60dabfab9f"
   },
   "compiler_command": "python3 tools/m1-content/compile.py --compiler-manifest crates/content/Cargo.toml",
   "content_schema_version": 2,
@@ -23,13 +23,13 @@
     "dialogues": 21,
     "equipment_slots": 11,
     "interfaces": 26,
-    "items": 116,
+    "items": 118,
     "mechanics": {
       "combat_styles": 24,
       "counters": 134,
-      "entitlements": 12,
+      "entitlements": 13,
       "experiences": 3,
-      "grants": 17,
+      "grants": 18,
       "ground_policies": 4,
       "instances": 1,
       "object_transforms": 68,
@@ -41,7 +41,7 @@
       "travels": 26,
       "value_providers": 1
     },
-    "normal_note_pairs": 52,
+    "normal_note_pairs": 53,
     "npcs": 26,
     "objects": 4837,
     "quests": 2,
@@ -60,22 +60,29 @@
     "tutorial_source_transitions": 73,
     "tutorial_states": 71
   },
-  "input_aggregate_sha256": "8ca86c21110e51a10e237a9afb796cc5ebf55222a34a166d37a31eabb0eec882",
+  "input_aggregate_sha256": "e645c0e61fa4375ada2272fcc56c3a5558d0f184abe338eda723bad8d39b6fbf",
   "milestone_accepted": false,
   "outputs": [
     {
-      "bytes": 241723,
-      "json_bytes": 241723,
-      "json_sha256": "ba90f615b65d884e1671a872fde89a523e28c9977f598cf1e9cbe6829bd6c555",
+      "bytes": 244208,
+      "json_bytes": 244208,
+      "json_sha256": "8573994812d0da63797e5a675359901047a494222ff1cf92ffb921807a64e60b",
       "path": "research/m1-bindings/input-lock.json",
-      "sha256": "ba90f615b65d884e1671a872fde89a523e28c9977f598cf1e9cbe6829bd6c555"
+      "sha256": "8573994812d0da63797e5a675359901047a494222ff1cf92ffb921807a64e60b"
     },
     {
-      "bytes": 462836,
-      "json_bytes": 13472402,
-      "json_sha256": "1dd64980ea7e6fe05f4f19c26969a2720f7543afb75370ad4839b1a92adff74c",
+      "bytes": 472368,
+      "json_bytes": 13619080,
+      "json_sha256": "b32840310a64d2ffe65b077cabb092b25e34ede884f2874832a0893f23288054",
       "path": "content/m1/game-content.json.gz",
-      "sha256": "e16610724b18ac6164a3d094085a0e28e843f31c00c45763bb95be6d35590b12"
+      "sha256": "ecdeabdcb4270698b4706c014459f3ec719d63c03bcd9731bc81b7ae2b6dfd10"
+    },
+    {
+      "bytes": 184365,
+      "json_bytes": 184365,
+      "json_sha256": "db43912383e9b9e8fad62eb3f7a06cdaa6491a6d672001a6c8c1cbbc18ec11a6",
+      "path": "research/runtime-bindings/application-result.json",
+      "sha256": "db43912383e9b9e8fad62eb3f7a06cdaa6491a6d672001a6c8c1cbbc18ec11a6"
     },
     {
       "bytes": 52366,
@@ -505,11 +512,11 @@
       "sha256": "aab8341ed233c3151d1c395d1c98681c112c0c12a74cf5352e766db604da2639"
     },
     {
-      "bytes": 78492,
-      "json_bytes": 78492,
-      "json_sha256": "e435e3470839999381e5b901372320c82cb8ab6ac1780792a7dfcb43d317ad4b",
+      "bytes": 79955,
+      "json_bytes": 79955,
+      "json_sha256": "c3c2b05ec2151a89ebfa5e3863ff82ec1642ac61dfe5f7938932efd751649e8e",
       "path": "research/m1-bindings/item-bindings.json",
-      "sha256": "e435e3470839999381e5b901372320c82cb8ab6ac1780792a7dfcb43d317ad4b"
+      "sha256": "c3c2b05ec2151a89ebfa5e3863ff82ec1642ac61dfe5f7938932efd751649e8e"
     },
     {
       "bytes": 22049,
@@ -596,28 +603,123 @@
       "sha256": "77556ad0703b50d58289f495db911c53be4fa8b7f4c86adf55b5e86264ad9a33"
     },
     {
-      "bytes": 1961228,
-      "json_bytes": 1961228,
-      "json_sha256": "ea46cbbd39edd7722b3b3d55f4fb5cd2d3dbf31ccf8bab2fe03fd014dc98347b",
+      "bytes": 1962461,
+      "json_bytes": 1962461,
+      "json_sha256": "7142d7723a4237ebf8833deb57737ab3e16e66bca1729e723464e5b409ee080c",
       "path": "content/m1/asset-references.json",
-      "sha256": "ea46cbbd39edd7722b3b3d55f4fb5cd2d3dbf31ccf8bab2fe03fd014dc98347b"
+      "sha256": "7142d7723a4237ebf8833deb57737ab3e16e66bca1729e723464e5b409ee080c"
     },
     {
-      "bytes": 1976,
-      "json_bytes": 1976,
-      "json_sha256": "0eec31894214dd016396a1d28c668b3ef53fd051f6d8f038ced26755bbf79173",
+      "bytes": 2006,
+      "json_bytes": 2006,
+      "json_sha256": "a639a723762a38bcc628be3234417a0d0f7bf65ba49e609eb1e954c0484d3bcb",
       "path": "research/m1-bindings/structural-validation.json",
-      "sha256": "0eec31894214dd016396a1d28c668b3ef53fd051f6d8f038ced26755bbf79173"
+      "sha256": "a639a723762a38bcc628be3234417a0d0f7bf65ba49e609eb1e954c0484d3bcb"
     }
   ],
   "presentation_approved": false,
   "readiness_dependency": "research/m1-bindings/contract-gaps.json",
-  "revision": "m1.source-backed.v2.8ca86c21110e51a1",
+  "revision": "m1.source-backed.v2.e645c0e61fa4375a",
   "runtime_compile_passed": true,
   "runtime_ready": false,
   "runtime_schema_version": 1,
   "schema_version": 1,
   "scope_policy": "Compilation envelopes cover the complete required route and dependencies, not owner-approved fences. Full four-plane collision and all scenery from all 61 source squares are retained separately. Unlisted runtime cells remain blocked. Out-of-scope travel needs the separately approved feedback policy, never a visual void.",
+  "source_application": {
+    "approved_adaptation": "adaptation.m1.goblin_energy_potion_provisional",
+    "audit": "research/runtime-bindings/application-result.json",
+    "coupled_updates": 7,
+    "remaining_selector_hooks": [
+      "NPC loot must use original spawn/life/credit/resolved state and the engine's source-owned ground origin; NpcCombatMechanics currently has no explicit ordinary-loot ground-policy selector.",
+      "Preserve beginner-clue and member-only tertiary candidates with source family/ownership eligibility before enabling those full-target outcomes; the potion approval does not certify their selectors.",
+      "Ground death supplies require their source character/world-switch persistence and offline-paused clock, not a wall-clock expiry inferred solely from the policy numbers.",
+      "Engine-owned traversal, attack/recovery UI, engagement and initial setting selectors must consume the applied fields; this content task does not guess new shared field names."
+    ],
+    "residuals": {
+      "active_or_conditionally_active": [
+        {
+          "path": "mechanics.vitals.level_up",
+          "reason": "Source current-vital adjustment on a base-level gain is not established by the pinned rules.",
+          "required_branch": "Actual HP/Prayer base-level gain; not Mining/Cooking-only gains.",
+          "rule_group": "level_up_conditional_current"
+        }
+      ],
+      "active_or_conditionally_active_count": 1,
+      "inactive_full_target": [
+        {
+          "path": "items.item.ensouled_goblin_head.stackable.rule",
+          "proof": {
+            "ordinary_acquisition_absent": true,
+            "precondition": "Invalidate if a grant, recipe, ordinary loot, shop or spawn enables this acquisition.",
+            "rare_items": [
+              "item.ensouled_goblin_head",
+              "item.milk.bottomless_bucket"
+            ]
+          },
+          "reason": "Source opcode160/mode2 container-specific stacking/origin rules remain unbound. The source identity is retained; no ordinary M1 grant or acquisition is invented.",
+          "rule_group": "conditional_stack_alternatives"
+        },
+        {
+          "path": "items.item.milk.bottomless_bucket.stackable.rule",
+          "proof": {
+            "ordinary_acquisition_absent": true,
+            "precondition": "Invalidate if a grant, recipe, ordinary loot, shop or spawn enables this acquisition.",
+            "rare_items": [
+              "item.ensouled_goblin_head",
+              "item.milk.bottomless_bucket"
+            ]
+          },
+          "reason": "Source opcode160/mode2 container-specific stacking/origin rules remain unbound. The source identity is retained; no ordinary M1 grant or acquisition is invented.",
+          "rule_group": "conditional_stack_alternatives"
+        },
+        {
+          "path": "mechanics.death.office_overflow",
+          "proof": {
+            "office_capacity": 120,
+            "ordinary_acquired_instance_items": 0,
+            "precondition": "Office must merge ordinary non-instanced item keys. Recheck on universe, acquisition or instance/merge-rule changes; never unconditionally discard overflow.",
+            "represented_item_keys": 118
+          },
+          "reason": "Deletion order above120 Office entries is not source-bound.",
+          "rule_group": "office_capacity_unreachable"
+        },
+        {
+          "path": "spawns.spawn.tutorial.fishing_spot.3099.3090.p0.interactions[0].action.rule.mechanics.respawn",
+          "proof": {
+            "constant_depletion": 0,
+            "precondition": "Recheck if depletion or relocation starts reading this policy.",
+            "respawn_policy_reads_on_this_method": 0
+          },
+          "reason": "No depletion/respawn or relocation observation for these tutorial fishing spots; the source base method is nondepleting.",
+          "rule_group": "nondepleting_fishing_no_respawn"
+        },
+        {
+          "path": "spawns.spawn.tutorial.fishing_spot.3101.3092.p0.interactions[0].action.rule.mechanics.respawn",
+          "proof": {
+            "constant_depletion": 0,
+            "precondition": "Recheck if depletion or relocation starts reading this policy.",
+            "respawn_policy_reads_on_this_method": 0
+          },
+          "reason": "No depletion/respawn or relocation observation for these tutorial fishing spots; the source base method is nondepleting.",
+          "rule_group": "nondepleting_fishing_no_respawn"
+        },
+        {
+          "path": "spawns.spawn.tutorial.fishing_spot.3103.3092.p0.interactions[0].action.rule.mechanics.respawn",
+          "proof": {
+            "constant_depletion": 0,
+            "precondition": "Recheck if depletion or relocation starts reading this policy.",
+            "respawn_policy_reads_on_this_method": 0
+          },
+          "reason": "No depletion/respawn or relocation observation for these tutorial fishing spots; the source base method is nondepleting.",
+          "rule_group": "nondepleting_fishing_no_respawn"
+        }
+      ],
+      "inactive_full_target_count": 6,
+      "policy": "A source binding is required only when its proved branch is reachable. Inactive definitions remain in the full target; no unresolved value is replaced by a success-shaped default.",
+      "unresolved_total": 7
+    },
+    "source_bindings_consumed": 104
+  },
   "source_gameplay_verified": false,
   "source_geometry": {
     "below_bridge_placements": 3081,
@@ -633,5 +735,5 @@
     "source_regions": 61,
     "walls": 21619
   },
-  "unresolved_binding_count": 111
+  "unresolved_binding_count": 7
 }

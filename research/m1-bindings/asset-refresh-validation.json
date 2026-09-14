@@ -1,5 +1,6 @@
 {
-  "behavior_and_geometry_unchanged": true,
+  "audited_source_application": "research/runtime-bindings/application-result.json",
+  "behavior_and_geometry_unchanged": false,
   "behavior_sha256": "5d4552cce62e04653ce62fa4caead91e1a1dce0b823af1dbee262d0454c7e3c9",
   "bound_wind_strike_table": {
     "source": [
@@ -49,14 +50,15 @@
   },
   "compiled_artifact": {
     "artifact_version": 2,
-    "bytes": 474824,
+    "bytes": 486105,
     "path": "content/m1/game-content.csc.gz",
     "schema_version": 2,
-    "sha256": "af89733bf26b2d71154af4b6f1dd5974a1e351a0b51b7c79f523e4d98f186320",
-    "uncompressed_bytes": 11190792,
-    "uncompressed_sha256": "b71a287706ddd151be918081a1c6fdb4cb2fe7b8934b20da40e45ea5ba349e83"
+    "sha256": "5217217392faf73d99197c88290cbf63a22b274688b2f0cf85d8ecfc237a6a40",
+    "uncompressed_bytes": 11334334,
+    "uncompressed_sha256": "eb50782a3221f5dbed3d691b8073fe87b7ec4e93ef233266e544ad60dabfab9f"
   },
   "gameplay_executed": false,
+  "geometry_and_prior_asset_closure_preserved": true,
   "merged_catalog": {
     "path": "assets/manifests/osrs/cache2695-content-v2-bundle.json.gz",
     "sha256": "5f429fecea1b2526a146adb8e96c6c564343cd248f3a12c75911e17c57054b7b",
@@ -65,6 +67,17 @@
   "merged_inventory_records": 12396,
   "new_original_assets": 268,
   "new_original_outputs": 1129,
+  "new_verified_definition_publication_needed": {
+    "interface_groups": [],
+    "item_definition_ids": [
+      3010,
+      3011
+    ],
+    "model_ids": [
+      2697
+    ],
+    "npc_definition_ids": []
+  },
   "original_catalog_records_preserved": 12128,
   "original_source_files_validated": 559,
   "presentation_approved": false,
@@ -77,7 +90,7 @@
     "size_bytes": 1233
   },
   "publication_sha256": "0ecaa8905b2e54a5b956cfe077303931c734ac55d5b155859cb74bc18f677fce",
-  "remaining_data_hookup": "Consumers resolve the merged catalog and its additive publication/shards; 111 behavior policies and precise runtime selectors remain with their owners. Original assets are not scene/render/audio acceptance.",
+  "remaining_data_hookup": "Consumers resolve the merged catalog and its additive publication/shards; Canonical source application is checked separately; newly imported potion3010/3011 and original model2697 require source-worker publication. Original assets are not scene/render/audio acceptance.",
   "remaining_missing_inputs": [],
   "requested": {
     "interface_groups": 13,
@@ -92,10 +105,10 @@
     "npc_definition_ids": 6
   },
   "result": "passed",
-  "revision": "m1.source-backed.v2.8ca86c21110e51a1",
+  "revision": "m1.source-backed.v2.e645c0e61fa4375a",
   "runtime_compile_passed": true,
   "schema_version": 1,
   "scope": "Asset/provenance refresh only; not full M1 source or gameplay certification.",
   "task": "m1-content-asset-refresh",
-  "unresolved_behavior_bindings_unchanged": 111
+  "unresolved_behavior_bindings_unchanged": 7
 }

@@ -1,0 +1,154 @@
+{
+  "content_compressed_sha256": "ecdeabdcb4270698b4706c014459f3ec719d63c03bcd9731bc81b7ae2b6dfd10",
+  "coupled_updates_checked": 7,
+  "death_values_checked": 118,
+  "departure": {
+    "atomic_capacity_rollback": true,
+    "currency_vectors": [
+      {
+        "coins_after": 25,
+        "coins_before": 25,
+        "id": "departure.untouched_coins",
+        "passed": true
+      },
+      {
+        "coins_after": 25,
+        "coins_before": 25,
+        "id": "departure.withdrawn_coins",
+        "passed": true
+      },
+      {
+        "coins_after": 25,
+        "coins_before": 25,
+        "id": "departure.partial_deposit",
+        "passed": true
+      },
+      {
+        "coins_after": 25,
+        "coins_before": 25,
+        "id": "departure.dropped_money_not_reseeded",
+        "passed": true
+      },
+      {
+        "coins_after": 0,
+        "coins_before": 0,
+        "id": "departure.money_lost_to_expiry",
+        "passed": true
+      }
+    ],
+    "replay_cases": 5
+  },
+  "gameplay_executed": false,
+  "loot": {
+    "conditional_dose_probabilities": {
+      "item.energy_potion.four_dose": "1/4",
+      "item.energy_potion.one_dose": "1/4",
+      "item.energy_potion.three_dose": "1/4",
+      "item.energy_potion.two_dose": "1/4"
+    },
+    "event_probability": "1/16",
+    "joint_primary_potion_vectors": 8192,
+    "production_replay_execution_claimed": false,
+    "receipt_invariant_vectors": 4
+  },
+  "original_source_numeric_oracles": "research/runtime-bindings/application-source-validation.json",
+  "presentation_approved": false,
+  "remaining_selector_hooks": [
+    "NPC loot must use original spawn/life/credit/resolved state and the engine's source-owned ground origin; NpcCombatMechanics currently has no explicit ordinary-loot ground-policy selector.",
+    "Preserve beginner-clue and member-only tertiary candidates with source family/ownership eligibility before enabling those full-target outcomes; the potion approval does not certify their selectors.",
+    "Ground death supplies require their source character/world-switch persistence and offline-paused clock, not a wall-clock expiry inferred solely from the policy numbers.",
+    "Engine-owned traversal, attack/recovery UI, engagement and initial setting selectors must consume the applied fields; this content task does not guess new shared field names."
+  ],
+  "residuals": {
+    "active_or_conditionally_active": [
+      {
+        "path": "mechanics.vitals.level_up",
+        "reason": "Source current-vital adjustment on a base-level gain is not established by the pinned rules.",
+        "required_branch": "Actual HP/Prayer base-level gain; not Mining/Cooking-only gains.",
+        "rule_group": "level_up_conditional_current"
+      }
+    ],
+    "active_or_conditionally_active_count": 1,
+    "inactive_full_target": [
+      {
+        "path": "items.item.ensouled_goblin_head.stackable.rule",
+        "proof": {
+          "ordinary_acquisition_absent": true,
+          "precondition": "Invalidate if a grant, recipe, ordinary loot, shop or spawn enables this acquisition.",
+          "rare_items": [
+            "item.ensouled_goblin_head",
+            "item.milk.bottomless_bucket"
+          ]
+        },
+        "reason": "Source opcode160/mode2 container-specific stacking/origin rules remain unbound. The source identity is retained; no ordinary M1 grant or acquisition is invented.",
+        "rule_group": "conditional_stack_alternatives"
+      },
+      {
+        "path": "items.item.milk.bottomless_bucket.stackable.rule",
+        "proof": {
+          "ordinary_acquisition_absent": true,
+          "precondition": "Invalidate if a grant, recipe, ordinary loot, shop or spawn enables this acquisition.",
+          "rare_items": [
+            "item.ensouled_goblin_head",
+            "item.milk.bottomless_bucket"
+          ]
+        },
+        "reason": "Source opcode160/mode2 container-specific stacking/origin rules remain unbound. The source identity is retained; no ordinary M1 grant or acquisition is invented.",
+        "rule_group": "conditional_stack_alternatives"
+      },
+      {
+        "path": "mechanics.death.office_overflow",
+        "proof": {
+          "office_capacity": 120,
+          "ordinary_acquired_instance_items": 0,
+          "precondition": "Office must merge ordinary non-instanced item keys. Recheck on universe, acquisition or instance/merge-rule changes; never unconditionally discard overflow.",
+          "represented_item_keys": 118
+        },
+        "reason": "Deletion order above120 Office entries is not source-bound.",
+        "rule_group": "office_capacity_unreachable"
+      },
+      {
+        "path": "spawns.spawn.tutorial.fishing_spot.3099.3090.p0.interactions[0].action.rule.mechanics.respawn",
+        "proof": {
+          "constant_depletion": 0,
+          "precondition": "Recheck if depletion or relocation starts reading this policy.",
+          "respawn_policy_reads_on_this_method": 0
+        },
+        "reason": "No depletion/respawn or relocation observation for these tutorial fishing spots; the source base method is nondepleting.",
+        "rule_group": "nondepleting_fishing_no_respawn"
+      },
+      {
+        "path": "spawns.spawn.tutorial.fishing_spot.3101.3092.p0.interactions[0].action.rule.mechanics.respawn",
+        "proof": {
+          "constant_depletion": 0,
+          "precondition": "Recheck if depletion or relocation starts reading this policy.",
+          "respawn_policy_reads_on_this_method": 0
+        },
+        "reason": "No depletion/respawn or relocation observation for these tutorial fishing spots; the source base method is nondepleting.",
+        "rule_group": "nondepleting_fishing_no_respawn"
+      },
+      {
+        "path": "spawns.spawn.tutorial.fishing_spot.3103.3092.p0.interactions[0].action.rule.mechanics.respawn",
+        "proof": {
+          "constant_depletion": 0,
+          "precondition": "Recheck if depletion or relocation starts reading this policy.",
+          "respawn_policy_reads_on_this_method": 0
+        },
+        "reason": "No depletion/respawn or relocation observation for these tutorial fishing spots; the source base method is nondepleting.",
+        "rule_group": "nondepleting_fishing_no_respawn"
+      }
+    ],
+    "inactive_full_target_count": 6,
+    "policy": "A source binding is required only when its proved branch is reachable. Inactive definitions remain in the full target; no unresolved value is replaced by a success-shaped default.",
+    "unresolved_total": 7
+  },
+  "result": "passed",
+  "schema_version": 1,
+  "source_bindings_checked": {
+    "codebug_parent_fixed": 1,
+    "known_fact": 5,
+    "source_supported_inference": 98
+  },
+  "source_bindings_consumed": 104,
+  "task": "m1-apply-runtime-bindings"
+}

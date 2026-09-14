@@ -1015,6 +1015,60 @@
         "468": 17
       }
     },
+    "item.energy_potion.three_dose": {
+      "asset_available": false,
+      "interpretation": "Notes use the source template/base composition. Item models, recolors, retextures, icon framing and wear attachments remain in the original definition.",
+      "missing_model_ids": [
+        2697
+      ],
+      "models": [
+        2697
+      ],
+      "native_weight_grams": 30,
+      "note_template": -1,
+      "source_asset": "asset.source.osrs.cache2695.item.3010",
+      "source_id": 3010,
+      "source_members": false,
+      "source_options": [
+        "Drink",
+        null,
+        null,
+        "Empty",
+        "Drop"
+      ],
+      "source_params": {
+        "434": 15,
+        "436": 26,
+        "468": 17
+      }
+    },
+    "item.energy_potion.three_dose.noted": {
+      "asset_available": false,
+      "interpretation": "Notes use the source template/base composition. Item models, recolors, retextures, icon framing and wear attachments remain in the original definition.",
+      "missing_model_ids": [
+        2697
+      ],
+      "models": [
+        2697
+      ],
+      "native_weight_grams": 30,
+      "note_template": 799,
+      "source_asset": "asset.source.osrs.cache2695.item.3011",
+      "source_id": 3011,
+      "source_members": false,
+      "source_options": [
+        "Drink",
+        null,
+        null,
+        "Empty",
+        "Drop"
+      ],
+      "source_params": {
+        "434": 15,
+        "436": 26,
+        "468": 17
+      }
+    },
     "item.energy_potion.two_dose": {
       "asset_available": true,
       "interpretation": "Notes use the source template/base composition. Item models, recolors, retextures, icon framing and wear attachments remain in the original definition.",

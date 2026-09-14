@@ -1,14 +1,15 @@
 {
-  "base": "34c8ef4",
-  "branch": "task/m1-content-assets",
+  "base": "0aea6c0",
+  "bounded_available_source_application_complete": true,
+  "branch": "task/m1-binding-application",
   "compiled_artifact": {
     "artifact_version": 2,
-    "bytes": 474824,
+    "bytes": 486105,
     "path": "content/m1/game-content.csc.gz",
     "schema_version": 2,
-    "sha256": "af89733bf26b2d71154af4b6f1dd5974a1e351a0b51b7c79f523e4d98f186320",
-    "uncompressed_bytes": 11190792,
-    "uncompressed_sha256": "b71a287706ddd151be918081a1c6fdb4cb2fe7b8934b20da40e45ea5ba349e83"
+    "sha256": "5217217392faf73d99197c88290cbf63a22b274688b2f0cf85d8ecfc237a6a40",
+    "uncompressed_bytes": 11334334,
+    "uncompressed_sha256": "eb50782a3221f5dbed3d691b8073fe87b7ec4e93ef233266e544ad60dabfab9f"
   },
   "counts": {
     "cooks_projected_edges": 22,
@@ -19,13 +20,13 @@
     "dialogues": 21,
     "equipment_slots": 11,
     "interfaces": 26,
-    "items": 116,
+    "items": 118,
     "mechanics": {
       "combat_styles": 24,
       "counters": 134,
-      "entitlements": 12,
+      "entitlements": 13,
       "experiences": 3,
-      "grants": 17,
+      "grants": 18,
       "ground_policies": 4,
       "instances": 1,
       "object_transforms": 68,
@@ -37,7 +38,7 @@
       "travels": 26,
       "value_providers": 1
     },
-    "normal_note_pairs": 52,
+    "normal_note_pairs": 53,
     "npcs": 26,
     "objects": 4837,
     "quests": 2,
@@ -56,76 +57,177 @@
     "tutorial_source_transitions": 73,
     "tutorial_states": 71
   },
-  "current_authority": [
-    "content/m1/manifest.json",
-    "research/m1-bindings/asset-refresh-validation.json",
-    "research/m1-bindings/compiler-validation.json",
-    "research/m1-bindings/schema-validation.json"
-  ],
   "evidence_hashes": {
-    "content/m1/asset-references.json": "ea46cbbd39edd7722b3b3d55f4fb5cd2d3dbf31ccf8bab2fe03fd014dc98347b",
-    "content/m1/game-content.csc.gz": "af89733bf26b2d71154af4b6f1dd5974a1e351a0b51b7c79f523e4d98f186320",
-    "content/m1/game-content.json.gz": "e16610724b18ac6164a3d094085a0e28e843f31c00c45763bb95be6d35590b12",
-    "content/m1/manifest.json": "6069e7db58e0bbc9144a699a7c61347f68ca9a461431b371a05ff7ffc6d37196",
-    "research/m1-bindings/asset-refresh-validation.json": "be9b071636871079a90a90817ba7c64bdb06238d7bd9938b3b3c022253447b48",
-    "research/m1-bindings/repeatability.json": "f181dc8b902084041fbf1858fe633fcd4805bd3c6a313fe4ee7361f4711006b1",
-    "research/m1-bindings/route-validation.json": "2a2f13758fc2fcd98edf7e942a5ec799c834ec95fca56c71e25d190e0cd6b5f8",
-    "research/m1-bindings/schema-validation.json": "63da6c64a55e55b614d661a5f2cf3c8fa87f8a052656c429bc6334a05350cfb4",
-    "research/m1-bindings/state-oracle-validation.json": "8021715b91aa708b21705bdbd9addf98fc599ace6fdb037e66e396a2aa85d814",
-    "research/m1-bindings/test-output.log": "cba203219b834140a43065fe5f0a8c22a4ffda1799d81b8cd096c69e46f7f046"
+    "content/m1/game-content.csc.gz": "5217217392faf73d99197c88290cbf63a22b274688b2f0cf85d8ecfc237a6a40",
+    "content/m1/game-content.json.gz": "ecdeabdcb4270698b4706c014459f3ec719d63c03bcd9731bc81b7ae2b6dfd10",
+    "content/m1/manifest.json": "0fbe219fa12ae7bcbb39f25b14355ed301fdeaa6af3a7615d8b1c7b579da1c00",
+    "research/m1-bindings/repeatability.json": "0374acffff447708fc2eb86e265d3e4f5949d39e116ff887523ecc180f07f246",
+    "research/m1-bindings/route-validation.json": "6598235fdee348ee429efdf22b21ccfb9d5206795e2c185ef896a0b1da84423b",
+    "research/m1-bindings/schema-validation.json": "773dd272945b0df3ca0d4333cfdf5f5b2e595e2e2d2aafd20b494b8331da2255",
+    "research/m1-bindings/state-oracle-validation.json": "6031f1aaad229766b407b76209f5a860907a5c950c82daa7508e739f3a28885b",
+    "research/m1-bindings/test-output.log": "2991bd840c8052d8415133b7fd4e5875596e230f8f5bf0e1bf459f4f2a743caf",
+    "research/runtime-bindings/application-result.json": "db43912383e9b9e8fad62eb3f7a06cdaa6491a6d672001a6c8c1cbbc18ec11a6",
+    "research/runtime-bindings/application-source-validation.json": "9bc3b7be29d8f58ffd3f2965518592e4639de65ff4010518954eb10339155a77",
+    "research/runtime-bindings/application-validation.json": "1178725d5dc32a320ce099f749d115023d043e3afc5f4895f5fa5a7caf732ec1"
   },
-  "fully_done": true,
-  "historical_baseline": "research/m1-bindings/asset-refresh-baseline.json",
+  "fully_done": false,
+  "new_original_item_publication_hookup": {
+    "item_definitions": [
+      3010,
+      3011
+    ],
+    "model_ids": [
+      2697
+    ],
+    "previous_asset_closure_references_preserved": 5254,
+    "source": "research/m1-bindings/application-item-definitions.json.gz"
+  },
   "overall_m1_product_content_status": "blocked",
-  "ownership": "Only content/m1, tools/m1-content and research/m1-bindings changed; no agents, factories or peer messages.",
-  "remaining_data_hookup": [
-    "Content now references the validated merged catalog and additive definition shards. Consumers must follow both publication manifests and resolve extension extraction_path to committed path; no original asset is fabricated or overwritten.",
-    "The separately owned resolver still handles111 localized behavior policies. This task changed no rule, geometry, tutorial/Cook graph, provisional policy or repaired Wind Strike table.",
-    "Engine finalization owns remaining precise selectors; source/render/audio/live-journey/owner-approval gates remain separate."
+  "parent_action": "Integrate this owned-path source application. Add/relay the tiny actual shared conditional-vital enum; the generator then binds it without guessing fields. Keep HP/Prayer policy off unrelated Mining/Cooking gains. Engine/backend owners finish precise source selectors, ownership and real journey execution. No old data/asset/decoder blocker or blanket111 policy count is used.",
+  "remaining_selector_hooks": [
+    "NPC loot must use original spawn/life/credit/resolved state and the engine's source-owned ground origin; NpcCombatMechanics currently has no explicit ordinary-loot ground-policy selector.",
+    "Preserve beginner-clue and member-only tertiary candidates with source family/ownership eligibility before enabling those full-target outcomes; the potion approval does not certify their selectors.",
+    "Ground death supplies require their source character/world-switch persistence and offline-paused clock, not a wall-clock expiry inferred solely from the policy numbers.",
+    "Engine-owned traversal, attack/recovery UI, engagement and initial setting selectors must consume the applied fields; this content task does not guess new shared field names."
   ],
-  "revision": "m1.source-backed.v2.8ca86c21110e51a1",
+  "residuals": {
+    "active_or_conditionally_active": [
+      {
+        "path": "mechanics.vitals.level_up",
+        "reason": "Source current-vital adjustment on a base-level gain is not established by the pinned rules.",
+        "required_branch": "Actual HP/Prayer base-level gain; not Mining/Cooking-only gains.",
+        "rule_group": "level_up_conditional_current"
+      }
+    ],
+    "active_or_conditionally_active_count": 1,
+    "inactive_full_target": [
+      {
+        "path": "items.item.ensouled_goblin_head.stackable.rule",
+        "proof": {
+          "ordinary_acquisition_absent": true,
+          "precondition": "Invalidate if a grant, recipe, ordinary loot, shop or spawn enables this acquisition.",
+          "rare_items": [
+            "item.ensouled_goblin_head",
+            "item.milk.bottomless_bucket"
+          ]
+        },
+        "reason": "Source opcode160/mode2 container-specific stacking/origin rules remain unbound. The source identity is retained; no ordinary M1 grant or acquisition is invented.",
+        "rule_group": "conditional_stack_alternatives"
+      },
+      {
+        "path": "items.item.milk.bottomless_bucket.stackable.rule",
+        "proof": {
+          "ordinary_acquisition_absent": true,
+          "precondition": "Invalidate if a grant, recipe, ordinary loot, shop or spawn enables this acquisition.",
+          "rare_items": [
+            "item.ensouled_goblin_head",
+            "item.milk.bottomless_bucket"
+          ]
+        },
+        "reason": "Source opcode160/mode2 container-specific stacking/origin rules remain unbound. The source identity is retained; no ordinary M1 grant or acquisition is invented.",
+        "rule_group": "conditional_stack_alternatives"
+      },
+      {
+        "path": "mechanics.death.office_overflow",
+        "proof": {
+          "office_capacity": 120,
+          "ordinary_acquired_instance_items": 0,
+          "precondition": "Office must merge ordinary non-instanced item keys. Recheck on universe, acquisition or instance/merge-rule changes; never unconditionally discard overflow.",
+          "represented_item_keys": 118
+        },
+        "reason": "Deletion order above120 Office entries is not source-bound.",
+        "rule_group": "office_capacity_unreachable"
+      },
+      {
+        "path": "spawns.spawn.tutorial.fishing_spot.3099.3090.p0.interactions[0].action.rule.mechanics.respawn",
+        "proof": {
+          "constant_depletion": 0,
+          "precondition": "Recheck if depletion or relocation starts reading this policy.",
+          "respawn_policy_reads_on_this_method": 0
+        },
+        "reason": "No depletion/respawn or relocation observation for these tutorial fishing spots; the source base method is nondepleting.",
+        "rule_group": "nondepleting_fishing_no_respawn"
+      },
+      {
+        "path": "spawns.spawn.tutorial.fishing_spot.3101.3092.p0.interactions[0].action.rule.mechanics.respawn",
+        "proof": {
+          "constant_depletion": 0,
+          "precondition": "Recheck if depletion or relocation starts reading this policy.",
+          "respawn_policy_reads_on_this_method": 0
+        },
+        "reason": "No depletion/respawn or relocation observation for these tutorial fishing spots; the source base method is nondepleting.",
+        "rule_group": "nondepleting_fishing_no_respawn"
+      },
+      {
+        "path": "spawns.spawn.tutorial.fishing_spot.3103.3092.p0.interactions[0].action.rule.mechanics.respawn",
+        "proof": {
+          "constant_depletion": 0,
+          "precondition": "Recheck if depletion or relocation starts reading this policy.",
+          "respawn_policy_reads_on_this_method": 0
+        },
+        "reason": "No depletion/respawn or relocation observation for these tutorial fishing spots; the source base method is nondepleting.",
+        "rule_group": "nondepleting_fishing_no_respawn"
+      }
+    ],
+    "inactive_full_target_count": 6,
+    "policy": "A source binding is required only when its proved branch is reachable. Inactive definitions remain in the full target; no unresolved value is replaced by a success-shaped default.",
+    "unresolved_total": 7
+  },
+  "revision": "m1.source-backed.v2.e645c0e61fa4375a",
   "runtime_ready": false,
   "schema_version": 2,
-  "scope": "Bounded completed original-asset/provenance refresh only. Not blanket full-M1 source certification.",
-  "source_asset_coverage": {
-    "merged_catalog": {
-      "path": "assets/manifests/osrs/cache2695-content-v2-bundle.json.gz",
-      "sha256": "5f429fecea1b2526a146adb8e96c6c564343cd248f3a12c75911e17c57054b7b",
-      "size_bytes": 1900496
-    },
-    "merged_inventory_records": 12396,
-    "new_original_assets": 268,
-    "new_original_outputs": 1129,
-    "product_asset_ids_resolved": 5254,
-    "remaining_missing_inputs": [],
-    "requested": {
-      "interface_groups": 13,
-      "item_definition_ids": 72,
-      "model_ids": 68,
-      "npc_definition_ids": 6
-    },
-    "resolved": {
-      "interface_groups": 13,
-      "item_definition_ids": 72,
-      "model_ids": 68,
-      "npc_definition_ids": 6
-    }
+  "source_application": {
+    "approved_adaptation": "adaptation.m1.goblin_energy_potion_provisional",
+    "audit": "research/runtime-bindings/application-result.json",
+    "coupled_updates": 7,
+    "exact_already_applied": 1,
+    "inferences_not_approvals": 98,
+    "newly_applied": 103,
+    "source_bindings_consumed": 104,
+    "validation": "research/runtime-bindings/application-validation.json"
   },
-  "status": "done",
-  "task": "m1-content-asset-refresh",
+  "status": "blocked",
+  "task": "m1-apply-runtime-bindings",
   "validation": {
     "artifact_reloaded": true,
-    "behavior_and_geometry_unchanged": true,
-    "behavior_sha256": "5d4552cce62e04653ce62fa4caead91e1a1dce0b823af1dbee262d0454c7e3c9",
-    "content_tests_passed": 36,
-    "independent_source_state_oracles_passed": 23,
+    "atomic_cleanup_grant_rollback": true,
+    "content_tests_passed": 47,
+    "currency_conservation_cases": 5,
+    "departure_replay_cases": 5,
+    "independent_graph_oracles_passed": 23,
+    "loot_joint_vectors": 8192,
+    "negative_source_mutations_rejected": 8,
+    "original_source_numeric_checks": 195,
     "presentation_approved": false,
-    "repeatable_outputs": 83,
+    "production_gameplay_executed": false,
+    "repeatable_outputs": 85,
     "required_walk_segments": 30,
-    "source_gameplay_executed": false,
-    "source_numeric_hit_table_json_supported": true,
     "source_routes_connected": 30,
-    "strict_runtime_compile_passed": true,
-    "unresolved_behavior_bindings_unchanged": 111
+    "strict_runtime_compile_passed": true
+  },
+  "vital_policy": {
+    "action": "awaiting_declared_shared_enum",
+    "path": "mechanics.vitals.level_up",
+    "proposed_value": "raise_if_at_old_base_otherwise_preserve",
+    "source": [
+      {
+        "notes": "Raise current to new base only when current equaled old base; leave drained and boosted values unchanged. Do not consult this policy for unrelated skills. Snapshot SHA-256: 550b17906059c3126324fd7df3bf80b6b5804b4a05bf280ecdc65af8c5a7dbe6. Documentary/code evidence, not a live observation.",
+        "reference": "https://raw.githubusercontent.com/rsmod/rsmod/fa13b3f67172ef36e15d6b1514358aee61411796/api/player/src/main/kotlin/org/rsmod/api/player/stat/PlayerSkillXP.kt",
+        "revision": "fa13b3f67172ef36e15d6b1514358aee61411796",
+        "status": "inference"
+      },
+      {
+        "notes": "Raise current to new base only when current equaled old base; leave drained and boosted values unchanged. Do not consult this policy for unrelated skills. Snapshot SHA-256: 0eb40a2013c137a314d8e680fc9743d93217efe2a86f386f1b2d3b32ad4174d7. Documentary/code evidence, not a live observation.",
+        "reference": "https://raw.githubusercontent.com/rsmod/rsmod/fa13b3f67172ef36e15d6b1514358aee61411796/api/player/src/integration/kotlin/org/rsmod/api/player/stat/PlayerSkillXPTest.kt",
+        "revision": "fa13b3f67172ef36e15d6b1514358aee61411796",
+        "status": "inference"
+      },
+      {
+        "notes": "Raise current to new base only when current equaled old base; leave drained and boosted values unchanged. Do not consult this policy for unrelated skills. Snapshot SHA-256: 0a4289963c26e6dd7074a80d150c220ff1ce2cb4b65fba589965f99803d5a019. Documentary/code evidence, not a live observation.",
+        "reference": "https://oldschool.runescape.wiki/w/Skills?oldid=15321845",
+        "revision": "15321845",
+        "status": "inference"
+      }
+    ]
   }
 }

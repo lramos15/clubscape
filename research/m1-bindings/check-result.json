@@ -9,13 +9,13 @@
     "dialogues": 21,
     "equipment_slots": 11,
     "interfaces": 26,
-    "items": 116,
+    "items": 118,
     "mechanics": {
       "combat_styles": 24,
       "counters": 134,
-      "entitlements": 12,
+      "entitlements": 13,
       "experiences": 3,
-      "grants": 17,
+      "grants": 18,
       "ground_policies": 4,
       "instances": 1,
       "object_transforms": 68,
@@ -27,7 +27,7 @@
       "travels": 26,
       "value_providers": 1
     },
-    "normal_note_pairs": 52,
+    "normal_note_pairs": 53,
     "npcs": 26,
     "objects": 4837,
     "quests": 2,
@@ -60,8 +60,9 @@
     "spawn.tutorial.fishing_spot.3103.3092.p0"
   ],
   "source_status_occurrences": {
-    "inference": 2450,
-    "verified_reference": 11569
+    "approved_adaptation": 1,
+    "inference": 2721,
+    "verified_reference": 11428
   },
   "structural_checks_passed": true
 }

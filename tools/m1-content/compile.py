@@ -8,7 +8,7 @@ import os
 from pathlib import Path
 import subprocess
 
-from common import BINDINGS, CONTENT, ROOT, canonical, sha, write
+from common import BINDINGS, CONTENT, ROOT, canonical, load, sha, write
 
 
 def main():
@@ -76,11 +76,20 @@ def main():
         if {value["path"] for value in unresolved} != set(reported):
             raise ValueError("Compiler unresolved-binding report differs from authored source binding paths")
         record["unresolved_binding_count"] = len(unresolved)
+        application = load(ROOT / "research/runtime-bindings/application-result.json")
+        if application["content_compressed_sha256"] != sha(source.read_bytes()):
+            raise ValueError("Source application proof does not match compiler input")
+        residuals = application["residuals"]
+        if residuals["unresolved_total"] != len(unresolved):
+            raise ValueError("Compiler/source-branch unresolved classification disagrees")
+        record["source_branch_residuals"] = residuals
         write(BINDINGS / "unresolved-bindings.json", {
             "schema_version": 2, "content_sha256": sha(source.read_bytes()),
             "runtime_compile_passed": True, "runtime_success_claimed": False,
             "bindings": unresolved, "count": len(unresolved),
             "profile_candidates": "research/m1-bindings/profile-v2.json",
+            "source_application": "research/runtime-bindings/application-result.json",
+            "source_branch_residuals": residuals,
         }, True)
     write(BINDINGS / "compiler-validation.json", record, True)
     print(json.dumps({

@@ -187,6 +187,7 @@ class Inputs:
             for identifier in load(ROOT / shard["path"]):
                 self.collection_sources[identifier] = shard["path"]
         self.supplement = load(BINDINGS / "definitions.json.gz")
+        self.definition_supplements = {}
         for number, record in self.supplement["items"].items():
             number = int(number)
             existing = self.collections["item"].get(number)
@@ -199,6 +200,18 @@ class Inputs:
             if existing is not None and existing != record:
                 raise ValueError(f"Supplement disagrees with original NPC {number}")
             self.collections["npc"][number] = record
+        extra = BINDINGS / "application-item-definitions.json.gz"
+        if extra.exists():
+            supplement = load(extra)
+            if supplement["item_group"] != self.bundle["groups"]["2/10"]:
+                raise ValueError("Additional item definitions have a different source archive identity")
+            for number, record in supplement["items"].items():
+                number = int(number)
+                existing = self.collections["item"].get(number)
+                if existing is not None and existing != record["definition"]:
+                    raise ValueError(f"Additional definition disagrees with original item {number}")
+                self.collections["item"][number] = record["definition"]
+                self.definition_supplements[("item", number)] = str(extra.relative_to(ROOT))
         self.rules = {name: load(JOURNEY / f"{name}.json") for name in (
             "initial-state", "activities", "tutorial", "cooks-assistant",
             "vocabulary", "decisions", "expected-scenarios")}
@@ -229,7 +242,7 @@ class Inputs:
     def definition_source(self, kind, number):
         asset = self.asset(kind, number)
         reference = (f"{self.collection_sources[asset]}#{asset}" if asset else
-                     f"research/m1-bindings/definitions.json.gz#{kind}s/{number}")
+                     f"{self.definition_supplements.get((kind, number), 'research/m1-bindings/definitions.json.gz')}#{kind}s/{number}")
         return [source_record(reference, f"Original selected-cache {kind} definition {number}; "
                               "source assets, not approved presentation or observed gameplay.")]
 

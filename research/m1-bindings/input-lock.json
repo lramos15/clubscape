@@ -1,5 +1,5 @@
 {
-  "aggregate_sha256": "8ca86c21110e51a10e237a9afb796cc5ebf55222a34a166d37a31eabb0eec882",
+  "aggregate_sha256": "e645c0e61fa4375ada2272fcc56c3a5558d0f184abe338eda723bad8d39b6fbf",
   "inputs": [
     {
       "bytes": 1900496,
@@ -6102,6 +6102,11 @@
       "sha256": "16ee6cad012123528429cd537bc494772e30da96571aab590dddaaf5717a21ff"
     },
     {
+      "bytes": 1512,
+      "path": "milestones/m1-goblin-loot-approval.json",
+      "sha256": "4f1fd17b2a454ad4c36cdd36a51becbdf9f17d132d8838187ff5afec15b32e85"
+    },
+    {
       "bytes": 9339,
       "path": "research/current-source/extraction-contract.json",
       "sha256": "a499a1cbef2af341193b35835b6da60420d1c06739a4c435e3e3bd03594ab59c"
@@ -6182,6 +6187,11 @@
       "sha256": "590d12348952c41dbbf9772a08537926bb6dfcda3c2a29bd4e881265a2313a6b"
     },
     {
+      "bytes": 2558,
+      "path": "research/m1-bindings/application-item-definitions.json.gz",
+      "sha256": "86b390d4db1ae66e0c47aabd588db4015855b3c0db858a9e2b6658b30fbdf31b"
+    },
+    {
       "bytes": 29188,
       "path": "research/m1-bindings/code-sources.json",
       "sha256": "19e34244977f7f9d1f5316748689099cd49fd94711a825e3a223f5d22777f6e2"
@@ -6202,9 +6212,9 @@
       "sha256": "299a330d5f6ff3876b2668cff58d7c58c41776239e4851d7558d8d8e781e9738"
     },
     {
-      "bytes": 8695,
+      "bytes": 8738,
       "path": "research/m1-bindings/selection.json",
-      "sha256": "964a11710e7be38224dfdc27ae38b2127b9dba0477d92a25cc3c1fd04b19b465"
+      "sha256": "eba70c376dfb2facd5dda8c08522089d384cff93260db235c5b45e79dcad45ba"
     },
     {
       "bytes": 43318,
@@ -6215,6 +6225,46 @@
       "bytes": 19197,
       "path": "research/m1-bindings/wiki-sources.json",
       "sha256": "d691a9316238d85e14ad7197b2b83b358beb068543b24690d26f45a4a005674e"
+    },
+    {
+      "bytes": 8349,
+      "path": "research/runtime-bindings/application-context.json",
+      "sha256": "01bf4176ef9b593e4a676f37b5fbd59af265e11b58e4ab25450af080050f7649"
+    },
+    {
+      "bytes": 58028,
+      "path": "research/runtime-bindings/death-values.json",
+      "sha256": "91a2c645e923fe9d0c1d22445066bed6b57f662a91b95410ae5fc62ad60f1cf9"
+    },
+    {
+      "bytes": 70668,
+      "path": "research/runtime-bindings/inputs/guide-prices.json.gz",
+      "sha256": "edb8af4e33318b2700163cade3e856b458165dba08e16387951ead444ee0886b"
+    },
+    {
+      "bytes": 11069,
+      "path": "research/runtime-bindings/oracles.json",
+      "sha256": "8ea68c20e43b14b7ef2f47d9bc636d7823a8e23f643db69f1564d818c4c4d50c"
+    },
+    {
+      "bytes": 10994,
+      "path": "research/runtime-bindings/profile-resolutions.json",
+      "sha256": "579b9d9a781edc92349ea6855a7c8620446f92585b5e3500d8ae13d1a7abb076"
+    },
+    {
+      "bytes": 590232,
+      "path": "research/runtime-bindings/resolutions.json",
+      "sha256": "56f1a2703f9ae4be2290eeaa3de07dfb5ed1641fc51d2d974c9653540b195737"
+    },
+    {
+      "bytes": 52350,
+      "path": "research/runtime-bindings/sources.json",
+      "sha256": "732d3bf9ced13aea68baf00a232d3911ba18b96d61be9cf6794d7606e2b065f8"
+    },
+    {
+      "bytes": 1377,
+      "path": "spec/adaptations.md",
+      "sha256": "08e0e30b2f0ff9391ec70259404c69ea560d9fb212c2bc28e3602dc4ab1e7b8e"
     },
     {
       "bytes": 37218,
@@ -6242,9 +6292,9 @@
       "sha256": "3ccf42326831b8d396fed6b843c9ace2cdc298a36b85323cc0bc91490b5c0898"
     },
     {
-      "bytes": 27135,
+      "bytes": 29427,
       "path": "tools/m1-content/build.py",
-      "sha256": "4a82a8f3480c5cb42a423007c3d8f286e356b4fbfe0fa94713d146631c3af41c"
+      "sha256": "b1a51019ba3ff7ebddb74e7074b1fbc8a52b3226340dbe3cfc7f496d36a858cc"
     },
     {
       "bytes": 15984,
@@ -6252,14 +6302,14 @@
       "sha256": "575ec765d52ab1e8f0904d5ac342fb4a88018456c9535b5bd67ba40b89cfa5d9"
     },
     {
-      "bytes": 11750,
+      "bytes": 12661,
       "path": "tools/m1-content/common.py",
-      "sha256": "67c3182cfc572a92228695bea33582a18a90e228a3eb26c02f1098dd9168c491"
+      "sha256": "44e9359bc110beb75ebfa3213268b219d628ee47fcee434d7d887b6dd8193514"
     },
     {
-      "bytes": 5222,
+      "bytes": 5871,
       "path": "tools/m1-content/compile.py",
-      "sha256": "86255c9167415c9996777c43af8189843dc130dd990f958e1796125ae7484a19"
+      "sha256": "4c9ba28fcdef669138022cc3c8c957ba41aa2239f67dfa27097a2c909305e21e"
     },
     {
       "bytes": 21559,
@@ -6277,9 +6327,9 @@
       "sha256": "e3b879cbd55c5f616b2f945943d3ef707b5ec3e5e01268b884e3c280aa9da0d0"
     },
     {
-      "bytes": 6782,
+      "bytes": 7351,
       "path": "tools/m1-content/import_definitions.py",
-      "sha256": "4611f2cc2edb35bbb3d50468448fd6f2780e47b062240e9c7064d6cb13366c50"
+      "sha256": "faceb66f5c2466df19067755413c61f539e0cc9a9c69c94049efb9da053fdd4c"
     },
     {
       "bytes": 5480,
@@ -6302,24 +6352,34 @@
       "sha256": "e52feb3a1c073a028196ac9741834e9faed21a96c2bbab92362594f8d80fd5d0"
     },
     {
+      "bytes": 21841,
+      "path": "tools/m1-content/runtime_application.py",
+      "sha256": "28ff34d8cf58a91ff74d55e19976fcc85116fece6f97344eca1d7945cbdd9b11"
+    },
+    {
       "bytes": 15187,
       "path": "tools/m1-content/spawns.py",
       "sha256": "a2eb361608b61425e2b90c512f107b02bc1dff42e09ad8f45bb2d362676f480f"
     },
     {
-      "bytes": 15914,
+      "bytes": 18573,
       "path": "tools/m1-content/state_oracles.py",
-      "sha256": "dd122b151dfaddcbb69ed1a7d0b8d26f46e2a4fccdcaa91ecae53cd8dbdbd833"
+      "sha256": "c8bec318f80139cd2d852d775a85df47fdcf127539dd8e5dc8186805eeb640dd"
     },
     {
-      "bytes": 5209,
+      "bytes": 5779,
       "path": "tools/m1-content/test_asset_refresh.py",
-      "sha256": "20a6a2220cd9e4b1776cd315bdd1f68b3ebbbebcd0d299ef963001f3ae6a57ee"
+      "sha256": "a8f5ca584d2f074e0d26e0bfd483dd75756c57bd630d7f363223a194ca907933"
     },
     {
       "bytes": 26149,
       "path": "tools/m1-content/test_content.py",
       "sha256": "42f8221c73c2115537813de680873e00b932486c4520c47f6fe358a18fe4c538"
+    },
+    {
+      "bytes": 7739,
+      "path": "tools/m1-content/test_runtime_application.py",
+      "sha256": "ae52ca44723a0864b65fce4746f6f0f3b9e3d18c2fef7f0a14dd7bb63616d8c9"
     },
     {
       "bytes": 9439,
@@ -6332,14 +6392,19 @@
       "sha256": "f7a0176dd033cb96288c1d2def3aaf0f88a86ec7d15d04f6ea66b2c8c6b259c0"
     },
     {
-      "bytes": 11656,
+      "bytes": 14657,
       "path": "tools/m1-content/verify_assets.py",
-      "sha256": "b3585c3514d01c07b3183b35abf51dd87803d175e2e3981757675181a02d8c93"
+      "sha256": "946e7cb8d8edd927435108380c6a69e04e11f3b63d815bb4aa2621ce8bf7bccb"
     },
     {
       "bytes": 8090,
       "path": "tools/m1-content/verify_routes.py",
       "sha256": "e09f698120ae32e795a8c0a7ac7ba797513beea226672b32a8bb60a4dae3f6c8"
+    },
+    {
+      "bytes": 13335,
+      "path": "tools/m1-content/verify_runtime_bindings.py",
+      "sha256": "69a94e4e56267b6d197c89eb9e64ecb7cbe46bac83b91019a325fe4a22a7af17"
     },
     {
       "bytes": 9146,
@@ -6350,6 +6415,11 @@
       "bytes": 21043,
       "path": "tools/m1-content/world_mechanics.py",
       "sha256": "feb0cde147cd15f5170de296a674d6980dd3ec5373591950b7291ad393bd2fb9"
+    },
+    {
+      "bytes": 7777,
+      "path": "tools/runtime-bindings/apply.py",
+      "sha256": "73cae222e7c6442e2805170ae97f07ca04a668715adad0823667f2f73217c375"
     }
   ],
   "schema_version": 1,

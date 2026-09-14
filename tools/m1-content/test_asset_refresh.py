@@ -14,6 +14,8 @@ class AssetRefreshTests(unittest.TestCase):
         cls.inputs = Inputs()
         cls.content = load(CONTENT / "game-content.json.gz")
         cls.baseline = load(BASELINE)
+        application = ROOT / "research/runtime-bindings/application-result.json"
+        cls.application = load(application) if application.exists() else None
 
     def test_complete_exact_original_asset_closure_and_hashes(self):
         report = verify()
@@ -35,7 +37,11 @@ class AssetRefreshTests(unittest.TestCase):
 
     def test_no_remaining_nullable_definition_asset_or_guessed_model(self):
         for category, kind in (("items", "item"), ("npcs", "npc"), ("objects", "object")):
-            for definition in self.content[category].values():
+            for identifier, definition in self.content[category].items():
+                if self.application and identifier in self.application["item_extensions"]:
+                    self.assertIsNone(definition["asset"])
+                    self.assertEqual(definition["source_id"], self.application["item_extensions"][identifier]["source_id"])
+                    continue
                 self.assertEqual(definition["asset"], self.inputs.asset(kind, definition["source_id"]))
                 self.assertIsNotNone(definition["asset"])
         cook = self.inputs.collections["npc"][4626]
@@ -55,7 +61,8 @@ class AssetRefreshTests(unittest.TestCase):
             self.assertEqual(self.inputs.collections["item"][int(number)], original["definition"])
 
     def test_all_behavior_and_the_parent_repaired_spell_table_are_preserved(self):
-        self.assertEqual(sha(canonical(behavior_projection(self.content))), self.baseline["behavior_sha256"])
+        expected = self.application["applied_behavior_sha256"] if self.application else self.baseline["behavior_sha256"]
+        self.assertEqual(sha(canonical(behavior_projection(self.content))), expected)
         maximum = self.content["mechanics"]["combat_styles"]["style.magic.wind_strike"]["maximum_hit"]
         self.assertEqual(maximum["status"], "bound")
         self.assertEqual(maximum["value"]["hits"], {"1": 2, "5": 4, "9": 6, "13": 8})

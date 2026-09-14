@@ -2,7 +2,7 @@
   "connected_with_source_doors_open": 30,
   "door_roundtrip_preserves_source_cells": true,
   "door_transform_definitions": 68,
-  "game_content_sha256": "e16610724b18ac6164a3d094085a0e28e843f31c00c45763bb95be6d35590b12",
+  "game_content_sha256": "ecdeabdcb4270698b4706c014459f3ec719d63c03bcd9731bc81b7ae2b6dfd10",
   "presentation_approved": false,
   "required_walk_segments": 30,
   "routes": [
