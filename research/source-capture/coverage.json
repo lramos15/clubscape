@@ -1,0 +1,114 @@
+{
+  "schema_version": 1,
+  "todo": "m1-source-captures",
+  "status": "Bounded original-runtime reference preparation completed; complete owner-approved reference pack remains incomplete.",
+  "source_selection": "research/current-source/selection.json",
+  "canonical_captures": "assets/reference/osrs240/captures.json",
+  "provenance": "assets/reference/osrs240/provenance.json",
+  "originality": {
+    "renderer": "Unmodified SHA-pinned original injected-client-1.12.38.jar, with matching official client/API resources",
+    "cache_loading": "Original va/vp index/group decoding over verified complete cache2695 containers",
+    "scene_loading": "Original rl4.fn terrain, placements, floor blending, shadowing, object models and morph metadata",
+    "scene_rendering": "Original ez.dh scene rasterization with original viewport/visibility routines",
+    "models": "Original ModelData/Model and NPC composition/animation implementations",
+    "ui": "Original item-icon, font, sprite, title/login and flame painters",
+    "replacement_viewer": false,
+    "clubscape_renderer_implemented": false,
+    "source_jar_rewritten": false,
+    "appearance_plugins_enabled": false,
+    "audio_synthesis": "Not performed; a graphics-only event consumer silences animation audio while preserving native animation stepping."
+  },
+  "prepared": [
+    {
+      "case": "source title/login states",
+      "count": 5,
+      "paths": [
+        "title/state-0-login-index-0.png",
+        "title/state-10-login-index-0.png",
+        "title/state-10-login-index-2.png",
+        "title/state-10-login-index-3.png",
+        "title/state-10-login-index-12.png"
+      ],
+      "scope": "Initial loading, welcome, empty login form, invalid-login UI and unaccepted terms, drawn by the original painter with controlled state. No authentication responses or state transitions were performed/observed.",
+      "canvas_pixels": [1920, 1080]
+    },
+    {
+      "case": "ordinary tree",
+      "count": 4,
+      "source_object": 1277,
+      "source_model": 1570,
+      "source_recolor": [3470, 5029],
+      "scope": "Original textured model at four recorded orientations, original lighting and source topology."
+    },
+    {
+      "case": "goblin",
+      "count": 32,
+      "source_npc": 3028,
+      "sequences": {"6181": 16, "6180": 16},
+      "scope": "Complete native idle/walk frame cycles, source part assembly, original lighting and source scale. Not a verified live spawn variant."
+    },
+    {
+      "case": "penguin candidate",
+      "count": 22,
+      "source_npc": 2063,
+      "source_model": 21547,
+      "sequences": {"5668": 14, "5666": 8},
+      "scope": "Complete native idle/walk frame cycles at original NPC scale75/128; not an approved player adaptation or equipment-fit contract."
+    },
+    {
+      "case": "generated inventory icons",
+      "count": 24,
+      "pixels_each": [36, 32],
+      "scope": "Native Client.createItemSprite results for source tutorial/Cook's Assistant items. Coin quantity1000 is an icon fixture parameter, never a player inventory grant."
+    },
+    {
+      "case": "native fonts and title sprites",
+      "count": 1,
+      "path": "components/native-fonts-and-title-sprites.png",
+      "scope": "Original measurement, glyph drawing and sprite drawing in a deliberately constructed test sheet. The sheet composition is not a source login/HUD reference."
+    },
+    {
+      "case": "complete source scenery viewports",
+      "count": 5,
+      "paths": [
+        "scenes/lumbridge-castle-plaza.png",
+        "scenes/lumbridge-river-bridge.png",
+        "scenes/tutorial-starting-house.png",
+        "scenes/tutorial-survival-coast.png",
+        "scenes/lumbridge-windmill-route.png"
+      ],
+      "scope": "Original native scene building/rasterization from source coordinates. Source ground elevations, original object layout/materials/textures and surrounding scenery are retained. No hand-built terrain or relocated demonstration square.",
+      "limits": "Viewport-only; no server-supplied player/NPC/ground-item layers or full Resizable-Classic HUD. Varps are explicit all-zero fixture state, not a claimed source account/tutorial stage."
+    }
+  ],
+  "calibration": {
+    "target_canvas_pixels": [1920, 1080],
+    "ui_scale": "Native unscaled pixel drawing; no browser/DPR acceptance inferred",
+    "model_projection": "Original Model.drawFrustum, 2048 angle units per turn; per-frame arguments and vertex hashes recorded",
+    "scene_projection": "Original locked-camera path, 16384 angle units per turn; source ground-relative height, native camera readbacks and viewport-derived zoom recorded",
+    "scene_draw_distance": 25,
+    "far_clip_units": 32768,
+    "far_clip_scope": "Explicit fixture calibration, not an observation of a live-session default; native culling/occlusion remain enabled",
+    "brightness": 0.8,
+    "texture_resolution": 128,
+    "random_seed": 0,
+    "seed_scope": "Only this isolated JVM's Math.random state is controlled; no rendering bytecode, global host configuration or authentication system is modified",
+    "animation_scope": "Native frame identities and client-cycle durations, not measured live playback cadence",
+    "live_initial_or_arrival_camera_verified": false
+  },
+  "remaining": [
+    "Authorized fresh normal-account source session and legitimate complete Tutorial Island progression",
+    "Exact actual initial-state, source UI locks/dialogue/transition timing, departure and experience-branch arrival observations",
+    "Full Resizable-Classic HUD and required bank/shop/inventory/skills/equipment/quest/death interfaces in source-backed live state",
+    "Server-side NPC/player/ground-item placement and dynamic object varp/varbit state for matched views",
+    "Registration website/account creation, actual connecting/authentication errors/reconnect states and browser-specific adaptation compositions",
+    "Source-faithful playable audio and synchronization, owned by the separate audio worker",
+    "Approved numeric visual/audio tolerances, supported resize range and representative Chrome/Edge hardware contract",
+    "Owner reference-pack approval before ClubScape presentation implementation",
+    "Separate final visual/audio/gameplay/performance/RuneLite compatibility acceptance"
+  ],
+  "terms_accepted": false,
+  "authenticated_source_journey": false,
+  "reference_pack_approved": false,
+  "final_presentation_accepted": false
+}

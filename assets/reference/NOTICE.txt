@@ -1,0 +1,18 @@
+Original OSRS rendering references
+
+Copyright © 1999 - 2026 Jagex Ltd. All rights reserved.
+
+Owner-authorized original source data and the pinned original injected runtime
+were used to prepare these captures. They are not newly designed substitute art.
+The corresponding source copyright/terms notices remain in
+assets/source/osrs/NOTICE.txt and research/current-source/runtime-config.ws.
+
+The rendering JARs are not redistributed here. Dependency/code notices remain
+embedded in their original artifacts; RuneLite's BSD code notice is retained in
+tools/cache-import/THIRD_PARTY_NOTICES.txt. Those code licenses do not apply to
+Jagex artwork, models, fonts, textures, interfaces, or these rendering outputs.
+
+These are explicitly controlled, offline original-renderer fixtures. No account
+creation, login, terms acceptance, approved reference-pack decision, candidate
+presentation acceptance, performance result or legitimate player journey is
+established by these files.
