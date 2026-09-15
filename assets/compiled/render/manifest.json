@@ -23059,6 +23059,20 @@
     "object_definitions": 118,
     "source_pipeline": "Original rl4.fn scene load (same base as the block export); fe.getConfig per wall; om mapSceneId/size/mapIcon per referenced object id"
    }
+  },
+  "gear/pose-fits.json": {
+   "sha256": "4e37128c89be873529346ca8892be885001cd287ae6dda7f0c1029375880b9be",
+   "size_bytes": 292704
   }
+ },
+ "gear_pose_fits": {
+  "file": "gear/pose-fits.json",
+  "schema_version": 1,
+  "body_npc": 2063,
+  "items": 10,
+  "sequences": 27,
+  "item_frames": 3220,
+  "item_frames_over_target": 20,
+  "classification": "Per-item per-pose rigid contact shifts against the penguin body (targets penetration <= 1, gap <= 2 source units); precomputed runtime input, not a fit waiver"
  }
 }

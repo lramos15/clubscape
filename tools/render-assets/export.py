@@ -16,6 +16,7 @@ import importlib.util
 import json
 import os
 from pathlib import Path
+import shutil
 import subprocess
 import sys
 
@@ -242,6 +243,32 @@ def verify_blocks(output: Path) -> dict:
     return {"result": "passed", "files": len(index["files"]), "squares": len(index["squares"]), "content_sha256": index["content_sha256"]}
 
 
+def build_pose_fits(output: Path) -> dict:
+    """
+    `--profile pose-fits`: runs the renderer's `pose-fit-table` tool (the same per-pose contact
+    solve the runtime uses) over the 10 M1 worn models × 27 required player sequences and
+    registers `gear/pose-fits.json` in the manifest so the browser applies recorded shifts instead
+    of solving on first display. Frames still over the fit targets are counted, never hidden.
+    """
+    cargo = shutil.which("cargo") or str(Path.home() / ".cargo/bin/cargo")
+    result = subprocess.run([cargo, "run", "--release", "-p", "clubscape-renderer", "--features", "tools",
+                             "--bin", "pose-fit-table", "--", str(output)],
+                            cwd=ROOT, text=True, capture_output=True, check=True)
+    summary = json.loads(result.stdout.strip().splitlines()[-1])
+    manifest_path = output / "manifest.json"
+    manifest = json.loads(manifest_path.read_text())
+    table_path = output / "gear/pose-fits.json"
+    manifest["files"]["gear/pose-fits.json"] = {"sha256": sha(table_path), "size_bytes": table_path.stat().st_size}
+    manifest["gear_pose_fits"] = {
+        "file": "gear/pose-fits.json", "schema_version": 1, "body_npc": 2063,
+        "items": summary["items"], "sequences": summary["sequences"], "item_frames": summary["item_frames"],
+        "item_frames_over_target": summary["item_frames_over_target"],
+        "classification": "Per-item per-pose rigid contact shifts against the penguin body (targets penetration <= 1, gap <= 2 source units); precomputed runtime input, not a fit waiver",
+    }
+    manifest_path.write_text(json.dumps(manifest, indent=1) + "\n")
+    return summary
+
+
 def verify_manifest(output: Path) -> dict:
     manifest = json.loads((output / "manifest.json").read_text())
     if manifest["source_cache_id"] != 2695 or manifest["source_revision"] != 240 or manifest["brightness"] != 0.8:
@@ -271,7 +298,7 @@ def main() -> int:
     parser.add_argument("--output", type=Path, default=DEFAULT_OUTPUT)
     parser.add_argument("--profile", default="all",
                         choices=["all", "tables", "palette", "textures", "models", "npcs", "scenes", "scenes-pinned", "blocks", "minimap", "anim", "dynamic", "widgets", "prune-textures", "compress", "unpack",
-                                 "pack-blocks", "unpack-blocks", "verify-blocks"])
+                                 "pack-blocks", "unpack-blocks", "verify-blocks", "pose-fits"])
     parser.add_argument("--verify-only", action="store_true")
     parser.add_argument("--java-home", type=Path, default=Path.home() / ".local/share/jdks/temurin-17.0.20.1+1")
     parser.add_argument("extra", nargs="*", help="Profile-specific arguments passed to the Java exporter")
@@ -302,6 +329,10 @@ def main() -> int:
         return 0
     if args.profile == "verify-blocks":
         print(json.dumps(verify_blocks(args.output), separators=(",", ":")))
+        return 0
+    if args.profile == "pose-fits":
+        print("POSE_FITS " + json.dumps(build_pose_fits(args.output), separators=(",", ":")))
+        print(json.dumps(verify_manifest(args.output), separators=(",", ":")))
         return 0
     capture = load_capture_module()
     if args.profile in ("blocks", "minimap") and not args.extra:

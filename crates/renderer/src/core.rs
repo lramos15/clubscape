@@ -7,8 +7,8 @@ use std::collections::HashMap;
 use serde::Deserialize;
 
 use crate::actor::{
-    ActivityContext, EquipModel, FitReport, NpcDefinition, NpcDefinitionRecord, PlayerBody,
-    player_sequence_for,
+    ActivityContext, AttachedPart, EquipModel, FitReport, NpcDefinition, NpcDefinitionRecord,
+    PlayerBody, PoseFit, PoseFitTable, player_sequence_for,
 };
 use crate::anim::Sequence;
 use crate::chunk::Chunks;
@@ -174,6 +174,31 @@ pub struct WorldEntity {
     /// Shell extension (`PublicWorld`): `asset.source.osrs.cache2695.object.<id>` for scenery.
     pub asset_id: Option<String>,
     pub definition_id: Option<String>,
+    /// `game.observer.v1` (visible players): actual current-tick movement and action.
+    pub running: Option<bool>,
+    pub movement_tick: Option<String>,
+    pub action: Option<WorldActorAction>,
+}
+
+/// `game.observer.v1` `ActorActionView`: the exact read-only action instance and phase the
+/// server executes for an actor. `animation` is the explicit source sequence (catalog or bare
+/// id); `None` means only the source action identity is known — nothing is guessed from it.
+/// Tick fields cross as decimal strings.
+#[derive(Deserialize, Debug, Clone, Default, PartialEq)]
+#[serde(default, rename_all = "camelCase")]
+pub struct WorldActorAction {
+    pub version: u32,
+    pub id: String,
+    pub activity: String,
+    pub action_id: Option<String>,
+    pub recipe_id: Option<String>,
+    pub style_id: Option<String>,
+    pub spell_id: Option<String>,
+    pub animation: Option<String>,
+    pub started_at_tick: String,
+    pub cycle_started_at_tick: String,
+    pub next_action_tick: Option<String>,
+    pub observed_at_tick: String,
 }
 
 #[derive(Deserialize, Debug, Clone, Default)]
@@ -202,6 +227,13 @@ pub struct WorldPlayer {
     pub equipment: Vec<WorldEquipment>,
     /// Shared-contract settings; `{ "setting": "run", "enabled": bool }` is the run toggle.
     pub settings: Vec<WorldSetting>,
+    /// `game.observer.v1`: the movement actually executed this tick (a final exhausted run
+    /// step is still running; a later non-moving tick is not). Absent on older observers.
+    pub running: Option<bool>,
+    pub movement_tick: Option<String>,
+    /// `game.observer.v1`: the current authoritative action, `null` when there is none;
+    /// absent (field missing) on older observers.
+    pub action: Option<WorldActorAction>,
 }
 
 #[derive(Deserialize, Debug, Clone, Default)]
@@ -287,13 +319,52 @@ pub fn parse_sequence_id(text: &str) -> Option<i32> {
     }
 }
 
-/// One server animation event applied to an actor: the sequence and when it started.
+/// Whether an actor moves this tick. `game.observer.v1` data wins: `running` reports executed
+/// movement (a final exhausted run step included) and `movementTick` correlates the tick of the
+/// latest movement, so an actor whose movement tick is not the current tick stands still even if
+/// its tile changed since the previous (older) view. Without observer fields the tile change
+/// between successive views is the only evidence.
+fn observed_moving(
+    running: Option<bool>,
+    movement_tick: Option<&String>,
+    tick: Option<i64>,
+    tile_changed: bool,
+) -> bool {
+    if running == Some(true) {
+        return true;
+    }
+    match (movement_tick, tick) {
+        (Some(moved_at), Some(now)) => moved_at.trim().parse::<i64>().ok() == Some(now),
+        // Observer present but no movement correlation (`movementTick: null`): standing.
+        (None, _) if running.is_some() => false,
+        _ => tile_changed,
+    }
+}
+
+/// The player body with its current gear attached: gear ids (sorted), merged bind-pose model,
+/// bind fit reports and the attached part ranges for the per-pose fit.
+struct AssembledPlayer {
+    gear_ids: Vec<i32>,
+    model: Model,
+    fits: Vec<FitReport>,
+    parts: Vec<AttachedPart>,
+}
+
+/// One server-bound action motion on an actor: the sequence and when its current cycle
+/// started (ms on the renderer clock). From an `ActorActionView` (`game.observer.v1`, keyed by
+/// the stable action id + cycle start tick) or a forwarded animation event (keyed by event id).
 #[derive(Clone, Debug, PartialEq)]
 struct ActionMotion {
     event_id: String,
     sequence: i32,
     started_ms: f64,
+    /// True when the motion comes from the observer contract (never expires on movement or
+    /// activity heuristics: the server says when the action ends).
+    observed: bool,
 }
+
+/// Source server tick length in ms (600 ms game cycle).
+const SERVER_TICK_MS: f64 = 600.0;
 
 /// A lit dynamic object variant (`models/dynamic/object-<id>-t<type>-r<rot>[-f<frame>].bin`).
 #[derive(Clone, Debug)]
@@ -587,7 +658,11 @@ pub struct RendererCore {
     /// Equipped-item models by item id.
     equip_models: HashMap<i32, EquipModel>,
     /// Assembled player model (body + gear) and the gear ids it was built for.
-    player_assembled: Option<(Vec<i32>, Model, Vec<FitReport>)>,
+    player_assembled: Option<AssembledPlayer>,
+    /// Per-pose fits of the drawn player frames (`(sequence, frame)` → one entry per part).
+    player_pose_fits: HashMap<(i32, usize), Vec<PoseFit>>,
+    /// Precomputed per-pose fits (`gear/pose-fits.json`), used before solving live.
+    pose_fit_table: Option<PoseFitTable>,
     player_frame_cache: HashMap<(i32, usize), Model>,
     player_gear: Vec<(String, i32)>,
     /// Explicit `br` (the approved fixture captures used 0); `None` applies the stock rule.
@@ -609,6 +684,8 @@ pub struct RendererCore {
     /// Player movement tracking for the original run rule (two tiles per server tick).
     player_motion_tick: Option<(i64, WorldTile)>,
     player_running: bool,
+    /// Whether the last WorldView carried `game.observer.v1` fields (`running`/`action`).
+    observer_fields_seen: bool,
     /// Latest server animation events per actor id (shell extension), with start times.
     action_motions: HashMap<String, ActionMotion>,
     /// Actors whose reported activity implies an action but whose motion is unknown this view.
@@ -665,6 +742,8 @@ impl RendererCore {
             destination_tile: None,
             equip_models: HashMap::new(),
             player_assembled: None,
+            player_pose_fits: HashMap::new(),
+            pose_fit_table: None,
             player_frame_cache: HashMap::new(),
             player_gear: Vec::new(),
             top_plane_override: None,
@@ -678,6 +757,7 @@ impl RendererCore {
             motion_fallback: false,
             player_motion_tick: None,
             player_running: false,
+            observer_fields_seen: false,
             action_motions: HashMap::new(),
             unknown_motions: Vec::new(),
             player_instance: None,
@@ -859,9 +939,16 @@ impl RendererCore {
         let fits = self
             .player_assembled
             .as_ref()
-            .map(|(_, _, f)| f.as_slice())
+            .map(|a| a.fits.as_slice())
             .unwrap_or(&[]);
         Some((&body.label_map, fits))
+    }
+
+    /// Per-pose contact fits of every player frame drawn (or previewed) since the gear last
+    /// changed, keyed by `(sequence, frame)`; entries whose targets are not met are the exact
+    /// remaining fit failures for the current gear.
+    pub fn player_pose_fits(&self) -> &HashMap<(i32, usize), Vec<PoseFit>> {
+        &self.player_pose_fits
     }
 
     pub fn has_npc_pack(&self, npc_id: i32) -> bool {
@@ -1382,25 +1469,125 @@ impl RendererCore {
                         event_id: event.event_id.clone(),
                         sequence,
                         started_ms: now_ms,
+                        observed: false,
                     },
                 );
             }
         }
+        let tick = view.tick.trim().parse::<i64>().ok();
+        // game.observer.v1 actions: the authoritative action instance/phase per actor. A stable
+        // id keeps its clock across polls and reconnects; a new cycle start re-anchors the
+        // sequence to that tick; `animation: null` keeps only the action identity (reported,
+        // never turned into a nearby-object or default motion).
+        self.observer_fields_seen = view.player.running.is_some() || view.player.action.is_some();
+        let mut observed_actions: Vec<(String, &WorldActorAction, bool)> = Vec::new();
+        if let Some(action) = view.player.action.as_ref() {
+            observed_actions.push((view.player.id.clone(), action, true));
+        }
+        for entity in &view.entities {
+            if let Some(action) = entity.action.as_ref()
+                && (entity.kind == "player" || entity.kind == "npc")
+            {
+                observed_actions.push((entity.id.clone(), action, false));
+            }
+        }
+        let mut observed_actors: std::collections::HashSet<String> =
+            std::collections::HashSet::new();
+        for (actor, action, _) in &observed_actions {
+            observed_actors.insert(actor.clone());
+            if action.version != 1 {
+                self.unknown_motions.push(format!(
+                    "{actor}: action {} has observer version {} (expected 1); ignored",
+                    action.id, action.version
+                ));
+                self.action_motions.remove(actor);
+                continue;
+            }
+            let Some(sequence) = action.animation.as_deref().and_then(parse_sequence_id) else {
+                // Only the source action is known: explicit, but no motion to play.
+                self.unknown_motions.push(format!(
+                    "{actor}: action {} ({}{}) has no bound source animation (animation {:?}); playing the stance",
+                    action.id,
+                    action.activity,
+                    action
+                        .action_id
+                        .as_deref()
+                        .map(|a| format!(", {a}"))
+                        .unwrap_or_default(),
+                    action.animation
+                ));
+                self.action_motions.remove(actor);
+                continue;
+            };
+            let key = format!("{}@{}", action.id, action.cycle_started_at_tick);
+            let fresh = self
+                .action_motions
+                .get(actor)
+                .is_none_or(|m| m.event_id != key);
+            if fresh {
+                // Anchor the cycle start on the renderer clock from the tick distance (600 ms
+                // per source tick); the same id + cycle never restarts on later polls.
+                let cycle_tick = action.cycle_started_at_tick.trim().parse::<i64>().ok();
+                let started_ms = match (tick, cycle_tick) {
+                    (Some(now_tick), Some(cycle)) if now_tick >= cycle => {
+                        now_ms - (now_tick - cycle) as f64 * SERVER_TICK_MS
+                    }
+                    _ => now_ms,
+                };
+                self.action_motions.insert(
+                    actor.clone(),
+                    ActionMotion {
+                        event_id: key,
+                        sequence,
+                        started_ms,
+                        observed: true,
+                    },
+                );
+            }
+        }
+        // An observer view that carries observer fields for an actor but no action (`null` or
+        // absent beside `running`) ends that actor's previously observed action; forwarded
+        // event motions are untouched.
+        let observer_without_action: std::collections::HashSet<String> =
+            std::iter::once(&view.player)
+                .filter(|p| p.running.is_some() && p.action.is_none())
+                .map(|p| p.id.clone())
+                .chain(
+                    view.entities
+                        .iter()
+                        .filter(|e| e.running.is_some() && e.action.is_none())
+                        .map(|e| e.id.clone()),
+                )
+                .collect();
+        self.action_motions.retain(|actor, m| {
+            !m.observed
+                || observed_actors.contains(actor)
+                || !observer_without_action.contains(actor)
+        });
         // Movement: the original plays the run sequence when the player covers two tiles in
-        // one server tick, the walk sequence for one. Ticks come from the view; the run toggle
-        // setting disambiguates when several ticks elapsed between views.
-        let moving = previous
+        // one server tick, the walk sequence for one. `running` from the observer contract is
+        // the movement actually executed this tick and wins; the tick rule and the run toggle
+        // setting are the fallback for older observers.
+        let tile_changed = previous
             .iter()
             .find(|e| e.is_player && e.id == view.player.id)
             .is_some_and(|o| o.tile.x != player_tile.x || o.tile.y != player_tile.y);
+        let moving = observed_moving(
+            view.player.running,
+            view.player.movement_tick.as_ref(),
+            tick,
+            tile_changed,
+        );
         let run_setting = view
             .player
             .settings
             .iter()
             .find(|s| s.setting == "run")
             .and_then(|s| s.enabled);
-        let tick = view.tick.trim().parse::<i64>().ok();
-        if let (Some(tick), Some((last_tick, last_tile))) = (tick, self.player_motion_tick.as_ref())
+        if let Some(running) = view.player.running {
+            self.player_running = running;
+        } else if let (Some(tick), Some((last_tick, last_tile))) =
+            (tick, self.player_motion_tick.as_ref())
             && tick > *last_tick
         {
             let ticks = tick - last_tick;
@@ -1446,11 +1633,18 @@ impl RendererCore {
         // when the server reports the activity back at rest.
         let at_rest = matches!(view.player.activity.as_str(), "" | "idle" | "walking");
         let expired = self.action_motions.get(&view.player.id).is_some_and(|m| {
-            moving
-                || at_rest
-                || self
-                    .sequence_frame(m.sequence, now_ms - m.started_ms)
+            if m.observed {
+                // The server owns the action's lifetime; a finished one-shot sequence returns to
+                // the stance until the next cycle start re-anchors it.
+                self.sequence_frame(m.sequence, now_ms - m.started_ms)
                     .is_some_and(|(_, ended)| ended)
+            } else {
+                moving
+                    || at_rest
+                    || self
+                        .sequence_frame(m.sequence, now_ms - m.started_ms)
+                        .is_some_and(|(_, ended)| ended)
+            }
         });
         if expired {
             self.action_motions.remove(&view.player.id);
@@ -1458,9 +1652,14 @@ impl RendererCore {
         let player_sequence = match parse_sequence_id(&view.player.animation) {
             Some(id) => id,
             None => {
-                let event_motion = self.action_motions.get(&view.player.id).map(|m| m.sequence);
+                let event_motion = self
+                    .action_motions
+                    .get(&view.player.id)
+                    .map(|m| (m.sequence, m.observed));
                 match event_motion {
-                    Some(id) if !moving => id,
+                    // An observed action plays even while the actor moves (the server sequences
+                    // movement and actions itself); forwarded events yield to movement.
+                    Some((id, observed)) if observed || !moving => id,
                     _ => {
                         let action_reported = self.player_dead
                             || !matches!(view.player.activity.as_str(), "" | "idle" | "walking");
@@ -1574,14 +1773,24 @@ impl RendererCore {
             })
             .collect();
         // Door states (shell extension mirroring the protocol DynamicObject).
+        // The canonical `objectId` is resolved to a source id only by the shell's validated
+        // definition catalogue (`sourceId`); the renderer never parses id strings.
         self.door_states = view
             .dynamic_objects
             .iter()
             .filter(|d| d.instance == view.player.instance && d.door_open.is_some())
             .filter_map(|d| {
-                let object = d
-                    .source_id
-                    .or_else(|| d.object_id.as_deref()?.rsplit('.').next()?.parse().ok())?;
+                let Some(object) = d.source_id else {
+                    self.unknown_motions.push(format!(
+                        "dynamic object {} ({}) at {},{},{} has no validated sourceId; not drawn",
+                        d.id,
+                        d.object_id.as_deref().unwrap_or("no objectId"),
+                        d.tile.x,
+                        d.tile.y,
+                        d.tile.plane
+                    ));
+                    return None;
+                };
                 Some(DoorState {
                     object,
                     tile: d.tile.clone(),
@@ -1612,9 +1821,16 @@ impl RendererCore {
             };
             let def = self.npc_defs.get(&npc);
             let old = previous.iter().find(|e| e.id == entity.id);
-            let moved = old.is_some_and(|o| o.tile.x != entity.tile.x || o.tile.y != entity.tile.y);
+            let tile_changed =
+                old.is_some_and(|o| o.tile.x != entity.tile.x || o.tile.y != entity.tile.y);
+            let moved = observed_moving(
+                entity.running,
+                entity.movement_tick.as_ref(),
+                tick,
+                tile_changed,
+            );
             let event_expired = self.action_motions.get(&entity.id).is_some_and(|m| {
-                moved
+                (moved && !m.observed)
                     || self
                         .sequence_frame(m.sequence, now_ms - m.started_ms)
                         .is_some_and(|(_, ended)| ended)
@@ -1766,21 +1982,35 @@ impl RendererCore {
         if self
             .player_assembled
             .as_ref()
-            .is_none_or(|(ids, _, _)| ids != &gear_ids)
+            .is_none_or(|a| a.gear_ids != gear_ids)
         {
             let gear: Vec<(String, &EquipModel)> = self
                 .player_gear
                 .iter()
                 .filter_map(|(slot, id)| self.equip_models.get(id).map(|m| (slot.clone(), m)))
                 .collect();
-            let (assembled, fits) = body.assemble(&gear);
-            self.player_assembled = Some((gear_ids.clone(), assembled, fits));
+            let (model, fits, parts) = body.assemble_parts(&gear);
+            self.player_assembled = Some(AssembledPlayer {
+                gear_ids: gear_ids.clone(),
+                model,
+                fits,
+                parts,
+            });
+            self.player_pose_fits.clear();
         }
         let Some(sequence) = self.sequences.get(&sequence_id) else {
             return Ok(None);
         };
-        let assembled = &self.player_assembled.as_ref().expect("assembled above").1;
-        let model = body.frame(assembled, sequence, frame)?;
+        let assembled = self.player_assembled.as_ref().expect("assembled above");
+        let (model, pose_fits) = body.frame_fitted(
+            &assembled.model,
+            &assembled.parts,
+            sequence,
+            frame,
+            self.pose_fit_table.as_ref(),
+        )?;
+        self.player_pose_fits
+            .insert((sequence_id, frame), pose_fits);
         self.player_frame_cache
             .insert((sequence_id, frame), model.clone());
         Ok(Some(model))
@@ -1913,6 +2143,13 @@ impl RendererCore {
         top
     }
 
+    /// Whether the last `update_world` carried `game.observer.v1` fields (`running` and/or
+    /// `action`); false means an older observer whose movement/actions are inferred (tick rule,
+    /// run setting) or reported unknown.
+    pub fn observer_v1(&self) -> bool {
+        self.observer_fields_seen
+    }
+
     /// Developer-only: derive action motions from the activity string and adjacent scenery when
     /// the server supplies no animation. Not final M1 logic; off by default.
     pub fn set_motion_fallback(&mut self, enabled: bool) {
@@ -1971,6 +2208,85 @@ impl RendererCore {
     /// Developer preview: the assembled player (body + the given gear) at a sequence frame,
     /// animated and scaled exactly like the in-scene actor.
     pub fn player_model_for_preview(
+        &mut self,
+        sequence_id: i32,
+        frame: usize,
+        gear: &[(&str, i32)],
+    ) -> Result<Option<Model>, RenderError> {
+        let Some(body) = self.player_body.as_ref() else {
+            return Ok(None);
+        };
+        let Some(sequence) = self.sequences.get(&sequence_id) else {
+            return Ok(None);
+        };
+        let gear: Vec<(String, &EquipModel)> = gear
+            .iter()
+            .filter_map(|(slot, id)| self.equip_models.get(id).map(|m| (slot.to_string(), m)))
+            .collect();
+        let (assembled, _, parts) = body.assemble_parts(&gear);
+        let frame = frame.min(sequence.frame_count().saturating_sub(1));
+        body.frame_fitted(
+            &assembled,
+            &parts,
+            sequence,
+            frame,
+            self.pose_fit_table.as_ref(),
+        )
+        .map(|(model, _)| Some(model))
+    }
+
+    /// Loads the precomputed per-pose fit table (`gear/pose-fits.json`). The table must be for
+    /// the approved body (`body_npc`) and its frame counts must match the loaded sequences;
+    /// otherwise it is rejected and every frame is solved live. Returns the number of
+    /// item × sequence entries accepted. Drawn frames cached before the load are discarded.
+    pub fn load_pose_fit_table(&mut self, json: &str, body_npc: i32) -> Result<usize, RenderError> {
+        let table: PoseFitTable = serde_json::from_str(json)
+            .map_err(|e| RenderError::InvalidAsset(format!("pose-fit table: {e}")))?;
+        if table.schema_version != 1 {
+            return Err(RenderError::InvalidAsset(format!(
+                "pose-fit table schema {} (expected 1)",
+                table.schema_version
+            )));
+        }
+        if table.body_npc != body_npc {
+            return Err(RenderError::InvalidAsset(format!(
+                "pose-fit table is for body NPC {}, the player body is NPC {body_npc}",
+                table.body_npc
+            )));
+        }
+        if table.targets.penetration != crate::actor::FIT_MAX_PENETRATION
+            || table.targets.gap != crate::actor::FIT_MAX_GAP
+        {
+            return Err(RenderError::InvalidAsset(format!(
+                "pose-fit table targets {}/{} differ from {}/{}",
+                table.targets.penetration,
+                table.targets.gap,
+                crate::actor::FIT_MAX_PENETRATION,
+                crate::actor::FIT_MAX_GAP
+            )));
+        }
+        let mismatches =
+            table.frame_count_mismatches(|id| self.sequences.get(&id).map(|s| s.frame_count()));
+        if !mismatches.is_empty() {
+            return Err(RenderError::InvalidAsset(format!(
+                "pose-fit table is stale: {}",
+                mismatches.join("; ")
+            )));
+        }
+        let entries = table.items.values().map(|i| i.sequences.len()).sum();
+        self.pose_fit_table = Some(table);
+        self.player_frame_cache.clear();
+        self.player_pose_fits.clear();
+        Ok(entries)
+    }
+
+    pub fn pose_fit_table(&self) -> Option<&PoseFitTable> {
+        self.pose_fit_table.as_ref()
+    }
+
+    /// [`Self::player_model_for_preview`] without the per-pose contact fit (the raw retargeted
+    /// pose, diagnostics only).
+    pub fn player_model_for_preview_unfitted(
         &mut self,
         sequence_id: i32,
         frame: usize,

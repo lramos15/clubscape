@@ -139,6 +139,123 @@ pub struct FitReport {
     pub scale: f64,
 }
 
+/// One item attached by [`PlayerBody::assemble_parts`]: where its vertices and faces sit in the
+/// merged model (after the body and the parts attached before it).
+#[derive(Debug, Clone, PartialEq)]
+pub struct AttachedPart {
+    pub item_id: i32,
+    pub slot: String,
+    pub vertices: std::ops::Range<usize>,
+    pub faces: std::ops::Range<usize>,
+}
+
+/// Fit of one attached item in one posed frame after the per-pose contact solve (source units,
+/// unscaled body): the rigid shift applied to the item that frame and the measures it left.
+#[derive(Debug, Clone, PartialEq)]
+pub struct PoseFit {
+    pub item_id: i32,
+    pub slot: String,
+    pub shift: f64,
+    pub direction: [f64; 3],
+    /// The translation applied (body space, source units); `shift` is its length.
+    pub offset: [f64; 3],
+    /// True when the shift came from a [`PoseFitTable`] entry instead of a live solve.
+    pub precomputed: bool,
+    /// Carried-bind-box / embedded penetration after the shift (target ≤ [`FIT_MAX_PENETRATION`]).
+    pub penetration: f64,
+    /// Item↔body clearance after the shift (target ≤ [`FIT_MAX_GAP`]).
+    pub gap: f64,
+}
+
+impl PoseFit {
+    pub fn meets_targets(&self) -> bool {
+        self.penetration <= FIT_MAX_PENETRATION && self.gap <= FIT_MAX_GAP
+    }
+}
+
+/// Required M1 player sequences (server appearance defaults, actions, combat, death, and the
+/// penguin's native stand/walk): the pose set every worn item is fitted and gated against.
+pub const REQUIRED_PLAYER_SEQUENCES: [i32; 27] = [
+    808, 819, 824, 820, 821, 822, 823, 836, 829, 12526, 827, 625, 879, 621, 733, 897, 896, 899,
+    898, 386, 390, 422, 423, 426, 711, 5668, 5666,
+];
+
+/// One precomputed per-pose fit: the rigid shift the solve applies to the item in that frame and
+/// the measures it leaves (source units, unscaled body).
+#[derive(Debug, Clone, PartialEq, serde::Serialize, serde::Deserialize)]
+pub struct TableFrameFit {
+    pub shift: [f64; 3],
+    pub penetration: f64,
+    pub gap: f64,
+}
+
+/// Precomputed fits of one item: keyed by sequence id (decimal string), one entry per frame.
+#[derive(Debug, Clone, PartialEq, Default, serde::Serialize, serde::Deserialize)]
+pub struct TableItemFits {
+    pub slot: String,
+    /// Manifest SHA-256 of the item's equipped model the fits were computed against.
+    pub model_sha256: String,
+    pub sequences: HashMap<String, Vec<TableFrameFit>>,
+}
+
+/// `gear/pose-fits.json`: the per-pose contact fits [`PlayerBody::pose_fitted`] would solve,
+/// precomputed for the M1 items across [`REQUIRED_PLAYER_SEQUENCES`] so drawing a frame costs
+/// no solve. Per item, never per gear combination (items are fitted against the body alone).
+/// Entries are bound to the body and item geometry by manifest hashes; the runtime rejects a
+/// table for another body and falls back to solving live for anything the table lacks.
+#[derive(Debug, Clone, PartialEq, serde::Serialize, serde::Deserialize)]
+pub struct PoseFitTable {
+    pub schema_version: u32,
+    pub body_npc: i32,
+    pub body_model_sha256: String,
+    pub human_reference_sha256: String,
+    pub targets: TableTargets,
+    pub items: HashMap<String, TableItemFits>,
+}
+
+#[derive(Debug, Clone, PartialEq, serde::Serialize, serde::Deserialize)]
+pub struct TableTargets {
+    pub penetration: f64,
+    pub gap: f64,
+}
+
+impl PoseFitTable {
+    pub fn frame(&self, item_id: i32, sequence_id: i32, frame: usize) -> Option<&TableFrameFit> {
+        self.items
+            .get(&item_id.to_string())?
+            .sequences
+            .get(&sequence_id.to_string())?
+            .get(frame)
+    }
+
+    /// Item × sequence entries whose frame count differs from the sequence (stale table).
+    pub fn frame_count_mismatches(
+        &self,
+        frame_count: impl Fn(i32) -> Option<usize>,
+    ) -> Vec<String> {
+        let mut out = Vec::new();
+        for (item, fits) in &self.items {
+            for (sequence, frames) in &fits.sequences {
+                let Ok(id) = sequence.parse::<i32>() else {
+                    out.push(format!(
+                        "item {item}: sequence key {sequence:?} is not an id"
+                    ));
+                    continue;
+                };
+                match frame_count(id) {
+                    Some(n) if n == frames.len() => {}
+                    Some(n) => out.push(format!(
+                        "item {item} sequence {id}: table has {} frames, sequence has {n}",
+                        frames.len()
+                    )),
+                    None => {}
+                }
+            }
+        }
+        out
+    }
+}
+
 /// Penguin player body with the human→penguin label retargeting table.
 #[derive(Debug, Clone)]
 pub struct PlayerBody {
@@ -235,8 +352,19 @@ impl PlayerBody {
     /// penguin labels and translated so its bound human anchor meets the corresponding penguin
     /// label centroid. Returns the merged model and per-item fit measurements.
     pub fn assemble(&self, gear: &[(String, &EquipModel)]) -> (Model, Vec<FitReport>) {
+        let (model, reports, _) = self.assemble_parts(gear);
+        (model, reports)
+    }
+
+    /// [`PlayerBody::assemble`] that also returns where each attached item sits in the merged
+    /// model, for the per-pose fit ([`PlayerBody::pose_fitted`]).
+    pub fn assemble_parts(
+        &self,
+        gear: &[(String, &EquipModel)],
+    ) -> (Model, Vec<FitReport>, Vec<AttachedPart>) {
         let mut merged = self.base.clone();
         let mut reports = Vec::new();
+        let mut parts = Vec::new();
         let scale = self.label_map.translation_scale;
         for (slot, item) in gear {
             let item_centroids = label_centroids(&item.model);
@@ -304,8 +432,13 @@ impl PlayerBody {
             // whole item is translated along the box axis that resolves it with the smallest
             // shift, stopping at contact so it rests on the body. Geometry is never edited.
             let design_penetration = fit_penetration(&self.human, &item.model);
-            let (anchor_shift, shift_direction) =
-                contact_solve(&self.base, slot_outward(slot), &mut part);
+            let (anchor_shift, shift_direction, _) = contact_solve(
+                &self.base,
+                slot_outward(slot),
+                &mut part,
+                &|body, item| penetration_depth(body, None, item),
+                &fit_penetration,
+            );
             let penetration = fit_penetration(&self.base, &part);
             let pca_box_penetration = pca_box_penetration(&self.base, &part);
             let gap = clearance(&self.base, &part);
@@ -316,7 +449,15 @@ impl PlayerBody {
                     self.penguin_label_for(human).unwrap_or(penguin_label)
                 }
             });
+            let vertex_start = merged.vertex_count;
+            let face_start = merged.face_count;
             merge_into(&mut merged, &part);
+            parts.push(AttachedPart {
+                item_id: item.item_id,
+                slot: slot.clone(),
+                vertices: vertex_start..merged.vertex_count,
+                faces: face_start..merged.face_count,
+            });
             reports.push(FitReport {
                 item_id: item.item_id,
                 slot: slot.clone(),
@@ -331,7 +472,7 @@ impl PlayerBody {
                 scale,
             });
         }
-        (merged, reports)
+        (merged, reports, parts)
     }
 
     /// Animated player model for a sequence frame in source units (before the definition's
@@ -353,7 +494,146 @@ impl PlayerBody {
         Ok(model)
     }
 
-    /// Animated, scaled player model for a sequence frame (what is drawn).
+    /// [`PlayerBody::pose`] followed by the per-pose contact fit: each attached item is
+    /// measured against the posed body with the bind-pose box it was fitted with (carried
+    /// rigidly with the item) and, where a body part swings into it deeper than
+    /// [`FIT_MAX_PENETRATION`] or it drifts further than [`FIT_MAX_GAP`] from the body, the item
+    /// alone is translated — along its slot's outward axis first, else the smallest resolving
+    /// shift — until it rests on the body again. Item geometry and the source frame transforms
+    /// are never edited; the shift is a rigid attachment correction per frame. Items are fitted
+    /// against the body only (not against each other), so no gear combination is special.
+    /// Returns the model and one [`PoseFit`] per part (targets not met stay reported).
+    pub fn pose_fitted(
+        &self,
+        assembled: &Model,
+        parts: &[AttachedPart],
+        sequence: &Sequence,
+        frame: usize,
+        table: Option<&PoseFitTable>,
+    ) -> Result<(Model, Vec<PoseFit>), RenderError> {
+        let mut model = self.pose(assembled, sequence, frame)?;
+        let mut fits = Vec::with_capacity(parts.len());
+        if parts.is_empty() {
+            return Ok((model, fits));
+        }
+        let body = extract_range(&model, 0..self.base.vertex_count, 0..self.base.face_count);
+        for part in parts {
+            if part.vertices.is_empty() {
+                continue;
+            }
+            if let Some(fit) = table.and_then(|t| t.frame(part.item_id, sequence.id, frame)) {
+                for v in part.vertices.clone() {
+                    model.xs[v] = (f64::from(model.xs[v]) + fit.shift[0]) as f32;
+                    model.ys[v] = (f64::from(model.ys[v]) + fit.shift[1]) as f32;
+                    model.zs[v] = (f64::from(model.zs[v]) + fit.shift[2]) as f32;
+                }
+                let len = dot(&fit.shift, &fit.shift).sqrt();
+                fits.push(PoseFit {
+                    item_id: part.item_id,
+                    slot: part.slot.clone(),
+                    shift: len,
+                    direction: if len > 1e-9 {
+                        [fit.shift[0] / len, fit.shift[1] / len, fit.shift[2] / len]
+                    } else {
+                        [0.0; 3]
+                    },
+                    offset: fit.shift,
+                    precomputed: true,
+                    penetration: fit.penetration,
+                    gap: fit.gap,
+                });
+                continue;
+            }
+            let bind_part = extract_range(assembled, part.vertices.clone(), part.faces.clone());
+            let mut posed = extract_range(&model, part.vertices.clone(), part.faces.clone());
+            let carried_box = carried_box(&bind_part, &posed);
+            let anchor = [
+                f64::from(posed.xs[0]),
+                f64::from(posed.ys[0]),
+                f64::from(posed.zs[0]),
+            ];
+            let box_measure = |body: &Model, item: &Model| -> f64 {
+                // The carried box moves rigidly with the item: follow the shift of the item's
+                // first vertex from the unshifted posed part.
+                let (axes, mean, min, max) = carried_box;
+                let shift = [
+                    f64::from(item.xs[0]) - anchor[0],
+                    f64::from(item.ys[0]) - anchor[1],
+                    f64::from(item.zs[0]) - anchor[2],
+                ];
+                let centre = [mean[0] + shift[0], mean[1] + shift[1], mean[2] + shift[2]];
+                let all: Vec<i32> = (0..body.vertex_count as i32).collect();
+                depth_in_box(body, &all, &(axes, centre, min, max))
+            };
+            let full_measure = |body: &Model, item: &Model| {
+                box_measure(body, item).max(embedded_depth(body, item))
+            };
+            let (shift, direction, offset) = contact_solve(
+                &body,
+                slot_outward(&part.slot),
+                &mut posed,
+                &box_measure,
+                &full_measure,
+            );
+            let penetration = full_measure(&body, &posed);
+            let gap = clearance(&body, &posed);
+            for (i, v) in part.vertices.clone().enumerate() {
+                model.xs[v] = posed.xs[i];
+                model.ys[v] = posed.ys[i];
+                model.zs[v] = posed.zs[i];
+            }
+            fits.push(PoseFit {
+                item_id: part.item_id,
+                slot: part.slot.clone(),
+                shift,
+                direction,
+                offset,
+                precomputed: false,
+                penetration,
+                gap,
+            });
+        }
+        Ok((model, fits))
+    }
+
+    /// The exact translation [`PlayerBody::pose_fitted`] applies to each part in a frame (for
+    /// building a [`PoseFitTable`]): shift vector, penetration and gap per part.
+    pub fn pose_fit_offsets(
+        &self,
+        assembled: &Model,
+        parts: &[AttachedPart],
+        sequence: &Sequence,
+        frame: usize,
+    ) -> Result<Vec<TableFrameFit>, RenderError> {
+        let (_, fits) = self.pose_fitted(assembled, parts, sequence, frame, None)?;
+        Ok(fits
+            .into_iter()
+            .map(|fit| TableFrameFit {
+                shift: fit.offset,
+                penetration: fit.penetration,
+                gap: fit.gap,
+            })
+            .collect())
+    }
+
+    /// Animated, scaled player model for a sequence frame (what is drawn): the pose with the
+    /// per-pose contact fit applied. Returns the per-part fits alongside.
+    pub fn frame_fitted(
+        &self,
+        assembled: &Model,
+        parts: &[AttachedPart],
+        sequence: &Sequence,
+        frame: usize,
+        table: Option<&PoseFitTable>,
+    ) -> Result<(Model, Vec<PoseFit>), RenderError> {
+        let (mut model, fits) = self.pose_fitted(assembled, parts, sequence, frame, table)?;
+        scale_float(&mut model, self.width_scale, self.height_scale);
+        model.compute_cylinder_bounds();
+        Ok((model, fits))
+    }
+
+    /// Animated, scaled player model for a sequence frame without the per-pose fit (the raw
+    /// retargeted pose; the bind-pose attachment only).
     pub fn frame(
         &self,
         assembled: &Model,
@@ -365,6 +645,56 @@ impl PlayerBody {
         model.compute_cylinder_bounds();
         Ok(model)
     }
+}
+
+/// The vertices `vertices` and faces `faces` of `assembled` as a standalone model (face indices
+/// rebased; vertex/face groups dropped).
+pub fn extract_range(
+    assembled: &Model,
+    vertices: std::ops::Range<usize>,
+    faces: std::ops::Range<usize>,
+) -> Model {
+    let mut part = assembled.clone();
+    part.vertex_count = vertices.len();
+    part.face_count = faces.len();
+    part.xs = assembled.xs[vertices.clone()].to_vec();
+    part.ys = assembled.ys[vertices.clone()].to_vec();
+    part.zs = assembled.zs[vertices.clone()].to_vec();
+    let offset = vertices.start as i32;
+    part.face_a = assembled.face_a[faces.clone()]
+        .iter()
+        .map(|v| v - offset)
+        .collect();
+    part.face_b = assembled.face_b[faces.clone()]
+        .iter()
+        .map(|v| v - offset)
+        .collect();
+    part.face_c = assembled.face_c[faces.clone()]
+        .iter()
+        .map(|v| v - offset)
+        .collect();
+    part.vertex_groups = None;
+    part.face_groups = None;
+    part.face_groups_alt = None;
+    part
+}
+
+/// The bind-pose oriented box of `bind_item` carried by the rigid motion onto `item`
+/// (falls back to the item's own box when no rigid motion is recoverable).
+fn carried_box(bind_item: &Model, item: &Model) -> ItemBox {
+    let (axes, mean, min, max) = item_box(bind_item);
+    let Some((r, t)) = rigid_motion(bind_item, item) else {
+        return item_box(item);
+    };
+    let rot = |x: &[f64; 3]| [dot(&r[0], x), dot(&r[1], x), dot(&r[2], x)];
+    let posed_axes = [rot(&axes[0]), rot(&axes[1]), rot(&axes[2])];
+    let rm = rot(&mean);
+    (
+        posed_axes,
+        [rm[0] + t[0], rm[1] + t[1], rm[2] + t[2]],
+        min,
+        max,
+    )
 }
 
 /// Splits an assembled+posed player model back into the body and one attached part (the part
@@ -613,9 +943,25 @@ pub fn pca_box_penetration(body: &Model, item: &Model) -> f64 {
 /// items swallowed by a thicker body part, which the box measure above cannot see.
 pub fn embedded_depth(body: &Model, item: &Model) -> f64 {
     let vertex = |m: &Model, v: usize| [f64::from(m.xs[v]), f64::from(m.ys[v]), f64::from(m.zs[v])];
+    if body.vertex_count == 0 {
+        return 0.0;
+    }
+    // Points outside the body's bounds cannot be inside it.
+    let mut lo = [f64::MAX; 3];
+    let mut hi = [f64::MIN; 3];
+    for v in 0..body.vertex_count {
+        let p = vertex(body, v);
+        for i in 0..3 {
+            lo[i] = lo[i].min(p[i]);
+            hi[i] = hi[i].max(p[i]);
+        }
+    }
     let mut deepest = 0.0f64;
     for p in 0..item.vertex_count {
         let point = vertex(item, p);
+        if (0..3).any(|i| point[i] < lo[i] || point[i] > hi[i]) {
+            continue;
+        }
         let mut winding = 0.0f64;
         for f in 0..body.face_count {
             winding += solid_angle(
@@ -727,16 +1073,8 @@ fn rigid_motion(from: &Model, to: &Model) -> Option<([[f64; 3]; 3], [f64; 3])> {
 /// and carried rigidly with the item, so the figure does not change with the box's orientation
 /// heuristics when a rigidly attached item merely turns with its part.
 pub fn posed_box_penetration(bind_item: &Model, body: &Model, item: &Model) -> f64 {
-    let (axes, mean, min, max) = item_box(bind_item);
-    let Some((r, t)) = rigid_motion(bind_item, item) else {
-        return penetration_depth(body, None, item);
-    };
-    let rot = |x: &[f64; 3]| [dot(&r[0], x), dot(&r[1], x), dot(&r[2], x)];
-    let posed_axes = [rot(&axes[0]), rot(&axes[1]), rot(&axes[2])];
-    let rm = rot(&mean);
-    let posed_mean = [rm[0] + t[0], rm[1] + t[1], rm[2] + t[2]];
     let all: Vec<i32> = (0..body.vertex_count as i32).collect();
-    depth_in_box(body, &all, &(posed_axes, posed_mean, min, max))
+    depth_in_box(body, &all, &carried_box(bind_item, item))
 }
 
 /// Combined fit penetration for a posed pair (see [`posed_box_penetration`]).
@@ -758,15 +1096,26 @@ pub fn slot_outward(slot: &str) -> Option<[f64; 3]> {
     }
 }
 
-/// Translates `item` along the slot's outward direction by the smallest distance that brings
-/// the combined penetration to at most [`FIT_MAX_PENETRATION`] while the clearance stays within
-/// [`FIT_MAX_GAP`] (the item rests on the body). When that direction cannot satisfy both, every
-/// body axis, the radial direction and the item's box axes are tried and the smallest shift
-/// meeting both wins (then the smallest meeting penetration alone). Geometry is never edited.
-/// Returns the shift and its direction.
-fn contact_solve(body: &Model, outward: Option<[f64; 3]>, item: &mut Model) -> (f64, [f64; 3]) {
-    if fit_penetration(body, item) <= FIT_MAX_PENETRATION && clearance(body, item) <= FIT_MAX_GAP {
-        return (0.0, [0.0; 3]);
+/// Rigid contact fit of one item against the body. Candidate directions are the slot's outward
+/// axis, the body axes, the radial direction from the body centre and the item's box axes; for
+/// each, the smallest translation bringing the combined penetration to at most
+/// [`FIT_MAX_PENETRATION`] is found (cheap box measure bracketed and bisected, full measure
+/// confirming), noting whether the clearance there stays within [`FIT_MAX_GAP`]. The smallest
+/// shift wins; a shift that also keeps contact is preferred when it is not much longer
+/// (within 1.5× + 2 units), and the outward axis breaks near-ties, so a hat is nudged back a
+/// unit rather than lifted a hand's width. When the chosen shift leaves the item floating, a
+/// second, perpendicular slide of at most 24 units is searched that restores contact without
+/// re-entering the body. Geometry is never edited; the result is the total translation and its
+/// direction, and unmet targets stay measurable afterwards.
+fn contact_solve(
+    body: &Model,
+    outward: Option<[f64; 3]>,
+    item: &mut Model,
+    box_measure: &dyn Fn(&Model, &Model) -> f64,
+    full_measure: &dyn Fn(&Model, &Model) -> f64,
+) -> (f64, [f64; 3], [f64; 3]) {
+    if full_measure(body, item) <= FIT_MAX_PENETRATION && clearance(body, item) <= FIT_MAX_GAP {
+        return (0.0, [0.0; 3], [0.0; 3]);
     }
     let (axes, mean, _, _) = item_box(item);
     let n = body.vertex_count.max(1) as f64;
@@ -783,82 +1132,232 @@ fn contact_solve(body: &Model, outward: Option<[f64; 3]>, item: &mut Model) -> (
     ];
     const COARSE: f64 = 0.5;
     const LIMIT: f64 = 64.0;
-    let shifted = |dir: &[f64; 3], t: f64| {
+    const SLIDE_LIMIT: f64 = 48.0;
+    let translated = |offset: &[f64; 3]| {
         let mut probe = item.clone();
         for v in 0..probe.vertex_count {
-            probe.xs[v] = (f64::from(item.xs[v]) + dir[0] * t) as f32;
-            probe.ys[v] = (f64::from(item.ys[v]) + dir[1] * t) as f32;
-            probe.zs[v] = (f64::from(item.zs[v]) + dir[2] * t) as f32;
+            probe.xs[v] = (f64::from(item.xs[v]) + offset[0]) as f32;
+            probe.ys[v] = (f64::from(item.ys[v]) + offset[1]) as f32;
+            probe.zs[v] = (f64::from(item.zs[v]) + offset[2]) as f32;
         }
         probe
     };
-    // Smallest shift along `dir` meeting the penetration target, and whether it also meets the
-    // gap target there.
-    let solve_along = |dir: &[f64; 3]| -> Option<(f64, bool)> {
+    let scaled = |dir: &[f64; 3], t: f64| [dir[0] * t, dir[1] * t, dir[2] * t];
+    let shifted = |dir: &[f64; 3], t: f64| translated(&scaled(dir, t));
+    // Smallest shift along `dir` clearing the cheap box measure (bracketed and bisected).
+    let box_clear_along = |dir: &[f64; 3]| -> Option<f64> {
         let mut previous = 0.0;
         let mut t = COARSE;
         while t <= LIMIT {
-            if fit_penetration(body, &shifted(dir, t)) <= FIT_MAX_PENETRATION {
-                let (mut lo, mut hi) = (previous, t);
+            if box_measure(body, &shifted(dir, t)) <= FIT_MAX_PENETRATION {
+                let (mut lo, mut h) = (previous, t);
                 for _ in 0..6 {
-                    let mid = 0.5 * (lo + hi);
-                    if fit_penetration(body, &shifted(dir, mid)) <= FIT_MAX_PENETRATION {
-                        hi = mid;
+                    let mid = 0.5 * (lo + h);
+                    if box_measure(body, &shifted(dir, mid)) <= FIT_MAX_PENETRATION {
+                        h = mid;
                     } else {
                         lo = mid;
                     }
                 }
-                let contact = clearance(body, &shifted(dir, hi)) <= FIT_MAX_GAP;
-                return Some((hi, contact));
+                return Some(h);
             }
             previous = t;
             t += COARSE;
         }
         None
     };
-    let mut chosen: Option<(f64, [f64; 3])> = None;
-    if let Some(dir) = outward
-        && let Some((t, true)) = solve_along(&dir)
-    {
-        chosen = Some((t, dir));
-    }
-    if chosen.is_none() {
-        let mut directions: Vec<[f64; 3]> = Vec::new();
-        let radial = dot(&away, &away).sqrt();
-        if radial > 1e-6 {
-            directions.push([away[0] / radial, away[1] / radial, away[2] / radial]);
-        }
-        for axis in [[1.0, 0.0, 0.0], [0.0, 1.0, 0.0], [0.0, 0.0, 1.0]]
-            .iter()
-            .chain(axes.iter())
-        {
-            directions.push(*axis);
-            directions.push([-axis[0], -axis[1], -axis[2]]);
-        }
-        let mut best: Option<(f64, bool, [f64; 3])> = None;
-        for dir in &directions {
-            let Some((t, contact)) = solve_along(dir) else {
-                continue;
-            };
-            let better = match best {
-                None => true,
-                Some((bt, bc, _)) => (contact && !bc) || (contact == bc && t < bt - 1e-9),
-            };
-            if better {
-                best = Some((t, contact, *dir));
+    // The full measure (box + item-inside-body) confirms a box-clearing shift and drives further
+    // coarse steps only when the item is still swallowed by the body; then whether the item
+    // still touches the body there.
+    let confirm_along = |dir: &[f64; 3], mut t: f64| -> Option<(f64, bool)> {
+        while full_measure(body, &shifted(dir, t)) > FIT_MAX_PENETRATION {
+            t += COARSE;
+            if t > LIMIT {
+                return None;
             }
         }
-        chosen = best.map(|(t, _, dir)| (t, dir));
-    }
-    let Some((t, dir)) = chosen else {
-        return (0.0, [0.0; 3]);
+        let contact = clearance(body, &shifted(dir, t)) <= FIT_MAX_GAP;
+        Some((t, contact))
     };
-    for v in 0..item.vertex_count {
-        item.xs[v] = (f64::from(item.xs[v]) + dir[0] * t) as f32;
-        item.ys[v] = (f64::from(item.ys[v]) + dir[1] * t) as f32;
-        item.zs[v] = (f64::from(item.zs[v]) + dir[2] * t) as f32;
+    let normalize = |v: [f64; 3]| -> Option<[f64; 3]> {
+        let len = dot(&v, &v).sqrt();
+        (len > 1e-6).then(|| [v[0] / len, v[1] / len, v[2] / len])
+    };
+    let mut directions: Vec<[f64; 3]> = Vec::new();
+    let push = |d: [f64; 3], directions: &mut Vec<[f64; 3]>| {
+        if let Some(d) = normalize(d)
+            && !directions.iter().any(|e| (dot(e, &d) - 1.0).abs() < 1e-6)
+        {
+            directions.push(d);
+        }
+    };
+    if let Some(dir) = outward {
+        push(dir, &mut directions);
     }
-    (t, dir)
+    for axis in [[1.0, 0.0, 0.0], [0.0, 1.0, 0.0], [0.0, 0.0, 1.0]] {
+        push(axis, &mut directions);
+        push([-axis[0], -axis[1], -axis[2]], &mut directions);
+    }
+    push(away, &mut directions);
+    for axis in &axes {
+        push(*axis, &mut directions);
+        push([-axis[0], -axis[1], -axis[2]], &mut directions);
+    }
+    // Box-clearing shift per direction; only directions that could still win (within the
+    // contact-preference margin of the shortest, or the outward axis within its tie margin) pay
+    // for the exact confirmation.
+    let mut boxed: Vec<(f64, [f64; 3])> = directions
+        .iter()
+        .filter_map(|dir| box_clear_along(dir).map(|t| (t, *dir)))
+        .collect();
+    boxed.sort_by(|a, b| a.0.total_cmp(&b.0));
+    let Some(&(shortest_box, _)) = boxed.first() else {
+        return (0.0, [0.0; 3], [0.0; 3]);
+    };
+    let is_outward = |d: &[f64; 3]| outward.is_some_and(|out| (dot(d, &out) - 1.0).abs() < 1e-6);
+    // (shift, contact, direction) per direction that clears the penetration.
+    let solved: Vec<(f64, bool, [f64; 3])> = boxed
+        .iter()
+        .filter(|(t, dir)| *t <= shortest_box * 1.5 + 4.0 || is_outward(dir))
+        .filter_map(|(t, dir)| confirm_along(dir, *t).map(|(t, contact)| (t, contact, *dir)))
+        .collect();
+    let Some(&shortest) = solved.iter().min_by(|a, b| a.0.total_cmp(&b.0)) else {
+        return (0.0, [0.0; 3], [0.0; 3]);
+    };
+    let shortest_contact = solved
+        .iter()
+        .filter(|c| c.1)
+        .min_by(|a, b| a.0.total_cmp(&b.0))
+        .copied();
+    let mut chosen = match shortest_contact {
+        Some(c) if c.0 <= shortest.0 * 1.5 + 2.0 => c,
+        _ => shortest,
+    };
+    if let Some(o) = solved.iter().find(|c| is_outward(&c.2))
+        && o.1 == chosen.1
+        && o.0 <= chosen.0 * 1.15 + 0.5
+    {
+        chosen = *o;
+    }
+    let (t, _, dir) = chosen;
+    let mut offset = scaled(&dir, t);
+    if !chosen.1 {
+        // Floating after the clearing shift: slide perpendicular to it until the item touches
+        // the body again (smallest slide that keeps the penetration target).
+        let seed = if dir[0].abs() < 0.9 {
+            [1.0, 0.0, 0.0]
+        } else {
+            [0.0, 1.0, 0.0]
+        };
+        let u = normalize([
+            dir[1] * seed[2] - dir[2] * seed[1],
+            dir[2] * seed[0] - dir[0] * seed[2],
+            dir[0] * seed[1] - dir[1] * seed[0],
+        ])
+        .unwrap_or([0.0, 1.0, 0.0]);
+        let w = [
+            dir[1] * u[2] - dir[2] * u[1],
+            dir[2] * u[0] - dir[0] * u[2],
+            dir[0] * u[1] - dir[1] * u[0],
+        ];
+        let mut best: Option<(f64, [f64; 3])> = None;
+        let start_gap = clearance(body, &translated(&offset));
+        for k in 0..8 {
+            let angle = f64::from(k) * std::f64::consts::FRAC_PI_4;
+            let (sa, ca) = angle.sin_cos();
+            let side = [
+                u[0] * ca + w[0] * sa,
+                u[1] * ca + w[1] * sa,
+                u[2] * ca + w[2] * sa,
+            ];
+            // The clearance cannot shrink faster than the item moves, so each probe jumps by
+            // the distance still to close (never less than a coarse step).
+            let at = |slide: f64| {
+                [
+                    offset[0] + side[0] * slide,
+                    offset[1] + side[1] * slide,
+                    offset[2] + side[2] * slide,
+                ]
+            };
+            // The clearance cannot shrink faster than the item moves, so a probe with a known
+            // clearance jumps by the distance still to close; where the box measure fails the
+            // clearance is not evaluated and the walk continues in coarse steps (the item may
+            // pass a thin part and rest on the body beyond it).
+            let mut known_gap = Some(start_gap);
+            let mut slide = 0.0;
+            loop {
+                slide += match known_gap {
+                    Some(gap) => (gap - FIT_MAX_GAP).max(COARSE),
+                    None => COARSE,
+                };
+                if slide > SLIDE_LIMIT || best.is_some_and(|(b, _)| slide >= b) {
+                    break;
+                }
+                let total = at(slide);
+                let probe = translated(&total);
+                if box_measure(body, &probe) > FIT_MAX_PENETRATION {
+                    known_gap = None;
+                    continue;
+                }
+                let gap = clearance(body, &probe);
+                known_gap = Some(gap);
+                if gap <= FIT_MAX_GAP && full_measure(body, &probe) <= FIT_MAX_PENETRATION {
+                    best = Some((slide, total));
+                    break;
+                }
+            }
+        }
+        if best.is_none() {
+            // Still floating: a bounded local search around the clearing shift (26 lattice
+            // directions, growing radius, smallest first) for any touching position.
+            let mut lattice: Vec<[f64; 3]> = Vec::new();
+            for x in -1..=1 {
+                for y in -1..=1 {
+                    for z in -1..=1 {
+                        if let Some(d) = normalize([f64::from(x), f64::from(y), f64::from(z)]) {
+                            lattice.push(d);
+                        }
+                    }
+                }
+            }
+            let mut clearance_budget = 48;
+            'radius: for step in 1..=12 {
+                let radius = f64::from(step) * 2.0 * COARSE;
+                for d in &lattice {
+                    let total = [
+                        offset[0] + d[0] * radius,
+                        offset[1] + d[1] * radius,
+                        offset[2] + d[2] * radius,
+                    ];
+                    let probe = translated(&total);
+                    if box_measure(body, &probe) > FIT_MAX_PENETRATION {
+                        continue;
+                    }
+                    if clearance_budget == 0 {
+                        break 'radius;
+                    }
+                    clearance_budget -= 1;
+                    if clearance(body, &probe) <= FIT_MAX_GAP
+                        && full_measure(body, &probe) <= FIT_MAX_PENETRATION
+                    {
+                        best = Some((radius, total));
+                        break 'radius;
+                    }
+                }
+            }
+        }
+        if let Some((_, total)) = best {
+            offset = total;
+        }
+    }
+    for v in 0..item.vertex_count {
+        item.xs[v] = (f64::from(item.xs[v]) + offset[0]) as f32;
+        item.ys[v] = (f64::from(item.ys[v]) + offset[1]) as f32;
+        item.zs[v] = (f64::from(item.zs[v]) + offset[2]) as f32;
+    }
+    let len = dot(&offset, &offset).sqrt();
+    let direction = normalize(offset).unwrap_or([0.0; 3]);
+    (len, direction, offset)
 }
 
 /// Smallest distance between the item and the body surfaces: item vertices to body triangles

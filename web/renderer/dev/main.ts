@@ -4,7 +4,7 @@
  * `window.__clubscapeBenchmarkV1` (RenderSnapshot protocol) so the browser harness can read
  * genuine GPU-completed frame records, and `window.__clubscapeDev` for the capture script.
  */
-import type { RenderFrame, WorldView } from "../../shared/contracts.ts";
+import type { DynamicObjectView, RenderFrame, WorldView } from "../../shared/contracts.ts";
 import { createRenderer, sourceZoomForViewportHeight, type ClubscapeRendererHandle } from "../src/index.ts";
 
 interface FixtureCamera { scene: string; base: [number, number]; local: [number, number, number]; pitch: number; yaw: number }
@@ -134,7 +134,7 @@ function scenarioWorld(name: string): WorldView & { dynamicObjects?: unknown[] }
     case "door-open":
       return {
         ...base, player: player(3098, 3098, "idle", []), entities: [],
-        dynamicObjects: [{ id: "transform.scenery.start_door", objectId: "asset.source.osrs.cache2695.object.9398", tile: tile(3098, 3107), instance: null, state: "object_state.open", doorOpen: true, quarterTurns: 1 }],
+        dynamicObjects: [{ id: "transform.scenery.start_door", objectId: "asset.source.osrs.cache2695.object.9398", sourceId: 9398, tile: tile(3098, 3107), instance: null, state: "object_state.open", doorOpen: true, quarterTurns: 1 }],
       };
     case "roof-player":
       return { ...base, player: player(3094, 3106, "idle", []), entities: [] };
@@ -147,7 +147,7 @@ function scenarioWorld(name: string): WorldView & { dynamicObjects?: unknown[] }
     case "source-door-open":
       return {
         ...base, player: { ...player(3094, 3103, "idle", []), animation: sequence(808) }, entities: [],
-        dynamicObjects: [{ id: "door-9398", objectId: "asset.source.osrs.cache2695.object.9398", tile: tile(3098, 3107), instance: null, doorOpen: name === "source-door-open", quarterTurns: name === "source-door-open" ? 1 : 0 }],
+        dynamicObjects: [{ id: "door-9398", objectId: "asset.source.osrs.cache2695.object.9398", sourceId: 9398, tile: tile(3098, 3107), instance: null, doorOpen: name === "source-door-open", quarterTurns: name === "source-door-open" ? 1 : 0 }],
       };
     case "source-roofs-outside":
     case "source-roofs-hidden":
@@ -196,7 +196,7 @@ function workloadWorld(x: number, y: number, region: string): WorldView {
 }
 
 /** Developer WorldView with the penguin player on a tile (region mode). */
-function devWorld(x: number, y: number, region: string, dynamicObjects: unknown[] = []): WorldView & { dynamicObjects: unknown[] } {
+function devWorld(x: number, y: number, region: string, dynamicObjects: DynamicObjectView[] = []): WorldView {
   return {
     revision: "dev", tick: "0", dynamicObjects,
     player: {
@@ -330,7 +330,7 @@ async function main(): Promise<void> {
         if (name === "door-open" || name === "door-closed") {
           // Lumbridge castle west large door (source object 12349 at 3213,3221, exported with its
           // four rotations): the developer view turns it a quarter on its own tile.
-          handle.update(devWorld(px, py, sceneId, name === "door-open" ? [{ id: "door-dev", objectId: "asset.source.osrs.cache2695.object.12349", tile: { x: 3213, y: 3221, plane: 0 }, instance: null, doorOpen: true, quarterTurns: 1 }] : []));
+          handle.update(devWorld(px, py, sceneId, name === "door-open" ? [{ id: "door-dev", objectId: "asset.source.osrs.cache2695.object.12349", sourceId: 12349, tile: { x: 3213, y: 3221, plane: 0 }, instance: null, doorOpen: true, quarterTurns: 1 }] : []));
           return showMinimap();
         }
         throw new Error(`region mode knows workload/workload-moving/door-open/door-closed, not ${name}`);

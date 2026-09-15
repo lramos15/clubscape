@@ -470,6 +470,250 @@ fn motion_identity_is_explicit_or_reported_unknown() {
     assert!(core.player_running());
 }
 
+/// `game.observer.v1`: explicit `running` / `movementTick` beat the inferred tick rule, an
+/// `ActorActionView` plays its bound source animation anchored on `cycleStartedAtTick` and keeps
+/// its clock across polls and reconnects, `animation: null` stays an explicit unknown motion,
+/// and `dynamicObjects` select source objects through `sourceId` only.
+#[test]
+fn observer_contract_fields_drive_movement_and_actions() {
+    let Some(mut core) = core_with_actors() else {
+        return;
+    };
+    let textures = textures();
+    load_house(&mut core);
+    let frame = |core: &mut RendererCore, v: &serde_json::Value, now_ms: f64| -> Vec<i32> {
+        core.update_world(&v.to_string(), now_ms).unwrap();
+        core.build_frame(now_ms).unwrap();
+        rasterize(core, &textures)
+    };
+    let base = |tick: i64, x: i32| -> serde_json::Value {
+        let mut v: serde_json::Value =
+            serde_json::from_str(&world((x, 3098), "walking", "", &[], serde_json::json!([])))
+                .unwrap();
+        v["tick"] = serde_json::json!(tick.to_string());
+        v
+    };
+    // Legacy observer (no fields): two tiles in one tick would run.
+    let mut v = base(10, 3092);
+    core.update_world(&v.to_string(), 0.0).unwrap();
+    assert!(!core.observer_v1());
+    v = base(11, 3094);
+    core.update_world(&v.to_string(), 0.0).unwrap();
+    assert!(
+        core.player_running(),
+        "legacy inference: two tiles per tick"
+    );
+    // Explicit `running: false` with the same two-tile step wins over the inference.
+    v = base(12, 3096);
+    v["player"]["running"] = serde_json::json!(false);
+    v["player"]["movementTick"] = serde_json::json!("12");
+    let walking = frame(&mut core, &v, 0.0);
+    assert!(core.observer_v1());
+    assert!(!core.player_running(), "explicit running:false wins");
+    // Final exhausted run step: one tile, `running: true`.
+    v = base(13, 3097);
+    v["player"]["running"] = serde_json::json!(true);
+    v["player"]["movementTick"] = serde_json::json!("13");
+    let running = frame(&mut core, &v, 0.0);
+    assert!(
+        core.player_running(),
+        "explicit running:true on a one-tile step"
+    );
+    // A later non-moving tick: same tile, `running: false`, movementTick in the past → idle.
+    v = base(14, 3097);
+    v["player"]["running"] = serde_json::json!(false);
+    v["player"]["movementTick"] = serde_json::json!("13");
+    let idle_3097 = frame(&mut core, &v, 0.0);
+    assert!(!core.player_running());
+    // Same tile as the run frame, so the stances alone differ.
+    common::assert_pixels_differ(&running, &idle_3097, "run stance equals idle");
+    // Movement tick equal to the current tick keeps the walk stance even when a second poll in
+    // the same tick shows no tile change.
+    v = base(15, 3098);
+    v["player"]["running"] = serde_json::json!(false);
+    v["player"]["movementTick"] = serde_json::json!("15");
+    let first_poll = frame(&mut core, &v, 0.0);
+    common::assert_pixels_equal(
+        &frame(&mut core, &v, 0.0),
+        &first_poll,
+        1920,
+        "second poll in the movement tick",
+    );
+    // Standing on 3098 afterwards (movementTick in the past): the idle reference at the tile
+    // every later comparison uses.
+    v = base(16, 3098);
+    v["player"]["running"] = serde_json::json!(false);
+    v["player"]["movementTick"] = serde_json::json!("15");
+    let idle = frame(&mut core, &v, 0.0);
+    common::assert_pixels_differ(&first_poll, &idle, "movement tick poll shows idle");
+    common::assert_pixels_differ(&walking, &running, "walk (3096) equals run (3097)");
+    // The body must actually be in view for these stance checks to mean anything.
+    let stance_pixels = common::diff_buffers(&first_poll, &idle).differing;
+    assert!(
+        stance_pixels > 300,
+        "walk vs idle changed only {stance_pixels} pixels; the player is not visible enough"
+    );
+
+    // Action with a bound source animation: plays 879 (woodcutting bronze axe) anchored on the
+    // cycle start; the frame at (now) equals the sequence's frame at
+    // (tick - cycleStartedAtTick) * 600 ms.
+    let action = |id: &str, cycle: i64, animation: Option<&str>| {
+        serde_json::json!({
+            "version": 1, "id": id, "activity": "gathering", "actionId": "action.woodcutting.chop",
+            "target": null, "recipeId": null, "styleId": null, "spellId": null,
+            "animation": animation, "startedAtTick": cycle.to_string(),
+            "cycleStartedAtTick": cycle.to_string(), "nextActionTick": (cycle + 4).to_string(),
+            "observedAtTick": cycle.to_string()
+        })
+    };
+    let mut v = base(20, 3098);
+    v["player"]["activity"] = serde_json::json!("gathering");
+    v["player"]["running"] = serde_json::json!(false);
+    v["player"]["movementTick"] = serde_json::json!("15");
+    v["player"]["action"] = action(
+        "act-1",
+        20,
+        Some("asset.source.osrs.cache2695.sequence.879"),
+    );
+    core.update_world(&v.to_string(), 1000.0).unwrap();
+    let summary = core.build_frame(1000.0).unwrap().clone();
+    assert!(
+        summary.entities_skipped.is_empty(),
+        "{:?}",
+        summary.entities_skipped
+    );
+    let chop_start = rasterize(&core, &textures);
+    common::assert_pixels_differ(&chop_start, &idle, "observed action equals idle");
+    // Reference: a fresh core fed the action at its cycle start (1000 ms), drawn 1200 ms later.
+    // (Scenery flames animate on the same clock, so comparisons share the draw time.)
+    // Facing comes from movement history (the contract carries no orientation), so every
+    // comparison core replays the same final step east.
+    let prime = |core: &mut RendererCore| {
+        load_house(core);
+        for (tick, x) in [(13, 3097), (15, 3098)] {
+            frame(core, &base(tick, x), 0.0);
+        }
+    };
+    let Some(mut fresh) = core_with_actors() else {
+        return;
+    };
+    prime(&mut fresh);
+    let mut w = base(20, 3098);
+    w["player"]["activity"] = serde_json::json!("gathering");
+    w["player"]["running"] = serde_json::json!(false);
+    w["player"]["movementTick"] = serde_json::json!("15");
+    w["player"]["action"] = action("act-1", 20, Some("879"));
+    fresh.update_world(&w.to_string(), 1000.0).unwrap();
+    fresh.build_frame(2200.0).unwrap();
+    let two_ticks_in = rasterize(&fresh, &textures);
+    fresh.build_frame(1000.0).unwrap();
+    common::assert_pixels_differ(
+        &two_ticks_in,
+        &rasterize(&fresh, &textures),
+        "cycle clock did not advance",
+    );
+    // Re-poll two ticks (1200 ms) later with the same action id and cycle start: the sequence
+    // continues on its clock, it does not restart.
+    v["tick"] = serde_json::json!("22");
+    v["player"]["action"]["observedAtTick"] = serde_json::json!("22");
+    common::assert_pixels_equal(
+        &frame(&mut core, &v, 2200.0),
+        &two_ticks_in,
+        1920,
+        "re-polled action must continue its cycle clock",
+    );
+    // Reconnect: a new core first sees the action at tick 22 with cycleStartedAtTick 20 and
+    // anchors 1200 ms into the cycle from the tick distance.
+    let Some(mut reconnected) = core_with_actors() else {
+        return;
+    };
+    prime(&mut reconnected);
+    common::assert_pixels_equal(
+        &frame(&mut reconnected, &v, 2200.0),
+        &two_ticks_in,
+        1920,
+        "reconnected client must resume the action phase from the tick distance",
+    );
+    // A new cycle start re-anchors the same action id: at tick 24 (3400 ms) the sequence is at
+    // its first frame again, like a fresh core starting the cycle now.
+    v["tick"] = serde_json::json!("24");
+    v["player"]["action"]["cycleStartedAtTick"] = serde_json::json!("24");
+    v["player"]["action"]["observedAtTick"] = serde_json::json!("24");
+    let reanchored = frame(&mut core, &v, 3400.0);
+    let Some(mut restarted) = core_with_actors() else {
+        return;
+    };
+    prime(&mut restarted);
+    common::assert_pixels_equal(
+        &reanchored,
+        &frame(&mut restarted, &v, 3400.0),
+        1920,
+        "new cycle start restarts the sequence",
+    );
+    // Action without a bound animation: explicit diagnostic naming the action, stance only
+    // (compared at the idle frame's draw time so scenery flames match).
+    v["player"]["action"] = action("act-2", 24, None);
+    core.update_world(&v.to_string(), 0.0).unwrap();
+    let summary = core.build_frame(0.0).unwrap().clone();
+    assert!(
+        summary.entities_skipped.iter().any(|s| s.contains("act-2")
+            && s.contains("action.woodcutting.chop")
+            && s.contains("no bound source animation")),
+        "{:?}",
+        summary.entities_skipped
+    );
+    common::assert_pixels_equal(
+        &rasterize(&core, &textures),
+        &idle,
+        1920,
+        "unbound observed action keeps the stance",
+    );
+    // `action: null` ends an observed action.
+    v["player"]["action"] = action("act-3", 24, Some("879"));
+    common::assert_pixels_differ(&frame(&mut core, &v, 0.0), &idle, "act-3 did not play");
+    v["player"]["action"] = serde_json::Value::Null;
+    v["player"]["activity"] = serde_json::json!("idle");
+    common::assert_pixels_equal(
+        &frame(&mut core, &v, 0.0),
+        &idle,
+        1920,
+        "action:null ends the observed action",
+    );
+    // Unsupported observer version: ignored with a diagnostic.
+    v["player"]["action"] = action("act-4", 24, Some("879"));
+    v["player"]["action"]["version"] = serde_json::json!(2);
+    core.update_world(&v.to_string(), 0.0).unwrap();
+    let summary = core.build_frame(0.0).unwrap().clone();
+    assert!(
+        summary
+            .entities_skipped
+            .iter()
+            .any(|s| s.contains("observer version 2")),
+        "{:?}",
+        summary.entities_skipped
+    );
+
+    // Dynamic objects: `sourceId` from the validated catalogue is the only selector; an entry
+    // with only an `objectId` string is reported and not applied.
+    let mut v = base(30, 3098);
+    v["player"]["running"] = serde_json::json!(false);
+    v["player"]["movementTick"] = serde_json::json!(null);
+    v["dynamicObjects"] = serde_json::json!([{
+        "id": "door-1", "objectId": "asset.source.osrs.cache2695.object.9398",
+        "tile": {"x": 3098, "y": 3107, "plane": 0}, "instance": null, "doorOpen": true
+    }]);
+    core.update_world(&v.to_string(), 0.0).unwrap();
+    let summary = core.build_frame(0.0).unwrap().clone();
+    assert!(
+        summary
+            .entities_skipped
+            .iter()
+            .any(|s| s.contains("door-1") && s.contains("no validated sourceId")),
+        "{:?}",
+        summary.entities_skipped
+    );
+}
+
 #[test]
 fn npc_definitions_animate_through_the_skeletal_port() {
     let Some(mut core) = core_with_actors() else {
@@ -704,6 +948,84 @@ fn player_pose_sheet_renders() {
     write_png("player-pose-sheet", 1920, 1080, &sheet);
 }
 
+/// Developer sheet of the per-pose contact fit: the frames with the largest fit shifts, raw
+/// retargeted pose (top) against the fitted pose that is drawn (bottom), from two yaws.
+#[test]
+#[ignore = "developer visualization; writes .local/render-assets/test-output/gear-fit-sheet.png"]
+fn gear_fit_sheet_renders() {
+    let Some(mut core) = core_with_actors() else {
+        return;
+    };
+    let textures = textures();
+    let cases: Vec<(&str, i32, usize, &str, i32)> = vec![
+        ("sqshield-829-5", 829, 5, "shield", 1173),
+        ("sqshield-898-6", 898, 6, "shield", 1173),
+        ("sqshield-836-5", 836, 5, "shield", 1173),
+        ("wshield-899-x", 899, 9, "shield", 1171),
+        ("hat-836-9", 836, 9, "head", 1949),
+        ("hat-621-20", 621, 20, "head", 1949),
+        ("pick-625-7", 625, 7, "weapon", 1265),
+        ("pick-899-6", 899, 6, "weapon", 1265),
+    ];
+    let cols = cases.len();
+    let (cw, ch) = (240usize, 300usize);
+    let mut sheet = vec![0x30_3030; cols * cw * 4 * ch];
+    let camera_z = std::env::var("GEAR_FIT_SHEET_Z")
+        .ok()
+        .and_then(|v| v.parse().ok())
+        .unwrap_or(520);
+    for (i, (name, sequence, frame, slot, item)) in cases.iter().enumerate() {
+        for (row, fitted, yaw) in [
+            (0, false, 256),
+            (1, true, 256),
+            (2, false, 768),
+            (3, true, 768),
+        ] {
+            let gear = [(*slot, *item)];
+            let model = if fitted {
+                core.player_model_for_preview(*sequence, *frame, &gear)
+            } else {
+                core.player_model_for_preview_unfitted(*sequence, *frame, &gear)
+            }
+            .unwrap()
+            .expect(name);
+            core.load_model_value("pose", model);
+            core.build_model_fixture_frame(&clubscape_renderer::core::ModelFixture {
+                model: "pose".into(),
+                npc: None,
+                yaw,
+                camera_y: 160,
+                camera_z,
+            })
+            .unwrap();
+            // Grey backdrop so the black body reads against it.
+            let mut pixels = vec![0x60_7080; 1920 * 1080];
+            {
+                let mut raster =
+                    Software::new(core.state, &mut pixels, &core.palette.rgb, &textures);
+                for tri in core.triangles() {
+                    let _ = raster.draw(tri);
+                }
+            }
+            pixels.iter_mut().for_each(|p| *p &= 0xFF_FFFF);
+            let (cx, cy) = (960 - cw / 2, 190);
+            let (ox, oy) = (i * cw, row * ch);
+            for y in 0..ch {
+                for x in 0..cw {
+                    sheet[(oy + y) * (cols * cw) + ox + x] = pixels[(cy + y) * 1920 + cx + x];
+                }
+            }
+        }
+        eprintln!("case {name}");
+    }
+    write_png(
+        "gear-fit-sheet",
+        (cols * cw) as u32,
+        (4 * ch) as u32,
+        &sheet,
+    );
+}
+
 /// Live layers: ground items, the animated fire temporary object, door states and roof removal.
 #[test]
 fn dynamic_layers_draw_from_the_world_view() {
@@ -837,7 +1159,7 @@ fn dynamic_layers_draw_from_the_world_view() {
     // Door state: the starting-house door (object 9398 at 3098,3107) opens by one quarter turn.
     view["entities"] = serde_json::json!([]);
     view["dynamicObjects"] = serde_json::json!([
-        {"id": "transform.scenery.start_door", "objectId": "asset.source.osrs.cache2695.object.9398", "tile": {"x": 3098, "y": 3107, "plane": 0},
+        {"id": "transform.scenery.start_door", "objectId": "asset.source.osrs.cache2695.object.9398", "sourceId": 9398, "tile": {"x": 3098, "y": 3107, "plane": 0},
          "instance": null, "state": "object_state.open", "doorOpen": true, "quarterTurns": 1}
     ]);
     core.update_world(&view.to_string(), 0.0).unwrap();

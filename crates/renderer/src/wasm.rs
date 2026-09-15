@@ -790,6 +790,45 @@ impl WasmRenderer {
             .map_err(js_err)
     }
 
+    /// Loads the precomputed per-pose gear fit table (`gear/pose-fits.json`, manifest
+    /// `gear_pose_fits`) for the approved body NPC. Rejected (error) when it is for another body,
+    /// another target pair or stale against the loaded sequences; without it every player frame
+    /// solves its fit live on first display. Returns the accepted item × sequence entry count.
+    pub fn load_pose_fit_table(&self, json: String, body_npc: i32) -> Result<u32, JsValue> {
+        self.inner
+            .borrow_mut()
+            .core
+            .load_pose_fit_table(&json, body_npc)
+            .map(|n| n as u32)
+            .map_err(js_err)
+    }
+
+    /// Per-pose gear fits of the player frames drawn since the gear last changed (JSON array of
+    /// `{sequence, frame, itemId, slot, shift, direction, precomputed, penetration, gap,
+    /// meetsTargets}`); entries with `meetsTargets: false` are the exact current fit failures.
+    pub fn player_pose_fits(&self) -> String {
+        let inner = self.inner.borrow();
+        let mut entries: Vec<String> = Vec::new();
+        for (&(sequence, frame), fits) in inner.core.player_pose_fits() {
+            for fit in fits {
+                entries.push(format!(
+                    "{{\"sequence\":{sequence},\"frame\":{frame},\"itemId\":{},\"slot\":{},\"shift\":{},\"direction\":[{},{},{}],\"precomputed\":{},\"penetration\":{},\"gap\":{},\"meetsTargets\":{}}}",
+                    fit.item_id,
+                    json_string(&fit.slot),
+                    fit.shift,
+                    fit.direction[0],
+                    fit.direction[1],
+                    fit.direction[2],
+                    fit.precomputed,
+                    fit.penetration,
+                    fit.gap,
+                    fit.meets_targets()
+                ));
+            }
+        }
+        format!("[{}]", entries.join(","))
+    }
+
     /// Loads an equippable item's worn model (`models/item-<id>-equip.bin`).
     pub fn load_equip_model(&self, item_id: i32, bytes: Vec<u8>) -> Result<(), JsValue> {
         self.inner
@@ -875,10 +914,18 @@ impl WasmRenderer {
         self.inner.borrow_mut().core.set_motion_fallback(enabled);
     }
 
-    /// Whether the player is running (original two-tiles-per-server-tick rule, or the `run`
-    /// setting when ticks are unavailable).
+    /// Whether the player is running: the observer contract's executed `running` when the world
+    /// view carries it, else the original two-tiles-per-server-tick rule (or the `run` setting
+    /// when ticks are unavailable).
     pub fn player_running(&self) -> bool {
         self.inner.borrow().core.player_running()
+    }
+
+    /// Whether the last world view carried `game.observer.v1` fields (`running` / `action`).
+    /// False means an older observer: movement is inferred from ticks and every action motion
+    /// must come from `animation` or forwarded events.
+    pub fn observer_v1(&self) -> bool {
+        self.inner.borrow().core.observer_v1()
     }
 
     /// Actors whose reported state implies an action but whose source motion was not supplied

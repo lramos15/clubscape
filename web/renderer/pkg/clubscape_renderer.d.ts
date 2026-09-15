@@ -109,6 +109,13 @@ export class WasmRenderer {
      * reference body used to retarget player-appearance sequences onto penguin labels.
      */
     load_player_body(penguin_base: Uint8Array, width_scale: number, height_scale: number, native_sequences: Int32Array, human_reference: Uint8Array): void;
+    /**
+     * Loads the precomputed per-pose gear fit table (`gear/pose-fits.json`, manifest
+     * `gear_pose_fits`) for the approved body NPC. Rejected (error) when it is for another body,
+     * another target pair or stale against the loaded sequences; without it every player frame
+     * solves its fit live on first display. Returns the accepted item × sequence entry count.
+     */
+    load_pose_fit_table(json: string, body_npc: number): number;
     load_scene(id: string, scene_bytes: Uint8Array, pack_bytes: Uint8Array): void;
     /**
      * Loads an exported sequence (`anim/seq-<id>.bin`, chunks SEQH/SEQL/SEQF/SEQI/SKEL/FRMT).
@@ -143,6 +150,12 @@ export class WasmRenderer {
      */
     constructor(canvas: HTMLCanvasElement, width: number, height: number, palette_bytes: Uint8Array);
     /**
+     * Whether the last world view carried `game.observer.v1` fields (`running` / `action`).
+     * False means an older observer: movement is inferred from ticks and every action motion
+     * must come from `animation` or forwarded events.
+     */
+    observer_v1(): boolean;
+    /**
      * JSON `{"kind":"tile","tile":{...}}` / `{"kind":"entity","id":..,"tile":{...}}` or null.
      */
     pick(x: number, y: number): string | undefined;
@@ -156,8 +169,15 @@ export class WasmRenderer {
      */
     player_fit_report(): string;
     /**
-     * Whether the player is running (original two-tiles-per-server-tick rule, or the `run`
-     * setting when ticks are unavailable).
+     * Per-pose gear fits of the player frames drawn since the gear last changed (JSON array of
+     * `{sequence, frame, itemId, slot, shift, direction, precomputed, penetration, gap,
+     * meetsTargets}`); entries with `meetsTargets: false` are the exact current fit failures.
+     */
+    player_pose_fits(): string;
+    /**
+     * Whether the player is running: the observer contract's executed `running` when the world
+     * view carries it, else the original two-tiles-per-server-tick rule (or the `run` setting
+     * when ticks are unavailable).
      */
     player_running(): boolean;
     /**
@@ -285,6 +305,7 @@ export interface InitOutput {
     readonly wasmrenderer_load_npc_definition: (a: number, b: number, c: number, d: number, e: number) => [number, number, number];
     readonly wasmrenderer_load_npc_pack: (a: number, b: number, c: number, d: number) => [number, number];
     readonly wasmrenderer_load_player_body: (a: number, b: number, c: number, d: number, e: number, f: number, g: number, h: number, i: number) => [number, number];
+    readonly wasmrenderer_load_pose_fit_table: (a: number, b: number, c: number, d: number) => [number, number, number];
     readonly wasmrenderer_load_scene: (a: number, b: number, c: number, d: number, e: number, f: number, g: number) => [number, number];
     readonly wasmrenderer_load_sequence: (a: number, b: number, c: number) => [number, number, number];
     readonly wasmrenderer_minimap_mask: (a: number) => [number, number, number];
@@ -292,8 +313,10 @@ export interface InitOutput {
     readonly wasmrenderer_minimap_surface: (a: number) => [number, number, number, number];
     readonly wasmrenderer_needs_recenter: (a: number, b: number, c: number, d: number) => number;
     readonly wasmrenderer_new: (a: any, b: number, c: number, d: number, e: number) => any;
+    readonly wasmrenderer_observer_v1: (a: number) => number;
     readonly wasmrenderer_pick: (a: number, b: number, c: number) => [number, number];
     readonly wasmrenderer_player_fit_report: (a: number) => [number, number];
+    readonly wasmrenderer_player_pose_fits: (a: number) => [number, number];
     readonly wasmrenderer_player_running: (a: number) => number;
     readonly wasmrenderer_register_ground_item_definition: (a: number, b: number, c: number, d: number) => void;
     readonly wasmrenderer_resize: (a: number, b: number, c: number) => void;
@@ -315,10 +338,10 @@ export interface InitOutput {
     readonly wasm_bindgen_765df639e0572edc___convert__closures_____invoke___js_sys_3b7301898fbf4e22___Function_fn_wasm_bindgen_765df639e0572edc___JsValue_____wasm_bindgen_765df639e0572edc___sys__Undefined___js_sys_3b7301898fbf4e22___Function_fn_wasm_bindgen_765df639e0572edc___JsValue_____wasm_bindgen_765df639e0572edc___sys__Undefined_______true_: (a: number, b: number, c: any, d: any) => void;
     readonly wasm_bindgen_765df639e0572edc___convert__closures_____invoke___wasm_bindgen_765df639e0572edc___JsValue__core_ed718c3d60ebd546___result__Result_____wasm_bindgen_765df639e0572edc___JsError___true_: (a: number, b: number, c: any) => [number, number];
     readonly wasm_bindgen_765df639e0572edc___convert__closures_____invoke___wasm_bindgen_765df639e0572edc___sys__JsNullable_wgpu_fb237351f69b1e72___backend__webgpu__webgpu_sys__gen_GpuError__GpuError___core_ed718c3d60ebd546___result__Result_____wasm_bindgen_765df639e0572edc___JsError___true_: (a: number, b: number, c: any) => [number, number];
-    readonly wasm_bindgen_765df639e0572edc___convert__closures_____invoke___wasm_bindgen_765df639e0572edc___sys__JsNullable_wgpu_fb237351f69b1e72___backend__webgpu__webgpu_sys__gen_GpuError__GpuError___core_ed718c3d60ebd546___result__Result_____wasm_bindgen_765df639e0572edc___JsError___true__84: (a: number, b: number, c: any) => [number, number];
-    readonly wasm_bindgen_765df639e0572edc___convert__closures_____invoke___wasm_bindgen_765df639e0572edc___sys__JsNullable_wgpu_fb237351f69b1e72___backend__webgpu__webgpu_sys__gen_GpuError__GpuError___core_ed718c3d60ebd546___result__Result_____wasm_bindgen_765df639e0572edc___JsError___true__85: (a: number, b: number, c: any) => [number, number];
+    readonly wasm_bindgen_765df639e0572edc___convert__closures_____invoke___wasm_bindgen_765df639e0572edc___sys__JsNullable_wgpu_fb237351f69b1e72___backend__webgpu__webgpu_sys__gen_GpuError__GpuError___core_ed718c3d60ebd546___result__Result_____wasm_bindgen_765df639e0572edc___JsError___true__87: (a: number, b: number, c: any) => [number, number];
+    readonly wasm_bindgen_765df639e0572edc___convert__closures_____invoke___wasm_bindgen_765df639e0572edc___sys__JsNullable_wgpu_fb237351f69b1e72___backend__webgpu__webgpu_sys__gen_GpuError__GpuError___core_ed718c3d60ebd546___result__Result_____wasm_bindgen_765df639e0572edc___JsError___true__88: (a: number, b: number, c: any) => [number, number];
     readonly wasm_bindgen_765df639e0572edc___convert__closures_____invoke___wgpu_fb237351f69b1e72___backend__webgpu__webgpu_sys__gen_GpuDeviceLostInfo__GpuDeviceLostInfo______true_: (a: number, b: number, c: any) => void;
-    readonly wasm_bindgen_765df639e0572edc___convert__closures_____invoke___wgpu_fb237351f69b1e72___backend__webgpu__webgpu_sys__gen_GpuDeviceLostInfo__GpuDeviceLostInfo______true__83: (a: number, b: number, c: any) => void;
+    readonly wasm_bindgen_765df639e0572edc___convert__closures_____invoke___wgpu_fb237351f69b1e72___backend__webgpu__webgpu_sys__gen_GpuDeviceLostInfo__GpuDeviceLostInfo______true__86: (a: number, b: number, c: any) => void;
     readonly __wbindgen_malloc: (a: number, b: number) => number;
     readonly __wbindgen_realloc: (a: number, b: number, c: number, d: number) => number;
     readonly __wbindgen_exn_store: (a: number) => void;

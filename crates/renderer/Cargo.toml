@@ -15,10 +15,18 @@ default = []
 gpu = ["dep:wgpu", "dep:bytemuck"]
 # Browser bindings (wasm-bindgen exports consumed by the web/renderer adapter).
 web = ["gpu", "dep:wasm-bindgen", "dep:wasm-bindgen-futures", "dep:js-sys", "dep:web-sys", "wgpu/webgpu"]
+# Native asset tools (`pose-fit-table`), never part of the wasm build.
+tools = ["dep:sha2"]
+
+[[bin]]
+name = "pose-fit-table"
+path = "src/bin/pose_fit_table.rs"
+required-features = ["tools"]
 
 [dependencies]
 serde = { workspace = true }
 serde_json = { workspace = true }
+sha2 = { workspace = true, optional = true }
 wgpu = { version = "30.0.1", optional = true, default-features = false, features = ["wgsl"] }
 bytemuck = { version = "1.25", optional = true, features = ["derive"] }
 wasm-bindgen = { version = "=0.2.128", optional = true }
@@ -34,6 +42,8 @@ png = "0.18"
 pollster = "1.0"
 # Already in the workspace lock through `png`; inflates the published scene gzip twins in tests.
 flate2 = "1.1"
+# Workspace-pinned digest for manifest-pinned test inputs.
+sha2 = { workspace = true }
 
 [lints]
 workspace = true

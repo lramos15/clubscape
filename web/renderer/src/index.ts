@@ -9,7 +9,8 @@
  * thrown error carrying the original message.
  */
 import type {
-  CreateRenderer, RenderCamera, RenderFrame, RendererConfig, RendererHandle, ScenePick, WorldView,
+  ActorActionView, CreateRenderer, DynamicObjectView, RenderCamera, RenderFrame, RendererConfig, RendererHandle,
+  ScenePick, WorldView,
 } from "../../shared/contracts.ts";
 import init, { WasmRenderer } from "../pkg/clubscape_renderer.js";
 
@@ -46,6 +47,12 @@ export interface RenderAssetManifest {
   equipment_items?: Array<{ item_id: number; name: string; equip_model: string | null }>;
   /** Human reference body for label retargeting (the drawn body is NPC 2063 model 21547 at 75/128). */
   player_reference?: { model: string; classification: string };
+  /**
+   * Precomputed per-item per-pose gear fits (`export.py --profile pose-fits`): the shifts the
+   * runtime contact solve would apply, so first display of a frame costs no solve. Frames still
+   * over the fit targets are counted here and reported per frame by `playerPoseFits()`.
+   */
+  gear_pose_fits?: { file: string; schema_version: number; body_npc: number; items: number; sequences: number; item_frames: number; item_frames_over_target: number };
   /** Door/fire/state objects: per type+orientation lit models with optional baked frames. */
   dynamic_objects?: Array<{
     object_id: number; name: string; sequence: number;
@@ -63,20 +70,13 @@ export interface RenderAssetManifest {
 }
 
 /**
- * Optional shell extension mirroring the protocol `WorldSnapshot.dynamic_objects` (door states).
- * `WorldView` does not carry it; pass it as `update({ ...world, dynamicObjects })`.
+ * `WorldView.dynamicObjects` (`game.observer.v1`, shared `DynamicObjectView`): door states from
+ * the protocol `WorldSnapshot.dynamic_objects`. Only `sourceId` — supplied by the shell's
+ * validated definition-catalogue lookup — selects the source object; the renderer never parses
+ * `objectId` strings, and an entry without `sourceId` is reported (`motion unknown: dynamic
+ * object …`) and not drawn.
  */
-export interface RendererDynamicObject {
-  id: string;
-  /** Source object id or `asset.source.osrs.cache2695.object.<id>`. */
-  objectId?: string;
-  sourceId?: number;
-  tile: { x: number; y: number; plane: number };
-  instance: string | null;
-  state?: string;
-  doorOpen?: boolean;
-  quarterTurns?: number;
-}
+export type RendererDynamicObject = DynamicObjectView;
 
 /**
  * Optional shell extension mirroring the protocol `Event` with `kind === "animation"`: the
@@ -93,14 +93,24 @@ export interface RendererAnimationEvent {
 
 /**
  * Renderer-consumed world inputs beyond the frozen `WorldView` fields. Motion identity is never
- * guessed: `player.animation` / `entity.animation` (bare or catalog sequence ids), animation
- * events and the `run` setting are the only sources; running is otherwise derived from the
- * original two-tiles-per-tick rule using `WorldView.tick`.
+ * guessed. In precedence order the sources are:
+ *
+ * 1. `player.animation` / `entity.animation` (bare or catalog sequence ids);
+ * 2. `game.observer.v1` — `running` / `movementTick` (movement actually executed this tick)
+ *    and `action: ActorActionView` whose `animation` is played anchored to
+ *    `cycleStartedAtTick` (600 ms per tick); the same `id` + cycle never restarts on polls or
+ *    reconnects, and `animation: null` keeps the stance and reports the explicit action id as
+ *    `motion unknown` — no nearby-object or default motion is selected;
+ * 3. forwarded animation `events` (legacy shells);
+ * 4. without observer fields, the original two-tiles-per-tick rule over `WorldView.tick` plus
+ *    the `run` setting.
  */
 export interface RendererWorldExtensions {
   dynamicObjects?: RendererDynamicObject[];
   events?: RendererAnimationEvent[];
 }
+
+export type { ActorActionView };
 
 /** Per-item gear fit on the penguin body (source units before the 75/128 draw scale). */
 export interface PlayerFitReport {
@@ -120,6 +130,20 @@ export interface PlayerFitReport {
   /** The same measure of the item on the human body it was designed for. */
   designPenetration: number;
   scale: number;
+}
+
+/** One per-pose gear fit (source units, unscaled body); see `RendererHandleExtensions.playerPoseFits`. */
+export interface PlayerPoseFit {
+  sequence: number;
+  frame: number;
+  itemId: number;
+  slot: string;
+  shift: number;
+  direction: [number, number, number];
+  precomputed: boolean;
+  penetration: number;
+  gap: number;
+  meetsTargets: boolean;
 }
 
 /** Model-only interface preview request; defaults reproduce interface 679 component 73. */
@@ -280,6 +304,13 @@ export interface ClubscapeRendererHandle extends RendererHandle {
   setRoofContext(hovered: { x: number; y: number } | null, destination: { x: number; y: number } | null): void;
   /** Current gear fit report (empty until a body and gear are assembled). */
   playerFitReport(): PlayerFitReport[];
+  /**
+   * Per-pose gear fits of every player frame drawn or previewed since the gear last changed:
+   * the rigid per-frame shift each worn item received against the posed body (from the
+   * precomputed table or a live solve) and the penetration/gap it left. `meetsTargets: false`
+   * entries are the exact remaining fit failures (targets: penetration ≤ 1, gap ≤ 2 source units).
+   */
+  playerPoseFits(): PlayerPoseFit[];
   /** Current scene placement (null without a scene). */
   scenePlacement(): ScenePlacement | null;
   /**
@@ -288,8 +319,18 @@ export interface ClubscapeRendererHandle extends RendererHandle {
    * sidecar is missing — never a blank or approximate map. Cached until the state changes.
    */
   minimapSurface(): MinimapSurface;
-  /** Whether the player is running (two tiles per server tick, or the `run` setting without ticks). */
+  /**
+   * Whether the player is running: `PlayerView.running` (`game.observer.v1`, the movement
+   * actually executed this tick) when present, else the two-tiles-per-server-tick rule (or the
+   * `run` setting without ticks).
+   */
   playerRunning(): boolean;
+  /**
+   * Whether the last `update()` carried `game.observer.v1` fields (`running`, `movementTick`,
+   * `action`). False means an older observer: movement is inferred from ticks and actions
+   * play only from `animation` / forwarded events.
+   */
+  observerV1(): boolean;
   /**
    * Actors whose reported state implies an action but whose source motion the last `update()`
    * did not supply (also reported through `onDiagnostic` as `motion unknown: …`).
@@ -379,6 +420,17 @@ export const createRenderer: (canvas: HTMLCanvasElement, config: RendererConfig,
     }
     for (const item of manifest.equipment_items ?? []) {
       if (item.equip_model) renderer.load_equip_model(item.item_id, await fetchAsset(item.equip_model));
+    }
+    if (manifest.gear_pose_fits && penguin) {
+      const table = new TextDecoder().decode(await fetchAsset(manifest.gear_pose_fits.file));
+      const entries = renderer.load_pose_fit_table(table, penguin.npc_id);
+      if (manifest.gear_pose_fits.item_frames_over_target > 0) {
+        options.onDiagnostic?.(
+          `gear pose fits: ${manifest.gear_pose_fits.item_frames_over_target} of ${manifest.gear_pose_fits.item_frames} item-frames remain over the fit targets (${entries} item×sequence entries loaded)`,
+        );
+      }
+    } else if (penguin) {
+      options.onDiagnostic?.("gear pose fits: no precomputed table in the manifest; player frames solve their fit live on first display");
     }
     // Live layers: doors/fires/state objects and ground-item stacks.
     for (const object of manifest.dynamic_objects ?? []) {
@@ -664,6 +716,10 @@ export const createRenderer: (canvas: HTMLCanvasElement, config: RendererConfig,
         requireLive();
         return JSON.parse(renderer.player_fit_report()) as PlayerFitReport[];
       },
+      playerPoseFits() {
+        requireLive();
+        return JSON.parse(renderer.player_pose_fits()) as PlayerPoseFit[];
+      },
       scenePlacement() {
         requireLive();
         const json = renderer.scene_placement();
@@ -681,6 +737,10 @@ export const createRenderer: (canvas: HTMLCanvasElement, config: RendererConfig,
       playerRunning() {
         requireLive();
         return renderer.player_running();
+      },
+      observerV1() {
+        requireLive();
+        return renderer.observer_v1();
       },
       unknownMotions() {
         requireLive();
