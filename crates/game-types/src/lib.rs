@@ -10,6 +10,7 @@ mod observer;
 mod runtime_state;
 mod runtime_validation;
 mod state;
+mod ui_amounts;
 mod ui_state;
 
 pub use content::*;
@@ -22,6 +23,7 @@ pub use mechanics::*;
 pub use observer::*;
 pub use runtime_state::*;
 pub use state::*;
+pub use ui_amounts::*;
 pub use ui_state::*;
 
 /// The additive persisted world/character envelope; not the content format.

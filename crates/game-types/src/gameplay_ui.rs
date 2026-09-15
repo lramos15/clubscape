@@ -257,6 +257,22 @@ pub struct PublicChatLine {
 #[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(tag = "kind", rename_all = "snake_case", deny_unknown_fields)]
 pub enum GameplayUiRequest {
+    ProductionSelectAll {
+        menu_id: String,
+        recipe: RecipeId,
+    },
+    BankSetAmount {
+        amount: crate::UiAmount,
+        noted: bool,
+    },
+    RecoveryTake {
+        death: DeathId,
+        storage: RecoveryStorage,
+        items: Vec<crate::RecoveryItemAmount>,
+    },
+    RecoveryBankAll {
+        records: Vec<crate::RecoveryRecordSelection>,
+    },
     UiDocumentPage {
         document_id: String,
         page: u16,
@@ -339,6 +355,8 @@ impl GameplayUiRequest {
         matches!(
             self,
             Self::BankSelectTab { .. }
+                | Self::BankSetAmount { .. }
+                | Self::RecoveryBankAll { .. }
                 | Self::BankCreateTab { .. }
                 | Self::BankMove { .. }
                 | Self::BankCollapseTab { .. }

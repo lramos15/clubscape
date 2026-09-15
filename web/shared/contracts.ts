@@ -163,6 +163,7 @@ export interface ShopView {
 export interface RecoveryView {
   death: string;
   storage: "grave" | "death_office";
+  /** Legacy cost is the quote for the entire remaining entry, never a unit price. */
   items: Array<{ id: string; item: ItemView; cost: number | null }>;
   remainingTicks: number | null;
 }
@@ -196,7 +197,31 @@ export interface WorldView {
 }
 
 export const GAMEPLAY_UI_CAPABILITY = "game.ui.v1";
+export const UI_AMOUNTS_CAPABILITY = "game.ui.amounts.v1";
+export const UI_RECOVERY_CAPABILITY = "game.ui.recovery.v1";
+export type UiAmount = { kind: "quantity"; quantity: number } | { kind: "all" };
+export interface RecoveryItemAmount { id: string; amount: UiAmount }
+export interface RecoveryRecordSelection { death: string; items: string[] }
+export interface RecoveryManagementView {
+  bankRevision: string;
+  panels: Array<{
+    death: string; storage: "grave" | "death_office";
+    entries: Array<{
+      id: string; item: ItemView;
+      /** Quotes for one unit and the full remaining entry; neither implies a UI pricing formula. */
+      unitFee: string; fullStackFee: string;
+      inventoryCapacity: number; bankCapacity: number; take: UiPermission; bank: UiPermission;
+    }>;
+    fullSelectionFee: string; takeAll: UiPermission;
+  }>;
+  bankAll: UiPermission;
+  bankAllRecords: RecoveryRecordSelection[];
+}
 export type GameplayUiIntent = (
+  | { kind: "production_select_all"; menu_id: string; recipe: string }
+  | { kind: "bank_set_amount"; amount: UiAmount; noted: boolean }
+  | { kind: "recovery_take"; death: string; storage: "grave" | "death_office"; items: RecoveryItemAmount[] }
+  | { kind: "recovery_bank_all"; records: RecoveryRecordSelection[] }
   | { kind: "ui_document_page"; document_id: string; page: number }
   | { kind: "bank_placeholder"; entry_id: string }
   | { kind: "ui_dismiss"; presentation_id: string }
@@ -230,7 +255,7 @@ export interface GameplayUiView {
   activeInterface: string | null;
   production: {
     id: string; interface: string; target: WorldTarget | null;
-    recipes: Array<{ recipe: string; name: string; outputs: ItemView[]; single: UiPermission; makeX: UiPermission }>;
+    recipes: Array<{ recipe: string; name: string; outputs: ItemView[]; single: UiPermission; makeX: UiPermission; all?: UiPermission }>;
   } | null;
   reward: {
     id: string; kind: "quest" | "level_up"; interface: string; title: string; lines: string[]; items: ItemView[];
@@ -251,13 +276,15 @@ export interface GameplayUiView {
   inventoryActions: InventoryActionsUiView[];
   bank: {
     revision: string; capacity: number; selectedTab: number; insertMode: boolean; placeholders: boolean; amount: number; noted: boolean;
+    /** Current semantic default; legacy amount remains a literal quantity, never an All sentinel. */
+    amountSelection?: UiAmount;
     tabs: Array<{ tab: number; firstEntry: string | null; entries: number }>;
     entries: Array<{ id: string; slot: number; tab: number; item: string; value: ItemView | null; placeholder: boolean }>;
     depositEquipment: UiPermission;
     unavailableContainers: Array<{ id: string; label: string; permission: UiPermission }>;
   } | null;
   keptOnDeath: { scope: "normal_unsafe_non_pvp"; kept: ItemView[]; lost: ItemView[]; fullGraveFee: string; fullOfficeFee: string; valueRevision: string } | null;
-  recovery: { cofferBalance: string; discard: UiPermission; cofferOffer: UiPermission; cofferItems: InventoryActionsUiView[] } | null;
+  recovery: { cofferBalance: string; discard: UiPermission; cofferOffer: UiPermission; cofferItems: InventoryActionsUiView[]; management?: RecoveryManagementView } | null;
   appearance: {
     choices: Record<string, Array<{ value: number; label: string | null; permission: UiPermission }>>;
     base: { asset: string; sourceNpc: number; adaptation: string } | null; confirmed: boolean;

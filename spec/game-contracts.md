@@ -46,6 +46,39 @@ identity; they do not inherit M1 numeric defaults.
 
 ## Authoritative gameplay UI contract, version 1
 
+### Additive All amounts and recovery management
+
+`UiAmount` is `{kind:"quantity", quantity:N}` or `{kind:"all"}`. Quantity is a
+positive request upper bound (1/5/X); All requests the actual remaining source
+quantity. No u32 sentinel is guessed or overloaded. `production_select_all`
+contains only the source menu/recipe IDs; the server selects current source
+input quantity and preserves Make-X first/repeat cadence even for All-of-one.
+`bank_set_amount` persists the semantic default and note preference. Existing
+`bank_set_options.amount` remains a literal quantity and clears All mode.
+`ui.bank.amountSelection` is authoritative; absent means an older unsupported
+`game.ui.amounts.v1` extension. Ordinary deposits retain `WorldView.bank.banker`.
+
+`recovery_take` carries death/storage and distinct `{id, amount:UiAmount}`
+entries. A partial quantity cannot become a whole-entry reclaim.
+`recovery_bank_all` echoes the current management view's exact
+`bankAllRecords`; the server validates owned context and identities, then uses
+the same source fee/payment/transfer planners. Source availability is expressed
+by per-row and Bank-All permissions, not inferred from a button's presence.
+Bank-All also echoes `management.bankRevision` in `expected_bank_revision`;
+ordinary bank controls echo `ui.bank.revision`. Both refer to the same bank and
+are checked only after durable duplicate lookup.
+
+`game.ui.recovery.v1` supplies `RecoveryManagementView`. `unitFee` quotes one
+unit now; `fullStackFee` quotes the whole remaining entry now, including paid
+credit. Legacy `RecoveryView.items.cost` has the latter whole-entry meaning.
+Clients must not multiply a unit quote or add row quotes to bypass source
+rounding/credit/combined caps. `fullSelectionFee`, actual inventory/bank
+capacities and `UiPermission` come from the immutable execution planner.
+All u64 fees/revisions remain decimal strings. Missing management data means
+unsupported, never a fabricated free/capacity-zero result. These fields are
+published before their implementation; the capability is advertised only when
+the working source-backed endpoint exists.
+
 `GameplayUiView` / `GameplayUiRequest` in `game-types/src/gameplay_ui.rs` and
 `GameplayUiView` / `GameplayUiIntent` in `web/shared/contracts.ts` are the exact
 shared M1 UI contract. The additive capability is `game.ui.v1`; `WorldView.ui`
