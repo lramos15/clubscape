@@ -1,5 +1,29 @@
 # Shared M1 game contracts
 
+## Renderer observer contract, version 1
+
+`PlayerView.running?` and the visible-player `EntityView.running?` report actual
+current-tick movement, not the run checkbox or a prediction. `movementTick?`
+correlates that movement; final two-step movement remains running when its path
+has ended or energy is exhausted. A subsequent nonmoving tick is not running.
+
+`action?: ActorActionView | null` is the exact read-only action instance/phase,
+with canonical action/recipe/style/spell IDs and real target (including null for
+inventory-only production). Its stable `id`, `startedAtTick`,
+`cycleStartedAtTick`, `nextActionTick` and `observedAtTick` preserve correlation
+without resetting animation on polls/reconnects. All ticks cross JS as decimal
+strings. Explicit `animation` identities are used when source-bound; otherwise
+the source action identity remains explicit rather than selecting a nearby
+object or unrelated default animation. Consumers must not guess by adjacency.
+Missing observer fields mean an older unsupported observer, not fabricated state.
+
+`WorldView.dynamicObjects?` carries typed `{id, objectId?, sourceId?, tile,
+instance, state?, doorOpen?, quarterTurns?}` entries from the existing complete
+`WorldSnapshot.dynamic_objects` list. Unknown numeric source IDs are omitted;
+the shell resolves canonical `objectId` only through its validated definition
+catalogue. These are observer values, never client-owned stock/state setters.
+Renderer handle, HUD/audio contracts and source cadence remain unchanged.
+
 ## Authoritative gameplay UI contract, version 1
 
 `GameplayUiView` / `GameplayUiRequest` in `game-types/src/gameplay_ui.rs` and

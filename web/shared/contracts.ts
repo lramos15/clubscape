@@ -62,6 +62,35 @@ export interface ItemView {
 export interface SlotView { index: number; item: ItemView | null }
 export interface SkillView { id: string; name: string; xpTenths: string; baseLevel: number; currentLevel: number; iconAsset: string | null }
 export interface QuestView { id: string; name: string; stage: string; journal: string; completed: boolean }
+export interface ActorActionView {
+  version: 1;
+  /** Stable action-instance identity; reconnect/polling must not restart the same action. */
+  id: string;
+  activity: string;
+  actionId: string | null;
+  target: WorldTarget | null;
+  recipeId: string | null;
+  styleId: string | null;
+  spellId: string | null;
+  /** Explicit source sequence/asset identity; null means only the source action is known. */
+  animation: string | null;
+  startedAtTick: string;
+  cycleStartedAtTick: string;
+  nextActionTick: string | null;
+  observedAtTick: string;
+}
+export interface DynamicObjectView {
+  id: string;
+  /** Canonical object definition ID, never a client-selected replacement. */
+  objectId?: string;
+  /** Only supplied by a validated definition-catalogue lookup, never ID-string parsing. */
+  sourceId?: number;
+  tile: Tile;
+  instance: string | null;
+  state?: string;
+  doorOpen?: boolean;
+  quarterTurns?: number;
+}
 export interface PlayerView {
   id: string;
   displayName: string;
@@ -83,6 +112,11 @@ export interface PlayerView {
   activePrayers: string[];
   activity: string;
   animation: string;
+  /** Actual current-tick movement, including a final exhausted run step; not the run checkbox. */
+  running?: boolean;
+  movementTick?: string | null;
+  /** Absent on older observers; null means there is no current authoritative action. */
+  action?: ActorActionView | null;
   settings: Setting[];
 }
 export interface EntityView {
@@ -97,6 +131,9 @@ export interface EntityView {
   maxHitpoints: number;
   available: boolean;
   animation: string;
+  running?: boolean;
+  movementTick?: string | null;
+  action?: ActorActionView | null;
   actions: Array<{ name: string; allowed: boolean; reason: string | null }>;
   appearance: Record<string, number>;
   equipment: Array<{ slot: string; sourceId: number | null }>;
@@ -138,6 +175,8 @@ export interface WorldView {
   tick: string;
   player: PlayerView;
   entities: EntityView[];
+  /** Complete authoritative dynamic-object list; absent only on older bridges. */
+  dynamicObjects?: DynamicObjectView[];
   groundItems: Array<{ id: string; tile: Tile; item: ItemView; canTake: boolean }>;
   dialogue: DialogueView | null;
   bank: BankView | null;
