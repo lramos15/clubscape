@@ -247,7 +247,7 @@ impl WorldEngine {
                                 &id,
                                 definition,
                                 (entity.tile, next),
-                                Some(&character),
+                                (context, Some(&character)),
                             )?
                         {
                             next_step = Some(next);
@@ -268,7 +268,7 @@ impl WorldEngine {
                                         &id,
                                         definition,
                                         (entity.tile, next),
-                                        Some(&character),
+                                        (context, Some(&character)),
                                     )?
                                 {
                                     next_step = Some(next);
@@ -415,7 +415,7 @@ impl WorldEngine {
                                 &id,
                                 definition,
                                 (entity.tile, tile),
-                                None,
+                                (context, None),
                             )?
                         {
                             candidates.push(tile);
@@ -447,9 +447,10 @@ impl WorldEngine {
         id: &SpawnId,
         definition: &NpcDefinition,
         edge: (Tile, Tile),
-        actor: Option<&CharacterState>,
+        actors: (&crate::TickContext, Option<&CharacterState>),
     ) -> GameResult<bool> {
         let (from, to) = edge;
+        let (context, actor) = actors;
         let map = self.collision_for(world, instance.as_ref())?;
         for dx in 0..definition.size {
             for dy in 0..definition.size {
@@ -473,9 +474,12 @@ impl WorldEngine {
         ) {
             let cells = footprint_tiles(to, definition.size)?;
             if world.characters.values().chain(actor).any(|actor| {
-                !matches!(actor.runtime.presence, PresenceState::Offline { .. })
-                    && &actor.runtime.instance == instance
+                &actor.runtime.instance == instance
                     && cells.contains(&actor.tile)
+                    && context
+                        .actors
+                        .get(&actor.actor_id)
+                        .is_some_and(|presence| presence.online)
             }) {
                 return Ok(false);
             }

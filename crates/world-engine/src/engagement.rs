@@ -107,7 +107,7 @@ impl WorldEngine {
                             id,
                             definition,
                             (current.tile, next),
-                            None,
+                            (context, None),
                         )?
                     {
                         runtime::entity_mut(world, instance, id)?.tile = next;
