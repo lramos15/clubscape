@@ -7,6 +7,13 @@
   "current_scene_contract_commit": "c7f3578e4b31cb659fd52b68c685200d970646ba",
   "amount_recovery_contract_commit": "005204affcd098e85cf63349cb1993410134e6a9",
   "native_control_binding_commit": "2fef76d1fba50ca03dc8c38e16ed7c2c84634fc9",
+  "control_candidate_commit": "79c11c6b89ec2d8abcc16012977737ab93dc4385",
+  "owned_followup_sequence": [
+    "c7f3578e4b31cb659fd52b68c685200d970646ba",
+    "005204affcd098e85cf63349cb1993410134e6a9",
+    "2fef76d1fba50ca03dc8c38e16ed7c2c84634fc9",
+    "79c11c6b89ec2d8abcc16012977737ab93dc4385"
+  ],
   "source_entry_parent_commit": "2f775f7971a78ad990e7ed80f2cf04c3e89e4c89",
   "source_entry_local_commit": "747871a15587c4ce247d63517adf2bd00357dd17",
   "implementation_verified": true,
