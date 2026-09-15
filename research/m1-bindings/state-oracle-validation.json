@@ -1,7 +1,7 @@
 {
   "cook_source_edges_bound": 22,
   "death_source_edges_bound": 6,
-  "game_content_sha256": "ecdeabdcb4270698b4706c014459f3ec719d63c03bcd9731bc81b7ae2b6dfd10",
+  "game_content_sha256": "b9364b8bb56a88779f57eee650bff032c424e862bc9737bbda558ae41802673b",
   "independent_graph_oracles": [
     {
       "expected_stage": "stage.tutorial.guide_greeting",
@@ -121,8 +121,8 @@
   ],
   "passed": 23,
   "runtime_journey_passed": false,
-  "schema_version": 2,
-  "source_boundary_policy": "Fixtures are independently supplied post-authoritative operation/state facts. They test actual schema2 guards/effects against source expectations, not unbound projectile/timing/departure/death execution. No public client event injection, source-observation claim or whole-gameplay acceptance is made.",
+  "schema_version": 3,
+  "source_boundary_policy": "Fixtures are independently supplied post-authoritative operation/state facts. They test actual content3 guards/effects against source expectations, not unbound projectile/timing/departure/death execution. No public client event injection, source-observation claim or whole-gameplay acceptance is made.",
   "source_oracles_sha256": "cf5c735399c9dae19bdadb16c7b16f0e5b9d4b11b5f1d208a1fec831312e2409",
   "tutorial_source_edges_bound": 73
 }

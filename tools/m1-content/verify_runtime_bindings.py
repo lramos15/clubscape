@@ -6,7 +6,7 @@ from copy import deepcopy
 from fractions import Fraction
 import json
 
-from common import CONTENT, canonical, item_stack, load, sha, write
+from common import BINDINGS, CONTENT, canonical, item_stack, load, sha, write
 from runtime_application import ADDITIONAL_ITEMS, DIRECTORY, POTION_ITEMS, classify_residuals, source_applier
 from state_oracles import Oracle, OracleRefusal
 
@@ -136,7 +136,7 @@ def departure_oracles(content, source_oracles):
 
 def verify():
     content = load(CONTENT / "game-content.json.gz")
-    application = load(DIRECTORY / "application-result.json")
+    application = load(BINDINGS / "application-result.json")
     resolutions = load(DIRECTORY / "resolutions.json")
     context = load(DIRECTORY / "application-context.json")
     module = source_applier()
@@ -187,11 +187,11 @@ def verify():
         "death_values_checked": len(provider["values"]["value"]),
         "loot": loot_oracles(content, application), "departure": departure_oracles(content, source_oracles),
         "residuals": residuals,
-        "original_source_numeric_oracles": "research/runtime-bindings/application-source-validation.json",
+        "original_source_numeric_oracles": "research/m1-bindings/application-source-validation.json",
         "remaining_selector_hooks": application["remaining_selector_hooks"],
         "gameplay_executed": False, "presentation_approved": False,
     }
-    write(DIRECTORY / "application-validation.json", report, pretty=True)
+    write(BINDINGS / "application-validation.json", report, pretty=True)
     print(json.dumps({"source_bindings_consumed": report["source_bindings_consumed"],
                       "coupled_updates": report["coupled_updates_checked"],
                       "loot_joint_vectors": report["loot"]["joint_primary_potion_vectors"],

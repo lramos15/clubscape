@@ -1,19 +1,20 @@
 {
-  "artifact_version": 2,
+  "active_source_binding_count": 0,
+  "artifact_version": 3,
   "baseline": "OSRS live build 240 / cache 2695; post-July-2026 normal F2P behavior contracts",
   "build_command": "python3 tools/m1-content/build.py",
   "check_command": "python3 tools/m1-content/check.py",
   "compiled_artifact": {
-    "artifact_version": 2,
-    "bytes": 486105,
+    "artifact_version": 3,
+    "bytes": 502831,
     "path": "content/m1/game-content.csc.gz",
-    "schema_version": 2,
-    "sha256": "5217217392faf73d99197c88290cbf63a22b274688b2f0cf85d8ecfc237a6a40",
-    "uncompressed_bytes": 11334334,
-    "uncompressed_sha256": "eb50782a3221f5dbed3d691b8073fe87b7ec4e93ef233266e544ad60dabfab9f"
+    "schema_version": 3,
+    "sha256": "59db342f4d41ea954ed8062b08c15dcc96a3cdddc43d3269d7455d7a1835a8d5",
+    "uncompressed_bytes": 11761569,
+    "uncompressed_sha256": "0181ec69456101defccbc8dd99b579ed849caae6301d801387732bea70fe98f5"
   },
   "compiler_command": "python3 tools/m1-content/compile.py --compiler-manifest crates/content/Cargo.toml",
-  "content_schema_version": 2,
+  "content_schema_version": 3,
   "counts": {
     "cooks_projected_edges": 22,
     "cooks_source_transitions": 22,
@@ -25,12 +26,13 @@
     "interfaces": 26,
     "items": 118,
     "mechanics": {
-      "combat_styles": 24,
+      "collision_groups": 49,
+      "combat_styles": 27,
       "counters": 134,
       "entitlements": 13,
       "experiences": 3,
       "grants": 18,
-      "ground_policies": 4,
+      "ground_policies": 7,
       "instances": 1,
       "object_transforms": 68,
       "prayers": 1,
@@ -39,13 +41,14 @@
       "spells": 2,
       "temporary_objects": 1,
       "travels": 26,
+      "traversal": 9,
       "value_providers": 1
     },
     "normal_note_pairs": 53,
     "npcs": 26,
     "objects": 4837,
     "quests": 2,
-    "recipes": 11,
+    "recipes": 13,
     "regions": 29,
     "runtime_blocked_cells": 16544,
     "runtime_collision_cells": 46358,
@@ -60,29 +63,38 @@
     "tutorial_source_transitions": 73,
     "tutorial_states": 71
   },
-  "input_aggregate_sha256": "e645c0e61fa4375ada2272fcc56c3a5558d0f184abe338eda723bad8d39b6fbf",
+  "declared_v3_selectors_authored": true,
+  "inactive_full_target_binding_count": 6,
+  "input_aggregate_sha256": "95f50b40601a821f7beaed37b624da3cb61b5afb6b381f75375f35530a196c79",
   "milestone_accepted": false,
   "outputs": [
     {
-      "bytes": 244208,
-      "json_bytes": 244208,
-      "json_sha256": "8573994812d0da63797e5a675359901047a494222ff1cf92ffb921807a64e60b",
+      "bytes": 337607,
+      "json_bytes": 337607,
+      "json_sha256": "4a9b4368741487b8e9b34c2262310a63fa3ea359a6dcbeff28bdf0d9871ee2a9",
       "path": "research/m1-bindings/input-lock.json",
-      "sha256": "8573994812d0da63797e5a675359901047a494222ff1cf92ffb921807a64e60b"
+      "sha256": "4a9b4368741487b8e9b34c2262310a63fa3ea359a6dcbeff28bdf0d9871ee2a9"
     },
     {
-      "bytes": 472368,
-      "json_bytes": 13619080,
-      "json_sha256": "b32840310a64d2ffe65b077cabb092b25e34ede884f2874832a0893f23288054",
+      "bytes": 492531,
+      "json_bytes": 14096581,
+      "json_sha256": "02fc0f734a76c2fdbdd04abfc68b40d5db5ca7fa54c7d29a2ad5b72ea6a4aed2",
       "path": "content/m1/game-content.json.gz",
-      "sha256": "ecdeabdcb4270698b4706c014459f3ec719d63c03bcd9731bc81b7ae2b6dfd10"
+      "sha256": "b9364b8bb56a88779f57eee650bff032c424e862bc9737bbda558ae41802673b"
     },
     {
-      "bytes": 184365,
-      "json_bytes": 184365,
-      "json_sha256": "db43912383e9b9e8fad62eb3f7a06cdaa6491a6d672001a6c8c1cbbc18ec11a6",
-      "path": "research/runtime-bindings/application-result.json",
-      "sha256": "db43912383e9b9e8fad62eb3f7a06cdaa6491a6d672001a6c8c1cbbc18ec11a6"
+      "bytes": 188851,
+      "json_bytes": 188851,
+      "json_sha256": "ec142de26dd327cbfa3de489ecca12a9ca58de52b4569252fb4c19557e166153",
+      "path": "research/m1-bindings/application-result.json",
+      "sha256": "ec142de26dd327cbfa3de489ecca12a9ca58de52b4569252fb4c19557e166153"
+    },
+    {
+      "bytes": 3959,
+      "json_bytes": 3959,
+      "json_sha256": "182acad81b95eb28abd734d267130f54c9a0ba49499e4c32433a5a9f3d63e2d8",
+      "path": "research/m1-bindings/runtime3-selectors.json",
+      "sha256": "182acad81b95eb28abd734d267130f54c9a0ba49499e4c32433a5a9f3d63e2d8"
     },
     {
       "bytes": 52366,
@@ -512,11 +524,11 @@
       "sha256": "aab8341ed233c3151d1c395d1c98681c112c0c12a74cf5352e766db604da2639"
     },
     {
-      "bytes": 79955,
-      "json_bytes": 79955,
-      "json_sha256": "c3c2b05ec2151a89ebfa5e3863ff82ec1642ac61dfe5f7938932efd751649e8e",
+      "bytes": 79913,
+      "json_bytes": 79913,
+      "json_sha256": "4fa68a0e541fd6eff19d7b7c07461804d98fdece610afd407ff54e2f87b1fc70",
       "path": "research/m1-bindings/item-bindings.json",
-      "sha256": "c3c2b05ec2151a89ebfa5e3863ff82ec1642ac61dfe5f7938932efd751649e8e"
+      "sha256": "4fa68a0e541fd6eff19d7b7c07461804d98fdece610afd407ff54e2f87b1fc70"
     },
     {
       "bytes": 22049,
@@ -547,11 +559,11 @@
       "sha256": "47e89010516afd1bca4cef727cb2eebb0cdc5d542029fc66cb655dde38529f90"
     },
     {
-      "bytes": 62324,
-      "json_bytes": 62324,
-      "json_sha256": "34d4608dd387876a33a69b993445bbe449f4f9bf31804715652c464b54b1da51",
+      "bytes": 66134,
+      "json_bytes": 66134,
+      "json_sha256": "949be7841e7a806e77ea98633e5aef8d08efa904878aed39fdac95f557321de2",
       "path": "research/m1-bindings/door-bindings.json",
-      "sha256": "34d4608dd387876a33a69b993445bbe449f4f9bf31804715652c464b54b1da51"
+      "sha256": "949be7841e7a806e77ea98633e5aef8d08efa904878aed39fdac95f557321de2"
     },
     {
       "bytes": 9466,
@@ -568,18 +580,18 @@
       "sha256": "602e1bddb3ab14a1d13c69e83a4aad56584cc4c037d8aa0640fc56ed758db022"
     },
     {
-      "bytes": 26170,
-      "json_bytes": 107385,
-      "json_sha256": "32befdb249329050c219f3b2875abc55d403fb998665828f1c5f695b6b0e6234",
+      "bytes": 26187,
+      "json_bytes": 107404,
+      "json_sha256": "0a0d5f101b917b5f1a393d69c696df788e1f193ab5119bab8cc718bfbe7e0841",
       "path": "research/m1-bindings/mechanics-bindings.json.gz",
-      "sha256": "b0697775a585dbdaea244599a78ea4f28f9f7e44cf11602ec9de69ceb3e9086d"
+      "sha256": "a98d8b6cbac7d7c22e1abfaeb80c64d94d0df0acee984a9c139da03692e9c0d2"
     },
     {
-      "bytes": 75742,
-      "json_bytes": 75742,
-      "json_sha256": "c7b82924a26d34b78f613370ba5d22b4c09195915ee79be114fb5c17f7780ae6",
+      "bytes": 75784,
+      "json_bytes": 75784,
+      "json_sha256": "ce4c4aefc4b635a6315b9adc706d410dec233cbb40b80c8d74e9744a8b23bbc3",
       "path": "content/m1/journey-checkpoints.json",
-      "sha256": "c7b82924a26d34b78f613370ba5d22b4c09195915ee79be114fb5c17f7780ae6"
+      "sha256": "ce4c4aefc4b635a6315b9adc706d410dec233cbb40b80c8d74e9744a8b23bbc3"
     },
     {
       "bytes": 1415,
@@ -603,23 +615,23 @@
       "sha256": "77556ad0703b50d58289f495db911c53be4fa8b7f4c86adf55b5e86264ad9a33"
     },
     {
-      "bytes": 1962461,
-      "json_bytes": 1962461,
-      "json_sha256": "7142d7723a4237ebf8833deb57737ab3e16e66bca1729e723464e5b409ee080c",
+      "bytes": 1964233,
+      "json_bytes": 1964233,
+      "json_sha256": "7c476e27b8edc63a9fc03fd146666e2ea4ff723ca1b200050739154858773e0e",
       "path": "content/m1/asset-references.json",
-      "sha256": "7142d7723a4237ebf8833deb57737ab3e16e66bca1729e723464e5b409ee080c"
+      "sha256": "7c476e27b8edc63a9fc03fd146666e2ea4ff723ca1b200050739154858773e0e"
     },
     {
-      "bytes": 2006,
-      "json_bytes": 2006,
-      "json_sha256": "a639a723762a38bcc628be3234417a0d0f7bf65ba49e609eb1e954c0484d3bcb",
+      "bytes": 2139,
+      "json_bytes": 2139,
+      "json_sha256": "86707f96ec63d2467fb9cc1ceabba3201e0c9a5664ba6aad143adacec741ace1",
       "path": "research/m1-bindings/structural-validation.json",
-      "sha256": "a639a723762a38bcc628be3234417a0d0f7bf65ba49e609eb1e954c0484d3bcb"
+      "sha256": "86707f96ec63d2467fb9cc1ceabba3201e0c9a5664ba6aad143adacec741ace1"
     }
   ],
   "presentation_approved": false,
   "readiness_dependency": "research/m1-bindings/contract-gaps.json",
-  "revision": "m1.source-backed.v2.e645c0e61fa4375a",
+  "revision": "m1.source-backed.v3.95f50b40601a821f",
   "runtime_compile_passed": true,
   "runtime_ready": false,
   "runtime_schema_version": 1,
@@ -627,24 +639,15 @@
   "scope_policy": "Compilation envelopes cover the complete required route and dependencies, not owner-approved fences. Full four-plane collision and all scenery from all 61 source squares are retained separately. Unlisted runtime cells remain blocked. Out-of-scope travel needs the separately approved feedback policy, never a visual void.",
   "source_application": {
     "approved_adaptation": "adaptation.m1.goblin_energy_potion_provisional",
-    "audit": "research/runtime-bindings/application-result.json",
+    "audit": "research/m1-bindings/application-result.json",
     "coupled_updates": 7,
+    "executor_conformance": "research/m1-bindings/schema-validation.json#native_source_policy_probes",
     "remaining_selector_hooks": [
-      "NPC loot must use original spawn/life/credit/resolved state and the engine's source-owned ground origin; NpcCombatMechanics currently has no explicit ordinary-loot ground-policy selector.",
-      "Preserve beginner-clue and member-only tertiary candidates with source family/ownership eligibility before enabling those full-target outcomes; the potion approval does not certify their selectors.",
-      "Ground death supplies require their source character/world-switch persistence and offline-paused clock, not a wall-clock expiry inferred solely from the policy numbers.",
-      "Engine-owned traversal, attack/recovery UI, engagement and initial setting selectors must consume the applied fields; this content task does not guess new shared field names."
+      "Fresh manual PlayerDrop ownership needs an explicit owner-online expiry/world-persistence policy. Current GroundItemPolicy only declares public_after/expires_after; the native source-clock probe records whether the engine honors this origin. Do not reuse DeathSupply or make expiry infinite."
     ],
     "residuals": {
-      "active_or_conditionally_active": [
-        {
-          "path": "mechanics.vitals.level_up",
-          "reason": "Source current-vital adjustment on a base-level gain is not established by the pinned rules.",
-          "required_branch": "Actual HP/Prayer base-level gain; not Mining/Cooking-only gains.",
-          "rule_group": "level_up_conditional_current"
-        }
-      ],
-      "active_or_conditionally_active_count": 1,
+      "active_or_conditionally_active": [],
+      "active_or_conditionally_active_count": 0,
       "inactive_full_target": [
         {
           "path": "items.item.ensouled_goblin_head.stackable.rule",
@@ -716,8 +719,9 @@
       ],
       "inactive_full_target_count": 6,
       "policy": "A source binding is required only when its proved branch is reachable. Inactive definitions remain in the full target; no unresolved value is replaced by a success-shaped default.",
-      "unresolved_total": 7
+      "unresolved_total": 6
     },
+    "runtime3_selectors": "research/m1-bindings/runtime3-selectors.json",
     "source_bindings_consumed": 104
   },
   "source_gameplay_verified": false,
@@ -735,5 +739,5 @@
     "source_regions": 61,
     "walls": 21619
   },
-  "unresolved_binding_count": 7
+  "unresolved_binding_count": 6
 }

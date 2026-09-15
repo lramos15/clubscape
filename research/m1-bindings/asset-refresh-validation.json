@@ -1,5 +1,17 @@
 {
-  "audited_source_application": "research/runtime-bindings/application-result.json",
+  "audio_publication_evolution": {
+    "audio_or_presentation_acceptance_claimed": false,
+    "current_manifest_bytes": 845835,
+    "current_manifest_sha256": "8e6d1eca465f720829599cae0e1c11b7700a9c7162e53dd5ddec36ceb89787aa",
+    "current_rendered_asset_count": 264,
+    "historical_manifest_sha256": "1e7c37af6d303eb5db9407c9318ee532cbd4f823427fed02c89612dfefaa23b5",
+    "historical_rendered_asset_count": 258,
+    "path": "assets/manifests/osrs/audio-runtime.json",
+    "reason": "The integrated audio worker restored native percussion initialization and added original cue selectors. Rendered audio hashes legitimately changed before this task. Validate the exact current upstream manifest and every current file; retain the earlier 258-file report as historical evidence, not an unchanged-audio claim.",
+    "rendered_audio_unchanged_claimed": false,
+    "upstream_commit": "75bfde1"
+  },
+  "audited_source_application": "research/m1-bindings/application-result.json",
   "behavior_and_geometry_unchanged": false,
   "behavior_sha256": "5d4552cce62e04653ce62fa4caead91e1a1dce0b823af1dbee262d0454c7e3c9",
   "bound_wind_strike_table": {
@@ -49,48 +61,50 @@
     }
   },
   "compiled_artifact": {
-    "artifact_version": 2,
-    "bytes": 486105,
+    "artifact_version": 3,
+    "bytes": 502831,
     "path": "content/m1/game-content.csc.gz",
-    "schema_version": 2,
-    "sha256": "5217217392faf73d99197c88290cbf63a22b274688b2f0cf85d8ecfc237a6a40",
-    "uncompressed_bytes": 11334334,
-    "uncompressed_sha256": "eb50782a3221f5dbed3d691b8073fe87b7ec4e93ef233266e544ad60dabfab9f"
+    "schema_version": 3,
+    "sha256": "59db342f4d41ea954ed8062b08c15dcc96a3cdddc43d3269d7455d7a1835a8d5",
+    "uncompressed_bytes": 11761569,
+    "uncompressed_sha256": "0181ec69456101defccbc8dd99b579ed849caae6301d801387732bea70fe98f5"
   },
+  "current_audio_files_hash_validated": 264,
   "gameplay_executed": false,
   "geometry_and_prior_asset_closure_preserved": true,
+  "historical_audio_file_count": 258,
   "merged_catalog": {
-    "path": "assets/manifests/osrs/cache2695-content-v2-bundle.json.gz",
-    "sha256": "5f429fecea1b2526a146adb8e96c6c564343cd248f3a12c75911e17c57054b7b",
-    "size_bytes": 1900496
+    "path": "assets/manifests/osrs/cache2695-potions-bundle.json.gz",
+    "sha256": "a6bcdca0fe8288b4b586a11537a646c7e745d49c874aa1329e508639a939381e",
+    "size_bytes": 1916698
   },
-  "merged_inventory_records": 12396,
-  "new_original_assets": 268,
-  "new_original_outputs": 1129,
-  "new_verified_definition_publication_needed": {
-    "interface_groups": [],
-    "item_definition_ids": [
-      3010,
-      3011
-    ],
-    "model_ids": [
-      2697
-    ],
-    "npc_definition_ids": []
-  },
+  "merged_inventory_records": 12400,
+  "new_original_assets": 272,
+  "new_original_outputs": 1137,
+  "new_verified_definition_publication_needed": {},
   "original_catalog_records_preserved": 12128,
   "original_source_files_validated": 559,
+  "potion_requested_resolved": {
+    "interface_groups": 0,
+    "item_definition_ids": 2,
+    "model_ids": 1,
+    "npc_definition_ids": 0
+  },
   "presentation_approved": false,
-  "product_assets_resolved": 5254,
-  "protected_audio_file_count": 258,
+  "product_assets_resolved": 5257,
   "protected_reference_image_count": 109,
   "protected_source_closure_evidence": {
     "path": "research/current-source/content-closure-commands/protected-input-integrity.json",
     "sha256": "cabaeaf8faa09b1b9f2d35d7aca2a1b9105359d0a3a3966b0e25ca08930dcffc",
     "size_bytes": 1233
   },
-  "publication_sha256": "0ecaa8905b2e54a5b956cfe077303931c734ac55d5b155859cb74bc18f677fce",
-  "remaining_data_hookup": "Consumers resolve the merged catalog and its additive publication/shards; Canonical source application is checked separately; newly imported potion3010/3011 and original model2697 require source-worker publication. Original assets are not scene/render/audio acceptance.",
+  "publication_chain": [
+    "assets/manifests/osrs/cache2695-published.json",
+    "assets/manifests/osrs/cache2695-content-v2-published.json",
+    "assets/manifests/osrs/cache2695-potions-published.json"
+  ],
+  "publication_sha256": "b592db6ba6121e278e03b5c7e435f2fa69bc8da9534adcec22d177ae1b855024",
+  "remaining_data_hookup": "Consumers resolve the merged catalog and its additive publication/shards; Canonical source application/selectors are checked separately. Potion3010/3011, original model2697 and source placeholder19365 are now published and bound. Original assets are not scene/render/audio acceptance.",
   "remaining_missing_inputs": [],
   "requested": {
     "interface_groups": 13,
@@ -105,10 +119,10 @@
     "npc_definition_ids": 6
   },
   "result": "passed",
-  "revision": "m1.source-backed.v2.e645c0e61fa4375a",
+  "revision": "m1.source-backed.v3.95f50b40601a821f",
   "runtime_compile_passed": true,
   "schema_version": 1,
   "scope": "Asset/provenance refresh only; not full M1 source or gameplay certification.",
   "task": "m1-content-asset-refresh",
-  "unresolved_behavior_bindings_unchanged": 7
+  "unresolved_behavior_bindings_unchanged": 6
 }

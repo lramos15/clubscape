@@ -1,14 +1,14 @@
 {
   "artifact": {
-    "artifact_version": 2,
-    "bytes": 486105,
+    "artifact_version": 3,
+    "bytes": 502831,
     "path": "content/m1/game-content.csc.gz",
-    "schema_version": 2,
-    "sha256": "5217217392faf73d99197c88290cbf63a22b274688b2f0cf85d8ecfc237a6a40",
-    "uncompressed_bytes": 11334334,
-    "uncompressed_sha256": "eb50782a3221f5dbed3d691b8073fe87b7ec4e93ef233266e544ad60dabfab9f"
+    "schema_version": 3,
+    "sha256": "59db342f4d41ea954ed8062b08c15dcc96a3cdddc43d3269d7455d7a1835a8d5",
+    "uncompressed_bytes": 11761569,
+    "uncompressed_sha256": "0181ec69456101defccbc8dd99b579ed849caae6301d801387732bea70fe98f5"
   },
-  "artifact_sha256": "eb50782a3221f5dbed3d691b8073fe87b7ec4e93ef233266e544ad60dabfab9f",
+  "artifact_sha256": "0181ec69456101defccbc8dd99b579ed849caae6301d801387732bea70fe98f5",
   "command": [
     "cargo",
     "run",
@@ -16,25 +16,25 @@
     "--locked",
     "--offline",
     "--manifest-path",
-    "/home/lramos15/clubscape/.worktrees/m1-binding-application/crates/content/Cargo.toml",
+    "/home/lramos15/clubscape/.worktrees/m1-content-runtime3/crates/content/Cargo.toml",
     "-p",
     "clubscape-content",
     "--",
     "--input",
-    "/home/lramos15/clubscape/.worktrees/m1-binding-application/tools/m1-content/.local/compiler/game-content.json",
+    "/home/lramos15/clubscape/.worktrees/m1-content-runtime3/tools/m1-content/.local/compiler/game-content.json",
     "--output",
-    "/home/lramos15/clubscape/.worktrees/m1-binding-application/tools/m1-content/.local/compiler/m1.csc"
+    "/home/lramos15/clubscape/.worktrees/m1-content-runtime3/tools/m1-content/.local/compiler/m1.csc"
   ],
-  "compiler_manifest": "/home/lramos15/clubscape/.worktrees/m1-binding-application/crates/content/Cargo.toml",
+  "compiler_manifest": "/home/lramos15/clubscape/.worktrees/m1-content-runtime3/crates/content/Cargo.toml",
   "compiler_manifest_sha256": "980057ed62a451bbf7eae3782ef442ce89fb54915d5f64c429802833086bdfd5",
   "compiler_sources": [
     {
       "path": "src/artifact.rs",
-      "sha256": "046d2b064be21b14c92a12fc174ff77155dcea67553810eb53f96923d2479dff"
+      "sha256": "44dd0f8288dd300b1e89ef47a523e780db1af40472b0e0e561864c8e2de16c1c"
     },
     {
       "path": "src/decode.rs",
-      "sha256": "3be5a1596db71a7b2a3f7e3b9c594d4c5b30cf560fd992d884d9ff4378fc63fa"
+      "sha256": "a1e60f6543cdd56eff717939b5725d8acc4c904d664d7e916f8189644d68217e"
     },
     {
       "path": "src/lib.rs",
@@ -42,11 +42,15 @@
     },
     {
       "path": "src/main.rs",
-      "sha256": "343c968eea444aeccbd8bc00f397fc6ecbc714ed7601a9d382e6b031db228e8e"
+      "sha256": "f256d690e78a5c0938e9dc6940fea51143b3c8b098f66b9f68b924f2f606221e"
     },
     {
       "path": "src/validation/definitions.rs",
-      "sha256": "6eb385ab35c88d544f6fb5ed37bb08ab1ee2125211a47dcae94e91bde10378cb"
+      "sha256": "93a3b06df90bda437f124592787ba5e14b44e3b5761f01c51af6e33a4f69f3fa"
+    },
+    {
+      "path": "src/validation/execution.rs",
+      "sha256": "240c8a045c312ae3f1c8528311656265e10ea7491cbcb016f13561c15c77aa38"
     },
     {
       "path": "src/validation/graphs/reachability.rs",
@@ -58,41 +62,34 @@
     },
     {
       "path": "src/validation/mechanics.rs",
-      "sha256": "4d3caf5f3666662079fb1c600df42d933f9e1f7336d16390ec79cd2c80cbfc2b"
+      "sha256": "c8d797bc34012b1d5b99151d3ca5ec0203a06b002d2d783e154fdff8f54be573"
     },
     {
       "path": "src/validation/mod.rs",
-      "sha256": "95164598db467d8fdd2d2864f0fc6d6405aeffddcd39fa9f4f2bf8f15e440499"
+      "sha256": "bd8ace3fd4ea72ac9a50aca324a99e7151f7a69337aae046b10b36f4084fc63b"
     },
     {
       "path": "src/validation/rules.rs",
-      "sha256": "ca1ed6c4efefbb03596898ab043e44cc410b9baf54fbc9fc482c88d750be090c"
+      "sha256": "81640227b5525a70ac0efeded0bd18633df92e7b55467c9baf666c723d7527a5"
     },
     {
       "path": "src/validation/world.rs",
       "sha256": "acbb6c89ef984aba39449f7918bc888143b0aff9c1680a03b1211f6667186cc7"
     }
   ],
-  "compiler_sources_aggregate_sha256": "29cbbe2f08f288d4bb53ccfa53eeee7e959858a87191bb3edab0d76034764f01",
+  "compiler_sources_aggregate_sha256": "d7475b44db56139ffd0f185b67d502200419a4106c494fa6a4ad24e985482086",
   "exit_code": 0,
   "gameplay_executed": false,
-  "input_compressed_sha256": "ecdeabdcb4270698b4706c014459f3ec719d63c03bcd9731bc81b7ae2b6dfd10",
-  "input_sha256": "b32840310a64d2ffe65b077cabb092b25e34ede884f2874832a0893f23288054",
+  "input_compressed_sha256": "b9364b8bb56a88779f57eee650bff032c424e862bc9737bbda558ae41802673b",
+  "input_sha256": "02fc0f734a76c2fdbdd04abfc68b40d5db5ca7fa54c7d29a2ad5b72ea6a4aed2",
   "note": "Actual clubscape-content Runtime CLI, no --test-fixture, permissive mode, field-stripping, synthetic content or substitute validator.",
   "presentation_approved": false,
   "runtime_compile_passed": true,
   "schema_version": 1,
   "shared_game_types_content_sha256": "701f41904db9a44e206f592f4ad821343e071f9a41fc5207bac2325a070396bb",
   "source_branch_residuals": {
-    "active_or_conditionally_active": [
-      {
-        "path": "mechanics.vitals.level_up",
-        "reason": "Source current-vital adjustment on a base-level gain is not established by the pinned rules.",
-        "required_branch": "Actual HP/Prayer base-level gain; not Mining/Cooking-only gains.",
-        "rule_group": "level_up_conditional_current"
-      }
-    ],
-    "active_or_conditionally_active_count": 1,
+    "active_or_conditionally_active": [],
+    "active_or_conditionally_active_count": 0,
     "inactive_full_target": [
       {
         "path": "items.item.ensouled_goblin_head.stackable.rule",
@@ -164,9 +161,9 @@
     ],
     "inactive_full_target_count": 6,
     "policy": "A source binding is required only when its proved branch is reachable. Inactive definitions remain in the full target; no unresolved value is replaced by a success-shaped default.",
-    "unresolved_total": 7
+    "unresolved_total": 6
   },
   "stderr": "",
-  "stdout": "{\"artifact_version\":2,\"baseline\":\"OSRS live build 240 / cache 2695; post-July-2026 normal F2P behavior contracts\",\"codec\":\"messagepack_named\",\"counts\":{\"collision_cells\":46358,\"dialogue_nodes\":61,\"dialogues\":21,\"equipment_slots\":11,\"interfaces\":26,\"items\":118,\"npcs\":26,\"objects\":4837,\"quests\":2,\"recipes\":11,\"regions\":29,\"shops\":1,\"skills\":24,\"spawns\":536,\"tutorial_stages\":71},\"file_bytes\":11334334,\"ok\":true,\"output\":\"/home/lramos15/clubscape/.worktrees/m1-binding-application/tools/m1-content/.local/compiler/m1.csc\",\"revision\":\"m1.source-backed.v2.e645c0e61fa4375a\",\"schema_version\":2,\"sha256\":\"eb50782a3221f5dbed3d691b8073fe87b7ec4e93ef233266e544ad60dabfab9f\",\"validation\":{\"approval_verification_performed\":false,\"asset_manifest\":null,\"checks\":[\"schema_and_identity\",\"map_keys_and_source_ids\",\"source_record_structure_and_mode\",\"numeric_and_reference_contracts\",\"explicit_collision_ownership\",\"initial_state_and_containers\",\"bounded_guard_and_effect_trees\",\"dialogue_and_progression_graphs\",\"rooted_progression_event_flag_and_unlock_dependencies\",\"one_time_quest_rewards\",\"asset_id_structure\",\"interface_registry_references\",\"recipe_tool_references_and_nonconsumption\",\"recipe_tool_holding_capacity\",\"initial_run_energy_units_and_bounds\",\"typed_mechanic_bindings_and_source_domains\",\"counter_entitlement_instance_and_recovery_contracts\",\"stationary_anchor_and_mobile_footprint_policy\"],\"evidence\":{\"approved_adaptation\":1,\"inference\":2721,\"test_fixture\":0,\"verified_reference\":11428},\"interface_definition_validation_performed\":true,\"limitations\":[\"Interface registry validation establishes logical identity and source mappings, not rendered controls or interface behavior.\",\"Source URLs, observations, baseline completeness, and owner approvals are not authenticated by compilation.\",\"Graph checks are conservative structural/constant-condition checks, not a gameplay planner or milestone acceptance.\",\"Typed formula/timing bindings are validated, not executed or source-certified; unresolved bindings remain unavailable at execution.\",\"Animation actor filters are checked as ActorId syntax; dynamic actor existence belongs to world-state validation.\",\"Optional presentation assets, asset files, geometry, audio, and visual fidelity require separate acceptance checks.\"],\"mode\":\"runtime\",\"presentation_verification_performed\":false,\"recipe_tool_reference_validation_performed\":true,\"referenced_assets\":5008,\"source_verification_performed\":false,\"unassigned_asset_sites\":874,\"unresolved_bindings\":[\"items.item.ensouled_goblin_head.stackable.rule\",\"items.item.milk.bottomless_bucket.stackable.rule\",\"mechanics.death.office_overflow\",\"mechanics.vitals.level_up\",\"spawns.spawn.tutorial.fishing_spot.3099.3090.p0.interactions[0].action.rule.mechanics.respawn\",\"spawns.spawn.tutorial.fishing_spot.3101.3092.p0.interactions[0].action.rule.mechanics.respawn\",\"spawns.spawn.tutorial.fishing_spot.3103.3092.p0.interactions[0].action.rule.mechanics.respawn\"]}}\n",
-  "unresolved_binding_count": 7
+  "stdout": "{\"artifact_version\":3,\"baseline\":\"OSRS live build 240 / cache 2695; post-July-2026 normal F2P behavior contracts\",\"codec\":\"messagepack_named\",\"counts\":{\"collision_cells\":46358,\"dialogue_nodes\":61,\"dialogues\":21,\"equipment_slots\":11,\"interfaces\":26,\"items\":118,\"npcs\":26,\"objects\":4837,\"quests\":2,\"recipes\":13,\"regions\":29,\"shops\":1,\"skills\":24,\"spawns\":536,\"tutorial_stages\":71},\"file_bytes\":11761569,\"ok\":true,\"output\":\"/home/lramos15/clubscape/.worktrees/m1-content-runtime3/tools/m1-content/.local/compiler/m1.csc\",\"revision\":\"m1.source-backed.v3.95f50b40601a821f\",\"schema_version\":3,\"sha256\":\"0181ec69456101defccbc8dd99b579ed849caae6301d801387732bea70fe98f5\",\"validation\":{\"approval_verification_performed\":false,\"asset_manifest\":null,\"checks\":[\"schema_and_identity\",\"map_keys_and_source_ids\",\"source_record_structure_and_mode\",\"numeric_and_reference_contracts\",\"explicit_collision_ownership\",\"initial_state_and_containers\",\"bounded_guard_and_effect_trees\",\"dialogue_and_progression_graphs\",\"rooted_progression_event_flag_and_unlock_dependencies\",\"one_time_quest_rewards\",\"asset_id_structure\",\"interface_registry_references\",\"recipe_tool_references_and_nonconsumption\",\"recipe_tool_holding_capacity\",\"initial_run_energy_units_and_bounds\",\"typed_mechanic_bindings_and_source_domains\",\"counter_entitlement_instance_and_recovery_contracts\",\"stationary_anchor_and_mobile_footprint_policy\"],\"evidence\":{\"approved_adaptation\":1,\"inference\":3155,\"test_fixture\":0,\"verified_reference\":11522},\"interface_definition_validation_performed\":true,\"limitations\":[\"Interface registry validation establishes logical identity and source mappings, not rendered controls or interface behavior.\",\"Source URLs, observations, baseline completeness, and owner approvals are not authenticated by compilation.\",\"Graph checks are conservative structural/constant-condition checks, not a gameplay planner or milestone acceptance.\",\"Typed formula/timing bindings are validated, not executed or source-certified; unresolved bindings remain unavailable at execution.\",\"Animation actor filters are checked as ActorId syntax; dynamic actor existence belongs to world-state validation.\",\"Optional presentation assets, asset files, geometry, audio, and visual fidelity require separate acceptance checks.\"],\"mode\":\"runtime\",\"presentation_verification_performed\":false,\"recipe_tool_reference_validation_performed\":true,\"referenced_assets\":5010,\"source_verification_performed\":false,\"unassigned_asset_sites\":872,\"unresolved_bindings\":[\"items.item.ensouled_goblin_head.stackable.rule\",\"items.item.milk.bottomless_bucket.stackable.rule\",\"mechanics.death.office_overflow\",\"spawns.spawn.tutorial.fishing_spot.3099.3090.p0.interactions[0].action.rule.mechanics.respawn\",\"spawns.spawn.tutorial.fishing_spot.3101.3092.p0.interactions[0].action.rule.mechanics.respawn\",\"spawns.spawn.tutorial.fishing_spot.3103.3092.p0.interactions[0].action.rule.mechanics.respawn\"]}}\n",
+  "unresolved_binding_count": 6
 }

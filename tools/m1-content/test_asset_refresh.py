@@ -14,17 +14,17 @@ class AssetRefreshTests(unittest.TestCase):
         cls.inputs = Inputs()
         cls.content = load(CONTENT / "game-content.json.gz")
         cls.baseline = load(BASELINE)
-        application = ROOT / "research/runtime-bindings/application-result.json"
+        application = BINDINGS / "application-result.json"
         cls.application = load(application) if application.exists() else None
 
     def test_complete_exact_original_asset_closure_and_hashes(self):
         report = verify()
         self.assertEqual(report["resolved"], {"item_definition_ids": 72, "model_ids": 68,
                                               "npc_definition_ids": 6, "interface_groups": 13})
-        self.assertEqual(report["product_assets_resolved"], 5254)
-        self.assertEqual(report["merged_inventory_records"], 12396)
-        self.assertEqual(report["new_original_assets"], 268)
-        self.assertEqual(report["new_original_outputs"], 1129)
+        self.assertEqual(report["product_assets_resolved"], 5257)
+        self.assertEqual(report["merged_inventory_records"], 12400)
+        self.assertEqual(report["new_original_assets"], 272)
+        self.assertEqual(report["new_original_outputs"], 1137)
         self.assertEqual(report["remaining_missing_inputs"], [])
 
     def test_new_definitions_use_the_correct_additive_collection_shard(self):
@@ -39,7 +39,7 @@ class AssetRefreshTests(unittest.TestCase):
         for category, kind in (("items", "item"), ("npcs", "npc"), ("objects", "object")):
             for identifier, definition in self.content[category].items():
                 if self.application and identifier in self.application["item_extensions"]:
-                    self.assertIsNone(definition["asset"])
+                    self.assertIsNotNone(definition["asset"])
                     self.assertEqual(definition["source_id"], self.application["item_extensions"][identifier]["source_id"])
                     continue
                 self.assertEqual(definition["asset"], self.inputs.asset(kind, definition["source_id"]))
@@ -51,7 +51,7 @@ class AssetRefreshTests(unittest.TestCase):
         self.assertEqual(self.inputs.asset("interface", 679), "asset.source.osrs.cache2695.interface.679")
 
     def test_original_catalog_records_and_collection_values_are_unchanged(self):
-        base = load(ROOT / self.inputs.publication["base_bundle"]["path"])
+        base = load(ROOT / "assets/manifests/osrs/cache2695-full-bundle.json.gz")
         self.assertEqual(self.inputs.bundle["records"][:len(base["records"])], base["records"])
         self.assertEqual(len(base["records"]), 12128)
         self.assertEqual(sha((ROOT / self.inputs.catalog_path).read_bytes()), CATALOG_SHA256)
@@ -61,7 +61,7 @@ class AssetRefreshTests(unittest.TestCase):
             self.assertEqual(self.inputs.collections["item"][int(number)], original["definition"])
 
     def test_all_behavior_and_the_parent_repaired_spell_table_are_preserved(self):
-        expected = self.application["applied_behavior_sha256"] if self.application else self.baseline["behavior_sha256"]
+        expected = self.application["runtime3"]["content_behavior_sha256"] if self.application else self.baseline["behavior_sha256"]
         self.assertEqual(sha(canonical(behavior_projection(self.content))), expected)
         maximum = self.content["mechanics"]["combat_styles"]["style.magic.wind_strike"]["maximum_hit"]
         self.assertEqual(maximum["status"], "bound")

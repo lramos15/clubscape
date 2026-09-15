@@ -13,7 +13,7 @@ BINDINGS = ROOT / "research/m1-bindings"
 SOURCE = ROOT / "assets/source/osrs/cache2695"
 JOURNEY = ROOT / "research/journey-rules"
 ASSET_PREFIX = "asset.source.osrs.cache2695."
-PUBLICATION = ROOT / "assets/manifests/osrs/cache2695-content-v2-published.json"
+PUBLICATION = ROOT / "assets/manifests/osrs/cache2695-potions-published.json"
 
 
 def published_inputs():
@@ -22,8 +22,9 @@ def published_inputs():
     try:
         sys.dont_write_bytecode = True
         sys.path.insert(0, str(ROOT / "tools/cache-import"))
-        from content_closure import load_published_inputs
-        return load_published_inputs(PUBLICATION)
+        from content_closure import load_published_inputs, publication_chain
+        bundle, collections = load_published_inputs(PUBLICATION)
+        return bundle, collections, publication_chain(PUBLICATION)
     finally:
         sys.path[:] = previous_path
         sys.dont_write_bytecode = previous_bytecode
@@ -172,7 +173,7 @@ class Inputs:
             if len(set(numbers)) != len(numbers):
                 raise ValueError(f"Ambiguous semantic IDs for a source {category} definition")
         self.publication = load(PUBLICATION)
-        self.bundle, source_collections = published_inputs()
+        self.bundle, source_collections, self.publication_chain = published_inputs()
         self.catalog_path = self.publication["merged_inventory"]["path"]
         self.assets = {record["asset_id"]: record for record in self.bundle["records"]}
         self.collections = {
@@ -183,9 +184,10 @@ class Inputs:
             identifier: str((SOURCE / f"collections/{kind}.json.gz").relative_to(ROOT))
             for kind, values in source_collections.items() for identifier in values
         }
-        for kind, shard in self.publication["collection_extensions"].items():
-            for identifier in load(ROOT / shard["path"]):
-                self.collection_sources[identifier] = shard["path"]
+        for _, publication in self.publication_chain:
+            for kind, shard in publication.get("collection_extensions", {}).items():
+                for identifier in load(ROOT / shard["path"]):
+                    self.collection_sources[identifier] = shard["path"]
         self.supplement = load(BINDINGS / "definitions.json.gz")
         self.definition_supplements = {}
         for number, record in self.supplement["items"].items():

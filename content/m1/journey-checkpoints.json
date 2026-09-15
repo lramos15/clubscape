@@ -64,8 +64,8 @@
     },
     {
       "consumed": "item.grain",
+      "counter": "counter.mill.hopper_grain",
       "expect_hopper": "grain",
-      "gap": "mill_state",
       "intent": {
         "action": "Fill",
         "kind": "interact",
@@ -73,9 +73,9 @@
       }
     },
     {
+      "counter": "counter.mill.flour",
       "expect_flour_units_delta": 1,
       "expect_hopper": null,
-      "gap": "mill_state",
       "intent": {
         "action": "Operate",
         "kind": "interact",
@@ -99,9 +99,9 @@
       }
     },
     {
+      "counter": "counter.mill.flour",
       "expect_flour_units_delta": -1,
-      "gap": "mill_state",
-      "morph_note": "Parent1781 must resolve to the source per-player full/empty bin, not be silently replaced.",
+      "morph_note": "Parent1781 resolves to the source per-player full/empty variants with unchanged clipping.",
       "produced": "item.flour.pot",
       "required_item": "item.pot",
       "source_action": "Empty",

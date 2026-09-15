@@ -1,14 +1,24 @@
-# Source-bound M1 content, schema 2
+# Source-bound M1 content, schema 3
 
-**The actual schema-2 pack compiles in strict Runtime mode and roundtrips through
-the version-2 artifact loader.** It contains real definitions and typed mechanics,
-not a relabeled v1 envelope. This is not full gameplay, presentation or source
-acceptance: exact non-executable source bindings are listed in
-[`unresolved-bindings.json`](../../research/m1-bindings/unresolved-bindings.json).
+**The actual content/artifact-3 pack strictly compiles and reloads, but native
+source-policy probes still block runtime readiness.** All declared v3 selectors
+and the conditional vital enum are authored. There are zero active
+`SourceBinding::Unresolved` values and six proof-scoped inactive dependencies,
+not an old v2/decoder/asset blocker. Native tests expose solid-target contact and
+fresh manual-drop offline-clock failures; see
+[`contract-gaps.json`](../../research/m1-bindings/contract-gaps.json) and the
+current [`status.json`](../../research/m1-bindings/status.json).
 
 ## Build and verify
 
 From the worktree root, with the documented existing Python/Rust toolchains:
+
+```sh
+python3 tools/m1-content/validate.py --repeat
+```
+
+That command runs every gate twice, records exact hashes and exits nonzero on
+native failures; repeatable failure is **not** a pass. Individual commands:
 
 ```sh
 python3 tools/m1-content/build.py
@@ -22,7 +32,9 @@ python3 tools/m1-content/verify_state_oracles.py
 
 The build uses committed inputs, then invokes the **actual** `clubscape-content`
 Runtime compiler. No fixture mode, permissive validator or field-stripping is
-used. `check.py` invokes the real strict parser/compiler and artifact loader.
+used. `check.py` invokes the real strict parser/compiler and artifact loader,
+constructs the actual engine, validates fresh creation/lifecycle/read-only APIs,
+executes the first source appearance request and runs isolated native probes.
 `game-content.json.gz` is the source-format product; `game-content.csc.gz` is the
 compressed compiled artifact. The manifest records their exact versions and
 compressed/uncompressed hashes. Gzip timestamps/filenames are normalized.
@@ -33,11 +45,13 @@ compressed/uncompressed hashes. Gzip timestamps/filenames are normalized.
 | Skills / normal equipment slots | 24 / 11 |
 | NPC / object definitions | 26 / 4,837 |
 | Runtime spawns: NPC / object / item | 166 / 360 / 10 |
-| Recipes / dialogues / interfaces / shops | 11 / 21 / 26 / 1 |
+| Recipes / dialogues / interfaces / shops | 13 / 21 / 26 / 1 |
 | Typed counters / grants / entitlements | 134 / 18 / 13 |
 | Physical door transforms / source door groups | 68 / 49 |
+| Complete combined collision selections / mixed-leaf states | 136 / 38 |
+| Actor-specific tutorial traversal definitions | 9 |
 | Transit pairs / typed travel definitions | 11 / 26 |
-| Combat styles / spells / projectiles / prayers | 24 / 2 / 2 / 1 |
+| Combat styles / spells / projectiles / prayers | 27 / 2 / 2 / 1 |
 | Runtime navigation regions / explicit cells | 29 / 46,358 |
 | Full source regions / explicit cells | 61 / 999,424 |
 | Individually retained source object placements | 151,019 |
@@ -55,7 +69,8 @@ The parent's already-bound Wind Strike value is preserved semantically and by it
 audited fingerprint; eight other accepted input differences are exact asset-locator
 refreshes, not permission to ignore changed source targets. The 98 source-supported
 reversible inferences remain **inference**, never observations or owner approvals.
-See `research/runtime-bindings/application-result.json`.
+See `research/m1-bindings/application-result.json`; the original
+`research/runtime-bindings` source evidence is not rewritten.
 
 Departure removes the documented **noncurrency** tutorial types/note variants
 from inventory, equipment and bank, then grants the 18-kind noncurrency provisions
@@ -74,7 +89,7 @@ wikiPrice108, extends the fixed death-value table. The3-dose item is also includ
 in the source death-supply classification.
 
 The source tertiary candidates are retained separately; the potion approval does
-not certify missing clue-family/ownership or runtime ground-origin selectors.
+not certify full-target clue-family/ownership eligibility.
 Invalid, uncredited and replayed NPC lives must not resolve loot twice.
 
 ## What is now represented
@@ -88,7 +103,7 @@ creates an owned temporary fire, retains the ground log on failure, and uses
 the source cardinal step order. No stochastic activity is replaced by guaranteed
 success.
 
-Every tutorial edge now has an authoritative schema-2 hook. Real dialogue
+Every tutorial edge has an authoritative content-3 hook. Real dialogue
 choices, source actor targets, UI contexts, production method/outcome, credited
 kill method, valid Wind Strike hit/splash and completed source travel are checked.
 There is no client stage-advance command or v1-disabled group of 36 edges.
@@ -106,6 +121,11 @@ source varbit 5325 and the actual empty/full flour-bin variants. Loading consume
 grain; controls process only a filled hopper; collecting consumes a pot and one
 flour unit. Its original three floors and both ladders remain connected. There is
 no grain-plus-pot-to-flour shortcut.
+Every valid morph selector maps to an original equal-clipping variant; invalid
+counter values reject. The unreachable runtime fallback names the actual empty
+variant, while the original absent fallback remains in the source records.
+Ordinary/tutorial bone burial uses `ConsumeOnly`, real input consumption,
+4.5 Prayer XP and two ticks, with no fake output item.
 
 Cook's ordinary milk/flour/egg graph accepts precollected ingredients and every
 partial-delivery order. Rewards are exactly 1 QP, 300 Cooking XP, source energy
@@ -115,9 +135,10 @@ No Brutus/Ides of Milk acquisition is invented or made a new starter requirement
 
 Death has a private source-chunk instance, a separate walkable **player** arrival,
 all three required topics, guarded portal exit, retained-item/valuation policy,
-grave/Office fees, clock pauses and storage limits. It is not a fake quest or a
-tutorial reset. Unbound valuation, overflow/restoration and other policies remain
-explicitly unavailable rather than giving free recovery.
+grave/Office fees, clock pauses and storage limits, explicit contextual recovery
+interfaces, and source-inferred two-tick Dying/four-tick Respawning phases.
+Valuation/restoration are bound. Only the proof-scoped unreachable Office
+overflow remains unresolved; it is not free recovery or a tutorial reset.
 
 ## Coordinates, doors and stationary NPCs
 
@@ -128,11 +149,16 @@ source placement shape/layer/quarter-turn, bridge-plane data and model transform
 remain separate.
 
 Door states change actual source leaf placement and explicit clipping, without
-deleting whole walls or clearing terrain. Double leaves share consistent collision
-coverage. Open/close roundtrips restore source cells. Thirty source route segments
+deleting whole walls or clearing terrain. Every mixed double-leaf combination has
+an explicit combined replacement: no last-writer-wins masks. Independent original
+object insertion checks all 636 combined-state cells. Open/close roundtrips restore
+source cells. Thirty source route segments
 connect through those **actual declared open-state masks**, not the v1 door-omission
 check map. Source hinge/landing candidates remain inferences, not captured
 observations or owner-approved rendering.
+Separate actor traversal guards preserve lesson permission even after another
+actor opens a shared door; the rat gate distinguishes entering from leaving.
+All 28 fixed/experience/respawn travel destinations are explicit and walkable.
 
 Death remains at source map pin **3180,5727**, using `ScriptedActor` navigation and
 walkable access tiles. Player arrival is a different, walkable candidate
@@ -157,11 +183,9 @@ respawns and Office overflow below the current118-key/120-entry bound.
 Never require these policies before their reachable branch, and recheck the
 proof if acquisitions, item universe or instance/merge rules change.
 
-The conditional HP/Prayer level-up rule is prepared: old base10 -> new11 maps
-current5/10/15 to5/11/15. It binds only after the shared enum is actually declared;
-until then that single conditional field remains explicit, not three old-policy
-substitutes. Mining/Cooking-only gains must not require a vital-level policy.
-Current active/inactive counts are in the application result and validation.
+The declared `raise_if_at_old_base_otherwise_preserve` HP/Prayer policy is bound:
+old base10 -> new11 maps current5/10/15 to5/11/15. Mining/Cooking-only gains do
+not read that vital policy. No enum gap remains.
 
 The shared tagged numeric-key decoder is now repaired. Wind Strike's known
 1/5/9/13 → 2/4/6/8 source table is bound as `MaximumHitFormula::LevelTable`,
@@ -169,18 +193,47 @@ not an unresolved field or a constant
 max hit.
 
 The completed source closure is now connected through the validated merged
-`cache2695-content-v2-bundle.json.gz` catalog and its additive collection shards.
-All **5,254 original requested product asset references** still resolve, including the formerly
+`cache2695-potions-bundle.json.gz` catalog and all three publication layers.
+All **5,257 requested product asset references** resolve, including the formerly
 missing 72 item definitions, 68 requested models, six NPC definitions (Cook4626)
-and 13 interface groups. The separate new publication need is exactly original
-definitions3010/3011 and model2697; no model or asset is regenerated. The source publication supplies 268 additional original assets and
-1,129 outputs; no substitute models or icon links are made.
+and 13 interface groups. Original definitions3010/3011, model2697 and dependent
+placeholder19365 are now published. The two additive layers supply 272 original
+assets and 1,137 outputs. No requested closure list remains nonempty, and no
+model or icon link is fabricated.
 
 `asset-refresh-validation.json` records the exact source/output hashes and the
 unchanged original asset/geometry boundary. The audited source application
 preserves the71/73 tutorial graph, Cook10/22, geometry and repaired Wind Strike
 table while changing only approved/source-resolved targets and coupled values.
 It is not full M1 source certification or an executed runtime journey.
+The earlier 258-file audio export is explicitly historical: upstream75bfde1
+corrected native percussion and added cues before this task. Its exact current
+264-file manifest and files are hash-validated separately, without an
+unchanged-audio or playback-acceptance claim.
 Penguin NPC 2063/model 21547 remains a candidate, not an approved player.
 Source captures, live mechanics execution, persistence, presentation/audio,
 browser performance, owner approval and RuneLite acceptance remain separate.
+
+## Native failures and integration paths
+
+At the original Lumbridge range, the walkable allowed west-side tile
+`3211,3215,0` still returns `OutOfReach` for both selected Single and Make-X-of-one.
+The executor checks movement/sight through the solid target's own clipped
+footprint. Its contact query needs to distinguish the reachable face from
+walking/shooting through the object; source masks and walls must not be cleared.
+
+Fresh manual drops select the correct private/300-tick policy and conserve the
+25 test coins, but an offline tick leaves expiry at300 instead of301.
+`GroundProducer::PlayerDrop` needs the source owner-online clock; only death
+supplies currently pause. Cross-world/manual-origin semantics and release after
+20 played hours must not be inferred from the unrelated10QP GE restriction.
+`runtime3-policy.json` retains that source-profile limit explicitly.
+
+The raw compiled file is generated at
+`tools/m1-content/.local/compiler/m1.csc`; its committed reproducible gzip is
+`content/m1/game-content.csc.gz`. `content/m1/manifest.json` provides the exact
+raw hash. Source asset resolution starts at
+`assets/manifests/osrs/cache2695-potions-published.json` and follows its ancestors.
+The backend owns `CLUBSCAPE_GAME_ROOT/clubscape-game.json` and
+`clubscape-game-assets.json` deployment descriptors; this task does not create a
+world UUID, seed state, publish files or claim a working server/browser journey.

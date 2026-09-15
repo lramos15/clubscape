@@ -268,12 +268,15 @@ class AuthoredContentTests(unittest.TestCase):
         self.assertEqual(len(self.content["quests"]["quest.cooks_assistant"]["journal"]), 10)
         self.assertEqual(len(self.bindings["travel"]), 11)
         self.assertTrue(all(edge["runtime_hooks"] and not edge["gaps"] for edge in self.graph["tutorial"]))
-        self.assertEqual(self.content["schema_version"], 2)
+        self.assertEqual(self.content["schema_version"], 3)
         self.assertFalse(any(recipe["outputs"] == [{"item": "item.flour.pot", "quantity": 1}]
                              for recipe in self.content["recipes"].values()))
         pairs = {record["id"]: record for record in self.bindings["travel"]}
         self.assertEqual([point[3] for point in pairs["mill_lower"]["source_endpoints"]], [0, 1])
         self.assertEqual([point[3] for point in pairs["mill_upper"]["source_endpoints"]], [1, 2])
+        for step in load(CONTENT / "journey-checkpoints.json")["cooks_legitimate_route"]:
+            if "counter" in step:
+                self.assertIn(step["counter"], self.content["mechanics"]["counters"])
 
     def test_real_shop_stock_not_fixture_inventory(self):
         shop = self.content["shops"]["shop.lumbridge.general_store"]

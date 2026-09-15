@@ -1,26 +1,29 @@
 {
+  "changed_outputs": [],
   "command": [
-    "python3",
+    "/usr/bin/python3",
     "tools/m1-content/build.py",
     "--json-output",
     "tools/m1-content/.local/game-content.json"
   ],
-  "compared_outputs": 85,
+  "compared_outputs": 92,
   "compiled_artifact": {
-    "artifact_version": 2,
-    "bytes": 486105,
+    "artifact_version": 3,
+    "bytes": 502831,
     "path": "content/m1/game-content.csc.gz",
-    "schema_version": 2,
-    "sha256": "5217217392faf73d99197c88290cbf63a22b274688b2f0cf85d8ecfc237a6a40",
-    "uncompressed_bytes": 11334334,
-    "uncompressed_sha256": "eb50782a3221f5dbed3d691b8073fe87b7ec4e93ef233266e544ad60dabfab9f"
+    "schema_version": 3,
+    "sha256": "59db342f4d41ea954ed8062b08c15dcc96a3cdddc43d3269d7455d7a1835a8d5",
+    "uncompressed_bytes": 11761569,
+    "uncompressed_sha256": "0181ec69456101defccbc8dd99b579ed849caae6301d801387732bea70fe98f5"
   },
+  "full_validation_repeated": true,
   "gameplay_executed": false,
   "identical_outputs": true,
+  "native_failures_are_not_waived": true,
   "output_hashes": {
-    "content/m1/asset-references.json": "7142d7723a4237ebf8833deb57737ab3e16e66bca1729e723464e5b409ee080c",
-    "content/m1/game-content.csc.gz": "5217217392faf73d99197c88290cbf63a22b274688b2f0cf85d8ecfc237a6a40",
-    "content/m1/game-content.json.gz": "ecdeabdcb4270698b4706c014459f3ec719d63c03bcd9731bc81b7ae2b6dfd10",
+    "content/m1/asset-references.json": "7c476e27b8edc63a9fc03fd146666e2ea4ff723ca1b200050739154858773e0e",
+    "content/m1/game-content.csc.gz": "59db342f4d41ea954ed8062b08c15dcc96a3cdddc43d3269d7455d7a1835a8d5",
+    "content/m1/game-content.json.gz": "b9364b8bb56a88779f57eee650bff032c424e862bc9737bbda558ae41802673b",
     "content/m1/geometry/11822.json.gz": "42902cf1b93afce1a86ff9b78610f14f9f7cd33f83ac215bea4fa296a5dac7d5",
     "content/m1/geometry/11823.json.gz": "68247492ecfa615686941ba38db49bb19efa8542896fabc19c8e866efc90934f",
     "content/m1/geometry/11824.json.gz": "556bc2937fa5ca5f0aca9b4c742a81b386d00ffd2f41e506c4cb810723ea54e1",
@@ -82,125 +85,35 @@
     "content/m1/geometry/13363.json.gz": "1c31c77bc5209e106d7283ab743440d89ecd2448aefbbf4a644b868bc5d877f4",
     "content/m1/geometry/13364.json.gz": "ea23a9fff3156fe6043ecb7d7e479e1dd80046ceedf5194c8f4f16b5636412a4",
     "content/m1/geometry/13365.json.gz": "aab8341ed233c3151d1c395d1c98681c112c0c12a74cf5352e766db604da2639",
-    "content/m1/journey-checkpoints.json": "c7b82924a26d34b78f613370ba5d22b4c09195915ee79be114fb5c17f7780ae6",
-    "content/m1/manifest.json": "0fbe219fa12ae7bcbb39f25b14355ed301fdeaa6af3a7615d8b1c7b579da1c00",
+    "content/m1/journey-checkpoints.json": "ce4c4aefc4b635a6315b9adc706d410dec233cbb40b80c8d74e9744a8b23bbc3",
+    "content/m1/manifest.json": "710edc872a14d1a2af465dd2b4e25b88bd135810de0a3544438e6c56db5f8606",
     "content/m1/slot-bindings.json": "06471dd9450e5fbdb7b216f362e580a34e06170876e4e9cab180c0eb7e843c5e",
-    "research/m1-bindings/asset-refresh-validation.json": "a8ffaa24c0314ad3fd70cc3dcfacd61706ac617af76938d353f42128022dc3b9",
-    "research/m1-bindings/compiler-validation.json": "e8216a96be71a524c2db70703b007a35067597a232723664e0b73e1160a6d140",
-    "research/m1-bindings/door-bindings.json": "34d4608dd387876a33a69b993445bbe449f4f9bf31804715652c464b54b1da51",
+    "research/m1-bindings/application-result.json": "ec142de26dd327cbfa3de489ecca12a9ca58de52b4569252fb4c19557e166153",
+    "research/m1-bindings/application-source-validation.json": "4bc868d5b8f82746fb4f0fecded399521565af4f877c3c55f4b7341b3e402521",
+    "research/m1-bindings/application-validation.json": "79763f78982d84399596084b8b0626320c854ebc45a268e69cf4bf037540d7b5",
+    "research/m1-bindings/asset-refresh-validation.json": "5894de2c7c6bda45ebe4a5a070aabb3137290cee66dd1405baf4baabbd41f519",
+    "research/m1-bindings/check-result.json": "b97b7bcc2d1ecf6ac5554802512e7a8bb99928d183e83b5c917cdef830ee06bf",
+    "research/m1-bindings/compiler-validation.json": "0758dba3de7acedd534f0e49ffe8323f4be4173129521746dbd480fded224a90",
+    "research/m1-bindings/door-bindings.json": "949be7841e7a806e77ea98633e5aef8d08efa904878aed39fdac95f557321de2",
     "research/m1-bindings/graph-bindings.json": "602e1bddb3ab14a1d13c69e83a4aad56584cc4c037d8aa0640fc56ed758db022",
-    "research/m1-bindings/input-lock.json": "8573994812d0da63797e5a675359901047a494222ff1cf92ffb921807a64e60b",
+    "research/m1-bindings/input-lock.json": "4a9b4368741487b8e9b34c2262310a63fa3ea359a6dcbeff28bdf0d9871ee2a9",
     "research/m1-bindings/interface-bindings.json": "5f102dec533a053858b6fe74ab3d4742a6a1115b6b1dda89df954285b3cea1d0",
-    "research/m1-bindings/item-bindings.json": "c3c2b05ec2151a89ebfa5e3863ff82ec1642ac61dfe5f7938932efd751649e8e",
+    "research/m1-bindings/item-bindings.json": "4fa68a0e541fd6eff19d7b7c07461804d98fdece610afd407ff54e2f87b1fc70",
     "research/m1-bindings/location-bindings.json": "eaa32ef2b1f72bd78c2121a46877e48a9f17052d18b0b5f8c55d836bc5c5d37b",
-    "research/m1-bindings/mechanics-bindings.json.gz": "b0697775a585dbdaea244599a78ea4f28f9f7e44cf11602ec9de69ceb3e9086d",
+    "research/m1-bindings/mechanics-bindings.json.gz": "a98d8b6cbac7d7c22e1abfaeb80c64d94d0df0acee984a9c139da03692e9c0d2",
     "research/m1-bindings/npc-bindings.json": "9d2458f542fe6394215b21da859bd36b2d2962eda8a2ada6c74d2055aab0df05",
     "research/m1-bindings/policy-bindings.json": "96a227b69689be770c80f657888e06d6f10428ed140c327f7f8c7008f821e483",
+    "research/m1-bindings/route-validation.json": "5257f5a21a0b12ca3211e3d2e82d7e2745def2ea3f24e4e5d0be4264e39dc723",
+    "research/m1-bindings/runtime3-selectors.json": "182acad81b95eb28abd734d267130f54c9a0ba49499e4c32433a5a9f3d63e2d8",
+    "research/m1-bindings/schema-validation.json": "494c8c910070ed47e7986bc6989b8f1cf40588743378fde535214a05569b6f24",
     "research/m1-bindings/spawn-bindings.json.gz": "38a1001730b8a73f6b934bef7806c976c53c1dbd721a712c478accc55d38adb8",
-    "research/m1-bindings/structural-validation.json": "a639a723762a38bcc628be3234417a0d0f7bf65ba49e609eb1e954c0484d3bcb",
+    "research/m1-bindings/state-oracle-validation.json": "ee66459448720189621046bfdb8853d27784b8eb1fca28c71858253a63a80a75",
+    "research/m1-bindings/structural-validation.json": "86707f96ec63d2467fb9cc1ceabba3201e0c9a5664ba6aad143adacec741ace1",
+    "research/m1-bindings/test-output.log": "3810d4a25b70d6aff6f2e0ed2f531500d976c4a65ee63fb27fed9d187331553c",
     "research/m1-bindings/travel-bindings.json": "47e89010516afd1bca4cef727cb2eebb0cdc5d542029fc66cb655dde38529f90",
-    "research/m1-bindings/unresolved-bindings.json": "d841bf359f24cc2e5df6f2da4e46c9f74d46a87335c6a33df97e76230291b981",
-    "research/m1-bindings/world-bindings.json.gz": "77556ad0703b50d58289f495db911c53be4fa8b7f4c86adf55b5e86264ad9a33",
-    "research/runtime-bindings/application-result.json": "db43912383e9b9e8fad62eb3f7a06cdaa6491a6d672001a6c8c1cbbc18ec11a6",
-    "research/runtime-bindings/application-validation.json": "1178725d5dc32a320ce099f749d115023d043e3afc5f4895f5fa5a7caf732ec1"
+    "research/m1-bindings/unresolved-bindings.json": "38f1d4ad9fb87b548849bdb389c7e9d4c5ed56de1cf784108de7784845993430",
+    "research/m1-bindings/world-bindings.json.gz": "77556ad0703b50d58289f495db911c53be4fa8b7f4c86adf55b5e86264ad9a33"
   },
-  "revision": "m1.source-backed.v2.e645c0e61fa4375a",
-  "schema_version": 2,
-  "source_application": {
-    "approved_adaptation": "adaptation.m1.goblin_energy_potion_provisional",
-    "audit": "research/runtime-bindings/application-result.json",
-    "coupled_updates": 7,
-    "remaining_selector_hooks": [
-      "NPC loot must use original spawn/life/credit/resolved state and the engine's source-owned ground origin; NpcCombatMechanics currently has no explicit ordinary-loot ground-policy selector.",
-      "Preserve beginner-clue and member-only tertiary candidates with source family/ownership eligibility before enabling those full-target outcomes; the potion approval does not certify their selectors.",
-      "Ground death supplies require their source character/world-switch persistence and offline-paused clock, not a wall-clock expiry inferred solely from the policy numbers.",
-      "Engine-owned traversal, attack/recovery UI, engagement and initial setting selectors must consume the applied fields; this content task does not guess new shared field names."
-    ],
-    "residuals": {
-      "active_or_conditionally_active": [
-        {
-          "path": "mechanics.vitals.level_up",
-          "reason": "Source current-vital adjustment on a base-level gain is not established by the pinned rules.",
-          "required_branch": "Actual HP/Prayer base-level gain; not Mining/Cooking-only gains.",
-          "rule_group": "level_up_conditional_current"
-        }
-      ],
-      "active_or_conditionally_active_count": 1,
-      "inactive_full_target": [
-        {
-          "path": "items.item.ensouled_goblin_head.stackable.rule",
-          "proof": {
-            "ordinary_acquisition_absent": true,
-            "precondition": "Invalidate if a grant, recipe, ordinary loot, shop or spawn enables this acquisition.",
-            "rare_items": [
-              "item.ensouled_goblin_head",
-              "item.milk.bottomless_bucket"
-            ]
-          },
-          "reason": "Source opcode160/mode2 container-specific stacking/origin rules remain unbound. The source identity is retained; no ordinary M1 grant or acquisition is invented.",
-          "rule_group": "conditional_stack_alternatives"
-        },
-        {
-          "path": "items.item.milk.bottomless_bucket.stackable.rule",
-          "proof": {
-            "ordinary_acquisition_absent": true,
-            "precondition": "Invalidate if a grant, recipe, ordinary loot, shop or spawn enables this acquisition.",
-            "rare_items": [
-              "item.ensouled_goblin_head",
-              "item.milk.bottomless_bucket"
-            ]
-          },
-          "reason": "Source opcode160/mode2 container-specific stacking/origin rules remain unbound. The source identity is retained; no ordinary M1 grant or acquisition is invented.",
-          "rule_group": "conditional_stack_alternatives"
-        },
-        {
-          "path": "mechanics.death.office_overflow",
-          "proof": {
-            "office_capacity": 120,
-            "ordinary_acquired_instance_items": 0,
-            "precondition": "Office must merge ordinary non-instanced item keys. Recheck on universe, acquisition or instance/merge-rule changes; never unconditionally discard overflow.",
-            "represented_item_keys": 118
-          },
-          "reason": "Deletion order above120 Office entries is not source-bound.",
-          "rule_group": "office_capacity_unreachable"
-        },
-        {
-          "path": "spawns.spawn.tutorial.fishing_spot.3099.3090.p0.interactions[0].action.rule.mechanics.respawn",
-          "proof": {
-            "constant_depletion": 0,
-            "precondition": "Recheck if depletion or relocation starts reading this policy.",
-            "respawn_policy_reads_on_this_method": 0
-          },
-          "reason": "No depletion/respawn or relocation observation for these tutorial fishing spots; the source base method is nondepleting.",
-          "rule_group": "nondepleting_fishing_no_respawn"
-        },
-        {
-          "path": "spawns.spawn.tutorial.fishing_spot.3101.3092.p0.interactions[0].action.rule.mechanics.respawn",
-          "proof": {
-            "constant_depletion": 0,
-            "precondition": "Recheck if depletion or relocation starts reading this policy.",
-            "respawn_policy_reads_on_this_method": 0
-          },
-          "reason": "No depletion/respawn or relocation observation for these tutorial fishing spots; the source base method is nondepleting.",
-          "rule_group": "nondepleting_fishing_no_respawn"
-        },
-        {
-          "path": "spawns.spawn.tutorial.fishing_spot.3103.3092.p0.interactions[0].action.rule.mechanics.respawn",
-          "proof": {
-            "constant_depletion": 0,
-            "precondition": "Recheck if depletion or relocation starts reading this policy.",
-            "respawn_policy_reads_on_this_method": 0
-          },
-          "reason": "No depletion/respawn or relocation observation for these tutorial fishing spots; the source base method is nondepleting.",
-          "rule_group": "nondepleting_fishing_no_respawn"
-        }
-      ],
-      "inactive_full_target_count": 6,
-      "policy": "A source binding is required only when its proved branch is reachable. Inactive definitions remain in the full target; no unresolved value is replaced by a success-shaped default.",
-      "unresolved_total": 7
-    },
-    "source_bindings_consumed": 104
-  },
-  "strict_runtime_compile_passed": true,
-  "task": "m1-apply-runtime-bindings"
+  "presentation_approved": false,
+  "schema_version": 3
 }

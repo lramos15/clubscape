@@ -1,0 +1,51 @@
+{
+  "schema_version": 1,
+  "classification": "source_supported_inference",
+  "source_observation_claimed": false,
+  "source_index": "research/m1-bindings/runtime3-sources.json",
+  "player_engagement": {
+    "combat_state_ticks": 9,
+    "logout_lock_ticks": 16,
+    "travel_lock_ticks": 9
+  },
+  "player_engagement_basis": "Pinned reconstruction checks last-contact+8 >= current tick: the exclusive engine deadline is9. Its hit processor and the pinned Logout article use16 logout ticks. Home Teleport uses the source in-combat predicate, not the longer logout lock. These tick-edge mappings are explicit engineering inferences, not live measurements.",
+  "npc_engagement": {
+    "leash_range": 10,
+    "inactivity_ticks": 9,
+    "reacquire_delay_ticks": 9,
+    "acquire_delay_ticks": 1,
+    "return_to_spawn": true,
+    "reset_life_on_return": false,
+    "aggression": null
+  },
+  "npc_engagement_basis": "Bounded nonaggressive M1 NPC interpretation: use the pinned combat10-tile horizon as the source-anchor leash, the same inclusive8-contact window for inactivity/reacquisition, and the next-tick retaliation phase. Reset-to-wander is represented by returning to the source anchor without a new life, full heal or renewed loot claim. Exact roaming/leash/reset capture remains a fidelity check; no aggression or easier combat is introduced.",
+  "method_attribution": "most_damage_then_first_method",
+  "method_attribution_basis": "Extend the existing source-supported greatest-credited-damage/earliest-contribution tie convention to per-method history. The required tutorial method guards prevent mixed melee/ranged training from satisfying the wrong lesson. This is not a claim of newly observed Jagex attribution.",
+  "death_timing": {"dying_ticks": 2, "respawn_ticks": 4},
+  "death_timing_basis": "Pinned PlayerDeath source waits2, begins the death animation, waits4, then transports/restores. The two source delays map to the declared Dying/Respawning phases; no instant death/reset or duplicate retention.",
+  "fresh_normal_manual_drop": {
+    "public_after": null,
+    "expires_after": 300,
+    "ordinary_full_target_public_after": 100,
+    "ordinary_full_target_expires_after": 300
+  },
+  "fresh_normal_manual_drop_basis": "Items/Drop establish100/300 ordinary manual-drop ticks. Drop explicitly assigns the untradeable-item timers to accounts below20 hours of played time; Items says those timers pause offline and the items follow their owner across worlds. Bind the private300-tick fresh-normal M1 projection, not ordinary public drops. Account's10QP/100total/20hour restrictions concern trade/GE and are NOT proof of a drop-release condition. The stage-only projection after20 played hours is not source-certified and needs a playtime selector before claiming longer-lived profile parity.",
+  "fresh_normal_manual_drop_profile": {
+    "documented_playtime_below_seconds": 72000,
+    "expiry_clock": "owner_online_ticks",
+    "world_scope": "owner_across_worlds",
+    "post_threshold_release_verified": false,
+    "acceptance_impact": "A stage selector alone does not encode playtime release, offline-paused expiration or cross-world ownership. These semantics require real executor conformance, not merely matching private/expiry numbers."
+  },
+  "npc_loot_ground": {"public_after": 100, "expires_after": 200},
+  "npc_loot_basis": "Drops explicitly gives tradeable monster loot100 private ticks and200 total ticks. Tutorial NPCs instead select the existing private50-tick Tutorial Island policy, a source-supported interpretation of the Island's ground-item rule. Ownership is the actual credited actor and source NPC life; identity/expiry are engine-owned. These are not manual-drop or death-supply origins.",
+  "unarmed": {
+    "default_style": "style.unarmed.punch",
+    "styles": ["style.unarmed.punch", "style.unarmed.kick", "style.unarmed.block"],
+    "cycle_ticks": 4,
+    "reach": 1,
+    "attack_type": "crush"
+  },
+  "unarmed_basis": "Existing melee source rule explicitly gives unarmed4 ticks and the ordinary accurate/aggressive/defensive XP families. Defaults are declared, never selected from registry order.",
+  "approval_scope": "All entries here remain source-supported reversible engineering interpretations. Only the separately recorded goblin potion and audio adaptations have owner-approval classifications; none of these entries inherits those approvals."
+}

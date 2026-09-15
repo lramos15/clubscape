@@ -11,12 +11,13 @@
     "interfaces": 26,
     "items": 118,
     "mechanics": {
-      "combat_styles": 24,
+      "collision_groups": 49,
+      "combat_styles": 27,
       "counters": 134,
       "entitlements": 13,
       "experiences": 3,
       "grants": 18,
-      "ground_policies": 4,
+      "ground_policies": 7,
       "instances": 1,
       "object_transforms": 68,
       "prayers": 1,
@@ -25,13 +26,14 @@
       "spells": 2,
       "temporary_objects": 1,
       "travels": 26,
+      "traversal": 9,
       "value_providers": 1
     },
     "normal_note_pairs": 53,
     "npcs": 26,
     "objects": 4837,
     "quests": 2,
-    "recipes": 11,
+    "recipes": 13,
     "regions": 29,
     "runtime_blocked_cells": 16544,
     "runtime_collision_cells": 46358,
@@ -46,13 +48,85 @@
     "tutorial_source_transitions": 73,
     "tutorial_states": 71
   },
+  "engine_constructed": true,
+  "engine_validation_diagnostic": "Error: \"Native source-policy conformance failed; see the exact probe result.\"\n",
+  "engine_validation_exit_code": 1,
   "exact_geometry_scope": "Explicit imported cells and source-bound object placement equality, not an observed live clipping dump.",
+  "execution_requirements": "research/m1-bindings/contract-gaps.json",
   "gameplay_executed": false,
-  "known_blockers": "research/m1-bindings/unresolved-bindings.json",
+  "native_source_policy_checks_passed": false,
+  "native_source_policy_probes": {
+    "consume_only": {
+      "controlled_component_random_draws": 24,
+      "direct_output_items": 0,
+      "passed": true,
+      "ticks": 2,
+      "xp_tenths": 45
+    },
+    "fresh_manual_drop_offline_clock": {
+      "actual_expiry_after_offline_tick": 300,
+      "actual_policy": "ground_policy.player_drop.m1_fresh",
+      "before_logout_expiry": 300,
+      "controlled_component_random_draws": 12,
+      "expected_expiry_after_offline_tick": 301,
+      "item": "item.coins",
+      "offline_ticks_advanced": 1,
+      "origin": "player_drop",
+      "passed": false,
+      "public_after": null,
+      "quantity_conserved": true,
+      "required_contract": "Fresh manual drops use owner-online expiration like untradeables; GroundProducer::PlayerDrop must not lose lifetime while the owner is offline.",
+      "source": "research/m1-bindings/runtime3-policy.json#fresh_normal_manual_drop_profile"
+    },
+    "passed": false,
+    "scope": "Isolated native component probes against unmodified strictly compiled source content. Controlled runtime inventory/stage boundaries and reproducible test-only randomness are not a fresh journey, observed odds or presentation acceptance.",
+    "single_and_make_x_one": {
+      "cases": [
+        {
+          "actor_tile": {
+            "plane": 0,
+            "x": 3211,
+            "y": 3215
+          },
+          "atomic_refusal": true,
+          "error": {
+            "code": "out_of_reach",
+            "message": "Target is on another plane, out of range, or blocked."
+          },
+          "expected_next_tick": 1,
+          "mode": "single",
+          "passed": false,
+          "quantity": 1,
+          "required_contract": "Contact a solid source facility from its allowed side without requiring movement/center-to-center sight through its own clipped footprint; keep real intervening walls and source access masks.",
+          "target": "spawn.range.lumbridge.3212.3215.p0.t10.r2"
+        },
+        {
+          "actor_tile": {
+            "plane": 0,
+            "x": 3211,
+            "y": 3215
+          },
+          "atomic_refusal": true,
+          "error": {
+            "code": "out_of_reach",
+            "message": "Target is on another plane, out of range, or blocked."
+          },
+          "expected_next_tick": 3,
+          "mode": "make_x",
+          "passed": false,
+          "quantity": 1,
+          "required_contract": "Contact a solid source facility from its allowed side without requiring movement/center-to-center sight through its own clipped footprint; keep real intervening walls and source access masks.",
+          "target": "spawn.range.lumbridge.3212.3215.p0.t10.r2"
+        }
+      ],
+      "passed": false
+    }
+  },
   "presentation_approved": false,
   "runtime_compile_passed": true,
   "schema_version": 1,
   "scope": "ID/reference/note/initial-state/source-geometry/graph-preservation checks only. Not a replacement for the real strict content compiler or the live/headless journey.",
+  "source_binding_inventory": "research/m1-bindings/unresolved-bindings.json",
   "source_npc_nonwalkable_anchors": [
     "spawn.death",
     "spawn.tutorial.fishing_spot.3099.3090.p0",
@@ -61,8 +135,8 @@
   ],
   "source_status_occurrences": {
     "approved_adaptation": 1,
-    "inference": 2721,
-    "verified_reference": 11428
+    "inference": 3155,
+    "verified_reference": 11522
   },
   "structural_checks_passed": true
 }

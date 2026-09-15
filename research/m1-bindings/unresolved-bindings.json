@@ -61,24 +61,6 @@
       ]
     },
     {
-      "path": "mechanics.vitals.level_up",
-      "reason": "Source current-vital adjustment on a base-level gain is not established by the pinned rules.",
-      "source": [
-        {
-          "notes": "Pinned behavioral reference; not an executed game trace.",
-          "reference": "https://oldschool.runescape.wiki/w/Experience?oldid=15167522",
-          "revision": "15167522",
-          "status": "verified_reference"
-        },
-        {
-          "notes": "Typed source rule binding; arithmetic/content validation is not observed runtime gameplay.",
-          "reference": "research/journey-rules/activities.json#rule.xp.level",
-          "revision": "source-contract-v1",
-          "status": "verified_reference"
-        }
-      ]
-    },
-    {
       "path": "spawns.spawn.tutorial.fishing_spot.3099.3090.p0.interactions[0].action.rule.mechanics.respawn",
       "reason": "No depletion/respawn or relocation observation for these tutorial fishing spots; the source base method is nondepleting.",
       "source": [
@@ -151,23 +133,16 @@
       ]
     }
   ],
-  "content_sha256": "ecdeabdcb4270698b4706c014459f3ec719d63c03bcd9731bc81b7ae2b6dfd10",
-  "count": 7,
+  "content_sha256": "b9364b8bb56a88779f57eee650bff032c424e862bc9737bbda558ae41802673b",
+  "count": 6,
   "profile_candidates": "research/m1-bindings/profile-v2.json",
   "runtime_compile_passed": true,
   "runtime_success_claimed": false,
-  "schema_version": 2,
-  "source_application": "research/runtime-bindings/application-result.json",
+  "schema_version": 3,
+  "source_application": "research/m1-bindings/application-result.json",
   "source_branch_residuals": {
-    "active_or_conditionally_active": [
-      {
-        "path": "mechanics.vitals.level_up",
-        "reason": "Source current-vital adjustment on a base-level gain is not established by the pinned rules.",
-        "required_branch": "Actual HP/Prayer base-level gain; not Mining/Cooking-only gains.",
-        "rule_group": "level_up_conditional_current"
-      }
-    ],
-    "active_or_conditionally_active_count": 1,
+    "active_or_conditionally_active": [],
+    "active_or_conditionally_active_count": 0,
     "inactive_full_target": [
       {
         "path": "items.item.ensouled_goblin_head.stackable.rule",
@@ -239,6 +214,6 @@
     ],
     "inactive_full_target_count": 6,
     "policy": "A source binding is required only when its proved branch is reachable. Inactive definitions remain in the full target; no unresolved value is replaced by a success-shaped default.",
-    "unresolved_total": 7
+    "unresolved_total": 6
   }
 }

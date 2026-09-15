@@ -1,0 +1,7338 @@
+{
+  "application_context_sha256": "01bf4176ef9b593e4a676f37b5fbd59af265e11b58e4ab25450af080050f7649",
+  "applied_behavior_sha256": "51f71d330d9860b3538e5b362e7a16b5c163e7d39e7f1796b032f69988803266",
+  "approved_loot": {
+    "adaptation": "adaptation.m1.goblin_energy_potion_provisional",
+    "approval_sha256": "4f1fd17b2a454ad4c36cdd36a51becbdf9f17d132d8838187ff5afec15b32e85",
+    "classification": "approved_adaptation",
+    "conditional_weights": {
+      "item.energy_potion.four_dose": 1,
+      "item.energy_potion.one_dose": 1,
+      "item.energy_potion.three_dose": 1,
+      "item.energy_potion.two_dose": 1
+    },
+    "event_chance": {
+      "denominator": 16,
+      "numerator": 1
+    },
+    "independent_of_primary": true,
+    "kill_identity_contract": "Actor credit, original NPC spawn/life and resolved-loot marker; duplicate/invalidated life events must not pay again.",
+    "lowered_pool": {
+      "entries": [
+        {
+          "items": [],
+          "weight": 60
+        },
+        {
+          "items": [
+            {
+              "item": "item.energy_potion.one_dose",
+              "maximum": 1,
+              "minimum": 1
+            }
+          ],
+          "weight": 1
+        },
+        {
+          "items": [
+            {
+              "item": "item.energy_potion.two_dose",
+              "maximum": 1,
+              "minimum": 1
+            }
+          ],
+          "weight": 1
+        },
+        {
+          "items": [
+            {
+              "item": "item.energy_potion.three_dose",
+              "maximum": 1,
+              "minimum": 1
+            }
+          ],
+          "weight": 1
+        },
+        {
+          "items": [
+            {
+              "item": "item.energy_potion.four_dose",
+              "maximum": 1,
+              "minimum": 1
+            }
+          ],
+          "weight": 1
+        }
+      ],
+      "kind": "exclusive",
+      "total_weight": 64
+    },
+    "path": "npcs.npc.goblin.level_2.combat.mechanics.loot[3]",
+    "primary_and_guaranteed_sha256": "7a784e29dfb06268d54b80d3881fa8617b7196deeaa3ceb15b5f8854e12842c4",
+    "retained_tertiary_candidates": [
+      {
+        "denominator": 64,
+        "item_ref": "item.clue.beginner",
+        "numerator": 1,
+        "requires": "source clue ownership/eligibility rules"
+      },
+      {
+        "denominator": 128,
+        "item_ref": "item.clue.easy",
+        "numerator": 1,
+        "requires": "source members/eligibility rules; not established for this F2P profile"
+      },
+      {
+        "denominator": 35,
+        "item_ref": "item.ensouled_goblin_head",
+        "numerator": 1,
+        "requires": "members"
+      },
+      {
+        "denominator": 5000,
+        "item_ref": "item.goblin_champion_scroll",
+        "numerator": 1,
+        "requires": "members/source champion-scroll eligibility"
+      }
+    ],
+    "tertiary_hook_note": "Beginner-clue and member-only tertiary identity/ownership families remain explicit full-target candidates. The approved potion policy does not remove or certify those separately unbound runtime selectors.",
+    "verified_osrs_probability": false
+  },
+  "baseline_behavior_sha256": "5d4552cce62e04653ce62fa4caead91e1a1dce0b823af1dbee262d0454c7e3c9",
+  "bindings": [
+    {
+      "accepted_current_fingerprint": true,
+      "action": "retained_inactive_dependency",
+      "classification": "inactive_dependency",
+      "input_sha256": "1ee07c6a9fc5926eea369d6c105177ed97d55177a597e21e3127d7e560466868",
+      "original_binding_sha256": "8c524ac54f227e5a5e7e56e973bcba81a887cf67a110ec358145f9c4f4e0bde7",
+      "output_sha256": "1ee07c6a9fc5926eea369d6c105177ed97d55177a597e21e3127d7e560466868",
+      "path": "items.item.ensouled_goblin_head.stackable.rule"
+    },
+    {
+      "accepted_current_fingerprint": true,
+      "action": "retained_inactive_dependency",
+      "classification": "inactive_dependency",
+      "input_sha256": "7c513ece783c5c9f521538a9633d338888e28de7ed7e11baba55b524deb3e01e",
+      "original_binding_sha256": "a8e16976657dc94acf5275085e34a648ce5c2026a44694ffa183e29041009011",
+      "output_sha256": "7c513ece783c5c9f521538a9633d338888e28de7ed7e11baba55b524deb3e01e",
+      "path": "items.item.milk.bottomless_bucket.stackable.rule"
+    },
+    {
+      "accepted_current_fingerprint": true,
+      "action": "already_applied",
+      "classification": "codebug_parent_fixed",
+      "input_sha256": "6272fec540a30b86fd544a4fa4e0085e2d54925f57de59cc98c2a499544b71b7",
+      "original_binding_sha256": "e9e006c7696b953be9da564f8ef1c1d3bd3985e18a9901ef2f92009ec8dcc0a3",
+      "output_sha256": "6272fec540a30b86fd544a4fa4e0085e2d54925f57de59cc98c2a499544b71b7",
+      "path": "mechanics.combat_styles.style.magic.wind_strike.maximum_hit"
+    },
+    {
+      "accepted_current_fingerprint": false,
+      "action": "retained_inactive_dependency",
+      "classification": "inactive_dependency",
+      "input_sha256": "164bd823e32c9496fa2fe9a5208ca47776033a9c1d74c9f580ec531d94d40410",
+      "original_binding_sha256": "164bd823e32c9496fa2fe9a5208ca47776033a9c1d74c9f580ec531d94d40410",
+      "output_sha256": "164bd823e32c9496fa2fe9a5208ca47776033a9c1d74c9f580ec531d94d40410",
+      "path": "mechanics.death.office_overflow"
+    },
+    {
+      "accepted_current_fingerprint": false,
+      "action": "applied",
+      "classification": "source_supported_inference",
+      "input_sha256": "27b6446ffcdcb7d997cd7e169b7ce697aa87a55c25f089fe72f4dc0e33bcda93",
+      "original_binding_sha256": "27b6446ffcdcb7d997cd7e169b7ce697aa87a55c25f089fe72f4dc0e33bcda93",
+      "output_sha256": "9625e8b3829519250bebd5f67971b2429d3aacfab29bb9e2839da236f6248ae9",
+      "path": "mechanics.death.repeat"
+    },
+    {
+      "accepted_current_fingerprint": false,
+      "action": "applied",
+      "classification": "source_supported_inference",
+      "input_sha256": "c1e08b6fac2f3aa7c5328205cc5bf1ce16b85b46a8d7ab5f62e333434acd6ed7",
+      "original_binding_sha256": "c1e08b6fac2f3aa7c5328205cc5bf1ce16b85b46a8d7ab5f62e333434acd6ed7",
+      "output_sha256": "9a7a4ef636b854f9f9ccdcf56ab15f00bf94c68c2fc804bad780ca4aac27a960",
+      "path": "mechanics.death.restoration"
+    },
+    {
+      "accepted_current_fingerprint": false,
+      "action": "applied",
+      "classification": "source_supported_inference",
+      "input_sha256": "7a7695081b05f4294f59f75ee016a6810f882425c0edbaaf6ddafad51708cbc6",
+      "original_binding_sha256": "7a7695081b05f4294f59f75ee016a6810f882425c0edbaaf6ddafad51708cbc6",
+      "output_sha256": "4d1110086d78e46bb680311133cdca4044b52e0382527b65c683ed0d266d685c",
+      "path": "mechanics.death.ties"
+    },
+    {
+      "accepted_current_fingerprint": false,
+      "action": "applied",
+      "classification": "source_supported_inference",
+      "input_sha256": "5f999d637922dcda77684ddb56f03a6058ffe59a9f570fcaec73001adf72e90a",
+      "original_binding_sha256": "5f999d637922dcda77684ddb56f03a6058ffe59a9f570fcaec73001adf72e90a",
+      "output_sha256": "f743ab9106b8f63e4789191581998461690b80c78c3a12bb8fcb9770219dc072",
+      "path": "mechanics.ground_policies.ground_policy.ammunition.expires_after"
+    },
+    {
+      "accepted_current_fingerprint": false,
+      "action": "applied",
+      "classification": "source_supported_inference",
+      "input_sha256": "d6c0a40e854f88e8a185a859ec2fdac5d4e8fb9a56a1bf5873265f0679bed52d",
+      "original_binding_sha256": "d6c0a40e854f88e8a185a859ec2fdac5d4e8fb9a56a1bf5873265f0679bed52d",
+      "output_sha256": "260938fc2d74d6bc0837ce52422b6504a286f3b1b587fb9f80b5739101c759ab",
+      "path": "mechanics.ground_policies.ground_policy.ammunition.public_after"
+    },
+    {
+      "accepted_current_fingerprint": false,
+      "action": "applied",
+      "classification": "known_fact",
+      "input_sha256": "f6402e235353f9fee8858345e58555c86d95cd009ad45f3d78922ac461da2185",
+      "original_binding_sha256": "f6402e235353f9fee8858345e58555c86d95cd009ad45f3d78922ac461da2185",
+      "output_sha256": "37b68ff5c77b94804bba5d49bac9624a46aba242f6963cbb56d643e19ceb9cb1",
+      "path": "mechanics.ground_policies.ground_policy.death_supplies.public_after"
+    },
+    {
+      "accepted_current_fingerprint": false,
+      "action": "applied",
+      "classification": "known_fact",
+      "input_sha256": "1ea4406744241b5d3db42bb70c982db47959188a5010ccf5798c91841fff93c6",
+      "original_binding_sha256": "1ea4406744241b5d3db42bb70c982db47959188a5010ccf5798c91841fff93c6",
+      "output_sha256": "7461978cedaf1368c10dceaa916bd1800880bde8fe25b0094af5e4e12d3881e0",
+      "path": "mechanics.ground_policies.ground_policy.fire_ashes.expires_after"
+    },
+    {
+      "accepted_current_fingerprint": false,
+      "action": "applied",
+      "classification": "source_supported_inference",
+      "input_sha256": "70a74a557e7d224229eb3bd7edd7c151998a7cfefca9c6b068a2ad667e232e43",
+      "original_binding_sha256": "70a74a557e7d224229eb3bd7edd7c151998a7cfefca9c6b068a2ad667e232e43",
+      "output_sha256": "69bd180fb1a5e3f409eb347ebed02638afb220f879df5ea9a1d9b89ef53476e8",
+      "path": "mechanics.ground_policies.ground_policy.fire_ashes.public_after"
+    },
+    {
+      "accepted_current_fingerprint": false,
+      "action": "applied",
+      "classification": "source_supported_inference",
+      "input_sha256": "9f2e6a5f940d0e3af39ad8275be73da38104f5cf74b68368ad0a61221bec0353",
+      "original_binding_sha256": "9f2e6a5f940d0e3af39ad8275be73da38104f5cf74b68368ad0a61221bec0353",
+      "output_sha256": "a4aaa51d0bb940cc4ccca9e39b4ffef03bb22d9eed8e5125c5f3e1595c598fd9",
+      "path": "mechanics.projectiles.projectile.bronze_arrow.timing"
+    },
+    {
+      "accepted_current_fingerprint": false,
+      "action": "applied",
+      "classification": "source_supported_inference",
+      "input_sha256": "da36f058e9819468a3857d1d3a2611239b9bfeb486390009870f79ce897e9850",
+      "original_binding_sha256": "da36f058e9819468a3857d1d3a2611239b9bfeb486390009870f79ce897e9850",
+      "output_sha256": "6afb0faac127fe3ba9fcb07448cd46b6b88bccdc90cbf268f3b9719f076840be",
+      "path": "mechanics.projectiles.projectile.wind_strike.timing"
+    },
+    {
+      "accepted_current_fingerprint": false,
+      "action": "applied",
+      "classification": "source_supported_inference",
+      "input_sha256": "36485eeb89baf15e15307270b210a1e1d1031aa2a6969d883acfad20c164b3b1",
+      "original_binding_sha256": "36485eeb89baf15e15307270b210a1e1d1031aa2a6969d883acfad20c164b3b1",
+      "output_sha256": "91641f311c19e77908277670731895ada3f6a96f92c906a8a01d19c4db1ec39c",
+      "path": "mechanics.reconciliations.reconciliation.tutorial.departure.policies"
+    },
+    {
+      "accepted_current_fingerprint": false,
+      "action": "applied",
+      "classification": "source_supported_inference",
+      "input_sha256": "3be05d4590814b8a3b72ee8648d35d105457a2c8426579b5151af5129d5594fd",
+      "original_binding_sha256": "3be05d4590814b8a3b72ee8648d35d105457a2c8426579b5151af5129d5594fd",
+      "output_sha256": "d201e9e403e387a28a9986afbffb2f9b2f748cae734a0f4c256d2aa858ec2601",
+      "path": "mechanics.travels.travel.castle_north_lower.backward.channel_ticks"
+    },
+    {
+      "accepted_current_fingerprint": false,
+      "action": "applied",
+      "classification": "source_supported_inference",
+      "input_sha256": "3be05d4590814b8a3b72ee8648d35d105457a2c8426579b5151af5129d5594fd",
+      "original_binding_sha256": "3be05d4590814b8a3b72ee8648d35d105457a2c8426579b5151af5129d5594fd",
+      "output_sha256": "d201e9e403e387a28a9986afbffb2f9b2f748cae734a0f4c256d2aa858ec2601",
+      "path": "mechanics.travels.travel.castle_north_lower.forward.channel_ticks"
+    },
+    {
+      "accepted_current_fingerprint": false,
+      "action": "applied",
+      "classification": "source_supported_inference",
+      "input_sha256": "33902ecd1150a76746d8cf8224b8081b0efd5a282d1a7ed52354127a8226ac2d",
+      "original_binding_sha256": "33902ecd1150a76746d8cf8224b8081b0efd5a282d1a7ed52354127a8226ac2d",
+      "output_sha256": "d201e9e403e387a28a9986afbffb2f9b2f748cae734a0f4c256d2aa858ec2601",
+      "path": "mechanics.travels.travel.castle_north_top_floor.backward.channel_ticks"
+    },
+    {
+      "accepted_current_fingerprint": false,
+      "action": "applied",
+      "classification": "source_supported_inference",
+      "input_sha256": "33902ecd1150a76746d8cf8224b8081b0efd5a282d1a7ed52354127a8226ac2d",
+      "original_binding_sha256": "33902ecd1150a76746d8cf8224b8081b0efd5a282d1a7ed52354127a8226ac2d",
+      "output_sha256": "d201e9e403e387a28a9986afbffb2f9b2f748cae734a0f4c256d2aa858ec2601",
+      "path": "mechanics.travels.travel.castle_north_top_floor.forward.channel_ticks"
+    },
+    {
+      "accepted_current_fingerprint": false,
+      "action": "applied",
+      "classification": "source_supported_inference",
+      "input_sha256": "91f2920416a9d4e5b4983ac24692ee9e3b6ec5302215186d51e337a5bca3d97f",
+      "original_binding_sha256": "91f2920416a9d4e5b4983ac24692ee9e3b6ec5302215186d51e337a5bca3d97f",
+      "output_sha256": "d201e9e403e387a28a9986afbffb2f9b2f748cae734a0f4c256d2aa858ec2601",
+      "path": "mechanics.travels.travel.castle_north_upper.backward.channel_ticks"
+    },
+    {
+      "accepted_current_fingerprint": false,
+      "action": "applied",
+      "classification": "source_supported_inference",
+      "input_sha256": "91f2920416a9d4e5b4983ac24692ee9e3b6ec5302215186d51e337a5bca3d97f",
+      "original_binding_sha256": "91f2920416a9d4e5b4983ac24692ee9e3b6ec5302215186d51e337a5bca3d97f",
+      "output_sha256": "d201e9e403e387a28a9986afbffb2f9b2f748cae734a0f4c256d2aa858ec2601",
+      "path": "mechanics.travels.travel.castle_north_upper.forward.channel_ticks"
+    },
+    {
+      "accepted_current_fingerprint": false,
+      "action": "applied",
+      "classification": "source_supported_inference",
+      "input_sha256": "75c1a1e9dcb4f34bc398fc1acfa4d4dbc6084f859e6d1cc9ddf7fb654b06214f",
+      "original_binding_sha256": "75c1a1e9dcb4f34bc398fc1acfa4d4dbc6084f859e6d1cc9ddf7fb654b06214f",
+      "output_sha256": "d201e9e403e387a28a9986afbffb2f9b2f748cae734a0f4c256d2aa858ec2601",
+      "path": "mechanics.travels.travel.castle_south_lower.backward.channel_ticks"
+    },
+    {
+      "accepted_current_fingerprint": false,
+      "action": "applied",
+      "classification": "source_supported_inference",
+      "input_sha256": "75c1a1e9dcb4f34bc398fc1acfa4d4dbc6084f859e6d1cc9ddf7fb654b06214f",
+      "original_binding_sha256": "75c1a1e9dcb4f34bc398fc1acfa4d4dbc6084f859e6d1cc9ddf7fb654b06214f",
+      "output_sha256": "d201e9e403e387a28a9986afbffb2f9b2f748cae734a0f4c256d2aa858ec2601",
+      "path": "mechanics.travels.travel.castle_south_lower.forward.channel_ticks"
+    },
+    {
+      "accepted_current_fingerprint": false,
+      "action": "applied",
+      "classification": "source_supported_inference",
+      "input_sha256": "c5d6cdcbc27b2832a219ebeb14631deffd7a2164f4187177162892f0a3832aa8",
+      "original_binding_sha256": "c5d6cdcbc27b2832a219ebeb14631deffd7a2164f4187177162892f0a3832aa8",
+      "output_sha256": "d201e9e403e387a28a9986afbffb2f9b2f748cae734a0f4c256d2aa858ec2601",
+      "path": "mechanics.travels.travel.castle_south_top_floor.backward.channel_ticks"
+    },
+    {
+      "accepted_current_fingerprint": false,
+      "action": "applied",
+      "classification": "source_supported_inference",
+      "input_sha256": "c5d6cdcbc27b2832a219ebeb14631deffd7a2164f4187177162892f0a3832aa8",
+      "original_binding_sha256": "c5d6cdcbc27b2832a219ebeb14631deffd7a2164f4187177162892f0a3832aa8",
+      "output_sha256": "d201e9e403e387a28a9986afbffb2f9b2f748cae734a0f4c256d2aa858ec2601",
+      "path": "mechanics.travels.travel.castle_south_top_floor.forward.channel_ticks"
+    },
+    {
+      "accepted_current_fingerprint": false,
+      "action": "applied",
+      "classification": "source_supported_inference",
+      "input_sha256": "4493a3a2461571ecc702c3e8e71b545e6f8a06aa6a354b88929a33713655be1a",
+      "original_binding_sha256": "4493a3a2461571ecc702c3e8e71b545e6f8a06aa6a354b88929a33713655be1a",
+      "output_sha256": "d201e9e403e387a28a9986afbffb2f9b2f748cae734a0f4c256d2aa858ec2601",
+      "path": "mechanics.travels.travel.castle_south_upper.backward.channel_ticks"
+    },
+    {
+      "accepted_current_fingerprint": false,
+      "action": "applied",
+      "classification": "source_supported_inference",
+      "input_sha256": "4493a3a2461571ecc702c3e8e71b545e6f8a06aa6a354b88929a33713655be1a",
+      "original_binding_sha256": "4493a3a2461571ecc702c3e8e71b545e6f8a06aa6a354b88929a33713655be1a",
+      "output_sha256": "d201e9e403e387a28a9986afbffb2f9b2f748cae734a0f4c256d2aa858ec2601",
+      "path": "mechanics.travels.travel.castle_south_upper.forward.channel_ticks"
+    },
+    {
+      "accepted_current_fingerprint": false,
+      "action": "applied",
+      "classification": "source_supported_inference",
+      "input_sha256": "6cb4f2e861a224083a206ffd4a724328ea20578344d863c9dd57abf6c54c3e27",
+      "original_binding_sha256": "6cb4f2e861a224083a206ffd4a724328ea20578344d863c9dd57abf6c54c3e27",
+      "output_sha256": "f9fb1f92c7aacb225cf1297bfe50df9de2fc1d176e5ab270b7ce3ad17f5acf0a",
+      "path": "mechanics.travels.travel.death.enter.channel_ticks"
+    },
+    {
+      "accepted_current_fingerprint": false,
+      "action": "applied",
+      "classification": "source_supported_inference",
+      "input_sha256": "6cb4f2e861a224083a206ffd4a724328ea20578344d863c9dd57abf6c54c3e27",
+      "original_binding_sha256": "6cb4f2e861a224083a206ffd4a724328ea20578344d863c9dd57abf6c54c3e27",
+      "output_sha256": "f9fb1f92c7aacb225cf1297bfe50df9de2fc1d176e5ab270b7ce3ad17f5acf0a",
+      "path": "mechanics.travels.travel.death.exit.channel_ticks"
+    },
+    {
+      "accepted_current_fingerprint": false,
+      "action": "applied",
+      "classification": "source_supported_inference",
+      "input_sha256": "6cb4f2e861a224083a206ffd4a724328ea20578344d863c9dd57abf6c54c3e27",
+      "original_binding_sha256": "6cb4f2e861a224083a206ffd4a724328ea20578344d863c9dd57abf6c54c3e27",
+      "output_sha256": "f9fb1f92c7aacb225cf1297bfe50df9de2fc1d176e5ab270b7ce3ad17f5acf0a",
+      "path": "mechanics.travels.travel.death.exit_voluntary.channel_ticks"
+    },
+    {
+      "accepted_current_fingerprint": false,
+      "action": "applied",
+      "classification": "source_supported_inference",
+      "input_sha256": "411f581faaada5a264b1282d9679c27ac2faaa19affd10c71cedca46ec0944f6",
+      "original_binding_sha256": "411f581faaada5a264b1282d9679c27ac2faaa19affd10c71cedca46ec0944f6",
+      "output_sha256": "9c7255d071e47d4d693d07ba6ac84272aed94915e9178e2c5ca1a724865a6b3d",
+      "path": "mechanics.travels.travel.lumbridge_cellar.backward.channel_ticks"
+    },
+    {
+      "accepted_current_fingerprint": false,
+      "action": "applied",
+      "classification": "source_supported_inference",
+      "input_sha256": "411f581faaada5a264b1282d9679c27ac2faaa19affd10c71cedca46ec0944f6",
+      "original_binding_sha256": "411f581faaada5a264b1282d9679c27ac2faaa19affd10c71cedca46ec0944f6",
+      "output_sha256": "9c7255d071e47d4d693d07ba6ac84272aed94915e9178e2c5ca1a724865a6b3d",
+      "path": "mechanics.travels.travel.lumbridge_cellar.forward.channel_ticks"
+    },
+    {
+      "accepted_current_fingerprint": false,
+      "action": "applied",
+      "classification": "source_supported_inference",
+      "input_sha256": "82752521a0b45913ccb2397ab9f98b8147ab5c674ed258171da688ed5506a1b5",
+      "original_binding_sha256": "82752521a0b45913ccb2397ab9f98b8147ab5c674ed258171da688ed5506a1b5",
+      "output_sha256": "4146dfcc09623eb872419a51bb6299e36e793d2ca2f737f288c1feb891f659c2",
+      "path": "mechanics.travels.travel.mill_lower.backward.channel_ticks"
+    },
+    {
+      "accepted_current_fingerprint": false,
+      "action": "applied",
+      "classification": "source_supported_inference",
+      "input_sha256": "82752521a0b45913ccb2397ab9f98b8147ab5c674ed258171da688ed5506a1b5",
+      "original_binding_sha256": "82752521a0b45913ccb2397ab9f98b8147ab5c674ed258171da688ed5506a1b5",
+      "output_sha256": "4146dfcc09623eb872419a51bb6299e36e793d2ca2f737f288c1feb891f659c2",
+      "path": "mechanics.travels.travel.mill_lower.forward.channel_ticks"
+    },
+    {
+      "accepted_current_fingerprint": false,
+      "action": "applied",
+      "classification": "source_supported_inference",
+      "input_sha256": "dc612c532d6d988a6edead43b746873bfd0a70f3114f2637a493ad749d90c010",
+      "original_binding_sha256": "dc612c532d6d988a6edead43b746873bfd0a70f3114f2637a493ad749d90c010",
+      "output_sha256": "4146dfcc09623eb872419a51bb6299e36e793d2ca2f737f288c1feb891f659c2",
+      "path": "mechanics.travels.travel.mill_upper.backward.channel_ticks"
+    },
+    {
+      "accepted_current_fingerprint": false,
+      "action": "applied",
+      "classification": "source_supported_inference",
+      "input_sha256": "dc612c532d6d988a6edead43b746873bfd0a70f3114f2637a493ad749d90c010",
+      "original_binding_sha256": "dc612c532d6d988a6edead43b746873bfd0a70f3114f2637a493ad749d90c010",
+      "output_sha256": "4146dfcc09623eb872419a51bb6299e36e793d2ca2f737f288c1feb891f659c2",
+      "path": "mechanics.travels.travel.mill_upper.forward.channel_ticks"
+    },
+    {
+      "accepted_current_fingerprint": false,
+      "action": "applied",
+      "classification": "source_supported_inference",
+      "input_sha256": "bb2062fbf6af04142cf7e436b1b122c14d26bd4a1aa88151a2be2710d6a71df8",
+      "original_binding_sha256": "bb2062fbf6af04142cf7e436b1b122c14d26bd4a1aa88151a2be2710d6a71df8",
+      "output_sha256": "9c7255d071e47d4d693d07ba6ac84272aed94915e9178e2c5ca1a724865a6b3d",
+      "path": "mechanics.travels.travel.tutorial_combat_ladder.backward.channel_ticks"
+    },
+    {
+      "accepted_current_fingerprint": false,
+      "action": "applied",
+      "classification": "source_supported_inference",
+      "input_sha256": "bb2062fbf6af04142cf7e436b1b122c14d26bd4a1aa88151a2be2710d6a71df8",
+      "original_binding_sha256": "bb2062fbf6af04142cf7e436b1b122c14d26bd4a1aa88151a2be2710d6a71df8",
+      "output_sha256": "9c7255d071e47d4d693d07ba6ac84272aed94915e9178e2c5ca1a724865a6b3d",
+      "path": "mechanics.travels.travel.tutorial_combat_ladder.forward.channel_ticks"
+    },
+    {
+      "accepted_current_fingerprint": false,
+      "action": "applied",
+      "classification": "source_supported_inference",
+      "input_sha256": "f8ca82c9c30d18de4e98d052fd4e824f3931d89c4658ed470c71b4589cd5abe6",
+      "original_binding_sha256": "f8ca82c9c30d18de4e98d052fd4e824f3931d89c4658ed470c71b4589cd5abe6",
+      "output_sha256": "9c7255d071e47d4d693d07ba6ac84272aed94915e9178e2c5ca1a724865a6b3d",
+      "path": "mechanics.travels.travel.tutorial_quest_ladder.backward.channel_ticks"
+    },
+    {
+      "accepted_current_fingerprint": false,
+      "action": "applied",
+      "classification": "source_supported_inference",
+      "input_sha256": "f8ca82c9c30d18de4e98d052fd4e824f3931d89c4658ed470c71b4589cd5abe6",
+      "original_binding_sha256": "f8ca82c9c30d18de4e98d052fd4e824f3931d89c4658ed470c71b4589cd5abe6",
+      "output_sha256": "9c7255d071e47d4d693d07ba6ac84272aed94915e9178e2c5ca1a724865a6b3d",
+      "path": "mechanics.travels.travel.tutorial_quest_ladder.forward.channel_ticks"
+    },
+    {
+      "accepted_current_fingerprint": false,
+      "action": "applied",
+      "classification": "source_supported_inference",
+      "input_sha256": "2882a5a23c239bb9508d004a2a187b2ba58a3c51b273946431e21848bc19ac9e",
+      "original_binding_sha256": "2882a5a23c239bb9508d004a2a187b2ba58a3c51b273946431e21848bc19ac9e",
+      "output_sha256": "c0d7fd8e744aa2705d6586a87d3cfbc8a3ce5ccefaf8aed6cc74ed18a2c44726",
+      "path": "mechanics.value_providers.value_provider.osrs.death.values"
+    },
+    {
+      "accepted_current_fingerprint": false,
+      "action": "retained_codebug_parent_required",
+      "classification": "codebug_parent_required",
+      "input_sha256": "905eb128fb3c942897ef3d79b5739705fe331f353a5ba92eb7622387abced460",
+      "original_binding_sha256": "905eb128fb3c942897ef3d79b5739705fe331f353a5ba92eb7622387abced460",
+      "output_sha256": "905eb128fb3c942897ef3d79b5739705fe331f353a5ba92eb7622387abced460",
+      "path": "mechanics.vitals.level_up"
+    },
+    {
+      "accepted_current_fingerprint": false,
+      "action": "applied",
+      "classification": "source_supported_inference",
+      "input_sha256": "9295a4b6567009da9f0c73b138138822df098760a09f18eaeb7f434157dfafc8",
+      "original_binding_sha256": "9295a4b6567009da9f0c73b138138822df098760a09f18eaeb7f434157dfafc8",
+      "output_sha256": "8955fdef647dc32b4fa7d8548185a9309ccd2e2c99106fd2ed267e6c547b05b9",
+      "path": "npcs.npc.account_guide.navigation.step_ticks"
+    },
+    {
+      "accepted_current_fingerprint": true,
+      "action": "applied",
+      "classification": "source_supported_inference",
+      "input_sha256": "0ab4827a0c2b3eded0c93715c9cbd226ee499f0c510bd03e45c0d0ad4ecd8a33",
+      "original_binding_sha256": "f92becb257ead476c4dc8149fbff12ffc9c409a1a218f8d548cee86c132ad7a6",
+      "output_sha256": "8955fdef647dc32b4fa7d8548185a9309ccd2e2c99106fd2ed267e6c547b05b9",
+      "path": "npcs.npc.adventurer_jon.navigation.step_ticks"
+    },
+    {
+      "accepted_current_fingerprint": false,
+      "action": "applied",
+      "classification": "source_supported_inference",
+      "input_sha256": "fbcd62aaf0d7a46b07cf788e04f36f0df89f5f27eb4d32cf19eb4e49f4bd5318",
+      "original_binding_sha256": "fbcd62aaf0d7a46b07cf788e04f36f0df89f5f27eb4d32cf19eb4e49f4bd5318",
+      "output_sha256": "8955fdef647dc32b4fa7d8548185a9309ccd2e2c99106fd2ed267e6c547b05b9",
+      "path": "npcs.npc.brother_brace.navigation.step_ticks"
+    },
+    {
+      "accepted_current_fingerprint": false,
+      "action": "applied",
+      "classification": "source_supported_inference",
+      "input_sha256": "8d7406f0f5cabb283444346a4bf0c30abbacb17b57c9c8232b966e4ce149e8f1",
+      "original_binding_sha256": "8d7406f0f5cabb283444346a4bf0c30abbacb17b57c9c8232b966e4ce149e8f1",
+      "output_sha256": "8955fdef647dc32b4fa7d8548185a9309ccd2e2c99106fd2ed267e6c547b05b9",
+      "path": "npcs.npc.chicken.navigation.step_ticks"
+    },
+    {
+      "accepted_current_fingerprint": false,
+      "action": "applied",
+      "classification": "source_supported_inference",
+      "input_sha256": "9dceb55011deedc0e7b0fd6b98868069a180e48c6a24b9412330c6b724db7eb2",
+      "original_binding_sha256": "9dceb55011deedc0e7b0fd6b98868069a180e48c6a24b9412330c6b724db7eb2",
+      "output_sha256": "8955fdef647dc32b4fa7d8548185a9309ccd2e2c99106fd2ed267e6c547b05b9",
+      "path": "npcs.npc.combat_instructor.navigation.step_ticks"
+    },
+    {
+      "accepted_current_fingerprint": true,
+      "action": "applied",
+      "classification": "source_supported_inference",
+      "input_sha256": "ea4976e20c01106a98497a636aaa794444acdb97731465ab40db56af9d8f51d3",
+      "original_binding_sha256": "9126548f3579b9438693d39971b3c08dbe1edf693a1dfe3867a1bac97e5c08f5",
+      "output_sha256": "8955fdef647dc32b4fa7d8548185a9309ccd2e2c99106fd2ed267e6c547b05b9",
+      "path": "npcs.npc.cook.navigation.step_ticks"
+    },
+    {
+      "accepted_current_fingerprint": false,
+      "action": "applied",
+      "classification": "source_supported_inference",
+      "input_sha256": "d1d0fddad2aca91b1306a2a1af24bf57fdb4e056225d007f4e1ae47ebcb80ebf",
+      "original_binding_sha256": "d1d0fddad2aca91b1306a2a1af24bf57fdb4e056225d007f4e1ae47ebcb80ebf",
+      "output_sha256": "8955fdef647dc32b4fa7d8548185a9309ccd2e2c99106fd2ed267e6c547b05b9",
+      "path": "npcs.npc.fred_the_farmer.navigation.step_ticks"
+    },
+    {
+      "accepted_current_fingerprint": false,
+      "action": "applied",
+      "classification": "source_supported_inference",
+      "input_sha256": "45cad1f46dd9b0267fc45e0d4a978c11eb527b9ab54c29d0c1d4c5959c4d1f9e",
+      "original_binding_sha256": "45cad1f46dd9b0267fc45e0d4a978c11eb527b9ab54c29d0c1d4c5959c4d1f9e",
+      "output_sha256": "8955fdef647dc32b4fa7d8548185a9309ccd2e2c99106fd2ed267e6c547b05b9",
+      "path": "npcs.npc.gielinor_guide.navigation.step_ticks"
+    },
+    {
+      "accepted_current_fingerprint": true,
+      "action": "applied",
+      "classification": "source_supported_inference",
+      "input_sha256": "e59ca9b8f0002e8621570c1f84369addb144ac928c7683e078ea0124e63c5bec",
+      "original_binding_sha256": "3a98e95571c87c7b6774ebde9c29fb05646cb6a64aafeb89964fcb7ab54fec93",
+      "output_sha256": "8955fdef647dc32b4fa7d8548185a9309ccd2e2c99106fd2ed267e6c547b05b9",
+      "path": "npcs.npc.gillie_groats.navigation.step_ticks"
+    },
+    {
+      "accepted_current_fingerprint": false,
+      "action": "applied",
+      "classification": "known_fact",
+      "input_sha256": "a9f7dca6b24dac3876acb461c6e9b69e180d65590c98d52b4d23955ffc39cc0c",
+      "original_binding_sha256": "a9f7dca6b24dac3876acb461c6e9b69e180d65590c98d52b4d23955ffc39cc0c",
+      "output_sha256": "db6b3b76d13d22417d86c3f80d07f35151909a743943a9900d6d67cc8831c832",
+      "path": "npcs.npc.goblin.level_2.combat.mechanics.damage"
+    },
+    {
+      "accepted_current_fingerprint": false,
+      "action": "retained_owner_decision",
+      "classification": "owner_decision",
+      "input_sha256": "823438133380a6d16698cf20d79f050b9dda5ab699b67382240804abb0f16c82",
+      "original_binding_sha256": "823438133380a6d16698cf20d79f050b9dda5ab699b67382240804abb0f16c82",
+      "output_sha256": "823438133380a6d16698cf20d79f050b9dda5ab699b67382240804abb0f16c82",
+      "path": "npcs.npc.goblin.level_2.combat.mechanics.loot[3]"
+    },
+    {
+      "accepted_current_fingerprint": false,
+      "action": "applied",
+      "classification": "source_supported_inference",
+      "input_sha256": "ef4f62385114fb5558b3c813b1ce14fbc3d34140dd6a8ffd23f723f59d46cdac",
+      "original_binding_sha256": "ef4f62385114fb5558b3c813b1ce14fbc3d34140dd6a8ffd23f723f59d46cdac",
+      "output_sha256": "8955fdef647dc32b4fa7d8548185a9309ccd2e2c99106fd2ed267e6c547b05b9",
+      "path": "npcs.npc.goblin.level_2.navigation.step_ticks"
+    },
+    {
+      "accepted_current_fingerprint": true,
+      "action": "applied",
+      "classification": "source_supported_inference",
+      "input_sha256": "d28891127918f5e4d93d143e08c7d3d90b0fb60e720b0d14763df73b62018c2f",
+      "original_binding_sha256": "6c24a7f58a3c97f1947b17fc476f1ed8f3c017018796400a3033c64cc4ec770e",
+      "output_sha256": "8955fdef647dc32b4fa7d8548185a9309ccd2e2c99106fd2ed267e6c547b05b9",
+      "path": "npcs.npc.ironman_tutor.navigation.step_ticks"
+    },
+    {
+      "accepted_current_fingerprint": true,
+      "action": "applied",
+      "classification": "source_supported_inference",
+      "input_sha256": "82a21238ce2fc8eba0ebc3233b80e3f4863f606563169d1bf5a4a65b3cc9f10d",
+      "original_binding_sha256": "32caa692a6b8d571bd2a4e4680a8a363e852b988c094c25b5b05e381bc914ca9",
+      "output_sha256": "8955fdef647dc32b4fa7d8548185a9309ccd2e2c99106fd2ed267e6c547b05b9",
+      "path": "npcs.npc.ironman_tutor.mainland.navigation.step_ticks"
+    },
+    {
+      "accepted_current_fingerprint": true,
+      "action": "applied",
+      "classification": "source_supported_inference",
+      "input_sha256": "2824e22eaaf69730d0b5c9f067486bc4530fee3450cd84431a5eede7b178e9b1",
+      "original_binding_sha256": "42b3e979cc5ee86afb0379a6e5db5668f2330e6e56c31865e9a48d1f10a03bbc",
+      "output_sha256": "8955fdef647dc32b4fa7d8548185a9309ccd2e2c99106fd2ed267e6c547b05b9",
+      "path": "npcs.npc.lumbridge_guide.navigation.step_ticks"
+    },
+    {
+      "accepted_current_fingerprint": false,
+      "action": "applied",
+      "classification": "source_supported_inference",
+      "input_sha256": "f53176b36655a0a72d2abad04ff68e9534a5914a3a0f3273c6a4645f93ab44c3",
+      "original_binding_sha256": "f53176b36655a0a72d2abad04ff68e9534a5914a3a0f3273c6a4645f93ab44c3",
+      "output_sha256": "8955fdef647dc32b4fa7d8548185a9309ccd2e2c99106fd2ed267e6c547b05b9",
+      "path": "npcs.npc.magic_instructor.navigation.step_ticks"
+    },
+    {
+      "accepted_current_fingerprint": false,
+      "action": "applied",
+      "classification": "source_supported_inference",
+      "input_sha256": "e5769dfba4e4dc2299b421118ecf37612581c63021bd3d5320e8f35facb69669",
+      "original_binding_sha256": "e5769dfba4e4dc2299b421118ecf37612581c63021bd3d5320e8f35facb69669",
+      "output_sha256": "8955fdef647dc32b4fa7d8548185a9309ccd2e2c99106fd2ed267e6c547b05b9",
+      "path": "npcs.npc.master_chef.navigation.step_ticks"
+    },
+    {
+      "accepted_current_fingerprint": false,
+      "action": "applied",
+      "classification": "source_supported_inference",
+      "input_sha256": "5cd59dac82ef2b5470f6f415c903b8040b2c1e12f24500081a3ceb4c9fbdc273",
+      "original_binding_sha256": "5cd59dac82ef2b5470f6f415c903b8040b2c1e12f24500081a3ceb4c9fbdc273",
+      "output_sha256": "8955fdef647dc32b4fa7d8548185a9309ccd2e2c99106fd2ed267e6c547b05b9",
+      "path": "npcs.npc.millie_miller.navigation.step_ticks"
+    },
+    {
+      "accepted_current_fingerprint": false,
+      "action": "applied",
+      "classification": "source_supported_inference",
+      "input_sha256": "9628f4e9134d355489869912c2b2364225a7265ed82546b1261d2536e6bfd247",
+      "original_binding_sha256": "9628f4e9134d355489869912c2b2364225a7265ed82546b1261d2536e6bfd247",
+      "output_sha256": "8955fdef647dc32b4fa7d8548185a9309ccd2e2c99106fd2ed267e6c547b05b9",
+      "path": "npcs.npc.mining_instructor.navigation.step_ticks"
+    },
+    {
+      "accepted_current_fingerprint": false,
+      "action": "applied",
+      "classification": "source_supported_inference",
+      "input_sha256": "27e91431106f9da7009d42238c99dee53f13ed096e9bb5ec2c64eabd3aaab6a6",
+      "original_binding_sha256": "27e91431106f9da7009d42238c99dee53f13ed096e9bb5ec2c64eabd3aaab6a6",
+      "output_sha256": "8955fdef647dc32b4fa7d8548185a9309ccd2e2c99106fd2ed267e6c547b05b9",
+      "path": "npcs.npc.quest_guide.navigation.step_ticks"
+    },
+    {
+      "accepted_current_fingerprint": false,
+      "action": "applied",
+      "classification": "source_supported_inference",
+      "input_sha256": "3f8237d4581039647af210bc9b845a99590e39130d39c250afd57b1a00b58dd8",
+      "original_binding_sha256": "3f8237d4581039647af210bc9b845a99590e39130d39c250afd57b1a00b58dd8",
+      "output_sha256": "8955fdef647dc32b4fa7d8548185a9309ccd2e2c99106fd2ed267e6c547b05b9",
+      "path": "npcs.npc.shop_assistant.navigation.step_ticks"
+    },
+    {
+      "accepted_current_fingerprint": false,
+      "action": "applied",
+      "classification": "source_supported_inference",
+      "input_sha256": "eabd46d9199a5ce93113e7b41670d7ac68bc8e0931c2ba6b5e6eebea116ef065",
+      "original_binding_sha256": "eabd46d9199a5ce93113e7b41670d7ac68bc8e0931c2ba6b5e6eebea116ef065",
+      "output_sha256": "8955fdef647dc32b4fa7d8548185a9309ccd2e2c99106fd2ed267e6c547b05b9",
+      "path": "npcs.npc.shopkeeper.navigation.step_ticks"
+    },
+    {
+      "accepted_current_fingerprint": false,
+      "action": "applied",
+      "classification": "source_supported_inference",
+      "input_sha256": "41b587cb9b329b8edac5af2c0f1282005f2248580b31cc72bac6976a3c4480f9",
+      "original_binding_sha256": "41b587cb9b329b8edac5af2c0f1282005f2248580b31cc72bac6976a3c4480f9",
+      "output_sha256": "8955fdef647dc32b4fa7d8548185a9309ccd2e2c99106fd2ed267e6c547b05b9",
+      "path": "npcs.npc.survival_expert.navigation.step_ticks"
+    },
+    {
+      "accepted_current_fingerprint": false,
+      "action": "applied",
+      "classification": "source_supported_inference",
+      "input_sha256": "bc24f0856a858d5aff1ba1e6e4f8101f4a1bd60e7b0870d351320c24b4e9ca72",
+      "original_binding_sha256": "bc24f0856a858d5aff1ba1e6e4f8101f4a1bd60e7b0870d351320c24b4e9ca72",
+      "output_sha256": "8955fdef647dc32b4fa7d8548185a9309ccd2e2c99106fd2ed267e6c547b05b9",
+      "path": "npcs.npc.tutorial.banker.navigation.step_ticks"
+    },
+    {
+      "accepted_current_fingerprint": false,
+      "action": "applied",
+      "classification": "known_fact",
+      "input_sha256": "e406048170a8a7142f0cbe067f2c3efed093ede6ba24c2d9c8ccaf80939c822b",
+      "original_binding_sha256": "e406048170a8a7142f0cbe067f2c3efed093ede6ba24c2d9c8ccaf80939c822b",
+      "output_sha256": "db6b3b76d13d22417d86c3f80d07f35151909a743943a9900d6d67cc8831c832",
+      "path": "npcs.npc.tutorial_chicken.combat.mechanics.damage"
+    },
+    {
+      "accepted_current_fingerprint": false,
+      "action": "applied",
+      "classification": "source_supported_inference",
+      "input_sha256": "f27efd27480f8c0341af2b7b05c324467610c2569798377bbf3e60b4b4a0072d",
+      "original_binding_sha256": "f27efd27480f8c0341af2b7b05c324467610c2569798377bbf3e60b4b4a0072d",
+      "output_sha256": "30d9771d6a7f374147e13951793674e1d6762aea4fbf4632c05c8d7af56572fa",
+      "path": "npcs.npc.tutorial_chicken.combat.mechanics.respawn"
+    },
+    {
+      "accepted_current_fingerprint": false,
+      "action": "applied",
+      "classification": "source_supported_inference",
+      "input_sha256": "5dbc753a32cb7f2d9ccc6c98518f07d58eecbd612e4c6b3a52933eaefb66d314",
+      "original_binding_sha256": "5dbc753a32cb7f2d9ccc6c98518f07d58eecbd612e4c6b3a52933eaefb66d314",
+      "output_sha256": "8955fdef647dc32b4fa7d8548185a9309ccd2e2c99106fd2ed267e6c547b05b9",
+      "path": "npcs.npc.tutorial_chicken.navigation.step_ticks"
+    },
+    {
+      "accepted_current_fingerprint": false,
+      "action": "applied",
+      "classification": "known_fact",
+      "input_sha256": "e406048170a8a7142f0cbe067f2c3efed093ede6ba24c2d9c8ccaf80939c822b",
+      "original_binding_sha256": "e406048170a8a7142f0cbe067f2c3efed093ede6ba24c2d9c8ccaf80939c822b",
+      "output_sha256": "db6b3b76d13d22417d86c3f80d07f35151909a743943a9900d6d67cc8831c832",
+      "path": "npcs.npc.tutorial_rat.combat.mechanics.damage"
+    },
+    {
+      "accepted_current_fingerprint": false,
+      "action": "applied",
+      "classification": "source_supported_inference",
+      "input_sha256": "f27efd27480f8c0341af2b7b05c324467610c2569798377bbf3e60b4b4a0072d",
+      "original_binding_sha256": "f27efd27480f8c0341af2b7b05c324467610c2569798377bbf3e60b4b4a0072d",
+      "output_sha256": "86639c2fdd9b576cd302518e7506d2df5734f4a2188a2ec7e85c3547f2f43e03",
+      "path": "npcs.npc.tutorial_rat.combat.mechanics.respawn"
+    },
+    {
+      "accepted_current_fingerprint": false,
+      "action": "applied",
+      "classification": "source_supported_inference",
+      "input_sha256": "df8a9511c1d213a2f1b5a78d684d06cfa59e48ccc09c49773abe03564912b726",
+      "original_binding_sha256": "df8a9511c1d213a2f1b5a78d684d06cfa59e48ccc09c49773abe03564912b726",
+      "output_sha256": "8955fdef647dc32b4fa7d8548185a9309ccd2e2c99106fd2ed267e6c547b05b9",
+      "path": "npcs.npc.tutorial_rat.navigation.step_ticks"
+    },
+    {
+      "accepted_current_fingerprint": false,
+      "action": "applied",
+      "classification": "source_supported_inference",
+      "input_sha256": "16e653f117255f74961ba8d48579a59ffc9a1cc5b23c271071e3ba18d8d78d39",
+      "original_binding_sha256": "16e653f117255f74961ba8d48579a59ffc9a1cc5b23c271071e3ba18d8d78d39",
+      "output_sha256": "c1453742a1782c53e5c89e286575effc81b2c2cd0d93253cd5c93da70804fb2c",
+      "path": "recipes.recipe.cooking.bread.lumbridge_range.mechanics.cadence.first"
+    },
+    {
+      "accepted_current_fingerprint": false,
+      "action": "applied",
+      "classification": "source_supported_inference",
+      "input_sha256": "16e653f117255f74961ba8d48579a59ffc9a1cc5b23c271071e3ba18d8d78d39",
+      "original_binding_sha256": "16e653f117255f74961ba8d48579a59ffc9a1cc5b23c271071e3ba18d8d78d39",
+      "output_sha256": "c1453742a1782c53e5c89e286575effc81b2c2cd0d93253cd5c93da70804fb2c",
+      "path": "recipes.recipe.cooking.bread.range.mechanics.cadence.first"
+    },
+    {
+      "accepted_current_fingerprint": false,
+      "action": "applied",
+      "classification": "source_supported_inference",
+      "input_sha256": "8fe202d3d1ea395d55ff69e0821faaabea0de1cbad03029e745fa7237ee3d85e",
+      "original_binding_sha256": "8fe202d3d1ea395d55ff69e0821faaabea0de1cbad03029e745fa7237ee3d85e",
+      "output_sha256": "590d78f264234dce0c8e6d00fb813f2245531a6182b652915209792387b34f2d",
+      "path": "recipes.recipe.cooking.shrimps.fire.mechanics.cadence.single"
+    },
+    {
+      "accepted_current_fingerprint": false,
+      "action": "applied",
+      "classification": "source_supported_inference",
+      "input_sha256": "8fe202d3d1ea395d55ff69e0821faaabea0de1cbad03029e745fa7237ee3d85e",
+      "original_binding_sha256": "8fe202d3d1ea395d55ff69e0821faaabea0de1cbad03029e745fa7237ee3d85e",
+      "output_sha256": "590d78f264234dce0c8e6d00fb813f2245531a6182b652915209792387b34f2d",
+      "path": "recipes.recipe.cooking.shrimps.lumbridge_range.mechanics.cadence.single"
+    },
+    {
+      "accepted_current_fingerprint": false,
+      "action": "applied",
+      "classification": "source_supported_inference",
+      "input_sha256": "8fe202d3d1ea395d55ff69e0821faaabea0de1cbad03029e745fa7237ee3d85e",
+      "original_binding_sha256": "8fe202d3d1ea395d55ff69e0821faaabea0de1cbad03029e745fa7237ee3d85e",
+      "output_sha256": "590d78f264234dce0c8e6d00fb813f2245531a6182b652915209792387b34f2d",
+      "path": "recipes.recipe.cooking.shrimps.range.mechanics.cadence.single"
+    },
+    {
+      "accepted_current_fingerprint": false,
+      "action": "applied",
+      "classification": "source_supported_inference",
+      "input_sha256": "76ab2de656961c283148d316e428a23e4cc57df97b93cdc3b0fdbcc158e11ba4",
+      "original_binding_sha256": "76ab2de656961c283148d316e428a23e4cc57df97b93cdc3b0fdbcc158e11ba4",
+      "output_sha256": "894482122b31784e290f78dc6e048b40f8e786cbe783bf0591daa3bd119cd6a0",
+      "path": "shops.shop.lumbridge.general_store.stock[0].mechanics.pricing.overstock"
+    },
+    {
+      "accepted_current_fingerprint": false,
+      "action": "applied",
+      "classification": "source_supported_inference",
+      "input_sha256": "e4e16a2788c13cb3afc506b282eed612036b60d18db66d5168f00d98ae123d2e",
+      "original_binding_sha256": "e4e16a2788c13cb3afc506b282eed612036b60d18db66d5168f00d98ae123d2e",
+      "output_sha256": "873c5aee0379277689b7c6185b3765d34bce029ddfcb08f99f23f327ccbd4645",
+      "path": "shops.shop.lumbridge.general_store.stock[0].mechanics.restock.phase"
+    },
+    {
+      "accepted_current_fingerprint": false,
+      "action": "applied",
+      "classification": "source_supported_inference",
+      "input_sha256": "76ab2de656961c283148d316e428a23e4cc57df97b93cdc3b0fdbcc158e11ba4",
+      "original_binding_sha256": "76ab2de656961c283148d316e428a23e4cc57df97b93cdc3b0fdbcc158e11ba4",
+      "output_sha256": "894482122b31784e290f78dc6e048b40f8e786cbe783bf0591daa3bd119cd6a0",
+      "path": "shops.shop.lumbridge.general_store.stock[1].mechanics.pricing.overstock"
+    },
+    {
+      "accepted_current_fingerprint": false,
+      "action": "applied",
+      "classification": "source_supported_inference",
+      "input_sha256": "e4e16a2788c13cb3afc506b282eed612036b60d18db66d5168f00d98ae123d2e",
+      "original_binding_sha256": "e4e16a2788c13cb3afc506b282eed612036b60d18db66d5168f00d98ae123d2e",
+      "output_sha256": "873c5aee0379277689b7c6185b3765d34bce029ddfcb08f99f23f327ccbd4645",
+      "path": "shops.shop.lumbridge.general_store.stock[1].mechanics.restock.phase"
+    },
+    {
+      "accepted_current_fingerprint": false,
+      "action": "applied",
+      "classification": "source_supported_inference",
+      "input_sha256": "76ab2de656961c283148d316e428a23e4cc57df97b93cdc3b0fdbcc158e11ba4",
+      "original_binding_sha256": "76ab2de656961c283148d316e428a23e4cc57df97b93cdc3b0fdbcc158e11ba4",
+      "output_sha256": "894482122b31784e290f78dc6e048b40f8e786cbe783bf0591daa3bd119cd6a0",
+      "path": "shops.shop.lumbridge.general_store.stock[2].mechanics.pricing.overstock"
+    },
+    {
+      "accepted_current_fingerprint": false,
+      "action": "applied",
+      "classification": "source_supported_inference",
+      "input_sha256": "e4e16a2788c13cb3afc506b282eed612036b60d18db66d5168f00d98ae123d2e",
+      "original_binding_sha256": "e4e16a2788c13cb3afc506b282eed612036b60d18db66d5168f00d98ae123d2e",
+      "output_sha256": "873c5aee0379277689b7c6185b3765d34bce029ddfcb08f99f23f327ccbd4645",
+      "path": "shops.shop.lumbridge.general_store.stock[2].mechanics.restock.phase"
+    },
+    {
+      "accepted_current_fingerprint": false,
+      "action": "applied",
+      "classification": "source_supported_inference",
+      "input_sha256": "76ab2de656961c283148d316e428a23e4cc57df97b93cdc3b0fdbcc158e11ba4",
+      "original_binding_sha256": "76ab2de656961c283148d316e428a23e4cc57df97b93cdc3b0fdbcc158e11ba4",
+      "output_sha256": "894482122b31784e290f78dc6e048b40f8e786cbe783bf0591daa3bd119cd6a0",
+      "path": "shops.shop.lumbridge.general_store.stock[3].mechanics.pricing.overstock"
+    },
+    {
+      "accepted_current_fingerprint": false,
+      "action": "applied",
+      "classification": "source_supported_inference",
+      "input_sha256": "e4e16a2788c13cb3afc506b282eed612036b60d18db66d5168f00d98ae123d2e",
+      "original_binding_sha256": "e4e16a2788c13cb3afc506b282eed612036b60d18db66d5168f00d98ae123d2e",
+      "output_sha256": "873c5aee0379277689b7c6185b3765d34bce029ddfcb08f99f23f327ccbd4645",
+      "path": "shops.shop.lumbridge.general_store.stock[3].mechanics.restock.phase"
+    },
+    {
+      "accepted_current_fingerprint": false,
+      "action": "applied",
+      "classification": "source_supported_inference",
+      "input_sha256": "76ab2de656961c283148d316e428a23e4cc57df97b93cdc3b0fdbcc158e11ba4",
+      "original_binding_sha256": "76ab2de656961c283148d316e428a23e4cc57df97b93cdc3b0fdbcc158e11ba4",
+      "output_sha256": "894482122b31784e290f78dc6e048b40f8e786cbe783bf0591daa3bd119cd6a0",
+      "path": "shops.shop.lumbridge.general_store.stock[4].mechanics.pricing.overstock"
+    },
+    {
+      "accepted_current_fingerprint": false,
+      "action": "applied",
+      "classification": "source_supported_inference",
+      "input_sha256": "e4e16a2788c13cb3afc506b282eed612036b60d18db66d5168f00d98ae123d2e",
+      "original_binding_sha256": "e4e16a2788c13cb3afc506b282eed612036b60d18db66d5168f00d98ae123d2e",
+      "output_sha256": "873c5aee0379277689b7c6185b3765d34bce029ddfcb08f99f23f327ccbd4645",
+      "path": "shops.shop.lumbridge.general_store.stock[4].mechanics.restock.phase"
+    },
+    {
+      "accepted_current_fingerprint": false,
+      "action": "applied",
+      "classification": "source_supported_inference",
+      "input_sha256": "76ab2de656961c283148d316e428a23e4cc57df97b93cdc3b0fdbcc158e11ba4",
+      "original_binding_sha256": "76ab2de656961c283148d316e428a23e4cc57df97b93cdc3b0fdbcc158e11ba4",
+      "output_sha256": "894482122b31784e290f78dc6e048b40f8e786cbe783bf0591daa3bd119cd6a0",
+      "path": "shops.shop.lumbridge.general_store.stock[5].mechanics.pricing.overstock"
+    },
+    {
+      "accepted_current_fingerprint": false,
+      "action": "applied",
+      "classification": "source_supported_inference",
+      "input_sha256": "e4e16a2788c13cb3afc506b282eed612036b60d18db66d5168f00d98ae123d2e",
+      "original_binding_sha256": "e4e16a2788c13cb3afc506b282eed612036b60d18db66d5168f00d98ae123d2e",
+      "output_sha256": "873c5aee0379277689b7c6185b3765d34bce029ddfcb08f99f23f327ccbd4645",
+      "path": "shops.shop.lumbridge.general_store.stock[5].mechanics.restock.phase"
+    },
+    {
+      "accepted_current_fingerprint": false,
+      "action": "applied",
+      "classification": "source_supported_inference",
+      "input_sha256": "76ab2de656961c283148d316e428a23e4cc57df97b93cdc3b0fdbcc158e11ba4",
+      "original_binding_sha256": "76ab2de656961c283148d316e428a23e4cc57df97b93cdc3b0fdbcc158e11ba4",
+      "output_sha256": "894482122b31784e290f78dc6e048b40f8e786cbe783bf0591daa3bd119cd6a0",
+      "path": "shops.shop.lumbridge.general_store.stock[6].mechanics.pricing.overstock"
+    },
+    {
+      "accepted_current_fingerprint": false,
+      "action": "applied",
+      "classification": "source_supported_inference",
+      "input_sha256": "e4e16a2788c13cb3afc506b282eed612036b60d18db66d5168f00d98ae123d2e",
+      "original_binding_sha256": "e4e16a2788c13cb3afc506b282eed612036b60d18db66d5168f00d98ae123d2e",
+      "output_sha256": "873c5aee0379277689b7c6185b3765d34bce029ddfcb08f99f23f327ccbd4645",
+      "path": "shops.shop.lumbridge.general_store.stock[6].mechanics.restock.phase"
+    },
+    {
+      "accepted_current_fingerprint": false,
+      "action": "applied",
+      "classification": "source_supported_inference",
+      "input_sha256": "76ab2de656961c283148d316e428a23e4cc57df97b93cdc3b0fdbcc158e11ba4",
+      "original_binding_sha256": "76ab2de656961c283148d316e428a23e4cc57df97b93cdc3b0fdbcc158e11ba4",
+      "output_sha256": "894482122b31784e290f78dc6e048b40f8e786cbe783bf0591daa3bd119cd6a0",
+      "path": "shops.shop.lumbridge.general_store.stock[7].mechanics.pricing.overstock"
+    },
+    {
+      "accepted_current_fingerprint": false,
+      "action": "applied",
+      "classification": "source_supported_inference",
+      "input_sha256": "e4e16a2788c13cb3afc506b282eed612036b60d18db66d5168f00d98ae123d2e",
+      "original_binding_sha256": "e4e16a2788c13cb3afc506b282eed612036b60d18db66d5168f00d98ae123d2e",
+      "output_sha256": "873c5aee0379277689b7c6185b3765d34bce029ddfcb08f99f23f327ccbd4645",
+      "path": "shops.shop.lumbridge.general_store.stock[7].mechanics.restock.phase"
+    },
+    {
+      "accepted_current_fingerprint": false,
+      "action": "applied",
+      "classification": "source_supported_inference",
+      "input_sha256": "76ab2de656961c283148d316e428a23e4cc57df97b93cdc3b0fdbcc158e11ba4",
+      "original_binding_sha256": "76ab2de656961c283148d316e428a23e4cc57df97b93cdc3b0fdbcc158e11ba4",
+      "output_sha256": "894482122b31784e290f78dc6e048b40f8e786cbe783bf0591daa3bd119cd6a0",
+      "path": "shops.shop.lumbridge.general_store.stock[8].mechanics.pricing.overstock"
+    },
+    {
+      "accepted_current_fingerprint": false,
+      "action": "applied",
+      "classification": "source_supported_inference",
+      "input_sha256": "e4e16a2788c13cb3afc506b282eed612036b60d18db66d5168f00d98ae123d2e",
+      "original_binding_sha256": "e4e16a2788c13cb3afc506b282eed612036b60d18db66d5168f00d98ae123d2e",
+      "output_sha256": "873c5aee0379277689b7c6185b3765d34bce029ddfcb08f99f23f327ccbd4645",
+      "path": "shops.shop.lumbridge.general_store.stock[8].mechanics.restock.phase"
+    },
+    {
+      "accepted_current_fingerprint": false,
+      "action": "applied",
+      "classification": "source_supported_inference",
+      "input_sha256": "76ab2de656961c283148d316e428a23e4cc57df97b93cdc3b0fdbcc158e11ba4",
+      "original_binding_sha256": "76ab2de656961c283148d316e428a23e4cc57df97b93cdc3b0fdbcc158e11ba4",
+      "output_sha256": "894482122b31784e290f78dc6e048b40f8e786cbe783bf0591daa3bd119cd6a0",
+      "path": "shops.shop.lumbridge.general_store.stock[9].mechanics.pricing.overstock"
+    },
+    {
+      "accepted_current_fingerprint": false,
+      "action": "applied",
+      "classification": "source_supported_inference",
+      "input_sha256": "e4e16a2788c13cb3afc506b282eed612036b60d18db66d5168f00d98ae123d2e",
+      "original_binding_sha256": "e4e16a2788c13cb3afc506b282eed612036b60d18db66d5168f00d98ae123d2e",
+      "output_sha256": "873c5aee0379277689b7c6185b3765d34bce029ddfcb08f99f23f327ccbd4645",
+      "path": "shops.shop.lumbridge.general_store.stock[9].mechanics.restock.phase"
+    },
+    {
+      "accepted_current_fingerprint": false,
+      "action": "applied",
+      "classification": "source_supported_inference",
+      "input_sha256": "76ab2de656961c283148d316e428a23e4cc57df97b93cdc3b0fdbcc158e11ba4",
+      "original_binding_sha256": "76ab2de656961c283148d316e428a23e4cc57df97b93cdc3b0fdbcc158e11ba4",
+      "output_sha256": "894482122b31784e290f78dc6e048b40f8e786cbe783bf0591daa3bd119cd6a0",
+      "path": "shops.shop.lumbridge.general_store.stock[10].mechanics.pricing.overstock"
+    },
+    {
+      "accepted_current_fingerprint": false,
+      "action": "applied",
+      "classification": "source_supported_inference",
+      "input_sha256": "e4e16a2788c13cb3afc506b282eed612036b60d18db66d5168f00d98ae123d2e",
+      "original_binding_sha256": "e4e16a2788c13cb3afc506b282eed612036b60d18db66d5168f00d98ae123d2e",
+      "output_sha256": "873c5aee0379277689b7c6185b3765d34bce029ddfcb08f99f23f327ccbd4645",
+      "path": "shops.shop.lumbridge.general_store.stock[10].mechanics.restock.phase"
+    },
+    {
+      "accepted_current_fingerprint": false,
+      "action": "applied",
+      "classification": "source_supported_inference",
+      "input_sha256": "76ab2de656961c283148d316e428a23e4cc57df97b93cdc3b0fdbcc158e11ba4",
+      "original_binding_sha256": "76ab2de656961c283148d316e428a23e4cc57df97b93cdc3b0fdbcc158e11ba4",
+      "output_sha256": "894482122b31784e290f78dc6e048b40f8e786cbe783bf0591daa3bd119cd6a0",
+      "path": "shops.shop.lumbridge.general_store.stock[11].mechanics.pricing.overstock"
+    },
+    {
+      "accepted_current_fingerprint": false,
+      "action": "applied",
+      "classification": "source_supported_inference",
+      "input_sha256": "e4e16a2788c13cb3afc506b282eed612036b60d18db66d5168f00d98ae123d2e",
+      "original_binding_sha256": "e4e16a2788c13cb3afc506b282eed612036b60d18db66d5168f00d98ae123d2e",
+      "output_sha256": "873c5aee0379277689b7c6185b3765d34bce029ddfcb08f99f23f327ccbd4645",
+      "path": "shops.shop.lumbridge.general_store.stock[11].mechanics.restock.phase"
+    },
+    {
+      "accepted_current_fingerprint": false,
+      "action": "applied",
+      "classification": "source_supported_inference",
+      "input_sha256": "76ab2de656961c283148d316e428a23e4cc57df97b93cdc3b0fdbcc158e11ba4",
+      "original_binding_sha256": "76ab2de656961c283148d316e428a23e4cc57df97b93cdc3b0fdbcc158e11ba4",
+      "output_sha256": "894482122b31784e290f78dc6e048b40f8e786cbe783bf0591daa3bd119cd6a0",
+      "path": "shops.shop.lumbridge.general_store.stock[12].mechanics.pricing.overstock"
+    },
+    {
+      "accepted_current_fingerprint": false,
+      "action": "applied",
+      "classification": "source_supported_inference",
+      "input_sha256": "e4e16a2788c13cb3afc506b282eed612036b60d18db66d5168f00d98ae123d2e",
+      "original_binding_sha256": "e4e16a2788c13cb3afc506b282eed612036b60d18db66d5168f00d98ae123d2e",
+      "output_sha256": "873c5aee0379277689b7c6185b3765d34bce029ddfcb08f99f23f327ccbd4645",
+      "path": "shops.shop.lumbridge.general_store.stock[12].mechanics.restock.phase"
+    },
+    {
+      "accepted_current_fingerprint": false,
+      "action": "applied",
+      "classification": "source_supported_inference",
+      "input_sha256": "76ab2de656961c283148d316e428a23e4cc57df97b93cdc3b0fdbcc158e11ba4",
+      "original_binding_sha256": "76ab2de656961c283148d316e428a23e4cc57df97b93cdc3b0fdbcc158e11ba4",
+      "output_sha256": "894482122b31784e290f78dc6e048b40f8e786cbe783bf0591daa3bd119cd6a0",
+      "path": "shops.shop.lumbridge.general_store.stock[13].mechanics.pricing.overstock"
+    },
+    {
+      "accepted_current_fingerprint": false,
+      "action": "applied",
+      "classification": "source_supported_inference",
+      "input_sha256": "e4e16a2788c13cb3afc506b282eed612036b60d18db66d5168f00d98ae123d2e",
+      "original_binding_sha256": "e4e16a2788c13cb3afc506b282eed612036b60d18db66d5168f00d98ae123d2e",
+      "output_sha256": "873c5aee0379277689b7c6185b3765d34bce029ddfcb08f99f23f327ccbd4645",
+      "path": "shops.shop.lumbridge.general_store.stock[13].mechanics.restock.phase"
+    },
+    {
+      "accepted_current_fingerprint": false,
+      "action": "applied",
+      "classification": "source_supported_inference",
+      "input_sha256": "76ab2de656961c283148d316e428a23e4cc57df97b93cdc3b0fdbcc158e11ba4",
+      "original_binding_sha256": "76ab2de656961c283148d316e428a23e4cc57df97b93cdc3b0fdbcc158e11ba4",
+      "output_sha256": "894482122b31784e290f78dc6e048b40f8e786cbe783bf0591daa3bd119cd6a0",
+      "path": "shops.shop.lumbridge.general_store.stock[14].mechanics.pricing.overstock"
+    },
+    {
+      "accepted_current_fingerprint": false,
+      "action": "applied",
+      "classification": "source_supported_inference",
+      "input_sha256": "e4e16a2788c13cb3afc506b282eed612036b60d18db66d5168f00d98ae123d2e",
+      "original_binding_sha256": "e4e16a2788c13cb3afc506b282eed612036b60d18db66d5168f00d98ae123d2e",
+      "output_sha256": "873c5aee0379277689b7c6185b3765d34bce029ddfcb08f99f23f327ccbd4645",
+      "path": "shops.shop.lumbridge.general_store.stock[14].mechanics.restock.phase"
+    },
+    {
+      "accepted_current_fingerprint": false,
+      "action": "applied",
+      "classification": "source_supported_inference",
+      "input_sha256": "76ab2de656961c283148d316e428a23e4cc57df97b93cdc3b0fdbcc158e11ba4",
+      "original_binding_sha256": "76ab2de656961c283148d316e428a23e4cc57df97b93cdc3b0fdbcc158e11ba4",
+      "output_sha256": "894482122b31784e290f78dc6e048b40f8e786cbe783bf0591daa3bd119cd6a0",
+      "path": "shops.shop.lumbridge.general_store.unstocked.rule.pricing.overstock"
+    },
+    {
+      "accepted_current_fingerprint": false,
+      "action": "applied",
+      "classification": "source_supported_inference",
+      "input_sha256": "e4e16a2788c13cb3afc506b282eed612036b60d18db66d5168f00d98ae123d2e",
+      "original_binding_sha256": "e4e16a2788c13cb3afc506b282eed612036b60d18db66d5168f00d98ae123d2e",
+      "output_sha256": "873c5aee0379277689b7c6185b3765d34bce029ddfcb08f99f23f327ccbd4645",
+      "path": "shops.shop.lumbridge.general_store.unstocked.rule.restock.phase"
+    },
+    {
+      "accepted_current_fingerprint": false,
+      "action": "retained_inactive_dependency",
+      "classification": "inactive_dependency",
+      "input_sha256": "aa09881b38a64a4c9ae9474b81e2b79c76c613223b4366af67be6fd0f2dd3c36",
+      "original_binding_sha256": "aa09881b38a64a4c9ae9474b81e2b79c76c613223b4366af67be6fd0f2dd3c36",
+      "output_sha256": "aa09881b38a64a4c9ae9474b81e2b79c76c613223b4366af67be6fd0f2dd3c36",
+      "path": "spawns.spawn.tutorial.fishing_spot.3099.3090.p0.interactions[0].action.rule.mechanics.respawn"
+    },
+    {
+      "accepted_current_fingerprint": false,
+      "action": "retained_inactive_dependency",
+      "classification": "inactive_dependency",
+      "input_sha256": "aa09881b38a64a4c9ae9474b81e2b79c76c613223b4366af67be6fd0f2dd3c36",
+      "original_binding_sha256": "aa09881b38a64a4c9ae9474b81e2b79c76c613223b4366af67be6fd0f2dd3c36",
+      "output_sha256": "aa09881b38a64a4c9ae9474b81e2b79c76c613223b4366af67be6fd0f2dd3c36",
+      "path": "spawns.spawn.tutorial.fishing_spot.3101.3092.p0.interactions[0].action.rule.mechanics.respawn"
+    },
+    {
+      "accepted_current_fingerprint": false,
+      "action": "retained_inactive_dependency",
+      "classification": "inactive_dependency",
+      "input_sha256": "aa09881b38a64a4c9ae9474b81e2b79c76c613223b4366af67be6fd0f2dd3c36",
+      "original_binding_sha256": "aa09881b38a64a4c9ae9474b81e2b79c76c613223b4366af67be6fd0f2dd3c36",
+      "output_sha256": "aa09881b38a64a4c9ae9474b81e2b79c76c613223b4366af67be6fd0f2dd3c36",
+      "path": "spawns.spawn.tutorial.fishing_spot.3103.3092.p0.interactions[0].action.rule.mechanics.respawn"
+    }
+  ],
+  "bound_path_count": 104,
+  "changed_paths": [
+    {
+      "operation": "replace",
+      "pointer": [
+        "initial_state",
+        "runtime",
+        "settings",
+        "death_auto_equip"
+      ]
+    },
+    {
+      "operation": "replace",
+      "pointer": [
+        "initial_state",
+        "runtime",
+        "settings",
+        "death_supply_piles"
+      ]
+    },
+    {
+      "operation": "replace",
+      "pointer": [
+        "initial_state",
+        "source"
+      ]
+    },
+    {
+      "operation": "remove",
+      "pointer": [
+        "mechanics",
+        "death",
+        "repeat",
+        "reason"
+      ]
+    },
+    {
+      "operation": "replace",
+      "pointer": [
+        "mechanics",
+        "death",
+        "repeat",
+        "source",
+        0,
+        "notes"
+      ]
+    },
+    {
+      "operation": "replace",
+      "pointer": [
+        "mechanics",
+        "death",
+        "repeat",
+        "source",
+        0,
+        "status"
+      ]
+    },
+    {
+      "operation": "replace",
+      "pointer": [
+        "mechanics",
+        "death",
+        "repeat",
+        "source",
+        1,
+        "notes"
+      ]
+    },
+    {
+      "operation": "replace",
+      "pointer": [
+        "mechanics",
+        "death",
+        "repeat",
+        "source",
+        1,
+        "reference"
+      ]
+    },
+    {
+      "operation": "replace",
+      "pointer": [
+        "mechanics",
+        "death",
+        "repeat",
+        "source",
+        1,
+        "revision"
+      ]
+    },
+    {
+      "operation": "replace",
+      "pointer": [
+        "mechanics",
+        "death",
+        "repeat",
+        "source",
+        1,
+        "status"
+      ]
+    },
+    {
+      "operation": "replace",
+      "pointer": [
+        "mechanics",
+        "death",
+        "repeat",
+        "status"
+      ]
+    },
+    {
+      "operation": "add",
+      "pointer": [
+        "mechanics",
+        "death",
+        "repeat",
+        "value"
+      ]
+    },
+    {
+      "operation": "remove",
+      "pointer": [
+        "mechanics",
+        "death",
+        "restoration",
+        "reason"
+      ]
+    },
+    {
+      "operation": "replace",
+      "pointer": [
+        "mechanics",
+        "death",
+        "restoration",
+        "source"
+      ]
+    },
+    {
+      "operation": "replace",
+      "pointer": [
+        "mechanics",
+        "death",
+        "restoration",
+        "status"
+      ]
+    },
+    {
+      "operation": "add",
+      "pointer": [
+        "mechanics",
+        "death",
+        "restoration",
+        "value"
+      ]
+    },
+    {
+      "operation": "remove",
+      "pointer": [
+        "mechanics",
+        "death",
+        "ties",
+        "reason"
+      ]
+    },
+    {
+      "operation": "replace",
+      "pointer": [
+        "mechanics",
+        "death",
+        "ties",
+        "source"
+      ]
+    },
+    {
+      "operation": "replace",
+      "pointer": [
+        "mechanics",
+        "death",
+        "ties",
+        "status"
+      ]
+    },
+    {
+      "operation": "add",
+      "pointer": [
+        "mechanics",
+        "death",
+        "ties",
+        "value"
+      ]
+    },
+    {
+      "operation": "add",
+      "pointer": [
+        "mechanics",
+        "entitlements",
+        "entitlement.tutorial.departure.provisions"
+      ]
+    },
+    {
+      "operation": "add",
+      "pointer": [
+        "mechanics",
+        "grants",
+        "grant.tutorial.departure.provisions"
+      ]
+    },
+    {
+      "operation": "remove",
+      "pointer": [
+        "mechanics",
+        "ground_policies",
+        "ground_policy.ammunition",
+        "expires_after",
+        "reason"
+      ]
+    },
+    {
+      "operation": "replace",
+      "pointer": [
+        "mechanics",
+        "ground_policies",
+        "ground_policy.ammunition",
+        "expires_after",
+        "source"
+      ]
+    },
+    {
+      "operation": "replace",
+      "pointer": [
+        "mechanics",
+        "ground_policies",
+        "ground_policy.ammunition",
+        "expires_after",
+        "status"
+      ]
+    },
+    {
+      "operation": "add",
+      "pointer": [
+        "mechanics",
+        "ground_policies",
+        "ground_policy.ammunition",
+        "expires_after",
+        "value"
+      ]
+    },
+    {
+      "operation": "remove",
+      "pointer": [
+        "mechanics",
+        "ground_policies",
+        "ground_policy.ammunition",
+        "public_after",
+        "reason"
+      ]
+    },
+    {
+      "operation": "replace",
+      "pointer": [
+        "mechanics",
+        "ground_policies",
+        "ground_policy.ammunition",
+        "public_after",
+        "source"
+      ]
+    },
+    {
+      "operation": "replace",
+      "pointer": [
+        "mechanics",
+        "ground_policies",
+        "ground_policy.ammunition",
+        "public_after",
+        "status"
+      ]
+    },
+    {
+      "operation": "add",
+      "pointer": [
+        "mechanics",
+        "ground_policies",
+        "ground_policy.ammunition",
+        "public_after",
+        "value"
+      ]
+    },
+    {
+      "operation": "remove",
+      "pointer": [
+        "mechanics",
+        "ground_policies",
+        "ground_policy.death_supplies",
+        "public_after",
+        "reason"
+      ]
+    },
+    {
+      "operation": "replace",
+      "pointer": [
+        "mechanics",
+        "ground_policies",
+        "ground_policy.death_supplies",
+        "public_after",
+        "source",
+        0,
+        "notes"
+      ]
+    },
+    {
+      "operation": "replace",
+      "pointer": [
+        "mechanics",
+        "ground_policies",
+        "ground_policy.death_supplies",
+        "public_after",
+        "source",
+        0,
+        "reference"
+      ]
+    },
+    {
+      "operation": "replace",
+      "pointer": [
+        "mechanics",
+        "ground_policies",
+        "ground_policy.death_supplies",
+        "public_after",
+        "source",
+        0,
+        "revision"
+      ]
+    },
+    {
+      "operation": "replace",
+      "pointer": [
+        "mechanics",
+        "ground_policies",
+        "ground_policy.death_supplies",
+        "public_after",
+        "source",
+        1,
+        "notes"
+      ]
+    },
+    {
+      "operation": "replace",
+      "pointer": [
+        "mechanics",
+        "ground_policies",
+        "ground_policy.death_supplies",
+        "public_after",
+        "source",
+        1,
+        "reference"
+      ]
+    },
+    {
+      "operation": "replace",
+      "pointer": [
+        "mechanics",
+        "ground_policies",
+        "ground_policy.death_supplies",
+        "public_after",
+        "source",
+        1,
+        "revision"
+      ]
+    },
+    {
+      "operation": "replace",
+      "pointer": [
+        "mechanics",
+        "ground_policies",
+        "ground_policy.death_supplies",
+        "public_after",
+        "status"
+      ]
+    },
+    {
+      "operation": "add",
+      "pointer": [
+        "mechanics",
+        "ground_policies",
+        "ground_policy.death_supplies",
+        "public_after",
+        "value"
+      ]
+    },
+    {
+      "operation": "remove",
+      "pointer": [
+        "mechanics",
+        "ground_policies",
+        "ground_policy.fire_ashes",
+        "expires_after",
+        "reason"
+      ]
+    },
+    {
+      "operation": "replace",
+      "pointer": [
+        "mechanics",
+        "ground_policies",
+        "ground_policy.fire_ashes",
+        "expires_after",
+        "source"
+      ]
+    },
+    {
+      "operation": "replace",
+      "pointer": [
+        "mechanics",
+        "ground_policies",
+        "ground_policy.fire_ashes",
+        "expires_after",
+        "status"
+      ]
+    },
+    {
+      "operation": "add",
+      "pointer": [
+        "mechanics",
+        "ground_policies",
+        "ground_policy.fire_ashes",
+        "expires_after",
+        "value"
+      ]
+    },
+    {
+      "operation": "remove",
+      "pointer": [
+        "mechanics",
+        "ground_policies",
+        "ground_policy.fire_ashes",
+        "public_after",
+        "reason"
+      ]
+    },
+    {
+      "operation": "replace",
+      "pointer": [
+        "mechanics",
+        "ground_policies",
+        "ground_policy.fire_ashes",
+        "public_after",
+        "source"
+      ]
+    },
+    {
+      "operation": "replace",
+      "pointer": [
+        "mechanics",
+        "ground_policies",
+        "ground_policy.fire_ashes",
+        "public_after",
+        "status"
+      ]
+    },
+    {
+      "operation": "add",
+      "pointer": [
+        "mechanics",
+        "ground_policies",
+        "ground_policy.fire_ashes",
+        "public_after",
+        "value"
+      ]
+    },
+    {
+      "operation": "remove",
+      "pointer": [
+        "mechanics",
+        "projectiles",
+        "projectile.bronze_arrow",
+        "timing",
+        "reason"
+      ]
+    },
+    {
+      "operation": "replace",
+      "pointer": [
+        "mechanics",
+        "projectiles",
+        "projectile.bronze_arrow",
+        "timing",
+        "source"
+      ]
+    },
+    {
+      "operation": "replace",
+      "pointer": [
+        "mechanics",
+        "projectiles",
+        "projectile.bronze_arrow",
+        "timing",
+        "status"
+      ]
+    },
+    {
+      "operation": "add",
+      "pointer": [
+        "mechanics",
+        "projectiles",
+        "projectile.bronze_arrow",
+        "timing",
+        "value"
+      ]
+    },
+    {
+      "operation": "remove",
+      "pointer": [
+        "mechanics",
+        "projectiles",
+        "projectile.wind_strike",
+        "timing",
+        "reason"
+      ]
+    },
+    {
+      "operation": "replace",
+      "pointer": [
+        "mechanics",
+        "projectiles",
+        "projectile.wind_strike",
+        "timing",
+        "source"
+      ]
+    },
+    {
+      "operation": "replace",
+      "pointer": [
+        "mechanics",
+        "projectiles",
+        "projectile.wind_strike",
+        "timing",
+        "status"
+      ]
+    },
+    {
+      "operation": "add",
+      "pointer": [
+        "mechanics",
+        "projectiles",
+        "projectile.wind_strike",
+        "timing",
+        "value"
+      ]
+    },
+    {
+      "operation": "remove",
+      "pointer": [
+        "mechanics",
+        "reconciliations",
+        "reconciliation.tutorial.departure",
+        "policies",
+        "reason"
+      ]
+    },
+    {
+      "operation": "replace",
+      "pointer": [
+        "mechanics",
+        "reconciliations",
+        "reconciliation.tutorial.departure",
+        "policies",
+        "source"
+      ]
+    },
+    {
+      "operation": "replace",
+      "pointer": [
+        "mechanics",
+        "reconciliations",
+        "reconciliation.tutorial.departure",
+        "policies",
+        "status"
+      ]
+    },
+    {
+      "operation": "add",
+      "pointer": [
+        "mechanics",
+        "reconciliations",
+        "reconciliation.tutorial.departure",
+        "policies",
+        "value"
+      ]
+    },
+    {
+      "operation": "remove",
+      "pointer": [
+        "mechanics",
+        "travels",
+        "travel.castle_north_lower.backward",
+        "channel_ticks",
+        "reason"
+      ]
+    },
+    {
+      "operation": "replace",
+      "pointer": [
+        "mechanics",
+        "travels",
+        "travel.castle_north_lower.backward",
+        "channel_ticks",
+        "source",
+        0,
+        "notes"
+      ]
+    },
+    {
+      "operation": "replace",
+      "pointer": [
+        "mechanics",
+        "travels",
+        "travel.castle_north_lower.backward",
+        "channel_ticks",
+        "source",
+        0,
+        "reference"
+      ]
+    },
+    {
+      "operation": "replace",
+      "pointer": [
+        "mechanics",
+        "travels",
+        "travel.castle_north_lower.backward",
+        "channel_ticks",
+        "source",
+        0,
+        "revision"
+      ]
+    },
+    {
+      "operation": "replace",
+      "pointer": [
+        "mechanics",
+        "travels",
+        "travel.castle_north_lower.backward",
+        "channel_ticks",
+        "status"
+      ]
+    },
+    {
+      "operation": "add",
+      "pointer": [
+        "mechanics",
+        "travels",
+        "travel.castle_north_lower.backward",
+        "channel_ticks",
+        "value"
+      ]
+    },
+    {
+      "operation": "remove",
+      "pointer": [
+        "mechanics",
+        "travels",
+        "travel.castle_north_lower.forward",
+        "channel_ticks",
+        "reason"
+      ]
+    },
+    {
+      "operation": "replace",
+      "pointer": [
+        "mechanics",
+        "travels",
+        "travel.castle_north_lower.forward",
+        "channel_ticks",
+        "source",
+        0,
+        "notes"
+      ]
+    },
+    {
+      "operation": "replace",
+      "pointer": [
+        "mechanics",
+        "travels",
+        "travel.castle_north_lower.forward",
+        "channel_ticks",
+        "source",
+        0,
+        "reference"
+      ]
+    },
+    {
+      "operation": "replace",
+      "pointer": [
+        "mechanics",
+        "travels",
+        "travel.castle_north_lower.forward",
+        "channel_ticks",
+        "source",
+        0,
+        "revision"
+      ]
+    },
+    {
+      "operation": "replace",
+      "pointer": [
+        "mechanics",
+        "travels",
+        "travel.castle_north_lower.forward",
+        "channel_ticks",
+        "status"
+      ]
+    },
+    {
+      "operation": "add",
+      "pointer": [
+        "mechanics",
+        "travels",
+        "travel.castle_north_lower.forward",
+        "channel_ticks",
+        "value"
+      ]
+    },
+    {
+      "operation": "remove",
+      "pointer": [
+        "mechanics",
+        "travels",
+        "travel.castle_north_top_floor.backward",
+        "channel_ticks",
+        "reason"
+      ]
+    },
+    {
+      "operation": "replace",
+      "pointer": [
+        "mechanics",
+        "travels",
+        "travel.castle_north_top_floor.backward",
+        "channel_ticks",
+        "source",
+        0,
+        "notes"
+      ]
+    },
+    {
+      "operation": "replace",
+      "pointer": [
+        "mechanics",
+        "travels",
+        "travel.castle_north_top_floor.backward",
+        "channel_ticks",
+        "source",
+        0,
+        "reference"
+      ]
+    },
+    {
+      "operation": "replace",
+      "pointer": [
+        "mechanics",
+        "travels",
+        "travel.castle_north_top_floor.backward",
+        "channel_ticks",
+        "source",
+        0,
+        "revision"
+      ]
+    },
+    {
+      "operation": "replace",
+      "pointer": [
+        "mechanics",
+        "travels",
+        "travel.castle_north_top_floor.backward",
+        "channel_ticks",
+        "status"
+      ]
+    },
+    {
+      "operation": "add",
+      "pointer": [
+        "mechanics",
+        "travels",
+        "travel.castle_north_top_floor.backward",
+        "channel_ticks",
+        "value"
+      ]
+    },
+    {
+      "operation": "remove",
+      "pointer": [
+        "mechanics",
+        "travels",
+        "travel.castle_north_top_floor.forward",
+        "channel_ticks",
+        "reason"
+      ]
+    },
+    {
+      "operation": "replace",
+      "pointer": [
+        "mechanics",
+        "travels",
+        "travel.castle_north_top_floor.forward",
+        "channel_ticks",
+        "source",
+        0,
+        "notes"
+      ]
+    },
+    {
+      "operation": "replace",
+      "pointer": [
+        "mechanics",
+        "travels",
+        "travel.castle_north_top_floor.forward",
+        "channel_ticks",
+        "source",
+        0,
+        "reference"
+      ]
+    },
+    {
+      "operation": "replace",
+      "pointer": [
+        "mechanics",
+        "travels",
+        "travel.castle_north_top_floor.forward",
+        "channel_ticks",
+        "source",
+        0,
+        "revision"
+      ]
+    },
+    {
+      "operation": "replace",
+      "pointer": [
+        "mechanics",
+        "travels",
+        "travel.castle_north_top_floor.forward",
+        "channel_ticks",
+        "status"
+      ]
+    },
+    {
+      "operation": "add",
+      "pointer": [
+        "mechanics",
+        "travels",
+        "travel.castle_north_top_floor.forward",
+        "channel_ticks",
+        "value"
+      ]
+    },
+    {
+      "operation": "remove",
+      "pointer": [
+        "mechanics",
+        "travels",
+        "travel.castle_north_upper.backward",
+        "channel_ticks",
+        "reason"
+      ]
+    },
+    {
+      "operation": "replace",
+      "pointer": [
+        "mechanics",
+        "travels",
+        "travel.castle_north_upper.backward",
+        "channel_ticks",
+        "source",
+        0,
+        "notes"
+      ]
+    },
+    {
+      "operation": "replace",
+      "pointer": [
+        "mechanics",
+        "travels",
+        "travel.castle_north_upper.backward",
+        "channel_ticks",
+        "source",
+        0,
+        "reference"
+      ]
+    },
+    {
+      "operation": "replace",
+      "pointer": [
+        "mechanics",
+        "travels",
+        "travel.castle_north_upper.backward",
+        "channel_ticks",
+        "source",
+        0,
+        "revision"
+      ]
+    },
+    {
+      "operation": "replace",
+      "pointer": [
+        "mechanics",
+        "travels",
+        "travel.castle_north_upper.backward",
+        "channel_ticks",
+        "status"
+      ]
+    },
+    {
+      "operation": "add",
+      "pointer": [
+        "mechanics",
+        "travels",
+        "travel.castle_north_upper.backward",
+        "channel_ticks",
+        "value"
+      ]
+    },
+    {
+      "operation": "remove",
+      "pointer": [
+        "mechanics",
+        "travels",
+        "travel.castle_north_upper.forward",
+        "channel_ticks",
+        "reason"
+      ]
+    },
+    {
+      "operation": "replace",
+      "pointer": [
+        "mechanics",
+        "travels",
+        "travel.castle_north_upper.forward",
+        "channel_ticks",
+        "source",
+        0,
+        "notes"
+      ]
+    },
+    {
+      "operation": "replace",
+      "pointer": [
+        "mechanics",
+        "travels",
+        "travel.castle_north_upper.forward",
+        "channel_ticks",
+        "source",
+        0,
+        "reference"
+      ]
+    },
+    {
+      "operation": "replace",
+      "pointer": [
+        "mechanics",
+        "travels",
+        "travel.castle_north_upper.forward",
+        "channel_ticks",
+        "source",
+        0,
+        "revision"
+      ]
+    },
+    {
+      "operation": "replace",
+      "pointer": [
+        "mechanics",
+        "travels",
+        "travel.castle_north_upper.forward",
+        "channel_ticks",
+        "status"
+      ]
+    },
+    {
+      "operation": "add",
+      "pointer": [
+        "mechanics",
+        "travels",
+        "travel.castle_north_upper.forward",
+        "channel_ticks",
+        "value"
+      ]
+    },
+    {
+      "operation": "remove",
+      "pointer": [
+        "mechanics",
+        "travels",
+        "travel.castle_south_lower.backward",
+        "channel_ticks",
+        "reason"
+      ]
+    },
+    {
+      "operation": "replace",
+      "pointer": [
+        "mechanics",
+        "travels",
+        "travel.castle_south_lower.backward",
+        "channel_ticks",
+        "source",
+        0,
+        "notes"
+      ]
+    },
+    {
+      "operation": "replace",
+      "pointer": [
+        "mechanics",
+        "travels",
+        "travel.castle_south_lower.backward",
+        "channel_ticks",
+        "source",
+        0,
+        "reference"
+      ]
+    },
+    {
+      "operation": "replace",
+      "pointer": [
+        "mechanics",
+        "travels",
+        "travel.castle_south_lower.backward",
+        "channel_ticks",
+        "source",
+        0,
+        "revision"
+      ]
+    },
+    {
+      "operation": "replace",
+      "pointer": [
+        "mechanics",
+        "travels",
+        "travel.castle_south_lower.backward",
+        "channel_ticks",
+        "status"
+      ]
+    },
+    {
+      "operation": "add",
+      "pointer": [
+        "mechanics",
+        "travels",
+        "travel.castle_south_lower.backward",
+        "channel_ticks",
+        "value"
+      ]
+    },
+    {
+      "operation": "remove",
+      "pointer": [
+        "mechanics",
+        "travels",
+        "travel.castle_south_lower.forward",
+        "channel_ticks",
+        "reason"
+      ]
+    },
+    {
+      "operation": "replace",
+      "pointer": [
+        "mechanics",
+        "travels",
+        "travel.castle_south_lower.forward",
+        "channel_ticks",
+        "source",
+        0,
+        "notes"
+      ]
+    },
+    {
+      "operation": "replace",
+      "pointer": [
+        "mechanics",
+        "travels",
+        "travel.castle_south_lower.forward",
+        "channel_ticks",
+        "source",
+        0,
+        "reference"
+      ]
+    },
+    {
+      "operation": "replace",
+      "pointer": [
+        "mechanics",
+        "travels",
+        "travel.castle_south_lower.forward",
+        "channel_ticks",
+        "source",
+        0,
+        "revision"
+      ]
+    },
+    {
+      "operation": "replace",
+      "pointer": [
+        "mechanics",
+        "travels",
+        "travel.castle_south_lower.forward",
+        "channel_ticks",
+        "status"
+      ]
+    },
+    {
+      "operation": "add",
+      "pointer": [
+        "mechanics",
+        "travels",
+        "travel.castle_south_lower.forward",
+        "channel_ticks",
+        "value"
+      ]
+    },
+    {
+      "operation": "remove",
+      "pointer": [
+        "mechanics",
+        "travels",
+        "travel.castle_south_top_floor.backward",
+        "channel_ticks",
+        "reason"
+      ]
+    },
+    {
+      "operation": "replace",
+      "pointer": [
+        "mechanics",
+        "travels",
+        "travel.castle_south_top_floor.backward",
+        "channel_ticks",
+        "source",
+        0,
+        "notes"
+      ]
+    },
+    {
+      "operation": "replace",
+      "pointer": [
+        "mechanics",
+        "travels",
+        "travel.castle_south_top_floor.backward",
+        "channel_ticks",
+        "source",
+        0,
+        "reference"
+      ]
+    },
+    {
+      "operation": "replace",
+      "pointer": [
+        "mechanics",
+        "travels",
+        "travel.castle_south_top_floor.backward",
+        "channel_ticks",
+        "source",
+        0,
+        "revision"
+      ]
+    },
+    {
+      "operation": "replace",
+      "pointer": [
+        "mechanics",
+        "travels",
+        "travel.castle_south_top_floor.backward",
+        "channel_ticks",
+        "status"
+      ]
+    },
+    {
+      "operation": "add",
+      "pointer": [
+        "mechanics",
+        "travels",
+        "travel.castle_south_top_floor.backward",
+        "channel_ticks",
+        "value"
+      ]
+    },
+    {
+      "operation": "remove",
+      "pointer": [
+        "mechanics",
+        "travels",
+        "travel.castle_south_top_floor.forward",
+        "channel_ticks",
+        "reason"
+      ]
+    },
+    {
+      "operation": "replace",
+      "pointer": [
+        "mechanics",
+        "travels",
+        "travel.castle_south_top_floor.forward",
+        "channel_ticks",
+        "source",
+        0,
+        "notes"
+      ]
+    },
+    {
+      "operation": "replace",
+      "pointer": [
+        "mechanics",
+        "travels",
+        "travel.castle_south_top_floor.forward",
+        "channel_ticks",
+        "source",
+        0,
+        "reference"
+      ]
+    },
+    {
+      "operation": "replace",
+      "pointer": [
+        "mechanics",
+        "travels",
+        "travel.castle_south_top_floor.forward",
+        "channel_ticks",
+        "source",
+        0,
+        "revision"
+      ]
+    },
+    {
+      "operation": "replace",
+      "pointer": [
+        "mechanics",
+        "travels",
+        "travel.castle_south_top_floor.forward",
+        "channel_ticks",
+        "status"
+      ]
+    },
+    {
+      "operation": "add",
+      "pointer": [
+        "mechanics",
+        "travels",
+        "travel.castle_south_top_floor.forward",
+        "channel_ticks",
+        "value"
+      ]
+    },
+    {
+      "operation": "remove",
+      "pointer": [
+        "mechanics",
+        "travels",
+        "travel.castle_south_upper.backward",
+        "channel_ticks",
+        "reason"
+      ]
+    },
+    {
+      "operation": "replace",
+      "pointer": [
+        "mechanics",
+        "travels",
+        "travel.castle_south_upper.backward",
+        "channel_ticks",
+        "source",
+        0,
+        "notes"
+      ]
+    },
+    {
+      "operation": "replace",
+      "pointer": [
+        "mechanics",
+        "travels",
+        "travel.castle_south_upper.backward",
+        "channel_ticks",
+        "source",
+        0,
+        "reference"
+      ]
+    },
+    {
+      "operation": "replace",
+      "pointer": [
+        "mechanics",
+        "travels",
+        "travel.castle_south_upper.backward",
+        "channel_ticks",
+        "source",
+        0,
+        "revision"
+      ]
+    },
+    {
+      "operation": "replace",
+      "pointer": [
+        "mechanics",
+        "travels",
+        "travel.castle_south_upper.backward",
+        "channel_ticks",
+        "status"
+      ]
+    },
+    {
+      "operation": "add",
+      "pointer": [
+        "mechanics",
+        "travels",
+        "travel.castle_south_upper.backward",
+        "channel_ticks",
+        "value"
+      ]
+    },
+    {
+      "operation": "remove",
+      "pointer": [
+        "mechanics",
+        "travels",
+        "travel.castle_south_upper.forward",
+        "channel_ticks",
+        "reason"
+      ]
+    },
+    {
+      "operation": "replace",
+      "pointer": [
+        "mechanics",
+        "travels",
+        "travel.castle_south_upper.forward",
+        "channel_ticks",
+        "source",
+        0,
+        "notes"
+      ]
+    },
+    {
+      "operation": "replace",
+      "pointer": [
+        "mechanics",
+        "travels",
+        "travel.castle_south_upper.forward",
+        "channel_ticks",
+        "source",
+        0,
+        "reference"
+      ]
+    },
+    {
+      "operation": "replace",
+      "pointer": [
+        "mechanics",
+        "travels",
+        "travel.castle_south_upper.forward",
+        "channel_ticks",
+        "source",
+        0,
+        "revision"
+      ]
+    },
+    {
+      "operation": "replace",
+      "pointer": [
+        "mechanics",
+        "travels",
+        "travel.castle_south_upper.forward",
+        "channel_ticks",
+        "status"
+      ]
+    },
+    {
+      "operation": "add",
+      "pointer": [
+        "mechanics",
+        "travels",
+        "travel.castle_south_upper.forward",
+        "channel_ticks",
+        "value"
+      ]
+    },
+    {
+      "operation": "remove",
+      "pointer": [
+        "mechanics",
+        "travels",
+        "travel.death.enter",
+        "channel_ticks",
+        "reason"
+      ]
+    },
+    {
+      "operation": "replace",
+      "pointer": [
+        "mechanics",
+        "travels",
+        "travel.death.enter",
+        "channel_ticks",
+        "source"
+      ]
+    },
+    {
+      "operation": "replace",
+      "pointer": [
+        "mechanics",
+        "travels",
+        "travel.death.enter",
+        "channel_ticks",
+        "status"
+      ]
+    },
+    {
+      "operation": "add",
+      "pointer": [
+        "mechanics",
+        "travels",
+        "travel.death.enter",
+        "channel_ticks",
+        "value"
+      ]
+    },
+    {
+      "operation": "remove",
+      "pointer": [
+        "mechanics",
+        "travels",
+        "travel.death.exit",
+        "channel_ticks",
+        "reason"
+      ]
+    },
+    {
+      "operation": "replace",
+      "pointer": [
+        "mechanics",
+        "travels",
+        "travel.death.exit",
+        "channel_ticks",
+        "source"
+      ]
+    },
+    {
+      "operation": "replace",
+      "pointer": [
+        "mechanics",
+        "travels",
+        "travel.death.exit",
+        "channel_ticks",
+        "status"
+      ]
+    },
+    {
+      "operation": "add",
+      "pointer": [
+        "mechanics",
+        "travels",
+        "travel.death.exit",
+        "channel_ticks",
+        "value"
+      ]
+    },
+    {
+      "operation": "remove",
+      "pointer": [
+        "mechanics",
+        "travels",
+        "travel.death.exit_voluntary",
+        "channel_ticks",
+        "reason"
+      ]
+    },
+    {
+      "operation": "replace",
+      "pointer": [
+        "mechanics",
+        "travels",
+        "travel.death.exit_voluntary",
+        "channel_ticks",
+        "source"
+      ]
+    },
+    {
+      "operation": "replace",
+      "pointer": [
+        "mechanics",
+        "travels",
+        "travel.death.exit_voluntary",
+        "channel_ticks",
+        "status"
+      ]
+    },
+    {
+      "operation": "add",
+      "pointer": [
+        "mechanics",
+        "travels",
+        "travel.death.exit_voluntary",
+        "channel_ticks",
+        "value"
+      ]
+    },
+    {
+      "operation": "remove",
+      "pointer": [
+        "mechanics",
+        "travels",
+        "travel.lumbridge_cellar.backward",
+        "channel_ticks",
+        "reason"
+      ]
+    },
+    {
+      "operation": "replace",
+      "pointer": [
+        "mechanics",
+        "travels",
+        "travel.lumbridge_cellar.backward",
+        "channel_ticks",
+        "source"
+      ]
+    },
+    {
+      "operation": "replace",
+      "pointer": [
+        "mechanics",
+        "travels",
+        "travel.lumbridge_cellar.backward",
+        "channel_ticks",
+        "status"
+      ]
+    },
+    {
+      "operation": "add",
+      "pointer": [
+        "mechanics",
+        "travels",
+        "travel.lumbridge_cellar.backward",
+        "channel_ticks",
+        "value"
+      ]
+    },
+    {
+      "operation": "remove",
+      "pointer": [
+        "mechanics",
+        "travels",
+        "travel.lumbridge_cellar.forward",
+        "channel_ticks",
+        "reason"
+      ]
+    },
+    {
+      "operation": "replace",
+      "pointer": [
+        "mechanics",
+        "travels",
+        "travel.lumbridge_cellar.forward",
+        "channel_ticks",
+        "source"
+      ]
+    },
+    {
+      "operation": "replace",
+      "pointer": [
+        "mechanics",
+        "travels",
+        "travel.lumbridge_cellar.forward",
+        "channel_ticks",
+        "status"
+      ]
+    },
+    {
+      "operation": "add",
+      "pointer": [
+        "mechanics",
+        "travels",
+        "travel.lumbridge_cellar.forward",
+        "channel_ticks",
+        "value"
+      ]
+    },
+    {
+      "operation": "remove",
+      "pointer": [
+        "mechanics",
+        "travels",
+        "travel.mill_lower.backward",
+        "channel_ticks",
+        "reason"
+      ]
+    },
+    {
+      "operation": "replace",
+      "pointer": [
+        "mechanics",
+        "travels",
+        "travel.mill_lower.backward",
+        "channel_ticks",
+        "source"
+      ]
+    },
+    {
+      "operation": "replace",
+      "pointer": [
+        "mechanics",
+        "travels",
+        "travel.mill_lower.backward",
+        "channel_ticks",
+        "status"
+      ]
+    },
+    {
+      "operation": "add",
+      "pointer": [
+        "mechanics",
+        "travels",
+        "travel.mill_lower.backward",
+        "channel_ticks",
+        "value"
+      ]
+    },
+    {
+      "operation": "remove",
+      "pointer": [
+        "mechanics",
+        "travels",
+        "travel.mill_lower.forward",
+        "channel_ticks",
+        "reason"
+      ]
+    },
+    {
+      "operation": "replace",
+      "pointer": [
+        "mechanics",
+        "travels",
+        "travel.mill_lower.forward",
+        "channel_ticks",
+        "source"
+      ]
+    },
+    {
+      "operation": "replace",
+      "pointer": [
+        "mechanics",
+        "travels",
+        "travel.mill_lower.forward",
+        "channel_ticks",
+        "status"
+      ]
+    },
+    {
+      "operation": "add",
+      "pointer": [
+        "mechanics",
+        "travels",
+        "travel.mill_lower.forward",
+        "channel_ticks",
+        "value"
+      ]
+    },
+    {
+      "operation": "remove",
+      "pointer": [
+        "mechanics",
+        "travels",
+        "travel.mill_upper.backward",
+        "channel_ticks",
+        "reason"
+      ]
+    },
+    {
+      "operation": "replace",
+      "pointer": [
+        "mechanics",
+        "travels",
+        "travel.mill_upper.backward",
+        "channel_ticks",
+        "source"
+      ]
+    },
+    {
+      "operation": "replace",
+      "pointer": [
+        "mechanics",
+        "travels",
+        "travel.mill_upper.backward",
+        "channel_ticks",
+        "status"
+      ]
+    },
+    {
+      "operation": "add",
+      "pointer": [
+        "mechanics",
+        "travels",
+        "travel.mill_upper.backward",
+        "channel_ticks",
+        "value"
+      ]
+    },
+    {
+      "operation": "remove",
+      "pointer": [
+        "mechanics",
+        "travels",
+        "travel.mill_upper.forward",
+        "channel_ticks",
+        "reason"
+      ]
+    },
+    {
+      "operation": "replace",
+      "pointer": [
+        "mechanics",
+        "travels",
+        "travel.mill_upper.forward",
+        "channel_ticks",
+        "source"
+      ]
+    },
+    {
+      "operation": "replace",
+      "pointer": [
+        "mechanics",
+        "travels",
+        "travel.mill_upper.forward",
+        "channel_ticks",
+        "status"
+      ]
+    },
+    {
+      "operation": "add",
+      "pointer": [
+        "mechanics",
+        "travels",
+        "travel.mill_upper.forward",
+        "channel_ticks",
+        "value"
+      ]
+    },
+    {
+      "operation": "replace",
+      "pointer": [
+        "mechanics",
+        "travels",
+        "travel.tutorial.departure",
+        "completion_effects"
+      ]
+    },
+    {
+      "operation": "remove",
+      "pointer": [
+        "mechanics",
+        "travels",
+        "travel.tutorial_combat_ladder.backward",
+        "channel_ticks",
+        "reason"
+      ]
+    },
+    {
+      "operation": "replace",
+      "pointer": [
+        "mechanics",
+        "travels",
+        "travel.tutorial_combat_ladder.backward",
+        "channel_ticks",
+        "source"
+      ]
+    },
+    {
+      "operation": "replace",
+      "pointer": [
+        "mechanics",
+        "travels",
+        "travel.tutorial_combat_ladder.backward",
+        "channel_ticks",
+        "status"
+      ]
+    },
+    {
+      "operation": "add",
+      "pointer": [
+        "mechanics",
+        "travels",
+        "travel.tutorial_combat_ladder.backward",
+        "channel_ticks",
+        "value"
+      ]
+    },
+    {
+      "operation": "remove",
+      "pointer": [
+        "mechanics",
+        "travels",
+        "travel.tutorial_combat_ladder.forward",
+        "channel_ticks",
+        "reason"
+      ]
+    },
+    {
+      "operation": "replace",
+      "pointer": [
+        "mechanics",
+        "travels",
+        "travel.tutorial_combat_ladder.forward",
+        "channel_ticks",
+        "source"
+      ]
+    },
+    {
+      "operation": "replace",
+      "pointer": [
+        "mechanics",
+        "travels",
+        "travel.tutorial_combat_ladder.forward",
+        "channel_ticks",
+        "status"
+      ]
+    },
+    {
+      "operation": "add",
+      "pointer": [
+        "mechanics",
+        "travels",
+        "travel.tutorial_combat_ladder.forward",
+        "channel_ticks",
+        "value"
+      ]
+    },
+    {
+      "operation": "remove",
+      "pointer": [
+        "mechanics",
+        "travels",
+        "travel.tutorial_quest_ladder.backward",
+        "channel_ticks",
+        "reason"
+      ]
+    },
+    {
+      "operation": "replace",
+      "pointer": [
+        "mechanics",
+        "travels",
+        "travel.tutorial_quest_ladder.backward",
+        "channel_ticks",
+        "source"
+      ]
+    },
+    {
+      "operation": "replace",
+      "pointer": [
+        "mechanics",
+        "travels",
+        "travel.tutorial_quest_ladder.backward",
+        "channel_ticks",
+        "status"
+      ]
+    },
+    {
+      "operation": "add",
+      "pointer": [
+        "mechanics",
+        "travels",
+        "travel.tutorial_quest_ladder.backward",
+        "channel_ticks",
+        "value"
+      ]
+    },
+    {
+      "operation": "remove",
+      "pointer": [
+        "mechanics",
+        "travels",
+        "travel.tutorial_quest_ladder.forward",
+        "channel_ticks",
+        "reason"
+      ]
+    },
+    {
+      "operation": "replace",
+      "pointer": [
+        "mechanics",
+        "travels",
+        "travel.tutorial_quest_ladder.forward",
+        "channel_ticks",
+        "source"
+      ]
+    },
+    {
+      "operation": "replace",
+      "pointer": [
+        "mechanics",
+        "travels",
+        "travel.tutorial_quest_ladder.forward",
+        "channel_ticks",
+        "status"
+      ]
+    },
+    {
+      "operation": "add",
+      "pointer": [
+        "mechanics",
+        "travels",
+        "travel.tutorial_quest_ladder.forward",
+        "channel_ticks",
+        "value"
+      ]
+    },
+    {
+      "operation": "replace",
+      "pointer": [
+        "mechanics",
+        "value_providers",
+        "value_provider.osrs.death",
+        "method"
+      ]
+    },
+    {
+      "operation": "replace",
+      "pointer": [
+        "mechanics",
+        "value_providers",
+        "value_provider.osrs.death",
+        "revision"
+      ]
+    },
+    {
+      "operation": "remove",
+      "pointer": [
+        "mechanics",
+        "value_providers",
+        "value_provider.osrs.death",
+        "values",
+        "reason"
+      ]
+    },
+    {
+      "operation": "replace",
+      "pointer": [
+        "mechanics",
+        "value_providers",
+        "value_provider.osrs.death",
+        "values",
+        "source"
+      ]
+    },
+    {
+      "operation": "replace",
+      "pointer": [
+        "mechanics",
+        "value_providers",
+        "value_provider.osrs.death",
+        "values",
+        "status"
+      ]
+    },
+    {
+      "operation": "add",
+      "pointer": [
+        "mechanics",
+        "value_providers",
+        "value_provider.osrs.death",
+        "values",
+        "value"
+      ]
+    },
+    {
+      "operation": "remove",
+      "pointer": [
+        "mechanics",
+        "vitals",
+        "level_up",
+        "reason"
+      ]
+    },
+    {
+      "operation": "replace",
+      "pointer": [
+        "mechanics",
+        "vitals",
+        "level_up",
+        "source"
+      ]
+    },
+    {
+      "operation": "replace",
+      "pointer": [
+        "mechanics",
+        "vitals",
+        "level_up",
+        "status"
+      ]
+    },
+    {
+      "operation": "add",
+      "pointer": [
+        "mechanics",
+        "vitals",
+        "level_up",
+        "value"
+      ]
+    },
+    {
+      "operation": "remove",
+      "pointer": [
+        "npcs",
+        "npc.account_guide",
+        "navigation",
+        "step_ticks",
+        "reason"
+      ]
+    },
+    {
+      "operation": "replace",
+      "pointer": [
+        "npcs",
+        "npc.account_guide",
+        "navigation",
+        "step_ticks",
+        "source"
+      ]
+    },
+    {
+      "operation": "replace",
+      "pointer": [
+        "npcs",
+        "npc.account_guide",
+        "navigation",
+        "step_ticks",
+        "status"
+      ]
+    },
+    {
+      "operation": "add",
+      "pointer": [
+        "npcs",
+        "npc.account_guide",
+        "navigation",
+        "step_ticks",
+        "value"
+      ]
+    },
+    {
+      "operation": "remove",
+      "pointer": [
+        "npcs",
+        "npc.adventurer_jon",
+        "navigation",
+        "step_ticks",
+        "reason"
+      ]
+    },
+    {
+      "operation": "replace",
+      "pointer": [
+        "npcs",
+        "npc.adventurer_jon",
+        "navigation",
+        "step_ticks",
+        "source"
+      ]
+    },
+    {
+      "operation": "replace",
+      "pointer": [
+        "npcs",
+        "npc.adventurer_jon",
+        "navigation",
+        "step_ticks",
+        "status"
+      ]
+    },
+    {
+      "operation": "add",
+      "pointer": [
+        "npcs",
+        "npc.adventurer_jon",
+        "navigation",
+        "step_ticks",
+        "value"
+      ]
+    },
+    {
+      "operation": "remove",
+      "pointer": [
+        "npcs",
+        "npc.brother_brace",
+        "navigation",
+        "step_ticks",
+        "reason"
+      ]
+    },
+    {
+      "operation": "replace",
+      "pointer": [
+        "npcs",
+        "npc.brother_brace",
+        "navigation",
+        "step_ticks",
+        "source"
+      ]
+    },
+    {
+      "operation": "replace",
+      "pointer": [
+        "npcs",
+        "npc.brother_brace",
+        "navigation",
+        "step_ticks",
+        "status"
+      ]
+    },
+    {
+      "operation": "add",
+      "pointer": [
+        "npcs",
+        "npc.brother_brace",
+        "navigation",
+        "step_ticks",
+        "value"
+      ]
+    },
+    {
+      "operation": "remove",
+      "pointer": [
+        "npcs",
+        "npc.chicken",
+        "navigation",
+        "step_ticks",
+        "reason"
+      ]
+    },
+    {
+      "operation": "replace",
+      "pointer": [
+        "npcs",
+        "npc.chicken",
+        "navigation",
+        "step_ticks",
+        "source"
+      ]
+    },
+    {
+      "operation": "replace",
+      "pointer": [
+        "npcs",
+        "npc.chicken",
+        "navigation",
+        "step_ticks",
+        "status"
+      ]
+    },
+    {
+      "operation": "add",
+      "pointer": [
+        "npcs",
+        "npc.chicken",
+        "navigation",
+        "step_ticks",
+        "value"
+      ]
+    },
+    {
+      "operation": "remove",
+      "pointer": [
+        "npcs",
+        "npc.combat_instructor",
+        "navigation",
+        "step_ticks",
+        "reason"
+      ]
+    },
+    {
+      "operation": "replace",
+      "pointer": [
+        "npcs",
+        "npc.combat_instructor",
+        "navigation",
+        "step_ticks",
+        "source"
+      ]
+    },
+    {
+      "operation": "replace",
+      "pointer": [
+        "npcs",
+        "npc.combat_instructor",
+        "navigation",
+        "step_ticks",
+        "status"
+      ]
+    },
+    {
+      "operation": "add",
+      "pointer": [
+        "npcs",
+        "npc.combat_instructor",
+        "navigation",
+        "step_ticks",
+        "value"
+      ]
+    },
+    {
+      "operation": "remove",
+      "pointer": [
+        "npcs",
+        "npc.cook",
+        "navigation",
+        "step_ticks",
+        "reason"
+      ]
+    },
+    {
+      "operation": "replace",
+      "pointer": [
+        "npcs",
+        "npc.cook",
+        "navigation",
+        "step_ticks",
+        "source"
+      ]
+    },
+    {
+      "operation": "replace",
+      "pointer": [
+        "npcs",
+        "npc.cook",
+        "navigation",
+        "step_ticks",
+        "status"
+      ]
+    },
+    {
+      "operation": "add",
+      "pointer": [
+        "npcs",
+        "npc.cook",
+        "navigation",
+        "step_ticks",
+        "value"
+      ]
+    },
+    {
+      "operation": "remove",
+      "pointer": [
+        "npcs",
+        "npc.fred_the_farmer",
+        "navigation",
+        "step_ticks",
+        "reason"
+      ]
+    },
+    {
+      "operation": "replace",
+      "pointer": [
+        "npcs",
+        "npc.fred_the_farmer",
+        "navigation",
+        "step_ticks",
+        "source"
+      ]
+    },
+    {
+      "operation": "replace",
+      "pointer": [
+        "npcs",
+        "npc.fred_the_farmer",
+        "navigation",
+        "step_ticks",
+        "status"
+      ]
+    },
+    {
+      "operation": "add",
+      "pointer": [
+        "npcs",
+        "npc.fred_the_farmer",
+        "navigation",
+        "step_ticks",
+        "value"
+      ]
+    },
+    {
+      "operation": "remove",
+      "pointer": [
+        "npcs",
+        "npc.gielinor_guide",
+        "navigation",
+        "step_ticks",
+        "reason"
+      ]
+    },
+    {
+      "operation": "replace",
+      "pointer": [
+        "npcs",
+        "npc.gielinor_guide",
+        "navigation",
+        "step_ticks",
+        "source"
+      ]
+    },
+    {
+      "operation": "replace",
+      "pointer": [
+        "npcs",
+        "npc.gielinor_guide",
+        "navigation",
+        "step_ticks",
+        "status"
+      ]
+    },
+    {
+      "operation": "add",
+      "pointer": [
+        "npcs",
+        "npc.gielinor_guide",
+        "navigation",
+        "step_ticks",
+        "value"
+      ]
+    },
+    {
+      "operation": "remove",
+      "pointer": [
+        "npcs",
+        "npc.gillie_groats",
+        "navigation",
+        "step_ticks",
+        "reason"
+      ]
+    },
+    {
+      "operation": "replace",
+      "pointer": [
+        "npcs",
+        "npc.gillie_groats",
+        "navigation",
+        "step_ticks",
+        "source"
+      ]
+    },
+    {
+      "operation": "replace",
+      "pointer": [
+        "npcs",
+        "npc.gillie_groats",
+        "navigation",
+        "step_ticks",
+        "status"
+      ]
+    },
+    {
+      "operation": "add",
+      "pointer": [
+        "npcs",
+        "npc.gillie_groats",
+        "navigation",
+        "step_ticks",
+        "value"
+      ]
+    },
+    {
+      "operation": "remove",
+      "pointer": [
+        "npcs",
+        "npc.goblin.level_2",
+        "combat",
+        "mechanics",
+        "damage",
+        "reason"
+      ]
+    },
+    {
+      "operation": "replace",
+      "pointer": [
+        "npcs",
+        "npc.goblin.level_2",
+        "combat",
+        "mechanics",
+        "damage",
+        "source"
+      ]
+    },
+    {
+      "operation": "replace",
+      "pointer": [
+        "npcs",
+        "npc.goblin.level_2",
+        "combat",
+        "mechanics",
+        "damage",
+        "status"
+      ]
+    },
+    {
+      "operation": "add",
+      "pointer": [
+        "npcs",
+        "npc.goblin.level_2",
+        "combat",
+        "mechanics",
+        "damage",
+        "value"
+      ]
+    },
+    {
+      "operation": "add",
+      "pointer": [
+        "npcs",
+        "npc.goblin.level_2",
+        "combat",
+        "mechanics",
+        "loot",
+        3,
+        "entries"
+      ]
+    },
+    {
+      "operation": "replace",
+      "pointer": [
+        "npcs",
+        "npc.goblin.level_2",
+        "combat",
+        "mechanics",
+        "loot",
+        3,
+        "kind"
+      ]
+    },
+    {
+      "operation": "remove",
+      "pointer": [
+        "npcs",
+        "npc.goblin.level_2",
+        "combat",
+        "mechanics",
+        "loot",
+        3,
+        "reason"
+      ]
+    },
+    {
+      "operation": "remove",
+      "pointer": [
+        "npcs",
+        "npc.goblin.level_2",
+        "combat",
+        "mechanics",
+        "loot",
+        3,
+        "source"
+      ]
+    },
+    {
+      "operation": "add",
+      "pointer": [
+        "npcs",
+        "npc.goblin.level_2",
+        "combat",
+        "mechanics",
+        "loot",
+        3,
+        "total_weight"
+      ]
+    },
+    {
+      "operation": "remove",
+      "pointer": [
+        "npcs",
+        "npc.goblin.level_2",
+        "navigation",
+        "step_ticks",
+        "reason"
+      ]
+    },
+    {
+      "operation": "replace",
+      "pointer": [
+        "npcs",
+        "npc.goblin.level_2",
+        "navigation",
+        "step_ticks",
+        "source"
+      ]
+    },
+    {
+      "operation": "replace",
+      "pointer": [
+        "npcs",
+        "npc.goblin.level_2",
+        "navigation",
+        "step_ticks",
+        "status"
+      ]
+    },
+    {
+      "operation": "add",
+      "pointer": [
+        "npcs",
+        "npc.goblin.level_2",
+        "navigation",
+        "step_ticks",
+        "value"
+      ]
+    },
+    {
+      "operation": "replace",
+      "pointer": [
+        "npcs",
+        "npc.goblin.level_2",
+        "source"
+      ]
+    },
+    {
+      "operation": "remove",
+      "pointer": [
+        "npcs",
+        "npc.ironman_tutor",
+        "navigation",
+        "step_ticks",
+        "reason"
+      ]
+    },
+    {
+      "operation": "replace",
+      "pointer": [
+        "npcs",
+        "npc.ironman_tutor",
+        "navigation",
+        "step_ticks",
+        "source"
+      ]
+    },
+    {
+      "operation": "replace",
+      "pointer": [
+        "npcs",
+        "npc.ironman_tutor",
+        "navigation",
+        "step_ticks",
+        "status"
+      ]
+    },
+    {
+      "operation": "add",
+      "pointer": [
+        "npcs",
+        "npc.ironman_tutor",
+        "navigation",
+        "step_ticks",
+        "value"
+      ]
+    },
+    {
+      "operation": "remove",
+      "pointer": [
+        "npcs",
+        "npc.ironman_tutor.mainland",
+        "navigation",
+        "step_ticks",
+        "reason"
+      ]
+    },
+    {
+      "operation": "replace",
+      "pointer": [
+        "npcs",
+        "npc.ironman_tutor.mainland",
+        "navigation",
+        "step_ticks",
+        "source"
+      ]
+    },
+    {
+      "operation": "replace",
+      "pointer": [
+        "npcs",
+        "npc.ironman_tutor.mainland",
+        "navigation",
+        "step_ticks",
+        "status"
+      ]
+    },
+    {
+      "operation": "add",
+      "pointer": [
+        "npcs",
+        "npc.ironman_tutor.mainland",
+        "navigation",
+        "step_ticks",
+        "value"
+      ]
+    },
+    {
+      "operation": "remove",
+      "pointer": [
+        "npcs",
+        "npc.lumbridge_guide",
+        "navigation",
+        "step_ticks",
+        "reason"
+      ]
+    },
+    {
+      "operation": "replace",
+      "pointer": [
+        "npcs",
+        "npc.lumbridge_guide",
+        "navigation",
+        "step_ticks",
+        "source"
+      ]
+    },
+    {
+      "operation": "replace",
+      "pointer": [
+        "npcs",
+        "npc.lumbridge_guide",
+        "navigation",
+        "step_ticks",
+        "status"
+      ]
+    },
+    {
+      "operation": "add",
+      "pointer": [
+        "npcs",
+        "npc.lumbridge_guide",
+        "navigation",
+        "step_ticks",
+        "value"
+      ]
+    },
+    {
+      "operation": "remove",
+      "pointer": [
+        "npcs",
+        "npc.magic_instructor",
+        "navigation",
+        "step_ticks",
+        "reason"
+      ]
+    },
+    {
+      "operation": "replace",
+      "pointer": [
+        "npcs",
+        "npc.magic_instructor",
+        "navigation",
+        "step_ticks",
+        "source"
+      ]
+    },
+    {
+      "operation": "replace",
+      "pointer": [
+        "npcs",
+        "npc.magic_instructor",
+        "navigation",
+        "step_ticks",
+        "status"
+      ]
+    },
+    {
+      "operation": "add",
+      "pointer": [
+        "npcs",
+        "npc.magic_instructor",
+        "navigation",
+        "step_ticks",
+        "value"
+      ]
+    },
+    {
+      "operation": "remove",
+      "pointer": [
+        "npcs",
+        "npc.master_chef",
+        "navigation",
+        "step_ticks",
+        "reason"
+      ]
+    },
+    {
+      "operation": "replace",
+      "pointer": [
+        "npcs",
+        "npc.master_chef",
+        "navigation",
+        "step_ticks",
+        "source"
+      ]
+    },
+    {
+      "operation": "replace",
+      "pointer": [
+        "npcs",
+        "npc.master_chef",
+        "navigation",
+        "step_ticks",
+        "status"
+      ]
+    },
+    {
+      "operation": "add",
+      "pointer": [
+        "npcs",
+        "npc.master_chef",
+        "navigation",
+        "step_ticks",
+        "value"
+      ]
+    },
+    {
+      "operation": "remove",
+      "pointer": [
+        "npcs",
+        "npc.millie_miller",
+        "navigation",
+        "step_ticks",
+        "reason"
+      ]
+    },
+    {
+      "operation": "replace",
+      "pointer": [
+        "npcs",
+        "npc.millie_miller",
+        "navigation",
+        "step_ticks",
+        "source"
+      ]
+    },
+    {
+      "operation": "replace",
+      "pointer": [
+        "npcs",
+        "npc.millie_miller",
+        "navigation",
+        "step_ticks",
+        "status"
+      ]
+    },
+    {
+      "operation": "add",
+      "pointer": [
+        "npcs",
+        "npc.millie_miller",
+        "navigation",
+        "step_ticks",
+        "value"
+      ]
+    },
+    {
+      "operation": "remove",
+      "pointer": [
+        "npcs",
+        "npc.mining_instructor",
+        "navigation",
+        "step_ticks",
+        "reason"
+      ]
+    },
+    {
+      "operation": "replace",
+      "pointer": [
+        "npcs",
+        "npc.mining_instructor",
+        "navigation",
+        "step_ticks",
+        "source"
+      ]
+    },
+    {
+      "operation": "replace",
+      "pointer": [
+        "npcs",
+        "npc.mining_instructor",
+        "navigation",
+        "step_ticks",
+        "status"
+      ]
+    },
+    {
+      "operation": "add",
+      "pointer": [
+        "npcs",
+        "npc.mining_instructor",
+        "navigation",
+        "step_ticks",
+        "value"
+      ]
+    },
+    {
+      "operation": "remove",
+      "pointer": [
+        "npcs",
+        "npc.quest_guide",
+        "navigation",
+        "step_ticks",
+        "reason"
+      ]
+    },
+    {
+      "operation": "replace",
+      "pointer": [
+        "npcs",
+        "npc.quest_guide",
+        "navigation",
+        "step_ticks",
+        "source"
+      ]
+    },
+    {
+      "operation": "replace",
+      "pointer": [
+        "npcs",
+        "npc.quest_guide",
+        "navigation",
+        "step_ticks",
+        "status"
+      ]
+    },
+    {
+      "operation": "add",
+      "pointer": [
+        "npcs",
+        "npc.quest_guide",
+        "navigation",
+        "step_ticks",
+        "value"
+      ]
+    },
+    {
+      "operation": "remove",
+      "pointer": [
+        "npcs",
+        "npc.shop_assistant",
+        "navigation",
+        "step_ticks",
+        "reason"
+      ]
+    },
+    {
+      "operation": "replace",
+      "pointer": [
+        "npcs",
+        "npc.shop_assistant",
+        "navigation",
+        "step_ticks",
+        "source"
+      ]
+    },
+    {
+      "operation": "replace",
+      "pointer": [
+        "npcs",
+        "npc.shop_assistant",
+        "navigation",
+        "step_ticks",
+        "status"
+      ]
+    },
+    {
+      "operation": "add",
+      "pointer": [
+        "npcs",
+        "npc.shop_assistant",
+        "navigation",
+        "step_ticks",
+        "value"
+      ]
+    },
+    {
+      "operation": "remove",
+      "pointer": [
+        "npcs",
+        "npc.shopkeeper",
+        "navigation",
+        "step_ticks",
+        "reason"
+      ]
+    },
+    {
+      "operation": "replace",
+      "pointer": [
+        "npcs",
+        "npc.shopkeeper",
+        "navigation",
+        "step_ticks",
+        "source"
+      ]
+    },
+    {
+      "operation": "replace",
+      "pointer": [
+        "npcs",
+        "npc.shopkeeper",
+        "navigation",
+        "step_ticks",
+        "status"
+      ]
+    },
+    {
+      "operation": "add",
+      "pointer": [
+        "npcs",
+        "npc.shopkeeper",
+        "navigation",
+        "step_ticks",
+        "value"
+      ]
+    },
+    {
+      "operation": "remove",
+      "pointer": [
+        "npcs",
+        "npc.survival_expert",
+        "navigation",
+        "step_ticks",
+        "reason"
+      ]
+    },
+    {
+      "operation": "replace",
+      "pointer": [
+        "npcs",
+        "npc.survival_expert",
+        "navigation",
+        "step_ticks",
+        "source"
+      ]
+    },
+    {
+      "operation": "replace",
+      "pointer": [
+        "npcs",
+        "npc.survival_expert",
+        "navigation",
+        "step_ticks",
+        "status"
+      ]
+    },
+    {
+      "operation": "add",
+      "pointer": [
+        "npcs",
+        "npc.survival_expert",
+        "navigation",
+        "step_ticks",
+        "value"
+      ]
+    },
+    {
+      "operation": "remove",
+      "pointer": [
+        "npcs",
+        "npc.tutorial.banker",
+        "navigation",
+        "step_ticks",
+        "reason"
+      ]
+    },
+    {
+      "operation": "replace",
+      "pointer": [
+        "npcs",
+        "npc.tutorial.banker",
+        "navigation",
+        "step_ticks",
+        "source"
+      ]
+    },
+    {
+      "operation": "replace",
+      "pointer": [
+        "npcs",
+        "npc.tutorial.banker",
+        "navigation",
+        "step_ticks",
+        "status"
+      ]
+    },
+    {
+      "operation": "add",
+      "pointer": [
+        "npcs",
+        "npc.tutorial.banker",
+        "navigation",
+        "step_ticks",
+        "value"
+      ]
+    },
+    {
+      "operation": "remove",
+      "pointer": [
+        "npcs",
+        "npc.tutorial_chicken",
+        "combat",
+        "mechanics",
+        "damage",
+        "reason"
+      ]
+    },
+    {
+      "operation": "replace",
+      "pointer": [
+        "npcs",
+        "npc.tutorial_chicken",
+        "combat",
+        "mechanics",
+        "damage",
+        "source"
+      ]
+    },
+    {
+      "operation": "replace",
+      "pointer": [
+        "npcs",
+        "npc.tutorial_chicken",
+        "combat",
+        "mechanics",
+        "damage",
+        "status"
+      ]
+    },
+    {
+      "operation": "add",
+      "pointer": [
+        "npcs",
+        "npc.tutorial_chicken",
+        "combat",
+        "mechanics",
+        "damage",
+        "value"
+      ]
+    },
+    {
+      "operation": "remove",
+      "pointer": [
+        "npcs",
+        "npc.tutorial_chicken",
+        "combat",
+        "mechanics",
+        "respawn",
+        "reason"
+      ]
+    },
+    {
+      "operation": "replace",
+      "pointer": [
+        "npcs",
+        "npc.tutorial_chicken",
+        "combat",
+        "mechanics",
+        "respawn",
+        "source"
+      ]
+    },
+    {
+      "operation": "replace",
+      "pointer": [
+        "npcs",
+        "npc.tutorial_chicken",
+        "combat",
+        "mechanics",
+        "respawn",
+        "status"
+      ]
+    },
+    {
+      "operation": "add",
+      "pointer": [
+        "npcs",
+        "npc.tutorial_chicken",
+        "combat",
+        "mechanics",
+        "respawn",
+        "value"
+      ]
+    },
+    {
+      "operation": "remove",
+      "pointer": [
+        "npcs",
+        "npc.tutorial_chicken",
+        "navigation",
+        "step_ticks",
+        "reason"
+      ]
+    },
+    {
+      "operation": "replace",
+      "pointer": [
+        "npcs",
+        "npc.tutorial_chicken",
+        "navigation",
+        "step_ticks",
+        "source"
+      ]
+    },
+    {
+      "operation": "replace",
+      "pointer": [
+        "npcs",
+        "npc.tutorial_chicken",
+        "navigation",
+        "step_ticks",
+        "status"
+      ]
+    },
+    {
+      "operation": "add",
+      "pointer": [
+        "npcs",
+        "npc.tutorial_chicken",
+        "navigation",
+        "step_ticks",
+        "value"
+      ]
+    },
+    {
+      "operation": "remove",
+      "pointer": [
+        "npcs",
+        "npc.tutorial_rat",
+        "combat",
+        "mechanics",
+        "damage",
+        "reason"
+      ]
+    },
+    {
+      "operation": "replace",
+      "pointer": [
+        "npcs",
+        "npc.tutorial_rat",
+        "combat",
+        "mechanics",
+        "damage",
+        "source"
+      ]
+    },
+    {
+      "operation": "replace",
+      "pointer": [
+        "npcs",
+        "npc.tutorial_rat",
+        "combat",
+        "mechanics",
+        "damage",
+        "status"
+      ]
+    },
+    {
+      "operation": "add",
+      "pointer": [
+        "npcs",
+        "npc.tutorial_rat",
+        "combat",
+        "mechanics",
+        "damage",
+        "value"
+      ]
+    },
+    {
+      "operation": "remove",
+      "pointer": [
+        "npcs",
+        "npc.tutorial_rat",
+        "combat",
+        "mechanics",
+        "respawn",
+        "reason"
+      ]
+    },
+    {
+      "operation": "replace",
+      "pointer": [
+        "npcs",
+        "npc.tutorial_rat",
+        "combat",
+        "mechanics",
+        "respawn",
+        "source"
+      ]
+    },
+    {
+      "operation": "replace",
+      "pointer": [
+        "npcs",
+        "npc.tutorial_rat",
+        "combat",
+        "mechanics",
+        "respawn",
+        "status"
+      ]
+    },
+    {
+      "operation": "add",
+      "pointer": [
+        "npcs",
+        "npc.tutorial_rat",
+        "combat",
+        "mechanics",
+        "respawn",
+        "value"
+      ]
+    },
+    {
+      "operation": "remove",
+      "pointer": [
+        "npcs",
+        "npc.tutorial_rat",
+        "navigation",
+        "step_ticks",
+        "reason"
+      ]
+    },
+    {
+      "operation": "replace",
+      "pointer": [
+        "npcs",
+        "npc.tutorial_rat",
+        "navigation",
+        "step_ticks",
+        "source"
+      ]
+    },
+    {
+      "operation": "replace",
+      "pointer": [
+        "npcs",
+        "npc.tutorial_rat",
+        "navigation",
+        "step_ticks",
+        "status"
+      ]
+    },
+    {
+      "operation": "add",
+      "pointer": [
+        "npcs",
+        "npc.tutorial_rat",
+        "navigation",
+        "step_ticks",
+        "value"
+      ]
+    },
+    {
+      "operation": "remove",
+      "pointer": [
+        "recipes",
+        "recipe.cooking.bread.lumbridge_range",
+        "mechanics",
+        "cadence",
+        "first",
+        "reason"
+      ]
+    },
+    {
+      "operation": "replace",
+      "pointer": [
+        "recipes",
+        "recipe.cooking.bread.lumbridge_range",
+        "mechanics",
+        "cadence",
+        "first",
+        "source"
+      ]
+    },
+    {
+      "operation": "replace",
+      "pointer": [
+        "recipes",
+        "recipe.cooking.bread.lumbridge_range",
+        "mechanics",
+        "cadence",
+        "first",
+        "status"
+      ]
+    },
+    {
+      "operation": "add",
+      "pointer": [
+        "recipes",
+        "recipe.cooking.bread.lumbridge_range",
+        "mechanics",
+        "cadence",
+        "first",
+        "value"
+      ]
+    },
+    {
+      "operation": "remove",
+      "pointer": [
+        "recipes",
+        "recipe.cooking.bread.range",
+        "mechanics",
+        "cadence",
+        "first",
+        "reason"
+      ]
+    },
+    {
+      "operation": "replace",
+      "pointer": [
+        "recipes",
+        "recipe.cooking.bread.range",
+        "mechanics",
+        "cadence",
+        "first",
+        "source"
+      ]
+    },
+    {
+      "operation": "replace",
+      "pointer": [
+        "recipes",
+        "recipe.cooking.bread.range",
+        "mechanics",
+        "cadence",
+        "first",
+        "status"
+      ]
+    },
+    {
+      "operation": "add",
+      "pointer": [
+        "recipes",
+        "recipe.cooking.bread.range",
+        "mechanics",
+        "cadence",
+        "first",
+        "value"
+      ]
+    },
+    {
+      "operation": "remove",
+      "pointer": [
+        "recipes",
+        "recipe.cooking.shrimps.fire",
+        "mechanics",
+        "cadence",
+        "single",
+        "reason"
+      ]
+    },
+    {
+      "operation": "replace",
+      "pointer": [
+        "recipes",
+        "recipe.cooking.shrimps.fire",
+        "mechanics",
+        "cadence",
+        "single",
+        "source",
+        0,
+        "notes"
+      ]
+    },
+    {
+      "operation": "replace",
+      "pointer": [
+        "recipes",
+        "recipe.cooking.shrimps.fire",
+        "mechanics",
+        "cadence",
+        "single",
+        "source",
+        0,
+        "reference"
+      ]
+    },
+    {
+      "operation": "replace",
+      "pointer": [
+        "recipes",
+        "recipe.cooking.shrimps.fire",
+        "mechanics",
+        "cadence",
+        "single",
+        "source",
+        0,
+        "revision"
+      ]
+    },
+    {
+      "operation": "replace",
+      "pointer": [
+        "recipes",
+        "recipe.cooking.shrimps.fire",
+        "mechanics",
+        "cadence",
+        "single",
+        "source",
+        0,
+        "status"
+      ]
+    },
+    {
+      "operation": "replace",
+      "pointer": [
+        "recipes",
+        "recipe.cooking.shrimps.fire",
+        "mechanics",
+        "cadence",
+        "single",
+        "source",
+        1,
+        "notes"
+      ]
+    },
+    {
+      "operation": "replace",
+      "pointer": [
+        "recipes",
+        "recipe.cooking.shrimps.fire",
+        "mechanics",
+        "cadence",
+        "single",
+        "source",
+        1,
+        "reference"
+      ]
+    },
+    {
+      "operation": "replace",
+      "pointer": [
+        "recipes",
+        "recipe.cooking.shrimps.fire",
+        "mechanics",
+        "cadence",
+        "single",
+        "source",
+        1,
+        "revision"
+      ]
+    },
+    {
+      "operation": "replace",
+      "pointer": [
+        "recipes",
+        "recipe.cooking.shrimps.fire",
+        "mechanics",
+        "cadence",
+        "single",
+        "source",
+        1,
+        "status"
+      ]
+    },
+    {
+      "operation": "replace",
+      "pointer": [
+        "recipes",
+        "recipe.cooking.shrimps.fire",
+        "mechanics",
+        "cadence",
+        "single",
+        "source",
+        2,
+        "notes"
+      ]
+    },
+    {
+      "operation": "replace",
+      "pointer": [
+        "recipes",
+        "recipe.cooking.shrimps.fire",
+        "mechanics",
+        "cadence",
+        "single",
+        "source",
+        2,
+        "reference"
+      ]
+    },
+    {
+      "operation": "replace",
+      "pointer": [
+        "recipes",
+        "recipe.cooking.shrimps.fire",
+        "mechanics",
+        "cadence",
+        "single",
+        "source",
+        2,
+        "revision"
+      ]
+    },
+    {
+      "operation": "replace",
+      "pointer": [
+        "recipes",
+        "recipe.cooking.shrimps.fire",
+        "mechanics",
+        "cadence",
+        "single",
+        "source",
+        2,
+        "status"
+      ]
+    },
+    {
+      "operation": "replace",
+      "pointer": [
+        "recipes",
+        "recipe.cooking.shrimps.fire",
+        "mechanics",
+        "cadence",
+        "single",
+        "source",
+        3,
+        "notes"
+      ]
+    },
+    {
+      "operation": "replace",
+      "pointer": [
+        "recipes",
+        "recipe.cooking.shrimps.fire",
+        "mechanics",
+        "cadence",
+        "single",
+        "source",
+        3,
+        "reference"
+      ]
+    },
+    {
+      "operation": "replace",
+      "pointer": [
+        "recipes",
+        "recipe.cooking.shrimps.fire",
+        "mechanics",
+        "cadence",
+        "single",
+        "source",
+        3,
+        "revision"
+      ]
+    },
+    {
+      "operation": "replace",
+      "pointer": [
+        "recipes",
+        "recipe.cooking.shrimps.fire",
+        "mechanics",
+        "cadence",
+        "single",
+        "source",
+        3,
+        "status"
+      ]
+    },
+    {
+      "operation": "replace",
+      "pointer": [
+        "recipes",
+        "recipe.cooking.shrimps.fire",
+        "mechanics",
+        "cadence",
+        "single",
+        "status"
+      ]
+    },
+    {
+      "operation": "add",
+      "pointer": [
+        "recipes",
+        "recipe.cooking.shrimps.fire",
+        "mechanics",
+        "cadence",
+        "single",
+        "value"
+      ]
+    },
+    {
+      "operation": "remove",
+      "pointer": [
+        "recipes",
+        "recipe.cooking.shrimps.lumbridge_range",
+        "mechanics",
+        "cadence",
+        "single",
+        "reason"
+      ]
+    },
+    {
+      "operation": "replace",
+      "pointer": [
+        "recipes",
+        "recipe.cooking.shrimps.lumbridge_range",
+        "mechanics",
+        "cadence",
+        "single",
+        "source",
+        0,
+        "notes"
+      ]
+    },
+    {
+      "operation": "replace",
+      "pointer": [
+        "recipes",
+        "recipe.cooking.shrimps.lumbridge_range",
+        "mechanics",
+        "cadence",
+        "single",
+        "source",
+        0,
+        "reference"
+      ]
+    },
+    {
+      "operation": "replace",
+      "pointer": [
+        "recipes",
+        "recipe.cooking.shrimps.lumbridge_range",
+        "mechanics",
+        "cadence",
+        "single",
+        "source",
+        0,
+        "revision"
+      ]
+    },
+    {
+      "operation": "replace",
+      "pointer": [
+        "recipes",
+        "recipe.cooking.shrimps.lumbridge_range",
+        "mechanics",
+        "cadence",
+        "single",
+        "source",
+        0,
+        "status"
+      ]
+    },
+    {
+      "operation": "replace",
+      "pointer": [
+        "recipes",
+        "recipe.cooking.shrimps.lumbridge_range",
+        "mechanics",
+        "cadence",
+        "single",
+        "source",
+        1,
+        "notes"
+      ]
+    },
+    {
+      "operation": "replace",
+      "pointer": [
+        "recipes",
+        "recipe.cooking.shrimps.lumbridge_range",
+        "mechanics",
+        "cadence",
+        "single",
+        "source",
+        1,
+        "reference"
+      ]
+    },
+    {
+      "operation": "replace",
+      "pointer": [
+        "recipes",
+        "recipe.cooking.shrimps.lumbridge_range",
+        "mechanics",
+        "cadence",
+        "single",
+        "source",
+        1,
+        "revision"
+      ]
+    },
+    {
+      "operation": "replace",
+      "pointer": [
+        "recipes",
+        "recipe.cooking.shrimps.lumbridge_range",
+        "mechanics",
+        "cadence",
+        "single",
+        "source",
+        1,
+        "status"
+      ]
+    },
+    {
+      "operation": "replace",
+      "pointer": [
+        "recipes",
+        "recipe.cooking.shrimps.lumbridge_range",
+        "mechanics",
+        "cadence",
+        "single",
+        "source",
+        2,
+        "notes"
+      ]
+    },
+    {
+      "operation": "replace",
+      "pointer": [
+        "recipes",
+        "recipe.cooking.shrimps.lumbridge_range",
+        "mechanics",
+        "cadence",
+        "single",
+        "source",
+        2,
+        "reference"
+      ]
+    },
+    {
+      "operation": "replace",
+      "pointer": [
+        "recipes",
+        "recipe.cooking.shrimps.lumbridge_range",
+        "mechanics",
+        "cadence",
+        "single",
+        "source",
+        2,
+        "revision"
+      ]
+    },
+    {
+      "operation": "replace",
+      "pointer": [
+        "recipes",
+        "recipe.cooking.shrimps.lumbridge_range",
+        "mechanics",
+        "cadence",
+        "single",
+        "source",
+        2,
+        "status"
+      ]
+    },
+    {
+      "operation": "replace",
+      "pointer": [
+        "recipes",
+        "recipe.cooking.shrimps.lumbridge_range",
+        "mechanics",
+        "cadence",
+        "single",
+        "source",
+        3,
+        "notes"
+      ]
+    },
+    {
+      "operation": "replace",
+      "pointer": [
+        "recipes",
+        "recipe.cooking.shrimps.lumbridge_range",
+        "mechanics",
+        "cadence",
+        "single",
+        "source",
+        3,
+        "reference"
+      ]
+    },
+    {
+      "operation": "replace",
+      "pointer": [
+        "recipes",
+        "recipe.cooking.shrimps.lumbridge_range",
+        "mechanics",
+        "cadence",
+        "single",
+        "source",
+        3,
+        "revision"
+      ]
+    },
+    {
+      "operation": "replace",
+      "pointer": [
+        "recipes",
+        "recipe.cooking.shrimps.lumbridge_range",
+        "mechanics",
+        "cadence",
+        "single",
+        "source",
+        3,
+        "status"
+      ]
+    },
+    {
+      "operation": "replace",
+      "pointer": [
+        "recipes",
+        "recipe.cooking.shrimps.lumbridge_range",
+        "mechanics",
+        "cadence",
+        "single",
+        "status"
+      ]
+    },
+    {
+      "operation": "add",
+      "pointer": [
+        "recipes",
+        "recipe.cooking.shrimps.lumbridge_range",
+        "mechanics",
+        "cadence",
+        "single",
+        "value"
+      ]
+    },
+    {
+      "operation": "remove",
+      "pointer": [
+        "recipes",
+        "recipe.cooking.shrimps.range",
+        "mechanics",
+        "cadence",
+        "single",
+        "reason"
+      ]
+    },
+    {
+      "operation": "replace",
+      "pointer": [
+        "recipes",
+        "recipe.cooking.shrimps.range",
+        "mechanics",
+        "cadence",
+        "single",
+        "source",
+        0,
+        "notes"
+      ]
+    },
+    {
+      "operation": "replace",
+      "pointer": [
+        "recipes",
+        "recipe.cooking.shrimps.range",
+        "mechanics",
+        "cadence",
+        "single",
+        "source",
+        0,
+        "reference"
+      ]
+    },
+    {
+      "operation": "replace",
+      "pointer": [
+        "recipes",
+        "recipe.cooking.shrimps.range",
+        "mechanics",
+        "cadence",
+        "single",
+        "source",
+        0,
+        "revision"
+      ]
+    },
+    {
+      "operation": "replace",
+      "pointer": [
+        "recipes",
+        "recipe.cooking.shrimps.range",
+        "mechanics",
+        "cadence",
+        "single",
+        "source",
+        0,
+        "status"
+      ]
+    },
+    {
+      "operation": "replace",
+      "pointer": [
+        "recipes",
+        "recipe.cooking.shrimps.range",
+        "mechanics",
+        "cadence",
+        "single",
+        "source",
+        1,
+        "notes"
+      ]
+    },
+    {
+      "operation": "replace",
+      "pointer": [
+        "recipes",
+        "recipe.cooking.shrimps.range",
+        "mechanics",
+        "cadence",
+        "single",
+        "source",
+        1,
+        "reference"
+      ]
+    },
+    {
+      "operation": "replace",
+      "pointer": [
+        "recipes",
+        "recipe.cooking.shrimps.range",
+        "mechanics",
+        "cadence",
+        "single",
+        "source",
+        1,
+        "revision"
+      ]
+    },
+    {
+      "operation": "replace",
+      "pointer": [
+        "recipes",
+        "recipe.cooking.shrimps.range",
+        "mechanics",
+        "cadence",
+        "single",
+        "source",
+        1,
+        "status"
+      ]
+    },
+    {
+      "operation": "replace",
+      "pointer": [
+        "recipes",
+        "recipe.cooking.shrimps.range",
+        "mechanics",
+        "cadence",
+        "single",
+        "source",
+        2,
+        "notes"
+      ]
+    },
+    {
+      "operation": "replace",
+      "pointer": [
+        "recipes",
+        "recipe.cooking.shrimps.range",
+        "mechanics",
+        "cadence",
+        "single",
+        "source",
+        2,
+        "reference"
+      ]
+    },
+    {
+      "operation": "replace",
+      "pointer": [
+        "recipes",
+        "recipe.cooking.shrimps.range",
+        "mechanics",
+        "cadence",
+        "single",
+        "source",
+        2,
+        "revision"
+      ]
+    },
+    {
+      "operation": "replace",
+      "pointer": [
+        "recipes",
+        "recipe.cooking.shrimps.range",
+        "mechanics",
+        "cadence",
+        "single",
+        "source",
+        2,
+        "status"
+      ]
+    },
+    {
+      "operation": "replace",
+      "pointer": [
+        "recipes",
+        "recipe.cooking.shrimps.range",
+        "mechanics",
+        "cadence",
+        "single",
+        "source",
+        3,
+        "notes"
+      ]
+    },
+    {
+      "operation": "replace",
+      "pointer": [
+        "recipes",
+        "recipe.cooking.shrimps.range",
+        "mechanics",
+        "cadence",
+        "single",
+        "source",
+        3,
+        "reference"
+      ]
+    },
+    {
+      "operation": "replace",
+      "pointer": [
+        "recipes",
+        "recipe.cooking.shrimps.range",
+        "mechanics",
+        "cadence",
+        "single",
+        "source",
+        3,
+        "revision"
+      ]
+    },
+    {
+      "operation": "replace",
+      "pointer": [
+        "recipes",
+        "recipe.cooking.shrimps.range",
+        "mechanics",
+        "cadence",
+        "single",
+        "source",
+        3,
+        "status"
+      ]
+    },
+    {
+      "operation": "replace",
+      "pointer": [
+        "recipes",
+        "recipe.cooking.shrimps.range",
+        "mechanics",
+        "cadence",
+        "single",
+        "status"
+      ]
+    },
+    {
+      "operation": "add",
+      "pointer": [
+        "recipes",
+        "recipe.cooking.shrimps.range",
+        "mechanics",
+        "cadence",
+        "single",
+        "value"
+      ]
+    },
+    {
+      "operation": "remove",
+      "pointer": [
+        "shops",
+        "shop.lumbridge.general_store",
+        "stock",
+        0,
+        "mechanics",
+        "pricing",
+        "overstock",
+        "reason"
+      ]
+    },
+    {
+      "operation": "replace",
+      "pointer": [
+        "shops",
+        "shop.lumbridge.general_store",
+        "stock",
+        0,
+        "mechanics",
+        "pricing",
+        "overstock",
+        "source"
+      ]
+    },
+    {
+      "operation": "replace",
+      "pointer": [
+        "shops",
+        "shop.lumbridge.general_store",
+        "stock",
+        0,
+        "mechanics",
+        "pricing",
+        "overstock",
+        "status"
+      ]
+    },
+    {
+      "operation": "add",
+      "pointer": [
+        "shops",
+        "shop.lumbridge.general_store",
+        "stock",
+        0,
+        "mechanics",
+        "pricing",
+        "overstock",
+        "value"
+      ]
+    },
+    {
+      "operation": "remove",
+      "pointer": [
+        "shops",
+        "shop.lumbridge.general_store",
+        "stock",
+        0,
+        "mechanics",
+        "restock",
+        "phase",
+        "reason"
+      ]
+    },
+    {
+      "operation": "replace",
+      "pointer": [
+        "shops",
+        "shop.lumbridge.general_store",
+        "stock",
+        0,
+        "mechanics",
+        "restock",
+        "phase",
+        "source"
+      ]
+    },
+    {
+      "operation": "replace",
+      "pointer": [
+        "shops",
+        "shop.lumbridge.general_store",
+        "stock",
+        0,
+        "mechanics",
+        "restock",
+        "phase",
+        "status"
+      ]
+    },
+    {
+      "operation": "add",
+      "pointer": [
+        "shops",
+        "shop.lumbridge.general_store",
+        "stock",
+        0,
+        "mechanics",
+        "restock",
+        "phase",
+        "value"
+      ]
+    },
+    {
+      "operation": "remove",
+      "pointer": [
+        "shops",
+        "shop.lumbridge.general_store",
+        "stock",
+        1,
+        "mechanics",
+        "pricing",
+        "overstock",
+        "reason"
+      ]
+    },
+    {
+      "operation": "replace",
+      "pointer": [
+        "shops",
+        "shop.lumbridge.general_store",
+        "stock",
+        1,
+        "mechanics",
+        "pricing",
+        "overstock",
+        "source"
+      ]
+    },
+    {
+      "operation": "replace",
+      "pointer": [
+        "shops",
+        "shop.lumbridge.general_store",
+        "stock",
+        1,
+        "mechanics",
+        "pricing",
+        "overstock",
+        "status"
+      ]
+    },
+    {
+      "operation": "add",
+      "pointer": [
+        "shops",
+        "shop.lumbridge.general_store",
+        "stock",
+        1,
+        "mechanics",
+        "pricing",
+        "overstock",
+        "value"
+      ]
+    },
+    {
+      "operation": "remove",
+      "pointer": [
+        "shops",
+        "shop.lumbridge.general_store",
+        "stock",
+        1,
+        "mechanics",
+        "restock",
+        "phase",
+        "reason"
+      ]
+    },
+    {
+      "operation": "replace",
+      "pointer": [
+        "shops",
+        "shop.lumbridge.general_store",
+        "stock",
+        1,
+        "mechanics",
+        "restock",
+        "phase",
+        "source"
+      ]
+    },
+    {
+      "operation": "replace",
+      "pointer": [
+        "shops",
+        "shop.lumbridge.general_store",
+        "stock",
+        1,
+        "mechanics",
+        "restock",
+        "phase",
+        "status"
+      ]
+    },
+    {
+      "operation": "add",
+      "pointer": [
+        "shops",
+        "shop.lumbridge.general_store",
+        "stock",
+        1,
+        "mechanics",
+        "restock",
+        "phase",
+        "value"
+      ]
+    },
+    {
+      "operation": "remove",
+      "pointer": [
+        "shops",
+        "shop.lumbridge.general_store",
+        "stock",
+        2,
+        "mechanics",
+        "pricing",
+        "overstock",
+        "reason"
+      ]
+    },
+    {
+      "operation": "replace",
+      "pointer": [
+        "shops",
+        "shop.lumbridge.general_store",
+        "stock",
+        2,
+        "mechanics",
+        "pricing",
+        "overstock",
+        "source"
+      ]
+    },
+    {
+      "operation": "replace",
+      "pointer": [
+        "shops",
+        "shop.lumbridge.general_store",
+        "stock",
+        2,
+        "mechanics",
+        "pricing",
+        "overstock",
+        "status"
+      ]
+    },
+    {
+      "operation": "add",
+      "pointer": [
+        "shops",
+        "shop.lumbridge.general_store",
+        "stock",
+        2,
+        "mechanics",
+        "pricing",
+        "overstock",
+        "value"
+      ]
+    },
+    {
+      "operation": "remove",
+      "pointer": [
+        "shops",
+        "shop.lumbridge.general_store",
+        "stock",
+        2,
+        "mechanics",
+        "restock",
+        "phase",
+        "reason"
+      ]
+    },
+    {
+      "operation": "replace",
+      "pointer": [
+        "shops",
+        "shop.lumbridge.general_store",
+        "stock",
+        2,
+        "mechanics",
+        "restock",
+        "phase",
+        "source"
+      ]
+    },
+    {
+      "operation": "replace",
+      "pointer": [
+        "shops",
+        "shop.lumbridge.general_store",
+        "stock",
+        2,
+        "mechanics",
+        "restock",
+        "phase",
+        "status"
+      ]
+    },
+    {
+      "operation": "add",
+      "pointer": [
+        "shops",
+        "shop.lumbridge.general_store",
+        "stock",
+        2,
+        "mechanics",
+        "restock",
+        "phase",
+        "value"
+      ]
+    },
+    {
+      "operation": "remove",
+      "pointer": [
+        "shops",
+        "shop.lumbridge.general_store",
+        "stock",
+        3,
+        "mechanics",
+        "pricing",
+        "overstock",
+        "reason"
+      ]
+    },
+    {
+      "operation": "replace",
+      "pointer": [
+        "shops",
+        "shop.lumbridge.general_store",
+        "stock",
+        3,
+        "mechanics",
+        "pricing",
+        "overstock",
+        "source"
+      ]
+    },
+    {
+      "operation": "replace",
+      "pointer": [
+        "shops",
+        "shop.lumbridge.general_store",
+        "stock",
+        3,
+        "mechanics",
+        "pricing",
+        "overstock",
+        "status"
+      ]
+    },
+    {
+      "operation": "add",
+      "pointer": [
+        "shops",
+        "shop.lumbridge.general_store",
+        "stock",
+        3,
+        "mechanics",
+        "pricing",
+        "overstock",
+        "value"
+      ]
+    },
+    {
+      "operation": "remove",
+      "pointer": [
+        "shops",
+        "shop.lumbridge.general_store",
+        "stock",
+        3,
+        "mechanics",
+        "restock",
+        "phase",
+        "reason"
+      ]
+    },
+    {
+      "operation": "replace",
+      "pointer": [
+        "shops",
+        "shop.lumbridge.general_store",
+        "stock",
+        3,
+        "mechanics",
+        "restock",
+        "phase",
+        "source"
+      ]
+    },
+    {
+      "operation": "replace",
+      "pointer": [
+        "shops",
+        "shop.lumbridge.general_store",
+        "stock",
+        3,
+        "mechanics",
+        "restock",
+        "phase",
+        "status"
+      ]
+    },
+    {
+      "operation": "add",
+      "pointer": [
+        "shops",
+        "shop.lumbridge.general_store",
+        "stock",
+        3,
+        "mechanics",
+        "restock",
+        "phase",
+        "value"
+      ]
+    },
+    {
+      "operation": "remove",
+      "pointer": [
+        "shops",
+        "shop.lumbridge.general_store",
+        "stock",
+        4,
+        "mechanics",
+        "pricing",
+        "overstock",
+        "reason"
+      ]
+    },
+    {
+      "operation": "replace",
+      "pointer": [
+        "shops",
+        "shop.lumbridge.general_store",
+        "stock",
+        4,
+        "mechanics",
+        "pricing",
+        "overstock",
+        "source"
+      ]
+    },
+    {
+      "operation": "replace",
+      "pointer": [
+        "shops",
+        "shop.lumbridge.general_store",
+        "stock",
+        4,
+        "mechanics",
+        "pricing",
+        "overstock",
+        "status"
+      ]
+    },
+    {
+      "operation": "add",
+      "pointer": [
+        "shops",
+        "shop.lumbridge.general_store",
+        "stock",
+        4,
+        "mechanics",
+        "pricing",
+        "overstock",
+        "value"
+      ]
+    },
+    {
+      "operation": "remove",
+      "pointer": [
+        "shops",
+        "shop.lumbridge.general_store",
+        "stock",
+        4,
+        "mechanics",
+        "restock",
+        "phase",
+        "reason"
+      ]
+    },
+    {
+      "operation": "replace",
+      "pointer": [
+        "shops",
+        "shop.lumbridge.general_store",
+        "stock",
+        4,
+        "mechanics",
+        "restock",
+        "phase",
+        "source"
+      ]
+    },
+    {
+      "operation": "replace",
+      "pointer": [
+        "shops",
+        "shop.lumbridge.general_store",
+        "stock",
+        4,
+        "mechanics",
+        "restock",
+        "phase",
+        "status"
+      ]
+    },
+    {
+      "operation": "add",
+      "pointer": [
+        "shops",
+        "shop.lumbridge.general_store",
+        "stock",
+        4,
+        "mechanics",
+        "restock",
+        "phase",
+        "value"
+      ]
+    },
+    {
+      "operation": "remove",
+      "pointer": [
+        "shops",
+        "shop.lumbridge.general_store",
+        "stock",
+        5,
+        "mechanics",
+        "pricing",
+        "overstock",
+        "reason"
+      ]
+    },
+    {
+      "operation": "replace",
+      "pointer": [
+        "shops",
+        "shop.lumbridge.general_store",
+        "stock",
+        5,
+        "mechanics",
+        "pricing",
+        "overstock",
+        "source"
+      ]
+    },
+    {
+      "operation": "replace",
+      "pointer": [
+        "shops",
+        "shop.lumbridge.general_store",
+        "stock",
+        5,
+        "mechanics",
+        "pricing",
+        "overstock",
+        "status"
+      ]
+    },
+    {
+      "operation": "add",
+      "pointer": [
+        "shops",
+        "shop.lumbridge.general_store",
+        "stock",
+        5,
+        "mechanics",
+        "pricing",
+        "overstock",
+        "value"
+      ]
+    },
+    {
+      "operation": "remove",
+      "pointer": [
+        "shops",
+        "shop.lumbridge.general_store",
+        "stock",
+        5,
+        "mechanics",
+        "restock",
+        "phase",
+        "reason"
+      ]
+    },
+    {
+      "operation": "replace",
+      "pointer": [
+        "shops",
+        "shop.lumbridge.general_store",
+        "stock",
+        5,
+        "mechanics",
+        "restock",
+        "phase",
+        "source"
+      ]
+    },
+    {
+      "operation": "replace",
+      "pointer": [
+        "shops",
+        "shop.lumbridge.general_store",
+        "stock",
+        5,
+        "mechanics",
+        "restock",
+        "phase",
+        "status"
+      ]
+    },
+    {
+      "operation": "add",
+      "pointer": [
+        "shops",
+        "shop.lumbridge.general_store",
+        "stock",
+        5,
+        "mechanics",
+        "restock",
+        "phase",
+        "value"
+      ]
+    },
+    {
+      "operation": "remove",
+      "pointer": [
+        "shops",
+        "shop.lumbridge.general_store",
+        "stock",
+        6,
+        "mechanics",
+        "pricing",
+        "overstock",
+        "reason"
+      ]
+    },
+    {
+      "operation": "replace",
+      "pointer": [
+        "shops",
+        "shop.lumbridge.general_store",
+        "stock",
+        6,
+        "mechanics",
+        "pricing",
+        "overstock",
+        "source"
+      ]
+    },
+    {
+      "operation": "replace",
+      "pointer": [
+        "shops",
+        "shop.lumbridge.general_store",
+        "stock",
+        6,
+        "mechanics",
+        "pricing",
+        "overstock",
+        "status"
+      ]
+    },
+    {
+      "operation": "add",
+      "pointer": [
+        "shops",
+        "shop.lumbridge.general_store",
+        "stock",
+        6,
+        "mechanics",
+        "pricing",
+        "overstock",
+        "value"
+      ]
+    },
+    {
+      "operation": "remove",
+      "pointer": [
+        "shops",
+        "shop.lumbridge.general_store",
+        "stock",
+        6,
+        "mechanics",
+        "restock",
+        "phase",
+        "reason"
+      ]
+    },
+    {
+      "operation": "replace",
+      "pointer": [
+        "shops",
+        "shop.lumbridge.general_store",
+        "stock",
+        6,
+        "mechanics",
+        "restock",
+        "phase",
+        "source"
+      ]
+    },
+    {
+      "operation": "replace",
+      "pointer": [
+        "shops",
+        "shop.lumbridge.general_store",
+        "stock",
+        6,
+        "mechanics",
+        "restock",
+        "phase",
+        "status"
+      ]
+    },
+    {
+      "operation": "add",
+      "pointer": [
+        "shops",
+        "shop.lumbridge.general_store",
+        "stock",
+        6,
+        "mechanics",
+        "restock",
+        "phase",
+        "value"
+      ]
+    },
+    {
+      "operation": "remove",
+      "pointer": [
+        "shops",
+        "shop.lumbridge.general_store",
+        "stock",
+        7,
+        "mechanics",
+        "pricing",
+        "overstock",
+        "reason"
+      ]
+    },
+    {
+      "operation": "replace",
+      "pointer": [
+        "shops",
+        "shop.lumbridge.general_store",
+        "stock",
+        7,
+        "mechanics",
+        "pricing",
+        "overstock",
+        "source"
+      ]
+    },
+    {
+      "operation": "replace",
+      "pointer": [
+        "shops",
+        "shop.lumbridge.general_store",
+        "stock",
+        7,
+        "mechanics",
+        "pricing",
+        "overstock",
+        "status"
+      ]
+    },
+    {
+      "operation": "add",
+      "pointer": [
+        "shops",
+        "shop.lumbridge.general_store",
+        "stock",
+        7,
+        "mechanics",
+        "pricing",
+        "overstock",
+        "value"
+      ]
+    },
+    {
+      "operation": "remove",
+      "pointer": [
+        "shops",
+        "shop.lumbridge.general_store",
+        "stock",
+        7,
+        "mechanics",
+        "restock",
+        "phase",
+        "reason"
+      ]
+    },
+    {
+      "operation": "replace",
+      "pointer": [
+        "shops",
+        "shop.lumbridge.general_store",
+        "stock",
+        7,
+        "mechanics",
+        "restock",
+        "phase",
+        "source"
+      ]
+    },
+    {
+      "operation": "replace",
+      "pointer": [
+        "shops",
+        "shop.lumbridge.general_store",
+        "stock",
+        7,
+        "mechanics",
+        "restock",
+        "phase",
+        "status"
+      ]
+    },
+    {
+      "operation": "add",
+      "pointer": [
+        "shops",
+        "shop.lumbridge.general_store",
+        "stock",
+        7,
+        "mechanics",
+        "restock",
+        "phase",
+        "value"
+      ]
+    },
+    {
+      "operation": "remove",
+      "pointer": [
+        "shops",
+        "shop.lumbridge.general_store",
+        "stock",
+        8,
+        "mechanics",
+        "pricing",
+        "overstock",
+        "reason"
+      ]
+    },
+    {
+      "operation": "replace",
+      "pointer": [
+        "shops",
+        "shop.lumbridge.general_store",
+        "stock",
+        8,
+        "mechanics",
+        "pricing",
+        "overstock",
+        "source"
+      ]
+    },
+    {
+      "operation": "replace",
+      "pointer": [
+        "shops",
+        "shop.lumbridge.general_store",
+        "stock",
+        8,
+        "mechanics",
+        "pricing",
+        "overstock",
+        "status"
+      ]
+    },
+    {
+      "operation": "add",
+      "pointer": [
+        "shops",
+        "shop.lumbridge.general_store",
+        "stock",
+        8,
+        "mechanics",
+        "pricing",
+        "overstock",
+        "value"
+      ]
+    },
+    {
+      "operation": "remove",
+      "pointer": [
+        "shops",
+        "shop.lumbridge.general_store",
+        "stock",
+        8,
+        "mechanics",
+        "restock",
+        "phase",
+        "reason"
+      ]
+    },
+    {
+      "operation": "replace",
+      "pointer": [
+        "shops",
+        "shop.lumbridge.general_store",
+        "stock",
+        8,
+        "mechanics",
+        "restock",
+        "phase",
+        "source"
+      ]
+    },
+    {
+      "operation": "replace",
+      "pointer": [
+        "shops",
+        "shop.lumbridge.general_store",
+        "stock",
+        8,
+        "mechanics",
+        "restock",
+        "phase",
+        "status"
+      ]
+    },
+    {
+      "operation": "add",
+      "pointer": [
+        "shops",
+        "shop.lumbridge.general_store",
+        "stock",
+        8,
+        "mechanics",
+        "restock",
+        "phase",
+        "value"
+      ]
+    },
+    {
+      "operation": "remove",
+      "pointer": [
+        "shops",
+        "shop.lumbridge.general_store",
+        "stock",
+        9,
+        "mechanics",
+        "pricing",
+        "overstock",
+        "reason"
+      ]
+    },
+    {
+      "operation": "replace",
+      "pointer": [
+        "shops",
+        "shop.lumbridge.general_store",
+        "stock",
+        9,
+        "mechanics",
+        "pricing",
+        "overstock",
+        "source"
+      ]
+    },
+    {
+      "operation": "replace",
+      "pointer": [
+        "shops",
+        "shop.lumbridge.general_store",
+        "stock",
+        9,
+        "mechanics",
+        "pricing",
+        "overstock",
+        "status"
+      ]
+    },
+    {
+      "operation": "add",
+      "pointer": [
+        "shops",
+        "shop.lumbridge.general_store",
+        "stock",
+        9,
+        "mechanics",
+        "pricing",
+        "overstock",
+        "value"
+      ]
+    },
+    {
+      "operation": "remove",
+      "pointer": [
+        "shops",
+        "shop.lumbridge.general_store",
+        "stock",
+        9,
+        "mechanics",
+        "restock",
+        "phase",
+        "reason"
+      ]
+    },
+    {
+      "operation": "replace",
+      "pointer": [
+        "shops",
+        "shop.lumbridge.general_store",
+        "stock",
+        9,
+        "mechanics",
+        "restock",
+        "phase",
+        "source"
+      ]
+    },
+    {
+      "operation": "replace",
+      "pointer": [
+        "shops",
+        "shop.lumbridge.general_store",
+        "stock",
+        9,
+        "mechanics",
+        "restock",
+        "phase",
+        "status"
+      ]
+    },
+    {
+      "operation": "add",
+      "pointer": [
+        "shops",
+        "shop.lumbridge.general_store",
+        "stock",
+        9,
+        "mechanics",
+        "restock",
+        "phase",
+        "value"
+      ]
+    },
+    {
+      "operation": "remove",
+      "pointer": [
+        "shops",
+        "shop.lumbridge.general_store",
+        "stock",
+        10,
+        "mechanics",
+        "pricing",
+        "overstock",
+        "reason"
+      ]
+    },
+    {
+      "operation": "replace",
+      "pointer": [
+        "shops",
+        "shop.lumbridge.general_store",
+        "stock",
+        10,
+        "mechanics",
+        "pricing",
+        "overstock",
+        "source"
+      ]
+    },
+    {
+      "operation": "replace",
+      "pointer": [
+        "shops",
+        "shop.lumbridge.general_store",
+        "stock",
+        10,
+        "mechanics",
+        "pricing",
+        "overstock",
+        "status"
+      ]
+    },
+    {
+      "operation": "add",
+      "pointer": [
+        "shops",
+        "shop.lumbridge.general_store",
+        "stock",
+        10,
+        "mechanics",
+        "pricing",
+        "overstock",
+        "value"
+      ]
+    },
+    {
+      "operation": "remove",
+      "pointer": [
+        "shops",
+        "shop.lumbridge.general_store",
+        "stock",
+        10,
+        "mechanics",
+        "restock",
+        "phase",
+        "reason"
+      ]
+    },
+    {
+      "operation": "replace",
+      "pointer": [
+        "shops",
+        "shop.lumbridge.general_store",
+        "stock",
+        10,
+        "mechanics",
+        "restock",
+        "phase",
+        "source"
+      ]
+    },
+    {
+      "operation": "replace",
+      "pointer": [
+        "shops",
+        "shop.lumbridge.general_store",
+        "stock",
+        10,
+        "mechanics",
+        "restock",
+        "phase",
+        "status"
+      ]
+    },
+    {
+      "operation": "add",
+      "pointer": [
+        "shops",
+        "shop.lumbridge.general_store",
+        "stock",
+        10,
+        "mechanics",
+        "restock",
+        "phase",
+        "value"
+      ]
+    },
+    {
+      "operation": "remove",
+      "pointer": [
+        "shops",
+        "shop.lumbridge.general_store",
+        "stock",
+        11,
+        "mechanics",
+        "pricing",
+        "overstock",
+        "reason"
+      ]
+    },
+    {
+      "operation": "replace",
+      "pointer": [
+        "shops",
+        "shop.lumbridge.general_store",
+        "stock",
+        11,
+        "mechanics",
+        "pricing",
+        "overstock",
+        "source"
+      ]
+    },
+    {
+      "operation": "replace",
+      "pointer": [
+        "shops",
+        "shop.lumbridge.general_store",
+        "stock",
+        11,
+        "mechanics",
+        "pricing",
+        "overstock",
+        "status"
+      ]
+    },
+    {
+      "operation": "add",
+      "pointer": [
+        "shops",
+        "shop.lumbridge.general_store",
+        "stock",
+        11,
+        "mechanics",
+        "pricing",
+        "overstock",
+        "value"
+      ]
+    },
+    {
+      "operation": "remove",
+      "pointer": [
+        "shops",
+        "shop.lumbridge.general_store",
+        "stock",
+        11,
+        "mechanics",
+        "restock",
+        "phase",
+        "reason"
+      ]
+    },
+    {
+      "operation": "replace",
+      "pointer": [
+        "shops",
+        "shop.lumbridge.general_store",
+        "stock",
+        11,
+        "mechanics",
+        "restock",
+        "phase",
+        "source"
+      ]
+    },
+    {
+      "operation": "replace",
+      "pointer": [
+        "shops",
+        "shop.lumbridge.general_store",
+        "stock",
+        11,
+        "mechanics",
+        "restock",
+        "phase",
+        "status"
+      ]
+    },
+    {
+      "operation": "add",
+      "pointer": [
+        "shops",
+        "shop.lumbridge.general_store",
+        "stock",
+        11,
+        "mechanics",
+        "restock",
+        "phase",
+        "value"
+      ]
+    },
+    {
+      "operation": "remove",
+      "pointer": [
+        "shops",
+        "shop.lumbridge.general_store",
+        "stock",
+        12,
+        "mechanics",
+        "pricing",
+        "overstock",
+        "reason"
+      ]
+    },
+    {
+      "operation": "replace",
+      "pointer": [
+        "shops",
+        "shop.lumbridge.general_store",
+        "stock",
+        12,
+        "mechanics",
+        "pricing",
+        "overstock",
+        "source"
+      ]
+    },
+    {
+      "operation": "replace",
+      "pointer": [
+        "shops",
+        "shop.lumbridge.general_store",
+        "stock",
+        12,
+        "mechanics",
+        "pricing",
+        "overstock",
+        "status"
+      ]
+    },
+    {
+      "operation": "add",
+      "pointer": [
+        "shops",
+        "shop.lumbridge.general_store",
+        "stock",
+        12,
+        "mechanics",
+        "pricing",
+        "overstock",
+        "value"
+      ]
+    },
+    {
+      "operation": "remove",
+      "pointer": [
+        "shops",
+        "shop.lumbridge.general_store",
+        "stock",
+        12,
+        "mechanics",
+        "restock",
+        "phase",
+        "reason"
+      ]
+    },
+    {
+      "operation": "replace",
+      "pointer": [
+        "shops",
+        "shop.lumbridge.general_store",
+        "stock",
+        12,
+        "mechanics",
+        "restock",
+        "phase",
+        "source"
+      ]
+    },
+    {
+      "operation": "replace",
+      "pointer": [
+        "shops",
+        "shop.lumbridge.general_store",
+        "stock",
+        12,
+        "mechanics",
+        "restock",
+        "phase",
+        "status"
+      ]
+    },
+    {
+      "operation": "add",
+      "pointer": [
+        "shops",
+        "shop.lumbridge.general_store",
+        "stock",
+        12,
+        "mechanics",
+        "restock",
+        "phase",
+        "value"
+      ]
+    },
+    {
+      "operation": "remove",
+      "pointer": [
+        "shops",
+        "shop.lumbridge.general_store",
+        "stock",
+        13,
+        "mechanics",
+        "pricing",
+        "overstock",
+        "reason"
+      ]
+    },
+    {
+      "operation": "replace",
+      "pointer": [
+        "shops",
+        "shop.lumbridge.general_store",
+        "stock",
+        13,
+        "mechanics",
+        "pricing",
+        "overstock",
+        "source"
+      ]
+    },
+    {
+      "operation": "replace",
+      "pointer": [
+        "shops",
+        "shop.lumbridge.general_store",
+        "stock",
+        13,
+        "mechanics",
+        "pricing",
+        "overstock",
+        "status"
+      ]
+    },
+    {
+      "operation": "add",
+      "pointer": [
+        "shops",
+        "shop.lumbridge.general_store",
+        "stock",
+        13,
+        "mechanics",
+        "pricing",
+        "overstock",
+        "value"
+      ]
+    },
+    {
+      "operation": "remove",
+      "pointer": [
+        "shops",
+        "shop.lumbridge.general_store",
+        "stock",
+        13,
+        "mechanics",
+        "restock",
+        "phase",
+        "reason"
+      ]
+    },
+    {
+      "operation": "replace",
+      "pointer": [
+        "shops",
+        "shop.lumbridge.general_store",
+        "stock",
+        13,
+        "mechanics",
+        "restock",
+        "phase",
+        "source"
+      ]
+    },
+    {
+      "operation": "replace",
+      "pointer": [
+        "shops",
+        "shop.lumbridge.general_store",
+        "stock",
+        13,
+        "mechanics",
+        "restock",
+        "phase",
+        "status"
+      ]
+    },
+    {
+      "operation": "add",
+      "pointer": [
+        "shops",
+        "shop.lumbridge.general_store",
+        "stock",
+        13,
+        "mechanics",
+        "restock",
+        "phase",
+        "value"
+      ]
+    },
+    {
+      "operation": "remove",
+      "pointer": [
+        "shops",
+        "shop.lumbridge.general_store",
+        "stock",
+        14,
+        "mechanics",
+        "pricing",
+        "overstock",
+        "reason"
+      ]
+    },
+    {
+      "operation": "replace",
+      "pointer": [
+        "shops",
+        "shop.lumbridge.general_store",
+        "stock",
+        14,
+        "mechanics",
+        "pricing",
+        "overstock",
+        "source"
+      ]
+    },
+    {
+      "operation": "replace",
+      "pointer": [
+        "shops",
+        "shop.lumbridge.general_store",
+        "stock",
+        14,
+        "mechanics",
+        "pricing",
+        "overstock",
+        "status"
+      ]
+    },
+    {
+      "operation": "add",
+      "pointer": [
+        "shops",
+        "shop.lumbridge.general_store",
+        "stock",
+        14,
+        "mechanics",
+        "pricing",
+        "overstock",
+        "value"
+      ]
+    },
+    {
+      "operation": "remove",
+      "pointer": [
+        "shops",
+        "shop.lumbridge.general_store",
+        "stock",
+        14,
+        "mechanics",
+        "restock",
+        "phase",
+        "reason"
+      ]
+    },
+    {
+      "operation": "replace",
+      "pointer": [
+        "shops",
+        "shop.lumbridge.general_store",
+        "stock",
+        14,
+        "mechanics",
+        "restock",
+        "phase",
+        "source"
+      ]
+    },
+    {
+      "operation": "replace",
+      "pointer": [
+        "shops",
+        "shop.lumbridge.general_store",
+        "stock",
+        14,
+        "mechanics",
+        "restock",
+        "phase",
+        "status"
+      ]
+    },
+    {
+      "operation": "add",
+      "pointer": [
+        "shops",
+        "shop.lumbridge.general_store",
+        "stock",
+        14,
+        "mechanics",
+        "restock",
+        "phase",
+        "value"
+      ]
+    },
+    {
+      "operation": "remove",
+      "pointer": [
+        "shops",
+        "shop.lumbridge.general_store",
+        "unstocked",
+        "rule",
+        "pricing",
+        "overstock",
+        "reason"
+      ]
+    },
+    {
+      "operation": "replace",
+      "pointer": [
+        "shops",
+        "shop.lumbridge.general_store",
+        "unstocked",
+        "rule",
+        "pricing",
+        "overstock",
+        "source"
+      ]
+    },
+    {
+      "operation": "replace",
+      "pointer": [
+        "shops",
+        "shop.lumbridge.general_store",
+        "unstocked",
+        "rule",
+        "pricing",
+        "overstock",
+        "status"
+      ]
+    },
+    {
+      "operation": "add",
+      "pointer": [
+        "shops",
+        "shop.lumbridge.general_store",
+        "unstocked",
+        "rule",
+        "pricing",
+        "overstock",
+        "value"
+      ]
+    },
+    {
+      "operation": "remove",
+      "pointer": [
+        "shops",
+        "shop.lumbridge.general_store",
+        "unstocked",
+        "rule",
+        "restock",
+        "phase",
+        "reason"
+      ]
+    },
+    {
+      "operation": "replace",
+      "pointer": [
+        "shops",
+        "shop.lumbridge.general_store",
+        "unstocked",
+        "rule",
+        "restock",
+        "phase",
+        "source"
+      ]
+    },
+    {
+      "operation": "replace",
+      "pointer": [
+        "shops",
+        "shop.lumbridge.general_store",
+        "unstocked",
+        "rule",
+        "restock",
+        "phase",
+        "status"
+      ]
+    },
+    {
+      "operation": "add",
+      "pointer": [
+        "shops",
+        "shop.lumbridge.general_store",
+        "unstocked",
+        "rule",
+        "restock",
+        "phase",
+        "value"
+      ]
+    }
+  ],
+  "content_compressed_sha256": "b9364b8bb56a88779f57eee650bff032c424e862bc9737bbda558ae41802673b",
+  "coupled_profile_provenance": [
+    {
+      "notes": "The official2025-10-22 ALL-player default list explicitly enables Auto-equip Worn Items from Gravestone; replace the old false candidate. Supersedes the prior provisional creation-profile value. Snapshot SHA-256: 3fcc153d513507d9f2da93d96a80b74a601a4f2c73b2bd605008dfcbc6543aad. Documentary/code evidence, not a live observation.",
+      "reference": "https://oldschool.runescape.wiki/w/Update:Grid_Master_Rewards%2C_Poll_%26_New_Player_Improvements?oldid=15010818",
+      "revision": "15010818",
+      "status": "verified_reference"
+    },
+    {
+      "notes": "The documented death default drops food/potions and modern rules expose an opt-out. Select that inherited default rather than the previous unobserved false candidate; current fresh-account toggle is still an inference. Supersedes the prior provisional creation-profile value. Snapshot SHA-256: a1490ab3c6b8dcd84e9bcfb401a206db107702b7785cdbed7f670beb2d8b09ae. Documentary/code evidence, not a live observation.",
+      "reference": "https://oldschool.runescape.wiki/w/Update:Death_Changes?oldid=14204053",
+      "revision": "14204053",
+      "status": "inference"
+    },
+    {
+      "notes": "The documented death default drops food/potions and modern rules expose an opt-out. Select that inherited default rather than the previous unobserved false candidate; current fresh-account toggle is still an inference. Supersedes the prior provisional creation-profile value. Snapshot SHA-256: ed74ac8aac2577953ea01d43246bc501556e1316089d1ef449e8b67c6a729c5e. Documentary/code evidence, not a live observation.",
+      "reference": "https://oldschool.runescape.wiki/w/Items_Kept_on_Death?oldid=15322198",
+      "revision": "15322198",
+      "status": "inference"
+    },
+    {
+      "notes": "The documented death default drops food/potions and modern rules expose an opt-out. Select that inherited default rather than the previous unobserved false candidate; current fresh-account toggle is still an inference. Supersedes the prior provisional creation-profile value. Snapshot SHA-256: 024e0511bb345db805d1853758e8cfb5f31afe6fcdbbf57f649522561c9448cb. Documentary/code evidence, not a live observation.",
+      "reference": "https://oldschool.runescape.wiki/w/Items?oldid=15324338",
+      "revision": "15324338",
+      "status": "inference"
+    }
+  ],
+  "coupled_update_count": 7,
+  "coupled_updates": [
+    {
+      "action": "applied",
+      "classification": "source_supported_inference",
+      "id": "departure_provision_grant",
+      "input_sha256": null,
+      "operation": "add",
+      "output_sha256": "4b2717cf308615a43bb4213b6b418e1c5fac0ab46568348847c25d1c301b03a2",
+      "pointer": [
+        "mechanics",
+        "grants",
+        "grant.tutorial.departure.provisions"
+      ]
+    },
+    {
+      "action": "applied",
+      "classification": "source_supported_inference",
+      "id": "departure_provision_entitlement",
+      "input_sha256": null,
+      "operation": "add",
+      "output_sha256": "419e0adb784922964d32c95e0bc8ef319e20d3b9d568b43b3b2fa0caa05f222b",
+      "pointer": [
+        "mechanics",
+        "entitlements",
+        "entitlement.tutorial.departure.provisions"
+      ]
+    },
+    {
+      "action": "applied",
+      "classification": "source_supported_inference",
+      "id": "departure_provision_effect",
+      "input_sha256": "2789d1a543b41d4812be1715286ddda471b5a6c16b9c9f64ce56074b1c5a53a4",
+      "operation": "replace",
+      "output_sha256": "6c9872df8068925851e9d1545d7d765be742687104c109335a0a17d4910efc78",
+      "pointer": [
+        "mechanics",
+        "travels",
+        "travel.tutorial.departure",
+        "completion_effects"
+      ]
+    },
+    {
+      "action": "applied",
+      "classification": "known_fact",
+      "id": "death_provider_method",
+      "input_sha256": "ab41aef8103ba8d5773dff129dbd0a22bb9cb2991a56a403045ab4e9186e8b5a",
+      "operation": "replace",
+      "output_sha256": "6634dbdb3d17c1a2f738399cb7083014106be1fb23607ade0230ef40bfa32123",
+      "pointer": [
+        "mechanics",
+        "value_providers",
+        "value_provider.osrs.death",
+        "method"
+      ]
+    },
+    {
+      "action": "applied",
+      "classification": "known_fact",
+      "id": "death_provider_revision",
+      "input_sha256": "3a2b14b15c3c3595c4304e2b76e1ed97a0f79e56b3a2ad3b508575d35fc1634a",
+      "operation": "replace",
+      "output_sha256": "b13aa9eeba251ef64674ad2c92dda8f7aa6e3c6f1a534303b6b4bbbd08bb7f84",
+      "pointer": [
+        "mechanics",
+        "value_providers",
+        "value_provider.osrs.death",
+        "revision"
+      ]
+    },
+    {
+      "action": "applied",
+      "classification": "known_fact",
+      "id": "initial_death_auto_equip",
+      "input_sha256": "fcbcf165908dd18a9e49f7ff27810176db8e9f63b4352213741664245224f8aa",
+      "operation": "replace",
+      "output_sha256": "b5bea41b6c623f7c09f1bf24dcae58ebab3c0cdd90ad966bc43a45b44867e12b",
+      "pointer": [
+        "initial_state",
+        "runtime",
+        "settings",
+        "death_auto_equip"
+      ]
+    },
+    {
+      "action": "applied",
+      "classification": "source_supported_inference",
+      "id": "initial_death_supply_piles",
+      "input_sha256": "fcbcf165908dd18a9e49f7ff27810176db8e9f63b4352213741664245224f8aa",
+      "operation": "replace",
+      "output_sha256": "b5bea41b6c623f7c09f1bf24dcae58ebab3c0cdd90ad966bc43a45b44867e12b",
+      "pointer": [
+        "initial_state",
+        "runtime",
+        "settings",
+        "death_supply_piles"
+      ]
+    }
+  ],
+  "death_value_extensions": {
+    "added": [
+      {
+        "canonical_item": "item.energy_potion.three_dose",
+        "effective_death_value": 123,
+        "guide_price": 123,
+        "high_alchemy": 66,
+        "item": "item.energy_potion.three_dose",
+        "source_feed_sha256": "69ecf1c861f20f8854848d1a9f309b34d8c7a69e338bd92db6a8ecddc0e77589",
+        "source_id": 3010,
+        "wiki_price_not_used": 108
+      },
+      {
+        "canonical_item": "item.energy_potion.three_dose",
+        "effective_death_value": 123,
+        "guide_price": 123,
+        "high_alchemy": 66,
+        "item": "item.energy_potion.three_dose.noted",
+        "source_feed_sha256": "69ecf1c861f20f8854848d1a9f309b34d8c7a69e338bd92db6a8ecddc0e77589",
+        "source_id": 3010,
+        "wiki_price_not_used": 108
+      }
+    ],
+    "current_value_rows": 118,
+    "original_value_rows": 116
+  },
+  "executor_conformance_requirements": "research/m1-bindings/contract-gaps.json",
+  "full_target_follow_up": [
+    "The retained beginner-clue/member-only tertiary candidates need their own full-target acquisition and ownership rules before enabling those outcomes; the potion approval does not certify them.",
+    "Reevaluate the six explicit inactive-dependency proofs before extending acquisition, depletion or the ordinary Office item universe."
+  ],
+  "gameplay_executed": false,
+  "item_extensions": {
+    "item.energy_potion.three_dose": {
+      "asset_published": true,
+      "inventory_model": 2697,
+      "missing_inventory_model": false,
+      "raw_inventory_model": 2697,
+      "source_definition": "assets/source/osrs/cache2695/potions/collections/item.json.gz#asset.source.osrs.cache2695.item.3010",
+      "source_id": 3010,
+      "source_payload_sha256": "58e0d540f327a55f0365bd0a62c03e3372e685a6de38108185e719b03f35e2f0"
+    },
+    "item.energy_potion.three_dose.noted": {
+      "asset_published": true,
+      "inventory_model": 2697,
+      "missing_inventory_model": false,
+      "raw_inventory_model": 0,
+      "source_definition": "assets/source/osrs/cache2695/potions/collections/item.json.gz#asset.source.osrs.cache2695.item.3011",
+      "source_id": 3011,
+      "source_payload_sha256": "44e0bc0c7d578139dfd9e1eebdb996e9797fa2465370f479f36c809886af81df"
+    }
+  },
+  "original_content_counts": {
+    "cooks_projected_edges": 22,
+    "cooks_source_transitions": 22,
+    "cooks_states": 10,
+    "death_source_states": 4,
+    "death_source_transitions": 6,
+    "dialogues": 21,
+    "equipment_slots": 11,
+    "interfaces": 26,
+    "items": 116,
+    "mechanics": {
+      "combat_styles": 24,
+      "counters": 134,
+      "entitlements": 12,
+      "experiences": 3,
+      "grants": 17,
+      "ground_policies": 4,
+      "instances": 1,
+      "object_transforms": 68,
+      "prayers": 1,
+      "projectiles": 2,
+      "reconciliations": 1,
+      "spells": 2,
+      "temporary_objects": 1,
+      "travels": 26,
+      "value_providers": 1
+    },
+    "normal_note_pairs": 52,
+    "npcs": 26,
+    "objects": 4837,
+    "quests": 2,
+    "recipes": 11,
+    "regions": 29,
+    "runtime_blocked_cells": 16544,
+    "runtime_collision_cells": 46358,
+    "runtime_walkable_cells": 29814,
+    "shops": 1,
+    "skills": 24,
+    "source_rules": 52,
+    "source_transit_pairs": 11,
+    "spawns": 536,
+    "tutorial_blocked_edges": 0,
+    "tutorial_projected_edges": 73,
+    "tutorial_source_transitions": 73,
+    "tutorial_states": 71
+  },
+  "original_immutable_source_geometry_hashes": {
+    "content/m1/geometry/11822.json.gz": "42902cf1b93afce1a86ff9b78610f14f9f7cd33f83ac215bea4fa296a5dac7d5",
+    "content/m1/geometry/11823.json.gz": "68247492ecfa615686941ba38db49bb19efa8542896fabc19c8e866efc90934f",
+    "content/m1/geometry/11824.json.gz": "556bc2937fa5ca5f0aca9b4c742a81b386d00ffd2f41e506c4cb810723ea54e1",
+    "content/m1/geometry/11825.json.gz": "de1370e4631bdf70312176dafe1325747092e060eb458f53e9307f03b8b9b80f",
+    "content/m1/geometry/11826.json.gz": "fd31ceb8ad9bd97680ce37de309e9359091afb7b7376e1f0428641c6ba20047c",
+    "content/m1/geometry/12078.json.gz": "631ac83d5262b5c22ec651ef32c932eeb9286febe8983ceec16af2e618d4464b",
+    "content/m1/geometry/12079.json.gz": "0713cc84735b66c1bbbd130dfea8b37cdd570657b87fee3447d891da9879fe36",
+    "content/m1/geometry/12080.json.gz": "f3c3a613a0b2f163a1062210db8a4aa3752b6b6cee86dbda100d7671c32abb9c",
+    "content/m1/geometry/12081.json.gz": "ed7cd80271746c5cf376cfd13d9d6746ee5f31377053af8a34303aa7f02dc968",
+    "content/m1/geometry/12082.json.gz": "362d9e85e9714b647c8152bae2581a732d3e87ade71b145ff0f876650e284fde",
+    "content/m1/geometry/12179.json.gz": "dae7bac02c406fd1c96cbbddd21cdab4640f5cd82ebccfa8a012aadfdc346a90",
+    "content/m1/geometry/12180.json.gz": "08e64ecf25d3ba4a0ca02740642f051012c9d6d2a3a0687de5ac57c23138194c",
+    "content/m1/geometry/12181.json.gz": "930e05cccbcc9bdb99e40f2b8efe92832c42a72d20d06044b425a052440a3f6a",
+    "content/m1/geometry/12334.json.gz": "dd78e7e2cfb9998cdc1adf3e3b0f0faa9a834193bf5ce56439fc7e4a5319f5db",
+    "content/m1/geometry/12335.json.gz": "456cc2a12d0957889c0ff2c182ad01f4bbe683123a4766c50dca3be8ed69d51e",
+    "content/m1/geometry/12336.json.gz": "bda505f823bc1a0653fd58f3274ef30da1f9bcb8df8f28728e27982c57e058e4",
+    "content/m1/geometry/12337.json.gz": "68da6d563a562ac52a83f7b6f02f74c293e7d1427fc478be4dc4e030a4aa7c8b",
+    "content/m1/geometry/12338.json.gz": "9686af5a0d0be5abbe60cfe22ab10015bd1d5405b23dc2fd1a949a97de3ebc17",
+    "content/m1/geometry/12339.json.gz": "ff52918621762de4a72e809fc7215a939a8ae2e5b5cc41ce94b3fdd0f5165d6b",
+    "content/m1/geometry/12340.json.gz": "474c0340061c64f34019558224b64cc8948198d6ea63d1f855aa006985c1afe7",
+    "content/m1/geometry/12341.json.gz": "996381723ce886d2579f8df80289d7cbc6e46a29510e016c6771aa2a019f4fce",
+    "content/m1/geometry/12435.json.gz": "139227c1cecf15034811509e227e6fe873475c8ddf49928126728edfe4f639bb",
+    "content/m1/geometry/12436.json.gz": "4af45ba4f77752f9bfa54dd2f30ee1ab241908cf51cc0b840f000c5a000e66d5",
+    "content/m1/geometry/12437.json.gz": "e5d3c81c0ca4002d187e30811b0524460eec874dd85b68765de9c11d63c95e29",
+    "content/m1/geometry/12590.json.gz": "3f0435f8e4d55dc5e35d3eefde69f7fa6a4fa349a5d2713fee1e6b3f3d7428c7",
+    "content/m1/geometry/12591.json.gz": "4b8bea7ee8886f8a647570a84deb846079c5249e1d8f75e200e259edf5a6c152",
+    "content/m1/geometry/12592.json.gz": "ac88967c3d01a9923aa6ddbb59c78d1aed2aa226e99101579b710765f8d5e009",
+    "content/m1/geometry/12593.json.gz": "cbccd523530df25cf2dad509dbe96f5a642f1a7d8155e9f60234887584ed6383",
+    "content/m1/geometry/12594.json.gz": "a719596bf1cb1b8767528823384437dde2cee3063b934136b4fa5cb38b914440",
+    "content/m1/geometry/12595.json.gz": "49ec6df5e5bd0df3bd230169a838895dc2cf0787f8a0b3e4a2d3761a4eb7028d",
+    "content/m1/geometry/12596.json.gz": "9d784715962180436fa6135c70968681ad4ad6987df9091eec4ae0af0106c872",
+    "content/m1/geometry/12597.json.gz": "e201c360c34b97e81f6c9d18a21843ef7df06fb256f82877228a4bd20c8d63d0",
+    "content/m1/geometry/12633.json.gz": "edced2bd17362a07d0a60239eda2b76fef14b16b4902adb80afe5f78886be8d9",
+    "content/m1/geometry/12693.json.gz": "0cb535def5f258e73984df3890c5e80331e864d7541d5954bab8ac7e1780a18e",
+    "content/m1/geometry/12694.json.gz": "b4c8b057f2258ee0152cf7baa9e66ca3218935ed44bcb5a5b685d868678e1d57",
+    "content/m1/geometry/12695.json.gz": "c94645d13a7768277afb169be523b0afff3416544a7f40063e249f8538d10145",
+    "content/m1/geometry/12846.json.gz": "dd3c4efa0370764e2836c92954b9ba9a61b280eb676acd7cce17d671813f9418",
+    "content/m1/geometry/12847.json.gz": "64c7e6af403363e8128aaadbec783fa4030b2dec9501f85d0c895c67f552f84e",
+    "content/m1/geometry/12848.json.gz": "32e7d98920212fb885724ec848d3a01467036aca73dc66b6c95a7d1cf807083a",
+    "content/m1/geometry/12849.json.gz": "b9a3303152b7dfd93a190a4b5283d4842fa87dff3788cdd7b043fb4aa53dc936",
+    "content/m1/geometry/12850.json.gz": "c37239aae68f554e19403158eea22b83bba13616eff7f43f7afce5447be45fb3",
+    "content/m1/geometry/12851.json.gz": "d50f1e03015545eb412cdda67843023e1323d0af9dd904c9adf822584e2c8df3",
+    "content/m1/geometry/12852.json.gz": "718aac093aae55af8c69661c41efbb791f7ee07010d3aa23385d2bf3e8a24693",
+    "content/m1/geometry/12853.json.gz": "7200b54f079a6bbc19865b54a12a1559b8e6c0868ca6519520f7641addc60b3e",
+    "content/m1/geometry/12949.json.gz": "0c8c1e4d36e2e669b2fc8293ae6c864bf98d641c8104136a1e893845aabd66ac",
+    "content/m1/geometry/12950.json.gz": "1c68cbf194e3abb1c84075e250d19076ba431e79f3d89044261d73a01c8cfdf4",
+    "content/m1/geometry/12951.json.gz": "2b01f537eae5a3e4a0f6a7f4c73f8129c0d3b8c8150a4c8f4b445db1724344d1",
+    "content/m1/geometry/13104.json.gz": "f3e295e80cf88e01ee0f6ce7da6e6d5912abeca5007701c29700a88370066a66",
+    "content/m1/geometry/13105.json.gz": "0e5fd0ad0b7321b38eb61a548f1885b9ca5633ed0ad2366f6f6d6dcad9aa70c3",
+    "content/m1/geometry/13106.json.gz": "8e06a66a001de984fdc2cedb904cf095eeb8a29d0fa00be9f52d8370e07e7141",
+    "content/m1/geometry/13107.json.gz": "fa1b8153629a45d6903adf4917044f503fd4c5d152d3a8c1e1d8b4ea9d1aaa4f",
+    "content/m1/geometry/13108.json.gz": "da5ad027ac808531b64efc42cd0a11c0d620ff6561bdf8e4132b6e240c648f0f",
+    "content/m1/geometry/13109.json.gz": "0b6185341af92cf8e685ea2a672236be1c30f316ea7aeb6695e45c7d1d8a4c67",
+    "content/m1/geometry/13205.json.gz": "79cabe32a225e1c4466d9ae40b295ce3351c05c578c01eddd6d8de2c2f9fad09",
+    "content/m1/geometry/13206.json.gz": "d09e5ed531f1d6111001075abb024793f07ad5cd457851bba97785df68ab2e58",
+    "content/m1/geometry/13360.json.gz": "8259a52eff407a20855fc3d047d76c209ba1d31ce8bedbbda1f8879ab181ed8a",
+    "content/m1/geometry/13361.json.gz": "a551e0c605338b54a45b0947afa0dafb463e1b81d1c54a18d8675af497a06650",
+    "content/m1/geometry/13362.json.gz": "fab9c1c7ec99645096ec3a0c4aa518850c551552cd6b1cb9413d13ca67e28e47",
+    "content/m1/geometry/13363.json.gz": "1c31c77bc5209e106d7283ab743440d89ecd2448aefbbf4a644b868bc5d877f4",
+    "content/m1/geometry/13364.json.gz": "ea23a9fff3156fe6043ecb7d7e479e1dd80046ceedf5194c8f4f16b5636412a4",
+    "content/m1/geometry/13365.json.gz": "aab8341ed233c3151d1c395d1c98681c112c0c12a74cf5352e766db604da2639"
+  },
+  "presentation_approved": false,
+  "remaining_selector_hooks": [
+    "Fresh manual PlayerDrop ownership needs an explicit owner-online expiry/world-persistence policy. Current GroundItemPolicy only declares public_after/expires_after; the native source-clock probe records whether the engine honors this origin. Do not reuse DeathSupply or make expiry infinite."
+  ],
+  "residuals": {
+    "active_or_conditionally_active": [],
+    "active_or_conditionally_active_count": 0,
+    "inactive_full_target": [
+      {
+        "path": "items.item.ensouled_goblin_head.stackable.rule",
+        "proof": {
+          "ordinary_acquisition_absent": true,
+          "precondition": "Invalidate if a grant, recipe, ordinary loot, shop or spawn enables this acquisition.",
+          "rare_items": [
+            "item.ensouled_goblin_head",
+            "item.milk.bottomless_bucket"
+          ]
+        },
+        "reason": "Source opcode160/mode2 container-specific stacking/origin rules remain unbound. The source identity is retained; no ordinary M1 grant or acquisition is invented.",
+        "rule_group": "conditional_stack_alternatives"
+      },
+      {
+        "path": "items.item.milk.bottomless_bucket.stackable.rule",
+        "proof": {
+          "ordinary_acquisition_absent": true,
+          "precondition": "Invalidate if a grant, recipe, ordinary loot, shop or spawn enables this acquisition.",
+          "rare_items": [
+            "item.ensouled_goblin_head",
+            "item.milk.bottomless_bucket"
+          ]
+        },
+        "reason": "Source opcode160/mode2 container-specific stacking/origin rules remain unbound. The source identity is retained; no ordinary M1 grant or acquisition is invented.",
+        "rule_group": "conditional_stack_alternatives"
+      },
+      {
+        "path": "mechanics.death.office_overflow",
+        "proof": {
+          "office_capacity": 120,
+          "ordinary_acquired_instance_items": 0,
+          "precondition": "Office must merge ordinary non-instanced item keys. Recheck on universe, acquisition or instance/merge-rule changes; never unconditionally discard overflow.",
+          "represented_item_keys": 118
+        },
+        "reason": "Deletion order above120 Office entries is not source-bound.",
+        "rule_group": "office_capacity_unreachable"
+      },
+      {
+        "path": "spawns.spawn.tutorial.fishing_spot.3099.3090.p0.interactions[0].action.rule.mechanics.respawn",
+        "proof": {
+          "constant_depletion": 0,
+          "precondition": "Recheck if depletion or relocation starts reading this policy.",
+          "respawn_policy_reads_on_this_method": 0
+        },
+        "reason": "No depletion/respawn or relocation observation for these tutorial fishing spots; the source base method is nondepleting.",
+        "rule_group": "nondepleting_fishing_no_respawn"
+      },
+      {
+        "path": "spawns.spawn.tutorial.fishing_spot.3101.3092.p0.interactions[0].action.rule.mechanics.respawn",
+        "proof": {
+          "constant_depletion": 0,
+          "precondition": "Recheck if depletion or relocation starts reading this policy.",
+          "respawn_policy_reads_on_this_method": 0
+        },
+        "reason": "No depletion/respawn or relocation observation for these tutorial fishing spots; the source base method is nondepleting.",
+        "rule_group": "nondepleting_fishing_no_respawn"
+      },
+      {
+        "path": "spawns.spawn.tutorial.fishing_spot.3103.3092.p0.interactions[0].action.rule.mechanics.respawn",
+        "proof": {
+          "constant_depletion": 0,
+          "precondition": "Recheck if depletion or relocation starts reading this policy.",
+          "respawn_policy_reads_on_this_method": 0
+        },
+        "reason": "No depletion/respawn or relocation observation for these tutorial fishing spots; the source base method is nondepleting.",
+        "rule_group": "nondepleting_fishing_no_respawn"
+      }
+    ],
+    "inactive_full_target_count": 6,
+    "policy": "A source binding is required only when its proved branch is reachable. Inactive definitions remain in the full target; no unresolved value is replaced by a success-shaped default.",
+    "unresolved_total": 6
+  },
+  "resolutions_sha256": "56f1a2703f9ae4be2290eeaa3de07dfb5ed1641fc51d2d974c9653540b195737",
+  "runtime3": {
+    "artifact_version": 3,
+    "collision_groups": 49,
+    "combined_collision_selections": 136,
+    "content_behavior_sha256": "68b9112835288bdcdde7d8ace86405fac33604b933c164d0f289abf77bccab79",
+    "content_schema_version": 3,
+    "death_timing": {
+      "source": [
+        {
+          "notes": "Pinned PlayerDeath source waits2, begins the death animation, waits4, then transports/restores. The two source delays map to the declared Dying/Respawning phases; no instant death/reset or duplicate retention. Source SHA-256: 1ea4d9d3915891e691b71ef201996401042fccd30fb1c40455ea322770078b74. Public source-supported reconstruction/interpretation, not a live observation.",
+          "reference": "https://raw.githubusercontent.com/rsmod/rsmod/fa13b3f67172ef36e15d6b1514358aee61411796/api/death/src/main/kotlin/org/rsmod/api/death/PlayerDeath.kt",
+          "revision": "fa13b3f67172ef36e15d6b1514358aee61411796",
+          "status": "inference"
+        },
+        {
+          "notes": "Pinned PlayerDeath source waits2, begins the death animation, waits4, then transports/restores. The two source delays map to the declared Dying/Respawning phases; no instant death/reset or duplicate retention.",
+          "reference": "research/m1-bindings/runtime3-policy.json",
+          "revision": "runtime3-source-profile-v1",
+          "status": "inference"
+        }
+      ],
+      "status": "bound",
+      "value": {
+        "dying_ticks": 2,
+        "respawn_ticks": 4
+      }
+    },
+    "fresh_normal_manual_drop_profile": {
+      "acceptance_impact": "A stage selector alone does not encode playtime release, offline-paused expiration or cross-world ownership. These semantics require real executor conformance, not merely matching private/expiry numbers.",
+      "documented_playtime_below_seconds": 72000,
+      "expiry_clock": "owner_online_ticks",
+      "post_threshold_release_verified": false,
+      "world_scope": "owner_across_worlds"
+    },
+    "gameplay_acceptance_claimed": false,
+    "morph_domain_projection": {
+      "counter": "counter.mill.flour",
+      "object": "object.mill.flour_bin",
+      "proof": "Every valid integer0..30 is explicitly mapped. Out-of-domain counter values fail before morph resolution; an unreachable fallback is totalized to the real empty variant. All reachable variants have identical footprint/clipping and remain per-character; the complete original source morph array/fallback remains in the source bindings.",
+      "reachable_selectors": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20,
+        21,
+        22,
+        23,
+        24,
+        25,
+        26,
+        27,
+        28,
+        29,
+        30
+      ],
+      "runtime_fallback": "object.mill.flour_bin.empty",
+      "source_fallback": null
+    },
+    "new_consume_only_recipes": [
+      "recipe.prayer.bones.ordinary",
+      "recipe.prayer.bones.tutorial"
+    ],
+    "new_ground_policies": [
+      "ground_policy.npc_loot",
+      "ground_policy.player_drop.m1_fresh",
+      "ground_policy.player_drop.ordinary"
+    ],
+    "npc_selector_ids": [
+      "npc.goblin.level_2",
+      "npc.tutorial_chicken",
+      "npc.tutorial_rat"
+    ],
+    "policy": "research/m1-bindings/runtime3-policy.json",
+    "policy_sha256": "cc9e2753bef8fe9ee9ea81ec7f7657297759df9c81ea0a5dfe1b8adf58b0eb53",
+    "presentation_approved": false,
+    "recovery_interfaces": {
+      "grave": "interface.grave",
+      "office": "interface.death_retrieval"
+    },
+    "runtime_schema_version": 1,
+    "source_geometry_preserved": true,
+    "source_index": "research/m1-bindings/runtime3-sources.json",
+    "source_index_sha256": "2076c006b7eac60b5a17f212430fc5cb18f1b8fc44bf2ad100bae3ad92e5b395",
+    "source_supported_inference_not_observed": true,
+    "traversal_definitions": 9,
+    "unarmed_styles": [
+      "style.unarmed.punch",
+      "style.unarmed.kick",
+      "style.unarmed.block"
+    ],
+    "v2_applied_behavior_sha256": "51f71d330d9860b3538e5b362e7a16b5c163e7d39e7f1796b032f69988803266"
+  },
+  "schema_version": 1,
+  "source_supported_inferences_not_owner_approvals": 98,
+  "task": "m1-apply-runtime-bindings",
+  "vital_policy": {
+    "action": "bound_declared_shared_enum",
+    "path": "mechanics.vitals.level_up",
+    "source": [
+      {
+        "notes": "Raise current to new base only when current equaled old base; leave drained and boosted values unchanged. Do not consult this policy for unrelated skills. Snapshot SHA-256: 550b17906059c3126324fd7df3bf80b6b5804b4a05bf280ecdc65af8c5a7dbe6. Documentary/code evidence, not a live observation.",
+        "reference": "https://raw.githubusercontent.com/rsmod/rsmod/fa13b3f67172ef36e15d6b1514358aee61411796/api/player/src/main/kotlin/org/rsmod/api/player/stat/PlayerSkillXP.kt",
+        "revision": "fa13b3f67172ef36e15d6b1514358aee61411796",
+        "status": "inference"
+      },
+      {
+        "notes": "Raise current to new base only when current equaled old base; leave drained and boosted values unchanged. Do not consult this policy for unrelated skills. Snapshot SHA-256: 0eb40a2013c137a314d8e680fc9743d93217efe2a86f386f1b2d3b32ad4174d7. Documentary/code evidence, not a live observation.",
+        "reference": "https://raw.githubusercontent.com/rsmod/rsmod/fa13b3f67172ef36e15d6b1514358aee61411796/api/player/src/integration/kotlin/org/rsmod/api/player/stat/PlayerSkillXPTest.kt",
+        "revision": "fa13b3f67172ef36e15d6b1514358aee61411796",
+        "status": "inference"
+      },
+      {
+        "notes": "Raise current to new base only when current equaled old base; leave drained and boosted values unchanged. Do not consult this policy for unrelated skills. Snapshot SHA-256: 0a4289963c26e6dd7074a80d150c220ff1ce2cb4b65fba589965f99803d5a019. Documentary/code evidence, not a live observation.",
+        "reference": "https://oldschool.runescape.wiki/w/Skills?oldid=15321845",
+        "revision": "15321845",
+        "status": "inference"
+      }
+    ],
+    "value": "raise_if_at_old_base_otherwise_preserve"
+  }
+}

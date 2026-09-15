@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Bind independent source graph oracles to actual schema2 state/events; not a live journey."""
+"""Bind independent source graph oracles to actual content3 state/events; not a live journey."""
 
 from copy import deepcopy
 import json
@@ -119,7 +119,7 @@ def verify():
             raise AssertionError(f"{case['id']}: got {(matched, actual)}, expected {(case['expect_transition_ref'], case['expect_stage_ref'])}")
         results.append({"id": case["id"], "passed": True, "expected_stage": case["expect_stage_ref"]})
     report = {
-        "schema_version": 2,
+        "schema_version": 3,
         "game_content_sha256": sha((CONTENT / "game-content.json.gz").read_bytes()),
         "source_oracles_sha256": sha(canonical(inputs.rules["expected-scenarios"])),
         "independent_graph_oracles": results, "passed": len(results),
@@ -127,7 +127,7 @@ def verify():
         "cook_source_edges_bound": len(bindings["cooks"]),
         "death_source_edges_bound": len(bindings["death"]["transitions"]),
         "source_boundary_policy": "Fixtures are independently supplied post-authoritative operation/state facts. "
-                                  "They test actual schema2 guards/effects against source expectations, not "
+                                  "They test actual content3 guards/effects against source expectations, not "
                                   "unbound projectile/timing/departure/death execution. No public client event "
                                   "injection, source-observation claim or whole-gameplay acceptance is made.",
         "runtime_journey_passed": False,

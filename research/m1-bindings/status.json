@@ -1,15 +1,80 @@
 {
-  "base": "0aea6c0",
-  "bounded_available_source_application_complete": true,
-  "branch": "task/m1-binding-application",
+  "active_executor_failure_count": 2,
+  "active_executor_failures": [
+    {
+      "evidence": {
+        "actual_expiry_after_offline_tick": 300,
+        "actual_policy": "ground_policy.player_drop.m1_fresh",
+        "before_logout_expiry": 300,
+        "controlled_component_random_draws": 12,
+        "expected_expiry_after_offline_tick": 301,
+        "item": "item.coins",
+        "offline_ticks_advanced": 1,
+        "origin": "player_drop",
+        "passed": false,
+        "public_after": null,
+        "quantity_conserved": true,
+        "required_contract": "Fresh manual drops use owner-online expiration like untradeables; GroundProducer::PlayerDrop must not lose lifetime while the owner is offline.",
+        "source": "research/m1-bindings/runtime3-policy.json#fresh_normal_manual_drop_profile"
+      },
+      "id": "fresh_manual_drop_offline_clock"
+    },
+    {
+      "evidence": {
+        "cases": [
+          {
+            "actor_tile": {
+              "plane": 0,
+              "x": 3211,
+              "y": 3215
+            },
+            "atomic_refusal": true,
+            "error": {
+              "code": "out_of_reach",
+              "message": "Target is on another plane, out of range, or blocked."
+            },
+            "expected_next_tick": 1,
+            "mode": "single",
+            "passed": false,
+            "quantity": 1,
+            "required_contract": "Contact a solid source facility from its allowed side without requiring movement/center-to-center sight through its own clipped footprint; keep real intervening walls and source access masks.",
+            "target": "spawn.range.lumbridge.3212.3215.p0.t10.r2"
+          },
+          {
+            "actor_tile": {
+              "plane": 0,
+              "x": 3211,
+              "y": 3215
+            },
+            "atomic_refusal": true,
+            "error": {
+              "code": "out_of_reach",
+              "message": "Target is on another plane, out of range, or blocked."
+            },
+            "expected_next_tick": 3,
+            "mode": "make_x",
+            "passed": false,
+            "quantity": 1,
+            "required_contract": "Contact a solid source facility from its allowed side without requiring movement/center-to-center sight through its own clipped footprint; keep real intervening walls and source access masks.",
+            "target": "spawn.range.lumbridge.3212.3215.p0.t10.r2"
+          }
+        ],
+        "passed": false
+      },
+      "id": "single_and_make_x_one"
+    }
+  ],
+  "base": "6605b09",
+  "bounded_source_application_complete": true,
+  "branch": "task/m1-content-runtime3",
   "compiled_artifact": {
-    "artifact_version": 2,
-    "bytes": 486105,
+    "artifact_version": 3,
+    "bytes": 502831,
     "path": "content/m1/game-content.csc.gz",
-    "schema_version": 2,
-    "sha256": "5217217392faf73d99197c88290cbf63a22b274688b2f0cf85d8ecfc237a6a40",
-    "uncompressed_bytes": 11334334,
-    "uncompressed_sha256": "eb50782a3221f5dbed3d691b8073fe87b7ec4e93ef233266e544ad60dabfab9f"
+    "schema_version": 3,
+    "sha256": "59db342f4d41ea954ed8062b08c15dcc96a3cdddc43d3269d7455d7a1835a8d5",
+    "uncompressed_bytes": 11761569,
+    "uncompressed_sha256": "0181ec69456101defccbc8dd99b579ed849caae6301d801387732bea70fe98f5"
   },
   "counts": {
     "cooks_projected_edges": 22,
@@ -22,12 +87,13 @@
     "interfaces": 26,
     "items": 118,
     "mechanics": {
-      "combat_styles": 24,
+      "collision_groups": 49,
+      "combat_styles": 27,
       "counters": 134,
       "entitlements": 13,
       "experiences": 3,
       "grants": 18,
-      "ground_policies": 4,
+      "ground_policies": 7,
       "instances": 1,
       "object_transforms": 68,
       "prayers": 1,
@@ -36,13 +102,14 @@
       "spells": 2,
       "temporary_objects": 1,
       "travels": 26,
+      "traversal": 9,
       "value_providers": 1
     },
     "normal_note_pairs": 53,
     "npcs": 26,
     "objects": 4837,
     "quests": 2,
-    "recipes": 11,
+    "recipes": 13,
     "regions": 29,
     "runtime_blocked_cells": 16544,
     "runtime_collision_cells": 46358,
@@ -57,49 +124,112 @@
     "tutorial_source_transitions": 73,
     "tutorial_states": 71
   },
+  "declared_v3_selectors_authored": true,
   "evidence_hashes": {
-    "content/m1/game-content.csc.gz": "5217217392faf73d99197c88290cbf63a22b274688b2f0cf85d8ecfc237a6a40",
-    "content/m1/game-content.json.gz": "ecdeabdcb4270698b4706c014459f3ec719d63c03bcd9731bc81b7ae2b6dfd10",
-    "content/m1/manifest.json": "0fbe219fa12ae7bcbb39f25b14355ed301fdeaa6af3a7615d8b1c7b579da1c00",
-    "research/m1-bindings/repeatability.json": "0374acffff447708fc2eb86e265d3e4f5949d39e116ff887523ecc180f07f246",
-    "research/m1-bindings/route-validation.json": "6598235fdee348ee429efdf22b21ccfb9d5206795e2c185ef896a0b1da84423b",
-    "research/m1-bindings/schema-validation.json": "773dd272945b0df3ca0d4333cfdf5f5b2e595e2e2d2aafd20b494b8331da2255",
-    "research/m1-bindings/state-oracle-validation.json": "6031f1aaad229766b407b76209f5a860907a5c950c82daa7508e739f3a28885b",
-    "research/m1-bindings/test-output.log": "2991bd840c8052d8415133b7fd4e5875596e230f8f5bf0e1bf459f4f2a743caf",
-    "research/runtime-bindings/application-result.json": "db43912383e9b9e8fad62eb3f7a06cdaa6491a6d672001a6c8c1cbbc18ec11a6",
-    "research/runtime-bindings/application-source-validation.json": "9bc3b7be29d8f58ffd3f2965518592e4639de65ff4010518954eb10339155a77",
-    "research/runtime-bindings/application-validation.json": "1178725d5dc32a320ce099f749d115023d043e3afc5f4895f5fa5a7caf732ec1"
+    "content/m1/asset-references.json": "7c476e27b8edc63a9fc03fd146666e2ea4ff723ca1b200050739154858773e0e",
+    "content/m1/game-content.csc.gz": "59db342f4d41ea954ed8062b08c15dcc96a3cdddc43d3269d7455d7a1835a8d5",
+    "content/m1/game-content.json.gz": "b9364b8bb56a88779f57eee650bff032c424e862bc9737bbda558ae41802673b",
+    "content/m1/geometry/11822.json.gz": "42902cf1b93afce1a86ff9b78610f14f9f7cd33f83ac215bea4fa296a5dac7d5",
+    "content/m1/geometry/11823.json.gz": "68247492ecfa615686941ba38db49bb19efa8542896fabc19c8e866efc90934f",
+    "content/m1/geometry/11824.json.gz": "556bc2937fa5ca5f0aca9b4c742a81b386d00ffd2f41e506c4cb810723ea54e1",
+    "content/m1/geometry/11825.json.gz": "de1370e4631bdf70312176dafe1325747092e060eb458f53e9307f03b8b9b80f",
+    "content/m1/geometry/11826.json.gz": "fd31ceb8ad9bd97680ce37de309e9359091afb7b7376e1f0428641c6ba20047c",
+    "content/m1/geometry/12078.json.gz": "631ac83d5262b5c22ec651ef32c932eeb9286febe8983ceec16af2e618d4464b",
+    "content/m1/geometry/12079.json.gz": "0713cc84735b66c1bbbd130dfea8b37cdd570657b87fee3447d891da9879fe36",
+    "content/m1/geometry/12080.json.gz": "f3c3a613a0b2f163a1062210db8a4aa3752b6b6cee86dbda100d7671c32abb9c",
+    "content/m1/geometry/12081.json.gz": "ed7cd80271746c5cf376cfd13d9d6746ee5f31377053af8a34303aa7f02dc968",
+    "content/m1/geometry/12082.json.gz": "362d9e85e9714b647c8152bae2581a732d3e87ade71b145ff0f876650e284fde",
+    "content/m1/geometry/12179.json.gz": "dae7bac02c406fd1c96cbbddd21cdab4640f5cd82ebccfa8a012aadfdc346a90",
+    "content/m1/geometry/12180.json.gz": "08e64ecf25d3ba4a0ca02740642f051012c9d6d2a3a0687de5ac57c23138194c",
+    "content/m1/geometry/12181.json.gz": "930e05cccbcc9bdb99e40f2b8efe92832c42a72d20d06044b425a052440a3f6a",
+    "content/m1/geometry/12334.json.gz": "dd78e7e2cfb9998cdc1adf3e3b0f0faa9a834193bf5ce56439fc7e4a5319f5db",
+    "content/m1/geometry/12335.json.gz": "456cc2a12d0957889c0ff2c182ad01f4bbe683123a4766c50dca3be8ed69d51e",
+    "content/m1/geometry/12336.json.gz": "bda505f823bc1a0653fd58f3274ef30da1f9bcb8df8f28728e27982c57e058e4",
+    "content/m1/geometry/12337.json.gz": "68da6d563a562ac52a83f7b6f02f74c293e7d1427fc478be4dc4e030a4aa7c8b",
+    "content/m1/geometry/12338.json.gz": "9686af5a0d0be5abbe60cfe22ab10015bd1d5405b23dc2fd1a949a97de3ebc17",
+    "content/m1/geometry/12339.json.gz": "ff52918621762de4a72e809fc7215a939a8ae2e5b5cc41ce94b3fdd0f5165d6b",
+    "content/m1/geometry/12340.json.gz": "474c0340061c64f34019558224b64cc8948198d6ea63d1f855aa006985c1afe7",
+    "content/m1/geometry/12341.json.gz": "996381723ce886d2579f8df80289d7cbc6e46a29510e016c6771aa2a019f4fce",
+    "content/m1/geometry/12435.json.gz": "139227c1cecf15034811509e227e6fe873475c8ddf49928126728edfe4f639bb",
+    "content/m1/geometry/12436.json.gz": "4af45ba4f77752f9bfa54dd2f30ee1ab241908cf51cc0b840f000c5a000e66d5",
+    "content/m1/geometry/12437.json.gz": "e5d3c81c0ca4002d187e30811b0524460eec874dd85b68765de9c11d63c95e29",
+    "content/m1/geometry/12590.json.gz": "3f0435f8e4d55dc5e35d3eefde69f7fa6a4fa349a5d2713fee1e6b3f3d7428c7",
+    "content/m1/geometry/12591.json.gz": "4b8bea7ee8886f8a647570a84deb846079c5249e1d8f75e200e259edf5a6c152",
+    "content/m1/geometry/12592.json.gz": "ac88967c3d01a9923aa6ddbb59c78d1aed2aa226e99101579b710765f8d5e009",
+    "content/m1/geometry/12593.json.gz": "cbccd523530df25cf2dad509dbe96f5a642f1a7d8155e9f60234887584ed6383",
+    "content/m1/geometry/12594.json.gz": "a719596bf1cb1b8767528823384437dde2cee3063b934136b4fa5cb38b914440",
+    "content/m1/geometry/12595.json.gz": "49ec6df5e5bd0df3bd230169a838895dc2cf0787f8a0b3e4a2d3761a4eb7028d",
+    "content/m1/geometry/12596.json.gz": "9d784715962180436fa6135c70968681ad4ad6987df9091eec4ae0af0106c872",
+    "content/m1/geometry/12597.json.gz": "e201c360c34b97e81f6c9d18a21843ef7df06fb256f82877228a4bd20c8d63d0",
+    "content/m1/geometry/12633.json.gz": "edced2bd17362a07d0a60239eda2b76fef14b16b4902adb80afe5f78886be8d9",
+    "content/m1/geometry/12693.json.gz": "0cb535def5f258e73984df3890c5e80331e864d7541d5954bab8ac7e1780a18e",
+    "content/m1/geometry/12694.json.gz": "b4c8b057f2258ee0152cf7baa9e66ca3218935ed44bcb5a5b685d868678e1d57",
+    "content/m1/geometry/12695.json.gz": "c94645d13a7768277afb169be523b0afff3416544a7f40063e249f8538d10145",
+    "content/m1/geometry/12846.json.gz": "dd3c4efa0370764e2836c92954b9ba9a61b280eb676acd7cce17d671813f9418",
+    "content/m1/geometry/12847.json.gz": "64c7e6af403363e8128aaadbec783fa4030b2dec9501f85d0c895c67f552f84e",
+    "content/m1/geometry/12848.json.gz": "32e7d98920212fb885724ec848d3a01467036aca73dc66b6c95a7d1cf807083a",
+    "content/m1/geometry/12849.json.gz": "b9a3303152b7dfd93a190a4b5283d4842fa87dff3788cdd7b043fb4aa53dc936",
+    "content/m1/geometry/12850.json.gz": "c37239aae68f554e19403158eea22b83bba13616eff7f43f7afce5447be45fb3",
+    "content/m1/geometry/12851.json.gz": "d50f1e03015545eb412cdda67843023e1323d0af9dd904c9adf822584e2c8df3",
+    "content/m1/geometry/12852.json.gz": "718aac093aae55af8c69661c41efbb791f7ee07010d3aa23385d2bf3e8a24693",
+    "content/m1/geometry/12853.json.gz": "7200b54f079a6bbc19865b54a12a1559b8e6c0868ca6519520f7641addc60b3e",
+    "content/m1/geometry/12949.json.gz": "0c8c1e4d36e2e669b2fc8293ae6c864bf98d641c8104136a1e893845aabd66ac",
+    "content/m1/geometry/12950.json.gz": "1c68cbf194e3abb1c84075e250d19076ba431e79f3d89044261d73a01c8cfdf4",
+    "content/m1/geometry/12951.json.gz": "2b01f537eae5a3e4a0f6a7f4c73f8129c0d3b8c8150a4c8f4b445db1724344d1",
+    "content/m1/geometry/13104.json.gz": "f3e295e80cf88e01ee0f6ce7da6e6d5912abeca5007701c29700a88370066a66",
+    "content/m1/geometry/13105.json.gz": "0e5fd0ad0b7321b38eb61a548f1885b9ca5633ed0ad2366f6f6d6dcad9aa70c3",
+    "content/m1/geometry/13106.json.gz": "8e06a66a001de984fdc2cedb904cf095eeb8a29d0fa00be9f52d8370e07e7141",
+    "content/m1/geometry/13107.json.gz": "fa1b8153629a45d6903adf4917044f503fd4c5d152d3a8c1e1d8b4ea9d1aaa4f",
+    "content/m1/geometry/13108.json.gz": "da5ad027ac808531b64efc42cd0a11c0d620ff6561bdf8e4132b6e240c648f0f",
+    "content/m1/geometry/13109.json.gz": "0b6185341af92cf8e685ea2a672236be1c30f316ea7aeb6695e45c7d1d8a4c67",
+    "content/m1/geometry/13205.json.gz": "79cabe32a225e1c4466d9ae40b295ce3351c05c578c01eddd6d8de2c2f9fad09",
+    "content/m1/geometry/13206.json.gz": "d09e5ed531f1d6111001075abb024793f07ad5cd457851bba97785df68ab2e58",
+    "content/m1/geometry/13360.json.gz": "8259a52eff407a20855fc3d047d76c209ba1d31ce8bedbbda1f8879ab181ed8a",
+    "content/m1/geometry/13361.json.gz": "a551e0c605338b54a45b0947afa0dafb463e1b81d1c54a18d8675af497a06650",
+    "content/m1/geometry/13362.json.gz": "fab9c1c7ec99645096ec3a0c4aa518850c551552cd6b1cb9413d13ca67e28e47",
+    "content/m1/geometry/13363.json.gz": "1c31c77bc5209e106d7283ab743440d89ecd2448aefbbf4a644b868bc5d877f4",
+    "content/m1/geometry/13364.json.gz": "ea23a9fff3156fe6043ecb7d7e479e1dd80046ceedf5194c8f4f16b5636412a4",
+    "content/m1/geometry/13365.json.gz": "aab8341ed233c3151d1c395d1c98681c112c0c12a74cf5352e766db604da2639",
+    "content/m1/journey-checkpoints.json": "ce4c4aefc4b635a6315b9adc706d410dec233cbb40b80c8d74e9744a8b23bbc3",
+    "content/m1/manifest.json": "710edc872a14d1a2af465dd2b4e25b88bd135810de0a3544438e6c56db5f8606",
+    "content/m1/slot-bindings.json": "06471dd9450e5fbdb7b216f362e580a34e06170876e4e9cab180c0eb7e843c5e",
+    "research/m1-bindings/application-result.json": "ec142de26dd327cbfa3de489ecca12a9ca58de52b4569252fb4c19557e166153",
+    "research/m1-bindings/application-source-validation.json": "4bc868d5b8f82746fb4f0fecded399521565af4f877c3c55f4b7341b3e402521",
+    "research/m1-bindings/application-validation.json": "79763f78982d84399596084b8b0626320c854ebc45a268e69cf4bf037540d7b5",
+    "research/m1-bindings/asset-refresh-validation.json": "5894de2c7c6bda45ebe4a5a070aabb3137290cee66dd1405baf4baabbd41f519",
+    "research/m1-bindings/check-result.json": "b97b7bcc2d1ecf6ac5554802512e7a8bb99928d183e83b5c917cdef830ee06bf",
+    "research/m1-bindings/compiler-validation.json": "0758dba3de7acedd534f0e49ffe8323f4be4173129521746dbd480fded224a90",
+    "research/m1-bindings/door-bindings.json": "949be7841e7a806e77ea98633e5aef8d08efa904878aed39fdac95f557321de2",
+    "research/m1-bindings/graph-bindings.json": "602e1bddb3ab14a1d13c69e83a4aad56584cc4c037d8aa0640fc56ed758db022",
+    "research/m1-bindings/input-lock.json": "4a9b4368741487b8e9b34c2262310a63fa3ea359a6dcbeff28bdf0d9871ee2a9",
+    "research/m1-bindings/interface-bindings.json": "5f102dec533a053858b6fe74ab3d4742a6a1115b6b1dda89df954285b3cea1d0",
+    "research/m1-bindings/item-bindings.json": "4fa68a0e541fd6eff19d7b7c07461804d98fdece610afd407ff54e2f87b1fc70",
+    "research/m1-bindings/location-bindings.json": "eaa32ef2b1f72bd78c2121a46877e48a9f17052d18b0b5f8c55d836bc5c5d37b",
+    "research/m1-bindings/mechanics-bindings.json.gz": "a98d8b6cbac7d7c22e1abfaeb80c64d94d0df0acee984a9c139da03692e9c0d2",
+    "research/m1-bindings/npc-bindings.json": "9d2458f542fe6394215b21da859bd36b2d2962eda8a2ada6c74d2055aab0df05",
+    "research/m1-bindings/policy-bindings.json": "96a227b69689be770c80f657888e06d6f10428ed140c327f7f8c7008f821e483",
+    "research/m1-bindings/repeatability.json": "a103412b10b3e45be8b6a49c9c8c17bea74d03df8ae37609690567149bedbc3d",
+    "research/m1-bindings/route-validation.json": "5257f5a21a0b12ca3211e3d2e82d7e2745def2ea3f24e4e5d0be4264e39dc723",
+    "research/m1-bindings/runtime3-selectors.json": "182acad81b95eb28abd734d267130f54c9a0ba49499e4c32433a5a9f3d63e2d8",
+    "research/m1-bindings/schema-validation.json": "494c8c910070ed47e7986bc6989b8f1cf40588743378fde535214a05569b6f24",
+    "research/m1-bindings/spawn-bindings.json.gz": "38a1001730b8a73f6b934bef7806c976c53c1dbd721a712c478accc55d38adb8",
+    "research/m1-bindings/state-oracle-validation.json": "ee66459448720189621046bfdb8853d27784b8eb1fca28c71858253a63a80a75",
+    "research/m1-bindings/structural-validation.json": "86707f96ec63d2467fb9cc1ceabba3201e0c9a5664ba6aad143adacec741ace1",
+    "research/m1-bindings/test-output.log": "3810d4a25b70d6aff6f2e0ed2f531500d976c4a65ee63fb27fed9d187331553c",
+    "research/m1-bindings/travel-bindings.json": "47e89010516afd1bca4cef727cb2eebb0cdc5d542029fc66cb655dde38529f90",
+    "research/m1-bindings/unresolved-bindings.json": "38f1d4ad9fb87b548849bdb389c7e9d4c5ed56de1cf784108de7784845993430",
+    "research/m1-bindings/validation-run.json": "4c01ce1ea27e992041102e31027b9417033c33ba1d0747be3c95d59c927b7f8b",
+    "research/m1-bindings/world-bindings.json.gz": "77556ad0703b50d58289f495db911c53be4fa8b7f4c86adf55b5e86264ad9a33"
   },
+  "full_journey_executed": false,
   "fully_done": false,
-  "new_original_item_publication_hookup": {
-    "item_definitions": [
-      3010,
-      3011
-    ],
-    "model_ids": [
-      2697
-    ],
-    "previous_asset_closure_references_preserved": 5254,
-    "source": "research/m1-bindings/application-item-definitions.json.gz"
-  },
-  "overall_m1_product_content_status": "blocked",
-  "parent_action": "Integrate this owned-path source application. Add/relay the tiny actual shared conditional-vital enum; the generator then binds it without guessing fields. Keep HP/Prayer policy off unrelated Mining/Cooking gains. Engine/backend owners finish precise source selectors, ownership and real journey execution. No old data/asset/decoder blocker or blanket111 policy count is used.",
-  "remaining_selector_hooks": [
-    "NPC loot must use original spawn/life/credit/resolved state and the engine's source-owned ground origin; NpcCombatMechanics currently has no explicit ordinary-loot ground-policy selector.",
-    "Preserve beginner-clue and member-only tertiary candidates with source family/ownership eligibility before enabling those full-target outcomes; the potion approval does not certify their selectors.",
-    "Ground death supplies require their source character/world-switch persistence and offline-paused clock, not a wall-clock expiry inferred solely from the policy numbers.",
-    "Engine-owned traversal, attack/recovery UI, engagement and initial setting selectors must consume the applied fields; this content task does not guess new shared field names."
-  ],
+  "input_aggregate_sha256": "95f50b40601a821f7beaed37b624da3cb61b5afb6b381f75375f35530a196c79",
+  "milestone_accepted": false,
+  "parent_action": "Resolve the exact native source-policy failures in contract-gaps.json without clearing source collision or changing private-drop semantics, then rerun python3 tools/m1-content/validate.py --repeat. No v2/decoder/vital/potion-asset blocker remains.",
+  "presentation_approved": false,
   "residuals": {
-    "active_or_conditionally_active": [
-      {
-        "path": "mechanics.vitals.level_up",
-        "reason": "Source current-vital adjustment on a base-level gain is not established by the pinned rules.",
-        "required_branch": "Actual HP/Prayer base-level gain; not Mining/Cooking-only gains.",
-        "rule_group": "level_up_conditional_current"
-      }
-    ],
-    "active_or_conditionally_active_count": 1,
+    "active_or_conditionally_active": [],
+    "active_or_conditionally_active_count": 0,
     "inactive_full_target": [
       {
         "path": "items.item.ensouled_goblin_head.stackable.rule",
@@ -171,63 +301,56 @@
     ],
     "inactive_full_target_count": 6,
     "policy": "A source binding is required only when its proved branch is reachable. Inactive definitions remain in the full target; no unresolved value is replaced by a success-shaped default.",
-    "unresolved_total": 7
+    "unresolved_total": 6
   },
-  "revision": "m1.source-backed.v2.e645c0e61fa4375a",
+  "revision": "m1.source-backed.v3.95f50b40601a821f",
   "runtime_ready": false,
-  "schema_version": 2,
+  "schema_version": 3,
   "source_application": {
-    "approved_adaptation": "adaptation.m1.goblin_energy_potion_provisional",
-    "audit": "research/runtime-bindings/application-result.json",
+    "approved_loot": "adaptation.m1.goblin_energy_potion_provisional",
+    "audit": "research/m1-bindings/application-result.json",
     "coupled_updates": 7,
-    "exact_already_applied": 1,
-    "inferences_not_approvals": 98,
-    "newly_applied": 103,
     "source_bindings_consumed": 104,
-    "validation": "research/runtime-bindings/application-validation.json"
+    "source_inferences_not_approvals": 98,
+    "vital_policy": {
+      "action": "bound_declared_shared_enum",
+      "path": "mechanics.vitals.level_up",
+      "source": [
+        {
+          "notes": "Raise current to new base only when current equaled old base; leave drained and boosted values unchanged. Do not consult this policy for unrelated skills. Snapshot SHA-256: 550b17906059c3126324fd7df3bf80b6b5804b4a05bf280ecdc65af8c5a7dbe6. Documentary/code evidence, not a live observation.",
+          "reference": "https://raw.githubusercontent.com/rsmod/rsmod/fa13b3f67172ef36e15d6b1514358aee61411796/api/player/src/main/kotlin/org/rsmod/api/player/stat/PlayerSkillXP.kt",
+          "revision": "fa13b3f67172ef36e15d6b1514358aee61411796",
+          "status": "inference"
+        },
+        {
+          "notes": "Raise current to new base only when current equaled old base; leave drained and boosted values unchanged. Do not consult this policy for unrelated skills. Snapshot SHA-256: 0eb40a2013c137a314d8e680fc9743d93217efe2a86f386f1b2d3b32ad4174d7. Documentary/code evidence, not a live observation.",
+          "reference": "https://raw.githubusercontent.com/rsmod/rsmod/fa13b3f67172ef36e15d6b1514358aee61411796/api/player/src/integration/kotlin/org/rsmod/api/player/stat/PlayerSkillXPTest.kt",
+          "revision": "fa13b3f67172ef36e15d6b1514358aee61411796",
+          "status": "inference"
+        },
+        {
+          "notes": "Raise current to new base only when current equaled old base; leave drained and boosted values unchanged. Do not consult this policy for unrelated skills. Snapshot SHA-256: 0a4289963c26e6dd7074a80d150c220ff1ce2cb4b65fba589965f99803d5a019. Documentary/code evidence, not a live observation.",
+          "reference": "https://oldschool.runescape.wiki/w/Skills?oldid=15321845",
+          "revision": "15321845",
+          "status": "inference"
+        }
+      ],
+      "value": "raise_if_at_old_base_otherwise_preserve"
+    }
   },
   "status": "blocked",
-  "task": "m1-apply-runtime-bindings",
+  "task": "m1-content-runtime3",
   "validation": {
     "artifact_reloaded": true,
-    "atomic_cleanup_grant_rollback": true,
-    "content_tests_passed": 47,
-    "currency_conservation_cases": 5,
-    "departure_replay_cases": 5,
-    "independent_graph_oracles_passed": 23,
-    "loot_joint_vectors": 8192,
-    "negative_source_mutations_rejected": 8,
-    "original_source_numeric_checks": 195,
-    "presentation_approved": false,
-    "production_gameplay_executed": false,
-    "repeatable_outputs": 85,
-    "required_walk_segments": 30,
-    "source_routes_connected": 30,
-    "strict_runtime_compile_passed": true
-  },
-  "vital_policy": {
-    "action": "awaiting_declared_shared_enum",
-    "path": "mechanics.vitals.level_up",
-    "proposed_value": "raise_if_at_old_base_otherwise_preserve",
-    "source": [
-      {
-        "notes": "Raise current to new base only when current equaled old base; leave drained and boosted values unchanged. Do not consult this policy for unrelated skills. Snapshot SHA-256: 550b17906059c3126324fd7df3bf80b6b5804b4a05bf280ecdc65af8c5a7dbe6. Documentary/code evidence, not a live observation.",
-        "reference": "https://raw.githubusercontent.com/rsmod/rsmod/fa13b3f67172ef36e15d6b1514358aee61411796/api/player/src/main/kotlin/org/rsmod/api/player/stat/PlayerSkillXP.kt",
-        "revision": "fa13b3f67172ef36e15d6b1514358aee61411796",
-        "status": "inference"
-      },
-      {
-        "notes": "Raise current to new base only when current equaled old base; leave drained and boosted values unchanged. Do not consult this policy for unrelated skills. Snapshot SHA-256: 0eb40a2013c137a314d8e680fc9743d93217efe2a86f386f1b2d3b32ad4174d7. Documentary/code evidence, not a live observation.",
-        "reference": "https://raw.githubusercontent.com/rsmod/rsmod/fa13b3f67172ef36e15d6b1514358aee61411796/api/player/src/integration/kotlin/org/rsmod/api/player/stat/PlayerSkillXPTest.kt",
-        "revision": "fa13b3f67172ef36e15d6b1514358aee61411796",
-        "status": "inference"
-      },
-      {
-        "notes": "Raise current to new base only when current equaled old base; leave drained and boosted values unchanged. Do not consult this policy for unrelated skills. Snapshot SHA-256: 0a4289963c26e6dd7074a80d150c220ff1ce2cb4b65fba589965f99803d5a019. Documentary/code evidence, not a live observation.",
-        "reference": "https://oldschool.runescape.wiki/w/Skills?oldid=15321845",
-        "revision": "15321845",
-        "status": "inference"
-      }
-    ]
+    "content_tests": 62,
+    "content_tests_passed": true,
+    "engine_constructed": true,
+    "failed_checks": [
+      "strict_reload_and_native_source_probes"
+    ],
+    "real_source_appearance_request_passed": true,
+    "repeatability_checked": true,
+    "repeatability_passed": true,
+    "strict_runtime_compiled": true
   }
 }

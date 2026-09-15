@@ -1016,11 +1016,9 @@
       }
     },
     "item.energy_potion.three_dose": {
-      "asset_available": false,
+      "asset_available": true,
       "interpretation": "Notes use the source template/base composition. Item models, recolors, retextures, icon framing and wear attachments remain in the original definition.",
-      "missing_model_ids": [
-        2697
-      ],
+      "missing_model_ids": [],
       "models": [
         2697
       ],
@@ -1043,11 +1041,9 @@
       }
     },
     "item.energy_potion.three_dose.noted": {
-      "asset_available": false,
+      "asset_available": true,
       "interpretation": "Notes use the source template/base composition. Item models, recolors, retextures, icon framing and wear attachments remain in the original definition.",
-      "missing_model_ids": [
-        2697
-      ],
+      "missing_model_ids": [],
       "models": [
         2697
       ],

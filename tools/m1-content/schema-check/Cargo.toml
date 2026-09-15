@@ -9,4 +9,5 @@ publish = false
 [dependencies]
 clubscape-content = { path = "../../../crates/content" }
 clubscape-game-types = { path = "../../../crates/game-types" }
+clubscape-world-engine = { path = "../../../crates/world-engine" }
 serde_json = "1"

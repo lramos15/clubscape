@@ -1,6 +1,7 @@
 {
   "groups": [
     {
+      "collision_group": "collision_group.scenery.12348.3207.3217.p0.t0.r1",
       "counter": "counter.door.scenery.12348.3207.3217.p0.t0.r1",
       "coverage": [
         [
@@ -36,6 +37,7 @@
       ]
     },
     {
+      "collision_group": "collision_group.scenery.12349.3213.3221.p0.t0.r0",
       "counter": "counter.door.scenery.12349.3213.3221.p0.t0.r0",
       "coverage": [
         [
@@ -88,6 +90,7 @@
       ]
     },
     {
+      "collision_group": "collision_group.scenery.12986.3186.3268.p0.t0.r0",
       "counter": "counter.door.scenery.12986.3186.3268.p0.t0.r0",
       "coverage": [
         [
@@ -140,6 +143,7 @@
       ]
     },
     {
+      "collision_group": "collision_group.scenery.12986.3188.3279.p0.t0.r1",
       "counter": "counter.door.scenery.12986.3188.3279.p0.t0.r1",
       "coverage": [
         [
@@ -192,6 +196,7 @@
       ]
     },
     {
+      "collision_group": "collision_group.scenery.12986.3213.3261.p0.t0.r0",
       "counter": "counter.door.scenery.12986.3213.3261.p0.t0.r0",
       "coverage": [
         [
@@ -244,6 +249,7 @@
       ]
     },
     {
+      "collision_group": "collision_group.scenery.13001.3188.3272.p0.t0.r0",
       "counter": "counter.door.scenery.13001.3188.3272.p0.t0.r0",
       "coverage": [
         [
@@ -279,6 +285,7 @@
       ]
     },
     {
+      "collision_group": "collision_group.scenery.13001.3189.3275.p0.t0.r1",
       "counter": "counter.door.scenery.13001.3189.3275.p0.t0.r1",
       "coverage": [
         [
@@ -314,6 +321,7 @@
       ]
     },
     {
+      "collision_group": "collision_group.scenery.15056.3147.3172.p0.t0.r1",
       "counter": "counter.door.scenery.15056.3147.3172.p0.t0.r1",
       "coverage": [
         [
@@ -349,6 +357,7 @@
       ]
     },
     {
+      "collision_group": "collision_group.scenery.1521.3166.3302.p0.t0.r1",
       "counter": "counter.door.scenery.1521.3166.3302.p0.t0.r1",
       "coverage": [
         [
@@ -401,6 +410,7 @@
       ]
     },
     {
+      "collision_group": "collision_group.scenery.1521.3244.3216.p0.t0.r3",
       "counter": "counter.door.scenery.1521.3244.3216.p0.t0.r3",
       "coverage": [
         [
@@ -453,6 +463,7 @@
       ]
     },
     {
+      "collision_group": "collision_group.scenery.1535.3118.3124.p0.t0.r0",
       "counter": "counter.door.scenery.1535.3118.3124.p0.t0.r0",
       "coverage": [
         [
@@ -488,6 +499,7 @@
       ]
     },
     {
+      "collision_group": "collision_group.scenery.1535.3124.3126.p0.t0.r3",
       "counter": "counter.door.scenery.1535.3124.3126.p0.t0.r3",
       "coverage": [
         [
@@ -523,6 +535,7 @@
       ]
     },
     {
+      "collision_group": "collision_group.scenery.1535.3139.3081.p0.t0.r1",
       "counter": "counter.door.scenery.1535.3139.3081.p0.t0.r1",
       "coverage": [
         [
@@ -558,6 +571,7 @@
       ]
     },
     {
+      "collision_group": "collision_group.scenery.1535.3207.3210.p1.t0.r2",
       "counter": "counter.door.scenery.1535.3207.3210.p1.t0.r2",
       "coverage": [
         [
@@ -593,6 +607,7 @@
       ]
     },
     {
+      "collision_group": "collision_group.scenery.1535.3207.3227.p1.t0.r2",
       "counter": "counter.door.scenery.1535.3207.3227.p1.t0.r2",
       "coverage": [
         [
@@ -628,6 +643,7 @@
       ]
     },
     {
+      "collision_group": "collision_group.scenery.1535.3225.3240.p0.t0.r2",
       "counter": "counter.door.scenery.1535.3225.3240.p0.t0.r2",
       "coverage": [
         [
@@ -663,6 +679,7 @@
       ]
     },
     {
+      "collision_group": "collision_group.scenery.1535.3225.3293.p0.t0.r0",
       "counter": "counter.door.scenery.1535.3225.3293.p0.t0.r0",
       "coverage": [
         [
@@ -698,6 +715,7 @@
       ]
     },
     {
+      "collision_group": "collision_group.scenery.1535.3226.3214.p0.t0.r2",
       "counter": "counter.door.scenery.1535.3226.3214.p0.t0.r2",
       "coverage": [
         [
@@ -733,6 +751,7 @@
       ]
     },
     {
+      "collision_group": "collision_group.scenery.1535.3226.3223.p0.t0.r2",
       "counter": "counter.door.scenery.1535.3226.3223.p0.t0.r2",
       "coverage": [
         [
@@ -768,6 +787,7 @@
       ]
     },
     {
+      "collision_group": "collision_group.scenery.1535.3230.3291.p0.t0.r2",
       "counter": "counter.door.scenery.1535.3230.3291.p0.t0.r2",
       "coverage": [
         [
@@ -803,6 +823,7 @@
       ]
     },
     {
+      "collision_group": "collision_group.scenery.1535.3234.3207.p0.t0.r0",
       "counter": "counter.door.scenery.1535.3234.3207.p0.t0.r0",
       "coverage": [
         [
@@ -838,6 +859,7 @@
       ]
     },
     {
+      "collision_group": "collision_group.scenery.1535.3235.3198.p0.t0.r1",
       "counter": "counter.door.scenery.1535.3235.3198.p0.t0.r1",
       "coverage": [
         [
@@ -873,6 +895,7 @@
       ]
     },
     {
+      "collision_group": "collision_group.scenery.1535.3246.3244.p0.t0.r3",
       "counter": "counter.door.scenery.1535.3246.3244.p0.t0.r3",
       "coverage": [
         [
@@ -908,6 +931,7 @@
       ]
     },
     {
+      "collision_group": "collision_group.scenery.1535.3247.3193.p0.t0.r0",
       "counter": "counter.door.scenery.1535.3247.3193.p0.t0.r0",
       "coverage": [
         [
@@ -943,6 +967,7 @@
       ]
     },
     {
+      "collision_group": "collision_group.scenery.1540.3238.3210.p0.t0.r0",
       "counter": "counter.door.scenery.1540.3238.3210.p0.t0.r0",
       "coverage": [
         [
@@ -978,6 +1003,7 @@
       ]
     },
     {
+      "collision_group": "collision_group.scenery.1543.3207.3214.p1.t0.r2",
       "counter": "counter.door.scenery.1543.3207.3214.p1.t0.r2",
       "coverage": [
         [
@@ -1013,6 +1039,7 @@
       ]
     },
     {
+      "collision_group": "collision_group.scenery.1543.3207.3222.p1.t0.r2",
       "counter": "counter.door.scenery.1543.3207.3222.p1.t0.r2",
       "coverage": [
         [
@@ -1048,6 +1075,7 @@
       ]
     },
     {
+      "collision_group": "collision_group.scenery.1558.3145.3291.p0.t0.r1",
       "counter": "counter.door.scenery.1558.3145.3291.p0.t0.r1",
       "coverage": [
         [
@@ -1100,6 +1128,7 @@
       ]
     },
     {
+      "collision_group": "collision_group.scenery.1558.3163.3290.p0.t0.r3",
       "counter": "counter.door.scenery.1558.3163.3290.p0.t0.r3",
       "coverage": [
         [
@@ -1152,6 +1181,7 @@
       ]
     },
     {
+      "collision_group": "collision_group.scenery.1558.3181.3289.p0.t0.r3",
       "counter": "counter.door.scenery.1558.3181.3289.p0.t0.r3",
       "coverage": [
         [
@@ -1204,6 +1234,7 @@
       ]
     },
     {
+      "collision_group": "collision_group.scenery.1558.3198.3282.p0.t0.r3",
       "counter": "counter.door.scenery.1558.3198.3282.p0.t0.r3",
       "coverage": [
         [
@@ -1256,6 +1287,7 @@
       ]
     },
     {
+      "collision_group": "collision_group.scenery.1558.3236.3285.p0.t0.r2",
       "counter": "counter.door.scenery.1558.3236.3285.p0.t0.r2",
       "coverage": [
         [
@@ -1308,6 +1340,7 @@
       ]
     },
     {
+      "collision_group": "collision_group.scenery.1558.3236.3296.p0.t0.r2",
       "counter": "counter.door.scenery.1558.3236.3296.p0.t0.r2",
       "coverage": [
         [
@@ -1360,6 +1393,7 @@
       ]
     },
     {
+      "collision_group": "collision_group.scenery.1558.3241.3301.p0.t0.r0",
       "counter": "counter.door.scenery.1558.3241.3301.p0.t0.r0",
       "coverage": [
         [
@@ -1412,6 +1446,7 @@
       ]
     },
     {
+      "collision_group": "collision_group.scenery.1558.3253.3266.p0.t0.r0",
       "counter": "counter.door.scenery.1558.3253.3266.p0.t0.r0",
       "coverage": [
         [
@@ -1464,6 +1499,7 @@
       ]
     },
     {
+      "collision_group": "collision_group.scenery.1558.3261.3321.p0.t0.r1",
       "counter": "counter.door.scenery.1558.3261.3321.p0.t0.r1",
       "coverage": [
         [
@@ -1516,6 +1552,7 @@
       ]
     },
     {
+      "collision_group": "collision_group.scenery.23917.3177.3315.p0.t0.r1",
       "counter": "counter.door.scenery.23917.3177.3315.p0.t0.r1",
       "coverage": [
         [
@@ -1568,6 +1605,7 @@
       ]
     },
     {
+      "collision_group": "collision_group.scenery.2406.3202.3169.p0.t0.r0",
       "counter": "counter.door.scenery.2406.3202.3169.p0.t0.r0",
       "coverage": [
         [
@@ -1603,6 +1641,7 @@
       ]
     },
     {
+      "collision_group": "collision_group.scenery.56376.3230.3235.p0.t0.r1",
       "counter": "counter.door.scenery.56376.3230.3235.p0.t0.r1",
       "coverage": [
         [
@@ -1638,6 +1677,7 @@
       ]
     },
     {
+      "collision_group": "collision_group.tutorial.account_entry.3125.3124.p0.t0.r0",
       "counter": "counter.door.tutorial.account_entry.3125.3124.p0.t0.r0",
       "coverage": [
         [
@@ -1673,6 +1713,7 @@
       ]
     },
     {
+      "collision_group": "collision_group.tutorial.account_exit.3130.3124.p0.t0.r0",
       "counter": "counter.door.tutorial.account_exit.3130.3124.p0.t0.r0",
       "coverage": [
         [
@@ -1708,6 +1749,7 @@
       ]
     },
     {
+      "collision_group": "collision_group.tutorial.chapel_exit.3122.3102.p0.t0.r1",
       "counter": "counter.door.tutorial.chapel_exit.3122.3102.p0.t0.r1",
       "coverage": [
         [
@@ -1743,6 +1785,7 @@
       ]
     },
     {
+      "collision_group": "collision_group.tutorial.chef_entry.3079.3084.p0.t0.r0",
       "counter": "counter.door.tutorial.chef_entry.3079.3084.p0.t0.r0",
       "coverage": [
         [
@@ -1778,6 +1821,7 @@
       ]
     },
     {
+      "collision_group": "collision_group.tutorial.chef_exit.3072.3090.p0.t0.r2",
       "counter": "counter.door.tutorial.chef_exit.3072.3090.p0.t0.r2",
       "coverage": [
         [
@@ -1813,6 +1857,7 @@
       ]
     },
     {
+      "collision_group": "collision_group.tutorial.mine_gate.3094.9502.p0.t0.r2",
       "counter": "counter.door.tutorial.mine_gate.3094.9502.p0.t0.r2",
       "coverage": [
         [
@@ -1865,6 +1910,7 @@
       ]
     },
     {
+      "collision_group": "collision_group.tutorial.quest_entry.3086.3126.p0.t0.r3",
       "counter": "counter.door.tutorial.quest_entry.3086.3126.p0.t0.r3",
       "coverage": [
         [
@@ -1900,6 +1946,7 @@
       ]
     },
     {
+      "collision_group": "collision_group.tutorial.rat_gate.3111.9518.p0.t0.r0",
       "counter": "counter.door.tutorial.rat_gate.3111.9518.p0.t0.r0",
       "coverage": [
         [
@@ -1952,6 +1999,7 @@
       ]
     },
     {
+      "collision_group": "collision_group.tutorial.start_door.3098.3107.p0.t0.r0",
       "counter": "counter.door.tutorial.start_door.3098.3107.p0.t0.r0",
       "coverage": [
         [
@@ -1987,6 +2035,7 @@
       ]
     },
     {
+      "collision_group": "collision_group.tutorial.survival_gate.3089.3091.p0.t0.r2",
       "counter": "counter.door.tutorial.survival_gate.3089.3091.p0.t0.r2",
       "coverage": [
         [

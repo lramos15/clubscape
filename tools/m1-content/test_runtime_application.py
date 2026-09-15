@@ -83,7 +83,7 @@ class RuntimeApplicationTests(unittest.TestCase):
         self.assertEqual(definition["source_id"], 3010)
         self.assertEqual(definition["noted_variant"], "item.energy_potion.three_dose.noted")
         self.assertEqual(self.content["items"]["item.energy_potion.three_dose.noted"]["source_id"], 3011)
-        self.assertIsNone(definition["asset"])
+        self.assertEqual(definition["asset"], "asset.source.osrs.cache2695.item.3010")
         values = self.content["mechanics"]["value_providers"]["value_provider.osrs.death"]["values"]["value"]
         self.assertEqual(values["item.energy_potion.three_dose"], 123)
         self.assertEqual(values["item.energy_potion.three_dose.noted"], 123)

@@ -1,45 +1,74 @@
 {
-  "content_schema_version": 2,
-  "artifact_version": 2,
+  "content_schema_version": 3,
+  "artifact_version": 3,
   "runtime_schema_version": 1,
   "former_v1_representation_gap_count": 17,
   "former_v1_gaps_resolved_by_shared_contracts": true,
   "parent_numeric_map_decoder_fix": "7150464",
   "wind_strike_source_table": {"1": 2, "5": 4, "9": 6, "13": 8},
   "wind_strike_current_binding": "bound; exact parent semantic replacement preserved",
-  "canonical_source_application": "research/runtime-bindings/application-result.json",
+  "canonical_source_application": "research/m1-bindings/application-result.json",
   "source_bindings_consumed": 104,
   "coupled_updates": 7,
   "source_supported_inferences_not_observations_or_approvals": 98,
   "approved_adaptation": "adaptation.m1.goblin_energy_potion_provisional",
   "approval_record": "milestones/m1-goblin-loot-approval.json",
   "source_binding_inventory": "research/m1-bindings/unresolved-bindings.json",
-  "active_vs_inactive_proofs": "research/runtime-bindings/application-result.json#residuals",
-  "conditional_vital_hook": {
+  "active_vs_inactive_proofs": "research/m1-bindings/application-result.json#residuals",
+  "active_source_binding_count": 0,
+  "inactive_source_binding_count": 6,
+  "conditional_vital_policy": {
     "field": "mechanics.vitals.level_up",
     "required_semantics": "Raise current to new base only when it equaled old base; drained/boosted values are unchanged.",
     "example": {"old_base": 10, "new_base": 11, "current": [5, 10, 15], "expected": [5, 11, 15]},
-    "proposed_source_variant": "raise_if_at_old_base_otherwise_preserve",
-    "selection": "The generator emits this source binding only if the actual shared enum declares the corresponding variant; no substitute or forked type.",
+    "bound_source_variant": "raise_if_at_old_base_otherwise_preserve",
+    "selection": "The actual declared shared enum is bound, not a substitute or forked type.",
     "runtime_scope": "Consult only on actual HP/Prayer base-level changes, never on Mining/Cooking-only XP gains.",
-    "current_resolution": "See application-result.json#vital_policy and the strict compiler report; do not infer availability from this proposal."
+    "current_resolution": "Bound and Runtime-compiled; no remaining conditional-vital representation gap."
   },
   "inactive_full_target_dependencies": [
     "Two unacquired ordinary-route conditional/charged alternatives retain definitions and source requirements.",
     "Three fishing respawn fields cannot be read when the bound depletion numerator is exactly zero.",
     "Office overflow is unreachable under the proved non-instanced ordinary-item merge/universe capacity; recheck on any acquisition/universe/instance-merge change."
   ],
-  "new_verified_asset_publication_hookup": {
+  "verified_asset_publication": {
     "item_definitions": [3010, 3011],
     "models": [2697],
+    "placeholder": 19365,
     "source": "research/m1-bindings/application-item-definitions.json.gz",
-    "original_5254_asset_closure": "preserved; no model or replacement asset generated"
+    "current_product_asset_references": 5257,
+    "missing_requested_ids": [],
+    "publication": "assets/manifests/osrs/cache2695-potions-published.json"
   },
-  "remaining_runtime_selector_hooks": [
-    "NPC loot must use original spawn/life/credited actor/resolved-loot identity and source ground ownership/lifetime; data does not authorize duplicate or invalidated kills.",
-    "Beginner-clue and member-only tertiary candidates remain separately retained; their source family/ownership eligibility must be wired before those full-target outcomes are enabled.",
-    "Source ground-origin selectors must distinguish automatic ammunition, manual drops, fire ashes and death supplies with the correct private/active-time/world scope.",
-    "Traversal/attack/recovery UI and source engagement/default selectors remain with the engine finalization owner; this task does not invent new shared field names."
+  "declared_v3_selectors_authored": true,
+  "native_execution_requirements": [
+    {
+      "id": "single_and_make_x_one",
+      "surface": "WorldEngine::require_world_target, touch_edge and solid-target contact/sight",
+      "source_target": "spawn.range.lumbridge.3212.3215.p0.t10.r2",
+      "actor_source_tile": {"x": 3211, "y": 3215, "plane": 0},
+      "input": "ProduceSelected recipe.cooking.bread.lumbridge_range, quantity1, Single versus MakeX",
+      "expected": "Accept from the walkable allowed west side and schedule source single1 versus first-MakeX3 ticks.",
+      "observed_executor_result": "Both requests return OutOfReach because the target footprint itself is movement/sight clipped. This is a native component result, not an OSRS observation.",
+      "parent_action": "Fix face-contact permission using original target shape/access-side/collision information. Do not clear source walls, relocate the range, bypass the facility requirement or alter source cooking timing.",
+      "new_content_field_required": false
+    },
+    {
+      "id": "fresh_manual_drop_offline_clock",
+      "surface": "GroundItemPolicy and WorldEngine::advance_ground_clocks for GroundProducer::PlayerDrop",
+      "source_policy": "ground_policy.player_drop.m1_fresh",
+      "source": "research/m1-bindings/runtime3-policy.json#fresh_normal_manual_drop_profile",
+      "expected": "A fresh manual drop's300 owner-online ticks pause offline; after one offline engine tick, absolute expiry moves300->301 and the25 coins remain owned.",
+      "observed_executor_result": "The correct private policy/origin is selected and quantity is conserved, but expiry remains300. Current pause dispatch covers DeathSupply only.",
+      "parent_action": "Represent/consume an explicit manual-origin owner-online clock and owner/world persistence. Existing public_after/expires_after numbers alone cannot express it. Reconcile source playtime release before claiming post20-hour profile parity.",
+      "new_content_field_required": "A typed clock/persistence/profile selector beyond current PlayerDropPolicy stage selection and GroundItemPolicy public_after/expires_after; shared owner chooses the exact field/enum names."
+    }
+  ],
+  "current_native_evidence": "research/m1-bindings/schema-validation.json#native_source_policy_probes",
+  "validation_command": "python3 tools/m1-content/validate.py --repeat",
+  "unverified_full_target_follow_up": [
+    "Retained beginner-clue/member-only tertiary acquisition and ownership families are not certified by the potion approval.",
+    "New engagement/leash/default/attribution policies remain source-supported reversible inferences, not live captures or owner-approved deviations."
   ],
   "currency_conservation": "Departure cleanup/provisions/entitlements/completed transport/acknowledgement are atomic and do not reset, relocate, duplicate or recreate coins.",
   "runtime_success_claimed": false,

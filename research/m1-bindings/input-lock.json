@@ -1,6 +1,11 @@
 {
-  "aggregate_sha256": "e645c0e61fa4375ada2272fcc56c3a5558d0f184abe338eda723bad8d39b6fbf",
+  "aggregate_sha256": "95f50b40601a821f7beaed37b624da3cb61b5afb6b381f75375f35530a196c79",
   "inputs": [
+    {
+      "bytes": 845835,
+      "path": "assets/manifests/osrs/audio-runtime.json",
+      "sha256": "8e6d1eca465f720829599cae0e1c11b7700a9c7162e53dd5ddec36ceb89787aa"
+    },
     {
       "bytes": 1900496,
       "path": "assets/manifests/osrs/cache2695-content-v2-bundle.json.gz",
@@ -22,9 +27,49 @@
       "sha256": "5d55cdeef8d4e1af1a1215c19d606a3aace0c10c47fc280559aaf8cfb13dbd70"
     },
     {
+      "bytes": 1916698,
+      "path": "assets/manifests/osrs/cache2695-potions-bundle.json.gz",
+      "sha256": "a6bcdca0fe8288b4b586a11537a646c7e745d49c874aa1329e508639a939381e"
+    },
+    {
+      "bytes": 19167,
+      "path": "assets/manifests/osrs/cache2695-potions-extraction.json.gz",
+      "sha256": "20e8d56e2f57ad8a95c7085a6b8db78671ca8f9516315815cb6865a7bcd1c0ac"
+    },
+    {
+      "bytes": 4737,
+      "path": "assets/manifests/osrs/cache2695-potions-published.json",
+      "sha256": "b592db6ba6121e278e03b5c7e435f2fa69bc8da9534adcec22d177ae1b855024"
+    },
+    {
       "bytes": 121738,
       "path": "assets/manifests/osrs/cache2695-published.json",
       "sha256": "84f48642594a6805f5f89c341d178345b7b0ca33f056242f4cb624517cafdb87"
+    },
+    {
+      "bytes": 61148,
+      "path": "assets/source/osrs/cache2695/audio/music/0.mid",
+      "sha256": "e932e57ae9c4cc398283d93ab41c898992b0dc0befd738e9f6fb738cb0b030f3"
+    },
+    {
+      "bytes": 12142,
+      "path": "assets/source/osrs/cache2695/audio/music/144.mid",
+      "sha256": "b041e75f4f02165e4dc056ed73d1aad721a19dd14b656f689edac3c74d3a20e8"
+    },
+    {
+      "bytes": 14223,
+      "path": "assets/source/osrs/cache2695/audio/music/2.mid",
+      "sha256": "6cf4c1c75543e2b1edd6d2ed19da2d42737d428f2a7e575582e22b51a6042525"
+    },
+    {
+      "bytes": 16320,
+      "path": "assets/source/osrs/cache2695/audio/music/62.mid",
+      "sha256": "3aca6df60f59b14deeec6daa9e3919e6ee24ccd6a04e24a6e18e146e4beb0531"
+    },
+    {
+      "bytes": 22613,
+      "path": "assets/source/osrs/cache2695/audio/music/76.mid",
+      "sha256": "2b129f7c6011baaa73fc6d5fac03fe9e5231c7475d4e0487663154f70fa393b5"
     },
     {
       "bytes": 110186,
@@ -5747,6 +5792,2471 @@
       "sha256": "470522234f9e03031d36d580186c90e23c3b0e426cd641d7d4cb23b90bd12303"
     },
     {
+      "bytes": 720,
+      "path": "assets/source/osrs/cache2695/fonts/494.json",
+      "sha256": "34eaba944b3927fe9c3f3938de80acf73c3787f276032cc32cab4ad5cc165f16"
+    },
+    {
+      "bytes": 732,
+      "path": "assets/source/osrs/cache2695/fonts/495.json",
+      "sha256": "1477a4d650b51fb9800c8035db30a5c47d839586fbf7c9968cdd3d7effc042c2"
+    },
+    {
+      "bytes": 743,
+      "path": "assets/source/osrs/cache2695/fonts/496.json",
+      "sha256": "3e7e6f01d7c67e8e10ea99e98b3c9718edbddbb38c8d4f0287e8ff59fc349f92"
+    },
+    {
+      "bytes": 772,
+      "path": "assets/source/osrs/cache2695/fonts/497.json",
+      "sha256": "1b4630f6a3c7aca6eac39b22599c908242a27222f475c0ac59a00815cb0c07e0"
+    },
+    {
+      "bytes": 4636,
+      "path": "assets/source/osrs/cache2695/interfaces/119.json.gz",
+      "sha256": "a1c1df056e8462457f85178dd476e11342aa273193a7c7fb03f3b0d49e22c629"
+    },
+    {
+      "bytes": 6039,
+      "path": "assets/source/osrs/cache2695/interfaces/12.json.gz",
+      "sha256": "a6133834eac17ac8b9efda33ceca3c9989b3d9db36137ff54207678ed1887f09"
+    },
+    {
+      "bytes": 718,
+      "path": "assets/source/osrs/cache2695/interfaces/149.json.gz",
+      "sha256": "ed468d883d7832a2ae700f30b490440ffe75e98ca4a8f2cb5af2d47075013688"
+    },
+    {
+      "bytes": 3745,
+      "path": "assets/source/osrs/cache2695/interfaces/15.json.gz",
+      "sha256": "4f32a3911297f04a2f05b765d496f979df993c43b188d1c73733093d4984d3d4"
+    },
+    {
+      "bytes": 1400,
+      "path": "assets/source/osrs/cache2695/interfaces/153.json.gz",
+      "sha256": "2d09a45eafb5ec4a6decb7c01fe4b645ccfdc0ddaae176c41a4d41eed6fb6abf"
+    },
+    {
+      "bytes": 3123,
+      "path": "assets/source/osrs/cache2695/interfaces/161.json.gz",
+      "sha256": "017c4406b95738659265ea7319832f4e7672afda2b0c4e2d0ce724877f53d697"
+    },
+    {
+      "bytes": 9634,
+      "path": "assets/source/osrs/cache2695/interfaces/162.json.gz",
+      "sha256": "8ef6709728d69c1e3bccaaf122ebc9e2c88ed808d73b3005d21c004ada679f80"
+    },
+    {
+      "bytes": 1686,
+      "path": "assets/source/osrs/cache2695/interfaces/182.json.gz",
+      "sha256": "7ab2d3a8730d2c5e148e248b41404c0e30e4bf7cdf3afb869be06764d469457a"
+    },
+    {
+      "bytes": 2094,
+      "path": "assets/source/osrs/cache2695/interfaces/192.json.gz",
+      "sha256": "4a17b357662c266e7ed3b7797d0629c763c3b1b155784b101f8fc391858778db"
+    },
+    {
+      "bytes": 1812,
+      "path": "assets/source/osrs/cache2695/interfaces/213.json.gz",
+      "sha256": "047f602d2060d877b14a5a3be9866239026d25c0f70e10b3aa5d4a88f68bead9"
+    },
+    {
+      "bytes": 916,
+      "path": "assets/source/osrs/cache2695/interfaces/216.json.gz",
+      "sha256": "557695a8a96c34895b58631f55a9aaef4fb28d257f44081488e78af9b49f2018"
+    },
+    {
+      "bytes": 4648,
+      "path": "assets/source/osrs/cache2695/interfaces/218.json.gz",
+      "sha256": "5a5bad12a3f8495068c1ab3520d329664402a5493f6f5bc5890932811d1d189c"
+    },
+    {
+      "bytes": 751,
+      "path": "assets/source/osrs/cache2695/interfaces/219.json.gz",
+      "sha256": "8bac815a0c4c21935a27ea725740415465ca9f221d3712a8eda3ade817b431a6"
+    },
+    {
+      "bytes": 1025,
+      "path": "assets/source/osrs/cache2695/interfaces/231.json.gz",
+      "sha256": "67bbaf173a56be02c3ce6d648519b57acda626c8f786f8da9b8d8c370223f423"
+    },
+    {
+      "bytes": 1567,
+      "path": "assets/source/osrs/cache2695/interfaces/239.json.gz",
+      "sha256": "10c3544e82c7f7cbe16c81d0788fb142d2434d4eb600b3d8fe73f5c9bfb310b7"
+    },
+    {
+      "bytes": 1422,
+      "path": "assets/source/osrs/cache2695/interfaces/300.json.gz",
+      "sha256": "ee69d3013ef04739f537399c676d6a004d28ae611d3433ad2221bc9bbfbe0be1"
+    },
+    {
+      "bytes": 696,
+      "path": "assets/source/osrs/cache2695/interfaces/301.json.gz",
+      "sha256": "007a457b10652babbb10fd3211e8a5f954137358708d96fd3e4947ec535f49ea"
+    },
+    {
+      "bytes": 1670,
+      "path": "assets/source/osrs/cache2695/interfaces/320.json.gz",
+      "sha256": "f12d426e09d6de0656b18414b9c6c4ed4cf9ce49bb5ad753d2894dc8b0f13798"
+    },
+    {
+      "bytes": 1196,
+      "path": "assets/source/osrs/cache2695/interfaces/399.json.gz",
+      "sha256": "e5f02ef640d238fab0c4d26d72b0908b3a64286a54ca0a3bd6491ec6523dfbda"
+    },
+    {
+      "bytes": 1262,
+      "path": "assets/source/osrs/cache2695/interfaces/4.json.gz",
+      "sha256": "d5f596b25bb31566280097c44201e0233d8f393d99cb10834d0abcb908a7b6f3"
+    },
+    {
+      "bytes": 1710,
+      "path": "assets/source/osrs/cache2695/interfaces/541.json.gz",
+      "sha256": "bf0ac502c66b40f579ea1ac0149f0423ac77f685586ae9fc6b34711118b328e2"
+    },
+    {
+      "bytes": 1686,
+      "path": "assets/source/osrs/cache2695/interfaces/558.json.gz",
+      "sha256": "ca13bae7e6d470f1ea2bb20809af83b7f6f555bc69573e91b446ca977d78681d"
+    },
+    {
+      "bytes": 2699,
+      "path": "assets/source/osrs/cache2695/interfaces/593.json.gz",
+      "sha256": "5678917a3d30b91f687bb194ce1faa3bf2c0b9831a4448b481f92df4cdb6e9f8"
+    },
+    {
+      "bytes": 1395,
+      "path": "assets/source/osrs/cache2695/interfaces/614.json.gz",
+      "sha256": "cc40c7f0eb53b081d920d413205f2f32108c40dc490a1d7ca4ef20e71a87ee44"
+    },
+    {
+      "bytes": 1146,
+      "path": "assets/source/osrs/cache2695/interfaces/669.json.gz",
+      "sha256": "4791b2bb35b47d29aa76b0e9f0e222c5aa45337b43e5d87a5fa451f801363f21"
+    },
+    {
+      "bytes": 1252,
+      "path": "assets/source/osrs/cache2695/interfaces/670.json.gz",
+      "sha256": "ebdf0fe5057a83e3bedeaa66161342113ef38b0085fbc53e9bffcb756722fa55"
+    },
+    {
+      "bytes": 699,
+      "path": "assets/source/osrs/cache2695/interfaces/671.json.gz",
+      "sha256": "cbcaa4822c681f8bd37c21d3dc89ec9fb8104cfd0c5a7b3b8cc6542327d70ca4"
+    },
+    {
+      "bytes": 2580,
+      "path": "assets/source/osrs/cache2695/interfaces/84.json.gz",
+      "sha256": "2c7b906b6e88ac42ac3fb21e623ba8c176290b4efbd4e6e99bb32d28e7da6061"
+    },
+    {
+      "bytes": 694,
+      "path": "assets/source/osrs/cache2695/interfaces/85.json.gz",
+      "sha256": "d062988a01db9f7523ec19e2b5dcc24975d851bc8e9fc5341d5d0767b8de070c"
+    },
+    {
+      "bytes": 925,
+      "path": "assets/source/osrs/cache2695/interfaces/929.json.gz",
+      "sha256": "b29931bb5c7028eb00ccdc123bb5a438dc00279da6f3038c1f64cf1d1ea52717"
+    },
+    {
+      "bytes": 2314,
+      "path": "assets/source/osrs/cache2695/models/1570.json.gz",
+      "sha256": "60761922e93ee89879a1c22df5adebb7e6eb26b2c10ed21cbf31d0ddab35f731"
+    },
+    {
+      "bytes": 4295,
+      "path": "assets/source/osrs/cache2695/models/21547.json.gz",
+      "sha256": "98b61c326c55c6d256a5895c2a4c69224bd417e287daf5c57257dfd26247974c"
+    },
+    {
+      "bytes": 3778,
+      "path": "assets/source/osrs/cache2695/models/24431.json.gz",
+      "sha256": "03d8312c34847a10500defe0af82d116de3af5c348d0599a5d5dbc0da609d143"
+    },
+    {
+      "bytes": 1518,
+      "path": "assets/source/osrs/cache2695/models/24441.json.gz",
+      "sha256": "c37fbd7375d11697946e1f3bee4320f38573c209372614a573d69e4ce7961e84"
+    },
+    {
+      "bytes": 2065,
+      "path": "assets/source/osrs/cache2695/models/24448.json.gz",
+      "sha256": "fca9ff724f8fee66e835ccdcac399cfa2b7b11b99062de6b80cae5378e5f7acf"
+    },
+    {
+      "bytes": 2546,
+      "path": "assets/source/osrs/cache2695/models/24458.json.gz",
+      "sha256": "d61e6478bb67f0d3905556d5e0d51a2c83924ef8573405d8bf2a93c1b77786d2"
+    },
+    {
+      "bytes": 2897,
+      "path": "assets/source/osrs/cache2695/models/24472.json.gz",
+      "sha256": "7feec0e6763f9ac7de49d5d3dc63ceb9bc31bdd9a3ca8e57259e25c993504162"
+    },
+    {
+      "bytes": 3064,
+      "path": "assets/source/osrs/cache2695/models/24482.json.gz",
+      "sha256": "a4874053e2cda55d0cb9ac1cce0e74d5e61b2c273a44789d899e371cf8fdbf14"
+    },
+    {
+      "bytes": 682,
+      "path": "assets/source/osrs/cache2695/potions/collections/item.json.gz",
+      "sha256": "b4ff6b1a39d5d7f80f881b0ccfd413908762f68fa86cc2a6d8a2af0d00d3879c"
+    },
+    {
+      "bytes": 1014,
+      "path": "assets/source/osrs/cache2695/potions/definitions/item/19365.json",
+      "sha256": "1294f08c890aa1df26fde7b8faef40c97b435520e7afec620e582149e288202b"
+    },
+    {
+      "bytes": 1091,
+      "path": "assets/source/osrs/cache2695/potions/definitions/item/3010.json",
+      "sha256": "dce008deb079db78f9a976ee9c2c9539c582200dabf5b1a9850f7428147b063b"
+    },
+    {
+      "bytes": 1011,
+      "path": "assets/source/osrs/cache2695/potions/definitions/item/3011.json",
+      "sha256": "ea3d6a39a6ebd65ffdd0d5a9fd07dd357f63dd8f15a22d1080acf070d766a4bf"
+    },
+    {
+      "bytes": 309,
+      "path": "assets/source/osrs/cache2695/potions/dependency-graph.json.gz",
+      "sha256": "4ac7e6c716f555445daaed9bc649ac801ba5f810276f2ddf2d08b2db42e0fb16"
+    },
+    {
+      "bytes": 1514,
+      "path": "assets/source/osrs/cache2695/potions/models/2697.json.gz",
+      "sha256": "96df4cf7e0f84260ceda2727aa458d978862f746356e8343fd96a6958ca25fa0"
+    },
+    {
+      "bytes": 7,
+      "path": "assets/source/osrs/cache2695/potions/raw/2/10/19365.bin",
+      "sha256": "274dc9532e7ac07e372204d31d60fe562db6825fa5fcce5c21e323a50738f94d"
+    },
+    {
+      "bytes": 127,
+      "path": "assets/source/osrs/cache2695/potions/raw/2/10/3010.bin",
+      "sha256": "58e0d540f327a55f0365bd0a62c03e3372e685a6de38108185e719b03f35e2f0"
+    },
+    {
+      "bytes": 7,
+      "path": "assets/source/osrs/cache2695/potions/raw/2/10/3011.bin",
+      "sha256": "44e0bc0c7d578139dfd9e1eebdb996e9797fa2465370f479f36c809886af81df"
+    },
+    {
+      "bytes": 1050,
+      "path": "assets/source/osrs/cache2695/potions/raw/7/2697/0.bin",
+      "sha256": "e287e7110bbf16d6a2210441d359ebf09dce6869fe871e3232772a30cf3feb96"
+    },
+    {
+      "bytes": 257,
+      "path": "assets/source/osrs/cache2695/raw/13/494/0.bin",
+      "sha256": "299172d0b685fa8d56c4de4fe48ad97e13f7ae92dae4744bbe955d829d96562c"
+    },
+    {
+      "bytes": 257,
+      "path": "assets/source/osrs/cache2695/raw/13/495/0.bin",
+      "sha256": "01e6d6c080143a4a436361dc5c3ea40f83cb188bfda38f64f4e7ea0154680d0d"
+    },
+    {
+      "bytes": 257,
+      "path": "assets/source/osrs/cache2695/raw/13/496/0.bin",
+      "sha256": "af04acc07d927ffd1a53fc1b903f663bc220c32772d72dc16011b4d94b85cc38"
+    },
+    {
+      "bytes": 257,
+      "path": "assets/source/osrs/cache2695/raw/13/497/0.bin",
+      "sha256": "10dab2bddfe9ea69e17a13edd33aa86c9a4f20268008c9ce74ee61ca6b7f1db4"
+    },
+    {
+      "bytes": 186418,
+      "path": "assets/source/osrs/cache2695/raw/22/655/0.bin",
+      "sha256": "8272421a6c6fc1f8b2b81248bb407d947423a4cc61ea6b21ee8aa06563445042"
+    },
+    {
+      "bytes": 336,
+      "path": "assets/source/osrs/cache2695/raw/4/10983/0.bin",
+      "sha256": "d1a17811158274b13783f90b333a217d586955af9efe6996c5eaacb915233e26"
+    },
+    {
+      "bytes": 340,
+      "path": "assets/source/osrs/cache2695/raw/4/10984/0.bin",
+      "sha256": "2e7428cefff451047997d04bb54bbaa3dce0ae7f9835b4cfa34b891696226f6b"
+    },
+    {
+      "bytes": 348,
+      "path": "assets/source/osrs/cache2695/raw/4/10985/0.bin",
+      "sha256": "a4164bbea452950b5d15c6b514523f1e8ae3df8a40faa4a50701003b18957525"
+    },
+    {
+      "bytes": 279,
+      "path": "assets/source/osrs/cache2695/raw/4/10986/0.bin",
+      "sha256": "bb69fd2485a606d40032c0a9d90cd93c9bcdc0f2c3e4524a36a12c5ca1c89ee4"
+    },
+    {
+      "bytes": 213,
+      "path": "assets/source/osrs/cache2695/raw/4/10987/0.bin",
+      "sha256": "ce6a01fdc2bed8166bffbeba7dc463ad8e09f5f86892533d80a7f4a91ba63324"
+    },
+    {
+      "bytes": 274,
+      "path": "assets/source/osrs/cache2695/raw/4/1984/0.bin",
+      "sha256": "0c180ce543ebb633ea81decb9af32eddc8312202ab5554b82c1a0a46f65ace6e"
+    },
+    {
+      "bytes": 270,
+      "path": "assets/source/osrs/cache2695/raw/4/1985/0.bin",
+      "sha256": "afbf27b8f8effc58ea648e20cf071670dc4e2616078eb1ee0d5f700f7dfbca48"
+    },
+    {
+      "bytes": 353,
+      "path": "assets/source/osrs/cache2695/raw/4/1986/0.bin",
+      "sha256": "26c4da2e16318e52787ef2b1f58fe0fae7e84b62812ac8a54771a8e1372e216f"
+    },
+    {
+      "bytes": 475,
+      "path": "assets/source/osrs/cache2695/raw/4/1987/0.bin",
+      "sha256": "83b9a83628fa46a6bb2165804ceb7edd778af49cde175f2f61a515ed06cb0520"
+    },
+    {
+      "bytes": 484,
+      "path": "assets/source/osrs/cache2695/raw/4/1988/0.bin",
+      "sha256": "523f3d0c6060defb100d9a8a45e6077ef6e12252ca980f107f7414c6abbf633f"
+    },
+    {
+      "bytes": 227,
+      "path": "assets/source/osrs/cache2695/raw/4/1991/0.bin",
+      "sha256": "8742ba71b9cf02a1281384a5faf27fdd40ceb1e6779f35ef794e951be9b8802a"
+    },
+    {
+      "bytes": 261,
+      "path": "assets/source/osrs/cache2695/raw/4/1992/0.bin",
+      "sha256": "cd570ff84c8d6f73ffc6f59d90bbdecead663fce3b5e0870939cecbaae62f81e"
+    },
+    {
+      "bytes": 185,
+      "path": "assets/source/osrs/cache2695/raw/4/1994/0.bin",
+      "sha256": "26a43d189f78ccab0a9b5a5dfd44510362df13d975265538da3ea634d7a62e20"
+    },
+    {
+      "bytes": 248,
+      "path": "assets/source/osrs/cache2695/raw/4/1995/0.bin",
+      "sha256": "9d4e309b472c4b2b2445eed1c76b964175ff8fc43e8093c4fcf7c40c3d626ae1"
+    },
+    {
+      "bytes": 203,
+      "path": "assets/source/osrs/cache2695/raw/4/1996/0.bin",
+      "sha256": "aaa0899b93f2af1ef383dfa0df715b2b3222e5831d8fea1cc4d379f28905e5c8"
+    },
+    {
+      "bytes": 160,
+      "path": "assets/source/osrs/cache2695/raw/4/1997/0.bin",
+      "sha256": "48e669cc82d6ee9bac73fe3a90fe64c54079c50997e0b0901be3b6003e5c0241"
+    },
+    {
+      "bytes": 323,
+      "path": "assets/source/osrs/cache2695/raw/4/1999/0.bin",
+      "sha256": "1f16d497bd849b2c0a925e393c86eca78f1812e57acd0fe3425b71574a1f1518"
+    },
+    {
+      "bytes": 187,
+      "path": "assets/source/osrs/cache2695/raw/4/2003/0.bin",
+      "sha256": "f1d6e884eeda98f2c7837673c123b76a60b0237c9c5771d19b92bfa750bc0ec1"
+    },
+    {
+      "bytes": 187,
+      "path": "assets/source/osrs/cache2695/raw/4/2004/0.bin",
+      "sha256": "725340437647763037fd269d125ac180bf518fb16742e08f5f82f87acbaffe9c"
+    },
+    {
+      "bytes": 357,
+      "path": "assets/source/osrs/cache2695/raw/4/2005/0.bin",
+      "sha256": "05fd766bc0e6e333f9e3fd40145cce5c48b39fd488d5d3aef0b4bf6965759004"
+    },
+    {
+      "bytes": 357,
+      "path": "assets/source/osrs/cache2695/raw/4/2006/0.bin",
+      "sha256": "75dcf71f2b7896d930e89506f68cf231e7f55686f232d0ce2b6f89c85834bd66"
+    },
+    {
+      "bytes": 191,
+      "path": "assets/source/osrs/cache2695/raw/4/2007/0.bin",
+      "sha256": "7761982310c1c4cbb3587c7404dff49dc43df3e82aca13ac4f478892aef0287c"
+    },
+    {
+      "bytes": 487,
+      "path": "assets/source/osrs/cache2695/raw/4/2008/0.bin",
+      "sha256": "d20a96dba2d80a2fe7730b70b3cdfa8cbfcc971833d29c4e4e06e071d12c1b26"
+    },
+    {
+      "bytes": 364,
+      "path": "assets/source/osrs/cache2695/raw/4/2009/0.bin",
+      "sha256": "42b491921b14b4417b2ff885faadf7edb5f2b4c27f99578f22157a8a45e8f855"
+    },
+    {
+      "bytes": 251,
+      "path": "assets/source/osrs/cache2695/raw/4/2010/0.bin",
+      "sha256": "d1b835ad4514b8a91b1395f61b4d362716da55465e87b00e74e4d3d6ea192c1b"
+    },
+    {
+      "bytes": 208,
+      "path": "assets/source/osrs/cache2695/raw/4/2011/0.bin",
+      "sha256": "a716d43d290c4702e2e420380724896c4e28fc182733e4b9e53641d561fdcf76"
+    },
+    {
+      "bytes": 220,
+      "path": "assets/source/osrs/cache2695/raw/4/2012/0.bin",
+      "sha256": "bab3708f72e83b8f5dd7b83af849baf3f281dc36dd650227a2d7783958ba0b40"
+    },
+    {
+      "bytes": 270,
+      "path": "assets/source/osrs/cache2695/raw/4/2013/0.bin",
+      "sha256": "bf10204997212313bbe19235084a5cc56d458d9847e0b3ba816f5363d7e47f45"
+    },
+    {
+      "bytes": 482,
+      "path": "assets/source/osrs/cache2695/raw/4/2014/0.bin",
+      "sha256": "29a17eb9c887f1d78cc9c8e86df179d420f9ce3e1cdb2527ef732ddbcb339602"
+    },
+    {
+      "bytes": 205,
+      "path": "assets/source/osrs/cache2695/raw/4/2015/0.bin",
+      "sha256": "32d7f2060fe2a7e8acfde58d42133f9270e4b1f8f9f6e44fcd74fbd14b804de2"
+    },
+    {
+      "bytes": 2384,
+      "path": "assets/source/osrs/cache2695/raw/4/2016/0.bin",
+      "sha256": "2e0a99ba45a58ffac4ba707c47a68930aee93b78b54b3b6804260b9044bfeac5"
+    },
+    {
+      "bytes": 2384,
+      "path": "assets/source/osrs/cache2695/raw/4/2017/0.bin",
+      "sha256": "b984327c96f560e657b2c097b4a712be4cd99891558520e52acc92f4a961fda1"
+    },
+    {
+      "bytes": 138,
+      "path": "assets/source/osrs/cache2695/raw/4/2018/0.bin",
+      "sha256": "988037555c18d2943eb1df62e7c96b97347689df8d7377f617b7048c07be86af"
+    },
+    {
+      "bytes": 141,
+      "path": "assets/source/osrs/cache2695/raw/4/2019/0.bin",
+      "sha256": "1c21c909eae5984266eea907f645cec03244ac52227ac5b04157d8c8ff9c2d89"
+    },
+    {
+      "bytes": 269,
+      "path": "assets/source/osrs/cache2695/raw/4/2020/0.bin",
+      "sha256": "3c4b5f95a964baa7f5c1ebcfaf5f32c1f2a8cc84a59a55c94cd1a65378e099ea"
+    },
+    {
+      "bytes": 119,
+      "path": "assets/source/osrs/cache2695/raw/4/2021/0.bin",
+      "sha256": "e9bf691d0e7b4c3c25694ac87ad07fd8af451785e9fd795321c140c17d3bc43b"
+    },
+    {
+      "bytes": 215,
+      "path": "assets/source/osrs/cache2695/raw/4/2023/0.bin",
+      "sha256": "944bf4bfa1b0a0c8fc7bf89f88f9f21005e73e443ff5382d3f576c1440ee8a1b"
+    },
+    {
+      "bytes": 214,
+      "path": "assets/source/osrs/cache2695/raw/4/2024/0.bin",
+      "sha256": "635d23d133bbcdeeef6d48725063df429655d903524099d928e6a60bdee0418c"
+    },
+    {
+      "bytes": 211,
+      "path": "assets/source/osrs/cache2695/raw/4/2025/0.bin",
+      "sha256": "0375f923d2484b84f82b425dd41f5daead9d4fb8ca1f1ac5f291b2db13e34be1"
+    },
+    {
+      "bytes": 416,
+      "path": "assets/source/osrs/cache2695/raw/4/2026/0.bin",
+      "sha256": "b30e88b22b68ab82eecf23d7beb7d21f9536899d454e0a90bb5bc90436dae907"
+    },
+    {
+      "bytes": 296,
+      "path": "assets/source/osrs/cache2695/raw/4/2027/0.bin",
+      "sha256": "49bd6dab015f46230f6d19e2136a919c9f0a7a0c7d397f260ac7812ee0af3254"
+    },
+    {
+      "bytes": 646,
+      "path": "assets/source/osrs/cache2695/raw/4/2040/0.bin",
+      "sha256": "18d52b06e5b767bb9bdd9c05455b9fa593cdb1f9d394ad4c684fd691ee5f0ea8"
+    },
+    {
+      "bytes": 470,
+      "path": "assets/source/osrs/cache2695/raw/4/2041/0.bin",
+      "sha256": "09ba4278983a2c030c1c1a802daa85822ae13570876c9eb6f5155cd4fcb3f968"
+    },
+    {
+      "bytes": 444,
+      "path": "assets/source/osrs/cache2695/raw/4/2043/0.bin",
+      "sha256": "054f8b177890060e47bc7f1c66375a2d5afd9e2070357fce08b24970411d3103"
+    },
+    {
+      "bytes": 424,
+      "path": "assets/source/osrs/cache2695/raw/4/2044/0.bin",
+      "sha256": "9b154641dadaf02b7f360c3a255bbcf4fb4d620753e3cc89928c74eb7f197235"
+    },
+    {
+      "bytes": 151,
+      "path": "assets/source/osrs/cache2695/raw/4/2045/0.bin",
+      "sha256": "2b1e2c272095c72bb80658fde8ecf2dbf3f73367d2c71ccc446db31fc722b848"
+    },
+    {
+      "bytes": 169,
+      "path": "assets/source/osrs/cache2695/raw/4/2046/0.bin",
+      "sha256": "7908ec7a33088101110f72b4b5257267d317f1691d20872792d3620ccef94367"
+    },
+    {
+      "bytes": 147,
+      "path": "assets/source/osrs/cache2695/raw/4/2048/0.bin",
+      "sha256": "cde666d1eaff820bd31fd5c8756ab9b781c2cc4be1492a035ed58d659639f96e"
+    },
+    {
+      "bytes": 402,
+      "path": "assets/source/osrs/cache2695/raw/4/2049/0.bin",
+      "sha256": "356ab0da046e01bd48b0486fa5aeb6b926f5b2f225d6fc243c6bf1ea3ac087d0"
+    },
+    {
+      "bytes": 165,
+      "path": "assets/source/osrs/cache2695/raw/4/2050/0.bin",
+      "sha256": "076e99f03a8ac291df3eac39816b06a454fb3169393a03131e06a6f737a3a1f6"
+    },
+    {
+      "bytes": 316,
+      "path": "assets/source/osrs/cache2695/raw/4/2052/0.bin",
+      "sha256": "c28b6cfcd2d6827b2cf3ccf1ae25a182f64df7786266d302f478d174d85add09"
+    },
+    {
+      "bytes": 180,
+      "path": "assets/source/osrs/cache2695/raw/4/2057/0.bin",
+      "sha256": "ef24decacb954384f638ede06bc42830d0aca25c28927144eebfba157cd2ae8c"
+    },
+    {
+      "bytes": 187,
+      "path": "assets/source/osrs/cache2695/raw/4/2063/0.bin",
+      "sha256": "c391269c826694def9bfc9cc13146c47382b25ce11de7b5c14a59f3fb4035c20"
+    },
+    {
+      "bytes": 183,
+      "path": "assets/source/osrs/cache2695/raw/4/2065/0.bin",
+      "sha256": "0fa96bd823075952a41945583501e7b43d4670b1853962e2c0bc7597962edce9"
+    },
+    {
+      "bytes": 175,
+      "path": "assets/source/osrs/cache2695/raw/4/2066/0.bin",
+      "sha256": "fb60d66a3f3c6ec36ba28dcf79ebf557319e8c937b89cd4032aa65fd67bd9c1b"
+    },
+    {
+      "bytes": 154,
+      "path": "assets/source/osrs/cache2695/raw/4/2067/0.bin",
+      "sha256": "3827f6e007a46674c0603c04a4d6ff18b38e63900b2cc31b794b1e3c25790ce7"
+    },
+    {
+      "bytes": 180,
+      "path": "assets/source/osrs/cache2695/raw/4/2068/0.bin",
+      "sha256": "927093c1437c0e674956e6bd491c532041b6e075d36bd8360ef1a807001b08c7"
+    },
+    {
+      "bytes": 348,
+      "path": "assets/source/osrs/cache2695/raw/4/2069/0.bin",
+      "sha256": "d8327fdeaf5328c9d33eeaf78dd83bf7003ea0cb8a748a10b43ff6b19f8da526"
+    },
+    {
+      "bytes": 196,
+      "path": "assets/source/osrs/cache2695/raw/4/2070/0.bin",
+      "sha256": "cea5f1c320e0e45b806614bb9c180a3b74b7619558e9a1386f56479f006dce04"
+    },
+    {
+      "bytes": 105,
+      "path": "assets/source/osrs/cache2695/raw/4/2071/0.bin",
+      "sha256": "8e1e12372c4e58cd429b983989c9be73a4f543bd093a21bde78edd0519f718ef"
+    },
+    {
+      "bytes": 212,
+      "path": "assets/source/osrs/cache2695/raw/4/2072/0.bin",
+      "sha256": "cfebcd67edff1d0c9899a6ecc2cac226f9c347555f756411e9ea2aef933427fc"
+    },
+    {
+      "bytes": 239,
+      "path": "assets/source/osrs/cache2695/raw/4/2073/0.bin",
+      "sha256": "8219e4a8989249237d833b5095b7044fa34adf2c52f65f331e936db8e47ea86a"
+    },
+    {
+      "bytes": 215,
+      "path": "assets/source/osrs/cache2695/raw/4/2074/0.bin",
+      "sha256": "ffa29501b6d5a4bd1a8856baea2e3286f2e5b4dc9b5af478b603de71adac3a25"
+    },
+    {
+      "bytes": 177,
+      "path": "assets/source/osrs/cache2695/raw/4/2075/0.bin",
+      "sha256": "7391cdda6f02cbd7b46e8dd29e2bee3645c64e95fb2d71248fedba383aa217c0"
+    },
+    {
+      "bytes": 109,
+      "path": "assets/source/osrs/cache2695/raw/4/2076/0.bin",
+      "sha256": "47b8de30fcebda0d1ec4baf96c236ce72d7cda42c3d4e5ad7c75c57fbc310be4"
+    },
+    {
+      "bytes": 121,
+      "path": "assets/source/osrs/cache2695/raw/4/2077/0.bin",
+      "sha256": "9852986067f5f70c0cdc34eadb3f962442f41ec9eb69d2e9397da9e238063d89"
+    },
+    {
+      "bytes": 125,
+      "path": "assets/source/osrs/cache2695/raw/4/2079/0.bin",
+      "sha256": "6028c7cbf444df8ae79db2580cdc228cf532c96fde8f6ebb88734583bd1bd773"
+    },
+    {
+      "bytes": 125,
+      "path": "assets/source/osrs/cache2695/raw/4/2080/0.bin",
+      "sha256": "e1439d6634d4683c1cd22baddf27be2155fec6d68cd32e9e8956c109f742daa9"
+    },
+    {
+      "bytes": 337,
+      "path": "assets/source/osrs/cache2695/raw/4/2083/0.bin",
+      "sha256": "fa33f9d20e8d0a26d1510d04cea2c3ae42b2fa066380ce405b4718ba09f8e020"
+    },
+    {
+      "bytes": 160,
+      "path": "assets/source/osrs/cache2695/raw/4/2084/0.bin",
+      "sha256": "b61288c9ec4ee1a00ad121273d785c0385a10e240c3bacaf7fc5f2bb53eca9d4"
+    },
+    {
+      "bytes": 201,
+      "path": "assets/source/osrs/cache2695/raw/4/2085/0.bin",
+      "sha256": "3699a524baad77a27b3cdf8080e753faa369ccafb31345e023e9e4d8e6e8e3c7"
+    },
+    {
+      "bytes": 123,
+      "path": "assets/source/osrs/cache2695/raw/4/2086/0.bin",
+      "sha256": "e5b14e9496e657fe409ba85d75af26a2ae703635ba67d585f5eb92ce77b4b9c5"
+    },
+    {
+      "bytes": 232,
+      "path": "assets/source/osrs/cache2695/raw/4/2087/0.bin",
+      "sha256": "e3e7f5d0e1286dbf4a8b09188ec0c5ba41e7088e7ce1ab8307580927b0452e79"
+    },
+    {
+      "bytes": 613,
+      "path": "assets/source/osrs/cache2695/raw/4/2088/0.bin",
+      "sha256": "63c6e6bf9ec83914dca77ce83634560b96913b6b43ebd7988f243b0c3e3a25c2"
+    },
+    {
+      "bytes": 452,
+      "path": "assets/source/osrs/cache2695/raw/4/2089/0.bin",
+      "sha256": "1c7a5222d52774f6f6d3b4ae3db2e917b5349598dd9ac73b6fd8c3667cd55d38"
+    },
+    {
+      "bytes": 650,
+      "path": "assets/source/osrs/cache2695/raw/4/2090/0.bin",
+      "sha256": "61a2f9ddec0715c78ba10b3febdeabe1aebfbff2b0a502b8cf57990209421389"
+    },
+    {
+      "bytes": 236,
+      "path": "assets/source/osrs/cache2695/raw/4/2091/0.bin",
+      "sha256": "41e83511766b84617eca4e779638afb32b13bcac9478ce76f0dd19add3d6dac7"
+    },
+    {
+      "bytes": 335,
+      "path": "assets/source/osrs/cache2695/raw/4/2092/0.bin",
+      "sha256": "79d620987b5d0637c571d30faf1514d0cbf54ab314fbb2dcda79cbd0a0ee3ea3"
+    },
+    {
+      "bytes": 205,
+      "path": "assets/source/osrs/cache2695/raw/4/2093/0.bin",
+      "sha256": "f12c9baece7be848216b746306e85ed6786723add8ea152a2d556a37f9f1f494"
+    },
+    {
+      "bytes": 197,
+      "path": "assets/source/osrs/cache2695/raw/4/2094/0.bin",
+      "sha256": "ed7a13d989d963f009caf5d366f964e32c78aec23d029567c3ab27e288759a1e"
+    },
+    {
+      "bytes": 351,
+      "path": "assets/source/osrs/cache2695/raw/4/2095/0.bin",
+      "sha256": "46aec828b5318a469e636992abc53b69b2f50d61b8e20ad477bf8add42b3d473"
+    },
+    {
+      "bytes": 656,
+      "path": "assets/source/osrs/cache2695/raw/4/2115/0.bin",
+      "sha256": "df8472e3745980eb15d62298d2b8f75cdbfcc6b1931f6bfa0a6d0ebd652b0e3e"
+    },
+    {
+      "bytes": 618,
+      "path": "assets/source/osrs/cache2695/raw/4/2116/0.bin",
+      "sha256": "9cc111a3770f9085bddf4bca9ff9c13541f1188b3cf1118e34172862ce4041df"
+    },
+    {
+      "bytes": 502,
+      "path": "assets/source/osrs/cache2695/raw/4/2119/0.bin",
+      "sha256": "636ac568014afd46ed507b95179de89e611ca37aeb19359fdc455a56bd8d0cf3"
+    },
+    {
+      "bytes": 133,
+      "path": "assets/source/osrs/cache2695/raw/4/2135/0.bin",
+      "sha256": "04abae3420f069d3e2a48b6db258dc16ae5864499dd20e3cab3fc1dedea26402"
+    },
+    {
+      "bytes": 172,
+      "path": "assets/source/osrs/cache2695/raw/4/2136/0.bin",
+      "sha256": "99290af09d28e8a47ecc899b4a8f14adb7825524287e2c0f4aea19a553494ca4"
+    },
+    {
+      "bytes": 137,
+      "path": "assets/source/osrs/cache2695/raw/4/2137/0.bin",
+      "sha256": "0bd61d238c52a24e74c32ac267c197b64fbf914a97cac50e688c7df3d8e84c6b"
+    },
+    {
+      "bytes": 110,
+      "path": "assets/source/osrs/cache2695/raw/4/2138/0.bin",
+      "sha256": "249b88732efd94552f0a4bfedcb1c5b63f91cd473f2f69d068bea0daf7035fd2"
+    },
+    {
+      "bytes": 1031,
+      "path": "assets/source/osrs/cache2695/raw/4/2141/0.bin",
+      "sha256": "b7deba382185de49b2bf86e0349753aa0325b55f048161c6897d37f677dbe2a2"
+    },
+    {
+      "bytes": 363,
+      "path": "assets/source/osrs/cache2695/raw/4/2143/0.bin",
+      "sha256": "8671cc133c3875adcc4a0c07d08252e61b5fc9b1091abeb9ce60a1159a934ba0"
+    },
+    {
+      "bytes": 238,
+      "path": "assets/source/osrs/cache2695/raw/4/2144/0.bin",
+      "sha256": "a28cc8669e6928dad7102074d7f3a641679b8f5eef0ee6b74224a98465f1df90"
+    },
+    {
+      "bytes": 161,
+      "path": "assets/source/osrs/cache2695/raw/4/2145/0.bin",
+      "sha256": "a58194481a94300640865d8a888efa5011f15dd85f921e6478d146a52bc78772"
+    },
+    {
+      "bytes": 799,
+      "path": "assets/source/osrs/cache2695/raw/4/2147/0.bin",
+      "sha256": "d90961b2277c1c45af742f60c7b25bb89b859c604b543bd541959e9a83cab087"
+    },
+    {
+      "bytes": 242,
+      "path": "assets/source/osrs/cache2695/raw/4/2148/0.bin",
+      "sha256": "867f7587bc65cc8139922eab01a1055575f7dce951ae8dd1b81c4e23d2ad4cc1"
+    },
+    {
+      "bytes": 2389,
+      "path": "assets/source/osrs/cache2695/raw/4/2149/0.bin",
+      "sha256": "2d0e6d2af742f34d5b5ced71b0c4792b9a4670b82851306f07bf74989060ce28"
+    },
+    {
+      "bytes": 2389,
+      "path": "assets/source/osrs/cache2695/raw/4/2150/0.bin",
+      "sha256": "1973ff85d08f7c41fcc7688ba723316e4a35b88c6669589d427e22a0545c1c27"
+    },
+    {
+      "bytes": 2389,
+      "path": "assets/source/osrs/cache2695/raw/4/2151/0.bin",
+      "sha256": "5e3ab1addc1884405681023e2763edf592d78dbf72bfea4850d70c9d1044a86e"
+    },
+    {
+      "bytes": 165,
+      "path": "assets/source/osrs/cache2695/raw/4/2152/0.bin",
+      "sha256": "44363ec0948d94f1b3bec77e9748c1e34b829b44af15bcfb248bd69d4d88dfe4"
+    },
+    {
+      "bytes": 974,
+      "path": "assets/source/osrs/cache2695/raw/4/2153/0.bin",
+      "sha256": "6bd2df95f18113cb605d8f33fe60ebdbdc888f1b7d7f5cd98a9dcf018e7bdc98"
+    },
+    {
+      "bytes": 1373,
+      "path": "assets/source/osrs/cache2695/raw/4/2154/0.bin",
+      "sha256": "6b459e8e043f335d311cd9888f3846469f7d3180cf13160e1b179dd3aeb216bf"
+    },
+    {
+      "bytes": 1514,
+      "path": "assets/source/osrs/cache2695/raw/4/2160/0.bin",
+      "sha256": "d48f2155c89b5713bfd5d90d0db878835dc1af3f45f92e143d14951595b5c5d9"
+    },
+    {
+      "bytes": 974,
+      "path": "assets/source/osrs/cache2695/raw/4/2167/0.bin",
+      "sha256": "b2d8aa7ed74b0f6602e010c36fde9c87e612b0dfed14e77b577a0dc2254bc0c2"
+    },
+    {
+      "bytes": 829,
+      "path": "assets/source/osrs/cache2695/raw/4/2168/0.bin",
+      "sha256": "f65cc42f936f9de523bdb530a6a98cde5815fc5d6f0f69d167eaa362b5850db3"
+    },
+    {
+      "bytes": 1161,
+      "path": "assets/source/osrs/cache2695/raw/4/2169/0.bin",
+      "sha256": "fe2754e0306882e4818555cfa0e2816459e6cdc9d4a3d8ae715c5261002ffa4f"
+    },
+    {
+      "bytes": 1161,
+      "path": "assets/source/osrs/cache2695/raw/4/2170/0.bin",
+      "sha256": "beaa7067fb9477d0e8401ea319594cab8f5c3adcdadae4607868069eea6d0bd4"
+    },
+    {
+      "bytes": 675,
+      "path": "assets/source/osrs/cache2695/raw/4/2171/0.bin",
+      "sha256": "8540448f460471057c342af187deb67446a90127cd031ddffd259ae0a27a091f"
+    },
+    {
+      "bytes": 350,
+      "path": "assets/source/osrs/cache2695/raw/4/2179/0.bin",
+      "sha256": "65ab1518957aedbb09b391deca13395627a46fe32016e5f6c3abb711218b9894"
+    },
+    {
+      "bytes": 350,
+      "path": "assets/source/osrs/cache2695/raw/4/2180/0.bin",
+      "sha256": "6046db95cd8de19caeab513cfd81bb2b2eb2b9a012ed3277ec874ea05419b716"
+    },
+    {
+      "bytes": 163,
+      "path": "assets/source/osrs/cache2695/raw/4/2181/0.bin",
+      "sha256": "c3de6da27fd3e68972f636a304a5a5691d45bbb8e34109d60c2970c2821f34e9"
+    },
+    {
+      "bytes": 828,
+      "path": "assets/source/osrs/cache2695/raw/4/2182/0.bin",
+      "sha256": "c62ad97926cce4f82d0cda1719174896cefbf3315b51fb2206b316ac4cbee9e9"
+    },
+    {
+      "bytes": 823,
+      "path": "assets/source/osrs/cache2695/raw/4/2183/0.bin",
+      "sha256": "acf46f8bc805272b5acf0445edeabd49481c4959b9efc90da3e7ffe65233ea05"
+    },
+    {
+      "bytes": 244,
+      "path": "assets/source/osrs/cache2695/raw/4/2184/0.bin",
+      "sha256": "c287799f4f75e6d77e7f6fe9199b4f81b7b46be7649736a5f907a43c0f46434d"
+    },
+    {
+      "bytes": 466,
+      "path": "assets/source/osrs/cache2695/raw/4/2185/0.bin",
+      "sha256": "c947169f6697e5a64a0aaacf1afabe3083d3261ee2f758833b28478c62ec7289"
+    },
+    {
+      "bytes": 122,
+      "path": "assets/source/osrs/cache2695/raw/4/2186/0.bin",
+      "sha256": "fa103d794490a1237c6ebf5ff9e3e6167c931ef85da6cf7d09c92bb467474245"
+    },
+    {
+      "bytes": 122,
+      "path": "assets/source/osrs/cache2695/raw/4/2187/0.bin",
+      "sha256": "6386a18cf81d8bdea348f2b972332b26a72a879090816c46e6fba9e24886e7c6"
+    },
+    {
+      "bytes": 142,
+      "path": "assets/source/osrs/cache2695/raw/4/2188/0.bin",
+      "sha256": "e45607d5f5efe7c2462200adb7aaff6537628301467ba67222f92f31f338e874"
+    },
+    {
+      "bytes": 179,
+      "path": "assets/source/osrs/cache2695/raw/4/2194/0.bin",
+      "sha256": "65623d7cda0ea358b0a7a64e0e9ab094087f8f61b2f638454a9da08484345ed9"
+    },
+    {
+      "bytes": 758,
+      "path": "assets/source/osrs/cache2695/raw/4/2197/0.bin",
+      "sha256": "5801fe444f56e8ba1bbe927fdd9c861c68371523b915bf26b5df541c3f5a0380"
+    },
+    {
+      "bytes": 390,
+      "path": "assets/source/osrs/cache2695/raw/4/2198/0.bin",
+      "sha256": "9cec9d8c958f431fd52cfd77db62f57c6b14b3ad981277650926bea1a6247a71"
+    },
+    {
+      "bytes": 206,
+      "path": "assets/source/osrs/cache2695/raw/4/2199/0.bin",
+      "sha256": "78d817a2ae7a86e4d453caa057b5cb449adfa2f10621696d155469a7816122da"
+    },
+    {
+      "bytes": 390,
+      "path": "assets/source/osrs/cache2695/raw/4/2200/0.bin",
+      "sha256": "da4aee0a731c716fce83a9d2c3466a800992ab7fb1da1d71f881949a980e105a"
+    },
+    {
+      "bytes": 88,
+      "path": "assets/source/osrs/cache2695/raw/4/2204/0.bin",
+      "sha256": "3a24e61d579765ec9dc37a8e348eb737cc407acd804a79d875da232a5a2bbf86"
+    },
+    {
+      "bytes": 222,
+      "path": "assets/source/osrs/cache2695/raw/4/2208/0.bin",
+      "sha256": "49842be9ffd2e73e65884e061de220b7a4d82faa1d221328cabb2ef155ecad2f"
+    },
+    {
+      "bytes": 222,
+      "path": "assets/source/osrs/cache2695/raw/4/2209/0.bin",
+      "sha256": "35c166ec3e4a86c431dcd89fb17a78d4659fbb1dae6e1cf59a70279a90a024f4"
+    },
+    {
+      "bytes": 345,
+      "path": "assets/source/osrs/cache2695/raw/4/2220/0.bin",
+      "sha256": "7bb32d6f9c6d192cea153739a5e340fc9c1cd36bc02e4329f5f90a5353cc6141"
+    },
+    {
+      "bytes": 305,
+      "path": "assets/source/osrs/cache2695/raw/4/2223/0.bin",
+      "sha256": "c878c8eec1c0309a08153bfa16aae77efcfa3365ac75ad628648fc3c436303f5"
+    },
+    {
+      "bytes": 235,
+      "path": "assets/source/osrs/cache2695/raw/4/2224/0.bin",
+      "sha256": "00d6e50182579a496da58814085b9ca78a6e23372a5972e8edc310a00cc93355"
+    },
+    {
+      "bytes": 352,
+      "path": "assets/source/osrs/cache2695/raw/4/2226/0.bin",
+      "sha256": "265cb86620ea55d1e2309b48120c4a042ed62da38b26803c8a67e7ede1bda2f5"
+    },
+    {
+      "bytes": 379,
+      "path": "assets/source/osrs/cache2695/raw/4/2227/0.bin",
+      "sha256": "8dd24df635d18c032927ee811f6283f2106c6da263f651aa65508a843628b58e"
+    },
+    {
+      "bytes": 79,
+      "path": "assets/source/osrs/cache2695/raw/4/2411/0.bin",
+      "sha256": "551db546b9a2e432af3ae60b9d4fa3a7bc9e022f4471df3f240e8ca3d2b49468"
+    },
+    {
+      "bytes": 1268,
+      "path": "assets/source/osrs/cache2695/raw/4/2422/0.bin",
+      "sha256": "945e965268e6cfda79b0f6d878aae45e581de6a1bd4288d472584ce4f3e5d252"
+    },
+    {
+      "bytes": 208,
+      "path": "assets/source/osrs/cache2695/raw/4/2577/0.bin",
+      "sha256": "b40ede83ffe6d5b098d18e48913a2dc0cd8f90868ae0645186c4ab060490a14c"
+    },
+    {
+      "bytes": 142,
+      "path": "assets/source/osrs/cache2695/raw/4/2596/0.bin",
+      "sha256": "4583061091307f1a5168cfc03676bea4f6c921f3d9a8cdce30aba8d38eac5932"
+    },
+    {
+      "bytes": 101,
+      "path": "assets/source/osrs/cache2695/raw/4/2735/0.bin",
+      "sha256": "0aa4cfb07beb06fa433d36a96b704a0168c314b7b74fb1243df84debc94c227c"
+    },
+    {
+      "bytes": 263,
+      "path": "assets/source/osrs/cache2695/raw/4/3046/0.bin",
+      "sha256": "a766264ee4e77b050e22ba3ad42bff3bc62e40c2741c14bbe5095c17dd31db5c"
+    },
+    {
+      "bytes": 440,
+      "path": "assets/source/osrs/cache2695/raw/4/3047/0.bin",
+      "sha256": "2627a772c472b0a9557ccdf08b5a72fe7379993d7a145d479ca28ed296c02989"
+    },
+    {
+      "bytes": 257,
+      "path": "assets/source/osrs/cache2695/raw/4/3048/0.bin",
+      "sha256": "74942a66da16befea6aacdc1447d12e613f8d4585eec35867283ca29e50443e3"
+    },
+    {
+      "bytes": 256,
+      "path": "assets/source/osrs/cache2695/raw/4/3049/0.bin",
+      "sha256": "b784a74042a86827d7830ecea48b32f558cd648fd416c170ee00826ef12d825f"
+    },
+    {
+      "bytes": 169,
+      "path": "assets/source/osrs/cache2695/raw/4/3056/0.bin",
+      "sha256": "cc3c0e7ebe80259552ac0f779c0b651205b27f3d3312f82484c14e838ba8ec49"
+    },
+    {
+      "bytes": 169,
+      "path": "assets/source/osrs/cache2695/raw/4/3057/0.bin",
+      "sha256": "b1b184fc6e272c9f149c2cd6b8deabdaca8527f717a09db183cd2570dee741de"
+    },
+    {
+      "bytes": 169,
+      "path": "assets/source/osrs/cache2695/raw/4/3058/0.bin",
+      "sha256": "73a9f90b9d7df5f6599e61c82bb9cd897927921d8ef13331a8b83ec8a5647704"
+    },
+    {
+      "bytes": 173,
+      "path": "assets/source/osrs/cache2695/raw/4/3059/0.bin",
+      "sha256": "f528db67c4460d9d5dc05a16667ad6264652df13e65b09c619de7b2a2f91f15e"
+    },
+    {
+      "bytes": 173,
+      "path": "assets/source/osrs/cache2695/raw/4/3060/0.bin",
+      "sha256": "ed3f57ba409502fb0971a28fc9b20107043b9257c9e75800deb1f8fc8b2996bc"
+    },
+    {
+      "bytes": 177,
+      "path": "assets/source/osrs/cache2695/raw/4/3061/0.bin",
+      "sha256": "ba20261513b594ff0c4de8d02cbb6893b974339857e81265d4d2c6727b28253e"
+    },
+    {
+      "bytes": 94,
+      "path": "assets/source/osrs/cache2695/raw/4/3073/0.bin",
+      "sha256": "866f5a99415f58efb2213e9bf2806e59360a89f16f06409417503d4669e6075f"
+    },
+    {
+      "bytes": 373,
+      "path": "assets/source/osrs/cache2695/raw/4/3077/0.bin",
+      "sha256": "c92fd089a84c2eeb5c81a1b1bcdaea11f0c7d2adf966e4418a6a102517eaa8d1"
+    },
+    {
+      "bytes": 1368,
+      "path": "assets/source/osrs/cache2695/raw/4/3078/0.bin",
+      "sha256": "0a640c7a5204422ed3ecab33fcdca17d0a7faa9d28afaccfa6fdbdfe0ee44277"
+    },
+    {
+      "bytes": 147,
+      "path": "assets/source/osrs/cache2695/raw/4/3080/0.bin",
+      "sha256": "858b6285219a4a26103b6a6b32380ac3d6756414fe228112ecc0017e6fd5c9a4"
+    },
+    {
+      "bytes": 151,
+      "path": "assets/source/osrs/cache2695/raw/4/3081/0.bin",
+      "sha256": "5b8f1fc9b3ea1a3e00fcf6e830c311e0003a162413e913f1dcb85aa58fa5b22c"
+    },
+    {
+      "bytes": 219,
+      "path": "assets/source/osrs/cache2695/raw/4/3083/0.bin",
+      "sha256": "02831faf91b4db1bdbee1dc96c568c9419273f3f6c8cfe5238c3713c68c51140"
+    },
+    {
+      "bytes": 1407,
+      "path": "assets/source/osrs/cache2695/raw/4/3084/0.bin",
+      "sha256": "14b894b32ef3ac33e362ad66594c698c392efa8e0e3fbe2d307517323f4de524"
+    },
+    {
+      "bytes": 1407,
+      "path": "assets/source/osrs/cache2695/raw/4/3085/0.bin",
+      "sha256": "3aa6f602d4c6c03552ee14a82595e32fe1dd230530f7167764e06c1a89856c23"
+    },
+    {
+      "bytes": 1514,
+      "path": "assets/source/osrs/cache2695/raw/4/3086/0.bin",
+      "sha256": "b01640c64f1b52e2544e54983a7d464fe42a4fdc71f424ca213087b988751571"
+    },
+    {
+      "bytes": 435,
+      "path": "assets/source/osrs/cache2695/raw/4/3087/0.bin",
+      "sha256": "01a95a2a5f7fc5f6f042367d26f25a624092384fd1d05013e0b85f36794131c9"
+    },
+    {
+      "bytes": 161,
+      "path": "assets/source/osrs/cache2695/raw/4/3093/0.bin",
+      "sha256": "e017b2f2ad98633129ad3a92af610f1f8e464dcbebd11ef6f919f33277d842bd"
+    },
+    {
+      "bytes": 122,
+      "path": "assets/source/osrs/cache2695/raw/4/3094/0.bin",
+      "sha256": "ae5abcdbfabae1b6503d21b54b11bcda841792629037a25bf0a661637e4e28f9"
+    },
+    {
+      "bytes": 195,
+      "path": "assets/source/osrs/cache2695/raw/4/3095/0.bin",
+      "sha256": "b92de00659f3c3cd8562eff40c0710bcc798a22ba51094ec283c38b324e6f608"
+    },
+    {
+      "bytes": 207,
+      "path": "assets/source/osrs/cache2695/raw/4/3096/0.bin",
+      "sha256": "923d5b5472c79d4fec598b5e53f024b38d639bedf01512491a36ce4d549551fc"
+    },
+    {
+      "bytes": 155,
+      "path": "assets/source/osrs/cache2695/raw/4/3105/0.bin",
+      "sha256": "9eba4b8790bc530ce8202ea58e6832f8bbdc2ebe046a0c1862ea4d53711de866"
+    },
+    {
+      "bytes": 155,
+      "path": "assets/source/osrs/cache2695/raw/4/3106/0.bin",
+      "sha256": "1ba81fd86b37355767faddd666ed49cc7d1efd6941be50288eba6ec9f5921bf4"
+    },
+    {
+      "bytes": 152,
+      "path": "assets/source/osrs/cache2695/raw/4/3107/0.bin",
+      "sha256": "6f188d80113880619a6a53c2094f3dfc1c4f70c910d53b62fdd2b05cc3da10e6"
+    },
+    {
+      "bytes": 156,
+      "path": "assets/source/osrs/cache2695/raw/4/3108/0.bin",
+      "sha256": "dcf8732deaa09789676b4df47c14f5f8c1cbc35e41b5373592e46a53fecb3f9d"
+    },
+    {
+      "bytes": 164,
+      "path": "assets/source/osrs/cache2695/raw/4/3109/0.bin",
+      "sha256": "5ed00adc23376d5ac86ff559bee69b828a206cad9b437765177495c6f005d38d"
+    },
+    {
+      "bytes": 262,
+      "path": "assets/source/osrs/cache2695/raw/4/3110/0.bin",
+      "sha256": "8679cab3caf6111dd52739305c4bc5afd988552cef859170213b5a516f2c4e29"
+    },
+    {
+      "bytes": 203,
+      "path": "assets/source/osrs/cache2695/raw/4/3111/0.bin",
+      "sha256": "3f2f352bd65a6acbb6a8461711ef0f9bcc01b14175a291ce1b0f8172a61b9d34"
+    },
+    {
+      "bytes": 206,
+      "path": "assets/source/osrs/cache2695/raw/4/3112/0.bin",
+      "sha256": "873601b42f0f7a973bb8f77d3d21158dce33ecf8263314f1fb5ece35a59e9e1a"
+    },
+    {
+      "bytes": 209,
+      "path": "assets/source/osrs/cache2695/raw/4/3113/0.bin",
+      "sha256": "c2f48c1b72ca187d2ea29aecc1c84f4115e3f88198fa769c89921288b4d57b33"
+    },
+    {
+      "bytes": 196,
+      "path": "assets/source/osrs/cache2695/raw/4/3120/0.bin",
+      "sha256": "ff8165f5975500c9dc8e45e90c3326aa6e617d7755ba40edc913e5129582ae34"
+    },
+    {
+      "bytes": 356,
+      "path": "assets/source/osrs/cache2695/raw/4/3121/0.bin",
+      "sha256": "9a94cfee4d57510b19f4255a31717ab0ec03f85083dfc898973a0e210c7aae98"
+    },
+    {
+      "bytes": 542,
+      "path": "assets/source/osrs/cache2695/raw/4/3134/0.bin",
+      "sha256": "99d80e6154ef2703ebaef45df34fb913a146d64aaf45fad44c9bc7006f566ea6"
+    },
+    {
+      "bytes": 155,
+      "path": "assets/source/osrs/cache2695/raw/4/3139/0.bin",
+      "sha256": "b48653cfe2cc9b276fc25f233e9341b66f1a4afd31b2151c12296f776f5febe9"
+    },
+    {
+      "bytes": 132,
+      "path": "assets/source/osrs/cache2695/raw/4/3141/0.bin",
+      "sha256": "8fdb2a7d824c5c4de0c120380d4c4161bf66f28a1a36e13bc3a2195658565c62"
+    },
+    {
+      "bytes": 141,
+      "path": "assets/source/osrs/cache2695/raw/4/3142/0.bin",
+      "sha256": "8cd63880a0b7d7288462691d16cadb956fcd8499290e9f64ec8883fa80ca4eef"
+    },
+    {
+      "bytes": 161,
+      "path": "assets/source/osrs/cache2695/raw/4/3144/0.bin",
+      "sha256": "acb505d503e9a144105351f5c33862ada0ff4206bfae7f0b0fb04142a8eb2d41"
+    },
+    {
+      "bytes": 425,
+      "path": "assets/source/osrs/cache2695/raw/4/3146/0.bin",
+      "sha256": "74e6844f615d821cd1e371dcbba1071747ec2ff5112d7eebe24094353d892f36"
+    },
+    {
+      "bytes": 143,
+      "path": "assets/source/osrs/cache2695/raw/4/3220/0.bin",
+      "sha256": "37feb69751d1ea3c044fe60a5758e30cb2afe801d861cda76336333b97528969"
+    },
+    {
+      "bytes": 100,
+      "path": "assets/source/osrs/cache2695/raw/4/3595/0.bin",
+      "sha256": "204a28af07f73b2a1121d81dc0cce225946dacfd83d6a5e6a11c4855f0c7b97d"
+    },
+    {
+      "bytes": 100,
+      "path": "assets/source/osrs/cache2695/raw/4/3596/0.bin",
+      "sha256": "77bf12ab32878aee920080e1142d7a3a9b34f31e450a563389045640d1a2c89e"
+    },
+    {
+      "bytes": 261,
+      "path": "assets/source/osrs/cache2695/raw/4/3597/0.bin",
+      "sha256": "5d433f879c235804f62bd889793af65a272853c13839b0dc7c5a29d21c29e8f2"
+    },
+    {
+      "bytes": 261,
+      "path": "assets/source/osrs/cache2695/raw/4/3598/0.bin",
+      "sha256": "b205806fde963c4eaa5aa2711391b45a23ce1effd6ccbea6dcebb9ede1398d98"
+    },
+    {
+      "bytes": 261,
+      "path": "assets/source/osrs/cache2695/raw/4/3599/0.bin",
+      "sha256": "79ecba01a5351c80fd03d4493c40281adbb6374e002c8627df32eb998e22a691"
+    },
+    {
+      "bytes": 328,
+      "path": "assets/source/osrs/cache2695/raw/4/3672/0.bin",
+      "sha256": "0726abb5c48f0e21b0079821db5d50ac214d1c93f382d98bf035682092179dc1"
+    },
+    {
+      "bytes": 243,
+      "path": "assets/source/osrs/cache2695/raw/4/3673/0.bin",
+      "sha256": "3e42a995b063639f83561f9669e3adab7e931ea8448e8cc0391919f34b0aec93"
+    },
+    {
+      "bytes": 434,
+      "path": "assets/source/osrs/cache2695/raw/4/880/0.bin",
+      "sha256": "6038df079ee8e7970b30bb9622802bdbc621dfea2f39d24ace6314c16f53eed4"
+    },
+    {
+      "bytes": 77102,
+      "path": "assets/source/osrs/cache2695/raw/6/0/0.bin",
+      "sha256": "efcde6d440e029c8c1458b956964dd4061cfc8cad75e310857116aead4be3a3b"
+    },
+    {
+      "bytes": 15430,
+      "path": "assets/source/osrs/cache2695/raw/6/144/0.bin",
+      "sha256": "f84bd91cd8f13c2a45f8635c496e917f200779aa87c71fc3a0a0952997016f59"
+    },
+    {
+      "bytes": 18266,
+      "path": "assets/source/osrs/cache2695/raw/6/2/0.bin",
+      "sha256": "379055f157b3659b50a6a452e4c4080c744026bc45d38553cff9090c6b6a4500"
+    },
+    {
+      "bytes": 21046,
+      "path": "assets/source/osrs/cache2695/raw/6/62/0.bin",
+      "sha256": "c9e25d857993d97f6d8d15668bb8d0ca3b5632f012f765d078189d80e01df75f"
+    },
+    {
+      "bytes": 28999,
+      "path": "assets/source/osrs/cache2695/raw/6/76/0.bin",
+      "sha256": "6b9a60a91e73685cbc0f89f7526e3d011bf4d980d10d038a858f070f8212fc39"
+    },
+    {
+      "bytes": 1308,
+      "path": "assets/source/osrs/cache2695/raw/7/1570/0.bin",
+      "sha256": "31c798ef3957f602a62f8a1494c94ef9a56b0f29865a0b0baa709ff8280dc1df"
+    },
+    {
+      "bytes": 3387,
+      "path": "assets/source/osrs/cache2695/raw/7/21547/0.bin",
+      "sha256": "c8f092dde71d17103132b05e956219aaefd4f6454906eb25bc64108531f15c1c"
+    },
+    {
+      "bytes": 2425,
+      "path": "assets/source/osrs/cache2695/raw/7/24431/0.bin",
+      "sha256": "53bd56114c3f059f89adce8584a1339035bc8639c02700eb1e40bc78eb2cc96e"
+    },
+    {
+      "bytes": 922,
+      "path": "assets/source/osrs/cache2695/raw/7/24441/0.bin",
+      "sha256": "102243ed5f2653f746f4765c3bf9f4b80a96d1fbee0b79bc720ebccc18fc41a1"
+    },
+    {
+      "bytes": 1423,
+      "path": "assets/source/osrs/cache2695/raw/7/24448/0.bin",
+      "sha256": "edf0f0ca4b1d39af1bb5b1f0f6af71b8a23f3e3a6df77c92a6b16940bc35e7df"
+    },
+    {
+      "bytes": 1628,
+      "path": "assets/source/osrs/cache2695/raw/7/24458/0.bin",
+      "sha256": "db835fa17835cf0c624585fb7e9c7eab6538576e2a09ebfd0a6a979f48337274"
+    },
+    {
+      "bytes": 2649,
+      "path": "assets/source/osrs/cache2695/raw/7/24472/0.bin",
+      "sha256": "efc6c063b05859f40b73787b24056e4147d271679f4d8cc5e4832a1e6e853150"
+    },
+    {
+      "bytes": 1977,
+      "path": "assets/source/osrs/cache2695/raw/7/24482/0.bin",
+      "sha256": "d3335487f1fd0adb46bb9849aad523f60a4fea4311435f02fc7370b72b21c129"
+    },
+    {
+      "bytes": 5465,
+      "path": "assets/source/osrs/cache2695/sprites/1018.json.gz",
+      "sha256": "96db13820588efa46e6daa1f8b883f3527f11f831ae0176d0a6463c8193b2833"
+    },
+    {
+      "bytes": 6477,
+      "path": "assets/source/osrs/cache2695/sprites/1018.png",
+      "sha256": "90c79c5bfbf929040ab065678105bc24a7658c90ebaf68c39567434819a674b6"
+    },
+    {
+      "bytes": 844,
+      "path": "assets/source/osrs/cache2695/sprites/1026.json.gz",
+      "sha256": "1c6990833f7f446216b16208ce59262aecf9dd4a97f8947c12d8272579ee7ce8"
+    },
+    {
+      "bytes": 740,
+      "path": "assets/source/osrs/cache2695/sprites/1026.png",
+      "sha256": "a27e2c2e4e5ae7a240a9fa98e4665e5e6ea76e72abd061bde9ce812c5366787b"
+    },
+    {
+      "bytes": 884,
+      "path": "assets/source/osrs/cache2695/sprites/1027.json.gz",
+      "sha256": "eb1fb2fc0029a41749955698218b3167d373ae4f025dd2d6af2003185269a35b"
+    },
+    {
+      "bytes": 742,
+      "path": "assets/source/osrs/cache2695/sprites/1027.png",
+      "sha256": "3a270880e74020e763516ef2bdf3803d5162cd1867ad1bd2ece121b2e8264743"
+    },
+    {
+      "bytes": 805,
+      "path": "assets/source/osrs/cache2695/sprites/1028.json.gz",
+      "sha256": "b0b82baf2f851967ad18623d4362d79818c1a68aa21a57091ca58a4bf2dc3b24"
+    },
+    {
+      "bytes": 698,
+      "path": "assets/source/osrs/cache2695/sprites/1028.png",
+      "sha256": "c685fcc9ac455db1779392db6a6c0b298a3b39ad6d1a0fd9b648248947b24655"
+    },
+    {
+      "bytes": 895,
+      "path": "assets/source/osrs/cache2695/sprites/1029.json.gz",
+      "sha256": "f43d5a57122f602ab5464a5dff7b6b944c0a6de9d387d6a3dac3e18543736563"
+    },
+    {
+      "bytes": 770,
+      "path": "assets/source/osrs/cache2695/sprites/1029.png",
+      "sha256": "7ee762f9bf930c44b4f7d7a279dd54cd446bf79ab75ef2aa25b935b3bbf390f5"
+    },
+    {
+      "bytes": 862,
+      "path": "assets/source/osrs/cache2695/sprites/1030.json.gz",
+      "sha256": "6ca7eadc4ae6a94f54fa25b2575aa3b29c767036bd2972111b12706a1e9610c4"
+    },
+    {
+      "bytes": 743,
+      "path": "assets/source/osrs/cache2695/sprites/1030.png",
+      "sha256": "04892d8798c19f8032cc17bb5e586801decbc3943886fc5f3919b629fb5ce6e0"
+    },
+    {
+      "bytes": 639,
+      "path": "assets/source/osrs/cache2695/sprites/1040.json.gz",
+      "sha256": "0013366397231b75991332b36a3639c6c506334aca1a1415c016c012fb0003b8"
+    },
+    {
+      "bytes": 923,
+      "path": "assets/source/osrs/cache2695/sprites/1040.png",
+      "sha256": "d041ae244bab95bf2aad8c6f26924e7c2b85c3f3f455b65778a85e0eb793cf84"
+    },
+    {
+      "bytes": 798,
+      "path": "assets/source/osrs/cache2695/sprites/1041.json.gz",
+      "sha256": "6935f4b7b423646475c86e256cc33a05425325a308717bc9555ea898e3ae7006"
+    },
+    {
+      "bytes": 633,
+      "path": "assets/source/osrs/cache2695/sprites/1041.png",
+      "sha256": "32b493faa6197e5a1b2d3f89726f8a9bf7fd0a5f63a55c825853a221dc56cdbe"
+    },
+    {
+      "bytes": 648,
+      "path": "assets/source/osrs/cache2695/sprites/1042.json.gz",
+      "sha256": "ac15188273d756ae7f3ab2d5b892f0f50a9ecca1952982bcaa72ccc26bccdc83"
+    },
+    {
+      "bytes": 517,
+      "path": "assets/source/osrs/cache2695/sprites/1042.png",
+      "sha256": "77e57a942e17fac3fd633bfe9ea57c1c5f527d8501db8432a82d0f0e0076f596"
+    },
+    {
+      "bytes": 431,
+      "path": "assets/source/osrs/cache2695/sprites/1043.json.gz",
+      "sha256": "62d91dd71250dbc0d6fccbeeb4e8294fa7ad14de531f9a59777f6727076ab21f"
+    },
+    {
+      "bytes": 299,
+      "path": "assets/source/osrs/cache2695/sprites/1043.png",
+      "sha256": "4a5053ee522d1be35d3352cf45f62d09d29b7a7b111f42ef2687081481602c73"
+    },
+    {
+      "bytes": 578,
+      "path": "assets/source/osrs/cache2695/sprites/1048.json.gz",
+      "sha256": "22f0c5c0e84c3faf68578f9bf17281bfad6d14c7a70d21b63e89073b5d280d76"
+    },
+    {
+      "bytes": 490,
+      "path": "assets/source/osrs/cache2695/sprites/1048.png",
+      "sha256": "5b10242ec266e4b6a182d088fb64d93f18f72350f368656c993c78d0bb6c66a0"
+    },
+    {
+      "bytes": 563,
+      "path": "assets/source/osrs/cache2695/sprites/1049.json.gz",
+      "sha256": "9b1fbd92f940f480d9ce64c37b1e3012dc1a8ca333d43f515ac0806b57bbab05"
+    },
+    {
+      "bytes": 491,
+      "path": "assets/source/osrs/cache2695/sprites/1049.png",
+      "sha256": "57538ac59bd14de3d5b86d32ddeba3d9a2e2ebbba8f5037bb5b4049cf360dd24"
+    },
+    {
+      "bytes": 572,
+      "path": "assets/source/osrs/cache2695/sprites/1074.json.gz",
+      "sha256": "259e4ee395600a92bbcb11c78e1b8a40c838c0419b787b8590402c8e71bc0774"
+    },
+    {
+      "bytes": 430,
+      "path": "assets/source/osrs/cache2695/sprites/1074.png",
+      "sha256": "2649099a83e10844cc11e231fec21b4c5697732caa34ef75ae57324396862fb5"
+    },
+    {
+      "bytes": 643,
+      "path": "assets/source/osrs/cache2695/sprites/1090.json.gz",
+      "sha256": "167fce9bf5582ce5fb0e212ecb9b3a0a070031696739e68e4cbff4d470f1188f"
+    },
+    {
+      "bytes": 557,
+      "path": "assets/source/osrs/cache2695/sprites/1090.png",
+      "sha256": "1d014d064fc3a891cb5bf8f82d47fc0e0eed5df22bdaf7b8975d65884576cebc"
+    },
+    {
+      "bytes": 239,
+      "path": "assets/source/osrs/cache2695/sprites/1123.json.gz",
+      "sha256": "c79a325bbc20999aca367a73fa1e5712787658d1c70a927f9941a76c4a492a20"
+    },
+    {
+      "bytes": 102,
+      "path": "assets/source/osrs/cache2695/sprites/1123.png",
+      "sha256": "412c5f614a33420efd722f1899b4bf90f015dd3b8e8433b6c807bb3aa80010dd"
+    },
+    {
+      "bytes": 229,
+      "path": "assets/source/osrs/cache2695/sprites/1124.json.gz",
+      "sha256": "de8daa625072a351c1d556ff75e6f9c0617e21134b1786097ad54d73a27dca08"
+    },
+    {
+      "bytes": 89,
+      "path": "assets/source/osrs/cache2695/sprites/1124.png",
+      "sha256": "cc9002fcf25adca366b485da377ff04af613067955cfb2f90bd0237bb4d4d750"
+    },
+    {
+      "bytes": 235,
+      "path": "assets/source/osrs/cache2695/sprites/1125.json.gz",
+      "sha256": "8d5ac2c8e651721558370b97b1bb40670098c9b455595f047242c41d65a9c522"
+    },
+    {
+      "bytes": 96,
+      "path": "assets/source/osrs/cache2695/sprites/1125.png",
+      "sha256": "a5d8c1c7d0913c123cc220bc5981662cc2f52e8f3fc2f66b8f6d15dd3cda8e71"
+    },
+    {
+      "bytes": 2742,
+      "path": "assets/source/osrs/cache2695/sprites/1173.json.gz",
+      "sha256": "02ba88d5d281d151a5517321778fd9596a0f7cc90c19f1eb7888d9012feac816"
+    },
+    {
+      "bytes": 2795,
+      "path": "assets/source/osrs/cache2695/sprites/1173.png",
+      "sha256": "efd6ef36f306be0625d2eece1562d9a0f40ee6f15228be53fee3ca34e733f754"
+    },
+    {
+      "bytes": 2900,
+      "path": "assets/source/osrs/cache2695/sprites/1174.json.gz",
+      "sha256": "8ef573a76918f31a1bcd7992f12c1122f4f981e923f6b136d00041090dd85841"
+    },
+    {
+      "bytes": 2990,
+      "path": "assets/source/osrs/cache2695/sprites/1174.png",
+      "sha256": "588507ff8d3e5d0b7736b1b68d80e322c79e7b2fcf018d32d8702eec8ef57a16"
+    },
+    {
+      "bytes": 2022,
+      "path": "assets/source/osrs/cache2695/sprites/1175.json.gz",
+      "sha256": "7678cfe79ad1074b6071de585e91a986e633922e24edf0ecdf06e3622e29b2d1"
+    },
+    {
+      "bytes": 2083,
+      "path": "assets/source/osrs/cache2695/sprites/1175.png",
+      "sha256": "cfb1f8d5c7a747034fe5ad2833b6e43804b6dfe3192dfb2e5147d34aae9bbe52"
+    },
+    {
+      "bytes": 2030,
+      "path": "assets/source/osrs/cache2695/sprites/1176.json.gz",
+      "sha256": "11f4be3104e15e2e9b6d7f2c87c62201831752f25811b72644c219873c82a606"
+    },
+    {
+      "bytes": 2117,
+      "path": "assets/source/osrs/cache2695/sprites/1176.png",
+      "sha256": "3be9b2053741a1fe2e87ce27c245442a379cb21358b6d1ce675bbb6cb289bb95"
+    },
+    {
+      "bytes": 2477,
+      "path": "assets/source/osrs/cache2695/sprites/1177.json.gz",
+      "sha256": "932c84508970ea2605f669f9733aec0d8dce9b983b822b03112f7a6fa18197bd"
+    },
+    {
+      "bytes": 2828,
+      "path": "assets/source/osrs/cache2695/sprites/1177.png",
+      "sha256": "1cdde1b2289c45408bf9239c9fbb789dba9b40b94b7ceb5d21e6941a9727d28d"
+    },
+    {
+      "bytes": 730,
+      "path": "assets/source/osrs/cache2695/sprites/1178.json.gz",
+      "sha256": "d59c00d7c36360dc2b52ce2ba7f49780e0be518247a9fae142db4801d085a1b5"
+    },
+    {
+      "bytes": 993,
+      "path": "assets/source/osrs/cache2695/sprites/1178.png",
+      "sha256": "2a80232abd8f46e14e520044ecbca4cf42682e7dfba56c67327e8df3c20068fb"
+    },
+    {
+      "bytes": 302,
+      "path": "assets/source/osrs/cache2695/sprites/1179.json.gz",
+      "sha256": "c2135d161c4a52e6885f117c33f4047557b01316fd8989d903b77111c7d8adb6"
+    },
+    {
+      "bytes": 207,
+      "path": "assets/source/osrs/cache2695/sprites/1179.png",
+      "sha256": "499fb8a6c28578040f9af08d665b408fd98459fe90039d4907ba69489db37fb8"
+    },
+    {
+      "bytes": 766,
+      "path": "assets/source/osrs/cache2695/sprites/1226.json.gz",
+      "sha256": "2ae1440c7faf713196fd9c53e3faa0b89f7245d78bbf0be32ea00efdceb5ea93"
+    },
+    {
+      "bytes": 587,
+      "path": "assets/source/osrs/cache2695/sprites/1226.png",
+      "sha256": "002db1e15193dd4b56424c44e224c48b8508d81c2a99987d5727c22db339712a"
+    },
+    {
+      "bytes": 604,
+      "path": "assets/source/osrs/cache2695/sprites/1342.json.gz",
+      "sha256": "5607c8f7159ecdc00165c3c81dfaaf7534d674c03af4e67862b277651421d749"
+    },
+    {
+      "bytes": 476,
+      "path": "assets/source/osrs/cache2695/sprites/1342.png",
+      "sha256": "a8da989caa6c136fbfb98397a42334490cc62a8a2e0d8ada1551dad7187d230b"
+    },
+    {
+      "bytes": 14302,
+      "path": "assets/source/osrs/cache2695/sprites/1648.json.gz",
+      "sha256": "4bc340f35b1579ee46ad1d1aea5f4554985f47af9c24756e6e1bfc40ffeecf16"
+    },
+    {
+      "bytes": 18633,
+      "path": "assets/source/osrs/cache2695/sprites/1648.png",
+      "sha256": "5d2e5d60c5c45544bad023cffe60d666ce3aef6c8c670ff25fb7b68dc818b55b"
+    },
+    {
+      "bytes": 608,
+      "path": "assets/source/osrs/cache2695/sprites/168.json.gz",
+      "sha256": "14173122d1eee3663fc6bb24874d4456501fe1522771ad2cf9b714d0271f2383"
+    },
+    {
+      "bytes": 482,
+      "path": "assets/source/osrs/cache2695/sprites/168.png",
+      "sha256": "0aaf7d0e9c712c0fff035c213ea9fd0a143c4798fbe63b6df6243e9ca7c5920a"
+    },
+    {
+      "bytes": 937,
+      "path": "assets/source/osrs/cache2695/sprites/170.json.gz",
+      "sha256": "f72b95fa58efbfb1d16071f7ff7fc40f782cda81cf340604d9874af9bcff9657"
+    },
+    {
+      "bytes": 875,
+      "path": "assets/source/osrs/cache2695/sprites/170.png",
+      "sha256": "c7972751efb5f8e70b1fd65daa36bff51999d46df07c752720eff94d3739e807"
+    },
+    {
+      "bytes": 575,
+      "path": "assets/source/osrs/cache2695/sprites/1709.json.gz",
+      "sha256": "2fe8db2b29750283f1a24dd08b31d1c190a4dfdfbb2a705762ad9cf32bc1bd70"
+    },
+    {
+      "bytes": 492,
+      "path": "assets/source/osrs/cache2695/sprites/1709.png",
+      "sha256": "a1a10cfae6fc98557b496c7890e16ecc83e9b6482ab6fd3fcc705f42ff58e486"
+    },
+    {
+      "bytes": 335,
+      "path": "assets/source/osrs/cache2695/sprites/172.json.gz",
+      "sha256": "1b1a66caeba249cd0c369eb950fad29b7bd441d5f387fd2a009cd5a32bd3796e"
+    },
+    {
+      "bytes": 267,
+      "path": "assets/source/osrs/cache2695/sprites/172.png",
+      "sha256": "1f9b3c3ad3d838bf824e2c7345d91ded1a70d86f2cf02593136b30d937671c71"
+    },
+    {
+      "bytes": 342,
+      "path": "assets/source/osrs/cache2695/sprites/173.json.gz",
+      "sha256": "21655dc5430d9ff60e24b7599a1e5d9743bc03ca17ec7eee800f8f0dce304ec2"
+    },
+    {
+      "bytes": 232,
+      "path": "assets/source/osrs/cache2695/sprites/173.png",
+      "sha256": "1f39ac60fb6f53594c2ab4f7b3f8c68cfd5f0953b8abe6ab39f22030b00d4967"
+    },
+    {
+      "bytes": 722,
+      "path": "assets/source/osrs/cache2695/sprites/174.json.gz",
+      "sha256": "32365830d6753c955f883ba16f26004ef64e2ea3559b0afb9959cd59e8312925"
+    },
+    {
+      "bytes": 731,
+      "path": "assets/source/osrs/cache2695/sprites/174.png",
+      "sha256": "3aa375c3e06a4ff3c5b7d6117b787d811531e8c42d1d3ebe02bc6e70723d5b4f"
+    },
+    {
+      "bytes": 737,
+      "path": "assets/source/osrs/cache2695/sprites/176.json.gz",
+      "sha256": "4fdcdc416fe59279900ae4f627fd66bedf2f5f3a543bf57e63a2e040fb59ceaa"
+    },
+    {
+      "bytes": 697,
+      "path": "assets/source/osrs/cache2695/sprites/176.png",
+      "sha256": "423ce4e42bc42e67482b0187313983bf3e23fdff84a29370798ed557b89ff2cb"
+    },
+    {
+      "bytes": 706,
+      "path": "assets/source/osrs/cache2695/sprites/177.json.gz",
+      "sha256": "bdbd676568155fae45e95a4e3b3828bd32ef53d1c8f122487ffc1f1ac553777b"
+    },
+    {
+      "bytes": 732,
+      "path": "assets/source/osrs/cache2695/sprites/177.png",
+      "sha256": "93c8d9ca2ed0728ca9c97357590678429f7de8f1fb90fd58a250a85e1990089a"
+    },
+    {
+      "bytes": 719,
+      "path": "assets/source/osrs/cache2695/sprites/178.json.gz",
+      "sha256": "af850db848653da37b29ac1535283a7e851d868f096d920ed946bf4237c63cca"
+    },
+    {
+      "bytes": 694,
+      "path": "assets/source/osrs/cache2695/sprites/178.png",
+      "sha256": "f58928974ae915cd6f9e298888e203a8f85d13796070adf2d56f4a723bd600b1"
+    },
+    {
+      "bytes": 268,
+      "path": "assets/source/osrs/cache2695/sprites/189.json.gz",
+      "sha256": "31504830e0e8cc030c73a7b029d2b3441461f899f99f4dcbb35e41b8556a247c"
+    },
+    {
+      "bytes": 165,
+      "path": "assets/source/osrs/cache2695/sprites/189.png",
+      "sha256": "137d82695456443c3902c3c65b5fd5706617513b84227bb2850f30236029c827"
+    },
+    {
+      "bytes": 274,
+      "path": "assets/source/osrs/cache2695/sprites/190.json.gz",
+      "sha256": "a0800a2a87c0b5db67d79eae2b93d4f47c60c56c94821d135d34ed7755303332"
+    },
+    {
+      "bytes": 171,
+      "path": "assets/source/osrs/cache2695/sprites/190.png",
+      "sha256": "a38272e022de409a021656d1369abbeadc518c0608e642c4ff60262c9c97c05e"
+    },
+    {
+      "bytes": 242,
+      "path": "assets/source/osrs/cache2695/sprites/191.json.gz",
+      "sha256": "60e0472690393033e34b571ca368316ae9f67c235d907cffdf472917d0be54bb"
+    },
+    {
+      "bytes": 148,
+      "path": "assets/source/osrs/cache2695/sprites/191.png",
+      "sha256": "448f19452768a414dbe28fd1de3a705960d577073bedb5f92a0fffa058ec8f38"
+    },
+    {
+      "bytes": 363,
+      "path": "assets/source/osrs/cache2695/sprites/2246.json.gz",
+      "sha256": "8d460642ac30c7e5ddff6215d2a5a56e15eb1d025100bcc00571e124e93f8a33"
+    },
+    {
+      "bytes": 253,
+      "path": "assets/source/osrs/cache2695/sprites/2246.png",
+      "sha256": "b33c62af7430c922252745940baabedc3131f6a4387a623d7e49a5673ba4febd"
+    },
+    {
+      "bytes": 788,
+      "path": "assets/source/osrs/cache2695/sprites/2818.json.gz",
+      "sha256": "d0d81a8b7dc3f1313a185c2814927a231a25440adf7212ef509f0dedf1e8ccda"
+    },
+    {
+      "bytes": 622,
+      "path": "assets/source/osrs/cache2695/sprites/2818.png",
+      "sha256": "f22f0af9d7f107c65dd1b421c261310c59011ff467803dc181439f1b3ce5295c"
+    },
+    {
+      "bytes": 354,
+      "path": "assets/source/osrs/cache2695/sprites/2820.json.gz",
+      "sha256": "3b93025f40c0b8d64314a5a5fce849433b3160b7f3c54a7bfa4419d21991ccb5"
+    },
+    {
+      "bytes": 264,
+      "path": "assets/source/osrs/cache2695/sprites/2820.png",
+      "sha256": "e98cfbe12cbe08192050ab8893f1b4a0fc26271e7ff94cbc4bbfa8d5d4f372f7"
+    },
+    {
+      "bytes": 353,
+      "path": "assets/source/osrs/cache2695/sprites/2822.json.gz",
+      "sha256": "e8e5e5f48dcc9893ddbe5e0e31dc838a462bb68692ea614ae59b038ca3f84421"
+    },
+    {
+      "bytes": 237,
+      "path": "assets/source/osrs/cache2695/sprites/2822.png",
+      "sha256": "b7ee35fc3bafab4096c40c267522eff1314d3fd402a8b4cafcc20cbaf6beb5f3"
+    },
+    {
+      "bytes": 835,
+      "path": "assets/source/osrs/cache2695/sprites/297.json.gz",
+      "sha256": "b05b48e11b6f03097d24368bd7afeb1ca9ecfd7d3b2b34e1e1d7628f48e5ac6a"
+    },
+    {
+      "bytes": 1189,
+      "path": "assets/source/osrs/cache2695/sprites/297.png",
+      "sha256": "9afcfb3221b04bd4c5a153384a2042746cda396aa1448379a1e7b06e985e779b"
+    },
+    {
+      "bytes": 1075,
+      "path": "assets/source/osrs/cache2695/sprites/3051.json.gz",
+      "sha256": "11631ca9bb493b207621ac4e2811a29144ab372edb8ac29d88c8186f61089410"
+    },
+    {
+      "bytes": 914,
+      "path": "assets/source/osrs/cache2695/sprites/3051.png",
+      "sha256": "3047282382093df152a59b11bfa876d59cc5c4d2ff0f7eb0c90541f9647187d1"
+    },
+    {
+      "bytes": 1173,
+      "path": "assets/source/osrs/cache2695/sprites/3057.json.gz",
+      "sha256": "83520cbf845bfdcc998758c4748291565749c2ed7dbadb35d939ee0b56d62492"
+    },
+    {
+      "bytes": 1039,
+      "path": "assets/source/osrs/cache2695/sprites/3057.png",
+      "sha256": "f8bfa70127cdb3be917ae756b70000bf50271b7c592382938382ea8d9af3dd6b"
+    },
+    {
+      "bytes": 387,
+      "path": "assets/source/osrs/cache2695/sprites/314.json.gz",
+      "sha256": "424c81f6facda82961259b2d2529a232c15768e7a780ec8373ef8ab0b185d6f8"
+    },
+    {
+      "bytes": 258,
+      "path": "assets/source/osrs/cache2695/sprites/314.png",
+      "sha256": "5896fabe7227fa0ed61d3105e99468c202ac9664d6a80d5ee2c37b7bce43a151"
+    },
+    {
+      "bytes": 317,
+      "path": "assets/source/osrs/cache2695/sprites/316.json.gz",
+      "sha256": "eea1ef8a5db1b5cc62daa1e52f3b4ece81cf1cb55c9359676ffa76b22e350caf"
+    },
+    {
+      "bytes": 238,
+      "path": "assets/source/osrs/cache2695/sprites/316.png",
+      "sha256": "8a0c6cfae68813a2ccdd9e068eaf5e63b4c2cacdf29f17de98f0477551d1d33e"
+    },
+    {
+      "bytes": 14903,
+      "path": "assets/source/osrs/cache2695/sprites/317.json.gz",
+      "sha256": "07a2f6558f76236fa9265e03b52cd4d0b65661da0011d71df601e0aac67a6494"
+    },
+    {
+      "bytes": 8340,
+      "path": "assets/source/osrs/cache2695/sprites/317.png",
+      "sha256": "4409005a74102e9f3796cfbd45503e9613788cb85cfcaf20207888b468f63292"
+    },
+    {
+      "bytes": 9464,
+      "path": "assets/source/osrs/cache2695/sprites/3523.json.gz",
+      "sha256": "edb1914a18b6be14b75e308e25dd84ebcb6ec4253f4b2de298228132fea48479"
+    },
+    {
+      "bytes": 11921,
+      "path": "assets/source/osrs/cache2695/sprites/3523.png",
+      "sha256": "f025b310358ef8fc713cd66c8ab081c28cc548f8e3826dedc85f70561337368e"
+    },
+    {
+      "bytes": 1687,
+      "path": "assets/source/osrs/cache2695/sprites/430.json.gz",
+      "sha256": "673b88f0638f8ca63cbc819adad76b28f96733e1a406c1889bb0a3996a8e63b5"
+    },
+    {
+      "bytes": 1857,
+      "path": "assets/source/osrs/cache2695/sprites/430.png",
+      "sha256": "c99082d31efac1536b732c282f4269ff857f55c1c7c3e24c367f6e9262aeae19"
+    },
+    {
+      "bytes": 1551,
+      "path": "assets/source/osrs/cache2695/sprites/431.json.gz",
+      "sha256": "feab802e468e25e440ee0c98e122d44bd7849eb22fd76ed6a461679964f372cc"
+    },
+    {
+      "bytes": 1682,
+      "path": "assets/source/osrs/cache2695/sprites/431.png",
+      "sha256": "836929b41c113b44bccde03e66b7a8c1ca853d3bcc60180e776bc764be99f986"
+    },
+    {
+      "bytes": 567,
+      "path": "assets/source/osrs/cache2695/sprites/442.json.gz",
+      "sha256": "6331689c4d0c8cd6613c4ace3f45b3e1b3ed12817419dc515b79bf0c7d2a7ea6"
+    },
+    {
+      "bytes": 480,
+      "path": "assets/source/osrs/cache2695/sprites/442.png",
+      "sha256": "f172fd5e91e5b8d94fd7ed24a3dae66076ac765d612819c46a2f4c204fc2e845"
+    },
+    {
+      "bytes": 4079,
+      "path": "assets/source/osrs/cache2695/sprites/444.json.gz",
+      "sha256": "b8b7d1e0606da5f252108716d4c9ce4b6843e56a7fad6c10907360d5dda87286"
+    },
+    {
+      "bytes": 5173,
+      "path": "assets/source/osrs/cache2695/sprites/444.png",
+      "sha256": "04e59444c0e9ba3ea1327c37cade8ba5dbaab77574e0234df7656e4c9081a1df"
+    },
+    {
+      "bytes": 1252,
+      "path": "assets/source/osrs/cache2695/sprites/446.json.gz",
+      "sha256": "43efbed0ec7e4e47dbed7ae248f72e53f5fa09550c00812b4fe3c856f458b741"
+    },
+    {
+      "bytes": 1368,
+      "path": "assets/source/osrs/cache2695/sprites/446.png",
+      "sha256": "6d28245c9c1244a901da152fdf33700f94921d1e99aa7a2796ac05338586c0d5"
+    },
+    {
+      "bytes": 7733,
+      "path": "assets/source/osrs/cache2695/sprites/448.json.gz",
+      "sha256": "aff45480dff97161fa5980b52dfc4225d217caa2143cab3bf948bb42dbed9476"
+    },
+    {
+      "bytes": 9721,
+      "path": "assets/source/osrs/cache2695/sprites/448.png",
+      "sha256": "8e6dff590691254dc8600766542b95585955fe24f6eaee2adacb03df74028568"
+    },
+    {
+      "bytes": 13572,
+      "path": "assets/source/osrs/cache2695/sprites/449.json.gz",
+      "sha256": "f3ed4fd73a8a8bcf39ba647ca303d5d71cbfcdb03d8f739f1974a8b93f2190bf"
+    },
+    {
+      "bytes": 15675,
+      "path": "assets/source/osrs/cache2695/sprites/449.png",
+      "sha256": "8cfea405af513811e0597556bf56812007137b14654a36af311706917acb351a"
+    },
+    {
+      "bytes": 2364,
+      "path": "assets/source/osrs/cache2695/sprites/450.json.gz",
+      "sha256": "755bc910e702865455efe0d524c47df928a57c25567128e08703098f67c1d36e"
+    },
+    {
+      "bytes": 4682,
+      "path": "assets/source/osrs/cache2695/sprites/450.png",
+      "sha256": "430a8bdfadb7d822076ffbcf433b8455c4d8a8a85049148338ff754b209da0fc"
+    },
+    {
+      "bytes": 3969,
+      "path": "assets/source/osrs/cache2695/sprites/453.json.gz",
+      "sha256": "a35edc92f62a13b7e8c7418540bf19e6dfdc72cbafb8967ceb66a3ab1dc9aea9"
+    },
+    {
+      "bytes": 5975,
+      "path": "assets/source/osrs/cache2695/sprites/453.png",
+      "sha256": "fa0f0320d40c7b895663282a9dc5b9eee88667f09a2c9a0109f310f0159cb3cb"
+    },
+    {
+      "bytes": 378,
+      "path": "assets/source/osrs/cache2695/sprites/454.json.gz",
+      "sha256": "8f125f6444691bc2d1ec160f8ad7c9f4c42420530e633457c30edeed1d018893"
+    },
+    {
+      "bytes": 740,
+      "path": "assets/source/osrs/cache2695/sprites/454.png",
+      "sha256": "19314dc63c8cd833064adba1770f4793a173ff9e4c44ceb336c934870d83815e"
+    },
+    {
+      "bytes": 12378,
+      "path": "assets/source/osrs/cache2695/sprites/455.json.gz",
+      "sha256": "9b830a92b159c1ba980eb86280eca654158b7bb32cac80d48a87db357cae90fa"
+    },
+    {
+      "bytes": 15532,
+      "path": "assets/source/osrs/cache2695/sprites/455.png",
+      "sha256": "8f404761c29d28cc6a0b02bf20ed7290cc026283252b6dba1145e8bed0974c25"
+    },
+    {
+      "bytes": 5882,
+      "path": "assets/source/osrs/cache2695/sprites/456.json.gz",
+      "sha256": "185c0ccc4ec9297305ef149b6017039d318b4b86ffc7cb11fddcd3b6195ce8dc"
+    },
+    {
+      "bytes": 7114,
+      "path": "assets/source/osrs/cache2695/sprites/456.png",
+      "sha256": "b57208e2d6d79d49ae19a98e2bea206dfbcc5d52e30f498e84f0af8ee0b31b79"
+    },
+    {
+      "bytes": 6861,
+      "path": "assets/source/osrs/cache2695/sprites/457.json.gz",
+      "sha256": "0050310b7d4da06e32f02c3a770b703362309343e3a8cd8d74e5a522542f4785"
+    },
+    {
+      "bytes": 9368,
+      "path": "assets/source/osrs/cache2695/sprites/457.png",
+      "sha256": "f1b44853b61e69dbfb6f7df40d36c807c57c9bfb565309e1791eb1262b23ee1c"
+    },
+    {
+      "bytes": 2527,
+      "path": "assets/source/osrs/cache2695/sprites/458.json.gz",
+      "sha256": "c4b11c1d2f88442025f0efe622104efc93ded66478d29e535f7c92fb55e82858"
+    },
+    {
+      "bytes": 3135,
+      "path": "assets/source/osrs/cache2695/sprites/458.png",
+      "sha256": "da4dbf9e729bd1621dc6d1eedb7ac59a33b3b27fb4dab850af2a4e186d8792fa"
+    },
+    {
+      "bytes": 5651,
+      "path": "assets/source/osrs/cache2695/sprites/460.json.gz",
+      "sha256": "71c9d33f645cd62c5afa84b6c3be0a12ab72b8d8badaf753821e83c521f09c6d"
+    },
+    {
+      "bytes": 6972,
+      "path": "assets/source/osrs/cache2695/sprites/460.png",
+      "sha256": "51845f5995eb97ca254c19ffcb0925c7d7250327241b7a4e3277662e1142564e"
+    },
+    {
+      "bytes": 4609,
+      "path": "assets/source/osrs/cache2695/sprites/461.json.gz",
+      "sha256": "c5f741b03f7323bdff46379f13bbeca8b745ed963900f07bd9b1ded5949f25d7"
+    },
+    {
+      "bytes": 6221,
+      "path": "assets/source/osrs/cache2695/sprites/461.png",
+      "sha256": "50711b0e92e2226a5e26aae65c10d919b95447dc910885695371e968a04119e5"
+    },
+    {
+      "bytes": 5733,
+      "path": "assets/source/osrs/cache2695/sprites/462.json.gz",
+      "sha256": "4da945c1116125ac1aaf31349000dd01928494b54b6abb9a64e8f74eec154c4f"
+    },
+    {
+      "bytes": 7442,
+      "path": "assets/source/osrs/cache2695/sprites/462.png",
+      "sha256": "4f724a385a77a743d22ba53acb78ce254d0147ab2511a1ac4a92ce0d938f1248"
+    },
+    {
+      "bytes": 1700,
+      "path": "assets/source/osrs/cache2695/sprites/463.json.gz",
+      "sha256": "7ec2185486fc9ec3c81d7598d1cc80b8f24a54ed7d339eaaf88aaa4b7f45a96f"
+    },
+    {
+      "bytes": 1757,
+      "path": "assets/source/osrs/cache2695/sprites/463.png",
+      "sha256": "b9b7214cc7b4e12a2b55a9667ef22ed91fb445c82a49c859ff503cf78a9da02f"
+    },
+    {
+      "bytes": 6644,
+      "path": "assets/source/osrs/cache2695/sprites/464.json.gz",
+      "sha256": "51bc4a1e34fcde2eb98aa7e479e7f9b8bbb45362dfa520d374dd6c585a25ba90"
+    },
+    {
+      "bytes": 8664,
+      "path": "assets/source/osrs/cache2695/sprites/464.png",
+      "sha256": "2e202350981af4e6b548ccc71e2621b07fa4f6aa9c52ab53c46e7f589952c04a"
+    },
+    {
+      "bytes": 4859,
+      "path": "assets/source/osrs/cache2695/sprites/465.json.gz",
+      "sha256": "16fed4e207a32aa446e992cf0e7619b59873d588f2b6f42e27f218e1217e55b4"
+    },
+    {
+      "bytes": 6014,
+      "path": "assets/source/osrs/cache2695/sprites/465.png",
+      "sha256": "a08b442c8e137dcd800c0674a5d1fb43b7abdc9cd6c3dc0cf496dec8c6d1a5f7"
+    },
+    {
+      "bytes": 6374,
+      "path": "assets/source/osrs/cache2695/sprites/466.json.gz",
+      "sha256": "92f7aa8f2936249f82de403ce46d1b22ee53763a96499b31dffde5fe294ccc46"
+    },
+    {
+      "bytes": 7360,
+      "path": "assets/source/osrs/cache2695/sprites/466.png",
+      "sha256": "97da60a4d0d05be864d262f7e8de914c9f869bc4107084c9daeea56fcd0125f0"
+    },
+    {
+      "bytes": 403,
+      "path": "assets/source/osrs/cache2695/sprites/4669.json.gz",
+      "sha256": "1efe141a8f463feba90fb8e3e5dbb697b84e013621aac1f4661ed4d8a1cab18e"
+    },
+    {
+      "bytes": 300,
+      "path": "assets/source/osrs/cache2695/sprites/4669.png",
+      "sha256": "983bb97e7001a113e34c7830ee8d112dafcc4ec1e15381d0528f5be5b88dbcaa"
+    },
+    {
+      "bytes": 3717,
+      "path": "assets/source/osrs/cache2695/sprites/468.json.gz",
+      "sha256": "8ce828653fb613050d575fac338bddab9ca03452c8e27313c7836d75fb292cb0"
+    },
+    {
+      "bytes": 4989,
+      "path": "assets/source/osrs/cache2695/sprites/468.png",
+      "sha256": "b32b673b5a4a889a745059962223ba12d622335eb0d89e8ab00e29d753a95fb6"
+    },
+    {
+      "bytes": 6024,
+      "path": "assets/source/osrs/cache2695/sprites/469.json.gz",
+      "sha256": "83c9f89655d576b95a736b976b3996629f21b8b4ea4b8f355df8f2836c179b24"
+    },
+    {
+      "bytes": 7915,
+      "path": "assets/source/osrs/cache2695/sprites/469.png",
+      "sha256": "d0b81f360d1c05cd40ef207b50d6104575bcee97160a69f75410b4abe91eea45"
+    },
+    {
+      "bytes": 6986,
+      "path": "assets/source/osrs/cache2695/sprites/470.json.gz",
+      "sha256": "167ded3eb58544dd996cb4ed24c8d71dadb6834a7024bc3c060804fcb2b49b52"
+    },
+    {
+      "bytes": 8999,
+      "path": "assets/source/osrs/cache2695/sprites/470.png",
+      "sha256": "f7b443970dfb6efd4daeb871da93530f61d6e4df2135222ad3ce93f7a9f811dc"
+    },
+    {
+      "bytes": 2415,
+      "path": "assets/source/osrs/cache2695/sprites/471.json.gz",
+      "sha256": "e89dd75fe0e3474f9e7205ca58fa497ea5f717d7ec6c42786da96c43fe6f49fb"
+    },
+    {
+      "bytes": 3601,
+      "path": "assets/source/osrs/cache2695/sprites/471.png",
+      "sha256": "d45dbe33e99a5de0be9742aed51316c7ff26f5d2674223a2e1c6d53bf464de59"
+    },
+    {
+      "bytes": 3375,
+      "path": "assets/source/osrs/cache2695/sprites/473.json.gz",
+      "sha256": "e6570bff1cd9846d365399160df62541d184fb6b2f938f03533cda1f870c48f7"
+    },
+    {
+      "bytes": 4318,
+      "path": "assets/source/osrs/cache2695/sprites/473.png",
+      "sha256": "1935c49ae3e12d64cdcedb40d5abb88e486fa3347da5770b85295155b0526968"
+    },
+    {
+      "bytes": 4125,
+      "path": "assets/source/osrs/cache2695/sprites/474.json.gz",
+      "sha256": "78643e363659b15987497a81c38316924fe4a9800da6c35416f8845efe62dd7c"
+    },
+    {
+      "bytes": 5208,
+      "path": "assets/source/osrs/cache2695/sprites/474.png",
+      "sha256": "ab6d7bacffeeded3ecc0e41aa45f1424691ee5fc044c96bf9191772b4ffc1fac"
+    },
+    {
+      "bytes": 9537,
+      "path": "assets/source/osrs/cache2695/sprites/475.json.gz",
+      "sha256": "ac127456c1067380c31b09d751d0221442699a2766ef2c836adf2a775cda135f"
+    },
+    {
+      "bytes": 11392,
+      "path": "assets/source/osrs/cache2695/sprites/475.png",
+      "sha256": "7c60f4d8feadc4aa987525e99cdb908260be96a8bbafc4beed1a18017ef09536"
+    },
+    {
+      "bytes": 8794,
+      "path": "assets/source/osrs/cache2695/sprites/478.json.gz",
+      "sha256": "8774b0bd7ec16ac96ef56ec3d197f4e124be532f2fe09f77954ab42b6a9cc1fc"
+    },
+    {
+      "bytes": 10323,
+      "path": "assets/source/osrs/cache2695/sprites/478.png",
+      "sha256": "79e6478e90ea9e1717dd0be8c52fdd193f2d851f7b549e4523f5ad8fcd44e4af"
+    },
+    {
+      "bytes": 1312,
+      "path": "assets/source/osrs/cache2695/sprites/479.json.gz",
+      "sha256": "010853414f62a3fc08c03bd5dd40a068368b16cd4604e8458fddb18f3d909cc2"
+    },
+    {
+      "bytes": 1520,
+      "path": "assets/source/osrs/cache2695/sprites/479.png",
+      "sha256": "06789f8af73f81d53df1e8341e0b3b86a15bfc59b83be61695e028c74b1f62b5"
+    },
+    {
+      "bytes": 4733,
+      "path": "assets/source/osrs/cache2695/sprites/487.json.gz",
+      "sha256": "a55d5b2d187d0ee1d09205d5c317b1d67546a58f7526f3e259c8f94d1bcd2cb4"
+    },
+    {
+      "bytes": 6231,
+      "path": "assets/source/osrs/cache2695/sprites/487.png",
+      "sha256": "3d872aef4ef0003657160823e055259ee7d9ea1c8a2b11b620382eaa1b362e6f"
+    },
+    {
+      "bytes": 6070,
+      "path": "assets/source/osrs/cache2695/sprites/490.json.gz",
+      "sha256": "236c38ecb5bcee6a55738d959170d47a887385d089a90aa427e75df5e301d8dc"
+    },
+    {
+      "bytes": 7966,
+      "path": "assets/source/osrs/cache2695/sprites/490.png",
+      "sha256": "abc7c6e07ee92b3ea0041290a8e2b366030731d6c5ec588266f7d508c108aad1"
+    },
+    {
+      "bytes": 11052,
+      "path": "assets/source/osrs/cache2695/sprites/491.json.gz",
+      "sha256": "608cfc63933616bcae55c5a0708ef52c19f66e5bb7143b4618f460dc47db7bf8"
+    },
+    {
+      "bytes": 12817,
+      "path": "assets/source/osrs/cache2695/sprites/491.png",
+      "sha256": "e77f0ce80e925e83cc9632688d7ca62fd5ff658c2df2ea88579eef2c3560571d"
+    },
+    {
+      "bytes": 13107,
+      "path": "assets/source/osrs/cache2695/sprites/492.json.gz",
+      "sha256": "82f6e734c3ad84c5f76d6c35a340d3cacae26056515d9cf1576394b2cd629886"
+    },
+    {
+      "bytes": 14506,
+      "path": "assets/source/osrs/cache2695/sprites/492.png",
+      "sha256": "683da28c7a251ccc65ac1a0632da78ce9d8b94fd7ca39bdb19ef989692c712b3"
+    },
+    {
+      "bytes": 7019,
+      "path": "assets/source/osrs/cache2695/sprites/493.json.gz",
+      "sha256": "8d4db32167cdb231bb0581ce70381890a37c8b01a8e204247e6942940f53c5b7"
+    },
+    {
+      "bytes": 9101,
+      "path": "assets/source/osrs/cache2695/sprites/493.png",
+      "sha256": "4f27f4ce2787f52918176b040a065369302e74e1318175a46e4f6ac489eba661"
+    },
+    {
+      "bytes": 3798,
+      "path": "assets/source/osrs/cache2695/sprites/494.json.gz",
+      "sha256": "7835603b33c3970f30af8adeb7e3a6d5a52849bd0aa474c004bc4091ac920711"
+    },
+    {
+      "bytes": 3758,
+      "path": "assets/source/osrs/cache2695/sprites/494.png",
+      "sha256": "7ff3a06f72d3f6212b0d7d8d13be6c6a8c6e7c83b76f0ea3b6c6fbf9cb672cdd"
+    },
+    {
+      "bytes": 4218,
+      "path": "assets/source/osrs/cache2695/sprites/495.json.gz",
+      "sha256": "9fdfb35841363d81a87542a9bc16c692ce62449631a6708038d18ee67930f692"
+    },
+    {
+      "bytes": 5431,
+      "path": "assets/source/osrs/cache2695/sprites/495.png",
+      "sha256": "30fbc285651a890aa2e50d45675c1acd1ed4419cd8bb90306969d3dd287bb386"
+    },
+    {
+      "bytes": 4345,
+      "path": "assets/source/osrs/cache2695/sprites/496.json.gz",
+      "sha256": "b515c4eb66486f0e62fa2a63b4ab6cb89072c695a9afc44befbfdf3b36e8d49d"
+    },
+    {
+      "bytes": 5756,
+      "path": "assets/source/osrs/cache2695/sprites/496.png",
+      "sha256": "0d0aa702975511a494aff9ffb3f0c70f07fe0cf4b5f04184db2982e6b8ea9c6d"
+    },
+    {
+      "bytes": 4820,
+      "path": "assets/source/osrs/cache2695/sprites/497.json.gz",
+      "sha256": "52ae3175938bc18ccd2c3e4c114a0748426f820d063e22414b4589873a757d9d"
+    },
+    {
+      "bytes": 6416,
+      "path": "assets/source/osrs/cache2695/sprites/497.png",
+      "sha256": "e8d10709faa71e5d95db6b6de6b4bb2dda75e37fa0e1680753ec8f7e18088746"
+    },
+    {
+      "bytes": 26920,
+      "path": "assets/source/osrs/cache2695/sprites/499.json.gz",
+      "sha256": "dd61ff4c1ffdfef9444fe6a1cede92ed9b322af81e376fda5b0db795538d2f18"
+    },
+    {
+      "bytes": 33113,
+      "path": "assets/source/osrs/cache2695/sprites/499.png",
+      "sha256": "6f82b7e3c20d1a141da5bcb74dd419ffe9d8c2aa72659bc33d63f7e4456775e6"
+    },
+    {
+      "bytes": 1974,
+      "path": "assets/source/osrs/cache2695/sprites/500.json.gz",
+      "sha256": "dae010d502c31689658e6d16b9a915abd1117e8be5b382f5d51022aed122bd80"
+    },
+    {
+      "bytes": 2196,
+      "path": "assets/source/osrs/cache2695/sprites/500.png",
+      "sha256": "052d92a2884039f4e250fcceb054823dca24672102881362b8863d40cb7f13d8"
+    },
+    {
+      "bytes": 4908,
+      "path": "assets/source/osrs/cache2695/sprites/531.json.gz",
+      "sha256": "cfcf97cbdef9f9df91aa1137e9a43a71c6d81ce3b6895ec294da7adabce4b8e7"
+    },
+    {
+      "bytes": 6663,
+      "path": "assets/source/osrs/cache2695/sprites/531.png",
+      "sha256": "32e78875bd1721792dbf6af03819ca6af904730f49c746a9dffa41cdc7fb3c96"
+    },
+    {
+      "bytes": 10792,
+      "path": "assets/source/osrs/cache2695/sprites/533.json.gz",
+      "sha256": "47557ff46f0e09ad31e1950585c9db482a586f99c03aaf5a834117072209c798"
+    },
+    {
+      "bytes": 12067,
+      "path": "assets/source/osrs/cache2695/sprites/533.png",
+      "sha256": "c7b0337f923d4110d94971284b02862ad2b03bb9427898f25bf6ba9e0014ad3c"
+    },
+    {
+      "bytes": 518,
+      "path": "assets/source/osrs/cache2695/sprites/537.json.gz",
+      "sha256": "8a4a97b3da7b88ddb35b7337ff63e98a45ddbe950d635f05131cc0d514a90f7f"
+    },
+    {
+      "bytes": 430,
+      "path": "assets/source/osrs/cache2695/sprites/537.png",
+      "sha256": "910e36a71f2046370e84047f97b8c1d5558626ce37e736a2d41cd92201620b19"
+    },
+    {
+      "bytes": 404,
+      "path": "assets/source/osrs/cache2695/sprites/539.json.gz",
+      "sha256": "c68f0274ec981ac2b87fea1c47348111687014aea4780e2e06a671343d4f7cd3"
+    },
+    {
+      "bytes": 289,
+      "path": "assets/source/osrs/cache2695/sprites/539.png",
+      "sha256": "7b98d49373787a31a00ac0f8f734d45c83c69262ec9495a3189da542deb56278"
+    },
+    {
+      "bytes": 389,
+      "path": "assets/source/osrs/cache2695/sprites/541.json.gz",
+      "sha256": "7416d8329b887c58f27ca8c96a08cb82005d56074b7b25ce7ea28c2b83b634e3"
+    },
+    {
+      "bytes": 282,
+      "path": "assets/source/osrs/cache2695/sprites/541.png",
+      "sha256": "ddcc33be8765c4809b9aa76e4e6efd4f61542323417699417218b17dc2eafbd7"
+    },
+    {
+      "bytes": 14002,
+      "path": "assets/source/osrs/cache2695/sprites/644.json.gz",
+      "sha256": "56209865c21394e475db8a40f5172b7b10f86bf6e28322c511e0577a2cb47a60"
+    },
+    {
+      "bytes": 17364,
+      "path": "assets/source/osrs/cache2695/sprites/644.png",
+      "sha256": "08d5aa4aea9c168e798fe9bcb6157948cf49c45aee53143b69739663097f233f"
+    },
+    {
+      "bytes": 333,
+      "path": "assets/source/osrs/cache2695/sprites/649.json.gz",
+      "sha256": "1e1d83c12e71aa5b850d7809592cd40223fa49201f9e3ee3c9d1c7f6c93e6d83"
+    },
+    {
+      "bytes": 216,
+      "path": "assets/source/osrs/cache2695/sprites/649.png",
+      "sha256": "668e3fbd8155d2793985b3548ce53163774012fe51b5b20e57e6eb21c9e0525f"
+    },
+    {
+      "bytes": 7429,
+      "path": "assets/source/osrs/cache2695/sprites/7202.json.gz",
+      "sha256": "b98a646f4beb3d6ff266c2ce835315fa827a2f2920bb232fda834162b5c5ae7c"
+    },
+    {
+      "bytes": 9467,
+      "path": "assets/source/osrs/cache2695/sprites/7202.png",
+      "sha256": "a3130043afb01e8c206940a97228a66d46a0a0d00ff6b306f82107aca90d9cbb"
+    },
+    {
+      "bytes": 8380,
+      "path": "assets/source/osrs/cache2695/sprites/7203.json.gz",
+      "sha256": "30899c6536739b976d4d0b066149f9c2c486738278b82bcb4af1f6d7300e9f51"
+    },
+    {
+      "bytes": 10556,
+      "path": "assets/source/osrs/cache2695/sprites/7203.png",
+      "sha256": "535ba01c26f3ec7c1ba918e6e6aca1e685454e55aedc92b5d85ee2c7277b991c"
+    },
+    {
+      "bytes": 7058,
+      "path": "assets/source/osrs/cache2695/sprites/7204.json.gz",
+      "sha256": "a91f88ece2c057ebc43fc173c3bad599d2f469c550ddf782c63683ca3b9e2f40"
+    },
+    {
+      "bytes": 9194,
+      "path": "assets/source/osrs/cache2695/sprites/7204.png",
+      "sha256": "c85ec792a12b96a685e81f42f6e4d66c0fe7234ae368acdf39baed8a7aab21f5"
+    },
+    {
+      "bytes": 754,
+      "path": "assets/source/osrs/cache2695/sprites/760.json.gz",
+      "sha256": "0f74509b539f004fa24362e19bab397183a4b0069439713ba01c50fe5f928a1f"
+    },
+    {
+      "bytes": 679,
+      "path": "assets/source/osrs/cache2695/sprites/760.png",
+      "sha256": "57cdda67f0add5e601a6b5c54b27a8f3e12a119e78cd743a9b9d98670d219e55"
+    },
+    {
+      "bytes": 573,
+      "path": "assets/source/osrs/cache2695/sprites/780.json.gz",
+      "sha256": "c74d063e94b68e87256e73dea46171c834b05ba8087f9bcad75543bc636223f6"
+    },
+    {
+      "bytes": 490,
+      "path": "assets/source/osrs/cache2695/sprites/780.png",
+      "sha256": "2d16785da64b50fdf8790eeac34f75b41e739472e34b26ac27b77cb5892c32f1"
+    },
+    {
+      "bytes": 467,
+      "path": "assets/source/osrs/cache2695/sprites/831.json.gz",
+      "sha256": "593d92c57e31ff4ff7aae025cab7bf5d1ec2a52922ed0c83cd5b31488db2d592"
+    },
+    {
+      "bytes": 289,
+      "path": "assets/source/osrs/cache2695/sprites/831.png",
+      "sha256": "300b0cc26a36942c7d2f8b26b3ea299ea2b6da76b742b84215406f4ee590ba6a"
+    },
+    {
+      "bytes": 7476,
+      "path": "assets/source/osrs/cache2695/sprites/866.json.gz",
+      "sha256": "4673c9b54778469cf91b92a77604e30a54cfa9b664ad0849218ad7fb794f696d"
+    },
+    {
+      "bytes": 9013,
+      "path": "assets/source/osrs/cache2695/sprites/866.png",
+      "sha256": "20842adc9e141eb98bcddd0b078aa8e6e41c086f77cff57f627bc01aff2ed346"
+    },
+    {
+      "bytes": 452,
+      "path": "assets/source/osrs/cache2695/sprites/897.json.gz",
+      "sha256": "e0393dc4470267b8cf3de68f95369e647ae125d03066f2c73db75ed5b99bd00d"
+    },
+    {
+      "bytes": 454,
+      "path": "assets/source/osrs/cache2695/sprites/897.png",
+      "sha256": "4cb9b9c726a55c31f6d8d892fae43556e57904fb122f46b8a59f134216c133a1"
+    },
+    {
+      "bytes": 487,
+      "path": "assets/source/osrs/cache2695/sprites/898.json.gz",
+      "sha256": "eac37d0b5632e1a452b6b32945036c7b94bed3ace2bc0b4c0505dbb2fa4bfee8"
+    },
+    {
+      "bytes": 364,
+      "path": "assets/source/osrs/cache2695/sprites/898.png",
+      "sha256": "11f2c00de6fa5301e289e82f70786ebb3b82a46554e558b53c8c7fdd017c86a0"
+    },
+    {
+      "bytes": 480,
+      "path": "assets/source/osrs/cache2695/sprites/899.json.gz",
+      "sha256": "ebb14ae384bd8ca349129e50e3f0d297ae36a9c4166bff326dc634a842af9456"
+    },
+    {
+      "bytes": 382,
+      "path": "assets/source/osrs/cache2695/sprites/899.png",
+      "sha256": "a91b018e43eaf252f0547835663ef920e98e8ed9632c133a45abc32be77f7508"
+    },
+    {
+      "bytes": 553,
+      "path": "assets/source/osrs/cache2695/sprites/900.json.gz",
+      "sha256": "55eeffd7c95d3f5606d673b981618cecdce77740fdbe30dd104b0fc6d83b2fce"
+    },
+    {
+      "bytes": 488,
+      "path": "assets/source/osrs/cache2695/sprites/900.png",
+      "sha256": "6c4eb2eb8b9f980fd6f19c52c8b262b7f050e3b9430b0142f403c39ef5cbd5f8"
+    },
+    {
+      "bytes": 538,
+      "path": "assets/source/osrs/cache2695/sprites/901.json.gz",
+      "sha256": "9a0a4d4351cb1fe40779442afabb3a104fb9857fcd71ff02a448567d16043852"
+    },
+    {
+      "bytes": 462,
+      "path": "assets/source/osrs/cache2695/sprites/901.png",
+      "sha256": "ae3dcdcf0b6950174f611d737ccb6e917da4ec3046f3ff1ab0a9fc9dbea84207"
+    },
+    {
+      "bytes": 415,
+      "path": "assets/source/osrs/cache2695/sprites/902.json.gz",
+      "sha256": "8953ade479b09a7bdf66c1b433e6581a171e7bcb68be50e987bead87085d3d68"
+    },
+    {
+      "bytes": 319,
+      "path": "assets/source/osrs/cache2695/sprites/902.png",
+      "sha256": "7d5559accc323786b7c0fe8f0316de72e7b9bbb0dd0d2feb11017afa731dbd90"
+    },
+    {
+      "bytes": 573,
+      "path": "assets/source/osrs/cache2695/sprites/903.json.gz",
+      "sha256": "c74d063e94b68e87256e73dea46171c834b05ba8087f9bcad75543bc636223f6"
+    },
+    {
+      "bytes": 490,
+      "path": "assets/source/osrs/cache2695/sprites/903.png",
+      "sha256": "2d16785da64b50fdf8790eeac34f75b41e739472e34b26ac27b77cb5892c32f1"
+    },
+    {
+      "bytes": 725,
+      "path": "assets/source/osrs/cache2695/sprites/904.json.gz",
+      "sha256": "791420e9d5edcacf37921ab85192b1ca243047e0a698e9ea3077e442ee2b3e31"
+    },
+    {
+      "bytes": 603,
+      "path": "assets/source/osrs/cache2695/sprites/904.png",
+      "sha256": "71acfd05320afde532a32c5a519acb5587488dcab4a1930e5b7109ac3ad7eafa"
+    },
+    {
+      "bytes": 466,
+      "path": "assets/source/osrs/cache2695/sprites/905.json.gz",
+      "sha256": "2fefb95f13b567d3bfd5fc2a8d619f43b42e30ee5079fd4c82f5d09e15de3a97"
+    },
+    {
+      "bytes": 361,
+      "path": "assets/source/osrs/cache2695/sprites/905.png",
+      "sha256": "9c0d1faccdbf971fde308afd88c42ae1d4092db390d4ab8117250437cbb8403d"
+    },
+    {
+      "bytes": 545,
+      "path": "assets/source/osrs/cache2695/sprites/907.json.gz",
+      "sha256": "c397e9862ad391370e075e253d62672c6be53fb51c766bd010ac9757c8fd9506"
+    },
+    {
+      "bytes": 438,
+      "path": "assets/source/osrs/cache2695/sprites/907.png",
+      "sha256": "d6c0d4bf29f3c6a38597333ff4478f3cee9b7dd284a73bb1d38a5ac03e3e690b"
+    },
+    {
+      "bytes": 385,
+      "path": "assets/source/osrs/cache2695/sprites/908.json.gz",
+      "sha256": "ffbe892101ca8ad5c278f23b0830202bb0b28c926dd06d501c3fbab7f09386d0"
+    },
+    {
+      "bytes": 275,
+      "path": "assets/source/osrs/cache2695/sprites/908.png",
+      "sha256": "57e5ea022cd1c49787185be158b75158c06c04c13a58c1c50a508fe82aaaf78b"
+    },
+    {
+      "bytes": 507,
+      "path": "assets/source/osrs/cache2695/sprites/909.json.gz",
+      "sha256": "0c275129c6b758b5986399fc9a3cb127ed12666acff0e4b79e4695ea685975e7"
+    },
+    {
+      "bytes": 416,
+      "path": "assets/source/osrs/cache2695/sprites/909.png",
+      "sha256": "dd62f5a00a3f1208515f04545c44947c8340602929c15b4c92c3ad96fa4c1df6"
+    },
+    {
+      "bytes": 453,
+      "path": "assets/source/osrs/cache2695/sprites/910.json.gz",
+      "sha256": "55796ddbde3e84e09e53d0fbb10764c442835d5a76ea79fc9b3b412c30683ef0"
+    },
+    {
+      "bytes": 377,
+      "path": "assets/source/osrs/cache2695/sprites/910.png",
+      "sha256": "de9a83ed5a290f3661ae542f72806d2704f5b26cf9e362a0016c33332e6e09e5"
+    },
+    {
+      "bytes": 172493,
+      "path": "assets/source/osrs/cache2695/title/title.jpg",
+      "sha256": "8903fd680577ac4ca37cfd73a90e5415739aff7f8d589e02b07f012ad5795636"
+    },
+    {
       "bytes": 9176,
       "path": "assets/source/osrs/cache2695/world/11822.json.gz",
       "sha256": "78e75c07460af2452d0895da9a1ada6a922915d3c808b3b46f64ee86600c348a"
@@ -6062,24 +8572,29 @@
       "sha256": "34e1a16d3f664d589da055772efc5cae89cb6b0a1bf57878ad146435b3881df2"
     },
     {
-      "bytes": 4073,
+      "bytes": 9675,
+      "path": "crates/game-types/src/execution.rs",
+      "sha256": "8da35ab6de29ffa41f7c561d5a8a1be951121c6caad0341295694a3765bd0ee1"
+    },
+    {
+      "bytes": 4162,
       "path": "crates/game-types/src/ids.rs",
-      "sha256": "497827772fbfb13fdf356d4831d3ca3c189e029cf1e254d7529f39c76762ff7e"
+      "sha256": "deb0db0685a40ded03c788154f4cf00a37bca496f259d764a145d91b72da51be"
     },
     {
-      "bytes": 20639,
+      "bytes": 20857,
       "path": "crates/game-types/src/intent.rs",
-      "sha256": "b03cc646d7ae25261ffdd9403deeb8477785e031e95d1f118a20d9f6dfd2d4e9"
+      "sha256": "b7109a16fd59b0db4016c34b433cc76edb50aac6204065f2a81779dab47601e0"
     },
     {
-      "bytes": 648,
+      "bytes": 685,
       "path": "crates/game-types/src/lib.rs",
-      "sha256": "62e98db5ee4fa0282f4e61b20697ec5fe2b9dc9b15edc9911366be6f6adb237c"
+      "sha256": "0692b0ae9f9dea5eb5aa379b83a56b3d7f14446f641af7041ae46ebf3376d6d6"
     },
     {
-      "bytes": 42615,
+      "bytes": 43352,
       "path": "crates/game-types/src/mechanics.rs",
-      "sha256": "d98c3b980d54828c25582eca4b32fe512d9b06523c60bec1277f43e0f6db1e67"
+      "sha256": "50566f0f502085d787a160cabe0a9f5179e6cfdb4c4861f926c4b18dbdf34c9e"
     },
     {
       "bytes": 4526,
@@ -6087,19 +8602,19 @@
       "sha256": "dade5ea9bf5b40bf88717ec93711a9277e8d56b14f30dec74634506549ac35f7"
     },
     {
-      "bytes": 23605,
+      "bytes": 25629,
       "path": "crates/game-types/src/runtime_state.rs",
-      "sha256": "38fd19619ec1c883e3e5a6900134465337a769ffffc5d4285976337f37984af2"
+      "sha256": "2cef2f756195d9670f2fdea1fafb84bd3690dcb126a9106140488b67c91182cb"
     },
     {
-      "bytes": 27262,
+      "bytes": 40934,
       "path": "crates/game-types/src/runtime_validation.rs",
-      "sha256": "41e1ce47e4a9457d8ba3da3918dbe65d14dcc15f103e80dad0bb5c8bb7306200"
+      "sha256": "02f74d752e765a94e139184e7bbe3a46f1e7676e6eb20a17966cd9bbcca0a454"
     },
     {
-      "bytes": 9565,
+      "bytes": 9751,
       "path": "crates/game-types/src/state.rs",
-      "sha256": "16ee6cad012123528429cd537bc494772e30da96571aab590dddaaf5717a21ff"
+      "sha256": "3733b74b1a941c12ddd16569625a9aeec5dd64e8628c63850951377637ddf4dc"
     },
     {
       "bytes": 1512,
@@ -6130,6 +8645,21 @@
       "bytes": 31232,
       "path": "research/current-source/m1-content-closure.json",
       "sha256": "d453c3780b1d9989563207b2df6ffc1a8696bb9c4097cca6b06bb8c3e4c0dc9f"
+    },
+    {
+      "bytes": 1776,
+      "path": "research/current-source/m1-potion-closure.json",
+      "sha256": "fdfb23e804eedc54b58ea9dd2997dc8b5baf6f51ebd21cb0952d329bccb1f05f"
+    },
+    {
+      "bytes": 2558,
+      "path": "research/current-source/m1-potion-definitions.json.gz",
+      "sha256": "86b390d4db1ae66e0c47aabd588db4015855b3c0db858a9e2b6658b30fbdf31b"
+    },
+    {
+      "bytes": 224916,
+      "path": "research/current-source/m1-potion-request.json",
+      "sha256": "d2d579ac6ca002b17c813a48869cebbf45290de1574f583a72eb008f418061ef"
     },
     {
       "bytes": 4379,
@@ -6212,6 +8742,21 @@
       "sha256": "299a330d5f6ff3876b2668cff58d7c58c41776239e4851d7558d8d8e781e9738"
     },
     {
+      "bytes": 1049,
+      "path": "research/m1-bindings/runtime3-input-context.json",
+      "sha256": "87b2cf02a5a7e181ea18cc5730802481ce7fbe0bce460d678fc860e4b7268734"
+    },
+    {
+      "bytes": 4391,
+      "path": "research/m1-bindings/runtime3-policy.json",
+      "sha256": "05031552cbd96aec54e15ee6075212212fffa165d913c476860bb2cfd222fc7b"
+    },
+    {
+      "bytes": 10945,
+      "path": "research/m1-bindings/runtime3-sources.json",
+      "sha256": "2076c006b7eac60b5a17f212430fc5cb18f1b8fc44bf2ad100bae3ad92e5b395"
+    },
+    {
       "bytes": 8738,
       "path": "research/m1-bindings/selection.json",
       "sha256": "eba70c376dfb2facd5dda8c08522089d384cff93260db235c5b45e79dcad45ba"
@@ -6262,14 +8807,14 @@
       "sha256": "732d3bf9ced13aea68baf00a232d3911ba18b96d61be9cf6794d7606e2b065f8"
     },
     {
-      "bytes": 1377,
+      "bytes": 2333,
       "path": "spec/adaptations.md",
-      "sha256": "08e0e30b2f0ff9391ec70259404c69ea560d9fb212c2bc28e3602dc4ab1e7b8e"
+      "sha256": "9d15bfb9b6d67b7f0105dd2c3751cb07132b5dc79af112b588fb908e6044373b"
     },
     {
-      "bytes": 37218,
+      "bytes": 41319,
       "path": "tools/cache-import/content_closure.py",
-      "sha256": "a0f47c7c95194385d7d6958baee45dc0270d1b2b5d945033df16b1a63ea2ca46"
+      "sha256": "842fc39066d05c2fbfdf123456774ac72323e3ab5b8f753e23dfb3cefc10f927"
     },
     {
       "bytes": 2950,
@@ -6277,9 +8822,9 @@
       "sha256": "cd3d731fc45b12d7515d7ded9df6b5c53d70e27a33011a78d254c3421be0d8e4"
     },
     {
-      "bytes": 35383,
+      "bytes": 36001,
       "path": "tools/cache-import/import_cache.py",
-      "sha256": "04dd614028b32788a0bef2efebd3f414d35b5a6499abe444303c6c69e3e29529"
+      "sha256": "72001d88da3b911425f109ece57df7bd2a888fed3ff8caad35dbbb7cec0d5e19"
     },
     {
       "bytes": 4236,
@@ -6292,24 +8837,24 @@
       "sha256": "3ccf42326831b8d396fed6b843c9ace2cdc298a36b85323cc0bc91490b5c0898"
     },
     {
-      "bytes": 29427,
+      "bytes": 30591,
       "path": "tools/m1-content/build.py",
-      "sha256": "b1a51019ba3ff7ebddb74e7074b1fbc8a52b3226340dbe3cfc7f496d36a858cc"
+      "sha256": "65b5a5b757c398fbabb92f1a05302210360aebb1206bb230546f9495666b27a5"
     },
     {
-      "bytes": 15984,
+      "bytes": 16972,
       "path": "tools/m1-content/check.py",
-      "sha256": "575ec765d52ab1e8f0904d5ac342fb4a88018456c9535b5bd67ba40b89cfa5d9"
+      "sha256": "677778885c8cd7d7df8b51be47d55b7ccf3f251616d308cd0b53b2d7a1a8b833"
     },
     {
-      "bytes": 12661,
+      "bytes": 12852,
       "path": "tools/m1-content/common.py",
-      "sha256": "44e9359bc110beb75ebfa3213268b219d628ee47fcee434d7d887b6dd8193514"
+      "sha256": "2a1d55c9a75e569d73037f0fd09163ea0ff87cd6b803d931c3f3a83917479eb1"
     },
     {
-      "bytes": 5871,
+      "bytes": 5844,
       "path": "tools/m1-content/compile.py",
-      "sha256": "4c9ba28fcdef669138022cc3c8c957ba41aa2239f67dfa27097a2c909305e21e"
+      "sha256": "6dfd5c37ea2fb3fe0d14d4fcafeb7170ea03d31506488ff3152d22433d08c1e0"
     },
     {
       "bytes": 21559,
@@ -6330,6 +8875,11 @@
       "bytes": 7351,
       "path": "tools/m1-content/import_definitions.py",
       "sha256": "faceb66f5c2466df19067755413c61f539e0cc9a9c69c94049efb9da053fdd4c"
+    },
+    {
+      "bytes": 7077,
+      "path": "tools/m1-content/import_execution_sources.py",
+      "sha256": "f5409964b4eb82e6b8e01bcee78319b1e850c951a4f457df9178db3a49ee5042"
     },
     {
       "bytes": 5480,
@@ -6357,6 +8907,31 @@
       "sha256": "28ff34d8cf58a91ff74d55e19976fcc85116fece6f97344eca1d7945cbdd9b11"
     },
     {
+      "bytes": 10630,
+      "path": "tools/m1-content/schema-check/Cargo.lock",
+      "sha256": "39d826dd8ecbcf515c08c87b7d29c0873956e0c198228cd808917de63b87bf84"
+    },
+    {
+      "bytes": 327,
+      "path": "tools/m1-content/schema-check/Cargo.toml",
+      "sha256": "54aefc57e22fbdb17baaca58b671f256c38d5d46b06368239ce9fa8117d3376a"
+    },
+    {
+      "bytes": 5281,
+      "path": "tools/m1-content/schema-check/src/main.rs",
+      "sha256": "cdb607a97da3a1227c2c136e01963bd77ca27bbb40d6c775600a2db6c8fce240"
+    },
+    {
+      "bytes": 9886,
+      "path": "tools/m1-content/schema-check/src/probes.rs",
+      "sha256": "aadc2262acd972cc267adc24d392622d407b18e86ffd2d8d482589c3a6c80986"
+    },
+    {
+      "bytes": 21922,
+      "path": "tools/m1-content/selectors3.py",
+      "sha256": "9deac92af379e5e3faf9c836b78eb4d4050c45c17edac7bcfc306bc52c7b489e"
+    },
+    {
       "bytes": 15187,
       "path": "tools/m1-content/spawns.py",
       "sha256": "a2eb361608b61425e2b90c512f107b02bc1dff42e09ad8f45bb2d362676f480f"
@@ -6369,17 +8944,22 @@
     {
       "bytes": 5779,
       "path": "tools/m1-content/test_asset_refresh.py",
-      "sha256": "a8f5ca584d2f074e0d26e0bfd483dd75756c57bd630d7f363223a194ca907933"
+      "sha256": "8756f0ccb80ad6565a4e9e9ca6db21b9503999b9f29369f4b887fbaabd4bd3ac"
     },
     {
-      "bytes": 26149,
+      "bytes": 26359,
       "path": "tools/m1-content/test_content.py",
-      "sha256": "42f8221c73c2115537813de680873e00b932486c4520c47f6fe358a18fe4c538"
+      "sha256": "60ea4a595e22e0fe9e83997f63dec28df2f9278118ffb193b4e92357c68a9ac2"
     },
     {
-      "bytes": 7739,
+      "bytes": 14987,
+      "path": "tools/m1-content/test_runtime3.py",
+      "sha256": "9e1caa8ed41533e4fb742ef27aeaed6ef4d219f3dde92494bccd7666df0ede33"
+    },
+    {
+      "bytes": 7779,
       "path": "tools/m1-content/test_runtime_application.py",
-      "sha256": "ae52ca44723a0864b65fce4746f6f0f3b9e3d18c2fef7f0a14dd7bb63616d8c9"
+      "sha256": "863aec88c38d491aa3cd27ef50657b1fb750359b9ff8d73f63fd63ec3715d2f2"
     },
     {
       "bytes": 9439,
@@ -6392,24 +8972,29 @@
       "sha256": "f7a0176dd033cb96288c1d2def3aaf0f88a86ec7d15d04f6ea66b2c8c6b259c0"
     },
     {
-      "bytes": 14657,
+      "bytes": 9018,
+      "path": "tools/m1-content/validate.py",
+      "sha256": "94d7d7f5b599afd6b60375a631ac990fd3fce84fe9e574a68632ffe6b071313c"
+    },
+    {
+      "bytes": 16316,
       "path": "tools/m1-content/verify_assets.py",
-      "sha256": "946e7cb8d8edd927435108380c6a69e04e11f3b63d815bb4aa2621ce8bf7bccb"
+      "sha256": "4c1024cf3a12da249e554bbacd60dd59eca23a7801bdd4d11f9a729dd50fa570"
     },
     {
-      "bytes": 8090,
+      "bytes": 15065,
       "path": "tools/m1-content/verify_routes.py",
-      "sha256": "e09f698120ae32e795a8c0a7ac7ba797513beea226672b32a8bb60a4dae3f6c8"
+      "sha256": "90e9e54178743f8c9bc05224526fe4ee536fc4d2eb69f6e20a77574d682b0e72"
     },
     {
-      "bytes": 13335,
+      "bytes": 13338,
       "path": "tools/m1-content/verify_runtime_bindings.py",
-      "sha256": "69a94e4e56267b6d197c89eb9e64ecb7cbe46bac83b91019a325fe4a22a7af17"
+      "sha256": "f7a0e098e2eaeab495c27eb41601ff24ff298fe64b38722200638ec7b0db96c8"
     },
     {
-      "bytes": 9146,
+      "bytes": 9148,
       "path": "tools/m1-content/verify_state_oracles.py",
-      "sha256": "44544b645236aa770f517b481d8a4af0004e41d64a729c7ff9b4db28c69e0121"
+      "sha256": "a67632b643f8701d0ed6fb7881c78bdc670f144d97678785661a672cc3efa04c"
     },
     {
       "bytes": 21043,

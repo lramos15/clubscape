@@ -1,0 +1,109 @@
+{
+  "artifact_version": 3,
+  "collision_groups": 49,
+  "combined_collision_selections": 136,
+  "content_behavior_sha256": "68b9112835288bdcdde7d8ace86405fac33604b933c164d0f289abf77bccab79",
+  "content_schema_version": 3,
+  "death_timing": {
+    "source": [
+      {
+        "notes": "Pinned PlayerDeath source waits2, begins the death animation, waits4, then transports/restores. The two source delays map to the declared Dying/Respawning phases; no instant death/reset or duplicate retention. Source SHA-256: 1ea4d9d3915891e691b71ef201996401042fccd30fb1c40455ea322770078b74. Public source-supported reconstruction/interpretation, not a live observation.",
+        "reference": "https://raw.githubusercontent.com/rsmod/rsmod/fa13b3f67172ef36e15d6b1514358aee61411796/api/death/src/main/kotlin/org/rsmod/api/death/PlayerDeath.kt",
+        "revision": "fa13b3f67172ef36e15d6b1514358aee61411796",
+        "status": "inference"
+      },
+      {
+        "notes": "Pinned PlayerDeath source waits2, begins the death animation, waits4, then transports/restores. The two source delays map to the declared Dying/Respawning phases; no instant death/reset or duplicate retention.",
+        "reference": "research/m1-bindings/runtime3-policy.json",
+        "revision": "runtime3-source-profile-v1",
+        "status": "inference"
+      }
+    ],
+    "status": "bound",
+    "value": {
+      "dying_ticks": 2,
+      "respawn_ticks": 4
+    }
+  },
+  "fresh_normal_manual_drop_profile": {
+    "acceptance_impact": "A stage selector alone does not encode playtime release, offline-paused expiration or cross-world ownership. These semantics require real executor conformance, not merely matching private/expiry numbers.",
+    "documented_playtime_below_seconds": 72000,
+    "expiry_clock": "owner_online_ticks",
+    "post_threshold_release_verified": false,
+    "world_scope": "owner_across_worlds"
+  },
+  "gameplay_acceptance_claimed": false,
+  "morph_domain_projection": {
+    "counter": "counter.mill.flour",
+    "object": "object.mill.flour_bin",
+    "proof": "Every valid integer0..30 is explicitly mapped. Out-of-domain counter values fail before morph resolution; an unreachable fallback is totalized to the real empty variant. All reachable variants have identical footprint/clipping and remain per-character; the complete original source morph array/fallback remains in the source bindings.",
+    "reachable_selectors": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15,
+      16,
+      17,
+      18,
+      19,
+      20,
+      21,
+      22,
+      23,
+      24,
+      25,
+      26,
+      27,
+      28,
+      29,
+      30
+    ],
+    "runtime_fallback": "object.mill.flour_bin.empty",
+    "source_fallback": null
+  },
+  "new_consume_only_recipes": [
+    "recipe.prayer.bones.ordinary",
+    "recipe.prayer.bones.tutorial"
+  ],
+  "new_ground_policies": [
+    "ground_policy.npc_loot",
+    "ground_policy.player_drop.m1_fresh",
+    "ground_policy.player_drop.ordinary"
+  ],
+  "npc_selector_ids": [
+    "npc.goblin.level_2",
+    "npc.tutorial_chicken",
+    "npc.tutorial_rat"
+  ],
+  "policy": "research/m1-bindings/runtime3-policy.json",
+  "policy_sha256": "cc9e2753bef8fe9ee9ea81ec7f7657297759df9c81ea0a5dfe1b8adf58b0eb53",
+  "presentation_approved": false,
+  "recovery_interfaces": {
+    "grave": "interface.grave",
+    "office": "interface.death_retrieval"
+  },
+  "runtime_schema_version": 1,
+  "source_geometry_preserved": true,
+  "source_index": "research/m1-bindings/runtime3-sources.json",
+  "source_index_sha256": "2076c006b7eac60b5a17f212430fc5cb18f1b8fc44bf2ad100bae3ad92e5b395",
+  "source_supported_inference_not_observed": true,
+  "traversal_definitions": 9,
+  "unarmed_styles": [
+    "style.unarmed.punch",
+    "style.unarmed.kick",
+    "style.unarmed.block"
+  ],
+  "v2_applied_behavior_sha256": "51f71d330d9860b3538e5b362e7a16b5c163e7d39e7f1796b032f69988803266"
+}

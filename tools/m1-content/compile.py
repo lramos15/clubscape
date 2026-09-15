@@ -50,7 +50,7 @@ def main():
     if result.returncode == 0:
         artifact = output_path.read_bytes()
         parsed = json.loads(result.stdout)
-        if parsed["schema_version"] != 2 or parsed["artifact_version"] != 2 or sha(artifact) != parsed["sha256"]:
+        if parsed["schema_version"] != 3 or parsed["artifact_version"] != 3 or sha(artifact) != parsed["sha256"]:
             raise ValueError("Actual compiler artifact identity/version mismatch")
         compressed = bytearray(gzip.compress(artifact, compresslevel=9, mtime=0))
         compressed[9] = 255
@@ -59,7 +59,7 @@ def main():
         record["artifact_sha256"] = sha(artifact)
         record["artifact"] = {"path": str(committed_path.relative_to(ROOT)), "bytes": len(compressed),
                               "sha256": sha(compressed), "uncompressed_bytes": len(artifact),
-                              "uncompressed_sha256": sha(artifact), "artifact_version": 2, "schema_version": 2}
+                              "uncompressed_sha256": sha(artifact), "artifact_version": 3, "schema_version": 3}
         decoded = json.loads(data)
         unresolved = []
         def find_bindings(value, path=""):
@@ -76,7 +76,7 @@ def main():
         if {value["path"] for value in unresolved} != set(reported):
             raise ValueError("Compiler unresolved-binding report differs from authored source binding paths")
         record["unresolved_binding_count"] = len(unresolved)
-        application = load(ROOT / "research/runtime-bindings/application-result.json")
+        application = load(BINDINGS / "application-result.json")
         if application["content_compressed_sha256"] != sha(source.read_bytes()):
             raise ValueError("Source application proof does not match compiler input")
         residuals = application["residuals"]
@@ -84,11 +84,11 @@ def main():
             raise ValueError("Compiler/source-branch unresolved classification disagrees")
         record["source_branch_residuals"] = residuals
         write(BINDINGS / "unresolved-bindings.json", {
-            "schema_version": 2, "content_sha256": sha(source.read_bytes()),
+            "schema_version": 3, "content_sha256": sha(source.read_bytes()),
             "runtime_compile_passed": True, "runtime_success_claimed": False,
             "bindings": unresolved, "count": len(unresolved),
             "profile_candidates": "research/m1-bindings/profile-v2.json",
-            "source_application": "research/runtime-bindings/application-result.json",
+            "source_application": "research/m1-bindings/application-result.json",
             "source_branch_residuals": residuals,
         }, True)
     write(BINDINGS / "compiler-validation.json", record, True)

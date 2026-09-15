@@ -26,6 +26,7 @@ from mechanics import base_mechanics
 from travel_policies import wire_travel_policies
 from world_mechanics import build_doors, wire_world
 from runtime_application import apply_source_bindings
+from selectors3 import apply_selectors
 
 
 def input_lock(inputs):
@@ -36,14 +37,16 @@ def input_lock(inputs):
     paths += list(JOURNEY.glob("*.json"))
     paths += [ROOT / "assets/manifests/osrs/cache2695-full-bundle.json.gz",
               ROOT / "assets/manifests/osrs/cache2695-published.json"]
-    extension = inputs.publication
-    closure_request = load(ROOT / extension["request"]["path"])
-    extension_records = [
-        *extension["published_files"], *extension["collection_extensions"].values(),
-        *[extension[key] for key in ("base_bundle", "base_publication", "merged_inventory",
-                                    "extraction_inventory", "request", "closure_report", "dependency_graph")],
-        closure_request["product_definitions_snapshot"], closure_request["selection"], closure_request["decoder_lock"],
-    ]
+    extension_records = []
+    for publication_path, extension in inputs.publication_chain:
+        paths.append(publication_path)
+        extension_records.extend(extension["published_files"])
+        extension_records.extend(extension.get("collection_extensions", {}).values())
+        extension_records.extend(extension[key] for key in ("base_bundle", "base_publication", "merged_inventory",
+            "extraction_inventory", "request", "closure_report", "dependency_graph") if key in extension)
+        if "request" in extension:
+            closure_request = load(ROOT / extension["request"]["path"])
+            extension_records.extend(closure_request[key] for key in ("product_definitions_snapshot", "selection", "decoder_lock"))
     for record in extension_records:
         previous = indexed.get(record["path"])
         if previous and (previous["sha256"], previous["size_bytes"]) != (record["sha256"], record["size_bytes"]):
@@ -56,7 +59,9 @@ def input_lock(inputs):
               ("selection", "extraction-contract", "m1-request")]
     paths += [BINDINGS / name for name in ("selection.json", "definitions.json.gz", "wiki-sources.json",
                                          "wiki-facts.json", "code-sources.json", "runtime-source-facts.json",
-                                         "profile-v2.json", "application-item-definitions.json.gz")]
+                                         "profile-v2.json", "application-item-definitions.json.gz",
+                                         "runtime3-policy.json", "runtime3-sources.json", "runtime3-input-context.json")]
+    paths += [ROOT / "assets/manifests/osrs/audio-runtime.json"]
     paths += [ROOT / "research/runtime-bindings" / name for name in (
         "resolutions.json", "application-context.json", "sources.json", "oracles.json",
         "death-values.json", "profile-resolutions.json", "inputs/guide-prices.json.gz")]
@@ -65,6 +70,8 @@ def input_lock(inputs):
     paths += list((ROOT / "crates/game-types/src").glob("*.rs"))
     paths += sorted((ROOT / "tools/m1-content").glob("*.py"))
     paths += sorted((ROOT / "tools/m1-content").glob("*.java"))
+    paths += sorted((ROOT / "tools/m1-content/schema-check/src").glob("*.rs"))
+    paths += [ROOT / "tools/m1-content/schema-check" / name for name in ("Cargo.toml", "Cargo.lock")]
     records = []
     for path in sorted(set(paths)):
         data = path.read_bytes()
@@ -134,6 +141,7 @@ def assemble(inputs, world, revision):
     normalize_sources(content)
     content, application = apply_source_bindings(content, inputs)
     bindings["application"] = application
+    content = apply_selectors(inputs, world, content, bindings)
     return content, bindings
 
 
@@ -202,8 +210,8 @@ def mechanics_bindings(inputs, content):
         "loot_tables": inputs.rules["activities"]["loot_tables"],
         "death_graph": inputs.rules["activities"]["death_graph"],
         "unresolved_semantic_items": inputs.selection["unresolved_items"],
-        "source_interaction_policy": "A source rule binding is not an engine implementation or an approval. "
-                                     "Unrepresented rules remain blocked in contract-gaps.json.",
+        "source_interaction_policy": "Source bindings are not engine execution or approval. See the current "
+                                     "native conformance probes and contract-gaps.json, not historical v1/v2 gaps.",
     }
 
 
@@ -260,16 +268,17 @@ def checkpoint_bindings(inputs, content, bindings):
         {"intent": {"kind": "interact", "target": object_at("object.mill.ladder_middle", 3164, 3307, 1), "action": "Climb-up"},
          "expect_plane": 2},
         {"intent": {"kind": "interact", "target": object_at("object.mill.hopper", 3166, 3307, 2), "action": "Fill"},
-         "expect_hopper": "grain", "consumed": "item.grain", "gap": "mill_state"},
+         "expect_hopper": "grain", "consumed": "item.grain", "counter": "counter.mill.hopper_grain"},
         {"intent": {"kind": "interact", "target": object_at("object.mill.controls", 3166, 3305, 2), "action": "Operate"},
-         "expect_hopper": None, "expect_flour_units_delta": 1, "gap": "mill_state"},
+         "expect_hopper": None, "expect_flour_units_delta": 1, "counter": "counter.mill.flour"},
         {"intent": {"kind": "interact", "target": object_at("object.mill.ladder_upper", 3164, 3307, 2), "action": "Climb-down"},
          "expect_plane": 1},
         {"intent": {"kind": "interact", "target": object_at("object.mill.ladder_middle", 3164, 3307, 1), "action": "Climb-down"},
          "expect_plane": 0},
         {"target": object_at("object.mill.flour_bin", 3166, 3306), "source_action": "Empty",
          "required_item": "item.pot", "produced": "item.flour.pot", "expect_flour_units_delta": -1,
-         "gap": "mill_state", "morph_note": "Parent1781 must resolve to the source per-player full/empty bin, not be silently replaced."},
+         "counter": "counter.mill.flour",
+         "morph_note": "Parent1781 resolves to the source per-player full/empty variants with unchanged clipping."},
         {"intent": {"kind": "interact", "target": "spawn.cook", "action": "Talk-to"},
          "expect_quest": "quest.cooks_assistant", "delivery_graph": "research/m1-bindings/graph-bindings.json#cooks"},
     ]
@@ -296,7 +305,7 @@ def build(args):
     inputs = Inputs()
     lock = input_lock(inputs)
     world = World(inputs)
-    revision = "m1.source-backed.v2." + lock["aggregate_sha256"][:16]
+    revision = "m1.source-backed.v3." + lock["aggregate_sha256"][:16]
     content, bindings = assemble(inputs, world, revision)
     from check import check_content
     checks = check_content(content, inputs, world, bindings)
@@ -308,7 +317,8 @@ def build(args):
     emit(BINDINGS / "input-lock.json", lock, True)
     emit(CONTENT / "game-content.json.gz", content)
     bindings["application"]["content_compressed_sha256"] = sha((CONTENT / "game-content.json.gz").read_bytes())
-    emit(ROOT / "research/runtime-bindings/application-result.json", bindings["application"], True)
+    emit(BINDINGS / "application-result.json", bindings["application"], True)
+    emit(BINDINGS / "runtime3-selectors.json", bindings["runtime3"], True)
     geometry_records = []
     for number in sorted(world.raw):
         geometry_records.append(emit(CONTENT / f"geometry/{number}.json.gz", world.region(number, full=True)))
@@ -382,26 +392,25 @@ def build(args):
     for binding in bindings["interfaces"].values():
         asset_ids.update(f"{ASSET_PREFIX}interface.{number}" for number in binding["source_groups"])
     missing_assets = set(asset_ids - inputs.assets.keys())
-    additional_assets = set()
-    for identifier in bindings["application"]["item_extensions"]:
-        extra = bindings["items"][identifier]
-        additional_assets.add(extra["source_asset"])
-        additional_assets.update(f"{ASSET_PREFIX}model.{number}" for number in extra["models"])
-    if missing_assets - additional_assets:
-        raise ValueError(f"Product asset references absent from validated merged catalog: {sorted(missing_assets - additional_assets)}")
+    if missing_assets:
+        raise ValueError(f"Product asset references absent from validated merged catalog: {sorted(missing_assets)}")
     emit(CONTENT / "asset-references.json", {
         "assets": [{"id": identifier, "kind": inputs.assets[identifier]["kind"],
                     "outputs": inputs.assets[identifier]["outputs"]} for identifier in sorted(asset_ids - missing_assets)],
         "manifest": inputs.catalog_path,
-        "publications": [inputs.publication["base_publication"]["path"], str(PUBLICATION.relative_to(ROOT))],
-        "collection_extensions": inputs.publication["collection_extensions"],
+        "publications": [str(path.relative_to(ROOT)) for path, _ in inputs.publication_chain],
+        "collection_extensions": [
+            {"publication": str(path.relative_to(ROOT)), "kind": kind, **shard}
+            for path, publication in inputs.publication_chain
+            for kind, shard in publication.get("collection_extensions", {}).items()],
         "verified_definition_extensions": {
             "path": "research/m1-bindings/application-item-definitions.json.gz",
             "sha256": sha((BINDINGS / "application-item-definitions.json.gz").read_bytes()),
             "items": bindings["application"]["item_extensions"],
             "unpublished_asset_ids": sorted(missing_assets),
-            "scope": "New owner-approved3-dose potion identity and reciprocal note only. Original assets are not fabricated; "
-                     "source-worker publication of these exact additional IDs remains a separate graphical hookup.",
+            "scope": "The actual3-dose potion identity, reciprocal note and original model2697 resolve through "
+                     "the additive potion publication, including its original placeholder19365 dependency. "
+                     "No fabricated assets or pending source-publication exception.",
         },
         "output_path_policy": "Asset outputs keep their canonical extraction-relative paths. Resolve committed "
                               "closure bytes with published_files[].extraction_path -> path in the additive publication; "
@@ -425,17 +434,22 @@ def build(args):
         "compiler_command": "python3 tools/m1-content/compile.py --compiler-manifest crates/content/Cargo.toml",
         "outputs": outputs, "counts": checks["counts"],
         "source_geometry": dict(world.statistics),
-        "content_schema_version": 2, "artifact_version": 2, "runtime_schema_version": 1,
+        "content_schema_version": 3, "artifact_version": 3, "runtime_schema_version": 1,
+        "declared_v3_selectors_authored": True,
+        "active_source_binding_count": bindings["application"]["residuals"]["active_or_conditionally_active_count"],
+        "inactive_full_target_binding_count": bindings["application"]["residuals"]["inactive_full_target_count"],
         "runtime_ready": False, "source_gameplay_verified": False,
         "presentation_approved": False, "milestone_accepted": False,
         "readiness_dependency": "research/m1-bindings/contract-gaps.json",
         "source_application": {
-            "audit": "research/runtime-bindings/application-result.json",
+            "audit": "research/m1-bindings/application-result.json",
             "source_bindings_consumed": bindings["application"]["bound_path_count"],
             "coupled_updates": bindings["application"]["coupled_update_count"],
             "approved_adaptation": bindings["application"]["approved_loot"]["adaptation"],
             "residuals": bindings["application"]["residuals"],
             "remaining_selector_hooks": bindings["application"]["remaining_selector_hooks"],
+            "runtime3_selectors": "research/m1-bindings/runtime3-selectors.json",
+            "executor_conformance": "research/m1-bindings/schema-validation.json#native_source_policy_probes",
         },
         "scope_policy": inputs.selection["navigation_scope_note"],
     }

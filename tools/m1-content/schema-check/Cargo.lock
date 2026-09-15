@@ -134,6 +134,22 @@ dependencies = [
 ]
 
 [[package]]
+name = "clubscape-simulation"
+version = "0.1.0"
+dependencies = [
+ "clubscape-game-types",
+]
+
+[[package]]
+name = "clubscape-world-engine"
+version = "0.1.0"
+dependencies = [
+ "clubscape-game-types",
+ "clubscape-simulation",
+ "serde",
+]
+
+[[package]]
 name = "colorchoice"
 version = "1.0.5"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -208,6 +224,7 @@ version = "0.1.0"
 dependencies = [
  "clubscape-content",
  "clubscape-game-types",
+ "clubscape-world-engine",
  "serde_json",
 ]
 

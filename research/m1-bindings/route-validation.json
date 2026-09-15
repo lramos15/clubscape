@@ -1,8 +1,12 @@
 {
+  "combined_cells_checked_by_source_object_insertion": 636,
+  "combined_collision_groups": 49,
+  "complete_combined_selections": 136,
   "connected_with_source_doors_open": 30,
   "door_roundtrip_preserves_source_cells": true,
   "door_transform_definitions": 68,
-  "game_content_sha256": "ecdeabdcb4270698b4706c014459f3ec719d63c03bcd9731bc81b7ae2b6dfd10",
+  "game_content_sha256": "b9364b8bb56a88779f57eee650bff032c424e862bc9737bbda558ae41802673b",
+  "mixed_leaf_selections": 38,
   "presentation_approved": false,
   "required_walk_segments": 30,
   "routes": [
@@ -608,8 +612,12 @@
     }
   ],
   "runtime_journey_passed": false,
-  "schema_version": 1,
-  "scope": "Source geometry connectivity through the actual schema2 ObjectTransform open-state collisions, not an empty map or wholesale door deletion. Open/close restores exact source cells. This topology check does not bypass access guards in gameplay, execute unbound source timing or certify inferred hinge/arrival/renderer fidelity.",
+  "schema_version": 3,
+  "scope": "Source geometry connectivity through actual content3 CombinedCollisionState selections, not an empty map or wholesale door deletion. Open/close restores exact source cells. This topology check does not bypass access guards in gameplay, execute unbound source timing or certify inferred hinge/arrival/renderer fidelity.",
+  "separate_runtime_acceptance": [
+    "Execute experience-branch tutorial departure/Home Teleport and reconciliation through the live server.",
+    "Execute Death's Office instance entry/exit and first-item-losing-death state through the live server."
+  ],
   "source_transit_pairs": [
     "tutorial_quest_ladder",
     "tutorial_combat_ladder",
@@ -623,8 +631,370 @@
     "castle_south_top_floor",
     "castle_north_top_floor"
   ],
-  "unrepresented_connections": [
-    "Experience-branch tutorial departure/Home Teleport and reconciliation",
-    "Death's Office live instance entry/exit and first-item-losing-death state"
+  "walkable_player_travel_destinations": [
+    {
+      "branch": "fixed",
+      "location": {
+        "instance": null,
+        "region": "region.osrs.12850",
+        "tile": {
+          "plane": 0,
+          "x": 3205,
+          "y": 3228
+        }
+      },
+      "travel": "travel.castle_north_lower.backward"
+    },
+    {
+      "branch": "fixed",
+      "location": {
+        "instance": null,
+        "region": "region.osrs.12850",
+        "tile": {
+          "plane": 1,
+          "x": 3205,
+          "y": 3228
+        }
+      },
+      "travel": "travel.castle_north_lower.forward"
+    },
+    {
+      "branch": "fixed",
+      "location": {
+        "instance": null,
+        "region": "region.osrs.12850",
+        "tile": {
+          "plane": 0,
+          "x": 3205,
+          "y": 3228
+        }
+      },
+      "travel": "travel.castle_north_top_floor.backward"
+    },
+    {
+      "branch": "fixed",
+      "location": {
+        "instance": null,
+        "region": "region.osrs.12850",
+        "tile": {
+          "plane": 2,
+          "x": 3205,
+          "y": 3228
+        }
+      },
+      "travel": "travel.castle_north_top_floor.forward"
+    },
+    {
+      "branch": "fixed",
+      "location": {
+        "instance": null,
+        "region": "region.osrs.12850",
+        "tile": {
+          "plane": 1,
+          "x": 3205,
+          "y": 3228
+        }
+      },
+      "travel": "travel.castle_north_upper.backward"
+    },
+    {
+      "branch": "fixed",
+      "location": {
+        "instance": null,
+        "region": "region.osrs.12850",
+        "tile": {
+          "plane": 2,
+          "x": 3205,
+          "y": 3228
+        }
+      },
+      "travel": "travel.castle_north_upper.forward"
+    },
+    {
+      "branch": "fixed",
+      "location": {
+        "instance": null,
+        "region": "region.osrs.12850",
+        "tile": {
+          "plane": 0,
+          "x": 3205,
+          "y": 3209
+        }
+      },
+      "travel": "travel.castle_south_lower.backward"
+    },
+    {
+      "branch": "fixed",
+      "location": {
+        "instance": null,
+        "region": "region.osrs.12850",
+        "tile": {
+          "plane": 1,
+          "x": 3205,
+          "y": 3209
+        }
+      },
+      "travel": "travel.castle_south_lower.forward"
+    },
+    {
+      "branch": "fixed",
+      "location": {
+        "instance": null,
+        "region": "region.osrs.12850",
+        "tile": {
+          "plane": 0,
+          "x": 3205,
+          "y": 3209
+        }
+      },
+      "travel": "travel.castle_south_top_floor.backward"
+    },
+    {
+      "branch": "fixed",
+      "location": {
+        "instance": null,
+        "region": "region.osrs.12850",
+        "tile": {
+          "plane": 2,
+          "x": 3205,
+          "y": 3209
+        }
+      },
+      "travel": "travel.castle_south_top_floor.forward"
+    },
+    {
+      "branch": "fixed",
+      "location": {
+        "instance": null,
+        "region": "region.osrs.12850",
+        "tile": {
+          "plane": 1,
+          "x": 3205,
+          "y": 3209
+        }
+      },
+      "travel": "travel.castle_south_upper.backward"
+    },
+    {
+      "branch": "fixed",
+      "location": {
+        "instance": null,
+        "region": "region.osrs.12850",
+        "tile": {
+          "plane": 2,
+          "x": 3205,
+          "y": 3209
+        }
+      },
+      "travel": "travel.castle_south_upper.forward"
+    },
+    {
+      "branch": "fixed",
+      "location": {
+        "instance": "instance_template.death.office",
+        "region": "region.osrs.12633",
+        "tile": {
+          "plane": 0,
+          "x": 3174,
+          "y": 5726
+        }
+      },
+      "travel": "travel.death.enter"
+    },
+    {
+      "branch": "source_respawn",
+      "location": {
+        "instance": null,
+        "region": "region.osrs.12850",
+        "tile": {
+          "plane": 0,
+          "x": 3222,
+          "y": 3218
+        }
+      },
+      "travel": "travel.death.exit"
+    },
+    {
+      "branch": "fixed",
+      "location": {
+        "instance": null,
+        "region": "region.osrs.12849",
+        "tile": {
+          "plane": 0,
+          "x": 3237,
+          "y": 3194
+        }
+      },
+      "travel": "travel.death.exit_voluntary"
+    },
+    {
+      "branch": "fixed",
+      "location": {
+        "instance": null,
+        "region": "region.osrs.12850",
+        "tile": {
+          "plane": 0,
+          "x": 3208,
+          "y": 3216
+        }
+      },
+      "travel": "travel.lumbridge_cellar.backward"
+    },
+    {
+      "branch": "fixed",
+      "location": {
+        "instance": null,
+        "region": "region.osrs.12950",
+        "tile": {
+          "plane": 0,
+          "x": 3208,
+          "y": 9616
+        }
+      },
+      "travel": "travel.lumbridge_cellar.forward"
+    },
+    {
+      "branch": "fixed",
+      "location": {
+        "instance": null,
+        "region": "region.osrs.12595",
+        "tile": {
+          "plane": 0,
+          "x": 3164,
+          "y": 3306
+        }
+      },
+      "travel": "travel.mill_lower.backward"
+    },
+    {
+      "branch": "fixed",
+      "location": {
+        "instance": null,
+        "region": "region.osrs.12595",
+        "tile": {
+          "plane": 1,
+          "x": 3164,
+          "y": 3306
+        }
+      },
+      "travel": "travel.mill_lower.forward"
+    },
+    {
+      "branch": "fixed",
+      "location": {
+        "instance": null,
+        "region": "region.osrs.12595",
+        "tile": {
+          "plane": 1,
+          "x": 3164,
+          "y": 3306
+        }
+      },
+      "travel": "travel.mill_upper.backward"
+    },
+    {
+      "branch": "fixed",
+      "location": {
+        "instance": null,
+        "region": "region.osrs.12595",
+        "tile": {
+          "plane": 2,
+          "x": 3164,
+          "y": 3306
+        }
+      },
+      "travel": "travel.mill_upper.forward"
+    },
+    {
+      "branch": "experience.brand_new",
+      "location": {
+        "instance": null,
+        "region": "region.osrs.12850",
+        "tile": {
+          "plane": 0,
+          "x": 3232,
+          "y": 3233
+        }
+      },
+      "travel": "travel.tutorial.departure"
+    },
+    {
+      "branch": "experience.experienced",
+      "location": {
+        "instance": null,
+        "region": "region.osrs.12850",
+        "tile": {
+          "plane": 0,
+          "x": 3222,
+          "y": 3218
+        }
+      },
+      "travel": "travel.tutorial.departure"
+    },
+    {
+      "branch": "experience.returning",
+      "location": {
+        "instance": null,
+        "region": "region.osrs.12850",
+        "tile": {
+          "plane": 0,
+          "x": 3232,
+          "y": 3233
+        }
+      },
+      "travel": "travel.tutorial.departure"
+    },
+    {
+      "branch": "fixed",
+      "location": {
+        "instance": null,
+        "region": "region.osrs.12436",
+        "tile": {
+          "plane": 0,
+          "x": 3110,
+          "y": 9526
+        }
+      },
+      "travel": "travel.tutorial_combat_ladder.backward"
+    },
+    {
+      "branch": "fixed",
+      "location": {
+        "instance": null,
+        "region": "region.osrs.12336",
+        "tile": {
+          "plane": 0,
+          "x": 3110,
+          "y": 3126
+        }
+      },
+      "travel": "travel.tutorial_combat_ladder.forward"
+    },
+    {
+      "branch": "fixed",
+      "location": {
+        "instance": null,
+        "region": "region.osrs.12336",
+        "tile": {
+          "plane": 0,
+          "x": 3088,
+          "y": 3118
+        }
+      },
+      "travel": "travel.tutorial_quest_ladder.backward"
+    },
+    {
+      "branch": "fixed",
+      "location": {
+        "instance": null,
+        "region": "region.osrs.12436",
+        "tile": {
+          "plane": 0,
+          "x": 3088,
+          "y": 9520
+        }
+      },
+      "travel": "travel.tutorial_quest_ladder.forward"
+    }
   ]
 }

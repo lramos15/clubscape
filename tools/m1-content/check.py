@@ -40,10 +40,11 @@ def check_content(content, inputs, world, bindings):
                         "temporary_object": "temporary_objects", "ground_policy": "ground_policies",
                         "instance_template": "instances", "travel": "travels", "experience": "experiences",
                         "style": "combat_styles", "spell": "spells", "projectile": "projectiles",
-                        "prayer": "prayers", "value_provider": "value_providers"}
+                        "prayer": "prayers", "value_provider": "value_providers",
+                        "traversal": "traversal", "collision_group": "collision_groups"}
     ids.update({kind: set(content["mechanics"][field]) for kind, field in mechanics_fields.items()})
     ids["object_state"] = {state for transform in content["mechanics"]["object_transforms"].values() for state in transform["states"]}
-    require(content["schema_version"] == 2, "Expected actual content schema2")
+    require(content["schema_version"] == 3, "Expected actual content schema3")
     ids["stage"] = set(content["tutorial"])
     for quest in content["quests"].values():
         ids["stage"].update(quest["journal"])
@@ -199,7 +200,8 @@ def check_content(content, inputs, world, bindings):
         "source_npc_nonwalkable_anchors": nonwalking,
         "exact_geometry_scope": "Explicit imported cells and source-bound object placement equality, not an observed live clipping dump.",
         "runtime_compile_passed": False, "gameplay_executed": False, "presentation_approved": False,
-        "known_blockers": "research/m1-bindings/unresolved-bindings.json",
+        "source_binding_inventory": "research/m1-bindings/unresolved-bindings.json",
+        "execution_requirements": "research/m1-bindings/contract-gaps.json",
         "scope": "ID/reference/note/initial-state/source-geometry/graph-preservation checks only. "
                  "Not a replacement for the real strict content compiler or the live/headless journey.",
     }
@@ -231,17 +233,28 @@ def main():
         ["cargo", "run", "--quiet", "--locked", "--offline", "--manifest-path",
          str(ROOT / "tools/m1-content/schema-check/Cargo.toml"), "--", str(input_path)],
         cwd=ROOT, env={**os.environ, "CARGO_TARGET_DIR": str(work / "schema-target"), "TMPDIR": str(work)},
-        text=True, capture_output=True, check=True)
+        text=True, capture_output=True)
+    if not result.stdout.strip():
+        raise subprocess.CalledProcessError(result.returncode or 1, result.args, result.stdout, result.stderr)
     schema = json.loads(result.stdout)
     require(schema["artifact_reloaded"] and schema["artifact_sha256"] == artifact["uncompressed_sha256"],
             "Real compiler/library roundtrip mismatch")
     write(BINDINGS / "schema-validation.json", schema, pretty=True)
     report["runtime_compile_passed"] = True
     report["artifact_reloaded"] = True
+    report["engine_constructed"] = schema["engine_constructed"]
+    report["native_source_policy_probes"] = schema["native_source_policy_probes"]
+    report["native_source_policy_checks_passed"] = schema["native_source_policy_probes"]["passed"]
+    report["engine_validation_exit_code"] = result.returncode
+    report["engine_validation_diagnostic"] = result.stderr
     write(BINDINGS / "check-result.json", report, pretty=True)
     print(json.dumps({"structural_checks_passed": True, "strict_runtime_compiler_passed": True,
                       "artifact_reloaded": True, "artifact_sha256": artifact["uncompressed_sha256"],
+                      "engine_constructed": schema["engine_constructed"],
+                      "native_source_policy_checks_passed": schema["native_source_policy_probes"]["passed"],
                       "unresolved_bindings": len(schema["unresolved_bindings"]), "gameplay_executed": False}))
+    if result.returncode or not schema["native_source_policy_probes"]["passed"]:
+        raise SystemExit(result.returncode or 1)
 
 
 if __name__ == "__main__":

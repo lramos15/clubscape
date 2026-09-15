@@ -10,12 +10,13 @@
     "interfaces": 26,
     "items": 118,
     "mechanics": {
-      "combat_styles": 24,
+      "collision_groups": 49,
+      "combat_styles": 27,
       "counters": 134,
       "entitlements": 13,
       "experiences": 3,
       "grants": 18,
-      "ground_policies": 4,
+      "ground_policies": 7,
       "instances": 1,
       "object_transforms": 68,
       "prayers": 1,
@@ -24,13 +25,14 @@
       "spells": 2,
       "temporary_objects": 1,
       "travels": 26,
+      "traversal": 9,
       "value_providers": 1
     },
     "normal_note_pairs": 53,
     "npcs": 26,
     "objects": 4837,
     "quests": 2,
-    "recipes": 11,
+    "recipes": 13,
     "regions": 29,
     "runtime_blocked_cells": 16544,
     "runtime_collision_cells": 46358,
@@ -46,12 +48,13 @@
     "tutorial_states": 71
   },
   "exact_geometry_scope": "Explicit imported cells and source-bound object placement equality, not an observed live clipping dump.",
+  "execution_requirements": "research/m1-bindings/contract-gaps.json",
   "gameplay_executed": false,
-  "known_blockers": "research/m1-bindings/unresolved-bindings.json",
   "presentation_approved": false,
   "runtime_compile_passed": false,
   "schema_version": 1,
   "scope": "ID/reference/note/initial-state/source-geometry/graph-preservation checks only. Not a replacement for the real strict content compiler or the live/headless journey.",
+  "source_binding_inventory": "research/m1-bindings/unresolved-bindings.json",
   "source_npc_nonwalkable_anchors": [
     "spawn.death",
     "spawn.tutorial.fishing_spot.3099.3090.p0",
@@ -60,8 +63,8 @@
   ],
   "source_status_occurrences": {
     "approved_adaptation": 1,
-    "inference": 2721,
-    "verified_reference": 11428
+    "inference": 3155,
+    "verified_reference": 11522
   },
   "structural_checks_passed": true
 }
