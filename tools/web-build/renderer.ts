@@ -7,9 +7,6 @@ import { fileURLToPath } from "node:url";
 const root = resolve(fileURLToPath(new URL("../../", import.meta.url)));
 const version = execFileSync("wasm-bindgen", ["--version"], { encoding: "utf8", cwd: root }).trim();
 if (version !== "wasm-bindgen 0.2.128") throw new Error("Renderer crate/CLI require wasm-bindgen0.2.128.");
-execFileSync("python3", ["-B", "tools/render-assets/export.py", "--profile", "unpack"], {
-  cwd: root, stdio: "pipe", maxBuffer: 2 * 1024 * 1024, timeout: 120_000,
-});
 try {
   execFileSync("bash", ["web/renderer/build.sh"], {
     cwd: root, stdio: "pipe", maxBuffer: 8 * 1024 * 1024, timeout: 300_000,

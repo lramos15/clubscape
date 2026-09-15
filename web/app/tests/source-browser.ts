@@ -10,9 +10,25 @@ import { assertSourceRunPin, captureSourceRunPin } from "../../../tools/web-buil
 import type { SourceRunPin } from "../../../tools/web-build/run-pins.ts";
 import type { PublicWorld } from "../public-state.ts";
 import { sourceAudioDefaults } from "../../audio/index.ts";
+import type { RenderSnapshot } from "../../../tools/browser-harness/src/protocol.ts";
+import type { PreviewObservation } from "../preview.ts";
+import { presentationOptions } from "../presentation.ts";
 
 const root = resolve(fileURLToPath(new URL("../../../", import.meta.url)));
 type SecretWindow = Window & { __sourceUiCredentials?: { name: string; password: string } };
+type FaultWindow = Window & { __clubscapeFailureDevice?: GPUDevice };
+type ObservedSnapshot = RenderSnapshot & { diagnostics: {
+  loadedSquares: number[] | null; scenePlacement: { baseX: number; baseY: number; sizeTiles: number; blocks: boolean } | null;
+  nativeScenePlacement: { baseX: number; baseY: number; sizeTiles: number; blocks: boolean } | null;
+  modelPreview: PreviewObservation | null; playerAnimationAvailable: boolean | null;
+} };
+
+function distribution(values: number[]) {
+  if (values.length === 0) return null;
+  const sorted = [...values].sort((a, b) => a - b);
+  const at = (quantile: number) => sorted[Math.max(0, Math.ceil(sorted.length * quantile) - 1)]!;
+  return { count: sorted.length, min: sorted[0], p50: at(0.5), p95: at(0.95), p99: at(0.99), max: sorted.at(-1) };
+}
 
 async function fields(page: Page, confirmation: boolean, wrongPassword = false): Promise<void> {
   await page.locator('input[data-ui-input="name"]').waitFor({ state: "attached" });
@@ -120,7 +136,9 @@ export async function sourceBrowserCheck(): Promise<void> {
   const executable = process.env.CLUBSCAPE_BROWSER_EXECUTABLE;
   const gameRoot = process.env.CLUBSCAPE_SOURCE_GAME_ROOT;
   const earlyScene = process.env.CLUBSCAPE_EARLY_SCENE ?? null;
-  if (earlyScene !== null) assert(/^[a-z0-9-]{1,80}$/.test(earlyScene), "Invalid explicit early-presentation scene.");
+  const recordedCamera = process.env.CLUBSCAPE_RECORDED_CAMERA ?? null;
+  const query = earlyScene ? `?presentation_scene=${earlyScene}` : recordedCamera ? `?presentation_camera=${recordedCamera}` : "";
+  assert.deepEqual(presentationOptions(query), { earlyScene, recordedCamera });
   assert(origin && /^http:\/\/127\.0\.0\.1:\d+$/.test(origin) && executable && gameRoot && process.env.DISPLAY);
   const evidence = resolve(root, process.env.CLUBSCAPE_BROWSER_EVIDENCE ?? ".local/evidence/source-ui");
   assert(evidence.startsWith(root + sep));
@@ -156,14 +174,32 @@ export async function sourceBrowserCheck(): Promise<void> {
     await sandbox.close();
     checks.push("actual headful Chrome namespace/seccomp sandbox");
     page = await context.newPage();
+    await page.addInitScript(() => {
+      const configure = GPUCanvasContext.prototype.configure;
+      GPUCanvasContext.prototype.configure = function (configuration) {
+        configure.call(this, configuration);
+        if (this.canvas instanceof HTMLCanvasElement && this.canvas.id === "world") {
+          (window as FaultWindow).__clubscapeFailureDevice = configuration.device;
+        }
+      };
+    });
     const unexpected = new Set<string>();
+    const renderRequests = new Set<string>();
+    const failedAssets = new Set<string>();
+    let unhandledPageErrors = 0;
+    page.on("pageerror", () => { unhandledPageErrors++; });
+    page.on("response", (response) => {
+      const path = new URL(response.url()).pathname;
+      if (response.status() >= 400 && (path.startsWith("/assets/") || path.startsWith("/content/"))) failedAssets.add(path);
+    });
     page.on("request", (request) => {
       const url = new URL(request.url());
       if (url.protocol === "data:" || url.protocol === "blob:") return;
-      const permittedScene = earlyScene !== null && url.pathname === "/" && url.search === `?presentation_scene=${earlyScene}`;
+      const permittedScene = query !== "" && url.pathname === "/" && url.search === query;
       if (url.origin !== origin || (url.search && !permittedScene) || url.hash || url.username || url.password) unexpected.add("noncanonical browser request");
+      if (url.pathname.startsWith("/assets/compiled/render/")) renderRequests.add(url.pathname);
     });
-    await page.goto(`${origin}${earlyScene === null ? "" : `/?presentation_scene=${earlyScene}`}`, { waitUntil: "networkidle" });
+    await page.goto(`${origin}${query}`, { waitUntil: "networkidle" });
     await page.waitForFunction(() => window.__clubscapeClientStateV1?.read().phase === "title", undefined, { timeout: 45_000 });
     await page.locator("#overlay").focus();
     await page.keyboard.press("Escape");
@@ -212,21 +248,33 @@ export async function sourceBrowserCheck(): Promise<void> {
     await page.waitForFunction(() => window.__clubscapeClientStateV1?.read().phase === "character");
     assert.equal(await page.evaluate(() => window.__clubscapeClientStateV1!.read().world), null);
     checks.push("real UI login without seeded character/world");
+    await page.waitForFunction(() => {
+      const state = window.__clubscapeBenchmarkV1!.read(null) as ObservedSnapshot;
+      return state.diagnostics.modelPreview?.state === "ready" && state.diagnostics.modelPreview.publishedImages >= 2;
+    }, undefined, { timeout: 30_000 });
+    const preview = await page.evaluate(() => (window.__clubscapeBenchmarkV1!.read(null) as ObservedSnapshot).diagnostics.modelPreview);
+    assert.deepEqual(preview?.nativeSize, { width: 480, height: 315 });
+    assert.equal(await page.evaluate(() => window.__clubscapeBenchmarkV1!.read(null).renderedFrames), 0);
+    await page.screenshot({ path: resolve(evidence, "actual-model-only-character-preview.png") });
+    checks.push("actual native-size penguin preview GPU readback before creation; zero world frames counted");
     await page.getByRole("button", { name: "Confirm appearance", exact: true }).click();
-    if (earlyScene === null) {
+    if (earlyScene === null && recordedCamera === null) {
       await page.waitForFunction(() => ["world", "error"].includes(window.__clubscapeClientStateV1?.read().phase ?? ""), undefined, { timeout: 30_000 });
       const state = await page.evaluate(() => window.__clubscapeClientStateV1!.read());
       if (state.phase === "error") {
-        assert.match(state.error?.message ?? "", /does not yet cover authoritative region/);
+        assert(state.error?.errorId);
+        assert.match(state.error?.message ?? "", /blocks cover .*source-bound live camera/);
         assert.equal(state.world, null);
         const benchmark = await page.evaluate(() => window.__clubscapeBenchmarkV1!.read(null));
         assert.equal(benchmark.renderedFrames, 0);
+        await assertSourceRunPin(gameRoot, pin);
         await writeFile(resolve(evidence, "result.json"), JSON.stringify({
-          kind: "actual-live-renderer-coverage-boundary", result: "blocked", checks,
+          kind: "actual-source-live-camera-boundary", result: "blocked", checks,
           sourceRunPin: pin, error: state.error, rendererCreated: true, automaticFixtureFallback: false,
           renderedFrames: benchmark.renderedFrames, fullJourneyTested: false, presentationAccepted: false,
         }, null, 2) + "\n");
-        console.log(JSON.stringify({ result: "blocked", kind: "actual-live-renderer-coverage-boundary",
+        await rm(resolve(evidence, "failure.json"), { force: true });
+        console.log(JSON.stringify({ result: "blocked", kind: "actual-source-live-camera-boundary",
           reason: state.error?.message, evidence: resolve(evidence, "result.json") }));
         process.exitCode = 2;
         return;
@@ -242,6 +290,10 @@ export async function sourceBrowserCheck(): Promise<void> {
     assert.equal(first.player.tutorialStage, "stage.tutorial.experience");
     assert(first.player.presence?.connected);
     assert(!JSON.stringify(first).includes("played_time") && !JSON.stringify(first).includes("ground_provenance"));
+    assert(Array.isArray(first.dynamicObjects));
+    assert(first.dynamicObjects.every((object) => object.objectId === null ? object.sourceId === null
+      : Number.isSafeInteger(object.sourceId) && object.sourceId! >= 0));
+    assert(first.dynamicObjects.every((object) => object.expiresAtTick === null || /^\d+$/.test(object.expiresAtTick)));
     checks.push("empty source creation, real join and separate sequenced appearance confirmation from UI");
     const gameplayUi = await page.evaluate(() => window.__clubscapeClientStateV1!.gameplayUi());
     assert.equal(gameplayUi.available, false);
@@ -260,17 +312,50 @@ export async function sourceBrowserCheck(): Promise<void> {
     assert.equal(audioControls.musicSelectorBound, false);
     checks.push("native calibrated source audio defaults observed; absent scene/next-selection facts remain unavailable");
     let renderPixels: unknown = null;
-    if (earlyScene !== null) {
+    if (earlyScene !== null || recordedCamera !== null) {
       await page.waitForFunction(() => (window.__clubscapeBenchmarkV1?.read(null).renderedFrames ?? 0) >= 8, undefined, { timeout: 30_000 });
       await dismissNotices(page);
-      const screenshot = await page.locator("#world").screenshot({ path: resolve(evidence, "actual-early-source-world.png") });
+      const screenshot = await page.locator("#world").screenshot({ path: resolve(evidence, recordedCamera ? "actual-streamed-source-world.png" : "actual-early-source-world.png") });
       const probe = execFileSync("python3", ["-B", "-c",
         "import io,json,sys;from PIL import Image;im=Image.open(io.BytesIO(sys.stdin.buffer.read())).convert('RGB'); p=list(im.getdata()); print(json.dumps({'width':im.width,'height':im.height,'nonblack':sum(max(v)>12 for v in p),'unique':len(set(p))}))",
       ], { cwd: root, input: screenshot, encoding: "utf8", maxBuffer: 1024 * 1024 });
       renderPixels = JSON.parse(probe) as { nonblack: number; unique: number };
       assert((renderPixels as { nonblack: number }).nonblack > 100_000);
       assert((renderPixels as { unique: number }).unique > 1000);
-      checks.push("explicit early fixture: actual nonblank WebGPU world composed with real UI/source actor state");
+      checks.push(recordedCamera ? "real streamed source blocks at the authoritative region; nonblank hardware WebGPU with an explicitly recorded camera"
+        : "explicit early fixture: actual nonblank WebGPU world composed with real UI/source actor state");
+    }
+    let timing: unknown = null;
+    if (recordedCamera !== null) {
+      const begin = await page.evaluate(() => window.__clubscapeBenchmarkV1!.read(null));
+      await page.waitForTimeout(10_000);
+      const end = await page.evaluate((cursor) => window.__clubscapeBenchmarkV1!.read(cursor), begin.renderedFrames) as ObservedSnapshot;
+      const elapsed = end.nowMs - begin.nowMs;
+      const frames = end.frames;
+      assert.equal(frames.length, end.renderedFrames - begin.renderedFrames);
+      assert(frames.length > 0);
+      const completions = [begin.lastCompletedAtMs, ...frames.map((frame) => frame.completedAtMs)];
+      const gaps = completions.slice(1).map((time, index) => time - completions[index]!);
+      const tail = end.nowMs - end.lastCompletedAtMs;
+      assert(end.diagnostics.loadedSquares?.includes(12336));
+      assert.equal(end.diagnostics.scenePlacement?.blocks, true);
+      assert.equal(end.diagnostics.scenePlacement?.sizeTiles, 104);
+      assert([...renderRequests].some((path) => path.includes("/blocks/")));
+      assert(![...renderRequests].some((path) => path.includes("/scenes/")), "recorded camera did not request a fixture scene");
+      assert.equal(end.diagnostics.playerAnimationAvailable, false);
+      const fps = frames.length * 1000 / elapsed;
+      timing = {
+        kind: "sparky-canonical-onboarding-engineering-only", measuredWindowMs: elapsed, completedFrames: frames.length,
+        renderedFps: fps, completionGapsMs: distribution(gaps), trailingGapMs: tail,
+        completionLatencyMs: distribution(frames.map((frame) => frame.completedAtMs - frame.submittedAtMs)),
+        gpuPassMs: distribution(frames.flatMap((frame) => frame.gpuDurationMs === undefined ? [] : [frame.gpuDurationMs])),
+        cpuEncodeMs: distribution(frames.flatMap((frame) => frame.cpuEncodeMs === undefined ? [] : [frame.cpuEncodeMs])),
+        atLeast60Fps: fps >= 60, gapsOver33_4Ms: [...gaps, tail].filter((gap) => gap > 33.4).length,
+        loadedSquares: end.diagnostics.loadedSquares, scenePlacement: end.diagnostics.scenePlacement,
+        nativeScenePlacement: end.diagnostics.nativeScenePlacement,
+        declaredWorkloadReady: end.ready, performanceAccepted: false, ownerHardware: false,
+      };
+      checks.push("per-world-frame performance.now receipts remain contiguous under the actual two-frame pipeline; metrics are engineering-only");
     }
     const progress = publicProgress(first);
     restarted = await restartSource(origin, pin, gameRoot);
@@ -307,33 +392,57 @@ export async function sourceBrowserCheck(): Promise<void> {
     });
     assert(privacy);
     assert.equal(unexpected.size, 0);
+    assert.deepEqual([...failedAssets], [], "real source/component requests must not hide missing delivery assets");
+    assert.equal(unhandledPageErrors, 0);
+    checks.push("actual component asset routes have no failed responses or unhandled page errors");
     const benchmark = await page.evaluate(() => window.__clubscapeBenchmarkV1!.read(null));
     assert.equal(benchmark.ready, false, "Unexposed actual entity counts cannot be treated as a complete benchmark workload.");
-    if (earlyScene !== null) {
+    if (earlyScene !== null || recordedCamera !== null) {
       assert(benchmark.renderedFrames > 0);
       assert(benchmark.lastSubmittedAtMs > 0 && benchmark.lastCompletedAtMs >= benchmark.lastSubmittedAtMs
         && benchmark.lastCompletedAtMs <= benchmark.nowMs);
-      assert.equal(benchmark.identity.sceneId, earlyScene);
-      assert.equal(benchmark.identity.workloadId, "early-presentation-not-journey");
+      if (earlyScene) assert.equal(benchmark.identity.sceneId, earlyScene);
+      else assert.match(benchmark.identity.sceneId, /^blocks@-?\d+,-?\d+$/);
+      assert.equal(benchmark.identity.workloadId, earlyScene ? "early-presentation-not-journey" : "recorded-camera-not-journey");
       checks.push("GPU-completed frame records use actual canvas submission/receipt observations and correct performance.now clock");
     }
+    await page.evaluate(() => {
+      const device = (window as FaultWindow).__clubscapeFailureDevice;
+      if (!device) throw new Error("The fault check did not observe the actual game-canvas device.");
+      device.destroy();
+      Reflect.deleteProperty(window, "__clubscapeFailureDevice");
+    });
+    await page.waitForFunction(() => {
+      const state = window.__clubscapeClientStateV1!.read();
+      return state.phase === "error" && state.error?.recoverable === false;
+    }, undefined, { timeout: 10_000 });
+    await page.waitForTimeout(250);
+    const failedFrames = await page.evaluate(() => window.__clubscapeBenchmarkV1!.read(null).renderedFrames);
+    await page.waitForTimeout(250);
+    assert.equal(await page.evaluate(() => window.__clubscapeBenchmarkV1!.read(null).renderedFrames), failedFrames);
+    assert.equal(await page.evaluate(() => window.__clubscapeBenchmarkV1!.read(null).ready), false);
+    checks.push("actual game-device-loss fault check stops GPU frame publication and displays a terminal UI error; no fallback");
     await assertSourceRunPin(gameRoot, pin);
     await writeFile(resolve(evidence, "result.json"), JSON.stringify({
-      kind: earlyScene ? "early-render-ui-canonical-source-entry" : "real-ui-wasm-canonical-source-onboarding",
+      kind: earlyScene ? "early-render-ui-canonical-source-entry" : "real-streamed-render-ui-canonical-source-entry",
       result: "passed", recordedAt: new Date().toISOString(),
       checks, gameplayUi, audioControls, sourceRunPin: pin, browser: version, sandbox: { namespaceAndSeccomp: true, gpuProcessSandboxed: system.gpu.auxAttributes?.sandboxed ?? null },
       titlePixels: title, build: benchmark.identity, rendererReady: benchmark.ready, renderedFrames: benchmark.renderedFrames,
-      actualUiSignup: true, actualCanonicalWorld: true, actualServerRestart: true,
-      earlyScene, renderPixels, fullJourneyTested: false, worldRendererIntegrated: earlyScene !== null,
+      actualUiSignup: true, actualCanonicalWorld: true, actualServerRestart: true, actualDeviceLossHandled: true,
+      earlyScene, recordedCamera, renderPixels, preview, timing,
+      dynamicObjects: { received: first.dynamicObjects.length, canonicalSourceMetadata: true },
+      fullJourneyTested: false, worldRendererIntegrated: true,
+      actualInitialBlocksLoaded: recordedCamera !== null, liveCameraSourceBound: false,
       regionStreamingComplete: false, presentationAccepted: false, milestoneAccepted: false,
     }, null, 2) + "\n");
     await rm(resolve(evidence, "failure.json"), { force: true });
-    console.log(JSON.stringify({ result: "passed", kind: earlyScene ? "early-render-ui-canonical-source-entry" : "real-ui-wasm-canonical-source-onboarding",
+    console.log(JSON.stringify({ result: "passed", kind: earlyScene ? "early-render-ui-canonical-source-entry" : "real-streamed-render-ui-canonical-source-entry",
       checks: checks.length, evidence: resolve(evidence, "result.json"), fullJourney: false }));
   } catch (error) {
     const diagnostic = await page?.evaluate(() => {
       const state = window.__clubscapeClientStateV1?.read();
       return { phase: state?.phase, error: state?.error, worldPresent: Boolean(state?.world),
+        renderer: window.__clubscapeBenchmarkV1?.read(null),
         unlockedInterfaces: state?.world?.player.unlockedInterfaces,
         uiFeedback: document.querySelector('[data-clubscape-ui] [aria-live]')?.textContent,
         controls: Array.from(document.querySelectorAll<HTMLElement>("[data-ui-control]"), (element) => element.dataset.uiControl),

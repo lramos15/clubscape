@@ -8,6 +8,7 @@
   "scripts": {
     "wasm": "node ../tools/web-build/wasm.ts",
     "renderer": "node ../tools/web-build/renderer.ts",
+    "render:inputs": "node ../tools/web-build/render-inputs.ts",
     "content": "node ../tools/web-build/content.ts",
     "source:bundle": "node ../tools/web-build/source-bundle.ts",
     "reference:check": "node ../tools/web-build/reference.ts",

@@ -15,6 +15,7 @@ From the repository root:
 pnpm --dir web install --frozen-lockfile
 pnpm --dir web wasm
 pnpm --dir web renderer
+pnpm --dir web render:inputs
 pnpm --dir web typecheck
 pnpm --dir web test
 pnpm --dir web reference:check
@@ -36,9 +37,12 @@ bytemuck/browser/native dependency graph when merging; renderer dependencies
 are not all present in the original base lock. The build command performs normal Cargo resolution,
 not a global tool installation or guessed alternate bindgen version.
 
-`pnpm renderer` calls the actual owned renderer unpack/build commands, checks
+`pnpm renderer` calls the actual renderer build command, checks
 CLI0.2.128, and records the resulting JS/WASM/manifest hashes under
 `.local/evidence/renderer-build.json`. `pnpm build` invokes it automatically.
+It does not require a JDK/cache or unpack stale raw fixture files to compile.
+`pnpm render:inputs` is the separate original-input reproduction step described
+below; the delivered browser needs none of that tooling.
 The renderer's dev TypeScript project is checked by its own build; the main
 app checks `renderer/src`/`pkg` but does not merge the dev fixture's incompatible
 global benchmark declaration into the production observer.
@@ -132,8 +136,12 @@ The committed artifact3 input now exists. The example presentation bindings
 and asset-root are **not supplied product presentation assets**; the renderer/
 UI/audio preparation owners must supply those real compiled outputs.
 The bindings JSON supplies `sourcePackSha256`, explicit `assets`,
-`bootstrap`, `rendererManifest`, `regions`, and optional `icons` mapping known
-item/skill IDs to declared original raster assets. It cannot replace catalog
+`bootstrap`, `rendererManifest`, `renderer`, `regions`, and optional `icons`
+mapping known item/skill IDs to declared original raster assets. Original
+`inventoryActions` labels can be provided explicitly; an existing
+ContentManifest's `catalog.icons`/`catalog.inventoryActions` are also retained.
+Renderer coverage/asset mappings and the same gzip carrier format survive
+this entrypoint as well as `source:bundle`. It cannot replace catalog
 names, completion stages, source IDs, initial state or authority rules.
 `project-content` revalidates the real artifact in `Runtime` mode first;
 invalid/TestFixture artifacts fail. Gzip is bounded and passed to the native
@@ -196,11 +204,13 @@ labels come from `interfaceOptions`. Source hashes/selectors/transformations
 are recorded in the private `source-provenance.json`; no whole cache or private
 game state is exposed. Original geometry and asset IDs are retained.
 
-The real audio, UI and initial WebGPU factories/assets are now integrated.
-The renderer's five named source fixture scenes are not a full authoritative
-region map; normal uncovered-region entry is explicit unavailability, never
-an arbitrary fixture or blank/software3D fallback. Live region/camera/actions/
-equipment/minimap/model-preview coverage remains renderer-owner continuation.
+The real audio, UI and streaming WebGPU factories/assets are integrated.
+All 61 published source blocks are reproduced and delivered, alongside actual
+skeletal/gear/live-layer inputs and the model-only preview. The renderer owns
+104x104 assembly/recenter. Live camera/control source bindings are still
+absent; normal entry reports that specific gap rather than selecting a
+fixture or inventing a spawn camera. Missing animation/running observer fields,
+dynamic minimap and real rendered entity counts remain explicit dependencies.
 
 The authorized `2c5fe68b` repair resolves the former descriptor blocker:
 512KiB admits the actual406,574-byte map, with the exact limit/limit+1 covered
@@ -245,23 +255,26 @@ These checks are not completion of the missing authoritative audio inputs.
 
 The authorized UI commits `069b5028`, `f34663c3`, `6a1b11fa` add the actual
 self-subscribing UI. `ui-assets.ts` verifies `assets/compiled/ui/provenance.json`
-and selects only catalogue-referenced title/sprite/item/portrait/minimap PNGs,
-plus the real catalogue/provenance JSON. It does not copy panel/evidence PNGs.
-There are1,179 image primitives and6,460 total source/audio/UI assets. The
+and selects catalogue-referenced title/sprite/item/portrait/minimap PNGs plus
+the published compass/seven dot primitives used directly by the UI's runtime
+minimap adapter. All are hash-verified through the same provenance; no
+panel/evidence PNG is copied. There are1,187 image primitives and7,171 total
+source/audio/UI/render assets in the current combined candidate. The
 24,658,127-byte UI catalogue remains an independent bounded asset; it is not
 inserted into actor snapshots.
 
 Use a **new** directory/world UUID when adding UI to an earlier pinned bundle:
 
 ```sh
-pnpm --dir web source:bundle .local/source-ui-df3e2a45-v2 <new-isolated-world-uuid>
-CLUBSCAPE_CLIENT_MANIFEST=.local/source-ui-df3e2a45-v2/content/manifest.json \
-CLUBSCAPE_CLIENT_ASSET_ROOT=.local/source-ui-df3e2a45-v2 \
+pnpm --dir web render:inputs
+pnpm --dir web source:bundle .local/source-stream-candidate <new-isolated-world-uuid>
+CLUBSCAPE_CLIENT_MANIFEST=.local/source-stream-candidate/content/manifest.json \
+CLUBSCAPE_CLIENT_ASSET_ROOT=.local/source-stream-candidate \
 CLUBSCAPE_CONTENT_OWNER=game \
 pnpm --dir web build
 ```
 
-The actual game root owns6,461 public asset/manifest routes; the web root serves
+The actual game root owns7,172 public asset/manifest routes; the web root serves
 only the compiled HTML/JS/CSS/WASM and build identity, with no overlapping routes.
 The independent account/audio Chrome check instantiates
 the actual audio factory through the shell, verifies recoverable gesture
@@ -274,14 +287,15 @@ Evidence appears as `titleAudio` in the normal browser result JSON.
 For actual UI/WASM/canonical-world integration:
 
 ```sh
-CLUBSCAPE_CLIENT_MANIFEST=.local/source-ui-df3e2a45-v2/content/manifest.json \
-CLUBSCAPE_CLIENT_ASSET_ROOT=.local/source-ui-df3e2a45-v2 \
+CLUBSCAPE_CLIENT_MANIFEST=.local/source-stream-candidate/content/manifest.json \
+CLUBSCAPE_CLIENT_ASSET_ROOT=.local/source-stream-candidate \
 CLUBSCAPE_CONTENT_OWNER=game \
 pnpm --dir web build
 
-CLUBSCAPE_BROWSER_EVIDENCE=.local/evidence/source-ui-df3e2a45-v2 \
+CLUBSCAPE_RECORDED_CAMERA=tutorial-starting-house \
+CLUBSCAPE_BROWSER_EVIDENCE=.local/evidence/source-stream-candidate \
 CLUBSCAPE_BROWSER_EXECUTABLE=/path/to/verified/native/chrome \
-pnpm --dir web test:isolated --game-root .local/source-ui-df3e2a45-v2
+pnpm --dir web test:isolated --game-root .local/source-stream-candidate
 ```
 
 The source-mode runner uses its bounded owned PostgreSQL database. It first
@@ -292,10 +306,12 @@ logout/relogin. A real server restart at the same origin retains the memory
 token and acknowledged character state; no replacement artifact, seed or
 network mock is used. Credentials stay in browser memory and are never
 reported. Evidence includes actual title pixels, startup/run pins and the
-onboarding result. With the initial renderer, normal region coverage is not
-yet mapped and fails explicitly. The earlier UI-only onboarding proof remains
-historical; explicit early-presentation mode below is not a replacement
-journey proof. Complete journey, world fidelity, real audio-scene/selection wiring and M1 acceptance
+onboarding result. The recorded-camera mode loads the actual canonical
+region's blocks, not a fixture scene; it remains a camera diagnostic rather
+than a live-camera/game-journey proof. Without this explicit mode, the current
+null source camera/control binding fails closed. The earlier UI-only and
+five-fixture onboarding proofs remain historical. Complete journey, world
+fidelity, real audio-scene/selection wiring and M1 acceptance
 remain separate. The legacy descriptor-probe environment name now selects
 real startup, not an expected failure.
 
@@ -323,47 +339,96 @@ overlapping web/game routes; do not ship the same routes through both roots.
 
 ## Static deployment identity
 
-### Actual renderer asset delivery and early composition
+### Published renderer reproduction, delivery and real composition
 
-`render-assets.ts` pins original manifest
-`3fd1ec1953183de5537a2e7d239389c8dceed50c2e5d658dcc82c49113468845`
-and publishes59 checked buffers after lossless unpack of the10 scene/model
-gzip twins. Compressed URLs retain the exact names expected by the actual
-adapter; physical `.gz.bin` carriers satisfy the existing server extension
-allowlist without changing bytes or using content-encoding tricks. Native
-validation-only optional tables/bakes are not fabricated if absent.
+The initial six renderer commits and ordered continuations `e96e3b8`,
+`1937201`, `c098133`, `0c541d9` are integrated. `render-assets.ts` pins manifest
+`a6a1b3dcd307aa1b8e1f8c3e850c087f78c0e818c644d47e12c58595ad3b6464`.
+The runtime graph includes the 61 blocks, source textures, sequences, NPC
+definitions, penguin/human-retarget inputs, equipment, dynamic objects,
+ground-item models, preview metadata and explicit diagnostic scenes.
 
-The combined source/UI/audio/render bundle has6,520 declared assets and is
-separate from older immutable bundles. Use a new directory and world UUID:
+`pnpm render:inputs` uses the existing original exporter in a separate owned
+`.local/render-inputs-a6a1b3dc` directory. All122 compressed block buffers
+match the published SHA/length pins exactly:55,720,421 bytes. The Java
+exporter's disk inventory omits65 absent validation/raw-twin records; its
+metadata and every retained file record are structurally identical to the
+published manifest. The script checks that exact distinction, retains the
+exporter's receipt, and packages the original **byte-exact** manifest, never a
+new source identity. Missing runtime records or any changed value fail.
+Evidence is `.local/evidence/render-block-reproduction.json`.
+
+The first reproduction needs the guide-verified original JDK/cache tooling.
+Subsequent packaging can use those verified outputs, or an explicit
+`CLUBSCAPE_RENDER_INPUTS` directory containing the same pinned inputs.
+Neither owner browsers nor the serving machine need Java/cache data.
+Only runtime dependencies are public: validation bakes/tables and raw
+scene/block duplicates are not shipped. Gzip URLs keep their exact names;
+physical `.gz.bin` carriers satisfy the server allowlist without changing
+bytes or content encoding.
+
+The current immutable source-stream candidate has7,171 declared assets
+(175,860,981 public bytes including its content manifest), separate from all
+retained earlier bundles. Create a **new** directory and world UUID:
 
 ```sh
 pnpm --dir web renderer
-pnpm --dir web source:bundle .local/source-render-df3e2a45 <new-isolated-world-uuid>
-CLUBSCAPE_CLIENT_MANIFEST=.local/source-render-df3e2a45/content/manifest.json \
-CLUBSCAPE_CLIENT_ASSET_ROOT=.local/source-render-df3e2a45 \
+pnpm --dir web render:inputs
+pnpm --dir web source:bundle .local/source-stream-candidate <new-isolated-world-uuid>
+CLUBSCAPE_CLIENT_MANIFEST=.local/source-stream-candidate/content/manifest.json \
+CLUBSCAPE_CLIENT_ASSET_ROOT=.local/source-stream-candidate \
 CLUBSCAPE_CONTENT_OWNER=game \
 pnpm --dir web build
 
-CLUBSCAPE_EARLY_SCENE=tutorial-starting-house \
-CLUBSCAPE_BROWSER_EVIDENCE=.local/evidence/early-render-df3e2a45 \
+CLUBSCAPE_RECORDED_CAMERA=tutorial-starting-house \
+CLUBSCAPE_BROWSER_EVIDENCE=.local/evidence/source-stream-candidate \
 CLUBSCAPE_BROWSER_EXECUTABLE=/path/to/verified/native/chrome \
-pnpm --dir web test:isolated --game-root .local/source-render-df3e2a45
+pnpm --dir web test:isolated --game-root .local/source-stream-candidate
 ```
 
-The early runner adds only a named `presentation_scene` query—never a token,
-account identity or game outcome—and uses real UI/signup/source creation/
-appearance/logout/relogin and same-artifact server restart. Its screenshot
-contains the actual WebGPU scene with real UI, not a source PNG in a viewport.
-Sparky checks find1,336,507 nonblack pixels and11,068 colours in the initial
-composed1920×1080 starting-house capture. Genuine GPU-completed frames advance;
-the current missing rendered-entity-count diagnostics keep benchmark readiness
-false. This is **early presentation**, not a full region/journey/performance
-pass. The unchanged native renderer GPU tests compare all five scenes against
-CPU/source at zero differences; those fixture checks remain separate.
+Serve that result with a privately configured owned `DATABASE_URL`:
 
-Without `CLUBSCAPE_EARLY_SCENE`, the current live-region test records an explicit
-coverage blocker rather than borrowing a fixture. No alias/mapping from
-`region.osrs.12336` to `tutorial-starting-house` is invented.
+```sh
+CLUBSCAPE_GAME_ROOT="$PWD/.local/source-stream-candidate" \
+CLUBSCAPE_WEB_ROOT="$PWD/web/dist" \
+cargo run -p clubscape-server
+# Open /?presentation_camera=tutorial-starting-house for recorded-camera diagnostics.
+```
+
+This mode keeps actual scene `blocks@3056,3056`, route `region.osrs.12336`,
+and workload `recorded-camera-not-journey`. The first real entry loads nine
+published squares and forwards ten canonical dynamic objects. Its native
+480x315 model-only preview does not advance world frame counters. Full source
+signup/creation/appearance/logout/relogin and same-artifact server restart are
+real. The separate game-device-loss fault check destroys only that browser's
+actual configured device and verifies explicit UI failure/no fallback.
+
+The earlier `CLUBSCAPE_EARLY_SCENE` / `presentation_scene` mode remains an
+explicit five-fixture diagnostic. Neither mode silently maps a canonical
+region to a fixture. Without a recorded diagnostic or real configured live
+camera, normal entry reports the camera binding gap.
+
+The two-frame shell clock uses a per-native-sequence canvas submission/
+completion ledger; offscreen previews cannot steal receipts. Real loaded
+square diagnostics govern residency, not append-only fetch history.
+The native `scenePlacement.blocks` flag has a demonstrated ABI bug (false
+for `blocks@` scenes). The owned adapter normalizes that one flag only after
+actual assembly/base/size/square agreement, preserves the raw observation
+and reports the mismatch. No minimap, entity-count or motion fidelity is
+inferred from it.
+
+The published native CPU/GPU suite now runs all mandatory scene/NPC cases
+without runtime skipping. Ten obsolete, ignored raw twins left by the prior
+owned unpack were hash-identified and removed; tests then used the current
+published gzip bytes. No renderer tests, tolerances or source inputs changed.
+Locally reproducible validation-only suites remain explicitly ignored.
+
+Sparky measurements remain engineering-only. The first repaired streamed run
+(`.local/evidence/source-stream-a6a1-v2/result.json`) measured605 genuine
+completed frames in10,120.905ms:59.7773fps, maximum completion gap60.655ms,
+nine gaps over33.4ms. This **fails** the60fps/gap gates; missing rendered
+entity counts and `game.ui.v1` keep readiness false. No frame limiter,
+rounded-up cadence, physical-display or owner-Mac/Edge acceptance is claimed.
 
 `web/dist/clubscape-web.json` implements the existing server contract:
 
@@ -439,13 +504,18 @@ is not approximated with a fake target. Evidence for this current unsupported
 boundary is recorded separately under
 `.local/evidence/early-render-ui-contract-v1/result.json`.
 
-1. The actual renderer entrypoint/build are integrated. Consume its continuation
-   for authoritative region streaming, action/equipment packs, exact canonical
-   object picks, dynamic minimap and model-only preview; do not promote named
-   fixture coverage into those obligations.
-2. Supply the real compiled source asset/region/camera bindings and a matching
-   server public ContentManifest/asset deployment. Do not substitute the test
-   fixtures for those resources.
+1. Streamed source assets, action/equipment packs, canonical picks and the
+   native-size preview are composed. The current backend's empty player
+   animation and absent running/active-animation observers still need exact
+   protocol/view/renderer alignment. The imported renderer's activity/adjacency
+   fallback is not accepted source motion. Dynamic minimap, rendered entity
+   counts and remaining gear-fit violations stay renderer-owner work.
+2. Supply actual source-bound live camera/control bindings for normal entry.
+   Published fixture cameras are deliberately not promoted to live defaults.
+   The current private/public game deployment is real and hash-verified;
+   there is no missing-block or old descriptor-size interlock. A native actor
+   reset API is also needed to show a fresh uncreated-character preview after
+   another world session without reusing prior gear.
 3. Existing backend/content commits are integrated: guarded contexts,
    quotes, presence, all three additive intents and lifecycle-journal retries
    are mapped. Align UI consumption of multi-panel recovery and exact U64 fees,

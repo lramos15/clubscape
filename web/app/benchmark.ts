@@ -5,6 +5,7 @@ import type { AssetObservation } from "./assets.ts";
 import { deepFreeze, invariant } from "./errors.ts";
 import { isHash } from "./identity.ts";
 import type { AudioSnapshot } from "../audio/index.ts";
+import type { PreviewObservation } from "./preview.ts";
 
 export interface RendererObservation {
   ready: boolean;
@@ -14,6 +15,10 @@ export interface RendererObservation {
   gpuTimestampPassScope: string | null;
   /** Applied render-profile settings, excluding changing actor/camera poses. */
   settings: Readonly<Record<string, unknown>> | null;
+  scenePlacement?: { baseX: number; baseY: number; sizeTiles: number; blocks: boolean } | null;
+  nativeScenePlacement?: { baseX: number; baseY: number; sizeTiles: number; blocks: boolean } | null;
+  loadedSquares?: number[];
+  playerAnimationAvailable?: boolean;
 }
 
 export class Benchmark implements ClubscapeBenchmarkV1 {
@@ -35,6 +40,7 @@ export class Benchmark implements ClubscapeBenchmarkV1 {
   #timestampFeature = false;
   #startupMs: number | null = null;
   #audio: unknown = null;
+  #preview: Readonly<PreviewObservation> | null = null;
   #now: () => number;
 
   constructor(build: BuildConfig, now: () => number = () => performance.now()) {
@@ -56,6 +62,7 @@ export class Benchmark implements ClubscapeBenchmarkV1 {
     this.#settingsSha = hash;
   }
   startup(milliseconds: number): void { this.#startupMs = milliseconds; }
+  preview(state: Readonly<PreviewObservation>): void { this.#preview = structuredClone(state); }
   audio(state: AudioSnapshot): void {
     this.#audio = {
       contextState: state.contextState, sampleRate: state.sampleRate, pendingGesture: state.pendingGesture,
@@ -151,6 +158,10 @@ export class Benchmark implements ClubscapeBenchmarkV1 {
       frames: afterFrame === null ? [] : this.#frames.filter((frame) => frame.sequence > afterFrame).map((frame) => ({ ...frame })),
       diagnostics: {
         rendererObservationAvailable: renderer !== null,
+        scenePlacement: renderer?.scenePlacement ?? null,
+        nativeScenePlacement: renderer?.nativeScenePlacement ?? null,
+        loadedSquares: renderer?.loadedSquares ?? null,
+        playerAnimationAvailable: renderer?.playerAnimationAvailable ?? null,
         wasmStartupMs: this.#startupMs,
         gpuTiming: {
           timestampQueryEnabled: this.#timestampFeature,
@@ -159,6 +170,7 @@ export class Benchmark implements ClubscapeBenchmarkV1 {
         },
         assetFetches: this.#assets.map((value) => ({ ...value })),
         audio: this.#audio,
+        modelPreview: this.#preview,
       },
     } satisfies RenderSnapshot & { diagnostics: unknown });
   }

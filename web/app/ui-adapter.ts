@@ -1,4 +1,4 @@
-import { forwardWorldPointer, onUiCameraRequest, setUiCamera } from "../ui/index.ts";
+import { forwardWorldPointer, getUiPreviewBounds, onUiCameraRequest, setUiCamera, setUiPreview } from "../ui/index.ts";
 import type { WorldPointer } from "../ui/index.ts";
 import type { RenderCamera, UiHandle } from "../shared/contracts.ts";
 
@@ -13,3 +13,5 @@ export const sourceUiAdapter: UiWorldAdapter = {
   camera: setUiCamera,
   cameraRequests: onUiCameraRequest,
 };
+
+export const sourceUiPreviewAdapter = { bounds: getUiPreviewBounds, publish: setUiPreview };

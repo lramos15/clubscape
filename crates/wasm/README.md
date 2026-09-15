@@ -96,6 +96,14 @@ errors intact. It does not implement another guard/price/readiness engine.
   not an item-ownership or permission verdict. Missing labels stay explicit.
 * Additive public properties are typed in `web/app/public-state.ts`;
   `web/shared/contracts.ts` remains unchanged.
+* `WorldSnapshot.dynamic_objects` becomes `WorldView.dynamicObjects`.
+  Its non-null `object_id` must validate as a canonical ObjectId and resolve
+  to the exact source ID in compiler-derived object metadata. Neither the
+  instance ID's numeric suffix nor `definition_id` is a fallback. Missing
+  metadata fails explicitly. Preserve identity/tile/instance/state, nullable
+  door state, quarter turns (0-3) and nullable U64 expiry as a decimal string.
+  A null canonical object ID keeps `sourceId:null`; no render definition is
+  invented for it. Rust regressions include semantic IDs and `u64::MAX`.
 * Animation strings and source audio asset IDs are passed through. An absent
   source animation/cycle/portrait remains absent; there is no pose clock or
   inferred level-up/quest-completion reward.

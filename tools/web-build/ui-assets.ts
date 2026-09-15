@@ -11,6 +11,21 @@ const root = resolve(fileURLToPath(new URL("../../", import.meta.url)));
 const hash = (bytes: Uint8Array): string => createHash("sha256").update(bytes).digest("hex");
 interface Pin { path: string; sha256: string; bytes: number }
 
+export function uiRuntimeImages(catalogue: UiCatalogue, pins: ReadonlyMap<string, Pin>): string[] {
+  const minimap = [...pins.keys()].filter((path) => /^ui\/minimaps\/(?:compass|dot-[0-9]+)\.png$/.test(path));
+  for (const path of ["ui/minimaps/compass.png", "ui/minimaps/dot-1.png", "ui/minimaps/dot-2.png"]) {
+    if (!minimap.includes(path)) throw new Error(`The actual UI requires an unpublished source minimap primitive: ${path}`);
+  }
+  return [...new Set([
+    catalogue.titleBackground,
+    ...Object.values(catalogue.sprites).map((sprite) => sprite.asset),
+    ...Object.values(catalogue.portraits).map((portrait) => portrait.asset),
+    ...catalogue.minimaps.map((map) => map.asset), ...minimap,
+    ...Object.values(catalogue.items).flatMap((item) => item.icons.flatMap((icon) =>
+      [icon.asset, icon.selectedAsset, icon.zeroShadowAsset])),
+  ])].sort();
+}
+
 /** Deliver catalogue-selected original UI primitives, never reference panels/captures. */
 export async function deliverUiAssets(directory: string): Promise<{
   assets: AssetRecord[]; files: PublicFile[]; aliases: Record<string, string>; bytes: number;
@@ -41,14 +56,7 @@ export async function deliverUiAssets(directory: string): Promise<{
   if (catalogue.version !== 1 || catalogue.sourcePackSha256 !== SOURCE_PACK_SHA256 || catalogue.sourceCache !== 2695) {
     throw new Error("UI catalogue is not the approved source-cache projection.");
   }
-  const images = new Set<string>([
-    catalogue.titleBackground,
-    ...Object.values(catalogue.sprites).map((sprite) => sprite.asset),
-    ...Object.values(catalogue.portraits).map((portrait) => portrait.asset),
-    ...catalogue.minimaps.map((map) => map.asset),
-    ...Object.values(catalogue.items).flatMap((item) => item.icons.flatMap((icon) =>
-      [icon.asset, icon.selectedAsset, icon.zeroShadowAsset])),
-  ]);
+  const images = uiRuntimeImages(catalogue, pins);
   const assets: AssetRecord[] = [], files: PublicFile[] = [];
   const aliases: Record<string, string> = {};
   let bytes = 0;
@@ -65,7 +73,7 @@ export async function deliverUiAssets(directory: string): Promise<{
   await emit("ui/manifest.json", "asset.source.ui.catalogue", "/content/ui/manifest.json", catalogueBytes, "application/json");
   await emit("ui/provenance.json", "asset.source.ui.provenance", "/content/ui/provenance.json", provenanceBytes, "application/json");
   let index = 0;
-  for (const id of [...images].sort()) {
+  for (const id of images) {
     if (id !== "ui/title-background.png" && !/^ui\/(?:sprites|items|portraits|minimaps)\/[A-Za-z0-9_-]+\.png$/.test(id)) {
       throw new Error(`Non-primitive UI image reference is not eligible for client delivery: ${id}`);
     }

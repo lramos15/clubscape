@@ -19,11 +19,15 @@ import { presenceOf } from "./public-state.ts";
 import { SourceAudioSession, audioProblem, playbackEnabled, sourceAudioAdapter } from "./audio.ts";
 import { sourceZoomForViewportHeight } from "./renderer.ts";
 import type { SourceAudioScene, SourceMusicSelector } from "../audio/index.ts";
+import type { PlayerPreviewRequest } from "../renderer/src/index.ts";
+import { ModelPreview } from "./preview.ts";
+import { sourceUiPreviewAdapter } from "./ui-adapter.ts";
 
 export interface ObservedRenderer extends RendererHandle {
   /** Observation only; all values must come from the real decoder/render path. */
   observe?(): RendererObservation;
   supportsScene?(id: string): boolean;
+  framePlayerPreview?(request: PlayerPreviewRequest): Promise<ImageData | null>;
 }
 export interface ApplicationHandle { app: BrowserApp; dispose(): Promise<void> }
 
@@ -36,6 +40,7 @@ export async function mountApplication(options: {
   uiCanvas: HTMLCanvasElement;
   status: HTMLElement;
   earlyScene?: string | null;
+  recordedCamera?: string | null;
   sourceAudio?: {
     scene(world: WorldView): SourceAudioScene | undefined;
     music?: { selector: SourceMusicSelector; areaMode: "modern" | "classic" };
@@ -43,12 +48,21 @@ export async function mountApplication(options: {
 }): Promise<ApplicationHandle> {
   const { build, components, bridge, benchmark, worldCanvas, uiCanvas, status } = options;
   const earlyScene = options.earlyScene ?? null;
+  const recordedCamera = options.recordedCamera ?? null;
+  const presentationCamera = earlyScene ?? recordedCamera;
+  const diagnosticWorkload = earlyScene ? "early-presentation-not-journey" : recordedCamera ? "recorded-camera-not-journey" : null;
   let ui: UiHandle | null = null;
   let audio: SourceAudioSession | null = null;
   let renderer: ObservedRenderer | null = null;
+  let preview: ModelPreview | null = null;
+  let appliedWorld: WorldView | null = null;
+  let rendererHadWorld = false;
+  let previewResetReported = false;
   let input: InputController | null = null;
   let assets: AssetLoader | null = null;
   let required: string[] = [];
+  let assetPins = new Map<string, string>();
+  let requiredPins = new Map<string, string>();
   let frame = 0;
   let priorFrameMs = performance.now();
   let inFlight = 0;
@@ -92,24 +106,35 @@ export async function mountApplication(options: {
       invariant(region, `No compiled source presentation exists for ${world.player.region}.`, "integration");
       sceneLoaded = false;
       benchmark.worldReady(false);
-      const fixture = earlyScene === null ? null : assets.manifest.renderer?.fixtures[earlyScene];
-      if (earlyScene !== null && !fixture) throw new AppError("The explicitly requested early scene is not an exported source fixture.", { kind: "region_unavailable" });
+      const fixture = presentationCamera === null ? null : assets.manifest.renderer?.fixtures[presentationCamera];
+      if (presentationCamera !== null && !fixture) throw new AppError("The explicitly requested source fixture/camera is not exported.", { kind: "region_unavailable" });
       const sceneId = earlyScene ?? region.sceneId;
       const camera = fixture?.camera ?? region.camera;
-      if (!renderer || !renderer.supportsScene?.(sceneId) || camera === null) {
-        throw new AppError(`The actual renderer does not yet cover authoritative region ${world.player.region}. Named source fixtures are available only through explicit early-presentation mode; no arbitrary scene or blank fallback was selected.`, { kind: "region_unavailable" });
+      if (!renderer || !renderer.supportsScene?.(sceneId)) {
+        throw new AppError(`The actual renderer has no published block coverage for authoritative region ${world.player.region}. No arbitrary scene or blank fallback was selected.`, { kind: "region_unavailable" });
       }
-      required = Array.from(new Set([...assets.manifest.bootstrap, ...(fixture?.requiredAssets ?? region.requiredAssets),
+      if (camera === null) throw new AppError(`Published renderer blocks cover ${world.player.region}, but a source-bound live camera is not supplied. Explicit recorded-camera presentation is separate; no spawn-camera defaults were invented.`, { kind: "camera_unavailable" });
+      if (recordedCamera !== null) {
+        const coverage = assets.manifest.renderer;
+        const square = Math.floor(camera.x / (64 * 128)) * 256 + Math.floor(camera.y / (64 * 128));
+        invariant(coverage?.coverage === "source_world_blocks" && coverage.regions[world.player.region]?.square === square,
+          "The explicitly recorded camera is not in this authoritative source region.", "camera_unavailable");
+      }
+      required = Array.from(new Set([...assets.manifest.bootstrap, ...(earlyScene !== null ? fixture!.requiredAssets : region.requiredAssets),
+        ...(assets.manifest.renderer?.coverage === "source_world_blocks" ? assets.manifest.renderer.commonAssets : []),
         ...(assets.manifest.rendererManifest ? [assets.manifest.rendererManifest] : [])]));
+      requiredPins = new Map(required.map((id) => [id, assetPins.get(id)!]));
       const uiAssets = Object.entries(assets.manifest.aliases ?? {}).filter(([id]) => id.startsWith("ui/")).map(([, id]) => id);
       assets.retain([...required, ...uiAssets]);
       benchmark.scene(sceneId, earlyScene ? `early.presentation.${sceneId}` : region.routeId,
-        earlyScene ? "early-presentation-not-journey" : region.workloadId,
+        diagnosticWorkload ?? region.workloadId,
         assets.manifest.renderer?.manifestSha256 ?? assets.manifestSha256,
-        new Map(required.map((id) => [id, assets!.manifest.assets.find((asset) => asset.id === id)!.sha256])));
+        requiredPins);
       await assets.preload(required);
-      renderer.update(world);
       await renderer.loadScene(sceneId);
+      renderer.update(world);
+      appliedWorld = world;
+      rendererHadWorld = true;
       input?.dispose();
       input = new InputController(uiCanvas, ui!, renderer, app, { ...camera, zoom: sourceZoomForViewportHeight(worldCanvas.height) },
         fixture ? null : region.controls, world.player.tile,
@@ -147,8 +172,9 @@ export async function mountApplication(options: {
     resize?.disconnect();
     unsubscribe?.();
     input?.dispose();
-    stopDevice?.();
+    preview?.dispose();
     renderer?.dispose();
+    stopDevice?.();
     ui?.dispose();
     assets?.dispose();
     await app.dispose();
@@ -168,6 +194,7 @@ export async function mountApplication(options: {
         observeAssets();
       },
     });
+    assetPins = new Map(assets.manifest.assets.map((asset) => [asset.id, asset.sha256]));
     required = [...assets.manifest.bootstrap];
     await assets.preload(required);
     ui = await components.createUi(uiCanvas, app, assets);
@@ -175,7 +202,11 @@ export async function mountApplication(options: {
       if (componentFailed) return;
       try {
         // createUi owns its state subscription; this observer drives only the renderer/benchmark.
-        if (state.world && renderer && sceneLoaded) renderer.update(state.world);
+        if (state.world && state.world !== appliedWorld && renderer && sceneLoaded) {
+          renderer.update(state.world);
+          appliedWorld = state.world;
+          rendererHadWorld = true;
+        }
         const presence = presenceOf(state.world);
         benchmark.worldReady(state.phase === "world" && sceneLoaded && presence?.connected === true && presence.presentInWorld
           && app.gameplayUi().available);
@@ -226,6 +257,15 @@ export async function mountApplication(options: {
         assetBaseUrl: assets.manifest.renderer?.assetBaseUrl ?? assets.baseUrl, manifestUrl: assets.url(assets.manifest.rendererManifest),
         sourcePackSha256: SOURCE_PACK_SHA256, width: worldCanvas.width, height: worldCanvas.height,
       });
+      const previewRenderer = renderer;
+      if (previewRenderer.framePlayerPreview) {
+        preview = new ModelPreview({
+          bounds: () => sourceUiPreviewAdapter.bounds(ui!),
+          frame: (size) => previewRenderer.framePlayerPreview!(size),
+          publish: (surface) => sourceUiPreviewAdapter.publish(ui!, surface),
+          report: (error) => app.report(error),
+        });
+      }
     }
     audio = await SourceAudioSession.create(assets, assets.manifest.assets,
       (error) => app.report(audioProblem(error)),
@@ -245,8 +285,18 @@ export async function mountApplication(options: {
       frame = requestAnimationFrame(render);
       const delta = now - priorFrameMs;
       priorFrameMs = now;
-      if (!renderer || !sceneLoaded || app.state().phase !== "world") return;
       try {
+        const state = app.state();
+        const previewOwner = state.world ? canonicalJson({
+          actor: state.world.player.id, appearance: state.world.player.appearance, equipment: state.world.player.equipment,
+        }) : state.phase === "character" && !rendererHadWorld ? "uncreated-source-body" : null;
+        preview?.update(previewOwner);
+        if (preview) benchmark.preview(preview.observe());
+        if (state.phase === "character" && rendererHadWorld && !previewResetReported) {
+          previewResetReported = true;
+          app.report(new AppError("A new character preview needs a renderer actor reset after the preceding session; prior character equipment is not reused.", { kind: "renderer_preview" }));
+        }
+        if (!renderer || !sceneLoaded || state.phase !== "world") return;
         input?.update(delta);
         invariant(inFlight < 128, "The renderer has too many uncompleted GPU submissions.", "device");
         inFlight++;
@@ -255,19 +305,33 @@ export async function mountApplication(options: {
           if (disposed) return;
           if (completed !== null) benchmark.completed(completed);
           const observation = renderer?.observe?.() ?? null;
-          benchmark.renderer(observation ? { ...observation, assets: observation.assets.map((asset) => ({
-            ...asset, id: assets?.manifest.renderer?.assetIds[asset.id] ?? asset.id,
-          })) } : null);
+          const delivery = assets?.manifest.renderer;
+          const observedAssets = observation?.assets.flatMap((asset) => {
+            const id = delivery?.assetIds[asset.id];
+            return id ? [{ ...asset, id }] : [];
+          }) ?? [];
+          if (observation && assets && delivery) {
+            const world = app.state().world;
+            const region = world ? assets.manifest.regions[world.player.region] : undefined;
+            const activeAssets = new Map(requiredPins);
+            for (const asset of observedAssets) if (asset.loaded) activeAssets.set(asset.id, asset.sha256);
+            benchmark.scene(observation.sceneId, earlyScene ? `early.presentation.${earlyScene}` : region?.routeId ?? "unavailable",
+              diagnosticWorkload ?? region?.workloadId ?? "unavailable",
+              delivery.manifestSha256, activeAssets);
+          }
+          benchmark.renderer(observation ? { ...observation, assets: observedAssets } : null);
           const settingsJson = observation?.settings ? canonicalJson(observation.settings) : "";
           if (settingsJson !== appliedRenderSettingsJson) {
             appliedRenderSettingsJson = settingsJson;
             appliedRenderSettings = observation?.settings ?? null;
             void settingsHash().catch(() => app.report(new AppError("Applied render settings could not be hashed.", { kind: "benchmark", recoverable: false })));
           }
-        }).catch(() => {
+        }).catch((error: unknown) => {
+          if (disposed) return;
           sceneLoaded = false;
           benchmark.worldReady(false);
-          app.report(new AppError("The real renderer failed to complete or observe its GPU frame.", { kind: "device", recoverable: false }));
+          app.report(error instanceof AppError ? error
+            : new AppError("The real renderer failed to complete or observe its GPU frame.", { kind: "device", recoverable: false }));
         }).finally(() => { inFlight--; });
       } catch (error) {
         sceneLoaded = false;

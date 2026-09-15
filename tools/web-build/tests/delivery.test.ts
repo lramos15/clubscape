@@ -4,7 +4,7 @@ import { mkdir, readFile, rm, symlink, writeFile } from "node:fs/promises";
 import { fileURLToPath } from "node:url";
 import { join } from "node:path";
 import { createHash, randomUUID } from "node:crypto";
-import { collectBuild, publicFile } from "../deliver.ts";
+import { collectBuild, publicAssetPath, publicFile } from "../deliver.ts";
 
 test("delivery is explicit, hash-pinned and rejects private extensions/traversal/symlinks", async () => {
   const root = fileURLToPath(new URL("../../../.local/web-delivery-checks/", import.meta.url));
@@ -25,4 +25,12 @@ test("delivery is explicit, hash-pinned and rejects private extensions/traversal
     await assert.rejects(publicFile(directory, "alias.html", "/alias.html"), /symlink/);
     await assert.rejects(publicFile(directory, "../outside.html", "/outside.html"), /canonical same-origin/);
   } finally { await rm(directory, { recursive: true, force: true }); }
+});
+
+test("all packaging entrypoints use the same byte-preserving public gzip carrier", () => {
+  assert.equal(publicAssetPath("/assets/compiled/render/blocks/12336.bin.gz"),
+    "assets/compiled/render/blocks/12336.bin.gz.bin");
+  assert.equal(publicAssetPath("/assets/ui/minimaps/dot-1.png"), "assets/ui/minimaps/dot-1.png");
+  assert.throws(() => publicAssetPath("/assets/../private"));
+  assert.throws(() => publicAssetPath("https://outside.example/asset.bin.gz"));
 });

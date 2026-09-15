@@ -159,6 +159,81 @@ fn allowed() -> game::Permission {
 }
 
 #[test]
+fn dynamic_objects_resolve_only_canonical_metadata_and_preserve_public_source_state() {
+    let mut bridge = client();
+    let mut world = snapshot(2);
+    world.dynamic_objects = vec![
+        game::DynamicObject {
+            id: "transform.fixture.9398".into(),
+            definition_id: "object.fixture.other".into(),
+            object_id: Some("object.fixture".into()),
+            tile: Some(position()),
+            instance: Some("instance.fixture".into()),
+            state: Some("object_state.fixture.open".into()),
+            door_open: Some(true),
+            quarter_turns: 3,
+            expires_at_tick: Some(u64::MAX),
+        },
+        game::DynamicObject {
+            id: "dynamic_object.fixture.26185".into(),
+            definition_id: "object.fixture".into(),
+            tile: Some(position()),
+            ..Default::default()
+        },
+    ];
+    let value = poll(&mut bridge, 4, world);
+    let objects = &value["world"]["dynamicObjects"];
+    assert_eq!(objects[0]["id"], "transform.fixture.9398");
+    assert_eq!(objects[0]["definitionId"], "object.fixture.other");
+    assert_eq!(objects[0]["objectId"], "object.fixture");
+    assert_eq!(
+        objects[0]["sourceId"], 4,
+        "not the id suffix or definition_id"
+    );
+    assert_eq!(objects[0]["tile"]["x"], 3200);
+    assert_eq!(objects[0]["instance"], "instance.fixture");
+    assert_eq!(objects[0]["state"], "object_state.fixture.open");
+    assert_eq!(objects[0]["doorOpen"], true);
+    assert_eq!(objects[0]["quarterTurns"], 3);
+    assert_eq!(objects[0]["expiresAtTick"], u64::MAX.to_string());
+    assert!(objects[1]["sourceId"].is_null());
+    assert!(objects[1]["objectId"].is_null());
+    assert!(objects[1]["doorOpen"].is_null());
+    assert!(objects[1]["expiresAtTick"].is_null());
+}
+
+#[test]
+fn unknown_dynamic_metadata_and_invalid_quarter_turns_fail_without_guessing() {
+    for (object_id, quarter_turns) in [
+        ("object.fixture.missing", 0),
+        ("asset.source.osrs.cache2695.object.9398", 0),
+        ("npc.fixture", 0),
+        ("object.fixture", 4),
+    ] {
+        let mut bridge = client();
+        let mut world = snapshot(2);
+        world.dynamic_objects.push(game::DynamicObject {
+            id: "transform.fixture".into(),
+            object_id: Some(object_id.into()),
+            tile: Some(position()),
+            quarter_turns,
+            ..Default::default()
+        });
+        bridge.prepare(&id(4), "poll", "{}").unwrap();
+        let result = bridge.receive_for(
+            &id(4),
+            &ServerMessage {
+                protocol_version: PROTOCOL_VERSION,
+                request_id: id(4),
+                result: Some(Outcome::WorldSnapshot(world)),
+            }
+            .encode_to_vec(),
+        );
+        assert!(result.is_err(), "{object_id}/{quarter_turns}");
+    }
+}
+
+#[test]
 fn bank_context_gates_private_slots_and_preserves_actual_permissions() {
     let mut bridge = client();
     let mut world = snapshot(2);

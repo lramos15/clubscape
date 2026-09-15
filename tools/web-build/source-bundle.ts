@@ -17,7 +17,7 @@ import { deliverRenderAssets } from "./render-assets.ts";
 const root = resolve(fileURLToPath(new URL("../../", import.meta.url)));
 const sha = (bytes: Uint8Array | string): string => createHash("sha256").update(bytes).digest("hex");
 
-/** Real source metadata + canonical content, not a renderer/UI/audio bundle or a seeded world. */
+/** Explicit canonical source/component delivery; accounts and characters are never seeded. */
 export async function prepareSourceBundle(directory: string, worldId: string): Promise<{
   directory: string; artifactSha256: string; contentRevision: string; publicAssets: number; publicBytes: number;
   worldId: string;
@@ -70,7 +70,9 @@ export async function prepareSourceBundle(directory: string, worldId: string): P
     bootstrap: [...audio.metadata, ...ui.startup], rendererManifest: "asset.source.render.manifest", renderer: render.renderer,
     regions: Object.fromEntries(Object.entries(projection.regions).map(([id, region]) => {
       if (region.sceneAsset === null) throw new Error(`Canonical region ${id} has no source scene asset.`);
-      return [id, { sceneId: region.sceneAsset, sceneAsset: region.sceneAsset, requiredAssets: [region.sceneAsset],
+      const block = render.renderer.coverage === "source_world_blocks" ? render.renderer.regions[id] : undefined;
+      return [id, { sceneId: block ? id : region.sceneAsset, sceneAsset: region.sceneAsset,
+        requiredAssets: [region.sceneAsset, ...(block?.requiredAssets ?? [])],
         routeId: id, workloadId: "unconfigured", camera: null, controls: null }];
     })),
   });

@@ -11,6 +11,7 @@ import type { AppState } from "../shared/contracts.ts";
 import { installSourceFetch } from "./source-fetch.ts";
 import type { GameplayUiSupport } from "./gameplay-ui.ts";
 import type { SourceAudioSession } from "./audio.ts";
+import { presentationOptions } from "./presentation.ts";
 
 declare global {
   interface Window {
@@ -18,7 +19,9 @@ declare global {
       read(): Readonly<AppState>; gameplayUi(): Readonly<GameplayUiSupport>;
       audioControls(): ReturnType<SourceAudioSession["controls"]> | null;
     };
-    __clubscapePresentationV1?: Readonly<{ mode: "live" | "early_fixture"; sceneId: string | null }>;
+    __clubscapePresentationV1?: Readonly<{
+      mode: "live" | "early_fixture" | "recorded_camera"; sceneId: string | null; cameraInput: string | null;
+    }>;
   }
 }
 
@@ -35,12 +38,15 @@ async function start(): Promise<void> {
   bridge = await createProtocolClient();
   benchmark.startup(performance.now() - startedAt);
   const components = await loadComponents();
-  const earlyScene = new URLSearchParams(location.search).get("presentation_scene");
-  window.__clubscapePresentationV1 = Object.freeze({ mode: earlyScene === null ? "live" : "early_fixture", sceneId: earlyScene });
+  const { earlyScene, recordedCamera } = presentationOptions(location.search);
+  window.__clubscapePresentationV1 = Object.freeze({
+    mode: earlyScene ? "early_fixture" : recordedCamera ? "recorded_camera" : "live",
+    sceneId: earlyScene, cameraInput: earlyScene ?? recordedCamera,
+  });
   const ownedBridge = bridge;
   bridge = null;
   application = await mountApplication({
-    build, benchmark, bridge: ownedBridge, components, status, earlyScene,
+    build, benchmark, bridge: ownedBridge, components, status, earlyScene, recordedCamera,
     worldCanvas: document.querySelector<HTMLCanvasElement>("#world")!,
     uiCanvas: document.querySelector<HTMLCanvasElement>("#overlay")!,
   });
@@ -48,9 +54,10 @@ async function start(): Promise<void> {
     read: () => application!.app.state(), gameplayUi: () => application!.app.gameplayUi(),
     audioControls: () => application!.app.audioControls(),
   });
-  if (earlyScene !== null) {
+  if (earlyScene !== null || recordedCamera !== null) {
     status.hidden = false;
-    status.textContent = `Early presentation fixture: ${earlyScene}. Not a legitimate journey or acceptance run.`;
+    status.textContent = earlyScene ? `Early presentation fixture: ${earlyScene}. Not a legitimate journey or acceptance run.`
+      : `Real streamed source region, explicit recorded camera: ${recordedCamera}. Not a live-camera or journey acceptance run.`;
   }
 }
 

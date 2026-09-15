@@ -8,12 +8,13 @@ entry points:
 * `web/audio/index.ts`: `createAudio: CreateAudio`
 
 These are Vite module imports, not script-tag loading or a substitute renderer.
-All three actual factories are integrated. The initial renderer exports five
-named source **fixture scenes**, not a complete authoritative-region stream.
-Normal entry rejects uncovered source regions explicitly; it never selects
-the nearest/first fixture or a blank viewport as a fallback. Explicit early
-presentation mode is separate and labeled; no model-preview substitute is
-created. The small HTML bootstrap diagnostic remains only a fatal startup
+All three actual factories are integrated, including the published 61-block
+streaming renderer and its model-only player preview. The shell accepts only
+published canonical region IDs or an explicitly selected diagnostic fixture.
+Source-bound live camera/control bindings are still absent from the current
+delivery; normal entry reports that exact gap, not obsolete missing-renderer
+or five-scene-only coverage. A recorded-camera streaming diagnostic is separate
+and labeled. The small HTML bootstrap diagnostic remains only a fatal startup
 fallback, **not** approved title/login presentation.
 
 Build delivery separately checks the exact external reference approval and
@@ -64,6 +65,9 @@ time; its separate observer updates only renderer/benchmark state.
   the actual `forwardWorldPointer` adapter, including move/primary/context and
   control-key state. The UI owns selected-item/spell/ground/entity action
   choice; the shell never independently sends a duplicate world action.
+  The current renderer returns canonical actor/object IDs and source scenery
+  footprints. Opaque old hashes, invalid tiles and unknown entity IDs reject;
+  there is no nearest-object or ID-suffix guess.
 * Arrow keys and middle-drag camera/scroll zoom use explicit source camera
   bindings in the current region manifest. There are no fabricated initial
   camera defaults. Keyboard controls are ignored for editable/accessible
@@ -173,21 +177,33 @@ appearance confirmation, logout/relogin and a real server restart while the
 browser retains its memory token and the exact world/artifact pin.
 `window.__clubscapeClientStateV1.read()` is an immutable observation-only view
 for this boundary; it exposes no credential, mutation or outcome setter.
-The source title is visibly rendered and logical/backing resize boundaries are
-tested. Full live-region/3D coverage, penguin preview and the UI owner's
-remaining field/control contracts stay explicit; this is not a complete Tutorial Island journey.
+The source title, native-size penguin preview and actual streamed starting
+region are visibly rendered; logical/backing resize boundaries are tested.
+The current real run receives ten dynamic object records through WASM.
+Their `object_id` must be a valid canonical ObjectId with source metadata in
+the validated content catalog. `sourceId` is never parsed from an ID suffix or
+substituted from `definition_id`. IDs, tiles, instances, state, optional door
+state, quarter turns and exact string expiry remain intact. Unknown canonical
+metadata or out-of-range rotation fails explicitly.
+This is not a complete Tutorial Island journey.
 
-## Actual renderer adapter and explicit early presentation
+## Actual streamed renderer and explicit presentation diagnostics
 
-The authorized six renderer commits are integrated through their real
-`web/renderer/src/index.ts` factory and `web/renderer/build.sh`; the shell does
-not implement a rasterizer. Build output uses wasm-bindgen0.2.128 and, on this
-host, matches the relayed WASM hash `04c20b009bf401b78fff0489b3248b30123e4c97a14454d5cd1b29ba70b9e43c`.
-The original renderer manifest stays
-`3fd1ec1953183de5537a2e7d239389c8dceed50c2e5d658dcc82c49113468845`.
+The initial six renderer commits and authorized continuations `e96e3b8`,
+`1937201`, `c098133`, `0c541d9` are integrated through the actual
+`web/renderer/src/index.ts` factory and `web/renderer/build.sh`.
+The shell does not implement a rasterizer, animation policy or gear fit.
+Build output uses wasm-bindgen0.2.128; actual build hashes are recorded in
+`.local/evidence/renderer-build.json`. The current original renderer manifest is
+`a6a1b3dcd307aa1b8e1f8c3e850c087f78c0e818c644d47e12c58595ad3b6464`.
+All 122 compressed buffers for its 61 blocks were reproduced byte-exactly from
+the pinned original inputs and are included in browser/server delivery.
 
 `renderer.ts` validates that exact manifest, passes the compiled WASM URL and
-actual asset base, forwards source `WorldView` unchanged, and maps diagnostics.
+actual asset base, forwards source `WorldView` including `dynamicObjects`, and
+maps actual diagnostics. `regionSceneId(square)` selects real block assembly;
+the native adapter owns its 104x104 rebuild/recenter and resource eviction.
+Unchanged immutable views are not reapplied on UI-only notices.
 `source-fetch.ts` enforces same-origin, redirect-error, no-cookie/no-referrer
 policy even for component factories that internally call global `fetch`.
 
@@ -200,32 +216,71 @@ source account/character state and server restart remain real, but the fixture
 scene/layout must not be counted as legitimate journey/streaming proof.
 Other exported fixture names are equally explicit; unsupported names fail.
 
+`/?presentation_camera=tutorial-starting-house` instead uses only that
+explicit recorded camera over the **actual authoritative region's streamed
+blocks**. It does not fetch a fixture scene. The recorded camera must belong
+to that source square. `sceneId` reports the actual assembled `blocks@x,y`;
+`routeId` remains the server region and workload is
+`recorded-camera-not-journey`. Neither diagnostic is a verified live spawn/
+arrival camera. Unknown/duplicate URL parameters and URL secrets reject.
+
 The camera uses16384 units/turn, near50 and
 `sourceZoomForViewportHeight(backingHeight)` (662 at1080). Live resize updates
 the same camera/zoom in renderer and UI. An early fixture with no live control
 calibration keeps its recorded camera: no guessed mouse sensitivity or scroll
-curve. Actual actor IDs are mapped back from the renderer's wrapping64-bit
-hash ABI; ambiguous/unmapped scene-object hashes are rejected with feedback,
-never converted to guessed spawns or a walk-through interaction.
+curve. Source live camera/control bindings must be supplied before normal
+entry. A logical privacy `instance` is not guessed to be the original client's
+instanced-map flag; stock roof behavior stays renderer-owned.
 
-Initial renderer frame timestamps are wall-clock `Date.now()` values.
+The current native frame timestamps still use wall-clock `Date.now()`.
 `CanvasGpuClock` independently observes **actual game-canvas texture acquisition,
-queue submission and `onSubmittedWorkDone` receipt**, recording the last real
-canvas submission on `performance.now()` and waiting for that receipt before
-publishing each genuine renderer-completed frame. It does not rewrite counters,
-estimate latency or substitute RAF. The extra completion observations are real
-measurement overhead and remain present during checks.
+queue submission and `onSubmittedWorkDone` receipt**. A ledger associates each
+native sequence with its own canvas blit, even when two native promises settle
+out of order. Offscreen preview/fill submissions never replace that receipt
+or increment world frame counts. The actual adapter's two-frame pipeline is
+enabled without a shell serial limiter. Submission/completion clocks use
+`performance.now()`; native measured GPU pass durations are retained.
+`read()` never renders, drains records or advances counters. The additional
+receipt observation remains part of measurement overhead.
+
+Loaded squares come from native diagnostics. Append-only fetch history is not
+claimed as residency after eviction. The current WASM
+`scenePlacement().blocks` incorrectly tests `scene_id().is_none()`, even for
+successfully assembled `blocks@` scenes. The owned adapter normalizes only
+that flag when actual base/size/scene/loaded-square diagnostics agree, reports
+the compatibility issue, and preserves `nativeScenePlacement` alongside it.
+Neither placement observation is a dynamic minimap.
+
+`ModelPreview` calls `getUiPreviewBounds()` every animation frame while the
+interface is open, requests `framePlayerPreview()` at the exact native size,
+copies its completed RGBA readback into a same-sized canvas with
+`putImageData`, and passes that canvas to `setUiPreview()`. No scaling, source
+PNG or human preview substitutes for it. One preview readback may be pending
+independently of two world frames; closure/owner/size changes discard stale
+results. Actual preview readbacks are separate diagnostics, never world FPS.
+The first source character uses the real 480x315 preview before creation.
+The renderer has no public actor-reset API: a different fresh character after
+a previous world session gets explicit preview-unavailable feedback until
+reload/actual new actor update, rather than inheriting prior equipment.
 
 The adapter's diagnostics currently expose actual loaded assets/scene/device/
 timestamps, but discard the raw WASM `entities_drawn` field and do not expose
 per-kind workload counts. `observe().entities` therefore stays `{}` and
 benchmark readiness stays false; no manifest/static/server-snapshot count is
 passed off as rendered entities. Renderer continuation must supply the real
-counts, live-region mapping, complete actions/equipment, object-pick identities,
-dynamic minimap and model-only preview. No missing-entrypoint blocker remains.
-The initial native adapter admits one frame in flight and returns null for a
-busy call; the shell does not add another limiter or serialize RAF behind its
-promise. Report the genuine completed cadence, not a configured refresh rate.
+counts and dynamic minimap. The backend still emits an empty player animation
+and no actual running/active-animation observer fields. Those are forwarded
+unchanged with explicit unsupported-motion feedback; the shell never chooses
+a pose from a run checkbox or adjacent object. The imported renderer's
+activity/adjacency fallback is an unaccepted interop gap, not source motion
+evidence. Hat/shield gear-fit violations also remain unaccepted.
+
+The real streamed Chrome/Xvfb check is engineering-only. It covers actual UI
+signup, wrong-password feedback, empty creation/appearance, source block
+fetches, ten canonical dynamic objects, native preview, pinned server restart,
+logout/relogin, and an actual game-device-loss fault check. It keeps
+`game.ui.v1` and rendered-count readiness false. Frame distributions and
+failing 60-FPS/gap budgets remain exact evidence, not a Mac/Edge/M1 acceptance.
 
 ## Actual audio adapter
 

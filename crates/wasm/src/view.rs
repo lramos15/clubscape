@@ -181,8 +181,32 @@ pub(crate) fn world(
         .dynamic_objects
         .iter()
         .map(|object| {
+            let source_id = object
+                .object_id
+                .as_ref()
+                .map(|id| {
+                    clubscape_game_types::ObjectId::new(id).map_err(|_| {
+                        BridgeError::protocol("A dynamic object has no valid canonical object_id.")
+                    })?;
+                    catalog
+                        .entities
+                        .get(id)
+                        .and_then(|definition| definition.source_id)
+                        .ok_or_else(|| {
+                            BridgeError::protocol(
+                                "A dynamic object's canonical source metadata is unavailable.",
+                            )
+                        })
+                })
+                .transpose()?;
+            if object.quarter_turns > 3 {
+                return Err(BridgeError::protocol(
+                    "A dynamic object rotation is outside its source quarter-turn range.",
+                ));
+            }
             Ok(json!({
                 "id":object.id,"definitionId":object.definition_id,"objectId":object.object_id,
+                "sourceId":source_id,
                 "tile":tile(object.tile.as_ref())?,"instance":object.instance,"state":object.state,
                 "doorOpen":object.door_open,"quarterTurns":object.quarter_turns,
                 "expiresAtTick":object.expires_at_tick.map(|tick| tick.to_string()),

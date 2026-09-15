@@ -6,22 +6,25 @@ import { SOURCE_PACK_SHA256 } from "../../web/shared/contracts.ts";
 import type { RenderAssetManifest } from "../../web/renderer/src/index.ts";
 import type { AssetRecord, RendererDelivery } from "../../web/app/manifest.ts";
 import type { PublicFile } from "./deliver.ts";
+import { publicAssetPath } from "./deliver.ts";
 import { publicPath } from "../../web/app/identity.ts";
+import { RENDER_MANIFEST_SHA256 } from "../../web/app/render-identity.ts";
+import { DEFAULT_RENDER_INPUTS, renderRuntimeFiles } from "./render-data.ts";
 
-export const RENDER_MANIFEST_SHA256 = "3fd1ec1953183de5537a2e7d239389c8dceed50c2e5d658dcc82c49113468845";
 const root = resolve(fileURLToPath(new URL("../../", import.meta.url)));
 const hash = (bytes: Uint8Array): string => createHash("sha256").update(bytes).digest("hex");
 
-export async function deliverRenderAssets(directory: string): Promise<{
+export async function deliverRenderAssets(directory: string, inputDirectory = process.env.CLUBSCAPE_RENDER_INPUTS ?? DEFAULT_RENDER_INPUTS): Promise<{
   assets: AssetRecord[]; files: PublicFile[]; renderer: RendererDelivery; bytes: number;
 }> {
-  const source = resolve(root, "assets/compiled/render");
+  const source = resolve(root, inputDirectory);
   const data = await readFile(resolve(source, "manifest.json"));
   if (hash(data) !== RENDER_MANIFEST_SHA256) throw new Error("The relayed original renderer manifest identity changed.");
   const manifest = JSON.parse(data.toString("utf8")) as RenderAssetManifest;
   if (manifest.approved_reference_pack_sha256 !== SOURCE_PACK_SHA256 || manifest.kind !== "clubscape_render_assets") {
     throw new Error("Renderer source-pack identity mismatch.");
   }
+  const runtime = renderRuntimeFiles(manifest);
   const assets: AssetRecord[] = [], files: PublicFile[] = [];
   const assetIds: Record<string, string> = {};
   let total = 0, index = 0;
@@ -37,13 +40,13 @@ export async function deliverRenderAssets(directory: string): Promise<{
   };
   await emit("asset.source.render.manifest", "/assets/compiled/render/manifest.json",
     "assets/compiled/render/manifest.json", data, "application/json");
-  for (const [name, expected] of Object.entries(manifest.files)) {
+  for (const name of runtime.files) {
+    const expected = manifest.files[name]!;
     publicPath(`/assets/compiled/render/${name}`);
     const input = resolve(source, name);
-    const stat = await lstat(input).catch(() => null);
-    if (stat === null && (name === "tables.bin" || name.startsWith("models/baked/"))) continue;
-    if (!stat?.isFile() || stat.isSymbolicLink() || stat.size !== expected.size_bytes || stat.size > 64 * 1024 * 1024) {
-      throw new Error(`Required published renderer buffer is missing or invalid: ${name}. Run the owned renderer build/unpack command.`);
+    const stat = await lstat(input);
+    if (!stat.isFile() || stat.isSymbolicLink() || stat.size !== expected.size_bytes || stat.size > 64 * 1024 * 1024) {
+      throw new Error(`Required published renderer buffer is invalid: ${name}. Run pnpm render:inputs against the pinned original inputs.`);
     }
     const bytes = await readFile(input);
     if (hash(bytes) !== expected.sha256) throw new Error(`Original renderer buffer hash mismatch: ${name}`);
@@ -51,7 +54,7 @@ export async function deliverRenderAssets(directory: string): Promise<{
     assetIds[name] = id;
     // The public URL retains the manifest's gzip name; the server's physical-file
     // extension allowlist uses a .bin carrier. No content-encoding or bytes change.
-    const path = name.endsWith(".gz") ? `assets/compiled/render/${name}.bin` : `assets/compiled/render/${name}`;
+    const path = publicAssetPath(`/assets/compiled/render/${name}`);
     await emit(id, `/assets/compiled/render/${name}`, path, bytes, "application/octet-stream");
   }
   const pack = JSON.parse(await readFile(resolve(root, "research/reference-pack/v1/manifest.json"), "utf8")) as {
@@ -73,17 +76,17 @@ export async function deliverRenderAssets(directory: string): Promise<{
         pitch: settings.pitch_input, yaw: settings.yaw_input, unitsPerTurn: 16384,
         zoom: settings.zoom, near: 50, far: settings.far_clip_units,
       },
-      requiredAssets: [
-        "asset.source.render.manifest", assetIds["palette.bin"]!,
-        ...manifest.textures.map((id) => assetIds[`textures/${id}.bin`]!),
-        ...manifest.npcs.map((npc) => assetIds[npc.pack]!),
-        assetIds[scene.file_gz ?? scene.file]!, assetIds[scene.models_file_gz ?? scene.models_file]!,
-      ],
+      requiredAssets: ["asset.source.render.manifest",
+        ...runtime.common.map((name) => assetIds[name]!),
+        ...runtime.scenes.get(scene.name)!.map((name) => assetIds[name]!)],
     };
   }
   return {
     assets, files, bytes: total,
     renderer: { manifestSha256: RENDER_MANIFEST_SHA256, assetBaseUrl: "/assets/compiled/render/",
-      assetIds, fixtures, coverage: "named_fixture_scenes_only" },
+      assetIds, fixtures, coverage: "source_world_blocks",
+      commonAssets: ["asset.source.render.manifest", ...runtime.common.map((name) => assetIds[name]!)],
+      regions: Object.fromEntries([...runtime.blocks].map(([square, paths]) =>
+        [`region.osrs.${square}`, { square, requiredAssets: paths.map((name) => assetIds[name]!) }])) },
   };
 }

@@ -18,6 +18,11 @@ export interface PublicRecovery extends RecoveryView {
   }>;
 }
 export interface PublicWorld extends WorldView {
+  dynamicObjects: Array<{
+    id: string; definitionId: string; objectId: string | null; sourceId: number | null;
+    tile: WorldView["player"]["tile"]; instance: string | null; state: string | null;
+    doorOpen: boolean | null; quarterTurns: number; expiresAtTick: string | null;
+  }>;
   player: PlayerView & { presence: SourcePresence | null; appearanceConfirmed: boolean };
   entities: Array<EntityView & {
     assetId: string | null; width: number; height: number; presence: SourcePresence | null;

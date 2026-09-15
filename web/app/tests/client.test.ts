@@ -356,16 +356,21 @@ test("read-only quotes keep exact recovery fees and reject stale selections afte
   await app.dispose();
 });
 
-test("uncovered authoritative regions fail explicitly instead of borrowing an arbitrary fixture scene", async () => {
-  const bridge = new FixtureBridge();
-  const hooksValue = hooks();
-  hooksValue.prepareWorld = async () => { throw new AppError("Actual source region is not exported.", { kind: "region_unavailable" }); };
-  const app = new BrowserApp(bridge, new RpcTransport((async () =>
-    new Response(new Uint8Array([1]), { headers: { "content-type": "application/x-protobuf" } })) as Fetch), hooksValue);
-  await assert.rejects(app.enterWorld(), /region is not exported/);
-  assert.equal(app.state().phase, "error");
-  assert.equal(app.state().world, null);
-  assert.equal(bridge.stateValue.worldJoined, true, "A presentation gap does not fabricate a source logout.");
-  assert(!bridge.operations.includes("leave"));
-  await app.dispose();
+test("missing source regions or live cameras fail explicitly without a fixture fallback or source logout", async () => {
+  for (const kind of ["region_unavailable", "camera_unavailable"]) {
+    const bridge = new FixtureBridge();
+    const hooksValue = hooks();
+    let disconnected = false;
+    hooksValue.prepareWorld = async () => { throw new AppError("Actual source presentation input is unavailable.", { kind }); };
+    hooksValue.disconnected = () => { disconnected = true; };
+    const app = new BrowserApp(bridge, new RpcTransport((async () =>
+      new Response(new Uint8Array([1]), { headers: { "content-type": "application/x-protobuf" } })) as Fetch), hooksValue);
+    await assert.rejects(app.enterWorld(), /presentation input is unavailable/);
+    assert.equal(app.state().phase, "error");
+    assert.equal(app.state().world, null);
+    assert(disconnected);
+    assert.equal(bridge.stateValue.worldJoined, true, "A presentation gap does not fabricate a source logout.");
+    assert(!bridge.operations.includes("leave"));
+    await app.dispose();
+  }
 });

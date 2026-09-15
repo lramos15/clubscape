@@ -21,6 +21,11 @@ export const mime: Record<string, string> = {
 };
 const root = resolve(fileURLToPath(new URL("../../", import.meta.url)));
 
+export function publicAssetPath(url: string): string {
+  publicPath(url);
+  return url.endsWith(".gz") ? `${url.slice(1)}.bin` : url.slice(1);
+}
+
 export async function publicFile(rootPath: string, path: string, url: string, expected?: AssetRecord): Promise<PublicFile> {
   publicPath(url);
   publicPath(`/${path}`);
@@ -96,7 +101,7 @@ export async function deliver(): Promise<void> {
     publicPath(manifestRoute, "/content/");
     const assetRoot = repoInput(process.env.CLUBSCAPE_CLIENT_ASSET_ROOT ?? dirname(relative(root, repoInput(manifestInput))));
     for (const asset of manifest.assets) {
-      const path = asset.url.endsWith(".gz") ? `${asset.url.slice(1)}.bin` : asset.url.slice(1);
+      const path = publicAssetPath(asset.url);
       const record = await publicFile(assetRoot, path, asset.url, asset);
       if (owner === "web") {
         const output = join(dist, path);

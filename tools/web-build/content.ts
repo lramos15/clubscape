@@ -3,8 +3,8 @@ import { dirname, resolve, sep } from "node:path";
 import { fileURLToPath } from "node:url";
 import { SOURCE_PACK_SHA256 } from "../../web/shared/contracts.ts";
 import { parseContentManifest } from "../../web/app/manifest.ts";
-import type { ContentManifest, RegionPresentation } from "../../web/app/manifest.ts";
-import { publicFile } from "./deliver.ts";
+import type { ContentManifest, DisplayCatalog, RegionPresentation } from "../../web/app/manifest.ts";
+import { publicAssetPath, publicFile } from "./deliver.ts";
 import { projectArtifact } from "./artifact.ts";
 
 const root = resolve(fileURLToPath(new URL("../../", import.meta.url)));
@@ -26,8 +26,10 @@ function path(key: string): string {
 }
 const projection = await projectArtifact(path("--artifact"));
 const bindings = JSON.parse(await readFile(path("--bindings"), "utf8")) as Pick<ContentManifest,
-  "sourcePackSha256" | "assets" | "bootstrap" | "rendererManifest" | "aliases"> & {
+  "sourcePackSha256" | "assets" | "bootstrap" | "rendererManifest" | "aliases" | "renderer"> & {
     regions: Record<string, RegionPresentation>; icons?: Record<string, string>;
+    inventoryActions?: Record<string, string[]>;
+    catalog?: Pick<DisplayCatalog, "icons" | "inventoryActions">;
   };
 if (bindings.sourcePackSha256 !== SOURCE_PACK_SHA256) throw new Error("Presentation bindings do not match the approved source pack.");
 for (const [id, region] of Object.entries(bindings.regions)) {
@@ -42,12 +44,14 @@ for (const id of projection.referencedAssets) {
 const manifest = parseContentManifest({
   schemaVersion: 1, sourcePackSha256: SOURCE_PACK_SHA256, contentRevision: projection.catalog.contentRevision,
   artifactSha256: projection.artifactSha256,
-  catalog: { ...projection.catalog, icons: bindings.icons ?? projection.catalog.icons ?? {} },
+  catalog: { ...projection.catalog, icons: bindings.icons ?? bindings.catalog?.icons ?? projection.catalog.icons ?? {},
+    inventoryActions: bindings.inventoryActions ?? bindings.catalog?.inventoryActions ?? {} },
   contentValidation: projection.contentValidation,
   ...(bindings.aliases === undefined ? {} : { aliases: bindings.aliases }),
+  ...(bindings.renderer === undefined ? {} : { renderer: bindings.renderer }),
   assets: bindings.assets, bootstrap: bindings.bootstrap, rendererManifest: bindings.rendererManifest, regions: bindings.regions,
 });
-for (const asset of manifest.assets) await publicFile(path("--asset-root"), asset.url.slice(1), asset.url, asset);
+for (const asset of manifest.assets) await publicFile(path("--asset-root"), publicAssetPath(asset.url), asset.url, asset);
 const output = path("--output");
 if ([path("--artifact"), path("--bindings")].includes(output)) throw new Error("Output cannot overwrite a source input.");
 await mkdir(dirname(output), { recursive: true });

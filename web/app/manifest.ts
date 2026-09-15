@@ -54,13 +54,17 @@ export interface ContentValidation {
   runtimeReadinessEstablished: false;
 }
 
-export interface RendererDelivery {
+interface RendererDeliveryBase {
   manifestSha256: string;
   assetBaseUrl: string;
   assetIds: Record<string, string>;
   fixtures: Record<string, { sourceInputId: string; camera: RenderCamera; requiredAssets: string[] }>;
-  coverage: "named_fixture_scenes_only";
 }
+export type RendererDelivery = RendererDeliveryBase & (
+  { coverage: "named_fixture_scenes_only" }
+  | { coverage: "source_world_blocks"; commonAssets: string[];
+    regions: Record<string, { square: number; requiredAssets: string[] }> }
+);
 
 export interface ContentManifest {
   schemaVersion: 1;
@@ -181,7 +185,7 @@ export function parseContentManifest(value: unknown): ContentManifest {
   if (manifest.renderer !== undefined) {
     const renderer = manifest.renderer;
     publicPath(`${renderer.assetBaseUrl.replace(/\/$/, "")}/manifest.json`, "/assets/");
-    invariant(renderer.coverage === "named_fixture_scenes_only" && isHash(renderer.manifestSha256)
+    invariant(["named_fixture_scenes_only", "source_world_blocks"].includes(renderer.coverage) && isHash(renderer.manifestSha256)
       && manifest.assets.find((asset) => asset.id === manifest.rendererManifest)?.sha256 === renderer.manifestSha256,
     "Invalid pinned renderer coverage/manifest identity.");
     for (const [path, id] of Object.entries(renderer.assetIds)) {
@@ -194,6 +198,19 @@ export function parseContentManifest(value: unknown): ContentManifest {
         && assetsExist(fixture.requiredAssets) && fixture.camera.unitsPerTurn === 16384
         && fixture.camera.near === 50 && Object.values(fixture.camera).every((value) => Number.isFinite(value)),
       "Invalid original renderer fixture/camera binding.");
+    }
+    if (renderer.coverage === "source_world_blocks") {
+      invariant(assetsExist(renderer.commonAssets) && renderer.commonAssets.includes(manifest.rendererManifest!)
+        && renderer.regions && typeof renderer.regions === "object" && !Array.isArray(renderer.regions)
+        && Object.keys(renderer.regions).length > 0 && Object.keys(renderer.regions).length <= 2048,
+      "Invalid source world-block renderer coverage.");
+      for (const [id, block] of Object.entries(renderer.regions)) {
+        invariant(Number.isSafeInteger(block.square) && block.square >= 0 && block.square <= 65535
+          && id === `region.osrs.${block.square}` && assetsExist(block.requiredAssets) && block.requiredAssets.length === 2
+          && block.requiredAssets.every((asset) => manifest.assets.find((entry) => entry.id === asset)?.url
+            .startsWith(`${renderer.assetBaseUrl}blocks/${block.square}.`)),
+        "A renderer region must retain its published square and two original block buffers.");
+      }
     }
   }
   return deepFreeze(manifest);
