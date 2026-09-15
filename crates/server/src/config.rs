@@ -51,18 +51,24 @@ pub enum ConfigError {
 
 impl Config {
     pub fn from_env() -> Result<Self, ConfigError> {
-        let database_url = optional_env("DATABASE_URL")?.ok_or(ConfigError::MissingDatabaseUrl)?;
-        let bind = optional_env("CLUBSCAPE_BIND")?.unwrap_or_else(|| DEFAULT_BIND.to_owned());
-        let revision = optional_env("CLUBSCAPE_BUILD_REVISION")?;
+        Self::from_environment(optional_env)
+    }
+
+    fn from_environment(
+        mut read: impl FnMut(&str) -> Result<Option<String>, ConfigError>,
+    ) -> Result<Self, ConfigError> {
+        let database_url = read("DATABASE_URL")?.ok_or(ConfigError::MissingDatabaseUrl)?;
+        let bind = read("CLUBSCAPE_BIND")?.unwrap_or_else(|| DEFAULT_BIND.to_owned());
+        let revision = read("CLUBSCAPE_BUILD_REVISION")?;
         let mut config = Self::new(&database_url, &bind, revision.as_deref())?;
-        if let Some(root) = optional_env("CLUBSCAPE_WEB_ROOT")? {
+        if let Some(root) = read("CLUBSCAPE_WEB_ROOT")? {
             if root.trim().is_empty() || root.chars().any(char::is_control) {
                 return Err(ConfigError::InvalidWebRoot);
             }
-            if let Some(root) = optional_env("CLUBSCAPE_GAME_ROOT")? {
-                config = config.with_game_root(PathBuf::from(root))?;
-            }
             config = config.with_web_root(PathBuf::from(root))?;
+        }
+        if let Some(root) = read("CLUBSCAPE_GAME_ROOT")? {
+            config = config.with_game_root(PathBuf::from(root))?;
         }
         Ok(config)
     }
@@ -148,6 +154,48 @@ mod tests {
     use super::*;
 
     const DATABASE: &str = "postgres://localhost/clubscape_config_unit_test";
+
+    #[test]
+    fn game_and_web_environment_roots_are_independent() {
+        for (web, game) in [
+            (None, None),
+            (Some("public-web"), None),
+            (None, Some("source-game")),
+            (Some("public-web"), Some("source-game")),
+        ] {
+            let config = Config::from_environment(|name| {
+                Ok(match name {
+                    "DATABASE_URL" => Some(DATABASE.to_owned()),
+                    "CLUBSCAPE_WEB_ROOT" => web.map(str::to_owned),
+                    "CLUBSCAPE_GAME_ROOT" => game.map(str::to_owned),
+                    _ => None,
+                })
+            })
+            .unwrap();
+            assert_eq!(config.web_root, web.map(PathBuf::from));
+            assert_eq!(config.game_root, game.map(PathBuf::from));
+        }
+    }
+
+    #[test]
+    fn invalid_game_environment_is_not_ignored_when_web_root_is_absent() {
+        for root in ["", "   ", "bad\nroot", "bad\0root"] {
+            let result = Config::from_environment(|name| {
+                Ok(match name {
+                    "DATABASE_URL" => Some(DATABASE.to_owned()),
+                    "CLUBSCAPE_GAME_ROOT" => Some(root.to_owned()),
+                    _ => None,
+                })
+            });
+            assert_eq!(result.unwrap_err(), ConfigError::InvalidGameRoot);
+        }
+        let result = Config::from_environment(|name| match name {
+            "DATABASE_URL" => Ok(Some(DATABASE.to_owned())),
+            "CLUBSCAPE_GAME_ROOT" => Err(ConfigError::NonUnicodeEnvironment),
+            _ => Ok(None),
+        });
+        assert_eq!(result.unwrap_err(), ConfigError::NonUnicodeEnvironment);
+    }
 
     #[test]
     fn binds_only_literal_loopback_addresses_and_allows_ephemeral_ports() {

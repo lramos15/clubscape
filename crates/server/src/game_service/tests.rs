@@ -496,6 +496,38 @@ fn normalize_fixture_sources(value: &mut serde_json::Value) {
 }
 
 #[test]
+fn canonical_sized_game_descriptors_load_but_the_private_byte_limit_is_enforced() {
+    let pack = Pack::new();
+    let mut config = Config::new(
+        "postgres://127.0.0.1/clubscape_m1_test",
+        "127.0.0.1:0",
+        None,
+    )
+    .unwrap()
+    .with_game_root(&pack.root)
+    .unwrap();
+    config.game_test_fixture = true;
+    assert!(config.web_root.is_none());
+    let path = pack.root.join("clubscape-game.json");
+    let original = fs::read(&path).unwrap();
+    assert_eq!(content::MAX_GAME_DESCRIPTOR_BYTES, 512 * 1024);
+    for size in [272_433, 406_574, 512 * 1024] {
+        let mut bytes = original.clone();
+        bytes.resize(size, b' ');
+        fs::write(&path, &bytes).unwrap();
+        assert!(content::load(&config).unwrap().is_some());
+    }
+    let mut oversized = original;
+    oversized.resize(512 * 1024 + 1, b' ');
+    fs::write(path, oversized).unwrap();
+    let error = match content::load(&config) {
+        Err(error) => error,
+        Ok(_) => panic!("an oversized configured game descriptor cannot load or fall back"),
+    };
+    assert!(format!("{error:?}").contains("game_content"));
+}
+
+#[test]
 fn compiler_fixture_loads_through_the_explicit_test_only_adapter() {
     let pack = Pack::new();
     clubscape_world_engine::WorldEngine::new(Arc::new(pack.definition.clone())).unwrap();

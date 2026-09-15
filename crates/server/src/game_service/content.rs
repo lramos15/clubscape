@@ -15,6 +15,8 @@ use uuid::Uuid;
 use super::readiness::{Profile, Readiness};
 use crate::{Config, StartupError, web_assets::WebAssets};
 
+pub(super) const MAX_GAME_DESCRIPTOR_BYTES: usize = 512 * 1024;
+
 #[derive(Deserialize)]
 #[serde(deny_unknown_fields)]
 struct Manifest {
@@ -43,7 +45,7 @@ pub(super) fn load(config: &Config) -> Result<Option<LoadedContent>, StartupErro
         return Ok(None);
     };
     let root = root.canonicalize().map_err(|_| failure("game_root"))?;
-    let descriptor = read_file(&root, "clubscape-game.json", 256 * 1024)?;
+    let descriptor = read_file(&root, "clubscape-game.json", MAX_GAME_DESCRIPTOR_BYTES)?;
     let manifest: Manifest =
         serde_json::from_slice(&descriptor).map_err(|_| failure("game_manifest"))?;
     if manifest.schema_version != 1

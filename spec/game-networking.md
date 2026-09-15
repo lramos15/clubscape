@@ -13,6 +13,9 @@ Without `CLUBSCAPE_GAME_ROOT`, the service remains account-only. Setting it
 requires a complete game directory. A blank setting, missing/invalid artifact,
 hash mismatch, required unresolved binding, invalid restored state or failed
 world lease prevents startup; none selects an account-only or fixture fallback.
+Game and web environment roots are parsed independently: a headless game
+service does not require `CLUBSCAPE_WEB_ROOT`, and an invalid configured game
+root cannot be ignored merely because no web root is present.
 
 ```sh
 # DATABASE_URL uses the separately managed PostgreSQL service.
@@ -48,7 +51,10 @@ The private `clubscape-game.json` descriptor is:
 ```
 
 This illustrates configuration, not a product pack. `world_id` must be stable
-and non-nil. The artifact is reloaded with the strict compiler's `Runtime`
+and non-nil. The private descriptor is bounded to512KiB, accommodating the
+full canonical M1 asset-ID map without trimming required source inputs; its
+20000-entry limit remains in force. This does not raise client packet/response
+or public bundle limits. The artifact is reloaded with the strict compiler's `Runtime`
 policy, including revalidation and rebuilt indexes. Referenced assets and the
 public manifest must be declared in `clubscape-game-assets.json`, using the
 existing `{schema_version, files:[{url,path,sha256,content_type}]}` bundle format.
