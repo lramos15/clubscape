@@ -10,7 +10,8 @@
       {"id": "bb7f85f7-096a-4377-80cb-3e7eae196c6b", "task": "M1-BROWSER-RENDERER"},
       {"id": "cc864d7a-37cc-4869-a7b4-d484d01cede5", "task": "M1-BROWSER-UI"},
       {"id": "78d01af9-70a4-4b02-8339-6a61eb377374", "task": "M1-BROWSER-SHELL"},
-      {"id": "2766e089-44e5-4a1d-974e-7b03ad9c269d", "task": "M1-GAMEPLAY-UI-CONTRACTS"}
+      {"id": "2766e089-44e5-4a1d-974e-7b03ad9c269d", "task": "M1-GAMEPLAY-UI-CONTRACTS"},
+      {"id": "cdfad64d-9162-439f-a525-58e1114dd7f4", "task": "M1-AUDIO-PREFERENCE-CONTROLS"}
     ],
     "reserved": [
       {"id": "81ac9884-4f39-4f27-b516-6e9a42b09b51", "task": "M1-HEADLESS-JOURNEY", "reason": "31/70 real source transitions and onboarding recovery verified. Runner is idle until the authoritative contextual smithing menu and final v4 candidate are integrated; no live service remains."}
@@ -18,7 +19,6 @@
     "queued": [],
     "parked": [
       {"id": "ac0f0856-44af-445b-bd90-6db7a1f4fc74", "reason": "Twelve independent original dynamic-layer cases integrated8b617c6; exact image/state/pair integrity and frozen full-HUD replay verified. Candidate comparisons belong to renderer; no automatic resumption."},
-      {"id": "cdfad64d-9162-439f-a525-58e1114dd7f4", "reason": "Native-calibrated audio and exact9asset supplement integratedf9e466d;29unit/32browser/85pack checks pass. Composed app/speaker/Mac/Edge acceptance remains separate; no automatic resumption."},
       {"id": "2a0ae699-6af8-45d5-90c7-3addfc56ee53", "reason": "Renewed five-invocation assessment complete; live creation/scene/window/baseline work, firstXP unverified after driverOutOfReach. No sixth invocation or automatic resumption."},
       {"id": "aab1ae0f-0238-4254-bff3-b7c046349c6b", "reason": "Shop capacity/identity fixes integrated as3310032+af75e17 with18 passing regressions; no automatic resumption."},
       {"id": "0f5ddddf-0aa0-4908-b0d3-1ffc6b1f7a20", "reason": "Actor presence/cadence fixes integrated as62a003c+e1076a8 with15 passing regressions; no automatic resumption."},
@@ -34,6 +34,24 @@
     "usage_accounting": "milestones/evidence/m1-usage-snapshot.json records the available delayed session snapshot; final project-wide credits/currency are unavailable."
   },
   "tasks": [
+    {
+      "id": "M1-AUDIO-PREFERENCE-CONTROLS",
+      "goal": "Complete the original music skip, saved playlist slots and remembered mute-preference APIs required by the actual M1 UI.",
+      "status": "IMPLEMENTING",
+      "specs": ["web/audio/README.md", "web/ui/contract-gaps.json", "web/ui/README.md", "spec/browser-implementation.md"],
+      "dependencies": ["M1-BROWSER-AUDIO"],
+      "allowed_paths": ["web/audio/**", "tools/browser-audio-tests/**", "research/browser-audio-policy/**"],
+      "forbidden_paths": ["prompt.md", "crates/**", "web/shared/**", "web/app/**", "web/ui/**", "web/renderer/**", "assets/**", "research/reference-pack/**", "tools/reference-pack/**", "tools/audio-import/**", "milestones/**"],
+      "outputs": ["Direct source-bound Skip Track API", "Exact source three-slot playlist and remembered mute preference contract", "Versioned detached client preference serialization and original-native/browser regressions"],
+      "validation_commands": [],
+      "test_requirements": ["No mode-flipping or caller-guessed next track", "No invented unlocks, saved preferences or waveform changes", "Preserve real source timing, mixer calibration, jingle interruption and event identity", "Reject corrupt/foreign-player preferences explicitly; do not inherit another character's settings", "Actual owner-backed persisted preferences are composed by the shell, not fabricated by audio"],
+      "acceptance": ["SQL m1-audio-preference-controls records exact source/native control semantics, implemented helper signatures and executed positive/negative/browser checks; final composed playback remains separate"],
+      "reserved_namespaces": [],
+      "source_notes": ["Completed UI delivery identifies real missing APIs: Shuffle-mode manual Skip Track, saved Playlist1/2/3 and remembered mute percentages for source varbits14817/12426/12427/12428. Reuse original native probes, not new source accounts or baseline selection."],
+      "parity_entries": [],
+      "adaptations": [],
+      "evidence": []
+    },
     {
       "id": "M1-TUTORIAL-DIALOGUE-ENTRIES",
       "goal": "Repair overlapping source lesson/recovery dialogue entries while preserving all grants, source stages and explicit missing-supply recovery.",
@@ -302,7 +320,7 @@
       "source_notes": ["Approved original/public/native HUD families"],
       "parity_entries": [],
       "adaptations": ["Seven approved web/branding compositions"],
-      "evidence": ["OwnedUI0e88812/c9845a1/22164d5 integrated069b502/f34663c/6a1b11f.87/87zero-tolerance sourcecomponent comparisons,1099originalspriteframes,10unit/17sandboxedbrowser cases pass; shopidentityretained.", "Requiredlive controls/projections remainincomplete. UIownercontinuesnativefilters/recovery/startupvariants; M1-GAMEPLAY-UI-CONTRACTS suppliesactualauthority/data. No wholeM1/UIacceptance."]
+      "evidence": ["OwnedUI0e88812/c9845a1/22164d5 integrated069b502/f34663c/6a1b11f.87/87zero-tolerance sourcecomponent comparisons,1099originalspriteframes,10unit/17sandboxedbrowser cases pass; shopidentityretained.", "Owned6988951/b7d6f8a/669e1f4/b76babf/b151d01/53ed974/8d99bf1 now integrate native filters/recovery/title effects, versioned controls, exact production/death/reward layouts and actual audio/music observer controls. Worker reports preserved87 plus106/45/18/8 zero-tolerance source checks,1100 original frames,38 UI/29 audio unit tests and48 browser component cases. Parent post-integration validation is pending.", "Latest UI nullable-production correction0ef2344/a85ff40 is collected but held with shared correction351847f3 until final authoritative v4 integration, preserving the current v3 source fingerprint. Backend owns final All/recovery/level-up source and wire contracts; UI continues native All Settings, bank/highlight/layout coverage without inventing those APIs. New M1-AUDIO-PREFERENCE-CONTROLS owns exact skip/playlist-slot/remembered-mute helpers. Real shell/renderer/audio/gameplay acceptance remains incomplete."]
     },
     {
       "id": "M1-BROWSER-AUDIO",
