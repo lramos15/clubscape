@@ -7,7 +7,29 @@
   "source_entry_parent_commit": "2f775f7971a78ad990e7ed80f2cf04c3e89e4c89",
   "source_entry_local_commit": "747871a15587c4ce247d63517adf2bd00357dd17",
   "implementation_verified": true,
-  "overall_status": "implemented_verified",
+  "overall_status": "candidate_verified_additional_controls_pending",
+  "passed_candidate_commit": "78fcec42226e17d715f422f8e9cc2be8a1fb8762",
+  "additional_control_work": {
+    "reported_by_parent": "8d99bf1",
+    "exact_residuals": "web/ui/contract-gaps.json",
+    "does_not_block_passed_candidate_handoff": true,
+    "pending_backend_source_contracts": [
+      "Explicit source Make-All and persistent bank All-default semantics; no client-guessed u32 sentinel.",
+      "Recovery unit-versus-stack fee meaning, effective unit fees, capacity and per-row/bank-all permissions; identity-bound partial 1/5/X/All retrieval and bank-all requests.",
+      "Complete canonical level-up chat/popup widget/style associations using the existing reward kind/interface contract."
+    ],
+    "existing_contracts_to_preserve": [
+      "Actual BankContext.banker and ordinary WorldView.bank context alongside open ui.bank.",
+      "expected_bank_revision echoes ui.bank.revision and is validated after durable duplicate lookup.",
+      "Nullable inventory-only production target, source UI4 menu hooks, completed four-layer publication and post-binding exclusive recovery entries."
+    ],
+    "separately_owned": [
+      "UI original layouts/local settings and complete source comparisons.",
+      "Audio skip/numbered playlist/remembered mute helpers and original mixing policy.",
+      "Renderer/shell observer, dynamic minimap/model previews and real source audio composition."
+    ],
+    "whole_ui_completion_claimed": false
+  },
   "authorized_consumables_parent_commit": "82e0a41acaaa8c69fe70369aaa559c05844253b8",
   "authorized_consumables_local_commit": "4677409552f33d211819504efacfee1a760d597a",
   "versions": {
