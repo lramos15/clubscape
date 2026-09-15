@@ -186,3 +186,137 @@ fn sha256_hex(bytes: &[u8]) -> String {
     let out = child.wait_with_output().unwrap();
     String::from_utf8(out.stdout).unwrap().split_whitespace().next().unwrap().to_string()
 }
+
+// ---------------------------------------------------------------- scene fixtures
+
+struct SceneFixture {
+    scene: &'static str,
+    capture: &'static str,
+    camera: [i32; 3],
+    pitch: i32,
+    yaw: i32,
+    focal_tile: [i32; 2],
+    base: [i32; 2],
+}
+
+const SCENE_FIXTURES: &[SceneFixture] = &[
+    SceneFixture { scene: "tutorial-starting-house", capture: "tutorial-starting-house", camera: [5888, -2360, 4992], pitch: 2048, yaw: 0, focal_tile: [3094, 3103], base: [3048, 3056] },
+    SceneFixture { scene: "tutorial-survival-coast", capture: "tutorial-survival-coast", camera: [7296, 0, 5632], pitch: 2048, yaw: 1024, focal_tile: [3101, 3085], base: [3048, 3032] },
+    SceneFixture { scene: "lumbridge-castle-plaza", capture: "lumbridge-castle-plaza", camera: [6912, 0, 5120], pitch: 2048, yaw: 0, focal_tile: [3222, 3218], base: [3168, 3168] },
+    SceneFixture { scene: "lumbridge-river-bridge", capture: "lumbridge-river-bridge", camera: [8576, 0, 4736], pitch: 2048, yaw: 2048, focal_tile: [3223, 3217], base: [3168, 3168] },
+    SceneFixture { scene: "lumbridge-windmill-route", capture: "lumbridge-windmill-route", camera: [6912, 0, 7040], pitch: 2048, yaw: 1536, focal_tile: [3166, 3306], base: [3120, 3240] },
+];
+
+fn load_scene(name: &str) -> (clubscape_renderer::scene::SceneData, Vec<Option<Model>>) {
+    let data = std::fs::read(repo_root().join(format!("assets/compiled/render/scenes/{name}.bin"))).expect("scene file");
+    let scene = clubscape_renderer::scene::SceneData::from_chunks(&data).expect("scene parse");
+    let models = scene
+        .model_keys
+        .iter()
+        .map(|key| {
+            let path = repo_root().join(format!("assets/compiled/render/models/scene/{key}.bin"));
+            Some(Model::from_chunks(&std::fs::read(&path).unwrap_or_else(|e| panic!("{}: {e}", path.display()))).expect("scene model"))
+        })
+        .collect();
+    (scene, models)
+}
+
+fn fixture_camera(fixture: &SceneFixture, manifest: &serde_json::Value) -> [i32; 3] {
+    // Camera height comes from the recorded native readback (source focal ground + offset).
+    let inputs = manifest["original_inputs"].as_array().expect("inputs");
+    let record = inputs
+        .iter()
+        .find(|i| i["id"].as_str() == Some(&format!("original.scenes.{}", fixture.capture)))
+        .expect("fixture record");
+    let cam = record["settings"]["camera_local_units"].as_array().expect("camera");
+    [cam[0].as_i64().unwrap() as i32, cam[1].as_i64().unwrap() as i32, cam[2].as_i64().unwrap() as i32]
+}
+
+fn render_scene_fixture(fixture: &SceneFixture) -> (Vec<i32>, usize) {
+    let manifest: serde_json::Value =
+        serde_json::from_str(&std::fs::read_to_string(repo_root().join("research/reference-pack/v1/manifest.json")).unwrap()).unwrap();
+    let camera = fixture_camera(fixture, &manifest);
+    let palette = load_palette();
+    let textures = load_textures();
+    let (scene, models) = load_scene(fixture.scene);
+    let state = RasterState::new(1920, 1080, 662);
+    let mut drawer = clubscape_renderer::scene::draw::SceneDrawer::new(&scene, &models, state, &palette.rgb, 32768);
+    let view = clubscape_renderer::scene::draw::SceneView {
+        camera_x: camera[0],
+        camera_height: camera[1],
+        camera_z: camera[2],
+        pitch: fixture.pitch,
+        yaw: fixture.yaw,
+        plane: 0,
+        focal_x: (fixture.focal_tile[0] - fixture.base[0]) * 128,
+        focal_z: (fixture.focal_tile[1] - fixture.base[1]) * 128,
+        center_on_camera: true,
+        far_clip: 32768,
+    };
+    let mut tris: Vec<Tri> = Vec::new();
+    drawer.draw(&view, &mut tris);
+    assert!(drawer.missing_models.is_empty(), "missing models: {:?}", drawer.missing_models);
+    assert!(tris.len() > 10000, "scene emitted only {} triangles", tris.len());
+    let mut pixels = vec![0i32; 1920 * 1080];
+    let mut raster = Software::new(state, &mut pixels, &palette.rgb, &textures);
+    let mut aborted = 0;
+    for tri in &tris {
+        if raster.draw(tri).is_err() {
+            aborted += 1;
+        }
+    }
+    let _ = fixture.camera;
+    (pixels, tris.len())
+}
+
+fn write_debug_png(name: &str, width: u32, height: u32, pixels: &[i32]) {
+    let dir = repo_root().join(".local/render-assets/test-output");
+    std::fs::create_dir_all(&dir).unwrap();
+    let file = std::fs::File::create(dir.join(format!("{name}.png"))).unwrap();
+    let mut encoder = png::Encoder::new(std::io::BufWriter::new(file), width, height);
+    encoder.set_color(png::ColorType::Rgb);
+    encoder.set_depth(png::BitDepth::Eight);
+    let mut writer = encoder.write_header().unwrap();
+    let bytes: Vec<u8> = pixels.iter().flat_map(|p| [(p >> 16) as u8, (p >> 8) as u8, *p as u8]).collect();
+    writer.write_image_data(&bytes).unwrap();
+}
+
+fn compare_scene(fixture: &SceneFixture) {
+    let (pixels, tri_count) = render_scene_fixture(fixture);
+    let (w, h, expected) = read_png_rgb(&repo_root().join(format!("assets/reference/osrs240/scenes/{}.png", fixture.capture)));
+    assert_eq!((w, h), (1920, 1080));
+    let diff = compare(w as usize, &pixels, &expected);
+    write_debug_png(&format!("{}-candidate", fixture.capture), w, h, &pixels);
+    let mut diffmap = vec![0i32; pixels.len()];
+    for (i, slot) in diffmap.iter_mut().enumerate() {
+        *slot = if (pixels[i] & 0xffffff) != (expected[i] & 0xffffff) { 0xff0000 } else { (expected[i] & 0xffffff) / 4 };
+    }
+    write_debug_png(&format!("{}-diff", fixture.capture), w, h, &diffmap);
+    eprintln!("{}: {} triangles, {} differing pixels, max channel {}", fixture.capture, tri_count, diff.differing, diff.max_channel);
+    assert_eq!(diff.differing, 0, "{}: {} pixels differ (max channel error {}), first at {:?}", fixture.capture, diff.differing, diff.max_channel, diff.first);
+}
+
+#[test]
+fn scene_tutorial_starting_house_matches_source_pixels() {
+    compare_scene(&SCENE_FIXTURES[0]);
+}
+
+#[test]
+fn scene_tutorial_survival_coast_matches_source_pixels() {
+    compare_scene(&SCENE_FIXTURES[1]);
+}
+
+#[test]
+fn scene_lumbridge_castle_plaza_matches_source_pixels() {
+    compare_scene(&SCENE_FIXTURES[2]);
+}
+
+#[test]
+fn scene_lumbridge_river_bridge_matches_source_pixels() {
+    compare_scene(&SCENE_FIXTURES[3]);
+}
+
+#[test]
+fn scene_lumbridge_windmill_route_matches_source_pixels() {
+    compare_scene(&SCENE_FIXTURES[4]);
+}

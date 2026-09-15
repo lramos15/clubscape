@@ -111,7 +111,10 @@ impl Model {
         let v = self.vertex_count;
         let f = self.face_count;
         if v == 0 || f == 0 {
-            return Err(RenderError::InvalidAsset("empty model".into()));
+            // Empty original models exist (invisible placeholders); they draw nothing.
+            self.vertex_count = 0;
+            self.face_count = 0;
+            return Ok(());
         }
         if self.xs.len() < v || self.ys.len() < v || self.zs.len() < v {
             return Err(RenderError::InvalidAsset("vertex arrays shorter than vertex count".into()));

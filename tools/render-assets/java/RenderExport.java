@@ -176,16 +176,16 @@ public final class RenderExport
     /** Serializes a lit original Model exactly as the original draw path consumes it. */
     static ChunkWriter model(fx model)
     {
-        if (model.by <= 0 || model.bd <= 0) throw new IllegalStateException("Empty native model");
+        if (model.by < 0 || model.bd < 0) throw new IllegalStateException("Negative native model counts");
         fx.et(model); // cylinder bounds (cf=1) as used by the scene draw path
         int stateAfterCylinder = model.cf;
         int cg1 = model.cg, ch1 = model.ch, cn1 = model.cn, ed1 = decodedEd(model), cz1 = model.cz;
         ChunkWriter writer = new ChunkWriter();
         writer.ints("MDHD", model.by, model.bd, model.cv, model.cm, model.cd, model.cc ? 1 : 0, model.ce == null ? 0 : model.ce.as, stateAfterCylinder, model.dc);
         writer.ints("BNDC", cg1, ch1, cn1, ed1, cz1);
-        writer.floats("VRTX", model.wh, model.by).floats("VRTY", model.pa, model.by).floats("VRTZ", model.mn, model.by);
-        writer.ints("FIDA", model.bl, model.bd).ints("FIDB", model.bv, model.bd).ints("FIDC", model.bh, model.bd);
-        writer.ints("FCLA", model.bz, model.bd).ints("FCLB", model.cr, model.bd).ints("FCLC", model.cu, model.bd);
+        writer.floats("VRTX", orEmptyF(model.wh), model.by).floats("VRTY", orEmptyF(model.pa), model.by).floats("VRTZ", orEmptyF(model.mn), model.by);
+        writer.ints("FIDA", orEmpty(model.bl), model.bd).ints("FIDB", orEmpty(model.bv), model.bd).ints("FIDC", orEmpty(model.bh), model.bd);
+        writer.ints("FCLA", orEmpty(model.bz), model.bd).ints("FCLB", orEmpty(model.cr), model.bd).ints("FCLC", orEmpty(model.cu), model.bd);
         if (model.cq != null) writer.shorts("FTEX", model.cq, model.bd);
         if (model.cp != null) writer.bytes("FTXC", model.cp, model.bd);
         if (model.cs != null && model.cv > 0)
@@ -201,6 +201,9 @@ public final class RenderExport
         if (model.ca != null) writer.jagged("FGR2", model.ca);
         return writer;
     }
+
+    static int[] orEmpty(int[] values) { return values == null ? new int[0] : values; }
+    static float[] orEmptyF(float[] values) { return values == null ? new float[0] : values; }
 
     String writeModel(String name, fx model, Object detail) throws Exception
     {

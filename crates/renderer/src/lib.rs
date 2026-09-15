@@ -18,6 +18,7 @@ pub mod model;
 pub mod model_draw;
 pub mod palette;
 pub mod raster;
+pub mod scene;
 pub mod tables;
 pub mod texture;
 
