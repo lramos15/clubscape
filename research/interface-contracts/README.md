@@ -155,6 +155,14 @@ explicit;883 pottery, guessed silence or a nearby object is not a replacement.
 See `animation-authority/verification.json` for the exact newer candidate,
 source qualifications, native/PG evidence and remaining publication boundary.
 
+The final bounded source-only follow-up is recorded in
+[`remaining-source-questions.json`](remaining-source-questions.json).
+Normal-grave Bank-All permission and dough/Empty motion or deliberate absence
+remain unverified after retained native/frozen evidence and seven pre-freeze
+page checks. The report identifies the exact missing original-server facts;
+it does not turn missing evidence into disabled permission or animation0.
+No runtime, content, artifact pin or live world changes accompany that report.
+
 Typed `dynamicObjects` forwards the existing complete authoritative door/object
 list. Canonical object IDs resolve through the validated definition catalogue;
 numeric source IDs are never parsed from strings or invented. Observer
