@@ -1,18 +1,25 @@
 import { createHash } from "node:crypto";
 import { lstat, mkdir, readFile, writeFile } from "node:fs/promises";
-import { dirname, resolve } from "node:path";
+import { dirname, extname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import { SOURCE_PACK_SHA256 } from "../../web/shared/contracts.ts";
 import type { RenderAssetManifest } from "../../web/renderer/src/index.ts";
 import type { AssetRecord, RendererDelivery } from "../../web/app/manifest.ts";
 import type { PublicFile } from "./deliver.ts";
-import { publicAssetPath } from "./deliver.ts";
+import { mime, publicAssetPath } from "./deliver.ts";
 import { publicPath } from "../../web/app/identity.ts";
 import { RENDER_MANIFEST_SHA256 } from "../../web/app/render-identity.ts";
 import { DEFAULT_RENDER_INPUTS, renderRuntimeFiles } from "./render-data.ts";
 
 const root = resolve(fileURLToPath(new URL("../../", import.meta.url)));
 const hash = (bytes: Uint8Array): string => createHash("sha256").update(bytes).digest("hex");
+
+export function renderAssetContentType(name: string): string {
+  const path = publicAssetPath(`/assets/compiled/render/${name}`);
+  const type = mime[extname(path)];
+  if (!type) throw new Error(`Renderer input has no supported public MIME type: ${name}`);
+  return type;
+}
 
 export async function deliverRenderAssets(directory: string, inputDirectory = process.env.CLUBSCAPE_RENDER_INPUTS ?? DEFAULT_RENDER_INPUTS): Promise<{
   assets: AssetRecord[]; files: PublicFile[]; renderer: RendererDelivery; bytes: number;
@@ -55,7 +62,7 @@ export async function deliverRenderAssets(directory: string, inputDirectory = pr
     // The public URL retains the manifest's gzip name; the server's physical-file
     // extension allowlist uses a .bin carrier. No content-encoding or bytes change.
     const path = publicAssetPath(`/assets/compiled/render/${name}`);
-    await emit(id, `/assets/compiled/render/${name}`, path, bytes, "application/octet-stream");
+    await emit(id, `/assets/compiled/render/${name}`, path, bytes, renderAssetContentType(name));
   }
   const pack = JSON.parse(await readFile(resolve(root, "research/reference-pack/v1/manifest.json"), "utf8")) as {
     original_inputs: Array<{ id: string; settings: {

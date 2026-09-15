@@ -83,10 +83,12 @@ the supply-recovery exclusions. No UI/protocol/persisted-state version changes
 or client-side dialogue merge/priority rule is introduced.
 
 Current renderer delivery uses a separate candidate,
-`.local/source-renderer-2d228d79-5e0aa8a2`, world
-`22f2a10e-6248-4df7-8776-a5fec15a025a`, with the same exact5e game artifact.
+`.local/source-renderer-2d228d79-5e0aa8a2-v2`, world
+`7e2d3d85-6691-4524-996b-2f354871715a`, with the same exact5e game artifact.
 The earlier5e code/data pair is retained rather than receiving new renderer
-assets in place.
+assets in place. The first unserved22f2a10e candidate is retained separately
+after strict delivery caught its pose-fit JSON MIME mismatch; the shared MIME
+mapping is now used, without relaxing byte/hash checks.
 
 The previous `.local/source-ui4-6fdb60e4` remains byte-pinned, with its matching
 11-file public code bundle archived at `.local/web-ui4-6f-bd4a693e`.

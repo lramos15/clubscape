@@ -6,6 +6,7 @@ import type { RenderAssetManifest } from "../../../web/renderer/src/index.ts";
 import { RENDER_MANIFEST_SHA256 } from "../../../web/app/render-identity.ts";
 import { renderRuntimeFiles, verifyReproductionManifest } from "../render-data.ts";
 import { validateRenderBlockPackage } from "../render-package.ts";
+import { renderAssetContentType } from "../render-assets.ts";
 
 async function published(): Promise<RenderAssetManifest> {
   const bytes = await readFile(new URL("../../../assets/compiled/render/manifest.json", import.meta.url));
@@ -26,6 +27,10 @@ test("delivery follows the published runtime dependency graph and ships all 61 o
   assert(runtime.common.includes("minimap/mapscenes.bin"));
   assert(runtime.common.includes("minimap/mapicons.bin"));
   assert(runtime.common.includes(manifest.gear_pose_fits!.file));
+  assert.equal(renderAssetContentType(manifest.gear_pose_fits!.file), "application/json");
+  assert.equal(renderAssetContentType("minimap/mapicons.bin"), "application/octet-stream");
+  assert.equal(renderAssetContentType("blocks/12336.bin.gz"), "application/octet-stream");
+  assert.throws(() => renderAssetContentType("../private.rs"), /canonical/);
   assert.equal([...runtime.blocks.values()].flat().filter((path) => path.startsWith("minimap/blocks/")).length, 61);
   assert(runtime.files.every((path) => !path.startsWith("models/baked/") && path !== "tables.bin"));
   assert(runtime.files.every((path) => !path.startsWith("scenes/") || path.endsWith(".gz")));

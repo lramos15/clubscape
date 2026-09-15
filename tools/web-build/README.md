@@ -230,7 +230,7 @@ Preparing another candidate still requires a new directory/UUID:
 CLUBSCAPE_RENDER_INPUTS=.local/render-inputs-2d228d79 \
 pnpm --dir web source:bundle .local/source-ui4-5e-candidate <new-isolated-world-uuid>
 
-GAME=.local/source-renderer-2d228d79-5e0aa8a2
+GAME=.local/source-renderer-2d228d79-5e0aa8a2-v2
 CLUBSCAPE_CLIENT_MANIFEST="$GAME/content/manifest.json" \
 CLUBSCAPE_CLIENT_ASSET_ROOT="$GAME" CLUBSCAPE_CONTENT_OWNER=game \
 pnpm --dir web build
@@ -559,12 +559,16 @@ an opaque instance ID, matching region/tile or a death hint. Known8x8 layouts ar
 passed before source-square assembly; unknown identities and unsupported turns
 block rendering rather than showing an ordinary map.
 
-Current fresh candidate `.local/source-renderer-2d228d79-5e0aa8a2` keeps the
+Current fresh candidate `.local/source-renderer-2d228d79-5e0aa8a2-v2` keeps the
 actual5e artifact but has a new world UUID
-`22f2a10e-6248-4df7-8776-a5fec15a025a`,7,692 assets and210,199,060 public bytes.
+`7e2d3d85-6691-4524-996b-2f354871715a`,7,692 assets and210,199,052 public bytes.
 The old5e world remains untouched, with its code at
 `.local/web-ui4-5e-b94190f5`; the earlier6f source/code pair is also retained.
 New assets never silently alter an existing run's content/asset identity.
+The first unserved22f2a10e candidate is retained as a failed delivery diagnostic:
+its pose-fit JSON had the binary MIME default. Renderer packaging now uses the
+shared public MIME table, so JSON remains `application/json` and gzip carriers
+remain `application/octet-stream`; neither hash nor MIME validation was relaxed.
 
 The retained pre-UI-handoff native255 candidate has7,181 declared assets
 (221,090,292 public bytes including its content manifest); the newer UI handoff
