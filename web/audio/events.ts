@@ -14,7 +14,7 @@ const PAYLOAD_FIELDS: Record<AudioEvent["kind"], ReadonlySet<string>> = {
   music: new Set([...COMMON_FIELDS, "mode", "unlocked", "boundary", "playlist", "shuffle",
     "fadeOutDelayCycles", "fadeOutCycles", "fadeInDelayCycles", "fadeInCycles"]),
   jingle: new Set([...COMMON_FIELDS, "auxiliary", "causeQuestId"]),
-  level_up: new Set([...COMMON_FIELDS, "auxiliary", "causeQuestId", "level"]),
+  level_up: new Set([...COMMON_FIELDS, "auxiliary", "causeQuestId", "level", "previousLevel", "skillId", "completionId"]),
   quest_complete: new Set([...COMMON_FIELDS, "questId"]),
   interface_closed: new Set([...COMMON_FIELDS, "questId", "completionId"]),
 };

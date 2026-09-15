@@ -49,7 +49,7 @@ for (const asset of sources) {
 }
 for (const path of [
   "web/shared/contracts.ts", `${owned}/run.mjs`, `${owned}/fixture.mjs`,
-  `${owned}/fixture.html`, `${owned}/monitor.js`,
+  `${owned}/fixture.html`, `${owned}/monitor.js`, "research/browser-audio-policy/cook-reward-boundary.json",
 ]) implementationFiles.push({ path, sha256: digest(await readFile(path)) });
 
 const server = createServer(async (request, response) => {
@@ -141,6 +141,7 @@ const originalRat = wavSamples(await readFile(registry.get("reference.audio.sfx.
 const nativePreferences = JSON.parse(await readFile("research/browser-audio-policy/native-preferences.json", "utf8"));
 const nativePosition = JSON.parse(await readFile("research/browser-audio-policy/native-position.json", "utf8"));
 const nativeMusic = JSON.parse(await readFile("research/browser-audio-policy/native-music.json", "utf8"));
+const cookRewardBoundary = JSON.parse(await readFile("research/browser-audio-policy/cook-reward-boundary.json", "utf8"));
 const nativeCurve = nativePreferences.cases.find((item) => item.case === "native-nonlinear-lookup-tables");
 
 async function check(name, body) {
@@ -680,7 +681,7 @@ try {
     return { cases: proof, resumedRememberedBackground: 2, resumedFromFrame: 0 };
   });
 
-  await check("legitimate once-only Learning/Cook completion and modal-deferred Cook reward jingle", async () => {
+  await check("once-only completion preserves a pre-trained Cook skill delta and source-selected reward jingle", async () => {
     const complete = (quest, id) => page.evaluate(({ quest, id }) => {
       const world = audioFixture.world;
       world.revision = String(BigInt(world.revision) + 1n);
@@ -695,20 +696,60 @@ try {
     await complete("quest.learning_the_ropes", "learning/duplicate-new-id");
     await page.waitForTimeout(100);
     assert.equal(await page.evaluate(() => audioFixture.native.starts.length), before);
-    await complete("quest.cooks_assistant", "cook/committed");
+    const trained = cookRewardBoundary.boundaries.find((value) => value.case === "pretrained-level5");
+    await page.evaluate((sample) => {
+      const world = audioFixture.world;
+      world.revision = String(BigInt(world.revision) + 1n);
+      world.player.skills = [{ id:"skill.cooking",name:"Cooking",...sample.before,
+        currentLevel:sample.before.baseLevel,iconAsset:null }];
+      audioFixture.update(world);
+    }, trained);
+    const reward = await page.evaluate((sample) => {
+      const world = audioFixture.world;
+      world.revision = String(BigInt(world.revision) + 1n);
+      world.player.skills = [{ id:"skill.cooking",name:"Cooking",...sample.after,
+        currentLevel:sample.after.baseLevel,iconAsset:null }];
+      world.player.quests.find((quest) => quest.id==="quest.cooks_assistant").completed = true;
+      const level = audioFixture.event({
+        kind:"level_up",sourceId:34,
+        payload:{ committed:true,skillId:"skill.cooking",previousLevel:sample.before.baseLevel,
+          level:sample.after.baseLevel,causeQuestId:"quest.cooks_assistant",completionId:"cook/committed" },
+      });
+      const completion = audioFixture.event({
+        id:"cook/committed",kind:"quest_complete",sourceId:null,
+        payload:{ committed:true,questId:"quest.cooks_assistant" },
+      });
+      // Supplied transaction notifications can put XP before semantic completion.
+      audioFixture.update(world,[level,completion]);
+      return level;
+    }, trained);
     await waitVoice(152, "jingle");
-    const rewardId = await emit({
-      kind: "level_up", sourceId: 33, payload: { committed: true, level: 4, causeQuestId: "quest.cooks_assistant" },
-    });
+    const rewardId = reward.id;
     await page.waitForTimeout(100);
-    assert.equal((await snapshot()).voices.some((v) => v.sourceId === 33), false);
+    assert.equal((await snapshot()).voices.some((v) => v.sourceId === 34), false);
+    await page.evaluate((reward) => {
+      audioFixture.update(audioFixture.world,[reward,{ ...reward,id:"cook/reward-callback-duplicate" }]);
+    }, reward);
+    await emit({
+      kind:"interface_closed",sourceId:153,
+      payload:{ questId:"quest.cooks_assistant",completionId:"not-the-committed-cook-scroll" },
+    });
+    assert.equal((await snapshot()).voices.some((v) => v.sourceId === 34), false);
     await emit({
       kind: "interface_closed", sourceId: 153,
       payload: { questId: "quest.cooks_assistant", completionId: "cook/committed" },
     });
-    await waitVoice(33, "jingle");
+    await waitVoice(34, "jingle");
     const state = await snapshot();
     assert.equal(state.traces.filter((t) => t.type === "started" && t.data.eventId === rewardId).length, 1);
+    const deferred = state.traces.find((t) => t.type === "jingle_deferred" && t.data.eventId === rewardId);
+    assert.deepEqual([deferred.data.skillId,deferred.data.previousLevel,deferred.data.level,deferred.data.group],
+      ["skill.cooking",2,5,34]);
+    const started = await page.evaluate(() => audioFixture.native.starts.length);
+    await page.evaluate((reward) => {
+      audioFixture.update(audioFixture.world,[{ ...reward,id:"cook/reward-after-close-duplicate" }]);
+    }, reward);
+    assert.equal(await page.evaluate(() => audioFixture.native.starts.length),started);
     await page.evaluate(() => {
       audioFixture.handle.disconnected();
       audioFixture.update(audioFixture.world, [audioFixture.event({
@@ -718,7 +759,13 @@ try {
     });
     await waitVoice(2, "music");
     assert.equal((await snapshot()).voices.some((v) => v.kind === "jingle"), false);
-    return { learningClassification: "approved_adaptation", learningReplaySources: 0, cookJingle: 152, rewardAfterSourceScroll153: 33, reconnectReplaySources: 0 };
+    return {
+      learningClassification:"approved_adaptation",learningReplaySources:0,cookJingle:152,
+      committedCookingDelta:{ before:trained.before,after:trained.after },
+      sourceSelectedRewardGroup:34,rewardAfterSourceScroll153:34,reconnectReplaySources:0,
+      duplicateRewardSources:0,sourceBoundary:"research/browser-audio-policy/cook-reward-boundary.json",
+      fixtureQualification:"Committed-projection fixture, not a played quest or a new per-quest jingle selector.",
+    };
   });
 
   await check("mute/unmute and zero-volume admission never leak nodes or replay rejected effects", async () => {

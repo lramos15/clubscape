@@ -22,6 +22,8 @@ import {
   SOURCE_UNPUBLISHED_M1_MUSIC,
 } from "./native-scene.ts";
 import type { SourceAudioScene, SourceMusicTransition, SourceMusicSelector } from "./native-scene.ts";
+import { baseSkills, committedRewardLevel, observeRewardLevels } from "./reward-levels.ts";
+import type { BaseSkills, RewardLevels } from "./reward-levels.ts";
 
 export * from "./native-policy.ts";
 export * from "./native-scene.ts";
@@ -181,6 +183,10 @@ class Runtime implements AudioHandle {
   private baseline = true;
   private questScroll: string | null = null;
   private readonly deferredLevels: AudioEvent[] = [];
+  private previousSkills: BaseSkills = new Map();
+  private currentSkills: BaseSkills = new Map();
+  private cookRewardLevels: RewardLevels | null = null;
+  private pendingCookCompletionId: string | null = null;
   private readonly prepared = new Map<string, Set<string>>();
   private music: MusicPlan = { groups: [0], cursor: 0, mode: "once", regionBound: true };
   private musicToken = 0;
@@ -294,6 +300,7 @@ class Runtime implements AudioHandle {
 
   update(world: WorldView | null, inputs: readonly AudioEvent[]): void {
     if (this.disposed) return;
+    this.pendingCookCompletionId = null;
     try {
       requireAudio(Array.isArray(inputs) && inputs.length <= MAX_EVENT_BATCH,
         "AUDIO_EVENT", "Audio event batch is not a bounded array.");
@@ -306,6 +313,9 @@ class Runtime implements AudioHandle {
           this.baseline = true;
           this.questScroll = null;
           this.deferredLevels.length = 0;
+          this.previousSkills = new Map();
+          this.currentSkills = new Map();
+          this.cookRewardLevels = null;
           this.music = { groups: [0], cursor: 0, mode: "once", regionBound: true };
         }
       } else {
@@ -317,6 +327,7 @@ class Runtime implements AudioHandle {
         "AUDIO_WORLD", "Audio requires a valid immutable authoritative world view.");
         requireAudio(world.player.quests.every((quest) => quest && stableId(quest.id) && typeof quest.completed === "boolean"),
           "AUDIO_WORLD", "Invalid authoritative quest completion data.");
+        const skills = baseSkills(world.player.skills);
         const revision = BigInt(world.revision);
         if (world.player.id === this.playerId && this.revision !== null && revision < this.revision) {
           this.trace("stale_snapshot", { revision: world.revision });
@@ -330,6 +341,8 @@ class Runtime implements AudioHandle {
           this.baseline = true;
           this.questScroll = null;
           this.deferredLevels.length = 0;
+          this.previousSkills = new Map();
+          this.cookRewardLevels = null;
           this.music = { groups: [], cursor: 0, mode: "once", regionBound: true };
         }
         const entities: Listener["entities"] = new Map();
@@ -347,6 +360,7 @@ class Runtime implements AudioHandle {
           instance: world.player.instance, entities,
         };
         this.revision = revision;
+        this.currentSkills = skills;
         if (this.baseline) {
           for (const quest of world.player.quests) if (quest.completed) this.completed.add(quest.id);
         }
@@ -381,9 +395,26 @@ class Runtime implements AudioHandle {
       }
       this.connected = true;
       this.startClock();
+      const events: AudioEvent[] = [];
       for (const input of inputs) {
         try {
-          const event = validateEvent(input);
+          events.push(validateEvent(input));
+        } catch (error) {
+          this.notifyError(failure(error, "AUDIO_EVENT", "Rejected audio event"));
+        }
+      }
+      const completion = events.find((event) => event.kind === "quest_complete" && event.payload.questId === COOK &&
+        event.payload.committed === true && (event.sourceId === null || event.sourceId === 152) &&
+        (event.assetId === null || event.assetId === this.catalog.groups.get("jingle:152")?.id) &&
+        (event.actorId === null || event.actorId === this.listener?.id) && !this.ledger.hasEvent(event.id));
+      if (completion && !this.completed.has(COOK) && world?.player.quests.some((quest) => quest.id === COOK && quest.completed)) {
+        // An XP notification can precede the semantic completion in the same
+        // committed batch. Stage only that supplied event, never create one.
+        this.pendingCookCompletionId = completion.id;
+        this.cookRewardLevels = observeRewardLevels(completion.id, this.previousSkills, this.currentSkills);
+      }
+      for (const event of events) {
+        try {
           if (this.ledger.hasEvent(event.id)) {
             this.trace("duplicate_event", { eventId: event.id });
             continue;
@@ -394,9 +425,11 @@ class Runtime implements AudioHandle {
           this.notifyError(failure(error, "AUDIO_EVENT", "Rejected audio event"));
         }
       }
+      this.pendingCookCompletionId = null;
       if (world !== null) {
         for (const quest of world.player.quests) if (quest.completed) this.completed.add(quest.id);
         this.baseline = false;
+        this.previousSkills = this.currentSkills;
       }
       this.reconcileSpatial();
       this.startClock();
@@ -582,6 +615,7 @@ class Runtime implements AudioHandle {
     this.stopClock();
     this.questScroll = null;
     this.deferredLevels.length = 0;
+    this.cookRewardLevels = null;
     this.trace("disconnected", {});
     this.publish();
   }
@@ -628,7 +662,12 @@ class Runtime implements AudioHandle {
         "AUDIO_QUEST", "The approved completion selector is original jingle 152.");
       const asset = this.asset("jingle", 152, event.assetId);
       this.completed.add(quest);
-      if (quest === COOK) this.questScroll = event.id;
+      if (quest === COOK) {
+        this.questScroll = event.id;
+        if (this.cookRewardLevels?.completionId !== event.id) {
+          this.cookRewardLevels = observeRewardLevels(event.id, this.previousSkills, this.currentSkills);
+        }
+      }
       this.trace("binding", {
         eventId: event.id, sourceId: 152,
         classification: quest === LEARNING ? "approved_adaptation" : "dated_public_source_observation",
@@ -649,13 +688,32 @@ class Runtime implements AudioHandle {
       requireAudio(event.payload.committed === true, "AUDIO_EVENT", "Jingles require committed source events.");
       requireAudio(event.actorId === null || event.actorId === this.listener.id,
         "AUDIO_EVENT", "A local music jingle cannot be selected by another actor's notification.");
-      if (event.payload.causeQuestId === COOK && this.questScroll !== null) {
-        requireAudio(event.kind === "level_up" && event.sourceId === 33 && event.payload.level === 4 &&
-          this.deferredLevels.length < 50,
-        "AUDIO_QUEST", "The observed Cook reward is level-4 jingle 33 after scroll dismissal, not an arbitrary ranked jingle.");
-        this.asset("jingle", 33, event.assetId);
-        this.deferredLevels.push(event);
-        this.trace("jingle_deferred", { eventId: event.id, group: 33 });
+      if (event.payload.causeQuestId === COOK) {
+        const delta = committedRewardLevel(event, this.cookRewardLevels, this.currentSkills);
+        if (delta === null) {
+          this.trace("reward_no_base_level_gain", { eventId: event.id, skillId: String(event.payload.skillId) });
+          return;
+        }
+        if (this.cookRewardLevels!.acceptedSkills.has(delta.skillId)) {
+          this.trace("duplicate_reward_level", { eventId: event.id, skillId: delta.skillId });
+          return;
+        }
+        if (event.sourceId !== -1) this.asset("jingle", event.sourceId, event.assetId);
+        const committed = Object.freeze({
+          ...event,
+          payload: Object.freeze({ ...event.payload, skillId: delta.skillId,
+            previousLevel: delta.before.baseLevel, level: delta.after.baseLevel,
+            completionId: this.cookRewardLevels!.completionId }),
+        });
+        if (this.questScroll !== null || this.pendingCookCompletionId !== null) {
+          requireAudio(this.deferredLevels.length < 50, "AUDIO_QUEST", "The deferred source level queue is full.");
+          this.deferredLevels.push(committed);
+          this.trace("jingle_deferred", { eventId: event.id, group: event.sourceId, skillId: delta.skillId,
+            previousLevel: delta.before.baseLevel, level: delta.after.baseLevel });
+        } else {
+          this.playJingleEvent(committed);
+        }
+        this.cookRewardLevels!.acceptedSkills.add(delta.skillId);
         return;
       }
       this.playJingleEvent(event);

@@ -39,14 +39,34 @@
     }
   ],
   "typescript_check": "passed",
-  "unit_checks": 20,
+  "unit_checks": 25,
   "real_browser_checks": 27,
   "browser": "Google Chrome for Testing 153.0.8010.12",
-  "browser_evidence_sha256": "66d3f485bdb0dfb2fdd6c9b99a22bc0d78f7ef9b3536bb424f73a586a53cac05",
+  "browser_evidence_sha256": "1027348bab9310d8a8cb7b92a7c5bac77ff0753bcead02c85f252e6b5142c875",
   "original_playable_files_unchanged": 266,
   "original_cache_files_rechecked_unchanged": 25,
   "native_source_starts": 103,
   "native_source_end_callbacks": 102,
   "exact_remaining_inputs": "research/browser-audio-policy/publication-needs.json",
-  "no_m1_gameplay_mac_edge_speaker_acceptance": true
+  "no_m1_gameplay_mac_edge_speaker_acceptance": true,
+  "cook_reward_conformance": {
+    "source_boundary_sha256": "c0ac07c608c6f7c84beeee31612c6bc36966233fd1c4cf1ef7ed457b644a1575",
+    "native_transport_cases": 4,
+    "source_level_boundaries": [
+      [
+        1,
+        4
+      ],
+      [
+        2,
+        5
+      ],
+      [
+        21,
+        21
+      ]
+    ],
+    "new_per_quest_selectors": false,
+    "gameplay_xp_changed": false
+  }
 }

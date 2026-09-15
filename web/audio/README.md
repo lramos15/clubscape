@@ -206,9 +206,14 @@ replaying old outcomes.
   `auxiliary`. `-1` is a no-op sentinel. Last accepted request wins, with no
   quest-versus-skill ranking or priority field.
 * `quest_complete`: `questId` Learning the Ropes or Cook's Assistant, group
-  `null`/152, legitimately committed. Cook reward `level_up`33 with `level:4`
-  and `causeQuestId:"quest.cooks_assistant"` is deferred until
+  `null`/152, legitimately committed. A Cook reward-caused `level_up` supplies
+  `causeQuestId:"quest.cooks_assistant"`, `skillId` and its **source-selected**
+  jingle group. The actual skill/base-level/XP delta is captured from the
+  immutable before/after completion snapshots. Optional `previousLevel`,
+  `level` and `completionId` must agree with that transaction. Any real
+  increase—including pre-trained or multi-level gains—is deferred until
   `interface_closed`, source153, matching `questId` and `completionId`.
+  A reward with no base-level increase produces **no level-up cue**.
 * `music`: explicit source group and mode; manual selection requires
   `unlocked:true`, playlists an explicit JSON-string array of at most100
   distinct available source groups. Optional source transition fields above.
@@ -230,6 +235,19 @@ ordinary shrimp315/bread2309 eating2393 once through12526/frame1 after four
 source cycles. The2393 waveform's first nonzero sample9393 is baked content,
 not another enqueue delay. Silent829 is not assigned a fabricated cue.
 Audio never grants XP/items, advances quests or manufactures reward dialogue.
+In particular, the dated Cook observation of33/level4 is a golden example,
+not a universal reward condition or selector. The later observed34/level5 is
+still qualified as a separate ordinary Cooking level-up, not newly asserted
+quest-selector evidence. The gate preserves the supplied group; it never
+chooses33/34 from a level. See
+`research/browser-audio-policy/cook-reward-boundary.md`.
+
+Feed coherent committed world/event batches so the completion's before/after
+skills remain observable. Within that batch, an XP/level notification may
+precede its supplied semantic completion event; the audio gate stages that
+existing event without generating another quest completion. It retains the
+original committed delta until dismissal even if later snapshots raise a
+skill further, and deduplicates callback/reconnect repeats.
 
 Stable event/cue IDs survive repeated snapshots and reconnects for the handle
 lifetime. The ledger never evicts IDs and replays history; its100,000-key limit

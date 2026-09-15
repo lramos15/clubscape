@@ -18,7 +18,7 @@ pnpm --dir web install --frozen-lockfile
 
 ```sh
 pnpm --dir web exec tsc --noEmit
-node --test web/audio/audio.test.ts web/audio/native-policy.test.ts
+node --test web/audio/audio.test.ts web/audio/native-policy.test.ts web/audio/reward-levels.test.ts
 
 # Full actual playback; includes the complete Autumn -> Harmony timer replay:
 node tools/browser-audio-tests/run.mjs
@@ -76,7 +76,8 @@ The suite exercises:
 * Native packet FIFO50, delay2 on processing call3, `-10` loading grace,
   original silence2411's74/100 branch and its queue occupancy.
 * Stable IDs, server/frame callback correlation, both approved adaptations,
-  repeat snapshots, source modal-deferred Cook reward33, reconnect/reset,
+  repeat snapshots, source modal-deferred Cook reward playback including a
+  pre-trained2→5 committed delta with supplied group34, reconnect/reset,
   last-accepted jingle replacement, ignored auxiliary values and `-1`.
 * A source scene projection with original object114's **1×2 footprint**, native
   rectangle/retention gain, signed fades, native150ms visibility fade, wrong
@@ -124,6 +125,20 @@ checks compare their **additional** clip counts, and the five proven unsafe
 scaled-jingle cases are explicitly refused. No limiter or normalizer is used.
 The original native render, gain error, clip-mask difference and remaining
 representation requirements are retained in `native-pcm.json`.
+
+The focused Cook conformance cases additionally run:
+
+```sh
+python3 tools/browser-audio-tests/native/cook_reward_boundary.py
+node --test web/audio/reward-levels.test.ts
+```
+
+Their source numeric fixtures use unchanged recipe/reward XP and original
+thresholds; they do not play/seed a quest or alter gameplay XP. The existing
+browser completion fixture now covers pre-training, an XP notification before
+the supplied completion in one transaction, wrong-scroll close, duplicate
+callbacks and source-group preservation. No production quest event is
+manufactured by the audio implementation.
 
 ## Reproducibility and containment
 
