@@ -6,13 +6,13 @@ client or an accepted presentation**. The owner-approved pack is
 `evidence/` records component-only results and remaining implementation gaps.
 The `m1-ui` task remains **blocked**, not done.
 
-The authorized parent integrity repair `9bf6969` is integrated as `8952d36`.
+The authorized parent integrity repair `9bf6969` is preserved in branch ancestry.
 Strict verification passes all 1,307 frozen input hashes and the 85 reference-pack
 tests. Historical status text in the hash-locked art/interface documents is not
 treated as a revocation of the external approval. Asset preparation now runs the
 unchanged strict pack validator before generating assets.
 
-Current component validation: TypeScript and 10 unit tests pass; all 14 browser
+Current component validation: TypeScript and 10 unit tests pass; all 17 browser
 interaction cases pass. All **87/87** native-panel/full-overlay/owner-composition
 comparisons pass at the original zero tolerances. This resolves the earlier
 shop and guide-family raster differences, but does not complete the missing
@@ -138,6 +138,38 @@ new account, world or inventory update.
 Lazy image failures do not cause an automatic retry loop. The in-client error
 Retry action retries failed UI assets explicitly before asking the shell to
 continue; disposal clears loaded-image, pending-request and raster caches.
+
+### Shop identity and stale views
+
+The exact authorized shop repairs are integrated in order as `44e6de1`
+(`3310032`) and `480d434` (`af75e17`). Their existing server quote/lifecycle
+prerequisites were absent from the initial `f64f52b` UI base. The UI commits were
+therefore replayed on the repairs' recorded parent `b3e8e12`; this preserves
+`faa8002` (private ground items/owner-online clocks/source contact) and `9bf6969`
+without reconstructing or editing unrelated backend changes. Both shop patch
+IDs match their authorized originals exactly.
+
+Every new UI `shop_buy`, including fixed-source rows and Buy-1/5/10/50/X,
+sends `expected_item` equal to the **displayed row's canonical `item.id`**.
+Numeric `sourceId`, a later occupant of the same index, and client prices are
+never substituted. Held context menus and amount prompts retain that identity.
+When a newer view has a different item at the index, the action is stopped and
+the user must select the current item again.
+
+This UI does not issue a separate quote RPC: Value uses the authoritative
+`ShopView` price only if the displayed identity still matches. Shell/simulator
+quote adapters must populate the same `expected_item` field on the existing
+protobuf `ShopBuy`; no quote tag, default, legacy bytes or v1 intent-hash
+behavior is changed here.
+
+Server `StaleCommand` and uncertain transport failures retain their actual
+message/error ID. The UI never automatically reconstructs or retries a buy
+against a replacement row. The shell publishes the refreshed authoritative
+view through the existing subscription and must retain the **original full
+intent** for any uncertain transport replay. Selecting a newly displayed item
+is a new user action, not a retargeted retry. Component tests cover row reuse
+while a menu/amount/Value action is held, all quantity modes, and both rejection
+classes; these tests do not duplicate backend trading rules.
 
 ## Outstanding scope — not hidden or accepted
 

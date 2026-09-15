@@ -5,72 +5,87 @@
     {
       "name": "real password fields, registration mismatch, rejection and retained input",
       "passed": true,
-      "milliseconds": 1005
+      "milliseconds": 1032
     },
     {
       "name": "login submit, keyboard focus and cancel route through services",
       "passed": true,
-      "milliseconds": 453
+      "milliseconds": 432
     },
     {
       "name": "capability/loading/connecting feedback and audio controls use real app state",
       "passed": true,
-      "milliseconds": 796
+      "milliseconds": 803
     },
     {
       "name": "native character controls without a fabricated WorldView retain selection on reject",
       "passed": true,
-      "milliseconds": 577
+      "milliseconds": 573
     },
     {
       "name": "inventory default, right-click, item selection, cancellation and no optimistic grants",
       "passed": true,
-      "milliseconds": 685
+      "milliseconds": 689
     },
     {
       "name": "drag/swap dispatch, no client mutation, and following click remains live",
       "passed": true,
-      "milliseconds": 638
+      "milliseconds": 558
     },
     {
       "name": "rejected game action displays actual reason/error ID and retains state",
       "passed": true,
-      "milliseconds": 449
+      "milliseconds": 442
     },
     {
       "name": "genuine tutorial lock dispatches no actions for mouse or keyboard",
       "passed": true,
-      "milliseconds": 363
+      "milliseconds": 385
     },
     {
       "name": "bank quantity, notes, search, cancel, rejected amount and atomic state boundary",
       "passed": true,
-      "milliseconds": 1284
+      "milliseconds": 1320
     },
     {
       "name": "shop value, buy, sell, zero stock and server rejection",
       "passed": true,
-      "milliseconds": 841
+      "milliseconds": 795
+    },
+    {
+      "name": "every buy amount sends the displayed canonical identity, never source ID or price",
+      "passed": true,
+      "milliseconds": 989
+    },
+    {
+      "name": "reused extra rows cannot retarget a held buy menu, quantity prompt or price view",
+      "passed": true,
+      "milliseconds": 1450
+    },
+    {
+      "name": "server stale/uncertain rejection preserves the original buy intent without automatic retargeting",
+      "passed": true,
+      "milliseconds": 1204
     },
     {
       "name": "equipment, skills XP, combat/auto-retaliate, run and prayer controls",
       "passed": true,
-      "milliseconds": 1148
+      "milliseconds": 1110
     },
     {
       "name": "spell selection, actual renderer world-pick bridge, unavailable target and minimap",
       "passed": true,
-      "milliseconds": 672
+      "milliseconds": 737
     },
     {
       "name": "dialogue choices/continue, authoritative text and quest journal",
       "passed": true,
-      "milliseconds": 853
+      "milliseconds": 926
     },
     {
       "name": "resize anchors, no offscreen required controls, reconnect and disposal",
       "passed": true,
-      "milliseconds": 1006
+      "milliseconds": 971
     }
   ],
   "browserErrors": [],

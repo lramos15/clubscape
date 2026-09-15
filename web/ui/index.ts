@@ -565,25 +565,34 @@ class UiController {
   private shopActions(index: number): UiAction[] {
     const shop = this.state.world?.shop, row = shop?.rows.find(row => row.index === index);
     if (!shop || !row) return [];
+    // A held menu/amount prompt must not acquire the identity of a reused row.
+    const displayedItem = row.item.id;
     const label = `<col=ff9040>${escapeText(row.item.name)}</col>`;
+    const currentRow = () => {
+      const current = this.state.world?.shop?.rows.find(r => r.index === index);
+      if (this.state.world?.shop?.id !== shop.id || current?.item.id !== displayedItem) {
+        this.show("The shop stock has changed. Choose the current item again.", "error", "ui.shop.stale");
+        return null;
+      }
+      return current;
+    };
     const value = () => {
-      const latest = this.state.world?.shop?.rows.find(r => r.index === index);
-      this.show(this.state.world?.shop?.id !== shop.id || latest?.buyPrice == null ? "The server has not supplied a current buy price."
+      const latest = currentRow();
+      if (!latest) return;
+      this.show(latest.buyPrice === null ? "The server has not supplied a current buy price."
         : `${latest.item.name}: currently costs ${latest.buyPrice} coins.`);
     };
     const buy = (quantity: number) => {
-      const current = this.state.world?.shop?.rows.find(r => r.index === index);
-      if (this.state.world?.shop?.id !== shop.id || current?.item.id !== row.item.id) {
-        this.show("The shop stock has changed. Choose the item again.", "error", "ui.shop.stale"); return;
-      }
-      this.send({ kind: "shop_buy", shop: shop.id, item_index: index, quantity });
+      if (!currentRow()) return;
+      this.send({ kind: "shop_buy", shop: shop.id, item_index: index, quantity, expected_item: displayedItem });
     };
     const disabled = row.stock <= 0 ? { disabled: "This item is out of stock." } : {};
-    return [{ label: this.local.shopValue ? `Value ${label}` : `Buy-${this.local.shopAmount} ${label}`,
+    const actions: UiAction[] = [{ label: this.local.shopValue ? `Value ${label}` : `Buy-${this.local.shopAmount} ${label}`,
       run: this.local.shopValue ? value : () => buy(this.local.shopAmount), ...(this.local.shopValue ? {} : disabled) },
     ...[1, 5, 10, 50].map(q => ({ label: `Buy-${q} ${label}`, run: () => buy(q), ...disabled })),
     { label: `Buy-X ${label}`, run: () => this.prompt("Enter amount:", buy), ...disabled },
     { label: `Value ${label}`, run: value }, { label: `Examine ${label}`, run: () => this.examine(row.item) }];
+    return actions.filter((action, at) => actions.findIndex(other => other.label === action.label) === at);
   }
 
   private prompt(label: string, confirm: (quantity: number) => void): void {

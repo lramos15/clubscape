@@ -176,13 +176,99 @@ try {
     await click("shop-0"); assert.match(await page.getByRole("status").innerText(), /currently costs 2 coins/);
     assert.equal((await intents()).length, 0); await click("notice-close");
     await click("shop-mode-10"); await click("shop-0");
-    assert.deepEqual(await lastIntent(), { kind: "shop_buy", shop: "shop.general", item_index: 0, quantity: 5 });
+    assert.deepEqual(await lastIntent(), { kind: "shop_buy", shop: "shop.general", item_index: 0, quantity: 5, expected_item: "item.pickaxe.bronze" });
     assert.equal(await page.locator('[data-ui-control="shop-1"]').isDisabled(), true);
     await click("inventory-0");
     assert.deepEqual(await lastIntent(), { kind: "shop_sell", shop: "shop.general", inventory_slot: 0, quantity: 5 });
     await reject("You don't have enough coins.", "test.shop.coins"); await click("shop-0");
     assert.match(await page.getByRole("status").innerText(), /test.shop.coins/);
     await capture("shop-rejection");
+  });
+  await check("every buy amount sends the displayed canonical identity, never source ID or price", async () => {
+    await mount("world");
+    await page.evaluate(() => {
+      const s = window.component.services;
+      s.patchWorld({ shop: { id: "shop.general", name: "General Store", rows: [
+        { index: 0, item: s.state().world.player.inventory[0].item, stock: 75, buyPrice: 23, sellPrice: 9 },
+      ] } });
+    }); await frame();
+    for (const [control, quantity] of [[8, 1], [10, 5], [12, 10], [14, 50]]) {
+      await click(`shop-mode-${control}`); await click("shop-0");
+      assert.deepEqual(await lastIntent(), { kind: "shop_buy", shop: "shop.general", item_index: 0, quantity,
+        expected_item: "item.pickaxe.bronze" });
+    }
+    await page.locator('[data-ui-control="shop-0"]').click({ button: "right" }); await frame();
+    await page.getByRole("button", { name: "Buy-X Bronze pickaxe", exact: true }).click(); await frame();
+    await page.getByLabel("Enter amount:", { exact: true }).fill("7");
+    await page.getByLabel("Enter amount:", { exact: true }).press("Enter"); await frame();
+    assert.deepEqual(await lastIntent(), { kind: "shop_buy", shop: "shop.general", item_index: 0, quantity: 7,
+      expected_item: "item.pickaxe.bronze" });
+    assert.equal(await page.evaluate(() => window.component.services.state().world.shop.rows[0].stock), 75);
+  });
+  await check("reused extra rows cannot retarget a held buy menu, quantity prompt or price view", async () => {
+    await mount("world");
+    const stock = (replacement) => page.evaluate(replacement => {
+      const s = window.component.services;
+      s.patchWorld({ shop: { id: "shop.general", name: "General Store", rows: [
+        { index: 12, item: s.state().world.player.inventory[replacement ? 1 : 0].item,
+          stock: 2, buyPrice: replacement ? 49 : 23, sellPrice: 9 },
+      ] } });
+    }, replacement);
+    await stock(false); await frame(); await resetIntents();
+    await page.locator('[data-ui-control="shop-12"]').click({ button: "right" }); await frame();
+    await stock(true); await frame();
+    await page.getByRole("button", { name: "Buy-1 Bronze pickaxe", exact: true }).click(); await frame();
+    assert.equal((await intents()).length, 0);
+    assert.match(await page.getByRole("status").innerText(), /ui.shop.stale/);
+    await click("notice-close");
+    await stock(false); await frame();
+    await page.locator('[data-ui-control="shop-12"]').click({ button: "right" }); await frame();
+    await page.getByRole("button", { name: "Buy-X Bronze pickaxe", exact: true }).click(); await frame();
+    await page.getByLabel("Enter amount:", { exact: true }).fill("2");
+    await stock(true); await frame();
+    await page.getByLabel("Enter amount:", { exact: true }).press("Enter"); await frame();
+    assert.equal((await intents()).length, 0);
+    assert.match(await page.getByRole("status").innerText(), /Choose the current item again/);
+    await click("notice-close");
+    await stock(false); await frame();
+    await page.locator('[data-ui-control="shop-12"]').click({ button: "right" }); await frame();
+    await stock(true); await frame();
+    await page.getByRole("button", { name: "Value Bronze pickaxe", exact: true }).click(); await frame();
+    assert.match(await page.getByRole("status").innerText(), /ui.shop.stale/);
+    assert.doesNotMatch(await page.getByRole("status").innerText(), /49 coins/);
+    await click("notice-close");
+    await click("shop-mode-8"); await click("shop-12");
+    assert.deepEqual(await lastIntent(), { kind: "shop_buy", shop: "shop.general", item_index: 12, quantity: 1,
+      expected_item: "item.axe.bronze" });
+    await capture("shop-reused-row-new-selection");
+  });
+  await check("server stale/uncertain rejection preserves the original buy intent without automatic retargeting", async () => {
+    for (const errorId of ["StaleCommand", "transport.uncertain"]) {
+      await mount("world");
+      await page.evaluate(() => {
+        const s = window.component.services;
+        s.patchWorld({ shop: { id: "shop.general", name: "General Store", rows: [
+          { index: 12, item: s.state().world.player.inventory[0].item, stock: 2, buyPrice: 23, sellPrice: 9 },
+        ] } });
+      }); await frame();
+      await click("shop-mode-8"); await resetIntents();
+      await reject("Refresh the shop and choose the current item.", errorId);
+      await click("shop-12");
+      const original = await lastIntent();
+      assert.equal(original.expected_item, "item.pickaxe.bronze");
+      assert.match(await page.getByRole("status").innerText(), new RegExp(errorId.replace(".", "\\.")));
+      await page.evaluate(() => {
+        const s = window.component.services;
+        s.patchWorld({ shop: { ...s.state().world.shop, rows: [
+          { index: 12, item: s.state().world.player.inventory[1].item, stock: 1, buyPrice: 49, sellPrice: 9 },
+        ] } });
+      }); await frame();
+      await click("notice-close"); await frame();
+      assert.equal((await intents()).length, 1);
+      assert.deepEqual(await lastIntent(), original);
+      assert.equal(await page.evaluate(() => window.component.services.state().world.player.inventory[3].item.quantity), 12345);
+    }
+    await capture("shop-stale-intent-retained");
   });
   await check("equipment, skills XP, combat/auto-retaliate, run and prayer controls", async () => {
     await mount("world"); await click("tab-4"); await click("equipment-slot.weapon");

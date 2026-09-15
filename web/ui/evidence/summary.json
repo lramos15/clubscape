@@ -6,8 +6,8 @@
     "total": 10
   },
   "browser_component_cases": {
-    "passed": 14,
-    "total": 14
+    "passed": 17,
+    "total": 17
   },
   "source_cases": {
     "native_hud": 16,
@@ -50,6 +50,28 @@
     "pack_tests_passed": 85,
     "manifest_unchanged": true,
     "tolerances_unchanged": true,
-    "approval_authority": "external_owner_record"
+    "approval_authority": "external_owner_record",
+    "repair_in_current_ancestry": "9bf6969"
+  },
+  "shop_identity": {
+    "status": "implemented_component_verified",
+    "authorized_commits": [
+      "3310032cc6621f41d395103a35e81b2cfd87e1ae",
+      "af75e17b98eeb94adbb9ef6d1066b3ec805a866a"
+    ],
+    "integrated_commits": [
+      "44e6de1",
+      "480d434"
+    ],
+    "patch_ids": [
+      "fa8350490190cf58168e8be25e72727e6fc0d56c",
+      "fcc48f310b38fd372274c8578f3f8ad9a7fc5d7a"
+    ],
+    "prerequisite_parent": "b3e8e12",
+    "preserved_parent": "faa8002",
+    "all_new_buys": "displayed canonical item.id",
+    "separate_ui_quote_rpc": false,
+    "retarget_on_retry": false,
+    "backend_regressions_rerun_in_ui_task": false
   }
 }
