@@ -3,9 +3,10 @@
 Status: **reference identity frozen; inventory and behavior gaps remain open**.
 
 The owner authorized replacing this exact cache/gamepack identity during the
-2026-09-13 fleet continuation. The record below remains the historical source
-pin until the newest usable verified combination is selected and its changes
-are reconciled. Do not block implementation solely on matching cache 2695.
+2026-09-13 fleet continuation. The selection below was reverified against the
+newest usable combination;
+the previously mandated identity remains as historical context. Do not block
+implementation solely on matching cache 2695.
 See `milestones/m1-fleet-resumption.json`; presentation approval is still
 separate.
 
@@ -29,8 +30,10 @@ The canonical source/input record is
 [`research/first-slice-sources.json`](../research/first-slice-sources.json).
 It records exact snapshot URLs, master/map-index hashes, the decoder tooling
 pin and dated wiki revisions. Equivalent identities for other imported inputs
-must be recorded before conversion. The full-cache hash and full
-player-facing inventory are not established.
+must be recorded before conversion. The full-cache hashes and source M1
+extraction are now published in
+`research/current-source/` and `assets/manifests/osrs/`. Full player-facing
+inventory reconciliation remains a separate full-target obligation.
 
 [Mechanic notes](../research/first-slice-mechanics.md) identify the current
 Learning the Ropes tutorial, source-supported starting XP and quest
@@ -42,8 +45,11 @@ inclusion dispositions, seasonal/CP selection and Section 40 scope approval
 remain outstanding. The machine's upstream RuneLite smoke tests are neither
 this baseline nor ClubScape compatibility evidence.
 
-The [capture checklist](../research/reference-capture-checklist.md) records
-missing initial-state, transition, world/camera and audio observations. No
-concrete owner-approved Section 30.2 pack exists yet. Only independently
-source-verified work may proceed; no accepted journey, presentation or full
-baseline coverage is claimed.
+The earlier [capture checklist](../research/reference-capture-checklist.md)
+records kickoff gaps. The current source target is the externally approved
+[v1.3.0 pack](../milestones/approvals/m1-reference-pack-v1.3.0.json), with original
+native fixtures, public references and qualified audio evidence.
+`research/m1-bindings/` records current source/data conformance, including
+source-supported inferences and the narrowly approved adaptations without
+relabelling them as observations. Full legitimate journey, candidate
+presentation and complete baseline coverage remain unaccepted.

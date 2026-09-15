@@ -6,6 +6,13 @@ The exact pack approved by the owner is
 No output from the new client becomes a source reference. Final visual/audio
 and Mac Chrome/Edge acceptance remain unexecuted.
 
+The pack hash-locks `spec/art-style.md` and `spec/interface-parity.md` as
+pre-approval context documents. They deliberately retain their original bytes,
+including historical status text; they do not revoke the later external owner
+approval. Current implementation authority and status live in this document,
+`spec/milestone-01.md` and the milestone/approval records. Do not rewrite those
+frozen context files or relax the pack verifier to update a status label.
+
 ## Independent surfaces
 
 - `crates/renderer`, `tools/render-assets`, `assets/compiled/render`: Rust/WASM

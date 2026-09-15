@@ -1,6 +1,6 @@
 # M1 benchmark contract status
 
-Status: **target-hardware contract blocked; no measurements passed**.
+Status: **benchmark contract fixed; final owner-hardware measurements pending**.
 
 The pre-renderer budget and permitted local profile are now fixed in
 `spec/m1-benchmark-contract.json`, tied to the owner-approved reference-pack
@@ -13,18 +13,19 @@ visuals, the approved draw distance and real tutorial/Lumbridge workloads are
 required. Empty scenes, lower resolution, a configured frame limiter,
 dedicated-GPU runs and software rendering cannot satisfy this target.
 
-Before presentation/performance implementation, record the target GPU, CPU,
-memory, OS/driver, browser builds, display/viewport/UI settings, representative
-routes, measurement windows and numeric acceptance tolerances. Those fields
-are not supplied at kickoff and must not be filled with invented measurements.
-The visual/audio pack must also be approved before that implementation.
+The pre-implementation contract records the permitted local GPU, CPU, memory,
+OS/driver, Chrome build, display/viewport/UI settings, representative routes,
+measurement windows and numeric tolerances. These are fixed inputs, not
+achieved measurements. The reference pack is owner-approved; final Mac hardware
+and both native browser results must still be collected without changing
+the acceptance thresholds.
 
 Sparky was rechecked on 2026-09-13: Ubuntu 24.04.4 ARM64 and NVIDIA GB10 with
-driver 580.173.02. It has not been established as the representative Section 36
-target, and no complete hardware/browser contract or rendered-workload evidence
-exists. Do not infer a desktop GPU classification or benchmark equivalence from
-the NVIDIA model name. Pin a qualifying representative environment and measure
-both required browsers before treating any host as acceptance evidence.
+driver 580.173.02. Vulkan reports integrated/shared-memory graphics, but the owner
+selected the M-series Mac for final Chrome/Edge testing. The pinned Sparky
+profile supports permitted engineering checks, not unrun Mac/Edge acceptance.
+Preserve its recorded GPU-process sandbox limitation and do not infer benchmark
+equivalence from a model name. Actual rendered workloads remain unmeasured.
 
 The independent account-service increment uses bounded correctness workloads,
 not release-performance certification: one client, five concurrent synthetic
@@ -32,8 +33,8 @@ clients, and a maximum of four concurrent password jobs; local test
 PostgreSQL is limited to two CPUs and 512 MiB. These limits protect the shared
 host and do not set or lower the release concurrency target.
 
-Later gameplay benchmarks must pin one-to-five-player and proposed launch
-concurrency workloads and record server tick time, memory/bandwidth per player,
+The frozen M1 contract includes one/five-player 600 ms gameplay workloads.
+Actual benchmarks must record server tick time, memory/bandwidth per player,
 CPU/entity cost, WASM startup, frame distributions/stalls, streaming/download
 size, content builds and integration/CI throughput under Section 36.
 The launch concurrency target remains a draft release-contract input.

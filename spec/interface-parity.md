@@ -1,11 +1,6 @@
 # First-slice interface evidence
 
-Status: **not implemented; reference pack v1.3.0 owner-approved**.
-
-The exact source target and owner decision are recorded in
-`milestones/approvals/m1-reference-pack-v1.3.0.json`. Implement the approved
-native/public reference families and source-framed compositions; this approval
-does not pass any unimplemented interface or final presentation gate.
+Status: **not implemented; no approved reference pack**.
 
 The required baseline layout is Resizable - Classic with stock visuals at
 1920x1080; supported resizing bounds and capture settings must be established

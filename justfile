@@ -40,6 +40,16 @@ test-integration:
 check-wasm:
     cargo check --quiet -p clubscape-protocol --target wasm32-unknown-unknown --locked
 
+content-build:
+    python3 tools/m1-content/build.py
+
+content-check:
+    python3 tools/m1-content/validate.py --repeat
+
+asset-check:
+    python3 tools/cache-import/import_cache.py validate-published
+    python3 tools/audio-import/audio_import.py validate
+
 milestone-status:
     python3 tools/milestone.py status
 

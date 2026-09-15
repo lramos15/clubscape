@@ -49,17 +49,25 @@ Task dependencies and path ownership are recorded in
 [`milestones/m1-tasks.json`](../milestones/m1-tasks.json).
 
 Before presentation implementation, the owner must approve a concrete,
-traceable visual/audio pack under Section 30.2. No such pack or approval exists
-at kickoff. Do not substitute generated placeholders or approve it on the
-owner's behalf. Independently testable account, protocol, persistence, content
-validation, and checkpoint infrastructure may proceed while the pack is
-blocked. Source-dependent gameplay must retain visible reference gaps.
+traceable visual/audio pack under Section 30.2. This gate is now satisfied by the
+exact external [v1.3.0 owner record](../milestones/approvals/m1-reference-pack-v1.3.0.json).
+It authorizes implementation against the frozen source, not final candidate
+presentation acceptance. Do not rewrite the approved manifest's pre-approval
+fields or substitute generated placeholders. Source-supported inferences and
+the narrowly approved loot/audio adaptations retain their exact classifications.
+The pack also hash-locks the original `art-style.md` and `interface-parity.md`
+context documents. Their pre-approval status text is historical; the external
+approval and [current browser boundary](browser-implementation.md) are the
+current authority. Preserve those two frozen files byte-for-byte.
 
 Before presentation/performance implementation, Section 36 requires the
 benchmark contract and pinned representative hardware/browser configuration.
-Sparky has an NVIDIA GB10; no representative integrated-graphics benchmark
-contract has been pinned for this execution. Host/tool availability alone
-cannot satisfy that gate, and the GPU model name is not proof of equivalence.
+The pre-implementation budgets and available Sparky engineering profile are
+fixed in `spec/m1-benchmark-contract.json`. The owner will run real Chrome/Edge
+acceptance on an M-series Mac after implementation; exact native inventory
+and measurements remain pending. Host/tool availability cannot satisfy the
+gate, and Sparky engineering evidence does not stand in for unrun Mac/Edge
+measurements.
 
 Every acceptance record must link actual evidence and its tested revision.
 Pending, blocked, deferred, or unexecuted checks are not passes. Final owner
@@ -69,8 +77,8 @@ Any later milestone needs its own separately approved execution.
 ## Execution limits and recovery
 
 The shared project ceiling is 25 active AI agents including the Director.
-At kickoff, no other agents are visible. Only explicitly reserved workers may
-run; nested delegation is forbidden for these initial tasks. No factory is
+Only explicitly reserved workers may run; current assignments are in the
+durable task ledger. Nested delegation is forbidden. No factory is
 authorized or required. Worker completion, failure, cancellation, or parking
 must be recorded before releasing its reservation.
 
@@ -89,3 +97,8 @@ hardware, or external execution limits prevent completion, continue independent
 unblocked milestone work where possible, then report the milestone as
 incomplete with a durable checkpoint. Never relabel that checkpoint as an
 accepted slice.
+
+The current [native/source checkpoint](../milestones/evidence/m1-native-runtime3.json)
+records strict source content and real backend/persistence conformance.
+The full headless/browser journey, source comparisons, runtime presentation,
+performance and final owner review still need their own evidence.
