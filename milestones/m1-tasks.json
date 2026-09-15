@@ -11,7 +11,6 @@
       {"id": "cc864d7a-37cc-4869-a7b4-d484d01cede5", "task": "M1-BROWSER-UI"},
       {"id": "78d01af9-70a4-4b02-8339-6a61eb377374", "task": "M1-BROWSER-SHELL"},
       {"id": "2766e089-44e5-4a1d-974e-7b03ad9c269d", "task": "M1-GAMEPLAY-UI-CONTRACTS"},
-      {"id": "cdfad64d-9162-439f-a525-58e1114dd7f4", "task": "M1-AUDIO-PREFERENCE-CONTROLS"},
       {"id": "ac0f0856-44af-445b-bd90-6db7a1f4fc74", "task": "M1-SCENERY-PHASE-EVIDENCE"},
       {"id": "81ac9884-4f39-4f27-b516-6e9a42b09b51", "task": "M1-HEADLESS-JOURNEY"},
       {"id": "e6925772-df1f-4ff7-9efc-219f800a5a14", "task": "M1-GAMEPLAY-UI-REVIEW"}
@@ -19,6 +18,7 @@
     "reserved": [],
     "queued": [],
     "parked": [
+      {"id": "cdfad64d-9162-439f-a525-58e1114dd7f4", "reason": "Native preference/Skip/three-playlist controls64bd3257 integratedd13b3c7; parent41unit/41fullChrome checks and all275audio/1307pack hashes pass. Actual UI/shell persistence and source authority are separately owned; no automatic resumption."},
       {"id": "2a0ae699-6af8-45d5-90c7-3addfc56ee53", "reason": "Renewed five-invocation assessment complete; live creation/scene/window/baseline work, firstXP unverified after driverOutOfReach. No sixth invocation or automatic resumption."},
       {"id": "aab1ae0f-0238-4254-bff3-b7c046349c6b", "reason": "Shop capacity/identity fixes integrated as3310032+af75e17 with18 passing regressions; no automatic resumption."},
       {"id": "0f5ddddf-0aa0-4908-b0d3-1ffc6b1f7a20", "reason": "Actor presence/cadence fixes integrated as62a003c+e1076a8 with15 passing regressions; no automatic resumption."},
@@ -72,7 +72,7 @@
     {
       "id": "M1-AUDIO-PREFERENCE-CONTROLS",
       "goal": "Complete the original music skip, saved playlist slots and remembered mute-preference APIs required by the actual M1 UI.",
-      "status": "IMPLEMENTING",
+      "status": "DONE",
       "specs": ["web/audio/README.md", "web/ui/contract-gaps.json", "web/ui/README.md", "spec/browser-implementation.md"],
       "dependencies": ["M1-BROWSER-AUDIO"],
       "allowed_paths": ["web/audio/**", "tools/browser-audio-tests/**", "research/browser-audio-policy/**"],
@@ -85,7 +85,7 @@
       "source_notes": ["Completed UI delivery identifies real missing APIs: Shuffle-mode manual Skip Track, saved Playlist1/2/3 and remembered mute percentages for source varbits14817/12426/12427/12428. Reuse original native probes, not new source accounts or baseline selection."],
       "parity_entries": [],
       "adaptations": [],
-      "evidence": []
+      "evidence": ["64bd3257 integratedd13b3c7. Exact original Skip, Playlist1/2/3 preserving100-slot holes, current/remembered mute and detached strictv1 preferences are implemented without AudioHandle/asset changes.12 native cases repeat in two isolated JVMs; parent41 unit and41 complete Chrome checks pass, all275 audio files and1307 frozen hashes unchanged.", "Parent complete-track scheduling errors0ms, jingle re-entry5.306ms within20ms, bound-Single addedclips0; graph/queue/cache disposed completely and browser output muted. Actual UI/shell storage/control composition and separate authoritative unlock/variable data remain required. Worker parked; milestones/evidence/m1-render-audio-integration.json preserves exact scope and original hash-bound reports."]
     },
     {
       "id": "M1-TUTORIAL-DIALOGUE-ENTRIES",
@@ -193,7 +193,7 @@
       "source_notes": ["The delivered UI has87/87 source raster checks but its listed authority/control gaps are real. Reuse current engine planners and canonical sources; routine stock behavior is not an adaptation."],
       "parity_entries": [],
       "adaptations": [],
-      "evidence": ["Passed candidate78fcec4 and complete owned UI4 sequence are integrated throughff37669; raw6fdb60e4740372c5e299fe385875cfac32e04f22ea26ad17b53049296256c1b3 / revisionm1.source-backed.v4.67e4f1fcc55d71d5. All four asset publication layers, nullable selected production, exclusive post-binding recovery entries and actual movement/action observers are present. Parent548 native,41 realPG+11account checks and71 source tests/full93-output repeat pass; artifact identity unchanged by regeneration.", "The real v3 journey's31/70 anvil boundary is fixed by the actual v4 production context/event path; controlled canonical legacy-protocol and authenticatedPG proofs pass without pre-selection inventory/XP changes or forged events. Fresh normal v4 journey is running. Remaining All/recovery/level-up controls and current-instance template observation continue in the same backend reservation; whole UI/M1 acceptance remains unclaimed. Parent UI4 consumer type errors are with the UI owner, not suppressed."]
+      "evidence": ["Passed candidate78fcec4 and complete owned UI4 sequence are integrated throughff37669; raw6fdb60e4740372c5e299fe385875cfac32e04f22ea26ad17b53049296256c1b3 / revisionm1.source-backed.v4.67e4f1fcc55d71d5. All four asset publication layers, nullable selected production, exclusive post-binding recovery entries and actual movement/action observers are present. Parent548 native,41 realPG+11account checks and71 source tests/full93-output repeat pass; artifact identity unchanged by regeneration.", "The real v3 journey's31/70 anvil boundary is fixed by the actual v4 production context/event path; controlled canonical legacy-protocol and authenticatedPG proofs pass without pre-selection inventory/XP changes or forged events. Fresh normal v4 journey is running. Remaining All/recovery/level-up controls and current-instance template observation continue in the same backend reservation; whole UI/M1 acceptance remains unclaimed. Parent UI4 consumer type errors are with the UI owner, not suppressed.", "Actual core has no explicit music/audio/native-variable state or projection. The same backend owner now owns minimal source-backed M1 unlock/history and native-variable facts, or proof of exact existing generic counter/event mappings. Client preferences exclude unlock authority; no all-unlocked defaults, reconstructed visit guesses or silent legacy history reset may stand in for persistence."]
     },
     {
       "id": "M1-GAME-ROOT-STARTUP",
@@ -337,7 +337,7 @@
       "source_notes": ["research/reference-pack/v1/manifest.json"],
       "parity_entries": [],
       "adaptations": ["Approved penguin base and equipment-fit criteria"],
-      "evidence": ["Initialexactrendererplusstreaming/skeletal/layers/preview/pipeline/harness integratedthroughe96e3b8/1937201/c098133/0c541d9. NativeGPUtimingnowactualtimestamps;all58publishedmodelcapturesmandatory, absenthardwarefails. Parentpublishedfixture/GPU/robustnessselectorpasses23testswithoneexplicitunpublishedexportignored.", "Publishedfullactorssuitecurrentlyfails roofmodepixelchange atactors.rs646; parentreproducedandreported. Unpackincorrectlyrequiresunpublishedblocks; rawhashpreference/oversizedpixeldiagnostics alsoassignedbacktoworker. Nogateiscountedpassedbecauseoftestfunctioncount.", "Requiredgearfitstillviolatesraw<=1penetration(axe1.01,hat6.56,shield5.73);actualrunning/sourceanimation/dynamicobjectobservercontracts anddynamicminimap inprogress.59.85FPS andp95completiongap~28ms arebelow/above frozenbudgets,respectively,notaccepted. Sameworkerrepairswithoutloosenedmetrics; originaldynamic-layerreferencesareindependenttask."]
+      "evidence": ["Eight further owned renderer commits are integrated through549fa2f. ParentGPU suite41passed/7explicitignored plus3 executed package-dependent minimap/recenter cases, native/WASM Clippy and all58model/5scene source captures pass. Current published roof regression passes; pinned raw/gzip and mandatoryTSET checks replace unsafe input preference, with bounded diagnostics.", "Current source dynamic comparison is8/12 scene-only passes,3 Tutorial flame-phase failures(maxchannel67>2) and1 unsupported mapped-chunk case; complete HUD/player compositions are not claimed. Original phase metadata is independently assigned. Bind fit passes all10 items, but2595/3220 posed item-frames still penetrate>1(max20.76913173884589;266 item-sequence pairs). Human-design overlap is not a waiver; full pose/edge/icon/instance/observer/full-HUD/performance work continues.", "Actual183member/61square package installs with plainPython. Parentfound stale full-manifest index afterdynamic metadata;95f718e refreshesonlythat hash and strictverificationpasses, same56381440byte/SHA99984d72...d30aeb payload. Currentbetween-completion/full-window/moving-camera performance isnotfrozen-contract/Mac acceptance. See milestones/evidence/m1-render-audio-integration.json."]
     },
     {
       "id": "M1-BROWSER-UI",

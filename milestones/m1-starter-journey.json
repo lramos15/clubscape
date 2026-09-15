@@ -9,11 +9,11 @@
   "candidate_revision": null,
   "accepted_revision": null,
   "checkpoint": {
-    "report": "milestones/evidence/m1-game-ui4.json",
+    "report": "milestones/evidence/m1-render-audio-integration.json",
     "verified_infrastructure_revision": "275d3cc83d6a7c2118d0afcf82490f364e5d2986",
     "infrastructure_evidence": "milestones/evidence/m1-account-foundations.json",
-    "runtime_revision": "ff37669a464eb92bd022403337b9464e9a637b0d",
-    "scope_note": "Canonical4 raw6fdb is integrated and passes548 native,41 realPG and the full93-output source repeat. It fixes the controlled anvil menu boundary; a fresh real journey is running. Current UI4 consumer type adaptation and remaining required controls/composition/fidelity/performance/Mac/owner gates remain incomplete. Prior real v3 progress remains31/70, not full acceptance."
+    "runtime_revision": "95f718ef3789074450566b71059916fd7c47b198",
+    "scope_note": "Canonical4 raw6fdb passes native/source/persistence checks and a fresh real journey is running. Renderer mechanisms and native audio preferences are integrated, but only8/12 new source scene cases pass and2595 posed item-frames violate gear penetration. Current UI4 type adaptation, source music authority, remaining controls/composition/performance/Mac/owner gates remain incomplete. Prior real v3 progress remains31/70, not full acceptance."
   },
   "scope_approval": {
     "authority": "owner",
