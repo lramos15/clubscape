@@ -33,6 +33,24 @@
   },
   "tasks": [
     {
+      "id": "M1-GAME-ROOT-STARTUP",
+      "goal": "Unblock real canonical-world startup without trimming source assets or silently requiring a browser bundle.",
+      "status": "IMPLEMENTING",
+      "specs": ["spec/game-networking.md", "web/ui/contract-gaps.json", "tools/web-build/README.md"],
+      "dependencies": ["M1-FLEET-LIVE-SERVER", "M1-FLEET-BINDING-APPLICATION"],
+      "allowed_paths": ["crates/server/src/config.rs", "crates/server/src/game_service/content.rs", "crates/server/src/game_service/tests.rs", "spec/game-networking.md"],
+      "forbidden_paths": ["prompt.md", "assets/**", "content/**", "web/**", "crates/game-types/**", "crates/world-engine/**", "crates/protocol/**"],
+      "outputs": ["Independently parsed game/web environment roots", "Bounded private descriptor budget covering the real M1 asset map", "Positive and negative size/configuration regressions"],
+      "validation_commands": ["cargo test -p clubscape-server", "cargo clippy -p clubscape-server --all-targets -- -D warnings"],
+      "test_requirements": ["GameRoot works without WebRoot", "Invalid configured GameRoot is never ignored", "Exact descriptor byte boundary is enforced", "Client packet and public bundle limits remain unchanged"],
+      "acceptance": ["SQL m1-game-root-startup records repaired concrete startup failures and actual source-world startup follow-up"],
+      "reserved_namespaces": [],
+      "source_notes": ["Canonical shell descriptor406574bytes and compact journey descriptor272433bytes exceed old262144byte limit; Config::from_env incorrectly nests GameRoot parsing under WebRoot."],
+      "parity_entries": [],
+      "adaptations": [],
+      "evidence": []
+    },
+    {
       "id": "M1-RUNELITE-FEASIBILITY",
       "goal": "Execute a bounded real RuneLite compatibility experiment independently of mandatory browser/headless M1 acceptance.",
       "status": "IMPLEMENTING",
