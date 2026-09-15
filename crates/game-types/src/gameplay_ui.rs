@@ -59,7 +59,7 @@ pub struct GameplayUiView {
 pub struct ProductionUiView {
     pub id: String,
     pub interface: InterfaceId,
-    pub target: WorldTarget,
+    pub target: Option<WorldTarget>,
     pub recipes: Vec<ProductionChoiceUiView>,
 }
 #[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]

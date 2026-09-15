@@ -180,7 +180,7 @@ export interface GameplayUiView {
   activeTab: string | null;
   activeInterface: string | null;
   production: {
-    id: string; interface: string; target: WorldTarget;
+    id: string; interface: string; target: WorldTarget | null;
     recipes: Array<{ recipe: string; name: string; outputs: ItemView[]; single: UiPermission; makeX: UiPermission }>;
   } | null;
   reward: {
