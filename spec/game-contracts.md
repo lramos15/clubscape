@@ -529,6 +529,13 @@ movement or sight. The source access-side mask, approaching tile's wall/sight
 edges, plane, distance, instance and target availability still apply. This
 query does not modify collision; a reachable cooking range remains nonwalkable.
 Wall-layer doors retain their explicit, separately validated face-query rules.
+Source-declared stationary NPC access (nonwalking resource, scripted actor or
+scenery-bound anchor) likewise permits cardinal near-face contact without
+requiring entry into its blocked footprint. The actor's declared walkable
+access tile, all source guards, plane/range/instance and approach/target sight
+restrictions remain mandatory. Water is not made walkable, ordinary mobile
+NPCs do not gain this exception, and an access-list entry does not waive an
+intervening wall.
 
 Physical collision maps are immutable and use a bounded eight-entry derived
 cache. Its exact identity is the current transform selection, instance

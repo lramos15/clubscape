@@ -517,7 +517,7 @@ impl WorldEngine {
                     && ((map.line_of_sight(character.tile, tile)
                         && (interaction.reach > 1 || touch_edge(&map, character.tile, tile)))
                         || (interaction.reach == 1
-                            && (solid_face_reachable(&map, character.tile, tile, &shape)
+                            && (interaction_face_reachable(&map, character.tile, tile, &shape)
                                 || self.door_face_reachable(world, character, target, tile)?)))
                 {
                     return Ok(());
@@ -602,13 +602,18 @@ impl WorldEngine {
     }
 }
 
-fn solid_face_reachable(
+fn interaction_face_reachable(
     map: &CollisionMap,
     from: Tile,
     to: Tile,
     shape: &crate::navigation::TargetShape,
 ) -> bool {
-    if !shape.solid_footprint || from.distance(to) != Some(1) {
+    let declared_anchor = shape.npc.is_some()
+        && shape
+            .access
+            .as_ref()
+            .is_some_and(|access| access.contains(&from));
+    if !(shape.solid_footprint || declared_anchor) || from.distance(to) != Some(1) {
         return false;
     }
     let Some(direction) = Direction::ALL.into_iter().find(|direction| {
@@ -620,8 +625,8 @@ fn solid_face_reachable(
     let (Some(near), Some(target)) = (map.cell(from), map.cell(to)) else {
         return false;
     };
-    // Contact stops at the near face, not inside the solid/opaque footprint. Source
-    // wall edges are bilateral, so the approaching tile still rejects intervening walls.
+    // Contact stops at a solid object's or explicitly declared stationary actor's
+    // near face. Water/scenery stays blocked; bilateral approach walls still apply.
     near.walkable
         && near.blocked_movement & direction.mask() == 0
         && near.blocked_sight & direction.mask() == 0

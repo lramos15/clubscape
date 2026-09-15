@@ -84,6 +84,19 @@ The profile labels its controlled physical-door selection and retains all
 600ms source cadence are unchanged; actual player-door traversal is validated
 separately through the protocol journey.
 
+Declared stationary NPC access uses the reachable cardinal face, not a
+requirement to walk inside a nonwalking resource/scenery footprint. This covers
+water fishing resources and explicitly scripted/scenery-bound actors without
+marking them as solid game objects. The actor must occupy its declared walkable
+access tile; source guard, plane, reach, instance, walls and sight checks still
+apply. Mobile/ordinary actors gain no exemption. The source water/scenery cells
+remain blocked, including after the interaction is admitted.
+
+`tools/m1-content/schema-check/examples/nonwalking_contact.rs` checks the actual
+source3317 Net admission from the reported west/south land faces, without a
+catch roll, XP or source geometry change. Its controlled setup is not a
+legitimate player acquisition or full-journey acceptance.
+
 ## Live adapter: lifecycle and read-only views
 
 The parent `2030e97` adapter can use `apply_lifecycle` for authenticated
