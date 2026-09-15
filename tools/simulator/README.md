@@ -4,6 +4,11 @@
 loopback HTTP RPCs. It never opens PostgreSQL, supplies RNG, sets character
 state, grants items, or submits tutorial-result events.
 
+The current journey requires canonical content/artifact4 with `game.ui.v1`/
+`game.observer.v1` and a complete `WorldSnapshot.ui` version1 projection. State
+and runtime stay version1. It always uses the manifest's actual current hash in
+a fresh owned candidate; it does not upgrade or repin historical test worlds.
+
 ## Commands
 
 Existing account-only checks remain independent:
@@ -87,12 +92,21 @@ Ordinary actions use generated Rust messages. Additive `open_grave`/
 Protobuf descriptor**. There are no guessed wire tags. An absent generated
 request is an error; generic `OpenInterface` is not substituted for recovery.
 
-With the integrated artifact-3 protocol, production uses generated
-`ProduceSelected(Single)` rather than guessing quantity-derived menu mode.
+With the integrated artifact4 protocol, source facility interactions open the
+actual target-bound `UiProduction`, then generated `GameplayUiRequest.production`
+selects its exact menu/recipe and explicit `Single` mode. Inventory-only dough
+uses real item-on-item input and preserves the absent world target. The normal
+tinderbox/logs and raw-shrimp/temporary-fire controls execute their exact source
+item-use semantics; when no menu is opened, the executed recipe/target observer
+must match. No generic `Produce` shortcut is used to skip anvil UI progression.
 Commerce selects the bucket row from the live authorized `ShopView`, obtains a
 real read-only quote, verifies source item/quantity/price, and submits the public
 purchase/sale. Quotes must preserve progression and input sequence. Public
 presence and bank/shop/recovery/quote contexts are retained in the trace.
+Actual reward/document continuations are processed by their typed IDs, never by
+auto-accepting an unknown confirmation. Typed bank withdrawals use the current
+entry identity and `GameplayUiRequest.expected_bank_revision` copied from the
+actual decimal `ui.bank.revision`; duplicates retain that original intent.
 
 Every **new buy and buy-quote** carries `ShopBuy.expected_item` from the
 displayed row's canonical `item` string. It is never the numeric cache/source ID

@@ -4,6 +4,7 @@ mod history_tests;
 mod plan;
 mod recovery;
 mod source;
+mod ui;
 
 use std::{
     collections::{BTreeMap, BTreeSet},
@@ -323,6 +324,17 @@ impl Runner {
             "Real server is not gameplay-ready: {}",
             hello.gameplay_unavailable_reason
         );
+        ensure!(
+            hello
+                .capabilities
+                .iter()
+                .any(|capability| capability == "game.ui.v1")
+                && hello
+                    .capabilities
+                    .iter()
+                    .any(|capability| capability == "game.observer.v1"),
+            "Required versioned source UI/action observer capabilities are unavailable"
+        );
         self.evidence.check(
             "server_request_budget",
             json!(clubscape_protocol::MAX_REQUEST_BYTES),
@@ -433,6 +445,10 @@ impl Runner {
     }
 
     fn capture(&mut self, snapshot: game::WorldSnapshot, reason: &str) -> Result<()> {
+        ensure!(
+            snapshot.ui.as_ref().is_some_and(|ui| ui.version == 1),
+            "M1 requires an actual complete UIstate1 projection; absence is not empty successful UI"
+        );
         let player = snapshot
             .player
             .as_ref()
@@ -551,6 +567,13 @@ impl Runner {
     }
 
     async fn input(&mut self, action: Action) -> Result<Receipt> {
+        if !matches!(action, Action::Ui(_)) {
+            self.continue_source_presentations().await?;
+        }
+        self.input_raw(action).await
+    }
+
+    async fn input_raw(&mut self, action: Action) -> Result<Receipt> {
         let receipt = Receipt {
             operation_id: Uuid::new_v4().to_string(),
             sequence: self.sequence,

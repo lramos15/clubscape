@@ -331,8 +331,30 @@ impl Runner {
                 self.check_grant("grant.tutorial.hammer")?;
             }
             "anvil_open" => {
+                let before_items = self.owned_counts()?;
+                let before_xp = self.xp("skill.smithing")?;
                 self.interact("spawn.anvil.tutorial.3075.9497.p0.t10.r0", "Smith")
                     .await?;
+                let menu = self
+                    .ui()?
+                    .production
+                    .as_ref()
+                    .context("The source anvil did not open its real production menu")?;
+                self.evidence.check(
+                    "source_anvil_menu_interface",
+                    json!("interface.smithing"),
+                    json!(menu.interface),
+                )?;
+                self.evidence.check(
+                    "anvil_menu_does_not_grant_items",
+                    json!(before_items),
+                    json!(self.owned_counts()?),
+                )?;
+                self.evidence.check(
+                    "anvil_menu_does_not_grant_xp",
+                    json!(before_xp),
+                    json!(self.xp("skill.smithing")?),
+                )?;
             }
             "smith_dagger" => {
                 self.produce_checked(
@@ -379,6 +401,8 @@ impl Runner {
             }
             "melee_rat" => {
                 self.style("style.sword.bronze.stab.accurate").await?;
+                // The source rat is 2x2; its east face is outside the guarded pen.
+                self.walk(Tile::new(3108, 9518, 0)).await?;
                 self.fight("spawn.tutorial_rat.3109.9518.p0", false, true)
                     .await?;
             }
@@ -412,7 +436,7 @@ impl Runner {
                 .await?
             }
             "bank_open" => {
-                self.interact("spawn.tutorial.bank_booth.3122.3124.p0.t10.r0", "Bank")
+                self.interact("spawn.tutorial.bank_booth.3122.3124.p0.t10.r0", "Use")
                     .await?;
                 self.check_bank(25)?;
             }
@@ -1177,6 +1201,29 @@ impl Runner {
     }
 
     async fn production_input(&mut self, recipe: &str, target: Option<&str>) -> Result<()> {
+        self.continue_source_presentations().await?;
+        if recipe == "recipe.firemaking.normal" && target.is_none() {
+            self.input(Action::UseItem(game::UseItem {
+                inventory_slot: self.slot("item.tinderbox")?,
+                target: Some(game::use_item::Target::OtherInventorySlot(
+                    self.slot("item.logs.normal")?,
+                )),
+            }))
+            .await?;
+            return Ok(());
+        }
+        let selected_target = target.map(|spawn| game::WorldTarget {
+            target: Some(game::world_target::Target::Spawn(spawn.into())),
+        });
+        if self.production_menu_matches(recipe, selected_target.as_ref())? {
+            return self
+                .select_source_production(
+                    recipe,
+                    selected_target.as_ref(),
+                    game::ProductionMode::Single,
+                )
+                .await;
+        }
         if let Some(target) = target {
             let action = self.source.spawn(target)?["interactions"]
                 .as_array()
@@ -1190,18 +1237,43 @@ impl Runner {
                 .and_then(|action| action["name"].as_str())
                 .context("Source facility does not offer selected recipe")?
                 .to_owned();
-            self.approach(target, &action).await?;
+            self.interact(target, &action).await?;
+        } else if recipe == "recipe.cooking.dough" {
+            let before = self.owned_counts()?;
+            self.input(Action::UseItem(game::UseItem {
+                inventory_slot: self.slot("item.flour.pot")?,
+                target: Some(game::use_item::Target::OtherInventorySlot(
+                    self.slot("item.water.bucket")?,
+                )),
+            }))
+            .await?;
+            self.evidence.check(
+                "inventory_menu_open_does_not_consume_items",
+                json!(before),
+                json!(self.owned_counts()?),
+            )?;
+            self.evidence.check(
+                "inventory_only_production_target",
+                Value::Null,
+                json!(
+                    self.ui()?
+                        .production
+                        .as_ref()
+                        .context("Actual inventory-only menu missing")?
+                        .target
+                        .as_ref()
+                        .map(|_| "world_target")
+                ),
+            )?;
+        } else {
+            bail!("No explicit source inventory/menu entry plan for targetless recipe {recipe}");
         }
-        self.input(Action::ProduceSelected(game::ProduceSelected {
-            recipe: recipe.into(),
-            target: target.map(|spawn| game::WorldTarget {
-                target: Some(game::world_target::Target::Spawn(spawn.into())),
-            }),
-            quantity: 1,
-            mode: game::ProductionMode::Single as i32,
-        }))
-        .await?;
-        Ok(())
+        self.select_source_production(
+            recipe,
+            selected_target.as_ref(),
+            game::ProductionMode::Single,
+        )
+        .await
     }
 
     async fn produce_checked(
@@ -1349,15 +1421,34 @@ impl Runner {
                 Tile::new(tile.x, tile.y + 1, tile.plane),
             ]))
             .await?;
-            self.input(Action::ProduceSelected(game::ProduceSelected {
-                recipe: recipe.into(),
-                quantity: 1,
-                mode: game::ProductionMode::Single as i32,
-                target: Some(game::WorldTarget {
-                    target: Some(game::world_target::Target::TemporaryObject(fire.id)),
-                }),
+            let target = game::WorldTarget {
+                target: Some(game::world_target::Target::TemporaryObject(fire.id.clone())),
+            };
+            self.input(Action::UseItem(game::UseItem {
+                inventory_slot: self.slot(raw)?,
+                target: Some(game::use_item::Target::TemporaryObject(fire.id)),
             }))
             .await?;
+            if self.ui()?.production.is_some() {
+                self.select_source_production(recipe, Some(&target), game::ProductionMode::Single)
+                    .await?;
+            } else {
+                let observed = self.player()?.action.as_ref().context(
+                    "Source item-use cooking has neither a menu nor an executed action observer",
+                )?;
+                ensure!(
+                    observed.recipe_id.as_deref() == Some(recipe)
+                        && observed.target.as_ref() == Some(&target),
+                    "Source item-use cooking did not execute the exact requested recipe/temporary target"
+                );
+                self.evidence.append(
+                    "source_direct_item_use_observer",
+                    evidence::message_json_with_defaults(
+                        "clubscape.game.v1.ActorAction",
+                        observed,
+                    )?,
+                )?;
+            }
         }
         self.wait_for(
             "stochastic_cooking_outcome_not_guaranteed_success",
@@ -1537,19 +1628,35 @@ impl Runner {
     }
 
     async fn withdraw(&mut self, item: &str, quantity: u32) -> Result<()> {
-        let bank_slot = self
-            .player()?
+        self.continue_source_presentations().await?;
+        let bank = self
+            .ui()?
             .bank
+            .as_ref()
+            .context("Actual source bank UI is not open")?;
+        let entry_id = bank
+            .entries
             .iter()
-            .find(|slot| slot.stack.as_ref().is_some_and(|stack| stack.item == item))
-            .map(|slot| slot.index)
+            .find(|entry| {
+                entry.item == item
+                    && !entry.placeholder
+                    && entry
+                        .value
+                        .as_ref()
+                        .and_then(|value| value.stack.as_ref())
+                        .is_some_and(|stack| stack.quantity > 0)
+            })
+            .map(|entry| entry.id.clone())
             .with_context(|| format!("No legitimately banked {item}"))?;
-        self.input(Action::BankWithdraw(game::BankWithdraw {
-            banker: BANK.into(),
-            bank_slot,
-            quantity,
-            noted: false,
-        }))
+        let revision = self.bank_revision()?;
+        self.ui_input(
+            game::gameplay_ui_request::Request::BankWithdraw(game::UiBankWithdrawal {
+                entry_id,
+                quantity,
+                noted: false,
+            }),
+            Some(revision),
+        )
         .await?;
         Ok(())
     }
@@ -2345,6 +2452,11 @@ mod tests {
         validate_source_path(&source).unwrap();
         assert_eq!(TUTORIAL_STAGES.windows(2).count(), 70);
         assert_eq!(source.tutorial["transitions"].as_array().unwrap().len(), 73);
+        let bank = source
+            .interaction("spawn.tutorial.bank_booth.3122.3124.p0.t10.r0", "Use")
+            .unwrap();
+        assert_eq!(bank["action"]["kind"], "open_bank");
+        assert_eq!(bank["action"]["interface"], "interface.bank");
     }
 
     #[test]

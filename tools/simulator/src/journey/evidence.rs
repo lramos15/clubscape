@@ -240,6 +240,14 @@ pub fn public_snapshot(snapshot: &game::WorldSnapshot) -> Result<Value> {
         .map(|presence| message_json_with_defaults("clubscape.game.v1.Presence", presence))
         .transpose()?
         .unwrap_or(Value::Null);
+    state["running"] = json!(player.running);
+    state["movement_tick"] = json!(player.movement_tick);
+    state["action"] = player
+        .action
+        .as_ref()
+        .map(|action| message_json_with_defaults("clubscape.game.v1.ActorAction", action))
+        .transpose()?
+        .unwrap_or(Value::Null);
     Ok(json!({
         "revision": snapshot.revision, "tick": snapshot.tick,
         "character_revision": snapshot.character_revision,
@@ -255,7 +263,10 @@ pub fn public_snapshot(snapshot: &game::WorldSnapshot) -> Result<Value> {
         "bank_context": snapshot.bank_context.as_ref().map(|context| message_json_with_defaults("clubscape.game.v1.BankContext", context)).transpose()?,
         "shop": snapshot.shop.as_ref().map(|shop| message_json_with_defaults("clubscape.game.v1.ShopView", shop)).transpose()?,
         "recovery": snapshot.recovery.as_ref().map(|recovery| message_json_with_defaults("clubscape.game.v1.RecoveryContext", recovery)).transpose()?,
-        "quote": snapshot.quote.as_ref().map(|quote| message_json_with_defaults("clubscape.game.v1.Quote", quote)).transpose()?
+        "quote": snapshot.quote.as_ref().map(|quote| message_json_with_defaults("clubscape.game.v1.Quote", quote)).transpose()?,
+        "ui": snapshot.ui.as_ref().map(|ui| message_json_with_defaults("clubscape.game.v1.GameplayUiView", ui)).transpose()?,
+        "dynamic_objects": snapshot.dynamic_objects.iter().map(|object|
+            message_json_with_defaults("clubscape.game.v1.DynamicObject", object)).collect::<Result<Vec<_>>>()?
     }))
 }
 

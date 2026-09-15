@@ -17,6 +17,14 @@ python3 tools/journey-tests/run.py \
   --report .local/evidence/m1-headless-journey.json
 ```
 
+**Current runner contract: canonical content/artifact4, state/runtime1, UIstate1.**
+The current fresh candidate is revision `m1.source-backed.v4.67e4f1fcc55d71d5`,
+raw `6fdb60e4740372c5e299fe385875cfac32e04f22ea26ad17b53049296256c1b3`,
+compressed `f53a28402baad5588ccf071310b4c239e24391715290aaac2616ed0215284aa6`.
+The versioned generated UI/observer contract and manifest/strict compiler are
+authoritative; the source content README's older schema3 wording is historical.
+Existing bb99/df3 worlds are never silently upgraded or reseeded.
+
 Prefer the fully integrated product GameRoot when it is available:
 
 ```sh
@@ -400,6 +408,47 @@ The required actual production-menu boundary belongs to the upcoming integration
 not an injected event, direct dagger-production bypass, or a fabricated stage.
 All old tools-dialogue/water/collision failures remain historical; none is
 reported as the current blocker.
+
+### Canonical4 real contextual production and departure boundary
+
+The authorized shared `d153…`, consumables `82e0a41…`, and ordered UI/backend
+sequence through `78fcec42226e17d715f422f8e9cc2be8a1fb8762` are integrated.
+Generated conflicts were resolved to that **final worker content4**, not old
+artifacts. Milestone records and the root lockfile were preserved unchanged;
+only owned runner, tests and evidence are changed by the follow-up implementation.
+
+The runner requires `game.ui.v1`, `game.observer.v1` and `snapshot.ui.version=1`,
+and records complete UI, action and dynamic-object observations. World facility
+menus are opened by the actual source action; production uses the displayed
+menu ID, exact recipe and explicit mode. Inventory dough is opened by actual
+flour-pot/water-bucket `UseItem`; its target stays null. Source rewards and
+documents use their actual typed continuation IDs. UI bank withdrawals echo the
+actual decimal `ui.bank.revision` and current entry ID, without rewriting retry
+intents. Ordinary deposit and other retained source APIs keep their real
+context/ownership checks; no generic interface command creates bank access.
+
+For the early shrimp lesson, generic fire `Cook` currently requests a cooking
+menu before that interface unlocks; its denial is retained as a separate
+diagnostic, not called successful. The actual raw-shrimp-on-fire inventory
+control executes the source recipe directly, with an exact observed
+recipe/temporary-target identity. This is not a direct recipe/stage setter.
+Anvil production does require the actual menu and selection.
+
+[`evidence/ui4-anvil-1e9c7be.json`](evidence/ui4-anvil-1e9c7be.json)
+records source `Smith` sequence105/tick498 opening interface312/target-bound
+menu `ui.4` and advancing `anvil_open -> smith_dagger` **without** a dagger or
+XP grant. Actual typed selection sequence106 then consumes the bronze bar,
+produces one dagger and awards125XP-tenths at tick505.
+
+[`evidence/ui4-departure-1e9c7be.json`](evidence/ui4-departure-1e9c7be.json)
+records **66 acknowledged source transitions**,263 source checks, real melee/
+ranged kills, the source bank's25coins, prayer/magic and Learning the Ropes1QP
+with its actual reward continuation, plus onboarding recovery on the same
+isolated database/artifact. It also records the new exact source blocker:
+`offer_mainland` sequence181 receives HTTP500 `game_source_view`; the source
+`departure_confirmation` stage has three simultaneously eligible **primary**
+Magic Instructor entries. No first-entry fallback, forced Home Teleport,
+unknown-write replay or completed-departure claim is made.
 
 ```sh
 python3 -m unittest discover -s tools/journey-tests -p 'test_*.py' -q
