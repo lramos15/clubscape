@@ -7,11 +7,14 @@
     "admissions_open": true,
     "active": [
       {"id": "director", "task": "M1-FLEET-CONTRACTS"},
-      {"id": "56283b56-0ae0-4839-a961-1a23a850dd1b", "task": "M1-FLEET-PUBLIC-REFERENCES"}
-    ],
-    "reserved": [
       {"id": "2766e089-44e5-4a1d-974e-7b03ad9c269d", "task": "M1-FLEET-LIVE-SERVER"},
       {"id": "fdda1fb0-1135-4cf8-8cff-3db550e48f54", "task": "M1-FLEET-BINDING-APPLICATION"}
+    ],
+    "reserved": [
+      {"id": "renderer-worker", "task": "M1-BROWSER-RENDERER"},
+      {"id": "ui-worker", "task": "M1-BROWSER-UI"},
+      {"id": "audio-worker", "task": "M1-BROWSER-AUDIO"},
+      {"id": "shell-worker", "task": "M1-BROWSER-SHELL"}
     ],
     "queued": [],
     "parked": [
@@ -25,6 +28,78 @@
     "usage_accounting": "milestones/evidence/m1-usage-snapshot.json records the available delayed session snapshot; final project-wide credits/currency are unavailable."
   },
   "tasks": [
+    {
+      "id": "M1-BROWSER-RENDERER",
+      "goal": "Implement actual source-faithful Rust/WASM WebGPU world/model/animation rendering and picking.",
+      "status": "READY",
+      "specs": ["spec/browser-implementation.md", "web/shared/contracts.ts", "spec/m1-benchmark-contract.json", "milestones/approvals/m1-reference-pack-v1.3.0.json"],
+      "dependencies": ["M1-REFERENCE-APPROVAL"],
+      "allowed_paths": ["crates/renderer/**", "web/renderer/**", "tools/render-assets/**", "assets/compiled/render/**"],
+      "forbidden_paths": ["prompt.md", "crates/game-types/**", "crates/server/**", "crates/protocol/**", "web/shared/**", "web/ui/**", "web/audio/**", "web/app/**", "milestones/**"],
+      "outputs": ["Real WebGPU scenes/assets/penguin/equipment/animations", "Picking and GPU-completed frame instrumentation"],
+      "validation_commands": [],
+      "test_requirements": ["Approved full-source comparisons", "No image-backed scene or generic substitute", "Source transforms/palette/timing and mandatory hardware backend"],
+      "acceptance": ["SQL m1-renderer records actual working rendering and precise fidelity/performance evidence"],
+      "reserved_namespaces": ["asset.compiled.render.*"],
+      "source_notes": ["research/reference-pack/v1/manifest.json"],
+      "parity_entries": [],
+      "adaptations": ["Approved penguin base and equipment-fit criteria"],
+      "evidence": []
+    },
+    {
+      "id": "M1-BROWSER-UI",
+      "goal": "Implement approved startup and Classic game interfaces with real authoritative controls and original source pixels/fonts.",
+      "status": "READY",
+      "specs": ["spec/browser-implementation.md", "web/shared/contracts.ts", "milestones/approvals/m1-reference-pack-v1.3.0.json"],
+      "dependencies": ["M1-REFERENCE-APPROVAL"],
+      "allowed_paths": ["web/ui/**", "assets/compiled/ui/**", "tools/ui-assets/**"],
+      "forbidden_paths": ["prompt.md", "crates/**", "web/shared/**", "web/app/**", "web/audio/**", "web/renderer/**", "milestones/**"],
+      "outputs": ["Accessible source-framed account screens", "Classic HUD/tabs/menus/inventory/equipment/skills/combat/bank/shop/dialogue/quests"],
+      "validation_commands": [],
+      "test_requirements": ["Exact source glyph/sprite/layout and live values", "No cosmetic-only controls, fake grants or source screenshots as client"],
+      "acceptance": ["SQL m1-ui records actual UI/control implementation and comparison results"],
+      "reserved_namespaces": ["asset.compiled.ui.*"],
+      "source_notes": ["Approved original/public/native HUD families"],
+      "parity_entries": [],
+      "adaptations": ["Seven approved web/branding compositions"],
+      "evidence": []
+    },
+    {
+      "id": "M1-BROWSER-AUDIO",
+      "goal": "Implement actual original-source browser audio playback and region/event/jingle/control lifecycle.",
+      "status": "READY",
+      "specs": ["spec/browser-implementation.md", "web/shared/contracts.ts", "research/reference-pack/v1/audio-reference.json", "milestones/m1-audio-trigger-approval.json"],
+      "dependencies": ["M1-REFERENCE-APPROVAL"],
+      "allowed_paths": ["web/audio/**", "tools/browser-audio-tests/**"],
+      "forbidden_paths": ["prompt.md", "crates/**", "web/shared/**", "web/app/**", "web/ui/**", "web/renderer/**", "assets/source/**", "milestones/**"],
+      "outputs": ["Enabled real playback with gestures/mute/volume/reconnect", "Source FIFO/offset/region/jingle/animation behavior"],
+      "validation_commands": [],
+      "test_requirements": ["Original lossless sounds only", "No double offsets/duplicate playing sources", "Actual playback/control timing evidence"],
+      "acceptance": ["SQL m1-browser-audio distinguishes real playback from file/decoder-only checks"],
+      "reserved_namespaces": [],
+      "source_notes": ["Corrected audio manifest and approved pack"],
+      "parity_entries": [],
+      "adaptations": ["adaptation.m1.learning_the_ropes_completion_audio", "adaptation.m1.ordinary_food_audio"],
+      "evidence": []
+    },
+    {
+      "id": "M1-BROWSER-SHELL",
+      "goal": "Deliver real browser/WASM transport, input and asset orchestration composing renderer, source UI and audio.",
+      "status": "READY",
+      "specs": ["spec/browser-implementation.md", "web/shared/contracts.ts", "spec/web-delivery.md", "spec/networking.md"],
+      "dependencies": ["M1-REFERENCE-APPROVAL"],
+      "allowed_paths": ["web/app/**", "web/package.json", "web/pnpm-lock.yaml", "web/tsconfig.json", "web/index.html", "web/vite.config.ts", "web/generated/**", "crates/wasm/**", "tools/web-build/**"],
+      "forbidden_paths": ["prompt.md", "crates/game-types/**", "crates/server/**", "crates/protocol/**", "crates/renderer/**", "web/shared/**", "web/ui/**", "web/audio/**", "milestones/**"],
+      "outputs": ["Real same-origin WASM client and source capability/loading/reconnect behavior", "Executable composed app/build/asset bundle and measurement hooks"],
+      "validation_commands": [],
+      "test_requirements": ["No seeded login/character", "No credential leaks/proxy escape", "Real backend state and genuine renderer counters"],
+      "acceptance": ["SQL m1-browser-shell records an executable integrated client, not a mock dashboard"],
+      "reserved_namespaces": [],
+      "source_notes": ["Owner-approved pack; final Mac acceptance still separate"],
+      "parity_entries": [],
+      "adaptations": [],
+      "evidence": []
+    },
     {
       "id": "M1-FLEET-POTION-ASSETS",
       "goal": "Publish only the additional original source inputs needed by the approved 1-4-dose potion loot adaptation.",
@@ -719,7 +794,7 @@
     {
       "id": "M1-REFERENCE-PACK",
       "goal": "Assemble the complete concrete Section 30.2 source visual/audio pack from available online inputs and matched source captures, without implementing presentation prematurely.",
-      "status": "BLOCKED",
+      "status": "DONE",
       "specs": ["spec/art-style.md", "spec/interface-parity.md", "spec/world.md", "spec/performance.md", "research/reference-capture-checklist.md"],
       "dependencies": ["M1-SOURCE-INPUTS", "M1-STARTING-STATE"],
       "allowed_paths": ["research/**", "spec/**", "tools/reference*.py", "milestones/**"],
@@ -755,7 +830,7 @@
     {
       "id": "M1-PRESENTATION",
       "goal": "Build and review the real startup-to-world WebGPU/audio benchmark, then all slice presentation states.",
-      "status": "BLOCKED",
+      "status": "IMPLEMENTING",
       "specs": ["prompt.md#14", "prompt.md#30.2", "prompt.md#30.3", "prompt.md#36"],
       "dependencies": ["M1-REF", "M1-REFERENCE-APPROVAL"],
       "allowed_paths": ["crates/renderer/**", "crates/wasm/**", "crates/audio/**", "web/**", "assets/**", "tests/browser/**"],
@@ -773,7 +848,7 @@
     {
       "id": "M1-REFERENCE-APPROVAL",
       "goal": "Obtain owner approval of the complete concrete visual/audio pack and establish the Section 36 benchmark contract.",
-      "status": "BLOCKED",
+      "status": "DONE",
       "specs": ["prompt.md#30.2", "prompt.md#36"],
       "dependencies": ["M1-REFERENCE-PACK"],
       "allowed_paths": ["spec/**", "milestones/**", "research/**"],

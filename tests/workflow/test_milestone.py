@@ -150,6 +150,7 @@ class MilestoneTests(unittest.TestCase):
         self.state["later_milestone_authorized"] = True
         self.assertTrue(milestone.structure_errors(self.state, self.tasks))
         self.state["later_milestone_authorized"] = False
+        self.state["reference_pack_approval"] = None
         next(task for task in self.tasks["tasks"] if task["id"] == "M1-PRESENTATION")["status"] = "IMPLEMENTING"
         self.assertTrue(milestone.structure_errors(self.state, self.tasks))
 

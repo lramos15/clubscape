@@ -1,0 +1,22 @@
+{
+  "schema_version": 1,
+  "gate": "reference-pack",
+  "result": "passed",
+  "revision": "9dfa981694f557d5cc8d402f21e355384963acb8",
+  "reference_pack_sha256": "b62e19704e17d3d3e4e819f803ef49ba7cc54034ae407184b423427c65d9674d",
+  "reference_pack_path": "research/reference-pack/v1/manifest.json",
+  "source_validation_command": "python3 tools/reference-pack/validate.py --report --require-complete",
+  "unit_command": "python3 -m unittest discover -s tools/reference-pack -p 'test_*.py' -q",
+  "unit_tests_passed": 85,
+  "input_hashes_checked": 1307,
+  "required_cases": 126,
+  "tutorial_states": 71,
+  "visual_families": 29,
+  "native_runtime_images": 109,
+  "public_images": 100,
+  "corrected_flac_inputs": 264,
+  "source_cue_wavs": 2,
+  "approval_record": "milestones/approvals/m1-reference-pack-v1.3.0.json",
+  "candidate_tested": false,
+  "final_presentation_accepted": false
+}

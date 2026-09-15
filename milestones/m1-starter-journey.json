@@ -19,13 +19,16 @@
     "record": "2026-09-13T16:05:01.176Z user execution request; prompt.md Section 44 approved default",
     "scope": "Complete Section 30 only"
   },
-  "reference_pack_approval": null,
+  "reference_pack_approval": {
+    "path": "milestones/approvals/m1-reference-pack-v1.3.0.json",
+    "sha256": "e910cb02b6984a94be542af1c56e29dc67bfe2e1cd14b72deda8b4b369feeb70"
+  },
   "presentation_acceptance": null,
   "later_milestone_authorized": false,
   "gates": [
     {"id": "reference-baseline", "status": "in_progress", "evidence": [], "blocker": "Build 240/cache 2695 identity and two index hashes established; full inventory reconciliation and source behavior gaps remain."},
-    {"id": "reference-pack", "status": "blocked", "evidence": [], "blocker": "Concrete Section 30.2 visual/audio pack and owner approval required before presentation implementation."},
-    {"id": "benchmark-contract", "status": "blocked", "evidence": [], "blocker": "Representative integrated-GPU hardware, driver and both browser versions are not supplied."},
+    {"id": "reference-pack", "status": "verified", "evidence": [{"path": "milestones/evidence/m1-approved-reference-pack.json", "sha256": "81e9d3366a9e13d3466b0275634ab5fae98a478881d2eefc47a91bae705c5ae5"}], "blocker": null},
+    {"id": "benchmark-contract", "status": "implemented", "evidence": [], "blocker": "Pre-implementation contract is spec/m1-benchmark-contract.json. Sparky profile is pinned for permitted engineering; exact owner Mac/Chrome/Edge fields and final measurements remain to be collected."},
     {"id": "early-presentation-benchmark", "status": "blocked", "evidence": [], "blocker": "Requires approved source pack and real browser renderer/audio."},
     {"id": "real-ui-account-creation", "status": "not_started", "evidence": [], "blocker": null},
     {"id": "complete-tutorial", "status": "not_started", "evidence": [], "blocker": null},

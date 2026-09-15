@@ -2,6 +2,11 @@
 
 Status: **target-hardware contract blocked; no measurements passed**.
 
+The pre-renderer budget and permitted local profile are now fixed in
+`spec/m1-benchmark-contract.json`, tied to the owner-approved reference-pack
+hash. Exact owner-run Mac browser/hardware collection and actual performance
+acceptance remain pending; no achieved FPS is asserted.
+
 The mandatory target remains 60 rendered FPS at 1920x1080 in desktop Chrome
 and Edge with WebGPU on representative modern integrated graphics. Stock
 visuals, the approved draw distance and real tutorial/Lumbridge workloads are

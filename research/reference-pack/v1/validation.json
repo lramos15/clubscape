@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "validated_at": "2026-09-15T00:10:51.036889+00:00",
+  "validated_at": "2026-09-15T00:22:24.598899+00:00",
   "result": "passed_source_input_integrity_and_case_index",
   "manifest": {
     "path": "research/reference-pack/v1/manifest.json",
