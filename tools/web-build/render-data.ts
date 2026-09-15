@@ -2,13 +2,14 @@ import { isDeepStrictEqual } from "node:util";
 import type { RenderAssetManifest } from "../../web/renderer/src/index.ts";
 import { publicPath } from "../../web/app/identity.ts";
 
-export const DEFAULT_RENDER_INPUTS = ".local/render-inputs-a6a1b3dc";
+export const DEFAULT_RENDER_INPUTS = ".local/render-inputs-8281dd16";
 
 export function renderRuntimeFiles(manifest: RenderAssetManifest): {
   common: string[]; scenes: Map<string, string[]>; blocks: Map<number, string[]>; files: string[];
 } {
   const common = new Set([
     "palette.bin", ...manifest.textures.map((id) => `textures/${id}.bin`),
+    ...(manifest.files["minimap/mapscenes.bin"] ? ["minimap/mapscenes.bin"] : []),
     ...manifest.npcs.map((npc) => npc.pack),
     ...(manifest.sequences ?? []).map((sequence) => sequence.file),
     ...(manifest.npc_definitions ?? []).map((npc) => npc.base_model),
@@ -20,8 +21,12 @@ export function renderRuntimeFiles(manifest: RenderAssetManifest): {
   ]);
   const scenes = new Map(manifest.scenes.map((scene) =>
     [scene.name, [scene.file_gz ?? scene.file, scene.models_file_gz ?? scene.models_file]]));
-  const blocks = new Map((manifest.blocks ?? []).map((block) =>
-    [block.square, [block.file_gz ?? block.file, block.models_file_gz ?? block.models_file]]));
+  const minimaps = new Map((manifest.minimap_blocks ?? []).map((block) => [block.square, block.file]));
+  const blocks = new Map((manifest.blocks ?? []).map((block) => {
+    const minimap = minimaps.get(block.square);
+    const paths = [block.file_gz ?? block.file, block.models_file_gz ?? block.models_file, ...(minimap ? [minimap] : [])];
+    return [block.square, paths] as const;
+  }));
   if (scenes.size !== manifest.scenes.length || blocks.size !== (manifest.blocks?.length ?? 0)) {
     throw new Error("Duplicate source renderer scene/block identity.");
   }

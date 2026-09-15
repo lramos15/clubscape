@@ -1,5 +1,5 @@
 import { createRenderer, regionSceneId, sourceZoomForViewportHeight } from "../renderer/src/index.ts";
-import type { ClubscapeRendererHandle, PlayerFitReport, PlayerPreviewRequest, RenderAssetManifest, RendererDiagnostics, ScenePlacement } from "../renderer/src/index.ts";
+import type { ClubscapeRendererHandle, MinimapSurface, PlayerFitReport, PlayerPreviewRequest, RenderAssetManifest, RendererDiagnostics, ScenePlacement } from "../renderer/src/index.ts";
 import wasmUrl from "../renderer/pkg/clubscape_renderer_bg.wasm?url";
 import type { RenderCamera, RendererConfig, RenderFrame, RendererHandle, WorldView } from "../shared/contracts.ts";
 import type { RendererObservation } from "./benchmark.ts";
@@ -23,6 +23,7 @@ export interface ShellRenderer extends RendererHandle {
   frameUiPreview(request: Readonly<UiPreviewRequest>): Promise<ImageData | null>;
   playerFitReport(): PlayerFitReport[];
   scenePlacement(): ScenePlacement | null;
+  minimapSurface(): MinimapSurface;
 }
 
 /** Exact adapter composition: real factory, real diagnostics, and the actual canvas queue clock. */
@@ -69,7 +70,7 @@ export async function createShellRenderer(canvas: HTMLCanvasElement, config: Ren
       world = value;
       // Extra validated fields (including dynamicObjects) survive the shared type boundary.
       native.update(value);
-      if (value.player.animation === "") report("The authoritative player animation observer is empty and running/action timing is not yet published. The shell does not infer it from settings or nearby objects; renderer animation fidelity remains unsupported.");
+      if (value.player.running === undefined || value.player.action === undefined) report("The authoritative movement/action observer is unavailable. The shell does not infer it from settings or nearby objects.");
     },
     camera(value) {
       invariant(value.near === 50 && value.unitsPerTurn === 16384, "Renderer camera must use its actual near50/16384-unit ABI.", "renderer");
@@ -100,6 +101,7 @@ export async function createShellRenderer(canvas: HTMLCanvasElement, config: Ren
     async frameUiPreview(request) { return native.framePlayerPreview(nativeUiPreviewRequest(request, world, manifest)); },
     playerFitReport() { return native.playerFitReport(); },
     scenePlacement() { return placement(native.diagnostics()).value; },
+    minimapSurface() { return native.minimapSurface(); },
     observe() {
       const state = native.diagnostics();
       const scene = placement(state);
@@ -107,7 +109,7 @@ export async function createShellRenderer(canvas: HTMLCanvasElement, config: Ren
         ready: state.sceneId !== null && state.deviceLostReason === null,
         sceneId: state.sceneId ?? "unloaded", assets: residentRendererAssets(manifest, state),
         scenePlacement: scene.value, nativeScenePlacement: scene.raw, loadedSquares: state.loadedSquares,
-        playerAnimationAvailable: world !== null && world.player.animation !== "",
+        playerAnimationAvailable: world !== null && world.player.running !== undefined && world.player.action !== undefined,
         // The public adapter still discards raw entities_drawn; never substitute server counts.
         entities: {}, gpuTimestampPassScope: state.timestampsSupported ? "original integer fill compute pass" : null,
         settings: camera ? { backend: "webgpu", sourceManifestSha256: state.manifestSha256, brightness: manifest.brightness,

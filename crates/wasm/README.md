@@ -152,29 +152,29 @@ Rust fixtures test wire mapping, malformed/stale/duplicate replies, uncertain
 outcomes, auth revocation, precision and privacy. They do not establish a real
 character/world journey or presentation fidelity.
 
-## Published `game.ui.v1` boundary (contract-only)
+## Complete generated `game.ui.v1` and actor-observer boundary
 
-The authorized `d1532d6f` contract is integrated. `GameplayUiRequest` and
+The authorized FINAL4 chain through `78fcec4` is integrated. `GameplayUiRequest` and
 `GameplayUiView` are reused directly from `clubscape-game-types`, and the
 browser uses the exact `GameplayUiIntent`/`GameplayUiView` shared types.
-No engine, Protobuf message, capability advertisement or canonical data
-implementation was included in that publication.
+The exact generated `WorldSnapshot.ui20`/`WorldInput.ui41` messages are now
+implemented by this bridge; the source engine remains exclusively server-owned.
 
 `BridgeState.capabilities` records the actual validated ServerHello values.
-`gameplayUiWireSupported` is explicitly **false** until the generated wire
-adapter is implemented. Valid new UI requests are parsed through the exact
-shared Rust request enum, then rejected as `unsupported_capability` or
-`unsupported_protocol` **before sequence allocation or transport**. They are
-never downgraded to old production/bank/item actions that discard menu, entry,
-presentation, confirmation or expected item/instance identities. A future
-server advertising `game.ui.v1` cannot make this old decoder create/join a
-world while silently dropping its required UI view.
+`gameplayUiWireSupported` is **true**, but admission still requires actual
+`game.ui.v1` negotiation and its complete version-1 view. `ui_input.rs` maps
+all20 current flat request variants, including document-page and placeholder,
+through generated Protobuf and the existing protocol validator before client-core
+allocates a sequence. Requests are never downgraded to old quantity/index
+operations or accepted as arbitrary client state. Missing/unnegotiated views,
+required nested messages, unknown enums and invalid identities fail explicitly.
 
 `gameplay_ui::project` is a pure Rust-DTO to shared-TypeScript-DTO projection,
-ready for the eventual generated snapshot adapter. It is **not exposed as a
+reused by the typed `ui_wire.rs` decoder. It is **not exposed as a
 WASM state setter or accepted client outcome**. It preserves every stable
 entry/menu/presentation/confirmation/item/instance ID, declared appearance/
-ability/permission state, public chat text and source continuation. Balances,
+ability/permission state, independent active tab/interface, document/native-map
+state, public chat text and source continuation. Balances,
 fees, XP, revisions and weight remain exact decimal strings. A bank placeholder
 has `value:null`, never a spendable zero-quantity stack. No guards, prices,
 grants, rewards, volumes, model previews or minimap data are computed here.
@@ -187,11 +187,18 @@ explicit null. A null target is legitimate inventory-only production, not
 an unavailable capability or a reason to fabricate a facility. Menu/recipe/
 permission identities remain intact.
 
-The broad runtime implementation/companion commits are not integrated; final
-v4 must be relayed before enabling generated wire support. The reserved
-`WorldSnapshot.ui`/`WorldInput.ui` tags are20/41; production target field3
-remains optional. `expected_bank_revision` field21 must echo the exact
-decimal `ui.bank.revision`, never passive-tick-changing character revision.
-The pure DTO projection already preserves this independent bank string. It
-does not manufacture a request precondition, wire implementation or gameplay
-progress to bypass a missing backend contextual menu.
+Production target field3 remains naturally optional. Bank request field21
+must echo the exact decimal `ui.bank.revision`. The browser captures it before
+queueing; direct WASM callers supply it explicitly. No character/world tick or
+newer row state substitutes for an explicitly captured precondition. Client-core
+retains the original full UI wire request across uncertain retries. The server
+checks a stale bank revision only after durable duplicate lookup.
+
+`game.observer.v1` is negotiated separately. `observer.rs` forwards local and
+visible-player `running`, nullable `movementTick` and nullable typed `action`
+with stable identity, exact source animation/method/recipe/style/spell/target
+and decimal start/cycle/next/observed ticks. Older absent observers stay absent;
+false, null, final-idle/exhausted running and supplied values are not inferred
+from a checkbox, activity or nearby scenery. The complete dynamic-object list
+still uses validated canonical object metadata for optional `sourceId`.
+Ordinary `WorldView.bank.banker` remains alongside `ui.bank`.

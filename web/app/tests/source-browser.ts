@@ -13,6 +13,7 @@ import { sourceAudioDefaults } from "../../audio/index.ts";
 import type { RenderSnapshot } from "../../../tools/browser-harness/src/protocol.ts";
 import type { PreviewObservation } from "../preview.ts";
 import { presentationOptions } from "../presentation.ts";
+import type { MinimapObservation } from "../minimap.ts";
 
 const root = resolve(fileURLToPath(new URL("../../../", import.meta.url)));
 type SecretWindow = Window & { __sourceUiCredentials?: { name: string; password: string } };
@@ -21,6 +22,7 @@ type ObservedSnapshot = RenderSnapshot & { diagnostics: {
   loadedSquares: number[] | null; scenePlacement: { baseX: number; baseY: number; sizeTiles: number; blocks: boolean } | null;
   nativeScenePlacement: { baseX: number; baseY: number; sizeTiles: number; blocks: boolean } | null;
   modelPreview: PreviewObservation | null; playerAnimationAvailable: boolean | null;
+  minimapSurface: MinimapObservation | null;
 } };
 
 function distribution(values: number[]) {
@@ -304,15 +306,54 @@ export async function sourceBrowserCheck(): Promise<void> {
     assert(first.player.presence?.connected);
     assert(!JSON.stringify(first).includes("played_time") && !JSON.stringify(first).includes("ground_provenance"));
     assert(Array.isArray(first.dynamicObjects));
-    assert(first.dynamicObjects.every((object) => object.objectId === null ? object.sourceId === null
+    assert(first.dynamicObjects.every((object) => object.objectId === undefined ? object.sourceId === undefined
       : Number.isSafeInteger(object.sourceId) && object.sourceId! >= 0));
     assert(first.dynamicObjects.every((object) => object.expiresAtTick === null || /^\d+$/.test(object.expiresAtTick)));
     checks.push("empty source creation, real join and separate sequenced appearance confirmation from UI");
     const gameplayUi = await page.evaluate(() => window.__clubscapeClientStateV1!.gameplayUi());
-    assert.equal(gameplayUi.available, false);
-    assert.equal(gameplayUi.reason, "not_advertised");
-    assert.equal(first.ui, undefined, "Contract publication cannot fabricate a version-1 server UI projection.");
-    checks.push("legacy game.ui.v1 absence is explicitly unsupported; no fake complete UI state");
+    assert.equal(gameplayUi.available, true);
+    assert.equal(gameplayUi.reason, null);
+    assert.equal(first.ui?.version, 1);
+    assert.equal(typeof first.player.running, "boolean");
+    assert(Object.hasOwn(first.player, "movementTick") && Object.hasOwn(first.player, "action"));
+    checks.push("real game.ui.v1 and actor observer fields arrive through generated WASM wire without an empty legacy fallback");
+    await dismissNotices(page);
+    await page.locator('[data-ui-control="experience-experience.brand_new"]').click();
+    await page.waitForFunction(() => {
+      const world = window.__clubscapeClientStateV1!.read().world;
+      return world !== null && world.player.tutorialStage !== "stage.tutorial.experience";
+    }, undefined, { timeout: 20_000 });
+    const selected = await page.evaluate(() => window.__clubscapeClientStateV1!.read().world) as PublicWorld;
+    assert.deepEqual(selected.player.inventory, first.player.inventory);
+    assert.deepEqual(selected.player.skills, first.player.skills);
+    const experience = { selection: "experience.brand_new", before: first.player.tutorialStage, after: selected.player.tutorialStage,
+      authoritativeOnly: true, inventoryAndXpUnchanged: true };
+    checks.push("actual UI source brand-new experience selection advances only through the authoritative request");
+    const chat = page.locator('input[data-ui-input="public-chat"]');
+    let chatProof: unknown;
+    if (selected.ui!.publicChat.permission.allowed) {
+      const message = "UI4 source transport check";
+      await chat.fill(message);
+      await chat.press("Enter");
+      await page.waitForFunction((text) => {
+        const world = window.__clubscapeClientStateV1!.read().world;
+        return world?.ui?.publicChat.messages.some((line) => line.actor === world.player.id && line.text === text);
+      }, message, { timeout: 20_000 });
+      const chatLine = await page.evaluate((text) => {
+        const world = window.__clubscapeClientStateV1!.read().world!;
+        return world.ui!.publicChat.messages.find((line) => line.actor === world.player.id && line.text === text)!;
+      }, message);
+      await page.waitForTimeout(700);
+      assert.equal(await page.evaluate((id) => window.__clubscapeClientStateV1!.read().world!.ui!.publicChat.messages.filter((line) => line.id === id).length,
+        chatLine.id), 1);
+      chatProof = { available: true, id: chatLine.id, channel: chatLine.channel, authoritativeOnly: true };
+      checks.push("actual UI public chat uses WorldInput.ui and renders the authoritative stable message exactly once");
+    } else {
+      assert(selected.ui!.publicChat.permission.reason);
+      if (await chat.count()) assert(await chat.isDisabled());
+      chatProof = { available: false, permission: selected.ui!.publicChat.permission, bypassed: false };
+      checks.push("actual source public-chat permission remains locked; no unlock or message is fabricated");
+    }
     const audioControls = await page.evaluate(() => window.__clubscapeClientStateV1!.audioControls());
     assert(audioControls);
     assert.equal(audioControls.semantics, "native-source-slider-v1");
@@ -357,7 +398,7 @@ export async function sourceBrowserCheck(): Promise<void> {
       assert.equal(end.diagnostics.scenePlacement?.sizeTiles, 104);
       assert([...renderRequests].some((path) => path.includes("/blocks/")));
       assert(![...renderRequests].some((path) => path.includes("/scenes/")), "recorded camera did not request a fixture scene");
-      assert.equal(end.diagnostics.playerAnimationAvailable, false);
+      assert.equal(end.diagnostics.playerAnimationAvailable, true);
       const fps = frames.length * 1000 / elapsed;
       timing = {
         kind: "sparky-canonical-onboarding-engineering-only", measuredWindowMs: elapsed, completedFrames: frames.length,
@@ -368,11 +409,12 @@ export async function sourceBrowserCheck(): Promise<void> {
         atLeast60Fps: fps >= 60, gapsOver33_4Ms: [...gaps, tail].filter((gap) => gap > 33.4).length,
         loadedSquares: end.diagnostics.loadedSquares, scenePlacement: end.diagnostics.scenePlacement,
         nativeScenePlacement: end.diagnostics.nativeScenePlacement,
+        minimap: end.diagnostics.minimapSurface,
         declaredWorkloadReady: end.ready, performanceAccepted: false, ownerHardware: false,
       };
       checks.push("per-world-frame performance.now receipts remain contiguous under the actual two-frame pipeline; metrics are engineering-only");
     }
-    const progress = publicProgress(first);
+    const progress = publicProgress(await page.evaluate(() => window.__clubscapeClientStateV1!.read().world) as PublicWorld);
     restarted = await restartSource(origin, pin, gameRoot);
     await page.waitForFunction((actorId) => {
       const state = window.__clubscapeClientStateV1?.read();
@@ -444,7 +486,8 @@ export async function sourceBrowserCheck(): Promise<void> {
     await writeFile(resolve(evidence, "result.json"), JSON.stringify({
       kind: earlyScene ? "early-render-ui-canonical-source-entry" : "real-streamed-render-ui-canonical-source-entry",
       result: "passed", recordedAt: new Date().toISOString(),
-      checks, gameplayUi, audioControls, sourceRunPin: pin, browser: version, sandbox: { namespaceAndSeccomp: true, gpuProcessSandboxed: system.gpu.auxAttributes?.sandboxed ?? null },
+      checks, gameplayUi, experience, publicChat: chatProof,
+      audioControls, sourceRunPin: pin, browser: version, sandbox: { namespaceAndSeccomp: true, gpuProcessSandboxed: system.gpu.auxAttributes?.sandboxed ?? null },
       titlePixels: title, build: benchmark.identity, rendererReady: benchmark.ready, renderedFrames: benchmark.renderedFrames,
       actualUiSignup: true, actualCanonicalWorld: true, actualServerRestart: true, actualDeviceLossHandled: true,
       earlyScene, recordedCamera, projection, renderPixels, preview, timing,

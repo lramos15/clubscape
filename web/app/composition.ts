@@ -20,7 +20,9 @@ import { SourceAudioSession, audioProblem, playbackEnabled, sourceAudioAdapter }
 import { sourceZoomForViewportHeight } from "./renderer.ts";
 import type { AudioSnapshot, SourceAudioScene, SourceMusicState } from "../audio/index.ts";
 import type { UiPreviewRequest } from "../ui/index.ts";
+import type { MinimapSurface } from "../renderer/src/index.ts";
 import { ModelPreview } from "./preview.ts";
+import { MinimapRelay } from "./minimap.ts";
 import { sourceUiAudioAdapter, sourceUiPreviewAdapter } from "./ui-adapter.ts";
 
 export interface ObservedRenderer extends RendererHandle {
@@ -28,6 +30,7 @@ export interface ObservedRenderer extends RendererHandle {
   observe?(): RendererObservation;
   supportsScene?(id: string): boolean;
   frameUiPreview?(request: Readonly<UiPreviewRequest>): Promise<ImageData | null>;
+  minimapSurface?(): MinimapSurface;
 }
 export interface ApplicationHandle { app: BrowserApp; dispose(): Promise<void> }
 
@@ -58,6 +61,9 @@ export async function mountApplication(options: {
   let appliedWorld: WorldView | null = null;
   let rendererHadWorld = false;
   let previewResetReported = false;
+  let minimap: MinimapRelay | null = null;
+  let minimapInput = "";
+  let deviceEpoch = "device-not-created";
   let input: InputController | null = null;
   let assets: AssetLoader | null = null;
   let required: string[] = [];
@@ -269,7 +275,10 @@ export async function mountApplication(options: {
         const message = (event as CustomEvent<unknown>).detail;
         if (typeof message === "string") app.report(new AppError(message, { kind: "renderer" }));
       }, { signal: lifecycle.signal });
-      stopDevice = watchCanvasDevice(worldCanvas, (epoch, ready, timestamps) => benchmark.device(epoch, ready, timestamps), (error) => {
+      stopDevice = watchCanvasDevice(worldCanvas, (epoch, ready, timestamps) => {
+        deviceEpoch = epoch;
+        benchmark.device(epoch, ready, timestamps);
+      }, (error) => {
         sceneLoaded = false;
         benchmark.worldReady(false);
         audio?.disconnected();
@@ -280,6 +289,8 @@ export async function mountApplication(options: {
         sourcePackSha256: SOURCE_PACK_SHA256, width: worldCanvas.width, height: worldCanvas.height,
       });
       const previewRenderer = renderer;
+      minimap = new MinimapRelay(components.setUiMinimap ? (surface) => components.setUiMinimap!(ui!, surface) : null,
+        (error) => app.report(error));
       if (previewRenderer.frameUiPreview) {
         preview = new ModelPreview({
           request: () => sourceUiPreviewAdapter.request(ui!),
@@ -347,6 +358,15 @@ export async function mountApplication(options: {
           if (disposed) return;
           if (completed !== null) benchmark.completed(completed);
           const observation = renderer?.observe?.() ?? null;
+          const worldView = app.state().world;
+          if (worldView && observation && renderer?.minimapSurface && observation.scenePlacement?.blocks) {
+            const key = canonicalJson({ revision: worldView.revision, scene: observation.scenePlacement });
+            if (key !== minimapInput) {
+              minimapInput = key;
+              minimap?.update(renderer.minimapSurface(), deviceEpoch);
+              benchmark.minimap(minimap?.observe() ?? null);
+            }
+          }
           const delivery = assets?.manifest.renderer;
           const observedAssets = observation?.assets.flatMap((asset) => {
             const id = delivery?.assetIds[asset.id];

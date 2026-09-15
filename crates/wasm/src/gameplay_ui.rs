@@ -1,19 +1,14 @@
 use clubscape_game_types::{
-    GAMEPLAY_UI_VIEW_VERSION, GameplayUiRequest, GameplayUiView, InventoryActionsUiView, UiItem,
+    GAMEPLAY_UI_VIEW_VERSION, GameplayUiView, InventoryActionsUiView, UiItem,
 };
 use serde_json::{Value, json};
 
 use crate::BridgeError;
 
 pub const CAPABILITY: &str = "game.ui.v1";
-// Publication of DTOs does not implement the generated protocol or server projection.
-pub const WIRE_SUPPORTED: bool = false;
+pub const WIRE_SUPPORTED: bool = true;
 
-pub(crate) fn request(input: &str) -> Option<GameplayUiRequest> {
-    serde_json::from_str(input).ok()
-}
-
-fn decimal(value: &str, signed: bool) -> Result<&str, BridgeError> {
+pub(crate) fn decimal(value: &str, signed: bool) -> Result<&str, BridgeError> {
     let digits = if signed {
         value.strip_prefix('-').unwrap_or(value)
     } else {
@@ -54,7 +49,7 @@ fn inventory_actions(values: &[InventoryActionsUiView]) -> Vec<Value> {
 }
 
 /// Pure shared-Rust-DTO to shared-TypeScript-DTO projection.
-/// No JS setter or RPC accepts these values; wire admission remains unsupported.
+/// No JS setter or RPC accepts these values.
 pub fn project(value: &GameplayUiView) -> Result<Value, BridgeError> {
     if value.version != GAMEPLAY_UI_VIEW_VERSION {
         return Err(BridgeError::protocol(
@@ -143,8 +138,12 @@ pub fn project(value: &GameplayUiView) -> Result<Value, BridgeError> {
     }
     let bonuses = &value.equipment.bonuses;
     Ok(json!({
-        "version":value.version,"activeInterface":value.active_interface,
+        "version":value.version,"activeTab":value.active_tab,"activeInterface":value.active_interface,
         "production":production,"reward":reward,"confirmation":confirmation,
+        "document":value.document.as_ref().map(|document| json!({
+            "id":document.id,"interface":document.interface,"title":document.title,"pages":document.pages,
+            "page":document.page,"mapAsset":document.map_asset,"nativeMap":document.native_map,
+        })),
         "interfaces":value.interfaces,"combatStyle":value.combat_style,"combatStyles":value.combat_styles,
         "prayers":value.prayers,"spells":value.spells,
         "equipment":{

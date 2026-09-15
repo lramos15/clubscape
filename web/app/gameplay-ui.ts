@@ -1,5 +1,5 @@
-import { GAMEPLAY_UI_CAPABILITY } from "../shared/contracts.ts";
-import type { GameplayUiView, WorldView } from "../shared/contracts.ts";
+import { ACTOR_OBSERVER_CAPABILITY, GAMEPLAY_UI_CAPABILITY } from "../shared/contracts.ts";
+import type { ActorActionView, GameIntent, GameplayUiIntent, GameplayUiView, WorldView } from "../shared/contracts.ts";
 import { AppError, invariant } from "./errors.ts";
 
 export interface GameplayUiSupport {
@@ -9,7 +9,7 @@ export interface GameplayUiSupport {
   message: string | null;
 }
 const requiredFields = [
-  "activeInterface", "production", "reward", "confirmation", "interfaces", "combatStyle", "combatStyles",
+  "activeTab", "activeInterface", "production", "reward", "confirmation", "document", "interfaces", "combatStyle", "combatStyles",
   "prayers", "spells", "equipment", "inventoryActions", "bank", "keptOnDeath", "recovery", "appearance", "publicChat",
 ] as const satisfies readonly (keyof GameplayUiView)[];
 
@@ -17,6 +17,25 @@ function decimal(value: unknown, signed = false): void {
   invariant(typeof value === "string" && (signed ? /^-?\d+$/ : /^\d+$/).test(value)
     && BigInt(value.startsWith("-") ? value.slice(1) : value) <= 18446744073709551615n,
   "Authoritative gameplay UI numeric values must remain exact decimal strings.", "protocol");
+}
+
+const bankKinds: ReadonlySet<string> = new Set([
+  "bank_select_tab", "bank_create_tab", "bank_move", "bank_collapse_tab", "bank_set_insert",
+  "bank_set_placeholders", "bank_release_placeholder", "bank_placeholder", "bank_deposit_equipment",
+  "bank_withdraw_entry", "bank_set_options",
+] satisfies GameplayUiIntent["kind"][]);
+
+export function isBankUiRequest(intent: GameIntent): intent is GameplayUiIntent {
+  return bankKinds.has(intent.kind);
+}
+
+/** Capture the displayed bank revision before request queuing; never retarget an explicit retry. */
+export function captureUiBankRevision(intent: GameIntent, world: WorldView | null): GameIntent {
+  if (!isBankUiRequest(intent)) return intent;
+  const revision = intent.expected_bank_revision ?? world?.ui?.bank?.revision;
+  if (revision === undefined) throw new AppError("The source bank revision is unavailable; no bank control request was sent.", { kind: "state" });
+  decimal(revision);
+  return { ...intent, expected_bank_revision: revision };
 }
 
 /** Validates the published shared view boundary, without deriving permissions, prices or defaults. */
@@ -30,6 +49,16 @@ export function validateGameplayUi(view: GameplayUiView): void {
   invariant(view.equipment && view.appearance && view.publicChat && view.publicChat.channel === "public"
     && Array.isArray(view.publicChat.messages), "The authoritative equipment/appearance/public-chat UI projection is missing.", "protocol");
   decimal(view.equipment.weightGrams, true);
+  invariant(view.activeTab === null || typeof view.activeTab === "string", "Invalid authoritative active tab.", "protocol");
+  if (view.document !== null) {
+    invariant(typeof view.document.id === "string" && view.document.id.length > 0
+      && typeof view.document.interface === "string" && typeof view.document.title === "string"
+      && Array.isArray(view.document.pages) && view.document.pages.every((page) => typeof page === "string")
+      && Number.isSafeInteger(view.document.page) && view.document.page >= 0
+      && typeof view.document.nativeMap === "boolean"
+      && (view.document.mapAsset === null || typeof view.document.mapAsset === "string"),
+    "The authoritative document/native-map projection is invalid.", "protocol");
+  }
   if (view.reward !== null) {
     invariant(Array.isArray(view.reward.xp) && view.reward.continuation !== null,
       "The authoritative reward continuation is missing.", "protocol");
@@ -56,6 +85,30 @@ export function validateGameplayUi(view: GameplayUiView): void {
       && ((target.kind === "spawn" && typeof target.spawn === "string" && target.spawn.length > 0)
         || (target.kind === "temporary_object" && typeof target.object === "string" && target.object.length > 0))),
     "The authoritative production target is neither null nor a typed world target.", "protocol");
+  }
+}
+
+export function validateActorObservers(capabilities: readonly string[], world: WorldView | null): void {
+  if (world === null || !capabilities.includes(ACTOR_OBSERVER_CAPABILITY)) return;
+  const action = (value: ActorActionView): void => {
+    invariant(value.version === 1 && typeof value.id === "string" && value.id.length > 0
+      && typeof value.activity === "string", "Invalid source action observer identity/version.", "protocol");
+    decimal(value.startedAtTick); decimal(value.cycleStartedAtTick); decimal(value.observedAtTick);
+    if (value.nextActionTick !== null) decimal(value.nextActionTick);
+    for (const field of ["actionId", "recipeId", "styleId", "spellId", "animation"] as const) {
+      invariant(value[field] === null || typeof value[field] === "string", "An actor observer omitted its nullable source identity.", "protocol");
+    }
+    invariant(value.target === null || (value.target !== undefined && typeof value.target === "object"
+      && ((value.target.kind === "spawn" && typeof value.target.spawn === "string")
+        || (value.target.kind === "temporary_object" && typeof value.target.object === "string"))),
+    "Invalid actor observer target.", "protocol");
+  };
+  for (const actor of [world.player, ...world.entities.filter((entity) => entity.kind === "player")]) {
+    invariant(typeof actor.running === "boolean" && Object.hasOwn(actor, "movementTick") && Object.hasOwn(actor, "action"),
+      "game.observer.v1 requires actual movement and nullable action observations.", "protocol");
+    if (actor.movementTick !== null) decimal(actor.movementTick);
+    invariant(actor.action !== undefined, "The source action observer is missing.", "protocol");
+    if (actor.action !== null) action(actor.action);
   }
 }
 

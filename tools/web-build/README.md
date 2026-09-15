@@ -7,6 +7,14 @@ checked against `web/shared/contracts.ts` and the owner approval record.
 Final source fidelity, gameplay, audio,
 performance and owner acceptance are unchanged.
 
+The owned UI4/WASM mapping and fresh FINAL4 delivery work, but the current
+UI-owner schema/dispatch tables lack `activeTab`, `document`,
+`bank_placeholder` and `ui_document_page`, and its component fixture is stale.
+Those UI files have not been edited outside ownership. Normal `pnpm typecheck`
+and therefore `pnpm build` remain blocked on that owner follow-up.
+Any separately recorded Vite/real-browser run is a diagnostic build, not a
+passing production typecheck or complete UI handoff.
+
 ## Normal commands
 
 From the repository root:
@@ -132,7 +140,7 @@ pnpm --dir web content \
   --output .local/game/content/manifest.json
 ```
 
-The committed artifact3 input now exists. The example presentation bindings
+The committed FINAL4 input now exists. The example presentation bindings
 and asset-root are **not supplied product presentation assets**; the renderer/
 UI/audio preparation owners must supply those real compiled outputs.
 The bindings JSON supplies `sourcePackSha256`, explicit `assets`,
@@ -149,10 +157,12 @@ compiler over stdin. Region scene-asset IDs must match that
 compiled content. Files reside under `asset-root` at their public URL paths
 without the leading slash. No entire cache is copied.
 
-Current canonical artifact3 is `m1.source-backed.v3.0e506f3dab24bbe0`, raw SHA-256
-`df3e2a452c100ecd94d2abc68e5cb1556f58090700474f547e7fd36de6682b3d`.
-The checked projection contains118 item definitions,29 runtime regions,
-one shop and5,010 compiled referenced asset IDs. Its exact six remaining
+Current canonical artifact4 is `m1.source-backed.v4.67e4f1fcc55d71d5`, raw SHA-256
+`6fdb60e4740372c5e299fe385875cfac32e04f22ea26ad17b53049296256c1b3`,
+compressed SHA-256
+`f53a28402baad5588ccf071310b4c239e24391715290aaac2616ed0215284aa6`.
+The checked projection contains122 item definitions,29 runtime regions,
+one shop and5,015 compiled referenced asset IDs. Its exact six remaining
 unresolved paths are preserved in `contentValidation`, not treated as active
 failures or erased. `crates/server/src/game_service/readiness.rs` owns the
 executable F2P inactivity proofs and revalidates restored/mutated state.
@@ -162,7 +172,7 @@ owner-online ground clocks and the120000 played-tick boundary. The former
 two-native-failure interlock is obsolete. Compiler/display projection alone
 still does not establish a deployed server's readiness; that remains the
 actual backend's job.
-Current projection/run evidence:
+Historical v3 projection/run evidence:
 `.local/evidence/browser-shell-df3e2a45/source-projection.json`,
 `source-refresh.json` and `source-run-pin.json` in that same directory.
 Earlier `.local/evidence/m1-artifact3-projection.json` remains historical.
@@ -172,6 +182,19 @@ The complete actor fix pair `62a003c` + `e1076a8`, then source refresh
 gameplay rules, geometry, assets and source policies are otherwise identical.
 Queued/current attack deadlines and effective presence remain engine-owned.
 There is no remaining shop/actor review-finding blocker.
+
+The authorized UI4 chain `9ae74e89`, already-consumed `351847f3`,
+`50f21226`, `d392f62a`, `e0e42d71`, `2f6a724b`, `4e92c9e7`, `78fcec4`
+is integrated. The separate `82e0a41` consumed-container publication and
+`2f775f7` dialogue generator correction are retained. One browser guidance
+merge kept the frozen-context protections and added the incoming UI4 guidance;
+no backend logic was manually edited and no FINAL4 output was replaced by v3.
+
+Fresh bundle `.local/source-ui4-6fdb60e4` has world UUID
+`4b976722-22aa-44ff-8b3a-72645374fb7b`,7,690 public assets and209,520,194 bytes.
+Its406,966-byte private descriptor stays within512KiB. This is a new normal
+world, not an implicit repin/migration of earlier acknowledged worlds.
+`source-records.py` uses the complete four-layer publication chain.
 
 Existing `.local/source-definition-a200ca08` and `.local/source-audio-a200ca08`
 bundles retain raw artifact
@@ -192,11 +215,11 @@ not a silent artifact swap inside a retained world.
 ### Real original-definition delivery
 
 ```sh
-pnpm --dir web source:bundle .local/source-definition-df3e2a45 <new-isolated-world-uuid>
+pnpm --dir web source:bundle .local/source-ui4-candidate <new-isolated-world-uuid>
 ```
 
 This new-directory-only tool strictly projects the current canonical artifact,
-uses the existing verified source-publication loader, and emits only the5,010
+uses all four verified publication layers (including `82e0a41` consumables), and emits only the5,015
 required original item/NPC/object/region definitions. Region gzip is decoded
 losslessly and checked against its original JSON digest; collection members
 are canonically serialized without changing fields. Original inventory action
@@ -209,8 +232,9 @@ All 61 published source blocks are reproduced and delivered, alongside actual
 skeletal/gear/live-layer inputs and the model-only preview. The renderer owns
 104x104 assembly/recenter. Live camera/control source bindings are still
 absent; normal entry reports that specific gap rather than selecting a
-fixture or inventing a spawn camera. Missing animation/running observer fields,
-dynamic minimap and real rendered entity counts remain explicit dependencies.
+fixture or inventing a spawn camera. The exact actor observers are now mapped from FINAL4. Their renderer
+consumption, UI dynamic-minimap/icon setter and actual rendered entity counts
+remain separate dependencies.
 
 The authorized `2c5fe68b` repair resolves the former descriptor blocker:
 512KiB admits the actual406,574-byte map, with the exact limit/limit+1 covered
@@ -224,7 +248,7 @@ outputs additionally include its exported `AUDIO_INPUTS` documents and exact
 264 unchanged FLACs plus two original reference WAVs, with no alias
 invented for the source silence. Original source path IDs resolve through
 explicit same-origin aliases. The private game membership map still contains
-only the5,010 compiler-required IDs; presentation delivery does not hide or inflate
+only the compiler-required IDs (5,015 in FINAL4); presentation delivery does not hide or inflate
 that descriptor's source validation. No waveform, gain, delay, loop or playlist
 is changed by the build layer.
 
@@ -393,13 +417,13 @@ overlapping web/game routes; do not ship the same routes through both roots.
 
 The initial six renderer commits and ordered continuations `e96e3b8`,
 `1937201`, `c098133`, `0c541d9` are integrated. `render-assets.ts` pins manifest
-`a6a1b3dcd307aa1b8e1f8c3e850c087f78c0e818c644d47e12c58595ad3b6464`.
+`8281dd16f01e996569661ddd711022af803ed62412a075698ca6c247ce164399`.
 The runtime graph includes the 61 blocks, source textures, sequences, NPC
 definitions, penguin/human-retarget inputs, equipment, dynamic objects,
 ground-item models, preview metadata and explicit diagnostic scenes.
 
 `pnpm render:inputs` uses the existing original exporter in a separate owned
-`.local/render-inputs-a6a1b3dc` directory. All122 compressed block buffers
+`.local/render-inputs-8281dd16` directory. All122 compressed block buffers
 match the published SHA/length pins exactly:55,720,421 bytes. The Java
 exporter's disk inventory omits65 absent validation/raw-twin records; its
 metadata and every retained file record are structurally identical to the
@@ -411,6 +435,10 @@ Evidence is `.local/evidence/render-block-reproduction.json`.
 The first reproduction needs the guide-verified original JDK/cache tooling.
 Subsequent packaging can use those verified outputs, or an explicit
 `CLUBSCAPE_RENDER_INPUTS` directory containing the same pinned inputs.
+`CLUBSCAPE_RENDER_REUSE_INPUTS=.local/render-inputs-a6a1b3dc` may reuse the122
+unchanged block files only after checking each current hash/size; no old
+manifest is adopted. The new renderer manifest adds61 minimap sidecars and
+the original map-scene/shape buffer, all delivered and streamed by square.
 Neither owner browsers nor the serving machine need Java/cache data.
 Only runtime dependencies are public: validation bakes/tables and raw
 scene/block duplicates are not shipped. Gzip URLs keep their exact names;
@@ -573,26 +601,45 @@ files stay in the project and owned processes/resources are cleaned.
 
 Before integrated-client completion:
 
-The `d1532d6f` versioned gameplay UI publication is contract-only. Current
-`game.ui.v1` requests are recognized through the exact shared Rust enum but
-rejected before wire/sequence allocation; `WorldView.ui` remains absent on
-the actual legacy server. The pure DTO projector and browser version/decimal/
-identity validation are prepared, not enabled as a backend implementation.
-Actual ServerHello capability, generated wire support and a complete version-1
-view are all required. The authorized `351847f3` target-nullability correction
-is integrated: explicit null denotes inventory-only production, not a missing
-capability or a dummy facility. Broad runtime commits remain deferred for
-the final-v4 relay. Future `WorldSnapshot.ui20`/`WorldInput.ui41` decoding must
-retain optional production target3, and bank request `expected_bank_revision21`
-must use the exact decimal `ui.bank.revision`, not character revision.
-Evidence for the earlier contract-only unsupported
-boundary is recorded separately under
-`.local/evidence/early-render-ui-contract-v1/result.json`.
+The complete generated UI4 request/view boundary is now implemented, including
+all20 requests, active tab, documents/native maps, nullable production and
+placeholder actions. Capability/version/nested-message validation is strict;
+bank field21 captures decimal `ui.bank.revision` before queueing and retains
+the original value across retries. Old contract-only receipts are historical.
+`game.observer.v1` actual movement/action observations preserve false/null/
+absence/identity/tick strings, including exhausted final run steps.
+Ordinary `WorldView.bank.banker` remains intact.
+
+Current production build blockers are in the unrelayed UI-owned follow-up:
+`web/ui/gameplay-ui.ts` lacks the new schema/dispatch cases and
+`web/ui/tests/component-fixture.ts` lacks activeTab/document. A live minimap/
+map-element-icon setter is also absent. The normal typecheck remains failed;
+the diagnostic Vite and actual UI4 source run do not erase that failure.
+`MinimapRelay` observes the real512x512/scale4/margin48 surface with exact
+revision, mask, notes, stats and icon IDs, and only delivers once per revision
+when a real sink is supplied. Current delivery is explicitly false rather
+than passing a static PNG off as the dynamic surface.
+
+The supplied renderer `d5320e1` builds after narrow conflict resolution and
+real bindgen output. Its unrelayed motion/gear predecessors were not imported.
+`5ab678d` was left unapplied because it also needs
+`547353b/710d29e/83636e7/61e986b`; its attempted follow-up was aborted rather
+than reconstructing the missing renderer implementation or claiming its tests.
+No edge-five-tile, instance assembly or full-HUD projection fidelity is accepted.
+
+Diagnostic evidence `.local/evidence/ui4-live-source-guards/result.json`
+records20 real checks against the fresh FINAL4 world: UI4 negotiation, typed
+observer state, original UI account/appearance flow, legitimate brand-new
+experience selection (`experience` to `guide_greeting`, inventory/XP unchanged),
+source-denied public chat without bypass, streamed terrain/minimap metadata,
+pinned restart/reconnect and device loss. The native surface was512x512,
+complete for its loaded sidecars with12 map-element IDs, but `delivered:false`
+because the UI sink is missing. This is not a complete journey, passing
+production typecheck, or M1/presentation/performance acceptance.
 
 1. Streamed source assets, action/equipment packs, canonical picks and the
-   native-size preview are composed. The current backend's empty player
-   animation and absent running/active-animation observers still need exact
-   protocol/view/renderer alignment. The imported renderer's activity/adjacency
+   native-size preview are composed. Actual actor observers now arrive through
+   WASM; their explicit renderer consumption remains pending. The imported renderer's activity/adjacency
    fallback is not accepted source motion. Dynamic minimap, rendered entity
    counts and remaining gear-fit violations stay renderer-owner work.
 2. Supply actual source-bound live camera/control bindings for normal entry.
@@ -613,11 +660,11 @@ boundary is recorded separately under
    Source contact/offline-clock and512KiB descriptor/environment repairs are
    integrated without trimmed content or seeded state. The complete actor/collision/style
    repairs are integrated without a new browser outcome API.
-   The newly published `GameplayUiView`/`GameplayUiIntent` still requires its
-   actual engine, generated Protobuf and canonical data implementation before
-   versioned production/reward/confirmation/ability/bank/death/chat/appearance
-   controls can be admitted. Preserve the stable IDs and string numeric fields
-   when that implementation is relayed; no old-view empty-success fallback.
+   `GameplayUiView`/`GameplayUiIntent` now use the actual engine, generated
+   Protobuf and FINAL4 data. Remaining native All/recovery/level-up contracts
+   are the separately enumerated continuation, not a blocker on the passed
+   backend candidate. Preserve all stable IDs/string values in the remaining
+   UI consumer alignment; no old-view empty-success fallback.
 4. The shell observes real canvas queue completions and adapts actual renderer
    diagnostics/source zoom. The renderer still needs to expose rendered entity
    counts (not discarded raw stats) and the

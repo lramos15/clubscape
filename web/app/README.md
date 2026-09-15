@@ -23,10 +23,9 @@ art/interface context files intentionally keep pre-approval prose; current
 implementation authority is in the browser/milestone guidance and external
 owner record, not a rewrite of those frozen inputs.
 
-## Published gameplay UI capability
+## Implemented UI4 wire and current component boundary
 
-The authorized `d1532d6f` contract publication is present, but its backend/
-Protobuf/data implementation is not. The shell treats `game.ui.v1` as a
+The authorized FINAL4 implementation through `78fcec4` is present. The shell treats `game.ui.v1` as a
 negotiated capability requiring both an implemented wire decoder and the
 **complete** `WorldView.ui.version === 1` projection. Published types alone
 cannot enable it. `BrowserApp.gameplayUi()` and the observation-only
@@ -34,17 +33,15 @@ cannot enable it. `BrowserApp.gameplayUi()` and the observation-only
 wire unavailable and missing versioned view; legacy world state never receives
 a fabricated empty UI object.
 
-The real legacy-server entry displays one recoverable unsupported-capability
-notice, not repeated cosmetic failures on every poll. New identity-bound
-`GameplayUiIntent` requests still go through WASM, which parses the shared
-Rust request type and refuses unsupported wire operations before sending or
-allocating a sequence. Old quantity/index/close-interface intents are not
-substitutes for new stable entry/menu/reward/confirmation identities.
+All20 current `GameplayUiIntent` variants go through the shared Rust request
+enum, generated Protobuf and protocol validators. Document pages, placeholders,
+stable entry/menu/reward/confirmation identities and exact bank preconditions
+are not approximated with legacy quantity/index operations.
 
 `gameplay-ui.ts` validates the full published versioned projection, exact
 decimal strings and placeholder shapes before state is recursively frozen.
-The native shared-DTO projection is prepared and fixture-tested, not wired
-to synthetic outcomes. Full M1/benchmark readiness also requires the actual
+The native shared-DTO projection is wired to actual server responses, never
+synthetic outcomes. Full M1/benchmark readiness also requires the actual
 versioned projection. Renderer/audio APIs, SourceAudioSettings, minimap and
 model-preview ownership are unchanged. The authorized `351847f3` correction
 is integrated: an active production menu can have `target:null` for genuine
@@ -53,13 +50,24 @@ absent production menu; no dummy facility is manufactured. A complete projected
 menu must still include the target field, and non-null values remain typed
 world targets.
 
-Full final-v4 wire integration remains deferred. The relayed tags are
+The implemented tags are
 `WorldSnapshot.ui = 20`, `WorldInput.ui = 41`, and the naturally optional
 production target field3. Bank request field21 (`expected_bank_revision`)
 must take the exact decimal `ui.bank.revision`, never a character/world
 revision that changes on passive ticks. The current projection retains that
-independent string unchanged; no hand-written wire message, bank precondition
-substitution or progression bypass is added ahead of the generated protocol.
+independent string before request queueing. Explicit stale retry preconditions
+remain unchanged; the backend performs mutable bank checks after durable
+deduplication. No character revision, hand-written wire or progression bypass
+substitutes for this contract.
+
+The current UI-owner module predates the added active-tab/document and
+placeholder/document-page cases. Its exhaustive TypeScript schema/dispatch
+tables and component fixture do not yet compile against FINAL4; those files
+remain outside this worker's edit scope. Normal `pnpm build` is therefore
+blocked on the UI-owner follow-up, not on the implemented WASM/API mapping.
+Diagnostic Vite bundling is explicitly separate from a passing production
+typecheck. Real UI4 entry/experience/source-lock/reconnect checks can run, but
+do not prove complete UI consumption or final acceptance.
 
 `composition.ts` is also dependency-injectable for bounded component tests.
 Such injected handles are not an integrated game. The real UI owns its
@@ -210,7 +218,7 @@ The initial six renderer commits and authorized continuations `e96e3b8`,
 The shell does not implement a rasterizer, animation policy or gear fit.
 Build output uses wasm-bindgen0.2.128; actual build hashes are recorded in
 `.local/evidence/renderer-build.json`. The current original renderer manifest is
-`a6a1b3dcd307aa1b8e1f8c3e850c087f78c0e818c644d47e12c58595ad3b6464`.
+`8281dd16f01e996569661ddd711022af803ed62412a075698ca6c247ce164399`.
 All 122 compressed buffers for its 61 blocks were reproduced byte-exactly from
 the pinned original inputs and are included in browser/server delivery.
 
@@ -312,12 +320,26 @@ timestamps, but discard the raw WASM `entities_drawn` field and do not expose
 per-kind workload counts. `observe().entities` therefore stays `{}` and
 benchmark readiness stays false; no manifest/static/server-snapshot count is
 passed off as rendered entities. Renderer continuation must supply the real
-counts and dynamic minimap. The backend still emits an empty player animation
-and no actual running/active-animation observer fields. Those are forwarded
-unchanged with explicit unsupported-motion feedback; the shell never chooses
-a pose from a run checkbox or adjacent object. The imported renderer's
-activity/adjacency fallback is an unaccepted interop gap, not source motion
-evidence. Hat/shield gear-fit violations also remain unaccepted.
+counts and dynamic minimap. The backend now supplies `game.observer.v1` movement/action fields, including
+final running steps during idle/exhaustion and stable action timing. They are
+forwarded with exact absence/null/string semantics. The shell never chooses a
+pose from a run checkbox or nearby object. Explicit renderer consumption is
+still an owner-side dependency; the older activity/adjacency fallback remains
+unaccepted, as do unverified gear-fit claims.
+
+The authorized `d5320e1` minimap API is integrated with regenerated matching
+bindings. Its merge retained the existing motion/gear code rather than importing
+unrelayed predecessors. `MinimapRelay` validates the actual 512x512 RGBA/mask,
+scale4/margin48, base/plane/revision and forwards once per renderer revision
+when a real UI sink is provided. The present UI has no live-surface/icon setter,
+so the actual raster/notes/stats/map-element IDs are observed but not replaced
+by a static PNG or claimed delivered. Edge-five-tile/instance/icon limitations
+remain explicit and `complete` is not full-surface fidelity.
+
+`5ab678d` could not be consumed independently: it requires unrelayed
+`547353b`, `710d29e`, `83636e7`, `61e986b` (and earlier motion/gear work).
+Its attempted follow-up was aborted; no missing renderer logic or passing
+comparison evidence was reconstructed.
 
 The real streamed Chrome/Xvfb check is engineering-only. It covers actual UI
 signup, wrong-password feedback, empty creation/appearance, source block

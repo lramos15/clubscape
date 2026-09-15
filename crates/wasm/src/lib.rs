@@ -2,7 +2,10 @@ pub mod catalog;
 mod context;
 pub mod gameplay_ui;
 mod intent;
+mod observer;
 mod quote;
+mod ui_input;
+mod ui_wire;
 mod view;
 
 use std::collections::{BTreeMap, BTreeSet, VecDeque};
@@ -110,6 +113,69 @@ pub struct Bridge {
 }
 
 impl Bridge {
+    fn validate_snapshot_contract(
+        &self,
+        snapshot: &game::WorldSnapshot,
+    ) -> Result<(), BridgeError> {
+        if self.capabilities.contains(gameplay_ui::CAPABILITY) != snapshot.ui.is_some() {
+            return Err(BridgeError::protocol(
+                "game.ui.v1 negotiation requires a complete versioned UI view, never an unversioned fallback.",
+            ));
+        }
+        if let Some(ui) = &snapshot.ui {
+            ui_wire::decode(ui)?;
+        }
+        let player = snapshot
+            .player
+            .as_ref()
+            .ok_or_else(|| BridgeError::protocol("A world snapshot has no local player."))?;
+        let observer = self.capabilities.contains(observer::CAPABILITY);
+        if observer && player.running.is_none() {
+            return Err(BridgeError::protocol(
+                "The negotiated actor observer omitted actual local movement state.",
+            ));
+        }
+        if !observer
+            && (player.running.is_some()
+                || player.movement_tick.is_some()
+                || player.action.is_some())
+        {
+            return Err(BridgeError::protocol(
+                "Actor observer fields require game.observer.v1 negotiation.",
+            ));
+        }
+        observer::fields(
+            player.running,
+            &player.movement_tick,
+            player.action.as_ref(),
+        )?;
+        for entity in &snapshot.entities {
+            if observer
+                && entity.kind == game::EntityKind::Player as i32
+                && entity.running.is_none()
+            {
+                return Err(BridgeError::protocol(
+                    "The negotiated observer omitted visible-player movement state.",
+                ));
+            }
+            if !observer
+                && (entity.running.is_some()
+                    || entity.movement_tick.is_some()
+                    || entity.action.is_some())
+            {
+                return Err(BridgeError::protocol(
+                    "Entity observer fields require game.observer.v1 negotiation.",
+                ));
+            }
+            observer::fields(
+                entity.running,
+                &entity.movement_tick,
+                entity.action.as_ref(),
+            )?;
+        }
+        Ok(())
+    }
+
     pub fn prepare(
         &mut self,
         request_id: &str,
@@ -212,19 +278,27 @@ impl Bridge {
                 "The UI/game input exceeds its protocol byte budget.",
             ));
         }
-        if gameplay_ui::request(input).is_some() {
-            return Err(BridgeError::new(
-                if self.capabilities.contains(gameplay_ui::CAPABILITY) {
-                    "unsupported_protocol"
-                } else {
-                    "unsupported_capability"
-                },
-                if self.capabilities.contains(gameplay_ui::CAPABILITY) {
-                    "The published gameplay UI request has no generated Protobuf mapping in this client. Nothing was sent or optimistically changed."
-                } else {
-                    "This server has not advertised game.ui.v1 or provided its version-1 authoritative view. The UI request is unsupported; nothing was sent."
-                },
-            ));
+        if let Some((request, bank_revision)) = ui_input::parse(input)? {
+            if !self.capabilities.contains(gameplay_ui::CAPABILITY) {
+                return Err(BridgeError::new(
+                    "unsupported_capability",
+                    "This server has not advertised game.ui.v1. No UI request was sent.",
+                ));
+            }
+            if self
+                .core
+                .snapshot()
+                .and_then(|snapshot| snapshot.ui.as_ref())
+                .is_none()
+            {
+                return Err(BridgeError::protocol(
+                    "The negotiated UI view is missing; no UI request was sent.",
+                ));
+            }
+            return self.submit_action(
+                request_id,
+                game::world_input::Action::Ui(ui_input::wire(request, bank_revision)?),
+            );
         }
         let action = intent::action(input)?;
         self.submit_action(request_id, action)
@@ -403,10 +477,14 @@ impl Bridge {
             }
         }
         let snapshot = match &outcome {
+            Some(Outcome::WorldJoined(joined)) => joined.snapshot.as_ref(),
             Some(Outcome::WorldSnapshot(snapshot)) => Some(snapshot),
             Some(Outcome::ActionResult(result)) => result.snapshot.as_ref(),
             _ => None,
         };
+        if let Some(snapshot) = snapshot {
+            self.validate_snapshot_contract(snapshot)?;
+        }
         if let (Some(snapshot), Some(catalog)) = (snapshot, self.catalog.as_ref()) {
             view::world(snapshot, catalog, &self.messages)?;
         }

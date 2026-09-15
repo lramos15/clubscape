@@ -1,7 +1,7 @@
 use clubscape_protocol::game;
 use serde_json::{Value, json};
 
-use crate::{BridgeError, catalog::DisplayCatalog, context};
+use crate::{BridgeError, catalog::DisplayCatalog, context, observer, ui_wire};
 
 fn missing() -> BridgeError {
     BridgeError::protocol("The public state is missing required source display metadata.")
@@ -149,7 +149,7 @@ pub(crate) fn world(
                 Ok(json!({"name":option.name,"allowed":allowed,"reason":reason,"denial":permission["denial"]}))
             }).collect::<Result<Vec<_>, BridgeError>>()?
         };
-        Ok(json!({
+        let mut result = json!({
             "id":entity.id,"definitionId":entity.definition_id,
             "sourceId":definition.and_then(|definition| definition.source_id),
             "name":entity.name,"kind":kind,"tile":tile(entity.tile.as_ref())?,"instance":entity.instance,
@@ -157,7 +157,11 @@ pub(crate) fn world(
             "animation":entity.animation,"appearance":entity.appearance,"equipment":equipment,
             "actions":actions,"assetId":entity.asset,"width":entity.width,"height":entity.height,
             "presence":context::presence(entity.presence.as_ref())?,
-        }))
+        });
+        result.as_object_mut().expect("entity object").extend(observer::fields(
+            entity.running, &entity.movement_tick, entity.action.as_ref(),
+        )?);
+        Ok(result)
     }).collect::<Result<Vec<_>, BridgeError>>()?;
     let ground_items = value
         .ground_items
@@ -204,13 +208,16 @@ pub(crate) fn world(
                     "A dynamic object rotation is outside its source quarter-turn range.",
                 ));
             }
-            Ok(json!({
-                "id":object.id,"definitionId":object.definition_id,"objectId":object.object_id,
-                "sourceId":source_id,
-                "tile":tile(object.tile.as_ref())?,"instance":object.instance,"state":object.state,
-                "doorOpen":object.door_open,"quarterTurns":object.quarter_turns,
+            let mut result = json!({
+                "id":object.id,"definitionId":object.definition_id,
+                "tile":tile(object.tile.as_ref())?,"instance":object.instance,"quarterTurns":object.quarter_turns,
                 "expiresAtTick":object.expires_at_tick.map(|tick| tick.to_string()),
-            }))
+            });
+            if let Some(id) = &object.object_id { result["objectId"] = json!(id); }
+            if let Some(id) = source_id { result["sourceId"] = json!(id); }
+            if let Some(state) = &object.state { result["state"] = json!(state); }
+            if let Some(open) = object.door_open { result["doorOpen"] = json!(open); }
+            Ok(result)
         })
         .collect::<Result<Vec<_>, BridgeError>>()?;
     let mut unavailable_views: Vec<_> = value
@@ -236,7 +243,7 @@ pub(crate) fn world(
         .and_then(|views| views.first())
         .cloned()
         .unwrap_or(Value::Null);
-    Ok(json!({
+    let mut result = json!({
         "revision":value.revision.to_string(),"tick":value.tick.to_string(),
         "player":{
             "id":player.actor_id,"displayName":player.display_name,"appearance":player.appearance,
@@ -259,7 +266,19 @@ pub(crate) fn world(
         "unavailableViews":unavailable_views,
         "eventHistoryGap":value.event_history_gap,
         "eventHistoryFloorRevision":value.event_history_floor_revision.to_string(),
-    }))
+    });
+    result["player"]
+        .as_object_mut()
+        .expect("player object")
+        .extend(observer::fields(
+            player.running,
+            &player.movement_tick,
+            player.action.as_ref(),
+        )?);
+    if let Some(ui) = &value.ui {
+        result["ui"] = ui_wire::decode(ui)?;
+    }
+    Ok(result)
 }
 
 pub(crate) fn audio(event: &game::Event) -> Option<Value> {

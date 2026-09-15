@@ -18,10 +18,12 @@ test("delivery follows the published runtime dependency graph and ships all 61 o
   assert.equal(runtime.blocks.size, 61);
   assert.equal(runtime.scenes.size, 5);
   assert(runtime.blocks.has(12336));
-  const blocks = [...runtime.blocks.values()].flat();
+  const blocks = [...runtime.blocks.values()].flat().filter((path) => path.endsWith(".gz"));
   assert.equal(blocks.length, 122);
   assert.equal(blocks.reduce((sum, path) => sum + manifest.files[path]!.size_bytes, 0), 55_720_421);
   assert(blocks.every((path) => path.endsWith(".gz")));
+  assert(runtime.common.includes("minimap/mapscenes.bin"));
+  assert.equal([...runtime.blocks.values()].flat().filter((path) => path.startsWith("minimap/blocks/")).length, 61);
   assert(runtime.files.every((path) => !path.startsWith("models/baked/") && path !== "tables.bin"));
   assert(runtime.files.every((path) => !path.startsWith("scenes/") || path.endsWith(".gz")));
   assert.equal(new Set(runtime.files).size, runtime.files.length);

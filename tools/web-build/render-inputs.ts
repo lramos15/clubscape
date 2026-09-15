@@ -10,7 +10,9 @@ import { DEFAULT_RENDER_INPUTS, verifyReproductionManifest } from "./render-data
 const root = resolve(fileURLToPath(new URL("../../", import.meta.url)));
 const source = resolve(root, "assets/compiled/render");
 const output = resolve(root, process.argv[2] ?? DEFAULT_RENDER_INPUTS);
+const reuse = process.env.CLUBSCAPE_RENDER_REUSE_INPUTS ? resolve(root, process.env.CLUBSCAPE_RENDER_REUSE_INPUTS) : null;
 if (!output.startsWith(root + sep) || output === source) throw new Error("Reproduction needs a separate owned directory inside the worktree.");
+if (reuse !== null && !reuse.startsWith(root + sep)) throw new Error("Reused renderer inputs must remain inside the worktree.");
 const hash = (bytes: Uint8Array): string => createHash("sha256").update(bytes).digest("hex");
 const absent = (error: unknown): null => {
   if (error instanceof Error && "code" in error && error.code === "ENOENT") return null;
@@ -24,6 +26,7 @@ const prior = await readFile(resolve(output, "manifest.json")).catch(absent);
 if (prior) verifyReproductionManifest(manifest, JSON.parse(prior.toString("utf8")) as RenderAssetManifest);
 if (!prior) await writeFile(resolve(output, "manifest.json"), bytes, { flag: "wx" });
 let needBlocks = false;
+let reused = 0;
 for (const [name, pin] of Object.entries(manifest.files)) {
   if (name === "tables.bin" || name.startsWith("models/baked/")) continue;
   if ((name.startsWith("scenes/") || name.startsWith("blocks/")) && !name.endsWith(".gz")) continue;
@@ -36,7 +39,16 @@ for (const [name, pin] of Object.entries(manifest.files)) {
     }
     continue;
   }
-  if (name.startsWith("blocks/")) { needBlocks = true; continue; }
+  if (name.startsWith("blocks/")) {
+    const previous = reuse === null ? null : await readFile(resolve(reuse, name)).catch(absent);
+    if (previous !== null) {
+      if (previous.length !== pin.size_bytes || hash(previous) !== pin.sha256) throw new Error(`Reused block differs from the current published pin: ${name}`);
+      await mkdir(dirname(target), { recursive: true });
+      await writeFile(target, previous, { flag: "wx" });
+      reused++;
+    } else needBlocks = true;
+    continue;
+  }
   const original = resolve(source, name);
   const data = await readFile(original);
   if (data.length !== pin.size_bytes || hash(data) !== pin.sha256) throw new Error(`Published renderer input mismatch: ${name}`);
@@ -67,6 +79,7 @@ if (omitted.length > 0) {
 }
 const report = { kind: "original-world-block-reproduction", manifestSha256: RENDER_MANIFEST_SHA256,
   invokedOriginalExporter: needBlocks, verifiedInventoryManifestSha256: hash(exporterBytes),
+  reusedHashIdenticalBlockFiles: reused,
   exporterOmittedValidationOrRawTwins: omitted,
   directory: output, blocks: manifest.blocks?.length ?? 0, files: count, bytes: total,
   browserNeedsJdkOrCache: false, presentationAccepted: false };

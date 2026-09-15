@@ -42,7 +42,7 @@ def main():
     destination = output / "assets/source-definitions"
     destination.mkdir(parents=True, exist_ok=False)
 
-    publication = ROOT / "assets/manifests/osrs/cache2695-potions-published.json"
+    publication = ROOT / "assets/manifests/osrs/cache2695-consumables-published.json"
     bundle, collections = load_published_inputs(publication)
     records = {record["asset_id"]: record for record in bundle["records"]}
     published = {}

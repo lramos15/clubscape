@@ -1,4 +1,4 @@
-import type { BankView, EntityView, GameIntent, PlayerView, RecoveryView, ShopView, WorldView } from "../shared/contracts.ts";
+import type { BankView, DynamicObjectView, EntityView, GameIntent, PlayerView, RecoveryView, ShopView, WorldView } from "../shared/contracts.ts";
 
 export interface SourceDenial { code: number; name: string; message: string }
 export interface SourcePermission { allowed: boolean | null; denial: SourceDenial | null }
@@ -18,10 +18,8 @@ export interface PublicRecovery extends RecoveryView {
   }>;
 }
 export interface PublicWorld extends WorldView {
-  dynamicObjects: Array<{
-    id: string; definitionId: string; objectId: string | null; sourceId: number | null;
-    tile: WorldView["player"]["tile"]; instance: string | null; state: string | null;
-    doorOpen: boolean | null; quarterTurns: number; expiresAtTick: string | null;
+  dynamicObjects: Array<DynamicObjectView & {
+    definitionId: string; quarterTurns: number; expiresAtTick: string | null;
   }>;
   player: PlayerView & { presence: SourcePresence | null; appearanceConfirmed: boolean };
   entities: Array<EntityView & {

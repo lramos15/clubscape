@@ -5,7 +5,7 @@ import type { AudioChannel } from "./settings.ts";
 import { RpcTransport } from "./transport.ts";
 import { presenceOf } from "./public-state.ts";
 import type { PublicWorld, QuoteRequest, QuoteView, ShopPurchaseIntent } from "./public-state.ts";
-import { gameplayUiSupport } from "./gameplay-ui.ts";
+import { captureUiBankRevision, gameplayUiSupport, validateActorObservers } from "./gameplay-ui.ts";
 import type { GameplayUiSupport } from "./gameplay-ui.ts";
 import type { SourceAudioSession } from "./audio.ts";
 
@@ -65,6 +65,7 @@ export function bridgeState(json: string): Readonly<BridgeState> {
   invariant(Array.isArray(state.capabilities) && state.capabilities.every((value) => typeof value === "string")
     && typeof state.gameplayUiWireSupported === "boolean", "Invalid WASM capability negotiation state.", "protocol");
   const support = gameplayUiSupport(state.capabilities, state.gameplayUiWireSupported, state.world);
+  validateActorObservers(state.capabilities, state.world);
   if (state.world !== null && support.reason === "view_missing") {
     throw new AppError(support.message!, { kind: "unsupported_protocol" });
   }
@@ -264,7 +265,14 @@ export class BrowserApp implements AppServices {
 
   async send(intent: GameIntent | ShopPurchaseIntent): Promise<void> {
     // Snapshot the input before it can be mutated by a UI selection/drag update.
-    const json = JSON.stringify(intent);
+    let selection: GameIntent;
+    try { selection = captureUiBankRevision(intent, this.#state.world); }
+    catch (error) {
+      const problem = appError(error);
+      this.report(problem);
+      throw problem;
+    }
+    const json = JSON.stringify(selection);
     const kind = intent.kind;
     const itemId = kind === "shop_buy" ? intent.expected_item : null;
     await this.#serial(async () => {

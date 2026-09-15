@@ -91,7 +91,7 @@ export function parseContentManifest(value: unknown): ContentManifest {
   invariant(manifest.catalog?.contentRevision === manifest.contentRevision, "Catalog content revision mismatch.");
   if (manifest.contentValidation !== undefined) {
     const validation = manifest.contentValidation;
-    invariant(validation.contentSchemaVersion === 3 && validation.artifactVersion === 3
+    invariant([3, 4].includes(validation.contentSchemaVersion) && validation.artifactVersion === validation.contentSchemaVersion
       && validation.readinessAuthority === "server_readiness_profile" && validation.runtimeReadinessEstablished === false
       && Array.isArray(validation.unresolvedBindings) && validation.unresolvedBindings.length <= 20_000
       && validation.unresolvedBindings.every((path) => typeof path === "string" && path.length > 0 && path.length <= 1024),
@@ -206,10 +206,13 @@ export function parseContentManifest(value: unknown): ContentManifest {
       "Invalid source world-block renderer coverage.");
       for (const [id, block] of Object.entries(renderer.regions)) {
         invariant(Number.isSafeInteger(block.square) && block.square >= 0 && block.square <= 65535
-          && id === `region.osrs.${block.square}` && assetsExist(block.requiredAssets) && block.requiredAssets.length === 2
-          && block.requiredAssets.every((asset) => manifest.assets.find((entry) => entry.id === asset)?.url
-            .startsWith(`${renderer.assetBaseUrl}blocks/${block.square}.`)),
-        "A renderer region must retain its published square and two original block buffers.");
+          && id === `region.osrs.${block.square}` && assetsExist(block.requiredAssets) && [2, 3].includes(block.requiredAssets.length)
+          && block.requiredAssets.every((asset) => {
+            const url = manifest.assets.find((entry) => entry.id === asset)?.url;
+            return url?.startsWith(`${renderer.assetBaseUrl}blocks/${block.square}.`)
+              || url === `${renderer.assetBaseUrl}minimap/blocks/${block.square}.bin`;
+          }),
+        "A renderer region must retain its published square, block buffers and declared minimap sidecar.");
       }
     }
   }

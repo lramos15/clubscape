@@ -14,7 +14,7 @@ fn view() -> GameplayUiView {
     let action = json!({"slot":3,"item":"item.fixture","instance":"item_instance.fixture",
         "actions":[{"id":"action.fixture","label":"Use","permission":permission()}]});
     serde_json::from_value(json!({
-        "version":1,"active_interface":"interface.fixture",
+        "version":1,"active_tab":"interface.inventory","active_interface":"interface.fixture","document":null,
         "production":{"id":"menu.fixture","interface":"interface.production",
             "target":{"kind":"spawn","spawn":"spawn.fixture"},
             "recipes":[{"recipe":"recipe.fixture","name":"Fixture recipe","outputs":[item()],

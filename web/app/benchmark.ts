@@ -6,6 +6,7 @@ import { deepFreeze, invariant } from "./errors.ts";
 import { isHash } from "./identity.ts";
 import type { AudioSnapshot } from "../audio/index.ts";
 import type { PreviewObservation } from "./preview.ts";
+import type { MinimapObservation } from "./minimap.ts";
 
 export interface RendererObservation {
   ready: boolean;
@@ -41,6 +42,7 @@ export class Benchmark implements ClubscapeBenchmarkV1 {
   #startupMs: number | null = null;
   #audio: unknown = null;
   #preview: Readonly<PreviewObservation> | null = null;
+  #minimap: Readonly<MinimapObservation> | null = null;
   #now: () => number;
 
   constructor(build: BuildConfig, now: () => number = () => performance.now()) {
@@ -63,6 +65,7 @@ export class Benchmark implements ClubscapeBenchmarkV1 {
   }
   startup(milliseconds: number): void { this.#startupMs = milliseconds; }
   preview(state: Readonly<PreviewObservation>): void { this.#preview = structuredClone(state); }
+  minimap(state: Readonly<MinimapObservation> | null): void { this.#minimap = state === null ? null : structuredClone(state); }
   audio(state: AudioSnapshot): void {
     this.#audio = {
       contextState: state.contextState, sampleRate: state.sampleRate, pendingGesture: state.pendingGesture,
@@ -171,6 +174,7 @@ export class Benchmark implements ClubscapeBenchmarkV1 {
         assetFetches: this.#assets.map((value) => ({ ...value })),
         audio: this.#audio,
         modelPreview: this.#preview,
+        minimapSurface: this.#minimap,
       },
     } satisfies RenderSnapshot & { diagnostics: unknown });
   }

@@ -2,13 +2,13 @@ import assert from "node:assert/strict";
 import { test } from "node:test";
 import { GAMEPLAY_UI_CAPABILITY } from "../../shared/contracts.ts";
 import type { GameplayUiView, WorldView } from "../../shared/contracts.ts";
-import { gameplayUiSupport, validateGameplayUi } from "../gameplay-ui.ts";
+import { captureUiBankRevision, gameplayUiSupport, validateActorObservers, validateGameplayUi } from "../gameplay-ui.ts";
 import { deepFreeze } from "../errors.ts";
 
 // Version/projection fixtures only. They are never attached to the real browser/server world.
 function view(): GameplayUiView {
   return {
-    version: 1, activeInterface: null, production: {
+    version: 1, activeTab: "interface.inventory", activeInterface: null, document: null, production: {
       id: "menu.original", interface: "interface.production", target: { kind: "spawn", spawn: "spawn.original" },
       recipes: [],
     }, reward: {
@@ -121,4 +121,36 @@ test("the exact bank revision is retained independently of advancing world revis
     assert.equal(world.ui!.bank!.revision, "9007199254740993");
     assert.notEqual(world.ui!.bank!.revision, world.revision);
   }
+});
+
+test("bank preconditions capture the displayed bank revision and never replace an explicit stale retry", () => {
+  const world = { revision: "9007199254741999", ui: view() } as WorldView;
+  const input = { kind: "bank_placeholder" as const, entry_id: "9007199254740995" };
+  const captured = captureUiBankRevision(input, world);
+  assert.deepEqual(captured, { ...input, expected_bank_revision: "9007199254740993" });
+  world.ui!.bank!.revision = "9007199254740994";
+  assert.deepEqual(captureUiBankRevision(captured, world), { ...input, expected_bank_revision: "9007199254740993" });
+  assert.throws(() => captureUiBankRevision(input, null), /bank revision is unavailable/);
+  assert.deepEqual(input, { kind: "bank_placeholder", entry_id: "9007199254740995" });
+});
+
+test("complete UI4 requires active-tab/document fields and preserves native-map metadata", () => {
+  const current = view();
+  current.document = { id: "document.original", interface: "interface.map", title: "Source map",
+    pages: ["Source page"], page: 0, mapAsset: "asset.source.map", nativeMap: true };
+  validateGameplayUi(current);
+  assert.equal(current.document.nativeMap, true);
+  Reflect.deleteProperty(current, "activeTab");
+  assert.throws(() => validateGameplayUi(current), /complete version-1/);
+});
+
+test("actual final-step running and explicit nullable observer state are not inferred from settings or activity", () => {
+  const world = { player: { running: true, movementTick: "9007199254740993", action: null,
+    activity: "idle", settings: [{ setting: "run", enabled: false }] }, entities: [] } as unknown as WorldView;
+  validateActorObservers(["game.observer.v1"], world);
+  assert.equal(world.player.running, true);
+  assert.equal(world.player.action, null);
+  Reflect.deleteProperty(world.player, "running");
+  assert.throws(() => validateActorObservers(["game.observer.v1"], world), /actual movement/);
+  validateActorObservers([], world);
 });

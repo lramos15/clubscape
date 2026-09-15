@@ -25,6 +25,11 @@ pub(crate) fn action(input: &str) -> Result<Action, BridgeError> {
     let intent: GameIntent = serde_json::from_str(input)
         .map_err(|_| BridgeError::input("The input is not a valid typed GameIntent."))?;
     Ok(match intent {
+        GameIntent::Ui { .. } => {
+            return Err(BridgeError::input(
+                "Browser gameplay UI requests must use their flat shared request shape.",
+            ));
+        }
         GameIntent::Walk {
             destination,
             running,
