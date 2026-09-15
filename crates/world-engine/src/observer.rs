@@ -12,6 +12,45 @@ fn same_action(left: &ObservedAction, right: &ObservedAction) -> bool {
 }
 
 impl WorldEngine {
+    pub fn scene_view(&self, world: &WorldState, actor: &ActorId) -> GameResult<CurrentSceneView> {
+        let character = world
+            .characters
+            .get(actor)
+            .ok_or_else(|| GameError::new(GameErrorCode::NotOwned, "Unknown scene observer."))?;
+        let template = character
+            .runtime
+            .instance
+            .as_ref()
+            .map(|id| {
+                let instance = world
+                    .runtime
+                    .instances
+                    .get(id)
+                    .ok_or_else(|| invalid_state("Current instance is absent."))?;
+                let definition = self
+                    .content
+                    .mechanics
+                    .instances
+                    .get(&instance.template)
+                    .ok_or_else(|| {
+                        unknown("Current instance template is not in the source catalogue.")
+                    })?;
+                if definition.private_to_character && instance.owner.as_ref() != Some(actor) {
+                    return Err(GameError::new(
+                        GameErrorCode::NotOwned,
+                        "The current private scene belongs to another actor.",
+                    ));
+                }
+                Ok(instance.template.clone())
+            })
+            .transpose()?;
+        Ok(CurrentSceneView {
+            region: character.region.clone(),
+            instance: character.runtime.instance.clone(),
+            instance_template: template,
+        })
+    }
+
     pub fn actor_observer(
         &self,
         world: &WorldState,

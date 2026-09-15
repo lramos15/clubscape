@@ -175,6 +175,12 @@ message WorldSnapshot {
   Quote quote = 19;
   // Present and versioned when game.ui.v1 is advertised; absent is unsupported legacy.
   GameplayUiView ui = 20;
+  CurrentScene scene = 21;
+}
+message CurrentScene {
+  string region = 1;
+  optional string instance = 2;
+  optional string instance_template = 3;
 }
 message UnavailableView { string view = 1; string reason = 2; }
 message DynamicObject {

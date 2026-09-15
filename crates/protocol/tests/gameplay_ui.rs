@@ -314,3 +314,26 @@ fn observer_motion_action_and_dynamic_objects_keep_optional_and_wide_clock_seman
         Some("object.source.door")
     );
 }
+
+#[test]
+fn current_scene_template_is_distinct_from_opaque_instance_and_optional_for_old_peers() {
+    assert!(game::WorldSnapshot::default().scene.is_none());
+    let value = game::CurrentScene {
+        region: "region.osrs.12633".into(),
+        instance: Some("instance.opaque.account_lease".into()),
+        instance_template: Some("instance_template.death.office".into()),
+    };
+    assert_eq!(
+        game::CurrentScene::decode(value.encode_to_vec().as_slice()).unwrap(),
+        value
+    );
+    let ordinary = game::CurrentScene {
+        region: "region.osrs.12850".into(),
+        instance: None,
+        instance_template: None,
+    };
+    assert_eq!(
+        game::CurrentScene::decode(ordinary.encode_to_vec().as_slice()).unwrap(),
+        ordinary
+    );
+}

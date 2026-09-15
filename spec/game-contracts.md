@@ -3,6 +3,19 @@
 ## Renderer observer contract, version 1
 
 The additive capability is `game.observer.v1`.
+
+`WorldView.scene?: CurrentSceneView` / Protobuf `WorldSnapshot.scene` field21
+provides `{region, instance, instanceTemplate}`. The latter two values are null
+in the ordinary world; the outer field is absent only on older observers.
+`instance` remains the opaque live identity. `instanceTemplate` is read from
+that actual runtime instance and names the validated source
+`InstanceTemplateDefinition`; it is never guessed from the opaque ID. Private
+scene ownership and existing visibility checks remain authoritative.
+The shell resolves `InstanceChunkMapping` through that template key and forwards
+the mapping to the renderer, which owns geometry/minimap construction. M1's
+`instance_template.death.office` already defines its four identity 8x8 chunks
+in region12633 at3168/3176 by5720/5728, plane0/turn0. This observer adds no
+content, collision change, stock setter or new instance creation.
 `PlayerView.running?` and the visible-player `EntityView.running?` report actual
 current-tick movement, not the run checkbox or a prediction. `movementTick?`
 correlates that movement; final two-step movement remains running when its path

@@ -501,6 +501,16 @@ pub(super) fn snapshot(
     }
     entities.sort_by(|a, b| a.id.cmp(&b.id));
     let result = game::WorldSnapshot {
+        scene: Some({
+            let scene = engine
+                .scene_view(&world.state, actor)
+                .map_err(engine_error)?;
+            game::CurrentScene {
+                region: scene.region.to_string(),
+                instance: scene.instance.map(|id| id.to_string()),
+                instance_template: scene.instance_template.map(|id| id.to_string()),
+            }
+        }),
         ui: if content.ui.is_some() {
             Some(super::ui_wire::view(
                 engine.ui_view(&world.state, actor).map_err(engine_error)?,

@@ -195,3 +195,35 @@ fn malformed_future_observation_is_not_a_successful_default() {
     });
     assert!(engine.actor_observer(&world, &actor()).is_err());
 }
+
+#[test]
+fn scene_observer_uses_actual_template_and_preserves_opaque_identity_and_private_ownership() {
+    let mut content = v::content();
+    v::with_death(&mut content);
+    let (engine, mut world) = setup(content);
+    let ordinary = engine.scene_view(&world, &actor()).unwrap();
+    assert!(ordinary.instance.is_none() && ordinary.instance_template.is_none());
+    let instance = InstanceId::new("instance.opaque.live_session").unwrap();
+    world.runtime.instances.insert(
+        instance.clone(),
+        InstanceState {
+            template: v::template(),
+            owner: Some(actor()),
+            counters: Default::default(),
+            entities: Default::default(),
+            object_states: Default::default(),
+        },
+    );
+    world.characters.get_mut(&actor()).unwrap().runtime.instance = Some(instance.clone());
+    let before = world.clone();
+    let scene = engine.scene_view(&world, &actor()).unwrap();
+    assert_eq!(scene.instance, Some(instance.clone()));
+    assert_eq!(scene.instance_template, Some(v::template()));
+    assert_eq!(world, before);
+    world.runtime.instances.get_mut(&instance).unwrap().owner =
+        Some(ActorId::new("actor.other").unwrap());
+    assert_eq!(
+        engine.scene_view(&world, &actor()).unwrap_err().code,
+        GameErrorCode::NotOwned
+    );
+}

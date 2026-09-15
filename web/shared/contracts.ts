@@ -92,6 +92,13 @@ export interface DynamicObjectView {
   doorOpen?: boolean;
   quarterTurns?: number;
 }
+export interface CurrentSceneView {
+  region: string;
+  /** Opaque live instance identity, unchanged from player.instance. */
+  instance: string | null;
+  /** Actual runtime template key for validated InstanceChunkMapping lookup; never parsed from instance. */
+  instanceTemplate: string | null;
+}
 export interface PlayerView {
   id: string;
   displayName: string;
@@ -175,6 +182,8 @@ export interface WorldView {
   revision: string;
   tick: string;
   player: PlayerView;
+  /** Absent on older bridges. Null instance/template inside means the ordinary source world. */
+  scene?: CurrentSceneView;
   entities: EntityView[];
   /** Complete authoritative dynamic-object list; absent only on older bridges. */
   dynamicObjects?: DynamicObjectView[];

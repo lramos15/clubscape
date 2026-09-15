@@ -1,11 +1,19 @@
 use serde::{Deserialize, Serialize};
 
 use crate::{
-    ActionId, CombatStyleId, GameError, GameErrorCode, GameResult, InstanceId, RecipeId, SpellId,
-    Tile, WorldTarget,
+    ActionId, CombatStyleId, GameError, GameErrorCode, GameResult, InstanceId, InstanceTemplateId,
+    RecipeId, RegionId, SpellId, Tile, WorldTarget,
 };
 
 pub const ACTOR_OBSERVER_VERSION: u32 = 1;
+
+#[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub struct CurrentSceneView {
+    pub region: RegionId,
+    pub instance: Option<InstanceId>,
+    pub instance_template: Option<InstanceTemplateId>,
+}
 
 /// Read-only identity and phase of the actual authoritative action, not scene-neighbour inference.
 #[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
