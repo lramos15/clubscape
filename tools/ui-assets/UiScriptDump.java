@@ -5,11 +5,35 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import net.runelite.cache.definitions.loaders.ScriptLoader;
 import net.runelite.cache.definitions.loaders.EnumLoader;
+import net.runelite.cache.definitions.loaders.StructLoader;
+import net.runelite.cache.definitions.loaders.GameValLoader;
 import net.runelite.cache.script.Opcodes;
 
 /** Read-only, bounded disassembly of the selected original UI scripts. */
 public final class UiScriptDump
 {
+    static void findVarbitScripts(OriginalCache cache, int varbit) throws Exception
+    {
+        ScriptLoader loader = new ScriptLoader().configureForRevision(cache.store.findIndex(12).getRevision());
+        for (var archive : cache.store.findIndex(12).getArchives())
+        {
+            byte[] raw = cache.archive(12).loadData(archive.getArchiveId(), 0);
+            boolean candidate = false;
+            for (int offset = 0; offset + 5 < raw.length; offset++)
+                if (raw[offset] == 0 && (raw[offset + 1] == 25 || raw[offset + 1] == 27)
+                    && java.nio.ByteBuffer.wrap(raw, offset + 2, 4).getInt() == varbit) candidate = true;
+            if (!candidate) continue;
+            var script = loader.load(archive.getArchiveId(), raw);
+            for (int pc = 0; pc < script.getInstructions().length; pc++)
+                if ((script.getInstructions()[pc] == 25 || script.getInstructions()[pc] == 27) && script.getIntOperands()[pc] == varbit)
+                {
+                    System.out.println("VARBIT_SCRIPT id=" + archive.getArchiveId() + " varbit=" + varbit
+                        + " intArgs=" + script.getIntArgCount() + " objectArgs=" + script.getObjArgCount());
+                    break;
+                }
+        }
+    }
+
     static void findWidgetScripts(OriginalCache cache, int group) throws Exception
     {
         ScriptLoader loader = new ScriptLoader().configureForRevision(cache.store.findIndex(12).getRevision());
@@ -69,7 +93,27 @@ public final class UiScriptDump
         try (OriginalCache cache = new OriginalCache(Path.of(args[0])))
         {
             for (int i = 2; i < args.length; i++)
-                if (args[i].startsWith("enum:"))
+                if (args[i].startsWith("labels:"))
+                {
+                    String term = args[i].substring(7).toLowerCase(java.util.Locale.ROOT);
+                    var loader = new GameValLoader();
+                    for (int group : new int[]{GameValLoader.INTERFACES, GameValLoader.VARPS, GameValLoader.VARBITS, GameValLoader.VARCS})
+                        for (int id : cache.archive(24).getFileIds(group))
+                        {
+                            var label = loader.load(group, id, cache.archive(24).loadData(group, id));
+                            if (label.getName() != null && label.getName().toLowerCase(java.util.Locale.ROOT).contains(term))
+                                System.out.println("SOURCE_LABEL group=" + group + " id=" + id + " name=" + label.getName());
+                        }
+                }
+                else if (args[i].startsWith("struct:"))
+                {
+                    int id = Integer.parseInt(args[i].substring(7));
+                    byte[] raw = cache.archive(2).loadData(34, id);
+                    Files.createDirectories(Path.of(args[1]));
+                    Files.writeString(Path.of(args[1]).resolve("struct-" + id + ".json"), OriginalCapture.JSON.toJson(
+                        OriginalCapture.map("sourceSha256", OriginalCapture.hash(raw), "definition", new StructLoader().load(id, raw))));
+                }
+                else if (args[i].startsWith("enum:"))
                 {
                     int id = Integer.parseInt(args[i].substring(5));
                     var value = new EnumLoader().load(id, cache.archive(2).loadData(8, id));
@@ -77,6 +121,8 @@ public final class UiScriptDump
                 }
                 else if (args[i].startsWith("widget:"))
                     findWidgetScripts(cache, Integer.parseInt(args[i].substring(7)));
+                else if (args[i].startsWith("varbit:"))
+                    findVarbitScripts(cache, Integer.parseInt(args[i].substring(7)));
                 else dump(cache, Path.of(args[1]), Integer.parseInt(args[i]));
         }
         catch (Exception error)

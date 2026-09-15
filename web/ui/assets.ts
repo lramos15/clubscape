@@ -42,6 +42,15 @@ export interface TutorialBinding {
 export interface MusicTrackAsset {
   row: number; group: number; name: string; hint: string; widgetIndex: number; sourceSha256: string;
 }
+export interface SettingRowAsset {
+  id: number; category: number; label: string; top: number; height: number; labelIndex: number;
+  params: Readonly<Record<string, string | number>>;
+  widgets: NativeWidget[]; descriptionIndices: number[]; sourceSha256: string;
+  sourceLocked: boolean;
+}
+export interface SettingEnumAsset {
+  keys: number[]; stringVals: string[] | null; intVals: number[] | null; defaultString: string;
+}
 export interface UiCatalogue {
   version: number; sourcePackSha256: string; sourceCache: number; nativeCanvas: number[];
   flames: FlameAssets;
@@ -56,6 +65,12 @@ export interface UiCatalogue {
   portraits: Record<string, { asset: string; offsetX: number; offsetY: number }>;
   staticModels: Record<string, StaticModelAsset>;
   musicTracks: MusicTrackAsset[];
+  settingsRows: Record<string, SettingRowAsset>;
+  settingsDefinitions: {
+    categories: Record<string, { id: number; definition: { params: Record<string, string | number> }; settings: number[] }>;
+    settings: Record<string, { sourceSha256: string; definition: { id: number; params: Record<string, string | number> } }>;
+    choices: Record<string, SettingEnumAsset>;
+  };
   npcs: Record<string, { name: string; examine: string | null }>;
   proposals: Record<string, {
     content: { heading: string; lines: string[]; buttons: string[] };

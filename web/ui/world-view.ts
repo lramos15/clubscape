@@ -19,6 +19,11 @@ import { projectQuestReward, rewardDetails } from "./rewards.ts";
 import { audioSourceControl, audioTooltip, projectAudioControls } from "./audio-controls.ts";
 import { SOURCE_MUSIC_MODE_IDS } from "../audio/native-scene.ts";
 import { projectMusicControls } from "./music-controls.ts";
+import { currentSettingValues, projectAllSettings, SETTINGS_CATEGORIES } from "./settings.ts";
+import type { SettingRowAsset } from "./assets.ts";
+import { sourceAudioDefaults } from "../audio/native-policy.ts";
+import { projectBank } from "./bank.ts";
+import { projectHud } from "./hud.ts";
 
 const EQUIPMENT = ["head", "cape", "neck", "weapon", "body", "shield", "legs", "hands", "feet", "ring", "ammo"];
 const SKILLS = ["attack", "strength", "defence", "ranged", "prayer", "magic", "runecraft", "construction",
@@ -138,6 +143,8 @@ export function paintGame(raster: SourceRaster, ui: GameViewContext): void {
     templateName = `native-${filterKind}-mask-0-filters`;
   if (!catalogue.templates[templateName]) templateName = "native-inventory";
   let widgets = cloneTemplate(catalogue.templates[templateName]!);
+  const bankProjection = bankView ? projectBank(catalogue, bankView, local.bankSearch, local.scroll) : null;
+  if (bankProjection) { widgets = bankProjection.widgets; local.scroll = bankProjection.scroll; }
   if (templateName === "native-audio-default") widgets = projectAudioControls(catalogue, ui.audio);
   const musicProjection = !banking && !world.shop && local.tab === 13
     ? projectMusicControls(catalogue, ui.music, ui.audio?.playingGroup ?? null, local.scroll, local.musicDropdown) : null;
@@ -173,6 +180,10 @@ export function paintGame(raster: SourceRaster, ui: GameViewContext): void {
     if (ui.state.phase === "character" || world.player.tutorialStage === "stage.tutorial.appearance") modal = "appearance";
     if (world.player.tutorialStage === "stage.tutorial.experience") modal = "experience";
   }
+  if (local.modal === "all-settings" && !production && !reward && !authoritative?.confirmation) modal = "all-settings";
+  const settingsValues = modal === "all-settings" ? currentSettingValues(catalogue, world, ui.audio, ui.music, local.clientInput) : null;
+  const settingsProjection = settingsValues ? projectAllSettings(catalogue, local.settings, settingsValues.values) : null;
+  if (settingsProjection) local.settings.scroll = settingsProjection.scroll;
   const recoveryOpen = world.recovery !== null && (!authoritative || ["interface.grave", "interface.death_retrieval"].includes(authoritative.activeInterface ?? ""));
   if (recoveryOpen) modal = world.recovery!.storage === "grave" ? "grave" : "recovery";
   const discardReason = permissionReason(authoritative?.recovery?.discard, "Discard recovery items");
@@ -194,6 +205,8 @@ export function paintGame(raster: SourceRaster, ui: GameViewContext): void {
   } else if (questReward) {
     widgets = attachGroup(widgets, projectQuestReward(catalogue.templates["native-reward"]!, catalogue,
       questReward, world.player.skills, world.player.questPoints, local.scroll), 153);
+  } else if (settingsProjection) {
+    widgets = attachGroup(widgets, settingsProjection.widgets, 134);
   } else if (modal && catalogue.templates[`native-${modal}`]) {
     widgets = attachGroup(widgets, catalogue.templates[`native-${modal}`]!, MODALS[modal]!);
   }
@@ -219,14 +232,16 @@ export function paintGame(raster: SourceRaster, ui: GameViewContext): void {
   }
   const displayedBankEntries = new Map<number, NonNullable<GameplayUiView["bank"]>["entries"][number]>();
   const displayedBankTabs = new Map<number, NonNullable<GameplayUiView["bank"]>["tabs"][number]>();
-  if (banking) {
+  if (bankProjection) {
+    for (const [slot, entry] of bankProjection.entries) {
+      displayedBankEntries.set(slot, entry);
+      if (entry.value) liveItems.set(`${widgetId(12, 12)}:${slot}`, entry.value);
+    }
+    for (const [tab, value] of bankProjection.tabs) displayedBankTabs.set(tab, value);
+  } else if (banking) {
     const prototype = widgets.find(w => w.id === widgetId(12, 12) && w.index === 0)!;
     widgets = widgets.filter(w => !(w.id === widgetId(12, 12) && w.index >= 0));
-    const slots = bankView ? bankView.entries
-      .filter(entry => (bankView.selectedTab === 0 || entry.tab === bankView.selectedTab) &&
-        (entry.value?.name ?? entry.item).toLocaleLowerCase().includes(local.bankSearch.toLocaleLowerCase()))
-      .map(entry => ({ index: entry.slot, item: entry.value, entry }))
-      : world.bank!.slots.filter(s => s.item && s.item.name.toLocaleLowerCase().includes(local.bankSearch.toLocaleLowerCase())).map(slot => ({ ...slot, entry: null }));
+    const slots = world.bank!.slots.filter(s => s.item && s.item.name.toLocaleLowerCase().includes(local.bankSearch.toLocaleLowerCase()));
     const content = widgets.find(widget => widget.id === widgetId(12, 12) && widget.index === -1)!;
     const extent = slots.length ? Math.floor((slots.length - 1) / 8) * 36 + prototype.height : 0;
     local.scroll = Math.min(local.scroll, Math.max(0, extent - content.height));
@@ -235,31 +250,10 @@ export function paintGame(raster: SourceRaster, ui: GameViewContext): void {
       const item = slot.item;
       const widget = { ...prototype, index: slot.index, x: prototype.x + index % 8 * 48,
         y: prototype.y + Math.floor(index / 8) * 36 - local.scroll, item: item?.sourceId ?? -1,
-        item_quantity: item?.quantity ?? 0, name: item?.name ?? slot.entry?.item ?? "" };
+        item_quantity: item?.quantity ?? 0, name: item?.name ?? "" };
       widgets.push(widget);
       if (item) liveItems.set(widgetKey(widget), item);
-      if (slot.entry) displayedBankEntries.set(slot.index, slot.entry);
     });
-    if (bankView) {
-      const tabPrototype = widgets.find(w => w.id === widgetId(12, 10) && w.index === 10)!;
-      const newTab = widgets.find(w => w.id === widgetId(12, 10) && w.index === 11)!;
-      const selectedTab = widgets.find(w => w.id === widgetId(12, 10) && w.index === 0)!;
-      const otherTab = widgets.find(w => w.id === widgetId(12, 10) && w.index === 1)!;
-      widgets = widgets.filter(w => !(w.id === widgetId(12, 10) && w.index >= 0));
-      bankView.tabs.forEach((tab, index) => {
-        const first = bankView.entries.find(entry => entry.id === tab.firstEntry);
-        const icon = tab.tab === 0 ? -1 : first?.value?.sourceId ?? (first ? catalogue.presentation?.sourceItems[first.item] ?? -1 : -1);
-        widgets.push({ ...(tab.tab === bankView.selectedTab ? selectedTab : otherTab), index: 2000 + tab.tab,
-          x: selectedTab.x + index * 40 });
-        widgets.push({ ...tabPrototype, index: tab.tab, x: tabPrototype.x + index * 40, sprite: tab.tab === 0 ? 1081 : -1,
-          item: icon, item_quantity: first?.value?.quantity ?? 1, quantityMode: 0, actions: ["View tab"] });
-        displayedBankTabs.set(tab.tab, tab);
-      });
-      if (bankView.tabs.length < 10) {
-        widgets.push({ ...otherTab, index: 3000, x: selectedTab.x + bankView.tabs.length * 40 });
-        widgets.push({ ...newTab, index: 1000, x: tabPrototype.x + bankView.tabs.length * 40 });
-      }
-    }
   }
   if (world.shop) {
     const prototype = widgets.find(w => w.id === widgetId(300, 16) && w.index === 1)!;
@@ -314,6 +308,7 @@ export function paintGame(raster: SourceRaster, ui: GameViewContext): void {
     }
   }
   if (recovery) widgets = projectRecovery(widgets, recovery);
+  if (authoritative) widgets = projectHud(widgets, catalogue, authoritative.interfaces, local.tab);
 
   const sourceRectangles = new Map<string, LaidWidget>();
   const sourceTabRects = new Map<number, Rect>();
@@ -322,7 +317,7 @@ export function paintGame(raster: SourceRaster, ui: GameViewContext): void {
     if (rect.width <= 0 || rect.height <= 0) return;
     const menu = [...actions];
     if (widget.item < 0 && ![149, 15, 301, 387, 593].includes(widget.id >> 16) &&
-        !(authoritative && [4, 12, 153, 270, 312].includes(widget.id >> 16)) && ![116, 239].includes(widget.id >> 16)) {
+        !(authoritative && [4, 12, 153, 270, 312].includes(widget.id >> 16)) && ![116, 134, 239].includes(widget.id >> 16)) {
       for (const operation of widget.actions ?? []) if (operation &&
         !menu.some(action => plainText(action.label).startsWith(plainText(operation)))) {
         menu.push({ label: operation, run: () => ui.unavailable(plainText(operation)) });
@@ -332,6 +327,7 @@ export function paintGame(raster: SourceRaster, ui: GameViewContext): void {
   };
   const sourceClose = (widget: LaidWidget) => register(widget, `close-${widgetKey(widget)}`, "Close interface", [{
     label: "Close", run: () => {
+      if (widget.id >> 16 === 134) { ui.change(() => { local.modal = null; local.settings.choice = null; }); return; }
       if (authoritative?.reward && widget.id >> 16 === 153) {
         ui.continueReward(authoritative.reward.id, authoritative.reward.continuation);
         return;
@@ -340,12 +336,90 @@ export function paintGame(raster: SourceRaster, ui: GameViewContext): void {
       ui.send({ kind: "close_interface" });
     },
   }]);
+  const settingsScope = (row: SettingRowAsset) => {
+    const outside = /clan|group ironman|sailing|world map|modern layout|old school store|mobile|combat achievement|leagues|last man standing|clue scroll|stash|birdhouse|phantom muspah|dwarf multicannon|quetzal|barracuda|cargo|boat|helm|boss health|hunter|slayer|beta world/i.test(row.label);
+    if (outside) ui.unavailable(row.label);
+    else ui.required(row.label, `source_setting:${row.id}`);
+  };
+  const openAllSettings = (category?: number) => ui.change(() => {
+    local.modal = "all-settings"; local.settings.choice = null;
+    if (category !== undefined) {
+      local.settings.category = category; local.settings.search = null; local.settings.scroll = 0;
+    }
+  });
+  const applySetting = (id: number, value?: number) => {
+    const state = settingsValues?.values.get(id), row = catalogue.settingsRows[id]!;
+    if (!settingsValues?.available.has(id)) { settingsScope(row); return; }
+    if ([4503, 2753, 2754, 2755].includes(id)) {
+      const channel = id === 4503 ? "master" : id === 2753 ? "music" : id === 2754 ? "effects" : "area";
+      if (value !== undefined) ui.audioPercent(channel, value);
+    } else if (id === 6335) {
+      const defaults = sourceAudioDefaults();
+      for (const channel of ["master", "music", "effects", "area"] as const) ui.audioPercent(channel, defaults.sliders[channel]);
+    } else if (id === 6393 && value !== undefined) ui.musicAction({ kind: "mode", mode: value === 0 ? "area" : value === 1 ? "shuffle" : "single" });
+    else if (id === 2974 && value !== undefined) ui.musicAction({ kind: "area_mode", mode: value === 0 ? "modern" : "classic" });
+    else if (id === 2769) ui.change(() => { local.clientInput.singleMouse = !local.clientInput.singleMouse; });
+    else if (id === 1104) ui.change(() => { local.clientInput.shiftDrop = !local.clientInput.shiftDrop; });
+    else if (id === 2775) ui.change(() => { local.clientInput.escapeCloses = !local.clientInput.escapeCloses; });
+    else if (id === 2861 || id === 880) ui.send({ kind: "set_setting", setting: {
+      setting: id === 2861 ? "death_supply_piles" : "death_auto_equip", enabled: state?.value !== true,
+    } });
+    else if (id === 2732) {
+      if (value !== 1) ui.unavailable(value === 0 ? "Fixed layout" : "Resizable Modern layout");
+    } else if (id === 2852 || id === 2853) {
+      if (id === 2852 && value !== 0) ui.unavailable("Interface scaling beyond the approved source UI scale 1");
+    } else settingsScope(row);
+  };
   const primaryAction = (widget: LaidWidget) => {
     const label = normalizedName(widget);
     const op = plainText(widget.actions?.find(Boolean) ?? "");
     const group = widget.id >> 16, child = widget.id & 65535;
     if (recovery && (group === 602 || group === 669)) return;
     if (op === "Close" && group !== 161 && group !== 239) { sourceClose(widget); return; }
+    if (group === 134 && settingsProjection && settingsValues) {
+      if (widget.index === -1 && child === 5)
+        register(widget, "settings-info", local.settings.moreInfo ? "Less info" : "More info", [{ label: "Toggle",
+          run: () => ui.change(() => { local.settings.moreInfo = !local.settings.moreInfo; local.settings.choice = null; }) }]);
+      else if (widget.index === -1 && child === 7)
+        register(widget, "settings-locked", local.settings.hideLocked ? "Show locked" : "Hide locked", [{ label: "Toggle",
+          run: () => ui.change(() => { local.settings.hideLocked = !local.settings.hideLocked; local.settings.scroll = 0; }) }]);
+      else if (widget.index === -1 && child === 11 && local.settings.search === null)
+        register(widget, "settings-search-start", "Search settings", [{ label: "Search",
+          run: () => {
+            ui.change(() => { local.settings.search = ""; local.settings.scroll = 0; });
+            ui.focusInput("settings-search");
+          } }]);
+      else if (child === 24 && widget.index >= 0) {
+        const category = widget.index;
+        if (SETTINGS_CATEGORIES[category]) register(widget, `settings-category-${category}`, SETTINGS_CATEGORIES[category]!, [{ label: "Select",
+          run: () => openAllSettings(category) }]);
+      } else if (widget.index === -1 && child === 21) {
+        const thumb = widgets.find(row => row.id === widget.id && row.index === 1)!;
+        register(widget, "settings-scroll", "Settings scroll", [], { scrollbar: {
+          value: settingsProjection.scroll, maximum: Math.max(0, settingsProjection.extent - 256), thumb: thumb.height, page: 256,
+          current: () => local.settings.scroll, change: value => ui.change(() => { local.settings.scroll = value; }),
+        } });
+      } else {
+        const descriptor = settingsProjection.controls.get(widgetKey(widget));
+        if (descriptor) {
+          const { row, source } = descriptor, kind = Number(row.params["1078"] ?? 0);
+          const known = settingsValues.values.get(row.id)!;
+          if (kind === 1 && source.type === 5) return;
+          const slider = kind === 1 && source.type === 3 && source.height === 16 && source.actions?.includes("Select") &&
+            [30, 31, 32, 319].includes(Number(row.params["1077"]));
+          const label = row.label, id = `setting-${row.id}-${widget.index}`;
+          register(widget, id, label, [{ label: source.actions?.find(Boolean) ?? "Select", run: () => {
+            if (kind === 2) ui.change(() => { local.settings.choice = { setting: row.id, x: widget.x, y: widget.y,
+              width: widget.width, height: widget.height, scroll: 0 }; });
+            else if (!slider) applySetting(row.id);
+          } }], { tooltip: label + (known.value === null && !settingsValues.available.has(row.id) ? "\nRequired setting value is unavailable." : ""),
+            ...(slider ? { slider: { value: typeof known.value === "number" ? known.value : null,
+              current: () => ui.audioValue(row.id === 4503 ? "master" : row.id === 2753 ? "music" : row.id === 2754 ? "effects" : "area"),
+              change: value => applySetting(row.id, value) } } : {}) });
+        }
+      }
+      return;
+    }
     if (group === 4 && deathPreview && deathProjection) {
       const entry = deathProjection.items.get(widgetKey(widget));
       if (entry) register(widget, `death-preview-${child}-${widget.index}`, `${entry.kept ? "Kept" : "Lost"}: ${entry.item.name}`, [{
@@ -418,7 +492,8 @@ export function paintGame(raster: SourceRaster, ui: GameViewContext): void {
         sourceTabRects.set(index, widget);
         const declared = authoritative?.interfaces.find(row => row.interface === tab.interface);
         if (declared?.visibility === "hidden") return;
-        register(widget, `tab-${index}`, tab.name, [{ label: tab.name, run: () => ui.openTab(index) }],
+        register(widget, `tab-${index}`, tab.name, [{ label: tab.name, run: () => ui.openTab(index) },
+          ...(index === 11 ? [3, 1, 4].map(category => ({ label: SETTINGS_CATEGORIES[category]!, run: () => openAllSettings(category) })) : [])],
           { pressed: local.tab === index, ...(unlocked ? {} : { disabled: authoritative
             ? permissionReason(declared?.permission, tab.name) ?? "This interface is locked."
             : "This tab has not been unlocked in the tutorial." }) });
@@ -454,7 +529,7 @@ export function paintGame(raster: SourceRaster, ui: GameViewContext): void {
       const definition = catalogue.items[widget.item];
       const shifted = definition?.shiftClickDropIndex === -2 ? "Drop"
         : definition && definition.shiftClickDropIndex >= 0 ? definition.interfaceOptions[definition.shiftClickDropIndex] : null;
-      const shiftAction = shifted ? actions.find(action => plainText(action.label).startsWith(shifted + " ")) : undefined;
+      const shiftAction = shifted && local.clientInput.shiftDrop ? actions.find(action => plainText(action.label).startsWith(shifted + " ")) : undefined;
       register(widget, `inventory-${widget.index}`, plainText(actions[0]?.label ?? label), actions,
         { draggableSlot: widget.index, ...(shiftAction ? { shiftAction } : {}) });
     }
@@ -496,7 +571,13 @@ export function paintGame(raster: SourceRaster, ui: GameViewContext): void {
         return;
       }
       if (child === 12 && widget.index >= 0) {
+        const dropTab = bankProjection?.dropTabs.get(widget.index);
+        if (dropTab !== undefined) {
+          register(widget, `bank-section-${dropTab}`, `Bank tab ${dropTab} drop area`, [], { bankTab: dropTab, focusable: false });
+          return;
+        }
         const entry = displayedBankEntries.get(widget.index);
+        if (bankView && !entry) return;
         const actions = entry ? ui.bankEntryActions(entry.id) : ui.bankActions(widget.index);
         register(widget, entry ? `bank-entry-${entry.id}` : `bank-${widget.index}`, plainText(actions[0]?.label ?? label), actions,
           entry ? { bankEntryId: entry.id } : {});
@@ -640,7 +721,7 @@ export function paintGame(raster: SourceRaster, ui: GameViewContext): void {
     if (group === 116 && op) {
       register(widget, `settings-${child}-${widget.index}`, op, [{ label: op, run: () => {
         if (/all settings/i.test(op)) {
-          ui.required("All Settings", "source_all_settings_projection");
+          openAllSettings();
         } else if (/run/i.test(op)) ui.send({ kind: "set_setting", setting: { setting: "run",
           enabled: !world.player.settings.find(s => s.setting === "run")?.enabled } });
         else if (/music|sound|area/i.test(op)) ui.required("Additional audio preferences", "source_audio_preference_projection");
@@ -735,6 +816,19 @@ export function paintGame(raster: SourceRaster, ui: GameViewContext): void {
     sourceRectangles.set(widgetKey(widget), widget);
     primaryAction(widget);
     const group = widget.id >> 16, child = widget.id & 65535;
+    if (group === 134 && settingsProjection && settingsValues) {
+      const row = settingsProjection.nodes.get(widgetKey(widget));
+      if (row && Number(row.params["1078"] ?? 0) === 0 && widget.type === 5 && widget.width === 18 &&
+          settingsValues.values.get(row.id)?.value === null) {
+        raster.widget(widget); raster.center("?", widget.x + 9, widget.y + 13, 494, 0xff981f);
+        return true;
+      }
+      if (row && Number(row.params["1078"]) === 9 && widget.onOp && settingsValues.values.get(row.id)?.value === null) {
+        raster.widget(widget);
+        raster.textBox("?", widget, { font: 494, color: 0xff981f, xAlign: 1, yAlign: 1 });
+        return true;
+      }
+    }
     if (group === 84 && widget.type === 6) {
       const parent = sourceRectangles.get(`${widget.parent}:-1`);
       if (parent) ui.preview(parent, widget);
@@ -759,26 +853,12 @@ export function paintGame(raster: SourceRaster, ui: GameViewContext): void {
       if (authoritative && tabIndex >= 0) {
         const declared = authoritative.interfaces.find(row => row.interface === TABS[tabIndex]!.interface);
         if (declared?.visibility === "hidden") return true;
-        if (declared?.highlighted) {
-          const source = catalogue.templates[TABS[tabIndex]!.template]?.find(row => row.id === widget.id && row.index === -1);
-          if (source) widget.sprite = source.sprite;
-        }
       }
       for (const [slot, rect] of sourceTabRects) if (!isInterfaceUnlocked(world, TABS[slot]!.interface) &&
         widget.id !== tabWidget(slot) && widget.x >= rect.x && widget.y >= rect.y &&
         widget.x + widget.width <= rect.x + rect.width && widget.y + widget.height <= rect.y + rect.height) return true;
     }
     const liveItem = liveItems.get(widgetKey(widget));
-    if (bankView && group === 12 && child === 12 && widget.index >= 0) {
-      const entry = displayedBankEntries.get(widget.index);
-      if (entry?.placeholder) {
-        const source = catalogue.presentation?.sourceItems[entry.item];
-        const placeholder = source === undefined ? undefined : catalogue.items[source]?.placeholderId;
-        if (placeholder !== undefined && placeholder >= 0) raster.item(placeholder, 1, widget.x, widget.y, 0);
-        else ui.required("Placeholder imagery", `source_placeholder_binding:${entry.item}`);
-        return true;
-      }
-    }
     if (liveItem?.iconAsset) {
       raster.image(liveItem.iconAsset, widget.x, widget.y);
       if (liveItem.quantity > 1) {
@@ -849,11 +929,15 @@ export function paintGame(raster: SourceRaster, ui: GameViewContext): void {
       if (/Completed:/.test(widget.text)) widget.text = `Completed: ${world.player.quests.filter(q => q.completed).length}/${catalogue.questTable.available}`;
     }
     if (group === 12) {
-      if (child === 3) widget.text = "The Bank of Gielinor";
+      if (child === 3) widget.text = bankView && bankView.selectedTab !== 0 ? `Tab ${bankView.selectedTab}` : "The Bank of Gielinor";
       if (child === 5) widget.text = String(bankView ? bankView.entries.length : world.bank!.slots.filter(slot => slot.item).length);
-      if (child === 8) widget.text = String(bankView ? bankView.capacity : world.bank!.capacity);
+      if (child === 8) widget.text = "";
+      if (child === 5) register(widget, "bank-space", "Bank space", [{
+        label: "Bank space", run: () => ui.notice(`${bankView ? bankView.entries.length : world.bank!.slots.filter(slot => slot.item).length} / ${bankView?.capacity ?? world.bank!.capacity}`),
+      }], { tooltip: `Bank capacity: ${bankView?.capacity ?? world.bank!.capacity}` });
       if (child === 25) widget.sprite = (bankView ? bankView.noted : local.bankNotes) ? 179 : 170;
-      if (bankView && child === 23) widget.sprite = bankView.insertMode ? 179 : 170;
+      if (bankView && child === 23) widget.sprite = 170;
+      if (bankView && child === 24) widget.sprite = bankView.insertMode ? 2820 : 2821;
       if (bankView && child === 40) widget.sprite = bankView.placeholders ? 179 : 170;
       if ([29, 31, 33, 35, 37].includes(child)) {
         const amount = bankView ? bankView.amount : local.bankAmount;
@@ -930,6 +1014,49 @@ export function paintGame(raster: SourceRaster, ui: GameViewContext): void {
   if (local.tab === 11 && local.settingsPage === "audio" && !ui.audio)
     for (const control of controls.filter(control => control.id.startsWith("audio-slider-")))
       raster.textBox("Unavailable", control, { font: 494, color: 0xffff00, xAlign: 1, yAlign: 1 });
+  if (settingsProjection) {
+    if (local.settings.search !== null) {
+      const box = tree.find(widget => widget.id === widgetId(134, 11) && widget.index === -1)!;
+      inputs.length = 0;
+      inputs.push({ ...box, id: "settings-search", label: "Search settings", type: "text", autocomplete: "off",
+        value: local.settings.search, maximum: 80, change: value => ui.change(() => { local.settings.search = value; local.settings.scroll = 0; }),
+        submit: () => ui.focusInput("settings-search") });
+    }
+    const choice = local.settings.choice;
+    if (choice) {
+      const row = catalogue.settingsRows[choice.setting]!, values = catalogue.settingsDefinitions.choices[String(row.params["1091"])];
+      if (values?.stringVals) {
+        const rowHeight = values.keys.length === 2 ? 24 : 20, visible = Math.min(120, values.keys.length * rowHeight);
+        const bottom = tree.find(widget => widget.id === widgetId(134, 14) && widget.index === -1)!;
+        const box = { x: choice.x, y: choice.y + choice.height + visible + 4 > bottom.y + bottom.height ? choice.y - visible - 4 : choice.y + choice.height,
+          width: choice.width, height: visible + 4 };
+        raster.fill(box, 0x0e0e0c); raster.border({ x: box.x + 1, y: box.y + 1, width: box.width - 2, height: box.height - 2 }, 0x474745);
+        controls.length = 0; inputs.length = 0;
+        const maximum = Math.max(0, values.keys.length * rowHeight - visible);
+        choice.scroll = Math.min(choice.scroll, maximum);
+        const first = Math.floor(choice.scroll / rowHeight);
+        values.keys.slice(first, first + Math.floor(visible / rowHeight)).forEach((key, offset) => {
+          const index = first + offset;
+          const bounds = { x: box.x + 2, y: box.y + 2 + offset * rowHeight, width: box.width - 4 - (maximum ? 16 : 0), height: rowHeight };
+          raster.textBox(escapeText(values.stringVals![index]!), bounds, { font: 495, color: 0xff981f, xAlign: 1, yAlign: 1 });
+          controls.push({ ...bounds, id: `settings-option-${key}`, label: values.stringVals![index]!,
+            actions: [{ label: "Select", run: () => { local.settings.choice = null; applySetting(row.id, key); ui.change(() => {}); } }] });
+        });
+        if (maximum) {
+          const bar = { x: box.x + box.width - 18, y: box.y + 2, width: 16, height: visible };
+          const track = Math.max(10, visible - 32), thumb = Math.max(10, Math.trunc(visible * track / (values.keys.length * rowHeight)));
+          const offset = 16 + Math.trunc((visible - 32 - thumb) * choice.scroll / maximum);
+          raster.sprite(792, bar.x, bar.y + 16, { width: 16, height: track, tiling: true });
+          raster.sprite(790, bar.x, bar.y + offset, { width: 16, height: thumb, tiling: true });
+          raster.sprite(789, bar.x, bar.y + offset); raster.sprite(791, bar.x, bar.y + offset + thumb - 5);
+          raster.sprite(773, bar.x, bar.y); raster.sprite(788, bar.x, bar.y + visible - 16);
+          controls.push({ ...bar, id: "settings-option-scroll", label: "Setting choices scroll", actions: [],
+            scrollbar: { value: choice.scroll, maximum, thumb, page: visible, current: () => choice.scroll,
+              change: value => ui.change(() => { choice.scroll = value; }) } });
+        }
+      } else ui.required(row.label, "source_setting_choices");
+    }
+  }
 
   // Empty inventory cells remain real drop targets; they are not fabricated item widgets.
   const inventoryRoot = tree.find(w => w.id >> 16 === inventoryGroup && w.index === -1);
@@ -1076,5 +1203,11 @@ export function paintGame(raster: SourceRaster, ui: GameViewContext): void {
   if (local.selectedItem || local.selectedSpell) {
     const label = local.selectedItem ? `Use ${escapeText(local.selectedItem.name)} ->` : "Cast Wind Strike ->";
     raster.text(label, 4, 15, 496, 0xffffff);
+  }
+  if (settingsProjection) {
+    for (let index = inputs.length - 1; index >= 0; index--)
+      if (inputs[index]!.id !== "settings-search" || local.settings.choice) inputs.splice(index, 1);
+    if (local.settings.choice) for (let index = controls.length - 1; index >= 0; index--)
+      if (!controls[index]!.id.startsWith("settings-option-")) controls.splice(index, 1);
   }
 }

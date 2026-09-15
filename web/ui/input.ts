@@ -24,6 +24,7 @@ export interface InputCallbacks {
   suppressClick: () => boolean;
   hover: (control: Control | null) => void;
   blocked: (reason: string) => void;
+  activate: (control: Control, shifted: boolean) => void;
 }
 
 export class InputSurface {
@@ -107,7 +108,7 @@ export class InputSurface {
           const action = event.shiftKey && current?.shiftAction ? current.shiftAction : current?.actions[0];
           const reason = current?.disabled ?? action?.disabled;
           if (reason) this.callbacks.blocked(reason);
-          else action?.run();
+          else if (current && action) this.callbacks.activate(current, event.shiftKey);
         });
         button.addEventListener("focus", () => this.callbacks.focus(control.id));
         button.addEventListener("blur", () => this.callbacks.focus(null));

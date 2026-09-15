@@ -10,6 +10,7 @@ import os
 from pathlib import Path
 import shutil
 import subprocess
+from settings_catalog import build_settings_catalog
 
 ROOT = Path(__file__).resolve().parents[2]
 TOOL = ROOT / "tools/ui-assets"
@@ -152,6 +153,7 @@ def native(items, source, tooling):
         UiPresentationCapture.run(capture, this);
         UiAudioCapture.run(capture, this);
         UiMusicCapture.run(capture, this);
+        UiBoundedCapture.run(capture, this);
     }
 """
     instrumented = instrumented.rstrip()[:-1] + extra + "}\n"
@@ -299,6 +301,9 @@ def main():
         "nativeAudioControls": read(native_dir / "audio-ui-inputs.json"),
         "nativeMusicControls": read(native_dir / "music-ui-inputs.json"),
         "musicTracks": read(native_dir / "music-ui-rows.json"),
+        "boundedUiInputs": read(native_dir / "bounded-ui-inputs.json"),
+        "settingsDefinitions": read(native_dir / "bounded-settings-definitions.json"),
+        "settingsRows": build_settings_catalog(read(native_dir / "bounded-settings-definitions.json"), scenes),
         "npcs": {str(n["id"]): {"name": n["name"], "examine": n.get("examine")} for n in collections("npc").values()},
         "presentation": {
             "interfaces": {key: {"name": v["name"], "sourceIds": v["source_ids"]}

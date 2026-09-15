@@ -22,6 +22,8 @@ import type { UiAudioChannel, UiAudioView } from "./audio-controls.ts";
 import type { SourceMusicState } from "../audio/native-scene.ts";
 import { musicRequest, musicStateProblem, musicScrollPosition } from "./music-controls.ts";
 import type { MusicUiAction } from "./music-controls.ts";
+import { defaultSettingsPage } from "./settings.ts";
+import type { SettingsPageState, ClientInputSettings } from "./settings.ts";
 
 export interface UiNotice { message: string; errorId: string | null; recoverable: boolean; scope: "error" | "unavailable" | "information" }
 export interface AmountPrompt { label: string; value: string; confirm: (quantity: number) => void; pending?: boolean }
@@ -45,6 +47,8 @@ export interface LocalUiState {
   productionAmount: ProductionAmount;
   settingsPage: "controls" | "audio";
   musicDropdown: boolean;
+  settings: SettingsPageState;
+  clientInput: ClientInputSettings;
 }
 export interface WorldPointer {
   kind: "move" | "primary" | "context";
@@ -84,13 +88,15 @@ export interface GameViewContext {
   audioToggle: () => void;
   music: SourceMusicState | null;
   musicAction: (action: MusicUiAction) => void;
+  focusInput: (id: string) => void;
 }
 
 function emptyLocal(): LocalUiState {
   return { tab: 3, selectedItem: null, selectedSpell: null, bankSearch: "", bankSearchOpen: false,
     bankAmount: 1, bankNotes: false, shopAmount: 1, shopValue: true, scroll: 0,
     journal: null, modal: null, dialoguePage: 0, amount: null, appearance: { body_type: 0 },
-    quickPrayer: true, magicFilter: false, filterPanel: null, prayerFilters: 0, magicFilters: 0, recoverySelected: null, chatDraft: "", productionAmount: 1, settingsPage: "controls", musicDropdown: false };
+    quickPrayer: true, magicFilter: false, filterPanel: null, prayerFilters: 0, magicFilters: 0, recoverySelected: null, chatDraft: "", productionAmount: 1, settingsPage: "controls", musicDropdown: false,
+    settings: defaultSettingsPage(), clientInput: { singleMouse: false, shiftDrop: true, escapeCloses: true } };
 }
 
 function errorDetails(error: unknown): { message: string; errorId: string | null; recoverable: boolean } {
@@ -292,13 +298,21 @@ class UiController {
       },
       hover: control => { this.hover = control; this.renderSoon(); },
       blocked: reason => this.show(reason, "error"),
+      activate: (control, shifted) => {
+        if (this.local.clientInput.singleMouse && !(shifted && control.shiftAction) &&
+            !control.id.startsWith("menu-") && control.actions.length > 1)
+          this.openMenu(control.actions, control.x, control.y + control.height);
+        else (shifted && control.shiftAction ? control.shiftAction : control.actions[0])?.run();
+      },
     });
     const scrollTargets: HTMLElement[] = [canvas, this.surface.root];
     for (const target of scrollTargets) target.addEventListener("wheel", event => {
       const [x, y] = this.xy(event);
       if (!this.capturesPointer(x, y) || this.menu || this.notice || this.local.amount || this.local.musicDropdown) return;
       event.preventDefault();
-      this.local.scroll = Math.max(0, this.local.scroll + Math.sign(event.deltaY) * (this.local.tab === 13 ? 45 : 36));
+      if (this.local.settings.choice) this.local.settings.choice.scroll = Math.max(0, this.local.settings.choice.scroll + Math.sign(event.deltaY) * 20);
+      else if (this.local.modal === "all-settings") this.local.settings.scroll = Math.max(0, this.local.settings.scroll + Math.sign(event.deltaY) * 45);
+      else this.local.scroll = Math.max(0, this.local.scroll + Math.sign(event.deltaY) * (this.local.tab === 13 ? 45 : 36));
       this.renderSoon();
     }, { signal: this.abort.signal, passive: false });
     window.addEventListener("pointerup", event => {
@@ -726,6 +740,8 @@ class UiController {
     else if (this.local.bankSearchOpen) this.local.bankSearchOpen = false;
     else if (this.local.filterPanel) this.local.filterPanel = null;
     else if (this.local.musicDropdown) this.local.musicDropdown = false;
+    else if (this.local.settings.choice) this.local.settings.choice = null;
+    else if (this.local.modal === "all-settings") this.local.modal = null;
     else if (this.local.selectedItem || this.local.selectedSpell) { this.local.selectedItem = null; this.local.selectedSpell = null; }
     else if (this.state.world && gameplayUi(this.state.world)?.confirmation) {
       this.sendUi({ kind: "ui_confirm", confirmation_id: gameplayUi(this.state.world)!.confirmation!.id, accept: false });
@@ -743,7 +759,12 @@ class UiController {
 
   private key(event: KeyboardEvent): void {
     if (event.isComposing) return;
-    if (event.key === "Escape") { event.preventDefault(); event.stopPropagation(); this.cancel(); return; }
+    if (event.key === "Escape") {
+      event.preventDefault(); event.stopPropagation();
+      if (this.local.clientInput.escapeCloses || this.menu || this.notice || this.local.amount || this.local.selectedItem || this.local.selectedSpell || this.local.settings.choice)
+        this.cancel();
+      return;
+    }
     if (this.surface.activeInput()) return;
     const scrolling = this.controls.find(control => control.id === this.focus && control.scrollbar);
     if (scrolling?.scrollbar && ["ArrowUp", "ArrowDown", "Home", "End", "PageUp", "PageDown"].includes(event.key)) {
@@ -867,6 +888,9 @@ class UiController {
       if (this.menu && !control?.id.startsWith("menu-")) { this.menu = null; this.suppressNextClick = true; this.renderSoon(); return; }
       if (this.local.musicDropdown && !control?.id.startsWith("music-filter-") && control?.id !== "music-list-filter") {
         this.local.musicDropdown = false; this.suppressNextClick = true; this.renderSoon(); return;
+      }
+      if (this.local.settings.choice && !control?.id.startsWith("settings-option-")) {
+        this.local.settings.choice = null; this.suppressNextClick = true; this.renderSoon(); return;
       }
       if (event.button !== 0 || this.notice || this.local.amount || control?.disabled) return;
       if (control?.scrollbar) {
@@ -1196,7 +1220,7 @@ class UiController {
   capturesPointer(x: number, y: number): boolean {
     if (this.disposed) return false;
     if (!this.state.world || this.state.phase !== "world" || this.notice || this.local.amount ||
-        this.sliderDrag || this.scrollDrag || this.local.musicDropdown ||
+        this.sliderDrag || this.scrollDrag || this.local.musicDropdown || this.local.settings.choice ||
         (this.state.error && this.state.error !== this.dismissedError)) return true;
     const presentation = gameplayUi(this.state.world);
     if (presentation?.reward || presentation?.confirmation) return true;
@@ -1246,7 +1270,9 @@ class UiController {
     }
     const running = world.player.settings.find(setting => setting.setting === "run")?.enabled ?? false;
     actions.push({ label: "Walk here", run: () => this.send({ kind: "walk", destination: pick.tile, running: pointer.control ? !running : running }) });
-    if (pointer.kind === "context") this.openMenu(actions, pointer.x, pointer.y);
+    if (pointer.kind === "context" || pointer.kind === "primary" && this.local.clientInput.singleMouse &&
+        !this.local.selectedItem && !this.local.selectedSpell && actions.length > 1)
+      this.openMenu(actions, pointer.x, pointer.y);
     else if (pointer.kind === "primary") {
       const first = actions[0];
       if (first?.disabled) this.show(first.disabled, "error");
@@ -1332,6 +1358,7 @@ class UiController {
         audioToggle: () => this.audio(),
         music: this.musicState?.playerId === world.player.id ? this.musicState.value : null,
         musicAction: action => this.changeMusic(action),
+        focusInput: id => requestAnimationFrame(() => { if (!this.disposed) this.surface.focus(id); }),
         capture: bounds => this.panelBounds.push(bounds),
         preview: (bounds, model) => {
           this.recordPreview("equipment", bounds, model);

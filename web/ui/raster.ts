@@ -1,5 +1,5 @@
 import type { FontAsset, NativeWidget, Rect } from "./assets.ts";
-import { UiAssets, staticModelKey } from "./assets.ts";
+import { UiAssets, intersect, staticModelKey } from "./assets.ts";
 
 const CP1252: Record<string, number> = {
   "€": 128, "‚": 130, "ƒ": 131, "„": 132, "…": 133, "†": 134, "‡": 135,
@@ -96,6 +96,7 @@ export class SourceRaster {
   readonly assets: UiAssets;
   private readonly coloredFonts = new Map<string, HTMLCanvasElement>();
   private readonly scaledSprites = new Map<string, HTMLCanvasElement>();
+  private activeClip: Rect | null = null;
 
   constructor(canvas: HTMLCanvasElement, assets: UiAssets) {
     this.canvas = canvas; this.assets = assets;
@@ -119,17 +120,40 @@ export class SourceRaster {
   }
   clip(rect: Rect, paint: () => void): void {
     if (rect.width <= 0 || rect.height <= 0) return;
+    const previous = this.activeClip;
+    this.activeClip = intersect(rect, previous ?? { x: 0, y: 0, width: this.canvas.width, height: this.canvas.height });
     this.context.save();
     this.context.beginPath(); this.context.rect(rect.x, rect.y, rect.width, rect.height); this.context.clip();
-    paint(); this.context.restore();
+    try { paint(); } finally { this.context.restore(); this.activeClip = previous; }
   }
 
   image(id: string, x: number, y: number, opacity = 0): boolean {
     const image = this.assets.image(id);
     if (!image) return false;
-    this.context.save(); this.context.globalAlpha = (256 - opacity) / 256;
-    this.context.drawImage(image, Math.floor(x), Math.floor(y)); this.context.restore();
+    this.withSpriteOpacity({ x: Math.floor(x), y: Math.floor(y), width: image.naturalWidth, height: image.naturalHeight }, opacity, () => {
+      this.context.save(); this.context.globalAlpha = 1;
+      this.context.drawImage(image, Math.floor(x), Math.floor(y)); this.context.restore();
+    });
     return true;
+  }
+
+  private withSpriteOpacity(rect: Rect, opacity: number, paint: () => void): void {
+    const bounds = intersect(rect, this.activeClip ?? { x: 0, y: 0, width: this.canvas.width, height: this.canvas.height });
+    if (bounds.width <= 0 || bounds.height <= 0) return;
+    const before = opacity ? this.context.getImageData(bounds.x, bounds.y, bounds.width, bounds.height) : null;
+    paint();
+    if (before) {
+      const after = this.context.getImageData(bounds.x, bounds.y, bounds.width, bounds.height), alpha = 256 - opacity;
+      for (let pixel = 0; pixel < after.data.length; pixel += 4) {
+        if (before.data[pixel + 3] === 255) {
+          for (let channel = 0; channel < 3; channel++)
+            after.data[pixel + channel] = (after.data[pixel + channel]! * alpha + before.data[pixel + channel]! * opacity) >> 8;
+        } else if (before.data[pixel + 3] === 0 && after.data[pixel + 3]) {
+          after.data[pixel + 3] = Math.floor(255 * alpha / 256);
+        }
+      }
+      this.context.putImageData(after, bounds.x, bounds.y);
+    }
   }
 
   sprite(id: number, x: number, y: number, options: {
@@ -295,27 +319,31 @@ export class SourceRaster {
 
   item(sourceId: number, quantity: number, x: number, y: number, quantityMode = 2, selected = false, opacity = 0, shadow = 0x333333): boolean {
     const path = this.assets.itemAsset(sourceId, quantity, selected, shadow);
-    if (!path || !this.image(path, x, y, opacity)) return false;
-    if (quantityMode === 1 || (quantityMode === 2 && (this.assets.catalogue.items[sourceId]?.stackable === 1 || quantity !== 1))) {
-      const count = countText(quantity);
-      // Native item sprites reserve RGB zero for transparency; their black glyph shadow is RGB 1.
-      this.text(count.text, x, y + 9, 494, count.color, 1);
-    }
+    if (!path || !this.assets.image(path)) return false;
+    const count = quantityMode === 1 || (quantityMode === 2 && (this.assets.catalogue.items[sourceId]?.stackable === 1 || quantity !== 1))
+      ? countText(quantity) : null;
+    this.withSpriteOpacity({ x: Math.floor(x), y: Math.floor(y), width: Math.max(36, count ? this.measure(count.text, 494) + 1 : 0), height: 32 }, opacity, () => {
+      this.image(path, x, y);
+      // Native quantity glyphs belong to the item sprite and receive its same opacity.
+      if (count) this.text(count.text, x, y + 9, 494, count.color, 1);
+    });
     return true;
   }
 
   widget(widget: NativeWidget): void {
     if (widget.type === 3) {
-      const before = widget.opacity ? this.context.getImageData(widget.x, widget.y, widget.width, widget.height) : null;
+      const bounds = intersect(widget, this.activeClip ?? { x: 0, y: 0, width: this.canvas.width, height: this.canvas.height });
+      if (bounds.width <= 0 || bounds.height <= 0) return;
+      const before = widget.opacity ? this.context.getImageData(bounds.x, bounds.y, bounds.width, bounds.height) : null;
       if (widget.filled) this.fill(widget, widget.color); else this.border(widget, widget.color);
       if (before) {
-        const after = this.context.getImageData(widget.x, widget.y, widget.width, widget.height), alpha = 256 - widget.opacity;
+        const after = this.context.getImageData(bounds.x, bounds.y, bounds.width, bounds.height), alpha = 256 - widget.opacity;
         for (let i = 0; i < after.data.length; i += 4) {
           if (before.data[i + 3] === 255) for (let channel = 0; channel < 3; channel++) {
             after.data[i + channel] = (after.data[i + channel]! * alpha >> 8) + (before.data[i + channel]! * widget.opacity >> 8);
           }
         }
-        this.context.putImageData(after, widget.x, widget.y);
+        this.context.putImageData(after, bounds.x, bounds.y);
       }
     } else if (widget.type === 4 && widget.text && widget.font >= 0) {
       this.textBox(widget.text, widget, { font: widget.font, color: widget.color, shadow: widget.shadow ? 0 : null,

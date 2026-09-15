@@ -25,8 +25,8 @@ or protobuf bridge implements them**. Actual versioned projection data is
 required; absent/unknown/malformed `WorldView.ui` is explicit unsupported/error
 feedback rather than a fabricated empty success.
 
-Current component validation: TypeScript and 39 UI unit tests pass; all 20 legacy,
-16 versioned, 7 real-audio-observer and 6 music-state browser cases pass. The 29 integrated audio
+Current component validation: TypeScript and 47 UI unit tests pass; all 20 legacy,
+16 versioned, 7 real-audio-observer, 6 music-state and 6 All Settings browser cases pass. The 29 integrated audio
 policy/reward tests also pass. All **87/87** native-panel/full-overlay/owner-composition
 comparisons pass at the original zero tolerances. This resolves the earlier
 shop and guide-family raster differences, but does not complete the missing
@@ -48,6 +48,10 @@ shared-host privacy; they do not claim audible world playback.
 Native music mode/list-menu artwork adds **8/8** exact comparisons in
 `evidence/native-music-controls/`. Its 853 row/group/widget bindings come from
 the original table44 display-name column, not inferred labels or fixture unlocks.
+The independent UI continuation uses **exactly 18 additional original states**:
+ten settings, three bank, three HUD and two level-up states. Source replays and
+data projections pass **36/36** zero-tolerance checks without changing the
+71-state/29-family/11-signature denominator. See `evidence/bounded-independent/`.
 
 ## Shell integration
 
@@ -186,6 +190,70 @@ submission while awaiting that update is stopped. Menus, quantity prompts,
 drag state, Escape, blur, outside-pointer release and reconnect retain their
 identity/error semantics. The world cannot receive clicks through a native
 modal's blank interior.
+
+### Stock All Settings window
+
+The source window is native group134, attached at161:16. Its actual category
+pages, search box, More/Less info, Hide/Show locked controls, native scrolling
+and bounded choice menus are implemented. The window opens locally as a client
+interface, not as a fake server acknowledgement. Category/source row identities
+come from enums422/423 and original structs; the compiled catalogue retains the
+source keyword aliases, descriptions, widget geometry and actual locked styles.
+Search also includes a matched section's children, following source3841.
+Unknown required controls are not hidden by the locked filter.
+The Settings tab161:47 retains its original Controls/Audio/Display shortcut
+order and opens the corresponding source category3/1/4 without a gameplay request.
+
+Available live bindings include master/music/effects/area sliders and native
+reset values, actual source music mode/Modern–Classic selection, authoritative
+death supply-pile/auto-equip settings, the UI's existing single-button mouse,
+shift-click and Escape behavior, and the actual approved Resizable-Classic
+layout. Audio uses the existing typed helpers; gameplay settings remain
+`AppServices` requests and do not change before their authoritative update.
+The input toggles start from the behavior already implemented by this UI; no
+source preference database or saved preference value is manufactured.
+Single-button mode covers both interface controls and actual renderer world
+picks; a permitted shift action still takes precedence, and denied actions
+never dispatch.
+
+Required display/camera settings without actual bindings remain visible with
+unknown values and explicit feedback. Unprovided numeric thresholds and colour
+preferences also stay explicitly unknown rather than displaying source-fixture
+zero values or saved swatches. In particular, source setting2734
+(`Camera zoom distance`, operation14) is **not** a direct assignment to
+`RenderCamera.zoom`: source42 applies `VIEWPORT_SETFOV` and camera-follow height.
+It uses source varcs73/74 with bounds1338–1341 and viewport interpolation.
+The controlled native comparison uses explicitly recorded300/200/600 inputs,
+never production defaults. Screen Brightness2736/operation15 and view
+distance3656/operation168 likewise need the renderer's actual source preference
+projection. No new renderer/audio callback or guessed preference is introduced.
+
+### Native bank/HUD/level-up projection
+
+Live bank projection now preserves main-tab-first sections, original tab
+background/icon offsets, section spacing/dividers and source drop areas.
+It uses stable entry IDs and actual tab assignments, not the source fixture
+quantities. Insert mode changes the original swap/insert icon2821/2820 rather
+than incorrectly selecting a red button background. Original linked placeholder
+items use opacity120, including their quantity glyphs.
+
+HUD visibility uses the actual interface projection. Highlights are the
+original two border primitives on native161:98, anchored to the relevant tab,
+not a substituted selected-tab skin. Source snapshots cover genuine hidden
+tabs, missing-rune locked styling and the original highlight frame.
+
+`level-up.ts` exposes source-only layout helpers without inventing canonical
+interface IDs. The source GameVal name `levelup_display` is group233 attached
+at162:567; title233:1, detail233:2 and continuation233:3 use native font497.
+Native system chat uses group162. `projectLevelUpPopup` and `projectLevelUpChat`
+take supplied text only, never infer XP/levels. The backend still owns the
+canonical chat/popup association and real event/text sequencing.
+
+These source states also exposed implementation clipping/compositing bugs:
+manual rectangle alpha writes now respect the active clip, and native item
+opacity applies to the whole item sprite including quantity text. The original
+integer blend arithmetic, source files, comparison algorithms and zero tolerances
+remain unchanged; all earlier proof lanes are retained.
 
 ### Source audio controls
 
@@ -448,7 +516,8 @@ Additional UI implementation/fidelity work remains:
   replay, including all modal/choice/scroll/selected/disabled variants;
 * the final v4 backend/protobuf/canonical-data integration for `game.ui.v1`;
   the independent nullable production-target correction is already consumed;
-* canonical level-up chat/popup source associations and complete native layouts;
+* canonical association and authoritative sequencing for the derived native
+  level-up chat/popup layouts, plus any additional required payload variants;
 * published production Make-All and bank default-All quantity semantics;
 * authoritative recovery fee-unit/capacity/per-row/bank-all data and partial
   retrieval/bank-all requests; coffer/discard/coffer-offer wiring is complete;
@@ -456,8 +525,9 @@ Additional UI implementation/fidelity work remains:
 * real source-scene/varp/music-state/event app wiring; the additive audio
   publications and UI-side route/control integration are complete;
 * direct native Skip Track request and three numbered playlist-slot management;
-* persisted remembered mute/music preferences and the broader All Settings
-  window projection.
+* the audio owner's typed saved-preference/Skip/numbered-playlist helpers;
+* actual renderer camera/FOV/brightness/view-distance preferences and remaining
+  unbound source controls inside the now-working All Settings window.
 
 Controls whose service capability is absent do not silently succeed or invent
 values. Out-of-scope controls retain their source placement and explicit
@@ -474,7 +544,7 @@ The existing frozen web dependencies are used.
 ```bash
 cd web
 pnpm exec tsc --noEmit
-node --test ui/tests/unit.test.ts ui/tests/gameplay-ui.test.ts ui/tests/audio-controls.test.ts ui/tests/music-controls.test.ts
+node --test ui/tests/unit.test.ts ui/tests/gameplay-ui.test.ts ui/tests/audio-controls.test.ts ui/tests/music-controls.test.ts ui/tests/independent.test.ts
 node --test audio/audio.test.ts audio/native-policy.test.ts audio/reward-levels.test.ts audio/supplement.test.ts
 cd ..
 python3 tools/ui-assets/glyph_proof.py
@@ -506,6 +576,13 @@ TMPDIR="$PWD/web/ui/.cache/xvfb" xvfb-run --auto-servernum \
   --server-args='-screen 0 2560x1440x24 -nolisten tcp' \
   node web/ui/tests/music-browser.mjs
 python3 tools/ui-assets/compare_modes.py --music-ui
+TMPDIR="$PWD/web/ui/.cache/xvfb" xvfb-run --auto-servernum \
+  --server-args='-screen 0 2560x1440x24 -nolisten tcp' \
+  node web/ui/tests/settings-browser.mjs
+TMPDIR="$PWD/web/ui/.cache/xvfb" xvfb-run --auto-servernum \
+  --server-args='-screen 0 2560x1440x24 -nolisten tcp' \
+  node web/ui/tests/bounded-browser.mjs
+python3 tools/ui-assets/compare_modes.py --bounded-ui
 ```
 
 The browser tests use sandboxed **headful** Chrome under Xvfb. Set
@@ -573,7 +650,7 @@ read-only `inspect_scripts.py` helper accepts a script ID, `enum:ID`, or a
 bounded `widget:GROUP` search against that same verified local cache.
 
 After recording `test-results/typecheck.log`, unit TAP, component captures and
-the three passing comparison reports, `python3 tools/ui-assets/archive_evidence.py`
+all six passing comparison reports, `python3 tools/ui-assets/archive_evidence.py`
 archives the evidence and source/candidate/diff images. It refuses failed or
 incomplete reports, preserves the existing zero tolerances, and keeps M1
 acceptance false. Archived native references allow comparison after owned

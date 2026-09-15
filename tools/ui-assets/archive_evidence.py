@@ -120,12 +120,14 @@ def main():
         "presentations": passed("presentation-comparison.json", 45),
         "audio_ui": passed("audio-ui-comparison.json", 18),
         "music_ui": passed("music-ui-comparison.json", 8),
+        "bounded_ui": passed("bounded-ui-comparison.json", 36),
     }
     components = passed("component-tests.json", 20)
     versioned = passed("gameplay-ui-v1-tests.json", 16)
     audio_ui = passed("audio-ui-tests.json", 7)
     music_ui = passed("music-ui-tests.json", 6)
-    units = passed_tap("unit.tap", 39)
+    settings_ui = passed("settings-component-tests.json", 6)
+    units = passed_tap("unit.tap", 47)
     audio_units = passed_tap("audio-policy.tap", 29)
     glyphs = read(RESULTS / "glyph-proof.json")
     if glyphs["failures"] or glyphs["checkedSpriteFrames"] < 1099 or glyphs["checkedFontGlyphs"] != 1024:
@@ -230,6 +232,22 @@ def main():
         "native_track_rows": len(manifest["musicTracks"]),
         "sourcePackSha256": glyphs["sourcePackSha256"], "finalAcceptance": False,
     })
+    bounded = manifest["boundedUiInputs"]
+    if bounded["limit"] != 18 or len(bounded["states"]) != 18:
+        raise ValueError("Owner-bounded original comparison state inventory changed")
+    independent = EVIDENCE / "bounded-independent"
+    refs = archive_references([state["case"] + ".png" for state in bounded["states"]], independent)
+    for kind in ("bounded-source", "bounded-projections", "settings-components"):
+        for path in (RESULTS / kind).glob("*.png"):
+            copy(path, independent / kind / path.name)
+    copy(RESULTS / "bounded-ui-comparison.json", independent / "comparison.json")
+    copy(RESULTS / "bounded-browser.json", independent / "browser.json")
+    copy(RESULTS / "settings-component-tests.json", independent / "settings-component-tests.json")
+    write(independent / "source-inputs.json", {
+        "scope": "Exactly eighteen original controlled independent UI states; no new acceptance or live account/progression assertions.",
+        "limit": 18, "states": bounded["states"], "references": refs,
+        "sourcePackSha256": glyphs["sourcePackSha256"], "finalAcceptance": False,
+    })
     owned_sources = sorted([
         *ROOT.glob("web/ui/*.ts"), *ROOT.glob("web/ui/tests/*.ts"), *ROOT.glob("web/ui/tests/*.mjs"),
         *ROOT.glob("tools/ui-assets/*.java"), *ROOT.glob("tools/ui-assets/*.py"),
@@ -247,7 +265,8 @@ def main():
         "unit": units,
         "integrated_audio_policy_units": audio_units,
         "component_browser": {"legacy": len(components["cases"]), "versioned": len(versioned["cases"]),
-                              "source_audio_ui": len(audio_ui["cases"]), "source_music_ui": len(music_ui["cases"]), "browser": versioned["browser"]},
+                              "source_audio_ui": len(audio_ui["cases"]), "source_music_ui": len(music_ui["cases"]),
+                              "all_settings_ui": len(settings_ui["cases"]), "browser": versioned["browser"]},
         "audio_contract": {
             "upstream_commits": ["888f9384e111b5f7fefeee36859bae4f873e5c95", "f74652a59834815b4e57e04366dc857681fd83c1", "f9e466d3feb6626785ae46b9d6549e4e7eb00443"],
             "authorized_picks": ["b7cc380", "d2082e8", "7475596"],

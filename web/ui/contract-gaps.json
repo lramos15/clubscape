@@ -44,7 +44,9 @@
     "Declared body_type 0/1 permissions and confirmation, with local appearance/equipment preview descriptors. Human kit/colour/pronoun controls do not create new penguin variants.",
     "All shop buys still send displayed canonical expected_item; held menus/amounts never retarget a reused row.",
     "Native master/music/effects/area sliders and per-channel mute controls consume actual audio observations, preserve remembered in-session positions and source integer/nonlinear semantics; title audio uses explicit global mute rather than resetting all channel positions.",
-    "Player-scoped setUiMusicState delegates the exact published state to the audio engine. Native modes, canonical manual tracks, actual unlock coloring/counts, current playlist, loop flags, scrollbar and source dropdown cancellation are wired without fabricated music events or caller-selected next songs."
+    "Player-scoped setUiMusicState delegates the exact published state to the audio engine. Native modes, canonical manual tracks, actual unlock coloring/counts, current playlist, loop flags, scrollbar and source dropdown cancellation are wired without fabricated music events or caller-selected next songs.",
+    "Stock All Settings group134 opens as a real local interface with original category/search/info/locked-filter/scroll/choice controls and live audio/music/death plus existing UI input behavior. Missing required display/camera values remain explicit unknowns, not fixture defaults.",
+    "Native bank main-tab/section ordering, tab graphics, placeholder opacity120/quantity glyphs and true insert icon projection; original HUD hidden/locked states and two-border highlight styling."
   ],
   "requests": [
     {
@@ -88,9 +90,14 @@
       "reason": "SourceMusicState and UI controls now cover actual modes/unlocks/manual selection/current playlist/loop flags. It does not identify three saved slots, and identical-state idempotence is not a skip API. No mode-flipping workaround or caller-guessed next track is used."
     },
     {
-      "scope": "Native remembered mute values and full settings window",
-      "extension": "Expose the actual remembered mute percentages (source varbits14817/12426/12427/12428) when restoring persisted settings. Complete the separate All Settings window projection.",
-      "reason": "Current percentages/mixers and source sidebar sliders are wired. In-session Mute/Unmute preserves the observed previous value. A zero value whose saved restoration value was never supplied reports ui.audio.remembered_mute instead of inventing it. The broader All Settings button has explicit required feedback, not a silent open acknowledgement."
+      "scope": "Native remembered mute and versioned saved client preferences",
+      "extension": "Consume the audio owner's forthcoming typed preference helpers for remembered mute varbits14817/12426/12427/12428, direct Skip and saved Playlist1/2/3.",
+      "reason": "The All Settings window and available bindings are now implemented. In-session Mute/Unmute preserves its observed value. Unprovided saved values remain unknown; this UI does not fork the audio preference contract or invent defaults."
+    },
+    {
+      "scope": "Actual source display/camera preferences",
+      "extension": "Renderer/shell must expose the real camera FOV/follow-height preference state and limits, brightness and view distance through its approved adapter.",
+      "reason": "Native setting2734/operation14 uses varcs73/74,1338–1341 and source42 VIEWPORT_SETFOV plus CAM_SETFOLLOWHEIGHT; RenderCamera.zoom is not a safe substitute. Brightness2736/operation15 and distance3656/operation168 retain source placement and required feedback. No display values are copied from comparison fixtures."
     },
     {
       "scope": "Committed Cook reward/Widget153 close audio batches",
@@ -100,8 +107,8 @@
   ],
   "implementation_gaps_without_contract_extension": [
     "Complete source-selected/highlight/hidden/disabled projection coverage for every required current-source signature and live 71-state route. The existing 71 states/29 families/11 signatures are preserved, not reduced or declared accepted.",
-    "Complete native level-up chat and popup layouts once their canonical association is supplied; current explicit failure/continuation coverage is not visual completion.",
-    "Matched full-panel source comparisons for remaining live bank-tab/placeholder/highlight variants and their canonical data, beyond the preserved original bank replay and current versioned interaction tests.",
+    "Wire the now-derived native162 chat and233 levelup_display popup helpers to the backend's canonical interface IDs and authoritative text/event sequencing; no IDs or levels are invented.",
+    "Match final canonical/live bank data to the now-calibrated main-tab/section/placeholder/selection layouts, and cover any additional required variants. The three bounded bank cases and their data projections already pass at zero tolerance.",
     "Real-server startup-to-quest-completion journey, reconnect/restart/concurrent-state behavior and final visual/audio/hardware acceptance remain separate gates."
   ],
   "source_comparison_scope": {
@@ -110,6 +117,7 @@
     "additional_production_death_reward_checks": { "passed": 45, "total": 45, "tolerance": 0 },
     "additional_audio_control_checks": { "passed": 18, "total": 18, "tolerance": 0 },
     "additional_music_control_checks": { "passed": 8, "total": 8, "tolerance": 0 },
+    "bounded_independent_states": { "total": 18, "maximum": 18, "source_and_projection_checks": 36, "passed": 36, "tolerance": 0 },
     "full_panels_excluded": 0,
     "source_fixture_balances_are_production_values": false,
     "component_double_is_live_gameplay": false

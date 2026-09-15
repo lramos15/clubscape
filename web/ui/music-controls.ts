@@ -7,7 +7,8 @@ import { escapeText } from "./raster.ts";
 export type MusicUiAction =
   | { kind: "mode"; mode: SourceMusicState["mode"] }
   | { kind: "play" | "add" | "remove"; group: number }
-  | { kind: "loop"; enabled: boolean };
+  | { kind: "loop"; enabled: boolean }
+  | { kind: "area_mode"; mode: SourceMusicState["areaMode"] };
 
 export function musicStateProblem(state: SourceMusicState): string | null {
   if (!state || !["area", "single", "shuffle", "playlist"].includes(state.mode) ||
@@ -42,6 +43,7 @@ export function musicRequest(state: SourceMusicState, action: MusicUiAction, pla
       break;
     case "play": next = { ...next, mode: "single", selectedGroup: action.group }; break;
     case "loop": next = { ...next, loopEnabled: action.enabled }; break;
+    case "area_mode": next = { ...next, areaMode: action.mode }; break;
     case "add":
       next = { ...next, playlistGroups: state.playlistGroups.includes(action.group) ? state.playlistGroups : [...state.playlistGroups, action.group] };
       break;
