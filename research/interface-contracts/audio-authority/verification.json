@@ -3,6 +3,7 @@
   "task": "m1-gameplay-ui-contracts",
   "scope": "Bounded M1 server-owned music unlock/history and native morph-variable authority",
   "contract_commit": "8d3b4004cd66b720d5bd7d96f10765c3b034eb25",
+  "implementation_candidate_commit": "5b4006f3a14f85da8b017d4bf20c124f188c7d3d",
   "authority_implemented": true,
   "source_authority_item_open": false,
   "menu_groups": [2, 62, 64, 76, 144, 145, 163, 327],

@@ -5,6 +5,7 @@
   "later_audio_authority": {
     "verification": "research/interface-contracts/audio-authority/verification.json",
     "contract_commit": "8d3b4004cd66b720d5bd7d96f10765c3b034eb25",
+    "implementation_candidate_commit": "5b4006f3a14f85da8b017d4bf20c124f188c7d3d",
     "authority_item_implemented_and_verified": true,
     "raw_sha256": "57462592102e1491f2c5bf00ca59dc80e75d03feb0859c49e66f4063ea36ebf5",
     "compressed_sha256": "52ca6143589182caee23a9ca967602094d787c4346bb30aec25ae67beb46d348",
