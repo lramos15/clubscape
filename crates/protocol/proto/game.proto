@@ -11,6 +11,7 @@ message JoinWorld {}
 message PollWorld {
   string world_session_id = 1;
   uint64 after_revision = 2;
+  QuoteRequest quote = 3;
 }
 message LeaveWorld { string world_session_id = 1; }
 
@@ -47,6 +48,9 @@ message WorldInput {
     ConfirmAppearance confirm_appearance = 35;
     SelectExperience select_experience = 36;
     Reclaim reclaim = 37;
+    ProduceSelected produce_selected = 38;
+    OpenGrave open_grave = 39;
+    Empty open_death_office = 40;
   }
 }
 
@@ -106,6 +110,22 @@ enum RecoveryStorage {
   DEATH_OFFICE = 2;
 }
 message Reclaim { string death = 1; RecoveryStorage storage = 2; repeated string items = 3; }
+enum ProductionMode { PRODUCTION_MODE_UNSPECIFIED = 0; SINGLE = 1; MAKE_X = 2; }
+message ProduceSelected {
+  string recipe = 1; WorldTarget target = 2; uint32 quantity = 3; ProductionMode mode = 4;
+}
+message OpenGrave { string death = 1; }
+message InventoryAmount { uint32 inventory_slot = 1; uint32 quantity = 2; }
+message BankWithdrawal { uint32 bank_slot = 1; uint32 quantity = 2; bool noted = 3; }
+message QuoteRequest {
+  oneof request {
+    InventoryAmount bank_deposit = 1;
+    BankWithdrawal bank_withdraw = 2;
+    ShopBuy shop_buy = 3;
+    ShopSell shop_sell = 4;
+    Reclaim recovery = 5;
+  }
+}
 
 message CharacterCreated {
   string actor_id = 1;
@@ -142,6 +162,10 @@ message WorldSnapshot {
   repeated DynamicObject dynamic_objects = 13;
   repeated UnavailableView unavailable_views = 14;
   uint64 next_sequence = 15;
+  BankContext bank_context = 16;
+  ShopView shop = 17;
+  RecoveryContext recovery = 18;
+  Quote quote = 19;
 }
 message UnavailableView { string view = 1; string reason = 2; }
 message DynamicObject {
@@ -203,7 +227,10 @@ message Player {
   optional string active_death = 26;
   bool appearance_confirmed = 27;
   optional string combat_style = 28;
+  Presence presence = 29;
 }
+enum PresenceKind { PRESENCE_UNSPECIFIED = 0; CONNECTED = 1; DISCONNECTING = 2; OFFLINE = 3; }
+message Presence { PresenceKind kind = 1; bool connected = 2; bool accepts_input = 3; bool present_in_world = 4; }
 enum EntityKind {
   ENTITY_KIND_UNSPECIFIED = 0;
   NPC = 1;
@@ -225,6 +252,11 @@ message Entity {
   optional string instance = 12;
   bool actions_evaluated = 13;
   EntityKind kind = 14;
+  repeated InteractionOption interaction_options = 15;
+  optional string asset = 16;
+  uint32 width = 17;
+  uint32 height = 18;
+  Presence presence = 19;
 }
 message GroundItem {
   string id = 1;
@@ -233,6 +265,7 @@ message GroundItem {
   bool can_take = 4;
   optional string instance = 5;
   bool permissions_evaluated = 6;
+  Permission permission = 7;
 }
 message Dialogue {
   string id = 1;
@@ -256,3 +289,39 @@ message Event {
   repeated Stack items = 11;
   string actor_id = 12;
 }
+
+enum RuleErrorCode {
+  RULE_ERROR_UNSPECIFIED = 0;
+  INVALID_INPUT = 1; UNKNOWN_CONTENT = 2; INVALID_CONTENT = 3; UNAVAILABLE = 4;
+  NOT_OWNED = 5; INSUFFICIENT_ITEMS = 6; INVENTORY_FULL = 7; STACK_OVERFLOW = 8;
+  REQUIREMENT_NOT_MET = 9; OUT_OF_REACH = 10; BLOCKED = 11; BUSY = 12;
+  STALE_COMMAND = 13; SESSION_CONFLICT = 14;
+}
+message RuleDenial { RuleErrorCode code = 1; string message = 2; }
+message Permission { bool allowed = 1; RuleDenial denial = 2; }
+message InteractionOption { string name = 1; Permission permission = 2; }
+message BankContext {
+  string banker = 1; optional string interface = 2; Permission deposit = 3; Permission withdraw = 4;
+}
+message ShopLine { uint32 index = 1; string item = 2; uint32 stock = 3; uint32 buy_price = 4; uint32 sell_price = 5; }
+message ShopView { string shop = 1; optional string interface = 2; string currency = 3; repeated ShopLine lines = 4; }
+message ItemLayout { oneof location { uint32 inventory_slot = 1; string equipment_slot = 2; } }
+message RecoveryEntry {
+  string id = 1; Stack stack = 2; ItemLayout layout = 3; uint64 full_entry_fee = 4; RecoveryStorage current_storage = 5;
+}
+message RecoveryView {
+  string death = 1; RecoveryStorage storage = 2; optional string interface = 3;
+  repeated RecoveryEntry entries = 4; optional uint32 active_ticks_remaining = 5;
+}
+message RecoveryContext { repeated RecoveryView views = 1; }
+message BankQuote { uint32 requested = 1; Stack transferred = 2; }
+message ShopQuote {
+  string shop = 1; string item = 2; uint32 requested = 3; uint32 quantity = 4; string currency = 5;
+  uint32 total_price = 6; uint32 stock_after = 7; RuleDenial partial_reason = 8;
+}
+message RecoveryQuote {
+  string death = 1; RecoveryStorage storage = 2; repeated string selected = 3;
+  // Full selected quantities, not a promise that a later partial transfer fits.
+  uint64 full_selection_fee = 4;
+}
+message Quote { oneof result { BankQuote bank = 1; ShopQuote shop = 2; RecoveryQuote recovery = 3; } }

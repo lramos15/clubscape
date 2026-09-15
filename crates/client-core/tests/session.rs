@@ -119,6 +119,7 @@ fn poll(
         Command::PollWorld(game::PollWorld {
             world_session_id: id(100),
             after_revision: 0,
+            quote: None,
         }),
     )
     .unwrap();

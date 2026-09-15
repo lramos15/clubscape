@@ -1,5 +1,6 @@
 mod content;
 mod random;
+mod readiness;
 mod view;
 
 #[cfg(test)]
@@ -12,8 +13,11 @@ use std::{
 };
 
 use axum::http::StatusCode;
-use clubscape_game_types::{ActorId, GameError, GameErrorCode, TICK_MILLISECONDS};
+use clubscape_game_types::{
+    ActorId, GameError, GameErrorCode, GameIntent, PresenceState, TICK_MILLISECONDS, WorldState,
+};
 use clubscape_protocol::{ErrorCode, client_message, game, server_message};
+use clubscape_world_engine::{ActorEvent, LifecycleTransition, WorldEngine};
 use prost::Message;
 use sqlx::PgPool;
 use tokio::{
@@ -27,8 +31,8 @@ use crate::{
     Config, ServeError, StartupError,
     error::ApiError,
     game_storage::{
-        AuthTokenDigest, CommittedActorEvent, GameCommand, GameStore, SessionAccess,
-        SourceCharacter, WorldLease, WorldSnapshot,
+        AuthTokenDigest, CommittedActorEvent, GameCommand, GameStore, LiveSessionAction,
+        SessionAccess, SessionLoss, SourceCharacter, WorldLease, WorldSnapshot,
     },
     web_assets::WebAssets,
 };
@@ -43,8 +47,6 @@ const PLAYER_LEASE: Duration = Duration::from_secs(30);
 const HISTORY_EVENTS: usize = 1024;
 const HISTORY_BYTES: usize = 4 * 1024 * 1024;
 const BASELINE_BYTES: usize = 8 * 1024 * 1024;
-const PRESENCE_GAP: &str =
-    "Source presence/logout handling is missing; the world cannot advance disconnected actors.";
 
 type Reply = Result<server_message::Result, ApiError>;
 
@@ -59,7 +61,6 @@ struct Envelope {
 #[derive(Clone)]
 enum State {
     Ready,
-    AwaitingPresence,
     Failed(ApiError),
     Stopping,
 }
@@ -69,8 +70,6 @@ pub(crate) struct GameHandle {
     sender: mpsc::Sender<Envelope>,
     state: Arc<Mutex<State>>,
     pub(crate) assets: Arc<WebAssets>,
-    store: GameStore,
-    world_id: Uuid,
 }
 
 impl GameHandle {
@@ -81,27 +80,9 @@ impl GameHandle {
             .map_err(|_| ApiError::internal("game_status_lock"))?
         {
             State::Ready => Ok(()),
-            State::AwaitingPresence => Err(view::unavailable(PRESENCE_GAP)),
             State::Failed(error) => Err(error.clone()),
             State::Stopping => Err(view::unavailable("The world coordinator is stopping.")),
         }
-    }
-
-    pub(crate) async fn character_initialized(&self, digest: [u8; 32]) -> Result<bool, ApiError> {
-        self.store
-            .load_character(self.world_id, AuthTokenDigest::from_digest(digest))
-            .await
-            .map(|character| character.is_some())
-            .map_err(Into::into)
-    }
-
-    pub(crate) async fn allow_account_logout(&self, digest: [u8; 32]) -> Result<(), ApiError> {
-        if self.character_initialized(digest).await? {
-            return Err(view::unavailable(
-                "The source presence/logout transition API is missing; game-character logout cannot be acknowledged.",
-            ));
-        }
-        Ok(())
     }
 
     pub(crate) async fn request(
@@ -161,7 +142,7 @@ impl PreparedGame {
             .engine
             .initial_world()
             .map_err(|_| StartupError::new("game_world", "source_initial_world"))?;
-        let world = store
+        let mut world = store
             .initialize_world(content.world_id, initial)
             .await
             .map_err(|_| StartupError::new("game_world", "world_initialization"))?;
@@ -169,6 +150,10 @@ impl PreparedGame {
             .state
             .validate_runtime(content.compiled.definition())
             .map_err(|_| StartupError::new("game_world", "restored_world_validation"))?;
+        content
+            .readiness
+            .validate_world(&world.state)
+            .map_err(|_| StartupError::new("game_world", "restored_readiness_profile"))?;
         let lease = store
             .acquire_world_lease(content.world_id, OWNER_LEASE)
             .await
@@ -185,18 +170,32 @@ impl PreparedGame {
                 return Err(StartupError::new("game_world", "runtime_identity"));
             }
         };
-        let state = Arc::new(Mutex::new(if world.state.characters.is_empty() {
-            State::Ready
-        } else {
-            State::AwaitingPresence
-        }));
+        let engine = content.engine.clone();
+        let readiness = content.readiness.clone();
+        let restored = store
+            .control_world(&lease, move |world| {
+                migrate_activity_clocks(world);
+                // A new coordinator has no verified client connections, irrespective of persisted leases.
+                let events = engine.reconcile_presence(world, &BTreeSet::new())?;
+                readiness.validate_world(world)?;
+                Ok(events)
+            })
+            .await;
+        match restored {
+            Ok(restored) => world = restored.snapshot,
+            Err(_) => {
+                if let Err(error) = store.release_world_lease(&lease).await {
+                    tracing::error!(event = "game_startup_cleanup", error_id = %error.error_id, "world lease release failed");
+                }
+                return Err(StartupError::new("game_world", "presence_reconciliation"));
+            }
+        }
+        let state = Arc::new(Mutex::new(State::Ready));
         let (sender, receiver) = mpsc::channel(QUEUE_CAPACITY);
         let handle = GameHandle {
             sender,
             state: state.clone(),
             assets: content.assets.clone(),
-            store: store.clone(),
-            world_id: content.world_id,
         };
         Ok(Self {
             coordinator: Coordinator {
@@ -253,7 +252,7 @@ impl GameTask {
 
     pub(crate) async fn finish(mut self) -> Result<(), ServeError> {
         self.shutdown.send_replace(true);
-        match timeout(Duration::from_secs(6), &mut self.task).await {
+        match timeout(Duration::from_secs(12), &mut self.task).await {
             Ok(Ok(result)) => result,
             Ok(Err(_)) => Err(ServeError::new("game_coordinator_worker")),
             Err(_) => {
@@ -375,10 +374,37 @@ impl Coordinator {
                 .reply
                 .send(Err(view::unavailable("The world coordinator is stopping.")));
         }
-        self.store
-            .release_world_lease(&self.lease)
-            .await
-            .map_err(|_| ServeError::new("game_lease_release"))?;
+        let engine = self.content.engine.clone();
+        let readiness = self.content.readiness.clone();
+        let reconciled = self
+            .store
+            .control_world(&self.lease, move |world| {
+                migrate_activity_clocks(world);
+                let actors: Vec<_> = world.characters.keys().cloned().collect();
+                let mut events = Vec::new();
+                for actor in actors {
+                    if matches!(
+                        world.characters[&actor].runtime.presence,
+                        PresenceState::Connected { .. } | PresenceState::Untracked
+                    ) {
+                        events.extend(engine.apply_lifecycle(
+                            world,
+                            &actor,
+                            LifecycleTransition::TransportLost,
+                        )?);
+                    }
+                }
+                readiness.validate_world(world)?;
+                Ok(events)
+            })
+            .await;
+        let released = self.store.release_world_lease(&self.lease).await;
+        if released.is_err() {
+            return Err(ServeError::new("game_lease_release"));
+        }
+        if reconciled.is_err() {
+            return Err(ServeError::new("game_shutdown_reconciliation"));
+        }
         if failed {
             Err(ServeError::new("game_loop_failure"))
         } else {
@@ -418,20 +444,11 @@ impl Coordinator {
         if self.failure().is_some() {
             return Ok(());
         }
-        if !self.world.state.characters.keys().eq(self.sessions.keys()) {
-            self.set_state(State::AwaitingPresence);
-            for _ in 0..INPUTS_PER_TICK {
-                if let Some(request) = self.pending.pop_front() {
-                    let _ = request.reply.send(Err(view::unavailable(PRESENCE_GAP)));
-                }
-            }
-            return Ok(());
-        }
         self.set_state(State::Ready);
         let expected = self.world.state.tick;
         let mut random = TrustedRandom::tick(self.key, self.content.world_id, expected + 1);
         let engine = self.content.engine.clone();
-        let compiled = self.content.compiled.clone();
+        let readiness = self.content.readiness.clone();
         let sessions = self
             .sessions
             .values()
@@ -439,12 +456,38 @@ impl Coordinator {
             .collect();
         let tick = self
             .store
-            .commit_routed_tick(&self.lease, expected, sessions, move |world| {
-                let events = engine.process_advanced_tick(world, &mut random)?;
-                world.validate_runtime(compiled.definition())?;
-                for character in world.characters.values() {
-                    view::check_context(character)?;
+            .commit_live_tick(&self.lease, expected, sessions, move |world, facts| {
+                migrate_activity_clocks(world);
+                let mut events = Vec::new();
+                for (actor, loss) in &facts.lost {
+                    let transition = match loss {
+                        SessionLoss::AuthenticationRevoked => {
+                            LifecycleTransition::AuthenticationRevoked
+                        }
+                        SessionLoss::TransportLost => LifecycleTransition::TransportLost,
+                    };
+                    events.extend(engine.apply_lifecycle(world, actor, transition)?);
                 }
+                // A retained lease after an acknowledged RequestLogout is not an implicit rejoin.
+                let connected: BTreeSet<_> = facts
+                    .connected
+                    .iter()
+                    .filter(|actor| {
+                        matches!(
+                            world.characters[*actor].runtime.presence,
+                            PresenceState::Connected { .. }
+                        )
+                    })
+                    .cloned()
+                    .collect();
+                events.extend(engine.reconcile_presence(world, &connected)?);
+                let context = engine.tick_context(world)?;
+                events.extend(engine.process_advanced_tick_with_context(
+                    world,
+                    &mut random,
+                    &context,
+                )?);
+                readiness.validate_world(world)?;
                 Ok(events)
             })
             .await;
@@ -472,6 +515,11 @@ impl Coordinator {
                 } else {
                     return Err(error.into());
                 }
+            }
+            Err(error)
+                if error.message == "Tick connection facts changed; retry the same tick." =>
+            {
+                return Ok(());
             }
             Err(error) => return Err(error.into()),
         }
@@ -503,6 +551,11 @@ impl Coordinator {
         } else {
             self.lifecycle(&request).await
         };
+        if let Err(error) = &result
+            && error.message.contains("unknown")
+        {
+            self.fail(error.clone());
+        }
         let _ = request.reply.send(result);
     }
 
@@ -534,15 +587,25 @@ impl Coordinator {
                         "Create without options; appearance and experience must be confirmed by source-game intents after joining.",
                     ));
                 }
+                let engine = self.content.engine.clone();
                 let character = self
                     .store
-                    .create_character(
+                    .create_character_with(
                         &self.lease,
                         request.authentication,
                         SourceCharacter {
                             content_revision: self.content.compiled.definition().revision.clone(),
                             initial_state: self.content.compiled.definition().initial_state.clone(),
                             appearance: BTreeMap::new(),
+                        },
+                        move |character| {
+                            let derived = engine.character_from_initial(
+                                character.actor_id.clone(),
+                                character.display_name.clone(),
+                                character.appearance.clone(),
+                            )?;
+                            character.runtime = derived.runtime;
+                            Ok(())
                         },
                     )
                     .await
@@ -560,29 +623,33 @@ impl Coordinator {
                 ))
             }
             client_message::Command::JoinWorld(_) => {
-                let character = self
+                let committed = self
                     .store
-                    .load_character(self.content.world_id, request.authentication)
-                    .await
-                    .map_err(ApiError::from)?
-                    .ok_or_else(|| conflict("Create a source-defined character before joining."))?;
-                let session = self
-                    .store
-                    .join_session(
-                        self.content.world_id,
-                        character.state.actor_id.clone(),
+                    .apply_session_lifecycle(
+                        &self.lease,
                         request.authentication,
+                        request.operation,
+                        LiveSessionAction::Join,
                         PLAYER_LEASE,
+                        lifecycle_callback(
+                            self.content.engine.clone(),
+                            self.content.readiness.clone(),
+                        ),
                     )
                     .await
                     .map_err(ApiError::from)?;
+                let character = committed
+                    .character
+                    .ok_or_else(|| ApiError::internal("game_join_character"))?;
+                let session = committed
+                    .receipt
+                    .session
+                    .ok_or_else(|| ApiError::internal("game_join_session"))?;
                 let access = session.access(request.authentication);
-                let snapshot = self
-                    .store
-                    .session_snapshot(&access, None)
-                    .await
-                    .map_err(ApiError::from)?;
-                self.world = snapshot.world;
+                self.world = committed.snapshot;
+                if !committed.duplicate {
+                    self.publish(committed.receipt.world_revision, committed.receipt.events);
+                }
                 self.sessions.insert(
                     access.actor_id.clone(),
                     Joined {
@@ -592,18 +659,17 @@ impl Coordinator {
                 );
                 let mut public = view::snapshot(
                     &self.content.compiled,
+                    &self.content.engine,
                     &self.world,
                     &access.actor_id,
-                    snapshot.character.revision,
+                    character.revision,
+                    None,
                 )?;
                 public.event_history_floor_revision = self.world.state.revision;
                 self.remember(&access, &public);
-                if self.world.state.characters.keys().eq(self.sessions.keys()) {
-                    self.set_state(State::Ready);
-                }
                 Ok(server_message::Result::WorldJoined(game::WorldJoined {
                     world_session_id: session.session_id.to_string(),
-                    next_sequence: snapshot.character.last_sequence + 1,
+                    next_sequence: character.last_sequence + 1,
                     content_revision: self.content.compiled.definition().revision.clone(),
                     content_manifest_path: self.content.public_manifest.clone(),
                     snapshot: Some(public),
@@ -629,19 +695,70 @@ impl Coordinator {
                     &access,
                     snapshot.character.revision,
                     Some(poll.after_revision),
+                    poll.quote
+                        .as_ref()
+                        .map(clubscape_protocol::quote_request)
+                        .transpose()?
+                        .as_ref(),
                 )?;
                 Ok(server_message::Result::WorldSnapshot(public))
             }
             client_message::Command::LeaveWorld(leave) => {
-                let access = self
-                    .access(request.authentication, &leave.world_session_id)
-                    .await?;
-                self.store
-                    .read_session(&access)
+                let id = Uuid::parse_str(&leave.world_session_id)
+                    .map_err(|_| ApiError::invalid("Invalid world session ID."))?;
+                let committed = self
+                    .store
+                    .apply_session_lifecycle(
+                        &self.lease,
+                        request.authentication,
+                        request.operation,
+                        LiveSessionAction::Leave { session_id: id },
+                        PLAYER_LEASE,
+                        lifecycle_callback(
+                            self.content.engine.clone(),
+                            self.content.readiness.clone(),
+                        ),
+                    )
                     .await
                     .map_err(ApiError::from)?;
-                Err(view::unavailable(
-                    "The source presence/logout transition API is missing; the world session was not released.",
+                self.world = committed.snapshot;
+                if !committed.duplicate {
+                    self.publish(committed.receipt.world_revision, committed.receipt.events);
+                }
+                if let Some(actor) = committed.receipt.actor_id
+                    && self
+                        .sessions
+                        .get(&actor)
+                        .is_some_and(|entry| entry.access.session_id == id)
+                {
+                    self.sessions.remove(&actor);
+                }
+                Ok(server_message::Result::WorldLeft(game::WorldLeft {}))
+            }
+            client_message::Command::Logout(_) => {
+                let committed = self
+                    .store
+                    .apply_session_lifecycle(
+                        &self.lease,
+                        request.authentication,
+                        request.operation,
+                        LiveSessionAction::Logout,
+                        PLAYER_LEASE,
+                        lifecycle_callback(
+                            self.content.engine.clone(),
+                            self.content.readiness.clone(),
+                        ),
+                    )
+                    .await
+                    .map_err(ApiError::from)?;
+                self.world = committed.snapshot;
+                if !committed.duplicate {
+                    self.publish(committed.receipt.world_revision, committed.receipt.events);
+                }
+                self.sessions
+                    .retain(|_, entry| entry.access.authentication != request.authentication);
+                Ok(server_message::Result::LoggedOut(
+                    clubscape_protocol::LoggedOut {},
                 ))
             }
             _ => Err(ApiError::invalid(
@@ -676,7 +793,6 @@ impl Coordinator {
             .heartbeat_session(&access, PLAYER_LEASE)
             .await
             .map_err(ApiError::from)?;
-        view::preflight(self.content.compiled.definition(), &intent)?;
         if request.reply.is_closed() {
             return Err(view::unavailable(
                 "The queued game request was cancelled before mutation.",
@@ -684,7 +800,7 @@ impl Coordinator {
         }
         let permit = attempted.insert(access.actor_id.clone());
         let engine = self.content.engine.clone();
-        let compiled = self.content.compiled.clone();
+        let readiness = self.content.readiness.clone();
         let mut random = TrustedRandom::command(self.key, self.content.world_id, request.operation);
         let committed = self
             .store
@@ -704,11 +820,15 @@ impl Coordinator {
                             "Only one new intent attempt per actor per source tick.",
                         ));
                     }
-                    let events = engine.apply_intent(world, actor, intent, &mut random)?;
-                    world.validate_runtime(compiled.definition())?;
-                    for character in world.characters.values() {
-                        view::check_context(character)?;
+                    let mut events = engine.apply_intent(world, actor, intent, &mut random)?;
+                    if !matches!(intent, GameIntent::RequestLogout) {
+                        events.extend(engine.apply_lifecycle(
+                            world,
+                            actor,
+                            LifecycleTransition::Activity,
+                        )?);
                     }
+                    readiness.validate_world(world)?;
                     Ok(events)
                 },
             )
@@ -721,7 +841,7 @@ impl Coordinator {
                 committed.commit.receipt.routed_events,
             );
         }
-        let public = self.frame(&access, committed.character_revision, None)?;
+        let public = self.frame(&access, committed.character_revision, None, None)?;
         Ok(server_message::Result::ActionResult(game::ActionResult {
             sequence: input.sequence,
             operation_id: request.request_id.clone(),
@@ -767,6 +887,7 @@ impl Coordinator {
         access: &SessionAccess,
         character_revision: u64,
         after: Option<u64>,
+        quote: Option<&clubscape_protocol::ReadOnlyQuote>,
     ) -> Result<game::WorldSnapshot, ApiError> {
         let joined = self
             .sessions
@@ -776,9 +897,11 @@ impl Coordinator {
         let floor = requested_floor.max(joined.join_revision);
         let mut public = view::snapshot(
             &self.content.compiled,
+            &self.content.engine,
             &self.world,
             &access.actor_id,
             character_revision,
+            quote,
         )?;
         public.event_history_floor_revision = self.history_floor.max(joined.join_revision);
         public.event_history_gap = requested_floor < public.event_history_floor_revision;
@@ -864,4 +987,40 @@ fn capacity() -> ApiError {
 
 fn conflict(message: &'static str) -> ApiError {
     ApiError::new(StatusCode::CONFLICT, ErrorCode::Conflict, message)
+}
+
+fn migrate_activity_clocks(world: &mut WorldState) {
+    for character in world.characters.values_mut() {
+        if matches!(character.runtime.presence, PresenceState::Untracked)
+            && character.runtime.last_active_tick.is_none()
+        {
+            // Legacy last_action_tick was already authoritative admission metadata, not a poll.
+            character.runtime.last_active_tick = Some(character.last_action_tick);
+        }
+    }
+}
+
+fn lifecycle_callback(
+    engine: Arc<WorldEngine>,
+    readiness: Arc<readiness::Readiness>,
+) -> impl Fn(&mut WorldState, &ActorId, LifecycleTransition) -> Result<Vec<ActorEvent>, GameError>
++ Send
++ 'static {
+    move |world, actor, transition| {
+        migrate_activity_clocks(world);
+        let events = if matches!(transition, LifecycleTransition::RequestedLogout)
+            && matches!(
+                world
+                    .characters
+                    .get(actor)
+                    .map(|character| &character.runtime.presence),
+                Some(PresenceState::Offline { .. })
+            ) {
+            Vec::new()
+        } else {
+            engine.apply_lifecycle(world, actor, transition)?
+        };
+        readiness.validate_world(world)?;
+        Ok(events)
+    }
 }

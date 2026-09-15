@@ -1,5 +1,7 @@
 use std::time::Duration;
 
+mod lifecycle;
+
 use clubscape_game_types::{
     Activity, ActorId, CharacterState, GAME_SCHEMA_VERSION, GameEvent, GameIntent, GameResult,
     WorldState,
@@ -274,6 +276,21 @@ impl GameStore {
         authentication: AuthTokenDigest,
         definition: SourceCharacter,
     ) -> Result<CharacterSnapshot, GameStorageError> {
+        self.create_character_with(lease, authentication, definition, |_| Ok(()))
+            .await
+    }
+
+    /// Creation-only source runtime initialization; retries never call the initializer again.
+    pub async fn create_character_with<F>(
+        &self,
+        lease: &WorldLease,
+        authentication: AuthTokenDigest,
+        definition: SourceCharacter,
+        initialize: F,
+    ) -> Result<CharacterSnapshot, GameStorageError>
+    where
+        F: FnOnce(&mut CharacterState) -> GameResult<()> + Send + 'static,
+    {
         self.local_lease(lease)?;
         let lease = lease.clone();
         database::run(&self.pool, "game_create_character", true, move |connection| {
@@ -316,7 +333,7 @@ impl GameStore {
                 let initial = definition.initial_state;
                 let actor_id = ActorId::new(format!("actor.{}", Uuid::new_v4().simple()))
                     .map_err(|_| ApiError::internal("game_actor_identity"))?;
-                let character = CharacterState {
+                let mut character = CharacterState {
                     schema_version: GAME_SCHEMA_VERSION,
                     actor_id: actor_id.clone(),
                     display_name: account.login_name,
@@ -341,6 +358,12 @@ impl GameStore {
                     last_command_sequence: 0,
                     runtime: clubscape_game_types::CharacterRuntime::from_initial_definition(&initial.runtime),
                 };
+                initialize(&mut character).map_err(callback_error)?;
+                if character.actor_id != actor_id || character.last_command_sequence != 0
+                    || character.last_action_tick != world.state.tick
+                {
+                    return Err(ApiError::internal("game_character_initializer_metadata"));
+                }
                 validate_character(&character, world.state.tick)?;
                 let previous_revision = world.state.revision;
                 world.state.revision = increment(previous_revision)?;
@@ -699,6 +722,11 @@ impl GameStore {
                         "The observed character revision is ahead of authoritative state.",
                     ));
                 }
+                let used: bool = sqlx::query_scalar(
+                    "SELECT EXISTS (SELECT 1 FROM game_lifecycle_commands WHERE account_id = $1 AND operation_id = $2)",
+                ).bind(player.account.account_id).bind(command.operation_id)
+                    .fetch_one(&mut *transaction).await.map_err(ApiError::database)?;
+                if used { return Err(conflict("The operation ID belongs to a lifecycle operation.")); }
                 if command.sequence != increment(character.last_sequence as u64)? {
                     return Err(conflict("The command sequence is stale or has a gap."));
                 }
@@ -789,9 +817,12 @@ impl GameStore {
     where
         F: FnOnce(&mut WorldState) -> GameResult<Vec<GameEvent>> + Send + 'static,
     {
-        self.commit_tick_inner(lease, expected_tick, None, move |world| {
-            apply(world).map(EventOutput::Legacy)
-        })
+        self.commit_tick_inner(
+            lease,
+            expected_tick,
+            TickAuthority::Unrestricted,
+            move |world, _| apply(world).map(EventOutput::Legacy),
+        )
         .await
         .map(|outcome| outcome.commit)
     }
@@ -808,9 +839,34 @@ impl GameStore {
     where
         F: FnOnce(&mut WorldState) -> GameResult<Vec<ActorEvent>> + Send + 'static,
     {
-        self.commit_tick_inner(lease, expected_tick, Some(sessions), move |world| {
-            apply(world).map(EventOutput::Routed)
-        })
+        self.commit_tick_inner(
+            lease,
+            expected_tick,
+            TickAuthority::Strict(sessions),
+            move |world, _| apply(world).map(EventOutput::Routed),
+        )
+        .await
+    }
+
+    /// Source lifecycle processing receives verified connection facts, not an all-online set.
+    pub async fn commit_live_tick<F>(
+        &self,
+        lease: &WorldLease,
+        expected_tick: u64,
+        sessions: Vec<SessionAccess>,
+        apply: F,
+    ) -> Result<RoutedTickCommit, GameStorageError>
+    where
+        F: FnOnce(&mut WorldState, &super::VerifiedConnections) -> GameResult<Vec<ActorEvent>>
+            + Send
+            + 'static,
+    {
+        self.commit_tick_inner(
+            lease,
+            expected_tick,
+            TickAuthority::Live(sessions),
+            move |world, facts| apply(world, facts).map(EventOutput::Routed),
+        )
         .await
     }
 
@@ -818,11 +874,13 @@ impl GameStore {
         &self,
         lease: &WorldLease,
         expected_tick: u64,
-        sessions: Option<Vec<SessionAccess>>,
+        authority: TickAuthority,
         apply: F,
     ) -> Result<RoutedTickCommit, GameStorageError>
     where
-        F: FnOnce(&mut WorldState) -> GameResult<EventOutput> + Send + 'static,
+        F: FnOnce(&mut WorldState, &super::VerifiedConnections) -> GameResult<EventOutput>
+            + Send
+            + 'static,
     {
         self.local_lease(lease)?;
         let next_tick = increment(expected_tick)?;
@@ -849,12 +907,20 @@ impl GameStore {
                 if world.state.tick != expected_tick {
                     return Err(conflict("The expected world tick is stale or has a gap."));
                 }
-                if let Some(sessions) = &sessions {
-                    lock_tick_sessions(&mut transaction, &world, sessions).await?;
-                }
+                let facts = match &authority {
+                    TickAuthority::Unrestricted => super::VerifiedConnections::default(),
+                    TickAuthority::Strict(sessions) => {
+                        lock_tick_sessions(&mut transaction, &world, sessions).await?;
+                        super::VerifiedConnections::default()
+                    }
+                    TickAuthority::Live(sessions) => {
+                        lifecycle::connection_facts(&mut transaction, &world, sessions, true)
+                            .await?
+                    }
+                };
                 let previous = world.state.clone();
                 world.state.tick = next_tick;
-                let output = apply(&mut world.state).map_err(callback_error)?;
+                let output = apply(&mut world.state, &facts).map_err(callback_error)?;
                 validate_transition(&previous, &world.state, next_tick)?;
                 world.state.revision = increment(previous.revision)?;
                 let (events, routed_events) = commit_events(output, &world)?;
@@ -878,8 +944,21 @@ impl GameStore {
                 )
                 .await?;
                 save_characters(&mut transaction, lease.world_id, &changed).await?;
-                if let Some(sessions) = &sessions {
-                    check_tick_sessions(&mut transaction, &world, sessions).await?;
+                match &authority {
+                    TickAuthority::Strict(sessions) => {
+                        check_tick_sessions(&mut transaction, &world, sessions).await?
+                    }
+                    TickAuthority::Live(sessions) => {
+                        if lifecycle::connection_facts(&mut transaction, &world, sessions, false)
+                            .await?
+                            != facts
+                        {
+                            return Err(conflict(
+                                "Tick connection facts changed; retry the same tick.",
+                            ));
+                        }
+                    }
+                    TickAuthority::Unrestricted => {}
                 }
                 ensure_fence(&mut transaction, &lease).await?;
                 transaction.commit().await.map_err(ApiError::database)?;
@@ -1517,6 +1596,12 @@ enum EventOutput {
     Routed(Vec<ActorEvent>),
 }
 
+enum TickAuthority {
+    Unrestricted,
+    Strict(Vec<SessionAccess>),
+    Live(Vec<SessionAccess>),
+}
+
 fn event_id(world: Uuid, revision: u64, index: usize, actor: &ActorId) -> String {
     let mut hash = Sha256::new();
     hash.update(b"clubscape.actor-event.v1\0");
@@ -1625,7 +1710,7 @@ async fn check_tick_sessions(
         return Err(ApiError::new(
             axum::http::StatusCode::SERVICE_UNAVAILABLE,
             clubscape_protocol::ErrorCode::Unavailable,
-            "Source presence handling is unavailable; offline actors cannot be advanced.",
+            "The supplied strict tick session set is incomplete.",
         ));
     }
     for access in sessions {
@@ -1646,7 +1731,7 @@ async fn check_tick_sessions(
             return Err(ApiError::new(
                 axum::http::StatusCode::SERVICE_UNAVAILABLE,
                 clubscape_protocol::ErrorCode::Unavailable,
-                "Source presence handling is unavailable; an actor's live session was lost.",
+                "A supplied strict tick session is no longer live.",
             ));
         }
     }

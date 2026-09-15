@@ -209,21 +209,25 @@ pub(crate) async fn account_snapshot(
 pub(crate) async fn logout(pool: &PgPool, digest: &[u8; 32]) -> Result<(), ApiError> {
     let digest = *digest;
     database::run(pool, "logout", true, move |connection| {
-        Box::pin(async move {
-            let deleted = sqlx::query(
-                "DELETE FROM account_sessions
-                 WHERE token_digest = $1 AND expires_at > clock_timestamp()",
-            )
-            .bind(digest.as_slice())
-            .execute(connection)
-            .await
-            .map_err(ApiError::database)?;
-            if deleted.rows_affected() == 1 {
-                Ok(())
-            } else {
-                Err(ApiError::unauthenticated())
-            }
-        })
+        Box::pin(async move { delete_session(connection, &digest).await })
     })
     .await
+}
+
+pub(crate) async fn delete_session(
+    connection: &mut sqlx::PgConnection,
+    digest: &[u8; 32],
+) -> Result<(), ApiError> {
+    let deleted = sqlx::query(
+        "DELETE FROM account_sessions WHERE token_digest = $1 AND expires_at > clock_timestamp()",
+    )
+    .bind(digest.as_slice())
+    .execute(connection)
+    .await
+    .map_err(ApiError::database)?;
+    if deleted.rows_affected() == 1 {
+        Ok(())
+    } else {
+        Err(ApiError::unauthenticated())
+    }
 }

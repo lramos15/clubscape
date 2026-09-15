@@ -2,8 +2,9 @@ use std::collections::BTreeMap;
 
 use clubscape_content::CompiledContent;
 use clubscape_game_types::*;
-use clubscape_protocol::game;
+use clubscape_protocol::{ReadOnlyQuote, game};
 use clubscape_simulation::skills::level_for_xp;
+use clubscape_world_engine::{ContextView, WorldEngine};
 use prost::Message;
 
 use crate::{
@@ -13,97 +14,31 @@ use crate::{
 
 pub(super) const VIEW_RADIUS: u16 = 32;
 
-pub(super) fn check_context(character: &CharacterState) -> GameResult<()> {
-    let container = match &character.runtime.engine {
-        EngineMetadata::Legacy => character
-            .flags
-            .keys()
-            .any(|key| key.starts_with("__world_engine.access.")),
-        EngineMetadata::Typed { schedule } => schedule.access.is_some(),
-    };
-    if container {
-        return Err(gap(
-            "Guarded bank/shop public-view helpers are not exposed by the engine.",
-        ));
-    }
-    if character.dialogue.is_some() {
-        return Err(gap(
-            "A guarded dialogue public-view helper is not exposed by the engine.",
-        ));
-    }
-    if character.runtime.active_death.is_some() {
-        return Err(gap(
-            "An authorized recovery/fee public-view helper is not exposed by the engine.",
-        ));
-    }
-    Ok(())
-}
-
-pub(super) fn preflight(content: &GameContent, intent: &GameIntent) -> Result<(), ApiError> {
-    match intent {
-        GameIntent::RequestLogout => {
-            return Err(unavailable(
-                "The source presence/logout transition API is missing; no logout was performed.",
-            ));
-        }
-        GameIntent::Reclaim { .. } => {
-            return Err(unavailable(
-                "The engine recovery/fee public-view API is missing.",
-            ));
-        }
-        GameIntent::Interact { target, action } => {
-            if let Some(interaction) = content.spawns.get(target).and_then(|spawn| {
-                spawn
-                    .interactions
-                    .iter()
-                    .find(|interaction| &interaction.name == action)
-            }) {
-                match interaction.action {
-                    InteractionAction::Bank | InteractionAction::OpenBank { .. } => {
-                        return Err(unavailable(
-                            "The engine guarded bank public-view API is missing.",
-                        ));
-                    }
-                    InteractionAction::Shop { .. } | InteractionAction::OpenShop { .. } => {
-                        return Err(unavailable(
-                            "The engine guarded shop/quote public-view API is missing.",
-                        ));
-                    }
-                    InteractionAction::Dialogue { .. } => {
-                        return Err(unavailable(
-                            "The engine guarded dialogue public-view API is missing.",
-                        ));
-                    }
-                    _ => {}
-                }
-            }
-        }
-        _ => {}
-    }
-    Ok(())
-}
-
 pub(super) fn snapshot(
     compiled: &CompiledContent,
+    engine: &WorldEngine,
     world: &WorldSnapshot,
     actor: &ActorId,
     character_revision: u64,
+    requested_quote: Option<&ReadOnlyQuote>,
 ) -> Result<game::WorldSnapshot, ApiError> {
     let content = compiled.definition();
     world
         .state
         .validate_runtime(content)
-        .map_err(|_| ApiError::internal("game_view_runtime_integrity"))?;
+        .map_err(engine_error)?;
     let character = world
         .state
         .characters
         .get(actor)
         .ok_or_else(|| ApiError::internal("game_view_actor"))?;
-    check_context(character).map_err(|_| unavailable("The authoritative context requires an engine public-view helper that is not available."))?;
     let stage = content
         .tutorial
         .get(&character.tutorial_stage)
         .ok_or_else(|| ApiError::internal("game_view_tutorial"))?;
+    let presence = engine
+        .presence_view(&world.state, actor)
+        .map_err(engine_error)?;
     let skills = character
         .skills
         .iter()
@@ -116,8 +51,7 @@ pub(super) fn snapshot(
                 id: id.to_string(),
                 xp_tenths: state.xp_tenths,
                 base_level: u32::from(
-                    level_for_xp(definition, state.xp_tenths)
-                        .map_err(|_| ApiError::internal("game_view_level"))?,
+                    level_for_xp(definition, state.xp_tenths).map_err(engine_error)?,
                 ),
                 current_level: u32::from(state.current_level),
             })
@@ -165,7 +99,7 @@ pub(super) fn snapshot(
         })
     })
     .collect();
-    let player = game::Player {
+    let mut player = game::Player {
         actor_id: actor.to_string(),
         display_name: character.display_name.clone(),
         appearance: character
@@ -175,18 +109,7 @@ pub(super) fn snapshot(
             .collect(),
         region: character.region.to_string(),
         tile: Some(tile(character.tile)),
-        inventory: character
-            .inventory
-            .slots
-            .iter()
-            .enumerate()
-            .filter_map(|(index, value)| {
-                value.as_ref().map(|value| game::ItemSlot {
-                    index: index as u32,
-                    stack: Some(stack(value)),
-                })
-            })
-            .collect(),
+        inventory: item_slots(character.inventory.slots.iter()),
         equipment: character
             .equipment
             .iter()
@@ -228,7 +151,11 @@ pub(super) fn snapshot(
             .iter()
             .map(ToString::to_string)
             .collect(),
-        active_death: None,
+        active_death: character
+            .runtime
+            .active_death
+            .as_ref()
+            .map(ToString::to_string),
         appearance_confirmed: character.runtime.settings.appearance_confirmed,
         combat_style: character
             .runtime
@@ -236,107 +163,183 @@ pub(super) fn snapshot(
             .style
             .as_ref()
             .map(ToString::to_string),
+        presence: Some(presence_view(&presence)),
     };
-    let instance = character
-        .runtime
-        .instance
-        .as_ref()
-        .map(|id| {
-            let instance = world
-                .state
-                .runtime
-                .instances
-                .get(id)
-                .ok_or_else(|| ApiError::internal("game_view_instance"))?;
-            let definition = content
-                .mechanics
-                .instances
-                .get(&instance.template)
-                .ok_or_else(|| ApiError::internal("game_view_instance_template"))?;
-            if definition.private_to_character && instance.owner.as_ref() != Some(actor) {
-                return Err(ApiError::internal("game_view_instance_ownership"));
-            }
-            Ok(instance)
-        })
-        .transpose()?;
-    let scoped = instance.map_or(&world.state.entities, |instance| &instance.entities);
-    let transforms = instance.map_or(&world.state.runtime.object_states, |instance| {
-        &instance.object_states
-    });
-    let transformed: BTreeMap<_, _> = transforms
+    let mut dialogue = None;
+    let mut bank_context = None;
+    let mut shop = None;
+    let mut recovery = None;
+    match engine
+        .context_view(&world.state, actor)
+        .map_err(engine_error)?
+    {
+        ContextView::None => {}
+        ContextView::Dialogue { view } => {
+            let speaker = engine
+                .target_view(
+                    &world.state,
+                    actor,
+                    &WorldTarget::Spawn {
+                        spawn: view.speaker.clone(),
+                    },
+                )
+                .map_err(engine_error)?
+                .ok_or_else(|| ApiError::internal("game_view_dialogue_speaker"))?;
+            dialogue = Some(game::Dialogue {
+                id: view.dialogue.to_string(),
+                speaker: view.speaker.to_string(),
+                speaker_name: speaker.name,
+                text: view.text,
+                choices: view
+                    .choices
+                    .into_iter()
+                    .map(|choice| game::Choice {
+                        id: choice.id,
+                        text: choice.text,
+                    })
+                    .collect(),
+            });
+        }
+        ContextView::Bank { view } => {
+            player.bank_open = true;
+            player.bank = item_slots(view.bank.slots.iter());
+            player.bank_capacity = u32::from(view.bank.capacity);
+            bank_context = Some(game::BankContext {
+                banker: view.banker.to_string(),
+                interface: view.interface.map(|id| id.to_string()),
+                deposit: Some(permission(&view.deposit)),
+                withdraw: Some(permission(&view.withdraw)),
+            });
+        }
+        ContextView::Shop { view } => {
+            shop = Some(game::ShopView {
+                shop: view.shop.to_string(),
+                interface: view.interface.map(|id| id.to_string()),
+                currency: view.currency.to_string(),
+                lines: view
+                    .lines
+                    .into_iter()
+                    .map(|line| game::ShopLine {
+                        index: u32::from(line.index),
+                        item: line.item.to_string(),
+                        stock: line.stock,
+                        buy_price: line.buy_price,
+                        sell_price: line.sell_price,
+                    })
+                    .collect(),
+            });
+        }
+        ContextView::Recovery { views } => {
+            recovery = Some(game::RecoveryContext {
+                views: views.iter().map(recovery_view).collect(),
+            });
+        }
+    }
+    let scoped = if let Some(instance) = &character.runtime.instance {
+        let instance = world
+            .state
+            .runtime
+            .instances
+            .get(instance)
+            .ok_or_else(|| ApiError::internal("game_view_instance"))?;
+        let definition = content
+            .mechanics
+            .instances
+            .get(&instance.template)
+            .ok_or_else(|| ApiError::internal("game_view_instance_template"))?;
+        if definition.private_to_character && instance.owner.as_ref() != Some(actor) {
+            return Err(ApiError::internal("game_view_instance_ownership"));
+        }
+        &instance.entities
+    } else {
+        &world.state.entities
+    };
+    let transforms = if let Some(instance) = &character.runtime.instance {
+        &world.state.runtime.instances[instance].object_states
+    } else {
+        &world.state.runtime.object_states
+    };
+    let transformed: std::collections::BTreeSet<_> = transforms
         .keys()
         .map(|id| {
-            let definition = content
+            content
                 .mechanics
                 .object_transforms
                 .get(id)
-                .ok_or_else(|| ApiError::internal("game_view_transform"))?;
-            Ok((definition.spawn.clone(), id))
+                .map(|definition| &definition.spawn)
+                .ok_or_else(|| ApiError::internal("game_view_transform"))
         })
-        .collect::<Result<_, ApiError>>()?;
+        .collect::<Result<_, _>>()?;
     let mut entities = Vec::new();
     for (id, state) in scoped {
-        if transformed.contains_key(id) || !visible(character.tile, state.tile) {
+        if !visible(character.tile, state.tile) && !transformed.contains(id) {
             continue;
         }
         let definition = content
             .spawns
             .get(id)
             .ok_or_else(|| ApiError::internal("game_view_spawn"))?;
-        let (definition_id, name, maximum, kind) = match &definition.kind {
-            SpawnKind::Npc { npc } => {
-                let npc = content
-                    .npcs
-                    .get(npc)
-                    .ok_or_else(|| ApiError::internal("game_view_npc"))?;
-                if npc.morph.is_some() {
-                    return Err(unavailable(
-                        "The engine NPC morph public-view helper is missing.",
-                    ));
-                }
-                (
-                    npc.id.to_string(),
-                    npc.name.clone(),
-                    npc.combat.as_ref().map_or(0, |combat| combat.hitpoints),
-                    game::EntityKind::Npc,
-                )
-            }
-            SpawnKind::Object { object } => {
-                let object = content
-                    .objects
-                    .get(object)
-                    .ok_or_else(|| ApiError::internal("game_view_object"))?;
-                if object.morph.is_some() {
-                    return Err(unavailable(
-                        "The engine object morph public-view helper is missing.",
-                    ));
-                }
-                (
-                    object.id.to_string(),
-                    object.name.clone(),
-                    0,
-                    game::EntityKind::Object,
-                )
-            }
-            SpawnKind::Item { .. } => continue,
+        if matches!(definition.kind, SpawnKind::Item { .. }) {
+            continue;
+        }
+        let Some(target) = engine
+            .target_view(
+                &world.state,
+                actor,
+                &WorldTarget::Spawn { spawn: id.clone() },
+            )
+            .map_err(engine_error)?
+        else {
+            continue;
+        };
+        if !visible(character.tile, target.tile) {
+            continue;
+        }
+        let (definition_id, kind, maximum) = if let Some(npc) = &target.npc {
+            let definition = content
+                .npcs
+                .get(npc)
+                .ok_or_else(|| ApiError::internal("game_view_npc"))?;
+            (
+                npc.to_string(),
+                game::EntityKind::Npc,
+                definition
+                    .combat
+                    .as_ref()
+                    .map_or(0, |combat| combat.hitpoints),
+            )
+        } else {
+            (
+                target
+                    .object
+                    .as_ref()
+                    .ok_or_else(|| ApiError::internal("game_view_object"))?
+                    .to_string(),
+                game::EntityKind::Object,
+                0,
+            )
         };
         entities.push(game::Entity {
             id: id.to_string(),
             definition_id,
-            name,
             kind: kind as i32,
-            tile: Some(tile(state.tile)),
+            name: target.name,
+            tile: Some(tile(target.tile)),
             hitpoints: u32::from(state.hitpoints),
             max_hitpoints: u32::from(maximum),
-            available: state.available_at_tick <= world.state.tick
-                && (maximum == 0 || state.hitpoints > 0),
-            // These are source-declared menu names, not a permission/guard evaluation.
-            actions: definition
+            available: target.available,
+            actions: target
                 .interactions
                 .iter()
-                .map(|interaction| interaction.name.clone())
+                .filter(|option| option.permission.allowed)
+                .map(|option| option.name.clone())
                 .collect(),
-            instance: character.runtime.instance.as_ref().map(ToString::to_string),
+            interaction_options: target.interactions.iter().map(interaction).collect(),
+            actions_evaluated: true,
+            instance: player.instance.clone(),
+            asset: target.asset.map(|id| id.to_string()),
+            width: u32::from(target.width),
+            height: u32::from(target.height),
             ..Default::default()
         });
     }
@@ -345,6 +348,12 @@ pub(super) fn snapshot(
             || other.runtime.instance != character.runtime.instance
             || !visible(character.tile, other.tile)
         {
+            continue;
+        }
+        let presence = engine
+            .presence_view(&world.state, id)
+            .map_err(engine_error)?;
+        if !presence.present_in_world {
             continue;
         }
         entities.push(game::Entity {
@@ -358,29 +367,28 @@ pub(super) fn snapshot(
                 .iter()
                 .map(|(key, value)| (key.clone(), *value))
                 .collect(),
-            instance: other.runtime.instance.as_ref().map(ToString::to_string),
+            instance: player.instance.clone(),
+            presence: Some(presence_view(&presence)),
+            width: 1,
+            height: 1,
             ..Default::default()
         });
     }
-    let ground_items = world
-        .state
-        .ground_items
-        .iter()
-        .filter(|item| {
-            item.instance == character.runtime.instance
-                && visible(character.tile, item.tile)
-                && item.expires_at_tick > world.state.tick
-                && (item.owner.as_ref() == Some(actor) || item.public_at_tick <= world.state.tick)
-        })
+    let ground_items = engine
+        .ground_item_views(&world.state, actor)
+        .map_err(engine_error)?
+        .into_iter()
+        .filter(|item| visible(character.tile, item.tile))
         .map(|item| game::GroundItem {
-            id: item.id.clone(),
+            id: item.id,
             tile: Some(tile(item.tile)),
             stack: Some(stack(&item.stack)),
-            can_take: false,
-            permissions_evaluated: false,
-            instance: item.instance.as_ref().map(ToString::to_string),
+            can_take: item.can_take.allowed,
+            permissions_evaluated: true,
+            permission: Some(permission(&item.can_take)),
+            instance: player.instance.clone(),
         })
-        .collect::<Vec<_>>();
+        .collect();
     let mut dynamic_objects = Vec::new();
     for (id, object) in &world.state.runtime.temporary_objects {
         if object.location.instance != character.runtime.instance
@@ -388,74 +396,82 @@ pub(super) fn snapshot(
         {
             continue;
         }
-        let definition = content
-            .mechanics
-            .temporary_objects
-            .get(&object.definition)
-            .ok_or_else(|| ApiError::internal("game_view_temporary_object"))?;
+        let Some(target) = engine
+            .target_view(
+                &world.state,
+                actor,
+                &WorldTarget::TemporaryObject { object: id.clone() },
+            )
+            .map_err(engine_error)?
+        else {
+            continue;
+        };
+        if !visible(character.tile, target.tile) {
+            continue;
+        }
         dynamic_objects.push(game::DynamicObject {
             id: id.to_string(),
             definition_id: object.definition.to_string(),
-            object_id: Some(definition.object.to_string()),
-            tile: Some(tile(object.location.tile)),
-            instance: object.location.instance.as_ref().map(ToString::to_string),
+            object_id: target.object.as_ref().map(ToString::to_string),
+            tile: Some(tile(target.tile)),
+            instance: player.instance.clone(),
             expires_at_tick: Some(object.expires_at_tick),
+            ..Default::default()
+        });
+        entities.push(game::Entity {
+            id: id.to_string(),
+            definition_id: target.object.map(|id| id.to_string()).unwrap_or_default(),
+            kind: game::EntityKind::Object as i32,
+            name: target.name,
+            tile: Some(tile(target.tile)),
+            available: target.available,
+            actions: target
+                .interactions
+                .iter()
+                .filter(|option| option.permission.allowed)
+                .map(|option| option.name.clone())
+                .collect(),
+            interaction_options: target.interactions.iter().map(interaction).collect(),
+            actions_evaluated: true,
+            instance: player.instance.clone(),
+            asset: target.asset.map(|id| id.to_string()),
+            width: u32::from(target.width),
+            height: u32::from(target.height),
             ..Default::default()
         });
     }
     for (id, selected) in transforms {
-        let definition = content
-            .mechanics
-            .object_transforms
-            .get(id)
-            .ok_or_else(|| ApiError::internal("game_view_transform"))?;
-        let state = definition
-            .states
-            .get(selected)
-            .ok_or_else(|| ApiError::internal("game_view_transform_state"))?;
-        if !visible(character.tile, state.tile) {
+        let definition = &content.mechanics.object_transforms[id];
+        let selected_state = &definition.states[selected];
+        let target = engine
+            .target_view(
+                &world.state,
+                actor,
+                &WorldTarget::Spawn {
+                    spawn: definition.spawn.clone(),
+                },
+            )
+            .map_err(engine_error)?;
+        let location = target
+            .as_ref()
+            .map_or(selected_state.tile, |target| target.tile);
+        if !visible(character.tile, location) {
             continue;
-        }
-        if let Some(object) = &state.object {
-            let object = content
-                .objects
-                .get(object)
-                .ok_or_else(|| ApiError::internal("game_view_transform_object"))?;
-            let source = content
-                .spawns
-                .get(&definition.spawn)
-                .ok_or_else(|| ApiError::internal("game_view_transform_spawn"))?;
-            let live = scoped
-                .get(&definition.spawn)
-                .ok_or_else(|| ApiError::internal("game_view_transform_entity"))?;
-            entities.push(game::Entity {
-                id: definition.spawn.to_string(),
-                definition_id: object.id.to_string(),
-                kind: game::EntityKind::Object as i32,
-                name: object.name.clone(),
-                tile: Some(tile(state.tile)),
-                available: live.available_at_tick <= world.state.tick,
-                actions: source
-                    .interactions
-                    .iter()
-                    .map(|interaction| interaction.name.clone())
-                    .collect(),
-                instance: character.runtime.instance.as_ref().map(ToString::to_string),
-                ..Default::default()
-            });
         }
         dynamic_objects.push(game::DynamicObject {
             id: id.to_string(),
             definition_id: id.to_string(),
-            object_id: state.object.as_ref().map(ToString::to_string),
-            tile: Some(tile(state.tile)),
+            object_id: target
+                .and_then(|target| target.object)
+                .map(|id| id.to_string()),
+            tile: Some(tile(location)),
             state: Some(selected.to_string()),
-            door_open: state
+            door_open: selected_state
                 .door
                 .as_ref()
                 .map(|door| matches!(door, DoorPosition::Open)),
-            quarter_turns: u32::from(state.placement.quarter_turns),
-            instance: character.runtime.instance.as_ref().map(ToString::to_string),
+            quarter_turns: u32::from(selected_state.placement.quarter_turns),
+            instance: player.instance.clone(),
             ..Default::default()
         });
     }
@@ -465,16 +481,6 @@ pub(super) fn snapshot(
         ));
     }
     entities.sort_by(|a, b| a.id.cmp(&b.id));
-    let mut unavailable_views = vec![game::UnavailableView {
-        view: "interaction_permissions".into(),
-        reason: "The engine has no guarded interaction-menu public-view API; action names are declarations only.".into(),
-    }];
-    if !ground_items.is_empty() {
-        unavailable_views.push(game::UnavailableView {
-            view: "ground_item_permissions".into(),
-            reason: "The engine has no ground-item permission public-view API; can_take is not evaluated.".into(),
-        });
-    }
     let result = game::WorldSnapshot {
         revision: world.state.revision,
         tick: world.state.tick,
@@ -482,14 +488,20 @@ pub(super) fn snapshot(
         player: Some(player),
         entities,
         ground_items,
-        dialogue: None,
+        dialogue,
+        bank_context,
+        shop,
+        recovery,
+        quote: requested_quote
+            .map(|quote| quote_view(engine, &world.state, actor, quote))
+            .transpose()?,
         events: Vec::new(),
         full_snapshot: true,
         removed_entities: Vec::new(),
         event_history_gap: false,
         event_history_floor_revision: world.state.revision,
         dynamic_objects,
-        unavailable_views,
+        unavailable_views: Vec::new(),
         next_sequence: character
             .last_command_sequence
             .checked_add(1)
@@ -497,6 +509,216 @@ pub(super) fn snapshot(
     };
     bounded(&result)?;
     Ok(result)
+}
+
+fn quote_view(
+    engine: &WorldEngine,
+    world: &WorldState,
+    actor: &ActorId,
+    request: &ReadOnlyQuote,
+) -> Result<game::Quote, ApiError> {
+    use game::quote::Result as Wire;
+    let result = match request {
+        ReadOnlyQuote::BankDeposit { slot, quantity } => {
+            let view = engine
+                .bank_deposit_quote(world, actor, *slot, *quantity)
+                .map_err(engine_error)?;
+            Wire::Bank(game::BankQuote {
+                requested: view.requested.get(),
+                transferred: Some(stack(&view.transferred)),
+            })
+        }
+        ReadOnlyQuote::BankWithdraw {
+            slot,
+            quantity,
+            noted,
+        } => {
+            let view = engine
+                .bank_withdraw_quote(world, actor, *slot, *quantity, *noted)
+                .map_err(engine_error)?;
+            Wire::Bank(game::BankQuote {
+                requested: view.requested.get(),
+                transferred: Some(stack(&view.transferred)),
+            })
+        }
+        ReadOnlyQuote::ShopBuy {
+            shop,
+            index,
+            quantity,
+        } => Wire::Shop(shop_quote(
+            engine
+                .shop_buy_quote(world, actor, shop, *index, *quantity)
+                .map_err(engine_error)?,
+        )),
+        ReadOnlyQuote::ShopSell {
+            shop,
+            slot,
+            quantity,
+        } => Wire::Shop(shop_quote(
+            engine
+                .shop_sell_quote(world, actor, shop, *slot, *quantity)
+                .map_err(engine_error)?,
+        )),
+        ReadOnlyQuote::Recovery {
+            death,
+            storage,
+            items,
+        } => {
+            let view = engine
+                .recovery_quote(world, actor, death, *storage, items)
+                .map_err(engine_error)?;
+            Wire::Recovery(game::RecoveryQuote {
+                death: view.death.to_string(),
+                storage: recovery_storage(view.storage),
+                selected: view.selected.iter().map(ToString::to_string).collect(),
+                full_selection_fee: view.full_selection_fee,
+            })
+        }
+    };
+    Ok(game::Quote {
+        result: Some(result),
+    })
+}
+
+fn shop_quote(view: clubscape_world_engine::ShopQuote) -> game::ShopQuote {
+    game::ShopQuote {
+        shop: view.shop.to_string(),
+        item: view.item.to_string(),
+        requested: view.requested.get(),
+        quantity: view.quantity,
+        currency: view.currency.to_string(),
+        total_price: view.total_price,
+        stock_after: view.stock_after,
+        partial_reason: view.partial_reason.as_ref().map(denial),
+    }
+}
+
+fn recovery_storage(storage: RecoveryStorage) -> i32 {
+    match storage {
+        RecoveryStorage::Grave => game::RecoveryStorage::Grave as i32,
+        RecoveryStorage::DeathOffice => game::RecoveryStorage::DeathOffice as i32,
+    }
+}
+
+fn recovery_view(view: &clubscape_world_engine::RecoveryView) -> game::RecoveryView {
+    game::RecoveryView {
+        death: view.death.to_string(),
+        storage: recovery_storage(view.storage),
+        interface: view.interface.as_ref().map(ToString::to_string),
+        active_ticks_remaining: view.active_ticks_remaining,
+        entries: view
+            .entries
+            .iter()
+            .map(|entry| game::RecoveryEntry {
+                id: entry.id.to_string(),
+                stack: Some(stack(&entry.stack)),
+                full_entry_fee: entry.full_entry_fee,
+                current_storage: recovery_storage(entry.current_storage),
+                layout: Some(game::ItemLayout {
+                    location: Some(match &entry.layout {
+                        ItemLayout::Inventory { slot } => {
+                            game::item_layout::Location::InventorySlot(u32::from(*slot))
+                        }
+                        ItemLayout::Equipment { slot } => {
+                            game::item_layout::Location::EquipmentSlot(slot.to_string())
+                        }
+                    }),
+                }),
+            })
+            .collect(),
+    }
+}
+
+fn presence_view(view: &clubscape_world_engine::PresenceView) -> game::Presence {
+    game::Presence {
+        kind: match view.state {
+            PresenceState::Connected { .. } => game::PresenceKind::Connected as i32,
+            PresenceState::Disconnecting { .. } => game::PresenceKind::Disconnecting as i32,
+            PresenceState::Offline { .. } => game::PresenceKind::Offline as i32,
+            PresenceState::Untracked => 0,
+        },
+        connected: view.connected,
+        accepts_input: view.accepts_input,
+        present_in_world: view.present_in_world,
+    }
+}
+
+fn interaction(view: &clubscape_world_engine::InteractionView) -> game::InteractionOption {
+    game::InteractionOption {
+        name: view.name.clone(),
+        permission: Some(permission(&view.permission)),
+    }
+}
+
+fn permission(view: &clubscape_world_engine::Permission) -> game::Permission {
+    game::Permission {
+        allowed: view.allowed,
+        denial: view.denial.as_ref().map(denial),
+    }
+}
+
+fn denial(error: &GameError) -> game::RuleDenial {
+    use game::RuleErrorCode as Code;
+    let (code, message) = match error.code {
+        GameErrorCode::InvalidInput => (Code::InvalidInput, "Invalid selection."),
+        GameErrorCode::UnknownContent => (Code::UnknownContent, "Unknown source content."),
+        GameErrorCode::InvalidContent => (Code::InvalidContent, "Invalid source content."),
+        GameErrorCode::Unavailable => (
+            Code::Unavailable,
+            "A required source binding is unavailable.",
+        ),
+        GameErrorCode::NotOwned => (
+            Code::NotOwned,
+            "The requested state is not owned or accessible.",
+        ),
+        GameErrorCode::InsufficientItems => {
+            (Code::InsufficientItems, "Insufficient items or currency.")
+        }
+        GameErrorCode::InventoryFull => (
+            Code::InventoryFull,
+            "The destination has insufficient capacity.",
+        ),
+        GameErrorCode::StackOverflow => (
+            Code::StackOverflow,
+            "The item or price bound would be exceeded.",
+        ),
+        GameErrorCode::RequirementNotMet => (
+            Code::RequirementNotMet,
+            "Source requirements are not satisfied.",
+        ),
+        GameErrorCode::OutOfReach => (Code::OutOfReach, "The target is out of reach."),
+        GameErrorCode::Blocked => (Code::Blocked, "The source action is blocked."),
+        GameErrorCode::Busy => (
+            Code::Busy,
+            "The source action cannot currently be performed.",
+        ),
+        GameErrorCode::StaleCommand => (Code::StaleCommand, "The command is stale."),
+        GameErrorCode::SessionConflict => {
+            (Code::SessionConflict, "Rejoin before submitting new input.")
+        }
+    };
+    game::RuleDenial {
+        code: code as i32,
+        message: message.into(),
+    }
+}
+
+pub(super) fn engine_error(error: GameError) -> ApiError {
+    let message = match error.code {
+        GameErrorCode::InvalidInput | GameErrorCode::UnknownContent => {
+            return ApiError::invalid("The source query or selection is invalid.");
+        }
+        GameErrorCode::InvalidContent => return ApiError::internal("game_source_view"),
+        GameErrorCode::Unavailable => {
+            return unavailable("A required source binding is unavailable.");
+        }
+        _ => "The authoritative source query requirements are not satisfied.",
+    };
+    ApiError::new(
+        axum::http::StatusCode::CONFLICT,
+        clubscape_protocol::ErrorCode::Conflict,
+        message,
+    )
 }
 
 pub(super) fn bounded(snapshot: &game::WorldSnapshot) -> Result<(), ApiError> {
@@ -574,6 +796,18 @@ fn visible(from: Tile, to: Tile) -> bool {
         .is_some_and(|distance| distance <= VIEW_RADIUS)
 }
 
+fn item_slots<'a>(slots: impl Iterator<Item = &'a Option<ItemStack>>) -> Vec<game::ItemSlot> {
+    slots
+        .enumerate()
+        .filter_map(|(index, value)| {
+            value.as_ref().map(|value| game::ItemSlot {
+                index: index as u32,
+                stack: Some(stack(value)),
+            })
+        })
+        .collect()
+}
+
 fn stack(value: &ItemStack) -> game::Stack {
     game::Stack {
         item: value.item.to_string(),
@@ -609,10 +843,6 @@ fn activity(value: &Activity) -> &'static str {
         Activity::Fighting { .. } => "fighting",
         Activity::Casting { .. } => "casting",
     }
-}
-
-fn gap(message: &'static str) -> GameError {
-    GameError::new(GameErrorCode::Unavailable, message)
 }
 
 pub(super) fn unavailable(message: &'static str) -> ApiError {

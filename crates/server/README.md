@@ -10,11 +10,11 @@ The public `game_storage` library module provides real PostgreSQL
 world/character/session persistence. Without `CLUBSCAPE_GAME_ROOT`, game RPCs
 remain unavailable and `game.v1` is not advertised. With an explicit validated
 artifact and asset bundle, the bounded coordinator executes the available
-`WorldEngine` actions/ticks through that store. Source presence and guarded
-public-view APIs are still missing; the adapter fails those boundaries explicitly
-and is **not yet a completed live-world integration**. See
+`WorldEngine` actions/ticks through that store. Source-owned lifecycle,
+combat-safe disconnect/logout, contextual public views and immutable quotes
+are wired through the integrated engine APIs. See
 [`spec/game-networking.md`](../../spec/game-networking.md) for configuration,
-ordering, routing, privacy, reconnect/shutdown and the exact remaining blockers.
+ordering, routing, privacy, reconnect/shutdown and production-source readiness.
 Storage and live-world synthetic tests are
 not source-content, gameplay, presentation, performance or milestone acceptance.
 
@@ -81,9 +81,9 @@ Those HTTP/account bounds are unchanged. With a configured game, coordinator
 requests additionally have a nine-second reply bound inside the ten-second RPC
 limit. Shutdown also signals the owned game task; its five-second lease-release
 operation overlaps HTTP draining where possible, followed by a bounded
-six-second coordinator join (and at most one second joining an abort) before
-pool close. Missing source presence/view APIs and game-loop failures remain
-explicitly unavailable, as detailed in the live-world contract.
+twelve-second coordinator join (and at most one second joining an abort) before
+pool close. Source-rule refusals, required unbound inputs and game-loop failures
+remain explicit, as detailed in the live-world contract.
 
 Login's credential lookup and entire session-issuance transaction are separate
 database groups; the account lock, pruning, insert **and commit** share the latter
@@ -165,6 +165,9 @@ cleanup bound; only the pool owner should call it.
 | `join_session`, `read_session`, `heartbeat_session`, `leave_session` | Exclusive player-session infrastructure bound to the actual account token digest. |
 | `commit_command(lease, access, GameCommand, callback)` | Atomically apply trusted mechanics, update world/character versions and store the exact result under the operation ID/sequence. |
 | `commit_tick(lease, expected_tick, callback)` | Server scheduler only: atomically advance one tick, update changed character versions, and retain the latest committed tick receipt. No tick RPC is exposed. |
+| `commit_live_tick(lease, expected_tick, sessions, callback)` | Supplies transactionally verified connection facts to engine lifecycle and advanced-tick processing, without forcing offline actors online. |
+| `apply_session_lifecycle(...)` | Atomically joins/leaves a session or logs out the account token with the source lifecycle transition and durable control-plane receipt, without consuming a gameplay sequence. |
+| `control_world(lease, callback)` | Fenced, idempotent startup/shutdown reconciliation without advancing tick/sequence. |
 
 `AuthTokenDigest::from_token` reuses the account code's canonical token parsing
 and SHA-256 implementation. `from_digest` supports the existing server auth

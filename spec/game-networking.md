@@ -1,17 +1,29 @@
-# Live-world server adapter
+# Live-world server
 
-This is the server integration contract at the current engine boundary, **not
-full M1 or source-content acceptance**. Account-only operation remains the
-default. The live adapter executes real compiler-validated content through
-`WorldEngine` and PostgreSQL, but the missing presence and public-view APIs
-below prevent marking the live-world integration task complete.
+The optional server adapter runs the actual source engine over PostgreSQL.
+It supports **content/artifact 3, persisted state 1, runtime 1**. Lifecycle,
+contextual views and quotes use the engine APIs in
+[`game-contracts.md`](game-contracts.md#live-lifecycle-and-read-only-projection-boundary);
+the former missing-API interlocks are removed. This backend is not UI,
+presentation, real-product journey, performance or M1 acceptance evidence.
 
-## Configuration and source identity
+## Configuration and launch
 
-`Config::with_game_root(path)` or `CLUBSCAPE_GAME_ROOT` explicitly configures a
-game directory. An absent setting is account-only mode; a blank setting,
-missing file, wrong checksum, invalid artifact, unresolved source binding or
-failed engine construction is a startup error, never account-only fallback.
+Without `CLUBSCAPE_GAME_ROOT`, the service remains account-only. Setting it
+requires a complete game directory. A blank setting, missing/invalid artifact,
+hash mismatch, required unresolved binding, invalid restored state or failed
+world lease prevents startup; none selects an account-only or fixture fallback.
+
+```sh
+# DATABASE_URL uses the separately managed PostgreSQL service.
+CLUBSCAPE_GAME_ROOT=/absolute/path/to/game \
+CLUBSCAPE_BIND=127.0.0.1:4010 \
+cargo run --locked -p clubscape-server
+```
+
+`Config::with_game_root(path)` is the equivalent library configuration.
+Optional `CLUBSCAPE_WEB_ROOT` serves the independently hash-validated UI bundle;
+game/web routes cannot overlap. Binding remains literal loopback only.
 
 The private `clubscape-game.json` descriptor is:
 
@@ -24,194 +36,204 @@ The private `clubscape-game.json` descriptor is:
   "content_manifest_path": "/content/manifest.json",
   "assets": {
     "asset.example.scene": "/assets/scene.glb"
+  },
+  "readiness_profile": {
+    "id": "ordinary_normal_f2p",
+    "excluded_items": [
+      "item.ensouled_goblin_head",
+      "item.milk.bottomless_bucket"
+    ]
   }
 }
 ```
 
-The example identifies the configuration shape, not usable product content.
-The world UUID must be non-nil and stable. Files are bounded regular files
-under the configured directory, without parent traversal or symlinks. The
-artifact is reloaded with `clubscape_content::load_compiled(..., Runtime)`;
-definitions, source mode, checksums and indexes are not trusted merely because
-an artifact was previously compiled. Any reported unresolved binding prevents
-startup. The engine receives those immutable, validated definitions.
+This illustrates configuration, not a product pack. `world_id` must be stable
+and non-nil. The artifact is reloaded with the strict compiler's `Runtime`
+policy, including revalidation and rebuilt indexes. Referenced assets and the
+public manifest must be declared in `clubscape-game-assets.json`, using the
+existing `{schema_version, files:[{url,path,sha256,content_type}]}` bundle format.
+Only `/content/` and `/assets/` game routes are allowed. Files are bounded,
+regular, hash checked and cannot traverse symlinks/parent paths. Static world
+cells/assets stream separately, never in each actor snapshot. Existing
+same-origin/CSP/no-wildcard-CORS/GET/HEAD behavior is retained.
 
-`clubscape-game-assets.json` uses the existing hash-pinned web-bundle manifest
-shape (`schema_version`, `files[]` with `url`, `path`, `sha256`, `content_type`).
-Game routes must be under `/content/` or `/assets/`. Every referenced content
-asset ID must map to a present, hash-checked file, as must the public manifest.
-Static files stream independently from RPC snapshots. Optional
-`CLUBSCAPE_WEB_ROOT` remains independent; overlapping game/web URLs fail
-startup. Existing same-origin headers, no wildcard CORS, path restrictions,
-GET/HEAD behavior and loopback-only binding remain intact. File/hash validation
-does not establish mesh, audio or presentation fidelity.
+The exact artifact hash and a private OS-generated PRF key are pinned in
+`game_worlds`; a changed artifact cannot silently reuse that world. Keys never
+enter public state, URLs or logs. Domain-separated HMAC-SHA256 counter draws
+use world and operation/tick identity with bounded unbiased rejection sampling.
+Clients do not submit random values, and retrying a committed operation does
+not draw again.
 
-The exact artifact hash and a private 32-byte random key are pinned in
-`game_worlds` by migration `0003_world_runtime_identity.sql`. The key is
-OS-generated only once, never placed in `WorldState`, public protobuf or logs.
-A different artifact cannot silently reuse the same world. HMAC-SHA256
-counter draws are domain-separated by world and operation/tick identity, with
-bounded unbiased rejection sampling. Retries of the same tick use the same
-private draws; clients never supply random values or see the key.
+## Source-aware readiness, not missing-value substitution
 
-There is no production fixture switch. The ignored server unit integration
-tests alone compile a test-only branch that loads `TestFixture` artifacts.
-It cannot be selected through environment variables, RPC or a production
-`Config` constructor. Those tests use actual PostgreSQL and HTTP.
+Omitting `readiness_profile` requires every reported binding to be resolved.
+The explicitly selected `ordinary_normal_f2p` profile requires declared
+`world_members = false` and computes conservative proofs over the actual
+validated artifact:
 
-## Ownership, scheduling and acknowledgments
+* A conditional-stack alternative can remain unresolved only when it is
+  explicitly excluded and has no initial/container, ground-spawn, positive
+  shop stock, grant, recipe, reconciliation, transformation or non-members
+  loot introduction. Only a literal source `MembersWorld` requirement (including
+  a conjunction containing it) removes a loot pool through the false-membership
+  proof; arbitrary guards are not reimplemented.
+* A gather respawn binding can remain unresolved only when the source depletion
+  rule is exactly constant zero. Cadence, relocation and other bindings remain
+  independently required.
+* Office overflow can remain unresolved only when the total defined ordinary
+  item-key universe fits the declared Office capacity and possible
+  introductions cannot produce charged/conditional/per-instance entries.
 
-One bounded coordinator owns each configured world and its fenced lease.
-The immutable engine never owns world time. At each 600 ms boundary:
+Every unresolved path must match a computed proof; there is no arbitrary
+allowlist, count-based success condition, fabricated respawn or item-rule
+coercion. The definitions remain unresolved in the compiled report. Logs retain
+the selected profile and exact proved-inactive paths. Changed acquisition,
+membership, capacity or item-instance assumptions invalidate the proof.
+Restored state and every engine/lifecycle mutation are also checked against the
+profile, including banks, ground items, shops, projectiles and recovery records.
 
-1. `GameStore::commit_routed_tick` advances time once through the shared storage
-   transaction, calling `engine.process_advanced_tick`, **not** `engine.tick`.
-2. Due source activities commit, including actor-routed events.
-3. Up to eight queued intents are attempted in receive order at that tick,
-   with at most one new attempt per actor. Their actual effects come only from
-   `engine.apply_intent`. Durable duplicates bypass callback execution.
+Thus the six proof-scoped inactive alternatives described in the source
+resolution inventory need not disable ordinary M1, but an unresolved active
+input still prevents runtime readiness. Source evidence and owner approvals
+are not authenticated by compilation or by these reachability/capacity proofs.
+The actual regenerated v3 product and its public asset bundle remain launch
+prerequisites; synthetic fixtures are not substitutes.
 
-The bounded channel and pending-intent queue each hold at most 64 requests.
-Full queues return structured HTTP 429 with a retry delay. A coordinator request
-has a nine-second response deadline within the existing ten-second RPC deadline.
-Cancelled queued requests are discarded before mutation. A request cancelled
-after work began may have an unknown outcome. Missed timer intervals use delay,
-never a burst of catch-up ticks; network arrivals cannot advance world time.
+## Transactions, time and connection lifecycle
 
-Every storage group still uses the existing five-second `database::run` and
-cancellation-owned connection discard. Auth tokens and exclusive player leases
-are validated inside mutation transactions, including after waiting for locks.
-Operation IDs are request UUIDs; intent hashes exclude auth/session/lease IDs.
-Sequences are strict, positive and contiguous. `expected_character_revision`
-is an observation hint for a sequenced intent, not an arbitrary state-replacement
-CAS: future observations fail, while source ticks may have advanced state since
-an older observation. The engine always evaluates current authoritative state.
-The observation hint does not enter the intent hash.
-Authenticated polls and admitted input requests heartbeat only their own
-infrastructure lease; ticking itself never keeps disconnected leases alive.
-Heartbeat metadata does not award progress or consume a command sequence.
+One bounded coordinator owns a fenced world lease. At each 600 ms boundary it
+commits exactly one storage-owned clock advance, derives verified transport/auth
+facts inside that transaction, applies engine lifecycle reconciliation, obtains
+`engine.tick_context`, and calls `engine.process_advanced_tick_with_context`.
+It never calls `engine.tick` inside a storage callback, decrements reserved
+metadata, or marks all persisted actors online.
 
-Character creation copies the validated source initial definition and does not
-run tutorial transitions. Creation options must be empty. Nonempty legacy
-appearance/experience fields are explicitly rejected; callers must submit
-`ConfirmAppearance` and `SelectExperience` as source-game intents after joining.
-Unsupported engine implementations return unavailability without creating a
-fake confirmation, choice, entitlement or progression result.
+After due work, at most eight queued intents are attempted in receive order,
+with one new attempt per actor per tick. Both channel and pending queue hold at
+most 64 requests; overflow is structured HTTP 429. Missed timer intervals delay
+instead of bursting. Requests have a nine-second coordinator reply bound inside
+the existing ten-second RPC bound. Each DB group, including commit and owned
+release, retains `database::run`'s five-second limit and cancellation/discard.
 
-New `commit_routed_command`, `commit_routed_tick` and `session_snapshot` APIs
-return transaction-consistent dynamic state for server projection. Existing
-`commit_command`/`commit_tick` APIs and legacy receipts remain compatible.
-`routed_events` is an optional/defaulted receipt field with actor membership,
-stable-ID and shape checks. A receipt cannot mix legacy flattened events with
-routed events. The server never guesses a recipient from an event's target.
-IDs are domain-separated hashes of world UUID, committed revision, event ordinal
-and recipient actor. They survive replay, remain bounded for long actor IDs,
-and detect a receipt whose recipient changed without its identity.
+Verified transport connections are those actually joined to this coordinator
+whose exact account-token digest and exclusive game lease remain live.
+The 30-second heartbeat lease is transport ownership, **not** a combat/logout/
+grave policy. Auth revocation yields `AuthenticationRevoked`; lease/transport
+loss yields `TransportLost`. The engine decides whether the body is
+Disconnecting or safely Offline. Disconnecting combat/projectiles and source
+life phases remain vulnerable and continue processing; one disconnected actor
+does not freeze the world or allow offline gathering.
 
-State, revisions and event routing commit before acknowledgment. Command
-timeouts stop further world processing rather than blindly rerunning a callback.
-A timed-out tick is reconciled through a locked read: a committed next tick
-uses its stored receipt; an unconfirmed outcome stops processing. Source errors
-are not retried as database failures. Reconnect and process restart preserve
-durable state, fences, operation receipts and private random identity.
+At process restart there are initially no verified live connections. The
+engine's `CoordinatorRestart` reconciliation preserves acknowledged state and
+pending combat rather than waiting for every saved actor. Legacy untracked
+input clocks can be migrated from the already authoritative
+`last_action_tick`, not from a poll or a new invented timestamp. Actual join/
+rejoin uses `apply_lifecycle`; repeated rejoin of an already-connected actor
+does not reset idle. Accepted real intents report `Activity` transactionally.
+Polls, quotes, heartbeat refreshes and duplicate callbacks never do.
 
-## Public snapshots and polling
+Game and lifecycle mutations validate auth/ownership under locks, then commit
+state, changed character/world revisions and actor-routed results before ack.
+Gameplay command sequences remain positive and contiguous. Operation UUIDs
+and canonical intent hashes provide restart-safe deduplication, independent of
+auth/game-lease renewal. `expected_character_revision` is an observation hint:
+future observations fail; source ticks may have advanced since an older
+observation. Source mechanics always evaluate current state.
 
-`CurrentAccount.character_initialized` is derived from actual authenticated
-database state, including when the service is subsequently started account-only.
-`game.v1` and `gameplay_available` describe a currently ready coordinator, not
-milestone completion. Health and hello expose stopped/unavailable game state;
-ordinary account operations remain independently implemented.
+`GameStore::apply_session_lifecycle` atomically joins/leaves the exclusive lease
+or performs account logout together with the source transition. `LeaveWorld`
+and `Logout` do not consume gameplay sequences. Migration
+`0004_game_lifecycle.sql` journals their request identity/intent and bounded
+receipt. Reused IDs with changed actions/authorization conflict, and a stale
+leave cannot delete a replacement session. A non-owner account token can log
+out without disconnecting the other token's game session.
 
-Every world response includes the complete local player and complete visible
-ground list. Only the local player's inventory, equipment, skills, quests,
-tutorial instruction, settings, experience, prayers and instance are projected.
-Private flags, entitlement ledgers, RNG, other players' containers/quests/XP
-and item-origin records are never broadcast. Other players expose identity,
-appearance and position, not their private character records.
+Requested logout uses the source engine's combat/projectile/life/travel rules;
+rejection leaves auth/session/world state intact. `WorldInput.request_logout`
+remains a sequenced source intent; its retained lease permits outcome recovery
+until explicit leave, auth logout or expiry. This does not implicitly rejoin
+an already-offline actor. Account-only auth behavior is unchanged.
 
-The network interest window is 32 tiles on the same plane and in the same live
-instance. It is not a gameplay reach/LOS or source rendering-distance formula.
-Explicit temporary-object and object-transform state has an additive typed
-`DynamicObject` projection; static cells, assets and complete content never
-appear in dynamic snapshots. Missing required definitions are errors.
+`control_world` handles idempotent owner-only startup/shutdown reconciliation
+without changing tick or sequence. `commit_live_tick` provides verified
+connection facts to source processing. `session_snapshot` combines live auth,
+optional ownership heartbeat and a consistent view snapshot. Existing legacy
+storage APIs remain compatible.
 
-Entity baselines are bounded to 128 entries/eight MiB across sessions.
-An available baseline produces `full_snapshot = false`, changed entities and
-explicit removals. A missing baseline produces a complete entity replacement.
-The local player, ground list and dynamic-object list are complete in either
-case. The wire response stays within 256 KiB, 2048 entities and 256 events;
-oversized views fail explicitly rather than silently dropping state.
+## Public protocol and views
 
-Event history holds at most 256 revision batches, 1024 events and four MiB.
-Only the receiving actor's events are included. Polls use `after_revision`;
-input responses may repeat recent post-join event IDs, which client-core
-deduplicates. History gaps are explicit through `event_history_gap` and
-`event_history_floor_revision`, with complete entity state. Rejoining establishes
-a new event floor and sends no historical notifications/audio. A repeated
-operation after restart cannot replay an old notification.
+`CreateCharacter` copies the source normal-account initial definition exactly.
+Creation has no grants or signup-triggered progress. Creation options must be
+empty; appearance confirmation and experience selection are real subsequent
+source intents. Source runtime defaults/style initialization comes from the
+engine's creation API, once only. Retry never overwrites inventory, XP or gates.
 
-## Missing engine boundaries: integration is blocked, not substituted
+Additive intents include `ProduceSelected` with explicit `Single`/`MakeX`
+(including Make-X-of-one), `OpenGrave` and `OpenDeathOffice`. A generic
+`OpenInterface` cannot manufacture contextual grave/bank/shop/Office access.
 
-The current `WorldEngine` public API exposes construction, initial state, intent
-application and tick processing, but not the following required integrations:
+`PollWorld.quote` optionally requests a typed read-only bank deposit/withdraw,
+shop buy/sell, or recovery quote. The server calls the engine's immutable
+planners directly. Quotes consume no gameplay sequence, activity clock, RNG,
+items or progress. Bank/shop quoted partial quantities and prices come from
+the same planners as execution. Recovery quotes explicitly cover the full
+selected quantities, not a future capacity guarantee.
 
-* **Presence/lifecycle:** an authoritative actor join/rejoin, requested logout,
-  auth revocation and transport-loss transition, with declared combat/retaliation/
-  interruption timing and online/idle/offline/grave-clock inputs. `ClockPause`
-  and `last_active_tick` exist in the shared state, but do not define a complete
-  presence policy or provide a public transition API.
-* **Guarded public views:** current bank/shop access, stock-sensitive per-unit
-  quotes, dialogue text/eligible choices, recovery panels and fees, available
-  interaction options, ground-item permissions, and source-variable morph
-  resolution. The relevant existing engine authorization helpers are private;
-  the server must not duplicate their rules or probe permissions by executing
-  speculative mutations.
+Snapshots use `context_view`/`dialogue_view`/`bank_view`/`shop_view`/
+`recovery_view`, `target_view`, `interaction_options`, `ground_item_views` and
+`presence_view`. The server neither executes speculative intents nor copies
+source guard, price, morph, fee, range or contextual-permission rules.
+Typed responses include eligible dialogue choices, authorized own bank data,
+shop stock/unit prices, quoted totals/partial denials, owned recovery layouts/
+fees/active ticks, instance/temporary-object/transform state and actual pickup/
+interaction permissions. Other players' inventory, bank, quests, XP, reward
+ledgers, RNG and recovery contents are never broadcast. Safely offline actors
+are omitted; vulnerable disconnecting actors remain visible.
 
-Until those APIs exist, the adapter has a conservative safety interlock, **not a
-replacement presence mechanic**: each persisted actor must have explicitly
-rejoined this coordinator, and every tick requires its exact live auth/game
-lease. Missing joins pause processing and report unavailability. Loss/revocation
-of an active lease fails the world closed before another actor tick; it does
-not erase pending combat/activity or award offline gathering. A restart waits
-for explicit rejoin without resetting stored time or applying offline catch-up.
-This all-actor interlock is not suitable as a final multiplayer presence model.
-In particular, a fresh client obeying unavailable capability negotiation cannot
-complete ordinary reconnect while this missing-policy interlock is active.
+Each response contains the complete local player, visible ground list and
+dynamic-object list. The 32-tile same-plane/same-instance interest window is a
+network limit, not a substitute gameplay reach rule. Entity deltas require a
+known session/revision baseline; otherwise `full_snapshot` replaces the entity
+set. Removals are explicit. Byte/entity/event bounds remain 256 KiB, 2048 and
+256; oversized views fail rather than silently truncate authoritative state.
 
-Requested `LeaveWorld`/`RequestLogout`, and account logout with a character in
-this world, return a concrete presence-API error rather than a successful
-game logout. The account-only service is unchanged. External account-token
-revocation still really revokes access and fails the interlock; it is not an
-implicit successful gameplay disconnect.
+Actor association is persisted alongside each `GameEvent`. Stable IDs hash
+world UUID, committed revision, ordinal and recipient; a changed recipient
+fails receipt integrity. The server never guesses routing from event targets.
+Events are published only after commit and filtered by recipient. History is
+bounded to 256 batches/1024 events/four MiB; baselines to 128/eight MiB.
+Missing history is explicit, and a fresh join/rejoin establishes an event floor
+without obsolete notifications/audio. Input responses may repeat recent IDs;
+client-core deduplicates them. Original request-ID spelling is echoed exactly.
 
-Bank/shop/dialogue opening is refused before mutation when its guarded public
-view cannot be produced. Recovery is explicitly unavailable. Existing unsupported
-source appearance, experience and mechanics-v2 intents remain engine errors.
-The generic snapshot does not leak bank/recovery data or invent quotes.
-Source-declared entity action names have `actions_evaluated = false`;
-ground `can_take` is not asserted without a permission helper
-(`permissions_evaluated = false`). `unavailable_views` names these missing
-boundaries rather than presenting them as resolved.
+Timeouts and lost acknowledgments never claim rollback. A command retry uses
+the same UUID/sequence/intent to recover its journal receipt without a callback.
+Unknown tick outcomes are reconciled by locked state/receipt reads; unresolved
+outcomes stop further work rather than blindly rerun source effects.
 
-The engine owner must expose these source-owned operations before the server
-task can be marked done. Neither an empty registry, a fixture, freezing the
-world nor a successful infrastructure test resolves those contracts.
+## Lifetime, acceptance and verification
 
-## Shutdown and verification
+Health/capability reporting reflects actual configured coordinator readiness
+and failures. `CurrentAccount.character_initialized` comes from authenticated
+DB state, even if the service is later started account-only. Existing optional
+web-bundle security behavior is retained.
 
-The service owns the coordinator and its supervision task. Shutdown signals
-the coordinator while HTTP drains, cancels pending database futures using the
-existing discard semantics, rejects queued work, and attempts fenced lease
-release before closing the pool. Coordinator join/release are bounded; forced
-abort/release or loop failures return `ServeError`, not clean-world success.
-No ticker is detached from `Service::serve`.
+Shutdown owns/cancels the coordinator and its supervision task, rejects queued
+work, commits source transport-loss reconciliation and releases the fenced
+world lease before closing the pool. The two lifecycle/release DB groups retain
+five-second bounds; coordinator join is bounded to twelve seconds plus a
+one-second abort join. Cleanup/loop failures return `ServeError`; no ticker is
+detached. The normal account-only shutdown bounds remain unchanged.
 
-Use the parent isolated PostgreSQL runner with this worktree and report
-`.local/evidence/m1-live-world-server.json`. It selects all ignored server
-binaries, including the test-only compiled-content HTTP integration cases, then
-uses a fresh database for the independent account client and removes its owned
-container. Normal native checks cover server, protocol and client-core tests
-plus strict all-target Clippy. Synthetic fixtures establish integration only;
-source product content, complete engine execution, gameplay/presentation and
-owner acceptance remain separate.
+Run native server/protocol/client-core and relevant engine/compiler/shared-type/
+simulation tests, formatting and all-target Clippy. The parent isolated runner
+selects all ignored server suites, runs real PostgreSQL/HTTP lifecycle,
+concurrent-player/privacy, source-context/quote, combat-disconnect and recovery
+tests, then an independent account client on a fresh DB and removes its owned
+container. The synthetic test loader is compile-time test-only: no production
+environment variable, RPC or constructor enables fixture mode.
+
+Passing this integration does not mark source product, complete Tutorial
+Island/Cook's Assistant, UI/presentation/audio, browser performance, RuneLite
+or clinical/owner acceptance complete.

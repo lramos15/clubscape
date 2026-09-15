@@ -398,10 +398,12 @@ async fn execute_command(
                 gameplay_unavailable_reason: reason,
             }))
         }
-        client_message::Command::Logout(_) => {
+        command @ client_message::Command::Logout(_) => {
             let digest = authorization_digest(headers)?;
             if let Some(game) = &state.game {
-                game.allow_account_logout(digest).await?;
+                return game
+                    .request(operation_id, request_id, digest, command)
+                    .await;
             }
             store::logout(&state.pool, &digest).await?;
             Ok(server_message::Result::LoggedOut(LoggedOut {}))

@@ -125,7 +125,7 @@ impl WorldLease {
     }
 }
 
-#[derive(Clone, Debug, PartialEq, Eq)]
+#[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
 pub struct GameSession {
     pub session_id: Uuid,
     pub account_id: Uuid,
@@ -232,4 +232,51 @@ pub struct SessionSnapshot {
     pub session: GameSession,
     pub character: CharacterSnapshot,
     pub world: WorldSnapshot,
+}
+
+#[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(tag = "kind", rename_all = "snake_case", deny_unknown_fields)]
+pub enum LiveSessionAction {
+    Join,
+    Leave { session_id: Uuid },
+    Logout,
+}
+
+#[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub struct LifecycleReceipt {
+    pub operation_id: Uuid,
+    pub account_id: Uuid,
+    pub world_id: Uuid,
+    pub action: LiveSessionAction,
+    pub actor_id: Option<ActorId>,
+    pub session: Option<GameSession>,
+    pub world_revision: u64,
+    pub events: Vec<CommittedActorEvent>,
+}
+
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub struct LifecycleCommit {
+    pub receipt: LifecycleReceipt,
+    pub snapshot: WorldSnapshot,
+    pub character: Option<CharacterSnapshot>,
+    pub duplicate: bool,
+}
+
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub struct WorldControlCommit {
+    pub snapshot: WorldSnapshot,
+    pub events: Vec<CommittedActorEvent>,
+}
+
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub enum SessionLoss {
+    AuthenticationRevoked,
+    TransportLost,
+}
+
+#[derive(Clone, Debug, Default, PartialEq, Eq)]
+pub struct VerifiedConnections {
+    pub connected: std::collections::BTreeSet<ActorId>,
+    pub lost: BTreeMap<ActorId, SessionLoss>,
 }

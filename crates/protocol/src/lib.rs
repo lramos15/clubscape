@@ -4,7 +4,9 @@ mod generated {
 
 mod game_input;
 
-pub use game_input::{game_intent, validate_character_options, validate_world_session};
+pub use game_input::{
+    ReadOnlyQuote, game_intent, quote_request, validate_character_options, validate_world_session,
+};
 pub use generated::clubscape::account::v1::*;
 pub use generated::clubscape::game::v1 as game;
 
@@ -81,6 +83,9 @@ pub fn validate_client_message(message: &ClientMessage) -> Result<(), Validation
         }
         Some(client_message::Command::PollWorld(poll)) => {
             validate_world_session(&poll.world_session_id)?;
+            if let Some(quote) = &poll.quote {
+                quote_request(quote)?;
+            }
         }
         Some(client_message::Command::WorldInput(input)) => {
             game_intent(input)?;

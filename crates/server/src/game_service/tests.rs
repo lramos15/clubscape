@@ -1,3 +1,5 @@
+#[path = "../../../world-engine/tests/support/mod.rs"]
+mod engine_fixtures;
 #[path = "../../../content/tests/common/mod.rs"]
 mod fixtures;
 
@@ -73,7 +75,8 @@ impl Database {
         assert_eq!(name, "clubscape_m1_test");
         assert_eq!(schema, "public");
         sqlx::raw_sql(
-            "DROP TABLE IF EXISTS public.processed_game_commands;
+            "DROP TABLE IF EXISTS public.game_lifecycle_commands;
+             DROP TABLE IF EXISTS public.processed_game_commands;
              DROP TABLE IF EXISTS public.game_sessions;
              DROP TABLE IF EXISTS public.game_characters;
              DROP TABLE IF EXISTS public.game_worlds;
@@ -124,6 +127,41 @@ impl Pack {
         let mut definition = fixtures::fixture();
         definition.revision = "live-world-synthetic-v1".into();
         definition.initial_state.tile = fixtures::tile(1002, 1003);
+        definition.mechanics.world_members = Some(false);
+        definition.mechanics.appearance = Some(AppearanceDefinition {
+            choices: BTreeMap::from([("body_type".into(), BTreeSet::from([0, 1]))]),
+            confirmation_guard: Guard::Always,
+            source: fixtures::sources(),
+        });
+        let experience = ExperienceId::new("experience.test.new").unwrap();
+        definition.mechanics.experiences.insert(
+            experience.clone(),
+            ExperienceDefinition {
+                id: experience,
+                name: "Synthetic new-player branch".into(),
+                selection_guard: Guard::Always,
+                source: fixtures::sources(),
+            },
+        );
+        let shop_interface = InterfaceId::new("interface.test.shop").unwrap();
+        definition.interfaces.insert(
+            shop_interface.clone(),
+            InterfaceDefinition {
+                id: shop_interface.clone(),
+                name: "Synthetic shop".into(),
+                access: InterfaceAccess::Contextual,
+                source_ids: vec![9000],
+                source: fixtures::sources(),
+            },
+        );
+        for id in [
+            InterfaceId::new("interface.test.bank").unwrap(),
+            shop_interface.clone(),
+        ] {
+            if !definition.initial_state.interfaces.contains(&id) {
+                definition.initial_state.interfaces.push(id);
+            }
+        }
         for stage in definition.tutorial.values_mut() {
             stage.allowed_actions = vec!["*".into()];
         }
@@ -131,6 +169,21 @@ impl Pack {
             .spawns
             .get_mut(&fixtures::id("spawn.test.guide"))
             .unwrap();
+        for interaction in &mut guide.interactions {
+            interaction.reach = 4;
+            interaction.action = match &interaction.action {
+                InteractionAction::Bank => InteractionAction::OpenBank {
+                    interface: InterfaceId::new("interface.test.bank").unwrap(),
+                    before_open: Vec::new(),
+                },
+                InteractionAction::Shop { shop } => InteractionAction::OpenShop {
+                    shop: shop.clone(),
+                    interface: shop_interface.clone(),
+                    before_open: Vec::new(),
+                },
+                other => other.clone(),
+            };
+        }
         guide.interactions.push(InteractionDefinition {
             name: "Practice".into(),
             reach: 4,
@@ -194,6 +247,191 @@ impl Pack {
             }));
             assets.insert(id.to_string(), url);
         }
+        self.write_manifest(entries, assets, &artifact);
+    }
+
+    fn combat() -> Self {
+        use engine_fixtures::v2 as v;
+        let mut definition = v::content();
+        v::with_combat(&mut definition);
+        v::with_death(&mut definition);
+        v::armed(&mut definition, false);
+        definition.mechanics.player_combat = Some(PlayerCombatPolicy {
+            unarmed: v::bound(WeaponDefinition {
+                styles: vec![v::style("accurate")],
+                default_style: v::style("accurate"),
+                ammunition: None,
+            }),
+            engagement: v::bound(PlayerEngagementPolicy {
+                combat_state_ticks: 3,
+                logout_lock_ticks: 3,
+                travel_lock_ticks: 3,
+            }),
+            source: engine_fixtures::source(),
+        });
+        let npc = definition
+            .npcs
+            .get_mut(&v::npc())
+            .unwrap()
+            .combat
+            .as_mut()
+            .unwrap();
+        npc.hitpoints = 200;
+        npc.mechanics.as_mut().unwrap().retaliation = true;
+        // Source-owned synthetic topics/exit stay executable without an unreachable legacy node.
+        definition
+            .dialogues
+            .get_mut(&engine_fixtures::dialogue())
+            .unwrap()
+            .nodes
+            .truncate(1);
+        let base = fixtures::fixture();
+        definition.items.extend(base.items);
+        definition.skills.extend(base.skills);
+        definition.regions.extend(base.regions);
+        definition.spawns.extend(base.spawns);
+        definition.objects.extend(base.objects);
+        definition.npcs.extend(base.npcs);
+        definition.recipes.extend(base.recipes);
+        definition.dialogues.extend(base.dialogues);
+        definition.quests.extend(base.quests);
+        definition.shops.extend(base.shops);
+        definition.interfaces.extend(base.interfaces);
+        definition.equipment_slots.extend(base.equipment_slots);
+        definition.equipment_slots.sort();
+        definition.equipment_slots.dedup();
+        definition
+            .initial_state
+            .flags
+            .extend(base.initial_state.flags);
+        for id in definition.skills.keys() {
+            definition
+                .initial_state
+                .skills
+                .entry(id.clone())
+                .or_insert(SkillState {
+                    xp_tenths: 0,
+                    current_level: 1,
+                });
+        }
+        for (id, quest) in &definition.quests {
+            definition.initial_state.quests.insert(
+                id.clone(),
+                QuestState {
+                    stage: quest.initial_stage.clone(),
+                    flags: BTreeMap::new(),
+                },
+            );
+        }
+        definition
+            .tutorial
+            .retain(|id, _| id == &definition.initial_state.tutorial_stage);
+        let stage = definition.tutorial.values_mut().next().unwrap();
+        stage.transitions.clear();
+        stage.nonfatal_combat = false;
+        stage.allowed_actions = vec!["*".into()];
+        let finish_id = StageId::new("stage.synthetic.integrated_finish").unwrap();
+        let mut finish = stage.clone();
+        finish.id = finish_id.clone();
+        stage.transitions.push(ProgressTransition {
+            event: "interacted".into(),
+            target: Some(engine_fixtures::spawn("rock").to_string()),
+            guard: Guard::Always,
+            effects: vec![Effect::SetTutorialStage {
+                stage: finish_id.clone(),
+            }],
+        });
+        definition.tutorial.insert(finish_id, finish);
+        let grave = InterfaceId::new("interface.synthetic.grave").unwrap();
+        let office = InterfaceId::new("interface.synthetic.office").unwrap();
+        for id in [&grave, &office] {
+            definition.interfaces.insert(
+                id.clone(),
+                InterfaceDefinition {
+                    id: id.clone(),
+                    name: "Synthetic owned recovery".into(),
+                    access: InterfaceAccess::Contextual,
+                    source_ids: Vec::new(),
+                    source: engine_fixtures::source(),
+                },
+            );
+            definition.initial_state.interfaces.push(id.clone());
+        }
+        definition.mechanics.death.as_mut().unwrap().interfaces =
+            Some(RecoveryInterfaces { grave, office });
+        definition
+            .mechanics
+            .death
+            .as_mut()
+            .unwrap()
+            .retained_unskulled = 0;
+        if let SourceBinding::Bound {
+            value: RecoveryFee::Bands { bands, .. },
+            ..
+        } = &mut definition.mechanics.death.as_mut().unwrap().grave_fee
+        {
+            bands.insert(
+                0,
+                FeeBand {
+                    minimum_value: 0,
+                    fee: 0,
+                },
+            );
+        }
+        for provider in definition.mechanics.value_providers.values_mut() {
+            provider.values = v::bound(definition.items.keys().map(|id| (id.clone(), 1)).collect());
+        }
+        for (index, item) in definition.items.values_mut().enumerate() {
+            item.source_id = Some(index as u32 + 1);
+            if let Some(equipment) = &mut item.equipment
+                && equipment.occupied_slots.is_empty()
+            {
+                equipment.occupied_slots.push(equipment.slot.clone());
+            }
+        }
+        for (index, item) in definition.objects.values_mut().enumerate() {
+            item.source_id = index as u32 + 1;
+        }
+        for (index, item) in definition.npcs.values_mut().enumerate() {
+            item.source_id = index as u32 + 1;
+        }
+        for (index, skill) in definition.skills.values_mut().enumerate() {
+            skill.source_id = index as u16;
+            while skill.xp_thresholds_tenths.len() < 99 {
+                skill
+                    .xp_thresholds_tenths
+                    .push(skill.xp_thresholds_tenths.last().unwrap() + 1000);
+            }
+            skill.maximum_xp_tenths = skill
+                .maximum_xp_tenths
+                .max(skill.xp_thresholds_tenths.last().unwrap() + 1000);
+        }
+        for (index, interface) in definition.interfaces.values_mut().enumerate() {
+            interface.source_ids = vec![index as u32 + 1];
+        }
+        definition.revision = "live-combat-recovery-synthetic-v3".into();
+        let mut serialized = serde_json::to_value(&definition).unwrap();
+        normalize_fixture_sources(&mut serialized);
+        let definition = serde_json::from_value(serialized).unwrap();
+        let root = PathBuf::from(env!("CARGO_MANIFEST_DIR"))
+            .join("../../.local/live-server-tests")
+            .join(Uuid::new_v4().to_string());
+        fs::create_dir_all(&root).unwrap();
+        let pack = Self {
+            root,
+            world_id: Uuid::new_v4(),
+            definition,
+        };
+        pack.write();
+        pack
+    }
+
+    fn write_manifest(
+        &self,
+        mut entries: Vec<serde_json::Value>,
+        assets: BTreeMap<String, String>,
+        artifact: &[u8],
+    ) {
         let manifest = serde_json::to_vec(&serde_json::json!({
             "schema_version":1, "content_revision":self.definition.revision,
             "synthetic_fixture":true, "milestone_accepted":false,
@@ -211,7 +449,7 @@ impl Pack {
         .unwrap();
         fs::write(self.root.join("clubscape-game.json"), serde_json::to_vec(&serde_json::json!({
             "schema_version":1, "world_id":self.world_id, "artifact":"world.csc",
-            "sha256":sha256(&artifact), "content_manifest_path":"/content/manifest.json", "assets":assets,
+            "sha256":sha256(artifact), "content_manifest_path":"/content/manifest.json", "assets":assets,
         })).unwrap()).unwrap();
     }
 
@@ -232,6 +470,31 @@ impl Drop for Pack {
     }
 }
 
+fn normalize_fixture_sources(value: &mut serde_json::Value) {
+    match value {
+        serde_json::Value::Object(fields) => {
+            if fields.contains_key("reference")
+                && fields.contains_key("revision")
+                && fields.get("status").and_then(serde_json::Value::as_str) == Some("test_fixture")
+            {
+                fields.insert(
+                    "reference".into(),
+                    serde_json::Value::String("fixture:clubscape-server/combat-recovery".into()),
+                );
+            }
+            for child in fields.values_mut() {
+                normalize_fixture_sources(child);
+            }
+        }
+        serde_json::Value::Array(values) => {
+            for child in values {
+                normalize_fixture_sources(child);
+            }
+        }
+        _ => {}
+    }
+}
+
 #[test]
 fn compiler_fixture_loads_through_the_explicit_test_only_adapter() {
     let pack = Pack::new();
@@ -248,6 +511,122 @@ fn compiler_fixture_loads_through_the_explicit_test_only_adapter() {
     let subscriber = tracing_subscriber::fmt().with_test_writer().finish();
     let _guard = tracing::subscriber::set_default(subscriber);
     assert!(content::load(&config).unwrap().is_some());
+}
+
+#[test]
+fn source_readiness_proves_inactive_paths_without_rewriting_them() {
+    let pack = Pack::new();
+    let mut definition = pack.definition.clone();
+    let alternative = ItemId::new("item.test.inactive_alternative").unwrap();
+    let mut item = definition.items[&fixtures::id("item.test.coins")].clone();
+    item.id = alternative.clone();
+    item.source_id = Some(99991);
+    item.stackable = Stackability::Conditional {
+        source_mode: 2,
+        rule: SourceBinding::Unresolved {
+            reason: "Synthetic alternative-only instance rule.".into(),
+            source: fixtures::sources(),
+        },
+    };
+    definition.items.insert(alternative.clone(), item);
+    let InteractionAction::Gather { rule } = &mut definition
+        .spawns
+        .get_mut(&fixtures::id("spawn.test.rock"))
+        .unwrap()
+        .interactions[0]
+        .action
+    else {
+        panic!()
+    };
+    rule.attempt_ticks = None;
+    rule.respawn_ticks = None;
+    let bound = |value| SourceBinding::Bound {
+        value,
+        source: fixtures::sources(),
+    };
+    rule.mechanics = Some(GatherMechanics {
+        method: ActionId::new("action.test.mining").unwrap(),
+        levels: LevelDomain {
+            minimum: 1,
+            maximum: 3,
+            basis: SkillLevelBasis::Current,
+        },
+        cadence: ActionCadence {
+            single: bound(2),
+            first: bound(2),
+            repeat: bound(2),
+            menu_delay: bound(0),
+        },
+        tool_cadences: Vec::new(),
+        alternatives: Vec::new(),
+        relocation: None,
+        respawn: SourceBinding::Unresolved {
+            reason: "No depletion implies no respawn draw.".into(),
+            source: fixtures::sources(),
+        },
+    });
+    let compiled = compile_content(definition.clone(), ValidationMode::TestFixture).unwrap();
+    let profile = readiness::Profile {
+        id: "ordinary_normal_f2p".into(),
+        excluded_items: BTreeSet::from([alternative]),
+    };
+    assert!(readiness::Readiness::check(&compiled, None).is_err());
+    let ready = readiness::Readiness::check(&compiled, Some(&profile)).unwrap();
+    assert_eq!(ready.inactive.len(), 2);
+    assert_eq!(
+        compiled.report().unresolved_bindings.len(),
+        2,
+        "proofs do not manufacture missing values"
+    );
+    let invalid = readiness::Profile {
+        id: profile.id.clone(),
+        excluded_items: BTreeSet::from([fixtures::id("item.test.coins")]),
+    };
+    assert!(readiness::Readiness::check(&compiled, Some(&invalid)).is_err());
+    let InteractionAction::Gather { rule } = &mut definition
+        .spawns
+        .get_mut(&fixtures::id("spawn.test.rock"))
+        .unwrap()
+        .interactions[0]
+        .action
+    else {
+        panic!()
+    };
+    rule.depletion = ChanceRule::constant(1, 1);
+    let now_required = compile_content(definition, ValidationMode::TestFixture).unwrap();
+    assert!(readiness::Readiness::check(&now_required, Some(&profile)).is_err());
+}
+
+#[test]
+fn source_combat_recovery_fixture_is_compiler_validated() {
+    let pack = Pack::combat();
+    let engine = WorldEngine::new(Arc::new(pack.definition.clone())).unwrap();
+    engine
+        .character_from_initial(
+            ActorId::new("actor.test.source").unwrap(),
+            "source",
+            BTreeMap::new(),
+        )
+        .unwrap();
+    let mut definition = pack.definition.clone();
+    definition.mechanics.death.as_mut().unwrap().office_overflow = SourceBinding::Unresolved {
+        reason: "Synthetic ordinary-key bound makes overflow inactive.".into(),
+        source: fixtures::sources(),
+    };
+    let profile = readiness::Profile {
+        id: "ordinary_normal_f2p".into(),
+        excluded_items: BTreeSet::new(),
+    };
+    let compiled = compile_content(definition.clone(), ValidationMode::TestFixture).unwrap();
+    let ready = readiness::Readiness::check(&compiled, Some(&profile)).unwrap();
+    assert!(
+        ready
+            .inactive
+            .contains_key("mechanics.death.office_overflow")
+    );
+    definition.mechanics.death.as_mut().unwrap().office_capacity = 1;
+    let required = compile_content(definition, ValidationMode::TestFixture).unwrap();
+    assert!(readiness::Readiness::check(&required, Some(&profile)).is_err());
 }
 
 struct Live {
@@ -318,6 +697,7 @@ struct Response {
 }
 
 impl Response {
+    #[track_caller]
     fn error(self, expected: StatusCode) -> clubscape_protocol::Error {
         assert_eq!(self.status, expected, "{:?}", self.message.result);
         let Some(server_message::Result::Error(error)) = self.message.result else {
@@ -347,6 +727,8 @@ impl Response {
 struct Account {
     token: String,
     account_id: Uuid,
+    name: String,
+    password: String,
 }
 
 impl Endpoint {
@@ -404,7 +786,7 @@ impl Endpoint {
             .call(
                 client_message::Command::Login(Login {
                     login_name: name.into(),
-                    password,
+                    password: password.clone(),
                 }),
                 None,
                 Uuid::new_v4(),
@@ -417,6 +799,31 @@ impl Endpoint {
         Account {
             token: login.session_token,
             account_id: Uuid::parse_str(&login.account.unwrap().account_id).unwrap(),
+            name: name.into(),
+            password,
+        }
+    }
+
+    async fn relogin(&self, account: &Account) -> Account {
+        let response = self
+            .call(
+                client_message::Command::Login(Login {
+                    login_name: account.name.clone(),
+                    password: account.password.clone(),
+                }),
+                None,
+                Uuid::new_v4(),
+            )
+            .await;
+        assert_eq!(response.status, StatusCode::OK);
+        let Some(server_message::Result::LoggedIn(login)) = response.message.result else {
+            panic!()
+        };
+        Account {
+            token: login.session_token,
+            account_id: account.account_id,
+            name: account.name.clone(),
+            password: account.password.clone(),
         }
     }
 
@@ -466,6 +873,7 @@ impl Endpoint {
             client_message::Command::PollWorld(game::PollWorld {
                 world_session_id: joined.world_session_id.clone(),
                 after_revision: revision,
+                quote: None,
             }),
             Some(&account.token),
             Uuid::new_v4(),
@@ -707,6 +1115,45 @@ async fn live_http_clones_source_characters_and_routes_only_committed_own_effect
     let bob = endpoint.account("live_bob").await;
     endpoint.create(&bob).await;
     let b = endpoint.join(&bob).await;
+    let (join_operation, join_result): (Uuid, String) = sqlx::query_as(
+        "SELECT operation_id, committed_result::text FROM game_lifecycle_commands
+         WHERE account_id = $1 AND committed_result->'action'->>'kind' = 'join'
+         ORDER BY committed_at DESC LIMIT 1",
+    )
+    .bind(alice.account_id)
+    .fetch_one(&database.pool)
+    .await
+    .unwrap();
+    sqlx::query(
+        "UPDATE game_lifecycle_commands SET committed_result =
+             jsonb_set(committed_result, '{session,actor_id}', to_jsonb($3::text))
+         WHERE account_id = $1 AND operation_id = $2",
+    )
+    .bind(alice.account_id)
+    .bind(join_operation)
+    .bind(
+        &b.snapshot
+            .as_ref()
+            .unwrap()
+            .player
+            .as_ref()
+            .unwrap()
+            .actor_id,
+    )
+    .execute(&database.pool)
+    .await
+    .unwrap();
+    endpoint
+        .call(
+            client_message::Command::JoinWorld(game::JoinWorld {}),
+            Some(&alice.token),
+            join_operation,
+        )
+        .await
+        .error(StatusCode::INTERNAL_SERVER_ERROR);
+    sqlx::query(
+        "UPDATE game_lifecycle_commands SET committed_result = $3::jsonb WHERE account_id = $1 AND operation_id = $2",
+    ).bind(alice.account_id).bind(join_operation).bind(join_result).execute(&database.pool).await.unwrap();
     let operation = Uuid::new_v4();
     let action = endpoint
         .input(&alice, &a, 1, operation, practice())
@@ -973,12 +1420,12 @@ async fn fixed_cadence_runs_real_engine_work_once_for_concurrent_players() {
 
 #[tokio::test(flavor = "multi_thread", worker_threads = 4)]
 #[ignore = "requires isolated PostgreSQL; run just test-integration"]
-async fn reconnect_restart_and_missing_presence_or_context_helpers_are_explicit() {
+async fn lifecycle_logout_reconnect_revocation_and_idle_clocks_are_source_owned() {
     let database = Database::reset().await;
     let pack = Pack::new();
     let service = Live::start(pack.config(&database)).await;
     let account = service.endpoint.account("restart_live").await;
-    let actor = service.endpoint.create(&account).await;
+    let actor = ActorId::new(service.endpoint.create(&account).await).unwrap();
     let joined = service.endpoint.join(&account).await;
     let operation = Uuid::new_v4();
     service
@@ -986,51 +1433,111 @@ async fn reconnect_restart_and_missing_presence_or_context_helpers_are_explicit(
         .input(&account, &joined, 1, operation, practice())
         .await
         .action();
-    for action in [
-        game::world_input::Action::RequestLogout(game::Empty {}),
-        game::world_input::Action::Interact(game::Interact {
-            target: "spawn.test.guide".into(),
-            action: "Bank".into(),
-        }),
-        game::world_input::Action::Interact(game::Interact {
-            target: "spawn.test.guide".into(),
-            action: "Shop".into(),
-        }),
-        game::world_input::Action::Interact(game::Interact {
-            target: "spawn.test.guide".into(),
-            action: "Talk".into(),
-        }),
-        game::world_input::Action::ConfirmAppearance(game::ConfirmAppearance::default()),
-        game::world_input::Action::SelectExperience(game::SelectExperience {
-            experience: "experience.test.new".into(),
-        }),
-    ] {
+    let last_active = database.world(pack.world_id).await.state.characters[&actor]
+        .runtime
+        .last_active_tick;
+    sleep(Duration::from_millis(1250)).await;
+    service.endpoint.poll(&account, &joined, 0).await.snapshot();
+    service.endpoint.join(&account).await;
+    assert_eq!(
+        database.world(pack.world_id).await.state.characters[&actor]
+            .runtime
+            .last_active_tick,
+        last_active,
+        "polls and repeated reconciliation/rejoin cannot claim user activity"
+    );
+    let leave_id = Uuid::new_v4();
+    for _ in 0..2 {
+        let response = service
+            .endpoint
+            .call(
+                client_message::Command::LeaveWorld(game::LeaveWorld {
+                    world_session_id: joined.world_session_id.clone(),
+                }),
+                Some(&account.token),
+                leave_id,
+            )
+            .await;
+        assert_eq!(response.status, StatusCode::OK);
+        assert!(matches!(
+            response.message.result,
+            Some(server_message::Result::WorldLeft(_))
+        ));
+    }
+    assert!(matches!(
+        database.world(pack.world_id).await.state.characters[&actor]
+            .runtime
+            .presence,
+        PresenceState::Offline { .. }
+    ));
+    let joined = service.endpoint.join(&account).await;
+    assert_eq!(joined.next_sequence, 2);
+    let confirmation = service
+        .endpoint
+        .input(
+            &account,
+            &joined,
+            2,
+            Uuid::new_v4(),
+            game::world_input::Action::ConfirmAppearance(game::ConfirmAppearance {
+                appearance: std::collections::HashMap::from([("body_type".into(), 1)]),
+            }),
+        )
+        .await
+        .action();
+    assert!(
+        confirmation
+            .snapshot
+            .unwrap()
+            .player
+            .unwrap()
+            .appearance_confirmed
+    );
+    let selection = service
+        .endpoint
+        .input(
+            &account,
+            &joined,
+            3,
+            Uuid::new_v4(),
+            game::world_input::Action::SelectExperience(game::SelectExperience {
+                experience: "experience.test.new".into(),
+            }),
+        )
+        .await
+        .action();
+    assert_eq!(
+        selection
+            .snapshot
+            .unwrap()
+            .player
+            .unwrap()
+            .experience
+            .as_deref(),
+        Some("experience.test.new")
+    );
+    assert_eq!(
         service
             .endpoint
-            .input(&account, &joined, 2, Uuid::new_v4(), action)
+            .call(
+                client_message::Command::Logout(Logout {}),
+                Some(&account.token),
+                Uuid::new_v4()
+            )
             .await
-            .error(StatusCode::SERVICE_UNAVAILABLE);
-    }
+            .status,
+        StatusCode::OK
+    );
     service
         .endpoint
         .call(
-            client_message::Command::LeaveWorld(game::LeaveWorld {
-                world_session_id: joined.world_session_id.clone(),
-            }),
+            client_message::Command::CurrentAccount(CurrentAccount {}),
             Some(&account.token),
             Uuid::new_v4(),
         )
         .await
-        .error(StatusCode::SERVICE_UNAVAILABLE);
-    service
-        .endpoint
-        .call(
-            client_message::Command::Logout(Logout {}),
-            Some(&account.token),
-            Uuid::new_v4(),
-        )
-        .await
-        .error(StatusCode::SERVICE_UNAVAILABLE);
+        .error(StatusCode::UNAUTHORIZED);
+    let account = service.endpoint.relogin(&account).await;
     let private_key: Vec<u8> =
         sqlx::query_scalar("SELECT runtime_random_key FROM game_worlds WHERE world_id = $1")
             .bind(pack.world_id)
@@ -1057,13 +1564,17 @@ async fn reconnect_restart_and_missing_presence_or_context_helpers_are_explicit(
     );
     account_only.stop().await.unwrap();
     let restarted = Live::start(pack.config(&database)).await;
+    let restored = database.world(pack.world_id).await;
     assert_eq!(
-        database.world(pack.world_id).await,
-        stored,
-        "restart must not tick disconnected stored actors"
+        restored.state.characters[&actor].inventory,
+        stored.state.characters[&actor].inventory
     );
+    assert!(matches!(
+        restored.state.characters[&actor].runtime.presence,
+        PresenceState::Offline { .. }
+    ));
     let rejoined = restarted.endpoint.join(&account).await;
-    assert_eq!(rejoined.next_sequence, 2);
+    assert_eq!(rejoined.next_sequence, 4);
     assert!(
         rejoined.snapshot.as_ref().unwrap().events.is_empty(),
         "reconnect cannot replay obsolete notifications/audio"
@@ -1093,7 +1604,7 @@ async fn reconnect_restart_and_missing_presence_or_context_helpers_are_explicit(
     assert_eq!(restored_key, private_key);
     restarted
         .endpoint
-        .input(&account, &rejoined, 2, Uuid::new_v4(), mine())
+        .input(&account, &rejoined, 4, Uuid::new_v4(), mine())
         .await
         .action();
     let digest = crate::crypto::token_digest(&account.token).unwrap();
@@ -1101,13 +1612,21 @@ async fn reconnect_restart_and_missing_presence_or_context_helpers_are_explicit(
     let after_revocation = database.world(pack.world_id).await;
     sleep(Duration::from_millis(800)).await;
     let after_wait = database.world(pack.world_id).await;
+    assert!(
+        after_wait.state.tick > after_revocation.state.tick,
+        "one lost auth session must not freeze the world"
+    );
     assert_eq!(
-        after_wait.state, after_revocation.state,
-        "unbound presence cannot permit offline gathering or clear activity"
+        after_wait.state.characters[&actor].skills,
+        after_revocation.state.characters[&actor].skills
     );
     assert!(matches!(
-        after_wait.state.characters[&ActorId::new(actor).unwrap()].activity,
-        Activity::Gathering { .. }
+        after_wait.state.characters[&actor].activity,
+        Activity::Idle
+    ));
+    assert!(matches!(
+        after_wait.state.characters[&actor].runtime.presence,
+        PresenceState::Offline { .. }
     ));
     let health = restarted
         .endpoint
@@ -1116,7 +1635,7 @@ async fn reconnect_restart_and_missing_presence_or_context_helpers_are_explicit(
         .send()
         .await
         .unwrap();
-    assert_eq!(health.status(), StatusCode::SERVICE_UNAVAILABLE);
+    assert_eq!(health.status(), StatusCode::OK);
     let hello = restarted
         .endpoint
         .call(
@@ -1128,12 +1647,582 @@ async fn reconnect_restart_and_missing_presence_or_context_helpers_are_explicit(
     let Some(server_message::Result::Hello(hello)) = hello.message.result else {
         panic!()
     };
-    assert!(!hello.gameplay_available);
-    assert!(hello.gameplay_unavailable_reason.contains("presence"));
-    assert_eq!(
-        restarted.stop().await.unwrap_err().kind(),
-        "game_loop_failure"
+    assert!(hello.gameplay_available);
+    restarted.stop().await.unwrap();
+    database.pool.close().await;
+}
+
+#[tokio::test(flavor = "multi_thread", worker_threads = 4)]
+#[ignore = "requires isolated PostgreSQL; run just test-integration"]
+async fn guarded_bank_shop_dialogue_and_quotes_are_real_immutable_public_views() {
+    let database = Database::reset().await;
+    let pack = Pack::new();
+    let service = Live::start(pack.config(&database)).await;
+    let account = service.endpoint.account("source_views").await;
+    let actor = service.endpoint.create(&account).await;
+    let joined = service.endpoint.join(&account).await;
+    let other = service.endpoint.account("private_views").await;
+    service.endpoint.create(&other).await;
+    let other_joined = service.endpoint.join(&other).await;
+    let bank = service
+        .endpoint
+        .input(
+            &account,
+            &joined,
+            1,
+            Uuid::new_v4(),
+            game::world_input::Action::Interact(game::Interact {
+                target: "spawn.test.guide".into(),
+                action: "Bank".into(),
+            }),
+        )
+        .await
+        .action()
+        .snapshot
+        .unwrap();
+    assert!(bank.player.as_ref().unwrap().bank_open);
+    assert!(
+        bank.bank_context
+            .as_ref()
+            .unwrap()
+            .deposit
+            .as_ref()
+            .unwrap()
+            .allowed
     );
+    let revision = bank.character_revision;
+    let quote = service
+        .endpoint
+        .call(
+            client_message::Command::PollWorld(game::PollWorld {
+                world_session_id: joined.world_session_id.clone(),
+                after_revision: bank.revision,
+                quote: Some(game::QuoteRequest {
+                    request: Some(game::quote_request::Request::BankDeposit(
+                        game::InventoryAmount {
+                            inventory_slot: 2,
+                            quantity: 2,
+                        },
+                    )),
+                }),
+            }),
+            Some(&account.token),
+            Uuid::new_v4(),
+        )
+        .await
+        .snapshot();
+    assert_eq!(
+        quote.character_revision, revision,
+        "a quote cannot mutate state or progression"
+    );
+    let Some(game::quote::Result::Bank(quote)) = quote.quote.unwrap().result else {
+        panic!()
+    };
+    assert_eq!(quote.transferred.as_ref().unwrap().quantity, 2);
+    let transferred = service
+        .endpoint
+        .input(
+            &account,
+            &joined,
+            2,
+            Uuid::new_v4(),
+            game::world_input::Action::BankDeposit(game::BankDeposit {
+                banker: "spawn.test.guide".into(),
+                inventory_slot: 2,
+                quantity: 2,
+            }),
+        )
+        .await
+        .action()
+        .snapshot
+        .unwrap();
+    assert!(
+        transferred
+            .player
+            .as_ref()
+            .unwrap()
+            .bank
+            .iter()
+            .any(|slot| slot.stack == quote.transferred)
+    );
+    let private = service
+        .endpoint
+        .poll(&other, &other_joined, 0)
+        .await
+        .snapshot();
+    assert!(private.player.as_ref().unwrap().bank.is_empty());
+    assert!(private.bank_context.is_none() && private.recovery.is_none());
+    assert!(!private.events.iter().any(|event| event.actor_id == actor));
+    service
+        .endpoint
+        .call(
+            client_message::Command::PollWorld(game::PollWorld {
+                world_session_id: other_joined.world_session_id.clone(),
+                after_revision: private.revision,
+                quote: Some(game::QuoteRequest {
+                    request: Some(game::quote_request::Request::BankWithdraw(
+                        game::BankWithdrawal {
+                            bank_slot: 0,
+                            quantity: 1,
+                            noted: false,
+                        },
+                    )),
+                }),
+            }),
+            Some(&other.token),
+            Uuid::new_v4(),
+        )
+        .await
+        .error(StatusCode::CONFLICT);
+    let shop = service
+        .endpoint
+        .input(
+            &account,
+            &joined,
+            3,
+            Uuid::new_v4(),
+            game::world_input::Action::Interact(game::Interact {
+                target: "spawn.test.guide".into(),
+                action: "Shop".into(),
+            }),
+        )
+        .await
+        .action()
+        .snapshot
+        .unwrap();
+    assert!(!shop.player.as_ref().unwrap().bank_open);
+    assert!(shop.player.as_ref().unwrap().bank.is_empty());
+    let id = shop.shop.as_ref().unwrap().shop.clone();
+    let quoted = service
+        .endpoint
+        .call(
+            client_message::Command::PollWorld(game::PollWorld {
+                world_session_id: joined.world_session_id.clone(),
+                after_revision: shop.revision,
+                quote: Some(game::QuoteRequest {
+                    request: Some(game::quote_request::Request::ShopBuy(game::ShopBuy {
+                        shop: id.clone(),
+                        item_index: 0,
+                        quantity: 1,
+                    })),
+                }),
+            }),
+            Some(&account.token),
+            Uuid::new_v4(),
+        )
+        .await
+        .snapshot();
+    assert_eq!(quoted.character_revision, shop.character_revision);
+    let Some(game::quote::Result::Shop(plan)) = quoted.quote.unwrap().result else {
+        panic!()
+    };
+    let purchased = service
+        .endpoint
+        .input(
+            &account,
+            &joined,
+            4,
+            Uuid::new_v4(),
+            game::world_input::Action::ShopBuy(game::ShopBuy {
+                shop: id,
+                item_index: 0,
+                quantity: 1,
+            }),
+        )
+        .await
+        .action()
+        .snapshot
+        .unwrap();
+    assert_eq!(
+        purchased.shop.as_ref().unwrap().lines[0].stock,
+        plan.stock_after
+    );
+    let dialogue = service
+        .endpoint
+        .input(
+            &account,
+            &joined,
+            5,
+            Uuid::new_v4(),
+            game::world_input::Action::Interact(game::Interact {
+                target: "spawn.test.guide".into(),
+                action: "Talk".into(),
+            }),
+        )
+        .await
+        .action()
+        .snapshot
+        .unwrap();
+    assert!(dialogue.shop.is_none());
+    let shown = dialogue.dialogue.as_ref().unwrap();
+    assert_eq!(shown.speaker, "spawn.test.guide");
+    assert!(!shown.choices.is_empty());
+    service
+        .endpoint
+        .input(
+            &account,
+            &joined,
+            6,
+            Uuid::new_v4(),
+            game::world_input::Action::DialogueChoice(game::DialogueChoice {
+                speaker: shown.speaker.clone(),
+                choice: "not_a_source_choice".into(),
+            }),
+        )
+        .await
+        .error(StatusCode::BAD_REQUEST);
+    service
+        .endpoint
+        .input(
+            &account,
+            &joined,
+            6,
+            Uuid::new_v4(),
+            game::world_input::Action::CloseInterface(game::Empty {}),
+        )
+        .await
+        .action();
+    service.stop().await.unwrap();
+    database.pool.close().await;
+}
+
+#[tokio::test(flavor = "multi_thread", worker_threads = 4)]
+#[ignore = "requires isolated PostgreSQL; run just test-integration"]
+async fn source_pending_disconnect_and_owned_grave_office_views_survive_restart() {
+    use engine_fixtures::v2 as v;
+    let database = Database::reset().await;
+    let pack = Pack::combat();
+    let service = Live::start(pack.config(&database)).await;
+    let account = service.endpoint.account("vulnerable_actor").await;
+    let actor = ActorId::new(service.endpoint.create(&account).await).unwrap();
+    let joined = service.endpoint.join(&account).await;
+    let other = service.endpoint.account("recovery_observer").await;
+    service.endpoint.create(&other).await;
+    let other_joined = service.endpoint.join(&other).await;
+    let enemy = engine_fixtures::spawn("enemy");
+    service
+        .endpoint
+        .input(
+            &account,
+            &joined,
+            1,
+            Uuid::new_v4(),
+            game::world_input::Action::Interact(game::Interact {
+                target: enemy.to_string(),
+                action: "use".into(),
+            }),
+        )
+        .await
+        .action();
+    service
+        .endpoint
+        .call(
+            client_message::Command::Logout(Logout {}),
+            Some(&account.token),
+            Uuid::new_v4(),
+        )
+        .await
+        .error(StatusCode::CONFLICT);
+    service
+        .endpoint
+        .call(
+            client_message::Command::LeaveWorld(game::LeaveWorld {
+                world_session_id: joined.world_session_id.clone(),
+            }),
+            Some(&account.token),
+            Uuid::new_v4(),
+        )
+        .await
+        .error(StatusCode::CONFLICT);
+    assert_eq!(
+        service
+            .endpoint
+            .call(
+                client_message::Command::CurrentAccount(CurrentAccount {}),
+                Some(&account.token),
+                Uuid::new_v4()
+            )
+            .await
+            .status,
+        StatusCode::OK
+    );
+    crate::store::logout(
+        &database.pool,
+        &crate::crypto::token_digest(&account.token).unwrap(),
+    )
+    .await
+    .unwrap();
+    timeout(Duration::from_secs(3), async {
+        loop {
+            let world = database.world(pack.world_id).await;
+            if matches!(
+                world.state.characters[&actor].runtime.presence,
+                PresenceState::Disconnecting { .. }
+            ) {
+                break;
+            }
+            sleep(Duration::from_millis(40)).await;
+        }
+    })
+    .await
+    .unwrap();
+    let vulnerable = database.world(pack.world_id).await;
+    assert_eq!(
+        vulnerable.state.entities[&enemy]
+            .runtime
+            .retaliation_target
+            .as_ref(),
+        Some(&actor)
+    );
+    assert!(vulnerable.state.characters[&actor].hitpoints > 0);
+    let visible = service
+        .endpoint
+        .poll(&other, &other_joined, 0)
+        .await
+        .snapshot();
+    let body = visible
+        .entities
+        .iter()
+        .find(|entity| entity.id == actor.as_str())
+        .unwrap();
+    assert!(!body.presence.as_ref().unwrap().connected);
+    assert!(body.presence.as_ref().unwrap().present_in_world);
+    service.stop().await.unwrap();
+
+    // Deterministic server-only fixture advancement still uses real storage/fencing and the
+    // actual source engine. No client can supply this random source or fabricate a death row.
+    let store = GameStore::new(database.pool.clone());
+    let lease = store
+        .acquire_world_lease(pack.world_id, OWNER_LEASE)
+        .await
+        .unwrap();
+    let engine = Arc::new(WorldEngine::new(Arc::new(pack.definition.clone())).unwrap());
+    let mut world = store.load_world(pack.world_id).await.unwrap();
+    for _ in 0..128 {
+        if matches!(
+            world.state.characters[&actor].runtime.life,
+            LifeState::FirstDeathOffice { .. }
+        ) {
+            break;
+        }
+        let engine = engine.clone();
+        world = store
+            .commit_live_tick(&lease, world.state.tick, Vec::new(), move |world, _| {
+                let context = engine.tick_context(world)?;
+                engine.process_advanced_tick_with_context(world, &mut v::Hits(0), &context)
+            })
+            .await
+            .unwrap()
+            .snapshot;
+    }
+    assert!(matches!(
+        world.state.characters[&actor].runtime.life,
+        LifeState::FirstDeathOffice { .. }
+    ));
+    let death = world.state.characters[&actor]
+        .runtime
+        .active_death
+        .clone()
+        .unwrap();
+    assert_eq!(world.state.runtime.deaths[&death].owner, actor);
+    store.release_world_lease(&lease).await.unwrap();
+    let restarted = Live::start(pack.config(&database)).await;
+    let account = restarted.endpoint.relogin(&account).await;
+    let joined = restarted.endpoint.join(&account).await;
+    let other_joined = restarted.endpoint.join(&other).await;
+    assert_eq!(joined.next_sequence, 2);
+    restarted
+        .endpoint
+        .input(
+            &account,
+            &joined,
+            2,
+            Uuid::new_v4(),
+            game::world_input::Action::OpenInterface(game::OpenInterface {
+                interface: "interface.synthetic.grave".into(),
+            }),
+        )
+        .await
+        .error(StatusCode::SERVICE_UNAVAILABLE);
+    let office = restarted
+        .endpoint
+        .input(
+            &account,
+            &joined,
+            2,
+            Uuid::new_v4(),
+            game::world_input::Action::OpenDeathOffice(game::Empty {}),
+        )
+        .await
+        .action()
+        .snapshot
+        .unwrap();
+    let panel = &office.recovery.as_ref().unwrap().views[0];
+    assert_eq!(panel.storage, game::RecoveryStorage::DeathOffice as i32);
+    assert_eq!(panel.death, death.as_str());
+    assert!(!panel.entries.is_empty());
+    let selected = panel.entries[0].id.clone();
+    let quote = restarted
+        .endpoint
+        .call(
+            client_message::Command::PollWorld(game::PollWorld {
+                world_session_id: joined.world_session_id.clone(),
+                after_revision: office.revision,
+                quote: Some(game::QuoteRequest {
+                    request: Some(game::quote_request::Request::Recovery(game::Reclaim {
+                        death: death.to_string(),
+                        storage: game::RecoveryStorage::DeathOffice as i32,
+                        items: vec![selected.clone()],
+                    })),
+                }),
+            }),
+            Some(&account.token),
+            Uuid::new_v4(),
+        )
+        .await
+        .snapshot();
+    assert_eq!(quote.character_revision, office.character_revision);
+    let Some(game::quote::Result::Recovery(quoted)) = quote.quote.unwrap().result else {
+        panic!()
+    };
+    assert_eq!(quoted.full_selection_fee, 0);
+    let private = restarted
+        .endpoint
+        .poll(&other, &other_joined, 0)
+        .await
+        .snapshot();
+    assert!(private.recovery.is_none());
+    restarted
+        .endpoint
+        .call(
+            client_message::Command::PollWorld(game::PollWorld {
+                world_session_id: other_joined.world_session_id.clone(),
+                after_revision: private.revision,
+                quote: Some(game::QuoteRequest {
+                    request: Some(game::quote_request::Request::Recovery(game::Reclaim {
+                        death: death.to_string(),
+                        storage: game::RecoveryStorage::DeathOffice as i32,
+                        items: vec![selected],
+                    })),
+                }),
+            }),
+            Some(&other.token),
+            Uuid::new_v4(),
+        )
+        .await
+        .error(StatusCode::CONFLICT);
+    let speaker = engine_fixtures::spawn("cook").to_string();
+    restarted
+        .endpoint
+        .input(
+            &account,
+            &joined,
+            3,
+            Uuid::new_v4(),
+            game::world_input::Action::Interact(game::Interact {
+                target: speaker.clone(),
+                action: "use".into(),
+            }),
+        )
+        .await
+        .action();
+    for (index, choice) in ["fees", "timer", "kept"].into_iter().enumerate() {
+        restarted
+            .endpoint
+            .input(
+                &account,
+                &joined,
+                4 + index as u64,
+                Uuid::new_v4(),
+                game::world_input::Action::DialogueChoice(game::DialogueChoice {
+                    speaker: speaker.clone(),
+                    choice: choice.into(),
+                }),
+            )
+            .await
+            .action();
+    }
+    let returned = restarted
+        .endpoint
+        .input(
+            &account,
+            &joined,
+            7,
+            Uuid::new_v4(),
+            game::world_input::Action::Interact(game::Interact {
+                target: engine_fixtures::spawn("portal").to_string(),
+                action: "use".into(),
+            }),
+        )
+        .await
+        .action()
+        .snapshot
+        .unwrap();
+    assert!(returned.player.as_ref().unwrap().instance.is_none());
+    let grave = restarted
+        .endpoint
+        .input(
+            &account,
+            &joined,
+            8,
+            Uuid::new_v4(),
+            game::world_input::Action::OpenGrave(game::OpenGrave {
+                death: death.to_string(),
+            }),
+        )
+        .await
+        .action()
+        .snapshot
+        .unwrap();
+    let grave_view = &grave.recovery.as_ref().unwrap().views[0];
+    assert_eq!(grave_view.storage, game::RecoveryStorage::Grave as i32);
+    let remaining = grave_view.active_ticks_remaining;
+    let reclaim = grave_view.entries[0].id.clone();
+    sleep(Duration::from_millis(1250)).await;
+    let paused = restarted
+        .endpoint
+        .poll(&account, &joined, grave.revision)
+        .await
+        .snapshot();
+    assert_eq!(
+        paused.recovery.as_ref().unwrap().views[0].active_ticks_remaining,
+        remaining,
+        "the real owned grave context, not a client flag, pauses its source clock"
+    );
+    restarted
+        .endpoint
+        .input(
+            &other,
+            &other_joined,
+            1,
+            Uuid::new_v4(),
+            game::world_input::Action::OpenGrave(game::OpenGrave {
+                death: death.to_string(),
+            }),
+        )
+        .await
+        .error(StatusCode::CONFLICT);
+    restarted
+        .endpoint
+        .input(
+            &account,
+            &joined,
+            9,
+            Uuid::new_v4(),
+            game::world_input::Action::Reclaim(game::Reclaim {
+                death: death.to_string(),
+                storage: game::RecoveryStorage::Grave as i32,
+                items: vec![reclaim.clone()],
+            }),
+        )
+        .await
+        .action();
+    assert!(
+        database.world(pack.world_id).await.state.runtime.deaths[&death]
+            .reclaimed
+            .contains(&RecoveryItemId::new(reclaim).unwrap())
+    );
+    restarted.stop().await.unwrap();
     database.pool.close().await;
 }
 

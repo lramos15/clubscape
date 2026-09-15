@@ -1,7 +1,7 @@
 use clubscape_game_types::{
     CharacterSetting, DeathId, DynamicObjectId, ExperienceId, GameIntent, INVENTORY_SLOTS,
-    InterfaceId, ItemTarget, Quantity, RecipeId, RecoveryItemId, RecoveryStorage, ShopId, SlotId,
-    SpawnId, Tile, WorldTarget,
+    InterfaceId, ItemTarget, ProductionMode, Quantity, RecipeId, RecoveryItemId, RecoveryStorage,
+    ShopId, SlotId, SpawnId, Tile, WorldTarget,
 };
 
 use crate::{ValidationError, game, invalid};
@@ -238,12 +238,37 @@ pub fn game_intent(input: &game::WorldInput) -> Result<GameIntent, ValidationErr
                 target: action.target.as_ref().map(world_target).transpose()?,
                 quantity: quantity(action.quantity)?,
             },
+            Action::ProduceSelected(action) => {
+                let mode = match game::ProductionMode::try_from(action.mode) {
+                    Ok(game::ProductionMode::Single) if action.quantity == 1 => {
+                        ProductionMode::Single
+                    }
+                    Ok(game::ProductionMode::MakeX) => ProductionMode::MakeX,
+                    _ => {
+                        return Err(invalid(
+                            "Select Single with quantity one, or an explicit Make-X mode.",
+                        ));
+                    }
+                };
+                GameIntent::ProduceSelected {
+                    recipe: RecipeId::new(&action.recipe)
+                        .map_err(|_| invalid("Invalid recipe ID."))?,
+                    target: action.target.as_ref().map(world_target).transpose()?,
+                    quantity: quantity(action.quantity)?,
+                    mode,
+                }
+            }
+            Action::OpenGrave(action) => GameIntent::OpenGrave {
+                death: DeathId::new(&action.death).map_err(|_| invalid("Invalid death ID."))?,
+            },
+            Action::OpenDeathOffice(_) => GameIntent::OpenDeathOffice,
             Action::SetSetting(action) => {
                 let setting = match game::SettingKind::try_from(action.setting) {
                     Ok(game::SettingKind::Run) => CharacterSetting::Run(action.enabled),
                     Ok(game::SettingKind::AutoRetaliate) => {
                         CharacterSetting::AutoRetaliate(action.enabled)
                     }
+
                     Ok(game::SettingKind::DeathAutoEquip) => {
                         CharacterSetting::DeathAutoEquip(action.enabled)
                     }
@@ -304,6 +329,94 @@ pub fn game_intent(input: &game::WorldInput) -> Result<GameIntent, ValidationErr
     )
 }
 
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub enum ReadOnlyQuote {
+    BankDeposit {
+        slot: u8,
+        quantity: Quantity,
+    },
+    BankWithdraw {
+        slot: u16,
+        quantity: Quantity,
+        noted: bool,
+    },
+    ShopBuy {
+        shop: ShopId,
+        index: u16,
+        quantity: Quantity,
+    },
+    ShopSell {
+        shop: ShopId,
+        slot: u8,
+        quantity: Quantity,
+    },
+    Recovery {
+        death: DeathId,
+        storage: RecoveryStorage,
+        items: Vec<RecoveryItemId>,
+    },
+}
+
+pub fn quote_request(request: &game::QuoteRequest) -> Result<ReadOnlyQuote, ValidationError> {
+    use game::quote_request::Request;
+    Ok(
+        match request
+            .request
+            .as_ref()
+            .ok_or_else(|| invalid("A quote selection is required."))?
+        {
+            Request::BankDeposit(value) => ReadOnlyQuote::BankDeposit {
+                slot: inventory_slot(value.inventory_slot)?,
+                quantity: quantity(value.quantity)?,
+            },
+            Request::BankWithdraw(value) => ReadOnlyQuote::BankWithdraw {
+                slot: bounded_index(value.bank_slot)?,
+                quantity: quantity(value.quantity)?,
+                noted: value.noted,
+            },
+            Request::ShopBuy(value) => ReadOnlyQuote::ShopBuy {
+                shop: ShopId::new(&value.shop).map_err(|_| invalid("Invalid shop ID."))?,
+                index: bounded_index(value.item_index)?,
+                quantity: quantity(value.quantity)?,
+            },
+            Request::ShopSell(value) => ReadOnlyQuote::ShopSell {
+                shop: ShopId::new(&value.shop).map_err(|_| invalid("Invalid shop ID."))?,
+                slot: inventory_slot(value.inventory_slot)?,
+                quantity: quantity(value.quantity)?,
+            },
+            Request::Recovery(value) => {
+                if value.items.is_empty() || value.items.len() > 256 {
+                    return Err(invalid("Select 1-256 distinct recovery entries."));
+                }
+                let items = value
+                    .items
+                    .iter()
+                    .map(|id| {
+                        RecoveryItemId::new(id).map_err(|_| invalid("Invalid recovery item ID."))
+                    })
+                    .collect::<Result<Vec<_>, _>>()?;
+                if items
+                    .iter()
+                    .collect::<std::collections::BTreeSet<_>>()
+                    .len()
+                    != items.len()
+                {
+                    return Err(invalid("Recovery item identities cannot be duplicated."));
+                }
+                ReadOnlyQuote::Recovery {
+                    death: DeathId::new(&value.death).map_err(|_| invalid("Invalid death ID."))?,
+                    storage: match game::RecoveryStorage::try_from(value.storage) {
+                        Ok(game::RecoveryStorage::Grave) => RecoveryStorage::Grave,
+                        Ok(game::RecoveryStorage::DeathOffice) => RecoveryStorage::DeathOffice,
+                        _ => return Err(invalid("A supported recovery storage is required.")),
+                    },
+                    items,
+                }
+            }
+        },
+    )
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -329,6 +442,52 @@ mod tests {
         value.sequence = 1;
         value.expected_character_revision = Some(i64::MAX as u64 + 1);
         assert!(game_intent(&value).is_err());
+    }
+
+    #[test]
+    fn explicit_production_recovery_and_quotes_preserve_typed_requests() {
+        let selected = |mode, count| {
+            input(game::world_input::Action::ProduceSelected(
+                game::ProduceSelected {
+                    recipe: "recipe.fixture.one".into(),
+                    target: None,
+                    quantity: count,
+                    mode,
+                },
+            ))
+        };
+        let single = game_intent(&selected(game::ProductionMode::Single as i32, 1)).unwrap();
+        let make_one = game_intent(&selected(game::ProductionMode::MakeX as i32, 1)).unwrap();
+        assert_ne!(single, make_one);
+        assert!(game_intent(&selected(game::ProductionMode::Single as i32, 2)).is_err());
+        assert!(game_intent(&selected(0, 1)).is_err());
+        assert!(matches!(
+            game_intent(&input(game::world_input::Action::OpenGrave(
+                game::OpenGrave {
+                    death: "death.fixture.one".into(),
+                }
+            )))
+            .unwrap(),
+            GameIntent::OpenGrave { .. }
+        ));
+        assert_eq!(
+            game_intent(&input(game::world_input::Action::OpenDeathOffice(
+                game::Empty {}
+            )))
+            .unwrap(),
+            GameIntent::OpenDeathOffice
+        );
+        assert!(
+            quote_request(&game::QuoteRequest {
+                request: Some(game::quote_request::Request::BankDeposit(
+                    game::InventoryAmount {
+                        inventory_slot: 28,
+                        quantity: 1
+                    },
+                ))
+            })
+            .is_err()
+        );
     }
 
     #[test]

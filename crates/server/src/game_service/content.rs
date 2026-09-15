@@ -12,6 +12,7 @@ use clubscape_world_engine::WorldEngine;
 use serde::Deserialize;
 use uuid::Uuid;
 
+use super::readiness::{Profile, Readiness};
 use crate::{Config, StartupError, web_assets::WebAssets};
 
 #[derive(Deserialize)]
@@ -23,6 +24,8 @@ struct Manifest {
     sha256: String,
     content_manifest_path: String,
     assets: BTreeMap<AssetId, String>,
+    #[serde(default)]
+    readiness_profile: Option<Profile>,
 }
 
 pub(crate) struct LoadedContent {
@@ -32,6 +35,7 @@ pub(crate) struct LoadedContent {
     pub engine: Arc<WorldEngine>,
     pub assets: Arc<WebAssets>,
     pub public_manifest: String,
+    pub readiness: Arc<Readiness>,
 }
 
 pub(super) fn load(config: &Config) -> Result<Option<LoadedContent>, StartupError> {
@@ -74,12 +78,14 @@ pub(super) fn load(config: &Config) -> Result<Option<LoadedContent>, StartupErro
             "configured compiled artifact failed strict validation");
         failure("game_artifact_validation")
     })?;
-    if !compiled.report().unresolved_bindings.is_empty() {
-        tracing::error!(event = "game_unresolved_bindings",
-            paths = ?compiled.report().unresolved_bindings,
-            "configured runtime has unresolved source bindings");
-        return Err(failure("game_unresolved_bindings"));
-    }
+    let readiness = Readiness::check(&compiled, manifest.readiness_profile.as_ref())
+        .map_err(|_| {
+            tracing::error!(event = "game_unresolved_bindings", paths = ?compiled.report().unresolved_bindings,
+                "configured runtime has unresolved required source bindings");
+            failure("game_required_bindings")
+        })?;
+    tracing::info!(event = "game_readiness", profile = ?readiness.profile, inactive = ?readiness.inactive,
+        "required source bindings checked; inactivity proofs are not milestone acceptance");
     let assets = WebAssets::load_game(&root).map_err(|_| failure("game_assets"))?;
     if !assets.contains(&manifest.content_manifest_path)
         || compiled.referenced_assets().iter().any(|id| {
@@ -101,6 +107,7 @@ pub(super) fn load(config: &Config) -> Result<Option<LoadedContent>, StartupErro
         engine: Arc::new(engine),
         assets: Arc::new(assets),
         public_manifest: manifest.content_manifest_path,
+        readiness: Arc::new(readiness),
     }))
 }
 
