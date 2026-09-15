@@ -110,6 +110,18 @@ There is no client stage-advance command or v1-disabled group of 36 edges.
 Interacting is not interchangeable with succeeding, and a generic hit/kill or
 invalidated cast cannot award Learning the Ropes.
 
+Supply-recovery entries are normalized after the immutable source-binding
+application. An eligible primary lesson remains the sole entry; otherwise one
+guarded recovery menu offers the original eligible grant choices. Replacement
+choices require an actually missing item or an unsatisfied source top-up count
+over the declared inventory/equipment scope. Multiple missing grants cannot
+create multiple matching entries, and a present net no longer blocks the next
+Survival Expert lesson. Choice/grant identities, quantities, stage gates and
+capacity behavior remain unchanged. This is an explicit source-supported
+dialogue-routing interpretation; the original source records are not rewritten.
+`test_dialogue_entries.py` and the native `dialogue_entries` example verify the
+lesson, lost-tool, equipped-tool, full-inventory and departure boundaries.
+
 Ordered grants, line satisfaction and durable entitlements implement partial
 Vannaka supplies and missing-only/top-up recovery. The normal inventory remains
 empty at creation. **25 bank coins are granted once before first presentation**,

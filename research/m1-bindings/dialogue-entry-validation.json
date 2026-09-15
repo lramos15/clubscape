@@ -1,0 +1,46 @@
+{
+  "schema_version": 1,
+  "task": "M1-TUTORIAL-DIALOGUE-ENTRIES",
+  "result": "passed_source_native_component_conformance",
+  "content_revision": "m1.source-backed.v3.41555bd46c074d62",
+  "artifact_sha256": "bb99ad96add9669fd49c4162832fbd8e9cb151997a4e4c4682b33b1f1882e2e1",
+  "generator_change": "tools/m1-content/dialogue_entries.py runs after the immutable104+7 source binding application and is recorded in runtime3-selectors.json.",
+  "original_binding_fingerprints_unchanged": true,
+  "source_stage_graph_and_grant_quantities_unchanged": true,
+  "new_entry_rule": "Eligible primary lesson first; otherwise one recovery entry offers the original eligible grant choices. Missing-only/top-up ownership guards suppress no-op replacements.",
+  "native_command": "cargo run --quiet --offline --locked --manifest-path tools/m1-content/schema-check/Cargo.toml --example dialogue_entries -- tools/m1-content/.local/compiler/m1.csc",
+  "native_cases": [
+    {
+      "case": "survival_tools_with_owned_net_and_earned_shrimp",
+      "read_only_options": "Talk-to allowed without mutation or multiple-entry error",
+      "choice": "woodcutting_firemaking_intro",
+      "selected_effects": "Exactly one bronze axe and tinderbox, retained one net, stage cut_logs",
+      "passed": true
+    },
+    {
+      "case": "catch_shrimp_with_unlocked_missing_net",
+      "read_only_options": "Talk-to allowed without mutation",
+      "choice": "replace.net",
+      "selected_effects": "Exactly one replacement net, no axe/tinderbox, unchanged catch_shrimp stage",
+      "passed": true
+    }
+  ],
+  "source_state_regressions": {
+    "passed": 6,
+    "cases": ["owned net with next lesson", "missing earlier tool with eligible lesson", "one missing-net replacement", "multiple missing unlocked supplies", "equipped tools and full inventory refusal", "departure and locked grants"]
+  },
+  "full_source_validation": {
+    "command": "python3 tools/m1-content/validate.py --repeat",
+    "strict_runtime_compile_reload": true,
+    "source_tests": 69,
+    "numeric_oracles": 195,
+    "graph_oracles": 23,
+    "routes": 30,
+    "repeatable_outputs": 92,
+    "active_unresolved_bindings": 0,
+    "proof_scoped_inactive_bindings": 6
+  },
+  "classification": "Controlled component states and source-supported routing interpretation; not authenticated source observations or a complete legitimate player journey.",
+  "actual_journey_recheck": "pending",
+  "milestone_accepted": false
+}

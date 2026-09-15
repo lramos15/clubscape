@@ -15,6 +15,19 @@ impl RandomSource for NoDraw {
     }
 }
 
+struct LowestTickDraw;
+impl RandomSource for LowestTickDraw {
+    fn draw_below(&mut self, upper: u32) -> GameResult<u32> {
+        if upper == 0 {
+            return Err(GameError::new(
+                GameErrorCode::InvalidInput,
+                "Empty source random domain.",
+            ));
+        }
+        Ok(0)
+    }
+}
+
 fn main() -> Result<(), Box<dyn std::error::Error>> {
     let path = env::args()
         .nth(1)
@@ -49,7 +62,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
             EntitlementId::new("entitlement.tutorial.net")?,
             EntitlementState::Grant {
                 delivered: BTreeMap::from([(ItemId::new("item.fishing_net.small")?, 1)]),
-                satisfied: Default::default(),
+                satisfied: [ItemId::new("item.fishing_net.small")?].into(),
                 complete: true,
             },
         );
@@ -98,8 +111,42 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         let admitted = dialogue.choices.iter().any(|choice| choice.id == expected);
         let unchanged = world.characters[&actor].inventory == before.characters[&actor].inventory
             && world.characters[&actor].skills == before.characters[&actor].skills;
-        results.push(json!({"missing_net": missing, "expected_choice": expected, "admitted": admitted,
-            "ownership_unchanged_before_selection": unchanged, "options": options, "passed": admitted && unchanged}));
+        engine.tick(&mut world, &mut LowestTickDraw)?;
+        engine.apply_intent(
+            &mut world,
+            &actor,
+            &GameIntent::SelectDialogue {
+                speaker: speaker.clone(),
+                choice: expected.into(),
+            },
+            &mut NoDraw,
+        )?;
+        let player = &world.characters[&actor];
+        let count = |name: &str| {
+            player
+                .inventory
+                .slots
+                .iter()
+                .flatten()
+                .filter(|stack| stack.item.as_str() == name)
+                .map(|stack| stack.quantity.get())
+                .sum::<u32>()
+        };
+        let grants_correct = count("item.fishing_net.small") == 1
+            && count("item.axe.bronze") == u32::from(!missing)
+            && count("item.tinderbox") == u32::from(!missing);
+        let stage_correct = player.tutorial_stage.as_str()
+            == if missing {
+                "stage.tutorial.catch_shrimp"
+            } else {
+                "stage.tutorial.cut_logs"
+            };
+        results.push(
+            json!({"missing_net": missing, "expected_choice": expected, "admitted": admitted,
+            "ownership_unchanged_before_selection": unchanged, "options": options,
+            "actual_selected_grants_correct": grants_correct, "actual_stage_correct": stage_correct,
+            "passed": admitted && unchanged && grants_correct && stage_correct}),
+        );
     }
     let passed = results.iter().all(|row| row["passed"] == true);
     println!(
