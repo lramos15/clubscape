@@ -13,11 +13,10 @@
       {"id": "78d01af9-70a4-4b02-8339-6a61eb377374", "task": "M1-BROWSER-SHELL"},
       {"id": "81ac9884-4f39-4f27-b516-6e9a42b09b51", "task": "M1-HEADLESS-JOURNEY"},
       {"id": "aab1ae0f-0238-4254-bff3-b7c046349c6b", "task": "M1-SHOP-REVIEW-FIXES"},
-      {"id": "0f5ddddf-0aa0-4908-b0d3-1ffc6b1f7a20", "task": "M1-ACTOR-REVIEW-FIXES"}
+      {"id": "0f5ddddf-0aa0-4908-b0d3-1ffc6b1f7a20", "task": "M1-ACTOR-REVIEW-FIXES"},
+      {"id": "2a0ae699-6af8-45d5-90c7-3addfc56ee53", "task": "M1-RUNELITE-FEASIBILITY"}
     ],
-    "reserved": [
-      {"id": "runelite-feasibility-worker", "task": "M1-RUNELITE-FEASIBILITY"}
-    ],
+    "reserved": [],
     "queued": [],
     "parked": [
       {"id": "2766e089-44e5-4a1d-974e-7b03ad9c269d", "reason": "Final live server wiring integrated as 1ea2e65; no automatic resumption."},
@@ -36,7 +35,7 @@
     {
       "id": "M1-RUNELITE-FEASIBILITY",
       "goal": "Execute a bounded real RuneLite compatibility experiment independently of mandatory browser/headless M1 acceptance.",
-      "status": "READY",
+      "status": "IMPLEMENTING",
       "specs": ["prompt.md section 12", "spec/runelite-compatibility.md", "spec/game-networking.md", "docs/machines/sparky.md"],
       "dependencies": ["M1-FLEET-LIVE-SERVER"],
       "allowed_paths": ["runelite/compatibility/**", "runelite/integration-tests/**", "tools/runelite-compatibility/**", "research/runelite-feasibility/**", "spec/runelite-compatibility.md"],
@@ -54,10 +53,10 @@
     {
       "id": "M1-FACILITY-DROP-FIXES",
       "goal": "Repair demonstrated original-range face contact and fresh manual-drop owner-online lifetime semantics without altering source collision or clocks.",
-      "status": "IMPLEMENTING",
+      "status": "DONE",
       "specs": ["research/m1-bindings/contract-gaps.json", "research/m1-bindings/runtime3-policy.json", "spec/game-contracts.md"],
       "dependencies": ["M1-FLEET-ENGINE-CLOSURE"],
-      "allowed_paths": ["crates/world-engine/src/permissions.rs", "crates/world-engine/src/navigation.rs", "crates/world-engine/src/world.rs", "crates/world-engine/src/actions.rs", "crates/world-engine/src/death.rs", "crates/world-engine/src/queries.rs", "crates/world-engine/src/lib.rs (owner clock tick only)", "crates/world-engine/tests/**", "crates/game-types/src/mechanics.rs", "crates/game-types/src/execution.rs", "crates/game-types/src/runtime_state.rs", "crates/game-types/src/runtime_validation.rs", "crates/content/**", "crates/simulation/tests/**", "crates/server/tests/**", "content/m1/**", "tools/m1-content/**", "research/m1-bindings/**", "spec/game-contracts.md"],
+      "allowed_paths": ["crates/world-engine/src/permissions.rs", "crates/world-engine/src/navigation.rs", "crates/world-engine/src/world.rs", "crates/world-engine/src/actions.rs", "crates/world-engine/src/death.rs", "crates/world-engine/src/queries.rs", "crates/world-engine/src/lib.rs", "crates/world-engine/tests/**", "crates/game-types/src/mechanics.rs", "crates/game-types/src/execution.rs", "crates/game-types/src/runtime_state.rs", "crates/game-types/src/runtime_validation.rs", "crates/content/**", "crates/simulation/tests/**", "crates/server/tests/**", "content/m1/**", "tools/m1-content/**", "research/m1-bindings/**", "spec/game-contracts.md"],
       "forbidden_paths": ["prompt.md", "assets/**", "web/**", "crates/protocol/**", "crates/world-engine/src/commerce.rs", "crates/world-engine/src/entities.rs", "crates/world-engine/src/combat.rs"],
       "outputs": ["Source-solid-facility contact with preserved access sides and walls", "Explicit persisted ground clock and fresh-profile selection", "Passing canonical native probes and regression cases"],
       "validation_commands": ["cargo test -p clubscape-world-engine -p clubscape-game-types -p clubscape-content", "python3 tools/m1-content/validate.py --repeat"],
@@ -67,7 +66,7 @@
       "source_notes": ["Native failures reported by canonical content worker 44c5d1f; source bindings have zero active unresolved values."],
       "parity_entries": [],
       "adaptations": [],
-      "evidence": []
+      "evidence": ["faa8002 integrates identical tested9bff13e code/data.455 merged workspace tests,33realPG/HTTPtests+11independentaccountchecks,63source tests and all native probes pass. Full repeatedsourcepipeline has92identicaloutputhashes; rawartifacta200ca08c80f6a3fc812fe02ca95f52325e183084f83b12e8d470a1f37cc6d62. No fulljourney/presentation/performance acceptance."]
     },
     {
       "id": "M1-SHOP-REVIEW-FIXES",
@@ -75,11 +74,11 @@
       "status": "IMPLEMENTING",
       "specs": ["crates/world-engine/README.md", "spec/game-contracts.md"],
       "dependencies": ["M1-ENGINE-REVIEW"],
-      "allowed_paths": ["crates/world-engine/src/commerce.rs", "crates/world-engine/src/queries.rs (shop view/quote only)", "crates/world-engine/src/actions.rs (ShopBuy dispatch only)", "crates/world-engine/tests/shop_review.rs", "crates/world-engine/tests/** (shop constructor compatibility only)", "crates/game-types/src/intent.rs", "crates/protocol/**", "crates/client-core/tests/** (shop constructor compatibility only)", "crates/server/tests/** (shop constructor compatibility only)", "crates/server/src/game_service/view.rs (shop quote identity only)", "web/shared/contracts.ts (shop intent identity only)", "spec/game-contracts.md (shop identity section only)"],
-      "forbidden_paths": ["prompt.md", "content/**", "assets/**", "web/ui/**", "web/app/**", "crates/server/src/** (except declared shop quote identity)", "milestones/**"],
+      "allowed_paths": ["crates/world-engine/src/commerce.rs", "crates/world-engine/src/queries.rs", "crates/world-engine/src/actions.rs", "crates/world-engine/tests/shop_review.rs", "crates/world-engine/tests/**", "crates/game-types/src/intent.rs", "crates/protocol/**", "crates/client-core/tests/**", "crates/server/tests/**", "crates/server/src/game_service/view.rs", "web/shared/contracts.ts", "spec/game-contracts.md"],
+      "forbidden_paths": ["prompt.md", "content/**", "assets/**", "web/ui/**", "web/app/**", "crates/server/src/game_storage/**", "milestones/**"],
       "outputs": ["Identity-safe shop buy requests and zero-row reclamation", "Native regression tests for concurrent row shifts/reuse/restart"],
       "validation_commands": ["cargo test -p clubscape-world-engine -p clubscape-protocol", "cargo clippy -p clubscape-world-engine -p clubscape-protocol --all-targets -- -D warnings"],
-      "test_requirements": ["No wrong-item charge", "No dead extra-row capacity", "No deleted source stock rows or reset restock phase", "Old committed intents retain encoding compatibility"],
+      "test_requirements": ["No wrong-item charge", "No dead extra-row capacity", "No deleted source stock rows or reset restock phase", "Old committed intents retain encoding compatibility", "Shared actions/queries/server view/browser contract/docs hunks are shop identity only; existing foreign tests receive constructor compatibility only"],
       "acceptance": ["SQL m1-shop-review-fixes records repaired root causes and actual regression results"],
       "reserved_namespaces": [],
       "source_notes": ["Independent review e6925772 at89f3386"],
@@ -93,11 +92,11 @@
       "status": "IMPLEMENTING",
       "specs": ["crates/world-engine/README.md", "spec/game-contracts.md"],
       "dependencies": ["M1-ENGINE-REVIEW"],
-      "allowed_paths": ["crates/world-engine/src/entities.rs", "crates/world-engine/src/combat.rs", "crates/world-engine/src/activities.rs", "crates/world-engine/src/lib.rs (NPC tick context only)", "crates/world-engine/tests/actor_review.rs"],
+      "allowed_paths": ["crates/world-engine/src/entities.rs", "crates/world-engine/src/combat.rs", "crates/world-engine/src/activities.rs", "crates/world-engine/src/lib.rs", "crates/world-engine/tests/actor_review.rs"],
       "forbidden_paths": ["prompt.md", "crates/game-types/**", "crates/world-engine/src/commerce.rs", "crates/protocol/**", "crates/server/**", "content/**", "assets/**", "web/**", "milestones/**"],
       "outputs": ["Presence-correct NPC navigation", "Synchronized selected/queued combat style with preserved cadence"],
       "validation_commands": ["cargo test -p clubscape-world-engine", "cargo clippy -p clubscape-world-engine --all-targets -- -D warnings"],
-      "test_requirements": ["Offline does not block", "Connected/pending combat disconnect still blocks", "Legacy presence requires authority", "Weapon changes do not stop legal combat or accelerate attack"],
+      "test_requirements": ["Offline does not block", "Connected/pending combat disconnect still blocks", "Legacy presence requires authority", "Weapon changes do not stop legal combat or accelerate attack", "Shared lib.rs changes are NPC tick-context plumbing only"],
       "acceptance": ["SQL m1-actor-review-fixes records actual reviewed-bug regressions passing"],
       "reserved_namespaces": [],
       "source_notes": ["Independent review e6925772 at89f3386"],
@@ -234,7 +233,7 @@
     {
       "id": "M1-FLEET-BINDING-APPLICATION",
       "goal": "Apply source resolutions and the explicit goblin adaptation to canonical content generation without losing coupled state/value updates or provenance.",
-      "status": "BLOCKED",
+      "status": "DONE",
       "specs": ["research/runtime-bindings/**", "milestones/m1-goblin-loot-approval.json", "spec/adaptations.md"],
       "dependencies": ["M1-FLEET-SOURCE-BINDINGS", "M1-FLEET-CONTENT-ASSET-REFRESH"],
       "allowed_paths": ["content/m1/**", "tools/m1-content/**", "research/m1-bindings/**", "tools/runtime-bindings/**", "research/runtime-bindings/application*.json"],
@@ -247,7 +246,7 @@
       "source_notes": ["Owner explicitly approved independent1/16 potion event/equal1-4doseweights; no other inference became an approval."],
       "parity_entries": [],
       "adaptations": ["adaptation.m1.goblin_energy_potion_provisional"],
-      "evidence": ["e8dfa2d integrates canonical content/artifact3: 104 source bindings, seven coupled updates, conditional vital policy, approved potion loot, 5257 original asset references and unchanged source geometry/graphs.", "Zero active unresolved bindings; six proof-scoped inactive dependencies. Strict compile/reload, 62 content tests, 195 source checks, 23 graph oracles and 30 routes pass.", "Two native executor failures remain: source-solid-range contact and fresh manual-drop owner-online lifetime. M1-FACILITY-DROP-FIXES owns repairs; not full gameplay acceptance."]
+      "evidence": ["faa8002 completes canonical content/artifact3:104sourcebindings,7coupledupdates,conditionalvital,approvedloot,5257originalassetrefs andunchanged sourcegeometry/graphs. Zeroactiveunresolvedbindings,sixproof-scopedinactive.", "StrictRuntimecompile/reload andallnativeprobes pass,including source-range Single1/Make-X-one3 andfreshdropoffline/120000played-tickselection.63source tests,195oracles/8negative mutations,23graphoracles,30routes,28destinations and92repeatablehashes pass.", "milestones/evidence/m1-native-runtime3.json records the boundednative/sourcecheckpoint. Actualfulljourney andbrowser/presentation gates remain separate."]
     },
     {
       "id": "M1-FLEET-ENGINE-CLOSURE",

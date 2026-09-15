@@ -1,0 +1,74 @@
+{
+  "schema_version": 1,
+  "milestone": "m1-starter-journey",
+  "gate": "content-compilation-and-stable-ids",
+  "kind": "native_source_runtime_checkpoint",
+  "result": "passed",
+  "revision": "faa800286cfeeed4f3bec0b924d1fb01c65b97d9",
+  "backend_revision": "1ea2e6539668a57600ddb7b8988785ba608ef61b",
+  "compiled_artifact": {
+    "path": "content/m1/game-content.csc.gz",
+    "content_version": 3,
+    "artifact_version": 3,
+    "uncompressed_sha256": "a200ca08c80f6a3fc812fe02ca95f52325e183084f83b12e8d470a1f37cc6d62"
+  },
+  "source_evidence": [
+    {"path": "content/m1/manifest.json", "sha256": "510fbb63a40f6618283e65bd154fdb7e9076286d7ba66db63d7bbb48801c0721"},
+    {"path": "research/m1-bindings/status.json", "sha256": "0b9ba11eb84d98e40b8de11e55dba77548a93455e782873d3b2a96c8f940a711"},
+    {"path": "research/m1-bindings/schema-validation.json", "sha256": "c1f75d75de91f84b6641a49209d747353450b75eee5b273fd1c7f27ca444556c"},
+    {"path": "research/m1-bindings/validation-run.json", "sha256": "1860ee0d22005c95ce1c545a24cb1b9edf0dfe8c8e20d40e7afd390c93697c54"},
+    {"path": "research/m1-bindings/repeatability.json", "sha256": "bb73f46570a17d84db6a02337447651c15da90e746b0711bde92bea08ad452f2"}
+  ],
+  "validation": {
+    "merged_workspace": {
+      "command": "cargo test --locked --workspace --quiet",
+      "passed": 455,
+      "failed": 0,
+      "ignored_database_tests": 33
+    },
+    "real_persistence_and_http": {
+      "command": "python3 tools/dev.py integration --workspace .worktrees/m1-contact-clocks --report .local/evidence/m1-contact-clock-storage.json",
+      "passed_database_tests": 33,
+      "independent_account_checks": 11,
+      "scope": "Actual PostgreSQL/HTTP with isolated synthetic fixtures, not the source M1 journey.",
+      "working_tree_validation": "9bff13e committed the tested repair tree; faa8002 integrates identical code/data.",
+      "cleanup": "Owned server and disposable PostgreSQL container stopped."
+    },
+    "source_conformance": {
+      "command": "python3 tools/m1-content/validate.py --repeat",
+      "strict_runtime_compile_and_reload": true,
+      "native_source_policy_probes": true,
+      "source_content_tests": 63,
+      "source_numeric_and_edge_oracles": 195,
+      "negative_source_mutations": 8,
+      "state_graph_oracles": 23,
+      "source_routes": 30,
+      "player_destinations": 28,
+      "repeatable_output_hashes": 92,
+      "active_unresolved_bindings": 0,
+      "proof_scoped_inactive_bindings": 6
+    },
+    "lint": {
+      "formatting": "passed",
+      "strict_clippy": "passed for game-types, content, world-engine and server, including the final storage test change"
+    }
+  },
+  "repaired_native_failures": [
+    "Original solid Lumbridge range is reachable from its allowed west face without changing collision, access masks or Single1/Make-X-one3 cadence.",
+    "Manual PlayerDrop provenance freezes an explicit owner-online clock; offline ticks do not consume its remaining lifetime.",
+    "Persisted authoritative playtime selects the source-supported120000-tick boundary; untradeable and tutorial overrides remain separate, and unknown legacy history is not silently reset."
+  ],
+  "remaining_work": [
+    "Independent shop identity/capacity and actor collision/queued-style review repairs are tracked separately.",
+    "Complete legitimate fresh-account M1 journey through the real server and browsers, including death/recovery and persistence.",
+    "Actual browser renderer/UI/audio composition, source comparisons, controls, animation and audible playback.",
+    "Real Chrome/Edge integrated-GPU performance and final owner presentation acceptance.",
+    "RuneLite feasibility is independent and unverified; it is not a browser acceptance prerequisite."
+  ],
+  "source_reference_pack_approval_unchanged": true,
+  "full_journey_executed": false,
+  "presentation_accepted": false,
+  "performance_accepted": false,
+  "milestone_accepted": false,
+  "later_milestone_authorized": false
+}
