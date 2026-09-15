@@ -178,12 +178,34 @@ actual two runs, 29 Rust and 10 orchestration checks, complete genuine mapping,
 exact identities, startup errors and cleanup. No source character or required
 gameplay restart was reached.
 
-Known parent repairs (solid-target range contact, offline manual-drop clocks,
-shop-row/reclaim identity, offline collision and queued styles) remain server
-work, not client exceptions. The simulator uses generated explicit Single
+Shop-row/reclaim identity, offline collision and queued-style review work remain
+parent integration, not client exceptions. The simulator uses generated explicit Single
 production requests and live guarded shop-row identities/quotes, and records
 public presence, bank, shop, recovery and quote contexts. No failed source action
 is transformed into a pass.
+
+### Authorized native-ready source repair
+
+Parent `faa800286cfeeed4f3bec0b924d1fb01c65b97d9` (original fix `9bff13e9260cc185d22cf6b3db5335ac35320cb4`)
+was authorized and cherry-picked as `0984877`. The current source/native
+conformance status has zero active executor failures: original solid-range
+contact, Single/Make-X timing and owner-online/manual-drop/playtime clocks are
+repaired. The exact current raw artifact is
+`a200ca08c80f6a3fc812fe02ca95f52325e183084f83b12e8d470a1f37cc6d62`.
+Private playtime is never seeded or reset by this client.
+
+The runner does not use the old failure inventory or the manifest's aggregate
+`runtime_ready` Boolean as an interlock. It loads the current hash-matched
+artifact and asks the real server to apply the documented source-readiness
+profile. The fresh isolated run still fails **earlier**, at the unchanged private
+descriptor-size gate (272,433 bytes versus 262,144); the independent GameRoot
+environment parser also remains nested in the actual code. Neither native
+source fix is being reported as a continuing failure.
+
+[`evidence/native-ready-0984877.json`](evidence/native-ready-0984877.json)
+records this actual new-artifact run, 29 Rust/10 orchestration checks, 11 real
+account checks, current identities, exact `game_file_size` error and complete
+cleanup. No product character, tutorial edge or required gameplay restart passed.
 
 `milestone_accepted`, browser/UI, audio, performance and RuneLite verification
 remain false. Unit fixtures below establish client machinery only:
