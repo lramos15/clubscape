@@ -163,6 +163,22 @@ def write_secret(secret_path):
     return password
 
 
+def preserve_owned_database(name, output, environment, report):
+    path = output / "private-world-after-run.pgcustom"
+    descriptor = os.open(path, os.O_WRONLY | os.O_CREAT | os.O_EXCL, 0o600)
+    with os.fdopen(descriptor, "wb") as destination:
+        result = subprocess.run(
+            ["docker", "exec", name, "pg_dump", "--username=clubscape", "--format=custom", "clubscape"],
+            cwd=ROOT, env=environment, stdout=destination, stderr=subprocess.PIPE, timeout=30, check=False)
+    report["database"]["private_backup"] = {
+        "exit_code": result.returncode, "path": str(path.relative_to(ROOT)), "size_bytes": path.stat().st_size,
+        "sha256": digest(path), "read_only_snapshot": True, "publish_contents": False,
+        "scope": "Owned synthetic world/account database only; private RNG/auth material stays ignored",
+    }
+    if result.returncode:
+        raise RuntimeError("Could not preserve the owned synthetic world before cleanup")
+
+
 def start_database(output, environment, report):
     name = "clubscape-rl-" + uuid.uuid4().hex[:16]
     secret_path = output / "postgres-password"
@@ -282,6 +298,12 @@ def live(java_home, output, environment, report, server_binary, game_root, catal
             report["compatibility_verified"] = bool(report["complete_tuple"] and report["exit_code"] == 0
                                                    and not report["native"]["native_render_errors"])
     finally:
+        if name:
+            try:
+                preserve_owned_database(name, output, environment, report)
+            except Exception as error:
+                report["preservation_error"] = str(error)
+                report["compatibility_verified"] = False
         stop(server)
         if server is not None:
             report["server"]["exit_code"] = server.returncode

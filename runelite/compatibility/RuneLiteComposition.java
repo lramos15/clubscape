@@ -40,7 +40,6 @@ import net.runelite.client.config.ConfigManager;
 import net.runelite.client.eventbus.EventBus;
 import net.runelite.client.plugins.PluginManager;
 import net.runelite.client.plugins.xptracker.XpTrackerPlugin;
-import net.runelite.client.plugins.xptracker.XpTrackerReadback;
 import net.runelite.client.ui.ClientToolbar;
 import net.runelite.client.ui.ClientUI;
 import net.runelite.client.ui.NavigationButton;
@@ -410,6 +409,15 @@ public final class RuneLiteComposition
             long pixels = scene.verifyVisibleActor("real authoritative ClubScape snapshot");
             if (pixels <= 30) throw new IllegalStateException("Penguin is not visible in the actual live scene");
             screenshot(output, "live-first-xp");
+            java.util.concurrent.atomic.AtomicReference<List<String>> labels = new java.util.concurrent.atomic.AtomicReference<>();
+            SwingUtilities.invokeAndWait(() -> labels.set(XpTrackerReadback.displayedLabels(tracker)));
+            evidence.record("genuine_tracker_panel", "labels", labels.get(), "native_gain", observed,
+                "class", tracker.getClass().getName(), "callback_source", "committed authoritative XP events only");
+            if (labels.get().stream().noneMatch(label -> label.contains("Gained:") && label.contains(Integer.toString(observed))))
+                throw new IllegalStateException("The genuine tracker panel did not display the observed positive gain");
+            boolean overlayRendered = injector.getInstance(OverlayManager.class).anyMatch(overlay ->
+                overlay.getClass().getName().equals("net.runelite.client.plugins.xptracker.XpInfoBoxOverlay")
+                    && overlay.getBounds().width > 0 && overlay.getBounds().height > 0);
             evidence.record("complete_tuple", "server_connected", true, "original_runtime", true,
                 "native_scene", true, "penguin_visible_pixels", pixels, "tracker", tracker.getClass().getName(),
                 "expected_plugin_xp", expectedDisplayGain, "observed_plugin_xp", observed,
@@ -422,6 +430,7 @@ public final class RuneLiteComposition
                 "final_character_revision", projection.snapshot().getCharacterRevision(),
                 "final_x", projection.snapshot().getPlayer().getTile().getX(),
                 "final_y", projection.snapshot().getPlayer().getTile().getY(),
+                "genuine_tracker_panel_gain_visible", true, "genuine_xp_overlay_rendered", overlayRendered,
                 "scope", "fresh account through first fishing XP only; not full M1 or broad plugin compatibility");
         }
         finally

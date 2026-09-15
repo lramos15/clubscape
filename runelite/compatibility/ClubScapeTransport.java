@@ -29,6 +29,8 @@ final class ClubScapeTransport implements AutoCloseable
     private long sequence;
     private long characterRevision;
     private long revision;
+    private long tick;
+    private long lastInputTick = -1;
     private String actor;
     private Consumer<Game.WorldSnapshot> consumer;
     private final PendingWorldInput pendingInput = new PendingWorldInput();
@@ -168,6 +170,7 @@ final class ClubScapeTransport implements AutoCloseable
         if (!snapshot.getPlayer().getActorId().equals(actor))
             throw new IllegalStateException("Server changed the local actor");
         revision = snapshot.getRevision();
+        tick = snapshot.getTick();
         characterRevision = snapshot.getCharacterRevision();
         sequence = snapshot.getNextSequence();
         consumer.accept(snapshot);
@@ -216,6 +219,12 @@ final class ClubScapeTransport implements AutoCloseable
     {
         if (pendingInput.active())
             throw new IllegalStateException("Retry or reconcile the retained operation; do not build a new intent");
+        for (int waits = 0; tick <= lastInputTick; waits++)
+        {
+            if (waits >= 10) throw new IllegalStateException("Authoritative tick did not advance for the next input");
+            Thread.sleep(600);
+            poll();
+        }
         Game.WorldInput.Builder input = Game.WorldInput.newBuilder().setWorldSessionId(session)
             .setSequence(sequence).setExpectedCharacterRevision(characterRevision);
         action.accept(input);
@@ -282,6 +291,7 @@ final class ClubScapeTransport implements AutoCloseable
             || !result.getActionResult().getOperationId().equals(command.getRequestId()))
             throw new IOException("Action receipt sequence mismatch");
         pendingInput.acknowledged(result.getActionResult().getSequence());
+        lastInputTick = result.getActionResult().getSnapshot().getTick();
         accept(result.getActionResult().getSnapshot());
         return result.getActionResult().getSnapshot();
     }

@@ -27,6 +27,7 @@ def build(java_home, source, *, report_path=None, history_path=None):
         verify(target, record)
     classes = LOCAL / "classes"
     classes.mkdir(exist_ok=True)
+    (classes / "net/runelite/client/plugins/xptracker/XpTrackerReadback.class").unlink(missing_ok=True)
     files = sorted((ROOT / "runelite/compatibility").glob("*.java"))
     files += sorted((LOCAL / "generated").rglob("*.java"))
     files += sorted((ROOT / "runelite/integration-tests").glob("*.java"))

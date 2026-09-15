@@ -34,6 +34,10 @@ if __name__ == "__main__":
             str(args.java_home.resolve() / "bin/java"), "-ea", "-Xmx256m", "-XX:ActiveProcessorCount=2",
             f"-Duser.home={home}", f"-Djava.io.tmpdir={home}", "-cp", classpath, "ShopIdentityChecks"
         ], java_environment),
+        ("signed_plugin_adapter_boundary", [
+            str(args.java_home.resolve() / "bin/java"), "-ea", "-Xmx256m", "-XX:ActiveProcessorCount=2",
+            f"-Duser.home={home}", f"-Djava.io.tmpdir={home}", "-cp", classpath, "PluginBoundaryChecks"
+        ], java_environment),
         ("python_harness", [
             "python3", "-m", "unittest", "discover", "-s", "tools/runelite-compatibility", "-p", "test_*.py", "-q"
         ], rust_environment),
