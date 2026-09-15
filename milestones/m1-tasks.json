@@ -35,6 +35,24 @@
   },
   "tasks": [
     {
+      "id": "M1-TERRAIN-INPUTS",
+      "goal": "Integrate the original raw-terrain and actor-clip exports, and reject incomplete terrain inputs instead of publishing a known-inexact scene.",
+      "status": "IMPLEMENTING",
+      "specs": ["spec/browser-implementation.md", "crates/renderer/README.md", "tools/render-assets/README.md", "research/interface-contracts/animation-requirements.json"],
+      "dependencies": ["M1-BROWSER-RENDERER"],
+      "allowed_paths": ["crates/renderer/src/scene/terrain.rs", "crates/renderer/src/scene/block.rs", "crates/renderer/src/core.rs", "crates/renderer/src/wasm.rs", "crates/renderer/tests/terrain_inputs.rs", "crates/renderer/tests/blocks.rs", "crates/renderer/README.md", "web/renderer/src/index.ts", "web/renderer/README.md"],
+      "forbidden_paths": ["prompt.md", "crates/world-engine/**", "crates/server/**", "content/**", "assets/source/**", "assets/manifests/**", "research/reference-pack/**", "tools/reference-pack/**", "crates/renderer/src/actor.rs"],
+      "outputs": ["Integration of owned aa2cb19/16e9130/eacb826/6e849ea without foreign metadata re-picks", "Explicit malformed or missing floor/raw-terrain failures before scene replacement", "Preserved full-source tile, minimap, animation and declared-instance behavior"],
+      "validation_commands": ["cargo test --locked -p clubscape-renderer --test terrain_inputs", "cargo test --locked -p clubscape-renderer --test blocks --test minimap --test dynamic_layers -- --include-ignored", "python3 tools/render-assets/export.py --profile verify-blocks", "python3 tools/render-assets/export.py --verify-only"],
+      "test_requirements": ["No fallback to known-inexact exported lighting for live block scenes", "Reject truncated or invalid new terrain records without panics or partial scene mutation", "Preserve original palette, geometry, shadow, light and HSL calculations", "Keep the actual 931/2034 fitting failure gate explicit; do not change fitting or tolerances", "No gameplay mutation, source repin or M1 acceptance"],
+      "acceptance": ["Record original-source happy-path comparisons and exact failing-input regressions on the integrated revision"],
+      "reserved_namespaces": [],
+      "source_notes": ["Renderer aa2cb19 ports the original rl4.ad terrain pass and adds BTER/BSHD/floor definitions; its current missing-input branch retains known-inexact lit tiles, while floor record remainders are ignored. Director will reproduce and repair those new admission boundaries in an isolated worktree."],
+      "parity_entries": [],
+      "adaptations": [],
+      "evidence": []
+    },
+    {
       "id": "M1-DYING-OBSERVATION",
       "goal": "Keep legitimate dying/respawn states observable through public world polling without changing source death outcomes or input refusals.",
       "status": "IMPLEMENTING",
