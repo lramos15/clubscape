@@ -1,3 +1,4 @@
+mod checkpoint;
 mod evidence;
 #[cfg(test)]
 mod history_tests;
@@ -40,6 +41,9 @@ pub struct Arguments {
     /// Owned orchestrator handshake directory. Absence blocks the required restart checkpoint.
     #[arg(long)]
     recovery_control_dir: Option<PathBuf>,
+    /// Private owner-only recovery capsule on a blocker; never a resume or state-setting input.
+    #[arg(long, requires = "recovery_control_dir")]
+    private_checkpoint_file: Option<PathBuf>,
     #[arg(long)]
     expected_server_build: Option<String>,
     #[arg(long, default_value_t = 5400, value_parser = clap::value_parser!(u64).range(30..=7200))]
@@ -100,6 +104,8 @@ struct Runner {
     expected_stage: Option<(String, String)>,
     onboarding_receipt: Option<Receipt>,
     reward_receipt: Option<Receipt>,
+    private_attempt: Option<checkpoint::Attempt>,
+    private_control: Option<checkpoint::ControlAttempt>,
 }
 
 pub async fn run(arguments: Arguments) -> Result<()> {
@@ -154,6 +160,8 @@ pub async fn run(arguments: Arguments) -> Result<()> {
         expected_stage: None,
         onboarding_receipt: None,
         reward_receipt: None,
+        private_attempt: None,
+        private_control: None,
     };
     let result = runner.execute().await;
     runner.evidence.report["input_count"] = json!(runner.input_count);
@@ -187,6 +195,20 @@ pub async fn run(arguments: Arguments) -> Result<()> {
         }
     }
     runner.evidence.flush()?;
+    if result.is_err()
+        && let Some(path) = &runner.arguments.private_checkpoint_file
+    {
+        runner.evidence.report["private_client_checkpoint"] =
+            match checkpoint::capture(&runner, path) {
+                Ok(status) => status,
+                Err(error) => json!({
+                    "status": "failed",
+                    "reason": format!("{error:#}"),
+                    "recoverable_checkpoint": false
+                }),
+            };
+        runner.evidence.flush()?;
+    }
     println!(
         "{}",
         json!({
@@ -281,12 +303,32 @@ impl Runner {
         self.evidence.flush()
     }
 
-    async fn rpc(&self, command: Command, token: bool) -> Result<Outcome> {
+    async fn rpc(&mut self, command: Command, token: bool) -> Result<Outcome> {
         self.bound()?;
+        let request_id = Uuid::new_v4().to_string();
+        let track = self.arguments.private_checkpoint_file.is_some()
+            && !matches!(
+                &command,
+                Command::Hello(_) | Command::CurrentAccount(_) | Command::PollWorld(_)
+            );
+        if track {
+            self.private_control = Some(checkpoint::ControlAttempt::new(
+                request_id.clone(),
+                command.clone(),
+                token.then(|| self.token.clone()),
+            ));
+        }
         let (status, result) = self
             .connection
-            .request(command, token.then_some(self.token.as_str()))
+            .request_with_id(command, token.then_some(self.token.as_str()), &request_id)
             .await?;
+        if track && let Some(attempt) = &mut self.private_control {
+            let error = match &result {
+                Outcome::Error(error) => Some((error.code, error.error_id.clone())),
+                _ => None,
+            };
+            attempt.received(status.as_u16(), error);
+        }
         if let Outcome::Error(error) = &result {
             return Err(RpcRejected {
                 context: "RPC",
@@ -607,6 +649,11 @@ impl Runner {
             }),
         )?;
         self.input_count += 1;
+        self.private_attempt = self
+            .arguments
+            .private_checkpoint_file
+            .as_ref()
+            .map(|_| checkpoint::Attempt::new(receipt.operation_id.clone(), input.clone()));
         let (status, result) = self
             .connection
             .request_with_id(
@@ -626,6 +673,15 @@ impl Runner {
                     result.duplicate == duplicate,
                     "Server duplicate status does not match the submitted operation history"
                 );
+                if let Some(attempt) = &mut self.private_attempt {
+                    attempt.acknowledged(
+                        result.duplicate,
+                        result
+                            .snapshot
+                            .as_ref()
+                            .map(|snapshot| snapshot.next_sequence),
+                    );
+                }
                 let snapshot = result.snapshot.context("Action result snapshot missing")?;
                 if snapshot.event_history_gap {
                     if Self::history_suffix_covered(self.events.last(), &snapshot.events) {
@@ -648,6 +704,9 @@ impl Runner {
                 );
             }
             Outcome::Error(error) => {
+                if let Some(attempt) = &mut self.private_attempt {
+                    attempt.rejected(status.as_u16(), error.code, error.error_id.clone());
+                }
                 self.evidence.append("server_rejection", json!({
                     "operation_id": receipt.operation_id, "sequence": receipt.sequence,
                     "http_status": status.as_u16(), "code": error.code, "error_id": error.error_id,

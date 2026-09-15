@@ -22,6 +22,8 @@ import urllib.parse
 import urllib.request
 import uuid
 
+from private_checkpoint import CheckpointError, preserve_checkpoint
+
 
 ROOT = Path(__file__).resolve().parents[2]
 POSTGRES_IMAGE = (
@@ -178,6 +180,55 @@ def record_server_exit(report, code):
             "phase": "server_shutdown",
             "reason": f"The owned real server exited unsuccessfully ({code}); resource cleanup is not clean-world success.",
         })
+
+
+def preserve_blocked_checkpoint(directory, report, server):
+    if (report.get("current_phase") != "real_m1_fresh_account_scenario"
+            or report.get("status") == "passed"):
+        return {
+            "status": "not_attempted", "snapshot_available": False,
+            "reason": "not_a_blocked_source_scenario", "resume_authorized": False,
+        }
+    try:
+        return preserve_checkpoint(ROOT, directory, report, server)
+    except (CheckpointError, OSError, ValueError, KeyError, TypeError,
+            subprocess.TimeoutExpired, JourneyError) as error:
+        return {
+            "status": "failed", "snapshot_available": False,
+            "recoverable_checkpoint": False, "resume_authorized": False,
+            "phase": error.phase if isinstance(error, CheckpointError) else "checkpoint_setup",
+            "reason": error.code if isinstance(error, CheckpointError)
+            else f"os_error_{error.errno}" if isinstance(error, OSError)
+            else "checkpoint_capture_incomplete",
+        }
+
+
+def preserve_and_cleanup(directory, name, report, server, cleanup_errors, report_path):
+    try:
+        report["private_checkpoint"] = {
+            "status": "failed", "snapshot_available": False,
+            "recoverable_checkpoint": False, "resume_authorized": False,
+            "reason": "capture_did_not_complete",
+        }
+        report["private_checkpoint"] = preserve_blocked_checkpoint(directory, report, server)
+    finally:
+        try:
+            cleanup_container(name, report)
+        except (JourneyError, OSError, ValueError, subprocess.TimeoutExpired) as error:
+            cleanup_errors.append(str(error))
+        try:
+            require(directory.parent == ROOT / ".local/journey-runs", "Refusing unowned directory cleanup.")
+            shutil.rmtree(directory)
+            report["owned_credentials_and_game_root_removed"] = True
+        except (JourneyError, OSError) as error:
+            cleanup_errors.append(str(error))
+        report["cleanup_errors"] = cleanup_errors
+        report["cleanup_passed"] = not cleanup_errors
+        if cleanup_errors:
+            report["status"] = "blocked"
+            report["full_journey_passed"] = False
+        report["milestone_accepted"] = False
+        write_json(report_path, report)
 
 
 class OwnedServer:
@@ -482,6 +533,9 @@ def run(args):
         "resource_limits": {"cpus": 2, "memory_mib": 768, "pids": 256},
         "owned_container_name": name, "commands": [], "restarts": [],
         "unchecked_segments": list(SEGMENTS),
+        "private_checkpoint": {
+            "status": "not_attempted", "snapshot_available": False, "resume_authorized": False,
+        },
     }
     server = None
     simulator = None
@@ -578,6 +632,8 @@ def run(args):
             str(client), "scenario", "m1_fresh_account", "--url", address,
             "--report", str(scenario_report_path.relative_to(ROOT)),
             "--recovery-control-dir", str(control.relative_to(ROOT)),
+            "--private-checkpoint-file",
+            str((control / "private-client-checkpoint.json").relative_to(ROOT)),
             "--expected-server-build", revision, "--max-seconds", str(args.max_seconds),
         ]
         with (evidence_directory / "simulator.log").open("w", encoding="utf-8") as log:
@@ -664,27 +720,12 @@ def run(args):
                 record_server_exit(report, server.stop())
             except (JourneyError, OSError, subprocess.TimeoutExpired) as error:
                 cleanup_errors.append(str(error))
-        try:
-            cleanup_container(name, report)
-        except (JourneyError, OSError, ValueError, subprocess.TimeoutExpired) as error:
-            cleanup_errors.append(str(error))
-        try:
-            require(directory.parent == ROOT / ".local/journey-runs", "Refusing unowned directory cleanup.")
-            shutil.rmtree(directory)
-            report["owned_credentials_and_game_root_removed"] = True
-        except (JourneyError, OSError) as error:
-            cleanup_errors.append(str(error))
-        report["cleanup_errors"] = cleanup_errors
-        report["cleanup_passed"] = not cleanup_errors
-        if cleanup_errors:
-            report["status"] = "blocked"
-            report["full_journey_passed"] = False
-        report["milestone_accepted"] = False
-        write_json(report_path, report)
+        preserve_and_cleanup(directory, name, report, server, cleanup_errors, report_path)
     print(json.dumps({
         "status": report["status"], "full_journey_passed": report["full_journey_passed"],
         "account_checks": len(report.get("account_lifecycle", {}).get("checks", [])),
         "owned_restarts": len(report["restarts"]), "cleanup_passed": report["cleanup_passed"],
+        "private_checkpoint": report["private_checkpoint"],
         "evidence": str(report_path.relative_to(ROOT)), "milestone_accepted": False,
         "first_failure": report.get("first_failure"),
     }))

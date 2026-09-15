@@ -31,13 +31,39 @@ cargo run --quiet -p clubscape-sim -- scenario m1_fresh_account \
 Run from the repository/worktree root. The scenario's source root defaults to
 the current directory. Evidence/control paths must be relative project paths
 without symlinks or traversal. Credentials are generated in memory and never
-included in traces. Origins are loopback-only; proxies and redirects are
-disabled.
+included in public reports or traces. The controlled orchestrator explicitly
+enables the private blocker capsule described below; without that option they
+remain in memory. Origins are loopback-only; proxies and redirects are disabled.
 
 **Prefer the [controlled orchestrator](../journey-tests/README.md).** A manually
 invoked simulator cannot restart an arbitrary server. Without its owned
 orchestrator handshake, the required restart checkpoint fails explicitly.
 The normal account service defaults are not changed.
+
+### Private blocker capsule
+
+The owner may pass `--private-checkpoint-file` only with its recovery-control
+directory. The output must be
+`.local/journey-runs/<16-hex-run-id>/control/private-client-checkpoint.json`.
+On a handled blocker after an actual source character has been observed, the
+simulator writes this new file with mode0600 under an existing mode0700 directory.
+Existing files, symlinks, public output paths and oversized capsules are refused.
+Only its hash, size and capture/failure status enter the public report.
+
+The **private** capsule holds the synthetic login/password/token, the last
+observed actor/source state, original onboarding/reward receipts, and exact
+generated-Protobuf bytes for the latest attempted world input or sequence probe.
+It also retains the original request UUID and authorization for account/lifecycle
+writes, including an uncertain logout or rejoin. Being logged out does not
+discard an otherwise observed source character's recovery information.
+Receiving an error or an acknowledgment is recorded without authorizing a retry.
+
+This output is not a database backup, a source-state setter or a resume command.
+The owner must pair it with the real PostgreSQL archive and matched private
+identities before cleanup. All future recovery requires explicit authorization
+and actual receipt/state reconciliation; an original operation's UUID, sequence
+and intent must not be replaced. See the
+[private checkpoint contract](../journey-tests/README.md#private-blocker-checkpoints).
 
 ## What the plan executes
 

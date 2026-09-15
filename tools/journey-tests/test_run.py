@@ -148,6 +148,34 @@ class OrchestratorTests(unittest.TestCase):
         RUN.record_server_exit(report, 1)
         self.assertEqual(report["first_failure"], original)
 
+    def test_backup_failure_is_explicit_and_does_not_disclose_command_diagnostics(self):
+        report = {"current_phase": "real_m1_fresh_account_scenario", "status": "blocked"}
+        with patch.object(RUN, "preserve_checkpoint", side_effect=OSError(5, "private-auth-must-not-escape")):
+            result = RUN.preserve_blocked_checkpoint(Path("unused"), report, None)
+        self.assertEqual(result["status"], "failed")
+        self.assertFalse(result["snapshot_available"])
+        self.assertFalse(result["recoverable_checkpoint"])
+        self.assertNotIn("private-auth-must-not-escape", json.dumps(result))
+
+    def test_backup_precedes_database_cleanup_even_when_capture_raises(self):
+        order = []
+        report = {"status": "blocked", "full_journey_passed": False,
+                  "first_failure": {"reason": "original source refusal"}}
+        directory = RUN.ROOT / ".local/journey-runs/0123456789abcdef"
+        def fail_capture(*_):
+            order.append("checkpoint")
+            raise RuntimeError("controlled machinery failure")
+        with patch.object(RUN, "preserve_blocked_checkpoint", side_effect=fail_capture), \
+                patch.object(RUN, "cleanup_container", side_effect=lambda *_: order.append("database")), \
+                patch.object(RUN.shutil, "rmtree", side_effect=lambda *_: order.append("credentials")), \
+                patch.object(RUN, "write_json", side_effect=lambda *_: order.append("report")):
+            with self.assertRaises(RuntimeError):
+                RUN.preserve_and_cleanup(directory, "owned-name", report, None, [], directory / "report.json")
+        self.assertEqual(order, ["checkpoint", "database", "credentials", "report"])
+        self.assertTrue(report["cleanup_passed"])
+        self.assertFalse(report["private_checkpoint"]["snapshot_available"])
+        self.assertEqual(report["first_failure"]["reason"], "original source refusal")
+
 
 if __name__ == "__main__":
     unittest.main()

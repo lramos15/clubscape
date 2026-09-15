@@ -1,0 +1,118 @@
+{
+  "schema_version": 1,
+  "task": "m1-headless-journey",
+  "scope": "Parked, owned checkpoint machinery only; no new game or PostgreSQL services.",
+  "implementation_status": "implemented_and_unit_verified",
+  "base_revision": "c0f3961d22318602a1609871e2927ec78f677750",
+  "already_collected_owned_commits": {
+    "d67543e": "27c707a",
+    "c0f3961": "7b249b2"
+  },
+  "unchanged_source": {
+    "revision": "m1.source-backed.v4.3ff4292b311453cc",
+    "raw_artifact_sha256": "5e0aa8a28851752ae0b8b0a08c635c6c8d2979f509f3a3e564ee74e2abfc8e6f",
+    "content_artifact_version": 4,
+    "state_runtime_ui_versions": 1,
+    "source_or_backend_edits": false
+  },
+  "park_boundary": {
+    "real_game_server_started": false,
+    "real_postgresql_started": false,
+    "real_account_or_gameplay_rpc_issued": false,
+    "trade_submitted_or_retried": false,
+    "old_6f_unknown_sequence181_retried": false,
+    "old_world_reconstructed_seeded_restored_or_repinned": false,
+    "historical_report_trace_and_log_files_verified_unchanged": 18,
+    "real_private_database_checkpoint_available": false,
+    "old_removed_tmpfs_worlds_recoverable": false
+  },
+  "client_capsule": {
+    "explicit_output_only_option": "--private-checkpoint-file",
+    "required_layout": ".local/journey-runs/<16-hex-run-id>/control/private-client-checkpoint.json",
+    "file_mode": "0600",
+    "parent_mode": "0700",
+    "existing_files_public_paths_and_symlinks_rejected": true,
+    "maximum_bytes": 2097152,
+    "private_data": [
+      "Actual synthetic account/login/password/token and world-session authorization",
+      "Actual actor/source identity and last observed state",
+      "Original onboarding and reward operation UUIDs, sequences and Protobuf intents",
+      "Exact latest attempted WorldInput, including negative sequence probes",
+      "Exact account/lifecycle request UUID, Protobuf body and original authorization",
+      "Observed response classification without authorizing any retry"
+    ],
+    "capture_can_preserve_an_observed_character_while_logged_out": true,
+    "public_projection": "Only capture/failure status, byte size and SHA-256; no private payload.",
+    "private_rng_generated_or_supplied_by_client": false
+  },
+  "future_owner_capture": {
+    "directory": ".local/journey-checkpoints/<run-id>/",
+    "directories_mode": "0700",
+    "files_mode": "0600",
+    "existing_checkpoint_overwrite_allowed": false,
+    "sequence": [
+      "Finish/reap simulator and stop/reap only the owned server",
+      "Validate the client capsule against the actual final report/source/actor observations",
+      "Verify exact owned PostgreSQL container ID/name/labels and endpoint/password-file configuration",
+      "Preserve the original verified GameRoot, private credentials/configuration, report and trace",
+      "Read actual private world/actor/RNG/account/journal identities and selected receipts",
+      "Require exactly the expected source world/actor and no other database clients",
+      "Run bounded pg_dump custom-format export into an exclusive private file",
+      "Read the complete archive using pg_restore --file=/dev/null, without a database restore",
+      "Read identities again; require equality and preservation of acknowledged sequence/revision/tick",
+      "Fsync private files/directories and publish only sanitized hash/availability metadata",
+      "Remove only the owned services and transient run directory, regardless of capture outcome"
+    ],
+    "private_rng_capture": "The archive retains actual game_worlds.runtime_random_key and complete persisted state; private before/after hashes bind them without publishing key/state contents.",
+    "request_identity_capture": "Original client UUID/sequence/intent bytes and selected actual game/lifecycle receipts are retained privately; receipt absence is not treated as rollback proof.",
+    "public_projection": "Availability, safe paths, artifact/binary/archive/inventory hashes and validation flags; no account credentials, private actor state or RNG data.",
+    "unrelated_host_environment_secrets_copied": false,
+    "backup_error_reports": "Explicit failed/unavailable status with phase and sanitized code; original gameplay failure remains distinct from backup and resource cleanup.",
+    "partial_archive_claimed_recoverable": false,
+    "automatic_restore_or_resume": false,
+    "gameplay_sql_mutation": false,
+    "prior_art": "Adapted the owner-only custom pg_dump/exclusive0600-file pattern from tools/runelite-compatibility/run.py; added exact ownership, quiescence, source/receipt/RNG matching, complete archive reading and failure/durability guards."
+  },
+  "validation": [
+    {
+      "command": "cargo test --quiet --package clubscape-sim --package clubscape-protocol --all-features",
+      "result": "passed",
+      "passed_tests": 53,
+      "scope": "Client/private-capsule machinery and generated protocol compatibility, not gameplay."
+    },
+    {
+      "command": "cargo clippy --quiet --package clubscape-sim --all-features --all-targets -- -D warnings",
+      "result": "passed"
+    },
+    {
+      "command": "cargo fmt --package clubscape-sim --check",
+      "result": "passed"
+    },
+    {
+      "command": "python3 -m unittest discover -s tools/journey-tests -p 'test_*.py' -q",
+      "result": "passed",
+      "passed_tests": 28,
+      "scope": "Mocked owned-database workflow and bounded one-shot process/file fixtures; no PostgreSQL or game service."
+    },
+    {
+      "command": "cargo run --quiet --package clubscape-sim --bin clubscape-sim -- scenario m1_fresh_account --help",
+      "result": "passed",
+      "scope": "Executable option/help parsing only; no RPC."
+    },
+    {
+      "command": "python3 tools/journey-tests/run.py --help",
+      "result": "passed",
+      "scope": "Import/argument parsing only; no service."
+    }
+  ],
+  "real_validation_still_required": [
+    "An explicitly authorized next real controlled journey must exercise actual PostgreSQL export, complete archive reading and before/after identity checks.",
+    "Any later recovery requires explicit owned restore authorization and actual receipt/state reconciliation before continuing the source plan."
+  ],
+  "real_postgresql_snapshot_or_restore_executed": false,
+  "fully_automated_resume_implemented": false,
+  "full_original_journey_passed": false,
+  "milestone_accepted": false,
+  "ui_audio_performance_or_runelite_acceptance": false,
+  "main_journey_status": "Blocked/parked pending the tested same-artifact shop fix; prior70/70+285checks remain historical qualified progress."
+}

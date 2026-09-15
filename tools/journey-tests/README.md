@@ -84,8 +84,10 @@ any startup check.
    the orchestrator's own `Popen` server process, against the same PostgreSQL
    data. The binary, descriptor and artifact identities must not change.
 6. Persist the aggregate report, actual simulator report/trace and server
-   diagnostics. Stop/reap owned processes and remove the exact owned container,
-   credentials and isolated GameRoot. No gameplay SQL is executed.
+   diagnostics. On a source blocker, capture the private checkpoint below after
+   reaping the client/server but before removing PostgreSQL. Remove the exact
+   owned container, transient credentials and isolated GameRoot regardless of
+   backup success. No gameplay SQL mutation is executed.
 
 The default restart is graceful. `--restart-mode crash` sends SIGKILL only to
 the owned process and waits 35 seconds for the existing fenced lease, without
@@ -111,6 +113,60 @@ Game/account writes occur only through public RPCs. The same isolated
 PostgreSQL data is retained across both required restarts; the only database
 creation/initialization is the container's ordinary startup and the real
 server's migrations.
+
+## Private blocker checkpoints
+
+For future controlled source runs, the orchestrator explicitly enables the
+simulator's private blocker capsule. After a handled scenario failure, the capsule
+contains the actual synthetic account credentials, original operation UUIDs and
+sequences, generated-Protobuf intents, last observations and recovery receipts.
+It is **not** a reconstructed character or an expected-state seed. A missing or
+failed capsule cannot be promoted to a recoverable checkpoint.
+
+After the simulator and owned server are reaped, the owner verifies the exact
+container ID/name/labels, database endpoint/password-file identity, the expected
+single source world/actor and absence of other database clients. Read-only queries
+bind the actual world/account/actor,
+source artifact, complete persisted world/actor hashes, private RNG-key identity,
+game/lifecycle journal hashes and selected actual receipts. A custom-format
+`pg_dump` captures the entire isolated database. `pg_restore --file=/dev/null`
+then reads the complete archive for integrity **without connecting to a database
+or executing a restore**. Before/after private identities must match, and the
+database must contain at least the last acknowledged sequence/revision/tick.
+Neither receipt presence nor absence causes a retry or changes the unknown-write
+policy.
+
+The retained directory is `.local/journey-checkpoints/<run-id>/`, with owned
+mode0700 directories and mode0600 files. It includes `world.pgcustom`, the original
+byte/hash-verified GameRoot, private client/service/configuration data, the
+original PostgreSQL password file, complete scenario report/trace, actual private
+identity results and a private file-hash inventory. Only required service
+configuration keys are captured, not unrelated host environment secrets.
+These files contain authentication and RNG material: **never commit, attach or
+publish their contents**. Command output/diagnostics are bounded and private;
+public errors disclose only a phase and sanitized failure code.
+
+The aggregate report's `private_checkpoint` and the checkpoint's
+`availability.json` contain only sanitized availability/hash metadata.
+An available archive is not a validated restore, authorized resume, or journey
+pass. Failed/incomplete capture is explicit and never claims a recoverable
+checkpoint; partial files remain private. Cleanup still reaps/removes only the
+owned services. Existing checkpoint directories are never overwritten.
+
+There is **no automatic restore or resume option**. A later explicitly approved
+recovery must validate the private inventory, restore only into a new owned
+isolated PostgreSQL instance, retain the exact artifact/world identity, use the
+real fencing/lifecycle paths, and reconcile actual receipts/state before
+continuing the source plan. A same-artifact binary fix does not authorize a
+content repin, sequence reset, grant replay or progress reconstruction.
+The previously removed 6f/5e tmpfs worlds remain unavailable; this mechanism
+cannot recreate them. While parked, validation uses client/orchestration
+machinery fixtures only, not a newly running PostgreSQL/server or a claimed real
+backup/restore.
+
+[`evidence/private-checkpoint-machinery-c0f3961.json`](evidence/private-checkpoint-machinery-c0f3961.json)
+records the parked implementation and its machinery checks. It does not claim
+that a real private database archive already exists.
 
 ## Evidence and blockers
 

@@ -14,7 +14,7 @@ use serde_json::{Value, json};
 use uuid::Uuid;
 
 use super::{
-    Receipt, Runner,
+    Receipt, Runner, checkpoint,
     evidence::{self, bank_json, stable_player},
 };
 use crate::Connection;
@@ -52,19 +52,42 @@ impl Runner {
             }),
         )?;
         self.input_count += 1;
+        let input = game::WorldInput {
+            world_session_id: self.world_session.clone(),
+            sequence,
+            expected_character_revision: Some(self.snapshot.character_revision),
+            action: Some(Action::CloseInterface(game::Empty {})),
+        };
+        self.private_attempt = self
+            .arguments
+            .private_checkpoint_file
+            .as_ref()
+            .map(|_| checkpoint::Attempt::new(operation_id.clone(), input.clone()));
         let (status, result) = self
             .connection
-            .request_with_id(
-                Command::WorldInput(game::WorldInput {
-                    world_session_id: self.world_session.clone(),
-                    sequence,
-                    expected_character_revision: Some(self.snapshot.character_revision),
-                    action: Some(Action::CloseInterface(game::Empty {})),
-                }),
-                Some(&self.token),
-                &operation_id,
-            )
+            .request_with_id(Command::WorldInput(input), Some(&self.token), &operation_id)
             .await?;
+        if let Some(attempt) = &mut self.private_attempt {
+            match &result {
+                Outcome::Error(error) => {
+                    attempt.rejected(status.as_u16(), error.code, error.error_id.clone());
+                }
+                Outcome::ActionResult(reply)
+                    if status.is_success()
+                        && reply.operation_id == operation_id
+                        && reply.sequence == sequence =>
+                {
+                    attempt.acknowledged(
+                        reply.duplicate,
+                        reply
+                            .snapshot
+                            .as_ref()
+                            .map(|snapshot| snapshot.next_sequence),
+                    );
+                }
+                _ => {}
+            }
+        }
         let Outcome::Error(error) = result else {
             bail!("Invalid sequence probe {label} was accepted; no rejection evidence");
         };
