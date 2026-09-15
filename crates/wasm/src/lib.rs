@@ -44,9 +44,6 @@ impl BridgeError {
     fn protocol(message: &str) -> Self {
         Self::new("protocol", message)
     }
-    fn unsupported(message: &str) -> Self {
-        Self::new("unsupported", message)
-    }
     fn js(self) -> JsValue {
         JsValue::from_str(&serde_json::to_string(&self).expect("error serialization"))
     }
@@ -200,9 +197,18 @@ impl Bridge {
 
     pub fn submit(&mut self, request_id: &str, input: &str) -> Result<Vec<u8>, BridgeError> {
         let action = intent::action(input)?;
-        if matches!(action, game::world_input::Action::ShopBuy(_)) {
-            return Err(BridgeError::unsupported(
-                "Index-only purchases are disabled while the expected-ItemId wire contract is being finalized. No purchase was sent.",
+        self.submit_action(request_id, action)
+    }
+
+    fn submit_action(
+        &mut self,
+        request_id: &str,
+        action: game::world_input::Action,
+    ) -> Result<Vec<u8>, BridgeError> {
+        if matches!(&action, game::world_input::Action::ShopBuy(buy) if buy.expected_item.is_none())
+        {
+            return Err(BridgeError::input(
+                "New browser purchases require the displayed row's canonical expected_item. No purchase was sent.",
             ));
         }
         if self
@@ -227,23 +233,29 @@ impl Bridge {
 
     pub fn submit_selected(
         &mut self,
-        _request_id: &str,
+        request_id: &str,
         input: &str,
         item_id: &str,
     ) -> Result<Vec<u8>, BridgeError> {
         clubscape_game_types::ItemId::new(item_id)
             .map_err(|_| BridgeError::input("A purchase must retain the selected ItemId."))?;
-        if !matches!(
-            intent::action(input)?,
-            game::world_input::Action::ShopBuy(_)
-        ) {
+        let mut action = intent::action(input)?;
+        let game::world_input::Action::ShopBuy(buy) = &mut action else {
             return Err(BridgeError::input(
                 "Selected-item submission is reserved for shop purchases.",
             ));
+        };
+        if buy
+            .expected_item
+            .as_ref()
+            .is_some_and(|expected| expected != item_id)
+        {
+            return Err(BridgeError::input(
+                "Purchase identity fields disagree; no identity was replaced.",
+            ));
         }
-        Err(BridgeError::unsupported(&format!(
-            "Purchase of {item_id} was not sent: the expected-ItemId wire contract is not integrated yet."
-        )))
+        buy.expected_item = Some(item_id.to_owned());
+        self.submit_action(request_id, action)
     }
 
     pub fn retry(&mut self) -> Result<Option<Vec<u8>>, BridgeError> {
@@ -683,6 +695,17 @@ impl BrowserClient {
     }
     pub fn request_id(&self, bytes: &[u8]) -> Result<String, JsValue> {
         request_id(bytes).map_err(BridgeError::js)
+    }
+    pub fn request_is_shop_buy(&self, bytes: &[u8]) -> Result<bool, JsValue> {
+        let message = ClientMessage::decode(bytes)
+            .map_err(|_| BridgeError::protocol("Invalid encoded request.").js())?;
+        Ok(matches!(
+            message.command,
+            Some(Command::WorldInput(game::WorldInput {
+                action: Some(game::world_input::Action::ShopBuy(_)),
+                ..
+            }))
+        ))
     }
     pub fn state(&self) -> Result<String, JsValue> {
         self.inner.state().map_err(BridgeError::js)

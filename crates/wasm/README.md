@@ -22,7 +22,8 @@ The raw matching bindgen JS/WASM pair is available under `/client/wasm/`.
 | `transport_lost()` | Preserve uncertain input, never passwords. |
 | `retry_uncertain_input()` | After a real rejoin, return either the same operation/sequence with its renewed lease, or no request when commitment is proven. |
 | `retry_lifecycle()` | Retry a transport-uncertain/unavailable leave or logout with its original UUID and lease, without rejoining. |
-| `submit_selected(uuid, intentJson, itemId)` | Preserve an explicitly selected shop ItemId at the WASM boundary. Purchases remain unsent until the exact identity-bound wire ABI is relayed. |
+| `submit_selected(uuid, intentJson, itemId)` | Compatibility adapter that writes the supplied canonical ItemId into exact `expected_item`; conflicting identity fields reject without replacement. New callers can use `submit` with `expected_item` directly. |
+| `request_is_shop_buy(requestBytes)` | Inspect a retained request with generated Protobuf so rejected uncertain purchases refresh views without a JS wire parser. |
 | `set_catalog(json)` | Install the content-revision-matched, display-only catalog. |
 | `state()` | JSON public state; no bearer token, world lease, other-player containers, or closed bank contents. |
 | `authorization()` | Transport-only memory accessor. Never serialize, log, persist, put in a URL, or expose through `AppServices`. |
@@ -69,10 +70,22 @@ errors intact. It does not implement another guard/price/readiness engine.
   selections return `quoteError` while still reconciling the valid world/events.
   Quotes are response-only, not sticky prices returned by `state()`.
 * Shop rows retain ItemId both as `row.itemId` and `row.item.id`; purchase
-  selections carry the UI-chosen ID into `submit_selected`, never infer it
-  from an index. The separate expected-item purchase-wire safety fix is still
-  pending exact relay. Both raw/index-only and selected purchases are refused
-  before sequence allocation until that ABI is integrated.
+  selections carry the UI-displayed **canonical `row.item.id`** as
+  `expected_item`. The authorized `3310032`/`af75e17` repairs are integrated:
+  Protobuf `ShopBuy.expected_item` is optional string tag4, while WorldInput
+  shop-buy tag25 and quote shop-buy tag3 are unchanged. New browser requests
+  require identity; no numeric source ID or client price substitutes for it.
+  The compatibility adapter never silently overwrites a conflicting ID.
+  Read-only quote selections likewise carry `expected_item`; the older local
+  quote spelling `itemId` remains an alias but always emits the new wire field.
+* Client-core retains original operation UUID, sequence and expected ItemId
+  across uncertain retries. A stale rejection does not advance the sequence.
+  Legacy None JSON/wire/canonical-v1 hashes—including historical committed
+  extra-row operations—remain governed by the unchanged shared compatibility
+  path; retries are never rewritten from a current row. New index-only browser
+  submissions are refused, although the server still supports legacy immutable
+  fixed-source rows. Shared/engine tests cover extra capacity reclamation,
+  tombstones, source restock phase, two actors and restart.
 * Original inventory **action-label** bindings can be carried in the catalog
   from the verified source collection's `interfaceOptions`. They are labels,
   not an item-ownership or permission verdict. Missing labels stay explicit.

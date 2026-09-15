@@ -141,10 +141,12 @@ pub(crate) fn action(input: &str) -> Result<Action, BridgeError> {
             shop,
             item_index,
             quantity,
+            expected_item,
         } => Action::ShopBuy(game::ShopBuy {
             shop: shop.to_string(),
             item_index: u32::from(item_index),
             quantity: quantity.get(),
+            expected_item: expected_item.map(|item| item.to_string()),
         }),
         GameIntent::ShopSell {
             shop,

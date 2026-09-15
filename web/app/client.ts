@@ -15,6 +15,7 @@ export interface WasmClient {
   receive(bytes: Uint8Array): string;
   receive_for(requestId: string, bytes: Uint8Array): string;
   request_id(bytes: Uint8Array): string;
+  request_is_shop_buy(bytes: Uint8Array): boolean;
   state(): string;
   set_catalog(input: string): string;
   transport_lost(): void;
@@ -191,7 +192,15 @@ export class BrowserApp implements AppServices {
     const installed = bridgeState(this.#bridge.set_catalog(JSON.stringify(catalog)));
     await this.#acceptWorld(installed);
     const retry = this.#bridge.retry_uncertain_input();
-    if (retry !== undefined) await this.#acceptWorld(await this.#exchange(retry));
+    if (retry !== undefined) {
+      const shopBuy = this.#bridge.request_is_shop_buy(retry);
+      try { await this.#acceptWorld(await this.#exchange(retry)); }
+      catch (value) {
+        const error = appError(value);
+        if (shopBuy) await this.#refreshRejectedShop(error);
+        throw error;
+      }
+    }
     this.#reconnectAttempts = 0;
     this.#publish({ loading: null });
     this.#schedulePoll();
@@ -227,7 +236,7 @@ export class BrowserApp implements AppServices {
     // Snapshot the input before it can be mutated by a UI selection/drag update.
     const json = JSON.stringify(intent);
     const kind = intent.kind;
-    const itemId = kind === "shop_buy" && "itemId" in intent ? intent.itemId : null;
+    const itemId = kind === "shop_buy" ? intent.expected_item : null;
     await this.#serial(async () => {
       if (this.#state.phase !== "world") throw new AppError("Wait for the world connection before acting.", { kind: "state" });
       if (presenceOf(this.#state.world)?.acceptsInput === false) {
@@ -235,12 +244,18 @@ export class BrowserApp implements AppServices {
       }
       this.#publish({ error: null });
       if (kind === "shop_buy" && typeof itemId !== "string") {
-        throw new AppError("No purchase was sent. Retain the selected shop row's ItemId; an index alone is not a purchase identity.", { kind: "input" });
+        throw new AppError("No purchase was sent. Supply expected_item from the displayed row's canonical item.id; an index or numeric source ID is not a purchase identity.", { kind: "input" });
       }
       if (kind === "request_logout") this.#logoutRequested = true;
       const id = crypto.randomUUID();
-      const bytes = itemId === null ? this.#bridge.submit(id, json) : this.#bridge.submit_selected(id, json, itemId);
-      const result = await this.#exchange(bytes);
+      let result: Readonly<BridgeState>;
+      try {
+        result = await this.#exchange(this.#bridge.submit(id, json));
+      } catch (value) {
+        const error = appError(value);
+        if (kind === "shop_buy") await this.#refreshRejectedShop(error);
+        throw error;
+      }
       await this.#acceptWorld(result);
       if (kind === "request_logout") await this.#finishLogout();
     });
@@ -251,14 +266,32 @@ export class BrowserApp implements AppServices {
     let quote: Readonly<QuoteView> | null = null;
     await this.#serial(async () => {
       if (this.#state.phase !== "world") throw new AppError("A joined source context is required for a quote.", { kind: "state" });
-      const state = await this.#request("quote", selection);
+      let state: Readonly<BridgeState>;
+      try { state = await this.#request("quote", selection); }
+      catch (value) {
+        const error = appError(value);
+        if (selection.kind === "shop_buy") await this.#refreshRejectedShop(error);
+        throw error;
+      }
       await this.#acceptWorld(state);
-      if (state.quoteError) throw new AppError(state.quoteError, { kind: "stale_selection" });
+      if (state.quoteError) {
+        this.#generation++;
+        throw new AppError(state.quoteError, { kind: "stale_selection" });
+      }
       invariant(state.quote, "The source quote response is missing.", "protocol");
       quote = state.quote;
     });
     invariant(quote, "The source quote was not returned.", "protocol");
     return quote;
+  }
+
+  async #refreshRejectedShop(error: AppError): Promise<void> {
+    if (error.kind !== "server" || error.code !== 3) return;
+    // Rule denials currently share the Conflict envelope. Refresh every rejected
+    // buy/quote, retain the original error ID, and never retry or retarget a buy.
+    this.#generation++;
+    await this.#acceptWorld(await this.#request("poll"));
+    error.message = `${error.message} The shop view was refreshed; choose the current item again.`;
   }
 
   async #acceptWorld(state: Readonly<BridgeState>): Promise<void> {
@@ -321,7 +354,7 @@ export class BrowserApp implements AppServices {
     const generation = this.#generation;
     const operation = this.#tail.then(async () => {
       if (this.#disposed || generation !== this.#generation) {
-        throw new AppError("This unsent input was cancelled after the connection changed.", { kind: "cancelled" });
+        throw new AppError("This unsent input was cancelled after the connection or source selection changed.", { kind: "cancelled" });
       }
       try { await action(); }
       catch (value) {

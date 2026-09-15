@@ -325,10 +325,12 @@ Before integrated-client completion:
 3. The authorized backend/content commits are integrated: guarded contexts,
    quotes, presence, all three additive intents and lifecycle-journal retries
    are mapped. Align UI consumption of multi-panel recovery and exact U64 fees,
-   plus source inventory action labels. Preserve shop ItemId through the
-   selection/WASM boundary; purchases stay unsent until the separate exact
-   expected-item purchase wire contract is relayed. Do not manufacture that
-   field's ABI. Source contact/offline-clock fixes are integrated; the newly
+   plus source inventory action labels. Shop expected-item/capacity fixes
+   `3310032` and `af75e17` are integrated: new buys and quotes send the displayed
+   canonical `item.id` as exact `expected_item` (ShopBuy tag4). Legacy None
+   bytes/hashes and original uncertain intents are preserved. Rejected
+   selections refresh without retargeting or silently retrying another item.
+   No shop identity/backend capacity blocker remains. Source contact/offline-clock fixes are integrated; the newly
    demonstrated game-descriptor size limit and the separately pending actor
    collision/style fixes remain visible, never bypassed with seeded state.
 4. Align renderer `observe()`/applied settings/GPU completion ABI and the

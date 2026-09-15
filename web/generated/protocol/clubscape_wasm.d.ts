@@ -16,6 +16,7 @@ export class BrowserClient {
     receive(bytes: Uint8Array): string;
     receive_for(request: string, bytes: Uint8Array): string;
     request_id(bytes: Uint8Array): string;
+    request_is_shop_buy(bytes: Uint8Array): boolean;
     retry_lifecycle(): Uint8Array | undefined;
     retry_uncertain_input(): Uint8Array | undefined;
     set_catalog(input: string): string;
@@ -36,6 +37,7 @@ export interface InitOutput {
     readonly browserclient_receive: (a: number, b: number, c: number) => [number, number, number, number];
     readonly browserclient_receive_for: (a: number, b: number, c: number, d: number, e: number) => [number, number, number, number];
     readonly browserclient_request_id: (a: number, b: number, c: number) => [number, number, number, number];
+    readonly browserclient_request_is_shop_buy: (a: number, b: number, c: number) => [number, number, number];
     readonly browserclient_retry_lifecycle: (a: number) => [number, number, number, number];
     readonly browserclient_retry_uncertain_input: (a: number) => [number, number, number, number];
     readonly browserclient_set_catalog: (a: number, b: number, c: number) => [number, number, number, number];

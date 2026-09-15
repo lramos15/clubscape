@@ -187,6 +187,7 @@ fn every_representable_shared_intent_round_trips_through_generated_wire() {
         json!({"kind":"produce_at","recipe":"recipe.fixture","target":{"kind":"spawn","spawn":"spawn.fixture"},"quantity":1}),
         json!({"kind":"bank_deposit","banker":"spawn.fixture","inventory_slot":0,"quantity":1}),
         json!({"kind":"bank_withdraw","banker":"spawn.fixture","bank_slot":0,"quantity":1,"noted":false}),
+        json!({"kind":"shop_buy","shop":"shop.fixture","item_index":0,"quantity":1,"expected_item":"item.fixture"}),
         json!({"kind":"shop_sell","shop":"shop.fixture","inventory_slot":0,"quantity":1}),
         json!({"kind":"set_combat_style","style":"style.fixture"}),
         json!({"kind":"cast","spell":"spell.fixture","target":null}),
@@ -225,24 +226,69 @@ fn every_representable_shared_intent_round_trips_through_generated_wire() {
 }
 
 #[test]
-fn shop_purchase_identity_is_retained_without_guessing_the_pending_wire_contract() {
+fn new_shop_purchases_use_the_selected_identity_and_never_replace_conflicting_ids() {
     let mut bridge = joined();
     let input = r#"{"kind":"shop_buy","shop":"shop.fixture","item_index":0,"quantity":1}"#;
     assert!(bridge.submit(&id(4), input).is_err());
-    let error = bridge
+    let wire = bridge
         .submit_selected(&id(4), input, "item.fixture")
-        .unwrap_err();
-    let error = serde_json::to_value(error).unwrap();
-    assert_eq!(error["kind"], "unsupported");
-    assert!(error["message"].as_str().unwrap().contains("item.fixture"));
+        .unwrap();
+    let Some(Command::WorldInput(input)) = ClientMessage::decode(wire.as_slice()).unwrap().command
+    else {
+        panic!()
+    };
+    let Some(game::world_input::Action::ShopBuy(buy)) = input.action else {
+        panic!()
+    };
+    assert_eq!(buy.expected_item.as_deref(), Some("item.fixture"));
     assert_eq!(
-        serde_json::from_str::<Value>(&bridge.state().unwrap()).unwrap()["uncertainInput"],
-        false
+        input.sequence, 1,
+        "The refused index-only input did not allocate a sequence."
     );
+    let mut bridge = joined();
+    assert!(bridge.submit_selected(&id(4),
+        r#"{"kind":"shop_buy","shop":"shop.fixture","item_index":0,"quantity":1,"expected_item":"item.original"}"#,
+        "item.replacement").is_err());
+    assert!(bridge.submit(&id(4), walk()).is_ok());
+}
+
+#[test]
+fn uncertain_shop_retry_retains_original_item_identity_and_stale_rejection_keeps_sequence() {
+    let mut bridge = joined();
+    let json = r#"{"kind":"shop_buy","shop":"shop.fixture","item_index":2,"quantity":5,"expected_item":"item.original"}"#;
+    let original = ClientMessage::decode(bridge.submit(&id(4), json).unwrap().as_slice()).unwrap();
+    bridge.transport_lost();
+    join(&mut bridge, 5, 1, 9_007_199_254_740_994);
+    let retry = ClientMessage::decode(bridge.retry().unwrap().unwrap().as_slice()).unwrap();
+    assert_eq!(retry.request_id, original.request_id);
+    let (Some(Command::WorldInput(before)), Some(Command::WorldInput(after))) =
+        (original.command, retry.command)
+    else {
+        panic!()
+    };
+    assert_eq!(before.action, after.action);
+    assert_ne!(before.world_session_id, after.world_session_id);
+    let Some(game::world_input::Action::ShopBuy(buy)) = after.action else {
+        panic!()
+    };
+    assert_eq!(buy.expected_item.as_deref(), Some("item.original"));
     assert!(
-        bridge.submit(&id(4), walk()).is_ok(),
-        "Refused purchases cannot allocate a sequence."
+        reply(
+            &mut bridge,
+            4,
+            Outcome::Error(clubscape_protocol::Error {
+                code: clubscape_protocol::ErrorCode::Conflict as i32,
+                message: "The source selection is stale.".into(),
+                error_id: id(99),
+                retry_after_seconds: 0,
+            })
+        )
+        .is_err()
     );
+    let state: Value = serde_json::from_str(&bridge.state().unwrap()).unwrap();
+    assert_eq!(state["nextSequence"], "1");
+    assert_eq!(state["uncertainInput"], false);
+    assert!(bridge.retry().unwrap().is_none());
 }
 
 #[test]
@@ -257,6 +303,8 @@ fn malformed_inputs_and_creation_options_do_not_enter_the_pending_queue() {
         r#"{"kind":"produce_selected","recipe":"recipe.fixture","target":null,"quantity":2,"mode":"single"}"#,
         r#"{"kind":"set_played_time","ticks":"120000"}"#,
         r#"{"kind":"set_ground_clock","ground_item_id":"ground.fixture","clock":"owner_online"}"#,
+        r#"{"kind":"shop_buy","shop":"shop.fixture","item_index":0,"quantity":1,"expected_item":123}"#,
+        r#"{"kind":"shop_buy","shop":"shop.fixture","item_index":0,"quantity":1,"expected_item":"spawn.not_an_item"}"#,
     ] {
         assert!(bridge.submit(&id(4), input).is_err());
     }

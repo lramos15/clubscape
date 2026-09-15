@@ -26,7 +26,8 @@ pub(crate) enum Selection {
     ShopBuy {
         shop: String,
         item_index: u32,
-        item_id: String,
+        #[serde(rename = "expected_item", alias = "itemId")]
+        expected_item: String,
         quantity: u32,
     },
     ShopSell {
@@ -70,15 +71,16 @@ impl Selection {
             Self::ShopBuy {
                 shop,
                 item_index,
-                item_id,
+                expected_item,
                 quantity,
             } => {
-                ItemId::new(item_id)
+                ItemId::new(expected_item)
                     .map_err(|_| BridgeError::input("A quote must retain the selected ItemId."))?;
                 Request::ShopBuy(game::ShopBuy {
                     shop: shop.clone(),
                     item_index: *item_index,
                     quantity: *quantity,
+                    expected_item: Some(expected_item.clone()),
                 })
             }
             Self::ShopSell {
@@ -138,7 +140,7 @@ impl Selection {
             (
                 Self::ShopBuy {
                     shop,
-                    item_id,
+                    expected_item: item_id,
                     quantity,
                     ..
                 }

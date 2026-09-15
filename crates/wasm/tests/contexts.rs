@@ -228,16 +228,24 @@ fn shop_rows_keep_item_ids_stock_zero_and_server_prices_without_inventing_stacks
 #[test]
 fn quote_requests_do_not_consume_sequences_and_stale_item_selections_are_not_prices() {
     let mut bridge = client();
-    let request = r#"{"kind":"shop_buy","shop":"shop.fixture","itemIndex":0,"itemId":"item.fixture.tool","quantity":2}"#;
+    let request = r#"{"kind":"shop_buy","shop":"shop.fixture","itemIndex":0,"expected_item":"item.fixture.tool","quantity":2}"#;
     let wire = bridge.prepare(&id(4), "quote", request).unwrap();
     let Some(Command::PollWorld(poll)) = ClientMessage::decode(wire.as_slice()).unwrap().command
     else {
         panic!()
     };
     assert_eq!(poll.after_revision, 1);
+    let selected = poll.quote.unwrap();
+    let Some(game::quote_request::Request::ShopBuy(buy)) = &selected.request else {
+        panic!()
+    };
+    assert_eq!(buy.expected_item.as_deref(), Some("item.fixture.tool"));
     assert!(matches!(
-        clubscape_protocol::quote_request(&poll.quote.unwrap()).unwrap(),
-        clubscape_protocol::ReadOnlyQuote::ShopBuy { .. }
+        clubscape_protocol::quote_request(&selected).unwrap(),
+        clubscape_protocol::ReadOnlyQuote::ShopBuy {
+            expected_item: Some(_),
+            ..
+        }
     ));
     let mut world = snapshot(2);
     world.quote = Some(game::Quote {

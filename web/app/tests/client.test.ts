@@ -33,9 +33,9 @@ class FixtureBridge implements WasmClient {
     this.intents.push(JSON.parse(input));
     return new Uint8Array([1]);
   }
-  submit_selected(_request: string, input: string, itemId: string): Uint8Array {
+  submit_selected(request: string, input: string, itemId: string): Uint8Array {
     this.selected.push({ input, itemId });
-    throw new AppError("Expected-ItemId wire adaptation is pending.", { kind: "unsupported" });
+    return this.submit(request, JSON.stringify({ ...JSON.parse(input), expected_item: itemId }));
   }
   receive(): string {
     this.pending = false;
@@ -51,6 +51,7 @@ class FixtureBridge implements WasmClient {
     return this.state();
   }
   request_id(): string { return "00000000-0000-4000-8000-000000000001"; }
+  request_is_shop_buy(): boolean { return (this.intents.at(-1) as { kind?: string } | undefined)?.kind === "shop_buy"; }
   receive_for(): string { return this.receive(); }
   state(): string { return JSON.stringify(this.stateValue); }
   authorization(): string | undefined { return this.stateValue.authenticated ? "not-a-real-token" : undefined; }
@@ -170,16 +171,63 @@ test("shop purchase selection identity reaches WASM unchanged and never becomes 
   }) as Fetch), hooks());
   await app.enterWorld();
   const baseline = requests;
-  await assert.rejects(app.send({ kind: "shop_buy", shop: "shop.fixture", item_index: 0, quantity: 1 }), /ItemId/);
-  const selected = { kind: "shop_buy" as const, shop: "shop.fixture", item_index: 0, quantity: 1, itemId: "item.fixture.tool" };
+  await assert.rejects(app.send({ kind: "shop_buy", shop: "shop.fixture", item_index: 0, quantity: 1 }), /expected_item/);
+  const selected = { kind: "shop_buy" as const, shop: "shop.fixture", item_index: 0, quantity: 1, expected_item: "item.fixture.tool" };
   const pending = app.send(selected);
-  selected.itemId = "item.fixture.other";
-  await assert.rejects(pending, /wire adaptation/);
-  assert.equal(bridge.selected[0]?.itemId, "item.fixture.tool");
-  assert.equal(JSON.parse(bridge.selected[0]!.input).itemId, "item.fixture.tool");
-  assert.equal(requests, baseline);
-  assert.equal(bridge.intents.length, 0);
+  selected.expected_item = "item.fixture.other";
+  await pending;
+  assert.deepEqual(bridge.intents, [{ kind: "shop_buy", shop: "shop.fixture", item_index: 0, quantity: 1, expected_item: "item.fixture.tool" }]);
+  assert.equal(bridge.selected.length, 0, "The current shell sends the canonical field directly.");
+  assert.equal(requests, baseline + 1);
   await app.dispose();
+});
+
+test("rejected buys and quotes refresh real view data, preserve the error ID and never retarget queued input", async () => {
+  for (const rejectedOperation of ["intent", "quote"]) {
+    const bridge = new FixtureBridge();
+    const originalReceive = bridge.receive.bind(bridge);
+    const errorId = "00000000-0000-4000-8000-000000000060";
+    const rejection = JSON.stringify({
+      kind: "server", message: "The authoritative source query requirements are not satisfied.",
+      code: 3, errorId, recoverable: true,
+    });
+    bridge.receive = () => {
+      if (bridge.lastOperation === rejectedOperation) {
+        bridge.pending = false;
+        throw rejection;
+      }
+      if (bridge.lastOperation === "poll" && bridge.stateValue.world) {
+        bridge.stateValue.world.shop = {
+          id: "shop.fixture", name: "Fixture shop", interfaceId: null, currency: "item.coins",
+          rows: [{ index: 0, itemId: "item.replacement", stock: 2, buyPrice: 7, sellPrice: 1,
+            item: { id: "item.replacement", name: "Replacement", quantity: 2, sourceId: 23,
+              iconAsset: null, instanceId: null, charges: null, actions: [] } }],
+        };
+      }
+      return originalReceive();
+    };
+    const app = new BrowserApp(bridge, new RpcTransport((async () =>
+      new Response(new Uint8Array([1]), { headers: { "content-type": "application/x-protobuf" } })) as Fetch), hooks());
+    await app.enterWorld();
+    if (rejectedOperation === "intent") {
+      const buy = { kind: "shop_buy" as const, shop: "shop.fixture", item_index: 0, quantity: 1, expected_item: "item.original" };
+      const results = await Promise.allSettled([app.send(buy), app.send(buy)]);
+      assert(results.every((result) => result.status === "rejected"));
+      assert.equal(bridge.intents.length, 1);
+      assert.deepEqual(bridge.intents[0], buy);
+    } else {
+      await assert.rejects(app.quote({
+        kind: "shop_buy", shop: "shop.fixture", itemIndex: 0, quantity: 1, expected_item: "item.original",
+      }), /choose the current item again/);
+      assert.equal(bridge.intents.length, 0);
+    }
+    assert.equal(bridge.operations.at(-1), "poll");
+    assert.equal(app.state().world?.shop?.rows[0]?.item.id, "item.replacement");
+    assert.equal(app.state().error?.errorId, errorId);
+    assert.match(app.state().error?.message ?? "", /refreshed/);
+    assert.equal(bridge.stateValue.nextSequence, "1");
+    await app.dispose();
+  }
 });
 
 test("lost logout acknowledgements reconcile via real account logout without rejoining the body", async () => {

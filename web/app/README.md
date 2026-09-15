@@ -72,11 +72,29 @@ capacity/price guarantee. A changed ItemId/selection rejects the quote while
 retaining the actual updated world view and deduplicated events.
 
 For a shop buy, the UI must retain the **displayed row's** `item.id` as
-`ShopPurchaseIntent.itemId`; do not look up a replacement ID from a possibly
-changed index. That ID is preserved into the WASM `submit_selected` boundary.
-Purchases currently fail explicitly, before network/sequence allocation,
-pending the relayed expected-item wire safety contract. This is a narrow
-purchase safety dependency, not the former backend view/lifecycle interlock.
+`ShopPurchaseIntent.expected_item`; do not look up a replacement ID from a
+possibly changed index, use numeric `sourceId`, or send a calculated price.
+The exact identity-bearing wire contract is now integrated:
+
+```ts
+await services.send({
+  kind: "shop_buy", shop: displayedShop.id, item_index: displayedRow.index,
+  quantity, expected_item: displayedRow.item.id,
+});
+await app.quote({
+  kind: "shop_buy", shop: displayedShop.id, itemIndex: displayedRow.index,
+  quantity, expected_item: displayedRow.item.id,
+});
+```
+
+The selection is snapshotted before queuing; uncertain retries keep the
+original UUID/sequence/intent/ItemId. A server buy/quote conflict refreshes the
+actual view, preserves the original error ID, cancels unsent dependent inputs
+and asks the user to choose again. It never resubmits against a replacement
+row. This also applies to a rejected uncertain purchase after rejoin. The wire
+currently groups source-rule denials under Conflict, so refresh is deliberately
+performed for every rejected shop buy/quote rather than guessing a subtype
+from human error text. No purchase identity blocker remains.
 
 `inventoryActions` in the display catalog contains only labels extracted from
 verified original item `interfaceOptions`, preserving their order. The source

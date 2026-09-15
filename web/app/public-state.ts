@@ -32,11 +32,11 @@ export interface PublicWorld extends WorldView {
   recoveryContext: { views: PublicRecovery[] } | null;
 }
 
-export type ShopPurchaseIntent = Extract<GameIntent, { kind: "shop_buy" }> & { itemId: string };
+export type ShopPurchaseIntent = Extract<GameIntent, { kind: "shop_buy" }> & { expected_item: string };
 export type QuoteRequest =
   | { kind: "bank_deposit"; inventorySlot: number; quantity: number }
   | { kind: "bank_withdraw"; bankSlot: number; quantity: number; noted: boolean }
-  | { kind: "shop_buy"; shop: string; itemIndex: number; itemId: string; quantity: number }
+  | { kind: "shop_buy"; shop: string; itemIndex: number; expected_item: string; quantity: number }
   | { kind: "shop_sell"; shop: string; inventorySlot: number; itemId: string; quantity: number }
   | { kind: "recovery"; death: string; storage: "grave" | "death_office"; items: string[] };
 export type QuoteView = { revision: string; tick: string } & (
