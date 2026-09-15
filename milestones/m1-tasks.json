@@ -8,13 +8,15 @@
     "active": [
       {"id": "director", "task": "M1-FLEET-CONTRACTS"},
       {"id": "2766e089-44e5-4a1d-974e-7b03ad9c269d", "task": "M1-FLEET-LIVE-SERVER"},
-      {"id": "fdda1fb0-1135-4cf8-8cff-3db550e48f54", "task": "M1-FLEET-BINDING-APPLICATION"}
+      {"id": "fdda1fb0-1135-4cf8-8cff-3db550e48f54", "task": "M1-FLEET-BINDING-APPLICATION"},
+      {"id": "bb7f85f7-096a-4377-80cb-3e7eae196c6b", "task": "M1-BROWSER-RENDERER"},
+      {"id": "cc864d7a-37cc-4869-a7b4-d484d01cede5", "task": "M1-BROWSER-UI"},
+      {"id": "cdfad64d-9162-439f-a525-58e1114dd7f4", "task": "M1-BROWSER-AUDIO"},
+      {"id": "78d01af9-70a4-4b02-8339-6a61eb377374", "task": "M1-BROWSER-SHELL"}
     ],
     "reserved": [
-      {"id": "renderer-worker", "task": "M1-BROWSER-RENDERER"},
-      {"id": "ui-worker", "task": "M1-BROWSER-UI"},
-      {"id": "audio-worker", "task": "M1-BROWSER-AUDIO"},
-      {"id": "shell-worker", "task": "M1-BROWSER-SHELL"}
+      {"id": "headless-journey-worker", "task": "M1-HEADLESS-JOURNEY"},
+      {"id": "world-review-worker", "task": "M1-ENGINE-REVIEW"}
     ],
     "queued": [],
     "parked": [
@@ -28,6 +30,42 @@
     "usage_accounting": "milestones/evidence/m1-usage-snapshot.json records the available delayed session snapshot; final project-wide credits/currency are unavailable."
   },
   "tasks": [
+    {
+      "id": "M1-HEADLESS-JOURNEY",
+      "goal": "Implement and execute the complete legitimate M1 protocol journey with real account/world/persistence boundaries, not seeded states.",
+      "status": "READY",
+      "specs": ["prompt.md section 30.1", "research/journey-rules/**", "spec/game-networking.md", "content/m1/README.md"],
+      "dependencies": ["M1-FLEET-ENGINE-CLOSURE"],
+      "allowed_paths": ["tools/simulator/**", "tools/journey-tests/**", "tests/scenarios/**"],
+      "forbidden_paths": ["prompt.md", "crates/**", "content/**", "assets/**", "web/**", "spec/**", "milestones/**"],
+      "outputs": ["Actual fresh-account tutorial/Lumbridge/Cook/death/recovery runner and checkpoints"],
+      "validation_commands": [],
+      "test_requirements": ["No direct DB/item/XP/quest mutation", "Full source action ordering and acquisition", "Reconnect/restart/duplicate completion evidence"],
+      "acceptance": ["SQL m1-headless-journey reports actual executed full-scope results or precise backend/content blockers"],
+      "reserved_namespaces": [],
+      "source_notes": ["Real server protobuf APIs and canonical source content"],
+      "parity_entries": [],
+      "adaptations": [],
+      "evidence": []
+    },
+    {
+      "id": "M1-ENGINE-REVIEW",
+      "goal": "Independently review integrated authoritative gameplay/core validation for high-confidence correctness and ownership bugs.",
+      "status": "READY",
+      "specs": ["spec/game-contracts.md", "spec/adaptations.md", "crates/world-engine/README.md"],
+      "dependencies": ["M1-FLEET-ENGINE-CLOSURE"],
+      "allowed_paths": [],
+      "forbidden_paths": ["**"],
+      "outputs": ["Revision-bound actionable review findings or no-findings within the bounded scope"],
+      "validation_commands": [],
+      "test_requirements": ["State/value conservation", "Source guard/action/tick/owner boundaries", "No unimplemented UI or source-data uncertainty mislabeled as a code bug"],
+      "acceptance": ["SQL m1-engine-review records completed independent assessment; defects block affected acceptance"],
+      "reserved_namespaces": [],
+      "source_notes": ["All reference/owner gates remain separate"],
+      "parity_entries": [],
+      "adaptations": [],
+      "evidence": []
+    },
     {
       "id": "M1-BROWSER-RENDERER",
       "goal": "Implement actual source-faithful Rust/WASM WebGPU world/model/animation rendering and picking.",
