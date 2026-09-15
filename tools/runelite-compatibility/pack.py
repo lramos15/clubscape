@@ -6,6 +6,7 @@ import argparse
 import gzip
 import hashlib
 import json
+import re
 from pathlib import Path
 import shutil
 import uuid
@@ -21,6 +22,14 @@ def sha(data):
 
 def encode(value):
     return json.dumps(value, ensure_ascii=True, separators=(",", ":"), sort_keys=True).encode()
+
+
+def private_descriptor_limit():
+    source = ROOT / "crates/server/src/game_service/content.rs"
+    matches = re.findall(r"\bconst MAX_GAME_DESCRIPTOR_BYTES: usize = ([0-9]+) \* 1024;", source.read_text())
+    if len(matches) != 1:
+        raise ValueError("Recheck the actual shared descriptor limit; do not assume an obsolete capacity.")
+    return int(matches[0]) * 1024
 
 
 def asset_ids(value):
@@ -126,6 +135,7 @@ def package(destination, source, *, report_path=None, catalog_path=None):
     }
     catalog_path.write_bytes(encode(catalog))
     lower_bound = len(encode(dict.fromkeys(required, "/assets/")))
+    descriptor_limit = private_descriptor_limit()
     report = {
         "schema_version": 1, "kind": "unchanged_source_pack",
         "artifact_sha256": sha(artifact), "content_revision": definition["revision"],
@@ -133,9 +143,11 @@ def package(destination, source, *, report_path=None, catalog_path=None):
             (destination / r["path"]).stat().st_size for r in files),
         "descriptor_bytes": len(encoded_descriptor),
         "descriptor_sha256": sha(encoded_descriptor),
-        "strict_server_descriptor_limit_bytes_at_base": 256 * 1024,
+        "strict_server_descriptor_limit_bytes": descriptor_limit,
+        "descriptor_limit_source": "crates/server/src/game_service/content.rs#MAX_GAME_DESCRIPTOR_BYTES",
+        "descriptor_limit_source_sha256": sha((ROOT / "crates/server/src/game_service/content.rs").read_bytes()),
         "minimum_assets_object_bytes_even_if_every_asset_shared_shortest_legal_url": lower_bound,
-        "fits_base_server_descriptor_limit": len(encoded_descriptor) <= 256 * 1024,
+        "fits_current_server_descriptor_limit": len(encoded_descriptor) <= descriptor_limit,
         "source_content_changed": False, "server_guards_changed": False,
         "game_root": str(destination.relative_to(ROOT)),
         "adapter_catalog": str(catalog_path.relative_to(ROOT)),

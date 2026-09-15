@@ -1,0 +1,71 @@
+{
+  "schema_version": 1,
+  "task": "M1-RUNELITE-FEASIBILITY",
+  "authorization_received": "2026-09-15T01:01:22.811-04:00",
+  "upstream_commit": "2c5fe68b9a6e2e99bcbf3543174f5540be02e95f",
+  "integrated_commit": "4953c4ddcdf87773ffab008d22090ff56b02024d",
+  "known_shared_startup_blockers": [],
+  "resolved_blockers": [
+    {
+      "id": "game-root-environment-nesting",
+      "status": "resolved",
+      "source": "crates/server/src/config.rs",
+      "source_sha256": "b5689f249a360685a92f26ec46e821cb34ca0b8e0f3565e81d5b141c5020ad2c"
+    },
+    {
+      "id": "strict-game-descriptor-capacity",
+      "status": "resolved",
+      "source": "crates/server/src/game_service/content.rs",
+      "source_sha256": "3e1a365e3ce856aa2e9350abb993c5f344750431e81edf132696373ff2a59f23",
+      "current_private_limit_bytes": 524288,
+      "pinned_descriptor_bytes": 283075,
+      "fits": true
+    }
+  ],
+  "current_candidate": {
+    "artifact_sha256": "df3e2a452c100ecd94d2abc68e5cb1556f58090700474f547e7fd36de6682b3d",
+    "revision": "m1.source-backed.v3.0e506f3dab24bbe0",
+    "game_root": "runelite/compatibility/artifacts/game-3a74cbe",
+    "descriptor_sha256": "7de30a533cd883659ff2e196631e265734b6104bf95218702288c9c7952b7feb",
+    "catalog_sha256": "ee495c0f7248f98ecb37694c278141329e3ad8a2ffbf1f46b15d3f24a8ee9068",
+    "repacked": false,
+    "world_or_rewards_reset": false,
+    "normal_account_created": false
+  },
+  "validation": {
+    "configuration_tests": 5,
+    "exact_descriptor_boundary_tests": 1,
+    "java_projection_checks": 9,
+    "java_shop_checks": 35,
+    "python_checks": 6,
+    "shared_wire_json_v1_hash_goldens": 5,
+    "clippy_exit": 0,
+    "rustfmt_exit": 0,
+    "reports": [
+      "research/runelite-feasibility/startup-regressions-2c5fe68.json",
+      "research/runelite-feasibility/service-probe-build-2c5fe68.json",
+      "research/runelite-feasibility/strict-compiler-capacity-2c5fe68.json",
+      "research/runelite-feasibility/validation-2c5fe68.json"
+    ],
+    "scope": "Configuration/synthetic boundary and strict-compiler/component checks only; not actual live server/RuneLite acceptance"
+  },
+  "history": {
+    "previous_research_files_byte_identical": 63,
+    "ledger_sha256": "026c99b9ebac16b9af97a8e901775a97ea097b0c29f78c9608855ace84ac11cd",
+    "same_bounds_explicitly_requested": true,
+    "maximum_live_invocations": 3,
+    "prior_invocations": 3,
+    "new_invocations": 0,
+    "old_failures_are_historical_not_current_blockers": true
+  },
+  "remaining_execution_prerequisite": "Explicit renewed/extended live-attempt admission; unchanged allocation is exhausted",
+  "work_status": "startup_fix_validated_and_integration_parked_at_unchanged_bound",
+  "compatibility_verified": false,
+  "tier": null,
+  "desktop_deferral_approved": false,
+  "whole_m1_or_presentation_claimed": false,
+  "new_live_services_started": 0,
+  "next_action": "Explicitly renew live-attempt allocation, then use this unchanged pinned df3e candidate for actual authoritative normal creation/join/scene/penguin/events/XP Tracker. Retain exact artifact during restart/reconnect.",
+  "review": "research/runelite-feasibility/startup-2c5fe68.md",
+  "parked": true
+}

@@ -1,0 +1,40 @@
+{
+  "schema_version": 1,
+  "checks": [
+    {
+      "command": [
+        "cargo",
+        "test",
+        "--quiet",
+        "--locked",
+        "--offline",
+        "-p",
+        "clubscape-server",
+        "--lib",
+        "config::tests"
+      ],
+      "exit_code": 0,
+      "stdout": "\nrunning 5 tests\n.....\ntest result: ok. 5 passed; 0 failed; 0 ignored; 0 measured; 36 filtered out; finished in 0.00s\n\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "cargo",
+        "test",
+        "--quiet",
+        "--locked",
+        "--offline",
+        "-p",
+        "clubscape-server",
+        "--lib",
+        "canonical_sized_game_descriptors_load_but_the_private_byte_limit_is_enforced"
+      ],
+      "exit_code": 0,
+      "stdout": "\nrunning 1 test\n.\ntest result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 40 filtered out; finished in 0.06s\n\n",
+      "stderr": ""
+    }
+  ],
+  "scope": "Shared configuration and synthetic descriptor-boundary unit tests only; no real database/world/RuneLite connection",
+  "live_integration_attempts": 0,
+  "compatibility_verified": false
+}

@@ -3,6 +3,14 @@
 Status: **Experimental adapter implemented; ClubScape compatibility UNVERIFIED.
 No support tier is established.**
 
+**Current prerequisite status:** startup fix2c5fe68 is integrated as4953c4d.
+The game-root environment and private descriptor-capacity blockers are
+**resolved**, not current interlocks. The unchanged candidate fits512KiB.
+The explicitly unchanged three-invocation allocation is exhausted; the live
+runtime/server/scene/player/event/plugin tuple remains unverified pending
+explicit renewed live admission. Historical sections below preserve prior
+failures rather than relabeling them as current.
+
 The upstream versions and host smoke evidence in
 [`docs/machines/sparky.md`](../docs/machines/sparky.md) do not establish a
 ClubScape scene bridge, state/event model, live connection or plugin support.
@@ -108,6 +116,25 @@ surfaces and renewed explicit live bounds still block the real RuneLite tuple.
 See [current source, checks and world-preservation evidence](../research/runelite-feasibility/canonical-3a74cbe.md).
 No new live invocation, support tier, whole-M1/presentation acceptance, desktop
 deferral or later milestone is claimed.
+
+## Shared startup repair completed
+
+Authorized2c5fe68b9a6e2e99bcbf3543174f5540be02e95f is applied as
+4953c4ddcdf87773ffab008d22090ff56b02024d. Standalone game-root configuration
+no longer depends on a web root or fake web bundle. Invalid configured roots
+remain fail-closed. Only the private descriptor limit changed to524,288 bytes;
+the preserved `df3e` candidate's283,075-byte descriptor fits unchanged.
+
+Five configuration tests and the exact512KiB/512KiB+1 boundary test pass, along
+with current owned codec/identity/harness and strict build/lint checks. This is
+not a new live integration or a source-account login.
+
+See [resolved prerequisites and remaining boundary](../research/runelite-feasibility/startup-2c5fe68.md).
+No old startup or resolved engine finding remains a blocker. No artifact/world/
+reward state or previous attempt ledger was reset; the remaining next action is
+explicit renewed live-attempt admission under a stated bound, not a fourth
+implicit launch. No RuneLite tier, desktop deferral or later milestone is
+approved.
 
 ## Original bounded M1 companion contract
 

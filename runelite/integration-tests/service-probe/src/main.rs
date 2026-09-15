@@ -20,8 +20,6 @@ fn inspect_artifact(path: &str) -> Result<(), Box<dyn std::error::Error>> {
             "artifact_sha256": sha256(&bytes),
             "referenced_assets_from_actual_compiler": smallest_assets.len(),
             "minimum_assets_map_bytes": minimum,
-            "base_server_descriptor_limit": 256 * 1024,
-            "fits_even_before_descriptor_metadata": minimum <= 256 * 1024,
             "compatibility_verified": false
         })
     );

@@ -6,7 +6,7 @@ import unittest
 from unittest.mock import patch
 
 from prepare import LOCAL, ROOT, linux_arm64
-from pack import package
+from pack import package, private_descriptor_limit
 from run import clean_environment, write_secret, validate_pack_selection
 
 
@@ -38,6 +38,9 @@ class HarnessChecks(unittest.TestCase):
         self.assertTrue(linux_arm64({"platform": [{"name": "linux", "arch": "aarch64"}]}))
         self.assertFalse(linux_arm64({"platform": [{"name": "linux"}]}))
         self.assertFalse(linux_arm64({"platform": [{"name": "win", "arch": "aarch64"}]}))
+
+    def test_descriptor_capacity_comes_from_current_shared_source(self):
+        self.assertEqual(private_descriptor_limit(), 512 * 1024)
 
     def test_changed_canonical_pack_cannot_overwrite_historical_outputs(self):
         directory = LOCAL / "unit-pack-history"
