@@ -11,14 +11,14 @@
       {"id": "cc864d7a-37cc-4869-a7b4-d484d01cede5", "task": "M1-BROWSER-UI"},
       {"id": "78d01af9-70a4-4b02-8339-6a61eb377374", "task": "M1-BROWSER-SHELL"},
       {"id": "2766e089-44e5-4a1d-974e-7b03ad9c269d", "task": "M1-GAMEPLAY-UI-CONTRACTS"},
-      {"id": "81ac9884-4f39-4f27-b516-6e9a42b09b51", "task": "M1-HEADLESS-JOURNEY"}
+      {"id": "81ac9884-4f39-4f27-b516-6e9a42b09b51", "task": "M1-HEADLESS-JOURNEY"},
+      {"id": "cdfad64d-9162-439f-a525-58e1114dd7f4", "task": "M1-AUDIO-CUE-TIMING"}
     ],
     "reserved": [],
     "queued": [],
     "parked": [
       {"id": "ac0f0856-44af-445b-bd90-6db7a1f4fc74", "reason": "Original scenery phase supplement6c68672d integratedb9cdd0f; parent36tests and exact27-observation/index verification pass. Renderer received active4/3/2 phases and original clocks; no automatic resumption."},
       {"id": "e6925772-df1f-4ff7-9efc-219f800a5a14", "reason": "Bounded UI4 review complete: one medium source-travel interruption bypass in timed UI actions. Director repair M1-UI-TRAVEL-INTERRUPTION is active; this is not final candidate signoff."},
-      {"id": "cdfad64d-9162-439f-a525-58e1114dd7f4", "reason": "Native preference/Skip/three-playlist controls64bd3257 integratedd13b3c7; parent41unit/41fullChrome checks and all275audio/1307pack hashes pass. Actual UI/shell persistence and source authority are separately owned; no automatic resumption."},
       {"id": "2a0ae699-6af8-45d5-90c7-3addfc56ee53", "reason": "Renewed five-invocation assessment complete; live creation/scene/window/baseline work, firstXP unverified after driverOutOfReach. No sixth invocation or automatic resumption."},
       {"id": "aab1ae0f-0238-4254-bff3-b7c046349c6b", "reason": "Shop capacity/identity fixes integrated as3310032+af75e17 with18 passing regressions; no automatic resumption."},
       {"id": "0f5ddddf-0aa0-4908-b0d3-1ffc6b1f7a20", "reason": "Actor presence/cadence fixes integrated as62a003c+e1076a8 with15 passing regressions; no automatic resumption."},
@@ -33,6 +33,24 @@
     "usage_accounting": "milestones/evidence/m1-usage-snapshot.json records the available delayed session snapshot; final project-wide credits/currency are unavailable."
   },
   "tasks": [
+    {
+      "id": "M1-AUDIO-CUE-TIMING",
+      "goal": "Repair the native cue-timing overruns reproduced by the actual composed browser harness without changing the approved timing bound.",
+      "status": "IMPLEMENTING",
+      "specs": ["web/audio/README.md", "tools/browser-audio-tests/**", ".worktrees/m1-browser-shell/.local/evidence/audio-preferences-handoff.json", ".worktrees/m1-browser-shell/.local/evidence/renderer-current-handoff/handoff.json"],
+      "dependencies": ["M1-AUDIO-PREFERENCE-CONTROLS"],
+      "allowed_paths": ["web/audio/**", "tools/browser-audio-tests/**", "research/browser-audio-policy/**"],
+      "forbidden_paths": ["prompt.md", "crates/**", "web/shared/**", "web/ui/**", "web/app/**", "web/renderer/**", "assets/**", "research/reference-pack/**", "tools/reference-pack/**", "milestones/**"],
+      "outputs": ["Exact case/boundary reproduction of26.440ms versus20.045ms", "Root-cause native queue/frame/audio-clock scheduling repair", "Repeated actual browser validation preserving all original cue and PCM semantics"],
+      "validation_commands": [],
+      "test_requirements": ["No threshold relaxation or reported-time substitution", "No fabricated early-start/source events or double offsets", "Preserve native FIFO/gesture/decode/jingle/mute/source cycles", "No ignored overruns or universal test slowdown to make timing pass", "All275 audio files and1307 frozen inputs unchanged"],
+      "acceptance": ["SQL m1-audio-cue-timing records exact measured before/after results and a real composed-harness recheck, not only earlier component passes"],
+      "reserved_namespaces": [],
+      "source_notes": ["Shell35e1258/6a85feb observed11 then9 native cue-timing failures, max26.440ms versus20.045ms; reproduced without the preference coordinator. Other account/source/persistence checks passed, but browser command correctly remained failed."],
+      "parity_entries": [],
+      "adaptations": [],
+      "evidence": []
+    },
     {
       "id": "M1-CONTEXTUAL-SHOP-ENTRY",
       "goal": "Admit a legitimate guarded source shop interaction without inventing a persistent shop-tab unlock or bypassing source context.",
