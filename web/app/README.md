@@ -307,32 +307,58 @@ Defaults come from `sourceAudioDefaults()` (effective255/127/127), not old
 linear unity assumptions. `SourceAudioSession.controls()`, `BrowserApp.audioControls()`
 and the read-only client observer expose actual positions/mixer/master state,
 with `sourceSliderToMixer` and `sourceMixerToAssetGain` used only for control
-observation—not applied again to playback. The native music mode IDs remain
+observation—not applied again to playback. Channel `referenceGains` explicitly
+distinguish native128/native255 calibration; they are not a claim about an
+active voice. `voices` reports the actual asset ID, rendered native level,
+applied native level and gain from `observeAudioState`. Thus a pending
+low-to-high jingle replacement cannot be mislabeled as already at full gain.
+The native music mode IDs remain
 area0/shuffle1/single2. Old `native_midi_end` directives are not emitted.
 
-`mountApplication` accepts an optional `sourceAudio` producer whose `scene(world)`
-returns the exact imported `SourceAudioScene` and whose optional music selector
-uses the exact audio-owner `SourceMusicSelector` contract. The wrapper delegates
-`setSourceAudioScene`/`setSourceMusicSelector` without computing attenuation,
+`mountApplication` accepts optional `sourceAudio.scene(world)` and
+`sourceAudio.music(world)` producers returning the imported `SourceAudioScene`
+and `SourceMusicState`. The latter preserves actual mode, Modern/Classic,
+unlocked groups, selected group, playlist and loop preference. The wrapper
+delegates `setSourceAudioScene`/`setSourceMusicState` without computing attenuation,
 retention, owner visibility, fades, next songs or varps. Scene coordinates stay
 in128-unit space; orientation, instance/owner and varp values are unchanged.
 An unavailable new scene stops stale ambience with explicit feedback, not an
-empty-scene success. Current renderer/protocol exports still lack the real
-listener/scenery/varp projection and authoritative next-selection input:
-`sourceSceneSupplied:false` / `musicSelectorBound:false` describe that absence.
-These flags describe supplied inputs, not proof that every emitter/asset is ready.
+empty-scene success. The first joined snapshot establishes the native actor
+without replaying old events, then binds its scene/music state after the
+audio-owned reset. Later scene inputs precede the coherent event batch; music
+state binds after the current world/area. No intermediate empty world update
+destroys Cook reward deltas. Identical music states do not restart playback.
+
+The native audio component now owns source-bound continuation. A next-song
+callback is **not required**. `musicContinuation:"native-bound"` identifies
+that policy, while `playback` reports the actual background plan.
+`sourceSceneSupplied` and `sourceMusicStateSupplied` describe supplied inputs,
+not proof that every emitter/asset is ready. `providedMusicState` is an immutable
+last accepted input, not an unlock grant or an echo of guessed source defaults.
+An omitted music update retains that actor's last supplied preference; title/
+actor changes clear the shell record and different actors never inherit it.
+Current renderer/protocol exports still lack the real listener/scenery/varp
+projection and manual/unlock-state input. The known M1 area's internal
+continuation is not blocked on either an invented unlock list or caller selector.
 
 Native policies are now calibrated, not the earlier generic gain/distance/fade
-placeholders. Actual source-scene/event/selection wiring and the separately
-owned additive publications remain uncompleted. Do not convert tiles to guessed
+placeholders. The authorized `f9e466d3` publication closes the nine native255
+input gaps. Actual source-scene/event/manual-state wiring remains separate.
+Do not convert tiles to guessed
 listener centres, use only interactable entities as all audible scenery, or
 derive varps from quest-stage names.
 
 `AssetLoader` supports an explicit `aliases` table for the original
 `AUDIO_INPUTS` metadata path IDs and payload paths. Aliases resolve only to
 declared hash-pinned same-origin assets, never arbitrary repository paths.
-The source bundle includes the exact three metadata documents,264 FLACs and
-two original cue WAVs. Only metadata loads before a gesture; payloads are
+The source bundle includes all four required metadata documents,264 unchanged
+FLACs, two original cue WAVs and nine additive native255 FLACs. The fourth
+`AUDIO_INPUTS.supplement` route has SHA-256
+`840aef91bac9a1fd042bdb1c3662ff92a378e279f48335108730e168af550d91`
+and resolves to `/content/audio/supplement.json`. Its payload URLs retain
+`/assets/source/osrs/audio-supplement/<kind>/<id>-native255.flac` exactly.
+Old IDs, paths, hashes and the frozen pack remain unchanged.
+Only metadata loads before a gesture; payloads are
 decoded by the actual factory on demand. Observations use its successful
 `decoded`/`evicted` notices; a fetch attempt is not counted as a load, and
 float PCM cache bytes are not mistaken for transfer bytes.
@@ -361,9 +387,11 @@ attribution/group/level/widget fields remain absent. A spatial-input error
 does not discard the committed world/event batch.
 
 Four Modern Lumbridge groups64/327/163/145 and source-native255 jingle inputs
-40/54/58/64/65 await the audio owner's exact additive publication/route relay.
-The existing264 FLACs, two WAVs, metadata hashes and approved pack are unchanged.
-No alias, scaled substitute, limiter or base-pack rewrite supplies missing inputs.
+40/54/58/64/65 are now published and delivered. Their IDs have prefix
+`asset.source.osrs.cache2695.audio-supplement.` and suffix
+`<kind>.<id>.native255`; music64 and jingle64 remain distinct. Representation
+choice, offsets and calibration stay entirely with audio. No blind128
+amplification, limiter, alias substitute or base-pack rewrite is added.
 
 The real Chrome shell check now exercises source title track0 through this
 factory, a genuine trusted input, actual22050-Hz decoding/clock advancement,
@@ -371,7 +399,13 @@ recoverable startup permission feedback, retained disconnect selection, and
 explicit title reset. It uses no fake world or game-cue loop and does not
 certify complete source-scene/music-selection wiring, gameplay, host-speaker
 perception or presentation acceptance. Checks now also observe native defaults
-and a real50% source-slider lookup without double normalization.
+and a real50% source-slider lookup without double normalization. The additive
+input/control fixture decodes all nine served FLACs against independently
+published float-channel hashes and exercises all four real music inputs through
+`setMusicState`, including idempotence and locked-selection rejection. Its
+explicit music-state fixtures are not account unlocks; it creates no synthetic
+world or committed gameplay/jingle event. Full-duration native continuation
+and jingle calibration remain the separate audio-owner component proofs.
 
 Renderer frame promises must resolve **after that actual render submission's
 `GPUQueue.onSubmittedWorkDone()` receipt**. RAF requests stay pipelined; no

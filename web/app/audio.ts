@@ -1,12 +1,12 @@
 import {
-  AudioFailure, createAudio, observeAudioState, readAudioState, setSourceAudioScene, setSourceMusicSelector,
+  AudioFailure, createAudio, observeAudioState, readAudioState, setSourceAudioScene, setSourceMusicState,
   sourceAudioDefaults, sourceSliderToMixer, sourceMixerToAssetGain,
 } from "../audio/index.ts";
-import type { AudioSnapshot, AudioTrace, SourceAudioScene, SourceMusicSelector } from "../audio/index.ts";
+import type { AudioSnapshot, AudioTrace, SourceAudioScene, SourceMusicState } from "../audio/index.ts";
 import type { AudioEvent, AudioHandle, ClientAssets, CreateAudio, WorldView } from "../shared/contracts.ts";
 import type { AssetObservation } from "./assets.ts";
 import type { AssetRecord } from "./manifest.ts";
-import { AppError } from "./errors.ts";
+import { AppError, deepFreeze } from "./errors.ts";
 import type { AudioChannel } from "./settings.ts";
 
 export interface AudioAdapter {
@@ -14,11 +14,11 @@ export interface AudioAdapter {
   read(handle: AudioHandle): AudioSnapshot;
   observe(handle: AudioHandle, listener: (state: AudioSnapshot) => void): () => void;
   scene(handle: AudioHandle, scene: SourceAudioScene | null): void;
-  music(handle: AudioHandle, selector: SourceMusicSelector | null, areaMode: "modern" | "classic"): void;
+  musicState(handle: AudioHandle, state: SourceMusicState): void;
 }
 export const sourceAudioAdapter: AudioAdapter = {
   create: createAudio, read: readAudioState, observe: observeAudioState,
-  scene: setSourceAudioScene, music: setSourceMusicSelector,
+  scene: setSourceAudioScene, musicState: setSourceMusicState,
 };
 
 export function sourceControlState(state: AudioSnapshot) {
@@ -28,12 +28,21 @@ export function sourceControlState(state: AudioSnapshot) {
       normalizedPosition: state.volumes[channel], percent,
       nativeMixer: state.nativeMixer[channel],
       lookupMixer: sourceSliderToMixer(channel, percent, state.masterPercent),
-      assetCalibrationGain: sourceMixerToAssetGain(state.nativeMixer[channel]),
+      referenceGains: Object.freeze({
+        native128: sourceMixerToAssetGain(state.nativeMixer[channel], 128),
+        native255: sourceMixerToAssetGain(state.nativeMixer[channel], 255),
+      }),
     });
   };
   return Object.freeze({ semantics: "native-source-slider-v1" as const, masterPercent: state.masterPercent,
     channels: Object.freeze({ music: control("music"), effects: control("effects"), area: control("area") }),
-    defaults: sourceAudioDefaults() });
+    defaults: sourceAudioDefaults(),
+    playback: Object.freeze({ ...state.background, groups: Object.freeze([...state.background.groups]) }),
+    voices: Object.freeze(state.voices.map((voice) => Object.freeze({
+      id: voice.id, sourceId: voice.sourceId, kind: voice.kind, channel: voice.channel,
+      assetId: voice.assetId, renderedNativeLevel: voice.renderedNativeLevel,
+      appliedNativeLevel: voice.appliedNativeLevel, gain: voice.gain,
+    }))) });
 }
 
 export function audioProblem(error: unknown): AppError {
@@ -61,7 +70,8 @@ export class SourceAudioSession {
   #seen = new WeakSet<AudioTrace>();
   #hasScene = false;
   #sceneUnavailableReported = false;
-  #musicSelectorBound = false;
+  #actor: string | null = null;
+  #musicState: Readonly<SourceMusicState> | null = null;
 
   private constructor(handle: AudioHandle, api: AudioAdapter, records: readonly AssetRecord[],
     report: (error: AppError) => void, observed: (state: AudioSnapshot) => void) {
@@ -105,7 +115,8 @@ export class SourceAudioSession {
   enabled(): boolean { return playbackEnabled(this.snapshot()); }
   controls() {
     return Object.freeze({ ...sourceControlState(this.snapshot()),
-      sourceSceneSupplied: this.#hasScene, musicSelectorBound: this.#musicSelectorBound });
+      sourceSceneSupplied: this.#hasScene, sourceMusicStateSupplied: this.#musicState !== null,
+      providedMusicState: this.#musicState, musicContinuation: "native-bound" as const });
   }
 
   unlock(): Promise<void> {
@@ -115,11 +126,17 @@ export class SourceAudioSession {
   }
   mute(value: boolean): void { this.#handle.mute(value); }
   volume(channel: AudioChannel, value: number): void { this.#handle.volume(channel, value); }
-  musicSelector(selector: SourceMusicSelector | null, areaMode: "modern" | "classic"): void {
-    this.#api.music(this.#handle, selector, areaMode);
-    this.#musicSelectorBound = selector !== null;
+  setMusicState(state: SourceMusicState): void {
+    try {
+      this.#api.musicState(this.#handle, state);
+      this.#musicState = deepFreeze(structuredClone(state));
+    } catch (error) {
+      this.#musicState = null;
+      throw audioProblem(error);
+    }
   }
-  update(world: WorldView | null, events: readonly AudioEvent[], scene?: SourceAudioScene | null): void {
+
+  #applyScene(world: WorldView | null, scene: SourceAudioScene | null | undefined): void {
     try {
       if (world === null) {
         if (this.#hasScene) this.#api.scene(this.#handle, null);
@@ -144,14 +161,27 @@ export class SourceAudioSession {
       try { this.#api.scene(this.#handle, null); }
       catch (error) { this.#report(audioProblem(error)); }
     }
-    // Preserve each coherent committed world/event batch for the audio-owned
-    // before/after Cook skill-delta gate. Never generate a completion or jingle.
+  }
+
+  update(world: WorldView | null, events: readonly AudioEvent[], scene?: SourceAudioScene | null, musicState?: SourceMusicState): void {
+    const actor = world === null ? null : world.player.id;
+    const changedActor = actor !== this.#actor;
+    if (changedActor || world === null) this.#musicState = null;
+    if (!changedActor && world !== null) this.#applyScene(world, scene);
+    // One coherent batch preserves the audio-owned before/after Cook delta. A new
+    // actor resets native scene/music inputs, so bind those after that first update.
     try { this.#handle.update(world, events); }
     catch (error) { this.#report(audioProblem(error)); }
+    this.#actor = actor;
+    if (changedActor || world === null) this.#applyScene(world, scene);
+    if (world !== null && musicState !== undefined) {
+      try { this.setMusicState(musicState); }
+      catch (error) { this.#report(audioProblem(error)); }
+    }
   }
   disconnected(): void { this.#handle.disconnected(); }
   async dispose(): Promise<void> {
     try { await this.#handle.dispose(); }
-    finally { this.#stop(); this.#observations.clear(); }
+    finally { this.#stop(); this.#observations.clear(); this.#musicState = null; this.#hasScene = false; }
   }
 }

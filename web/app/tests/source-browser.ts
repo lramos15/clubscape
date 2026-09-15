@@ -309,8 +309,10 @@ export async function sourceBrowserCheck(): Promise<void> {
       assert.equal(audioControls.channels[channel].nativeMixer, sourceAudioDefaults().mixer[channel]);
     }
     assert.equal(audioControls.sourceSceneSupplied, false);
-    assert.equal(audioControls.musicSelectorBound, false);
-    checks.push("native calibrated source audio defaults observed; absent scene/next-selection facts remain unavailable");
+    assert.equal(audioControls.sourceMusicStateSupplied, false);
+    assert.equal(audioControls.providedMusicState, null);
+    assert.equal(audioControls.musicContinuation, "native-bound");
+    checks.push("native audio defaults and internal music continuation observed; no source scene or manual unlock state invented");
     let renderPixels: unknown = null;
     if (earlyScene !== null || recordedCamera !== null) {
       await page.waitForFunction(() => (window.__clubscapeBenchmarkV1?.read(null).renderedFrames ?? 0) >= 8, undefined, { timeout: 30_000 });

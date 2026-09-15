@@ -18,7 +18,7 @@ import { RpcTransport } from "./transport.ts";
 import { presenceOf } from "./public-state.ts";
 import { SourceAudioSession, audioProblem, playbackEnabled, sourceAudioAdapter } from "./audio.ts";
 import { sourceZoomForViewportHeight } from "./renderer.ts";
-import type { SourceAudioScene, SourceMusicSelector } from "../audio/index.ts";
+import type { SourceAudioScene, SourceMusicState } from "../audio/index.ts";
 import type { PlayerPreviewRequest } from "../renderer/src/index.ts";
 import { ModelPreview } from "./preview.ts";
 import { sourceUiPreviewAdapter } from "./ui-adapter.ts";
@@ -42,8 +42,8 @@ export async function mountApplication(options: {
   earlyScene?: string | null;
   recordedCamera?: string | null;
   sourceAudio?: {
-    scene(world: WorldView): SourceAudioScene | undefined;
-    music?: { selector: SourceMusicSelector; areaMode: "modern" | "classic" };
+    scene?(world: WorldView): SourceAudioScene | undefined;
+    music?(world: WorldView): SourceMusicState | undefined;
   };
 }): Promise<ApplicationHandle> {
   const { build, components, bridge, benchmark, worldCanvas, uiCanvas, status } = options;
@@ -143,9 +143,12 @@ export async function mountApplication(options: {
     },
     events(world, events) {
       let scene: SourceAudioScene | null | undefined;
-      try { scene = world === null ? null : options.sourceAudio?.scene(world); }
+      let music: SourceMusicState | undefined;
+      try { scene = world === null ? null : options.sourceAudio?.scene?.(world); }
       catch (error) { app.report(audioProblem(error)); }
-      audio?.update(world, events, scene);
+      try { music = world === null ? undefined : options.sourceAudio?.music?.(world); }
+      catch (error) { app.report(audioProblem(error)); }
+      audio?.update(world, events, scene, music);
     },
     async unlockAudio() {
       if (!audio) throw new AppError("The source audio component is not ready.", { kind: "audio" });
@@ -278,7 +281,6 @@ export async function mountApplication(options: {
     for (const channel of ["music", "effects", "area"] as const) {
       if (overrides[channel] !== undefined) audio.volume(channel, overrides[channel]);
     }
-    if (options.sourceAudio?.music) audio.musicSelector(options.sourceAudio.music.selector, options.sourceAudio.music.areaMode);
     audio.update(null, []);
     const render = (now: number): void => {
       if (disposed) return;

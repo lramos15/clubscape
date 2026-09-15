@@ -221,7 +221,7 @@ request budgets are unchanged, no asset IDs are trimmed, and old
 
 The authorized audio factory `7ea817f5` is now integrated. New source-bundle
 outputs additionally include its exported `AUDIO_INPUTS` documents and exact
-264 FLACs plus two original reference WAVs, with no alias
+264 unchanged FLACs plus two original reference WAVs, with no alias
 invented for the source silence. Original source path IDs resolve through
 explicit same-origin aliases. The private game membership map still contains
 only the5,010 compiler-required IDs; presentation delivery does not hide or inflate
@@ -232,33 +232,69 @@ The authorized native policy/Cook delta commits `888f9384` and `f74652a5`
 are also integrated. Runtime volume arguments are source normalized slider
 positions, with native defaults255/127/127 and nonlinear lookup inside audio.
 The shell uses a v2 preference-semantic marker instead of reinterpreting old
-linear values, delegates typed source-scene/next-music inputs, preserves
+linear values, delegates typed source-scene/music-state inputs, preserves
 coherent before/after committed reward batches, and exposes actual native
 control observations. No source gain/distance/varp/next-song math is duplicated.
 The current bridge still lacks actual128-unit listener, all placed emitters,
-bound original varps and next-selection provenance; no dummy values are supplied.
+bound original varps and actual manual/unlock-state preferences; no dummy values
+are supplied. Native source-bound next-track selection needs no caller callback.
 
-The remaining music64/327/163/145 and native255 jingle40/54/58/64/65
-publications belong to the audio owner. Current `AUDIO_INPUTS`/266 frozen
-payloads stay exact; new supplemental IDs/routes must be relayed before they
-can be delivered. No missing native representation is replaced by scaling
-the frozen128 input. Native policy calibration is no longer a generic blocker;
-the exact pending data/publications and real-source wiring are.
+The authorized `f9e466d3` closure is integrated. All four required `AUDIO_INPUTS`
+metadata routes and all nine original native255 assets are delivered.
+`assets/manifests/osrs/audio-m1-supplement.json` is pinned at
+`840aef91bac9a1fd042bdb1c3662ff92a378e279f48335108730e168af550d91`
+and served through `/content/audio/supplement.json`. Exact IDs have prefix
+`asset.source.osrs.cache2695.audio-supplement.` with suffixes
+`music.{64,327,163,145}.native255` and `jingle.{40,54,58,64,65}.native255`;
+payload URLs retain their original
+`/assets/source/osrs/audio-supplement/<kind>/<id>-native255.flac` paths.
+The nine files add45,199,584 bytes and never replace an old ID or waveform.
+The existing266 payloads and three base metadata hashes remain exact.
+
+`SourceAudioSession.setMusicState` delegates the actual source mode, unlocks,
+selection, playlist, loop and Modern/Classic state to the audio owner.
+There is no required caller-guessed next-song callback and no missing-four-
+tracks/five-jingles blocker. The owner chooses a native255 representation only
+where calibrated. Control observation distinguishes configured channel levels,
+reference128/255 gains, and each actual voice's rendered/applied levels.
+No blind128 amplification or limiter is added by the shell.
 
 Native-control shell evidence is separate from earlier provisional-volume runs:
 `.local/evidence/native-audio-title-v2/result.json` records actual default
 255/127/127 levels and a50% music position producing native mixer44 (asset
 calibration44/128), not a linear0.5 gain. The real canonical source entry under
 `.local/evidence/early-native-audio-v2/result.json` records those actual defaults
-while explicitly reporting no supplied source scene or next-music selector.
-These checks are not completion of the missing authoritative audio inputs.
+while explicitly reporting the then-missing inputs. They are historical:
+the next-selector and nine-publication blockers are now closed, while actual
+scene/manual-state/event provenance remains separate.
+
+The new immutable candidate is `.local/source-audio-native255-df3e2a45`,
+world UUID `61d4c53c-1b63-4d50-b515-7587f3cd6cf6`, with the same canonical
+`df3e2a45...` game artifact. Previous world/asset bundles are not rewritten.
+Its audio input/control fixture checks all nine actual served decodes against
+published float-channel hashes and the four actual music representations
+through the native state API. The fixture's selections are not account
+unlocks and it fabricates no world or committed gameplay event.
+Receipts are `.local/evidence/audio-closure-controls/result.json` (including
+`titleAudio.supplement`) and `.local/evidence/audio-closure-source-entry/result.json`.
+The latter uses only the actual canonical account/world path; absent source
+scene/manual-state facts remain explicitly unavailable.
+
+```sh
+GAME=.local/source-audio-native255-df3e2a45
+CLUBSCAPE_CLIENT_MANIFEST="$GAME/content/manifest.json" \
+CLUBSCAPE_CLIENT_ASSET_ROOT="$GAME" \
+CLUBSCAPE_CONTENT_OWNER=game pnpm --dir web build
+# With an owned DATABASE_URL supplied privately:
+CLUBSCAPE_GAME_ROOT="$PWD/$GAME" pnpm --dir web serve
+```
 
 The authorized UI commits `069b5028`, `f34663c3`, `6a1b11fa` add the actual
 self-subscribing UI. `ui-assets.ts` verifies `assets/compiled/ui/provenance.json`
 and selects catalogue-referenced title/sprite/item/portrait/minimap PNGs plus
 the published compass/seven dot primitives used directly by the UI's runtime
 minimap adapter. All are hash-verified through the same provenance; no
-panel/evidence PNG is copied. There are1,187 image primitives and7,171 total
+panel/evidence PNG is copied. There are1,187 image primitives and7,181 total
 source/audio/UI/render assets in the current combined candidate. The
 24,658,127-byte UI catalogue remains an independent bounded asset; it is not
 inserted into actor snapshots.
@@ -274,7 +310,7 @@ CLUBSCAPE_CONTENT_OWNER=game \
 pnpm --dir web build
 ```
 
-The actual game root owns7,172 public asset/manifest routes; the web root serves
+The actual game root owns7,182 public asset/manifest routes; the web root serves
 only the compiled HTML/JS/CSS/WASM and build identity, with no overlapping routes.
 The independent account/audio Chrome check instantiates
 the actual audio factory through the shell, verifies recoverable gesture
@@ -367,8 +403,8 @@ scene/block duplicates are not shipped. Gzip URLs keep their exact names;
 physical `.gz.bin` carriers satisfy the server allowlist without changing
 bytes or content encoding.
 
-The current immutable source-stream candidate has7,171 declared assets
-(175,860,981 public bytes including its content manifest), separate from all
+The current immutable native255 source-stream candidate has7,181 declared assets
+(221,090,292 public bytes including its content manifest), separate from all
 retained earlier bundles. Create a **new** directory and world UUID:
 
 ```sh
@@ -541,8 +577,9 @@ boundary is recorded separately under
    cycle/group/delay/action/cue and Cook-widget linkage are not present in
    the current event wire and must not be guessed. Native gain/spatial/fade/
    duration/default policies are integrated; actual source listener/varps/
-   emitters, committed Cook attribution and the additive source publications
-   remain concrete inputs, not permission to invent gains or next songs. The actual UI consumes
+   emitters, committed Cook attribution and manual/unlock-state preferences
+   remain concrete inputs. All nine native255 publications and internal
+   next-track selection are integrated, not remaining blockers. The actual UI consumes
    `forwardWorldPointer`, `setUiCamera` and `onUiCameraRequest` in logical pixels;
    renderer picking remains backing-pixel based. Source entity/pose/morph/dynamic-object
    state must come from the real view, not fixtures or fabricated animations.
