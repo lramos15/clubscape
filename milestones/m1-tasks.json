@@ -10,10 +10,11 @@
       {"id": "bb7f85f7-096a-4377-80cb-3e7eae196c6b", "task": "M1-BROWSER-RENDERER"},
       {"id": "cc864d7a-37cc-4869-a7b4-d484d01cede5", "task": "M1-BROWSER-UI"},
       {"id": "78d01af9-70a4-4b02-8339-6a61eb377374", "task": "M1-BROWSER-SHELL"},
-      {"id": "2766e089-44e5-4a1d-974e-7b03ad9c269d", "task": "M1-GAMEPLAY-UI-CONTRACTS"},
-      {"id": "81ac9884-4f39-4f27-b516-6e9a42b09b51", "task": "M1-HEADLESS-JOURNEY"}
+      {"id": "2766e089-44e5-4a1d-974e-7b03ad9c269d", "task": "M1-GAMEPLAY-UI-CONTRACTS"}
     ],
-    "reserved": [],
+    "reserved": [
+      {"id": "81ac9884-4f39-4f27-b516-6e9a42b09b51", "task": "M1-HEADLESS-JOURNEY", "reason": "Actual70/70 tutorial and Lumbridge copper/bank progress pass. Shop Trade is denied by an ungranted contextual-interface flag; no Trade mutation was submitted, and owned services are cleaned."}
+    ],
     "queued": [],
     "parked": [
       {"id": "ac0f0856-44af-445b-bd90-6db7a1f4fc74", "reason": "Original scenery phase supplement6c68672d integratedb9cdd0f; parent36tests and exact27-observation/index verification pass. Renderer received active4/3/2 phases and original clocks; no automatic resumption."},
@@ -34,9 +35,27 @@
   },
   "tasks": [
     {
+      "id": "M1-CONTEXTUAL-SHOP-ENTRY",
+      "goal": "Admit a legitimate guarded source shop interaction without inventing a persistent shop-tab unlock or bypassing source context.",
+      "status": "IMPLEMENTING",
+      "specs": ["tools/journey-tests/evidence/departure-mainland-shop-1c7a449.json", "spec/game-contracts.md", "crates/world-engine/src/actions.rs", "crates/world-engine/src/queries.rs"],
+      "dependencies": ["M1-DEPARTURE-CHOICE-ENTRIES"],
+      "allowed_paths": ["crates/world-engine/src/actions.rs", "crates/world-engine/src/queries.rs", "crates/world-engine/tests/contextual_shop_entry.rs", "crates/world-engine/README.md", "spec/game-contracts.md"],
+      "forbidden_paths": ["prompt.md", "content/**", "assets/**", "web/**", "crates/game-types/**", "crates/protocol/**", "research/journey-rules/**", "research/reference-pack/**", "tools/reference-pack/**"],
+      "outputs": ["Actual canonical missing-flag shop-entry reproduction", "Matching query/execution contextual shop permission", "Preserved bank/production locks, source guards, ownership, range and commerce rules"],
+      "validation_commands": ["cargo test --locked -p clubscape-world-engine --test contextual_shop_entry"],
+      "test_requirements": ["Both real source keepers work without seeded interface.shop ownership", "No Trade mutation before query admission or direct buy without context", "No generic OpenInterface access to a contextual panel", "Wrong stage/range/target/context-kind remain refused atomically", "Existing bank and production unlock behavior remains intact"],
+      "acceptance": ["SQL m1-contextual-shop-entry records native source and negative regression results, then separate live continuation"],
+      "reserved_namespaces": [],
+      "source_notes": ["One fresh normal5e account completed70/70 and285checks, then keeperTrade permission denied because interface.shop is contextual, never unlocked by the canonical source, and incorrectly requires character.interfaces membership. Both source stage and commerce permissions already pass."],
+      "parity_entries": [],
+      "adaptations": [],
+      "evidence": []
+    },
+    {
       "id": "M1-DEPARTURE-CHOICE-ENTRIES",
       "goal": "Present the three identical-guard Magic Instructor departure branches as one legitimate source question with all original choices and effects.",
-      "status": "IMPLEMENTING",
+      "status": "DONE",
       "specs": ["tools/journey-tests/evidence/ui4-departure-1e9c7be.json", "research/journey-rules/tutorial.json", "tools/m1-content/dialogue_entries.py"],
       "dependencies": ["M1-TUTORIAL-DIALOGUE-ENTRIES"],
       "allowed_paths": ["tools/m1-content/dialogue_entries.py", "tools/m1-content/selectors3.py", "tools/m1-content/test_departure_entries.py", "tools/m1-content/schema-check/examples/departure_entries.rs", "content/m1/**", "research/m1-bindings/**"],
@@ -49,7 +68,7 @@
       "source_notes": ["Fresh normal v4 account reached66/70 and1Learning-the-RopesQP. offer_mainland returned500game_source_view; three primary entries share the same question text and departure_confirmation guard. Outcome was not retried or labeled rolled back."],
       "parity_entries": [],
       "adaptations": [],
-      "evidence": ["Generator e8c3c43 and canonical4 productdf6ea49 integratebacbdf1/8778fb3. Only identical-question/guard isolated tutorial branches merge; original three choices/order/guards/effects are preserved and incompatible continuations fail. Actualold6f nativeprobe reproducesMultipleentries; new5e artifactpassesoffer/stay/info/normal4branches,wrong-stageatomicrefusal andimmutablequeries without items/XP/QP/entitlements/mode/location changes orautomatictravel.", "77source tests/full93-output repeat pass; only decodedrevision+Magicdialogue change(nodes7->5), allmechanics/tutorial/quests/items/geometry/initialstate unchanged. Exactraw5e0aa8a28851752ae0b8b0a08c635c6c8d2979f509f3a3e564ee74e2abfc8e6f, revisionm1.source-backed.v4.3ff4292b311453cc. Parent refreshes the generatedrawfile explicitly before its nativeprobe; a stale6f rawfile is not confused with the newcommittedproduct. Freshrealjourney resumption remains separate; research/m1-bindings/departure-entry-validation.json."]
+      "evidence": ["Generator e8c3c43 and canonical4 productdf6ea49 integratebacbdf1/8778fb3. Only identical-question/guard isolated tutorial branches merge; original three choices/order/guards/effects are preserved and incompatible continuations fail. Actualold6f nativeprobe reproducesMultipleentries; new5e artifactpassesoffer/stay/info/normal4branches,wrong-stageatomicrefusal andimmutablequeries without items/XP/QP/entitlements/mode/location changes orautomatictravel.", "77source tests/full93-output repeat pass; only decodedrevision+Magicdialogue change(nodes7->5), allmechanics/tutorial/quests/items/geometry/initialstate unchanged. Exactraw5e0aa8a28851752ae0b8b0a08c635c6c8d2979f509f3a3e564ee74e2abfc8e6f, revisionm1.source-backed.v4.3ff4292b311453cc. Parent refreshes the generatedrawfile explicitly before its nativeprobe; a stale6f rawfile is not confused with the newcommittedproduct.", "CLOSED LIVE in7b249b2: actualofferACK966, all3choicesobserved991, normalconfirmation992, actualHomeTeleport993->arrival1017 withcorrectsourcepossessions/XP/1QP. Freshaccountcompletes70/70 andcontinuesLumbridge; no forceddeparture oroldunknownwriteretry. FullM1 remainsseparate."]
     },
     {
       "id": "M1-UI-TRAVEL-INTERRUPTION",
@@ -324,7 +343,7 @@
     {
       "id": "M1-HEADLESS-JOURNEY",
       "goal": "Implement and execute the complete legitimate M1 protocol journey with real account/world/persistence boundaries, not seeded states.",
-      "status": "IMPLEMENTING",
+      "status": "BLOCKED",
       "specs": ["prompt.md section 30.1", "research/journey-rules/**", "spec/game-networking.md", "content/m1/README.md"],
       "dependencies": ["M1-FLEET-ENGINE-CLOSURE"],
       "allowed_paths": ["tools/simulator/**", "tools/journey-tests/**", "tests/scenarios/**"],
@@ -337,7 +356,7 @@
       "source_notes": ["Real server protobuf APIs and canonical source content"],
       "parity_entries": [],
       "adaptations": [],
-      "evidence": ["Priorv3/31-edge proof remains immutable. Newowned73ade449/a5e938ba are integrated34ad711/f09e199: one actualfreshnormal6f canonical4 account completes66/70 transitions and263 source checks, Learning-the-Ropes1QP and its true reward continuation, real anvil/menu/dagger+XP, equipment/combat/prayer/magic,25bankcoins/400capacity, and onboarding recovery. Unknown mutations/history are not retried or invented; coverage is not combined across accounts.", "New blocker is three identical-question/guard Magic Instructor primary entries at departure_confirmation; offer_mainland sequence181 returns500game_source_view, with no commit/rollback assumption. Director M1-DEPARTURE-CHOICE-ENTRIES owns the source menu repair. Remaining4 tutorial transitions, mainland/Lumbridge/Cook/death/postquest recovery and full M1 are unverified; same runner is reserved with no live service.", "Travel interruption fix0575fe0 is already integrated in the runner as9291564 without changing6f. Worker48 simulator/protocol+2compatibility+5travel tests,12 Python tests and fmt/Clippy pass; parent validation of newrunner integration is pending."]
+      "evidence": ["Prior31/66-edge evidence remains immutable, including unresolved old6f sequence181 and lack of a restorable old test database. Newc0f3961 is integrated7b249b2: one freshnormal5e account completes70/70 source transitions and285checks, legitimate24-tick HomeTeleport arrival, exact18-kind source provisions with earnedXP/1QP preserved, real Lumbridge copper+175XP-tenths, inventory moves, source castle bank/400capacity, deposits and identity/revision-bound withdrawals. Onboarding recovery is same-account/same-data and passes; coverage is not summed across accounts.", "Current blocker is read-only keeperTrade permission requiring missinginterface.shop membership despite legitimate mainland/source context and no canonical unlock effect. No Trade mutation was sent. Director M1-CONTEXTUAL-SHOP-ENTRY is active. Goblin/death/Cook/postquest recovery and final browser/presentation/performance/owner gates remain unverified; same runner is reserved without services.", "Source departure menu repair is CLOSED LIVE. Original3choices, authorizednormalconfirmation andactualHomeTeleport/arrival are recorded in tools/journey-tests/evidence/departure-mainland-shop-1c7a449.json. Exactraw5e verified fromcommittedgzip, neverstalegeneratedraw; oldunknownoperationnotretried. Worker48Rust/12Python/fmt/Clippy pass."]
     },
     {
       "id": "M1-ENGINE-REVIEW",
