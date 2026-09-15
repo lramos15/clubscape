@@ -5,12 +5,21 @@ complete, not the live demonstration. See
 [`review.md`](../../research/runelite-feasibility/review.md) and
 [`assessment.json`](../../research/runelite-feasibility/assessment.json).
 
+**Renewed live result:** explicit invocations4/5 are now exhausted. Actual normal
+signup/join/native scene/window passed; invocation5 also verified the genuine
+tracker baseline and legitimate source appearance/experience events. The guide
+interaction was authoritatively rejected asOutOfReach before movement or XP.
+The complete tuple did **not** pass; no support tier is claimed. See
+[live renewal review](../../research/runelite-feasibility/live-renewal-review.md)
+and the separately preserved renewal ledger/evidence. No automatic sixth run.
+
 **Startup repair applied:** 2c5fe68 is integrated as4953c4d. Independent game-root
 parsing and the512KiB private descriptor limit resolve both earlier startup
 blockers; the unchanged current candidate fits. See
 [current closure and unchanged experiment boundary](../../research/runelite-feasibility/startup-2c5fe68.md).
-The old failures below are historical. No fourth live invocation is authorized
-by the explicitly unchanged three-invocation allocation.
+The old startup failures below are historical. The original three-invocation
+allocation remains unchanged; the separately authorized4/5 allocation is also
+now exhausted.
 
 **Current candidate:** the complete62a003c/e1076a87 actor pair and3a74cbe source
 refresh are integrated. Use `game-3a74cbe` / `df3e…b3d` and its matching catalog,
@@ -165,8 +174,8 @@ After shared fixes and renewed explicit bounds, the runner's `--game-root` and
 artifact identity and matching catalog/content revision before starting services.
 Character-created/world-joined revisions must match that selected catalog too.
 
-**All three reserved integration invocations are exhausted. Do not run a fourth,
-reset the ledger, alter content/guards, or start another adapter architecture to
-evade this stop.** The two service prerequisites are resolved; a new live test
-still needs explicitly renewed bounds. No desktop deferral
+**Both allocations are exhausted: original1/2/3 and renewed4/5. Do not reset
+either ledger, launch a sixth invocation, alter content/guards or start another
+adapter architecture to evade this stop.** The two service prerequisites are
+resolved. Future live work needs separately explicit bounds. No desktop deferral
 or replacement native-client strategy has been approved.

@@ -3,6 +3,16 @@
 Status: **Experimental adapter implemented; ClubScape compatibility UNVERIFIED.
 No support tier is established.**
 
+**Latest bounded live result:** the explicitly renewed invocations4/5 are
+exhausted. The complete tuple failed. Real normal signup/join, original native
+scene/player/window and genuine tracker baseline were observed; legitimate
+appearance/experience transitions reached the guide stage. A real OutOfReach
+denial stopped the driver before movement/gathering/XP. No positive plugin gain
+or support tier is established. See the
+[renewed live review](../research/runelite-feasibility/live-renewal-review.md).
+The source startup defects are resolved; the current gap is the driver's
+unverified static contact assumption, not permission to weaken source rules.
+
 **Current prerequisite status:** startup fix2c5fe68 is integrated as4953c4d.
 The game-root environment and private descriptor-capacity blockers are
 **resolved**, not current interlocks. The unchanged candidate fits512KiB.
@@ -11,6 +21,7 @@ After independent real-source startup verification, the Director admitted
 two additional attempts in
 [`m1-runelite-live-renewal.json`](../milestones/m1-runelite-live-renewal.json).
 They are global invocations4/5, not a reset of the first allocation.
+Both have now been consumed with preserved failures; no sixth is authorized.
 The live runtime/server/scene/player/event/plugin tuple remains unverified.
 Historical sections below preserve earlier limits/failures rather than
 relabelling them as current.

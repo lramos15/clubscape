@@ -1,0 +1,107 @@
+{
+  "schema_version": 1,
+  "files": [
+    {
+      "path": "research/runelite-feasibility/renewal-evidence/live-renewal-4-events.jsonl",
+      "sha256": "0ff31ab2b33c00bd9d339bfe812844cf2e164938147c5f57093861199517d589",
+      "size_bytes": 11259,
+      "committed": true
+    },
+    {
+      "path": "research/runelite-feasibility/renewal-evidence/live-renewal-4-server.log",
+      "sha256": "bb44245fa932e4b87c8de333cfbc4b21254e3bf23d87b7114f11be20edba64aa",
+      "size_bytes": 4131,
+      "committed": true
+    },
+    {
+      "path": "research/runelite-feasibility/renewal-evidence/live-renewal-4-runtime.log",
+      "sha256": "035d408add4239bc65539d0dede65bb3be8122c62d2d3aa409fc6b013dcb39fe",
+      "size_bytes": 3387,
+      "committed": true
+    },
+    {
+      "path": "research/runelite-feasibility/renewal-evidence/live-renewal-4-xvfb.log",
+      "sha256": "0cee9b419c5747b72a4287b3641cc393a24d4c59aadbfa8c3ddadfd776c7fded",
+      "size_bytes": 4169,
+      "committed": true
+    },
+    {
+      "path": "runelite/compatibility/artifacts/live-renewal-4/live-joined-canvas.png",
+      "sha256": "9f586a9220121f843532f785e5e9ef69547859f3f598168028a8c8696a0228e5",
+      "size_bytes": 616934,
+      "width": 1280,
+      "height": 800,
+      "committed": false,
+      "classification": "actual authenticated joined source snapshot; not first-XP proof"
+    },
+    {
+      "path": "runelite/compatibility/artifacts/live-renewal-4/live-joined-official-window.png",
+      "sha256": "fec311b5744b8aac9bd0680140ccc07a8b1b08b7f9f3dc9dbd33daf4f3cb711e",
+      "size_bytes": 619426,
+      "width": 1311,
+      "height": 800,
+      "committed": false,
+      "classification": "actual authenticated joined source snapshot; not first-XP proof"
+    },
+    {
+      "path": "runelite/compatibility/artifacts/live-renewal-4/live-joined-screen-canvas.png",
+      "sha256": "9f586a9220121f843532f785e5e9ef69547859f3f598168028a8c8696a0228e5",
+      "size_bytes": 616934,
+      "width": 1280,
+      "height": 800,
+      "committed": false,
+      "classification": "actual authenticated joined source snapshot; not first-XP proof"
+    },
+    {
+      "path": "research/runelite-feasibility/renewal-evidence/live-renewal-5-events.jsonl",
+      "sha256": "e71804cd140eaa64bb08de6a88dfb5b6f6cd94f426dddd0a904c5f8f09ba791f",
+      "size_bytes": 18558,
+      "committed": true
+    },
+    {
+      "path": "research/runelite-feasibility/renewal-evidence/live-renewal-5-server.log",
+      "sha256": "e2f22ad9a3527f17dd204ea9cd83016895bd9cf15f67fc660630130837ef8476",
+      "size_bytes": 5971,
+      "committed": true
+    },
+    {
+      "path": "research/runelite-feasibility/renewal-evidence/live-renewal-5-runtime.log",
+      "sha256": "949af42fcb8aac29474512f90576b8e384ddcbc67d2ced2eed300dbcc4f2fd1e",
+      "size_bytes": 1939,
+      "committed": true
+    },
+    {
+      "path": "research/runelite-feasibility/renewal-evidence/live-renewal-5-xvfb.log",
+      "sha256": "0cee9b419c5747b72a4287b3641cc393a24d4c59aadbfa8c3ddadfd776c7fded",
+      "size_bytes": 4169,
+      "committed": true
+    },
+    {
+      "path": "runelite/compatibility/artifacts/live-renewal-5/live-joined-canvas.png",
+      "sha256": "d0f92f26f92015c4588295e71175aec02cc42884d34c210d2db617d462e64bd9",
+      "size_bytes": 616904,
+      "width": 1280,
+      "height": 800,
+      "committed": false,
+      "classification": "actual authenticated joined source snapshot; not first-XP proof"
+    },
+    {
+      "path": "runelite/compatibility/artifacts/live-renewal-5/live-joined-official-window.png",
+      "sha256": "e77b0065afa51ef596da6c7e658299215f15576c6c08d76a9c87acfd9e9d9544",
+      "size_bytes": 619391,
+      "width": 1311,
+      "height": 800,
+      "committed": false,
+      "classification": "actual authenticated joined source snapshot; not first-XP proof"
+    },
+    {
+      "path": "runelite/compatibility/artifacts/live-renewal-5/live-joined-screen-canvas.png",
+      "sha256": "d0f92f26f92015c4588295e71175aec02cc42884d34c210d2db617d462e64bd9",
+      "size_bytes": 616904,
+      "width": 1280,
+      "height": 800,
+      "committed": false,
+      "classification": "actual authenticated joined source snapshot; not first-XP proof"
+    }
+  ]
+}

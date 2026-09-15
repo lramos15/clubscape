@@ -1,0 +1,206 @@
+{
+  "schema_version": 1,
+  "task": "M1-RUNELITE-FEASIBILITY",
+  "assessment_complete": true,
+  "compatibility_verified": false,
+  "tier": null,
+  "result": "Complete live tuple failed within exhausted renewed allocation",
+  "authority_commit": "eec354c00d67d88686794085de2c8ecb31ef91df",
+  "authority_integrated_commit": "1f1a7036f5302d3a4eb27f3ebea60888c237d910",
+  "original_evidence": [
+    {
+      "path": "research/runelite-feasibility/experiment.json",
+      "sha256": "026c99b9ebac16b9af97a8e901775a97ea097b0c29f78c9608855ace84ac11cd"
+    },
+    {
+      "path": "research/runelite-feasibility/assessment.json",
+      "sha256": "f2c7d81353381aeaba711a7f90bb00d0d33f742d19a2cc25c38599d0867595ae"
+    }
+  ],
+  "bounds": {
+    "additional_live_invocations": 2,
+    "global_invocation_numbers": [
+      4,
+      5
+    ],
+    "total_live_invocations_maximum": 5,
+    "total_materially_distinct_architectures_maximum": 2,
+    "live_attempt_timeout_seconds": 600,
+    "jvm_heap_mib": 3072,
+    "jvm_active_processors": 2,
+    "rust_build_jobs": 2,
+    "database_cpus": 2,
+    "database_memory_mib": 512,
+    "nested_agents": 0
+  },
+  "original_invocations_consumed": 3,
+  "new_invocations_consumed": 2,
+  "total_consumed": 5,
+  "architectures_executed": [
+    "A"
+  ],
+  "sixth_invocation_authorized": false,
+  "artifact_sha256": "df3e2a452c100ecd94d2abc68e5cb1556f58090700474f547e7fd36de6682b3d",
+  "content_revision": "m1.source-backed.v3.0e506f3dab24bbe0",
+  "candidate_descriptor_unchanged": true,
+  "runtime_tuple": "research/runelite-feasibility/build-inputs.json",
+  "upstream_jars_or_signatures_modified": false,
+  "invocations": [
+    {
+      "number": 4,
+      "code_commit": "eb001170feefc5d2fa7066221b72536f6e39fe1c",
+      "native_exit": 1,
+      "server_exit": 0,
+      "elapsed_seconds": 13.072,
+      "passed": [
+        "Real public Register/Login/CreateCharacter(empty options)/Join",
+        "Normal24skills/emptyinventory/sourcevitals/position/stage",
+        "Original live scene/nativepenguin/window exactpixelmatch",
+        "Real source ticks"
+      ],
+      "failure": "Readback helper in signed upstream package caused SecurityException before baseline inspection or gameplay input",
+      "later_correction": "Adapter helper moved outside signed package; read-only reflection, upstream signatures intact"
+    },
+    {
+      "number": 5,
+      "code_commit": "389c3adbfbe84e723500f7ed25e0840b7041c8c5",
+      "native_exit": 1,
+      "server_exit": 0,
+      "elapsed_seconds": 17.46,
+      "passed": [
+        "Real normal creation/join/initialstate and exactlivewindow",
+        "Genuine XP Tracker baseline from actual source ticks",
+        "Legitimate appearance and experience transitions with correlated server eventIDs"
+      ],
+      "failure": "Actual OutOfReach rejection of Talk-to spawn.gielinor_guide at sequence3; no walk/gather/XP reached",
+      "guide_source_navigation": {
+        "kind": "mobile",
+        "wander_radius": 3,
+        "step_ticks": 1,
+        "talk_reach": 1
+      },
+      "failed_tick_target_tile_recorded": false,
+      "engine_defect_proven": false
+    }
+  ],
+  "verified_baseline": {
+    "at": "2026-09-15T05:51:00.511079490Z",
+    "kind": "plugin_baseline_verified",
+    "server_tick": 8,
+    "server_revision": 10,
+    "source_xp_tenths": 0,
+    "native_absolute_xp": 0,
+    "tracker_gain": 0,
+    "initialization_ticks_remaining": 0,
+    "fake_callbacks": 0
+  },
+  "correlated_source_transitions": [
+    {
+      "at": "2026-09-15T05:51:01.417349600Z",
+      "kind": "authoritative_event",
+      "event_id": "event:807594d3db53a445ce62581c32b11c68a47fb37997719d0ed114c5c37229bd9e",
+      "event": "appearance_confirmed",
+      "revision": 13,
+      "tick": 10,
+      "skill": "",
+      "xp_tenths": 0,
+      "target": "",
+      "text": ""
+    },
+    {
+      "at": "2026-09-15T05:51:01.417481985Z",
+      "kind": "authoritative_event",
+      "event_id": "event:da15b4a205383a14aadecdd46b57c8a5b91bdc1cb985aa10c50b2a3872860540",
+      "event": "tutorial_advanced",
+      "revision": 13,
+      "tick": 10,
+      "skill": "",
+      "xp_tenths": 0,
+      "target": "stage.tutorial.experience",
+      "text": ""
+    },
+    {
+      "at": "2026-09-15T05:51:03.315760714Z",
+      "kind": "authoritative_event",
+      "event_id": "event:e053b2175f789252532bc247ff3d6236bab4c022a92a439d24b40e843a4ce889",
+      "event": "experience_selected",
+      "revision": 17,
+      "tick": 13,
+      "skill": "",
+      "xp_tenths": 0,
+      "target": "experience.brand_new",
+      "text": ""
+    },
+    {
+      "at": "2026-09-15T05:51:03.315866730Z",
+      "kind": "authoritative_event",
+      "event_id": "event:f755a8356b586d495ea2234575098cf75a1dec729b608d086efbd786578767c4",
+      "event": "tutorial_advanced",
+      "revision": 17,
+      "tick": 13,
+      "skill": "",
+      "xp_tenths": 0,
+      "target": "stage.tutorial.guide_greeting",
+      "text": ""
+    }
+  ],
+  "actual_server_rejection": [
+    {
+      "message": "game command validation failed",
+      "event": "game_validation_failure",
+      "error_id": "245ca9ba-29ef-4886-937a-12d18b1c90d3",
+      "game_error_code": "OutOfReach"
+    }
+  ],
+  "field_coverage": {
+    "live_auth_world_join": true,
+    "normal_initial_player_projection": true,
+    "native_current_position_model_scene": true,
+    "actual_window_pixels": true,
+    "source_ticks_and_initial_transitions": true,
+    "genuine_tracker_baseline": true,
+    "authoritative_movement_demonstrated": false,
+    "server_xp_gain": false,
+    "native_stat_changed_from_xp": false,
+    "genuine_tracker_positive_gain": false,
+    "genuine_overlay_gain": false,
+    "other_players_npcs_ground_items_hud_menu_broad_plugins": false,
+    "reconnect_restart_certified": false
+  },
+  "xp_semantics": {
+    "source_units": "tenths",
+    "native_api_units": "integer XP",
+    "display_gain": "floor(current_tenths/10)-floor(initial_tenths/10)",
+    "positive_or_fractional_live_mapping_verified": false,
+    "fake_xp_callbacks": 0
+  },
+  "cleanup": {
+    "all_owned_containers_removed": true,
+    "all_owned_servers_exited_cleanly": true,
+    "jvm_xvfb_stopped": true,
+    "explicit_credential_files_removed": true,
+    "invocation4_private_database_backup": false,
+    "invocation5_private_backup": {
+      "exit_code": 0,
+      "path": "runelite/compatibility/artifacts/live-renewal-5/private-world-after-run.pgcustom",
+      "size_bytes": 34958,
+      "sha256": "2583269d88436a2c980b4a738a6a2bb8e841126cec8419d5357c2743ea09950a",
+      "read_only_snapshot": true,
+      "publish_contents": false,
+      "scope": "Owned synthetic world/account database only; private RNG/auth material stays ignored"
+    },
+    "private_backup_contents_published": false,
+    "no_world_state_sql_mutation": true
+  },
+  "next_action": "Only after separately approved bounds: make the driver approach current typed moving targets and recheck evaluated reach after pacing; record actor/target tiles/options; retain source collision/reach and complete real first-XP correlation. No automatic sixth attempt.",
+  "estimated_focused_followup_engineer_days": [
+    1,
+    3
+  ],
+  "impossibility_claim": false,
+  "desktop_deferral_approved": false,
+  "whole_m1_or_presentation_accepted": false,
+  "parked": true,
+  "review": "research/runelite-feasibility/live-renewal-review.md",
+  "evidence_inventory": "research/runelite-feasibility/live-renewal-evidence-inventory.json"
+}

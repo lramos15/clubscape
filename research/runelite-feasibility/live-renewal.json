@@ -48,9 +48,28 @@
       "report": "research/runelite-feasibility/live-renewal-4.json",
       "phase": "real_runtime_scene_state_plugin",
       "exit_code": 1
+    },
+    {
+      "number": 5,
+      "architecture": "A",
+      "name": "live-renewal-5",
+      "hypothesis": "Moving read-only plugin inspection outside the signed upstream package removes invocation4s diagnosed boundary failure without modifying RuneLite. Actual normal source creation, genuine tracker baseline, source-tick-paced dialogue/unlocks/walking/gathering, native penguin movement, committed XP and visible genuine XP Tracker gain can now satisfy the complete live tuple.",
+      "diagnostics": [
+        "strict server readiness/exit",
+        "actual protobuf receipts",
+        "native scene/player",
+        "real plugin output"
+      ],
+      "status": "failed",
+      "report": "research/runelite-feasibility/live-renewal-5.json",
+      "phase": "real_runtime_scene_state_plugin",
+      "exit_code": 1
     }
   ],
   "compatibility_verified": false,
   "tier": null,
-  "state": "one_remaining_invocation"
+  "state": "exhausted_and_stopped",
+  "assessment": "research/runelite-feasibility/live-renewal-assessment.json",
+  "review": "research/runelite-feasibility/live-renewal-review.md",
+  "assessment_complete": true
 }
