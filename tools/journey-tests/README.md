@@ -333,6 +333,33 @@ The engine owner must address declared non-walking-resource contact without
 clearing water/wall clipping or moving the source fishing spot. The cache
 repair remains verified; this is not the historical tick deadline.
 
+### Actual stationary catch and onboarding recovery
+
+The authorized declared-contact repair `2828643a…` is integrated as `dcec4a5`,
+without changing the pinned `df3e…82b3d` artifact, source water, NPC placement,
+odds or cadence. The real normal-account run admitted Net from cardinal west,
+observed Gathering with no initial reward, then actually caught one raw shrimp
+and earned 100 Fishing XP-tenths before transitioning to `skills_open`.
+SQL `m1-nonwalking-contact` is done for this live result, not only admission.
+
+Both independent current candidates also **passed onboarding recovery**:
+HTTP transport rejoin, logout/token revocation/login, replacement of the owned
+server against the same isolated PostgreSQL data and exact artifact, original
+net-grant operation replay without new value, and stale/future sequence
+rejection. [`evidence/nonwalking-catch-dcec4a5.json`](evidence/nonwalking-catch-dcec4a5.json)
+records actual items, XP, ticks, sequences, PIDs and identities.
+
+The new blocker occurs after the Skills tab advances to `survival_tools`.
+Approaching the Survival Expert makes actual `PollWorld` return HTTP500
+`game_source_view` (`InvalidContent`). The canonical primary
+`transition.tutorial.survival_tools` entry overlaps `finish.net` or `replace.net`
+after the net lesson; the engine correctly refuses multiple matching entries.
+No first-entry fallback, inventory/flag workaround or stage skip is used.
+[`evidence/survival-tools-entry-dcec4a5.json`](evidence/survival-tools-entry-dcec4a5.json)
+contains the two normal-account reproductions, exact failed poll IDs and source
+guard/code evidence. Each reached ten source transitions and one verified
+onboarding restart; later gameplay and post-quest recovery remain unpassed.
+
 ```sh
 python3 -m unittest discover -s tools/journey-tests -p 'test_*.py' -q
 ```

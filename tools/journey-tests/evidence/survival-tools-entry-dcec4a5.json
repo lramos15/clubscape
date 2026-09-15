@@ -1,0 +1,128 @@
+{
+  "schema_version": 1,
+  "task": "m1-headless-journey",
+  "status": "blocked",
+  "full_original_journey_passed": false,
+  "milestone_accepted": false,
+  "ui_audio_performance_or_runelite_claims": false,
+  "fixed_water_contact_or_old_tick_deadline_reported_as_blocker": false,
+  "pinned_source": {
+    "revision": "m1.source-backed.v3.0e506f3dab24bbe0",
+    "raw_artifact_sha256": "df3e2a452c100ecd94d2abc68e5cb1556f58090700474f547e7fd36de6682b3d",
+    "server_revision_label": "dcec4a55b59e583f3764f1f5c09b4826f4a43aea",
+    "source_state_geometry_rng_or_cadence_modified": false
+  },
+  "verified_progress": {
+    "source_net_admission_and_stochastic_catch": true,
+    "raw_shrimp_earned": 1,
+    "fishing_xp_tenths_earned": 100,
+    "onboarding_transport_reconnect": true,
+    "onboarding_logout_revocation_login_rejoin": true,
+    "onboarding_owned_server_restart_same_database_and_artifact": true,
+    "original_net_grant_replay_without_duplicate_progress": true,
+    "old_and_future_command_sequences_rejected": true,
+    "skills_interface_opened_after_recovery": true,
+    "successful_tutorial_edges_per_account": 10,
+    "coverage_is_not_combined_across_accounts": true,
+    "contact_and_recovery_detail": "tools/journey-tests/evidence/nonwalking-catch-dcec4a5.json"
+  },
+  "new_reproduced_failure": {
+    "source_stage": "stage.tutorial.survival_tools",
+    "intended_next_dialogue": "woodcutting_firemaking_intro with spawn.survival_expert",
+    "failed_rpc": "PollWorld during an already acknowledged ordinary approach walk",
+    "http_status": 500,
+    "protocol_code": "Internal",
+    "server_error_kind": "game_source_view",
+    "engine_error_mapping": "GameErrorCode::InvalidContent",
+    "caller_did_not_skip_or_replace_the_failed_view": true
+  },
+  "source_dialogue_entry_overlap": {
+    "dialogue": "dialogue.survival_expert",
+    "source_primary_entry": {
+      "id": "transition.tutorial.survival_tools",
+      "guards": ["tutorial_stage == stage.tutorial.survival_tools", "inventory free capacity >= 2"]
+    },
+    "source_recovery_entries": [
+      {
+        "id": "finish.net",
+        "guards": ["tutorial_stage != stage.tutorial.mainland", "counter.tutorial.net.completed == true", "entitlement.tutorial.net not claimed"]
+      },
+      {
+        "id": "replace.net",
+        "guards": ["tutorial_stage != stage.tutorial.mainland", "counter.tutorial.net.completed == true", "entitlement.tutorial.net claimed"]
+      }
+    ],
+    "actual_public_facts": "The same normal account completed the source net lesson, retains its one net plus one earned raw shrimp, has 26 free inventory slots, and opened Skills to reach survival_tools.",
+    "reasoning": "The primary entry is eligible. Regardless of the private entitlement Boolean, exactly one of the two recovery entries is also eligible after net completion and before mainland. Their guards do not exclude the next primary lesson or require a missing net.",
+    "no_private_ledger_or_world_database_read": true,
+    "engine_contract": "world-engine/actions.rs dialogue_entry iterates all entry_nodes and returns InvalidContent(\"Multiple dialogue entries match.\") when a second eligible entry appears.",
+    "public_view_path": "queries.rs interaction_options calls dialogue_entry for a reachable Dialogue interaction; server/game_service/view.rs maps InvalidContent to game_source_view HTTP500.",
+    "required_owner_repair": "Source-owned mutually exclusive/intentional lesson and recovery dialogue entry structure, or a correct single menu with eligible choices. Do not change the engine to silently choose the first entry, mutate tutorial/entitlement flags, remove the earned net, or seed a later stage."
+  },
+  "independent_runs": [
+    {
+      "run_id": "cac75782c5bd4022",
+      "command": "python3 tools/journey-tests/run.py --report .local/evidence/m1-nonwalking-fixed-journey.json",
+      "world_id": "56875c32-c5b4-468d-9824-91b4644224b2",
+      "account_id": "c07743c3-5ec5-42c8-bcd8-0730116729fd",
+      "actor_id": "actor.89dc5b51b21a46ac8fe6154b6f24e13f",
+      "source_edges": 10,
+      "onboarding_recovery_passed": true,
+      "skills_open_sequence": 34,
+      "skills_open_operation": "770f39f8-1616-4008-88e2-8cecd3cd6d6a",
+      "skills_open_tick": 137,
+      "acknowledged_walk_sequence": 35,
+      "acknowledged_walk_operation": "ca1dbc9e-9fd8-49d7-b976-84a84a379535",
+      "walk_destination": {"x": 3103, "y": 3095, "plane": 0},
+      "last_observed_tick": 142,
+      "last_observed_position": {"x": 3100, "y": 3093, "plane": 0},
+      "last_observed_next_sequence": 36,
+      "failed_poll_request_id": "c88fea12-4896-40de-9121-8d5fde737ff2",
+      "error_id": "26de725e-355b-43fc-a8ad-d9e02fbb5622",
+      "source_service_exit_clean": true,
+      "owned_resources_cleaned": true
+    },
+    {
+      "run_id": "1e9cf3ba7efd4ab2",
+      "recorded_at_unix_ms": 1789460313249,
+      "command": "python3 tools/journey-tests/run.py --report .local/evidence/m1-post-fishing-view-reproduction.json",
+      "fresh_normal_account_not_a_seeded_or_rewound_character": true,
+      "world_id": "78398943-519b-4a6e-8e4a-9bcaf9aeecb9",
+      "account_id": "c1f3e674-c882-430d-92f6-14b2cf6d6032",
+      "actor_id": "actor.d5ea64ea7be54c828914122ed7f4b7b2",
+      "source_edges": 10,
+      "source_checks_passed": 92,
+      "catch_transition_tick": 148,
+      "onboarding_recovery_passed": true,
+      "restart_old_server_pid": 841884,
+      "restart_new_server_pid": 843178,
+      "restart_request_id": "07480efe-3290-4d49-9f73-5d4b12e2d218",
+      "resumed_next_sequence": 43,
+      "skills_open_tick": 161,
+      "acknowledged_walk_sequence": 44,
+      "acknowledged_walk_operation": "fc599024-89ae-46c7-bb6c-3d2a6c834151",
+      "walk_destination": {"x": 3104, "y": 3095, "plane": 0},
+      "last_observed_tick": 169,
+      "last_observed_position": {"x": 3103, "y": 3094, "plane": 0},
+      "last_observed_next_sequence": 45,
+      "failed_poll_request_id": "58b68e1e-af75-4957-9ae7-54532478a461",
+      "error_id": "a57952dd-9b7e-4bbe-bd7d-231280c7f54d",
+      "source_service_exit_clean": true,
+      "owned_resources_cleaned": true
+    }
+  ],
+  "shared_binary_identity": {
+    "server_sha256": "00f0d35fced68e524e3cfa68290c9cdb79d50ce90ce05b0da5bfaf980be51250",
+    "simulator_sha256": "f5a9932f6bf39a1e802eafae86f55aba84bb308618ab40aa59aadd7fd311aa54"
+  },
+  "validation": [
+    {"command": "cargo fmt --package clubscape-sim --check", "result": "passed"},
+    {"command": "cargo test --quiet --package clubscape-sim --package clubscape-protocol --all-features", "result": "passed", "passed_tests": 38},
+    {"command": "cargo test --quiet --package clubscape-server --test shop_intent_compatibility", "result": "passed", "passed_tests": 2},
+    {"command": "cargo clippy --quiet --package clubscape-sim --all-features --all-targets -- -D warnings", "result": "passed"},
+    {"command": "python3 -m unittest discover -s tools/journey-tests -p 'test_*.py' -q", "result": "passed", "passed_tests": 12}
+  ],
+  "remaining_unchecked": "The remaining60 source tutorial transitions, survival tools/woodcutting/fire/cooking/mining/smithing/combat/prayer/magic/HomeTeleport, Lumbridge, Cook acquisition/rewards, actual goblin death/grave and post-quest restart/reconnect/replays.",
+  "sql_contact_task": "done on actual Net/catch/XP proof",
+  "sql_full_journey_task": "blocked on this new source-dialogue entry/view failure"
+}
