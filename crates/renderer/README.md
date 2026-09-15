@@ -375,12 +375,22 @@ refuses buffers whose hash differs.
 * Minimap (`scene::minimap`, `tests/minimap.rs`): all 15 native minimap captures (5 scenes ×
   planes 0–2) are reproduced pixel-exactly over the scene interior (tiles 5..98) from streamed
   blocks — terrain shapes/colours, bridge tiles, wall/door/diagonal marks, map-scene sprites.
-  The outer 5-tile band of a 104×104 scene differs (up to 14 207 of 262 144 pixels on plane 0,
-  0 on most upper planes): the original loader blends floor colours there from inputs that
-  depend on the scene base, while blocks carry colours blended once with full neighbours. The
-  same band exists in the assembled 3D scene (never within the original's 16-tile recenter
-  margin of the player, rarely visible at draw distance 25). Exact band colours would need the
-  raw underlay/overlay ids blended at assembly, which the block export does not yet carry.
+  The outer 5-tile band of a 104×104 scene differs (plane 0: 8 455 / 13 341 / 14 207 / 3 110 /
+  485 of 262 144 pixels on the five references; planes 1–2: 43 / 8 / 0 elsewhere; interior 0
+  everywhere) — **UNMET**. Cause, from the current loader (`rl4`): the top-level region arrays
+  are 184×184 (`vj = 40` margin) but at the stock draw distance (`wq = 0`) `rl4.fn` loads only
+  the scene's own squares (its margin ring `xo ± (6 + wq) >> 3` minus `xo ± 6 >> 3` is empty),
+  so `rl4.ad`'s 5-tile floor blend counts no tiles outside the 104×104 scene and the band is
+  blended from a truncated neighbourhood that depends on the scene base; blocks carry colours
+  blended once with their real neighbours (24-tile export margin). The same band exists in the
+  assembled 3D scene (never within the original's 16-tile recenter margin of the player, rarely
+  visible at draw distance 25). Exact band colours need the terrain colour build ported to
+  assembly time from raw per-tile data the block export does not yet carry: underlay/overlay
+  ids, overlay shape/rotation and settings per plane (`lw`), then `rl4.ad` (height normals →
+  `tp` light with the (−50, −10, −50) direction, the running 5-tile HSL box blend limited to the
+  loaded scene, underlay/overlay definitions, tile shapes → paints / tile models) reproducing the
+  exported interior colours bit-exactly as its own test. The same port is the prerequisite for
+  turned instance chunks (the original lights the terrain after rotating the chunk).
   Map-element icons: the surface's icon list equals the original `bu.aa` pass recorded per
   square on all 15 native cases (`sourceIconMismatches: 0`), and the original sprites are
   exported (`minimap/mapicons.bin`, 386 elements) with the `bo.as` placement rule for the HUD;
