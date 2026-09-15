@@ -13,7 +13,8 @@
       {"id": "2766e089-44e5-4a1d-974e-7b03ad9c269d", "task": "M1-GAMEPLAY-UI-CONTRACTS"},
       {"id": "cdfad64d-9162-439f-a525-58e1114dd7f4", "task": "M1-AUDIO-PREFERENCE-CONTROLS"},
       {"id": "ac0f0856-44af-445b-bd90-6db7a1f4fc74", "task": "M1-SCENERY-PHASE-EVIDENCE"},
-      {"id": "81ac9884-4f39-4f27-b516-6e9a42b09b51", "task": "M1-HEADLESS-JOURNEY"}
+      {"id": "81ac9884-4f39-4f27-b516-6e9a42b09b51", "task": "M1-HEADLESS-JOURNEY"},
+      {"id": "e6925772-df1f-4ff7-9efc-219f800a5a14", "task": "M1-GAMEPLAY-UI-REVIEW"}
     ],
     "reserved": [],
     "queued": [],
@@ -22,7 +23,6 @@
       {"id": "aab1ae0f-0238-4254-bff3-b7c046349c6b", "reason": "Shop capacity/identity fixes integrated as3310032+af75e17 with18 passing regressions; no automatic resumption."},
       {"id": "0f5ddddf-0aa0-4908-b0d3-1ffc6b1f7a20", "reason": "Actor presence/cadence fixes integrated as62a003c+e1076a8 with15 passing regressions; no automatic resumption."},
       {"id": "fdda1fb0-1135-4cf8-8cff-3db550e48f54", "reason": "Canonical v3 content and both demonstrated executor repairs are integrated and source-native conformance passes; no automatic resumption."},
-      {"id": "e6925772-df1f-4ff7-9efc-219f800a5a14", "reason": "Independent engine assessment complete; all four reported findings now repaired with active regressions. Final candidate review remains separate; no automatic resumption."},
       {"id": "598d83d0-6ce2-40ac-b6d5-01d566c68b99", "reason": "Reference research complete; no automatic resumption."},
       {"id": "20a115ef-0586-4ca1-9505-c1840fc02365", "reason": "Account implementation and deadline repair complete; no automatic resumption."},
       {"id": "31d6526b-89a8-4bad-bf54-15ccc64ab410", "reason": "Both scoped review turns complete; no automatic resumption."}
@@ -33,6 +33,24 @@
     "usage_accounting": "milestones/evidence/m1-usage-snapshot.json records the available delayed session snapshot; final project-wide credits/currency are unavailable."
   },
   "tasks": [
+    {
+      "id": "M1-GAMEPLAY-UI-REVIEW",
+      "goal": "Independently review the new authoritative UI4 transaction, state and migration implementation for high-confidence correctness defects.",
+      "status": "REVIEW",
+      "specs": ["spec/game-contracts.md", "spec/game-networking.md", "research/interface-contracts/verification.json"],
+      "dependencies": ["M1-ENGINE-REVIEW", "M1-SHOP-REVIEW-FIXES", "M1-ACTOR-REVIEW-FIXES"],
+      "allowed_paths": [],
+      "forbidden_paths": ["**"],
+      "outputs": ["Bounded revision-specific correctness findings with exact file/lines and reproduction inputs, or no findings in the examined delta"],
+      "validation_commands": [],
+      "test_requirements": ["Read-only new UI4 delta, not a rerun of old repaired findings", "Value/identity conservation and source phase/replay semantics", "Explicit migration/fencing/history preservation", "Known unfinished All/recovery/level-up UI controls are not misreported as newly discovered bugs"],
+      "acceptance": ["SQL m1-gameplay-ui-review records a bounded review of candidate78fcec4 integrated throughff37669, not final composed-client technical/security/style acceptance"],
+      "reserved_namespaces": [],
+      "source_notes": ["Source artifact6fdb60e4740372c5e299fe385875cfac32e04f22ea26ad17b53049296256c1b3; prior shop/actor fixes preserved. Backend follow-up controls run separately and are not part of this frozen review delta."],
+      "parity_entries": [],
+      "adaptations": [],
+      "evidence": []
+    },
     {
       "id": "M1-SCENERY-PHASE-EVIDENCE",
       "goal": "Record original native per-placement animation phases for the existing twelve dynamic reference cases without changing their images or capture inputs.",
