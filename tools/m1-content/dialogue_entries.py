@@ -1,8 +1,57 @@
-"""Disambiguate source lessons and missing-supply recovery after frozen binding application."""
+"""Disambiguate source questions and recovery after frozen binding application."""
 
 from copy import deepcopy
 
-from common import all_of, item_stack
+from common import all_of, canonical, item_stack, sha
+
+
+def normalize_tutorial_choices(content):
+    plans = []
+    for dialogue in content["dialogues"].values():
+        nodes = {node["id"]: node for node in dialogue["nodes"]}
+        if len(nodes) != len(dialogue["nodes"]):
+            raise ValueError("Source dialogue node identities must be unique")
+        if len(set(dialogue["entry_nodes"])) != len(dialogue["entry_nodes"]):
+            raise ValueError("Source dialogue entry identities must be unique")
+        groups = {}
+        for key in dialogue["entry_nodes"]:
+            if key not in nodes:
+                raise ValueError("Source dialogue entry must name an existing node")
+            if key.startswith("transition.tutorial."):
+                node = nodes[key]
+                groups.setdefault(canonical(node["guard"]), []).append(node)
+        for guard, group in groups.items():
+            if len(group) < 2:
+                continue
+            ids = {node["id"] for node in group}
+            if any(set(node) != {"id", "text", "guard", "choices"} for node in group):
+                raise ValueError("Source question normalization cannot discard node fields")
+            if len({node["text"] for node in group}) != 1:
+                raise ValueError("Equal-guard source entries have different questions")
+            if any(not node["choices"] for node in group):
+                raise ValueError("Source question branches must retain actual choices")
+            choices = [deepcopy(choice) for node in group for choice in node["choices"]]
+            if len({choice["id"] for choice in choices}) != len(choices):
+                raise ValueError("Source question branches have duplicate choice identities")
+            if any(choice["next_node"] is not None for choice in choices):
+                raise ValueError("Explicit source dialogue continuations cannot be merged")
+            if any(choice["next_node"] in ids for node in dialogue["nodes"] for choice in node["choices"]):
+                raise ValueError("An explicit continuation targets a source question branch")
+            plans.append((dialogue, group, choices, sha(guard)))
+    audit = []
+    for dialogue, group, choices, guard_hash in plans:
+        retained = group[0]
+        removed = {node["id"] for node in group[1:]}
+        retained["choices"] = choices
+        dialogue["nodes"] = [node for node in dialogue["nodes"] if node["id"] not in removed]
+        dialogue["entry_nodes"] = [key for key in dialogue["entry_nodes"] if key not in removed]
+        audit.append({
+            "dialogue": dialogue["id"], "entry": retained["id"],
+            "merged_entry_ids": [node["id"] for node in group],
+            "original_choice_ids": [choice["id"] for choice in choices],
+            "guard_sha256": guard_hash, "question_and_choice_payloads_preserved": True,
+        })
+    return audit
 
 
 def normalize_tutorial_recovery(content):

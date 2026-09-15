@@ -8,7 +8,7 @@ from common import (
     item_stack, load, position, requirement, sha, source_record, tutorial_at, unique_sources,
 )
 from geometry import World, canonical_mask
-from dialogue_entries import normalize_tutorial_recovery
+from dialogue_entries import normalize_tutorial_choices, normalize_tutorial_recovery
 from mechanics import completed_counter, damage_xp, effective
 from progression import within_points
 from spawns import stage_from
@@ -41,6 +41,7 @@ def apply_selectors(inputs, world, content, bindings):
     mill_morph(inputs, content)
     recovery_selectors(inputs, content, policy)
     consume_recipes(inputs, content)
+    choice_entries = normalize_tutorial_choices(content)
     recovery_entries = normalize_tutorial_recovery(content)
     for stage in content["tutorial"].values():
         allowed = stage["allowed_actions"]
@@ -63,6 +64,7 @@ def apply_selectors(inputs, world, content, bindings):
         "npc_selector_ids": [npc["id"] for npc in content["npcs"].values() if npc["combat"]],
         "fresh_normal_manual_drop_profile": policy["fresh_normal_manual_drop_profile"],
         "death_timing": mechanics["death"]["timing"], "recovery_interfaces": mechanics["death"]["interfaces"],
+        "tutorial_choice_entries": choice_entries,
         "tutorial_recovery_entries": recovery_entries,
         "new_consume_only_recipes": [identifier for identifier, recipe in content["recipes"].items()
                                      if recipe["mechanics"]["lifecycle"]["kind"] == "consume_only"],
