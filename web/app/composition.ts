@@ -17,10 +17,10 @@ import { Settings, sourceSliderPosition } from "./settings.ts";
 import { RpcTransport } from "./transport.ts";
 import { presenceOf } from "./public-state.ts";
 import { SourceAudioSession, audioProblem, playbackEnabled, sourceAudioAdapter } from "./audio.ts";
-import { sourceZoomForViewportHeight } from "./renderer.ts";
+import { fullHudZoomForViewport } from "./renderer.ts";
 import type { AudioSnapshot, SourceAudioPreferences } from "../audio/index.ts";
 import type { UiPreviewRequest } from "../ui/index.ts";
-import type { MinimapSurface } from "../renderer/src/index.ts";
+import type { MapIconSprite, MinimapSurface } from "../renderer/src/index.ts";
 import { ModelPreview } from "./preview.ts";
 import { MinimapRelay } from "./minimap.ts";
 import { sourceUiAudioAdapter, sourceUiPreviewAdapter } from "./ui-adapter.ts";
@@ -28,6 +28,9 @@ import { PlayerAudioComposition } from "./player-audio-composition.ts";
 import type { PlayerAudioSources } from "./player-audio-composition.ts";
 import { browserPlayerAudioStorage, PlayerAudioPreferenceStore } from "./player-audio-store.ts";
 import type { PlayerAudioStorage } from "./player-audio-store.ts";
+import { rendererWorldView } from "./instance-layout.ts";
+import { resizeFullHud } from "./viewport.ts";
+import type { FullHudSurface } from "./viewport.ts";
 
 export interface ObservedRenderer extends RendererHandle {
   /** Observation only; all values must come from the real decoder/render path. */
@@ -35,6 +38,7 @@ export interface ObservedRenderer extends RendererHandle {
   supportsScene?(id: string): boolean;
   frameUiPreview?(request: Readonly<UiPreviewRequest>): Promise<ImageData | null>;
   minimapSurface?(): MinimapSurface;
+  mapIconSprites?(): Map<number, MapIconSprite>;
 }
 export interface ApplicationHandle { app: BrowserApp; dispose(): Promise<void> }
 
@@ -50,6 +54,9 @@ export async function mountApplication(options: {
   recordedCamera?: string | null;
   sourceAudio?: PlayerAudioSources;
   playerAudioStorage?: PlayerAudioStorage;
+  sourceRenderer?: {
+    instanceTemplate?(world: WorldView): string | null | undefined;
+  };
 }): Promise<ApplicationHandle> {
   const { build, components, bridge, benchmark, worldCanvas, uiCanvas, status } = options;
   const earlyScene = options.earlyScene ?? null;
@@ -86,6 +93,7 @@ export async function mountApplication(options: {
   let appliedRenderSettingsJson = "";
   let appliedAudioSettings: Pick<AudioSnapshot, "masterPercent" | "volumes" | "nativeMixer" | "muted"> | null = null;
   let appliedAudioPreferences: SourceAudioPreferences | null = null;
+  let surface: Readonly<FullHudSurface> | null = null;
   let appliedSettingsKey = "";
   let settingsActor: string | null = null;
   const lifecycle = new AbortController();
@@ -127,6 +135,8 @@ export async function mountApplication(options: {
       invariant(region, `No compiled source presentation exists for ${world.player.region}.`, "integration");
       sceneLoaded = false;
       benchmark.worldReady(false);
+      const renderWorld = rendererWorldView(world, assets.manifest.instanceLayouts,
+        options.sourceRenderer?.instanceTemplate?.(world));
       const fixture = presentationCamera === null ? null : assets.manifest.renderer?.fixtures[presentationCamera];
       if (presentationCamera !== null && !fixture) throw new AppError("The explicitly requested source fixture/camera is not exported.", { kind: "region_unavailable" });
       const sceneId = earlyScene ?? region.sceneId;
@@ -152,12 +162,15 @@ export async function mountApplication(options: {
         assets.manifest.renderer?.manifestSha256 ?? assets.manifestSha256,
         requiredPins);
       await assets.preload(required);
+      // Prime the declared layout before loadScene asks which source squares to load.
+      renderer.update(renderWorld);
       await renderer.loadScene(sceneId);
-      renderer.update(world);
       appliedWorld = world;
       rendererHadWorld = true;
       input?.dispose();
-      input = new InputController(uiCanvas, ui!, renderer, app, { ...camera, zoom: sourceZoomForViewportHeight(worldCanvas.height) },
+      input = new InputController(uiCanvas, ui!, renderer, app, {
+        ...camera, zoom: fullHudZoomForViewport(worldCanvas.width, worldCanvas.height),
+      },
         fixture ? null : region.controls, world.player.tile,
         () => ({ width: worldCanvas.width, height: worldCanvas.height }));
       sceneLoaded = true;
@@ -243,7 +256,8 @@ export async function mountApplication(options: {
       try {
         // createUi owns its state subscription; this observer drives only the renderer/benchmark.
         if (state.world && state.world !== appliedWorld && renderer && sceneLoaded) {
-          renderer.update(state.world);
+          renderer.update(rendererWorldView(state.world, assets?.manifest.instanceLayouts,
+            options.sourceRenderer?.instanceTemplate?.(state.world)));
           appliedWorld = state.world;
           rendererHadWorld = true;
         }
@@ -268,15 +282,15 @@ export async function mountApplication(options: {
       const width = Math.max(1, Math.round(worldCanvas.clientWidth));
       const height = Math.max(1, Math.round(worldCanvas.clientHeight));
       const scale = window.devicePixelRatio;
-      const pixelsWide = Math.round(width * scale);
-      const pixelsHigh = Math.round(height * scale);
-      if (worldCanvas.width !== pixelsWide || worldCanvas.height !== pixelsHigh) {
-        worldCanvas.width = pixelsWide; worldCanvas.height = pixelsHigh;
-      }
-      renderer?.resize(pixelsWide, pixelsHigh);
-      input?.resizeZoom(sourceZoomForViewportHeight(pixelsHigh));
-      ui?.resize(width, height);
-      benchmark.viewport(width, height, scale);
+      surface = resizeFullHud(surface, width, height, scale, {
+        world(pixelsWide, pixelsHigh) {
+          if (renderer) renderer.resize(pixelsWide, pixelsHigh);
+          else { worldCanvas.width = pixelsWide; worldCanvas.height = pixelsHigh; }
+        },
+        camera(zoom) { input?.resizeZoom(zoom); },
+        ui(width, height) { ui?.resize(width, height); },
+        observe(width, height, scale) { benchmark.viewport(width, height, scale); },
+      });
     };
     resizeSurfaces();
     resize = new ResizeObserver(resizeSurfaces);
@@ -308,7 +322,8 @@ export async function mountApplication(options: {
       });
       const previewRenderer = renderer;
       minimap = new MinimapRelay(components.setUiMinimap ? (surface) => components.setUiMinimap!(ui!, surface) : null,
-        (error) => app.report(error));
+        (error) => app.report(error),
+        components.setUiMapIconSprites ? (sprites) => components.setUiMapIconSprites!(ui!, sprites) : null);
       if (previewRenderer.frameUiPreview) {
         preview = new ModelPreview({
           request: () => sourceUiPreviewAdapter.request(ui!),
@@ -394,7 +409,7 @@ export async function mountApplication(options: {
             const key = canonicalJson({ revision: worldView.revision, scene: observation.scenePlacement });
             if (key !== minimapInput) {
               minimapInput = key;
-              minimap?.update(renderer.minimapSurface(), deviceEpoch);
+              minimap?.update(renderer.minimapSurface(), deviceEpoch, renderer.mapIconSprites?.());
               benchmark.minimap(minimap?.observe() ?? null);
             }
           }

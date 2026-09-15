@@ -2,7 +2,7 @@ import { isDeepStrictEqual } from "node:util";
 import type { RenderAssetManifest } from "../../web/renderer/src/index.ts";
 import { publicPath } from "../../web/app/identity.ts";
 
-export const DEFAULT_RENDER_INPUTS = ".local/render-inputs-8281dd16";
+export const DEFAULT_RENDER_INPUTS = ".local/render-inputs-2d228d79";
 
 export function renderRuntimeFiles(manifest: RenderAssetManifest): {
   common: string[]; scenes: Map<string, string[]>; blocks: Map<number, string[]>; files: string[];
@@ -10,6 +10,8 @@ export function renderRuntimeFiles(manifest: RenderAssetManifest): {
   const common = new Set([
     "palette.bin", ...manifest.textures.map((id) => `textures/${id}.bin`),
     ...(manifest.files["minimap/mapscenes.bin"] ? ["minimap/mapscenes.bin"] : []),
+    ...(manifest.files["minimap/mapicons.bin"] ? ["minimap/mapicons.bin"] : []),
+    ...(manifest.gear_pose_fits ? [manifest.gear_pose_fits.file] : []),
     ...manifest.npcs.map((npc) => npc.pack),
     ...(manifest.sequences ?? []).map((sequence) => sequence.file),
     ...(manifest.npc_definitions ?? []).map((npc) => npc.base_model),

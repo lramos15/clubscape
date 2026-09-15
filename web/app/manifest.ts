@@ -2,6 +2,8 @@ import type { RenderCamera } from "../shared/contracts.ts";
 import { SOURCE_PACK_SHA256 } from "../shared/contracts.ts";
 import { deepFreeze, invariant } from "./errors.ts";
 import { assetId, isHash, publicPath } from "./identity.ts";
+import { validateInstanceLayouts } from "./instance-layout.ts";
+import type { SourceInstanceLayouts } from "./instance-layout.ts";
 
 export interface AssetRecord {
   id: string;
@@ -79,6 +81,7 @@ export interface ContentManifest {
   contentValidation?: ContentValidation;
   aliases?: Record<string, string>;
   renderer?: RendererDelivery;
+  instanceLayouts?: SourceInstanceLayouts;
 }
 
 export function parseContentManifest(value: unknown): ContentManifest {
@@ -170,6 +173,7 @@ export function parseContentManifest(value: unknown): ContentManifest {
         && region.camera.near > 0 && region.camera.far > region.camera.near && region.camera.zoom > 0,
       "Invalid recorded source camera.");
     }
+    if (manifest.instanceLayouts !== undefined) validateInstanceLayouts(manifest.instanceLayouts, new Set(Object.keys(manifest.regions)));
     if (region.controls !== null) {
       invariant(["yawUnitsPerPixel", "pitchUnitsPerPixel", "keyboardYawUnitsPerSecond", "keyboardPitchUnitsPerSecond",
         "minimumPitch", "maximumPitch", "zoomPerWheelStep", "minimumZoom", "maximumZoom", "tileWorldUnits"].every((key) => {

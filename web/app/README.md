@@ -73,7 +73,7 @@ Diagnostic Vite bundling is explicitly separate from a passing production
 typecheck. Real UI4 entry/experience/source-lock/reconnect checks can run, but
 do not prove complete UI consumption or final acceptance.
 
-The new normal candidate `.local/source-ui4-5e0aa8a2` uses raw artifact
+The retained initial5e candidate `.local/source-ui4-5e0aa8a2` uses raw artifact
 `5e0aa8a28851752ae0b8b0a08c635c6c8d2979f509f3a3e564ee74e2abfc8e6f`,
 revision `m1.source-backed.v4.3ff4292b311453cc`, and a different world UUID from
 the retained6f candidate. Only the Magic Instructor question/entry normalization
@@ -81,6 +81,12 @@ and revision changed: original stay/information/normal choices retain their
 payloads and order, with repeated identical primary predicates collapsed in
 the supply-recovery exclusions. No UI/protocol/persisted-state version changes
 or client-side dialogue merge/priority rule is introduced.
+
+Current renderer delivery uses a separate candidate,
+`.local/source-renderer-2d228d79-5e0aa8a2`, world
+`22f2a10e-6248-4df7-8776-a5fec15a025a`, with the same exact5e game artifact.
+The earlier5e code/data pair is retained rather than receiving new renderer
+assets in place.
 
 The previous `.local/source-ui4-6fdb60e4` remains byte-pinned, with its matching
 11-file public code bundle archived at `.local/web-ui4-6f-bd4a693e`.
@@ -237,10 +243,16 @@ This is not a complete Tutorial Island journey.
 The initial six renderer commits and authorized continuations `e96e3b8`,
 `1937201`, `c098133`, `0c541d9` are integrated through the actual
 `web/renderer/src/index.ts` factory and `web/renderer/build.sh`.
+The full `d4dec55`/`9e9c9be`/`d5320e1` through `5ab678d` prerequisite chain
+and the exact `8c6bab07`/`779670bf`/`8d070b5d`/`de3c623b`/`1b148d55`/
+`bae5f2a0`/`7bcb6c8f`/`31896c72` handoff are now integrated. The former
+partial minimap merge was reconciled to those published renderer files; the
+resulting renderer-owned tree matches the final handoff exactly.
+Source phase `6c68672d` was imported once; its duplicate `5b2d8ac` was not.
 The shell does not implement a rasterizer, animation policy or gear fit.
 Build output uses wasm-bindgen0.2.128; actual build hashes are recorded in
 `.local/evidence/renderer-build.json`. The current original renderer manifest is
-`8281dd16f01e996569661ddd711022af803ed62412a075698ca6c247ce164399`.
+`2d228d79f526cb4d84a444118c9e8f3961d2f08213f56ffe5f8a81af17b9cceb`.
 All 122 compressed buffers for its 61 blocks were reproduced byte-exactly from
 the pinned original inputs and are included in browser/server delivery.
 
@@ -269,31 +281,35 @@ to that source square. `sceneId` reports the actual assembled `blocks@x,y`;
 `recorded-camera-not-journey`. Neither diagnostic is a verified live spawn/
 arrival camera. Unknown/duplicate URL parameters and URL secrets reject.
 
-The camera uses16384 units/turn, near50 and
-the renderer's **viewport-only** `sourceZoomForViewportHeight(backingHeight)`
-helper (662 at1080). Live resize updates
-the same camera/zoom in renderer and UI. An early fixture with no live control
+The composed app uses16384 units/turn, near50 and the renderer's exact
+`fullHudViewport(width,height)` / `fullHudZoomForViewport(width,height)`:
+410 at1920x1080,292 at1024x768,547 at2560x1440, checked against all16 original
+viewport samples. `viewport.ts` deduplicates ResizeObserver/window notifications,
+keeping logical UI coordinates separate from backing pixels and sending each
+actual renderer resize/camera change once. The app always contains the real
+Classic HUD, including when its world uses an explicitly named diagnostic scene;
+only standalone viewport fixtures use the retained662 helper. An early fixture with no live control
 calibration keeps its recorded camera: no guessed mouse sensitivity or scroll
 curve. Source live camera/control bindings must be supplied before normal
-entry. A logical privacy `instance` is not guessed to be the original client's
-instanced-map flag; stock roof behavior stays renderer-owned.
+entry. Native full-HUD zoom is source-bound; a live camera position/input policy
+is a different still-required contract, not supplied by a zoom formula.
 
 The independent byte-identical frozen inventory/full-HUD replay in
 `53fbd543828cda12f28f2ec30b8f78c9d914ccef` reports native full-HUD zoom410,
-not viewport-only662, at1080. Current composed captures therefore do **not**
-establish matched full-HUD projection, even when their GPU frames complete.
-The presentation observer and new source-run receipts label this explicitly.
-The renderer owns resolution against matched original source cases; the shell
-does not override zoom to410, rescale HUD/minimap coordinates, or alter the
-native-size model preview to approximate a match.
+not viewport-only662, at1080. The new full-HUD helper implements the separately captured original layout
+parameters, rather than empirically overriding a viewport fixture. Its correct
+zoom does **not** establish full composed/player fidelity. The presentation
+observer reports `renderer-native-full-hud-helper` but retains
+`fullHudProjectionMatched:false`. No HUD/minimap coordinates or native model
+surface sizes are rescaled to force a match.
 
 That commit's12 dynamic cases and
 `assets/reference/osrs240/m1-dynamic/case-index.json` (SHA-256
 `dde300e30ff909e539c283fa7053c673abc9428ce357894f0727be08da8ad557`)
 are offline original-render references only. They are not client assets,
-authoritative gameplay, or candidate acceptance. No supplemental capture
-import was needed for this shell-side classification, and frozen inputs remain
-untouched.
+authoritative gameplay, or candidate acceptance. The later per-placement phase supplement is likewise offline-only. Production
+composition does not call developer body-hiding, source-phase or scenery-clock
+fixture controls. Frozen inputs remain untouched.
 
 The current native frame timestamps still use wall-clock `Date.now()`.
 `CanvasGpuClock` independently observes **actual game-canvas texture acquisition,
@@ -307,7 +323,8 @@ enabled without a shell serial limiter. Submission/completion clocks use
 receipt observation remains part of measurement overhead.
 
 Loaded squares come from native diagnostics. Append-only fetch history is not
-claimed as residency after eviction. The current WASM
+claimed as residency after eviction; minimap/MICN sidecars follow their source
+square's real residency as well. The current WASM
 `scenePlacement().blocks` incorrectly tests `scene_id().is_none()`, even for
 successfully assembled `blocks@` scenes. The owned adapter normalizes only
 that flag when actual base/size/scene/loaded-square diagnostics agree, reports
@@ -342,33 +359,49 @@ timestamps, but discard the raw WASM `entities_drawn` field and do not expose
 per-kind workload counts. `observe().entities` therefore stays `{}` and
 benchmark readiness stays false; no manifest/static/server-snapshot count is
 passed off as rendered entities. Renderer continuation must supply the real
-counts and dynamic minimap. The backend now supplies `game.observer.v1` movement/action fields, including
+counts. The backend now supplies `game.observer.v1` movement/action fields, including
 final running steps during idle/exhaustion and stable action timing. They are
 forwarded with exact absence/null/string semantics. The shell never chooses a
-pose from a run checkbox or nearby object. Explicit renderer consumption is
-still an owner-side dependency; the older activity/adjacency fallback remains
-unaccepted, as do unverified gear-fit claims.
+pose from a run checkbox or nearby object. The new renderer consumes those
+fields, including stable action/cycle anchors and explicit null animation.
+`diagnostics.actorObserver` exposes its actual `observerV1()`, `playerRunning()`
+and `unknownMotions()` results; absent numeric binding remains unknown, not a
+guessed action or a blanket animation-ready flag. `developerMotionFallback`
+is explicitly false. Per-pose fit reports are available without claiming the
+surface-clearance metric proves the frozen attachment-anchor gap; that gate
+remains unaccepted.
 
-The authorized `d5320e1` minimap API is integrated with regenerated matching
-bindings. Its merge retained the existing motion/gear code rather than importing
-unrelayed predecessors. `MinimapRelay` validates the actual 512x512 RGBA/mask,
+`MinimapRelay` validates the actual 512x512 RGBA/mask,
 scale4/margin48, base/plane/revision and forwards once per renderer revision
 when a real UI sink is provided. The present UI has no live-surface/icon setter,
 so the actual raster/notes/stats/map-element IDs are observed but not replaced
-by a static PNG or claimed delivered. Edge-five-tile/instance/icon limitations
-remain explicit and `complete` is not full-surface fidelity.
+by a static PNG or claimed delivered. It also retains `sourceIconMismatches`
+and forwards original `mapIconSprites()` pixels/offsets through the optional
+`Components.setUiMapIconSprites` sink, independently of raster revision.
+Decoded counts are actual native map entries, not guessed entity counts.
+No icon offset,80-radius or clipping math is implemented: the relayed world128
+description awaits the owner's exact unit/helper correction. Sprite delivery
+is not icon-projection acceptance. Edge-five-tile limitations remain explicit
+and `complete` is not full-surface fidelity.
 
-`5ab678d` could not be consumed independently: it requires unrelayed
-`547353b`, `710d29e`, `83636e7`, `61e986b` (and earlier motion/gear work).
-Its attempted follow-up was aborted; no missing renderer logic or passing
-comparison evidence was reconstructed.
+`ContentManifest.instanceLayouts` is projected by the native Runtime compiler
+from `mechanics.instances`: chunk size and original source/destination region,
+tile, plane and rotation, not a separate world definition. The renderer accepts
+the declared8x8 mappings only after the actual backend template identity is
+supplied through `sourceRenderer.instanceTemplate(world)`. Current wire views
+still expose only an opaque instance ID; no template is guessed from that ID,
+matching region/tile or a death hint. Missing identity/layout and unsupported
+turns fail explicitly before world rendering. The source layout is primed before
+scene loading, so the native adapter requests/copies only its declared squares.
+Ordinary worlds explicitly pass `instanceLayout:null`; rotated unsupported
+geometry is never silently drawn as an uninstanced scene.
 
 The real streamed Chrome/Xvfb check is engineering-only. It covers actual UI
 signup, wrong-password feedback, empty creation/appearance, source block
 fetches, ten canonical dynamic objects, exact preview-request/unavailability
 semantics, pinned server restart,
-logout/relogin, and an actual game-device-loss fault check. It keeps
-`game.ui.v1` and rendered-count readiness false. Frame distributions and
+logout/relogin, and an actual game-device-loss fault check. UI4 is negotiated;
+rendered-count readiness remains false. Frame distributions and
 failing 60-FPS/gap budgets remain exact evidence, not a Mac/Edge/M1 acceptance.
 
 ## Actual audio adapter

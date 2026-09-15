@@ -47,6 +47,7 @@ const manifest = parseContentManifest({
   catalog: { ...projection.catalog, icons: bindings.icons ?? bindings.catalog?.icons ?? projection.catalog.icons ?? {},
     inventoryActions: bindings.inventoryActions ?? bindings.catalog?.inventoryActions ?? {} },
   contentValidation: projection.contentValidation,
+  instanceLayouts: projection.instanceLayouts,
   ...(bindings.aliases === undefined ? {} : { aliases: bindings.aliases }),
   ...(bindings.renderer === undefined ? {} : { renderer: bindings.renderer }),
   assets: bindings.assets, bootstrap: bindings.bootstrap, rendererManifest: bindings.rendererManifest, regions: bindings.regions,

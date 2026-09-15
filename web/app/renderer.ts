@@ -1,5 +1,5 @@
-import { createRenderer, regionSceneId, sourceZoomForViewportHeight } from "../renderer/src/index.ts";
-import type { ClubscapeRendererHandle, MinimapSurface, PlayerFitReport, PlayerPreviewRequest, RenderAssetManifest, RendererDiagnostics, ScenePlacement } from "../renderer/src/index.ts";
+import { createRenderer, fullHudViewport, fullHudZoomForViewport, regionSceneId, sourceZoomForViewportHeight } from "../renderer/src/index.ts";
+import type { ClubscapeRendererHandle, MapIconSprite, MinimapSurface, PlayerFitReport, PlayerPoseFit, PlayerPreviewRequest, RenderAssetManifest, RendererDiagnostics, RendererWorldExtensions, ScenePlacement } from "../renderer/src/index.ts";
 import wasmUrl from "../renderer/pkg/clubscape_renderer_bg.wasm?url";
 import type { RenderCamera, RendererConfig, RenderFrame, RendererHandle, WorldView } from "../shared/contracts.ts";
 import type { RendererObservation } from "./benchmark.ts";
@@ -13,7 +13,7 @@ import { residentRendererAssets, sourceScenePlacement } from "./render-state.ts"
 import { nativeUiPreviewRequest } from "./ui-preview-request.ts";
 import type { UiPreviewRequest } from "../ui/index.ts";
 
-export { regionSceneId, sourceZoomForViewportHeight };
+export { fullHudViewport, fullHudZoomForViewport, regionSceneId, sourceZoomForViewportHeight };
 
 export interface ShellRenderer extends RendererHandle {
   observe(): RendererObservation;
@@ -24,6 +24,11 @@ export interface ShellRenderer extends RendererHandle {
   playerFitReport(): PlayerFitReport[];
   scenePlacement(): ScenePlacement | null;
   minimapSurface(): MinimapSurface;
+  mapIconSprites(): Map<number, MapIconSprite>;
+  playerPoseFits(): PlayerPoseFit[];
+  observerV1(): boolean;
+  playerRunning(): boolean;
+  unknownMotions(): string[];
 }
 
 /** Exact adapter composition: real factory, real diagnostics, and the actual canvas queue clock. */
@@ -43,7 +48,9 @@ export async function createShellRenderer(canvas: HTMLCanvasElement, config: Ren
     canvas.dispatchEvent(new CustomEvent("clubscape-render-diagnostic", { detail: message }));
   };
   try {
-    native = await createRenderer(canvas, config, { wasmUrl, onDiagnostic: report, maxFramesInFlight: 2 });
+    native = await createRenderer(canvas, config, {
+      wasmUrl, onDiagnostic: report, maxFramesInFlight: 2, developerMotionFallback: false,
+    });
   } catch (error) {
     clock.dispose();
     throw new AppError(`Actual WebGPU renderer initialization failed: ${String(error)}`, { kind: "device", recoverable: false });
@@ -66,7 +73,7 @@ export async function createShellRenderer(canvas: HTMLCanvasElement, config: Ren
       invariant(sceneIds.has(id), `The actual renderer has no exported scene for ${id}. No fixture was selected as a fallback.`, "region_unavailable");
       await native.loadScene(id);
     },
-    update(value) {
+    update(value: WorldView & RendererWorldExtensions) {
       world = value;
       // Extra validated fields (including dynamicObjects) survive the shared type boundary.
       native.update(value);
@@ -100,8 +107,13 @@ export async function createShellRenderer(canvas: HTMLCanvasElement, config: Ren
     framePlayerPreview(request) { return native.framePlayerPreview(request); },
     async frameUiPreview(request) { return native.framePlayerPreview(nativeUiPreviewRequest(request, world, manifest)); },
     playerFitReport() { return native.playerFitReport(); },
+    playerPoseFits() { return native.playerPoseFits(); },
+    observerV1() { return native.observerV1(); },
+    playerRunning() { return native.playerRunning(); },
+    unknownMotions() { return native.unknownMotions(); },
     scenePlacement() { return placement(native.diagnostics()).value; },
     minimapSurface() { return native.minimapSurface(); },
+    mapIconSprites() { return native.mapIconSprites(); },
     observe() {
       const state = native.diagnostics();
       const scene = placement(state);
@@ -109,11 +121,13 @@ export async function createShellRenderer(canvas: HTMLCanvasElement, config: Ren
         ready: state.sceneId !== null && state.deviceLostReason === null,
         sceneId: state.sceneId ?? "unloaded", assets: residentRendererAssets(manifest, state),
         scenePlacement: scene.value, nativeScenePlacement: scene.raw, loadedSquares: state.loadedSquares,
-        playerAnimationAvailable: world !== null && world.player.running !== undefined && world.player.action !== undefined,
+        actorObserver: { observerV1: native.observerV1(), running: native.playerRunning(), unknownMotions: native.unknownMotions() },
         // The public adapter still discards raw entities_drawn; never substitute server counts.
         entities: {}, gpuTimestampPassScope: state.timestampsSupported ? "original integer fill compute pass" : null,
         settings: camera ? { backend: "webgpu", sourceManifestSha256: state.manifestSha256, brightness: manifest.brightness,
-          near: 50, far: camera.far, zoom: camera.zoom, angleUnitsPerTurn: 16384 } : null,
+          near: 50, far: camera.far, zoom: camera.zoom, angleUnitsPerTurn: 16384,
+          projection: "renderer-native-full-hud-helper", fullHudProjectionMatched: false,
+          attachmentGapAccepted: false } : null,
       };
     },
     dispose() { if (!disposed) { disposed = true; native.dispose(); clock.dispose(); } },

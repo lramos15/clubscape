@@ -19,7 +19,7 @@ export interface RendererObservation {
   scenePlacement?: { baseX: number; baseY: number; sizeTiles: number; blocks: boolean } | null;
   nativeScenePlacement?: { baseX: number; baseY: number; sizeTiles: number; blocks: boolean } | null;
   loadedSquares?: number[];
-  playerAnimationAvailable?: boolean;
+  actorObserver?: { observerV1: boolean; running: boolean; unknownMotions: string[] };
 }
 
 export class Benchmark implements ClubscapeBenchmarkV1 {
@@ -164,7 +164,8 @@ export class Benchmark implements ClubscapeBenchmarkV1 {
         scenePlacement: renderer?.scenePlacement ?? null,
         nativeScenePlacement: renderer?.nativeScenePlacement ?? null,
         loadedSquares: renderer?.loadedSquares ?? null,
-        playerAnimationAvailable: renderer?.playerAnimationAvailable ?? null,
+        actorObserver: renderer?.actorObserver ?? null,
+        rendererSettings: renderer?.settings ?? null,
         wasmStartupMs: this.#startupMs,
         gpuTiming: {
           timestampQueryEnabled: this.#timestampFeature,

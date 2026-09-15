@@ -6,13 +6,16 @@ import { fileURLToPath } from "node:url";
 import type { RenderAssetManifest } from "../../web/renderer/src/index.ts";
 import { RENDER_MANIFEST_SHA256 } from "../../web/app/render-identity.ts";
 import { DEFAULT_RENDER_INPUTS, verifyReproductionManifest } from "./render-data.ts";
+import { validateRenderBlockPackage } from "./render-package.ts";
 
 const root = resolve(fileURLToPath(new URL("../../", import.meta.url)));
 const source = resolve(root, "assets/compiled/render");
 const output = resolve(root, process.argv[2] ?? DEFAULT_RENDER_INPUTS);
 const reuse = process.env.CLUBSCAPE_RENDER_REUSE_INPUTS ? resolve(root, process.env.CLUBSCAPE_RENDER_REUSE_INPUTS) : null;
+const packagePath = process.env.CLUBSCAPE_RENDER_BLOCK_PACKAGE ? resolve(root, process.env.CLUBSCAPE_RENDER_BLOCK_PACKAGE) : null;
 if (!output.startsWith(root + sep) || output === source) throw new Error("Reproduction needs a separate owned directory inside the worktree.");
 if (reuse !== null && !reuse.startsWith(root + sep)) throw new Error("Reused renderer inputs must remain inside the worktree.");
+if (packagePath !== null && !packagePath.startsWith(root + sep)) throw new Error("Copy the authorized block package into this worktree before installation.");
 const hash = (bytes: Uint8Array): string => createHash("sha256").update(bytes).digest("hex");
 const absent = (error: unknown): null => {
   if (error instanceof Error && "code" in error && error.code === "ENOENT") return null;
@@ -21,10 +24,23 @@ const absent = (error: unknown): null => {
 const bytes = await readFile(resolve(source, "manifest.json"));
 if (hash(bytes) !== RENDER_MANIFEST_SHA256) throw new Error("Published render manifest changed.");
 const manifest = JSON.parse(bytes.toString("utf8")) as RenderAssetManifest;
+const indexBytes = await readFile(resolve(source, "blocks.index.json"));
+const index = validateRenderBlockPackage(JSON.parse(indexBytes.toString("utf8")), manifest, RENDER_MANIFEST_SHA256);
+if (packagePath !== null) {
+  const stat = await lstat(packagePath);
+  if (!stat.isFile() || stat.isSymbolicLink() || stat.size !== index.pack.size_bytes
+    || hash(await readFile(packagePath)) !== index.pack.sha256) {
+    throw new Error("The supplied archive is not the exact current block/MICN package. Older packs cannot substitute for its sidecars.");
+  }
+}
+const packaged = new Set(index.files.map((entry) => entry.file));
 await mkdir(output, { recursive: true });
 const prior = await readFile(resolve(output, "manifest.json")).catch(absent);
 if (prior) verifyReproductionManifest(manifest, JSON.parse(prior.toString("utf8")) as RenderAssetManifest);
 if (!prior) await writeFile(resolve(output, "manifest.json"), bytes, { flag: "wx" });
+const priorIndex = await readFile(resolve(output, "blocks.index.json")).catch(absent);
+if (priorIndex && !priorIndex.equals(indexBytes)) throw new Error("Output already contains a different block-package index; use a new input directory.");
+if (!priorIndex) await writeFile(resolve(output, "blocks.index.json"), indexBytes, { flag: "wx" });
 let needBlocks = false;
 let reused = 0;
 for (const [name, pin] of Object.entries(manifest.files)) {
@@ -39,6 +55,7 @@ for (const [name, pin] of Object.entries(manifest.files)) {
     }
     continue;
   }
+  if (packagePath !== null && packaged.has(name)) continue;
   if (name.startsWith("blocks/")) {
     const previous = reuse === null ? null : await readFile(resolve(reuse, name)).catch(absent);
     if (previous !== null) {
@@ -55,7 +72,11 @@ for (const [name, pin] of Object.entries(manifest.files)) {
   await mkdir(dirname(target), { recursive: true });
   await copyFile(original, target);
 }
-if (needBlocks) {
+if (packagePath !== null) {
+  execFileSync("python3", ["-B", "tools/render-assets/export.py", "--profile", "unpack-blocks", "--output", output, packagePath], {
+    cwd: root, stdio: "inherit", timeout: 180_000,
+  });
+} else if (needBlocks) {
   execFileSync("python3", ["-B", "tools/render-assets/export.py", "--profile", "blocks", "--output", output], {
     cwd: root, stdio: "inherit", timeout: 1_800_000,
   });
@@ -76,9 +97,15 @@ await mkdir(resolve(root, ".local/evidence"), { recursive: true });
 if (omitted.length > 0) {
   await writeFile(resolve(root, ".local/evidence/render-block-exporter-manifest.json"), exporterBytes);
   await writeFile(resolve(output, "manifest.json"), bytes);
+  await writeFile(resolve(output, "blocks.index.json"), indexBytes);
 }
+execFileSync("python3", ["-B", "tools/render-assets/export.py", "--profile", "verify-blocks", "--output", output], {
+  cwd: root, stdio: "inherit", timeout: 180_000,
+});
 const report = { kind: "original-world-block-reproduction", manifestSha256: RENDER_MANIFEST_SHA256,
-  invokedOriginalExporter: needBlocks, verifiedInventoryManifestSha256: hash(exporterBytes),
+  invokedOriginalExporter: packagePath === null && needBlocks, verifiedInventoryManifestSha256: hash(exporterBytes),
+  verifiedPublishedPackage: packagePath === null ? null : index.pack,
+  verifiedPackageMembers: index.files.length,
   reusedHashIdenticalBlockFiles: reused,
   exporterOmittedValidationOrRawTwins: omitted,
   directory: output, blocks: manifest.blocks?.length ?? 0, files: count, bytes: total,

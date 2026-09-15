@@ -406,8 +406,8 @@ test("read-only quotes keep exact recovery fees and reject stale selections afte
   await app.dispose();
 });
 
-test("missing source regions or live cameras fail explicitly without a fixture fallback or source logout", async () => {
-  for (const kind of ["region_unavailable", "camera_unavailable"]) {
+test("missing source regions, live cameras or actual instance layouts fail without fallback or source logout", async () => {
+  for (const kind of ["region_unavailable", "camera_unavailable", "instance_unavailable"]) {
     const bridge = new FixtureBridge();
     const hooksValue = hooks();
     let disconnected = false;

@@ -138,7 +138,7 @@ export class InputController {
     if (this.#blocked(event) || textInput(document.activeElement) || this.#ui.capturesPointer(x, y)) return;
     event.preventDefault();
     if (!this.#controls) {
-      this.#services.report(new AppError("This source fixture uses the viewport-derived zoom; no live scroll-zoom policy was invented.", { kind: "integration" }));
+      this.#services.report(new AppError("This source composition uses its native viewport zoom; no live scroll-zoom policy was invented.", { kind: "integration" }));
       return;
     }
     if (event.deltaY !== 0) this.#zoom(Math.sign(event.deltaY) * this.#controls.zoomPerWheelStep);

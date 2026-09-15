@@ -16,6 +16,7 @@ export function residentRendererAssets(manifest: RenderAssetManifest, state: Ren
   const blocks = new Map((manifest.blocks ?? []).flatMap((block) =>
     [block.file, block.file_gz, block.models_file, block.models_file_gz]
       .filter((path): path is string => path !== undefined).map((path) => [path, block.square] as const)));
+  for (const block of manifest.minimap_blocks ?? []) blocks.set(block.file, block.square);
   const scenes = new Map(manifest.scenes.flatMap((scene) =>
     [scene.file, scene.file_gz, scene.models_file, scene.models_file_gz]
       .filter((path): path is string => path !== undefined).map((path) => [path, scene.name] as const)));

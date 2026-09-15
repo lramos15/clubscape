@@ -28,6 +28,30 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
             )
         })
         .collect();
+    let instance_layouts: std::collections::BTreeMap<_, _> = source
+        .mechanics
+        .instances
+        .values()
+        .map(|template| {
+            let chunks: Vec<_> = template
+                .chunks
+                .iter()
+                .map(|chunk| {
+                    serde_json::json!({
+                        "sourceRegion":chunk.source_region,
+                        "sourceOrigin":chunk.source_origin,
+                        "destinationRegion":chunk.destination_region,
+                        "destinationOrigin":chunk.destination_origin,
+                        "quarterTurns":chunk.quarter_turns,
+                    })
+                })
+                .collect();
+            (
+                template.id.to_string(),
+                serde_json::json!({"chunkSize":template.chunk_size,"chunks":chunks}),
+            )
+        })
+        .collect();
     println!(
         "{}",
         serde_json::json!({
@@ -35,6 +59,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
             "artifactSha256":clubscape_content::sha256(&bytes),
             "catalog":clubscape_wasm::catalog::from_compiled(&compiled),
             "regions":regions,
+            "instanceLayouts":instance_layouts,
             "referencedAssets":compiled.referenced_assets(),
             "contentValidation":{
                 "contentSchemaVersion":source.schema_version,

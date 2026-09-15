@@ -90,15 +90,17 @@ test("stream residency comes from actual loaded squares, not append-only fetch h
       { square: 12336, file: "blocks/12336.bin", file_gz: "blocks/12336.bin.gz" },
       { square: 12592, file: "blocks/12592.bin", file_gz: "blocks/12592.bin.gz" },
     ],
+    minimap_blocks: [{ square: 12336, file: "minimap/blocks/12336.bin" }, { square: 12592, file: "minimap/blocks/12592.bin" }],
   } as RenderAssetManifest;
   const state = {
     sceneId: "blocks@3048,3056", loadedSquares: [12592],
-    assets: ["palette.bin", "scenes/a.bin.gz", "blocks/12336.bin.gz", "blocks/12592.bin.gz", "blocks/12592.bin.gz"]
+    assets: ["palette.bin", "scenes/a.bin.gz", "blocks/12336.bin.gz", "blocks/12592.bin.gz", "blocks/12592.bin.gz",
+      "minimap/blocks/12336.bin", "minimap/blocks/12592.bin"]
       .map((id) => ({ id, sha256: "a".repeat(64), loaded: true })),
   } as RendererDiagnostics;
   const result = residentRendererAssets(manifest, state);
-  assert.equal(result.length, 4);
-  assert.deepEqual(result.map((asset) => asset.loaded), [true, false, false, true]);
+  assert.equal(result.length, 6);
+  assert.deepEqual(result.map((asset) => asset.loaded), [true, false, false, true, false, true]);
   assert.equal(state.assets[2]!.loaded, true, "native history was not mutated");
 });
 

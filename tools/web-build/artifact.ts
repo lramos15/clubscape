@@ -4,6 +4,7 @@ import { resolve, sep } from "node:path";
 import { fileURLToPath } from "node:url";
 import { gunzipSync } from "node:zlib";
 import type { ContentValidation, DisplayCatalog } from "../../web/app/manifest.ts";
+import type { SourceInstanceLayouts } from "../../web/app/instance-layout.ts";
 
 const root = resolve(fileURLToPath(new URL("../../", import.meta.url)));
 const maximum = 64 * 1024 * 1024;
@@ -14,6 +15,7 @@ export interface ContentProjection {
   regions: Record<string, { name: string; sceneAsset: string | null }>;
   referencedAssets: string[];
   contentValidation: ContentValidation;
+  instanceLayouts: SourceInstanceLayouts;
 }
 
 export async function readArtifact(path: string): Promise<Buffer> {

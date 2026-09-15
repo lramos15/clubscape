@@ -67,6 +67,7 @@ export async function prepareSourceBundle(directory: string, worldId: string): P
     schemaVersion: 1, sourcePackSha256: SOURCE_PACK_SHA256, contentRevision: manifest.revision,
     artifactSha256: sha(bytes), catalog: { ...projection.catalog, inventoryActions: actions },
     contentValidation: projection.contentValidation, assets: source.assets, aliases: { ...audio.aliases, ...ui.aliases },
+    instanceLayouts: projection.instanceLayouts,
     bootstrap: [...audio.metadata, ...ui.startup], rendererManifest: "asset.source.render.manifest", renderer: render.renderer,
     regions: Object.fromEntries(Object.entries(projection.regions).map(([id, region]) => {
       if (region.sceneAsset === null) throw new Error(`Canonical region ${id} has no source scene asset.`);

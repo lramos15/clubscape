@@ -22,7 +22,9 @@ type FaultWindow = Window & { __clubscapeFailureDevice?: GPUDevice };
 type ObservedSnapshot = RenderSnapshot & { diagnostics: {
   loadedSquares: number[] | null; scenePlacement: { baseX: number; baseY: number; sizeTiles: number; blocks: boolean } | null;
   nativeScenePlacement: { baseX: number; baseY: number; sizeTiles: number; blocks: boolean } | null;
-  modelPreview: PreviewObservation | null; playerAnimationAvailable: boolean | null;
+  modelPreview: PreviewObservation | null;
+  actorObserver: { observerV1: boolean; running: boolean; unknownMotions: string[] } | null;
+  rendererSettings: { zoom?: number; projection?: string; fullHudProjectionMatched?: boolean; attachmentGapAccepted?: boolean } | null;
   minimapSurface: MinimapObservation | null;
 } };
 
@@ -412,7 +414,17 @@ export async function sourceBrowserCheck(): Promise<void> {
       assert.equal(end.diagnostics.scenePlacement?.sizeTiles, 104);
       assert([...renderRequests].some((path) => path.includes("/blocks/")));
       assert(![...renderRequests].some((path) => path.includes("/scenes/")), "recorded camera did not request a fixture scene");
-      assert.equal(end.diagnostics.playerAnimationAvailable, true);
+      assert.equal(end.diagnostics.actorObserver?.observerV1, true);
+      assert.equal(typeof end.diagnostics.actorObserver?.running, "boolean");
+      assert.equal(end.diagnostics.rendererSettings?.zoom, 410);
+      assert.equal(end.diagnostics.rendererSettings?.projection, "renderer-native-full-hud-helper");
+      assert.equal(end.diagnostics.rendererSettings?.fullHudProjectionMatched, false);
+      assert.equal(end.diagnostics.rendererSettings?.attachmentGapAccepted, false);
+      assert.equal(end.diagnostics.minimapSurface?.sourceIconMismatches, 0);
+      assert.equal(end.diagnostics.minimapSurface?.iconSprites.count, 386);
+      assert.equal(end.diagnostics.minimapSurface?.iconSprites.available, true);
+      assert.equal(end.diagnostics.minimapSurface?.iconSprites.delivered, false);
+      assert.equal(end.diagnostics.minimapSurface?.iconProjection, "awaiting-exact-unit-helper");
       const fps = frames.length * 1000 / elapsed;
       timing = {
         kind: "sparky-canonical-onboarding-engineering-only", measuredWindowMs: elapsed, completedFrames: frames.length,
@@ -424,6 +436,7 @@ export async function sourceBrowserCheck(): Promise<void> {
         loadedSquares: end.diagnostics.loadedSquares, scenePlacement: end.diagnostics.scenePlacement,
         nativeScenePlacement: end.diagnostics.nativeScenePlacement,
         minimap: end.diagnostics.minimapSurface,
+        actorObserver: end.diagnostics.actorObserver, rendererSettings: end.diagnostics.rendererSettings,
         declaredWorkloadReady: end.ready, performanceAccepted: false, ownerHardware: false,
       };
       checks.push("per-world-frame performance.now receipts remain contiguous under the actual two-frame pipeline; metrics are engineering-only");
@@ -471,7 +484,7 @@ export async function sourceBrowserCheck(): Promise<void> {
     assert.equal(unhandledPageErrors, 0);
     checks.push("actual component asset routes have no failed responses or unhandled page errors");
     const projection = await page.evaluate(() => window.__clubscapePresentationV1);
-    assert.equal(projection?.projection, "renderer-viewport-only-helper");
+    assert.equal(projection?.projection, "renderer-native-full-hud-helper");
     assert.equal(projection?.fullHudProjectionMatched, false);
     const benchmark = await page.evaluate(() => window.__clubscapeBenchmarkV1!.read(null));
     assert.equal(benchmark.ready, false, "Unexposed actual entity counts cannot be treated as a complete benchmark workload.");

@@ -220,17 +220,17 @@ grants XP/provisions or performs departure before the genuine normal flow.
 The source-native four-branch probe is explicitly a controlled precondition
 fixture, not a completed account journey.
 
-Fresh candidate `.local/source-ui4-5e0aa8a2` has world UUID
+The retained first5e candidate `.local/source-ui4-5e0aa8a2` has world UUID
 `47ef8810-42b2-4e4e-86e0-23495a37572c`, the exact5e artifact,7,690 assets,
 209,520,194 public bytes and a406,966-byte private descriptor.
 The6f world UUID/hash and all earlier bundles remain unchanged.
 Preparing another candidate still requires a new directory/UUID:
 
 ```sh
-CLUBSCAPE_RENDER_INPUTS=.local/render-inputs-8281dd16 \
+CLUBSCAPE_RENDER_INPUTS=.local/render-inputs-2d228d79 \
 pnpm --dir web source:bundle .local/source-ui4-5e-candidate <new-isolated-world-uuid>
 
-GAME=.local/source-ui4-5e0aa8a2
+GAME=.local/source-renderer-2d228d79-5e0aa8a2
 CLUBSCAPE_CLIENT_MANIFEST="$GAME/content/manifest.json" \
 CLUBSCAPE_CLIENT_ASSET_ROOT="$GAME" CLUBSCAPE_CONTENT_OWNER=game \
 pnpm --dir web build
@@ -503,35 +503,68 @@ overlapping web/game routes; do not ship the same routes through both roots.
 
 ### Published renderer reproduction, delivery and real composition
 
-The initial six renderer commits and ordered continuations `e96e3b8`,
-`1937201`, `c098133`, `0c541d9` are integrated. `render-assets.ts` pins manifest
-`8281dd16f01e996569661ddd711022af803ed62412a075698ca6c247ce164399`.
+The full renderer prerequisite chain through `5ab678d` and the ordered
+`8c6bab07` through `31896c72` handoff are integrated. The renderer-owned tree
+matches the final published handoff; shared UI/nullable/observer prerequisites
+were already present and were not replaced by older copies. Source phase
+`6c68672d` is present once, without duplicating `5b2d8ac`.
+`render-assets.ts` pins manifest
+`2d228d79f526cb4d84a444118c9e8f3961d2f08213f56ffe5f8a81af17b9cceb`.
 The runtime graph includes the 61 blocks, source textures, sequences, NPC
 definitions, penguin/human-retarget inputs, equipment, dynamic objects,
-ground-item models, preview metadata and explicit diagnostic scenes.
+ground-item models, the real per-pose fit table, original map-icon sprites,
+preview metadata and explicit diagnostic scenes.
 
-`pnpm render:inputs` uses the existing original exporter in a separate owned
-`.local/render-inputs-8281dd16` directory. All122 compressed block buffers
-match the published SHA/length pins exactly:55,720,421 bytes. The Java
-exporter's disk inventory omits65 absent validation/raw-twin records; its
-metadata and every retained file record are structurally identical to the
-published manifest. The script checks that exact distinction, retains the
-exporter's receipt, and packages the original **byte-exact** manifest, never a
-new source identity. Missing runtime records or any changed value fail.
-Evidence is `.local/evidence/render-block-reproduction.json`.
+The current published archive is
+`clubscape-render-blocks-dde248f04ea70392.tar`,56,381,440 bytes, SHA-256
+`3a16edb732bba6ea5aa1e5f0468bf85ed07e9395b52624ba7df43f58fafe9d73`.
+Its183 members are the122 unchanged gzip twins (55,720,421 bytes) plus61 new
+MICN-bearing minimap sidecars. Old packs cannot supply those sidecars.
+`render-package.ts` validates the complete member order, raw/gzip hashes,
+sizes, source-pack identity, content digest and whole-manifest binding before
+the current `export.py --profile unpack-blocks` installs anything.
 
-The first reproduction needs the guide-verified original JDK/cache tooling.
-Subsequent packaging can use those verified outputs, or an explicit
-`CLUBSCAPE_RENDER_INPUTS` directory containing the same pinned inputs.
-`CLUBSCAPE_RENDER_REUSE_INPUTS=.local/render-inputs-a6a1b3dc` may reuse the122
-unchanged block files only after checking each current hash/size; no old
-manifest is adopted. The new renderer manifest adds61 minimap sidecars and
-the original map-scene/shape buffer, all delivered and streamed by square.
+```sh
+CLUBSCAPE_RENDER_BLOCK_PACKAGE=.local/render-packages/clubscape-render-blocks-dde248f04ea70392.tar \
+pnpm --dir web render:inputs
+```
+
+The verified input directory is `.local/render-inputs-2d228d79`.
+This path uses Python's actual unpack/verify profiles, not a source JDK/cache,
+partial index rewrite or hand-written tar extraction. Common published files
+are copied only after their manifest hashes/lengths match. Evidence is
+`.local/evidence/render-block-reproduction.json`.
+Original reproduction remains available separately; an explicit
+`CLUBSCAPE_RENDER_REUSE_INPUTS` directory is accepted only against current pins,
+never as permission to adopt an older manifest or sidecar.
 Neither owner browsers nor the serving machine need Java/cache data.
 Only runtime dependencies are public: validation bakes/tables and raw
 scene/block duplicates are not shipped. Gzip URLs keep their exact names;
 physical `.gz.bin` carriers satisfy the server allowlist without changing
 bytes or content encoding.
+
+The shell now uses the original full-HUD projection helper for all composed
+Classic HUD modes (410/292/547 at the published primary/minimum/maximum sizes),
+deduplicates resize/camera notifications, and keeps the old662 helper only for
+standalone viewport fixtures. Real `observerV1`/running/unknown-motion results
+are observable; no activity/nearest-object fallback is enabled. Map icon pixels
+and offsets are delivered unchanged, but the pending source-unit/radius helper
+is not guessed and actual UI icon projection remains unaccepted. Per-pose
+surface-clearance success is not the frozen attachment-gap criterion.
+
+`project-content` exposes only compiler-validated instance geometry as
+`ContentManifest.instanceLayouts`. Actual instance membership still needs a
+separately supplied backend template identity. The shell never derives it from
+an opaque instance ID, matching region/tile or a death hint. Known8x8 layouts are
+passed before source-square assembly; unknown identities and unsupported turns
+block rendering rather than showing an ordinary map.
+
+Current fresh candidate `.local/source-renderer-2d228d79-5e0aa8a2` keeps the
+actual5e artifact but has a new world UUID
+`22f2a10e-6248-4df7-8776-a5fec15a025a`,7,692 assets and210,199,060 public bytes.
+The old5e world remains untouched, with its code at
+`.local/web-ui4-5e-b94190f5`; the earlier6f source/code pair is also retained.
+New assets never silently alter an existing run's content/asset identity.
 
 The retained pre-UI-handoff native255 candidate has7,181 declared assets
 (221,090,292 public bytes including its content manifest); the newer UI handoff
