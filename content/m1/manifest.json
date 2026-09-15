@@ -1,20 +1,21 @@
 {
   "active_source_binding_count": 0,
-  "artifact_version": 3,
+  "artifact_version": 4,
+  "asset_closure_passed": false,
   "baseline": "OSRS live build 240 / cache 2695; post-July-2026 normal F2P behavior contracts",
   "build_command": "python3 tools/m1-content/build.py",
   "check_command": "python3 tools/m1-content/check.py",
   "compiled_artifact": {
-    "artifact_version": 3,
-    "bytes": 503883,
+    "artifact_version": 4,
+    "bytes": 519882,
     "path": "content/m1/game-content.csc.gz",
-    "schema_version": 3,
-    "sha256": "3cbcd94e8fe28b55b67c3893a323807adfe3b559fb12ed9f3efc0e592a18b4a2",
-    "uncompressed_bytes": 11828194,
-    "uncompressed_sha256": "bb99ad96add9669fd49c4162832fbd8e9cb151997a4e4c4682b33b1f1882e2e1"
+    "schema_version": 4,
+    "sha256": "204b62035cd25a81b28864abdba4ab6fc04db994cf1c484b2c8288ca402d1df3",
+    "uncompressed_bytes": 13083530,
+    "uncompressed_sha256": "8f33a4a41aa378bc73489f59aa8d77588f047b3bb9ca63a77e411416abcc54fa"
   },
   "compiler_command": "python3 tools/m1-content/compile.py --compiler-manifest crates/content/Cargo.toml",
-  "content_schema_version": 3,
+  "content_schema_version": 4,
   "counts": {
     "cooks_projected_edges": 22,
     "cooks_source_transitions": 22,
@@ -23,8 +24,8 @@
     "death_source_transitions": 6,
     "dialogues": 21,
     "equipment_slots": 11,
-    "interfaces": 26,
-    "items": 118,
+    "interfaces": 30,
+    "items": 122,
     "mechanics": {
       "collision_groups": 49,
       "combat_styles": 27,
@@ -44,7 +45,7 @@
       "traversal": 9,
       "value_providers": 1
     },
-    "normal_note_pairs": 53,
+    "normal_note_pairs": 55,
     "npcs": 26,
     "objects": 4837,
     "quests": 2,
@@ -65,36 +66,43 @@
   },
   "declared_v3_selectors_authored": true,
   "inactive_full_target_binding_count": 6,
-  "input_aggregate_sha256": "41555bd46c074d621c1ed6c6e2f610f17ed0b86ed4e173299e2f818b15eebb24",
+  "input_aggregate_sha256": "4a122475c6658a4205b5e1fb583ba305641f9839cefb7cbbeedaca1509203321",
   "milestone_accepted": false,
   "outputs": [
     {
-      "bytes": 338127,
-      "json_bytes": 338127,
-      "json_sha256": "a544e1f78e406d0d21748566adebe8c76720169eae1f8bccd9c72d39e6e47a34",
+      "bytes": 339175,
+      "json_bytes": 339175,
+      "json_sha256": "45a50607e2c058440a5db567894c699f857bd6ed00e09e36b4bf006a75fa4c54",
       "path": "research/m1-bindings/input-lock.json",
-      "sha256": "a544e1f78e406d0d21748566adebe8c76720169eae1f8bccd9c72d39e6e47a34"
+      "sha256": "45a50607e2c058440a5db567894c699f857bd6ed00e09e36b4bf006a75fa4c54"
     },
     {
-      "bytes": 493708,
-      "json_bytes": 14172852,
-      "json_sha256": "916dfea8710231f68241395a892be93b52bd3b4dce75e896f6a23c43fbc2bc36",
+      "bytes": 509875,
+      "json_bytes": 15553501,
+      "json_sha256": "f9208dd0ed924a97e92263f4df0abfc358c7d8ea502c39b7f551c462f65a8588",
       "path": "content/m1/game-content.json.gz",
-      "sha256": "b803b160de90df921bd7bbe6e45b3fc612c4f73ff4159a488dfd887dc808d52f"
+      "sha256": "5ec9d9e28fbf6a58ddf370d52739c11cd29b5921810e8fe62f70d794d5b39127"
     },
     {
-      "bytes": 191089,
-      "json_bytes": 191089,
-      "json_sha256": "cbb95012960967231bd6c98ce1a6a0920d8deb4ae4632a8d46fffff382d246c9",
+      "bytes": 189277,
+      "json_bytes": 189277,
+      "json_sha256": "61be5a042877d18f6a1b602931f0be38919868e4ea471dee954a17d465fd4c12",
       "path": "research/m1-bindings/application-result.json",
-      "sha256": "cbb95012960967231bd6c98ce1a6a0920d8deb4ae4632a8d46fffff382d246c9"
+      "sha256": "61be5a042877d18f6a1b602931f0be38919868e4ea471dee954a17d465fd4c12"
     },
     {
-      "bytes": 6071,
-      "json_bytes": 6071,
-      "json_sha256": "000a2841a90288696b51e34ee22d87c2f0a2f81d5bb00e99690796dc4b48a73b",
+      "bytes": 4211,
+      "json_bytes": 4211,
+      "json_sha256": "4daf4f0c83d210d33e659163c6f972ee6040fbf9df4303397312dd579f348c24",
       "path": "research/m1-bindings/runtime3-selectors.json",
-      "sha256": "000a2841a90288696b51e34ee22d87c2f0a2f81d5bb00e99690796dc4b48a73b"
+      "sha256": "4daf4f0c83d210d33e659163c6f972ee6040fbf9df4303397312dd579f348c24"
+    },
+    {
+      "bytes": 1782,
+      "json_bytes": 1782,
+      "json_sha256": "391345355ae96c23ef34fc34c223301632e46b76683182e8e103a97a4ea03c28",
+      "path": "research/m1-bindings/ui-bindings.json",
+      "sha256": "391345355ae96c23ef34fc34c223301632e46b76683182e8e103a97a4ea03c28"
     },
     {
       "bytes": 52366,
@@ -524,11 +532,11 @@
       "sha256": "aab8341ed233c3151d1c395d1c98681c112c0c12a74cf5352e766db604da2639"
     },
     {
-      "bytes": 79913,
-      "json_bytes": 79913,
-      "json_sha256": "4fa68a0e541fd6eff19d7b7c07461804d98fdece610afd407ff54e2f87b1fc70",
+      "bytes": 82599,
+      "json_bytes": 82599,
+      "json_sha256": "74fdfce9029a66bb3b58b1ff68ce6200ac2a6e21d452de31f6c7931909f42ee3",
       "path": "research/m1-bindings/item-bindings.json",
-      "sha256": "4fa68a0e541fd6eff19d7b7c07461804d98fdece610afd407ff54e2f87b1fc70"
+      "sha256": "74fdfce9029a66bb3b58b1ff68ce6200ac2a6e21d452de31f6c7931909f42ee3"
     },
     {
       "bytes": 22049,
@@ -615,23 +623,23 @@
       "sha256": "77556ad0703b50d58289f495db911c53be4fa8b7f4c86adf55b5e86264ad9a33"
     },
     {
-      "bytes": 1964233,
-      "json_bytes": 1964233,
-      "json_sha256": "7c476e27b8edc63a9fc03fd146666e2ea4ff723ca1b200050739154858773e0e",
+      "bytes": 1965286,
+      "json_bytes": 1965286,
+      "json_sha256": "88eef0c537227c48c568106331f6a38b9acce3f3b351ae0f5cf2b762e246b885",
       "path": "content/m1/asset-references.json",
-      "sha256": "7c476e27b8edc63a9fc03fd146666e2ea4ff723ca1b200050739154858773e0e"
+      "sha256": "88eef0c537227c48c568106331f6a38b9acce3f3b351ae0f5cf2b762e246b885"
     },
     {
-      "bytes": 2139,
-      "json_bytes": 2139,
-      "json_sha256": "7625a18f96306b2e5dd66ff295b876a5508eafb714d3ff1349a7c32e6676616e",
+      "bytes": 2670,
+      "json_bytes": 2670,
+      "json_sha256": "ba30fbc0df119cd361d404eb5fcf7692eacdf52ee84b7c46622b7dd14915734d",
       "path": "research/m1-bindings/structural-validation.json",
-      "sha256": "7625a18f96306b2e5dd66ff295b876a5508eafb714d3ff1349a7c32e6676616e"
+      "sha256": "ba30fbc0df119cd361d404eb5fcf7692eacdf52ee84b7c46622b7dd14915734d"
     }
   ],
   "presentation_approved": false,
   "readiness_dependency": "research/m1-bindings/contract-gaps.json",
-  "revision": "m1.source-backed.v3.41555bd46c074d62",
+  "revision": "m1.source-backed.v4.4a122475c6658a42",
   "runtime_compile_passed": true,
   "runtime_ready": false,
   "runtime_schema_version": 1,
@@ -676,10 +684,15 @@
         {
           "path": "mechanics.death.office_overflow",
           "proof": {
+            "excluded_unacquired_conditional_keys": [
+              "item.ensouled_goblin_head",
+              "item.milk.bottomless_bucket"
+            ],
             "office_capacity": 120,
             "ordinary_acquired_instance_items": 0,
+            "ordinary_item_key_upper_bound": 120,
             "precondition": "Office must merge ordinary non-instanced item keys. Recheck on universe, acquisition or instance/merge-rule changes; never unconditionally discard overflow.",
-            "represented_item_keys": 118
+            "represented_item_keys": 122
           },
           "reason": "Deletion order above120 Office entries is not source-bound.",
           "rule_group": "office_capacity_unreachable"
@@ -737,5 +750,15 @@
     "source_regions": 61,
     "walls": 21619
   },
+  "unpublished_asset_ids": [
+    "asset.source.osrs.cache2695.item.1919",
+    "asset.source.osrs.cache2695.item.1920",
+    "asset.source.osrs.cache2695.item.229",
+    "asset.source.osrs.cache2695.item.230",
+    "asset.source.osrs.cache2695.model.2548",
+    "asset.source.osrs.cache2695.model.2747",
+    "asset.source.osrs.cache2695.model.561",
+    "asset.source.osrs.cache2695.model.8234"
+  ],
   "unresolved_binding_count": 6
 }

@@ -13,7 +13,7 @@ pub fn validate_world_session(value: &str) -> Result<(), ValidationError> {
     Ok(())
 }
 
-fn bounded_text(value: &str, maximum: usize) -> Result<String, ValidationError> {
+pub(crate) fn bounded_text(value: &str, maximum: usize) -> Result<String, ValidationError> {
     if value.is_empty() || value.len() > maximum || value.chars().any(char::is_control) {
         return Err(invalid(
             "A game identifier is empty, oversized or contains control characters.",
@@ -22,7 +22,7 @@ fn bounded_text(value: &str, maximum: usize) -> Result<String, ValidationError> 
     Ok(value.to_owned())
 }
 
-fn inventory_slot(value: u32) -> Result<u8, ValidationError> {
+pub(crate) fn inventory_slot(value: u32) -> Result<u8, ValidationError> {
     if value >= INVENTORY_SLOTS as u32 {
         return Err(invalid("Inventory slot must be between 0 and 27."));
     }
@@ -38,7 +38,7 @@ fn bounded_index(value: u32) -> Result<u16, ValidationError> {
     u16::try_from(value).map_err(|_| invalid("Game collection index is out of range."))
 }
 
-fn quantity(value: u32) -> Result<Quantity, ValidationError> {
+pub(crate) fn quantity(value: u32) -> Result<Quantity, ValidationError> {
     Quantity::new(value).map_err(|_| invalid("Item quantity is out of range."))
 }
 
@@ -121,6 +121,9 @@ pub fn game_intent(input: &game::WorldInput) -> Result<GameIntent, ValidationErr
             .as_ref()
             .ok_or_else(|| invalid("A supported game action is required."))?
         {
+            Action::Ui(request) => GameIntent::Ui {
+                request: crate::ui_input::ui_request(request)?,
+            },
             Action::Walk(action) => {
                 let tile = action
                     .destination

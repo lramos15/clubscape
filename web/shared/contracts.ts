@@ -147,7 +147,9 @@ export interface WorldView {
 }
 
 export const GAMEPLAY_UI_CAPABILITY = "game.ui.v1";
-export type GameplayUiIntent =
+export type GameplayUiIntent = (
+  | { kind: "ui_document_page"; document_id: string; page: number }
+  | { kind: "bank_placeholder"; entry_id: string }
   | { kind: "ui_dismiss"; presentation_id: string }
   | { kind: "production_select"; menu_id: string; recipe: string; quantity: number; mode: "single" | "make_x" }
   | { kind: "item_action"; inventory_slot: number; expected_item: string; expected_instance: string | null; action: string }
@@ -165,7 +167,8 @@ export type GameplayUiIntent =
   | { kind: "request_recovery_discard"; death: string; storage: "grave" | "death_office"; items: string[] }
   | { kind: "coffer_offer"; inventory_slot: number; expected_item: string; expected_instance: string | null; quantity: number }
   | { kind: "ui_confirm"; confirmation_id: string; accept: boolean }
-  | { kind: "public_chat"; channel: "public"; text: string };
+  | { kind: "public_chat"; channel: "public"; text: string }
+) & { expected_bank_revision?: string };
 export interface UiPermission { allowed: boolean; code: string | null; reason: string | null }
 export interface AbilityUiView { id: string; name: string; selected: boolean; visible: boolean; permission: UiPermission }
 export interface InventoryActionsUiView {
@@ -174,6 +177,7 @@ export interface InventoryActionsUiView {
 }
 export interface GameplayUiView {
   version: 1;
+  activeTab: string | null;
   activeInterface: string | null;
   production: {
     id: string; interface: string; target: WorldTarget;
@@ -185,6 +189,7 @@ export interface GameplayUiView {
     skill: string | null; level: number | null; continuation: GameplayUiIntent;
   } | null;
   confirmation: { id: string; kind: string; title: string; lines: string[]; items: ItemView[]; credit: string | null } | null;
+  document: { id: string; interface: string; title: string; pages: string[]; page: number; mapAsset: string | null; nativeMap: boolean } | null;
   interfaces: Array<{ interface: string; visibility: "hidden" | "locked" | "enabled"; highlighted: boolean; permission: UiPermission }>;
   combatStyle: string | null;
   combatStyles: AbilityUiView[];

@@ -6,6 +6,92 @@ use crate::game_storage::{
 use clubscape_world_engine::LifecycleTransition;
 
 impl GameStore {
+    /// Operator-authorized UI metadata migration, conditional on the exact old artifact pin.
+    pub async fn migrate_ui_content<F>(
+        &self,
+        lease: &WorldLease,
+        from_hash: String,
+        to_hash: String,
+        revision: String,
+        migrate: F,
+    ) -> Result<WorldSnapshot, GameStorageError>
+    where
+        F: FnOnce(&mut WorldState) -> GameResult<()> + Send + 'static,
+    {
+        self.local_lease(lease)?;
+        if !codec::text(&revision, 256)
+            || from_hash == to_hash
+            || [&from_hash, &to_hash].iter().any(|value| {
+                value.len() != 64
+                    || !value
+                        .bytes()
+                        .all(|byte| byte.is_ascii_digit() || (b'a'..=b'f').contains(&byte))
+            })
+        {
+            return Err(ApiError::invalid(
+                "Exact source and destination artifact hashes are required.",
+            )
+            .into());
+        }
+        let lease = lease.clone();
+        database::run(&self.pool, "game_ui_migration", true, move |connection| Box::pin(async move {
+            let mut transaction = connection.begin().await.map_err(ApiError::database)?;
+            let mut world = lock_world(&mut transaction, lease.world_id).await?;
+            ensure_fence(&mut transaction, &lease).await?;
+            lock_characters(&mut transaction, &world).await?;
+            let current: Option<String> = sqlx::query_scalar("SELECT runtime_artifact_sha256 FROM game_worlds WHERE world_id = $1")
+                .bind(lease.world_id).fetch_one(&mut *transaction).await.map_err(ApiError::database)?;
+            if current.as_deref() == Some(&to_hash) && world.state.content_revision == revision {
+                let audit: Option<(String, i64)> = sqlx::query_as(
+                    "SELECT from_artifact, world_revision FROM game_content_migrations WHERE world_id = $1 AND to_artifact = $2",
+                ).bind(lease.world_id).bind(&to_hash).fetch_optional(&mut *transaction).await.map_err(ApiError::database)?;
+                if audit.is_none_or(|(from, at)| from != from_hash || at <= 0 || at as u64 > world.state.revision) {
+                    return Err(conflict("This target does not have the explicitly requested prior migration receipt."));
+                }
+                if world.state.runtime.ui_version != Some(clubscape_game_types::UI_STATE_VERSION)
+                    || world.state.characters.values().any(|character| character.runtime.ui.is_none()) {
+                    return Err(ApiError::internal("game_ui_migration_incomplete"));
+                }
+                ensure_fence(&mut transaction, &lease).await?;
+                transaction.commit().await.map_err(ApiError::database)?;
+                return Ok(world);
+            }
+            if current.as_deref() != Some(&from_hash) { return Err(conflict("The world does not have the explicitly authorized old artifact.")); }
+            let previous = world.state.clone();
+            world.state.content_revision = revision.clone();
+            migrate(&mut world.state).map_err(callback_error)?;
+            let mut preserved = world.state.clone();
+            preserved.content_revision = previous.content_revision.clone();
+            preserved.runtime.ui_version = previous.runtime.ui_version;
+            for (id, character) in &mut preserved.characters {
+                let old = previous.characters.get(id).ok_or_else(|| ApiError::internal("game_ui_migration_actor"))?;
+                if old.runtime.ui.is_some() && character.runtime.ui != old.runtime.ui {
+                    return Err(ApiError::internal("game_ui_migration_changed_history"));
+                }
+                character.runtime.ui = old.runtime.ui.clone();
+            }
+            if preserved != previous { return Err(ApiError::internal("game_ui_migration_changed_gameplay")); }
+            validate_world(&world.state)?;
+            world.state.revision = increment(previous.revision)?;
+            let json = encode(&world.state, MAX_WORLD_BYTES)?;
+            let count = sqlx::query(
+                "UPDATE game_worlds SET state = $2::jsonb, content_revision = $3, revision = $4,
+                     runtime_artifact_sha256 = $5 WHERE world_id = $1 AND runtime_artifact_sha256 = $6
+                     AND lease_owner = $7 AND lease_fence = $8 AND lease_expires_at > clock_timestamp()",
+            ).bind(lease.world_id).bind(json).bind(revision).bind(number(world.state.revision)?)
+                .bind(&to_hash).bind(&from_hash).bind(lease.owner_id).bind(number(lease.fence)?)
+                .execute(&mut *transaction).await.map_err(ApiError::database)?.rows_affected();
+            if count != 1 { return Err(stale_fence()); }
+            sqlx::query("UPDATE game_characters SET revision = revision + 1 WHERE world_id = $1")
+                .bind(lease.world_id).execute(&mut *transaction).await.map_err(ApiError::database)?;
+            sqlx::query("INSERT INTO game_content_migrations (world_id, from_artifact, to_artifact, world_revision) VALUES ($1,$2,$3,$4)")
+                .bind(lease.world_id).bind(from_hash).bind(to_hash).bind(number(world.state.revision)?)
+                .execute(&mut *transaction).await.map_err(ApiError::database)?;
+            ensure_fence(&mut transaction, &lease).await?;
+            transaction.commit().await.map_err(ApiError::database)?;
+            Ok(world)
+        })).await.map_err(Into::into)
+    }
     /// Lifecycle and its auth/session effects commit together, without a gameplay sequence.
     pub async fn apply_session_lifecycle<F>(
         &self,

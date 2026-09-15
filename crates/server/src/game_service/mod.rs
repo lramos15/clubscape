@@ -1,6 +1,7 @@
 mod content;
 mod random;
 mod readiness;
+mod ui_wire;
 mod view;
 
 #[cfg(test)]
@@ -70,6 +71,7 @@ pub(crate) struct GameHandle {
     sender: mpsc::Sender<Envelope>,
     state: Arc<Mutex<State>>,
     pub(crate) assets: Arc<WebAssets>,
+    pub(crate) gameplay_ui: bool,
 }
 
 impl GameHandle {
@@ -196,6 +198,7 @@ impl PreparedGame {
             sender,
             state: state.clone(),
             assets: content.assets.clone(),
+            gameplay_ui: content.compiled.definition().ui.is_some(),
         };
         Ok(Self {
             coordinator: Coordinator {
@@ -343,7 +346,7 @@ impl Coordinator {
                 request = self.receiver.recv() => {
                     let Some(request) = request else { break };
                     if request.reply.is_closed() { continue; }
-                    if matches!(request.command, client_message::Command::WorldInput(_)) {
+                    if self.timed_input(&request.command) {
                         if let Some(error) = self.failure() {
                             let _ = request.reply.send(Err(error));
                         } else if self.pending.len() >= QUEUE_CAPACITY {
@@ -549,7 +552,11 @@ impl Coordinator {
         let result = if let Some(error) = self.failure() {
             Err(error)
         } else {
-            self.lifecycle(&request).await
+            if matches!(request.command, client_message::Command::WorldInput(_)) {
+                self.input(&request, &mut BTreeSet::new()).await
+            } else {
+                self.lifecycle(&request).await
+            }
         };
         if let Err(error) = &result
             && error.message.contains("unknown")
@@ -557,6 +564,22 @@ impl Coordinator {
             self.fail(error.clone());
         }
         let _ = request.reply.send(result);
+    }
+
+    fn timed_input(&self, command: &client_message::Command) -> bool {
+        let client_message::Command::WorldInput(input) = command else {
+            return false;
+        };
+        let Some(game::world_input::Action::Ui(request)) = &input.action else {
+            return true;
+        };
+        let Ok(request) = clubscape_protocol::ui_request(request) else {
+            return true;
+        };
+        self.content
+            .engine
+            .ui_request_requires_tick(&request)
+            .unwrap_or(true)
     }
 
     async fn access(
@@ -788,6 +811,12 @@ impl Coordinator {
             .await?;
         self.check_join(&access)?;
         let intent = clubscape_protocol::game_intent(input)?;
+        let bank_revision = match &input.action {
+            Some(game::world_input::Action::Ui(request)) => {
+                clubscape_protocol::ui_bank_revision(request)?
+            }
+            _ => None,
+        };
         // Authentication/ownership is checked again by the committing transaction.
         self.store
             .heartbeat_session(&access, PLAYER_LEASE)
@@ -814,6 +843,19 @@ impl Coordinator {
                 },
                 input.expected_character_revision,
                 move |world, actor, intent| {
+                    if bank_revision.is_some_and(|expected| {
+                        world
+                            .characters
+                            .get(actor)
+                            .and_then(|character| character.runtime.ui.as_ref())
+                            .map(|ui| ui.bank.revision)
+                            != Some(expected)
+                    }) {
+                        return Err(GameError::new(
+                            GameErrorCode::StaleCommand,
+                            "The bank changed; refresh its current entries and revision.",
+                        ));
+                    }
                     if !permit {
                         return Err(GameError::new(
                             GameErrorCode::Busy,

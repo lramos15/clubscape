@@ -4,6 +4,7 @@
 //! access to interfaces. Callers retain those responsibilities.
 
 pub mod bank;
+pub mod bank_layout;
 pub mod equipment;
 pub mod inventory;
 pub mod navigation;

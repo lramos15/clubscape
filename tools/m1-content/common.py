@@ -202,8 +202,8 @@ class Inputs:
             if existing is not None and existing != record:
                 raise ValueError(f"Supplement disagrees with original NPC {number}")
             self.collections["npc"][number] = record
-        extra = BINDINGS / "application-item-definitions.json.gz"
-        if extra.exists():
+        for extra in [BINDINGS / "application-item-definitions.json.gz", BINDINGS / "ui-item-definitions.json.gz"]:
+          if extra.exists():
             supplement = load(extra)
             if supplement["item_group"] != self.bundle["groups"]["2/10"]:
                 raise ValueError("Additional item definitions have a different source archive identity")

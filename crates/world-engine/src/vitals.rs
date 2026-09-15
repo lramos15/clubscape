@@ -248,6 +248,30 @@ impl WorldEngine {
             ));
         }
         let formula = policy.drain.require()?;
+        let grams = self.carried_weight(character)?;
+        let minimum = i64::from(formula.weight_minimum_grams);
+        let maximum = i64::from(formula.weight_maximum_grams);
+        if maximum <= minimum || formula.agility_scale == 0 || agility > formula.agility_scale {
+            return Err(invalid_content("Invalid run-drain domain."));
+        }
+        let weight = grams.clamp(minimum, maximum) - minimum;
+        let denominator = (maximum - minimum) as u128;
+        let numerator = u128::from(formula.base) * denominator
+            + u128::from(formula.weight_scale) * weight as u128;
+        let (numerator, denominator) = if formula.floor_weight_term_before_agility {
+            (numerator / denominator, 1)
+        } else {
+            (numerator, denominator)
+        };
+        let cost = source_math::rounded(
+            numerator * u128::from(formula.agility_scale - agility),
+            denominator * u128::from(formula.agility_scale),
+            &formula.rounding,
+        )?;
+        u16::try_from(cost).map_err(|_| invalid_content("Run cost exceeds the energy range."))
+    }
+
+    pub(crate) fn carried_weight(&self, character: &CharacterState) -> GameResult<i64> {
         let mut grams = 0_i64;
         for (stack, equipped) in character
             .inventory
@@ -279,26 +303,7 @@ impl WorldEngine {
                 .checked_add(i64::from(weight.grams) * i64::from(count))
                 .ok_or_else(|| invalid_state("Carried weight overflow."))?;
         }
-        let minimum = i64::from(formula.weight_minimum_grams);
-        let maximum = i64::from(formula.weight_maximum_grams);
-        if maximum <= minimum || formula.agility_scale == 0 || agility > formula.agility_scale {
-            return Err(invalid_content("Invalid run-drain domain."));
-        }
-        let weight = grams.clamp(minimum, maximum) - minimum;
-        let denominator = (maximum - minimum) as u128;
-        let numerator = u128::from(formula.base) * denominator
-            + u128::from(formula.weight_scale) * weight as u128;
-        let (numerator, denominator) = if formula.floor_weight_term_before_agility {
-            (numerator / denominator, 1)
-        } else {
-            (numerator, denominator)
-        };
-        let cost = source_math::rounded(
-            numerator * u128::from(formula.agility_scale - agility),
-            denominator * u128::from(formula.agility_scale),
-            &formula.rounding,
-        )?;
-        u16::try_from(cost).map_err(|_| invalid_content("Run cost exceeds the energy range."))
+        Ok(grams)
     }
 
     pub(crate) fn set_prayer(
@@ -313,22 +318,9 @@ impl WorldEngine {
             .prayers
             .get(prayer)
             .ok_or_else(|| unknown("Unknown prayer."))?;
-        if !character.interfaces.contains(&definition.interface) {
-            return Err(GameError::new(
-                GameErrorCode::RequirementNotMet,
-                "Prayer interface is locked.",
-            ));
-        }
+        self.prayer_preconditions(character, prayer, enabled)?;
         let mut events = vec![];
         if enabled {
-            self.requirements(character, &definition.requirements)?;
-            definition.drain.require()?;
-            if character.prayer_points == 0 {
-                return Err(GameError::new(
-                    GameErrorCode::RequirementNotMet,
-                    "No prayer points.",
-                ));
-            }
             for excluded in &definition.exclusive_with {
                 if character.runtime.combat.active_prayers.remove(excluded) {
                     events.push(GameEvent::PrayerChanged {
@@ -350,6 +342,37 @@ impl WorldEngine {
             enabled,
         });
         Ok(events)
+    }
+
+    pub(crate) fn prayer_preconditions(
+        &self,
+        character: &CharacterState,
+        prayer: &PrayerId,
+        enabled: bool,
+    ) -> GameResult<()> {
+        let definition = self
+            .content
+            .mechanics
+            .prayers
+            .get(prayer)
+            .ok_or_else(|| unknown("Unknown prayer."))?;
+        if !character.interfaces.contains(&definition.interface) {
+            return Err(GameError::new(
+                GameErrorCode::RequirementNotMet,
+                "Prayer interface is locked.",
+            ));
+        }
+        if enabled {
+            self.requirements(character, &definition.requirements)?;
+            definition.drain.require()?;
+            if character.prayer_points == 0 {
+                return Err(GameError::new(
+                    GameErrorCode::RequirementNotMet,
+                    "No prayer points.",
+                ));
+            }
+        }
+        Ok(())
     }
 
     pub(crate) fn advance_vitals(

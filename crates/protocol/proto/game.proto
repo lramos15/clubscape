@@ -51,6 +51,7 @@ message WorldInput {
     ProduceSelected produce_selected = 38;
     OpenGrave open_grave = 39;
     Empty open_death_office = 40;
+    GameplayUiRequest ui = 41;
   }
 }
 
@@ -172,6 +173,8 @@ message WorldSnapshot {
   ShopView shop = 17;
   RecoveryContext recovery = 18;
   Quote quote = 19;
+  // Present and versioned when game.ui.v1 is advertised; absent is unsupported legacy.
+  GameplayUiView ui = 20;
 }
 message UnavailableView { string view = 1; string reason = 2; }
 message DynamicObject {
@@ -294,6 +297,91 @@ message Event {
   string event_id = 10;
   repeated Stack items = 11;
   string actor_id = 12;
+  PublicChatLine public_chat = 13;
+}
+
+message GameplayUiRequest {
+  optional string expected_bank_revision = 21;
+  oneof request {
+    UiIdentity dismiss = 1;
+    UiProductionSelection production = 2;
+    UiItemAction item_action = 3;
+    UiTab select_tab = 4;
+    UiIdentity create_tab = 5;
+    UiBankMove bank_move = 6;
+    UiTab collapse_tab = 7;
+    UiToggle insert_mode = 8;
+    UiToggle placeholders = 9;
+    UiIdentity release_placeholder = 10;
+    Empty deposit_equipment = 11;
+    UiBankWithdrawal bank_withdraw = 12;
+    UiBankOptions bank_options = 13;
+    Empty death_preview = 14;
+    Reclaim discard_recovery = 15;
+    UiCofferOffer coffer_offer = 16;
+    UiConfirmation confirmation = 17;
+    UiChat public_chat = 18;
+    UiDocumentPage document_page = 19;
+    UiIdentity placeholder = 20;
+  }
+}
+message UiIdentity { string id = 1; }
+message UiTab { uint32 tab = 1; }
+message UiToggle { bool enabled = 1; }
+message UiProductionSelection { string menu_id = 1; string recipe = 2; uint32 quantity = 3; ProductionMode mode = 4; }
+message UiItemAction { uint32 inventory_slot = 1; string expected_item = 2; optional string expected_instance = 3; string action = 4; }
+message UiBankMove { string entry_id = 1; optional string before_entry_id = 2; uint32 tab = 3; }
+message UiBankWithdrawal { string entry_id = 1; uint32 quantity = 2; bool noted = 3; }
+message UiBankOptions { uint32 amount = 1; bool noted = 2; }
+message UiCofferOffer { uint32 inventory_slot = 1; string expected_item = 2; optional string expected_instance = 3; uint32 quantity = 4; }
+message UiConfirmation { string id = 1; bool accept = 2; }
+message UiChat { string channel = 1; string text = 2; }
+message UiDocumentPage { string id = 1; uint32 page = 2; }
+
+message UiItem { Stack stack = 1; string name = 2; optional uint32 source_id = 3; optional string asset = 4; }
+message UiXp { string skill = 1; string amount_tenths = 2; }
+message UiProductionChoice { string recipe = 1; string name = 2; repeated UiItem outputs = 3; Permission single = 4; Permission make_x = 5; }
+message UiProduction { string id = 1; string interface = 2; WorldTarget target = 3; repeated UiProductionChoice recipes = 4; }
+message UiReward {
+  string id = 1; string kind = 2; string interface = 3; string title = 4; repeated string lines = 5;
+  repeated UiItem items = 6; repeated UiXp xp = 7; uint32 quest_points = 8;
+  optional string quest = 9; optional string skill = 10; optional uint32 level = 11;
+  GameplayUiRequest continuation = 12;
+}
+message UiConfirmationView { string id = 1; string kind = 2; string title = 3; repeated string lines = 4; repeated UiItem items = 5; optional string credit = 6; }
+message UiDocument { string id = 1; string interface = 2; string title = 3; repeated string pages = 4; uint32 page = 5; optional string map_asset = 6; bool native_map = 7; }
+message UiInterfaceState { string interface = 1; string visibility = 2; bool highlighted = 3; Permission permission = 4; }
+message UiAbility { string id = 1; string name = 2; bool selected = 3; bool visible = 4; Permission permission = 5; }
+message UiBonus { string kind = 1; sint32 amount = 2; }
+message UiEquipment {
+  repeated UiBonus attack = 1; repeated UiBonus defence = 2;
+  sint32 melee_strength = 3; sint32 ranged_strength = 4; sint32 magic_damage_percent = 5; sint32 prayer = 6;
+  string weight_grams = 7; repeated string slots = 8;
+}
+message UiItemOperation { string id = 1; string label = 2; Permission permission = 3; }
+message UiInventoryActions { uint32 slot = 1; string item = 2; optional string instance = 3; repeated UiItemOperation actions = 4; }
+message UiBankTab { uint32 tab = 1; optional string first_entry = 2; uint32 entries = 3; }
+message UiBankEntry { string id = 1; uint32 slot = 2; uint32 tab = 3; string item = 4; UiItem value = 5; bool placeholder = 6; }
+message UiBank {
+  string revision = 1; uint32 capacity = 2; uint32 selected_tab = 3; bool insert_mode = 4; bool placeholders = 5;
+  uint32 amount = 6; bool noted = 7; repeated UiBankTab tabs = 8; repeated UiBankEntry entries = 9;
+  Permission deposit_equipment = 10; repeated UiItemOperation unavailable_containers = 11;
+}
+message UiDeathPreview { string scope = 1; repeated UiItem kept = 2; repeated UiItem lost = 3; string full_grave_fee = 4; string full_office_fee = 5; string value_revision = 6; }
+message UiRecoveryControls { string coffer_balance = 1; Permission discard = 2; Permission coffer_offer = 3; repeated UiInventoryActions coffer_items = 4; }
+message UiAppearanceChoice { uint32 value = 1; optional string label = 2; Permission permission = 3; }
+message UiAppearanceParameter { string key = 1; repeated UiAppearanceChoice choices = 2; }
+message UiPenguinBase { string asset = 1; uint32 source_npc = 2; string adaptation = 3; }
+message UiAppearance { repeated UiAppearanceParameter choices = 1; UiPenguinBase base = 2; bool confirmed = 3; }
+message PublicChatLine { string id = 1; string actor = 2; string sender = 3; string channel = 4; string text = 5; uint32 colour = 6; uint32 effect = 7; }
+message UiPublicChat { Permission permission = 1; uint32 maximum_bytes = 2; string channel = 3; repeated PublicChatLine messages = 4; }
+message GameplayUiView {
+  uint32 version = 1; optional string active_interface = 2; UiProduction production = 3; UiReward reward = 4;
+  UiConfirmationView confirmation = 5; repeated UiInterfaceState interfaces = 6; optional string combat_style = 7;
+  repeated UiAbility combat_styles = 8; repeated UiAbility prayers = 9; repeated UiAbility spells = 10;
+  UiEquipment equipment = 11; repeated UiInventoryActions inventory_actions = 12; UiBank bank = 13;
+  UiDeathPreview kept_on_death = 14; UiRecoveryControls recovery = 15; UiAppearance appearance = 16; UiPublicChat public_chat = 17;
+  UiDocument document = 18; optional string active_tab = 19;
 }
 
 enum RuleErrorCode {

@@ -59,7 +59,7 @@ fields **before** this crate receives them. `read_content_json` detects duplicat
 keys at every nesting level, rejects unknown fields (including internally tagged
 enum fields), enforces input limits, and rejects trailing documents. The shared
 canonical JSON field is `schema_version`, not `schemaVersion`.
-Despite persisted-state serde compatibility defaults, content-3 source input
+Despite persisted-state serde compatibility defaults, content-4 source input
 must explicitly contain every definition field, including `mechanics`, recipe
 tools and intentional `null`/empty declarations. Only an ordinary stack's
 absent `instance` has the same meaning as explicit `null`; a charged stack
@@ -71,7 +71,7 @@ New registry definitions are available through `definition().mechanics`.
 `report().unresolved_bindings` lists exact unresolved source-binding paths.
 Compiling those explicit gaps does not make them executable.
 
-Content/artifact 3 closes the final source-selector contract: player/stage drop
+Content/artifact 3 introduced the final source-selector contract: player/stage drop
 policies, NPC loot policy/eligibility/engagement/method attribution, explicit
 weapon and unarmed defaults, actor traversal edges, combined collision states,
 geometry-morph bridges, recovery interface selectors and death-phase timing.
@@ -81,7 +81,15 @@ overlapping mutable transforms cannot rely on last-writer-wins replacements.
 New guard locations participate in iterative preflight and safe rejection/drop.
 Declared sets cannot hide duplicate input entries through serde normalization.
 
-Existing content-2 artifacts must be regenerated, not relabeled. Persisted
+Content/artifact4 adds the explicit `GameContent.ui` definition (`null` for a
+non-UI profile). It validates complete semantic interface classification,
+source production interfaces, native style/ability labels, exact atomic quest
+reward payloads, selected-item action lifecycles, bank preferences, document
+bounds and coffer/chat/appearance policy provenance. UI source guards participate
+in the same bounded scans. It does not approve the external asset publication
+or UI presentation.
+
+Existing content-1/2/3 artifacts must be regenerated, not relabeled. Persisted
 state/runtime remain additive version 1; missing contact/method/provenance/phase
 history is explicit legacy absence, never a fabricated source default or reward.
 
@@ -113,7 +121,7 @@ directories are created only after successful compilation.
 
 ### Identity, definitions, provenance
 
-- Only content schema version 3 is accepted. Revision and baseline are required,
+- Only content schema version 4 is accepted. Revision and baseline are required,
   bounded, non-placeholder single-line identities. No particular OSRS cache/build
   number is hardcoded; choosing/verifying the baseline remains source work.
 - Every map key equals its contained ID. All M1 definition categories and the
@@ -369,7 +377,7 @@ progression destinations are explicit `SetTutorialStage`/`SetQuestStage` effects
 Compilation and canonical identity checks do not implement or certify an FSM,
 event scheduling, visual/audio playback, or authoritative runtime matching.
 
-## Binary artifact version 3
+## Binary artifact version 4
 
 Gameplay data uses the mature **rmp-serde MessagePack** codec, with named
 maps of the typed definition's canonical JSON projection. This gives integer
@@ -384,7 +392,7 @@ The fixed 84-byte envelope is:
 | Offset | Bytes | Meaning |
 | --- | ---: | --- |
 | 0 | 8 | ASCII `CLSCONT` followed by NUL |
-| 8 | 2 | Little-endian artifact version, `3` |
+| 8 | 2 | Little-endian artifact version, `4` |
 | 10 | 2 | Little-endian codec ID, `1` = named MessagePack |
 | 12 | 8 | Little-endian exact payload byte length |
 | 20 | 32 | SHA-256 of payload bytes |
@@ -393,7 +401,7 @@ The fixed 84-byte envelope is:
 
 Identity SHA-256 covers, in order:
 
-1. the bytes `clubscape.content.identity.v3` followed by NUL;
+1. the bytes `clubscape.content.identity.v4` followed by NUL;
 2. shared schema version as little-endian `u32`;
 3. revision UTF-8 length as little-endian `u64`, then revision bytes;
 4. baseline UTF-8 length as little-endian `u64`, then baseline bytes.

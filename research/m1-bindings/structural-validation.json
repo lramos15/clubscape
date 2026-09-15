@@ -1,4 +1,5 @@
 {
+  "asset_closure_passed": false,
   "counts": {
     "cooks_projected_edges": 22,
     "cooks_source_transitions": 22,
@@ -7,8 +8,8 @@
     "death_source_transitions": 6,
     "dialogues": 21,
     "equipment_slots": 11,
-    "interfaces": 26,
-    "items": 118,
+    "interfaces": 30,
+    "items": 122,
     "mechanics": {
       "collision_groups": 49,
       "combat_styles": 27,
@@ -28,7 +29,7 @@
       "traversal": 9,
       "value_providers": 1
     },
-    "normal_note_pairs": 53,
+    "normal_note_pairs": 55,
     "npcs": 26,
     "objects": 4837,
     "quests": 2,
@@ -62,9 +63,27 @@
     "spawn.tutorial.fishing_spot.3103.3092.p0"
   ],
   "source_status_occurrences": {
-    "approved_adaptation": 1,
-    "inference": 3170,
-    "verified_reference": 11534
+    "approved_adaptation": 2,
+    "inference": 3298,
+    "verified_reference": 15803
   },
-  "structural_checks_passed": true
+  "structural_checks_passed": true,
+  "unpublished_asset_references": [
+    {
+      "asset": "asset.source.osrs.cache2695.item.1919",
+      "path": "content/items/item.beer_glass"
+    },
+    {
+      "asset": "asset.source.osrs.cache2695.item.1920",
+      "path": "content/items/item.beer_glass.noted"
+    },
+    {
+      "asset": "asset.source.osrs.cache2695.item.229",
+      "path": "content/items/item.vial"
+    },
+    {
+      "asset": "asset.source.osrs.cache2695.item.230",
+      "path": "content/items/item.vial.noted"
+    }
+  ]
 }

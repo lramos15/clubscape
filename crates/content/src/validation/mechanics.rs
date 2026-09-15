@@ -92,6 +92,7 @@ impl Validator<'_> {
             counts,
             unresolved,
         )?;
+        source_tree(&self.content.ui, "ui", mode, counts, unresolved)?;
         for item in self.content.items.values() {
             let path = format!("items.{}", item.id);
             source_tree(

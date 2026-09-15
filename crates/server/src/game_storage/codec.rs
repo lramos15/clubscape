@@ -154,6 +154,11 @@ pub(super) fn validate_world(world: &WorldState) -> Result<(), ApiError> {
                 "Character identities must match their world keys.",
             ));
         }
+        if character.runtime.ui.is_some() != world.runtime.ui_version.is_some() {
+            return Err(ApiError::invalid(
+                "World and character UI versions disagree; history cannot be defaulted.",
+            ));
+        }
         validate_character(character, world.tick)?;
     }
     if world

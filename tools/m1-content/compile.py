@@ -50,7 +50,7 @@ def main():
     if result.returncode == 0:
         artifact = output_path.read_bytes()
         parsed = json.loads(result.stdout)
-        if parsed["schema_version"] != 3 or parsed["artifact_version"] != 3 or sha(artifact) != parsed["sha256"]:
+        if parsed["schema_version"] != 4 or parsed["artifact_version"] != 4 or sha(artifact) != parsed["sha256"]:
             raise ValueError("Actual compiler artifact identity/version mismatch")
         compressed = bytearray(gzip.compress(artifact, compresslevel=9, mtime=0))
         compressed[9] = 255
@@ -59,7 +59,7 @@ def main():
         record["artifact_sha256"] = sha(artifact)
         record["artifact"] = {"path": str(committed_path.relative_to(ROOT)), "bytes": len(compressed),
                               "sha256": sha(compressed), "uncompressed_bytes": len(artifact),
-                              "uncompressed_sha256": sha(artifact), "artifact_version": 3, "schema_version": 3}
+                              "uncompressed_sha256": sha(artifact), "artifact_version": 4, "schema_version": 4}
         decoded = json.loads(data)
         unresolved = []
         def find_bindings(value, path=""):

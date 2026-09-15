@@ -10,6 +10,7 @@ mod context;
 mod death;
 mod engagement;
 mod entities;
+mod gameplay_ui;
 mod grants;
 mod lifecycle;
 mod navigation;
@@ -174,7 +175,11 @@ impl WorldEngine {
             last_command_sequence: 0,
             runtime: CharacterRuntime::from_initial(&self.content),
         };
+        if let Some(ui) = &self.content.ui {
+            character.runtime.ui = Some(GameplayUiRuntime::from_legacy(&character.bank, &ui.bank)?);
+        }
         character.migrate_engine_metadata(&self.content)?;
+        self.prepare_ui(&mut character)?;
         self.refresh_combat_style(&mut character)?;
         validation::character(&character, &self.content)?;
         Ok(character)
@@ -189,6 +194,9 @@ impl WorldEngine {
         intent: &GameIntent,
         random: &mut impl RandomSource,
     ) -> GameResult<Vec<ActorEvent>> {
+        if let GameIntent::Ui { request } = intent {
+            return self.apply_ui_request(world, actor, request, random);
+        }
         self.check_world(world)?;
         let mut draft = world.clone();
         let mut character = draft.characters.remove(actor).ok_or_else(|| {
@@ -198,6 +206,8 @@ impl WorldEngine {
             )
         })?;
         character.migrate_engine_metadata(&self.content)?;
+        self.prepare_ui(&mut character)?;
+        self.require_ui_modal_clear(&character, intent)?;
         validation::character(&character, &self.content)?;
         self.input_permission(&character)?;
         if !self
@@ -246,6 +256,7 @@ impl WorldEngine {
             random,
         )?;
         self.progress(&mut draft, &mut character, &before, &mut events, random)?;
+        self.observe_ui(&before, &mut character, &events)?;
         self.validate_open_dialogue(&draft, &character)?;
         self.check_reward_atomicity(&before, &character)?;
         self.session_close_event(&before, &character, &mut events)?;
@@ -293,6 +304,7 @@ impl WorldEngine {
         let mut draft = world.clone();
         draft.tick = runtime::deadline(draft.tick, 1)?;
         let events = self.process_tick_draft(&mut draft, random, context)?;
+        self.observe_world_ui(world, &mut draft, &events)?;
         draft.validate_runtime(&self.content)?;
         *world = draft;
         Ok(events)
@@ -312,6 +324,7 @@ impl WorldEngine {
         }
         let mut draft = world.clone();
         let events = self.process_tick_draft(&mut draft, random, context)?;
+        self.observe_world_ui(world, &mut draft, &events)?;
         draft.validate_runtime(&self.content)?;
         *world = draft;
         Ok(events)
@@ -325,6 +338,7 @@ impl WorldEngine {
     ) -> GameResult<Vec<ActorEvent>> {
         for character in draft.characters.values_mut() {
             character.migrate_engine_metadata(&self.content)?;
+            self.prepare_ui(character)?;
         }
         let mut lifecycle_events = self.advance_presence(draft)?;
         let effective = self.effective_context(draft, context)?;
@@ -332,6 +346,7 @@ impl WorldEngine {
         self.advance_playtime(draft, context)?;
         self.advance_entities(draft, random)?;
         self.expire_objects(draft)?;
+        self.refresh_production_ui(draft)?;
         self.advance_ground_clocks(draft, context)?;
         self.restock(draft)?;
         draft
@@ -526,6 +541,7 @@ fn is_interruption(code: &GameErrorCode) -> bool {
             | GameErrorCode::OutOfReach
             | GameErrorCode::Blocked
             | GameErrorCode::Busy
+            | GameErrorCode::StaleCommand
     )
 }
 

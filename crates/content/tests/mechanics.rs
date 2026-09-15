@@ -1792,6 +1792,7 @@ fn world_runtime_checks_scoped_counters_lifetimes_instances_and_grave_ownership(
             }),
             office: vec![],
             reclaimed: BTreeSet::new(),
+            discarded: BTreeSet::new(),
             arrival: None,
         },
     );
@@ -1998,8 +1999,8 @@ fn closure_policies_roundtrip_strict_source_and_new_artifact_domain() {
     assert_eq!(read_content_json(&json).unwrap(), content);
     let compiled = compile(content.clone());
     let bytes = encode_compiled(&compiled).unwrap();
-    assert_eq!(clubscape_content::ARTIFACT_VERSION, 3);
-    assert_eq!(CONTENT_SCHEMA_VERSION, 3);
+    assert_eq!(clubscape_content::ARTIFACT_VERSION, 4);
+    assert_eq!(CONTENT_SCHEMA_VERSION, 4);
     assert_eq!(
         load_compiled(&bytes, ValidationMode::TestFixture)
             .unwrap()

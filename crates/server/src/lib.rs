@@ -82,25 +82,7 @@ impl Service {
                 "conflicting_static_routes",
             ));
         }
-        let pool = PgPoolOptions::new()
-            // All acquisition, release and cleanup work is owned and timed, not background upkeep.
-            .min_connections(0)
-            .max_connections(8)
-            .idle_timeout(None)
-            .max_lifetime(None)
-            .acquire_timeout(database::IO_TIMEOUT)
-            .after_connect(|connection, _| {
-                Box::pin(async move {
-                    sqlx::query("SET statement_timeout = '5s'")
-                        .execute(&mut *connection)
-                        .await?;
-                    sqlx::query("SET lock_timeout = '5s'")
-                        .execute(connection)
-                        .await?;
-                    Ok(())
-                })
-            })
-            .connect_lazy_with(config.database);
+        let pool = database_pool(&config);
         let initialized = async {
             let acquired = timeout(database::IO_TIMEOUT, pool.acquire())
                 .await
@@ -213,6 +195,83 @@ impl Service {
         );
         result
     }
+}
+
+fn database_pool(config: &Config) -> PgPool {
+    PgPoolOptions::new()
+        // All acquisition, release and cleanup work is owned and timed, not background upkeep.
+        .min_connections(0)
+        .max_connections(8)
+        .idle_timeout(None)
+        .max_lifetime(None)
+        .acquire_timeout(database::IO_TIMEOUT)
+        .after_connect(|connection, _| {
+            Box::pin(async move {
+                sqlx::query("SET statement_timeout = '5s'")
+                    .execute(&mut *connection)
+                    .await?;
+                sqlx::query("SET lock_timeout = '5s'")
+                    .execute(connection)
+                    .await?;
+                Ok(())
+            })
+        })
+        .connect_lazy_with(config.database.clone())
+}
+
+pub async fn migrate_game_ui(
+    config: Config,
+    expected_old_artifact: String,
+) -> Result<(), StartupError> {
+    let content = game_service::PreparedGame::load(&config)?
+        .ok_or_else(|| StartupError::new("game_ui_migration", "game_content_required"))?;
+    if content.compiled.definition().ui.is_none() {
+        return Err(StartupError::new(
+            "game_ui_migration",
+            "ui_content_required",
+        ));
+    }
+    let pool = database_pool(&config);
+    let store = game_storage::GameStore::new(pool.clone());
+    let mut lease = None;
+    let result = async {
+        store
+            .migrate()
+            .await
+            .map_err(|_| StartupError::new("game_ui_migration", "schema_migration"))?;
+        let acquired = store
+            .acquire_world_lease(content.world_id, std::time::Duration::from_secs(30))
+            .await
+            .map_err(|_| StartupError::new("game_ui_migration", "exclusive_world_ownership"))?;
+        lease = Some(acquired.clone());
+        let engine = content.engine.clone();
+        let readiness = content.readiness.clone();
+        store
+            .migrate_ui_content(
+                &acquired,
+                expected_old_artifact,
+                content.artifact_hash,
+                content.compiled.definition().revision.clone(),
+                move |world| {
+                    engine.migrate_ui_state(world)?;
+                    readiness.validate_world(world)
+                },
+            )
+            .await
+            .map_err(|_| StartupError::new("game_ui_migration", "state_migration"))?;
+        Ok(())
+    }
+    .await;
+    let released = if let Some(lease) = lease {
+        store.release_world_lease(&lease).await.is_ok()
+    } else {
+        true
+    };
+    let closed = database::close_pool(pool).await;
+    if !released || !closed {
+        return Err(StartupError::new("game_ui_migration", "cleanup"));
+    }
+    result
 }
 
 async fn health(State(state): State<Arc<AppState>>) -> Response {
@@ -348,6 +407,9 @@ async fn execute_command(
             };
             if available {
                 capabilities.push(clubscape_protocol::GAME_CAPABILITY.to_owned());
+                if state.game.as_ref().is_some_and(|game| game.gameplay_ui) {
+                    capabilities.push(clubscape_protocol::GAMEPLAY_UI_CAPABILITY.to_owned());
+                }
             }
             Ok(server_message::Result::Hello(ServerHello {
                 capabilities,

@@ -1,7 +1,7 @@
 # Live-world server
 
 The optional server adapter runs the actual source engine over PostgreSQL.
-It supports **content/artifact 3, persisted state 1, runtime 1**. Lifecycle,
+It supports **content/artifact 4, persisted state 1, runtime 1, UI state/view 1**. Lifecycle,
 contextual views and quotes use the engine APIs in
 [`game-contracts.md`](game-contracts.md#live-lifecycle-and-read-only-projection-boundary);
 the former missing-API interlocks are removed. This backend is not UI,
@@ -102,8 +102,17 @@ Thus the six proof-scoped inactive alternatives described in the source
 resolution inventory need not disable ordinary M1, but an unresolved active
 input still prevents runtime readiness. Source evidence and owner approvals
 are not authenticated by compilation or by these reachability/capacity proofs.
-The actual regenerated v3 product and its public asset bundle remain launch
+The actual regenerated v4 product and its public asset bundle remain launch
 prerequisites; synthetic fixtures are not substitutes.
+
+The UI4 candidate records its publication gate independently:
+`asset_closure_passed=false` and the exact missing item/model IDs in
+`content/m1/manifest.json`. Build/check/asset-verification commands still fail
+that gate even when strict source compilation, reload and native probes pass.
+Required item assets are explicit references, not nullable replacement icons.
+Publishing original items229/230/1919/1920 and models561/2548/2747/8234 through
+the validated source publication chain is required before this candidate can
+be packaged as a complete game directory.
 
 ## Transactions, time and connection lifecycle
 
@@ -120,6 +129,12 @@ most 64 requests; overflow is structured HTTP 429. Missed timer intervals delay
 instead of bursting. Requests have a nine-second coordinator reply bound inside
 the existing ten-second RPC bound. Each DB group, including commit and owned
 release, retains `database::run`'s five-second limit and cancellation/discard.
+
+UI source mutations use the same boundary and `ui_request_requires_tick`
+classification as engine admission. Preference changes, document/reward
+continuations, read-only modal selection and public chat use the same bounded
+queue and command journal without consuming an action phase. They cannot make
+movement, combat or production run faster.
 
 Verified transport connections are those actually joined to this coordinator
 whose exact account-token digest and exclusive game lease remain live.
@@ -174,6 +189,49 @@ Creation has no grants or signup-triggered progress. Creation options must be
 empty; appearance confirmation and experience selection are real subsequent
 source intents. Source runtime defaults/style initialization comes from the
 engine's creation API, once only. Retry never overwrites inventory, XP or gates.
+
+`game.ui.v1` is advertised only for a ready UI-enabled content profile. An M1
+consumer must require that capability and `snapshot.ui.version == 1`, then
+consume the complete typed projection. Absent `ui` means an unsupported older
+profile, not empty successful UI data. The exact Rust/TypeScript DTOs and
+request names are in the shared gameplay UI contract. The shell maps its flat
+`GameplayUiIntent` into Protobuf `GameplayUiRequest`; the internal engine
+representation is `GameIntent::Ui { request }`. Renderer/audio ABIs do not change.
+
+Bank callers echo `ui.bank.revision` in
+`GameplayUiRequest.expected_bank_revision`. Invalid/missing preconditions fail;
+stale revisions fail transactionally without consuming a sequence. A duplicate
+operation with the same intent/sequence recovers its committed receipt before
+this mutable-state precondition is checked. The existing
+`WorldInput.expected_character_revision` remains an observation hint.
+
+Views distinguish the selected tab from contextual/modal state and expose
+target-bound production, entitlement rewards/continuations, native bank
+metadata, exact per-actor abilities/bonuses/weight, recovery/coffer controls,
+original documents and routed public chat. Public chat messages have stable
+IDs independent of each recipient's event ID; repeat snapshots/history must
+not duplicate rendered lines. Other players' private UI state is never sent.
+
+### Explicit UI content upgrade
+
+Stop the existing coordinator and configure a complete target v4 game directory,
+keeping its stable world UUID. Run the operator-only command with the exact
+old raw artifact SHA-256, not its compressed-file hash:
+
+```sh
+CLUBSCAPE_GAME_ROOT=/absolute/path/to/complete-v4-game \
+cargo run --locked -p clubscape-server -- migrate-ui --from <old-raw-sha256>
+```
+
+`migrate_game_ui(config, old_hash)` is the library equivalent. The operation
+acquires exclusive fencing, preserves source state/claims/sequence/tick/private
+RNG and old receipts, initializes only absent legacy UI metadata, updates the
+artifact/content pin and writes one audit row. It is idempotent and refuses an
+active owner, wrong old pin or missing UI history in an already-versioned world.
+Normal startup never performs this content swap. UI bank metadata is derived
+from real old bank slots; old reward/chat history is not invented. Migration
+failure/timeout does not claim rollback; retrying the same exact target checks
+the committed pin/audit state.
 
 Additive intents include `ProduceSelected` with explicit `Single`/`MakeX`
 (including Make-X-of-one), `OpenGrave` and `OpenDeathOffice`. A generic

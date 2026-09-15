@@ -216,6 +216,13 @@ pub struct QuestState {
 #[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(tag = "kind", rename_all = "snake_case")]
 pub enum Activity {
+    InventoryAction {
+        slot: u8,
+        item: ItemId,
+        instance: Option<crate::ItemInstanceId>,
+        action: String,
+        completes_at: u64,
+    },
     Idle,
     Walking {
         path: Vec<Tile>,

@@ -183,6 +183,7 @@ impl WorldEngine {
                     remaining -= chunk;
                 }
                 character.bank = staging.bank;
+                bank::reconcile_ui(character, true)?;
                 Ok(())
             }
             _ => Err(invalid_content(
@@ -226,7 +227,8 @@ impl WorldEngine {
                     character.equipment = equipment.clone()
                 }
                 ContainerReconciliation::ReplaceBank { slots } => {
-                    character.bank.slots = slots.clone()
+                    character.bank.slots = slots.clone();
+                    bank::reconcile_ui(character, true)?;
                 }
                 ContainerReconciliation::RemoveItems { container, items } => match container {
                     ContainerKind::Inventory => {

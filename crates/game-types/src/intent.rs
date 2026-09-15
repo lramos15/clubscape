@@ -5,6 +5,9 @@ use crate::*;
 #[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(tag = "kind", rename_all = "snake_case")]
 pub enum GameIntent {
+    Ui {
+        request: GameplayUiRequest,
+    },
     Walk {
         destination: Tile,
         running: bool,
@@ -140,6 +143,9 @@ pub enum WorldTarget {
 #[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(tag = "kind", rename_all = "snake_case")]
 pub enum GameEvent {
+    PublicChat {
+        line: PublicChatLine,
+    },
     Moved {
         tile: Tile,
     },
@@ -297,6 +303,7 @@ pub enum GameEvent {
 impl GameEvent {
     pub fn kind(&self) -> &'static str {
         match self {
+            Self::PublicChat { .. } => "public_chat",
             Self::Moved { .. } => "moved",
             Self::Interacted { .. } => "interacted",
             Self::DialogueSelected { .. } => "dialogue_selected",
@@ -340,6 +347,7 @@ impl GameEvent {
 
     pub fn primary_target(&self) -> Option<&str> {
         match self {
+            Self::PublicChat { .. } => None,
             Self::Interacted { target, .. }
             | Self::Gathered { target, .. }
             | Self::Hit { target, .. }

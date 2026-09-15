@@ -27,6 +27,7 @@ from travel_policies import wire_travel_policies
 from world_mechanics import build_doors, wire_world
 from runtime_application import apply_source_bindings
 from selectors3 import apply_selectors
+from ui4 import apply_ui
 
 
 def input_lock(inputs):
@@ -62,6 +63,8 @@ def input_lock(inputs):
                                          "profile-v2.json", "application-item-definitions.json.gz",
                                          "runtime3-policy.json", "runtime3-sources.json", "runtime3-input-context.json")]
     paths += [ROOT / "assets/manifests/osrs/audio-runtime.json"]
+    paths += [ROOT / "research/interface-contracts/sources.json", ROOT / "research/interface-contracts/native-ui.json",
+              BINDINGS / "ui-item-definitions.json.gz"]
     paths += [ROOT / "research/runtime-bindings" / name for name in (
         "resolutions.json", "application-context.json", "sources.json", "oracles.json",
         "death-values.json", "profile-resolutions.json", "inputs/guide-prices.json.gz")]
@@ -142,6 +145,7 @@ def assemble(inputs, world, revision):
     content, application = apply_source_bindings(content, inputs)
     bindings["application"] = application
     content = apply_selectors(inputs, world, content, bindings)
+    content = apply_ui(inputs, content, bindings)
     return content, bindings
 
 
@@ -305,10 +309,10 @@ def build(args):
     inputs = Inputs()
     lock = input_lock(inputs)
     world = World(inputs)
-    revision = "m1.source-backed.v3." + lock["aggregate_sha256"][:16]
+    revision = "m1.source-backed.v4." + lock["aggregate_sha256"][:16]
     content, bindings = assemble(inputs, world, revision)
-    from check import check_content
-    checks = check_content(content, inputs, world, bindings)
+    from check import inspect_content
+    checks = inspect_content(content, inputs, world, bindings)
     outputs = []
     def emit(path, value, pretty=False):
         record = write(path, value, pretty)
@@ -319,6 +323,7 @@ def build(args):
     bindings["application"]["content_compressed_sha256"] = sha((CONTENT / "game-content.json.gz").read_bytes())
     emit(BINDINGS / "application-result.json", bindings["application"], True)
     emit(BINDINGS / "runtime3-selectors.json", bindings["runtime3"], True)
+    emit(BINDINGS / "ui-bindings.json", bindings["ui"], True)
     geometry_records = []
     for number in sorted(world.raw):
         geometry_records.append(emit(CONTENT / f"geometry/{number}.json.gz", world.region(number, full=True)))
@@ -392,12 +397,12 @@ def build(args):
     for binding in bindings["interfaces"].values():
         asset_ids.update(f"{ASSET_PREFIX}interface.{number}" for number in binding["source_groups"])
     missing_assets = set(asset_ids - inputs.assets.keys())
-    if missing_assets:
-        raise ValueError(f"Product asset references absent from validated merged catalog: {sorted(missing_assets)}")
     emit(CONTENT / "asset-references.json", {
         "assets": [{"id": identifier, "kind": inputs.assets[identifier]["kind"],
                     "outputs": inputs.assets[identifier]["outputs"]} for identifier in sorted(asset_ids - missing_assets)],
         "manifest": inputs.catalog_path,
+        "asset_closure_passed": not missing_assets,
+        "unpublished_asset_ids": sorted(missing_assets),
         "publications": [str(path.relative_to(ROOT)) for path, _ in inputs.publication_chain],
         "collection_extensions": [
             {"publication": str(path.relative_to(ROOT)), "kind": kind, **shard}
@@ -434,7 +439,9 @@ def build(args):
         "compiler_command": "python3 tools/m1-content/compile.py --compiler-manifest crates/content/Cargo.toml",
         "outputs": outputs, "counts": checks["counts"],
         "source_geometry": dict(world.statistics),
-        "content_schema_version": 3, "artifact_version": 3, "runtime_schema_version": 1,
+        "content_schema_version": 4, "artifact_version": 4, "runtime_schema_version": 1,
+        "asset_closure_passed": not missing_assets and checks["asset_closure_passed"],
+        "unpublished_asset_ids": sorted(missing_assets),
         "declared_v3_selectors_authored": True,
         "active_source_binding_count": bindings["application"]["residuals"]["active_or_conditionally_active_count"],
         "inactive_full_target_binding_count": bindings["application"]["residuals"]["inactive_full_target_count"],
@@ -463,9 +470,13 @@ def build(args):
                      "unresolved_binding_count": compiler["unresolved_binding_count"]})
     write(CONTENT / "manifest.json", manifest, True)
     print(__import__("json").dumps({"revision": revision, "counts": checks["counts"],
+                                   "asset_closure_passed": not missing_assets,
+                                   "unpublished_asset_ids": sorted(missing_assets),
                                    "runtime_ready": False, "structural_checks": "passed",
                                    "runtime_compile_passed": True,
                                    "unresolved_binding_count": compiler["unresolved_binding_count"]}))
+    if missing_assets:
+        raise ValueError(f"Source compilation passed, but required published assets are absent: {sorted(missing_assets)}")
 
 
 def main():

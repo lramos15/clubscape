@@ -368,6 +368,7 @@ impl GameStore {
                 let previous_revision = world.state.revision;
                 world.state.revision = increment(previous_revision)?;
                 world.state.characters.insert(actor_id.clone(), character.clone());
+                validate_world(&world.state)?;
                 let json = encode(&world.state, MAX_WORLD_BYTES)?;
                 validate_authentication(&mut transaction, account.account_id, authentication).await?;
                 save_world(&mut transaction, &lease, &world.state, previous_revision, json, None).await?;
@@ -1419,6 +1420,7 @@ async fn ensure_fence(connection: &mut PgConnection, lease: &WorldLease) -> Resu
 fn validate_transition(before: &WorldState, after: &WorldState, tick: u64) -> Result<(), ApiError> {
     if before.schema_version != after.schema_version
         || before.content_revision != after.content_revision
+        || before.runtime.ui_version != after.runtime.ui_version
         || before.revision != after.revision
         || after.tick != tick
         || !before.characters.keys().eq(after.characters.keys())

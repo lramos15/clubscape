@@ -9,6 +9,8 @@ import json
 from common import BINDINGS, CONTENT, canonical, item_stack, load, sha, write
 from runtime_application import ADDITIONAL_ITEMS, DIRECTORY, POTION_ITEMS, classify_residuals, source_applier
 from state_oracles import Oracle, OracleRefusal
+from ui4 import CONTAINER_ITEMS, legacy_content
+from verify_ui4 import verify_ui4
 
 
 def require(value, message):
@@ -147,6 +149,8 @@ def verify():
             "Source application input hashes changed")
     require(application["bound_path_count"] == 104 and application["coupled_update_count"] == 7, "Incomplete source application")
     checked = Counter()
+    ui_audit = verify_ui4(content) if content.get("ui") is not None else None
+    legacy = legacy_content(content) if ui_audit else content
     for path, record in resolutions["resolutions"].items():
         if not record["apply_to_ordinary_profile"]:
             continue
@@ -157,6 +161,9 @@ def verify():
                     "Already-bound parent provenance changed without exact reconciliation")
         else:
             if record["rule_group"] == "death_value_snapshot":
+                if ui_audit:
+                    for item in CONTAINER_ITEMS:
+                        current["value"].pop(item)
                 for item in ADDITIONAL_ITEMS:
                     require(current["value"].pop(item) == 123, "New potion death price is not the fixed guide value")
                 current["source"] = record["replacement"]["source"]
@@ -169,7 +176,7 @@ def verify():
                     "A source inference was promoted to observation or approval")
         checked[record["classification"]] += 1
     for change in resolutions["coupled_updates"]:
-        require(module.at(content, change["pointer"]) == change["value"], "Coupled update missing or changed: " + change["id"])
+        require(module.at(legacy, change["pointer"]) == change["value"], "Coupled update missing or changed: " + change["id"])
     residuals = classify_residuals(content, resolutions)
     require(residuals == application["residuals"], "Inactive/active reachability classification is stale")
     provider = content["mechanics"]["value_providers"]["value_provider.osrs.death"]
@@ -185,6 +192,7 @@ def verify():
         "source_bindings_checked": dict(checked), "source_bindings_consumed": sum(checked.values()),
         "coupled_updates_checked": len(resolutions["coupled_updates"]),
         "death_values_checked": len(provider["values"]["value"]),
+        "ui_extension": ui_audit,
         "loot": loot_oracles(content, application), "departure": departure_oracles(content, source_oracles),
         "residuals": residuals,
         "original_source_numeric_oracles": "research/m1-bindings/application-source-validation.json",

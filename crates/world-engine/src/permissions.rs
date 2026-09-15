@@ -12,6 +12,11 @@ impl WorldEngine {
         intent: &GameIntent,
     ) -> GameResult<()> {
         let keys = match intent {
+            GameIntent::Ui { .. } => {
+                return Err(invalid_content(
+                    "UI intent authorization requires the UI dispatcher.",
+                ));
+            }
             GameIntent::Walk { .. } => vec!["walk".into()],
             GameIntent::Interact { target, action } => vec![
                 "interact".into(),

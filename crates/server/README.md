@@ -18,6 +18,21 @@ ordering, routing, privacy, reconnect/shutdown and production-source readiness.
 Storage and live-world synthetic tests are
 not source-content, gameplay, presentation, performance or milestone acceptance.
 
+UI-enabled content/artifact4 advertises `game.ui.v1` and supplies the typed
+`WorldSnapshot.ui` view. Source production, reward continuations, selected
+styles/abilities, item actions, real bank metadata, death/recovery controls and
+authenticated public chat commit through the same fenced journal. Bank controls
+must echo the decimal `ui.bank.revision` in
+`GameplayUiRequest.expected_bank_revision`; clocks changing the whole-character
+revision do not invalidate an otherwise unchanged bank.
+
+Use `cargo run --locked -p clubscape-server -- migrate-ui --from <old-raw-sha256>`
+with `DATABASE_URL` and a complete target `CLUBSCAPE_GAME_ROOT` for an explicit
+UI-only content upgrade. It requires exclusive world ownership and audits the
+artifact swap in migration0005. It never resets inventory/XP/claims, restarts
+sequences, replaces private RNG or fabricates lost UI history. See the live-world
+specification for exact caller mappings and current source-asset prerequisites.
+
 ## Running locally
 
 An optional `CLUBSCAPE_WEB_ROOT` serves a hash-validated, explicitly enumerated
@@ -168,6 +183,7 @@ cleanup bound; only the pool owner should call it.
 | `commit_live_tick(lease, expected_tick, sessions, callback)` | Supplies transactionally verified connection facts to engine lifecycle and advanced-tick processing, without forcing offline actors online. |
 | `apply_session_lifecycle(...)` | Atomically joins/leaves a session or logs out the account token with the source lifecycle transition and durable control-plane receipt, without consuming a gameplay sequence. |
 | `control_world(lease, callback)` | Fenced, idempotent startup/shutdown reconciliation without advancing tick/sequence. |
+| `migrate_ui_content(lease, from_hash, to_hash, revision, callback)` | Operator-only, exact-pin UI metadata migration and atomic audit; no ordinary RPC exposes it. |
 
 `AuthTokenDigest::from_token` reuses the account code's canonical token parsing
 and SHA-256 implementation. `from_digest` supports the existing server auth

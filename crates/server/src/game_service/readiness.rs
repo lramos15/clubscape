@@ -19,6 +19,8 @@ pub(crate) struct Readiness {
     excluded: BTreeSet<ItemId>,
     #[serde(skip)]
     ordinary_office: bool,
+    #[serde(skip)]
+    possible_office_items: BTreeSet<ItemId>,
 }
 
 impl Readiness {
@@ -73,7 +75,7 @@ impl Readiness {
         }
         if let Some(death) = &content.mechanics.death
             && matches!(death.office_overflow, SourceBinding::Unresolved { .. })
-            && content.items.len() <= usize::from(death.office_capacity)
+            && possible.len() <= usize::from(death.office_capacity)
             && !instances
             && possible.iter().all(|id| {
                 content.items.get(id).is_some_and(|item| {
@@ -82,9 +84,10 @@ impl Readiness {
             })
         {
             result.ordinary_office = true;
+            result.possible_office_items = possible.clone();
             proofs.insert("mechanics.death.office_overflow".to_owned(),
                 format!("At most {} ordinary item keys, no introduced item instances, within {} Office slots.",
-                    content.items.len(), death.office_capacity));
+                    possible.len(), death.office_capacity));
         }
         for path in &compiled.report().unresolved_bindings {
             let proof = proofs.get(path).ok_or_else(|| {
@@ -99,7 +102,9 @@ impl Readiness {
     pub fn validate_world(&self, world: &WorldState) -> GameResult<()> {
         let check = |stack: &ItemStack| {
             !self.excluded.contains(&stack.item)
-                && (!self.ordinary_office || stack.instance.is_none())
+                && (!self.ordinary_office
+                    || (stack.instance.is_none()
+                        && self.possible_office_items.contains(&stack.item)))
         };
         for character in world.characters.values() {
             if !character
@@ -124,9 +129,11 @@ impl Readiness {
                 .flat_map(|item| &item.resources_spent)
                 .any(|item| !check(item))
             || world.shops.values().any(|shop| {
-                shop.stock
-                    .iter()
-                    .any(|(item, count)| *count > 0 && self.excluded.contains(item))
+                shop.stock.iter().any(|(item, count)| {
+                    *count > 0
+                        && (self.excluded.contains(item)
+                            || (self.ordinary_office && !self.possible_office_items.contains(item)))
+                })
             })
             || world.runtime.deaths.values().any(|death| {
                 death
@@ -311,6 +318,15 @@ fn possible_items(content: &GameContent) -> GameResult<(BTreeSet<ItemId>, bool)>
                     charges.empty_variant.clone(),
                     charges.charged_variant.clone(),
                 ]);
+            }
+            if let Some(ui) = &content.ui {
+                for action in ui.item_actions.get(id).into_iter().flatten() {
+                    if let ItemUiAction::Drink { replacement, .. }
+                    | ItemUiAction::Empty { replacement } = &action.action
+                    {
+                        additions.push(replacement.clone());
+                    }
+                }
             }
         }
         let old = items.len();

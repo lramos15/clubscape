@@ -27,6 +27,12 @@ impl WorldEngine {
             self.refresh_combat_style(character)?;
         }
         match character.activity.clone() {
+            Activity::InventoryAction { completes_at, .. } => {
+                if world.tick < completes_at {
+                    return Ok(Vec::new());
+                }
+                self.complete_inventory_action(world, character, rng)
+            }
             Activity::Idle => Ok(vec![]),
             Activity::Walking { mut path, running } => {
                 self.authorize(character, &["walk".into()])?;
@@ -436,6 +442,18 @@ impl WorldEngine {
             remaining,
             mode,
         } = job;
+        if let Some(menu) = character
+            .runtime
+            .ui
+            .as_ref()
+            .and_then(|ui| ui.production.as_ref())
+            && (target.as_ref() != Some(&menu.target) || !menu.recipes.contains(recipe_id))
+        {
+            return Err(GameError::new(
+                GameErrorCode::NotOwned,
+                "The open production menu cannot be retargeted.",
+            ));
+        }
         self.authorize(
             character,
             &["produce".into(), format!("produce:{recipe_id}")],
@@ -570,7 +588,7 @@ impl WorldEngine {
         }))
     }
 
-    fn recipe_delay(
+    pub(crate) fn recipe_delay(
         &self,
         recipe: &RecipeDefinition,
         single: bool,
@@ -582,7 +600,7 @@ impl WorldEngine {
         }
     }
 
-    fn check_recipe(
+    pub(crate) fn check_recipe(
         &self,
         world: &WorldState,
         character: &CharacterState,
@@ -647,7 +665,7 @@ impl WorldEngine {
         )
     }
 
-    fn check_outcomes_fit(
+    pub(crate) fn check_outcomes_fit(
         &self,
         character: &CharacterState,
         recipe: &RecipeDefinition,

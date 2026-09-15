@@ -185,6 +185,7 @@ pub fn content() -> GameContent {
     let region = region("room", tile(10, 10, 0), tile(16, 16, 0));
     GameContent {
         schema_version: CONTENT_SCHEMA_VERSION,
+        ui: None,
         revision: "synthetic-v1".into(),
         baseline: "synthetic only; not a gamepack".into(),
         interfaces: BTreeMap::new(),

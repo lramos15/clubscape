@@ -1,5 +1,5 @@
 {
-  "aggregate_sha256": "41555bd46c074d621c1ed6c6e2f610f17ed0b86ed4e173299e2f818b15eebb24",
+  "aggregate_sha256": "4a122475c6658a4205b5e1fb583ba305641f9839cefb7cbbeedaca1509203321",
   "inputs": [
     {
       "bytes": 845835,
@@ -8562,9 +8562,9 @@
       "sha256": "90671bea204c9e583fa84e280d42b1203725aee6f0f4dba42a2c23357e3f3f7e"
     },
     {
-      "bytes": 14658,
+      "bytes": 14810,
       "path": "crates/game-types/src/content.rs",
-      "sha256": "701f41904db9a44e206f592f4ad821343e071f9a41fc5207bac2325a070396bb"
+      "sha256": "6d28f930d86d27175b916eb21fc39d7dedf38650e5cb775607fdd369be5667f1"
     },
     {
       "bytes": 826,
@@ -8577,9 +8577,9 @@
       "sha256": "d78b3f6ba8d503fa84d42938ce82671ab6e4ad4be7b85d5111f5f72b4c4eee76"
     },
     {
-      "bytes": 9163,
+      "bytes": 10023,
       "path": "crates/game-types/src/gameplay_ui.rs",
-      "sha256": "ecdaf6a70fbe56358efb6edeef9f215736dcf3fca8bdd2cc6472ab256774abb9"
+      "sha256": "058f8bfb192e9182c2a099bab3804c8811d90a72209a2a875a291e33865989f5"
     },
     {
       "bytes": 4162,
@@ -8587,14 +8587,14 @@
       "sha256": "deb0db0685a40ded03c788154f4cf00a37bca496f259d764a145d91b72da51be"
     },
     {
-      "bytes": 22679,
+      "bytes": 22884,
       "path": "crates/game-types/src/intent.rs",
-      "sha256": "36705b9172bc38b2020c339a63c6eab525476627b82abe9113871c7f4133bfdc"
+      "sha256": "cbcfd32620681acb6ab0552e3470926dc9e26da4e7737bfa7b103e011bf74a8c"
     },
     {
-      "bytes": 726,
+      "bytes": 761,
       "path": "crates/game-types/src/lib.rs",
-      "sha256": "5da13bb50816294fcac7835fb8317a283d4d755eee6b506a5910d7febae1e523"
+      "sha256": "ae54e9e9ce2f6607b76b49a8c536fb3d9bea9a630c6e36e472be1ffd55e15656"
     },
     {
       "bytes": 43635,
@@ -8607,19 +8607,24 @@
       "sha256": "dade5ea9bf5b40bf88717ec93711a9277e8d56b14f30dec74634506549ac35f7"
     },
     {
-      "bytes": 26476,
+      "bytes": 27034,
       "path": "crates/game-types/src/runtime_state.rs",
-      "sha256": "1b82d963ebda39cd0755339532134c0f95a3673e1bd8fc9a513402bb15481c9f"
+      "sha256": "858d8fe96a99a3cf2534a3e85f30ad634f702ac484634810f08665e511e907dd"
     },
     {
-      "bytes": 42272,
+      "bytes": 47140,
       "path": "crates/game-types/src/runtime_validation.rs",
-      "sha256": "ac78f3c890161579bec25d47188b95b579f88d99a8533c7c2dd57d4d93fc339b"
+      "sha256": "6caaf1b3d25618ab3401560e6f43bf9c85c5b4e1880978e35f163124c3056a9d"
     },
     {
-      "bytes": 9751,
+      "bytes": 9920,
       "path": "crates/game-types/src/state.rs",
-      "sha256": "3733b74b1a941c12ddd16569625a9aeec5dd64e8628c63850951377637ddf4dc"
+      "sha256": "4421ac1ed3dedd3eb01065a13a13126526650198b1126551a9004d21cb4f44c7"
+    },
+    {
+      "bytes": 13582,
+      "path": "crates/game-types/src/ui_state.rs",
+      "sha256": "a0b2deb958d8e3fbd2757b259196a7f2a0b4bf52925f9732c2a3f5f8ddb9aee9"
     },
     {
       "bytes": 1512,
@@ -8675,6 +8680,16 @@
       "bytes": 8853,
       "path": "research/current-source/selection.json",
       "sha256": "b1a8d65cec6143946dba7172bc29142c8aa47cc4383abaffefef5b2ea3b2b028"
+    },
+    {
+      "bytes": 122131,
+      "path": "research/interface-contracts/native-ui.json",
+      "sha256": "9ea550d2a8a9f13ba6e8db760789879e304327cd0b98aed4141fd21422645ff8"
+    },
+    {
+      "bytes": 7288,
+      "path": "research/interface-contracts/sources.json",
+      "sha256": "8b2c9424f728adc9504edb45aa9ae970f0a4a37b95220df1e51de1927c849114"
     },
     {
       "bytes": 127856,
@@ -8767,6 +8782,11 @@
       "sha256": "eba70c376dfb2facd5dda8c08522089d384cff93260db235c5b45e79dcad45ba"
     },
     {
+      "bytes": 2785,
+      "path": "research/m1-bindings/ui-item-definitions.json.gz",
+      "sha256": "27d6b60e109a5a42cdbf704aaf4b882403aa4ea37a2cfa80944a79027e444014"
+    },
+    {
       "bytes": 43318,
       "path": "research/m1-bindings/wiki-facts.json",
       "sha256": "006bf33bfec4c5ebe5c4cc972fc362c5198fd64e001f56c65f20a86f20b0e19f"
@@ -8817,9 +8837,9 @@
       "sha256": "9d15bfb9b6d67b7f0105dd2c3751cb07132b5dc79af112b588fb908e6044373b"
     },
     {
-      "bytes": 46026,
+      "bytes": 41319,
       "path": "tools/cache-import/content_closure.py",
-      "sha256": "2295c7b83b4f3be13fe6b09050b9d0cd56bbf2fcc267a0ba653f0ae64ce7d9e5"
+      "sha256": "842fc39066d05c2fbfdf123456774ac72323e3ab5b8f753e23dfb3cefc10f927"
     },
     {
       "bytes": 2950,
@@ -8827,9 +8847,9 @@
       "sha256": "cd3d731fc45b12d7515d7ded9df6b5c53d70e27a33011a78d254c3421be0d8e4"
     },
     {
-      "bytes": 36651,
+      "bytes": 36001,
       "path": "tools/cache-import/import_cache.py",
-      "sha256": "7812ad643b5e75951569f130dc1d80224da4fcadfa70e8a5e5a3ea4397d2f8af"
+      "sha256": "72001d88da3b911425f109ece57df7bd2a888fed3ff8caad35dbbb7cec0d5e19"
     },
     {
       "bytes": 4236,
@@ -8842,34 +8862,29 @@
       "sha256": "3ccf42326831b8d396fed6b843c9ace2cdc298a36b85323cc0bc91490b5c0898"
     },
     {
-      "bytes": 30591,
+      "bytes": 31330,
       "path": "tools/m1-content/build.py",
-      "sha256": "65b5a5b757c398fbabb92f1a05302210360aebb1206bb230546f9495666b27a5"
+      "sha256": "1f2e7fec68abfe3b056c5bdb1da6a3f06bea6d8c020b8ee68376f3c45e2ec3cb"
     },
     {
-      "bytes": 16972,
+      "bytes": 18333,
       "path": "tools/m1-content/check.py",
-      "sha256": "677778885c8cd7d7df8b51be47d55b7ccf3f251616d308cd0b53b2d7a1a8b833"
+      "sha256": "0422eafab6bd10cb5b3af489bdc7b1bff686cafe365580f060ec65c393d194ee"
     },
     {
-      "bytes": 12852,
+      "bytes": 12904,
       "path": "tools/m1-content/common.py",
-      "sha256": "2a1d55c9a75e569d73037f0fd09163ea0ff87cd6b803d931c3f3a83917479eb1"
+      "sha256": "4514e1894d9f16c265635491c149b00746fb62f4ea99a639315a923fa9cf945d"
     },
     {
       "bytes": 5844,
       "path": "tools/m1-content/compile.py",
-      "sha256": "6dfd5c37ea2fb3fe0d14d4fcafeb7170ea03d31506488ff3152d22433d08c1e0"
+      "sha256": "045c3812f4749dd7897d3fc5ce2fd34dd388a1cee8aa614bb406b0fedb077bb9"
     },
     {
       "bytes": 21559,
       "path": "tools/m1-content/definitions.py",
       "sha256": "7c011d42ce5dbccc317d0d8ff121980f8dce976697bd9d1626fe1cf2244cc253"
-    },
-    {
-      "bytes": 3115,
-      "path": "tools/m1-content/dialogue_entries.py",
-      "sha256": "95b44e82d6eea13d99354e9708c475f8fdf5dfa7361a76029b49e23ca885c733"
     },
     {
       "bytes": 12383,
@@ -8892,6 +8907,11 @@
       "sha256": "f5409964b4eb82e6b8e01bcee78319b1e850c951a4f457df9178db3a49ee5042"
     },
     {
+      "bytes": 5427,
+      "path": "tools/m1-content/import_interface_contracts.py",
+      "sha256": "89bbc35410544645c22bf3421b1dc88e76c0d05cb909c28b54a067d77a9bb6c9"
+    },
+    {
       "bytes": 5480,
       "path": "tools/m1-content/import_references.py",
       "sha256": "048c2cba6e9b08fa74923cc4b9ecd9458cc2df6a16670e757a5334e34c8e0acd"
@@ -8912,9 +8932,9 @@
       "sha256": "e52feb3a1c073a028196ac9741834e9faed21a96c2bbab92362594f8d80fd5d0"
     },
     {
-      "bytes": 21841,
+      "bytes": 23487,
       "path": "tools/m1-content/runtime_application.py",
-      "sha256": "28ff34d8cf58a91ff74d55e19976fcc85116fece6f97344eca1d7945cbdd9b11"
+      "sha256": "822b2f57a578feadb5b5575b6e9e87fc19d3210cdbc606db9381d613906476dc"
     },
     {
       "bytes": 10630,
@@ -8927,19 +8947,24 @@
       "sha256": "54aefc57e22fbdb17baaca58b671f256c38d5d46b06368239ce9fa8117d3376a"
     },
     {
-      "bytes": 5281,
+      "bytes": 5742,
       "path": "tools/m1-content/schema-check/src/main.rs",
-      "sha256": "cdb607a97da3a1227c2c136e01963bd77ca27bbb40d6c775600a2db6c8fce240"
+      "sha256": "8a20f7e9e91e23540751c36b5c8058639ff3841dca89a776211d9e1bb9287b6c"
     },
     {
-      "bytes": 12011,
+      "bytes": 12055,
       "path": "tools/m1-content/schema-check/src/probes.rs",
-      "sha256": "b2182f1633fc95db6b418cc954224e4ce512e168a8ab8a19f7df042f4f254137"
+      "sha256": "ff83ad69b4b5e6394a5606a16945cc015b96de8eb76cae3c5ca32370ca1b9157"
     },
     {
-      "bytes": 22787,
+      "bytes": 7589,
+      "path": "tools/m1-content/schema-check/src/ui_probes.rs",
+      "sha256": "622b9ca51516f5a7e4f0d392dac3bd9a1d64f64547450ae99cd100246f7d2c2f"
+    },
+    {
+      "bytes": 22615,
       "path": "tools/m1-content/selectors3.py",
-      "sha256": "e3e5f21b2ec3dd0b1ab526e20efd16bb9f1d2cb4e6adb97976e55d5a8015b00e"
+      "sha256": "74a3ccb50900cb41cf39fc162c39159ee00ee0129a689c545964c3b8b2a89a36"
     },
     {
       "bytes": 15187,
@@ -8952,24 +8977,19 @@
       "sha256": "c8bec318f80139cd2d852d775a85df47fdcf127539dd8e5dc8186805eeb640dd"
     },
     {
-      "bytes": 5779,
+      "bytes": 6439,
       "path": "tools/m1-content/test_asset_refresh.py",
-      "sha256": "8756f0ccb80ad6565a4e9e9ca6db21b9503999b9f29369f4b887fbaabd4bd3ac"
+      "sha256": "651d347ec67b07be1a2a435bb92bcf4a7e4bddf627e2dcbb788f7f8a915c32a5"
     },
     {
-      "bytes": 26359,
+      "bytes": 27167,
       "path": "tools/m1-content/test_content.py",
-      "sha256": "60ea4a595e22e0fe9e83997f63dec28df2f9278118ffb193b4e92357c68a9ac2"
-    },
-    {
-      "bytes": 4850,
-      "path": "tools/m1-content/test_dialogue_entries.py",
-      "sha256": "06651fa92d4ada8695c5d22451f1e8c2bbe67709d636388a74204140cde91b3b"
+      "sha256": "1c35e0dbc946992a8c6117d53802aa7f8d9cdc43c4ce4a8374e5bf06006116db"
     },
     {
       "bytes": 16071,
       "path": "tools/m1-content/test_runtime3.py",
-      "sha256": "12453407da26963bf40982b625f8934d9eda4572a6af9d799e615a929183baa0"
+      "sha256": "d9830959eda0f8e39deb335518dd6b8ea7d972e8e6586dfc3390dc7316471f2c"
     },
     {
       "bytes": 7779,
@@ -8987,14 +9007,19 @@
       "sha256": "f7a0176dd033cb96288c1d2def3aaf0f88a86ec7d15d04f6ea66b2c8c6b259c0"
     },
     {
+      "bytes": 17675,
+      "path": "tools/m1-content/ui4.py",
+      "sha256": "1fb0a89244a9371d9c5fd2979b11370febcd6593b14be0c19684b0dee760bd70"
+    },
+    {
       "bytes": 9277,
       "path": "tools/m1-content/validate.py",
       "sha256": "ae66c9dde337a0c47d8ec4c9e6cb034d4851e53c2b3af487e6307bb8b12a20fe"
     },
     {
-      "bytes": 16316,
+      "bytes": 17719,
       "path": "tools/m1-content/verify_assets.py",
-      "sha256": "4c1024cf3a12da249e554bbacd60dd59eca23a7801bdd4d11f9a729dd50fa570"
+      "sha256": "24868f290d94d1d6c27bafa66b15f9ffcbab6b669358749246bd00172a3268fc"
     },
     {
       "bytes": 15065,
@@ -9002,14 +9027,19 @@
       "sha256": "90e9e54178743f8c9bc05224526fe4ee536fc4d2eb69f6e20a77574d682b0e72"
     },
     {
-      "bytes": 13338,
+      "bytes": 13722,
       "path": "tools/m1-content/verify_runtime_bindings.py",
-      "sha256": "f7a0e098e2eaeab495c27eb41601ff24ff298fe64b38722200638ec7b0db96c8"
+      "sha256": "34e3f137a5a86f98f3dcde5fb6db9d776f0f77bcf0368d49b228c320981bcf99"
     },
     {
       "bytes": 9148,
       "path": "tools/m1-content/verify_state_oracles.py",
       "sha256": "a67632b643f8701d0ed6fb7881c78bdc670f144d97678785661a672cc3efa04c"
+    },
+    {
+      "bytes": 4505,
+      "path": "tools/m1-content/verify_ui4.py",
+      "sha256": "bbc3dbfd6a7c2e3e22567b2ddfe226f6d160baf9209d017fce7782149ce32f19"
     },
     {
       "bytes": 21043,

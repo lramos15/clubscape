@@ -22,9 +22,58 @@ filters remain UI filtering over complete authoritative data. Only declared
 appearance parameters and the approved penguin base are exposed; audio/minimap/
 preview controls retain their separate ownership.
 
-This commit publishes the contract before its consumers. Capability
-advertisement requires the subsequent engine/data/protocol implementation and
-validation; the types alone are not an implementation or acceptance claim.
+The engine and optional game service implement this contract. Protobuf
+`WorldSnapshot.ui` is field20; `WorldInput.ui` is field41.
+`GameplayUiRequest.expected_bank_revision` (field21) is a canonical decimal
+string, required only for bank controls. It guards the current **bank** revision
+inside the committing callback, after duplicate recovery. It is transport
+precondition metadata, not part of the intent hash. Whole-character revisions
+are unsuitable for this check because source playtime/passive ticks legitimately
+change them before queued input executes.
+
+`activeTab` retains the selected global tab; `activeInterface` identifies the
+current context/modal or selected tab. Closed contextual panels can be hidden
+while their source-owned open action is permitted (equipment statistics and
+normal death preview). Banks/shops/graves still require their actual interaction,
+not a global interface ID. `document` binds original text or a native map;
+`ui_document_page` and identity-bound dismissal do not grant items/progress.
+The additional inventory actions augment existing equip/eat/drop/use intents.
+
+Production menus retain target, instance, interface, allowed recipe set and
+stable identity; stale/retargeted selection fails. Source one-click milking
+starts its actual recipe without a fabricated menu. Production selections,
+item/container mutations and accepted destructive confirmations share normal
+source-tick admission. Presentation/preferences/public chat do not consume an
+action phase. All still use authenticated, sequenced, durable commands.
+
+Quest cards are bound to newly committed atomic entitlements and their exact
+source reward payload, followed by actual XP-derived level cards. Dismissal
+consumes only that presentation identity. Pending cards survive reconnect;
+old events/audio do not replay. Equipment/style/ability/weight and death/recovery
+views reuse immutable execution planners. Bank placeholders are non-spendable
+metadata over the same bank slots, with stable entry IDs and source capacity.
+They are never zero-quantity stacks or a second value store.
+
+Content/artifact **4** adds `GameContent.ui`; schema4 requires explicit `null`
+for a non-UI profile. Persisted envelope/runtime remain **1**, with UI state
+version **1**. `WorldRuntime.ui_version` distinguishes an explicitly migrated
+world from legacy absence. A missing character UI record in a versioned UI
+world is corruption, not permission to recreate history. Creation initializes
+metadata once through the source engine; explicit fenced migration initializes
+legacy bank layout without changing possessions, XP, claims, clocks or sequence.
+`GameStore::migrate_ui_content` audits the exact old/new artifact pins using
+`0005_game_content_migrations.sql`. A changed artifact is never silently swapped
+under a persistent world.
+
+Public chat uses authenticated sender identities, same-instance/plane locality,
+bounded printable CP1252 text and per-recipient committed event IDs/history.
+Control/rich-text tags and private-channel requests fail explicitly. Chat does
+not interrupt combat/movement or reuse an action cooldown. The selected source
+profile's tutorial restriction and qualified locality/admission bounds are in
+`research/interface-contracts/sources.json`; they are not observed build240
+packet behavior. Appearance remains only the declared body_type0/1 and approved
+penguin base2063. Renderer/audio interfaces and their acceptance gates are
+unchanged.
 
 This extends the working account service; it does not replace it or mark any
 M1 acceptance gate passed. Source selection may change under
@@ -183,11 +232,12 @@ than independently guessed by each content/runtime worker.
 
 ## Mechanics extension: content 3, persisted state 1/runtime 1
 
-`CONTENT_SCHEMA_VERSION = 3` versions immutable definitions.
+The selector extension was introduced in content3. The current
+`CONTENT_SCHEMA_VERSION = 4` additionally versions the authoritative UI profile.
 `GAME_SCHEMA_VERSION = 1` still versions the additive character/world envelope;
 it is not a content version or a protocol-version change.
 `RUNTIME_SCHEMA_VERSION = 1` versions the new `runtime` records. The compiler
-artifact and identity-digest domain are version 3. Recompile content-1/2 artifacts;
+artifact and identity-digest domain are version 4. Recompile content-1/2/3 artifacts;
 do not relabel their headers or manufacture missing source inputs.
 
 The authoritative Rust definitions are `game-types/src/mechanics.rs`, `execution.rs`,
@@ -440,8 +490,8 @@ validated content, alongside existing container/XP/navigation validation.
 Storage also validates shape/bounds and append-only reward ledgers.
 
 The executor implements the bound selectors, schedulers, effects, combat and
-death/recovery lifecycle. Integration still requires recompiling source content
-3 and wiring authoritative presence, requests and durable state/RNG ownership.
+death/recovery lifecycle. The integrated source server consumes content4 with
+authoritative presence, requests, durable state/RNG ownership and typed UI.
 Unresolved source bindings for departure, NPC variants/supplements, timing,
 valuation/overflow and exact arrivals remain source gates, not invented defaults.
 Source asset closure, presentation approval, browser/performance and RuneLite
@@ -449,7 +499,7 @@ acceptance remain separate.
 
 ### Final selector closure and wire requirements
 
-Content/artifact 3 deliberately rejects the old immutable shape rather than
+The content3 selector extension deliberately rejected the old immutable shape rather than
 silently upgrading policy values. Persisted envelopes and runtime remain version
 1 with additive defaults: absent contact/history/provenance/arrival fields mean
 legacy evidence is absent, not fresh contact or a newly earned entitlement.

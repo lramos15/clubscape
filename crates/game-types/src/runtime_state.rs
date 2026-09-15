@@ -213,6 +213,9 @@ pub struct CharacterRuntime {
     pub presence: PresenceState,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub played_time: Option<PlayedTime>,
+    /// Legacy absence is migrated from the actual bank/state, never fabricated history.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub ui: Option<GameplayUiRuntime>,
 }
 
 impl Default for CharacterRuntime {
@@ -240,6 +243,7 @@ impl Default for CharacterRuntime {
             last_active_tick: None,
             presence: PresenceState::Untracked,
             played_time: None,
+            ui: None,
         }
     }
 }
@@ -273,6 +277,9 @@ impl CharacterRuntime {
 
     pub fn validate_shape(&self) -> GameResult<()> {
         let tick = |tick: u64| tick <= i64::MAX as u64;
+        if let Some(ui) = &self.ui {
+            ui.validate_shape()?;
+        }
         match self.presence {
             PresenceState::Connected { joined_at_tick }
                 if !tick(joined_at_tick) || self.last_active_tick.is_none() =>
@@ -702,6 +709,8 @@ pub struct DeathRecord {
     pub office: Vec<RecoveryItem>,
     pub reclaimed: BTreeSet<RecoveryItemId>,
     #[serde(default)]
+    pub discarded: BTreeSet<RecoveryItemId>,
+    #[serde(default)]
     pub arrival: Option<DeathArrival>,
 }
 
@@ -709,6 +718,8 @@ pub struct DeathRecord {
 #[serde(deny_unknown_fields)]
 pub struct WorldRuntime {
     pub schema_version: u32,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub ui_version: Option<u32>,
     /// None is a legacy/unbound world, not an implicit free or members world.
     pub members: Option<bool>,
     pub counters: BTreeMap<CounterId, CounterValue>,
@@ -728,6 +739,7 @@ impl Default for WorldRuntime {
     fn default() -> Self {
         Self {
             schema_version: RUNTIME_SCHEMA_VERSION,
+            ui_version: None,
             members: None,
             counters: BTreeMap::new(),
             object_states: BTreeMap::new(),
@@ -745,6 +757,7 @@ impl Default for WorldRuntime {
 impl WorldRuntime {
     pub fn from_initial(content: &GameContent) -> Self {
         Self {
+            ui_version: content.ui.as_ref().map(|_| UI_STATE_VERSION),
             members: content.mechanics.world_members,
             counters: initial_counters(content, CounterScope::World),
             object_states: content

@@ -34,10 +34,12 @@ pub struct UiItem {
 #[serde(deny_unknown_fields)]
 pub struct GameplayUiView {
     pub version: u32,
+    pub active_tab: Option<InterfaceId>,
     pub active_interface: Option<InterfaceId>,
     pub production: Option<ProductionUiView>,
     pub reward: Option<RewardUiView>,
     pub confirmation: Option<ConfirmationUiView>,
+    pub document: Option<crate::DocumentUiView>,
     pub interfaces: Vec<InterfaceUiView>,
     pub combat_style: Option<String>,
     pub combat_styles: Vec<AbilityUiView>,
@@ -255,6 +257,13 @@ pub struct PublicChatLine {
 #[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(tag = "kind", rename_all = "snake_case", deny_unknown_fields)]
 pub enum GameplayUiRequest {
+    UiDocumentPage {
+        document_id: String,
+        page: u16,
+    },
+    BankPlaceholder {
+        entry_id: String,
+    },
     UiDismiss {
         presentation_id: String,
     },
@@ -323,4 +332,23 @@ pub enum GameplayUiRequest {
         channel: String,
         text: String,
     },
+}
+
+impl GameplayUiRequest {
+    pub fn requires_bank_revision(&self) -> bool {
+        matches!(
+            self,
+            Self::BankSelectTab { .. }
+                | Self::BankCreateTab { .. }
+                | Self::BankMove { .. }
+                | Self::BankCollapseTab { .. }
+                | Self::BankSetInsert { .. }
+                | Self::BankSetPlaceholders { .. }
+                | Self::BankReleasePlaceholder { .. }
+                | Self::BankPlaceholder { .. }
+                | Self::BankDepositEquipment
+                | Self::BankWithdrawEntry { .. }
+                | Self::BankSetOptions { .. }
+        )
+    }
 }

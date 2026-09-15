@@ -29,6 +29,11 @@ impl WorldEngine {
             events.extend(self.interrupt_travel(character, cause)?);
         }
         match intent {
+            GameIntent::Ui { .. } => {
+                return Err(invalid_state(
+                    "UI requests use the authoritative UI dispatcher.",
+                ));
+            }
             GameIntent::Walk {
                 destination,
                 running,
@@ -73,30 +78,17 @@ impl WorldEngine {
                 events.extend(self.select_dialogue(world, character, speaker, choice, rng)?)
             }
             GameIntent::OpenInterface { interface } => {
-                let definition = self
-                    .content
-                    .interfaces
-                    .get(interface)
-                    .ok_or_else(|| unknown("Unknown interface."))?;
-                if !character.interfaces.contains(interface) {
-                    return Err(GameError::new(
-                        GameErrorCode::RequirementNotMet,
-                        "Interface is locked.",
-                    ));
-                }
-                if definition.access != InterfaceAccess::Tab {
-                    return Err(unavailable(
-                        "Contextual interface requires a source interaction.",
-                    ));
-                }
+                let definition = self.open_interface_preconditions(world, character, interface)?;
                 self.close_interfaces(character, &mut events)?;
                 events.push(GameEvent::InterfaceOpened {
                     interface: interface.clone(),
                 });
-                events.push(GameEvent::InterfacePresented {
-                    interface: interface.clone(),
-                    context: InterfaceContext::Tab,
-                });
+                if definition.access == InterfaceAccess::Tab {
+                    events.push(GameEvent::InterfacePresented {
+                        interface: interface.clone(),
+                        context: InterfaceContext::Tab,
+                    });
+                }
             }
             GameIntent::CloseInterface => self.close_interfaces(character, &mut events)?,
             GameIntent::Equip { inventory_slot } => {
@@ -465,9 +457,29 @@ impl WorldEngine {
                 if recipes.is_empty() {
                     return Err(unavailable("No compiled production choices."));
                 }
-                frame.events.push(GameEvent::Message {
-                    text: "Select a permitted source recipe.".into(),
-                });
+                if self.content.ui.as_ref().is_some_and(|ui| {
+                    recipes.len() == 1 && ui.direct_production.contains(&recipes[0])
+                }) {
+                    self.start_selected_production(
+                        world,
+                        character,
+                        &recipes[0],
+                        Some(target.clone()),
+                        1,
+                        ProductionMode::Single,
+                    )?;
+                } else if self.content.ui.is_some() {
+                    frame.events.extend(self.open_production_menu(
+                        character,
+                        target,
+                        &interaction.name,
+                        recipes,
+                    )?);
+                } else {
+                    frame.events.push(GameEvent::Message {
+                        text: "Select a permitted source recipe.".into(),
+                    });
+                }
             }
             InteractionAction::Bank | InteractionAction::OpenBank { .. } => {
                 self.authorize(character, &["bank".into()])?;
@@ -567,6 +579,54 @@ impl WorldEngine {
         Ok(())
     }
 
+    pub(crate) fn open_interface_preconditions(
+        &self,
+        world: &WorldState,
+        character: &CharacterState,
+        interface: &InterfaceId,
+    ) -> GameResult<&InterfaceDefinition> {
+        let intent = GameIntent::OpenInterface {
+            interface: interface.clone(),
+        };
+        self.input_permission(character)?;
+        self.authorize_intent(character, &intent)?;
+        self.require_ui_modal_clear(character, &intent)?;
+        if let Some(ui) = &self.content.ui
+            && let Some(rule) = ui
+                .stage_interfaces
+                .get(&character.tutorial_stage)
+                .and_then(|states| states.iter().find(|state| &state.interface == interface))
+        {
+            if let Some(reason) = &rule.unavailable_reason {
+                return Err(unavailable(reason.clone()));
+            }
+            self.require_guard(world, character, &rule.guard)?;
+        }
+        let definition = self
+            .content
+            .interfaces
+            .get(interface)
+            .ok_or_else(|| unknown("Unknown interface."))?;
+        if !character.interfaces.contains(interface) {
+            return Err(GameError::new(
+                GameErrorCode::RequirementNotMet,
+                "Interface is locked.",
+            ));
+        }
+        if definition.access != InterfaceAccess::Tab
+            && !self
+                .content
+                .ui
+                .as_ref()
+                .is_some_and(|ui| &ui.equipment_stats_interface == interface)
+        {
+            return Err(unavailable(
+                "Contextual interface requires a source interaction.",
+            ));
+        }
+        Ok(definition)
+    }
+
     pub(crate) fn close_interfaces(
         &self,
         character: &mut CharacterState,
@@ -602,7 +662,27 @@ impl WorldEngine {
                 ContainerSession::Grave { interface, .. }
                 | ContainerSession::DeathOffice { interface },
             ) => Ok(Some(interface.clone())),
-            None => Ok(None),
+            None => Ok(character.runtime.ui.as_ref().and_then(|ui| {
+                ui.production
+                    .as_ref()
+                    .map(|menu| menu.interface.clone())
+                    .or_else(|| {
+                        ui.document
+                            .as_ref()
+                            .map(|document| document.interface.clone())
+                    })
+                    .or_else(|| ui.active_interface.clone())
+                    .or_else(|| {
+                        ui.death_preview.then(|| {
+                            self.content
+                                .ui
+                                .as_ref()
+                                .unwrap()
+                                .death_preview_interface
+                                .clone()
+                        })
+                    })
+            })),
         }
     }
 
@@ -997,7 +1077,7 @@ impl WorldEngine {
     }
 }
 
-fn removed_items(before: &Inventory, after: &Inventory) -> GameResult<Vec<ItemStack>> {
+pub(crate) fn removed_items(before: &Inventory, after: &Inventory) -> GameResult<Vec<ItemStack>> {
     let mut counts = std::collections::BTreeMap::<ItemId, i64>::new();
     for stack in before.slots.iter().flatten() {
         *counts.entry(stack.item.clone()).or_default() += i64::from(stack.quantity.get());

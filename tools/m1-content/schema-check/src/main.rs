@@ -10,6 +10,7 @@ use clubscape_game_types::{
 use clubscape_world_engine::{LifecycleTransition, RandomSource, WorldEngine};
 
 mod probes;
+mod ui_probes;
 
 struct NoRandom;
 
@@ -75,6 +76,15 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     world.validate_runtime(content)?;
     let before_query = world.clone();
     engine.context_view(&world, &actor)?;
+    let initial_ui = engine.ui_view(&world, &actor)?;
+    if initial_ui.version != 1
+        || initial_ui.appearance.confirmed
+        || initial_ui.public_chat.permission.allowed
+    {
+        return Err(
+            "Source initial UI fabricated confirmation or mainland chat availability".into(),
+        );
+    }
     engine.presence_view(&world, &actor)?;
     engine.target_view(
         &world,
@@ -98,6 +108,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         return Err("actual source appearance input did not follow its declared edge".into());
     }
     let native = probes::run(&engine)?;
+    let ui_native = ui_probes::run(&engine)?;
     println!(
         "{}",
         serde_json::json!({
@@ -113,6 +124,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
             "read_only_engine_views_preserved_state": true,
             "real_source_appearance_request_passed": true,
             "native_source_policy_probes": native,
+            "native_ui_control_probes": ui_native,
             "engine_api_scope": "Construction, authenticated-lifecycle boundary, read-only views and first source input only; not a full journey or browser/presentation acceptance.",
             "gameplay_executed": false,
             "revision": content.revision,
@@ -124,7 +136,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
             "recipes": content.recipes.len(),
         })
     );
-    if native["passed"] != true {
+    if native["passed"] != true || ui_native["passed"] != true {
         return Err("Native source-policy conformance failed; see the exact probe result.".into());
     }
     Ok(())

@@ -629,6 +629,17 @@ impl WorldEngine {
         storage: RecoveryStorage,
     ) -> GameResult<RecoveryView> {
         let character = self.query_actor(world, actor)?;
+        self.recovery_view_for(world, character, death, storage)
+    }
+
+    pub(crate) fn recovery_view_for(
+        &self,
+        world: &WorldState,
+        character: &CharacterState,
+        death: &DeathId,
+        storage: RecoveryStorage,
+    ) -> GameResult<RecoveryView> {
+        let actor = &character.actor_id;
         let record =
             world.runtime.deaths.get(death).ok_or_else(|| {
                 GameError::new(GameErrorCode::NotOwned, "Unknown recovery record.")

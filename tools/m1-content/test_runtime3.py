@@ -33,7 +33,7 @@ class Runtime3Tests(unittest.TestCase):
                    and model.guard(rule["guard"]) for rule in rules)
 
     def test_v3_and_every_new_selector_have_explicit_bound_values(self):
-        self.assertEqual(self.content["schema_version"], 3)
+        self.assertEqual(self.content["schema_version"], 4)
         for name in ("unarmed", "engagement"):
             self.assertEqual(self.mechanics["player_combat"][name]["status"], "bound")
         for npc in self.content["npcs"].values():

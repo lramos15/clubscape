@@ -59,6 +59,7 @@ impl WorldEngine {
             )
         })?;
         character.migrate_engine_metadata(&self.content)?;
+        self.prepare_ui(&mut character)?;
         let before = character.clone();
         let events = self.lifecycle_draft(&draft, &mut character, transition)?;
         self.check_reward_atomicity(&before, &character)?;
@@ -94,6 +95,7 @@ impl WorldEngine {
                 .remove(&actor)
                 .ok_or_else(|| invalid_state("Presence actor disappeared."))?;
             character.migrate_engine_metadata(&self.content)?;
+            self.prepare_ui(&mut character)?;
             let transition = if connected.contains(&actor) {
                 Some(LifecycleTransition::Rejoin)
             } else if matches!(

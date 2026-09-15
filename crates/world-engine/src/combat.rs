@@ -18,6 +18,64 @@ struct Strike<'a> {
     snapshot: Option<&'a ProjectileTargetSnapshot>,
 }
 
+impl WorldEngine {
+    pub(crate) fn spell_preconditions(
+        &self,
+        world: &WorldState,
+        character: &CharacterState,
+        id: &SpellId,
+    ) -> GameResult<()> {
+        let spell = self
+            .content
+            .mechanics
+            .spells
+            .get(id)
+            .ok_or_else(|| unknown("Unknown spell."))?;
+        if !character.interfaces.contains(&spell.interface) {
+            return Err(GameError::new(
+                GameErrorCode::RequirementNotMet,
+                "Spell interface is locked.",
+            ));
+        }
+        self.requirements(character, &spell.requirements)?;
+        self.require_guard(world, character, &spell.guard)?;
+        clubscape_simulation::inventory::remove_batch(
+            &mut character.inventory.clone(),
+            &self.content.items,
+            &spell.runes,
+        )?;
+        match &spell.action {
+            SpellAction::Combat { .. } => self.combat_phase_ready(world.tick, character)?,
+            SpellAction::Teleport { travel } => self.travel_permission(world, character, travel)?,
+        }
+        Ok(())
+    }
+
+    fn combat_phase_ready(&self, tick: u64, character: &CharacterState) -> GameResult<()> {
+        if !matches!(character.runtime.life, LifeState::Alive | LifeState::Legacy)
+            || character.hitpoints == 0
+        {
+            return Err(GameError::new(
+                GameErrorCode::RequirementNotMet,
+                "This life state cannot attack.",
+            ));
+        }
+        if tick
+            < character
+                .runtime
+                .combat
+                .attack_ready
+                .max(character.runtime.combat.spell_ready)
+        {
+            return Err(GameError::new(
+                GameErrorCode::Busy,
+                "Source attack cooldown is not ready.",
+            ));
+        }
+        Ok(())
+    }
+}
+
 pub(crate) enum CombatLock {
     State,
     Logout,
@@ -153,7 +211,7 @@ impl WorldEngine {
         Ok(())
     }
 
-    fn equipped_weapon<'a>(
+    pub(crate) fn equipped_weapon<'a>(
         &'a self,
         character: &CharacterState,
         style: &CombatStyleId,
@@ -255,14 +313,7 @@ impl WorldEngine {
             .spells
             .get(id)
             .ok_or_else(|| unknown("Unknown spell."))?;
-        if !character.interfaces.contains(&spell.interface) {
-            return Err(GameError::new(
-                GameErrorCode::RequirementNotMet,
-                "Spell interface is locked.",
-            ));
-        }
-        self.requirements(character, &spell.requirements)?;
-        self.require_guard(world, character, &spell.guard)?;
+        self.spell_preconditions(world, character, id)?;
         match &spell.action {
             SpellAction::Combat { style, .. } => {
                 let target =
@@ -303,26 +354,7 @@ impl WorldEngine {
         if spell_id.is_none() {
             self.attack_permission(world, character, target)?;
         }
-        if !matches!(character.runtime.life, LifeState::Alive | LifeState::Legacy)
-            || character.hitpoints == 0
-        {
-            return Err(GameError::new(
-                GameErrorCode::RequirementNotMet,
-                "This life state cannot attack.",
-            ));
-        }
-        if world.tick
-            < character
-                .runtime
-                .combat
-                .attack_ready
-                .max(character.runtime.combat.spell_ready)
-        {
-            return Err(GameError::new(
-                GameErrorCode::Busy,
-                "Source attack cooldown is not ready.",
-            ));
-        }
+        self.combat_phase_ready(world.tick, character)?;
         let mut spent = Vec::new();
         let (weapon, projectile_id, launch_xp) = if let Some(spell_id) = spell_id {
             self.authorize(character, &["cast".into(), format!("cast:{spell_id}")])?;
@@ -745,7 +777,7 @@ impl WorldEngine {
         source_math::maximum_accuracy_roll(self.effective(character, formula)?, bonus)
     }
 
-    fn equipment_bonus(
+    pub(crate) fn equipment_bonus(
         &self,
         character: &CharacterState,
         project: impl Fn(&CombatBonuses) -> i32,

@@ -1,0 +1,94 @@
+{
+  "schema_version": 1,
+  "task": "m1-gameplay-ui-contracts",
+  "shared_contract_commit": "e48e6f52d68aa97fbbb4f5664bf6e1c5ef7e71e8",
+  "implementation_verified": true,
+  "overall_status": "blocked_required_asset_publication",
+  "versions": {
+    "content": 4,
+    "artifact": 4,
+    "persisted_state": 1,
+    "runtime": 1,
+    "ui_state": 1,
+    "ui_view": 1,
+    "capability": "game.ui.v1"
+  },
+  "artifact": {
+    "path": "content/m1/game-content.csc.gz",
+    "raw_sha256": "8f33a4a41aa378bc73489f59aa8d77588f047b3bb9ca63a77e411416abcc54fa",
+    "compressed_sha256": "204b62035cd25a81b28864abdba4ab6fc04db994cf1c484b2c8288ca402d1df3",
+    "strict_runtime_compile": true,
+    "strict_reload": true,
+    "byte_identical_outputs_across_two_builds": 83,
+    "asset_closure_passed": false
+  },
+  "validation": {
+    "native": {
+      "command": "cargo test -p clubscape-game-types -p clubscape-simulation -p clubscape-world-engine -p clubscape-content -p clubscape-protocol -p clubscape-server -p clubscape-client-core --all-targets --quiet",
+      "binaries": 41,
+      "passed": 523,
+      "failed": 0,
+      "ignored_postgresql_tests": 38
+    },
+    "postgresql_http": {
+      "command": "python3 /home/lramos15/clubscape/tools/dev.py integration --workspace /home/lramos15/clubscape/.worktrees/m1-gameplay-ui-contracts --report .local/evidence/m1-gameplay-ui-contracts.json",
+      "passed": 38,
+      "new_ui_integration_cases": 5,
+      "independent_account_client_checks": 11,
+      "owned_server_container_database_cleaned_up": true
+    },
+    "source_tests": {
+      "command": "python3 -m unittest discover -s tools/m1-content -p 'test_*.py'",
+      "passed": 64,
+      "source_bindings_preserved": 104,
+      "coupled_updates_preserved": 7,
+      "loot_joint_vectors": 8192,
+      "currency_vectors": 5,
+      "active_unresolved_bindings": 0,
+      "proof_scoped_inactive_bindings": 6
+    },
+    "canonical_engine_ui_probes": {
+      "report": "research/m1-bindings/schema-validation.json#native_ui_control_probes",
+      "immutable_semantic_states": 71,
+      "source_body_types": [0, 1],
+      "approved_source_npc": 2063,
+      "selected_original_potion_doses": 4,
+      "run_units_per_dose": 1500,
+      "independent_drink_ticks": 3,
+      "selected_burial_ticks": 2,
+      "selected_burial_xp_tenths": 45,
+      "source_menu_single_ticks": 1,
+      "source_menu_make_x_one_ticks": 3,
+      "passed": true,
+      "scope": "Real unmodified source content and engine on controlled component preconditions; not a fresh journey."
+    },
+    "cargo_fmt_check": "passed",
+    "native_clippy_all_targets_warnings_denied": "passed",
+    "wasm32_libraries_compile_and_clippy_warnings_denied": "passed",
+    "shared_typescript_strict_typecheck": "passed"
+  },
+  "required_asset_publication": {
+    "item_ids": [229, 230, 1919, 1920],
+    "model_ids": [561, 2548, 2747, 8234],
+    "source_definitions": "research/m1-bindings/ui-item-definitions.json.gz",
+    "definition_import_sha256": "27d6b60e109a5a42cdbf704aaf4b882403aa4ea37a2cfa80944a79027e444014",
+    "build_check_and_asset_verifier_exit": 1,
+    "policy": "Publish and validate original source assets, then regenerate. No null icons, substituted models, removed source outcomes or relaxed startup checks."
+  },
+  "caller_contract": {
+    "view": "WorldSnapshot.ui / WorldView.ui version1, capability game.ui.v1",
+    "input": "WorldInput.ui / GameplayUiIntent; ordinary operation UUID and contiguous sequence",
+    "bank_precondition": "GameplayUiRequest.expected_bank_revision must echo ui.bank.revision as a decimal string; validated after duplicate receipt lookup",
+    "migration": "Stop the coordinator; configure a complete target game root; cargo run --locked -p clubscape-server -- migrate-ui --from <exact-old-raw-artifact-sha256>",
+    "migration_audit": "0005_game_content_migrations.sql",
+    "preserved": "Items, XP, entitlements, clocks, sequences, private RNG, acknowledged receipts, account-only mode, renderer/audio ABI and unchanged source gameplay checkpoints."
+  },
+  "acceptance": {
+    "full_fresh_account_journey": false,
+    "browser_presentation": false,
+    "audio_presentation": false,
+    "performance": false,
+    "owner_m1_acceptance": false,
+    "milestone_accepted": false
+  }
+}

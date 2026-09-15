@@ -235,6 +235,31 @@ def classify_residuals(content, resolutions):
                           if spawn["kind"]["kind"] == "item"}
     shop_stock = {row["item"] for shop in content["shops"].values() for row in shop["stock"]}
     ordinary_acquired |= source_item_spawns | shop_stock
+    introduced_instances = False
+    def collect_effects(value):
+        nonlocal introduced_instances
+        if isinstance(value, dict):
+            if value.get("kind") == "give_items":
+                ordinary_acquired.update(stack["item"] for stack in value["items"])
+                introduced_instances |= any(stack.get("instance") is not None for stack in value["items"])
+            for child in value.values():
+                collect_effects(child)
+        elif isinstance(value, list):
+            for child in value:
+                collect_effects(child)
+    for field in ("spawns", "dialogues", "tutorial", "quests", "recipes", "mechanics"):
+        collect_effects(content[field])
+    changed = True
+    while changed:
+        before = set(ordinary_acquired)
+        for identifier in before:
+            item = content["items"][identifier]
+            ordinary_acquired.update(value for value in (item["noted_variant"], item["unnoted_variant"]) if value)
+            for action in (content.get("ui") or {}).get("item_actions", {}).get(identifier, []):
+                if action["action"]["kind"] in ("drink", "empty"):
+                    ordinary_acquired.add(action["action"]["replacement"])
+        changed = ordinary_acquired != before
+    conditional = {item for item, definition in content["items"].items() if isinstance(definition["stackable"], dict)}
     active, inactive = [], []
     module = source_applier()
     for path, value in remaining:
@@ -257,12 +282,15 @@ def classify_residuals(content, resolutions):
                          "precondition": "Recheck if depletion or relocation starts reading this policy."}
             elif group == "office_capacity_unreachable":
                 capacity = content["mechanics"]["death"]["office_capacity"]
-                if len(content["items"]) > capacity:
+                excluded = conditional - ordinary_acquired
+                upper_bound = len(content["items"]) - len(excluded)
+                if upper_bound > capacity:
                     raise ValueError("Item universe exceeds the conditional Office capacity proof")
-                if any(content["items"][item]["charges"] is not None or isinstance(content["items"][item]["stackable"], dict)
+                if introduced_instances or any(content["items"][item]["charges"] is not None or isinstance(content["items"][item]["stackable"], dict)
                        for item in ordinary_acquired):
                     raise ValueError("Ordinary item instances invalidate Office merge/capacity proof")
                 proof = {"represented_item_keys": len(content["items"]), "office_capacity": capacity,
+                         "ordinary_item_key_upper_bound": upper_bound, "excluded_unacquired_conditional_keys": sorted(excluded),
                          "ordinary_acquired_instance_items": 0,
                          "precondition": "Office must merge ordinary non-instanced item keys. Recheck on universe, acquisition "
                                          "or instance/merge-rule changes; never unconditionally discard overflow."}

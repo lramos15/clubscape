@@ -9,6 +9,7 @@ mod numeric_keys;
 mod runtime_state;
 mod runtime_validation;
 mod state;
+mod ui_state;
 
 pub use content::*;
 pub use error::*;
@@ -19,10 +20,11 @@ pub use intent::*;
 pub use mechanics::*;
 pub use runtime_state::*;
 pub use state::*;
+pub use ui_state::*;
 
 /// The additive persisted world/character envelope; not the content format.
 pub const GAME_SCHEMA_VERSION: u32 = 1;
-pub const CONTENT_SCHEMA_VERSION: u32 = 3;
+pub const CONTENT_SCHEMA_VERSION: u32 = 4;
 pub const RUNTIME_SCHEMA_VERSION: u32 = 1;
 pub const TICK_MILLISECONDS: u64 = 600;
 pub const INVENTORY_SLOTS: usize = 28;

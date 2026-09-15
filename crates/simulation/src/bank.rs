@@ -51,6 +51,18 @@ pub fn deposit(
     inventory_slot: usize,
     quantity: Quantity,
 ) -> GameResult<ItemStack> {
+    let mut draft = character.clone();
+    let result = deposit_inner(&mut draft, content, inventory_slot, quantity)?;
+    *character = draft;
+    Ok(result)
+}
+
+fn deposit_inner(
+    character: &mut CharacterState,
+    content: &GameContent,
+    inventory_slot: usize,
+    quantity: Quantity,
+) -> GameResult<ItemStack> {
     inventory::validate(&character.inventory, &content.items)?;
     validate(&character.bank, &content.items)?;
     let selected = inventory::stack_at(&character.inventory, inventory_slot)?.clone();
@@ -87,15 +99,35 @@ pub fn deposit(
             },
         )?;
     }
-    add_to_bank(&mut bank, &deposited)?;
+    add_to_bank(
+        &mut bank,
+        &deposited,
+        character.runtime.ui.as_ref().map(|ui| &ui.bank),
+    )?;
     character.inventory = inventory;
     character.bank = bank;
+    if let Some(ui) = &mut character.runtime.ui {
+        super::bank_layout::reconcile(&character.bank, &mut ui.bank, true)?;
+    }
     Ok(deposited)
 }
 
 /// Withdraws exactly the requested quantity or changes nothing.
 /// `noted = true` requires an explicit note mapping; it never silently changes form.
 pub fn withdraw(
+    character: &mut CharacterState,
+    content: &GameContent,
+    bank_slot: usize,
+    quantity: Quantity,
+    noted: bool,
+) -> GameResult<ItemStack> {
+    let mut draft = character.clone();
+    let result = withdraw_inner(&mut draft, content, bank_slot, quantity, noted)?;
+    *character = draft;
+    Ok(result)
+}
+
+fn withdraw_inner(
     character: &mut CharacterState,
     content: &GameContent,
     bank_slot: usize,
@@ -149,6 +181,9 @@ pub fn withdraw(
         .ok_or_else(|| invalid_slot(bank_slot))? = replacement;
     character.inventory = inventory;
     character.bank = bank;
+    if let Some(ui) = &mut character.runtime.ui {
+        super::bank_layout::reconcile(&character.bank, &mut ui.bank, true)?;
+    }
     Ok(withdrawn)
 }
 
@@ -167,7 +202,11 @@ fn stack_at(bank: &Bank, slot: usize) -> GameResult<&ItemStack> {
         })
 }
 
-fn add_to_bank(bank: &mut Bank, stack: &ItemStack) -> GameResult<()> {
+fn add_to_bank(
+    bank: &mut Bank,
+    stack: &ItemStack,
+    layout: Option<&clubscape_game_types::BankLayout>,
+) -> GameResult<()> {
     if let Some(stored) = bank
         .slots
         .iter_mut()
@@ -175,15 +214,110 @@ fn add_to_bank(bank: &mut Bank, stack: &ItemStack) -> GameResult<()> {
         .find(|stored| stored.item == stack.item)
     {
         stored.quantity = add_quantities(stored.quantity, stack.quantity)?;
-    } else if let Some(slot) = bank.slots.iter_mut().find(|slot| slot.is_none()) {
-        *slot = Some(stack.clone());
-    } else if bank.slots.len() < usize::from(bank.capacity) {
-        bank.slots.push(Some(stack.clone()));
+    } else if let Some(entry) = layout.and_then(|layout| {
+        layout
+            .entries
+            .iter()
+            .find(|entry| entry.placeholder && entry.item == stack.item)
+    }) {
+        let index = usize::from(entry.slot);
+        if bank.slots.len() <= index {
+            bank.slots.resize(index + 1, None);
+        }
+        bank.slots[index] = Some(stack.clone());
+    } else if let Some(index) = (0..usize::from(bank.capacity)).find(|index| {
+        bank.slots.get(*index).is_none_or(Option::is_none)
+            && layout.is_none_or(|layout| {
+                !layout
+                    .entries
+                    .iter()
+                    .any(|entry| usize::from(entry.slot) == *index && entry.placeholder)
+            })
+    }) {
+        if bank.slots.len() <= index {
+            bank.slots.resize(index + 1, None);
+        }
+        bank.slots[index] = Some(stack.clone());
     } else {
         return Err(GameError::new(
             GameErrorCode::InventoryFull,
             "Bank has reached its explicit slot capacity.",
         ));
+    }
+
+    Ok(())
+}
+
+pub struct EquipmentDepositPlan {
+    pub character: CharacterState,
+    pub transferred: Vec<ItemStack>,
+}
+
+/// Ordered per-slot plans; failed slots retain their entire owned stack.
+pub fn plan_equipment_deposit(
+    character: &CharacterState,
+    content: &GameContent,
+) -> GameResult<EquipmentDepositPlan> {
+    if character.equipment.is_empty() {
+        return Err(GameError::new(
+            GameErrorCode::NotOwned,
+            "There are no equipped items to deposit.",
+        ));
+    }
+    super::equipment::validate(&character.equipment, content)?;
+    validate(&character.bank, &content.items)?;
+    let mut draft = character.clone();
+    let mut moved = Vec::new();
+    for slot in &content.equipment_slots {
+        let Some(stack) = draft.equipment.get(slot).cloned() else {
+            continue;
+        };
+        let mut bank = draft.bank.clone();
+        match add_to_bank(
+            &mut bank,
+            &stack,
+            draft.runtime.ui.as_ref().map(|ui| &ui.bank),
+        ) {
+            Ok(()) => {
+                draft.bank = bank;
+                draft.equipment.remove(slot);
+                if let Some(ui) = &mut draft.runtime.ui {
+                    super::bank_layout::reconcile(&draft.bank, &mut ui.bank, true)?;
+                }
+                moved.push(stack);
+            }
+            Err(error)
+                if matches!(
+                    error.code,
+                    GameErrorCode::InventoryFull | GameErrorCode::StackOverflow
+                ) => {}
+            Err(error) => return Err(error),
+        }
+    }
+    if moved.is_empty() && !character.equipment.is_empty() {
+        return Err(GameError::new(
+            GameErrorCode::InventoryFull,
+            "No equipped item fits in the bank.",
+        ));
+    }
+    Ok(EquipmentDepositPlan {
+        character: draft,
+        transferred: moved,
+    })
+}
+
+pub fn deposit_equipment(
+    character: &mut CharacterState,
+    content: &GameContent,
+) -> GameResult<Vec<ItemStack>> {
+    let plan = plan_equipment_deposit(character, content)?;
+    *character = plan.character;
+    Ok(plan.transferred)
+}
+
+pub fn reconcile_ui(character: &mut CharacterState, changed: bool) -> GameResult<()> {
+    if let Some(ui) = &mut character.runtime.ui {
+        super::bank_layout::reconcile(&character.bank, &mut ui.bank, changed)?;
     }
     Ok(())
 }

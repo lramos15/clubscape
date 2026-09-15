@@ -10,6 +10,15 @@ pub(crate) fn discard_rules(mut content: GameContent) {
     let mut guards = Vec::new();
     let mut effects = Vec::new();
     let mut loot = Vec::new();
+    if let Some(ui) = &mut content.ui {
+        guards.push(std::mem::replace(&mut ui.chat.guard, Guard::Always));
+        for rule in ui.stage_interfaces.values_mut().flatten() {
+            guards.push(std::mem::replace(&mut rule.guard, Guard::Always));
+        }
+        for action in ui.item_actions.values_mut().flatten() {
+            guards.push(std::mem::replace(&mut action.guard, Guard::Always));
+        }
+    }
     for traversal in content.mechanics.traversal.values_mut() {
         guards.push(std::mem::replace(&mut traversal.guard, Guard::Always));
     }
@@ -156,6 +165,21 @@ enum Work<'a> {
 /// Iterative preflight runs before any recursive rule processing or serialization.
 pub(super) fn scan(content: &GameContent) -> GameResult<Scan> {
     let mut pending = Vec::new();
+    if let Some(ui) = &content.ui {
+        pending.push(Work::Guard(&ui.chat.guard, 1));
+        pending.extend(
+            ui.stage_interfaces
+                .values()
+                .flatten()
+                .map(|rule| Work::Guard(&rule.guard, 1)),
+        );
+        pending.extend(
+            ui.item_actions
+                .values()
+                .flatten()
+                .map(|action| Work::Guard(&action.guard, 1)),
+        );
+    }
     for traversal in content.mechanics.traversal.values() {
         pending.push(Work::Guard(&traversal.guard, 1));
     }

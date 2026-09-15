@@ -1,4 +1,5 @@
 #![allow(dead_code)]
+pub mod ui;
 
 use std::collections::BTreeMap;
 
@@ -551,6 +552,7 @@ pub fn fixture() -> GameContent {
     };
     GameContent {
         schema_version: CONTENT_SCHEMA_VERSION,
+        ui: None,
         revision: "synthetic-v1".into(),
         baseline: "fixture:strict-content-v1".into(),
         items,

@@ -1,0 +1,109 @@
+{
+  "acceptance": {
+    "milestone_accepted": false,
+    "observed_gameplay": false
+  },
+  "attribution": "OSRS Wiki facts/transcript: CC BY-NC-SA 3.0, source URLs/revisions above. Native identifiers/metadata: pinned RuneLite source and approved reference pack.",
+  "bank_maximum_extra_tabs": 9,
+  "bones_xp_tenths": 45,
+  "bury_ticks": 2,
+  "coffer": {
+    "credit_denominator": 100,
+    "credit_numerator": 105,
+    "maximum_balance": 2147483647,
+    "minimum_exchange_value": 10000
+  },
+  "drink_cooldown_ticks": 3,
+  "energy_restore_units": 1500,
+  "notes": [
+    "Energy is 15% (not obsolete 10%) at source revision15320560; each dose changes only the selected ordinary item.",
+    "Potion timer is independent of food; it does not set a food attack delay.",
+    "Beer source effects are HP+1, Strength+floor(base*2/100)+1, Attack drain floor(current*6/100)+1; the drink-timer grouping is a qualified shared-drink inference, not an observed beer packet trace.",
+    "Bank insert/swap/9 extra tabs/placeholders/deposit-worn are source controls. Initial swap/placeholders-off are explicit native-default inferences, not invented account permissions.",
+    "Coffer credit uses separately captured exchange values, not the max(exchange,alchemy) death-retention table. Coins are not a deposit mechanism; eligible ordinary M1 items are selected explicitly.",
+    "Public chat is unavailable on Tutorial Island; only normal public channel is enabled. Text/audience/admission bounds remain explicitly qualified transport policy.",
+    "BOOK392 and LEVELUP_DISPLAY233 are exact pinned native symbols. AIDE_MAP615 has original tutor/toggle children matching the newcomer map; this linkage is source-supported inference, not the incorrect old539 claim (539 is RAIDS_REWARDS).",
+    "No source visibility is guessed from a numeric varp281 or from unmentioned controls in the11 approved signatures."
+  ],
+  "schema_version": 1,
+  "security_book_pages": [
+    "<col=00007f>Account Tips</col><br><br>Upgrade to a <col=7f0000>Jagex Account</col>, if you haven't already done so.<br><br>These use <col=7f0000>two-factor verification</col> to keep people out of your account, even if they somehow learn your password.<br><br>Ensure your <col=7f0000>email account</col> is properly secure too, with its own <col=7f0000>two-factor verification</col>.",
+    "<col=00007f>Password Tips</col><br><br>A good password should be easy for <col=7f0000>you</col> to remember, but hard for <col=7f0000>anyone else</col> to guess.<br><br>Choose a password containing both <col=7f0000>letters</col> and <col=7f0000>numbers</col>, but don't make it so hard that you'll forget it!<br><br>Never <col=7f0000>write</col> your password down or <col=7f0000>save it</col> in a text file on your device, as someone could find it.<br><br>Never give your password to <col=7f0000>anyone</col>. This includes your friends, family and moderators in the game.<br><br>Nor should you give anyone your account info on <col=7f0000>social media</col>, even if they claim they can help you with RuneScape.",
+    "<col=00007f>Other Security Tips</col><br><br>Set a <col=7f0000>Bank PIN</col> to help protect your banked items, in case someone gets into your account.<br><br>To set a Bank PIN, speak to a <col=7f0000>banker</col> and ask to check your <col=7f0000>PIN settings</col>.<br><br>Never leave your account logged in while you're <col=7f0000>away from your device</col>, as it only takes a few seconds to steal or ruin your account!",
+    "<col=00007f>Stronghold of Security</col><br><br>The Stronghold of Security is located under the <col=7f0000>Barbarian Village</col> in Misthalin, west of <col=7f0000>Varrock</col>.<br><br>It was discovered by accident, when a miner fell through the ground into a previously unexplored cave.<br><br>The Stronghold contains many challenges, both for those who enjoy <col=7f0000>combat</col> and for those who enjoy challenges of the <col=7f0000>mind</col>.<br><br>This book's guidance may be useful to you as you delve into the Stronghold.<br><br>You can find the Stronghold of Security by looking for a <col=7f0000>hole</col> in the middle of the <col=7f0000>Barbarian Village</col>.<br><br>Be sure to take your <col=7f0000>combat equipment</col> though!"
+  ],
+  "sources": {
+    "Bank": {
+      "page": "Bank",
+      "revision": 15315062,
+      "sha256": "9a5a3fd1b7ed21e35f5849026ec588cf947fc072ba6286738019101d8f51d3d9",
+      "url": "https://oldschool.runescape.wiki/w/Bank?oldid=15315062"
+    },
+    "Beer": {
+      "page": "Beer",
+      "revision": 15304450,
+      "sha256": "daa76149079a04f862d8bf3772359b7f8a0c7dccd76944dd28824a8b44c18d0d",
+      "url": "https://oldschool.runescape.wiki/w/Beer?oldid=15304450"
+    },
+    "Bones": {
+      "page": "Bones",
+      "revision": 15327876,
+      "sha256": "88e1185ce479685e9e377fdbc519d1aef6c7153b0098a4690006550e7cbd0ee4",
+      "url": "https://oldschool.runescape.wiki/w/Bones?oldid=15327876"
+    },
+    "Chat_Interface": {
+      "page": "Chat_Interface",
+      "revision": 15318106,
+      "sha256": "d6a80f8ba395ead98a7994114b66c411f4bfe5c3c61113060e9de273ee7aaae8",
+      "url": "https://oldschool.runescape.wiki/w/Chat_Interface?oldid=15318106"
+    },
+    "Death%27s_Coffer": {
+      "page": "Death%27s_Coffer",
+      "revision": 15310867,
+      "sha256": "0af282bc3570338f9483c42248f4bedb26d65b8a08518f1451d31094160882be",
+      "url": "https://oldschool.runescape.wiki/w/Death%27s_Coffer?oldid=15310867"
+    },
+    "Energy_potion": {
+      "page": "Energy_potion",
+      "revision": 15320560,
+      "sha256": "c1f78e087b5c54d1a8b258f1068eb45c13ac034eceec6151535893c09342c067",
+      "url": "https://oldschool.runescape.wiki/w/Energy_potion?oldid=15320560"
+    },
+    "Game_tick/Action_lengths": {
+      "page": "Game_tick/Action_lengths",
+      "revision": 15319478,
+      "sha256": "45e93f07d6c0b1fc6b996186e44d2b3a333a986767e5b7691c5ffd57ae6730a7",
+      "url": "https://oldschool.runescape.wiki/w/Game_tick/Action_lengths?oldid=15319478"
+    },
+    "Newcomer_map": {
+      "page": "Newcomer_map",
+      "revision": 15343089,
+      "sha256": "756d52eb8e64b41afdb626a8fd030b3efe39a2e8a3da763c6d5745effda25b81",
+      "url": "https://oldschool.runescape.wiki/w/Newcomer_map?oldid=15343089"
+    },
+    "Potions": {
+      "page": "Potions",
+      "revision": 15315536,
+      "sha256": "044a04a0469e638dec889dc737beaaa5d4c2a41edd8ee9228b9427548d57191c",
+      "url": "https://oldschool.runescape.wiki/w/Potions?oldid=15315536"
+    },
+    "Security_book": {
+      "page": "Security_book",
+      "revision": 15282321,
+      "sha256": "01a95d6dab01d5195b882662a2bb2dad7a8760c101978b74df8d84ad9987781b",
+      "url": "https://oldschool.runescape.wiki/w/Security_book?oldid=15282321"
+    },
+    "Transcript:Security_book": {
+      "page": "Transcript:Security_book",
+      "revision": 14517749,
+      "sha256": "38ff8578311548798fbc9969e599ed8eb812433005a37b29cc698bff29031d8c",
+      "url": "https://oldschool.runescape.wiki/w/Transcript:Security_book?oldid=14517749"
+    },
+    "Tutorial_Island": {
+      "page": "Tutorial_Island",
+      "revision": 15275369,
+      "sha256": "401c0e74e7765398fb19519c2f4a92c2bd361cf8904f9fe5d94f9885d2eccc79",
+      "url": "https://oldschool.runescape.wiki/w/Tutorial_Island?oldid=15275369"
+    }
+  }
+}

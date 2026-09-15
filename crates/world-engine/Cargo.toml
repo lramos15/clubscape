@@ -11,6 +11,7 @@ clubscape-simulation = { path = "../simulation" }
 serde.workspace = true
 
 [dev-dependencies]
+clubscape-content = { path = "../content" }
 serde_json.workspace = true
 
 [lints]

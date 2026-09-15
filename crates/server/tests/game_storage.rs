@@ -155,7 +155,8 @@ impl TestDatabase {
         assert_eq!(database, TEST_DATABASE);
         assert_eq!(schema, "public");
         sqlx::raw_sql(
-            "DROP TABLE IF EXISTS public.game_lifecycle_commands;
+            "DROP TABLE IF EXISTS public.game_content_migrations;
+             DROP TABLE IF EXISTS public.game_lifecycle_commands;
              DROP TABLE IF EXISTS public.processed_game_commands;
              DROP TABLE IF EXISTS public.game_sessions;
              DROP TABLE IF EXISTS public.game_characters;
@@ -984,7 +985,7 @@ async fn world_initialization_and_source_character_creation_are_atomic_and_never
         .fetch_one(&database.pool)
         .await
         .unwrap();
-    assert_eq!(migration_count, 4);
+    assert_eq!(migration_count, 5);
     let initial = database.store.load_world(database.world_id).await.unwrap();
     let copies = join_all((0..8).map(|_| {
         database

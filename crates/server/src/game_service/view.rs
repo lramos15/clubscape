@@ -482,6 +482,13 @@ pub(super) fn snapshot(
     }
     entities.sort_by(|a, b| a.id.cmp(&b.id));
     let result = game::WorldSnapshot {
+        ui: if content.ui.is_some() {
+            Some(super::ui_wire::view(
+                engine.ui_view(&world.state, actor).map_err(engine_error)?,
+            )?)
+        } else {
+            None
+        },
         revision: world.state.revision,
         tick: world.state.tick,
         character_revision,
@@ -665,7 +672,7 @@ fn permission(view: &clubscape_world_engine::Permission) -> game::Permission {
     }
 }
 
-fn denial(error: &GameError) -> game::RuleDenial {
+pub(super) fn denial(error: &GameError) -> game::RuleDenial {
     use game::RuleErrorCode as Code;
     let (code, message) = match error.code {
         GameErrorCode::InvalidInput => (Code::InvalidInput, "Invalid selection."),
@@ -749,6 +756,10 @@ pub(super) fn event(value: &CommittedActorEvent) -> game::Event {
         ..Default::default()
     };
     match &value.event {
+        GameEvent::PublicChat { line } => {
+            result.public_chat = Some(super::ui_wire::chat(line.clone()));
+            result.text = line.text.clone();
+        }
         GameEvent::Message { text }
         | GameEvent::Inspected {
             explanation: text, ..
@@ -842,6 +853,7 @@ fn tile(value: Tile) -> game::Tile {
 
 fn activity(value: &Activity) -> &'static str {
     match value {
+        Activity::InventoryAction { .. } => "item_action",
         Activity::Idle => "idle",
         Activity::Walking { .. } => "walking",
         Activity::Gathering { .. } => "gathering",

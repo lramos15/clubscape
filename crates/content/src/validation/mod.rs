@@ -3,6 +3,7 @@ mod execution;
 mod graphs;
 mod mechanics;
 mod rules;
+mod ui;
 mod world;
 
 pub(crate) use rules::discard_rules;
@@ -40,7 +41,7 @@ pub(crate) fn validate(content: &GameContent, mode: ValidationMode) -> GameResul
     if content.schema_version != CONTENT_SCHEMA_VERSION {
         return Err(invalid(
             "schema_version",
-            "only GameContent schema version 3 is supported; explicitly migrate and recompile older definitions",
+            "only GameContent schema version 4 is supported; explicitly migrate and recompile older definitions",
         ));
     }
     identity(&content.revision, "revision")?;
@@ -93,6 +94,7 @@ pub(crate) fn validate(content: &GameContent, mode: ValidationMode) -> GameResul
     let dialogue_nodes = validator.dialogues()?;
     validator.progression_definitions()?;
     validator.initial_state()?;
+    validator.gameplay_ui()?;
     validator.progression_graphs()?;
     let (assets, unassigned_asset_sites) = validator.assets();
     let report = ValidationReport {
@@ -116,6 +118,7 @@ pub(crate) fn validate(content: &GameContent, mode: ValidationMode) -> GameResul
             "typed_mechanic_bindings_and_source_domains",
             "counter_entitlement_instance_and_recovery_contracts",
             "stationary_anchor_and_mobile_footprint_policy",
+            "authoritative_ui_sources_context_rewards_and_controls",
         ],
         evidence,
         unresolved_bindings,
@@ -259,6 +262,20 @@ impl Validator<'_> {
 
     fn assets(&self) -> (BTreeSet<AssetId>, usize) {
         let mut assets = BTreeSet::new();
+        if let Some(ui) = &self.content.ui {
+            if let SourceBinding::Bound { value, .. } = &ui.appearance_base {
+                assets.insert(value.asset.clone());
+            }
+            for action in ui.item_actions.values().flatten() {
+                if let ItemUiAction::Read {
+                    map_asset: Some(asset),
+                    ..
+                } = &action.action
+                {
+                    assets.insert(asset.clone());
+                }
+            }
+        }
         let mut unassigned = 0;
         let mut add = |asset: &Option<AssetId>| {
             if let Some(asset) = asset {

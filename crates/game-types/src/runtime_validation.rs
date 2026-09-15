@@ -81,6 +81,76 @@ impl CharacterState {
     /// Container/equipment/XP validation remains the caller's existing responsibility.
     pub fn validate_runtime(&self, content: &GameContent) -> GameResult<()> {
         self.runtime.validate_shape()?;
+        if let Some(ui) = &self.runtime.ui {
+            let definition = content
+                .ui
+                .as_ref()
+                .ok_or_else(|| invalid("UI state needs its source content profile."))?;
+            if ui.active_tab.as_ref().is_some_and(|id| {
+                content
+                    .interfaces
+                    .get(id)
+                    .is_none_or(|interface| interface.access != InterfaceAccess::Tab)
+            }) || ui
+                .active_interface
+                .as_ref()
+                .is_some_and(|id| id != &definition.equipment_stats_interface)
+                || ui.bank.entries.iter().any(|entry| {
+                    !content.items.contains_key(&entry.item)
+                        || entry.tab > definition.bank.maximum_tabs
+                })
+                || ui.production.as_ref().is_some_and(|menu| {
+                    !content.interfaces.contains_key(&menu.interface)
+                        || menu
+                            .recipes
+                            .iter()
+                            .any(|recipe| !content.recipes.contains_key(recipe))
+                })
+                || ui.rewards.iter().any(|reward| {
+                    !content.interfaces.contains_key(&reward.interface)
+                        || reward
+                            .quest
+                            .as_ref()
+                            .is_some_and(|quest| !content.quests.contains_key(quest))
+                        || reward
+                            .skill
+                            .as_ref()
+                            .is_some_and(|skill| !content.skills.contains_key(skill))
+                })
+            {
+                return Err(invalid("UI state references unknown source content."));
+            }
+            for entry in &ui.bank.entries {
+                let value = self
+                    .bank
+                    .slots
+                    .get(usize::from(entry.slot))
+                    .and_then(Option::as_ref);
+                match (entry.placeholder, value) {
+                    (true, None) if entry.instance.is_none() && entry.slot < self.bank.capacity => {
+                    }
+                    (false, Some(stack))
+                        if stack.item == entry.item
+                            && stack.instance.as_ref().map(|instance| &instance.id)
+                                == entry.instance.as_ref() => {}
+                    _ => {
+                        return Err(invalid(
+                            "Bank UI metadata disagrees with its authoritative slot.",
+                        ));
+                    }
+                }
+            }
+            if self.bank.slots.iter().enumerate().any(|(slot, item)| {
+                item.is_some()
+                    && !ui
+                        .bank
+                        .entries
+                        .iter()
+                        .any(|entry| usize::from(entry.slot) == slot)
+            }) {
+                return Err(invalid("Bank item has no UI entry identity."));
+            }
+        }
         counters(&self.runtime.counters, content, CounterScope::Character)?;
         let definitions = &content.mechanics;
         let runtime = &self.runtime;
@@ -167,6 +237,26 @@ impl CharacterState {
                 || *next_tick > i64::MAX as u64)
         {
             return Err(invalid("Invalid pending dynamic-facility production."));
+        }
+        if let Activity::InventoryAction {
+            slot,
+            item,
+            action,
+            completes_at,
+            ..
+        } = &self.activity
+            && (usize::from(*slot) >= self.inventory.slots.len()
+                || *completes_at > i64::MAX as u64
+                || content
+                    .ui
+                    .as_ref()
+                    .and_then(|ui| ui.item_actions.get(item))
+                    .and_then(|actions| actions.iter().find(|definition| &definition.id == action))
+                    .is_none_or(|definition| {
+                        !matches!(definition.action, ItemUiAction::ConsumeRecipe { .. })
+                    }))
+        {
+            return Err(invalid("Invalid pending selected inventory action."));
         }
         if matches!(&self.activity, Activity::ProducingSelected { mode: ProductionMode::Single, remaining, .. } if *remaining != 1)
         {
@@ -404,6 +494,9 @@ impl EntityRuntime {
 impl WorldRuntime {
     pub fn validate_shape(&self) -> GameResult<()> {
         if self.schema_version != RUNTIME_SCHEMA_VERSION
+            || self
+                .ui_version
+                .is_some_and(|version| version != UI_STATE_VERSION)
             || self.next_ground_id > i64::MAX as u64
             || self.ground_provenance.len() > 32_768
             || self.counters.len() > 2048
@@ -458,6 +551,8 @@ impl WorldRuntime {
                 || record.retained.len() > 64
                 || record.office.len() > 4096
                 || record.reclaimed.len() > 4096
+                || record.discarded.len() > 4096
+                || !record.reclaimed.is_disjoint(&record.discarded)
                 || record.arrival.as_ref().is_some_and(|arrival| {
                     arrival.dying_until_tick < record.occurred_at_tick
                         || arrival.arrives_at_tick < arrival.dying_until_tick
@@ -497,7 +592,10 @@ impl WorldRuntime {
                 .iter()
                 .chain(record.grave.iter().flat_map(|grave| &grave.items))
             {
-                if record.reclaimed.contains(&item.id) || !recovery_ids.insert(&item.id) {
+                if record.reclaimed.contains(&item.id)
+                    || record.discarded.contains(&item.id)
+                    || !recovery_ids.insert(&item.id)
+                {
                     return Err(invalid(
                         "Recovery ownership was reclaimed or appears twice.",
                     ));
@@ -558,6 +656,11 @@ impl WorldState {
                 "World state needs an explicit content/schema migration.",
             ));
         }
+        if self.runtime.ui_version != content.ui.as_ref().map(|_| UI_STATE_VERSION) {
+            return Err(invalid(
+                "World UI metadata requires an explicit content migration.",
+            ));
+        }
         counters(&self.runtime.counters, content, CounterScope::World)?;
         let definitions = &content.mechanics;
         let mut instances = BTreeSet::new();
@@ -573,6 +676,17 @@ impl WorldState {
         for (id, character) in &self.characters {
             if id != &character.actor_id {
                 return Err(invalid("Character map key and actor identity disagree."));
+            }
+            if character.runtime.ui.is_some() != self.runtime.ui_version.is_some()
+                || character
+                    .runtime
+                    .ui
+                    .as_ref()
+                    .is_some_and(|ui| ui.chat_ticks.iter().any(|tick| *tick > self.tick))
+            {
+                return Err(invalid(
+                    "Missing UI history or future public-chat admission metadata.",
+                ));
             }
             character.validate_runtime(content)?;
             if character

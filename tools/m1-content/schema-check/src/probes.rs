@@ -8,13 +8,13 @@ use crate::NoRandom;
 
 type ProbeResult<T> = Result<T, Box<dyn std::error::Error>>;
 
-struct ProbeRandom {
+pub(super) struct ProbeRandom {
     state: u64,
     draws: u32,
 }
 
 impl ProbeRandom {
-    fn new() -> Self {
+    pub(super) fn new() -> Self {
         Self {
             state: 0x6d315f636f6e7465,
             draws: 0,
@@ -46,7 +46,10 @@ impl RandomSource for ProbeRandom {
 }
 
 // Isolated component states are never written into canonical creation content.
-fn mainland_fixture(engine: &WorldEngine, name: &str) -> ProbeResult<(WorldState, ActorId)> {
+pub(super) fn mainland_fixture(
+    engine: &WorldEngine,
+    name: &str,
+) -> ProbeResult<(WorldState, ActorId)> {
     let mut world = engine.initial_world()?;
     let actor = ActorId::new(format!("actor.content.{name}"))?;
     let mut character = engine.character_from_initial(

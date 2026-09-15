@@ -33,6 +33,14 @@ def require(value, message):
 
 
 def check_content(content, inputs, world, bindings):
+    report = inspect_content(content, inputs, world, bindings)
+    require(report["asset_closure_passed"],
+            f"Unpublished asset references: {report['unpublished_asset_references']}")
+    return report
+
+
+def inspect_content(content, inputs, world, bindings):
+    """Inspect source structure and report publication separately; CLI callers still fail either gate."""
     ids = {kind: set(content[field]) for kind, field in REGISTRIES.items()}
     ids["slot"] = set(content["equipment_slots"])
     mechanics_fields = {"counter": "counters", "grant": "grants", "entitlement": "entitlements",
@@ -44,11 +52,12 @@ def check_content(content, inputs, world, bindings):
                         "traversal": "traversal", "collision_group": "collision_groups"}
     ids.update({kind: set(content["mechanics"][field]) for kind, field in mechanics_fields.items()})
     ids["object_state"] = {state for transform in content["mechanics"]["object_transforms"].values() for state in transform["states"]}
-    require(content["schema_version"] == 3, "Expected actual content schema3")
+    require(content["schema_version"] == 4, "Expected actual content schema4")
     ids["stage"] = set(content["tutorial"])
     for quest in content["quests"].values():
         ids["stage"].update(quest["journal"])
     source_counts = Counter()
+    unpublished = set()
     for kind, field in REGISTRIES.items():
         require(content[field], f"Empty {field}")
         source_numbers = set()
@@ -92,7 +101,10 @@ def check_content(content, inputs, world, bindings):
                 if key in reference_fields and not (path == "content" and key in content):
                     reference(item, reference_fields[key], path + "/" + key)
                 if key in ("asset", "scene_asset", "animation", "sound") and item is not None:
-                    require(item in inputs.assets, f"Unpublished asset reference at {path}: {item}")
+                    require(isinstance(item, str) and ID.fullmatch(item) and item.startswith("asset."),
+                            f"Invalid asset reference at {path}: {item}")
+                    if item not in inputs.assets:
+                        unpublished.add((item, path))
                 if key == "quantity":
                     require(type(item) is int and 0 < item <= 2147483647, f"Invalid item quantity at {path}")
                 if key == "name" and value.get("kind") == "flag":
@@ -196,6 +208,8 @@ def check_content(content, inputs, world, bindings):
     })
     return {
         "schema_version": 1, "counts": counts, "structural_checks_passed": True,
+        "asset_closure_passed": not unpublished,
+        "unpublished_asset_references": [{"asset": asset, "path": path} for asset, path in sorted(unpublished)],
         "source_status_occurrences": dict(source_counts),
         "source_npc_nonwalkable_anchors": nonwalking,
         "exact_geometry_scope": "Explicit imported cells and source-bound object placement equality, not an observed live clipping dump.",
@@ -220,7 +234,9 @@ def main():
     for output in manifest["outputs"]:
         require(sha((CONTENT.parents[1] / output["path"]).read_bytes()) == output["sha256"],
                 f"Generated output changed: {output['path']}")
-    report = check_content(content, inputs, world, bindings)
+    report = inspect_content(content, inputs, world, bindings)
+    report["asset_closure_passed"] = report["asset_closure_passed"] and manifest["asset_closure_passed"]
+    report["unpublished_asset_ids"] = manifest["unpublished_asset_ids"]
     artifact = manifest["compiled_artifact"]
     compressed = (ROOT / artifact["path"]).read_bytes()
     require(sha(compressed) == artifact["sha256"] and sha(gzip.decompress(compressed)) == artifact["uncompressed_sha256"],
@@ -244,17 +260,22 @@ def main():
     report["artifact_reloaded"] = True
     report["engine_constructed"] = schema["engine_constructed"]
     report["native_source_policy_probes"] = schema["native_source_policy_probes"]
+    report["native_ui_control_probes"] = schema["native_ui_control_probes"]
     report["native_source_policy_checks_passed"] = schema["native_source_policy_probes"]["passed"]
     report["engine_validation_exit_code"] = result.returncode
     report["engine_validation_diagnostic"] = result.stderr
     write(BINDINGS / "check-result.json", report, pretty=True)
     print(json.dumps({"structural_checks_passed": True, "strict_runtime_compiler_passed": True,
+                      "asset_closure_passed": report["asset_closure_passed"],
+                      "unpublished_asset_ids": report["unpublished_asset_ids"],
                       "artifact_reloaded": True, "artifact_sha256": artifact["uncompressed_sha256"],
                       "engine_constructed": schema["engine_constructed"],
                       "native_source_policy_checks_passed": schema["native_source_policy_probes"]["passed"],
                       "unresolved_bindings": len(schema["unresolved_bindings"]), "gameplay_executed": False}))
-    if result.returncode or not schema["native_source_policy_probes"]["passed"]:
+    if result.returncode or not schema["native_source_policy_probes"]["passed"] or not schema["native_ui_control_probes"]["passed"]:
         raise SystemExit(result.returncode or 1)
+    require(report["asset_closure_passed"],
+            f"Source/engine checks do not waive missing published assets: {report['unpublished_asset_ids']}")
 
 
 if __name__ == "__main__":

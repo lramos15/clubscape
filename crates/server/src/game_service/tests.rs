@@ -2,6 +2,7 @@
 mod engine_fixtures;
 #[path = "../../../content/tests/common/mod.rs"]
 mod fixtures;
+mod ui;
 
 use std::{env, fs, path::PathBuf, str::FromStr, sync::Arc, time::Duration};
 
@@ -75,7 +76,8 @@ impl Database {
         assert_eq!(name, "clubscape_m1_test");
         assert_eq!(schema, "public");
         sqlx::raw_sql(
-            "DROP TABLE IF EXISTS public.game_lifecycle_commands;
+            "DROP TABLE IF EXISTS public.game_content_migrations;
+             DROP TABLE IF EXISTS public.game_lifecycle_commands;
              DROP TABLE IF EXISTS public.processed_game_commands;
              DROP TABLE IF EXISTS public.game_sessions;
              DROP TABLE IF EXISTS public.game_characters;
@@ -123,6 +125,15 @@ struct Pack {
 }
 
 impl Pack {
+    fn ui() -> Self {
+        let mut pack = Self::new();
+        fixtures::ui::enable(&mut pack.definition);
+        pack.definition.initial_state.interfaces =
+            pack.definition.interfaces.keys().cloned().collect();
+        pack.definition.revision = "live-ui-synthetic-v4".into();
+        pack.write();
+        pack
+    }
     fn new() -> Self {
         let mut definition = fixtures::fixture();
         definition.revision = "live-world-synthetic-v1".into();
@@ -764,6 +775,30 @@ struct Account {
 }
 
 impl Endpoint {
+    async fn ui(
+        &self,
+        account: &Account,
+        joined: &game::WorldJoined,
+        sequence: u64,
+        operation: Uuid,
+        bank_revision: Option<u64>,
+        request: game::gameplay_ui_request::Request,
+    ) -> Response {
+        self.call(
+            client_message::Command::WorldInput(game::WorldInput {
+                world_session_id: joined.world_session_id.clone(),
+                sequence,
+                expected_character_revision: None,
+                action: Some(game::world_input::Action::Ui(game::GameplayUiRequest {
+                    expected_bank_revision: bank_revision.map(|revision| revision.to_string()),
+                    request: Some(request),
+                })),
+            }),
+            Some(&account.token),
+            operation,
+        )
+        .await
+    }
     async fn call(
         &self,
         command: client_message::Command,

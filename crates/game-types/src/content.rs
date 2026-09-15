@@ -559,6 +559,9 @@ pub struct GameContent {
     pub interfaces: BTreeMap<InterfaceId, InterfaceDefinition>,
     pub equipment_slots: Vec<SlotId>,
     pub initial_state: InitialStateDefinition,
+    /// Content-4 declares this field explicitly; None is an old non-UI engine profile.
+    #[serde(default)]
+    pub ui: Option<GameplayUiDefinition>,
     pub mechanics: MechanicsDefinition,
 }
 

@@ -1,0 +1,4025 @@
+{
+  "combat_categories": [
+    {
+      "columnTypes": [
+        [
+          "INTEGER"
+        ],
+        [
+          "INTEGER",
+          "STRING",
+          "STRING",
+          "GRAPHIC"
+        ]
+      ],
+      "columnValues": [
+        [
+          0
+        ],
+        [
+          0,
+          "Punch",
+          "(Accurate)<br>(Crush)<br>(Attack XP)",
+          247,
+          1,
+          "Kick",
+          "(Aggressive)<br>(Crush)<br>(Strength XP)",
+          248,
+          3,
+          "Block",
+          "(Defensive)<br>(Crush)<br>(Defence XP)",
+          249
+        ]
+      ],
+      "id": 3938,
+      "tableId": 78
+    },
+    {
+      "columnTypes": [
+        [
+          "INTEGER"
+        ],
+        [
+          "INTEGER",
+          "STRING",
+          "STRING",
+          "GRAPHIC"
+        ]
+      ],
+      "columnValues": [
+        [
+          1
+        ],
+        [
+          0,
+          "Chop",
+          "(Accurate)<br>(Slash)<br>(Attack XP)",
+          234,
+          1,
+          "Hack",
+          "(Aggressive)<br>(Slash)<br>(Strength XP)",
+          235,
+          2,
+          "Smash",
+          "(Aggressive)<br>(Crush)<br>(Strength XP)",
+          236,
+          3,
+          "Block",
+          "(Defensive)<br>(Slash)<br>(Defence XP)",
+          233
+        ]
+      ],
+      "id": 3939,
+      "tableId": 78
+    },
+    {
+      "columnTypes": [
+        [
+          "INTEGER"
+        ],
+        [
+          "INTEGER",
+          "STRING",
+          "STRING",
+          "GRAPHIC"
+        ]
+      ],
+      "columnValues": [
+        [
+          2
+        ],
+        [
+          0,
+          "Pound",
+          "(Accurate)<br>(Crush)<br>(Attack XP)",
+          255,
+          1,
+          "Pummel",
+          "(Aggressive)<br>(Crush)<br>(Strength XP)",
+          256,
+          3,
+          "Block",
+          "(Defensive)<br>(Crush)<br>(Defence XP)",
+          253
+        ]
+      ],
+      "id": 3940,
+      "tableId": 78
+    },
+    {
+      "columnTypes": [
+        [
+          "INTEGER"
+        ],
+        [
+          "INTEGER",
+          "STRING",
+          "STRING",
+          "GRAPHIC"
+        ]
+      ],
+      "columnValues": [
+        [
+          27
+        ],
+        [
+          0,
+          "Pound",
+          "(Aggressive)<br>(Crush)<br>(Strength XP)",
+          255,
+          1,
+          "Pummel",
+          "(Aggressive)<br>(Crush)<br>(Strength XP)",
+          256,
+          3,
+          "Smash",
+          "(Aggressive)<br>(Crush)<br>(Strength XP)",
+          253
+        ]
+      ],
+      "id": 3941,
+      "tableId": 78
+    },
+    {
+      "columnTypes": [
+        [
+          "INTEGER"
+        ],
+        [
+          "INTEGER",
+          "STRING",
+          "STRING",
+          "GRAPHIC"
+        ]
+      ],
+      "columnValues": [
+        [
+          3
+        ],
+        [
+          0,
+          "Accurate",
+          "(Accurate)<br>(Standard)<br>(Ranged XP)",
+          268,
+          1,
+          "Rapid",
+          "(Rapid)<br>(Standard)<br>(Ranged XP)",
+          269,
+          3,
+          "Longrange",
+          "(Longrange)<br>(Standard)<br>(Ranged XP)<br>(Defence XP)",
+          270
+        ]
+      ],
+      "id": 3942,
+      "tableId": 78
+    },
+    {
+      "columnTypes": [
+        [
+          "INTEGER"
+        ],
+        [
+          "INTEGER",
+          "STRING",
+          "STRING",
+          "GRAPHIC"
+        ]
+      ],
+      "columnValues": [
+        [
+          4
+        ],
+        [
+          0,
+          "Chop",
+          "(Accurate)<br>(Slash)<br>(Attack XP)",
+          279,
+          1,
+          "Slash",
+          "(Aggressive)<br>(Slash)<br>(Strength XP)",
+          278,
+          2,
+          "Lunge",
+          "(Controlled)<br>(Stab)<br>(Shared XP)",
+          277,
+          3,
+          "Block",
+          "(Defensive)<br>(Slash)<br>(Defence XP)",
+          280
+        ]
+      ],
+      "id": 3943,
+      "tableId": 78
+    },
+    {
+      "columnTypes": [
+        [
+          "INTEGER"
+        ],
+        [
+          "INTEGER",
+          "STRING",
+          "STRING",
+          "GRAPHIC"
+        ]
+      ],
+      "columnValues": [
+        [
+          5
+        ],
+        [
+          0,
+          "Accurate",
+          "(Accurate)<br>(Heavy)<br>(Ranged XP)",
+          258,
+          1,
+          "Rapid",
+          "(Rapid)<br>(Heavy)<br>(Ranged XP)",
+          259,
+          3,
+          "Longrange",
+          "(Longrange)<br>(Heavy)<br>(Ranged XP)<br>(Defence XP)",
+          260
+        ]
+      ],
+      "id": 3944,
+      "tableId": 78
+    },
+    {
+      "columnTypes": [
+        [
+          "INTEGER"
+        ],
+        [
+          "INTEGER",
+          "STRING",
+          "STRING",
+          "GRAPHIC"
+        ]
+      ],
+      "columnValues": [
+        [
+          6
+        ],
+        [
+          0,
+          "Scorch",
+          "(Aggressive)<br>(Slash)<br>(Strength XP)",
+          289,
+          1,
+          "Flare",
+          "(Accurate)<br>(Ranged)<br>(Ranged XP)",
+          290,
+          2,
+          "Blaze",
+          "(Defensive)<br>(Magic)<br>(Magic XP)",
+          291
+        ]
+      ],
+      "id": 3945,
+      "tableId": 78
+    },
+    {
+      "columnTypes": [
+        [
+          "INTEGER"
+        ],
+        [
+          "INTEGER",
+          "STRING",
+          "STRING",
+          "GRAPHIC"
+        ]
+      ],
+      "columnValues": [
+        [
+          7
+        ],
+        [
+          0,
+          "Short fuse",
+          "(Short fuse)<br>(Heavy)<br>(Ranged XP)",
+          288,
+          1,
+          "Medium fuse",
+          "(Medium fuse)<br>(Heavy)<br>(Ranged XP)",
+          282,
+          3,
+          "Long fuse",
+          "(Long fuse)<br>(Heavy)<br>(Ranged XP)<br>(Defence XP)",
+          281
+        ]
+      ],
+      "id": 3946,
+      "tableId": 78
+    },
+    {
+      "columnTypes": [
+        [
+          "INTEGER"
+        ],
+        [
+          "INTEGER",
+          "STRING",
+          "STRING",
+          "GRAPHIC"
+        ]
+      ],
+      "columnValues": [
+        [
+          8
+        ],
+        [
+          0,
+          "Aim and Fire",
+          "(Aim and Fire)",
+          128,
+          1,
+          "Kick",
+          "(Aggressive)<br>(Crush)<br>(Strength XP)",
+          248
+        ]
+      ],
+      "id": 3947,
+      "tableId": 78
+    },
+    {
+      "columnTypes": [
+        [
+          "INTEGER"
+        ],
+        [
+          "INTEGER",
+          "STRING",
+          "STRING",
+          "GRAPHIC"
+        ]
+      ],
+      "columnValues": [
+        [
+          9
+        ],
+        [
+          0,
+          "Chop",
+          "(Accurate)<br>(Slash)<br>(Attack XP)",
+          239,
+          1,
+          "Slash",
+          "(Aggressive)<br>(Slash)<br>(Strength XP)",
+          238,
+          2,
+          "Lunge",
+          "(Controlled)<br>(Stab)<br>(Shared XP)",
+          240,
+          3,
+          "Block",
+          "(Defensive)<br>(Slash)<br>(Defence XP)",
+          237
+        ]
+      ],
+      "id": 3948,
+      "tableId": 78
+    },
+    {
+      "columnTypes": [
+        [
+          "INTEGER"
+        ],
+        [
+          "INTEGER",
+          "STRING",
+          "STRING",
+          "GRAPHIC"
+        ]
+      ],
+      "columnValues": [
+        [
+          10
+        ],
+        [
+          0,
+          "Chop",
+          "(Accurate)<br>(Slash)<br>(Attack XP)",
+          239,
+          1,
+          "Slash",
+          "(Aggressive)<br>(Slash)<br>(Strength XP)",
+          238,
+          2,
+          "Smash",
+          "(Aggressive)<br>(Crush)<br>(Strength XP)",
+          238,
+          3,
+          "Block",
+          "(Defensive)<br>(Slash)<br>(Defence XP)",
+          237
+        ]
+      ],
+      "id": 3949,
+      "tableId": 78
+    },
+    {
+      "columnTypes": [
+        [
+          "INTEGER"
+        ],
+        [
+          "INTEGER",
+          "STRING",
+          "STRING",
+          "GRAPHIC"
+        ]
+      ],
+      "columnValues": [
+        [
+          23
+        ],
+        [
+          0,
+          "Chop",
+          "(Accurate)<br>(Slash)<br>(Attack XP)",
+          239,
+          1,
+          "Slash",
+          "(Aggressive)<br>(Slash)<br>(Strength XP)",
+          238,
+          2,
+          "Smash",
+          "(Aggressive)<br>(Crush)<br>(Strength XP)",
+          238,
+          3,
+          "Block",
+          "(Defensive)<br>(Slash)<br>(Defence XP)",
+          237
+        ]
+      ],
+      "id": 3950,
+      "tableId": 78
+    },
+    {
+      "columnTypes": [
+        [
+          "INTEGER"
+        ],
+        [
+          "INTEGER",
+          "STRING",
+          "STRING",
+          "GRAPHIC"
+        ]
+      ],
+      "columnValues": [
+        [
+          11
+        ],
+        [
+          0,
+          "Spike",
+          "(Accurate)<br>(Stab)<br>(Attack XP)",
+          274,
+          1,
+          "Impale",
+          "(Aggressive)<br>(Stab)<br>(Strength XP)",
+          276,
+          2,
+          "Smash",
+          "(Aggressive)<br>(Crush)<br>(Strength XP)",
+          275,
+          3,
+          "Block",
+          "(Defensive)<br>(Stab)<br>(Defence XP)",
+          273
+        ]
+      ],
+      "id": 3951,
+      "tableId": 78
+    },
+    {
+      "columnTypes": [
+        [
+          "INTEGER"
+        ],
+        [
+          "INTEGER",
+          "STRING",
+          "STRING",
+          "GRAPHIC"
+        ]
+      ],
+      "columnValues": [
+        [
+          12
+        ],
+        [
+          0,
+          "Jab",
+          "(Controlled)<br>(Stab)<br>(Shared XP)",
+          284,
+          1,
+          "Swipe",
+          "(Aggressive)<br>(Slash)<br>(Strength XP)",
+          285,
+          3,
+          "Fend",
+          "(Defensive)<br>(Stab)<br>(Defence XP)",
+          283
+        ]
+      ],
+      "id": 3952,
+      "tableId": 78
+    },
+    {
+      "columnTypes": [
+        [
+          "INTEGER"
+        ],
+        [
+          "INTEGER",
+          "STRING",
+          "STRING",
+          "GRAPHIC"
+        ]
+      ],
+      "columnValues": [
+        [
+          26
+        ],
+        [
+          0,
+          "Jab",
+          "(Controlled)<br>(Stab)<br>(Shared XP)",
+          284,
+          1,
+          "Swipe",
+          "(Aggressive)<br>(Slash)<br>(Strength XP)",
+          285,
+          3,
+          "Fend",
+          "(Defensive)<br>(Stab)<br>(Defence XP)",
+          283
+        ]
+      ],
+      "id": 3953,
+      "tableId": 78
+    },
+    {
+      "columnTypes": [
+        [
+          "INTEGER"
+        ],
+        [
+          "INTEGER",
+          "STRING",
+          "STRING",
+          "GRAPHIC"
+        ]
+      ],
+      "columnValues": [
+        [
+          13
+        ],
+        [
+          0,
+          "Bash",
+          "(Accurate)<br>(Crush)<br>(Attack XP)",
+          266,
+          1,
+          "Pound",
+          "(Aggressive)<br>(Crush)<br>(Strength XP)",
+          267,
+          3,
+          "Block",
+          "(Defensive)<br>(Crush)<br>(Defence XP)",
+          252
+        ]
+      ],
+      "id": 3954,
+      "tableId": 78
+    },
+    {
+      "columnTypes": [
+        [
+          "INTEGER"
+        ],
+        [
+          "INTEGER",
+          "STRING",
+          "STRING",
+          "GRAPHIC"
+        ]
+      ],
+      "columnValues": [
+        [
+          14
+        ],
+        [
+          0,
+          "Reap",
+          "(Accurate)<br>(Slash)<br>(Attack XP)",
+          272,
+          1,
+          "Chop",
+          "(Aggressive)<br>(Slash)<br>(Strength XP)",
+          262,
+          2,
+          "Jab",
+          "(Aggressive)<br>(Crush)<br>(Strength XP)",
+          271,
+          3,
+          "Block",
+          "(Defensive)<br>(Slash)<br>(Defence XP)",
+          261
+        ]
+      ],
+      "id": 3955,
+      "tableId": 78
+    },
+    {
+      "columnTypes": [
+        [
+          "INTEGER"
+        ],
+        [
+          "INTEGER",
+          "STRING",
+          "STRING",
+          "GRAPHIC"
+        ]
+      ],
+      "columnValues": [
+        [
+          15
+        ],
+        [
+          0,
+          "Lunge",
+          "(Controlled)<br>(Stab)<br>(Shared XP)",
+          241,
+          1,
+          "Swipe",
+          "(Controlled)<br>(Slash)<br>(Shared XP)",
+          251,
+          2,
+          "Pound",
+          "(Controlled)<br>(Crush)<br>(Shared XP)",
+          242,
+          3,
+          "Block",
+          "(Defensive)<br>(Stab)<br>(Defence XP)",
+          250
+        ]
+      ],
+      "id": 3956,
+      "tableId": 78
+    },
+    {
+      "columnTypes": [
+        [
+          "INTEGER"
+        ],
+        [
+          "INTEGER",
+          "STRING",
+          "STRING",
+          "GRAPHIC"
+        ]
+      ],
+      "columnValues": [
+        [
+          25
+        ],
+        [
+          0,
+          "Lunge",
+          "(Accurate)<br>(Stab)<br>(Attack XP)",
+          241,
+          1,
+          "Swipe",
+          "(Aggressive)<br>(Slash)<br>(Strength XP)",
+          251,
+          2,
+          "Pound",
+          "(Controlled)<br>(Crush)<br>(Shared XP)",
+          242,
+          3,
+          "Block",
+          "(Defensive)<br>(Stab)<br>(Defence XP)",
+          250
+        ]
+      ],
+      "id": 3957,
+      "tableId": 78
+    },
+    {
+      "columnTypes": [
+        [
+          "INTEGER"
+        ],
+        [
+          "INTEGER",
+          "STRING",
+          "STRING",
+          "GRAPHIC"
+        ]
+      ],
+      "columnValues": [
+        [
+          16
+        ],
+        [
+          0,
+          "Pound",
+          "(Accurate)<br>(Crush)<br>(Attack XP)",
+          246,
+          1,
+          "Pummel",
+          "(Aggressive)<br>(Crush)<br>(Strength XP)",
+          244,
+          2,
+          "Spike",
+          "(Controlled)<br>(Stab)<br>(Shared XP)",
+          245,
+          3,
+          "Block",
+          "(Defensive)<br>(Crush)<br>(Defence XP)",
+          243
+        ]
+      ],
+      "id": 3958,
+      "tableId": 78
+    },
+    {
+      "columnTypes": [
+        [
+          "INTEGER"
+        ],
+        [
+          "INTEGER",
+          "STRING",
+          "STRING",
+          "GRAPHIC"
+        ]
+      ],
+      "columnValues": [
+        [
+          17
+        ],
+        [
+          0,
+          "Stab",
+          "(Accurate)<br>(Stab)<br>(Attack XP)",
+          240,
+          1,
+          "Lunge",
+          "(Aggressive)<br>(Stab)<br>(Strength XP)",
+          239,
+          2,
+          "Slash",
+          "(Aggressive)<br>(Slash)<br>(Strength XP)",
+          238,
+          3,
+          "Block",
+          "(Defensive)<br>(Stab)<br>(Defence XP)",
+          237
+        ]
+      ],
+      "id": 3959,
+      "tableId": 78
+    },
+    {
+      "columnTypes": [
+        [
+          "INTEGER"
+        ],
+        [
+          "INTEGER",
+          "STRING",
+          "STRING",
+          "GRAPHIC"
+        ]
+      ],
+      "columnValues": [
+        [
+          18
+        ],
+        [
+          0,
+          "Bash",
+          "(Accurate)<br>(Crush)<br>(Attack XP)",
+          266,
+          1,
+          "Pound",
+          "(Aggressive)<br>(Crush)<br>(Strength XP)",
+          267,
+          3,
+          "Focus",
+          "(Defensive)<br>(Crush)<br>(Defence XP)",
+          252
+        ]
+      ],
+      "id": 3960,
+      "tableId": 78
+    },
+    {
+      "columnTypes": [
+        [
+          "INTEGER"
+        ],
+        [
+          "INTEGER",
+          "STRING",
+          "STRING",
+          "GRAPHIC"
+        ]
+      ],
+      "columnValues": [
+        [
+          21
+        ],
+        [
+          0,
+          "Jab",
+          "(Accurate)<br>(Stab)<br>(Attack XP)",
+          266,
+          1,
+          "Swipe",
+          "(Aggressive)<br>(Slash)<br>(Strength XP)",
+          267,
+          3,
+          "Fend",
+          "(Defensive)<br>(Crush)<br>(Defence XP)",
+          252
+        ]
+      ],
+      "id": 3961,
+      "tableId": 78
+    },
+    {
+      "columnTypes": [
+        [
+          "INTEGER"
+        ],
+        [
+          "INTEGER",
+          "STRING",
+          "STRING",
+          "GRAPHIC"
+        ]
+      ],
+      "columnValues": [
+        [
+          22
+        ],
+        [
+          0,
+          "Jab",
+          "(Accurate)<br>(Stab)<br>(Attack XP)",
+          266,
+          1,
+          "Swipe",
+          "(Aggressive)<br>(Slash)<br>(Strength XP)",
+          267,
+          3,
+          "Fend",
+          "(Defensive)<br>(Crush)<br>(Defence XP)",
+          252
+        ]
+      ],
+      "id": 3962,
+      "tableId": 78
+    },
+    {
+      "columnTypes": [
+        [
+          "INTEGER"
+        ],
+        [
+          "INTEGER",
+          "STRING",
+          "STRING",
+          "GRAPHIC"
+        ]
+      ],
+      "columnValues": [
+        [
+          19
+        ],
+        [
+          0,
+          "Accurate",
+          "(Accurate)<br>(Light)<br>(Ranged XP)",
+          263,
+          1,
+          "Rapid",
+          "(Rapid)<br>(Light)<br>(Ranged XP)",
+          264,
+          3,
+          "Longrange",
+          "(Longrange)<br>(Light)<br>(Ranged XP)<br>(Defence XP)",
+          265
+        ]
+      ],
+      "id": 3963,
+      "tableId": 78
+    },
+    {
+      "columnTypes": [
+        [
+          "INTEGER"
+        ],
+        [
+          "INTEGER",
+          "STRING",
+          "STRING",
+          "GRAPHIC"
+        ]
+      ],
+      "columnValues": [
+        [
+          20
+        ],
+        [
+          0,
+          "Flick",
+          "(Accurate)<br>(Slash)<br>(Attack XP)",
+          286,
+          1,
+          "Lash",
+          "(Controlled)<br>(Slash)<br>(Shared XP)",
+          287,
+          3,
+          "Deflect",
+          "(Defensive)<br>(Slash)<br>(Defence XP)",
+          286
+        ]
+      ],
+      "id": 3964,
+      "tableId": 78
+    },
+    {
+      "columnTypes": [
+        [
+          "INTEGER"
+        ],
+        [
+          "INTEGER",
+          "STRING",
+          "STRING",
+          "GRAPHIC"
+        ]
+      ],
+      "columnValues": [
+        [
+          24
+        ],
+        [
+          0,
+          "Accurate",
+          "(Accurate)<br>(Magic XP)",
+          263,
+          1,
+          "Accurate",
+          "(Accurate)<br>(Magic XP)",
+          263,
+          3,
+          "Longrange",
+          "(Longrange)<br>(Magic XP)<br>(Defence XP)",
+          265
+        ]
+      ],
+      "id": 3965,
+      "tableId": 78
+    },
+    {
+      "columnTypes": [
+        [
+          "INTEGER"
+        ],
+        [
+          "INTEGER",
+          "STRING",
+          "STRING",
+          "GRAPHIC"
+        ]
+      ],
+      "columnValues": [
+        [
+          29
+        ],
+        [
+          0,
+          "Accurate",
+          "(Accurate)<br>(Magic XP)",
+          263,
+          1,
+          "Accurate",
+          "(Accurate)<br>(Magic XP)",
+          263,
+          3,
+          "Longrange",
+          "(Longrange)<br>(Magic XP)<br>(Defence XP)",
+          265
+        ]
+      ],
+      "id": 3966,
+      "tableId": 78
+    },
+    {
+      "columnTypes": [
+        [
+          "INTEGER"
+        ],
+        [
+          "INTEGER",
+          "STRING",
+          "STRING",
+          "GRAPHIC"
+        ]
+      ],
+      "columnValues": [
+        [
+          28
+        ],
+        [
+          0,
+          "Pummel",
+          "(Accurate)<br>(Crush)<br>(Attack XP)",
+          254,
+          3,
+          "Block",
+          "No attacking!",
+          253
+        ]
+      ],
+      "id": 3967,
+      "tableId": 78
+    },
+    {
+      "columnTypes": [
+        [
+          "INTEGER"
+        ],
+        [
+          "INTEGER",
+          "STRING",
+          "STRING",
+          "GRAPHIC"
+        ]
+      ],
+      "columnValues": [
+        [
+          30
+        ],
+        [
+          0,
+          "Stab",
+          "(Accurate)<br>(Stab)<br>(Attack XP)",
+          240,
+          1,
+          "Lunge",
+          "(Aggressive)<br>(Stab)<br>(Strength XP)",
+          239,
+          2,
+          "Pound",
+          "(Aggressive)<br>(Crush)<br>(Strength XP)",
+          238,
+          3,
+          "Block",
+          "(Defensive)<br>(Stab)<br>(Defence XP)",
+          237
+        ]
+      ],
+      "id": 3968,
+      "tableId": 78
+    },
+    {
+      "columnTypes": [
+        [
+          "INTEGER"
+        ],
+        [
+          "INTEGER",
+          "STRING",
+          "STRING",
+          "GRAPHIC"
+        ]
+      ],
+      "columnValues": [
+        [
+          31
+        ],
+        [
+          0,
+          "Melee",
+          "(Stab)<br>(Strength XP)",
+          289,
+          1,
+          "Ranged",
+          "(Ranged)<br>(Ranged XP)",
+          290,
+          2,
+          "Magic",
+          "(Magic)<br>(Magic XP)",
+          291
+        ]
+      ],
+      "id": 4091,
+      "tableId": 78
+    },
+    {
+      "columnTypes": [
+        [
+          "INTEGER"
+        ],
+        [
+          "INTEGER",
+          "STRING",
+          "STRING",
+          "GRAPHIC"
+        ]
+      ],
+      "columnValues": [
+        [
+          32
+        ],
+        [
+          0,
+          "Pound",
+          "(Accurate)<br>(Crush)<br>(Attack XP)",
+          255,
+          1,
+          "Pummel",
+          "(Aggressive)<br>(Crush)<br>(Strength XP)",
+          256,
+          3,
+          "Block",
+          "(Defensive)<br>(Crush)<br>(Defence XP)",
+          253
+        ]
+      ],
+      "id": 5376,
+      "tableId": 78
+    },
+    {
+      "columnTypes": [
+        [
+          "INTEGER"
+        ],
+        [
+          "INTEGER",
+          "STRING",
+          "STRING",
+          "GRAPHIC"
+        ]
+      ],
+      "columnValues": [
+        [
+          33
+        ],
+        [
+          0,
+          "Aim and Fire",
+          "(Aim and Fire)",
+          7074
+        ]
+      ],
+      "id": 13321,
+      "tableId": 78
+    },
+    {
+      "columnTypes": [
+        [
+          "INTEGER"
+        ],
+        [
+          "INTEGER",
+          "STRING",
+          "STRING",
+          "GRAPHIC"
+        ]
+      ],
+      "columnValues": [
+        [
+          34
+        ],
+        [
+          0,
+          "Poke",
+          "(Accurate)<br>(Stab)<br>(Attack XP)",
+          254,
+          1,
+          "Slash",
+          "(Aggressive)<br>(Slash)<br>(Strength XP)",
+          256,
+          2,
+          "Pound",
+          "(Aggressive)<br>(Crush)<br>(Strength XP)",
+          255,
+          3,
+          "Block",
+          "(Defensive)<br>(Slash)<br>(Defence XP)",
+          253
+        ]
+      ],
+      "id": 16265,
+      "tableId": 78
+    },
+    {
+      "columnTypes": [
+        [
+          "INTEGER"
+        ],
+        [
+          "INTEGER",
+          "STRING",
+          "STRING",
+          "GRAPHIC"
+        ]
+      ],
+      "columnValues": [
+        [
+          35
+        ],
+        [
+          0,
+          "Chop",
+          "(Accurate)<br>(Slash)<br>(Attack XP)",
+          239,
+          1,
+          "Slash",
+          "(Aggressive)<br>(Slash)<br>(Strength XP)",
+          238,
+          3,
+          "Block",
+          "(Defensive)<br>(Slash)<br>(Defence XP)",
+          237
+        ]
+      ],
+      "id": 16914,
+      "tableId": 78
+    }
+  ],
+  "hud_signatures": [
+    {
+      "basis": "Named control introductions in the pinned current transcript/journey contract; NOT observed numeric source progress or a declaration that every unmentioned control is hidden.",
+      "display_states_required": [
+        "source_locked",
+        "source_highlighted",
+        "unlocked"
+      ],
+      "expected_introduced_tabs": [],
+      "id": "hud.signature.e3b0c44298fc",
+      "pixel_family_id": "hud.classic",
+      "state_ids": [
+        "stage.tutorial.appearance",
+        "stage.tutorial.experience",
+        "stage.tutorial.guide_greeting"
+      ],
+      "unmentioned_controls": "unknown; never convert absence from this signature into hidden/disabled"
+    },
+    {
+      "basis": "Named control introductions in the pinned current transcript/journey contract; NOT observed numeric source progress or a declaration that every unmentioned control is hidden.",
+      "display_states_required": [
+        "source_locked",
+        "source_highlighted",
+        "unlocked"
+      ],
+      "expected_introduced_tabs": [
+        "ui.settings"
+      ],
+      "id": "hud.signature.eccd45481804",
+      "pixel_family_id": "hud.classic",
+      "state_ids": [
+        "stage.tutorial.settings_open",
+        "stage.tutorial.guide_settings",
+        "stage.tutorial.starting_exit",
+        "stage.tutorial.survival_greeting"
+      ],
+      "unmentioned_controls": "unknown; never convert absence from this signature into hidden/disabled"
+    },
+    {
+      "basis": "Named control introductions in the pinned current transcript/journey contract; NOT observed numeric source progress or a declaration that every unmentioned control is hidden.",
+      "display_states_required": [
+        "source_locked",
+        "source_highlighted",
+        "unlocked"
+      ],
+      "expected_introduced_tabs": [
+        "ui.inventory",
+        "ui.settings"
+      ],
+      "id": "hud.signature.fea76d760919",
+      "pixel_family_id": "hud.classic",
+      "state_ids": [
+        "stage.tutorial.inventory_open",
+        "stage.tutorial.catch_shrimp"
+      ],
+      "unmentioned_controls": "unknown; never convert absence from this signature into hidden/disabled"
+    },
+    {
+      "basis": "Named control introductions in the pinned current transcript/journey contract; NOT observed numeric source progress or a declaration that every unmentioned control is hidden.",
+      "display_states_required": [
+        "source_locked",
+        "source_highlighted",
+        "unlocked"
+      ],
+      "expected_introduced_tabs": [
+        "ui.inventory",
+        "ui.settings",
+        "ui.skills"
+      ],
+      "id": "hud.signature.bb9660478aa4",
+      "pixel_family_id": "hud.classic",
+      "state_ids": [
+        "stage.tutorial.skills_open",
+        "stage.tutorial.survival_tools",
+        "stage.tutorial.cut_logs",
+        "stage.tutorial.light_fire",
+        "stage.tutorial.cook_shrimp",
+        "stage.tutorial.survival_exit",
+        "stage.tutorial.chef_entry",
+        "stage.tutorial.chef_greeting",
+        "stage.tutorial.make_dough",
+        "stage.tutorial.bake_bread",
+        "stage.tutorial.chef_exit",
+        "stage.tutorial.run_toggle",
+        "stage.tutorial.quest_entry",
+        "stage.tutorial.quest_greeting"
+      ],
+      "unmentioned_controls": "unknown; never convert absence from this signature into hidden/disabled"
+    },
+    {
+      "basis": "Named control introductions in the pinned current transcript/journey contract; NOT observed numeric source progress or a declaration that every unmentioned control is hidden.",
+      "display_states_required": [
+        "source_locked",
+        "source_highlighted",
+        "unlocked"
+      ],
+      "expected_introduced_tabs": [
+        "ui.inventory",
+        "ui.quests",
+        "ui.settings",
+        "ui.skills"
+      ],
+      "id": "hud.signature.d1caccbcc9e7",
+      "pixel_family_id": "hud.classic",
+      "state_ids": [
+        "stage.tutorial.journal_open",
+        "stage.tutorial.quest_explanation",
+        "stage.tutorial.quest_ladder",
+        "stage.tutorial.mining_greeting",
+        "stage.tutorial.mine_first",
+        "stage.tutorial.mine_second",
+        "stage.tutorial.smelt_bronze",
+        "stage.tutorial.mining_hammer",
+        "stage.tutorial.anvil_open",
+        "stage.tutorial.smith_dagger",
+        "stage.tutorial.mining_exit",
+        "stage.tutorial.combat_greeting"
+      ],
+      "unmentioned_controls": "unknown; never convert absence from this signature into hidden/disabled"
+    },
+    {
+      "basis": "Named control introductions in the pinned current transcript/journey contract; NOT observed numeric source progress or a declaration that every unmentioned control is hidden.",
+      "display_states_required": [
+        "source_locked",
+        "source_highlighted",
+        "unlocked"
+      ],
+      "expected_introduced_tabs": [
+        "ui.equipment",
+        "ui.inventory",
+        "ui.quests",
+        "ui.settings",
+        "ui.skills"
+      ],
+      "id": "hud.signature.7d3383ac8097",
+      "pixel_family_id": "hud.classic",
+      "state_ids": [
+        "stage.tutorial.equipment_open",
+        "stage.tutorial.equipment_stats_open",
+        "stage.tutorial.equip_dagger",
+        "stage.tutorial.melee_supply",
+        "stage.tutorial.equip_melee"
+      ],
+      "unmentioned_controls": "unknown; never convert absence from this signature into hidden/disabled"
+    },
+    {
+      "basis": "Named control introductions in the pinned current transcript/journey contract; NOT observed numeric source progress or a declaration that every unmentioned control is hidden.",
+      "display_states_required": [
+        "source_locked",
+        "source_highlighted",
+        "unlocked"
+      ],
+      "expected_introduced_tabs": [
+        "ui.combat",
+        "ui.equipment",
+        "ui.inventory",
+        "ui.quests",
+        "ui.settings",
+        "ui.skills"
+      ],
+      "id": "hud.signature.b1d364ad73bc",
+      "pixel_family_id": "hud.classic",
+      "state_ids": [
+        "stage.tutorial.combat_open",
+        "stage.tutorial.enter_rat_pen",
+        "stage.tutorial.melee_rat",
+        "stage.tutorial.leave_rat_pen",
+        "stage.tutorial.ranged_supply",
+        "stage.tutorial.equip_ranged",
+        "stage.tutorial.ranged_rat",
+        "stage.tutorial.combat_exit",
+        "stage.tutorial.bank_open",
+        "stage.tutorial.bank_close",
+        "stage.tutorial.poll_inspect",
+        "stage.tutorial.account_entry",
+        "stage.tutorial.account_greeting"
+      ],
+      "unmentioned_controls": "unknown; never convert absence from this signature into hidden/disabled"
+    },
+    {
+      "basis": "Named control introductions in the pinned current transcript/journey contract; NOT observed numeric source progress or a declaration that every unmentioned control is hidden.",
+      "display_states_required": [
+        "source_locked",
+        "source_highlighted",
+        "unlocked"
+      ],
+      "expected_introduced_tabs": [
+        "ui.account",
+        "ui.combat",
+        "ui.equipment",
+        "ui.inventory",
+        "ui.quests",
+        "ui.settings",
+        "ui.skills"
+      ],
+      "id": "hud.signature.943ff57f7cf5",
+      "pixel_family_id": "hud.classic",
+      "state_ids": [
+        "stage.tutorial.account_open"
+      ],
+      "unmentioned_controls": "unknown; never convert absence from this signature into hidden/disabled"
+    },
+    {
+      "basis": "Named control introductions in the pinned current transcript/journey contract; NOT observed numeric source progress or a declaration that every unmentioned control is hidden.",
+      "display_states_required": [
+        "source_locked",
+        "source_highlighted",
+        "unlocked"
+      ],
+      "expected_introduced_tabs": [
+        "ui.account",
+        "ui.combat",
+        "ui.equipment",
+        "ui.inventory",
+        "ui.logout",
+        "ui.quests",
+        "ui.settings",
+        "ui.skills"
+      ],
+      "id": "hud.signature.d66878558420",
+      "pixel_family_id": "hud.classic",
+      "state_ids": [
+        "stage.tutorial.account_explanation",
+        "stage.tutorial.account_exit",
+        "stage.tutorial.chapel_entry",
+        "stage.tutorial.prayer_greeting"
+      ],
+      "unmentioned_controls": "unknown; never convert absence from this signature into hidden/disabled"
+    },
+    {
+      "basis": "Named control introductions in the pinned current transcript/journey contract; NOT observed numeric source progress or a declaration that every unmentioned control is hidden.",
+      "display_states_required": [
+        "source_locked",
+        "source_highlighted",
+        "unlocked"
+      ],
+      "expected_introduced_tabs": [
+        "ui.account",
+        "ui.combat",
+        "ui.equipment",
+        "ui.inventory",
+        "ui.logout",
+        "ui.prayer",
+        "ui.quests",
+        "ui.settings",
+        "ui.skills"
+      ],
+      "id": "hud.signature.afee12fe4bbc",
+      "pixel_family_id": "hud.classic",
+      "state_ids": [
+        "stage.tutorial.prayer_open",
+        "stage.tutorial.prayer_explanation",
+        "stage.tutorial.chapel_exit",
+        "stage.tutorial.magic_entry",
+        "stage.tutorial.magic_greeting"
+      ],
+      "unmentioned_controls": "unknown; never convert absence from this signature into hidden/disabled"
+    },
+    {
+      "basis": "Named control introductions in the pinned current transcript/journey contract; NOT observed numeric source progress or a declaration that every unmentioned control is hidden.",
+      "display_states_required": [
+        "source_locked",
+        "source_highlighted",
+        "unlocked"
+      ],
+      "expected_introduced_tabs": [
+        "ui.account",
+        "ui.combat",
+        "ui.equipment",
+        "ui.inventory",
+        "ui.logout",
+        "ui.magic",
+        "ui.prayer",
+        "ui.quests",
+        "ui.settings",
+        "ui.skills"
+      ],
+      "id": "hud.signature.24123c0f583f",
+      "pixel_family_id": "hud.classic",
+      "state_ids": [
+        "stage.tutorial.magic_open",
+        "stage.tutorial.magic_supply",
+        "stage.tutorial.wind_strike",
+        "stage.tutorial.departure_offer",
+        "stage.tutorial.departure_confirmation",
+        "stage.tutorial.home_teleport",
+        "stage.tutorial.teleport_channel",
+        "stage.tutorial.mainland"
+      ],
+      "unmentioned_controls": "unknown; never convert absence from this signature into hidden/disabled"
+    }
+  ],
+  "qualification": "Original native control/label data. Signature omissions are unknown, never evidence to hide a control.",
+  "schema_version": 1,
+  "sha256": "0fd28137bd73a6da31f58e62638b0a9c546a34d5b9f95750e4ce1755907999a0",
+  "source": "assets/compiled/ui/manifest.json",
+  "source_pack_sha256": "b62e19704e17d3d3e4e819f803ef49ba7cc54034ae407184b423427c65d9674d",
+  "tutorial_states": [
+    {
+      "case_id": "case.tutorial.appearance",
+      "declared_controls": [
+        "ui.appearance"
+      ],
+      "distinct_layout_still_required": true,
+      "family_ids": [
+        "hud.classic",
+        "tutorial.appearance",
+        "world.scenery"
+      ],
+      "hud_signature_id": "hud.signature.e3b0c44298fc",
+      "phase_id": "phase.tutorial.00",
+      "separate_source_screenshot_required": false,
+      "source_text_record_ids": [
+        "text.333051.15309360.10",
+        "text.333051.15309360.5",
+        "text.333051.15309360.6",
+        "text.333051.15309360.7",
+        "text.333051.15309360.8",
+        "text.333051.15309360.9"
+      ],
+      "source_text_selector": {
+        "chapter": "Customization",
+        "sections": [
+          null
+        ]
+      },
+      "state_id": "stage.tutorial.appearance",
+      "text_selection_rule": "Choose the exact record and permitted branch using the authoritative event/guard trace and source section/order. This phase corpus is NOT permission to display any arbitrary line from the instructor at every state.",
+      "visual_variant_ids": [
+        "tutorial.appearance.appearance_controls",
+        "world.scenery.tutorial_house"
+      ]
+    },
+    {
+      "case_id": "case.tutorial.experience",
+      "declared_controls": [
+        "ui.experience"
+      ],
+      "distinct_layout_still_required": true,
+      "family_ids": [
+        "hud.classic",
+        "tutorial.experience",
+        "world.scenery"
+      ],
+      "hud_signature_id": "hud.signature.e3b0c44298fc",
+      "phase_id": "phase.tutorial.01",
+      "separate_source_screenshot_required": false,
+      "source_text_record_ids": [
+        "text.333051.15309360.10",
+        "text.333051.15309360.5",
+        "text.333051.15309360.6",
+        "text.333051.15309360.7",
+        "text.333051.15309360.8",
+        "text.333051.15309360.9"
+      ],
+      "source_text_selector": {
+        "chapter": "Customization",
+        "sections": [
+          null
+        ]
+      },
+      "state_id": "stage.tutorial.experience",
+      "text_selection_rule": "Choose the exact record and permitted branch using the authoritative event/guard trace and source section/order. This phase corpus is NOT permission to display any arbitrary line from the instructor at every state.",
+      "visual_variant_ids": [
+        "tutorial.experience.brand_new",
+        "tutorial.experience.experienced",
+        "tutorial.experience.returning",
+        "world.scenery.tutorial_house"
+      ]
+    },
+    {
+      "case_id": "case.tutorial.guide_greeting",
+      "declared_controls": [],
+      "distinct_layout_still_required": true,
+      "family_ids": [
+        "dialogue.flow",
+        "hud.classic",
+        "world.scenery"
+      ],
+      "hud_signature_id": "hud.signature.e3b0c44298fc",
+      "phase_id": "phase.tutorial.02",
+      "separate_source_screenshot_required": false,
+      "source_text_record_ids": [
+        "text.333051.15309360.14",
+        "text.333051.15309360.15",
+        "text.333051.15309360.16",
+        "text.333051.15309360.17",
+        "text.333051.15309360.18"
+      ],
+      "source_text_selector": {
+        "chapter": "Gielinor Guide",
+        "sections": [
+          null
+        ]
+      },
+      "state_id": "stage.tutorial.guide_greeting",
+      "text_selection_rule": "Choose the exact record and permitted branch using the authoritative event/guard trace and source section/order. This phase corpus is NOT permission to display any arbitrary line from the instructor at every state.",
+      "visual_variant_ids": [
+        "dialogue.flow.continue",
+        "dialogue.flow.speaker_chathead",
+        "world.scenery.tutorial_house"
+      ]
+    },
+    {
+      "case_id": "case.tutorial.settings_open",
+      "declared_controls": [
+        "ui.settings"
+      ],
+      "distinct_layout_still_required": true,
+      "family_ids": [
+        "hud.classic",
+        "ui.settings",
+        "world.scenery"
+      ],
+      "hud_signature_id": "hud.signature.eccd45481804",
+      "phase_id": "phase.tutorial.02",
+      "separate_source_screenshot_required": false,
+      "source_text_record_ids": [
+        "text.333051.15309360.14",
+        "text.333051.15309360.15",
+        "text.333051.15309360.16",
+        "text.333051.15309360.17",
+        "text.333051.15309360.18"
+      ],
+      "source_text_selector": {
+        "chapter": "Gielinor Guide",
+        "sections": [
+          null
+        ]
+      },
+      "state_id": "stage.tutorial.settings_open",
+      "text_selection_rule": "Choose the exact record and permitted branch using the authoritative event/guard trace and source section/order. This phase corpus is NOT permission to display any arbitrary line from the instructor at every state.",
+      "visual_variant_ids": [
+        "hud.classic.source_highlighted",
+        "ui.settings.sidebar",
+        "world.scenery.tutorial_house"
+      ]
+    },
+    {
+      "case_id": "case.tutorial.guide_settings",
+      "declared_controls": [],
+      "distinct_layout_still_required": true,
+      "family_ids": [
+        "dialogue.flow",
+        "hud.classic",
+        "world.scenery"
+      ],
+      "hud_signature_id": "hud.signature.eccd45481804",
+      "phase_id": "phase.tutorial.02",
+      "separate_source_screenshot_required": false,
+      "source_text_record_ids": [
+        "text.333051.15309360.25",
+        "text.333051.15309360.26",
+        "text.333051.15309360.27",
+        "text.333051.15309360.28"
+      ],
+      "source_text_selector": {
+        "chapter": "Gielinor Guide",
+        "sections": [
+          "After opening settings menu"
+        ]
+      },
+      "state_id": "stage.tutorial.guide_settings",
+      "text_selection_rule": "Choose the exact record and permitted branch using the authoritative event/guard trace and source section/order. This phase corpus is NOT permission to display any arbitrary line from the instructor at every state.",
+      "visual_variant_ids": [
+        "dialogue.flow.continue",
+        "dialogue.flow.speaker_chathead",
+        "world.scenery.tutorial_house"
+      ]
+    },
+    {
+      "case_id": "case.tutorial.starting_exit",
+      "declared_controls": [],
+      "distinct_layout_still_required": true,
+      "family_ids": [
+        "dialogue.flow",
+        "hud.classic",
+        "world.scenery"
+      ],
+      "hud_signature_id": "hud.signature.eccd45481804",
+      "phase_id": "phase.tutorial.02",
+      "separate_source_screenshot_required": false,
+      "source_text_record_ids": [
+        "text.333051.15309360.25",
+        "text.333051.15309360.26",
+        "text.333051.15309360.27",
+        "text.333051.15309360.28"
+      ],
+      "source_text_selector": {
+        "chapter": "Gielinor Guide",
+        "sections": [
+          "After opening settings menu"
+        ]
+      },
+      "state_id": "stage.tutorial.starting_exit",
+      "text_selection_rule": "Choose the exact record and permitted branch using the authoritative event/guard trace and source section/order. This phase corpus is NOT permission to display any arbitrary line from the instructor at every state.",
+      "visual_variant_ids": [
+        "dialogue.flow.instruction",
+        "world.scenery.route_transition",
+        "world.scenery.tutorial_house"
+      ]
+    },
+    {
+      "case_id": "case.tutorial.survival_greeting",
+      "declared_controls": [],
+      "distinct_layout_still_required": true,
+      "family_ids": [
+        "dialogue.flow",
+        "hud.classic",
+        "ui.inventory",
+        "world.scenery"
+      ],
+      "hud_signature_id": "hud.signature.eccd45481804",
+      "phase_id": "phase.tutorial.03",
+      "separate_source_screenshot_required": false,
+      "source_text_record_ids": [
+        "text.333051.15309360.48",
+        "text.333051.15309360.49",
+        "text.333051.15309360.51",
+        "text.333051.15309360.52"
+      ],
+      "source_text_selector": {
+        "chapter": "Survival Expert",
+        "sections": [
+          "Talking to the Survival Expert"
+        ]
+      },
+      "state_id": "stage.tutorial.survival_greeting",
+      "text_selection_rule": "Choose the exact record and permitted branch using the authoritative event/guard trace and source section/order. This phase corpus is NOT permission to display any arbitrary line from the instructor at every state.",
+      "visual_variant_ids": [
+        "dialogue.flow.item_grant",
+        "dialogue.flow.speaker_chathead",
+        "ui.inventory.occupied",
+        "world.scenery.tutorial_coast"
+      ]
+    },
+    {
+      "case_id": "case.tutorial.inventory_open",
+      "declared_controls": [
+        "ui.inventory"
+      ],
+      "distinct_layout_still_required": true,
+      "family_ids": [
+        "hud.classic",
+        "ui.inventory",
+        "world.scenery"
+      ],
+      "hud_signature_id": "hud.signature.fea76d760919",
+      "phase_id": "phase.tutorial.03",
+      "separate_source_screenshot_required": false,
+      "source_text_record_ids": [
+        "text.333051.15309360.59"
+      ],
+      "source_text_selector": {
+        "chapter": "Survival Expert",
+        "sections": [
+          "After opening inventory"
+        ]
+      },
+      "state_id": "stage.tutorial.inventory_open",
+      "text_selection_rule": "Choose the exact record and permitted branch using the authoritative event/guard trace and source section/order. This phase corpus is NOT permission to display any arbitrary line from the instructor at every state.",
+      "visual_variant_ids": [
+        "hud.classic.source_highlighted",
+        "ui.inventory.occupied",
+        "world.scenery.tutorial_coast"
+      ]
+    },
+    {
+      "case_id": "case.tutorial.catch_shrimp",
+      "declared_controls": [],
+      "distinct_layout_still_required": true,
+      "family_ids": [
+        "hud.classic",
+        "ui.inventory",
+        "world.activities",
+        "world.scenery"
+      ],
+      "hud_signature_id": "hud.signature.fea76d760919",
+      "phase_id": "phase.tutorial.03",
+      "separate_source_screenshot_required": false,
+      "source_text_record_ids": [
+        "text.333051.15309360.63",
+        "text.333051.15309360.67",
+        "text.333051.15309360.68",
+        "text.333051.15309360.69",
+        "text.333051.15309360.73"
+      ],
+      "source_text_selector": {
+        "chapter": "Survival Expert",
+        "sections": [
+          "Before fishing",
+          "After clicking on a fishing spot",
+          "Before opening skills menu"
+        ]
+      },
+      "state_id": "stage.tutorial.catch_shrimp",
+      "text_selection_rule": "Choose the exact record and permitted branch using the authoritative event/guard trace and source section/order. This phase corpus is NOT permission to display any arbitrary line from the instructor at every state.",
+      "visual_variant_ids": [
+        "ui.inventory.occupied",
+        "world.activities.fishing",
+        "world.scenery.tutorial_coast"
+      ]
+    },
+    {
+      "case_id": "case.tutorial.skills_open",
+      "declared_controls": [
+        "ui.skills"
+      ],
+      "distinct_layout_still_required": true,
+      "family_ids": [
+        "hud.classic",
+        "ui.skills",
+        "world.scenery"
+      ],
+      "hud_signature_id": "hud.signature.bb9660478aa4",
+      "phase_id": "phase.tutorial.03",
+      "separate_source_screenshot_required": false,
+      "source_text_record_ids": [
+        "text.333051.15309360.73",
+        "text.333051.15309360.77"
+      ],
+      "source_text_selector": {
+        "chapter": "Survival Expert",
+        "sections": [
+          "Before opening skills menu",
+          "After opening skills menu"
+        ]
+      },
+      "state_id": "stage.tutorial.skills_open",
+      "text_selection_rule": "Choose the exact record and permitted branch using the authoritative event/guard trace and source section/order. This phase corpus is NOT permission to display any arbitrary line from the instructor at every state.",
+      "visual_variant_ids": [
+        "hud.classic.source_highlighted",
+        "ui.skills.grid_24",
+        "ui.skills.tooltip",
+        "world.scenery.tutorial_coast"
+      ]
+    },
+    {
+      "case_id": "case.tutorial.survival_tools",
+      "declared_controls": [],
+      "distinct_layout_still_required": true,
+      "family_ids": [
+        "dialogue.flow",
+        "hud.classic",
+        "ui.inventory",
+        "world.scenery"
+      ],
+      "hud_signature_id": "hud.signature.bb9660478aa4",
+      "phase_id": "phase.tutorial.03",
+      "separate_source_screenshot_required": false,
+      "source_text_record_ids": [
+        "text.333051.15309360.83",
+        "text.333051.15309360.84",
+        "text.333051.15309360.85",
+        "text.333051.15309360.86"
+      ],
+      "source_text_selector": {
+        "chapter": "Survival Expert",
+        "sections": [
+          "After fishing"
+        ]
+      },
+      "state_id": "stage.tutorial.survival_tools",
+      "text_selection_rule": "Choose the exact record and permitted branch using the authoritative event/guard trace and source section/order. This phase corpus is NOT permission to display any arbitrary line from the instructor at every state.",
+      "visual_variant_ids": [
+        "dialogue.flow.item_grant",
+        "dialogue.flow.player_speaker",
+        "dialogue.flow.speaker_chathead",
+        "ui.inventory.occupied",
+        "world.scenery.tutorial_coast"
+      ]
+    },
+    {
+      "case_id": "case.tutorial.cut_logs",
+      "declared_controls": [],
+      "distinct_layout_still_required": true,
+      "family_ids": [
+        "hud.classic",
+        "ui.inventory",
+        "world.activities",
+        "world.scenery"
+      ],
+      "hud_signature_id": "hud.signature.bb9660478aa4",
+      "phase_id": "phase.tutorial.03",
+      "separate_source_screenshot_required": false,
+      "source_text_record_ids": [
+        "text.333051.15309360.100",
+        "text.333051.15309360.90",
+        "text.333051.15309360.98",
+        "text.333051.15309360.99"
+      ],
+      "source_text_selector": {
+        "chapter": "Survival Expert",
+        "sections": [
+          "Before cutting a tree",
+          "After clicking on a tree"
+        ]
+      },
+      "state_id": "stage.tutorial.cut_logs",
+      "text_selection_rule": "Choose the exact record and permitted branch using the authoritative event/guard trace and source section/order. This phase corpus is NOT permission to display any arbitrary line from the instructor at every state.",
+      "visual_variant_ids": [
+        "ui.inventory.occupied",
+        "world.activities.chopping",
+        "world.scenery.tutorial_coast"
+      ]
+    },
+    {
+      "case_id": "case.tutorial.light_fire",
+      "declared_controls": [],
+      "distinct_layout_still_required": true,
+      "family_ids": [
+        "hud.classic",
+        "ui.inventory",
+        "world.activities",
+        "world.scenery"
+      ],
+      "hud_signature_id": "hud.signature.bb9660478aa4",
+      "phase_id": "phase.tutorial.03",
+      "separate_source_screenshot_required": false,
+      "source_text_record_ids": [
+        "text.333051.15309360.104",
+        "text.333051.15309360.108",
+        "text.333051.15309360.110",
+        "text.333051.15309360.113"
+      ],
+      "source_text_selector": {
+        "chapter": "Survival Expert",
+        "sections": [
+          "Before lighting a fire",
+          "After using tinderbox on logs"
+        ]
+      },
+      "state_id": "stage.tutorial.light_fire",
+      "text_selection_rule": "Choose the exact record and permitted branch using the authoritative event/guard trace and source section/order. This phase corpus is NOT permission to display any arbitrary line from the instructor at every state.",
+      "visual_variant_ids": [
+        "ui.inventory.item_on_item",
+        "world.activities.firemaking",
+        "world.scenery.tutorial_coast"
+      ]
+    },
+    {
+      "case_id": "case.tutorial.cook_shrimp",
+      "declared_controls": [],
+      "distinct_layout_still_required": true,
+      "family_ids": [
+        "hud.classic",
+        "ui.production",
+        "world.activities",
+        "world.scenery"
+      ],
+      "hud_signature_id": "hud.signature.bb9660478aa4",
+      "phase_id": "phase.tutorial.03",
+      "separate_source_screenshot_required": false,
+      "source_text_record_ids": [
+        "text.333051.15309360.117",
+        "text.333051.15309360.121",
+        "text.333051.15309360.123",
+        "text.333051.15309360.124",
+        "text.333051.15309360.127",
+        "text.333051.15309360.128",
+        "text.333051.15309360.132",
+        "text.333051.15309360.134",
+        "text.333051.15309360.135"
+      ],
+      "source_text_selector": {
+        "chapter": "Survival Expert",
+        "sections": [
+          "Before cooking the shrimp",
+          "After using shrimp on fire",
+          "Cooking more shrimp"
+        ]
+      },
+      "state_id": "stage.tutorial.cook_shrimp",
+      "text_selection_rule": "Choose the exact record and permitted branch using the authoritative event/guard trace and source section/order. This phase corpus is NOT permission to display any arbitrary line from the instructor at every state.",
+      "visual_variant_ids": [
+        "ui.production.cooking_burn",
+        "ui.production.cooking_success",
+        "world.activities.cooking",
+        "world.scenery.tutorial_coast"
+      ]
+    },
+    {
+      "case_id": "case.tutorial.survival_exit",
+      "declared_controls": [],
+      "distinct_layout_still_required": true,
+      "family_ids": [
+        "dialogue.flow",
+        "hud.classic",
+        "world.scenery"
+      ],
+      "hud_signature_id": "hud.signature.bb9660478aa4",
+      "phase_id": "phase.tutorial.03",
+      "separate_source_screenshot_required": false,
+      "source_text_record_ids": [
+        "text.333051.15309360.181"
+      ],
+      "source_text_selector": {
+        "chapter": "Survival Expert",
+        "sections": [
+          "After opening the gate"
+        ]
+      },
+      "state_id": "stage.tutorial.survival_exit",
+      "text_selection_rule": "Choose the exact record and permitted branch using the authoritative event/guard trace and source section/order. This phase corpus is NOT permission to display any arbitrary line from the instructor at every state.",
+      "visual_variant_ids": [
+        "dialogue.flow.instruction",
+        "world.scenery.route_transition",
+        "world.scenery.tutorial_coast"
+      ]
+    },
+    {
+      "case_id": "case.tutorial.chef_entry",
+      "declared_controls": [],
+      "distinct_layout_still_required": true,
+      "family_ids": [
+        "dialogue.flow",
+        "hud.classic",
+        "world.scenery"
+      ],
+      "hud_signature_id": "hud.signature.bb9660478aa4",
+      "phase_id": "phase.tutorial.04",
+      "separate_source_screenshot_required": false,
+      "source_text_record_ids": [
+        "text.333051.15309360.210"
+      ],
+      "source_text_selector": {
+        "chapter": "Master Chef",
+        "sections": [
+          "Opening the Master Chef's door"
+        ]
+      },
+      "state_id": "stage.tutorial.chef_entry",
+      "text_selection_rule": "Choose the exact record and permitted branch using the authoritative event/guard trace and source section/order. This phase corpus is NOT permission to display any arbitrary line from the instructor at every state.",
+      "visual_variant_ids": [
+        "dialogue.flow.instruction",
+        "world.scenery.kitchen",
+        "world.scenery.route_transition"
+      ]
+    },
+    {
+      "case_id": "case.tutorial.chef_greeting",
+      "declared_controls": [],
+      "distinct_layout_still_required": true,
+      "family_ids": [
+        "dialogue.flow",
+        "hud.classic",
+        "ui.inventory",
+        "world.scenery"
+      ],
+      "hud_signature_id": "hud.signature.bb9660478aa4",
+      "phase_id": "phase.tutorial.04",
+      "separate_source_screenshot_required": false,
+      "source_text_record_ids": [
+        "text.333051.15309360.219",
+        "text.333051.15309360.220",
+        "text.333051.15309360.221",
+        "text.333051.15309360.223",
+        "text.333051.15309360.224"
+      ],
+      "source_text_selector": {
+        "chapter": "Master Chef",
+        "sections": [
+          "Talking to the Master Chef"
+        ]
+      },
+      "state_id": "stage.tutorial.chef_greeting",
+      "text_selection_rule": "Choose the exact record and permitted branch using the authoritative event/guard trace and source section/order. This phase corpus is NOT permission to display any arbitrary line from the instructor at every state.",
+      "visual_variant_ids": [
+        "dialogue.flow.item_grant",
+        "dialogue.flow.player_speaker",
+        "dialogue.flow.speaker_chathead",
+        "ui.inventory.occupied",
+        "world.scenery.kitchen"
+      ]
+    },
+    {
+      "case_id": "case.tutorial.make_dough",
+      "declared_controls": [
+        "ui.cooking"
+      ],
+      "distinct_layout_still_required": true,
+      "family_ids": [
+        "hud.classic",
+        "ui.inventory",
+        "ui.production",
+        "world.scenery"
+      ],
+      "hud_signature_id": "hud.signature.bb9660478aa4",
+      "phase_id": "phase.tutorial.04",
+      "separate_source_screenshot_required": false,
+      "source_text_record_ids": [
+        "text.333051.15309360.243",
+        "text.333051.15309360.244"
+      ],
+      "source_text_selector": {
+        "chapter": "Master Chef",
+        "sections": [
+          "Making the dough"
+        ]
+      },
+      "state_id": "stage.tutorial.make_dough",
+      "text_selection_rule": "Choose the exact record and permitted branch using the authoritative event/guard trace and source section/order. This phase corpus is NOT permission to display any arbitrary line from the instructor at every state.",
+      "visual_variant_ids": [
+        "ui.inventory.item_on_item",
+        "ui.production.item_mixing",
+        "world.scenery.kitchen"
+      ]
+    },
+    {
+      "case_id": "case.tutorial.bake_bread",
+      "declared_controls": [],
+      "distinct_layout_still_required": true,
+      "family_ids": [
+        "hud.classic",
+        "ui.production",
+        "world.activities",
+        "world.scenery"
+      ],
+      "hud_signature_id": "hud.signature.bb9660478aa4",
+      "phase_id": "phase.tutorial.04",
+      "separate_source_screenshot_required": false,
+      "source_text_record_ids": [
+        "text.333051.15309360.248",
+        "text.333051.15309360.249",
+        "text.333051.15309360.250",
+        "text.333051.15309360.254",
+        "text.333051.15309360.258",
+        "text.333051.15309360.259"
+      ],
+      "source_text_selector": {
+        "chapter": "Master Chef",
+        "sections": [
+          "Cooking the dough",
+          "Cooking more dough"
+        ]
+      },
+      "state_id": "stage.tutorial.bake_bread",
+      "text_selection_rule": "Choose the exact record and permitted branch using the authoritative event/guard trace and source section/order. This phase corpus is NOT permission to display any arbitrary line from the instructor at every state.",
+      "visual_variant_ids": [
+        "ui.production.cooking_burn",
+        "ui.production.cooking_success",
+        "world.activities.cooking",
+        "world.scenery.kitchen"
+      ]
+    },
+    {
+      "case_id": "case.tutorial.chef_exit",
+      "declared_controls": [],
+      "distinct_layout_still_required": true,
+      "family_ids": [
+        "dialogue.flow",
+        "hud.classic",
+        "world.scenery"
+      ],
+      "hud_signature_id": "hud.signature.bb9660478aa4",
+      "phase_id": "phase.tutorial.04",
+      "separate_source_screenshot_required": false,
+      "source_text_record_ids": [
+        "text.333051.15309360.280"
+      ],
+      "source_text_selector": {
+        "chapter": "Master Chef",
+        "sections": [
+          "Opening the exit door"
+        ]
+      },
+      "state_id": "stage.tutorial.chef_exit",
+      "text_selection_rule": "Choose the exact record and permitted branch using the authoritative event/guard trace and source section/order. This phase corpus is NOT permission to display any arbitrary line from the instructor at every state.",
+      "visual_variant_ids": [
+        "dialogue.flow.instruction",
+        "world.scenery.kitchen",
+        "world.scenery.route_transition"
+      ]
+    },
+    {
+      "case_id": "case.tutorial.run_toggle",
+      "declared_controls": [],
+      "distinct_layout_still_required": true,
+      "family_ids": [
+        "hud.classic",
+        "world.scenery"
+      ],
+      "hud_signature_id": "hud.signature.bb9660478aa4",
+      "phase_id": "phase.tutorial.04",
+      "separate_source_screenshot_required": false,
+      "source_text_record_ids": [
+        "text.333051.15309360.284"
+      ],
+      "source_text_selector": {
+        "chapter": "Master Chef",
+        "sections": [
+          "After toggling the run button"
+        ]
+      },
+      "state_id": "stage.tutorial.run_toggle",
+      "text_selection_rule": "Choose the exact record and permitted branch using the authoritative event/guard trace and source section/order. This phase corpus is NOT permission to display any arbitrary line from the instructor at every state.",
+      "visual_variant_ids": [
+        "hud.classic.run_active",
+        "world.scenery.kitchen"
+      ]
+    },
+    {
+      "case_id": "case.tutorial.quest_entry",
+      "declared_controls": [],
+      "distinct_layout_still_required": true,
+      "family_ids": [
+        "dialogue.flow",
+        "hud.classic",
+        "world.scenery"
+      ],
+      "hud_signature_id": "hud.signature.bb9660478aa4",
+      "phase_id": "phase.tutorial.05",
+      "separate_source_screenshot_required": false,
+      "source_text_record_ids": [
+        "text.333051.15309360.289"
+      ],
+      "source_text_selector": {
+        "chapter": "Quest Guide",
+        "sections": [
+          "Opening the Quest Guide's door"
+        ]
+      },
+      "state_id": "stage.tutorial.quest_entry",
+      "text_selection_rule": "Choose the exact record and permitted branch using the authoritative event/guard trace and source section/order. This phase corpus is NOT permission to display any arbitrary line from the instructor at every state.",
+      "visual_variant_ids": [
+        "dialogue.flow.instruction",
+        "world.scenery.quest_house",
+        "world.scenery.route_transition"
+      ]
+    },
+    {
+      "case_id": "case.tutorial.quest_greeting",
+      "declared_controls": [],
+      "distinct_layout_still_required": true,
+      "family_ids": [
+        "dialogue.flow",
+        "hud.classic",
+        "ui.quests",
+        "world.scenery"
+      ],
+      "hud_signature_id": "hud.signature.bb9660478aa4",
+      "phase_id": "phase.tutorial.05",
+      "separate_source_screenshot_required": false,
+      "source_text_record_ids": [
+        "text.333051.15309360.297",
+        "text.333051.15309360.298"
+      ],
+      "source_text_selector": {
+        "chapter": "Quest Guide",
+        "sections": [
+          "Talking to the Quest Guide"
+        ]
+      },
+      "state_id": "stage.tutorial.quest_greeting",
+      "text_selection_rule": "Choose the exact record and permitted branch using the authoritative event/guard trace and source section/order. This phase corpus is NOT permission to display any arbitrary line from the instructor at every state.",
+      "visual_variant_ids": [
+        "dialogue.flow.speaker_chathead",
+        "ui.quests.active",
+        "world.scenery.quest_house"
+      ]
+    },
+    {
+      "case_id": "case.tutorial.journal_open",
+      "declared_controls": [
+        "ui.quests"
+      ],
+      "distinct_layout_still_required": true,
+      "family_ids": [
+        "hud.classic",
+        "ui.quests",
+        "world.scenery"
+      ],
+      "hud_signature_id": "hud.signature.d1caccbcc9e7",
+      "phase_id": "phase.tutorial.05",
+      "separate_source_screenshot_required": false,
+      "source_text_record_ids": [
+        "text.333051.15309360.306"
+      ],
+      "source_text_selector": {
+        "chapter": "Quest Guide",
+        "sections": [
+          "Opening the quest journal"
+        ]
+      },
+      "state_id": "stage.tutorial.journal_open",
+      "text_selection_rule": "Choose the exact record and permitted branch using the authoritative event/guard trace and source section/order. This phase corpus is NOT permission to display any arbitrary line from the instructor at every state.",
+      "visual_variant_ids": [
+        "hud.classic.source_highlighted",
+        "ui.quests.active",
+        "ui.quests.complete",
+        "ui.quests.not_started",
+        "world.scenery.quest_house"
+      ]
+    },
+    {
+      "case_id": "case.tutorial.quest_explanation",
+      "declared_controls": [],
+      "distinct_layout_still_required": true,
+      "family_ids": [
+        "dialogue.flow",
+        "hud.classic",
+        "ui.quests",
+        "world.scenery"
+      ],
+      "hud_signature_id": "hud.signature.d1caccbcc9e7",
+      "phase_id": "phase.tutorial.05",
+      "separate_source_screenshot_required": false,
+      "source_text_record_ids": [
+        "text.333051.15309360.310",
+        "text.333051.15309360.311",
+        "text.333051.15309360.312",
+        "text.333051.15309360.313",
+        "text.333051.15309360.314",
+        "text.333051.15309360.315",
+        "text.333051.15309360.316"
+      ],
+      "source_text_selector": {
+        "chapter": "Quest Guide",
+        "sections": [
+          "Talking to the Quest Guide after viewing the quest journal"
+        ]
+      },
+      "state_id": "stage.tutorial.quest_explanation",
+      "text_selection_rule": "Choose the exact record and permitted branch using the authoritative event/guard trace and source section/order. This phase corpus is NOT permission to display any arbitrary line from the instructor at every state.",
+      "visual_variant_ids": [
+        "dialogue.flow.speaker_chathead",
+        "ui.quests.active",
+        "world.scenery.quest_house"
+      ]
+    },
+    {
+      "case_id": "case.tutorial.quest_ladder",
+      "declared_controls": [],
+      "distinct_layout_still_required": true,
+      "family_ids": [
+        "dialogue.flow",
+        "hud.classic",
+        "world.scenery"
+      ],
+      "hud_signature_id": "hud.signature.d1caccbcc9e7",
+      "phase_id": "phase.tutorial.05",
+      "separate_source_screenshot_required": false,
+      "source_text_record_ids": [
+        "text.333051.15309360.334"
+      ],
+      "source_text_selector": {
+        "chapter": "Mining Instructor",
+        "sections": [
+          "After entering the caves"
+        ]
+      },
+      "state_id": "stage.tutorial.quest_ladder",
+      "text_selection_rule": "Choose the exact record and permitted branch using the authoritative event/guard trace and source section/order. This phase corpus is NOT permission to display any arbitrary line from the instructor at every state.",
+      "visual_variant_ids": [
+        "dialogue.flow.instruction",
+        "world.scenery.quest_house",
+        "world.scenery.route_transition"
+      ]
+    },
+    {
+      "case_id": "case.tutorial.mining_greeting",
+      "declared_controls": [],
+      "distinct_layout_still_required": true,
+      "family_ids": [
+        "dialogue.flow",
+        "hud.classic",
+        "ui.inventory",
+        "world.scenery"
+      ],
+      "hud_signature_id": "hud.signature.d1caccbcc9e7",
+      "phase_id": "phase.tutorial.06",
+      "separate_source_screenshot_required": false,
+      "source_text_record_ids": [
+        "text.333051.15309360.354",
+        "text.333051.15309360.355",
+        "text.333051.15309360.356",
+        "text.333051.15309360.357",
+        "text.333051.15309360.359",
+        "text.333051.15309360.360"
+      ],
+      "source_text_selector": {
+        "chapter": "Mining Instructor",
+        "sections": [
+          "Talking to the Mining Instructor"
+        ]
+      },
+      "state_id": "stage.tutorial.mining_greeting",
+      "text_selection_rule": "Choose the exact record and permitted branch using the authoritative event/guard trace and source section/order. This phase corpus is NOT permission to display any arbitrary line from the instructor at every state.",
+      "visual_variant_ids": [
+        "dialogue.flow.item_grant",
+        "dialogue.flow.player_speaker",
+        "dialogue.flow.speaker_chathead",
+        "ui.inventory.occupied",
+        "world.scenery.mine"
+      ]
+    },
+    {
+      "case_id": "case.tutorial.mine_first",
+      "declared_controls": [],
+      "distinct_layout_still_required": true,
+      "family_ids": [
+        "hud.classic",
+        "ui.inventory",
+        "world.activities",
+        "world.scenery"
+      ],
+      "hud_signature_id": "hud.signature.d1caccbcc9e7",
+      "phase_id": "phase.tutorial.06",
+      "separate_source_screenshot_required": false,
+      "source_text_record_ids": [
+        "text.333051.15309360.363",
+        "text.333051.15309360.364",
+        "text.333051.15309360.365",
+        "text.333051.15309360.368"
+      ],
+      "source_text_selector": {
+        "chapter": "Mining Instructor",
+        "sections": [
+          "Mining a rock",
+          "Before obtaining both ores"
+        ]
+      },
+      "state_id": "stage.tutorial.mine_first",
+      "text_selection_rule": "Choose the exact record and permitted branch using the authoritative event/guard trace and source section/order. This phase corpus is NOT permission to display any arbitrary line from the instructor at every state.",
+      "visual_variant_ids": [
+        "ui.inventory.occupied",
+        "world.activities.mining",
+        "world.scenery.mine"
+      ]
+    },
+    {
+      "case_id": "case.tutorial.mine_second",
+      "declared_controls": [],
+      "distinct_layout_still_required": true,
+      "family_ids": [
+        "hud.classic",
+        "ui.inventory",
+        "world.activities",
+        "world.scenery"
+      ],
+      "hud_signature_id": "hud.signature.d1caccbcc9e7",
+      "phase_id": "phase.tutorial.06",
+      "separate_source_screenshot_required": false,
+      "source_text_record_ids": [
+        "text.333051.15309360.363",
+        "text.333051.15309360.364",
+        "text.333051.15309360.365",
+        "text.333051.15309360.375",
+        "text.333051.15309360.376"
+      ],
+      "source_text_selector": {
+        "chapter": "Mining Instructor",
+        "sections": [
+          "Mining a rock",
+          "After obtaining both ores"
+        ]
+      },
+      "state_id": "stage.tutorial.mine_second",
+      "text_selection_rule": "Choose the exact record and permitted branch using the authoritative event/guard trace and source section/order. This phase corpus is NOT permission to display any arbitrary line from the instructor at every state.",
+      "visual_variant_ids": [
+        "ui.inventory.occupied",
+        "world.activities.mining",
+        "world.scenery.mine"
+      ]
+    },
+    {
+      "case_id": "case.tutorial.smelt_bronze",
+      "declared_controls": [],
+      "distinct_layout_still_required": true,
+      "family_ids": [
+        "hud.classic",
+        "ui.production",
+        "world.activities",
+        "world.scenery"
+      ],
+      "hud_signature_id": "hud.signature.d1caccbcc9e7",
+      "phase_id": "phase.tutorial.06",
+      "separate_source_screenshot_required": false,
+      "source_text_record_ids": [
+        "text.333051.15309360.379",
+        "text.333051.15309360.380",
+        "text.333051.15309360.381"
+      ],
+      "source_text_selector": {
+        "chapter": "Mining Instructor",
+        "sections": [
+          "Smelting bronze"
+        ]
+      },
+      "state_id": "stage.tutorial.smelt_bronze",
+      "text_selection_rule": "Choose the exact record and permitted branch using the authoritative event/guard trace and source section/order. This phase corpus is NOT permission to display any arbitrary line from the instructor at every state.",
+      "visual_variant_ids": [
+        "ui.production.smelting",
+        "world.activities.smelting",
+        "world.scenery.mine"
+      ]
+    },
+    {
+      "case_id": "case.tutorial.mining_hammer",
+      "declared_controls": [],
+      "distinct_layout_still_required": true,
+      "family_ids": [
+        "dialogue.flow",
+        "hud.classic",
+        "ui.inventory",
+        "world.scenery"
+      ],
+      "hud_signature_id": "hud.signature.d1caccbcc9e7",
+      "phase_id": "phase.tutorial.06",
+      "separate_source_screenshot_required": false,
+      "source_text_record_ids": [
+        "text.333051.15309360.388",
+        "text.333051.15309360.389",
+        "text.333051.15309360.391",
+        "text.333051.15309360.392",
+        "text.333051.15309360.395",
+        "text.333051.15309360.396"
+      ],
+      "source_text_selector": {
+        "chapter": "Mining Instructor",
+        "sections": [
+          "Talking to the Mining Instructor after smelting a bronze bar"
+        ]
+      },
+      "state_id": "stage.tutorial.mining_hammer",
+      "text_selection_rule": "Choose the exact record and permitted branch using the authoritative event/guard trace and source section/order. This phase corpus is NOT permission to display any arbitrary line from the instructor at every state.",
+      "visual_variant_ids": [
+        "dialogue.flow.item_grant",
+        "dialogue.flow.player_speaker",
+        "dialogue.flow.speaker_chathead",
+        "ui.inventory.occupied",
+        "world.scenery.mine"
+      ]
+    },
+    {
+      "case_id": "case.tutorial.anvil_open",
+      "declared_controls": [
+        "ui.smithing"
+      ],
+      "distinct_layout_still_required": true,
+      "family_ids": [
+        "hud.classic",
+        "ui.production",
+        "world.scenery"
+      ],
+      "hud_signature_id": "hud.signature.d1caccbcc9e7",
+      "phase_id": "phase.tutorial.06",
+      "separate_source_screenshot_required": false,
+      "source_text_record_ids": [
+        "text.333051.15309360.400",
+        "text.333051.15309360.403",
+        "text.333051.15309360.404",
+        "text.333051.15309360.407",
+        "text.333051.15309360.408",
+        "text.333051.15309360.412"
+      ],
+      "source_text_selector": {
+        "chapter": "Mining Instructor",
+        "sections": [
+          "Before making the dagger",
+          "Opening the smithing menu"
+        ]
+      },
+      "state_id": "stage.tutorial.anvil_open",
+      "text_selection_rule": "Choose the exact record and permitted branch using the authoritative event/guard trace and source section/order. This phase corpus is NOT permission to display any arbitrary line from the instructor at every state.",
+      "visual_variant_ids": [
+        "ui.production.anvil",
+        "ui.production.unavailable_recipe",
+        "world.scenery.mine"
+      ]
+    },
+    {
+      "case_id": "case.tutorial.smith_dagger",
+      "declared_controls": [],
+      "distinct_layout_still_required": true,
+      "family_ids": [
+        "hud.classic",
+        "ui.production",
+        "world.activities",
+        "world.scenery"
+      ],
+      "hud_signature_id": "hud.signature.d1caccbcc9e7",
+      "phase_id": "phase.tutorial.06",
+      "separate_source_screenshot_required": false,
+      "source_text_record_ids": [
+        "text.333051.15309360.416",
+        "text.333051.15309360.420"
+      ],
+      "source_text_selector": {
+        "chapter": "Mining Instructor",
+        "sections": [
+          "After smithing a bronze dagger",
+          "Attempting to make other bronze items"
+        ]
+      },
+      "state_id": "stage.tutorial.smith_dagger",
+      "text_selection_rule": "Choose the exact record and permitted branch using the authoritative event/guard trace and source section/order. This phase corpus is NOT permission to display any arbitrary line from the instructor at every state.",
+      "visual_variant_ids": [
+        "ui.production.dagger_selection",
+        "world.activities.smithing",
+        "world.scenery.mine"
+      ]
+    },
+    {
+      "case_id": "case.tutorial.mining_exit",
+      "declared_controls": [],
+      "distinct_layout_still_required": true,
+      "family_ids": [
+        "dialogue.flow",
+        "hud.classic",
+        "world.scenery"
+      ],
+      "hud_signature_id": "hud.signature.d1caccbcc9e7",
+      "phase_id": "phase.tutorial.06",
+      "separate_source_screenshot_required": false,
+      "source_text_record_ids": [
+        "text.333051.15309360.460"
+      ],
+      "source_text_selector": {
+        "chapter": "Mining Instructor",
+        "sections": [
+          "Opening the gate"
+        ]
+      },
+      "state_id": "stage.tutorial.mining_exit",
+      "text_selection_rule": "Choose the exact record and permitted branch using the authoritative event/guard trace and source section/order. This phase corpus is NOT permission to display any arbitrary line from the instructor at every state.",
+      "visual_variant_ids": [
+        "dialogue.flow.instruction",
+        "world.scenery.mine",
+        "world.scenery.route_transition"
+      ]
+    },
+    {
+      "case_id": "case.tutorial.combat_greeting",
+      "declared_controls": [],
+      "distinct_layout_still_required": true,
+      "family_ids": [
+        "dialogue.flow",
+        "hud.classic",
+        "world.scenery"
+      ],
+      "hud_signature_id": "hud.signature.d1caccbcc9e7",
+      "phase_id": "phase.tutorial.07",
+      "separate_source_screenshot_required": false,
+      "source_text_record_ids": [
+        "text.333051.15309360.473",
+        "text.333051.15309360.474",
+        "text.333051.15309360.475",
+        "text.333051.15309360.476",
+        "text.333051.15309360.478",
+        "text.333051.15309360.481"
+      ],
+      "source_text_selector": {
+        "chapter": "Combat Instructor",
+        "sections": [
+          "Talking to the Combat Instructor"
+        ]
+      },
+      "state_id": "stage.tutorial.combat_greeting",
+      "text_selection_rule": "Choose the exact record and permitted branch using the authoritative event/guard trace and source section/order. This phase corpus is NOT permission to display any arbitrary line from the instructor at every state.",
+      "visual_variant_ids": [
+        "dialogue.flow.player_speaker",
+        "dialogue.flow.speaker_chathead",
+        "world.scenery.combat_cave"
+      ]
+    },
+    {
+      "case_id": "case.tutorial.equipment_open",
+      "declared_controls": [
+        "ui.equipment"
+      ],
+      "distinct_layout_still_required": true,
+      "family_ids": [
+        "hud.classic",
+        "ui.equipment",
+        "world.scenery"
+      ],
+      "hud_signature_id": "hud.signature.7d3383ac8097",
+      "phase_id": "phase.tutorial.07",
+      "separate_source_screenshot_required": false,
+      "source_text_record_ids": [
+        "text.333051.15309360.493"
+      ],
+      "source_text_selector": {
+        "chapter": "Combat Instructor",
+        "sections": [
+          "Opening the worn inventory tab"
+        ]
+      },
+      "state_id": "stage.tutorial.equipment_open",
+      "text_selection_rule": "Choose the exact record and permitted branch using the authoritative event/guard trace and source section/order. This phase corpus is NOT permission to display any arbitrary line from the instructor at every state.",
+      "visual_variant_ids": [
+        "hud.classic.source_highlighted",
+        "ui.equipment.slots",
+        "world.scenery.combat_cave"
+      ]
+    },
+    {
+      "case_id": "case.tutorial.equipment_stats_open",
+      "declared_controls": [
+        "ui.equipment_stats"
+      ],
+      "distinct_layout_still_required": true,
+      "family_ids": [
+        "hud.classic",
+        "ui.equipment",
+        "world.scenery"
+      ],
+      "hud_signature_id": "hud.signature.7d3383ac8097",
+      "phase_id": "phase.tutorial.07",
+      "separate_source_screenshot_required": false,
+      "source_text_record_ids": [
+        "text.333051.15309360.497"
+      ],
+      "source_text_selector": {
+        "chapter": "Combat Instructor",
+        "sections": [
+          "Opening the equipment stats menu"
+        ]
+      },
+      "state_id": "stage.tutorial.equipment_stats_open",
+      "text_selection_rule": "Choose the exact record and permitted branch using the authoritative event/guard trace and source section/order. This phase corpus is NOT permission to display any arbitrary line from the instructor at every state.",
+      "visual_variant_ids": [
+        "ui.equipment.stats",
+        "world.scenery.combat_cave"
+      ]
+    },
+    {
+      "case_id": "case.tutorial.equip_dagger",
+      "declared_controls": [],
+      "distinct_layout_still_required": true,
+      "family_ids": [
+        "hud.classic",
+        "ui.equipment",
+        "world.scenery"
+      ],
+      "hud_signature_id": "hud.signature.7d3383ac8097",
+      "phase_id": "phase.tutorial.07",
+      "separate_source_screenshot_required": false,
+      "source_text_record_ids": [
+        "text.333051.15309360.501"
+      ],
+      "source_text_selector": {
+        "chapter": "Combat Instructor",
+        "sections": [
+          "After equipping a bronze dagger"
+        ]
+      },
+      "state_id": "stage.tutorial.equip_dagger",
+      "text_selection_rule": "Choose the exact record and permitted branch using the authoritative event/guard trace and source section/order. This phase corpus is NOT permission to display any arbitrary line from the instructor at every state.",
+      "visual_variant_ids": [
+        "ui.equipment.slots",
+        "ui.equipment.weapon_swap",
+        "world.scenery.combat_cave"
+      ]
+    },
+    {
+      "case_id": "case.tutorial.melee_supply",
+      "declared_controls": [],
+      "distinct_layout_still_required": true,
+      "family_ids": [
+        "dialogue.flow",
+        "hud.classic",
+        "ui.inventory",
+        "world.scenery"
+      ],
+      "hud_signature_id": "hud.signature.7d3383ac8097",
+      "phase_id": "phase.tutorial.07",
+      "separate_source_screenshot_required": false,
+      "source_text_record_ids": [
+        "text.333051.15309360.505",
+        "text.333051.15309360.507",
+        "text.333051.15309360.510",
+        "text.333051.15309360.513",
+        "text.333051.15309360.516",
+        "text.333051.15309360.519",
+        "text.333051.15309360.520"
+      ],
+      "source_text_selector": {
+        "chapter": "Combat Instructor",
+        "sections": [
+          "Talking to the Combat Instructor after equipping a bronze dagger"
+        ]
+      },
+      "state_id": "stage.tutorial.melee_supply",
+      "text_selection_rule": "Choose the exact record and permitted branch using the authoritative event/guard trace and source section/order. This phase corpus is NOT permission to display any arbitrary line from the instructor at every state.",
+      "visual_variant_ids": [
+        "dialogue.flow.item_grant",
+        "dialogue.flow.speaker_chathead",
+        "ui.inventory.occupied",
+        "world.scenery.combat_cave"
+      ]
+    },
+    {
+      "case_id": "case.tutorial.equip_melee",
+      "declared_controls": [],
+      "distinct_layout_still_required": true,
+      "family_ids": [
+        "hud.classic",
+        "ui.equipment",
+        "world.scenery"
+      ],
+      "hud_signature_id": "hud.signature.7d3383ac8097",
+      "phase_id": "phase.tutorial.07",
+      "separate_source_screenshot_required": false,
+      "source_text_record_ids": [
+        "text.333051.15309360.536"
+      ],
+      "source_text_selector": {
+        "chapter": "Combat Instructor",
+        "sections": [
+          "After equipping a bronze sword and wooden shield"
+        ]
+      },
+      "state_id": "stage.tutorial.equip_melee",
+      "text_selection_rule": "Choose the exact record and permitted branch using the authoritative event/guard trace and source section/order. This phase corpus is NOT permission to display any arbitrary line from the instructor at every state.",
+      "visual_variant_ids": [
+        "ui.equipment.slots",
+        "ui.equipment.weapon_swap",
+        "world.scenery.combat_cave"
+      ]
+    },
+    {
+      "case_id": "case.tutorial.combat_open",
+      "declared_controls": [
+        "ui.combat"
+      ],
+      "distinct_layout_still_required": true,
+      "family_ids": [
+        "hud.classic",
+        "ui.combat",
+        "world.scenery"
+      ],
+      "hud_signature_id": "hud.signature.b1d364ad73bc",
+      "phase_id": "phase.tutorial.07",
+      "separate_source_screenshot_required": false,
+      "source_text_record_ids": [
+        "text.333051.15309360.546"
+      ],
+      "source_text_selector": {
+        "chapter": "Combat Instructor",
+        "sections": [
+          "Opening the combat interface"
+        ]
+      },
+      "state_id": "stage.tutorial.combat_open",
+      "text_selection_rule": "Choose the exact record and permitted branch using the authoritative event/guard trace and source section/order. This phase corpus is NOT permission to display any arbitrary line from the instructor at every state.",
+      "visual_variant_ids": [
+        "hud.classic.source_highlighted",
+        "ui.combat.auto_retaliate",
+        "ui.combat.melee_styles",
+        "world.scenery.combat_cave"
+      ]
+    },
+    {
+      "case_id": "case.tutorial.enter_rat_pen",
+      "declared_controls": [],
+      "distinct_layout_still_required": true,
+      "family_ids": [
+        "dialogue.flow",
+        "hud.classic",
+        "world.scenery"
+      ],
+      "hud_signature_id": "hud.signature.b1d364ad73bc",
+      "phase_id": "phase.tutorial.07",
+      "separate_source_screenshot_required": false,
+      "source_text_record_ids": [
+        "text.333051.15309360.553"
+      ],
+      "source_text_selector": {
+        "chapter": "Combat Instructor",
+        "sections": [
+          "Entering the rat cage"
+        ]
+      },
+      "state_id": "stage.tutorial.enter_rat_pen",
+      "text_selection_rule": "Choose the exact record and permitted branch using the authoritative event/guard trace and source section/order. This phase corpus is NOT permission to display any arbitrary line from the instructor at every state.",
+      "visual_variant_ids": [
+        "dialogue.flow.instruction",
+        "world.scenery.combat_cave"
+      ]
+    },
+    {
+      "case_id": "case.tutorial.melee_rat",
+      "declared_controls": [],
+      "distinct_layout_still_required": true,
+      "family_ids": [
+        "hud.classic",
+        "ui.combat",
+        "world.activities",
+        "world.scenery"
+      ],
+      "hud_signature_id": "hud.signature.b1d364ad73bc",
+      "phase_id": "phase.tutorial.07",
+      "separate_source_screenshot_required": false,
+      "source_text_record_ids": [
+        "text.333051.15309360.557",
+        "text.333051.15309360.561",
+        "text.333051.15309360.565"
+      ],
+      "source_text_selector": {
+        "chapter": "Combat Instructor",
+        "sections": [
+          "Attacking a giant rat",
+          "After killing a giant rat",
+          "Attempting to attack a 2nd giant rat with melee"
+        ]
+      },
+      "state_id": "stage.tutorial.melee_rat",
+      "text_selection_rule": "Choose the exact record and permitted branch using the authoritative event/guard trace and source section/order. This phase corpus is NOT permission to display any arbitrary line from the instructor at every state.",
+      "visual_variant_ids": [
+        "ui.combat.target_feedback",
+        "world.activities.melee",
+        "world.scenery.combat_cave"
+      ]
+    },
+    {
+      "case_id": "case.tutorial.leave_rat_pen",
+      "declared_controls": [],
+      "distinct_layout_still_required": true,
+      "family_ids": [
+        "dialogue.flow",
+        "hud.classic",
+        "world.scenery"
+      ],
+      "hud_signature_id": "hud.signature.b1d364ad73bc",
+      "phase_id": "phase.tutorial.07",
+      "separate_source_screenshot_required": false,
+      "source_text_record_ids": [
+        "text.333051.15309360.569",
+        "text.333051.15309360.570",
+        "text.333051.15309360.571",
+        "text.333051.15309360.573",
+        "text.333051.15309360.576",
+        "text.333051.15309360.579",
+        "text.333051.15309360.580"
+      ],
+      "source_text_selector": {
+        "chapter": "Combat Instructor",
+        "sections": [
+          "Talking to the combat instructor after killing the first giant rat"
+        ]
+      },
+      "state_id": "stage.tutorial.leave_rat_pen",
+      "text_selection_rule": "Choose the exact record and permitted branch using the authoritative event/guard trace and source section/order. This phase corpus is NOT permission to display any arbitrary line from the instructor at every state.",
+      "visual_variant_ids": [
+        "dialogue.flow.instruction",
+        "dialogue.flow.player_speaker",
+        "world.scenery.combat_cave"
+      ]
+    },
+    {
+      "case_id": "case.tutorial.ranged_supply",
+      "declared_controls": [],
+      "distinct_layout_still_required": true,
+      "family_ids": [
+        "dialogue.flow",
+        "hud.classic",
+        "ui.inventory",
+        "world.scenery"
+      ],
+      "hud_signature_id": "hud.signature.b1d364ad73bc",
+      "phase_id": "phase.tutorial.07",
+      "separate_source_screenshot_required": false,
+      "source_text_record_ids": [
+        "text.333051.15309360.569",
+        "text.333051.15309360.570",
+        "text.333051.15309360.571",
+        "text.333051.15309360.573",
+        "text.333051.15309360.576",
+        "text.333051.15309360.579",
+        "text.333051.15309360.580"
+      ],
+      "source_text_selector": {
+        "chapter": "Combat Instructor",
+        "sections": [
+          "Talking to the combat instructor after killing the first giant rat"
+        ]
+      },
+      "state_id": "stage.tutorial.ranged_supply",
+      "text_selection_rule": "Choose the exact record and permitted branch using the authoritative event/guard trace and source section/order. This phase corpus is NOT permission to display any arbitrary line from the instructor at every state.",
+      "visual_variant_ids": [
+        "dialogue.flow.item_grant",
+        "dialogue.flow.player_speaker",
+        "dialogue.flow.speaker_chathead",
+        "ui.inventory.occupied",
+        "world.scenery.combat_cave"
+      ]
+    },
+    {
+      "case_id": "case.tutorial.equip_ranged",
+      "declared_controls": [],
+      "distinct_layout_still_required": true,
+      "family_ids": [
+        "hud.classic",
+        "ui.combat",
+        "ui.equipment",
+        "world.scenery"
+      ],
+      "hud_signature_id": "hud.signature.b1d364ad73bc",
+      "phase_id": "phase.tutorial.07",
+      "separate_source_screenshot_required": false,
+      "source_text_record_ids": [
+        "text.333051.15309360.583",
+        "text.333051.15309360.586",
+        "text.333051.15309360.590",
+        "text.333051.15309360.594"
+      ],
+      "source_text_selector": {
+        "chapter": "Combat Instructor",
+        "sections": [
+          "Talking to the combat instructor before killing the second giant rat"
+        ]
+      },
+      "state_id": "stage.tutorial.equip_ranged",
+      "text_selection_rule": "Choose the exact record and permitted branch using the authoritative event/guard trace and source section/order. This phase corpus is NOT permission to display any arbitrary line from the instructor at every state.",
+      "visual_variant_ids": [
+        "ui.combat.ranged_styles",
+        "ui.equipment.bow_displaces_shield",
+        "ui.equipment.slots",
+        "world.scenery.combat_cave"
+      ]
+    },
+    {
+      "case_id": "case.tutorial.ranged_rat",
+      "declared_controls": [],
+      "distinct_layout_still_required": true,
+      "family_ids": [
+        "hud.classic",
+        "ui.combat",
+        "world.activities",
+        "world.scenery"
+      ],
+      "hud_signature_id": "hud.signature.b1d364ad73bc",
+      "phase_id": "phase.tutorial.07",
+      "separate_source_screenshot_required": false,
+      "source_text_record_ids": [
+        "text.333051.15309360.603",
+        "text.333051.15309360.668"
+      ],
+      "source_text_selector": {
+        "chapter": "Combat Instructor",
+        "sections": [
+          "After killing a second giant rat",
+          "Attempting to attack a 3rd giant rat with ranged"
+        ]
+      },
+      "state_id": "stage.tutorial.ranged_rat",
+      "text_selection_rule": "Choose the exact record and permitted branch using the authoritative event/guard trace and source section/order. This phase corpus is NOT permission to display any arbitrary line from the instructor at every state.",
+      "visual_variant_ids": [
+        "ui.combat.target_feedback",
+        "world.activities.ranged",
+        "world.scenery.combat_cave"
+      ]
+    },
+    {
+      "case_id": "case.tutorial.combat_exit",
+      "declared_controls": [],
+      "distinct_layout_still_required": true,
+      "family_ids": [
+        "dialogue.flow",
+        "hud.classic",
+        "world.scenery"
+      ],
+      "hud_signature_id": "hud.signature.b1d364ad73bc",
+      "phase_id": "phase.tutorial.07",
+      "separate_source_screenshot_required": false,
+      "source_text_record_ids": [
+        "text.333051.15309360.672"
+      ],
+      "source_text_selector": {
+        "chapter": "Combat Instructor",
+        "sections": [
+          "Climbing the exit ladder"
+        ]
+      },
+      "state_id": "stage.tutorial.combat_exit",
+      "text_selection_rule": "Choose the exact record and permitted branch using the authoritative event/guard trace and source section/order. This phase corpus is NOT permission to display any arbitrary line from the instructor at every state.",
+      "visual_variant_ids": [
+        "dialogue.flow.instruction",
+        "world.scenery.combat_cave",
+        "world.scenery.route_transition"
+      ]
+    },
+    {
+      "case_id": "case.tutorial.bank_open",
+      "declared_controls": [
+        "ui.bank"
+      ],
+      "distinct_layout_still_required": true,
+      "family_ids": [
+        "hud.classic",
+        "ui.bank",
+        "world.scenery"
+      ],
+      "hud_signature_id": "hud.signature.b1d364ad73bc",
+      "phase_id": "phase.tutorial.08",
+      "separate_source_screenshot_required": false,
+      "source_text_record_ids": [
+        "text.333051.15309360.685"
+      ],
+      "source_text_selector": {
+        "chapter": "Banking tutorial",
+        "sections": [
+          "Opening the bank"
+        ]
+      },
+      "state_id": "stage.tutorial.bank_open",
+      "text_selection_rule": "Choose the exact record and permitted branch using the authoritative event/guard trace and source section/order. This phase corpus is NOT permission to display any arbitrary line from the instructor at every state.",
+      "visual_variant_ids": [
+        "ui.bank.amount",
+        "ui.bank.items",
+        "ui.bank.open",
+        "world.scenery.bank"
+      ]
+    },
+    {
+      "case_id": "case.tutorial.bank_close",
+      "declared_controls": [],
+      "distinct_layout_still_required": true,
+      "family_ids": [
+        "hud.classic",
+        "ui.bank",
+        "world.scenery"
+      ],
+      "hud_signature_id": "hud.signature.b1d364ad73bc",
+      "phase_id": "phase.tutorial.08",
+      "separate_source_screenshot_required": false,
+      "source_text_record_ids": [
+        "text.333051.15309360.685"
+      ],
+      "source_text_selector": {
+        "chapter": "Banking tutorial",
+        "sections": [
+          "Opening the bank"
+        ]
+      },
+      "state_id": "stage.tutorial.bank_close",
+      "text_selection_rule": "Choose the exact record and permitted branch using the authoritative event/guard trace and source section/order. This phase corpus is NOT permission to display any arbitrary line from the instructor at every state.",
+      "visual_variant_ids": [
+        "ui.bank.closed",
+        "world.scenery.bank"
+      ]
+    },
+    {
+      "case_id": "case.tutorial.poll_inspect",
+      "declared_controls": [
+        "ui.poll"
+      ],
+      "distinct_layout_still_required": true,
+      "family_ids": [
+        "hud.classic",
+        "ui.account_poll",
+        "world.scenery"
+      ],
+      "hud_signature_id": "hud.signature.b1d364ad73bc",
+      "phase_id": "phase.tutorial.08",
+      "separate_source_screenshot_required": false,
+      "source_text_record_ids": [
+        "text.333051.15309360.693",
+        "text.333051.15309360.694",
+        "text.333051.15309360.695",
+        "text.333051.15309360.697",
+        "text.333051.15309360.699"
+      ],
+      "source_text_selector": {
+        "chapter": "Banking tutorial",
+        "sections": [
+          "Accessing the poll booth"
+        ]
+      },
+      "state_id": "stage.tutorial.poll_inspect",
+      "text_selection_rule": "Choose the exact record and permitted branch using the authoritative event/guard trace and source section/order. This phase corpus is NOT permission to display any arbitrary line from the instructor at every state.",
+      "visual_variant_ids": [
+        "ui.account_poll.poll_choices",
+        "ui.account_poll.poll_intro",
+        "ui.account_poll.poll_unavailable",
+        "world.scenery.bank"
+      ]
+    },
+    {
+      "case_id": "case.tutorial.account_entry",
+      "declared_controls": [],
+      "distinct_layout_still_required": true,
+      "family_ids": [
+        "dialogue.flow",
+        "hud.classic",
+        "world.scenery"
+      ],
+      "hud_signature_id": "hud.signature.b1d364ad73bc",
+      "phase_id": "phase.tutorial.08",
+      "separate_source_screenshot_required": false,
+      "source_text_record_ids": [
+        "text.333051.15309360.702"
+      ],
+      "source_text_selector": {
+        "chapter": "Banking tutorial",
+        "sections": [
+          "Entering the Account Guide's room"
+        ]
+      },
+      "state_id": "stage.tutorial.account_entry",
+      "text_selection_rule": "Choose the exact record and permitted branch using the authoritative event/guard trace and source section/order. This phase corpus is NOT permission to display any arbitrary line from the instructor at every state.",
+      "visual_variant_ids": [
+        "dialogue.flow.instruction",
+        "world.scenery.bank",
+        "world.scenery.route_transition"
+      ]
+    },
+    {
+      "case_id": "case.tutorial.account_greeting",
+      "declared_controls": [],
+      "distinct_layout_still_required": true,
+      "family_ids": [
+        "dialogue.flow",
+        "hud.classic",
+        "ui.account_poll",
+        "world.scenery"
+      ],
+      "hud_signature_id": "hud.signature.b1d364ad73bc",
+      "phase_id": "phase.tutorial.08",
+      "separate_source_screenshot_required": false,
+      "source_text_record_ids": [
+        "text.333051.15309360.710",
+        "text.333051.15309360.711",
+        "text.333051.15309360.712",
+        "text.333051.15309360.713",
+        "text.333051.15309360.714",
+        "text.333051.15309360.715"
+      ],
+      "source_text_selector": {
+        "chapter": "Banking tutorial",
+        "sections": [
+          "Talking to the Account Guide"
+        ]
+      },
+      "state_id": "stage.tutorial.account_greeting",
+      "text_selection_rule": "Choose the exact record and permitted branch using the authoritative event/guard trace and source section/order. This phase corpus is NOT permission to display any arbitrary line from the instructor at every state.",
+      "visual_variant_ids": [
+        "dialogue.flow.player_speaker",
+        "dialogue.flow.speaker_chathead",
+        "ui.account_poll.links",
+        "ui.account_poll.logout",
+        "world.scenery.bank"
+      ]
+    },
+    {
+      "case_id": "case.tutorial.account_open",
+      "declared_controls": [
+        "ui.account"
+      ],
+      "distinct_layout_still_required": true,
+      "family_ids": [
+        "hud.classic",
+        "ui.account_poll",
+        "world.scenery"
+      ],
+      "hud_signature_id": "hud.signature.943ff57f7cf5",
+      "phase_id": "phase.tutorial.08",
+      "separate_source_screenshot_required": false,
+      "source_text_record_ids": [
+        "text.333051.15309360.723"
+      ],
+      "source_text_selector": {
+        "chapter": "Banking tutorial",
+        "sections": [
+          "Opening the Account Management menu"
+        ]
+      },
+      "state_id": "stage.tutorial.account_open",
+      "text_selection_rule": "Choose the exact record and permitted branch using the authoritative event/guard trace and source section/order. This phase corpus is NOT permission to display any arbitrary line from the instructor at every state.",
+      "visual_variant_ids": [
+        "hud.classic.source_highlighted",
+        "ui.account_poll.account",
+        "world.scenery.bank"
+      ]
+    },
+    {
+      "case_id": "case.tutorial.account_explanation",
+      "declared_controls": [
+        "ui.logout",
+        "ui.account_links"
+      ],
+      "distinct_layout_still_required": true,
+      "family_ids": [
+        "dialogue.flow",
+        "hud.classic",
+        "ui.account_poll",
+        "world.scenery"
+      ],
+      "hud_signature_id": "hud.signature.d66878558420",
+      "phase_id": "phase.tutorial.08",
+      "separate_source_screenshot_required": false,
+      "source_text_record_ids": [
+        "text.333051.15309360.727",
+        "text.333051.15309360.729",
+        "text.333051.15309360.730",
+        "text.333051.15309360.732",
+        "text.333051.15309360.734",
+        "text.333051.15309360.736",
+        "text.333051.15309360.738",
+        "text.333051.15309360.739",
+        "text.333051.15309360.740",
+        "text.333051.15309360.741",
+        "text.333051.15309360.742",
+        "text.333051.15309360.743",
+        "text.333051.15309360.744",
+        "text.333051.15309360.745",
+        "text.333051.15309360.746",
+        "text.333051.15309360.748",
+        "text.333051.15309360.749",
+        "text.333051.15309360.750"
+      ],
+      "source_text_selector": {
+        "chapter": "Banking tutorial",
+        "sections": [
+          "Talking to the Account Guide after opening the Account Management menu"
+        ]
+      },
+      "state_id": "stage.tutorial.account_explanation",
+      "text_selection_rule": "Choose the exact record and permitted branch using the authoritative event/guard trace and source section/order. This phase corpus is NOT permission to display any arbitrary line from the instructor at every state.",
+      "visual_variant_ids": [
+        "dialogue.flow.player_speaker",
+        "dialogue.flow.speaker_chathead",
+        "ui.account_poll.links",
+        "ui.account_poll.logout",
+        "world.scenery.bank"
+      ]
+    },
+    {
+      "case_id": "case.tutorial.account_exit",
+      "declared_controls": [],
+      "distinct_layout_still_required": true,
+      "family_ids": [
+        "dialogue.flow",
+        "hud.classic",
+        "world.scenery"
+      ],
+      "hud_signature_id": "hud.signature.d66878558420",
+      "phase_id": "phase.tutorial.08",
+      "separate_source_screenshot_required": false,
+      "source_text_record_ids": [
+        "text.333051.15309360.706",
+        "text.333051.15309360.754",
+        "text.333051.15309360.755",
+        "text.333051.15309360.756",
+        "text.333051.15309360.757",
+        "text.333051.15309360.758",
+        "text.333051.15309360.759",
+        "text.333051.15309360.761"
+      ],
+      "source_text_selector": {
+        "chapter": "Banking tutorial",
+        "sections": [
+          "Talking to the Account Guide again",
+          "Attempting to leave through the bank exit"
+        ]
+      },
+      "state_id": "stage.tutorial.account_exit",
+      "text_selection_rule": "Choose the exact record and permitted branch using the authoritative event/guard trace and source section/order. This phase corpus is NOT permission to display any arbitrary line from the instructor at every state.",
+      "visual_variant_ids": [
+        "dialogue.flow.instruction",
+        "dialogue.flow.player_speaker",
+        "world.scenery.bank",
+        "world.scenery.route_transition"
+      ]
+    },
+    {
+      "case_id": "case.tutorial.chapel_entry",
+      "declared_controls": [],
+      "distinct_layout_still_required": true,
+      "family_ids": [
+        "dialogue.flow",
+        "hud.classic",
+        "world.scenery"
+      ],
+      "hud_signature_id": "hud.signature.d66878558420",
+      "phase_id": "phase.tutorial.09",
+      "separate_source_screenshot_required": false,
+      "source_text_record_ids": [
+        "text.333051.15309360.778",
+        "text.333051.15309360.779",
+        "text.333051.15309360.780"
+      ],
+      "source_text_selector": {
+        "chapter": "Prayer Tutorial",
+        "sections": [
+          "Talking to Brother Brace"
+        ]
+      },
+      "state_id": "stage.tutorial.chapel_entry",
+      "text_selection_rule": "Choose the exact record and permitted branch using the authoritative event/guard trace and source section/order. This phase corpus is NOT permission to display any arbitrary line from the instructor at every state.",
+      "visual_variant_ids": [
+        "dialogue.flow.instruction",
+        "dialogue.flow.player_speaker",
+        "world.scenery.chapel",
+        "world.scenery.route_transition"
+      ]
+    },
+    {
+      "case_id": "case.tutorial.prayer_greeting",
+      "declared_controls": [],
+      "distinct_layout_still_required": true,
+      "family_ids": [
+        "dialogue.flow",
+        "hud.classic",
+        "ui.prayer",
+        "world.scenery"
+      ],
+      "hud_signature_id": "hud.signature.d66878558420",
+      "phase_id": "phase.tutorial.09",
+      "separate_source_screenshot_required": false,
+      "source_text_record_ids": [
+        "text.333051.15309360.778",
+        "text.333051.15309360.779",
+        "text.333051.15309360.780"
+      ],
+      "source_text_selector": {
+        "chapter": "Prayer Tutorial",
+        "sections": [
+          "Talking to Brother Brace"
+        ]
+      },
+      "state_id": "stage.tutorial.prayer_greeting",
+      "text_selection_rule": "Choose the exact record and permitted branch using the authoritative event/guard trace and source section/order. This phase corpus is NOT permission to display any arbitrary line from the instructor at every state.",
+      "visual_variant_ids": [
+        "dialogue.flow.player_speaker",
+        "dialogue.flow.speaker_chathead",
+        "ui.prayer.active",
+        "ui.prayer.available",
+        "ui.prayer.restored",
+        "world.scenery.chapel"
+      ]
+    },
+    {
+      "case_id": "case.tutorial.prayer_open",
+      "declared_controls": [
+        "ui.prayer"
+      ],
+      "distinct_layout_still_required": true,
+      "family_ids": [
+        "hud.classic",
+        "ui.prayer",
+        "world.scenery"
+      ],
+      "hud_signature_id": "hud.signature.afee12fe4bbc",
+      "phase_id": "phase.tutorial.09",
+      "separate_source_screenshot_required": false,
+      "source_text_record_ids": [
+        "text.333051.15309360.788"
+      ],
+      "source_text_selector": {
+        "chapter": "Prayer Tutorial",
+        "sections": [
+          "Opening the prayer menu"
+        ]
+      },
+      "state_id": "stage.tutorial.prayer_open",
+      "text_selection_rule": "Choose the exact record and permitted branch using the authoritative event/guard trace and source section/order. This phase corpus is NOT permission to display any arbitrary line from the instructor at every state.",
+      "visual_variant_ids": [
+        "hud.classic.source_highlighted",
+        "ui.prayer.available",
+        "ui.prayer.unavailable",
+        "world.scenery.chapel"
+      ]
+    },
+    {
+      "case_id": "case.tutorial.prayer_explanation",
+      "declared_controls": [],
+      "distinct_layout_still_required": true,
+      "family_ids": [
+        "dialogue.flow",
+        "hud.classic",
+        "ui.prayer",
+        "world.scenery"
+      ],
+      "hud_signature_id": "hud.signature.afee12fe4bbc",
+      "phase_id": "phase.tutorial.09",
+      "separate_source_screenshot_required": false,
+      "source_text_record_ids": [
+        "text.333051.15309360.792",
+        "text.333051.15309360.793",
+        "text.333051.15309360.794",
+        "text.333051.15309360.795",
+        "text.333051.15309360.796"
+      ],
+      "source_text_selector": {
+        "chapter": "Prayer Tutorial",
+        "sections": [
+          "Talking to Brother Brace after opening the prayer menu"
+        ]
+      },
+      "state_id": "stage.tutorial.prayer_explanation",
+      "text_selection_rule": "Choose the exact record and permitted branch using the authoritative event/guard trace and source section/order. This phase corpus is NOT permission to display any arbitrary line from the instructor at every state.",
+      "visual_variant_ids": [
+        "dialogue.flow.speaker_chathead",
+        "ui.prayer.active",
+        "ui.prayer.available",
+        "ui.prayer.restored",
+        "world.scenery.chapel"
+      ]
+    },
+    {
+      "case_id": "case.tutorial.chapel_exit",
+      "declared_controls": [],
+      "distinct_layout_still_required": true,
+      "family_ids": [
+        "dialogue.flow",
+        "hud.classic",
+        "world.scenery"
+      ],
+      "hud_signature_id": "hud.signature.afee12fe4bbc",
+      "phase_id": "phase.tutorial.09",
+      "separate_source_screenshot_required": false,
+      "source_text_record_ids": [
+        "text.333051.15309360.814"
+      ],
+      "source_text_selector": {
+        "chapter": "Prayer Tutorial",
+        "sections": [
+          "After exiting the chapel"
+        ]
+      },
+      "state_id": "stage.tutorial.chapel_exit",
+      "text_selection_rule": "Choose the exact record and permitted branch using the authoritative event/guard trace and source section/order. This phase corpus is NOT permission to display any arbitrary line from the instructor at every state.",
+      "visual_variant_ids": [
+        "dialogue.flow.instruction",
+        "world.scenery.chapel",
+        "world.scenery.route_transition"
+      ]
+    },
+    {
+      "case_id": "case.tutorial.magic_entry",
+      "declared_controls": [],
+      "distinct_layout_still_required": true,
+      "family_ids": [
+        "dialogue.flow",
+        "hud.classic",
+        "world.scenery"
+      ],
+      "hud_signature_id": "hud.signature.afee12fe4bbc",
+      "phase_id": "phase.tutorial.10",
+      "separate_source_screenshot_required": false,
+      "source_text_record_ids": [
+        "text.333051.15309360.896",
+        "text.333051.15309360.897",
+        "text.333051.15309360.898"
+      ],
+      "source_text_selector": {
+        "chapter": "Magic Instructor",
+        "sections": [
+          "Talking to the Magic Instructor"
+        ]
+      },
+      "state_id": "stage.tutorial.magic_entry",
+      "text_selection_rule": "Choose the exact record and permitted branch using the authoritative event/guard trace and source section/order. This phase corpus is NOT permission to display any arbitrary line from the instructor at every state.",
+      "visual_variant_ids": [
+        "dialogue.flow.instruction",
+        "dialogue.flow.player_speaker",
+        "world.scenery.magic_area",
+        "world.scenery.route_transition"
+      ]
+    },
+    {
+      "case_id": "case.tutorial.magic_greeting",
+      "declared_controls": [],
+      "distinct_layout_still_required": true,
+      "family_ids": [
+        "dialogue.flow",
+        "hud.classic",
+        "world.scenery"
+      ],
+      "hud_signature_id": "hud.signature.afee12fe4bbc",
+      "phase_id": "phase.tutorial.10",
+      "separate_source_screenshot_required": false,
+      "source_text_record_ids": [
+        "text.333051.15309360.896",
+        "text.333051.15309360.897",
+        "text.333051.15309360.898"
+      ],
+      "source_text_selector": {
+        "chapter": "Magic Instructor",
+        "sections": [
+          "Talking to the Magic Instructor"
+        ]
+      },
+      "state_id": "stage.tutorial.magic_greeting",
+      "text_selection_rule": "Choose the exact record and permitted branch using the authoritative event/guard trace and source section/order. This phase corpus is NOT permission to display any arbitrary line from the instructor at every state.",
+      "visual_variant_ids": [
+        "dialogue.flow.player_speaker",
+        "dialogue.flow.speaker_chathead",
+        "world.scenery.magic_area"
+      ]
+    },
+    {
+      "case_id": "case.tutorial.magic_open",
+      "declared_controls": [
+        "ui.magic"
+      ],
+      "distinct_layout_still_required": true,
+      "family_ids": [
+        "hud.classic",
+        "ui.magic",
+        "world.scenery"
+      ],
+      "hud_signature_id": "hud.signature.24123c0f583f",
+      "phase_id": "phase.tutorial.10",
+      "separate_source_screenshot_required": false,
+      "source_text_record_ids": [
+        "text.333051.15309360.906"
+      ],
+      "source_text_selector": {
+        "chapter": "Magic Instructor",
+        "sections": [
+          "Opening the magic interface"
+        ]
+      },
+      "state_id": "stage.tutorial.magic_open",
+      "text_selection_rule": "Choose the exact record and permitted branch using the authoritative event/guard trace and source section/order. This phase corpus is NOT permission to display any arbitrary line from the instructor at every state.",
+      "visual_variant_ids": [
+        "hud.classic.source_highlighted",
+        "ui.magic.level_filtered",
+        "ui.magic.missing_runes",
+        "ui.magic.unfiltered",
+        "world.scenery.magic_area"
+      ]
+    },
+    {
+      "case_id": "case.tutorial.magic_supply",
+      "declared_controls": [],
+      "distinct_layout_still_required": true,
+      "family_ids": [
+        "dialogue.flow",
+        "hud.classic",
+        "ui.inventory",
+        "world.scenery"
+      ],
+      "hud_signature_id": "hud.signature.24123c0f583f",
+      "phase_id": "phase.tutorial.10",
+      "separate_source_screenshot_required": false,
+      "source_text_record_ids": [
+        "text.333051.15309360.912",
+        "text.333051.15309360.914",
+        "text.333051.15309360.915"
+      ],
+      "source_text_selector": {
+        "chapter": "Magic Instructor",
+        "sections": [
+          "Talking to the Magic Instructor after opening the magic interface"
+        ]
+      },
+      "state_id": "stage.tutorial.magic_supply",
+      "text_selection_rule": "Choose the exact record and permitted branch using the authoritative event/guard trace and source section/order. This phase corpus is NOT permission to display any arbitrary line from the instructor at every state.",
+      "visual_variant_ids": [
+        "dialogue.flow.item_grant",
+        "dialogue.flow.speaker_chathead",
+        "ui.inventory.occupied",
+        "world.scenery.magic_area"
+      ]
+    },
+    {
+      "case_id": "case.tutorial.wind_strike",
+      "declared_controls": [],
+      "distinct_layout_still_required": true,
+      "family_ids": [
+        "hud.classic",
+        "ui.magic",
+        "ui.quests",
+        "world.activities",
+        "world.scenery"
+      ],
+      "hud_signature_id": "hud.signature.24123c0f583f",
+      "phase_id": "phase.tutorial.10",
+      "separate_source_screenshot_required": false,
+      "source_text_record_ids": [
+        "text.333051.15309360.931",
+        "text.333051.15309360.932"
+      ],
+      "source_text_selector": {
+        "chapter": "Magic Instructor",
+        "sections": [
+          "After casting air strike on a chicken"
+        ]
+      },
+      "state_id": "stage.tutorial.wind_strike",
+      "text_selection_rule": "Choose the exact record and permitted branch using the authoritative event/guard trace and source section/order. This phase corpus is NOT permission to display any arbitrary line from the instructor at every state.",
+      "visual_variant_ids": [
+        "ui.magic.selected_spell",
+        "ui.quests.reward_ropes",
+        "world.activities.magic",
+        "world.scenery.magic_area"
+      ]
+    },
+    {
+      "case_id": "case.tutorial.departure_offer",
+      "declared_controls": [
+        "ui.quest_reward"
+      ],
+      "distinct_layout_still_required": true,
+      "family_ids": [
+        "dialogue.flow",
+        "hud.classic",
+        "ui.quests",
+        "world.scenery"
+      ],
+      "hud_signature_id": "hud.signature.24123c0f583f",
+      "phase_id": "phase.tutorial.10",
+      "separate_source_screenshot_required": false,
+      "source_text_record_ids": [
+        "text.333051.15309360.940",
+        "text.333051.15309360.941",
+        "text.333051.15309360.942",
+        "text.333051.15309360.944",
+        "text.333051.15309360.945",
+        "text.333051.15309360.946",
+        "text.333051.15309360.947",
+        "text.333051.15309360.950",
+        "text.333051.15309360.951",
+        "text.333051.15309360.952",
+        "text.333051.15309360.953",
+        "text.333051.15309360.956",
+        "text.333051.15309360.957",
+        "text.333051.15309360.958",
+        "text.333051.15309360.959",
+        "text.333051.15309360.960",
+        "text.333051.15309360.962",
+        "text.333051.15309360.963",
+        "text.333051.15309360.964",
+        "text.333051.15309360.965",
+        "text.333051.15309360.967",
+        "text.333051.15309360.968",
+        "text.333051.15309360.969",
+        "text.333051.15309360.970",
+        "text.333051.15309360.971",
+        "text.333051.15309360.972",
+        "text.333051.15309360.974"
+      ],
+      "source_text_selector": {
+        "chapter": "After casting wind strike",
+        "sections": [
+          null
+        ]
+      },
+      "state_id": "stage.tutorial.departure_offer",
+      "text_selection_rule": "Choose the exact record and permitted branch using the authoritative event/guard trace and source section/order. This phase corpus is NOT permission to display any arbitrary line from the instructor at every state.",
+      "visual_variant_ids": [
+        "dialogue.flow.choices",
+        "dialogue.flow.player_speaker",
+        "ui.quests.reward_ropes",
+        "world.scenery.magic_area"
+      ]
+    },
+    {
+      "case_id": "case.tutorial.departure_confirmation",
+      "declared_controls": [],
+      "distinct_layout_still_required": true,
+      "family_ids": [
+        "dialogue.flow",
+        "hud.classic",
+        "world.scenery"
+      ],
+      "hud_signature_id": "hud.signature.24123c0f583f",
+      "phase_id": "phase.tutorial.10",
+      "separate_source_screenshot_required": false,
+      "source_text_record_ids": [
+        "text.333051.15309360.940",
+        "text.333051.15309360.941",
+        "text.333051.15309360.942",
+        "text.333051.15309360.944",
+        "text.333051.15309360.945",
+        "text.333051.15309360.946",
+        "text.333051.15309360.947",
+        "text.333051.15309360.950",
+        "text.333051.15309360.951",
+        "text.333051.15309360.952",
+        "text.333051.15309360.953",
+        "text.333051.15309360.956",
+        "text.333051.15309360.957",
+        "text.333051.15309360.958",
+        "text.333051.15309360.959",
+        "text.333051.15309360.960",
+        "text.333051.15309360.962",
+        "text.333051.15309360.963",
+        "text.333051.15309360.964",
+        "text.333051.15309360.965",
+        "text.333051.15309360.967",
+        "text.333051.15309360.968",
+        "text.333051.15309360.969",
+        "text.333051.15309360.970",
+        "text.333051.15309360.971",
+        "text.333051.15309360.972",
+        "text.333051.15309360.974"
+      ],
+      "source_text_selector": {
+        "chapter": "After casting wind strike",
+        "sections": [
+          null
+        ]
+      },
+      "state_id": "stage.tutorial.departure_confirmation",
+      "text_selection_rule": "Choose the exact record and permitted branch using the authoritative event/guard trace and source section/order. This phase corpus is NOT permission to display any arbitrary line from the instructor at every state.",
+      "visual_variant_ids": [
+        "dialogue.flow.choices",
+        "dialogue.flow.continue",
+        "dialogue.flow.player_speaker",
+        "world.scenery.magic_area"
+      ]
+    },
+    {
+      "case_id": "case.tutorial.home_teleport",
+      "declared_controls": [],
+      "distinct_layout_still_required": true,
+      "family_ids": [
+        "dialogue.flow",
+        "hud.classic",
+        "ui.magic",
+        "world.activities",
+        "world.scenery"
+      ],
+      "hud_signature_id": "hud.signature.24123c0f583f",
+      "phase_id": "phase.tutorial.10",
+      "separate_source_screenshot_required": false,
+      "source_text_record_ids": [
+        "text.333051.15309360.940",
+        "text.333051.15309360.941",
+        "text.333051.15309360.942",
+        "text.333051.15309360.944",
+        "text.333051.15309360.945",
+        "text.333051.15309360.946",
+        "text.333051.15309360.947",
+        "text.333051.15309360.950",
+        "text.333051.15309360.951",
+        "text.333051.15309360.952",
+        "text.333051.15309360.953",
+        "text.333051.15309360.956",
+        "text.333051.15309360.957",
+        "text.333051.15309360.958",
+        "text.333051.15309360.959",
+        "text.333051.15309360.960",
+        "text.333051.15309360.962",
+        "text.333051.15309360.963",
+        "text.333051.15309360.964",
+        "text.333051.15309360.965",
+        "text.333051.15309360.967",
+        "text.333051.15309360.968",
+        "text.333051.15309360.969",
+        "text.333051.15309360.970",
+        "text.333051.15309360.971",
+        "text.333051.15309360.972",
+        "text.333051.15309360.974"
+      ],
+      "source_text_selector": {
+        "chapter": "After casting wind strike",
+        "sections": [
+          null
+        ]
+      },
+      "state_id": "stage.tutorial.home_teleport",
+      "text_selection_rule": "Choose the exact record and permitted branch using the authoritative event/guard trace and source section/order. This phase corpus is NOT permission to display any arbitrary line from the instructor at every state.",
+      "visual_variant_ids": [
+        "dialogue.flow.player_speaker",
+        "ui.magic.teleport_channel",
+        "world.activities.home_teleport",
+        "world.scenery.magic_area"
+      ]
+    },
+    {
+      "case_id": "case.tutorial.teleport_channel",
+      "declared_controls": [],
+      "distinct_layout_still_required": true,
+      "family_ids": [
+        "dialogue.flow",
+        "hud.classic",
+        "ui.magic",
+        "world.activities",
+        "world.scenery"
+      ],
+      "hud_signature_id": "hud.signature.24123c0f583f",
+      "phase_id": "phase.tutorial.10",
+      "separate_source_screenshot_required": false,
+      "source_text_record_ids": [
+        "text.333051.15309360.940",
+        "text.333051.15309360.941",
+        "text.333051.15309360.942",
+        "text.333051.15309360.944",
+        "text.333051.15309360.945",
+        "text.333051.15309360.946",
+        "text.333051.15309360.947",
+        "text.333051.15309360.950",
+        "text.333051.15309360.951",
+        "text.333051.15309360.952",
+        "text.333051.15309360.953",
+        "text.333051.15309360.956",
+        "text.333051.15309360.957",
+        "text.333051.15309360.958",
+        "text.333051.15309360.959",
+        "text.333051.15309360.960",
+        "text.333051.15309360.962",
+        "text.333051.15309360.963",
+        "text.333051.15309360.964",
+        "text.333051.15309360.965",
+        "text.333051.15309360.967",
+        "text.333051.15309360.968",
+        "text.333051.15309360.969",
+        "text.333051.15309360.970",
+        "text.333051.15309360.971",
+        "text.333051.15309360.972",
+        "text.333051.15309360.974"
+      ],
+      "source_text_selector": {
+        "chapter": "After casting wind strike",
+        "sections": [
+          null
+        ]
+      },
+      "state_id": "stage.tutorial.teleport_channel",
+      "text_selection_rule": "Choose the exact record and permitted branch using the authoritative event/guard trace and source section/order. This phase corpus is NOT permission to display any arbitrary line from the instructor at every state.",
+      "visual_variant_ids": [
+        "dialogue.flow.player_speaker",
+        "ui.magic.teleport_channel",
+        "world.activities.home_teleport",
+        "world.scenery.magic_area"
+      ]
+    },
+    {
+      "case_id": "case.tutorial.mainland",
+      "declared_controls": [],
+      "distinct_layout_still_required": true,
+      "family_ids": [
+        "dialogue.flow",
+        "hud.classic",
+        "world.scenery"
+      ],
+      "hud_signature_id": "hud.signature.24123c0f583f",
+      "phase_id": "phase.tutorial.10",
+      "separate_source_screenshot_required": false,
+      "source_text_record_ids": [
+        "text.333051.15309360.978"
+      ],
+      "source_text_selector": {
+        "chapter": "After casting wind strike",
+        "sections": [
+          "After teleporting to Lumbridge"
+        ]
+      },
+      "state_id": "stage.tutorial.mainland",
+      "text_selection_rule": "Choose the exact record and permitted branch using the authoritative event/guard trace and source section/order. This phase corpus is NOT permission to display any arbitrary line from the instructor at every state.",
+      "visual_variant_ids": [
+        "world.scenery.lumbridge_castle",
+        "dialogue.flow.instruction"
+      ]
+    }
+  ],
+  "weapon_categories": {
+    "1205": 17,
+    "1237": 14,
+    "1265": 10,
+    "1277": 17,
+    "1351": 1,
+    "841": 3
+  }
+}

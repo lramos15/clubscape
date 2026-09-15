@@ -75,6 +75,13 @@ pub(crate) fn cadence(cadence: &ActionCadence, single: bool, repeat: bool) -> Ga
 
 pub(crate) fn close_access(character: &mut CharacterState) -> GameResult<()> {
     schedule_mut(character)?.access = None;
+    if let Some(ui) = &mut character.runtime.ui {
+        ui.active_interface = None;
+        ui.production = None;
+        ui.document = None;
+        ui.confirmation = None;
+        ui.death_preview = false;
+    }
     Ok(())
 }
 
@@ -87,6 +94,13 @@ pub(crate) fn interrupt(character: &mut CharacterState) -> GameResult<()> {
     schedule.gather_interaction = None;
     schedule.dialogue_interaction = None;
     schedule.access = None;
+    if let Some(ui) = &mut character.runtime.ui {
+        ui.active_interface = None;
+        ui.production = None;
+        ui.document = None;
+        ui.confirmation = None;
+        ui.death_preview = false;
+    }
     Ok(())
 }
 

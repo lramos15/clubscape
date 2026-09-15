@@ -7,7 +7,7 @@ import unittest
 from common import BINDINGS, CONTENT, Inputs, counter_value, item_stack, load, position
 from definitions import xp_thresholds
 from geometry import World, canonical_mask, clipped_footprint, wall_edges
-from check import check_content
+from check import check_content, inspect_content
 from state_oracles import Oracle, OracleRefusal
 
 
@@ -99,9 +99,22 @@ class AuthoredContentTests(unittest.TestCase):
         cls.mechanics = load(BINDINGS / "mechanics-bindings.json.gz")
 
     def test_product_structure(self):
-        result = check_content(self.content, self.inputs, self.world, self.bindings)
+        result = inspect_content(self.content, self.inputs, self.world, self.bindings)
         self.assertTrue(result["structural_checks_passed"])
         self.assertFalse(result["runtime_compile_passed"])
+
+    def test_asset_publication_is_a_distinct_mandatory_gate_not_null_icon_success(self):
+        manifest = load(CONTENT / "manifest.json")
+        if not manifest["asset_closure_passed"]:
+            self.assertEqual(set(manifest["unpublished_asset_ids"]), {
+                f"asset.source.osrs.cache2695.{kind}.{number}"
+                for kind, numbers in (("item", [229, 230, 1919, 1920]), ("model", [561, 2548, 2747, 8234]))
+                for number in numbers
+            })
+            with self.assertRaisesRegex(ValueError, "Unpublished asset references"):
+                check_content(self.content, self.inputs, self.world, self.bindings)
+        else:
+            self.assertTrue(check_content(self.content, self.inputs, self.world, self.bindings)["asset_closure_passed"])
 
     def test_exact_source_variants_not_similarly_named_npcs(self):
         npcs, items = self.content["npcs"], self.content["items"]
@@ -268,7 +281,7 @@ class AuthoredContentTests(unittest.TestCase):
         self.assertEqual(len(self.content["quests"]["quest.cooks_assistant"]["journal"]), 10)
         self.assertEqual(len(self.bindings["travel"]), 11)
         self.assertTrue(all(edge["runtime_hooks"] and not edge["gaps"] for edge in self.graph["tutorial"]))
-        self.assertEqual(self.content["schema_version"], 3)
+        self.assertEqual(self.content["schema_version"], 4)
         self.assertFalse(any(recipe["outputs"] == [{"item": "item.flour.pot", "quantity": 1}]
                              for recipe in self.content["recipes"].values()))
         pairs = {record["id"]: record for record in self.bindings["travel"]}

@@ -1,12 +1,12 @@
 {
   "artifact_reloaded": true,
-  "artifact_sha256": "bb99ad96add9669fd49c4162832fbd8e9cb151997a4e4c4682b33b1f1882e2e1",
+  "artifact_sha256": "8f33a4a41aa378bc73489f59aa8d77588f047b3bb9ca63a77e411416abcc54fa",
   "canonical_game_content_deserialized": true,
   "engine_api_scope": "Construction, authenticated-lifecycle boundary, read-only views and first source input only; not a full journey or browser/presentation acceptance.",
   "engine_constructed": true,
   "gameplay_executed": false,
-  "interfaces": 26,
-  "items": 118,
+  "interfaces": 30,
+  "items": 122,
   "native_source_policy_probes": {
     "consume_only": {
       "controlled_component_random_draws": 24,
@@ -71,11 +71,38 @@
       "passed": true
     }
   },
+  "native_ui_control_probes": {
+    "appearance": {
+      "approved_source_npc": 2063,
+      "body_type": [
+        0,
+        1
+      ]
+    },
+    "independent_drink_ticks": 3,
+    "passed": true,
+    "real_source_production_menu_modes": [
+      {
+        "delay_ticks": 1,
+        "mode": "single"
+      },
+      {
+        "delay_ticks": 3,
+        "mode": "make_x"
+      }
+    ],
+    "run_restoration_units_per_dose": 1500,
+    "scope": "Actual unmodified strict content4 and real engine control execution on explicit source-precondition component states. Not a fresh-account journey, source capture or presentation acceptance.",
+    "selected_bury_ticks": 2,
+    "selected_bury_xp_tenths": 45,
+    "selected_original_potion_doses": 4,
+    "semantic_immutable_ui_states": 71
+  },
   "read_only_engine_views_preserved_state": true,
   "real_source_appearance_request_passed": true,
   "recipes": 13,
   "regions": 29,
-  "revision": "m1.source-backed.v3.41555bd46c074d62",
+  "revision": "m1.source-backed.v4.4a122475c6658a42",
   "runtime_compiled": true,
   "skills": 24,
   "source_initial_world_and_character_validated": true,

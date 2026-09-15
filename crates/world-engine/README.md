@@ -1,7 +1,7 @@
 # clubscape-world-engine
 
-Transactional headless execution of **content/artifact 3, persisted state 1,
-runtime 1**. The final selector/traversal/combat-credit/recovery-UI/validation/
+Transactional headless execution of **content/artifact 4, persisted state 1,
+runtime 1, UI state/view 1**. The final selector/traversal/combat-credit/recovery-UI/validation/
 mode-phase integration scope is implemented for bound source data. Unknown
 source bindings remain explicit errors; they are not unimplemented stand-ins.
 
@@ -29,7 +29,26 @@ engine.apply_lifecycle(world, actor, LifecycleTransition) -> GameResult<Vec<Acto
 engine.reconcile_presence(world, &verified_connected_actors) -> GameResult<Vec<ActorEvent>>;
 engine.presence_view(world, actor) -> GameResult<PresenceView>;
 engine.tick_context(world) -> GameResult<TickContext>;
+engine.ui_view(world, actor) -> GameResult<GameplayUiView>;
+engine.apply_ui_request(world, actor, &GameplayUiRequest, rng) -> GameResult<Vec<ActorEvent>>;
+engine.ui_request_requires_tick(&GameplayUiRequest) -> GameResult<bool>;
+engine.migrate_ui_state(world) -> GameResult<()>;
 ```
+
+The UI dispatcher is also exposed through `GameIntent::Ui`. Queries reuse
+execution guards/planners; they never clone a world and try an intent. The
+versioned source UI profile binds real production targets/recipes, exact
+entitlement reward payloads, level text, semantic interface rules, native style
+labels, selected-slot drink/bury/read/empty operations, bank controls and
+source-normal death/coffer/public-chat policies. UI preferences/continuations
+and chat do not consume a gameplay phase; item/container mutations do.
+Chats preserve movement/combat and have only their declared admission bound.
+
+Bank entries refer to the actual persistent bank. Placeholders reserve capacity
+without quantity/value; entry IDs survive reorder/refill, and stale selections
+fail. Reward dismissal never grants anything. `WorldRuntime.ui_version` makes
+lost UI state an explicit error, not a lazy default; only new-character
+construction and an operator-authorized legacy migration initialize it.
 
 `ActorEvent { actor_id, event: GameEvent }` includes routing for credited actors
 other than the finisher. The caller supplies **compiler-validated** content and
@@ -146,8 +165,8 @@ binding supplies the source items and policy; the runtime hardcodes neither.
 The authoritative additions are in `game-types/src/execution.rs` and
 [`spec/game-contracts.md`](../../spec/game-contracts.md#final-selector-closure-and-wire-requirements).
 The definition changes are deliberately breaking: **recompile source input as
-content/artifact 3**, including every new explicit field/null. Do not relabel
-content-2 artifacts. Persisted envelope/runtime versions remain 1 with checked
+content/artifact 4**, including every new explicit field/null. Do not relabel
+content-2/3 artifacts. Persisted envelope/runtime versions remain 1 with checked
 additive defaults.
 
 | New definition surface | Meaning |
@@ -307,8 +326,9 @@ browser/performance or RuneLite gates.
 
 ## Reproduce validation
 
-The current native suite passes 185 engine tests, 107 simulation tests, 82
-compiler tests and 12 shared-type tests. The prior closure also passed the
+The prior selector-closure snapshot passed 185 engine tests, 107 simulation tests, 82
+compiler tests and 12 shared-type tests; the UI extension adds its own control,
+compiler, protocol and actual server/persistence regressions. The prior closure also passed the
 parent isolated PostgreSQL suite and independent account lifecycle; repeat it
 for lifecycle/storage integration changes. WASM checks remain compilation/lint,
 not browser execution.

@@ -3,6 +3,8 @@ mod generated {
 }
 
 mod game_input;
+mod ui_input;
+pub use ui_input::{ui_bank_revision, ui_request};
 
 pub use game_input::{
     ReadOnlyQuote, game_intent, quote_request, validate_character_options, validate_world_session,
@@ -14,6 +16,7 @@ pub const PROTOCOL_VERSION: u32 = 1;
 pub const MAX_REQUEST_BYTES: usize = 16 * 1024;
 pub const MAX_GAME_RESPONSE_BYTES: usize = 256 * 1024;
 pub const GAME_CAPABILITY: &str = "game.v1";
+pub const GAMEPLAY_UI_CAPABILITY: &str = "game.ui.v1";
 pub const MEDIA_TYPE: &str = "application/x-protobuf";
 pub const CAPABILITIES: &[&str] = &["accounts.v1", "sessions.v1"];
 pub const GAMEPLAY_UNAVAILABLE_REASON: &str =

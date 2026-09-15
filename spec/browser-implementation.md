@@ -96,6 +96,16 @@ state. The M1 client must negotiate and receive the complete current projection.
 Nullable members inside it mean genuinely closed/not-applicable source state.
 U64 amounts, coffer balances and clocks remain decimal strings in JavaScript.
 
+The implemented boundary is `game.ui.v1` / `GameplayUiView.version=1`.
+`activeTab` is independent of contextual/modal `activeInterface`; closed panels
+can still expose a permitted source open action. UI bank mutations carry the
+current decimal `ui.bank.revision` as `expected_bank_revision` on the typed
+request. The shell maps flat `GameplayUiIntent` into Protobuf
+`WorldInput.ui`, preserving the ordinary UUID/sequence journal. Do not wrap it
+as arbitrary client state or substitute a whole-character revision for the
+bank precondition. Pending reward/document continuations use their returned
+identity; duplicate event/chat IDs are deduplicated rather than replayed.
+
 Queries must reuse source guards and transaction planners without speculative
 intent execution, RNG, duplicate pricing rules or invented zero statistics.
 Production menus retain their real target and legal recipes; recipe selection

@@ -183,8 +183,6 @@ impl WorldEngine {
             .value_providers
             .get(&policy.value_provider)
             .ok_or_else(|| unknown("Unknown death value provider."))?;
-        let values = provider.values.require()?;
-        let ties = policy.ties.require()?;
         let origin = runtime::location(character);
         let id = DeathId::new(format!(
             "death.engine.{}.{}",
@@ -194,53 +192,17 @@ impl WorldEngine {
         if world.runtime.deaths.contains_key(&id) {
             return Err(invalid_state("Death identity collision."));
         }
-        let mut carried = Vec::new();
-        for (slot, stack) in character
-            .inventory
-            .slots
-            .iter()
-            .enumerate()
-            .filter_map(|(slot, stack)| stack.as_ref().map(|stack| (slot, stack)))
-        {
-            carried.push((stack.clone(), ItemLayout::Inventory { slot: slot as u8 }));
-        }
-        for slot in &self.content.equipment_slots {
-            if let Some(stack) = character.equipment.get(slot) {
-                carried.push((stack.clone(), ItemLayout::Equipment { slot: slot.clone() }));
-            }
-        }
-        let mut valued = carried
-            .into_iter()
-            .enumerate()
-            .map(|(order, (stack, layout))| {
-                let value = *values.get(&stack.item).ok_or_else(|| {
-                    unavailable(format!("Death value table lacks {}.", stack.item))
-                })?;
-                Ok((order, stack, layout, value))
-            })
-            .collect::<GameResult<Vec<_>>>()?;
-        valued.sort_by(|a, b| {
-            b.3.cmp(&a.3)
-                .then_with(|| match ties {
-                    RetentionTiePolicy::InventoryThenEquipment => {
-                        layout_key(&a.2).cmp(&layout_key(&b.2))
-                    }
-                    RetentionTiePolicy::EquipmentThenInventory => {
-                        (!matches!(a.2, ItemLayout::Equipment { .. }), a.0)
-                            .cmp(&(!matches!(b.2, ItemLayout::Equipment { .. }), b.0))
-                    }
-                    RetentionTiePolicy::StableItemIdThenOriginalSlot => {
-                        (&a.1.item, a.0).cmp(&(&b.1.item, b.0))
-                    }
-                })
-                .then_with(|| a.0.cmp(&b.0))
-        });
-        let mut remaining_kept = u32::from(policy.retained_unskulled);
+        let valued = self.retention_plan(character)?;
         let mut retained = Vec::new();
         let mut lost = Vec::new();
-        for (order, stack, layout, value) in valued {
-            let kept = remaining_kept.min(stack.quantity.get());
-            remaining_kept -= kept;
+        for RetentionPart {
+            order,
+            stack,
+            layout,
+            value,
+            kept,
+        } in valued
+        {
             let lose = stack.quantity.get() - kept;
             if kept > 0 {
                 retained.push(RecoveryItem {
@@ -443,6 +405,7 @@ impl WorldEngine {
                 grave,
                 office,
                 reclaimed: BTreeSet::new(),
+                discarded: BTreeSet::new(),
                 arrival: None,
             },
         );
@@ -1057,6 +1020,7 @@ impl WorldEngine {
                         false,
                     )?;
                     character.bank = staging.bank;
+                    bank::reconcile_ui(character, true)?;
                 }
                 FeeSource::Inventory => inventory::remove(
                     &mut character.inventory,
@@ -1080,6 +1044,91 @@ impl WorldEngine {
     }
 }
 
+pub(crate) struct RetentionPart {
+    pub order: usize,
+    pub stack: ItemStack,
+    pub layout: ItemLayout,
+    pub value: u64,
+    pub kept: u32,
+}
+
+impl WorldEngine {
+    /// The actual normal-unsafe retention planner, shared by death and the immutable UI preview.
+    pub(crate) fn retention_plan(
+        &self,
+        character: &CharacterState,
+    ) -> GameResult<Vec<RetentionPart>> {
+        let policy = self
+            .content
+            .mechanics
+            .death
+            .as_ref()
+            .ok_or_else(|| unavailable("Death policy is not bound."))?;
+        let provider = self
+            .content
+            .mechanics
+            .value_providers
+            .get(&policy.value_provider)
+            .ok_or_else(|| unknown("Unknown death value provider."))?;
+        let values = provider.values.require()?;
+        let ties = policy.ties.require()?;
+        let mut carried = Vec::new();
+        for (slot, stack) in character
+            .inventory
+            .slots
+            .iter()
+            .enumerate()
+            .filter_map(|(slot, stack)| stack.as_ref().map(|stack| (slot, stack)))
+        {
+            carried.push((stack.clone(), ItemLayout::Inventory { slot: slot as u8 }));
+        }
+        for slot in &self.content.equipment_slots {
+            if let Some(stack) = character.equipment.get(slot) {
+                carried.push((stack.clone(), ItemLayout::Equipment { slot: slot.clone() }));
+            }
+        }
+        let mut valued = carried
+            .into_iter()
+            .enumerate()
+            .map(|(order, (stack, layout))| {
+                let value = *values.get(&stack.item).ok_or_else(|| {
+                    unavailable(format!("Death value table lacks {}.", stack.item))
+                })?;
+                Ok(RetentionPart {
+                    order,
+                    stack,
+                    layout,
+                    value,
+                    kept: 0,
+                })
+            })
+            .collect::<GameResult<Vec<_>>>()?;
+        valued.sort_by(|a, b| {
+            b.value
+                .cmp(&a.value)
+                .then_with(|| match ties {
+                    RetentionTiePolicy::InventoryThenEquipment => {
+                        layout_key(&a.layout).cmp(&layout_key(&b.layout))
+                    }
+                    RetentionTiePolicy::EquipmentThenInventory => {
+                        (!matches!(a.layout, ItemLayout::Equipment { .. }), a.order)
+                            .cmp(&(!matches!(b.layout, ItemLayout::Equipment { .. }), b.order))
+                    }
+                    RetentionTiePolicy::StableItemIdThenOriginalSlot => {
+                        (&a.stack.item, a.order).cmp(&(&b.stack.item, b.order))
+                    }
+                })
+                .then_with(|| a.order.cmp(&b.order))
+        });
+        let mut remaining = u32::from(policy.retained_unskulled);
+        for part in &mut valued {
+            part.kept = remaining.min(part.stack.quantity.get());
+            remaining -= part.kept;
+        }
+        Ok(valued)
+    }
+}
+
 fn layout_key(layout: &ItemLayout) -> (u8, String) {
     match layout {
         ItemLayout::Inventory { slot } => (0, format!("{slot:02}")),
@@ -1092,6 +1141,15 @@ pub(crate) fn recovery_fee(
     item: &RecoveryItem,
     quantity: u32,
 ) -> GameResult<u64> {
+    recovery_fee_value(rule, item.effective_unit_value, item.fee_paid, quantity)
+}
+
+pub(crate) fn recovery_fee_value(
+    rule: &RecoveryFee,
+    value: u64,
+    paid: u64,
+    quantity: u32,
+) -> GameResult<u64> {
     let fee = match rule {
         RecoveryFee::Bands {
             bands,
@@ -1099,7 +1157,7 @@ pub(crate) fn recovery_fee(
         } => {
             let fee = bands
                 .iter()
-                .filter(|band| item.effective_unit_value >= band.minimum_value)
+                .filter(|band| value >= band.minimum_value)
                 .max_by_key(|band| band.minimum_value)
                 .map_or(0, |band| band.fee);
             u64::from(fee)
@@ -1113,11 +1171,11 @@ pub(crate) fn recovery_fee(
             rate,
             rounding,
         } => {
-            if item.effective_unit_value < *free_below {
+            if value < *free_below {
                 0
             } else {
                 source_math::rounded(
-                    u128::from(item.effective_unit_value) * u128::from(rate.numerator),
+                    u128::from(value) * u128::from(rate.numerator),
                     u128::from(rate.denominator),
                     rounding,
                 )?
@@ -1126,7 +1184,7 @@ pub(crate) fn recovery_fee(
             }
         }
     };
-    Ok(fee.saturating_sub(item.fee_paid))
+    Ok(fee.saturating_sub(paid))
 }
 
 fn recovery_capacity_error(code: &GameErrorCode) -> bool {

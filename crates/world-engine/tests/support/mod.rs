@@ -218,6 +218,7 @@ pub fn content() -> GameContent {
         .collect();
     let mut content = GameContent {
         schema_version: CONTENT_SCHEMA_VERSION,
+        ui: None,
         revision: "synthetic-v1".into(),
         baseline: "synthetic fixture only".into(),
         items,

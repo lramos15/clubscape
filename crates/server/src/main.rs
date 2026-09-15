@@ -25,6 +25,26 @@ async fn main() -> ExitCode {
             return ExitCode::FAILURE;
         }
     };
+    let arguments: Vec<_> = std::env::args().skip(1).collect();
+    if !arguments.is_empty() {
+        if arguments.len() == 3 && arguments[0] == "migrate-ui" && arguments[1] == "--from" {
+            return match clubscape_server::migrate_game_ui(config, arguments[2].clone()).await {
+                Ok(()) => {
+                    tracing::info!(
+                        event = "game_ui_migration_complete",
+                        "explicit UI metadata/content migration committed"
+                    );
+                    ExitCode::SUCCESS
+                }
+                Err(_) => ExitCode::FAILURE,
+            };
+        }
+        tracing::error!(
+            event = "argument_error",
+            "use no arguments to serve, or migrate-ui --from <old-artifact-sha256>"
+        );
+        return ExitCode::FAILURE;
+    }
     #[cfg(unix)]
     let (mut interrupt, mut terminate) = {
         use tokio::signal::unix::{SignalKind, signal};

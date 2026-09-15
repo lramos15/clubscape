@@ -61,9 +61,22 @@ def record_baseline():
 
 
 def verify():
+    report = inspect_assets()
+    require(report["current_asset_closure_passed"],
+            f"Current product still requires original asset publication: {report['new_verified_definition_publication_needed']}")
+    return report
+
+
+def inspect_assets():
     inputs = Inputs()  # The shared loader validates all catalog, publication, shard and source-output hashes.
     baseline = load(BASELINE)
     content = load(CONTENT / "game-content.json.gz")
+    ui_profile = content.get("ui")
+    if ui_profile is not None:
+        from ui4 import CONTAINER_ITEMS, legacy_content
+        from verify_ui4 import verify_ui4
+        verify_ui4(content)
+        content = legacy_content(content)
     manifest = load(CONTENT / "manifest.json")
     references = load(CONTENT / "asset-references.json")
     ancestor = next(publication for _, publication in inputs.publication_chain
@@ -87,7 +100,8 @@ def verify():
                 "Incomplete canonical source application")
         for key, count in baseline["counts"].items():
             if key not in ("items", "normal_note_pairs", "mechanics", "recipes"):
-                require(manifest["counts"][key] == count, f"Source application changed non-target count {key}")
+                current_count = len(content["interfaces"]) if key == "interfaces" and ui_profile else manifest["counts"][key]
+                require(current_count == count, f"Source application changed non-target count {key}")
         require(set(extensions) == {"item.energy_potion.three_dose", "item.energy_potion.three_dose.noted"},
                 "Unapproved item-extension scope")
     else:
@@ -102,12 +116,20 @@ def verify():
             continue  # Verified item closure and explicit v3 combined-door records have separate audits.
         require(sha((ROOT / name).read_bytes()) == expected, f"Protected source content changed: {name}")
     require(references["manifest"] == inputs.catalog_path, "Product still points at the old source catalog")
-    require(all(not values for values in references["source_closure_missing"].values()), "Product asset closure is not empty")
+    missing = references["source_closure_missing"]
+    if ui_profile:
+        require(set(missing["item_definition_ids"]).issubset(set(CONTAINER_ITEMS.values()))
+                and set(missing["model_ids"]).issubset({561, 2548, 2747, 8234})
+                and not missing["npc_definition_ids"] and not missing["interface_groups"],
+                "A previously closed source asset became missing outside the exact UI extension")
+    else:
+        require(all(not values for values in missing.values()), "Product asset closure is not empty")
     require(set(references["source_closure_missing"]) == set(REQUESTED), "Missing closure category")
     require(closure["requested"] == REQUESTED and closure["resolved"] == REQUESTED, "Wrong frozen source closure request")
     required = set(potion_request["required_asset_ids"])
     actual = {record["id"] for record in references["assets"]}
-    require(actual == required and len(actual) == 5257, "Product does not expose exactly the requested real source asset set")
+    ui_assets = {ui_profile["appearance_base"]["value"]["asset"]} if ui_profile else set()
+    require(actual == required | ui_assets and len(required) == 5257, "Product changed the exact original source asset boundary")
     require(len(actual) == len(references["assets"]), "Duplicate product asset reference")
     resolved = {}
     for category, expected_count in REQUESTED.items():
@@ -131,7 +153,7 @@ def verify():
     npc_bindings = load(BINDINGS / "npc-bindings.json")
     interface_bindings = load(BINDINGS / "interface-bindings.json")
     require(all(record["asset_available"] and not record["missing_model_ids"] for identifier, record in
-                list(item_bindings.items()) + list(npc_bindings.items())),
+                list(item_bindings.items()) + list(npc_bindings.items()) if not ui_profile or identifier not in CONTAINER_ITEMS),
             "Previously completed definition/model binding became unavailable")
     require(all(not record["missing_source_groups"] for record in interface_bindings.values()), "Interface binding still unavailable")
     for record in references["assets"]:
@@ -178,13 +200,15 @@ def verify():
         require(sha((ROOT / record["path"]).read_bytes()) == record["sha256"],
                 f"Current upstream audio output changed: {record['path']}")
     report = {
-        "schema_version": 1, "task": "m1-content-asset-refresh", "result": "passed",
-        "scope": "Asset/provenance refresh only; not full M1 source or gameplay certification.",
+        "schema_version": 1, "task": "m1-content-asset-refresh",
+        "result": "passed" if not any(missing.values()) else "blocked_new_assets",
+        "scope": "Prior original asset/provenance closure preserved; current UI publication is a separate mandatory gate. Not M1 acceptance.",
         "revision": content["revision"], "compiled_artifact": manifest["compiled_artifact"],
         "merged_catalog": inputs.publication["merged_inventory"],
         "publication_sha256": sha(PUBLICATION.read_bytes()),
         "requested": REQUESTED, "resolved": resolved, "remaining_missing_inputs": [],
-        "product_assets_resolved": len(actual), "merged_inventory_records": len(inputs.assets),
+        "product_assets_resolved": len(required), "current_published_asset_references": len(actual),
+        "current_asset_closure_passed": not any(missing.values()), "merged_inventory_records": len(inputs.assets),
         "new_original_assets": len(closure["new_asset_ids"]) + len(potion_closure["new_asset_ids"]),
         "new_original_outputs": sum(len(publication["published_files"]) for _, publication in inputs.publication_chain[1:]),
         "potion_requested_resolved": potion_closure["resolved"],
@@ -199,7 +223,7 @@ def verify():
         "behavior_sha256": baseline["behavior_sha256"], "behavior_and_geometry_unchanged": application is None,
         "geometry_and_prior_asset_closure_preserved": True,
         "audited_source_application": str(application_path.relative_to(ROOT)) if application else None,
-        "new_verified_definition_publication_needed": {},
+        "new_verified_definition_publication_needed": missing,
         "bound_wind_strike_table": content["mechanics"]["combat_styles"]["style.magic.wind_strike"]["maximum_hit"],
         "unresolved_behavior_bindings_unchanged": unresolved["count"],
         "runtime_compile_passed": manifest["runtime_compile_passed"],
