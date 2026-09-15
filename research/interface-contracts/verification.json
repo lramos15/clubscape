@@ -1,6 +1,15 @@
 {
   "schema_version": 1,
   "task": "m1-gameplay-ui-contracts",
+  "record_scope": "Historical All/recovery/level-up candidate. The later audio-authority candidate and current artifact hashes are recorded separately below.",
+  "later_audio_authority": {
+    "verification": "research/interface-contracts/audio-authority/verification.json",
+    "contract_commit": "8d3b4004cd66b720d5bd7d96f10765c3b034eb25",
+    "authority_item_implemented_and_verified": true,
+    "raw_sha256": "57462592102e1491f2c5bf00ca59dc80e75d03feb0859c49e66f4063ea36ebf5",
+    "compressed_sha256": "52ca6143589182caee23a9ca967602094d787c4346bb30aec25ae67beb46d348",
+    "existing_6f_worlds_repin_attempted": false
+  },
   "shared_contract_commit": "e48e6f52d68aa97fbbb4f5664bf6e1c5ef7e71e8",
   "nullable_production_contract_commit": "351847f3f5255f6de6e345d5217a7910eaa145a3",
   "renderer_observer_contract_commit": "e0e42d714793d5fa815d3fcc4dff63b36f0a2a3f",

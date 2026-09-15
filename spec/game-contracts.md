@@ -5,9 +5,8 @@
 `game.audio.authority.v1` adds `WorldView.audioAuthority` /
 Protobuf `WorldSnapshot.audio_authority`22. `AudioAuthorityView` contains
 `version`, source `profile`, `music` and `varps`. There is **no write request**
-for unlocks, history, variable words or client-supplied grants. This contract is
-published before the implementation; the capability is not advertised by an
-unimplemented endpoint.
+for unlocks, history, variable words or client-supplied grants. This contract is implemented only for a source profile containing
+`ui.audio_authority`; older profiles omit both the field and capability.
 
 Music supplies `history: from_creation | legacy_untracked`, decimal
 `trackedFromTick`/`revision`, `complete`, the confirmed `unlockedGroups`, and
@@ -36,6 +35,47 @@ are not a license to infer quest state or fill a missing variable with zero.
 These are read-only projections of generic server facts/source-qualified
 defaults, not a second RuneLite-shaped gameplay authority or client preferences.
 The existing renderer/audio handles and `SourceAudioPreferences`v1 are unchanged.
+
+The bound M1 facts are in
+`research/interface-contracts/audio-authority/inputs.json`, with generated
+proofs in `research/m1-bindings/audio-authority-bindings.json`. Original
+table44 explicitly marks Newbie62 automatic. Each of the six Lumbridge tracks
+has its **own** native unlock hint and dated track page stating first arrival
+in Lumbridge; this conclusion is independent of Modern/Classic playback.
+Scape Cave144 uses the frozen Tutorial Island cave reference, not its narrower
+native Varrock hint. Ordinary-world, plane0 containment uses the existing
+dated music polygons on an integer half-tile lattice. This trigger/boundary
+adapter is qualified source inference, not an observed original server program.
+
+Two existing character booleans conserve stronger positive history:
+`counter.tutorial.quest_ladder.completed` is written only after completed
+`travel.tutorial_quest_ladder.forward` at3088,9520,0; and
+`counter.tutorial.departed` requires completed departure and its actual source
+Lumbridge landing. Generation audits those exact writers and guards.
+An accepted/queued travel, arbitrary stage-name ordering, audio preferences or
+Modern membership cannot substitute for these facts. Queries never grant music.
+Actual executed walking steps (including the intermediate run step), source
+transports, firemaking movement and committed source facts append confirmations.
+
+Persisted `CharacterRuntime.audio_authority` is guarded by
+`WorldRuntime.audio_authority_version`. Fresh creation records the actual
+storage-owned creation tick; missing history in a versioned world is corruption.
+Normal transactions enforce append-only confirmations and stable origin/profile.
+The operator-only exact-pin `migrate-ui` path initializes older absent histories
+as `legacy_untracked`, confirms only source-automatic/current-position/conserved
+facts, and leaves other tracks unknown. Existing music/UI history, possessions,
+claims, clocks, private RNG and old receipts cannot be rewritten by migration.
+No current `6f` world is automatically repinned or migrated.
+
+For the calibrated M1 morphs, native609/611 read491 bits2/4:
+`RC_NO_TALLY_REQUIRED_WATER/FIRE` in `ABYSSAL_WARP`. Dated tiara/ruins references
+and the exact checked M1 equipment domain support zero for those two bits;
+the profile contains no corresponding tiara or attuned Hat of the Eye.
+Generation refuses to reuse that default if the equipment domain expands.
+The projection therefore supplies `id:491,value:0,knownBits:20`, not a claim
+that all491 bits or unrelated quest variables are zero. Generic guarded source
+fields can project actual counters; overlapping cases fail instead of choosing
+the first, and an unbound case has an explicit unavailable value.
 
 ## Renderer observer contract, version 1
 

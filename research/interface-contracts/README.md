@@ -1,5 +1,25 @@
 # Authoritative M1 interface inputs
 
+The concrete source audio authority contract is published in
+`8d3b4004cd66b720d5bd7d96f10765c3b034eb25`. The bounded
+`audio-authority/inputs.json` joins existing native audio calibration at Director
+commit15184423 with exact pre-freeze track/tiara/ruins revisions and pinned
+RuneLite symbols. It does not modify audio assets or the approved pack.
+All eight menu IDs are source-bound;0 is title-only. Each of the six Lumbridge
+tracks independently says first arrival unlocks it, rather than inheriting an
+unlock from Modern playlist membership. The old frozen Harmony disambiguation
+page is not used as music evidence.
+
+The source generator audits the actual completed-teleport writers of
+`counter.tutorial.quest_ladder.completed` and `counter.tutorial.departed`.
+Those facts preserve positive historical unlocks through legacy migration even
+when the current tile is elsewhere. Other legacy absence stays unknown.
+Original491 bits2/4 are qualified from actual no-talisman access definitions and
+the checked M1 equipment scope, not guessed Cook/quest-state numbers.
+The server supplies persistent authority separately from audio preferences,
+selection, client timers and original playback. See the shared contracts for
+known-bit masks, creation clocks, append-only state and exact-pin migration.
+
 `sources.json` retains dated public references, hashes, extracted facts and
 qualifications. `native-ui.json` retains the pinned native interface/style
 metadata and the approved 71 semantic tutorial-state / 11 HUD-signature

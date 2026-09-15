@@ -242,6 +242,7 @@ pub fn projection(content: &mut GameContent) {
         .unwrap_or_default();
     content.ui = Some(GameplayUiDefinition {
         version: 1,
+        audio_authority: None,
         production_interfaces: content
             .recipes
             .keys()

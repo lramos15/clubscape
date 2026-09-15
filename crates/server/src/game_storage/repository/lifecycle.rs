@@ -63,8 +63,19 @@ impl GameStore {
             let mut preserved = world.state.clone();
             preserved.content_revision = previous.content_revision.clone();
             preserved.runtime.ui_version = previous.runtime.ui_version;
+            preserved.runtime.audio_authority_version = previous.runtime.audio_authority_version;
             for (id, character) in &mut preserved.characters {
                 let old = previous.characters.get(id).ok_or_else(|| ApiError::internal("game_ui_migration_actor"))?;
+                if old.runtime.audio_authority.is_some() && character.runtime.audio_authority != old.runtime.audio_authority {
+                    return Err(ApiError::internal("game_ui_migration_changed_audio_history"));
+                }
+                if old.runtime.audio_authority.is_none() && character.runtime.audio_authority.as_ref().is_some_and(|audio| {
+                    audio.history != clubscape_game_types::MusicHistoryStatus::LegacyUntracked
+                        || audio.tracked_from_tick != previous.tick
+                }) {
+                    return Err(ApiError::internal("game_ui_migration_fabricated_audio_history"));
+                }
+                character.runtime.audio_authority = old.runtime.audio_authority.clone();
                 if old.runtime.ui.is_some() && character.runtime.ui != old.runtime.ui {
                     return Err(ApiError::internal("game_ui_migration_changed_history"));
                 }

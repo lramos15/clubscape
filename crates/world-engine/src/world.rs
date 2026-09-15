@@ -145,6 +145,7 @@ impl WorldEngine {
         character.tile = location.tile;
         character.region = location.region;
         character.runtime.instance = location.instance;
+        self.observe_audio_position(character, world.tick, character.tile)?;
         Ok(())
     }
 

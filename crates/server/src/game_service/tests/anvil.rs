@@ -436,6 +436,132 @@ fn canonical_earned_level_uses_real_chat_payload_and_exact_native_popup_associat
     );
 }
 
+#[test]
+fn canonical_audio_authority_uses_actual_source_steps_not_client_mode_or_all_unlocked_defaults() {
+    let (_, engine, _) = source();
+    let actor: ActorId = fixtures::id("actor.canonical.music");
+    let mut character = engine
+        .character_from_initial(actor.clone(), "Music", BTreeMap::new())
+        .unwrap();
+    assert_eq!(
+        character
+            .runtime
+            .audio_authority
+            .as_ref()
+            .unwrap()
+            .unlocks
+            .keys()
+            .copied()
+            .collect::<Vec<_>>(),
+        vec![62]
+    );
+    let respawn = engine
+        .content()
+        .mechanics
+        .death
+        .as_ref()
+        .unwrap()
+        .respawn
+        .require()
+        .unwrap();
+    character.tile = respawn.tile;
+    character.region = respawn.region.clone();
+    character.tutorial_stage = fixtures::id("stage.tutorial.mainland");
+    let mut world = engine.initial_world().unwrap();
+    world.characters.insert(actor.clone(), character);
+    engine
+        .apply_lifecycle(&mut world, &actor, LifecycleTransition::Join)
+        .unwrap();
+    engine
+        .apply_intent(
+            &mut world,
+            &actor,
+            &GameIntent::Walk {
+                destination: Tile::new(3223, 3218, 0).unwrap(),
+                running: false,
+            },
+            &mut NoDraw,
+        )
+        .unwrap();
+    assert_eq!(
+        engine
+            .audio_authority_view(&world, &actor)
+            .unwrap()
+            .music
+            .unlocked_groups,
+        vec![62]
+    );
+    let context = engine.tick_context(&world).unwrap();
+    engine
+        .tick_with_context(&mut world, &mut engine_fixtures::v2::Hits(0), &context)
+        .unwrap();
+    let view = engine.audio_authority_view(&world, &actor).unwrap();
+    assert_eq!(
+        view.music.unlocked_groups,
+        vec![2, 62, 64, 76, 145, 163, 327]
+    );
+    assert_eq!(
+        view.music
+            .tracks
+            .iter()
+            .find(|track| track.group == 144)
+            .unwrap()
+            .status,
+        MusicUnlockStatus::Locked
+    );
+    assert_eq!(view.varps[0].id, 491);
+    assert_eq!(view.varps[0].known_bits, 20);
+    assert_eq!(view.varps[0].value, Some(0));
+    let before = world.clone();
+    let restored: WorldState =
+        serde_json::from_slice(&serde_json::to_vec(&world).unwrap()).unwrap();
+    assert_eq!(
+        engine.audio_authority_view(&restored, &actor).unwrap(),
+        view
+    );
+    assert_eq!(world, before);
+}
+
+#[test]
+fn canonical_audio_migration_recovers_exact_acknowledged_counters_not_only_current_location() {
+    let (_, engine, _) = source();
+    let mut legacy_content = engine.content().clone();
+    legacy_content.ui.as_mut().unwrap().audio_authority = None;
+    let legacy_engine = WorldEngine::new(Arc::new(legacy_content)).unwrap();
+    let actor: ActorId = fixtures::id("actor.canonical.music_legacy");
+    let mut character = legacy_engine
+        .character_from_initial(actor.clone(), "Legacy", BTreeMap::new())
+        .unwrap();
+    // Controlled previously acknowledged source-fact boundary; not a fabricated played journey.
+    for id in [
+        "counter.tutorial.quest_ladder.completed",
+        "counter.tutorial.departed",
+    ] {
+        character
+            .runtime
+            .counters
+            .insert(fixtures::id(id), CounterValue::Boolean(true));
+    }
+    let before = character.clone();
+    let mut world = legacy_engine.initial_world().unwrap();
+    world.characters.insert(actor.clone(), character);
+    engine.migrate_ui_state(&mut world).unwrap();
+    let view = engine.audio_authority_view(&world, &actor).unwrap();
+    assert_eq!(view.music.history, MusicHistoryStatus::LegacyUntracked);
+    assert!(view.music.complete);
+    assert_eq!(
+        view.music.unlocked_groups,
+        vec![2, 62, 64, 76, 144, 145, 163, 327]
+    );
+    assert_eq!(world.characters[&actor].tile, before.tile);
+    assert_eq!(world.characters[&actor].inventory, before.inventory);
+    assert_eq!(world.characters[&actor].runtime.ui, before.runtime.ui);
+    assert_eq!(
+        world.characters[&actor].runtime.counters,
+        before.runtime.counters
+    );
+}
+
 #[tokio::test(flavor = "multi_thread", worker_threads = 4)]
 #[ignore = "requires isolated PostgreSQL; run just test-integration"]
 async fn canonical_anvil_legacy_command_and_public_menu_receipt_commit_once_in_real_postgresql() {

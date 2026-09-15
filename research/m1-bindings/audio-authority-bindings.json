@@ -1,0 +1,86 @@
+{
+  "client_preferences_grant_tracks": false,
+  "conserved_facts": {
+    "lumbridge": {
+      "counter": "counter.tutorial.departed",
+      "event": "teleport",
+      "landings": [
+        {
+          "plane": 0,
+          "x": 3232,
+          "y": 3233
+        },
+        {
+          "plane": 0,
+          "x": 3232,
+          "y": 3233
+        },
+        {
+          "plane": 0,
+          "x": 3222,
+          "y": 3218
+        }
+      ],
+      "phase": "completed",
+      "source_edge_sha256": "bf05cdb336a1c9ac374763c4d1794688da4c77e2a2a5c4b35ce41d33ca68f648",
+      "travel": "travel.tutorial.departure"
+    },
+    "tutorial_cave": {
+      "counter": "counter.tutorial.quest_ladder.completed",
+      "event": "teleport",
+      "landings": [
+        {
+          "plane": 0,
+          "x": 3088,
+          "y": 9520
+        }
+      ],
+      "phase": "completed",
+      "source_edge_sha256": "26d7defb96d801232c98a9469e05dc3ae82d471375290543637e631b31530a7b",
+      "travel": "travel.tutorial_quest_ladder.forward"
+    }
+  },
+  "equipment_scope_source_ids": [
+    841,
+    877,
+    882,
+    1009,
+    1171,
+    1173,
+    1205,
+    1237,
+    1265,
+    1277,
+    1351,
+    1949
+  ],
+  "input_sha256": "4b79ac2306d0daa7efaafc46596c3f4abb7ecb1afb4908178a73930f7bf5856e",
+  "legacy_history": "Explicit legacy_untracked origin, positive conserved confirmations only; absence remains unknown.",
+  "menu_groups": [
+    2,
+    62,
+    64,
+    76,
+    144,
+    145,
+    163,
+    327
+  ],
+  "milestone_accepted": false,
+  "modern_membership_is_unlock_proof": false,
+  "native_varp": {
+    "id": 491,
+    "known_bits": 20,
+    "value": 0
+  },
+  "normal_initial_position": {
+    "plane": 0,
+    "x": 3094,
+    "y": 3106
+  },
+  "schema_version": 1,
+  "source_assets_modified": false,
+  "source_geometry_classification": "dated_public_source_geography_with_native_music_table_corroboration",
+  "source_trigger_qualification": "Explicit per-track arrival hints plus dated polygons and audited completed-travel facts.",
+  "title_group_excluded": 0
+}

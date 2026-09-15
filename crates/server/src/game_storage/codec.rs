@@ -164,6 +164,21 @@ pub(super) fn validate_world(world: &WorldState) -> Result<(), ApiError> {
                 "World and character UI versions disagree; history cannot be defaulted.",
             ));
         }
+        if character.runtime.audio_authority.is_some()
+            != world.runtime.audio_authority_version.is_some()
+            || character
+                .runtime
+                .audio_authority
+                .as_ref()
+                .is_some_and(|audio| {
+                    audio.tracked_from_tick > world.tick
+                        || audio.unlocks.values().any(|entry| entry.tick > world.tick)
+                })
+        {
+            return Err(ApiError::invalid(
+                "World and character audio history disagree or have future confirmations.",
+            ));
+        }
         validate_character(character, world.tick)?;
     }
     if world

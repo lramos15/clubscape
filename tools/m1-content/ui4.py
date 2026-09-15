@@ -270,6 +270,10 @@ def apply_ui(inputs, content, bindings):
                                   "Owner-approved original penguin base2063/model21547 at75/128; no new kits/colours.", "approved_adaptation", "1.3.0")]),
         "source": ui_source,
     }
+    from audio_authority4 import bind_audio_authority
+    audio, audio_proof = bind_audio_authority(content)
+    content["ui"]["audio_authority"] = audio
+    bindings["audio_authority"] = audio_proof
     content["schema_version"] = 4
     bindings["ui"] = {"schema_version": 1, "capability": "game.ui.v1", "source_facts": "research/interface-contracts/sources.json",
                       "additive_capabilities": ["game.ui.amounts.v1", "game.ui.recovery.v1"],

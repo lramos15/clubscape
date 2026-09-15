@@ -56,6 +56,11 @@ impl WorldEngine {
                     entering = *next;
                 }
                 let events = map.step_path(&mut character.tile, &mut path, running)?;
+                for event in &events {
+                    if let GameEvent::Moved { tile } = event {
+                        self.observe_audio_position(character, world.tick, *tile)?;
+                    }
+                }
                 if !events.is_empty() {
                     character
                         .runtime
@@ -983,6 +988,7 @@ impl WorldEngine {
                         .get(&tile)
                         .ok_or_else(|| unknown("Fire step has no region."))?
                         .clone();
+                    self.observe_audio_position(character, world.tick, tile)?;
                     frame.events.push(GameEvent::Moved { tile });
                     break;
                 }

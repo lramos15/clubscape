@@ -1,3 +1,4 @@
+mod audio_wire;
 mod content;
 mod observer;
 mod random;
@@ -73,6 +74,7 @@ pub(crate) struct GameHandle {
     state: Arc<Mutex<State>>,
     pub(crate) assets: Arc<WebAssets>,
     pub(crate) gameplay_ui: bool,
+    pub(crate) audio_authority: bool,
 }
 
 impl GameHandle {
@@ -200,6 +202,12 @@ impl PreparedGame {
             state: state.clone(),
             assets: content.assets.clone(),
             gameplay_ui: content.compiled.definition().ui.is_some(),
+            audio_authority: content
+                .compiled
+                .definition()
+                .ui
+                .as_ref()
+                .is_some_and(|ui| ui.audio_authority.is_some()),
         };
         Ok(Self {
             coordinator: Coordinator {
@@ -623,10 +631,11 @@ impl Coordinator {
                             appearance: BTreeMap::new(),
                         },
                         move |character| {
-                            let derived = engine.character_from_initial(
+                            let derived = engine.character_from_initial_at_tick(
                                 character.actor_id.clone(),
                                 character.display_name.clone(),
                                 character.appearance.clone(),
+                                character.last_action_tick,
                             )?;
                             character.runtime = derived.runtime;
                             Ok(())

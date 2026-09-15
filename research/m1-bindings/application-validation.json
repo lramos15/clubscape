@@ -1,5 +1,5 @@
 {
-  "content_compressed_sha256": "9f7c782af06d4ca407c4b18eb3e48178b0e905f6957f8494d9a32e65185f2598",
+  "content_compressed_sha256": "618efcdcfaaf0d3ba0c61c61572d9da86fa3df71b85e2eaba2b8b5a78b8844d2",
   "coupled_updates_checked": 7,
   "death_values_checked": 122,
   "departure": {
@@ -214,7 +214,7 @@
     "schema_version": 1,
     "source_scope_passed": true,
     "tutorial_states": 71,
-    "ui_sha256": "0013227595afc17d9b1e42f77abbf694627cbcee7c8e6fc6656179063c391644",
+    "ui_sha256": "3623f12b679cfe9092967975221fd80a498684af5888be8bdfaee4483cec4a24",
     "ui_version": 1
   }
 }

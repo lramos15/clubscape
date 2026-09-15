@@ -68,6 +68,8 @@ def input_lock(inputs):
     paths += [ROOT / "research/interface-contracts/actor-observer-bindings.json"]
     paths += [ROOT / "research/interface-contracts/level-up-native.json",
               ROOT / "research/interface-contracts/control-bindings.json"]
+    paths += [ROOT / "research/interface-contracts/audio-authority/inputs.json",
+              ROOT / "research/interface-contracts/audio-authority/pre-freeze-pages.json"]
     paths += [ROOT / "research/current-source/m1-consumable-validation.json",
               ROOT / "tools/cache-import/CONSUMABLE_ASSETS.md"]
     paths += [ROOT / "research/runtime-bindings" / name for name in (
@@ -329,6 +331,7 @@ def build(args):
     emit(BINDINGS / "application-result.json", bindings["application"], True)
     emit(BINDINGS / "runtime3-selectors.json", bindings["runtime3"], True)
     emit(BINDINGS / "ui-bindings.json", bindings["ui"], True)
+    emit(BINDINGS / "audio-authority-bindings.json", bindings["audio_authority"], True)
     geometry_records = []
     for number in sorted(world.raw):
         geometry_records.append(emit(CONTENT / f"geometry/{number}.json.gz", world.region(number, full=True)))

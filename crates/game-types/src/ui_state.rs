@@ -9,6 +9,8 @@ pub const BANK_LAYOUT_AMOUNT_VERSION: u32 = 2;
 #[serde(deny_unknown_fields)]
 pub struct GameplayUiDefinition {
     pub version: u32,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub audio_authority: Option<AudioAuthorityDefinition>,
     pub production_interfaces: BTreeMap<RecipeId, InterfaceId>,
     pub direct_production: BTreeSet<RecipeId>,
     pub quest_rewards: BTreeMap<QuestId, QuestUiDefinition>,

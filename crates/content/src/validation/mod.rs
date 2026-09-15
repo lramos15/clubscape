@@ -1,3 +1,4 @@
+mod audio;
 mod definitions;
 mod execution;
 mod graphs;

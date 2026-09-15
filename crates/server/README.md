@@ -47,6 +47,21 @@ command upgrades only bank metadata to layout2 with required `amount_all`;
 missing layout2 preference data fails instead of resetting to quantity1.
 Existing UI history and the state/runtime/UI version1 envelopes are preserved.
 
+Source `ui.audio_authority` profiles additionally expose the read-only
+`game.audio.authority.v1` snapshot. The engine records source-automatic unlocks,
+actual movement/transport positions and audited conserved facts in append-only
+character history. The existing transaction/receipt machinery preserves them
+across retries, account-token renewal and restart. Native morph words are
+derived from source-bound generic facts/defaults with explicit known-bit masks;
+preferences cannot write unlocks or variable state.
+
+Exact-pin `migrate-ui` also initializes previously absent audio history as
+**legacy untracked**, never fresh/empty/all-unlocked. Existing UI/audio history
+and all gameplay state remain unchanged; only confirmed automatic, current
+position and conserved facts are added for an untracked record. Missing history
+under the audio-version marker is an error. This is not an automatic upgrade
+of an existing world or a reconstruction of unknowable past visits.
+
 Use `cargo run --locked -p clubscape-server -- migrate-ui --from <old-raw-sha256>`
 with `DATABASE_URL` and a complete target `CLUBSCAPE_GAME_ROOT` for an explicit
 UI-only content upgrade. It requires exclusive world ownership and audits the

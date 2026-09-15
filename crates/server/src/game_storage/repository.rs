@@ -1421,6 +1421,7 @@ fn validate_transition(before: &WorldState, after: &WorldState, tick: u64) -> Re
     if before.schema_version != after.schema_version
         || before.content_revision != after.content_revision
         || before.runtime.ui_version != after.runtime.ui_version
+        || before.runtime.audio_authority_version != after.runtime.audio_authority_version
         || before.revision != after.revision
         || after.tick != tick
         || !before.characters.keys().eq(after.characters.keys())

@@ -1,5 +1,5 @@
 {
-  "aggregate_sha256": "f1ee211ae8aa27eaa568cc7e670fe3b6e582ccce526b7f30d277585a244be91b",
+  "aggregate_sha256": "b0a5ed1cb5d01668249e06bee35225cad66766bfe4bce8b4887973212f70539a",
   "inputs": [
     {
       "bytes": 845835,
@@ -8687,6 +8687,16 @@
       "sha256": "90671bea204c9e583fa84e280d42b1203725aee6f0f4dba42a2c23357e3f3f7e"
     },
     {
+      "bytes": 2989,
+      "path": "crates/game-types/src/audio_authority.rs",
+      "sha256": "aedb3929e399bd4f3fd3ca57205613598daa48d505fea504ccf51114c4d51731"
+    },
+    {
+      "bytes": 6447,
+      "path": "crates/game-types/src/audio_state.rs",
+      "sha256": "aab2e79941fa6116a10b60f05123d167edddb84856b37134514a727fa9b4e532"
+    },
+    {
       "bytes": 14810,
       "path": "crates/game-types/src/content.rs",
       "sha256": "6d28f930d86d27175b916eb21fc39d7dedf38650e5cb775607fdd369be5667f1"
@@ -8717,9 +8727,9 @@
       "sha256": "cbcfd32620681acb6ab0552e3470926dc9e26da4e7737bfa7b103e011bf74a8c"
     },
     {
-      "bytes": 835,
+      "bytes": 925,
       "path": "crates/game-types/src/lib.rs",
-      "sha256": "fd80b297fa653dcf0c70a212986b38914f4f40b76feda024f48b55156730c0a6"
+      "sha256": "59aeb50bc6fe7324be2f76a3878750d60f4520aa1d01d564bfbc8cbd3c6d1386"
     },
     {
       "bytes": 43635,
@@ -8737,14 +8747,14 @@
       "sha256": "b8af4ca5e5e742b7e456469b584e84cf25fb6802455a2811c8c8adf2968effe9"
     },
     {
-      "bytes": 27175,
+      "bytes": 27766,
       "path": "crates/game-types/src/runtime_state.rs",
-      "sha256": "a9ccf765a9d855215a894dc0264d72128790bfe1165f9fdfede35493b4d8286d"
+      "sha256": "61432b2f9fece62b04a971d23491b8e84b10624c0bb0d5c0036b2ce77a859d68"
     },
     {
-      "bytes": 48219,
+      "bytes": 49991,
       "path": "crates/game-types/src/runtime_validation.rs",
-      "sha256": "c0ff123f432e4e8c980050054a64c21de538432cbe3d8f08a455deb89104fd78"
+      "sha256": "9cb5f9befd325574bd0a38b32fc8e101e4a051bb0e434438d62d65fb9382cddd"
     },
     {
       "bytes": 9920,
@@ -8757,9 +8767,9 @@
       "sha256": "e1e1d8ad58e871dabf4a0ad575597e34b690200653fb94d04270b656c4940a80"
     },
     {
-      "bytes": 15371,
+      "bytes": 15493,
       "path": "crates/game-types/src/ui_state.rs",
-      "sha256": "925b64b1ab421add0f2e42c4be6f13d6436419633aa42872d09ce18396094c44"
+      "sha256": "46f9f8a83f3a68af5c270a7763d776a4cd7f1ef0c66e9047558bdeaa209ef205"
     },
     {
       "bytes": 1512,
@@ -8840,6 +8850,16 @@
       "bytes": 1989,
       "path": "research/interface-contracts/actor-observer-bindings.json",
       "sha256": "9d563b4c7dddbba933d4bcb4cc696d6df82e65a26a73f74482ddedb78cc39e2b"
+    },
+    {
+      "bytes": 105763,
+      "path": "research/interface-contracts/audio-authority/inputs.json",
+      "sha256": "4b79ac2306d0daa7efaafc46596c3f4abb7ecb1afb4908178a73930f7bf5856e"
+    },
+    {
+      "bytes": 38630,
+      "path": "research/interface-contracts/audio-authority/pre-freeze-pages.json",
+      "sha256": "55461e90bf9a2acb91f51099a9e63c6b8422e6396046c54e357ad77339ca9853"
     },
     {
       "bytes": 216961,
@@ -9037,14 +9057,19 @@
       "sha256": "8c2996fca8bcb17c4a9aa57a2610a5e53bed97653653ff162b5aad91e9a55105"
     },
     {
+      "bytes": 9776,
+      "path": "tools/m1-content/audio_authority4.py",
+      "sha256": "85d1bc07b5c92bfae591ea769038c4f05ddd83b6997a272687fe236c2edd49aa"
+    },
+    {
       "bytes": 4533,
       "path": "tools/m1-content/bind_wiki.py",
       "sha256": "3ccf42326831b8d396fed6b843c9ace2cdc298a36b85323cc0bc91490b5c0898"
     },
     {
-      "bytes": 32253,
+      "bytes": 32513,
       "path": "tools/m1-content/build.py",
-      "sha256": "18cc77fcfd9abb47396677b2337543284577aab167aef3404dbb2be1e654af78"
+      "sha256": "124baa9d9e58bae0b3190f2df2f623b0885cf02ee9289cd8e8a9b613899b3ca7"
     },
     {
       "bytes": 5508,
@@ -9080,6 +9105,11 @@
       "bytes": 12383,
       "path": "tools/m1-content/geometry.py",
       "sha256": "a77ce32922e30f76da6c5607efd74472d012a623b4bd9e5fbdbea0563529ec9c"
+    },
+    {
+      "bytes": 8309,
+      "path": "tools/m1-content/import_audio_authority.py",
+      "sha256": "3a5ffc2afdac007f9ae3dc8dd5eabac4055f4d41ed3013de41d62828c96e2f2c"
     },
     {
       "bytes": 2980,
@@ -9177,6 +9207,11 @@
       "sha256": "662d268ae2903f4a90f259bd50e8844c8a75ee92e8f1d37acd24d82b84f24335"
     },
     {
+      "bytes": 4213,
+      "path": "tools/m1-content/test_audio_authority.py",
+      "sha256": "f5cd40a40b09867b7adafb983a90737bc47be7e21d5dc9d7ac451ba9d53e2138"
+    },
+    {
       "bytes": 27086,
       "path": "tools/m1-content/test_content.py",
       "sha256": "75327d76415142d062be80af1253ca9953db100d263f972a4a95b063b9efa505"
@@ -9212,9 +9247,9 @@
       "sha256": "f7a0176dd033cb96288c1d2def3aaf0f88a86ec7d15d04f6ea66b2c8c6b259c0"
     },
     {
-      "bytes": 20216,
+      "bytes": 20416,
       "path": "tools/m1-content/ui4.py",
-      "sha256": "195f25fc742adc193a191d2da4378ad3f114508b04c43a831146fb2b4d976194"
+      "sha256": "0520c92a1b8cb0e86cb2d44aa59ded174ca40f2ccc4b838923c3f84b44ad311f"
     },
     {
       "bytes": 9277,

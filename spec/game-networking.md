@@ -186,6 +186,16 @@ storage APIs remain compatible.
 
 ## Public protocol and views
 
+Audio-enabled source profiles advertise `game.audio.authority.v1` and populate
+`WorldSnapshot.audio_authority`22. This is actor-private, read-only authority,
+not the client's volume/mode/playlist preference record. Unlock confirmations
+commit atomically with actual source movement/facts; polling never grants them.
+Legacy-untracked negatives remain unknown. The shell must retain preference
+records and surface incomplete authority instead of restoring all-unlocked or
+current-location-only history. Native variable values are usable only for their
+declared `known_bits`;491 mask20 is not a complete RuneLite varp array.
+Exact meanings and source/migration qualifications are in the shared contracts.
+
 Ready game servers advertise `game.observer.v1`. `Player.running` field30 and
 visible-player `Entity.running` field20 are optional for older peers but always
 populated by the new server. They report actual current-tick steps, not a run

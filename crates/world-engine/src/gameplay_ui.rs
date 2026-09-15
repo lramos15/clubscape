@@ -42,6 +42,7 @@ impl WorldEngine {
         for character in draft.characters.values_mut() {
             self.prepare_ui(character)?;
         }
+        self.migrate_audio_history(&mut draft)?;
         draft.validate_runtime(&self.content)?;
         *world = draft;
         Ok(())
@@ -392,6 +393,7 @@ impl WorldEngine {
         self.session_close_event(&before, &character, &mut events)?;
         self.observe_ui(&before, &mut character, &events)?;
         self.observe_actor_action(draft.tick, &before, &mut character, &events)?;
+        self.observe_audio_facts(&mut character, draft.tick)?;
         if timed {
             character.last_action_tick = draft.tick;
             runtime::schedule_mut(&mut character)?.command_seen = true;

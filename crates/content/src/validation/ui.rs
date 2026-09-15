@@ -5,6 +5,9 @@ impl Validator<'_> {
         let Some(ui) = &self.content.ui else {
             return Ok(());
         };
+        if let Some(audio) = &ui.audio_authority {
+            self.audio_authority(audio)?;
+        }
         if ui.version != GAMEPLAY_UI_VIEW_VERSION
             || ui.bank.maximum_tabs == 0
             || ui.bank.maximum_tabs > 9

@@ -7,12 +7,12 @@
   "check_command": "python3 tools/m1-content/check.py",
   "compiled_artifact": {
     "artifact_version": 4,
-    "bytes": 521208,
+    "bytes": 523864,
     "path": "content/m1/game-content.csc.gz",
     "schema_version": 4,
-    "sha256": "e42204b6b6ebf479d7baffb283ea67bcccf82e2497b96714ef3644b99eec00aa",
-    "uncompressed_bytes": 13161417,
-    "uncompressed_sha256": "7db3f6ae58712d253ba09a95ef212a62dfc514929300003e60f8732c0a0a9069"
+    "sha256": "52ca6143589182caee23a9ca967602094d787c4346bb30aec25ae67beb46d348",
+    "uncompressed_bytes": 13173372,
+    "uncompressed_sha256": "57462592102e1491f2c5bf00ca59dc80e75d03feb0859c49e66f4063ea36ebf5"
   },
   "compiler_command": "python3 tools/m1-content/compile.py --compiler-manifest crates/content/Cargo.toml",
   "content_schema_version": 4,
@@ -66,29 +66,29 @@
   },
   "declared_v3_selectors_authored": true,
   "inactive_full_target_binding_count": 6,
-  "input_aggregate_sha256": "f1ee211ae8aa27eaa568cc7e670fe3b6e582ccce526b7f30d277585a244be91b",
+  "input_aggregate_sha256": "b0a5ed1cb5d01668249e06bee35225cad66766bfe4bce8b4887973212f70539a",
   "milestone_accepted": false,
   "outputs": [
     {
-      "bytes": 346931,
-      "json_bytes": 346931,
-      "json_sha256": "66a1a112fc88984a12a48dfe75bd76963df4e10b613d2389fd956e2dd51e5172",
+      "bytes": 348195,
+      "json_bytes": 348195,
+      "json_sha256": "7fde98db6fd47e681e585c0816f99a7edf54cb73b46f2f71de40eda6c9bf091a",
       "path": "research/m1-bindings/input-lock.json",
-      "sha256": "66a1a112fc88984a12a48dfe75bd76963df4e10b613d2389fd956e2dd51e5172"
+      "sha256": "7fde98db6fd47e681e585c0816f99a7edf54cb73b46f2f71de40eda6c9bf091a"
     },
     {
-      "bytes": 511332,
-      "json_bytes": 15644976,
-      "json_sha256": "1210619a28bd008052707eff1e5bd3c3484387b2c7c6a985925bc019c62f979f",
+      "bytes": 514152,
+      "json_bytes": 15659112,
+      "json_sha256": "27001e89c50cc4e8149e1480969052af410f09e59fbe53cef456a91f4a3a94c8",
       "path": "content/m1/game-content.json.gz",
-      "sha256": "9f7c782af06d4ca407c4b18eb3e48178b0e905f6957f8494d9a32e65185f2598"
+      "sha256": "618efcdcfaaf0d3ba0c61c61572d9da86fa3df71b85e2eaba2b8b5a78b8844d2"
     },
     {
       "bytes": 191285,
       "json_bytes": 191285,
-      "json_sha256": "b2c96df223887793ceb6087f7e3f3a743f1de82280d2c158ae88fb940f3298af",
+      "json_sha256": "1def8dfe1636c229754bd960e6f76b7eb24140f1336cfd69f668b27789bebfa2",
       "path": "research/m1-bindings/application-result.json",
-      "sha256": "b2c96df223887793ceb6087f7e3f3a743f1de82280d2c158ae88fb940f3298af"
+      "sha256": "1def8dfe1636c229754bd960e6f76b7eb24140f1336cfd69f668b27789bebfa2"
     },
     {
       "bytes": 6071,
@@ -103,6 +103,13 @@
       "json_sha256": "dae39e834626c34b7fb0063790c747c653ec7511d3c7335030c982297505da29",
       "path": "research/m1-bindings/ui-bindings.json",
       "sha256": "dae39e834626c34b7fb0063790c747c653ec7511d3c7335030c982297505da29"
+    },
+    {
+      "bytes": 2035,
+      "json_bytes": 2035,
+      "json_sha256": "36856ec5b1b1bdcf72d71c80e996c710b8ba108b8a6e9eb17d3e24c3d4582dc1",
+      "path": "research/m1-bindings/audio-authority-bindings.json",
+      "sha256": "36856ec5b1b1bdcf72d71c80e996c710b8ba108b8a6e9eb17d3e24c3d4582dc1"
     },
     {
       "bytes": 52366,
@@ -632,14 +639,14 @@
     {
       "bytes": 2209,
       "json_bytes": 2209,
-      "json_sha256": "93dc2ff4a16be080579a01201bb248fd9162e078cff7bb5db6a8b2ddaadae14f",
+      "json_sha256": "cd73bb29cfe097cf63ffd015aeed46ffecc9bad84b45772b0ea1d395dae7f93a",
       "path": "research/m1-bindings/structural-validation.json",
-      "sha256": "93dc2ff4a16be080579a01201bb248fd9162e078cff7bb5db6a8b2ddaadae14f"
+      "sha256": "cd73bb29cfe097cf63ffd015aeed46ffecc9bad84b45772b0ea1d395dae7f93a"
     }
   ],
   "presentation_approved": false,
   "readiness_dependency": "research/m1-bindings/contract-gaps.json",
-  "revision": "m1.source-backed.v4.f1ee211ae8aa27ea",
+  "revision": "m1.source-backed.v4.b0a5ed1cb5d01668",
   "runtime_compile_passed": true,
   "runtime_ready": false,
   "runtime_schema_version": 1,

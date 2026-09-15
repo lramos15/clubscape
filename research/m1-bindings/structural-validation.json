@@ -64,8 +64,8 @@
   ],
   "source_status_occurrences": {
     "approved_adaptation": 2,
-    "inference": 3302,
-    "verified_reference": 15946
+    "inference": 3312,
+    "verified_reference": 15962
   },
   "structural_checks_passed": true,
   "unpublished_asset_references": []

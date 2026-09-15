@@ -81,6 +81,14 @@ impl CharacterState {
     /// Container/equipment/XP validation remains the caller's existing responsibility.
     pub fn validate_runtime(&self, content: &GameContent) -> GameResult<()> {
         self.runtime.validate_shape()?;
+        if let Some(audio) = &self.runtime.audio_authority {
+            let definition = content
+                .ui
+                .as_ref()
+                .and_then(|ui| ui.audio_authority.as_ref())
+                .ok_or_else(|| invalid("Audio history requires its source profile."))?;
+            audio.validate_definition(definition)?;
+        }
         if let Some(ui) = &self.runtime.ui {
             let definition = content
                 .ui
@@ -383,6 +391,13 @@ impl CharacterState {
 impl CharacterRuntime {
     /// Append-only reward accounting survives replay, close/reopen, death and restart.
     pub fn validate_ledger_successor(&self, successor: &Self) -> GameResult<()> {
+        if let Some(previous) = &self.audio_authority {
+            let next = successor
+                .audio_authority
+                .as_ref()
+                .ok_or_else(|| invalid("Acknowledged source audio history was removed."))?;
+            previous.validate_successor(next)?;
+        }
         if self.played_time.as_ref().is_some_and(|before| {
             successor.played_time.as_ref().is_none_or(|after| {
                 after.ticks < before.ticks
@@ -497,6 +512,9 @@ impl WorldRuntime {
             || self
                 .ui_version
                 .is_some_and(|version| version != UI_STATE_VERSION)
+            || self
+                .audio_authority_version
+                .is_some_and(|version| version != AUDIO_AUTHORITY_VERSION)
             || self.next_ground_id > i64::MAX as u64
             || self.ground_provenance.len() > 32_768
             || self.counters.len() > 2048
@@ -661,6 +679,16 @@ impl WorldState {
                 "World UI metadata requires an explicit content migration.",
             ));
         }
+        if self.runtime.audio_authority_version
+            != content
+                .ui
+                .as_ref()
+                .and_then(|ui| ui.audio_authority.as_ref().map(|_| AUDIO_AUTHORITY_VERSION))
+        {
+            return Err(invalid(
+                "Source audio history requires an explicit content migration.",
+            ));
+        }
         counters(&self.runtime.counters, content, CounterScope::World)?;
         let definitions = &content.mechanics;
         let mut instances = BTreeSet::new();
@@ -676,6 +704,21 @@ impl WorldState {
         for (id, character) in &self.characters {
             if id != &character.actor_id {
                 return Err(invalid("Character map key and actor identity disagree."));
+            }
+            if character.runtime.audio_authority.is_some()
+                != self.runtime.audio_authority_version.is_some()
+                || character
+                    .runtime
+                    .audio_authority
+                    .as_ref()
+                    .is_some_and(|audio| {
+                        audio.tracked_from_tick > self.tick
+                            || audio.unlocks.values().any(|entry| entry.tick > self.tick)
+                    })
+            {
+                return Err(invalid(
+                    "Missing source audio history or future confirmation.",
+                ));
             }
             if character.runtime.ui.is_some() != self.runtime.ui_version.is_some()
                 || character

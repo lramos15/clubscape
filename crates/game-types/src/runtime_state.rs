@@ -218,6 +218,8 @@ pub struct CharacterRuntime {
     pub ui: Option<GameplayUiRuntime>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub observation: Option<ActorObservation>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub audio_authority: Option<AudioAuthorityRuntime>,
 }
 
 impl Default for CharacterRuntime {
@@ -247,6 +249,7 @@ impl Default for CharacterRuntime {
             played_time: None,
             ui: None,
             observation: None,
+            audio_authority: None,
         }
     }
 }
@@ -280,6 +283,9 @@ impl CharacterRuntime {
 
     pub fn validate_shape(&self) -> GameResult<()> {
         let tick = |tick: u64| tick <= i64::MAX as u64;
+        if let Some(audio) = &self.audio_authority {
+            audio.validate_shape()?;
+        }
         if let Some(ui) = &self.ui {
             ui.validate_shape()?;
         }
@@ -723,6 +729,8 @@ pub struct WorldRuntime {
     pub schema_version: u32,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub ui_version: Option<u32>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub audio_authority_version: Option<u32>,
     /// None is a legacy/unbound world, not an implicit free or members world.
     pub members: Option<bool>,
     pub counters: BTreeMap<CounterId, CounterValue>,
@@ -743,6 +751,7 @@ impl Default for WorldRuntime {
         Self {
             schema_version: RUNTIME_SCHEMA_VERSION,
             ui_version: None,
+            audio_authority_version: None,
             members: None,
             counters: BTreeMap::new(),
             object_states: BTreeMap::new(),
@@ -761,6 +770,10 @@ impl WorldRuntime {
     pub fn from_initial(content: &GameContent) -> Self {
         Self {
             ui_version: content.ui.as_ref().map(|_| UI_STATE_VERSION),
+            audio_authority_version: content
+                .ui
+                .as_ref()
+                .and_then(|ui| ui.audio_authority.as_ref().map(|_| AUDIO_AUTHORITY_VERSION)),
             members: content.mechanics.world_members,
             counters: initial_counters(content, CounterScope::World),
             object_states: content

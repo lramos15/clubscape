@@ -3,6 +3,7 @@
 
 mod actions;
 mod activities;
+mod audio_authority;
 mod collision_cache;
 mod combat;
 mod commerce;
@@ -150,6 +151,16 @@ impl WorldEngine {
         display_name: impl Into<String>,
         appearance: BTreeMap<String, u32>,
     ) -> GameResult<CharacterState> {
+        self.character_from_initial_at_tick(actor_id, display_name, appearance, 0)
+    }
+
+    pub fn character_from_initial_at_tick(
+        &self,
+        actor_id: ActorId,
+        display_name: impl Into<String>,
+        appearance: BTreeMap<String, u32>,
+        at_tick: u64,
+    ) -> GameResult<CharacterState> {
         let initial = &self.content.initial_state;
         let mut character = CharacterState {
             schema_version: GAME_SCHEMA_VERSION,
@@ -182,6 +193,7 @@ impl WorldEngine {
         character.migrate_engine_metadata(&self.content)?;
         self.prepare_ui(&mut character)?;
         self.refresh_combat_style(&mut character)?;
+        self.initialize_audio_history(&mut character, at_tick, MusicHistoryStatus::FromCreation)?;
         validation::character(&character, &self.content)?;
         Ok(character)
     }
@@ -259,6 +271,7 @@ impl WorldEngine {
         self.progress(&mut draft, &mut character, &before, &mut events, random)?;
         self.observe_ui(&before, &mut character, &events)?;
         self.observe_actor_action(draft.tick, &before, &mut character, &events)?;
+        self.observe_audio_facts(&mut character, draft.tick)?;
         self.validate_open_dialogue(&draft, &character)?;
         self.check_reward_atomicity(&before, &character)?;
         self.session_close_event(&before, &character, &mut events)?;
@@ -308,6 +321,7 @@ impl WorldEngine {
         let events = self.process_tick_draft(&mut draft, random, context)?;
         self.observe_world_ui(world, &mut draft, &events)?;
         self.observe_world_actions(world, &mut draft, &events)?;
+        self.observe_world_audio(&mut draft)?;
         draft.validate_runtime(&self.content)?;
         *world = draft;
         Ok(events)
@@ -329,6 +343,7 @@ impl WorldEngine {
         let events = self.process_tick_draft(&mut draft, random, context)?;
         self.observe_world_ui(world, &mut draft, &events)?;
         self.observe_world_actions(world, &mut draft, &events)?;
+        self.observe_world_audio(&mut draft)?;
         draft.validate_runtime(&self.content)?;
         *world = draft;
         Ok(events)
