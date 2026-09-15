@@ -1,0 +1,10 @@
+{
+  "scope": "Original individual source frames/masks/offsets/alpha, no panel crops",
+  "checkedSpriteFrames": 1099,
+  "checkedFontGlyphs": 1024,
+  "failures": [],
+  "toleranceDifferentPixels": 0,
+  "sourcePackSha256": "b62e19704e17d3d3e4e819f803ef49ba7cc54034ae407184b423427c65d9674d",
+  "gameplayAcceptance": false,
+  "finalAcceptance": false
+}

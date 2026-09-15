@@ -1,0 +1,627 @@
+import type { NativeWidget, Rect } from "./assets.ts";
+import { intersect } from "./assets.ts";
+import type { Control, UiAction } from "./input.ts";
+import { SourceRaster, countText, escapeText, plainText, sourceLines } from "./raster.ts";
+import { cloneTemplate, frameRegions, paintNativeTree, tabWidget, TABS, widgetId, widgetKey } from "./layout.ts";
+import type { LaidWidget } from "./layout.ts";
+import type { GameViewContext } from "./index.ts";
+import { isInterfaceUnlocked } from "./index.ts";
+import type { ItemView, SkillView } from "../shared/contracts.ts";
+
+const EQUIPMENT = ["head", "cape", "neck", "weapon", "body", "shield", "legs", "hands", "feet", "ring", "ammo"];
+const SKILLS = ["attack", "strength", "defence", "ranged", "prayer", "magic", "runecraft", "construction",
+  "hitpoints", "agility", "herblore", "thieving", "crafting", "fletching", "slayer", "hunter",
+  "mining", "smithing", "fishing", "cooking", "firemaking", "woodcutting", "farming", "sailing"];
+const MODALS: Record<string, number> = {
+  journal: 119, reward: 153, experience: 929, appearance: 679, "equipment-stats": 84,
+  "kept-items": 4, grave: 602, recovery: 669, smithing: 312, production: 270, "all-settings": 134,
+};
+
+export function paintCharacter(raster: SourceRaster, appearance: Record<string, number>, controls: Control[],
+  change: (body: number) => void, confirm: () => void, required: (label: string, field: string) => void): Rect | null {
+  const source = raster.assets.catalogue.templates["native-appearance"];
+  if (!source) throw new Error("The original character-creator frame is missing.");
+  const tree = paintNativeTree(raster, source, raster.canvas.width, raster.canvas.height, widget => {
+    if (widget.id >> 16 !== 679) return true;
+    const child = widget.id & 65535;
+    if ([68, 69].includes(child) && widget.index >= 0 && widget.type !== 4) {
+      const selected = appearance.body_type === (child === 68 ? 0 : 1);
+      const skin = source.find(w => w.id === widgetId(679, selected ? 68 : 69) && w.index === widget.index);
+      if (skin) { widget.sprite = skin.sprite; widget.color = skin.color; widget.opacity = skin.opacity; }
+    }
+    raster.widget(widget);
+    return true;
+  });
+  for (const widget of tree) {
+    if (widget.id >> 16 !== 679 || widget.index !== -1 || widget.type !== 0) continue;
+    const child = widget.id & 65535;
+    if (![68, 69, 74].includes(child) && !widget.actions?.some(Boolean)) continue;
+    const row = tree.find(w => w.parent === widget.parent && w.type === 4 && w.text);
+    const label = child === 74 ? "Confirm appearance" : child === 68 || child === 69 ? `Body type ${child === 68 ? "A" : "B"}`
+      : `${row && widget.x < row.x ? "Previous" : "Next"} ${plainText(row?.text ?? "appearance option")}`;
+    controls.push({ ...intersect(widget, widget.clip), id: `appearance-${widgetKey(widget)}`, label,
+      ...([68, 69].includes(child) ? { pressed: appearance.body_type === (child === 68 ? 0 : 1) } : {}),
+      actions: [{ label, run: () => child === 74 ? confirm() : [68, 69].includes(child) ? change(child === 68 ? 0 : 1)
+        : required(label, "appearance_options") }] });
+  }
+  const model = tree.find(w => w.id >> 16 === 679 && w.type === 6);
+  return model ? tree.find(w => w.id === model.parent && w.index === -1) ?? null : null;
+}
+
+function attachGroup(widgets: NativeWidget[], source: readonly NativeWidget[], group: number): NativeWidget[] {
+  const add = new Map<string, NativeWidget>();
+  const staticSource = new Map(source.filter(w => w.index === -1).map(w => [w.id, w]));
+  for (const widget of source.filter(w => w.id >> 16 === group)) {
+    add.set(widgetKey(widget), { ...widget });
+    let parent = staticSource.get(widget.parent);
+    const seen = new Set<number>();
+    while (parent && !seen.has(parent.id)) {
+      seen.add(parent.id); add.set(widgetKey(parent), { ...parent });
+      parent = staticSource.get(parent.parent);
+    }
+  }
+  return [...widgets.filter(w => w.id >> 16 !== group && !add.has(widgetKey(w))), ...add.values()]
+    .sort((a, b) => a.id - b.id || a.index - b.index);
+}
+
+export function skillTooltip(skill: SkillView, thresholds: readonly number[] | undefined): string {
+  const xp = BigInt(skill.xpTenths);
+  const decimal = (value: bigint) => `${(value / 10n).toLocaleString("en-US")}${value % 10n ? "." + value % 10n : ""}`;
+  const next = thresholds?.[skill.baseLevel];
+  return `${skill.name}: ${skill.currentLevel}/${skill.baseLevel}\nCurrent XP: ${decimal(xp)}` +
+    (next === undefined ? "\nMaximum level" : `\nNext level at: ${decimal(BigInt(next))}\nRemaining XP: ${decimal(BigInt(next) > xp ? BigInt(next) - xp : 0n)}`);
+}
+
+function normalizedName(widget: NativeWidget): string {
+  return plainText(widget.name || widget.text || widget.actions?.find(Boolean) || "").trim();
+}
+
+export function paintGame(raster: SourceRaster, ui: GameViewContext): void {
+  const { world, local, controls, inputs } = ui, catalogue = raster.assets.catalogue;
+  const width = raster.canvas.width, height = raster.canvas.height;
+  const regions = frameRegions(width, height);
+  const tab = TABS[local.tab] ?? TABS[3];
+  let templateName: string = world.bank ? "native-bank" : world.shop ? "native-shop" : tab.template;
+  if (!world.bank && !world.shop && local.tab === 5 && world.player.activePrayers.includes("prayer.thick_skin") &&
+      catalogue.templates["native-prayer-active"]) templateName = "native-prayer-active";
+  if (!world.bank && !world.shop && local.tab === 6 && !["item.rune.air", "item.rune.mind"].every(id =>
+    world.player.inventory.some(slot => slot.item?.id === id && slot.item.quantity > 0)) && catalogue.templates["native-magic-missing-runes"])
+    templateName = "native-magic-missing-runes";
+  if (!catalogue.templates[templateName]) templateName = "native-inventory";
+  let widgets = cloneTemplate(catalogue.templates[templateName]!);
+  let modal = local.journal ? "journal" : local.modal;
+  if (ui.state.phase === "character" || world.player.tutorialStage === "stage.tutorial.appearance") modal = "appearance";
+  if (world.player.tutorialStage === "stage.tutorial.experience") modal = "experience";
+  if (world.recovery) modal = world.recovery.storage === "grave" ? "grave" : "recovery";
+  if (modal && catalogue.templates[`native-${modal}`]) {
+    widgets = attachGroup(widgets, catalogue.templates[`native-${modal}`]!, MODALS[modal]!);
+  }
+  if (world.dialogue && catalogue.templates["native-guide-dialogue"]) {
+    widgets = widgets.filter(w => w.id >> 16 !== 162);
+    widgets = attachGroup(widgets, catalogue.templates["native-guide-dialogue"]!, 162);
+    widgets = attachGroup(widgets, catalogue.templates["native-guide-dialogue"]!, 231);
+  }
+
+  const liveItems = new Map<string, ItemView>();
+  const inventoryGroup = world.bank ? 15 : world.shop ? 301 : 149;
+  const itemPrototype = widgets.find(w => w.id >> 16 === inventoryGroup && w.item >= 0) ??
+    catalogue.templates["native-inventory"]!.find(w => w.id >> 16 === 149 && w.item >= 0)!;
+  if (widgets.some(w => w.id >> 16 === inventoryGroup)) {
+    widgets = widgets.filter(w => !(w.id >> 16 === inventoryGroup && w.index >= 0 && w.type === 5));
+    for (const slot of world.player.inventory) if (slot.item) {
+      const widget = { ...itemPrototype, index: slot.index, x: itemPrototype.x + slot.index % 4 * 42,
+        y: itemPrototype.y + Math.floor(slot.index / 4) * 36, item: slot.item.sourceId ?? -1,
+        item_quantity: slot.item.quantity, border: local.selectedItem?.slot === slot.index ? 2 : 1,
+        quantityMode: 2, text: "", name: slot.item.name, actions: slot.item.actions };
+      widgets.push(widget); liveItems.set(widgetKey(widget), slot.item);
+    }
+  }
+  if (world.bank) {
+    const prototype = widgets.find(w => w.id === widgetId(12, 12) && w.index === 0)!;
+    widgets = widgets.filter(w => !(w.id === widgetId(12, 12) && w.index >= 0));
+    const slots = world.bank.slots.filter(s => s.item && s.item.name.toLocaleLowerCase().includes(local.bankSearch.toLocaleLowerCase()));
+    local.scroll = Math.min(local.scroll, Math.max(0, Math.ceil(slots.length / 8) * 36 - 204));
+    slots.forEach((slot, index) => {
+      const item = slot.item!;
+      const widget = { ...prototype, index: slot.index, x: prototype.x + index % 8 * 48,
+        y: prototype.y + Math.floor(index / 8) * 36 - local.scroll, item: item.sourceId ?? -1,
+        item_quantity: item.quantity, name: item.name };
+      widgets.push(widget); liveItems.set(widgetKey(widget), item);
+    });
+  }
+  if (world.shop) {
+    const prototype = widgets.find(w => w.id === widgetId(300, 16) && w.index === 1)!;
+    widgets = widgets.filter(w => !(w.id === widgetId(300, 16) && w.index >= 0));
+    local.scroll = Math.min(local.scroll, Math.max(0, Math.ceil(world.shop.rows.length / 8) * 47 - 212));
+    world.shop.rows.forEach((row, index) => {
+      const widget = { ...prototype, index: row.index + 1, x: prototype.x + index % 8 * 47,
+        y: prototype.y + Math.floor(index / 8) * 47 - local.scroll, item: row.item.sourceId ?? -1,
+        item_quantity: row.stock, name: row.item.name };
+      widgets.push(widget); liveItems.set(widgetKey(widget), row.item);
+    });
+  }
+
+  for (let slotIndex = 0; slotIndex < EQUIPMENT.length; slotIndex++) {
+    const id = widgetId(387, 15 + slotIndex);
+    const parent = widgets.find(w => w.id === id && w.index === -1);
+    if (!parent) continue;
+    const item = world.player.equipment.find(e => e.slot === `slot.${EQUIPMENT[slotIndex]}`)?.item;
+    widgets = widgets.filter(w => !(w.id === id && w.index > 0));
+    if (item) {
+      const prototype = catalogue.templates["native-equipment"]!.find(w => w.id === widgetId(387, 18) && w.index === 1)!;
+      const widget = { ...prototype, id, parent: id, index: 1, x: parent.x + 2, y: parent.y + 2,
+        item: item.sourceId ?? -1, item_quantity: item.quantity };
+      widgets.push(widget); liveItems.set(widgetKey(widget), item);
+    } else {
+      const source = catalogue.templates["native-equipment"]!.find(w => w.id === id && w.index === 2);
+      if (source) widgets.push({ ...source });
+      else {
+        // Empty equipped slots use the same native placeholders as the other stock slots.
+        const placeholder = [156, 157, 158, 159, 161, 162, 163, 164, 165, 160, 166][slotIndex]!;
+        const proto = catalogue.templates["native-equipment"]!.find(w => w.id === widgetId(387, 15) && w.index === 2)!;
+        widgets.push({ ...proto, id, parent: id, x: parent.x + 2, y: parent.y + 2, sprite: placeholder });
+      }
+    }
+    if (!world.bank && !world.shop && local.tab === 2 && !modal) {
+      const scroller = widgets.find(w => w.id >> 16 === 399 && w.type === 0 && w.scrollHeight > w.height);
+      if (scroller) {
+        local.scroll = Math.min(local.scroll, scroller.scrollHeight - scroller.height);
+        const parents = new Map(widgets.filter(w => w.index < 0).map(w => [w.id, w.parent]));
+        for (const widget of widgets) {
+          if (widget === scroller) continue;
+          let parent = widget.parent;
+          const visited = new Set<number>();
+          while (parent !== -1 && !visited.has(parent)) {
+            if (parent === scroller.id) { widget.y -= local.scroll; break; }
+            visited.add(parent); parent = parents.get(parent) ?? -1;
+          }
+        }
+      }
+    }
+  }
+
+  const sourceRectangles = new Map<string, LaidWidget>();
+  const sourceTabRects = new Map<number, Rect>();
+  const register = (widget: LaidWidget, id: string, label: string, actions: UiAction[], properties: Partial<Control> = {}) => {
+    const rect = intersect(widget, widget.clip);
+    if (rect.width <= 0 || rect.height <= 0) return;
+    const menu = [...actions];
+    if (widget.item < 0 && ![149, 15, 301, 387, 593].includes(widget.id >> 16)) {
+      for (const operation of widget.actions ?? []) if (operation &&
+        !menu.some(action => plainText(action.label).startsWith(plainText(operation)))) {
+        menu.push({ label: operation, run: () => ui.unavailable(plainText(operation)) });
+      }
+    }
+    const firstDisabled = menu[0]?.disabled;
+    controls.push({ ...rect, id, label: plainText(label), actions: menu, ...properties,
+      ...(firstDisabled && !properties.disabled ? { disabled: firstDisabled } : {}) });
+  };
+  const sourceClose = (widget: LaidWidget) => register(widget, `close-${widgetKey(widget)}`, "Close interface", [{
+    label: "Close", run: () => {
+      ui.change(() => { local.modal = null; local.journal = null; });
+      ui.send({ kind: "close_interface" });
+    },
+  }]);
+  const primaryAction = (widget: LaidWidget) => {
+    const label = normalizedName(widget);
+    const op = plainText(widget.actions?.find(Boolean) ?? "");
+    const group = widget.id >> 16, child = widget.id & 65535;
+    if (op === "Close" && group !== 161) { sourceClose(widget); return; }
+    if (group === 161) {
+      const index = TABS.findIndex((_, i) => tabWidget(i) === widget.id);
+      if (index >= 0) {
+        const tab = TABS[index]!, unlocked = isInterfaceUnlocked(world, tab.interface);
+        sourceTabRects.set(index, widget);
+        register(widget, `tab-${index}`, tab.name, [{ label: tab.name, run: () => ui.openTab(index) }],
+          { pressed: local.tab === index, ...(unlocked ? {} : { disabled: "This tab has not been unlocked in the tutorial." }) });
+      }
+      if (widget.contentType === 1338) {
+        register(widget, "minimap", "Minimap", [{ label: "Walk here", run: () => ui.minimapClick(widget) }]);
+      }
+      if (widget.contentType === 1339) register(widget, "compass", "Compass", [{ label: "Face North", run: ui.faceNorth }]);
+    }
+    if (group === 160) {
+      if (child === 26) register(widget, "run", "Toggle run", [{
+        label: "Toggle Run", run: () => ui.send({ kind: "set_setting", setting: { setting: "run",
+          enabled: !world.player.settings.find(s => s.setting === "run")?.enabled } }),
+      }], { pressed: world.player.settings.find(s => s.setting === "run")?.enabled ?? false,
+        tooltip: `Run energy: ${Math.floor(world.player.runEnergy / (catalogue.presentation?.runEnergyScale ?? 100))}%` });
+      if (child === 18) register(widget, "quick-prayer", "Quick prayers", [
+        { label: "Toggle Quick-prayers", run: () => ui.send({ kind: "set_prayer", prayer: "prayer.thick_skin",
+          enabled: !world.player.activePrayers.includes("prayer.thick_skin") }),
+          ...(world.player.prayerPoints <= 0 ? { disabled: "You have no Prayer points left." } : {}) },
+        { label: "Setup Quick-prayers", run: () => ui.change(() => { local.tab = 5; local.quickPrayer = !local.quickPrayer; }) },
+      ], { tooltip: `Prayer points: ${world.player.prayerPoints}` });
+      if (child === 7) register(widget, "hitpoints", "Hitpoints", [{ label: "Hitpoints", run: () => ui.notice(`Hitpoints: ${world.player.hitpoints}`) }],
+        { tooltip: `Hitpoints: ${world.player.hitpoints}` });
+      if (child === 34) register(widget, "special-attack", "Special attack", [{ label: "Special attack", run: () => ui.unavailable("Special attacks") }]);
+      if (child === 49) register(widget, "world-map", "World map", [{ label: "World map", run: () => ui.unavailable("World map") }]);
+      if (child === 52) register(widget, "wiki", "Wiki", [{ label: "Wiki", run: () => ui.unavailable("In-client wiki lookup") }]);
+      if (child === 6) register(widget, "xp-drops", "XP drops", [{ label: "XP drops", run: () => ui.unavailable("XP-drop configuration") }]);
+    }
+    if (group === inventoryGroup && widget.item >= 0 && widget.index >= 0) {
+      const actions = ui.inventoryActions(widget.index);
+      const definition = catalogue.items[widget.item];
+      const shifted = definition?.shiftClickDropIndex === -2 ? "Drop"
+        : definition && definition.shiftClickDropIndex >= 0 ? definition.interfaceOptions[definition.shiftClickDropIndex] : null;
+      const shiftAction = shifted ? actions.find(action => plainText(action.label).startsWith(shifted + " ")) : undefined;
+      register(widget, `inventory-${widget.index}`, plainText(actions[0]?.label ?? label), actions,
+        { draggableSlot: widget.index, ...(shiftAction ? { shiftAction } : {}) });
+    }
+    if (group === 387 && child >= 15 && child <= 25 && widget.index === -1) {
+      const slot = `slot.${EQUIPMENT[child - 15]}`, actions = ui.equipmentActions(slot);
+      if (actions.length) register(widget, `equipment-${slot}`, plainText(actions[0]!.label), actions);
+      else register(widget, `equipment-${slot}`, `Empty ${EQUIPMENT[child - 15]} slot`, [], { disabled: "Nothing is equipped in this slot." });
+    }
+    if (group === 387 && [1, 3, 5, 7].includes(child) && widget.index === -1) {
+      register(widget, `equipment-control-${child}`, op, [{ label: op, run: () => {
+        if (child === 1 || child === 5) {
+          const modal = child === 1 ? "equipment-stats" : "kept-items";
+          ui.change(() => { local.modal = modal; });
+          ui.send({ kind: "open_interface", interface: child === 1 ? "interface.equipment_stats" : "interface.items_kept_on_death" });
+        } else ui.unavailable(op);
+      } }]);
+    }
+    if (group === 320 && child >= 1 && child <= 24 && widget.index === -1) {
+      const skill = world.player.skills.find(s => s.id === `skill.${SKILLS[child - 1]}`);
+      if (skill) register(widget, `skill-${skill.id}`, skill.name, [{ label: `View ${skill.name} guide`,
+        run: () => ui.notice(skillTooltip(skill, catalogue.presentation?.skills[skill.id]?.thresholds)) }],
+      { tooltip: skillTooltip(skill, catalogue.presentation?.skills[skill.id]?.thresholds) });
+    }
+    if (group === 12) {
+      if (child === 12 && widget.index >= 0) {
+        const actions = ui.bankActions(widget.index);
+        register(widget, `bank-${widget.index}`, plainText(actions[0]?.label ?? label), actions);
+      } else if (op) {
+        register(widget, `bank-control-${child}-${widget.index}`, op, [{ label: op, run: () => {
+          if (child === 25) ui.change(() => { if (world.bank!.allowNotes) local.bankNotes = !local.bankNotes; });
+          else if ([29, 31, 33, 37].includes(child)) ui.change(() => { local.bankAmount = child === 29 ? 1 : child === 31 ? 5 : child === 33 ? 10 : "all"; });
+          else if (child === 35) ui.prompt("Set custom quantity:", quantity => ui.change(() => { local.bankAmount = quantity; }));
+          else if (child === 42) ui.change(() => { local.bankSearchOpen = !local.bankSearchOpen; });
+          else if (child === 47) ui.depositAll();
+          else if (child === 49) ui.required("Deposit worn items", "bank_deposit_equipment_intent");
+          else if (child === 40 || child === 10) ui.required("Bank tabs/placeholders", "bank_tab_and_placeholder_state");
+          else if (child === 23) ui.required("Bank insert/swap", "move_bank_intent");
+          else if (child === 45) ui.required("Empty containers", "bank_empty_containers_intent");
+          else if (child === 107) ui.change(() => { local.tab = 4; });
+          else ui.unavailable(op);
+        } }], child === 25 && !world.bank!.allowNotes ? { disabled: "This bank does not permit notes." } : {});
+      }
+    }
+    if (group === 300) {
+      if (child === 16 && widget.index > 0) {
+        const actions = ui.shopActions(widget.index - 1);
+        register(widget, `shop-${widget.index - 1}`, plainText(actions[0]?.label ?? label), actions);
+      } else if ([5, 8, 10, 12, 14].includes(child) && widget.index === -1) {
+        register(widget, `shop-mode-${child}`, op || "Value", [{ label: op || "Value", run: () => ui.change(() => {
+          local.shopValue = child === 5;
+          if (child !== 5) local.shopAmount = child === 8 ? 1 : child === 10 ? 5 : child === 12 ? 10 : 50;
+        }) }], { pressed: child === 5 ? local.shopValue : !local.shopValue && local.shopAmount === (child === 8 ? 1 : child === 10 ? 5 : child === 12 ? 10 : 50) });
+      }
+    }
+    if (group === 541 && widget.index === -1 && widget.name) {
+      const thickSkin = label === "Thick Skin";
+      register(widget, `prayer-${child}`, label, [{ label: `${world.player.activePrayers.includes("prayer.thick_skin") && thickSkin ? "Deactivate" : "Activate"} ${label}`,
+        run: () => thickSkin ? ui.send({ kind: "set_prayer", prayer: "prayer.thick_skin", enabled: !world.player.activePrayers.includes("prayer.thick_skin") })
+          : ui.unavailable(label),
+        ...(thickSkin && world.player.prayerPoints <= 0 ? { disabled: "You have no Prayer points left." } : {}),
+      }], { pressed: thickSkin && world.player.activePrayers.includes("prayer.thick_skin"),
+        tooltip: thickSkin ? `Level 1: Thick Skin\nPrayer points: ${world.player.prayerPoints}` : `${label}\nNot available in this slice.` });
+    }
+    if (group === 218 && widget.name && (widget.targetVerb || op)) {
+      const spell = label === "Wind Strike" ? "spell.wind_strike" : label === "Lumbridge Home Teleport" ? "spell.lumbridge_home_teleport" : null;
+      const runeCount = (id: string) => world.player.inventory.reduce((total, slot) => total + (slot.item?.id === id ? slot.item.quantity : 0), 0);
+      const missing = spell === "spell.wind_strike" && (!runeCount("item.rune.air") || !runeCount("item.rune.mind"));
+      register(widget, `spell-${child}`, label, [{ label: `Cast ${label}`, run: () => {
+        if (!spell) ui.unavailable(label);
+        else if (spell === "spell.lumbridge_home_teleport") ui.send({ kind: "cast", spell, target: null });
+        else ui.change(() => { local.selectedItem = null; local.selectedSpell = spell; });
+      }, ...(missing ? { disabled: "Wind Strike requires an Air rune and a Mind rune." } : {}) }],
+      { pressed: spell !== null && local.selectedSpell === spell,
+        tooltip: spell === "spell.wind_strike" ? `Level 1: Wind Strike\nAir rune: ${runeCount("item.rune.air")}/1\nMind rune: ${runeCount("item.rune.mind")}/1` : label });
+    }
+    if ((group === 541 || group === 218) && widget.text === "Filters") {
+      register(widget, `filters-${group}`, "Filters", [{ label: "Filters", run: () => ui.notice(
+        "The native filter control modes are not implemented yet. This required UI work is not an out-of-scope feature.",
+        "error", group === 541 ? "ui.incomplete.prayer_filters" : "ui.incomplete.spell_filters") }]);
+    }
+    if (group === 182 && (op || widget.text.toLowerCase().includes("logout"))) {
+      const logout = /logout/i.test(op || widget.text);
+      register(widget, logout ? "logout" : `logout-scope-${widgetKey(widget)}`, logout ? "Logout" : op,
+        [{ label: logout ? "Logout" : op, run: logout ? ui.logout : () => ui.unavailable(op) }]);
+    }
+    if (group === 116 && op) {
+      register(widget, `settings-${child}-${widget.index}`, op, [{ label: op, run: () => {
+        if (/all settings/i.test(op)) {
+          ui.change(() => { local.modal = "all-settings"; });
+          ui.send({ kind: "open_interface", interface: "interface.settings" });
+        } else if (/run/i.test(op)) ui.send({ kind: "set_setting", setting: { setting: "run",
+          enabled: !world.player.settings.find(s => s.setting === "run")?.enabled } });
+        else if (/music|sound|area/i.test(op)) ui.required("Audio controls", "native_audio_slider_value");
+        else ui.unavailable(op);
+      } }]);
+    }
+    if ([707, 109, 429, 712, 216, 239].includes(group) && op) register(widget, `scope-${widgetKey(widget)}`, op,
+      [{ label: op, run: () => ui.unavailable(op) }]);
+    if ((group === 602 || group === 669) && op && world.recovery) {
+      register(widget, `recovery-control-${widgetKey(widget)}`, op, [{ label: op, run: () => {
+        if (op === "Take-All") ui.send({ kind: "reclaim", death: world.recovery!.death,
+          storage: world.recovery!.storage, items: world.recovery!.items.map(item => item.id) });
+        else ui.required(op, "recovery_action");
+      } }], op === "Take-All" && world.recovery.items.length === 0 ? { disabled: "There are no items to reclaim." } : {});
+    }
+    if (group === 399 && widget.type === 4 && widget.text && widget.index >= 0) {
+      const name = plainText(widget.text);
+      const quest = world.player.quests.find(q => q.name === name);
+      register(widget, `quest-${widgetKey(widget)}`, name, [{ label: name, run: () => {
+        if (!quest) ui.unavailable(name);
+        else {
+          ui.change(() => { local.journal = quest.id; local.scroll = 0; });
+          ui.send({ kind: "open_interface", interface: "interface.quests" });
+        }
+      } }]);
+    }
+  };
+
+  const skills = new Map(world.player.skills.map(s => [s.id, s]));
+  const dialogue = world.dialogue;
+  const weapon = world.player.equipment.find(e => e.slot === "slot.weapon")?.item;
+  const styleIds = weapon?.sourceId == null ? [] : catalogue.presentation?.weapons[weapon.sourceId] ?? [];
+  const category = weapon?.sourceId == null ? 0 : catalogue.presentation?.weaponCategories[weapon.sourceId] ?? 0;
+  const styleValues = catalogue.combatCategories.find(c => c.columnValues[0]?.[0] === category)?.columnValues[1] ?? [];
+  const styleEntries: Array<{ position: number; label: string; tooltip: string; sprite: number }> = [];
+  for (let index = 0; index < styleValues.length; index += 4) styleEntries.push({
+    position: Number(styleValues[index]), label: String(styleValues[index + 1]),
+    tooltip: String(styleValues[index + 2]), sprite: Number(styleValues[index + 3]),
+  });
+  const styleNames = (id: string) => styleEntries[styleIds.indexOf(id)]?.label ?? "";
+
+  const tree = paintNativeTree(raster, widgets, width, height, widget => {
+    sourceRectangles.set(widgetKey(widget), widget);
+    primaryAction(widget);
+    const group = widget.id >> 16, child = widget.id & 65535;
+    if (widget.contentType === 1337) return true;
+    if (ui.minimap.draw(widget, world.player.tile, world)) return true;
+    if (group === 161 && widget.type === 5) {
+      for (const [slot, rect] of sourceTabRects) if (!isInterfaceUnlocked(world, TABS[slot]!.interface) &&
+        widget.id !== tabWidget(slot) && widget.x >= rect.x && widget.y >= rect.y &&
+        widget.x + widget.width <= rect.x + rect.width && widget.y + widget.height <= rect.y + rect.height) return true;
+    }
+    const liveItem = liveItems.get(widgetKey(widget));
+    if (liveItem?.iconAsset) {
+      raster.image(liveItem.iconAsset, widget.x, widget.y);
+      if (liveItem.quantity > 1) {
+        const quantity = countText(world.shop && group === 300 ? widget.item_quantity : liveItem.quantity);
+        raster.text(quantity.text, widget.x, widget.y + 9, 494, quantity.color, 1);
+      }
+      return true;
+    }
+    if (group === 160) {
+      if (child === 10) widget.text = String(world.player.hitpoints);
+      if (child === 21) widget.text = String(world.player.prayerPoints);
+      if (child === 29) widget.text = String(Math.floor(world.player.runEnergy / (catalogue.presentation?.runEnergyScale ?? 100)));
+      if (child === 37) widget.text = "";
+      if (child === 32 && world.player.runEnergy > 0) return true;
+      if (child === 24 && world.player.prayerPoints > 0) return true;
+    }
+    if (group === 320) {
+      const skill = skills.get(`skill.${SKILLS[child - 1]}`);
+      if (widget.type === 4 && widget.index === 4) widget.text = skill ? String(skill.currentLevel) : "?";
+      if (widget.type === 4 && widget.index === 5) widget.text = skill ? String(skill.baseLevel) : "?";
+      if (child === 32) widget.text = `Total level: ${world.player.skills.reduce((n, s) => n + s.baseLevel, 0)}`;
+    }
+    if (group === 593) {
+      if (child === 3) widget.text = weapon ? escapeText(weapon.name) : "Unarmed";
+      if ([6, 10, 14, 18].includes(child) && widget.index === -1) {
+        const index = [6, 10, 14, 18].indexOf(child), style = styleIds[index];
+        if (style) register(widget, `combat-style-${index}`, styleNames(style), [{ label: styleNames(style), run: () => ui.send({ kind: "set_combat_style", style }) }],
+          { tooltip: `${styleNames(style)}\nThe server selects and validates the combat style.` });
+        else if (weapon && styleIds.length && index >= styleIds.length) return true;
+        else register(widget, `combat-style-${index}`, ["Punch", "Kick", "Block", "Block"][index]!,
+          [{ label: "Combat style", run: () => ui.required("Combat style", "unarmed_combat_styles") }]);
+        const neutral = widgets.find(w => w.id === widgetId(593, 10) && w.index === -1);
+        if (neutral && widget.type === 5) widget.sprite = neutral.sprite;
+      }
+      if ([7, 11, 15, 19].includes(child) && widget.type === 5) {
+        const entry = styleEntries.find(style => style.position === [7, 11, 15, 19].indexOf(child));
+        if (!entry) return true;
+        widget.sprite = entry.sprite;
+      }
+      if ([9, 13, 17, 21].includes(child)) {
+        const index = [9, 13, 17, 21].indexOf(child);
+        widget.text = styleIds[index] ? styleNames(styleIds[index]!) : weapon && styleIds.length ? "" : ["Punch", "Kick", "Block", ""][index]!;
+      }
+      if (child === 32) register(widget, "auto-retaliate", "Auto retaliate", [{ label: "Auto retaliate", run: () => ui.send({
+        kind: "set_setting", setting: { setting: "auto_retaliate", enabled: !world.player.settings.find(s => s.setting === "auto_retaliate")?.enabled },
+      }) }], { pressed: world.player.settings.find(s => s.setting === "auto_retaliate")?.enabled ?? false });
+      if (child === 36) widget.text = `Auto Retaliate<br>(${world.player.settings.find(s => s.setting === "auto_retaliate")?.enabled ? "On" : "Off"})`;
+    }
+    if (group === 541 && widget.type === 4 && /^\d+ \/ \d+$/.test(widget.text)) {
+      widget.text = `${world.player.prayerPoints} / ${skills.get("skill.prayer")?.baseLevel ?? "?"}`;
+    }
+    if (group === 399 && widget.type === 4) {
+      const quest = world.player.quests.find(q => q.name === plainText(widget.text));
+      if (quest) widget.color = quest.completed ? 0x00ff00 : /not_started|unstarted/i.test(quest.stage) ? 0xff0000 : 0xffff00;
+      if (/Quest Points:/.test(widget.text)) widget.text = `Quest Points: ${world.player.questPoints}/${catalogue.questTable.maximum_points}`;
+      if (/Completed:/.test(widget.text)) widget.text = `Completed: ${world.player.quests.filter(q => q.completed).length}/${catalogue.questTable.available}`;
+    }
+    if (group === 12) {
+      if (child === 3) widget.text = "The Bank of Gielinor";
+      if (child === 5) widget.text = String(world.bank!.slots.filter(slot => slot.item).length);
+      if (child === 25) widget.sprite = local.bankNotes ? 179 : 170;
+      if ([29, 31, 33, 35, 37].includes(child)) {
+        const selected = child === 29 ? local.bankAmount === 1 : child === 31 ? local.bankAmount === 5 : child === 33 ? local.bankAmount === 10
+          : child === 37 ? local.bankAmount === "all" : typeof local.bankAmount === "number" && ![1, 5, 10].includes(local.bankAmount);
+        widget.sprite = selected ? 179 : 170;
+      }
+    }
+    if (group === 300 && child === 1 && widget.type === 4) widget.text = escapeText(world.shop!.name);
+    if (group === 116 && widget.type === 4 && /^\d+%$/.test(widget.text))
+      widget.text = `${Math.floor(world.player.runEnergy / (catalogue.presentation?.runEnergyScale ?? 100))}%`;
+    if (group === 162 && widget.type === 4 && widget.text.includes("Reference")) widget.text = escapeText(world.player.displayName) + ":";
+    if (group === 231 && dialogue) {
+      if (child === 4) widget.text = escapeText(dialogue.speakerName);
+      if (child === 6) {
+        const lines = sourceLines(dialogue.text, widget.width, catalogue.fonts[widget.font]!);
+        const pageSize = Math.max(1, Math.floor(widget.height / (widget.lineHeight || catalogue.fonts[widget.font]!.ascent)));
+        widget.text = lines.slice(local.dialoguePage * pageSize, (local.dialoguePage + 1) * pageSize).join("<br>");
+      }
+      if (child === 5) {
+        const body = widgets.find(w => w.id === widgetId(231, 6))!;
+        const lines = sourceLines(dialogue.text, body.width, catalogue.fonts[body.font]!);
+        const more = (local.dialoguePage + 1) * Math.floor(body.height / (body.lineHeight || catalogue.fonts[body.font]!.ascent)) < lines.length;
+        const single = dialogue.choices.length === 1 ? dialogue.choices[0] : null;
+        widget.text = more || single ? "Click here to continue" : dialogue.choices.length ? "" : "Waiting for server...";
+        if (more || single) register(widget, "dialogue-continue", "Continue dialogue", [{ label: "Continue", run: () => {
+          if (more) ui.change(() => { local.dialoguePage++; });
+          else if (single) ui.send({ kind: "select_dialogue", speaker: dialogue.speaker, choice: single.id });
+        } }]);
+      }
+      if (widget.type === 6) {
+        const entity = world.entities.find(e => e.id === dialogue.speaker);
+        const portrait = entity?.sourceId !== null && entity?.sourceId !== undefined ? catalogue.portraits[`npc-${entity.sourceId}`] : null;
+        if (dialogue.portraitAsset) raster.image(dialogue.portraitAsset, widget.x + (portrait?.offsetX ?? 0), widget.y + (portrait?.offsetY ?? 0));
+        else if (portrait) raster.image(portrait.asset, widget.x + portrait.offsetX, widget.y + portrait.offsetY);
+        return true;
+      }
+    }
+    if (group === 119 && widget.type === 4) {
+      const quest = world.player.quests.find(q => q.id === local.journal);
+      if (quest) {
+        if (widget.height < 35) widget.text = escapeText(quest.name);
+        else widget.text = quest.journal;
+      } else widget.text = "";
+    }
+    if (group === 153 && widget.type === 4) widget.text = "";
+    if ([84, 4, 602, 669].includes(group) && widget.type === 4 && /\d/.test(widget.text)) widget.text = "";
+    if (group === 602 && child === 1 && widget.index === 1) widget.text = "Gravestone";
+    if (group === 669 && child === 1 && widget.index === 1) widget.text = "Death's Office Item Retrieval";
+    raster.widget(widget);
+    return true;
+  });
+
+  // Empty inventory cells remain real drop targets; they are not fabricated item widgets.
+  const inventoryRoot = tree.find(w => w.id >> 16 === inventoryGroup && w.index === -1);
+  if (inventoryRoot) {
+    const first = tree.find(w => w.id >> 16 === inventoryGroup && w.index >= 0 && w.type === 5);
+    const offsetX = first ? first.x - inventoryRoot.x - first.index % 4 * 42 : 16;
+    const offsetY = first ? first.y - inventoryRoot.y - Math.floor(first.index / 4) * 36 : 8;
+    for (let index = 0; index < 28; index++) {
+      if (controls.some(c => c.id === `inventory-${index}`)) continue;
+      const rect = { x: inventoryRoot.x + offsetX + index % 4 * 42, y: inventoryRoot.y + offsetY + Math.floor(index / 4) * 36, width: 36, height: 32 };
+      controls.push({ ...rect, id: `inventory-${index}`, label: `Empty inventory slot ${index + 1}`, actions: [],
+        draggableSlot: index, focusable: false });
+    }
+  }
+  if (!dialogue) {
+    const lines = world.messages.slice(-7).map(m => escapeText(m.text));
+    lines.forEach((line, index) => raster.textBox(line, { x: 7, y: height - 164 + index * 14, width: 485, height: 14 },
+      { font: 495, color: 0, shadow: null, lineHeight: 14 }));
+    if (world.player.tutorialInstruction && world.player.tutorialStage !== "stage.tutorial.mainland") {
+      raster.sprite(1017, 0, height - 165);
+      raster.textBox(world.player.tutorialInstruction, { x: 14, y: height - 154, width: 481, height: 112 },
+        { font: 495, color: 0, shadow: null, lineHeight: 16, xAlign: 1, yAlign: 1 });
+    }
+    controls.push({ x: 7, y: height - 45, width: 487, height: 19, id: "chat-input", label: "Chat input",
+      actions: [{ label: "Chat input", run: () => ui.required("Chat messages", "send_chat_intent") }] });
+  }
+  if (dialogue && dialogue.choices.length > 1) {
+    raster.sprite(1017, 0, height - 165);
+    raster.center("Select an Option", 259, height - 143, 496, 0, null);
+    const lineHeight = Math.min(25, Math.floor(100 / dialogue.choices.length));
+    const start = height - 130;
+    dialogue.choices.forEach((choice, index) => {
+      const rect = { x: 16, y: start + index * lineHeight, width: 485, height: lineHeight };
+      raster.textBox(choice.text, rect, { font: 496, color: 0x0000ff, shadow: null, xAlign: 1, yAlign: 1 });
+      controls.push({ ...rect, id: `dialogue-choice-${index}`, label: plainText(choice.text),
+        actions: [{ label: choice.text, run: () => ui.send({ kind: "select_dialogue", speaker: dialogue.speaker, choice: choice.id }) }] });
+    });
+  }
+  if (local.bankSearchOpen && world.bank) {
+    raster.sprite(1017, 0, height - 165);
+    raster.center("Show items whose names contain:", 259, height - 125, 496, 0, null);
+    raster.center(escapeText(local.bankSearch) + "<col=0000ff>*</col>", 259, height - 93, 496, 0, null);
+    inputs.push({ x: 100, y: height - 114, width: 320, height: 29, id: "bank-search", label: "Search bank",
+      type: "text", autocomplete: "off", value: local.bankSearch, maximum: 120,
+      change: value => ui.change(() => { local.bankSearch = value; local.scroll = 0; }),
+      submit: () => ui.change(() => { local.bankSearchOpen = false; }) });
+    controls.push({ x: 16, y: height - 60, width: 486, height: 25, id: "bank-search-close", label: "Close bank search",
+      actions: [{ label: "Close search", run: () => ui.change(() => { local.bankSearchOpen = false; }) }] });
+    raster.center("Click here to continue", 259, height - 42, 495, 0x0000ff, null);
+  }
+  if (modal === "journal") {
+    const quest = world.player.quests.find(q => q.id === local.journal);
+    const content = tree.filter(w => w.id >> 16 === 119 && w.type === 0 && w.height > 100).sort((a, b) => a.width * a.height - b.width * b.height)[0];
+    if (quest && content) {
+      const rect = { x: content.x + 16, y: content.y + 42, width: content.width - 42, height: content.height - 58 };
+      const lines = sourceLines(quest.journal, rect.width, catalogue.fonts[495]!);
+      const first = Math.min(Math.floor(local.scroll / 16), Math.max(0, lines.length - Math.floor(rect.height / 16)));
+      raster.textBox(lines.slice(first).join("<br>"), rect, { font: 495, color: 0, shadow: null, lineHeight: 16 });
+    }
+  }
+  if (modal === "appearance" || modal === "experience") {
+    const group = MODALS[modal]!, frame = tree.find(w => w.id === widgetId(group, 0));
+    if (frame) {
+      const candidates = tree.filter(w => w.id >> 16 === group &&
+        (w.actions?.some(Boolean) || modal === "appearance" && w.index === -1 && [68, 69].includes(w.id & 65535)));
+      for (const widget of candidates) {
+        const child = widget.id & 65535;
+        const rowLabel = tree.find(w => w.parent === widget.parent && w.type === 4 && w.text)?.text;
+        const name = modal === "appearance" && [68, 69].includes(child) ? `Body type ${child === 68 ? "A" : "B"}`
+          : modal === "appearance" && rowLabel && widget.type === 0 && child !== 74
+            ? `${widget.x < (tree.find(w => w.parent === widget.parent && w.type === 4)?.x ?? widget.x) ? "Previous" : "Next"} ${plainText(rowLabel)}`
+            : normalizedName(widget);
+        if (modal === "appearance") {
+          register(widget, `appearance-${widgetKey(widget)}`, name || "Appearance control", [{ label: name || "Appearance control", run: () => {
+            if (child === 74) ui.confirmAppearance();
+            else if (child === 68 || child === 69) ui.change(() => { local.appearance.body_type = child === 68 ? 0 : 1; });
+            else ui.required(name || "Appearance options", "appearance_options");
+          } }], [68, 69].includes(child) ? { pressed: local.appearance.body_type === (child === 68 ? 0 : 1) } : {});
+        }
+      }
+      if (modal === "experience") {
+        const choices = catalogue.presentation?.experiences ?? [];
+        candidates.forEach(candidate => {
+          const label = tree.find(w => w.id === candidate.id && w.type === 4 && w.text)?.text;
+          const choice = choices.find(c => c.name === label);
+          if (!choice) return;
+          register(candidate, `experience-${choice.id}`, choice.name, [{ label: choice.name,
+            run: () => ui.send({ kind: "select_experience", experience: choice.id }) }]);
+        });
+      }
+    }
+  }
+  if (world.recovery) {
+    const recovery = world.recovery, group = MODALS[modal!]!;
+    const frame = tree.find(w => w.id === widgetId(group, 0));
+    if (frame) {
+      const rows = recovery.items;
+      rows.forEach((row, index) => {
+        const rect = { x: frame.x + 24 + index % 8 * 48, y: frame.y + 58 + Math.floor(index / 8) * 42, width: 36, height: 32 };
+        if (row.item.sourceId !== null) raster.item(row.item.sourceId, row.item.quantity, rect.x, rect.y);
+        controls.push({ ...rect, id: `recover-${row.id}`, label: `Reclaim ${row.item.name}`, tooltip: row.cost === null ? "Reclaim cost unavailable" : `Reclaim cost: ${row.cost} coins`,
+          actions: [{ label: `Reclaim ${escapeText(row.item.name)}`, run: () => ui.send({ kind: "reclaim", death: recovery.death, storage: recovery.storage, items: [row.id] }) }] });
+      });
+    }
+  }
+  if (modal === "equipment-stats" || modal === "kept-items" || modal === "reward") {
+    const frame = tree.find(w => w.id === widgetId(MODALS[modal]!, 0));
+    if (frame) {
+      const message = modal === "equipment-stats" ? "Equipment bonuses have not been supplied by the server."
+        : modal === "kept-items" ? "Items kept on death have not been supplied by the server."
+          : "The server has not supplied a reward breakdown.";
+      raster.textBox(message, { x: frame.x + 30, y: frame.y + 45, width: frame.width - 60, height: 70 },
+        { font: 495, color: 0xffff00, xAlign: 1, yAlign: 1, lineHeight: 16 });
+    }
+  }
+  // Native chat channel controls keep their original positions, including out-of-scope channels.
+  const channels = ["All", "Game", "Public", "Private", "Channel", "Clan", "Trade", "Report"];
+  for (const widget of tree.filter(w => w.id >> 16 === 162 && w.type === 4 && channels.includes(plainText(w.text)))) {
+    const name = plainText(widget.text);
+    register(widget, `chat-${name}`, name, [{ label: name, run: () => ui.unavailable(`${name} chat controls`) }]);
+  }
+  if (local.selectedItem || local.selectedSpell) {
+    const label = local.selectedItem ? `Use ${escapeText(local.selectedItem.name)} ->` : "Cast Wind Strike ->";
+    raster.text(label, 4, 15, 496, 0xffffff);
+  }
+}

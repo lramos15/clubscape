@@ -1,0 +1,60 @@
+{
+  "status": "blocked",
+  "shared_contract_changed": false,
+  "source_pack_sha256": "b62e19704e17d3d3e4e819f803ef49ba7cc54034ae407184b423427c65d9674d",
+  "requests": [
+    {
+      "scope": "Authoritative open/closed production and other modal state",
+      "extension": "WorldView.activeInterface: string | null; WorldView.production: { interface: string; target: WorldTarget | null; recipes: Array<{ id: string; name: string; item: ItemView; allowed: boolean; reason: string | null }> } | null",
+      "reason": "An open_interface acknowledgement does not supply the active recipe menu, target, legal choices or concurrent/reconnect closure state. No client-side production grant or guessed guard is used."
+    },
+    {
+      "scope": "Quest/level reward presentation and sequencing",
+      "extension": "WorldView.reward: { id: string; kind: 'quest' | 'level_up'; title: string; lines: string[]; items: ItemView[]; continuation: GameIntent | null } | null",
+      "reason": "QuestView.completed/journal and total XP do not identify the authoritative reward payload or its dismissal/queued-level-up sequence. The UI must not infer awarded quantities from unrelated state deltas or a fixture."
+    },
+    {
+      "scope": "Selected combat style and exact source availability/visibility",
+      "extension": "PlayerView.combatStyle: string; PlayerView.interfaceStates: Array<{ id: string; visibility: 'hidden' | 'locked' | 'enabled'; highlighted: boolean; reason: string | null }>; PlayerView.prayers/spells: Array<{ id: string; allowed: boolean; reason: string | null }>",
+      "reason": "unlockedInterfaces and activePrayers do not encode the selected combat style, all guard-dependent ability availability, hidden versus locked states, or native tutorial highlights."
+    },
+    {
+      "scope": "Inventory options not represented by existing intents",
+      "extension": "GameIntent variant { kind: 'item_action'; inventory_slot: number; action: string }",
+      "reason": "The public actions list can expose Drink, Bury, Read and other item operations, but the intent union only has equip/eat/drop/use-on-target. Mapping these to a fabricated self-use or an unrelated spawn is not legitimate."
+    },
+    {
+      "scope": "Chat submission",
+      "extension": "GameIntent variant { kind: 'send_chat'; channel: string; text: string }",
+      "reason": "WorldView.messages is read-only and no public method submits chat. The current input/control explicitly reports this gap rather than silently accepting typing."
+    },
+    {
+      "scope": "Bank native management controls",
+      "extension": "BankView tabs/activeTab/placeholders/insertMode; GameIntent variants for bank tab creation/assignment, placeholder changes, bank reorder, deposit-equipment and empty-container operations",
+      "reason": "Existing bank_deposit and bank_withdraw cover ordinary item amounts and notes, not these distinct source controls. Their buttons remain present and report missing capability."
+    },
+    {
+      "scope": "Equipment/death effective information",
+      "extension": "PlayerView.equipmentStats and weight, or an approved complete UI derivation input; WorldView.keptOnDeath: { kept: ItemView[]; lost: ItemView[]; fee: number | null } | null; RecoveryView.cofferBalance and discard/recovery option intents",
+      "reason": "Current equipment identities and RecoveryView rows are insufficient for all effective bonus, kept-on-death, coffer and discard presentations. No fixture zeros or guessed recovery prices are displayed as authoritative values."
+    },
+    {
+      "scope": "Appearance options and audio values",
+      "extension": "AppState.appearanceOptions: Record<string, Array<{ value: number; label: string; allowed: boolean }>> | null; AppState.audioSettings: { music: number; effects: number; area: number; muted: boolean; currentTrack: string | null }",
+      "reason": "The validated content currently supplies body_type 0/1 only. soundEnabled and setters do not expose actual saved channel values, track/playlist state, or all source appearance choices. Renderer preview uses the separate documented presentation hook."
+    },
+    {
+      "scope": "Dynamic minimap and native tutorial map visibility",
+      "extension": "A renderer/shell minimap surface adapter carrying current base tile, plane and source mask state, or WorldView.minimap with equivalent authoritative metadata",
+      "reason": "Static original scene rasters plus live entity markers do not establish changing door/instance geometry or exact source tutorial map visibility. No observed live minimap state is invented."
+    }
+  ],
+  "implementation_gaps_without_contract_extension": [
+    "Native prayer/spell filter controls and their distinct source layouts.",
+    "Complete native recovery grid/fee/discard layout calibration.",
+    "All required live-data source comparisons, selected/disabled/scroll variants and full tutorial UI projections.",
+    "Native authentication-failure/terms and animated-title variants beyond the implemented approved source-framed screens.",
+    "Remaining zero-tolerance native sprite/label differences recorded by the source comparator."
+  ],
+  "final_m1_acceptance": false
+}

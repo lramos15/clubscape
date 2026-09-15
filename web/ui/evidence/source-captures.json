@@ -1,0 +1,40 @@
+{
+  "scope": "Component source-widget replay on transparent world surface, NOT a game or full-frame scene comparison",
+  "browser": "153.0.8010.12",
+  "viewport": [
+    1920,
+    1080
+  ],
+  "dpr": 1,
+  "uiScale": 1,
+  "names": [
+    "native-inventory",
+    "native-equipment",
+    "native-skills",
+    "native-combat",
+    "native-prayer",
+    "native-magic",
+    "native-quest-list",
+    "native-bank",
+    "native-shop",
+    "native-guide-dialogue",
+    "family-guide",
+    "family-survival",
+    "family-quest-guide",
+    "family-combat",
+    "family-prayer",
+    "family-magic"
+  ],
+  "compositions": [
+    "registration",
+    "registration-rejected",
+    "connecting",
+    "capability",
+    "runtime-error",
+    "unavailable",
+    "branding"
+  ],
+  "errors": [],
+  "serverGameplay": false,
+  "finalAcceptance": false
+}

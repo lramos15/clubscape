@@ -1,0 +1,71 @@
+{
+  "status": "blocked",
+  "type_check": "passed",
+  "unit_tests": {
+    "passed": 9,
+    "total": 9
+  },
+  "browser_component_cases": {
+    "passed": 14,
+    "total": 14
+  },
+  "source_cases": {
+    "native_hud": 16,
+    "owner_compositions": 7
+  },
+  "source_checks": {
+    "passed": 83,
+    "total": 87
+  },
+  "source_failures": [
+    {
+      "case": "native-shop",
+      "region": "active-panel",
+      "different_pixels": 3,
+      "tolerance": 0
+    },
+    {
+      "case": "native-shop",
+      "region": "full-ui-canvas",
+      "different_pixels": 3,
+      "tolerance": 0
+    },
+    {
+      "case": "family-guide",
+      "region": "sidebar",
+      "different_pixels": 190,
+      "tolerance": 0
+    },
+    {
+      "case": "family-guide",
+      "region": "full-ui-canvas",
+      "different_pixels": 190,
+      "tolerance": 0
+    }
+  ],
+  "glyphs": {
+    "original_frames_checked": 1099,
+    "font_masks_checked": 1024,
+    "mismatches": 0
+  },
+  "text_oracles": {
+    "metric_checked": 696,
+    "explicitly_unrecorded": 2
+  },
+  "factoring_registry": {
+    "states": 71,
+    "families": 29,
+    "hud_signatures": 11,
+    "live_journey_verified": false
+  },
+  "remaining_controls": "web/ui/contract-gaps.json",
+  "claims_excluded": [
+    "real-server gameplay",
+    "world/3D fidelity",
+    "audible playback",
+    "M1 presentation acceptance",
+    "performance acceptance",
+    "Mac/Edge certification",
+    "RuneLite compatibility"
+  ]
+}
