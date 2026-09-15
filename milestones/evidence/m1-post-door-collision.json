@@ -1,0 +1,60 @@
+{
+  "schema_version": 1,
+  "milestone": "m1-starter-journey",
+  "task": "M1-DYNAMIC-COLLISION-PERFORMANCE",
+  "result": "passed_source_component_profile_and_regressions",
+  "code_revision": "eda966a96465226a2dfb84106a0d17dfeafa09fc",
+  "profile_revision": "5104c46485ccc17b168069983c15c24b1b466ac8",
+  "source_artifact_sha256": "df3e2a452c100ecd94d2abc68e5cb1556f58090700474f547e7fd36de6682b3d",
+  "original_live_failure": {
+    "evidence_revision": "9c7e72f6c4163138ae465e0544b256b7ad25640e",
+    "path": "tools/journey-tests/evidence/first-door-tick-dea24a0.json",
+    "independent_accounts": 2,
+    "acknowledged_tutorial_transitions_per_account": 5,
+    "required_success_path_transitions": 70,
+    "failure": "After acknowledged source starting-door Open, the next Walk encounters the5000ms game_commit_tick deadline and the world stops; no unknown write was retried."
+  },
+  "measured_cause": "After any noninitial object state, repeated reach/NPC checks rebuilt all source cells and cloned complete region definitions. Exact-state reuse removes those repeated builds.",
+  "source_component": {
+    "cells": 46358,
+    "entities": 536,
+    "actor_counts": [1, 5],
+    "qualification": "Controlled physical-door selection in isolated native source-content fixtures. No legitimate journey progression or final server-performance acceptance is claimed by these fixtures.",
+    "debug_before_closed_ms": [25.771874, 28.469723],
+    "debug_before_open_ms": [9566.916413, 9565.393186],
+    "debug_after_cold_open_ms": [125.178023, 127.911763],
+    "debug_after_warm_open_ms": [27.350069, 27.187125, 30.017744, 29.797279],
+    "release_samples": 20,
+    "release_maximum_ms": 9.690497,
+    "release_warm_open_maximum_ms": 2.597293,
+    "before_after_world_and_event_hashes_identical": true,
+    "before_open_world_hashes": [
+      "c17e3af7ff6c36f869a8b1b7811cab33c684e66322a48f35140817e6faebef22",
+      "9768057a684ae483e09d9597d71b4d6dd9cecbbb36257e9fa9bedaaf274f9564"
+    ],
+    "command": "cargo run --release --locked --manifest-path tools/m1-content/schema-check/Cargo.toml --example collision_profile -- /path/to/pinned/m1.csc 60 5"
+  },
+  "cache_contract": {
+    "retained_derived_entries": 8,
+    "exact_key": ["selected transform states", "instance template", "instance-scoped temporary definitions and tiles"],
+    "not_used_as_identity": ["world tick", "world revision", "actor permissions", "RNG"],
+    "immutable_maps": true,
+    "persistent_authority_changed": false,
+    "actor_guards_and_occupancy_unchanged": true
+  },
+  "validation": {
+    "engine_tests": 236,
+    "new_cache_regressions": 8,
+    "ignored_engine_tests": 0,
+    "native_and_wasm_clippy": "passed",
+    "postgres_http_tests": 33,
+    "independent_account_checks": 11,
+    "owned_database_and_process_cleanup": "verified"
+  },
+  "unchanged": ["original collision builder/source masks", "all source NPCs and geometry", "600ms source cadence", "5000ms storage deadline", "source artifact/world identity", "owner reference approval"],
+  "actual_post_door_journey_recheck": "in_progress",
+  "full_journey_executed": false,
+  "final_performance_accepted": false,
+  "milestone_accepted": false,
+  "later_milestone_authorized": false
+}
