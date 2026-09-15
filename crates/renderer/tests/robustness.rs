@@ -525,3 +525,92 @@ fn resize_reprojects_and_picking_stays_in_bounds() {
         "resizing back must reproduce the original frame"
     );
 }
+
+// ------------------------------------------------------------------ skeletal animation port
+
+#[test]
+fn animation_port_reproduces_baked_original_frames_exactly() {
+    use clubscape_renderer::anim::{Sequence, apply_frame, scale_float};
+    let textures = textures();
+    let mut checked = 0;
+    for (npc, sequences, camera_y, camera_z) in [
+        (3028, [6181, 6180], 240, 650),
+        (2063, [5668, 5666], 160, 400),
+    ] {
+        let pack = NpcPack::from_chunks(&read(&format!(
+            "assets/compiled/render/models/npc-{npc}.pack.bin"
+        )))
+        .unwrap();
+        let base = Model::from_chunks(&read(&format!(
+            "assets/compiled/render/models/npc-{npc}-base.bin"
+        )))
+        .unwrap();
+        for sequence_id in sequences {
+            let path =
+                repo_root().join(format!("assets/compiled/render/anim/seq-{sequence_id}.bin"));
+            if !path.exists() {
+                eprintln!("skipping sequence {sequence_id}: run export.py --profile anim");
+                continue;
+            }
+            let sequence = Sequence::from_chunks(&std::fs::read(path).unwrap()).unwrap();
+            let baked = pack.sequences.get(&sequence_id).expect("baked sequence");
+            assert_eq!(
+                sequence.lengths, baked.lengths,
+                "sequence {sequence_id} frame lengths"
+            );
+            for frame in 0..sequence.frame_count() {
+                let mut model = base.clone();
+                apply_frame(&mut model, &sequence, frame, None).unwrap();
+                scale_float(&mut model, pack.width_scale, pack.height_scale);
+                let expected = pack.frame_model(sequence_id, frame).unwrap();
+                // The baked pack stores int-truncated positions exactly as the draw path reads them.
+                for v in 0..model.vertex_count {
+                    let got = (model.xs[v] as i32, model.ys[v] as i32, model.zs[v] as i32);
+                    let want = (
+                        expected.xs[v] as i32,
+                        expected.ys[v] as i32,
+                        expected.zs[v] as i32,
+                    );
+                    assert_eq!(
+                        got, want,
+                        "npc {npc} seq {sequence_id} frame {frame} vertex {v}"
+                    );
+                }
+                if let Some(alphas) = &expected.alphas {
+                    assert_eq!(
+                        model.alphas.as_ref().unwrap(),
+                        alphas,
+                        "npc {npc} seq {sequence_id} frame {frame} alphas"
+                    );
+                }
+                // And the drawn frame equals the approved capture.
+                model.compute_cylinder_bounds();
+                let mut core = RendererCore::new(palette(), 1920, 1080);
+                core.load_model_value("frame", model);
+                core.build_model_fixture_frame(&ModelFixture {
+                    model: "frame".into(),
+                    npc: None,
+                    yaw: 256,
+                    camera_y,
+                    camera_z,
+                })
+                .unwrap();
+                let pixels = rasterize(&core, &textures);
+                let (_, _, reference) = read_png_rgb(&repo_root().join(format!(
+                    "assets/reference/osrs240/models/npc-{npc}-sequence-{sequence_id}-frame-{frame}.png"
+                )));
+                let differing = pixels
+                    .iter()
+                    .zip(&reference)
+                    .filter(|(a, b)| a != b)
+                    .count();
+                assert_eq!(
+                    differing, 0,
+                    "npc {npc} seq {sequence_id} frame {frame}: {differing} pixels differ from the capture"
+                );
+                checked += 1;
+            }
+        }
+    }
+    eprintln!("animation port checked {checked} frames");
+}

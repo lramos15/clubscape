@@ -12,6 +12,8 @@
 //! original data (`assets/compiled/render`) and the authoritative world view supplied by the
 //! browser shell.
 
+pub mod actor;
+pub mod anim;
 pub mod chunk;
 pub mod core;
 pub mod error;

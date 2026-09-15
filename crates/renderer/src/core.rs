@@ -6,6 +6,11 @@ use std::collections::HashMap;
 
 use serde::Deserialize;
 
+use crate::actor::{
+    ActivityContext, EquipModel, FitReport, NpcDefinition, NpcDefinitionRecord, PlayerBody,
+    player_sequence_for,
+};
+use crate::anim::Sequence;
 use crate::chunk::Chunks;
 use crate::error::RenderError;
 use crate::model::{Bounds, Model, parse_model_pack};
@@ -160,6 +165,25 @@ pub struct WorldEntity {
     pub tile: WorldTile,
     pub animation: String,
     pub available: Option<bool>,
+    pub instance: Option<String>,
+    pub name: Option<String>,
+    pub activity: Option<String>,
+    pub hitpoints: Option<i32>,
+    pub max_hitpoints: Option<i32>,
+}
+
+#[derive(Deserialize, Debug, Clone, Default)]
+#[serde(default, rename_all = "camelCase")]
+pub struct WorldItem {
+    pub id: String,
+    pub source_id: Option<i32>,
+}
+
+#[derive(Deserialize, Debug, Clone, Default)]
+#[serde(default)]
+pub struct WorldEquipment {
+    pub slot: String,
+    pub item: Option<WorldItem>,
 }
 
 #[derive(Deserialize, Debug, Clone, Default)]
@@ -168,6 +192,10 @@ pub struct WorldPlayer {
     pub id: String,
     pub tile: WorldTile,
     pub animation: String,
+    pub activity: String,
+    pub hitpoints: Option<i32>,
+    pub instance: Option<String>,
+    pub equipment: Vec<WorldEquipment>,
 }
 
 #[derive(Deserialize, Debug, Clone, Default)]
@@ -188,6 +216,8 @@ struct EntityState {
     sequence: i32,
     sequence_started_ms: f64,
     is_player: bool,
+    /// NPC footprint size in tiles (definition `size`).
+    size: i32,
 }
 
 /// Camera in world units (tile * 128) matching `RenderCamera` from the shared contract.
@@ -292,6 +322,24 @@ pub struct RendererCore {
     scene_id: Option<String>,
     drawer: Option<SceneDrawer>,
     npc_packs: HashMap<i32, NpcPack>,
+    /// Original sequences (`anim/seq-<id>.bin`) for the skeletal animation port.
+    sequences: HashMap<i32, Sequence>,
+    /// NPC definitions (lit base model + definition sequences) for skeletal animation.
+    npc_defs: HashMap<i32, NpcDefinition>,
+    /// Animated+scaled frame cache keyed by (npc, sequence, frame).
+    frame_cache: HashMap<(i32, i32, usize), Model>,
+    /// The penguin player body and retargeting table (needs the human reference model).
+    player_body: Option<PlayerBody>,
+    /// Equipped-item models by item id.
+    equip_models: HashMap<i32, EquipModel>,
+    /// Assembled player model (body + gear) and the gear ids it was built for.
+    player_assembled: Option<(Vec<i32>, Model, Vec<FitReport>)>,
+    player_frame_cache: HashMap<(i32, usize), Model>,
+    player_gear: Vec<(String, i32)>,
+    player_activity: String,
+    player_animation: String,
+    player_dead: bool,
+    player_instance: Option<String>,
     /// Standalone lit models (e.g. the tree fixture) addressed by manifest id.
     models: HashMap<String, Model>,
     /// World blocks (64x64 map squares) keyed by square id, with their model packs.
@@ -321,6 +369,18 @@ impl RendererCore {
             scene_id: None,
             drawer: None,
             npc_packs: HashMap::new(),
+            sequences: HashMap::new(),
+            npc_defs: HashMap::new(),
+            frame_cache: HashMap::new(),
+            player_body: None,
+            equip_models: HashMap::new(),
+            player_assembled: None,
+            player_frame_cache: HashMap::new(),
+            player_gear: Vec::new(),
+            player_activity: String::new(),
+            player_animation: String::new(),
+            player_dead: false,
+            player_instance: None,
             models: HashMap::new(),
             blocks: HashMap::new(),
             scenery_entities: Vec::new(),
@@ -347,6 +407,88 @@ impl RendererCore {
         let pack = NpcPack::from_chunks(bytes)?;
         self.npc_packs.insert(npc_id, pack);
         Ok(())
+    }
+
+    /// Loads an original sequence (frames + skeleton) for the skeletal animation port.
+    pub fn load_sequence(&mut self, bytes: &[u8]) -> Result<i32, RenderError> {
+        let sequence = Sequence::from_chunks(bytes)?;
+        let id = sequence.id;
+        self.sequences.insert(id, sequence);
+        self.frame_cache.clear();
+        self.player_frame_cache.clear();
+        Ok(id)
+    }
+
+    pub fn has_sequence(&self, id: i32) -> bool {
+        self.sequences.contains_key(&id)
+    }
+
+    /// Loads an NPC definition (manifest `npc_definitions` record as JSON) with its lit base.
+    pub fn load_npc_definition(
+        &mut self,
+        record_json: &str,
+        base_bytes: &[u8],
+    ) -> Result<i32, RenderError> {
+        let record: NpcDefinitionRecord = serde_json::from_str(record_json)
+            .map_err(|e| RenderError::Scene(format!("npc definition json: {e}")))?;
+        let base = Model::from_chunks(base_bytes)?;
+        let id = record.npc_id;
+        self.npc_defs.insert(id, NpcDefinition { record, base });
+        self.frame_cache.retain(|(npc, _, _), _| *npc != id);
+        Ok(id)
+    }
+
+    pub fn has_npc_definition(&self, npc_id: i32) -> bool {
+        self.npc_defs.contains_key(&npc_id)
+    }
+
+    /// Installs the player body: the approved penguin base (NPC 2063) with its native
+    /// sequences and the human reference used only to derive the label retargeting table.
+    pub fn load_player_body(
+        &mut self,
+        penguin_base: &[u8],
+        width_scale: i32,
+        height_scale: i32,
+        native_sequences: Vec<i32>,
+        human_reference: &[u8],
+    ) -> Result<(), RenderError> {
+        let base = Model::from_chunks(penguin_base)?;
+        let human = Model::from_chunks(human_reference)?;
+        if base.vertex_groups.is_none() || human.vertex_groups.is_none() {
+            return Err(RenderError::InvalidAsset(
+                "player body models need vertex labels".into(),
+            ));
+        }
+        self.player_body = Some(PlayerBody::new(
+            base,
+            width_scale,
+            height_scale,
+            native_sequences,
+            &human,
+        ));
+        self.player_assembled = None;
+        self.player_frame_cache.clear();
+        Ok(())
+    }
+
+    pub fn load_equip_model(&mut self, item_id: i32, bytes: &[u8]) -> Result<(), RenderError> {
+        let model = Model::from_chunks(bytes)?;
+        self.equip_models
+            .insert(item_id, EquipModel { item_id, model });
+        self.player_assembled = None;
+        self.player_frame_cache.clear();
+        Ok(())
+    }
+
+    /// Retargeting table and last equipment fit report (proposal data for owner review).
+    pub fn player_fit_report(&self) -> Option<(&crate::anim::LabelMap, &[FitReport])> {
+        let body = self.player_body.as_ref()?;
+        let fits = self
+            .player_assembled
+            .as_ref()
+            .map(|(_, _, f)| f.as_slice())
+            .unwrap_or(&[]);
+        Some((&body.label_map, fits))
     }
 
     pub fn has_npc_pack(&self, npc_id: i32) -> bool {
@@ -583,18 +725,65 @@ impl RendererCore {
         Ok(())
     }
 
-    /// Applies an authoritative world view: entity placement and animation identity only.
+    /// Applies an authoritative world view: entity placement, animation identity, equipment
+    /// and instance visibility only. Nothing here decides game rules.
     pub fn update_world(&mut self, json: &str, now_ms: f64) -> Result<(), RenderError> {
         let view: WorldViewInput = serde_json::from_str(json)
             .map_err(|e| RenderError::Scene(format!("world view json: {e}")))?;
         let mut next: Vec<EntityState> = Vec::new();
+        let previous = std::mem::take(&mut self.entities);
+        let player_tile = view.player.tile.clone();
+        self.player_instance = view.player.instance.clone();
+        self.player_activity = view.player.activity.clone();
+        self.player_animation = view.player.animation.clone();
+        self.player_dead = view.player.hitpoints.is_some_and(|hp| hp <= 0);
+        let mut gear: Vec<(String, i32)> = view
+            .player
+            .equipment
+            .iter()
+            .filter_map(|e| {
+                e.item
+                    .as_ref()
+                    .and_then(|i| i.source_id)
+                    .map(|id| (e.slot.clone(), id))
+            })
+            .collect();
+        gear.sort();
+        if gear != self.player_gear {
+            self.player_gear = gear;
+            self.player_assembled = None;
+            self.player_frame_cache.clear();
+        }
+        // The player's sequence: the server-bound animation when named, otherwise the original
+        // motion for the reported activity and surroundings.
+        let moving = previous
+            .iter()
+            .find(|e| e.is_player && e.id == view.player.id)
+            .is_some_and(|o| o.tile.x != player_tile.x || o.tile.y != player_tile.y);
+        let player_sequence = match view.player.animation.trim().parse::<i32>() {
+            Ok(id) if id >= 0 => id,
+            _ => {
+                let context = ActivityContext {
+                    weapon_item: self
+                        .player_gear
+                        .iter()
+                        .find(|(slot, _)| slot == "weapon")
+                        .map(|(_, id)| *id),
+                    moving,
+                    running: false,
+                    dead: self.player_dead,
+                    ..self.adjacent_context(&player_tile)
+                };
+                player_sequence_for(&view.player.activity, &context)
+            }
+        };
         let apply = |id: &str,
                      npc: i32,
                      tile: &WorldTile,
-                     animation: &str,
+                     sequence: i32,
                      is_player: bool,
+                     size: i32,
                      previous: &[EntityState]| {
-            let sequence = animation.trim().parse::<i32>().unwrap_or(-1);
             let old = previous.iter().find(|e| e.id == id);
             let mut orientation = old.map(|o| o.orientation).unwrap_or(0);
             if let Some(o) = old
@@ -614,6 +803,7 @@ impl RendererCore {
                 sequence,
                 sequence_started_ms: started,
                 is_player,
+                size,
             }
         };
         self.scenery_entities = view
@@ -622,28 +812,58 @@ impl RendererCore {
             .filter(|e| e.kind == "object" || e.kind == "temporary_object")
             .filter_map(|e| e.source_id.map(|id| (e.id.clone(), id, e.tile.clone())))
             .collect();
-        let previous = std::mem::take(&mut self.entities);
         next.push(apply(
             &view.player.id,
             PLAYER_BASE_NPC,
-            &view.player.tile,
-            &view.player.animation,
+            &player_tile,
+            player_sequence,
             true,
+            1,
             &previous,
         ));
         for entity in &view.entities {
             if entity.kind != "npc" && entity.kind != "player" {
                 continue;
             }
+            // Instanced entities are visible only inside the player's instance.
+            if entity.instance != view.player.instance {
+                continue;
+            }
             let Some(npc) = entity.source_id else {
                 continue;
             };
+            let named = entity
+                .animation
+                .trim()
+                .parse::<i32>()
+                .ok()
+                .filter(|id| *id >= 0);
+            let def = self.npc_defs.get(&npc);
+            let old = previous.iter().find(|e| e.id == entity.id);
+            let moved = old.is_some_and(|o| o.tile.x != entity.tile.x || o.tile.y != entity.tile.y);
+            let dead = entity.hitpoints.is_some_and(|hp| hp <= 0)
+                && entity.max_hitpoints.is_some_and(|m| m > 0);
+            let sequence = match (named, def) {
+                (Some(id), _) => id,
+                (None, Some(def)) => {
+                    if dead && let Some(&death) = def.record.combat_sequences.last() {
+                        death
+                    } else if moved && def.walk() >= 0 {
+                        def.walk()
+                    } else {
+                        def.stand()
+                    }
+                }
+                (None, None) => -1,
+            };
+            let size = def.map(|d| d.record.size.max(1)).unwrap_or(1);
             next.push(apply(
                 &entity.id,
                 npc,
                 &entity.tile,
-                &entity.animation,
+                sequence,
                 entity.kind == "player",
+                size,
                 &previous,
             ));
         }
@@ -652,56 +872,274 @@ impl RendererCore {
         Ok(())
     }
 
+    /// What stands on the tiles around the player (scene object ids and WorldView scenery /
+    /// NPC entities), used only to pick the original tool motion for an activity.
+    fn adjacent_context(&self, tile: &WorldTile) -> ActivityContext {
+        let mut context = ActivityContext::default();
+        let Some(scene) = &self.scene else {
+            return context;
+        };
+        let classify = |object_id: i32, context: &mut ActivityContext| match object_id {
+            // Tutorial Island / Lumbridge source object ids: trees, rocks, fishing, fire, range,
+            // furnace, anvil (content pack spawn definitions).
+            1276..=1282 | 1283..=1290 | 9730..=9732 | 1315..=1319 | 1330 | 1331 | 1332 | 9734 => {
+                context.adjacent_tree = true
+            }
+            10943 | 11161 | 11360 | 11361 | 11364 | 11365 | 10079 | 10080 | 10081 | 10082
+            | 10083 => {
+                if matches!(object_id, 10082 | 10083 | 24009) {
+                    context.adjacent_furnace = true;
+                } else {
+                    context.adjacent_rock = true;
+                }
+            }
+            24009 | 3994 | 16469 => context.adjacent_furnace = true,
+            26185..=26195 => context.adjacent_fire = true,
+            9682 | 9736 | 114 | 12269 => context.adjacent_range = true,
+            2097 | 2031 | 24006 => context.adjacent_anvil = true,
+            _ => {}
+        };
+        for dx in -1..=1 {
+            for dy in -1..=1 {
+                let ex = tile.x - scene.base_x + scene.offset + dx;
+                let ey = tile.y - scene.base_y + scene.offset + dy;
+                if ex < 0 || ey < 0 || ex >= scene.width || ey >= scene.height {
+                    continue;
+                }
+                let plane = tile.plane.clamp(0, scene.planes - 1);
+                let index = scene.tile_index(plane, ex, ey);
+                for slot in 0..5 {
+                    if let Some(&id) = scene.slots.get(&(index * 5 + slot)) {
+                        let object_id = ((scene.game_objects[id].hash >> 20) & 0xFFFF_FFFF) as i32;
+                        classify(object_id, &mut context);
+                    }
+                }
+                if let Some(wall) = scene.walls.get(&index) {
+                    classify(((wall.hash >> 20) & 0xFFFF_FFFF) as i32, &mut context);
+                }
+                if let Some(floor) = scene.floor_decorations.get(&index) {
+                    classify(((floor.hash >> 20) & 0xFFFF_FFFF) as i32, &mut context);
+                }
+            }
+        }
+        for (_, object_id, t) in &self.scenery_entities {
+            if (t.x - tile.x).abs() <= 1 && (t.y - tile.y).abs() <= 1 && t.plane == tile.plane {
+                classify(*object_id, &mut context);
+            }
+        }
+        for entity in &self.entities {
+            if entity.npc == 3317
+                && (entity.tile.x - tile.x).abs() <= 1
+                && (entity.tile.y - tile.y).abs() <= 1
+            {
+                context.adjacent_fishing_spot = true;
+            }
+        }
+        context
+    }
+
+    /// Animated, scaled model for an actor frame through the skeletal port (cached).
+    fn npc_frame_model(&mut self, npc: i32, sequence_id: i32, frame: usize) -> Option<Model> {
+        if let Some(model) = self.frame_cache.get(&(npc, sequence_id, frame)) {
+            return Some(model.clone());
+        }
+        let def = self.npc_defs.get(&npc)?;
+        let sequence = self.sequences.get(&sequence_id)?;
+        let mut model = def.base.clone();
+        crate::anim::apply_frame(&mut model, sequence, frame, None).ok()?;
+        crate::anim::scale_float(&mut model, def.record.width_scale, def.record.height_scale);
+        model.compute_cylinder_bounds();
+        self.frame_cache
+            .insert((npc, sequence_id, frame), model.clone());
+        Some(model)
+    }
+
+    /// The player's animated model for a sequence frame: penguin body + attached gear.
+    fn player_frame_model(
+        &mut self,
+        sequence_id: i32,
+        frame: usize,
+    ) -> Result<Option<Model>, RenderError> {
+        if let Some(model) = self.player_frame_cache.get(&(sequence_id, frame)) {
+            return Ok(Some(model.clone()));
+        }
+        let Some(body) = self.player_body.as_ref() else {
+            return Ok(None);
+        };
+        let gear_ids: Vec<i32> = self.player_gear.iter().map(|(_, id)| *id).collect();
+        if self
+            .player_assembled
+            .as_ref()
+            .is_none_or(|(ids, _, _)| ids != &gear_ids)
+        {
+            let gear: Vec<(String, &EquipModel)> = self
+                .player_gear
+                .iter()
+                .filter_map(|(slot, id)| self.equip_models.get(id).map(|m| (slot.clone(), m)))
+                .collect();
+            let (assembled, fits) = body.assemble(&gear);
+            self.player_assembled = Some((gear_ids.clone(), assembled, fits));
+        }
+        let Some(sequence) = self.sequences.get(&sequence_id) else {
+            return Ok(None);
+        };
+        let assembled = &self.player_assembled.as_ref().expect("assembled above").1;
+        let model = body.frame(assembled, sequence, frame)?;
+        self.player_frame_cache
+            .insert((sequence_id, frame), model.clone());
+        Ok(Some(model))
+    }
+
+    /// Developer preview: the assembled player (body + the given gear) at a sequence frame,
+    /// animated and scaled exactly like the in-scene actor.
+    pub fn player_model_for_preview(
+        &mut self,
+        sequence_id: i32,
+        frame: usize,
+        gear: &[(&str, i32)],
+    ) -> Result<Option<Model>, RenderError> {
+        let Some(body) = self.player_body.as_ref() else {
+            return Ok(None);
+        };
+        let Some(sequence) = self.sequences.get(&sequence_id) else {
+            return Ok(None);
+        };
+        let gear: Vec<(String, &EquipModel)> = gear
+            .iter()
+            .filter_map(|(slot, id)| self.equip_models.get(id).map(|m| (slot.to_string(), m)))
+            .collect();
+        let (assembled, _) = body.assemble(&gear);
+        let frame = frame.min(sequence.frame_count().saturating_sub(1));
+        body.frame(&assembled, sequence, frame).map(Some)
+    }
+
+    /// Frame index for a sequence through the skeletal port's timing (`rd.az` semantics).
+    fn sequence_frame(&self, sequence_id: i32, elapsed_ms: f64) -> Option<(usize, bool)> {
+        let sequence = self.sequences.get(&sequence_id)?;
+        let cycles = (elapsed_ms / CLIENT_CYCLE_MS).floor().max(0.0) as i64;
+        match sequence.frame_at(cycles) {
+            Some(frame) => Some((frame, false)),
+            None => Some((sequence.frame_count().saturating_sub(1), true)),
+        }
+    }
+
     /// Builds this frame's painter-ordered triangle stream. Returns a summary; the stream is
     /// available through [`Self::triangles`].
     pub fn build_frame(&mut self, now_ms: f64) -> Result<&FrameSummary, RenderError> {
         let start = now();
         let animation_cycles = self.animation_cycles(now_ms);
-        let scene = self
-            .scene
-            .as_ref()
-            .ok_or_else(|| RenderError::Scene("no scene loaded".into()))?;
-        let drawer = self.drawer.as_mut().expect("drawer follows scene");
-        let base_x = scene.base_x;
-        let base_y = scene.base_y;
-        drawer.begin_frame(scene);
+        let (base_x, base_y) = {
+            let scene = self
+                .scene
+                .as_ref()
+                .ok_or_else(|| RenderError::Scene("no scene loaded".into()))?;
+            let drawer = self.drawer.as_mut().expect("drawer follows scene");
+            drawer.begin_frame(scene);
+            (scene.base_x, scene.base_y)
+        };
         let mut temp_models: Vec<Model> = Vec::new();
         let mut skipped = Vec::new();
         let mut drawn = 0usize;
-        for entity in &self.entities {
-            let Some(pack) = self.npc_packs.get(&entity.npc) else {
+        // Resolve every actor's model first (the skeletal path may need &mut self for caches).
+        let entities = self.entities.clone();
+        let mut resolved: Vec<(EntityState, Model)> = Vec::with_capacity(entities.len());
+        for entity in &entities {
+            let elapsed = now_ms - entity.sequence_started_ms;
+            let model = if entity.is_player && self.player_body.is_some() {
+                let sequence_id = if self.sequences.contains_key(&entity.sequence) {
+                    entity.sequence
+                } else {
+                    skipped.push(format!(
+                        "{}: sequence {} not loaded, standing",
+                        entity.id, entity.sequence
+                    ));
+                    crate::actor::PLAYER_IDLE
+                };
+                if !self.sequences.contains_key(&sequence_id) {
+                    skipped.push(format!(
+                        "{}: idle sequence {} not loaded",
+                        entity.id, sequence_id
+                    ));
+                    continue;
+                }
+                let Some((frame, ended)) = self.sequence_frame(sequence_id, elapsed) else {
+                    continue;
+                };
+                if ended && sequence_id != crate::actor::PLAYER_DEATH {
+                    // One-shot actions return to the stance once finished.
+                    match self.sequence_frame(crate::actor::PLAYER_IDLE, elapsed) {
+                        Some((idle_frame, _)) => {
+                            self.player_frame_model(crate::actor::PLAYER_IDLE, idle_frame)?
+                        }
+                        None => None,
+                    }
+                } else {
+                    self.player_frame_model(sequence_id, frame)?
+                }
+            } else if let Some(def) = self.npc_defs.get(&entity.npc) {
+                let mut sequence_id = entity.sequence;
+                if !self.sequences.contains_key(&sequence_id) {
+                    let fallback = if def.stand() >= 0 { def.stand() } else { -1 };
+                    if sequence_id >= 0 {
+                        skipped.push(format!(
+                            "{}: sequence {} not loaded, using {}",
+                            entity.id, sequence_id, fallback
+                        ));
+                    }
+                    sequence_id = fallback;
+                }
+                if sequence_id < 0 || !self.sequences.contains_key(&sequence_id) {
+                    // Definition without a stand sequence (or unloaded): draw the static base.
+                    let mut model = def.base.clone();
+                    crate::anim::scale_float(
+                        &mut model,
+                        def.record.width_scale,
+                        def.record.height_scale,
+                    );
+                    model.compute_cylinder_bounds();
+                    Some(model)
+                } else {
+                    let Some((frame, _)) = self.sequence_frame(sequence_id, elapsed) else {
+                        continue;
+                    };
+                    self.npc_frame_model(entity.npc, sequence_id, frame)
+                }
+            } else if let Some(pack) = self.npc_packs.get(&entity.npc) {
+                // Baked-frame pack (validation fixtures / packs without a definition).
+                let sequence = if pack.sequences.contains_key(&entity.sequence) {
+                    entity.sequence
+                } else {
+                    let mut ids: Vec<i32> = pack.sequences.keys().copied().collect();
+                    ids.sort_unstable();
+                    let Some(&first) = ids.first() else {
+                        skipped.push(format!("{}: pack has no sequences", entity.id));
+                        continue;
+                    };
+                    if entity.sequence >= 0 {
+                        skipped.push(format!(
+                            "{}: sequence {} not baked, using {}",
+                            entity.id, entity.sequence, first
+                        ));
+                    }
+                    first
+                };
+                let Some(frame) = pack.frame_index(sequence, elapsed) else {
+                    continue;
+                };
+                pack.frame_model(sequence, frame)
+            } else {
                 skipped.push(format!(
                     "{}: no animation pack for npc {}",
                     entity.id, entity.npc
                 ));
                 continue;
             };
-            let sequence = if pack.sequences.contains_key(&entity.sequence) {
-                entity.sequence
-            } else {
-                // Fall back to the pack's first sequence (idle) when the world view names an
-                // animation this pack does not carry; report it rather than hide the actor.
-                let mut ids: Vec<i32> = pack.sequences.keys().copied().collect();
-                ids.sort_unstable();
-                let Some(&first) = ids.first() else {
-                    skipped.push(format!("{}: pack has no sequences", entity.id));
-                    continue;
-                };
-                if entity.sequence >= 0 {
-                    skipped.push(format!(
-                        "{}: sequence {} not baked, using {}",
-                        entity.id, entity.sequence, first
-                    ));
-                }
-                first
-            };
-            let elapsed = now_ms - entity.sequence_started_ms;
-            let Some(frame) = pack.frame_index(sequence, elapsed) else {
-                continue;
-            };
-            let Some(model) = pack.frame_model(sequence, frame) else {
-                continue;
-            };
+            let Some(model) = model else { continue };
+            resolved.push((entity.clone(), model));
+        }
+        let scene = self.scene.as_ref().expect("scene checked above");
+        let drawer = self.drawer.as_mut().expect("drawer follows scene");
+        for (entity, model) in resolved {
             let local_x = entity.tile.x - base_x;
             let local_y = entity.tile.y - base_y;
             if local_x < 0 || local_y < 0 || local_x >= scene.max_x || local_y >= scene.max_y {
@@ -709,8 +1147,10 @@ impl RendererCore {
                 continue;
             }
             let plane = entity.tile.plane.clamp(0, scene.planes - 1);
-            let x = local_x * 128 + 64;
-            let z = local_y * 128 + 64;
+            let size = entity.size.max(1);
+            // Multi-tile NPCs stand on the centre of their footprint (original actor placement).
+            let x = local_x * 128 + size * 64;
+            let z = local_y * 128 + size * 64;
             let height = tile_height(scene, plane, x, z);
             let model_index = temp_models.len();
             temp_models.push(model);
@@ -720,8 +1160,8 @@ impl RendererCore {
                     plane,
                     tile_x: local_x,
                     tile_y: local_y,
-                    size_x: 1,
-                    size_y: 1,
+                    size_x: size,
+                    size_y: size,
                     x,
                     height,
                     z,
@@ -786,6 +1226,10 @@ impl RendererCore {
         let model = Model::from_chunks(bytes)?;
         self.models.insert(id.to_string(), model);
         Ok(())
+    }
+
+    pub fn load_model_value(&mut self, id: &str, model: Model) {
+        self.models.insert(id.to_string(), model);
     }
 
     /// Developer fixture replay: draws one model through the original legacy draw

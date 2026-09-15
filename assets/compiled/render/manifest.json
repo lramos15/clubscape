@@ -2005,6 +2005,2709 @@
   131,
   132
  ],
+ "npc_definitions": [
+  {
+   "npc_id": 306,
+   "name": "Lumbridge Guide",
+   "base_model": "models/npc-306-base.bin",
+   "size": 1,
+   "width_scale": 128,
+   "height_scale": 128,
+   "sequences": {
+    "stand": 813,
+    "walk": 1205,
+    "rotate_180": 1206,
+    "rotate_left": 1207,
+    "rotate_right": 1208,
+    "idle_rotate_left": -1,
+    "idle_rotate_right": -1,
+    "run": -1
+   },
+   "combat_sequences": []
+  },
+  {
+   "npc_id": 311,
+   "name": "Ironman tutor",
+   "base_model": "models/npc-311-base.bin",
+   "size": 1,
+   "width_scale": 128,
+   "height_scale": 128,
+   "sequences": {
+    "stand": 808,
+    "walk": 819,
+    "rotate_180": 820,
+    "rotate_left": 821,
+    "rotate_right": 822,
+    "idle_rotate_left": -1,
+    "idle_rotate_right": -1,
+    "run": -1
+   },
+   "combat_sequences": []
+  },
+  {
+   "npc_id": 732,
+   "name": "Fred the Farmer",
+   "base_model": "models/npc-732-base.bin",
+   "size": 1,
+   "width_scale": 128,
+   "height_scale": 128,
+   "sequences": {
+    "stand": 813,
+    "walk": 1205,
+    "rotate_180": 1206,
+    "rotate_left": 1207,
+    "rotate_right": 1208,
+    "idle_rotate_left": -1,
+    "idle_rotate_right": -1,
+    "run": -1
+   },
+   "combat_sequences": []
+  },
+  {
+   "npc_id": 2063,
+   "name": "Penguin",
+   "base_model": "models/npc-2063-base.bin",
+   "size": 1,
+   "width_scale": 75,
+   "height_scale": 75,
+   "sequences": {
+    "stand": 5668,
+    "walk": 5666,
+    "rotate_180": -1,
+    "rotate_left": -1,
+    "rotate_right": -1,
+    "idle_rotate_left": -1,
+    "idle_rotate_right": -1,
+    "run": -1
+   },
+   "combat_sequences": []
+  },
+  {
+   "npc_id": 2804,
+   "name": "Chicken",
+   "base_model": "models/npc-2804-base.bin",
+   "size": 1,
+   "width_scale": 85,
+   "height_scale": 85,
+   "sequences": {
+    "stand": 5386,
+    "walk": 5385,
+    "rotate_180": -1,
+    "rotate_left": -1,
+    "rotate_right": -1,
+    "idle_rotate_left": -1,
+    "idle_rotate_right": -1,
+    "run": -1
+   },
+   "combat_sequences": []
+  },
+  {
+   "npc_id": 2813,
+   "name": "Shop keeper",
+   "base_model": "models/npc-2813-base.bin",
+   "size": 1,
+   "width_scale": 128,
+   "height_scale": 128,
+   "sequences": {
+    "stand": 808,
+    "walk": 819,
+    "rotate_180": 820,
+    "rotate_left": 821,
+    "rotate_right": 822,
+    "idle_rotate_left": -1,
+    "idle_rotate_right": -1,
+    "run": -1
+   },
+   "combat_sequences": []
+  },
+  {
+   "npc_id": 2814,
+   "name": "Shop assistant",
+   "base_model": "models/npc-2814-base.bin",
+   "size": 1,
+   "width_scale": 128,
+   "height_scale": 128,
+   "sequences": {
+    "stand": 808,
+    "walk": 819,
+    "rotate_180": 820,
+    "rotate_left": 821,
+    "rotate_right": 822,
+    "idle_rotate_left": -1,
+    "idle_rotate_right": -1,
+    "run": -1
+   },
+   "combat_sequences": []
+  },
+  {
+   "npc_id": 3028,
+   "name": "Goblin",
+   "base_model": "models/npc-3028-base.bin",
+   "size": 1,
+   "width_scale": 128,
+   "height_scale": 128,
+   "sequences": {
+    "stand": 6181,
+    "walk": 6180,
+    "rotate_180": -1,
+    "rotate_left": -1,
+    "rotate_right": -1,
+    "idle_rotate_left": -1,
+    "idle_rotate_right": -1,
+    "run": -1
+   },
+   "combat_sequences": [
+    6182,
+    6183,
+    6184,
+    6185
+   ]
+  },
+  {
+   "npc_id": 3305,
+   "name": "Master Chef",
+   "base_model": "models/npc-3305-base.bin",
+   "size": 1,
+   "width_scale": 128,
+   "height_scale": 128,
+   "sequences": {
+    "stand": 808,
+    "walk": 819,
+    "rotate_180": 820,
+    "rotate_left": 821,
+    "rotate_right": 822,
+    "idle_rotate_left": -1,
+    "idle_rotate_right": -1,
+    "run": -1
+   },
+   "combat_sequences": []
+  },
+  {
+   "npc_id": 3307,
+   "name": "Combat Instructor",
+   "base_model": "models/npc-3307-base.bin",
+   "size": 1,
+   "width_scale": 128,
+   "height_scale": 128,
+   "sequences": {
+    "stand": 808,
+    "walk": 819,
+    "rotate_180": 820,
+    "rotate_left": 821,
+    "rotate_right": 822,
+    "idle_rotate_left": -1,
+    "idle_rotate_right": -1,
+    "run": -1
+   },
+   "combat_sequences": []
+  },
+  {
+   "npc_id": 3308,
+   "name": "Gielinor Guide",
+   "base_model": "models/npc-3308-base.bin",
+   "size": 1,
+   "width_scale": 128,
+   "height_scale": 128,
+   "sequences": {
+    "stand": 808,
+    "walk": 819,
+    "rotate_180": 820,
+    "rotate_left": 821,
+    "rotate_right": 822,
+    "idle_rotate_left": -1,
+    "idle_rotate_right": -1,
+    "run": -1
+   },
+   "combat_sequences": []
+  },
+  {
+   "npc_id": 3309,
+   "name": "Magic Instructor",
+   "base_model": "models/npc-3309-base.bin",
+   "size": 1,
+   "width_scale": 128,
+   "height_scale": 128,
+   "sequences": {
+    "stand": 813,
+    "walk": 819,
+    "rotate_180": 820,
+    "rotate_left": 821,
+    "rotate_right": 822,
+    "idle_rotate_left": -1,
+    "idle_rotate_right": -1,
+    "run": -1
+   },
+   "combat_sequences": []
+  },
+  {
+   "npc_id": 3310,
+   "name": "Account Guide",
+   "base_model": "models/npc-3310-base.bin",
+   "size": 1,
+   "width_scale": 128,
+   "height_scale": 128,
+   "sequences": {
+    "stand": 808,
+    "walk": 819,
+    "rotate_180": 820,
+    "rotate_left": 821,
+    "rotate_right": 822,
+    "idle_rotate_left": -1,
+    "idle_rotate_right": -1,
+    "run": -1
+   },
+   "combat_sequences": []
+  },
+  {
+   "npc_id": 3311,
+   "name": "Mining Instructor",
+   "base_model": "models/npc-3311-base.bin",
+   "size": 1,
+   "width_scale": 128,
+   "height_scale": 128,
+   "sequences": {
+    "stand": 808,
+    "walk": 819,
+    "rotate_180": 820,
+    "rotate_left": 821,
+    "rotate_right": 822,
+    "idle_rotate_left": -1,
+    "idle_rotate_right": -1,
+    "run": -1
+   },
+   "combat_sequences": []
+  },
+  {
+   "npc_id": 3312,
+   "name": "Quest Guide",
+   "base_model": "models/npc-3312-base.bin",
+   "size": 1,
+   "width_scale": 128,
+   "height_scale": 128,
+   "sequences": {
+    "stand": 808,
+    "walk": 819,
+    "rotate_180": 820,
+    "rotate_left": 821,
+    "rotate_right": 822,
+    "idle_rotate_left": -1,
+    "idle_rotate_right": -1,
+    "run": -1
+   },
+   "combat_sequences": []
+  },
+  {
+   "npc_id": 3313,
+   "name": "Giant rat",
+   "base_model": "models/npc-3313-base.bin",
+   "size": 2,
+   "width_scale": 128,
+   "height_scale": 128,
+   "sequences": {
+    "stand": 4932,
+    "walk": 4931,
+    "rotate_180": -1,
+    "rotate_left": -1,
+    "rotate_right": -1,
+    "idle_rotate_left": -1,
+    "idle_rotate_right": -1,
+    "run": -1
+   },
+   "combat_sequences": [
+    4933,
+    4934,
+    4935
+   ]
+  },
+  {
+   "npc_id": 3316,
+   "name": "Chicken",
+   "base_model": "models/npc-3316-base.bin",
+   "size": 1,
+   "width_scale": 80,
+   "height_scale": 80,
+   "sequences": {
+    "stand": 5386,
+    "walk": 5385,
+    "rotate_180": -1,
+    "rotate_left": -1,
+    "rotate_right": -1,
+    "idle_rotate_left": -1,
+    "idle_rotate_right": -1,
+    "run": -1
+   },
+   "combat_sequences": []
+  },
+  {
+   "npc_id": 3317,
+   "name": "Fishing spot",
+   "base_model": "models/npc-3317-base.bin",
+   "size": 1,
+   "width_scale": 128,
+   "height_scale": 128,
+   "sequences": {
+    "stand": 7634,
+    "walk": 7634,
+    "rotate_180": -1,
+    "rotate_left": -1,
+    "rotate_right": -1,
+    "idle_rotate_left": -1,
+    "idle_rotate_right": -1,
+    "run": -1
+   },
+   "combat_sequences": []
+  },
+  {
+   "npc_id": 3318,
+   "name": "Banker",
+   "base_model": "models/npc-3318-base.bin",
+   "size": 1,
+   "width_scale": 128,
+   "height_scale": 128,
+   "sequences": {
+    "stand": 808,
+    "walk": 819,
+    "rotate_180": 820,
+    "rotate_left": 821,
+    "rotate_right": 822,
+    "idle_rotate_left": -1,
+    "idle_rotate_right": -1,
+    "run": -1
+   },
+   "combat_sequences": []
+  },
+  {
+   "npc_id": 3319,
+   "name": "Brother Brace",
+   "base_model": "models/npc-3319-base.bin",
+   "size": 1,
+   "width_scale": 128,
+   "height_scale": 128,
+   "sequences": {
+    "stand": 808,
+    "walk": 819,
+    "rotate_180": 820,
+    "rotate_left": 821,
+    "rotate_right": 822,
+    "idle_rotate_left": -1,
+    "idle_rotate_right": -1,
+    "run": -1
+   },
+   "combat_sequences": []
+  },
+  {
+   "npc_id": 4626,
+   "name": "Cook",
+   "base_model": "models/npc-4626-base.bin",
+   "size": 1,
+   "width_scale": 128,
+   "height_scale": 128,
+   "sequences": {
+    "stand": 808,
+    "walk": 819,
+    "rotate_180": 820,
+    "rotate_left": 821,
+    "rotate_right": 822,
+    "idle_rotate_left": -1,
+    "idle_rotate_right": -1,
+    "run": -1
+   },
+   "combat_sequences": []
+  },
+  {
+   "npc_id": 4627,
+   "name": "Millie Miller",
+   "base_model": "models/npc-4627-base.bin",
+   "size": 1,
+   "width_scale": 128,
+   "height_scale": 128,
+   "sequences": {
+    "stand": 808,
+    "walk": 819,
+    "rotate_180": 820,
+    "rotate_left": 821,
+    "rotate_right": 822,
+    "idle_rotate_left": -1,
+    "idle_rotate_right": -1,
+    "run": -1
+   },
+   "combat_sequences": []
+  },
+  {
+   "npc_id": 4628,
+   "name": "Gillie Groats",
+   "base_model": "models/npc-4628-base.bin",
+   "size": 1,
+   "width_scale": 128,
+   "height_scale": 128,
+   "sequences": {
+    "stand": 3950,
+    "walk": 3997,
+    "rotate_180": -1,
+    "rotate_left": -1,
+    "rotate_right": -1,
+    "idle_rotate_left": -1,
+    "idle_rotate_right": -1,
+    "run": -1
+   },
+   "combat_sequences": []
+  },
+  {
+   "npc_id": 7941,
+   "name": "Ironman tutor",
+   "base_model": "models/npc-7941-base.bin",
+   "size": 1,
+   "width_scale": 128,
+   "height_scale": 128,
+   "sequences": {
+    "stand": -1,
+    "walk": -1,
+    "rotate_180": -1,
+    "rotate_left": -1,
+    "rotate_right": -1,
+    "idle_rotate_left": -1,
+    "idle_rotate_right": -1,
+    "run": -1
+   },
+   "combat_sequences": []
+  },
+  {
+   "npc_id": 8503,
+   "name": "Survival Expert",
+   "base_model": "models/npc-8503-base.bin",
+   "size": 1,
+   "width_scale": 128,
+   "height_scale": 128,
+   "sequences": {
+    "stand": 808,
+    "walk": 819,
+    "rotate_180": 820,
+    "rotate_left": 821,
+    "rotate_right": 822,
+    "idle_rotate_left": -1,
+    "idle_rotate_right": -1,
+    "run": -1
+   },
+   "combat_sequences": []
+  },
+  {
+   "npc_id": 9244,
+   "name": "Adventurer Jon",
+   "base_model": "models/npc-9244-base.bin",
+   "size": 1,
+   "width_scale": 128,
+   "height_scale": 128,
+   "sequences": {
+    "stand": -1,
+    "walk": -1,
+    "rotate_180": -1,
+    "rotate_left": -1,
+    "rotate_right": -1,
+    "idle_rotate_left": -1,
+    "idle_rotate_right": -1,
+    "run": -1
+   },
+   "combat_sequences": []
+  },
+  {
+   "npc_id": 9855,
+   "name": "Death",
+   "base_model": "models/npc-9855-base.bin",
+   "size": 2,
+   "width_scale": 128,
+   "height_scale": 128,
+   "sequences": {
+    "stand": 8748,
+    "walk": 8748,
+    "rotate_180": -1,
+    "rotate_left": -1,
+    "rotate_right": -1,
+    "idle_rotate_left": -1,
+    "idle_rotate_right": -1,
+    "run": -1
+   },
+   "combat_sequences": []
+  }
+ ],
+ "equipment_items": [
+  {
+   "item_id": 882,
+   "name": "Bronze arrow",
+   "equip_model": null,
+   "params": {
+    "12": 7,
+    "23": 1,
+    "2431": 16924
+   }
+  },
+  {
+   "item_id": 1351,
+   "name": "Bronze axe",
+   "equip_model": "models/item-1351-equip.bin",
+   "labels": [
+    {
+     "label": 27,
+     "vertices": 27,
+     "centroid": [
+      -29,
+      -97,
+      -23.22222222222222
+     ],
+     "min_y": -111,
+     "max_y": -81
+    }
+   ],
+   "params": {
+    "0": -2,
+    "1": 4,
+    "2": 2,
+    "3": 0,
+    "4": 0,
+    "5": 0,
+    "6": 1,
+    "7": 0,
+    "23": 0,
+    "8": 0,
+    "9": 0,
+    "10": 5,
+    "11": 0,
+    "13": 0,
+    "14": 5
+   }
+  },
+  {
+   "item_id": 877,
+   "name": "Bronze bolts",
+   "equip_model": null,
+   "params": {
+    "12": 10,
+    "23": 1
+   }
+  },
+  {
+   "item_id": 1009,
+   "name": "Brass necklace",
+   "equip_model": "models/item-1009-equip.bin",
+   "labels": [
+    {
+     "label": 8,
+     "vertices": 24,
+     "centroid": [
+      0,
+      -155.58333333333334,
+      -9.666666666666666
+     ],
+     "min_y": -166,
+     "max_y": -142
+    }
+   ],
+   "params": {}
+  },
+  {
+   "item_id": 1949,
+   "name": "Chef's hat",
+   "equip_model": "models/item-1949-equip.bin",
+   "labels": [
+    {
+     "label": 1,
+     "vertices": 33,
+     "centroid": [
+      0.6363636363636364,
+      -205.24242424242425,
+      -6.515151515151516
+     ],
+     "min_y": -217,
+     "max_y": -190
+    }
+   ],
+   "params": {}
+  },
+  {
+   "item_id": 1205,
+   "name": "Bronze dagger",
+   "equip_model": "models/item-1205-equip.bin",
+   "labels": [
+    {
+     "label": 50,
+     "vertices": 21,
+     "centroid": [
+      -29,
+      -98.33333333333333,
+      -3.9523809523809526
+     ],
+     "min_y": -105,
+     "max_y": -93
+    }
+   ],
+   "params": {
+    "0": 4,
+    "1": 2,
+    "2": -4,
+    "3": 1,
+    "4": 0,
+    "5": 0,
+    "6": 0,
+    "7": 0,
+    "8": 1,
+    "9": 0,
+    "10": 3,
+    "11": 0,
+    "13": 0,
+    "14": 4
+   }
+  },
+  {
+   "item_id": 1265,
+   "name": "Bronze pickaxe",
+   "equip_model": "models/item-1265-equip.bin",
+   "labels": [
+    {
+     "label": 50,
+     "vertices": 38,
+     "centroid": [
+      -29,
+      -104.13157894736842,
+      -41.13157894736842
+     ],
+     "min_y": -139,
+     "max_y": -73
+    }
+   ],
+   "params": {
+    "0": 4,
+    "1": -2,
+    "2": 2,
+    "3": 0,
+    "4": 0,
+    "5": 0,
+    "6": 1,
+    "7": 0,
+    "23": 0,
+    "8": 0,
+    "9": 0,
+    "10": 5,
+    "11": 0,
+    "13": 0,
+    "14": 5
+   }
+  },
+  {
+   "item_id": 1173,
+   "name": "Bronze sq shield",
+   "equip_model": "models/item-1173-equip.bin",
+   "labels": [
+    {
+     "label": 28,
+     "vertices": 36,
+     "centroid": [
+      39.888888888888886,
+      -102.16666666666667,
+      3.2222222222222223
+     ],
+     "min_y": -140,
+     "max_y": -66
+    }
+   ],
+   "params": {
+    "0": 0,
+    "1": 0,
+    "2": 0,
+    "3": -6,
+    "4": 0,
+    "5": 5,
+    "6": 6,
+    "7": 4,
+    "8": 0,
+    "9": 5,
+    "11": 0
+   }
+  },
+  {
+   "item_id": 1171,
+   "name": "Wooden shield",
+   "equip_model": "models/item-1171-equip.bin",
+   "labels": [
+    {
+     "label": 28,
+     "vertices": 42,
+     "centroid": [
+      35.357142857142854,
+      -102.23809523809524,
+      -0.38095238095238093
+     ],
+     "min_y": -138,
+     "max_y": -69
+    }
+   ],
+   "params": {
+    "0": 0,
+    "1": 0,
+    "2": 0,
+    "3": 0,
+    "4": 0,
+    "5": 4,
+    "6": 5,
+    "7": 3,
+    "8": 1,
+    "9": 4,
+    "11": 0
+   }
+  },
+  {
+   "item_id": 841,
+   "name": "Shortbow",
+   "equip_model": "models/item-841-equip.bin",
+   "labels": [
+    {
+     "label": 27,
+     "vertices": 26,
+     "centroid": [
+      -29,
+      -99.42307692307692,
+      1.9230769230769231
+     ],
+     "min_y": -127,
+     "max_y": -81
+    }
+   ],
+   "params": {
+    "4": 8,
+    "13": 7,
+    "14": 4,
+    "23": 1
+   }
+  },
+  {
+   "item_id": 1237,
+   "name": "Bronze spear (Members)",
+   "equip_model": "models/item-1237-equip.bin",
+   "labels": [
+    {
+     "label": 27,
+     "vertices": 21,
+     "centroid": [
+      -30,
+      -110.28571428571429,
+      -23.714285714285715
+     ],
+     "min_y": -160,
+     "max_y": -44
+    }
+   ],
+   "params": {}
+  },
+  {
+   "item_id": 1277,
+   "name": "Bronze sword",
+   "equip_model": "models/item-1277-equip.bin",
+   "labels": [
+    {
+     "label": 50,
+     "vertices": 25,
+     "centroid": [
+      -30,
+      -98.92,
+      -12.84
+     ],
+     "min_y": -106,
+     "max_y": -92
+    }
+   ],
+   "params": {
+    "0": 4,
+    "1": 3,
+    "2": -2,
+    "3": 0,
+    "4": 0,
+    "5": 0,
+    "6": 2,
+    "7": 1,
+    "8": 0,
+    "9": 0,
+    "10": 5,
+    "11": 0,
+    "13": 0,
+    "14": 4
+   }
+  }
+ ],
+ "player_reference": {
+  "model": "models/player-default-male-body.bin",
+  "kits": [
+   {
+    "kit": 0,
+    "body_part": 0
+   },
+   {
+    "kit": 10,
+    "body_part": 1
+   },
+   {
+    "kit": 18,
+    "body_part": 2
+   },
+   {
+    "kit": 26,
+    "body_part": 3
+   },
+   {
+    "kit": 33,
+    "body_part": 4
+   },
+   {
+    "kit": 36,
+    "body_part": 5
+   },
+   {
+    "kit": 42,
+    "body_part": 6
+   }
+  ],
+  "labels": [
+   {
+    "label": 0,
+    "vertices": 3,
+    "centroid": [
+     0,
+     6,
+     0.6666666666666666
+    ],
+    "min_y": 6,
+    "max_y": 6
+   },
+   {
+    "label": 1,
+    "vertices": 67,
+    "centroid": [
+     0,
+     -182.044776119403,
+     -11.761194029850746
+    ],
+    "min_y": -196,
+    "max_y": -167
+   },
+   {
+    "label": 2,
+    "vertices": 4,
+    "centroid": [
+     0,
+     -164.5,
+     -2
+    ],
+    "min_y": -165,
+    "max_y": -164
+   },
+   {
+    "label": 3,
+    "vertices": 4,
+    "centroid": [
+     0,
+     -171,
+     -3.5
+    ],
+    "min_y": -173,
+    "max_y": -169
+   },
+   {
+    "label": 4,
+    "vertices": 6,
+    "centroid": [
+     0,
+     -120,
+     -3.6666666666666665
+    ],
+    "min_y": -123,
+    "max_y": -114
+   },
+   {
+    "label": 5,
+    "vertices": 2,
+    "centroid": [
+     0,
+     -114,
+     8
+    ],
+    "min_y": -114,
+    "max_y": -114
+   },
+   {
+    "label": 8,
+    "vertices": 26,
+    "centroid": [
+     0,
+     -138.76923076923077,
+     -0.5384615384615384
+    ],
+    "min_y": -163,
+    "max_y": -114
+   },
+   {
+    "label": 17,
+    "vertices": 4,
+    "centroid": [
+     -27,
+     -131,
+     0.5
+    ],
+    "min_y": -132,
+    "max_y": -130
+   },
+   {
+    "label": 19,
+    "vertices": 12,
+    "centroid": [
+     -28.833333333333332,
+     -113.83333333333333,
+     0.8333333333333334
+    ],
+    "min_y": -125,
+    "max_y": -103
+   },
+   {
+    "label": 20,
+    "vertices": 4,
+    "centroid": [
+     -25.5,
+     -145.5,
+     0
+    ],
+    "min_y": -146,
+    "max_y": -145
+   },
+   {
+    "label": 21,
+    "vertices": 8,
+    "centroid": [
+     -23.5,
+     -152.75,
+     -0.25
+    ],
+    "min_y": -163,
+    "max_y": -144
+   },
+   {
+    "label": 22,
+    "vertices": 12,
+    "centroid": [
+     28.833333333333332,
+     -113.83333333333333,
+     0.8333333333333334
+    ],
+    "min_y": -125,
+    "max_y": -103
+   },
+   {
+    "label": 23,
+    "vertices": 4,
+    "centroid": [
+     27,
+     -131,
+     0.5
+    ],
+    "min_y": -132,
+    "max_y": -130
+   },
+   {
+    "label": 25,
+    "vertices": 8,
+    "centroid": [
+     23.5,
+     -152.75,
+     -0.25
+    ],
+    "min_y": -163,
+    "max_y": -144
+   },
+   {
+    "label": 26,
+    "vertices": 4,
+    "centroid": [
+     25.5,
+     -145.5,
+     0
+    ],
+    "min_y": -146,
+    "max_y": -145
+   },
+   {
+    "label": 27,
+    "vertices": 12,
+    "centroid": [
+     -30.833333333333332,
+     -96.33333333333333,
+     0.6666666666666666
+    ],
+    "min_y": -102,
+    "max_y": -91
+   },
+   {
+    "label": 28,
+    "vertices": 12,
+    "centroid": [
+     30.833333333333332,
+     -96.33333333333333,
+     0.6666666666666666
+    ],
+    "min_y": -102,
+    "max_y": -91
+   },
+   {
+    "label": 29,
+    "vertices": 4,
+    "centroid": [
+     0,
+     -110,
+     0
+    ],
+    "min_y": -110,
+    "max_y": -110
+   },
+   {
+    "label": 30,
+    "vertices": 2,
+    "centroid": [
+     0,
+     -114,
+     -8
+    ],
+    "min_y": -114,
+    "max_y": -114
+   },
+   {
+    "label": 31,
+    "vertices": 4,
+    "centroid": [
+     -9,
+     -47,
+     0
+    ],
+    "min_y": -48,
+    "max_y": -46
+   },
+   {
+    "label": 32,
+    "vertices": 10,
+    "centroid": [
+     -9.5,
+     -10,
+     2.2
+    ],
+    "min_y": -19,
+    "max_y": 1
+   },
+   {
+    "label": 34,
+    "vertices": 4,
+    "centroid": [
+     -9,
+     -59.5,
+     -1
+    ],
+    "min_y": -61,
+    "max_y": -58
+   },
+   {
+    "label": 35,
+    "vertices": 4,
+    "centroid": [
+     9,
+     -59.5,
+     -1
+    ],
+    "min_y": -61,
+    "max_y": -58
+   },
+   {
+    "label": 37,
+    "vertices": 4,
+    "centroid": [
+     9,
+     -47,
+     0
+    ],
+    "min_y": -48,
+    "max_y": -46
+   },
+   {
+    "label": 38,
+    "vertices": 10,
+    "centroid": [
+     9.5,
+     -10,
+     2.2
+    ],
+    "min_y": -19,
+    "max_y": 1
+   },
+   {
+    "label": 39,
+    "vertices": 2,
+    "centroid": [
+     0,
+     -94,
+     0
+    ],
+    "min_y": -97,
+    "max_y": -91
+   },
+   {
+    "label": 40,
+    "vertices": 2,
+    "centroid": [
+     17,
+     -94,
+     0
+    ],
+    "min_y": -97,
+    "max_y": -91
+   },
+   {
+    "label": 41,
+    "vertices": 2,
+    "centroid": [
+     0,
+     -98,
+     12
+    ],
+    "min_y": -98,
+    "max_y": -98
+   },
+   {
+    "label": 42,
+    "vertices": 2,
+    "centroid": [
+     -17,
+     -94,
+     0.5
+    ],
+    "min_y": -97,
+    "max_y": -91
+   },
+   {
+    "label": 45,
+    "vertices": 4,
+    "centroid": [
+     -9.5,
+     3.5,
+     -17
+    ],
+    "min_y": 1,
+    "max_y": 6
+   },
+   {
+    "label": 46,
+    "vertices": 4,
+    "centroid": [
+     9.5,
+     3.5,
+     -17
+    ],
+    "min_y": 1,
+    "max_y": 6
+   },
+   {
+    "label": 47,
+    "vertices": 4,
+    "centroid": [
+     9.75,
+     2,
+     1
+    ],
+    "min_y": -2,
+    "max_y": 6
+   },
+   {
+    "label": 48,
+    "vertices": 4,
+    "centroid": [
+     -9.75,
+     2,
+     1
+    ],
+    "min_y": -2,
+    "max_y": 6
+   }
+  ],
+  "classification": "Human reference for penguin label retargeting; the drawn player body is NPC 2063 model 21547 at 75/128"
+ },
+ "sequences": [
+  {
+   "sequence_id": 386,
+   "file": "anim/seq-386.bin",
+   "sha256": "ff7b945f78015de01a944415102cb9a12ac2a4472dd3005b5978c3c1b1b5cf05",
+   "frame_count": 6,
+   "frame_lengths_client_cycles": [
+    4,
+    4,
+    6,
+    3,
+    18,
+    4
+   ],
+   "frame_step": -1,
+   "max_loops": 99,
+   "left_hand_item": -1,
+   "right_hand_item": -1,
+   "priority": 2,
+   "skeletons": 1
+  },
+  {
+   "sequence_id": 390,
+   "file": "anim/seq-390.bin",
+   "sha256": "adb17da8c4730cecfc1d7f6dcca5ff49acfde09baad354a432c89fc53b939b84",
+   "frame_count": 10,
+   "frame_lengths_client_cycles": [
+    4,
+    4,
+    4,
+    4,
+    8,
+    2,
+    1,
+    1,
+    8,
+    3
+   ],
+   "frame_step": -1,
+   "max_loops": 99,
+   "left_hand_item": -1,
+   "right_hand_item": -1,
+   "priority": 2,
+   "skeletons": 1
+  },
+  {
+   "sequence_id": 422,
+   "file": "anim/seq-422.bin",
+   "sha256": "0ac344c93e61d078d441eb52ab1d131993ba1ba3bcea2ed16a8d020bbf8dd956",
+   "frame_count": 5,
+   "frame_lengths_client_cycles": [
+    6,
+    6,
+    10,
+    10,
+    6
+   ],
+   "frame_step": -1,
+   "max_loops": 99,
+   "left_hand_item": -1,
+   "right_hand_item": -1,
+   "priority": 2,
+   "skeletons": 1
+  },
+  {
+   "sequence_id": 423,
+   "file": "anim/seq-423.bin",
+   "sha256": "3fede8129acfde18865365cd95e7be27a72af0a1f5369bae728cc20566c16a9e",
+   "frame_count": 5,
+   "frame_lengths_client_cycles": [
+    6,
+    6,
+    10,
+    3,
+    10
+   ],
+   "frame_step": -1,
+   "max_loops": 99,
+   "left_hand_item": -1,
+   "right_hand_item": -1,
+   "priority": 2,
+   "skeletons": 1
+  },
+  {
+   "sequence_id": 426,
+   "file": "anim/seq-426.bin",
+   "sha256": "8306d98f8dfabed0c70fe11616efa97a3359260d1ec80202b0b957ef94c6642b",
+   "frame_count": 10,
+   "frame_lengths_client_cycles": [
+    4,
+    4,
+    4,
+    4,
+    15,
+    10,
+    5,
+    4,
+    4,
+    4
+   ],
+   "frame_step": -1,
+   "max_loops": 99,
+   "left_hand_item": -1,
+   "right_hand_item": -1,
+   "priority": 2,
+   "skeletons": 1
+  },
+  {
+   "sequence_id": 621,
+   "file": "anim/seq-621.bin",
+   "sha256": "8bd8426e3fa03f14fa7a6c40c42c7ee9989ff6ce68cea418f3cde1f57b71b744",
+   "frame_count": 44,
+   "frame_lengths_client_cycles": [
+    4,
+    4,
+    4,
+    4,
+    4,
+    4,
+    4,
+    4,
+    4,
+    4,
+    4,
+    4,
+    4,
+    4,
+    4,
+    4,
+    4,
+    4,
+    4,
+    4,
+    4,
+    4,
+    4,
+    4,
+    4,
+    4,
+    4,
+    4,
+    4,
+    4,
+    4,
+    4,
+    4,
+    4,
+    4,
+    4,
+    4,
+    4,
+    4,
+    4,
+    4,
+    4,
+    4,
+    4
+   ],
+   "frame_step": 44,
+   "max_loops": 3,
+   "left_hand_item": 815,
+   "right_hand_item": 815,
+   "priority": 1,
+   "skeletons": 1
+  },
+  {
+   "sequence_id": 625,
+   "file": "anim/seq-625.bin",
+   "sha256": "f6ddb9badfcdeeab11fbc3c973153075986623927bf723ec19a9ad3dc62ca2b9",
+   "frame_count": 12,
+   "frame_lengths_client_cycles": [
+    5,
+    3,
+    3,
+    3,
+    3,
+    3,
+    3,
+    3,
+    16,
+    3,
+    5,
+    5
+   ],
+   "frame_step": 8,
+   "max_loops": 8,
+   "left_hand_item": 1777,
+   "right_hand_item": 1777,
+   "priority": 1,
+   "skeletons": 1
+  },
+  {
+   "sequence_id": 711,
+   "file": "anim/seq-711.bin",
+   "sha256": "6026e342c628fcd8d8f5adacba051d350b03a12db028bf0845f77a70bb04f03e",
+   "frame_count": 12,
+   "frame_lengths_client_cycles": [
+    4,
+    4,
+    4,
+    4,
+    4,
+    4,
+    6,
+    6,
+    15,
+    15,
+    4,
+    4
+   ],
+   "frame_step": -1,
+   "max_loops": 99,
+   "left_hand_item": 0,
+   "right_hand_item": 0,
+   "priority": 0,
+   "skeletons": 1
+  },
+  {
+   "sequence_id": 733,
+   "file": "anim/seq-733.bin",
+   "sha256": "2e1c70269bc25ebca735bc08e9eac4c235db6410b2e2296ac79e4da2f5e70cac",
+   "frame_count": 16,
+   "frame_lengths_client_cycles": [
+    8,
+    4,
+    4,
+    4,
+    4,
+    3,
+    3,
+    15,
+    10,
+    15,
+    10,
+    30,
+    4,
+    4,
+    30,
+    4
+   ],
+   "frame_step": 9,
+   "max_loops": 3,
+   "left_hand_item": 0,
+   "right_hand_item": 1102,
+   "priority": 1,
+   "skeletons": 1
+  },
+  {
+   "sequence_id": 808,
+   "file": "anim/seq-808.bin",
+   "sha256": "d3c1c6b96937f4632ae172c690eb529af1ea499663ceda86bc2758ab36d1f996",
+   "frame_count": 12,
+   "frame_lengths_client_cycles": [
+    21,
+    21,
+    21,
+    21,
+    21,
+    21,
+    21,
+    21,
+    21,
+    21,
+    21,
+    21
+   ],
+   "frame_step": -1,
+   "max_loops": 99,
+   "left_hand_item": -1,
+   "right_hand_item": -1,
+   "priority": 0,
+   "skeletons": 1
+  },
+  {
+   "sequence_id": 813,
+   "file": "anim/seq-813.bin",
+   "sha256": "284d3216685ef97649c21d9fde419cd11b6ac5c3d09fda4f701f716898bb7601",
+   "frame_count": 12,
+   "frame_lengths_client_cycles": [
+    21,
+    21,
+    21,
+    21,
+    21,
+    21,
+    21,
+    21,
+    21,
+    21,
+    21,
+    21
+   ],
+   "frame_step": -1,
+   "max_loops": 99,
+   "left_hand_item": -1,
+   "right_hand_item": -1,
+   "priority": 0,
+   "skeletons": 1
+  },
+  {
+   "sequence_id": 819,
+   "file": "anim/seq-819.bin",
+   "sha256": "9f3bee729e89b26a936dc3a6bc2ee03dcae214e5bdb6ea818dcd135bf1c6438e",
+   "frame_count": 8,
+   "frame_lengths_client_cycles": [
+    6,
+    6,
+    6,
+    6,
+    6,
+    6,
+    6,
+    6
+   ],
+   "frame_step": -1,
+   "max_loops": 99,
+   "left_hand_item": -1,
+   "right_hand_item": -1,
+   "priority": 0,
+   "skeletons": 1
+  },
+  {
+   "sequence_id": 820,
+   "file": "anim/seq-820.bin",
+   "sha256": "82c34cde7c90e3e6c2c8945c832271db87e78409bbc2d1aafb0f542e78bc7150",
+   "frame_count": 8,
+   "frame_lengths_client_cycles": [
+    6,
+    6,
+    6,
+    6,
+    6,
+    6,
+    6,
+    6
+   ],
+   "frame_step": -1,
+   "max_loops": 99,
+   "left_hand_item": -1,
+   "right_hand_item": -1,
+   "priority": 0,
+   "skeletons": 1
+  },
+  {
+   "sequence_id": 821,
+   "file": "anim/seq-821.bin",
+   "sha256": "dc3883513861fa5ac0511fa4c531799e2a08f75d850aecc13c6dc05deef4e4d4",
+   "frame_count": 4,
+   "frame_lengths_client_cycles": [
+    6,
+    6,
+    6,
+    6
+   ],
+   "frame_step": -1,
+   "max_loops": 99,
+   "left_hand_item": -1,
+   "right_hand_item": -1,
+   "priority": 0,
+   "skeletons": 1
+  },
+  {
+   "sequence_id": 822,
+   "file": "anim/seq-822.bin",
+   "sha256": "7b8abe420fbe020a881ff79111dc32ed5dea6cc30753d0d32cdeec03f89950f3",
+   "frame_count": 4,
+   "frame_lengths_client_cycles": [
+    6,
+    6,
+    6,
+    6
+   ],
+   "frame_step": -1,
+   "max_loops": 99,
+   "left_hand_item": -1,
+   "right_hand_item": -1,
+   "priority": 0,
+   "skeletons": 1
+  },
+  {
+   "sequence_id": 823,
+   "file": "anim/seq-823.bin",
+   "sha256": "fc8c4c58b3c7bd3e49ae7da08de6f60fcdca10df7c4a479c2fa3c723c5286b39",
+   "frame_count": 4,
+   "frame_lengths_client_cycles": [
+    11,
+    11,
+    11,
+    11
+   ],
+   "frame_step": -1,
+   "max_loops": 99,
+   "left_hand_item": -1,
+   "right_hand_item": -1,
+   "priority": 0,
+   "skeletons": 1
+  },
+  {
+   "sequence_id": 824,
+   "file": "anim/seq-824.bin",
+   "sha256": "c8ff89428ad2b398f458a1f24d4f848165f203b38c6e27a5781f92076a8a3645",
+   "frame_count": 8,
+   "frame_lengths_client_cycles": [
+    5,
+    4,
+    4,
+    4,
+    5,
+    4,
+    4,
+    4
+   ],
+   "frame_step": -1,
+   "max_loops": 99,
+   "left_hand_item": -1,
+   "right_hand_item": -1,
+   "priority": 0,
+   "skeletons": 1
+  },
+  {
+   "sequence_id": 827,
+   "file": "anim/seq-827.bin",
+   "sha256": "3bb6e106347a13f5b0aee264eb83b521b7f4b1f52e036c0e5151b2c89ec92196",
+   "frame_count": 10,
+   "frame_lengths_client_cycles": [
+    8,
+    8,
+    4,
+    4,
+    4,
+    10,
+    4,
+    4,
+    4,
+    8
+   ],
+   "frame_step": -1,
+   "max_loops": 99,
+   "left_hand_item": 0,
+   "right_hand_item": 0,
+   "priority": 2,
+   "skeletons": 1
+  },
+  {
+   "sequence_id": 829,
+   "file": "anim/seq-829.bin",
+   "sha256": "d21215e28cd710b82be0bb633e9c9905383132250b07b08b873591f8906ae7ee",
+   "frame_count": 10,
+   "frame_lengths_client_cycles": [
+    4,
+    3,
+    10,
+    3,
+    3,
+    3,
+    20,
+    3,
+    20,
+    4
+   ],
+   "frame_step": -1,
+   "max_loops": 99,
+   "left_hand_item": 0,
+   "right_hand_item": 0,
+   "priority": 2,
+   "skeletons": 1
+  },
+  {
+   "sequence_id": 836,
+   "file": "anim/seq-836.bin",
+   "sha256": "01cd7cdd717732b81cd9dfc9f4bd45f78de392c2dc5a3560f906a99864c0a6ec",
+   "frame_count": 10,
+   "frame_lengths_client_cycles": [
+    8,
+    4,
+    4,
+    4,
+    14,
+    4,
+    3,
+    3,
+    3,
+    20000
+   ],
+   "frame_step": -1,
+   "max_loops": 99,
+   "left_hand_item": 0,
+   "right_hand_item": 0,
+   "priority": 0,
+   "skeletons": 1
+  },
+  {
+   "sequence_id": 879,
+   "file": "anim/seq-879.bin",
+   "sha256": "6088805652f8aee7c83b7683f97959bf7583a46ccaa53a04bff48cfc12c306ff",
+   "frame_count": 6,
+   "frame_lengths_client_cycles": [
+    4,
+    4,
+    10,
+    12,
+    6,
+    4
+   ],
+   "frame_step": 6,
+   "max_loops": 4,
+   "left_hand_item": 1863,
+   "right_hand_item": 0,
+   "priority": 1,
+   "skeletons": 1
+  },
+  {
+   "sequence_id": 896,
+   "file": "anim/seq-896.bin",
+   "sha256": "02cb2183d097f500029a4222801c3625ad9bf3298810f16f58155a0fea6f9755",
+   "frame_count": 31,
+   "frame_lengths_client_cycles": [
+    4,
+    4,
+    4,
+    4,
+    6,
+    6,
+    4,
+    4,
+    4,
+    4,
+    4,
+    4,
+    4,
+    4,
+    4,
+    4,
+    4,
+    4,
+    4,
+    4,
+    4,
+    4,
+    4,
+    4,
+    4,
+    6,
+    6,
+    4,
+    4,
+    4,
+    4
+   ],
+   "frame_step": -1,
+   "max_loops": 99,
+   "left_hand_item": 0,
+   "right_hand_item": 0,
+   "priority": 1,
+   "skeletons": 1
+  },
+  {
+   "sequence_id": 897,
+   "file": "anim/seq-897.bin",
+   "sha256": "e2623a8507c5843d1681f2e4951f8eec65d9699b766af2b85bd3bf8b095c7203",
+   "frame_count": 19,
+   "frame_lengths_client_cycles": [
+    4,
+    3,
+    2,
+    2,
+    4,
+    4,
+    4,
+    4,
+    4,
+    30,
+    4,
+    4,
+    4,
+    4,
+    4,
+    2,
+    2,
+    3,
+    4
+   ],
+   "frame_step": -1,
+   "max_loops": 99,
+   "left_hand_item": 0,
+   "right_hand_item": 0,
+   "priority": 1,
+   "skeletons": 1
+  },
+  {
+   "sequence_id": 898,
+   "file": "anim/seq-898.bin",
+   "sha256": "af65bbf2a877cf81eb009838416addc41a4e94f2766f2a1fe1a2d13352ae1aa3",
+   "frame_count": 17,
+   "frame_lengths_client_cycles": [
+    4,
+    4,
+    4,
+    4,
+    4,
+    15,
+    6,
+    15,
+    6,
+    15,
+    6,
+    15,
+    4,
+    4,
+    4,
+    4,
+    4
+   ],
+   "frame_step": -1,
+   "max_loops": 99,
+   "left_hand_item": 0,
+   "right_hand_item": 2859,
+   "priority": 1,
+   "skeletons": 1
+  },
+  {
+   "sequence_id": 899,
+   "file": "anim/seq-899.bin",
+   "sha256": "7592b30eca562b27e1f7d54616352cc1bdb05c7ada939e3d8ed8587f6545cf20",
+   "frame_count": 19,
+   "frame_lengths_client_cycles": [
+    4,
+    4,
+    4,
+    4,
+    4,
+    8,
+    8,
+    4,
+    4,
+    50,
+    4,
+    4,
+    8,
+    8,
+    4,
+    4,
+    4,
+    4,
+    4
+   ],
+   "frame_step": -1,
+   "max_loops": 99,
+   "left_hand_item": 0,
+   "right_hand_item": 0,
+   "priority": 1,
+   "skeletons": 1
+  },
+  {
+   "sequence_id": 1205,
+   "file": "anim/seq-1205.bin",
+   "sha256": "5c7f2a29de2c8b48d3e86620876e116ccec008a7fb160b58daea589acf4b427f",
+   "frame_count": 8,
+   "frame_lengths_client_cycles": [
+    6,
+    6,
+    6,
+    6,
+    6,
+    6,
+    6,
+    6
+   ],
+   "frame_step": -1,
+   "max_loops": 99,
+   "left_hand_item": -1,
+   "right_hand_item": -1,
+   "priority": 0,
+   "skeletons": 1
+  },
+  {
+   "sequence_id": 1206,
+   "file": "anim/seq-1206.bin",
+   "sha256": "f497e1cf0dcfec4e46f8da2f1469cf07888a8594806ff8b514e946b3d1fa7005",
+   "frame_count": 8,
+   "frame_lengths_client_cycles": [
+    6,
+    6,
+    6,
+    6,
+    6,
+    6,
+    6,
+    6
+   ],
+   "frame_step": -1,
+   "max_loops": 99,
+   "left_hand_item": -1,
+   "right_hand_item": -1,
+   "priority": 0,
+   "skeletons": 1
+  },
+  {
+   "sequence_id": 1207,
+   "file": "anim/seq-1207.bin",
+   "sha256": "9105c231d9b8b756800cb8e42240fe17c8ef26162dfdb27e17eb351c7feb7626",
+   "frame_count": 4,
+   "frame_lengths_client_cycles": [
+    6,
+    6,
+    6,
+    6
+   ],
+   "frame_step": -1,
+   "max_loops": 99,
+   "left_hand_item": -1,
+   "right_hand_item": -1,
+   "priority": 0,
+   "skeletons": 1
+  },
+  {
+   "sequence_id": 1208,
+   "file": "anim/seq-1208.bin",
+   "sha256": "bfc9a38686acbe1eb22836a1e02b9fe1602839f11f792d9f5e360e76e77e0ef4",
+   "frame_count": 4,
+   "frame_lengths_client_cycles": [
+    6,
+    6,
+    6,
+    6
+   ],
+   "frame_step": -1,
+   "max_loops": 99,
+   "left_hand_item": -1,
+   "right_hand_item": -1,
+   "priority": 0,
+   "skeletons": 1
+  },
+  {
+   "sequence_id": 3950,
+   "file": "anim/seq-3950.bin",
+   "sha256": "2dd3768d6a0964b440ac07915b8db32a0398e01941e1be39f5f362e9354f05d3",
+   "frame_count": 12,
+   "frame_lengths_client_cycles": [
+    21,
+    21,
+    21,
+    21,
+    21,
+    21,
+    21,
+    21,
+    21,
+    21,
+    21,
+    21
+   ],
+   "frame_step": -1,
+   "max_loops": 99,
+   "left_hand_item": -1,
+   "right_hand_item": -1,
+   "priority": 0,
+   "skeletons": 1
+  },
+  {
+   "sequence_id": 3997,
+   "file": "anim/seq-3997.bin",
+   "sha256": "896d3e48a8d3e5bc1fe24e96b7f3e6791b911ae9414d89c7c745d7be42657d34",
+   "frame_count": 8,
+   "frame_lengths_client_cycles": [
+    5,
+    5,
+    5,
+    5,
+    5,
+    5,
+    5,
+    5
+   ],
+   "frame_step": -1,
+   "max_loops": 99,
+   "left_hand_item": -1,
+   "right_hand_item": -1,
+   "priority": 0,
+   "skeletons": 1
+  },
+  {
+   "sequence_id": 4931,
+   "file": "anim/seq-4931.bin",
+   "sha256": "4e0bc16d44606dfc70e1459eaf945ca780c2c4ff5cc3e98c4cdb71228241972a",
+   "frame_count": 16,
+   "frame_lengths_client_cycles": [
+    1,
+    2,
+    1,
+    2,
+    2,
+    2,
+    1,
+    2,
+    2,
+    2,
+    1,
+    2,
+    2,
+    2,
+    1,
+    2
+   ],
+   "frame_step": 16,
+   "max_loops": 99,
+   "left_hand_item": -1,
+   "right_hand_item": -1,
+   "priority": 0,
+   "skeletons": 1
+  },
+  {
+   "sequence_id": 4932,
+   "file": "anim/seq-4932.bin",
+   "sha256": "276bfe675997fca399ea569c2e144bda8ca4a7139399a7fcf68ca4c73b286e3d",
+   "frame_count": 40,
+   "frame_lengths_client_cycles": [
+    5,
+    5,
+    5,
+    5,
+    5,
+    5,
+    5,
+    5,
+    5,
+    5,
+    5,
+    5,
+    5,
+    5,
+    5,
+    5,
+    5,
+    5,
+    5,
+    5,
+    5,
+    5,
+    5,
+    5,
+    5,
+    5,
+    5,
+    5,
+    5,
+    5,
+    5,
+    5,
+    5,
+    5,
+    5,
+    5,
+    5,
+    5,
+    5,
+    5
+   ],
+   "frame_step": 40,
+   "max_loops": 99,
+   "left_hand_item": -1,
+   "right_hand_item": -1,
+   "priority": 0,
+   "skeletons": 2
+  },
+  {
+   "sequence_id": 4933,
+   "file": "anim/seq-4933.bin",
+   "sha256": "259f063f4063b1f064a9b1974712ca3e4e83c189071efaefb655907c8dcd6d67",
+   "frame_count": 20,
+   "frame_lengths_client_cycles": [
+    3,
+    3,
+    3,
+    3,
+    3,
+    2,
+    2,
+    3,
+    3,
+    2,
+    2,
+    3,
+    3,
+    3,
+    3,
+    3,
+    3,
+    3,
+    2,
+    2
+   ],
+   "frame_step": -1,
+   "max_loops": 99,
+   "left_hand_item": -1,
+   "right_hand_item": -1,
+   "priority": 0,
+   "skeletons": 1
+  },
+  {
+   "sequence_id": 4934,
+   "file": "anim/seq-4934.bin",
+   "sha256": "19d92bf2b569c364de97a40eec08f4ff4da4afccdd6b9b725f4d867a971df9ff",
+   "frame_count": 16,
+   "frame_lengths_client_cycles": [
+    3,
+    3,
+    3,
+    3,
+    3,
+    3,
+    3,
+    3,
+    3,
+    3,
+    3,
+    3,
+    3,
+    3,
+    3,
+    3
+   ],
+   "frame_step": -1,
+   "max_loops": 99,
+   "left_hand_item": -1,
+   "right_hand_item": -1,
+   "priority": 0,
+   "skeletons": 1
+  },
+  {
+   "sequence_id": 4935,
+   "file": "anim/seq-4935.bin",
+   "sha256": "25692c78b0ad5364d9b9e73753daa74a55ff5e964badf5f5eca5270ee19c0d87",
+   "frame_count": 27,
+   "frame_lengths_client_cycles": [
+    5,
+    5,
+    5,
+    6,
+    6,
+    5,
+    5,
+    5,
+    5,
+    5,
+    5,
+    5,
+    5,
+    5,
+    5,
+    5,
+    5,
+    5,
+    6,
+    6,
+    6,
+    6,
+    6,
+    6,
+    6,
+    6,
+    200
+   ],
+   "frame_step": -1,
+   "max_loops": 99,
+   "left_hand_item": -1,
+   "right_hand_item": -1,
+   "priority": 0,
+   "skeletons": 1
+  },
+  {
+   "sequence_id": 5385,
+   "file": "anim/seq-5385.bin",
+   "sha256": "79f933309ae145755c673418b9e944f14189ef2fe8c46884fc39f52a2cb77ec5",
+   "frame_count": 10,
+   "frame_lengths_client_cycles": [
+    3,
+    3,
+    3,
+    3,
+    3,
+    3,
+    3,
+    3,
+    3,
+    3
+   ],
+   "frame_step": -1,
+   "max_loops": 99,
+   "left_hand_item": -1,
+   "right_hand_item": -1,
+   "priority": 0,
+   "skeletons": 1
+  },
+  {
+   "sequence_id": 5386,
+   "file": "anim/seq-5386.bin",
+   "sha256": "2bcfb862c1335b462f0ecb9c131419b78f2e445348e3f2e63a734e97150d8582",
+   "frame_count": 99,
+   "frame_lengths_client_cycles": [
+    4,
+    4,
+    4,
+    4,
+    4,
+    4,
+    4,
+    4,
+    4,
+    4,
+    4,
+    4,
+    4,
+    4,
+    4,
+    4,
+    4,
+    4,
+    4,
+    4,
+    4,
+    4,
+    4,
+    4,
+    4,
+    4,
+    4,
+    4,
+    4,
+    4,
+    4,
+    4,
+    4,
+    4,
+    4,
+    4,
+    4,
+    4,
+    4,
+    4,
+    4,
+    4,
+    4,
+    4,
+    4,
+    4,
+    4,
+    4,
+    4,
+    4,
+    4,
+    4,
+    4,
+    4,
+    4,
+    4,
+    4,
+    4,
+    4,
+    4,
+    4,
+    4,
+    4,
+    4,
+    4,
+    4,
+    4,
+    4,
+    4,
+    4,
+    4,
+    4,
+    4,
+    4,
+    4,
+    4,
+    4,
+    4,
+    4,
+    4,
+    4,
+    4,
+    4,
+    4,
+    4,
+    4,
+    4,
+    4,
+    4,
+    4,
+    4,
+    4,
+    4,
+    4,
+    4,
+    4,
+    4,
+    4,
+    4
+   ],
+   "frame_step": -1,
+   "max_loops": 99,
+   "left_hand_item": -1,
+   "right_hand_item": -1,
+   "priority": 0,
+   "skeletons": 2
+  },
+  {
+   "sequence_id": 5666,
+   "file": "anim/seq-5666.bin",
+   "sha256": "63bd1f1d215e74224f4f55776b0a5c6d715bb70bbbd207b22b5af75e0610a5a4",
+   "frame_count": 8,
+   "frame_lengths_client_cycles": [
+    3,
+    3,
+    3,
+    3,
+    3,
+    3,
+    3,
+    3
+   ],
+   "frame_step": -1,
+   "max_loops": 99,
+   "left_hand_item": -1,
+   "right_hand_item": -1,
+   "priority": 0,
+   "skeletons": 1
+  },
+  {
+   "sequence_id": 5668,
+   "file": "anim/seq-5668.bin",
+   "sha256": "6777ba31b0aba6ed0633c5ef20d98fd2c95aac786fbd5a88e01f81eee81592d4",
+   "frame_count": 14,
+   "frame_lengths_client_cycles": [
+    6,
+    6,
+    6,
+    6,
+    6,
+    6,
+    6,
+    6,
+    6,
+    6,
+    6,
+    6,
+    6,
+    6
+   ],
+   "frame_step": -1,
+   "max_loops": 99,
+   "left_hand_item": -1,
+   "right_hand_item": -1,
+   "priority": 0,
+   "skeletons": 1
+  },
+  {
+   "sequence_id": 6180,
+   "file": "anim/seq-6180.bin",
+   "sha256": "f1e8d031f84bd7171e5ae90f5b49f6f8dd8b3800416025f9c41084c902367384",
+   "frame_count": 16,
+   "frame_lengths_client_cycles": [
+    3,
+    3,
+    3,
+    3,
+    3,
+    3,
+    3,
+    3,
+    3,
+    3,
+    3,
+    3,
+    3,
+    3,
+    3,
+    3
+   ],
+   "frame_step": -1,
+   "max_loops": 99,
+   "left_hand_item": -1,
+   "right_hand_item": -1,
+   "priority": 0,
+   "skeletons": 1
+  },
+  {
+   "sequence_id": 6181,
+   "file": "anim/seq-6181.bin",
+   "sha256": "25d8c82285c1e07e6eec6bacf61141e0c2bfd762d00b192ef2eba0b6e70bbb1f",
+   "frame_count": 16,
+   "frame_lengths_client_cycles": [
+    3,
+    4,
+    4,
+    4,
+    4,
+    4,
+    4,
+    4,
+    4,
+    4,
+    4,
+    4,
+    4,
+    4,
+    4,
+    4
+   ],
+   "frame_step": -1,
+   "max_loops": 99,
+   "left_hand_item": -1,
+   "right_hand_item": -1,
+   "priority": 0,
+   "skeletons": 1
+  },
+  {
+   "sequence_id": 6182,
+   "file": "anim/seq-6182.bin",
+   "sha256": "3c0f92059f1296cfcb2e7107bd599a257a992f076d5ecae9351df82bb52cb03a",
+   "frame_count": 31,
+   "frame_lengths_client_cycles": [
+    3,
+    3,
+    3,
+    3,
+    3,
+    3,
+    3,
+    3,
+    3,
+    3,
+    3,
+    3,
+    3,
+    3,
+    3,
+    3,
+    3,
+    3,
+    3,
+    3,
+    3,
+    3,
+    3,
+    3,
+    3,
+    3,
+    3,
+    3,
+    3,
+    3,
+    300
+   ],
+   "frame_step": -1,
+   "max_loops": 99,
+   "left_hand_item": -1,
+   "right_hand_item": -1,
+   "priority": 0,
+   "skeletons": 1
+  },
+  {
+   "sequence_id": 6183,
+   "file": "anim/seq-6183.bin",
+   "sha256": "74dbc9414d96136bcf9779a44719f288da83191953c034bed2209f1789d75ab9",
+   "frame_count": 19,
+   "frame_lengths_client_cycles": [
+    5,
+    5,
+    5,
+    5,
+    5,
+    5,
+    5,
+    5,
+    5,
+    5,
+    5,
+    5,
+    5,
+    5,
+    5,
+    5,
+    5,
+    5,
+    5
+   ],
+   "frame_step": -1,
+   "max_loops": 99,
+   "left_hand_item": -1,
+   "right_hand_item": -1,
+   "priority": 2,
+   "skeletons": 1
+  },
+  {
+   "sequence_id": 6184,
+   "file": "anim/seq-6184.bin",
+   "sha256": "56757fa032842173b68aefd4bc1d9b5bb3e7cda85b11d8288ca50b14570c43b8",
+   "frame_count": 18,
+   "frame_lengths_client_cycles": [
+    3,
+    3,
+    3,
+    3,
+    3,
+    3,
+    3,
+    3,
+    3,
+    3,
+    3,
+    3,
+    3,
+    3,
+    3,
+    3,
+    3,
+    3
+   ],
+   "frame_step": -1,
+   "max_loops": 99,
+   "left_hand_item": -1,
+   "right_hand_item": -1,
+   "priority": 2,
+   "skeletons": 1
+  },
+  {
+   "sequence_id": 6185,
+   "file": "anim/seq-6185.bin",
+   "sha256": "d90cb7d8321e0b54a361902eca3d2df4629503f8c1b173da60a69a399793fd29",
+   "frame_count": 12,
+   "frame_lengths_client_cycles": [
+    3,
+    3,
+    3,
+    3,
+    3,
+    3,
+    3,
+    3,
+    3,
+    3,
+    3,
+    3
+   ],
+   "frame_step": -1,
+   "max_loops": 99,
+   "left_hand_item": -1,
+   "right_hand_item": -1,
+   "priority": 2,
+   "skeletons": 1
+  },
+  {
+   "sequence_id": 7634,
+   "file": "anim/seq-7634.bin",
+   "sha256": "87941cb25739c004e754ddcf1380b89401427cbcddc49a3149ef135eb32ce84e",
+   "frame_count": 8,
+   "frame_lengths_client_cycles": [
+    5,
+    5,
+    5,
+    5,
+    5,
+    5,
+    5,
+    5
+   ],
+   "frame_step": -1,
+   "max_loops": 99,
+   "left_hand_item": -1,
+   "right_hand_item": -1,
+   "priority": 0,
+   "skeletons": 1
+  },
+  {
+   "sequence_id": 8748,
+   "file": "anim/seq-8748.bin",
+   "sha256": "48d168e4d1751a032e7634a849f727a7b914a35a97ad7142444c6934ce8253c1",
+   "frame_count": 64,
+   "frame_lengths_client_cycles": [
+    5,
+    5,
+    5,
+    5,
+    5,
+    5,
+    5,
+    5,
+    5,
+    5,
+    5,
+    5,
+    5,
+    5,
+    5,
+    5,
+    5,
+    5,
+    5,
+    5,
+    5,
+    5,
+    5,
+    5,
+    5,
+    5,
+    5,
+    5,
+    5,
+    5,
+    5,
+    5,
+    5,
+    5,
+    5,
+    5,
+    5,
+    5,
+    5,
+    5,
+    5,
+    5,
+    5,
+    5,
+    5,
+    5,
+    5,
+    5,
+    5,
+    5,
+    5,
+    5,
+    5,
+    5,
+    5,
+    5,
+    5,
+    5,
+    5,
+    5,
+    5,
+    5,
+    5,
+    5
+   ],
+   "frame_step": -1,
+   "max_loops": 99,
+   "left_hand_item": -1,
+   "right_hand_item": -1,
+   "priority": 0,
+   "skeletons": 1
+  },
+  {
+   "sequence_id": 12526,
+   "file": "anim/seq-12526.bin",
+   "sha256": "a15cd4d7c9b0dd36d6ec67bce50970c9875015953c2ac707bbf787654ae82e37",
+   "frame_count": 10,
+   "frame_lengths_client_cycles": [
+    4,
+    3,
+    10,
+    3,
+    3,
+    3,
+    20,
+    3,
+    20,
+    4
+   ],
+   "frame_step": -1,
+   "max_loops": 99,
+   "left_hand_item": 0,
+   "right_hand_item": 0,
+   "priority": 2,
+   "skeletons": 1
+  }
+ ],
  "files": {
   "tables.bin": {
    "sha256": "954c4395b0b236169129950ce3c98cfdaa662de33b7ad67e7270757fc7c247c6",
@@ -7141,6 +9844,2605 @@
     "decompressed": "blocks/13365.models.bin",
     "decompressed_sha256": "235f455ab06357e86ec02a9ab9713eb7aff207e7a38524522598657aef426e79",
     "decompressed_size_bytes": 1919837
+   }
+  },
+  "models/npc-306-base.bin": {
+   "sha256": "0a4651625b97e1f70f92d2a5b3fdc40862dbcaa8836172952552172ae177aac1",
+   "size_bytes": 35575,
+   "detail": {
+    "vertices": 541,
+    "faces": 849,
+    "textured_faces": 0,
+    "detail": {
+     "npc_id": 306,
+     "models": [
+      214,
+      250,
+      5674,
+      5668,
+      5672,
+      7127,
+      7123
+     ],
+     "ambient_plus_64": 64,
+     "contrast_plus_850": 850,
+     "light_direction": [
+      -30,
+      -50,
+      -30
+     ],
+     "width_scale": 128,
+     "height_scale": 128,
+     "note": "Lit before animation and before source scale; scale applies after animation as in pl.ag"
+    }
+   }
+  },
+  "models/npc-311-base.bin": {
+   "sha256": "bb99185feaa9dae6b1caf0d78bb4cf75647048f50028b0f4005afd9196a66a5d",
+   "size_bytes": 32384,
+   "detail": {
+    "vertices": 427,
+    "faces": 830,
+    "textured_faces": 0,
+    "detail": {
+     "npc_id": 311,
+     "models": [
+      235,
+      246,
+      2444,
+      558,
+      13307,
+      557,
+      4954
+     ],
+     "ambient_plus_64": 64,
+     "contrast_plus_850": 850,
+     "light_direction": [
+      -30,
+      -50,
+      -30
+     ],
+     "width_scale": 128,
+     "height_scale": 128,
+     "note": "Lit before animation and before source scale; scale applies after animation as in pl.ag"
+    }
+   }
+  },
+  "models/npc-732-base.bin": {
+   "sha256": "55b2c3b0edb5b1cc860b502345a0b48ac32f60f5809ae665dc80d43a1bea0758",
+   "size_bytes": 28996,
+   "detail": {
+    "vertices": 414,
+    "faces": 660,
+    "textured_faces": 10,
+    "detail": {
+     "npc_id": 732,
+     "models": [
+      4843,
+      217,
+      246,
+      10705,
+      27139,
+      10218,
+      28285,
+      185,
+      13947
+     ],
+     "ambient_plus_64": 64,
+     "contrast_plus_850": 850,
+     "light_direction": [
+      -30,
+      -50,
+      -30
+     ],
+     "width_scale": 128,
+     "height_scale": 128,
+     "note": "Lit before animation and before source scale; scale applies after animation as in pl.ag"
+    }
+   }
+  },
+  "models/npc-2804-base.bin": {
+   "sha256": "cc6afb542d7a781e5e49183da82ea8f68f8defd8bbfbe59fa25e4047966f4477",
+   "size_bytes": 15148,
+   "detail": {
+    "vertices": 203,
+    "faces": 410,
+    "textured_faces": 0,
+    "detail": {
+     "npc_id": 2804,
+     "models": [
+      23905
+     ],
+     "ambient_plus_64": 79,
+     "contrast_plus_850": 850,
+     "light_direction": [
+      -30,
+      -50,
+      -30
+     ],
+     "width_scale": 85,
+     "height_scale": 85,
+     "note": "Lit before animation and before source scale; scale applies after animation as in pl.ag"
+    }
+   }
+  },
+  "models/npc-2813-base.bin": {
+   "sha256": "1a53365b62ab54894825bc43f7828593e495d9d4154da9962f399dd8384cb05f",
+   "size_bytes": 20616,
+   "detail": {
+    "vertices": 271,
+    "faces": 526,
+    "textured_faces": 0,
+    "detail": {
+     "npc_id": 2813,
+     "models": [
+      215,
+      28285,
+      246,
+      305,
+      26632,
+      176,
+      181
+     ],
+     "ambient_plus_64": 64,
+     "contrast_plus_850": 850,
+     "light_direction": [
+      -30,
+      -50,
+      -30
+     ],
+     "width_scale": 128,
+     "height_scale": 128,
+     "note": "Lit before animation and before source scale; scale applies after animation as in pl.ag"
+    }
+   }
+  },
+  "models/npc-2814-base.bin": {
+   "sha256": "6ee8b31c303c5c91e68d49250504140f98c48a24e36a7348fe9af131f93d35f5",
+   "size_bytes": 20616,
+   "detail": {
+    "vertices": 271,
+    "faces": 526,
+    "textured_faces": 0,
+    "detail": {
+     "npc_id": 2814,
+     "models": [
+      235,
+      28285,
+      246,
+      305,
+      26632,
+      176,
+      181
+     ],
+     "ambient_plus_64": 64,
+     "contrast_plus_850": 850,
+     "light_direction": [
+      -30,
+      -50,
+      -30
+     ],
+     "width_scale": 128,
+     "height_scale": 128,
+     "note": "Lit before animation and before source scale; scale applies after animation as in pl.ag"
+    }
+   }
+  },
+  "models/npc-3305-base.bin": {
+   "sha256": "700996fd8d8193c98d394292167d6d2ffda2b921d93a2c88f76ce0c4891b15a2",
+   "size_bytes": 25432,
+   "detail": {
+    "vertices": 348,
+    "faces": 668,
+    "textured_faces": 0,
+    "detail": {
+     "npc_id": 3305,
+     "models": [
+      235,
+      250,
+      302,
+      159,
+      176,
+      263,
+      185,
+      244,
+      199,
+      536
+     ],
+     "ambient_plus_64": 64,
+     "contrast_plus_850": 850,
+     "light_direction": [
+      -30,
+      -50,
+      -30
+     ],
+     "width_scale": 128,
+     "height_scale": 128,
+     "note": "Lit before animation and before source scale; scale applies after animation as in pl.ag"
+    }
+   }
+  },
+  "models/npc-3307-base.bin": {
+   "sha256": "f950fbba3113686998d0c0da6df193db04f495e3ae784f7b75e8472de650655b",
+   "size_bytes": 40995,
+   "detail": {
+    "vertices": 660,
+    "faces": 1027,
+    "textured_faces": 0,
+    "detail": {
+     "npc_id": 3307,
+     "models": [
+      231,
+      252,
+      315,
+      165,
+      565,
+      268,
+      185,
+      546,
+      328,
+      290,
+      201
+     ],
+     "ambient_plus_64": 64,
+     "contrast_plus_850": 850,
+     "light_direction": [
+      -30,
+      -50,
+      -30
+     ],
+     "width_scale": 128,
+     "height_scale": 128,
+     "note": "Lit before animation and before source scale; scale applies after animation as in pl.ag"
+    }
+   }
+  },
+  "models/npc-3308-base.bin": {
+   "sha256": "b16fd880ce264205290c63973e79421902bacc6db69d002ddd8fb170a865e2fd",
+   "size_bytes": 26552,
+   "detail": {
+    "vertices": 389,
+    "faces": 684,
+    "textured_faces": 0,
+    "detail": {
+     "npc_id": 3308,
+     "models": [
+      230,
+      249,
+      313,
+      157,
+      198,
+      27639,
+      185,
+      176,
+      3330
+     ],
+     "ambient_plus_64": 64,
+     "contrast_plus_850": 850,
+     "light_direction": [
+      -30,
+      -50,
+      -30
+     ],
+     "width_scale": 128,
+     "height_scale": 128,
+     "note": "Lit before animation and before source scale; scale applies after animation as in pl.ag"
+    }
+   }
+  },
+  "models/npc-3309-base.bin": {
+   "sha256": "11ca06fd95781727b12ad2e11909b6aa2aef8947e9b2c7f2b6cf62daf43404da",
+   "size_bytes": 30086,
+   "detail": {
+    "vertices": 435,
+    "faces": 749,
+    "textured_faces": 0,
+    "detail": {
+     "npc_id": 3309,
+     "models": [
+      214,
+      250,
+      295,
+      26630,
+      567,
+      265,
+      185,
+      534,
+      202,
+      176
+     ],
+     "ambient_plus_64": 64,
+     "contrast_plus_850": 850,
+     "light_direction": [
+      -30,
+      -50,
+      -30
+     ],
+     "width_scale": 128,
+     "height_scale": 128,
+     "note": "Lit before animation and before source scale; scale applies after animation as in pl.ag"
+    }
+   }
+  },
+  "models/npc-3310-base.bin": {
+   "sha256": "a26d37ad616eef396014571460fddc02feed3f0a5295ec3d153083eb7ae3ae87",
+   "size_bytes": 20309,
+   "detail": {
+    "vertices": 287,
+    "faces": 525,
+    "textured_faces": 0,
+    "detail": {
+     "npc_id": 3310,
+     "models": [
+      215,
+      247,
+      28515,
+      27154,
+      176,
+      27639,
+      185,
+      327
+     ],
+     "ambient_plus_64": 64,
+     "contrast_plus_850": 850,
+     "light_direction": [
+      -30,
+      -50,
+      -30
+     ],
+     "width_scale": 128,
+     "height_scale": 128,
+     "note": "Lit before animation and before source scale; scale applies after animation as in pl.ag"
+    }
+   }
+  },
+  "models/npc-3311-base.bin": {
+   "sha256": "b84dcc98de1dd9518dc40493c26ab210b5af461dcd7ef5489040a88c6507f6de",
+   "size_bytes": 25814,
+   "detail": {
+    "vertices": 359,
+    "faces": 647,
+    "textured_faces": 0,
+    "detail": {
+     "npc_id": 3311,
+     "models": [
+      211,
+      249,
+      315,
+      26634,
+      509,
+      28337,
+      185,
+      280,
+      179
+     ],
+     "ambient_plus_64": 64,
+     "contrast_plus_850": 850,
+     "light_direction": [
+      -30,
+      -50,
+      -30
+     ],
+     "width_scale": 128,
+     "height_scale": 128,
+     "note": "Lit before animation and before source scale; scale applies after animation as in pl.ag"
+    }
+   }
+  },
+  "models/npc-3312-base.bin": {
+   "sha256": "dadcf11269751837ce0f776f4d1680fd9d036195fc3f282f3c3e9a38e74599b8",
+   "size_bytes": 23860,
+   "detail": {
+    "vertices": 344,
+    "faces": 616,
+    "textured_faces": 0,
+    "detail": {
+     "npc_id": 3312,
+     "models": [
+      230,
+      249,
+      313,
+      157,
+      27639,
+      185,
+      176
+     ],
+     "ambient_plus_64": 64,
+     "contrast_plus_850": 850,
+     "light_direction": [
+      -30,
+      -50,
+      -30
+     ],
+     "width_scale": 128,
+     "height_scale": 128,
+     "note": "Lit before animation and before source scale; scale applies after animation as in pl.ag"
+    }
+   }
+  },
+  "models/npc-3313-base.bin": {
+   "sha256": "e3f3a8074d12ef302d054024a1dbb05a62571437826a55bf8f246c974a14b8e4",
+   "size_bytes": 39538,
+   "detail": {
+    "vertices": 519,
+    "faces": 1021,
+    "textured_faces": 0,
+    "detail": {
+     "npc_id": 3313,
+     "models": [
+      18891,
+      18889,
+      18894,
+      18888
+     ],
+     "ambient_plus_64": 64,
+     "contrast_plus_850": 850,
+     "light_direction": [
+      -30,
+      -50,
+      -30
+     ],
+     "width_scale": 128,
+     "height_scale": 128,
+     "note": "Lit before animation and before source scale; scale applies after animation as in pl.ag"
+    }
+   }
+  },
+  "models/npc-3316-base.bin": {
+   "sha256": "34e52f9d0dc99ea0a9277357b16faf85aaeaa4dd93d3d09419767e62f54d76f7",
+   "size_bytes": 15148,
+   "detail": {
+    "vertices": 203,
+    "faces": 410,
+    "textured_faces": 0,
+    "detail": {
+     "npc_id": 3316,
+     "models": [
+      23905
+     ],
+     "ambient_plus_64": 64,
+     "contrast_plus_850": 850,
+     "light_direction": [
+      -30,
+      -50,
+      -30
+     ],
+     "width_scale": 80,
+     "height_scale": 80,
+     "note": "Lit before animation and before source scale; scale applies after animation as in pl.ag"
+    }
+   }
+  },
+  "models/npc-3317-base.bin": {
+   "sha256": "907ab81ec69a21e68101f3b32f91761859970171dfabacbceb534d373330b4cd",
+   "size_bytes": 6088,
+   "detail": {
+    "vertices": 83,
+    "faces": 84,
+    "textured_faces": 0,
+    "detail": {
+     "npc_id": 3317,
+     "models": [
+      41238
+     ],
+     "ambient_plus_64": 64,
+     "contrast_plus_850": 850,
+     "light_direction": [
+      -30,
+      -50,
+      -30
+     ],
+     "width_scale": 128,
+     "height_scale": 128,
+     "note": "Lit before animation and before source scale; scale applies after animation as in pl.ag"
+    }
+   }
+  },
+  "models/npc-3318-base.bin": {
+   "sha256": "b73f02c0b756f900430a0e624a2a369c72d8f5b899762b8bec42a11c188781e4",
+   "size_bytes": 21296,
+   "detail": {
+    "vertices": 276,
+    "faces": 546,
+    "textured_faces": 0,
+    "detail": {
+     "npc_id": 3318,
+     "models": [
+      215,
+      246,
+      59824,
+      26630,
+      176,
+      28285,
+      181
+     ],
+     "ambient_plus_64": 64,
+     "contrast_plus_850": 850,
+     "light_direction": [
+      -30,
+      -50,
+      -30
+     ],
+     "width_scale": 128,
+     "height_scale": 128,
+     "note": "Lit before animation and before source scale; scale applies after animation as in pl.ag"
+    }
+   }
+  },
+  "models/npc-3319-base.bin": {
+   "sha256": "91f3fb49b75974e71ffdeeee08afcceac461a31b46a9d75e51b6f8d04d4cf6c9",
+   "size_bytes": 20816,
+   "detail": {
+    "vertices": 285,
+    "faces": 520,
+    "textured_faces": 0,
+    "detail": {
+     "npc_id": 3319,
+     "models": [
+      223,
+      181,
+      246,
+      28515,
+      26619,
+      176,
+      260,
+      280,
+      284
+     ],
+     "ambient_plus_64": 64,
+     "contrast_plus_850": 850,
+     "light_direction": [
+      -30,
+      -50,
+      -30
+     ],
+     "width_scale": 128,
+     "height_scale": 128,
+     "note": "Lit before animation and before source scale; scale applies after animation as in pl.ag"
+    }
+   }
+  },
+  "models/npc-4626-base.bin": {
+   "sha256": "8a976c08df389574008014e25ee926e33ad0879fcfca9972a593a7b49441318c",
+   "size_bytes": 29262,
+   "detail": {
+    "vertices": 382,
+    "faces": 755,
+    "textured_faces": 0,
+    "detail": {
+     "npc_id": 4626,
+     "models": [
+      199,
+      215,
+      247,
+      13897,
+      10980,
+      10218,
+      12750,
+      181
+     ],
+     "ambient_plus_64": 64,
+     "contrast_plus_850": 850,
+     "light_direction": [
+      -30,
+      -50,
+      -30
+     ],
+     "width_scale": 128,
+     "height_scale": 128,
+     "note": "Lit before animation and before source scale; scale applies after animation as in pl.ag"
+    }
+   }
+  },
+  "models/npc-4627-base.bin": {
+   "sha256": "2c29e0ac2404e411f981464810813b1346c9034c1655147590de34a78448af6e",
+   "size_bytes": 25402,
+   "detail": {
+    "vertices": 348,
+    "faces": 650,
+    "textured_faces": 0,
+    "detail": {
+     "npc_id": 4627,
+     "models": [
+      399,
+      467,
+      8846,
+      10706,
+      11119,
+      358,
+      437
+     ],
+     "ambient_plus_64": 64,
+     "contrast_plus_850": 850,
+     "light_direction": [
+      -30,
+      -50,
+      -30
+     ],
+     "width_scale": 128,
+     "height_scale": 128,
+     "note": "Lit before animation and before source scale; scale applies after animation as in pl.ag"
+    }
+   }
+  },
+  "models/npc-4628-base.bin": {
+   "sha256": "f01e2101a288b0014977567125c26bdd3c6aa67aa1095f45a8740363487be146",
+   "size_bytes": 42844,
+   "detail": {
+    "vertices": 579,
+    "faces": 1124,
+    "textured_faces": 0,
+    "detail": {
+     "npc_id": 4628,
+     "models": [
+      391,
+      417,
+      467,
+      14588,
+      10706,
+      11119,
+      358,
+      14794,
+      437
+     ],
+     "ambient_plus_64": 64,
+     "contrast_plus_850": 850,
+     "light_direction": [
+      -30,
+      -50,
+      -30
+     ],
+     "width_scale": 128,
+     "height_scale": 128,
+     "note": "Lit before animation and before source scale; scale applies after animation as in pl.ag"
+    }
+   }
+  },
+  "models/npc-7941-base.bin": {
+   "sha256": "182c83cf35a1c3ba7a023860839dbd1e097b1ea10623bee19a8719dac24589b0",
+   "size_bytes": 35818,
+   "detail": {
+    "vertices": 486,
+    "faces": 913,
+    "textured_faces": 0,
+    "detail": {
+     "npc_id": 7941,
+     "models": [
+      215,
+      246,
+      2662,
+      2342,
+      13307,
+      530,
+      4954
+     ],
+     "ambient_plus_64": 64,
+     "contrast_plus_850": 850,
+     "light_direction": [
+      -30,
+      -50,
+      -30
+     ],
+     "width_scale": 128,
+     "height_scale": 128,
+     "note": "Lit before animation and before source scale; scale applies after animation as in pl.ag"
+    }
+   }
+  },
+  "models/npc-8503-base.bin": {
+   "sha256": "e4b34f1b53f9b7503487f92a74324231eb383c7f6e0dc060e6f5ad27d511f344",
+   "size_bytes": 27379,
+   "detail": {
+    "vertices": 377,
+    "faces": 719,
+    "textured_faces": 0,
+    "detail": {
+     "npc_id": 8503,
+     "models": [
+      384,
+      481,
+      18554,
+      487,
+      356,
+      15925,
+      361,
+      15931,
+      437
+     ],
+     "ambient_plus_64": 64,
+     "contrast_plus_850": 850,
+     "light_direction": [
+      -30,
+      -50,
+      -30
+     ],
+     "width_scale": 128,
+     "height_scale": 128,
+     "note": "Lit before animation and before source scale; scale applies after animation as in pl.ag"
+    }
+   }
+  },
+  "models/npc-9244-base.bin": {
+   "sha256": "539c4004b4cab8ddfd6a9c021c01d2fc380a3a1677b7e51a7b3692fff00f279d",
+   "size_bytes": 61898,
+   "detail": {
+    "vertices": 848,
+    "faces": 1589,
+    "textured_faces": 0,
+    "detail": {
+     "npc_id": 9244,
+     "models": [
+      4012
+     ],
+     "ambient_plus_64": 64,
+     "contrast_plus_850": 850,
+     "light_direction": [
+      -30,
+      -50,
+      -30
+     ],
+     "width_scale": 128,
+     "height_scale": 128,
+     "note": "Lit before animation and before source scale; scale applies after animation as in pl.ag"
+    }
+   }
+  },
+  "models/npc-9855-base.bin": {
+   "sha256": "942341c563bb46961ca4bd7bcebd627a70420f547412faff7b35e5804f59191f",
+   "size_bytes": 55217,
+   "detail": {
+    "vertices": 866,
+    "faces": 1487,
+    "textured_faces": 0,
+    "detail": {
+     "npc_id": 9855,
+     "models": [
+      40587
+     ],
+     "ambient_plus_64": 64,
+     "contrast_plus_850": 850,
+     "light_direction": [
+      -30,
+      -50,
+      -30
+     ],
+     "width_scale": 128,
+     "height_scale": 128,
+     "note": "Lit before animation and before source scale; scale applies after animation as in pl.ag"
+    }
+   }
+  },
+  "models/item-1351-equip.bin": {
+   "sha256": "91bb7455da47f6ca87f9af334781b61423d4cb678920a074b6ac8e472c078cf0",
+   "size_bytes": 1904,
+   "detail": {
+    "vertices": 27,
+    "faces": 40,
+    "textured_faces": 0,
+    "detail": {
+     "item_id": 1351,
+     "gender": 0,
+     "source": "op.jm equipped model, lit as in lc.bd"
+    }
+   }
+  },
+  "models/item-1009-equip.bin": {
+   "sha256": "360be4d8516950f0f8defb2c7d9eb61dc087839d0eb862aadf1616680252262b",
+   "size_bytes": 1292,
+   "detail": {
+    "vertices": 24,
+    "faces": 22,
+    "textured_faces": 0,
+    "detail": {
+     "item_id": 1009,
+     "gender": 0,
+     "source": "op.jm equipped model, lit as in lc.bd"
+    }
+   }
+  },
+  "models/item-1949-equip.bin": {
+   "sha256": "5df583f5e5ea757d57ee138df703a883bb7e0349105ef33381d9f6ba5a166688",
+   "size_bytes": 2284,
+   "detail": {
+    "vertices": 33,
+    "faces": 56,
+    "textured_faces": 0,
+    "detail": {
+     "item_id": 1949,
+     "gender": 0,
+     "source": "op.jm equipped model, lit as in lc.bd"
+    }
+   }
+  },
+  "models/item-1205-equip.bin": {
+   "sha256": "4760a0c18ee74f93d727dd359f067d1c7222f8b4a4b30b639468054eedbd67ac",
+   "size_bytes": 1900,
+   "detail": {
+    "vertices": 21,
+    "faces": 38,
+    "textured_faces": 0,
+    "detail": {
+     "item_id": 1205,
+     "gender": 0,
+     "source": "op.jm equipped model, lit as in lc.bd"
+    }
+   }
+  },
+  "models/item-1265-equip.bin": {
+   "sha256": "6838e07f6598d0db8c2592f7091e25d8864d7161c3bbfb8dd885e59d457aee9f",
+   "size_bytes": 3012,
+   "detail": {
+    "vertices": 38,
+    "faces": 68,
+    "textured_faces": 0,
+    "detail": {
+     "item_id": 1265,
+     "gender": 0,
+     "source": "op.jm equipped model, lit as in lc.bd"
+    }
+   }
+  },
+  "models/item-1173-equip.bin": {
+   "sha256": "e0e73b923eb4269f26a3993b967c380e7d1a61c8134c8d34b852a3dd465462fc",
+   "size_bytes": 2742,
+   "detail": {
+    "vertices": 36,
+    "faces": 62,
+    "textured_faces": 0,
+    "detail": {
+     "item_id": 1173,
+     "gender": 0,
+     "source": "op.jm equipped model, lit as in lc.bd"
+    }
+   }
+  },
+  "models/item-1171-equip.bin": {
+   "sha256": "4c92b7c34190193f763c94555911eada52e3e7dd641955cd83afdda0b4fb88f7",
+   "size_bytes": 3186,
+   "detail": {
+    "vertices": 42,
+    "faces": 74,
+    "textured_faces": 0,
+    "detail": {
+     "item_id": 1171,
+     "gender": 0,
+     "source": "op.jm equipped model, lit as in lc.bd"
+    }
+   }
+  },
+  "models/item-841-equip.bin": {
+   "sha256": "32670e3b59bca48a5d48307fa2b398ecf774f646def672139d302092830a83b8",
+   "size_bytes": 2336,
+   "detail": {
+    "vertices": 26,
+    "faces": 56,
+    "textured_faces": 0,
+    "detail": {
+     "item_id": 841,
+     "gender": 0,
+     "source": "op.jm equipped model, lit as in lc.bd"
+    }
+   }
+  },
+  "models/item-1237-equip.bin": {
+   "sha256": "5d4394eb41483c709bb627048d9c2d635461f2a01ca0a32229cd12f4cb29d560",
+   "size_bytes": 1528,
+   "detail": {
+    "vertices": 21,
+    "faces": 30,
+    "textured_faces": 0,
+    "detail": {
+     "item_id": 1237,
+     "gender": 0,
+     "source": "op.jm equipped model, lit as in lc.bd"
+    }
+   }
+  },
+  "models/item-1277-equip.bin": {
+   "sha256": "65b092a5f9d7a071e87e85ff5f0d8abe6aa9bd34946909ce0cf3b92454b76121",
+   "size_bytes": 1964,
+   "detail": {
+    "vertices": 25,
+    "faces": 38,
+    "textured_faces": 0,
+    "detail": {
+     "item_id": 1277,
+     "gender": 0,
+     "source": "op.jm equipped model, lit as in lc.bd"
+    }
+   }
+  },
+  "models/player-default-male-body.bin": {
+   "sha256": "54ada3436db718a3d972ef12687868549069799b2224c7ec0b2cbbf3fb8c4711",
+   "size_bytes": 18668,
+   "detail": {
+    "vertices": 258,
+    "faces": 468,
+    "textured_faces": 0,
+    "detail": {
+     "kits": [
+      0,
+      10,
+      18,
+      26,
+      33,
+      36,
+      42
+     ],
+     "source": "lc.bd default male kits merged and lit; retargeting reference, never drawn as the player"
+    }
+   }
+  },
+  "anim/seq-386.bin": {
+   "sha256": "ff7b945f78015de01a944415102cb9a12ac2a4472dd3005b5978c3c1b1b5cf05",
+   "size_bytes": 20152,
+   "detail": {
+    "sequence_id": 386,
+    "file": "anim/seq-386.bin",
+    "sha256": "ff7b945f78015de01a944415102cb9a12ac2a4472dd3005b5978c3c1b1b5cf05",
+    "frame_count": 6,
+    "frame_lengths_client_cycles": [
+     4,
+     4,
+     6,
+     3,
+     18,
+     4
+    ],
+    "frame_step": -1,
+    "max_loops": 99,
+    "left_hand_item": -1,
+    "right_hand_item": -1,
+    "priority": 2,
+    "skeletons": 1
+   }
+  },
+  "anim/seq-390.bin": {
+   "sha256": "adb17da8c4730cecfc1d7f6dcca5ff49acfde09baad354a432c89fc53b939b84",
+   "size_bytes": 22056,
+   "detail": {
+    "sequence_id": 390,
+    "file": "anim/seq-390.bin",
+    "sha256": "adb17da8c4730cecfc1d7f6dcca5ff49acfde09baad354a432c89fc53b939b84",
+    "frame_count": 10,
+    "frame_lengths_client_cycles": [
+     4,
+     4,
+     4,
+     4,
+     8,
+     2,
+     1,
+     1,
+     8,
+     3
+    ],
+    "frame_step": -1,
+    "max_loops": 99,
+    "left_hand_item": -1,
+    "right_hand_item": -1,
+    "priority": 2,
+    "skeletons": 1
+   }
+  },
+  "anim/seq-422.bin": {
+   "sha256": "0ac344c93e61d078d441eb52ab1d131993ba1ba3bcea2ed16a8d020bbf8dd956",
+   "size_bytes": 19632,
+   "detail": {
+    "sequence_id": 422,
+    "file": "anim/seq-422.bin",
+    "sha256": "0ac344c93e61d078d441eb52ab1d131993ba1ba3bcea2ed16a8d020bbf8dd956",
+    "frame_count": 5,
+    "frame_lengths_client_cycles": [
+     6,
+     6,
+     10,
+     10,
+     6
+    ],
+    "frame_step": -1,
+    "max_loops": 99,
+    "left_hand_item": -1,
+    "right_hand_item": -1,
+    "priority": 2,
+    "skeletons": 1
+   }
+  },
+  "anim/seq-423.bin": {
+   "sha256": "3fede8129acfde18865365cd95e7be27a72af0a1f5369bae728cc20566c16a9e",
+   "size_bytes": 20192,
+   "detail": {
+    "sequence_id": 423,
+    "file": "anim/seq-423.bin",
+    "sha256": "3fede8129acfde18865365cd95e7be27a72af0a1f5369bae728cc20566c16a9e",
+    "frame_count": 5,
+    "frame_lengths_client_cycles": [
+     6,
+     6,
+     10,
+     3,
+     10
+    ],
+    "frame_step": -1,
+    "max_loops": 99,
+    "left_hand_item": -1,
+    "right_hand_item": -1,
+    "priority": 2,
+    "skeletons": 1
+   }
+  },
+  "anim/seq-426.bin": {
+   "sha256": "8306d98f8dfabed0c70fe11616efa97a3359260d1ec80202b0b957ef94c6642b",
+   "size_bytes": 22264,
+   "detail": {
+    "sequence_id": 426,
+    "file": "anim/seq-426.bin",
+    "sha256": "8306d98f8dfabed0c70fe11616efa97a3359260d1ec80202b0b957ef94c6642b",
+    "frame_count": 10,
+    "frame_lengths_client_cycles": [
+     4,
+     4,
+     4,
+     4,
+     15,
+     10,
+     5,
+     4,
+     4,
+     4
+    ],
+    "frame_step": -1,
+    "max_loops": 99,
+    "left_hand_item": -1,
+    "right_hand_item": -1,
+    "priority": 2,
+    "skeletons": 1
+   }
+  },
+  "anim/seq-621.bin": {
+   "sha256": "8bd8426e3fa03f14fa7a6c40c42c7ee9989ff6ce68cea418f3cde1f57b71b744",
+   "size_bytes": 51260,
+   "detail": {
+    "sequence_id": 621,
+    "file": "anim/seq-621.bin",
+    "sha256": "8bd8426e3fa03f14fa7a6c40c42c7ee9989ff6ce68cea418f3cde1f57b71b744",
+    "frame_count": 44,
+    "frame_lengths_client_cycles": [
+     4,
+     4,
+     4,
+     4,
+     4,
+     4,
+     4,
+     4,
+     4,
+     4,
+     4,
+     4,
+     4,
+     4,
+     4,
+     4,
+     4,
+     4,
+     4,
+     4,
+     4,
+     4,
+     4,
+     4,
+     4,
+     4,
+     4,
+     4,
+     4,
+     4,
+     4,
+     4,
+     4,
+     4,
+     4,
+     4,
+     4,
+     4,
+     4,
+     4,
+     4,
+     4,
+     4,
+     4
+    ],
+    "frame_step": 44,
+    "max_loops": 3,
+    "left_hand_item": 815,
+    "right_hand_item": 815,
+    "priority": 1,
+    "skeletons": 1
+   }
+  },
+  "anim/seq-625.bin": {
+   "sha256": "f6ddb9badfcdeeab11fbc3c973153075986623927bf723ec19a9ad3dc62ca2b9",
+   "size_bytes": 24376,
+   "detail": {
+    "sequence_id": 625,
+    "file": "anim/seq-625.bin",
+    "sha256": "f6ddb9badfcdeeab11fbc3c973153075986623927bf723ec19a9ad3dc62ca2b9",
+    "frame_count": 12,
+    "frame_lengths_client_cycles": [
+     5,
+     3,
+     3,
+     3,
+     3,
+     3,
+     3,
+     3,
+     16,
+     3,
+     5,
+     5
+    ],
+    "frame_step": 8,
+    "max_loops": 8,
+    "left_hand_item": 1777,
+    "right_hand_item": 1777,
+    "priority": 1,
+    "skeletons": 1
+   }
+  },
+  "anim/seq-711.bin": {
+   "sha256": "6026e342c628fcd8d8f5adacba051d350b03a12db028bf0845f77a70bb04f03e",
+   "size_bytes": 23468,
+   "detail": {
+    "sequence_id": 711,
+    "file": "anim/seq-711.bin",
+    "sha256": "6026e342c628fcd8d8f5adacba051d350b03a12db028bf0845f77a70bb04f03e",
+    "frame_count": 12,
+    "frame_lengths_client_cycles": [
+     4,
+     4,
+     4,
+     4,
+     4,
+     4,
+     6,
+     6,
+     15,
+     15,
+     4,
+     4
+    ],
+    "frame_step": -1,
+    "max_loops": 99,
+    "left_hand_item": 0,
+    "right_hand_item": 0,
+    "priority": 0,
+    "skeletons": 1
+   }
+  },
+  "anim/seq-733.bin": {
+   "sha256": "2e1c70269bc25ebca735bc08e9eac4c235db6410b2e2296ac79e4da2f5e70cac",
+   "size_bytes": 28860,
+   "detail": {
+    "sequence_id": 733,
+    "file": "anim/seq-733.bin",
+    "sha256": "2e1c70269bc25ebca735bc08e9eac4c235db6410b2e2296ac79e4da2f5e70cac",
+    "frame_count": 16,
+    "frame_lengths_client_cycles": [
+     8,
+     4,
+     4,
+     4,
+     4,
+     3,
+     3,
+     15,
+     10,
+     15,
+     10,
+     30,
+     4,
+     4,
+     30,
+     4
+    ],
+    "frame_step": 9,
+    "max_loops": 3,
+    "left_hand_item": 0,
+    "right_hand_item": 1102,
+    "priority": 1,
+    "skeletons": 1
+   }
+  },
+  "anim/seq-808.bin": {
+   "sha256": "d3c1c6b96937f4632ae172c690eb529af1ea499663ceda86bc2758ab36d1f996",
+   "size_bytes": 23260,
+   "detail": {
+    "sequence_id": 808,
+    "file": "anim/seq-808.bin",
+    "sha256": "d3c1c6b96937f4632ae172c690eb529af1ea499663ceda86bc2758ab36d1f996",
+    "frame_count": 12,
+    "frame_lengths_client_cycles": [
+     21,
+     21,
+     21,
+     21,
+     21,
+     21,
+     21,
+     21,
+     21,
+     21,
+     21,
+     21
+    ],
+    "frame_step": -1,
+    "max_loops": 99,
+    "left_hand_item": -1,
+    "right_hand_item": -1,
+    "priority": 0,
+    "skeletons": 1
+   }
+  },
+  "anim/seq-813.bin": {
+   "sha256": "284d3216685ef97649c21d9fde419cd11b6ac5c3d09fda4f701f716898bb7601",
+   "size_bytes": 23644,
+   "detail": {
+    "sequence_id": 813,
+    "file": "anim/seq-813.bin",
+    "sha256": "284d3216685ef97649c21d9fde419cd11b6ac5c3d09fda4f701f716898bb7601",
+    "frame_count": 12,
+    "frame_lengths_client_cycles": [
+     21,
+     21,
+     21,
+     21,
+     21,
+     21,
+     21,
+     21,
+     21,
+     21,
+     21,
+     21
+    ],
+    "frame_step": -1,
+    "max_loops": 99,
+    "left_hand_item": -1,
+    "right_hand_item": -1,
+    "priority": 0,
+    "skeletons": 1
+   }
+  },
+  "anim/seq-819.bin": {
+   "sha256": "9f3bee729e89b26a936dc3a6bc2ee03dcae214e5bdb6ea818dcd135bf1c6438e",
+   "size_bytes": 22620,
+   "detail": {
+    "sequence_id": 819,
+    "file": "anim/seq-819.bin",
+    "sha256": "9f3bee729e89b26a936dc3a6bc2ee03dcae214e5bdb6ea818dcd135bf1c6438e",
+    "frame_count": 8,
+    "frame_lengths_client_cycles": [
+     6,
+     6,
+     6,
+     6,
+     6,
+     6,
+     6,
+     6
+    ],
+    "frame_step": -1,
+    "max_loops": 99,
+    "left_hand_item": -1,
+    "right_hand_item": -1,
+    "priority": 0,
+    "skeletons": 1
+   }
+  },
+  "anim/seq-820.bin": {
+   "sha256": "82c34cde7c90e3e6c2c8945c832271db87e78409bbc2d1aafb0f542e78bc7150",
+   "size_bytes": 22620,
+   "detail": {
+    "sequence_id": 820,
+    "file": "anim/seq-820.bin",
+    "sha256": "82c34cde7c90e3e6c2c8945c832271db87e78409bbc2d1aafb0f542e78bc7150",
+    "frame_count": 8,
+    "frame_lengths_client_cycles": [
+     6,
+     6,
+     6,
+     6,
+     6,
+     6,
+     6,
+     6
+    ],
+    "frame_step": -1,
+    "max_loops": 99,
+    "left_hand_item": -1,
+    "right_hand_item": -1,
+    "priority": 0,
+    "skeletons": 1
+   }
+  },
+  "anim/seq-821.bin": {
+   "sha256": "dc3883513861fa5ac0511fa4c531799e2a08f75d850aecc13c6dc05deef4e4d4",
+   "size_bytes": 19644,
+   "detail": {
+    "sequence_id": 821,
+    "file": "anim/seq-821.bin",
+    "sha256": "dc3883513861fa5ac0511fa4c531799e2a08f75d850aecc13c6dc05deef4e4d4",
+    "frame_count": 4,
+    "frame_lengths_client_cycles": [
+     6,
+     6,
+     6,
+     6
+    ],
+    "frame_step": -1,
+    "max_loops": 99,
+    "left_hand_item": -1,
+    "right_hand_item": -1,
+    "priority": 0,
+    "skeletons": 1
+   }
+  },
+  "anim/seq-822.bin": {
+   "sha256": "7b8abe420fbe020a881ff79111dc32ed5dea6cc30753d0d32cdeec03f89950f3",
+   "size_bytes": 19660,
+   "detail": {
+    "sequence_id": 822,
+    "file": "anim/seq-822.bin",
+    "sha256": "7b8abe420fbe020a881ff79111dc32ed5dea6cc30753d0d32cdeec03f89950f3",
+    "frame_count": 4,
+    "frame_lengths_client_cycles": [
+     6,
+     6,
+     6,
+     6
+    ],
+    "frame_step": -1,
+    "max_loops": 99,
+    "left_hand_item": -1,
+    "right_hand_item": -1,
+    "priority": 0,
+    "skeletons": 1
+   }
+  },
+  "anim/seq-823.bin": {
+   "sha256": "fc8c4c58b3c7bd3e49ae7da08de6f60fcdca10df7c4a479c2fa3c723c5286b39",
+   "size_bytes": 19580,
+   "detail": {
+    "sequence_id": 823,
+    "file": "anim/seq-823.bin",
+    "sha256": "fc8c4c58b3c7bd3e49ae7da08de6f60fcdca10df7c4a479c2fa3c723c5286b39",
+    "frame_count": 4,
+    "frame_lengths_client_cycles": [
+     11,
+     11,
+     11,
+     11
+    ],
+    "frame_step": -1,
+    "max_loops": 99,
+    "left_hand_item": -1,
+    "right_hand_item": -1,
+    "priority": 0,
+    "skeletons": 1
+   }
+  },
+  "anim/seq-824.bin": {
+   "sha256": "c8ff89428ad2b398f458a1f24d4f848165f203b38c6e27a5781f92076a8a3645",
+   "size_bytes": 22844,
+   "detail": {
+    "sequence_id": 824,
+    "file": "anim/seq-824.bin",
+    "sha256": "c8ff89428ad2b398f458a1f24d4f848165f203b38c6e27a5781f92076a8a3645",
+    "frame_count": 8,
+    "frame_lengths_client_cycles": [
+     5,
+     4,
+     4,
+     4,
+     5,
+     4,
+     4,
+     4
+    ],
+    "frame_step": -1,
+    "max_loops": 99,
+    "left_hand_item": -1,
+    "right_hand_item": -1,
+    "priority": 0,
+    "skeletons": 1
+   }
+  },
+  "anim/seq-827.bin": {
+   "sha256": "3bb6e106347a13f5b0aee264eb83b521b7f4b1f52e036c0e5151b2c89ec92196",
+   "size_bytes": 23384,
+   "detail": {
+    "sequence_id": 827,
+    "file": "anim/seq-827.bin",
+    "sha256": "3bb6e106347a13f5b0aee264eb83b521b7f4b1f52e036c0e5151b2c89ec92196",
+    "frame_count": 10,
+    "frame_lengths_client_cycles": [
+     8,
+     8,
+     4,
+     4,
+     4,
+     10,
+     4,
+     4,
+     4,
+     8
+    ],
+    "frame_step": -1,
+    "max_loops": 99,
+    "left_hand_item": 0,
+    "right_hand_item": 0,
+    "priority": 2,
+    "skeletons": 1
+   }
+  },
+  "anim/seq-829.bin": {
+   "sha256": "d21215e28cd710b82be0bb633e9c9905383132250b07b08b873591f8906ae7ee",
+   "size_bytes": 22888,
+   "detail": {
+    "sequence_id": 829,
+    "file": "anim/seq-829.bin",
+    "sha256": "d21215e28cd710b82be0bb633e9c9905383132250b07b08b873591f8906ae7ee",
+    "frame_count": 10,
+    "frame_lengths_client_cycles": [
+     4,
+     3,
+     10,
+     3,
+     3,
+     3,
+     20,
+     3,
+     20,
+     4
+    ],
+    "frame_step": -1,
+    "max_loops": 99,
+    "left_hand_item": 0,
+    "right_hand_item": 0,
+    "priority": 2,
+    "skeletons": 1
+   }
+  },
+  "anim/seq-836.bin": {
+   "sha256": "01cd7cdd717732b81cd9dfc9f4bd45f78de392c2dc5a3560f906a99864c0a6ec",
+   "size_bytes": 23756,
+   "detail": {
+    "sequence_id": 836,
+    "file": "anim/seq-836.bin",
+    "sha256": "01cd7cdd717732b81cd9dfc9f4bd45f78de392c2dc5a3560f906a99864c0a6ec",
+    "frame_count": 10,
+    "frame_lengths_client_cycles": [
+     8,
+     4,
+     4,
+     4,
+     14,
+     4,
+     3,
+     3,
+     3,
+     20000
+    ],
+    "frame_step": -1,
+    "max_loops": 99,
+    "left_hand_item": 0,
+    "right_hand_item": 0,
+    "priority": 0,
+    "skeletons": 1
+   }
+  },
+  "anim/seq-879.bin": {
+   "sha256": "6088805652f8aee7c83b7683f97959bf7583a46ccaa53a04bff48cfc12c306ff",
+   "size_bytes": 20236,
+   "detail": {
+    "sequence_id": 879,
+    "file": "anim/seq-879.bin",
+    "sha256": "6088805652f8aee7c83b7683f97959bf7583a46ccaa53a04bff48cfc12c306ff",
+    "frame_count": 6,
+    "frame_lengths_client_cycles": [
+     4,
+     4,
+     10,
+     12,
+     6,
+     4
+    ],
+    "frame_step": 6,
+    "max_loops": 4,
+    "left_hand_item": 1863,
+    "right_hand_item": 0,
+    "priority": 1,
+    "skeletons": 1
+   }
+  },
+  "anim/seq-896.bin": {
+   "sha256": "02cb2183d097f500029a4222801c3625ad9bf3298810f16f58155a0fea6f9755",
+   "size_bytes": 40740,
+   "detail": {
+    "sequence_id": 896,
+    "file": "anim/seq-896.bin",
+    "sha256": "02cb2183d097f500029a4222801c3625ad9bf3298810f16f58155a0fea6f9755",
+    "frame_count": 31,
+    "frame_lengths_client_cycles": [
+     4,
+     4,
+     4,
+     4,
+     6,
+     6,
+     4,
+     4,
+     4,
+     4,
+     4,
+     4,
+     4,
+     4,
+     4,
+     4,
+     4,
+     4,
+     4,
+     4,
+     4,
+     4,
+     4,
+     4,
+     4,
+     6,
+     6,
+     4,
+     4,
+     4,
+     4
+    ],
+    "frame_step": -1,
+    "max_loops": 99,
+    "left_hand_item": 0,
+    "right_hand_item": 0,
+    "priority": 1,
+    "skeletons": 1
+   }
+  },
+  "anim/seq-897.bin": {
+   "sha256": "e2623a8507c5843d1681f2e4951f8eec65d9699b766af2b85bd3bf8b095c7203",
+   "size_bytes": 29812,
+   "detail": {
+    "sequence_id": 897,
+    "file": "anim/seq-897.bin",
+    "sha256": "e2623a8507c5843d1681f2e4951f8eec65d9699b766af2b85bd3bf8b095c7203",
+    "frame_count": 19,
+    "frame_lengths_client_cycles": [
+     4,
+     3,
+     2,
+     2,
+     4,
+     4,
+     4,
+     4,
+     4,
+     30,
+     4,
+     4,
+     4,
+     4,
+     4,
+     2,
+     2,
+     3,
+     4
+    ],
+    "frame_step": -1,
+    "max_loops": 99,
+    "left_hand_item": 0,
+    "right_hand_item": 0,
+    "priority": 1,
+    "skeletons": 1
+   }
+  },
+  "anim/seq-898.bin": {
+   "sha256": "af65bbf2a877cf81eb009838416addc41a4e94f2766f2a1fe1a2d13352ae1aa3",
+   "size_bytes": 27956,
+   "detail": {
+    "sequence_id": 898,
+    "file": "anim/seq-898.bin",
+    "sha256": "af65bbf2a877cf81eb009838416addc41a4e94f2766f2a1fe1a2d13352ae1aa3",
+    "frame_count": 17,
+    "frame_lengths_client_cycles": [
+     4,
+     4,
+     4,
+     4,
+     4,
+     15,
+     6,
+     15,
+     6,
+     15,
+     6,
+     15,
+     4,
+     4,
+     4,
+     4,
+     4
+    ],
+    "frame_step": -1,
+    "max_loops": 99,
+    "left_hand_item": 0,
+    "right_hand_item": 2859,
+    "priority": 1,
+    "skeletons": 1
+   }
+  },
+  "anim/seq-899.bin": {
+   "sha256": "7592b30eca562b27e1f7d54616352cc1bdb05c7ada939e3d8ed8587f6545cf20",
+   "size_bytes": 29476,
+   "detail": {
+    "sequence_id": 899,
+    "file": "anim/seq-899.bin",
+    "sha256": "7592b30eca562b27e1f7d54616352cc1bdb05c7ada939e3d8ed8587f6545cf20",
+    "frame_count": 19,
+    "frame_lengths_client_cycles": [
+     4,
+     4,
+     4,
+     4,
+     4,
+     8,
+     8,
+     4,
+     4,
+     50,
+     4,
+     4,
+     8,
+     8,
+     4,
+     4,
+     4,
+     4,
+     4
+    ],
+    "frame_step": -1,
+    "max_loops": 99,
+    "left_hand_item": 0,
+    "right_hand_item": 0,
+    "priority": 1,
+    "skeletons": 1
+   }
+  },
+  "anim/seq-1205.bin": {
+   "sha256": "5c7f2a29de2c8b48d3e86620876e116ccec008a7fb160b58daea589acf4b427f",
+   "size_bytes": 23276,
+   "detail": {
+    "sequence_id": 1205,
+    "file": "anim/seq-1205.bin",
+    "sha256": "5c7f2a29de2c8b48d3e86620876e116ccec008a7fb160b58daea589acf4b427f",
+    "frame_count": 8,
+    "frame_lengths_client_cycles": [
+     6,
+     6,
+     6,
+     6,
+     6,
+     6,
+     6,
+     6
+    ],
+    "frame_step": -1,
+    "max_loops": 99,
+    "left_hand_item": -1,
+    "right_hand_item": -1,
+    "priority": 0,
+    "skeletons": 1
+   }
+  },
+  "anim/seq-1206.bin": {
+   "sha256": "f497e1cf0dcfec4e46f8da2f1469cf07888a8594806ff8b514e946b3d1fa7005",
+   "size_bytes": 23276,
+   "detail": {
+    "sequence_id": 1206,
+    "file": "anim/seq-1206.bin",
+    "sha256": "f497e1cf0dcfec4e46f8da2f1469cf07888a8594806ff8b514e946b3d1fa7005",
+    "frame_count": 8,
+    "frame_lengths_client_cycles": [
+     6,
+     6,
+     6,
+     6,
+     6,
+     6,
+     6,
+     6
+    ],
+    "frame_step": -1,
+    "max_loops": 99,
+    "left_hand_item": -1,
+    "right_hand_item": -1,
+    "priority": 0,
+    "skeletons": 1
+   }
+  },
+  "anim/seq-1207.bin": {
+   "sha256": "9105c231d9b8b756800cb8e42240fe17c8ef26162dfdb27e17eb351c7feb7626",
+   "size_bytes": 19772,
+   "detail": {
+    "sequence_id": 1207,
+    "file": "anim/seq-1207.bin",
+    "sha256": "9105c231d9b8b756800cb8e42240fe17c8ef26162dfdb27e17eb351c7feb7626",
+    "frame_count": 4,
+    "frame_lengths_client_cycles": [
+     6,
+     6,
+     6,
+     6
+    ],
+    "frame_step": -1,
+    "max_loops": 99,
+    "left_hand_item": -1,
+    "right_hand_item": -1,
+    "priority": 0,
+    "skeletons": 1
+   }
+  },
+  "anim/seq-1208.bin": {
+   "sha256": "bfc9a38686acbe1eb22836a1e02b9fe1602839f11f792d9f5e360e76e77e0ef4",
+   "size_bytes": 19788,
+   "detail": {
+    "sequence_id": 1208,
+    "file": "anim/seq-1208.bin",
+    "sha256": "bfc9a38686acbe1eb22836a1e02b9fe1602839f11f792d9f5e360e76e77e0ef4",
+    "frame_count": 4,
+    "frame_lengths_client_cycles": [
+     6,
+     6,
+     6,
+     6
+    ],
+    "frame_step": -1,
+    "max_loops": 99,
+    "left_hand_item": -1,
+    "right_hand_item": -1,
+    "priority": 0,
+    "skeletons": 1
+   }
+  },
+  "anim/seq-3950.bin": {
+   "sha256": "2dd3768d6a0964b440ac07915b8db32a0398e01941e1be39f5f362e9354f05d3",
+   "size_bytes": 23260,
+   "detail": {
+    "sequence_id": 3950,
+    "file": "anim/seq-3950.bin",
+    "sha256": "2dd3768d6a0964b440ac07915b8db32a0398e01941e1be39f5f362e9354f05d3",
+    "frame_count": 12,
+    "frame_lengths_client_cycles": [
+     21,
+     21,
+     21,
+     21,
+     21,
+     21,
+     21,
+     21,
+     21,
+     21,
+     21,
+     21
+    ],
+    "frame_step": -1,
+    "max_loops": 99,
+    "left_hand_item": -1,
+    "right_hand_item": -1,
+    "priority": 0,
+    "skeletons": 1
+   }
+  },
+  "anim/seq-3997.bin": {
+   "sha256": "896d3e48a8d3e5bc1fe24e96b7f3e6791b911ae9414d89c7c745d7be42657d34",
+   "size_bytes": 22684,
+   "detail": {
+    "sequence_id": 3997,
+    "file": "anim/seq-3997.bin",
+    "sha256": "896d3e48a8d3e5bc1fe24e96b7f3e6791b911ae9414d89c7c745d7be42657d34",
+    "frame_count": 8,
+    "frame_lengths_client_cycles": [
+     5,
+     5,
+     5,
+     5,
+     5,
+     5,
+     5,
+     5
+    ],
+    "frame_step": -1,
+    "max_loops": 99,
+    "left_hand_item": -1,
+    "right_hand_item": -1,
+    "priority": 0,
+    "skeletons": 1
+   }
+  },
+  "anim/seq-4931.bin": {
+   "sha256": "4e0bc16d44606dfc70e1459eaf945ca780c2c4ff5cc3e98c4cdb71228241972a",
+   "size_bytes": 19264,
+   "detail": {
+    "sequence_id": 4931,
+    "file": "anim/seq-4931.bin",
+    "sha256": "4e0bc16d44606dfc70e1459eaf945ca780c2c4ff5cc3e98c4cdb71228241972a",
+    "frame_count": 16,
+    "frame_lengths_client_cycles": [
+     1,
+     2,
+     1,
+     2,
+     2,
+     2,
+     1,
+     2,
+     2,
+     2,
+     1,
+     2,
+     2,
+     2,
+     1,
+     2
+    ],
+    "frame_step": 16,
+    "max_loops": 99,
+    "left_hand_item": -1,
+    "right_hand_item": -1,
+    "priority": 0,
+    "skeletons": 1
+   }
+  },
+  "anim/seq-4932.bin": {
+   "sha256": "276bfe675997fca399ea569c2e144bda8ca4a7139399a7fcf68ca4c73b286e3d",
+   "size_bytes": 41508,
+   "detail": {
+    "sequence_id": 4932,
+    "file": "anim/seq-4932.bin",
+    "sha256": "276bfe675997fca399ea569c2e144bda8ca4a7139399a7fcf68ca4c73b286e3d",
+    "frame_count": 40,
+    "frame_lengths_client_cycles": [
+     5,
+     5,
+     5,
+     5,
+     5,
+     5,
+     5,
+     5,
+     5,
+     5,
+     5,
+     5,
+     5,
+     5,
+     5,
+     5,
+     5,
+     5,
+     5,
+     5,
+     5,
+     5,
+     5,
+     5,
+     5,
+     5,
+     5,
+     5,
+     5,
+     5,
+     5,
+     5,
+     5,
+     5,
+     5,
+     5,
+     5,
+     5,
+     5,
+     5
+    ],
+    "frame_step": 40,
+    "max_loops": 99,
+    "left_hand_item": -1,
+    "right_hand_item": -1,
+    "priority": 0,
+    "skeletons": 2
+   }
+  },
+  "anim/seq-4933.bin": {
+   "sha256": "259f063f4063b1f064a9b1974712ca3e4e83c189071efaefb655907c8dcd6d67",
+   "size_bytes": 22288,
+   "detail": {
+    "sequence_id": 4933,
+    "file": "anim/seq-4933.bin",
+    "sha256": "259f063f4063b1f064a9b1974712ca3e4e83c189071efaefb655907c8dcd6d67",
+    "frame_count": 20,
+    "frame_lengths_client_cycles": [
+     3,
+     3,
+     3,
+     3,
+     3,
+     2,
+     2,
+     3,
+     3,
+     2,
+     2,
+     3,
+     3,
+     3,
+     3,
+     3,
+     3,
+     3,
+     2,
+     2
+    ],
+    "frame_step": -1,
+    "max_loops": 99,
+    "left_hand_item": -1,
+    "right_hand_item": -1,
+    "priority": 0,
+    "skeletons": 1
+   }
+  },
+  "anim/seq-4934.bin": {
+   "sha256": "19d92bf2b569c364de97a40eec08f4ff4da4afccdd6b9b725f4d867a971df9ff",
+   "size_bytes": 16480,
+   "detail": {
+    "sequence_id": 4934,
+    "file": "anim/seq-4934.bin",
+    "sha256": "19d92bf2b569c364de97a40eec08f4ff4da4afccdd6b9b725f4d867a971df9ff",
+    "frame_count": 16,
+    "frame_lengths_client_cycles": [
+     3,
+     3,
+     3,
+     3,
+     3,
+     3,
+     3,
+     3,
+     3,
+     3,
+     3,
+     3,
+     3,
+     3,
+     3,
+     3
+    ],
+    "frame_step": -1,
+    "max_loops": 99,
+    "left_hand_item": -1,
+    "right_hand_item": -1,
+    "priority": 0,
+    "skeletons": 1
+   }
+  },
+  "anim/seq-4935.bin": {
+   "sha256": "25692c78b0ad5364d9b9e73753daa74a55ff5e964badf5f5eca5270ee19c0d87",
+   "size_bytes": 25864,
+   "detail": {
+    "sequence_id": 4935,
+    "file": "anim/seq-4935.bin",
+    "sha256": "25692c78b0ad5364d9b9e73753daa74a55ff5e964badf5f5eca5270ee19c0d87",
+    "frame_count": 27,
+    "frame_lengths_client_cycles": [
+     5,
+     5,
+     5,
+     6,
+     6,
+     5,
+     5,
+     5,
+     5,
+     5,
+     5,
+     5,
+     5,
+     5,
+     5,
+     5,
+     5,
+     5,
+     6,
+     6,
+     6,
+     6,
+     6,
+     6,
+     6,
+     6,
+     200
+    ],
+    "frame_step": -1,
+    "max_loops": 99,
+    "left_hand_item": -1,
+    "right_hand_item": -1,
+    "priority": 0,
+    "skeletons": 1
+   }
+  },
+  "anim/seq-5385.bin": {
+   "sha256": "79f933309ae145755c673418b9e944f14189ef2fe8c46884fc39f52a2cb77ec5",
+   "size_bytes": 7300,
+   "detail": {
+    "sequence_id": 5385,
+    "file": "anim/seq-5385.bin",
+    "sha256": "79f933309ae145755c673418b9e944f14189ef2fe8c46884fc39f52a2cb77ec5",
+    "frame_count": 10,
+    "frame_lengths_client_cycles": [
+     3,
+     3,
+     3,
+     3,
+     3,
+     3,
+     3,
+     3,
+     3,
+     3
+    ],
+    "frame_step": -1,
+    "max_loops": 99,
+    "left_hand_item": -1,
+    "right_hand_item": -1,
+    "priority": 0,
+    "skeletons": 1
+   }
+  },
+  "anim/seq-5386.bin": {
+   "sha256": "2bcfb862c1335b462f0ecb9c131419b78f2e445348e3f2e63a734e97150d8582",
+   "size_bytes": 58404,
+   "detail": {
+    "sequence_id": 5386,
+    "file": "anim/seq-5386.bin",
+    "sha256": "2bcfb862c1335b462f0ecb9c131419b78f2e445348e3f2e63a734e97150d8582",
+    "frame_count": 99,
+    "frame_lengths_client_cycles": [
+     4,
+     4,
+     4,
+     4,
+     4,
+     4,
+     4,
+     4,
+     4,
+     4,
+     4,
+     4,
+     4,
+     4,
+     4,
+     4,
+     4,
+     4,
+     4,
+     4,
+     4,
+     4,
+     4,
+     4,
+     4,
+     4,
+     4,
+     4,
+     4,
+     4,
+     4,
+     4,
+     4,
+     4,
+     4,
+     4,
+     4,
+     4,
+     4,
+     4,
+     4,
+     4,
+     4,
+     4,
+     4,
+     4,
+     4,
+     4,
+     4,
+     4,
+     4,
+     4,
+     4,
+     4,
+     4,
+     4,
+     4,
+     4,
+     4,
+     4,
+     4,
+     4,
+     4,
+     4,
+     4,
+     4,
+     4,
+     4,
+     4,
+     4,
+     4,
+     4,
+     4,
+     4,
+     4,
+     4,
+     4,
+     4,
+     4,
+     4,
+     4,
+     4,
+     4,
+     4,
+     4,
+     4,
+     4,
+     4,
+     4,
+     4,
+     4,
+     4,
+     4,
+     4,
+     4,
+     4,
+     4,
+     4,
+     4
+    ],
+    "frame_step": -1,
+    "max_loops": 99,
+    "left_hand_item": -1,
+    "right_hand_item": -1,
+    "priority": 0,
+    "skeletons": 2
+   }
+  },
+  "anim/seq-5666.bin": {
+   "sha256": "63bd1f1d215e74224f4f55776b0a5c6d715bb70bbbd207b22b5af75e0610a5a4",
+   "size_bytes": 9704,
+   "detail": {
+    "sequence_id": 5666,
+    "file": "anim/seq-5666.bin",
+    "sha256": "63bd1f1d215e74224f4f55776b0a5c6d715bb70bbbd207b22b5af75e0610a5a4",
+    "frame_count": 8,
+    "frame_lengths_client_cycles": [
+     3,
+     3,
+     3,
+     3,
+     3,
+     3,
+     3,
+     3
+    ],
+    "frame_step": -1,
+    "max_loops": 99,
+    "left_hand_item": -1,
+    "right_hand_item": -1,
+    "priority": 0,
+    "skeletons": 1
+   }
+  },
+  "anim/seq-5668.bin": {
+   "sha256": "6777ba31b0aba6ed0633c5ef20d98fd2c95aac786fbd5a88e01f81eee81592d4",
+   "size_bytes": 9672,
+   "detail": {
+    "sequence_id": 5668,
+    "file": "anim/seq-5668.bin",
+    "sha256": "6777ba31b0aba6ed0633c5ef20d98fd2c95aac786fbd5a88e01f81eee81592d4",
+    "frame_count": 14,
+    "frame_lengths_client_cycles": [
+     6,
+     6,
+     6,
+     6,
+     6,
+     6,
+     6,
+     6,
+     6,
+     6,
+     6,
+     6,
+     6,
+     6
+    ],
+    "frame_step": -1,
+    "max_loops": 99,
+    "left_hand_item": -1,
+    "right_hand_item": -1,
+    "priority": 0,
+    "skeletons": 1
+   }
+  },
+  "anim/seq-6180.bin": {
+   "sha256": "f1e8d031f84bd7171e5ae90f5b49f6f8dd8b3800416025f9c41084c902367384",
+   "size_bytes": 17228,
+   "detail": {
+    "sequence_id": 6180,
+    "file": "anim/seq-6180.bin",
+    "sha256": "f1e8d031f84bd7171e5ae90f5b49f6f8dd8b3800416025f9c41084c902367384",
+    "frame_count": 16,
+    "frame_lengths_client_cycles": [
+     3,
+     3,
+     3,
+     3,
+     3,
+     3,
+     3,
+     3,
+     3,
+     3,
+     3,
+     3,
+     3,
+     3,
+     3,
+     3
+    ],
+    "frame_step": -1,
+    "max_loops": 99,
+    "left_hand_item": -1,
+    "right_hand_item": -1,
+    "priority": 0,
+    "skeletons": 1
+   }
+  },
+  "anim/seq-6181.bin": {
+   "sha256": "25d8c82285c1e07e6eec6bacf61141e0c2bfd762d00b192ef2eba0b6e70bbb1f",
+   "size_bytes": 15516,
+   "detail": {
+    "sequence_id": 6181,
+    "file": "anim/seq-6181.bin",
+    "sha256": "25d8c82285c1e07e6eec6bacf61141e0c2bfd762d00b192ef2eba0b6e70bbb1f",
+    "frame_count": 16,
+    "frame_lengths_client_cycles": [
+     3,
+     4,
+     4,
+     4,
+     4,
+     4,
+     4,
+     4,
+     4,
+     4,
+     4,
+     4,
+     4,
+     4,
+     4,
+     4
+    ],
+    "frame_step": -1,
+    "max_loops": 99,
+    "left_hand_item": -1,
+    "right_hand_item": -1,
+    "priority": 0,
+    "skeletons": 1
+   }
+  },
+  "anim/seq-6182.bin": {
+   "sha256": "3c0f92059f1296cfcb2e7107bd599a257a992f076d5ecae9351df82bb52cb03a",
+   "size_bytes": 26340,
+   "detail": {
+    "sequence_id": 6182,
+    "file": "anim/seq-6182.bin",
+    "sha256": "3c0f92059f1296cfcb2e7107bd599a257a992f076d5ecae9351df82bb52cb03a",
+    "frame_count": 31,
+    "frame_lengths_client_cycles": [
+     3,
+     3,
+     3,
+     3,
+     3,
+     3,
+     3,
+     3,
+     3,
+     3,
+     3,
+     3,
+     3,
+     3,
+     3,
+     3,
+     3,
+     3,
+     3,
+     3,
+     3,
+     3,
+     3,
+     3,
+     3,
+     3,
+     3,
+     3,
+     3,
+     3,
+     300
+    ],
+    "frame_step": -1,
+    "max_loops": 99,
+    "left_hand_item": -1,
+    "right_hand_item": -1,
+    "priority": 0,
+    "skeletons": 1
+   }
+  },
+  "anim/seq-6183.bin": {
+   "sha256": "74dbc9414d96136bcf9779a44719f288da83191953c034bed2209f1789d75ab9",
+   "size_bytes": 16696,
+   "detail": {
+    "sequence_id": 6183,
+    "file": "anim/seq-6183.bin",
+    "sha256": "74dbc9414d96136bcf9779a44719f288da83191953c034bed2209f1789d75ab9",
+    "frame_count": 19,
+    "frame_lengths_client_cycles": [
+     5,
+     5,
+     5,
+     5,
+     5,
+     5,
+     5,
+     5,
+     5,
+     5,
+     5,
+     5,
+     5,
+     5,
+     5,
+     5,
+     5,
+     5,
+     5
+    ],
+    "frame_step": -1,
+    "max_loops": 99,
+    "left_hand_item": -1,
+    "right_hand_item": -1,
+    "priority": 2,
+    "skeletons": 1
+   }
+  },
+  "anim/seq-6184.bin": {
+   "sha256": "56757fa032842173b68aefd4bc1d9b5bb3e7cda85b11d8288ca50b14570c43b8",
+   "size_bytes": 17616,
+   "detail": {
+    "sequence_id": 6184,
+    "file": "anim/seq-6184.bin",
+    "sha256": "56757fa032842173b68aefd4bc1d9b5bb3e7cda85b11d8288ca50b14570c43b8",
+    "frame_count": 18,
+    "frame_lengths_client_cycles": [
+     3,
+     3,
+     3,
+     3,
+     3,
+     3,
+     3,
+     3,
+     3,
+     3,
+     3,
+     3,
+     3,
+     3,
+     3,
+     3,
+     3,
+     3
+    ],
+    "frame_step": -1,
+    "max_loops": 99,
+    "left_hand_item": -1,
+    "right_hand_item": -1,
+    "priority": 2,
+    "skeletons": 1
+   }
+  },
+  "anim/seq-6185.bin": {
+   "sha256": "d90cb7d8321e0b54a361902eca3d2df4629503f8c1b173da60a69a399793fd29",
+   "size_bytes": 13504,
+   "detail": {
+    "sequence_id": 6185,
+    "file": "anim/seq-6185.bin",
+    "sha256": "d90cb7d8321e0b54a361902eca3d2df4629503f8c1b173da60a69a399793fd29",
+    "frame_count": 12,
+    "frame_lengths_client_cycles": [
+     3,
+     3,
+     3,
+     3,
+     3,
+     3,
+     3,
+     3,
+     3,
+     3,
+     3,
+     3
+    ],
+    "frame_step": -1,
+    "max_loops": 99,
+    "left_hand_item": -1,
+    "right_hand_item": -1,
+    "priority": 2,
+    "skeletons": 1
+   }
+  },
+  "anim/seq-7634.bin": {
+   "sha256": "87941cb25739c004e754ddcf1380b89401427cbcddc49a3149ef135eb32ce84e",
+   "size_bytes": 16912,
+   "detail": {
+    "sequence_id": 7634,
+    "file": "anim/seq-7634.bin",
+    "sha256": "87941cb25739c004e754ddcf1380b89401427cbcddc49a3149ef135eb32ce84e",
+    "frame_count": 8,
+    "frame_lengths_client_cycles": [
+     5,
+     5,
+     5,
+     5,
+     5,
+     5,
+     5,
+     5
+    ],
+    "frame_step": -1,
+    "max_loops": 99,
+    "left_hand_item": -1,
+    "right_hand_item": -1,
+    "priority": 0,
+    "skeletons": 1
+   }
+  },
+  "anim/seq-8748.bin": {
+   "sha256": "48d168e4d1751a032e7634a849f727a7b914a35a97ad7142444c6934ce8253c1",
+   "size_bytes": 23532,
+   "detail": {
+    "sequence_id": 8748,
+    "file": "anim/seq-8748.bin",
+    "sha256": "48d168e4d1751a032e7634a849f727a7b914a35a97ad7142444c6934ce8253c1",
+    "frame_count": 64,
+    "frame_lengths_client_cycles": [
+     5,
+     5,
+     5,
+     5,
+     5,
+     5,
+     5,
+     5,
+     5,
+     5,
+     5,
+     5,
+     5,
+     5,
+     5,
+     5,
+     5,
+     5,
+     5,
+     5,
+     5,
+     5,
+     5,
+     5,
+     5,
+     5,
+     5,
+     5,
+     5,
+     5,
+     5,
+     5,
+     5,
+     5,
+     5,
+     5,
+     5,
+     5,
+     5,
+     5,
+     5,
+     5,
+     5,
+     5,
+     5,
+     5,
+     5,
+     5,
+     5,
+     5,
+     5,
+     5,
+     5,
+     5,
+     5,
+     5,
+     5,
+     5,
+     5,
+     5,
+     5,
+     5,
+     5,
+     5
+    ],
+    "frame_step": -1,
+    "max_loops": 99,
+    "left_hand_item": -1,
+    "right_hand_item": -1,
+    "priority": 0,
+    "skeletons": 1
+   }
+  },
+  "anim/seq-12526.bin": {
+   "sha256": "a15cd4d7c9b0dd36d6ec67bce50970c9875015953c2ac707bbf787654ae82e37",
+   "size_bytes": 22888,
+   "detail": {
+    "sequence_id": 12526,
+    "file": "anim/seq-12526.bin",
+    "sha256": "a15cd4d7c9b0dd36d6ec67bce50970c9875015953c2ac707bbf787654ae82e37",
+    "frame_count": 10,
+    "frame_lengths_client_cycles": [
+     4,
+     3,
+     10,
+     3,
+     3,
+     3,
+     20,
+     3,
+     20,
+     4
+    ],
+    "frame_step": -1,
+    "max_loops": 99,
+    "left_hand_item": 0,
+    "right_hand_item": 0,
+    "priority": 2,
+    "skeletons": 1
    }
   }
  }
