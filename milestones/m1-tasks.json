@@ -12,11 +12,10 @@
       {"id": "cdfad64d-9162-439f-a525-58e1114dd7f4", "task": "M1-BROWSER-AUDIO"},
       {"id": "78d01af9-70a4-4b02-8339-6a61eb377374", "task": "M1-BROWSER-SHELL"},
       {"id": "81ac9884-4f39-4f27-b516-6e9a42b09b51", "task": "M1-HEADLESS-JOURNEY"},
-      {"id": "2766e089-44e5-4a1d-974e-7b03ad9c269d", "task": "M1-GAMEPLAY-UI-CONTRACTS"}
-    ],
-    "reserved": [
+      {"id": "2766e089-44e5-4a1d-974e-7b03ad9c269d", "task": "M1-GAMEPLAY-UI-CONTRACTS"},
       {"id": "ac0f0856-44af-445b-bd90-6db7a1f4fc74", "task": "M1-CONSUMABLE-ASSET-CLOSURE"}
     ],
+    "reserved": [],
     "queued": [],
     "parked": [
       {"id": "2a0ae699-6af8-45d5-90c7-3addfc56ee53", "reason": "Renewed five-invocation assessment complete; live creation/scene/window/baseline work, firstXP unverified after driverOutOfReach. No sixth invocation or automatic resumption."},
@@ -37,7 +36,7 @@
     {
       "id": "M1-CONSUMABLE-ASSET-CLOSURE",
       "goal": "Publish only the missing original empty-container assets required by actual M1 drinking replacements.",
-      "status": "READY",
+      "status": "IMPLEMENTING",
       "specs": ["tools/cache-import/POTION_ASSETS.md", "tools/cache-import/CONTENT_CLOSURE.md", "research/m1-bindings/ui-item-definitions.json.gz"],
       "dependencies": ["M1-FLEET-POTION-ASSETS"],
       "allowed_paths": ["tools/cache-import/**", "research/current-source/**", "assets/source/osrs/cache2695/**", "assets/manifests/osrs/**"],
