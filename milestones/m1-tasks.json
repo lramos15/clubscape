@@ -11,12 +11,11 @@
       {"id": "cc864d7a-37cc-4869-a7b4-d484d01cede5", "task": "M1-BROWSER-UI"},
       {"id": "cdfad64d-9162-439f-a525-58e1114dd7f4", "task": "M1-BROWSER-AUDIO"},
       {"id": "78d01af9-70a4-4b02-8339-6a61eb377374", "task": "M1-BROWSER-SHELL"},
-      {"id": "81ac9884-4f39-4f27-b516-6e9a42b09b51", "task": "M1-HEADLESS-JOURNEY"}
+      {"id": "81ac9884-4f39-4f27-b516-6e9a42b09b51", "task": "M1-HEADLESS-JOURNEY"},
+      {"id": "aab1ae0f-0238-4254-bff3-b7c046349c6b", "task": "M1-SHOP-REVIEW-FIXES"},
+      {"id": "0f5ddddf-0aa0-4908-b0d3-1ffc6b1f7a20", "task": "M1-ACTOR-REVIEW-FIXES"}
     ],
-    "reserved": [
-      {"id": "shop-fix-worker", "task": "M1-SHOP-REVIEW-FIXES"},
-      {"id": "actor-fix-worker", "task": "M1-ACTOR-REVIEW-FIXES"}
-    ],
+    "reserved": [],
     "queued": [],
     "parked": [
       {"id": "2766e089-44e5-4a1d-974e-7b03ad9c269d", "reason": "Final live server wiring integrated as 1ea2e65; no automatic resumption."},
@@ -35,10 +34,10 @@
     {
       "id": "M1-FACILITY-DROP-FIXES",
       "goal": "Repair demonstrated original-range face contact and fresh manual-drop owner-online lifetime semantics without altering source collision or clocks.",
-      "status": "READY",
+      "status": "IMPLEMENTING",
       "specs": ["research/m1-bindings/contract-gaps.json", "research/m1-bindings/runtime3-policy.json", "spec/game-contracts.md"],
-      "dependencies": ["M1-FLEET-BINDING-APPLICATION"],
-      "allowed_paths": ["crates/world-engine/src/permissions.rs", "crates/world-engine/src/world.rs", "crates/world-engine/src/actions.rs", "crates/world-engine/src/death.rs", "crates/world-engine/src/queries.rs", "crates/world-engine/tests/**", "crates/game-types/src/mechanics.rs", "crates/game-types/src/runtime_state.rs", "crates/game-types/src/runtime_validation.rs", "crates/content/**", "crates/simulation/tests/**", "crates/server/tests/**", "content/m1/**", "tools/m1-content/**", "research/m1-bindings/**", "spec/game-contracts.md"],
+      "dependencies": ["M1-FLEET-ENGINE-CLOSURE"],
+      "allowed_paths": ["crates/world-engine/src/permissions.rs", "crates/world-engine/src/navigation.rs", "crates/world-engine/src/world.rs", "crates/world-engine/src/actions.rs", "crates/world-engine/src/death.rs", "crates/world-engine/src/queries.rs", "crates/world-engine/src/lib.rs (owner clock tick only)", "crates/world-engine/tests/**", "crates/game-types/src/mechanics.rs", "crates/game-types/src/execution.rs", "crates/game-types/src/runtime_state.rs", "crates/game-types/src/runtime_validation.rs", "crates/content/**", "crates/simulation/tests/**", "crates/server/tests/**", "content/m1/**", "tools/m1-content/**", "research/m1-bindings/**", "spec/game-contracts.md"],
       "forbidden_paths": ["prompt.md", "assets/**", "web/**", "crates/protocol/**", "crates/world-engine/src/commerce.rs", "crates/world-engine/src/entities.rs", "crates/world-engine/src/combat.rs"],
       "outputs": ["Source-solid-facility contact with preserved access sides and walls", "Explicit persisted ground clock and fresh-profile selection", "Passing canonical native probes and regression cases"],
       "validation_commands": ["cargo test -p clubscape-world-engine -p clubscape-game-types -p clubscape-content", "python3 tools/m1-content/validate.py --repeat"],
@@ -53,7 +52,7 @@
     {
       "id": "M1-SHOP-REVIEW-FIXES",
       "goal": "Repair stale unstocked shop item selection and permanent zero-stock capacity consumption from independent review.",
-      "status": "READY",
+      "status": "IMPLEMENTING",
       "specs": ["crates/world-engine/README.md", "spec/game-contracts.md"],
       "dependencies": ["M1-ENGINE-REVIEW"],
       "allowed_paths": ["crates/world-engine/src/commerce.rs", "crates/world-engine/src/views.rs", "crates/world-engine/src/lib.rs (shop intent dispatch only)", "crates/world-engine/tests/shop_review.rs", "crates/world-engine/tests/** (shop constructor compatibility only)", "crates/game-types/src/intent.rs", "crates/protocol/**", "crates/client-core/tests/** (shop constructor compatibility only)", "crates/server/tests/** (shop constructor compatibility only)", "web/shared/contracts.ts (shop intent identity only)", "spec/game-contracts.md (shop identity section only)"],
@@ -71,7 +70,7 @@
     {
       "id": "M1-ACTOR-REVIEW-FIXES",
       "goal": "Repair offline NPC collision and stale queued combat style while preserving vulnerable disconnected actors and attack deadlines.",
-      "status": "READY",
+      "status": "IMPLEMENTING",
       "specs": ["crates/world-engine/README.md", "spec/game-contracts.md"],
       "dependencies": ["M1-ENGINE-REVIEW"],
       "allowed_paths": ["crates/world-engine/src/entities.rs", "crates/world-engine/src/combat.rs", "crates/world-engine/src/activities.rs", "crates/world-engine/src/lib.rs (NPC tick context only)", "crates/world-engine/tests/actor_review.rs"],
