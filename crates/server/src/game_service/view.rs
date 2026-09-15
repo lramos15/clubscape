@@ -501,6 +501,7 @@ pub(super) fn snapshot(
     }
     entities.sort_by(|a, b| a.id.cmp(&b.id));
     let result = game::WorldSnapshot {
+        audio_authority: None,
         scene: Some({
             let scene = engine
                 .scene_view(&world.state, actor)

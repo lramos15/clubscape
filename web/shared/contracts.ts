@@ -178,6 +178,8 @@ export interface AudioEvent {
   payload: Readonly<Record<string, string | number | boolean>>;
 }
 export interface WorldView {
+  /** Read-only server authority. Absence is unsupported, never a fresh empty history. */
+  audioAuthority?: AudioAuthorityView;
   /** Absent only on older unsupported servers. game.ui.v1 requires version 1. */
   ui?: GameplayUiView;
   revision: string;
@@ -199,6 +201,32 @@ export interface WorldView {
 export const GAMEPLAY_UI_CAPABILITY = "game.ui.v1";
 export const UI_AMOUNTS_CAPABILITY = "game.ui.amounts.v1";
 export const UI_RECOVERY_CAPABILITY = "game.ui.recovery.v1";
+export const AUDIO_AUTHORITY_CAPABILITY = "game.audio.authority.v1";
+export interface AudioAuthorityView {
+  version: 1;
+  profile: string;
+  music: {
+    history: "from_creation" | "legacy_untracked";
+    trackedFromTick: string;
+    revision: string;
+    /** Legacy missing tracks remain unknown, not locked; client preferences cannot fill them. */
+    complete: boolean;
+    unlockedGroups: readonly number[];
+    tracks: ReadonlyArray<{
+      group: number;
+      status: "unlocked" | "locked" | "unknown";
+      confirmedAtTick: string | null;
+      rule: string | null;
+    }>;
+  };
+  varps: ReadonlyArray<{
+    id: number;
+    value: number | null;
+    knownBits: number;
+    binding: string;
+    unavailableReason: string | null;
+  }>;
+}
 export type UiAmount = { kind: "quantity"; quantity: number } | { kind: "all" };
 export interface RecoveryItemAmount { id: string; amount: UiAmount }
 export interface RecoveryRecordSelection { death: string; items: string[] }

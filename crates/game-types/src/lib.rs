@@ -1,3 +1,4 @@
+mod audio_authority;
 mod content;
 mod error;
 mod execution;
@@ -13,6 +14,7 @@ mod state;
 mod ui_amounts;
 mod ui_state;
 
+pub use audio_authority::*;
 pub use content::*;
 pub use error::*;
 pub use execution::*;

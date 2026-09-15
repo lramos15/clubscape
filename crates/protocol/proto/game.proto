@@ -176,6 +176,45 @@ message WorldSnapshot {
   // Present and versioned when game.ui.v1 is advertised; absent is unsupported legacy.
   GameplayUiView ui = 20;
   CurrentScene scene = 21;
+  AudioAuthority audio_authority = 22;
+}
+message AudioAuthority {
+  uint32 version = 1;
+  string profile = 2;
+  MusicAuthority music = 3;
+  repeated NativeVarp varps = 4;
+}
+enum MusicHistoryStatus {
+  MUSIC_HISTORY_UNSPECIFIED = 0;
+  FROM_CREATION = 1;
+  LEGACY_UNTRACKED = 2;
+}
+enum MusicUnlockStatus {
+  MUSIC_UNLOCK_UNSPECIFIED = 0;
+  UNLOCKED = 1;
+  LOCKED = 2;
+  UNKNOWN = 3;
+}
+message MusicAuthority {
+  MusicHistoryStatus history = 1;
+  string tracked_from_tick = 2;
+  string revision = 3;
+  bool complete = 4;
+  repeated uint32 unlocked_groups = 5;
+  repeated MusicUnlock tracks = 6;
+}
+message MusicUnlock {
+  uint32 group = 1;
+  MusicUnlockStatus status = 2;
+  optional string confirmed_at_tick = 3;
+  optional string rule = 4;
+}
+message NativeVarp {
+  uint32 id = 1;
+  optional sint32 value = 2;
+  string binding = 3;
+  optional string unavailable_reason = 4;
+  uint32 known_bits = 5;
 }
 message CurrentScene {
   string region = 1;

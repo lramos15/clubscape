@@ -1,5 +1,42 @@
 # Shared M1 game contracts
 
+## Read-only source audio authority
+
+`game.audio.authority.v1` adds `WorldView.audioAuthority` /
+Protobuf `WorldSnapshot.audio_authority`22. `AudioAuthorityView` contains
+`version`, source `profile`, `music` and `varps`. There is **no write request**
+for unlocks, history, variable words or client-supplied grants. This contract is
+published before the implementation; the capability is not advertised by an
+unimplemented endpoint.
+
+Music supplies `history: from_creation | legacy_untracked`, decimal
+`trackedFromTick`/`revision`, `complete`, the confirmed `unlockedGroups`, and
+one `tracks` row per declared group with `status: unlocked | locked | unknown`,
+nullable `confirmedAtTick` and source `rule`. A confirmation tick records when
+authority learned the fact, not a fabricated earlier visit time.
+The bounded M1 menu set is2/62/64/76/144/145/163/327. Group0 is title music,
+never a manufactured menu unlock. Modern playlist membership is not an unlock
+rule; source position/actions and independently bound facts determine unlocks.
+
+Missing history in an older world is **untracked**, not a fresh empty list or
+an all-unlocked account. Legacy missing tracks remain `unknown`; they do not
+become `locked` merely because the current tile is elsewhere. New confirmations
+are persistent and append-only. Shell/audio must preserve existing preference
+records and report incomplete authority rather than replacing them with defaults,
+granting their selected tracks, or silently treating a current-location list as
+complete history. `complete` is true only when every declared track's state is
+known. Preferences/playback, unlock authority and original source selection
+evidence remain separate responsibilities.
+
+Each native variable row contains original `id`, nullable signed `value`,
+`knownBits`, source `binding`, and nullable `unavailableReason`. The consumer
+must verify that every bit required by its validated original varbit definitions
+is covered before forwarding the value to `SourceAudioScene.varps`. Unbound bits
+are not a license to infer quest state or fill a missing variable with zero.
+These are read-only projections of generic server facts/source-qualified
+defaults, not a second RuneLite-shaped gameplay authority or client preferences.
+The existing renderer/audio handles and `SourceAudioPreferences`v1 are unchanged.
+
 ## Renderer observer contract, version 1
 
 The additive capability is `game.observer.v1`.
