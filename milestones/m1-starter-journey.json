@@ -9,11 +9,11 @@
   "candidate_revision": null,
   "accepted_revision": null,
   "checkpoint": {
-    "report": "milestones/evidence/m1-authority-controls.json",
+    "report": "milestones/evidence/m1-dying-audio-repairs.json",
     "verified_infrastructure_revision": "275d3cc83d6a7c2118d0afcf82490f364e5d2986",
     "infrastructure_evidence": "milestones/evidence/m1-account-foundations.json",
-    "runtime_revision": "49bf011b3f5dff77877310d61f56ac6320ea7a90",
-    "scope_note": "Newauthority-enabled5b3canonical4 passes588native,46realPG and94source/95repeat checks; existing5e/6fworlds are notrepinned. Actualsame5e journey reaches321checks,shop/goblin/loot withtwoverifiedprivate restores, thenDyingPollWorld409; privatecheckpointpreserved. Source-safe death continuation,Cook/postquest,completeclient/fidelity/performance/owner gates remainincomplete."
+    "runtime_revision": "f9e56a577b2aa6d56521d025536c972d8691d860",
+    "scope_note": "The current 5b3 authority candidate and native dying-observation repair are verified separately from the actual source-5e journey. That same account reached 70/70 tutorial transitions and 321 checks through shops, goblin combat and loot, with two verified private restores, then stopped at Dying PollWorld409. Its protected checkpoint remains unchanged; actual cause confirmation and source-safe continuation are pending. The exact composed audio/storage fixture passes after the cue-timing repair, not the whole production client. Cook/post-quest recovery, complete client/fidelity/performance and owner acceptance remain incomplete."
   },
   "scope_approval": {
     "authority": "owner",

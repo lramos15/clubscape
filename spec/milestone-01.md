@@ -98,12 +98,24 @@ unblocked milestone work where possible, then report the milestone as
 incomplete with a durable checkpoint. Never relabel that checkpoint as an
 accepted slice.
 
-The current [mainland/shop checkpoint](../milestones/evidence/m1-mainland-shop-entry.json)
-preserves a real normal-account journey through all70 source tutorial
-transitions, Learning the Ropes'1QP reward, legitimate Lumbridge arrival,
-copper mining, bank operations and onboarding recovery. The next source shop
-entry blocker is repaired without changing the canonical artifact; its native
-checks are not a substitute for the resumed mainland journey.
+The current [repair checkpoint](../milestones/evidence/m1-dying-audio-repairs.json)
+preserves the distinction between native repairs and the actual normal-account
+journey. That same source-5e account has completed all 70 tutorial transitions,
+Learning the Ropes' 1QP reward, legitimate Lumbridge arrival, copper mining,
+bank/shop operations, goblin combat and loot: 321 checks across three
+invocations, including two verified private database restores. It is now
+preserved at a dying-state `PollWorld409` failure. A native stale-combat-style
+reproduction and repair pass, but the actual checkpoint cause and source-safe
+continuation still need confirmation. Do not repin, heal, skip a death phase,
+replay retention, or recreate missing trace events to resume it.
+
+The newer [authority candidate](../milestones/evidence/m1-authority-controls.json)
+uses source 5b3; its controls, audio history and animation contracts are verified
+separately, without repinning existing worlds. The exact composed audio/storage
+fixture passes after the native cue-timing repair. That fixture is not the
+complete production browser client, a fresh browser journey, or owner audio
+acceptance.
+
 The [native UI comparisons](../milestones/evidence/m1-ui-controls.json),
 [renderer/audio results](../milestones/evidence/m1-render-audio-integration.json)
 and [reviewed travel repair](../milestones/evidence/m1-ui-travel-interruption.json)

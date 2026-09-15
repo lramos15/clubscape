@@ -43,14 +43,14 @@
       "allowed_paths": ["crates/world-engine/src/death.rs", "crates/world-engine/src/combat.rs", "crates/world-engine/src/lifecycle.rs", "crates/world-engine/src/gameplay_ui/projections.rs", "crates/world-engine/tests/dying_observation.rs", "crates/server/src/game_service/tests/dying_observation.rs", "crates/server/src/game_service/tests.rs", "crates/world-engine/README.md", "spec/game-contracts.md"],
       "forbidden_paths": ["prompt.md", "assets/**", "content/**", "web/**", "research/reference-pack/**", "tools/reference-pack/**", ".local/journey-checkpoints/**"],
       "outputs": ["Exact failing observation query localized and reproduced", "Minimal source-preserving life-transition/read-only correction", "Positive phase observation and negative input/persistence regressions"],
-      "validation_commands": [],
+      "validation_commands": ["cargo test --locked -p clubscape-world-engine --test dying_observation", "python3 tools/dev.py integration --report .local/evidence/dying-observation-parent.json"],
       "test_requirements": ["No heal, death skip, fake arrival or state seeding", "No broad catch/empty view/permission weakening", "Preserve privatecheckpoint/RNG/items/XP/receipts/source pin", "Reconcile derived metadata only through a demonstrated legitimate boundary", "Public polling stays read-only"],
       "acceptance": ["SQL m1-dying-observation records proven cause, executable regressions and a separately authorized source-safe checkpoint continuation"],
       "reserved_namespaces": [],
-      "source_notes": ["Actualgoblin-causeddeath: lastpublictick1613HP1, preservedtick1616HP0/lifeDying. PollWorld409error688aab5a. Stalecombatstyleafterequipmentremoval is a candidate only; exact private-state diagnostic is pending."],
+      "source_notes": ["Actual goblin-caused death: last public tick1613/HP1, preserved tick1616/HP0/lifeDying, PollWorld409 error688aab5a. Native canonical-source reproduction confirms a stale sword style after the source retention rules remove the equipped sword. Whether this caused the actual private checkpoint failure still requires the sanitized diagnostic."],
       "parity_entries": [],
       "adaptations": [],
-      "evidence": []
+      "evidence": ["Owned634cff997ab290eb482c1a2923885ca25eea620a integratedf6f6adf refreshes derived style after death equipment retention and at trusted Join/Rejoin/CoordinatorRestart only in intermediate death states. Four native regressions and full engine/native/WASM checks pass; parent46 realPG/HTTP tests plus11 independent account checks pass. Query/input guards, death clocks, items, XP, RNG, receipts and source pins are preserved.", "milestones/evidence/m1-dying-audio-repairs.json records the native repair and actual checkpoint uncertainty. Protected archive7fa370e14c9b421e remains unchanged; public gameplay resume is not authorized until its cause is confirmed and the source-safe adapter is verified."]
     },
     {
       "id": "M1-AUDIO-CUE-TIMING",
