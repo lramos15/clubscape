@@ -9,11 +9,11 @@
   "candidate_revision": null,
   "accepted_revision": null,
   "checkpoint": {
-    "report": "milestones/evidence/m1-engine-review-repairs.json",
+    "report": "milestones/evidence/m1-source-journey31.json",
     "verified_infrastructure_revision": "275d3cc83d6a7c2118d0afcf82490f364e5d2986",
     "infrastructure_evidence": "milestones/evidence/m1-account-foundations.json",
-    "runtime_revision": "3a74cbe5911e699fd30e51cdedf944e4616f86b5",
-    "scope_note": "All four reported engine review defects are repaired. This is native/source/persistence evidence only; complete legitimate journey and real browser/presentation/performance acceptance remain outstanding."
+    "runtime_revision": "8b617c63bc33c5a448162dce5db1a946fb5cb49f",
+    "scope_note": "One normal-account source journey verifies31/70 transitions and onboarding recovery, then stops at the missing contextual smithing-menu event. Twelve independent original dynamic-layer cases are integrated; candidate comparisons and full browser/gameplay/presentation/performance acceptance remain outstanding. Upcoming authoritative UI4 is not yet integrated."
   },
   "scope_approval": {
     "authority": "owner",
@@ -32,7 +32,7 @@
     {"id": "benchmark-contract", "status": "implemented", "evidence": [], "blocker": "Pre-implementation contract is spec/m1-benchmark-contract.json. Sparky profile is pinned for permitted engineering; exact owner Mac/Chrome/Edge fields and final measurements remain to be collected."},
     {"id": "early-presentation-benchmark", "status": "in_progress", "evidence": [], "blocker": "Reference pack is approved; actual renderer/UI/audio composition and source comparisons are still being implemented."},
     {"id": "real-ui-account-creation", "status": "in_progress", "evidence": [], "blocker": null},
-    {"id": "complete-tutorial", "status": "in_progress", "evidence": [], "blocker": null},
+    {"id": "complete-tutorial", "status": "in_progress", "evidence": [], "blocker": "31/70 source transitions verified in one fresh normal account. The actual anvil Smith action does not yet open the contextual source smithing interface required for the next lesson; backend production/UI closure is in progress."},
     {"id": "legitimate-lumbridge-arrival", "status": "in_progress", "evidence": [], "blocker": null},
     {"id": "lumbridge-activities", "status": "in_progress", "evidence": [], "blocker": null},
     {"id": "death-and-recovery", "status": "in_progress", "evidence": [], "blocker": null},
@@ -46,11 +46,11 @@
     {"id": "migration-and-extension-validation", "status": "in_progress", "evidence": [], "blocker": null},
     {"id": "chrome-fresh-account-journey", "status": "not_started", "evidence": [], "blocker": null},
     {"id": "edge-fresh-account-journey", "status": "not_started", "evidence": [], "blocker": null},
-    {"id": "source-visual-comparisons", "status": "not_started", "evidence": [], "blocker": null},
+    {"id": "source-visual-comparisons", "status": "in_progress", "evidence": [], "blocker": "Source UI/model component proofs and12 additional original dynamic cases exist; matched complete composed-client cases, raw gear-fit, roofs and full-HUD projection still require closure."},
     {"id": "runtime-animation-evidence", "status": "in_progress", "evidence": [], "blocker": null},
     {"id": "runtime-audio-evidence", "status": "in_progress", "evidence": [], "blocker": null},
-    {"id": "chrome-integrated-gpu-performance", "status": "blocked", "evidence": [], "blocker": "No pinned representative integrated-graphics Chrome contract or rendered-workload evidence; GB10 availability alone does not establish this gate."},
-    {"id": "edge-integrated-gpu-performance", "status": "blocked", "evidence": [], "blocker": "Representative integrated-GPU Edge environment unavailable."},
+    {"id": "chrome-integrated-gpu-performance", "status": "blocked", "evidence": [], "blocker": "Owner will run the final candidate on an M-series Mac; exact hardware/Chrome attestation and frozen-workload results remain unrun. Sparky engineering measured59.85FPS/p95 completion gap about28ms, not the required60FPS/20ms."},
+    {"id": "edge-integrated-gpu-performance", "status": "blocked", "evidence": [], "blocker": "Owner Mac/Edge handoff is planned, but exact platform attestation and real frozen-workload results remain unrun; no native Linux ARM64 Edge is available."},
     {"id": "independent-style-review", "status": "not_started", "evidence": [], "blocker": null},
     {"id": "independent-technical-review", "status": "not_started", "evidence": [], "blocker": null},
     {"id": "security-and-recovery", "status": "not_started", "evidence": [], "blocker": null},

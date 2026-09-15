@@ -10,13 +10,14 @@
       {"id": "bb7f85f7-096a-4377-80cb-3e7eae196c6b", "task": "M1-BROWSER-RENDERER"},
       {"id": "cc864d7a-37cc-4869-a7b4-d484d01cede5", "task": "M1-BROWSER-UI"},
       {"id": "78d01af9-70a4-4b02-8339-6a61eb377374", "task": "M1-BROWSER-SHELL"},
-      {"id": "81ac9884-4f39-4f27-b516-6e9a42b09b51", "task": "M1-HEADLESS-JOURNEY"},
-      {"id": "2766e089-44e5-4a1d-974e-7b03ad9c269d", "task": "M1-GAMEPLAY-UI-CONTRACTS"},
-      {"id": "ac0f0856-44af-445b-bd90-6db7a1f4fc74", "task": "M1-SOURCE-DYNAMIC-REFERENCES"}
+      {"id": "2766e089-44e5-4a1d-974e-7b03ad9c269d", "task": "M1-GAMEPLAY-UI-CONTRACTS"}
     ],
-    "reserved": [],
+    "reserved": [
+      {"id": "81ac9884-4f39-4f27-b516-6e9a42b09b51", "task": "M1-HEADLESS-JOURNEY", "reason": "31/70 real source transitions and onboarding recovery verified. Runner is idle until the authoritative contextual smithing menu and final v4 candidate are integrated; no live service remains."}
+    ],
     "queued": [],
     "parked": [
+      {"id": "ac0f0856-44af-445b-bd90-6db7a1f4fc74", "reason": "Twelve independent original dynamic-layer cases integrated8b617c6; exact image/state/pair integrity and frozen full-HUD replay verified. Candidate comparisons belong to renderer; no automatic resumption."},
       {"id": "cdfad64d-9162-439f-a525-58e1114dd7f4", "reason": "Native-calibrated audio and exact9asset supplement integratedf9e466d;29unit/32browser/85pack checks pass. Composed app/speaker/Mac/Edge acceptance remains separate; no automatic resumption."},
       {"id": "2a0ae699-6af8-45d5-90c7-3addfc56ee53", "reason": "Renewed five-invocation assessment complete; live creation/scene/window/baseline work, firstXP unverified after driverOutOfReach. No sixth invocation or automatic resumption."},
       {"id": "aab1ae0f-0238-4254-bff3-b7c046349c6b", "reason": "Shop capacity/identity fixes integrated as3310032+af75e17 with18 passing regressions; no automatic resumption."},
@@ -36,7 +37,7 @@
     {
       "id": "M1-TUTORIAL-DIALOGUE-ENTRIES",
       "goal": "Repair overlapping source lesson/recovery dialogue entries while preserving all grants, source stages and explicit missing-supply recovery.",
-      "status": "IMPLEMENTING",
+      "status": "DONE",
       "specs": ["tools/journey-tests/evidence/survival-tools-entry-dcec4a5.json", "research/journey-rules/tutorial.json", "spec/game-contracts.md"],
       "dependencies": ["M1-NONWALKING-CONTACT"],
       "allowed_paths": ["tools/m1-content/dialogue_entries.py", "tools/m1-content/selectors3.py", "tools/m1-content/test_dialogue_entries.py", "tools/m1-content/schema-check/examples/dialogue_entries.rs", "content/m1/**", "research/m1-bindings/**", "content/m1/README.md"],
@@ -49,12 +50,12 @@
       "source_notes": ["Two normal accounts passed10/70sourceedges plus onboardingrecovery; reachable SurvivalExpert producesInvalidContent because primarylesson andnetrecovery entries overlap."],
       "parity_entries": [],
       "adaptations": [],
-      "evidence": ["2f775f7+435e27c apply separateauditedloweringAFTERimmutable104+7bindingapplication; primarylessonexclusive,onefallbackrecoverymenu,originalchoice/effects preserved andactualmissing/topup ownershiprequired.", "Strictsourcev3artifactbb99ad96...82e2e1 passes69tests/195oracles/30routes/23graphs/92repeatoutputs. Nativeprimarylesson grantsoneaxe/tinderbox whilekeepingnet andadvancescut_logs; lostnetchoicegrantsonewithoutstagechange. Actualfreshjourney recheckrunning; noM1acceptance."]
+      "evidence": ["2f775f7+435e27c apply separateauditedloweringAFTERimmutable104+7bindingapplication; primarylessonexclusive,onefallbackrecoverymenu,originalchoice/effects preserved andactualmissing/topup ownershiprequired.", "Strictsourcev3artifactbb99ad96...82e2e1 passes69tests/195oracles/30routes/23graphs/92repeatoutputs. Nativeprimarylesson grantsoneaxe/tinderbox whilekeepingnet andadvancescut_logs; lostnetchoicegrantsonewithoutstagechange.", "ACTUAL fresh normal-account tools lesson passed in two candidates; e357222 integrates089639eb and tools/journey-tests/evidence/exclusive-tools-f2b1870.json. Source choice grants exactly one axe/tinderbox, retains legitimately owned net/shrimp and advances survival_tools to cut_logs without500. Later candidate reaches31/70 transitions; full M1 remains unaccepted."]
     },
     {
       "id": "M1-SOURCE-DYNAMIC-REFERENCES",
       "goal": "Capture bounded supplemental original-runtime evidence for required dynamic world layers under the already approved presentation target.",
-      "status": "IMPLEMENTING",
+      "status": "DONE",
       "specs": ["tools/source-capture/README.md", "tools/source-capture/NATIVE_HUD.md", "spec/browser-implementation.md", "research/reference-pack/v1/comparison-policy.json"],
       "dependencies": ["M1-REFERENCE-APPROVAL"],
       "allowed_paths": ["tools/source-layer-capture/**", "assets/reference/osrs240/m1-dynamic/**", "research/source-layers/**"],
@@ -67,7 +68,7 @@
       "source_notes": ["Existing renderer has dynamic geometry/pixel-change checks but needs matched original source evidence; source target/tolerances do not change."],
       "parity_entries": [],
       "adaptations": [],
-      "evidence": []
+      "evidence": ["53fbd543 integrated8b617c6 publishes exactly12 original-native cases and8 paired pixel/geometry records. Case-index SHA dde300e30ff909e539c283fa7053c673abc9428ce357894f0727be08da8ad557; original12-case repeat is byte-identical,22 new and20 frozen-capture tests pass, all1307 frozen hashes unchanged.", "Parent verifies all12 stored original images/native states and8 pairs, and actually replays the frozen native inventory frame byte-identically. Original full-HUD zoom410 differs from viewport-only662; locked/normal roof selectors, controlled door orientation and mapped-chunk qualifications are explicit. These are source inputs, not candidate fidelity/gameplay/performance acceptance. Renderer received exact source cases and remains responsible for matched comparisons."]
     },
     {
       "id": "M1-NONWALKING-CONTACT",
@@ -126,7 +127,7 @@
     {
       "id": "M1-GAMEPLAY-UI-CONTRACTS",
       "goal": "Close the actual source-backed engine/data/protocol contracts required by the approved M1 interface controls.",
-      "status": "DONE",
+      "status": "IMPLEMENTING",
       "specs": ["spec/browser-implementation.md", "web/ui/contract-gaps.json", "spec/game-contracts.md", "spec/game-networking.md", "prompt.md sections30/3.3"],
       "dependencies": ["M1-FLEET-LIVE-SERVER", "M1-FLEET-BINDING-APPLICATION", "M1-SHOP-REVIEW-FIXES", "M1-ACTOR-REVIEW-FIXES"],
       "allowed_paths": ["crates/server/**", "crates/protocol/**", "crates/game-types/**", "crates/world-engine/**", "crates/simulation/**", "crates/content/**", "crates/client-core/tests/**", "content/m1/**", "tools/m1-content/**", "research/m1-bindings/**", "research/interface-contracts/**", "web/shared/contracts.ts", "spec/game-contracts.md", "spec/game-networking.md", "spec/browser-implementation.md"],
@@ -139,12 +140,12 @@
       "source_notes": ["The delivered UI has87/87 source raster checks but its listed authority/control gaps are real. Reuse current engine planners and canonical sources; routine stock behavior is not an adaptation."],
       "parity_entries": [],
       "adaptations": [],
-      "evidence": ["Initial andrenewedboundedassessment preserved; newownedcommits integrated591a5a0/5a9959d/bb13381. Fiveof fiveinvocationsconsumed; no sixth authorized.", "Live normalcreation/join/originalscene/penguin/window andgenuineXPTrackerbaseline verified. Sourceappearance/experience transitions occurred, thenclientdriverTalk-to lackedcurrentmoving-target approach andreturnedOutOfReach beforemovement/XP. This was NOTthelaterpost-door tick503. Fulltuple/tier/RuneLitecompatibilityremainUNVERIFIED; no desktopdeferral/M1acceptance."]
+      "evidence": ["Shared game.ui.v1 contract e48e6f5 is integratedd1532d6. Backend implementation9ae74e89 and nullable production contract351847f3/implementation50f21226 remain worker-owned, not integrated on main. Final v4 must consume all four source publication layers, preserve the post-binding dialogue-entry repair and expose actual renderer observer state.", "ACTUAL v3 journey reaches31/70 transitions, then source anvil Smith acknowledges without contextual interface.smithing opening or required stage transition. The same backend owner is closing this real Production entry/event path with canonical and public-protocol regressions, not generic OpenInterface or direct-dagger bypass. Final regenerated v4 hashes and integrated validation are pending; no UI/gameplay acceptance claimed."]
     },
     {
       "id": "M1-GAME-ROOT-STARTUP",
       "goal": "Unblock real canonical-world startup without trimming source assets or silently requiring a browser bundle.",
-      "status": "IMPLEMENTING",
+      "status": "DONE",
       "specs": ["spec/game-networking.md", "web/ui/contract-gaps.json", "tools/web-build/README.md"],
       "dependencies": ["M1-FLEET-LIVE-SERVER", "M1-FLEET-BINDING-APPLICATION"],
       "allowed_paths": ["crates/server/src/config.rs", "crates/server/src/game_service/content.rs", "crates/server/src/game_service/tests.rs", "spec/game-networking.md"],
@@ -162,7 +163,7 @@
     {
       "id": "M1-RUNELITE-FEASIBILITY",
       "goal": "Execute a bounded real RuneLite compatibility experiment independently of mandatory browser/headless M1 acceptance.",
-      "status": "IMPLEMENTING",
+      "status": "PARKED",
       "specs": ["prompt.md section 12", "spec/runelite-compatibility.md", "spec/game-networking.md", "docs/machines/sparky.md"],
       "dependencies": ["M1-FLEET-LIVE-SERVER"],
       "allowed_paths": ["runelite/compatibility/**", "runelite/integration-tests/**", "tools/runelite-compatibility/**", "research/runelite-feasibility/**", "spec/runelite-compatibility.md"],
@@ -175,7 +176,7 @@
       "source_notes": ["Official RuneLite1.12.38/injected revision240 and cache2695 are already pinned; no repeated baseline freshness discovery."],
       "parity_entries": [],
       "adaptations": [],
-      "evidence": []
+      "evidence": ["Initial and renewed bounded assessments preserved; owned commits integrated591a5a0/5a9959d/bb13381. Five of five invocations consumed; no sixth authorized.", "Live normal creation/join/original scene/penguin/window and genuine XP Tracker baseline verified. Source appearance/experience transitions occurred, then client-driver Talk-to lacked current moving-target approach and returned OutOfReach before movement/XP. This was not the later post-door tick503. Full tuple/tier/RuneLite compatibility remain unverified; no desktop deferral or M1 acceptance."]
     },
     {
       "id": "M1-FACILITY-DROP-FIXES",
@@ -234,7 +235,7 @@
     {
       "id": "M1-HEADLESS-JOURNEY",
       "goal": "Implement and execute the complete legitimate M1 protocol journey with real account/world/persistence boundaries, not seeded states.",
-      "status": "IMPLEMENTING",
+      "status": "BLOCKED",
       "specs": ["prompt.md section 30.1", "research/journey-rules/**", "spec/game-networking.md", "content/m1/README.md"],
       "dependencies": ["M1-FLEET-ENGINE-CLOSURE"],
       "allowed_paths": ["tools/simulator/**", "tools/journey-tests/**", "tests/scenarios/**"],
@@ -247,7 +248,7 @@
       "source_notes": ["Real server protobuf APIs and canonical source content"],
       "parity_entries": [],
       "adaptations": [],
-      "evidence": []
+      "evidence": ["089639eb integratede357222. One fresh normal account on exactbb99 v3 completed31/70 source transitions and162 source checks, including legitimate gathering/fire/cooking/mining/smelting and transport/logout/login/owned-server restart/durable-grant replay. tools/journey-tests/evidence/anvil-open-f2b1870.json preserves source/build/protocol/event identities and real outcomes.", "Current blocker is acknowledged source Smith at anvil_open emitting only a selection message, not contextual interface.smithing opening. Backend UI owner is closing the real production boundary. No forged interface event/direct dagger/stage skip, old-world repinning, unknown mutation retry or combined-account coverage. Remaining39 transitions, Lumbridge/Cook/death/postquest recovery and full M1 acceptance are unverified.", "Parent40 simulator/protocol Rust tests,12 orchestration tests, fmt and strict Clippy pass. Acknowledged-input history is reconciled only by exact last-event payload overlap in the server's chronological suffix or a no-gap read-only actual-cursor poll; wire gap and proof remain recorded."]
     },
     {
       "id": "M1-ENGINE-REVIEW",

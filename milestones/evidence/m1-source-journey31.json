@@ -1,0 +1,99 @@
+{
+  "schema_version": 1,
+  "milestone": "m1-starter-journey",
+  "result": "partial_source_journey_and_independent_reference_inputs_verified",
+  "code_revision": "8b617c63bc33c5a448162dce5db1a946fb5cb49f",
+  "recorded_date": "2026-09-15",
+  "source_candidate": {
+    "content_artifact_version": 3,
+    "content_revision": "m1.source-backed.v3.41555bd46c074d62",
+    "raw_artifact_sha256": "bb99ad96add9669fd49c4162832fbd8e9cb151997a4e4c4682b33b1f1882e2e1",
+    "manifest_sha256": "41e5cd10d3992084b52642cb59845b80a221d483fc8df65197da7f1ef35d494f",
+    "state_version": 1,
+    "runtime_version": 1,
+    "upcoming_ui4_integrated": false
+  },
+  "actual_journey": {
+    "evidence_revision": "e35722252d256fdf8e91c3b60ce5e7c432168ee8",
+    "path": "tools/journey-tests/evidence/anvil-open-f2b1870.json",
+    "sha256": "849b74c21d7bbd44220279e3a817894280914a603a5938850d14c53aeb8e2772",
+    "run_id": "656f0053f75e406f",
+    "fresh_normal_account": true,
+    "successful_transitions_in_one_account": 31,
+    "required_success_path_transitions": 70,
+    "source_checks": 162,
+    "legitimate_mechanics": ["fishing", "woodcutting", "firemaking", "cooking", "mining", "bronze_smelting"],
+    "onboarding_recovery": ["transport_reconnect", "logout_login_rejoin", "owned_server_restart_same_database_and_artifact", "durable_grant_replay_without_duplication", "old_and_future_sequence_rejection"],
+    "source_geometry_rng_cadence_or_character_state_seeded": false,
+    "acknowledged_input_replayed_for_event_history": false,
+    "owned_process_and_database_cleanup_verified": true,
+    "blocker": "Real source anvil Smith at anvil_open acknowledges at tick500 but emits no contextual interface.smithing opening, so the required smithing-menu transition does not occur through tick540.",
+    "next_owner": "M1-GAMEPLAY-UI-CONTRACTS",
+    "forbidden_workarounds": ["generic contextual OpenInterface", "direct dagger production to skip the lesson", "forged interface event", "existing-world artifact repinning", "unknown mutation retry"]
+  },
+  "actual_tools_lesson": {
+    "path": "tools/journey-tests/evidence/exclusive-tools-f2b1870.json",
+    "sha256": "4aea7097b62a03ebec07a4d85814b69d11dd619b599682d1c18b5c98c9d1b42e",
+    "result": "exclusive_source_primary_entry_grants_one_axe_and_tinderbox_retains_net_and_advances_cut_logs",
+    "independent_normal_candidates": 2,
+    "prior_entry_overlap_closed": true
+  },
+  "independent_dynamic_source_inputs": {
+    "evidence_revision": "8b617c63bc33c5a448162dce5db1a946fb5cb49f",
+    "path": "assets/reference/osrs240/m1-dynamic/case-index.json",
+    "sha256": "dde300e30ff909e539c283fa7053c673abc9428ce357894f0727be08da8ad557",
+    "validation_path": "research/source-layers/validation.json",
+    "validation_sha256": "3a52ebee54cc442b885448d2b315fd7fed14998752ac38f2f22d0c5d6fd82e17",
+    "cases": 12,
+    "paired_pixel_and_geometry_records": 8,
+    "classification": "controlled offline original-client rendering",
+    "families": ["door", "ground_item_piles", "fire_animation", "roofs", "minimap_plane_and_mapped_chunk"],
+    "source_worker_all_case_repeat_identical": true,
+    "parent_stored_image_state_and_pair_integrity": "passed",
+    "parent_actual_frozen_inventory_native_replay": "byte_identical",
+    "original_full_hud_zoom": 410,
+    "original_viewport_only_zoom": 662,
+    "qualifications": ["Controlled door orientation is not an observed server hinge choice.", "Locked-camera draw planes and normal-camera stock roof selectors are distinct.", "A controlled mapped chunk is not a live instance observation."],
+    "candidate_compared": false,
+    "new_presentation_approval": false
+  },
+  "parent_validation": [
+    {"command": "cargo fmt --package clubscape-sim --check", "result": "passed"},
+    {"command": "cargo test --locked --quiet --package clubscape-sim --package clubscape-protocol --all-features", "result": "passed", "tests": 40},
+    {"command": "cargo clippy --locked --quiet --package clubscape-sim --all-features --all-targets -- -D warnings", "result": "passed"},
+    {"command": "python3 -m unittest discover -s tools/journey-tests -p 'test_*.py' -q", "result": "passed", "tests": 12},
+    {"command": "python3 -m unittest discover -s tools/source-layer-capture -p 'test_*.py' -q", "result": "passed", "tests": 22},
+    {"command": "python3 -m unittest discover -s tools/source-capture -p 'test_*.py' -q", "result": "passed", "tests": 20},
+    {"command": "python3 tools/source-layer-capture/capture.py --verify-only", "result": "passed", "cases": 12, "pairs": 8},
+    {"command": "python3 tools/source-layer-capture/capture.py --source /home/lramos15/clubscape/.worktrees/m1-consumable-assets/.local/current-source --resources /home/lramos15/clubscape/.worktrees/m1-native-hud/.local/source-capture/tooling --baseline-check", "result": "passed", "original_frozen_image_replays": 1},
+    {"command": "python3 tools/reference-pack/validate.py --require-complete", "result": "passed", "unchanged_hash_bound_inputs": 1307}
+  ],
+  "approval": {
+    "reference_pack_sha256": "b62e19704e17d3d3e4e819f803ef49ba7cc54034ae407184b423427c65d9674d",
+    "external_approval": "milestones/approvals/m1-reference-pack-v1.3.0.json",
+    "external_approval_sha256": "e910cb02b6984a94be542af1c56e29dc67bfe2e1cd14b72deda8b4b369feeb70",
+    "historical_frozen_status_prose_unchanged": true,
+    "final_presentation_accepted": false
+  },
+  "remaining": [
+    "Real contextual smithing menu and final source-complete authoritative UI4 integration.",
+    "Remaining39 tutorial transitions, legitimate Lumbridge activities, Cook's Assistant, death and post-quest recovery.",
+    "Complete browser/WASM shell and live UI/audio/renderer composition.",
+    "Matched original dynamic-layer comparisons, correct full-HUD projection, raw equipment-fit and roof/harness repairs.",
+    "Actual completed-render performance: prior59.85FPS and p95 gap about28ms do not meet frozen60FPS/20ms.",
+    "Real owner Mac Chrome/Edge journey, presentation and performance evidence.",
+    "Independent final candidate reviews and explicit owner visual/audio acceptance."
+  ],
+  "runelite_companion": {
+    "bounded_assessment_complete": true,
+    "invocations_consumed": 5,
+    "total_admitted": 5,
+    "compatibility_verified": false,
+    "sixth_invocation_authorized": false,
+    "desktop_deferral_approved": false,
+    "blocks_browser_m1": false
+  },
+  "full_journey_verified": false,
+  "milestone_accepted": false,
+  "later_milestone_authorized": false
+}
