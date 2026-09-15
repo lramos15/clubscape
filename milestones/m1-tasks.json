@@ -10,10 +10,11 @@
       {"id": "bb7f85f7-096a-4377-80cb-3e7eae196c6b", "task": "M1-BROWSER-RENDERER"},
       {"id": "cc864d7a-37cc-4869-a7b4-d484d01cede5", "task": "M1-BROWSER-UI"},
       {"id": "78d01af9-70a4-4b02-8339-6a61eb377374", "task": "M1-BROWSER-SHELL"},
-      {"id": "2766e089-44e5-4a1d-974e-7b03ad9c269d", "task": "M1-GAMEPLAY-UI-CONTRACTS"},
-      {"id": "81ac9884-4f39-4f27-b516-6e9a42b09b51", "task": "M1-HEADLESS-JOURNEY"}
+      {"id": "2766e089-44e5-4a1d-974e-7b03ad9c269d", "task": "M1-GAMEPLAY-UI-CONTRACTS"}
     ],
-    "reserved": [],
+    "reserved": [
+      {"id": "81ac9884-4f39-4f27-b516-6e9a42b09b51", "task": "M1-HEADLESS-JOURNEY", "reason": "Verified66/70 on actual6f canonical4, then source confirmation-menu ambiguity. Owned services cleaned; same runner waits for a verified source repair without retrying the unknown offer_mainland outcome."}
+    ],
     "queued": [],
     "parked": [
       {"id": "ac0f0856-44af-445b-bd90-6db7a1f4fc74", "reason": "Original scenery phase supplement6c68672d integratedb9cdd0f; parent36tests and exact27-observation/index verification pass. Renderer received active4/3/2 phases and original clocks; no automatic resumption."},
@@ -33,6 +34,24 @@
     "usage_accounting": "milestones/evidence/m1-usage-snapshot.json records the available delayed session snapshot; final project-wide credits/currency are unavailable."
   },
   "tasks": [
+    {
+      "id": "M1-DEPARTURE-CHOICE-ENTRIES",
+      "goal": "Present the three identical-guard Magic Instructor departure branches as one legitimate source question with all original choices and effects.",
+      "status": "IMPLEMENTING",
+      "specs": ["tools/journey-tests/evidence/ui4-departure-1e9c7be.json", "research/journey-rules/tutorial.json", "tools/m1-content/dialogue_entries.py"],
+      "dependencies": ["M1-TUTORIAL-DIALOGUE-ENTRIES"],
+      "allowed_paths": ["tools/m1-content/dialogue_entries.py", "tools/m1-content/selectors3.py", "tools/m1-content/test_departure_entries.py", "tools/m1-content/schema-check/examples/departure_entries.rs", "content/m1/**", "research/m1-bindings/**"],
+      "forbidden_paths": ["prompt.md", "crates/**", "web/**", "assets/**", "tools/m1-content/progression.py", "research/journey-rules/**", "research/runtime-bindings/**", "research/reference-pack/**", "tools/reference-pack/**"],
+      "outputs": ["Audited post-binding primary-choice menu normalization", "Exact original decline/information/normal-confirmation choices and unchanged progression", "Strict canonical4 regeneration and native choice/guard regressions"],
+      "validation_commands": ["python3 tools/m1-content/validate.py --repeat"],
+      "test_requirements": ["One eligible departure confirmation entry, not engine first-match", "Original identical question text, choice IDs/order/guards/effects preserved", "No unsupported account-mode switch or forced departure", "Different prompts/guards or explicit node continuations are not silently merged", "Original104+7 binding fingerprints, tutorial71/73 and Cook10/22 remain intact"],
+      "acceptance": ["SQL m1-departure-choice-entries records complete source/native repair and a separate real journey continuation"],
+      "reserved_namespaces": [],
+      "source_notes": ["Fresh normal v4 account reached66/70 and1Learning-the-RopesQP. offer_mainland returned500game_source_view; three primary entries share the same question text and departure_confirmation guard. Outcome was not retried or labeled rolled back."],
+      "parity_entries": [],
+      "adaptations": [],
+      "evidence": []
+    },
     {
       "id": "M1-UI-TRAVEL-INTERRUPTION",
       "goal": "Apply the existing source travel interruption/refusal policy to timed UI actions so acknowledged activities cannot be discarded by pending travel.",
@@ -306,7 +325,7 @@
     {
       "id": "M1-HEADLESS-JOURNEY",
       "goal": "Implement and execute the complete legitimate M1 protocol journey with real account/world/persistence boundaries, not seeded states.",
-      "status": "IMPLEMENTING",
+      "status": "BLOCKED",
       "specs": ["prompt.md section 30.1", "research/journey-rules/**", "spec/game-networking.md", "content/m1/README.md"],
       "dependencies": ["M1-FLEET-ENGINE-CLOSURE"],
       "allowed_paths": ["tools/simulator/**", "tools/journey-tests/**", "tests/scenarios/**"],
@@ -319,7 +338,7 @@
       "source_notes": ["Real server protobuf APIs and canonical source content"],
       "parity_entries": [],
       "adaptations": [],
-      "evidence": ["089639eb integratede357222. One fresh normal account on exactbb99 v3 completed31/70 source transitions and162 source checks, including legitimate gathering/fire/cooking/mining/smelting and transport/logout/login/owned-server restart/durable-grant replay. tools/journey-tests/evidence/anvil-open-f2b1870.json preserves source/build/protocol/event identities and real outcomes.", "The v3 blocker is source Smith at anvil_open emitting only a selection message. Passed worker candidate78fcec4 on canonical4 raw6fdb60e4740372c5e299fe385875cfac32e04f22ea26ad17b53049296256c1b3 now proves the actual legacy target-bound menu/event boundary in controlled canonical and realPG tests. Same runner is explicitly resumed on a fresh normal v4 candidate to verify and continue it live. No forged event/direct dagger/stage skip, old-world repinning, unknown mutation retry or combined-account coverage. Remaining39 transitions, Lumbridge/Cook/death/postquest recovery and full M1 acceptance are unverified.", "Parent40 simulator/protocol Rust tests,12 orchestration tests, fmt and strict Clippy pass on prior v3. Acknowledged-input history is reconciled only by exact last-event payload overlap in the server's chronological suffix or a no-gap read-only actual-cursor poll; wire gap and proof remain recorded."]
+      "evidence": ["Priorv3/31-edge proof remains immutable. Newowned73ade449/a5e938ba are integrated34ad711/f09e199: one actualfreshnormal6f canonical4 account completes66/70 transitions and263 source checks, Learning-the-Ropes1QP and its true reward continuation, real anvil/menu/dagger+XP, equipment/combat/prayer/magic,25bankcoins/400capacity, and onboarding recovery. Unknown mutations/history are not retried or invented; coverage is not combined across accounts.", "New blocker is three identical-question/guard Magic Instructor primary entries at departure_confirmation; offer_mainland sequence181 returns500game_source_view, with no commit/rollback assumption. Director M1-DEPARTURE-CHOICE-ENTRIES owns the source menu repair. Remaining4 tutorial transitions, mainland/Lumbridge/Cook/death/postquest recovery and full M1 are unverified; same runner is reserved with no live service.", "Travel interruption fix0575fe0 is already integrated in the runner as9291564 without changing6f. Worker48 simulator/protocol+2compatibility+5travel tests,12 Python tests and fmt/Clippy pass; parent validation of newrunner integration is pending."]
     },
     {
       "id": "M1-ENGINE-REVIEW",
