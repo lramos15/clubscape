@@ -417,6 +417,7 @@ dependencies = [
  "pollster",
  "serde",
  "serde_json",
+ "sha2",
  "wasm-bindgen",
  "wasm-bindgen-futures",
  "web-sys",
