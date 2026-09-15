@@ -424,6 +424,11 @@ Death/recovery/setting/transfer/appearance events have no static primary target.
 `InterfaceAccess::Contextual` cannot be presented by generic tab opening.
 `OpenBank`/`OpenShop` establish the source context and commit their
 `before_open` effects **before** publishing `InterfacePresented`.
+An `OpenShop` presentation has the same source keeper/commerce admission as
+`Shop`; it does not additionally require or grant a permanent shop-tab unlock.
+The interface definition must still be contextual, and query/execution share
+all source-stage, target, reach and ownership checks. Existing bank/production
+interface unlock requirements are unchanged.
 
 `FreeCapacity` and `OwnsItems` distinguish capacity from combined
 inventory/equipment/bank ownership. `GrantDefinition` specifies target

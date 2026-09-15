@@ -519,7 +519,7 @@ impl WorldEngine {
                     ..
                 } = &interaction.action
                 {
-                    self.require_context_interface(character, interface)?;
+                    self.validate_context_interface(interface)?;
                     self.effects(world, character, before_open, rng, &mut frame)?;
                     frame.events.push(GameEvent::InterfacePresented {
                         interface: interface.clone(),
@@ -566,6 +566,17 @@ impl WorldEngine {
         character: &CharacterState,
         id: &InterfaceId,
     ) -> GameResult<()> {
+        self.validate_context_interface(id)?;
+        if !character.interfaces.contains(id) {
+            return Err(GameError::new(
+                GameErrorCode::RequirementNotMet,
+                "Contextual interface is locked.",
+            ));
+        }
+        Ok(())
+    }
+
+    pub(crate) fn validate_context_interface(&self, id: &InterfaceId) -> GameResult<()> {
         let interface = self
             .content
             .interfaces
@@ -574,12 +585,6 @@ impl WorldEngine {
         if interface.access != InterfaceAccess::Contextual {
             return Err(invalid_content(
                 "A container cannot present a tab as context.",
-            ));
-        }
-        if !character.interfaces.contains(id) {
-            return Err(GameError::new(
-                GameErrorCode::RequirementNotMet,
-                "Contextual interface is locked.",
             ));
         }
         Ok(())

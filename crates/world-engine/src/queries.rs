@@ -563,7 +563,7 @@ impl WorldEngine {
                             interface, shop, ..
                         } => {
                             self.authorize(character, &["shop".into(), format!("shop:{shop}")])?;
-                            self.require_context_interface(character, interface)
+                            self.validate_context_interface(interface)
                         }
                         InteractionAction::Bank => self.authorize(character, &["bank".into()]),
                         InteractionAction::Shop { shop } => {

@@ -54,6 +54,12 @@ fail. Reward dismissal never grants anything. `WorldRuntime.ui_version` makes
 lost UI state an explicit error, not a lazy default; only new-character
 construction and an operator-authorized legacy migration initialize it.
 
+Shop presentation inherits the guarded source keeper interaction's admission,
+not an unrelated permanent shop-tab unlock. Both query and execution require
+the real shop authorization, target, source guard and contextual interface kind.
+Generic tab opening still cannot open a shop; bank and production interface
+unlock checks are unchanged.
+
 Actor observers record executed movement and exact active source action identity
 with stable instance/cycle timing. They do not predict running from settings,
 infer production by adjacent scenery, change action cadence or sample RNG.
