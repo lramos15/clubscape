@@ -472,12 +472,11 @@ impl WorldEngine {
             }
         ) {
             let cells = footprint_tiles(to, definition.size)?;
-            if world
-                .characters
-                .values()
-                .chain(actor)
-                .any(|actor| &actor.runtime.instance == instance && cells.contains(&actor.tile))
-            {
+            if world.characters.values().chain(actor).any(|actor| {
+                !matches!(actor.runtime.presence, PresenceState::Offline { .. })
+                    && &actor.runtime.instance == instance
+                    && cells.contains(&actor.tile)
+            }) {
                 return Ok(false);
             }
             let entities = match instance {

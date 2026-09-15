@@ -24,6 +24,14 @@ pub(crate) enum CombatLock {
     Travel,
 }
 
+fn sync_fighting_style(character: &mut CharacterState) {
+    if let (Some(selected), Activity::Fighting { style, .. }) =
+        (&character.runtime.combat.style, &mut character.activity)
+    {
+        *style = selected.to_string();
+    }
+}
+
 impl WorldEngine {
     pub(crate) fn attack_permission(
         &self,
@@ -141,9 +149,7 @@ impl WorldEngine {
             return Err(unknown("Unknown combat style."));
         }
         character.runtime.combat.style = Some(id.clone());
-        if let Activity::Fighting { style, .. } = &mut character.activity {
-            *style = id.to_string();
-        }
+        sync_fighting_style(character);
         Ok(())
     }
 
@@ -231,6 +237,7 @@ impl WorldEngine {
         } else if !legacy_weapon {
             character.runtime.combat.style = None;
         }
+        sync_fighting_style(character);
         Ok(())
     }
 

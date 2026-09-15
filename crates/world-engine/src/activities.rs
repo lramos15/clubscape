@@ -23,6 +23,9 @@ impl WorldEngine {
         if character.runtime.pending_fire.is_some() {
             return self.advance_fire(world, character, rng);
         }
+        if matches!(character.activity, Activity::Fighting { .. }) {
+            self.refresh_combat_style(character)?;
+        }
         match character.activity.clone() {
             Activity::Idle => Ok(vec![]),
             Activity::Walking { mut path, running } => {
