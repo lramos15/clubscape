@@ -30,6 +30,10 @@ if __name__ == "__main__":
             str(args.java_home.resolve() / "bin/java"), "-ea", "-Xmx256m", "-XX:ActiveProcessorCount=2",
             f"-Duser.home={home}", f"-Djava.io.tmpdir={home}", "-cp", classpath, "ProjectionChecks"
         ], java_environment),
+        ("synthetic_java_shop_identity", [
+            str(args.java_home.resolve() / "bin/java"), "-ea", "-Xmx256m", "-XX:ActiveProcessorCount=2",
+            f"-Duser.home={home}", f"-Djava.io.tmpdir={home}", "-cp", classpath, "ShopIdentityChecks"
+        ], java_environment),
         ("python_harness", [
             "python3", "-m", "unittest", "discover", "-s", "tools/runelite-compatibility", "-p", "test_*.py", "-q"
         ], rust_environment),
@@ -38,6 +42,10 @@ if __name__ == "__main__":
         ], rust_environment),
         ("public_service_probe_format", [
             "cargo", "fmt", "--check", "--manifest-path", manifest
+        ], rust_environment),
+        ("shared_shop_wire_and_v1_hash_goldens", [
+            "cargo", "test", "--quiet", "--locked", "--offline", "-p", "clubscape-protocol",
+            "-p", "clubscape-server", "--test", "shop_identity", "--test", "shop_intent_compatibility"
         ], rust_environment),
     ]
     records = []

@@ -76,7 +76,8 @@ def linux_arm64(record):
     )
 
 
-def prepare(source, java_home):
+def prepare(source, java_home, *, report_path=None):
+    report_path = report_path or ROOT / "research/runelite-feasibility/build-inputs.json"
     if platform.machine() != "aarch64":
         raise ValueError("This pinned protoc/native tuple is Linux ARM64, not a host-independent install.")
     lock = json.loads((TOOL / "dependencies.json").read_text())
@@ -145,7 +146,7 @@ def prepare(source, java_home):
         "generation_command": command,
         "compatibility_verified": False,
     }
-    (ROOT / "research/runelite-feasibility/build-inputs.json").write_text(
+    report_path.write_text(
         json.dumps(report, indent=2) + "\n"
     )
     (LOCAL / "classpath.txt").write_text(os.pathsep.join(str(p) for p in paths))
@@ -160,5 +161,9 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("--source", type=Path, default=DEFAULT_SOURCE)
     parser.add_argument("--java-home", type=Path, required=True)
+    parser.add_argument("--report", type=Path, default=ROOT / "research/runelite-feasibility/build-inputs.json")
     args = parser.parse_args()
-    prepare(args.source.resolve(), args.java_home.resolve())
+    report = args.report.resolve()
+    if not report.is_relative_to(ROOT / "research/runelite-feasibility"):
+        parser.error("Dependency/schema reports must remain in the owned research directory.")
+    prepare(args.source.resolve(), args.java_home.resolve(), report_path=report)

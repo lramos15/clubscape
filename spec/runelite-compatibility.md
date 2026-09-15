@@ -74,6 +74,22 @@ Prior experiment records remain frozen. Real integration is blocked pending
 Director startup fixes and renewed explicit live bounds; browser/headless work
 continues independently and desktop deferral remains unapproved.
 
+## Required shop ABI adaptation
+
+Authorized3310032/af75e17 are integrated in order as1216aba/f1ede5d, preserving
+canonical faa8002. The Java binding is generated from the updated authoritative
+schema: optional `ShopBuy.expected_item=4`, with action25/quote3 and account-v1
+tags unchanged. New owned buy/quote requests bind the displayed canonical item
+ID, never a numeric source ID or client price. Stale selections refresh without
+silent replacement; uncertain retries retain exact original operation bytes.
+
+35 owned shop codec/selection/retry checks plus the five shared legacy
+wire/JSON/v1-hash golden tests pass. See
+[`shop-af75e17.md`](../research/runelite-feasibility/shop-af75e17.md) for exact
+commands, scope and limitations. No live shop or generic-plugin acceptance is
+claimed. The independent startup blockers and exhausted invocation ledger
+remain unchanged; no desktop deferral or later milestone is authorized.
+
 ## Original bounded M1 companion contract
 
 Task `M1-RUNELITE-FEASIBILITY` reserves one worker within the shared25-agent

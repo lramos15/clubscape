@@ -13,6 +13,13 @@ Use the separately named current pack/catalog and commands in
 do not overwrite the original experiment's inputs or treat its old pack as
 current. No additional live invocation was admitted.
 
+**Shop ABI update:** authorized3310032 thenaf75e17 are integrated, and the
+owned buy/quote transport now pins immutable displayed canonical item identities,
+refreshes rejected selections, and retains original uncertain operation bytes.
+See [shop adaptation and checks](../../research/runelite-feasibility/shop-af75e17.md).
+Regenerate the authoritative Java schema using the separately named report
+there; old evidence and legacy `None` wire/hash behavior remain unchanged.
+
 This is a Java protocol/state/render/event adapter around the **actual unchanged**
 official RuneLite 1.12.38 runtime and injected revision-240 client. It uses the
 official `RuneLiteModule`, `ClientUI`, `PluginManager`, `Hooks`, `EventBus`, and
@@ -70,6 +77,10 @@ evidence that it reflected server state.
 * `FirstXpJourney` is an unverified, bounded real-input driver for fresh signup
   through first fishing XP. It cannot seed XP/items/stages or advance ticks.
   It is not the independent full headless/browser M1 acceptance journey.
+* `ShopSelection` binds a displayed row's canonical `item.id` to both buy and
+  quote. `PendingWorldInput` retains exact operation bytes for explicit retries;
+  a refresh cannot silently retarget a purchase. This does not implement native
+  shop widgets or establish cross-process recovery.
 
 ## Original-assessment build and small checks
 

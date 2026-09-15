@@ -1,0 +1,91 @@
+{
+  "schema_version": 1,
+  "task": "M1-RUNELITE-FEASIBILITY",
+  "authorization_received": "2026-09-14T23:48:34.871-04:00",
+  "authorized_commits_in_order": [
+    {
+      "upstream": "3310032cc6621f41d395103a35e81b2cfd87e1ae",
+      "cherry_pick": "1216abac311bf76998525211d07645a64515e40d"
+    },
+    {
+      "upstream": "af75e17b98eeb94adbb9ef6d1066b3ec805a866a",
+      "cherry_pick": "f1ede5d748894ab71388af2ecc45d06840791076"
+    }
+  ],
+  "canonical_source_commit_retained": "c841f6a6dcd4a1a2b3e7a9e121c62849140c8634",
+  "raw_artifact_sha256": "a200ca08c80f6a3fc812fe02ca95f52325e183084f83b12e8d470a1f37cc6d62",
+  "owned_adaptation_complete": true,
+  "compatibility_verified": false,
+  "tier": null,
+  "desktop_deferral_approved": false,
+  "wire_contract": {
+    "new_optional_field": "ShopBuy.expected_item=4",
+    "world_input_shop_buy_tag": 25,
+    "quote_request_shop_buy_tag": 3,
+    "account_v1_tags_unchanged": true,
+    "generated_schemas": [
+      {
+        "path": "crates/protocol/proto/account.proto",
+        "sha256": "c777fa303f0aa0c287649de65e25cea2a40130f06d65c095b7fb79074cf21bc8"
+      },
+      {
+        "path": "crates/protocol/proto/game.proto",
+        "sha256": "3e00a9029cffb89788182728e15a6e1f8460693c7244201cf0181fecbad6bcd7"
+      }
+    ]
+  },
+  "new_request_policy": {
+    "buys_and_quotes": "Always displayed ShopLine.item canonical identity, including fixed rows",
+    "uses_source_numeric_id": false,
+    "sends_client_price": false,
+    "uses_displayed_row_index_not_list_position": true,
+    "missing_or_empty_identity_coerced_to_none": false
+  },
+  "retry_policy": {
+    "retained_value": "Exact immutable identified ClientMessage",
+    "preserves": [
+      "operation UUID",
+      "sequence",
+      "quantity",
+      "expected item",
+      "observation fields",
+      "historical absent expected_item"
+    ],
+    "rebuilds_from_refreshed_row": false,
+    "automatic_repurchase": false,
+    "durability": "in-memory only; cross-process recovery not certified",
+    "stale_selection": "Read-only refresh; choose again only after confirmed no sequence consumption; otherwise retain/reconcile original operation"
+  },
+  "validation": {
+    "java_compile_exit": 0,
+    "synthetic_java_shop_checks": 35,
+    "existing_java_projection_checks": 9,
+    "python_harness_checks": 5,
+    "shared_protocol_shop_goldens": 3,
+    "shared_server_v1_json_hash_goldens": 2,
+    "clippy_exit": 0,
+    "rustfmt_exit": 0,
+    "commands_results": "research/runelite-feasibility/validation-shop-af75e17.json"
+  },
+  "history": {
+    "research_files_byte_identical": 50,
+    "source_schema_outputs_preserved": "runelite/compatibility/artifacts/preserved-generated-faa8002",
+    "prior_adapter_classes_preserved": "runelite/compatibility/artifacts/preserved-classes-ae20baf",
+    "prior_live_invocations": 3,
+    "new_live_invocations": 0
+  },
+  "backend_identity_blocker": false,
+  "remaining_integration_blockers": [
+    "Unchanged game-root environment nesting",
+    "Unchanged 262144-byte descriptor limit versus actual283075-byte canonical pack",
+    "Exhausted original live invocation allocation"
+  ],
+  "scope_limits": [
+    "No live shop transaction or native shop widget/menu interaction demonstrated",
+    "No fabricated XP/plugin callback",
+    "No full M1 or presentation acceptance"
+  ],
+  "next_action": "Director startup fixes and renewed explicit live bounds remain required for actual current-pack original-runtime signup/join/scene/player/event/plugin integration.",
+  "review": "research/runelite-feasibility/shop-af75e17.md",
+  "parked": true
+}

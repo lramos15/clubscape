@@ -31,6 +31,17 @@ final class ClubScapeTransport implements AutoCloseable
     private long revision;
     private String actor;
     private Consumer<Game.WorldSnapshot> consumer;
+    private final PendingWorldInput pendingInput = new PendingWorldInput();
+
+    static final class ServerRejection extends IOException
+    {
+        final AccountOuterClass.ErrorCode code;
+        ServerRejection(AccountOuterClass.Error error)
+        {
+            super("Real server rejected the request: " + error.getCode() + ": " + error.getMessage());
+            code = error.getCode();
+        }
+    }
 
     ClubScapeTransport(URI origin, Evidence evidence)
     {
@@ -52,8 +63,28 @@ final class ClubScapeTransport implements AutoCloseable
 
     private ServerMessage request(ClientMessage.Builder builder) throws Exception
     {
-        String requestId = UUID.randomUUID().toString();
-        ClientMessage command = builder.setProtocolVersion(1).setRequestId(requestId).build();
+        ClientMessage command = identify(builder);
+        validateNewShopRequest(command);
+        return send(command);
+    }
+
+    private static ClientMessage identify(ClientMessage.Builder builder)
+    {
+        return builder.setProtocolVersion(1).setRequestId(UUID.randomUUID().toString()).build();
+    }
+
+    static void validateNewShopRequest(ClientMessage command)
+    {
+        if (command.hasWorldInput() && command.getWorldInput().hasShopBuy())
+            ShopSelection.requireIdentity(command.getWorldInput().getShopBuy());
+        if (command.hasPollWorld() && command.getPollWorld().hasQuote()
+            && command.getPollWorld().getQuote().hasShopBuy())
+            ShopSelection.requireIdentity(command.getPollWorld().getQuote().getShopBuy());
+    }
+
+    private ServerMessage send(ClientMessage command) throws Exception
+    {
+        String requestId = command.getRequestId();
         byte[] bytes = command.toByteArray();
         if (bytes.length > 16 * 1024) throw new IllegalArgumentException("Request exceeds protocol bound");
         HttpRequest.Builder request = HttpRequest.newBuilder(rpc).timeout(Duration.ofSeconds(12))
@@ -85,8 +116,7 @@ final class ClubScapeTransport implements AutoCloseable
         {
             evidence.record("server_denial", "code", message.getError().getCode().name(),
                 "message", message.getError().getMessage());
-            throw new IOException("Real server rejected " + command.getCommandCase() + ": "
-                + message.getError().getCode() + ": " + message.getError().getMessage());
+            throw new ServerRejection(message.getError());
         }
         if (response.statusCode() != 200) throw new IOException("Non-success HTTP status");
         return message;
@@ -145,15 +175,47 @@ final class ClubScapeTransport implements AutoCloseable
 
     Game.WorldSnapshot poll() throws Exception
     {
-        ServerMessage result = request(ClientMessage.newBuilder().setPollWorld(Game.PollWorld.newBuilder()
-            .setWorldSessionId(session).setAfterRevision(revision)));
+        return poll(null);
+    }
+
+    private Game.WorldSnapshot poll(Game.QuoteRequest quote) throws Exception
+    {
+        Game.PollWorld.Builder poll = Game.PollWorld.newBuilder()
+            .setWorldSessionId(session).setAfterRevision(revision);
+        if (quote != null) poll.setQuote(quote);
+        ServerMessage result = request(ClientMessage.newBuilder().setPollWorld(poll));
         if (!result.hasWorldSnapshot()) throw new IOException("Expected world snapshot");
         accept(result.getWorldSnapshot());
         return result.getWorldSnapshot();
     }
 
+    Game.WorldSnapshot buyDisplayedRow(ShopSelection selection) throws Exception
+    {
+        return input(input -> input.setShopBuy(selection.buy()));
+    }
+
+    Game.WorldSnapshot quoteDisplayedRow(ShopSelection selection) throws Exception
+    {
+        try { return poll(selection.quote()); }
+        catch (ServerRejection rejected)
+        {
+            if (rejected.code == AccountOuterClass.ErrorCode.CONFLICT)
+            {
+                boolean refreshed = refreshRejectedShop(rejected);
+                evidence.record("shop_selection_rejected", "read_only_quote", true,
+                    "expected_item", selection.buy().getExpectedItem(),
+                    "view_refreshed", refreshed,
+                    "action_required", refreshed ? "Choose an item from the refreshed displayed view; no automatic identity substitution"
+                        : "Refresh the view before a new choice; retain the original uncertain selection");
+            }
+            throw rejected;
+        }
+    }
+
     Game.WorldSnapshot input(Consumer<Game.WorldInput.Builder> action) throws Exception
     {
+        if (pendingInput.active())
+            throw new IllegalStateException("Retry or reconcile the retained operation; do not build a new intent");
         Game.WorldInput.Builder input = Game.WorldInput.newBuilder().setWorldSessionId(session)
             .setSequence(sequence).setExpectedCharacterRevision(characterRevision);
         action.accept(input);
@@ -163,10 +225,63 @@ final class ClubScapeTransport implements AutoCloseable
                 input.hasOpenInterface() ? input.getOpenInterface().getInterface() : "",
             "walk", input.hasWalk() ? Evidence.fields("x", input.getWalk().getDestination().getX(),
                 "y", input.getWalk().getDestination().getY()) : null);
-        ServerMessage result = request(ClientMessage.newBuilder().setWorldInput(input));
+        ClientMessage command = identify(ClientMessage.newBuilder().setWorldInput(input));
+        validateNewShopRequest(command);
+        pendingInput.begin(command);
+        evidence.record("pending_world_input", "request_id", command.getRequestId(),
+            "sequence", command.getWorldInput().getSequence(), "action", input.getActionCase().name(),
+            "expected_item", input.hasShopBuy() ? input.getShopBuy().getExpectedItem() : "",
+            "retry_policy", "Retain the exact original operation; never rebind a refreshed shop row");
+        return submitPendingInput();
+    }
+
+    Game.WorldSnapshot retryPendingInput() throws Exception
+    {
+        return submitPendingInput();
+    }
+
+    private boolean refreshRejectedShop(ServerRejection rejection)
+    {
+        try { poll(); return true; }
+        catch (Exception refreshFailure) { rejection.addSuppressed(refreshFailure); return false; }
+    }
+
+    private Game.WorldSnapshot submitPendingInput() throws Exception
+    {
+        ClientMessage command = pendingInput.original();
+        ServerMessage result;
+        try { result = send(command); }
+        catch (ServerRejection rejected)
+        {
+            if (command.getWorldInput().hasShopBuy()
+                && rejected.code == AccountOuterClass.ErrorCode.CONFLICT)
+            {
+                long beforeRefresh = revision;
+                try
+                {
+                    Game.WorldSnapshot refreshed = poll();
+                    boolean notConsumed = pendingInput.rejectedWithoutConsumption(refreshed.getNextSequence());
+                    evidence.record("shop_selection_rejected", "request_id", command.getRequestId(),
+                        "expected_item", command.getWorldInput().getShopBuy().getExpectedItem(),
+                        "refreshed_revision", refreshed.getRevision(), "previous_revision", beforeRefresh,
+                        "sequence_not_consumed", notConsumed,
+                        "action_required", notConsumed ? "Choose an item from the refreshed displayed view"
+                            : "Outcome requires reconciliation; retain the original operation bytes");
+                }
+                catch (Exception refreshFailure)
+                {
+                    rejected.addSuppressed(refreshFailure);
+                    evidence.record("shop_refresh_failed", "request_id", command.getRequestId(),
+                        "selection_retained", true, "outcome_reconciled", false);
+                }
+            }
+            throw rejected;
+        }
         if (!result.hasActionResult()) throw new IOException("Expected committed action result");
-        if (result.getActionResult().getSequence() != sequence)
+        if (result.getActionResult().getSequence() != command.getWorldInput().getSequence()
+            || !result.getActionResult().getOperationId().equals(command.getRequestId()))
             throw new IOException("Action receipt sequence mismatch");
+        pendingInput.acknowledged(result.getActionResult().getSequence());
         accept(result.getActionResult().getSnapshot());
         return result.getActionResult().getSnapshot();
     }
