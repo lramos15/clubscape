@@ -1,0 +1,133 @@
+{
+  "schema_version": 1,
+  "task": "m1-headless-journey",
+  "recorded_on": "2026-09-15",
+  "status": "parked_pending_authorized_validated_source_pack",
+  "scope": "Local preservation and recovery-availability audit only; no new services or gameplay.",
+  "full_original_journey_passed": false,
+  "milestone_accepted": false,
+  "collected_owned_commits": [
+    {
+      "owned": "73ade4497f0898e18eab748e449bad76770da0b0",
+      "parent_integration_reported_by_director": "34ad711"
+    },
+    {
+      "owned": "a5e938bad0fd4586d637d988975deca6325dee4c",
+      "parent_integration_reported_by_director": "f09e199"
+    }
+  ],
+  "historical_run_boundary": {
+    "run_id": "37b566d34a474437",
+    "account_id": "4ba18564-9143-4835-b5a6-d7ca1baf1158",
+    "actor_id": "actor.a245c396328c4aae87f47ac50cf1b5d5",
+    "world_id": "cee8fb42-d1de-4da3-a9b2-93c8d5e88152",
+    "source_revision": "m1.source-backed.v4.67e4f1fcc55d71d5",
+    "artifact_git_revision": "1e9c7be1d2a881ba0f1540bea05cd23fbe693d6a",
+    "artifact_path": "content/m1/game-content.csc.gz",
+    "raw_artifact_sha256": "6fdb60e4740372c5e299fe385875cfac32e04f22ea26ad17b53049296256c1b3",
+    "compressed_artifact_sha256": "f53a28402baad5588ccf071310b4c239e24391715290aaac2616ed0215284aa6",
+    "current_local_artifact_hashes_match": true,
+    "qualified_progress": {
+      "acknowledged_tutorial_edges": 66,
+      "source_success_path_edges": 70,
+      "source_checks_passed": 263,
+      "learning_the_ropes_quest_points": 1,
+      "onboarding_recovery": "passed in the historical run",
+      "live_anvil": "passed in the historical run"
+    },
+    "original_evidence": "tools/journey-tests/evidence/ui4-departure-1e9c7be.json"
+  },
+  "unknown_operation_boundary": {
+    "sequence": 181,
+    "operation_id": "569e861c-3721-4741-811f-7c1340463702",
+    "action": "DialogueChoice offer_mainland",
+    "speaker": "spawn.magic_instructor",
+    "last_acknowledged_stage": "stage.tutorial.departure_offer",
+    "last_observed_tick": 665,
+    "last_observed_world_revision": 851,
+    "http_status": 500,
+    "server_error_kind": "game_source_view",
+    "error_id": "e8aa60d2-f3f5-42bd-a7b2-235604842d9f",
+    "successful_acknowledgment_observed": false,
+    "authoritative_commit_or_rollback": "unknown",
+    "retried": false,
+    "failed_response_is_a_durable_server_receipt": false,
+    "earlier_onboarding_replay_proves_this_operation": false
+  },
+  "existing_recovery_availability": {
+    "scope": "This owned invocation's retained outputs and orchestration lifecycle, not external or unowned backups.",
+    "private_world_backup_available": false,
+    "safe_unknown_operation_receipt_lookup_available": false,
+    "database_storage": "Owned PostgreSQL container tmpfs; no backup export in the orchestrator.",
+    "historical_cleanup_report": {
+      "owned_database_removed": true,
+      "owned_credentials_and_game_root_removed": true,
+      "owned_server_reaped": true,
+      "server_exit_clean": true,
+      "cleanup_passed": true,
+      "cleanup_errors": []
+    },
+    "current_owned_run_directory_entries": 0,
+    "backup_dump_or_receipt_files_found_in_owned_evidence": 0,
+    "retained_public_snapshot_is_a_restorable_world_backup": false,
+    "retained_input_and_error_trace_is_a_safe_authoritative_receipt_lookup": false,
+    "new_services_started_for_inspection": false,
+    "database_or_gameplay_rpc_performed_for_inspection": false
+  },
+  "preserved_files": [
+    {
+      "path": ".local/evidence/m1-ui4-source-bank.json",
+      "bytes": 90477,
+      "sha256": "926d0a8dbde063782410cfb7554537452b7c45d7ef7dbff3cf3a146852074175"
+    },
+    {
+      "path": ".local/evidence/journey-37b566d34a474437/accounts-server.jsonl",
+      "bytes": 3701,
+      "sha256": "daedfa4a5279f98062318bac878d0993e7257f4cc568f1738fd9cfa50d85a005"
+    },
+    {
+      "path": ".local/evidence/journey-37b566d34a474437/m1-fresh-account.json",
+      "bytes": 64743,
+      "sha256": "c3b499d40c70230254b6eaea4f7b07dcd379fc239ee535a52f2dd12599e256ff"
+    },
+    {
+      "path": ".local/evidence/journey-37b566d34a474437/m1-fresh-account.trace.jsonl",
+      "bytes": 9449164,
+      "sha256": "609cf17f4d6db11533f1296a8e05f5a442cccc146c916415bb9bed44a00c63a3"
+    },
+    {
+      "path": ".local/evidence/journey-37b566d34a474437/product-server-0.jsonl",
+      "bytes": 30443,
+      "sha256": "13a3cae16ee497eac8f17564a5eb3e8f579ef0d99390e6e6f8940f9c6fbc81f1"
+    },
+    {
+      "path": ".local/evidence/journey-37b566d34a474437/product-server-1.jsonl",
+      "bytes": 111198,
+      "sha256": "66e2a829fb039e4b4f4bdeb2b74b783c381b5b5e5a77803a2bd8fdae1ac07111"
+    },
+    {
+      "path": ".local/evidence/journey-37b566d34a474437/simulator.log",
+      "bytes": 336,
+      "sha256": "c2cc15efec02766a8f026b7c8bcb2cabf9296c96ae0068eb1b0026c8decb9c53"
+    },
+    {
+      "path": ".local/evidence/journey-37b566d34a474437/unavailable-scenario.json",
+      "bytes": 5480,
+      "sha256": "f2ae02f939e67bb90062cff788d544ac0e0d5ee5e6e975de23fdeebab3f7b64f"
+    },
+    {
+      "path": ".local/evidence/journey-37b566d34a474437/unavailable-scenario.trace.jsonl",
+      "bytes": 224,
+      "sha256": "537600da8d9b0a80a181cb225b14852e59e7a82732185a07515d973dbdc80e65"
+    }
+  ],
+  "privacy": "Only run/account/world/input identifiers and file metadata are recorded here; no private authentication material or RNG is published.",
+  "resumption_policy": {
+    "await_explicit_validated_new_candidate_authorization": true,
+    "fresh_normal_account_and_world_required": true,
+    "historical_world_or_artifact_repinned": false,
+    "prior_progress_reconstructed_or_seeded": false,
+    "old_unknown_operation_retried": false,
+    "coverage_from_different_accounts_combined": false
+  }
+}
