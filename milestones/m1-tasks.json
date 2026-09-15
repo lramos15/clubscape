@@ -12,16 +12,16 @@
       {"id": "cdfad64d-9162-439f-a525-58e1114dd7f4", "task": "M1-BROWSER-AUDIO"},
       {"id": "78d01af9-70a4-4b02-8339-6a61eb377374", "task": "M1-BROWSER-SHELL"},
       {"id": "81ac9884-4f39-4f27-b516-6e9a42b09b51", "task": "M1-HEADLESS-JOURNEY"},
-      {"id": "aab1ae0f-0238-4254-bff3-b7c046349c6b", "task": "M1-SHOP-REVIEW-FIXES"},
-      {"id": "0f5ddddf-0aa0-4908-b0d3-1ffc6b1f7a20", "task": "M1-ACTOR-REVIEW-FIXES"},
       {"id": "2a0ae699-6af8-45d5-90c7-3addfc56ee53", "task": "M1-RUNELITE-FEASIBILITY"}
     ],
     "reserved": [],
     "queued": [],
     "parked": [
+      {"id": "aab1ae0f-0238-4254-bff3-b7c046349c6b", "reason": "Shop capacity/identity fixes integrated as3310032+af75e17 with18 passing regressions; no automatic resumption."},
+      {"id": "0f5ddddf-0aa0-4908-b0d3-1ffc6b1f7a20", "reason": "Actor presence/cadence fixes integrated as62a003c+e1076a8 with15 passing regressions; no automatic resumption."},
       {"id": "2766e089-44e5-4a1d-974e-7b03ad9c269d", "reason": "Final live server wiring integrated as 1ea2e65; no automatic resumption."},
-      {"id": "fdda1fb0-1135-4cf8-8cff-3db550e48f54", "reason": "Canonical v3 content integrated as e8dfa2d; two demonstrated executor failures tracked separately; no automatic resumption."},
-      {"id": "e6925772-df1f-4ff7-9efc-219f800a5a14", "reason": "Independent engine assessment complete; four findings require repairs; no automatic resumption."},
+      {"id": "fdda1fb0-1135-4cf8-8cff-3db550e48f54", "reason": "Canonical v3 content and both demonstrated executor repairs are integrated and source-native conformance passes; no automatic resumption."},
+      {"id": "e6925772-df1f-4ff7-9efc-219f800a5a14", "reason": "Independent engine assessment complete; all four reported findings now repaired with active regressions. Final candidate review remains separate; no automatic resumption."},
       {"id": "598d83d0-6ce2-40ac-b6d5-01d566c68b99", "reason": "Reference research complete; no automatic resumption."},
       {"id": "20a115ef-0586-4ca1-9505-c1840fc02365", "reason": "Account implementation and deadline repair complete; no automatic resumption."},
       {"id": "31d6526b-89a8-4bad-bf54-15ccc64ab410", "reason": "Both scoped review turns complete; no automatic resumption."}
@@ -71,7 +71,7 @@
     {
       "id": "M1-SHOP-REVIEW-FIXES",
       "goal": "Repair stale unstocked shop item selection and permanent zero-stock capacity consumption from independent review.",
-      "status": "IMPLEMENTING",
+      "status": "DONE",
       "specs": ["crates/world-engine/README.md", "spec/game-contracts.md"],
       "dependencies": ["M1-ENGINE-REVIEW"],
       "allowed_paths": ["crates/world-engine/src/commerce.rs", "crates/world-engine/src/queries.rs", "crates/world-engine/src/actions.rs", "crates/world-engine/tests/shop_review.rs", "crates/world-engine/tests/**", "crates/game-types/src/intent.rs", "crates/protocol/**", "crates/client-core/tests/**", "crates/server/tests/**", "crates/server/src/game_service/view.rs", "web/shared/contracts.ts", "spec/game-contracts.md"],
@@ -84,12 +84,12 @@
       "source_notes": ["Independent review e6925772 at89f3386"],
       "parity_entries": [],
       "adaptations": [],
-      "evidence": []
+      "evidence": ["3310032+af75e17 integrate067a6eed+ee77ba0. All18shopregressions pass; immutablebuy/quoteplanner verifies optionalexpected_item and legacyidentitylessfixedrowsonly. Emptyextras/clocks are reclaimed without source-row/phase loss; before/after wire/JSON/receipt hashes match.", "Merged495native tests,33PG/HTTPtests+11independentaccountchecks, strictworkspaceClippy, TypeScript and11audio tests pass. UI/shell/simulator/RuneLiteworkers received exact field4/canonicalitemID contract; their actual integration remains separate."]
     },
     {
       "id": "M1-ACTOR-REVIEW-FIXES",
       "goal": "Repair offline NPC collision and stale queued combat style while preserving vulnerable disconnected actors and attack deadlines.",
-      "status": "IMPLEMENTING",
+      "status": "DONE",
       "specs": ["crates/world-engine/README.md", "spec/game-contracts.md"],
       "dependencies": ["M1-ENGINE-REVIEW"],
       "allowed_paths": ["crates/world-engine/src/entities.rs", "crates/world-engine/src/combat.rs", "crates/world-engine/src/activities.rs", "crates/world-engine/src/engagement.rs", "crates/world-engine/src/lib.rs", "crates/world-engine/tests/actor_review.rs"],
@@ -102,7 +102,7 @@
       "source_notes": ["Independent review e6925772 at89f3386"],
       "parity_entries": [],
       "adaptations": [],
-      "evidence": ["Partial8705f1d synchronizes queued combat and tracked collision;185prior+11newtests pass,4enabledlegacy-presence tests still fail. The same worker is authorized to forward the already available TickContext from engagement.rs return-to-spawn and finish all helper/caller plumbing. Do not integrate or markdone until all regressions pass."]
+      "evidence": ["62a003c+e1076a8 integrate8705f1d+dea8eef as one complete repair. All15actorregressions pass, including the four previously failing legacy cases. Wander/chase/contact/return all use effective trusted presence; safelyOffline/absentlegacy do not block while Connected/vulnerableDisconnecting do.", "Queued combat repairs preserve targets and all deadlines through equip/unequip/default changes and old persisted mismatches.210engine tests inworker,495mergednative tests and33realPG/HTTPtests pass; no public ABI or source engagement-policy change."]
     },
     {
       "id": "M1-HEADLESS-JOURNEY",

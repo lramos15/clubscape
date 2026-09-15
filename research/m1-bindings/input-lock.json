@@ -1,5 +1,5 @@
 {
-  "aggregate_sha256": "327d3a78f3bdad7cea50384fffe3eaf176c95b2c74e53a1047767d1e5d922c13",
+  "aggregate_sha256": "0e506f3dab24bbe0206d9299a54a08a95560c90f7e8e62e07eab4a21a1fe29e1",
   "inputs": [
     {
       "bytes": 845835,
@@ -8582,9 +8582,9 @@
       "sha256": "deb0db0685a40ded03c788154f4cf00a37bca496f259d764a145d91b72da51be"
     },
     {
-      "bytes": 20857,
+      "bytes": 22679,
       "path": "crates/game-types/src/intent.rs",
-      "sha256": "b7109a16fd59b0db4016c34b433cc76edb50aac6204065f2a81779dab47601e0"
+      "sha256": "36705b9172bc38b2020c339a63c6eab525476627b82abe9113871c7f4133bfdc"
     },
     {
       "bytes": 685,

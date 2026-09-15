@@ -62,12 +62,12 @@
   },
   "compiled_artifact": {
     "artifact_version": 3,
-    "bytes": 503156,
+    "bytes": 503151,
     "path": "content/m1/game-content.csc.gz",
     "schema_version": 3,
-    "sha256": "4c92b3c3cd27ee0eb7247457a6ddce703bb6323f127ccff83039b409afba2dcf",
+    "sha256": "0c3812b97bce2ff14c72eb1fa1643612101dae274c6a2e8e4ea3d00db1622fbf",
     "uncompressed_bytes": 11794799,
-    "uncompressed_sha256": "a200ca08c80f6a3fc812fe02ca95f52325e183084f83b12e8d470a1f37cc6d62"
+    "uncompressed_sha256": "df3e2a452c100ecd94d2abc68e5cb1556f58090700474f547e7fd36de6682b3d"
   },
   "current_audio_files_hash_validated": 264,
   "gameplay_executed": false,
@@ -119,7 +119,7 @@
     "npc_definition_ids": 6
   },
   "result": "passed",
-  "revision": "m1.source-backed.v3.327d3a78f3bdad7c",
+  "revision": "m1.source-backed.v3.0e506f3dab24bbe0",
   "runtime_compile_passed": true,
   "schema_version": 1,
   "scope": "Asset/provenance refresh only; not full M1 source or gameplay certification.",

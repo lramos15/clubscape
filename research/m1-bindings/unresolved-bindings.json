@@ -133,7 +133,7 @@
       ]
     }
   ],
-  "content_sha256": "621a938508bc189eb78bca516fb750c42ad6fc8a91dbf194ad9a1ba3ac3d72d9",
+  "content_sha256": "82ddce978c66f4d7cea65adef3c0c895029a0691313b6aab00897f8a4dd2c781",
   "count": 6,
   "profile_candidates": "research/m1-bindings/profile-v2.json",
   "runtime_compile_passed": true,
