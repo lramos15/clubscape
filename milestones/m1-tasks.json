@@ -7,19 +7,21 @@
     "admissions_open": true,
     "active": [
       {"id": "director", "task": "M1-FLEET-CONTRACTS"},
-      {"id": "2766e089-44e5-4a1d-974e-7b03ad9c269d", "task": "M1-FLEET-LIVE-SERVER"},
-      {"id": "fdda1fb0-1135-4cf8-8cff-3db550e48f54", "task": "M1-FLEET-BINDING-APPLICATION"},
       {"id": "bb7f85f7-096a-4377-80cb-3e7eae196c6b", "task": "M1-BROWSER-RENDERER"},
       {"id": "cc864d7a-37cc-4869-a7b4-d484d01cede5", "task": "M1-BROWSER-UI"},
       {"id": "cdfad64d-9162-439f-a525-58e1114dd7f4", "task": "M1-BROWSER-AUDIO"},
-      {"id": "78d01af9-70a4-4b02-8339-6a61eb377374", "task": "M1-BROWSER-SHELL"}
+      {"id": "78d01af9-70a4-4b02-8339-6a61eb377374", "task": "M1-BROWSER-SHELL"},
+      {"id": "81ac9884-4f39-4f27-b516-6e9a42b09b51", "task": "M1-HEADLESS-JOURNEY"}
     ],
     "reserved": [
-      {"id": "headless-journey-worker", "task": "M1-HEADLESS-JOURNEY"},
-      {"id": "world-review-worker", "task": "M1-ENGINE-REVIEW"}
+      {"id": "shop-fix-worker", "task": "M1-SHOP-REVIEW-FIXES"},
+      {"id": "actor-fix-worker", "task": "M1-ACTOR-REVIEW-FIXES"}
     ],
     "queued": [],
     "parked": [
+      {"id": "2766e089-44e5-4a1d-974e-7b03ad9c269d", "reason": "Final live server wiring integrated as 1ea2e65; no automatic resumption."},
+      {"id": "fdda1fb0-1135-4cf8-8cff-3db550e48f54", "reason": "Canonical v3 content integrated as e8dfa2d; two demonstrated executor failures tracked separately; no automatic resumption."},
+      {"id": "e6925772-df1f-4ff7-9efc-219f800a5a14", "reason": "Independent engine assessment complete; four findings require repairs; no automatic resumption."},
       {"id": "598d83d0-6ce2-40ac-b6d5-01d566c68b99", "reason": "Reference research complete; no automatic resumption."},
       {"id": "20a115ef-0586-4ca1-9505-c1840fc02365", "reason": "Account implementation and deadline repair complete; no automatic resumption."},
       {"id": "31d6526b-89a8-4bad-bf54-15ccc64ab410", "reason": "Both scoped review turns complete; no automatic resumption."}
@@ -31,9 +33,63 @@
   },
   "tasks": [
     {
+      "id": "M1-FACILITY-DROP-FIXES",
+      "goal": "Repair demonstrated original-range face contact and fresh manual-drop owner-online lifetime semantics without altering source collision or clocks.",
+      "status": "READY",
+      "specs": ["research/m1-bindings/contract-gaps.json", "research/m1-bindings/runtime3-policy.json", "spec/game-contracts.md"],
+      "dependencies": ["M1-FLEET-BINDING-APPLICATION"],
+      "allowed_paths": ["crates/world-engine/src/permissions.rs", "crates/world-engine/src/world.rs", "crates/world-engine/src/actions.rs", "crates/world-engine/src/death.rs", "crates/world-engine/src/queries.rs", "crates/world-engine/tests/**", "crates/game-types/src/mechanics.rs", "crates/game-types/src/runtime_state.rs", "crates/game-types/src/runtime_validation.rs", "crates/content/**", "crates/simulation/tests/**", "crates/server/tests/**", "content/m1/**", "tools/m1-content/**", "research/m1-bindings/**", "spec/game-contracts.md"],
+      "forbidden_paths": ["prompt.md", "assets/**", "web/**", "crates/protocol/**", "crates/world-engine/src/commerce.rs", "crates/world-engine/src/entities.rs", "crates/world-engine/src/combat.rs"],
+      "outputs": ["Source-solid-facility contact with preserved access sides and walls", "Explicit persisted ground clock and fresh-profile selection", "Passing canonical native probes and regression cases"],
+      "validation_commands": ["cargo test -p clubscape-world-engine -p clubscape-game-types -p clubscape-content", "python3 tools/m1-content/validate.py --repeat"],
+      "test_requirements": ["Single and Make-X-one accept from source west tile", "Blocked sides and intervening walls remain blocked", "Manual drops pause only under the declared policy", "Reconnect/restart preserve remaining lifetime and ownership"],
+      "acceptance": ["SQL m1-facility-drop-fixes records both original native failures repaired without seeding the real journey"],
+      "reserved_namespaces": [],
+      "source_notes": ["Native failures reported by canonical content worker 44c5d1f; source bindings have zero active unresolved values."],
+      "parity_entries": [],
+      "adaptations": [],
+      "evidence": []
+    },
+    {
+      "id": "M1-SHOP-REVIEW-FIXES",
+      "goal": "Repair stale unstocked shop item selection and permanent zero-stock capacity consumption from independent review.",
+      "status": "READY",
+      "specs": ["crates/world-engine/README.md", "spec/game-contracts.md"],
+      "dependencies": ["M1-ENGINE-REVIEW"],
+      "allowed_paths": ["crates/world-engine/src/commerce.rs", "crates/world-engine/src/views.rs", "crates/world-engine/src/lib.rs (shop intent dispatch only)", "crates/world-engine/tests/shop_review.rs", "crates/world-engine/tests/** (shop constructor compatibility only)", "crates/game-types/src/intent.rs", "crates/protocol/**", "crates/client-core/tests/** (shop constructor compatibility only)", "crates/server/tests/** (shop constructor compatibility only)", "web/shared/contracts.ts (shop intent identity only)", "spec/game-contracts.md (shop identity section only)"],
+      "forbidden_paths": ["prompt.md", "content/**", "assets/**", "web/ui/**", "web/app/**", "crates/server/src/**", "milestones/**"],
+      "outputs": ["Identity-safe shop buy requests and zero-row reclamation", "Native regression tests for concurrent row shifts/reuse/restart"],
+      "validation_commands": ["cargo test -p clubscape-world-engine -p clubscape-protocol", "cargo clippy -p clubscape-world-engine -p clubscape-protocol --all-targets -- -D warnings"],
+      "test_requirements": ["No wrong-item charge", "No dead extra-row capacity", "No deleted source stock rows or reset restock phase", "Old committed intents retain encoding compatibility"],
+      "acceptance": ["SQL m1-shop-review-fixes records repaired root causes and actual regression results"],
+      "reserved_namespaces": [],
+      "source_notes": ["Independent review e6925772 at89f3386"],
+      "parity_entries": [],
+      "adaptations": [],
+      "evidence": []
+    },
+    {
+      "id": "M1-ACTOR-REVIEW-FIXES",
+      "goal": "Repair offline NPC collision and stale queued combat style while preserving vulnerable disconnected actors and attack deadlines.",
+      "status": "READY",
+      "specs": ["crates/world-engine/README.md", "spec/game-contracts.md"],
+      "dependencies": ["M1-ENGINE-REVIEW"],
+      "allowed_paths": ["crates/world-engine/src/entities.rs", "crates/world-engine/src/combat.rs", "crates/world-engine/src/activities.rs", "crates/world-engine/src/lib.rs (NPC tick context only)", "crates/world-engine/tests/actor_review.rs"],
+      "forbidden_paths": ["prompt.md", "crates/game-types/**", "crates/world-engine/src/commerce.rs", "crates/protocol/**", "crates/server/**", "content/**", "assets/**", "web/**", "milestones/**"],
+      "outputs": ["Presence-correct NPC navigation", "Synchronized selected/queued combat style with preserved cadence"],
+      "validation_commands": ["cargo test -p clubscape-world-engine", "cargo clippy -p clubscape-world-engine --all-targets -- -D warnings"],
+      "test_requirements": ["Offline does not block", "Connected/pending combat disconnect still blocks", "Legacy presence requires authority", "Weapon changes do not stop legal combat or accelerate attack"],
+      "acceptance": ["SQL m1-actor-review-fixes records actual reviewed-bug regressions passing"],
+      "reserved_namespaces": [],
+      "source_notes": ["Independent review e6925772 at89f3386"],
+      "parity_entries": [],
+      "adaptations": [],
+      "evidence": []
+    },
+    {
       "id": "M1-HEADLESS-JOURNEY",
       "goal": "Implement and execute the complete legitimate M1 protocol journey with real account/world/persistence boundaries, not seeded states.",
-      "status": "READY",
+      "status": "IMPLEMENTING",
       "specs": ["prompt.md section 30.1", "research/journey-rules/**", "spec/game-networking.md", "content/m1/README.md"],
       "dependencies": ["M1-FLEET-ENGINE-CLOSURE"],
       "allowed_paths": ["tools/simulator/**", "tools/journey-tests/**", "tests/scenarios/**"],
@@ -51,7 +107,7 @@
     {
       "id": "M1-ENGINE-REVIEW",
       "goal": "Independently review integrated authoritative gameplay/core validation for high-confidence correctness and ownership bugs.",
-      "status": "READY",
+      "status": "DONE",
       "specs": ["spec/game-contracts.md", "spec/adaptations.md", "crates/world-engine/README.md"],
       "dependencies": ["M1-FLEET-ENGINE-CLOSURE"],
       "allowed_paths": [],
@@ -64,12 +120,12 @@
       "source_notes": ["All reference/owner gates remain separate"],
       "parity_entries": [],
       "adaptations": [],
-      "evidence": []
+      "evidence": ["Independent review at89f3386 found four medium logic defects; assessment complete, fixes are separately tracked in shop/actor review-fix tasks. No M1 acceptance claim."]
     },
     {
       "id": "M1-BROWSER-RENDERER",
       "goal": "Implement actual source-faithful Rust/WASM WebGPU world/model/animation rendering and picking.",
-      "status": "READY",
+      "status": "IMPLEMENTING",
       "specs": ["spec/browser-implementation.md", "web/shared/contracts.ts", "spec/m1-benchmark-contract.json", "milestones/approvals/m1-reference-pack-v1.3.0.json"],
       "dependencies": ["M1-REFERENCE-APPROVAL"],
       "allowed_paths": ["crates/renderer/**", "web/renderer/**", "tools/render-assets/**", "assets/compiled/render/**"],
@@ -87,7 +143,7 @@
     {
       "id": "M1-BROWSER-UI",
       "goal": "Implement approved startup and Classic game interfaces with real authoritative controls and original source pixels/fonts.",
-      "status": "READY",
+      "status": "IMPLEMENTING",
       "specs": ["spec/browser-implementation.md", "web/shared/contracts.ts", "milestones/approvals/m1-reference-pack-v1.3.0.json"],
       "dependencies": ["M1-REFERENCE-APPROVAL"],
       "allowed_paths": ["web/ui/**", "assets/compiled/ui/**", "tools/ui-assets/**"],
@@ -105,7 +161,7 @@
     {
       "id": "M1-BROWSER-AUDIO",
       "goal": "Implement actual original-source browser audio playback and region/event/jingle/control lifecycle.",
-      "status": "READY",
+      "status": "IMPLEMENTING",
       "specs": ["spec/browser-implementation.md", "web/shared/contracts.ts", "research/reference-pack/v1/audio-reference.json", "milestones/m1-audio-trigger-approval.json"],
       "dependencies": ["M1-REFERENCE-APPROVAL"],
       "allowed_paths": ["web/audio/**", "tools/browser-audio-tests/**"],
@@ -123,7 +179,7 @@
     {
       "id": "M1-BROWSER-SHELL",
       "goal": "Deliver real browser/WASM transport, input and asset orchestration composing renderer, source UI and audio.",
-      "status": "READY",
+      "status": "IMPLEMENTING",
       "specs": ["spec/browser-implementation.md", "web/shared/contracts.ts", "spec/web-delivery.md", "spec/networking.md"],
       "dependencies": ["M1-REFERENCE-APPROVAL"],
       "allowed_paths": ["web/app/**", "web/package.json", "web/pnpm-lock.yaml", "web/tsconfig.json", "web/index.html", "web/vite.config.ts", "web/generated/**", "crates/wasm/**", "tools/web-build/**"],
@@ -159,7 +215,7 @@
     {
       "id": "M1-FLEET-BINDING-APPLICATION",
       "goal": "Apply source resolutions and the explicit goblin adaptation to canonical content generation without losing coupled state/value updates or provenance.",
-      "status": "READY",
+      "status": "BLOCKED",
       "specs": ["research/runtime-bindings/**", "milestones/m1-goblin-loot-approval.json", "spec/adaptations.md"],
       "dependencies": ["M1-FLEET-SOURCE-BINDINGS", "M1-FLEET-CONTENT-ASSET-REFRESH"],
       "allowed_paths": ["content/m1/**", "tools/m1-content/**", "research/m1-bindings/**", "tools/runtime-bindings/**", "research/runtime-bindings/application*.json"],
@@ -172,7 +228,7 @@
       "source_notes": ["Owner explicitly approved independent1/16 potion event/equal1-4doseweights; no other inference became an approval."],
       "parity_entries": [],
       "adaptations": ["adaptation.m1.goblin_energy_potion_provisional"],
-      "evidence": ["eaf9f926 integrated;104sourcebindings+7coupledupdates and approvedpotioneventapplied.47tests,195sourcechecks,8192lootvectors,5currencycases,23oracles,30routespassed.", "Only one conditional HP/Prayer enum remains active; six dependencies have explicit inactive-scope proofs."]
+      "evidence": ["e8dfa2d integrates canonical content/artifact3: 104 source bindings, seven coupled updates, conditional vital policy, approved potion loot, 5257 original asset references and unchanged source geometry/graphs.", "Zero active unresolved bindings; six proof-scoped inactive dependencies. Strict compile/reload, 62 content tests, 195 source checks, 23 graph oracles and 30 routes pass.", "Two native executor failures remain: source-solid-range contact and fresh manual-drop owner-online lifetime. M1-FACILITY-DROP-FIXES owns repairs; not full gameplay acceptance."]
     },
     {
       "id": "M1-FLEET-ENGINE-CLOSURE",
@@ -249,7 +305,7 @@
     {
       "id": "M1-FLEET-LIVE-SERVER",
       "goal": "Wire compiled source content, the headless engine and fenced transactional persistence into real game RPCs and source-cadence scheduling.",
-      "status": "READY",
+      "status": "DONE",
       "specs": ["spec/game-contracts.md", "spec/networking.md", "crates/server/README.md"],
       "dependencies": ["M1-FLEET-STORAGE", "M1-FLEET-MECHANICS-CONTRACTS"],
       "allowed_paths": ["crates/server/**", "crates/protocol/**", "crates/client-core/tests/**", "spec/game-networking.md"],
@@ -262,7 +318,7 @@
       "source_notes": ["Owner-run final presentation/browser testing remains separate."],
       "parity_entries": [],
       "adaptations": [],
-      "evidence": ["594722d integratedas2030e97;fenced600mscoordinator,authgameRPCs,routedevents/privateRNG/strictassets.31livePG/HTTPtestsreported. Engine-owned lifecycle/public-view APIs remain required before fullgameplay."]
+      "evidence": ["1ea2e65 integrates final source lifecycle, combat-safe disconnect/reconnect, guarded contextual views/quotes, typed production/recovery requests and ordinary-profile readiness proofs.", "Worker reports 442 native tests, 33 real PostgreSQL/HTTP tests and 11 independent-client checks passed. Parent integration and actual M1 journey remain separate."]
     },
     {
       "id": "M1-FLEET-MAC-HANDOFF",
