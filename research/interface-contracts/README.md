@@ -33,6 +33,18 @@ inventory/equipment ownership guards remain real source conditions. Six source
 tests and the native owned-net/missing-net UI cases pass without an engine
 first-match fallback or duplicate resources.
 
+`anvil-checkpoint.json` records the actual v3 journey's stage/items/XP/location
+from runner `089639ebc0123107fdceb7d12dec06b8e18dfd40`, not a new starting
+character or production seed. The server regression loads the real current
+canonical4 artifact and decodes legacy Protobuf `Interact/Smith`. At
+3075,9498,0 it opens target-bound source smithing312 and advances only the
+`interface_opened` lesson hook to `smith_dagger`, leaving inventory, XP and
+entitlements unchanged before recipe selection. Locked/wrong-stage/out-of-range
+and forged generic-interface attempts stay atomic failures. A real account/
+PostgreSQL command-journal case proves the same canonical public menu receipt
+and duplicate replay. This requires the existing UI4 implementation; the
+v3 message-only branch is not a workaround or accepted journey.
+
 The selected source potion restores 15% (1500 run units), with a separate
 three-tick timer, and leaves the next original dose or original vial229.
 Beer leaves beer glass1919;1923 is a bowl, not a replacement. The original

@@ -32,14 +32,14 @@
     "native": {
       "command": "cargo test -p clubscape-game-types -p clubscape-simulation -p clubscape-world-engine -p clubscape-content -p clubscape-protocol -p clubscape-server -p clubscape-client-core --all-targets --quiet",
       "binaries": 43,
-      "passed": 547,
+      "passed": 548,
       "failed": 0,
-      "ignored_postgresql_tests": 40
+      "ignored_postgresql_tests": 41
     },
     "postgresql_http": {
       "command": "python3 /home/lramos15/clubscape/tools/dev.py integration --workspace /home/lramos15/clubscape/.worktrees/m1-gameplay-ui-contracts --report .local/evidence/m1-gameplay-ui-contracts.json",
-      "passed": 40,
-      "new_ui_integration_cases": 7,
+      "passed": 41,
+      "new_ui_integration_cases": 8,
       "independent_account_client_checks": 11,
       "owned_server_container_database_cleaned_up": true
     },
@@ -66,6 +66,26 @@
       "engine_ambiguity_checks_unchanged": true,
       "native_fixture_correction": "The pre-existing net entitlement is complete only with its satisfied item set populated; no runtime validation was weakened and no inventory item was granted by this fixture correction.",
       "scope": "Post-104+7 source normalization and real native UI/entry checks on controlled source states, not a fresh player journey."
+    },
+    "canonical_anvil_legacy_protocol": {
+      "checkpoint": "research/interface-contracts/anvil-checkpoint.json",
+      "evidence_commit": "089639ebc0123107fdceb7d12dec06b8e18dfd40",
+      "source_stage_before": "stage.tutorial.anvil_open",
+      "source_stage_after": "stage.tutorial.smith_dagger",
+      "source_object_id": 2097,
+      "source_interface_id": 312,
+      "target": "spawn.anvil.tutorial.3075.9497.p0.t10.r0",
+      "actor_tile": {"x": 3075, "y": 9498, "plane": 0},
+      "captured_sequence": 102,
+      "captured_tick": 500,
+      "legacy_interact_smith_decoded_through_public_protobuf": true,
+      "actual_canonical4_engine_and_public_menu_projection": true,
+      "interface_opened_before_recipe_selection": true,
+      "inventory_xp_entitlements_unchanged_before_selection": true,
+      "locked_interface_wrong_stage_range_and_generic_interface_refusals_atomic": true,
+      "real_authenticated_postgresql_command_receipt_and_duplicate_replay": true,
+      "gameplay_fix_required": false,
+      "scope": "Exact observed stage/items/XP/location reconstructed only as controlled test preconditions against the real canonical4 artifact. Native public-protocol/view regression plus real authenticated PostgreSQL journal; not a full fresh-account HTTP journey."
     },
     "canonical_engine_ui_probes": {
       "report": "research/m1-bindings/schema-validation.json#native_ui_control_probes",

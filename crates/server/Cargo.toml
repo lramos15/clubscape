@@ -31,6 +31,7 @@ tracing-subscriber.workspace = true
 uuid = { workspace = true, features = ["v4", "serde"] }
 
 [dev-dependencies]
+flate2 = { version = "1.1.10", default-features = false, features = ["rust_backend"] }
 futures-util = "0.3"
 reqwest = { workspace = true, features = ["stream"] }
 tokio = { workspace = true, features = ["io-util", "test-util"] }

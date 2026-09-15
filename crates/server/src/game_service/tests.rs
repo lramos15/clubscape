@@ -1,3 +1,4 @@
+mod anvil;
 #[path = "../../../world-engine/tests/support/mod.rs"]
 mod engine_fixtures;
 #[path = "../../../content/tests/common/mod.rs"]
