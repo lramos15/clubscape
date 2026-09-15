@@ -1,0 +1,210 @@
+{
+  "scope": "Original book/map text, models and tutor-control fixtures. Native markers are genuinely hidden in these source captures; visible-marker placement/animation is not certified.",
+  "inputs": [
+    {
+      "case": "ui4-book-first",
+      "group": 392,
+      "title": "Source-only book title",
+      "page": 0,
+      "lines": [
+        "Source-only line 1",
+        "Source-only line 2",
+        "Source-only line 3",
+        "Source-only line 4",
+        "Source-only line 5",
+        "Source-only line 6",
+        "Source-only line 7",
+        "Source-only line 8",
+        "Source-only line 9",
+        "Source-only line 10",
+        "Source-only line 11",
+        "Source-only line 12",
+        "Source-only line 13",
+        "Source-only line 14",
+        "Source-only line 15",
+        "Source-only line 16",
+        "Source-only line 17",
+        "Source-only line 18",
+        "Source-only line 19",
+        "Source-only line 20",
+        "Source-only line 21",
+        "Source-only line 22",
+        "Source-only line 23",
+        "Source-only line 24",
+        "Source-only line 25",
+        "Source-only line 26",
+        "Source-only line 27",
+        "Source-only line 28",
+        "Source-only line 29",
+        "Source-only line 30"
+      ],
+      "previous": false,
+      "next": true,
+      "scope": "Explicit original facing-page text/visibility inputs, not production book content or account policy."
+    },
+    {
+      "case": "ui4-book-last",
+      "group": 392,
+      "title": "Source-only book title",
+      "page": 1,
+      "lines": [
+        "Source-only line 31",
+        "Source-only line 32",
+        "Source-only line 33",
+        "Source-only line 34",
+        "Source-only line 35",
+        "Source-only line 36",
+        "Source-only line 37",
+        "Source-only line 38",
+        "Source-only line 39",
+        "Source-only line 40",
+        "Source-only line 41",
+        "Source-only line 42",
+        "Source-only line 43",
+        "Source-only line 44",
+        "Source-only line 45",
+        "Source-only line 46",
+        "Source-only line 47",
+        "Source-only line 48",
+        "Source-only line 49",
+        "Source-only line 50",
+        "Source-only line 51",
+        "Source-only line 52",
+        "Source-only line 53",
+        "Source-only line 54",
+        "Source-only line 55",
+        "Source-only line 56",
+        "Source-only line 57",
+        "Source-only line 58",
+        "Source-only line 59",
+        "Source-only line 60"
+      ],
+      "previous": true,
+      "next": false,
+      "scope": "Explicit original facing-page text/visibility inputs, not production book content or account policy."
+    },
+    {
+      "case": "ui4-map-tutors-hidden",
+      "group": 615,
+      "tutors": false,
+      "tile": {
+        "x": 3168,
+        "y": 3168,
+        "plane": 0
+      },
+      "markerHidden": true
+    },
+    {
+      "case": "ui4-map-tutors-shown",
+      "group": 615,
+      "tutors": true,
+      "tile": {
+        "x": 3168,
+        "y": 3168,
+        "plane": 0
+      },
+      "markerHidden": true,
+      "operation": [
+        615,
+        18,
+        1
+      ],
+      "sourceScripts": [
+        2039,
+        2040,
+        2041,
+        2042,
+        2043
+      ]
+    }
+  ],
+  "references": [
+    {
+      "kind": "ui",
+      "name": "ui4-book-first.png",
+      "sha256": "8b2f9b9433d5734465b64883910826b17cc6fff021e27d8239e3d732bb37dba9",
+      "bytes": 142893
+    },
+    {
+      "kind": "ui",
+      "name": "ui4-book-last.png",
+      "sha256": "fe61b1c5d46ee04c40f83fba85e2c838f92b10740aec7cd4d0fa78f1304c7aa8",
+      "bytes": 143118
+    },
+    {
+      "kind": "ui",
+      "name": "ui4-map-tutors-hidden.png",
+      "sha256": "207fb04e320fd27ead6f0ef2ed3ca631594fcca7cab0093c0a862399a41db447",
+      "bytes": 138050
+    },
+    {
+      "kind": "ui",
+      "name": "ui4-map-tutors-shown.png",
+      "sha256": "e9ff4f1676ea955d8cbaab018ce04dfd1b173f7234a1ab8af5feab25757d9f05",
+      "bytes": 138243
+    }
+  ],
+  "marker": {
+    "widget": {
+      "id": 40304640,
+      "index": 0,
+      "parent": 40304640,
+      "x": -1,
+      "y": -1,
+      "width": 32,
+      "height": 32,
+      "type": 6,
+      "contentType": 0,
+      "text": "",
+      "sprite": -1,
+      "item": -1,
+      "item_quantity": 0,
+      "font": -1,
+      "color": 0,
+      "shadow": false,
+      "lineHeight": 0,
+      "xText": 0,
+      "yText": 0,
+      "opacity": 0,
+      "filled": false,
+      "tiling": false,
+      "spriteShadow": 0,
+      "flipX": false,
+      "flipY": false,
+      "border": 0,
+      "scrollX": 0,
+      "scrollY": 0,
+      "scrollWidth": 0,
+      "scrollHeight": 0,
+      "originalX": 240,
+      "originalY": 160,
+      "originalWidth": 32,
+      "originalHeight": 32,
+      "xMode": 0,
+      "yMode": 0,
+      "widthMode": 0,
+      "heightMode": 0,
+      "actions": null,
+      "name": "",
+      "targetVerb": "",
+      "quantityMode": 2,
+      "dragTime": 0,
+      "dragZone": 0,
+      "modelType": 1,
+      "model": 3062,
+      "modelZoom": 1526,
+      "modelRotation": [
+        512,
+        0,
+        68
+      ],
+      "onOp": null,
+      "noClickThrough": false,
+      "if3": true
+    },
+    "animation": 646,
+    "scope": "Original model-only glyph at an explicit interior position; not a source visibility or animation-sequence claim."
+  },
+  "sourcePackSha256": "b62e19704e17d3d3e4e819f803ef49ba7cc54034ae407184b423427c65d9674d",
+  "finalAcceptance": false
+}

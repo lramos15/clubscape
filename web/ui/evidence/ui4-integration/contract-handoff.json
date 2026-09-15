@@ -1,0 +1,72 @@
+{
+  "scope": "Exact integrated candidate/type/source identity and component wiring; no fresh-world or migration execution claimed.",
+  "contract": {
+    "capability": "game.ui.v1",
+    "upstream_commit": "d1532d6fc063d2a02383a7b4bb1ca3c449e214ce",
+    "authorized_cherry_pick": "5d56c93",
+    "typescript": "web/shared/contracts.ts",
+    "rust": "crates/game-types/src/gameplay_ui.rs",
+    "nullable_production_correction": {
+      "upstream": "351847f3f5255f6de6e345d5217a7910eaa145a3",
+      "authorized_pick": "ccbfbb0",
+      "meaning": "Explicit null is legitimate inventory-only production; omitted/malformed target fields are invalid."
+    },
+    "transport_handoff": {
+      "world_snapshot_ui_tag": 20,
+      "world_input_ui_tag": 41,
+      "expected_bank_revision_field": 21,
+      "expected_bank_revision_source": "Exact decimal ui.bank.revision at request creation, never world/character revision; retain on retries.",
+      "wire_implementation_in_ui": false,
+      "final_candidate": "78fcec42226e17d715f422f8e9cc2be8a1fb8762",
+      "authorized_picks": [
+        "cd12063",
+        "ccbfbb0",
+        "e4c9669",
+        "9973948",
+        "3103033",
+        "19c85d5",
+        "30a8183",
+        "70e4294",
+        "087cfca",
+        "85843a1"
+      ],
+      "bank_precondition_in_ui": "All eleven published bank requests capture the displayed bank revision in controls, held menus and drags. Missing/stale revisions reject explicitly; existing bound intents are never rebound.",
+      "raw_artifact_sha256": "6fdb60e4740372c5e299fe385875cfac32e04f22ea26ad17b53049296256c1b3",
+      "compressed_artifact_sha256": "f53a28402baad5588ccf071310b4c239e24391715290aaac2616ed0215284aa6",
+      "versions": {
+        "content": 4,
+        "artifact": 4,
+        "state": 1,
+        "runtime": 1,
+        "ui_state": 1
+      },
+      "cargo_lock_changed_by_ui": false,
+      "awaiting": "Real shell composition using a fresh normal candidate or explicit fenced migration; never silently repin an old world."
+    },
+    "status": "The authorized passed UI4 implementation, source publications and observer prerequisites are integrated. Exact final shared/proto files and raw/compressed artifact hashes match78fcec4. UI component evidence is not a live-server journey or whole-UI acceptance.",
+    "version_rule": "WorldView.ui.version must equal 1. Absent, unknown or malformed projections are explicit unsupported/error states, never fabricated empty views."
+  },
+  "files": [
+    {
+      "path": "web/shared/contracts.ts",
+      "sha256": "a80c61793c3965d8dc1b84797450cf6dac00299dfdbdeb3c768a6e3861a611db"
+    },
+    {
+      "path": "crates/game-types/src/gameplay_ui.rs",
+      "sha256": "f8f1cf049df41a14d4f8ab5813f44ead3229b32a12936ed7dcfb30c60de3b6d0"
+    },
+    {
+      "path": "crates/game-types/src/observer.rs",
+      "sha256": "0c7942f5d0dd8e909670ffc6ecaad18514b05f3a6a953004612d077ed90b4496"
+    },
+    {
+      "path": "crates/protocol/proto/game.proto",
+      "sha256": "67a227c8d4cdf95428070d910fcc291734317f0fd5793393afae28265ffa9c55"
+    },
+    {
+      "path": "content/m1/game-content.csc.gz",
+      "sha256": "f53a28402baad5588ccf071310b4c239e24391715290aaac2616ed0215284aa6"
+    }
+  ],
+  "finalAcceptance": false
+}

@@ -1,0 +1,40 @@
+{
+  "scope": "UI4 and revisioned minimap component tests with explicit deterministic services/pixels, not a live server/renderer journey or final fidelity acceptance.",
+  "browser": "153.0.8010.12",
+  "cases": [
+    {
+      "name": "activeTab is authoritative, independent from a contextual interface, and is not selected on rejection or an empty acknowledgement",
+      "passed": true
+    },
+    {
+      "name": "bank placeholders echo the displayed bank revision, preserve banker context and reject stale held quantities without rebinding",
+      "passed": true
+    },
+    {
+      "name": "original book controls retain document identity and authoritative page state across acknowledgement, rejection and cancellation",
+      "passed": true
+    },
+    {
+      "name": "newcomer-map native models and tutor controls do not invent pages, while supplied map artwork uses native model-only bounds",
+      "passed": true
+    },
+    {
+      "name": "canonical source233 level-up text uses supplied values and continuation without client XP or fabricated close events",
+      "passed": true
+    },
+    {
+      "name": "renderer minimap pixels are copied once per revision and stale/reused/malformed surfaces explicitly fail",
+      "passed": true
+    },
+    {
+      "name": "minimap owner/instance changes clear stale data while observer null/absence and exact timestamps survive UI updates",
+      "passed": true
+    },
+    {
+      "name": "map-element identities remain exact and missing original icons are visible in diagnostics instead of generic substitutes",
+      "passed": true
+    }
+  ],
+  "errors": [],
+  "finalAcceptance": false
+}

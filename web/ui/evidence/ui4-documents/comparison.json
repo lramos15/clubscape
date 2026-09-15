@@ -1,0 +1,128 @@
+{
+  "scope": "Additional ORIGINAL UI component/effect fixture comparisons, not live gameplay",
+  "sourcePackSha256": "b62e19704e17d3d3e4e819f803ef49ba7cc54034ae407184b423427c65d9674d",
+  "results": [
+    {
+      "case": "ui4-book-first",
+      "kind": "documents",
+      "size": [
+        1920,
+        1080
+      ],
+      "checked_pixels": 2073600,
+      "source_sha256": "8b2f9b9433d5734465b64883910826b17cc6fff021e27d8239e3d732bb37dba9",
+      "candidate_sha256": "4d8ce2edb50f66876b7765f2873abb3b8f0726b35c5ab96dd79bd1b4980088e6",
+      "different_pixels": 0,
+      "tolerance": 0,
+      "coverage": 1,
+      "passed": true
+    },
+    {
+      "case": "ui4-book-last",
+      "kind": "documents",
+      "size": [
+        1920,
+        1080
+      ],
+      "checked_pixels": 2073600,
+      "source_sha256": "fe61b1c5d46ee04c40f83fba85e2c838f92b10740aec7cd4d0fa78f1304c7aa8",
+      "candidate_sha256": "2535a4977d3143f962bd2492a88d87dcf90b0e9b5155be965d43fbcfc378eb78",
+      "different_pixels": 0,
+      "tolerance": 0,
+      "coverage": 1,
+      "passed": true
+    },
+    {
+      "case": "ui4-map-tutors-hidden",
+      "kind": "documents",
+      "size": [
+        1920,
+        1080
+      ],
+      "checked_pixels": 2073600,
+      "source_sha256": "207fb04e320fd27ead6f0ef2ed3ca631594fcca7cab0093c0a862399a41db447",
+      "candidate_sha256": "3dae47456a694b64659b35aadbc8bc26a7c1c868fa2e9ca6e9edb494512f4b34",
+      "different_pixels": 0,
+      "tolerance": 0,
+      "coverage": 1,
+      "passed": true
+    },
+    {
+      "case": "ui4-map-tutors-shown",
+      "kind": "documents",
+      "size": [
+        1920,
+        1080
+      ],
+      "checked_pixels": 2073600,
+      "source_sha256": "e9ff4f1676ea955d8cbaab018ce04dfd1b173f7234a1ab8af5feab25757d9f05",
+      "candidate_sha256": "83a78703bbb83000e368143aec75761bde15dd001306e6061c5d9f039c80c12c",
+      "different_pixels": 0,
+      "tolerance": 0,
+      "coverage": 1,
+      "passed": true
+    },
+    {
+      "case": "ui4-book-first",
+      "kind": "document-projections",
+      "size": [
+        1920,
+        1080
+      ],
+      "checked_pixels": 2073600,
+      "source_sha256": "8b2f9b9433d5734465b64883910826b17cc6fff021e27d8239e3d732bb37dba9",
+      "candidate_sha256": "4d8ce2edb50f66876b7765f2873abb3b8f0726b35c5ab96dd79bd1b4980088e6",
+      "different_pixels": 0,
+      "tolerance": 0,
+      "coverage": 1,
+      "passed": true
+    },
+    {
+      "case": "ui4-book-last",
+      "kind": "document-projections",
+      "size": [
+        1920,
+        1080
+      ],
+      "checked_pixels": 2073600,
+      "source_sha256": "fe61b1c5d46ee04c40f83fba85e2c838f92b10740aec7cd4d0fa78f1304c7aa8",
+      "candidate_sha256": "2535a4977d3143f962bd2492a88d87dcf90b0e9b5155be965d43fbcfc378eb78",
+      "different_pixels": 0,
+      "tolerance": 0,
+      "coverage": 1,
+      "passed": true
+    },
+    {
+      "case": "ui4-map-tutors-hidden",
+      "kind": "document-projections",
+      "size": [
+        1920,
+        1080
+      ],
+      "checked_pixels": 2073600,
+      "source_sha256": "207fb04e320fd27ead6f0ef2ed3ca631594fcca7cab0093c0a862399a41db447",
+      "candidate_sha256": "3dae47456a694b64659b35aadbc8bc26a7c1c868fa2e9ca6e9edb494512f4b34",
+      "different_pixels": 0,
+      "tolerance": 0,
+      "coverage": 1,
+      "passed": true
+    },
+    {
+      "case": "ui4-map-tutors-shown",
+      "kind": "document-projections",
+      "size": [
+        1920,
+        1080
+      ],
+      "checked_pixels": 2073600,
+      "source_sha256": "e9ff4f1676ea955d8cbaab018ce04dfd1b173f7234a1ab8af5feab25757d9f05",
+      "candidate_sha256": "83a78703bbb83000e368143aec75761bde15dd001306e6061c5d9f039c80c12c",
+      "different_pixels": 0,
+      "tolerance": 0,
+      "coverage": 1,
+      "passed": true
+    }
+  ],
+  "fullPanelsExcluded": 0,
+  "finalAcceptance": false
+}
