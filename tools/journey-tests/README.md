@@ -18,12 +18,13 @@ python3 tools/journey-tests/run.py \
 ```
 
 **Current runner contract: canonical content/artifact4, state/runtime1, UIstate1.**
-The current fresh candidate is revision `m1.source-backed.v4.67e4f1fcc55d71d5`,
-raw `6fdb60e4740372c5e299fe385875cfac32e04f22ea26ad17b53049296256c1b3`,
-compressed `f53a28402baad5588ccf071310b4c239e24391715290aaac2616ed0215284aa6`.
+The current fresh candidate is revision `m1.source-backed.v4.3ff4292b311453cc`,
+raw `5e0aa8a28851752ae0b8b0a08c635c6c8d2979f509f3a3e564ee74e2abfc8e6f`,
+compressed `7d49e8f85b7b229bb0fc9f6f3cb9665aaf9d287f6a873ac42701e3d77cc6e69f`.
 The versioned generated UI/observer contract and manifest/strict compiler are
-authoritative; the source content README's older schema3 wording is historical.
-Existing bb99/df3 worlds are never silently upgraded or reseeded.
+authoritative. Existing 6f/bb99/df3 worlds are never silently upgraded or reseeded.
+The historical 6f departure operation's unknown outcome is not retried or
+reconstructed; this source revision requires a fresh normal candidate.
 
 Prefer the fully integrated product GameRoot when it is available:
 
@@ -49,6 +50,12 @@ records. Other assets use hash-matched original published outputs. Every compile
 reference must be mapped; an absent output fails rather than becoming a
 placeholder. Payload files are deduplicated by hash and use short loopback asset
 URLs. This is not a rendered browser bundle or visual-fidelity claim.
+
+Packaging verifies both hashes of the manifest-selected committed archive,
+decompresses those exact bytes into the isolated GameRoot, and requires the
+strict inspector to report the same raw artifact hash. It never reads
+`tools/m1-content/.local/compiler/m1.csc`; running the source checker alone need
+not refresh that separate compiler output.
 
 The generated descriptor explicitly selects the documented
 `ordinary_normal_f2p` readiness profile and its two excluded, unacquired rare
@@ -466,6 +473,44 @@ repin or unknown-operation retry was needed. The independent Magic Instructor
 confirmation-entry blocker and prior actual66-edge evidence remain intact;
 these component passes are not a completed journey or new live Home Teleport
 acceptance.
+
+### Actual 5e departure, mainland and shop-entry blocker
+
+Authorized generator `bacbdf1` and product `8778fb3` are integrated as
+`c41c1ee` and `1c7a449`; the timed-UI travel repair remains present.
+The packager verified the committed archive and actual raw `5e0a...c8e6f`
+bytes, not a stale compiler-output filename. The old 6f account and uncertain
+sequence181 were neither retried nor reconstructed.
+
+[`evidence/departure-mainland-shop-1c7a449.json`](evidence/departure-mainland-shop-1c7a449.json)
+records fresh normal run `19cea04e47564728`: **70/70 acknowledged tutorial
+transitions and 285 source checks**. The real confirmation menu contains the
+original three choices. `offer_mainland` acknowledges at tick966; the actual
+normal confirmation at992 and Home Teleport at993 lead to Lumbridge at1017.
+The source18-kind kit, earned XP and1QP match their source checkpoints.
+Onboarding reconnect/logout/login/same-database-and-artifact restart/replays
+also pass in this same account. Mainland copper adds one ore and175XP-tenths
+using the legitimately acquired bronze pickaxe. Inventory movement, the real
+castle/bank route, copper deposit/typed withdrawal, and10-coin withdrawal pass;
+the bank retains15coins and one copper ore.
+
+The next blocker is **not** departure or shop-row identity. At tick1244, with
+next sequence245 and a mainland actor adjacent to `spawn.shopkeeper`, the real
+evaluated target view allows `Talk-to` but denies `Trade` with
+`REQUIREMENT_NOT_MET`. No Trade mutation is submitted. Both source keepers use
+`OpenShop(interface.shop)`; its query/execution requires an already unlocked
+contextual interface, but the actual progressed actor lacks `interface.shop`
+and the canonical pack has no effect unlocking it. Both entries have empty
+`before_open`, and that hook runs after the locked-interface check. The
+information-only shop dialogue supplies no alternative trade choice.
+
+The source/backend owner must provide the legitimate contextual shop-entry
+unlock/admission bridge. The runner does not invent an unlock, use generic
+`OpenInterface`, bypass context with a direct buy, or skip the shop. The combined
+inventory/equipment/bank/shop segment therefore remains unchecked despite its
+passed inventory/bank substeps. Goblin/death/Cook/post-quest recovery remain
+unexecuted. Source-service shutdown and all owned resource cleanup passed;
+this is qualified journey progress, not a full journey or milestone pass.
 
 ```sh
 python3 -m unittest discover -s tools/journey-tests -p 'test_*.py' -q
