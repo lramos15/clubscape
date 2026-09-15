@@ -12,7 +12,7 @@ const PAYLOAD_FIELDS: Record<AudioEvent["kind"], ReadonlySet<string>> = {
     "selector", "binding", "ambient", "ambientRandom", "objectId", "active", "sequenceId", "frame", "iteration", "itemId", "weightRoll", "orientation"]),
   animation: new Set([...COMMON_FIELDS, ...SPATIAL_FIELDS, "phase", "frame", "iteration", "itemId", "weightRoll"]),
   music: new Set([...COMMON_FIELDS, "mode", "unlocked", "boundary", "playlist", "shuffle",
-    "fadeOutDelayCycles", "fadeOutCycles", "fadeInDelayCycles", "fadeInCycles"]),
+    "fadeOutDelayCycles", "fadeOutCycles", "fadeInDelayCycles", "fadeInCycles", "loopEnabled"]),
   jingle: new Set([...COMMON_FIELDS, "auxiliary", "causeQuestId"]),
   level_up: new Set([...COMMON_FIELDS, "auxiliary", "causeQuestId", "level", "previousLevel", "skillId", "completionId"]),
   quest_complete: new Set([...COMMON_FIELDS, "questId"]),

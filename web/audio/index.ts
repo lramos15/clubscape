@@ -7,7 +7,7 @@ import { AudioFailure, failure, integer, requireAudio, unit } from "./errors.ts"
 import { EventLedger, SourceQueue } from "./queue.ts";
 import {
   APPROVED_PACK, loadCatalog, regionalTrack, selectWeighted, SOURCE_CYCLE_SECONDS,
-  SOURCE_RATE, sourceRandomBelow, sourceRoll, validTile,
+  SOURCE_RATE, sourceRandomBelow, sourceRoll, validTile, sourceAssetForLevel,
 } from "./source.ts";
 import type { AssetKind, FrameCue, SourceAsset, SourceCatalog } from "./source.ts";
 import {
@@ -18,10 +18,8 @@ import {
 import {
   sourceObjectDefinition, resolveSourceObject, sourceMusicRegion, sourceMusicDurationSeconds,
   SOURCE_BACKGROUND_TRANSITION, SOURCE_TITLE_TRANSITION, SOURCE_JINGLE_TRANSITION,
-  SOURCE_MIX_REPRESENTATION_NEEDS,
-  SOURCE_UNPUBLISHED_M1_MUSIC,
 } from "./native-scene.ts";
-import type { SourceAudioScene, SourceMusicTransition, SourceMusicSelector } from "./native-scene.ts";
+import type { SourceAudioScene, SourceMusicTransition, SourceMusicSelector, SourceMusicState } from "./native-scene.ts";
 import { baseSkills, committedRewardLevel, observeRewardLevels } from "./reward-levels.ts";
 import type { BaseSkills, RewardLevels } from "./reward-levels.ts";
 
@@ -58,6 +56,7 @@ export interface AudioSnapshot {
   readonly voices: readonly Readonly<{
     id: number; sourceId: number; kind: AssetKind; channel: Channel;
     eventId: string; when: number; gain: number; loop: boolean; loopEnd: number;
+    assetId: string; renderedNativeLevel: number | null; appliedNativeLevel: number;
   }>[];
   readonly cache: Readonly<{ decodedBytes: number; cached: number; pending: number }>;
   readonly policyLimits: readonly string[];
@@ -120,6 +119,10 @@ interface Voice {
   ambientFade: { from: number; target: number; start: number; durationMs: number; stop: boolean } | null;
   retiring: boolean;
   musicFader: { direction: "in" | "out"; cycles: number; current: number; nextAt: number; retire: boolean } | null;
+  nativeVolume: number;
+  endAt: number | null;
+  onComplete: (() => void) | null;
+  representationToken: number;
 }
 interface MusicPlan {
   groups: readonly number[];
@@ -128,6 +131,8 @@ interface MusicPlan {
   regionBound: boolean;
   transition?: SourceMusicTransition;
   scopeGroups?: readonly number[];
+  loopEnabled?: boolean;
+  shuffle?: boolean;
 }
 
 const runtimes = new WeakMap<AudioHandle, Runtime>();
@@ -159,6 +164,7 @@ class Runtime implements AudioHandle {
   private readonly master: GainNode;
   private readonly buses: Record<Channel, GainNode>;
   private readonly voices = new Map<number, Voice>();
+  private readonly representationLoads = new Map<number, { asset: SourceAsset; token: number }>();
   private readonly queue = new SourceQueue<Effect>();
   private readonly ambientPending = new Map<string, Effect>();
   private readonly traces: AudioTrace[] = [];
@@ -173,8 +179,11 @@ class Runtime implements AudioHandle {
   private readonly ambientIntervals = new Map<string, number>();
   private musicSelector: SourceMusicSelector | null = null;
   private sourceRequestDue: { plan: MusicPlan; group: number; token: number; at: number } | null = null;
+  private nextPreparation: { assetId: string; token: number; when: number } | null = null;
   private nativeAreaMode: "modern" | "classic" = "modern";
   private musicAreaName: string | null = null;
+  private musicState: SourceMusicState | null = null;
+  private areaShuffle: { key: string; remaining: number[] } | null = null;
   private listener: Listener | null = null;
   private playerId: string | null = null;
   private revision: bigint | null = null;
@@ -250,6 +259,7 @@ class Runtime implements AudioHandle {
         channel: voice.channel, eventId: voice.eventId, when: voice.when,
         gain: voice.gain.gain.value,
         loop: voice.source.loop, loopEnd: voice.source.loopEnd,
+        assetId: voice.asset.id, renderedNativeLevel: voice.asset.nativeMixerLevel, appliedNativeLevel: voice.nativeVolume,
       }))),
       cache: Object.freeze(this.cache.state), policyLimits: Object.freeze([...this.policyLimits]),
       traces: Object.freeze([...this.traces]),
@@ -284,6 +294,7 @@ class Runtime implements AudioHandle {
         this.backgroundPreparation = null;
         this.trace("unlocked", { state: this.context.state });
         this.startClock();
+        await this.refreshMusicVoices();
         await this.ensureMusic();
       } catch (error) {
         this.pendingGesture = this.context.state !== "running";
@@ -336,6 +347,9 @@ class Runtime implements AudioHandle {
         if (world.player.id !== this.playerId) {
           this.resetPlaying();
           this.playerId = world.player.id;
+          this.musicState = null;
+          this.areaShuffle = null;
+          this.sourceScene = null;
           this.ledger = new EventLedger();
           this.completed = new Set();
           this.baseline = true;
@@ -373,8 +387,13 @@ class Runtime implements AudioHandle {
           this.queue.clear();
           this.prepared.clear();
           this.stopWhere((voice) => voice.asset.kind === "sfx", "region_changed");
-          if (this.music.regionBound) {
-            const group = musicRegion?.defaultGroup ?? regionalTrack(this.listener.region);
+          if (this.music.regionBound && (changedMusicArea || this.nativeAreaMode === "classic" ||
+            previous?.id !== this.listener.id || previous?.instance !== this.listener.instance)) {
+            const scope = musicRegion?.groups.filter((group) => !this.musicState ||
+              this.musicState.unlockedGroups.includes(group)) ?? [];
+            const fallback = musicRegion?.defaultGroup ?? regionalTrack(this.listener.region);
+            const group = this.musicState && musicRegion
+              ? (scope.includes(musicRegion.defaultGroup) ? musicRegion.defaultGroup : scope[0] ?? null) : fallback;
             if (group === null || group !== this.music.groups[this.music.cursor]) {
               this.musicToken++;
               this.musicPending = null;
@@ -382,7 +401,8 @@ class Runtime implements AudioHandle {
               this.musicFailed = false;
               this.nextBackground = null;
               this.music = { groups: group === null ? [] : [group], cursor: 0, mode: "once", regionBound: true,
-                transition: SOURCE_BACKGROUND_TRANSITION, scopeGroups: musicRegion?.groups ?? [] };
+                transition: SOURCE_BACKGROUND_TRANSITION, scopeGroups: scope,
+                loopEnabled: this.musicState?.loopEnabled ?? true };
             }
             this.trace("region", { region: this.listener.region, group });
             if (group === null && !inputs.some((event) => event.kind === "music")) {
@@ -449,22 +469,8 @@ class Runtime implements AudioHandle {
       this.nativeMixer[channel] = sourceSliderToMixer(channel, Math.round(value * 100), this.masterPercent);
       this.trace("volume", { channel, value, nativeMixer: this.nativeMixer[channel] });
       if (channel === "music") {
-        for (const voice of this.voices.values()) if (voice.channel === "music") {
-          if (this.needsNativeGainInput(voice.asset, this.nativeMixer.music)) {
-            this.stopVoice(voice, "native_gain_representation_required");
-            if (voice.asset.kind === "jingle") {
-              this.jingle = null;
-              this.jinglePending = null;
-              this.musicalToken++;
-            }
-            this.notifyError(new AudioFailure("AUDIO_NATIVE_GAIN_INPUT_REQUIRED",
-              `Original ${voice.asset.kind} ${voice.asset.sourceId} cannot be raised to this native level using the frozen128 representation without extra clipping.`,
-              true, { sourceId: voice.asset.sourceId, nativeMixer: this.nativeMixer.music }));
-            continue;
-          }
-          voice.calibrationGain = sourceMixerToAssetGain(this.nativeMixer.music);
-          if (!voice.musicFader) voice.gain.gain.setValueAtTime(voice.level * voice.asset.inputGain * voice.calibrationGain, this.context.currentTime);
-        }
+        void this.refreshMusicVoices().catch((error) => this.notifyError(failure(error,
+          "AUDIO_NATIVE_REPRESENTATION", "Cannot apply the configured original mixer representation")));
       }
       if (this.nativeMixer[channel] === 0) {
         if (channel === "music") this.stopMusical();
@@ -494,9 +500,63 @@ class Runtime implements AudioHandle {
         this.musicSelector = selector;
         this.nativeAreaMode = areaMode;
         this.musicAreaName = null;
+        this.areaShuffle = null;
         if (selector && this.musicExhausted && this.music.groups[this.music.cursor] !== undefined) {
           void this.requestSourceNext(this.music, this.music.groups[this.music.cursor]!, this.musicToken);
         }
+      }
+
+      setMusicState(state: SourceMusicState): void {
+        requireAudio(["area","single","shuffle","playlist"].includes(state.mode) &&
+          ["modern","classic"].includes(state.areaMode) && typeof state.loopEnabled === "boolean" &&
+          Array.isArray(state.unlockedGroups) && Array.isArray(state.playlistGroups) &&
+          state.unlockedGroups.length <= 100 && state.playlistGroups.length <= 100,
+        "AUDIO_SOURCE_MUSIC", "Invalid bounded original music state.");
+        const unlocked = [...new Set(state.unlockedGroups)];
+        const playlist = [...new Set(state.playlistGroups)];
+        for (const group of unlocked) this.asset("music", group, null);
+        for (const group of playlist) requireAudio(unlocked.includes(group), "AUDIO_SOURCE_MUSIC", "A playlist cannot grant a locked track.");
+        requireAudio(state.selectedGroup === null || unlocked.includes(state.selectedGroup),
+          "AUDIO_SOURCE_MUSIC", "A manually selected track must be source-unlocked.");
+        const same = this.musicState && this.musicState.mode === state.mode && this.musicState.areaMode === state.areaMode &&
+          this.musicState.selectedGroup === state.selectedGroup && this.musicState.loopEnabled === state.loopEnabled &&
+          this.musicState.unlockedGroups.join(",") === unlocked.join(",") &&
+          this.musicState.playlistGroups.join(",") === playlist.join(",");
+        if (same) return;
+        this.musicState = Object.freeze({ ...state, unlockedGroups: Object.freeze(unlocked), playlistGroups: Object.freeze(playlist) });
+        this.nativeAreaMode = state.areaMode;
+        this.areaShuffle = null;
+        let groups: number[], mode: MusicPlan["mode"];
+        if (state.mode === "area") {
+          requireAudio(this.listener, "AUDIO_SOURCE_MUSIC", "Area mode requires an authoritative world.");
+          const region = sourceMusicRegion(this.listener.tile, state.areaMode);
+          requireAudio(region, "AUDIO_SOURCE_REGION", "The declared world has no source music region.");
+          const available = region.groups.filter((group) => unlocked.includes(group));
+          requireAudio(available.length > 0, "AUDIO_SOURCE_MUSIC", "No source-unlocked track is available in this area.");
+          const first = available.includes(region.defaultGroup) ? region.defaultGroup : available[0]!;
+          groups = [first]; mode = "once";
+          this.musicAreaName = region.name;
+          this.music = { groups, cursor: 0, mode, regionBound: true,
+            scopeGroups: available, loopEnabled: state.loopEnabled, transition: SOURCE_BACKGROUND_TRANSITION };
+        } else {
+          groups = state.mode === "single"
+            ? (state.selectedGroup === null ? [] : [state.selectedGroup])
+            : (state.mode === "playlist" ? playlist : unlocked);
+          requireAudio(groups.length > 0, "AUDIO_SOURCE_MUSIC", "A declared music mode needs its original selected tracks.");
+          const shuffle = state.mode === "shuffle" || state.mode === "playlist";
+          if (shuffle) groups = this.shuffled(groups);
+          const cursor = state.selectedGroup !== null && groups.includes(state.selectedGroup) ? groups.indexOf(state.selectedGroup) : 0;
+          mode = state.mode === "single" ? "single" : "playlist";
+          this.music = { groups: Object.freeze(groups), cursor, mode, regionBound: false,
+            loopEnabled: state.loopEnabled, shuffle, transition: SOURCE_BACKGROUND_TRANSITION };
+        }
+        this.musicToken++;
+        this.musicPending = null;
+        this.musicExhausted = false;
+        this.musicFailed = false;
+        this.nextBackground = null;
+        this.sourceRequestDue = null;
+        void this.ensureMusic().catch((error) => this.notifyError(failure(error, "AUDIO_SOURCE_MUSIC", "Cannot apply declared music state")));
       }
 
       setSourceScene(scene: SourceAudioScene | null): void {
@@ -952,7 +1012,7 @@ class Runtime implements AudioHandle {
       eventId: event.id, actionId: actionId(event), key, asset, channel, gain: position.gain,
       repeats, ambient, ambientRandom, spatial: position.spatial,
       buffer: null, error: null, lateReported: false, requestedAt: now,
-      dueAt: this.nextCycleAt + delay * SOURCE_CYCLE_SECONDS,
+      dueAt: Math.max(this.nextCycleAt, now + SOURCE_CYCLE_SECONDS) + delay * SOURCE_CYCLE_SECONDS,
       enqueuedCycle: this.processingCycle, epoch: this.epoch,
     };
     if (ambient) {
@@ -1144,8 +1204,11 @@ class Runtime implements AudioHandle {
       fadeInDelayCycles: this.transitionNumber(event, "fadeInDelayCycles", 60),
       fadeInCycles: this.transitionNumber(event, "fadeInCycles", 0),
     };
+    requireAudio(event.payload.loopEnabled === undefined || typeof event.payload.loopEnabled === "boolean",
+      "AUDIO_SOURCE_MUSIC", "The original loop preference must be a boolean.");
     this.music = { groups: Object.freeze(groups), cursor: groups.indexOf(selected.sourceId),
-      mode: repeatMode, regionBound: mode === "area", transition };
+      mode: repeatMode, regionBound: mode === "area", transition,
+      loopEnabled: event.payload.loopEnabled !== false, shuffle: mode === "shuffle" || event.payload.shuffle === true };
     this.musicToken++;
     this.musicExhausted = false;
     this.musicFailed = false;
@@ -1193,10 +1256,18 @@ class Runtime implements AudioHandle {
     this.trace("jingle_accepted", { eventId, group: asset.sourceId });
     this.jinglePending = (async () => {
       try {
-        const buffer = await this.cache.load(asset);
-        if (token !== this.musicalToken || !this.canPlay() || this.muted) return;
-        this.startVoice(asset, buffer, "music", eventId, eventId, eventId, 1,
-          this.context.currentTime, null, false, token, asset.endFrame! / SOURCE_RATE, false, () => {
+        let selected = asset;
+        let buffer = await this.cache.load(selected);
+        for (;;) {
+          if (token !== this.musicalToken || !this.canPlay() || this.muted) return;
+          const current = this.asset("jingle", asset.sourceId, asset.id);
+          if (current.id === selected.id) break;
+          selected = current;
+          this.jingle = selected;
+          buffer = await this.cache.load(selected);
+        }
+        this.startVoice(selected, buffer, "music", eventId, eventId, eventId, 1,
+          this.context.currentTime, null, false, token, selected.endFrame! / SOURCE_RATE, false, () => {
             if (token !== this.musicalToken) return;
             this.jingle = null;
             this.jinglePending = null;
@@ -1254,6 +1325,10 @@ class Runtime implements AudioHandle {
     }
     if (token !== this.musicToken || !this.canPlay() || this.muted || this.nativeMixer.music === 0 ||
       this.jingle !== null || this.jinglePending !== null) return;
+    this.music = plan;
+    plan.cursor = cursor;
+    this.musicExhausted = false;
+    if (plan.regionBound && this.areaShuffle?.remaining[0] === asset.sourceId) this.areaShuffle.remaining.shift();
     const transition = plan.transition ?? (this.listener === null ? SOURCE_TITLE_TRANSITION : SOURCE_BACKGROUND_TRANSITION);
     const readyAt = Math.max(this.context.currentTime, when);
     const actualWhen = readyAt + transition.fadeInDelayCycles * SOURCE_CYCLE_SECONDS;
@@ -1266,7 +1341,9 @@ class Runtime implements AudioHandle {
         if (token !== this.musicToken) return;
         if (plan.mode === "once") {
           this.musicExhausted = true;
-          if (!this.sourceRequestDue) void this.requestSourceNext(plan, asset.sourceId, token);
+          if (sourceMusicDurationSeconds(asset.sourceId) === null) void this.requestSourceNext(plan, asset.sourceId, token);
+        } else if (plan.loopEnabled === false) {
+          this.musicExhausted = true;
         } else if (plan.mode === "playlist" || plan.mode === "single") {
           plan.cursor = (cursor + 1) % plan.groups.length;
         }
@@ -1276,13 +1353,34 @@ class Runtime implements AudioHandle {
     if (plan.mode === "once") {
       const duration = sourceMusicDurationSeconds(asset.sourceId);
       this.sourceRequestDue = duration === null ? null : { plan, group: asset.sourceId, token, at: actualWhen + duration };
+      if (duration !== null && this.listener && !this.musicSelector && plan.loopEnabled !== false) {
+        const region = sourceMusicRegion(this.listener.tile, this.nativeAreaMode);
+        const nextGroup = this.nextAreaTrack(plan, asset.sourceId, region?.groups ?? plan.scopeGroups ?? plan.groups);
+        const nextPlan: MusicPlan = { groups: [nextGroup], cursor: 0, mode: "once", regionBound: true,
+          scopeGroups: region?.groups ?? plan.scopeGroups ?? plan.groups, transition: SOURCE_JINGLE_TRANSITION };
+        void this.prepareNextBackground(nextPlan, 0, actualWhen + duration, token).then(() => {
+          if (this.sourceRequestDue?.token === token && this.sourceRequestDue.at === actualWhen + duration &&
+            this.nextBackground?.token === token && this.nextBackground.when === actualWhen + duration) {
+            this.sourceRequestDue = null;
+          }
+        }, (error) => {
+          if (token === this.musicToken) this.notifyError(failure(error, "AUDIO_SOURCE_MUSIC", "Cannot prepare the next native area track"));
+        });
+      }
     }
-    if (plan.mode === "playlist" || plan.mode === "single") {
-      const next = (cursor + 1) % plan.groups.length;
+    if ((plan.mode === "playlist" || plan.mode === "single") && plan.loopEnabled !== false) {
+      let next = (cursor + 1) % plan.groups.length;
+      let nextPlan = { ...plan, transition: SOURCE_JINGLE_TRANSITION };
+      if (next === 0 && plan.shuffle && plan.groups.length > 1) {
+        let order = this.shuffled(plan.groups);
+        if (order[0] === asset.sourceId) [order[0], order[1]] = [order[1]!, order[0]!];
+        nextPlan = { ...nextPlan, groups: Object.freeze(order), cursor: 0 };
+        next = 0;
+      }
       const interval = sourceMusicDurationSeconds(asset.sourceId);
       requireAudio(interval !== null, "AUDIO_SOURCE_MUSIC", "This source track has no native player duration row.");
       const nextWhen = actualWhen + interval;
-      void this.prepareNextBackground({ ...plan, transition: SOURCE_JINGLE_TRANSITION }, next, nextWhen, token).catch((error) => {
+      void this.prepareNextBackground(nextPlan, next, nextWhen, token).catch((error) => {
         if (token === this.musicToken) this.notifyError(failure(error, "AUDIO_PLAYLIST", "Cannot prepare the next source track"));
       });
     }
@@ -1295,22 +1393,22 @@ class Runtime implements AudioHandle {
         return;
       }
       const region = sourceMusicRegion(this.listener.tile, this.nativeAreaMode);
-      if (!this.musicSelector) {
-        this.notifyError(new AudioFailure("AUDIO_SOURCE_MUSIC_SELECTION_REQUIRED",
-          "The native player requests its next source selection. Connect SourceMusicSelector; do not fabricate a playlist or leave an exhausted track as success.",
-          true, { previousGroup: group, nativeArea: region?.areaId ?? -1,
-            requiredGroups: (region?.groups ?? []).join(",") }));
-        return;
-      }
+      if (plan.loopEnabled === false) return;
       try {
-        const selection = await deadline(this.musicSelector({
+        const request = {
           previousGroup: group, mode: plan.mode === "once" ? "area" : plan.mode,
           region, durationTicks: sourceMusicDurationSeconds(group) === null ? null : sourceMusicDurationSeconds(group)! / 0.6,
-        }), 15_000, new AudioFailure("AUDIO_SOURCE_MUSIC_SELECTION_TIMEOUT", "The source music selector did not provide its next request."));
+        } as const;
+        const selection = this.musicSelector
+          ? await deadline(this.musicSelector(request), 15_000,
+            new AudioFailure("AUDIO_SOURCE_MUSIC_SELECTION_TIMEOUT", "The source music selector did not provide its next request."))
+          : { group: this.nextAreaTrack(plan, group, region?.groups ?? plan.groups),
+            transition: SOURCE_JINGLE_TRANSITION };
         if (token !== this.musicToken || !this.canPlay()) return;
         this.asset("music", selection.group, null);
         this.music = { groups: [selection.group], cursor: 0, mode: "once", regionBound: true,
-          transition: selection.transition ?? SOURCE_BACKGROUND_TRANSITION };
+          scopeGroups: region?.groups ?? plan.scopeGroups ?? plan.groups,
+          loopEnabled: true, transition: selection.transition ?? SOURCE_BACKGROUND_TRANSITION };
         this.musicToken++;
         this.musicExhausted = false;
         this.musicFailed = false;
@@ -1325,9 +1423,9 @@ class Runtime implements AudioHandle {
         this.stopVoice(voice, "native_zero_fade_replacement");
         return;
       }
-      const nativeVolume = Math.round(voice.calibrationGain * 128);
+      const nativeVolume = voice.nativeVolume;
       const current = voice.musicFader?.current ?? (direction === "in" ? 0
-        : Math.round(voice.gain.gain.value / voice.asset.inputGain * 128));
+        : Math.round(voice.gain.gain.value / voice.asset.inputGain * (voice.asset.nativeMixerLevel ?? 128)));
       voice.musicFader = { direction, cycles, current, nextAt: when + SOURCE_CYCLE_SECONDS, retire };
       voice.level = direction === "in" ? 1 : 0;
       this.trace("native_music_fade", { voiceId: voice.id, direction, cycles, when, nativeVolume,
@@ -1338,7 +1436,7 @@ class Runtime implements AudioHandle {
     private advanceMusicFade(voice: Voice, cycleAt: number): void {
       const fade = voice.musicFader;
       if (!fade || cycleAt + 0.000001 < fade.nextAt) return;
-      const target = Math.round(voice.calibrationGain * 128);
+      const target = voice.nativeVolume;
       const active = fade.direction === "in" ? fade.current < target : fade.current > 0;
       if (!active) {
         voice.musicFader = null;
@@ -1349,18 +1447,22 @@ class Runtime implements AudioHandle {
       fade.current = fade.direction === "in"
         ? Math.min(target, Math.fround(fade.current + (step === 0 ? target : step)))
         : Math.max(0, Math.fround(fade.current - (step === 0 ? target : step)));
-      voice.gain.gain.setValueAtTime(sourceMixerToAssetGain(Math.trunc(fade.current)) * voice.asset.inputGain,
+      voice.gain.gain.setValueAtTime(sourceMixerToAssetGain(Math.trunc(fade.current), voice.asset.nativeMixerLevel ?? 128) * voice.asset.inputGain,
         Math.max(this.context.currentTime, fade.nextAt));
       fade.nextAt += SOURCE_CYCLE_SECONDS;
       if (fade.retire && fade.current <= 0) this.stopVoice(voice, "native_music_fade_finished");
     }
   private async prepareNextBackground(plan: MusicPlan, cursor: number, when: number, token: number): Promise<void> {
     const asset = this.asset("music", plan.groups[cursor]!, null);
+    const preparing = { assetId: asset.id, token, when };
+    this.nextPreparation = preparing;
     try {
       await this.cache.load(asset);
     } catch (error) {
       if (token !== this.musicToken || this.disposed || !this.connected) return;
       throw error;
+    } finally {
+      if (this.nextPreparation === preparing) this.nextPreparation = null;
     }
     if (token !== this.musicToken || !this.canPlay()) return;
     // Do not recursively schedule the whole playlist. The source-cycle clock
@@ -1370,23 +1472,33 @@ class Runtime implements AudioHandle {
 
   private nextBackground: { plan: MusicPlan; cursor: number; when: number; token: number } | null = null;
 
-  private asset(kind: AssetKind, sourceId: number | null, assetId: string | null): SourceAsset {
-    if (kind === "music" && sourceId !== null &&
-      (SOURCE_UNPUBLISHED_M1_MUSIC as readonly number[]).includes(sourceId)) {
-      throw new AudioFailure("AUDIO_SOURCE_MUSIC_ASSET_REQUIRED",
-        `Native music table44 requires index6 group${sourceId}; it has no approved playable publication. No FLAC alias or substituted song is created.`,
-        true, { sourceIndex: 6, sourceGroup: sourceId });
+  private shuffled(groups: readonly number[]): number[] {
+    const result = [...groups];
+    for (let i = result.length - 1; i > 0; i--) {
+      const j = sourceRandomBelow(i + 1);
+      [result[i], result[j]] = [result[j]!, result[i]!];
     }
-    const asset = this.catalog.groups.get(`${kind}:${sourceId}`);
-    requireAudio(asset && (assetId === null || assetId === asset.id), "AUDIO_ASSET_ID",
-      `Unknown or mismatched original ${kind} identity ${sourceId}. No replacement is permitted.`);
-    return asset;
+    return result;
   }
 
-  private needsNativeGainInput(asset: SourceAsset, volume: number): boolean {
-    return asset.kind !== "sfx" && SOURCE_MIX_REPRESENTATION_NEEDS.some((need) =>
-      need.index === (asset.kind === "music" ? 6 : 11) && need.group === asset.sourceId) &&
-      asset.peak * sourceMixerToAssetGain(volume) > 1;
+  private nextAreaTrack(plan: MusicPlan, previous: number, groups: readonly number[]): number {
+    const available = groups.filter((group) => !this.musicState || this.musicState.unlockedGroups.includes(group));
+    requireAudio(available.length > 0, "AUDIO_SOURCE_MUSIC", "The declared source area has no unlocked track.");
+    for (const group of available) this.asset("music", group, null);
+    if (available.length === 1) return available[0]!;
+    const key = `${this.nativeAreaMode}/${available.join(",")}`;
+    if (this.areaShuffle?.key !== key) {
+      this.areaShuffle = { key, remaining: this.shuffled(available.filter((group) => group !== previous)) };
+    } else if (this.areaShuffle.remaining.length === 0) {
+      const order = this.shuffled(available);
+      if (order[0] === previous) [order[0], order[1]] = [order[1]!, order[0]!];
+      this.areaShuffle.remaining = order;
+    }
+    return this.areaShuffle.remaining[0]!;
+  }
+
+  private asset(kind: AssetKind, sourceId: number | null, assetId: string | null): SourceAsset {
+    return sourceAssetForLevel(this.catalog, kind, sourceId, assetId, this.nativeMixer.music);
   }
 
   private startVoice(
@@ -1395,16 +1507,10 @@ class Runtime implements AudioHandle {
     duration?: number, musicalLoop = false, ended?: () => void, ambientRandom = false,
   ): Voice {
     this.requireOpen();
-    if (this.needsNativeGainInput(asset, this.nativeMixer.music)) {
-      throw new AudioFailure("AUDIO_NATIVE_GAIN_INPUT_REQUIRED",
-        `Original ${asset.kind} ${asset.sourceId} needs a native mixer-level representation at volume ${this.nativeMixer.music}; scaling the frozen128 PCM would add clipping. No limiter or normalization is substituted.`,
-        true, { sourceId: asset.sourceId, nativeMixer: this.nativeMixer.music });
-    }
-
     const source = this.context.createBufferSource();
     const gain = this.context.createGain();
     source.buffer = buffer;
-    const calibrationGain = sourceMixerToAssetGain(this.nativeMixer[channel]);
+    const calibrationGain = sourceMixerToAssetGain(this.nativeMixer[channel], asset.nativeMixerLevel ?? 128);
     gain.gain.setValueAtTime(level * asset.inputGain * calibrationGain, when);
     if (ambient && !ambientRandom) {
       source.loop = true;
@@ -1421,18 +1527,11 @@ class Runtime implements AudioHandle {
       id: ++this.voiceId, asset, source, gain, channel, eventId, actionId: action, key,
       when, level, spatial, ambient, ambientRandom, musicToken, stopped: false, calibrationGain,
       ambientFade: null, retiring: false, musicFader: null,
+      nativeVolume: this.nativeMixer[channel], endAt: source.loop ? null : when + (duration ?? buffer.duration),
+      onComplete: ended ?? null, representationToken: 0,
     };
     this.voices.set(voice.id, voice);
-    source.onended = () => {
-      if (voice.stopped) return;
-      voice.stopped = true;
-      source.disconnect();
-      gain.disconnect();
-      this.voices.delete(voice.id);
-      this.trace("ended", { voiceId: voice.id, sourceId: asset.sourceId, eventId, natural: !voice.retiring });
-      ended?.();
-      this.publish();
-    };
+    source.onended = () => this.finishVoice(voice, source);
     try {
       if (duration === undefined) source.start(when);
       else source.start(when, 0, duration);
@@ -1440,6 +1539,7 @@ class Runtime implements AudioHandle {
         voiceId: voice.id, sourceId: asset.sourceId, kind: asset.kind, channel, eventId, when,
         duration: duration ?? buffer.duration, loop: source.loop,
         loopEnd: source.loopEnd, gain: level * asset.inputGain * calibrationGain,
+        assetId: asset.id, renderedNativeLevel: asset.nativeMixerLevel, nativeMixer: voice.nativeVolume,
       });
       if (asset.kind !== "sfx") this.publish();
       return voice;
@@ -1449,9 +1549,97 @@ class Runtime implements AudioHandle {
     }
   }
 
+  private finishVoice(voice: Voice, source: AudioBufferSourceNode): void {
+    if (voice.stopped || voice.source !== source) return;
+    voice.stopped = true;
+    voice.representationToken++;
+    source.disconnect();
+    voice.gain.disconnect();
+    this.voices.delete(voice.id);
+    this.representationLoads.delete(voice.id);
+    this.trace("ended", { voiceId: voice.id, sourceId: voice.asset.sourceId, assetId: voice.asset.id,
+      eventId: voice.eventId, natural: !voice.retiring });
+    voice.onComplete?.();
+    this.publish();
+  }
+
+  private async refreshMusicVoices(): Promise<void> {
+    const pending: Promise<void>[] = [];
+    for (const voice of this.voices.values()) {
+      if (voice.channel !== "music" || voice.stopped) continue;
+      const wanted = sourceAssetForLevel(this.catalog, voice.asset.kind, voice.asset.sourceId,
+        voice.asset.id, this.nativeMixer.music);
+      if (wanted.id !== voice.asset.id && this.nativeMixer.music !== 0) {
+        pending.push(this.replaceVoiceRepresentation(voice, wanted));
+      } else {
+        voice.representationToken++;
+        this.representationLoads.delete(voice.id);
+        voice.nativeVolume = this.nativeMixer.music;
+        voice.calibrationGain = sourceMixerToAssetGain(voice.nativeVolume, voice.asset.nativeMixerLevel ?? 128);
+        if (!voice.musicFader) voice.gain.gain.setValueAtTime(
+          voice.level * voice.asset.inputGain * voice.calibrationGain, this.context.currentTime);
+      }
+    }
+    await Promise.all(pending);
+  }
+
+  private async replaceVoiceRepresentation(voice: Voice, asset: SourceAsset): Promise<void> {
+    const request = { asset, token: ++voice.representationToken };
+    this.representationLoads.set(voice.id, request);
+    this.trace("representation_loading", { voiceId: voice.id, sourceId: asset.sourceId, assetId: asset.id,
+      configuredNativeLevel: this.nativeMixer.music, appliedNativeLevel: voice.nativeVolume });
+    try {
+      const buffer = await this.cache.load(asset);
+      if (voice.stopped || request.token !== voice.representationToken || !this.canPlay() || this.muted ||
+        this.nativeMixer.music === 0) return;
+      const wanted = sourceAssetForLevel(this.catalog, asset.kind, asset.sourceId, voice.asset.id, this.nativeMixer.music);
+      if (wanted.id !== asset.id) return;
+      requireAudio(asset.frames === voice.asset.frames && asset.channels === voice.asset.channels &&
+        asset.endFrame === voice.asset.endFrame,
+      "AUDIO_NATIVE_REPRESENTATION", "A mixer-level representation changed the native source clock.");
+      const when = Math.max(this.context.currentTime, voice.when);
+      const offset = Math.max(0, when - voice.when);
+      const remaining = voice.endAt === null ? undefined : voice.endAt - when;
+      if (offset >= buffer.duration || (remaining !== undefined && remaining <= 0)) return;
+      const next = this.context.createBufferSource();
+      next.buffer = buffer;
+      next.loop = voice.source.loop;
+      next.loopStart = voice.source.loopStart;
+      next.loopEnd = voice.source.loopEnd;
+      next.connect(voice.gain);
+      next.onended = () => this.finishVoice(voice, next);
+      try {
+        if (remaining === undefined) next.start(when, offset);
+        else next.start(when, offset, remaining);
+      } catch (error) {
+        next.disconnect();
+        throw error;
+      }
+      const old = voice.source;
+      old.onended = null;
+      old.stop(when);
+      old.disconnect();
+      voice.source = next;
+      voice.asset = asset;
+      voice.nativeVolume = this.nativeMixer.music;
+      voice.calibrationGain = sourceMixerToAssetGain(voice.nativeVolume, asset.nativeMixerLevel ?? 128);
+      const nativeLevel = voice.musicFader ? Math.trunc(voice.musicFader.current) : voice.nativeVolume * voice.level;
+      voice.gain.gain.setValueAtTime(nativeLevel / (asset.nativeMixerLevel ?? 128) * asset.inputGain, when);
+      if (this.jingle?.sourceId === asset.sourceId && asset.kind === "jingle") this.jingle = asset;
+      this.trace("representation_changed", { voiceId: voice.id, sourceId: asset.sourceId, assetId: asset.id,
+        nativeMixer: voice.nativeVolume, when, offset, endAt: voice.endAt });
+      this.publish();
+    } catch (error) {
+      if (!voice.stopped && request.token === voice.representationToken) throw error;
+    } finally {
+      if (this.representationLoads.get(voice.id) === request) this.representationLoads.delete(voice.id);
+    }
+  }
+
   private stopVoice(voice: Voice, reason: string): void {
     if (voice.stopped) return;
     voice.stopped = true;
+    voice.representationToken++;
     voice.source.onended = null;
     try { voice.source.stop(); } catch (error) {
       this.trace("stop_error", { voiceId: voice.id, message: error instanceof Error ? error.message : String(error) });
@@ -1459,6 +1647,7 @@ class Runtime implements AudioHandle {
     voice.source.disconnect();
     voice.gain.disconnect();
     this.voices.delete(voice.id);
+    this.representationLoads.delete(voice.id);
     this.trace("stopped", { voiceId: voice.id, sourceId: voice.asset.sourceId, eventId: voice.eventId, reason });
   }
 
@@ -1476,6 +1665,7 @@ class Runtime implements AudioHandle {
     this.jinglePending = null;
     this.jingle = null;
     this.nextBackground = null;
+    this.nextPreparation = null;
     this.sourceRequestDue = null;
     this.stopWhere((voice) => voice.channel === "music", "musical_replacement");
   }
@@ -1494,8 +1684,10 @@ class Runtime implements AudioHandle {
   private cancelUnusedLoads(): void {
     const wanted = new Set(this.queue.values().map((effect) => effect.asset.id));
     for (const effect of this.ambientPending.values()) wanted.add(effect.asset.id);
+    for (const request of this.representationLoads.values()) wanted.add(request.asset.id);
     for (const assets of this.prepared.values()) for (const id of assets) wanted.add(id);
     if (this.connected && !this.muted && this.nativeMixer.music > 0) {
+      if (this.nextPreparation?.token === this.musicToken) wanted.add(this.nextPreparation.assetId);
       for (const group of [this.music.groups[this.music.cursor], this.nextBackground?.plan.groups[this.nextBackground.cursor]]) {
         const asset = this.catalog.groups.get(`music:${group}`);
         if (asset) wanted.add(asset.id);
@@ -1758,4 +1950,10 @@ export function setSourceMusicSelector(
   const runtime = runtimes.get(handle);
   requireAudio(runtime, "AUDIO_HANDLE", "Not a ClubScape source-audio handle.");
   runtime.sourceMusicDriver(selector, areaMode);
+}
+
+export function setSourceMusicState(handle: AudioHandle, state: SourceMusicState): void {
+  const runtime = runtimes.get(handle);
+  requireAudio(runtime, "AUDIO_HANDLE", "Not a ClubScape source-audio handle.");
+  runtime.setMusicState(state);
 }

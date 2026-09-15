@@ -18,11 +18,13 @@ const version = execFileSync(chrome, ["--version"], { encoding: "utf8" }).trim()
 assert.match(version, /Chrome for Testing 153\./, "Use the verified sandboxed Chrome 153, not an unrecorded browser.");
 const manifest = JSON.parse(await readFile("assets/manifests/osrs/audio-runtime.json", "utf8"));
 const reference = JSON.parse(await readFile("research/reference-pack/v1/audio-reference.json", "utf8"));
-const sources = [...manifest.assets, ...reference.reference_templates];
+const supplement = JSON.parse(await readFile("assets/manifests/osrs/audio-m1-supplement.json", "utf8"));
+const sources = [...manifest.assets, ...reference.reference_templates, ...supplement.assets];
 const registry = new Map(sources.map((a) => [a.asset_id ?? a.id, a.path]));
 for (const path of [
   "assets/manifests/osrs/audio-runtime.json", "research/audio-source/source-map.json",
   "research/reference-pack/v1/audio-reference.json",
+  "assets/manifests/osrs/audio-m1-supplement.json",
 ]) registry.set(path, path);
 const requests = [];
 const faults = new Map();
@@ -50,6 +52,7 @@ for (const asset of sources) {
 for (const path of [
   "web/shared/contracts.ts", `${owned}/run.mjs`, `${owned}/fixture.mjs`,
   `${owned}/fixture.html`, `${owned}/monitor.js`, "research/browser-audio-policy/cook-reward-boundary.json",
+  "assets/manifests/osrs/audio-m1-supplement.json", "research/browser-audio-policy/supplement-browser-oracles.json",
 ]) implementationFiles.push({ path, sha256: digest(await readFile(path)) });
 
 const server = createServer(async (request, response) => {
@@ -113,6 +116,8 @@ const report = {
   schemaVersion: 1, fixtureOnly: true, sourcePackSha256: "b62e19704e17d3d3e4e819f803ef49ba7cc54034ae407184b423427c65d9674d",
   browser: version, node: process.version, startedAt: new Date().toISOString(),
   sourceAssets: sources.length, sourceFilesChanged: null, sandbox: null, audioDevice: null,
+  frozenOriginalAssets: 266, additiveAssets: supplement.assets.length,
+  supplementManifestSha256: digest(await readFile("assets/manifests/osrs/audio-m1-supplement.json")),
   implementationFiles,
   headless: true, hostSpeakerPerception: "not tested", macEdge: "not tested",
   validationScope: process.argv.includes("--quick") ? "lifecycle-smoke-with-offline-boundary" : "full-browser-audio-control-and-native-playlist-boundary",
@@ -142,6 +147,8 @@ const nativePreferences = JSON.parse(await readFile("research/browser-audio-poli
 const nativePosition = JSON.parse(await readFile("research/browser-audio-policy/native-position.json", "utf8"));
 const nativeMusic = JSON.parse(await readFile("research/browser-audio-policy/native-music.json", "utf8"));
 const cookRewardBoundary = JSON.parse(await readFile("research/browser-audio-policy/cook-reward-boundary.json", "utf8"));
+const supplementOracles = JSON.parse(await readFile("research/browser-audio-policy/supplement-browser-oracles.json", "utf8"));
+assert.equal(supplementOracles.manifest_sha256, digest(await readFile("assets/manifests/osrs/audio-m1-supplement.json")));
 const nativeCurve = nativePreferences.cases.find((item) => item.case === "native-nonlinear-lookup-tables");
 
 async function check(name, body) {
@@ -172,6 +179,15 @@ async function gain(channel, value) {
   await page.locator(`#${channel}`).focus();
   await page.keyboard.press("Home");
   for (let i = 0; i < value; i++) await page.keyboard.press("ArrowRight");
+  assert.equal((await snapshot()).volumes[channel], value / 100);
+}
+async function slideWithoutMuting(channel, value) {
+  const control = page.locator(`#${channel}`);
+  const previous = Number(await control.inputValue());
+  await control.focus();
+  for (let i = 0; i < Math.abs(previous - value); i++) {
+    await page.keyboard.press(value > previous ? "ArrowRight" : "ArrowLeft");
+  }
   assert.equal((await snapshot()).volumes[channel], value / 100);
 }
 async function trustedUnlock() {
@@ -1049,24 +1065,132 @@ try {
     };
   });
 
-  await check("new native publication/representation requirements fail explicitly instead of clipping or fabricating assets", async () => {
+  await check("a real slider change switches to the original native255 representation without restarting its clock", async () => {
     await emit({ kind:"music",sourceId:-1,payload:{ mode:"area" } });
-    const before = await page.evaluate(() => audioFixture.native.starts.length);
-    for (const group of [40,54,58,64,65]) {
-      await emit({ kind:"jingle",sourceId:group,payload:{ committed:true } });
-      await page.waitForFunction((group) => audioFixture.errors.some(
-        (e) => e.code==="AUDIO_NATIVE_GAIN_INPUT_REQUIRED" && e.detail?.sourceId===group),group);
+    await gain("music", 50);
+    const eventId = await emit({ kind:"jingle",sourceId:54,payload:{ committed:true } });
+    await waitVoice(54);
+    const low = (await snapshot()).voices.find((v) => v.eventId === eventId);
+    assert.equal(low.renderedNativeLevel, 128);
+    assert.equal(low.assetId, "asset.source.osrs.cache2695.audio-runtime.jingle.54");
+    assert.equal(low.appliedNativeLevel, 44);
+    const highId = "asset.source.osrs.cache2695.audio-supplement.jingle.54.native255";
+    faults.set(highId, { kind:"delay",ms:180 });
+    await slideWithoutMuting("music", 100);
+    await page.waitForFunction((id) => audioFixture.snapshot().voices.some(
+      (v) => v.eventId === id && v.renderedNativeLevel === 255 && v.appliedNativeLevel === 255 && v.gain === 1), eventId);
+    const high = (await snapshot()).voices.find((v) => v.eventId === eventId);
+    assert.equal(high.id, low.id);
+    assert.equal(high.when, low.when);
+    assert.equal(high.assetId, highId);
+    assert.equal(high.gain, 1);
+    assert.equal((await snapshot()).voices.filter((v) => v.kind==="jingle").length, 1);
+    const switched = (await snapshot()).traces.find((t) => t.type==="representation_changed" && t.data.voiceId===low.id);
+    assert.ok(switched.data.offset > 0);
+    await slideWithoutMuting("music",50);
+    await page.waitForFunction((id)=>audioFixture.snapshot().voices.some((v)=>v.eventId===id && v.gain===Math.fround(44/255)),eventId);
+    assert.equal((await snapshot()).voices.find((v) => v.eventId===eventId).gain,Math.fround(44/255));
+    await slideWithoutMuting("music",100);
+    await waitEnded(eventId);
+    const final = (await snapshot()).traces.find((t) => t.type==="ended" && t.data.eventId===eventId);
+    const expectedEnd = low.when + supplement.assets.find((a) => a.kind==="jingle" && a.source_group===54).loop.source_engine_end_frame/22050;
+    assert.ok(Math.abs(final.audioTime-expectedEnd)<=0.02);
+    return { group:54,oldAsset:low.assetId,newAsset:high.assetId,voiceId:low.id,
+      unchangedSourceStart:low.when,replacementOffset:switched.data.offset,
+      expectedEnd,actualEnd:final.audioTime,duplicatePlayingSources:0 };
+  });
+
+  await check("all nine additive native files play through the real factory and exactly match independent PCM oracles", async () => {
+    await emit({ kind:"music",sourceId:-1,payload:{ mode:"area" } });
+    await gain("music",100);
+    const proof = [];
+    for (const asset of supplement.assets) {
+      const clipsBefore = (await page.evaluate(() => audioFixture.stats())).clips;
+      const eventId = await emit({
+        kind:asset.kind,sourceId:asset.source_group,
+        payload:asset.kind==="music"
+          ? { mode:"single",unlocked:true,boundary:"native_duration",loopEnabled:false,
+            fadeOutCycles:0,fadeInDelayCycles:0,fadeInCycles:0 }
+          : { committed:true },
+      });
+      await waitVoice(asset.source_group,asset.kind);
+      const voice = (await snapshot()).voices.find((v) => v.eventId===eventId || (v.kind==="music" && v.sourceId===asset.source_group));
+      assert.equal(voice.assetId,asset.asset_id);
+      assert.equal(voice.renderedNativeLevel,255);
+      assert.equal(voice.appliedNativeLevel,255);
+      assert.equal(voice.gain,1);
+      const rendered = await page.evaluate(async (frames) => {
+        const buffer=audioFixture.native.buffers.get(frames);
+        const hashes=[];
+        let peak=0,fullScale=0,clips=0;
+        for(let channel=0;channel<buffer.numberOfChannels;channel++){
+          const samples=buffer.getChannelData(channel);
+          hashes.push(Array.from(new Uint8Array(await crypto.subtle.digest("SHA-256",samples)),
+            (v)=>v.toString(16).padStart(2,"0")).join(""));
+          for(const sample of samples){
+            peak=Math.max(peak,Math.abs(sample));
+            if(sample===-1 || sample===32767/32768)fullScale++;
+            if(Math.abs(sample)>1)clips++;
+          }
+        }
+        return { frames:buffer.length,sampleRate:buffer.sampleRate,channels:buffer.numberOfChannels,
+          hashes,peak,fullScale,extraClips:clips };
+      },asset.signal.frames);
+      const oracle=supplementOracles.assets.find((row)=>row.asset_id===asset.asset_id);
+      assert.deepEqual(rendered.hashes,oracle.float32_channel_sha256);
+      assert.equal(rendered.frames,oracle.frames);
+      assert.equal(rendered.sampleRate,22050);
+      assert.equal(rendered.fullScale,oracle.full_scale_samples);
+      assert.equal(rendered.extraClips,0);
+      if(asset.kind==="jingle")await waitEnded(eventId);
+      else await page.waitForTimeout(800);
+      const clipsAfter=(await page.evaluate(()=>audioFixture.stats())).clips;
+      assert.equal(clipsAfter-clipsBefore,0);
+      proof.push({ assetId:asset.asset_id,nativeVolume:255,sourceId:asset.source_group,kind:asset.kind,
+        frames:rendered.frames,pcmFloatHashesExact:true,nativeFullScaleSamples:rendered.fullScale,
+        additionalClipSamples:0,actualStart:voice.when,naturallyEnded:asset.kind==="jingle" });
+      await emit({kind:"music",sourceId:-1,payload:{mode:"area"}});
     }
-    assert.equal(await page.evaluate(() => audioFixture.native.starts.length),before);
-    const fetches=requests.length;
-    for (const group of [64,327,163,145]) await emit({ kind:"music",sourceId:group,payload:{ mode:"area" } });
-    assert.equal(requests.length,fetches);
-    const errors = await page.evaluate(() => audioFixture.errors.filter((e) => e.code==="AUDIO_SOURCE_MUSIC_ASSET_REQUIRED"));
-    assert.deepEqual(errors.map((e) => e.detail.sourceGroup),[64,327,163,145]);
     await emit({ kind:"music",sourceId:2,payload:{ mode:"area",fadeOutCycles:0,fadeInDelayCycles:0,fadeInCycles:0 } });
     await waitVoice(2);
-    return { native255RepresentationNeeded:[40,54,58,64,65],newOriginalMusicGroupsNeeded:[64,327,163,145],
-      guardedSourceStarts:0,unpublishedAssetFetches:0,originalFilesChanged:0 };
+    return { publishedAssets:proof,sourcePackChanged:false,baseOriginalsUnchanged:266 };
+  });
+
+  await check("declared single/shuffle state is idempotent and source-unlocked groups are not fabricated", async () => {
+    const state = { mode:"single",areaMode:"modern",unlockedGroups:[163],selectedGroup:163,playlistGroups:[],loopEnabled:false };
+    await page.evaluate((state)=>audioFixture.setSourceMusicState(state),state);
+    await waitVoice(163,"music");
+    const voice=(await snapshot()).voices.find((v)=>v.kind==="music" && v.sourceId===163);
+    const starts=await page.evaluate(()=>audioFixture.native.starts.length);
+    await page.evaluate((state)=>{
+      for(let i=0;i<5;i++)audioFixture.setSourceMusicState(state);
+    },state);
+    await page.waitForTimeout(100);
+    assert.equal(await page.evaluate(()=>audioFixture.native.starts.length),starts);
+    const rejection=await page.evaluate(()=>{
+      try{
+        audioFixture.setSourceMusicState({mode:"single",areaMode:"modern",unlockedGroups:[163],
+          selectedGroup:64,playlistGroups:[],loopEnabled:true});
+        return null;
+      }catch(error){return error.code;}
+    });
+    assert.equal(rejection,"AUDIO_SOURCE_MUSIC");
+    assert.equal((await snapshot()).voices.some((v)=>v.id===voice.id),true);
+    await page.evaluate(()=>{
+      audioFixture.handle.disconnected();
+      audioFixture.update(audioFixture.world);
+    });
+    await waitVoice(163,"music");
+    assert.equal((await snapshot()).voices.filter((v)=>v.kind==="music").length,1);
+    await page.evaluate(()=>audioFixture.setSourceMusicState({
+      mode:"shuffle",areaMode:"modern",unlockedGroups:[64,327,163,145],
+      selectedGroup:null,playlistGroups:[],loopEnabled:true,
+    }));
+    await page.waitForFunction(()=>audioFixture.snapshot().background.groups.length===4);
+    const groups=(await snapshot()).background.groups;
+    assert.deepEqual([...groups].sort((a,b)=>a-b),[64,145,163,327]);
+    return { identicalStateRestarts:0,lockedSelectionRejected:true,singleReconnectSources:1,
+      shuffleGroups:groups,sourceGainGuessing:false };
   });
 
   if (!process.argv.includes("--quick")) {
@@ -1103,7 +1227,103 @@ try {
         additionalClipSamples: monitor.clips - clipBaseline, monitor,
       };
     });
+    await check("Modern area selects its next original track internally without a caller selector or exhausted silence", async () => {
+      const stateInput = {
+        mode:"area",areaMode:"modern",unlockedGroups:[2,64,327,163,76,145],
+        selectedGroup:null,playlistGroups:[],loopEnabled:true,
+      };
+      await page.evaluate((state) => {
+        audioFixture.setSourceMusicSelector(null,"modern");
+        audioFixture.setSourceMusicState(state);
+      },stateInput);
+      await waitVoice(76,"music");
+      await emit({
+        kind:"music",sourceId:163,payload:{mode:"area",fadeOutCycles:0,fadeInDelayCycles:0,fadeInCycles:0},
+      });
+      await waitVoice(163,"music");
+      await page.waitForFunction(() => audioFixture.snapshot().voices.filter((v)=>v.kind==="music").length===1);
+      const first=(await snapshot()).voices.find((v)=>v.kind==="music");
+      const nextDeadline=first.when+194*0.6;
+      await page.evaluate(()=>{
+        const world=audioFixture.world;
+        world.revision=String(BigInt(world.revision)+1n);
+        world.player.region="region.osrs.12851";
+        world.player.tile={x:3222,y:3280,plane:0};
+        audioFixture.update(world);
+      });
+      assert.equal((await snapshot()).voices.some((v)=>v.id===first.id),true);
+      await page.waitForFunction((deadline)=>audioFixture.context.currentTime>=deadline+0.1 &&
+        audioFixture.snapshot().voices.some((v)=>v.kind==="music" && v.sourceId!==163 && v.when<=audioFixture.context.currentTime),
+      nextDeadline,{timeout:130_000});
+      const state=await snapshot();
+      const next=state.voices.find((v)=>v.kind==="music" && v.when<=state.currentTime);
+      assert.ok([2,64,327,76,145].includes(next.sourceId));
+      assert.ok(Math.abs(next.when-nextDeadline)*1000<=20);
+      assert.equal(state.background.exhausted,false);
+      assert.equal(state.voices.filter((v)=>v.kind==="music" && v.when<=state.currentTime).length,1);
+      assert.equal(await page.evaluate(()=>audioFixture.errors.some((e)=>
+        ["AUDIO_SOURCE_MUSIC_SELECTION_REQUIRED","AUDIO_SOURCE_MUSIC_ASSET_REQUIRED","AUDIO_NATIVE_GAIN_INPUT_REQUIRED"].includes(e.code))),false);
+      return { sourceArea:1,actualOriginalMembership:[2,64,327,163,76,145],from:163,to:next.sourceId,
+        actualNextAssetId:next.assetId,callerSelector:null,expectedBoundary:nextDeadline,
+        actualBoundary:next.when,timingErrorMs:Math.abs(next.when-nextDeadline)*1000,
+        sameAreaSquareRestart:false,exhausted:false };
+    });
+    await check("single mode re-enters the complete original pass on its native timer without looping release samples", async () => {
+      await page.evaluate(()=>audioFixture.setSourceMusicState({
+        mode:"single",areaMode:"modern",unlockedGroups:[163],selectedGroup:163,playlistGroups:[],loopEnabled:true,
+      }));
+      await waitVoice(163,"music");
+      await page.waitForFunction(()=>audioFixture.snapshot().voices.filter((v)=>v.kind==="music").length===1);
+      const first=(await snapshot()).voices.find((v)=>v.kind==="music");
+      const boundary=first.when+194*0.6;
+      await page.waitForFunction(({boundary,id})=>audioFixture.context.currentTime>=boundary+0.1 &&
+        audioFixture.snapshot().voices.some((v)=>v.kind==="music" && v.sourceId===163 && v.id!==id &&
+          v.when<=audioFixture.context.currentTime),{boundary,id:first.id},{timeout:130_000});
+      const second=(await snapshot()).voices.find((v)=>v.kind==="music");
+      assert.equal(second.sourceId,163);
+      assert.equal(second.loop,false);
+      assert.ok(Math.abs(second.when-boundary)*1000<=20);
+      assert.equal((await snapshot()).background.exhausted,false);
+      return { sourceGroup:163,firstStart:first.when,secondStart:second.when,
+        nativeDurationTicks:194,timingErrorMs:Math.abs(second.when-boundary)*1000,
+        sampleLoop:false,originalReleaseTailPreserved:true };
+    });
   }
+
+  await check("a pre-trained Cook reward with unchanged base level produces no level-up source before or after its scroll closes", async () => {
+    const sample=cookRewardBoundary.boundaries.find((entry)=>entry.case==="pretrained-no-level");
+    await page.evaluate((sample)=>{
+      const world=audioFixture.syntheticWorld("region.osrs.12850");
+      world.player.id="player.audio-no-level-fixture";
+      world.player.skills=[{id:"skill.cooking",name:"Cooking",...sample.before,
+        currentLevel:sample.before.baseLevel+2,iconAsset:null}];
+      audioFixture.update(world);
+    },sample);
+    const result=await page.evaluate((sample)=>{
+      const world=audioFixture.world;
+      world.revision="2";
+      world.player.skills=[{id:"skill.cooking",name:"Cooking",...sample.after,
+        currentLevel:sample.after.baseLevel+3,iconAsset:null}];
+      world.player.quests.find((q)=>q.id==="quest.cooks_assistant").completed=true;
+      const level=audioFixture.event({id:"no-level/notification",kind:"level_up",sourceId:34,
+        payload:{committed:true,skillId:"skill.cooking",level:sample.after.baseLevel,
+          causeQuestId:"quest.cooks_assistant",completionId:"no-level/completion"}});
+      const complete=audioFixture.event({id:"no-level/completion",kind:"quest_complete",sourceId:null,
+        payload:{committed:true,questId:"quest.cooks_assistant"}});
+      audioFixture.update(world,[complete,level]);
+      return level;
+    },sample);
+    await waitVoice(152,"jingle");
+    await emit({kind:"interface_closed",sourceId:153,
+      payload:{questId:"quest.cooks_assistant",completionId:"no-level/completion"}});
+    await page.waitForTimeout(150);
+    const state=await snapshot();
+    assert.equal(state.voices.some((v)=>v.sourceId===34),false);
+    assert.equal(state.traces.some((t)=>t.type==="started" && t.data.eventId===result.id),false);
+    assert.equal(state.traces.some((t)=>t.type==="reward_no_base_level_gain" && t.data.eventId===result.id),true);
+    return { committedCookingDelta:{before:sample.before,after:sample.after},levelUpSources:0,
+      currentLevelBoostNotTreatedAsBaseGain:true,productionQuestOrXpMutations:0 };
+  });
 
   await check("real AudioContext closure is a device failure, followed by idempotent complete disposal", async () => {
     await page.evaluate(() => audioFixture.context.close());

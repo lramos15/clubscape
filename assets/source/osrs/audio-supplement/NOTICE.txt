@@ -1,0 +1,18 @@
+Original Old School RuneScape audio — additive M1 native representations
+
+Copyright © 1999 - 2026 Jagex Ltd. All rights reserved.
+
+These owner-authorized additions use the unchanged injected1.12.38/cache2695
+MIDI, patches, original samples, PcmPlayer and device quantization at native
+mixer level255. They are not gain-patched copies, replacement compositions,
+generic SoundFont/MIDI synthesis, normalized waveforms or a new adaptation.
+
+The distinct identities, original input hashes, exact PCM/FLAC relationships,
+native clock/loop/release behavior and preserved source saturation are in
+assets/manifests/osrs/audio-m1-supplement.json and
+research/browser-audio-policy/supplement-source-inputs.json.
+Every pre-existing audio-runtime file and its manifest remain unchanged.
+
+Lossless packaging does not transfer ownership or create an open-source
+license. See ../NOTICE.txt and tools/audio-import/THIRD_PARTY_NOTICES.txt.
+Source publication is not gameplay, host-speaker, Mac/Edge or M1 acceptance.

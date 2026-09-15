@@ -95,7 +95,9 @@ export const SOURCE_MUSIC_ROWS: ReadonlyMap<number, SourceMusicRow> = new Map(
   (NATIVE_AUDIO_DATA.music as readonly SourceMusicRow[]).map((row) => [row.group, row]),
 );
 export const SOURCE_LUMBRIDGE_GROUPS = Object.freeze([2, 64, 327, 163, 76, 145]);
-export const SOURCE_UNPUBLISHED_M1_MUSIC = Object.freeze([64, 327, 163, 145]);
+export const SOURCE_SUPPLEMENT_M1_MUSIC = Object.freeze([64, 327, 163, 145]);
+/** Kept for callers of the earlier calibration component; all four inputs are now published. */
+export const SOURCE_UNPUBLISHED_M1_MUSIC: readonly number[] = Object.freeze([]);
 export const SOURCE_MIX_REPRESENTATION_NEEDS = Object.freeze(
   NATIVE_AUDIO_DATA.nativeMixComparisons.filter((entry) => entry.additional_clip_samples > 0)
     .map((entry) => Object.freeze({ index: entry.index, group: entry.group, additionalClipsAt255: entry.additional_clip_samples })),
@@ -126,6 +128,16 @@ export interface SourceMusicSelection {
   readonly transition?: SourceMusicTransition;
 }
 export type SourceMusicSelector = (request: SourceMusicRequest) => Promise<SourceMusicSelection>;
+export interface SourceMusicState {
+  readonly mode: "area" | "single" | "shuffle" | "playlist";
+  readonly areaMode: "modern" | "classic";
+  /** Source-unlocked groups for manual/shuffle selection; the audio component grants no unlocks. */
+  readonly unlockedGroups: readonly number[];
+  readonly selectedGroup: number | null;
+  readonly playlistGroups: readonly number[];
+  /** Re-entry uses fresh one-pass sources, never the exported release padding as a sample loop. */
+  readonly loopEnabled: boolean;
+}
 
 function polygonContains(x: number, y: number, points: readonly (readonly number[])[]): boolean {
   let inside = false;

@@ -1,0 +1,190 @@
+{
+  "schema_version": 1,
+  "result": "passed",
+  "representation_native_level": 255,
+  "gain_bound_db": 0.25,
+  "additional_clip_bound": 0,
+  "cases": [
+    {
+      "index": 6,
+      "group": 64,
+      "native_mixer": 44,
+      "original_native_pcm_sha256": "72d61ceddddfa4739a61603f5a97dad6e72ca063169235a997a82153c079d874",
+      "gain_error_db": 0.07036246526370012,
+      "maximum_pointwise_difference": 0.12408710554534313,
+      "additional_clip_samples": 0,
+      "classification": "Original native mixer level comparison; not a claim of bit-identical re-synthesis from a mixed representation."
+    },
+    {
+      "index": 6,
+      "group": 64,
+      "native_mixer": 136,
+      "original_native_pcm_sha256": "bc4517de801dab57f3303c6eadbb69a9c4b8b1506a2e30059d68ef58c0aa2ca4",
+      "gain_error_db": 0.023912153862173383,
+      "maximum_pointwise_difference": 0.3883443196614583,
+      "additional_clip_samples": 0,
+      "classification": "Original native mixer level comparison; not a claim of bit-identical re-synthesis from a mixed representation."
+    },
+    {
+      "index": 6,
+      "group": 327,
+      "native_mixer": 44,
+      "original_native_pcm_sha256": "1dd8f5e2f26e96ff19603e4b4d0cc66223688b1d1015cd2a9004dc99533c84fb",
+      "gain_error_db": -0.0008950841718642049,
+      "maximum_pointwise_difference": 0.009996601179534315,
+      "additional_clip_samples": 0,
+      "classification": "Original native mixer level comparison; not a claim of bit-identical re-synthesis from a mixed representation."
+    },
+    {
+      "index": 6,
+      "group": 327,
+      "native_mixer": 136,
+      "original_native_pcm_sha256": "e92f458a3b4ec3c2a131169b48d78f0a843f6628b70b6482c6ef3db0dd1d71e7",
+      "gain_error_db": -0.0029094411149331112,
+      "maximum_pointwise_difference": 0.010776774088541663,
+      "additional_clip_samples": 0,
+      "classification": "Original native mixer level comparison; not a claim of bit-identical re-synthesis from a mixed representation."
+    },
+    {
+      "index": 6,
+      "group": 163,
+      "native_mixer": 44,
+      "original_native_pcm_sha256": "29839c4f3e6ea25e696ade27d9fbbade1f869781795d3ffb7e807fd778351404",
+      "gain_error_db": 0.0757798954494286,
+      "maximum_pointwise_difference": 0.010277602251838235,
+      "additional_clip_samples": 0,
+      "classification": "Original native mixer level comparison; not a claim of bit-identical re-synthesis from a mixed representation."
+    },
+    {
+      "index": 6,
+      "group": 163,
+      "native_mixer": 136,
+      "original_native_pcm_sha256": "30934cca4331c8cda89df0b20a129d0ef9d1070285282926a8d943d1858c8af2",
+      "gain_error_db": 0.017685512422457902,
+      "maximum_pointwise_difference": 0.012575276692708331,
+      "additional_clip_samples": 0,
+      "classification": "Original native mixer level comparison; not a claim of bit-identical re-synthesis from a mixed representation."
+    },
+    {
+      "index": 6,
+      "group": 145,
+      "native_mixer": 44,
+      "original_native_pcm_sha256": "d8848f4abdf8d6bd3508fe1549d460e32353b3b97cbd9a4671ee9506b21c4345",
+      "gain_error_db": 0.17369560005501705,
+      "maximum_pointwise_difference": 0.014606670304840686,
+      "additional_clip_samples": 0,
+      "classification": "Original native mixer level comparison; not a claim of bit-identical re-synthesis from a mixed representation."
+    },
+    {
+      "index": 6,
+      "group": 145,
+      "native_mixer": 136,
+      "original_native_pcm_sha256": "b3b48ec386d3ecf9b04089c0971f0546be2d8a08da79255bc090ae779923c3e6",
+      "gain_error_db": 0.05667009808083938,
+      "maximum_pointwise_difference": 0.022894287109374994,
+      "additional_clip_samples": 0,
+      "classification": "Original native mixer level comparison; not a claim of bit-identical re-synthesis from a mixed representation."
+    },
+    {
+      "index": 11,
+      "group": 40,
+      "native_mixer": 44,
+      "original_native_pcm_sha256": "4c806e67586a2a047901e2adf2c9f3a85263b366c3524224b20fa752f1f6b440",
+      "gain_error_db": 0.2311898815689667,
+      "maximum_pointwise_difference": 0.028353462967218135,
+      "additional_clip_samples": 0,
+      "classification": "Original native mixer level comparison; not a claim of bit-identical re-synthesis from a mixed representation."
+    },
+    {
+      "index": 11,
+      "group": 40,
+      "native_mixer": 136,
+      "original_native_pcm_sha256": "d3a334cdf40b7c305da45a4f0e71c26a9dfef34f8f615952ccdba1b0ce202bf1",
+      "gain_error_db": -0.06780182727178465,
+      "maximum_pointwise_difference": 0.09995320638020833,
+      "additional_clip_samples": 0,
+      "classification": "Original native mixer level comparison; not a claim of bit-identical re-synthesis from a mixed representation."
+    },
+    {
+      "index": 11,
+      "group": 54,
+      "native_mixer": 44,
+      "original_native_pcm_sha256": "bc44a5e0d3f0b48c68d255b36802b5e053a5417ee3ba6d768b3ca14471450c09",
+      "gain_error_db": 0.043876103844568956,
+      "maximum_pointwise_difference": 0.07724262312346813,
+      "additional_clip_samples": 0,
+      "classification": "Original native mixer level comparison; not a claim of bit-identical re-synthesis from a mixed representation."
+    },
+    {
+      "index": 11,
+      "group": 54,
+      "native_mixer": 136,
+      "original_native_pcm_sha256": "4c98def7df2f68ade5f12990daa60c03f4ce2b6a112d24387841b63eaa981a90",
+      "gain_error_db": -0.04091150224301042,
+      "maximum_pointwise_difference": 0.24253133138020833,
+      "additional_clip_samples": 0,
+      "classification": "Original native mixer level comparison; not a claim of bit-identical re-synthesis from a mixed representation."
+    },
+    {
+      "index": 11,
+      "group": 58,
+      "native_mixer": 44,
+      "original_native_pcm_sha256": "7424e1747c37c30a1f87df81fe9c363391e63477ef0c39f38093294b37631c56",
+      "gain_error_db": 0.08966617558619874,
+      "maximum_pointwise_difference": 0.039792288985906865,
+      "additional_clip_samples": 0,
+      "classification": "Original native mixer level comparison; not a claim of bit-identical re-synthesis from a mixed representation."
+    },
+    {
+      "index": 11,
+      "group": 58,
+      "native_mixer": 136,
+      "original_native_pcm_sha256": "5c0a70bd20dd9e47bc2fae7dfe24f5b74e42198325c1d8fc95c07fc598a55ee7",
+      "gain_error_db": -0.038638898511973864,
+      "maximum_pointwise_difference": 0.13082071940104167,
+      "additional_clip_samples": 0,
+      "classification": "Original native mixer level comparison; not a claim of bit-identical re-synthesis from a mixed representation."
+    },
+    {
+      "index": 11,
+      "group": 64,
+      "native_mixer": 44,
+      "original_native_pcm_sha256": "81f26fa9e82ab25d6b4a8ca2103df21750cae1bf040124e8ccd285751a35881f",
+      "gain_error_db": 0.18761295175606066,
+      "maximum_pointwise_difference": 0.13992046281403187,
+      "additional_clip_samples": 0,
+      "classification": "Original native mixer level comparison; not a claim of bit-identical re-synthesis from a mixed representation."
+    },
+    {
+      "index": 11,
+      "group": 64,
+      "native_mixer": 136,
+      "original_native_pcm_sha256": "5aa456dcdf3bd8cbca7093aec076eee7a96205ddf77edb770a4729307d709335",
+      "gain_error_db": -0.07336463414151392,
+      "maximum_pointwise_difference": 0.4666666666666667,
+      "additional_clip_samples": 0,
+      "classification": "Original native mixer level comparison; not a claim of bit-identical re-synthesis from a mixed representation."
+    },
+    {
+      "index": 11,
+      "group": 65,
+      "native_mixer": 44,
+      "original_native_pcm_sha256": "b0e88c1b5a287a18ec2f6dd402e0851e2ef6742f32fd8ff9f24905fc9757fd22",
+      "gain_error_db": 0.07938509236352492,
+      "maximum_pointwise_difference": 0.07638286515778187,
+      "additional_clip_samples": 0,
+      "classification": "Original native mixer level comparison; not a claim of bit-identical re-synthesis from a mixed representation."
+    },
+    {
+      "index": 11,
+      "group": 65,
+      "native_mixer": 136,
+      "original_native_pcm_sha256": "c7b6deba78e0225ee68a9c6e7e780dc038e8a1a0daaac32f02810f095704d028",
+      "gain_error_db": 0.01913590030728531,
+      "maximum_pointwise_difference": 0.24446818033854167,
+      "additional_clip_samples": 0,
+      "classification": "Original native mixer level comparison; not a claim of bit-identical re-synthesis from a mixed representation."
+    }
+  ],
+  "frozen_waveforms_modified": false
+}

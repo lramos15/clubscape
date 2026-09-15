@@ -39,15 +39,15 @@
     }
   ],
   "typescript_check": "passed",
-  "unit_checks": 25,
-  "real_browser_checks": 27,
+  "unit_checks": 29,
+  "real_browser_checks": 32,
   "browser": "Google Chrome for Testing 153.0.8010.12",
-  "browser_evidence_sha256": "1027348bab9310d8a8cb7b92a7c5bac77ff0753bcead02c85f252e6b5142c875",
+  "browser_evidence_sha256": "ca775f026fd2497cd47da08af234155b89f1d2d20312539752bfdc2f9393bacc",
   "original_playable_files_unchanged": 266,
   "original_cache_files_rechecked_unchanged": 25,
-  "native_source_starts": 103,
-  "native_source_end_callbacks": 102,
-  "exact_remaining_inputs": "research/browser-audio-policy/publication-needs.json",
+  "native_source_starts": 122,
+  "native_source_end_callbacks": 121,
+  "exact_remaining_inputs": null,
   "no_m1_gameplay_mac_edge_speaker_acceptance": true,
   "cook_reward_conformance": {
     "source_boundary_sha256": "c0ac07c608c6f7c84beeee31612c6bc36966233fd1c4cf1ef7ed457b644a1575",
@@ -68,5 +68,7 @@
     ],
     "new_per_quest_selectors": false,
     "gameplay_xp_changed": false
-  }
+  },
+  "additive_publication": "research/browser-audio-policy/supplement-validation.json",
+  "remaining_integration": "Authoritative scene/music state, real composed app journey and owner-platform acceptance; no missing native publications."
 }

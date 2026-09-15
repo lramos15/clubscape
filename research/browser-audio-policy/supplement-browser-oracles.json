@@ -1,0 +1,116 @@
+{
+  "schema_version": 1,
+  "manifest_sha256": "840aef91bac9a1fd042bdb1c3662ff92a378e279f48335108730e168af550d91",
+  "conversion": "Exact signed32 power-of-two mapping of lossless unity FLAC24 containing original16 bits",
+  "generated_before_browser_comparison": true,
+  "assets": [
+    {
+      "asset_id": "asset.source.osrs.cache2695.audio-supplement.music.64.native255",
+      "frames": 7158457,
+      "sample_rate": 22050,
+      "channels": 2,
+      "float32_channel_sha256": [
+        "1b3472a2b3170e071ed8dec80415253622916d40cd693c6aadc24dfb1cdd86c9",
+        "100b44664c0b41657c0ee1fd4ed0a903915d44b0e72466eb3ba6a911c652832a"
+      ],
+      "full_scale_samples": 2973,
+      "source_pcm_s16le_sha256": "85e05efe6d7ea062e194754a2493bcadace3f5e077795e27b44d09674dddf811"
+    },
+    {
+      "asset_id": "asset.source.osrs.cache2695.audio-supplement.music.327.native255",
+      "frames": 3409041,
+      "sample_rate": 22050,
+      "channels": 2,
+      "float32_channel_sha256": [
+        "3f0c4f6d201494682371217372eedc0dd02c980846d2c1e6251edc7d3a3171af",
+        "3612ab7829000be7cf38603cbf83a8e54a256ed0625c7e60f836fbcbff3ef02a"
+      ],
+      "full_scale_samples": 0,
+      "source_pcm_s16le_sha256": "ef23435749331b6d060442179c9b4f32d4b776850ed29acff256ca7bd8dca913"
+    },
+    {
+      "asset_id": "asset.source.osrs.cache2695.audio-supplement.music.163.native255",
+      "frames": 2562293,
+      "sample_rate": 22050,
+      "channels": 2,
+      "float32_channel_sha256": [
+        "7c0952289f62a7ab9f368e9f4ee50ec8b9006b94feb92cdc3e695f2c477e7305",
+        "3566e9e35d9c47e2cf8b28b99ba39b26695f87c1527f0813b24f1bc7312e3fcb"
+      ],
+      "full_scale_samples": 0,
+      "source_pcm_s16le_sha256": "7b8f941d35ccda5ee6e1d78f17fc89519691575c3cb08ff5afad4635b3869f6a"
+    },
+    {
+      "asset_id": "asset.source.osrs.cache2695.audio-supplement.music.145.native255",
+      "frames": 5248065,
+      "sample_rate": 22050,
+      "channels": 2,
+      "float32_channel_sha256": [
+        "3523f8a8186b1bac4aa9554d1c31b74714c5596beb1b81204c8c2194a687d210",
+        "9644b15e240740789dd10f8ea77d8fd1f76674a36037627c0d16c1ef43dd1d77"
+      ],
+      "full_scale_samples": 0,
+      "source_pcm_s16le_sha256": "e89772c292b1083fd44e03cc4ecc742f30e70ba2aa1d104b88cbb8f784ce4e27"
+    },
+    {
+      "asset_id": "asset.source.osrs.cache2695.audio-supplement.jingle.40.native255",
+      "frames": 149945,
+      "sample_rate": 22050,
+      "channels": 2,
+      "float32_channel_sha256": [
+        "13ed0f523c8cb16fd362b85d965de9be9f49ca019c983f16c9dcec40b05f277f",
+        "d0509df64a4b8e57521b90ec6412bded66e90fca929f45342098717e4539d678"
+      ],
+      "full_scale_samples": 12,
+      "source_pcm_s16le_sha256": "1cbff8dcba97002230b6319fe71479786230c1e9d7fa05c9ae5d71153591e386"
+    },
+    {
+      "asset_id": "asset.source.osrs.cache2695.audio-supplement.jingle.54.native255",
+      "frames": 154355,
+      "sample_rate": 22050,
+      "channels": 2,
+      "float32_channel_sha256": [
+        "7d61d38b1391348733e225477cd1905d5104da7c9f1f141b803d8989f6db3d90",
+        "e40b94e4b30093bffa06a4dd5d87443c24de180eebd1f79b3329aa160c50f143"
+      ],
+      "full_scale_samples": 555,
+      "source_pcm_s16le_sha256": "31997c21b737acf5bff4c083007bfef76663e2d5c57181fa2df61274e01933a9"
+    },
+    {
+      "asset_id": "asset.source.osrs.cache2695.audio-supplement.jingle.58.native255",
+      "frames": 138478,
+      "sample_rate": 22050,
+      "channels": 2,
+      "float32_channel_sha256": [
+        "e03ccd428925306de6e069b4404273a5caba9fe0932b5aed6f00acb4a139da84",
+        "bee7197a801e5f205b586c8d5c0362e348cf5dfbb223aa1b74732adfa91431c4"
+      ],
+      "full_scale_samples": 18,
+      "source_pcm_s16le_sha256": "626b00ad85ed0bd92f48ecbb6634ee0bfcaca0447c73cb6156cf9bcf8e70cdd0"
+    },
+    {
+      "asset_id": "asset.source.osrs.cache2695.audio-supplement.jingle.64.native255",
+      "frames": 139654,
+      "sample_rate": 22050,
+      "channels": 2,
+      "float32_channel_sha256": [
+        "c700a20184ffe95c1dee172242c6557eac336d2cfa5a8c6dd604dd62f3ff0783",
+        "e4a9aa0753a4e466692881763f419bf40b9d84bbabaf43b65feb47a3441e7bec"
+      ],
+      "full_scale_samples": 93,
+      "source_pcm_s16le_sha256": "5996e7128a756e52f084e5e5ec7d167dd6adc1f31ac2eada4f71e4c0663532ec"
+    },
+    {
+      "asset_id": "asset.source.osrs.cache2695.audio-supplement.jingle.65.native255",
+      "frames": 154355,
+      "sample_rate": 22050,
+      "channels": 2,
+      "float32_channel_sha256": [
+        "a3ae1453ab23df192c6dc930d71d806e26aaecc2556a4b0b7610bde53d475a39",
+        "02f8857eed1e0b4af4e0c7dccf749eea417669f725d75c5dddd3dfc5017571dd"
+      ],
+      "full_scale_samples": 169,
+      "source_pcm_s16le_sha256": "de584c2198d3cfff3a900b11cb5c7ce7a5d392c9610954b7d5272d16c00146dc"
+    }
+  ]
+}

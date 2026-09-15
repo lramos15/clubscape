@@ -57,13 +57,34 @@ def main():
             "additional_clips_if_scaling_current_file": value["additional_clip_samples"],
             "reason": "Do not modify frozen files or add a limiter/normalization; provide original native-level representation or dynamic original synthesis.",
         })
-    (base / "publication-needs.json").write_text(json.dumps({
+    publication = {
         "schema_version": 1,
         "source_pack_sha256": "b62e19704e17d3d3e4e819f803ef49ba7cc54034ae407184b423427c65d9674d",
         "frozen_source_files_modified": False, "requirements": requirements, "calibration_inputs": locks,
         "bridge_contract": "web/audio/native-scene.ts: SourceAudioScene, SourceMusicSelector; web/audio/README.md",
         "acceptance": False,
-    }, indent=2) + "\n")
+    }
+    supplement_path = Path("assets/manifests/osrs/audio-m1-supplement.json")
+    if supplement_path.exists():
+        supplement = json.loads(supplement_path.read_text())
+        for need in requirements:
+            asset = next(a for a in supplement["assets"]
+                         if a["source_index"] == need["index"] and a["source_group"] == need["group"])
+            assert hashlib.sha256(Path(asset["path"]).read_bytes()).hexdigest() == asset["sha256"]
+            if need["kind"] == "native_mixer_representation":
+                assert asset["encoding"]["source_pcm_s16le_sha256"] == need["required_native_255_pcm_sha256"]
+                assert asset["signal"]["frames"] == need["frames"]
+                assert asset["native_render"]["source_device_saturation_samples"] == need["source_native_clip_samples"]
+            need["fulfilled_by"] = {
+                "asset_id": asset["asset_id"], "path": asset["path"],
+                "sha256": asset["sha256"], "native_mixer_level": asset["native_mixer_level"],
+            }
+        publication.update({
+            "status": "published_additive_original_inputs", "authority_commit": supplement["authority_commit"],
+            "supplement_manifest": {"path": str(supplement_path), "sha256": hashlib.sha256(supplement_path.read_bytes()).hexdigest()},
+            "remaining_publication_inputs": [],
+        })
+    (base / "publication-needs.json").write_text(json.dumps(publication, indent=2) + "\n")
     print(f"Generated {len(definitions)} native objects, {len(rows)} music rows and three source map families.")
 
 

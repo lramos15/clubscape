@@ -11,7 +11,13 @@
       "name": "Book of Spells",
       "native_row_sha256": "d6faf0a38bafaa416f9352db7375ccd760ccc931c0f7c2757752d374195d55db",
       "native_area": 1,
-      "reason": "Native table44 Modern Lumbridge membership; no approved playable publication exists."
+      "reason": "Native table44 Modern Lumbridge membership; no approved playable publication exists.",
+      "fulfilled_by": {
+        "asset_id": "asset.source.osrs.cache2695.audio-supplement.music.64.native255",
+        "path": "assets/source/osrs/audio-supplement/music/64-native255.flac",
+        "sha256": "e921e2c64aa43bff9e27bc7a583f2ca519db67721e5a74a0d8cda92a2713c949",
+        "native_mixer_level": 255
+      }
     },
     {
       "kind": "missing_original_track",
@@ -21,7 +27,13 @@
       "name": "Dream",
       "native_row_sha256": "4f19529050447b0042e09e9bf383f4eaebd6ac5746321635687c3ae351336fdd",
       "native_area": 1,
-      "reason": "Native table44 Modern Lumbridge membership; no approved playable publication exists."
+      "reason": "Native table44 Modern Lumbridge membership; no approved playable publication exists.",
+      "fulfilled_by": {
+        "asset_id": "asset.source.osrs.cache2695.audio-supplement.music.327.native255",
+        "path": "assets/source/osrs/audio-supplement/music/327-native255.flac",
+        "sha256": "4c0885ee1ffdbde53c834e005b4ad768ebdba741ab1e874799f28363cdf7d9cf",
+        "native_mixer_level": 255
+      }
     },
     {
       "kind": "missing_original_track",
@@ -31,7 +43,13 @@
       "name": "Flute Salad",
       "native_row_sha256": "b31f31aac5f2cb9fb87a3aaa46d47418d093b2a3aeeef267d9bb20571e14d576",
       "native_area": 1,
-      "reason": "Native table44 Modern Lumbridge membership; no approved playable publication exists."
+      "reason": "Native table44 Modern Lumbridge membership; no approved playable publication exists.",
+      "fulfilled_by": {
+        "asset_id": "asset.source.osrs.cache2695.audio-supplement.music.163.native255",
+        "path": "assets/source/osrs/audio-supplement/music/163-native255.flac",
+        "sha256": "2008b75f8f3707aa591d6a329f2dc8f550088aeb7edbe3eaa9f8829a4550dcfc",
+        "native_mixer_level": 255
+      }
     },
     {
       "kind": "missing_original_track",
@@ -41,7 +59,13 @@
       "name": "Yesteryear",
       "native_row_sha256": "f7e822265106bfd593109b53c35843aae7aa60c17e6c73d13fcbf678999ce4f7",
       "native_area": 1,
-      "reason": "Native table44 Modern Lumbridge membership; no approved playable publication exists."
+      "reason": "Native table44 Modern Lumbridge membership; no approved playable publication exists.",
+      "fulfilled_by": {
+        "asset_id": "asset.source.osrs.cache2695.audio-supplement.music.145.native255",
+        "path": "assets/source/osrs/audio-supplement/music/145-native255.flac",
+        "sha256": "0fcb66507734c271cc72cfa7904007418e09b6eea9c45114ebee0d79effab257",
+        "native_mixer_level": 255
+      }
     },
     {
       "kind": "native_mixer_representation",
@@ -53,7 +77,13 @@
       "frames": 149945,
       "source_native_clip_samples": 12,
       "additional_clips_if_scaling_current_file": 1,
-      "reason": "Do not modify frozen files or add a limiter/normalization; provide original native-level representation or dynamic original synthesis."
+      "reason": "Do not modify frozen files or add a limiter/normalization; provide original native-level representation or dynamic original synthesis.",
+      "fulfilled_by": {
+        "asset_id": "asset.source.osrs.cache2695.audio-supplement.jingle.40.native255",
+        "path": "assets/source/osrs/audio-supplement/jingle/40-native255.flac",
+        "sha256": "2021bc6d8366d610b75b3b962e80f205f78700c9fafa4d77cd182556fc82c6ac",
+        "native_mixer_level": 255
+      }
     },
     {
       "kind": "native_mixer_representation",
@@ -65,7 +95,13 @@
       "frames": 154355,
       "source_native_clip_samples": 555,
       "additional_clips_if_scaling_current_file": 8,
-      "reason": "Do not modify frozen files or add a limiter/normalization; provide original native-level representation or dynamic original synthesis."
+      "reason": "Do not modify frozen files or add a limiter/normalization; provide original native-level representation or dynamic original synthesis.",
+      "fulfilled_by": {
+        "asset_id": "asset.source.osrs.cache2695.audio-supplement.jingle.54.native255",
+        "path": "assets/source/osrs/audio-supplement/jingle/54-native255.flac",
+        "sha256": "9b799f8547abb3fceabb2c49a94d5e4ae94dff5b7b2af358f428de9dd21f0af9",
+        "native_mixer_level": 255
+      }
     },
     {
       "kind": "native_mixer_representation",
@@ -77,7 +113,13 @@
       "frames": 138478,
       "source_native_clip_samples": 18,
       "additional_clips_if_scaling_current_file": 2,
-      "reason": "Do not modify frozen files or add a limiter/normalization; provide original native-level representation or dynamic original synthesis."
+      "reason": "Do not modify frozen files or add a limiter/normalization; provide original native-level representation or dynamic original synthesis.",
+      "fulfilled_by": {
+        "asset_id": "asset.source.osrs.cache2695.audio-supplement.jingle.58.native255",
+        "path": "assets/source/osrs/audio-supplement/jingle/58-native255.flac",
+        "sha256": "df3b2b2127a31db1eef9d7b9b1c4f5ab8d79b43eba9f587e68ebc656aa8929c9",
+        "native_mixer_level": 255
+      }
     },
     {
       "kind": "native_mixer_representation",
@@ -89,7 +131,13 @@
       "frames": 139654,
       "source_native_clip_samples": 93,
       "additional_clips_if_scaling_current_file": 11,
-      "reason": "Do not modify frozen files or add a limiter/normalization; provide original native-level representation or dynamic original synthesis."
+      "reason": "Do not modify frozen files or add a limiter/normalization; provide original native-level representation or dynamic original synthesis.",
+      "fulfilled_by": {
+        "asset_id": "asset.source.osrs.cache2695.audio-supplement.jingle.64.native255",
+        "path": "assets/source/osrs/audio-supplement/jingle/64-native255.flac",
+        "sha256": "f938413b07d9aeca2b32f56cbea8651c895336962afc47fe763def64f28a1f9e",
+        "native_mixer_level": 255
+      }
     },
     {
       "kind": "native_mixer_representation",
@@ -101,7 +149,13 @@
       "frames": 154355,
       "source_native_clip_samples": 169,
       "additional_clips_if_scaling_current_file": 2,
-      "reason": "Do not modify frozen files or add a limiter/normalization; provide original native-level representation or dynamic original synthesis."
+      "reason": "Do not modify frozen files or add a limiter/normalization; provide original native-level representation or dynamic original synthesis.",
+      "fulfilled_by": {
+        "asset_id": "asset.source.osrs.cache2695.audio-supplement.jingle.65.native255",
+        "path": "assets/source/osrs/audio-supplement/jingle/65-native255.flac",
+        "sha256": "9e6f595be0ee340a290cd4b8ab002773472754864dee527832a067153613f9a5",
+        "native_mixer_level": 255
+      }
     }
   ],
   "calibration_inputs": {
@@ -111,5 +165,12 @@
     "native-pcm.json": "667989b9ae4181a5ee316c36629719b5ec261d371f897e183e65f3028cbdad9a"
   },
   "bridge_contract": "web/audio/native-scene.ts: SourceAudioScene, SourceMusicSelector; web/audio/README.md",
-  "acceptance": false
+  "acceptance": false,
+  "status": "published_additive_original_inputs",
+  "authority_commit": "58a40d1194aa5806f2fa8919bfe2877aaa7d9721",
+  "supplement_manifest": {
+    "path": "assets/manifests/osrs/audio-m1-supplement.json",
+    "sha256": "840aef91bac9a1fd042bdb1c3662ff92a378e279f48335108730e168af550d91"
+  },
+  "remaining_publication_inputs": []
 }

@@ -39,11 +39,12 @@ export function sourceSliderToMixer(channel: SourceAudioChannel, percent: number
   return (channel === "music" ? NATIVE_MUSIC_LEVELS : NATIVE_EFFECT_LEVELS)[index]!;
 }
 
-export function sourceMixerToAssetGain(volume: number): number {
-  requireAudio(integer(volume, 0, 255), "AUDIO_SOURCE_VOLUME", "Invalid native mixer level.");
+export function sourceMixerToAssetGain(volume: number, renderedNativeLevel: 128 | 255 = 128): number {
+  requireAudio(integer(volume, 0, 255) && (renderedNativeLevel === 128 || renderedNativeLevel === 255),
+    "AUDIO_SOURCE_VOLUME", "Invalid native mixer level or original representation.");
   // Music was rendered at native 128. Effects' native device result is s16*V/256;
   // the published effects are already at half gain (including the WAV voice adapter).
-  return volume / 128;
+  return volume / renderedNativeLevel;
 }
 
 export function sourceAudioDefaults(): SourceAudioDefaults {

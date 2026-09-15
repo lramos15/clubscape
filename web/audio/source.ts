@@ -21,6 +21,11 @@ export const AUDIO_INPUTS = Object.freeze({
     sha256: "e4d54300411c6fdffd09b2d5d1c2051d381f9d8a3931fce16e83cbee07f16764",
     bytes: 24348,
   },
+  supplement: {
+    path: "assets/manifests/osrs/audio-m1-supplement.json",
+    sha256: "840aef91bac9a1fd042bdb1c3662ff92a378e279f48335108730e168af550d91",
+    bytes: 25856,
+  },
 });
 
 export type AssetKind = "music" | "jingle" | "sfx";
@@ -36,6 +41,7 @@ interface SourceSignal {
   readonly loopStart: number;
   readonly loopEnd: number;
   readonly inputGain: number;
+  readonly nativeMixerLevel: 128 | 255 | null;
 }
 export type SourceAsset = SourceSignal & (
   | { readonly playable: true; readonly path: string; readonly sha256: string; readonly bytes: number }
@@ -61,6 +67,7 @@ export interface AmbientDefinition {
 export interface SourceCatalog {
   readonly assets: ReadonlyMap<string, SourceAsset>;
   readonly groups: ReadonlyMap<string, SourceAsset>;
+  readonly native255: ReadonlyMap<string, SourceAsset>;
   readonly sequences: ReadonlyMap<number, readonly FrameCue[]>;
   readonly ambient: ReadonlyMap<number, AmbientDefinition>;
 }
@@ -134,16 +141,18 @@ async function documentInput(
 
 export async function loadCatalog(assets: ClientAssets, signal: AbortSignal): Promise<SourceCatalog> {
   requireAudio(SOURCE_PACK_SHA256 === APPROVED_PACK, "AUDIO_PACK", "The audio implementation requires approved pack v1.3.0.");
-  const [manifest, map, reference] = await Promise.all([
+  const [manifest, map, reference, supplement] = await Promise.all([
     documentInput(assets, AUDIO_INPUTS.manifest, signal),
     documentInput(assets, AUDIO_INPUTS.map, signal),
     documentInput(assets, AUDIO_INPUTS.reference, signal),
+    documentInput(assets, AUDIO_INPUTS.supplement, signal),
   ]);
   requireAudio(manifest.settings.native_startup_percussion_bank === 128 &&
     manifest.settings.native_startup_percussion_channel === 9 &&
     manifest.assets.length === 264, "AUDIO_PACK", "Missing corrected native audio initialization.");
   const byId = new Map<string, SourceAsset>();
   const groups = new Map<string, SourceAsset>();
+  const native255 = new Map<string, SourceAsset>();
   const add = (asset: SourceAsset) => {
     requireAudio(!byId.has(asset.id) && !groups.has(`${asset.kind}:${asset.sourceId}`),
       "AUDIO_MANIFEST", "Duplicate source audio identity.");
@@ -164,7 +173,7 @@ export async function loadCatalog(assets: ClientAssets, signal: AbortSignal): Pr
       peak: a.signal.peak, firstNonzeroFrame: a.signal.first_nonzero_frame,
       endFrame: a.kind === "sfx" ? null : a.loop.source_engine_end_frame,
       loopStart: a.loop.loop_start_frame ?? 0, loopEnd: a.loop.loop_end_frame ?? 0,
-      inputGain: 1, playable: true,
+      inputGain: 1, playable: true, nativeMixerLevel: a.kind === "sfx" ? null : 128,
     });
   }
   // These two approved original WAVs are NOT among the 264 FLACs. Match the
@@ -178,7 +187,7 @@ export async function loadCatalog(assets: ClientAssets, signal: AbortSignal): Pr
       id: a.id, kind: "sfx", sourceId: a.source_group, path: a.path,
       sha256: a.sha256, bytes: a.size_bytes, frames: a.signal.frames, channels: 1,
       peak: a.signal.peak, firstNonzeroFrame: null, endFrame: null,
-      loopStart: 0, loopEnd: 0, inputGain: 0.5, playable: true,
+      loopStart: 0, loopEnd: 0, inputGain: 0.5, playable: true, nativeMixerLevel: null,
     });
   }
   requireAudio(manifest.source_silences[0].source_group === 2411 &&
@@ -187,8 +196,51 @@ export async function loadCatalog(assets: ClientAssets, signal: AbortSignal): Pr
   add({
     id: manifest.source_silences[0].asset_id, kind: "sfx", sourceId: 2411,
     playable: false, path: null, sha256: null, bytes: 0, frames: 110, channels: 1, peak: 0,
-    firstNonzeroFrame: null, endFrame: null, loopStart: 0, loopEnd: 0, inputGain: 1,
+    firstNonzeroFrame: null, endFrame: null, loopStart: 0, loopEnd: 0, inputGain: 1, nativeMixerLevel: null,
   });
+  requireAudio(supplement.schema_version === 1 && supplement.source_pack_sha256 === APPROVED_PACK &&
+    supplement.base_manifest.path === AUDIO_INPUTS.manifest.path &&
+    supplement.base_manifest.sha256 === AUDIO_INPUTS.manifest.sha256 &&
+    supplement.base_manifest.size_bytes === AUDIO_INPUTS.manifest.bytes &&
+    supplement.frozen_files_modified === false && supplement.reencoded_base_files === 0 &&
+    supplement.assets.length === 9,
+  "AUDIO_SUPPLEMENT", "The additive native audio manifest must retain the exact unchanged base.");
+  const expectedSupplement = new Set(["music:64","music:327","music:163","music:145",
+    "jingle:40","jingle:54","jingle:58","jingle:64","jingle:65"]);
+  for (const raw of supplement.assets) {
+    const a = object(raw);
+    const key = `${a.kind}:${a.source_group}`;
+    requireAudio(expectedSupplement.delete(key) && a.source_file === 0 &&
+      a.source_index === (a.kind === "music" ? 6 : 11) && a.native_mixer_level === 255 &&
+      a.asset_id === `asset.source.osrs.cache2695.audio-supplement.${a.kind}.${a.source_group}.native255` &&
+      a.path === `assets/source/osrs/audio-supplement/${a.kind}/${a.source_group}-native255.flac` &&
+      a.signal.sample_rate === SOURCE_RATE && a.signal.channels === 2 &&
+      a.encoding.bits_per_sample === 24 && a.encoding.effective_source_bits === 16 &&
+      a.encoding.gain_numerator === 1 && a.encoding.gain_denominator === 1 &&
+      a.encoding.lossless_round_trip_verified === true &&
+      a.native_render.native_startup_percussion_channel === 9 &&
+      a.native_render.native_startup_percussion_bank === 128 &&
+      a.native_render.independent_render_passes === 2 && a.native_render.repeated_pcm_and_inputs_equal === true &&
+      a.loop.native_midi_loop === false && a.loop.export_native_loop === false &&
+      a.loop.release_tail_frames === SOURCE_RATE &&
+      a.signal.frames === a.loop.source_engine_end_frame + SOURCE_RATE && !byId.has(a.asset_id),
+    "AUDIO_SUPPLEMENT", "Invalid additive native audio identity, representation, or source relationship.");
+    const base = groups.get(key);
+    requireAudio(base ? a.base_asset_id === base.id && a.signal.frames === base.frames &&
+      a.loop.source_engine_end_frame === base.endFrame : a.base_asset_id === null,
+    "AUDIO_SUPPLEMENT", "A native representation must not replace or relabel a different source group.");
+    const asset: SourceAsset = Object.freeze({
+      id: a.asset_id, kind: a.kind, sourceId: a.source_group, path: a.path,
+      sha256: a.sha256, bytes: a.size_bytes, frames: a.signal.frames, channels: 2,
+      peak: a.signal.peak, firstNonzeroFrame: a.signal.first_nonzero_frame,
+      endFrame: a.loop.source_engine_end_frame, loopStart: 0, loopEnd: 0,
+      inputGain: 1, playable: true, nativeMixerLevel: 255,
+    });
+    byId.set(asset.id, asset);
+    native255.set(key, asset);
+    if (!base) groups.set(key, asset);
+  }
+  requireAudio(expectedSupplement.size === 0, "AUDIO_SUPPLEMENT", "Required original additive inputs are missing.");
   const sequences = new Map<number, FrameCue[]>();
   for (const raw of map.sequence_sound_events) {
     const a = object(raw);
@@ -215,7 +267,23 @@ export async function loadCatalog(assets: ClientAssets, signal: AbortSignal): Pr
       fields: Object.freeze({ ...fields }),
     }));
   }
-  return { assets: byId, groups, sequences, ambient };
+  return { assets: byId, groups, native255, sequences, ambient };
+}
+
+/** Stable source IDs remain unchanged; only the explicitly published native-level representation varies. */
+export function sourceAssetForLevel(
+  catalog: SourceCatalog, kind: AssetKind, sourceId: number | null, assetId: string | null, nativeLevel: number,
+): SourceAsset {
+  requireAudio(integer(nativeLevel, 0, 255), "AUDIO_SOURCE_VOLUME", "Invalid configured native mixer level.");
+  const key = `${kind}:${sourceId}`;
+  const base = catalog.groups.get(key);
+  const requested = assetId === null ? base : catalog.assets.get(assetId);
+  requireAudio(base && requested && requested.kind === kind && requested.sourceId === sourceId,
+    "AUDIO_ASSET_ID", `Unknown or mismatched original ${kind} identity ${sourceId}. No replacement is permitted.`);
+  if (requested.nativeMixerLevel === 255) return requested;
+  const alternate = catalog.native255.get(key);
+  if (alternate && requested.nativeMixerLevel === 128 && requested.peak * nativeLevel / 128 > 1) return alternate;
+  return requested;
 }
 
 export function validTile(tile: unknown): tile is Tile {

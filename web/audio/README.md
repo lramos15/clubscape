@@ -8,16 +8,20 @@ policies into it. It does not implement UI or gameplay authority.
 The source pack stays
 `b62e19704e17d3d3e4e819f803ef49ba7cc54034ae407184b423427c65d9674d`.
 All264 original FLACs and the original710/2693 reference WAVs are unchanged.
+Nine additive original native255 inputs now live under
+`assets/source/osrs/audio-supplement/`; their strict manifest is
+`assets/manifests/osrs/audio-m1-supplement.json`
+(`840aef91bac9a1fd042bdb1c3662ff92a378e279f48335108730e168af550d91`).
 New calibration is under `research/browser-audio-policy/`, **outside** the
 frozen pack. See that directory's README for actual native probes, source
-hashes, operation-by-operation findings and exact publication needs.
+hashes, operation-by-operation findings and fulfilled publication records.
 
 ## Composition and migration from8770111
 
 ```ts
 import {
   createAudio, observeAudioState, setSourceMasterVolume,
-  setSourceAudioScene, setSourceMusicSelector,
+  setSourceAudioScene, setSourceMusicState,
 } from "./audio/index.ts";
 
 const audio = await createAudio(assets, reportAudioFeedback);
@@ -35,7 +39,11 @@ audio.volume("area", 1);
 setSourceMasterVolume(audio, 100); // original integer percentage
 
 setSourceAudioScene(audio, sourceSceneProjection);
-setSourceMusicSelector(audio, resolveAuthoritativeNextMusic, "modern");
+setSourceMusicState(audio, {
+  mode: "area", areaMode: "modern",
+  unlockedGroups: sourceUnlockedMusicGroups,
+  selectedGroup: null, playlistGroups: [], loopEnabled: true,
+});
 
 // Transport loss is not a title screen:
 audio.disconnected();
@@ -67,8 +75,13 @@ do not send it merely because transport is reconnecting.
   single/custom-playlist timer replay uses `boundary:"native_duration"` or omits
   it; the declared native duration and exact PCM EOT are separate quantities.
 * Music mode IDs are native **area0 / shuffle1 / single2**. Modern Lumbridge
-  contains six original tracks, not just the two already published for it.
-  Exact required missing inputs are listed below.
+  now plays all six original tracks **2,64,327,163,76,145**. The internal
+  area/playlist clock selects the next source from that exact membership;
+  no caller must invent a selector or tolerate silent exhaustion.
+* Old asset IDs still identify their original128 representations. The five
+  affected jingles select their distinct native255 input when the requested
+  mixer level would otherwise add clipping. New music is rendered at255.
+  Gains use the representation's own native level, never blind `volume/128`.
 
 ## Actual graph, loading, permission and errors
 
@@ -83,7 +96,13 @@ unchanged. The two original WAV templates `reference.audio.sfx.2693` and
 `reference.audio.sfx.710` receive the exact half-gain already baked into FLAC
 effects; neither has a fabricated FLAC alias.
 
-`AUDIO_INPUTS` exposes three original metadata path IDs and checksums.
+The new files are **FLAC24 containing all original16 bits at unity gain**.
+This is a reversible container expansion, not a waveform gain patch. It gives
+Chrome an exact power-of-two float representation even at native saturation;
+the previous native16 FLAC positive-peak decoder mapping could exceed the
+existing float bound there. Original native clipping is preserved, not limited.
+
+`AUDIO_INPUTS` exposes four metadata path IDs/checksums, including `supplement`.
 `ClientAssets.url(id)` must resolve them and the matching playable asset IDs
 through same-origin HTTP(S). Bytes, lengths, hashes, decoded dimensions,
 finite PCM and decoder peak bounds are checked. Metadata is deliberately
@@ -112,6 +131,14 @@ duplicates. Disposal stops clocks, aborts owned loads, disconnects gains/sources
 and closes the context. Asset failure never retries a large music file on every
 unchanged snapshot; explicit control/selection retry is required.
 
+For a live low→high slider change on an affected jingle, the old native128
+source retains its last safe **applied** level while the new original255
+representation loads. The visible configured/applied levels remain distinct.
+The runtime swaps at the same PCM offset and audio-clock end, disconnects the
+old node, and applies `nativeVolume/255`; it does not restart the cue, apply the
+baked offset twice, or briefly amplify the unsafe representation. A subsequent
+lower level may keep the already-loaded255 source with its correct gain.
+
 ## Native helper APIs and authoritative input
 
 All exports below are additional to the unchanged `AudioHandle` ABI.
@@ -120,7 +147,7 @@ All exports below are additional to the unchanged `AudioHandle` ABI.
 | --- | --- |
 | `sourceAudioDefaults()` | source percentages, raw127 constructor preferences, effective255/127/127 mixer levels, gains255/128 and127/128 |
 | `sourceSliderToMixer(channel, percent, masterPercent=100)` | exact native float32 index/rounding and nonlinear lookup |
-| `sourceMixerToAssetGain(nativeVolume)` | calibrated `nativeVolume/128`, accounting for the original musical render and half-gain effects |
+| `sourceMixerToAssetGain(nativeVolume, renderedNativeLevel=128)` | calibrated `nativeVolume/renderedNativeLevel`; use255 for the additive musical representations |
 | `setSourceMasterVolume(handle, percent)` | native master applied **before** each channel lookup |
 | `sourcePacketSpatial(listener, emitter, range, retain, areaVolume)` | source packet Manhattan-minus128 distance, packed inner retention, float32/ceil integer volume |
 | `sourceObjectBounds(tile, sizeX, sizeY, orientation)` | original rotated object footprint in128-unit coordinates |
@@ -132,7 +159,8 @@ All exports below are additional to the unchanged `AudioHandle` ABI.
 | `sourceMusicRegion(tile, areaMode)` | source-qualified detailed M1 polygons and actual native table44 membership |
 | `sourceMusicDurationSeconds(group)` | original duration field in600ms units, **not** exact MIDI EOT or claimed server emission time |
 | `setSourceAudioScene(handle, scene)` | consume the typed renderer/bridge projection and maintain actual original object streams |
-| `setSourceMusicSelector(handle, selector, areaMode)` | request the actual next selection rather than inventing a default playlist or silent exhausted success |
+| `setSourceMusicState(handle, state)` | source mode, unlocks, selected group, playlist and loop preference; identical states do not restart playback |
+| `setSourceMusicSelector(handle, selector, areaMode)` | optional stronger authoritative override; `null` uses internal source-bound continuation, not an error |
 
 The exact additional bridge input is exported as:
 
@@ -159,6 +187,14 @@ type SourceMusicSelector = (request: {
   region: SourceMusicRegion | null;
   durationTicks: number | null;
 }) => Promise<{ group: number; transition?: SourceMusicTransition }>;
+interface SourceMusicState {
+  mode: "area" | "single" | "shuffle" | "playlist";
+  areaMode: "modern" | "classic";
+  unlockedGroups: readonly number[];
+  selectedGroup: number | null;
+  playlistGroups: readonly number[];
+  loopEnabled: boolean;
+}
 ```
 
 The renderer supplies placed audible scenery, including non-interactable
@@ -174,9 +210,14 @@ For music, preserve actual source selections/preferences when available.
 `fadeOutDelayCycles`, `fadeOutCycles`, `fadeInDelayCycles`, `fadeInCycles`.
 The native defaults are title **[0,0,0,100]**, background script9630
 **[0,60,60,0]**, and jingle/resume **[0,0,0,0]**. The selector input is a concrete
-bridge requirement, not permission to grant unlocked tracks or invent source
-server polygon/timer decisions. A missing selector is reported explicitly at
-pass completion rather than hidden as successful ongoing audio.
+optional authoritative override, not permission to grant unlocked tracks.
+Without it, the known M1 area uses its actual membership, no-repeat shuffle
+bag and native duration timer. A pending next choice is retained across jingle/
+mute interruption rather than consumed twice. The source duration and PCM EOT
+remain separate: single mode restarts a fresh source at its timer, playlists
+advance with one prepared successor, and neither loops the release padding.
+Same-area square crossings preserve music; a real area change resets selection.
+Different characters do not inherit the preceding character's unlock list.
 
 ## Shared AudioEvent payloads
 
@@ -216,7 +257,8 @@ replaying old outcomes.
   A reward with no base-level increase produces **no level-up cue**.
 * `music`: explicit source group and mode; manual selection requires
   `unlocked:true`, playlists an explicit JSON-string array of at most100
-  distinct available source groups. Optional source transition fields above.
+  distinct available source groups. Optional source transition fields above;
+  `loopEnabled:false` explicitly stops after the current pass.
 
 Native frame cues remain621→2603 at4/16cycles;625→3220 at11/50;
 733→2597 at8/45 and10/70;879→2735 at3/18;898→3790/3791/3790/3791
@@ -255,25 +297,38 @@ fails explicitly. A fresh handle requires the server's new event floor from
 `spec/game-networking.md`. No tokens, credentials or outcomes are persisted
 by the audio module.
 
-## Exact remaining input requirements, not the old policy placeholders
+## Additive identities and remaining app integration
 
-1. Modern Lumbridge's native table44 area1 has **2,64,327,163,76,145**, with
-   Harmony76 marked area-default. Original music **64,327,163,145** still lacks
-   approved playable publication. `AUDIO_SOURCE_MUSIC_ASSET_REQUIRED` names
-   the exact index/group; no nonexistent FLAC alias or jingle substitution.
-2. All35 musical inputs were rendered by the original player at128 and255.
-   RMS gain differences of scaled frozen inputs stay within0.25dB, but source
-   jingles **40,54,58,64,65** can introduce respectively **1,8,2,11,2** extra
-   clipped samples at full native mixer. Those unsafe gain cases fail as
-   `AUDIO_NATIVE_GAIN_INPUT_REQUIRED`; provide a source-native representation/
-   synthesis path, not a limiter, normalization or changed frozen asset.
-3. Wire the concrete source-scene and next-music bridge inputs above. Source
-   native/public calibration does not substitute for authoritative scene vars,
-   unlock state or server music selections. Public polygons retain their
-   qualification instead of pretending to be native-server captures.
+All nine new IDs have prefix
+`asset.source.osrs.cache2695.audio-supplement.` and these exact suffixes:
 
-The old constructor/default, generic attenuation, arbitrary fade and missing
-membership placeholders are now backed by executed original policies and
-qualified source maps. The remaining missing publications/bridge inputs are
-precise. Independent tests live in `tools/browser-audio-tests`; none claims
-gameplay, owner Mac/Edge, host-speaker perception or M1 acceptance.
+```text
+music.64.native255    music.327.native255
+music.163.native255   music.145.native255
+jingle.40.native255   jingle.54.native255
+jingle.58.native255   jingle.64.native255
+jingle.65.native255
+```
+
+They route to `assets/source/osrs/audio-supplement/<kind>/<group>-native255.flac`.
+Music64 and jingle64 remain distinct source indexes. The base manifest and all
+old IDs/hashes remain untouched. The supplement binds original native source
+inputs, instrument/sample hashes, two identical render passes, integer MIDI
+clock/EOT, rate/channels, native-level metadata, PCM/container hashes and
+source saturation. Independent native44/136 controls meet the existing0.25dB
+gain bound with zero additional clipping; the high-level PCM is exact.
+
+The four missing tracks and five unsafe full-gain jingle inputs are **published
+and consumed**, not recurring blockers. Shell integration needs the fourth
+metadata route and nine original asset routes, `createAudio` composition,
+trusted controls, coherent committed audio/world events, and the typed
+scene/music state above. The renderer/authority supplies actual listener
+coordinates, object presence/orientation/owner and original morph varps;
+the audio layer calculates source gain/visibility/fade and chooses M1 next
+tracks. No caller-guessed gain or next-song callback is required.
+
+Public polygon provenance and timer projections remain qualified instead of
+being relabeled native-server captures. Legitimate app/server journey, physical
+speaker perception, owner Mac Chrome/Edge and full M1 acceptance remain actual
+product-level checks outside this bounded component. No such acceptance is
+claimed by the native or isolated browser fixtures.

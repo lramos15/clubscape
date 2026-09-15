@@ -1,6 +1,7 @@
 import {
   createAudio, observeAudioState, readAudioState, setSourceMusicSelector,
   setSourceAudioScene, setSourceMasterVolume, sourceMusicRegion, sourceAudioDefaults,
+  setSourceMusicState,
 } from "/web/audio/index.ts";
 
 const native = {
@@ -196,6 +197,7 @@ window.audioFixture = {
   setSourceAudioScene: (scene) => setSourceAudioScene(handle, scene),
   setSourceMasterVolume: (value) => setSourceMasterVolume(handle, value),
   setSourceMusicSelector: (selector, mode = "modern") => setSourceMusicSelector(handle, selector, mode),
+  setSourceMusicState: (state) => setSourceMusicState(handle, state),
   sourceMusicRegion, sourceAudioDefaults,
   originalsConnected: () => native.destinations.some((node) =>
     node.context === native.contexts.at(-1) && node !== monitorSink &&

@@ -18,9 +18,9 @@ pnpm --dir web install --frozen-lockfile
 
 ```sh
 pnpm --dir web exec tsc --noEmit
-node --test web/audio/audio.test.ts web/audio/native-policy.test.ts web/audio/reward-levels.test.ts
+node --test web/audio/audio.test.ts web/audio/native-policy.test.ts web/audio/reward-levels.test.ts web/audio/supplement.test.ts
 
-# Full actual playback; includes the complete Autumn -> Harmony timer replay:
+# Full actual playback; complete playlist, Modern-area and single timer replays:
 node tools/browser-audio-tests/run.mjs
 
 # Iteration: shorter lifecycle checks plus actual offline waveform/fade render:
@@ -40,6 +40,23 @@ python3 tools/browser-audio-tests/native/probe.py pcm
 python3 tools/browser-audio-tests/native/public_maps.py
 python3 tools/browser-audio-tests/native/generate_policy.py
 ```
+
+The authorized additive source publication is separate from the frozen pack:
+
+```sh
+python3 tools/browser-audio-tests/native/audio_supplement.py publish
+python3 tools/browser-audio-tests/native/audio_supplement.py verify
+python3 tools/browser-audio-tests/native/supplement_oracles.py
+```
+
+Publication renders each of the nine originals **twice** at native255, compares
+all PCM/source input/instrument relationships, and losslessly expands the original
+16-bit PCM into unity-gain FLAC24. Additional actual native44/136 renders check
+the configured slider-level gain behavior. It never writes base source files.
+`supplement_oracles.py` derives both channel hashes from independently checked
+integer PCM **before** browser decoding. Saturated samples remain exact native
+values; this avoids the old FLAC16 positive-full-scale float bias without
+changing a waveform, adding attenuation, a limiter or a new tolerance.
 
 The native runner reuses hash-locked source-owner artifacts/private cache.
 `--reuse`/`--cache` can select equivalent verified local copies. It does not
@@ -71,6 +88,12 @@ The suite exercises:
 
 * Corrected original music0/62/144/76/2 and actual bow2693, rat710/713/711,
   goblin469/472/471, smelt2725 and source gathering/eating cues.
+* All nine additive inputs actually start through the factory: original Modern
+  music64/327/163/145 and native255 jingles40/54/58/64/65. Their complete decoded
+  channel hashes match independent native-PCM float oracles exactly.
+* Real slider movement across native128→255 representation selection with a
+  delayed load. The old source is swapped at its current offset/end; configured
+  volume is preserved without duplicate music, clipping or an action restart.
 * Real native defaults255/127/127, nonlinear channel/master composition, live
   original-WAV waveform/gain comparisons, and source fader master steps.
 * Native packet FIFO50, delay2 on processing call3, `-10` loading grace,
@@ -95,15 +118,17 @@ The suite exercises:
   original release is retained; it is not made into a seamless buffer loop.
   This is a declared source-duration projection, not a capture of the server's
   exact per-account next-song submission time.
+* Full-length Modern-area next-track selection without any caller selector,
+  source163 single-mode replay at194×600ms, and idempotent declared
+  area/single/shuffle/playlist state with source-unlock checks.
 * Unknown/mismatched IDs, noncommitted input, corrupt/truncated bytes, HTTP
   failure, same-origin/hash checks, decoder failure, cancelled stale loads,
   and no snapshot-driven large-file retry storm.
 * Real context suspension/closure and a real browser-local silent output sink,
   plus explicitly labeled injected resume rejection/timeout, with real
   gesture recovery and no duplicate resumed music.
-* Explicit guards for four unpublished Modern music groups and five
-  native-full-gain jingle representation failures. Missing source bytes or
-  extra clipping are never relabeled successful playback.
+* Pre-trained Cook2→5 reward deferral and source-group preservation plus
+  pre-trained21→21 with no level-up playback, both through the real factory.
 
 The saturation fixture uses an explicit0.01 gain for50 simultaneous packet
 effects. It proves queue/order/lifecycle behavior without manufacturing a mix
@@ -121,10 +146,11 @@ Jingle33 at native255, for example, has12 saturated source samples; the frozen
 128 render scaled to the corresponding gain has8 at a subset of those positions.
 The suite does not falsely assert an absolute-zero global clip counter after
 that legitimate native configuration. SFX stress and safe music transition
-checks compare their **additional** clip counts, and the five proven unsafe
-scaled-jingle cases are explicitly refused. No limiter or normalizer is used.
-The original native render, gain error, clip-mask difference and remaining
-representation requirements are retained in `native-pcm.json`.
+checks compare their **additional** clip counts. The five formerly unsafe
+scaled-jingle cases now use their original native255 supplemental representations.
+No limiter or normalizer is used. Historic failure proof stays in
+`native-pcm.json`; exact fulfilling PCM and rendered controls are in
+`supplement-source-inputs.json` and `supplement-level-calibration.json`.
 
 The focused Cook conformance cases additionally run:
 
@@ -144,7 +170,8 @@ manufactured by the audio implementation.
 
 `results.json` records the last run's full/quick scope, versions, actual native
 starts/ends, waveform/gain/timing, observed failures, and tested implementation
-hashes. All266 original playable files are checked before and after every run.
+hashes. All266 original playable files **and nine additive files** are checked
+before and after every run; the base manifest/approval hashes remain unchanged.
 A code/harness change during a run invalidates its result. Missing callbacks
 after deliberately closing the actual context are recorded as missing, not
 fabricated; graph/resource cleanup is separately asserted.
@@ -161,5 +188,5 @@ detachment or source-file rewrite is used. Browsers and server are closed in
 These are audio-only headless tests. Screenshots would require the machine
 guide's headful Xvfb setup. Physical host-speaker perception, real game/server
 journey, owner Mac/Edge, presentation fidelity acceptance and full M1 acceptance
-are still separate gates. The exact source publication/bridge needs are in
+are still separate gates. The exact additive publication/bridge contract is in
 `web/audio/README.md` and `research/browser-audio-policy/README.md`.
