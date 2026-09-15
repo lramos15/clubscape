@@ -7,14 +7,16 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         .ok_or("Pass the validated world.csc artifact path.")?;
     let path = Path::new(&input);
     let mut bytes = Vec::new();
-    File::open(path)?
+    let source: Box<dyn Read> = if input == "-" {
+        Box::new(std::io::stdin())
+    } else {
+        Box::new(File::open(path)?)
+    };
+    source
         .take(clubscape_content::MAX_INPUT_BYTES as u64 + 1)
         .read_to_end(&mut bytes)?;
     let compiled =
         clubscape_content::load_compiled(&bytes, clubscape_content::ValidationMode::Runtime)?;
-    if !compiled.report().unresolved_bindings.is_empty() {
-        return Err("The source artifact still contains unresolved bindings.".into());
-    }
     let source = compiled.definition();
     let regions: std::collections::BTreeMap<_, _> = source
         .regions
@@ -34,6 +36,13 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
             "catalog":clubscape_wasm::catalog::from_compiled(&compiled),
             "regions":regions,
             "referencedAssets":compiled.referenced_assets(),
+            "contentValidation":{
+                "contentSchemaVersion":source.schema_version,
+                "artifactVersion":clubscape_content::ARTIFACT_VERSION,
+                "unresolvedBindings":compiled.report().unresolved_bindings,
+                "readinessAuthority":"server_readiness_profile",
+                "runtimeReadinessEstablished":false,
+            },
         })
     );
     Ok(())

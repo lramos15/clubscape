@@ -42,6 +42,15 @@ export interface DisplayCatalog {
   quests: Record<string, { name: string; completedStage: string }>;
   equipmentSlots: string[];
   icons?: Record<string, string>;
+  shops?: Record<string, { name: string; currency: string }>;
+}
+
+export interface ContentValidation {
+  contentSchemaVersion: number;
+  artifactVersion: number;
+  unresolvedBindings: string[];
+  readinessAuthority: "server_readiness_profile";
+  runtimeReadinessEstablished: false;
 }
 
 export interface ContentManifest {
@@ -54,6 +63,7 @@ export interface ContentManifest {
   bootstrap: string[];
   rendererManifest: string | null;
   regions: Record<string, RegionPresentation>;
+  contentValidation?: ContentValidation;
 }
 
 export function parseContentManifest(value: unknown): ContentManifest {
@@ -64,6 +74,22 @@ export function parseContentManifest(value: unknown): ContentManifest {
   invariant(typeof manifest.contentRevision === "string" && manifest.contentRevision.length > 0
     && manifest.contentRevision.length <= 256 && isHash(manifest.artifactSha256), "Invalid source content identity.");
   invariant(manifest.catalog?.contentRevision === manifest.contentRevision, "Catalog content revision mismatch.");
+  if (manifest.contentValidation !== undefined) {
+    const validation = manifest.contentValidation;
+    invariant(validation.contentSchemaVersion === 3 && validation.artifactVersion === 3
+      && validation.readinessAuthority === "server_readiness_profile" && validation.runtimeReadinessEstablished === false
+      && Array.isArray(validation.unresolvedBindings) && validation.unresolvedBindings.length <= 20_000
+      && validation.unresolvedBindings.every((path) => typeof path === "string" && path.length > 0 && path.length <= 1024),
+    "Invalid compiler provenance or fabricated runtime-readiness claim.");
+  }
+  if (manifest.catalog.shops !== undefined) {
+    invariant(typeof manifest.catalog.shops === "object" && !Array.isArray(manifest.catalog.shops)
+      && Object.keys(manifest.catalog.shops).length <= 4096, "Invalid source shop display catalog.");
+    for (const shop of Object.values(manifest.catalog.shops)) {
+      invariant(typeof shop.name === "string" && Object.hasOwn(manifest.catalog.items, shop.currency),
+        "A source shop currency is missing from the item catalog.");
+    }
+  }
   for (const table of [manifest.catalog.items, manifest.catalog.skills, manifest.catalog.entities, manifest.catalog.quests]) {
     invariant(table && typeof table === "object" && !Array.isArray(table) && Object.keys(table).length <= 20_000,
       "Invalid public display catalog.");

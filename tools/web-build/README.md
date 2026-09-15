@@ -90,22 +90,36 @@ from independently maintained item/world/price/guard definitions:
 
 ```sh
 pnpm --dir web content \
-  --artifact .local/game/world.csc \
+  --artifact content/m1/game-content.csc.gz \
   --bindings assets/compiled/browser/presentation.json \
   --asset-root .local/game \
   --output .local/game/content/manifest.json
 ```
 
-Those example input paths are **not supplied product assets**. The renderer/
-UI/audio preparation owners must supply real compiled presentation bindings.
+The committed artifact3 input now exists. The example presentation bindings
+and asset-root are **not supplied product presentation assets**; the renderer/
+UI/audio preparation owners must supply those real compiled outputs.
 The bindings JSON supplies `sourcePackSha256`, explicit `assets`,
 `bootstrap`, `rendererManifest`, `regions`, and optional `icons` mapping known
 item/skill IDs to declared original raster assets. It cannot replace catalog
 names, completion stages, source IDs, initial state or authority rules.
 `project-content` revalidates the real artifact in `Runtime` mode first;
-unresolved/TestFixture artifacts fail. Region scene-asset IDs must match that
+invalid/TestFixture artifacts fail. Gzip is bounded and passed to the native
+compiler over stdin. Region scene-asset IDs must match that
 compiled content. Files reside under `asset-root` at their public URL paths
 without the leading slash. No entire cache is copied.
+
+Canonical artifact3 is `m1.source-backed.v3.95f50b40601a821f`, raw SHA-256
+`0181ec69456101defccbc8dd99b579ed849caae6301d801387732bea70fe98f5`.
+The checked projection contains118 item definitions,29 runtime regions,
+one shop and5,010 compiled referenced asset IDs. Its exact six remaining
+unresolved paths are preserved in `contentValidation`, not treated as active
+failures or erased. `crates/server/src/game_service/readiness.rs` owns the
+executable F2P inactivity proofs and revalidates restored/mutated state.
+The shell neither duplicates those proofs nor bypasses them. Compiler/display
+projection is **not runtime readiness**: the pending source solid-target reach
+and fresh manual-drop offline-clock probes remain engine-owner work.
+Projection evidence: `.local/evidence/m1-artifact3-projection.json`.
 
 For a game-owned asset bundle:
 
@@ -200,10 +214,13 @@ Before integrated-client completion:
 2. Supply the real compiled source asset/region/camera bindings and a matching
    server public ContentManifest/asset deployment. Do not substitute the test
    fixtures for those resources.
-3. Align the backend's new generated guarded bank/shop/recovery/menu/lifecycle
-   fields in `crates/wasm/src/view.rs`, and add the three missing exact intent
-   variants when the protocol owner exposes them. Preserve source errors,
-   public-state privacy and client-core lease/sequence reconciliation.
+3. The authorized backend/content commits are integrated: guarded contexts,
+   quotes, presence, all three additive intents and lifecycle-journal retries
+   are mapped. Align UI consumption of multi-panel recovery and exact U64 fees,
+   plus source inventory action labels. Preserve shop ItemId through the
+   selection/WASM boundary; purchases stay unsent until the separate exact
+   expected-item purchase wire contract is relayed. Do not manufacture that
+   field's ABI or work around source contact/offline-clock bugs.
 4. Align renderer `observe()`/applied settings/GPU completion ABI and actual
    audio decode observations described in `web/app/README.md`. UI context menus
    may expose `worldContext(pick,x,y)`. Source entity/pose/morph/dynamic-object

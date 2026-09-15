@@ -16,10 +16,12 @@ export class BrowserClient {
     receive(bytes: Uint8Array): string;
     receive_for(request: string, bytes: Uint8Array): string;
     request_id(bytes: Uint8Array): string;
+    retry_lifecycle(): Uint8Array | undefined;
     retry_uncertain_input(): Uint8Array | undefined;
     set_catalog(input: string): string;
     state(): string;
     submit(request_id: string, input: string): Uint8Array;
+    submit_selected(request_id: string, input: string, item_id: string): Uint8Array;
     transport_lost(): void;
 }
 
@@ -34,10 +36,12 @@ export interface InitOutput {
     readonly browserclient_receive: (a: number, b: number, c: number) => [number, number, number, number];
     readonly browserclient_receive_for: (a: number, b: number, c: number, d: number, e: number) => [number, number, number, number];
     readonly browserclient_request_id: (a: number, b: number, c: number) => [number, number, number, number];
+    readonly browserclient_retry_lifecycle: (a: number) => [number, number, number, number];
     readonly browserclient_retry_uncertain_input: (a: number) => [number, number, number, number];
     readonly browserclient_set_catalog: (a: number, b: number, c: number) => [number, number, number, number];
     readonly browserclient_state: (a: number) => [number, number, number, number];
     readonly browserclient_submit: (a: number, b: number, c: number, d: number, e: number) => [number, number, number, number];
+    readonly browserclient_submit_selected: (a: number, b: number, c: number, d: number, e: number, f: number, g: number) => [number, number, number, number];
     readonly browserclient_transport_lost: (a: number) => void;
     readonly __wbindgen_externrefs: WebAssembly.Table;
     readonly __wbindgen_free: (a: number, b: number, c: number) => void;

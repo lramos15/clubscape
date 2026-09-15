@@ -187,7 +187,6 @@ fn every_representable_shared_intent_round_trips_through_generated_wire() {
         json!({"kind":"produce_at","recipe":"recipe.fixture","target":{"kind":"spawn","spawn":"spawn.fixture"},"quantity":1}),
         json!({"kind":"bank_deposit","banker":"spawn.fixture","inventory_slot":0,"quantity":1}),
         json!({"kind":"bank_withdraw","banker":"spawn.fixture","bank_slot":0,"quantity":1,"noted":false}),
-        json!({"kind":"shop_buy","shop":"shop.fixture","item_index":0,"quantity":1}),
         json!({"kind":"shop_sell","shop":"shop.fixture","inventory_slot":0,"quantity":1}),
         json!({"kind":"set_combat_style","style":"style.fixture"}),
         json!({"kind":"cast","spell":"spell.fixture","target":null}),
@@ -201,6 +200,10 @@ fn every_representable_shared_intent_round_trips_through_generated_wire() {
         json!({"kind":"reclaim","death":"death.fixture","storage":"grave","items":["recovery_item.fixture"]}),
         json!({"kind":"cancel_activity"}),
         json!({"kind":"request_logout"}),
+        json!({"kind":"produce_selected","recipe":"recipe.fixture","target":null,"quantity":1,"mode":"single"}),
+        json!({"kind":"produce_selected","recipe":"recipe.fixture","target":null,"quantity":1,"mode":"make_x"}),
+        json!({"kind":"open_grave","death":"death.fixture"}),
+        json!({"kind":"open_death_office"}),
     ];
     for case in cases {
         let mut bridge = joined();
@@ -222,21 +225,24 @@ fn every_representable_shared_intent_round_trips_through_generated_wire() {
 }
 
 #[test]
-fn source_intents_without_wire_variants_are_never_coerced() {
-    for input in [
-        json!({"kind":"produce_selected","recipe":"recipe.fixture","target":null,"quantity":1,"mode":"make_x"}),
-        json!({"kind":"open_grave","death":"death.fixture"}),
-        json!({"kind":"open_death_office"}),
-    ] {
-        let mut bridge = joined();
-        let error = bridge.submit(&id(4), &input.to_string()).unwrap_err();
-        assert_eq!(serde_json::to_value(error).unwrap()["kind"], "unsupported");
-        assert!(
-            !serde_json::from_str::<Value>(&bridge.state().unwrap()).unwrap()["uncertainInput"]
-                .as_bool()
-                .unwrap()
-        );
-    }
+fn shop_purchase_identity_is_retained_without_guessing_the_pending_wire_contract() {
+    let mut bridge = joined();
+    let input = r#"{"kind":"shop_buy","shop":"shop.fixture","item_index":0,"quantity":1}"#;
+    assert!(bridge.submit(&id(4), input).is_err());
+    let error = bridge
+        .submit_selected(&id(4), input, "item.fixture")
+        .unwrap_err();
+    let error = serde_json::to_value(error).unwrap();
+    assert_eq!(error["kind"], "unsupported");
+    assert!(error["message"].as_str().unwrap().contains("item.fixture"));
+    assert_eq!(
+        serde_json::from_str::<Value>(&bridge.state().unwrap()).unwrap()["uncertainInput"],
+        false
+    );
+    assert!(
+        bridge.submit(&id(4), walk()).is_ok(),
+        "Refused purchases cannot allocate a sequence."
+    );
 }
 
 #[test]
@@ -248,6 +254,7 @@ fn malformed_inputs_and_creation_options_do_not_enter_the_pending_queue() {
         r#"{"kind":"walk","destination":{"x":1.5,"y":3200,"plane":0},"running":false}"#,
         r#"{"kind":"walk","destination":{"x":3200,"y":3200,"plane":4},"running":false}"#,
         r#"{"kind":"set_setting","setting":{"setting":"invented","enabled":true}}"#,
+        r#"{"kind":"produce_selected","recipe":"recipe.fixture","target":null,"quantity":2,"mode":"single"}"#,
     ] {
         assert!(bridge.submit(&id(4), input).is_err());
     }

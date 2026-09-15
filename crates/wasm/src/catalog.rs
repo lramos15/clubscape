@@ -17,6 +17,13 @@ pub struct QuestDefinition {
     pub completed_stage: String,
 }
 
+#[derive(Clone, Serialize, Deserialize)]
+#[serde(deny_unknown_fields, rename_all = "camelCase")]
+pub struct ShopDefinition {
+    pub name: String,
+    pub currency: String,
+}
+
 /// Display-only projection of compiler-validated content, never an authority for actions.
 #[derive(Default, Serialize, Deserialize)]
 #[serde(deny_unknown_fields, rename_all = "camelCase")]
@@ -29,6 +36,8 @@ pub struct DisplayCatalog {
     pub equipment_slots: Vec<String>,
     #[serde(default)]
     pub icons: BTreeMap<String, String>,
+    #[serde(default)]
+    pub shops: BTreeMap<String, ShopDefinition>,
 }
 
 #[cfg(not(target_arch = "wasm32"))]
@@ -108,5 +117,18 @@ pub fn from_compiled(content: &clubscape_content::CompiledContent) -> DisplayCat
             .map(ToString::to_string)
             .collect(),
         icons: BTreeMap::new(),
+        shops: source
+            .shops
+            .values()
+            .map(|shop| {
+                (
+                    shop.id.to_string(),
+                    ShopDefinition {
+                        name: shop.name.clone(),
+                        currency: shop.currency.to_string(),
+                    },
+                )
+            })
+            .collect(),
     }
 }

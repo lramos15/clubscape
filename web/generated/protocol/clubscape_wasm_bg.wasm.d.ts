@@ -8,10 +8,12 @@ export const browserclient_prepare: (a: number, b: number, c: number, d: number,
 export const browserclient_receive: (a: number, b: number, c: number) => [number, number, number, number];
 export const browserclient_receive_for: (a: number, b: number, c: number, d: number, e: number) => [number, number, number, number];
 export const browserclient_request_id: (a: number, b: number, c: number) => [number, number, number, number];
+export const browserclient_retry_lifecycle: (a: number) => [number, number, number, number];
 export const browserclient_retry_uncertain_input: (a: number) => [number, number, number, number];
 export const browserclient_set_catalog: (a: number, b: number, c: number) => [number, number, number, number];
 export const browserclient_state: (a: number) => [number, number, number, number];
 export const browserclient_submit: (a: number, b: number, c: number, d: number, e: number) => [number, number, number, number];
+export const browserclient_submit_selected: (a: number, b: number, c: number, d: number, e: number, f: number, g: number) => [number, number, number, number];
 export const browserclient_transport_lost: (a: number) => void;
 export const __wbindgen_externrefs: WebAssembly.Table;
 export const __wbindgen_free: (a: number, b: number, c: number) => void;

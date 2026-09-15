@@ -1,5 +1,5 @@
 use clubscape_game_types::{
-    CharacterSetting, GameIntent, ItemTarget, RecoveryStorage, WorldTarget,
+    CharacterSetting, GameIntent, ItemTarget, ProductionMode, RecoveryStorage, WorldTarget,
 };
 use clubscape_protocol::game::{self, world_input::Action};
 
@@ -207,12 +207,23 @@ pub(crate) fn action(input: &str) -> Result<Action, BridgeError> {
         }),
         GameIntent::CancelActivity => Action::CancelActivity(game::Empty {}),
         GameIntent::RequestLogout => Action::RequestLogout(game::Empty {}),
-        GameIntent::ProduceSelected { .. }
-        | GameIntent::OpenGrave { .. }
-        | GameIntent::OpenDeathOffice => {
-            return Err(BridgeError::unsupported(
-                "This source intent has no generated Protobuf variant in this build. It was not sent.",
-            ));
-        }
+        GameIntent::ProduceSelected {
+            recipe,
+            target: at,
+            quantity,
+            mode,
+        } => Action::ProduceSelected(game::ProduceSelected {
+            recipe: recipe.to_string(),
+            target: at.map(target),
+            quantity: quantity.get(),
+            mode: match mode {
+                ProductionMode::Single => game::ProductionMode::Single as i32,
+                ProductionMode::MakeX => game::ProductionMode::MakeX as i32,
+            },
+        }),
+        GameIntent::OpenGrave { death } => Action::OpenGrave(game::OpenGrave {
+            death: death.to_string(),
+        }),
+        GameIntent::OpenDeathOffice => Action::OpenDeathOffice(game::Empty {}),
     })
 }

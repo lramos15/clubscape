@@ -3,11 +3,15 @@ import { AppError, appError, deepFreeze, invariant } from "./errors.ts";
 import type { DisplayCatalog } from "./manifest.ts";
 import type { AudioChannel } from "./settings.ts";
 import { RpcTransport } from "./transport.ts";
+import { presenceOf } from "./public-state.ts";
+import type { PublicWorld, QuoteRequest, QuoteView, ShopPurchaseIntent } from "./public-state.ts";
 
 export interface WasmClient {
   prepare(requestId: string, operation: string, input: string): Uint8Array;
   submit(requestId: string, intent: string): Uint8Array;
+  submit_selected(requestId: string, intent: string, itemId: string): Uint8Array;
   retry_uncertain_input(): Uint8Array | undefined;
+  retry_lifecycle(): Uint8Array | undefined;
   receive(bytes: Uint8Array): string;
   receive_for(requestId: string, bytes: Uint8Array): string;
   request_id(bytes: Uint8Array): string;
@@ -29,10 +33,13 @@ export interface BridgeState {
   serverBuild: string | null;
   contentRevision: string | null;
   contentManifestPath: string | null;
-  world: WorldView | null;
+  world: PublicWorld | null;
   events: AudioEvent[];
   nextSequence: string | null;
   uncertainInput: boolean;
+  worldJoined: boolean;
+  quote: QuoteView | null;
+  quoteError: string | null;
 }
 
 export interface ClientHooks {
@@ -52,6 +59,14 @@ export function bridgeState(json: string): Readonly<BridgeState> {
     invariant(typeof state.world.revision === "string" && /^\d+$/.test(state.world.revision)
       && typeof state.world.tick === "string" && /^\d+$/.test(state.world.tick)
       && state.world.player.skills.every((skill) => typeof skill.xpTenths === "string" && /^\d+$/.test(skill.xpTenths)), "WASM U64 values must remain decimal strings.", "protocol");
+    for (const view of state.world.recoveryContext?.views ?? []) {
+      invariant(view.items.every((entry) => typeof entry.fullEntryFee === "string" && /^\d+$/.test(entry.fullEntryFee)),
+        "Recovery fees must remain exact U64 decimal strings.", "protocol");
+    }
+  }
+  if (state.quote?.kind === "recovery") {
+    invariant(typeof state.quote.fullSelectionFee === "string" && /^\d+$/.test(state.quote.fullSelectionFee),
+      "Recovery quote fees must remain exact U64 decimal strings.", "protocol");
   }
   return deepFreeze(state);
 }
@@ -73,6 +88,7 @@ export class BrowserApp implements AppServices {
   #reconnect: ReturnType<typeof setTimeout> | undefined;
   #reconnectAttempts = 0;
   #worldPrepared: string | null = null;
+  #logoutRequested = false;
 
   constructor(bridge: WasmClient, transport: RpcTransport, hooks: ClientHooks) {
     this.#bridge = bridge;
@@ -125,6 +141,7 @@ export class BrowserApp implements AppServices {
       await this.#request("login", { loginName, password });
       const state = await this.#request("account");
       this.#reconnectAttempts = 0;
+      this.#logoutRequested = false;
       this.#publish({
         phase: "character", accountName: state.accountName, world: null, loading: null,
         error: state.gameplayAvailable ? null : {
@@ -153,6 +170,7 @@ export class BrowserApp implements AppServices {
     await this.#serial(async () => {
       const state = bridgeState(this.#bridge.state());
       if (!state.authenticated) throw new AppError("Sign in before entering the world.", { kind: "state" });
+      this.#logoutRequested = false;
       if (!state.characterInitialized) {
         // This is the source-defined empty creation RPC, not a seeded character.
         await this.#request("hello");
@@ -174,41 +192,92 @@ export class BrowserApp implements AppServices {
     const retry = this.#bridge.retry_uncertain_input();
     if (retry !== undefined) await this.#acceptWorld(await this.#exchange(retry));
     this.#reconnectAttempts = 0;
-    this.#publish({ phase: "world", loading: null });
+    this.#publish({ loading: null });
     this.#schedulePoll();
   }
 
   async logout(): Promise<void> {
     await this.#serial(async () => {
+      this.#logoutRequested = true;
       this.#stopPoll();
       const state = bridgeState(this.#bridge.state());
-      if (state.phase === "in_world") await this.#request("leave");
-      await this.#request("logout");
-      this.#generation++;
-      this.#reconnectAttempts = 0;
-      if (this.#reconnect !== undefined) clearTimeout(this.#reconnect);
-      this.#reconnect = undefined;
-      this.#worldPrepared = null;
-      this.#hooks.disconnected();
-      this.#hooks.events(null, []);
-      this.#publish({ phase: "title", accountName: null, world: null, error: null, loading: null });
+      if (state.worldJoined && state.phase !== "reconnecting") await this.#request("leave");
+      await this.#finishLogout();
     });
   }
 
-  async send(intent: GameIntent): Promise<void> {
+  async #finishLogout(): Promise<void> {
+    const retry = this.#bridge.retry_lifecycle();
+    const recovered = retry === undefined ? null : await this.#exchange(retry);
+    if (recovered === null || recovered.authenticated) await this.#request("logout");
+    this.#logoutRequested = false;
+    this.#generation++;
+    this.#reconnectAttempts = 0;
+    this.#stopPoll();
+    if (this.#reconnect !== undefined) clearTimeout(this.#reconnect);
+    this.#reconnect = undefined;
+    this.#worldPrepared = null;
+    this.#hooks.disconnected();
+    this.#hooks.events(null, []);
+    this.#publish({ phase: "title", accountName: null, world: null, error: null, loading: null });
+  }
+
+  async send(intent: GameIntent | ShopPurchaseIntent): Promise<void> {
     // Snapshot the input before it can be mutated by a UI selection/drag update.
     const json = JSON.stringify(intent);
+    const kind = intent.kind;
+    const itemId = kind === "shop_buy" && "itemId" in intent ? intent.itemId : null;
     await this.#serial(async () => {
       if (this.#state.phase !== "world") throw new AppError("Wait for the world connection before acting.", { kind: "state" });
+      if (presenceOf(this.#state.world)?.acceptsInput === false) {
+        throw new AppError("The authoritative presence view does not currently accept game input.", { kind: "state" });
+      }
       this.#publish({ error: null });
-      const result = await this.#exchange(this.#bridge.submit(crypto.randomUUID(), json));
+      if (kind === "shop_buy" && typeof itemId !== "string") {
+        throw new AppError("No purchase was sent. Retain the selected shop row's ItemId; an index alone is not a purchase identity.", { kind: "input" });
+      }
+      if (kind === "request_logout") this.#logoutRequested = true;
+      const id = crypto.randomUUID();
+      const bytes = itemId === null ? this.#bridge.submit(id, json) : this.#bridge.submit_selected(id, json, itemId);
+      const result = await this.#exchange(bytes);
       await this.#acceptWorld(result);
+      if (kind === "request_logout") await this.#finishLogout();
     });
+  }
+
+  async quote(request: QuoteRequest): Promise<Readonly<QuoteView>> {
+    const selection = JSON.parse(JSON.stringify(request)) as QuoteRequest;
+    let quote: Readonly<QuoteView> | null = null;
+    await this.#serial(async () => {
+      if (this.#state.phase !== "world") throw new AppError("A joined source context is required for a quote.", { kind: "state" });
+      const state = await this.#request("quote", selection);
+      await this.#acceptWorld(state);
+      if (state.quoteError) throw new AppError(state.quoteError, { kind: "stale_selection" });
+      invariant(state.quote, "The source quote response is missing.", "protocol");
+      quote = state.quote;
+    });
+    invariant(quote, "The source quote was not returned.", "protocol");
+    return quote;
   }
 
   async #acceptWorld(state: Readonly<BridgeState>): Promise<void> {
     const world = state.world;
     if (!world) return;
+    const presence = presenceOf(world);
+    if (presence?.presentInWorld === false) {
+      this.#stopPoll();
+      this.#worldPrepared = null;
+      this.#hooks.disconnected();
+      this.#hooks.events(null, state.events);
+      this.#publish({
+        phase: "character", world: null, accountName: state.accountName,
+        error: this.#logoutRequested ? null : {
+          message: "The authoritative world presence is offline. Enter the world explicitly to reconnect.",
+          errorId: null, recoverable: true,
+        },
+      });
+      return;
+    }
     const key = `${state.contentRevision}:${world.player.region}:${world.player.instance ?? ""}:${world.player.tile.plane}`;
     if (key !== this.#worldPrepared) {
       this.#publish({ phase: "connecting", world, accountName: state.accountName });
@@ -268,18 +337,26 @@ export class BrowserApp implements AppServices {
   #failed(error: AppError): void {
     let state: Readonly<BridgeState> | null = null;
     try { state = bridgeState(this.#bridge.state()); } catch { /* Keep the last valid immutable view. */ }
-    const lost = error.kind === "transport" || error.kind === "protocol" || state?.phase === "reconnecting"
-      || this.#state.phase === "reconnecting";
-    if (lost) {
+    const definitiveServerRejection = error.kind === "server" && error.code !== 7;
+    const lost = !definitiveServerRejection && (error.kind === "transport" || error.kind === "protocol"
+      || state?.phase === "reconnecting" || this.#state.phase === "reconnecting");
+    if (!lost) this.#logoutRequested = false;
+    if (!state?.authenticated) {
+      this.#stopPoll();
+      this.#hooks.disconnected();
+      this.#publish({ phase: "login", world: null, accountName: null });
+      if (lost) {
+        this.#generation++;
+        this.#bridge.transport_lost();
+      }
+    } else if (lost) {
       this.#generation++;
       this.#bridge.transport_lost();
       this.#stopPoll();
       this.#hooks.disconnected();
       this.#publish({ phase: state?.authenticated ? "reconnecting" : "login" });
       if (state?.authenticated && error.recoverable) this.#scheduleReconnect(error.retryAfterSeconds * 1000);
-    } else if (!state?.authenticated) {
-      this.#publish({ phase: "login", world: null, accountName: null });
-    } else if (this.#state.phase === "connecting") {
+    } else if (this.#state.phase === "connecting" || this.#state.phase === "reconnecting") {
       this.#publish({ phase: state.phase === "in_world" && this.#worldPrepared ? "world" : "character" });
     }
     this.report(error);
@@ -316,6 +393,16 @@ export class BrowserApp implements AppServices {
     if (!bridgeState(this.#bridge.state()).authenticated) return;
     await this.#serial(async () => {
       this.#publish({ phase: "reconnecting" });
+      if (this.#logoutRequested) {
+        // Logout itself atomically reconciles the owned source presence/lease.
+        // Do not rejoin a body whose requested logout acknowledgement was lost.
+        await this.#finishLogout();
+        return;
+      }
+      if (presenceOf(bridgeState(this.#bridge.state()).world)?.presentInWorld === false) {
+        this.#publish({ phase: "character", world: null });
+        return;
+      }
       await this.#request("hello");
       const state = await this.#request("account");
       if (state.characterInitialized) {

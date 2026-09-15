@@ -4,7 +4,7 @@ import { BrowserApp, bridgeState } from "../client.ts";
 import type { BridgeState, WasmClient, ClientHooks } from "../client.ts";
 import { RpcTransport } from "../transport.ts";
 import type { Fetch } from "../transport.ts";
-import type { WorldView } from "../../shared/contracts.ts";
+import type { PublicWorld } from "../public-state.ts";
 import { AppError } from "../errors.ts";
 
 // These doubles isolate composition/order/privacy, not protocol or gameplay correctness.
@@ -14,12 +14,14 @@ class FixtureBridge implements WasmClient {
     characterInitialized: true, gameplayAvailable: true, unavailableReason: null,
     serverBuild: "fixture-not-game", contentRevision: "fixture", contentManifestPath: "/content/manifest.json",
     world: null, events: [], nextSequence: "1", uncertainInput: false,
+    worldJoined: false, quote: null, quoteError: null,
   };
   intents: unknown[] = [];
   operations: string[] = [];
   lastOperation = "";
   freed = false;
   pending = false;
+  selected: Array<{ input: string; itemId: string }> = [];
   prepare(_request: string, operation: string): Uint8Array {
     this.operations.push(operation); this.lastOperation = operation;
     return new Uint8Array([1]);
@@ -31,11 +33,20 @@ class FixtureBridge implements WasmClient {
     this.intents.push(JSON.parse(input));
     return new Uint8Array([1]);
   }
+  submit_selected(_request: string, input: string, itemId: string): Uint8Array {
+    this.selected.push({ input, itemId });
+    throw new AppError("Expected-ItemId wire adaptation is pending.", { kind: "unsupported" });
+  }
   receive(): string {
     this.pending = false;
-    if (this.lastOperation === "join") this.stateValue.phase = "in_world";
+    if (this.lastOperation === "join") {
+      this.stateValue.phase = "in_world";
+      this.stateValue.worldJoined = true;
+    }
+    if (this.lastOperation === "leave") this.stateValue.worldJoined = false;
     if (this.lastOperation === "logout") {
       this.stateValue.authenticated = false; this.stateValue.accountName = null; this.stateValue.world = null;
+      this.stateValue.worldJoined = false;
     }
     return this.state();
   }
@@ -45,11 +56,14 @@ class FixtureBridge implements WasmClient {
   authorization(): string | undefined { return this.stateValue.authenticated ? "not-a-real-token" : undefined; }
   transport_lost(): void { this.stateValue.phase = "reconnecting"; this.pending = false; }
   retry_uncertain_input(): Uint8Array | undefined { return undefined; }
+  retry_lifecycle(): Uint8Array | undefined { return undefined; }
   set_catalog(): string {
     this.stateValue.world = {
       revision: "9007199254740993", tick: "9007199254740993",
-      player: { region: "region.fixture", instance: null, tile: { x: 1, y: 1, plane: 0 }, skills: [] },
-    } as unknown as WorldView;
+      player: { region: "region.fixture", instance: null, tile: { x: 1, y: 1, plane: 0 }, skills: [],
+        presence: { kind: "connected", connected: true, acceptsInput: true, presentInWorld: true } },
+      recoveryContext: null,
+    } as unknown as PublicWorld;
     return this.state();
   }
   free(): void { this.freed = true; }
@@ -144,5 +158,93 @@ test("a terminal device/component failure cannot be cleared by a later poll", as
   assert.equal(app.state().phase, "error");
   assert(!bridge.operations.includes("poll"));
   await assert.rejects(app.send({ kind: "cancel_activity" }), /Reload/);
+  await app.dispose();
+});
+
+test("shop purchase selection identity reaches WASM unchanged and never becomes an index-only write", async () => {
+  const bridge = new FixtureBridge();
+  let requests = 0;
+  const app = new BrowserApp(bridge, new RpcTransport((async () => {
+    requests++;
+    return new Response(new Uint8Array([1]), { headers: { "content-type": "application/x-protobuf" } });
+  }) as Fetch), hooks());
+  await app.enterWorld();
+  const baseline = requests;
+  await assert.rejects(app.send({ kind: "shop_buy", shop: "shop.fixture", item_index: 0, quantity: 1 }), /ItemId/);
+  const selected = { kind: "shop_buy" as const, shop: "shop.fixture", item_index: 0, quantity: 1, itemId: "item.fixture.tool" };
+  const pending = app.send(selected);
+  selected.itemId = "item.fixture.other";
+  await assert.rejects(pending, /wire adaptation/);
+  assert.equal(bridge.selected[0]?.itemId, "item.fixture.tool");
+  assert.equal(JSON.parse(bridge.selected[0]!.input).itemId, "item.fixture.tool");
+  assert.equal(requests, baseline);
+  assert.equal(bridge.intents.length, 0);
+  await app.dispose();
+});
+
+test("lost logout acknowledgements reconcile via real account logout without rejoining the body", async () => {
+  const bridge = new FixtureBridge();
+  let fail = false;
+  const app = new BrowserApp(bridge, new RpcTransport((async () => {
+    if (fail) throw new Error("fixture transport lost");
+    return new Response(new Uint8Array([1]), { headers: { "content-type": "application/x-protobuf" } });
+  }) as Fetch), hooks());
+  await app.enterWorld();
+  const joins = bridge.operations.filter((operation) => operation === "join").length;
+  fail = true;
+  await assert.rejects(app.send({ kind: "request_logout" }), /interrupted/);
+  fail = false;
+  await app.reconnect();
+  assert.equal(bridge.operations.filter((operation) => operation === "join").length, joins);
+  assert.equal(bridge.operations.at(-1), "logout");
+  assert.equal(app.state().phase, "title");
+  assert.equal(bridge.authorization(), undefined);
+  await app.dispose();
+});
+
+test("an observed source-offline body is not automatically rejoined", async () => {
+  const bridge = new FixtureBridge();
+  const originalReceive = bridge.receive.bind(bridge);
+  bridge.receive = () => {
+    const result = originalReceive();
+    if (bridge.lastOperation === "intent" && bridge.stateValue.world) {
+      bridge.stateValue.world.player.presence = {
+        kind: "offline", connected: false, acceptsInput: false, presentInWorld: false,
+      };
+      return bridge.state();
+    }
+    return result;
+  };
+  const app = new BrowserApp(bridge, new RpcTransport((async () =>
+    new Response(new Uint8Array([1]), { headers: { "content-type": "application/x-protobuf" } })) as Fetch), hooks());
+  await app.enterWorld();
+  await app.send({ kind: "cancel_activity" });
+  assert.equal(app.state().phase, "character");
+  assert.equal(app.state().world, null);
+  const joins = bridge.operations.filter((operation) => operation === "join").length;
+  await app.reconnect();
+  assert.equal(bridge.operations.filter((operation) => operation === "join").length, joins);
+  await app.dispose();
+});
+
+test("read-only quotes keep exact recovery fees and reject stale selections after reconciling the view", async () => {
+  const bridge = new FixtureBridge();
+  const app = new BrowserApp(bridge, new RpcTransport((async () =>
+    new Response(new Uint8Array([1]), { headers: { "content-type": "application/x-protobuf" } })) as Fetch), hooks());
+  await app.enterWorld();
+  bridge.stateValue.quote = {
+    kind: "recovery", revision: "9007199254740993", tick: "9007199254740993",
+    death: "death.fixture", storage: "grave", selected: ["recovery_item.fixture"], fullSelectionFee: "18446744073709551615",
+  };
+  const request = { kind: "recovery" as const, death: "death.fixture", storage: "grave" as const, items: ["recovery_item.fixture"] };
+  const quote = await app.quote(request);
+  assert.equal(quote.kind, "recovery");
+  assert(quote.kind === "recovery" && quote.fullSelectionFee === "18446744073709551615");
+  assert(Object.isFrozen(quote));
+  assert.equal(bridge.intents.length, 0);
+  bridge.stateValue.quote = null;
+  bridge.stateValue.quoteError = "Source selection changed.";
+  await assert.rejects(app.quote(request), /selection changed/);
+  assert.equal(app.state().phase, "world");
   await app.dispose();
 });

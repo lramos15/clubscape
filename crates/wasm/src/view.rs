@@ -1,7 +1,7 @@
 use clubscape_protocol::game;
 use serde_json::{Value, json};
 
-use crate::{BridgeError, catalog::DisplayCatalog};
+use crate::{BridgeError, catalog::DisplayCatalog, context};
 
 fn missing() -> BridgeError {
     BridgeError::protocol("The public state is missing required source display metadata.")
@@ -17,7 +17,7 @@ fn tile(value: Option<&game::Tile>) -> Result<Value, BridgeError> {
     Ok(json!({"x":value.x, "y":value.y, "plane":value.plane}))
 }
 
-fn stack(value: &game::Stack, catalog: &DisplayCatalog) -> Result<Value, BridgeError> {
+pub(crate) fn stack(value: &game::Stack, catalog: &DisplayCatalog) -> Result<Value, BridgeError> {
     let definition = catalog.items.get(&value.item).ok_or_else(missing)?;
     if value.quantity == 0 || value.quantity > clubscape_game_types::MAX_STACK_QUANTITY {
         return Err(BridgeError::protocol("A public item quantity is invalid."));
@@ -52,6 +52,21 @@ pub(crate) fn world(
     messages: &[Value],
 ) -> Result<Value, BridgeError> {
     let player = value.player.as_ref().ok_or_else(missing)?;
+    if [
+        value.dialogue.is_some(),
+        value.bank_context.is_some(),
+        value.shop.is_some(),
+        value.recovery.is_some(),
+    ]
+    .into_iter()
+    .filter(|present| *present)
+    .count()
+        > 1
+    {
+        return Err(BridgeError::protocol(
+            "The server sent incompatible simultaneous interface contexts.",
+        ));
+    }
     let mut inventory: Vec<Value> = (0..clubscape_game_types::INVENTORY_SLOTS)
         .map(|index| json!({"index":index,"item":null}))
         .collect();
@@ -102,6 +117,7 @@ pub(crate) fn world(
     let entities = value.entities.iter().map(|entity| {
         let kind = match game::EntityKind::try_from(entity.kind) {
             Ok(game::EntityKind::Npc) => "npc",
+            Ok(game::EntityKind::Object) if clubscape_game_types::DynamicObjectId::new(&entity.id).is_ok() => "temporary_object",
             Ok(game::EntityKind::Object) => "object",
             Ok(game::EntityKind::Player) => "player",
             _ => return Err(BridgeError::protocol("The server sent an unknown entity kind.")),
@@ -114,26 +130,46 @@ pub(crate) fn world(
             }).transpose()?.flatten();
             Ok(json!({"slot":slot.slot,"sourceId":source_id}))
         }).collect::<Result<Vec<_>, BridgeError>>()?;
+        let actions = if entity.interaction_options.is_empty() {
+            entity.actions.iter().map(|action| json!({
+                "name":action,"allowed":entity.actions_evaluated,
+                "reason":if entity.actions_evaluated {None} else {Some("The server has not evaluated this interaction's permissions.")},
+                "denial":null,
+            })).collect::<Vec<_>>()
+        } else {
+            entity.interaction_options.iter().map(|option| {
+                let permission = context::permission(option.permission.as_ref())?;
+                let allowed = entity.actions_evaluated && permission["allowed"] == true;
+                let reason = if allowed {
+                    Value::Null
+                } else {
+                    permission["denial"]["message"].as_str()
+                        .map(|message| json!(message))
+                        .unwrap_or_else(|| json!("The server has not supplied an evaluated permission for this option."))
+                };
+                Ok(json!({"name":option.name,"allowed":allowed,"reason":reason,"denial":permission["denial"]}))
+            }).collect::<Result<Vec<_>, BridgeError>>()?
+        };
         Ok(json!({
             "id":entity.id,"definitionId":entity.definition_id,
             "sourceId":definition.and_then(|definition| definition.source_id),
             "name":entity.name,"kind":kind,"tile":tile(entity.tile.as_ref())?,"instance":entity.instance,
             "hitpoints":entity.hitpoints,"maxHitpoints":entity.max_hitpoints,"available":entity.available,
             "animation":entity.animation,"appearance":entity.appearance,"equipment":equipment,
-            "actions":entity.actions.iter().map(|action| json!({
-                "name":action,"allowed":entity.actions_evaluated,
-                "reason":if entity.actions_evaluated {None} else {Some("The server has not evaluated this interaction's permissions.")},
-            })).collect::<Vec<_>>(),
+            "actions":actions,"assetId":entity.asset,"width":entity.width,"height":entity.height,
+            "presence":context::presence(entity.presence.as_ref())?,
         }))
     }).collect::<Result<Vec<_>, BridgeError>>()?;
     let ground_items = value
         .ground_items
         .iter()
         .map(|item| {
+            let permission = context::permission(item.permission.as_ref())?;
             Ok(json!({
                 "id":item.id,"tile":tile(item.tile.as_ref())?,
                 "item":stack(item.stack.as_ref().ok_or_else(missing)?, catalog)?,
-                "canTake":item.permissions_evaluated && item.can_take,
+                "canTake":item.permissions_evaluated && item.can_take && item.permission.as_ref().is_none_or(|permission| permission.allowed),
+                "permission":permission,
             }))
         })
         .collect::<Result<Vec<_>, BridgeError>>()?;
@@ -165,6 +201,13 @@ pub(crate) fn world(
             "reason":"This generated protocol revision has no source inventory-menu projection; item actions remain unavailable.",
         }));
     }
+    let recovery_context = context::recovery(value.recovery.as_ref(), catalog)?;
+    let recovery = recovery_context["views"]
+        .as_array()
+        .filter(|views| views.len() == 1)
+        .and_then(|views| views.first())
+        .cloned()
+        .unwrap_or(Value::Null);
     Ok(json!({
         "revision":value.revision.to_string(),"tick":value.tick.to_string(),
         "player":{
@@ -179,9 +222,11 @@ pub(crate) fn world(
             "settings":player.settings.iter().map(setting).collect::<Result<Vec<_>,_>>()?,
             "appearanceConfirmed":player.appearance_confirmed,"experience":player.experience,
             "combatStyle":player.combat_style,"activeDeath":player.active_death,
+            "presence":context::presence(player.presence.as_ref())?,
         },
         "entities":entities,"groundItems":ground_items,"dialogue":dialogue,
-        "bank":null,"shop":null,"recovery":null,"messages":messages,
+        "bank":context::bank(value, catalog)?,"shop":context::shop(value.shop.as_ref(), catalog)?,
+        "recovery":recovery,"recoveryContext":recovery_context,"messages":messages,
         "dynamicObjects":dynamic_objects,
         "unavailableViews":unavailable_views,
         "eventHistoryGap":value.event_history_gap,

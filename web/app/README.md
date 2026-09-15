@@ -33,8 +33,11 @@ controls; the shell supplies immutable authoritative state and real services.
   size remains the whole viewport. DPR is honored without downscaling.
 * `services.logout()` requests actual `LeaveWorld` before account logout.
   A source/combat/presence failure does not clear the account or claim logout.
-  Literal `send({kind:"request_logout"})` remains that exact typed game intent;
-  it is not substituted for the account-lifecycle API.
+  Literal `send({kind:"request_logout"})` first sends that exact sequenced game
+  intent, then finishes the requested account logout. A lost acknowledgement
+  never implicitly rejoins an offline body. Uncertain lifecycle retries retain
+  the original request UUID/lease; account logout reconciles a lost sequenced
+  exit without replaying game effects.
 * Mutation requests are serialized, bounded to 32 waiting operations, and
   snapshotted before UI mutation. Lost transport cancels unsent inputs.
   Rejoin/retry uses client-core's operation ID/sequence reconciliation.
@@ -42,6 +45,32 @@ controls; the shell supplies immutable authoritative state and real services.
   authoritative time. Reconnect is bounded/backed off. Passwords are never
   retained for reconnect. Unrecoverable device/protocol/component failures
   stop polling/input and cannot be overwritten by a later snapshot.
+* Source presence facts gate input. An observed offline body leaves the visible
+  world and requires explicit entry, not automatic rejoin. Connected but
+  source-busy/death states remain genuine rendered workloads; they are not
+  faked input availability or missing-scene failures.
+
+## Typed source contexts and read-only quotes
+
+`public-state.ts` exposes the additive guarded bank/shop/recovery/permission/
+presence data while keeping the shared contract untouched. Recovery panels are
+available in `world.recoveryContext.views`; the old singular field is populated
+only for one panel. Render decimal-string `fullEntryFee`/`fullSelectionFee`;
+the legacy numeric `cost` is deliberately null, never a rounded fee.
+
+`BrowserApp.quote(QuoteRequest)` sends `PollWorld.quote` through WASM and returns
+only the server's correlated result. Bank/shop partial transfers and reasons
+come from immutable engine planners, not local multiplication or speculative
+intents. The result carries its source revision/tick and is not a future
+capacity/price guarantee. A changed ItemId/selection rejects the quote while
+retaining the actual updated world view and deduplicated events.
+
+For a shop buy, the UI must retain the **displayed row's** `item.id` as
+`ShopPurchaseIntent.itemId`; do not look up a replacement ID from a possibly
+changed index. That ID is preserved into the WASM `submit_selected` boundary.
+Purchases currently fail explicitly, before network/sequence allocation,
+pending the relayed expected-item wire safety contract. This is a narrow
+purchase safety dependency, not the former backend view/lifecycle interlock.
 
 Only `clubscape.preferences.v1` stores local, schema-checked normalized channel
 volumes and the named visual profile. Tokens/account names/passwords are not

@@ -1,8 +1,10 @@
 pub mod catalog;
+mod context;
 mod intent;
+mod quote;
 mod view;
 
-use std::collections::{BTreeSet, VecDeque};
+use std::collections::{BTreeMap, BTreeSet, VecDeque};
 
 use clubscape_client_core::{ClientCore, ClientError, ClientEvent, Phase};
 use clubscape_protocol::{
@@ -79,6 +81,13 @@ struct Credentials {
     password: String,
 }
 
+#[derive(Clone)]
+struct PendingLifecycle {
+    request_id: String,
+    command: Command,
+    uncertain: bool,
+}
+
 #[derive(Default)]
 pub struct Bridge {
     core: ClientCore,
@@ -97,6 +106,8 @@ pub struct Bridge {
     messages: Vec<Value>,
     seen_events: BTreeSet<String>,
     event_order: VecDeque<String>,
+    pending_quotes: BTreeMap<String, quote::Selection>,
+    pending_lifecycle: Option<PendingLifecycle>,
 }
 
 impl Bridge {
@@ -111,6 +122,17 @@ impl Bridge {
                 "The account input exceeds its byte budget.",
             ));
         }
+        let selection = if operation == "quote" {
+            if self.catalog.is_none() {
+                return Err(BridgeError::new(
+                    "state",
+                    "Load the joined source catalog before requesting a quote.",
+                ));
+            }
+            Some(quote::Selection::parse(input)?)
+        } else {
+            None
+        };
         let command = match operation {
             "hello" => Command::Hello(clubscape_protocol::Hello {}),
             "register" | "login" => {
@@ -139,11 +161,12 @@ impl Bridge {
                 Command::CreateCharacter(game::CreateCharacter::default())
             }
             "join" => Command::JoinWorld(game::JoinWorld {}),
-            "poll" => Command::PollWorld(game::PollWorld {
+            "poll" | "quote" => Command::PollWorld(game::PollWorld {
                 world_session_id: self.session.clone().ok_or_else(|| {
                     BridgeError::new("state", "Join the world before requesting updates.")
                 })?,
                 after_revision: self.core.snapshot().map_or(0, |snapshot| snapshot.revision),
+                quote: selection.as_ref().map(quote::Selection::wire).transpose()?,
             }),
             "leave" => Command::LeaveWorld(game::LeaveWorld {
                 world_session_id: self.session.clone().ok_or_else(|| {
@@ -152,20 +175,75 @@ impl Bridge {
             }),
             _ => return Err(BridgeError::input("Unsupported bridge operation.")),
         };
-        self.core
-            .prepare(request_id, command)
-            .map(|message| message.encode_to_vec())
-            .map_err(Into::into)
+        let lifecycle = matches!(command, Command::LeaveWorld(_) | Command::Logout(_));
+        if self.pending_lifecycle.is_some()
+            && (lifecycle || matches!(command, Command::JoinWorld(_)))
+        {
+            return Err(BridgeError::new(
+                "state",
+                "Resolve the outstanding lifecycle operation before leaving, signing out or rejoining.",
+            ));
+        }
+        let message = self.core.prepare(request_id, command)?;
+        if lifecycle {
+            self.pending_lifecycle = Some(PendingLifecycle {
+                request_id: request_id.to_owned(),
+                command: message.command.clone().expect("prepared lifecycle command"),
+                uncertain: false,
+            });
+        }
+        if let Some(selection) = selection {
+            self.pending_quotes.insert(request_id.to_owned(), selection);
+        }
+        Ok(message.encode_to_vec())
     }
 
     pub fn submit(&mut self, request_id: &str, input: &str) -> Result<Vec<u8>, BridgeError> {
         let action = intent::action(input)?;
+        if matches!(action, game::world_input::Action::ShopBuy(_)) {
+            return Err(BridgeError::unsupported(
+                "Index-only purchases are disabled while the expected-ItemId wire contract is being finalized. No purchase was sent.",
+            ));
+        }
+        if self
+            .core
+            .snapshot()
+            .and_then(|snapshot| snapshot.player.as_ref())
+            .and_then(|player| player.presence.as_ref())
+            .is_some_and(|presence| !presence.accepts_input)
+        {
+            return Err(BridgeError::new(
+                "state",
+                "The authoritative presence view does not currently accept game input.",
+            ));
+        }
         let message = self.core.submit_action(request_id, action)?;
         if let Some(Command::WorldInput(input)) = &message.command {
             self.uncertain_sequence = Some(input.sequence);
             self.uncertain_request = Some(request_id.to_owned());
         }
         Ok(message.encode_to_vec())
+    }
+
+    pub fn submit_selected(
+        &mut self,
+        _request_id: &str,
+        input: &str,
+        item_id: &str,
+    ) -> Result<Vec<u8>, BridgeError> {
+        clubscape_game_types::ItemId::new(item_id)
+            .map_err(|_| BridgeError::input("A purchase must retain the selected ItemId."))?;
+        if !matches!(
+            intent::action(input)?,
+            game::world_input::Action::ShopBuy(_)
+        ) {
+            return Err(BridgeError::input(
+                "Selected-item submission is reserved for shop purchases.",
+            ));
+        }
+        Err(BridgeError::unsupported(&format!(
+            "Purchase of {item_id} was not sent: the expected-ItemId wire contract is not integrated yet."
+        )))
     }
 
     pub fn retry(&mut self) -> Result<Option<Vec<u8>>, BridgeError> {
@@ -178,7 +256,31 @@ impl Bridge {
             .map_err(Into::into)
     }
 
+    pub fn retry_lifecycle(&mut self) -> Result<Option<Vec<u8>>, BridgeError> {
+        let Some(pending) = self.pending_lifecycle.as_ref() else {
+            return Ok(None);
+        };
+        if !pending.uncertain {
+            return Err(BridgeError::new(
+                "state",
+                "The lifecycle operation is still awaiting its original response.",
+            ));
+        }
+        let message = self
+            .core
+            .prepare(&pending.request_id, pending.command.clone())?;
+        self.pending_lifecycle
+            .as_mut()
+            .expect("pending lifecycle")
+            .uncertain = false;
+        Ok(Some(message.encode_to_vec()))
+    }
+
     pub fn transport_lost(&mut self) {
+        self.pending_quotes.clear();
+        if let Some(pending) = &mut self.pending_lifecycle {
+            pending.uncertain = true;
+        }
         self.core.transport_lost();
     }
 
@@ -266,9 +368,73 @@ impl Bridge {
         if let (Some(snapshot), Some(catalog)) = (snapshot, self.catalog.as_ref()) {
             view::world(snapshot, catalog, &self.messages)?;
         }
+        let mut quote_result = None;
+        let mut quote_error = None;
+        if let (Some(selection), Some(snapshot)) = (self.pending_quotes.get(&request_id), snapshot)
+        {
+            if self
+                .core
+                .snapshot()
+                .is_some_and(|previous| snapshot.revision < previous.revision)
+            {
+                quote_error =
+                    Some("The quote belongs to an older world revision. Request a fresh quote.");
+            } else if let Some(value) = snapshot
+                .quote
+                .as_ref()
+                .filter(|value| selection.matches(value))
+            {
+                quote_result = Some(context::quote(
+                    value,
+                    self.catalog
+                        .as_ref()
+                        .ok_or_else(|| BridgeError::protocol("Quote catalog is missing."))?,
+                    snapshot.revision,
+                    snapshot.tick,
+                )?);
+            } else {
+                quote_error = Some(
+                    "The source quote no longer matches the selected item, quantity or recovery identities. No transaction was sent.",
+                );
+            }
+        }
+        if let Some(Outcome::Error(error)) = &outcome
+            && error.code == ErrorCode::Unavailable as i32
+            && self
+                .pending_lifecycle
+                .as_ref()
+                .is_some_and(|pending| pending.request_id == request_id)
+        {
+            if uuid::Uuid::parse_str(&error.error_id).is_err() {
+                return Err(BridgeError::protocol(
+                    "The lifecycle error has no valid correlation ID.",
+                ));
+            }
+            // This additive lifecycle journal has the same unknown-outcome rule as game inputs.
+            // Do not let an unavailable receipt become a completed request in older client-core.
+            self.transport_lost();
+            return Err(BridgeError {
+                kind: "server",
+                message: error.message.clone(),
+                error_id: Some(error.error_id.clone()),
+                code: Some(error.code),
+                retry_after_seconds: error.retry_after_seconds.min(60),
+                recoverable: true,
+            });
+        }
         let events = match self.core.handle_response(message) {
             Ok(events) => events,
             Err(error) => {
+                if matches!(&error, ClientError::Server { .. }) {
+                    self.pending_quotes.remove(&request_id);
+                    if self
+                        .pending_lifecycle
+                        .as_ref()
+                        .is_some_and(|pending| pending.request_id == request_id)
+                    {
+                        self.pending_lifecycle = None;
+                    }
+                }
                 if self.core.authorization_token().is_none() {
                     self.clear_private_world();
                 } else if matches!(&error, ClientError::Server { .. })
@@ -285,6 +451,14 @@ impl Bridge {
                 return Err(error);
             }
         };
+        self.pending_quotes.remove(&request_id);
+        if self
+            .pending_lifecycle
+            .as_ref()
+            .is_some_and(|pending| pending.request_id == request_id)
+        {
+            self.pending_lifecycle = None;
+        }
         if self.applied.insert(request_id.clone()) {
             self.applied_order.push_back(request_id);
         }
@@ -366,7 +540,7 @@ impl Bridge {
                 }
             }
         }
-        self.state_with_events(audio)
+        self.state_with_details(audio, quote_result, quote_error)
     }
 
     fn remember_event(&mut self, id: String) -> bool {
@@ -393,6 +567,8 @@ impl Bridge {
         self.messages.clear();
         self.seen_events.clear();
         self.event_order.clear();
+        self.pending_quotes.clear();
+        self.pending_lifecycle = None;
     }
 
     pub fn state(&self) -> Result<String, BridgeError> {
@@ -400,6 +576,15 @@ impl Bridge {
     }
 
     fn state_with_events(&self, audio: Vec<Value>) -> Result<String, BridgeError> {
+        self.state_with_details(audio, None, None)
+    }
+
+    fn state_with_details(
+        &self,
+        audio: Vec<Value>,
+        quote: Option<Value>,
+        quote_error: Option<&str>,
+    ) -> Result<String, BridgeError> {
         let world = match (self.core.snapshot(), self.catalog.as_ref()) {
             (Some(snapshot), Some(catalog)) => {
                 Some(view::world(snapshot, catalog, &self.messages)?)
@@ -423,6 +608,8 @@ impl Bridge {
             "gameplayAvailable":self.gameplay_available,"unavailableReason":self.unavailable_reason,
             "serverBuild":self.server_build,"contentRevision":self.content_revision,
             "contentManifestPath":self.manifest_path,"world":world,"events":audio,
+            "worldJoined":self.session.is_some(),
+            "quote":quote,"quoteError":quote_error,
             "nextSequence":self.core.next_sequence().map(|value| value.to_string()),
             "uncertainInput":self.uncertain_sequence.is_some(),
         })
@@ -470,8 +657,21 @@ impl BrowserClient {
             .submit(request_id, input)
             .map_err(BridgeError::js)
     }
+    pub fn submit_selected(
+        &mut self,
+        request_id: &str,
+        input: &str,
+        item_id: &str,
+    ) -> Result<Vec<u8>, JsValue> {
+        self.inner
+            .submit_selected(request_id, input, item_id)
+            .map_err(BridgeError::js)
+    }
     pub fn retry_uncertain_input(&mut self) -> Result<Option<Vec<u8>>, JsValue> {
         self.inner.retry().map_err(BridgeError::js)
+    }
+    pub fn retry_lifecycle(&mut self) -> Result<Option<Vec<u8>>, JsValue> {
+        self.inner.retry_lifecycle().map_err(BridgeError::js)
     }
     pub fn receive(&mut self, bytes: &[u8]) -> Result<String, JsValue> {
         self.inner.receive(bytes).map_err(BridgeError::js)

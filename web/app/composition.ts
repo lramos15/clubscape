@@ -15,6 +15,7 @@ import { canonicalJson } from "./identity.ts";
 import { parseContentManifest } from "./manifest.ts";
 import { Settings } from "./settings.ts";
 import { RpcTransport } from "./transport.ts";
+import { presenceOf } from "./public-state.ts";
 
 export interface ObservedRenderer extends RendererHandle {
   /** Observation only; all values must come from the real decoder/render path. */
@@ -146,7 +147,8 @@ export async function mountApplication(options: {
       try {
         ui?.update(state);
         if (state.world && renderer && sceneLoaded) renderer.update(state.world);
-        benchmark.worldReady(state.phase === "world" && sceneLoaded);
+        const presence = presenceOf(state.world);
+        benchmark.worldReady(state.phase === "world" && sceneLoaded && presence?.connected === true && presence.presentInWorld);
       } catch {
         componentFailed = true;
         sceneLoaded = false;

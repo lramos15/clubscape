@@ -1,11 +1,11 @@
-import { execFileSync } from "node:child_process";
 import { mkdir, readFile, writeFile } from "node:fs/promises";
 import { dirname, resolve, sep } from "node:path";
 import { fileURLToPath } from "node:url";
 import { SOURCE_PACK_SHA256 } from "../../web/shared/contracts.ts";
 import { parseContentManifest } from "../../web/app/manifest.ts";
-import type { ContentManifest, DisplayCatalog, RegionPresentation } from "../../web/app/manifest.ts";
+import type { ContentManifest, RegionPresentation } from "../../web/app/manifest.ts";
 import { publicFile } from "./deliver.ts";
+import { projectArtifact } from "./artifact.ts";
 
 const root = resolve(fileURLToPath(new URL("../../", import.meta.url)));
 const options = new Map<string, string>();
@@ -24,12 +24,7 @@ function path(key: string): string {
   if (!path.startsWith(root + sep)) throw new Error("Content build paths must stay inside this worktree.");
   return path;
 }
-const projection = JSON.parse(execFileSync("cargo", [
-  "run", "--quiet", "-p", "clubscape-wasm", "--bin", "project-content", "--", path("--artifact"),
-], { cwd: root, encoding: "utf8", maxBuffer: 16 * 1024 * 1024 })) as {
-  artifactSha256: string; catalog: DisplayCatalog;
-  regions: Record<string, { sceneAsset: string | null }>; referencedAssets: string[];
-};
+const projection = await projectArtifact(path("--artifact"));
 const bindings = JSON.parse(await readFile(path("--bindings"), "utf8")) as Pick<ContentManifest,
   "sourcePackSha256" | "assets" | "bootstrap" | "rendererManifest"> & {
     regions: Record<string, RegionPresentation>; icons?: Record<string, string>;
@@ -48,6 +43,7 @@ const manifest = parseContentManifest({
   schemaVersion: 1, sourcePackSha256: SOURCE_PACK_SHA256, contentRevision: projection.catalog.contentRevision,
   artifactSha256: projection.artifactSha256,
   catalog: { ...projection.catalog, icons: bindings.icons ?? projection.catalog.icons ?? {} },
+  contentValidation: projection.contentValidation,
   assets: bindings.assets, bootstrap: bindings.bootstrap, rendererManifest: bindings.rendererManifest, regions: bindings.regions,
 });
 for (const asset of manifest.assets) await publicFile(path("--asset-root"), asset.url.slice(1), asset.url, asset);
