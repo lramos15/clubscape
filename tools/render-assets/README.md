@@ -69,7 +69,19 @@ by manifest key and verifies both the gzip and inflated hashes. `unpack-blocks <
 the members into the asset tree, checking the pack hash, every member hash, path containment
 and the inflated raw buffers (which the native tests read), with plain Python 3 — no source
 cache, JDK or original runtime. `verify-blocks` is the strict presence + hash check
-(`--verify-only` treats blocks as optional).
+(`--verify-only` treats block *presence* as optional but still requires the index to be bound to
+the current manifest and to pin exactly the manifest's block/minimap hashes).
+
+**The index is bound to one manifest.** Every profile that rewrites `manifest.json` (the Java
+profiles, `compress`, `pose-fits`) ends by re-binding the index: when the pinned block/minimap
+buffers are unchanged only `manifest_sha256` is refreshed (the published tar stays valid); when
+their content changed (e.g. the minimap sidecars gained the `MICN` icon chunk) the pack is
+regenerated from the local exports, and if those are not present the export fails rather than
+leaving an index that `unpack-blocks`/`verify-blocks` would reject. The renderer test
+`tests/package_index.rs` re-checks the binding on published inputs alone. Current package:
+`clubscape-render-blocks-dde248f04ea70392.tar` (SHA-256
+`3a16edb732bba6ea5aa1e5f0468bf85ed07e9395b52624ba7df43f58fafe9d73`, 56 381 440 bytes, 183
+members: the 122 block twins unchanged from `d76bc2ab…`, the 61 sidecars updated).
 
 Current pack: `clubscape-render-blocks-d76bc2ab72b552a1.tar`, SHA-256
 `99984d72eb3e00e9614ba712f6ecb5ebeab1ba6c7c29116826dc735369d30aeb`, 56 381 440 bytes,

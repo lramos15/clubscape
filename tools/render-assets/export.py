@@ -243,6 +243,38 @@ def verify_blocks(output: Path) -> dict:
     return {"result": "passed", "files": len(index["files"]), "squares": len(index["squares"]), "content_sha256": index["content_sha256"]}
 
 
+def refresh_blocks_index(output: Path) -> dict:
+    """
+    Keeps `blocks.index.json` bound to the manifest it was written for. Every profile that
+    rewrites `manifest.json` calls this afterwards: when the pinned block/minimap files are
+    unchanged (same names and hashes) only `manifest_sha256` is refreshed and the pack stays
+    valid; when their content changed the pack is regenerated from the local exports, and if
+    those are missing the export FAILS instead of leaving an index that `verify-blocks` would
+    reject later (an index pinning an older manifest once shipped that way).
+    """
+    index_path = output / BLOCK_INDEX
+    if not index_path.is_file():
+        return {"index": "absent"}
+    index = json.loads(index_path.read_text())
+    manifest = json.loads((output / "manifest.json").read_text())
+    current_manifest = sha(output / "manifest.json")
+    names = block_files(manifest)
+    pinned = {e["file"]: e["sha256"] for e in index["files"]}
+    current = {name: manifest["files"][name]["sha256"] for name in names}
+    if pinned == current:
+        if index["manifest_sha256"] == current_manifest:
+            return {"index": "current", "manifest_sha256": current_manifest}
+        index["manifest_sha256"] = current_manifest
+        index_path.write_text(json.dumps(index, indent=1) + "\n")
+        return {"index": "manifest_pin_refreshed", "manifest_sha256": current_manifest, "pack": index["pack"]["sha256"]}
+    missing = [name for name in names if not (output / name).is_file()]
+    if missing:
+        raise ValueError(f"Block package content changed ({len(set(pinned) ^ set(current)) + sum(1 for n in current if n in pinned and pinned[n] != current[n])} files) "
+                         f"but {len(missing)} block buffers are not exported locally (e.g. {missing[0]}); run --profile blocks/minimap then --profile pack-blocks")
+    packed = pack_blocks(output, LOCAL / "dist")
+    return {"index": "repacked", **packed}
+
+
 def build_pose_fits(output: Path) -> dict:
     """
     `--profile pose-fits`: runs the renderer's `pose-fit-table` tool (the same per-pose contact
@@ -288,8 +320,23 @@ def verify_manifest(output: Path) -> dict:
         if path.stat().st_size != record["size_bytes"] or sha(path) != record["sha256"]:
             raise ValueError(f"Exported buffer changed: {name}")
         checked += 1
+    manifest_sha = sha(output / "manifest.json")
+    index_path = output / BLOCK_INDEX
+    block_index = "absent"
+    if index_path.is_file():
+        # The block package index must be bound to THIS manifest and pin exactly the manifest's
+        # block/minimap hashes (file presence is `verify-blocks`' stricter job).
+        index = json.loads(index_path.read_text())
+        if index["manifest_sha256"] != manifest_sha:
+            raise ValueError(f"{BLOCK_INDEX} was written for manifest {index['manifest_sha256'][:12]}…, current is {manifest_sha[:12]}…; run --profile pack-blocks (or any export profile, which refreshes it)")
+        pinned = {e["file"]: e["sha256"] for e in index["files"]}
+        current = {name: manifest["files"][name]["sha256"] for name in block_files(manifest)}
+        if pinned != current:
+            changed = sorted(set(pinned) ^ set(current)) or sorted(n for n in current if pinned.get(n) != current[n])
+            raise ValueError(f"{BLOCK_INDEX} pins block/minimap buffers that differ from the manifest (e.g. {changed[0]}); run --profile pack-blocks")
+        block_index = {"manifest_bound": True, "files": len(index["files"]), "content_sha256": index["content_sha256"], "pack_sha256": index["pack"]["sha256"]}
     return {"schema_version": 1, "result": "passed", "files": checked,
-            "manifest_sha256": sha(output / "manifest.json"), "candidate_render_acceptance": False}
+            "manifest_sha256": manifest_sha, "block_index": block_index, "candidate_render_acceptance": False}
 
 
 def main() -> int:
@@ -310,6 +357,7 @@ def main() -> int:
         return 0
     if args.profile == "compress":
         print(f"COMPRESS {compress_scenes(args.output)} buffers")
+        print("BLOCK_INDEX " + json.dumps(refresh_blocks_index(args.output), separators=(",", ":")))
         print(json.dumps(verify_manifest(args.output), separators=(",", ":")))
         return 0
     if args.profile == "unpack":
@@ -332,6 +380,7 @@ def main() -> int:
         return 0
     if args.profile == "pose-fits":
         print("POSE_FITS " + json.dumps(build_pose_fits(args.output), separators=(",", ":")))
+        print("BLOCK_INDEX " + json.dumps(refresh_blocks_index(args.output), separators=(",", ":")))
         print(json.dumps(verify_manifest(args.output), separators=(",", ":")))
         return 0
     capture = load_capture_module()
@@ -370,6 +419,8 @@ def main() -> int:
     manifest_path.write_text(json.dumps(manifest, indent=1) + "\n")
     if args.profile in ("all", "scenes", "blocks"):
         print(f"COMPRESS {compress_scenes(args.output)} buffers")
+    # Any manifest rewrite re-binds (or regenerates) the block package index.
+    print("BLOCK_INDEX " + json.dumps(refresh_blocks_index(args.output), separators=(",", ":")))
     print(json.dumps(verify_manifest(args.output), separators=(",", ":")))
     return 0
 

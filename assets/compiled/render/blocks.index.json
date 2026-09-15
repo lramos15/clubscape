@@ -1,12 +1,12 @@
 {
  "schema_version": 1,
  "kind": "clubscape_render_blocks",
- "manifest_sha256": "04e0cf57d4f912fabad9d5792a384a8d2ea0d94189257312fc0cfc0852b831db",
+ "manifest_sha256": "2d228d79f526cb4d84a444118c9e8f3961d2f08213f56ffe5f8a81af17b9cceb",
  "approved_reference_pack_sha256": "b62e19704e17d3d3e4e819f803ef49ba7cc54034ae407184b423427c65d9674d",
- "content_sha256": "d76bc2ab72b552a1a097bea19296beb0d8f79b34ca0d1e424cd84813a57f787e",
+ "content_sha256": "dde248f04ea703924b766235594c0102c9cb6c04aad8c60c117aa4b6e65beaca",
  "pack": {
-  "file": "clubscape-render-blocks-d76bc2ab72b552a1.tar",
-  "sha256": "99984d72eb3e00e9614ba712f6ecb5ebeab1ba6c7c29116826dc735369d30aeb",
+  "file": "clubscape-render-blocks-dde248f04ea70392.tar",
+  "sha256": "3a16edb732bba6ea5aa1e5f0468bf85ed07e9395b52624ba7df43f58fafe9d73",
   "size_bytes": 56381440
  },
  "squares": [
@@ -929,308 +929,308 @@
   },
   {
    "file": "minimap/blocks/11822.bin",
-   "sha256": "77ce5ac83711483a04712ea7c380f607df96a0784d037108d654c18527b092d2",
-   "size_bytes": 1185
+   "sha256": "c01641781d327130150fae869f259fdd3e833255b75b94f1a2b30e3e07c48fc1",
+   "size_bytes": 1209
   },
   {
    "file": "minimap/blocks/11823.bin",
-   "sha256": "4510d43e6fc6374cf599e4256bbcb2bb9c4f9b9a4aa4f0bcc2ea784b5b648aa0",
-   "size_bytes": 8453
+   "sha256": "dc2cc6ae1d118d0d96210662177ddfc912b7b191b2e16d711dd953810b876d71",
+   "size_bytes": 8477
   },
   {
    "file": "minimap/blocks/11824.bin",
-   "sha256": "f77c3274b135effcaea063ca712c57a1b2670bd105e07ab96d509731e56d271e",
-   "size_bytes": 689
+   "sha256": "33a9e55af10fe667b5c883e0af246addfa68da72b3b374d6fa4b9723de7c9c28",
+   "size_bytes": 713
   },
   {
    "file": "minimap/blocks/11825.bin",
-   "sha256": "be90ddb4b87fa6549d66d39e4bd0569f8b80e2417a7e4b9cd5258acfd62210ad",
-   "size_bytes": 7817
+   "sha256": "548ab9bb29fd0965786add6f5aadd8b91ac607f75851e5a1bd324030d33c30a2",
+   "size_bytes": 8001
   },
   {
    "file": "minimap/blocks/11826.bin",
-   "sha256": "90bae7d2f3831bba68d3018cbd82dd3aaac1b04ae3462eaf827b42ce3cd236b6",
-   "size_bytes": 10457
+   "sha256": "ddad38686033ac78795c0fe51f71049e1b9af557c2b02f1d65199ce0fd517246",
+   "size_bytes": 10625
   },
   {
    "file": "minimap/blocks/12078.bin",
-   "sha256": "8df80500736b9b82b990bd6bbe9aea63bed8420a23e297b9eb1667c61f19393f",
-   "size_bytes": 10681
+   "sha256": "9c6152cdf3dea6d4b59a543276ca326152e4a50a8673154d8181a75af0a4e0db",
+   "size_bytes": 10993
   },
   {
    "file": "minimap/blocks/12079.bin",
-   "sha256": "1c0358789621cb1fb64d5fa1e562339209aa9688c890ced483a94ebacafa0cd3",
-   "size_bytes": 893
+   "sha256": "174457bce10cdc61dab24d2666593a60562a436903773794b5fc81b475718a76",
+   "size_bytes": 901
   },
   {
    "file": "minimap/blocks/12080.bin",
-   "sha256": "bdf503ca646f21c2f6a18892c16215dddbde2c1793e14341aaa2d80f7fd1fcd8",
-   "size_bytes": 1125
+   "sha256": "4fff615c15aee6d7031eed6c0eda5d7706e8295733f7e207fe6fcf99fedc23bf",
+   "size_bytes": 1133
   },
   {
    "file": "minimap/blocks/12081.bin",
-   "sha256": "ea647fffde6d380648780cfd6f378df6d611dfbc07be1f52379ea7de5e06a269",
-   "size_bytes": 8761
+   "sha256": "5b3ee58d577fb3ff9c8d0c329d7f89291be652c1f0437f2830fb4dd3c54e321a",
+   "size_bytes": 8833
   },
   {
    "file": "minimap/blocks/12082.bin",
-   "sha256": "8bd2a6f185ce1d7fc2a60c0fe5de08dc9a29e63c60770fe4bd486f70b394c6c7",
-   "size_bytes": 20785
+   "sha256": "5a489cb333f5c42b8ee64e7aecc4a6baa9e2caa2cf3bdd13cae791459ef50b2c",
+   "size_bytes": 21145
   },
   {
    "file": "minimap/blocks/12179.bin",
-   "sha256": "6fab58be217243762787b32ba188aebdaf0f22a8891e81058523f7c3108d7d2c",
-   "size_bytes": 4205
+   "sha256": "09f11f3933ca101dc3281a96fbabee65e2e991d1e684b10034b81e737fb2383a",
+   "size_bytes": 4213
   },
   {
    "file": "minimap/blocks/12180.bin",
-   "sha256": "7a3f0d54c4c1ca0c2ba3acee76753921a7d6e112f883520a4f4b01be0f4f9746",
-   "size_bytes": 129
+   "sha256": "7bfbdb8290a72b16bd8de4d37e7483e358e5800fe2d14542fced7ddaa98d9039",
+   "size_bytes": 137
   },
   {
    "file": "minimap/blocks/12181.bin",
-   "sha256": "bfc93767ef6c530edcf7043e4a8cf40b026575e760290d33c734757996b9c3e7",
-   "size_bytes": 11729
+   "sha256": "acb31e303e09f7c05608695723d861f3263e12a05332133e2352897bed571ea1",
+   "size_bytes": 11833
   },
   {
    "file": "minimap/blocks/12334.bin",
-   "sha256": "de39ea18808c90209f2129cc89dad621a03eed80743b765727cd938b145ae9a8",
-   "size_bytes": 837
+   "sha256": "1d1dee702fb9f1da115f1a80f633de8f4c825e1e6d1b1cc3a71e2eff046c07cd",
+   "size_bytes": 861
   },
   {
    "file": "minimap/blocks/12335.bin",
-   "sha256": "7741ba2b7173c8b9c481a91b995f73343c2b09800841d867884c81c80506d5e3",
-   "size_bytes": 8417
+   "sha256": "c0cba86b2044c974771629d13126701107fda95bbf5e1a670a9c3756f932a3a5",
+   "size_bytes": 8505
   },
   {
    "file": "minimap/blocks/12336.bin",
-   "sha256": "d852cb000341465b0784cde7139381e2e501ba8afaa603bd53653eb8574f5f7f",
-   "size_bytes": 16489
+   "sha256": "2ff5fc052bd8acbe1d1566337ba0ac669a409b23fade31a4bcbcc31a5baa8988",
+   "size_bytes": 16657
   },
   {
    "file": "minimap/blocks/12337.bin",
-   "sha256": "614a323039ec86267fd8b01345ace5d8d9e225b92f8d3d1d9f16c7663df3244d",
-   "size_bytes": 7525
+   "sha256": "f13570edfdcc693e973e98687a715895058addf8dd14a5245990c4ea34286dd9",
+   "size_bytes": 7613
   },
   {
    "file": "minimap/blocks/12338.bin",
-   "sha256": "acb95e8f5e6abb5ceda88beeeed041cf4ed15af17a219a1a2acc106d381d12dd",
-   "size_bytes": 12189
+   "sha256": "67a31a73f958160572807eae50be763e6913a9ade9705b1dcd52ef2f7ce33700",
+   "size_bytes": 12453
   },
   {
    "file": "minimap/blocks/12339.bin",
-   "sha256": "505ccc06394560f3fa6c1ca2de52fec4e64afe031feeaa71a99c3743de7d546d",
-   "size_bytes": 7953
+   "sha256": "402285a210da6a1920776b0e8fc2dafc85c84292894dadcce2fd7064ec842521",
+   "size_bytes": 8025
   },
   {
    "file": "minimap/blocks/12340.bin",
-   "sha256": "de17d5d3b161bddc01f0b51323d840bdd38f2ee29e02c0c0a34fe9b35ff9aa77",
-   "size_bytes": 15317
+   "sha256": "e95c54ce36f54a0385a2079609d0cf7594d3c82acc4236f614fea7dee6a536a3",
+   "size_bytes": 15437
   },
   {
    "file": "minimap/blocks/12341.bin",
-   "sha256": "7368199f75f09f6480668bb22e442a6a9229f23c15914ad82b706bfe1ea51b42",
-   "size_bytes": 9825
+   "sha256": "875e3befadf409e5930b1ab3454c89c7988f351a013ff7dadd1667790c9d8bc5",
+   "size_bytes": 10009
   },
   {
    "file": "minimap/blocks/12435.bin",
-   "sha256": "1cf608c5ac701ef27b6b231b70cb92e38c2509b2757740cedb4cd8e5fa4e26fa",
-   "size_bytes": 8237
+   "sha256": "530fba4a4f20409de0447a560accb410f2a94527faf2a03cec87501f62e06883",
+   "size_bytes": 8245
   },
   {
    "file": "minimap/blocks/12436.bin",
-   "sha256": "15f09de4533a1cc0fb8ef89b2795b3f1831dde5d8468d818f37e8466fe6b4314",
-   "size_bytes": 4485
+   "sha256": "f4a935cd643aa04f2f1d940ef61ff11ddc3c012d2ac8d01038dbf1efe6975f2c",
+   "size_bytes": 4573
   },
   {
    "file": "minimap/blocks/12437.bin",
-   "sha256": "a1da31147d8599e0e0d7a18a87815c26e106d731ce65ff2fe32437a85ee7a3bc",
-   "size_bytes": 4641
+   "sha256": "a5e5d3ccf0ffe7566e76cc7a83903e64486ece7836d618b4984c0bb7c6331ba1",
+   "size_bytes": 4665
   },
   {
    "file": "minimap/blocks/12590.bin",
-   "sha256": "8a1910e0ae60f4dad5f8f8730070369e0200305699de0dc9db407a8a6e69e69f",
-   "size_bytes": 6993
+   "sha256": "7f71bad7893d6602b00f67127ce5c7d74be532d76c4832b7c838a6f03fe491db",
+   "size_bytes": 7049
   },
   {
    "file": "minimap/blocks/12591.bin",
-   "sha256": "6051a400ccb71333c7ed01da36c3a8376177ff9230a53cef55dfe6a23a4ec200",
-   "size_bytes": 1881
+   "sha256": "e77f57c2a3b6eff35fdf72fcf22c3d265afaa3f63ce1b00ea2bf45b22b14acdb",
+   "size_bytes": 1937
   },
   {
    "file": "minimap/blocks/12592.bin",
-   "sha256": "fbb7fd2662bd39d20972e9be874afa9bde3261bd58e0fdc610cd212245911b58",
-   "size_bytes": 3041
+   "sha256": "534c8db8615e1c896fe3379a7b9a73d1d40321ce3fb83f8196f9d1d944f83e57",
+   "size_bytes": 3049
   },
   {
    "file": "minimap/blocks/12593.bin",
-   "sha256": "683fa3e08789fcc2101873aedc3ed9d2499193c4afd37dc0d82d7db7ab2ef3b0",
-   "size_bytes": 2701
+   "sha256": "5d02c84812178b17f2fc626d91c2240aecb20d353f5f835fb23fb7700d7a03e5",
+   "size_bytes": 2757
   },
   {
    "file": "minimap/blocks/12594.bin",
-   "sha256": "15f2fe9cb5e6f4cf02a0e0049d4e57f3c98c9e4f303ca3968f5a2dd64b627ebe",
-   "size_bytes": 4173
+   "sha256": "292d3d7b1b665a814ec429f4bc6818d8e7a802a170461ec95c2ba9c2ede4c7cb",
+   "size_bytes": 4309
   },
   {
    "file": "minimap/blocks/12595.bin",
-   "sha256": "54a2daefa6586435e5265afbd2a8f571ec7c80204a1d04b7eb8cb105c1b298f9",
-   "size_bytes": 11253
+   "sha256": "74ff486c598153d7ffc36ae4f05b09f6042990b1b765bfb98e48aaf012d29199",
+   "size_bytes": 11357
   },
   {
    "file": "minimap/blocks/12596.bin",
-   "sha256": "c38460fa28f3858892a6ea45100ad528a973f73740e40499e6759ad50cf1fe95",
-   "size_bytes": 10629
+   "sha256": "d9e046cb7c7a9f973d67a3855f62a7ff52b12de5282d6fa99d7c18d240133720",
+   "size_bytes": 10765
   },
   {
    "file": "minimap/blocks/12597.bin",
-   "sha256": "d5fe65d5bf3632440657f06d39e2837bf86a8f340878a5ea37afcbd827cfd5c6",
-   "size_bytes": 25949
+   "sha256": "3bcb8526142198abdda3a7abf9b628a866fa893b140ba6088cd2ed6910bc4dcb",
+   "size_bytes": 26213
   },
   {
    "file": "minimap/blocks/12633.bin",
-   "sha256": "9470a0adfc26e0933a6abde5f41b7b452f4faf7584a0c3ffec6e8930d24e0143",
-   "size_bytes": 1929
+   "sha256": "4b895905d129994683d719ebccfc346c72c5b1b43ec1adb305179af614f72a02",
+   "size_bytes": 1953
   },
   {
    "file": "minimap/blocks/12693.bin",
-   "sha256": "0456c697193c0e38ed03a77d13ab95be4ab3a090204e06a4771e9a8a20300a11",
-   "size_bytes": 1289
+   "sha256": "85661d740f3d4928701a9b71b876c99292a1c0d00d2e58d1580b4d73f2e0add2",
+   "size_bytes": 1313
   },
   {
    "file": "minimap/blocks/12694.bin",
-   "sha256": "970ef75cc71636ba22d9288a059aad9cf8e821c2386f58b2626e191b9dd0ebc9",
-   "size_bytes": 10749
+   "sha256": "27711c59a0994915229975d38baf16c465051845fe40a8b858e27f5d9ed34140",
+   "size_bytes": 10757
   },
   {
    "file": "minimap/blocks/12695.bin",
-   "sha256": "1bd9cd3e27387786be3c6b9fe6981a6ec6a860d91052dd40d427020ff8f0ce07",
-   "size_bytes": 3181
+   "sha256": "5f8a7b06941e92729d489f91083d857996ab2c519eda8b7fb323dbc93143ceac",
+   "size_bytes": 3189
   },
   {
    "file": "minimap/blocks/12846.bin",
-   "sha256": "c490e38c7ff5e3f5d78daa1ba3d49465998312d6e0e8bf19c2ce2317fa82d5f9",
-   "size_bytes": 649
+   "sha256": "ef496f83d99a87983fa8d56c4705bcc19ae274d9bed514e4a54bd2afc595b0ef",
+   "size_bytes": 657
   },
   {
    "file": "minimap/blocks/12847.bin",
-   "sha256": "60f95325d910a150d9fb9b71bb66991b031796e99ef07afa227d95483d7ce209",
-   "size_bytes": 449
+   "sha256": "d0232fea7a9a00b37ab3ecfc4fa7dd99e439df8cfb7de879c3493c4726d1db1a",
+   "size_bytes": 457
   },
   {
    "file": "minimap/blocks/12848.bin",
-   "sha256": "795220f77d08aa745ed54f26779452d564823d7b512f58b9c2674611d35e7588",
-   "size_bytes": 809
+   "sha256": "958e889bb5c936501a9ff15102f5c6f2828f204a1e195255415c3e5f683cf7cc",
+   "size_bytes": 865
   },
   {
    "file": "minimap/blocks/12849.bin",
-   "sha256": "de6bf0d3c574dd10f44ebbb7cfa88ae9b5c722d0d17304e3432786989f2d0174",
-   "size_bytes": 4773
+   "sha256": "1532da1accf7a01c2f54814d6643fdefe0e3ed94461fd28b7f3edbbd56e65fa5",
+   "size_bytes": 4973
   },
   {
    "file": "minimap/blocks/12850.bin",
-   "sha256": "3dff4b3aadcc973a93551a1f3092a95ce10b6617d85a2ecbda0bd531d8c2dc8f",
-   "size_bytes": 28605
+   "sha256": "386c253c885dff7db99c9ad3eb048979d296e1c23c234c294291403f5fcfc213",
+   "size_bytes": 29237
   },
   {
    "file": "minimap/blocks/12851.bin",
-   "sha256": "1fae23a9314729e72d3fd73c207be99032bfc2e89ea49096ac0f3a51428c6a3b",
-   "size_bytes": 9453
+   "sha256": "4273a4b9cc605a6238ad2b44318013f263750269361615b5c138fc9a51657190",
+   "size_bytes": 9509
   },
   {
    "file": "minimap/blocks/12852.bin",
-   "sha256": "147f71ccdd03f4cf00cb9f7d6e9c6c1ef787adaed5f1b7ece047d555eeb1769d",
-   "size_bytes": 16973
+   "sha256": "768b7f063e2bc594f94fa1bac301ed4998b23d95c74c9ab403c5044341c94a82",
+   "size_bytes": 17093
   },
   {
    "file": "minimap/blocks/12853.bin",
-   "sha256": "25ecd0111f37ea2a365256edc766cba50bd6bd4f36a648917d0376f5764237cb",
-   "size_bytes": 36161
+   "sha256": "6b10734a5676e5a3a5aee231d49952f0a6fc8aaaecfc57fdee5c427ea05f7c8d",
+   "size_bytes": 36617
   },
   {
    "file": "minimap/blocks/12949.bin",
-   "sha256": "079c50268848fa22b702fd39bd2c0df4430ff805b5a34dd535bdf68a874a7303",
-   "size_bytes": 1193
+   "sha256": "96786152320b8340dbbfb25792d85ee07e8994a0be00bf5b2c423085d45d8cbc",
+   "size_bytes": 1217
   },
   {
    "file": "minimap/blocks/12950.bin",
-   "sha256": "68901102de0d0398d2dd1b1138a14c08e6f6bc737d64bc644c0ba463ab7ab8b7",
-   "size_bytes": 3149
+   "sha256": "b47ccca4a9545094e3f363ab1b830cd45b7780e5a855422b47f4222a5152c070",
+   "size_bytes": 3173
   },
   {
    "file": "minimap/blocks/12951.bin",
-   "sha256": "53b06246291b257bf8298bebbf2130bce25cb8cd51a7a011c877413e2e64e98d",
-   "size_bytes": 4097
+   "sha256": "77c887e8effd90cd831e19d62af980ea84c30b76f2e77ab667605aa3905cb84a",
+   "size_bytes": 4105
   },
   {
    "file": "minimap/blocks/13104.bin",
-   "sha256": "50377675e3812eaf3c1909690b74163061b8b4f5da9f64caece0fe038048d6f6",
-   "size_bytes": 2353
+   "sha256": "76f9bc068f5ad2b8430fb3a68a5a3ccc1917e8771f0c571022766f48da8df1c4",
+   "size_bytes": 2457
   },
   {
    "file": "minimap/blocks/13105.bin",
-   "sha256": "bf76a0cf885e8543d4d59d67b2cfc43df9aa4079dd287190cb6143840dda9adc",
-   "size_bytes": 19685
+   "sha256": "fac848ae62eaeaa6d250a7d70605ba13f1a6ab615d5affb2350be59446897781",
+   "size_bytes": 20061
   },
   {
    "file": "minimap/blocks/13106.bin",
-   "sha256": "0157aa4f006ef9af2249dd3eb46b0217a013e371414be579b9806e4fea6ae9a9",
-   "size_bytes": 8897
+   "sha256": "ccc8be1aa4dabe1540dec2d006383f9d24c35aedf0b35a7f4b20d94d8789b82d",
+   "size_bytes": 9033
   },
   {
    "file": "minimap/blocks/13107.bin",
-   "sha256": "b0c1b60df8d4740bf007a86670c5f6ea589b47adab2fabe0c78b151f9c98da49",
-   "size_bytes": 2369
+   "sha256": "6ada2c2e5ecb5235b66953f3db2021251523c8eaf2c4b6233e8f5916ab0f7944",
+   "size_bytes": 2425
   },
   {
    "file": "minimap/blocks/13108.bin",
-   "sha256": "1ab527c9db62d31d1bb8eb3897c6e4437676c33c7e90532d19d4c9909d62dcac",
-   "size_bytes": 11525
+   "sha256": "dc670c44e4340b4e563194b7694dc92312b0b1658683621738d52c18e56e682b",
+   "size_bytes": 11565
   },
   {
    "file": "minimap/blocks/13109.bin",
-   "sha256": "4b05808630c92c0d9c25394f8a583075d54eadd2899b166b1ce7a5f12418227d",
-   "size_bytes": 13725
+   "sha256": "78f99f7b51903fafad3438c5cb53e1f7c6be36b8cfc2af25329e2717a4dd3efb",
+   "size_bytes": 13893
   },
   {
    "file": "minimap/blocks/13205.bin",
-   "sha256": "9bb3f77037510b3fd8b3ccf8945fc0e317732cdb3eb9ef91a47dedb733e77de8",
-   "size_bytes": 1913
+   "sha256": "137fd16fdd509725a9d2504421dd2cb3a868269b9b6970ba9fbe321c0517bbcc",
+   "size_bytes": 1921
   },
   {
    "file": "minimap/blocks/13206.bin",
-   "sha256": "6ad1b99afa613c1b6b0903d7fdb27e6c7bb70d6d4d682a5d360244651f77b612",
-   "size_bytes": 1173
+   "sha256": "5281ae2ecfc88066a7b626902f613b55af095fb9b66b12e77ad49c316335aad9",
+   "size_bytes": 1293
   },
   {
    "file": "minimap/blocks/13360.bin",
-   "sha256": "b4bd0a69f4e79ef36bd4e683a4181d4500500ef6b774cc8eab7345ff628d77a4",
-   "size_bytes": 1805
+   "sha256": "023894bca6aa6d8b835707d711941eef2c5612aa7c41a1c921981e0d1dd218b3",
+   "size_bytes": 1829
   },
   {
    "file": "minimap/blocks/13361.bin",
-   "sha256": "b68a95198121da7c4305051f36646eabba9f6cff8f9e52c475e52aaab312895c",
-   "size_bytes": 7237
+   "sha256": "d7bfd12a3305c3c53f6f81e7e85be50287c21817804a0057e0201bd76b71beac",
+   "size_bytes": 7293
   },
   {
    "file": "minimap/blocks/13362.bin",
-   "sha256": "d346187051649f99e80d410fdbb96b1445a9e760b52d0c01f8fac6a38b840152",
-   "size_bytes": 34861
+   "sha256": "91637b6ef7e2d69a1c2694771931ed80f8c47dc0d33a655ebcfbfcf0ce828e9a",
+   "size_bytes": 34869
   },
   {
    "file": "minimap/blocks/13363.bin",
-   "sha256": "bef55d76a71d852eb1f709065ca21f5a39296ce005fe9a5efd7817f8cc2df72b",
-   "size_bytes": 16785
+   "sha256": "74119268a12a2e1a1e0af4689bc58cf75c35c4c10654576c29df766694123cf5",
+   "size_bytes": 16905
   },
   {
    "file": "minimap/blocks/13364.bin",
-   "sha256": "8811d3df3e9f9219171e0602eadcf2bf5cfc3364e41e394ae08a6445ef21be0f",
-   "size_bytes": 7573
+   "sha256": "f106f547cc0d6c590681b024878c5d073ce667467948181a7ee68a2ce31377ff",
+   "size_bytes": 7629
   },
   {
    "file": "minimap/blocks/13365.bin",
-   "sha256": "dbc9fcff330533b8c301db15d42e30d0ffbbdb6e0eac05ad27c6be8ca38e3e40",
-   "size_bytes": 10721
+   "sha256": "569fcd17370067cc3947d2a329266f37077ce2021c90a774b479a5a9a3a4cc98",
+   "size_bytes": 10745
   }
  ],
  "install": "python3 tools/render-assets/export.py --profile unpack-blocks <pack.tar>  (verifies every hash; no source cache or JDK needed)",
