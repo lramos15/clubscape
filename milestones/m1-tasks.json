@@ -273,8 +273,8 @@
       "status": "IMPLEMENTING",
       "specs": ["spec/browser-implementation.md", "web/shared/contracts.ts", "research/reference-pack/v1/audio-reference.json", "milestones/m1-audio-trigger-approval.json"],
       "dependencies": ["M1-REFERENCE-APPROVAL"],
-      "allowed_paths": ["web/audio/**", "tools/browser-audio-tests/**", "research/browser-audio-policy/**"],
-      "forbidden_paths": ["prompt.md", "crates/**", "web/shared/**", "web/app/**", "web/ui/**", "web/renderer/**", "assets/source/**", "milestones/**"],
+      "allowed_paths": ["web/audio/**", "tools/browser-audio-tests/**", "research/browser-audio-policy/**", "assets/source/osrs/audio-supplement/**", "assets/manifests/osrs/audio-m1-supplement.json"],
+      "forbidden_paths": ["prompt.md", "crates/**", "web/shared/**", "web/app/**", "web/ui/**", "web/renderer/**", "assets/source/osrs/audio-runtime/**", "assets/source/osrs/cache2695/**", "assets/manifests/osrs/audio-runtime.json", "research/reference-pack/**", "tools/reference-pack/**", "tools/audio-import/**", "milestones/**"],
       "outputs": ["Enabled real playback with gestures/mute/volume/reconnect", "Source FIFO/offset/region/jingle/animation behavior", "Original native mixer/slider/positional/fade and M1 music selection calibration, implemented without invented defaults"],
       "validation_commands": [],
       "test_requirements": ["Original lossless sounds only", "No double offsets/duplicate playing sources", "Actual playback/control timing evidence"],
@@ -283,7 +283,7 @@
       "source_notes": ["Corrected audio manifest and approved pack"],
       "parity_entries": [],
       "adaptations": ["adaptation.m1.learning_the_ropes_completion_audio", "adaptation.m1.ordinary_food_audio"],
-      "evidence": ["7ea817f integrates actualWebAudio factory,264FLAC+2originalWAV playback,sourceFIFO/adaptedcuecorrelation.11unit/24realChromeaudiochecks reportedpassed; nohostspeaker/Mac/Edge/fulljourneyacceptance.", "Sameworker continuation closes four precise nativepolicy gaps: defaultmixer/slidercurve, positionalattenuation/activeambience, sourcefade/reentry, fresh defaultmusic mode/nextselection. Approved source pack hashes must remain frozen."]
+      "evidence": ["Nativecalibrationd8eb730 andCookdeltafixa0ab06d integrated888f938/f74652a.23nativeprobefamilies,25unit/27realChromechecksreportedpass; source255/127/127defaults,nonlinearsliders,position/morph/fade/musicpoliciesbound.Original266files/cacheunchanged.", "Sameworker nowowns ONLYadditivepublication/consumption of4requiredmusicgroups64/327/163/145 andnative255representations forjingles40/54/58/64/65, backedbypublication-needs.json hashes. Frozenbaseaudio/referencepack mustremainunchanged; no limiter orfakegain substitute. RealM1/speaker/Mac/Edgeacceptance staysseparate."]
     },
     {
       "id": "M1-BROWSER-SHELL",
