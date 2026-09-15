@@ -8,6 +8,7 @@ from unittest.mock import patch
 from prepare import LOCAL, ROOT, linux_arm64
 from pack import package, private_descriptor_limit
 from run import clean_environment, write_secret, validate_pack_selection
+from renewal import validate_bounds, EXPECTED_BOUNDS
 
 
 class HarnessChecks(unittest.TestCase):
@@ -93,6 +94,24 @@ class HarnessChecks(unittest.TestCase):
             for path in [descriptor, public, catalog]:
                 path.unlink(missing_ok=True)
             directory.rmdir()
+
+    def test_explicit_renewal_is_sequential_bounded_and_stops_on_success(self):
+        authority = {"task": "M1-RUNELITE-FEASIBILITY", "decision": "admitted_bounded_followup",
+                     "followup_bounds": EXPECTED_BOUNDS}
+        original = {"live_attempts": [{"number": i, "architecture": "A"} for i in [1, 2, 3]]}
+        validate_bounds(authority, {"invocations": []}, 4, original)
+        with self.assertRaises(ValueError):
+            validate_bounds(authority, {"invocations": []}, 5, original)
+        failed = {"invocations": [{"number": 4, "architecture": "A", "status": "failed"}]}
+        validate_bounds(authority, failed, 5, original)
+        passed = {"invocations": [{"number": 4, "architecture": "A", "status": "passed"}]}
+        with self.assertRaises(ValueError):
+            validate_bounds(authority, passed, 5, original)
+        exhausted = {"invocations": [{"number": i, "architecture": "A", "status": "failed"} for i in [4, 5]]}
+        with self.assertRaises(ValueError):
+            validate_bounds(authority, exhausted, 6, original)
+        with self.assertRaises(ValueError):
+            validate_bounds(authority, {"invocations": []}, 4, {"live_attempts": []})
 
 
 if __name__ == "__main__":

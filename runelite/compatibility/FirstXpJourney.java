@@ -1,6 +1,7 @@
 import clubscape.game.v1.Game;
 import java.util.Comparator;
 import java.util.function.Predicate;
+import java.util.concurrent.Callable;
 
 /** A bounded real input driver, stopping at first fishing XP; not a tutorial acceptance suite. */
 final class FirstXpJourney
@@ -8,12 +9,15 @@ final class FirstXpJourney
     private final ClubScapeTransport transport;
     private final WorldProjection projection;
     private final Evidence evidence;
+    private final Callable<Boolean> baselineReady;
 
-    FirstXpJourney(ClubScapeTransport transport, WorldProjection projection, Evidence evidence)
+    FirstXpJourney(ClubScapeTransport transport, WorldProjection projection, Evidence evidence,
+                   Callable<Boolean> baselineReady)
     {
         this.transport = transport;
         this.projection = projection;
         this.evidence = evidence;
+        this.baselineReady = baselineReady;
     }
 
     private Game.WorldSnapshot poll() throws Exception
@@ -68,6 +72,13 @@ final class FirstXpJourney
             throw new IllegalStateException("Not the real unseeded normal-account initial state");
         poll();
         poll();
+        boolean initialized = false;
+        for (int ticks = 0; ticks < 8; ticks++)
+        {
+            if (baselineReady.call()) { initialized = true; break; }
+            poll();
+        }
+        if (!initialized) throw new IllegalStateException("Genuine XP Tracker did not initialize from actual server baseline");
         transport.input(input -> input.setConfirmAppearance(Game.ConfirmAppearance.newBuilder().putAppearance("body_type", 0)));
         transport.input(input -> input.setSelectExperience(Game.SelectExperience.newBuilder().setExperience("experience.brand_new")));
         interact("spawn.gielinor_guide", "Talk-to");
@@ -98,6 +109,7 @@ final class FirstXpJourney
         {
             if (projection.gainedXp().getOrDefault("skill.fishing", 0L) > 0)
             {
+                transport.input(input -> input.setCancelActivity(Game.Empty.getDefaultInstance()));
                 evidence.record("legitimate_first_xp", "skill", "skill.fishing",
                     "xp_tenths", projection.gainedXp().get("skill.fishing"),
                     "tutorial_stage", projection.snapshot().getPlayer().getTutorialStage(),

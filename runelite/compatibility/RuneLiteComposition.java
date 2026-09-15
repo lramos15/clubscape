@@ -62,6 +62,10 @@ public final class RuneLiteComposition
     private boolean joined;
     private long lastTick = -1;
     private final Map<String, Long> initialXp = new LinkedHashMap<>();
+    private Path liveOutput;
+    private Game.Tile previousTile;
+    private int authoritativeMoves;
+    private boolean baselineVerified;
 
     private RuneLiteComposition(Evidence evidence) { this.evidence = evidence; }
 
@@ -184,6 +188,15 @@ public final class RuneLiteComposition
                 {
                     gameState(GameState.LOGGING_IN);
                     player.getSkillsList().forEach(skill -> initialXp.put(skill.getId(), skill.getXpTenths()));
+                    evidence.record("authoritative_initial_player", "actor_id", player.getActorId(),
+                        "tick", snapshot.getTick(), "revision", snapshot.getRevision(),
+                        "stage", player.getTutorialStage(), "x", player.getTile().getX(), "y", player.getTile().getY(),
+                        "hitpoints", player.getHitpoints(), "prayer_points", player.getPrayerPoints(),
+                        "run_energy", player.getRunEnergy(), "inventory_slots", player.getInventoryCount(),
+                        "appearance_confirmed", player.getAppearanceConfirmed(), "experience_selected", player.hasExperience(),
+                        "skills", player.getSkillsList().stream().map(skill -> Evidence.fields(
+                            "id", skill.getId(), "xp_tenths", skill.getXpTenths(),
+                            "base_level", skill.getBaseLevel(), "current_level", skill.getCurrentLevel())).toList());
                 }
                 for (Game.Skill skill : player.getSkillsList())
                 {
@@ -203,10 +216,13 @@ public final class RuneLiteComposition
                         slot.getStack().getQuantity());
                 }
                 scene.apply(player);
+                if (previousTile != null && !previousTile.equals(player.getTile())) authoritativeMoves++;
+                previousTile = player.getTile();
                 if (!joined)
                 {
                     gameState(GameState.LOGGED_IN);
                     joined = true;
+                    if (liveOutput != null) screenshot(liveOutput, "live-joined");
                 }
                 for (Game.Event event : events)
                 {
@@ -216,11 +232,14 @@ public final class RuneLiteComposition
                     if (event.getKind().equals("xp_gained"))
                     {
                         Skill skill = Skill.valueOf(event.getSkill().substring(6).toUpperCase(Locale.ROOT));
+                        if (!baselineVerified || XpTrackerReadback.initializationTicksRemaining(tracker) != 0)
+                            throw new IllegalStateException("Real XP arrived before the genuine tracker baseline was verified");
                         int xp = game.getSkillExperience(skill);
                         game.getCallbacks().post(new StatChanged(skill, xp,
                             game.getRealSkillLevel(skill), game.getBoostedSkillLevel(skill)));
                         evidence.record("native_stat_event", "server_event_id", event.getEventId(),
                             "skill", skill.name(), "native_absolute_xp", xp,
+                            "server_gain_tenths", event.getXpTenths(), "integer_scale", 10,
                             "event_bus", "genuine net.runelite.client.callback.Hooks",
                             "tracker_gained", XpTrackerReadback.gained(tracker, skill));
                     }
@@ -243,6 +262,34 @@ public final class RuneLiteComposition
         })) throw new IllegalStateException("Bounded native state queue is full");
         try { completed.get(45, TimeUnit.SECONDS); }
         catch (Exception error) { throw new IllegalStateException("Could not project actual server state", error); }
+    }
+
+    private boolean checkPluginBaseline() throws Exception
+    {
+        CompletableFuture<Boolean> completed = new CompletableFuture<>();
+        if (!work.offer(() ->
+        {
+            try
+            {
+                long tenths = initialXp.get("skill.fishing");
+                int integerXp = Math.toIntExact(tenths / 10);
+                boolean ready = projection.gainedXp().isEmpty()
+                    && game.getSkillExperience(Skill.FISHING) == integerXp
+                    && XpTrackerReadback.baselineMatches(tracker, Skill.FISHING, integerXp);
+                if (ready)
+                {
+                    baselineVerified = true;
+                    evidence.record("plugin_baseline_verified", "server_tick", projection.snapshot().getTick(),
+                        "server_revision", projection.snapshot().getRevision(), "source_xp_tenths", tenths,
+                        "native_absolute_xp", integerXp, "tracker_gain", XpTrackerReadback.gained(tracker, Skill.FISHING),
+                        "initialization_ticks_remaining", XpTrackerReadback.initializationTicksRemaining(tracker),
+                        "fake_callbacks", 0);
+                }
+                completed.complete(ready);
+            }
+            catch (Throwable error) { completed.completeExceptionally(error); }
+        })) throw new IllegalStateException("Bounded native baseline queue is full");
+        return completed.get(15, TimeUnit.SECONDS);
     }
 
     private void showTracker(boolean overlay) throws Exception
@@ -321,6 +368,7 @@ public final class RuneLiteComposition
 
     private void live(URI origin, Path output) throws Exception
     {
+        liveOutput = output;
         CompletableFuture<Void> journey = new CompletableFuture<>();
         ExecutorService network = Executors.newSingleThreadExecutor(r -> new Thread(r, "ClubScape-HTTP"));
         network.submit(() ->
@@ -328,7 +376,7 @@ public final class RuneLiteComposition
             try (ClubScapeTransport transport = new ClubScapeTransport(origin, evidence))
             {
                 transport.signupAndJoin(this::apply, catalog.get("content_revision").getAsString());
-                new FirstXpJourney(transport, projection, evidence).run();
+                new FirstXpJourney(transport, projection, evidence, this::checkPluginBaseline).run();
                 journey.complete(null);
                 // Leave/logout happen only after the main thread has preserved the complete live tuple.
                 while (!network.isShutdown()) Thread.sleep(100);
@@ -355,6 +403,8 @@ public final class RuneLiteComposition
             int observed = XpTrackerReadback.gained(tracker, Skill.FISHING);
             if (observed <= 0 || observed != expectedDisplayGain)
                 throw new IllegalStateException("Genuine XP Tracker does not match authoritative committed experience");
+            if (!baselineVerified || authoritativeMoves == 0)
+                throw new IllegalStateException("Live baseline and actual authoritative movement were not demonstrated");
             showTracker(true);
             for (int frame = 0; frame < 12; frame++) { scene.render(); Thread.sleep(40); }
             long pixels = scene.verifyVisibleActor("real authoritative ClubScape snapshot");
@@ -364,6 +414,14 @@ public final class RuneLiteComposition
                 "native_scene", true, "penguin_visible_pixels", pixels, "tracker", tracker.getClass().getName(),
                 "expected_plugin_xp", expectedDisplayGain, "observed_plugin_xp", observed,
                 "authoritative_xp_tenths", expectedTenths,
+                "native_absolute_xp", game.getSkillExperience(Skill.FISHING),
+                "fractional_xp_remainder_tenths", (initialXp.get("skill.fishing") + expectedTenths) % 10,
+                "display_conversion", "floor(current source xp_tenths / 10) - floor(initial source xp_tenths / 10); no source XP discarded",
+                "baseline_verified_before_xp", baselineVerified, "authoritative_moves", authoritativeMoves,
+                "final_server_tick", projection.snapshot().getTick(), "final_server_revision", projection.snapshot().getRevision(),
+                "final_character_revision", projection.snapshot().getCharacterRevision(),
+                "final_x", projection.snapshot().getPlayer().getTile().getX(),
+                "final_y", projection.snapshot().getPlayer().getTile().getY(),
                 "scope", "fresh account through first fishing XP only; not full M1 or broad plugin compatibility");
         }
         finally

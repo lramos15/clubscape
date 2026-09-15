@@ -17,6 +17,7 @@ import urllib.request
 import uuid
 
 from prepare import ROOT, LOCAL, digest
+import renewal
 
 PG_IMAGE = "postgres:16-alpine@sha256:cf78e76683b9ca8c5733cbbdce6c9262b45b6767934dd0a95e671f9a0fc20685"
 
@@ -117,7 +118,7 @@ def native_errors(path):
     return errors[:20]
 
 
-def native(java_home, output, mode, environment, catalog=None):
+def native(java_home, output, mode, environment, catalog=None, deadline=None):
     verify_cache()
     xvfb = log = None
     try:
@@ -138,7 +139,8 @@ def native(java_home, output, mode, environment, catalog=None):
         with (output / "runtime.log").open("w") as runtime_log:
             process = subprocess.Popen(arguments, cwd=ROOT, env=environment, stdout=runtime_log, stderr=subprocess.STDOUT)
             try:
-                exit_code = process.wait(timeout=150 if mode == "preflight" else 600)
+                budget = 150 if mode == "preflight" else min(570, max(1, deadline - time.monotonic() - 30))
+                exit_code = process.wait(timeout=budget)
             finally:
                 stop(process)
         verify_cache()
@@ -225,9 +227,35 @@ def validate_pack_selection(game_root, catalog):
         raise ValueError("Selected --catalog belongs to a different source content revision.")
 
 
+def validate_bundle_storage(game_root):
+    manifest = json.loads((game_root / "clubscape-game-assets.json").read_text())
+    allowed = {".html", ".js", ".css", ".wasm", ".json", ".png", ".jpg", ".jpeg", ".webp",
+               ".ogg", ".flac", ".wav", ".glb", ".bin", ".ktx2", ".woff", ".woff2", ".ttf", ".svg"}
+    total = 0
+    for record in manifest["files"]:
+        path = game_root / record["path"]
+        if (Path(record["path"]).is_absolute() or ".." in Path(record["path"]).parts
+                or path.suffix not in allowed or path.is_symlink()
+                or not path.resolve().is_relative_to(game_root.resolve()) or not path.is_file()):
+            raise ValueError("Invalid public bundle storage path; preserve the server's extension/path guards")
+        if path.stat().st_size > 64 * 1024 * 1024 or digest(path) != record["sha256"]:
+            raise ValueError("Public bundle storage bytes/hash differ from the pinned descriptor")
+        total += path.stat().st_size
+    if total > 512 * 1024 * 1024:
+        raise ValueError("Public asset memory bound exceeded")
+    descriptor = json.loads((game_root / "clubscape-game.json").read_text())
+    artifact = game_root / descriptor["artifact"]
+    if digest(artifact) != descriptor["sha256"]:
+        raise ValueError("Pinned world artifact bytes changed")
+    return {"files": len(manifest["files"]), "bytes": total, "storage_extensions_and_hashes": "verified",
+            "artifact_sha256": descriptor["sha256"], "world_artifact_repacked": False}
+
+
 def live(java_home, output, environment, report, server_binary, game_root, catalog):
     name = None
     server = None
+    started = time.monotonic()
+    deadline = started + 600
     try:
         name, database_url = start_database(output, environment, report)
         server_environment = {**environment, "DATABASE_URL": database_url,
@@ -247,7 +275,7 @@ def live(java_home, output, environment, report, server_binary, game_root, catal
             report["server"]["origin"] = origin
             report["server"]["responsive"] = True
             report["phase"] = "real_runtime_scene_state_plugin"
-            report["native"] = native(java_home, output, origin, environment, catalog)
+            report["native"] = native(java_home, output, origin, environment, catalog, deadline)
             report["exit_code"] = report["native"]["exit_code"]
             events = [json.loads(line) for line in (output / "events.jsonl").read_text().splitlines()]
             report["complete_tuple"] = next((event for event in events if event["kind"] == "complete_tuple"), None)
@@ -261,6 +289,7 @@ def live(java_home, output, environment, report, server_binary, game_root, catal
             cleanup = run_command(["docker", "stop", "--time", "10", name], environment=environment, timeout=30)
             report["database"]["cleanup_exit_code"] = cleanup.returncode
         (output / "postgres-password").unlink(missing_ok=True)
+        report["elapsed_seconds_including_cleanup"] = round(time.monotonic() - started, 3)
 
 
 def main():
@@ -273,6 +302,7 @@ def main():
     parser.add_argument("--server-binary", type=Path, default=LOCAL / "rust-target/debug/clubscape-server")
     parser.add_argument("--game-root", type=Path, default=LOCAL / "game")
     parser.add_argument("--catalog", type=Path)
+    parser.add_argument("--renewal-record", type=Path)
     args = parser.parse_args()
     if not args.name.replace("-", "").isalnum():
         parser.error("Use an alphanumeric/hyphen owned evidence directory name")
@@ -283,14 +313,21 @@ def main():
         parser.error("Game roots and catalogs must remain in the owned artifacts directory.")
     experiment_path = ROOT / "research/runelite-feasibility/experiment.json"
     experiment = json.loads(experiment_path.read_text())
+    renewed = None
+    bundle_check = None
     if args.mode == "live":
         if not args.hypothesis:
             parser.error("Each live attempt requires its own falsifiable --hypothesis")
-        if args.attempt not in (1, 2, 3) or any(a["number"] == args.attempt for a in experiment["live_attempts"]):
-            parser.error("A new explicitly numbered live attempt within the three-attempt bound is required")
-        if len(experiment["live_attempts"]) >= 3:
-            parser.error("The live integration bound is exhausted")
         validate_pack_selection(game_root, catalog)
+        bundle_check = validate_bundle_storage(game_root)
+        if args.renewal_record:
+            artifact = json.loads((game_root / "clubscape-game.json").read_text())["sha256"]
+            renewed = renewal.load_allocation(args.renewal_record, args.attempt, artifact)
+        else:
+            if args.attempt not in (1, 2, 3) or any(a["number"] == args.attempt for a in experiment["live_attempts"]):
+                parser.error("A new explicitly numbered live attempt within the original allocation is required")
+            if len(experiment["live_attempts"]) >= 3:
+                parser.error("The original bound is exhausted; an explicit renewal record is required for 4/5")
     output = LOCAL / args.name
     output.mkdir(mode=0o700)
     home = output / "home"
@@ -300,16 +337,23 @@ def main():
         "schema_version": 1, "mode": args.mode, "name": args.name,
         "recorded_at": datetime.datetime.now(datetime.timezone.utc).isoformat(),
         "architecture": "A", "compatibility_verified": False, "exit_code": 1,
+        "global_invocation": args.attempt, "allocation": "renewal" if renewed is not None else "original",
         "evidence_directory": str(output.relative_to(ROOT)),
+        "bundle_preflight": bundle_check,
     }
     if args.mode == "live":
-        experiment["live_attempts"].append({
+        entry = {
             "number": args.attempt, "architecture": "A", "name": args.name,
             "hypothesis": args.hypothesis,
             "diagnostics": ["strict server readiness/exit", "actual protobuf receipts", "native scene/player", "real plugin output"],
             "status": "started", "report": f"research/runelite-feasibility/{args.name}.json",
-        })
-        experiment_path.write_text(json.dumps(experiment, indent=2) + "\n")
+        }
+        if renewed is not None:
+            renewed["invocations"].append(entry)
+            renewal.save(renewed)
+        else:
+            experiment["live_attempts"].append(entry)
+            experiment_path.write_text(json.dumps(experiment, indent=2) + "\n")
     try:
         if args.mode == "preflight":
             report["native"] = native(args.java_home.resolve(), output, "preflight", environment, catalog)
@@ -322,12 +366,19 @@ def main():
         report_path = ROOT / f"research/runelite-feasibility/{args.name}.json"
         report_path.write_text(json.dumps(report, indent=2) + "\n")
         if args.mode == "live":
-            current = json.loads(experiment_path.read_text())
-            attempt = next(a for a in current["live_attempts"] if a["number"] == args.attempt)
+            current = json.loads((renewal.LEDGER if renewed is not None else experiment_path).read_text())
+            attempts = current["invocations"] if renewed is not None else current["live_attempts"]
+            attempt = next(a for a in attempts if a["number"] == args.attempt)
             attempt["status"] = "passed" if report["compatibility_verified"] else "failed"
             attempt["phase"] = report.get("phase")
             attempt["exit_code"] = report["exit_code"]
-            experiment_path.write_text(json.dumps(current, indent=2) + "\n")
+            if renewed is not None:
+                current["compatibility_verified"] = report["compatibility_verified"]
+                current["state"] = "passed_and_stopped" if report["compatibility_verified"] else (
+                    "exhausted_and_stopped" if len(attempts) == 2 else "one_remaining_invocation")
+                renewal.save(current)
+            else:
+                experiment_path.write_text(json.dumps(current, indent=2) + "\n")
     print(json.dumps({k: v for k, v in report.items() if k not in ["native", "server", "database"]}))
     return report["exit_code"]
 

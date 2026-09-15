@@ -1,0 +1,17 @@
+{
+  "command": [
+    "cargo",
+    "build",
+    "--quiet",
+    "--locked",
+    "--offline",
+    "-p",
+    "clubscape-server"
+  ],
+  "exit_code": 0,
+  "stdout": "",
+  "stderr": "",
+  "source_revision": "1f1a7036f5302d3a4eb27f3ebea60888c237d910",
+  "authority": "normal unmodified clubscape-server binary; no fake web root or test fixture",
+  "binary_sha256": "0333abbb117f91e8f2b600bac18c4d452c3b1e569aaedee80539efdda378d3e9"
+}

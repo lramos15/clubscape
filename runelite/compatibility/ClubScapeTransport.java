@@ -134,7 +134,7 @@ final class ClubScapeTransport implements AutoCloseable
         if (!hello.hasHello() || !hello.getHello().getGameplayAvailable()
             || !hello.getHello().getCapabilitiesList().contains("game.v1"))
             throw new IllegalStateException("Actual server is not gameplay-ready");
-        String name = "rl_" + UUID.randomUUID().toString().replace("-", "").substring(0, 14);
+        String name = "rl_" + UUID.randomUUID().toString().replace("-", "").substring(0, 8);
         String password = UUID.randomUUID().toString() + UUID.randomUUID();
         ServerMessage registered = request(ClientMessage.newBuilder().setRegister(
             AccountOuterClass.Register.newBuilder().setLoginName(name).setPassword(password)));
