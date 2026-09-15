@@ -140,6 +140,20 @@ function scenarioWorld(name: string): WorldView & { dynamicObjects?: unknown[] }
       return { ...base, player: player(3094, 3106, "idle", []), entities: [] };
     case "preview":
       return { ...base, player: player(3098, 3098, "idle", [["weapon", 1277, "item.bronze_sword"], ["shield", 1171, "item.wooden_shield"]]), entities: [] };
+    // Original dynamic-layer reference cases (assets/reference/osrs240/m1-dynamic): exact case
+    // inputs, rendered at the native full-HUD zoom 410 (see applyScenario). No player body is
+    // drawn in those frames, so the player is placed without a body-carrying scene position.
+    case "source-door-closed":
+    case "source-door-open":
+      return {
+        ...base, player: { ...player(3094, 3103, "idle", []), animation: sequence(808) }, entities: [],
+        dynamicObjects: [{ id: "door-9398", objectId: "asset.source.osrs.cache2695.object.9398", tile: tile(3098, 3107), instance: null, doorOpen: name === "source-door-open", quarterTurns: name === "source-door-open" ? 1 : 0 }],
+      };
+    case "source-roofs-outside":
+    case "source-roofs-hidden":
+      return { ...base, player: { ...player(3094, 3099, "idle", []), animation: sequence(808) }, entities: [] };
+    case "source-roofs-inside":
+      return { ...base, player: { ...player(3094, 3103, "idle", []), animation: sequence(808) }, entities: [] };
     case "unknown-motion":
       // The backend interop gap as it stands today: an action reported with no source
       // animation. The renderer keeps the stance and reports `motion unknown` — never a guess.
@@ -355,6 +369,23 @@ async function main(): Promise<void> {
       handle.setRoofMode(name === "roof-player" ? 1 : 0);
       // Scenarios show live rendering: the stock top-plane rule instead of the pinned plane 0.
       handle.setTopPlane(name.startsWith("pinned-") ? 0 : null);
+      if (name.startsWith("source-")) {
+        // Original dynamic-layer reference inputs: the locked camera of the fixture at the native
+        // full-HUD zoom 410, the case's recorded draw plane, the original hide-roofs preference.
+        handle.camera({
+          x: fixture.base[0] * 128 + fixture.local[0], height: fixture.local[1], y: fixture.base[1] * 128 + fixture.local[2],
+          pitch: fixture.pitch, yaw: fixture.yaw, unitsPerTurn: 16384, zoom: 410, near: 50, far: 32768,
+        });
+        const hidden = name === "source-roofs-hidden" || name.startsWith("source-door");
+        handle.setHideRoofs(hidden);
+        handle.setTopPlane(hidden ? 0 : 3);
+      } else {
+        handle.setHideRoofs(false);
+        handle.camera({
+          x: fixture.base[0] * 128 + fixture.local[0], height: fixture.local[1], y: fixture.base[1] * 128 + fixture.local[2],
+          pitch: fixture.pitch, yaw: fixture.yaw, unitsPerTurn: 16384, zoom: sourceZoomForViewportHeight(height), near: 50, far: 32768,
+        });
+      }
       handle.update(scenarioWorld(name.replace(/^pinned-/, "")));
       if (name === "preview") {
         // The UI's preview bounds are the 480x315 parent layer; the renderer returns exactly that.

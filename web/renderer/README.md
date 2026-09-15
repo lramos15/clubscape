@@ -155,7 +155,9 @@ arguments from `docs/machines/sparky.md` (no `--no-sandbox`, no software rendere
 screenshots the visible canvas element for the five scenes, streams the world across a
 map-square edge, replays the 58 approved model captures, runs the scenarios (gear, every
 required action motion, ground items + fire, door state, roof mode, interface preview readback;
-`--scenarios 0` skips), checks 1024×768 / 1280×720 / 2560×1440, a live resize and picks, and
+`--scenarios 0` skips; `--scenario-filter a,b` selects; `source-*` scenarios reproduce the
+Tutorial dynamic-layer reference inputs at the native full-HUD zoom 410 and record the drawn
+player's screen box), checks 1024×768 / 1280×720 / 2560×1440, a live resize and picks, and
 writes `report.json` with GPU-completed frame statistics. `--workload-ms N` adds a frozen
 representative workload (streamed Lumbridge scene, geared fighting player, 7 animated NPCs, fire,
 ground items; ≈ 69k primitives) with the camera held on the player; `--workload-moving 1` glides

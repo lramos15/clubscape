@@ -958,3 +958,81 @@ fn flame_phases_identified_from_blocks() {
     )
     .unwrap();
 }
+
+/// The same eight phase-independent cases through the wgpu compute rasterizer on a hardware
+/// adapter: the GPU readback must equal the CPU frame and the original reference exactly.
+/// Compiled with `--features gpu`; a missing adapter fails, it is not a pass.
+#[cfg(feature = "gpu")]
+#[test]
+fn dynamic_layer_cases_match_on_the_gpu() {
+    use clubscape_renderer::gpu::pack::pack_frame;
+    use clubscape_renderer::gpu::{GpuRasterizer, GpuTextures};
+    let inputs = inputs();
+    let (adapter, device, queue) =
+        match pollster::block_on(clubscape_renderer::gpu::device::request_native_device()) {
+            Ok(v) => v,
+            Err(e) => panic!(
+                "GPU fidelity tests need a hardware wgpu adapter (Vulkan/Metal): {e}. \
+                 Run without `--features gpu` on machines without one; a missing GPU is not a pass."
+            ),
+        };
+    let palette = Palette::from_chunks(&common::read_asset("palette.bin")).unwrap();
+    let gpu_textures = GpuTextures::from_set(&inputs.textures);
+    let mut raster =
+        GpuRasterizer::new(device, queue, &palette.rgb, &gpu_textures, 1920, 1080).unwrap();
+    eprintln!("adapter: {}", adapter.get_info().name);
+    let mut report = Vec::new();
+    for spec in case_specs().into_iter().filter(|s| !s.flame) {
+        let case = CaseRecord::load(spec.id);
+        let mut core = core_for(&inputs, spec.scene);
+        core.set_camera(camera(&case, spec.scene)).unwrap();
+        core.set_plane(case.source_plane());
+        core.set_top_plane_override(Some(case.draw_plane()));
+        core.update_world(&spec.view, 0.0).unwrap();
+        core.build_frame(spec.build_ms).unwrap();
+        let cpu = rasterize(&core, &inputs.textures);
+        let packed = pack_frame(&core.state, core.triangles(), &inputs.textures);
+        let frame = raster.render(&core.state, &packed, 0).unwrap();
+        let mut gpu = raster.read_back().unwrap();
+        assert!(
+            frame.is_complete(),
+            "{}: queue completion did not fire",
+            spec.id
+        );
+        gpu.iter_mut().for_each(|p| *p &= 0xFF_FFFF);
+        let (w, h, source) = read_png_rgb(&case.frame_path());
+        let hud = case.hud_rects();
+        let vs_cpu = common::diff_buffers(&gpu, &cpu);
+        let m = metric(&gpu, &source, w as usize, h as usize, &hud, None);
+        let line = format!(
+            "{}: gpu vs cpu {} px differ | gpu vs source: {} | scene identical {} of {} | interior max {} | band changed {}",
+            spec.id,
+            vs_cpu.differing,
+            if m.passed() { "PASS" } else { "FAIL" },
+            m.scene_identical,
+            m.scene_pixels,
+            m.interior_max,
+            m.band_changed
+        );
+        eprintln!("{line}");
+        report.push(line);
+        assert_eq!(
+            vs_cpu.differing, 0,
+            "{}: GPU differs from CPU: {vs_cpu:?}",
+            spec.id
+        );
+        assert!(
+            m.passed(),
+            "{}: GPU frame outside the approved profile",
+            spec.id
+        );
+        assert_eq!(
+            m.scene_identical, m.scene_pixels,
+            "{}: GPU frame not identical to the source over the scene",
+            spec.id
+        );
+    }
+    let out_dir = repo_root().join(".local/render-assets/test-output/dynamic");
+    std::fs::create_dir_all(&out_dir).unwrap();
+    std::fs::write(out_dir.join("gpu-report.txt"), report.join("\n") + "\n").unwrap();
+}

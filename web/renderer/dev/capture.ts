@@ -264,7 +264,12 @@ async function main(): Promise<void> {
     // Live-layer and player-action scenarios on the starting-house fixture (developer WorldViews
     // with real source ids): gear, activity motions, ground items + fire, door state, roof mode
     // and the model-only interface preview readback.
-    const scenarioNames = ["pinned-gear-idle", "gear-idle", "gear-fighting", "woodcutting", "mining", "fishing", "firemaking", "cooking", "walking", "ranged", "casting", "death", "unknown-motion", "ground-items-fire", "door-open", "roof-player", "preview"];
+    const scenarioNames = ["pinned-gear-idle", "gear-idle", "gear-fighting", "woodcutting", "mining", "fishing", "firemaking", "cooking", "walking", "ranged", "casting", "death", "unknown-motion", "ground-items-fire", "door-open", "roof-player", "preview",
+      // Original dynamic-layer reference inputs at the native full-HUD zoom 410 (Tutorial cases).
+      "source-door-closed", "source-door-open", "source-roofs-outside", "source-roofs-inside", "source-roofs-hidden"];
+    // `--scenario-filter a,b` limits the scenario pass to the named scenarios.
+    const scenarioFilter = argValue("--scenario-filter", "");
+    const selectedScenarios = scenarioFilter ? scenarioNames.filter((n) => scenarioFilter.split(",").includes(n)) : scenarioNames;
     const scenarioDir = path.join(out, "scenarios");
     await mkdir(scenarioDir, { recursive: true });
     const scenarioResults: unknown[] = [];
@@ -274,10 +279,14 @@ async function main(): Promise<void> {
       await waitReady(page);
       await waitFrames(page, 3);
       const canvas = page.locator("canvas[data-clubscape-surface]");
-      for (const name of scenarioNames) {
+      for (const name of selectedScenarios) {
         const applied = await page.evaluate((n) => window.__clubscapeDev.applyScenario!(n), name);
         const startFrames = (await snapshot(page, null)).renderedFrames;
         await waitFrames(page, startFrames + 3);
+        // The world canvas must be the unscrolled 1920x1080 element: a page scrollbar (from the
+        // auxiliary preview/minimap canvases) would overlay the element screenshot.
+        const layout = await page.evaluate(() => ({ innerW: window.innerWidth, innerH: window.innerHeight, clientW: document.documentElement.clientWidth, clientH: document.documentElement.clientHeight, scrollX: window.scrollX, scrollY: window.scrollY }));
+        if (layout.innerW !== layout.clientW || layout.innerH !== layout.clientH || layout.scrollX !== 0 || layout.scrollY !== 0) throw new Error(`scenario ${name}: a page scrollbar or scroll offset is present ${JSON.stringify(layout)}; the canvas screenshot would not be the plain 1920x1080 element`);
         await canvas.screenshot({ path: path.join(scenarioDir, `${name}-t0.png`) });
         await page.waitForTimeout(600);
         await canvas.screenshot({ path: path.join(scenarioDir, `${name}-t1.png`) });
@@ -285,12 +294,25 @@ async function main(): Promise<void> {
           await page.locator("canvas[data-clubscape-preview]").screenshot({ path: path.join(scenarioDir, "preview-surface.png"), omitBackground: true });
         }
         const last = await page.evaluate(() => window.__clubscapeDev.handle!.diagnostics().lastFrame);
+        // Screen box of the drawn player (the source dynamic-layer frames carry no player body),
+        // from the exact pick coverage, so comparisons can attribute those pixels.
+        const playerBox = await page.evaluate(() => {
+          const handle = window.__clubscapeDev.handle!;
+          let box: [number, number, number, number] | null = null;
+          for (let y = 0; y < 1080; y += 2) {
+            for (let x = 0; x < 1920; x += 2) {
+              const pick = handle.pick(x, y);
+              if (pick && pick.kind === "entity" && pick.id === "player-dev") box = box ? [Math.min(box[0], x), Math.min(box[1], y), Math.max(box[2], x), Math.max(box[3], y)] : [x, y, x, y];
+            }
+          }
+          return box;
+        });
         const picks = await page.evaluate(() => {
           const handle = window.__clubscapeDev.handle!;
           const points: Array<[number, number]> = [[960, 540], [1030, 560], [880, 520], [1100, 470]];
           return points.map(([x, y]) => ({ x, y, pick: handle.pick(x, y) }));
         });
-        scenarioResults.push({ name, applied, lastFrame: last, picks });
+        scenarioResults.push({ name, applied, lastFrame: last, picks, playerBox });
         console.log(`scenario ${name}: prims=${last?.primitives} ${JSON.stringify(applied).slice(0, 200)}`);
       }
       await page.evaluate(() => window.__clubscapeDev.applyScenario!("pinned-gear-idle"));

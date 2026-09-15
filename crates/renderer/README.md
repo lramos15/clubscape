@@ -278,7 +278,13 @@ refuses buffers whose hash differs.
   selector `cz.ch` now honours the original hide-roofs preference first (`set_hide_roofs`) and
   reproduces every recorded selector value (3 outside, 0 inside/hidden, 1 on plane 1).
   `lumbridge-minimap-mapped-chunk` (controlled `rl4.fn` instanced-chunk template mapping) is
-  **unsupported**: the renderer has no instanced-chunk placement, no candidate exists.
+  **unsupported**: the renderer has no instanced-chunk placement, no candidate exists. The same
+  eight phase-independent cases also pass through the wgpu compute rasterizer on the GB10
+  (`dynamic_layer_cases_match_on_the_gpu`: GPU = CPU = source, 0 differing pixels), and the
+  five Tutorial cases rendered by Chrome 153 (dev scenarios `source-*`, zoom 410) differ from
+  the source frames only inside the flame boxes (95 px) and the developer page's drawn penguin
+  (the source frames carry no player body; 144–165 px, screen box recorded per scenario) — 0
+  pixels elsewhere; `tutorial-roofs-inside` is identical over all 1 863 553 scene pixels.
 * Minimap (`scene::minimap`, `tests/minimap.rs`): all 15 native minimap captures (5 scenes ×
   planes 0–2) are reproduced pixel-exactly over the scene interior (tiles 5..98) from streamed
   blocks — terrain shapes/colours, bridge tiles, wall/door/diagonal marks, map-scene sprites.
