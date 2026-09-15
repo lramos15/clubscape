@@ -32,7 +32,14 @@ export class WasmRenderer {
      * Builds and submits one frame; resolves when the GPU queue reports the work complete.
      */
     frame(now_ms: number): Promise<any>;
+    /**
+     * Developer fixture replay of an approved model capture (legacy draw, zoom 1024,
+     * background 0x303030). `npc`/`sequence`/`frame` select a baked NPC frame, otherwise
+     * `model` names a model loaded with `load_model`.
+     */
+    frame_model_fixture(model: string, npc: number, sequence: number, frame: number, yaw: number, camera_y: number, camera_z: number): Promise<any>;
     last_frame_triangles(): number;
+    load_model(id: string, bytes: Uint8Array): void;
     load_npc_pack(npc_id: number, bytes: Uint8Array): void;
     load_scene(id: string, scene_bytes: Uint8Array, pack_bytes: Uint8Array): void;
     /**
@@ -85,7 +92,9 @@ export interface InitOutput {
     readonly wasmrenderer_device_epoch: (a: number) => number;
     readonly wasmrenderer_device_lost_reason: (a: number) => [number, number];
     readonly wasmrenderer_frame: (a: number, b: number) => any;
+    readonly wasmrenderer_frame_model_fixture: (a: number, b: number, c: number, d: number, e: number, f: number, g: number, h: number, i: number) => any;
     readonly wasmrenderer_last_frame_triangles: (a: number) => number;
+    readonly wasmrenderer_load_model: (a: number, b: number, c: number, d: number, e: number) => [number, number];
     readonly wasmrenderer_load_npc_pack: (a: number, b: number, c: number, d: number) => [number, number];
     readonly wasmrenderer_load_scene: (a: number, b: number, c: number, d: number, e: number, f: number, g: number) => [number, number];
     readonly wasmrenderer_new: (a: any, b: number, c: number, d: number, e: number) => any;
@@ -98,10 +107,10 @@ export interface InitOutput {
     readonly wasm_bindgen_765df639e0572edc___convert__closures_____invoke___js_sys_3b7301898fbf4e22___Function_fn_wasm_bindgen_765df639e0572edc___JsValue_____wasm_bindgen_765df639e0572edc___sys__Undefined___js_sys_3b7301898fbf4e22___Function_fn_wasm_bindgen_765df639e0572edc___JsValue_____wasm_bindgen_765df639e0572edc___sys__Undefined_______true_: (a: number, b: number, c: any, d: any) => void;
     readonly wasm_bindgen_765df639e0572edc___convert__closures_____invoke___wasm_bindgen_765df639e0572edc___JsValue__core_ed718c3d60ebd546___result__Result_____wasm_bindgen_765df639e0572edc___JsError___true_: (a: number, b: number, c: any) => [number, number];
     readonly wasm_bindgen_765df639e0572edc___convert__closures_____invoke___wasm_bindgen_765df639e0572edc___sys__JsNullable_wgpu_fb237351f69b1e72___backend__webgpu__webgpu_sys__gen_GpuError__GpuError___core_ed718c3d60ebd546___result__Result_____wasm_bindgen_765df639e0572edc___JsError___true_: (a: number, b: number, c: any) => [number, number];
-    readonly wasm_bindgen_765df639e0572edc___convert__closures_____invoke___wasm_bindgen_765df639e0572edc___sys__JsNullable_wgpu_fb237351f69b1e72___backend__webgpu__webgpu_sys__gen_GpuError__GpuError___core_ed718c3d60ebd546___result__Result_____wasm_bindgen_765df639e0572edc___JsError___true__41: (a: number, b: number, c: any) => [number, number];
-    readonly wasm_bindgen_765df639e0572edc___convert__closures_____invoke___wasm_bindgen_765df639e0572edc___sys__JsNullable_wgpu_fb237351f69b1e72___backend__webgpu__webgpu_sys__gen_GpuError__GpuError___core_ed718c3d60ebd546___result__Result_____wasm_bindgen_765df639e0572edc___JsError___true__42: (a: number, b: number, c: any) => [number, number];
+    readonly wasm_bindgen_765df639e0572edc___convert__closures_____invoke___wasm_bindgen_765df639e0572edc___sys__JsNullable_wgpu_fb237351f69b1e72___backend__webgpu__webgpu_sys__gen_GpuError__GpuError___core_ed718c3d60ebd546___result__Result_____wasm_bindgen_765df639e0572edc___JsError___true__43: (a: number, b: number, c: any) => [number, number];
+    readonly wasm_bindgen_765df639e0572edc___convert__closures_____invoke___wasm_bindgen_765df639e0572edc___sys__JsNullable_wgpu_fb237351f69b1e72___backend__webgpu__webgpu_sys__gen_GpuError__GpuError___core_ed718c3d60ebd546___result__Result_____wasm_bindgen_765df639e0572edc___JsError___true__44: (a: number, b: number, c: any) => [number, number];
     readonly wasm_bindgen_765df639e0572edc___convert__closures_____invoke___wgpu_fb237351f69b1e72___backend__webgpu__webgpu_sys__gen_GpuDeviceLostInfo__GpuDeviceLostInfo______true_: (a: number, b: number, c: any) => void;
-    readonly wasm_bindgen_765df639e0572edc___convert__closures_____invoke___wgpu_fb237351f69b1e72___backend__webgpu__webgpu_sys__gen_GpuDeviceLostInfo__GpuDeviceLostInfo______true__40: (a: number, b: number, c: any) => void;
+    readonly wasm_bindgen_765df639e0572edc___convert__closures_____invoke___wgpu_fb237351f69b1e72___backend__webgpu__webgpu_sys__gen_GpuDeviceLostInfo__GpuDeviceLostInfo______true__42: (a: number, b: number, c: any) => void;
     readonly __wbindgen_malloc: (a: number, b: number) => number;
     readonly __wbindgen_realloc: (a: number, b: number, c: number, d: number) => number;
     readonly __wbindgen_exn_store: (a: number) => void;

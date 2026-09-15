@@ -5,7 +5,7 @@
  * genuine GPU-completed frame records, and `window.__clubscapeDev` for the capture script.
  */
 import type { RenderFrame, WorldView } from "../../shared/contracts.ts";
-import { createRenderer, type ClubscapeRendererHandle } from "../src/index.ts";
+import { createRenderer, sourceZoomForViewportHeight, type ClubscapeRendererHandle } from "../src/index.ts";
 
 interface FixtureCamera { scene: string; base: [number, number]; local: [number, number, number]; pitch: number; yaw: number }
 
@@ -31,7 +31,11 @@ interface DevState {
 
 declare global {
   interface Window {
-    __clubscapeDev: DevState & { setWorld(world: WorldView | null): void; pause(): void; resume(): void; frameOnce(): Promise<RenderFrame | null> };
+    __clubscapeDev: DevState & {
+      setWorld(world: WorldView | null): void; pause(): void; resume(): void; frameOnce(): Promise<RenderFrame | null>;
+      /** Live resize with the source zoom curve for the new height (what a shell does on resize). */
+      resizeTo(width: number, height: number): void;
+    };
     __clubscapeBenchmarkV1?: {
       bindRun?(binding: { contractId: string; contractSha256: string }): void;
       read(afterFrame: number | null): unknown;
@@ -69,8 +73,9 @@ async function main(): Promise<void> {
   const sceneId = param("scene", "tutorial-starting-house");
   const width = Number(param("w", "1920"));
   const height = Number(param("h", "1080"));
+  const modelMode = param("mode", "scene") === "model";
   const fixture = FIXTURES.find((f) => f.scene === sceneId);
-  if (!fixture) throw new Error(`unknown fixture scene ${sceneId}`);
+  if (!fixture && !modelMode) throw new Error(`unknown fixture scene ${sceneId}`);
   const state: DevState = { ready: false, error: null, handle: null, frames: [], sceneId, paused: false };
   let pending: RenderFrame[] = [];
   window.__clubscapeDev = {
@@ -79,6 +84,15 @@ async function main(): Promise<void> {
     pause() { state.paused = true; },
     resume() { state.paused = false; },
     frameOnce: async () => state.handle ? state.handle.frame(performance.now()) : null,
+    resizeTo(w, h) {
+      const handle = state.handle;
+      if (!handle || !fixture) return;
+      handle.resize(w, h);
+      handle.camera({
+        x: fixture.base[0] * 128 + fixture.local[0], height: fixture.local[1], y: fixture.base[1] * 128 + fixture.local[2],
+        pitch: fixture.pitch, yaw: fixture.yaw, unitsPerTurn: 16384, zoom: sourceZoomForViewportHeight(h), near: 50, far: 32768,
+      });
+    },
   };
   const publish = () => Object.assign(window.__clubscapeDev, state);
   window.__clubscapeBenchmarkV1 = {
@@ -111,10 +125,17 @@ async function main(): Promise<void> {
       onDiagnostic(message) { console.warn(`[renderer] ${message}`); },
     });
     state.handle = handle;
+    if (modelMode) {
+      // Model capture replay: the capture script drives handle.frameModelFixture directly.
+      state.ready = true;
+      publish();
+      return;
+    }
+    if (!fixture) throw new Error(`unknown fixture scene ${sceneId}`);
     await handle.loadScene(sceneId);
     handle.camera({
       x: fixture.base[0] * 128 + fixture.local[0], height: fixture.local[1], y: fixture.base[1] * 128 + fixture.local[2],
-      pitch: fixture.pitch, yaw: fixture.yaw, unitsPerTurn: 16384, zoom: 662, near: 50, far: 32768,
+      pitch: fixture.pitch, yaw: fixture.yaw, unitsPerTurn: 16384, zoom: sourceZoomForViewportHeight(height), near: 50, far: 32768,
     });
     if (param("actors", "0") === "1") handle.update(actorsWorld(fixture));
     state.ready = true;

@@ -55,8 +55,20 @@ export interface RendererDiagnostics {
   deviceLostReason: string | null;
 }
 
+/** Approved model capture parameters (`drawFrustum(0, yaw, 0, 128, 0, cameraY, cameraZ)`, zoom 1024). */
+export interface ModelFixtureRequest {
+  /** Manifest model id (e.g. `models/object-1277-model-1570-lit.bin`) when `npc` is absent. */
+  model?: string;
+  npc?: { id: number; sequence: number; frame: number };
+  yaw: number;
+  cameraY: number;
+  cameraZ: number;
+}
+
 export interface ClubscapeRendererHandle extends RendererHandle {
   diagnostics(): RendererDiagnostics;
+  /** Developer-only replay of an approved model/animation capture on the canvas. */
+  frameModelFixture(request: ModelFixtureRequest): Promise<RenderFrame>;
 }
 
 async function sha256Hex(bytes: Uint8Array): Promise<string> {
@@ -125,6 +137,7 @@ export const createRenderer: (canvas: HTMLCanvasElement, config: RendererConfig,
     for (const npc of manifest.npcs) {
       renderer.load_npc_pack(npc.npc_id, await fetchAsset(npc.pack));
     }
+    const loadedModels = new Set<string>();
 
     let renderedFrames = 0;
     let lastFrame: RenderFrame | null = null;
@@ -193,6 +206,35 @@ export const createRenderer: (canvas: HTMLCanvasElement, config: RendererConfig,
           inFlight = false;
         }
       },
+      async frameModelFixture(request) {
+        requireLive();
+        if (inFlight) throw new Error("a frame is already in flight");
+        inFlight = true;
+        try {
+          if (!request.npc) {
+            if (!request.model) throw new Error("model fixture needs `model` or `npc`");
+            if (!loadedModels.has(request.model)) {
+              renderer.load_model(request.model, await fetchAsset(request.model));
+              loadedModels.add(request.model);
+            }
+          }
+          const record = await renderer.frame_model_fixture(
+            request.model ?? "", request.npc?.id ?? -1, request.npc?.sequence ?? -1, request.npc?.frame ?? 0,
+            Math.trunc(request.yaw), Math.trunc(request.cameraY), Math.trunc(request.cameraZ),
+          );
+          const frame: RenderFrame = {
+            sequence: record.sequence, submittedAtMs: record.submitted_at_ms, completedAtMs: record.completed_at_ms,
+            drawCalls: record.draw_calls, primitives: record.primitives, cpuEncodeMs: record.cpu_encode_ms,
+            ...(record.gpu_duration_known ? { gpuDurationMs: record.gpu_duration_ms } : {}),
+          };
+          record.free();
+          renderedFrames += 1;
+          lastFrame = frame;
+          return frame;
+        } finally {
+          inFlight = false;
+        }
+      },
       pick(x, y) {
         requireLive();
         const json = renderer.pick(Math.trunc(x), Math.trunc(y));
@@ -219,6 +261,17 @@ export const createRenderer: (canvas: HTMLCanvasElement, config: RendererConfig,
     };
     return handle;
   };
+
+/**
+ * The original client's viewport zoom for a viewport height (662 at 1080 px, 883 at 1440 px,
+ * 471 at 768 px). Pass it as `RenderCamera.zoom` unless reproducing another source zoom state;
+ * the renderer never rescales on its own.
+ */
+export function sourceZoomForViewportHeight(height: number): number {
+  const n = Math.trunc(height) - 334;
+  const d = n < 0 ? 256 : n >= 100 ? 205 : Math.trunc(((205 - 256) * n) / 100) + 256;
+  return Math.trunc((Math.trunc(height) * d) / 334);
+}
 
 /** Contract-typed alias for shells that only want the shared signature. */
 export const createRendererContract: CreateRenderer = (canvas, config) => createRenderer(canvas, config);

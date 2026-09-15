@@ -4,12 +4,18 @@
 //! * `WasmRenderer::new(canvas, width, height, palette_bytes)` — requests a real WebGPU adapter and
 //!   device through wgpu, configures the canvas surface; rejects with a descriptive error when
 //!   WebGPU is unavailable or the adapter is a software fallback. No WebGL fallback exists.
-//! * `add_texture(bytes)`, `load_npc_pack(npc_id, bytes)`, `load_scene(id, scene_bytes, pack_bytes)`
+//! * `add_texture(bytes)`, `load_npc_pack(npc_id, bytes)`, `load_model(id, bytes)`,
+//!   `load_scene(id, scene_bytes, pack_bytes)`
 //! * `resize(width, height)`, `set_camera(x, height, y, pitch, yaw, zoom, far)`
-//! * `update_world(json)` — the shared `WorldView` serialized as JSON
+//! * `update_world(json, now_ms)` — the shared `WorldView` serialized as JSON
 //! * `frame(now_ms)` → `Promise<FrameRecordJs>` resolved after the GPU queue reports completion
-//! * `pick(x, y)` → JSON `ScenePick` or `null`
-//! * `device_epoch()`, `timestamps_supported()`, `asset_hashes()`
+//! * `frame_model_fixture(model, npc, sequence, frame, yaw, camera_y, camera_z)` — developer
+//!   replay of an approved model capture
+//! * `pick(x, y)` → JSON `ScenePick` or `undefined`
+//! * `adapter_info()`, `device_epoch()`, `timestamps_supported()`, `device_lost_reason()`,
+//!   `scene_id()`, `last_frame_triangles()`
+//!
+//! See `crates/renderer/README.md` for the full ABI table.
 
 #![allow(clippy::new_ret_no_self, clippy::too_many_arguments)]
 
@@ -20,7 +26,7 @@ use std::sync::{Arc, Mutex};
 use wasm_bindgen::prelude::*;
 use wasm_bindgen_futures::future_to_promise;
 
-use crate::core::{Camera, RendererCore};
+use crate::core::{Camera, ModelFixture, RendererCore};
 use crate::error::RenderError;
 use crate::gpu::{GpuRasterizer, GpuTextures, pack_frame};
 use crate::palette::Palette;
@@ -28,6 +34,11 @@ use crate::scene::draw::PickTarget;
 
 fn js_err(error: impl std::fmt::Display) -> JsValue {
     JsValue::from_str(&error.to_string())
+}
+
+enum FrameKind {
+    Scene { now_ms: f64 },
+    ModelFixture(ModelFixture),
 }
 
 struct Inner {
@@ -316,7 +327,41 @@ impl WasmRenderer {
 
     /// Builds and submits one frame; resolves when the GPU queue reports the work complete.
     pub fn frame(&self, now_ms: f64) -> js_sys::Promise {
-        let shared = self.inner.clone();
+        Self::run_frame(self.inner.clone(), FrameKind::Scene { now_ms })
+    }
+
+    /// Developer fixture replay of an approved model capture (legacy draw, zoom 1024,
+    /// background 0x303030). `npc`/`sequence`/`frame` select a baked NPC frame, otherwise
+    /// `model` names a model loaded with `load_model`.
+    pub fn frame_model_fixture(
+        &self,
+        model: String,
+        npc: i32,
+        sequence: i32,
+        frame: u32,
+        yaw: i32,
+        camera_y: i32,
+        camera_z: i32,
+    ) -> js_sys::Promise {
+        let fixture = ModelFixture {
+            model,
+            npc: (npc >= 0).then_some((npc, sequence, frame as usize)),
+            yaw,
+            camera_y,
+            camera_z,
+        };
+        Self::run_frame(self.inner.clone(), FrameKind::ModelFixture(fixture))
+    }
+
+    pub fn load_model(&self, id: String, bytes: Vec<u8>) -> Result<(), JsValue> {
+        self.inner
+            .borrow_mut()
+            .core
+            .load_model(&id, &bytes)
+            .map_err(js_err)
+    }
+
+    fn run_frame(shared: Rc<RefCell<Inner>>, kind: FrameKind) -> js_sys::Promise {
         future_to_promise(async move {
             // (Re)create the GPU rasterizer when textures changed, validating pipeline creation
             // through an error scope so shader/pipeline failures reject instead of presenting
@@ -355,7 +400,19 @@ impl WasmRenderer {
             let (done, record) = {
                 let mut inner = shared.borrow_mut();
                 let cpu_start = js_sys::Date::now();
-                inner.core.build_frame(now_ms).map_err(js_err)?;
+                let clear = match &kind {
+                    FrameKind::Scene { now_ms } => {
+                        inner.core.build_frame(*now_ms).map_err(js_err)?;
+                        0
+                    }
+                    FrameKind::ModelFixture(fixture) => {
+                        inner
+                            .core
+                            .build_model_fixture_frame(fixture)
+                            .map_err(js_err)?;
+                        0x30_3030
+                    }
+                };
                 let state = inner.core.state;
                 let packed = pack_frame(&state, inner.core.triangles(), &inner.core.textures);
                 let (w, h) = (inner.width, inner.height);
@@ -369,7 +426,7 @@ impl WasmRenderer {
                     } = &mut *inner;
                     let raster = raster.as_mut().expect("raster created above");
                     raster.resize(w, h);
-                    let gpu_frame = raster.render(&state, &packed, 0).map_err(js_err)?;
+                    let gpu_frame = raster.render(&state, &packed, clear).map_err(js_err)?;
                     let surface_texture = match surface.get_current_texture() {
                         wgpu::CurrentSurfaceTexture::Success(t)
                         | wgpu::CurrentSurfaceTexture::Suboptimal(t) => t,

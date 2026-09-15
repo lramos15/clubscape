@@ -9,6 +9,7 @@ use serde::Deserialize;
 use crate::chunk::Chunks;
 use crate::error::RenderError;
 use crate::model::{Bounds, Model, parse_model_pack};
+use crate::model_draw::{ModelDrawer, ModelScratch};
 use crate::palette::Palette;
 use crate::raster::software::{Software, TextureSource};
 use crate::raster::{DrawStats, Fill, RasterState, Tri};
@@ -214,6 +215,33 @@ impl Default for Camera {
     }
 }
 
+/// Parameters of an approved model capture (`drawFrustum(0, yaw, 0, 128, 0, camera_y, camera_z)`).
+#[derive(Clone, Debug, Default)]
+pub struct ModelFixture {
+    pub model: String,
+    pub npc: Option<(i32, i32, usize)>,
+    pub yaw: i32,
+    pub camera_y: i32,
+    pub camera_z: i32,
+}
+
+impl Camera {
+    /// The original viewport zoom for a viewport height (`client` resizable zoom curve):
+    /// 662 at 1080 px, 883 at 1440 px, 471 at 768 px. Shells pass this as `zoom` unless they
+    /// reproduce a different source-defined zoom state.
+    pub fn source_zoom_for_height(height: i32) -> i32 {
+        let n = height - 334;
+        let d = if n < 0 {
+            256
+        } else if n >= 100 {
+            205
+        } else {
+            (205 - 256) * n / 100 + 256
+        };
+        (f64::from(height) * f64::from(d) / 334.0) as i32
+    }
+}
+
 #[derive(Clone, Debug, Default)]
 pub struct FrameSummary {
     pub triangles: usize,
@@ -234,6 +262,8 @@ pub struct RendererCore {
     scene_id: Option<String>,
     drawer: Option<SceneDrawer>,
     npc_packs: HashMap<i32, NpcPack>,
+    /// Standalone lit models (e.g. the tree fixture) addressed by manifest id.
+    models: HashMap<String, Model>,
     entities: Vec<EntityState>,
     plane: i32,
     tris: Vec<Tri>,
@@ -255,6 +285,7 @@ impl RendererCore {
             scene_id: None,
             drawer: None,
             npc_packs: HashMap::new(),
+            models: HashMap::new(),
             entities: Vec::new(),
             plane: 0,
             tris: Vec::new(),
@@ -549,6 +580,9 @@ impl RendererCore {
             center_on_camera: true,
             far_clip: self.camera.far,
         };
+        if self.camera.zoom > 0 {
+            self.state.zoom = self.camera.zoom;
+        }
         drawer.state = self.state;
         self.tris.clear();
         drawer.draw(
@@ -577,6 +611,83 @@ impl RendererCore {
 
     pub fn triangles(&self) -> &[Tri] {
         &self.tris
+    }
+
+    pub fn load_model(&mut self, id: &str, bytes: &[u8]) -> Result<(), RenderError> {
+        let model = Model::from_chunks(bytes)?;
+        self.models.insert(id.to_string(), model);
+        Ok(())
+    }
+
+    /// Developer fixture replay: draws one model through the original legacy draw
+    /// (`fx.be`, 2048 units per turn, zoom 1024) exactly as the approved model captures did.
+    /// `npc` selects a baked animation frame from a loaded NPC pack; otherwise `model` names a
+    /// standalone lit model. The frame background is the capture's 0x303030.
+    pub fn build_model_fixture_frame(
+        &mut self,
+        fixture: &ModelFixture,
+    ) -> Result<&FrameSummary, RenderError> {
+        let start = now();
+        let model = match fixture.npc {
+            Some((npc, sequence, frame)) => self
+                .npc_packs
+                .get(&npc)
+                .ok_or_else(|| RenderError::Scene(format!("npc pack {npc} not loaded")))?
+                .frame_model(sequence, frame)
+                .ok_or_else(|| {
+                    RenderError::Scene(format!(
+                        "npc {npc} has no sequence {sequence} frame {frame}"
+                    ))
+                })?,
+            None => self
+                .models
+                .get(&fixture.model)
+                .ok_or_else(|| RenderError::Scene(format!("model {} not loaded", fixture.model)))?
+                .clone(),
+        };
+        let mut state = RasterState::new(self.state.width, self.state.height, 1024);
+        state.zoom = 1024;
+        self.state = state;
+        let mut scratch = ModelScratch::default();
+        self.tris.clear();
+        {
+            let mut drawer = ModelDrawer {
+                state,
+                palette: &self.palette.rgb,
+                scratch: &mut scratch,
+                alpha_pass: 2,
+            };
+            drawer
+                .draw_legacy(
+                    &model,
+                    0,
+                    fixture.yaw,
+                    0,
+                    128,
+                    0,
+                    fixture.camera_y,
+                    fixture.camera_z,
+                    0,
+                    &mut self.tris,
+                )
+                .map_err(|_| RenderError::Scene("model fixture draw aborted".into()))?;
+        }
+        self.picks.clear();
+        self.pick_buffer = None;
+        self.entities.clear();
+        let mut stats = DrawStats::default();
+        for tri in &self.tris {
+            stats.count(tri);
+        }
+        self.last_summary = FrameSummary {
+            triangles: self.tris.len(),
+            stats,
+            entities_drawn: 1,
+            entities_skipped: Vec::new(),
+            missing_models: 0,
+            cpu_build_ms: now() - start,
+        };
+        Ok(&self.last_summary)
     }
 
     pub fn pick_targets(&self) -> &[PickTarget] {

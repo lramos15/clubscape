@@ -141,6 +141,35 @@ async function main(): Promise<void> {
       console.log(`${scene}: ${frames.length} GPU-completed frames in ${measureMs} ms, prims=${frames[0]?.primitives}, gpu p50=${(scenes[scene] as any).measured.gpuDurationMs.p50}`);
     }
 
+    // Approved model/animation captures replayed through the legacy draw path in the browser.
+    await page.setViewportSize({ width: 1920, height: 1080 });
+    await page.goto(`http://127.0.0.1:${port}/?mode=model&w=1920&h=1080`);
+    await waitReady(page);
+    const modelCases: Array<{ name: string; request: Record<string, unknown> }> = [];
+    for (const yaw of [0, 256, 512, 1024]) {
+      modelCases.push({ name: `tree-1277-yaw-${yaw}`, request: { model: "models/object-1277-model-1570-lit.bin", yaw, cameraY: 250, cameraZ: 750 } });
+    }
+    for (const [seq, frames] of [[6181, 16], [6180, 16]] as const) {
+      for (let frame = 0; frame < frames; frame += 1) {
+        modelCases.push({ name: `npc-3028-sequence-${seq}-frame-${frame}`, request: { npc: { id: 3028, sequence: seq, frame }, yaw: 256, cameraY: 240, cameraZ: 650 } });
+      }
+    }
+    for (const [seq, frames] of [[5668, 14], [5666, 8]] as const) {
+      for (let frame = 0; frame < frames; frame += 1) {
+        modelCases.push({ name: `npc-2063-sequence-${seq}-frame-${frame}`, request: { npc: { id: 2063, sequence: seq, frame }, yaw: 256, cameraY: 160, cameraZ: 400 } });
+      }
+    }
+    const modelDir = path.join(out, "models");
+    await mkdir(modelDir, { recursive: true });
+    const modelResults: unknown[] = [];
+    for (const c of modelCases) {
+      const frame = await page.evaluate((request) => window.__clubscapeDev.handle!.frameModelFixture(request as any), c.request);
+      await page.locator("canvas[data-clubscape-surface]").screenshot({ path: path.join(modelDir, `${c.name}.png`) });
+      modelResults.push({ name: c.name, request: c.request, frame });
+    }
+    report.models = modelResults;
+    console.log(`model fixtures captured: ${modelResults.length}`);
+
     // Resize range checks on one scene.
     const resizes: unknown[] = [];
     for (const [w, h] of [[1024, 768], [1280, 720], [2560, 1440]] as const) {
@@ -160,10 +189,10 @@ async function main(): Promise<void> {
     await page.goto(`http://127.0.0.1:${port}/?scene=tutorial-starting-house&w=1920&h=1080&actors=1`);
     await waitReady(page);
     await waitFrames(page, 3);
-    await page.evaluate(() => window.__clubscapeDev.handle!.resize(1280, 720));
+    await page.evaluate(() => window.__clubscapeDev.resizeTo(1280, 720));
     await waitFrames(page, 8);
     await page.locator("canvas[data-clubscape-surface]").screenshot({ path: path.join(out, "tutorial-starting-house-actors-live-resize-1280x720.png") });
-    await page.evaluate(() => window.__clubscapeDev.handle!.resize(1920, 1080));
+    await page.evaluate(() => window.__clubscapeDev.resizeTo(1920, 1080));
     await waitFrames(page, 12);
     await page.locator("canvas[data-clubscape-surface]").screenshot({ path: path.join(out, "tutorial-starting-house-actors-t0.png") });
     await page.waitForTimeout(400);
