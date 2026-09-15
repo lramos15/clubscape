@@ -8669,6 +8669,7 @@
   "over_penetration": 666,
   "over_gap": 8,
   "over_attachment": 0,
+  "over_penetration_box_half_only": 61,
   "classification": "Per-item per-pose rigid attachment fits (rotation about the grip + shift) against the penguin body; targets penetration <= 1 (carried bind box), surface gap <= 2, attachment gap <= 2 source units; precomputed runtime input, not a fit waiver"
  },
  "hud_zoom": {
@@ -23581,8 +23582,8 @@
    }
   },
   "gear/pose-fits.json": {
-   "sha256": "6a91b00ba19342f71028d49f761c2a46c2eaaabbb9d8c9a8b0343f4d9027c905",
-   "size_bytes": 331320
+   "sha256": "e1a7cb099e40f20cbf0ee51549a3a47508cb7e3c38eea2ce2220711adc64a852",
+   "size_bytes": 369363
   },
   "hud/zoom-table.json": {
    "sha256": "8375bbcd0c071466b0869f0a89d2525e50a73c35c4a23c6a07d3089ae241d21f",
@@ -23644,8 +23645,8 @@
    }
   },
   "gear/pose-fit-failures.json": {
-   "sha256": "01a96b563b94ad6c33482375925b9fc5259fd5dc6feabce4f5e0126c01cb59f1",
-   "size_bytes": 183823
+   "sha256": "a9808978f542c8caca821e8d904222e6bbfd6ba6c12616c07756bf53a8ffffec",
+   "size_bytes": 211153
   },
   "terrain/floors.bin": {
    "sha256": "b6c2356d8a663e3f15c218bf67ea631acdf1eb6cbe13ad42b3610d86488622d2",

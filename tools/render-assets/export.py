@@ -303,6 +303,7 @@ def build_pose_fits(output: Path) -> dict:
         "legality_frame_counts": summary["legality_frame_counts"],
         "item_frames_over_target": summary["item_frames_over_target"],
         "over_penetration": summary["over_penetration"], "over_gap": summary["over_gap"], "over_attachment": summary["over_attachment"],
+        "over_penetration_box_half_only": summary["over_penetration_box_half_only"],
         "classification": "Per-item per-pose rigid attachment fits (rotation about the grip + shift) against the penguin body; targets penetration <= 1 (carried bind box), surface gap <= 2, attachment gap <= 2 source units; precomputed runtime input, not a fit waiver",
     }
     manifest_path.write_text(json.dumps(manifest, indent=1) + "\n")

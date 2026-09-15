@@ -97,6 +97,9 @@ fn main() {
     // Failures whose penetration exceeds the source design's own overlap at the same pose by
     // more than the target (informational split of the failures, not a gate).
     let mut over_design = 0usize;
+    // Penetration failures whose embedded half is within the target: only the carried-box half
+    // (body geometry behind the item inside its box, no item geometry inside the body) decides.
+    let mut box_only = 0usize;
     let mut unmet_penetration = 0usize;
     let mut unmet_gap = 0usize;
     let mut frames = 0usize;
@@ -167,10 +170,14 @@ fn main() {
                     if design.is_some_and(|(pen, _)| fit.penetration > pen + FIT_MAX_PENETRATION) {
                         over_design += 1;
                     }
+                    if over_pen && fit.embedded <= FIT_MAX_PENETRATION {
+                        box_only += 1;
+                    }
                     failures.push(serde_json::json!({
                         "item_id": item_id, "sequence": sequence.id, "frame": frame, "legality": class,
                         "penetration": fit.penetration, "gap": fit.gap, "attachment_gap": fit.attachment_gap,
                         "anchor_clearance": fit.anchor_clearance,
+                        "embedded_penetration": fit.embedded,
                         "human_design_penetration_same_pose": design.map(|(p, _)| p),
                         "human_design_gap_same_pose": design.map(|(_, g)| g),
                     }));
@@ -225,12 +232,14 @@ fn main() {
                 "gap": "item <-> body surface clearance (touching anywhere)",
                 "attachment_gap": "distance of the item's grip/contact point from where the posed anchor bone carries the retargeted design grip",
                 "anchor_clearance": "item <-> anchor body part surface clearance",
+                "embedded_penetration": "the embedded half of penetration alone: deepest item vertex inside the body mesh; a failure with embedded <= 1 is decided by the carried-box half only (body geometry behind the item inside its box, no item geometry inside the body)",
                 "human_design_penetration_same_pose": "the same measure for the item on the human body it was designed for, posed by the same frame (null for the penguin's native sequences); context only"
             },
             "item_frames_measured": frames,
             "item_frames_not_drawn": hidden_frames,
             "legality_frame_counts": class_counts.iter().map(|(k, v)| serde_json::json!({"class": k, "item_frames": v})).collect::<Vec<_>>(),
             "failures_over_penetration_beyond_design_plus_target": over_design,
+            "failures_over_penetration_box_half_only": box_only,
             "failures": failures,
         }))
         .expect("json")
@@ -252,6 +261,7 @@ fn main() {
             "over_gap": unmet_gap,
             "over_attachment": unmet_attachment,
             "over_penetration_beyond_design_plus_target": over_design,
+            "over_penetration_box_half_only": box_only,
         })
     );
 }

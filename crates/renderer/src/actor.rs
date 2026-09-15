@@ -146,6 +146,11 @@ pub struct FitReport {
     /// Clearance between the item and the anchor body part alone (the part it is worn on /
     /// held by): 0 when touching it, larger when it rests on some other part.
     pub anchor_clearance: f64,
+    /// The embedded half of `penetration` alone: the deepest item vertex inside the body mesh
+    /// (source units). `penetration − embedded > 0` means the box half decides — body geometry
+    /// inside the item's carried bind box without item geometry inside the body (an arm behind
+    /// a shield plate). Provenance for the gate, not a second target.
+    pub embedded: f64,
 }
 
 /// Maximum attachment gap (source units): the item's grip/contact point may sit at most this
@@ -208,6 +213,8 @@ pub struct PoseFit {
     pub attachment_gap: f64,
     /// Clearance between the item and its anchor body part alone.
     pub anchor_clearance: f64,
+    /// Deepest item vertex inside the body mesh (the embedded half of `penetration`).
+    pub embedded: f64,
 }
 
 impl PoseFit {
@@ -437,6 +444,8 @@ pub struct TableFrameFit {
     pub attachment_gap: f64,
     #[serde(default)]
     pub anchor_clearance: f64,
+    #[serde(default)]
+    pub embedded: f64,
 }
 
 /// Precomputed fits of one item: keyed by sequence id (decimal string), one entry per frame.
@@ -727,6 +736,7 @@ impl PlayerBody {
             let pca_box_penetration = pca_box_penetration(&self.base, &part);
             let gap = clearance(&self.base, &part);
             let anchor_clearance = clearance(&anchor_part, &part);
+            let embedded = embedded_depth(&self.base, &part);
             relabel(&mut part, |human| {
                 if human == item_label {
                     penguin_label
@@ -763,6 +773,7 @@ impl PlayerBody {
                 attachment_gap: fit.attachment_gap,
                 rotation_deg: fit.rotation_deg(),
                 anchor_clearance,
+                embedded,
             });
         }
         (merged, reports, parts)
@@ -847,6 +858,7 @@ impl PlayerBody {
                     gap: fit.gap,
                     attachment_gap: fit.attachment_gap,
                     anchor_clearance: fit.anchor_clearance,
+                    embedded: fit.embedded,
                 });
                 continue;
             }
@@ -875,6 +887,7 @@ impl PlayerBody {
             let penetration = posed_fit_penetration(&bind_part, &body, &posed);
             let gap = clearance(&body, &posed);
             let anchor_clearance = clearance(anchor_part, &posed);
+            let embedded = embedded_depth(&body, &posed);
             for (i, v) in part.vertices.clone().enumerate() {
                 model.xs[v] = posed.xs[i];
                 model.ys[v] = posed.ys[i];
@@ -892,6 +905,7 @@ impl PlayerBody {
                 gap,
                 attachment_gap: fit.attachment_gap,
                 anchor_clearance,
+                embedded,
             });
         }
         Ok((model, fits))
@@ -917,6 +931,7 @@ impl PlayerBody {
                 gap: fit.gap,
                 attachment_gap: fit.attachment_gap,
                 anchor_clearance: fit.anchor_clearance,
+                embedded: fit.embedded,
             })
             .collect())
     }
