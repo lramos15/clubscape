@@ -167,7 +167,7 @@ pub fn run(engine: &WorldEngine) -> Result<Value> {
             .ui_view(&world, &actor)?
             .production
             .ok_or("Missing actual cooking menu")?;
-        if menu.target != (WorldTarget::Spawn { spawn: target }) {
+        if menu.target != Some(WorldTarget::Spawn { spawn: target }) {
             return Err("Cooking menu invented a target".into());
         }
         engine.tick(&mut world, &mut random)?;
@@ -189,11 +189,88 @@ pub fn run(engine: &WorldEngine) -> Result<Value> {
         }
         modes.push(json!({"mode": mode, "delay_ticks": delay}));
     }
+    let mut world = base.clone();
+    let recipe = RecipeId::new("recipe.cooking.dough")?;
+    let inputs = &engine.content().recipes[&recipe].inputs;
+    let character = world.characters.get_mut(&actor).unwrap();
+    character
+        .interfaces
+        .push(InterfaceId::new("interface.cooking")?);
+    for (slot, input) in [
+        (0, &inputs[0]),
+        (1, &inputs[1]),
+        (8, &inputs[0]),
+        (9, &inputs[1]),
+    ] {
+        character.inventory.slots[slot] = Some(input.clone());
+    }
+    engine.apply_intent(
+        &mut world,
+        &actor,
+        &GameIntent::UseItem {
+            inventory_slot: 8,
+            target: ItemTarget::Inventory { slot: 9 },
+        },
+        &mut NoRandom,
+    )?;
+    let menu = engine
+        .ui_view(&world, &actor)?
+        .production
+        .ok_or("Actual source dough item-use did not open its menu")?;
+    if menu.target.is_some()
+        || !menu
+            .recipes
+            .iter()
+            .any(|choice| choice.recipe == recipe && choice.single.allowed)
+    {
+        return Err(
+            "Inventory-only source dough menu invented a facility or denied its actual inputs"
+                .into(),
+        );
+    }
+    world = serde_json::from_slice(&serde_json::to_vec(&world)?)?;
+    engine.tick(&mut world, &mut random)?;
+    apply(
+        engine,
+        &mut world,
+        &actor,
+        GameplayUiRequest::ProductionSelect {
+            menu_id: menu.id,
+            recipe: recipe.clone(),
+            quantity: 1,
+            mode: ProductionMode::Single,
+        },
+    )?;
+    engine.tick(&mut world, &mut random)?;
+    let inventory = &world.characters[&actor].inventory;
+    if inventory.slots[0] != Some(inputs[0].clone())
+        || inventory.slots[1] != Some(inputs[1].clone())
+    {
+        return Err(
+            "Dough UI consumed a different matching input instead of its selected slots".into(),
+        );
+    }
+    for output in &engine.content().recipes[&recipe].outputs {
+        let count: u32 = inventory
+            .slots
+            .iter()
+            .flatten()
+            .filter(|stack| stack.item == output.item)
+            .map(|stack| stack.quantity.get())
+            .sum();
+        if count != output.quantity.get() {
+            return Err(
+                "Source dough UI lost or duplicated its declared dough/container output".into(),
+            );
+        }
+    }
     Ok(json!({
         "passed": true, "semantic_immutable_ui_states": checked,
         "appearance": {"body_type": [0, 1], "approved_source_npc": 2063},
         "selected_original_potion_doses": 4, "run_restoration_units_per_dose": 1500, "independent_drink_ticks": 3,
         "selected_bury_ticks": 2, "selected_bury_xp_tenths": 45, "real_source_production_menu_modes": modes,
+        "inventory_only_dough": {"passed": true, "target": null, "selected_slots": [8, 9], "earlier_matching_copies_preserved": true,
+            "original_dough_and_empty_containers_preserved": true},
         "scope": "Actual unmodified strict content4 and real engine control execution on explicit source-precondition component states. Not a fresh-account journey, source capture or presentation acceptance."
     }))
 }

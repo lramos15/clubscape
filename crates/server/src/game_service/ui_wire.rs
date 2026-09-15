@@ -137,7 +137,7 @@ pub(super) fn view(value: types::GameplayUiView) -> Result<game::GameplayUiView,
         production: value.production.map(|menu| game::UiProduction {
             id: menu.id,
             interface: menu.interface.to_string(),
-            target: Some(target(menu.target)),
+            target: menu.target.map(target),
             recipes: menu
                 .recipes
                 .into_iter()

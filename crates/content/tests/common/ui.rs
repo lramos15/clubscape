@@ -180,6 +180,7 @@ pub fn projection(content: &mut GameContent) {
             },
         );
     }
+
     let stage_interfaces = content
         .tutorial
         .keys()
@@ -327,4 +328,42 @@ pub fn projection(content: &mut GameContent) {
         },
         source: sources,
     });
+}
+
+pub fn inventory_production(content: &mut GameContent) {
+    for (offset, name) in ["flour", "water", "dough"].into_iter().enumerate() {
+        let mut item = content.items[&id("item.test.food")].clone();
+        item.id = id(&format!("item.test.{name}"));
+        item.name = format!("Synthetic {name}");
+        item.source_id = Some(9700 + offset as u32);
+        item.healing = None;
+        content.items.insert(item.id.clone(), item);
+    }
+    let mut recipe = content.recipes[&id("recipe.test.bury")].clone();
+    recipe.id = id("recipe.test.dough");
+    recipe.name = "Synthetic inventory-only dough".into();
+    recipe.inputs = vec![stack("item.test.flour", 1), stack("item.test.water", 1)];
+    recipe.outputs = vec![stack("item.test.dough", 1)];
+    recipe.xp.clear();
+    recipe.requirements.clear();
+    let mechanics = recipe.mechanics.as_mut().unwrap();
+    mechanics.method = id("action.test.dough");
+    mechanics.lifecycle = RecipeLifecycle::InventoryConversion;
+    for phase in [
+        &mut mechanics.cadence.single,
+        &mut mechanics.cadence.first,
+        &mut mechanics.cadence.repeat,
+    ] {
+        *phase = SourceBinding::Bound {
+            value: 1,
+            source: sources(),
+        };
+    }
+    content
+        .ui
+        .as_mut()
+        .unwrap()
+        .production_interfaces
+        .insert(recipe.id.clone(), id("interface.test.ui_production"));
+    content.recipes.insert(recipe.id.clone(), recipe);
 }

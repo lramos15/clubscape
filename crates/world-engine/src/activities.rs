@@ -447,12 +447,25 @@ impl WorldEngine {
             .ui
             .as_ref()
             .and_then(|ui| ui.production.as_ref())
-            && (target.as_ref() != Some(&menu.target) || !menu.recipes.contains(recipe_id))
+            && (target.as_ref() != menu.target.as_ref() || !menu.recipes.contains(recipe_id))
         {
             return Err(GameError::new(
                 GameErrorCode::NotOwned,
                 "The open production menu cannot be retargeted.",
             ));
+        }
+        let inventory_selection = character
+            .runtime
+            .ui
+            .as_ref()
+            .and_then(|ui| ui.production.as_ref())
+            .and_then(|menu| menu.inventory_selection.clone());
+        if let Some(selection) = &inventory_selection {
+            self.production_inventory_permission(
+                character,
+                selection,
+                std::slice::from_ref(recipe_id),
+            )?;
         }
         self.authorize(
             character,
@@ -530,6 +543,9 @@ impl WorldEngine {
             self.check_outcomes_fit(character, recipe)?;
             character.activity =
                 production_activity(recipe.id.clone(), target, remaining, next_tick, mode);
+            if let Some(ui) = &mut character.runtime.ui {
+                ui.production_input = inventory_selection;
+            }
         }
         if let Some(mechanics) = &recipe.mechanics {
             character
@@ -674,10 +690,10 @@ impl WorldEngine {
             .success
             .numerator(self.recipe_level(character, recipe)?)?;
         if count > 0 {
-            self.recipe_inventory(&mut character.inventory.clone(), recipe, true)?;
+            self.recipe_inventory(&mut character.inventory.clone(), recipe, true, None)?;
         }
         if count < recipe.success.denominator {
-            self.recipe_inventory(&mut character.inventory.clone(), recipe, false)?;
+            self.recipe_inventory(&mut character.inventory.clone(), recipe, false, None)?;
         }
         Ok(())
     }
@@ -687,15 +703,21 @@ impl WorldEngine {
         container: &mut Inventory,
         recipe: &RecipeDefinition,
         success: bool,
+        selection: Option<&ProductionInventorySelection>,
     ) -> GameResult<()> {
         let outputs = if success {
             &recipe.outputs
         } else {
             &recipe.failed_outputs
         };
+        let mut draft = container.clone();
+        if let Some(selection) = selection {
+            self.remove_selected_recipe_inputs(&mut draft, recipe, selection)?;
+        }
         let operations: Vec<_> = recipe
             .inputs
             .iter()
+            .filter(|_| selection.is_none())
             .cloned()
             .map(inventory::InventoryOperation::Remove)
             .chain(
@@ -705,7 +727,9 @@ impl WorldEngine {
                     .map(inventory::InventoryOperation::Add),
             )
             .collect();
-        inventory::apply_operations(container, &self.content.items, &operations)
+        inventory::apply_operations(&mut draft, &self.content.items, &operations)?;
+        *container = draft;
+        Ok(())
     }
 
     fn produce(
@@ -730,11 +754,31 @@ impl WorldEngine {
         if remaining == 0 {
             return Err(invalid_state("Pending production has zero work."));
         }
+        if let Some(selection) = character
+            .runtime
+            .ui
+            .as_ref()
+            .and_then(|ui| ui.production_input.as_ref())
+        {
+            self.production_inventory_permission(character, selection, std::slice::from_ref(id))?;
+        }
         self.check_recipe_target(world, character, recipe, target.as_ref())?;
         self.check_recipe(world, character, recipe, false)?;
         self.check_outcomes_fit(character, recipe)?;
         let success = random::roll(&recipe.success, self.recipe_level(character, recipe)?, rng)?;
-        self.recipe_inventory(&mut character.inventory, recipe, success)?;
+        self.recipe_inventory(
+            &mut character.inventory,
+            recipe,
+            success,
+            character
+                .runtime
+                .ui
+                .as_ref()
+                .and_then(|ui| ui.production_input.as_ref()),
+        )?;
+        if let Some(ui) = &mut character.runtime.ui {
+            ui.production_input = None;
+        }
         let outputs = if success {
             recipe.outputs.clone()
         } else {

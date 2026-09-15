@@ -341,6 +341,7 @@ message UiDocumentPage { string id = 1; uint32 page = 2; }
 message UiItem { Stack stack = 1; string name = 2; optional uint32 source_id = 3; optional string asset = 4; }
 message UiXp { string skill = 1; string amount_tenths = 2; }
 message UiProductionChoice { string recipe = 1; string name = 2; repeated UiItem outputs = 3; Permission single = 4; Permission make_x = 5; }
+// target is absent for genuine inventory-only production, never a fabricated facility.
 message UiProduction { string id = 1; string interface = 2; WorldTarget target = 3; repeated UiProductionChoice recipes = 4; }
 message UiReward {
   string id = 1; string kind = 2; string interface = 3; string title = 4; repeated string lines = 5;

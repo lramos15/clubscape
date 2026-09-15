@@ -31,6 +31,7 @@ impl Permission {
                         | GameErrorCode::Unavailable
                         | GameErrorCode::StackOverflow
                         | GameErrorCode::SessionConflict
+                        | GameErrorCode::StaleCommand
                 ) =>
             {
                 Ok(Self {

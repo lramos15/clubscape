@@ -150,6 +150,8 @@ pub struct GameplayUiRuntime {
     pub active_tab: Option<InterfaceId>,
     pub active_interface: Option<InterfaceId>,
     pub production: Option<ProductionUiSession>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub production_input: Option<ProductionInventorySelection>,
     pub rewards: Vec<RewardUiView>,
     pub confirmation: Option<UiConfirmation>,
     pub document: Option<DocumentUiView>,
@@ -163,10 +165,30 @@ pub struct GameplayUiRuntime {
 pub struct ProductionUiSession {
     pub id: String,
     pub interface: InterfaceId,
-    pub target: WorldTarget,
+    pub target: Option<WorldTarget>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub inventory_selection: Option<ProductionInventorySelection>,
     pub instance: Option<InstanceId>,
     pub recipes: Vec<RecipeId>,
     pub action: String,
+}
+
+#[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub struct ProductionInventorySelection {
+    pub used_slot: u8,
+    pub used: ItemStack,
+    pub target_slot: u8,
+    pub target: ItemStack,
+}
+
+impl ProductionInventorySelection {
+    pub fn validate_shape(&self) -> GameResult<()> {
+        if self.used_slot >= 28 || self.target_slot >= 28 || self.used_slot == self.target_slot {
+            return Err(ui_state_error());
+        }
+        Ok(())
+    }
 }
 #[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]
@@ -259,6 +281,7 @@ impl GameplayUiRuntime {
             active_tab: None,
             active_interface: None,
             production: None,
+            production_input: None,
             rewards: Vec::new(),
             confirmation: None,
             document: None,
@@ -280,6 +303,14 @@ impl GameplayUiRuntime {
     }
 
     pub fn validate_shape(&self) -> GameResult<()> {
+        for selection in self
+            .production
+            .iter()
+            .filter_map(|menu| menu.inventory_selection.as_ref())
+            .chain(self.production_input.iter())
+        {
+            selection.validate_shape()?;
+        }
         let id = |value: &str| {
             !value.is_empty() && value.len() <= 192 && !value.chars().any(char::is_control)
         };
@@ -346,6 +377,7 @@ impl GameplayUiRuntime {
                 != self.bank.entries.len()
             || self.production.as_ref().is_some_and(|menu| {
                 !id(&menu.id)
+                    || menu.target.is_none() != menu.inventory_selection.is_some()
                     || menu.recipes.is_empty()
                     || menu.recipes.len() > 256
                     || menu.recipes.iter().collect::<BTreeSet<_>>().len() != menu.recipes.len()

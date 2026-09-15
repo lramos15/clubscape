@@ -233,6 +233,7 @@ fn production_mode_and_old_snapshot_absence_are_not_success_shaped_defaults() {
             matches!(request, GameplayUiRequest::ProductionSelect { mode, .. } if mode == expected)
         );
     }
+
     let old = game::WorldSnapshot {
         revision: 9,
         tick: 4,
@@ -255,4 +256,20 @@ fn production_mode_and_old_snapshot_absence_are_not_success_shaped_defaults() {
             .amount_tenths,
         u64::MAX.to_string()
     );
+}
+
+#[test]
+fn inventory_production_transports_an_absent_world_target_not_an_empty_fake_target() {
+    let menu = game::UiProduction {
+        id: "ui.7".into(),
+        interface: "interface.cooking".into(),
+        target: None,
+        recipes: vec![game::UiProductionChoice {
+            recipe: "recipe.cooking.dough".into(),
+            ..Default::default()
+        }],
+    };
+    let decoded = game::UiProduction::decode(menu.encode_to_vec().as_slice()).unwrap();
+    assert_eq!(decoded, menu);
+    assert!(decoded.target.is_none());
 }

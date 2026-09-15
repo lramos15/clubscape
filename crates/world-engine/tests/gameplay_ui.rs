@@ -219,9 +219,9 @@ fn production_menu_has_real_target_and_single_make_x_one_remain_distinct() {
             .unwrap();
         assert_eq!(
             menu.target,
-            WorldTarget::Spawn {
+            Some(WorldTarget::Spawn {
                 spawn: SpawnId::new("spawn.test.furnace").unwrap()
-            }
+            })
         );
         let before = world.clone();
         assert!(
@@ -1300,4 +1300,295 @@ fn empty_native_tabs_collapse_and_all_tab_counts_all_owned_entries() {
     assert_eq!(view.tabs[1].tab, 1);
     assert_eq!(view.selected_tab, 1);
     assert_eq!(view.entries[0].id, rows[1].id);
+}
+
+fn inventory_menu() -> (WorldEngine, WorldState) {
+    let mut content = data();
+    source::ui::inventory_production(&mut content);
+    for (slot, item) in [(5, "flour"), (6, "water"), (8, "flour"), (9, "water")] {
+        content.initial_state.inventory.slots[slot] =
+            Some(source::stack(&format!("item.test.{item}"), 1));
+    }
+    let (engine, mut world) = setup(content);
+    let inventory = world.characters[&actor()].inventory.clone();
+    engine
+        .apply_intent(
+            &mut world,
+            &actor(),
+            &GameIntent::UseItem {
+                inventory_slot: 8,
+                target: ItemTarget::Inventory { slot: 9 },
+            },
+            &mut NoRandom,
+        )
+        .unwrap();
+    assert_eq!(world.characters[&actor()].inventory, inventory);
+    assert!(matches!(
+        world.characters[&actor()].activity,
+        Activity::Idle
+    ));
+    (engine, world)
+}
+
+#[test]
+fn inventory_only_menu_has_null_target_and_preserves_selected_inputs_through_completion() {
+    for mode in [ProductionMode::Single, ProductionMode::MakeX] {
+        let (engine, mut world) = inventory_menu();
+        let menu = engine
+            .ui_view(&world, &actor())
+            .unwrap()
+            .production
+            .unwrap();
+        assert!(menu.target.is_none());
+        assert!(serde_json::to_value(&menu).unwrap()["target"].is_null());
+        assert!(menu.recipes[0].single.allowed && menu.recipes[0].make_x.allowed);
+        let selection = world.characters[&actor()]
+            .runtime
+            .ui
+            .as_ref()
+            .unwrap()
+            .production
+            .as_ref()
+            .unwrap()
+            .inventory_selection
+            .as_ref()
+            .unwrap();
+        assert_eq!((selection.used_slot, selection.target_slot), (8, 9));
+        world = serde_json::from_slice(&serde_json::to_vec(&world).unwrap()).unwrap();
+        next(&engine, &mut world);
+        let before = world.clone();
+        assert!(
+            engine
+                .apply_intent(
+                    &mut world,
+                    &actor(),
+                    &GameIntent::ProduceSelected {
+                        recipe: source::id("recipe.test.dough"),
+                        target: Some(WorldTarget::Spawn {
+                            spawn: source::id("spawn.test.furnace")
+                        }),
+                        quantity: Quantity::new(1).unwrap(),
+                        mode,
+                    },
+                    &mut NoRandom
+                )
+                .is_err()
+        );
+        assert_eq!(world, before);
+        ui(
+            &engine,
+            &mut world,
+            GameplayUiRequest::ProductionSelect {
+                menu_id: menu.id,
+                recipe: source::id("recipe.test.dough"),
+                quantity: 1,
+                mode,
+            },
+        )
+        .unwrap();
+        assert!(matches!(
+            world.characters[&actor()].activity,
+            Activity::ProducingSelected {
+                target: None,
+                next_tick: 2,
+                ..
+            }
+        ));
+        world = serde_json::from_slice(&serde_json::to_vec(&world).unwrap()).unwrap();
+        next(&engine, &mut world);
+        let character = &world.characters[&actor()];
+        assert_eq!(
+            character.inventory.slots[5],
+            Some(source::stack("item.test.flour", 1))
+        );
+        assert_eq!(
+            character.inventory.slots[6],
+            Some(source::stack("item.test.water", 1))
+        );
+        assert_eq!(
+            clubscape_simulation::inventory::count(
+                &character.inventory,
+                &engine.content().items,
+                &source::id("item.test.dough")
+            )
+            .unwrap(),
+            1
+        );
+        assert!(
+            character
+                .runtime
+                .ui
+                .as_ref()
+                .unwrap()
+                .production_input
+                .is_none()
+        );
+        let inventory = character.inventory.clone();
+        next(&engine, &mut world);
+        assert_eq!(world.characters[&actor()].inventory, inventory);
+    }
+}
+
+#[test]
+fn inventory_menu_rejects_stale_slots_and_cannot_consume_a_different_matching_copy() {
+    for after_selection in [false, true] {
+        let (engine, mut world) = inventory_menu();
+        let menu = engine
+            .ui_view(&world, &actor())
+            .unwrap()
+            .production
+            .unwrap();
+        next(&engine, &mut world);
+        if after_selection {
+            ui(
+                &engine,
+                &mut world,
+                GameplayUiRequest::ProductionSelect {
+                    menu_id: menu.id.clone(),
+                    recipe: source::id("recipe.test.dough"),
+                    quantity: 1,
+                    mode: ProductionMode::Single,
+                },
+            )
+            .unwrap();
+        }
+        world
+            .characters
+            .get_mut(&actor())
+            .unwrap()
+            .inventory
+            .slots
+            .swap(8, 12);
+        let before = world.clone();
+        if !after_selection {
+            assert!(
+                !engine
+                    .ui_view(&world, &actor())
+                    .unwrap()
+                    .production
+                    .unwrap()
+                    .recipes[0]
+                    .single
+                    .allowed
+            );
+            assert_eq!(
+                ui(
+                    &engine,
+                    &mut world,
+                    GameplayUiRequest::ProductionSelect {
+                        menu_id: menu.id,
+                        recipe: source::id("recipe.test.dough"),
+                        quantity: 1,
+                        mode: ProductionMode::Single,
+                    }
+                )
+                .unwrap_err()
+                .code,
+                GameErrorCode::StaleCommand
+            );
+            assert_eq!(world, before);
+        }
+        next(&engine, &mut world);
+        assert_eq!(
+            world.characters[&actor()].inventory,
+            before.characters[&actor()].inventory
+        );
+        assert!(matches!(
+            world.characters[&actor()].activity,
+            Activity::Idle
+        ));
+        assert!(
+            world.characters[&actor()]
+                .runtime
+                .ui
+                .as_ref()
+                .unwrap()
+                .production
+                .is_none()
+        );
+        assert!(
+            world.characters[&actor()]
+                .runtime
+                .ui
+                .as_ref()
+                .unwrap()
+                .production_input
+                .is_none()
+        );
+    }
+}
+
+#[test]
+fn inventory_menu_closes_normally_and_legacy_targetless_production_remains_valid() {
+    let (engine, mut world) = inventory_menu();
+    next(&engine, &mut world);
+    let before = world.clone();
+    assert_eq!(
+        engine
+            .apply_intent(
+                &mut world,
+                &actor(),
+                &GameIntent::UseItem {
+                    inventory_slot: 8,
+                    target: ItemTarget::Inventory { slot: 5 },
+                },
+                &mut NoRandom
+            )
+            .unwrap_err()
+            .code,
+        GameErrorCode::InvalidInput,
+        "using flour on another flour stack is not the source flour-and-water selection"
+    );
+    assert_eq!(world, before);
+    engine
+        .apply_intent(
+            &mut world,
+            &actor(),
+            &GameIntent::CloseInterface,
+            &mut NoRandom,
+        )
+        .unwrap();
+    assert!(
+        engine
+            .ui_view(&world, &actor())
+            .unwrap()
+            .production
+            .is_none()
+    );
+    next(&engine, &mut world);
+    engine
+        .apply_intent(
+            &mut world,
+            &actor(),
+            &GameIntent::ProduceSelected {
+                recipe: source::id("recipe.test.dough"),
+                target: None,
+                quantity: Quantity::new(1).unwrap(),
+                mode: ProductionMode::Single,
+            },
+            &mut NoRandom,
+        )
+        .unwrap();
+    next(&engine, &mut world);
+    assert_eq!(
+        clubscape_simulation::inventory::count(
+            &world.characters[&actor()].inventory,
+            &engine.content().items,
+            &source::id("item.test.dough")
+        )
+        .unwrap(),
+        1
+    );
+}
+
+#[test]
+fn legacy_facility_menu_decodes_without_new_inventory_selection_metadata() {
+    let menu: ProductionUiSession = serde_json::from_value(serde_json::json!({
+        "id": "ui.1", "interface": "interface.test.ui_production",
+        "target": {"kind": "spawn", "spawn": "spawn.test.furnace"},
+        "instance": null, "recipes": ["recipe.test.bar"], "action": "Smelt"
+    }))
+    .unwrap();
+    assert!(matches!(menu.target, Some(WorldTarget::Spawn { .. })));
+    assert!(menu.inventory_selection.is_none());
 }

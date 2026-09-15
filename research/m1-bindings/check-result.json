@@ -129,6 +129,16 @@
       ]
     },
     "independent_drink_ticks": 3,
+    "inventory_only_dough": {
+      "earlier_matching_copies_preserved": true,
+      "original_dough_and_empty_containers_preserved": true,
+      "passed": true,
+      "selected_slots": [
+        8,
+        9
+      ],
+      "target": null
+    },
     "passed": true,
     "real_source_production_menu_modes": [
       {

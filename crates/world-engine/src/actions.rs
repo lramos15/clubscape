@@ -184,7 +184,12 @@ impl WorldEngine {
             GameIntent::UseItem {
                 inventory_slot,
                 target,
-            } => self.use_item(world, character, usize::from(*inventory_slot), target)?,
+            } => events.extend(self.use_item(
+                world,
+                character,
+                usize::from(*inventory_slot),
+                target,
+            )?),
             GameIntent::MoveInventory { from, to } => inventory::swap(
                 &mut character.inventory,
                 &self.content.items,
@@ -471,7 +476,8 @@ impl WorldEngine {
                 } else if self.content.ui.is_some() {
                     frame.events.extend(self.open_production_menu(
                         character,
-                        target,
+                        Some(target),
+                        None,
                         &interaction.name,
                         recipes,
                     )?);
@@ -959,7 +965,7 @@ impl WorldEngine {
         character: &mut CharacterState,
         slot: usize,
         target: &ItemTarget,
-    ) -> GameResult<()> {
+    ) -> GameResult<Vec<GameEvent>> {
         let used = inventory::stack_at(&character.inventory, slot)?
             .item
             .clone();
@@ -1070,9 +1076,41 @@ impl WorldEngine {
                 tile: character.tile,
                 next_attempt_tick,
             });
-            Ok(())
+            Ok(Vec::new())
         } else {
-            self.start_production(world, character, &recipe, facility, 1)
+            if let ItemTarget::Inventory { slot: target_slot } = target
+                && self.content.ui.is_some()
+                && self.content.recipes[&recipe]
+                    .mechanics
+                    .as_ref()
+                    .is_some_and(|mechanics| {
+                        matches!(mechanics.lifecycle, RecipeLifecycle::InventoryConversion)
+                    })
+            {
+                let selection = ProductionInventorySelection {
+                    used_slot: u8::try_from(slot)
+                        .map_err(|_| invalid_state("Invalid selected inventory slot."))?,
+                    used: inventory::stack_at(&character.inventory, slot)?.clone(),
+                    target_slot: *target_slot,
+                    target: inventory::stack_at(&character.inventory, usize::from(*target_slot))?
+                        .clone(),
+                };
+                self.production_inventory_permission(
+                    character,
+                    &selection,
+                    std::slice::from_ref(&recipe),
+                )?;
+                runtime::interrupt(character)?;
+                return self.open_production_menu(
+                    character,
+                    None,
+                    Some(selection),
+                    "use_item",
+                    &[recipe],
+                );
+            }
+            self.start_production(world, character, &recipe, facility, 1)?;
+            Ok(Vec::new())
         }
     }
 }

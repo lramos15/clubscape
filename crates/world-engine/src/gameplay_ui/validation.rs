@@ -160,6 +160,38 @@ impl WorldEngine {
                 "Production context disagrees with its source menu binding.",
             ));
         }
+        if let Some(selection) = ui
+            .production
+            .as_ref()
+            .and_then(|menu| menu.inventory_selection.as_ref())
+        {
+            self.production_inventory_recipes(selection, &ui.production.as_ref().unwrap().recipes)?;
+        }
+        if let Some(selection) = &ui.production_input {
+            let recipe = match &character.activity {
+                Activity::Producing {
+                    recipe,
+                    target: None,
+                    ..
+                }
+                | Activity::ProducingAt {
+                    recipe,
+                    target: None,
+                    ..
+                }
+                | Activity::ProducingSelected {
+                    recipe,
+                    target: None,
+                    ..
+                } => recipe,
+                _ => {
+                    return Err(invalid_state(
+                        "Selected source inputs have no matching inventory production activity.",
+                    ));
+                }
+            };
+            self.production_inventory_recipes(selection, std::slice::from_ref(recipe))?;
+        }
         if let Some(document) = &ui.document
             && !definition.item_actions.values().flatten().any(|action| matches!(&action.action,
                 ItemUiAction::Read { interface, title, pages, map_asset, native_map }

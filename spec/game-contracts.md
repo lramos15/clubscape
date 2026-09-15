@@ -46,6 +46,26 @@ item/container mutations and accepted destructive confirmations share normal
 source-tick admission. Presentation/preferences/public chat do not consume an
 action phase. All still use authenticated, sequenced, durable commands.
 
+`ProductionUiView.target` is `Option<WorldTarget>` / `WorldTarget | null`.
+A null target is genuine inventory-only production, such as flour + water
+dough; it is not an unavailable menu and must not be replaced by a facility,
+actor/self-use or dummy spawn. Existing Protobuf target field3 is absent in
+that case. `UseItem` with an inventory target opens the bound source menu.
+`ProductionUiSession.inventory_selection` retains both selected slots and exact
+stack/instance identities; these are checked again at selection and first
+completion, which consumes the selected inputs before other matching copies.
+The pending input selection survives state serialization; stale input changes
+refuse/interrupt atomically. Subsequent Make-X repetitions use the ordinary
+source recipe planner. Closing, interruption and source disconnect behavior
+remain authoritative. Legitimate direct `ProduceSelected { target: None }`
+continues to work without an open menu.
+
+Old facility-menu JSON still decodes as `target: Some(...)`. The additive
+`inventory_selection` and pending `production_input` fields default to absent
+only for those older contexts/ordinary direct production; existing reward/chat
+history is not reset. No content/protocol version, message tag, renderer/audio
+ABI, source cadence or gameplay-scope waiver is introduced by this correction.
+
 Quest cards are bound to newly committed atomic entitlements and their exact
 source reward payload, followed by actual XP-derived level cards. Dismissal
 consumes only that presentation identity. Pending cards survive reconnect;

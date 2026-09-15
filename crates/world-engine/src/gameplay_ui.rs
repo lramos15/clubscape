@@ -1,5 +1,6 @@
 mod bank_controls;
 mod inventory_actions;
+mod production;
 mod projections;
 mod validation;
 
@@ -308,11 +309,14 @@ impl WorldEngine {
                         "Recipe does not belong to the open source facility.",
                     ));
                 }
+                if let Some(selection) = &menu.inventory_selection {
+                    self.production_inventory_permission(&character, selection, &menu.recipes)?;
+                }
                 self.production_permission(
                     &draft,
                     &character,
                     recipe,
-                    &menu.target,
+                    menu.target.as_ref(),
                     *quantity,
                     *mode,
                 )?;
@@ -320,7 +324,7 @@ impl WorldEngine {
                     &mut draft,
                     &mut character,
                     recipe,
-                    Some(menu.target),
+                    menu.target,
                     *quantity,
                     *mode,
                 )?;
@@ -454,7 +458,8 @@ impl WorldEngine {
     pub(crate) fn open_production_menu(
         &self,
         character: &mut CharacterState,
-        target: &WorldTarget,
+        target: Option<&WorldTarget>,
+        inventory_selection: Option<ProductionInventorySelection>,
         action: &str,
         recipes: &[RecipeId],
     ) -> GameResult<Vec<GameEvent>> {
@@ -482,7 +487,8 @@ impl WorldEngine {
         ui_mut(character)?.production = Some(ProductionUiSession {
             id,
             interface: interface.clone(),
-            target: target.clone(),
+            target: target.cloned(),
+            inventory_selection,
             instance: character.runtime.instance.clone(),
             recipes: recipes.to_vec(),
             action: action.into(),
@@ -503,13 +509,23 @@ impl WorldEngine {
             else {
                 continue;
             };
-            let gone = matches!(&menu.target, WorldTarget::TemporaryObject { object } if !world.runtime.temporary_objects.contains_key(object));
+            let gone = matches!(&menu.target, Some(WorldTarget::TemporaryObject { object }) if !world.runtime.temporary_objects.contains_key(object));
             let valid = if gone || menu.instance != character.runtime.instance {
                 false
-            } else {
-                self.interaction_options(world, actor, &menu.target)?
+            } else if let Some(target) = &menu.target {
+                self.interaction_options(world, actor, target)?
                     .iter()
                     .any(|option| option.name == menu.action && option.permission.allowed)
+            } else if let Some(selection) = &menu.inventory_selection {
+                match self.production_inventory_permission(character, selection, &menu.recipes) {
+                    Ok(()) => true,
+                    Err(error) if crate::is_interruption(&error.code) => false,
+                    Err(error) => return Err(error),
+                }
+            } else {
+                return Err(invalid_state(
+                    "Targetless production menu lost its source inventory selection.",
+                ));
             };
             if !valid {
                 close.push(actor.clone());

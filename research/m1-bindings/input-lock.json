@@ -1,5 +1,5 @@
 {
-  "aggregate_sha256": "4a122475c6658a4205b5e1fb583ba305641f9839cefb7cbbeedaca1509203321",
+  "aggregate_sha256": "1e255aadeb163e856703a2833d4464dc8481a445172fe7bdddb97a2cc5f54e20",
   "inputs": [
     {
       "bytes": 845835,
@@ -8577,9 +8577,9 @@
       "sha256": "d78b3f6ba8d503fa84d42938ce82671ab6e4ad4be7b85d5111f5f72b4c4eee76"
     },
     {
-      "bytes": 10023,
+      "bytes": 10031,
       "path": "crates/game-types/src/gameplay_ui.rs",
-      "sha256": "058f8bfb192e9182c2a099bab3804c8811d90a72209a2a875a291e33865989f5"
+      "sha256": "f8f1cf049df41a14d4f8ab5813f44ead3229b32a12936ed7dcfb30c60de3b6d0"
     },
     {
       "bytes": 4162,
@@ -8622,9 +8622,9 @@
       "sha256": "4421ac1ed3dedd3eb01065a13a13126526650198b1126551a9004d21cb4f44c7"
     },
     {
-      "bytes": 13582,
+      "bytes": 14717,
       "path": "crates/game-types/src/ui_state.rs",
-      "sha256": "a0b2deb958d8e3fbd2757b259196a7f2a0b4bf52925f9732c2a3f5f8ddb9aee9"
+      "sha256": "5a53eba4127b6e999e2499ecc63355588ab090b8b5a53569b42c0b9074cc99c3"
     },
     {
       "bytes": 1512,
@@ -8957,9 +8957,9 @@
       "sha256": "ff83ad69b4b5e6394a5606a16945cc015b96de8eb76cae3c5ca32370ca1b9157"
     },
     {
-      "bytes": 7589,
+      "bytes": 10194,
       "path": "tools/m1-content/schema-check/src/ui_probes.rs",
-      "sha256": "622b9ca51516f5a7e4f0d392dac3bd9a1d64f64547450ae99cd100246f7d2c2f"
+      "sha256": "9014e2e1fb16324b4369e79d375bf3b223e87e931336ad86b825256548f5a4d3"
     },
     {
       "bytes": 22615,

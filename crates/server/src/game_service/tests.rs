@@ -2,6 +2,7 @@
 mod engine_fixtures;
 #[path = "../../../content/tests/common/mod.rs"]
 mod fixtures;
+mod production;
 mod ui;
 
 use std::{env, fs, path::PathBuf, str::FromStr, sync::Arc, time::Duration};

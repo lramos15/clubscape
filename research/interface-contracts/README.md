@@ -15,6 +15,13 @@ the same pinned guide/high-alchemy valuation. Native source probes run the real
 engine with strict unmodified content4 on explicitly controlled component states.
 They are not a fresh-account journey or observed presentation.
 
+The nullable production-target correction is published separately as
+`351847f3f5255f6de6e345d5217a7910eaa145a3`. The canonical native probe exercises
+actual flour + water item-use through a menu with `target: null`, preserves its
+selected slots across serialization, and produces the declared dough/empty
+containers without consuming earlier matching copies. Native and real
+PostgreSQL/HTTP cases also cover stale selections, exact-once retries and restart.
+
 The selected source potion restores 15% (1500 run units), with a separate
 three-tick timer, and leaves the next original dose or original vial229.
 Beer leaves beer glass1919;1923 is a bowl, not a replacement. The original

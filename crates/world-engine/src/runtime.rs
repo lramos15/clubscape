@@ -97,6 +97,7 @@ pub(crate) fn interrupt(character: &mut CharacterState) -> GameResult<()> {
     if let Some(ui) = &mut character.runtime.ui {
         ui.active_interface = None;
         ui.production = None;
+        ui.production_input = None;
         ui.document = None;
         ui.confirmation = None;
         ui.death_preview = false;

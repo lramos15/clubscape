@@ -1,6 +1,6 @@
 {
   "artifact_reloaded": true,
-  "artifact_sha256": "8f33a4a41aa378bc73489f59aa8d77588f047b3bb9ca63a77e411416abcc54fa",
+  "artifact_sha256": "7db2892a303c1a9eac1158c4802859ccb99fc9141281cfb06761468c0d10f894",
   "canonical_game_content_deserialized": true,
   "engine_api_scope": "Construction, authenticated-lifecycle boundary, read-only views and first source input only; not a full journey or browser/presentation acceptance.",
   "engine_constructed": true,
@@ -80,6 +80,16 @@
       ]
     },
     "independent_drink_ticks": 3,
+    "inventory_only_dough": {
+      "earlier_matching_copies_preserved": true,
+      "original_dough_and_empty_containers_preserved": true,
+      "passed": true,
+      "selected_slots": [
+        8,
+        9
+      ],
+      "target": null
+    },
     "passed": true,
     "real_source_production_menu_modes": [
       {
@@ -102,7 +112,7 @@
   "real_source_appearance_request_passed": true,
   "recipes": 13,
   "regions": 29,
-  "revision": "m1.source-backed.v4.4a122475c6658a42",
+  "revision": "m1.source-backed.v4.1e255aadeb163e85",
   "runtime_compiled": true,
   "skills": 24,
   "source_initial_world_and_character_validated": true,

@@ -78,7 +78,7 @@ impl WorldEngine {
                                         world,
                                         character,
                                         id,
-                                        &menu.target,
+                                        menu.target.as_ref(),
                                         1,
                                         ProductionMode::Single,
                                     ))?,
@@ -86,7 +86,7 @@ impl WorldEngine {
                                         world,
                                         character,
                                         id,
-                                        &menu.target,
+                                        menu.target.as_ref(),
                                         1,
                                         ProductionMode::MakeX,
                                     ))?,
@@ -370,11 +370,20 @@ impl WorldEngine {
         world: &WorldState,
         character: &CharacterState,
         id: &RecipeId,
-        target: &WorldTarget,
+        target: Option<&WorldTarget>,
         quantity: u32,
         mode: ProductionMode,
     ) -> GameResult<()> {
         self.input_permission(character)?;
+        if let Some(selection) = character
+            .runtime
+            .ui
+            .as_ref()
+            .and_then(|ui| ui.production.as_ref())
+            .and_then(|menu| menu.inventory_selection.as_ref())
+        {
+            self.production_inventory_permission(character, selection, std::slice::from_ref(id))?;
+        }
         self.authorize(character, &["produce".into(), format!("produce:{id}")])?;
         let recipe = self
             .content
@@ -385,7 +394,7 @@ impl WorldEngine {
         if mode == ProductionMode::Single && quantity != 1 {
             return Err(invalid_state("Invalid production selection mode/quantity."));
         }
-        self.check_recipe_target(world, character, recipe, Some(target))?;
+        self.check_recipe_target(world, character, recipe, target)?;
         self.check_recipe(world, character, recipe, false)?;
         self.recipe_delay(recipe, mode == ProductionMode::Single, false)?;
         self.check_outcomes_fit(character, recipe)

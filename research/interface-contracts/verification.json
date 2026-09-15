@@ -2,6 +2,7 @@
   "schema_version": 1,
   "task": "m1-gameplay-ui-contracts",
   "shared_contract_commit": "e48e6f52d68aa97fbbb4f5664bf6e1c5ef7e71e8",
+  "nullable_production_contract_commit": "351847f3f5255f6de6e345d5217a7910eaa145a3",
   "implementation_verified": true,
   "overall_status": "blocked_required_asset_publication",
   "versions": {
@@ -15,8 +16,8 @@
   },
   "artifact": {
     "path": "content/m1/game-content.csc.gz",
-    "raw_sha256": "8f33a4a41aa378bc73489f59aa8d77588f047b3bb9ca63a77e411416abcc54fa",
-    "compressed_sha256": "204b62035cd25a81b28864abdba4ab6fc04db994cf1c484b2c8288ca402d1df3",
+    "raw_sha256": "7db2892a303c1a9eac1158c4802859ccb99fc9141281cfb06761468c0d10f894",
+    "compressed_sha256": "5491b01951ad35111563a941639527cdb6184a2389767cf63080f0f368383099",
     "strict_runtime_compile": true,
     "strict_reload": true,
     "byte_identical_outputs_across_two_builds": 83,
@@ -26,14 +27,14 @@
     "native": {
       "command": "cargo test -p clubscape-game-types -p clubscape-simulation -p clubscape-world-engine -p clubscape-content -p clubscape-protocol -p clubscape-server -p clubscape-client-core --all-targets --quiet",
       "binaries": 41,
-      "passed": 523,
+      "passed": 528,
       "failed": 0,
-      "ignored_postgresql_tests": 38
+      "ignored_postgresql_tests": 39
     },
     "postgresql_http": {
       "command": "python3 /home/lramos15/clubscape/tools/dev.py integration --workspace /home/lramos15/clubscape/.worktrees/m1-gameplay-ui-contracts --report .local/evidence/m1-gameplay-ui-contracts.json",
-      "passed": 38,
-      "new_ui_integration_cases": 5,
+      "passed": 39,
+      "new_ui_integration_cases": 6,
       "independent_account_client_checks": 11,
       "owned_server_container_database_cleaned_up": true
     },
@@ -59,6 +60,12 @@
       "selected_burial_xp_tenths": 45,
       "source_menu_single_ticks": 1,
       "source_menu_make_x_one_ticks": 3,
+      "inventory_only_dough": {
+        "target": null,
+        "selected_slots": [8, 9],
+        "earlier_matching_copies_preserved": true,
+        "declared_dough_and_empty_container_outputs_preserved": true
+      },
       "passed": true,
       "scope": "Real unmodified source content and engine on controlled component preconditions; not a fresh journey."
     },
@@ -78,6 +85,8 @@
   "caller_contract": {
     "view": "WorldSnapshot.ui / WorldView.ui version1, capability game.ui.v1",
     "input": "WorldInput.ui / GameplayUiIntent; ordinary operation UUID and contiguous sequence",
+    "production_target": "Option<WorldTarget> / WorldTarget|null; absent protobuf target for genuine inventory-only production",
+    "inventory_production": "UseItem on an inventory slot opens a source menu. Trusted typed selection retains both slots/stacks/instances through selection and first completion; stale identities cannot consume another matching copy.",
     "bank_precondition": "GameplayUiRequest.expected_bank_revision must echo ui.bank.revision as a decimal string; validated after duplicate receipt lookup",
     "migration": "Stop the coordinator; configure a complete target game root; cargo run --locked -p clubscape-server -- migrate-ui --from <exact-old-raw-artifact-sha256>",
     "migration_audit": "0005_game_content_migrations.sql",

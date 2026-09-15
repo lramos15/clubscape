@@ -7,12 +7,12 @@
   "check_command": "python3 tools/m1-content/check.py",
   "compiled_artifact": {
     "artifact_version": 4,
-    "bytes": 519882,
+    "bytes": 519879,
     "path": "content/m1/game-content.csc.gz",
     "schema_version": 4,
-    "sha256": "204b62035cd25a81b28864abdba4ab6fc04db994cf1c484b2c8288ca402d1df3",
+    "sha256": "5491b01951ad35111563a941639527cdb6184a2389767cf63080f0f368383099",
     "uncompressed_bytes": 13083530,
-    "uncompressed_sha256": "8f33a4a41aa378bc73489f59aa8d77588f047b3bb9ca63a77e411416abcc54fa"
+    "uncompressed_sha256": "7db2892a303c1a9eac1158c4802859ccb99fc9141281cfb06761468c0d10f894"
   },
   "compiler_command": "python3 tools/m1-content/compile.py --compiler-manifest crates/content/Cargo.toml",
   "content_schema_version": 4,
@@ -66,29 +66,29 @@
   },
   "declared_v3_selectors_authored": true,
   "inactive_full_target_binding_count": 6,
-  "input_aggregate_sha256": "4a122475c6658a4205b5e1fb583ba305641f9839cefb7cbbeedaca1509203321",
+  "input_aggregate_sha256": "1e255aadeb163e856703a2833d4464dc8481a445172fe7bdddb97a2cc5f54e20",
   "milestone_accepted": false,
   "outputs": [
     {
-      "bytes": 339175,
-      "json_bytes": 339175,
-      "json_sha256": "45a50607e2c058440a5db567894c699f857bd6ed00e09e36b4bf006a75fa4c54",
+      "bytes": 339176,
+      "json_bytes": 339176,
+      "json_sha256": "75f3320e1bc975dc4f89d9cdfba97716044ad9074875ffb1faf56e6d0e0786ae",
       "path": "research/m1-bindings/input-lock.json",
-      "sha256": "45a50607e2c058440a5db567894c699f857bd6ed00e09e36b4bf006a75fa4c54"
+      "sha256": "75f3320e1bc975dc4f89d9cdfba97716044ad9074875ffb1faf56e6d0e0786ae"
     },
     {
-      "bytes": 509875,
+      "bytes": 509874,
       "json_bytes": 15553501,
-      "json_sha256": "f9208dd0ed924a97e92263f4df0abfc358c7d8ea502c39b7f551c462f65a8588",
+      "json_sha256": "30fcefde81832e714710079404e38e794b4bf9f4ba0be0a8dd563108e5591dc4",
       "path": "content/m1/game-content.json.gz",
-      "sha256": "5ec9d9e28fbf6a58ddf370d52739c11cd29b5921810e8fe62f70d794d5b39127"
+      "sha256": "0e33cc051f7d970c2e43ef7375c029527bcef98c933cf191b918d5b5c5d86d89"
     },
     {
       "bytes": 189277,
       "json_bytes": 189277,
-      "json_sha256": "61be5a042877d18f6a1b602931f0be38919868e4ea471dee954a17d465fd4c12",
+      "json_sha256": "52b434b649313bc8d9226a90bcfec5711546233b0f8a058c1fc9ea09be4cd79b",
       "path": "research/m1-bindings/application-result.json",
-      "sha256": "61be5a042877d18f6a1b602931f0be38919868e4ea471dee954a17d465fd4c12"
+      "sha256": "52b434b649313bc8d9226a90bcfec5711546233b0f8a058c1fc9ea09be4cd79b"
     },
     {
       "bytes": 4211,
@@ -639,7 +639,7 @@
   ],
   "presentation_approved": false,
   "readiness_dependency": "research/m1-bindings/contract-gaps.json",
-  "revision": "m1.source-backed.v4.4a122475c6658a42",
+  "revision": "m1.source-backed.v4.1e255aadeb163e85",
   "runtime_compile_passed": true,
   "runtime_ready": false,
   "runtime_schema_version": 1,

@@ -198,6 +198,13 @@ request names are in the shared gameplay UI contract. The shell maps its flat
 `GameplayUiIntent` into Protobuf `GameplayUiRequest`; the internal engine
 representation is `GameIntent::Ui { request }`. Renderer/audio ABIs do not change.
 
+Production menus may have no world target. Preserve Protobuf
+`UiProduction.target` absence as `WorldView.ui.production.target = null`;
+do not construct an empty `WorldTarget` message or invent a facility. Inventory
+`UseItem` retains its selected item/target slots in trusted typed menu state,
+and `ProductionSelect` continues to send only the menu ID, recipe, quantity
+and explicit mode through the ordinary durable sequence/operation journal.
+
 Bank callers echo `ui.bank.revision` in
 `GameplayUiRequest.expected_bank_revision`. Invalid/missing preconditions fail;
 stale revisions fail transactionally without consuming a sequence. A duplicate
