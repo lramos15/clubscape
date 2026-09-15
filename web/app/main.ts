@@ -21,6 +21,7 @@ declare global {
     };
     __clubscapePresentationV1?: Readonly<{
       mode: "live" | "early_fixture" | "recorded_camera"; sceneId: string | null; cameraInput: string | null;
+      projection: "renderer-viewport-only-helper"; fullHudProjectionMatched: false;
     }>;
   }
 }
@@ -42,6 +43,7 @@ async function start(): Promise<void> {
   window.__clubscapePresentationV1 = Object.freeze({
     mode: earlyScene ? "early_fixture" : recordedCamera ? "recorded_camera" : "live",
     sceneId: earlyScene, cameraInput: earlyScene ?? recordedCamera,
+    projection: "renderer-viewport-only-helper", fullHudProjectionMatched: false,
   });
   const ownedBridge = bridge;
   bridge = null;
@@ -57,7 +59,7 @@ async function start(): Promise<void> {
   if (earlyScene !== null || recordedCamera !== null) {
     status.hidden = false;
     status.textContent = earlyScene ? `Early presentation fixture: ${earlyScene}. Not a legitimate journey or acceptance run.`
-      : `Real streamed source region, explicit recorded camera: ${recordedCamera}. Not a live-camera or journey acceptance run.`;
+      : `Real streamed source region, explicit recorded camera: ${recordedCamera}. Viewport-only projection; matched full-HUD projection awaits the renderer. Not a journey or fidelity acceptance run.`;
   }
 }
 

@@ -444,6 +444,23 @@ explicit five-fixture diagnostic. Neither mode silently maps a canonical
 region to a fixture. Without a recorded diagnostic or real configured live
 camera, normal entry reports the camera binding gap.
 
+**Projection boundary:** the independent frozen full-HUD inventory replay in
+source supplement `53fbd543828cda12f28f2ec30b8f78c9d914ccef` is byte-identical
+and reports zoom410 at1080, versus the viewport-only helper's662. The current
+composed output is explicitly not a matched full-HUD projection. Genuine
+GPU completion, nonblank screenshots and unchanged native widget coordinates
+do not establish that fidelity. Only the renderer's matched-source resolution
+can close it; no empirical shell camera override or UI/preview/minimap
+coordinate scaling is applied.
+
+The supplement's12 cases are offline original-render evidence. Its index
+`assets/reference/osrs240/m1-dynamic/case-index.json` has SHA-256
+`dde300e30ff909e539c283fa7053c673abc9428ce357894f0727be08da8ad557`.
+These reference captures are not imported into this browser delivery, nor
+does their publication accept the candidate or change frozen input hashes.
+New source-run receipts carry the explicit projection classification; earlier
+GPU measurements remain engineering-only and are not retroactively promoted.
+
 The two-frame shell clock uses a per-native-sequence canvas submission/
 completion ledger; offscreen previews cannot steal receipts. Real loaded
 square diagnostics govern residency, not append-only fetch history.

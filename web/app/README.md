@@ -237,12 +237,30 @@ to that source square. `sceneId` reports the actual assembled `blocks@x,y`;
 arrival camera. Unknown/duplicate URL parameters and URL secrets reject.
 
 The camera uses16384 units/turn, near50 and
-`sourceZoomForViewportHeight(backingHeight)` (662 at1080). Live resize updates
+the renderer's **viewport-only** `sourceZoomForViewportHeight(backingHeight)`
+helper (662 at1080). Live resize updates
 the same camera/zoom in renderer and UI. An early fixture with no live control
 calibration keeps its recorded camera: no guessed mouse sensitivity or scroll
 curve. Source live camera/control bindings must be supplied before normal
 entry. A logical privacy `instance` is not guessed to be the original client's
 instanced-map flag; stock roof behavior stays renderer-owned.
+
+The independent byte-identical frozen inventory/full-HUD replay in
+`53fbd543828cda12f28f2ec30b8f78c9d914ccef` reports native full-HUD zoom410,
+not viewport-only662, at1080. Current composed captures therefore do **not**
+establish matched full-HUD projection, even when their GPU frames complete.
+The presentation observer and new source-run receipts label this explicitly.
+The renderer owns resolution against matched original source cases; the shell
+does not override zoom to410, rescale HUD/minimap coordinates, or alter the
+native-size model preview to approximate a match.
+
+That commit's12 dynamic cases and
+`assets/reference/osrs240/m1-dynamic/case-index.json` (SHA-256
+`dde300e30ff909e539c283fa7053c673abc9428ce357894f0727be08da8ad557`)
+are offline original-render references only. They are not client assets,
+authoritative gameplay, or candidate acceptance. No supplemental capture
+import was needed for this shell-side classification, and frozen inputs remain
+untouched.
 
 The current native frame timestamps still use wall-clock `Date.now()`.
 `CanvasGpuClock` independently observes **actual game-canvas texture acquisition,

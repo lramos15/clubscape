@@ -397,6 +397,9 @@ export async function sourceBrowserCheck(): Promise<void> {
     assert.deepEqual([...failedAssets], [], "real source/component requests must not hide missing delivery assets");
     assert.equal(unhandledPageErrors, 0);
     checks.push("actual component asset routes have no failed responses or unhandled page errors");
+    const projection = await page.evaluate(() => window.__clubscapePresentationV1);
+    assert.equal(projection?.projection, "renderer-viewport-only-helper");
+    assert.equal(projection?.fullHudProjectionMatched, false);
     const benchmark = await page.evaluate(() => window.__clubscapeBenchmarkV1!.read(null));
     assert.equal(benchmark.ready, false, "Unexposed actual entity counts cannot be treated as a complete benchmark workload.");
     if (earlyScene !== null || recordedCamera !== null) {
@@ -431,7 +434,7 @@ export async function sourceBrowserCheck(): Promise<void> {
       checks, gameplayUi, audioControls, sourceRunPin: pin, browser: version, sandbox: { namespaceAndSeccomp: true, gpuProcessSandboxed: system.gpu.auxAttributes?.sandboxed ?? null },
       titlePixels: title, build: benchmark.identity, rendererReady: benchmark.ready, renderedFrames: benchmark.renderedFrames,
       actualUiSignup: true, actualCanonicalWorld: true, actualServerRestart: true, actualDeviceLossHandled: true,
-      earlyScene, recordedCamera, renderPixels, preview, timing,
+      earlyScene, recordedCamera, projection, renderPixels, preview, timing,
       dynamicObjects: { received: first.dynamicObjects.length, canonicalSourceMetadata: true },
       fullJourneyTested: false, worldRendererIntegrated: true,
       actualInitialBlocksLoaded: recordedCamera !== null, liveCameraSourceBound: false,
