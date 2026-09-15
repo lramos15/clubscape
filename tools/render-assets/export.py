@@ -53,6 +53,9 @@ def normalize(value):
 # Raw scene buffers are large (5-15 MB each) and reproducible; only their gzip form is published.
 # A raw file may therefore be absent when its .gz twin verifies (see `unpack`).
 COMPRESSED_PREFIXES = ("scenes/", "blocks/")
+# Twins that are reproducible but not committed (world blocks: see `pack-blocks`); `unpack`
+# restores them only when present, `unpack-blocks`/`verify-blocks` require them.
+UNPUBLISHED_PREFIXES = ("blocks/",)
 
 
 def gzip_bytes(data: bytes) -> bytes:
@@ -88,18 +91,32 @@ def compress_scenes(output: Path) -> int:
     return written
 
 
-def unpack_scenes(output: Path) -> int:
-    """Restore raw scene buffers from their published .gz twins (native tests read the raw files)."""
+def unpack_scenes(output: Path, require: tuple[str, ...] = ()) -> dict:
+    """
+    Restore raw buffers from their .gz twins (native tests read the raw files). Published twins
+    (scenes) must be present and are always verified; twins that are deliberately unpublished
+    (`blocks/`, reproducible locally or installed from the block pack) are restored when present
+    and only *required* when their prefix is listed in `require`. A raw file whose hash already
+    matches the manifest is left alone; a stale raw file is overwritten with the pinned bytes.
+    """
     manifest = json.loads((output / "manifest.json").read_text())
-    restored = 0
+    restored = fresh = skipped = 0
     for name, record in manifest["files"].items():
         if not name.endswith(".gz"):
             continue
         raw_name = record["detail"]["decompressed"]
         raw = output / raw_name
+        compressed_path = output / name
+        if not compressed_path.is_file():
+            unpublished = name.startswith(UNPUBLISHED_PREFIXES) and not name.startswith(require)
+            if unpublished:
+                skipped += 1
+                continue
+            raise ValueError(f"Missing published buffer {name}")
         if raw.is_file() and sha(raw) == record["detail"]["decompressed_sha256"]:
+            fresh += 1
             continue
-        compressed = (output / name).read_bytes()
+        compressed = compressed_path.read_bytes()
         if hashlib.sha256(compressed).hexdigest() != record["sha256"]:
             raise ValueError(f"Published buffer changed: {name}")
         data = gzip.decompress(compressed)
@@ -108,7 +125,7 @@ def unpack_scenes(output: Path) -> int:
         raw.parent.mkdir(parents=True, exist_ok=True)
         raw.write_bytes(data)
         restored += 1
-    return restored
+    return {"restored": restored, "already_pinned": fresh, "unpublished_skipped": skipped}
 
 
 BLOCK_INDEX = "blocks.index.json"
@@ -269,7 +286,8 @@ def main() -> int:
         print(json.dumps(verify_manifest(args.output), separators=(",", ":")))
         return 0
     if args.profile == "unpack":
-        print(f"UNPACK {unpack_scenes(args.output)} buffers")
+        # Published twins only; unpublished block twins are restored when present, never required.
+        print("UNPACK " + json.dumps(unpack_scenes(args.output), separators=(",", ":")))
         print(json.dumps(verify_manifest(args.output), separators=(",", ":")))
         return 0
     if args.profile == "pack-blocks":

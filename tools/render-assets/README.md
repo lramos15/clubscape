@@ -35,7 +35,7 @@ python3 tools/render-assets/export.py --profile dynamic     # door/fire/state ob
 python3 tools/render-assets/export.py --profile widgets     # original if3 model components (interface 679:73)
 python3 tools/render-assets/export.py --profile minimap     # map-scene sprites/shape masks + per-square minimap sidecars
 python3 tools/render-assets/export.py --profile compress    # (re)write scenes/*.gz, blocks/*.gz + manifest
-python3 tools/render-assets/export.py --profile unpack      # restore raw scenes/*.bin from *.gz
+python3 tools/render-assets/export.py --profile unpack      # restore raw *.bin from published *.gz (pinned bytes; unpublished block twins optional)
 python3 tools/render-assets/export.py --profile pack-blocks # deterministic world-block pack + blocks.index.json
 python3 tools/render-assets/export.py --profile unpack-blocks .local/render-assets/dist/clubscape-render-blocks-<hash>.tar
 python3 tools/render-assets/export.py --profile verify-blocks  # strict: every pinned block buffer present + hashed

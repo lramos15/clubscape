@@ -21,8 +21,8 @@ fn read(rel: &str) -> Vec<u8> {
 
 fn textures() -> TextureSet {
     let mut set = TextureSet::default();
-    for entry in std::fs::read_dir(repo_root().join("assets/compiled/render/textures")).unwrap() {
-        set.insert(Texture::from_chunks(&std::fs::read(entry.unwrap().path()).unwrap()).unwrap());
+    for bytes in common::texture_bytes() {
+        set.insert(Texture::from_chunks(&bytes).unwrap());
     }
     set
 }
@@ -33,9 +33,8 @@ fn core_with_textures() -> RendererCore {
         1920,
         1080,
     );
-    for entry in std::fs::read_dir(repo_root().join("assets/compiled/render/textures")).unwrap() {
-        core.add_texture(&std::fs::read(entry.unwrap().path()).unwrap())
-            .unwrap();
+    for bytes in common::texture_bytes() {
+        core.add_texture(&bytes).unwrap();
     }
     core
 }

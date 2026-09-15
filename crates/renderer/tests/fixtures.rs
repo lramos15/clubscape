@@ -37,19 +37,13 @@ fn read_png_rgb(path: &Path) -> (u32, u32, Vec<i32>) {
 }
 
 fn load_palette() -> Palette {
-    let data =
-        std::fs::read(repo_root().join("assets/compiled/render/palette.bin")).expect("palette.bin");
-    Palette::from_chunks(&data).expect("palette")
+    Palette::from_chunks(&common::read_asset("palette.bin")).expect("palette")
 }
 
 fn load_textures() -> TextureSet {
     let mut set = TextureSet::default();
-    let dir = repo_root().join("assets/compiled/render/textures");
-    for entry in std::fs::read_dir(&dir).expect("textures dir") {
-        let path = entry.unwrap().path();
-        if path.extension().is_some_and(|e| e == "bin") {
-            set.insert(Texture::from_chunks(&std::fs::read(&path).unwrap()).expect("texture"));
-        }
+    for bytes in common::texture_bytes() {
+        set.insert(Texture::from_chunks(&bytes).expect("texture"));
     }
     assert!(!set.is_empty());
     set
@@ -495,12 +489,10 @@ fn scene_models_report_alpha_254_flat_faces() {
 #[test]
 fn core_places_world_view_entities_in_scene() {
     use clubscape_renderer::core::{Camera, RendererCore};
-    let root = repo_root();
     let palette = load_palette();
     let mut core = RendererCore::new(palette, 1920, 1080);
-    for entry in std::fs::read_dir(root.join("assets/compiled/render/textures")).unwrap() {
-        core.add_texture(&std::fs::read(entry.unwrap().path()).unwrap())
-            .unwrap();
+    for bytes in common::texture_bytes() {
+        core.add_texture(&bytes).unwrap();
     }
     core.load_npc_pack_as(3028, &read_asset("models/npc-3028.pack.bin"))
         .unwrap();

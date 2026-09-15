@@ -177,13 +177,19 @@ impl Block {
         let object_flags = chunks.bytes("BOBF")?;
         let heights = chunks.ints("BHGT")?;
         let roofs = chunks.ints("BROF")?;
-        let settings = chunks.bytes_opt("BSET")?.unwrap_or_else(|| vec![0; tiles]);
+        let settings = chunks.bytes_opt("BSET")?.ok_or_else(|| {
+            RenderError::InvalidAsset(
+                "block export lacks BSET tile settings (re-export with the current blocks profile)"
+                    .into(),
+            )
+        })?;
         if flags.len() != tiles
             || link.len() != tiles
             || object_count.len() != tiles
             || object_flags.len() != tiles * 5
             || heights.len() != (planes * (size + 1) * (size + 1)) as usize
             || roofs.len() != tiles
+            || settings.len() != tiles
         {
             return Err(RenderError::InvalidAsset(
                 "block per-tile array sizes".into(),

@@ -75,9 +75,8 @@ fn core() -> RendererCore {
         1920,
         1080,
     );
-    for entry in std::fs::read_dir(repo_root().join("assets/compiled/render/textures")).unwrap() {
-        core.add_texture(&std::fs::read(entry.unwrap().path()).unwrap())
-            .unwrap();
+    for bytes in common::texture_bytes() {
+        core.add_texture(&bytes).unwrap();
     }
     core.load_map_scenes(&common::read_asset("minimap/mapscenes.bin"))
         .unwrap();
@@ -382,7 +381,10 @@ fn door_states_move_the_minimap_wall_mark() {
     let after = red(&open_rgb);
     assert!(!before.is_empty(), "closed door draws a red wall mark");
     assert!(!after.is_empty(), "open door draws a red wall mark");
-    assert_ne!(before, after, "the mark moved with the door rotation");
+    assert!(
+        before != after,
+        "the mark did not move with the door rotation (closed {before:?}, open {after:?})"
+    );
     let differing = closed_rgb
         .iter()
         .zip(&open_rgb)

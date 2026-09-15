@@ -8,17 +8,14 @@ mod common;
 use clubscape_renderer::core::{Camera, RendererCore};
 use clubscape_renderer::palette::Palette;
 
-use common::repo_root;
-
 fn core_with_scene(name: &str, camera: Camera) -> RendererCore {
     let mut core = RendererCore::new(
         Palette::from_chunks(&common::read_asset("palette.bin")).unwrap(),
         1920,
         1080,
     );
-    for entry in std::fs::read_dir(repo_root().join("assets/compiled/render/textures")).unwrap() {
-        core.add_texture(&std::fs::read(entry.unwrap().path()).unwrap())
-            .unwrap();
+    for bytes in common::texture_bytes() {
+        core.add_texture(&bytes).unwrap();
     }
     let manifest: serde_json::Value =
         serde_json::from_slice(&common::read_asset("manifest.json")).unwrap();
@@ -100,7 +97,11 @@ fn warm_cache_frames_equal_a_fresh_build() {
     );
     let picks_cached: Vec<u32> = cached.triangles().iter().map(|t| t.pick).collect();
     let picks_fresh: Vec<u32> = fresh.triangles().iter().map(|t| t.pick).collect();
-    assert_eq!(picks_cached, picks_fresh);
+    let pick_diff = common::diff_buffers(
+        &picks_cached.iter().map(|&p| p as i32).collect::<Vec<_>>(),
+        &picks_fresh.iter().map(|&p| p as i32).collect::<Vec<_>>(),
+    );
+    assert!(pick_diff.differing == 0, "pick ids differ: {pick_diff:?}");
 
     // A camera change drops every entry and the first frame at the new camera stores none.
     let moved = Camera {

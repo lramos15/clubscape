@@ -51,12 +51,19 @@ web/renderer/build.sh
 ```
 
 Runtime inputs live in `assets/compiled/render` (see `tools/render-assets/README.md`). Tests read
-published buffers through `tests/common/mod.rs`: raw scene buffers are published only as
-deterministic gzip twins and are inflated on the fly, so a clean checkout runs every scene and
-NPC case; a declared input that is missing fails the test. No test skips a mandatory case at
-run time — suites over unpublished, reproducible exports (world blocks, pinned validation
-twins, per-frame bakes) are `#[ignore]`d with the reproduction command and fail on missing
-files when run with `--include-ignored`.
+published buffers through `tests/common/mod.rs`, which returns exactly the manifest-pinned
+bytes: a raw file is used only when its SHA-256 equals the manifest entry, otherwise the
+published gzip twin is inflated and its decompressed hash checked; textures are the manifest's
+list, not the directory contents; a stale or newer unpublished local export can never override
+a published input, and an input matching neither pin fails loudly (no silent fallback). Raw
+scene buffers are published only as deterministic gzip twins, so a clean checkout runs every
+scene and NPC case. Scene/block exports must carry their tile settings (`TSET`/`BSET`) — an
+older export without them is rejected instead of silently drawing every roof (that defaulting
+once let a stale raw scene hide the roof-removal failure). No test skips a mandatory case at
+run time — suites over unpublished, reproducible exports (world blocks, pinned validation twins,
+per-frame bakes) are `#[ignore]`d with the reproduction command and fail on missing or
+unpinned files when run with `--include-ignored`. Pixel comparisons report counts, first
+differences and channel errors, never whole buffers.
 
 Tests (published inputs unless noted):
 

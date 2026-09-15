@@ -27,8 +27,8 @@ fn asset(key: &str) -> Vec<u8> {
 
 fn textures() -> TextureSet {
     let mut set = TextureSet::default();
-    for entry in std::fs::read_dir(repo_root().join("assets/compiled/render/textures")).unwrap() {
-        set.insert(Texture::from_chunks(&std::fs::read(entry.unwrap().path()).unwrap()).unwrap());
+    for bytes in common::texture_bytes() {
+        set.insert(Texture::from_chunks(&bytes).unwrap());
     }
     set
 }
@@ -61,9 +61,8 @@ fn core_with_actors() -> Option<RendererCore> {
         1920,
         1080,
     );
-    for entry in std::fs::read_dir(repo_root().join("assets/compiled/render/textures")).unwrap() {
-        core.add_texture(&std::fs::read(entry.unwrap().path()).unwrap())
-            .unwrap();
+    for bytes in common::texture_bytes() {
+        core.add_texture(&bytes).unwrap();
     }
     for seq in manifest["sequences"].as_array().unwrap() {
         core.load_sequence(&asset(seq["file"].as_str().unwrap()))
@@ -338,10 +337,11 @@ fn motion_identity_is_explicit_or_reported_unknown() {
         summary.entities_skipped
     );
     assert_eq!(core.unknown_motions().len(), 1);
-    assert_eq!(
-        rasterize(&core, &textures),
-        idle,
-        "unknown motion must not invent a pose"
+    common::assert_pixels_equal(
+        &rasterize(&core, &textures),
+        &idle,
+        1920,
+        "unknown motion must not invent a pose",
     );
     // Catalog sequence id in player.animation: the source motion plays, no diagnostic.
     view["player"]["animation"] = serde_json::json!("asset.source.osrs.cache2695.sequence.879");
@@ -353,7 +353,7 @@ fn motion_identity_is_explicit_or_reported_unknown() {
         summary.entities_skipped
     );
     let chop = rasterize(&core, &textures);
-    assert_ne!(chop, idle);
+    common::assert_pixels_differ(&chop, &idle, "named motion equals idle");
     // Animation event (shell extension) for the player: same result through the event channel.
     view["player"]["animation"] = serde_json::json!("");
     view["events"] = serde_json::json!([{"kind": "animation", "eventId": "evt-1", "actorId": "player-1", "animationAsset": "asset.source.osrs.cache2695.sequence.879"}]);
@@ -364,10 +364,11 @@ fn motion_identity_is_explicit_or_reported_unknown() {
         "{:?}",
         summary.entities_skipped
     );
-    assert_eq!(
-        rasterize(&core, &textures),
-        chop,
-        "event-driven motion equals the named motion"
+    common::assert_pixels_equal(
+        &rasterize(&core, &textures),
+        &chop,
+        1920,
+        "event-driven motion equals the named motion",
     );
     // An event naming a non-sequence asset is reported, not applied.
     view["events"] = serde_json::json!([{"kind": "animation", "eventId": "evt-2", "actorId": "player-1", "animationAsset": "asset.source.osrs.cache2695.object.1276"}]);
@@ -395,7 +396,12 @@ fn motion_identity_is_explicit_or_reported_unknown() {
         "{:?}",
         summary.entities_skipped
     );
-    assert_eq!(rasterize(&core, &textures), idle);
+    common::assert_pixels_equal(
+        &rasterize(&core, &textures),
+        &idle,
+        1920,
+        "bad event keeps idle",
+    );
     // Developer fallback on: the activity table applies (and is labelled as such by the flag).
     core.set_motion_fallback(true);
     view["player"]["hitpoints"] = serde_json::json!(10);
@@ -407,7 +413,12 @@ fn motion_identity_is_explicit_or_reported_unknown() {
         "{:?}",
         summary.entities_skipped
     );
-    assert_eq!(rasterize(&core, &textures), chop);
+    common::assert_pixels_equal(
+        &rasterize(&core, &textures),
+        &chop,
+        1920,
+        "developer fallback pose",
+    );
     core.set_motion_fallback(false);
 
     // Running: two tiles in one server tick plays 824, one tile plays 819; the run setting
@@ -486,7 +497,7 @@ fn npc_definitions_animate_through_the_skeletal_port() {
     let first = rasterize(&core, &textures);
     core.build_frame(20.0 * 9.0).unwrap();
     let later = rasterize(&core, &textures);
-    assert_ne!(first, later, "definition stand sequences did not advance");
+    common::assert_pixels_differ(&first, &later, "definition stand sequences did not advance");
     // Every drawn actor is pickable by its WorldView id somewhere in the frame.
     let mut found = std::collections::HashSet::new();
     for y in (300..1000).step_by(3) {
@@ -548,8 +559,8 @@ fn player_uses_original_action_motion_and_wears_modular_gear() {
     let chop0 = rasterize(&core, &textures);
     core.build_frame(20.0 * 8.0).unwrap();
     let chop1 = rasterize(&core, &textures);
-    assert_ne!(idle, chop0, "woodcutting pose equals idle");
-    assert_ne!(chop0, chop1, "woodcutting animation did not advance");
+    common::assert_pixels_differ(&idle, &chop0, "woodcutting pose equals idle");
+    common::assert_pixels_differ(&chop0, &chop1, "woodcutting animation did not advance");
     let (_, fits) = core.player_fit_report().unwrap();
     assert_eq!(fits.len(), 1, "axe should be attached: {fits:?}");
     eprintln!("fit: {:?}", fits[0]);
@@ -586,7 +597,7 @@ fn player_uses_original_action_motion_and_wears_modular_gear() {
         assert!(fit.gap <= clubscape_renderer::actor::FIT_MAX_GAP, "{fit:?}");
     }
     let armed = rasterize(&core, &textures);
-    assert_ne!(armed, chop0);
+    common::assert_pixels_differ(&armed, &chop0, "worn gear changed nothing");
     // The server names the combat motion: punch (422) and sword slash (390) differ.
     core.update_world(
         &world((3098, 3098), "fighting", "422", &[], serde_json::json!([])),
@@ -608,7 +619,7 @@ fn player_uses_original_action_motion_and_wears_modular_gear() {
     .unwrap();
     core.build_frame(20.0 * 3.0).unwrap();
     let slash = rasterize(&core, &textures);
-    assert_ne!(punch, slash);
+    common::assert_pixels_differ(&punch, &slash, "punch and slash render alike");
     // Server-bound death animation.
     core.update_world(
         &world((3098, 3098), "idle", "836", &[], serde_json::json!([])),
@@ -617,7 +628,7 @@ fn player_uses_original_action_motion_and_wears_modular_gear() {
     .unwrap();
     core.build_frame(20.0 * 40.0).unwrap();
     let dead = rasterize(&core, &textures);
-    assert_ne!(dead, idle);
+    common::assert_pixels_differ(&dead, &idle, "death pose equals idle");
     if let Some(PickTarget::Object { .. }) = core.pick(960, 700) {}
 }
 
@@ -764,7 +775,7 @@ fn dynamic_layers_draw_from_the_world_view() {
         summary.entities_skipped
     );
     let with_items = rasterize(&core, &textures);
-    assert_ne!(with_items, baseline, "ground items drew nothing");
+    common::assert_pixels_differ(&with_items, &baseline, "ground items drew nothing");
     assert!(core.triangles().len() > baseline_tris);
     let mut item_pick = None;
     for y in (400..1000).step_by(2) {
@@ -823,7 +834,7 @@ fn dynamic_layers_draw_from_the_world_view() {
         summary.entities_skipped
     );
     let door_open = rasterize(&core, &textures);
-    assert_ne!(door_open, baseline, "open door did not change the wall");
+    common::assert_pixels_differ(&door_open, &baseline, "open door did not change the wall");
     write_png("dynamic-layers-door-open", 1920, 1080, &door_open);
 
     // Roof removal mode 1 hides the roof over the player's tile inside the house.
@@ -841,9 +852,10 @@ fn dynamic_layers_draw_from_the_world_view() {
         "roof triangles: visible {on_tris}, removed {}",
         core.triangles().len()
     );
-    assert_ne!(
-        roofs_on, roofs_off,
-        "roof removal mode 1 changed nothing over the player"
+    common::assert_pixels_differ(
+        &roofs_on,
+        &roofs_off,
+        "roof removal mode 1 changed nothing over the player",
     );
     write_png("dynamic-layers-roof-removed", 1920, 1080, &roofs_off);
     core.set_roof_mode(0);
@@ -1083,7 +1095,11 @@ fn stock_top_plane_rule_hides_upper_planes_under_roofs() {
         outside > pinned,
         "stock rule drew {outside} triangles vs pinned plane 0 {pinned}"
     );
-    assert_ne!(outside_pixels, pinned_pixels);
+    common::assert_pixels_differ(
+        &outside_pixels,
+        &pinned_pixels,
+        "stock rule equals pinned plane 0",
+    );
     write_png("top-plane-stock-outside", 1920, 1080, &outside_pixels);
     // Player inside the starting house (roof-flagged tile): the top plane drops to plane 0 again.
     core.update_world(

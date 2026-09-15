@@ -11,6 +11,7 @@ use clubscape_renderer::core::{Camera, ModelFixture, NpcPack, RendererCore};
 use clubscape_renderer::model::Model;
 use clubscape_renderer::palette::Palette;
 use clubscape_renderer::raster::software::Software;
+use clubscape_renderer::scene::SceneData;
 use clubscape_renderer::scene::draw::PickTarget;
 use clubscape_renderer::texture::{Texture, TextureSet};
 
@@ -49,17 +50,16 @@ fn palette() -> Palette {
 
 fn textures() -> TextureSet {
     let mut set = TextureSet::default();
-    for entry in std::fs::read_dir(repo_root().join("assets/compiled/render/textures")).unwrap() {
-        set.insert(Texture::from_chunks(&std::fs::read(entry.unwrap().path()).unwrap()).unwrap());
+    for bytes in common::texture_bytes() {
+        set.insert(Texture::from_chunks(&bytes).unwrap());
     }
     set
 }
 
 fn core_with_assets(width: i32, height: i32) -> RendererCore {
     let mut core = RendererCore::new(palette(), width, height);
-    for entry in std::fs::read_dir(repo_root().join("assets/compiled/render/textures")).unwrap() {
-        core.add_texture(&std::fs::read(entry.unwrap().path()).unwrap())
-            .unwrap();
+    for bytes in common::texture_bytes() {
+        core.add_texture(&bytes).unwrap();
     }
     core.load_npc_pack_as(
         3028,
@@ -130,6 +130,90 @@ fn truncated_and_corrupt_buffers_are_rejected() {
     assert!(Palette::from_chunks(&[0u8; 16]).is_err());
     let pack = read("assets/compiled/render/models/npc-3028.pack.bin");
     assert!(NpcPack::from_chunks(&pack[..pack.len() - 4096]).is_err());
+}
+
+/// The test-input pinning relies on the shared SHA-256 helper: FIPS 180-4 vectors, and every
+/// published scene the tests read must hash to its manifest entry (a raw file that does not
+/// is ignored in favour of the published twin, see `common::read_asset`).
+#[test]
+fn test_inputs_are_pinned_to_the_manifest() {
+    assert_eq!(
+        common::sha256_hex(b""),
+        "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    );
+    assert_eq!(
+        common::sha256_hex(b"abc"),
+        "ba7816bf8f01cfea414140de5dae2223b00361a396177a9cb410ff61f20015ad"
+    );
+    let long = vec![b'a'; 1_000_000];
+    assert_eq!(
+        common::sha256_hex(&long),
+        "cdc76e5c9914fb9281a1c7e284d73e67f1809a48a497200e046d39ccc7112cd0"
+    );
+    let manifest: serde_json::Value =
+        serde_json::from_slice(&common::read_asset("manifest.json")).unwrap();
+    for name in [
+        "tutorial-starting-house",
+        "tutorial-survival-coast",
+        "lumbridge-castle-plaza",
+        "lumbridge-river-bridge",
+        "lumbridge-windmill-route",
+    ] {
+        let key = format!("scenes/{name}.bin");
+        let bytes = common::read_asset(&key);
+        let pin = manifest["files"][&key]["sha256"].as_str().unwrap();
+        assert_eq!(common::sha256_hex(&bytes), pin, "{key}");
+        // The bytes the tests use carry the tile settings roof removal depends on.
+        assert!(
+            clubscape_renderer::chunk::Chunks::parse(&bytes)
+                .unwrap()
+                .has("TSET"),
+            "{key} lacks TSET"
+        );
+    }
+}
+
+/// Removes one tagged chunk from a chunk file (header + every other chunk kept verbatim).
+fn without_chunk(file: &[u8], tag: &[u8; 4]) -> Vec<u8> {
+    let mut out = file[..8].to_vec();
+    let mut cursor = 8;
+    while cursor + 8 <= file.len() {
+        let len = u32::from_le_bytes(file[cursor + 4..cursor + 8].try_into().unwrap()) as usize;
+        let end = cursor + 8 + len;
+        if &file[cursor..cursor + 4] != tag {
+            out.extend_from_slice(&file[cursor..end]);
+        }
+        cursor = end;
+    }
+    out
+}
+
+/// A scene or block export without its tile settings would silently draw every roof (the
+/// roof-removal and stock top-plane rules read `ez.vs`); such a buffer must be refused, never
+/// defaulted to "no roofs".
+#[test]
+fn scene_exports_without_tile_settings_are_rejected() {
+    let scene = read("assets/compiled/render/scenes/tutorial-starting-house.bin");
+    assert!(
+        SceneData::from_chunks(&scene).is_ok(),
+        "the published scene carries TSET"
+    );
+    let stripped = without_chunk(&scene, b"TSET");
+    assert!(stripped.len() < scene.len());
+    match SceneData::from_chunks(&stripped) {
+        Err(e) => assert!(e.to_string().contains("TSET"), "{e}"),
+        Ok(_) => panic!("scene without TSET loaded with defaulted tile settings"),
+    }
+    // Every published fixture scene carries roof-flagged tiles somewhere (the settings are real).
+    let loaded = SceneData::from_chunks(&scene).unwrap();
+    let roofed = (0..loaded.width)
+        .flat_map(|x| (0..loaded.height).map(move |y| (x, y)))
+        .filter(|&(x, y)| loaded.is_roof_tile(0, x, y))
+        .count();
+    assert!(
+        roofed > 0,
+        "starting-house scene has no roof-flagged tiles on plane 0"
+    );
 }
 
 #[test]
@@ -503,10 +587,11 @@ fn resize_reprojects_and_picking_stays_in_bounds() {
     camera.zoom = Camera::source_zoom_for_height(1080);
     core.set_camera(camera).unwrap();
     core.build_frame(0.0).unwrap();
-    assert_eq!(
-        rasterize(&core, &textures),
-        full,
-        "resizing back must reproduce the original frame"
+    common::assert_pixels_equal(
+        &rasterize(&core, &textures),
+        &full,
+        1920,
+        "resizing back must reproduce the original frame",
     );
 }
 

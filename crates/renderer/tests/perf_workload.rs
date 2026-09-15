@@ -2,7 +2,9 @@
 //! scenario of the browser capture): the Lumbridge scene assembled from blocks, the geared
 //! fighting penguin, seven NPCs, a fire and ground items, at the 1920x1080 source camera.
 //! Measures `build_frame` (traversal + projection) and `pack_frame` (GPU layout) per frame.
-//! Ignored by default: needs the local block exports and takes a few seconds.
+//! Ignored by default: needs the local block exports and takes a few seconds. Compiled only
+//! with the `gpu` feature (it packs the GPU layout).
+#![cfg(feature = "gpu")]
 
 mod common;
 
@@ -39,8 +41,7 @@ fn workload_cpu_profile() {
         1080,
     );
     let mut textures = TextureSet::default();
-    for entry in std::fs::read_dir(repo_root().join("assets/compiled/render/textures")).unwrap() {
-        let bytes = std::fs::read(entry.unwrap().path()).unwrap();
+    for bytes in common::texture_bytes() {
         core.add_texture(&bytes).unwrap();
         textures.insert(Texture::from_chunks(&bytes).unwrap());
     }

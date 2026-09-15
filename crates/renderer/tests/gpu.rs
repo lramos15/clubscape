@@ -20,19 +20,13 @@ use clubscape_renderer::texture::{Texture, TextureSet};
 use common::{read_asset, repo_root};
 
 fn load_palette() -> Palette {
-    Palette::from_chunks(
-        &std::fs::read(repo_root().join("assets/compiled/render/palette.bin")).unwrap(),
-    )
-    .unwrap()
+    Palette::from_chunks(&read_asset("palette.bin")).unwrap()
 }
 
 fn load_textures() -> TextureSet {
     let mut set = TextureSet::default();
-    for entry in std::fs::read_dir(repo_root().join("assets/compiled/render/textures")).unwrap() {
-        let path = entry.unwrap().path();
-        if path.extension().is_some_and(|e| e == "bin") {
-            set.insert(Texture::from_chunks(&std::fs::read(&path).unwrap()).unwrap());
-        }
+    for bytes in common::texture_bytes() {
+        set.insert(Texture::from_chunks(&bytes).unwrap());
     }
     set
 }

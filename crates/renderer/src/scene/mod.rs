@@ -328,9 +328,17 @@ impl SceneData {
             return Err(RenderError::InvalidAsset("scene heights size".into()));
         }
         let roofs = chunks.ints("ROOF")?;
-        let settings = chunks
-            .bytes_opt("TSET")?
-            .unwrap_or_else(|| vec![0; roofs.len()]);
+        // `ez.vs` drives roof removal and the stock top-plane rule; a scene without it would
+        // silently draw every roof, so an export predating TSET is rejected, not defaulted.
+        let settings = chunks.bytes_opt("TSET")?.ok_or_else(|| {
+            RenderError::InvalidAsset(
+                "scene export lacks TSET tile settings (re-export with the current scenes profile)"
+                    .into(),
+            )
+        })?;
+        if settings.len() != roofs.len() {
+            return Err(RenderError::InvalidAsset("scene tile settings size".into()));
+        }
         let mut scene = SceneData {
             name: chunks.text("NAME")?,
             base_x: h[0],

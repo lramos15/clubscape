@@ -69,7 +69,7 @@ impl PackedFrame {
         boxes.clear();
         boxes.reserve(tris.len());
         let mut fallbacks = 0usize;
-        for (tri, slot) in tris.iter().zip(packed.chunks_exact_mut(TRI_STRIDE)) {
+        for (tri, slot) in tris.iter().zip(packed.as_chunks_mut::<TRI_STRIDE>().0) {
             let mut colors = [0i32; 3];
             let mut kind = KIND_GOURAUD;
             let mut texture = -1;
@@ -109,7 +109,6 @@ impl PackedFrame {
                 }
             }
             let flags = kind | (if tri.clip_x { 4 } else { 0 }) | ((tri.alpha & 255) << 8);
-            let slot: &mut [i32; TRI_STRIDE] = slot.try_into().expect("chunk of TRI_STRIDE");
             *slot = [
                 tri.y[0],
                 tri.y[1],
