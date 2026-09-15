@@ -49,7 +49,7 @@
       "source_notes": ["Two normal accounts passed10/70sourceedges plus onboardingrecovery; reachable SurvivalExpert producesInvalidContent because primarylesson andnetrecovery entries overlap."],
       "parity_entries": [],
       "adaptations": [],
-      "evidence": []
+      "evidence": ["2f775f7+435e27c apply separateauditedloweringAFTERimmutable104+7bindingapplication; primarylessonexclusive,onefallbackrecoverymenu,originalchoice/effects preserved andactualmissing/topup ownershiprequired.", "Strictsourcev3artifactbb99ad96...82e2e1 passes69tests/195oracles/30routes/23graphs/92repeatoutputs. Nativeprimarylesson grantsoneaxe/tinderbox whilekeepingnet andadvancescut_logs; lostnetchoicegrantsonewithoutstagechange. Actualfreshjourney recheckrunning; noM1acceptance."]
     },
     {
       "id": "M1-SOURCE-DYNAMIC-REFERENCES",
@@ -283,7 +283,7 @@
       "source_notes": ["research/reference-pack/v1/manifest.json"],
       "parity_entries": [],
       "adaptations": ["Approved penguin base and equipment-fit criteria"],
-      "evidence": ["Initial exactraster/scene/GPU/WASM components integrated66ecd4d/67aacfe/55c2a1e/487b8a9/6969a43/63b911d; centraldependencylock627fb17 preservesexistingversions.", "Parent restored10publishedbuffers andverified nativeGB10 all5source scenes/treecases withzeropixeldifference; actualWASM/TypeScriptbuild passes.21testfunctions pass, BUT legacy standaloneNPC54case loopsskip absentper-framefiles; CPU pack-basedNPCcoveragepasses. Worker mustcorrectrequiredGPUfixturecoverage andmislabelled trianglecount-as-nanoseconds print; no fullrenderer/performance acceptance.", "Sameworker continuesrequiredaction animations/modulargear/fit/roof/items/dynamicworld/regionstreaming/preview/minimap. Passingearlyfixtures are not entireM1rendering."]
+      "evidence": ["Initialexactrendererplusstreaming/skeletal/layers/preview/pipeline/harness integratedthroughe96e3b8/1937201/c098133/0c541d9. NativeGPUtimingnowactualtimestamps;all58publishedmodelcapturesmandatory, absenthardwarefails. Parentpublishedfixture/GPU/robustnessselectorpasses23testswithoneexplicitunpublishedexportignored.", "Publishedfullactorssuitecurrentlyfails roofmodepixelchange atactors.rs646; parentreproducedandreported. Unpackincorrectlyrequiresunpublishedblocks; rawhashpreference/oversizedpixeldiagnostics alsoassignedbacktoworker. Nogateiscountedpassedbecauseoftestfunctioncount.", "Requiredgearfitstillviolatesraw<=1penetration(axe1.01,hat6.56,shield5.73);actualrunning/sourceanimation/dynamicobjectobservercontracts anddynamicminimap inprogress.59.85FPS andp95completiongap~28ms arebelow/above frozenbudgets,respectively,notaccepted. Sameworkerrepairswithoutloosenedmetrics; originaldynamic-layerreferencesareindependenttask."]
     },
     {
       "id": "M1-BROWSER-UI",
