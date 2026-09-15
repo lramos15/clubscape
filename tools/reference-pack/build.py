@@ -19,6 +19,7 @@ from components import ROOT, OUT, SOURCE, digest, load_gzip, measure, proposals
 from fetch import image_facts, write_json
 from factoring import make_factoring, review_ready
 from native_hud import load_inputs as load_native_hud_inputs, calibration as native_hud_calibration, wire_cases as wire_native_hud
+from audio_reference import source_contract as audio_reference_contract, resolved_action_map, wire_cases as wire_audio_cases
 
 
 CAPTURE_PATH = ROOT / "assets/reference/osrs240/captures.json"
@@ -108,6 +109,12 @@ def document_bindings():
         "research/audio-source/references.json", "research/audio-source/browser-decode.json",
         "research/audio-source/conversion-evidence.json.gz", "research/audio-source/extra-inputs.json.gz",
         "research/audio-source/layout-check.json", "tools/audio-import/dependencies.json",
+        "milestones/m1-audio-trigger-approval.json", "spec/adaptations.md",
+        "research/audio-source/bindings.json", "research/audio-source/selector-observations.json",
+        "research/audio-source/binding-native-evidence.json.gz", "research/audio-source/binding-public-evidence.json.gz",
+        "research/audio-source/selector-observation-evidence.json.gz",
+        "research/audio-source/musical-startup-correction.json", "research/audio-source/selector-observation-validation.json",
+        "research/audio-source/binding-test-results.json", "research/audio-source/validation.json",
         "tools/audio-import/codec.py", "tools/source-capture/capture.py",
         "tools/source-capture/NATIVE_HUD.md",
         "assets/reference/osrs240/reference-sets.json",
@@ -149,7 +156,7 @@ def case_base(identifier, title, family, input_ids, widget_groups, profile):
     }
 
 
-def make_cases(originals, public, proposal_inputs, audio):
+def make_cases(originals, public, proposal_inputs, audio, audio_contract):
     tutorial = json.loads(TUTORIAL_PATH.read_text())
     by_title = {entry["title"].removeprefix("File:"): entry["id"] for entry in public}
     public_ids = set(by_title.values())
@@ -158,6 +165,8 @@ def make_cases(originals, public, proposal_inputs, audio):
     audio_by_key = {f"{entry['kind']}.{entry['source_group']}": entry["asset_id"]
                     for entry in audio["assets"]}
     audio_map = json.loads((ROOT / "research/audio-source/source-map.json").read_text())
+    audio_map["actions"] = resolved_action_map(audio_contract)
+    templates = audio_contract["reference_templates"]
     audio_families = {
         "gathering": ["rule.mining.", "rule.woodcutting.", "rule.fishing.", "rule.firemaking."],
         "production": ["rule.cooking.", "rule.smelting.", "rule.smithing."],
@@ -265,8 +274,6 @@ def make_cases(originals, public, proposal_inputs, audio):
                                for prefix in audio_families[names[0]]):
                             audio_rules.append(action["journey_rule_id"])
                             sounds.update(action["identified_sound_ids"])
-                    if names[0] == "production":
-                        sounds.add(2725)
                     if names[0] == "interaction":
                         for action in audio_map["quest_and_gathering"]:
                             if "sound_ids" in action:
@@ -275,6 +282,7 @@ def make_cases(originals, public, proposal_inputs, audio):
                                 raise ValueError(f"Unknown quest audio source-map shape: {action['action']}")
                 identifiers = [entry["asset_id"] for entry in audio["assets"]
                                if entry["kind"] == "sfx" and entry["source_group"] in sounds]
+                identifiers.extend(entry["id"] for entry in templates if entry["source_group"] in sounds)
         else:
             identifiers = [by_title[name] for name in names]
         case = case_base(suffix, title, kind, identifiers, widgets, profile)
@@ -302,12 +310,11 @@ def make_cases(originals, public, proposal_inputs, audio):
             case["source_map"] = "research/audio-source/source-map.json"
             case["action_rule_ids"] = audio_rules
             case["unbound_trigger_policy"] = "An empty identified_sound_ids list means unverified, not silence."
-            if names[0] == "production":
-                case["candidate_only_sound_ids"] = [2725]
             case["evidence_scope"] = "Exact original FLAC inputs and source-cache relationships; no new conversion. "
             case["evidence_scope"] += "Public playback controls/recording supplement these. Live triggers/mixer are not guessed."
         cases.append(case)
-    all_ids = original_ids | public_ids | proposal_ids | set(audio_ids)
+    template_ids = {entry["id"] for entry in templates}
+    all_ids = original_ids | public_ids | proposal_ids | set(audio_ids) | template_ids
     inputs = {entry["id"]: entry for entry in originals + public + proposal_inputs}
     for case in cases:
         missing = set(case["input_ids"]) - all_ids
@@ -315,7 +322,9 @@ def make_cases(originals, public, proposal_inputs, audio):
             raise ValueError(f"Missing actual inputs for {case['id']}: {missing}")
         case["input_roles"] = []
         for identifier in case["input_ids"]:
-            if identifier in audio_ids:
+            if identifier in template_ids:
+                role, profile = "current_original_audio_template", "audio_source"
+            elif identifier in audio_ids:
                 role, profile = "current_original_audio_input", "audio_source"
             else:
                 entry = inputs[identifier]
@@ -348,46 +357,15 @@ def gaps(factoring):
     ]
 
 
-def audio_handoff(factoring):
-    source_map_path = ROOT / "research/audio-source/source-map.json"
-    source_map = json.loads(source_map_path.read_text())
-    by_rule = {row["journey_rule_id"]: row for row in source_map["actions"]}
-    requirement = next(row for row in factoring["source_review_requirements"]
-                       if row["id"] == "input.required_effect_bindings")
-    anchors = {
-        "rule.combat.ranged": {"item_ids": [841]},
-        "rule.goblin.level_2": {"npc_ids": [3028]},
-        "rule.combat.tutorial_rat": {"npc_ids": [3313, 3314, 3315]},
-        "rule.food.healing": {"item_ids": [315, 2309]},
-        "rule.smelting.bronze": {"item_ids": [436, 438, 2349], "candidate_sound_ids": [2725]},
-    }
+def audio_handoff(audio_contract):
     return {
-        "schema_version": 1, "scope": "Only remaining source-audio identity/event/precedence inputs; no HUD blocker.",
-        "source_map": digest(source_map_path),
-        "playable_source_manifest": digest(AUDIO_PATH),
-        "unresolved_actions": [
-            {"rule_id": rule, **anchors[rule],
-             "retained_sequence_ids": by_rule[rule]["source_sequence_ids"],
-             "sequence_role": "Existing source-map anchors/candidates, not a newly verified event binding.",
-             "identified_sound_ids": by_rule[rule]["identified_sound_ids"],
-             "source_note": by_rule[rule]["note"],
-             "needed": "Actual source sound ID/variant and source-relative event boundary, with loops/weights "
-                       "where relevant. Do not replace it with a generic click, grunt, silence or plausible candidate."}
-            for rule in requirement["unbound_rule_ids"]
-        ],
-        "quest_selection": {
-            "quest_refs": ["quest.learning_the_ropes", "quest.cooks_assistant"],
-            "retained_source_jingle_ids": [152, 153, 154],
-            "current_best_candidate": 154,
-            "candidate_basis": "Pinned wiki says154 usually accompanies Beginner/Easy quests; not a per-quest selector.",
-            "needed": ["exact per-quest jingle ID/selection rule",
-                       "quest-completion versus simultaneous level-up jingle ordering/interrupt/queue precedence"],
-        },
-        "not_requested_again": ["cache acquisition", "audio conversion", "native HUD/panel rendering",
-                                "per-microstate authenticated screenshots", "a blanket source account handoff"],
-        "later_candidate_checks": ["audible output", "gain/device latency", "bound event synchronization",
-                                  "region transitions/loops", "gesture and reconnect behavior"],
-        "owner_approved": False,
+        "schema_version": 1, "status": "reference_inputs_complete",
+        "scope": "All required selectors now have qualified source evidence or one of two exact owner-approved adaptations.",
+        "reference_contract": digest(OUT / "audio-reference.json"),
+        "owner_audio_approval": audio_contract["owner_audio_adaptations"]["input"],
+        "unresolved_actions": [], "selected_bindings": audio_contract["selectors"],
+        "later_candidate_checks": audio_contract["candidate_validation_obligations"],
+        "reference_pack_approved": False,
     }
 
 
@@ -453,6 +431,7 @@ def gallery(manifest):
     all_media = {entry["id"]: entry for entry in manifest["original_inputs"] + manifest["public_inputs"]
                  + manifest["proposal_inputs"] + manifest["recording_frames"] + manifest["native_hud_inputs"]}
     audio = {entry["asset_id"]: entry for entry in manifest["audio"]["assets"]}
+    audio.update({entry["id"]: entry for entry in manifest["audio"]["reference_templates"]})
     factoring = manifest["evidence_factorization"]
     text_records = {record["id"]: record for record in
                     json.loads((ROOT / manifest["dynamic_text_oracles"]["path"]).read_text())["records"]}
@@ -549,12 +528,26 @@ def gallery(manifest):
         f'<td><audio controls preload="none" src="{link(entry["path"])}"></audio></td>'
         f'<td><code>{entry["sha256"][:16]}</code></td></tr>' for entry in manifest["audio"]["assets"]
     ]
+    template_rows = [
+        f'<tr><td>{html.escape(entry["id"])}</td><td>Exact native cue WAV; not a new FLAC conversion</td>'
+        f'<td><audio controls preload="none" src="{link(entry["path"])}"></audio></td>'
+        f'<td><code>{entry["sha256"][:16]}</code></td></tr>'
+        for entry in manifest["audio"]["reference_templates"]
+    ]
+    selector_rows = ''.join(
+        f'<tr data-audio-selector-id="{entry["id"]}"><td>{html.escape(entry["id"])}</td>'
+        f'<td>{html.escape(entry["classification"])}</td>'
+        f'<td>{html.escape(str(entry.get("sound_ids", entry.get("jingle_id"))))}</td>'
+        f'<td>{html.escape(entry["event"] + " " + entry["timing"])}</td>'
+        f'<td>{html.escape(", ".join(entry.get("recording_dates", [])) or "Exact owner record; NOT verified current selector")}</td></tr>'
+        for entry in manifest["audio"]["selectors"]
+    )
     gap_html = ''.join(
         f'<li><strong>{entry["id"]}</strong>: {html.escape(entry["exact_deficit"])} '
         f'{html.escape(entry["bounded_resolution"])}</li>' for entry in manifest["source_gaps"])
     page = """<!doctype html><html lang="en"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1"><link rel="icon" href="data:,">
-<title>M1 source reference review - awaiting owner approval</title>
+<title>M1 complete source reference pack - ready for owner review, approval pending</title>
 <style>
 *{box-sizing:border-box}body{margin:0;background:#f5f3ed;color:#171717;font:16px/1.45 system-ui,sans-serif}
 header,main{padding:20px;max-width:1800px;margin:auto}header{border-bottom:5px solid #995d08}
@@ -566,21 +559,25 @@ img,video{max-width:100%;height:auto;max-height:260px;object-fit:contain;image-r
 .status{font-weight:700;color:#7b3700}input,select{max-width:100%;padding:8px;font:inherit}
 table{width:100%;table-layout:fixed;border-collapse:collapse}td{border-bottom:1px solid #aaa;padding:8px}
 audio{max-width:100%;width:260px}[hidden]{display:none!important}summary{cursor:pointer}
-</style></head><body><header><h1>M1 source-reference review, v1.2</h1>
-<p class="banner">AWAITING OWNER APPROVAL. Readiness follows the named source-family/calibration inputs,
-not a separate authenticated screenshot for every micro-transition. This gallery displays original
+</style></head><body><header><h1>M1 source-reference review, v1.3</h1>
+<p class="banner">READY FOR OWNER REVIEW; OVERALL PACK APPROVAL IS STILL PENDING.
+The two audio selector adaptations have their own exact owner approval, not verified-current-source status.
+This gallery displays original
 reference media and labeled composition proposals. It is NOT the ClubScape client, a renderer demonstration,
-a passed player journey, or visual/audio acceptance. No owner approval has been granted.</p>
+a passed player journey, or visual/audio acceptance. The complete pack and seven web-only compositions
+have NOT been approved by this tooling.</p>
+<nav><a href="../owner-review.html">Compact owner review / exact manifest SHA / decision scope</a></nav>
 <nav><a href="#native-hud">16 original native HUD/panel frames</a> | <a href="#families">29 visual families</a> | <a href="#signatures">Progressive HUD signatures</a> |
-<a href="#cases">All126 cases /71 tutorial states</a> | <a href="#sources">Public originals</a> | <a href="#audio">258 original audio files</a> |
+<a href="#cases">All126 cases /71 tutorial states</a> | <a href="#sources">Public originals</a> | <a href="#audio">264 corrected FLACs +2 exact cue references</a> |
 <a href="../manifest.json">Manifest</a> | <a href="../native-metrics.json">Exact component/font metrics</a> |
 <a href="../comparison-policy.json">Pre-candidate numeric policy</a> | <a href="../search-log.json">Acquisition/search evidence</a> |
 <a href="../evidence-families.json">Literal requirement audit</a> | <a href="../dynamic-text-oracles.json">Pinned text/value oracles</a> |
-<a href="../native-hud-integration.json">Native calibration</a> | <a href="../audio-handoff.json">Minimal remaining audio inputs</a> |
+<a href="../native-hud-integration.json">Native calibration</a> | <a href="../audio-reference.json">Qualified/approved audio bindings</a> |
 <a href="contact-sheets.json">Contact-sheet index</a></nav>
 <p>Primary product proposal: 1920x1080 / DPR1 / UI scale1. Proposed range: 1024x768 through 2560x1440.
 Gallery resizing is not game resizing/performance evidence. Owner-run M-series Mac Chrome/Edge results are unrun.</p>
-<h2>Minimal missing reference inputs</h2><ul>""" + gap_html + """</ul>
+<h2>Reference input status</h2><p>No missing reference inputs remain after qualified source observations
+and the two exact owner-approved audio adaptations. Final candidate checks below are not missing pack inputs.</p><ul>""" + gap_html + """</ul>
 <p><strong>The native HUD/panel reference gap is closed.</strong> Source commit db103ba supplies the
 original full frame, native161/CS2, minimap/chat/sidebar/panel coordinate readbacks and six actual
 attachment families. These six controlled examples do not replace the71-state source text/value map
@@ -606,9 +603,18 @@ This is not a claim of observed numeric source progress, nor a licence to hide o
 <h2 id="sources">Every retrieved public original</h2><p>Native originals are linked; the scaled previews are navigation
 only, never comparison baselines. Source cropping, legacy layouts and official-client-only effects are identified.</p>
 <section class="grid">""" + ''.join(inventory) + """</section>
-<h2 id="audio">All original audio inputs</h2><p>Click to listen. No autoplay. These are the existing lossless source
-conversions, not newly converted assets or accepted source mixer/trigger behavior. The verified silent SFX2411 has no
-playable file and is separately preserved in the manifest.</p><table><tbody>""" + ''.join(audio_rows) + """</tbody></table>
+<h2 id="audio">Qualified selectors and all original audio inputs</h2>
+<p>Original channel9 bank128 startup was corrected;26 musical payloads changed. All223 prior SFX and
+weighted silence2411 remain unchanged. The264 current FLACs replace obsolete musical locks.
+Two exact previously generated native WAVs preserve2693/710 reference bytes without conversion.</p>
+<p><strong>Approved adaptations, not verified OSRS selectors:</strong> Learning the Ropes uses152 once
+on legitimate committed completion; ordinary shrimp315/bread2309 use2393 once at12526 frame1 after4 client cycles.
+No duplicate animation/game callback or double-added waveform offset. Cook retains observed152 followed by
+reward-level-up after scroll dismissal. Historical2017/2018/2019/2024 sources are not relabeled build240.</p>
+<table><thead><tr><th>Selector</th><th>Evidence role</th><th>Original cue IDs</th><th>Trigger/timing</th><th>Date/scope</th></tr></thead>
+<tbody>""" + selector_rows + """</tbody></table>
+<p>Click to listen; no autoplay. File decoding is not final audible/mixer/gesture acceptance.</p>
+<table><tbody>""" + ''.join(audio_rows + template_rows) + """</tbody></table>
 <p>Original game media: Copyright Jagex Ltd. Wiki contributor histories and file notices are preserved per input.
 Source access does not imply endorsement, an open-source asset license or product acceptance.</p></main>
 <script>
@@ -641,6 +647,113 @@ search.addEventListener('input',filter);filter();
                        "source_role": "review_contact_sheet_not_a_baseline",
                        "transformation": "Full original frame 0, aspect-preserving thumbnail; no source crop."})
     write_json(directory / "contact-sheets.json", sheets)
+
+
+def owner_review(manifest):
+    manifest_record = digest(OUT / "manifest.json")
+    entries = {entry["id"]: entry for entry in manifest["original_inputs"] + manifest["native_hud_inputs"]
+               + manifest["proposal_inputs"]}
+    selected = [entry["id"] for entry in manifest["proposal_inputs"]] + [
+        "original.title.state-10-login-index-2", "native-hud.native-inventory",
+        "native-hud.native-guide-dialogue", "original.scenes.lumbridge-castle-plaza",
+        "original.models.npc-2063-sequence-5668-frame-0",
+    ]
+    sheet = Image.new("RGB", (1600, 1020), (26, 26, 26))
+    draw = ImageDraw.Draw(sheet)
+    for index, identifier in enumerate(selected):
+        entry = entries[identifier]
+        with Image.open(ROOT / entry["path"]) as source:
+            preview = source.convert("RGBA")
+            preview.thumbnail((386, 284))
+        x, y = (index % 4) * 400, (index // 4) * 340
+        sheet.paste(preview, (x + 7, y + 40), preview)
+        label = "UNAPPROVED PROPOSAL" if identifier.startswith("proposal.") else "ORIGINAL SOURCE REFERENCE"
+        draw.text((x + 6, y + 4), label, fill=(255, 210, 120))
+        draw.text((x + 6, y + 20), identifier[:60], fill="white")
+    contact = OUT / "owner-review-contact.png"
+    sheet.save(contact)
+    review = {
+        "schema_version": 1, "pack_version": manifest["pack_version"],
+        "status": "awaiting_owner_approval", "ready_for_owner_review": manifest["ready_for_owner_review"],
+        "manifest": manifest_record, "gallery": manifest["gallery"],
+        "contact_sheet": {**digest(contact), "input_ids": selected,
+                          "source_role": "review_contact_sheet_not_a_baseline",
+                          "transformation": "Aspect-preserving whole-image thumbnails; no source/candidate comparison or approval."},
+        "already_approved_audio_only": manifest["approved_audio_adaptations"],
+        "decisions_requested": [
+            {
+                "id": "review.reference_pack",
+                "decision": "Approve the exact source-reference manifest, its qualified evidence roles and family/state factoring.",
+                "scope": "126cases/71states,29families/180distinct variants,109original runtime images,100public images, "
+                         "nine recording frames,698 pinned text records,264 corrected FLACs and two exact source cue WAVs.",
+            },
+            {
+                "id": "review.web_compositions",
+                "decision": "Approve the seven concrete source-framed compositions and minimal branding direction.",
+                "proposal_ids": [entry["id"] for entry in manifest["proposal_inputs"]],
+                "details": "Native titlebox779,171,360x200; source sprites499/500 and native fonts495/496. "
+                           "Registration, rejection, connecting, capability/runtime/scope feedback and branding "
+                           "are proposals, not OSRS captures or an implemented frontend. Final logo artwork is not fabricated.",
+            },
+            {
+                "id": "review.penguin_and_equipment",
+                "decision": "Approve original Penguin NPC2063/model21547 at75/128 scale as the source-style base "
+                            "and the explicit equipment-fitting criteria, not a finished fitted player.",
+                "details": "Use original idle5668/walk5666 frames; preserve all functional slots. Proposed "
+                           "attachment gap<=2 source units, unintended penetration<=1; no ordinary tree/goblin/scenery redesign.",
+            },
+            {
+                "id": "review.viewport_and_tolerances",
+                "decision": "Approve1920x1080/DPR1/UIscale1/100% zoom and proposed1024x768 through2560x1440 range, "
+                            "with the already-declared numeric profiles before candidate evaluation.",
+                "details": "Exact native sprites/fonts/values; full-panel coverage; source scene interior max2 "
+                           "8-bit channel error/mean0.35 and1px source-edge allowance. Source audio PCM exact, "
+                           "existing browser float bound0.000023. Read comparison-policy.json for all per-case rules.",
+            },
+        ],
+        "not_approved_by_this_review": [
+            "Final ClubScape visual/audio or gameplay acceptance",
+            "Unrun M-series Mac Chrome/Edge performance and actual game resizing",
+            "RuneLite compatibility or later milestones",
+            "Relabeling dated/provisional selectors as verified current OSRS behavior",
+        ],
+        "candidate_obligations": manifest["evidence_factorization"]["acceptance_obligations"],
+        "reference_pack_approved": False, "candidate_evaluated": False,
+    }
+    write_json(OUT / "owner-review.json", review)
+    decisions = ''.join(
+        f'<li><strong>{html.escape(row["decision"])}</strong><p>{html.escape(row.get("details", row.get("scope", "")))}</p></li>'
+        for row in review["decisions_requested"])
+    document = f"""<!doctype html><html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1"><link rel="icon" href="data:,">
+<title>M1 final reference-pack owner review</title><style>
+body{{max-width:1100px;margin:auto;padding:24px;font:16px/1.5 system-ui;background:#f5f3ed;color:#171717}}
+code,p,li{{overflow-wrap:anywhere}}img{{max-width:100%;height:auto}}.notice{{border:2px solid #98611d;padding:14px;background:#fff1cf}}
+a{{color:#18467c}}
+</style></head><body><h1>M1 reference pack v{manifest['pack_version']}: ready for owner review</h1>
+<p class="notice"><strong>Overall reference-pack approval is pending.</strong> This is source evidence and
+explicit proposals, not ClubScape or an accepted renderer/gameplay run. The two audio selector adaptations
+were approved separately by the owner; they are not verified current OSRS selectors.</p>
+<p><strong>Exact manifest SHA-256:</strong><br><code>{manifest_record['sha256']}</code></p>
+<p><a href="manifest.json">Manifest</a> | <a href="gallery/index.html">Full indexed gallery</a> |
+<a href="owner-review-contact.png">Review contact sheet</a> | <a href="owner-review.json">Exact review scope</a> |
+<a href="comparison-policy.json">Numeric policy</a> | <a href="audio-reference.json">Qualified audio bindings</a></p>
+<h2>One bounded reference-pack decision</h2><ol>{decisions}</ol>
+<h2>Already approved: only two audio selectors</h2>
+<p>Owner record <code>{APPROVAL_DISPLAY_PATH}</code>, SHA-256
+<code>{manifest['approved_audio_adaptations']['input']['sha256']}</code>.
+Learning the Ropes uses original152 once at legitimate committed completion; ordinary shrimp315/bread2309
+use2393 once at12526 frame1/four client cycles. No duplicate callbacks or double-added waveform offsets.
+Both remain <strong>approved_adaptation</strong>. Cook retains dated observed152, then post-dismissal
+reward-level-up; native last-accepted-request-wins is unchanged.</p>
+<h2>Whole-image review previews, not baselines</h2><a href="owner-review-contact.png"><img
+src="owner-review-contact.png" alt="Seven unapproved compositions and five original source references"></a>
+<p>All required input/family/hash checks must pass. Final candidate/source-fidelity behavior, actual playback
+and Mac Chrome/Edge measurements remain separate unrun acceptance obligations.</p></body></html>"""
+    (OUT / "owner-review.html").write_text(document)
+
+
+APPROVAL_DISPLAY_PATH = "milestones/m1-audio-trigger-approval.json"
 
 
 def main():
@@ -690,7 +803,10 @@ def main():
     proposal_inputs = proposals()
     write_json(OUT / "proposals.json", proposal_inputs)
     audio = json.loads(AUDIO_PATH.read_text())
-    cases = make_cases(originals, public, proposal_inputs, audio)
+    audio_contract = audio_reference_contract()
+    write_json(OUT / "audio-reference.json", audio_contract)
+    cases = make_cases(originals, public, proposal_inputs, audio, audio_contract)
+    wire_audio_cases(cases, audio_contract, audio)
     browser = json.loads((OUT / "browser-media.json").read_text())
     frames = []
     for recording in browser["recordings"]:
@@ -706,7 +822,7 @@ def main():
         page["images"] = sorted({title.removeprefix("File:") for title in page["images"]
                                  if "[" not in title and "]" not in title})
     write_json(OUT / "pages.json", pages)
-    factoring, text_oracles = make_factoring(cases, originals, public, pages, native_hud_inputs)
+    factoring, text_oracles = make_factoring(cases, originals, public, pages, native_hud_inputs, audio_contract)
     wire_native_hud(cases, factoring, native_hud_inputs)
     factoring["native_hud_calibration"] = digest(OUT / "native-hud-integration.json")
     for case in cases:
@@ -716,7 +832,7 @@ def main():
     write_json(OUT / "evidence-families.json", factoring)
     write_json(OUT / "dynamic-text-oracles.json", text_oracles)
     source_gaps = gaps(factoring)
-    write_json(OUT / "audio-handoff.json", audio_handoff(factoring))
+    write_json(OUT / "audio-handoff.json", audio_handoff(audio_contract))
     ready = review_ready(factoring["source_review_requirements"])
     for case in cases:
         if case["family"] not in ("audio", "model", "scene"):
@@ -736,7 +852,7 @@ def main():
     write_json(OUT / "comparison-policy.json", policy_record)
     write_json(OUT / "search-log.json", search_log())
     manifest = {
-        "schema_version": 1, "pack_id": "m1-public-reference-pack-v1", "pack_version": "1.2.0",
+        "schema_version": 1, "pack_id": "m1-public-reference-pack-v1", "pack_version": "1.3.0",
         "assembled_on": "2026-09-14",
         "status": "awaiting_owner_approval",
         "ready_for_owner_review": ready,
@@ -750,6 +866,8 @@ def main():
         "native_hud_calibration": digest(OUT / "native-hud-integration.json"),
         "native_hud_inputs": native_hud_inputs,
         "remaining_audio_handoff": digest(OUT / "audio-handoff.json"),
+        "audio_reference_contract": digest(OUT / "audio-reference.json"),
+        "approved_audio_adaptations": audio_contract["owner_audio_adaptations"],
         "source_selection": json.loads((ROOT / "research/current-source/selection.json").read_text())["selection_id"],
         "source_build": 240, "source_cache": 2695,
         "source_runtime": "SHA-pinned original injected-client-1.12.38",
@@ -809,11 +927,16 @@ def main():
         "recording_frames": frames,
         "audio": {
             "manifest": digest(AUDIO_PATH), "assets": audio["assets"],
+            "reference_templates": audio_contract["reference_templates"],
             "source_silences": audio["source_silences"], "settings": audio["settings"],
             "source_map": digest(ROOT / "research/audio-source/source-map.json"),
-            "actions": json.loads((ROOT / "research/audio-source/source-map.json").read_text())["actions"],
+            "actions": resolved_action_map(audio_contract),
+            "selectors": audio_contract["selectors"], "native_queue_rules": audio_contract["native_queue_rules"],
+            "current_audio_proof": audio_contract["current_audio_proof"],
             "all_source_map_fields_retained_in_bound_input": True,
-            "remaining_bindings": audio["remaining_bindings"],
+            "remaining_bindings": [],
+            "candidate_validation_obligations": audio_contract["candidate_validation_obligations"],
+            "supersession_note": audio_contract["supersession"],
             "public_controls": [wiki("Audio options interface.png"), wiki("Music tab.png"), wiki(music_update(1, "gif"))],
             "public_transition_recording": wiki(music_update(2, "mp4")),
             "public_policy": {
@@ -835,7 +958,7 @@ def main():
         "component_reconciliation": digest(OUT / "native-metrics.json"),
         "cases": cases, "source_gaps": source_gaps,
         "product_decisions": [
-            "Bounded owner reference-pack approval remains ungranted; source gaps are not a waiver request.",
+            "All required reference inputs are present. One bounded owner reference-pack approval remains ungranted.",
             "Review the seven explicit web-only/title composition proposals and logo substitution direction.",
             "Review reuse of original Penguin NPC2063 at source75/128 scale and subsequent modular equipment-fitting gates.",
             "Review proposed1920x1080/DPR1/scale1 primary, resize range and pre-candidate numeric tolerances.",
@@ -853,6 +976,8 @@ def main():
             "retrieved_public_recordings": sum(entry["decoded"]["format"] == "MP4" for entry in public),
             "derived_recording_frames": len(frames), "owner_review_proposals": len(proposal_inputs),
             "playable_original_audio_files": len(audio["assets"]),
+            "additional_original_cue_wav_references": len(audio_contract["reference_templates"]),
+            "owner_approved_audio_selector_adaptations": 2,
             "verified_source_silences_without_file": len(audio["source_silences"]),
             "published_original_asset_files": len(inventory),
             "source_gap_cases": sum(bool(case["source_gap_refs"]) for case in cases),
@@ -874,7 +999,7 @@ def main():
          "case_ids": [case["id"] for case in cases
                       if entry.get("id", entry.get("asset_id")) in case["input_ids"]],
          "unassigned_role": "explicit_supplementary_source_inventory_not_used_to_claim_case_completion"}
-        for entry in originals + native_hud_inputs + public + proposal_inputs + frames + audio["assets"]
+        for entry in originals + native_hud_inputs + public + proposal_inputs + frames + audio["assets"] + audio_contract["reference_templates"]
     ]
     required = {"schema_version": 1, "source_contract": digest(TUTORIAL_PATH),
                 "required_ids": [case["id"] for case in cases],
@@ -889,6 +1014,7 @@ def main():
         "schema_version": 1, "manifest": digest(OUT / "manifest.json"),
         "meaning": "Immutable review identity, NOT an approval record; changing inputs requires regenerating/reviewing the pack.",
     })
+    owner_review(manifest)
     print(json.dumps({"status": manifest["status"], "ready_for_owner_review": ready, **manifest["counts"]}))
 
 

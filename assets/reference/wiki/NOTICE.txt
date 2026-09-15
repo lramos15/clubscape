@@ -26,6 +26,13 @@ watermarked. The recording-frames/ directory contains explicitly identified
 full-frame browser decodes of the pinned public recording, not original PNG
 uploads, original runtime fixtures, or ClubScape screenshots.
 
+The audio-source/ directory contains two byte-identical original native
+comparison WAVs (2693 and710), copied from retained source-audio evidence
+without synthesis, conversion or normalization. They are not wiki uploads
+or new runtime FLACs. Their native input/PCM hashes, current cache identity
+and matching public-recording template hashes are in audio-templates.json
+and audio-reference.json under research/reference-pack/v1/.
+
 The separate review gallery and web-only compositions are unapproved
 reference tooling. They are not the ClubScape client or evidence that a game
 renderer, authoritative journey, browser playback pipeline or Mac target

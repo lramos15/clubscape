@@ -1,0 +1,686 @@
+{
+  "schema_version": 1,
+  "source_selection": "osrs-live-240-cache2695-injected1.12.38-20260913",
+  "current_audio_proof": {
+    "current_manifest": {
+      "path": "assets/manifests/osrs/audio-runtime.json",
+      "sha256": "8e6d1eca465f720829599cae0e1c11b7700a9c7162e53dd5ddec36ceb89787aa",
+      "size_bytes": 845835
+    },
+    "correction_input": {
+      "path": "research/audio-source/musical-startup-correction.json",
+      "sha256": "7712c948e95bef8b61b6734558e7f9b6e561f32de7786f2c841cacc386298fb5",
+      "size_bytes": 2531
+    },
+    "browser_pcm_evidence": {
+      "path": "research/audio-source/browser-decode.json",
+      "sha256": "38d3ac7b8c197d2e4fc6c277abd02a1e7d28c2c337b0daa6825d84f62795b1d0",
+      "size_bytes": 166652
+    },
+    "previous_comparison_commit": "e74026a3e9764ea9dd81a19ddd6f87abc32a70bb",
+    "changed_musical_asset_ids": [
+      "asset.source.osrs.cache2695.audio-runtime.jingle.152",
+      "asset.source.osrs.cache2695.audio-runtime.jingle.153",
+      "asset.source.osrs.cache2695.audio-runtime.jingle.154",
+      "asset.source.osrs.cache2695.audio-runtime.jingle.29",
+      "asset.source.osrs.cache2695.audio-runtime.jingle.30",
+      "asset.source.osrs.cache2695.audio-runtime.jingle.33",
+      "asset.source.osrs.cache2695.audio-runtime.jingle.34",
+      "asset.source.osrs.cache2695.audio-runtime.jingle.37",
+      "asset.source.osrs.cache2695.audio-runtime.jingle.39",
+      "asset.source.osrs.cache2695.audio-runtime.jingle.40",
+      "asset.source.osrs.cache2695.audio-runtime.jingle.42",
+      "asset.source.osrs.cache2695.audio-runtime.jingle.47",
+      "asset.source.osrs.cache2695.audio-runtime.jingle.51",
+      "asset.source.osrs.cache2695.audio-runtime.jingle.54",
+      "asset.source.osrs.cache2695.audio-runtime.jingle.56",
+      "asset.source.osrs.cache2695.audio-runtime.jingle.57",
+      "asset.source.osrs.cache2695.audio-runtime.jingle.58",
+      "asset.source.osrs.cache2695.audio-runtime.jingle.64",
+      "asset.source.osrs.cache2695.audio-runtime.jingle.65",
+      "asset.source.osrs.cache2695.audio-runtime.jingle.69",
+      "asset.source.osrs.cache2695.audio-runtime.jingle.70",
+      "asset.source.osrs.cache2695.audio-runtime.music.0",
+      "asset.source.osrs.cache2695.audio-runtime.music.144",
+      "asset.source.osrs.cache2695.audio-runtime.music.2",
+      "asset.source.osrs.cache2695.audio-runtime.music.62",
+      "asset.source.osrs.cache2695.audio-runtime.music.76"
+    ],
+    "musical_assets_checked": 35,
+    "prior_sfx_hashes_preserved": 223,
+    "source_silence_preserved": true,
+    "active_payload_records": "Only the current264 published assets; previous musical hashes are not active baselines.",
+    "native_startup": {
+      "channel": 9,
+      "bank": 128,
+      "call": "nu.ap(9,128,-27396)"
+    }
+  },
+  "owner_audio_adaptations": {
+    "input": {
+      "path": "milestones/m1-audio-trigger-approval.json",
+      "sha256": "d6f187cd182741421cbc14420dbb8eb60411cd478f3c15be3cd740c081731c30",
+      "size_bytes": 1976
+    },
+    "source_commit": "5df8420",
+    "adaptations_spec": {
+      "path": "spec/adaptations.md",
+      "sha256": "9d15bfb9b6d67b7f0105dd2c3751cb07132b5dc79af112b588fb908e6044373b",
+      "size_bytes": 2333
+    },
+    "record": {
+      "schema_version": 1,
+      "milestone": "m1-starter-journey",
+      "authority": "owner",
+      "decision": "approved",
+      "owner_record": "Use the proposed original sounds provisionally and document them for review",
+      "scope": "Two narrowly defined provisional audio trigger choices only; original source sound payloads are unchanged by this decision.",
+      "adaptations": [
+        {
+          "id": "adaptation.m1.learning_the_ropes_completion_audio",
+          "event": "Legitimate Learning the Ropes quest completion",
+          "source_audio": "Original quest-completion jingle 152",
+          "policy": "Play once when the source-bound quest completion is committed. Do not replay it on duplicate completion, reconnect or state reload.",
+          "classification": "approved_adaptation",
+          "verified_current_source_selector": false
+        },
+        {
+          "id": "adaptation.m1.ordinary_food_audio",
+          "items": [
+            "Shrimps",
+            "Bread"
+          ],
+          "source_item_ids": [
+            315,
+            2309
+          ],
+          "source_audio": "Original eating sound 2393",
+          "policy": "Emit once using the sound-enabled eating animation's first sound cue: source sequence 12526, frame 1, after four source client cycles. Never emit it twice from both animation and a game-trigger callback, and do not double-add the waveform's baked source offset.",
+          "classification": "approved_adaptation",
+          "verified_current_ordinary_food_selector": false
+        }
+      ],
+      "unchanged": [
+        "No changes to XP, item consumption, combat or quest progression",
+        "Cook's Assistant retains observed jingle 152, with its reward-caused level-up sound/dialogue after quest-scroll dismissal",
+        "Native last-accepted-jingle-request-wins behavior and source SFX queue semantics remain",
+        "Reference-pack approval and final visual/audio owner acceptance are still separate"
+      ],
+      "review_requirement": "Disclose these two provisional trigger choices in the owner Mac playtest and source/parity records; they are not promoted to verified OSRS behavior."
+    },
+    "scope": "These two selector choices only; not reference-pack or product acceptance."
+  },
+  "selectors": [
+    {
+      "id": "selector.shortbow",
+      "rule_ids": [
+        "rule.combat.ranged"
+      ],
+      "classification": "dated_public_source_observation",
+      "payload_ids": [
+        "reference.audio.sfx.2693"
+      ],
+      "sound_ids": {
+        "release": 2693
+      },
+      "source_sequence": 426,
+      "event": "ordinary shortbow projectile release, not equip or target impact",
+      "timing": "Game-triggered launch boundary; no embedded frame event in426. Preserve received queue delay rather than adding a guessed frame or projectile-impact offset.",
+      "recording_dates": [
+        "20240521"
+      ],
+      "recording_urls": [
+        "https://www.youtube.com/watch?v=1lHcLieBdLk"
+      ],
+      "verified_current_build_selector": false
+    },
+    {
+      "id": "selector.tutorial_rat",
+      "rule_ids": [
+        "rule.combat.tutorial_rat"
+      ],
+      "classification": "dated_public_source_observation",
+      "payload_ids": [
+        "reference.audio.sfx.710",
+        "asset.source.osrs.cache2695.audio-runtime.sfx.713",
+        "asset.source.osrs.cache2695.audio-runtime.sfx.711"
+      ],
+      "sound_ids": {
+        "attack": 710,
+        "death": 711,
+        "hit": 713
+      },
+      "source_sequences": {
+        "attack": 4933,
+        "death": 4935,
+        "hit": 4934
+      },
+      "event": "Separate game-triggered attack, damage-reaction and death cues, not sounds on every movement frame",
+      "timing": "Separate received/game-triggered attack, hit and death events; preserve native queue delay.",
+      "recording_dates": [
+        "20240521"
+      ],
+      "recording_urls": [
+        "https://www.youtube.com/watch?v=1lHcLieBdLk"
+      ],
+      "verified_current_build_selector": false
+    },
+    {
+      "id": "selector.goblin",
+      "rule_ids": [
+        "rule.goblin.level_2"
+      ],
+      "classification": "dated_public_source_observation",
+      "payload_ids": [
+        "asset.source.osrs.cache2695.audio-runtime.sfx.469",
+        "asset.source.osrs.cache2695.audio-runtime.sfx.472",
+        "asset.source.osrs.cache2695.audio-runtime.sfx.471"
+      ],
+      "sound_ids": {
+        "attack": 469,
+        "hit": 472,
+        "death": 471
+      },
+      "source_sequences": [
+        6184,
+        6183,
+        6182
+      ],
+      "event": "Ordinary unarmed goblin attack, damage reaction and death.",
+      "timing": "Game-triggered source event boundaries; no fabricated618x frame sound or armed-variant substitution.",
+      "recording_dates": [
+        "20180510",
+        "20190720"
+      ],
+      "recording_urls": [
+        "https://www.youtube.com/watch?v=kdk7teYIOQk",
+        "https://www.youtube.com/watch?v=5PazG956MZo"
+      ],
+      "verified_current_build_selector": false
+    },
+    {
+      "id": "selector.bronze_smelting",
+      "rule_ids": [
+        "rule.smelting.bronze"
+      ],
+      "classification": "dated_public_source_observation",
+      "payload_ids": [
+        "asset.source.osrs.cache2695.audio-runtime.sfx.2725"
+      ],
+      "sound_ids": {
+        "start": 2725
+      },
+      "source_sequence": 899,
+      "event": "Accepted copper/tin furnace operation begins; source chat says the ores are placed together in the furnace",
+      "timing": "Game-triggered smelt-start cue; no embedded event in899 and no duplicated waveform-leading delay.",
+      "recording_dates": [
+        "20240521"
+      ],
+      "recording_urls": [
+        "https://www.youtube.com/watch?v=1lHcLieBdLk"
+      ],
+      "verified_current_build_selector": false
+    },
+    {
+      "id": "selector.ordinary_food",
+      "rule_ids": [
+        "rule.food.healing"
+      ],
+      "classification": "approved_adaptation",
+      "payload_ids": [
+        "asset.source.osrs.cache2695.audio-runtime.sfx.2393"
+      ],
+      "adaptation_id": "adaptation.m1.ordinary_food_audio",
+      "owner_record": {
+        "path": "milestones/m1-audio-trigger-approval.json",
+        "sha256": "d6f187cd182741421cbc14420dbb8eb60411cd478f3c15be3cd740c081731c30",
+        "size_bytes": 1976
+      },
+      "sound_ids": {
+        "eat": 2393
+      },
+      "source_item_ids": [
+        315,
+        2309
+      ],
+      "source_sequence": 12526,
+      "frame": 1,
+      "source_client_cycle": 4,
+      "repeat_count": 1,
+      "event": "Legitimate ordinary shrimp/bread consumption; source12526 first sound cue.",
+      "timing": "One dispatch atframe1 after four source client cycles; animation and game callback may not both emit it.",
+      "baked_offset_added_again": false,
+      "duplicate_dispatches_allowed": 0,
+      "current_native_sequence_cue_verified": true,
+      "verified_current_build_selector": false
+    },
+    {
+      "id": "selector.learning_the_ropes",
+      "quest_refs": [
+        "quest.learning_the_ropes"
+      ],
+      "classification": "approved_adaptation",
+      "payload_ids": [
+        "asset.source.osrs.cache2695.audio-runtime.jingle.152"
+      ],
+      "adaptation_id": "adaptation.m1.learning_the_ropes_completion_audio",
+      "owner_record": {
+        "path": "milestones/m1-audio-trigger-approval.json",
+        "sha256": "d6f187cd182741421cbc14420dbb8eb60411cd478f3c15be3cd740c081731c30",
+        "size_bytes": 1976
+      },
+      "jingle_id": 152,
+      "event": "Legitimate committed Learning the Ropes completion.",
+      "timing": "Submit once on committed completion; do not replay on duplicate completion, reconnect or state reload.",
+      "duplicate_dispatches_allowed": 0,
+      "native_last_accepted_request_wins_preserved": true,
+      "verified_current_build_selector": false
+    },
+    {
+      "id": "selector.cooks_assistant",
+      "quest_refs": [
+        "quest.cooks_assistant"
+      ],
+      "classification": "dated_public_source_observation",
+      "payload_ids": [
+        "asset.source.osrs.cache2695.audio-runtime.jingle.152",
+        "asset.source.osrs.cache2695.audio-runtime.jingle.33",
+        "asset.source.osrs.cache2695.audio-runtime.jingle.34"
+      ],
+      "jingle_id": 152,
+      "event": "Normal-account quest completion/reward scroll.",
+      "timing": "Quest completion/152 precedes the reward-caused level-up dialog/33; the level-up is shown and sounded after the quest scroll is dismissed.",
+      "reward_levelup_after_scroll_dismissal": {
+        "correlation": 0.9822065977733833,
+        "cue_start_seconds": 690.1516553287981,
+        "dialog_visible_at_seconds": [
+          690.2,
+          691.5
+        ],
+        "jingle": 33,
+        "level": 4
+      },
+      "later_levelup_not_simultaneous": {
+        "correlation": 0.9207284175007333,
+        "cue_start_seconds": 715.7616326530613,
+        "jingle": 34,
+        "level": 5,
+        "not_a_simultaneous_quest_reward": true
+      },
+      "recording_dates": [
+        "20170301"
+      ],
+      "recording_urls": [
+        "https://www.youtube.com/watch?v=ppHJckQj7Vk"
+      ],
+      "verified_current_build_selector": false,
+      "not_a_class_priority": true
+    }
+  ],
+  "reference_templates": [
+    {
+      "id": "reference.audio.sfx.2693",
+      "path": "assets/reference/wiki/audio-source/sfx-2693.wav",
+      "sha256": "bdd068b885a00957af3dfa75242f2a97b28cdacaaeac08f194cf03bfd3b5a074",
+      "size_bytes": 44144,
+      "source_role": "current_original_audio_template",
+      "source_index": 4,
+      "source_group": 2693,
+      "source_file": 0,
+      "source_cache_id": 2695,
+      "kind": "sfx_reference_template",
+      "name": "Original source cue 2693",
+      "source_provenance": {
+        "path": "research/reference-pack/v1/sources/native-cue-2693.json",
+        "sha256": "5d961c3c3e53faec9b9aa9cc36bb37808cae10308d6b6003d1d0c90fe81c2274",
+        "size_bytes": 492
+      },
+      "source_comparison_evidence": {
+        "path": "research/audio-source/binding-public-evidence.json.gz",
+        "sha256": "aa4f4f866f02858003fec6f8c877085ff5827c6f777142a6b00503e8035fde21",
+        "size_bytes": 13648
+      },
+      "signal": {
+        "sample_rate": 22050,
+        "channels": 1,
+        "frames": 22050,
+        "duration_seconds": 1.0,
+        "pcm_s16le_sha256": "c60e324d55b3ebc2535c089b0bfb5e56089e25d7b674cc0def324db8ff9761fd",
+        "peak": 0.49383544921875,
+        "export_gain_numerator": 1,
+        "export_gain_denominator": 1,
+        "scope": "Exact original native comparison PCM, not a newly converted runtime FLAC or calibrated live mixer level."
+      },
+      "copied_without_conversion": true,
+      "retained_source_path": "/home/lramos15/clubscape/.worktrees/m1-audio-bindings/.local/audio-bindings/candidate-pcm/sfx-2693.wav",
+      "copy_verified_at": "2026-09-14T23:35:04.181039+00:00",
+      "notice": "assets/reference/wiki/NOTICE.txt"
+    },
+    {
+      "id": "reference.audio.sfx.710",
+      "path": "assets/reference/wiki/audio-source/sfx-710.wav",
+      "sha256": "2fa8cd356b1088333dc83457f9c04d4e6556c08d005f8278675e7b26ba6b0e61",
+      "size_bytes": 24298,
+      "source_role": "current_original_audio_template",
+      "source_index": 4,
+      "source_group": 710,
+      "source_file": 0,
+      "source_cache_id": 2695,
+      "kind": "sfx_reference_template",
+      "name": "Original source cue 710",
+      "source_provenance": {
+        "path": "research/reference-pack/v1/sources/native-cue-710.json",
+        "sha256": "e6d68af10c570b6e919749110d120981290fe99ef1f492212bbba66f07aefab8",
+        "size_bytes": 489
+      },
+      "source_comparison_evidence": {
+        "path": "research/audio-source/binding-public-evidence.json.gz",
+        "sha256": "aa4f4f866f02858003fec6f8c877085ff5827c6f777142a6b00503e8035fde21",
+        "size_bytes": 13648
+      },
+      "signal": {
+        "sample_rate": 22050,
+        "channels": 1,
+        "frames": 12127,
+        "duration_seconds": 0.5499773242630386,
+        "pcm_s16le_sha256": "cf4a584993b58928bc14e22388929db95c3e5f0998e3759990e0989008d73e19",
+        "peak": 0.60198974609375,
+        "export_gain_numerator": 1,
+        "export_gain_denominator": 1,
+        "scope": "Exact original native comparison PCM, not a newly converted runtime FLAC or calibrated live mixer level."
+      },
+      "copied_without_conversion": true,
+      "retained_source_path": "/home/lramos15/clubscape/.worktrees/m1-audio-bindings/.local/audio-bindings/candidate-pcm/sfx-710.wav",
+      "copy_verified_at": "2026-09-14T23:35:04.181646+00:00",
+      "notice": "assets/reference/wiki/NOTICE.txt"
+    }
+  ],
+  "native_queue_rules": {
+    "arguments": [
+      "sound_id",
+      "repeat_count",
+      "client_cycle_delay"
+    ],
+    "capacity": 50,
+    "countdown": "Each source client cycle decrements delay; dispatch when negative, set delay=-100, remove next cycle. Submitted delay2 dispatches on the third processing call.",
+    "full_queue": "New entry dropped, existing FIFO entries retained; no kind-based priority",
+    "jingle_acceptance": "Music volume nonzero and group != -1",
+    "jingle_arguments": [
+      "source_index11_group",
+      "unused_auxiliary_integer"
+    ],
+    "jingle_opcode": 3202,
+    "jingle_priority": "Last accepted request replaces pending work and clears active music streams, retaining the remembered background playlist. No quest-vs-skill ranking; auxiliary values0/1/255/60000 do not change this.",
+    "jingle_sentinel": "Group -1 does not start or erase an earlier accepted request",
+    "native_loop": false,
+    "nonpositional_volume_zero_or_repeat_zero": "No enqueue",
+    "offsets": "Published SFX already include source instrument offsets. Source runtime trims whole20ms leading delay and adds it to the queue; using the untrimmed asset must not add that trim again.",
+    "request_delay_fade_arguments": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "script_sfx_opcode": 3200,
+    "source_clock_units_not_hardware_latency": true,
+    "source_silence": "Preserve2411 and its74/100 branch probability, not a missing-file fallback."
+  },
+  "native_queue_cases": [
+    {
+      "case": "native-startup-percussion-bank",
+      "constructor_default_bank_channel9": 0,
+      "source_startup_call": "dg.ay -> nu.ap(9,128,-27396)",
+      "source_startup_default_bank_channel9": 128
+    },
+    {
+      "callbacks": [
+        {
+          "event": "VolumeChanged"
+        },
+        {
+          "event": "VolumeChanged"
+        },
+        {
+          "event": "VolumeChanged"
+        },
+        {
+          "delay": 7,
+          "event": "SoundEffectPlayed",
+          "sound_id": 2393
+        }
+      ],
+      "case": "script-sfx-id-loops-delay",
+      "queue": [
+        {
+          "delay": 7,
+          "loops": 1,
+          "native_boolean": false,
+          "packed_location": 0,
+          "retain": 0,
+          "sound_id": 2393,
+          "world_view_id": 0
+        }
+      ]
+    },
+    {
+      "case": "sfx-mute-and-zero-repeat",
+      "queue_size": 1
+    },
+    {
+      "case": "native-client-sfx-tick-delay",
+      "observed": [
+        {
+          "client_cycle": 1,
+          "entry": {
+            "delay": 1,
+            "loops": 1,
+            "native_boolean": false,
+            "packed_location": 0,
+            "retain": 0,
+            "sound_id": 2735,
+            "world_view_id": 0
+          },
+          "queue_size": 1
+        },
+        {
+          "client_cycle": 2,
+          "entry": {
+            "delay": 0,
+            "loops": 1,
+            "native_boolean": false,
+            "packed_location": 0,
+            "retain": 0,
+            "sound_id": 2735,
+            "world_view_id": 0
+          },
+          "queue_size": 1
+        },
+        {
+          "client_cycle": 3,
+          "entry": {
+            "delay": -100,
+            "loops": 1,
+            "native_boolean": false,
+            "packed_location": 0,
+            "retain": 0,
+            "sound_id": 2735,
+            "world_view_id": 0
+          },
+          "queue_size": 1
+        },
+        {
+          "client_cycle": 4,
+          "entry": null,
+          "queue_size": 0
+        }
+      ],
+      "submitted_delay": 2
+    },
+    {
+      "case": "native-leading-delay-trim-is-exact",
+      "full_frames": 11686,
+      "remaining_pcm_identical": true,
+      "sound_id": 2015,
+      "trim_client_cycles": 1,
+      "trim_frames": 441,
+      "trimmed_frames": 11245
+    },
+    {
+      "case": "sfx-capacity-fifo",
+      "last": {
+        "delay": 49,
+        "loops": 1,
+        "native_boolean": false,
+        "packed_location": 0,
+        "retain": 0,
+        "sound_id": 2393,
+        "world_view_id": 0
+      },
+      "queued": 50
+    },
+    {
+      "case": "jingle-request-order",
+      "pending": [
+        33
+      ],
+      "playing_jingle": true,
+      "submitted": [
+        154,
+        33
+      ]
+    },
+    {
+      "case": "jingle-request-order",
+      "pending": [
+        154
+      ],
+      "playing_jingle": true,
+      "submitted": [
+        33,
+        154
+      ]
+    },
+    {
+      "case": "jingle-request-order",
+      "pending": [
+        154
+      ],
+      "playing_jingle": true,
+      "submitted": [
+        152,
+        154
+      ]
+    },
+    {
+      "case": "jingle-request-order",
+      "pending": [
+        152
+      ],
+      "playing_jingle": true,
+      "submitted": [
+        154,
+        152
+      ]
+    },
+    {
+      "argument": 0,
+      "case": "jingle-auxiliary-argument",
+      "pending": [
+        154
+      ]
+    },
+    {
+      "argument": 1,
+      "case": "jingle-auxiliary-argument",
+      "pending": [
+        154
+      ]
+    },
+    {
+      "argument": 255,
+      "case": "jingle-auxiliary-argument",
+      "pending": [
+        154
+      ]
+    },
+    {
+      "argument": 60000,
+      "case": "jingle-auxiliary-argument",
+      "pending": [
+        154
+      ]
+    },
+    {
+      "case": "jingle-mute-sentinel",
+      "final_pending": [
+        154
+      ]
+    },
+    {
+      "active_streams": 0,
+      "case": "jingle-replaces-active-retains-playlist",
+      "pending": [
+        154
+      ],
+      "remembered_background_group": 76
+    }
+  ],
+  "evidence_inputs": [
+    {
+      "path": "research/audio-source/bindings.json",
+      "sha256": "6bc546e7a707bd151b83226796ba080737d629bd7658fd3cb60d7b2383418e63",
+      "size_bytes": 9889
+    },
+    {
+      "path": "research/audio-source/selector-observations.json",
+      "sha256": "b50d7f68fa34efbb3ba86caad0eb684f0177bedad2caf21b9954d194d694c340",
+      "size_bytes": 6907
+    },
+    {
+      "path": "research/audio-source/binding-native-evidence.json.gz",
+      "sha256": "b6f57fffb3684299e4d077d8efa89c10fe8ebeaeb409addd7646328297c9d5a3",
+      "size_bytes": 405190
+    },
+    {
+      "path": "research/audio-source/binding-public-evidence.json.gz",
+      "sha256": "aa4f4f866f02858003fec6f8c877085ff5827c6f777142a6b00503e8035fde21",
+      "size_bytes": 13648
+    },
+    {
+      "path": "research/audio-source/selector-observation-evidence.json.gz",
+      "sha256": "ad807ca7a2816a82c4c352ed3e48a82c2c38fd51869fac8c5af2dbd77e4cff2e",
+      "size_bytes": 56258
+    },
+    {
+      "path": "research/audio-source/musical-startup-correction.json",
+      "sha256": "7712c948e95bef8b61b6734558e7f9b6e561f32de7786f2c841cacc386298fb5",
+      "size_bytes": 2531
+    },
+    {
+      "path": "research/audio-source/selector-observation-validation.json",
+      "sha256": "53b20850770e95edbf277e6c35d11f1a66802d17a71ff5edf736479f1cf2e676",
+      "size_bytes": 888
+    },
+    {
+      "path": "research/audio-source/binding-test-results.json",
+      "sha256": "96400d703029cd16e74354b8be38decb2edb76a71ddc9dbcaf3ed9ef98f99ce0",
+      "size_bytes": 1414
+    },
+    {
+      "path": "research/audio-source/validation.json",
+      "sha256": "2449ce6e85b876959ab075e16bba3629fd2b03b0afd2fbf6bd81d2d83d4e8e20",
+      "size_bytes": 832
+    }
+  ],
+  "historical_qualification": "These observations identify exact current-cache audio payloads in dated source-game contexts. The historical recording dates are retained; they are not claimed to be captures of build240. Recent recordings were separately tested and do not silently replace that version caveat.",
+  "supersession": "Current selector observations supersede older candidate notes; the exact owner record supplies only the two remaining choices. Upstream pre-approval residual/status prose is historical context, not a reason to discard observed IDs or the approved adaptations.",
+  "missing_reference_inputs": [],
+  "candidate_validation_obligations": [
+    "Verify legitimate triggers, once-only dispatch and persistence against authoritative state.",
+    "Preserve native FIFO/last-accepted-request-wins and waveform offsets; measure browser/device timing separately.",
+    "Use source scene/frame triggers and current PCM; retain dated-source qualifications through the owner playtest.",
+    "Test actual audible playback, region/loop/fade behavior, gestures and reconnects in the implemented client."
+  ],
+  "reference_pack_approved": false,
+  "candidate_or_mac_accepted": false
+}

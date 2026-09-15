@@ -23,6 +23,7 @@ const media = JSON.parse(await readFile(resolve(root, 'research/reference-pack/v
 const types = {
   '.html': 'text/html; charset=utf-8', '.png': 'image/png', '.jpg': 'image/jpeg',
   '.gif': 'image/gif', '.mp4': 'video/mp4', '.flac': 'audio/flac',
+  '.wav': 'audio/wav',
   '.json': 'application/json', '.css': 'text/css', '.js': 'text/javascript',
 };
 const requests = [];
@@ -155,6 +156,7 @@ try {
     const expectedFamilyIds = manifest.evidence_factorization.families.map((entry) => entry.id).sort();
     const expectedSignatureIds = manifest.evidence_factorization.hud_signatures.map((entry) => entry.id).sort();
     const expectedNativeHudIds = manifest.native_hud_inputs.map((entry) => entry.id).sort();
+    const expectedSelectorIds = manifest.audio.selectors.map((entry) => entry.id).sort();
     report.gallery = [];
     for (const [width, height] of [[1024, 768], [1280, 800], [1920, 1080], [2560, 1440]]) {
       await page.setViewportSize({ width, height });
@@ -170,6 +172,9 @@ try {
           .map((entry) => entry.dataset.hudSignatureId).sort(),
         native_hud_ids: [...document.querySelectorAll('[data-native-hud-id]')]
           .map((entry) => entry.dataset.nativeHudId).sort(),
+        audio_selector_ids: [...document.querySelectorAll('[data-audio-selector-id]')]
+          .map((entry) => entry.dataset.audioSelectorId).sort(),
+        audio_controls: document.querySelectorAll('audio').length,
         autoplay_media: [...document.querySelectorAll('audio,video')].filter((entry) => entry.autoplay).length,
       }));
       assert.deepEqual(result.broken_images, []);
@@ -178,6 +183,8 @@ try {
       assert.deepEqual(result.reference_family_ids, expectedFamilyIds);
       assert.deepEqual(result.hud_signature_ids, expectedSignatureIds);
       assert.deepEqual(result.native_hud_ids, expectedNativeHudIds);
+      assert.deepEqual(result.audio_selector_ids, expectedSelectorIds);
+      assert.equal(result.audio_controls, manifest.audio.assets.length + manifest.audio.reference_templates.length);
       assert.equal(result.autoplay_media, 0);
       await page.locator('#search').fill('case.tutorial.');
       const visibleTutorial = await page.evaluate(() =>
@@ -188,6 +195,26 @@ try {
       assert.equal(await page.locator('[data-case-id]:visible').count(), 1);
       await page.locator('#search').fill('');
       report.gallery.push({ viewport: [width, height], ...result });
+    }
+    await page.goto(`${origin}/research/reference-pack/v1/owner-review.html`);
+    assert((await page.locator('body').innerText()).includes(report.manifest_sha256));
+    await page.waitForFunction(() => [...document.images].every((image) => image.complete && image.naturalWidth > 0));
+    report.owner_review_page = { manifest_hash_visible: true, contact_sheet_loaded: true, pack_approved: false };
+    report.reference_wav_decodes = [];
+    for (const reference of manifest.audio.reference_templates) {
+      const result = await page.evaluate(async (url) => {
+        const context = new OfflineAudioContext(1, 1, 22050);
+        const decoded = await context.decodeAudioData(await (await fetch(url)).arrayBuffer());
+        const samples = decoded.getChannelData(0);
+        let peak = 0;
+        for (const sample of samples) peak = Math.max(peak, Math.abs(sample));
+        return { frames: decoded.length, sample_rate: decoded.sampleRate, channels: decoded.numberOfChannels, peak };
+      }, `${origin}/${reference.path}`);
+      assert.equal(result.frames, reference.signal.frames);
+      assert.equal(result.sample_rate, 22050);
+      assert.equal(result.channels, 1);
+      assert(result.peak > 0);
+      report.reference_wav_decodes.push({ id: reference.id, ...result, actual_playback_accepted: false });
     }
   }
   assert.deepEqual(errors, []);

@@ -16,6 +16,7 @@ from validate import EvidenceError, checked_path, decode_public, require_complet
 from factoring import review_ready
 from text_oracles import check_full_panel_partition, check_source_values, check_text_projection, project_record
 from native_hud import FAMILY_SLOTS, validate_records as validate_native_hud, calibration as native_hud_calibration
+from audio_reference import ADAPTATIONS, APPROVAL_SHA256, validate_contract as validate_audio_contract, wave_facts
 
 
 class PackTests(unittest.TestCase):
@@ -23,6 +24,7 @@ class PackTests(unittest.TestCase):
     def setUpClass(cls):
         cls.manifest = json.loads((OUT / "manifest.json").read_text())
         cls.oracles = json.loads((OUT / "dynamic-text-oracles.json").read_text())
+        cls.audio_contract = json.loads((OUT / "audio-reference.json").read_text())
 
     def rejects(self, mutation):
         value = copy.deepcopy(self.manifest)
@@ -82,8 +84,8 @@ class PackTests(unittest.TestCase):
     def test_no_self_approval(self):
         self.rejects(lambda value: value["approval"].update(owner_reference_pack_approved=True))
 
-    def test_no_incomplete_ready_flag(self):
-        self.rejects(lambda value: value.update(ready_for_owner_approval=True))
+    def test_readiness_must_match_satisfied_inputs(self):
+        self.rejects(lambda value: value.update(ready_for_owner_review=False))
 
     def test_proposal_is_not_source_capture(self):
         self.rejects(lambda value: value["proposal_inputs"][0].update(source_capture=True))
@@ -100,8 +102,8 @@ class PackTests(unittest.TestCase):
     def test_silent_audio_is_preserved(self):
         self.rejects(lambda value: value["audio"]["source_silences"][0].update(playable_output="made-up.flac"))
 
-    def test_gaps_cannot_be_dropped(self):
-        self.rejects(lambda value: value["source_gaps"].pop())
+    def test_closed_audio_gap_not_reintroduced(self):
+        self.rejects(lambda value: value["source_gaps"].append({"id": "input.required_effect_bindings"}))
 
     def test_unrun_mac_not_certified(self):
         self.rejects(lambda value: value["browsers_and_hardware"].update(mac_edge_tested=True))
@@ -172,9 +174,17 @@ class PackTests(unittest.TestCase):
             with self.assertRaisesRegex(EvidenceError, "outside its declared titlebox"):
                 verify_proposal(entry)
 
-    def test_source_completeness_gate_stays_blocked(self):
+    def test_complete_for_review_is_not_pack_approval(self):
+        require_complete(self.manifest)
+        self.assertTrue(self.manifest["ready_for_owner_review"])
+        self.assertFalse(any(self.manifest["approval"].values()))
+        self.assertEqual(self.manifest["status"], "awaiting_owner_approval")
+
+    def test_missing_input_still_blocks_completeness(self):
+        value = copy.deepcopy(self.manifest)
+        value["evidence_factorization"]["source_review_requirements"][0]["status"] = "missing_native_reference"
         with self.assertRaisesRegex(EvidenceError, "Mandatory source evidence"):
-            require_complete(self.manifest)
+            require_complete(value)
 
     def test_native_hud_gap_is_closed_without_authenticated_progression(self):
         rows = {row["id"]: row for row in self.manifest["evidence_factorization"]["source_review_requirements"]}
@@ -371,6 +381,92 @@ class PackTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, "integer coordinates"):
             check_full_panel_partition(10, 10, [{"rectangle": [0.5, 0, 9, 10],
                 "verifier": "source_pixels", "source_input_ids": ["unit.source"]}])
+
+    def test_exact_two_owner_adaptations_not_self_approval(self):
+        approval = self.manifest["approved_audio_adaptations"]
+        self.assertEqual(approval["input"]["sha256"], APPROVAL_SHA256)
+        self.assertEqual({row["id"] for row in approval["record"]["adaptations"]}, set(ADAPTATIONS))
+        self.assertEqual(approval["record"]["authority"], "owner")
+        self.assertFalse(self.manifest["approval"]["owner_reference_pack_approved"])
+
+    def test_changed_owner_approval_hash_rejected(self):
+        self.rejects(lambda value: value["approved_audio_adaptations"]["input"].update(sha256="0" * 64))
+
+    def test_no_broader_adaptation_scope(self):
+        self.rejects(lambda value: value["approved_audio_adaptations"]["record"]["adaptations"].append(
+            {"id": "adaptation.invented", "classification": "approved_adaptation"}))
+
+    def test_adaptations_cannot_be_reclassified_verified_source(self):
+        def mutation(value):
+            food = next(row for row in value["audio"]["selectors"] if row["id"] == "selector.ordinary_food")
+            food["classification"] = "verified_current_source"
+            food["verified_current_build_selector"] = True
+        self.rejects(mutation)
+
+    def test_learning_the_ropes_exact_approved_jingle(self):
+        def mutation(value):
+            cue = next(row for row in value["audio"]["selectors"] if row["id"] == "selector.learning_the_ropes")
+            cue["jingle_id"] = 154
+        self.rejects(mutation)
+
+    def test_food_source_frame_and_no_double_offset(self):
+        def mutation(value):
+            food = next(row for row in value["audio"]["selectors"] if row["id"] == "selector.ordinary_food")
+            food["frame"] = 0
+            food["source_client_cycle"] = 5
+            food["baked_offset_added_again"] = True
+        self.rejects(mutation)
+
+    def test_food_duplicate_callback_rejected(self):
+        def mutation(value):
+            food = next(row for row in value["audio"]["selectors"] if row["id"] == "selector.ordinary_food")
+            food["duplicate_dispatches_allowed"] = 1
+        self.rejects(mutation)
+
+    def test_historical_recording_not_relabelled_build240(self):
+        def mutation(value):
+            source = next(row for row in value["audio"]["selectors"] if row["id"] == "selector.cooks_assistant")
+            source["recording_dates"] = ["20260914"]
+            source["verified_current_build_selector"] = True
+        self.rejects(mutation)
+
+    def test_no_quest_rank_added_to_native_queue(self):
+        self.rejects(lambda value: value["audio"]["native_queue_rules"].update(jingle_priority="Quest beats skill"))
+
+    def test_cooks_modal_order_preserved(self):
+        def mutation(value):
+            source = next(row for row in value["audio"]["selectors"] if row["id"] == "selector.cooks_assistant")
+            source["timing"] = "Play level-up first and quest afterward."
+        self.rejects(mutation)
+
+    def test_obsolete_percussion_setup_or_music_hash_rejected(self):
+        self.rejects(lambda value: value["audio"]["current_audio_proof"]["native_startup"].update(bank=0))
+        self.rejects(lambda value: value["audio"]["assets"][0].update(sha256="0" * 64))
+
+    def test_current_264_files_and_26_musical_corrections(self):
+        proof = self.manifest["audio"]["current_audio_proof"]
+        self.assertEqual(len(self.manifest["audio"]["assets"]), 264)
+        self.assertEqual(len(proof["changed_musical_asset_ids"]), 26)
+        self.assertEqual(proof["prior_sfx_hashes_preserved"], 223)
+        self.assertTrue(proof["source_silence_preserved"])
+
+    def test_required_source_cue_wavs_are_actual_native_bytes(self):
+        self.assertEqual({row["source_group"] for row in self.audio_contract["reference_templates"]}, {2693, 710})
+        for row in self.audio_contract["reference_templates"]:
+            self.assertEqual(wave_facts(ROOT / row["path"]), row["signal"])
+        self.rejects(lambda value: value["audio"]["reference_templates"].pop())
+
+    def test_native_queue_and_approved_reference_contract(self):
+        result = validate_audio_contract(self.audio_contract, decode_templates=True)
+        self.assertTrue(result["native_queue_rules_checked"])
+        self.assertTrue(result["historical_qualifications_retained"])
+        self.assertFalse(result["pack_approved"])
+
+    def test_selected_audio_payload_cannot_disappear_from_case(self):
+        def mutation(value):
+            case = next(row for row in value["cases"] if row["id"] == "case.tutorial.departure_offer")
+            case["audio_selector_refs"] = []
+        self.rejects(mutation)
 
 
 if __name__ == "__main__":

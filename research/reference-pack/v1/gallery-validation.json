@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "evidence_scope": "Public source-media decode and reference-gallery usability only",
-  "observed_at": "2026-09-14T19:44:15.261Z",
+  "observed_at": "2026-09-15T00:12:00.944Z",
   "browser": "153.0.8010.12",
   "executable": "/home/lramos15/.cache/ms-playwright/chromium-1243/chrome-linux-arm64/chrome",
   "playwright_module": "/home/lramos15/clubscape/.worktrees/m1-browser-platform/tools/browser-harness/node_modules/playwright-core/index.mjs",
@@ -14,7 +14,7 @@
   "owner_reference_pack_approved": false,
   "final_presentation_accepted": false,
   "source_media_decoded_this_run": false,
-  "manifest_sha256": "dc4b0c9b91e3fccb6a77f7bcf30361e103dfc9c8bb0c24b2bda8861e8e0e48ff",
+  "manifest_sha256": "b62e19704e17d3d3e4e819f803ef49ba7cc54034ae407184b423427c65d9674d",
   "gallery": [
     {
       "viewport": [
@@ -213,6 +213,16 @@
         "native-hud.native-shop",
         "native-hud.native-skills"
       ],
+      "audio_selector_ids": [
+        "selector.bronze_smelting",
+        "selector.cooks_assistant",
+        "selector.goblin",
+        "selector.learning_the_ropes",
+        "selector.ordinary_food",
+        "selector.shortbow",
+        "selector.tutorial_rat"
+      ],
+      "audio_controls": 266,
       "autoplay_media": 0
     },
     {
@@ -412,6 +422,16 @@
         "native-hud.native-shop",
         "native-hud.native-skills"
       ],
+      "audio_selector_ids": [
+        "selector.bronze_smelting",
+        "selector.cooks_assistant",
+        "selector.goblin",
+        "selector.learning_the_ropes",
+        "selector.ordinary_food",
+        "selector.shortbow",
+        "selector.tutorial_rat"
+      ],
+      "audio_controls": 266,
       "autoplay_media": 0
     },
     {
@@ -611,6 +631,16 @@
         "native-hud.native-shop",
         "native-hud.native-skills"
       ],
+      "audio_selector_ids": [
+        "selector.bronze_smelting",
+        "selector.cooks_assistant",
+        "selector.goblin",
+        "selector.learning_the_ropes",
+        "selector.ordinary_food",
+        "selector.shortbow",
+        "selector.tutorial_rat"
+      ],
+      "audio_controls": 266,
       "autoplay_media": 0
     },
     {
@@ -810,7 +840,40 @@
         "native-hud.native-shop",
         "native-hud.native-skills"
       ],
+      "audio_selector_ids": [
+        "selector.bronze_smelting",
+        "selector.cooks_assistant",
+        "selector.goblin",
+        "selector.learning_the_ropes",
+        "selector.ordinary_food",
+        "selector.shortbow",
+        "selector.tutorial_rat"
+      ],
+      "audio_controls": 266,
       "autoplay_media": 0
+    }
+  ],
+  "owner_review_page": {
+    "manifest_hash_visible": true,
+    "contact_sheet_loaded": true,
+    "pack_approved": false
+  },
+  "reference_wav_decodes": [
+    {
+      "id": "reference.audio.sfx.2693",
+      "frames": 22050,
+      "sample_rate": 22050,
+      "channels": 1,
+      "peak": 0.4938505291938782,
+      "actual_playback_accepted": false
+    },
+    {
+      "id": "reference.audio.sfx.710",
+      "frames": 12127,
+      "sample_rate": 22050,
+      "channels": 1,
+      "peak": 0.6020081043243408,
+      "actual_playback_accepted": false
     }
   ]
 }

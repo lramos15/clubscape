@@ -1,7 +1,11 @@
-# M1 public reference pack, v1.2
+# M1 public reference pack, v1.3
 
-**Status: `awaiting_owner_approval`; only two source-audio requirements
-remain. The native HUD/panel calibration gap is closed.** All **126 case IDs / 71 tutorial states** are retained
+**Complete and ready for owner review; overall status remains
+`awaiting_owner_approval`. No required pack inputs remain missing.**
+The two residual audio selectors are now covered by the exact, separately
+owner-approved adaptations in `milestones/m1-audio-trigger-approval.json`;
+they are **not** relabeled verified current OSRS selectors.
+All **126 case IDs / 71 tutorial states** are retained
 and factored into **29 visual families, 180 distinct required visual
 variants, 11 instructor phases and 11 progressive HUD signatures**. The
 previous demand for 69 further micro-state screenshots was an invented
@@ -11,11 +15,18 @@ The later owner direction in `milestones/m1-owner-followups.json` supersedes
 the older source-capture handoff's account/terms request. That older file is
 retained only as hash-bound historical context, not imposed as this pack's gate.
 
-Open **[`v1/gallery/index.html`](v1/gallery/index.html)** in a browser. It is an
+Start with **[`v1/owner-review.html`](v1/owner-review.html)** for the exact
+manifest SHA, compact contact sheet and one bounded approval scope.
+[`v1/owner-review.json`](v1/owner-review.json) is the machine-readable scope;
+[`v1/owner-review-contact.png`](v1/owner-review-contact.png) contains the
+seven unapproved compositions and five original source review views.
+
+Open **[`v1/gallery/index.html`](v1/gallery/index.html)** for the full
 indexed **source-reference review gallery, not ClubScape, a game frontend,
 a renderer demonstration, or an accepted baseline**. It works from a checkout
 with relative local links. The case filter, original-file links, public media
-catalogue, contact sheets, source recording and 258 audio controls are for
+catalogue, contact sheets, source recording and264 corrected FLAC controls
+(plus two exact source cue WAV references) are for
 review only. Scaled previews are never comparison inputs.
 
 ## Literal requirements and evidence factoring
@@ -66,7 +77,8 @@ Chrome/Edge performance are later acceptance gates; they remain unrun.
 | Retrieved official 2026 music-transition MP4, including audio | 1 |
 | Explicitly derived full recording frames at 0, 5, ... 40 seconds | 9 |
 | Clearly labeled owner-review web/title compositions | 7 |
-| Existing original FLAC files, not re-converted | 258 |
+| Current corrected original FLAC files | 264 |
+| Exact already-generated native cue WAV references2693/710, copied unchanged | 2 |
 | Original silent SFX2411, no playable file | 1 |
 | Hash-bound published original cache asset files | 559 |
 
@@ -165,6 +177,49 @@ probability, frame events and ambient fields remain bound to the existing
 audio manifest. The MP4 has actually been decoded, including its audio; that
 is **not** a calibrated source mixer, audible product playback or gameplay run.
 
+## Corrected audio and exact selector authority
+
+[`v1/audio-reference.json`](v1/audio-reference.json) binds the CURRENT
+`assets/manifests/osrs/audio-runtime.json`, selector observations, native queue
+evidence, correction record and owner approval. Native startup requires
+percussion **channel9/bank128**. All35 musical outputs were checked and26
+payloads changed; the pack now uses their corrected file and PCM hashes.
+All223 prior SFX and weighted silence2411 remain unchanged. Previous musical
+hashes are used only for the correction-delta audit, never as active baselines.
+
+The264 published FLACs do not include the separately analyzed2693/710 WAVs.
+Those two original native templates have been copied without conversion into
+`assets/reference/wiki/audio-source/`. Their complete bytes and decoded PCM
+match the retained public/native comparison evidence. Their full source gain
+is explicit; they are reference inputs, not newly published runtime FLACs.
+
+| Binding | Original input and authority |
+| --- | --- |
+| Ordinary shortbow |2693 at projectile release, with the2024-05-21 recording qualification |
+| Tutorial rat |710 attack,713 hit,711 death; current4933/4934/4935 motion family and dated2024 public events |
+| Ordinary unarmed goblin |469 attack,472 hit,471 death; original signals and2018/2019 public action evidence |
+| Bronze smelt |2725 at accepted copper/tin furnace-start event; dated2024 evidence, not an invented899 frame sound |
+| Cook's Assistant |Observed152 at quest scroll, reward-level-up after dismissal;2017-03-01 normal-account recording, not the excluded speedrun34 |
+| Learning the Ropes |**approved_adaptation**:152 once on legitimate committed completion; no duplicate/reconnect/reload replay |
+| Ordinary shrimp315/bread2309 |**approved_adaptation**:2393 once at12526 frame1 after4 client cycles; no duplicate animation/game callback or double-added baked offset |
+
+The exact owner record SHA-256 is
+`d6f187cd182741421cbc14420dbb8eb60411cd478f3c15be3cd740c081731c30`
+(commit5df8420). The scope is ONLY the two selector choices; no gameplay,
+XP, item-consumption, combat or quest-progression change is authorized.
+Cook's observed ordering and the native last-accepted-jingle-request-wins
+rule remain. There is no invented quest-versus-skill priority or auxiliary
+priority argument. Native source SFX use a50-entry FIFO; delay2 dispatches
+on the third processing call, and the waveform's existing offset is not
+added twice.
+
+Historical2017/2018/2019/2024 footage identifies current-cache payloads in
+source-game contexts; it is not build240 footage. The two approved
+adaptations likewise remain provisional for review, not verified current
+selectors. The older residual prose in upstream audio preparation records
+is retained as historical context and explicitly superseded by the newer
+observations/owner record; it is not a current pack blocker.
+
 ## Comparison policy and proposed adaptations
 
 [`v1/comparison-policy.json`](v1/comparison-policy.json) sets numeric limits
@@ -211,24 +266,21 @@ Equipment attachment/fitting, all functional slots, branding and web-only
 wording receive separate bounded owner review. They do not relax ordinary
 tree, goblin, terrain, building or source-interface requirements.
 
-## Minimal remaining source inputs
+## One remaining owner decision, not a missing-input gate
 
-| Input | Evidence still required |
-| --- | --- |
-| `input.required_effect_bindings` | Source cue IDs/event boundaries for ordinary shortbow, goblin, tutorial rat, eating and bronze smelting. Existing PCM/sequence/ambient evidence is retained; smelting2725 is only a candidate. Candidate playback cannot establish an unknown source identity. |
-| `input.quest_jingle_binding` | Exact Learning the Ropes/Cook's Assistant cue selection and quest/level-up precedence. The three already-pinned wiki descriptions were rechecked:154 **usually** accompanies Beginner/Easy quests,152 Master,153 Intermediate/Expert. This narrows the candidate, not the per-quest binding. |
+The strict completeness check now passes. The manifest computes
+`ready_for_owner_review=true` from source inputs, qualified observations and
+only the two exact approved adaptations. `source_gaps` is empty.
+[`v1/audio-handoff.json`](v1/audio-handoff.json) records completed audio-input
+resolution, not obsolete open blockers.
 
-These are **two audio input requirements / three representative case entries**.
-The native HUD requirement is satisfied, not awaiting another source session.
-[`v1/audio-handoff.json`](v1/audio-handoff.json) lists the exact remaining
-rule/item/NPC/sequence anchors and quest precedence question. Known native frame-event sound
-bindings do not require another source session; they retain their recorded
-cycle offsets. Browser/device gain, latency, actual event scheduling and
-live journey fidelity are separate checks against those inputs.
-
-The manifest computes `ready_for_owner_review` from qualifying source-input
-satisfaction, instead of hardcoding false forever. Readiness would not grant
-approval. No uncertain source input is silently replaced with a design choice.
+The separate bounded reference-pack approval requests agreement on the exact
+manifest, seven web-only compositions/branding direction, source penguin
+base/equipment-fit criteria, and proposed viewport/resize/numeric tolerances.
+Those choices are concrete but **not yet approved**. Actual legitimate
+journey behavior, dynamic-state source fidelity, audible playback and final
+M-series Mac Chrome/Edge acceptance remain unrun candidate obligations, not
+missing pack inputs. Readiness does not grant approval or certify a product.
 The
 [`search log`](v1/search-log.json) records bounded wiki searches, revision and
 file-history checks, official material, rejected HDOS archive footage,

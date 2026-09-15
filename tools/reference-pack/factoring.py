@@ -8,6 +8,7 @@ from catalogue import TUTORIAL_GROUPS, wiki, update, music_update
 from components import ROOT, SOURCE, digest, load_gzip
 from text_oracles import make_text_oracles
 from native_hud import validate_records as validate_native_hud_records
+from audio_reference import source_contract as current_audio_contract
 
 
 FAMILY_DEFINITIONS = [
@@ -219,9 +220,9 @@ SOURCE_REVIEW_INPUTS = {
         "case_ids": ["case.audio.effects.production", "case.audio.effects.combat"],
         "literal_basis": "30.2 explicitly requires required sound IDs and source-defined playback triggers/timing.",
         "status": "unresolved_source_identity",
-        "available": "All258 FLACs and current cache sequence/ambient events, plus named independent candidates.",
-        "missing": "Current ordinary shortbow, goblin/rat, eating and bronze-smelting cue bindings/event boundaries. "
-                   "These cannot be inferred from a candidate that merely plays a plausible sound. Smelting2725 remains a candidate.",
+        "available": "Current264 corrected FLACs, two exact native cue WAV references, dated source-signal/event "
+                     "observations and the exact owner-approved ordinary-food selector adaptation.",
+        "missing": "Any absent payload, source-event qualification or exact owner record must fail validation.",
         "not_required": "No live-account proof for already identified native frame events; those use recorded cycle offsets. "
                         "Device latency/gain and observed gameplay synchronization are later candidate checks.",
         "evidence_ids": [],
@@ -231,10 +232,9 @@ SOURCE_REVIEW_INPUTS = {
         "case_ids": ["case.audio.jingles"],
         "literal_basis": "30.2: source sound IDs and triggers across the complete required journey.",
         "status": "unresolved_source_identity",
-        "available": "Pinned jingle152/153/154 PCM. Rechecked exact wiki revisions:154 usually accompanies Beginner/Easy "
-                     "quests;152 Master;153 Intermediate/Expert. This narrows the candidate, not the actual quest binding.",
-        "missing": "Exact Learning the Ropes/Cook's Assistant cue selection and quest/level-up precedence. "
-                   "A wiki 'usually' statement is not an observed or defined per-quest selector.",
+        "available": "Corrected original jingle152; dated normal Cook's Assistant152/post-dismissal level-up "
+                     "observation; native last-accepted-request-wins rules; owner-approved Learning-the-Ropes152 adaptation.",
+        "missing": "Any missing qualified Cook observation, native queue evidence or exact tutorial selector approval must fail.",
         "not_required": "No extra rendered quest-scroll screenshots; existing current/source-compatible scroll families suffice.",
         "evidence_ids": [],
     },
@@ -275,8 +275,9 @@ ACCEPTANCE_OBLIGATIONS = [
         "id": "acceptance.audio_playback",
         "stage": "candidate_audio_fidelity",
         "scope": "Audible playback, exact bound event synchronization, gains, fades, loops, region changes, gestures and reconnect.",
-        "proof_needed": "Compare against native PCM/event/calibration inputs once bound; test source-event phase and "
-                        "browser scheduling/device latency separately. File decoding is not audible acceptance.",
+        "proof_needed": "Apply qualified dated source bindings and the two explicitly approved selector adaptations "
+                        "without relabeling them verified current selectors. Compare corrected native PCM/event inputs; "
+                        "test source-event phase and browser scheduling/device latency separately. File decoding is not audible acceptance.",
     },
     {
         "id": "acceptance.mac_and_resize",
@@ -364,7 +365,7 @@ def review_ready(requirements):
     return bool(requirements) and all(row["status"] == "available" and row["evidence_ids"] for row in requirements)
 
 
-def assess_source_requirements(originals, public, native_hud_inputs=()):
+def assess_source_requirements(originals, public, native_hud_inputs=(), audio_contract=None):
     requirements = [{"id": identifier, **definition} for identifier, definition in SOURCE_REVIEW_INPUTS.items()]
     by_id = {row["id"]: row for row in requirements}
     if native_hud_inputs:
@@ -375,24 +376,22 @@ def assess_source_requirements(originals, public, native_hud_inputs=()):
         row["demonstrated_scope"] = "Original complete frame/panels, NPC dialogue231, source-font/native-coordinate "
         row["demonstrated_scope"] += "background calibration and6 actual attachment families; synthetic fixture "
         row["demonstrated_scope"] += "text is not source dialogue and these are not71 authenticated progression captures."
-    source_map = json.loads((ROOT / "research/audio-source/source-map.json").read_text())
-    actions = {row["journey_rule_id"]: row for row in source_map["actions"]}
-    required = ("rule.combat.ranged", "rule.goblin.level_2", "rule.combat.tutorial_rat",
-                "rule.food.healing", "rule.smelting.bronze")
-    remaining = [
-        identifier for identifier in required
-        if not actions[identifier]["identified_sound_ids"]
-        or not (actions[identifier]["source_frame_events"] or actions[identifier].get("source_binding_verified", False))
-    ]
-    by_id["input.required_effect_bindings"]["unbound_rule_ids"] = remaining
-    if not remaining:
-        row = by_id["input.required_effect_bindings"]
+    audio_contract = current_audio_contract() if audio_contract is None else audio_contract
+    effects = [row for row in audio_contract["selectors"] if row.get("rule_ids")]
+    quests = [row for row in audio_contract["selectors"] if row.get("quest_refs")]
+    if audio_contract["missing_reference_inputs"]:
+        raise ValueError("Audio reference contract still lacks a required source input")
+    for identifier, selectors in (("input.required_effect_bindings", effects), ("input.quest_jingle_binding", quests)):
+        row = by_id[identifier]
         row["status"] = "available"
-        row["evidence_ids"] = list(required)
+        row["evidence_ids"] = [selector["id"] for selector in selectors]
+        row["satisfaction"] = "Qualified original source evidence plus the specifically approved adaptations; "
+        row["satisfaction"] += "not a claim that historical or provisional selectors were verified on build240."
+    by_id["input.required_effect_bindings"]["unbound_rule_ids"] = []
     return requirements
 
 
-def make_factoring(cases, originals, public, pages, native_hud_inputs=()):
+def make_factoring(cases, originals, public, pages, native_hud_inputs=(), audio_contract=None):
     text_oracles = make_text_oracles(pages)
     tutorial = json.loads((ROOT / "research/journey-rules/tutorial.json").read_text())
     initial = json.loads((ROOT / "research/journey-rules/initial-state.json").read_text())
@@ -532,7 +531,7 @@ def make_factoring(cases, originals, public, pages, native_hud_inputs=()):
             case["acceptance_obligation_ids"].append("acceptance.arrival_state")
         if case["family"] == "audio":
             case["acceptance_obligation_ids"] = ["acceptance.audio_playback"]
-    requirements = assess_source_requirements(originals, public, native_hud_inputs)
+    requirements = assess_source_requirements(originals, public, native_hud_inputs, audio_contract)
     for row in requirements:
         for case_id in row["case_ids"]:
             if row["status"] != "available":
@@ -596,10 +595,11 @@ def make_factoring(cases, originals, public, pages, native_hud_inputs=()):
              "replacement": "Keep source branches and uncertainty; compare presentation at recorded fixture settings and "
                             "validate legitimate branch state with the candidate. Never claim that fixture is the live initial camera."},
             {"old_predicate": "A missing source-relative sound selector can be inferred from whichever candidate sounds plausible.",
-             "decision": "rejected_source_input_deficit_remains",
+             "decision": "resolved_by_qualified_source_evidence_and_exact_owner_adaptations",
              "literal_basis": "30.2 expressly names sound IDs, source-defined triggers and timing.",
-             "replacement": "Keep the narrow unbound cue/selector list; move ONLY scheduling/device/performance "
-                            "verification to candidate acceptance. Known native frame events do not require another live session."},
+             "replacement": "Use corrected original payloads, dated event observations, native queue rules and only "
+                            "the two owner-approved selector policies. Retain all provenance/qualification labels; "
+                            "candidate playback and device/performance verification remain separate."},
             {"old_predicate": "Always reject ready_for_owner_review, even when every required input is later available.",
              "decision": "removed_hardcoded_false_gate",
              "literal_basis": "Reference readiness and owner approval are separate bounded checkpoints.",

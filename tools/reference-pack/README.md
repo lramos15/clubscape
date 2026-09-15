@@ -16,7 +16,7 @@ From this worktree's root:
 
 ```sh
 python3 tools/reference-pack/build.py
-python3 tools/reference-pack/validate.py --report
+python3 tools/reference-pack/validate.py --report --require-complete
 python3 -m unittest discover -s tools/reference-pack -p 'test_*.py' -v
 node --check tools/reference-pack/browser-check.mjs
 ```
@@ -31,7 +31,10 @@ The parent-authorized source-input commit `db103ba` has been integrated.
 images, validates their actual frame and64 native UI-region pixel hashes,
 and binds the source metadata into the existing126 cases/29 families.
 It does not rerender or edit source-capture code. The original93 fixtures,
-100 public images,258 FLACs and seven proposals are preserved.
+100 public images and seven proposals are preserved. The current264-FLAC
+audio manifest includes the integrated native-percussion correction and six
+new effects. Two previously generated native cue WAVs2693/710 are separately
+preserved unchanged as reference templates, not re-converted runtime assets.
 
 `factoring.py` audits literal Section30.2. It retains126 cases and71 tutorial
 states while declaring29 visual families,180 distinct variants,11 instructor
@@ -41,9 +44,9 @@ runs and native-font metrics; it never renders a new "source capture."
 `evidence-families.json` separates missing reference inputs from later
 candidate state/source-fidelity/behavior/platform/owner acceptance evidence.
 
-The stricter completeness command deliberately exits nonzero while the
-two documented audio-binding requirements remain. The native HUD/panel
-source-calibration requirement is now satisfied. The gate does not
+The strict completeness command now passes: native HUD, qualified source
+selector observations and the exact owner-approved two audio adaptations
+supply all required reference inputs. The gate does not
 demand71 separately captured source microstates or an authenticated
 arrival-container screenshot:
 
@@ -54,8 +57,10 @@ python3 tools/reference-pack/validate.py --require-complete
 Passing normal validation means bytes, decoded images, source classification,
 current component/font proofs, original PCM, all distinct visual
 families/states/signatures and the complete **case index**
-are sound. It does **not** mean the source case evidence is complete, owner
-approved, or accepted as a product. `validation.json` records both facts.
+are sound. Strict completeness additionally checks every required input.
+Neither grants owner approval or product acceptance. The input pack is
+complete; overall approval remains pending.
+`validation.json` records these separate facts.
 Tests deliberately remove/duplicate cases, remove actual inputs, change
 hashes/dimensions, relabel icons/crops as panels/full frames, fabricate
 settings/dates, change native metadata, relax tolerances, add masks, promote
@@ -69,6 +74,33 @@ quest ingredient states), lose phases/signatures, reintroduce per-state
 screenshot demands, change text/values/glyphs or leave holes in full-panel
 pixel partitions. A positive unit case proves that readiness can be true
 when real input requirements are satisfied, without marking approval.
+
+## Current audio source/adaptation application
+
+`audio_reference.py` hash-binds the current264-file audio manifest, all
+correction/observation/native queue evidence and exact owner record
+`milestones/m1-audio-trigger-approval.json`. It rejects altered approval
+scope, stale musical hashes, lost percussion-bank setup, changed prior SFX,
+missing cue templates, fabricated dates/current-build labels, duplicate food
+callbacks, double offsets and invented jingle priority.
+
+The audit reads the pre-correction manifest from the pinned base commit
+`e74026a3e9764ea9dd81a19ddd6f87abc32a70bb` only to verify the26-file musical
+delta and preservation of223 prior SFX/silence. It does not retain those old
+musical hashes as active baselines. All264 FLACs are actually decoded and
+checked against the current declared PCM.
+
+The exact native reference WAVs are committed. Routine builds need no other
+worktree. Their original one-time, no-conversion import was:
+
+```sh
+python3 tools/reference-pack/audio_reference.py --materialize-templates \
+  --source /home/lramos15/clubscape/.worktrees/m1-audio-bindings/.local/audio-bindings/candidate-pcm
+```
+
+The importer required matching prior waveform-comparison SHA-256 and native
+decoded-PCM provenance before copying. It did not use the separate historical
+eight-bit control waveforms.
 
 ## Exact public retrieval
 
@@ -136,7 +168,9 @@ python3 tools/reference-pack/validate.py --report
 `--gallery-only` preserves the existing original recording/frame provenance.
 It records the reviewed manifest hash in `v1/gallery-validation.json`, checks
 all126 case IDs,29 family IDs and11 HUD signature IDs at all four viewports,
-all16 native HUD frame IDs, and exercises the71-state filter. Use `--gallery` only when deliberately
+all16 native HUD frame IDs, seven selector records,264+2 audio controls, the
+owner-summary manifest hash/contact sheet and actual decoding of the two
+source WAV references. It exercises the71-state filter. Use `--gallery` only when deliberately
 reproducing the original source-recording decode as well.
 
 Other hosts must supply their own existing compatible browser/Playwright
@@ -147,14 +181,17 @@ reference/audio paths, is checked for responsiveness and is closed in
 `finally`. Chromium's sandbox is enabled; no sandbox-disabling flags are used.
 
 To review without a server, open
-`research/reference-pack/v1/gallery/index.html` directly. The gallery never
+`research/reference-pack/v1/owner-review.html` for the compact decision scope
+and exact manifest SHA, then `gallery/index.html` for the full indexed pack.
+`owner-review-contact.png` is a concise whole-image review sheet. The gallery never
 autoplays audio or video. Full source links preserve native pixels; contact
 sheets are identified as scaled navigational previews, not comparison
 baselines. Product implementation, live journey, native script/state
 calibration, final Mac Chrome/Edge results and all approvals remain separate.
 
-The precise audio handoff is `research/reference-pack/v1/audio-handoff.json`:
-ordinary shortbow/goblin/tutorial-rat/eating/bronze-smelting cue/event
-bindings, plus exact Learning the Ropes/Cook's Assistant jingle selection
-and precedence. No source-account or new broad-image-search prerequisite
-is introduced by these remaining named inputs.
+`audio-reference.json` preserves the final selector/queue policy.
+`audio-handoff.json` marks its required inputs complete. Learning the Ropes152
+and ordinary-food2393/12526frame1/four cycles remain `approved_adaptation`,
+NOT verified current OSRS selectors. Dated Cook/shortbow/rat/goblin/smelting
+observations retain their dates. Only the owner can grant the separate final
+pack approval or later product acceptance.

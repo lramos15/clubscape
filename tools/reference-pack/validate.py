@@ -27,6 +27,7 @@ from native_hud import (
     FAMILY_PANELS, calibration as native_hud_calibration, case_input_ids as native_hud_case_ids,
     input_id as native_hud_id, validate_records as validate_native_hud,
 )
+from audio_reference import source_contract as current_audio_contract, validate_contract as validate_audio_contract, wave_facts, case_selector_ids, resolved_action_map
 
 
 class EvidenceError(ValueError):
@@ -62,7 +63,7 @@ def unique(records, key, label):
 
 
 def structural(manifest):
-    require(manifest["schema_version"] == 1 and manifest["pack_version"] == "1.2.0", "Unsupported pack schema/version")
+    require(manifest["schema_version"] == 1 and manifest["pack_version"] == "1.3.0", "Unsupported pack schema/version")
     require(manifest["status"] == "awaiting_owner_approval", "Pack must remain awaiting_owner_approval")
     factoring = manifest["evidence_factorization"]
     ready = review_ready(factoring["source_review_requirements"])
@@ -84,8 +85,9 @@ def structural(manifest):
     proposal_ids = unique(manifest["proposal_inputs"], "id", "proposal ID")
     frame_ids = unique(manifest["recording_frames"], "id", "recording frame ID")
     audio_ids = unique(manifest["audio"]["assets"], "asset_id", "audio asset ID")
-    all_ids = original_ids | native_hud_ids | public_ids | proposal_ids | frame_ids | audio_ids
-    require(len(all_ids) == sum(map(len, (original_ids, native_hud_ids, public_ids, proposal_ids, frame_ids, audio_ids))),
+    template_ids = unique(manifest["audio"]["reference_templates"], "id", "source audio template ID")
+    all_ids = original_ids | native_hud_ids | public_ids | proposal_ids | frame_ids | audio_ids | template_ids
+    require(len(all_ids) == sum(map(len, (original_ids, native_hud_ids, public_ids, proposal_ids, frame_ids, audio_ids, template_ids))),
             "Cross-class duplicate input ID")
     cases = manifest["cases"]
     ids = unique(cases, "id", "required case ID")
@@ -102,6 +104,7 @@ def structural(manifest):
     role_by_id = {entry["id"]: entry["source_role"] for entry in
                   manifest["original_inputs"] + manifest["native_hud_inputs"] + manifest["public_inputs"] + manifest["proposal_inputs"]}
     role_by_id.update({entry["asset_id"]: "current_original_audio_input" for entry in manifest["audio"]["assets"]})
+    role_by_id.update({entry["id"]: "current_original_audio_template" for entry in manifest["audio"]["reference_templates"]})
     for case in cases:
         require(case["input_ids"] and set(case["input_ids"]) <= all_ids, f"Missing case input: {case['id']}")
         require(len(case["input_ids"]) == len(set(case["input_ids"])), f"Duplicate case input: {case['id']}")
@@ -173,11 +176,12 @@ def structural(manifest):
             and manifest["counts"]["original_runtime_images"] == 109, "Wrong original/native image inventory")
     audio = json.loads((ROOT / "assets/manifests/osrs/audio-runtime.json").read_text())
     require(manifest["audio"]["assets"] == audio["assets"], "Existing original audio inventory changed")
-    require(len(audio_ids) == 258, "Missing playable audio files")
+    require(len(audio_ids) == 264 and len(template_ids) == 2, "Missing corrected audio or required source cue templates")
     require(manifest["audio"]["source_silences"] == audio["source_silences"], "Source silence2411 changed/dropped")
     require(manifest["audio"]["source_silences"][0]["playable_output"] is None, "Silence falsely assigned playable file")
     require(not manifest["audio"]["conversion_repeated"]
             and not manifest["audio"]["live_source_mixer_calibrated"], "False audio conversion/calibration claim")
+    validate_audio_application(manifest)
     validate_factoring(manifest, factoring)
     requirements = {row["id"]: row for row in factoring["source_review_requirements"]}
     gaps = {entry["id"]: entry for entry in manifest["source_gaps"]}
@@ -208,6 +212,34 @@ def structural(manifest):
     return metrics
 
 
+def validate_audio_application(manifest):
+    contract = current_audio_contract()
+    require(manifest["approved_audio_adaptations"] == contract["owner_audio_adaptations"],
+            "Exact owner audio approval scope/hash or adaptation classification changed")
+    require(manifest["audio"]["selectors"] == contract["selectors"],
+            "Qualified/approved audio selectors changed or falsely certified current")
+    require(manifest["audio"]["reference_templates"] == contract["reference_templates"],
+            "Missing/changed original cue templates")
+    require(manifest["audio"]["current_audio_proof"] == contract["current_audio_proof"],
+            "Obsolete pre-correction musical proof retained")
+    require(manifest["audio"]["native_queue_rules"] == contract["native_queue_rules"],
+            "Native queue/offset/priority semantics changed")
+    require(manifest["audio"]["actions"] == resolved_action_map(contract),
+            "Stale or incorrect active source cue bindings")
+    require(manifest["audio"]["remaining_bindings"] == [], "Closed audio blockers restated as missing inputs")
+    selectors = {row["id"]: row for row in contract["selectors"]}
+    for case in manifest["cases"]:
+        expected = case_selector_ids(case, selectors)
+        require(case["audio_selector_refs"] == expected, "Missing case audio selector mapping")
+        adaptations = [selectors[key]["adaptation_id"] for key in expected if selectors[key]["classification"] == "approved_adaptation"]
+        require(case["approved_audio_adaptation_refs"] == adaptations, "Case lost exact approved-adaptation label")
+        for key in expected:
+            require(set(selectors[key]["payload_ids"]) <= set(case["input_ids"]), "Selected cue lacks actual case input bytes")
+    require(manifest["counts"]["playable_original_audio_files"] == 264
+            and manifest["counts"]["additional_original_cue_wav_references"] == 2
+            and manifest["counts"]["owner_approved_audio_selector_adaptations"] == 2, "Incorrect corrected audio/approval counts")
+
+
 def validate_factoring(manifest, factoring):
     definitions = {row[0]: row for row in FAMILY_DEFINITIONS}
     families = {row["id"]: row for row in factoring["families"]}
@@ -216,6 +248,7 @@ def validate_factoring(manifest, factoring):
     input_ids = {row["id"] for row in manifest["original_inputs"] + manifest["native_hud_inputs"] + manifest["public_inputs"]
                  + manifest["proposal_inputs"] + manifest["recording_frames"]}
     input_ids |= {row["asset_id"] for row in manifest["audio"]["assets"]}
+    input_ids |= {row["id"] for row in manifest["audio"]["reference_templates"]}
     case_map = {case["id"]: case for case in manifest["cases"]}
     all_variants = set()
     for identifier, definition in definitions.items():
@@ -443,6 +476,27 @@ def require_complete(manifest):
             "Mandatory source evidence remains: " + ", ".join(gap["id"] for gap in manifest["source_gaps"]))
 
 
+def validate_owner_review(manifest):
+    review = json.loads((OUT / "owner-review.json").read_text())
+    require(review["manifest"] == digest(OUT / "manifest.json"), "Owner review cites a stale manifest")
+    require(review["ready_for_owner_review"] == manifest["ready_for_owner_review"]
+            and review["status"] == "awaiting_owner_approval" and not review["reference_pack_approved"],
+            "Owner review falsely grants pack approval or contradicts readiness")
+    require(review["already_approved_audio_only"] == manifest["approved_audio_adaptations"],
+            "Owner summary broadens or hides the two approved audio adaptations")
+    decisions = {row["id"]: row for row in review["decisions_requested"]}
+    require(set(decisions) == {"review.reference_pack", "review.web_compositions",
+                              "review.penguin_and_equipment", "review.viewport_and_tolerances"},
+            "Incomplete/broadened final owner decision scope")
+    require(decisions["review.web_compositions"]["proposal_ids"] == [row["id"] for row in manifest["proposal_inputs"]],
+            "Owner review omitted a concrete web-only proposal")
+    facts = image_facts(verify_file(review["contact_sheet"]).read_bytes())
+    require(facts["dimensions"] == [1600, 1020] and len(review["contact_sheet"]["input_ids"]) == 12,
+            "Owner review contact sheet is incomplete")
+    require(review["manifest"]["sha256"] in (OUT / "owner-review.html").read_text(), "Owner page hides the exact manifest hash")
+    return {"decision_groups": 4, "web_proposals": 7, "contact_images": 12, "pack_approved": False}
+
+
 def validate(manifest, *, full_audio=True):
     metrics = structural(manifest)
     records = []
@@ -450,11 +504,15 @@ def validate(manifest, *, full_audio=True):
                 "proposal_inputs", "recording_frames", "tool_inputs", "source_snapshot_inventory", "owned_document_inputs"):
         records.extend(manifest[key])
     records.extend(manifest["audio"]["assets"])
+    records.extend(manifest["audio"]["reference_templates"])
+    records.extend(entry["source_provenance"] for entry in manifest["audio"]["reference_templates"])
     records.extend(entry["snapshot"] for entry in manifest["public_page_revisions"])
     records.extend(entry["source_snapshot"] for entry in manifest["public_inputs"])
     records += [manifest["source_widget_symbols"]["source"], manifest["comparison_policy"],
                 manifest["factorization_document"], manifest["dynamic_text_oracles"], manifest["audio_binding_audit_sources"],
                 manifest["native_hud_calibration"], manifest["remaining_audio_handoff"],
+                manifest["audio_reference_contract"], manifest["approved_audio_adaptations"]["input"],
+                manifest["approved_audio_adaptations"]["adaptations_spec"],
                 manifest["audio"]["browser_source_recording_decode"]]
     unique_files = {}
     for record in records:
@@ -479,9 +537,10 @@ def validate(manifest, *, full_audio=True):
         if entry["path"].endswith(".png"):
             image_facts((ROOT / entry["path"]).read_bytes())
             source_pngs += 1
-    expected_media = {entry["path"] for entry in manifest["public_inputs"] + manifest["recording_frames"]}
+    expected_media = {entry["path"] for entry in manifest["public_inputs"] + manifest["recording_frames"]
+                      + manifest["audio"]["reference_templates"]}
     actual_media = {path.relative_to(ROOT).as_posix() for path in (ROOT / "assets/reference/wiki").rglob("*")
-                    if path.is_file() and path.suffix.lower() in (".png", ".jpg", ".jpeg", ".gif", ".mp4")}
+                    if path.is_file() and path.suffix.lower() in (".png", ".jpg", ".jpeg", ".gif", ".mp4", ".wav")}
     require(expected_media == actual_media, "Unindexed/missing media file in owned asset inventory")
     expected_snapshots = {entry["path"] for entry in manifest["source_snapshot_inventory"]}
     actual_snapshots = {path.relative_to(ROOT).as_posix() for path in (OUT / "sources").glob("*") if path.is_file()}
@@ -501,6 +560,8 @@ def validate(manifest, *, full_audio=True):
     synthetic = {text for entry in manifest["native_hud_inputs"] for text in entry["synthetic_dialogue_strings"]}
     require(not any(record["desktop_text"] in synthetic for record in actual_text["records"]),
             "Synthetic native fixture body was promoted to source dialogue")
+    audio_contract = json.loads(verify_file(manifest["audio_reference_contract"]).read_text())
+    audio_application = validate_audio_contract(audio_contract, decode_templates=True)
     for notice in manifest["notices"]:
         require(checked_path(notice).is_file(), f"Missing source notice: {notice}")
     contact_sheets = json.loads((OUT / "gallery/contact-sheets.json").read_text())
@@ -508,6 +569,7 @@ def validate(manifest, *, full_audio=True):
         facts = image_facts(verify_file(sheet).read_bytes())
         require(facts["dimensions"] == [1600, 1200], "Malformed contact sheet")
     audio = decode_audio(manifest) if full_audio else {"status": "not_run", "files_decoded": 0}
+    owner_review = validate_owner_review(manifest)
     return {
         "schema_version": 1, "validated_at": datetime.now(timezone.utc).isoformat(),
         "result": "passed_source_input_integrity_and_case_index",
@@ -522,6 +584,8 @@ def validate(manifest, *, full_audio=True):
         "published_source_sprite_atlases_decoded": source_pngs,
         "exact_component_or_text_proofs_rechecked": verify_matches(manifest, metrics),
         "audio": audio, "required_case_ids_checked": len(manifest["cases"]),
+        "audio_reference_application": audio_application,
+        "owner_review_summary": owner_review,
         "tutorial_states_mapped": 71,
         "visual_families_checked": manifest["counts"]["visual_families"],
         "distinct_visual_variants_checked": manifest["counts"]["distinct_visual_variants"],

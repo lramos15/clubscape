@@ -226,6 +226,10 @@
         "case.tutorial.wind_strike"
       ],
       "pixel_or_audio_input_ids": [
+        "asset.source.osrs.cache2695.audio-runtime.jingle.152",
+        "asset.source.osrs.cache2695.audio-runtime.sfx.2725",
+        "asset.source.osrs.cache2695.audio-runtime.sfx.711",
+        "asset.source.osrs.cache2695.audio-runtime.sfx.713",
         "native-hud.family-combat",
         "native-hud.family-guide",
         "native-hud.family-magic",
@@ -260,6 +264,8 @@
         "original.scenes.lumbridge-castle-plaza",
         "original.scenes.tutorial-starting-house",
         "original.scenes.tutorial-survival-coast",
+        "reference.audio.sfx.2693",
+        "reference.audio.sfx.710",
         "wiki.account-guide-chathead-png",
         "wiki.account-management-tab-png",
         "wiki.activating-quick-prayers-gif",
@@ -585,6 +591,7 @@
         "case.ui.dialogue"
       ],
       "pixel_or_audio_input_ids": [
+        "asset.source.osrs.cache2695.audio-runtime.jingle.152",
         "native-hud.family-combat",
         "native-hud.family-guide",
         "native-hud.family-magic",
@@ -1009,6 +1016,8 @@
         "case.ui.combat"
       ],
       "pixel_or_audio_input_ids": [
+        "asset.source.osrs.cache2695.audio-runtime.sfx.711",
+        "asset.source.osrs.cache2695.audio-runtime.sfx.713",
         "native-hud.native-combat",
         "original.items.1205",
         "original.items.1265",
@@ -1034,6 +1043,8 @@
         "original.items.841",
         "original.items.882",
         "original.items.995",
+        "reference.audio.sfx.2693",
+        "reference.audio.sfx.710",
         "wiki.attack-style-tab-png",
         "wiki.combat-instructor-chathead-png",
         "wiki.combatstyles-slash-sword-png",
@@ -1161,6 +1172,7 @@
         "case.ui.magic"
       ],
       "pixel_or_audio_input_ids": [
+        "asset.source.osrs.cache2695.audio-runtime.jingle.152",
         "native-hud.native-magic",
         "original.items.1205",
         "original.items.1265",
@@ -1244,6 +1256,7 @@
         "case.ui.smithing"
       ],
       "pixel_or_audio_input_ids": [
+        "asset.source.osrs.cache2695.audio-runtime.sfx.2725",
         "original.items.1205",
         "original.items.1265",
         "original.items.1277",
@@ -1467,6 +1480,9 @@
         "case.ui.quests"
       ],
       "pixel_or_audio_input_ids": [
+        "asset.source.osrs.cache2695.audio-runtime.jingle.152",
+        "asset.source.osrs.cache2695.audio-runtime.jingle.33",
+        "asset.source.osrs.cache2695.audio-runtime.jingle.34",
         "native-hud.native-quest-list",
         "original.items.1205",
         "original.items.1265",
@@ -1512,7 +1528,10 @@
         "wiki.grid-master-rewards-poll-new-player-improvements-5-png",
         "wiki.grid-master-rewards-poll-new-player-improvements-6-png",
         "wiki.learning-the-ropes-reward-scroll-png",
-        "wiki.cook-s-assistant-reward-scroll-png"
+        "wiki.cook-s-assistant-reward-scroll-png",
+        "asset.source.osrs.cache2695.audio-runtime.jingle.152",
+        "asset.source.osrs.cache2695.audio-runtime.jingle.33",
+        "asset.source.osrs.cache2695.audio-runtime.jingle.34"
       ],
       "current_widget_inputs": [
         {
@@ -1851,6 +1870,10 @@
         "case.world.tutorial_house"
       ],
       "pixel_or_audio_input_ids": [
+        "asset.source.osrs.cache2695.audio-runtime.jingle.152",
+        "asset.source.osrs.cache2695.audio-runtime.sfx.2725",
+        "asset.source.osrs.cache2695.audio-runtime.sfx.711",
+        "asset.source.osrs.cache2695.audio-runtime.sfx.713",
         "original.items.1205",
         "original.items.1265",
         "original.items.1277",
@@ -1880,6 +1903,8 @@
         "original.scenes.lumbridge-windmill-route",
         "original.scenes.tutorial-starting-house",
         "original.scenes.tutorial-survival-coast",
+        "reference.audio.sfx.2693",
+        "reference.audio.sfx.710",
         "wiki.account-guide-chathead-png",
         "wiki.account-management-tab-png",
         "wiki.activating-quick-prayers-gif",
@@ -1989,6 +2014,10 @@
         "case.tutorial.wind_strike"
       ],
       "pixel_or_audio_input_ids": [
+        "asset.source.osrs.cache2695.audio-runtime.jingle.152",
+        "asset.source.osrs.cache2695.audio-runtime.sfx.2725",
+        "asset.source.osrs.cache2695.audio-runtime.sfx.711",
+        "asset.source.osrs.cache2695.audio-runtime.sfx.713",
         "original.items.1205",
         "original.items.1265",
         "original.items.1277",
@@ -2072,6 +2101,8 @@
         "original.models.tree-1277-yaw-256",
         "original.models.tree-1277-yaw-512",
         "original.scenes.tutorial-survival-coast",
+        "reference.audio.sfx.2693",
+        "reference.audio.sfx.710",
         "wiki.attack-style-tab-png",
         "wiki.choose-option-use-interface-png",
         "wiki.combat-instructor-chathead-png",
@@ -2100,6 +2131,10 @@
         "wiki.worn-equipment-tab-png"
       ],
       "representative_input_ids": [
+        "asset.source.osrs.cache2695.audio-runtime.jingle.152",
+        "asset.source.osrs.cache2695.audio-runtime.sfx.2725",
+        "asset.source.osrs.cache2695.audio-runtime.sfx.711",
+        "asset.source.osrs.cache2695.audio-runtime.sfx.713",
         "original.models.npc-2063-sequence-5666-frame-0",
         "original.models.npc-2063-sequence-5666-frame-1",
         "original.models.npc-2063-sequence-5666-frame-2",
@@ -2159,6 +2194,8 @@
         "original.models.tree-1277-yaw-256",
         "original.models.tree-1277-yaw-512",
         "original.scenes.tutorial-survival-coast",
+        "reference.audio.sfx.2693",
+        "reference.audio.sfx.710",
         "wiki.attack-style-tab-png",
         "wiki.choose-option-use-interface-png",
         "wiki.combat-instructor-chathead-png",
@@ -2568,6 +2605,7 @@
         "asset.source.osrs.cache2695.audio-runtime.sfx.2238",
         "asset.source.osrs.cache2695.audio-runtime.sfx.2266",
         "asset.source.osrs.cache2695.audio-runtime.sfx.227",
+        "asset.source.osrs.cache2695.audio-runtime.sfx.2393",
         "asset.source.osrs.cache2695.audio-runtime.sfx.2422",
         "asset.source.osrs.cache2695.audio-runtime.sfx.2498",
         "asset.source.osrs.cache2695.audio-runtime.sfx.2577",
@@ -2636,8 +2674,15 @@
         "asset.source.osrs.cache2695.audio-runtime.sfx.372",
         "asset.source.osrs.cache2695.audio-runtime.sfx.3790",
         "asset.source.osrs.cache2695.audio-runtime.sfx.3791",
+        "asset.source.osrs.cache2695.audio-runtime.sfx.469",
+        "asset.source.osrs.cache2695.audio-runtime.sfx.471",
+        "asset.source.osrs.cache2695.audio-runtime.sfx.472",
         "asset.source.osrs.cache2695.audio-runtime.sfx.512",
-        "asset.source.osrs.cache2695.audio-runtime.sfx.880"
+        "asset.source.osrs.cache2695.audio-runtime.sfx.711",
+        "asset.source.osrs.cache2695.audio-runtime.sfx.713",
+        "asset.source.osrs.cache2695.audio-runtime.sfx.880",
+        "reference.audio.sfx.2693",
+        "reference.audio.sfx.710"
       ],
       "representative_input_ids": [
         "asset.source.osrs.cache2695.audio-runtime.sfx.2596",
@@ -2658,8 +2703,16 @@
         "asset.source.osrs.cache2695.audio-runtime.sfx.220",
         "asset.source.osrs.cache2695.audio-runtime.sfx.221",
         "asset.source.osrs.cache2695.audio-runtime.sfx.227",
+        "asset.source.osrs.cache2695.audio-runtime.sfx.469",
+        "asset.source.osrs.cache2695.audio-runtime.sfx.471",
+        "asset.source.osrs.cache2695.audio-runtime.sfx.472",
         "asset.source.osrs.cache2695.audio-runtime.sfx.512",
+        "asset.source.osrs.cache2695.audio-runtime.sfx.711",
+        "asset.source.osrs.cache2695.audio-runtime.sfx.713",
+        "asset.source.osrs.cache2695.audio-runtime.sfx.2393",
         "asset.source.osrs.cache2695.audio-runtime.sfx.2498",
+        "reference.audio.sfx.2693",
+        "reference.audio.sfx.710",
         "asset.source.osrs.cache2695.audio-runtime.sfx.372",
         "asset.source.osrs.cache2695.audio-runtime.sfx.2238",
         "asset.source.osrs.cache2695.audio-runtime.sfx.2266",
@@ -2853,10 +2906,8 @@
       ],
       "required_panel_pixel_coverage": 1.0,
       "candidate_panel_pixel_coverage_measured": null,
-      "missing_input_requirement_ids": [
-        "input.required_effect_bindings"
-      ],
-      "agreement_input_status": "awaiting_named_source_input",
+      "missing_input_requirement_ids": [],
+      "agreement_input_status": "factored_inputs_available",
       "native_hud_input_ids": [],
       "native_evidence_scope": "actual native geometry/background/font/panel/attachment examples; source text and exact semantic state stay independently checked"
     },
@@ -2944,10 +2995,8 @@
       ],
       "required_panel_pixel_coverage": 1.0,
       "candidate_panel_pixel_coverage_measured": null,
-      "missing_input_requirement_ids": [
-        "input.quest_jingle_binding"
-      ],
-      "agreement_input_status": "awaiting_named_source_input",
+      "missing_input_requirement_ids": [],
+      "agreement_input_status": "factored_inputs_available",
       "native_hud_input_ids": [],
       "native_evidence_scope": "actual native geometry/background/font/panel/attachment examples; source text and exact semantic state stay independently checked"
     },
@@ -6224,18 +6273,19 @@
         "case.audio.effects.combat"
       ],
       "literal_basis": "30.2 explicitly requires required sound IDs and source-defined playback triggers/timing.",
-      "status": "unresolved_source_identity",
-      "available": "All258 FLACs and current cache sequence/ambient events, plus named independent candidates.",
-      "missing": "Current ordinary shortbow, goblin/rat, eating and bronze-smelting cue bindings/event boundaries. These cannot be inferred from a candidate that merely plays a plausible sound. Smelting2725 remains a candidate.",
+      "status": "available",
+      "available": "Current264 corrected FLACs, two exact native cue WAV references, dated source-signal/event observations and the exact owner-approved ordinary-food selector adaptation.",
+      "missing": "Any absent payload, source-event qualification or exact owner record must fail validation.",
       "not_required": "No live-account proof for already identified native frame events; those use recorded cycle offsets. Device latency/gain and observed gameplay synchronization are later candidate checks.",
-      "evidence_ids": [],
-      "unbound_rule_ids": [
-        "rule.combat.ranged",
-        "rule.goblin.level_2",
-        "rule.combat.tutorial_rat",
-        "rule.food.healing",
-        "rule.smelting.bronze"
-      ]
+      "evidence_ids": [
+        "selector.shortbow",
+        "selector.tutorial_rat",
+        "selector.goblin",
+        "selector.bronze_smelting",
+        "selector.ordinary_food"
+      ],
+      "satisfaction": "Qualified original source evidence plus the specifically approved adaptations; not a claim that historical or provisional selectors were verified on build240.",
+      "unbound_rule_ids": []
     },
     {
       "id": "input.quest_jingle_binding",
@@ -6246,11 +6296,15 @@
         "case.audio.jingles"
       ],
       "literal_basis": "30.2: source sound IDs and triggers across the complete required journey.",
-      "status": "unresolved_source_identity",
-      "available": "Pinned jingle152/153/154 PCM. Rechecked exact wiki revisions:154 usually accompanies Beginner/Easy quests;152 Master;153 Intermediate/Expert. This narrows the candidate, not the actual quest binding.",
-      "missing": "Exact Learning the Ropes/Cook's Assistant cue selection and quest/level-up precedence. A wiki 'usually' statement is not an observed or defined per-quest selector.",
+      "status": "available",
+      "available": "Corrected original jingle152; dated normal Cook's Assistant152/post-dismissal level-up observation; native last-accepted-request-wins rules; owner-approved Learning-the-Ropes152 adaptation.",
+      "missing": "Any missing qualified Cook observation, native queue evidence or exact tutorial selector approval must fail.",
       "not_required": "No extra rendered quest-scroll screenshots; existing current/source-compatible scroll families suffice.",
-      "evidence_ids": []
+      "evidence_ids": [
+        "selector.learning_the_ropes",
+        "selector.cooks_assistant"
+      ],
+      "satisfaction": "Qualified original source evidence plus the specifically approved adaptations; not a claim that historical or provisional selectors were verified on build240."
     }
   ],
   "acceptance_obligations": [
@@ -6282,7 +6336,7 @@
       "id": "acceptance.audio_playback",
       "stage": "candidate_audio_fidelity",
       "scope": "Audible playback, exact bound event synchronization, gains, fades, loops, region changes, gestures and reconnect.",
-      "proof_needed": "Compare against native PCM/event/calibration inputs once bound; test source-event phase and browser scheduling/device latency separately. File decoding is not audible acceptance."
+      "proof_needed": "Apply qualified dated source bindings and the two explicitly approved selector adaptations without relabeling them verified current selectors. Compare corrected native PCM/event inputs; test source-event phase and browser scheduling/device latency separately. File decoding is not audible acceptance."
     },
     {
       "id": "acceptance.mac_and_resize",
@@ -6341,9 +6395,9 @@
     },
     {
       "old_predicate": "A missing source-relative sound selector can be inferred from whichever candidate sounds plausible.",
-      "decision": "rejected_source_input_deficit_remains",
+      "decision": "resolved_by_qualified_source_evidence_and_exact_owner_adaptations",
       "literal_basis": "30.2 expressly names sound IDs, source-defined triggers and timing.",
-      "replacement": "Keep the narrow unbound cue/selector list; move ONLY scheduling/device/performance verification to candidate acceptance. Known native frame events do not require another live session."
+      "replacement": "Use corrected original payloads, dated event observations, native queue rules and only the two owner-approved selector policies. Retain all provenance/qualification labels; candidate playback and device/performance verification remain separate."
     },
     {
       "old_predicate": "Always reject ready_for_owner_review, even when every required input is later available.",

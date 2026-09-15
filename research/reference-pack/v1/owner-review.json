@@ -1,0 +1,170 @@
+{
+  "schema_version": 1,
+  "pack_version": "1.3.0",
+  "status": "awaiting_owner_approval",
+  "ready_for_owner_review": true,
+  "manifest": {
+    "path": "research/reference-pack/v1/manifest.json",
+    "sha256": "b62e19704e17d3d3e4e819f803ef49ba7cc54034ae407184b423427c65d9674d",
+    "size_bytes": 8052030
+  },
+  "gallery": "research/reference-pack/v1/gallery/index.html",
+  "contact_sheet": {
+    "path": "research/reference-pack/v1/owner-review-contact.png",
+    "sha256": "87de4556ca175e75965217da59cf311f1c84ecb420f84667d5633413eca665ed",
+    "size_bytes": 317136,
+    "input_ids": [
+      "proposal.registration",
+      "proposal.registration-rejected",
+      "proposal.connecting",
+      "proposal.capability",
+      "proposal.runtime-error",
+      "proposal.unavailable",
+      "proposal.branding",
+      "original.title.state-10-login-index-2",
+      "native-hud.native-inventory",
+      "native-hud.native-guide-dialogue",
+      "original.scenes.lumbridge-castle-plaza",
+      "original.models.npc-2063-sequence-5668-frame-0"
+    ],
+    "source_role": "review_contact_sheet_not_a_baseline",
+    "transformation": "Aspect-preserving whole-image thumbnails; no source/candidate comparison or approval."
+  },
+  "already_approved_audio_only": {
+    "input": {
+      "path": "milestones/m1-audio-trigger-approval.json",
+      "sha256": "d6f187cd182741421cbc14420dbb8eb60411cd478f3c15be3cd740c081731c30",
+      "size_bytes": 1976
+    },
+    "source_commit": "5df8420",
+    "adaptations_spec": {
+      "path": "spec/adaptations.md",
+      "sha256": "9d15bfb9b6d67b7f0105dd2c3751cb07132b5dc79af112b588fb908e6044373b",
+      "size_bytes": 2333
+    },
+    "record": {
+      "schema_version": 1,
+      "milestone": "m1-starter-journey",
+      "authority": "owner",
+      "decision": "approved",
+      "owner_record": "Use the proposed original sounds provisionally and document them for review",
+      "scope": "Two narrowly defined provisional audio trigger choices only; original source sound payloads are unchanged by this decision.",
+      "adaptations": [
+        {
+          "id": "adaptation.m1.learning_the_ropes_completion_audio",
+          "event": "Legitimate Learning the Ropes quest completion",
+          "source_audio": "Original quest-completion jingle 152",
+          "policy": "Play once when the source-bound quest completion is committed. Do not replay it on duplicate completion, reconnect or state reload.",
+          "classification": "approved_adaptation",
+          "verified_current_source_selector": false
+        },
+        {
+          "id": "adaptation.m1.ordinary_food_audio",
+          "items": [
+            "Shrimps",
+            "Bread"
+          ],
+          "source_item_ids": [
+            315,
+            2309
+          ],
+          "source_audio": "Original eating sound 2393",
+          "policy": "Emit once using the sound-enabled eating animation's first sound cue: source sequence 12526, frame 1, after four source client cycles. Never emit it twice from both animation and a game-trigger callback, and do not double-add the waveform's baked source offset.",
+          "classification": "approved_adaptation",
+          "verified_current_ordinary_food_selector": false
+        }
+      ],
+      "unchanged": [
+        "No changes to XP, item consumption, combat or quest progression",
+        "Cook's Assistant retains observed jingle 152, with its reward-caused level-up sound/dialogue after quest-scroll dismissal",
+        "Native last-accepted-jingle-request-wins behavior and source SFX queue semantics remain",
+        "Reference-pack approval and final visual/audio owner acceptance are still separate"
+      ],
+      "review_requirement": "Disclose these two provisional trigger choices in the owner Mac playtest and source/parity records; they are not promoted to verified OSRS behavior."
+    },
+    "scope": "These two selector choices only; not reference-pack or product acceptance."
+  },
+  "decisions_requested": [
+    {
+      "id": "review.reference_pack",
+      "decision": "Approve the exact source-reference manifest, its qualified evidence roles and family/state factoring.",
+      "scope": "126cases/71states,29families/180distinct variants,109original runtime images,100public images, nine recording frames,698 pinned text records,264 corrected FLACs and two exact source cue WAVs."
+    },
+    {
+      "id": "review.web_compositions",
+      "decision": "Approve the seven concrete source-framed compositions and minimal branding direction.",
+      "proposal_ids": [
+        "proposal.registration",
+        "proposal.registration-rejected",
+        "proposal.connecting",
+        "proposal.capability",
+        "proposal.runtime-error",
+        "proposal.unavailable",
+        "proposal.branding"
+      ],
+      "details": "Native titlebox779,171,360x200; source sprites499/500 and native fonts495/496. Registration, rejection, connecting, capability/runtime/scope feedback and branding are proposals, not OSRS captures or an implemented frontend. Final logo artwork is not fabricated."
+    },
+    {
+      "id": "review.penguin_and_equipment",
+      "decision": "Approve original Penguin NPC2063/model21547 at75/128 scale as the source-style base and the explicit equipment-fitting criteria, not a finished fitted player.",
+      "details": "Use original idle5668/walk5666 frames; preserve all functional slots. Proposed attachment gap<=2 source units, unintended penetration<=1; no ordinary tree/goblin/scenery redesign."
+    },
+    {
+      "id": "review.viewport_and_tolerances",
+      "decision": "Approve1920x1080/DPR1/UIscale1/100% zoom and proposed1024x768 through2560x1440 range, with the already-declared numeric profiles before candidate evaluation.",
+      "details": "Exact native sprites/fonts/values; full-panel coverage; source scene interior max2 8-bit channel error/mean0.35 and1px source-edge allowance. Source audio PCM exact, existing browser float bound0.000023. Read comparison-policy.json for all per-case rules."
+    }
+  ],
+  "not_approved_by_this_review": [
+    "Final ClubScape visual/audio or gameplay acceptance",
+    "Unrun M-series Mac Chrome/Edge performance and actual game resizing",
+    "RuneLite compatibility or later milestones",
+    "Relabeling dated/provisional selectors as verified current OSRS behavior"
+  ],
+  "candidate_obligations": [
+    {
+      "id": "acceptance.tutorial_progression",
+      "stage": "candidate_behavior_and_source_fidelity",
+      "scope": "All71 states, legitimate guards/rewards/recovery, actual dynamic text/values and source-defined UI visibility/highlighting. Reuse the factored source layouts; do not demand71 independent source screenshots.",
+      "proof_needed": "Authoritative event trace and candidate captures at distinct visual-family/signature changes; test every state projection against the pinned source oracles."
+    },
+    {
+      "id": "acceptance.arrival_state",
+      "stage": "candidate_behavior_and_source_fidelity",
+      "scope": "Experience-specific departure possessions, arrival location, optional Adventure Paths and persistence.",
+      "proof_needed": "Validate the retained source branch rules and resolve their explicitly provisional container policy. Use the EXISTING recorded Lumbridge fixture camera for matched presentation tests; do not mislabel it as an observed first-login/arrival camera or force both gameplay branches to that camera."
+    },
+    {
+      "id": "acceptance.dynamic_layout",
+      "stage": "candidate_visual_fidelity",
+      "scope": "Text length/wrapping, counters, item quantities, selection, disabled/hidden controls and scene entities.",
+      "proof_needed": "Zero glyph/advance/value errors and full-panel source-checked coverage. A dynamic field is parameterized, not exempted. Native script-resolved fields must be recorded before comparison."
+    },
+    {
+      "id": "acceptance.source_ambiguities",
+      "stage": "candidate_source_fidelity",
+      "scope": "Unrecorded transcript lines, optional tutorial control visibility and existing labeled behavior assumptions.",
+      "proof_needed": "Retain uncertainty; do not invent lines, numeric progress or hidden controls. They are not new visual-layout families or justification for a live-account prerequisite to agreeing the shared frames."
+    },
+    {
+      "id": "acceptance.audio_playback",
+      "stage": "candidate_audio_fidelity",
+      "scope": "Audible playback, exact bound event synchronization, gains, fades, loops, region changes, gestures and reconnect.",
+      "proof_needed": "Apply qualified dated source bindings and the two explicitly approved selector adaptations without relabeling them verified current selectors. Compare corrected native PCM/event inputs; test source-event phase and browser scheduling/device latency separately. File decoding is not audible acceptance."
+    },
+    {
+      "id": "acceptance.mac_and_resize",
+      "stage": "candidate_platform_performance",
+      "scope": "Actual game resizing and M-series Mac Chrome/Edge visual/audio/performance.",
+      "proof_needed": "Owner-run hardware/browser versions and measurements after implementation. Existing native geometry/static anchors and gallery checks are agreement/development inputs, not fabricated Mac results."
+    },
+    {
+      "id": "acceptance.owner",
+      "stage": "separate_owner_checkpoints",
+      "scope": "Reference-pack approval followed later by candidate presentation acceptance.",
+      "proof_needed": "Owner review of the completed hash-bound input pack, numeric policy, resize range, penguin/fitting and web-only proposals. Neither ready_for_owner_review nor source-tool tests grant approval."
+    }
+  ],
+  "reference_pack_approved": false,
+  "candidate_evaluated": false
+}
