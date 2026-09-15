@@ -25,7 +25,7 @@ use clubscape_renderer::model::Model;
 use common::read_asset;
 
 /// Required player sequences (server appearance defaults, actions, combat, death).
-const REQUIRED_SEQUENCES: [i32; 27] = clubscape_renderer::actor::REQUIRED_PLAYER_SEQUENCES;
+const REQUIRED_SEQUENCES: [i32; 39] = clubscape_renderer::actor::REQUIRED_PLAYER_SEQUENCES;
 
 fn slot_for(item_id: i32) -> &'static str {
     match item_id {
@@ -83,8 +83,8 @@ fn inputs() -> Inputs {
     }
     assert_eq!(
         items.len(),
-        13,
-        "the 10 M1 equippable items with a worn model plus the 3 sequence hand items"
+        16,
+        "the 10 M1 equippable items with a worn model plus the 6 sequence hand items (net, tinderbox, hammer, milking stool and bucket, home-teleport stick)"
     );
     let sequences = REQUIRED_SEQUENCES
         .iter()
@@ -323,22 +323,94 @@ fn legal_item_frames_follow_the_source_hand_overrides() {
     assert_eq!(class("weapon", 1277, 879, true), FitLegality::Hidden);
     assert_eq!(class("weapon", 1277, 733, true), FitLegality::Hidden);
     assert_eq!(class("shield", 1171, 733, true), FitLegality::Hidden);
-    // Movement and idle leave the worn gear alone; combat keeps it pending the binding.
+    // Movement and idle leave the worn gear alone.
     for plain in [808, 819, 824, 820, 821, 822, 823, 5668, 5666] {
         assert_eq!(class("weapon", 1277, plain, true), FitLegality::Worn);
         assert_eq!(class("shield", 1171, plain, true), FitLegality::Worn);
     }
-    for combat in [386, 390, 422, 423, 426] {
+    // Combat: a worn weapon is drawn only during the qualified styles it plays
+    // (animation-requirements.json); a shield only with one-handed styles / unarmed.
+    for (sequence, weapon, legal) in [
+        (386, 1277, true),
+        (386, 1205, true),
+        (386, 841, false),
+        (386, 1351, false),
+        (390, 1277, true),
+        (395, 1351, true),
+        (395, 1277, false),
+        (400, 1265, true),
+        (401, 1351, true),
+        (401, 1265, true),
+        (401, 1237, false),
+        (426, 841, true),
+        (426, 1277, false),
+        (428, 1237, true),
+        (429, 1237, true),
+        (440, 1237, true),
+        (440, 1277, false),
+        (422, 1277, false),
+        (423, 1351, false),
+    ] {
         assert_eq!(
-            class("weapon", 841, combat, true),
-            FitLegality::CombatBindingPending
+            class("weapon", weapon, sequence, true),
+            if legal {
+                FitLegality::Worn
+            } else {
+                FitLegality::IllegalStyle
+            },
+            "weapon {weapon} in {sequence}"
         );
-        assert_eq!(
-            class("shield", 1173, combat, true),
-            FitLegality::CombatBindingPending
-        );
-        assert_eq!(class("head", 1949, combat, true), FitLegality::Worn);
     }
+    for (sequence, shield_legal) in [
+        (386, true),
+        (390, true),
+        (395, true),
+        (400, true),
+        (401, true),
+        (422, true),
+        (423, true),
+        (426, false),
+        (428, false),
+        (429, false),
+        (440, false),
+    ] {
+        assert_eq!(
+            class("shield", 1173, sequence, true),
+            if shield_legal {
+                FitLegality::Worn
+            } else {
+                FitLegality::IllegalStyle
+            },
+            "shield in {sequence}"
+        );
+        assert_eq!(class("head", 1949, sequence, true), FitLegality::Worn);
+        assert_eq!(class("amulet", 1009, sequence, true), FitLegality::Worn);
+    }
+    // Milking holds its own bucket/tool (native words 6244 / 2437) and Home Teleport's first
+    // phase its right-hand item (10214); the other home phases hide both hands.
+    assert_eq!(class("weapon", 1277, 2305, true), FitLegality::Hidden);
+    assert_eq!(class("shield", 1171, 2305, true), FitLegality::Hidden);
+    assert_eq!(class("weapon", 1277, 4847, true), FitLegality::Hidden);
+    assert_eq!(class("shield", 1171, 4847, true), FitLegality::Hidden);
+    for phase in [4850, 4853, 4855, 4857] {
+        assert_eq!(class("weapon", 1277, phase, true), FitLegality::Hidden);
+        assert_eq!(class("shield", 1171, phase, true), FitLegality::Hidden);
+        assert_eq!(class("head", 1949, phase, true), FitLegality::Worn);
+    }
+    let seq2305 = seq(2305);
+    assert_eq!(
+        (seq2305.left_hand_item, seq2305.right_hand_item),
+        (6244, 2437)
+    );
+    let seq4847 = seq(4847);
+    assert_eq!(
+        (seq4847.left_hand_item, seq4847.right_hand_item),
+        (0, 10214)
+    );
+    assert_eq!(
+        clubscape_renderer::actor::HOME_TELEPORT_PHASES,
+        [(0, 4847), (6, 4850), (12, 4853), (16, 4855), (21, 4857)]
+    );
     // The manifest's decoded override values agree with the sequences' own fields.
     let values = inputs.manifest["sequence_hand_overrides"]["values"]
         .as_array()
@@ -369,7 +441,7 @@ fn legal_item_frames_follow_the_source_hand_overrides() {
 /// to see the exact failures; the non-ignored record test below proves the published failure
 /// list is the live truth. Targets are never relaxed and no combination is masked.
 #[test]
-#[ignore = "UNMET pose gate: 671 of 1587 legal item-frames exceed the pre-declared targets (666 penetration > 1, 8 gap > 2, 0 attachment > 2; see assets/compiled/render/gear/pose-fit-failures.json); run with --ignored"]
+#[ignore = "UNMET pose gate: 931 of 2034 legal item-frames exceed the pre-declared targets (926 penetration > 1, 8 gap > 2, 0 attachment > 2; see assets/compiled/render/gear/pose-fit-failures.json); run with --ignored"]
 fn pose_fit_gate_every_legal_item_frame_meets_the_targets() {
     let inputs = inputs();
     let (measured, _) = sweep(&inputs);

@@ -158,6 +158,22 @@ function scenarioWorld(name: string): WorldView & { dynamicObjects?: unknown[] }
     case "gear-smithing":
       // 898: the hammer (a sequence hand item, not equippable) in the weapon slot, shield hidden.
       return { ...base, player: player(3098, 3098, "producing", FULL_GEAR, sequence(898)), entities: [object("anvil", 2097, 3099, 3098)] };
+    case "milking":
+      // 2305 with the full wearable set: the native stool (left) and bucket (right) replace the hands.
+      return { ...base, player: player(3098, 3098, "producing", FULL_GEAR, sequence(2305)), entities: [npc("cow", 2790, 3099, 3098)] };
+    case "home-teleport-1":
+    case "home-teleport-2":
+    case "home-teleport-3":
+    case "home-teleport-4":
+    case "home-teleport-5": {
+      // Ordinary Home Teleport phases (ticks 0/6/12/16/21 of the 24-tick channel; the server names the phase).
+      const phase = [4847, 4850, 4853, 4855, 4857][Number(name.slice(-1)) - 1]!;
+      return { ...base, player: player(3098, 3098, "casting", FULL_GEAR, sequence(phase)), entities: [] };
+    }
+    case "axe-hack":
+      return { ...base, player: player(3098, 3098, "fighting", [["weapon", 1351, "item.bronze_axe"], ["shield", 1171, "item.wooden_shield"]], sequence(395)), entities: [npc("rat", 2813, 3099, 3098)] };
+    case "spear-lunge":
+      return { ...base, player: player(3098, 3098, "fighting", [["weapon", 1237, "item.bronze_spear"]], sequence(429)), entities: [npc("rat", 2813, 3099, 3098)] };
     case "observer-unbound":
       // game.observer.v1 view: a 2^53+1 tick (string), running false, an action whose animation
       // binding the backend has not published (`animation: null`): reported, never guessed.
@@ -576,7 +592,7 @@ async function main(): Promise<void> {
       // Exact minimap marker placement for a stock 152x152 widget around the player (icons of
       // the fixture's plane; an error object when the scene has no map data or sprites).
       let icons: MinimapIconPlacements | { error: string } | null = null;
-      if (name.startsWith("gear-") || name === "observer-unbound") {
+      if (name.startsWith("gear-") || name === "observer-unbound" || name === "milking" || name.startsWith("home-teleport") || name === "axe-hack" || name === "spear-lunge") {
         const tile = scenarioWorld(name.replace(/^pinned-/, "")).player.tile;
         try {
           icons = handle.minimapIconPlacements(tile.x, tile.y, MINIMAP_STOCK_SCALE, 152, 152);

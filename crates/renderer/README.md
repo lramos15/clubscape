@@ -298,7 +298,30 @@ refuses buffers whose hash differs.
   The runtime applies the same overrides to the drawn player and the interface preview
   (`core::player_frame_model`, `effective_gear`), and reports a hidden slot in
   `unknown_motions()`.
-* **Pose gate result: UNMET.** Over the 1 587 legal item-frames, 671 exceed a target: 666
+* **Required sequence set grown to 39** (confirmed additions in
+  `research/interface-contracts/animation-requirements.json`, source metadata
+  `animation-authority/inputs.json` sha `43fafa67…`): milking 2305 (native hand words left 6244 →
+  stool 5732, right 2437 → bucket 1925), the five ordinary Home Teleport actor phases
+  4847/4850/4853/4855/4857 (ticks 0/6/12/16/21 of the unchanged 24-tick channel — a qualified
+  alignment, not an observed server packet; 4847 right word 10214 → stick 9702, every other
+  hand hidden; the neighbouring 4848/4849/4854/4856/4858 are graphics, not actor clips), and the
+  qualified legal combat styles 395 axe hack, 400 blunt spike, 401 blunt pound, 428 spear spike,
+  429 spear lunge, 440 sweep. All twelve are exported with their original skeletons/frames and
+  hand-model overrides (frame counts equal the native metadata) and play in Chrome with the
+  right hand closure. Combat legality now follows the qualified weapon → style table
+  (`actor::COMBAT_STYLES`) instead of a pending superset: a worn weapon is drawn only during the
+  styles it plays, a shield only with one-handed styles or unarmed; other combinations are
+  `illegal_style` (never occur, not drawn). Legality classes over 39 sequences: `worn` 1 801,
+  `override` 233, `illegal_style` 497, `hidden` 4 863, `not_equippable` 942 item-frames → 2 034
+  legal item-frames gated.
+* **Pose gate result: UNMET — 931 of 2 034 legal item-frames** (926 penetration > 1, 8 gap > 2,
+  0 attachment > 2): brass necklace 519, wooden shield 97, square shield 79, milking stool 55,
+  pickaxe 36, axe 30, sword 23, dagger 17, stick 14, net 37, bow 9, spear 7, tinderbox 2, hat 1.
+  Provenance: 67 are decided by the carried-box half alone (square shield 60, wooden shield 5,
+  pickaxe 1, hat 1); 864 have item geometry inside the penguin mesh; 564 exceed the source
+  design's own same-pose overlap by more than the target (necklace 496, wooden shield 19, net 37,
+  stool 7, stick 3, sword 2). The previous 27-sequence figures for reference: 671 of 1 587 —
+  666
   penetration > 1 (max 18.7, wooden shield seq 819/820), 8 gap > 2 (max 6.0, net 621), 0
   attachment > 2 (bounded by construction). Per item: brass necklace 321 (every frame: a chain
   designed for a neck ~15 units across is embedded 8–13 deep in the penguin's ~50-unit-deep body

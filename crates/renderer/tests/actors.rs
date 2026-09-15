@@ -1734,6 +1734,29 @@ fn sequence_hand_overrides_replace_the_worn_hand_models() {
         drawn(&mut core, "898"),
         vec![s("amulet", 1009), s("head", 1949), s("weapon", 2347)]
     );
+    // Milking (2305): the native stool (left word 6244 → item 5732) and bucket (right word
+    // 2437 → item 1925); Home Teleport phase 1 (4847): the stick (10214 → 9702), left hidden;
+    // the other home phases hide both hands.
+    assert_eq!(
+        drawn(&mut core, "2305"),
+        vec![
+            s("amulet", 1009),
+            s("head", 1949),
+            s("shield", 5732),
+            s("weapon", 1925)
+        ]
+    );
+    assert_eq!(
+        drawn(&mut core, "4847"),
+        vec![s("amulet", 1009), s("head", 1949), s("weapon", 9702)]
+    );
+    for phase in ["4850", "4853", "4855", "4857"] {
+        assert_eq!(
+            drawn(&mut core, phase),
+            vec![s("amulet", 1009), s("head", 1949)],
+            "home phase {phase}"
+        );
+    }
     let smithing = rasterize(&core, &textures);
     common::assert_pixels_differ(&dead, &smithing, "death equals smithing");
     // The preview obeys the same rule.

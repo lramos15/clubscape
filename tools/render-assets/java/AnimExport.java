@@ -55,6 +55,12 @@ final class AnimExport
         386, 390, 422, 423, // melee stab, slash, punch, kick
         426, // shortbow
         711, // wind strike cast
+        // Confirmed additional M1 actor sequences (research/interface-contracts/
+        // animation-requirements.json, source metadata animation-authority/inputs.json):
+        2305, // milking (native hand overrides left 6244 / right 2437)
+        4847, 4850, 4853, 4855, 4857, // ordinary Home Teleport phases (4847 right hand 10214)
+        // Qualified legal combat styles: axe hack, blunt spike/pound, spear spike/lunge, sweep.
+        395, 400, 401, 428, 429, 440,
     };
 
     /** Binds the config/model archives the kit, item and param loaders read (client init, gj.az). */

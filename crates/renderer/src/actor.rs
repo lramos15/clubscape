@@ -342,12 +342,6 @@ pub fn item_visibility(
     }
 }
 
-/// Combat sequences among the required set (stab, slash, punch, kick, bow): whether a given
-/// worn weapon or shield can be present while one plays follows the backend's weapon-category →
-/// animation binding (being assigned), not the sequence data; the fit gate keeps every such
-/// combination (a superset) until that binding is published.
-pub const COMBAT_SEQUENCES: [i32; 5] = [386, 390, 422, 423, 426];
-
 /// Legality class of an item × sequence combination for the fit gate, from the source rules.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash, PartialOrd, Ord, serde::Serialize)]
 #[serde(rename_all = "snake_case")]
@@ -356,9 +350,9 @@ pub enum FitLegality {
     Worn,
     /// Drawn because the sequence itself puts the item into a hand slot (`lc.bd`).
     Override,
-    /// A worn weapon/shield during a combat sequence: legal until the backend's
-    /// weapon-category → animation binding says otherwise (kept as a superset).
-    CombatBindingPending,
+    /// A worn weapon that does not play this combat sequence, or a shield during a two-handed
+    /// weapon's sequence (`COMBAT_STYLES`): the combination never occurs, not drawn.
+    IllegalStyle,
     /// The sequence's hand override replaces the item's slot: not drawn, no fit exists.
     Hidden,
     /// A sequence hand item (net, tinderbox, hammer) outside its own sequences: the player
@@ -369,17 +363,14 @@ pub enum FitLegality {
 impl FitLegality {
     /// Whether the combination is drawn (and therefore fitted and gated).
     pub fn is_drawn(self) -> bool {
-        matches!(
-            self,
-            FitLegality::Worn | FitLegality::Override | FitLegality::CombatBindingPending
-        )
+        matches!(self, FitLegality::Worn | FitLegality::Override)
     }
 
     pub fn name(self) -> &'static str {
         match self {
             FitLegality::Worn => "worn",
             FitLegality::Override => "override",
-            FitLegality::CombatBindingPending => "combat_binding_pending",
+            FitLegality::IllegalStyle => "illegal_style",
             FitLegality::Hidden => "hidden",
             FitLegality::NotEquippable => "not_equippable",
         }
@@ -399,15 +390,23 @@ pub fn fit_legality(
         ItemVisibility::Hidden => FitLegality::Hidden,
         ItemVisibility::Override => FitLegality::Override,
         ItemVisibility::Worn if !equippable => FitLegality::NotEquippable,
-        ItemVisibility::Worn => {
-            if COMBAT_SEQUENCES.contains(&sequence.id)
-                && (slot == WEAPON_SLOT || slot == SHIELD_SLOT)
-            {
-                FitLegality::CombatBindingPending
-            } else {
-                FitLegality::Worn
+        ItemVisibility::Worn => match COMBAT_STYLES.iter().find(|(id, _, _)| *id == sequence.id) {
+            Some((_, weapons, _)) if slot == WEAPON_SLOT => {
+                if weapons.contains(&item_id) {
+                    FitLegality::Worn
+                } else {
+                    FitLegality::IllegalStyle
+                }
             }
-        }
+            Some((_, _, one_handed)) if slot == SHIELD_SLOT => {
+                if *one_handed {
+                    FitLegality::Worn
+                } else {
+                    FitLegality::IllegalStyle
+                }
+            }
+            _ => FitLegality::Worn,
+        },
     }
 }
 
@@ -425,9 +424,39 @@ pub fn cached_kits(manifest: &serde_json::Value) -> std::collections::HashSet<i3
 
 /// Required M1 player sequences (server appearance defaults, actions, combat, death, and the
 /// penguin's native stand/walk): the pose set every worn item is fitted and gated against.
-pub const REQUIRED_PLAYER_SEQUENCES: [i32; 27] = [
+pub const REQUIRED_PLAYER_SEQUENCES: [i32; 39] = [
     808, 819, 824, 820, 821, 822, 823, 836, 829, 12526, 827, 625, 879, 621, 733, 897, 896, 899,
     898, 386, 390, 422, 423, 426, 711, 5668, 5666,
+    // Confirmed additions (research/interface-contracts/animation-requirements.json): milking,
+    // the five ordinary Home Teleport phases, and the qualified legal combat styles.
+    2305, 4847, 4850, 4853, 4855, 4857, 395, 400, 401, 428, 429, 440,
+];
+
+/// Ordinary Home Teleport: the actor phases over the unchanged 24-tick channel
+/// (`animation-authority/inputs.json` `home_teleport.actor_phases`, qualified alignment — not an
+/// observed server packet): `(start tick, sequence)`.
+pub const HOME_TELEPORT_PHASES: [(i32, i32); 5] =
+    [(0, 4847), (6, 4850), (12, 4853), (16, 4855), (21, 4857)];
+pub const HOME_TELEPORT_CHANNEL_TICKS: i32 = 24;
+
+/// Qualified legal combat styles (`animation-requirements.json`
+/// `additional_sequences_for_qualified_legal_style_bindings` + the named natives of the frozen
+/// set): `(sequence, weapon items that play it, one-handed)`. A worn weapon is drawn during a
+/// combat sequence only when it plays that sequence; a shield only with a one-handed weapon's
+/// sequence or unarmed. Sword-class stab/slash (386/390) serve the bronze sword and dagger — the
+/// only stab/slash natives in the required set.
+pub const COMBAT_STYLES: [(i32, &[i32], bool); 11] = [
+    (386, &[1277, 1205], true),
+    (390, &[1277, 1205], true),
+    (395, &[1351], true),
+    (400, &[1265], true),
+    (401, &[1351, 1265], true),
+    (422, &[], true),
+    (423, &[], true),
+    (426, &[841], false),
+    (428, &[1237], false),
+    (429, &[1237], false),
+    (440, &[1237], false),
 ];
 
 /// One precomputed per-pose fit: the rigid transform the attachment fit applies to the item in

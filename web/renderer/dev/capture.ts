@@ -283,6 +283,8 @@ async function main(): Promise<void> {
     const scenarioNames = ["pinned-gear-idle", "gear-idle", "gear-fighting", "woodcutting", "mining", "fishing", "firemaking", "cooking", "walking", "ranged", "casting", "death", "unknown-motion", "ground-items-fire", "door-open", "roof-player", "preview",
       // Source hand overrides on the full wearable set and the observer-v1 unbound-action report.
       "gear-death", "gear-woodcutting", "gear-mining", "gear-smithing", "observer-unbound",
+      // Confirmed additional M1 clips: milking, the five Home Teleport phases, qualified combat styles.
+      "milking", "home-teleport-1", "home-teleport-2", "home-teleport-3", "home-teleport-4", "home-teleport-5", "axe-hack", "spear-lunge",
       // Original dynamic-layer reference inputs at the native full-HUD zoom 410 (Tutorial cases).
       "source-door-closed", "source-door-open", "source-roofs-outside", "source-roofs-inside", "source-roofs-hidden"];
     // `--scenario-filter a,b` limits the scenario pass to the named scenarios.
