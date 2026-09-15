@@ -25,7 +25,9 @@ owner record, not a rewrite of those frozen inputs.
 
 ## Implemented UI4 wire and current component boundary
 
-The authorized FINAL4 implementation through `78fcec4` is present. The shell treats `game.ui.v1` as a
+The authorized FINAL4 implementation through `78fcec4` is present, together with
+the `e8c3c43` generator / `df6ea491` departure-question source update.
+The shell treats `game.ui.v1` as a
 negotiated capability requiring both an implemented wire decoder and the
 **complete** `WorldView.ui.version === 1` projection. Published types alone
 cannot enable it. `BrowserApp.gameplayUi()` and the observation-only
@@ -70,6 +72,22 @@ blocked on the UI-owner follow-up, not on the implemented WASM/API mapping.
 Diagnostic Vite bundling is explicitly separate from a passing production
 typecheck. Real UI4 entry/experience/source-lock/reconnect checks can run, but
 do not prove complete UI consumption or final acceptance.
+
+The new normal candidate `.local/source-ui4-5e0aa8a2` uses raw artifact
+`5e0aa8a28851752ae0b8b0a08c635c6c8d2979f509f3a3e564ee74e2abfc8e6f`,
+revision `m1.source-backed.v4.3ff4292b311453cc`, and a different world UUID from
+the retained6f candidate. Only the Magic Instructor question/entry normalization
+and revision changed: original stay/information/normal choices retain their
+payloads and order, with repeated identical primary predicates collapsed in
+the supply-recovery exclusions. No UI/protocol/persisted-state version changes
+or client-side dialogue merge/priority rule is introduced.
+
+The previous `.local/source-ui4-6fdb60e4` remains byte-pinned, with its matching
+11-file public code bundle archived at `.local/web-ui4-6f-bd4a693e`.
+Neither source bundle is repinned or migrated. Canonical compressed/raw hashes
+come from verified `game-content.csc.gz` and `content/m1/manifest.json`, never a
+possibly stale `.local/compiler` raw output. The departure native precondition
+probe is not a legitimate browser completion of Tutorial Island.
 
 `composition.ts` is also dependency-injectable for bounded component tests.
 Such injected handles are not an integrated game. The real UI owns its

@@ -18,3 +18,16 @@ test("artifact transport decodes bounded gzip without pretending it validates ru
     await assert.rejects(readArtifact(join(directory, "bad.csc.gz")), /gzip/);
   } finally { await rm(directory, { recursive: true, force: true }); }
 });
+
+test("explicit gzip inputs never adopt a stale neighboring compiler raw file", async () => {
+  const directory = fileURLToPath(new URL(`../../../.local/artifact-transport-${randomUUID()}/`, import.meta.url));
+  await mkdir(directory, { recursive: true });
+  try {
+    const fresh = Buffer.from("Fresh compressed transport fixture; not a Runtime artifact.");
+    const stale = Buffer.from("Stale compiler scratch fixture; not a Runtime artifact.");
+    await writeFile(join(directory, "candidate.csc"), stale);
+    await writeFile(join(directory, "candidate.csc.gz"), gzipSync(fresh));
+    assert.deepEqual(await readArtifact(join(directory, "candidate.csc.gz")), fresh);
+    assert.deepEqual(await readArtifact(join(directory, "candidate.csc")), stale);
+  } finally { await rm(directory, { recursive: true, force: true }); }
+});

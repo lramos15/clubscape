@@ -159,10 +159,15 @@ compiler over stdin. Region scene-asset IDs must match that
 compiled content. Files reside under `asset-root` at their public URL paths
 without the leading slash. No entire cache is copied.
 
-Current canonical artifact4 is `m1.source-backed.v4.67e4f1fcc55d71d5`, raw SHA-256
-`6fdb60e4740372c5e299fe385875cfac32e04f22ea26ad17b53049296256c1b3`,
+Current canonical artifact4 is `m1.source-backed.v4.3ff4292b311453cc`, raw SHA-256
+`5e0aa8a28851752ae0b8b0a08c635c6c8d2979f509f3a3e564ee74e2abfc8e6f`,
 compressed SHA-256
-`f53a28402baad5588ccf071310b4c239e24391715290aaac2616ed0215284aa6`.
+`7d49e8f85b7b229bb0fc9f6f3cb9665aaf9d287f6a873ac42701e3d77cc6e69f`.
+`readArtifact` reads the explicitly supplied gzip, and `projectArtifact` passes
+those actual bytes to the rebuilt native Runtime validator over stdin.
+Stale `.local/compiler/game-content.csc` output is never the identity of a
+published gzip. Both compressed and uncompressed hashes/lengths must match the
+manifest; no raw-hash exception or guessed cache refresh is accepted.
 The checked projection contains122 item definitions,29 runtime regions,
 one shop and5,015 compiled referenced asset IDs. Its exact six remaining
 unresolved paths are preserved in `contentValidation`, not treated as active
@@ -197,6 +202,46 @@ Fresh bundle `.local/source-ui4-6fdb60e4` has world UUID
 Its406,966-byte private descriptor stays within512KiB. This is a new normal
 world, not an implicit repin/migration of earlier acknowledged worlds.
 `source-records.py` uses the complete four-layer publication chain.
+
+That6f bundle is now a retained earlier diagnostic, not the current source
+product. Its matching code-only WEB_ROOT is archived at
+`.local/web-ui4-6f-bd4a693e`, preserving the exact11 allowlisted files and
+descriptor. The archive contains no private source/compiler/account files.
+
+The authorized `e8c3c43` generator and `df6ea491` product are integrated as
+`c148ee8` and `a4d8eed`. Product README/generated-evidence conflicts were resolved
+to the exact authorized product blobs, not mixed6f/5e metadata. All81
+manifest-listed output hashes match. No Director-frozen fingerprint or
+approval was rewritten. Structural comparison isolates the revision and
+Magic Instructor dialogue: one question retains all original stay/information/
+normal choices, with identical primary predicates deduplicated in three
+recovery exclusions. Source guards/effects remain equivalent; no menu action
+grants XP/provisions or performs departure before the genuine normal flow.
+The source-native four-branch probe is explicitly a controlled precondition
+fixture, not a completed account journey.
+
+Fresh candidate `.local/source-ui4-5e0aa8a2` has world UUID
+`47ef8810-42b2-4e4e-86e0-23495a37572c`, the exact5e artifact,7,690 assets,
+209,520,194 public bytes and a406,966-byte private descriptor.
+The6f world UUID/hash and all earlier bundles remain unchanged.
+Preparing another candidate still requires a new directory/UUID:
+
+```sh
+CLUBSCAPE_RENDER_INPUTS=.local/render-inputs-8281dd16 \
+pnpm --dir web source:bundle .local/source-ui4-5e-candidate <new-isolated-world-uuid>
+
+GAME=.local/source-ui4-5e0aa8a2
+CLUBSCAPE_CLIENT_MANIFEST="$GAME/content/manifest.json" \
+CLUBSCAPE_CLIENT_ASSET_ROOT="$GAME" CLUBSCAPE_CONTENT_OWNER=game \
+pnpm --dir web build
+CLUBSCAPE_GAME_ROOT="$PWD/$GAME" pnpm --dir web serve
+```
+
+The normal build remains blocked on the separately reported UI-owner errors.
+An explicitly recorded diagnostic Vite delivery is not a production typecheck
+pass. If a later4 artifact is integrated, retain the generator and regenerate
+that newer product rather than replacing it with this5e candidate. No automatic
+world migration is performed.
 
 Existing `.local/source-definition-a200ca08` and `.local/source-audio-a200ca08`
 bundles retain raw artifact
