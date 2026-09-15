@@ -151,6 +151,27 @@ views reuse immutable execution planners. Bank placeholders are non-spendable
 metadata over the same bank slots, with stable entry IDs and source capacity.
 They are never zero-quantity stacks or a second value store.
 
+Exact original level-up associations are published in
+`research/interface-contracts/level-up-native.json`: `interface.level_up`
+is source group233 (`LevelupDisplay`), with title/body/continue children1/2/3,
+font497 and named per-skill model containers. The additive
+`interface.level_up_notification` association is source group660
+(`NotificationDisplay`), title/body children4/8 and original script3343
+arguments `(text_colour, title_text, body_text)`; colour `-1` resolves to16750623.
+The existing `reward.kind/interface/skill/level/continuation` remains the only
+reward contract. A popup is not a quest scroll, another grant, or permission to
+invent an extra modal. The generic source notification script does not prove
+that every level gain opens both interfaces. Existing M1 chat/reward history and
+its default233 presentation stay intact.
+
+`research/interface-contracts/control-bindings.json` distinguishes actual
+recovery controls: Office669 has source1/5/X/All and per-unit fee wording;
+its varp263 is a **fee**, not a bank permission. Retrieval602's Bank-All is
+conditional on a different contextual meaning of varp263. Button presence must
+not manufacture that authority. Normal-grave672 is a distinct original layout,
+not authorization to replace the existing world's602 binding silently.
+These metadata publications change no frozen assets or existing artifact pin.
+
 Content/artifact **4** adds `GameContent.ui`; schema4 requires explicit `null`
 for a non-UI profile. Persisted envelope/runtime remain **1**, with UI state
 version **1**. `WorldRuntime.ui_version` distinguishes an explicitly migrated
