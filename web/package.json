@@ -6,12 +6,22 @@
   "packageManager": "pnpm@12.4.1",
   "engines": {"node": ">=24.18.0"},
   "scripts": {
-    "check": "tsc --noEmit",
-    "test": "node --test"
+    "wasm": "node ../tools/web-build/wasm.ts",
+    "content": "node ../tools/web-build/content.ts",
+    "typecheck": "tsc --noEmit",
+    "check": "pnpm typecheck",
+    "test": "node --test app/tests/*.test.ts ../tools/web-build/tests/*.test.ts",
+    "build": "pnpm wasm && pnpm typecheck && vite build && node ../tools/web-build/deliver.ts",
+    "dev": "pnpm build && pnpm serve",
+    "serve": "node ../tools/web-build/serve.ts",
+    "test:browser": "node ../tools/web-build/browser-check.ts",
+    "test:isolated": "python3 ../tools/web-build/isolated-check.py"
   },
   "devDependencies": {
     "@types/node": "26.5.1",
+    "@webgpu/types": "0.1.72",
     "typescript": "7.0.2",
-    "playwright-core": "1.63.0"
+    "playwright-core": "1.63.0",
+    "vite": "8.3.0"
   }
 }

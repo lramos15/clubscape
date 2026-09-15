@@ -1,0 +1,20 @@
+import initWasm, { BrowserClient } from "../generated/protocol/clubscape_wasm.js";
+import wasmUrl from "../generated/protocol/clubscape_wasm_bg.wasm?url";
+import { invariant } from "./errors.ts";
+import { boundedBytes } from "./transport.ts";
+export { BrowserApp } from "./client.ts";
+export { RpcTransport } from "./transport.ts";
+export { checkCapability } from "./capability.ts";
+
+/** Programmatic bridge entry; not a UI, fixture world, or account bypass. */
+export async function createProtocolClient(): Promise<BrowserClient> {
+  const response = await fetch(wasmUrl, {
+    mode: "same-origin", credentials: "omit", redirect: "error", referrerPolicy: "no-referrer",
+    signal: AbortSignal.timeout(30_000),
+  });
+  invariant(response.ok && response.headers.get("content-type")?.split(";")[0]?.trim() === "application/wasm",
+    "The real protocol WASM module could not be loaded.", "wasm");
+  const bytes = await boundedBytes(response, 16 * 1024 * 1024);
+  await initWasm({ module_or_path: bytes });
+  return new BrowserClient();
+}

@@ -11,7 +11,7 @@
     "verbatimModuleSyntax": true,
     "allowImportingTsExtensions": true,
     "skipLibCheck": true,
-    "types": ["node"]
+    "types": ["node", "@webgpu/types", "vite/client"]
   },
-  "include": ["shared/**/*.ts", "app/**/*.ts", "ui/**/*.ts", "audio/**/*.ts", "tests/**/*.ts"]
+  "include": ["shared/**/*.ts", "app/**/*.ts", "ui/**/*.ts", "audio/**/*.ts", "renderer/**/*.ts", "generated/**/*.d.ts", "tests/**/*.ts", "vite.config.ts", "../tools/web-build/**/*.ts"]
 }

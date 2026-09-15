@@ -1,0 +1,9 @@
+:root { color-scheme: dark; }
+html, body, #clubscape { width: 100%; height: 100%; margin: 0; overflow: hidden; }
+#clubscape { position: relative; background: #000; }
+#world, #overlay { position: absolute; inset: 0; width: 100%; height: 100%; }
+#world { pointer-events: none; }
+#overlay { touch-action: none; }
+#bootstrap-status { position: absolute; inset: 1rem auto auto 1rem; max-width: 48rem; white-space: pre-wrap; }
+#bootstrap-status[hidden] { display: none; }
+noscript { position: absolute; inset: 1rem; }

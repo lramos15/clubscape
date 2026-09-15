@@ -1,0 +1,24 @@
+[package]
+name = "clubscape-wasm"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+publish.workspace = true
+
+[lib]
+crate-type = ["cdylib", "rlib"]
+
+[dependencies]
+clubscape-client-core = { path = "../client-core" }
+clubscape-game-types.workspace = true
+clubscape-protocol.workspace = true
+prost.workspace = true
+serde.workspace = true
+serde_json.workspace = true
+wasm-bindgen = "=0.2.128"
+
+[target.'cfg(not(target_arch = "wasm32"))'.dependencies]
+clubscape-content = { path = "../content" }
+
+[lints]
+workspace = true
