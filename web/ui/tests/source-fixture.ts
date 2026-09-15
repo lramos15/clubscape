@@ -1,4 +1,4 @@
-import { UiAssets } from "../assets.ts";
+import { UiAssets, staticModelKey } from "../assets.ts";
 import { SourceRaster } from "../raster.ts";
 import { paintNativeTree } from "../layout.ts";
 import { MinimapPainter } from "../minimap.ts";
@@ -35,6 +35,10 @@ export async function sourceFixture(name: string): Promise<void> {
   const widgets = assets.catalogue.templates[name];
   if (!widgets) throw new Error(`Unknown original-runtime fixture ${name}`);
   await assets.preloadItems(widgets.filter(w => w.item >= 0).map(w => w.item));
+  await Promise.all(widgets.filter(w => w.type === 6).flatMap(w => {
+    const icon = assets.catalogue.staticModels[staticModelKey(w)];
+    return icon ? [assets.require(icon.asset)] : [];
+  }));
   await Promise.all(Object.values(assets.catalogue.portraits).map(p => assets.require(p.asset)));
   await Promise.all(["ui/minimaps/compass.png", "ui/minimaps/3168-3168-0.png"].map(id => assets.require(id)));
   const raster = new SourceRaster(canvas, assets);
@@ -123,7 +127,7 @@ export async function recoveryProjection(name: string): Promise<void> {
       item: { id: `source-fixture-item-${row.item}`, sourceId: row.item, name: assets.catalogue.items[row.item]!.name,
         quantity: row.item_quantity, actions: [], iconAsset: null, instanceId: null, charges: null } })),
     selectedId: selected ? `source-fixture-slot-${selected.index}` : null,
-    coffer: office ? scrolling ? 12345 : Number(cofferText) : null, unitFee: office ? scrolling ? 42 : Number(feeText) : null,
+    coffer: office ? scrolling ? "12345" : cofferText! : null, unitFee: office ? scrolling ? 42 : Number(feeText) : null,
     capacity: 120, bankAll: name === "native-retrieval-602-35-0-1", discardAll: false, scroll: scrolling?.[1] === "scroll" ? 60 : 0,
   };
   if (name.includes("--1-")) { display.selectedId = null; display.unitFee = 0; }

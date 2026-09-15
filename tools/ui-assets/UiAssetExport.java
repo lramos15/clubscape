@@ -20,8 +20,10 @@ public final class UiAssetExport
     static final TreeSet<Integer> sprites = new TreeSet<>();
     static final TreeSet<Integer> fonts = new TreeSet<>();
     static final TreeSet<String> models = new TreeSet<>();
+    static final TreeSet<Integer> nativeItems = new TreeSet<>();
     static final List<Object> rendererPreviews = new ArrayList<>();
     static final Map<String, Object> portraitMetadata = new LinkedHashMap<>();
+    static final Map<String, Object> staticModelMetadata = new LinkedHashMap<>();
 
     static Path directory(OriginalCapture capture, String name) throws Exception
     {
@@ -147,6 +149,7 @@ public final class UiAssetExport
 
     static void rendererPreviewBoundary(OriginalCapture capture, HudCapture hud, int group) throws Exception
     {
+        if (group != 679 && group != 84 && group != 4) return;
         List<Widget> all = new ArrayList<>();
         IdentityHashMap<Widget, Boolean> visited = new IdentityHashMap<>();
         for (lw widget : hud.widgets.ax[group]) visit(widget, visited, all);
@@ -171,6 +174,7 @@ public final class UiAssetExport
             @SuppressWarnings("unchecked") Map<String, Object> w = (Map<String, Object>) value;
             sprite(capture, (int) w.get("sprite"));
             font(capture, (int) w.get("font"));
+            if ((int) w.get("item") >= 0) nativeItems.add((int) w.get("item"));
         }
         List<Widget> all = new ArrayList<>();
         IdentityHashMap<Widget, Boolean> visited = new IdentityHashMap<>();
@@ -217,6 +221,62 @@ public final class UiAssetExport
             finally { hidden.forEach((w, value) -> w.setHidden(value)); }
         }
         Files.writeString(capture.output.resolve("portraits.json"), OriginalCapture.JSON.toJson(portraitMetadata));
+        staticModels(capture, hud);
+    }
+
+    static void staticModels(OriginalCapture capture, HudCapture hud) throws Exception
+    {
+        List<Widget> all = new ArrayList<>();
+        IdentityHashMap<Widget, Boolean> visited = new IdentityHashMap<>();
+        for (lw[] group : hud.widgets.ax)
+            if (group != null) for (lw widget : group) visit(widget, visited, all);
+        List<Widget> icons = all.stream().filter(w -> !w.isHidden() && w.getType() == 6
+            && (w.getItemId() >= 0 || w.getModelType() == 1 && w.getModelId() >= 0)
+            && w.getWidth() > 0 && w.getHeight() > 0).toList();
+        for (Widget icon : icons)
+        {
+            int iconX = icon.getCanvasLocation().getX(), iconY = icon.getCanvasLocation().getY();
+            if (iconX < 0 || iconY < 0) continue;
+            String key = icon.getId() + ":" + icon.getModelType() + ":" + icon.getModelId() + ":" + icon.getItemId() + ":"
+                + icon.getItemQuantity() + ":" + icon.getWidth() + ":" + icon.getHeight() + ":"
+                + icon.getModelZoom() + ":" + icon.getRotationX() + ":" + icon.getRotationY() + ":" + icon.getRotationZ();
+            if (staticModelMetadata.containsKey(key)) continue;
+            IdentityHashMap<Widget, Boolean> hidden = new IdentityHashMap<>();
+            for (Widget widget : all)
+            {
+                hidden.put(widget, widget.isSelfHidden());
+                if (widget != icon && (widget.getType() >= 3 || widget.getContentType() != 0)) widget.setHidden(true);
+            }
+            try
+            {
+                int[] pixels = capture.target(1920, 1080, 0x123456, 512);
+                qi.ck.az(1920, 1080, hud.widgets, 1, 2, -293044276);
+                int x = 1920, y = 1080, right = 0, bottom = 0;
+                for (int pixel = 0; pixel < pixels.length; pixel++)
+                    if (pixels[pixel] != 0x123456)
+                    {
+                        x = Math.min(x, pixel % 1920); right = Math.max(right, pixel % 1920 + 1);
+                        y = Math.min(y, pixel / 1920); bottom = Math.max(bottom, pixel / 1920 + 1);
+                    }
+                if (right <= x || bottom <= y) throw new IllegalStateException("Native static model has no pixels: " + key);
+                int width = right - x, height = bottom - y;
+                int[] component = new int[width * height];
+                for (int row = 0; row < height; row++)
+                    System.arraycopy(pixels, (y + row) * 1920 + x, component, row * width, width);
+                for (int pixel = 0; pixel < component.length; pixel++)
+                    component[pixel] = component[pixel] == 0x123456 ? 0 : component[pixel] | 0xff000000;
+                java.nio.ByteBuffer raw = java.nio.ByteBuffer.allocate(8 + component.length * 4);
+                raw.putInt(width).putInt(height);
+                for (int pixel : component) raw.putInt(pixel);
+                String name = OriginalCapture.hash(raw.array()) + ".png";
+                png(directory(capture, "models").resolve(name), component, width, height, false);
+                staticModelMetadata.put(key, OriginalCapture.map("asset", "ui/models/" + name,
+                    "offsetX", x - iconX, "offsetY", y - iconY,
+                    "widget", widget(icon), "scope", "Complete isolated native model pixels, including extents beyond the nominal widget; never a panel or player preview."));
+            }
+            finally { hidden.forEach((widget, value) -> widget.setHidden(value)); }
+        }
+        Files.writeString(capture.output.resolve("static-models.json"), OriginalCapture.JSON.toJson(staticModelMetadata));
     }
 
     static void extras(OriginalCapture capture) throws Exception
@@ -234,8 +294,38 @@ public final class UiAssetExport
         int titleId = capture.cache.store.findIndex(10).findArchiveByName("title.jpg").getArchiveId();
         ym title = it.az(capture.cache.archive(10).loadData(titleId, 0), 1951476339);
         png(capture.output.resolve("title-background.png"), title.getPixels(), title.getWidth(), title.getHeight(), true);
-        int[][] items = OriginalCapture.JSON.fromJson(
+        int[][] requested = OriginalCapture.JSON.fromJson(
             Files.readString(Path.of(System.getProperty("clubscape.ui.items"))), int[][].class);
+        List<int[]> items = new ArrayList<>(java.util.Arrays.asList(requested));
+        TreeSet<Integer> knownItems = new TreeSet<>();
+        for (int[] item : items) knownItems.add(item[0]);
+        Map<Integer, Object> additionalItems = new LinkedHashMap<>();
+        var loader = new net.runelite.cache.definitions.loaders.ItemLoader();
+        for (int id : nativeItems)
+        {
+            if (!knownItems.add(id)) continue;
+            byte[] raw = capture.cache.archive(2).loadData(10, id);
+            var item = loader.load(id, raw);
+            additionalItems.put(id, OriginalCapture.map("sourceRawSha256", OriginalCapture.hash(raw), "definition", item));
+            TreeSet<Integer> quantities = new TreeSet<>();
+            quantities.add(1);
+            if (item.countCo != null) for (int quantity : item.countCo) if (quantity > 1) quantities.add(quantity);
+            for (int quantity : quantities) items.add(new int[]{id, quantity});
+        }
+        for (int id : new TreeSet<>(knownItems))
+        {
+            var item = loader.load(id, capture.cache.archive(2).loadData(10, id));
+            int placeholder = item.placeholderId;
+            if (placeholder < 0 || !knownItems.add(placeholder)) continue;
+            byte[] raw = capture.cache.archive(2).loadData(10, placeholder);
+            var definition = loader.load(placeholder, raw);
+            additionalItems.put(placeholder, OriginalCapture.map("sourceRawSha256", OriginalCapture.hash(raw), "definition", definition));
+            TreeSet<Integer> quantities = new TreeSet<>();
+            quantities.add(1);
+            if (definition.countCo != null) for (int quantity : definition.countCo) if (quantity > 1) quantities.add(quantity);
+            for (int quantity : quantities) items.add(new int[]{placeholder, quantity});
+        }
+        Files.writeString(capture.output.resolve("additional-items.json"), OriginalCapture.JSON.toJson(additionalItems));
         Path out = directory(capture, "items");
         Map<String, Object> metadata = new LinkedHashMap<>();
         for (int[] request : items)

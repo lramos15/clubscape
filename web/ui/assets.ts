@@ -9,6 +9,10 @@ export interface SpriteFrame extends Rect {
 }
 export interface SpriteAsset { sourceId: number; asset: string; frames: SpriteFrame[] }
 export interface FontAsset { sourceId: number; ascent: number; advances: number[] }
+export interface StaticModelAsset {
+  asset: string; offsetX: number; offsetY: number;
+  widget: Pick<NativeWidget, "id" | "modelType" | "model" | "item" | "item_quantity" | "modelZoom" | "modelRotation" | "width" | "height">;
+}
 export interface NativeWidget extends Rect {
   id: number; index: number; parent: number; type: number; contentType: number;
   text: string; sprite: number; item: number; item_quantity: number;
@@ -28,6 +32,7 @@ export interface ItemAsset {
   name: string; examine: string; stackable: number;
   interfaceOptions: Array<string | null>; shiftClickDropIndex: number;
   notedID: number; notedTemplate: number;
+  placeholderId: number; placeholderTemplateId: number;
   icons: Array<{ minimum: number; asset: string; selectedAsset: string; zeroShadowAsset: string }>;
 }
 export interface TutorialBinding {
@@ -46,6 +51,7 @@ export interface UiCatalogue {
   questTable: { available: number; maximum_points: number };
   definitions: Record<string, Record<string, unknown>>;
   portraits: Record<string, { asset: string; offsetX: number; offsetY: number }>;
+  staticModels: Record<string, StaticModelAsset>;
   npcs: Record<string, { name: string; examine: string | null }>;
   proposals: Record<string, {
     content: { heading: string; lines: string[]; buttons: string[] };
@@ -66,6 +72,11 @@ export interface UiCatalogue {
       melee_strength: number; ranged_strength: number; magic_damage_percent: number; prayer: number }>;
     runEnergyScale: number;
   };
+}
+
+export function staticModelKey(widget: StaticModelAsset["widget"]): string {
+  return [widget.id, widget.modelType, widget.model, widget.item, widget.item_quantity, widget.width, widget.height,
+    widget.modelZoom, ...widget.modelRotation].join(":");
 }
 
 export function contains(rect: Rect, x: number, y: number): boolean {
@@ -116,6 +127,8 @@ export class UiAssets {
     if (value.version !== 1 || value.sourcePackSha256 !== SOURCE_PACK_SHA256 || value.sourceCache !== 2695) {
       throw new Error("UI assets do not match the owner-approved source pack.");
     }
+    if (!value.staticModels || !value.templates["native-production-choice-1"] || !value.templates["native-death-preview-populated"])
+      throw new Error("Original versioned UI modal frames or static model icons are missing.");
     for (const id of [494, 495, 496, 497]) {
       if (value.fonts[id]?.advances.length !== 256 || value.sprites[id]?.frames.length !== 256) {
         throw new Error(`Original CP1252 font ${id} is missing or corrupt.`);

@@ -15,6 +15,10 @@ import { abilityVisible, filterOptionEnabled, spellGrid } from "../filters.ts";
 import { recoveryFeeText, projectRecovery, recoveryControls, recoveryTemplate } from "../recovery.ts";
 import type { RecoveryDisplay, RecoveryUiCommand } from "../recovery.ts";
 import { entryErrorLines } from "../entry.ts";
+import { projectProduction } from "../production.ts";
+import { projectDeathPreview } from "../death-preview.ts";
+import { projectQuestReward } from "../rewards.ts";
+import type { ItemView } from "../../shared/contracts.ts";
 
 const root = resolve(import.meta.dirname, "../../..");
 const catalogue: UiCatalogue = decodeUiCatalogue(JSON.parse(readFileSync(resolve(root, "assets/compiled/ui/manifest.json"), "utf8")));
@@ -169,7 +173,7 @@ test("recovery display uses explicit fee/coffer inputs and native controls witho
   const item = fixtureWorld().player.inventory[0]!.item!;
   const view: RecoveryDisplay = {
     storage: "death_office", items: [{ id: "recovery-source-1", slot: 0, item: { ...item, quantity: 7 }, allowed: true, reason: null }],
-    selectedId: "recovery-source-1", coffer: 12345, unitFee: 42, capacity: 120, bankAll: false, discardAll: false, scroll: 0,
+    selectedId: "recovery-source-1", coffer: "12345", unitFee: 42, capacity: 120, bankAll: false, discardAll: false, scroll: 0,
   };
   immutable(view);
   assert.match(recoveryFeeText(view), /294/);
@@ -186,4 +190,73 @@ test("recovery display uses explicit fee/coffer inputs and native controls witho
   const locked = { ...view, items: [{ ...view.items[0]!, allowed: false, reason: "Authoritative source rejection" }] };
   assert.equal(recoveryControls(projectRecovery(recoveryTemplate(catalogue, locked), locked), 1920, 1080, locked, command => calls.push(command))
     .find(control => control.id === "recovery-item-recovery-source-1")!.disabled, "Authoritative source rejection");
+});
+
+test("source production model replacement preserves widget identity and native choice coordinates", () => {
+  const yes = { allowed: true, code: null, reason: null };
+  for (const count of [1, 2, 3, 6, 10, 18]) {
+    const source = catalogue.templates[`native-production-choice-${count}`]!;
+    const outputs = source.filter(widget => widget.id >> 16 === 270 && widget.type === 6 && widget.item >= 0);
+    const view = {
+      id: "component-menu", interface: "interface.cooking", target: { kind: "spawn" as const, spawn: "component-facility" },
+      recipes: outputs.map((widget, index) => ({
+        recipe: `opaque-recipe-${index}`, name: catalogue.items[widget.item]!.name,
+        outputs: [{ id: `component-item-${widget.item}`, sourceId: widget.item, name: catalogue.items[widget.item]!.name,
+          quantity: 1, instanceId: null, charges: null, iconAsset: null, actions: [] }], single: yes, makeX: yes,
+      })),
+    };
+    immutable(view);
+    const projection = projectProduction(catalogue, view, 1, 0, null);
+    assert.deepEqual(projection.problems, []);
+    const icons = projection.widgets.filter(widget => widget.id >> 16 === 270 && widget.type === 6);
+    assert.equal(icons.length, count);
+    assert.equal(new Set(icons.map(widget => widget.id)).size, count);
+    for (const icon of icons) {
+      const parent = projection.widgets.find(widget => widget.id === icon.id && widget.index === -1)!;
+      assert.equal(icon.x, parent.x + Math.trunc((parent.width - icon.width) / 2));
+      assert.equal(icon.y, parent.y + Math.trunc((parent.height - icon.height) / 2));
+      assert.equal(icon.item, outputs.find(widget => widget.id === icon.id)!.item);
+    }
+  }
+});
+
+test("bank placeholder artwork uses the actual original placeholder definition, never an alpha-tinted normal item", () => {
+  assert.equal(catalogue.items[1265]!.placeholderId, 14760);
+  assert.equal(catalogue.items[1351]!.placeholderId, 14705);
+  for (const id of [1265, 1351, 995]) {
+    const placeholder = catalogue.items[catalogue.items[id]!.placeholderId]!;
+    assert.ok(placeholder.placeholderTemplateId >= 0);
+    assert.ok(placeholder.icons.length > 0);
+  }
+});
+
+test("death preview projects only supplied rows, opaque quantities and full monetary text", () => {
+  const supplied = { ...fixtureWorld().player.inventory[0]!.item!, quantity: 37 };
+  const view = immutable({ scope: "normal_unsafe_non_pvp" as const, kept: [], lost: [supplied],
+    fullGraveFee: "9007199254740993", fullOfficeFee: "18446744073709551615", valueRevision: "9007199254740995" });
+  const projection = projectDeathPreview(catalogue, view, 0);
+  assert.equal(projection.items.size, 1);
+  const row = [...projection.items.values()][0]!;
+  assert.equal(row.item.quantity, 37);
+  assert.equal(row.kept, false);
+  assert.equal(projection.widgets.filter(widget => widget.id >> 16 === 4 && widget.item >= 0).length, 1);
+});
+
+test("quest reward lines use the real source 9..15 slots and never retain native fixture awards", () => {
+  const source = catalogue.templates["native-reward"]!;
+  const output: ItemView = { ...fixtureWorld().player.inventory[2]!.item!, quantity: 7 };
+  const reward = immutable({
+    id: "reward-id", kind: "quest" as const, interface: "interface.quest_reward", title: "Authoritative title",
+    lines: ["Actual authoritative line"], items: [output], xp: [{ skill: "skill.cooking", amountTenths: "9007199254740993" }],
+    questPoints: 1, quest: null, skill: null, level: null,
+    continuation: { kind: "ui_dismiss" as const, presentation_id: "reward-id" },
+  });
+  const widgets = projectQuestReward(source, catalogue, reward, fixtureWorld().player.skills, 19, 0);
+  const text = (child: number) => widgets.find(widget => widget.id === 153 * 65536 + child)!.text;
+  assert.equal(text(4), "Authoritative title");
+  assert.equal(text(6), "Total Quest Points: 19");
+  assert.equal(text(9), "Actual authoritative line");
+  assert.equal(text(10), "7 x Shrimps");
+  assert.ok(widgets.some(widget => widget.text.includes("900,719,925,474,099.3")));
+  assert.ok(!widgets.some(widget => /^Line [1-7]$/.test(widget.text)));
 });

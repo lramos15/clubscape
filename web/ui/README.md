@@ -12,8 +12,14 @@ tests. Historical status text in the hash-locked art/interface documents is not
 treated as a revocation of the external approval. Asset preparation now runs the
 unchanged strict pack validator before generating assets.
 
-Current component validation: TypeScript and 14 unit tests pass; all 20 browser
-interaction cases pass. All **87/87** native-panel/full-overlay/owner-composition
+The authorized contract publication `d1532d6` is integrated as `5d56c93`.
+`GameplayUiView` / `GameplayUiIntent` are binding, **not proof that the backend
+or protobuf bridge implements them**. Actual versioned projection data is
+required; absent/unknown/malformed `WorldView.ui` is explicit unsupported/error
+feedback rather than a fabricated empty success.
+
+Current component validation: TypeScript and 28 unit tests pass; all 20 legacy
+and 15 versioned browser cases pass. All **87/87** native-panel/full-overlay/owner-composition
 comparisons pass at the original zero tolerances. This resolves the earlier
 shop and guide-family raster differences, but does not complete the missing
 controls, live-data projections or real-server acceptance gates below.
@@ -21,14 +27,19 @@ controls, live-data projections or real-server acceptance gates below.
 The bounded source-mode continuation additionally validates native filter
 panels and data-only grid projections, populated recovery/fee/selection and
 80-slot scroll projections, and the procedural title effect/current reconnect
-banner. See `evidence/mode-comparison.json` for the separate exact comparisons.
+banner: **106/106**, zero tolerance. The published-contract continuation adds
+**45/45** exact native production, smithing, populated death-preview and reward
+frame/projection comparisons. These use controlled source-only inputs and a
+deterministic component double, not a real server or final M1 acceptance.
+See `evidence/mode-comparison.json` and
+`evidence/native-presentations/comparison.json`.
 
 ## Shell integration
 
 ```ts
 import {
   createUi, forwardWorldPointer, setUiCamera, onUiCameraRequest,
-  getUiPreviewBounds, setUiPreview,
+  getUiPreviewBounds, getUiPreviewRequest, setUiPreview,
 } from "./ui/index.ts";
 
 const ui = await createUi(overlayCanvas, services, assets);
@@ -51,6 +62,7 @@ if (!ui.capturesPointer(x, y)) {
 }
 
 // Optional actual model-only renderer preview, never a reference panel/capture.
+const request = getUiPreviewRequest(ui);
 const bounds = getUiPreviewBounds(ui);
 // Render an RGBA model-only surface at bounds.width × bounds.height, then:
 setUiPreview(ui, modelPreviewSurface);
@@ -71,10 +83,17 @@ The input layer tracks the canvas's screen rectangle. The renderer must do its
 own picking; the overlay never fabricates a picked entity or world coordinate.
 
 The preview hooks are presentation adapters, not new gameplay contracts.
-`getUiPreviewBounds()` is available after the character interface's render.
+`getUiPreviewBounds()` is available after the character/equipment interface's render.
 `setUiPreview()` accepts an actual renderer canvas/bitmap at those exact native
 dimensions; no resizing or human-preview substitution is performed. A missing
 preview remains a missing renderer integration, not a finished penguin.
+`getUiPreviewRequest(ui): Readonly<UiPreviewRequest> | null` returns a detached
+descriptor: `purpose` (`appearance`/`equipment`), surface `bounds`, native
+`modelBounds`, `sourceWidget`, `modelZoom`, `modelRotation`, approved local
+appearance selection, and actual equipment/base metadata. Null equipment/base
+means unavailable, not an invented empty loadout. Model parameters are native
+widget parameters, not the world-camera ABI. Equipment-preview compositing
+occurs at the source model widget's draw position and parent clip.
 
 ### Independent display helpers
 
@@ -94,7 +113,7 @@ preview remains a missing renderer integration, not a finished penguin.
 * `recoveryTemplate(catalogue, display)`, `projectRecovery(widgets, display)`
   and `recoveryControls(widgets, width, height, display, dispatch)` consume
   explicit `RecoveryDisplay` fields: storage, rows `{id, slot, item, allowed,
-  reason}`, selected ID, coffer, unit fee, capacity, bank/discard availability,
+  reason}`, selected ID, coffer as decimal text, unit fee, capacity, bank/discard availability,
   and scroll position. Null monetary/capacity fields remain unknown.
   `RecoveryUiCommand` is `select`, `retrieve` (1/5/X/All), `take_all`,
   `bank_all`, `discard_all`, `examine`, or `close`. The adapter must map these
@@ -102,10 +121,43 @@ preview remains a missing renderer integration, not a finished penguin.
   request into a full-stack reclaim.
 
 Current public `RecoveryView` is rendered at the calibrated native grid
-positions, but cannot fill the missing coffer/fee-unit/capacity fields. Existing
+positions. `ui.recovery.cofferBalance` and discard/coffer-offer permissions are
+now consumed. Unit fee, capacity and per-row permissions remain unprojected;
+`allowed: null` records unknown permission rather than inventing `true`. Existing
 whole-item reclaim remains usable; unsupported partial quantities are clearly
 identified rather than faked. The separate backend/UI-contract closure owns
 the remaining quote, permission and quantity wiring.
+
+### Versioned controller behavior
+
+`gameplay-ui.ts` validates the complete declared projection shape, decimal
+strings, stable identities and permissions without implementing gameplay
+rules. Frozen immutable projections reuse their validation result. All new
+requests go through `AppServices.send()`; no duplicate protocol or
+`SourceUi` state is manufactured. U64 money/XP/revisions and signed gram weights
+remain strings, with `BigInt` formatting.
+
+Inventory actions retain the declared opaque action ID, canonical item and
+instance. Production retains menu/recipe IDs and separate single/make-X
+permission. Bank menus and drag/drop retain entry IDs, reject changed
+identities, and wait for authoritative tab/quantity/notes updates. Placeholders
+remain `value: null`, never a zero-quantity spendable `ItemView`.
+
+Quest rewards project their supplied narrative and structured item/XP/point
+fields into the real source text slots9–15; continuation sends the supplied
+request without granting anything. Confirmations retain their opaque ID and
+exact credit; acceptance/cancellation never clears them optimistically.
+Level-up interfaces without a canonical source binding have explicit
+`ui.source.reward.layout` feedback and real continuation, **not** a quest-scroll
+substitute or completed level-up presentation.
+
+Public chat checks the declared channel/permission and UTF-8 byte limit.
+A rejected draft is retained. An acknowledged draft is neither echoed locally
+nor cleared until the authoritative own-message update arrives; duplicate
+submission while awaiting that update is stopped. Menus, quantity prompts,
+drag state, Escape, blur, outside-pointer release and reconnect retain their
+identity/error semantics. The world cannot receive clicks through a native
+modal's blank interior.
 
 ## Asset contract
 
@@ -131,7 +183,10 @@ The catalogue contains original:
   nominal 32×32 widget);
 * native scene minimap rasters and original map-dot/compass sprites.
 * source title palettes/rune masks and current information-item parameters for
-  the normal prayer/spellbook UI, without substituting unused alternate books.
+  the normal prayer/spellbook UI, without substituting unused alternate books;
+* original placeholder definitions/icons, not alpha-tinted normal items;
+* isolated original static production/reward model artwork, including the
+  actual parchment models, never a finished panel screenshot.
 
 The raster follows the native 16.16 trimmed-sprite draw extents, including a
 possible final row beyond the nominal scaled rectangle; parent clipping still
@@ -139,6 +194,15 @@ applies. Overflowing centered labels use Java's truncating integer division.
 Decorative item shadow values are read from the actual pinned `gp.ae → lj.ab`
 argument (`lw.dm * 880555563`); unshadowed icons are generated by the original
 item painter, not repaired by editing candidate pixels.
+
+The original multi-skill script2046 is initialized with explicit source-only
+choice/amount inputs for one through eighteen choices; source430 supplies the
+bronze smithing table, and source972 the populated death preview. Item models
+are isolated by the native renderer, not cut out of a finished panel. Their
+keys retain source widget context as well as model/item/zoom/rotation:
+the native first-column clip is not interchangeable with later columns.
+Identical model-only images are content-addressed and reused. Additional
+original item definitions and their raw hashes are recorded in provenance.
 
 Inventory, bank, shop and worn-item ownership/quantities are projected from the
 current immutable `WorldView`. The native template inventories and synthetic
@@ -233,8 +297,8 @@ classes; these tests do not duplicate backend trading rules.
 
 ## Outstanding scope — not hidden or accepted
 
-See [`contract-gaps.json`](contract-gaps.json) for exact requested public-field
-extensions. That file is **a request, not a fork of `web/shared/contracts.ts`**.
+See [`contract-gaps.json`](contract-gaps.json) for the published/wired subset and
+exact residual requests. It is **not a fork of `web/shared/contracts.ts`**.
 
 Additional UI implementation/fidelity work remains:
 
@@ -242,10 +306,12 @@ Additional UI implementation/fidelity work remains:
   signatures (the 71 states, 29 families and 11 signatures are retained);
 * native source comparison of live data projections, not only source-widget
   replay, including all modal/choice/scroll/selected/disabled variants;
-* equipment-stat values/kept-on-death presentation, production selection,
-  quest/level reward payloads and their dismissal sequencing;
-* authoritative recovery coffer/fee/permission/quantity data and request wiring
-  for the now-calibrated populated/selected/scrolling native controls;
+* real backend/protobuf/canonical-data implementation of `game.ui.v1`,
+  including the separately promised nullable production-target correction;
+* canonical level-up chat/popup source associations and complete native layouts;
+* published production Make-All and bank default-All quantity semantics;
+* authoritative recovery fee-unit/capacity/per-row/bank-all data and partial
+  retrieval/bank-all requests; coffer/discard/coffer-offer wiring is complete;
 * the actual renderer preview and dynamic minimap surface/state;
 * in-game source audio sliders/music policy and actual settings, owned by the
   audio/shell closure.
@@ -265,7 +331,7 @@ The existing frozen web dependencies are used.
 ```bash
 cd web
 pnpm exec tsc --noEmit
-node --test ui/tests/unit.test.ts
+node --test ui/tests/unit.test.ts ui/tests/gameplay-ui.test.ts
 cd ..
 python3 tools/ui-assets/glyph_proof.py
 
@@ -275,12 +341,19 @@ TMPDIR="$PWD/web/ui/.cache/xvfb" xvfb-run --auto-servernum \
   node web/ui/tests/component-browser.mjs
 TMPDIR="$PWD/web/ui/.cache/xvfb" xvfb-run --auto-servernum \
   --server-args='-screen 0 2560x1440x24 -nolisten tcp' \
+  node web/ui/tests/gameplay-ui-browser.mjs
+TMPDIR="$PWD/web/ui/.cache/xvfb" xvfb-run --auto-servernum \
+  --server-args='-screen 0 2560x1440x24 -nolisten tcp' \
   node web/ui/tests/source-browser.mjs
 python3 tools/ui-assets/compare.py
 TMPDIR="$PWD/web/ui/.cache/xvfb" xvfb-run --auto-servernum \
   --server-args='-screen 0 2560x1440x24 -nolisten tcp' \
   node web/ui/tests/modes-browser.mjs
 python3 tools/ui-assets/compare_modes.py
+TMPDIR="$PWD/web/ui/.cache/xvfb" xvfb-run --auto-servernum \
+  --server-args='-screen 0 2560x1440x24 -nolisten tcp' \
+  node web/ui/tests/presentations-browser.mjs
+python3 tools/ui-assets/compare_modes.py --presentations
 ```
 
 The browser tests use sandboxed **headful** Chrome under Xvfb. Set
@@ -340,3 +413,16 @@ locally to inspect only the original title-effect arithmetic. It is not a
 runtime dependency, does not upload source code, and changes no global tool or
 security configuration. Native preparation itself uses the existing pinned
 Java/cache dependencies.
+
+`UiPresentationCapture` initializes original scripts2046/430/972 and the native
+reward widget's explicit text fields. Source-only production/recovery quantities
+are recorded in `evidence/native-presentations/source-inputs.json`. The
+read-only `inspect_scripts.py` helper accepts a script ID, `enum:ID`, or a
+bounded `widget:GROUP` search against that same verified local cache.
+
+After recording `test-results/typecheck.log`, unit TAP, component captures and
+the three passing comparison reports, `python3 tools/ui-assets/archive_evidence.py`
+archives the evidence and source/candidate/diff images. It refuses failed or
+incomplete reports, preserves the existing zero tolerances, and keeps M1
+acceptance false. Archived native references allow comparison after owned
+scratch outputs have been cleaned.

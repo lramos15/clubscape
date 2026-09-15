@@ -1,22 +1,33 @@
 import type {
   AppServices, AppState, ClientAssets, CreateUi, GameIntent, ItemTarget, ItemView,
-  RenderCamera, ScenePick, UiHandle, WorldTarget, WorldView,
+  RenderCamera, ScenePick, UiHandle, WorldTarget, WorldView, GameplayUiIntent, GameplayUiView,
 } from "../shared/contracts.ts";
 import { UiAssets, contains } from "./assets.ts";
 import type { NativeWidget, Rect } from "./assets.ts";
 import { InputSurface } from "./input.ts";
 import type { Control, InputField, UiAction } from "./input.ts";
 import { SourceRaster, escapeText, plainText, sourceLines } from "./raster.ts";
-import { paintEntry, paintReconnect } from "./entry.ts";
+import { entryErrorLines, paintEntry, paintReconnect } from "./entry.ts";
 import { frameRegions, TABS } from "./layout.ts";
 import { MinimapPainter } from "./minimap.ts";
 import { paintCharacter, paintGame } from "./world-view.ts";
 import { TitleFlames } from "./flames.ts";
 import type { AbilityKind, AbilityVisualTruth } from "./filters.ts";
+import { checkUiIntent, gameplayUi, gameplayUiProblem, isGameplayUiIntent, permissionReason } from "./gameplay-ui.ts";
+import { paintConfirmation } from "./presentations.ts";
+import type { ProductionAmount } from "./production.ts";
+import { rewardDetails } from "./rewards.ts";
 
 export interface UiNotice { message: string; errorId: string | null; recoverable: boolean; scope: "error" | "unavailable" | "information" }
 export interface AmountPrompt { label: string; value: string; confirm: (quantity: number) => void; pending?: boolean }
 export interface ItemSelection { slot: number; id: string; instanceId: string | null; name: string }
+export interface UiPreviewRequest {
+  purpose: "appearance" | "equipment";
+  bounds: Rect; modelBounds: Rect; sourceWidget: number; modelZoom: number; modelRotation: readonly number[];
+  appearance: Readonly<Record<string, number>>;
+  equipment: Readonly<WorldView["player"]["equipment"]> | null;
+  base: GameplayUiView["appearance"]["base"];
+}
 export interface LocalUiState {
   tab: number; selectedItem: ItemSelection | null; selectedSpell: string | null;
   bankSearch: string; bankSearchOpen: boolean; bankAmount: number | "all"; bankNotes: boolean;
@@ -25,6 +36,8 @@ export interface LocalUiState {
   appearance: Record<string, number>; quickPrayer: boolean; magicFilter: boolean;
   filterPanel: AbilityKind | null; prayerFilters: number; magicFilters: number;
   recoverySelected: string | null;
+  chatDraft: string;
+  productionAmount: ProductionAmount;
 }
 export interface WorldPointer {
   kind: "move" | "primary" | "context";
@@ -34,6 +47,7 @@ export interface GameViewContext {
   state: Readonly<AppState>; world: WorldView; local: LocalUiState;
   controls: Control[]; inputs: InputField[]; minimap: MinimapPainter;
   send: (intent: GameIntent) => void;
+  sendUi: (intent: GameplayUiIntent) => void;
   openTab: (index: number) => void;
   change: (change: () => void) => void;
   notice: (message: string, scope?: UiNotice["scope"], id?: string) => void;
@@ -43,6 +57,7 @@ export interface GameViewContext {
   inventoryActions: (slot: number) => UiAction[];
   equipmentActions: (slot: string) => UiAction[];
   bankActions: (slot: number) => UiAction[];
+  bankEntryActions: (entryId: string) => UiAction[];
   shopActions: (index: number) => UiAction[];
   depositAll: () => void;
   logout: () => void;
@@ -51,13 +66,18 @@ export interface GameViewContext {
   minimapClick: (widget: NativeWidget) => void;
   faceNorth: () => void;
   abilityVisuals: Readonly<Record<string, AbilityVisualTruth>>;
+  sendChat: () => void;
+  continueReward: (presentationId: string, continuation: GameplayUiIntent) => void;
+  hoveredProduction: string | null;
+  capture: (bounds: Rect) => void;
+  preview: (bounds: Rect, model: NativeWidget) => void;
 }
 
 function emptyLocal(): LocalUiState {
   return { tab: 3, selectedItem: null, selectedSpell: null, bankSearch: "", bankSearchOpen: false,
     bankAmount: 1, bankNotes: false, shopAmount: 1, shopValue: true, scroll: 0,
     journal: null, modal: null, dialoguePage: 0, amount: null, appearance: { body_type: 0 },
-    quickPrayer: true, magicFilter: false, filterPanel: null, prayerFilters: 0, magicFilters: 0, recoverySelected: null };
+    quickPrayer: true, magicFilter: false, filterPanel: null, prayerFilters: 0, magicFilters: 0, recoverySelected: null, chatDraft: "", productionAmount: 1 };
 }
 
 function errorDetails(error: unknown): { message: string; errorId: string | null; recoverable: boolean } {
@@ -70,6 +90,11 @@ function errorDetails(error: unknown): { message: string; errorId: string | null
 }
 
 export function isInterfaceUnlocked(world: WorldView, id: string): boolean {
+  const ui = gameplayUi(world);
+  if (ui) {
+    const entry = ui.interfaces.find(row => row.interface === id);
+    return entry?.visibility === "enabled" && entry.permission.allowed;
+  }
   if (world.player.unlockedInterfaces.includes(id)) return true;
   return !world.player.tutorialStage.startsWith("stage.tutorial.") || world.player.tutorialStage === "stage.tutorial.mainland";
 }
@@ -77,7 +102,7 @@ export function isInterfaceUnlocked(world: WorldView, id: string): boolean {
 export function readQuantity(value: string): number | null {
   if (!/^[1-9]\d*$/.test(value.trim())) return null;
   const amount = Number(value.trim());
-  return Number.isSafeInteger(amount) ? amount : null;
+  return Number.isSafeInteger(amount) && amount <= 4294967295 ? amount : null;
 }
 
 const controllers = new WeakMap<UiHandle, UiController>();
@@ -127,6 +152,12 @@ export function getUiPreviewBounds(handle: UiHandle): Readonly<Rect> | null {
   return bounds ? { x: bounds.x, y: bounds.y, width: bounds.width, height: bounds.height } : null;
 }
 
+/** Renderer input only: local approved appearance selection plus actual source geometry/equipment. */
+export function getUiPreviewRequest(handle: UiHandle): Readonly<UiPreviewRequest> | null {
+  const request = controllers.get(handle)?.previewRequest;
+  return request ? structuredClone(request) : null;
+}
+
 /** Supply only an actual model-only renderer surface at the requested native dimensions. */
 export function setUiPreview(handle: UiHandle, image: HTMLCanvasElement | OffscreenCanvas | ImageBitmap | null): void {
   const controller = controllers.get(handle);
@@ -150,6 +181,7 @@ class UiController {
   cameraRequest: ((yaw: number) => void) | null = null;
   preview: HTMLCanvasElement | OffscreenCanvas | ImageBitmap | null = null;
   previewBounds: Rect | null = null;
+  previewRequest: UiPreviewRequest | null = null;
   abilityVisuals: { revision: string; values: Readonly<Record<string, AbilityVisualTruth>> } | null = null;
   private readonly surface: InputSurface;
   private readonly unsubscribe: () => void;
@@ -157,6 +189,7 @@ class UiController {
   private disposed = false;
   private scheduled = 0;
   private controls: Control[] = [];
+  private panelBounds: Rect[] = [];
   private focus: string | null = null;
   private hover: Control | null = null;
   private point = { x: 0, y: 0 };
@@ -167,6 +200,7 @@ class UiController {
   private awaitingSelectionRevision: string | null = null;
   private amountRevision: string | null = null;
   private drag: { slot: number; x: number; y: number; start: number; active: boolean; identity: ItemSelection } | null = null;
+  private bankDrag: { entry: string; item: string; instance: string | null; x: number; y: number; start: number; active: boolean } | null = null;
   private suppressNextClick = false;
   private name = "";
   private password = "";
@@ -177,6 +211,7 @@ class UiController {
   private readonly titleStartedAt = performance.now();
   private entryErrorKind: "capability" | "runtime-error" = "runtime-error";
   private entryErrorPage = 0;
+  private chatSubmission: { text: string; messageIds: Set<string>; accepted: boolean } | null = null;
 
   constructor(canvas: HTMLCanvasElement, services: AppServices, assets: UiAssets) {
     this.canvas = canvas; this.services = services; this.assets = assets;
@@ -204,8 +239,10 @@ class UiController {
         return suppress;
       },
       hover: control => { this.hover = control; this.renderSoon(); },
+      blocked: reason => this.show(reason, "error"),
     });
-    canvas.addEventListener("wheel", event => {
+    const scrollTargets: HTMLElement[] = [canvas, this.surface.root];
+    for (const target of scrollTargets) target.addEventListener("wheel", event => {
       const [x, y] = this.xy(event);
       if (!this.capturesPointer(x, y) || this.menu || this.notice || this.local.amount) return;
       event.preventDefault();
@@ -213,14 +250,20 @@ class UiController {
       this.renderSoon();
     }, { signal: this.abort.signal, passive: false });
     window.addEventListener("pointerup", event => {
-      if (this.drag && !this.surface.root.contains(event.target as Node) && event.target !== canvas) this.pointer(event, null, "up");
+      const inControls = event.target instanceof Node && this.surface.root.contains(event.target);
+      if ((this.drag || this.bankDrag) && !inControls && event.target !== canvas) this.pointer(event, null, "up");
     }, { signal: this.abort.signal });
-    window.addEventListener("blur", () => { this.drag = null; this.menu = null; this.renderSoon(); }, { signal: this.abort.signal });
+    window.addEventListener("blur", () => { this.drag = null; this.bankDrag = null; this.menu = null; this.renderSoon(); }, { signal: this.abort.signal });
+    window.addEventListener("pointercancel", () => { this.drag = null; this.bankDrag = null; this.renderSoon(); }, { signal: this.abort.signal });
     assets.changed(() => this.renderSoon());
     this.unsubscribe = services.subscribe(state => this.update(state));
     const bounds = canvas.getBoundingClientRect();
     this.resize(bounds.width || canvas.width, bounds.height || canvas.height);
     this.update(this.state);
+    if (this.state.world) {
+      const problem = gameplayUiProblem(this.state.world);
+      if (problem) this.surface.announce(problem.message);
+    }
     requestAnimationFrame(() => {
       if (!this.disposed && (this.state.phase === "login" || this.state.phase === "register")) this.surface.focus("name");
     });
@@ -235,12 +278,38 @@ class UiController {
     if (this.disposed) return;
     const old = this.state;
     this.state = state;
-    if (old.world?.player.id && old.world.player.id !== state.world?.player.id) this.local = emptyLocal();
+    if (old.world?.player.id !== state.world?.player.id) {
+      this.local = emptyLocal(); this.chatSubmission = null; this.drag = null; this.bankDrag = null; this.menu = null;
+      if (state.world) this.local.appearance = { ...state.world.player.appearance };
+    }
     if (old.world?.dialogue?.id !== state.world?.dialogue?.id) this.local.dialoguePage = 0;
     if (old.world?.bank?.banker !== state.world?.bank?.banker) {
       this.local.bankSearch = ""; this.local.bankSearchOpen = false; this.local.scroll = 0; this.local.amount = null;
     }
     if (old.world?.shop?.id !== state.world?.shop?.id) { this.local.scroll = 0; this.local.amount = null; }
+    const projection = state.world ? gameplayUi(state.world) : null;
+    const previousProjection = old.world ? gameplayUi(old.world) : null;
+    if (projection?.activeInterface && projection.activeInterface !== previousProjection?.activeInterface) {
+      const tab = TABS.findIndex(tab => tab.interface === projection.activeInterface);
+      if (tab >= 0) this.local.tab = tab;
+    }
+    if (projection?.production?.id !== previousProjection?.production?.id ||
+        projection?.confirmation?.id !== previousProjection?.confirmation?.id ||
+        projection?.reward?.id !== previousProjection?.reward?.id) {
+      this.local.scroll = 0; this.local.dialoguePage = 0;
+      if (!this.local.amount?.pending) this.local.amount = null;
+    }
+    if (projection?.production?.id !== previousProjection?.production?.id) this.local.productionAmount = 1;
+    if (projection && this.chatSubmission?.accepted) this.reconcileChat();
+    if (state.world && (!old.world || gameplayUiProblem(state.world)?.code !== gameplayUiProblem(old.world)?.code)) {
+      const problem = gameplayUiProblem(state.world);
+      if (problem) this.surface.announce(problem.message);
+      else this.surface.announce("Versioned game.ui.v1 projection received.");
+    }
+    if (state.world?.ui?.version === 1) {
+      const problem = gameplayUiProblem(state.world);
+      if (problem) this.show(problem.message, "error", problem.code);
+    }
     const selected = this.local.selectedItem;
     if (selected && !this.sameItem(selected)) this.local.selectedItem = null;
     if (this.awaitingSelectionRevision !== null && state.world?.revision !== this.awaitingSelectionRevision) {
@@ -269,7 +338,7 @@ class UiController {
     this.canvas.style.width = `${Math.round(width)}px`; this.canvas.style.height = `${Math.round(height)}px`;
     this.raster.context.imageSmoothingEnabled = false;
     this.surface.align();
-    this.menu = null; this.drag = null; this.renderSoon();
+    this.menu = null; this.drag = null; this.bankDrag = null; this.renderSoon();
   }
 
   dispose(): void {
@@ -280,8 +349,9 @@ class UiController {
     this.unsubscribe(); this.abort.abort(); this.surface.dispose(); this.assets.dispose();
     this.local = emptyLocal(); this.pending.clear(); this.raster.dispose();
     this.titleFlames.dispose();
-    this.controls = []; this.hover = null; this.menu = null; this.drag = null; this.notice = null;
-    this.preview = null; this.previewBounds = null; this.cameraRequest = null; this.abilityVisuals = null;
+    this.controls = []; this.panelBounds = []; this.hover = null; this.menu = null; this.drag = null; this.bankDrag = null; this.notice = null;
+    this.chatSubmission = null;
+    this.preview = null; this.previewBounds = null; this.previewRequest = null; this.cameraRequest = null; this.abilityVisuals = null;
   }
 
   renderSoon(): void {
@@ -320,6 +390,10 @@ class UiController {
       this.show(`${name} does not apply to the approved penguin base. Body type A/B and confirmation remain available; no additional cosmetic variant has been approved.`, "unavailable");
       return;
     }
+    if (this.state.world) {
+      const problem = gameplayUiProblem(this.state.world);
+      if (problem) { this.show(`${name}: ${problem.message} Required integration: ${field}.`, "error", problem.code); return; }
+    }
     this.show(`${name} cannot be completed: the server interface does not supply ${field}. This is a required integration, not an out-of-scope feature.`,
       "error", `ui.contract.${field}`);
   }
@@ -348,8 +422,92 @@ class UiController {
   }
 
   private send(intent: GameIntent): void {
+    if (isGameplayUiIntent(intent)) { this.sendUi(intent); return; }
+    if (this.state.world?.ui !== undefined) {
+      const problem = gameplayUiProblem(this.state.world);
+      if (problem) { this.show(problem.message, "error", problem.code); return; }
+    }
+    const ui = this.state.world ? gameplayUi(this.state.world) : null;
+    if (ui) {
+      if (intent.kind === "open_interface") {
+        const entry = ui.interfaces.find(row => row.interface === intent.interface);
+        const reason = permissionReason(entry?.permission, intent.interface);
+        if (entry?.visibility !== "enabled" || reason) {
+          this.show(reason ?? "This interface is locked.", "error", entry?.permission.code ?? "ui.interface.unavailable"); return;
+        }
+      }
+      const ability = intent.kind === "set_combat_style" ? ui.combatStyles.find(row => row.id === intent.style)
+        : intent.kind === "set_prayer" ? ui.prayers.find(row => row.id === intent.prayer)
+          : intent.kind === "cast" ? ui.spells.find(row => row.id === intent.spell) : undefined;
+      if (intent.kind === "set_combat_style" || intent.kind === "set_prayer" || intent.kind === "cast") {
+        const reason = permissionReason(ability?.permission, "Ability");
+        if (!ability?.visible || reason) { this.show(reason ?? "This ability is not visible in the current projection.", "error", ability?.permission.code ?? "ui.ability.unavailable"); return; }
+      }
+    }
     void this.request(JSON.stringify(intent), () => this.services.send(intent),
       intent.kind === "use_item" || intent.kind === "cast");
+  }
+
+  private sendUi(intent: GameplayUiIntent): void {
+    const world = this.state.world;
+    if (!world) { this.show("A supported game.ui.v1 world is required.", "error", "ui.capability.game.ui.v1"); return; }
+    const problem = checkUiIntent(world, intent);
+    if (problem) { this.show(problem.message, "error", problem.code); return; }
+    const request = structuredClone(intent);
+    void this.request(JSON.stringify(request), () => this.services.send(request));
+  }
+
+  private reconcileChat(): void {
+    const world = this.state.world, pending = this.chatSubmission;
+    const ui = world ? gameplayUi(world) : null;
+    if (!ui || !world || !pending?.accepted) return;
+    if (ui.publicChat.messages.some(message => message.actor === world.player.id &&
+        message.text === pending.text && !pending.messageIds.has(message.id))) {
+      if (this.local.chatDraft === pending.text) this.local.chatDraft = "";
+      this.chatSubmission = null; this.renderSoon();
+    }
+  }
+
+  private async sendChat(): Promise<void> {
+    const world = this.state.world;
+    if (!world || this.pending.has("public-chat")) return;
+    if (this.chatSubmission?.accepted) {
+      this.show("The chat request was acknowledged. Waiting for its authoritative message before sending again.", "information");
+      return;
+    }
+    const ui = gameplayUi(world);
+    const intent: GameplayUiIntent = { kind: "public_chat", channel: "public", text: this.local.chatDraft };
+    const problem = checkUiIntent(world, intent);
+    if (problem || !ui) { this.show(problem?.message ?? "game.ui.v1 is unavailable.", "error", problem?.code ?? "ui.capability.game.ui.v1"); return; }
+    const submission = { text: intent.text, messageIds: new Set(ui.publicChat.messages.map(message => message.id)), accepted: false };
+    this.chatSubmission = submission;
+    if (await this.request("public-chat", () => this.services.send(intent))) {
+      if (this.chatSubmission === submission) submission.accepted = true;
+      this.reconcileChat();
+    } else if (this.chatSubmission === submission) this.chatSubmission = null;
+  }
+
+  private continueReward(presentationId: string, continuation: GameplayUiIntent): void {
+    const reward = this.state.world ? gameplayUi(this.state.world)?.reward : null;
+    if (!reward || reward.id !== presentationId) {
+      this.show("That reward presentation changed. Review the current presentation.", "error", "ui.presentation.stale"); return;
+    }
+    this.sendUi(structuredClone(continuation));
+  }
+
+  private confirmAppearance(): void {
+    if (this.state.world?.ui !== undefined) {
+      const problem = gameplayUiProblem(this.state.world);
+      if (problem) { this.show(problem.message, "error", problem.code); return; }
+    }
+    const ui = this.state.world ? gameplayUi(this.state.world) : null;
+    if (ui) {
+      const choices = ui.appearance.choices.body_type;
+      const choice = choices?.find(choice => choice.value === this.local.appearance.body_type);
+      const reason = permissionReason(choice?.permission, "Body type");
+      if (reason || ui.appearance.confirmed) { this.show(reason ?? "Appearance is already confirmed.", "error", choice?.permission.code ?? "ui.appearance.confirmed"); return; }
+      this.send({ kind: "confirm_appearance", appearance: { body_type: choice!.value } });
+    } else void this.request("appearance", () => this.services.createCharacter({ ...this.local.appearance }));
   }
 
   private screen(screen: "title" | "register" | "login"): void {
@@ -395,11 +553,18 @@ class UiController {
     else if (this.local.bankSearchOpen) this.local.bankSearchOpen = false;
     else if (this.local.filterPanel) this.local.filterPanel = null;
     else if (this.local.selectedItem || this.local.selectedSpell) { this.local.selectedItem = null; this.local.selectedSpell = null; }
+    else if (this.state.world && gameplayUi(this.state.world)?.confirmation) {
+      this.sendUi({ kind: "ui_confirm", confirmation_id: gameplayUi(this.state.world)!.confirmation!.id, accept: false });
+    } else if (this.state.world && gameplayUi(this.state.world)?.reward) {
+      this.sendUi(structuredClone(gameplayUi(this.state.world)!.reward!.continuation));
+    } else if (this.state.world && gameplayUi(this.state.world)?.activeInterface) {
+      this.send({ kind: "close_interface" });
+    }
     else if (this.local.modal || this.local.journal || this.state.world?.bank || this.state.world?.shop || this.state.world?.recovery) {
       this.local.modal = null; this.local.journal = null; this.send({ kind: "close_interface" });
     } else if (this.state.world) this.send({ kind: "cancel_activity" });
     else this.screen("title");
-    this.drag = null; this.renderSoon();
+    this.drag = null; this.bankDrag = null; this.renderSoon();
   }
 
   private key(event: KeyboardEvent): void {
@@ -428,6 +593,25 @@ class UiController {
       }
       return;
     }
+    if (this.state.world && gameplayUi(this.state.world)?.confirmation && event.key === " ") {
+      event.preventDefault(); this.controls.find(control => control.id === "ui-confirm-accept")?.actions[0]?.run(); return;
+    }
+    if (this.state.world && gameplayUi(this.state.world)?.reward && (event.key === " " || event.key === "Enter")) {
+      const reward = gameplayUi(this.state.world)!.reward!;
+      event.preventDefault(); this.continueReward(reward.id, reward.continuation); return;
+    }
+    const production = this.state.world ? gameplayUi(this.state.world)?.production : null;
+    if (production) {
+      const shortcut = event.key === " " ? "space" : event.key.toLowerCase();
+      const control = this.controls.find(control => control.productionRecipe && control.shortcut === shortcut);
+      if (control) {
+        event.preventDefault();
+        const action = control.actions[0];
+        const reason = control.disabled ?? action?.disabled;
+        if (reason) this.show(reason, "error"); else action?.run();
+        return;
+      }
+    }
     const choice = this.state.world?.dialogue?.choices[Number(event.key) - 1];
     if (choice && /^[1-9]$/.test(event.key)) {
       event.preventDefault(); this.send({ kind: "select_dialogue", speaker: this.state.world!.dialogue!.speaker, choice: choice.id }); return;
@@ -440,13 +624,23 @@ class UiController {
     const tab = TABS.findIndex(tab => tab.key === event.key);
     if (tab >= 0 && this.state.world) { event.preventDefault(); this.openTab(tab); }
     else if (event.key.length === 1 && !event.ctrlKey && !event.metaKey && !event.altKey && this.state.world) {
-      event.preventDefault(); this.required("Chat messages", "send_chat_intent");
+      event.preventDefault();
+      const chat = gameplayUi(this.state.world)?.publicChat;
+      if (chat?.permission.allowed) {
+        this.local.chatDraft += event.key; this.renderSoon();
+        requestAnimationFrame(() => this.surface.focus("public-chat"));
+      } else this.required("Chat messages", "send_chat_intent");
     }
   }
 
   private openTab(index: number): void {
     const world = this.state.world, tab = TABS[index];
-    if (!world || !tab || !isInterfaceUnlocked(world, tab.interface)) return;
+    if (!world || !tab) return;
+    if (!isInterfaceUnlocked(world, tab.interface)) {
+      const declared = gameplayUi(world)?.interfaces.find(row => row.interface === tab.interface);
+      this.show(permissionReason(declared?.permission, tab.name) ?? "This interface is locked.", "error", declared?.permission.code ?? "ui.interface.locked");
+      return;
+    }
     this.local.tab = index; this.local.scroll = 0; this.menu = null; this.local.filterPanel = null;
     if (this.assets.catalogue.presentation?.interfaces[tab.interface]) this.send({ kind: "open_interface", interface: tab.interface });
     else this.unavailable(tab.name);
@@ -458,17 +652,41 @@ class UiController {
     if (phase === "move") {
       if (this.drag && (event.buttons & 1) && performance.now() - this.drag.start >= 100 &&
           Math.max(Math.abs(x - this.drag.x), Math.abs(y - this.drag.y)) >= 5) this.drag.active = true;
+      if (this.bankDrag && (event.buttons & 1) && performance.now() - this.bankDrag.start >= 100 &&
+          Math.max(Math.abs(x - this.bankDrag.x), Math.abs(y - this.bankDrag.y)) >= 5) this.bankDrag.active = true;
       this.renderSoon(); return;
     }
     if (phase === "down") {
       this.suppressNextClick = false;
       if (this.menu && !control?.id.startsWith("menu-")) { this.menu = null; this.suppressNextClick = true; this.renderSoon(); return; }
       if (event.button !== 0 || this.notice || this.local.amount || control?.disabled) return;
+      if (control?.bankEntryId && this.state.world) {
+        const entry = gameplayUi(this.state.world)?.bank?.entries.find(entry => entry.id === control.bankEntryId);
+        if (entry) this.bankDrag = { entry: entry.id, item: entry.item, instance: entry.value?.instanceId ?? null,
+          x, y, start: performance.now(), active: false };
+      }
       if (control?.draggableSlot !== undefined) {
         const item = this.inventory(control.draggableSlot);
         if (item) this.drag = { slot: control.draggableSlot, x, y, start: performance.now(), active: false,
           identity: { slot: control.draggableSlot, id: item.id, instanceId: item.instanceId, name: item.name } };
       }
+    } else if (this.bankDrag) {
+      const drag = this.bankDrag; this.bankDrag = null;
+      if (drag.active) {
+        this.suppressNextClick = true;
+        const bank = this.state.world ? gameplayUi(this.state.world)?.bank : null;
+        const current = bank?.entries.find(entry => entry.id === drag.entry);
+        const target = this.controls.find(control => (control.bankEntryId || control.bankTab !== undefined || control.bankCreate) && contains(control, x, y));
+        if (!current || current.item !== drag.item || (current.value?.instanceId ?? null) !== drag.instance)
+          this.show("The dragged bank entry changed. Choose it again.", "error", "ui.bank.stale");
+        else if (target?.bankCreate) this.sendUi({ kind: "bank_create_tab", entry_id: drag.entry });
+        else if (target && target.bankEntryId !== drag.entry) this.sendUi({
+          kind: "bank_move", entry_id: drag.entry, before_entry_id: target.bankEntryId ?? null,
+          tab: target.bankTab ?? bank!.entries.find(entry => entry.id === target.bankEntryId)?.tab ?? bank!.selectedTab,
+        });
+        setTimeout(() => { this.suppressNextClick = false; }, 0);
+      }
+      this.renderSoon();
     } else if (this.drag) {
       const drag = this.drag;
       this.drag = null;
@@ -522,18 +740,23 @@ class UiController {
     const item = this.inventory(slot), world = this.state.world;
     if (!item || !world) return [];
     const label = `<col=ff9040>${escapeText(item.name)}</col>`;
+    const projection = gameplayUi(world);
     if (this.local.selectedItem) return [
       { label: `Use ${escapeText(this.local.selectedItem.name)} -> ${label}`, run: this.validSlot(slot, () => this.useSelection({ kind: "inventory", slot })) },
       { label: `Examine ${label}`, run: () => this.examine(item) },
     ];
-    if (world.bank) {
+    if (projection?.bank && !world.bank) {
+      return [{ label: `Deposit ${label}`, run: () => this.required("Deposit inventory", "contextual_banker_identity") }];
+    }
+    if (projection ? projection.bank && world.bank : world.bank) {
       const bank = world.bank;
+      if (!bank) return [];
       const deposit = (quantity: number) => this.validSlot(slot, () => this.send({ kind: "bank_deposit", banker: bank.banker, inventory_slot: slot, quantity }))();
       const options: UiAction[] = [1, 5, 10].map(q => ({ label: `Deposit-${q} ${label}`, run: () => deposit(q) }));
       options.push({ label: `Deposit-X ${label}`, run: () => this.prompt("Enter amount:", deposit) },
         { label: `Deposit-All ${label}`, run: this.validSlot(slot, item => deposit(item.quantity)) },
         { label: `Examine ${label}`, run: () => this.examine(item) });
-      const selected = this.local.bankAmount;
+      const selected = projection?.bank ? projection.bank.amount : this.local.bankAmount;
       return [{ label: `Deposit-${selected === "all" ? "All" : selected} ${label}`,
         run: this.validSlot(slot, item => deposit(selected === "all" ? item.quantity : selected)) },
       ...options.filter(o => !o.label.startsWith(`Deposit-${selected} `))];
@@ -550,6 +773,28 @@ class UiController {
       ...[1, 5, 10, 50].map(q => ({ label: `Sell-${q} ${label}`, run: () => sell(q) })),
       { label: `Sell-X ${label}`, run: () => this.prompt("Enter amount:", sell) },
       { label: `Examine ${label}`, run: () => this.examine(item) }];
+    }
+    if (projection) {
+      const row = projection.inventoryActions.find(row => row.slot === slot && row.item === item.id && row.instance === item.instanceId);
+      const actions: UiAction[] = row?.actions.map(action => ({
+        label: `${escapeText(action.label)} ${label}`,
+        run: () => this.sendUi({ kind: "item_action", inventory_slot: slot, expected_item: item.id, expected_instance: item.instanceId, action: action.id }),
+        ...(permissionReason(action.permission, action.label) ? { disabled: permissionReason(action.permission, action.label)! } : {}),
+      })) ?? [{ label: `Item actions ${label}`, disabled: "The projection did not supply actions for this item identity.", run: () => {} }];
+      actions.push({ label: `Use ${label}`, run: this.validSlot(slot, current => {
+        this.local.selectedItem = { slot, id: current.id, instanceId: current.instanceId, name: current.name };
+        this.local.selectedSpell = null; this.renderSoon();
+      }) });
+      const offer = projection.recovery?.cofferItems.find(row => row.slot === slot && row.item === item.id && row.instance === item.instanceId);
+      if (offer) {
+        const reason = permissionReason(projection.recovery?.cofferOffer, "Coffer offer") ??
+          (offer.actions.some(action => action.permission.allowed) ? undefined : permissionReason(offer.actions[0]?.permission, "Offer item"));
+        actions.push({ label: `Offer to Death's Coffer ${label}`, run: () => this.prompt("Offer how many?", quantity =>
+          this.sendUi({ kind: "coffer_offer", inventory_slot: slot, expected_item: item.id, expected_instance: item.instanceId, quantity })),
+        ...(reason ? { disabled: reason } : {}) });
+      }
+      actions.push({ label: `Examine ${label}`, run: () => this.examine(item) });
+      return actions;
     }
     const actions: UiAction[] = [];
     for (const option of item.actions) {
@@ -592,6 +837,7 @@ class UiController {
       if (current?.banker !== bank.banker || found?.id !== item.id) {
         this.show("That bank slot has changed. Choose the item again.", "error", "ui.bank.stale"); return;
       }
+
       this.send({ kind: "bank_withdraw", banker: bank.banker, bank_slot: slot, quantity, noted: this.local.bankNotes });
     };
     const currentAmount = this.local.bankAmount;
@@ -603,6 +849,49 @@ class UiController {
         ...(item.quantity <= 1 ? { disabled: "There is only one item in this stack." } : {}) },
       { label: `Placeholder ${label}`, run: () => this.required("Bank placeholders", "bank_placeholder_intent") },
       { label: `Examine ${label}`, run: () => this.examine(item) }];
+  }
+
+  private bankEntryActions(entryId: string): UiAction[] {
+    const world = this.state.world, bank = world ? gameplayUi(world)?.bank : null;
+    const entry = bank?.entries.find(row => row.id === entryId);
+    if (!bank || !entry) return [];
+    const label = `<col=ff9040>${escapeText(entry.value?.name ?? entry.item)}</col>`;
+    const current = () => {
+      const view = this.state.world ? gameplayUi(this.state.world)?.bank : null;
+      const row = view?.entries.find(row => row.id === entryId);
+      if (!row || row.item !== entry.item || row.value?.instanceId !== entry.value?.instanceId) {
+        this.show("That bank entry identity changed. Choose the current entry again.", "error", "ui.bank.stale"); return null;
+      }
+      return { view: view!, row };
+    };
+    const withdraw = (quantity: number) => {
+      const value = current();
+      if (value) this.sendUi({ kind: "bank_withdraw_entry", entry_id: entryId, quantity, noted: value.view.noted });
+    };
+    const actions: UiAction[] = entry.placeholder ? [{
+      label: `Release placeholder ${label}`, run: () => { if (current()) this.sendUi({ kind: "bank_release_placeholder", entry_id: entryId }); },
+    }] : [
+      { label: `Withdraw-${bank.amount} ${label}`, run: () => withdraw(bank.amount) },
+      ...[1, 5, 10].filter(quantity => quantity !== bank.amount).map(quantity => ({ label: `Withdraw-${quantity} ${label}`, run: () => withdraw(quantity) })),
+      { label: `Withdraw-X ${label}`, run: () => this.prompt("Enter amount:", withdraw) },
+      { label: `Withdraw-All ${label}`, run: () => { const value = current(); if (value?.row.value) withdraw(value.row.value.quantity); } },
+      { label: `Withdraw-All-but-1 ${label}`, run: () => {
+        const value = current(); if (value?.row.value) withdraw(value.row.value.quantity - 1);
+      }, ...(entry.value && entry.value.quantity > 1 ? {} : { disabled: "There is only one item in this stack." }) },
+    ];
+    actions.push({ label: `Create tab ${label}`, run: () => { if (current()) this.sendUi({ kind: "bank_create_tab", entry_id: entryId }); } });
+    for (const tab of bank.tabs) actions.push({
+      label: `Move to tab ${tab.tab} ${label}`,
+      run: () => { if (current()) this.sendUi({ kind: "bank_move", entry_id: entryId, before_entry_id: null, tab: tab.tab }); },
+    });
+    actions.push({ label: `Examine ${label}`, run: () => {
+      if (entry.value) this.examine(entry.value);
+      else {
+        const source = this.assets.catalogue.presentation?.sourceItems[entry.item];
+        this.show(source === undefined ? entry.item : this.assets.catalogue.items[source]?.examine || entry.item);
+      }
+    } });
+    return actions;
   }
 
   private shopActions(index: number): UiAction[] {
@@ -647,21 +936,28 @@ class UiController {
     if (!prompt || prompt.pending) return;
     const quantity = readQuantity(prompt.value);
     if (quantity === null) { this.show("Enter a positive whole number.", "error", "ui.quantity.invalid"); return; }
-    const pending = this.pending.size;
+    const pending = this.pending.size, notice = this.notice;
     this.amountRevision = this.state.world?.revision ?? null;
+    prompt.pending = true;
     prompt.confirm(quantity);
-    if (this.pending.size > pending) prompt.pending = true;
-    else this.local.amount = null;
+    if (this.pending.size <= pending) {
+      prompt.pending = false;
+      if (this.notice === notice) this.local.amount = null;
+    }
     this.renderSoon();
   }
   private async depositAll(): Promise<void> {
+    if (this.state.world?.ui !== undefined) {
+      const problem = gameplayUiProblem(this.state.world);
+      if (problem) { this.show(problem.message, "error", problem.code); return; }
+    }
     const bank = this.state.world?.bank;
-    if (!bank) return;
-    const slots = this.state.world!.player.inventory.filter(s => s.item).map(s => ({ index: s.index, id: s.item!.id }));
+    if (!bank) { this.required("Deposit inventory", "contextual_banker_identity"); return; }
+    const slots = this.state.world!.player.inventory.filter(s => s.item).map(s => ({ index: s.index, id: s.item!.id, instance: s.item!.instanceId }));
     for (const slot of slots) {
       if (this.state.world?.bank?.banker !== bank.banker) { this.show("The bank has closed.", "error", "ui.bank.closed"); return; }
       const item = this.inventory(slot.index);
-      if (!item || item.id !== slot.id) { this.show("The inventory changed during deposit.", "error", "ui.inventory.changed"); return; }
+      if (!item || item.id !== slot.id || item.instanceId !== slot.instance) { this.show("The inventory changed during deposit.", "error", "ui.inventory.changed"); return; }
       if (!await this.request(`deposit-all-${slot.index}`, () => this.services.send({
         kind: "bank_deposit", banker: bank.banker, inventory_slot: slot.index, quantity: item.quantity,
       }))) return;
@@ -672,8 +968,11 @@ class UiController {
     if (this.disposed) return false;
     if (!this.state.world || this.state.phase !== "world" || this.notice || this.local.amount ||
         (this.state.error && this.state.error !== this.dismissedError)) return true;
+    const presentation = gameplayUi(this.state.world);
+    if (presentation?.reward || presentation?.confirmation) return true;
     if (this.menu && contains({ ...this.menu, height: this.menu.actions.length * 15 + 22 }, x, y)) return true;
     return Object.values(frameRegions(this.canvas.width, this.canvas.height)).some(rect => contains(rect, x, y)) ||
+      this.panelBounds.some(rect => contains(rect, x, y)) ||
       this.controls.some(control => contains(control, x, y));
   }
 
@@ -732,23 +1031,28 @@ class UiController {
 
   private render(): void {
     const controls: Control[] = [], inputs: InputField[] = [];
+    this.panelBounds = [];
     this.raster.clear();
     const world = this.state.world;
     const error = this.notice?.scope === "error" ? this.notice : this.state.error;
-    this.previewBounds = null;
-    const character = this.state.phase === "character" || world?.player.tutorialStage === "stage.tutorial.appearance";
+    this.previewBounds = null; this.previewRequest = null;
+    const gameplay = world ? gameplayUi(world) : null;
+    const character = gameplay ? gameplay.activeInterface === "interface.appearance" ||
+      this.state.phase === "character" && !gameplay.appearance.confirmed
+      : this.state.phase === "character" || world?.player.tutorialStage === "stage.tutorial.appearance";
     if (!world && character) {
       this.previewBounds = paintCharacter(this.raster, this.local.appearance, controls,
         body => { this.local.appearance.body_type = body; this.renderSoon(); },
-        () => { void this.request("appearance", () => this.services.createCharacter({ ...this.local.appearance })); },
-        (label, field) => this.required(label, field));
+        () => this.confirmAppearance(),
+        (label, field) => this.required(label, field), undefined,
+        (bounds, model) => this.recordPreview("appearance", bounds, model));
       if (this.preview && this.previewBounds) {
         const bounds = this.previewBounds;
         if (this.preview.width === bounds.width && this.preview.height === bounds.height)
           this.raster.clip(bounds, () => this.raster.context.drawImage(this.preview!, bounds.x, bounds.y));
         else this.show("The renderer's character preview does not match the native preview dimensions.", "error", "ui.preview.size");
       }
-    } else if (!world || (this.state.phase !== "world" && this.state.phase !== "reconnecting")) {
+    } else if (!world || (this.state.phase !== "world" && this.state.phase !== "reconnecting" && this.state.phase !== "character")) {
       const cycle = Math.floor((performance.now() - this.titleStartedAt) / 20);
       this.titleFlames.advance(cycle);
       paintEntry(this.raster, { state: this.state, name: this.name, password: this.password, confirmation: this.confirmation,
@@ -773,43 +1077,75 @@ class UiController {
       paintGame(this.raster, {
         state: this.state, world, local: this.local, controls, inputs, minimap: this.minimap,
         abilityVisuals: this.abilityVisuals?.revision === world.revision ? this.abilityVisuals.values : {},
-        send: intent => this.send(intent), openTab: tab => this.openTab(tab),
+        send: intent => this.send(intent), sendUi: intent => this.sendUi(intent), openTab: tab => this.openTab(tab),
         change: change => { change(); this.renderSoon(); },
         notice: (message, scope = "information", id) => this.show(message, scope, id),
         unavailable: name => this.unavailable(name), required: (name, field) => this.required(name, field),
         prompt: (label, confirm) => this.prompt(label, confirm),
         inventoryActions: slot => this.inventoryActions(slot), equipmentActions: slot => this.equipmentActions(slot),
-        bankActions: slot => this.bankActions(slot), shopActions: slot => this.shopActions(slot),
+        bankActions: slot => this.bankActions(slot), bankEntryActions: entry => this.bankEntryActions(entry), shopActions: slot => this.shopActions(slot),
         depositAll: () => { void this.request("deposit-inventory", () => this.depositAll()); },
         logout: () => { void this.request("logout", () => this.services.logout()); },
         volume: (channel, value) => {
           void this.request(`volume-${channel}`, async () => { await this.services.unlockAudio(); this.services.audioVolume(channel, value); });
         },
-        confirmAppearance: () => { void this.request("appearance", () => this.services.createCharacter({ ...this.local.appearance })); },
+        confirmAppearance: () => this.confirmAppearance(),
         minimapClick: widget => {
           const destination = this.minimap.destination(widget, world.player.tile, this.point.x, this.point.y);
           if (destination) this.send({ kind: "walk", destination, running: world.player.settings.find(s => s.setting === "run")?.enabled ?? false });
         },
         faceNorth: () => this.cameraRequest ? this.cameraRequest(0) : this.required("Camera rotation", "camera_request_adapter"),
+        sendChat: () => { void this.sendChat(); },
+        continueReward: (id, continuation) => this.continueReward(id, continuation),
+        hoveredProduction: this.hover?.productionRecipe ?? null,
+        capture: bounds => this.panelBounds.push(bounds),
+        preview: (bounds, model) => {
+          this.recordPreview("equipment", bounds, model);
+          if (this.preview) {
+            if (this.preview.width === bounds.width && this.preview.height === bounds.height)
+              this.raster.context.drawImage(this.preview, bounds.x, bounds.y);
+            else this.show("The renderer's equipment preview does not match the native preview dimensions.", "error", "ui.preview.size");
+          }
+        },
       });
       if (character) {
         const characterControls: Control[] = [];
         this.previewBounds = paintCharacter(this.raster, this.local.appearance, characterControls,
           body => { this.local.appearance.body_type = body; this.renderSoon(); },
-          () => { void this.request("appearance", () => this.services.createCharacter({ ...this.local.appearance })); },
-          (label, field) => this.required(label, field));
+          () => this.confirmAppearance(),
+          (label, field) => this.required(label, field), gameplayUi(world)?.appearance,
+          (bounds, model) => this.recordPreview("appearance", bounds, model));
         const hudControls = controls.filter(control => !control.id.startsWith("appearance-"));
         controls.length = 0; controls.push(...hudControls, ...characterControls);
         if (this.preview && this.previewBounds) {
           const bounds = this.previewBounds;
           if (this.preview.width === bounds.width && this.preview.height === bounds.height)
             this.raster.clip(bounds, () => this.raster.context.drawImage(this.preview!, bounds.x, bounds.y));
+          else this.show("The renderer's character preview does not match the native preview dimensions.", "error", "ui.preview.size");
         }
       }
     }
     if (this.drag?.active) {
       const item = this.inventory(this.drag.slot);
       if (item?.sourceId !== null && item?.sourceId !== undefined) this.raster.item(item.sourceId, item.quantity, this.point.x - 18, this.point.y - 16, 2, false, 128);
+    }
+    if (gameplay?.reward && !(gameplay.reward.kind === "quest" &&
+        this.assets.catalogue.presentation?.interfaces[gameplay.reward.interface]?.sourceIds.includes(153))) {
+      const reward = gameplay.reward;
+      controls.length = 0; inputs.length = 0;
+      const message = `Required source layout unavailable for ${reward.interface} (${reward.kind}).\n${reward.title}\n` +
+        rewardDetails(reward, world!.player.skills).join("\n");
+      this.surface.announce(`${message}\nError ID: ui.source.reward.layout`);
+      this.paintChatOverlay(message, "Click here to continue", controls);
+      const continuation = controls.find(control => control.id === "notice-close");
+      const lines = entryErrorLines(message, 472, this.assets.catalogue.fonts[495]!);
+      if (continuation && (this.local.dialoguePage + 1) * 5 >= lines.length)
+        continuation.actions = [{ label: "Continue presentation", run: () => this.continueReward(reward.id, reward.continuation) }];
+    }
+    if (gameplay?.confirmation && !this.notice && !this.local.amount) {
+      controls.length = 0; inputs.length = 0;
+      paintConfirmation(this.raster, gameplay.confirmation, this.local.dialoguePage, controls,
+        intent => this.sendUi(intent), () => { this.local.dialoguePage++; this.renderSoon(); });
     }
     if (this.local.amount && world) {
       controls.length = 0; inputs.length = 0;
@@ -818,10 +1154,12 @@ class UiController {
       this.raster.center(escapeText(this.local.amount.value) + "<col=0000ff>*</col>", rect.x + 259, rect.y + 88, 496, 0, null);
       inputs.push({ id: "amount", label: this.local.amount.label, x: rect.x + 130, y: rect.y + 68, width: 260, height: 26,
         type: "text", inputMode: "numeric", autocomplete: "off", maximum: 16, value: this.local.amount.value,
+        readOnly: Boolean(this.local.amount.pending),
         change: value => { if (this.local.amount) this.local.amount.value = value; this.renderSoon(); }, submit: () => this.confirmAmount() });
       controls.push({ id: "amount-confirm", label: "Confirm amount", x: rect.x + 140, y: rect.y + 105, width: 239, height: 22,
+        ...(this.local.amount.pending ? { disabled: "Waiting for an authoritative update." } : {}),
         actions: [{ label: "Confirm amount", run: () => this.confirmAmount() }] });
-      this.raster.center("Press Enter to confirm", rect.x + 259, rect.y + 121, 495, 0x0000ff, null);
+      this.raster.center(this.local.amount.pending ? "Waiting for server..." : "Press Enter to confirm", rect.x + 259, rect.y + 121, 495, 0x0000ff, null);
     }
     const visibleError = this.state.error && this.state.error !== this.dismissedError ? this.state.error : null;
     const overlay = this.notice || (world || character ? visibleError : null);
@@ -868,10 +1206,23 @@ class UiController {
     this.surface.sync(controls, inputs);
   }
 
+  private recordPreview(purpose: UiPreviewRequest["purpose"], bounds: Rect, model: NativeWidget): void {
+    const world = this.state.world;
+    this.previewBounds = { x: bounds.x, y: bounds.y, width: bounds.width, height: bounds.height };
+    this.previewRequest = {
+      purpose, bounds: this.previewBounds,
+      modelBounds: { x: model.x, y: model.y, width: model.width, height: model.height },
+      sourceWidget: model.id, modelZoom: model.modelZoom, modelRotation: [...model.modelRotation],
+      appearance: { ...(purpose === "appearance" ? this.local.appearance : world?.player.appearance) },
+      equipment: world ? structuredClone(world.player.equipment) : null,
+      base: world ? gameplayUi(world)?.appearance.base ?? null : null,
+    };
+  }
+
   private paintChatOverlay(message: string, continuation: string, controls: Control[]): void {
     const chat = frameRegions(this.canvas.width, this.canvas.height).chat;
     this.raster.sprite(1017, chat.x, chat.y);
-    const lines = sourceLines(escapeText(message), 472, this.assets.catalogue.fonts[495]!);
+    const lines = entryErrorLines(message, 472, this.assets.catalogue.fonts[495]!);
     const pageSize = 5;
     const page = Math.min(this.local.dialoguePage, Math.max(0, Math.ceil(lines.length / pageSize) - 1));
     this.raster.textBox(lines.slice(page * pageSize, (page + 1) * pageSize).join("<br>"),

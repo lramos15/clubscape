@@ -10,6 +10,33 @@ import net.runelite.cache.script.Opcodes;
 /** Read-only, bounded disassembly of the selected original UI scripts. */
 public final class UiScriptDump
 {
+    static void findWidgetScripts(OriginalCache cache, int group) throws Exception
+    {
+        ScriptLoader loader = new ScriptLoader().configureForRevision(cache.store.findIndex(12).getRevision());
+        for (var archive : cache.store.findIndex(12).getArchives())
+        {
+            byte[] raw = cache.archive(12).loadData(archive.getArchiveId(), 0);
+            boolean candidate = false;
+            for (int offset = 0; offset + 5 < raw.length; offset++)
+                if (raw[offset] == 0 && raw[offset + 1] == 0
+                    && ((raw[offset + 2] & 255) << 8 | raw[offset + 3] & 255) == group)
+                {
+                    candidate = true;
+                    break;
+                }
+            if (!candidate) continue;
+            var script = loader.load(archive.getArchiveId(), raw);
+            var references = new ArrayList<Integer>();
+            for (int pc = 0; pc < script.getInstructions().length; pc++)
+                if (script.getInstructions()[pc] == 0 && script.getIntOperands()[pc] >>> 16 == group)
+                    references.add(script.getIntOperands()[pc] & 65535);
+            if (!references.isEmpty())
+                System.out.println("script=" + archive.getArchiveId() + " group=" + group
+                    + " intArgs=" + script.getIntArgCount() + " objectArgs=" + script.getObjArgCount()
+                    + " children=" + references);
+        }
+    }
+
     static void dump(OriginalCache cache, Path directory, int... ids) throws Exception
     {
         Files.createDirectories(directory);
@@ -48,7 +75,14 @@ public final class UiScriptDump
                     var value = new EnumLoader().load(id, cache.archive(2).loadData(8, id));
                     Files.writeString(Path.of(args[1]).resolve("enum-" + id + ".json"), OriginalCapture.JSON.toJson(value));
                 }
+                else if (args[i].startsWith("widget:"))
+                    findWidgetScripts(cache, Integer.parseInt(args[i].substring(7)));
                 else dump(cache, Path.of(args[1]), Integer.parseInt(args[i]));
+        }
+        catch (Exception error)
+        {
+            error.printStackTrace();
+            System.exit(1);
         }
         System.exit(0);
     }

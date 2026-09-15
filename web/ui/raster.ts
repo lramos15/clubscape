@@ -1,5 +1,5 @@
 import type { FontAsset, NativeWidget, Rect } from "./assets.ts";
-import { UiAssets } from "./assets.ts";
+import { UiAssets, staticModelKey } from "./assets.ts";
 
 const CP1252: Record<string, number> = {
   "€": 128, "‚": 130, "ƒ": 131, "„": 132, "…": 133, "†": 134, "‡": 135,
@@ -328,6 +328,9 @@ export class SourceRaster {
     } else if (widget.type === 6 && widget.modelType === 2) {
       const portrait = this.assets.catalogue.portraits[`npc-${widget.model}`];
       if (portrait) this.image(portrait.asset, widget.x + portrait.offsetX, widget.y + portrait.offsetY);
+    } else if (widget.type === 6) {
+      const model = this.assets.catalogue.staticModels[staticModelKey(widget)];
+      if (model) this.image(model.asset, widget.x + model.offsetX, widget.y + model.offsetY);
     } else if (widget.type === 9) {
       let x = widget.x, y = widget.lineDirection ? widget.y + widget.height : widget.y;
       const endX = widget.x + widget.width, endY = widget.lineDirection ? widget.y : widget.y + widget.height;

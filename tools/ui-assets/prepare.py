@@ -82,6 +82,10 @@ def native(items, source, tooling):
         for quantity in sorted(quantities):
             requests.append([item["id"], quantity])
     write(WORK / "items.json", requests)
+    content = read(ROOT / "content/m1/game-content.json.gz")
+    production_items = sorted({content["items"][output["item"]]["source_id"]
+                               for recipe in content["recipes"].values() for output in recipe["outputs"]})
+    write(WORK / "production-items.json", production_items)
     original = ROOT / "tools/source-capture"
     instrumented = (original / "HudCapture.java").read_text()
     begin = instrumented.index('state.add(OriginalCapture.map("id", widget.getId()')
@@ -145,6 +149,7 @@ def native(items, source, tooling):
         selectTab(6);
         frame("native-magic-missing-runes", 218);
         UiModeCapture.run(capture, this);
+        UiPresentationCapture.run(capture, this);
     }
 """
     instrumented = instrumented.rstrip()[:-1] + extra + "}\n"
@@ -165,6 +170,7 @@ def native(items, source, tooling):
                "--add-opens=java.base/java.lang=ALL-UNNAMED", "-Dclubscape.capture.seed=0",
                f"-Duser.home={WORK / 'java-home'}", f"-Djava.io.tmpdir={WORK / 'java-work'}",
                f"-Dclubscape.ui.items={WORK / 'items.json'}",
+               f"-Dclubscape.ui.production={WORK / 'production-items.json'}",
                "-cp", str(WORK / "classes") + os.pathsep + cp,
                "OriginalCapture", str(source), str(WORK), str(WORK / "native"), "hud"]
     result = subprocess.run(command, cwd=ROOT, env=env, capture_output=True, text=True, timeout=600)
@@ -202,6 +208,8 @@ def main():
     native_dir = WORK / "native"
     if not (native_dir / "captures.json").exists():
         raise ValueError("Run prepare.py --native once; resolved native styles cannot be guessed")
+    for identifier, record in read(native_dir / "additional-items.json").items():
+        items.setdefault(int(identifier), record["definition"])
     # Compare the instrumented host to the already-approved originals, not to a new baseline.
     native_source = ROOT / "assets/reference/osrs240/native-hud"
     matches = []
@@ -212,15 +220,20 @@ def main():
         matches.append(capture["path"])
     OUT.mkdir(parents=True, exist_ok=True)
     generated_sprites = {str(identifier) for identifier in read(native_dir / "generated-sprites.json")}
-    for name in ("sprites", "fonts", "items", "portraits", "minimaps"):
+    model_images = {Path(record["asset"]).name for record in read(native_dir / "static-models.json").values()}
+    for name in ("sprites", "fonts", "items", "portraits", "minimaps", "models"):
         destination = OUT / name
         destination.mkdir(exist_ok=True)
         for path in (native_dir / name).glob("*"):
-            if path.suffix == ".png" and (name != "sprites" or path.stem in generated_sprites):
+            if path.suffix == ".png" and (name != "sprites" or path.stem in generated_sprites) and (name != "models" or path.name in model_images):
                 shutil.copyfile(path, destination / path.name)
         if name == "sprites":
             for path in destination.glob("*.png"):
                 if path.stem not in generated_sprites:
+                    path.unlink()
+        if name == "models":
+            for path in destination.glob("*.png"):
+                if path.name not in model_images:
                     path.unlink()
     shutil.copyfile(native_dir / "title-background.png", OUT / "title-background.png")
     sprites = {p.stem: read(p) | {"asset": f"ui/sprites/{p.stem}.png"} for p in (native_dir / "sprites").glob("*.json")
@@ -241,7 +254,7 @@ def main():
     for item in items.values():
         item_catalog[str(item["id"])] = {
             key: item.get(key) for key in ("name", "examine", "stackable", "interfaceOptions", "shiftClickDropIndex",
-                                         "notedID", "notedTemplate", "countCo", "countObj", "category")
+                                         "notedID", "notedTemplate", "placeholderId", "placeholderTemplateId", "countCo", "countObj", "category")
         }
         quantities = sorted({1, *(q for q in item.get("countCo") or [] if q > 1)})
         if not item_catalog[str(item["id"])]["name"]:
@@ -279,6 +292,8 @@ def main():
         } for p in pack["proposal_inputs"]},
         "tutorialStates": factoring["state_bindings"], "hudSignatures": factoring["hud_signatures"],
         "portraits": read(native_dir / "portraits.json"),
+        "staticModels": read(native_dir / "static-models.json"),
+        "nativePresentations": read(native_dir / "presentation-inputs.json"),
         "npcs": {str(n["id"]): {"name": n["name"], "examine": n.get("examine")} for n in collections("npc").values()},
         "presentation": {
             "interfaces": {key: {"name": v["name"], "sourceIds": v["source_ids"]}
@@ -310,12 +325,16 @@ def main():
         "readbackInstrumentationSource": {"path": "tools/source-capture/HudCapture.java",
                                           "sha256": sha(ROOT / "tools/source-capture/HudCapture.java")},
         "nativeFixturesUnchanged": matches,
+        "additionalSourceItems": {identifier: {"sourceIndex": 2, "sourceGroup": 10, "sourceFile": int(identifier),
+                                               "sourceRawSha256": record["sourceRawSha256"]}
+                                  for identifier, record in read(native_dir / "additional-items.json").items()},
         "transformations": [
             "Original cache sprite frames repacked without scaling, palette changes or invented pixels.",
             "Original CP1252 257-byte font metrics and original glyph masks.",
             "Original Client.createItemSprite, native widget shadow 0x333333, quantity_mode=0; quantities are painted from AppState.",
             "Original JPEG decoder, unscaled source title background, no title-screen capture.",
             "NPC model-only native widget painting on transparency; no finished dialogue-panel crop.",
+            "Original isolated static production/skill UI model icons, with native zoom/rotation and parent clip; no finished panel or human preview.",
             "Native widget readbacks; fixture text/items are templates, never authoritative game state."
         ],
         "additionalPreviewBoundary": read(native_dir / "renderer-previews.json"),

@@ -5,17 +5,18 @@ import { intersect } from "./assets.ts";
 import { nativeTree, projectScrollbar, widgetId, widgetKey } from "./layout.ts";
 import { escapeText } from "./raster.ts";
 
-export interface RecoveryDisplayItem { id: string; item: ItemView; slot: number; allowed: boolean; reason: string | null }
+export interface RecoveryDisplayItem { id: string; item: ItemView; slot: number; allowed: boolean | null; reason: string | null }
 /** Explicit display inputs: null is unknown, never a fabricated zero balance or fee. */
 export interface RecoveryDisplay {
   storage: "grave" | "death_office";
   items: readonly RecoveryDisplayItem[];
   selectedId: string | null;
-  coffer: number | null;
+  coffer: string | null;
   unitFee: number | null;
   capacity: number | null;
   bankAll: boolean;
   discardAll: boolean;
+  discardReason?: string;
   scroll: number;
 }
 export type RecoveryUiCommand =
@@ -34,7 +35,7 @@ export function recoveryTemplate(catalogue: UiCatalogue, view: RecoveryDisplay):
 
 export function recoveryFeeText(view: RecoveryDisplay): string {
   const selected = view.items.find(row => row.id === view.selectedId);
-  const coffer = view.coffer === null ? "Unavailable" : view.coffer.toLocaleString("en-US");
+  const coffer = view.coffer === null ? "Unavailable" : BigInt(view.coffer).toLocaleString("en-US");
   if (!selected) return `Select an item to retrieve.<br>Death's Coffer: <col=ffffff>${coffer}</col>`;
   // Source3492 uses INV_TOTAL for the selected item type, while the outline remains on its selected slot.
   const quantity = view.items.filter(row => row.item.id === selected.item.id)
@@ -92,7 +93,8 @@ export function recoveryControls(widgets: readonly NativeWidget[], width: number
       const select = view.storage === "death_office";
       const label = `${select ? "Select" : "Take-All"} ${row.item.name}`;
       controls.push({ ...rect, id: `recovery-item-${row.id}`, label, pressed: row.id === view.selectedId,
-        ...(row.allowed ? {} : { disabled: row.reason ?? "This item is currently unavailable." }),
+        ...(row.allowed === false ? { disabled: row.reason ?? "This item is currently unavailable." } : {}),
+        ...(row.allowed === null ? { tooltip: "Retrieval permission and affordability are not projected; the server validates this request." } : {}),
         actions: [{ label, run: () => dispatch(select ? { kind: "select", id: row.id } : { kind: "retrieve", id: row.id, amount: "all" }) },
           { label: `Examine ${row.item.name}`, run: () => dispatch({ kind: "examine", id: row.id }) }] });
       continue;
@@ -107,8 +109,9 @@ export function recoveryControls(widgets: readonly NativeWidget[], width: number
     else if (group === 669 && [6, 7, 8, 9].includes(child) && selected)
       command = { kind: "retrieve", id: selected.id, amount: child === 6 ? 1 : child === 7 ? 5 : child === 8 ? "x" : "all" };
     if (!command) continue;
-    const disabled = command.kind === "discard_all" && !view.discardAll ? "Discard permission has not been supplied."
+    const disabled = command.kind === "discard_all" && !view.discardAll ? view.discardReason ?? "Discard permission has not been supplied."
       : command.kind === "bank_all" && !view.bankAll ? "Bank-All is not enabled."
+      : command.kind === "retrieve" && selected?.allowed === false ? selected.reason ?? "This item is currently unavailable."
       : command.kind !== "close" && view.items.length === 0 ? "There are no items to retrieve." : undefined;
     controls.push({ ...rect, id: `recovery-option-${widgetKey(widget)}`, label: command.kind === "retrieve" ? `Retrieve ${operation}` : operation,
       ...(disabled ? { disabled } : {}), actions: [{ label: operation, run: () => dispatch(command!) }] });

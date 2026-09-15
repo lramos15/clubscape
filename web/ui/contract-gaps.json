@@ -1,68 +1,85 @@
 {
   "status": "blocked",
-  "shared_contract_changed": false,
   "source_pack_sha256": "b62e19704e17d3d3e4e819f803ef49ba7cc54034ae407184b423427c65d9674d",
+  "shared_contract_changed_by_ui": false,
+  "published_contract": {
+    "capability": "game.ui.v1",
+    "upstream_commit": "d1532d6fc063d2a02383a7b4bb1ca3c449e214ce",
+    "authorized_cherry_pick": "5d56c93",
+    "typescript": "web/shared/contracts.ts",
+    "rust": "crates/game-types/src/gameplay_ui.rs",
+    "status": "Types published; backend implementation/protobuf/canonical projection remain a separate closure. No service implementation is inferred from types.",
+    "version_rule": "WorldView.ui.version must equal 1. Absent, unknown or malformed projections are explicit unsupported/error states, never fabricated empty views."
+  },
+  "wired_versioned_controls": [
+    "Opaque inventory action IDs with canonical item and instance identity; declared permission rejection, local use selection and no optimistic ownership changes.",
+    "Production menu/recipe IDs, single versus make_x permission, 1/5/10/X requests, native one-through-eighteen-choice layouts and the source bronze smithing table. Unoffered source rows remain present with explicit feedback.",
+    "Quest reward title, narrative/item/XP/quest-point fields, native source 9..15 text slots, exact continuation request and stable presentation identity.",
+    "Opaque confirmations with real title/lines/items/u64 credit, pagination, accept/cancel and Escape.",
+    "Selected/visible/permitted abilities and interface states; combat style association retains identity even if view row ordering changes.",
+    "Equipment bonuses/weight and exact native equipment-preview request geometry; no missing-stat zero defaults.",
+    "Stable bank entries/tabs, drag/move/new-tab/collapse, placeholders, original placeholder sprites, note/amount/insert preferences and deposit-equipment permissions.",
+    "Death-preview kept/lost rows, exact fee strings and value revision. Unsupported alternate scopes retain their source controls and feedback.",
+    "Recovery coffer balance, discard permission/request and inventory coffer offering, with confirmation identity retained and no local credit/item changes.",
+    "Public chat permission, declared channel and UTF-8 byte limit; rejected drafts retained, no optimistic echo or clearing before the authoritative own-message update.",
+    "Declared body_type 0/1 permissions and confirmation, with local appearance/equipment preview descriptors. Human kit/colour/pronoun controls do not create new penguin variants.",
+    "All shop buys still send displayed canonical expected_item; held menus/amounts never retarget a reused row."
+  ],
   "requests": [
     {
-      "scope": "Authoritative open/closed production and other modal state",
-      "extension": "WorldView.activeInterface: string | null; WorldView.production: { interface: string; target: WorldTarget | null; recipes: Array<{ id: string; name: string; item: ItemView; allowed: boolean; reason: string | null }> } | null",
-      "reason": "An open_interface acknowledgement does not supply the active recipe menu, target, legal choices or concurrent/reconnect closure state. No client-side production grant or guessed guard is used."
+      "scope": "Real backend/protocol/shell implementation of the published contract",
+      "extension": "No new fork: implement the published GameplayUiView/GameplayUiIntent and project WorldView.ui.version=1 through AppServices.state/subscribe/send.",
+      "reason": "The exact type publication is integrated, but component service-double acknowledgements do not prove protobuf transport, authoritative execution, canonical data, persistence or the real-server journey."
     },
     {
-      "scope": "Quest/level reward presentation and sequencing",
-      "extension": "WorldView.reward: { id: string; kind: 'quest' | 'level_up'; title: string; lines: string[]; items: ItemView[]; continuation: GameIntent | null } | null",
-      "reason": "QuestView.completed/journal and total XP do not identify the authoritative reward payload or its dismissal/queued-level-up sequence. The UI must not infer awarded quantities from unrelated state deltas or a fixture."
+      "scope": "Inventory-only production target correction",
+      "extension": "GameplayUiView.production.target: WorldTarget | null, with the corresponding authoritative Rust/protobuf correction relayed by its owner.",
+      "reason": "The published d1532d6 target is nonnullable. Runtime null explicitly reports ui.production.target.unsupported. No dummy facility is manufactured for dough or another inventory-only recipe."
     },
     {
-      "scope": "Selected combat style and exact source availability/visibility",
-      "extension": "PlayerView.combatStyle: string; PlayerView.interfaceStates: Array<{ id: string; visibility: 'hidden' | 'locked' | 'enabled'; highlighted: boolean; reason: string | null }>; PlayerView.prayers/spells: Array<{ id: string; allowed: boolean; reason: string | null }>",
-      "reason": "unlockedInterfaces and activePrayers do not encode the selected combat style, all guard-dependent ability availability, hidden versus locked states, or native tutorial highlights."
+      "scope": "Source Make-All and persistent bank All defaults",
+      "extension": "Publish the exact bank_set_options.amount All encoding, and either an authoritative production all-quantity value or an explicit All request mode.",
+      "reason": "The current u32 fields do not define either sentinel. The original All controls remain visible and report required integration. Withdraw-All already uses the current authoritative bank entry quantity; it is not blocked by this question."
     },
     {
-      "scope": "Inventory options not represented by existing intents",
-      "extension": "GameIntent variant { kind: 'item_action'; inventory_slot: number; action: string }",
-      "reason": "The public actions list can expose Drink, Bury, Read and other item operations, but the intent union only has equip/eat/drop/use-on-target. Mapping these to a fabricated self-use or an unrelated spawn is not legitimate."
+      "scope": "Complete recovery fee/quantity/bank controls",
+      "extension": "Publish RecoveryView.items.cost unit-versus-stack semantics, effective unit fee/capacity/per-row UiPermission/bank-all permission, and identity-bound partial-quantity retrieval and bank-all requests.",
+      "reason": "reclaim currently accepts whole recovery item IDs only. Partial 1/5/X cannot become a full-stack reclaim; fee units and capacity cannot be inferred. Null per-row display permission stays unknown, while existing whole-item requests remain server-validated. Coffer, discard and coffer-offer fields are now wired and no longer requested as missing."
     },
     {
-      "scope": "Chat submission",
-      "extension": "GameIntent variant { kind: 'send_chat'; channel: string; text: string }",
-      "reason": "WorldView.messages is read-only and no public method submits chat. The current input/control explicitly reports this gap rather than silently accepting typing."
+      "scope": "Canonical level-up chat/popup source association",
+      "extension": "Publish canonical reward.interface IDs and corresponding current source widget/style bindings for each required level-up chat/popup variant; use the existing kind/interface fields, not a second reward contract.",
+      "reason": "Only interface.quest_reward currently has a canonical source association in the published content catalogue. Other reward layouts explicitly display ui.source.reward.layout with the real payload and continuation, not a fabricated quest scroll. Native level-up variants remain required."
     },
     {
-      "scope": "Bank native management controls",
-      "extension": "BankView tabs/activeTab/placeholders/insertMode; GameIntent variants for bank tab creation/assignment, placeholder changes, bank reorder, deposit-equipment and empty-container operations",
-      "reason": "Existing bank_deposit and bank_withdraw cover ordinary item amounts and notes, not these distinct source controls. Their buttons remain present and report missing capability."
+      "scope": "Contextual ordinary bank deposits",
+      "extension": "Continue supplying WorldView.bank.banker alongside an open GameplayUiView.bank, or publish the replacement identity-bound ordinary-deposit request.",
+      "reason": "The v1 bank projection itself contains no banker identity. Existing bank_deposit still requires it. The UI explicitly reports contextual_banker_identity if a v1-only bank omits that required legacy context."
     },
     {
-      "scope": "Equipment/death effective information",
-      "extension": "PlayerView.equipmentStats and weight, or an approved complete UI derivation input; WorldView.keptOnDeath: { kept: ItemView[]; lost: ItemView[]; fee: number | null } | null; RecoveryView coffer balance, capacity, selected identity, fee units/quote, per-row and bank/discard permissions, and partial-quantity recovery intents",
-      "reason": "Native populated, selected, fee and scrolling recovery layouts are now calibrated. Their display helper needs explicit authoritative fields for missing coffer/fee units/permissions/quantities. No fixture zeros or guessed recovery prices are displayed as production values."
+      "scope": "Dynamic minimap and real model-only previews",
+      "extension": "Renderer/shell must provide the actual changing minimap surface plus base tile/plane/source mask state, and consume getUiPreviewRequest(handle) with setUiPreview(handle, nativeSizeModelSurface).",
+      "reason": "The UI now exports source widget/model bounds, native model parameters, approved local body selection and authoritative equipment/base metadata. Static minimap rasters and absent previews are not a finished renderer. These are component adapters, not new server defaults or shared-ABI edits."
     },
     {
-      "scope": "Actual audio settings and music policy",
-      "extension": "The audio/shell closure's published AudioSettings and applicable volume/mix/music controls",
-      "reason": "soundEnabled and setters do not expose all actual saved channel and music state. No audio policy is invented here. Body_type 0/1 and the approved penguin base remain the entire current appearance contract; human kit/colour controls retain explicit necessary unavailability, not a request for unapproved cosmetics."
-    },
-    {
-      "scope": "Dynamic minimap and native tutorial map visibility",
-      "extension": "A renderer/shell minimap surface adapter carrying current base tile, plane and source mask state, or WorldView.minimap with equivalent authoritative metadata",
-      "reason": "Static original scene rasters plus live entity markers do not establish changing door/instance geometry or exact source tutorial map visibility. No observed live minimap state is invented."
+      "scope": "Actual source audio settings and controls",
+      "extension": "Consume the audio/shell owner's published SourceAudioSettings and source slider/mix/music policy when available.",
+      "reason": "soundEnabled and write-only setters do not expose actual saved channel/music state. No new audio policy or fake production volume value is invented by the UI."
     }
   ],
   "implementation_gaps_without_contract_extension": [
-    "Full legitimate live-data/71-state source projection and control coverage after the canonical public fields are available; current source-backed local filter, selected/disabled, recovery-scroll and entry-effect projections are separately verified."
+    "Complete source-selected/highlight/hidden/disabled projection coverage for every required current-source signature and live 71-state route. The existing 71 states/29 families/11 signatures are preserved, not reduced or declared accepted.",
+    "Complete native level-up chat and popup layouts once their canonical association is supplied; current explicit failure/continuation coverage is not visual completion.",
+    "Matched full-panel source comparisons for remaining live bank-tab/placeholder/highlight variants and their canonical data, beyond the preserved original bank replay and current versioned interaction tests.",
+    "Real-server startup-to-quest-completion journey, reconnect/restart/concurrent-state behavior and final visual/audio/hardware acceptance remain separate gates."
   ],
-  "independent_ui_work_completed": [
-    "Native prayer/spell filter panels, conditional disabled option, local toggles and exact Classic filtered-grid/reflow/resizing arithmetic.",
-    "Populated native grave and Death's Office selection/fee/quantity/bank/discard/close control geometry, explicit field display helpers and 80-slot scroll projections.",
-    "Original procedural title animation and current native reconnect banner; actual startup/error fields remain inside seven approved compositions, with long-error pagination and no invented legal or Jagex account policy.",
-    "Body_type A/B and confirmation retained; original human-specific controls retain explicit necessary unavailability without new cosmetic variants.",
-    "Source-selected/disabled/filtered/scrolling and runtime component tests with explicit native fixture fields, not production balances."
-  ],
-  "resolved_source_replay_gaps": {
-    "native_shop": "Exact native trimmed-sprite fixed-point extents; no tolerance change.",
-    "family_guide": "Native decorative-item shadow and truncating text alignment; no pixel patching.",
-    "checks": {"passed": 87, "total": 87}
+  "source_comparison_scope": {
+    "preserved_native_and_owner_composition_checks": { "passed": 87, "total": 87, "tolerance": 0 },
+    "preserved_native_mode_and_effect_checks": { "passed": 106, "total": 106, "tolerance": 0 },
+    "additional_production_death_reward_checks": { "passed": 45, "total": 45, "tolerance": 0 },
+    "full_panels_excluded": 0,
+    "source_fixture_balances_are_production_values": false,
+    "component_double_is_live_gameplay": false
   },
   "final_m1_acceptance": false
 }

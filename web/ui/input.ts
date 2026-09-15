@@ -5,10 +5,13 @@ export interface Control extends Rect {
   id: string; label: string; actions: UiAction[]; disabled?: string; pressed?: boolean;
   tooltip?: string; draggableSlot?: number; focusable?: boolean;
   shiftAction?: UiAction;
+  bankEntryId?: string; bankTab?: number; bankCreate?: boolean;
+  productionRecipe?: string; shortcut?: string;
 }
 export interface InputField extends Rect {
   id: string; label: string; type: "text" | "password"; value: string; autocomplete: string;
   inputMode?: "text" | "numeric"; maximum?: number; disabled?: boolean;
+  readOnly?: boolean;
   change: (value: string) => void; submit: () => void;
 }
 export interface InputCallbacks {
@@ -18,6 +21,7 @@ export interface InputCallbacks {
   key: (event: KeyboardEvent) => void;
   suppressClick: () => boolean;
   hover: (control: Control | null) => void;
+  blocked: (reason: string) => void;
 }
 
 export class InputSurface {
@@ -84,6 +88,7 @@ export class InputSurface {
   }
 
   sync(controls: readonly Control[], inputs: readonly InputField[] = []): void {
+    const hadFocus = document.activeElement === this.canvas || this.root.contains(document.activeElement);
     this.controls.clear();
     const buttonIds = new Set<string>(), inputIds = new Set<string>();
     for (const control of controls) {
@@ -98,7 +103,9 @@ export class InputSurface {
           if (this.callbacks.suppressClick()) { event.preventDefault(); return; }
           const current = this.controls.get(control.id);
           const action = event.shiftKey && current?.shiftAction ? current.shiftAction : current?.actions[0];
-          if (current && !current.disabled && action && !action.disabled) action.run();
+          const reason = current?.disabled ?? action?.disabled;
+          if (reason) this.callbacks.blocked(reason);
+          else action?.run();
         });
         button.addEventListener("focus", () => this.callbacks.focus(control.id));
         button.addEventListener("blur", () => this.callbacks.focus(null));
@@ -108,7 +115,8 @@ export class InputSurface {
       }
       button.textContent = control.label;
       button.setAttribute("aria-label", control.label);
-      button.setAttribute("aria-description", control.disabled ?? control.tooltip ?? "");
+      button.setAttribute("aria-description", control.disabled ?? control.actions[0]?.disabled ?? control.tooltip ?? "");
+      button.setAttribute("aria-disabled", String(Boolean(control.disabled ?? control.actions[0]?.disabled)));
       button.disabled = Boolean(control.disabled);
       button.tabIndex = control.focusable === false ? -1 : 0;
       if (control.pressed !== undefined) button.setAttribute("aria-pressed", String(control.pressed));
@@ -131,6 +139,7 @@ export class InputSurface {
       element.autocomplete = field.autocomplete as AutoFill;
       element.inputMode = field.inputMode ?? "text"; element.maxLength = field.maximum ?? 255;
       element.disabled = field.disabled ?? false;
+      element.readOnly = field.readOnly ?? false;
       if (element.value !== field.value) element.value = field.value;
       element.oninput = () => field.change(element!.value);
       element.onselect = () => this.callbacks.focus(field.id);
@@ -141,6 +150,7 @@ export class InputSurface {
     }
     for (const [id, button] of this.buttons) if (!buttonIds.has(id)) { button.remove(); this.buttons.delete(id); }
     for (const [id, field] of this.fields) if (!inputIds.has(id)) { field.value = ""; field.remove(); this.fields.delete(id); }
+    if (hadFocus && document.activeElement === document.body) this.canvas.focus({ preventScroll: true });
   }
 
   announce(message: string): void { if (this.live.textContent !== message) this.live.textContent = message; }

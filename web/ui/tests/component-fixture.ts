@@ -1,5 +1,5 @@
-import type { AppServices, AppState, GameIntent, ItemView, UiHandle, WorldView } from "../../shared/contracts.ts";
-import { createUi, forwardWorldPointer, onUiCameraRequest } from "../index.ts";
+import type { AppServices, AppState, GameIntent, ItemView, UiHandle, WorldView, GameplayUiView, UiPermission } from "../../shared/contracts.ts";
+import { createUi, forwardWorldPointer, onUiCameraRequest, getUiPreviewRequest } from "../index.ts";
 import { TABS } from "../layout.ts";
 import { testAssets } from "./source-fixture.ts";
 
@@ -51,6 +51,33 @@ export function fixtureWorld(): WorldView {
   };
 }
 
+export function fixtureUi(world: WorldView): GameplayUiView {
+  const allowed: UiPermission = { allowed: true, code: null, reason: null };
+  const ability = (id: string, name: string, selected = false) => ({ id, name, selected, visible: true, permission: { ...allowed } });
+  return {
+    version: 1, activeInterface: null, production: null, reward: null, confirmation: null,
+    interfaces: [...TABS.map(tab => ({ interface: tab.interface, visibility: "enabled" as const, highlighted: false, permission: { ...allowed } })),
+      ...["interface.equipment_stats", "interface.items_kept_on_death", "interface.bank", "interface.grave", "interface.death_retrieval",
+        "interface.cooking", "interface.smithing", "interface.quest_reward", "interface.appearance", "interface.experience"]
+        .map(id => ({ interface: id, visibility: "enabled" as const, highlighted: false, permission: { ...allowed } }))],
+    combatStyle: "style.sword.bronze.stab.accurate",
+    combatStyles: [ability("style.sword.bronze.stab.accurate", "Stab", true), ability("style.sword.bronze.stab.aggressive", "Lunge"),
+      ability("style.sword.bronze.slash.aggressive", "Slash"), ability("style.sword.bronze.stab.defensive", "Block")],
+    prayers: [ability("prayer.thick_skin", "Thick Skin")],
+    spells: [ability("spell.wind_strike", "Wind Strike"), ability("spell.lumbridge_home_teleport", "Lumbridge Home Teleport")],
+    equipment: { bonuses: { attack: { stab: 4, slash: 3, crush: -2, magic: 0, ranged: 0 }, defence: { stab: 0, slash: 2, crush: 1, magic: 0, ranged: 0 },
+      meleeStrength: 5, rangedStrength: 0, magicDamagePercent: 0, prayer: 0 }, weightGrams: "1814", slots: ["slot.weapon"] },
+    inventoryActions: world.player.inventory.filter(row => row.item).map(row => ({
+      slot: row.index, item: row.item!.id, instance: row.item!.instanceId,
+      actions: row.item!.actions.map((label, index) => ({ id: `action.component.${row.index}.${index}`, label, permission: { ...allowed } })),
+    })),
+    bank: null, keptOnDeath: null, recovery: null,
+    appearance: { choices: { body_type: [{ value: 0, label: "A", permission: { ...allowed } }, { value: 1, label: "B", permission: { ...allowed } }] },
+      base: { asset: "asset.source.osrs.cache2695.npc.2063", sourceNpc: 2063, adaptation: "component.approved-penguin-base" }, confirmed: true },
+    publicChat: { permission: { ...allowed }, maximumBytes: 80, channel: "public", messages: [] },
+  };
+}
+
 export class ComponentServices implements AppServices {
   current: Readonly<AppState>;
   readonly intents: GameIntent[] = [];
@@ -77,6 +104,11 @@ export class ComponentServices implements AppServices {
     const world = { ...structuredClone(this.current.world!), ...patch };
     world.revision = String(BigInt(world.revision) + 1n);
     this.publish({ ...this.current, world });
+  }
+  enableUi(): void {
+    const world = structuredClone(this.current.world!);
+    world.ui = fixtureUi(world);
+    this.patchWorld(world);
   }
   private async accept(method: string, ...args: unknown[]): Promise<void> {
     this.calls.push({ method, args });
@@ -106,7 +138,7 @@ export async function mount(phase: AppState["phase"] = "world"): Promise<typeof 
   const services = new ComponentServices(phase), ui = await createUi(canvas, services, testAssets);
   onUiCameraRequest(ui, yaw => services.cameraRequests.push(yaw));
   current = { services, ui };
-  Object.assign(window, { component: current, forwardWorldPointer, fixtureWorld });
+  Object.assign(window, { component: current, forwardWorldPointer, fixtureWorld, getUiPreviewRequest });
   await new Promise(requestAnimationFrame); await new Promise(requestAnimationFrame);
   return current;
 }

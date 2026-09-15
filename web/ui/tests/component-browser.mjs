@@ -230,6 +230,8 @@ try {
     assert.equal((await intents()).length, 0);
     assert.match(await page.getByRole("status").innerText(), /Choose the current item again/);
     await click("notice-close");
+    assert.equal(await page.getByLabel("Enter amount:", { exact: true }).inputValue(), "2");
+    await page.getByLabel("Enter amount:", { exact: true }).press("Escape"); await frame();
     await stock(false); await frame();
     await page.locator('[data-ui-control="shop-12"]').click({ button: "right" }); await frame();
     await stock(true); await frame();
