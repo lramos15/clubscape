@@ -14,6 +14,8 @@
 
 pub mod chunk;
 pub mod error;
+#[cfg(feature = "gpu")]
+pub mod gpu;
 pub mod model;
 pub mod model_draw;
 pub mod palette;

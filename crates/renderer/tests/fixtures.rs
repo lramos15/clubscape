@@ -320,3 +320,27 @@ fn scene_lumbridge_river_bridge_matches_source_pixels() {
 fn scene_lumbridge_windmill_route_matches_source_pixels() {
     compare_scene(&SCENE_FIXTURES[4]);
 }
+
+#[test]
+fn scene_models_report_alpha_254_flat_faces() {
+    // The original flat fill treats alpha 254 as a one-pixel shift copy; the GPU path needs to
+    // know whether any exported scene face uses it.
+    let mut flat_254 = 0usize;
+    let mut total_alpha = 0usize;
+    for fixture in SCENE_FIXTURES {
+        let (_, models) = load_scene(fixture.scene);
+        for model in models.iter().flatten() {
+            if let Some(alphas) = &model.alphas {
+                for f in 0..model.face_count {
+                    if alphas[f] != 0 {
+                        total_alpha += 1;
+                    }
+                    if alphas[f] == -2 && model.color_c[f] == -1 && model.textures.as_ref().map(|t| t[f] == -1).unwrap_or(true) {
+                        flat_254 += 1;
+                    }
+                }
+            }
+        }
+    }
+    eprintln!("alpha faces: {total_alpha}, flat alpha-254 faces: {flat_254}");
+}
