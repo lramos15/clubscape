@@ -1,5 +1,7 @@
 import { SOURCE_PACK_SHA256 } from "../shared/contracts.ts";
 import type { ClientAssets } from "../shared/contracts.ts";
+import type { FlameAssets } from "./flames.ts";
+import type { AbilityMetadata } from "./filters.ts";
 
 export interface Rect { x: number; y: number; width: number; height: number }
 export interface SpriteFrame extends Rect {
@@ -34,6 +36,8 @@ export interface TutorialBinding {
 }
 export interface UiCatalogue {
   version: number; sourcePackSha256: string; sourceCache: number; nativeCanvas: number[];
+  flames: FlameAssets;
+  abilities: Record<string, AbilityMetadata>;
   sprites: Record<string, SpriteAsset>; fonts: Record<string, FontAsset>; items: Record<string, ItemAsset>;
   titleBackground: string; templates: Record<string, NativeWidget[]>;
   namedSprites: Record<string, number>;
@@ -74,6 +78,25 @@ export function intersect(a: Rect, b: Rect): Rect {
     height: Math.max(0, Math.min(a.y + a.height, b.y + b.height) - y) };
 }
 
+/** Lossless source-widget interning avoids shipping the same HUD in every reference variant. */
+export function decodeUiCatalogue(value: unknown): UiCatalogue {
+  const input = value as UiCatalogue & { templateEncoding?: string; widgetPool?: NativeWidget[] };
+  if (input.templateEncoding === undefined) return input;
+  if (input.templateEncoding !== "native-widget-pool-v1" || !Array.isArray(input.widgetPool))
+    throw new Error("Unsupported native UI template encoding.");
+  const pool = input.widgetPool;
+  const templates = Object.fromEntries(Object.entries(input.templates).map(([name, encoded]) => {
+    if (!Array.isArray(encoded)) throw new Error(`Invalid source UI template ${name}.`);
+    const widgets = (encoded as unknown as number[]).map(index => {
+      if (!Number.isInteger(index) || index < 0 || index >= pool.length) throw new Error(`Invalid source widget reference in ${name}.`);
+      return pool[index]!;
+    });
+    return [name, widgets];
+  }));
+  const { templateEncoding: _encoding, widgetPool: _pool, ...catalogue } = input;
+  return { ...catalogue, templates };
+}
+
 export class UiAssets {
   readonly images = new Map<string, HTMLImageElement>();
   private readonly loading = new Map<string, Promise<HTMLImageElement>>();
@@ -89,7 +112,7 @@ export class UiAssets {
   ) { this.catalogue = catalogue; this.client = client; this.onError = onError; }
 
   static async load(client: ClientAssets, onError: (error: Error, id: string) => void): Promise<UiAssets> {
-    const value = await client.json("ui/manifest.json") as UiCatalogue;
+    const value = decodeUiCatalogue(await client.json("ui/manifest.json"));
     if (value.version !== 1 || value.sourcePackSha256 !== SOURCE_PACK_SHA256 || value.sourceCache !== 2695) {
       throw new Error("UI assets do not match the owner-approved source pack.");
     }

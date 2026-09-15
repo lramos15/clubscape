@@ -2,12 +2,12 @@
   "status": "blocked",
   "type_check": "passed",
   "unit_tests": {
-    "passed": 10,
-    "total": 10
+    "passed": 14,
+    "total": 14
   },
   "browser_component_cases": {
-    "passed": 17,
-    "total": 17
+    "passed": 20,
+    "total": 20
   },
   "source_cases": {
     "native_hud": 16,
@@ -73,5 +73,23 @@
     "separate_ui_quote_rpc": false,
     "retarget_on_retry": false,
     "backend_regressions_rerun_in_ui_task": false
+  },
+  "additional_source_modes": {
+    "passed": 106,
+    "total": 106,
+    "tolerance": 0,
+    "scope": "native UI/effect and explicit-field projection components only"
+  },
+  "independent_controls_finished": [
+    "prayer/spell filters and exact Classic reflow/icon sizing",
+    "populated/selected/fee/retrieval-option and 80-slot scrolling projections",
+    "original procedural title animation and current source reconnect banner",
+    "approved startup/error framing, glyph-safe paging and body_type-only appearance controls"
+  ],
+  "asset_factoring": {
+    "encoding": "native-widget-pool-v1",
+    "widget_occurrences": 63789,
+    "unique_widgets": 6263,
+    "manifest_bytes": 10270488
   }
 }

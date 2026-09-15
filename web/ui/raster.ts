@@ -312,7 +312,7 @@ export class SourceRaster {
         const after = this.context.getImageData(widget.x, widget.y, widget.width, widget.height), alpha = 256 - widget.opacity;
         for (let i = 0; i < after.data.length; i += 4) {
           if (before.data[i + 3] === 255) for (let channel = 0; channel < 3; channel++) {
-            after.data[i + channel] = (after.data[i + channel]! * alpha + before.data[i + channel]! * widget.opacity) >> 8;
+            after.data[i + channel] = (after.data[i + channel]! * alpha >> 8) + (before.data[i + channel]! * widget.opacity >> 8);
           }
         }
         this.context.putImageData(after, widget.x, widget.y);

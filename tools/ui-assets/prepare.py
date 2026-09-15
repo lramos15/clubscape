@@ -144,6 +144,7 @@ def native(items, source, tooling):
         load(218, true);
         selectTab(6);
         frame("native-magic-missing-runes", 218);
+        UiModeCapture.run(capture, this);
     }
 """
     instrumented = instrumented.rstrip()[:-1] + extra + "}\n"
@@ -153,11 +154,13 @@ def native(items, source, tooling):
                TEMP=str(WORK / "java-work"))
     java_sources = [p for p in original.glob("*.java") if p.name != "HudCapture.java"]
     command = ["javac", "--release", "17", "-cp", cp, "-d", str(WORK / "classes"),
-               *map(str, java_sources), str(WORK / "HudCapture.java"), str(TOOL / "UiAssetExport.java")]
+               *map(str, java_sources), str(WORK / "HudCapture.java"), *map(str, sorted(TOOL.glob("*.java")))]
     result = subprocess.run(command, cwd=ROOT, env=env, capture_output=True, text=True)
     (WORK / "compile.log").write_text(result.stdout + result.stderr)
     if result.returncode:
         raise RuntimeError((result.stdout + result.stderr)[-6000:])
+    if "Client error:" in result.stdout + result.stderr:
+        raise RuntimeError("Native source UI script reported an error; source mode captures are rejected. See .cache/native.log.")
     command = ["java", "-ea", "-Xmx3g", "-Djava.awt.headless=true",
                "--add-opens=java.base/java.lang=ALL-UNNAMED", "-Dclubscape.capture.seed=0",
                f"-Duser.home={WORK / 'java-home'}", f"-Djava.io.tmpdir={WORK / 'java-work'}",
@@ -168,6 +171,8 @@ def native(items, source, tooling):
     (WORK / "native.log").write_text(result.stdout + result.stderr)
     if result.returncode:
         raise RuntimeError((result.stdout + result.stderr)[-6000:])
+    if "Client error:" in result.stdout + result.stderr:
+        raise RuntimeError("Native source UI script reported an error; mode captures rejected. See .cache/native.log.")
     for record in read(ROOT / "research/current-source/cache-files.json"):
         verified(source / record["name"], record)
     return [{"path": str(p.relative_to(ROOT.parent)), "sha256": sha(p)} for p in libraries]
@@ -206,14 +211,20 @@ def main():
             raise ValueError(f"Readback instrumentation changed approved source pixels: {capture['path']}")
         matches.append(capture["path"])
     OUT.mkdir(parents=True, exist_ok=True)
+    generated_sprites = {str(identifier) for identifier in read(native_dir / "generated-sprites.json")}
     for name in ("sprites", "fonts", "items", "portraits", "minimaps"):
         destination = OUT / name
         destination.mkdir(exist_ok=True)
         for path in (native_dir / name).glob("*"):
-            if path.suffix == ".png":
+            if path.suffix == ".png" and (name != "sprites" or path.stem in generated_sprites):
                 shutil.copyfile(path, destination / path.name)
+        if name == "sprites":
+            for path in destination.glob("*.png"):
+                if path.stem not in generated_sprites:
+                    path.unlink()
     shutil.copyfile(native_dir / "title-background.png", OUT / "title-background.png")
-    sprites = {p.stem: read(p) | {"asset": f"ui/sprites/{p.stem}.png"} for p in (native_dir / "sprites").glob("*.json")}
+    sprites = {p.stem: read(p) | {"asset": f"ui/sprites/{p.stem}.png"} for p in (native_dir / "sprites").glob("*.json")
+               if p.stem in generated_sprites}
     fonts = {p.stem: read(p) for p in (native_dir / "fonts").glob("*.json")}
     definitions = {}
     for prefix in (SOURCE, SOURCE / "content-v2"):
@@ -241,15 +252,28 @@ def main():
              "zeroShadowAsset": f"ui/items/{item['id']}-{q}-1-shadow0.png"} for q in quantities]
     factoring = pack["evidence_factorization"]
     content = read(ROOT / "content/m1/game-content.json.gz")
+    pool, indexes, references = [], {}, {}
+    for name, widgets in scenes.items():
+        references[name] = []
+        for widget in widgets:
+            identity = json.dumps(widget, sort_keys=True, separators=(",", ":"))
+            if identity not in indexes:
+                indexes[identity] = len(pool)
+                pool.append(widget)
+            references[name].append(indexes[identity])
     manifest = {
         "version": 1, "sourcePackSha256": PACK_SHA, "sourceCache": 2695, "nativeCanvas": [1920, 1080],
         "sprites": sprites, "fonts": fonts, "items": item_catalog,
-        "titleBackground": "ui/title-background.png", "templates": scenes,
+        "titleBackground": "ui/title-background.png", "templates": references,
+        "templateEncoding": "native-widget-pool-v1", "widgetPool": pool,
         "namedSprites": read(native_dir / "named-sprites.json"),
         "minimaps": read(native_dir / "minimaps.json"),
         "combatCategories": read(native_dir / "combat-categories.json"),
         "questTable": read(native_dir / "hud-input-contract.json")["quest_counter_fixture"],
         "definitions": definitions,
+        "nativeModes": read(native_dir / "mode-inputs.json"),
+        "flames": read(native_dir / "flames.json"),
+        "abilities": read(native_dir / "abilities.json"),
         "proposals": {p["id"].removeprefix("proposal."): {
             "content": p["content"], "frame": p["titlebox_rectangle"], "controls": p["controls"]
         } for p in pack["proposal_inputs"]},

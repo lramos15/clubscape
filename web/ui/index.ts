@@ -7,10 +7,12 @@ import type { NativeWidget, Rect } from "./assets.ts";
 import { InputSurface } from "./input.ts";
 import type { Control, InputField, UiAction } from "./input.ts";
 import { SourceRaster, escapeText, plainText, sourceLines } from "./raster.ts";
-import { paintEntry } from "./entry.ts";
+import { paintEntry, paintReconnect } from "./entry.ts";
 import { frameRegions, TABS } from "./layout.ts";
 import { MinimapPainter } from "./minimap.ts";
 import { paintCharacter, paintGame } from "./world-view.ts";
+import { TitleFlames } from "./flames.ts";
+import type { AbilityKind, AbilityVisualTruth } from "./filters.ts";
 
 export interface UiNotice { message: string; errorId: string | null; recoverable: boolean; scope: "error" | "unavailable" | "information" }
 export interface AmountPrompt { label: string; value: string; confirm: (quantity: number) => void; pending?: boolean }
@@ -21,6 +23,8 @@ export interface LocalUiState {
   shopAmount: number; shopValue: boolean; scroll: number; journal: string | null;
   modal: string | null; dialoguePage: number; amount: AmountPrompt | null;
   appearance: Record<string, number>; quickPrayer: boolean; magicFilter: boolean;
+  filterPanel: AbilityKind | null; prayerFilters: number; magicFilters: number;
+  recoverySelected: string | null;
 }
 export interface WorldPointer {
   kind: "move" | "primary" | "context";
@@ -46,13 +50,14 @@ export interface GameViewContext {
   confirmAppearance: () => void;
   minimapClick: (widget: NativeWidget) => void;
   faceNorth: () => void;
+  abilityVisuals: Readonly<Record<string, AbilityVisualTruth>>;
 }
 
 function emptyLocal(): LocalUiState {
   return { tab: 3, selectedItem: null, selectedSpell: null, bankSearch: "", bankSearchOpen: false,
     bankAmount: 1, bankNotes: false, shopAmount: 1, shopValue: true, scroll: 0,
     journal: null, modal: null, dialoguePage: 0, amount: null, appearance: { body_type: 0 },
-    quickPrayer: true, magicFilter: false };
+    quickPrayer: true, magicFilter: false, filterPanel: null, prayerFilters: 0, magicFilters: 0, recoverySelected: null };
 }
 
 function errorDetails(error: unknown): { message: string; errorId: string | null; recoverable: boolean } {
@@ -128,6 +133,12 @@ export function setUiPreview(handle: UiHandle, image: HTMLCanvasElement | Offscr
   if (controller) { controller.preview = image; controller.renderSoon(); }
 }
 
+/** Optional source-display facts from an authoritative adapter, scoped to its exact snapshot. */
+export function setUiAbilityVisuals(handle: UiHandle, revision: string, values: Readonly<Record<string, AbilityVisualTruth>>): void {
+  const controller = controllers.get(handle);
+  if (controller) { controller.abilityVisuals = { revision, values: structuredClone(values) }; controller.renderSoon(); }
+}
+
 class UiController {
   state: Readonly<AppState>;
   local = emptyLocal();
@@ -139,6 +150,7 @@ class UiController {
   cameraRequest: ((yaw: number) => void) | null = null;
   preview: HTMLCanvasElement | OffscreenCanvas | ImageBitmap | null = null;
   previewBounds: Rect | null = null;
+  abilityVisuals: { revision: string; values: Readonly<Record<string, AbilityVisualTruth>> } | null = null;
   private readonly surface: InputSurface;
   private readonly unsubscribe: () => void;
   private readonly abort = new AbortController();
@@ -161,12 +173,18 @@ class UiController {
   private confirmation = "";
   private hideName = false;
   private authGeneration = 0;
+  private readonly titleFlames: TitleFlames;
+  private readonly titleStartedAt = performance.now();
+  private entryErrorKind: "capability" | "runtime-error" = "runtime-error";
+  private entryErrorPage = 0;
 
   constructor(canvas: HTMLCanvasElement, services: AppServices, assets: UiAssets) {
     this.canvas = canvas; this.services = services; this.assets = assets;
     this.state = services.state();
     if (this.state.world) this.local.appearance = { ...this.state.world.player.appearance };
     this.raster = new SourceRaster(canvas, assets);
+    const visualSeed = crypto.getRandomValues(new Uint32Array(1))[0]!;
+    this.titleFlames = new TitleFlames(assets.catalogue.flames, visualSeed);
     this.minimap = new MinimapPainter(this.raster);
     this.surface = new InputSurface(canvas, {
       pointer: (event, control, phase) => this.pointer(event, control, phase),
@@ -236,6 +254,8 @@ class UiController {
       this.local.tab = allowed < 0 ? 3 : allowed;
     }
     if (state.error && state.error !== old.error) {
+      this.entryErrorPage = 0;
+      this.entryErrorKind = old.phase === "capability_check" || state.phase === "capability_check" ? "capability" : "runtime-error";
       this.dismissedError = null;
       this.surface.announce(`${state.error.message}${state.error.errorId ? ` Error ID: ${state.error.errorId}` : ""}`);
     }
@@ -259,18 +279,32 @@ class UiController {
     cancelAnimationFrame(this.scheduled);
     this.unsubscribe(); this.abort.abort(); this.surface.dispose(); this.assets.dispose();
     this.local = emptyLocal(); this.pending.clear(); this.raster.dispose();
+    this.titleFlames.dispose();
     this.controls = []; this.hover = null; this.menu = null; this.drag = null; this.notice = null;
-    this.preview = null; this.previewBounds = null; this.cameraRequest = null;
+    this.preview = null; this.previewBounds = null; this.cameraRequest = null; this.abilityVisuals = null;
   }
 
   renderSoon(): void {
     if (this.disposed || this.scheduled) return;
-    this.scheduled = requestAnimationFrame(() => { this.scheduled = 0; if (!this.disposed) this.render(); });
+    this.scheduled = requestAnimationFrame(() => {
+      this.scheduled = 0;
+      if (!this.disposed) {
+        this.render();
+        if (this.entryAnimationVisible()) this.renderSoon();
+      }
+    });
+  }
+
+  private entryAnimationVisible(): boolean {
+    return this.state.phase !== "world" && this.state.phase !== "character" &&
+      !(this.state.phase === "reconnecting" && this.state.world) &&
+      !(this.state.phase === "capability_check" && this.state.loading);
   }
 
   show(message: string, scope: UiNotice["scope"] = "information", errorId: string | null = null): void {
     if (this.notice?.message === message && this.notice.errorId === errorId && this.notice.scope === scope) return;
     this.notice = { message, errorId, recoverable: true, scope };
+    this.entryErrorPage = 0;
     this.local.dialoguePage = 0;
     this.menu = null;
     this.surface.announce(message + (errorId ? ` Error ID: ${errorId}` : ""));
@@ -282,6 +316,10 @@ class UiController {
   }
 
   private required(name: string, field: string): void {
+    if (field === "human_appearance_controls") {
+      this.show(`${name} does not apply to the approved penguin base. Body type A/B and confirmation remain available; no additional cosmetic variant has been approved.`, "unavailable");
+      return;
+    }
     this.show(`${name} cannot be completed: the server interface does not supply ${field}. This is a required integration, not an out-of-scope feature.`,
       "error", `ui.contract.${field}`);
   }
@@ -355,6 +393,7 @@ class UiController {
     else if (this.state.error && this.dismissedError !== this.state.error) this.dismissedError = this.state.error;
     else if (this.local.amount) this.local.amount = null;
     else if (this.local.bankSearchOpen) this.local.bankSearchOpen = false;
+    else if (this.local.filterPanel) this.local.filterPanel = null;
     else if (this.local.selectedItem || this.local.selectedSpell) { this.local.selectedItem = null; this.local.selectedSpell = null; }
     else if (this.local.modal || this.local.journal || this.state.world?.bank || this.state.world?.shop || this.state.world?.recovery) {
       this.local.modal = null; this.local.journal = null; this.send({ kind: "close_interface" });
@@ -382,7 +421,11 @@ class UiController {
       return;
     }
     if (this.notice || (this.state.error && this.state.error !== this.dismissedError)) {
-      if (event.key === " " || event.key === "Enter") { event.preventDefault(); this.cancel(); }
+      if (event.key === " " || event.key === "Enter") {
+        event.preventDefault();
+        const next = this.controls.find(control => control.id === "entry-error-next");
+        if (next) next.actions[0]?.run(); else this.cancel();
+      }
       return;
     }
     const choice = this.state.world?.dialogue?.choices[Number(event.key) - 1];
@@ -404,7 +447,7 @@ class UiController {
   private openTab(index: number): void {
     const world = this.state.world, tab = TABS[index];
     if (!world || !tab || !isInterfaceUnlocked(world, tab.interface)) return;
-    this.local.tab = index; this.local.scroll = 0; this.menu = null;
+    this.local.tab = index; this.local.scroll = 0; this.menu = null; this.local.filterPanel = null;
     if (this.assets.catalogue.presentation?.interfaces[tab.interface]) this.send({ kind: "open_interface", interface: tab.interface });
     else this.unavailable(tab.name);
     this.renderSoon();
@@ -706,8 +749,12 @@ class UiController {
         else this.show("The renderer's character preview does not match the native preview dimensions.", "error", "ui.preview.size");
       }
     } else if (!world || (this.state.phase !== "world" && this.state.phase !== "reconnecting")) {
+      const cycle = Math.floor((performance.now() - this.titleStartedAt) / 20);
+      this.titleFlames.advance(cycle);
       paintEntry(this.raster, { state: this.state, name: this.name, password: this.password, confirmation: this.confirmation,
         focus: this.focus, hideName: this.hideName, busy: this.pending.has("auth"), error,
+        errorKind: this.entryErrorKind, cursorVisible: cycle % 40 < 20,
+        errorPage: this.entryErrorPage,
         dismissedError: error !== this.notice && this.dismissedError === this.state.error },
       { screen: screen => this.screen(screen), submit: () => { void this.submitAuth(); },
         change: (field, value) => { this[field] = value; this.renderSoon(); },
@@ -719,11 +766,13 @@ class UiController {
           });
         },
         dismiss: () => this.cancel(), audio: () => this.audio(), hideName: () => { this.hideName = !this.hideName; this.renderSoon(); },
+        nextErrorPage: () => { this.entryErrorPage++; this.renderSoon(); },
         unavailable: name => this.unavailable(name),
-      }, controls, inputs);
+      }, controls, inputs, this.titleFlames);
     } else {
       paintGame(this.raster, {
         state: this.state, world, local: this.local, controls, inputs, minimap: this.minimap,
+        abilityVisuals: this.abilityVisuals?.revision === world.revision ? this.abilityVisuals.values : {},
         send: intent => this.send(intent), openTab: tab => this.openTab(tab),
         change: change => { change(); this.renderSoon(); },
         notice: (message, scope = "information", id) => this.show(message, scope, id),
@@ -791,10 +840,7 @@ class UiController {
     }
     if (world && this.state.phase === "reconnecting") {
       controls.length = 0; inputs.length = 0;
-      const rect = { x: 0, y: 0, width: 259, height: 45 };
-      this.raster.fill(rect, 0); this.raster.border({ x: 0, y: 0, width: 258, height: 44 }, 0xffffff);
-      this.raster.text("Connection lost", 6, 16, 496);
-      this.raster.text("Please wait - attempting to reestablish", 6, 32, 495);
+      paintReconnect(this.raster);
     }
     if (this.menu) {
       const menu = this.menu, rect = { x: menu.x, y: menu.y, width: menu.width, height: menu.actions.length * 15 + 22 };

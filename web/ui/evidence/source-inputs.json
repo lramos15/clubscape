@@ -101,8 +101,8 @@
   ],
   "tool_sources": {
     "tools/source-capture/HudCapture.java": "1acce05b4e2437677cbf447f292740a647e12fde14d75d6337bdf019b08c55a7",
-    "tools/ui-assets/UiAssetExport.java": "aa42faeae720aae59449ec537bc9a3c1083e89195ecbb06e39519fb1a2204157",
-    "tools/ui-assets/prepare.py": "024e1f4ca3b02bfaca94ac5e76b45cb161474fdb53b31cc0b6ca22b057b254e2"
+    "tools/ui-assets/UiAssetExport.java": "25e441231cc8e41a8572655a87ab8f874d368946aae0625f70b6f91c22041659",
+    "tools/ui-assets/prepare.py": "3fd984fb8dd223c8f95b147f2e96e21c952f45ca5ec20cbdc57163b2c38a337d"
   },
   "final_acceptance": false
 }

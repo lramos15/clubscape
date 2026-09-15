@@ -221,6 +221,9 @@ public final class UiAssetExport
 
     static void extras(OriginalCapture capture) throws Exception
     {
+        UiAbilityCatalog.write(capture);
+        UiFlameCapture.run(capture);
+        UiScriptDump.dump(capture.cache, directory(capture, "scripts"), 458, 2262, 1985, 3490);
         for (int id : new int[]{494, 495, 496, 497}) font(capture, id);
         for (int id : new int[]{498, 499, 500, 501, 697, 699, 1211, 1213, 811, 1649, 2133})
             sprite(capture, id);
@@ -302,5 +305,6 @@ public final class UiAssetExport
             }
         }
         Files.writeString(capture.output.resolve("minimaps.json"), OriginalCapture.JSON.toJson(mapEntries));
+        Files.writeString(capture.output.resolve("generated-sprites.json"), OriginalCapture.JSON.toJson(sprites));
     }
 }

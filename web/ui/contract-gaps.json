@@ -35,13 +35,13 @@
     },
     {
       "scope": "Equipment/death effective information",
-      "extension": "PlayerView.equipmentStats and weight, or an approved complete UI derivation input; WorldView.keptOnDeath: { kept: ItemView[]; lost: ItemView[]; fee: number | null } | null; RecoveryView.cofferBalance and discard/recovery option intents",
-      "reason": "Current equipment identities and RecoveryView rows are insufficient for all effective bonus, kept-on-death, coffer and discard presentations. No fixture zeros or guessed recovery prices are displayed as authoritative values."
+      "extension": "PlayerView.equipmentStats and weight, or an approved complete UI derivation input; WorldView.keptOnDeath: { kept: ItemView[]; lost: ItemView[]; fee: number | null } | null; RecoveryView coffer balance, capacity, selected identity, fee units/quote, per-row and bank/discard permissions, and partial-quantity recovery intents",
+      "reason": "Native populated, selected, fee and scrolling recovery layouts are now calibrated. Their display helper needs explicit authoritative fields for missing coffer/fee units/permissions/quantities. No fixture zeros or guessed recovery prices are displayed as production values."
     },
     {
-      "scope": "Appearance options and audio values",
-      "extension": "AppState.appearanceOptions: Record<string, Array<{ value: number; label: string; allowed: boolean }>> | null; AppState.audioSettings: { music: number; effects: number; area: number; muted: boolean; currentTrack: string | null }",
-      "reason": "The validated content currently supplies body_type 0/1 only. soundEnabled and setters do not expose actual saved channel values, track/playlist state, or all source appearance choices. Renderer preview uses the separate documented presentation hook."
+      "scope": "Actual audio settings and music policy",
+      "extension": "The audio/shell closure's published AudioSettings and applicable volume/mix/music controls",
+      "reason": "soundEnabled and setters do not expose all actual saved channel and music state. No audio policy is invented here. Body_type 0/1 and the approved penguin base remain the entire current appearance contract; human kit/colour controls retain explicit necessary unavailability, not a request for unapproved cosmetics."
     },
     {
       "scope": "Dynamic minimap and native tutorial map visibility",
@@ -50,10 +50,14 @@
     }
   ],
   "implementation_gaps_without_contract_extension": [
-    "Native prayer/spell filter controls and their distinct source layouts.",
-    "Complete native recovery grid/fee/discard layout calibration.",
-    "All required live-data source comparisons, selected/disabled/scroll variants and full tutorial UI projections.",
-    "Native authentication-failure/terms and animated-title variants beyond the implemented approved source-framed screens."
+    "Full legitimate live-data/71-state source projection and control coverage after the canonical public fields are available; current source-backed local filter, selected/disabled, recovery-scroll and entry-effect projections are separately verified."
+  ],
+  "independent_ui_work_completed": [
+    "Native prayer/spell filter panels, conditional disabled option, local toggles and exact Classic filtered-grid/reflow/resizing arithmetic.",
+    "Populated native grave and Death's Office selection/fee/quantity/bank/discard/close control geometry, explicit field display helpers and 80-slot scroll projections.",
+    "Original procedural title animation and current native reconnect banner; actual startup/error fields remain inside seven approved compositions, with long-error pagination and no invented legal or Jagex account policy.",
+    "Body_type A/B and confirmation retained; original human-specific controls retain explicit necessary unavailability without new cosmetic variants.",
+    "Source-selected/disabled/filtered/scrolling and runtime component tests with explicit native fixture fields, not production balances."
   ],
   "resolved_source_replay_gaps": {
     "native_shop": "Exact native trimmed-sprite fixed-point extents; no tolerance change.",

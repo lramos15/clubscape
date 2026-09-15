@@ -1,19 +1,38 @@
 import type { AppState } from "../shared/contracts.ts";
 import type { Control, InputField } from "./input.ts";
-import type { Rect } from "./assets.ts";
-import { SourceRaster, escapeText } from "./raster.ts";
+import type { FontAsset, Rect } from "./assets.ts";
+import { SourceRaster, escapeText, sourceLines, textAdvance } from "./raster.ts";
+import type { TitleFlames } from "./flames.ts";
 
 export interface EntryModel {
   state: Readonly<AppState>; name: string; password: string; confirmation: string;
   focus: string | null; hideName: boolean; busy: boolean;
   error: { message: string; errorId: string | null; recoverable: boolean } | null;
   dismissedError: boolean;
+  errorKind?: "capability" | "runtime-error";
+  cursorVisible?: boolean;
+  errorPage?: number;
 }
 export interface EntryActions {
   screen: (screen: "title" | "login" | "register") => void;
   submit: () => void; retry: () => void; dismiss: () => void;
   change: (field: "name" | "password" | "confirmation", value: string) => void;
   unavailable: (name: string) => void; audio: () => void; hideName: () => void;
+  nextErrorPage?: () => void;
+}
+
+export function entryErrorLines(text: string, width: number, font: FontAsset): string[] {
+  const result: string[] = [];
+  for (const line of sourceLines(escapeText(text), width, font)) {
+    let part = "", advance = 0;
+    for (const glyph of line.match(/<lt>|<gt>|./gu) ?? []) {
+      const next = textAdvance(glyph, font);
+      if (part && advance + next > width) { result.push(part); part = ""; advance = 0; }
+      part += glyph; advance += next;
+    }
+    result.push(part);
+  }
+  return result;
 }
 
 export function paintTitleBackground(raster: SourceRaster, width: number): void {
@@ -27,11 +46,22 @@ export function paintTitleBackground(raster: SourceRaster, width: number): void 
   raster.sprite(498, pad + 382 - Math.floor(logo.width / 2), 18);
 }
 
+/** Original client draw-loading-message path: lu.bz, native p11 font and four-pixel frame. */
+export function paintReconnect(raster: SourceRaster): void {
+  const text = "Connection lost<br>Please wait - attempting to reestablish";
+  const lines = sourceLines(text, 250, raster.assets.catalogue.fonts[494]!);
+  const width = Math.max(...lines.map(line => raster.measure(line, 494))), height = lines.length * 13;
+  raster.fill({ x: 6, y: 6, width: width + 8, height: height + 8 }, 0);
+  raster.border({ x: 6, y: 6, width: width + 8, height: height + 8 }, 0xffffff);
+  raster.textBox(text, { x: 10, y: 10, width, height }, { font: 494, color: 0xffffff, shadow: null, xAlign: 1, yAlign: 1 });
+}
+
 export function paintEntry(raster: SourceRaster, model: EntryModel, actions: EntryActions,
-  controls: Control[], inputs: InputField[]): void {
+  controls: Control[], inputs: InputField[], flames?: TitleFlames): void {
   const width = raster.canvas.width, pad = Math.floor((width - 765) / 2), center = pad + 382;
   const box = { x: pad + 202, y: 171, width: 360, height: 200 };
   paintTitleBackground(raster, width);
+  if (!(model.state.phase === "capability_check" && model.state.loading)) flames?.paint(raster, pad);
   const addButton = (id: string, label: string, cx: number, top: number, run: () => void, disabled?: string) => {
     const rect = { x: cx - 73, y: top, width: 146, height: 40 };
     raster.sprite(500, rect.x, rect.y);
@@ -40,10 +70,11 @@ export function paintEntry(raster: SourceRaster, model: EntryModel, actions: Ent
   };
   const sourceInput = (id: "name" | "password" | "confirmation", label: string, value: string,
     rect: Rect, baseline: number, hidden: boolean, max: number) => {
-    let shown = hidden ? "*".repeat(value.length) : escapeText(value);
-    while (shown && raster.measure(shown, 495) > rect.width - 8) shown = shown.slice(1);
+    let visibleValue = hidden ? "*".repeat(value.length) : value;
+    while (visibleValue && raster.measure(escapeText(visibleValue), 495) > rect.width - 8) visibleValue = visibleValue.slice(1);
+    const shown = escapeText(visibleValue);
     const focused = model.focus === id;
-    raster.clip(rect, () => raster.text(shown + (focused ? "<col=ffff00>|</col>" : ""), rect.x, baseline, 495));
+    raster.clip(rect, () => raster.text(shown + (focused && model.cursorVisible !== false ? "<col=ffff00>|</col>" : ""), rect.x, baseline, 495));
     inputs.push({ ...rect, id, label, value, type: id === "name" ? "text" : "password", disabled: model.busy,
       autocomplete: id === "name" ? "username" : model.state.phase === "register" ? "new-password" : "current-password",
       maximum: max, change: value => actions.change(id, value), submit: actions.submit });
@@ -54,8 +85,9 @@ export function paintEntry(raster: SourceRaster, model: EntryModel, actions: Ent
     raster.sprite(499, box.x, box.y);
     raster.center(proposal.content.heading, center, box.y + 31, 496, 0xffff00);
     if (errorText) {
-      raster.textBox(escapeText(errorText), { x: box.x + 14, y: box.y + 45, width: 332, height: 76 },
-        { font: 495, lineHeight: 18, xAlign: 1, yAlign: 1 });
+      const lines = entryErrorLines(errorText, 332, raster.assets.catalogue.fonts[495]!);
+      const page = Math.min(model.errorPage ?? 0, Math.max(0, Math.ceil(lines.length / 3) - 1));
+      lines.slice(page * 3, page * 3 + 3).forEach((line, i) => raster.center(line, center, box.y + 59 + i * 21, 495));
     } else proposal.content.lines.forEach((line, i) => raster.center(line, center, box.y + 59 + i * 21, 495));
     return proposal;
   };
@@ -103,11 +135,13 @@ export function paintEntry(raster: SourceRaster, model: EntryModel, actions: Ent
     addButton("entry-cancel", "Cancel", center + 80, 303, () => actions.screen("title"));
   } else if (error) {
     const idText = error.errorId ? `\nError ID: ${error.errorId}` : "";
-    const name = phase === "register" ? "registration-rejected" : phase === "error" && !model.state.world ? "capability" : "runtime-error";
-    composition(name, `${error.message}${idText}`);
-    addButton("entry-retry", phase === "register" ? "Try again" : "Retry", center - 80, 303,
-      error.recoverable ? actions.retry : actions.dismiss, error.recoverable ? undefined : "The required capability is unavailable");
-    addButton("entry-back", "Back", center + 80, 303, () => actions.screen("login"));
+    const name = phase === "register" ? "registration-rejected" : model.errorKind ?? "runtime-error";
+    const proposal = composition(name, `${error.message}${idText}`);
+    const lines = entryErrorLines(`${error.message}${idText}`, 332, raster.assets.catalogue.fonts[495]!);
+    const more = ((model.errorPage ?? 0) + 1) * 3 < lines.length;
+    addButton(more ? "entry-error-next" : "entry-retry", more ? "Continue" : proposal.content.buttons[0]!, center - 80, 303,
+      more ? () => actions.nextErrorPage?.() : actions.retry, more || error.recoverable ? undefined : "Retry is unavailable for this error.");
+    addButton("entry-back", proposal.content.buttons[1]!, center + 80, 303, () => actions.screen(phase === "register" ? "title" : "login"));
   } else if (model.state.loading && phase === "capability_check") {
     raster.center("ClubScape is loading - please wait...", center, 225, 496, 0xffffff, null);
     const progress = model.state.loading;

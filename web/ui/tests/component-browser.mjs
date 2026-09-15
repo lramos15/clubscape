@@ -298,6 +298,80 @@ try {
     assert.equal((await lastIntent()).kind, "walk");
     await click("compass"); assert.deepEqual(await page.evaluate(() => window.component.services.cameraRequests), [0]);
   });
+  await check("native prayer and spell filters toggle locally, disable dependent options and reflow", async () => {
+    await mount("world"); await click("tab-5"); await resetIntents();
+    await click("filters-541");
+    assert.equal(await page.locator('[data-ui-control^="filter-prayer-"]').count(), 5);
+    assert.equal(await page.locator('[data-ui-control="filter-prayer-1"]').isDisabled(), true);
+    await click("filter-prayer-0");
+    assert.equal(await page.locator('[data-ui-control="filter-prayer-1"]').isDisabled(), false);
+    await click("filter-prayer-3"); await click("filters-541");
+    assert.equal(await page.locator('[data-ui-control^="prayer-"]').count(), 1);
+    assert.equal((await intents()).length, 0);
+    await click("filters-541"); await capture("prayer-filter-native-controls");
+    await page.locator("canvas").press("Escape"); await frame();
+    assert.equal(await page.locator('[data-ui-control^="filter-prayer-"]').count(), 0);
+    assert.equal((await intents()).length, 0);
+    await click("tab-6"); await resetIntents(); await click("filters-218");
+    assert.equal(await page.locator('[data-ui-control^="filter-magic-"]').count(), 7);
+    await click("filter-magic-3"); await click("filters-218");
+    assert.equal(await page.locator('[data-ui-control^="spell-"]').count(), 3);
+    const wind = await page.locator('[data-ui-control="spell-11"]').boundingBox();
+    assert.equal(wind.width, 40);
+    await click("filters-218"); await click("filter-magic-0"); await capture("spell-filter-native-controls");
+    await click("filters-218");
+    assert.equal(await page.locator('[data-ui-control="spell-11"]').count(), 0);
+    assert.equal((await intents()).length, 0);
+  });
+  await check("native recovery selection/amount controls preserve items and do not invent balance fields", async () => {
+    await mount("world");
+    await page.evaluate(() => {
+      const s = window.component.services;
+      s.patchWorld({ recovery: { death: "death.component", storage: "death_office", remainingTicks: null, items: [
+        { id: "recovery.pickaxe", item: s.state().world.player.inventory[0].item, cost: null },
+        { id: "recovery.runes", item: { ...s.state().world.player.inventory[4].item, quantity: 7 }, cost: null },
+      ] } });
+    }); await frame(); await resetIntents();
+    await click("recovery-item-recovery.runes");
+    assert.equal((await intents()).length, 0);
+    await page.getByRole("button", { name: "Retrieve 5", exact: true }).click(); await frame();
+    assert.match(await page.getByRole("status").innerText(), /reclaim_quantity/);
+    assert.equal((await intents()).length, 0); await click("notice-close");
+    await reject("These items cannot be reclaimed from this location.", "test.recovery.location");
+    await page.getByRole("button", { name: "Retrieve All", exact: true }).click(); await frame();
+    assert.deepEqual(await lastIntent(), { kind: "reclaim", death: "death.component", storage: "death_office", items: ["recovery.runes"] });
+    assert.equal(await page.evaluate(() => window.component.services.state().world.recovery.items[1].item.quantity), 7);
+    await click("notice-close"); await capture("recovery-native-fields-pending");
+  });
+  await check("source title animates without app-state progress and long runtime errors paginate", async () => {
+    await mount("title");
+    const sample = () => page.evaluate(() => {
+      const c = document.querySelector("canvas");
+      return Array.from(c.getContext("2d").getImageData(Math.floor((innerWidth - 765) / 2), 9, 110, 254).data).reduce((a, b, i) => (a + b * (i % 127 + 1)) >>> 0, 0);
+    });
+    const first = await sample();
+    await page.waitForTimeout(300);
+    assert.notEqual(await sample(), first);
+    assert.equal(await page.evaluate(() => window.component.services.calls.length), 0);
+    assert.equal(await page.evaluate(() => window.component.services.state().loading), null);
+    await page.evaluate(() => {
+      const s = window.component.services;
+      s.publish({ ...s.state(), phase: "error", error: {
+        message: Array(12).fill("The required source resource could not be loaded.").join(" "),
+        errorId: "test.long.resource.failure", recoverable: true,
+      } });
+    }); await frame();
+    let pages = 0;
+    while (await page.locator('[data-ui-control="entry-error-next"]').count()) {
+      await click("entry-error-next"); pages++;
+      assert.ok(pages < 20);
+    }
+    assert.ok(pages > 1);
+    assert.equal(await page.locator('[data-ui-control="entry-retry"]').count(), 1);
+    assert.match(await page.getByRole("status").innerText(), /test.long.resource.failure/);
+    assert.equal(await page.evaluate(() => window.component.services.calls.filter(c => c.method === "enterWorld").length), 0);
+    await capture("runtime-error-paged-source-frame");
+  });
   await check("dialogue choices/continue, authoritative text and quest journal", async () => {
     await mount("world");
     await page.evaluate(() => window.component.services.patchWorld({ dialogue: { id: "dialogue.fixture", speaker: "spawn.cook",

@@ -12,11 +12,16 @@ tests. Historical status text in the hash-locked art/interface documents is not
 treated as a revocation of the external approval. Asset preparation now runs the
 unchanged strict pack validator before generating assets.
 
-Current component validation: TypeScript and 10 unit tests pass; all 17 browser
+Current component validation: TypeScript and 14 unit tests pass; all 20 browser
 interaction cases pass. All **87/87** native-panel/full-overlay/owner-composition
 comparisons pass at the original zero tolerances. This resolves the earlier
 shop and guide-family raster differences, but does not complete the missing
 controls, live-data projections or real-server acceptance gates below.
+
+The bounded source-mode continuation additionally validates native filter
+panels and data-only grid projections, populated recovery/fee/selection and
+80-slot scroll projections, and the procedural title effect/current reconnect
+banner. See `evidence/mode-comparison.json` for the separate exact comparisons.
 
 ## Shell integration
 
@@ -71,6 +76,37 @@ The preview hooks are presentation adapters, not new gameplay contracts.
 dimensions; no resizing or human-preview substitution is performed. A missing
 preview remains a missing renderer integration, not a finished penguin.
 
+### Independent display helpers
+
+* `setUiAbilityVisuals(ui, revision, facts)` accepts a read-only map keyed by
+  native widget ID. `AbilityVisualTruth` contains optional `level`, `resources`,
+  `requirements`, `lowerTier`, and `supersededByMultiSkill` booleans/null.
+  It applies only to that exact world revision. Unknown requirements stay
+  visible: the UI does not manufacture legal availability. Current skill/rune
+  display facts use the immutable snapshot and original information-item
+  parameters; execution remains server-authoritative.
+* `projectAbilityGrid(widgets, catalogue, kind, mask, facts)` and
+  `projectFilterPanel(widgets, kind, mask)` implement the source Classic layout
+  and checkbox states. Prayer uses source bits6574–6578; Magic uses
+  6605/6609/6606/6607/6608/12137/6548. These are **local display preferences**,
+  not game commands or permissions. Escape closes the filter panel; the
+  tier-dependent prayer option retains its native disabled state.
+* `recoveryTemplate(catalogue, display)`, `projectRecovery(widgets, display)`
+  and `recoveryControls(widgets, width, height, display, dispatch)` consume
+  explicit `RecoveryDisplay` fields: storage, rows `{id, slot, item, allowed,
+  reason}`, selected ID, coffer, unit fee, capacity, bank/discard availability,
+  and scroll position. Null monetary/capacity fields remain unknown.
+  `RecoveryUiCommand` is `select`, `retrieve` (1/5/X/All), `take_all`,
+  `bank_all`, `discard_all`, `examine`, or `close`. The adapter must map these
+  to the published authoritative APIs; it must not make a partial-quantity
+  request into a full-stack reclaim.
+
+Current public `RecoveryView` is rendered at the calibrated native grid
+positions, but cannot fill the missing coffer/fee-unit/capacity fields. Existing
+whole-item reclaim remains usable; unsupported partial quantities are clearly
+identified rather than faked. The separate backend/UI-contract closure owns
+the remaining quote, permission and quantity wiring.
+
 ## Asset contract
 
 `ClientAssets.json("ui/manifest.json")` must resolve to
@@ -79,6 +115,10 @@ and resolve under `assets/compiled/`. `ClientAssets.image()` must return decoded
 same-origin images and the shell asset loader should verify the pinned hashes in
 `ui/provenance.json`. The UI rejects the wrong pack/cache identity or missing
 native font metrics. Do not map these asset IDs to full reference screenshots.
+`native-widget-pool-v1` losslessly interns repeated source widgets in the wire
+catalogue. `UiAssets.load()` decodes it automatically; direct catalogue consumers
+should call `decodeUiCatalogue(raw)`. This keeps the many source-mode cases from
+duplicating the complete HUD in a large startup download.
 
 The catalogue contains original:
 
@@ -90,6 +130,8 @@ The catalogue contains original:
 * model-only NPC portraits with parent-clip offsets (a model can exceed its
   nominal 32×32 widget);
 * native scene minimap rasters and original map-dot/compass sprites.
+* source title palettes/rune masks and current information-item parameters for
+  the normal prayer/spellbook UI, without substituting unused alternate books.
 
 The raster follows the native 16.16 trimmed-sprite draw extents, including a
 possible final row beyond the nominal scaled rectangle; parent clipping still
@@ -139,6 +181,24 @@ Lazy image failures do not cause an automatic retry loop. The in-client error
 Retry action retries failed UI assets explicitly before asking the shell to
 continue; disposal clears loaded-image, pending-request and raster caches.
 
+The title effect is a port of the original procedural `cs.fl/je/as/bu` path:
+source rune masks, palettes, noise/blur, integer compositing, wave offsets and
+20ms source cycles. Native seeded effect captures are compared separately from
+startup composition images. No finished title capture or prerecorded flame
+movie is used in the client. Loading bars continue to use only actual app
+counters. The current-source reconnect banner follows `lu.bz` and font494.
+
+Startup and error presentation remains inside the seven approved source-framed
+compositions. Long actual errors/IDs paginate at native glyph boundaries without
+overlap, and inputs retain their values on rejection. No ClubScape legal terms,
+business policies, Jagex account creation, Jagex Launcher flow or external
+authentication have been invented. Historical Jagex terms/auth captures remain
+reference-only, not ClubScape policy.
+
+Only the approved penguin base and `body_type` A/B are selectable. The original
+human kit/colour/pronoun control locations remain, with explicit necessary
+unavailability; they are not requests to introduce new penguin cosmetics.
+
 ### Shop identity and stale views
 
 The exact authorized shop repairs are integrated in order as `44e6de1`
@@ -178,21 +238,17 @@ extensions. That file is **a request, not a fork of `web/shared/contracts.ts`**.
 
 Additional UI implementation/fidelity work remains:
 
-* prayer/spell filter modes; their buttons report a required UI implementation
-  gap, not an invented missing server field;
 * complete validated source projection of all enabled/disabled/highlight
   signatures (the 71 states, 29 families and 11 signatures are retained);
 * native source comparison of live data projections, not only source-widget
   replay, including all modal/choice/scroll/selected/disabled variants;
 * equipment-stat values/kept-on-death presentation, production selection,
   quest/level reward payloads and their dismissal sequencing;
-* fully calibrated populated grave/recovery grids and all native discard/fee
-  controls; current per-item reclaim actions are not recovery fidelity proof;
-* appearance kit/colour/pronoun choices beyond the public content's body type,
-  and the actual renderer preview;
-* in-game source audio sliders/music controls and current values;
-* native authentication-failure/terms/animated-title mode coverage beyond the
-  implemented source-framed startup/error compositions.
+* authoritative recovery coffer/fee/permission/quantity data and request wiring
+  for the now-calibrated populated/selected/scrolling native controls;
+* the actual renderer preview and dynamic minimap surface/state;
+* in-game source audio sliders/music policy and actual settings, owned by the
+  audio/shell closure.
 
 Controls whose service capability is absent do not silently succeed or invent
 values. Out-of-scope controls retain their source placement and explicit
@@ -221,6 +277,10 @@ TMPDIR="$PWD/web/ui/.cache/xvfb" xvfb-run --auto-servernum \
   --server-args='-screen 0 2560x1440x24 -nolisten tcp' \
   node web/ui/tests/source-browser.mjs
 python3 tools/ui-assets/compare.py
+TMPDIR="$PWD/web/ui/.cache/xvfb" xvfb-run --auto-servernum \
+  --server-args='-screen 0 2560x1440x24 -nolisten tcp' \
+  node web/ui/tests/modes-browser.mjs
+python3 tools/ui-assets/compare_modes.py
 ```
 
 The browser tests use sandboxed **headful** Chrome under Xvfb. Set
@@ -266,3 +326,17 @@ The additional player-preview interfaces deliberately suppress the original
 accepted penguin preview. This boundary is recorded in the compiled provenance.
 Original RuneScape artwork/logos remain source material; no replacement logo or
 new stylistic approval is claimed.
+
+Additional mode preparation is owned by `UiModeCapture`: it invokes the actual
+native filter click scripts, supplies explicitly recorded UI preference bits,
+and initializes source containers525/636 plus context-specific variables261–263
+for the recovery fixtures. The silent original SFX queue is initialized so
+native click scripts do not abort; any native `Client error` rejects preparation.
+These test balances/fees are never copied into production state.
+
+`UiScriptDump` is a bounded read-only source-contract inspection helper.
+The optional MIT CFR artifact in `tools/ui-assets/dependencies.json` was used
+locally to inspect only the original title-effect arithmetic. It is not a
+runtime dependency, does not upload source code, and changes no global tool or
+security configuration. Native preparation itself uses the existing pinned
+Java/cache dependencies.

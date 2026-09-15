@@ -108,3 +108,21 @@ export function paintNativeTree(raster: SourceRaster, widgets: readonly NativeWi
 export function cloneTemplate(widgets: readonly NativeWidget[]): NativeWidget[] {
   return widgets.map(w => ({ ...w }));
 }
+
+/** Source CS2 231/740: scrollbar sizing and thumb position, independent of gameplay. */
+export function projectScrollbar(widgets: NativeWidget[], barId: number, contentId: number, total: number, position: number): void {
+  const bar = widgets.find(w => w.id === barId && w.index === -1);
+  const content = widgets.find(w => w.id === contentId && w.index === -1);
+  if (!bar || !content) return;
+  const visible = Math.max(1, content.height), extent = Math.max(visible, total);
+  const track = Math.max(10, bar.height - 32);
+  const thumb = Math.max(10, Math.min(track, Math.trunc(visible * track / extent)));
+  const offset = 16 + Math.trunc((bar.height - 32 - thumb) * position / Math.max(1, total - visible));
+  content.scrollHeight = total > visible ? total : 0; content.scrollY = position;
+  for (const widget of widgets) if (widget.id === barId && widget.index >= 1 && widget.index <= 3) {
+    widget.y = bar.y + offset + (widget.index === 3 ? thumb - 5 : 0);
+    widget.originalY = offset + (widget.index === 3 ? thumb - 5 : 0);
+    widget.height = widget.originalHeight = widget.index === 1 ? thumb : 5;
+    widget.heightMode = 0; widget.yMode = 0;
+  }
+}

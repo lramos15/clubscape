@@ -16,8 +16,8 @@ export async function browserHost() {
       response.end(`<!doctype html><html><head><meta charset="utf-8"><title>UI component/source fixture — not gameplay</title>
         <style>html,body{margin:0;background:#000;overflow:hidden}main{position:relative}canvas{display:block}</style>
         </head><body><main><canvas aria-label="ClubScape source UI"></canvas></main>
-        <script type="module">import{sourceFixture,ownerFixture}from"/web/ui/tests/source-fixture.ts";
-        window.sourceFixture=sourceFixture;window.ownerFixture=ownerFixture;</script></body></html>`);
+        <script type="module">import{sourceFixture,ownerFixture,flameFixture,filterProjection,recoveryProjection,reconnectFixture}from"/web/ui/tests/source-fixture.ts";
+        window.sourceFixture=sourceFixture;window.ownerFixture=ownerFixture;window.flameFixture=flameFixture;window.filterProjection=filterProjection;window.recoveryProjection=recoveryProjection;window.reconnectFixture=reconnectFixture;</script></body></html>`);
       return;
     }
     const directories = { "/assets/": resolve(root, "assets/compiled"), "/web/ui/": resolve(root, "web/ui"),

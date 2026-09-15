@@ -9,11 +9,15 @@ import { readQuantity, isInterfaceUnlocked } from "../index.ts";
 import { skillTooltip } from "../world-view.ts";
 import { fixtureWorld, immutable } from "./component-fixture.ts";
 import type { UiCatalogue } from "../assets.ts";
-import { UiAssets } from "../assets.ts";
+import { UiAssets, decodeUiCatalogue } from "../assets.ts";
 import type { ClientAssets } from "../../shared/contracts.ts";
+import { abilityVisible, filterOptionEnabled, spellGrid } from "../filters.ts";
+import { recoveryFeeText, projectRecovery, recoveryControls, recoveryTemplate } from "../recovery.ts";
+import type { RecoveryDisplay, RecoveryUiCommand } from "../recovery.ts";
+import { entryErrorLines } from "../entry.ts";
 
 const root = resolve(import.meta.dirname, "../../..");
-const catalogue: UiCatalogue = JSON.parse(readFileSync(resolve(root, "assets/compiled/ui/manifest.json"), "utf8"));
+const catalogue: UiCatalogue = decodeUiCatalogue(JSON.parse(readFileSync(resolve(root, "assets/compiled/ui/manifest.json"), "utf8")));
 const pack = JSON.parse(readFileSync(resolve(root, "research/reference-pack/v1/manifest.json"), "utf8"));
 const oracles = JSON.parse(readFileSync(resolve(root, "research/reference-pack/v1/dynamic-text-oracles.json"), "utf8"));
 
@@ -26,6 +30,15 @@ test("exact owner approval and source-font metrics are bound", () => {
     assert.equal(catalogue.fonts[id]!.ascent, metrics.ascent);
     assert.deepEqual(catalogue.fonts[id]!.advances, metrics.advances);
   }
+});
+
+test("lossless source-widget pool rejects corrupt references", () => {
+  const widget = catalogue.templates["native-inventory"]![0]!;
+  const encoded = { ...catalogue, templateEncoding: "native-widget-pool-v1", widgetPool: [widget], templates: { first: [0], second: [0] } };
+  const decoded = decodeUiCatalogue(encoded);
+  assert.deepEqual(decoded.templates.first, [widget]);
+  assert.deepEqual(decoded.templates.second, [widget]);
+  assert.throws(() => decodeUiCatalogue({ ...encoded, templates: { invalid: [1] } }), /Invalid source widget reference/);
 });
 
 test("native CP1252 mapping, escapes, line breaks and indivisible tokens", () => {
@@ -130,4 +143,47 @@ test("failed asset requests require explicit retry and release references on dis
   assert.equal(attempts, 2);
   assets.dispose();
   assert.equal(assets.images.size, 0);
+});
+
+test("source filter predicates retain unknown requirements and use exact Classic grid arithmetic", () => {
+  const wind = catalogue.abilities[String(218 * 65536 + 11)]!;
+  assert.equal(abilityVisible("magic", 32, wind, { requirements: null }), true);
+  assert.equal(abilityVisible("magic", 32, wind, { requirements: false }), false);
+  assert.equal(abilityVisible("magic", 16, wind, { resources: false }), false);
+  assert.equal(abilityVisible("magic", 1, wind), false);
+  assert.equal(filterOptionEnabled("prayer", 1, 0), false);
+  assert.equal(filterOptionEnabled("prayer", 1, 1), true);
+  assert.deepEqual(spellGrid(4, 184, 240, true), { size: 40, columns: 3, rows: 2, gapX: 28, gapY: 28, width: 176, height: 108 });
+  assert.deepEqual(spellGrid(69, 184, 240, true), { size: 24, columns: 7, rows: 10, gapX: 2, gapY: 0, width: 180, height: 240 });
+});
+
+test("web-only error pages preserve long identifiers without overlap or native glyph clipping", () => {
+  const message = "asset/" + "a".repeat(400) + "<missing>";
+  const lines = entryErrorLines(message, 332, catalogue.fonts[495]!);
+  assert.ok(lines.length > 3);
+  assert.ok(lines.every(line => textAdvance(line, catalogue.fonts[495]!) <= 332));
+  assert.equal(lines.join("").replaceAll("<lt>", "<").replaceAll("<gt>", ">"), message);
+});
+
+test("recovery display uses explicit fee/coffer inputs and native controls without granting items", () => {
+  const item = fixtureWorld().player.inventory[0]!.item!;
+  const view: RecoveryDisplay = {
+    storage: "death_office", items: [{ id: "recovery-source-1", slot: 0, item: { ...item, quantity: 7 }, allowed: true, reason: null }],
+    selectedId: "recovery-source-1", coffer: 12345, unitFee: 42, capacity: 120, bankAll: false, discardAll: false, scroll: 0,
+  };
+  immutable(view);
+  assert.match(recoveryFeeText(view), /294/);
+  assert.match(recoveryFeeText(view), /12,345/);
+  const missing = { ...view, unitFee: null, coffer: null };
+  assert.match(recoveryFeeText(missing), /Fee: unavailable/);
+  assert.doesNotMatch(recoveryFeeText(missing), /12,345|294|>0</);
+  const widgets = projectRecovery(recoveryTemplate(catalogue, view), view);
+  const calls: RecoveryUiCommand[] = [];
+  const controls = recoveryControls(widgets, 1920, 1080, view, command => calls.push(command));
+  controls.find(control => control.label === "Retrieve 5")!.actions[0]!.run();
+  assert.deepEqual(calls, [{ kind: "retrieve", id: "recovery-source-1", amount: 5 }]);
+  assert.equal(view.items[0]!.item.quantity, 7);
+  const locked = { ...view, items: [{ ...view.items[0]!, allowed: false, reason: "Authoritative source rejection" }] };
+  assert.equal(recoveryControls(projectRecovery(recoveryTemplate(catalogue, locked), locked), 1920, 1080, locked, command => calls.push(command))
+    .find(control => control.id === "recovery-item-recovery-source-1")!.disabled, "Authoritative source rejection");
 });

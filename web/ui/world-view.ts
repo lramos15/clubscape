@@ -7,6 +7,10 @@ import type { LaidWidget } from "./layout.ts";
 import type { GameViewContext } from "./index.ts";
 import { isInterfaceUnlocked } from "./index.ts";
 import type { ItemView, SkillView } from "../shared/contracts.ts";
+import { FILTER_OPTIONS, filterOptionEnabled, projectAbilityGrid, projectFilterPanel } from "./filters.ts";
+import type { AbilityVisualTruth } from "./filters.ts";
+import { projectRecovery, recoveryControls, recoveryTemplate } from "./recovery.ts";
+import type { RecoveryDisplay, RecoveryUiCommand } from "./recovery.ts";
 
 const EQUIPMENT = ["head", "cape", "neck", "weapon", "body", "shield", "legs", "hands", "feet", "ring", "ammo"];
 const SKILLS = ["attack", "strength", "defence", "ranged", "prayer", "magic", "runecraft", "construction",
@@ -24,6 +28,7 @@ export function paintCharacter(raster: SourceRaster, appearance: Record<string, 
   const tree = paintNativeTree(raster, source, raster.canvas.width, raster.canvas.height, widget => {
     if (widget.id >> 16 !== 679) return true;
     const child = widget.id & 65535;
+    if (child === 72 && widget.type === 4) widget.text = "Unavailable";
     if ([68, 69].includes(child) && widget.index >= 0 && widget.type !== 4) {
       const selected = appearance.body_type === (child === 68 ? 0 : 1);
       const skin = source.find(w => w.id === widgetId(679, selected ? 68 : 69) && w.index === widget.index);
@@ -35,14 +40,14 @@ export function paintCharacter(raster: SourceRaster, appearance: Record<string, 
   for (const widget of tree) {
     if (widget.id >> 16 !== 679 || widget.index !== -1 || widget.type !== 0) continue;
     const child = widget.id & 65535;
-    if (![68, 69, 74].includes(child) && !widget.actions?.some(Boolean)) continue;
+    if (![68, 69, 72, 74].includes(child) && !widget.actions?.some(Boolean)) continue;
     const row = tree.find(w => w.parent === widget.parent && w.type === 4 && w.text);
     const label = child === 74 ? "Confirm appearance" : child === 68 || child === 69 ? `Body type ${child === 68 ? "A" : "B"}`
-      : `${row && widget.x < row.x ? "Previous" : "Next"} ${plainText(row?.text ?? "appearance option")}`;
+      : child === 72 ? "Pronoun options" : `${row && widget.x < row.x ? "Previous" : "Next"} ${plainText(row?.text ?? "appearance option")}`;
     controls.push({ ...intersect(widget, widget.clip), id: `appearance-${widgetKey(widget)}`, label,
       ...([68, 69].includes(child) ? { pressed: appearance.body_type === (child === 68 ? 0 : 1) } : {}),
       actions: [{ label, run: () => child === 74 ? confirm() : [68, 69].includes(child) ? change(child === 68 ? 0 : 1)
-        : required(label, "appearance_options") }] });
+        : required(label, "human_appearance_controls") }] });
   }
   const model = tree.find(w => w.id >> 16 === 679 && w.type === 6);
   return model ? tree.find(w => w.id === model.parent && w.index === -1) ?? null : null;
@@ -87,13 +92,42 @@ export function paintGame(raster: SourceRaster, ui: GameViewContext): void {
   if (!world.bank && !world.shop && local.tab === 6 && !["item.rune.air", "item.rune.mind"].every(id =>
     world.player.inventory.some(slot => slot.item?.id === id && slot.item.quantity > 0)) && catalogue.templates["native-magic-missing-runes"])
     templateName = "native-magic-missing-runes";
+  const filterKind = local.tab === 5 ? "prayer" : local.tab === 6 ? "magic" : null;
+  if (!world.bank && !world.shop && filterKind && local.filterPanel === filterKind)
+    templateName = `native-${filterKind}-mask-0-filters`;
   if (!catalogue.templates[templateName]) templateName = "native-inventory";
   let widgets = cloneTemplate(catalogue.templates[templateName]!);
+  if (!world.bank && !world.shop && filterKind) {
+    const mask = filterKind === "prayer" ? local.prayerFilters : local.magicFilters;
+    if (local.filterPanel === filterKind) projectFilterPanel(widgets, filterKind, mask);
+    else {
+      const truths: Record<string, AbilityVisualTruth> = {};
+      const skill = world.player.skills.find(s => s.id === `skill.${filterKind === "prayer" ? "prayer" : "magic"}`);
+      for (const [id, metadata] of Object.entries(catalogue.abilities)) {
+        if (metadata.kind !== filterKind) continue;
+        truths[id] = {
+          level: skill ? Math.max(skill.baseLevel, skill.currentLevel) >= metadata.level : null,
+          ...(filterKind === "magic" ? { resources: metadata.runes.every(rune =>
+            world.player.inventory.reduce((sum, slot) => sum + (slot.item?.sourceId === rune.sourceId ? slot.item.quantity : 0), 0) >= rune.quantity) } : {}),
+          ...ui.abilityVisuals[id],
+        };
+      }
+      widgets = projectAbilityGrid(widgets, catalogue, filterKind, mask, truths);
+    }
+  }
   let modal = local.journal ? "journal" : local.modal;
   if (ui.state.phase === "character" || world.player.tutorialStage === "stage.tutorial.appearance") modal = "appearance";
   if (world.player.tutorialStage === "stage.tutorial.experience") modal = "experience";
   if (world.recovery) modal = world.recovery.storage === "grave" ? "grave" : "recovery";
-  if (modal && catalogue.templates[`native-${modal}`]) {
+  const recovery: RecoveryDisplay | null = world.recovery ? {
+    storage: world.recovery.storage,
+    items: world.recovery.items.map((row, slot) => ({ id: row.id, slot, item: row.item, allowed: true, reason: null })),
+    selectedId: world.recovery.items.some(row => row.id === local.recoverySelected) ? local.recoverySelected : null,
+    coffer: null, unitFee: null, capacity: null, bankAll: false, discardAll: false, scroll: local.scroll,
+  } : null;
+  if (recovery) {
+    widgets = attachGroup(widgets, recoveryTemplate(catalogue, recovery), recovery.storage === "grave" ? 602 : 669);
+  } else if (modal && catalogue.templates[`native-${modal}`]) {
     widgets = attachGroup(widgets, catalogue.templates[`native-${modal}`]!, MODALS[modal]!);
   }
   if (world.dialogue && catalogue.templates["native-guide-dialogue"]) {
@@ -175,6 +209,7 @@ export function paintGame(raster: SourceRaster, ui: GameViewContext): void {
             if (parent === scroller.id) { widget.y -= local.scroll; break; }
             visited.add(parent); parent = parents.get(parent) ?? -1;
           }
+          if (recovery) widgets = projectRecovery(widgets, recovery);
         }
       }
     }
@@ -206,6 +241,7 @@ export function paintGame(raster: SourceRaster, ui: GameViewContext): void {
     const label = normalizedName(widget);
     const op = plainText(widget.actions?.find(Boolean) ?? "");
     const group = widget.id >> 16, child = widget.id & 65535;
+    if (recovery && (group === 602 || group === 669)) return;
     if (op === "Close" && group !== 161) { sourceClose(widget); return; }
     if (group === 161) {
       const index = TABS.findIndex((_, i) => tabWidget(i) === widget.id);
@@ -321,9 +357,21 @@ export function paintGame(raster: SourceRaster, ui: GameViewContext): void {
         tooltip: spell === "spell.wind_strike" ? `Level 1: Wind Strike\nAir rune: ${runeCount("item.rune.air")}/1\nMind rune: ${runeCount("item.rune.mind")}/1` : label });
     }
     if ((group === 541 || group === 218) && widget.text === "Filters") {
-      register(widget, `filters-${group}`, "Filters", [{ label: "Filters", run: () => ui.notice(
-        "The native filter control modes are not implemented yet. This required UI work is not an out-of-scope feature.",
-        "error", group === 541 ? "ui.incomplete.prayer_filters" : "ui.incomplete.spell_filters") }]);
+      const kind = group === 541 ? "prayer" : "magic";
+      register(widget, `filters-${group}`, "Filters", [{ label: "Filters", run: () =>
+        ui.change(() => { local.filterPanel = local.filterPanel === kind ? null : kind; }) }]);
+    }
+    if ((group === 541 && child === 42 || group === 218 && child === 206) && widget.type === 3 && widget.index >= 0) {
+      const kind = group === 541 ? "prayer" : "magic", option = widget.index;
+      const label = FILTER_OPTIONS[kind][option];
+      if (label) {
+        const mask = kind === "prayer" ? local.prayerFilters : local.magicFilters;
+        register(widget, `filter-${kind}-${option}`, label, [{ label: "Change", run: () => ui.change(() => {
+          if (kind === "prayer") local.prayerFilters ^= 1 << option;
+          else local.magicFilters ^= 1 << option;
+        }) }], { pressed: !(mask & 1 << option),
+          ...(!filterOptionEnabled(kind, option, mask) ? { disabled: "Enable tier filtering before changing this dependent option." } : {}) });
+      }
     }
     if (group === 182 && (op || widget.text.toLowerCase().includes("logout"))) {
       const logout = /logout/i.test(op || widget.text);
@@ -343,13 +391,6 @@ export function paintGame(raster: SourceRaster, ui: GameViewContext): void {
     }
     if ([707, 109, 429, 712, 216, 239].includes(group) && op) register(widget, `scope-${widgetKey(widget)}`, op,
       [{ label: op, run: () => ui.unavailable(op) }]);
-    if ((group === 602 || group === 669) && op && world.recovery) {
-      register(widget, `recovery-control-${widgetKey(widget)}`, op, [{ label: op, run: () => {
-        if (op === "Take-All") ui.send({ kind: "reclaim", death: world.recovery!.death,
-          storage: world.recovery!.storage, items: world.recovery!.items.map(item => item.id) });
-        else ui.required(op, "recovery_action");
-      } }], op === "Take-All" && world.recovery.items.length === 0 ? { disabled: "There are no items to reclaim." } : {});
-    }
     if (group === 399 && widget.type === 4 && widget.text && widget.index >= 0) {
       const name = plainText(widget.text);
       const quest = world.player.quests.find(q => q.name === name);
@@ -493,9 +534,7 @@ export function paintGame(raster: SourceRaster, ui: GameViewContext): void {
       } else widget.text = "";
     }
     if (group === 153 && widget.type === 4) widget.text = "";
-    if ([84, 4, 602, 669].includes(group) && widget.type === 4 && /\d/.test(widget.text)) widget.text = "";
-    if (group === 602 && child === 1 && widget.index === 1) widget.text = "Gravestone";
-    if (group === 669 && child === 1 && widget.index === 1) widget.text = "Death's Office Item Retrieval";
+    if ([84, 4].includes(group) && widget.type === 4 && /\d/.test(widget.text)) widget.text = "";
     raster.widget(widget);
     return true;
   });
@@ -591,18 +630,23 @@ export function paintGame(raster: SourceRaster, ui: GameViewContext): void {
       }
     }
   }
-  if (world.recovery) {
-    const recovery = world.recovery, group = MODALS[modal!]!;
-    const frame = tree.find(w => w.id === widgetId(group, 0));
-    if (frame) {
-      const rows = recovery.items;
-      rows.forEach((row, index) => {
-        const rect = { x: frame.x + 24 + index % 8 * 48, y: frame.y + 58 + Math.floor(index / 8) * 42, width: 36, height: 32 };
-        if (row.item.sourceId !== null) raster.item(row.item.sourceId, row.item.quantity, rect.x, rect.y);
-        controls.push({ ...rect, id: `recover-${row.id}`, label: `Reclaim ${row.item.name}`, tooltip: row.cost === null ? "Reclaim cost unavailable" : `Reclaim cost: ${row.cost} coins`,
-          actions: [{ label: `Reclaim ${escapeText(row.item.name)}`, run: () => ui.send({ kind: "reclaim", death: recovery.death, storage: recovery.storage, items: [row.id] }) }] });
-      });
-    }
+  if (recovery && world.recovery) {
+    const snapshot = world.recovery;
+    const dispatch = (command: RecoveryUiCommand) => {
+      if (command.kind === "select") ui.change(() => { local.recoverySelected = command.id; });
+      else if (command.kind === "close") ui.send({ kind: "close_interface" });
+      else if (command.kind === "examine") {
+        const item = snapshot.items.find(row => row.id === command.id)?.item;
+        if (item) ui.notice(item.sourceId === null ? item.name : catalogue.items[item.sourceId]?.examine || item.name);
+      } else if (command.kind === "take_all") ui.send({ kind: "reclaim", death: snapshot.death, storage: snapshot.storage, items: snapshot.items.map(row => row.id) });
+      else if (command.kind === "retrieve") {
+        const item = snapshot.items.find(row => row.id === command.id);
+        if (item && (command.amount === "all" || typeof command.amount === "number" && command.amount >= item.item.quantity))
+          ui.send({ kind: "reclaim", death: snapshot.death, storage: snapshot.storage, items: [command.id] });
+        else ui.required("Partial-quantity retrieval", "reclaim_quantity");
+      } else ui.required(command.kind === "bank_all" ? "Bank-All" : "Discard-All", "recovery_action");
+    };
+    controls.push(...recoveryControls(widgets, width, height, recovery, dispatch));
   }
   if (modal === "equipment-stats" || modal === "kept-items" || modal === "reward") {
     const frame = tree.find(w => w.id === widgetId(MODALS[modal]!, 0));
