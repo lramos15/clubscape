@@ -50,6 +50,8 @@ pub struct ActorObservation {
     pub next_id: u64,
     pub movement: Option<MovementObservation>,
     pub action: Option<ActionObservation>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub overlay: Option<ActionObservation>,
 }
 
 impl Default for ActorObservation {
@@ -59,6 +61,7 @@ impl Default for ActorObservation {
             next_id: 1,
             movement: None,
             action: None,
+            overlay: None,
         }
     }
 }
@@ -93,7 +96,7 @@ pub struct ActionObservation {
     pub started_at_tick: u64,
     pub cycle_started_at_tick: u64,
     pub next_action_tick: Option<u64>,
-    /// A completed/instant action remains observable only in its actual commit tick.
+    /// Completed source clips may remain observable for their bound visual duration.
     pub completed_at_tick: Option<u64>,
 }
 
@@ -102,6 +105,11 @@ impl ActorObservation {
         if self.version != ACTOR_OBSERVER_VERSION
             || self.next_id == 0
             || self.next_id > i64::MAX as u64
+            || self
+                .action
+                .as_ref()
+                .zip(self.overlay.as_ref())
+                .is_some_and(|(action, overlay)| action.ordinal == overlay.ordinal)
             || self.movement.as_ref().is_some_and(|motion| {
                 motion.tick > tick
                     || motion.from == motion.to
@@ -111,7 +119,7 @@ impl ActorObservation {
                         .distance(motion.to)
                         .is_none_or(|distance| distance > if motion.running { 2 } else { 1 })
             })
-            || self.action.as_ref().is_some_and(|action| {
+            || self.action.iter().chain(self.overlay.iter()).any(|action| {
                 action.ordinal == 0
                     || action.ordinal >= self.next_id
                     || action.started_at_tick > action.cycle_started_at_tick

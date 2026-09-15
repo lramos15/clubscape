@@ -1,0 +1,94 @@
+{
+  "schema_version": 1,
+  "scope": "Bounded source actor-animation authority, not renderer or avatar asset publication",
+  "early_inventory_commits": [
+    "4b7f3d445bb79eeae5b783728bba6cae127dcae9",
+    "838c7670f44dc83c6562f14cfe70c2f7c08597b8"
+  ],
+  "renderer_observer_consumer": "8c6bab0",
+  "backend_field_absence_is_a_blocker": false,
+  "input_metadata": {
+    "path": "research/interface-contracts/animation-authority/inputs.json",
+    "sha256": "43fafa676d29a22f4d7b57bd545860993350b5c627494e20ee52db98496ca4b0",
+    "native_sequences_decoded": 46,
+    "cache_id": 2695,
+    "config_archive_revision": 1788780611,
+    "crc_version_and_pinned_files_before_after_verified": true
+  },
+  "implemented": {
+    "typed_content_profile": "ui.actor_animations",
+    "legal_style_bindings": 27,
+    "recipe_rules": 13,
+    "spell_bindings": 2,
+    "required_sequence_metadata": 30,
+    "actual_attack_execution_and_final_hit_recording": true,
+    "food_delay_does_not_manufacture_an_attack_cycle": true,
+    "instant_wind_strike_clip_survives_launch_tick": true,
+    "consumption_overlay_preserves_gameplay_activity_and_timers": true,
+    "exact_item_action_identity_retained": true,
+    "death_observation_follows_actual_life_phase_and_arrival": true,
+    "source_milking_2305_preserves_recipe_timing_and_output": true,
+    "home_channel_ticks": 24,
+    "home_phase_ticks": [0, 6, 12, 16, 21],
+    "home_phase_sequences": [4847, 4850, 4853, 4855, 4857],
+    "existing_observer_id_and_phase_clock_abi_preserved": true,
+    "poll_reload_or_duplicate_receipt_restarts_animation": false
+  },
+  "qualifications": [
+    "Weapon/style dispatch uses actual canonical weapon and attack-type identities with named native sequences and pinned secondary corroboration. It is qualified inference, not an observed Jagex server packet. Inconsistent secondary numeric style indexes are explicitly rejected.",
+    "Home phase alignment uses the frozen original crop and current native active/terminal-hold frames, constrained to the unchanged24-tick source channel. GIF delays are not asserted as native server-clock measurements.",
+    "Ordinary drink829 reuse is a qualified source consumption-motion binding, not permission to substitute special rum/tea animations or change gameplay timers.",
+    "Original sequence hand/model overrides remain an asset/renderer responsibility. No avatar or original asset bytes were modified."
+  ],
+  "remaining_source_motion_gaps": {
+    "recipe.cooking.dough": "Numeric sequence or deliberate absence is genuinely unverified; never use potter-wheel883 or nearby-object fallback.",
+    "empty_container": "Numeric sequence or deliberate absence is genuinely unverified; retain actual item/action identity, not silent success."
+  },
+  "asset_owner_handoff": {
+    "inventory": "research/interface-contracts/animation-requirements.json",
+    "missing_from_8c6bab0_manifest_and_fit_set": [395, 400, 401, 428, 429, 440, 2305, 4847, 4850, 4853, 4855, 4857],
+    "raw_hand_overrides_recorded": true,
+    "export_or_fit_completion_claimed": false
+  },
+  "candidate": {
+    "revision": "m1.source-backed.v4.bdbf8a3788b842be",
+    "path": "content/m1/game-content.csc.gz",
+    "raw_sha256": "5b3ba5f108ed3fec8f8b5f7f49b429c059e21b6f192ec99a0569616e08330059",
+    "compressed_sha256": "8da1e85a1e2ebb0355e29e7a15a0ca7cdab2f2751bc1341dd5efd5322b925ca6",
+    "raw_bytes": 13213366,
+    "compressed_bytes": 527455,
+    "content_artifact_versions": [4, 4],
+    "state_runtime_ui_versions": [1, 1, 1],
+    "observer_version": 1,
+    "decoded_changes_from_8eddc42": ["revision", "ui.actor_animations"],
+    "live_5e_6f_worlds_repin_or_restart_attempted": false
+  },
+  "validation": {
+    "native_tests": 583,
+    "native_binaries": 45,
+    "canonical_animation_tests": 7,
+    "source_tests": 94,
+    "new_animation_source_tests": 6,
+    "postgresql_http_tests": 46,
+    "new_durable_phase_replay_test": 1,
+    "independent_account_checks": 11,
+    "identical_generated_paths_across_two_builds": 91,
+    "strict_native_wasm_clippy_and_format": true,
+    "postgresql_report": ".local/evidence/actor-animation-final.json",
+    "owned_test_services_and_databases_cleaned": true
+  },
+  "preserved": {
+    "immutable_source_bindings": 104,
+    "coupled_updates": 7,
+    "tutorial_graph": [71, 73],
+    "cooks_graph": [10, 22],
+    "spawns": 536,
+    "collision_cells": 46358,
+    "existing_public_asset_references": 5266,
+    "actor_audio_unlock_and_native_var_authority": true,
+    "departure_primary_menu_and_timed_ui_interruption_repairs": true,
+    "gameplay_geometry_cadence_rng_rewards_changed": false,
+    "source_renderer_avatar_audio_assets_changed": false
+  },
+  "whole_presentation_or_m1_acceptance": false
+}

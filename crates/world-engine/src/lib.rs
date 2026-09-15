@@ -3,6 +3,7 @@
 
 mod actions;
 mod activities;
+mod animation_observer;
 mod audio_authority;
 mod collision_cache;
 mod combat;

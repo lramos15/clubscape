@@ -137,6 +137,24 @@ dough, combat and spells retain their exact identities when no numeric source
 animation is bound. No neighbour inference or fabricated sequence fills a gap.
 The renderer owns skeletal retargeting and source frame playback.
 
+The later `ui.actor_animations` profile binds actual legal weapon/style, spell,
+production, consumption and death identities without adjacency fallback.
+`animation-authority/inputs.json` retains native sequence metadata, the frozen
+Home Teleport crop and explicit dispatch/timing qualifications. Source Home
+Teleport keeps its24-tick channel, one stable action ID and phase epochs
+0/6/12/16/21. Actual attacks advance cycles; food-delayed deadlines do not create
+swings. Instant casts and consumption keep bounded source clip lifetimes,
+without replacing the gameplay activity or timers. Death follows real source
+life phases and milking uses2305.
+
+`animation-requirements.json` was published early for the Director/asset owner:
+twelve additional original actor sequences/fit entries are required beyond the
+renderer8c6bab0 set. Native hand overrides are retained as source facts, not new
+gameplay items. Dough and Empty motion/absence remain genuinely unverified and
+explicit;883 pottery, guessed silence or a nearby object is not a replacement.
+See `animation-authority/verification.json` for the exact newer candidate,
+source qualifications, native/PG evidence and remaining publication boundary.
+
 Typed `dynamicObjects` forwards the existing complete authoritative door/object
 list. Canonical object IDs resolve through the validated definition catalogue;
 numeric source IDs are never parsed from strings or invented. Observer

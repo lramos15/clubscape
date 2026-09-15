@@ -2,6 +2,13 @@ use clubscape_game_types::*;
 
 use crate::{ActorEvent, WorldEngine, invalid_state, runtime, unknown};
 
+#[derive(Clone, Copy, Default)]
+pub(crate) struct ObservationUpdate {
+    pub new_instance: bool,
+    pub completed: bool,
+    pub executed: bool,
+}
+
 fn same_action(left: &ObservedAction, right: &ObservedAction) -> bool {
     left.activity == right.activity
         && left.action_id == right.action_id
@@ -74,31 +81,46 @@ impl WorldEngine {
                 && motion.instance == character.runtime.instance
         });
         let current = self.current_actor_action(character)?;
-        let action = observation
-            .action
-            .as_ref()
-            .filter(|action| {
-                action.completed_at_tick == Some(world.tick)
-                    || (action.completed_at_tick.is_none()
-                        && current
-                            .as_ref()
-                            .is_some_and(|(identity, _)| same_action(identity, &action.identity)))
+        let primary = observation.action.as_ref().filter(|action| {
+            self.completed_animation_visible(world.tick, action)
+                || (action.completed_at_tick.is_none()
+                    && current
+                        .as_ref()
+                        .is_some_and(|(identity, _)| same_action(identity, &action.identity)))
+        });
+        let selected = if matches!(
+            character.runtime.life,
+            LifeState::Dying { .. } | LifeState::Respawning { .. }
+        ) {
+            primary
+        } else {
+            observation
+                .overlay
+                .as_ref()
+                .filter(|overlay| self.completed_animation_visible(world.tick, overlay))
+                .or(primary)
+        };
+        let action = selected
+            .map(|action| {
+                let mut view = ActorActionView {
+                    version: ACTOR_OBSERVER_VERSION,
+                    id: format!("actor_action.{}.{}", actor, action.ordinal),
+                    activity: action.identity.activity.clone(),
+                    action_id: action.identity.action_id.clone(),
+                    target: action.identity.target.clone(),
+                    recipe_id: action.identity.recipe_id.clone(),
+                    style_id: action.identity.style_id.clone(),
+                    spell_id: action.identity.spell_id.clone(),
+                    animation: action.identity.animation.clone(),
+                    started_at_tick: action.started_at_tick.to_string(),
+                    cycle_started_at_tick: action.cycle_started_at_tick.to_string(),
+                    next_action_tick: action.next_action_tick.map(|tick| tick.to_string()),
+                    observed_at_tick: world.tick.to_string(),
+                };
+                self.project_actor_animation(world.tick, action, &mut view)?;
+                Ok(view)
             })
-            .map(|action| ActorActionView {
-                version: ACTOR_OBSERVER_VERSION,
-                id: format!("actor_action.{}.{}", actor, action.ordinal),
-                activity: action.identity.activity.clone(),
-                action_id: action.identity.action_id.clone(),
-                target: action.identity.target.clone(),
-                recipe_id: action.identity.recipe_id.clone(),
-                style_id: action.identity.style_id.clone(),
-                spell_id: action.identity.spell_id.clone(),
-                animation: action.identity.animation.clone(),
-                started_at_tick: action.started_at_tick.to_string(),
-                cycle_started_at_tick: action.cycle_started_at_tick.to_string(),
-                next_action_tick: action.next_action_tick.map(|tick| tick.to_string()),
-                observed_at_tick: world.tick.to_string(),
-            });
+            .transpose()?;
         Ok(ActorObserverView {
             running: movement.is_some_and(|motion| motion.running),
             movement_tick: movement.map(|motion| motion.tick.to_string()),
@@ -134,6 +156,16 @@ impl WorldEngine {
         after: &mut CharacterState,
         events: &[GameEvent],
     ) -> GameResult<()> {
+        if (matches!(
+            after.runtime.life,
+            LifeState::Dying { .. } | LifeState::Respawning { .. }
+        ) || events
+            .iter()
+            .any(|event| matches!(event, GameEvent::DeathOccurred { .. })))
+            && let Some(observation) = &mut after.runtime.observation
+        {
+            observation.overlay = None;
+        }
         let prior = self.current_actor_action(before)?;
         let current = self.current_actor_action(after)?;
         let completed = current.is_none()
@@ -182,7 +214,25 @@ impl WorldEngine {
                     (None, Some(_)) => true,
                     _ => false,
                 };
-            self.record_actor_action(tick, after, identity, next, new_instance, completed)?;
+            let executed = !completed
+                && !matches!(
+                    identity.activity.as_str(),
+                    "fighting" | "casting" | "dying" | "travelling"
+                )
+                && prior.as_ref().map(|(_, next)| *next) != current.as_ref().map(|(_, next)| *next);
+            if identity.activity != "fighting" || !new_instance || recorded_by_execution {
+                self.record_actor_action(
+                    tick,
+                    after,
+                    identity,
+                    next,
+                    ObservationUpdate {
+                        new_instance,
+                        completed,
+                        executed,
+                    },
+                )?;
+            }
         } else if let Some(animation) = explicit_animation {
             self.record_actor_action(
                 tick,
@@ -197,15 +247,18 @@ impl WorldEngine {
                     animation: Some(animation),
                 },
                 None,
-                true,
-                true,
+                ObservationUpdate {
+                    new_instance: true,
+                    completed: true,
+                    executed: true,
+                },
             )?;
         } else if !after
             .runtime
             .observation
             .as_ref()
             .and_then(|observation| observation.action.as_ref())
-            .is_some_and(|action| action.completed_at_tick == Some(tick))
+            .is_some_and(|action| self.completed_animation_visible(tick, action))
             && let Some(observation) = &mut after.runtime.observation
         {
             observation.action = None;
@@ -219,26 +272,25 @@ impl WorldEngine {
         character: &mut CharacterState,
         identity: ObservedAction,
         next_action_tick: Option<u64>,
-        new_instance: bool,
-        completed: bool,
+        update: ObservationUpdate,
     ) -> GameResult<()> {
         let observation = character
             .runtime
             .observation
             .get_or_insert_with(ActorObservation::default);
-        if !new_instance
+        if !update.new_instance
             && let Some(action) = &mut observation.action
             && same_action(&action.identity, &identity)
             && action.completed_at_tick.is_none()
         {
-            if action.next_action_tick != next_action_tick {
+            if update.executed {
                 action.cycle_started_at_tick = tick;
             }
             action.next_action_tick = next_action_tick;
             if identity.animation.is_some() {
                 action.identity.animation = identity.animation;
             }
-            action.completed_at_tick = completed.then_some(tick);
+            action.completed_at_tick = update.completed.then_some(tick);
         } else {
             let ordinal = observation.next_id;
             observation.next_id = ordinal
@@ -251,7 +303,7 @@ impl WorldEngine {
                 started_at_tick: tick,
                 cycle_started_at_tick: tick,
                 next_action_tick,
-                completed_at_tick: completed.then_some(tick),
+                completed_at_tick: update.completed.then_some(tick),
             });
         }
         observation.validate(tick)
@@ -275,6 +327,13 @@ impl WorldEngine {
             spell_id: None,
             animation: None,
         };
+        if let LifeState::Dying { at_tick, .. } | LifeState::Respawning { at_tick, .. } =
+            character.runtime.life
+        {
+            identity.activity = "dying".into();
+            identity.action_id = Some(ActionId::new("action.life.death")?);
+            return Ok(Some((identity, Some(at_tick))));
+        }
         if let Some(fire) = &character.runtime.pending_fire {
             identity.activity = "producing".into();
             self.observed_recipe(&mut identity, &fire.recipe)?;

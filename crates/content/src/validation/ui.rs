@@ -8,6 +8,9 @@ impl Validator<'_> {
         if let Some(audio) = &ui.audio_authority {
             self.audio_authority(audio)?;
         }
+        if let Some(animations) = &ui.actor_animations {
+            self.actor_animations(animations)?;
+        }
         if ui.version != GAMEPLAY_UI_VIEW_VERSION
             || ui.bank.maximum_tabs == 0
             || ui.bank.maximum_tabs > 9

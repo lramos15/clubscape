@@ -6830,7 +6830,7 @@
       ]
     }
   ],
-  "content_compressed_sha256": "3f865e9e96decde4b997b1d7bc6eca0c3af3a87581e810edd94aebcfb6df6481",
+  "content_compressed_sha256": "2782a2fbb164ca4c11a964778adf0ca544986f6b2e17aa9bb9bd55f730092ed2",
   "coupled_profile_provenance": [
     {
       "notes": "The official2025-10-22 ALL-player default list explicitly enables Auto-equip Worn Items from Gravestone; replace the old false candidate. Supersedes the prior provisional creation-profile value. Snapshot SHA-256: 3fcc153d513507d9f2da93d96a80b74a601a4f2c73b2bd605008dfcbc6543aad. Documentary/code evidence, not a live observation.",

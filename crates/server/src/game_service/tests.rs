@@ -1,4 +1,6 @@
 mod amounts;
+mod animation_authority;
+mod animation_storage;
 mod anvil;
 mod audio_authority;
 #[path = "../../../world-engine/tests/support/mod.rs"]

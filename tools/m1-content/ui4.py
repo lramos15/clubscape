@@ -274,6 +274,10 @@ def apply_ui(inputs, content, bindings):
     audio, audio_proof = bind_audio_authority(content)
     content["ui"]["audio_authority"] = audio
     bindings["audio_authority"] = audio_proof
+    from actor_animation4 import bind_actor_animations
+    animations, animation_proof = bind_actor_animations(content)
+    content["ui"]["actor_animations"] = animations
+    bindings["actor_animations"] = animation_proof
     content["schema_version"] = 4
     bindings["ui"] = {"schema_version": 1, "capability": "game.ui.v1", "source_facts": "research/interface-contracts/sources.json",
                       "additive_capabilities": ["game.ui.amounts.v1", "game.ui.recovery.v1"],

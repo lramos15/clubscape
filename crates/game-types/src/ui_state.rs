@@ -11,6 +11,8 @@ pub struct GameplayUiDefinition {
     pub version: u32,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub audio_authority: Option<AudioAuthorityDefinition>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub actor_animations: Option<ActorAnimationDefinition>,
     pub production_interfaces: BTreeMap<RecipeId, InterfaceId>,
     pub direct_production: BTreeSet<RecipeId>,
     pub quest_rewards: BTreeMap<QuestId, QuestUiDefinition>,

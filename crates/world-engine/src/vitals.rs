@@ -186,6 +186,7 @@ impl WorldEngine {
         )?;
         character.runtime.combat.spell_ready =
             runtime::deadline(character.runtime.combat.spell_ready.max(tick), attack_delay)?;
+        self.record_item_animation(tick, character, &stack.item, "eat")?;
         Ok(vec![GameEvent::FoodEaten {
             item: stack.item,
             healed: character.hitpoints - before,

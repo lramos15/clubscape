@@ -1,3 +1,4 @@
+mod actor_animations;
 mod audio_authority;
 mod audio_state;
 mod content;
@@ -15,6 +16,7 @@ mod state;
 mod ui_amounts;
 mod ui_state;
 
+pub use actor_animations::*;
 pub use audio_authority::*;
 pub use audio_state::*;
 pub use content::*;

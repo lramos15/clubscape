@@ -1,3 +1,4 @@
+mod actor_animations;
 mod audio;
 mod definitions;
 mod execution;

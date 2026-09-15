@@ -174,9 +174,9 @@
     "spawn.tutorial.fishing_spot.3103.3092.p0"
   ],
   "source_status_occurrences": {
-    "approved_adaptation": 2,
-    "inference": 3312,
-    "verified_reference": 15962
+    "approved_adaptation": 4,
+    "inference": 3352,
+    "verified_reference": 16017
   },
   "structural_checks_passed": true,
   "unpublished_asset_ids": [],

@@ -734,23 +734,28 @@ impl WorldState {
             character.validate_runtime(content)?;
             if let Some(observation) = &character.runtime.observation {
                 observation.validate(self.tick)?;
-                if observation.action.as_ref().is_some_and(|action| {
-                    action
-                        .identity
-                        .recipe_id
-                        .as_ref()
-                        .is_some_and(|id| !content.recipes.contains_key(id))
-                        || action
+                if observation
+                    .action
+                    .iter()
+                    .chain(observation.overlay.iter())
+                    .any(|action| {
+                        action
                             .identity
-                            .style_id
+                            .recipe_id
                             .as_ref()
-                            .is_some_and(|id| !content.mechanics.combat_styles.contains_key(id))
-                        || action
-                            .identity
-                            .spell_id
-                            .as_ref()
-                            .is_some_and(|id| !content.mechanics.spells.contains_key(id))
-                }) {
+                            .is_some_and(|id| !content.recipes.contains_key(id))
+                            || action
+                                .identity
+                                .style_id
+                                .as_ref()
+                                .is_some_and(|id| !content.mechanics.combat_styles.contains_key(id))
+                            || action
+                                .identity
+                                .spell_id
+                                .as_ref()
+                                .is_some_and(|id| !content.mechanics.spells.contains_key(id))
+                    })
+                {
                     return Err(invalid(
                         "Actor observation references unknown source actions.",
                     ));

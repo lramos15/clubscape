@@ -121,6 +121,31 @@ against the exact canonical baseline and pinned original named animation
 constants. Other baselines keep explicit animation references or exact action
 identity; they do not inherit M1 numeric defaults.
 
+New source profiles include typed `ui.actor_animations`, with exact native
+sequence metadata and per-action/recipe/style/spell rules. Source evidence and
+qualifications are retained in
+`research/interface-contracts/animation-authority/inputs.json`. All legal M1
+weapon/style choices, Wind Strike, ordinary Home Teleport, consumption, death
+and milking have explicit rules; unknown dough/Empty motions are not assigned
+pottery, stance or neighbouring-object numeric fallbacks.
+
+For the ordinary24-tick Home Teleport, `startedAtTick` remains the whole channel
+start. `cycleStartedAtTick` is the current bound animation phase start:
+offsets0/6/12/16/21 with4847/4850/4853/4855/4857. The stable ID and phase epoch
+do not restart on polling or reload. This phase alignment is qualified from the
+frozen original crop and current native active/terminal-hold frames, not claimed
+as a native server timing capture. Gameplay channel/cooldown values are unchanged.
+
+Actual combat executions advance their observation cycle; a delayed attack
+deadline or UI preference change cannot manufacture a new swing. Completed
+instant casts retain their original phase for the bound source clip duration.
+Consumption has a bounded visual overlay with its exact item/action identity,
+while the underlying movement/combat state and source timers remain unchanged.
+Death takes precedence and uses the actual dying/respawn lifecycle. These are
+read-only animation observations, not new gameplay effects or renderer/avatar
+changes. Original sequence hand/model overrides remain the asset/renderer
+owner's responsibility.
+
 ## Authoritative gameplay UI contract, version 1
 
 ### Additive All amounts and recovery management

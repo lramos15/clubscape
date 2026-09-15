@@ -1,5 +1,5 @@
 {
-  "aggregate_sha256": "37b793c6c8e659476b0e14d2a7999660b5c1ce3924885bb11114ab5283c0c305",
+  "aggregate_sha256": "bdbf8a3788b842bef7f9fd0a32d167ed5ee73eaf8db45cbf6bfea3ff51d8195a",
   "inputs": [
     {
       "bytes": 845835,
@@ -8687,6 +8687,11 @@
       "sha256": "90671bea204c9e583fa84e280d42b1203725aee6f0f4dba42a2c23357e3f3f7e"
     },
     {
+      "bytes": 1556,
+      "path": "crates/game-types/src/actor_animations.rs",
+      "sha256": "563fe5fe1c49fa744db1915db8859e8241837e11acd42696188609ceafa3acff"
+    },
+    {
       "bytes": 2989,
       "path": "crates/game-types/src/audio_authority.rs",
       "sha256": "aedb3929e399bd4f3fd3ca57205613598daa48d505fea504ccf51114c4d51731"
@@ -8727,9 +8732,9 @@
       "sha256": "cbcfd32620681acb6ab0552e3470926dc9e26da4e7737bfa7b103e011bf74a8c"
     },
     {
-      "bytes": 925,
+      "bytes": 976,
       "path": "crates/game-types/src/lib.rs",
-      "sha256": "59aeb50bc6fe7324be2f76a3878750d60f4520aa1d01d564bfbc8cbd3c6d1386"
+      "sha256": "fcd044a0c33e589a8ff5290994b514ab67c7a7f4c6c53dbbd4624184d0221aeb"
     },
     {
       "bytes": 43635,
@@ -8742,9 +8747,9 @@
       "sha256": "dade5ea9bf5b40bf88717ec93711a9277e8d56b14f30dec74634506549ac35f7"
     },
     {
-      "bytes": 4664,
+      "bytes": 5013,
       "path": "crates/game-types/src/observer.rs",
-      "sha256": "b8af4ca5e5e742b7e456469b584e84cf25fb6802455a2811c8c8adf2968effe9"
+      "sha256": "509dc123d53f9942535bbbfc29a9c3d732f5dbba37dbbc1ac06173843d7c135d"
     },
     {
       "bytes": 27766,
@@ -8752,9 +8757,9 @@
       "sha256": "61432b2f9fece62b04a971d23491b8e84b10624c0bb0d5c0036b2ce77a859d68"
     },
     {
-      "bytes": 49991,
+      "bytes": 50179,
       "path": "crates/game-types/src/runtime_validation.rs",
-      "sha256": "9cb5f9befd325574bd0a38b32fc8e101e4a051bb0e434438d62d65fb9382cddd"
+      "sha256": "dd4a8ce6b3b0bbb5012639633f775e9d78aea0776578d6384a2e1ac8164d161f"
     },
     {
       "bytes": 9920,
@@ -8767,9 +8772,9 @@
       "sha256": "e1e1d8ad58e871dabf4a0ad575597e34b690200653fb94d04270b656c4940a80"
     },
     {
-      "bytes": 15493,
+      "bytes": 15616,
       "path": "crates/game-types/src/ui_state.rs",
-      "sha256": "46f9f8a83f3a68af5c270a7763d776a4cd7f1ef0c66e9047558bdeaa209ef205"
+      "sha256": "c9af9dde899c9b4cd8e099f0ff05e726702d4cc84a208f56427ff681250a9507"
     },
     {
       "bytes": 1512,
@@ -8847,9 +8852,14 @@
       "sha256": "b1a8d65cec6143946dba7172bc29142c8aa47cc4383abaffefef5b2ea3b2b028"
     },
     {
-      "bytes": 1989,
+      "bytes": 2186,
       "path": "research/interface-contracts/actor-observer-bindings.json",
-      "sha256": "9d563b4c7dddbba933d4bcb4cc696d6df82e65a26a73f74482ddedb78cc39e2b"
+      "sha256": "43cac42b40ae5ecbd7ee7d66a07a401cc1dcb7a0d9c6ce3ad678f2bdc30ef9ab"
+    },
+    {
+      "bytes": 52457,
+      "path": "research/interface-contracts/animation-authority/inputs.json",
+      "sha256": "43fafa676d29a22f4d7b57bd545860993350b5c627494e20ee52db98496ca4b0"
     },
     {
       "bytes": 105763,
@@ -9052,9 +9062,19 @@
       "sha256": "6abbbd0a2be3a0a9758b004135521e07e4de3d65eab7b98952e4edfe05f283e0"
     },
     {
+      "bytes": 2824,
+      "path": "tools/m1-content/NativeAnimationProbe.java",
+      "sha256": "cd8b8149999fd82414d572b38f7f9cf6068fa2adceb9fc23ccbd8592918e4283"
+    },
+    {
       "bytes": 6426,
       "path": "tools/m1-content/NativeControlProbe.java",
       "sha256": "8c2996fca8bcb17c4a9aa57a2610a5e53bed97653653ff162b5aad91e9a55105"
+    },
+    {
+      "bytes": 7527,
+      "path": "tools/m1-content/actor_animation4.py",
+      "sha256": "7bc2f47a9087af8bc47529fc5f0e778726b52abcfadf633939b73ef0145c8a4b"
     },
     {
       "bytes": 9776,
@@ -9067,9 +9087,9 @@
       "sha256": "3ccf42326831b8d396fed6b843c9ace2cdc298a36b85323cc0bc91490b5c0898"
     },
     {
-      "bytes": 32513,
+      "bytes": 32687,
       "path": "tools/m1-content/build.py",
-      "sha256": "124baa9d9e58bae0b3190f2df2f623b0885cf02ee9289cd8e8a9b613899b3ca7"
+      "sha256": "fff00acd5652ce59854800161049e2c9af50e3510957638ddce973d173ec51f3"
     },
     {
       "bytes": 5508,
@@ -9105,6 +9125,11 @@
       "bytes": 12383,
       "path": "tools/m1-content/geometry.py",
       "sha256": "a77ce32922e30f76da6c5607efd74472d012a623b4bd9e5fbdbea0563529ec9c"
+    },
+    {
+      "bytes": 4895,
+      "path": "tools/m1-content/import_actor_animations.py",
+      "sha256": "6cb24e99c25dea497538b4a48c3e491a90ed7fe0d754386ea4b18cda5aca44df"
     },
     {
       "bytes": 8309,
@@ -9147,9 +9172,9 @@
       "sha256": "b5472c22c109db346a8cda64347a03f353b94a59022c026c47acf027dd09453a"
     },
     {
-      "bytes": 2741,
+      "bytes": 2927,
       "path": "tools/m1-content/probe_ui_controls.py",
-      "sha256": "df06779ccffdaa2a78be02b33bb3023b2516c865ac575cb01fc89d707ee46c0d"
+      "sha256": "bd32394070b23afb210973e6333466833a1ae1c904b555dfde81e8599249547a"
     },
     {
       "bytes": 30870,
@@ -9202,6 +9227,11 @@
       "sha256": "c8bec318f80139cd2d852d775a85df47fdcf127539dd8e5dc8186805eeb640dd"
     },
     {
+      "bytes": 3952,
+      "path": "tools/m1-content/test_actor_animations.py",
+      "sha256": "50ca0db8a28fbba0b27a5f9ae3efbe88d66c04f9d68977bb8d1941df8a533717"
+    },
+    {
       "bytes": 8041,
       "path": "tools/m1-content/test_asset_refresh.py",
       "sha256": "662d268ae2903f4a90f259bd50e8844c8a75ee92e8f1d37acd24d82b84f24335"
@@ -9252,9 +9282,9 @@
       "sha256": "f7a0176dd033cb96288c1d2def3aaf0f88a86ec7d15d04f6ea66b2c8c6b259c0"
     },
     {
-      "bytes": 20416,
+      "bytes": 20638,
       "path": "tools/m1-content/ui4.py",
-      "sha256": "0520c92a1b8cb0e86cb2d44aa59ded174ca40f2ccc4b838923c3f84b44ad311f"
+      "sha256": "a2d88086e70e1c1d0b3e0fcb6d0939361bfbc510feda5f78f2fd0e1d78ad2e10"
     },
     {
       "bytes": 9277,

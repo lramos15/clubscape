@@ -36,6 +36,6 @@
       "qualification": "Existing source player appearance sequences PLAYER_WALK819 and PLAYER_RUN824; movement selection is actual engine execution, not checkbox or adjacency."
     }
   ],
-  "unknown_policy": "No numeric combat, spell or inventory-dough sequence is invented. Preserve exact source style/spell/recipe identity unless an explicit bound animation event/definition supplies a sequence.",
+  "unknown_policy": "New profiles bind legal combat styles, Wind Strike, ordinary Home Teleport phases, consumption and death through typed ui.actor_animations and the qualified evidence in animation-authority/inputs.json. Explicit supplied animation identities still win. Inventory dough and container Empty remain source-unverified, not silent and never assigned a potter-wheel or nearby-object fallback.",
   "acceptance": false
 }

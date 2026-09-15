@@ -213,12 +213,14 @@ impl WorldEngine {
                     runtime::deadline(world.tick, u64::from(delay))?,
                 );
                 // Drinks preserve combat/movement and never touch food/attack/spell cooldowns.
+                self.record_item_animation(world.tick, character, item, action)?;
                 Ok(vec![GameEvent::Message {
                     text: format!("You drink the {}.", self.content.items[item].name),
                 }])
             }
             ItemUiAction::Empty { replacement } => {
                 self.replace_selected(character, slot, item, replacement)?;
+                self.record_item_animation(world.tick, character, item, action)?;
                 Ok(Vec::new())
             }
             ItemUiAction::Read {
