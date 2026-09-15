@@ -70,6 +70,13 @@ try {
     assert.equal((await state()).volumes.effects, 1);
     assert.equal((await state()).nativeMixer.effects, 0);
     await page.screenshot({ path: resolve(results, "audio-components/native-master-zero.png") });
+    await page.evaluate(() => { window.audioComponent.handle.volume("music", 0); window.audioComponent.handle.mute(true); }); await frame();
+    await page.locator('[data-ui-control="audio-mute-master"]').click({ button: "right" }); await frame();
+    await page.getByRole("button", { name: "Enable sound", exact: true }).click(); await frame();
+    await page.waitForFunction(() => window.audioComponent.state().unlocked);
+    assert.equal((await state()).muted, false);
+    assert.equal((await state()).masterPercent, 0);
+    assert.equal((await state()).volumes.music, 0);
   });
   await check("drag, focus, Escape and external updates preserve source slider values", async () => {
     await mount(); await settings();
@@ -129,7 +136,7 @@ try {
     assert.equal(await page.getByRole("button", { name: "Shuffle Mode", exact: true }).getAttribute("data-ui-control"), "music-mode-1");
     assert.equal(await page.getByRole("button", { name: "Single Mode", exact: true }).getAttribute("data-ui-control"), "music-mode-2");
     await click("music-mode-1");
-    assert.match(await page.getByRole("status").innerText(), /authoritative_music_selection_and_unlocks/);
+    assert.match(await page.getByRole("status").innerText(), /ui.music.binding/);
     assert.equal(await page.evaluate(() => window.component.services.intents.some(intent => intent.kind === "music")), false);
   });
   await check("title toggle uses real activation and global mute without rewriting source channel positions", async () => {

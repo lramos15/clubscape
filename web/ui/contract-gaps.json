@@ -12,11 +12,12 @@
     "version_rule": "WorldView.ui.version must equal 1. Absent, unknown or malformed projections are explicit unsupported/error states, never fabricated empty views."
   },
   "published_audio_policy": {
-    "upstream_commits": ["888f9384e111b5f7fefeee36859bae4f873e5c95", "f74652a59834815b4e57e04366dc857681fd83c1"],
-    "authorized_picks": ["b7cc380", "d2082e8"],
+    "upstream_commits": ["888f9384e111b5f7fefeee36859bae4f873e5c95", "f74652a59834815b4e57e04366dc857681fd83c1", "f9e466d3feb6626785ae46b9d6549e4e7eb00443"],
+    "authorized_picks": ["b7cc380", "d2082e8", "7475596"],
     "audio_handle_abi_changed": false,
     "volume_argument": "Source normalized slider position; percent/100 is sent exactly once, never mixer/native asset gain.",
-    "current_values": "bindUiAudio uses observeAudioState, sourceAudioDefaults, sourceSliderToMixer and sourceMixerToAssetGain. Native defaults are effective mixer 255/127/127.",
+    "current_values": "bindUiAudio uses actual observed percentages/mixers and per-voice renderedNativeLevel/appliedNativeLevel. sourceMixerToAssetGain uses the actual 128 or 255 denominator, never an assumed music-channel gain.",
+    "supplement": {"manifest": "assets/manifests/osrs/audio-m1-supplement.json", "sha256": "840aef91bac9a1fd042bdb1c3662ff92a378e279f48335108730e168af550d91", "assets": 9, "status": "published_consumed_and_routed_in_ui_component_host"},
     "committed_gameplay_events_created_by_ui": false
   },
   "wired_versioned_controls": [
@@ -32,7 +33,8 @@
     "Public chat permission, declared channel and UTF-8 byte limit; rejected drafts retained, no optimistic echo or clearing before the authoritative own-message update.",
     "Declared body_type 0/1 permissions and confirmation, with local appearance/equipment preview descriptors. Human kit/colour/pronoun controls do not create new penguin variants.",
     "All shop buys still send displayed canonical expected_item; held menus/amounts never retarget a reused row.",
-    "Native master/music/effects/area sliders and per-channel mute controls consume actual audio observations, preserve remembered in-session positions and source integer/nonlinear semantics; title audio uses explicit global mute rather than resetting all channel positions."
+    "Native master/music/effects/area sliders and per-channel mute controls consume actual audio observations, preserve remembered in-session positions and source integer/nonlinear semantics; title audio uses explicit global mute rather than resetting all channel positions.",
+    "Player-scoped setUiMusicState delegates the exact published state to the audio engine. Native modes, canonical manual tracks, actual unlock coloring/counts, current playlist, loop flags, scrollbar and source dropdown cancellation are wired without fabricated music events or caller-selected next songs."
   ],
   "requests": [
     {
@@ -71,24 +73,19 @@
       "reason": "The UI now exports source widget/model bounds, native model parameters, approved local body selection and authoritative equipment/base metadata. Static minimap rasters and absent previews are not a finished renderer. These are component adapters, not new server defaults or shared-ABI edits."
     },
     {
-      "scope": "Real source audio listener/object/varp and next-music bridge",
-      "extension": "Use the published setSourceAudioScene(handle, scene) with real 128-unit listener coordinates, plane/instance/owner, placed emitters/orientations and bound original varps; use setSourceMusicSelector with the actual next selection.",
-      "reason": "UI observer/volume wiring is complete, but shell/renderer scene inputs are not owned here. No tile-center guess, invented gain/distance/fade, empty-emitter success or playlist is supplied by UI."
+      "scope": "Real source audio listener/object/varp and music-state app composition",
+      "extension": "Use setSourceAudioScene with real 128-unit listener, plane/instance/owner, placed emitters/orientations and original varps; call setUiMusicState(ui, playerId, actual SourceMusicState) after audio.update(world, events).",
+      "reason": "UI/state integration and native internal continuation are implemented. Actual shell/renderer inputs remain outside UI ownership. No caller-guessed gain, empty scene or next-song callback is required or supplied."
     },
     {
-      "scope": "Authoritative music preferences, unlocks and manual requests",
-      "extension": "Publish current native area0/shuffle1/single2 preference, authoritative unlocked tracks/playlist and a manual-selection request bridge; retain sourceDuration/native_duration semantics.",
-      "reason": "AudioSnapshot's playback plan does not establish saved music preference or unlock ownership. Original mode controls are present with exact native IDs and required feedback; no committed music event or unlocked:true flag is fabricated from a click."
+      "scope": "Direct skip request and numbered playlist slots",
+      "extension": "Expose a direct Skip Track request into the audio engine's existing native next-track policy; supply saved Playlist1/2/3 identities/contents for the original numbered-slot controls.",
+      "reason": "SourceMusicState and UI controls now cover actual modes/unlocks/manual selection/current playlist/loop flags. It does not identify three saved slots, and identical-state idempotence is not a skip API. No mode-flipping workaround or caller-guessed next track is used."
     },
     {
       "scope": "Native remembered mute values and full settings window",
       "extension": "Expose the actual remembered mute percentages (source varbits14817/12426/12427/12428) when restoring persisted settings. Complete the separate All Settings window projection.",
       "reason": "Current percentages/mixers and source sidebar sliders are wired. In-session Mute/Unmute preserves the observed previous value. A zero value whose saved restoration value was never supplied reports ui.audio.remembered_mute instead of inventing it. The broader All Settings button has explicit required feedback, not a silent open acknowledgement."
-    },
-    {
-      "scope": "Additive original audio publications",
-      "extension": "Integrate the audio owner's forthcoming AUDIO_INPUTS/routes for index6 groups64/327/163/145 and native255 index11 groups40/54/58/64/65.",
-      "reason": "These additions are not yet relayed on this branch. The frozen 266 files/base pack remain unchanged; missing tracks or unsafe scaled representations are not substituted, normalized or invented."
     },
     {
       "scope": "Committed Cook reward/Widget153 close audio batches",
@@ -107,6 +104,7 @@
     "preserved_native_mode_and_effect_checks": { "passed": 106, "total": 106, "tolerance": 0 },
     "additional_production_death_reward_checks": { "passed": 45, "total": 45, "tolerance": 0 },
     "additional_audio_control_checks": { "passed": 18, "total": 18, "tolerance": 0 },
+    "additional_music_control_checks": { "passed": 8, "total": 8, "tolerance": 0 },
     "full_panels_excluded": 0,
     "source_fixture_balances_are_production_values": false,
     "component_double_is_live_gameplay": false

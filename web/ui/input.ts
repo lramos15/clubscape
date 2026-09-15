@@ -8,6 +8,7 @@ export interface Control extends Rect {
   bankEntryId?: string; bankTab?: number; bankCreate?: boolean;
   productionRecipe?: string; shortcut?: string;
   slider?: { value: number | null; current: () => number | null; change: (value: number) => void };
+  scrollbar?: { value: number; maximum: number; thumb: number; page: number; current: () => number; change: (value: number) => void };
 }
 export interface InputField extends Rect {
   id: string; label: string; type: "text" | "password"; value: string; autocomplete: string;
@@ -119,14 +120,19 @@ export class InputSurface {
       button.setAttribute("aria-description", control.disabled ?? control.actions[0]?.disabled ?? control.tooltip ?? "");
       button.setAttribute("aria-disabled", String(Boolean(control.disabled ?? control.actions[0]?.disabled)));
       button.disabled = Boolean(control.disabled);
-      if (control.slider) {
+      if (control.scrollbar) {
+        button.setAttribute("role", "slider"); button.setAttribute("aria-orientation", "vertical");
+        button.setAttribute("aria-valuemin", "0"); button.setAttribute("aria-valuemax", String(control.scrollbar.maximum));
+        button.setAttribute("aria-valuenow", String(control.scrollbar.value)); button.setAttribute("aria-valuetext", String(control.scrollbar.value));
+      } else if (control.slider) {
         button.setAttribute("role", "slider");
+        button.setAttribute("aria-orientation", "horizontal");
         button.setAttribute("aria-valuemin", "0"); button.setAttribute("aria-valuemax", "100");
         if (control.slider.value !== null) button.setAttribute("aria-valuenow", String(control.slider.value));
         else button.removeAttribute("aria-valuenow");
         button.setAttribute("aria-valuetext", control.slider.value === null ? "Unavailable" : `${control.slider.value}%`);
       } else {
-        button.removeAttribute("role"); button.removeAttribute("aria-valuemin"); button.removeAttribute("aria-valuemax");
+        button.removeAttribute("role"); button.removeAttribute("aria-orientation"); button.removeAttribute("aria-valuemin"); button.removeAttribute("aria-valuemax");
         button.removeAttribute("aria-valuenow"); button.removeAttribute("aria-valuetext");
       }
       button.tabIndex = control.focusable === false ? -1 : 0;

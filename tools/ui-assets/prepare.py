@@ -151,6 +151,7 @@ def native(items, source, tooling):
         UiModeCapture.run(capture, this);
         UiPresentationCapture.run(capture, this);
         UiAudioCapture.run(capture, this);
+        UiMusicCapture.run(capture, this);
     }
 """
     instrumented = instrumented.rstrip()[:-1] + extra + "}\n"
@@ -296,6 +297,8 @@ def main():
         "staticModels": read(native_dir / "static-models.json"),
         "nativePresentations": read(native_dir / "presentation-inputs.json"),
         "nativeAudioControls": read(native_dir / "audio-ui-inputs.json"),
+        "nativeMusicControls": read(native_dir / "music-ui-inputs.json"),
+        "musicTracks": read(native_dir / "music-ui-rows.json"),
         "npcs": {str(n["id"]): {"name": n["name"], "examine": n.get("examine")} for n in collections("npc").values()},
         "presentation": {
             "interfaces": {key: {"name": v["name"], "sourceIds": v["source_ids"]}

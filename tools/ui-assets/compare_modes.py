@@ -14,6 +14,7 @@ def main():
     parser.add_argument("--flames-only", action="store_true")
     parser.add_argument("--presentations", action="store_true", help="Compare the separate published-contract modal fixture lane")
     parser.add_argument("--audio-ui", action="store_true", help="Compare original audio preference controls, not audible output")
+    parser.add_argument("--music-ui", action="store_true", help="Compare original music mode/list widgets, not audio outcomes")
     args = parser.parse_args()
     results = []
     directory = ROOT / "web/ui/test-results"
@@ -28,6 +29,9 @@ def main():
     if args.audio_ui:
         lanes = [(kind, ROOT / "tools/ui-assets/.cache/native/ui-only", "native-*.png")
                  for kind in ("audio-source", "audio-projections")]
+    if args.music_ui:
+        lanes = [(kind, ROOT / "tools/ui-assets/.cache/native/ui-only", "native-*.png")
+                 for kind in ("music-source", "music-projections")]
     for kind, source_directory, pattern in lanes:
         if args.flames_only and kind != "flames":
             continue
@@ -37,7 +41,7 @@ def main():
             source = source_directory / path.name
             if not source.exists():
                 source_kind = "flames" if kind == "flames" else "ui"
-                archive = ROOT / "web/ui/evidence" / ("native-audio-controls" if args.audio_ui else "native-presentations" if args.presentations else "native-modes")
+                archive = ROOT / "web/ui/evidence" / ("native-music-controls" if args.music_ui else "native-audio-controls" if args.audio_ui else "native-presentations" if args.presentations else "native-modes")
                 source = archive / "original" / source_kind / path.name
                 records = json.loads((archive / "source-inputs.json").read_text())["references"]
                 record = next(record for record in records if record["kind"] == source_kind and record["name"] == path.name)
@@ -57,7 +61,7 @@ def main():
     report = {"scope": "Additional ORIGINAL UI component/effect fixture comparisons, not live gameplay",
               "sourcePackSha256": "b62e19704e17d3d3e4e819f803ef49ba7cc54034ae407184b423427c65d9674d",
               "results": results, "fullPanelsExcluded": 0, "finalAcceptance": False}
-    (directory / ("audio-ui-comparison.json" if args.audio_ui else "presentation-comparison.json" if args.presentations else "mode-comparison.json")).write_text(json.dumps(report, indent=2) + "\n")
+    (directory / ("music-ui-comparison.json" if args.music_ui else "audio-ui-comparison.json" if args.audio_ui else "presentation-comparison.json" if args.presentations else "mode-comparison.json")).write_text(json.dumps(report, indent=2) + "\n")
     print(json.dumps({"checked": len(results), "passed": sum(r["passed"] for r in results),
                       "failures": [{"case": r["case"], "different": r["different_pixels"]} for r in results if not r["passed"]]}))
     return int(not results or any(not result["passed"] for result in results))

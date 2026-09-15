@@ -12,10 +12,12 @@ export async function browserHost({ audioAssets = false } = {}) {
   const audio = new Map();
   if (audioAssets) {
     for (const path of ["assets/manifests/osrs/audio-runtime.json", "research/audio-source/source-map.json",
-      "research/reference-pack/v1/audio-reference.json"]) audio.set(path, resolve(root, path));
+      "research/reference-pack/v1/audio-reference.json", "assets/manifests/osrs/audio-m1-supplement.json"])
+      audio.set(path, resolve(root, path));
     const manifest = JSON.parse(await readFile(audio.get("assets/manifests/osrs/audio-runtime.json"), "utf8"));
     const reference = JSON.parse(await readFile(audio.get("research/reference-pack/v1/audio-reference.json"), "utf8"));
-    for (const entry of [...manifest.assets, ...reference.reference_templates]) {
+    const supplement = JSON.parse(await readFile(audio.get("assets/manifests/osrs/audio-m1-supplement.json"), "utf8"));
+    for (const entry of [...manifest.assets, ...reference.reference_templates, ...supplement.assets]) {
       const path = resolve(root, entry.path);
       if (!path.startsWith(root + sep)) throw new Error("Invalid original audio fixture path.");
       audio.set(entry.asset_id ?? entry.id, path);

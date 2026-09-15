@@ -39,6 +39,9 @@ export interface TutorialBinding {
   state_id: string; case_id: string; hud_signature_id: string; declared_controls: string[];
   visual_variant_ids: string[]; source_text_record_ids: string[];
 }
+export interface MusicTrackAsset {
+  row: number; group: number; name: string; hint: string; widgetIndex: number; sourceSha256: string;
+}
 export interface UiCatalogue {
   version: number; sourcePackSha256: string; sourceCache: number; nativeCanvas: number[];
   flames: FlameAssets;
@@ -52,6 +55,7 @@ export interface UiCatalogue {
   definitions: Record<string, Record<string, unknown>>;
   portraits: Record<string, { asset: string; offsetX: number; offsetY: number }>;
   staticModels: Record<string, StaticModelAsset>;
+  musicTracks: MusicTrackAsset[];
   npcs: Record<string, { name: string; examine: string | null }>;
   proposals: Record<string, {
     content: { heading: string; lines: string[]; buttons: string[] };
@@ -129,6 +133,8 @@ export class UiAssets {
     }
     if (!value.staticModels || !value.templates["native-production-choice-1"] || !value.templates["native-death-preview-populated"])
       throw new Error("Original versioned UI modal frames or static model icons are missing.");
+    if (!Array.isArray(value.musicTracks) || !value.musicTracks.length || !value.templates["native-music-mode-0"])
+      throw new Error("Original music row identities or native mode controls are missing.");
     for (const id of [494, 495, 496, 497]) {
       if (value.fonts[id]?.advances.length !== 256 || value.sprites[id]?.frames.length !== 256) {
         throw new Error(`Original CP1252 font ${id} is missing or corrupt.`);

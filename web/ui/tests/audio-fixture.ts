@@ -1,8 +1,10 @@
 import type { AudioSnapshot } from "../../audio/index.ts";
 import { createAudio, readAudioState, sourceSliderToMixer, setSourceMasterVolume } from "../../audio/index.ts";
+import type { SourceMusicState } from "../../audio/index.ts";
 import { SOURCE_PACK_SHA256 } from "../../shared/contracts.ts";
-import { bindUiAudio } from "../index.ts";
+import { bindUiAudio, getUiMusicState, onUiMusicStateChange, setUiMusicState } from "../index.ts";
 import { observedAudio, projectAudioControls } from "../audio-controls.ts";
+import { projectMusicControls } from "../music-controls.ts";
 import { UiAssets } from "../assets.ts";
 import { SourceRaster } from "../raster.ts";
 import { paintNativeTree } from "../layout.ts";
@@ -33,10 +35,14 @@ export async function mountAudio(phase: "world" | "title" = "world"): Promise<vo
   };
   if (phase === "world") handle.update(component.services.state().world, []);
   else handle.update(null, []);
+  const musicChanges: Array<{ playerId: string; state: SourceMusicState }> = [];
+  onUiMusicStateChange(component.ui, (playerId, state) => { musicChanges.push({ playerId, state }); });
   disposeAudio = () => handle.dispose();
   Object.assign(window, { audioComponent: {
     handle, failures, state: () => readAudioState(handle), stop,
     master: (percent: number) => setSourceMasterVolume(handle, percent),
+    music: (state: SourceMusicState, playerId = component.services.state().world!.player.id) => setUiMusicState(component.ui, playerId, state),
+    musicState: () => getUiMusicState(component.ui), musicChanges,
     dispose: () => handle.dispose(), uiDispose: () => component.ui.dispose(),
   } });
 }
@@ -64,6 +70,26 @@ export async function audioProjection(percentages: readonly number[]): Promise<v
   const result = observedAudio(snapshotFor(percentages));
   if (!result.value) throw new Error(result.problem);
   const widgets = projectAudioControls(assets.catalogue, result.value);
+  await assets.preloadItems(widgets.filter(widget => widget.item >= 0).map(widget => widget.item));
+  await Promise.all(["ui/minimaps/compass.png", "ui/minimaps/3168-3168-0.png"].map(id => assets.require(id)));
+  const raster = new SourceRaster(canvas, assets), minimap = new MinimapPainter(raster);
+  paintNativeTree(raster, widgets, 1920, 1080, widget => widget.contentType === 1337 ||
+    minimap.draw(widget, { x: 3222, y: 3218, plane: 0 }));
+}
+
+export async function musicProjection(name: string): Promise<void> {
+  const canvas = document.querySelector("canvas")!;
+  canvas.width = 1920; canvas.height = 1080;
+  const assets = await (loaded ??= UiAssets.load(testAssets, error => { throw error; }));
+  const source = assets.catalogue.templates[name]!;
+  const unlocked = new Set(source.filter(widget => widget.id === 239 * 65536 + 11 && widget.type === 4 && widget.color === 0x0dc10d)
+    .map(widget => widget.index));
+  const mode = name === "native-music-mode-1" ? "shuffle" : name === "native-music-mode-2" ? "single" : "area";
+  const state: SourceMusicState = { mode, areaMode: "modern",
+    unlockedGroups: assets.catalogue.musicTracks.filter(track => unlocked.has(track.widgetIndex)).map(track => track.group),
+    selectedGroup: null, playlistGroups: [], loopEnabled: true };
+  const projected = projectMusicControls(assets.catalogue, state, null, 0, name === "native-music-filter-open").widgets;
+  const widgets = [...source.filter(widget => widget.id >> 16 !== 239), ...projected.filter(widget => widget.id >> 16 === 239)];
   await assets.preloadItems(widgets.filter(widget => widget.item >= 0).map(widget => widget.item));
   await Promise.all(["ui/minimaps/compass.png", "ui/minimaps/3168-3168-0.png"].map(id => assets.require(id)));
   const raster = new SourceRaster(canvas, assets), minimap = new MinimapPainter(raster);

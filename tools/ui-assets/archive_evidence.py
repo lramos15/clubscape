@@ -34,6 +34,21 @@ def write(path, value):
     path.write_text(json.dumps(value, indent=2) + "\n")
 
 
+def archive_references(names, directory):
+    references = []
+    for name in names:
+        if Path(name).name != name:
+            raise ValueError("Unexpected source case path")
+        source = NATIVE / "ui-only" / name
+        destination = directory / "original/ui" / name
+        if not source.exists():
+            source = destination
+        if source != destination:
+            copy(source, destination)
+        references.append({"kind": "ui", "name": name, "sha256": digest(source), "bytes": source.stat().st_size})
+    return references
+
+
 def passed(name, count):
     report = read(RESULTS / name)
     rows = report.get("results", report.get("cases", []))
@@ -58,12 +73,14 @@ def main():
         "modes": passed("mode-comparison.json", 106),
         "presentations": passed("presentation-comparison.json", 45),
         "audio_ui": passed("audio-ui-comparison.json", 18),
+        "music_ui": passed("music-ui-comparison.json", 8),
     }
     components = passed("component-tests.json", 20)
     versioned = passed("gameplay-ui-v1-tests.json", 15)
     audio_ui = passed("audio-ui-tests.json", 7)
-    units = passed_tap("unit.tap", 33)
-    audio_units = passed_tap("audio-policy.tap", 25)
+    music_ui = passed("music-ui-tests.json", 6)
+    units = passed_tap("unit.tap", 38)
+    audio_units = passed_tap("audio-policy.tap", 29)
     glyphs = read(RESULTS / "glyph-proof.json")
     if glyphs["failures"] or glyphs["checkedSpriteFrames"] < 1099 or glyphs["checkedFontGlyphs"] != 1024:
         raise ValueError("Original glyph/frame proof is incomplete")
@@ -151,6 +168,22 @@ def main():
         "references": audio_references, "inputs": records, "sourceScripts": scripts, "sourcePackSha256": glyphs["sourcePackSha256"],
         "finalAcceptance": False,
     })
+    music_archive = EVIDENCE / "native-music-controls"
+    records = manifest["nativeMusicControls"]
+    if len(records) != 4 or not music_ui["browserOutputMuted"]:
+        raise ValueError("Native music UI evidence is incomplete")
+    references = archive_references([record["case"] + ".png" for record in records], music_archive)
+    for kind in ("music-source", "music-projections", "music-components"):
+        for path in (RESULTS / kind).glob("*.png"):
+            copy(path, music_archive / kind / path.name)
+    copy(RESULTS / "music-ui-tests.json", music_archive / "browser.json")
+    copy(RESULTS / "music-ui-comparison.json", music_archive / "comparison.json")
+    write(music_archive / "source-inputs.json", {
+        "scope": "Original music mode/dropdown and row identity calibration only; source fixture unlocks are not live-gameplay state",
+        "references": references, "inputs": records,
+        "native_track_rows": len(manifest["musicTracks"]),
+        "sourcePackSha256": glyphs["sourcePackSha256"], "finalAcceptance": False,
+    })
     owned_sources = sorted([
         *ROOT.glob("web/ui/*.ts"), *ROOT.glob("web/ui/tests/*.ts"), *ROOT.glob("web/ui/tests/*.mjs"),
         *ROOT.glob("tools/ui-assets/*.java"), *ROOT.glob("tools/ui-assets/*.py"),
@@ -167,12 +200,15 @@ def main():
         "unit": units,
         "integrated_audio_policy_units": audio_units,
         "component_browser": {"legacy": len(components["cases"]), "versioned": len(versioned["cases"]),
-                              "source_audio_ui": len(audio_ui["cases"]), "browser": versioned["browser"]},
+                              "source_audio_ui": len(audio_ui["cases"]), "source_music_ui": len(music_ui["cases"]), "browser": versioned["browser"]},
         "audio_contract": {
-            "upstream_commits": ["888f9384e111b5f7fefeee36859bae4f873e5c95", "f74652a59834815b4e57e04366dc857681fd83c1"],
-            "authorized_picks": ["b7cc380", "d2082e8"],
+            "upstream_commits": ["888f9384e111b5f7fefeee36859bae4f873e5c95", "f74652a59834815b4e57e04366dc857681fd83c1", "f9e466d3feb6626785ae46b9d6549e4e7eb00443"],
+            "authorized_picks": ["b7cc380", "d2082e8", "7475596"],
             "volume_semantics": "Source normalized slider position, never linear gain; master is applied before lookup.",
             "observer": "observeAudioState via bindUiAudio",
+            "music_state": "setUiMusicState delegates the published SourceMusicState with current player identity; native continuation is internal.",
+            "supplement_manifest_sha256": digest(ROOT / "assets/manifests/osrs/audio-m1-supplement.json"),
+            "supplement_assets": 9,
             "browser_output_muted_for_component_tests": True,
             "scene_or_committed_gameplay_events_fabricated": False,
         },

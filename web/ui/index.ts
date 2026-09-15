@@ -19,6 +19,9 @@ import type { ProductionAmount } from "./production.ts";
 import { rewardDetails } from "./rewards.ts";
 import { audioSliderPercent, observedAudio } from "./audio-controls.ts";
 import type { UiAudioChannel, UiAudioView } from "./audio-controls.ts";
+import type { SourceMusicState } from "../audio/native-scene.ts";
+import { musicRequest, musicStateProblem, musicScrollPosition } from "./music-controls.ts";
+import type { MusicUiAction } from "./music-controls.ts";
 
 export interface UiNotice { message: string; errorId: string | null; recoverable: boolean; scope: "error" | "unavailable" | "information" }
 export interface AmountPrompt { label: string; value: string; confirm: (quantity: number) => void; pending?: boolean }
@@ -41,6 +44,7 @@ export interface LocalUiState {
   chatDraft: string;
   productionAmount: ProductionAmount;
   settingsPage: "controls" | "audio";
+  musicDropdown: boolean;
 }
 export interface WorldPointer {
   kind: "move" | "primary" | "context";
@@ -77,13 +81,16 @@ export interface GameViewContext {
   audioValue: (channel: UiAudioChannel) => number | null;
   audioPercent: (channel: UiAudioChannel, percent: number) => void;
   audioMute: (channel: UiAudioChannel) => void;
+  audioToggle: () => void;
+  music: SourceMusicState | null;
+  musicAction: (action: MusicUiAction) => void;
 }
 
 function emptyLocal(): LocalUiState {
   return { tab: 3, selectedItem: null, selectedSpell: null, bankSearch: "", bankSearchOpen: false,
     bankAmount: 1, bankNotes: false, shopAmount: 1, shopValue: true, scroll: 0,
     journal: null, modal: null, dialoguePage: 0, amount: null, appearance: { body_type: 0 },
-    quickPrayer: true, magicFilter: false, filterPanel: null, prayerFilters: 0, magicFilters: 0, recoverySelected: null, chatDraft: "", productionAmount: 1, settingsPage: "controls" };
+    quickPrayer: true, magicFilter: false, filterPanel: null, prayerFilters: 0, magicFilters: 0, recoverySelected: null, chatDraft: "", productionAmount: 1, settingsPage: "controls", musicDropdown: false };
 }
 
 function errorDetails(error: unknown): { message: string; errorId: string | null; recoverable: boolean } {
@@ -170,7 +177,26 @@ export async function bindUiAudio(handle: UiHandle, audio: AudioHandle): Promise
   const module = await import("../audio/index.ts");
   const controller = controllers.get(handle);
   if (!controller) throw new Error("UI handle has been disposed.");
-  return controller.bindAudio(audio, module.observeAudioState, module.setSourceMasterVolume);
+  return controller.bindAudio(audio, module.observeAudioState, module.setSourceMasterVolume, module.setSourceMusicState, module.readAudioState);
+}
+
+/** Apply the same published music state to audio and UI, scoped to the actual current player. */
+export function setUiMusicState(handle: UiHandle, playerId: string, state: SourceMusicState): void {
+  const controller = controllers.get(handle);
+  if (!controller) throw new Error("UI handle has been disposed.");
+  controller.supplyMusicState(playerId, state);
+}
+
+export function getUiMusicState(handle: UiHandle): Readonly<SourceMusicState> | null {
+  return controllers.get(handle)?.readMusicState() ?? null;
+}
+
+/** Reports applied client music preferences; it does not grant unlocks or emit gameplay audio events. */
+export function onUiMusicStateChange(handle: UiHandle, listener: (playerId: string, state: SourceMusicState) => void | Promise<void>): () => void {
+  const controller = controllers.get(handle);
+  if (!controller) throw new Error("UI handle has been disposed.");
+  controller.musicChanged = listener;
+  return () => { if (controller.musicChanged === listener) controller.musicChanged = null; };
 }
 
 /** Supply only an actual model-only renderer surface at the requested native dimensions. */
@@ -233,7 +259,11 @@ class UiController {
   private masterVolume: ((percent: number) => void) | null = null;
   private readonly mutedPercentages = new Map<UiAudioChannel, number>();
   private sliderDrag: { id: string; grab: number } | null = null;
+  private scrollDrag: { id: string; grab: number } | null = null;
   private audioTrace: import("../audio/index.ts").AudioTrace | null = null;
+  private musicState: { playerId: string; value: SourceMusicState } | null = null;
+  private sourceMusic: ((value: SourceMusicState) => void) | null = null;
+  musicChanged: ((playerId: string, state: SourceMusicState) => void | Promise<void>) | null = null;
 
   constructor(canvas: HTMLCanvasElement, services: AppServices, assets: UiAssets) {
     this.canvas = canvas; this.services = services; this.assets = assets;
@@ -266,17 +296,17 @@ class UiController {
     const scrollTargets: HTMLElement[] = [canvas, this.surface.root];
     for (const target of scrollTargets) target.addEventListener("wheel", event => {
       const [x, y] = this.xy(event);
-      if (!this.capturesPointer(x, y) || this.menu || this.notice || this.local.amount) return;
+      if (!this.capturesPointer(x, y) || this.menu || this.notice || this.local.amount || this.local.musicDropdown) return;
       event.preventDefault();
-      this.local.scroll = Math.max(0, this.local.scroll + Math.sign(event.deltaY) * 36);
+      this.local.scroll = Math.max(0, this.local.scroll + Math.sign(event.deltaY) * (this.local.tab === 13 ? 45 : 36));
       this.renderSoon();
     }, { signal: this.abort.signal, passive: false });
     window.addEventListener("pointerup", event => {
       const inControls = event.target instanceof Node && this.surface.root.contains(event.target);
-      if ((this.drag || this.bankDrag || this.sliderDrag) && !inControls && event.target !== canvas) this.pointer(event, null, "up");
+      if ((this.drag || this.bankDrag || this.sliderDrag || this.scrollDrag) && !inControls && event.target !== canvas) this.pointer(event, null, "up");
     }, { signal: this.abort.signal });
-    window.addEventListener("blur", () => { this.drag = null; this.bankDrag = null; this.sliderDrag = null; this.menu = null; this.renderSoon(); }, { signal: this.abort.signal });
-    window.addEventListener("pointercancel", () => { this.drag = null; this.bankDrag = null; this.sliderDrag = null; this.renderSoon(); }, { signal: this.abort.signal });
+    window.addEventListener("blur", () => { this.drag = null; this.bankDrag = null; this.sliderDrag = null; this.scrollDrag = null; this.menu = null; this.renderSoon(); }, { signal: this.abort.signal });
+    window.addEventListener("pointercancel", () => { this.drag = null; this.bankDrag = null; this.sliderDrag = null; this.scrollDrag = null; this.renderSoon(); }, { signal: this.abort.signal });
     assets.changed(() => this.renderSoon());
     this.unsubscribe = services.subscribe(state => this.update(state));
     const bounds = canvas.getBoundingClientRect();
@@ -292,11 +322,13 @@ class UiController {
   }
 
   bindAudio(handle: AudioHandle, observe: typeof import("../audio/index.ts").observeAudioState,
-    master: typeof import("../audio/index.ts").setSourceMasterVolume): () => void {
+    master: typeof import("../audio/index.ts").setSourceMasterVolume,
+    music: typeof import("../audio/index.ts").setSourceMusicState,
+    read: typeof import("../audio/index.ts").readAudioState): () => void {
     this.stopAudio?.();
     this.mutedPercentages.clear();
     this.audioTrace = null;
-    const stop = observe(handle, snapshot => {
+    const receive = (snapshot: import("../audio/index.ts").AudioSnapshot) => {
       if (this.disposed) return;
       const result = observedAudio(snapshot);
       if (result.problem) {
@@ -314,18 +346,60 @@ class UiController {
           else this.show(message, "error", code);
         }
       }
-    });
+    };
+    const stop = observe(handle, receive);
     this.audioHandle = handle;
     this.masterVolume = percent => master(handle, percent);
+    this.sourceMusic = state => { music(handle, state); receive(read(handle)); };
     const cleanup = () => {
       stop();
       if (this.stopAudio === cleanup) {
         this.stopAudio = null; this.audioHandle = null; this.audioView = null; this.masterVolume = null; this.sliderDrag = null; this.audioTrace = null;
+        this.musicState = null; this.sourceMusic = null;
         this.renderSoon();
       }
     };
     this.stopAudio = cleanup;
     return cleanup;
+  }
+
+  supplyMusicState(playerId: string, value: SourceMusicState): void {
+    try {
+      if (!this.state.world || this.state.world.player.id !== playerId)
+        throw Object.assign(new Error("The supplied music state belongs to a different player snapshot."), { errorId: "ui.music.owner" });
+      if (!this.sourceMusic || !this.audioView || this.audioView.disposed)
+        throw Object.assign(new Error("Bind the actual audio handle before supplying music state."), { errorId: "ui.music.binding" });
+      const problem = musicStateProblem(value);
+      if (problem) throw Object.assign(new Error(problem), { errorId: "ui.music.state" });
+      const state = Object.freeze({ ...value, unlockedGroups: Object.freeze([...value.unlockedGroups]),
+        playlistGroups: Object.freeze([...value.playlistGroups]) });
+      this.sourceMusic(state);
+      this.musicState = { playerId, value: state };
+      this.renderSoon();
+    } catch (error) {
+      const details = errorDetails(error);
+      this.show(details.message, "error", details.errorId);
+      throw error;
+    }
+  }
+
+  readMusicState(): SourceMusicState | null {
+    return this.musicState ? structuredClone(this.musicState.value) : null;
+  }
+
+  private changeMusic(action: MusicUiAction): void {
+    const current = this.musicState, player = this.state.world?.player.id;
+    if (!current || current.playerId !== player) {
+      this.show("Supply the current player's SourceMusicState through setUiMusicState before using music controls.",
+        "error", "ui.music.binding"); return;
+    }
+    const next = musicRequest(current.value, action, this.audioView?.plannedGroup ?? null);
+    if (!next.state) { this.show(next.problem, "error", "ui.music.selection"); return; }
+    void this.request(`music-preference:${JSON.stringify(next.state)}`, async () => {
+      this.supplyMusicState(current.playerId, next.state);
+      const playback = action.kind === "mode" || action.kind === "play" ? this.services.unlockAudio() : Promise.resolve();
+      await Promise.all([playback, Promise.resolve().then(() => this.musicChanged?.(current.playerId, structuredClone(next.state)))]);
+    });
   }
 
   private xy(event: Pick<MouseEvent, "clientX" | "clientY">): [number, number] {
@@ -338,7 +412,8 @@ class UiController {
     const old = this.state;
     this.state = state;
     if (old.world?.player.id !== state.world?.player.id) {
-      this.local = emptyLocal(); this.chatSubmission = null; this.drag = null; this.bankDrag = null; this.menu = null;
+      this.local = emptyLocal(); this.chatSubmission = null; this.drag = null; this.bankDrag = null; this.scrollDrag = null; this.menu = null;
+      this.musicState = null;
       if (state.world) this.local.appearance = { ...state.world.player.appearance };
     }
     if (old.world?.dialogue?.id !== state.world?.dialogue?.id) this.local.dialoguePage = 0;
@@ -397,7 +472,7 @@ class UiController {
     this.canvas.style.width = `${Math.round(width)}px`; this.canvas.style.height = `${Math.round(height)}px`;
     this.raster.context.imageSmoothingEnabled = false;
     this.surface.align();
-    this.menu = null; this.drag = null; this.bankDrag = null; this.sliderDrag = null; this.renderSoon();
+    this.menu = null; this.drag = null; this.bankDrag = null; this.sliderDrag = null; this.scrollDrag = null; this.renderSoon();
   }
 
   dispose(): void {
@@ -410,8 +485,10 @@ class UiController {
     this.local = emptyLocal(); this.pending.clear(); this.raster.dispose();
     this.titleFlames.dispose();
     this.controls = []; this.panelBounds = []; this.hover = null; this.menu = null; this.drag = null; this.bankDrag = null; this.notice = null;
+    this.scrollDrag = null;
     this.chatSubmission = null;
     this.preview = null; this.previewBounds = null; this.previewRequest = null; this.cameraRequest = null; this.abilityVisuals = null;
+    this.musicChanged = null;
   }
 
   renderSoon(): void {
@@ -641,13 +718,14 @@ class UiController {
   }
 
   private cancel(): void {
-    if (this.sliderDrag) { this.sliderDrag = null; this.renderSoon(); return; }
+    if (this.sliderDrag || this.scrollDrag) { this.sliderDrag = null; this.scrollDrag = null; this.renderSoon(); return; }
     if (this.menu) this.menu = null;
     else if (this.notice) this.notice = null;
     else if (this.state.error && this.dismissedError !== this.state.error) this.dismissedError = this.state.error;
     else if (this.local.amount) this.local.amount = null;
     else if (this.local.bankSearchOpen) this.local.bankSearchOpen = false;
     else if (this.local.filterPanel) this.local.filterPanel = null;
+    else if (this.local.musicDropdown) this.local.musicDropdown = false;
     else if (this.local.selectedItem || this.local.selectedSpell) { this.local.selectedItem = null; this.local.selectedSpell = null; }
     else if (this.state.world && gameplayUi(this.state.world)?.confirmation) {
       this.sendUi({ kind: "ui_confirm", confirmation_id: gameplayUi(this.state.world)!.confirmation!.id, accept: false });
@@ -667,6 +745,14 @@ class UiController {
     if (event.isComposing) return;
     if (event.key === "Escape") { event.preventDefault(); event.stopPropagation(); this.cancel(); return; }
     if (this.surface.activeInput()) return;
+    const scrolling = this.controls.find(control => control.id === this.focus && control.scrollbar);
+    if (scrolling?.scrollbar && ["ArrowUp", "ArrowDown", "Home", "End", "PageUp", "PageDown"].includes(event.key)) {
+      event.preventDefault(); event.stopPropagation();
+      const value = event.key === "Home" ? 0 : event.key === "End" ? scrolling.scrollbar.maximum
+        : scrolling.scrollbar.current() + (event.key === "PageUp" ? -scrolling.scrollbar.page : event.key === "PageDown" ? scrolling.scrollbar.page
+          : event.key === "ArrowUp" ? -4 : 4);
+      scrolling.scrollbar.change(Math.max(0, Math.min(scrolling.scrollbar.maximum, value))); return;
+    }
     const slider = this.controls.find(control => control.id === this.focus && control.slider);
     if (slider && ["ArrowLeft", "ArrowRight", "ArrowUp", "ArrowDown", "Home", "End", "PageUp", "PageDown"].includes(event.key)) {
       event.preventDefault(); event.stopPropagation();
@@ -747,6 +833,7 @@ class UiController {
       return;
     }
     this.local.tab = index; this.local.scroll = 0; this.menu = null; this.local.filterPanel = null;
+    this.local.musicDropdown = false;
     if (this.assets.catalogue.presentation?.interfaces[tab.interface]) this.send({ kind: "open_interface", interface: tab.interface });
     else this.unavailable(tab.name);
     this.renderSoon();
@@ -754,6 +841,13 @@ class UiController {
 
   private pointer(event: PointerEvent, control: Control | null, phase: "down" | "move" | "up"): void {
     const [x, y] = this.xy(event); this.point = { x, y };
+    if (this.scrollDrag && phase !== "down") {
+      const control = this.controls.find(control => control.id === this.scrollDrag!.id);
+      if (phase === "move" && control?.scrollbar && event.buttons & 1)
+        control.scrollbar.change(musicScrollPosition(y - control.y, control.height, control.scrollbar.thumb, control.scrollbar.maximum, this.scrollDrag.grab));
+      if (phase === "up") this.scrollDrag = null;
+      this.renderSoon(); return;
+    }
     if (this.sliderDrag && phase !== "down") {
       const slider = this.controls.find(control => control.id === this.sliderDrag!.id);
       if (phase === "move" && slider?.slider && !slider.disabled && event.buttons & 1)
@@ -771,7 +865,22 @@ class UiController {
     if (phase === "down") {
       this.suppressNextClick = false;
       if (this.menu && !control?.id.startsWith("menu-")) { this.menu = null; this.suppressNextClick = true; this.renderSoon(); return; }
+      if (this.local.musicDropdown && !control?.id.startsWith("music-filter-") && control?.id !== "music-list-filter") {
+        this.local.musicDropdown = false; this.suppressNextClick = true; this.renderSoon(); return;
+      }
       if (event.button !== 0 || this.notice || this.local.amount || control?.disabled) return;
+      if (control?.scrollbar) {
+        const scroll = control.scrollbar, top = 16 + Math.trunc((control.height - 32 - scroll.thumb) * scroll.value / Math.max(1, scroll.maximum));
+        if (y < control.y + 16) scroll.change(Math.max(0, scroll.current() - 4));
+        else if (y >= control.y + control.height - 16) scroll.change(Math.min(scroll.maximum, scroll.current() + 4));
+        else {
+          const grab = y >= control.y + top && y < control.y + top + scroll.thumb ? y - control.y - top : Math.trunc(scroll.thumb / 2);
+          this.scrollDrag = { id: control.id, grab };
+          scroll.change(musicScrollPosition(y - control.y, control.height, scroll.thumb, scroll.maximum, grab));
+          if (event.isTrusted && event.target instanceof Element) event.target.setPointerCapture(event.pointerId);
+        }
+        return;
+      }
       if (control?.slider && control.slider.value !== null) {
         const left = control.x + Math.trunc(control.slider.value * (control.width - 16) / 100);
         const grab = x >= left && x < left + 16 ? x - left : 0;
@@ -1087,7 +1196,7 @@ class UiController {
   capturesPointer(x: number, y: number): boolean {
     if (this.disposed) return false;
     if (!this.state.world || this.state.phase !== "world" || this.notice || this.local.amount ||
-        this.sliderDrag ||
+        this.sliderDrag || this.scrollDrag || this.local.musicDropdown ||
         (this.state.error && this.state.error !== this.dismissedError)) return true;
     const presentation = gameplayUi(this.state.world);
     if (presentation?.reward || presentation?.confirmation) return true;
@@ -1220,6 +1329,9 @@ class UiController {
         audio: this.audioView, audioPercent: (channel, percent) => this.audioPercent(channel, percent),
         audioValue: channel => this.audioView?.percentages[channel] ?? null,
         audioMute: channel => this.audioMute(channel),
+        audioToggle: () => this.audio(),
+        music: this.musicState?.playerId === world.player.id ? this.musicState.value : null,
+        musicAction: action => this.changeMusic(action),
         capture: bounds => this.panelBounds.push(bounds),
         preview: (bounds, model) => {
           this.recordPreview("equipment", bounds, model);

@@ -16,13 +16,16 @@ export const AUDIO_CONTROLS = [
 export interface UiAudioView {
   readonly percentages: Readonly<Record<UiAudioChannel, number>>;
   readonly mixer: Readonly<Record<SourceAudioChannel, number>>;
-  readonly assetGain: Readonly<Record<SourceAudioChannel, number>>;
+  readonly musicalVoices: readonly {
+    assetId: string; sourceId: number; renderedNativeLevel: 128 | 255; appliedNativeLevel: number; calibrationGain: number;
+  }[];
   readonly muted: boolean;
   readonly pendingGesture: boolean;
   readonly disposed: boolean;
   readonly outputEnabled: boolean;
   readonly enabled: boolean;
   readonly playingGroup: number | null;
+  readonly plannedGroup: number | null;
 }
 
 export function observedAudio(snapshot: AudioSnapshot): { value: UiAudioView; problem: null } | { value: null; problem: string } {
@@ -40,12 +43,21 @@ export function observedAudio(snapshot: AudioSnapshot): { value: UiAudioView; pr
   const enabled = snapshot.outputEnabled && snapshot.unlocked && !snapshot.pendingGesture && !snapshot.disposed &&
     !snapshot.muted && snapshot.contextState === "running";
   const voice = enabled ? snapshot.voices.find(voice => voice.kind === "music" && voice.when <= snapshot.currentTime) : undefined;
+  const musicalVoices: UiAudioView["musicalVoices"][number][] = [];
+  for (const voice of snapshot.voices.filter(voice => voice.kind === "music" || voice.kind === "jingle")) {
+    if (voice.renderedNativeLevel !== 128 && voice.renderedNativeLevel !== 255)
+      return { value: null, problem: "The audio observer did not identify the actual musical representation." };
+    if (!Number.isInteger(voice.appliedNativeLevel) || voice.appliedNativeLevel < 0 || voice.appliedNativeLevel > 255)
+      return { value: null, problem: "The audio observer provided an invalid applied native level." };
+    musicalVoices.push({ assetId: voice.assetId, sourceId: voice.sourceId, renderedNativeLevel: voice.renderedNativeLevel,
+      appliedNativeLevel: voice.appliedNativeLevel,
+      calibrationGain: sourceMixerToAssetGain(voice.appliedNativeLevel, voice.renderedNativeLevel) });
+  }
   return { problem: null, value: {
-    percentages, mixer: { ...snapshot.nativeMixer },
-    assetGain: { music: sourceMixerToAssetGain(snapshot.nativeMixer.music), effects: sourceMixerToAssetGain(snapshot.nativeMixer.effects),
-      area: sourceMixerToAssetGain(snapshot.nativeMixer.area) },
+    percentages, mixer: { ...snapshot.nativeMixer }, musicalVoices,
     enabled, muted: snapshot.muted, pendingGesture: snapshot.pendingGesture, disposed: snapshot.disposed,
     outputEnabled: snapshot.outputEnabled, playingGroup: voice?.sourceId ?? null,
+    plannedGroup: snapshot.background.groups[snapshot.background.cursor] ?? null,
   } };
 }
 

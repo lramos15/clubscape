@@ -14,12 +14,26 @@ test("UI source percentages retain the observed nonlinear mixer, never invert it
   assert.ok(result.value);
   assert.equal(result.value.percentages.music, 50);
   assert.equal(result.value.mixer.music, 44);
-  assert.equal(result.value.assetGain.music, 44 / 128);
+  assert.deepEqual(result.value.musicalVoices, []);
   assert.equal(audioTooltip(result.value, "music"), "Adjust Music Volume (50%)");
   const master = observedAudio(snapshotFor([50, 100, 100, 100])).value!;
   assert.deepEqual(master.mixer, { music: 44, effects: 22, area: 22 });
 });
 
+test("musical observations preserve native255 denominators and distinguish configured from applied levels", () => {
+  const snapshot = snapshotFor([100, 100, 100, 100]);
+  const result = observedAudio({ ...snapshot, voices: [
+    { id: 1, sourceId: 64, kind: "music", channel: "music", eventId: "native255", when: 0, gain: 1, loop: false, loopEnd: 0,
+      assetId: "asset.source.osrs.cache2695.audio-supplement.music.64.native255", renderedNativeLevel: 255, appliedNativeLevel: 255 },
+    { id: 2, sourceId: 40, kind: "jingle", channel: "music", eventId: "safe128", when: 0, gain: 44 / 128, loop: false, loopEnd: 0,
+      assetId: "asset.source.osrs.cache2695.audio-runtime.jingle.40", renderedNativeLevel: 128, appliedNativeLevel: 44 },
+  ] });
+  assert.ok(result.value);
+  assert.equal(result.value.mixer.music, 255);
+  assert.equal(result.value.musicalVoices[0]!.calibrationGain, 1);
+  assert.equal(result.value.musicalVoices[1]!.calibrationGain, 44 / 128);
+  assert.equal(result.value.musicalVoices[1]!.appliedNativeLevel, 44);
+});
 test("source audio observation distinguishes real permission/output and accepts intermediate master refreshes", () => {
   const snapshot = snapshotFor([100, 100, 100, 100]);
   assert.equal(observedAudio({ ...snapshot, contextState: "running" }).value!.enabled, false);

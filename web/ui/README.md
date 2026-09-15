@@ -18,8 +18,8 @@ or protobuf bridge implements them**. Actual versioned projection data is
 required; absent/unknown/malformed `WorldView.ui` is explicit unsupported/error
 feedback rather than a fabricated empty success.
 
-Current component validation: TypeScript and 33 UI unit tests pass; all 20 legacy,
-15 versioned and 7 real-audio-observer browser cases pass. The 25 integrated audio
+Current component validation: TypeScript and 38 UI unit tests pass; all 20 legacy,
+15 versioned, 7 real-audio-observer and 6 music-state browser cases pass. The 29 integrated audio
 policy/reward tests also pass. All **87/87** native-panel/full-overlay/owner-composition
 comparisons pass at the original zero tolerances. This resolves the earlier
 shop and guide-family raster differences, but does not complete the missing
@@ -38,6 +38,9 @@ Nine native audio preference states add **18/18** full-overlay source/reprojecti
 checks at zero tolerance, recorded in `evidence/native-audio-controls/`. Those
 browser controls use the real WebAudio adapter, with browser output muted for
 shared-host privacy; they do not claim audible world playback.
+Native music mode/list-menu artwork adds **8/8** exact comparisons in
+`evidence/native-music-controls/`. Its 853 row/group/widget bindings come from
+the original table44 display-name column, not inferred labels or fixture unlocks.
 
 ## Shell integration
 
@@ -170,15 +173,26 @@ The exact native-audio and Cook reward corrections are integrated as `b7cc380`
 and `d2082e8` (upstream `888f9384`, then `f74652a5`). Their stable patches match
 the authorized originals; the shared `AudioHandle` ABI and frozen source pack
 were not changed.
+The additive input/native-policy closure `f9e466d3` is integrated as `7475596`.
+The four Modern tracks and five native255 jingle representations are published
+and consumed, not remaining source-input blockers.
 
 ```ts
-import { bindUiAudio } from "./ui/index.ts";
+import { bindUiAudio, setUiMusicState, onUiMusicStateChange } from "./ui/index.ts";
 
 // AppServices routes each normalized SOURCE position once:
 // audioVolume(channel, position) { audio.volume(channel, position); }
 // unlockAudio() { return audio.unlock(); }
 const stopAudioUi = await bindUiAudio(ui, audio);
+// Update the real audio world first; then apply the actual source music state.
+audio.update(world, committedAudioEvents);
+setUiMusicState(ui, world.player.id, sourceMusicState);
+const stopMusicPreferences = onUiMusicStateChange(ui, (playerId, preferences) => {
+  // Persist only client preferences; unlockedGroups still come from authority.
+  return saveMusicPreferences(playerId, preferences);
+});
 // Optional on teardown; ui.dispose() also detaches the observer.
+stopMusicPreferences();
 stopAudioUi();
 ```
 
@@ -191,6 +205,10 @@ native nonlinear semantics. A music slider at50% is sent as **0.5**, not44/255,
 44/128 or a provisional half-amplitude gain. Master50 is applied before the
 lookup: with channel100, native levels are44/22/22. Diagnostic gain values are
 not substituted for percentages in the visible source controls.
+Musical diagnostics now use each observed voice's **actual rendered native
+level** (128 or255) and separately retain configured/applied levels. There is
+no single assumed music-channel `volume/128` gain; a native255 voice at255 has
+calibration gain1. Existing safe native128 representations remain distinct.
 
 The native Audio settings subpage uses original sprites, geometry, mute
 overlays and source tooltip strings. Track clicks/drag use the source integer
@@ -211,26 +229,55 @@ messages/codes are surfaced. Without a binding, thumbs remain unprojected and
 controls explicitly unavailable rather than falsely showing100%.
 
 Music modes retain native **area0 / shuffle1 / single2** control identities.
-Manual selection still requires the actual unlocked-track/preferences/request
-bridge. The UI does not fabricate `unlocked:true`, a playlist, a committed
-music event or the old rejected `native_midi_end` directive.
+`setUiMusicState(ui, playerId, SourceMusicState)` sends the exact published
+state to `setSourceMusicState` and retains that successfully applied input for
+UI projection. It is required because the audio observer's playback plan is
+not a saved-preference/unlock projection. Foreign-player updates reject and
+character changes clear the UI binding. `getUiMusicState(ui)` returns a detached
+read-only view; identical supplied states do not restart the audio engine.
+`onUiMusicStateChange` reports applied client preferences and awaits optional
+persistence feedback, while audio unlock starts inside the real gesture.
+
+Source mode buttons, canonical track selection, unlock hints, current-playlist
+add/remove/play and loop preferences are wired. All music rows retain their
+native positions, fonts, exact unlocked colors and current supplied counter;
+there are no copied fixture17 unlocks. The original scrollbar supports drag,
+four-pixel arrow steps and keyboard navigation. Held menus recheck the actual
+current unlock set before dispatch. The UI never fabricates `unlocked:true`,
+a gameplay music event, a next song, or the rejected `native_midi_end` directive.
+The engine owns native-duration continuation and no-repeat selection.
+
+The fourth tab button is source **Skip Track**, not a loop toggle. It remains
+disabled in native Area/Single modes; Shuffle-mode manual skip needs a public
+request into the engine's internal next-track policy. The native three numbered
+playlist slots also need their saved-slot model; the published `SourceMusicState`
+contains only the current playlist. Those original controls retain explicit
+required feedback rather than arbitrary slot assignment or next-song guesses.
 
 The shell/renderer, not this UI, must call `setSourceAudioScene` with the actual
 128-unit listener, plane/instance/owner, placed scenery emitters/orientations
-and original varps, and connect `setSourceMusicSelector` to actual selection.
+and original varps, and provide actual `SourceMusicState` input.
 Native helpers own distance, retention, visibility and fades; do not reintroduce
-caller-computed gain/distance. Do not turn a reconnect into `audio.update(null,
+caller-computed gain/distance. `setSourceMusicSelector` is now an optional
+stronger override, **not a required caller-guessed next-song callback**.
+Do not turn a reconnect into `audio.update(null,
 [])`. Likewise, clicking reward Continue sends only the gameplay request:
 Cook level audio requires coherent committed before/after skill batches,
 `skillId` and completion attribution, followed by the **actual** matching
 Widget153 close. No base-level gain means no level cue. The UI never generates
 that delta or close event from an optimistic click.
 
-Original Modern Lumbridge groups64/327/163/145 and native255 jingle
-representations40/54/58/64/65 remain pending the audio owner's additive
-publication/AUDIO_INPUTS relay. No frozen file is changed or missing variant
-scaled/invented here. The broader All Settings window and persisted mute/music
-preference projection remain explicit required integrations.
+The fourth metadata route is
+`assets/manifests/osrs/audio-m1-supplement.json`, SHA-256
+`840aef91bac9a1fd042bdb1c3662ff92a378e279f48335108730e168af550d91`.
+The nine exact IDs use prefix `asset.source.osrs.cache2695.audio-supplement.`
+with `music.{64,327,163,145}.native255` or
+`jingle.{40,54,58,64,65}.native255`. Route them to the corresponding
+`assets/source/osrs/audio-supplement/<kind>/<id>-native255.flac`; music64 and
+jingle64 are distinct. UI component hosting resolves all four `AUDIO_INPUTS`
+metadata routes and all nine original asset IDs. The parent shell must expose
+the same routes in its own `ClientAssets` implementation. No base ID, file,
+hash, limiter or waveform normalization is changed.
 
 ## Asset contract
 
@@ -386,8 +433,9 @@ Additional UI implementation/fidelity work remains:
 * authoritative recovery fee-unit/capacity/per-row/bank-all data and partial
   retrieval/bank-all requests; coffer/discard/coffer-offer wiring is complete;
 * the actual renderer preview and dynamic minimap surface/state;
-* real source-scene/varp/music/event wiring and the forthcoming additive audio
-  publications; native audio sidebar sliders/current observation are complete;
+* real source-scene/varp/music-state/event app wiring; the additive audio
+  publications and UI-side route/control integration are complete;
+* direct native Skip Track request and three numbered playlist-slot management;
 * persisted remembered mute/music preferences and the broader All Settings
   window projection.
 
@@ -406,8 +454,8 @@ The existing frozen web dependencies are used.
 ```bash
 cd web
 pnpm exec tsc --noEmit
-node --test ui/tests/unit.test.ts ui/tests/gameplay-ui.test.ts ui/tests/audio-controls.test.ts
-node --test audio/audio.test.ts audio/native-policy.test.ts audio/reward-levels.test.ts
+node --test ui/tests/unit.test.ts ui/tests/gameplay-ui.test.ts ui/tests/audio-controls.test.ts ui/tests/music-controls.test.ts
+node --test audio/audio.test.ts audio/native-policy.test.ts audio/reward-levels.test.ts audio/supplement.test.ts
 cd ..
 python3 tools/ui-assets/glyph_proof.py
 
@@ -434,6 +482,10 @@ TMPDIR="$PWD/web/ui/.cache/xvfb" xvfb-run --auto-servernum \
   --server-args='-screen 0 2560x1440x24 -nolisten tcp' \
   node web/ui/tests/audio-browser.mjs
 python3 tools/ui-assets/compare_modes.py --audio-ui
+TMPDIR="$PWD/web/ui/.cache/xvfb" xvfb-run --auto-servernum \
+  --server-args='-screen 0 2560x1440x24 -nolisten tcp' \
+  node web/ui/tests/music-browser.mjs
+python3 tools/ui-assets/compare_modes.py --music-ui
 ```
 
 The browser tests use sandboxed **headful** Chrome under Xvfb. Set

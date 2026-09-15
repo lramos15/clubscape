@@ -17,7 +17,8 @@ import { productionChoiceLabel, productionSource, projectProduction } from "./pr
 import { deathPreviewDetails, projectDeathPreview } from "./death-preview.ts";
 import { projectQuestReward, rewardDetails } from "./rewards.ts";
 import { audioSourceControl, audioTooltip, projectAudioControls } from "./audio-controls.ts";
-import { SOURCE_MUSIC_MODE_IDS, SOURCE_MUSIC_ROWS } from "../audio/native-scene.ts";
+import { SOURCE_MUSIC_MODE_IDS } from "../audio/native-scene.ts";
+import { projectMusicControls } from "./music-controls.ts";
 
 const EQUIPMENT = ["head", "cape", "neck", "weapon", "body", "shield", "legs", "hands", "feet", "ring", "ammo"];
 const SKILLS = ["attack", "strength", "defence", "ranged", "prayer", "magic", "runecraft", "construction",
@@ -138,6 +139,9 @@ export function paintGame(raster: SourceRaster, ui: GameViewContext): void {
   if (!catalogue.templates[templateName]) templateName = "native-inventory";
   let widgets = cloneTemplate(catalogue.templates[templateName]!);
   if (templateName === "native-audio-default") widgets = projectAudioControls(catalogue, ui.audio);
+  const musicProjection = !banking && !world.shop && local.tab === 13
+    ? projectMusicControls(catalogue, ui.music, ui.audio?.playingGroup ?? null, local.scroll, local.musicDropdown) : null;
+  if (musicProjection) { widgets = musicProjection.widgets; local.scroll = musicProjection.scroll; }
   if (!banking && !world.shop && filterKind) {
     const mask = filterKind === "prayer" ? local.prayerFilters : local.magicFilters;
     if (local.filterPanel === filterKind) projectFilterPanel(widgets, filterKind, mask);
@@ -318,7 +322,7 @@ export function paintGame(raster: SourceRaster, ui: GameViewContext): void {
     if (rect.width <= 0 || rect.height <= 0) return;
     const menu = [...actions];
     if (widget.item < 0 && ![149, 15, 301, 387, 593].includes(widget.id >> 16) &&
-        !(authoritative && [4, 12, 153, 270, 312].includes(widget.id >> 16)) && widget.id >> 16 !== 116) {
+        !(authoritative && [4, 12, 153, 270, 312].includes(widget.id >> 16)) && ![116, 239].includes(widget.id >> 16)) {
       for (const operation of widget.actions ?? []) if (operation &&
         !menu.some(action => plainText(action.label).startsWith(plainText(operation)))) {
         menu.push({ label: operation, run: () => ui.unavailable(plainText(operation)) });
@@ -341,7 +345,7 @@ export function paintGame(raster: SourceRaster, ui: GameViewContext): void {
     const op = plainText(widget.actions?.find(Boolean) ?? "");
     const group = widget.id >> 16, child = widget.id & 65535;
     if (recovery && (group === 602 || group === 669)) return;
-    if (op === "Close" && group !== 161) { sourceClose(widget); return; }
+    if (op === "Close" && group !== 161 && group !== 239) { sourceClose(widget); return; }
     if (group === 4 && deathPreview && deathProjection) {
       const entry = deathProjection.items.get(widgetKey(widget));
       if (entry) register(widget, `death-preview-${child}-${widget.index}`, `${entry.kept ? "Kept" : "Lost"}: ${entry.item.name}`, [{
@@ -625,7 +629,8 @@ export function paintGame(raster: SourceRaster, ui: GameViewContext): void {
       const label = track ? audioControl.label : `${ui.audio?.percentages[audioControl.channel] === 0 ? "Unmute" : "Mute"} ${audioControl.label}`;
       const tooltip = ui.audio ? track ? audioTooltip(ui.audio, audioControl.channel) : label : unavailable!;
       register(widget, `audio-${track ? "slider" : "mute"}-${audioControl.channel}`, label,
-        track ? [] : [{ label, run: () => ui.audioMute(audioControl.channel) }],
+        track ? [] : [{ label, run: () => ui.audioMute(audioControl.channel) },
+          ...(audioControl.channel === "master" ? [{ label: ui.audio?.enabled ? "Mute sound" : "Enable sound", run: ui.audioToggle }] : [])],
         { tooltip, ...(unavailable ? { disabled: unavailable } : {}),
           ...(track ? { slider: { value: ui.audio?.percentages[audioControl.channel] ?? null,
             current: () => ui.audioValue(audioControl.channel),
@@ -646,10 +651,53 @@ export function paintGame(raster: SourceRaster, ui: GameViewContext): void {
       const mode = child === 14 ? "area" : child === 15 ? "shuffle" : "single";
       const label = `${mode[0]!.toUpperCase()}${mode.slice(1)} Mode`;
       register(widget, `music-mode-${SOURCE_MUSIC_MODE_IDS[mode]}`, label, [{
-        label, run: () => ui.required(label, "authoritative_music_selection_and_unlocks"),
-      }]);
+        label, run: () => ui.musicAction({ kind: "mode", mode }),
+      }, ...(ui.music ? [{ label: ui.music.loopEnabled ? "Disable looping" : "Enable looping",
+        run: () => ui.musicAction({ kind: "loop", enabled: !ui.music!.loopEnabled }) },
+      ...(mode === "shuffle" ? [{ label: "Play current playlist", run: () => ui.musicAction({ kind: "mode", mode: "playlist" }) }] : [])] : [])],
+      { pressed: ui.music?.mode === mode || mode === "shuffle" && ui.music?.mode === "playlist" });
+    } else if (group === 239 && child === 17 && widget.index === -1) {
+      const available = ui.music?.mode === "shuffle" || ui.music?.mode === "playlist";
+      register(widget, "music-skip", "Skip Track", [{ label: "Skip Track", run: () => ui.required("Skip Track", "native_music_skip_request") }],
+        available ? {} : { disabled: ui.music ? "Skip Track is available only in Shuffle Mode." : "Supply source music state before using Skip Track." });
+    } else if (group === 239 && child === 18 && widget.index === -1) {
+      register(widget, "music-list-filter", "Music list", [{ label: "Expand", run: () => ui.change(() => { local.musicDropdown = !local.musicDropdown; }) }]);
+    } else if (group === 239 && child === 12 && widget.index === -1 && musicProjection) {
+      const thumb = widgets.find(row => row.id === widget.id && row.index === 1)!;
+      register(widget, "music-scrollbar", "Music list scroll", [], { scrollbar: {
+        value: musicProjection.scroll, maximum: Math.max(0, musicProjection.extent - musicProjection.viewportHeight),
+        thumb: thumb.height, page: musicProjection.viewportHeight, current: () => local.scroll,
+        change: value => ui.change(() => { local.scroll = value; }),
+      } });
+    } else if (group === 239 && child === 20 && widget.actions?.includes("Close")) {
+      register(widget, "music-filter-close", "Close music list menu", [{ label: "Close", run: () => ui.change(() => { local.musicDropdown = false; }) }]);
+    } else if (group === 239 && child === 21 && widget.type === 3 && widget.index > 0) {
+      const index = Math.floor((widget.index - 1) / 2);
+      const label = index === 0 ? "All music" : `Playlist ${index}`;
+      register(widget, `music-filter-${index}`, label, [{ label, run: () => {
+        if (index !== 0) ui.required(label, "numbered_music_playlists");
+        else {
+          ui.change(() => { local.musicDropdown = false; local.scroll = 0; });
+          if (ui.music?.mode === "playlist") ui.musicAction({ kind: "mode", mode: "shuffle" });
+        }
+      } }]);
+    } else if (group === 239 && child === 11 && widget.type === 4 && widget.index >= 0) {
+      const track = musicProjection?.tracks.get(widget.index);
+      if (track) {
+        const unlocked = ui.music?.unlockedGroups.includes(track.group) ?? false;
+        const unavailable = !ui.music ? "The current source music state has not been supplied." : !unlocked ? "This source track is locked." : undefined;
+        register(widget, `music-track-${track.group}`, track.name, [
+          { label: `Play ${escapeText(track.name)}`, run: () => ui.musicAction({ kind: "play", group: track.group }),
+            ...(unavailable ? { disabled: unavailable } : {}) },
+          { label: `Unlock hint ${escapeText(track.name)}`, run: () => ui.notice(`${track.name}\n${track.hint || "No original unlock hint is recorded."}`) },
+          { label: `${ui.music?.playlistGroups.includes(track.group) ? "Remove from" : "Add to"} current playlist`,
+            run: () => ui.musicAction({ kind: ui.music?.playlistGroups.includes(track.group) ? "remove" : "add", group: track.group }),
+            ...(unavailable ? { disabled: unavailable } : {}) },
+          ...[1, 2, 3].map(slot => ({ label: `Add to playlist ${slot}`, run: () => ui.required(`Playlist ${slot}`, "numbered_music_playlists") })),
+        ], { pressed: ui.music?.selectedGroup === track.group, tooltip: track.name });
+      }
     } else if (group === 239 && op) register(widget, `music-${widgetKey(widget)}`, label || op, [{
-      label: label || op, run: () => ui.required(label || "Music selection", "authoritative_music_selection_and_unlocks"),
+      label: label || op, run: () => ui.required(label || "Music control", "source_music_control"),
     }]);
     if ([707, 109, 429, 712, 216].includes(group) && op) register(widget, `scope-${widgetKey(widget)}`, op,
       [{ label: op, run: () => ui.unavailable(op) }]);
@@ -817,8 +865,6 @@ export function paintGame(raster: SourceRaster, ui: GameViewContext): void {
     if (group === 300 && child === 1 && widget.type === 4) widget.text = escapeText(world.shop!.name);
     if (group === 116 && widget.type === 4 && /^\d+%$/.test(widget.text))
       widget.text = `${Math.floor(world.player.runEnergy / (catalogue.presentation?.runEnergyScale ?? 100))}%`;
-    if (group === 239 && child === 4) widget.text = ui.audio?.playingGroup === null || !ui.audio
-      ? "" : escapeText(SOURCE_MUSIC_ROWS.get(ui.audio.playingGroup)?.name ?? "Source track name unavailable");
     if (group === 162 && widget.type === 4 && widget.text.includes("Reference")) widget.text = escapeText(world.player.displayName) + ":";
     if (group === 231 && dialogue) {
       if (child === 4) widget.text = escapeText(dialogue.speakerName);
