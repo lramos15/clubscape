@@ -15,7 +15,9 @@
       {"id": "aab1ae0f-0238-4254-bff3-b7c046349c6b", "task": "M1-SHOP-REVIEW-FIXES"},
       {"id": "0f5ddddf-0aa0-4908-b0d3-1ffc6b1f7a20", "task": "M1-ACTOR-REVIEW-FIXES"}
     ],
-    "reserved": [],
+    "reserved": [
+      {"id": "runelite-feasibility-worker", "task": "M1-RUNELITE-FEASIBILITY"}
+    ],
     "queued": [],
     "parked": [
       {"id": "2766e089-44e5-4a1d-974e-7b03ad9c269d", "reason": "Final live server wiring integrated as 1ea2e65; no automatic resumption."},
@@ -31,6 +33,24 @@
     "usage_accounting": "milestones/evidence/m1-usage-snapshot.json records the available delayed session snapshot; final project-wide credits/currency are unavailable."
   },
   "tasks": [
+    {
+      "id": "M1-RUNELITE-FEASIBILITY",
+      "goal": "Execute a bounded real RuneLite compatibility experiment independently of mandatory browser/headless M1 acceptance.",
+      "status": "READY",
+      "specs": ["prompt.md section 12", "spec/runelite-compatibility.md", "spec/game-networking.md", "docs/machines/sparky.md"],
+      "dependencies": ["M1-FLEET-LIVE-SERVER"],
+      "allowed_paths": ["runelite/compatibility/**", "runelite/integration-tests/**", "tools/runelite-compatibility/**", "research/runelite-feasibility/**", "spec/runelite-compatibility.md"],
+      "forbidden_paths": ["prompt.md", "crates/**", "web/**", "content/**", "assets/**", "tools/source-capture/**", "milestones/**", "Cargo.toml", "Cargo.lock"],
+      "outputs": ["Pinned executable native-runtime integration attempt", "Live authoritative scene/player/event/plugin evidence or diagnosed blockers", "Bounded architecture comparison and explicit support status"],
+      "validation_commands": [],
+      "test_requirements": ["Real ClubScape loopback account/world connection", "Original runtime renders live scene and penguin", "At least one genuine generic plugin consumes actual authoritative events", "No upstream launch/API mock or invented XP counts as compatibility"],
+      "acceptance": ["At most two materially distinct architectures and three live integration attempts; stop with executable evidence, exact gaps and recommendation", "No desktop deferral is accepted without owner approval; no separate native client substitution"],
+      "reserved_namespaces": ["org.clubscape.runelite"],
+      "source_notes": ["Official RuneLite1.12.38/injected revision240 and cache2695 are already pinned; no repeated baseline freshness discovery."],
+      "parity_entries": [],
+      "adaptations": [],
+      "evidence": []
+    },
     {
       "id": "M1-FACILITY-DROP-FIXES",
       "goal": "Repair demonstrated original-range face contact and fresh manual-drop owner-online lifetime semantics without altering source collision or clocks.",
