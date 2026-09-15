@@ -277,6 +277,41 @@ pub struct Evidence {
 }
 
 impl Evidence {
+    pub fn resume(path: &Path, old: &Value, old_trace: &Path) -> Result<Self> {
+        ensure!(
+            !local_path(path)?.exists()
+                && !local_path(&path.with_extension("trace.jsonl"))?.exists(),
+            "Resume must not overwrite historical evidence"
+        );
+        let mut evidence = Self::new(path)?;
+        let mut original = File::open(local_path(old_trace)?)?;
+        std::io::copy(&mut original, &mut evidence.trace)?;
+        evidence.report = old.clone();
+        evidence.report["status"] = json!("running");
+        evidence.report["full_journey_passed"] = json!(false);
+        evidence.report["trace_path"] = json!(path.with_extension("trace.jsonl"));
+        evidence.report["prior_failure"] = evidence.report["first_failure"].take();
+        evidence
+            .report
+            .as_object_mut()
+            .context("Invalid report")?
+            .remove("first_failure");
+        evidence
+            .report
+            .as_object_mut()
+            .context("Invalid report")?
+            .remove("private_client_checkpoint");
+        evidence.report["private_checkpoint_resume"] = json!({
+            "historical_trace_sha256": super::source::hash(&fs::read(local_path(old_trace)?)?),
+            "historical_prefix_copied_byte_for_byte": true,
+            "resumed_at_unix_ms": timestamp_ms(),
+            "same_original_account_required": true,
+            "state_reconstructed_or_seeded": false
+        });
+        evidence.flush()?;
+        Ok(evidence)
+    }
+
     pub fn new(path: &Path) -> Result<Self> {
         local_path(path)?;
         if let Some(parent) = path.parent() {
@@ -359,6 +394,37 @@ impl Evidence {
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn resumed_evidence_preserves_the_exact_historical_prefix() {
+        let directory =
+            PathBuf::from(".local/evidence-resume-tests").join(uuid::Uuid::new_v4().to_string());
+        let old_path = directory.join("old.json");
+        let new_path = directory.join("new.json");
+        let mut old = Evidence::new(&old_path).unwrap();
+        old.append("source_checkpoint", json!({"fixture_only": true}))
+            .unwrap();
+        old.report["status"] = json!("blocked");
+        old.report["first_failure"] = json!({"reason": "fixture-only blocker"});
+        old.flush().unwrap();
+        let old_trace = old_path.with_extension("trace.jsonl");
+        let original = fs::read(local_path(&old_trace).unwrap()).unwrap();
+        let mut resumed = Evidence::resume(&new_path, &old.report, &old_trace).unwrap();
+        resumed
+            .append("resume_control", json!({"not_a_game_event": true}))
+            .unwrap();
+        resumed.flush().unwrap();
+        let actual =
+            fs::read(local_path(&new_path.with_extension("trace.jsonl")).unwrap()).unwrap();
+        assert!(actual.starts_with(&original));
+        assert_eq!(resumed.report["trace_records"], 2);
+        assert_eq!(resumed.report["full_journey_passed"], false);
+        assert_eq!(fs::read(local_path(&old_trace).unwrap()).unwrap(), original);
+        assert!(Evidence::resume(&new_path, &old.report, &old_trace).is_err());
+        drop(resumed);
+        drop(old);
+        fs::remove_dir_all(local_path(&directory).unwrap()).unwrap();
+    }
 
     #[test]
     fn generated_core_action_roundtrips_without_secrets() {

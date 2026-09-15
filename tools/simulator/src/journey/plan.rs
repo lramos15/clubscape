@@ -125,7 +125,15 @@ pub(super) fn validate_source_path(source: &Source) -> Result<()> {
 
 impl Runner {
     pub(super) async fn tutorial(&mut self) -> Result<()> {
-        for pair in TUTORIAL_STAGES.windows(2) {
+        let completed = self.evidence.report["tutorial_edges_passed"]
+            .as_array()
+            .context("Missing source-edge ledger")?
+            .len();
+        ensure!(
+            completed < TUTORIAL_STAGES.len(),
+            "Invalid source-edge prefix"
+        );
+        for pair in TUTORIAL_STAGES.windows(2).skip(completed) {
             let from = format!("stage.tutorial.{}", pair[0]);
             let to = format!("stage.tutorial.{}", pair[1]);
             self.label(&format!("tutorial.{}", pair[0]))?;
@@ -1020,6 +1028,7 @@ impl Runner {
 
     async fn speak(&mut self, speaker: &str, choice: &str) -> Result<Receipt> {
         let started = self.snapshot.tick;
+        let mut rejected_contacts = BTreeSet::new();
         for attempt in 0..16 {
             ensure!(
                 self.snapshot.tick.saturating_sub(started) < 600,
@@ -1027,6 +1036,7 @@ impl Runner {
             );
             self.interact(speaker, "Talk-to").await?;
             let before = self.entities.get(speaker).cloned();
+            let attempted_from = self.tile()?;
             match self.choose(speaker, choice).await {
                 Ok(receipt) => return Ok(receipt),
                 Err(error) => {
@@ -1041,10 +1051,43 @@ impl Runner {
                         "maximum_attempts": 16, "source_ticks_elapsed": self.snapshot.tick - started,
                         "reason": "Definite rejection reconciled against the same mobile source target; no successful choice was replayed."
                     }))?;
+                    rejected_contacts.insert(attempted_from);
+                    if self.snapshot.dialogue.is_some() {
+                        self.input(Action::CloseInterface(game::Empty {})).await?;
+                    }
+                    let navigation = self
+                        .source
+                        .navigation_with_states(&self.observed_states, false)?;
+                    let mut alternatives = self.source.target_goals(
+                        speaker,
+                        "Talk-to",
+                        self.entities.get(speaker),
+                        &navigation,
+                    )?;
+                    alternatives =
+                        Self::untried_dialogue_contacts(alternatives, &rejected_contacts);
+                    ensure!(
+                        !alternatives.is_empty(),
+                        "No untried legal source dialogue contact remains for {speaker}/{choice}"
+                    );
+                    self.evidence.append("bounded_dialogue_contact_change", json!({
+                        "speaker": speaker, "choice": choice, "rejected_contacts": rejected_contacts,
+                        "candidate_contacts": alternatives, "actual_walk_required": true,
+                        "rng_or_source_geometry_changed": false
+                    }))?;
+                    self.go_to(alternatives).await?;
                 }
             }
         }
         bail!("Source speaker {speaker} invalidated choice {choice} in sixteen bounded attempts")
+    }
+
+    fn untried_dialogue_contacts(
+        mut candidates: BTreeSet<Tile>,
+        rejected: &BTreeSet<Tile>,
+    ) -> BTreeSet<Tile> {
+        candidates.retain(|tile| !rejected.contains(tile));
+        candidates
     }
 
     async fn choose(&mut self, speaker: &str, choice: &str) -> Result<Receipt> {
@@ -1504,7 +1547,11 @@ impl Runner {
         } else {
             "skill.attack"
         })?;
-        self.interact_here(target, "Attack").await?;
+        if ranged {
+            self.interact_here(target, "Attack").await?;
+        } else {
+            self.interact(target, "Attack").await?;
+        }
         let started = self.snapshot.tick;
         let budget = self.source.number("/activities/combat_tick_budget")?;
         loop {
@@ -1865,9 +1912,13 @@ impl Runner {
 
     async fn take_ground(&mut self, ground: &game::GroundItem) -> Result<()> {
         ensure!(
-            ground.permissions_evaluated && ground.can_take,
-            "Ground-item permission is unavailable or denied"
+            ground.permissions_evaluated,
+            "Ground-item permissions are unavailable"
         );
+        self.evidence.append(
+            "selected_ground_item",
+            evidence::message_json("clubscape.game.v1.GroundItem", ground)?,
+        )?;
         let tile = ground
             .tile
             .as_ref()
@@ -1879,6 +1930,13 @@ impl Runner {
             .context("Missing real ground item")?
             .clone();
         self.walk(tile).await?;
+        let current = self
+            .snapshot
+            .ground_items
+            .iter()
+            .find(|item| item.id == ground.id)
+            .context("The selected ground item disappeared during the real approach")?;
+        Self::verify_ground_after_approach(ground, current)?;
         let before = self.count(&stack.item)?;
         self.input(Action::TakeGroundItem(game::TakeGroundItem {
             ground_item_id: ground.id.clone(),
@@ -1889,6 +1947,54 @@ impl Runner {
             json!(before + u64::from(stack.quantity)),
             json!(self.count(&stack.item)?),
         )
+    }
+
+    fn verify_ground_after_approach(
+        selected: &game::GroundItem,
+        current: &game::GroundItem,
+    ) -> Result<()> {
+        ensure!(
+            selected.id == current.id
+                && selected.tile == current.tile
+                && selected.stack == current.stack,
+            "The selected ground item changed identity or quantity during approach"
+        );
+        ensure!(
+            current.permissions_evaluated && current.can_take,
+            "Selected ground-item pickup is denied at its actual tile"
+        );
+        Ok(())
+    }
+
+    pub(super) async fn resume_goblin_loot(&mut self) -> Result<()> {
+        self.label("lumbridge.actual_goblin_loot_recovery")?;
+        let candidates: Vec<_> = self
+            .snapshot
+            .ground_items
+            .iter()
+            .filter(|item| {
+                item.stack
+                    .as_ref()
+                    .is_some_and(|stack| stack.item == "item.bones" && stack.quantity == 1)
+            })
+            .cloned()
+            .collect();
+        ensure!(
+            candidates.len() == 1,
+            "Previously credited goblin loot is missing or ambiguous in the actual resumed view"
+        );
+        self.evidence.append(
+            "resumed_unsubmitted_goblin_loot_selection",
+            json!({
+                "ground_id": candidates[0].id,
+                "prior_pickup_submitted": false,
+                "prior_credited_kill_and_xp_preserved": true,
+                "new_goblin_kill_or_loot_grant": false
+            }),
+        )?;
+        self.take_ground(&candidates[0]).await?;
+        self.evidence.passed("goblin_combat")?;
+        self.source_death().await
     }
 
     async fn take_spawn(&mut self, spawn: &str, item: &str) -> Result<()> {
@@ -1950,7 +2056,7 @@ impl Runner {
                 .is_some_and(|npc| npc.available && npc.hitpoints > 0))
         })
         .await?;
-        self.interact_here(GOBLIN, "Attack").await?;
+        self.interact(GOBLIN, "Attack").await?;
         self.input(Action::CancelActivity(game::Empty {})).await?;
         let death_tile = self.tile()?;
         let before = evidence::stable_player(self.player()?);
@@ -2364,6 +2470,46 @@ mod tests {
     use super::*;
     use prost::Message;
     use std::path::Path;
+
+    #[test]
+    fn ground_pickup_rechecks_reach_after_walking_without_retargeting_the_item() {
+        let before = game::GroundItem {
+            id: "ground.original".into(),
+            stack: Some(game::Stack {
+                item: "item.bones".into(),
+                quantity: 1,
+                ..Default::default()
+            }),
+            tile: Some(game::Tile {
+                x: 3246,
+                y: 3235,
+                plane: 0,
+            }),
+            permissions_evaluated: true,
+            can_take: false,
+            ..Default::default()
+        };
+        let mut current = before.clone();
+        current.can_take = true;
+        assert!(Runner::verify_ground_after_approach(&before, &current).is_ok());
+        current.id = "ground.other".into();
+        assert!(Runner::verify_ground_after_approach(&before, &current).is_err());
+        current = before.clone();
+        assert!(Runner::verify_ground_after_approach(&before, &current).is_err());
+    }
+
+    #[test]
+    fn dialogue_contact_recovery_never_reuses_a_rejected_tile_or_invents_a_goal() {
+        let west = Tile::new(3127, 3104, 0);
+        let south = Tile::new(3128, 3103, 0);
+        let north = Tile::new(3128, 3105, 0);
+        let source = BTreeSet::from([west, south, north]);
+        assert_eq!(
+            Runner::untried_dialogue_contacts(source.clone(), &BTreeSet::from([south, west])),
+            BTreeSet::from([north])
+        );
+        assert!(Runner::untried_dialogue_contacts(source.clone(), &source).is_empty());
+    }
 
     #[test]
     fn movement_retry_requires_same_observed_target_and_current_source_evidence() {

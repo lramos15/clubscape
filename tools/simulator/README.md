@@ -7,7 +7,8 @@ state, grants items, or submits tutorial-result events.
 The current journey requires canonical content/artifact4 with `game.ui.v1`/
 `game.observer.v1` and a complete `WorldSnapshot.ui` version1 projection. State
 and runtime stay version1. It always uses the manifest's actual current hash in
-a fresh owned candidate; it does not upgrade or repin historical test worlds.
+a fresh owned candidate or an explicitly verified same-artifact private restore;
+it does not upgrade or repin historical test worlds.
 
 ## Commands
 
@@ -58,12 +59,17 @@ writes, including an uncertain logout or rejoin. Being logged out does not
 discard an otherwise observed source character's recovery information.
 Receiving an error or an acknowledgment is recorded without authorizing a retry.
 
-This output is not a database backup, a source-state setter or a resume command.
+This output is not a database backup or a source-state setter.
 The owner must pair it with the real PostgreSQL archive and matched private
 identities before cleanup. All future recovery requires explicit authorization
 and actual receipt/state reconciliation; an original operation's UUID, sequence
 and intent must not be replaced. See the
 [private checkpoint contract](../journey-tests/README.md#private-blocker-checkpoints).
+The separate `resume.py` owner passes `--resume-client-checkpoint` only after an
+explicit archive-hash check and actual database identity reconciliation. The
+simulator accepts only the documented tutorial/post-kill boundaries, preserves
+the old trace prefix, uses normal login/join and checks the original actor/state
+and receipt deduplication before continuing. Other boundary types are refused.
 
 ## What the plan executes
 
@@ -147,6 +153,13 @@ current view, and stops for a new explicit selection. It does not silently
 choose a replacement item, remove the identity field, or resubmit an uncertain
 operation under another ID. Historical `None` wire/intent compatibility belongs
 to the unchanged server/protocol journal contract, not a new-client fallback.
+
+After a definitively rejected mobile-NPC dialogue choice, bounded recovery can
+walk to another original legal contact tile instead of repeating the same failed
+face. It retains the same speaker/choice and the existing sixteen-attempt/
+600-source-tick bounds. Ground pickups likewise walk normally before checking
+the fresh permission for the **same** observed ground ID, stack and tile;
+an out-of-reach pre-walk view is not a pickup denial at the destination.
 
 Polls wait 600 ms. Gathering/combat/ignition waits and retries are bounded and
 observed; success probabilities are never modified or statistically certified by

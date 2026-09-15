@@ -1,0 +1,209 @@
+{
+  "schema_version": 1,
+  "task": "m1-headless-journey",
+  "status": "blocked",
+  "scope": "Actual same-account source journey with explicit verified private database restorations.",
+  "full_original_journey_passed": false,
+  "milestone_accepted": false,
+  "ui_visual_audio_performance_or_runelite_acceptance": false,
+  "authorized_shop_fix": {
+    "parent": "9d67cef9de29b74d58ff6cde2762656b7c1c2452",
+    "local": "8ab279ac3abbd697e2ed4df5fad00c0c30063f20",
+    "owned_and_parent_duplicates_both_picked": false
+  },
+  "immutable_source_identity": {
+    "revision": "m1.source-backed.v4.3ff4292b311453cc",
+    "raw_artifact_sha256": "5e0aa8a28851752ae0b8b0a08c635c6c8d2979f509f3a3e564ee74e2abfc8e6f",
+    "compressed_artifact_sha256": "7d49e8f85b7b229bb0fc9f6f3cb9665aaf9d287f6a873ac42701e3d77cc6e69f",
+    "content_artifact_version": 4,
+    "state_runtime_version": 1,
+    "ui_state_version": 1,
+    "descriptor_sha256": "b354112321e37c3d347dfce0882a3d468f15c09ea798dddcda76a877dffaa4d6",
+    "assets_manifest_sha256": "bb4ce31e660b14bb24477c9419f5778776cbc5f110711805d98e8691808aed1f",
+    "server_sha256_all_three_invocations": "39bd1c33f22bcc5e1a7b4e94b64069128ed8c5b52f0a3ab760b14fd8238729ff",
+    "generated_protocol_descriptor_sha256": "d66a326fa3c02c493efbd636bcaaa31c7fe94d0246dba377123a32efefc44614",
+    "world_or_artifact_repinned": false
+  },
+  "single_original_character": {
+    "account_id": "f43da325-ffcc-4753-a823-7a345dfce33b",
+    "actor_id": "actor.05a9c9bae95142fabe29d3ec35e8cf9e",
+    "world_id": "95acc818-e1d6-4ad3-805f-d323623d2933",
+    "initial_creation": "Actual public Register/Login/CreateCharacter with normal empty options/JoinWorld in run98fe26d99054484d.",
+    "resumed_account_registered_or_character_created_again": false,
+    "coverage_combined_across_accounts": false,
+    "old_6f_sequence181_retried": false,
+    "removed_older_worlds_reconstructed": false
+  },
+  "invocations": [
+    {
+      "run_id": "98fe26d99054484d",
+      "command": "python3 tools/journey-tests/run.py --report .local/evidence/m1-shop-context-5e-fresh.json",
+      "source_edges": 59,
+      "source_checks": 243,
+      "last_acknowledged_sequence": 200,
+      "input_count": 288,
+      "unique_events": 707,
+      "trace_records": 1932,
+      "simulator_sha256": "0681c1295f7bfc24120f5acc835353d0a2d8c501c37c4872925c0924727190ff",
+      "result": "Blocked by sixteen bounded Brother Brace choice reach refusals; preserved a real private checkpoint.",
+      "last_rejected_input": {"sequence": 201, "operation_id": "775bd85e-1acb-4b09-b651-aac2476772d1", "choice": "prayer_activation_points_bones", "http_status": 409, "error_id": "629d871f-e27f-4a7c-9baa-847452b814dd", "sanitized_server_game_error_code": "OutOfReach"},
+      "cleanup_passed": true
+    },
+    {
+      "run_id": "c8cea29df6fc42a5",
+      "command": "python3 tools/journey-tests/resume.py --checkpoint .local/journey-checkpoints/98fe26d99054484d --expected-archive-sha256 2cc5b23722fc24143b175d8e94bb15ad4f657e2119609aeed829b4e069148e92 --report .local/evidence/m1-shop-context-5e-resumed.json",
+      "source_edges": 70,
+      "source_checks": 310,
+      "last_acknowledged_sequence": 292,
+      "input_count": 388,
+      "unique_events": 1277,
+      "trace_records": 2635,
+      "simulator_sha256": "2b04e3c727fdf2f0dee3c6fcb50e2b6480e89b8ff47f414e78d9c2d4a13505a7",
+      "actual_restored_private_identity_sha256": "12e1df09cd2b724acf49303d1d9db2ca2e4d2c441a227206540b0b53eec9d637",
+      "original_trace_preserved_as_exact_byte_prefix": true,
+      "result": "Source shop, inventory/bank and credited goblin kill passed; client checked pickup permission before walking, so no pickup mutation was submitted.",
+      "cleanup_passed": true
+    },
+    {
+      "run_id": "7fa370e14c9b421e",
+      "command": "python3 tools/journey-tests/resume.py --checkpoint .local/journey-checkpoints/c8cea29df6fc42a5 --expected-archive-sha256 ec66024dd3f2fbcc6d0a9473ada8ac4679fda5f2ea46d92bd6655bbd2438f209 --report .local/evidence/m1-mainland-loot-resumed.json",
+      "source_edges": 70,
+      "source_checks": 321,
+      "last_acknowledged_sequence": 301,
+      "input_count": 398,
+      "unique_events": 1338,
+      "trace_records": 2825,
+      "simulator_sha256": "f3e6b14d0fc40c40acc8b20ea18f7134e1fee34744f7355ab0243a925a3f437b",
+      "actual_restored_private_identity_sha256": "6431accb826329912d7c16012c9057fe407172e74973c6faebc254006429cb1e",
+      "original_trace_preserved_as_exact_byte_prefix": true,
+      "result": "Original goblin bones recovered without another kill; actual goblin-caused death reached dying state, but PollWorld failed.",
+      "cleanup_passed": true
+    }
+  ],
+  "actual_restore_guarantees": {
+    "explicit_path_and_previously_observed_archive_hash_required": true,
+    "all_private_inventory_file_hashes_and_permissions_checked": true,
+    "only_new_owned_empty_postgresql_database_modified": true,
+    "restore_in_single_transaction_from_actual_pg_dump": true,
+    "private_world_actor_rng_account_and_journal_identities_equal_before_server_start": true,
+    "original_game_root_bytes_world_id_and_artifact_retained": true,
+    "ordinary_login_join_and_original_actor_state_sequence_checks_passed": true,
+    "original_net_grant_deduplicated_without_repeat_reward": true,
+    "historical_game_events_recreated_or_fabricated": false,
+    "unknown_input_or_control_outcome_automatically_resumed": false,
+    "old_physical_database_container_claimed_reused": false,
+    "onboarding_restart_evidence_retains_its_original_invocation": true
+  },
+  "actual_mainland_shop": {
+    "trade": {"sequence": 280, "operation_id": "d682bb50-8b30-4d63-8159-48a8e6ce1f02", "tick": 1251, "revision": 1539, "next_sequence": 281},
+    "guarded_shop_context_present": true,
+    "permanent_interface_shop_unlock_present": false,
+    "quote": {"item": "item.bucket", "quantity": 1, "expected_and_actual_total_coins": 2},
+    "buy": {"sequence": 281, "operation_id": "65b30484-e252-4b96-9b0f-4adf94e92c6d", "tick": 1254, "revision": 1543, "next_sequence": 282, "item_index": 5, "expected_item": "item.bucket", "quantity": 1},
+    "sale_quote_expected_and_actual_total_coins": 0,
+    "sell": {"sequence": 282, "operation_id": "6c2693ab-6435-4ba7-b3db-48fecf66a5be", "tick": 1257, "revision": 1547, "next_sequence": 283, "quantity": 1},
+    "final_bucket_count": 1,
+    "final_inventory_coins": 8,
+    "generic_interface_or_direct_buy_context_bypass": false
+  },
+  "actual_goblin_combat_and_loot": {
+    "target": "spawn.goblin.level_2.3246.3235.p0",
+    "credited_kill_tick": 1365,
+    "credited_kill_event": "event:eb10dfff4460ad1f676209ff3407f2fe83dbea62e4784692c48323fda9b2c157",
+    "source_goblin_hitpoints": 5,
+    "attack_xp_tenths_expected_and_actual_delta": 200,
+    "source_fight_duration_ticks": 16,
+    "ground_bones": "ground.engine.8",
+    "ground_position": {"x": 3246, "y": 3235, "plane": 0},
+    "observed_pre_walk_permission": "OUT_OF_REACH",
+    "actual_walk_then_same_id_stack_position_and_fresh_permission_check": true,
+    "pickup": {"sequence": 295, "operation_id": "6dc0ba9f-e7e3-412b-9512-425ad0e4c8f9", "inventory_bones_expected_and_actual": 1},
+    "goblin_kill_repeated_after_restore": false,
+    "new_loot_or_xp_granted_by_restore": false
+  },
+  "actual_required_death_setup": {
+    "death_supply_piles_disabled_sequence": 296,
+    "auto_retaliate_disabled_sequence": 297,
+    "shield_unequipped_sequence": 298,
+    "normal_approach_sequence": 299,
+    "goblin_attack": {"sequence": 300, "operation_id": "7b39d59d-9760-4d4f-ac6c-1a4d8f7f6488"},
+    "cancel_player_attack": {"sequence": 301, "operation_id": "f0b7d733-7bbc-413e-b410-b44ef7fda7d1"},
+    "hp_setter_used": false,
+    "actual_npc_retaliation_observed_to_last_public_hp": 1
+  },
+  "exact_next_failure": {
+    "action": "lumbridge.source_item_losing_death / PollWorld",
+    "request_id": "6ec49ce1-3987-43d4-9bc9-37afc6c6f2a3",
+    "http_status": 409,
+    "protocol_code": "Conflict",
+    "error_id": "688aab5a-a58b-4a57-bb48-ec9dcdd1391a",
+    "message": "The authoritative source query requirements are not satisfied.",
+    "last_public_tick": 1613,
+    "last_public_revision": 1924,
+    "next_gameplay_sequence": 302,
+    "last_public_position": {"x": 3245, "y": 3235, "plane": 0},
+    "last_public_hitpoints": 1,
+    "query_refusal_reinterpreted_as_success": false,
+    "new_gameplay_mutation_or_unknown_write_retry": false,
+    "specific_internal_query_not_yet_localized": true,
+    "parent_integration_needed": "Keep authoritative world/UI polling observable through legitimate dying/respawn progression. Preserve source input refusals, timing and data; do not skip the death phase or clear/seed state."
+  },
+  "sanitized_private_persistence_diagnostic": {
+    "scope": "Structural inspection of the actual preserved server archive, not a successful public dying/Office/grave view.",
+    "world_tick": 1616,
+    "world_revision": 1928,
+    "hitpoints": 0,
+    "life_phase": "dying",
+    "active_death_and_death_record_present": true,
+    "region": "region.osrs.12850",
+    "instance_present": false,
+    "death_arrival_completed": false,
+    "dialogue_present": false,
+    "utility": "Owned network-disabled one-shot pg_restore; SQL output stayed0600/private and was deleted after extracting only these structural fields.",
+    "private_auth_or_rng_published": false
+  },
+  "private_checkpoint_availability": [
+    {"run_id": "98fe26d99054484d", "directory": ".local/journey-checkpoints/98fe26d99054484d", "archive_bytes": 111807, "archive_sha256": "2cc5b23722fc24143b175d8e94bb15ad4f657e2119609aeed829b4e069148e92", "private_inventory_sha256": "3c901f5ff85d3c77c3cc08873d3df3d66d54b503c44f68fa7a68603c72e659be"},
+    {"run_id": "c8cea29df6fc42a5", "directory": ".local/journey-checkpoints/c8cea29df6fc42a5", "archive_bytes": 148035, "archive_sha256": "ec66024dd3f2fbcc6d0a9473ada8ac4679fda5f2ea46d92bd6655bbd2438f209", "private_inventory_sha256": "067486b1e9f922439bb67e0ed29fa60d187676db6e034d723947050a132b2316"},
+    {"run_id": "7fa370e14c9b421e", "directory": ".local/journey-checkpoints/7fa370e14c9b421e", "archive_bytes": 152325, "archive_sha256": "d2e586a51f78ed36ab30443f0297b1273e984957ae5b8f78c73b86be53ca16e1", "private_inventory_sha256": "7a4253a1f067f84320f8d513c6757f269a02fd29861d75b7f53e0acececcf6c6"}
+  ],
+  "private_checkpoint_qualification": "All three real captures passed ownership/quiescence, complete custom-archive reading, exact before/after private identities and private permissions/durability checks. The latest dying checkpoint is preserved, but its gameplay continuation is not yet supported or authorized by the narrow resume adapter; require the backend query fix and explicit source-safe reconciliation.",
+  "passing_complete_segments": [
+    "registration_login", "source_initial_character", "onboarding_recovery",
+    "full_tutorial_learning_the_ropes", "lumbridge_copper",
+    "inventory_equipment_bank_shop", "goblin_combat"
+  ],
+  "remaining_unchecked": [
+    "Public dying/respawn/first Death's Office view and required topics",
+    "Grave opening, source fees and actual reclaim",
+    "Cook's Assistant legitimate acquisition, mill, partial deliveries, full reward and range recipe",
+    "Required post-quest transport reconnect, logout/login, same-database/artifact server restart and completion replay"
+  ],
+  "owned_runner_changes": [
+    "Bounded rejected-contact exclusion and actual alternate walks for mobile dialogue; original speaker/choice and sixteen-attempt/600-tick bounds retained.",
+    "Explicit archive-hash-gated restoration into a fresh owned empty database, followed by exact private identity and ordinary public login/join/receipt reconciliation.",
+    "Exact old trace bytes and source-edge prefix retained without fabricating events or combining accounts.",
+    "Ground-item approach precedes a fresh permission check for the same ID/stack/tile.",
+    "Melee attack admission reuses bounded mobile-target approach after respawn."
+  ],
+  "validation": [
+    {"command": "cargo test --quiet --package clubscape-world-engine --test contextual_shop_entry", "result": "passed", "tests": 5, "scope": "Native component checks, not journey evidence."},
+    {"command": "cargo test --quiet --package clubscape-sim --package clubscape-protocol --all-features", "result": "passed", "tests": 56},
+    {"command": "python3 -m unittest discover -s tools/journey-tests -p 'test_*.py' -q", "result": "passed", "tests": 31},
+    {"command": "cargo clippy --quiet --package clubscape-sim --all-features --all-targets -- -D warnings", "result": "passed"},
+    {"command": "cargo fmt --package clubscape-sim --check", "result": "passed"}
+  ],
+  "source_oracles": "research/journey-rules and tests/scenarios/m1_fresh_account.json; exact input/content/protocol hashes and expected-versus-actual checkpoints remain in the original reports/traces.",
+  "cleanup": {"all_owned_game_servers_and_postgresql_containers_removed": true, "inspection_utility_removed": true, "private_sql_inspection_copy_deleted": true, "private_checkpoints_retained": true, "private_payloads_committed": false},
+  "preserved_public_evidence": [
+    {"path": ".local/evidence/m1-shop-context-5e-fresh.json", "sha256": "1a80774efe78e3ddbff63b2cef732e5c16f67c511b6bda8aa1d6cdc4e29fb7b1"},
+    {"path": ".local/evidence/journey-98fe26d99054484d/m1-fresh-account.json", "sha256": "786afe9f0ee176af9127388214d9dac4e2e0e73a8e768e38a40a6d0c9e9a0850"},
+    {"path": ".local/evidence/journey-98fe26d99054484d/m1-fresh-account.trace.jsonl", "sha256": "6df4ea9d7864d7d908fc48f412c9be62a86e294b8ba54bdea30eaac6a41ddbdc"},
+    {"path": ".local/evidence/m1-shop-context-5e-resumed.json", "sha256": "592320b176ad999598bc5d8c7c01af3c63d5f97981e6e916ca2e5c5a0bc60476"},
+    {"path": ".local/evidence/journey-c8cea29df6fc42a5/m1-fresh-account.json", "sha256": "b04d96f7e7c4386e996fc4e5d2bdea78d327680095a13092fae25986c162559d"},
+    {"path": ".local/evidence/journey-c8cea29df6fc42a5/m1-fresh-account.trace.jsonl", "sha256": "026b64390ce1135b97c54beca00f17dcc430fcfc4b812af69c408387146375cb"},
+    {"path": ".local/evidence/m1-mainland-loot-resumed.json", "sha256": "69602b78749a3d9550d1c0602cf6e53f28ba47a4b88e993427d5d9c7cb0be147"},
+    {"path": ".local/evidence/journey-7fa370e14c9b421e/m1-fresh-account.json", "sha256": "17e82dfb7f310d71315ec15d00c956affc7d20e0b19843a7a64e18fc378c4749"},
+    {"path": ".local/evidence/journey-7fa370e14c9b421e/m1-fresh-account.trace.jsonl", "sha256": "51e9795d38c4da2849dc313478fe8d10112b3e305d68e3a8f60ef70f454fda9e"}
+  ]
+}

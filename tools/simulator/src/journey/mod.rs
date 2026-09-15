@@ -44,6 +44,9 @@ pub struct Arguments {
     /// Private owner-only recovery capsule on a blocker; never a resume or state-setting input.
     #[arg(long, requires = "recovery_control_dir")]
     private_checkpoint_file: Option<PathBuf>,
+    /// Explicit owner-verified restoration at a supported source continuation boundary.
+    #[arg(long, requires = "recovery_control_dir")]
+    resume_client_checkpoint: Option<PathBuf>,
     #[arg(long)]
     expected_server_build: Option<String>,
     #[arg(long, default_value_t = 5400, value_parser = clap::value_parser!(u64).range(30..=7200))]
@@ -106,10 +109,23 @@ struct Runner {
     reward_receipt: Option<Receipt>,
     private_attempt: Option<checkpoint::Attempt>,
     private_control: Option<checkpoint::ControlAttempt>,
+    resume: Option<checkpoint::Resume>,
 }
 
 pub async fn run(arguments: Arguments) -> Result<()> {
-    let mut evidence = Evidence::new(&arguments.report)?;
+    let mut evidence = if arguments.resume_client_checkpoint.is_some() {
+        let source = Source::load(&arguments.source_root)?;
+        let resume = checkpoint::Resume::load(
+            arguments
+                .resume_client_checkpoint
+                .as_ref()
+                .context("Missing resume control")?,
+            &source,
+        )?;
+        Evidence::resume(&arguments.report, &resume.report, &resume.trace)?
+    } else {
+        Evidence::new(&arguments.report)?
+    };
     evidence.report["limits"] = json!({
         "max_seconds": arguments.max_seconds, "max_inputs": arguments.max_inputs,
         "poll_interval_ms": 600, "stalled_clock_polls": 20,
@@ -137,6 +153,24 @@ pub async fn run(arguments: Arguments) -> Result<()> {
         }
     };
     let deadline = Instant::now() + Duration::from_secs(arguments.max_seconds);
+    let resume = arguments
+        .resume_client_checkpoint
+        .as_ref()
+        .map(|path| checkpoint::Resume::load(path, &source))
+        .transpose()?;
+    let event_ids = resume
+        .as_ref()
+        .map(|value| value.event_ids.clone())
+        .unwrap_or_default();
+    let input_count = resume
+        .as_ref()
+        .map(|value| {
+            value.report["input_count"]
+                .as_u64()
+                .context("Missing historical input count")
+        })
+        .transpose()?
+        .unwrap_or(0);
     let mut runner = Runner {
         arguments,
         source,
@@ -147,9 +181,9 @@ pub async fn run(arguments: Arguments) -> Result<()> {
         entities: BTreeMap::new(),
         observed_states: BTreeMap::new(),
         events: Vec::new(),
-        event_ids: BTreeSet::new(),
+        event_ids,
         sequence: 0,
-        input_count: 0,
+        input_count,
         stalled_polls: 0,
         account_id: String::new(),
         login_name: format!("m1_{}", &Uuid::new_v4().simple().to_string()[..14]),
@@ -162,6 +196,7 @@ pub async fn run(arguments: Arguments) -> Result<()> {
         reward_receipt: None,
         private_attempt: None,
         private_control: None,
+        resume,
     };
     let result = runner.execute().await;
     runner.evidence.report["input_count"] = json!(runner.input_count);
@@ -439,7 +474,22 @@ impl Runner {
     }
 
     async fn login(&mut self) -> Result<()> {
-        let session = crate::login(&self.connection, &self.login_name, &self.password).await?;
+        let Outcome::LoggedIn(session) = self
+            .rpc(
+                Command::Login(clubscape_protocol::Login {
+                    login_name: self.login_name.clone(),
+                    password: self.password.clone(),
+                }),
+                false,
+            )
+            .await?
+        else {
+            bail!("Login did not return a session");
+        };
+        ensure!(
+            session.session_token.len() == 43 && session.expires_at_unix_ms > 0,
+            "Server returned an invalid session"
+        );
         ensure!(
             session
                 .account
@@ -1070,9 +1120,62 @@ impl Runner {
 
     async fn execute(&mut self) -> Result<()> {
         plan::validate_source_path(&self.source)?;
-        self.register_and_join().await?;
-        self.tutorial().await?;
-        self.lumbridge().await?;
+        let after_goblin_kill = self
+            .resume
+            .as_ref()
+            .is_some_and(|resume| resume.after_goblin_kill);
+        if let Some(resume) = self.resume.take() {
+            self.account_id = resume.string("/private_authentication_do_not_publish/account_id")?;
+            self.login_name = resume.string("/private_authentication_do_not_publish/login_name")?;
+            self.password = resume.string("/private_authentication_do_not_publish/password")?;
+            self.actor_id = resume.string("/actor_id")?;
+            self.onboarding_receipt = resume.receipt("onboarding")?;
+            self.reward_receipt = resume.receipt("reward")?;
+            self.hello().await?;
+            self.login().await?;
+            self.join().await?;
+            self.evidence.check(
+                "restored_original_actor",
+                json!(self.actor_id),
+                json!(self.player()?.actor_id),
+            )?;
+            self.evidence.check(
+                "restored_original_next_sequence",
+                resume.capsule["last_observed_state"]["next_sequence"].clone(),
+                json!(self.sequence),
+            )?;
+            let actual = evidence::stable_player(self.player()?);
+            let mut expected = serde_json::Map::new();
+            for key in actual.as_object().context("Invalid stable player")?.keys() {
+                expected.insert(
+                    key.clone(),
+                    resume.capsule["last_observed_state"]["player"]
+                        .get(key)
+                        .with_context(|| format!("Missing historical player field {key}"))?
+                        .clone(),
+                );
+            }
+            self.evidence.check(
+                "restored_acknowledged_player_state",
+                Value::Object(expected),
+                actual,
+            )?;
+            self.input(Action::CloseInterface(game::Empty {})).await?;
+            let receipt = self
+                .onboarding_receipt
+                .clone()
+                .context("Missing original source grant receipt")?;
+            self.verify_duplicate(&receipt, "restored_original_grant_deduplicated")
+                .await?;
+        } else {
+            self.register_and_join().await?;
+        }
+        if after_goblin_kill {
+            self.resume_goblin_loot().await?;
+        } else {
+            self.tutorial().await?;
+            self.lumbridge().await?;
+        }
         self.cooks_assistant().await?;
         let receipt = self
             .reward_receipt

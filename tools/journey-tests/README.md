@@ -153,20 +153,42 @@ pass. Failed/incomplete capture is explicit and never claims a recoverable
 checkpoint; partial files remain private. Cleanup still reaps/removes only the
 owned services. Existing checkpoint directories are never overwritten.
 
-There is **no automatic restore or resume option**. A later explicitly approved
-recovery must validate the private inventory, restore only into a new owned
-isolated PostgreSQL instance, retain the exact artifact/world identity, use the
-real fencing/lifecycle paths, and reconcile actual receipts/state before
-continuing the source plan. A same-artifact binary fix does not authorize a
-content repin, sequence reset, grant replay or progress reconstruction.
+There is **no automatic restore**. The separately invoked `resume.py` requires
+explicit authorization, a checkpoint path and its previously observed archive
+SHA-256. It verifies every private inventory entry and the current artifact,
+refuses unknown input/control outcomes, and restores only into a newly created,
+ownership-checked empty PostgreSQL database. The complete private world, actor,
+RNG and journal identities must match before the real server starts. Normal
+login/join, source-state comparisons and original-grant deduplication precede
+continuation. A same-artifact binary fix does not authorize a content repin,
+sequence reset, grant replay or progress reconstruction.
+
+```sh
+python3 tools/journey-tests/resume.py \
+  --checkpoint .local/journey-checkpoints/<run-id> \
+  --expected-archive-sha256 <previously-observed-exact-sha256> \
+  --report .local/evidence/<unique-resume-report>.json
+```
+
+Supported continuation boundaries are deliberately narrow: a verified
+post-onboarding tutorial prefix, or the recorded post-goblin-kill/pre-pickup
+client refusal. Other boundaries, including the later dying-state query failure,
+are refused before starting services. They need a source-safe continuation
+adapter after the corresponding backend fix. Historical trace bytes and source
+checkpoints remain an exact prefix, not recreated game events; the same account,
+actor and world continue. Required restart evidence records its original
+invocation rather than pretending the restored database is the old container.
 The previously removed 6f/5e tmpfs worlds remain unavailable; this mechanism
-cannot recreate them. While parked, validation uses client/orchestration
-machinery fixtures only, not a newly running PostgreSQL/server or a claimed real
-backup/restore.
+cannot recreate them. Only actual preserved database archives are restorable.
 
 [`evidence/private-checkpoint-machinery-c0f3961.json`](evidence/private-checkpoint-machinery-c0f3961.json)
 records the parked implementation and its machinery checks. It does not claim
 that a real private database archive already exists.
+
+The later authorized shop continuation exercised real private capture and two
+explicit restores. Its latest private checkpoint is the genuine dying-state
+frontier, not a completed Death's Office/Cook journey; see the current evidence
+entry below.
 
 ## Evidence and blockers
 
@@ -567,6 +589,48 @@ inventory/equipment/bank/shop segment therefore remains unchecked despite its
 passed inventory/bank substeps. Goblin/death/Cook/post-quest recovery remain
 unexecuted. Source-service shutdown and all owned resource cleanup passed;
 this is qualified journey progress, not a full journey or milestone pass.
+
+### Actual shop, goblin and dying-state frontier
+
+[`evidence/shop-goblin-dying-8ab279a.json`](evidence/shop-goblin-dying-8ab279a.json)
+records the complete same-account provenance, source-oracle checks, exact
+operations, public trace hashes and sanitized private-checkpoint availability.
+
+The authorized binary-only shop repair `9d67cef` is applied as `8ab279a`; the
+artifact remains raw `5e0a...c8e6f`. A fresh normal account's first run
+`98fe26d99054484d` hit sixteen bounded Brother Brace reach refusals. It produced
+the first real private archive. Explicit restoration in `c8cea29df6fc42a5`
+preserved that exact world/account/RNG/journal state and the chronological trace.
+Bounded alternate-contact walks, rather than repeated selection from the same
+failed face, completed the remaining tutorial. No source odds, clipping or ticks
+were changed.
+
+Actual `Trade` sequence280/tick1251 opened the source shop without a permanent
+`interface.shop` unlock. A canonical `item.bucket` quote and buy cost2coins;
+the real sale returned0coins. Copper, inventory/bank/shop and a credited
+5HP goblin kill with200Attack-XP-tenths passed. The runner then exposed its own
+pickup-ordering error: it checked `can_take` before walking to the drop. The fix
+walks normally and rechecks the same ground ID, stack, position and permission;
+it never retargets or grants loot.
+
+The second explicit restoration, `7fa370e14c9b421e`, took the original
+`ground.engine.8` bones without repeating the kill. This same account now has
+**70/70 tutorial transitions and321 source checks**, with seven complete
+segments passed. Actual goblin retaliation then reduced HP to zero. The next
+`PollWorld` returned HTTP409/error
+`688aab5a-a58b-4a57-bb48-ec9dcdd1391a` instead of an observable dying-state view.
+Last public state: tick1613/revision1924/next302, HP1. Sanitized inspection of the
+actual preserved server data confirms tick1616/revision1928, HP0, `life=dying`,
+an active death record, and incomplete arrival; it is not a successful public
+Office/grave view.
+
+The current private archive is
+`.local/journey-checkpoints/7fa370e14c9b421e/world.pgcustom`,
+SHA-256 `d2e586a51f78ed36ab30443f0297b1273e984957ae5b8f78c73b86be53ca16e1`.
+It and its private identity/configuration companions must not be published.
+All owned services are cleaned. The remaining blocker is authoritative
+world/UI query observability during legitimate dying/respawn progression;
+Office/grave/Cook/post-quest recovery remain unchecked.
 
 ```sh
 python3 -m unittest discover -s tools/journey-tests -p 'test_*.py' -q
