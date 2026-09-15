@@ -666,3 +666,26 @@ composition supports its exact distribution as a separate 64-weight pool
 not choose those values or source item identities; product binding supplies
 them. Executable tests verify independence, one dose, actual ground ownership
 and replay safety.
+
+### Shop row identity and empty-row lifetime
+
+Fixed source catalogue rows retain their indices, including rows whose base and
+current stock are both zero. An extra row with zero base stock is reclaimed with
+its clock after its last purchase or decay. Successful shop trades and ticks also
+reclaim previously serialized empty extras. Sale quotes count live extra rows,
+not old empty keys. Cleanup does not reset another row's restock phase, and a
+positive-base extra at zero remains eligible for its source replenishment.
+
+Extra-row indices are not stable identities: another customer's sale or an
+empty-row removal can change their meaning. **The identity repair is pending**;
+the current `ShopBuy` wire message and `shop_buy` intent still carry only shop,
+index and quantity. Sending an unrecognized JSON `expected_item` does not enforce
+identity, and a cached extra-row index is not yet safe to buy.
+
+The approved additive repair requires optional `expected_item: ItemId`, omitted
+from canonical JSON when absent, with a matching optional Protobuf string and
+shared TypeScript field. The immutable buy planner must reject a mismatched
+identity before charging; identity-less requests may target only fixed source
+catalogue rows. Read-only quotes must validate the same identity. Integrating
+that repair requires the actual shop dispatch in `actions.rs`, queries in
+`queries.rs`, and the server quote adapter, not only the commerce implementation.

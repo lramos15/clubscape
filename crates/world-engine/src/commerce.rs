@@ -160,10 +160,17 @@ impl WorldEngine {
                         .ok_or_else(|| unknown("Missing shop stock."))?;
                     let extras = state
                         .stock
-                        .keys()
-                        .filter(|id| !definition.stock.iter().any(|row| &row.item == *id))
+                        .iter()
+                        .filter(|(id, stock)| {
+                            (*base_stock != 0 || **stock != 0)
+                                && !definition.stock.iter().any(|row| &row.item == *id)
+                        })
                         .count();
-                    if !state.stock.contains_key(item) && extras >= usize::from(*maximum_lines) {
+                    let existing = state
+                        .stock
+                        .get(item)
+                        .is_some_and(|stock| *base_stock != 0 || *stock != 0);
+                    if !existing && extras >= usize::from(*maximum_lines) {
                         return Err(GameError::new(
                             GameErrorCode::InventoryFull,
                             "Shop has no free unstocked lines.",
@@ -217,7 +224,8 @@ impl WorldEngine {
             .ok_or_else(|| unknown("Missing shop state."))?
             .stock
             .insert(row.item.clone(), plan.stock);
-        self.reset_stock_clock(world, shop, row)
+        self.reset_stock_clock(world, shop, row)?;
+        self.reclaim_empty_extra_rows(world, shop)
     }
 
     pub(crate) fn trade_plan(
@@ -596,6 +604,33 @@ impl WorldEngine {
         Ok(())
     }
 
+    fn reclaim_empty_extra_rows(
+        &self,
+        world: &mut WorldState,
+        shop: &ShopDefinition,
+    ) -> GameResult<()> {
+        if !matches!(
+            shop.unstocked,
+            Some(UnstockedShopPolicy::Accept { base_stock: 0, .. })
+        ) {
+            return Ok(());
+        }
+        let state = world
+            .shops
+            .get_mut(&shop.id)
+            .ok_or_else(|| unknown("Missing shop state."))?;
+        let mut clocks = world.runtime.stock_deadlines.get_mut(&shop.id);
+        state.stock.retain(|item, stock| {
+            // Catalogue rows retain their fixed indices and phase even at zero stock.
+            let keep = *stock != 0 || shop.stock.iter().any(|row| &row.item == item);
+            if !keep && let Some(clocks) = clocks.as_mut() {
+                clocks.remove(item);
+            }
+            keep
+        });
+        Ok(())
+    }
+
     pub(crate) fn restock(&self, world: &mut WorldState) -> GameResult<()> {
         for (id, definition) in &self.content.shops {
             let mut rows = definition.stock.clone();
@@ -671,6 +706,7 @@ impl WorldEngine {
                         .insert(row.item.clone(), self.stock_deadline(&row, world.tick)?);
                 }
             }
+            self.reclaim_empty_extra_rows(world, definition)?;
             world
                 .shops
                 .get_mut(id)
