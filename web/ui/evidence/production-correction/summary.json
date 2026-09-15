@@ -1,0 +1,58 @@
+{
+  "scope": "Bounded nullable-production UI correction; component fixture only, not live anvil/progression evidence.",
+  "implementation_commit": "0ef23449a42db521c6a9af9bdce95b102d12b175",
+  "authorized_correction": {
+    "upstream": "351847f3f5255f6de6e345d5217a7910eaa145a3",
+    "authorized_pick": "ccbfbb0",
+    "meaning": "Explicit null is legitimate inventory-only production; omitted/malformed target fields are invalid."
+  },
+  "sourcePackSha256": "b62e19704e17d3d3e4e819f803ef49ba7cc54034ae407184b423427c65d9674d",
+  "typecheck": {
+    "passed": true
+  },
+  "unit": {
+    "passed": 39,
+    "total": 39
+  },
+  "versioned_browser_cases": 16,
+  "source_modal_checks": {
+    "passed": 45,
+    "tolerance": 0
+  },
+  "transport_handoff": {
+    "world_snapshot_ui_tag": 20,
+    "world_input_ui_tag": 41,
+    "expected_bank_revision_field": 21,
+    "expected_bank_revision_source": "Exact decimal ui.bank.revision at request creation, never world/character revision; retain on retries.",
+    "wire_implementation_in_ui": false,
+    "broad_runtime_commits_not_integrated": [
+      "9ae74e89",
+      "50f212269d664ae4f18230c11ccde843cb039734"
+    ],
+    "awaiting": "Owner-relayed final v4 runtime/assets/dialogue/observer integration."
+  },
+  "files": [
+    {
+      "path": "web/shared/contracts.ts",
+      "sha256": "29e5d4395b556d5498e586a37fc597c2de1c594707aa7081046b41c64b79ee6e"
+    },
+    {
+      "path": "crates/game-types/src/gameplay_ui.rs",
+      "sha256": "6b59c7f7607660c42b69a08cfd75ced48a3fe9c3ef18ef2044f7c898fff1640f"
+    },
+    {
+      "path": "web/ui/gameplay-ui.ts",
+      "sha256": "8ce448845b5f97dc045b2ae62bec53e96a2d308ad4df87fae24dfd110f73fd62"
+    },
+    {
+      "path": "web/ui/tests/gameplay-ui.test.ts",
+      "sha256": "3e2966e7968153d6a03e30f148868716f2faf8c1653d45d83065e36084969c13"
+    },
+    {
+      "path": "web/ui/tests/gameplay-ui-browser.mjs",
+      "sha256": "fb4cea01533b64b2e23bdbee1917b490a62ea8bfc9458c3d4c5c5d64ec5b2d67"
+    }
+  ],
+  "finalAcceptance": false,
+  "gameplayAcceptance": false
+}

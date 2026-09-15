@@ -1,0 +1,244 @@
+TAP version 13
+# Subtest: UI source percentages retain the observed nonlinear mixer, never invert it into a linear slider
+ok 1 - UI source percentages retain the observed nonlinear mixer, never invert it into a linear slider
+  ---
+  duration_ms: 0.957606
+  type: 'test'
+  ...
+# Subtest: musical observations preserve native255 denominators and distinguish configured from applied levels
+ok 2 - musical observations preserve native255 denominators and distinguish configured from applied levels
+  ---
+  duration_ms: 0.143857
+  type: 'test'
+  ...
+# Subtest: source audio observation distinguishes real permission/output and accepts intermediate master refreshes
+ok 3 - source audio observation distinguishes real permission/output and accepts intermediate master refreshes
+  ---
+  duration_ms: 0.135617
+  type: 'test'
+  ...
+# Subtest: native slider hit conversion uses floor scaling and retains the original thumb grab offset
+ok 4 - native slider hit conversion uses floor scaling and retains the original thumb grab offset
+  ---
+  duration_ms: 0.205793
+  type: 'test'
+  ...
+# Subtest: source audio projection follows exact thumb/mute geometry and never invents unobserved positions
+ok 5 - source audio projection follows exact thumb/mute geometry and never invents unobserved positions
+  ---
+  duration_ms: 1.062727
+  type: 'test'
+  ...
+# Subtest: native audio controls remain unclipped within supported Classic HUD anchors
+ok 6 - native audio controls remain unclipped within supported Classic HUD anchors
+  ---
+  duration_ms: 9.096954
+  type: 'test'
+  ...
+# Subtest: game.ui.v1 requires the exact complete projection, never a fabricated empty success
+ok 7 - game.ui.v1 requires the exact complete projection, never a fabricated empty success
+  ---
+  duration_ms: 1.420569
+  type: 'test'
+  ...
+# Subtest: nested malformed fields and duplicate identities are explicit projection failures
+ok 8 - nested malformed fields and duplicate identities are explicit projection failures
+  ---
+  duration_ms: 1.634107
+  type: 'test'
+  ...
+# Subtest: decimal formatting retains u64 XP/credit and signed gram precision
+ok 9 - decimal formatting retains u64 XP/credit and signed gram precision
+  ---
+  duration_ms: 7.974307
+  type: 'test'
+  ...
+# Subtest: opaque inventory actions recheck item, instance and actual permission without mutating inventory
+ok 10 - opaque inventory actions recheck item, instance and actual permission without mutating inventory
+  ---
+  duration_ms: 0.863606
+  type: 'test'
+  ...
+# Subtest: production retains menu/recipe identities and distinct single/make-X permissions
+ok 11 - production retains menu/recipe identities and distinct single/make-X permissions
+  ---
+  duration_ms: 0.479171
+  type: 'test'
+  ...
+# Subtest: inventory-only production accepts explicit null, not a missing or malformed target field
+ok 12 - inventory-only production accepts explicit null, not a missing or malformed target field
+  ---
+  duration_ms: 1.18108
+  type: 'test'
+  ...
+# Subtest: bank requests retain stable entries, placeholders and tab identities
+ok 13 - bank requests retain stable entries, placeholders and tab identities
+  ---
+  duration_ms: 0.268898
+  type: 'test'
+  ...
+# Subtest: placeholder zero-quantity objects, mismatched item IDs and duplicate source slots are not valid bank views
+ok 14 - placeholder zero-quantity objects, mismatched item IDs and duplicate source slots are not valid bank views
+  ---
+  duration_ms: 0.211041
+  type: 'test'
+  ...
+# Subtest: coffer/discard requests depend on declared permissions and preserve recovery/instance identity
+ok 15 - coffer/discard requests depend on declared permissions and preserve recovery/instance identity
+  ---
+  duration_ms: 0.221858
+  type: 'test'
+  ...
+# Subtest: public chat checks declared channel, UTF-8 bytes and server permission, not JS string length
+ok 16 - public chat checks declared channel, UTF-8 bytes and server permission, not JS string length
+  ---
+  duration_ms: 0.512675
+  type: 'test'
+  ...
+# Subtest: presentation requests are exhaustive and require the current opaque identity
+ok 17 - presentation requests are exhaustive and require the current opaque identity
+  ---
+  duration_ms: 0.159153
+  type: 'test'
+  ...
+# Subtest: native music rows bind source database/group/widget identities without label-based dispatch
+ok 18 - native music rows bind source database/group/widget identities without label-based dispatch
+  ---
+  duration_ms: 0.517475
+  type: 'test'
+  ...
+# Subtest: music UI requests retain actual unlocks and do not guess a next track
+ok 19 - music UI requests retain actual unlocks and do not guess a next track
+  ---
+  duration_ms: 0.553044
+  type: 'test'
+  ...
+# Subtest: current playlist and loop changes preserve source identities and reject invalid states
+ok 20 - current playlist and loop changes preserve source identities and reject invalid states
+  ---
+  duration_ms: 0.112593
+  type: 'test'
+  ...
+# Subtest: music projection replaces fixture unlock counts/colors and scrolls real source rows
+ok 21 - music projection replaces fixture unlock counts/colors and scrolls real source rows
+  ---
+  duration_ms: 6.036215
+  type: 'test'
+  ...
+# Subtest: exact owner approval and source-font metrics are bound
+ok 22 - exact owner approval and source-font metrics are bound
+  ---
+  duration_ms: 0.994534
+  type: 'test'
+  ...
+# Subtest: lossless source-widget pool rejects corrupt references
+ok 23 - lossless source-widget pool rejects corrupt references
+  ---
+  duration_ms: 0.236786
+  type: 'test'
+  ...
+# Subtest: native CP1252 mapping, escapes, line breaks and indivisible tokens
+ok 24 - native CP1252 mapping, escapes, line breaks and indivisible tokens
+  ---
+  duration_ms: 0.285826
+  type: 'test'
+  ...
+# Subtest: 696 pinned text records match metrics; two explicitly unrecorded texts remain unknown
+ok 25 - 696 pinned text records match metrics; two explicitly unrecorded texts remain unknown
+  ---
+  duration_ms: 12.790402
+  type: 'test'
+  ...
+# Subtest: 71-state/29-family/11-signature coverage is retained without declaring unknown controls hidden
+ok 26 - 71-state/29-family/11-signature coverage is retained without declaring unknown controls hidden
+  ---
+  duration_ms: 0.291394
+  type: 'test'
+  ...
+# Subtest: native anchors remain source-aligned across the approved resize range
+ok 27 - native anchors remain source-aligned across the approved resize range
+  ---
+  duration_ms: 3.305253
+  type: 'test'
+  ...
+# Subtest: genuine source lock uses authoritative unlocks, never inferred negative evidence
+ok 28 - genuine source lock uses authoritative unlocks, never inferred negative evidence
+  ---
+  duration_ms: 0.473971
+  type: 'test'
+  ...
+# Subtest: quantity parser rejects zero, negative, fractional, exponent, overflow and blank
+ok 29 - quantity parser rejects zero, negative, fractional, exponent, overflow and blank
+  ---
+  duration_ms: 0.145825
+  type: 'test'
+  ...
+# Subtest: skill XP formatting never loses u64/string precision or creates XP
+ok 30 - skill XP formatting never loses u64/string precision or creates XP
+  ---
+  duration_ms: 7.52968
+  type: 'test'
+  ...
+# Subtest: content-derived weapon IDs and experience choices remain data-only source bindings
+ok 31 - content-derived weapon IDs and experience choices remain data-only source bindings
+  ---
+  duration_ms: 53.447078
+  type: 'test'
+  ...
+# Subtest: failed asset requests require explicit retry and release references on dispose
+ok 32 - failed asset requests require explicit retry and release references on dispose
+  ---
+  duration_ms: 5.437091
+  type: 'test'
+  ...
+# Subtest: source filter predicates retain unknown requirements and use exact Classic grid arithmetic
+ok 33 - source filter predicates retain unknown requirements and use exact Classic grid arithmetic
+  ---
+  duration_ms: 0.267634
+  type: 'test'
+  ...
+# Subtest: web-only error pages preserve long identifiers without overlap or native glyph clipping
+ok 34 - web-only error pages preserve long identifiers without overlap or native glyph clipping
+  ---
+  duration_ms: 0.547283
+  type: 'test'
+  ...
+# Subtest: recovery display uses explicit fee/coffer inputs and native controls without granting items
+ok 35 - recovery display uses explicit fee/coffer inputs and native controls without granting items
+  ---
+  duration_ms: 3.380853
+  type: 'test'
+  ...
+# Subtest: source production model replacement preserves widget identity and native choice coordinates
+ok 36 - source production model replacement preserves widget identity and native choice coordinates
+  ---
+  duration_ms: 4.26502
+  type: 'test'
+  ...
+# Subtest: bank placeholder artwork uses the actual original placeholder definition, never an alpha-tinted normal item
+ok 37 - bank placeholder artwork uses the actual original placeholder definition, never an alpha-tinted normal item
+  ---
+  duration_ms: 0.139537
+  type: 'test'
+  ...
+# Subtest: death preview projects only supplied rows, opaque quantities and full monetary text
+ok 38 - death preview projects only supplied rows, opaque quantities and full monetary text
+  ---
+  duration_ms: 0.959702
+  type: 'test'
+  ...
+# Subtest: quest reward lines use the real source 9..15 slots and never retain native fixture awards
+ok 39 - quest reward lines use the real source 9..15 slots and never retain native fixture awards
+  ---
+  duration_ms: 0.609396
+  type: 'test'
+  ...
+1..39
+# tests 39
+# suites 0
+# pass 39
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 369.614467
