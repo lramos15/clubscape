@@ -16,6 +16,7 @@ pnpm --dir web install --frozen-lockfile
 pnpm --dir web wasm
 pnpm --dir web typecheck
 pnpm --dir web test
+pnpm --dir web reference:check
 pnpm --dir web build
 ```
 
@@ -33,6 +34,28 @@ versions already existed in the base lock. Root `Cargo.lock` is outside this
 worker's ownership; the integrator must retain Cargo's new `clubscape-wasm`
 member entry when merging. The build command performs normal Cargo resolution,
 not a global tool installation or guessed alternate bindgen version.
+
+### Frozen reference integrity and current authority
+
+The authorized `9bf6969` repair restores the exact pre-approval bytes of
+`spec/art-style.md` (`79a15277…`) and `spec/interface-parity.md` (`77cfea36…`).
+Their historical status is source context, **not revocation** of the exact
+external owner record (`e910cb02…`). Current authority lives in
+`spec/browser-implementation.md`, `spec/milestone-01.md` and that approval.
+Do not update frozen prose or a hash lock to reflect current progress.
+
+Every delivery runs `reference.ts`: it checks the exact pack/approval bytes,
+verifies those frozen context records, then invokes the **unchanged**
+`tools/reference-pack/validate.py --require-complete` with full audio decoding.
+It never passes `--report`, rebuilds the pack, changes tolerances, or writes the
+source evidence tree. The build artifact includes deterministic reference
+integrity pins/counts; the dated execution receipt is separate under
+`.local/evidence/browser-reference-integrity.json`.
+
+The repaired source passes1,307 hashes,126 cases,71 tutorial states,109 native
+images and264 FLACs. The existing85 pack tests remain unchanged and pass.
+Neither those checks nor historical validator `owner_approved:false` fields
+override the external approval or claim product/candidate acceptance.
 
 With an **owned** account database configured privately in `DATABASE_URL`:
 

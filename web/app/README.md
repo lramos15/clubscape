@@ -11,6 +11,12 @@ These are Vite module imports, not script-tag loading or a substitute renderer.
 Missing components fail visibly with an integration error ID. The small HTML
 bootstrap diagnostic is **not approved title/login presentation**.
 
+Build delivery separately checks the exact external reference approval and
+the complete unchanged strict pack validator. The restored hash-bound
+art/interface context files intentionally keep pre-approval prose; current
+implementation authority is in the browser/milestone guidance and external
+owner record, not a rewrite of those frozen inputs.
+
 `composition.ts` is also dependency-injectable for bounded component tests.
 Such injected handles are not an integrated game. The real UI owns its
 source-sprite/font composition, selections, drag state, menus and accessible

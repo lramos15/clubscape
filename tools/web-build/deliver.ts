@@ -7,6 +7,7 @@ import { BENCHMARK_CONTRACT_SHA256, SOURCE_PACK_SHA256 } from "../../web/shared/
 import { canonicalJson, publicPath } from "../../web/app/identity.ts";
 import { parseContentManifest } from "../../web/app/manifest.ts";
 import type { AssetRecord } from "../../web/app/manifest.ts";
+import { verifyReferenceIntegrity } from "./reference.ts";
 
 export interface PublicFile { url: string; path: string; sha256: string; content_type: string }
 const digest = (bytes: Uint8Array | string): string => createHash("sha256").update(bytes).digest("hex");
@@ -71,13 +72,7 @@ function repoInput(value: string): string {
 
 export async function deliver(): Promise<void> {
   const dist = resolve(root, "web/dist");
-  const approval = JSON.parse(await readFile(resolve(root, "milestones/approvals/m1-reference-pack-v1.3.0.json"), "utf8")) as {
-    authority: string; decision: string; reference_pack: string; reference_pack_sha256: string;
-  };
-  if (approval.authority !== "owner" || approval.decision !== "approved"
-    || approval.reference_pack_sha256 !== SOURCE_PACK_SHA256) throw new Error("Exact source-pack approval is absent.");
-  const pack = await readFile(repoInput(approval.reference_pack));
-  if (digest(pack) !== SOURCE_PACK_SHA256) throw new Error("Approved source pack digest changed.");
+  const referenceIntegrity = await verifyReferenceIntegrity();
   const contractBytes = await readFile(resolve(root, "spec/m1-benchmark-contract.json"));
   const contract = JSON.parse(contractBytes.toString("utf8")) as { visual_settings: Record<string, unknown> };
   if (digest(contractBytes) !== BENCHMARK_CONTRACT_SHA256) throw new Error("Benchmark source contract digest changed.");
@@ -124,7 +119,7 @@ export async function deliver(): Promise<void> {
   if (total > 512 * 1024 * 1024) throw new Error("Browser build exceeds the server's total byte limit.");
   const artifact = canonicalJson({
     schemaVersion: 1, sourcePackSha256: SOURCE_PACK_SHA256,
-    benchmarkContractSha256: BENCHMARK_CONTRACT_SHA256, files, gameFiles: external, content,
+    benchmarkContractSha256: BENCHMARK_CONTRACT_SHA256, referenceIntegrity, files, gameFiles: external, content,
     exclusions: ["client/build.json", "client/build-artifact.json", "clubscape-web.json"],
   }) + "\n";
   if (Buffer.byteLength(artifact) > 2 * 1024 * 1024) throw new Error("Build identity manifest exceeds its byte budget.");

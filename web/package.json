@@ -9,6 +9,7 @@
     "wasm": "node ../tools/web-build/wasm.ts",
     "content": "node ../tools/web-build/content.ts",
     "source:bundle": "node ../tools/web-build/source-bundle.ts",
+    "reference:check": "node ../tools/web-build/reference.ts",
     "typecheck": "tsc --noEmit",
     "check": "pnpm typecheck",
     "test": "node --test app/tests/*.test.ts audio/*.test.ts ../tools/web-build/tests/*.test.ts",
