@@ -79,3 +79,53 @@ Capability, device-loss, asset, audio, transport and authorization failures must
 surface explicitly. There is no WebGL/software renderer fallback in M1.
 Temporary synthetic fixtures are labeled tool/test-only and cannot pass
 gameplay, source fidelity or performance acceptance.
+
+## Authoritative M1 interface completion
+
+`web/ui/contract-gaps.json` identifies missing implementation contracts, not
+permission to drop required controls. Task `M1-GAMEPLAY-UI-CONTRACTS` owns the
+source engine/data/protocol closure. Publish its exact shared types before
+dependent UI/shell wiring; keep existing renderer/audio interfaces unchanged.
+
+Use an additive, versioned `WorldView.ui` projection for active interfaces,
+production selections, current reward presentation, selected combat style,
+source visibility/locks/highlights, ability availability, effective equipment
+statistics/weight, bank management and death/recovery information. Absence
+means an older unsupported capability, not a fabricated empty successful
+state. The M1 client must negotiate and receive the complete current projection.
+Nullable members inside it mean genuinely closed/not-applicable source state.
+U64 amounts, coffer balances and clocks remain decimal strings in JavaScript.
+
+Queries must reuse source guards and transaction planners without speculative
+intent execution, RNG, duplicate pricing rules or invented zero statistics.
+Production menus retain their real target and legal recipes; recipe selection
+distinguishes Single and Make-X-of-one. Reward/continuation state comes from the
+actual committed operation and source presentation metadata, not unrelated
+inventory/XP deltas. Dismissal never grants a reward again.
+
+Expose real inventory actions for the available M1 items, including source
+drinking, burial and applicable reading/emptying. Reuse existing mechanics and
+source bindings; do not map an action to fabricated self-use or a dummy spawn.
+Preserve the selected item's identity, slot, consumption/replacement behavior
+and its own delays rather than treating every consumable as food.
+
+Complete the required bank tab/order/placeholder/insert/deposit-equipment
+controls against the same persistent bank. Placeholders are non-spendable
+metadata, never zero-quantity or duplicate owned items. Source controls for
+containers/items absent from M1 retain their genuine disabled/unavailable
+state; this is not authorization to add new acquisition families.
+Death preview, coffer display and relevant recovery/discard controls must use
+actual source valuation/ownership and confirmation semantics.
+
+Public chat must use an authenticated, bounded, source-conformant route with
+correct sender/audience, input validation and replay behavior; a typed line
+must not simply disappear. This does not authorize clans, private social
+systems, moderation/admin privileges or the later CP social milestone.
+Do not interrupt gameplay or change source action cadence just to carry chat.
+
+Appearance exposes the currently declared source choices and approved penguin
+base; do not create new human kits, colours or penguin cosmetics. Actual preview
+and dynamic minimap surfaces remain renderer-owned. Audio controls expose the
+actual audio runtime's values/policy through the shell, not guessed server
+volume defaults. Native local filters/layouts remain UI-owned. Preserve the
+full 71-state journey, source rules, all earlier fixes and approval boundaries.

@@ -14,12 +14,13 @@
       {"id": "81ac9884-4f39-4f27-b516-6e9a42b09b51", "task": "M1-HEADLESS-JOURNEY"},
       {"id": "2a0ae699-6af8-45d5-90c7-3addfc56ee53", "task": "M1-RUNELITE-FEASIBILITY"}
     ],
-    "reserved": [],
+    "reserved": [
+      {"id": "2766e089-44e5-4a1d-974e-7b03ad9c269d", "task": "M1-GAMEPLAY-UI-CONTRACTS"}
+    ],
     "queued": [],
     "parked": [
       {"id": "aab1ae0f-0238-4254-bff3-b7c046349c6b", "reason": "Shop capacity/identity fixes integrated as3310032+af75e17 with18 passing regressions; no automatic resumption."},
       {"id": "0f5ddddf-0aa0-4908-b0d3-1ffc6b1f7a20", "reason": "Actor presence/cadence fixes integrated as62a003c+e1076a8 with15 passing regressions; no automatic resumption."},
-      {"id": "2766e089-44e5-4a1d-974e-7b03ad9c269d", "reason": "Final live server wiring integrated as 1ea2e65; no automatic resumption."},
       {"id": "fdda1fb0-1135-4cf8-8cff-3db550e48f54", "reason": "Canonical v3 content and both demonstrated executor repairs are integrated and source-native conformance passes; no automatic resumption."},
       {"id": "e6925772-df1f-4ff7-9efc-219f800a5a14", "reason": "Independent engine assessment complete; all four reported findings now repaired with active regressions. Final candidate review remains separate; no automatic resumption."},
       {"id": "598d83d0-6ce2-40ac-b6d5-01d566c68b99", "reason": "Reference research complete; no automatic resumption."},
@@ -32,6 +33,24 @@
     "usage_accounting": "milestones/evidence/m1-usage-snapshot.json records the available delayed session snapshot; final project-wide credits/currency are unavailable."
   },
   "tasks": [
+    {
+      "id": "M1-GAMEPLAY-UI-CONTRACTS",
+      "goal": "Close the actual source-backed engine/data/protocol contracts required by the approved M1 interface controls.",
+      "status": "READY",
+      "specs": ["spec/browser-implementation.md", "web/ui/contract-gaps.json", "spec/game-contracts.md", "spec/game-networking.md", "prompt.md sections30/3.3"],
+      "dependencies": ["M1-FLEET-LIVE-SERVER", "M1-FLEET-BINDING-APPLICATION", "M1-SHOP-REVIEW-FIXES", "M1-ACTOR-REVIEW-FIXES"],
+      "allowed_paths": ["crates/server/**", "crates/protocol/**", "crates/game-types/**", "crates/world-engine/**", "crates/simulation/**", "crates/content/**", "crates/client-core/tests/**", "content/m1/**", "tools/m1-content/**", "research/m1-bindings/**", "research/interface-contracts/**", "web/shared/contracts.ts", "spec/game-contracts.md", "spec/game-networking.md", "spec/browser-implementation.md"],
+      "forbidden_paths": ["prompt.md", "assets/**", "web/ui/**", "web/app/**", "web/audio/**", "web/renderer/**", "tools/reference-pack/**", "research/reference-pack/**", "spec/art-style.md", "spec/interface-parity.md", "spec/adaptations.md", "milestones/**", "Cargo.toml", "Cargo.lock"],
+      "outputs": ["Versioned authoritative UI projection and exact shared adapter types", "Real production/reward/item-action/bank/death/public-chat controls", "Source bindings, migration/replay/ownership tests and actual PostgreSQL/HTTP evidence"],
+      "validation_commands": ["cargo test --workspace --locked", "cargo clippy --workspace --all-targets --locked -- -D warnings", "python3 tools/m1-content/validate.py --repeat", "python3 tools/dev.py integration"],
+      "test_requirements": ["No speculative query mutations or fake state", "No duplicate rewards/coins/items across retry/restart", "Preserve source action timing and all repaired ownership/collision/style behavior", "Typed non-spendable placeholders and actual effective values", "New controls operate on legitimate current contexts", "No unrelated appearance/audio/renderer or content expansion"],
+      "acceptance": ["SQL m1-gameplay-ui-contracts records implemented concrete contracts, exact ABI and executed positive/negative conformance, not the old missing-field list"],
+      "reserved_namespaces": ["interface.*", "action.item.*", "action.bank.*", "action.recovery.*"],
+      "source_notes": ["The delivered UI has87/87 source raster checks but its listed authority/control gaps are real. Reuse current engine planners and canonical sources; routine stock behavior is not an adaptation."],
+      "parity_entries": [],
+      "adaptations": [],
+      "evidence": []
+    },
     {
       "id": "M1-GAME-ROOT-STARTUP",
       "goal": "Unblock real canonical-world startup without trimming source assets or silently requiring a browser bundle.",
