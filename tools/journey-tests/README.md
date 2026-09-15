@@ -33,12 +33,21 @@ Builds use project-local `.local/journey-target` and `.local/journey-build-work`
 `--skip-build` explicitly uses existing binaries; their SHA-256 identities are
 still recorded and are not proof that they were rebuilt from the HEAD label.
 
-Without `--game-root`, the script constructs an isolated descriptor from the
-committed product artifact and **only hash-matched original published outputs**.
-It records any unmapped asset IDs rather than generating substitutes. This
-limited assembly is not a replacement for the complete product adapter.
-Startup still runs the real server's artifact-version, unresolved-binding,
-asset-membership and engine-construction checks, without relaxing any of them.
+Without `--game-root`, the script obtains the **exact required asset-ID set from
+the real strict Runtime compiler**, validates the canonical publication chain,
+and constructs an isolated source-only GameRoot. Original definition-collection
+shards remain byte-for-byte original; their existing asset-ID keys select their
+records. Other assets use hash-matched original published outputs. Every compiler
+reference must be mapped; an absent output fails rather than becoming a
+placeholder. Payload files are deduplicated by hash and use short loopback asset
+URLs. This is not a rendered browser bundle or visual-fidelity claim.
+
+The generated descriptor explicitly selects the documented
+`ordinary_normal_f2p` readiness profile and its two excluded, unacquired rare
+alternatives. The real server—not the packager—must prove all six inactive
+bindings. Startup still enforces descriptor size, artifact/source readiness,
+asset membership and engine construction. Compact JSON does not remove or relax
+any startup check.
 
 ## Isolation and sequence
 
@@ -100,7 +109,9 @@ source path, oracles and limitations.
 binary/content/protocol identities, first failures and verified cleanup.
 **Zero product tutorial edges and zero required gameplay restarts passed.**
 
-At base `89f3386`, the committed product pack is artifact/schema 2, while the
+### Historical base89f3386 failures
+
+At base `89f3386`, the committed product pack was artifact/schema 2, while the
 engine requires artifact/schema 3. The existing network adapter also still
 documents missing lifecycle/guarded views, and its generated `game.proto` lacks
 `OpenGrave`/`OpenDeathOffice` and a public recovery-entry/fee view. These are
@@ -134,6 +145,45 @@ the real unmodified server library. It installs no callbacks, fake server or
 fixture content. This lets product artifact validation be tested independently
 of the binary environment-parsing defect; it does **not** claim that defect is
 fixed. The default remains the actual `clubscape-server` binary.
+
+### Authorized final backend/content integration
+
+Parent commits `1ea2e6539668a57600ddb7b8988785ba608ef61b` and
+`e8dfa2df63e7694ac1b52b865dbe9478504646d6` were explicitly authorized for this
+worktree. Their local cherry-picks are `1d2f6d6` and `bcc0de9`. The updated backend
+implements lifecycle/contextual views and quotes, and exposes `ProduceSelected`,
+`OpenGrave` and `OpenDeathOffice`. Its documentation describes independent
+game-only configuration, but the actual `Config::from_env` implementation still
+nests GameRoot under WebRoot: the real binary probe still stops at Hello.
+The real source pack is artifact 3 with zero active unresolved bindings and six
+proof-scoped inactive bindings. Historical artifact-2 evidence is not a claim
+about this new revision.
+
+The launcher additionally supports `inspect-artifact <project-artifact>` for
+packaging. It calls `clubscape_content::load_compiled(..., Runtime)` and emits
+the actual compiler reference set; it does not instantiate or seed characters.
+Both production entry points retain the same real server startup checks.
+
+The explicit real-Service run found a separate hard deployment blocker:
+the complete **5,010-reference** compact descriptor is **272,433 bytes**, larger
+than `game_service/content.rs`'s **262,144-byte** descriptor limit. Actual startup
+returns `game_content / game_file_size`. All references are backed by validated
+originals: 4,981 use unchanged original definition collections, and 35 original
+payload files cover the whole compiler-required set. Nothing is missing or
+replaced with a placeholder. The parent must increase the private descriptor
+bound; public RPC budgets and source-readiness checks must remain intact.
+Neither this failure nor the stale environment parser is a gameplay pass.
+[`evidence/artifact3-bcc0de9.json`](evidence/artifact3-bcc0de9.json) records the
+actual two runs, 29 Rust and 10 orchestration checks, complete genuine mapping,
+exact identities, startup errors and cleanup. No source character or required
+gameplay restart was reached.
+
+Known parent repairs (solid-target range contact, offline manual-drop clocks,
+shop-row/reclaim identity, offline collision and queued styles) remain server
+work, not client exceptions. The simulator uses generated explicit Single
+production requests and live guarded shop-row identities/quotes, and records
+public presence, bank, shop, recovery and quote contexts. No failed source action
+is transformed into a pass.
 
 `milestone_accepted`, browser/UI, audio, performance and RuneLite verification
 remain false. Unit fixtures below establish client machinery only:

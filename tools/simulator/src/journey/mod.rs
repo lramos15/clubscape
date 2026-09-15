@@ -607,6 +607,7 @@ impl Runner {
                 Command::PollWorld(game::PollWorld {
                     world_session_id: self.world_session.clone(),
                     after_revision: self.snapshot.revision,
+                    quote: None,
                 }),
                 true,
             )
@@ -628,6 +629,43 @@ impl Runner {
             "Authoritative 600ms clock stalled for 20 polls"
         );
         self.capture(snapshot, "poll")
+    }
+
+    async fn quote(&mut self, request: game::quote_request::Request) -> Result<game::Quote> {
+        self.bound()?;
+        tokio::time::sleep(SOURCE_TICK).await;
+        let sequence = self.sequence;
+        let before = evidence::stable_player(self.player()?);
+        let result = self
+            .rpc(
+                Command::PollWorld(game::PollWorld {
+                    world_session_id: self.world_session.clone(),
+                    after_revision: self.snapshot.revision,
+                    quote: Some(game::QuoteRequest {
+                        request: Some(request),
+                    }),
+                }),
+                true,
+            )
+            .await?;
+        let Outcome::WorldSnapshot(snapshot) = result else {
+            bail!("Quote PollWorld returned the wrong generated Protobuf result");
+        };
+        ensure!(
+            snapshot.next_sequence == sequence,
+            "A read-only quote consumed a gameplay sequence"
+        );
+        let quote = snapshot
+            .quote
+            .clone()
+            .context("Actual guarded quote is missing")?;
+        self.capture(snapshot, "guarded_quote")?;
+        self.evidence.check(
+            "quote_preserves_gameplay_state",
+            before,
+            evidence::stable_player(self.player()?),
+        )?;
+        Ok(quote)
     }
 
     async fn wait_for(

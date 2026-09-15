@@ -114,6 +114,21 @@ class OrchestratorTests(unittest.TestCase):
         value = "postgresql://user:sensitive@127.0.0.1:4321/isolated"
         self.assertNotIn("sensitive", RUN.redact(f"failure {value}", {"DATABASE_URL": value}))
 
+    def test_compact_descriptor_changes_encoding_not_required_assets(self):
+        relative = Path(".local/journey-machinery-tests") / uuid.uuid4().hex
+        directory = RUN.private_directory(relative)
+        try:
+            data = {"assets": {"asset.original.one": "/assets/0", "asset.original.two": "/assets/1"}}
+            compact = directory / "descriptor.json"
+            pretty = directory / "evidence.json"
+            RUN.write_json(compact, data, compact=True)
+            RUN.write_json(pretty, data)
+            self.assertEqual(RUN.read_json(compact), data)
+            self.assertEqual(RUN.read_json(pretty), data)
+            self.assertLess(compact.stat().st_size, pretty.stat().st_size)
+        finally:
+            shutil.rmtree(directory)
+
 
 if __name__ == "__main__":
     unittest.main()

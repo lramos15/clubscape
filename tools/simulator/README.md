@@ -87,6 +87,13 @@ Ordinary actions use generated Rust messages. Additive `open_grave`/
 Protobuf descriptor**. There are no guessed wire tags. An absent generated
 request is an error; generic `OpenInterface` is not substituted for recovery.
 
+With the integrated artifact-3 protocol, production uses generated
+`ProduceSelected(Single)` rather than guessing quantity-derived menu mode.
+Commerce selects the bucket row from the live authorized `ShopView`, obtains a
+real read-only quote, verifies source item/quantity/price, and submits the public
+purchase/sale. Quotes must preserve progression and input sequence. Public
+presence and bank/shop/recovery/quote contexts are retained in the trace.
+
 Polls wait 600 ms. Gathering/combat/ignition waits and retries are bounded and
 observed; success probabilities are never modified or statistically certified by
 one run. Writes with uncertain transport outcomes are not retried under new

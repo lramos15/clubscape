@@ -1,0 +1,166 @@
+{
+  "schema_version": 1,
+  "task": "m1-headless-journey",
+  "status": "blocked",
+  "full_original_journey_passed": false,
+  "milestone_accepted": false,
+  "ui_audio_performance_or_runelite_claims": false,
+  "gameplay_sql_or_state_seeding_used": false,
+  "authorized_integrations": {
+    "backend_parent_commit": "1ea2e6539668a57600ddb7b8988785ba608ef61b",
+    "backend_local_cherry_pick": "1d2f6d6",
+    "content_parent_commit": "e8dfa2df63e7694ac1b52b865dbe9478504646d6",
+    "content_local_cherry_pick": "bcc0de903ddcce037f89096c0dbcd26479e62943"
+  },
+  "execution_revision_label": "bcc0de903ddcce037f89096c0dbcd26479e62943",
+  "workspace_dirty_with_owned_runner_changes": true,
+  "native_checks": [
+    {"command": "cargo fmt --package clubscape-sim", "result": "passed"},
+    {
+      "command": "cargo test --quiet --package clubscape-sim --package clubscape-protocol --all-features",
+      "result": "passed",
+      "passed_tests": 29,
+      "breakdown": {
+        "protocol_unit": 12,
+        "protocol_game": 3,
+        "simulator_unit": 13,
+        "simulator_loopback": 1
+      }
+    },
+    {
+      "command": "cargo clippy --quiet --package clubscape-sim --all-features --all-targets -- -D warnings",
+      "result": "passed"
+    },
+    {
+      "command": "python3 -m unittest discover -s tools/journey-tests -p 'test_*.py' -q",
+      "result": "passed",
+      "passed_tests": 10,
+      "scope": "Owned client/packaging/process machinery, not gameplay."
+    }
+  ],
+  "real_source_inputs": {
+    "content_revision": "m1.source-backed.v3.95f50b40601a821f",
+    "content_schema_version": 3,
+    "artifact_version": 3,
+    "artifact_archive_bytes": 502831,
+    "artifact_archive_sha256": "59db342f4d41ea954ed8062b08c15dcc96a3cdddc43d3269d7455d7a1835a8d5",
+    "artifact_uncompressed_bytes": 11761569,
+    "artifact_uncompressed_sha256": "0181ec69456101defccbc8dd99b579ed849caae6301d801387732bea70fe98f5",
+    "source_content_archive_sha256": "b9364b8bb56a88779f57eee650bff032c424e862bc9737bbda558ae41802673b",
+    "content_manifest_sha256": "710edc872a14d1a2af465dd2b4e25b88bd135810de0a3544438e6c56db5f8606",
+    "protocol_version": 1,
+    "generated_protocol_descriptor_sha256": "db3ad36878170f21460e679b38c4c90f8e4940b22b0b99a5231724e307c82caf",
+    "game_proto_sha256": "df515b5c1b21490e5784fdf999f6baa59993b73a04182b89d738478c7466ccd6",
+    "cargo_lock_sha256_used_for_build_not_committed": "865211f6a32c844860f53dea5c77abd739f238e2e7be18b6acbc51687f2c63e3",
+    "strict_compiler_inspection": "passed using load_compiled(Runtime), not a decoded/relabelled fixture",
+    "compiler_required_asset_ids": 5010,
+    "genuine_asset_mappings": 5010,
+    "missing_required_assets": 0,
+    "original_definition_collection_deliveries": 4981,
+    "original_payload_files": 35,
+    "canonical_publication_validation": "passed",
+    "asset_policy": "Original collection shard bytes keep their original asset-ID keyed records; other assets use hash-matched original published bytes. No regenerated model, placeholder or changed source geometry.",
+    "readiness_profile_requested": {
+      "id": "ordinary_normal_f2p",
+      "excluded_items": ["item.ensouled_goblin_head", "item.milk.bottomless_bucket"]
+    },
+    "compiler_unresolved_binding_paths": [
+      "items.item.ensouled_goblin_head.stackable.rule",
+      "items.item.milk.bottomless_bucket.stackable.rule",
+      "mechanics.death.office_overflow",
+      "spawns.spawn.tutorial.fishing_spot.3099.3090.p0.interactions[0].action.rule.mechanics.respawn",
+      "spawns.spawn.tutorial.fishing_spot.3101.3092.p0.interactions[0].action.rule.mechanics.respawn",
+      "spawns.spawn.tutorial.fishing_spot.3103.3092.p0.interactions[0].action.rule.mechanics.respawn"
+    ],
+    "server_readiness_proof_execution": "Not reached: deployment descriptor rejected earlier. The source/user reports zero active and six proved-inactive bindings; this run does not replace the real server's proof checks."
+  },
+  "source_oracle_hashes": {
+    "research/journey-rules/initial-state.json": "3f6cefa5f68f226878df5286d1689c1ebe5a2fa28b4d6c5d0fd34a7741447ad3",
+    "research/journey-rules/tutorial.json": "774789d1559f438f3db6036d831d4b341a093d77949d416ff9bc8bfe48d0087b",
+    "research/journey-rules/activities.json": "a0eb67f8615642161f7ba05ecfda99bd1ba62102f5fc23f335a340df4645f6f7",
+    "research/journey-rules/cooks-assistant.json": "ccb21048828e1d1a774f09c809d01aaf6900425bc52ea2e1bc471142ff4295cf",
+    "research/journey-rules/expected-scenarios.json": "c9dc703ab7ad139d6df90791d13bcb3cbfcdd518973517e3bdabcbc93ba29a68",
+    "research/m1-bindings/application-result.json": "ec142de26dd327cbfa3de489ecca12a9ca58de52b4569252fb4c19557e166153",
+    "research/m1-bindings/graph-bindings.json": "602e1bddb3ab14a1d13c69e83a4aad56584cc4c037d8aa0640fc56ed758db022",
+    "research/m1-bindings/runtime3-policy.json": "05031552cbd96aec54e15ee6075212212fffa165d913c476860bb2cfd222fc7b",
+    "research/m1-bindings/runtime3-selectors.json": "182acad81b95eb28abd734d267130f54c9a0ba49499e4c32433a5a9f3d63e2d8",
+    "research/m1-bindings/runtime3-sources.json": "2076c006b7eac60b5a17f212430fc5cb18f1b8fc44bf2ad100bae3ad92e5b395",
+    "tests/scenarios/m1_fresh_account.json": "34164cf09a1b94c8af0d90f374d4e4bfb9db330c18bd90b1db8cac7903437784"
+  },
+  "real_runs": [
+    {
+      "run_id": "43e8ae20efc54b84",
+      "recorded_at_unix_ms": 1789440295157,
+      "command": "python3 tools/journey-tests/run.py --report .local/evidence/m1-headless-artifact3.json",
+      "exit_code": 1,
+      "real_account_checks_passed": 11,
+      "real_account_only_negative_readiness_check": "passed; not gameplay",
+      "first_failure": {
+        "phase": "real_m1_fresh_account_scenario",
+        "action": "hello.gameplay_readiness",
+        "sequence": 0,
+        "tick": 0,
+        "stage": null,
+        "reason": "Real server is not gameplay-ready: The starter journey is not implemented. No character has been initialized.",
+        "cause": "Config::from_env still reads CLUBSCAPE_GAME_ROOT inside the CLUBSCAPE_WEB_ROOT branch.",
+        "file": "crates/server/src/config.rs",
+        "lines": [58, 65]
+      },
+      "server_sha256": "241ded8cd4767bd08051ab8b8e1b0c7813a08d3bba68c615187aa1d302572864",
+      "simulator_sha256": "219ac6812cca9d0de4c21da9d0fe9dbc6cd41d6569338c7392a8911889a423eb",
+      "world_id": "5eeb3026-fb2c-4b67-82f6-1d170d469dbd",
+      "descriptor_sha256": "4d61dc07713bbf9970c0a4004738d3f0b1996625b217a7bf12153f1901b7b978",
+      "owned_resources_cleaned": true
+    },
+    {
+      "run_id": "a347b0d13b7d4146",
+      "recorded_at_unix_ms": 1789440334066,
+      "command": "python3 tools/journey-tests/run.py --server-entrypoint public-api --report .local/evidence/m1-headless-artifact3-public-api.json",
+      "entrypoint": "Unchanged real Service::bind/serve with explicit Config::with_game_root; no test callbacks or fixture mode.",
+      "exit_code": 1,
+      "real_account_checks_passed": 11,
+      "real_account_only_negative_readiness_check": "passed; not gameplay",
+      "first_failure": {
+        "phase": "strict_product_server_startup",
+        "server_exit_code": 1,
+        "event": "startup_failure",
+        "stage": "game_content",
+        "error_kind": "game_file_size",
+        "error_id": "bb2bd368-825d-4df7-9387-4378701b59f3",
+        "file": "crates/server/src/game_service/content.rs",
+        "line": 46,
+        "actual_complete_compact_descriptor_bytes": 272433,
+        "server_limit_bytes": 262144,
+        "over_limit_bytes": 10289
+      },
+      "real_service_launcher_sha256": "769ed194cba98067c3b412f78c3315ac6e7918848bfee65c09a3108f9e3247d4",
+      "simulator_sha256": "219ac6812cca9d0de4c21da9d0fe9dbc6cd41d6569338c7392a8911889a423eb",
+      "world_id": "7dcc4714-9ef0-47db-beff-5b4ced2d54a4",
+      "descriptor_sha256": "16b1e5e83292e80955acfb8cc755fb131cdb104ee39211d4a55ed8f4b0590beb",
+      "owned_resources_cleaned": true
+    }
+  ],
+  "parent_required_fixes": [
+    "Read CLUBSCAPE_GAME_ROOT independently of CLUBSCAPE_WEB_ROOT in Config::from_env.",
+    "Increase the private deployment-descriptor byte bound enough for the real complete 5010-reference source map; retain public RPC limits, strict source/profile proofs and real asset-membership checks."
+  ],
+  "known_parent_native_and_review_repairs_not_bypassed": [
+    "Valid solid-range contact from west 3211,3215",
+    "Fresh manual PlayerDrop expiration pause while offline",
+    "Shop row identity and reclamation review",
+    "Offline actor collision",
+    "Queued combat style"
+  ],
+  "gameplay_evidence": {
+    "product_characters_created": 0,
+    "product_tutorial_edges_executed": 0,
+    "required_onboarding_or_post_quest_restarts_executed": 0,
+    "unchecked": [
+      "All 71 tutorial states and Learning the Ropes",
+      "Legitimate Lumbridge mining, inventory, equipment, bank and shop",
+      "Actual goblin combat, source death, Office, grave and recovery",
+      "Actual Cook ingredient acquisition, mill, partial delivery, reward and range",
+      "Onboarding/post-quest logout, login, reconnect, owned restart and duplicate-operation replay"
+    ]
+  }
+}

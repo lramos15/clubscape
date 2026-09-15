@@ -7,7 +7,7 @@ publish.workspace = true
 default-run = "clubscape-sim"
 
 [features]
-journey-server = ["dep:clubscape-server", "dep:tracing-subscriber"]
+journey-server = ["dep:clubscape-content", "dep:clubscape-server", "dep:tracing-subscriber"]
 
 [[bin]]
 name = "clubscape-journey-server"
@@ -18,6 +18,7 @@ required-features = ["journey-server"]
 anyhow.workspace = true
 clap.workspace = true
 clubscape-protocol.workspace = true
+clubscape-content = { path = "../../crates/content", optional = true }
 clubscape-server = { path = "../../crates/server", optional = true }
 flate2 = "1.1"
 prost.workspace = true

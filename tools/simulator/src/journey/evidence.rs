@@ -234,6 +234,12 @@ pub fn public_snapshot(snapshot: &game::WorldSnapshot) -> Result<Value> {
         "hitpoints": player.hitpoints, "prayer_points": player.prayer_points,
         "run_energy": player.run_energy, "activity": player.activity
     });
+    state["presence"] = player
+        .presence
+        .as_ref()
+        .map(|presence| message_json_with_defaults("clubscape.game.v1.Presence", presence))
+        .transpose()?
+        .unwrap_or(Value::Null);
     Ok(json!({
         "revision": snapshot.revision, "tick": snapshot.tick,
         "character_revision": snapshot.character_revision,
@@ -245,7 +251,11 @@ pub fn public_snapshot(snapshot: &game::WorldSnapshot) -> Result<Value> {
         "unavailable_views": snapshot.unavailable_views.iter().map(|view| json!({
             "view": view.view, "reason": view.reason
         })).collect::<Vec<_>>(),
-        "event_history_gap": snapshot.event_history_gap
+        "event_history_gap": snapshot.event_history_gap,
+        "bank_context": snapshot.bank_context.as_ref().map(|context| message_json_with_defaults("clubscape.game.v1.BankContext", context)).transpose()?,
+        "shop": snapshot.shop.as_ref().map(|shop| message_json_with_defaults("clubscape.game.v1.ShopView", shop)).transpose()?,
+        "recovery": snapshot.recovery.as_ref().map(|recovery| message_json_with_defaults("clubscape.game.v1.RecoveryContext", recovery)).transpose()?,
+        "quote": snapshot.quote.as_ref().map(|quote| message_json_with_defaults("clubscape.game.v1.Quote", quote)).transpose()?
     }))
 }
 
@@ -376,6 +386,10 @@ mod tests {
                     .unwrap_err()
                     .to_string()
                     .contains("Generated game.proto has no")
+            );
+        } else {
+            assert!(
+                matches!(result.unwrap(), game::world_input::Action::OpenGrave(ref action) if action.death == "death.synthetic")
             );
         }
         assert!(generated_action("advance_stage", json!({})).is_err());

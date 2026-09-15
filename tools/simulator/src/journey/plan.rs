@@ -995,10 +995,13 @@ impl Runner {
                 .to_owned();
             self.approach(target, &action).await?;
         }
-        self.input(Action::Produce(game::Produce {
+        self.input(Action::ProduceSelected(game::ProduceSelected {
             recipe: recipe.into(),
-            target: target.map(str::to_owned),
+            target: target.map(|spawn| game::WorldTarget {
+                target: Some(game::world_target::Target::Spawn(spawn.into())),
+            }),
             quantity: 1,
+            mode: game::ProductionMode::Single as i32,
         }))
         .await?;
         Ok(())
@@ -1149,9 +1152,10 @@ impl Runner {
                 Tile::new(tile.x, tile.y + 1, tile.plane),
             ]))
             .await?;
-            self.input(Action::ProduceAt(game::ProduceAt {
+            self.input(Action::ProduceSelected(game::ProduceSelected {
                 recipe: recipe.into(),
                 quantity: 1,
+                mode: game::ProductionMode::Single as i32,
                 target: Some(game::WorldTarget {
                     target: Some(game::world_target::Target::TemporaryObject(fire.id)),
                 }),
@@ -1422,18 +1426,48 @@ impl Runner {
         let buckets = self.count("item.bucket")?;
         let coins = self.count("item.coins")?;
         self.interact(SHOPKEEPER, "Trade").await?;
-        let index = self.source.content["shops"][SHOP]["stock"]
-            .as_array()
-            .context("Missing canonical shop stock")?
+        let shop = self
+            .snapshot
+            .shop
+            .as_ref()
+            .context("Actual guarded shop view is missing")?;
+        ensure!(
+            shop.shop == SHOP,
+            "Opened shop identity differs from the source target"
+        );
+        let index = shop
+            .lines
             .iter()
-            .position(|item| item["item"] == "item.bucket")
-            .context("Source general store lacks bucket stock")? as u32;
-        self.input(Action::ShopBuy(game::ShopBuy {
+            .find(|line| line.item == "item.bucket")
+            .context("Source bucket is absent from the guarded current shop rows")?
+            .index;
+        let buy = game::ShopBuy {
             shop: SHOP.into(),
             item_index: index,
             quantity: 1,
-        }))
-        .await?;
+        };
+        let quote = self
+            .quote(game::quote_request::Request::ShopBuy(buy.clone()))
+            .await?;
+        let Some(game::quote::Result::Shop(quote)) = quote.result else {
+            bail!("Guarded source purchase did not return a shop quote");
+        };
+        self.evidence.check(
+            "quoted_source_bucket_identity",
+            json!("item.bucket"),
+            json!(quote.item),
+        )?;
+        self.evidence.check(
+            "quoted_source_bucket_quantity",
+            json!(1),
+            json!(quote.quantity),
+        )?;
+        self.evidence.check(
+            "quoted_source_bucket_total",
+            json!(2),
+            json!(quote.total_price),
+        )?;
+        self.input(Action::ShopBuy(buy)).await?;
         self.evidence.check(
             "source_shop_bucket_purchase",
             json!(buckets + 1),
@@ -1444,12 +1478,28 @@ impl Runner {
             json!(coins - 2),
             json!(self.count("item.coins")?),
         )?;
-        self.input(Action::ShopSell(game::ShopSell {
+        let sell = game::ShopSell {
             shop: SHOP.into(),
             inventory_slot: self.slot("item.bucket")?,
             quantity: 1,
-        }))
-        .await?;
+        };
+        let quote = self
+            .quote(game::quote_request::Request::ShopSell(sell.clone()))
+            .await?;
+        let Some(game::quote::Result::Shop(quote)) = quote.result else {
+            bail!("Guarded source sale did not return a shop quote");
+        };
+        self.evidence.check(
+            "quoted_source_bucket_sale_quantity",
+            json!(1),
+            json!(quote.quantity),
+        )?;
+        self.evidence.check(
+            "quoted_source_bucket_sale_total",
+            json!(0),
+            json!(quote.total_price),
+        )?;
+        self.input(Action::ShopSell(sell)).await?;
         self.evidence.check(
             "source_shop_bucket_sale",
             json!(buckets),

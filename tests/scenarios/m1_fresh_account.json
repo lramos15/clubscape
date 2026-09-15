@@ -13,6 +13,10 @@
     "research/m1-bindings/location-bindings.json",
     "research/m1-bindings/travel-bindings.json",
     "research/m1-bindings/selection.json",
+    "research/m1-bindings/application-result.json",
+    "research/m1-bindings/runtime3-selectors.json",
+    "research/m1-bindings/runtime3-policy.json",
+    "research/m1-bindings/runtime3-sources.json",
     "research/runtime-bindings/application-result.json"
   ],
   "source_tick_ms": 600,

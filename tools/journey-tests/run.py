@@ -82,7 +82,7 @@ def private_directory(value):
     return path
 
 
-def write_json(path, value):
+def write_json(path, value, *, compact=False):
     require(path.is_relative_to(ROOT), "Evidence must remain in this project.")
     relative = path.relative_to(ROOT)
     project_path(relative)
@@ -91,7 +91,8 @@ def write_json(path, value):
     project_path(pending.relative_to(ROOT))
     descriptor = os.open(pending, os.O_WRONLY | os.O_CREAT | os.O_TRUNC, 0o600)
     with os.fdopen(descriptor, "w", encoding="utf-8") as target:
-        json.dump(value, target, indent=2, sort_keys=True)
+        json.dump(value, target, indent=None if compact else 2, sort_keys=True,
+                  separators=(",", ":") if compact else None)
         target.write("\n")
         target.flush()
         os.fsync(target.fileno())
@@ -221,8 +222,47 @@ class OwnedServer:
         return process.returncode
 
 
-def publish_product_root(directory, report):
-    """Copy only hash-verified original outputs; absent bindings remain absent."""
+def verified_collection_locations(references):
+    """Use the canonical publication validator, then retain exact original shard bytes."""
+    prior_path = list(sys.path)
+    prior_bytecode = sys.dont_write_bytecode
+    try:
+        sys.dont_write_bytecode = True
+        sys.path.insert(0, str(ROOT / "tools/cache-import"))
+        from content_closure import load_published_inputs, publication_chain
+        publication = project_path(references["publications"][-1])
+        bundle, collections = load_published_inputs(publication)
+        require(
+            {record["asset_id"] for record in bundle["records"]}.issuperset(
+                asset["id"] for asset in references["assets"]
+            ),
+            "Product references are absent from the validated original catalog.",
+        )
+        shards = {
+            path: path.name.split(".")[0]
+            for path in (ROOT / "assets/source/osrs/cache2695/collections").glob("*.json.gz")
+        }
+        for _, manifest in publication_chain(publication):
+            for kind, entry in manifest.get("collection_extensions", {}).items():
+                shards[project_path(entry["path"])] = kind
+        locations = {}
+        for path, kind in shards.items():
+            for asset_id, record in read_json(path).items():
+                require(record == collections[kind].get(asset_id), "Original collection payload differs from validated source.")
+                require(asset_id not in locations, "Duplicate original asset in collection shards.")
+                locations[asset_id] = path
+        return locations
+    except JourneyError:
+        raise
+    except Exception as error:
+        raise JourneyError(f"Canonical original-publication validation failed: {error}") from error
+    finally:
+        sys.path[:] = prior_path
+        sys.dont_write_bytecode = prior_bytecode
+
+
+def publish_product_root(directory, report, inspector, env):
+    """Expose genuine original bytes for every asset required by the real strict compiler."""
     game_root = directory / "game-root"
     game_root.mkdir(mode=0o700)
     content_manifest_path = ROOT / "content/m1/manifest.json"
@@ -236,7 +276,15 @@ def publish_product_root(directory, report):
     artifact_sha = hashlib.sha256(artifact).hexdigest()
     require(artifact_sha == compiled["uncompressed_sha256"], "Compiled product checksum differs from manifest.")
     (game_root / "world.csc").write_bytes(artifact)
+    inspected = json.loads(bounded([
+        inspector, "inspect-artifact", game_root / "world.csc",
+    ], env=env, timeout=120).stdout)
+    require(inspected["artifact_sha256"] == artifact_sha, "Strict compiler inspected a different artifact.")
+    required_assets = set(inspected["referenced_assets"])
+    require(0 < len(required_assets) <= 20000, "Unbounded/empty actual compiler asset-reference set.")
     references = read_json(ROOT / "content/m1/asset-references.json")
+    original_collections = verified_collection_locations(references)
+    catalog = {entry["id"]: entry for entry in references["assets"]}
     published = {}
     for name in references["publications"]:
         for entry in read_json(project_path(name))["published_files"]:
@@ -245,26 +293,36 @@ def publish_product_root(directory, report):
     assets = {}
     copied = {}
     missing = []
+    collection_deliveries = 0
+    payload_hashes = {}
     total_bytes = len(artifact)
-    for asset in references["assets"]:
+    for asset_id in sorted(required_assets):
+        asset = catalog.get(asset_id)
+        require(asset is not None, f"Compiler asset missing from original catalog: {asset_id}")
         matched = None
-        for output in asset["outputs"]:
-            for entry in published.get(output["sha256"], []):
-                path = project_path(entry["path"])
-                if not path.is_file():
-                    continue
-                require(sha(path) == output["sha256"], f"Published source asset changed: {entry['path']}")
-                matched = (path, output["sha256"])
-                break
-            if matched:
-                break
+        if asset_id in original_collections:
+            path = original_collections[asset_id]
+            if path not in payload_hashes:
+                payload_hashes[path] = sha(path)
+            matched = (path, payload_hashes[path])
+            collection_deliveries += 1
+        else:
+            for output in asset["outputs"]:
+                for entry in published.get(output["sha256"], []):
+                    path = project_path(entry["path"])
+                    if not path.is_file():
+                        continue
+                    require(sha(path) == output["sha256"], f"Published source asset changed: {entry['path']}")
+                    matched = (path, output["sha256"])
+                    break
+                if matched:
+                    break
         if matched is None:
             missing.append(asset["id"])
             continue
         source, digest = matched
         if digest not in copied:
-            suffix = "".join(source.suffixes)[-16:] or ".bin"
-            relative = f"assets/{digest}{suffix}"
+            relative = f"assets/{len(copied):x}"
             destination = game_root / relative
             destination.parent.mkdir(parents=True, exist_ok=True)
             shutil.copyfile(source, destination)
@@ -276,7 +334,8 @@ def publish_product_root(directory, report):
                 "content_type": "application/octet-stream",
             })
             copied[digest] = url
-        assets[asset["id"]] = copied[digest]
+        assets[asset_id] = copied[digest]
+    require(not missing, f"Required genuine source outputs are absent: {missing[:16]} ({len(missing)} total)")
     relative = "content/manifest.json"
     (game_root / "content").mkdir()
     shutil.copyfile(content_manifest_path, game_root / relative)
@@ -288,19 +347,33 @@ def publish_product_root(directory, report):
         "schema_version": 1, "world_id": str(uuid.uuid4()), "artifact": "world.csc",
         "sha256": artifact_sha, "content_manifest_path": "/content/manifest.json",
         "assets": assets,
+        "readiness_profile": {
+            "id": "ordinary_normal_f2p",
+            "excluded_items": ["item.ensouled_goblin_head", "item.milk.bottomless_bucket"],
+        },
     }
-    write_json(game_root / "clubscape-game.json", descriptor)
+    write_json(game_root / "clubscape-game.json", descriptor, compact=True)
     write_json(game_root / "clubscape-game-assets.json", {"schema_version": 1, "files": files})
     report["product_root_preparation"] = {
         "artifact": compiled, "source_revision": content_manifest["revision"],
         "actual_source_asset_mappings": len(assets),
+        "actual_compiler_referenced_assets": len(required_assets),
+        "all_compiler_referenced_assets_mapped": len(assets) == len(required_assets),
+        "original_collection_deliveries": collection_deliveries,
+        "original_payload_files": len(copied),
+        "source_publication_validation": "passed",
+        "collection_delivery": "Original hash-validated shard bytes, keyed by the unchanged original asset ID; no placeholder or regenerated model/definition.",
+        "readiness_profile": descriptor["readiness_profile"],
+        "compiler_unresolved_binding_paths": inspected["unresolved_bindings"],
+        "descriptor_bytes": (game_root / "clubscape-game.json").stat().st_size,
+        "known_descriptor_limit_at_bcc0de9_bytes": 256 * 1024,
         "unmapped_original_asset_ids_count": len(missing),
         "unmapped_original_asset_ids_first_24": missing[:24],
         "unmapped_are_not_placeholders": True,
         "world_id": descriptor["world_id"],
         "descriptor_sha256": sha(game_root / "clubscape-game.json"),
         "game_assets_manifest_sha256": sha(game_root / "clubscape-game-assets.json"),
-        "policy": "Strict real-server readiness is still required. Supply --game-root for the integrated complete product adapter.",
+        "policy": "Real server still enforces descriptor limits, strict artifact/source-profile readiness, actual assets and engine initialization. Original asset bytes are not UI/gameplay acceptance.",
     }
     return game_root
 
@@ -410,9 +483,10 @@ def run(args):
         report["build_performed_by_orchestrator"] = not args.skip_build
         report["workspace_dirty"] = bool(bounded(["git", "status", "--porcelain"]).stdout.strip())
         report["host"] = {"machine": os.uname().machine, "system": os.uname().sysname}
-        build = ["cargo", "build", "--quiet", "-p", "clubscape-server", "-p", "clubscape-sim"]
-        if args.server_entrypoint == "public-api":
-            build.extend(["--features", "clubscape-sim/journey-server"])
+        build = [
+            "cargo", "build", "--quiet", "-p", "clubscape-server", "-p", "clubscape-sim",
+            "--features", "clubscape-sim/journey-server",
+        ]
         if not args.skip_build:
             bounded(build, env=env, timeout=900)
             report["commands"].append({"command": " ".join(build), "result": "passed"})
@@ -423,6 +497,7 @@ def run(args):
             else "debug/clubscape-server"
         )
         client = Path(env["CARGO_TARGET_DIR"]) / "debug/clubscape-sim"
+        inspector = Path(env["CARGO_TARGET_DIR"]) / "debug/clubscape-journey-server"
         require(binary.is_file() and client.is_file(), "Chosen validation command requires built server/simulator binaries.")
         report["binary_sha256"] = {
             "server": sha(binary), "simulator": sha(client), "account_server": sha(account_binary),
@@ -467,7 +542,8 @@ def run(args):
             game_root = project_path(args.game_root)
             require(game_root.is_dir(), "Supplied product GameRoot is absent.")
         else:
-            game_root = publish_product_root(directory, report)
+            report["current_phase"] = "genuine_product_root_assembly"
+            game_root = publish_product_root(directory, report, inspector, env)
         report["game_root_identity"] = game_identity(game_root)
         expected_artifact = read_json(ROOT / "content/m1/manifest.json")["compiled_artifact"]["uncompressed_sha256"]
         require(report["game_root_identity"]["artifact_sha256"] == expected_artifact,
