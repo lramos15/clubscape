@@ -2,6 +2,7 @@
 """Compare exported individual bitmaps with original publication atlases, including alpha."""
 import gzip
 import json
+import argparse
 from pathlib import Path
 from PIL import Image
 
@@ -9,6 +10,9 @@ ROOT = Path(__file__).resolve().parents[2]
 
 
 def main():
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--native-exports", action="store_true", help="Also verify every compiled frame against the hash-bound original cache export")
+    args = parser.parse_args()
     compiled = ROOT / "assets/compiled/ui"
     manifest = json.loads((compiled / "manifest.json").read_text())
     checked, failures, glyphs = 0, [], 0
@@ -37,6 +41,23 @@ def main():
               "checkedSpriteFrames": checked, "checkedFontGlyphs": glyphs, "failures": failures,
               "toleranceDifferentPixels": 0, "sourcePackSha256": manifest["sourcePackSha256"],
               "gameplayAcceptance": False, "finalAcceptance": False}
+    if args.native_exports:
+        native = ROOT / "tools/ui-assets/.cache/native/sprites"
+        atlases, frames = 0, 0
+        for identifier, record in manifest["sprites"].items():
+            source = json.loads((native / (identifier + ".json")).read_text())
+            if source["sourceRawSha256"] != record["sourceRawSha256"] or source["frames"] != record["frames"]:
+                failures.append({"sprite": identifier, "kind": "native_metadata"})
+            original = Image.open(native / (identifier + ".png")).convert("RGBA")
+            exported = Image.open(compiled / "sprites" / (identifier + ".png")).convert("RGBA")
+            if original.size != exported.size or original.tobytes() != exported.tobytes():
+                failures.append({"sprite": identifier, "kind": "native_pixels"})
+            atlases += 1
+            frames += len(record["frames"])
+        result["nativeExportCopyProof"] = {
+            "atlases": atlases, "frames": frames, "toleranceDifferentPixels": 0,
+            "scope": "Original-cache export raw hashes, complete frame metrics and every RGBA pixel retained by compilation; separate from the publication-atlas comparison count.",
+        }
     output = ROOT / "web/ui/test-results"
     output.mkdir(parents=True, exist_ok=True)
     (output / "glyph-proof.json").write_text(json.dumps(result, indent=2) + "\n")

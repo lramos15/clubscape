@@ -121,13 +121,15 @@ def main():
         "audio_ui": passed("audio-ui-comparison.json", 18),
         "music_ui": passed("music-ui-comparison.json", 8),
         "bounded_ui": passed("bounded-ui-comparison.json", 36),
+        "documents": passed("document-comparison.json", 8),
     }
     components = passed("component-tests.json", 20)
     versioned = passed("gameplay-ui-v1-tests.json", 16)
     audio_ui = passed("audio-ui-tests.json", 7)
     music_ui = passed("music-ui-tests.json", 6)
     settings_ui = passed("settings-component-tests.json", 6)
-    units = passed_tap("unit.tap", 47)
+    ui4 = passed("ui4-component-tests.json", 8)
+    units = passed_tap("unit.tap", 54)
     audio_units = passed_tap("audio-policy.tap", 29)
     glyphs = read(RESULTS / "glyph-proof.json")
     if glyphs["failures"] or glyphs["checkedSpriteFrames"] < 1099 or glyphs["checkedFontGlyphs"] != 1024:
@@ -178,6 +180,9 @@ def main():
         "finalAcceptance": False,
     })
     manifest = read(ROOT / "assets/compiled/ui/manifest.json")
+    native_proof = glyphs.get("nativeExportCopyProof")
+    if not native_proof or native_proof["atlases"] != len(manifest["sprites"]) or native_proof["frames"] != sum(len(value["frames"]) for value in manifest["sprites"].values()):
+        raise ValueError("Complete original-cache frame export copy proof is missing")
     audio_archive = EVIDENCE / "native-audio-controls"
     audio_references = []
     records = manifest["nativeAudioControls"]
@@ -248,6 +253,37 @@ def main():
         "limit": 18, "states": bounded["states"], "references": refs,
         "sourcePackSha256": glyphs["sourcePackSha256"], "finalAcceptance": False,
     })
+    documents = EVIDENCE / "ui4-documents"
+    records = manifest["nativeDocuments"]
+    if len(records) != 4 or len({record["case"] for record in records}) != 4:
+        raise ValueError("Original UI4 document fixture inventory changed")
+    refs = archive_references([record["case"] + ".png" for record in records], documents)
+    browser = read(RESULTS / "documents-browser.json")
+    if browser["errors"] or len(browser["names"]) != 4:
+        raise ValueError("Original UI4 document browser evidence is incomplete")
+    for kind in ("documents", "document-projections"):
+        for path in (RESULTS / kind).glob("*.png"):
+            copy(path, documents / kind / path.name)
+    copy(RESULTS / "document-comparison.json", documents / "comparison.json")
+    copy(RESULTS / "documents-browser.json", documents / "browser.json")
+    write(documents / "source-inputs.json", {
+        "scope": "Original book/map text, models and tutor-control fixtures. Native markers are genuinely hidden in these source captures; visible-marker placement/animation is not certified.",
+        "inputs": records, "references": refs, "marker": manifest["documentMarker"],
+        "sourcePackSha256": glyphs["sourcePackSha256"], "finalAcceptance": False,
+    })
+    ui4_archive = EVIDENCE / "ui4-integration"
+    copy(RESULTS / "ui4-component-tests.json", ui4_archive / "browser.json")
+    for path in (RESULTS / "ui4-components").glob("*.png"):
+        copy(path, ui4_archive / path.name)
+    write(ui4_archive / "contract-handoff.json", {
+        "scope": "Exact integrated candidate/type/source identity and component wiring; no fresh-world or migration execution claimed.",
+        "contract": read(ROOT / "web/ui/contract-gaps.json")["published_contract"],
+        "files": [{"path": name, "sha256": digest(ROOT / name)} for name in (
+            "web/shared/contracts.ts", "crates/game-types/src/gameplay_ui.rs", "crates/game-types/src/observer.rs",
+            "crates/protocol/proto/game.proto", "content/m1/game-content.csc.gz",
+        )],
+        "finalAcceptance": False,
+    })
     owned_sources = sorted([
         *ROOT.glob("web/ui/*.ts"), *ROOT.glob("web/ui/tests/*.ts"), *ROOT.glob("web/ui/tests/*.mjs"),
         *ROOT.glob("tools/ui-assets/*.java"), *ROOT.glob("tools/ui-assets/*.py"),
@@ -266,7 +302,8 @@ def main():
         "integrated_audio_policy_units": audio_units,
         "component_browser": {"legacy": len(components["cases"]), "versioned": len(versioned["cases"]),
                               "source_audio_ui": len(audio_ui["cases"]), "source_music_ui": len(music_ui["cases"]),
-                              "all_settings_ui": len(settings_ui["cases"]), "browser": versioned["browser"]},
+                              "all_settings_ui": len(settings_ui["cases"]), "ui4": len(ui4["cases"]), "browser": versioned["browser"]},
+        "ui4_candidate": read(ROOT / "web/ui/contract-gaps.json")["published_contract"]["transport_handoff"],
         "audio_contract": {
             "upstream_commits": ["888f9384e111b5f7fefeee36859bae4f873e5c95", "f74652a59834815b4e57e04366dc857681fd83c1", "f9e466d3feb6626785ae46b9d6549e4e7eb00443"],
             "authorized_picks": ["b7cc380", "d2082e8", "7475596"],
@@ -286,6 +323,7 @@ def main():
             "sprites": len(manifest["sprites"]), "fonts": len(manifest["fonts"]), "items": len(manifest["items"]),
             "native_templates": len(manifest["templates"]), "static_model_contexts": len(manifest["staticModels"]),
             "static_model_images": len({model["asset"] for model in manifest["staticModels"].values()}),
+            "map_elements": len(manifest["mapElements"]), "native_document_states": len(manifest["nativeDocuments"]),
             "manifest_sha256": digest(ROOT / "assets/compiled/ui/manifest.json"),
         },
         "implementation_files": [{"path": str(path.relative_to(ROOT)), "sha256": digest(path)} for path in owned_sources],

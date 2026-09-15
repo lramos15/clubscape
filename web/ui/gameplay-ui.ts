@@ -18,6 +18,7 @@ const decimal = (signed = false): Validator => scalar("lossless decimal integer 
   value => typeof value === "string" && (signed ? /^-?\d+$/ : /^\d+$/).test(value));
 const oneOf = (...values: readonly unknown[]): Validator => scalar(values.map(String).join(" | "), value => values.includes(value));
 const nullable = (check: Validator): Validator => (value, path) => value === null ? null : check(value, path);
+const optional = (check: Validator): Validator => (value, path) => value === undefined ? null : check(value, path);
 function object(fields: Record<string, Validator>, exact = false): Validator {
   return (value, path) => {
     if (!isRecord(value)) return `${path}: expected an object`;
@@ -70,6 +71,8 @@ const target: Validator = (value, path) => {
 };
 const storage = oneOf("grave", "death_office");
 const intentFields: Record<GameplayUiIntent["kind"], Record<string, Validator>> = {
+  ui_document_page: { document_id: identity, page: integer(0, 65535) },
+  bank_placeholder: { entry_id: identity },
   ui_dismiss: { presentation_id: identity },
   production_select: { menu_id: identity, recipe: identity, quantity, mode: oneOf("single", "make_x") },
   item_action: { inventory_slot: integer(0, 255), expected_item: identity, expected_instance: nullable(identity), action: identity },
@@ -89,13 +92,24 @@ const intentFields: Record<GameplayUiIntent["kind"], Record<string, Validator>> 
   ui_confirm: { confirmation_id: identity, accept: bool },
   public_chat: { channel: oneOf("public"), text },
 };
-const intentChecks = new Map(Object.entries(intentFields).map(([kind, fields]) => [kind, object({ kind: oneOf(kind), ...fields }, true)]));
+const bankRequests = new Set<GameplayUiIntent["kind"]>([
+  "bank_placeholder", "bank_select_tab", "bank_create_tab", "bank_move", "bank_collapse_tab", "bank_set_insert",
+  "bank_set_placeholders", "bank_release_placeholder", "bank_deposit_equipment", "bank_withdraw_entry", "bank_set_options",
+]);
+export function requiresBankRevision(intent: GameplayUiIntent): boolean { return bankRequests.has(intent.kind); }
+export function bindBankRevision(intent: GameplayUiIntent, revision: string): GameplayUiIntent {
+  return requiresBankRevision(intent) && !Object.hasOwn(intent, "expected_bank_revision")
+    ? { ...intent, expected_bank_revision: revision } : intent;
+}
+const intentChecks = new Map(Object.entries(intentFields).map(([kind, fields]) => [kind, object({
+  kind: oneOf(kind), ...fields, expected_bank_revision: optional(decimal()),
+}, true)]));
 const intentCheck: Validator = (value, path) => {
   const check = isRecord(value) && typeof value.kind === "string" ? intentChecks.get(value.kind) : undefined;
   return check ? check(value, path) : `${path}: unknown game.ui.v1 request`;
 };
 const projectionCheck = object({
-  version: oneOf(1), activeInterface: nullable(identity),
+  version: oneOf(1), activeTab: nullable(identity), activeInterface: nullable(identity),
   production: nullable(object({
     id: identity, interface: identity, target: nullable(target),
     recipes: array(object({ recipe: identity, name: text, outputs: array(item), single: permission, makeX: permission }), "recipe"),
@@ -106,6 +120,10 @@ const projectionCheck = object({
     questPoints: u32, quest: nullable(identity), skill: nullable(identity), level: nullable(integer(0, 65535)), continuation: intentCheck,
   })),
   confirmation: nullable(object({ id: identity, kind: identity, title: text, lines: array(text), items: array(item), credit: nullable(decimal()) })),
+  document: nullable(object({
+    id: identity, interface: identity, title: text, pages: array(text), page: integer(0, 65535),
+    mapAsset: nullable(identity), nativeMap: bool,
+  })),
   interfaces: array(object({ interface: identity, visibility: oneOf("hidden", "locked", "enabled"), highlighted: bool, permission }), "interface"),
   combatStyle: nullable(identity), combatStyles: array(ability, "id"), prayers: array(ability, "id"), spells: array(ability, "id"),
   equipment: object({
@@ -160,6 +178,8 @@ function validateProjection(ui: GameplayUiView): UiContractProblem | null {
   });
   const problem = projectionCheck(ui, "ui");
   if (problem) return invalid(problem);
+  if (ui.document && !ui.document.nativeMap && ui.document.page >= ui.document.pages.length)
+    return invalid("ui.document.page: outside the supplied page list");
   if (ui.bank) {
     const slots = new Set<number>();
     for (const entry of ui.bank.entries) {
@@ -215,6 +235,13 @@ export function checkUiIntent(world: WorldView, intent: GameplayUiIntent): UiCon
   const stale = (message: string): UiContractProblem => ({ message, code: "ui.identity.stale" });
   const invalid = intentCheck(intent, "request");
   if (invalid) return { message: invalid, code: "ui.request.invalid" };
+  if (requiresBankRevision(intent)) {
+    if (!ui.bank) return stale("The bank has closed. Open the current bank again.");
+    if (intent.expected_bank_revision === undefined)
+      return { message: "The displayed bank revision is required for this request.", code: "ui.bank.revision.required" };
+    if (intent.expected_bank_revision !== ui.bank.revision)
+      return { message: "The displayed bank changed. Review its current entries and choose again.", code: "ui.bank.revision.stale" };
+  }
   switch (intent.kind) {
     case "item_action": {
       if (!inventoryIdentity(world, intent.inventory_slot, intent.expected_item, intent.expected_instance))
@@ -229,9 +256,18 @@ export function checkUiIntent(world: WorldView, intent: GameplayUiIntent): UiCon
       return denied(intent.mode === "single" ? choice?.single : choice?.makeX, "Production");
     }
     case "ui_dismiss":
-      return ui.reward?.id === intent.presentation_id ? null : stale("That presentation has changed or closed.");
+      return ui.reward?.id === intent.presentation_id || ui.document?.id === intent.presentation_id
+        ? null : stale("That presentation has changed or closed.");
+    case "ui_document_page": {
+      const document = ui.document;
+      if (!document || document.id !== intent.document_id) return stale("That document has changed or closed.");
+      if (document.nativeMap || intent.page >= document.pages.length)
+        return { message: "That page is not supplied by the current document.", code: "ui.document.page.invalid" };
+      return null;
+    }
     case "ui_confirm":
       return ui.confirmation?.id === intent.confirmation_id ? null : stale("That confirmation has changed or closed.");
+    case "bank_placeholder":
     case "bank_withdraw_entry": {
       const entry = ui.bank?.entries.find(row => row.id === intent.entry_id);
       return entry?.value && !entry.placeholder ? null : stale("That bank entry is no longer withdrawable.");

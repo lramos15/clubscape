@@ -59,6 +59,7 @@ export interface UiCatalogue {
   titleBackground: string; templates: Record<string, NativeWidget[]>;
   namedSprites: Record<string, number>;
   minimaps: Array<{ baseX: number; baseY: number; plane: number; asset: string }>;
+  mapElements: Record<string, { sourceId: number; sprite: number; name: string | null; sourceSha256: string }>;
   combatCategories: Array<{ id: number; columnValues: unknown[][] }>;
   questTable: { available: number; maximum_points: number };
   definitions: Record<string, Record<string, unknown>>;
@@ -66,12 +67,13 @@ export interface UiCatalogue {
   staticModels: Record<string, StaticModelAsset>;
   musicTracks: MusicTrackAsset[];
   settingsRows: Record<string, SettingRowAsset>;
+  documentMarker: { widget: NativeWidget; animation: number; scope: string };
   settingsDefinitions: {
     categories: Record<string, { id: number; definition: { params: Record<string, string | number> }; settings: number[] }>;
     settings: Record<string, { sourceSha256: string; definition: { id: number; params: Record<string, string | number> } }>;
     choices: Record<string, SettingEnumAsset>;
   };
-  npcs: Record<string, { name: string; examine: string | null }>;
+  npcs: Record<string, { name: string; examine: string | null; mapVisible: boolean; interactable: boolean }>;
   proposals: Record<string, {
     content: { heading: string; lines: string[]; buttons: string[] };
     frame: number[]; controls: Array<{ label: string; rectangle: number[] }>;
@@ -150,6 +152,8 @@ export class UiAssets {
       throw new Error("Original versioned UI modal frames or static model icons are missing.");
     if (!Array.isArray(value.musicTracks) || !value.musicTracks.length || !value.templates["native-music-mode-0"])
       throw new Error("Original music row identities or native mode controls are missing.");
+    if (!value.mapElements || !value.templates["ui4-book-first"] || !value.templates["ui4-map-tutors-hidden"])
+      throw new Error("Original UI4 document models or map-element bindings are missing.");
     for (const id of [494, 495, 496, 497]) {
       if (value.fonts[id]?.advances.length !== 256 || value.sprites[id]?.frames.length !== 256) {
         throw new Error(`Original CP1252 font ${id} is missing or corrupt.`);

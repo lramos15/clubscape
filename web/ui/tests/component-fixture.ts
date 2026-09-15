@@ -1,5 +1,6 @@
 import type { AppServices, AppState, GameIntent, ItemView, UiHandle, WorldView, GameplayUiView, UiPermission } from "../../shared/contracts.ts";
-import { createUi, forwardWorldPointer, onUiCameraRequest, getUiPreviewRequest } from "../index.ts";
+import { createUi, forwardWorldPointer, onUiCameraRequest, getUiPreviewRequest, setUiMinimap, getUiMinimapStatus } from "../index.ts";
+import type { UiMinimapSurface } from "../index.ts";
 import { TABS } from "../layout.ts";
 import { testAssets } from "./source-fixture.ts";
 
@@ -55,10 +56,11 @@ export function fixtureUi(world: WorldView): GameplayUiView {
   const allowed: UiPermission = { allowed: true, code: null, reason: null };
   const ability = (id: string, name: string, selected = false) => ({ id, name, selected, visible: true, permission: { ...allowed } });
   return {
-    version: 1, activeInterface: null, production: null, reward: null, confirmation: null,
+    version: 1, activeTab: "interface.inventory", activeInterface: null, production: null, reward: null, confirmation: null, document: null,
     interfaces: [...TABS.map(tab => ({ interface: tab.interface, visibility: "enabled" as const, highlighted: false, permission: { ...allowed } })),
       ...["interface.equipment_stats", "interface.items_kept_on_death", "interface.bank", "interface.grave", "interface.death_retrieval",
-        "interface.cooking", "interface.smithing", "interface.quest_reward", "interface.appearance", "interface.experience"]
+        "interface.cooking", "interface.smithing", "interface.quest_reward", "interface.appearance", "interface.experience",
+        "interface.read_book", "interface.newcomer_map", "interface.level_up"]
         .map(id => ({ interface: id, visibility: "enabled" as const, highlighted: false, permission: { ...allowed } }))],
     combatStyle: "style.sword.bronze.stab.accurate",
     combatStyles: [ability("style.sword.bronze.stab.accurate", "Stab", true), ability("style.sword.bronze.stab.aggressive", "Lunge"),
@@ -85,6 +87,7 @@ export class ComponentServices implements AppServices {
   readonly errors: Array<{ message: string; errorId: string | null }> = [];
   readonly cameraRequests: number[] = [];
   rejection: { message: string; errorId: string } | null = null;
+  automaticTabReplies = true;
   private listeners = new Set<(state: Readonly<AppState>) => void>();
 
   constructor(phase: AppState["phase"] = "world") {
@@ -122,7 +125,14 @@ export class ComponentServices implements AppServices {
   logout(): Promise<void> { return this.accept("logout"); }
   createCharacter(appearance: Record<string, number>): Promise<void> { return this.accept("createCharacter", appearance); }
   enterWorld(): Promise<void> { return this.accept("enterWorld"); }
-  send(intent: GameIntent): Promise<void> { this.intents.push(structuredClone(intent)); return this.accept("send", intent); }
+  async send(intent: GameIntent): Promise<void> {
+    this.intents.push(structuredClone(intent));
+    await this.accept("send", intent);
+    const world = this.current.world;
+    if (this.automaticTabReplies && world?.ui && intent.kind === "open_interface" &&
+        TABS.some(tab => tab.interface === intent.interface))
+      this.patchWorld({ ui: { ...world.ui, activeTab: intent.interface } });
+  }
   setScreen(phase: "title" | "register" | "login"): void { this.calls.push({ method: "setScreen", args: [phase] }); this.publish({ ...this.current, phase, error: null }); }
   unlockAudio(): Promise<void> { return this.accept("unlockAudio"); }
   audioVolume(channel: "music" | "effects" | "area", value: number): void { this.calls.push({ method: "audioVolume", args: [channel, value] }); }
@@ -130,15 +140,28 @@ export class ComponentServices implements AppServices {
 }
 
 let current: { services: ComponentServices; ui: UiHandle } | null = null;
+export function componentMinimap(world: WorldView, revision = 1): UiMinimapSurface {
+  const pixels = new ImageData(512, 512);
+  for (let index = 3; index < pixels.data.length; index += 4) pixels.data[index] = 255;
+  return {
+    width: 512, height: 512, scale: 4, marginX: 48, marginY: 48,
+    baseX: world.player.tile.x - 52, baseY: world.player.tile.y - 52, plane: world.player.tile.plane,
+    revision, complete: false, notes: ["Explicit blank component-test surface; no terrain or live renderer fidelity is claimed."],
+    stats: { terrainTiles: 0, wallMarks: 0, diagonalMarks: 0, mapScenes: 0, unresolved: 0 },
+    icons: [], pixels, mask: new Uint8Array(512 * 512),
+  };
+}
 export async function mount(phase: AppState["phase"] = "world"): Promise<typeof current> {
   current?.ui.dispose();
   const canvas = document.querySelector("canvas")!;
   canvas.width = innerWidth; canvas.height = innerHeight;
   canvas.style.width = `${innerWidth}px`; canvas.style.height = `${innerHeight}px`;
   const services = new ComponentServices(phase), ui = await createUi(canvas, services, testAssets);
+  if (services.state().world) setUiMinimap(ui, componentMinimap(services.state().world!));
   onUiCameraRequest(ui, yaw => services.cameraRequests.push(yaw));
   current = { services, ui };
-  Object.assign(window, { component: current, forwardWorldPointer, fixtureWorld, getUiPreviewRequest });
+  Object.assign(window, { component: current, forwardWorldPointer, fixtureWorld, getUiPreviewRequest,
+    setUiMinimap, getUiMinimapStatus, componentMinimap });
   await new Promise(requestAnimationFrame); await new Promise(requestAnimationFrame);
   return current;
 }

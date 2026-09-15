@@ -55,7 +55,7 @@ def validate_frozen_pack():
 
 def collections(kind):
     result = {}
-    for prefix in (SOURCE, SOURCE / "content-v2", SOURCE / "potions"):
+    for prefix in (SOURCE, SOURCE / "content-v2", SOURCE / "potions", SOURCE / "consumables"):
         path = prefix / f"collections/{kind}.json.gz"
         if path.exists():
             result.update({int(value["id"]): value for value in read(path).values()})
@@ -154,6 +154,8 @@ def native(items, source, tooling):
         UiAudioCapture.run(capture, this);
         UiMusicCapture.run(capture, this);
         UiBoundedCapture.run(capture, this);
+        UiDocumentCapture.run(capture, this);
+        UiMapIcons.run(capture);
     }
 """
     instrumented = instrumented.rstrip()[:-1] + extra + "}\n"
@@ -285,6 +287,7 @@ def main():
         "templateEncoding": "native-widget-pool-v1", "widgetPool": pool,
         "namedSprites": read(native_dir / "named-sprites.json"),
         "minimaps": read(native_dir / "minimaps.json"),
+        "mapElements": read(native_dir / "map-elements.json"),
         "combatCategories": read(native_dir / "combat-categories.json"),
         "questTable": read(native_dir / "hud-input-contract.json")["quest_counter_fixture"],
         "definitions": definitions,
@@ -300,11 +303,15 @@ def main():
         "nativePresentations": read(native_dir / "presentation-inputs.json"),
         "nativeAudioControls": read(native_dir / "audio-ui-inputs.json"),
         "nativeMusicControls": read(native_dir / "music-ui-inputs.json"),
+        "nativeDocuments": read(native_dir / "document-inputs.json"),
+        "documentMarker": read(native_dir / "document-marker.json"),
         "musicTracks": read(native_dir / "music-ui-rows.json"),
         "boundedUiInputs": read(native_dir / "bounded-ui-inputs.json"),
         "settingsDefinitions": read(native_dir / "bounded-settings-definitions.json"),
         "settingsRows": build_settings_catalog(read(native_dir / "bounded-settings-definitions.json"), scenes),
-        "npcs": {str(n["id"]): {"name": n["name"], "examine": n.get("examine")} for n in collections("npc").values()},
+        "npcs": {str(n["id"]): {"name": n["name"], "examine": n.get("examine"),
+                              "mapVisible": n["isMinimapVisible"], "interactable": n["isInteractable"]}
+                 for n in collections("npc").values()},
         "presentation": {
             "interfaces": {key: {"name": v["name"], "sourceIds": v["source_ids"]}
                            for key, v in content["interfaces"].items()},

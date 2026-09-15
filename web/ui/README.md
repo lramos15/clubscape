@@ -20,13 +20,16 @@ malformed target fields still fail the complete version1 projection check.
 The bounded correction's unit/browser/native-modal evidence is recorded in
 `evidence/production-correction/`; preceding complete-source reports retain
 their original commit basis rather than claiming unrelated tests were rerun.
-`GameplayUiView` / `GameplayUiIntent` are binding, **not proof that the backend
-or protobuf bridge implements them**. Actual versioned projection data is
+The authorized UI4 implementation through `78fcec4` is now integrated. Its
+shared/protobuf files and exact canonical artifact hashes match the handoff.
+This does not establish that the separate parent shell has completed its live
+composition. Actual versioned projection data is
 required; absent/unknown/malformed `WorldView.ui` is explicit unsupported/error
 feedback rather than a fabricated empty success.
 
-Current component validation: TypeScript and 47 UI unit tests pass; all 20 legacy,
-16 versioned, 7 real-audio-observer, 6 music-state and 6 All Settings browser cases pass. The 29 integrated audio
+Current component validation: TypeScript and 54 UI unit tests pass; all 20 legacy,
+16 versioned, 7 real-audio-observer, 6 music-state, 6 All Settings and 8 UI4
+browser cases pass. The 29 integrated audio
 policy/reward tests also pass. All **87/87** native-panel/full-overlay/owner-composition
 comparisons pass at the original zero tolerances. This resolves the earlier
 shop and guide-family raster differences, but does not complete the missing
@@ -52,6 +55,10 @@ The independent UI continuation uses **exactly 18 additional original states**:
 ten settings, three bank, three HUD and two level-up states. Source replays and
 data projections pass **36/36** zero-tolerance checks without changing the
 71-state/29-family/11-signature denominator. See `evidence/bounded-independent/`.
+UI4 adds four original book/map states and **8/8** full source/reprojection
+checks, for **308/308** total exact comparisons. These document fixtures have a
+genuinely hidden native player marker; they do not certify visible-marker
+animation or placement. See `evidence/ui4-documents/`.
 
 ## Shell integration
 
@@ -114,6 +121,84 @@ means unavailable, not an invented empty loadout. Model parameters are native
 widget parameters, not the world-camera ABI. Equipment-preview compositing
 occurs at the source model widget's draw position and parent clip.
 
+### UI4 and revisioned minimap composition
+
+The source runtime prerequisite picks are `cd12063` (`9ae74e89`), `e4c9669`
+(`50f21226`), `3103033` (`d392f62`), `19c85d5` (`e0e42d7`),
+`30a8183` (`2f6a724`), `087cfca` (`4e92c9e`) and `85843a1` (`78fcec4`).
+The already-consumed nullable correction remains `ccbfbb0`; the named main
+consumables and dialogue prerequisites are retained as `9973948` (`82e0a41`)
+and `70e4294` (`2f775f7`). Only authorized patches touched their owned paths;
+the UI did not edit `Cargo.lock`.
+
+The final `game-content.csc.gz` has raw SHA-256
+`6fdb60e4740372c5e299fe385875cfac32e04f22ea26ad17b53049296256c1b3`
+and compressed SHA-256
+`f53a28402baad5588ccf071310b4c239e24391715290aaac2616ed0215284aa6`.
+Content/artifact are version4; persisted state, runtime and UI state remain1.
+Use a fresh normal candidate or the backend's explicit fenced migration;
+never silently repin an old world.
+
+```ts
+import { setUiMinimap, getUiMinimapStatus } from "./ui/index.ts";
+
+// Called after the real renderer has updated/assembled this same world:
+function publishMinimap() {
+  const surface = renderer.minimapSurface();
+  if (surface.revision !== getUiMinimapStatus(ui)?.revision) {
+    setUiMinimap(ui, surface);
+  }
+}
+function onRendererReplaced() {
+  setUiMinimap(ui, null);
+}
+```
+
+`setUiMinimap(UiHandle, UiMinimapSurface | null): void` structurally consumes
+the renderer's published `MinimapSurface` from `d5320e1`; it does not alter
+`RendererHandle`. Supply 512x512 opaque RGBA8 `ImageData`, scale4,
+marginX/Y48, baseX/Y, plane, revision, the source mask, complete/notes/stats and
+exact map-element icon IDs. Pixels/mask/metadata are copied per revision;
+stale, reused-with-different-data, malformed and wrong-plane inputs fail with
+an actual `UiMinimapError.errorId`. Player/instance/plane changes clear stale
+data. A missing surface disables map input with explicit feedback.
+
+`getUiMinimapStatus(UiHandle): UiMinimapStatus | null` returns detached
+metadata plus source-mask coverage and missing-asset diagnostics. Original
+index2/group35 area definitions resolve the renderer's map-element IDs to
+original primary sprites; no numeric ID is parsed from a canonical string.
+The runtime never falls back to a static minimap PNG. Static rasters remain
+only in explicitly world-less source comparison fixtures. Component input
+tests supply explicit blank/patterned pixels with incomplete/test-only notes,
+not a replacement production renderer.
+
+The renderer's remaining edge-five-tile and instance qualifications stay
+visible in `complete`, `notes` and `stats`; these are not fidelity acceptance.
+Full-HUD zoom410 at1080 is not viewport-only662. The renderer owns the proper
+camera/resize adapter; the UI does not substitute either for its native
+settings slider. Observer `running`, `movementTick`, action identity and exact
+decimal clocks, including null versus absent values, and validated
+`dynamicObjects` pass through the immutable world unchanged. The run checkbox
+is an input preference, not an executed-movement observer.
+
+UI4 `activeTab` is authoritative and separate from modal `activeInterface`;
+an acknowledgement without a new view does not select a tab. Explicit null
+means no selected side content, not a fabricated inventory selection.
+All eleven UI-bank operations, including `bank_placeholder`, capture
+`ui.bank.revision` at control/menu/drag creation. Held requests are never
+rebound to a later revision; passive world ticks do not invalidate an unchanged
+bank revision. Ordinary deposits still preserve `WorldView.bank.banker`.
+
+BOOK392 uses its original model-only paper, font497 and thirty line slots;
+source markup/colours survive wrapping, and long supplied pages remain
+reachable through local overflow navigation. `ui_document_page` and document
+dismissal retain the opaque ID and wait for authoritative updates. AIDE_MAP615
+uses the original map models, source tutor-toggle geometry and source2043
+marker arithmetic. A supplied native-map `mapAsset` must match the original
+model-only image dimensions; it is never stretched into a full panel.
+Source book text is rendered as the authoritative item document, not rewritten
+into ClubScape legal terms or Jagex account-creation controls.
+
 ### Independent display helpers
 
 * `setUiAbilityVisuals(ui, revision, facts)` accepts a read-only map keyed by
@@ -163,23 +248,23 @@ identities, and wait for authoritative tab/quantity/notes updates. Placeholders
 remain `value: null`, never a zero-quantity spendable `ItemView`.
 
 The relayed final-wire constraints are `WorldSnapshot.ui` tag20 and
-`WorldInput.ui` tag41, with complete `ui.version === 1` negotiation. The future
+`WorldInput.ui` tag41, with complete `ui.version === 1` negotiation. The
 `expected_bank_revision` field21 must echo the decimal **`ui.bank.revision`**
 captured for that request, not the passive-tick-changing world/character
 revision. Retries retain the original complete request. This overlay sends
 the current published `GameIntent` through `AppServices`; it does not invent
 unpublished transport fields or marshal protobuf itself.
 
-Only the small nullable correction has been integrated here. Broad runtime
-commits `9ae74e89` / `50f21226` remain unconsumed pending the owner's final v4
-relay. Component production fixtures are not a bypass for the live anvil
-contextual-menu/progression blocker.
+The authorized final v4 prerequisites are integrated, including the source312
+anvil menu opening before selection. The UI still does not bypass progression;
+component production fixtures are not a live anvil/journey proof.
 
 Quest rewards project their supplied narrative and structured item/XP/point
 fields into the real source text slots9–15; continuation sends the supplied
 request without granting anything. Confirmations retain their opaque ID and
 exact credit; acceptance/cancellation never clears them optimistically.
-Level-up interfaces without a canonical source binding have explicit
+The current canonical `interface.level_up` binds the original233 popup with
+the supplied title/text and continuation. Other level-up interfaces without a canonical source binding have explicit
 `ui.source.reward.layout` feedback and real continuation, **not** a quest-scroll
 substitute or completed level-up presentation.
 
@@ -242,12 +327,14 @@ original two border primitives on native161:98, anchored to the relevant tab,
 not a substituted selected-tab skin. Source snapshots cover genuine hidden
 tabs, missing-rune locked styling and the original highlight frame.
 
-`level-up.ts` exposes source-only layout helpers without inventing canonical
-interface IDs. The source GameVal name `levelup_display` is group233 attached
+`level-up.ts` exposes original layout helpers without inventing canonical
+interface IDs. UI4 now supplies the base popup association. The source GameVal name `levelup_display` is group233 attached
 at162:567; title233:1, detail233:2 and continuation233:3 use native font497.
 Native system chat uses group162. `projectLevelUpPopup` and `projectLevelUpChat`
-take supplied text only, never infer XP/levels. The backend still owns the
-canonical chat/popup association and real event/text sequencing.
+take supplied text only, never infer XP/levels. The backend still owns remaining
+chat-only/style associations and real event/text sequencing. Newcomer-map
+model3062 is an isolated original frame0 glyph; animation646 and visible-marker
+source comparison remain unverified, not silently accepted.
 
 These source states also exposed implementation clipping/compositing bugs:
 manual rectangle alpha writes now respect the active clip, and native item
@@ -514,14 +601,16 @@ Additional UI implementation/fidelity work remains:
   signatures (the 71 states, 29 families and 11 signatures are retained);
 * native source comparison of live data projections, not only source-widget
   replay, including all modal/choice/scroll/selected/disabled variants;
-* the final v4 backend/protobuf/canonical-data integration for `game.ui.v1`;
-  the independent nullable production-target correction is already consumed;
-* canonical association and authoritative sequencing for the derived native
-  level-up chat/popup layouts, plus any additional required payload variants;
+* real shell/server composition of the integrated final v4 candidate;
+  the nullable correction, bank preconditions and all current UI requests are consumed;
+* additional canonical level-up chat/style variants beyond the now-wired
+  source233 popup, plus authoritative event sequencing;
 * published production Make-All and bank default-All quantity semantics;
 * authoritative recovery fee-unit/capacity/per-row/bank-all data and partial
   retrieval/bank-all requests; coffer/discard/coffer-offer wiring is complete;
-* the actual renderer preview and dynamic minimap surface/state;
+* actual renderer preview/minimap app feeding and the renderer's unfinished
+  edge/instance fidelity; UI-side surface consumption is implemented;
+* newcomer-map cursor animation646 and visible-marker source comparison;
 * real source-scene/varp/music-state/event app wiring; the additive audio
   publications and UI-side route/control integration are complete;
 * direct native Skip Track request and three numbered playlist-slot management;
@@ -544,10 +633,10 @@ The existing frozen web dependencies are used.
 ```bash
 cd web
 pnpm exec tsc --noEmit
-node --test ui/tests/unit.test.ts ui/tests/gameplay-ui.test.ts ui/tests/audio-controls.test.ts ui/tests/music-controls.test.ts ui/tests/independent.test.ts
+node --test ui/tests/unit.test.ts ui/tests/gameplay-ui.test.ts ui/tests/audio-controls.test.ts ui/tests/music-controls.test.ts ui/tests/independent.test.ts ui/tests/ui4.test.ts
 node --test audio/audio.test.ts audio/native-policy.test.ts audio/reward-levels.test.ts audio/supplement.test.ts
 cd ..
-python3 tools/ui-assets/glyph_proof.py
+python3 tools/ui-assets/glyph_proof.py --native-exports
 
 mkdir -p web/ui/.cache/xvfb
 TMPDIR="$PWD/web/ui/.cache/xvfb" xvfb-run --auto-servernum \
@@ -583,6 +672,13 @@ TMPDIR="$PWD/web/ui/.cache/xvfb" xvfb-run --auto-servernum \
   --server-args='-screen 0 2560x1440x24 -nolisten tcp' \
   node web/ui/tests/bounded-browser.mjs
 python3 tools/ui-assets/compare_modes.py --bounded-ui
+TMPDIR="$PWD/web/ui/.cache/xvfb" xvfb-run --auto-servernum \
+  --server-args='-screen 0 2560x1440x24 -nolisten tcp' \
+  node web/ui/tests/ui4-browser.mjs
+TMPDIR="$PWD/web/ui/.cache/xvfb" xvfb-run --auto-servernum \
+  --server-args='-screen 0 2560x1440x24 -nolisten tcp' \
+  node web/ui/tests/documents-browser.mjs
+python3 tools/ui-assets/compare_modes.py --documents
 ```
 
 The browser tests use sandboxed **headful** Chrome under Xvfb. Set
@@ -591,7 +687,9 @@ the short owned `web/ui/.s/` path because Chromium Unix socket names have a
 length limit. Test servers bind random loopback ports and close on completion.
 
 The component double is deliberately not a server simulator: requests are
-recorded, rejected or acknowledged; it never applies game rewards or rules.
+recorded, rejected or acknowledged. Its explicit tab-reply mode publishes only
+tab presentation responses and can be disabled for pending/rejection tests;
+it never applies game rewards, progression or ownership rules.
 Component screenshots use a transparent/black world surface and cannot prove
 gameplay, world fidelity or performance.
 
@@ -650,7 +748,7 @@ read-only `inspect_scripts.py` helper accepts a script ID, `enum:ID`, or a
 bounded `widget:GROUP` search against that same verified local cache.
 
 After recording `test-results/typecheck.log`, unit TAP, component captures and
-all six passing comparison reports, `python3 tools/ui-assets/archive_evidence.py`
+all seven passing comparison reports, `python3 tools/ui-assets/archive_evidence.py`
 archives the evidence and source/candidate/diff images. It refuses failed or
 incomplete reports, preserves the existing zero tolerances, and keeps M1
 acceptance false. Archived native references allow comparison after owned

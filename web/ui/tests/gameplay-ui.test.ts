@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import test from "node:test";
-import { checkUiIntent, formatUiFixed, formatUiInteger, gameplayUi, gameplayUiProblem, isGameplayUiIntent } from "../gameplay-ui.ts";
+import { bindBankRevision, checkUiIntent, formatUiFixed, formatUiInteger, gameplayUi, gameplayUiProblem, isGameplayUiIntent } from "../gameplay-ui.ts";
 import { fixtureUi, fixtureWorld, immutable } from "./component-fixture.ts";
 import type { GameplayUiIntent, UiPermission } from "../../shared/contracts.ts";
 
@@ -112,14 +112,15 @@ test("bank requests retain stable entries, placeholders and tab identities", () 
   const world = bankWorld();
   immutable(world);
   assert.equal(gameplayUiProblem(world), null);
-  assert.equal(checkUiIntent(world, { kind: "bank_withdraw_entry", entry_id: "opaque-entry", quantity: 1, noted: true }), null);
-  assert.equal(checkUiIntent(world, { kind: "bank_release_placeholder", entry_id: "opaque-placeholder" }), null);
-  assert.equal(checkUiIntent(world, { kind: "bank_withdraw_entry", entry_id: "opaque-placeholder", quantity: 1, noted: false })?.code, "ui.identity.stale");
-  assert.equal(checkUiIntent(world, { kind: "bank_release_placeholder", entry_id: "opaque-entry" })?.code, "ui.identity.stale");
-  assert.equal(checkUiIntent(world, { kind: "bank_move", entry_id: "opaque-entry", before_entry_id: "opaque-placeholder", tab: 0 })?.code, "ui.identity.stale");
-  assert.equal(checkUiIntent(world, { kind: "bank_move", entry_id: "opaque-entry", before_entry_id: "opaque-placeholder", tab: 1 }), null);
-  assert.equal(checkUiIntent(world, { kind: "bank_move", entry_id: "opaque-entry", before_entry_id: null, tab: 9 })?.code, "ui.identity.stale");
-  assert.equal(checkUiIntent(world, { kind: "bank_set_options", amount: 0, noted: false })?.code, "ui.bank.amount.unsupported");
+  const check = (intent: GameplayUiIntent) => checkUiIntent(world, bindBankRevision(intent, world.ui.bank!.revision));
+  assert.equal(check({ kind: "bank_withdraw_entry", entry_id: "opaque-entry", quantity: 1, noted: true }), null);
+  assert.equal(check({ kind: "bank_release_placeholder", entry_id: "opaque-placeholder" }), null);
+  assert.equal(check({ kind: "bank_withdraw_entry", entry_id: "opaque-placeholder", quantity: 1, noted: false })?.code, "ui.identity.stale");
+  assert.equal(check({ kind: "bank_release_placeholder", entry_id: "opaque-entry" })?.code, "ui.identity.stale");
+  assert.equal(check({ kind: "bank_move", entry_id: "opaque-entry", before_entry_id: "opaque-placeholder", tab: 0 })?.code, "ui.identity.stale");
+  assert.equal(check({ kind: "bank_move", entry_id: "opaque-entry", before_entry_id: "opaque-placeholder", tab: 1 }), null);
+  assert.equal(check({ kind: "bank_move", entry_id: "opaque-entry", before_entry_id: null, tab: 9 })?.code, "ui.identity.stale");
+  assert.equal(check({ kind: "bank_set_options", amount: 0, noted: false })?.code, "ui.bank.amount.unsupported");
 });
 
 test("placeholder zero-quantity objects, mismatched item IDs and duplicate source slots are not valid bank views", () => {

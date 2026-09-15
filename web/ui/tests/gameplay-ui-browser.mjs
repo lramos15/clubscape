@@ -104,21 +104,22 @@ try {
       s.patchWorld(world);
     });
     await reset(); await click("bank-entry-entry-A");
-    assert.deepEqual(await last(), { kind: "bank_withdraw_entry", entry_id: "entry-A", quantity: 5, noted: true });
+    const bankRevision = await page.evaluate(() => window.component.services.state().world.ui.bank.revision);
+    assert.deepEqual(await last(), { kind: "bank_withdraw_entry", entry_id: "entry-A", quantity: 5, noted: true, expected_bank_revision: bankRevision });
     await page.locator('[data-ui-control="bank-entry-entry-placeholder"]').click({ button: "right" }); await frame();
     assert.equal(await page.getByRole("button", { name: /Withdraw/ }).count(), 0);
     await page.getByRole("button", { name: /Release placeholder/ }).click(); await frame();
-    assert.deepEqual(await last(), { kind: "bank_release_placeholder", entry_id: "entry-placeholder" });
+    assert.deepEqual(await last(), { kind: "bank_release_placeholder", entry_id: "entry-placeholder", expected_bank_revision: bankRevision });
     await click("bank-control-23--1");
-    assert.deepEqual(await last(), { kind: "bank_set_insert", enabled: true });
+    assert.deepEqual(await last(), { kind: "bank_set_insert", enabled: true, expected_bank_revision: bankRevision });
     await click("bank-control-40--1");
-    assert.deepEqual(await last(), { kind: "bank_set_placeholders", enabled: true });
+    assert.deepEqual(await last(), { kind: "bank_set_placeholders", enabled: true, expected_bank_revision: bankRevision });
     await click("bank-control-49--1");
-    assert.deepEqual(await last(), { kind: "bank_deposit_equipment" });
+    assert.deepEqual(await last(), { kind: "bank_deposit_equipment", expected_bank_revision: bankRevision });
     await click("bank-control-31--1");
-    assert.deepEqual(await last(), { kind: "bank_set_options", amount: 5, noted: true });
+    assert.deepEqual(await last(), { kind: "bank_set_options", amount: 5, noted: true, expected_bank_revision: bankRevision });
     await click("bank-tab-1");
-    assert.deepEqual(await last(), { kind: "bank_select_tab", tab: 1 });
+    assert.deepEqual(await last(), { kind: "bank_select_tab", tab: 1, expected_bank_revision: bankRevision });
     assert.equal(await page.evaluate(() => window.component.services.state().world.ui.bank.selectedTab), 0);
     await capture("bank-v1-stable-entries");
   });
@@ -141,7 +142,8 @@ try {
     await reset();
     await page.mouse.move(a.x, a.y); await page.mouse.down(); await page.waitForTimeout(130);
     await page.mouse.move(b.x, b.y, { steps: 4 }); await page.mouse.up(); await frame();
-    assert.deepEqual(await last(), { kind: "bank_move", entry_id: "drag-A", before_entry_id: "drag-B", tab: 0 });
+    const bankRevision = await page.evaluate(() => window.component.services.state().world.ui.bank.revision);
+    assert.deepEqual(await last(), { kind: "bank_move", entry_id: "drag-A", before_entry_id: "drag-B", tab: 0, expected_bank_revision: bankRevision });
     assert.deepEqual(await page.evaluate(() => window.component.services.state().world.ui.bank.entries.map(entry => entry.id)), ["drag-A", "drag-B"]);
     await reset();
     await page.mouse.move(a.x, a.y); await page.mouse.down(); await page.waitForTimeout(130);
@@ -155,7 +157,7 @@ try {
     await page.mouse.move(a.x, a.y); await page.mouse.down(); await page.waitForTimeout(130);
     const tab = await box("bank-tab-1");
     await page.mouse.move(tab.x, tab.y); await page.mouse.up(); await frame();
-    assert.deepEqual(await last(), { kind: "bank_move", entry_id: "drag-A", before_entry_id: null, tab: 1 });
+    assert.deepEqual(await last(), { kind: "bank_move", entry_id: "drag-A", before_entry_id: null, tab: 1, expected_bank_revision: bankRevision });
     await reset();
     await page.locator('[data-ui-control="bank-entry-drag-A"]').click({ button: "right" }); await frame();
     await patch(() => {

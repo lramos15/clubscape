@@ -16,6 +16,7 @@ def main():
     parser.add_argument("--audio-ui", action="store_true", help="Compare original audio preference controls, not audible output")
     parser.add_argument("--music-ui", action="store_true", help="Compare original music mode/list widgets, not audio outcomes")
     parser.add_argument("--bounded-ui", action="store_true", help="Compare the owner-bounded independent native UI states")
+    parser.add_argument("--documents", action="store_true", help="Compare original UI4 book/map widget and model fixtures")
     args = parser.parse_args()
     results = []
     directory = ROOT / "web/ui/test-results"
@@ -36,6 +37,9 @@ def main():
     if args.bounded_ui:
         lanes = [(kind, ROOT / "tools/ui-assets/.cache/native/ui-only", "bounded-*.png")
                  for kind in ("bounded-source", "bounded-projections")]
+    if args.documents:
+        lanes = [(kind, ROOT / "tools/ui-assets/.cache/native/ui-only", "ui4-*.png")
+                 for kind in ("documents", "document-projections")]
     for kind, source_directory, pattern in lanes:
         if args.flames_only and kind != "flames":
             continue
@@ -45,7 +49,7 @@ def main():
             source = source_directory / path.name
             if not source.exists():
                 source_kind = "flames" if kind == "flames" else "ui"
-                archive = ROOT / "web/ui/evidence" / ("bounded-independent" if args.bounded_ui else "native-music-controls" if args.music_ui else "native-audio-controls" if args.audio_ui else "native-presentations" if args.presentations else "native-modes")
+                archive = ROOT / "web/ui/evidence" / ("ui4-documents" if args.documents else "bounded-independent" if args.bounded_ui else "native-music-controls" if args.music_ui else "native-audio-controls" if args.audio_ui else "native-presentations" if args.presentations else "native-modes")
                 source = archive / "original" / source_kind / path.name
                 records = json.loads((archive / "source-inputs.json").read_text())["references"]
                 record = next(record for record in records if record["kind"] == source_kind and record["name"] == path.name)
@@ -65,7 +69,7 @@ def main():
     report = {"scope": "Additional ORIGINAL UI component/effect fixture comparisons, not live gameplay",
               "sourcePackSha256": "b62e19704e17d3d3e4e819f803ef49ba7cc54034ae407184b423427c65d9674d",
               "results": results, "fullPanelsExcluded": 0, "finalAcceptance": False}
-    (directory / ("bounded-ui-comparison.json" if args.bounded_ui else "music-ui-comparison.json" if args.music_ui else "audio-ui-comparison.json" if args.audio_ui else "presentation-comparison.json" if args.presentations else "mode-comparison.json")).write_text(json.dumps(report, indent=2) + "\n")
+    (directory / ("document-comparison.json" if args.documents else "bounded-ui-comparison.json" if args.bounded_ui else "music-ui-comparison.json" if args.music_ui else "audio-ui-comparison.json" if args.audio_ui else "presentation-comparison.json" if args.presentations else "mode-comparison.json")).write_text(json.dumps(report, indent=2) + "\n")
     print(json.dumps({"checked": len(results), "passed": sum(r["passed"] for r in results),
                       "failures": [{"case": r["case"], "different": r["different_pixels"]} for r in results if not r["passed"]]}))
     return int(not results or any(not result["passed"] for result in results))

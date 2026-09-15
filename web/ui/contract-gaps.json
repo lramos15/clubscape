@@ -15,10 +15,16 @@
       "expected_bank_revision_field": 21,
       "expected_bank_revision_source": "Exact decimal ui.bank.revision at request creation, never world/character revision; retain on retries.",
       "wire_implementation_in_ui": false,
-      "broad_runtime_commits_not_integrated": ["9ae74e89", "50f212269d664ae4f18230c11ccde843cb039734"],
-      "awaiting": "Owner-relayed final v4 runtime/assets/dialogue/observer integration."
+      "final_candidate": "78fcec42226e17d715f422f8e9cc2be8a1fb8762",
+      "authorized_picks": ["cd12063", "ccbfbb0", "e4c9669", "9973948", "3103033", "19c85d5", "30a8183", "70e4294", "087cfca", "85843a1"],
+      "bank_precondition_in_ui": "All eleven published bank requests capture the displayed bank revision in controls, held menus and drags. Missing/stale revisions reject explicitly; existing bound intents are never rebound.",
+      "raw_artifact_sha256": "6fdb60e4740372c5e299fe385875cfac32e04f22ea26ad17b53049296256c1b3",
+      "compressed_artifact_sha256": "f53a28402baad5588ccf071310b4c239e24391715290aaac2616ed0215284aa6",
+      "versions": {"content": 4, "artifact": 4, "state": 1, "runtime": 1, "ui_state": 1},
+      "cargo_lock_changed_by_ui": false,
+      "awaiting": "Real shell composition using a fresh normal candidate or explicit fenced migration; never silently repin an old world."
     },
-    "status": "Types published; backend implementation/protobuf/canonical projection remain a separate closure. No service implementation is inferred from types.",
+    "status": "The authorized passed UI4 implementation, source publications and observer prerequisites are integrated. Exact final shared/proto files and raw/compressed artifact hashes match78fcec4. UI component evidence is not a live-server journey or whole-UI acceptance.",
     "version_rule": "WorldView.ui.version must equal 1. Absent, unknown or malformed projections are explicit unsupported/error states, never fabricated empty views."
   },
   "published_audio_policy": {
@@ -46,13 +52,18 @@
     "Native master/music/effects/area sliders and per-channel mute controls consume actual audio observations, preserve remembered in-session positions and source integer/nonlinear semantics; title audio uses explicit global mute rather than resetting all channel positions.",
     "Player-scoped setUiMusicState delegates the exact published state to the audio engine. Native modes, canonical manual tracks, actual unlock coloring/counts, current playlist, loop flags, scrollbar and source dropdown cancellation are wired without fabricated music events or caller-selected next songs.",
     "Stock All Settings group134 opens as a real local interface with original category/search/info/locked-filter/scroll/choice controls and live audio/music/death plus existing UI input behavior. Missing required display/camera values remain explicit unknowns, not fixture defaults.",
-    "Native bank main-tab/section ordering, tab graphics, placeholder opacity120/quantity glyphs and true insert icon projection; original HUD hidden/locked states and two-border highlight styling."
+    "Native bank main-tab/section ordering, tab graphics, placeholder opacity120/quantity glyphs and true insert icon projection; original HUD hidden/locked states and two-border highlight styling.",
+    "Authoritative activeTab is separate from activeInterface. Acknowledgement/rejection does not optimistically select a tab; explicit null renders no selected side content.",
+    "Identity-bound bank_placeholder plus decimal expected_bank_revision on every current UI-bank mutation. Ordinary deposits retain the actual WorldView.bank.banker.",
+    "Original BOOK392 facing pages, source font497/line slots/colour markup, overflow navigation, ui_document_page and identity-bound document dismissal; original AIDE_MAP615 models/tutor toggles and native-size mapAsset consumption.",
+    "Canonical interface.level_up now binds source233 with supplied text and continuation; no XP, level or committed-close event is inferred.",
+    "setUiMinimap/getUiMinimapStatus consume the exact renderer surface fields, copy pixel/mask data per revision, retain source qualifications, resolve original map-element sprites and clear stale owner/instance/plane data. Live rendering has no static-PNG fallback."
   ],
   "requests": [
     {
-      "scope": "Real backend/protocol/shell implementation of the published contract",
-      "extension": "No new fork: implement the published GameplayUiView/GameplayUiIntent and project WorldView.ui.version=1 through AppServices.state/subscribe/send.",
-      "reason": "The exact type publication is integrated, but component service-double acknowledgements do not prove protobuf transport, authoritative execution, canonical data, persistence or the real-server journey."
+      "scope": "Real UI4 shell/server composition",
+      "extension": "Compose the integrated current game.ui.v1/observer candidate through AppServices with real source assets and renderer/audio inputs, using a fresh normal world or explicit fenced migration.",
+      "reason": "The backend implementation and exact candidate hashes are no longer missing. The UI cannot edit the shell or silently repin existing persisted worlds; component replies do not prove a real-server journey."
     },
     {
       "scope": "Source Make-All and persistent bank All defaults",
@@ -67,7 +78,7 @@
     {
       "scope": "Canonical level-up chat/popup source association",
       "extension": "Publish canonical reward.interface IDs and corresponding current source widget/style bindings for each required level-up chat/popup variant; use the existing kind/interface fields, not a second reward contract.",
-      "reason": "Only interface.quest_reward currently has a canonical source association in the published content catalogue. Other reward layouts explicitly display ui.source.reward.layout with the real payload and continuation, not a fabricated quest scroll. Native level-up variants remain required."
+      "reason": "The current interface.level_up ->233 popup is now wired. Complete chat-only/other native style and event associations remain explicitly pending in the backend handoff metadata; unknown interfaces still receive ui.source.reward.layout instead of a fabricated substitute."
     },
     {
       "scope": "Contextual ordinary bank deposits",
@@ -75,9 +86,9 @@
       "reason": "The v1 bank projection itself contains no banker identity. Existing bank_deposit still requires it. The UI explicitly reports contextual_banker_identity if a v1-only bank omits that required legacy context."
     },
     {
-      "scope": "Dynamic minimap and real model-only previews",
-      "extension": "Renderer/shell must provide the actual changing minimap surface plus base tile/plane/source mask state, and consume getUiPreviewRequest(handle) with setUiPreview(handle, nativeSizeModelSurface).",
-      "reason": "The UI now exports source widget/model bounds, native model parameters, approved local body selection and authoritative equipment/base metadata. Static minimap rasters and absent previews are not a finished renderer. These are component adapters, not new server defaults or shared-ABI edits."
+      "scope": "Actual renderer surface/observer composition",
+      "extension": "Feed renderer.minimapSurface() to setUiMinimap(handle,surface) once per revision and consume getUiPreviewRequest/setUiPreview. Preserve game.observer.v1 null/absence/stable action IDs and decimal timestamps, and dynamicObjects field13 with validated sourceId.",
+      "reason": "The UI-side minimap setter/consumption and original icon assets now exist. Renderer edge-five-tile/instance completeness remains qualified; sourceMask/complete/notes/stats are exposed, not promoted to fidelity acceptance. Original full-HUD zoom410 at1080 is not the viewport-only662 calibration."
     },
     {
       "scope": "Real source audio listener/object/varp and music-state app composition",
@@ -107,8 +118,9 @@
   ],
   "implementation_gaps_without_contract_extension": [
     "Complete source-selected/highlight/hidden/disabled projection coverage for every required current-source signature and live 71-state route. The existing 71 states/29 families/11 signatures are preserved, not reduced or declared accepted.",
-    "Wire the now-derived native162 chat and233 levelup_display popup helpers to the backend's canonical interface IDs and authoritative text/event sequencing; no IDs or levels are invented.",
+    "Apply additional backend-declared level-up chat/style variants when published; the current canonical source233 popup is now wired.",
     "Match final canonical/live bank data to the now-calibrated main-tab/section/placeholder/selection layouts, and cover any additional required variants. The three bounded bank cases and their data projections already pass at zero tolerance.",
+    "The newcomer-map marker uses the original isolated model3062 at source frame0 and source2043 placement arithmetic. Native animation646 and visible-marker placement need further source/runtime comparison; the four document fixtures certify text/models/tutor controls with their genuinely hidden native marker, not those missing gates.",
     "Real-server startup-to-quest-completion journey, reconnect/restart/concurrent-state behavior and final visual/audio/hardware acceptance remain separate gates."
   ],
   "source_comparison_scope": {
@@ -118,6 +130,7 @@
     "additional_audio_control_checks": { "passed": 18, "total": 18, "tolerance": 0 },
     "additional_music_control_checks": { "passed": 8, "total": 8, "tolerance": 0 },
     "bounded_independent_states": { "total": 18, "maximum": 18, "source_and_projection_checks": 36, "passed": 36, "tolerance": 0 },
+    "ui4_document_states": { "total": 4, "source_and_projection_checks": 8, "passed": 8, "tolerance": 0, "visible_marker_animation_acceptance": false },
     "full_panels_excluded": 0,
     "source_fixture_balances_are_production_values": false,
     "component_double_is_live_gameplay": false

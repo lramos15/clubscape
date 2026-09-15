@@ -1,5 +1,5 @@
 import type { NativeWidget, Rect } from "./assets.ts";
-import { intersect } from "./assets.ts";
+import { intersect, staticModelKey } from "./assets.ts";
 import type { Control, UiAction } from "./input.ts";
 import { SourceRaster, countText, escapeText, plainText, sourceLines } from "./raster.ts";
 import { cloneTemplate, frameRegions, paintNativeTree, projectScrollbar, tabWidget, TABS, widgetId, widgetKey } from "./layout.ts";
@@ -24,6 +24,8 @@ import type { SettingRowAsset } from "./assets.ts";
 import { sourceAudioDefaults } from "../audio/native-policy.ts";
 import { projectBank } from "./bank.ts";
 import { projectHud } from "./hud.ts";
+import { documentSource, projectDocument } from "./documents.ts";
+import { projectLevelUpPopup } from "./level-up.ts";
 
 const EQUIPMENT = ["head", "cape", "neck", "weapon", "body", "shield", "legs", "hands", "feet", "ring", "ammo"];
 const SKILLS = ["attack", "strength", "defence", "ranged", "prayer", "magic", "runecraft", "construction",
@@ -32,6 +34,7 @@ const SKILLS = ["attack", "strength", "defence", "ranged", "prayer", "magic", "r
 const MODALS: Record<string, number> = {
   journal: 119, reward: 153, experience: 929, appearance: 679, "equipment-stats": 84,
   "kept-items": 4, grave: 602, recovery: 669, smithing: 312, production: 270, "all-settings": 134,
+  book: 392, "newcomer-map": 615, "level-up": 233,
 };
 
 export function paintCharacter(raster: SourceRaster, appearance: Record<string, number>, controls: Control[],
@@ -120,6 +123,19 @@ export function paintGame(raster: SourceRaster, ui: GameViewContext): void {
   const reward = authoritative?.reward ?? null;
   const questReward = reward?.kind === "quest" &&
     catalogue.presentation?.interfaces[reward.interface]?.sourceIds.includes(153) ? reward : null;
+  const levelReward = reward?.kind === "level_up" &&
+    catalogue.presentation?.interfaces[reward.interface]?.sourceIds.includes(233) ? reward : null;
+  const document = authoritative?.document ?? null;
+  const documentGroup = document && !reward && !production ? documentSource(catalogue, document) : null;
+  const documentProjection = document && documentGroup !== null
+    ? projectDocument(catalogue, document, local.documentPart, local.documentTutors, world.player.tile) : null;
+  if (document && !reward && !production && documentGroup === null)
+    ui.required(document.title, `document_source:${document.interface}`);
+  if (document?.mapAsset && documentGroup === 392)
+    ui.required("This document's map image", "book_map_image_layout");
+  if (documentProjection) local.documentPart = documentProjection.part;
+  if (authoritative?.activeTab !== null && authoritative && local.tab < 0)
+    ui.required("The selected source side tab", `active_tab_source:${authoritative.activeTab}`);
   const deathPreview = authoritative?.keptOnDeath ?? null;
   const deathProjection = deathPreview ? projectDeathPreview(catalogue, deathPreview, local.scroll) : null;
   const productionGroup = production ? productionSource(catalogue, production) : null;
@@ -143,6 +159,8 @@ export function paintGame(raster: SourceRaster, ui: GameViewContext): void {
     templateName = `native-${filterKind}-mask-0-filters`;
   if (!catalogue.templates[templateName]) templateName = "native-inventory";
   let widgets = cloneTemplate(catalogue.templates[templateName]!);
+  if (authoritative && local.tab < 0 && !banking && !world.shop)
+    widgets = widgets.filter(widget => !TABS.some(tab => tab.group === widget.id >> 16));
   const bankProjection = bankView ? projectBank(catalogue, bankView, local.bankSearch, local.scroll) : null;
   if (bankProjection) { widgets = bankProjection.widgets; local.scroll = bankProjection.scroll; }
   if (templateName === "native-audio-default") widgets = projectAudioControls(catalogue, ui.audio);
@@ -170,7 +188,8 @@ export function paintGame(raster: SourceRaster, ui: GameViewContext): void {
   let modal = local.journal ? "journal" : local.modal;
   if (authoritative) {
     modal = production ? productionGroup === 312 ? "smithing" : "production"
-      : questReward ? "reward"
+      : questReward ? "reward" : levelReward ? "level-up"
+        : documentProjection ? documentProjection.group === 615 ? "newcomer-map" : "book"
         : authoritative.activeInterface === "interface.equipment_stats" ? "equipment-stats"
           : authoritative.activeInterface === "interface.items_kept_on_death" && authoritative.keptOnDeath ? "kept-items"
             : authoritative.activeInterface === "interface.quests" && local.journal ? "journal"
@@ -180,7 +199,7 @@ export function paintGame(raster: SourceRaster, ui: GameViewContext): void {
     if (ui.state.phase === "character" || world.player.tutorialStage === "stage.tutorial.appearance") modal = "appearance";
     if (world.player.tutorialStage === "stage.tutorial.experience") modal = "experience";
   }
-  if (local.modal === "all-settings" && !production && !reward && !authoritative?.confirmation) modal = "all-settings";
+  if (local.modal === "all-settings" && !production && !reward && !document && !authoritative?.confirmation) modal = "all-settings";
   const settingsValues = modal === "all-settings" ? currentSettingValues(catalogue, world, ui.audio, ui.music, local.clientInput) : null;
   const settingsProjection = settingsValues ? projectAllSettings(catalogue, local.settings, settingsValues.values) : null;
   if (settingsProjection) local.settings.scroll = settingsProjection.scroll;
@@ -205,12 +224,17 @@ export function paintGame(raster: SourceRaster, ui: GameViewContext): void {
   } else if (questReward) {
     widgets = attachGroup(widgets, projectQuestReward(catalogue.templates["native-reward"]!, catalogue,
       questReward, world.player.skills, world.player.questPoints, local.scroll), 153);
+  } else if (levelReward) {
+    widgets = attachGroup(widgets, projectLevelUpPopup(catalogue,
+      { title: levelReward.title, lines: levelReward.lines, continuation: "Click here to continue" }, local.dialoguePage), 233);
+  } else if (documentProjection) {
+    widgets = attachGroup(widgets, documentProjection.widgets, documentProjection.group);
   } else if (settingsProjection) {
     widgets = attachGroup(widgets, settingsProjection.widgets, 134);
   } else if (modal && catalogue.templates[`native-${modal}`]) {
     widgets = attachGroup(widgets, catalogue.templates[`native-${modal}`]!, MODALS[modal]!);
   }
-  if (world.dialogue && catalogue.templates["native-guide-dialogue"]) {
+  if (world.dialogue && !levelReward && catalogue.templates["native-guide-dialogue"]) {
     widgets = widgets.filter(w => w.id >> 16 !== 162);
     widgets = attachGroup(widgets, catalogue.templates["native-guide-dialogue"]!, 162);
     widgets = attachGroup(widgets, catalogue.templates["native-guide-dialogue"]!, 231);
@@ -375,6 +399,43 @@ export function paintGame(raster: SourceRaster, ui: GameViewContext): void {
     const op = plainText(widget.actions?.find(Boolean) ?? "");
     const group = widget.id >> 16, child = widget.id & 65535;
     if (recovery && (group === 602 || group === 669)) return;
+    if (document && documentProjection && group === documentProjection.group) {
+      if (widget.index === -1 && (group === 392 && child === 7 || group === 615 && child === 20))
+        register(widget, "document-close", `Close ${document.title}`, [{ label: "Close",
+          run: () => ui.sendUi({ kind: "ui_dismiss", presentation_id: document.id }) }], { tooltip: document.title });
+      else if (group === 392 && widget.index === -1 && [75, 77].includes(child)) {
+        const previous = child === 75;
+        register(widget, previous ? "document-previous" : "document-next", previous ? "Previous page" : "Next page", [{
+          label: previous ? "Previous page" : "Next page", run: () => {
+            if (!ui.presentationCurrent("document", document.id, document.page)) return;
+            if (previous && local.documentPart > 0) ui.change(() => { local.documentPart--; });
+            else if (!previous && local.documentPart + 1 < documentProjection.parts) ui.change(() => { local.documentPart++; });
+            else ui.sendUi({ kind: "ui_document_page", document_id: document.id, page: document.page + (previous ? -1 : 1) });
+          },
+        }]);
+      } else if (group === 615 && child === 18 && widget.index === -1)
+        register(widget, "document-tutors", local.documentTutors ? "Hide Tutors" : "Show Tutors", [{
+          label: local.documentTutors ? "Hide" : "Show",
+          run: () => { if (ui.presentationCurrent("document", document.id)) ui.change(() => { local.documentTutors = !local.documentTutors; }); },
+        }], { pressed: local.documentTutors });
+      return;
+    }
+    if (group === 233 && levelReward && widget.index === -1) {
+      if (child === 3) {
+        const lines = levelReward.lines.flatMap(line => sourceLines(escapeText(line), 390, catalogue.fonts[497]!));
+        const more = (local.dialoguePage + 1) * 2 < lines.length;
+        register(widget, "level-up-continue", more ? "Continue level-up text" : "Continue level-up", [{
+          label: "Continue", run: () => {
+            if (!ui.presentationCurrent("reward", levelReward.id)) return;
+            if (more) ui.change(() => { local.dialoguePage++; });
+            else ui.continueReward(levelReward.id, levelReward.continuation);
+          },
+        }]);
+      } else if (child === 1 || child === 2) register(widget, `level-up-details-${child}`, "Level-up details", [{
+        label: "View details", run: () => ui.notice(rewardDetails(levelReward, world.player.skills).join("\n")),
+      }], { tooltip: rewardDetails(levelReward, world.player.skills).join("\n") });
+      return;
+    }
     if (op === "Close" && group !== 161 && group !== 239) { sourceClose(widget); return; }
     if (group === 134 && settingsProjection && settingsValues) {
       if (widget.index === -1 && child === 5)
@@ -499,7 +560,10 @@ export function paintGame(raster: SourceRaster, ui: GameViewContext): void {
             : "This tab has not been unlocked in the tutorial." }) });
       }
       if (widget.contentType === 1338) {
-        register(widget, "minimap", "Minimap", [{ label: "Walk here", run: () => ui.minimapClick(widget) }]);
+        const status = ui.minimap.status();
+        register(widget, "minimap", "Minimap", [{ label: "Walk here", run: () => ui.minimapClick(widget) }],
+          { tooltip: ui.minimap.information(), ...(!ui.minimap.enabled || !status
+            ? { disabled: ui.minimap.enabled ? "The renderer has not supplied a dynamic minimap." : "The minimap is unavailable in the current source state." } : {}) });
       }
       if (widget.contentType === 1339) register(widget, "compass", "Compass", [{ label: "Face North", run: ui.faceNorth }]);
     }
@@ -816,6 +880,21 @@ export function paintGame(raster: SourceRaster, ui: GameViewContext): void {
     sourceRectangles.set(widgetKey(widget), widget);
     primaryAction(widget);
     const group = widget.id >> 16, child = widget.id & 65535;
+    if (document && documentProjection && group === documentProjection.group) {
+      if (group === 392 && child === 76 && ui.hoveredControl === "document-previous") widget.sprite = 2385;
+      if (group === 392 && child === 78 && ui.hoveredControl === "document-next") widget.sprite = 2389;
+      if ((group === 392 && child === 8 || group === 615 && child === 20) && ui.hoveredControl === "document-close") widget.sprite = 540;
+      if (document.mapAsset && group === 615 && child === 1 && widget.type === 6) {
+        const native = catalogue.staticModels[staticModelKey(widget)];
+        const reference = native && raster.assets.image(native.asset), supplied = raster.assets.image(document.mapAsset);
+        if (native && reference && supplied) {
+          if (supplied.naturalWidth !== reference.naturalWidth || supplied.naturalHeight !== reference.naturalHeight)
+            ui.notice("The document map asset does not match its original model-only dimensions.", "error", "ui.document.asset.size");
+          else raster.image(document.mapAsset, widget.x + native.offsetX, widget.y + native.offsetY);
+        }
+        return true;
+      }
+    }
     if (group === 134 && settingsProjection && settingsValues) {
       const row = settingsProjection.nodes.get(widgetKey(widget));
       if (row && Number(row.params["1078"] ?? 0) === 0 && widget.type === 5 && widget.width === 18 &&
@@ -1071,7 +1150,7 @@ export function paintGame(raster: SourceRaster, ui: GameViewContext): void {
         draggableSlot: index, focusable: false });
     }
   }
-  if (!dialogue && productionGroup !== 270) {
+  if (!dialogue && !levelReward && productionGroup !== 270) {
     const publicLines = authoritative?.publicChat.messages.map(message => `${message.sender}: ${message.text}`) ?? [];
     const lines = [...world.messages.map(message => message.text), ...publicLines].slice(-7).map(escapeText);
     lines.forEach((line, index) => raster.textBox(line, { x: 7, y: height - 164 + index * 14, width: 485, height: 14 },
@@ -1098,7 +1177,7 @@ export function paintGame(raster: SourceRaster, ui: GameViewContext): void {
         actions: [{ label: "Unsupported game.ui.v1", run: () => ui.notice(gameplayUiProblem(world)!.message, "error", "ui.capability.game.ui.v1") }] });
     }
   }
-  if (dialogue && dialogue.choices.length > 1) {
+  if (dialogue && !levelReward && dialogue.choices.length > 1) {
     raster.sprite(1017, 0, height - 165);
     raster.center("Select an Option", 259, height - 143, 496, 0, null);
     const lineHeight = Math.min(25, Math.floor(100 / dialogue.choices.length));

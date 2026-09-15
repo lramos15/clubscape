@@ -10,10 +10,13 @@ import { SourceRaster, escapeText, plainText, sourceLines } from "./raster.ts";
 import { entryErrorLines, paintEntry, paintReconnect } from "./entry.ts";
 import { frameRegions, TABS } from "./layout.ts";
 import { MinimapPainter } from "./minimap.ts";
+import { minimapSurfaceProblem, UiMinimapError } from "./minimap-surface.ts";
+import type { UiMinimapSurface, UiMinimapStatus } from "./minimap-surface.ts";
+export type { UiMinimapSurface, UiMinimapStatus } from "./minimap-surface.ts";
 import { paintCharacter, paintGame } from "./world-view.ts";
 import { TitleFlames } from "./flames.ts";
 import type { AbilityKind, AbilityVisualTruth } from "./filters.ts";
-import { checkUiIntent, gameplayUi, gameplayUiProblem, isGameplayUiIntent, permissionReason } from "./gameplay-ui.ts";
+import { bindBankRevision, checkUiIntent, gameplayUi, gameplayUiProblem, isGameplayUiIntent, permissionReason } from "./gameplay-ui.ts";
 import { paintConfirmation } from "./presentations.ts";
 import type { ProductionAmount } from "./production.ts";
 import { rewardDetails } from "./rewards.ts";
@@ -49,6 +52,8 @@ export interface LocalUiState {
   musicDropdown: boolean;
   settings: SettingsPageState;
   clientInput: ClientInputSettings;
+  documentPart: number;
+  documentTutors: boolean;
 }
 export interface WorldPointer {
   kind: "move" | "primary" | "context";
@@ -79,6 +84,8 @@ export interface GameViewContext {
   sendChat: () => void;
   continueReward: (presentationId: string, continuation: GameplayUiIntent) => void;
   hoveredProduction: string | null;
+  hoveredControl: string | null;
+  presentationCurrent: (kind: "document" | "reward", id: string, page?: number) => boolean;
   capture: (bounds: Rect) => void;
   preview: (bounds: Rect, model: NativeWidget) => void;
   audio: UiAudioView | null;
@@ -96,7 +103,8 @@ function emptyLocal(): LocalUiState {
     bankAmount: 1, bankNotes: false, shopAmount: 1, shopValue: true, scroll: 0,
     journal: null, modal: null, dialoguePage: 0, amount: null, appearance: { body_type: 0 },
     quickPrayer: true, magicFilter: false, filterPanel: null, prayerFilters: 0, magicFilters: 0, recoverySelected: null, chatDraft: "", productionAmount: 1, settingsPage: "controls", musicDropdown: false,
-    settings: defaultSettingsPage(), clientInput: { singleMouse: false, shiftDrop: true, escapeCloses: true } };
+    settings: defaultSettingsPage(), clientInput: { singleMouse: false, shiftDrop: true, escapeCloses: true },
+    documentPart: 0, documentTutors: false };
 }
 
 function errorDetails(error: unknown): { message: string; errorId: string | null; recoverable: boolean } {
@@ -148,6 +156,20 @@ export const createUi: CreateUi = async (canvas, services, clientAssets) => {
 /** The shell forwards its actual renderer pick; UI selection never invents a world target. */
 export function forwardWorldPointer(handle: UiHandle, pointer: WorldPointer): boolean {
   return controllers.get(handle)?.worldPointer(pointer) ?? false;
+}
+
+export function setUiMinimap(handle: UiHandle, surface: UiMinimapSurface | null): void {
+  const controller = controllers.get(handle);
+  if (!controller) throw new UiMinimapError("The UI handle is not live.", "ui.minimap.disposed");
+  controller.supplyMinimap(surface);
+}
+
+export function getUiMinimapStatus(handle: UiHandle): UiMinimapStatus | null {
+  return controllers.get(handle)?.minimapStatus() ?? null;
+}
+
+function minimapScope(world: WorldView | null): string | null {
+  return world ? JSON.stringify([world.player.id, world.player.instance, world.player.tile.plane]) : null;
 }
 
 /** Call alongside RendererHandle.camera(). This is presentation state, not a contract fork. */
@@ -247,7 +269,7 @@ class UiController {
   private awaitingSelectionRevision: string | null = null;
   private amountRevision: string | null = null;
   private drag: { slot: number; x: number; y: number; start: number; active: boolean; identity: ItemSelection } | null = null;
-  private bankDrag: { entry: string; item: string; instance: string | null; x: number; y: number; start: number; active: boolean } | null = null;
+  private bankDrag: { entry: string; item: string; instance: string | null; revision: string; x: number; y: number; start: number; active: boolean } | null = null;
   private suppressNextClick = false;
   private name = "";
   private password = "";
@@ -421,10 +443,32 @@ class UiController {
     return [point.x, point.y];
   }
 
+  supplyMinimap(surface: UiMinimapSurface | null): void {
+    if (this.disposed) throw new UiMinimapError("The UI handle is not live.", "ui.minimap.disposed");
+    if (surface === null) { this.minimap.clear(); this.renderSoon(); return; }
+    try {
+      const world = this.state.world, scope = minimapScope(world);
+      if (!world || scope === null) throw new UiMinimapError("Publish the current world before its renderer minimap.", "ui.minimap.world");
+      const problem = minimapSurfaceProblem(surface);
+      if (problem) throw new UiMinimapError(problem);
+      if (surface.plane !== world.player.tile.plane)
+        throw new UiMinimapError("The renderer minimap belongs to a different plane.", "ui.minimap.plane");
+      if (this.minimap.supply(surface, scope)) this.renderSoon();
+    } catch (error) {
+      if (!(error instanceof UiMinimapError)) throw error;
+      this.show(error.message, "error", error.errorId);
+      this.services.report(error, error.errorId);
+      throw error;
+    }
+  }
+
+  minimapStatus(): UiMinimapStatus | null { return this.disposed ? null : this.minimap.status(); }
+
   update(state: Readonly<AppState>): void {
     if (this.disposed) return;
     const old = this.state;
     this.state = state;
+    this.minimap.retainScope(minimapScope(state.world));
     if (old.world?.player.id !== state.world?.player.id) {
       this.local = emptyLocal(); this.chatSubmission = null; this.drag = null; this.bankDrag = null; this.scrollDrag = null; this.menu = null;
       this.musicState = null;
@@ -437,10 +481,10 @@ class UiController {
     if (old.world?.shop?.id !== state.world?.shop?.id) { this.local.scroll = 0; this.local.amount = null; }
     const projection = state.world ? gameplayUi(state.world) : null;
     const previousProjection = old.world ? gameplayUi(old.world) : null;
-    if (projection?.activeInterface && projection.activeInterface !== previousProjection?.activeInterface) {
-      const tab = TABS.findIndex(tab => tab.interface === projection.activeInterface);
-      if (tab >= 0) this.local.tab = tab;
-    }
+    if (projection) this.local.tab = TABS.findIndex(tab => tab.interface === projection.activeTab);
+    if (projection?.document?.id !== previousProjection?.document?.id ||
+        projection?.document?.page !== previousProjection?.document?.page) this.local.documentPart = 0;
+    if (projection?.document?.id !== previousProjection?.document?.id) this.local.documentTutors = false;
     if (projection?.production?.id !== previousProjection?.production?.id ||
         projection?.confirmation?.id !== previousProjection?.confirmation?.id ||
         projection?.reward?.id !== previousProjection?.reward?.id) {
@@ -466,7 +510,7 @@ class UiController {
     if (this.local.amount?.pending && state.world?.revision !== this.amountRevision) {
       this.local.amount = null; this.amountRevision = null;
     }
-    if (state.world && !isInterfaceUnlocked(state.world, TABS[this.local.tab]!.interface)) {
+    if (state.world && !projection && !isInterfaceUnlocked(state.world, TABS[this.local.tab]?.interface ?? "interface.inventory")) {
       const allowed = TABS.findIndex(tab => isInterfaceUnlocked(state.world!, tab.interface));
       this.local.tab = allowed < 0 ? 3 : allowed;
     }
@@ -495,7 +539,7 @@ class UiController {
     this.stopAudio?.(); this.mutedPercentages.clear();
     this.password = ""; this.confirmation = ""; this.name = "";
     cancelAnimationFrame(this.scheduled);
-    this.unsubscribe(); this.abort.abort(); this.surface.dispose(); this.assets.dispose();
+    this.unsubscribe(); this.abort.abort(); this.surface.dispose(); this.assets.dispose(); this.minimap.dispose();
     this.local = emptyLocal(); this.pending.clear(); this.raster.dispose();
     this.titleFlames.dispose();
     this.controls = []; this.panelBounds = []; this.hover = null; this.menu = null; this.drag = null; this.bankDrag = null; this.notice = null;
@@ -599,9 +643,10 @@ class UiController {
       intent.kind === "use_item" || intent.kind === "cast");
   }
 
-  private sendUi(intent: GameplayUiIntent): void {
+  private sendUi(intent: GameplayUiIntent, bankRevision?: string): void {
     const world = this.state.world;
     if (!world) { this.show("A supported game.ui.v1 world is required.", "error", "ui.capability.game.ui.v1"); return; }
+    if (bankRevision !== undefined) intent = bindBankRevision(intent, bankRevision);
     const problem = checkUiIntent(world, intent);
     if (problem) { this.show(problem.message, "error", problem.code); return; }
     const request = structuredClone(intent);
@@ -747,6 +792,8 @@ class UiController {
       this.sendUi({ kind: "ui_confirm", confirmation_id: gameplayUi(this.state.world)!.confirmation!.id, accept: false });
     } else if (this.state.world && gameplayUi(this.state.world)?.reward) {
       this.sendUi(structuredClone(gameplayUi(this.state.world)!.reward!.continuation));
+    } else if (this.state.world && gameplayUi(this.state.world)?.document) {
+      this.sendUi({ kind: "ui_dismiss", presentation_id: gameplayUi(this.state.world)!.document!.id });
     } else if (this.state.world && gameplayUi(this.state.world)?.activeInterface) {
       this.send({ kind: "close_interface" });
     }
@@ -810,7 +857,17 @@ class UiController {
     }
     if (this.state.world && gameplayUi(this.state.world)?.reward && (event.key === " " || event.key === "Enter")) {
       const reward = gameplayUi(this.state.world)!.reward!;
-      event.preventDefault(); this.continueReward(reward.id, reward.continuation); return;
+      event.preventDefault();
+      const level = this.controls.find(control => control.id === "level-up-continue");
+      if (level) level.actions[0]?.run(); else this.continueReward(reward.id, reward.continuation);
+      return;
+    }
+    if (this.state.world && gameplayUi(this.state.world)?.document &&
+        ["ArrowLeft", "ArrowRight", "PageUp", "PageDown"].includes(event.key)) {
+      event.preventDefault();
+      const id = event.key === "ArrowLeft" || event.key === "PageUp" ? "document-previous" : "document-next";
+      this.controls.find(control => control.id === id)?.actions[0]?.run();
+      return;
     }
     const production = this.state.world ? gameplayUi(this.state.world)?.production : null;
     if (production) {
@@ -853,7 +910,8 @@ class UiController {
       this.show(permissionReason(declared?.permission, tab.name) ?? "This interface is locked.", "error", declared?.permission.code ?? "ui.interface.locked");
       return;
     }
-    this.local.tab = index; this.local.scroll = 0; this.menu = null; this.local.filterPanel = null;
+    if (!gameplayUi(world)) this.local.tab = index;
+    this.local.scroll = 0; this.menu = null; this.local.filterPanel = null;
     this.local.musicDropdown = false;
     if (this.assets.catalogue.presentation?.interfaces[tab.interface]) this.send({ kind: "open_interface", interface: tab.interface });
     else this.unavailable(tab.name);
@@ -914,8 +972,9 @@ class UiController {
         return;
       }
       if (control?.bankEntryId && this.state.world) {
-        const entry = gameplayUi(this.state.world)?.bank?.entries.find(entry => entry.id === control.bankEntryId);
-        if (entry) this.bankDrag = { entry: entry.id, item: entry.item, instance: entry.value?.instanceId ?? null,
+        const bank = gameplayUi(this.state.world)?.bank;
+        const entry = bank?.entries.find(entry => entry.id === control.bankEntryId);
+        if (entry && bank) this.bankDrag = { entry: entry.id, item: entry.item, instance: entry.value?.instanceId ?? null, revision: bank.revision,
           x, y, start: performance.now(), active: false };
       }
       if (control?.draggableSlot !== undefined) {
@@ -932,11 +991,11 @@ class UiController {
         const target = this.controls.find(control => (control.bankEntryId || control.bankTab !== undefined || control.bankCreate) && contains(control, x, y));
         if (!current || current.item !== drag.item || (current.value?.instanceId ?? null) !== drag.instance)
           this.show("The dragged bank entry changed. Choose it again.", "error", "ui.bank.stale");
-        else if (target?.bankCreate) this.sendUi({ kind: "bank_create_tab", entry_id: drag.entry });
+        else if (target?.bankCreate) this.sendUi({ kind: "bank_create_tab", entry_id: drag.entry }, drag.revision);
         else if (target && target.bankEntryId !== drag.entry) this.sendUi({
           kind: "bank_move", entry_id: drag.entry, before_entry_id: target.bankEntryId ?? null,
           tab: target.bankTab ?? bank!.entries.find(entry => entry.id === target.bankEntryId)?.tab ?? bank!.selectedTab,
-        });
+        }, drag.revision);
         setTimeout(() => { this.suppressNextClick = false; }, 0);
       }
       this.renderSoon();
@@ -1112,17 +1171,17 @@ class UiController {
     const current = () => {
       const view = this.state.world ? gameplayUi(this.state.world)?.bank : null;
       const row = view?.entries.find(row => row.id === entryId);
-      if (!row || row.item !== entry.item || row.value?.instanceId !== entry.value?.instanceId) {
+      if (!view || !row || row.item !== entry.item || row.value?.instanceId !== entry.value?.instanceId) {
         this.show("That bank entry identity changed. Choose the current entry again.", "error", "ui.bank.stale"); return null;
       }
-      return { view: view!, row };
+      return { view, row };
     };
     const withdraw = (quantity: number) => {
       const value = current();
-      if (value) this.sendUi({ kind: "bank_withdraw_entry", entry_id: entryId, quantity, noted: value.view.noted });
+      if (value) this.sendUi({ kind: "bank_withdraw_entry", entry_id: entryId, quantity, noted: bank.noted }, bank.revision);
     };
     const actions: UiAction[] = entry.placeholder ? [{
-      label: `Release placeholder ${label}`, run: () => { if (current()) this.sendUi({ kind: "bank_release_placeholder", entry_id: entryId }); },
+      label: `Release placeholder ${label}`, run: () => { if (current()) this.sendUi({ kind: "bank_release_placeholder", entry_id: entryId }, bank.revision); },
     }] : [
       { label: `Withdraw-${bank.amount} ${label}`, run: () => withdraw(bank.amount) },
       ...[1, 5, 10].filter(quantity => quantity !== bank.amount).map(quantity => ({ label: `Withdraw-${quantity} ${label}`, run: () => withdraw(quantity) })),
@@ -1131,11 +1190,14 @@ class UiController {
       { label: `Withdraw-All-but-1 ${label}`, run: () => {
         const value = current(); if (value?.row.value) withdraw(value.row.value.quantity - 1);
       }, ...(entry.value && entry.value.quantity > 1 ? {} : { disabled: "There is only one item in this stack." }) },
+      { label: `Placeholder ${label}`, run: () => {
+        if (current()) this.sendUi({ kind: "bank_placeholder", entry_id: entryId }, bank.revision);
+      } },
     ];
-    actions.push({ label: `Create tab ${label}`, run: () => { if (current()) this.sendUi({ kind: "bank_create_tab", entry_id: entryId }); } });
+    actions.push({ label: `Create tab ${label}`, run: () => { if (current()) this.sendUi({ kind: "bank_create_tab", entry_id: entryId }, bank.revision); } });
     for (const tab of bank.tabs) actions.push({
       label: `Move to tab ${tab.tab} ${label}`,
-      run: () => { if (current()) this.sendUi({ kind: "bank_move", entry_id: entryId, before_entry_id: null, tab: tab.tab }); },
+      run: () => { if (current()) this.sendUi({ kind: "bank_move", entry_id: entryId, before_entry_id: null, tab: tab.tab }, bank.revision); },
     });
     actions.push({ label: `Examine ${label}`, run: () => {
       if (entry.value) this.examine(entry.value);
@@ -1334,7 +1396,7 @@ class UiController {
       paintGame(this.raster, {
         state: this.state, world, local: this.local, controls, inputs, minimap: this.minimap,
         abilityVisuals: this.abilityVisuals?.revision === world.revision ? this.abilityVisuals.values : {},
-        send: intent => this.send(intent), sendUi: intent => this.sendUi(intent), openTab: tab => this.openTab(tab),
+        send: intent => this.send(intent), sendUi: intent => this.sendUi(intent, world.ui?.bank?.revision), openTab: tab => this.openTab(tab),
         change: change => { change(); this.renderSoon(); },
         notice: (message, scope = "information", id) => this.show(message, scope, id),
         unavailable: name => this.unavailable(name), required: (name, field) => this.required(name, field),
@@ -1345,6 +1407,9 @@ class UiController {
         logout: () => { void this.request("logout", () => this.services.logout()); },
         confirmAppearance: () => this.confirmAppearance(),
         minimapClick: widget => {
+          if (!this.minimap.enabled || !this.minimap.status()) {
+            this.show("The dynamic minimap is not available.", "error", "ui.minimap.unavailable"); return;
+          }
           const destination = this.minimap.destination(widget, world.player.tile, this.point.x, this.point.y);
           if (destination) this.send({ kind: "walk", destination, running: world.player.settings.find(s => s.setting === "run")?.enabled ?? false });
         },
@@ -1352,6 +1417,14 @@ class UiController {
         sendChat: () => { void this.sendChat(); },
         continueReward: (id, continuation) => this.continueReward(id, continuation),
         hoveredProduction: this.hover?.productionRecipe ?? null,
+        hoveredControl: this.hover?.id ?? null,
+        presentationCurrent: (kind, id, page) => {
+          const current = this.state.world ? gameplayUi(this.state.world) : null;
+          const matches = kind === "document" ? current?.document?.id === id &&
+            (page === undefined || current.document.page === page) : current?.reward?.id === id;
+          if (!matches) this.show("That presentation changed. Review the current interface.", "error", "ui.presentation.stale");
+          return matches;
+        },
         audio: this.audioView, audioPercent: (channel, percent) => this.audioPercent(channel, percent),
         audioValue: channel => this.audioView?.percentages[channel] ?? null,
         audioMute: channel => this.audioMute(channel),
@@ -1390,8 +1463,10 @@ class UiController {
       const item = this.inventory(this.drag.slot);
       if (item?.sourceId !== null && item?.sourceId !== undefined) this.raster.item(item.sourceId, item.quantity, this.point.x - 18, this.point.y - 16, 2, false, 128);
     }
-    if (gameplay?.reward && !(gameplay.reward.kind === "quest" &&
-        this.assets.catalogue.presentation?.interfaces[gameplay.reward.interface]?.sourceIds.includes(153))) {
+    if (gameplay?.reward && !((gameplay.reward.kind === "quest" &&
+        this.assets.catalogue.presentation?.interfaces[gameplay.reward.interface]?.sourceIds.includes(153)) ||
+        (gameplay.reward.kind === "level_up" &&
+        this.assets.catalogue.presentation?.interfaces[gameplay.reward.interface]?.sourceIds.includes(233)))) {
       const reward = gameplay.reward;
       controls.length = 0; inputs.length = 0;
       const message = `Required source layout unavailable for ${reward.interface} (${reward.kind}).\n${reward.title}\n` +

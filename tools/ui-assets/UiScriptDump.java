@@ -7,6 +7,7 @@ import net.runelite.cache.definitions.loaders.ScriptLoader;
 import net.runelite.cache.definitions.loaders.EnumLoader;
 import net.runelite.cache.definitions.loaders.StructLoader;
 import net.runelite.cache.definitions.loaders.GameValLoader;
+import net.runelite.cache.definitions.loaders.InterfaceLoader;
 import net.runelite.cache.script.Opcodes;
 
 /** Read-only, bounded disassembly of the selected original UI scripts. */
@@ -118,6 +119,20 @@ public final class UiScriptDump
                     int id = Integer.parseInt(args[i].substring(5));
                     var value = new EnumLoader().load(id, cache.archive(2).loadData(8, id));
                     Files.writeString(Path.of(args[1]).resolve("enum-" + id + ".json"), OriginalCapture.JSON.toJson(value));
+                }
+                else if (args[i].startsWith("interface:"))
+                {
+                    int group = Integer.parseInt(args[i].substring(10));
+                    var loader = new InterfaceLoader().configureForRevision(cache.store.findIndex(3).getRevision());
+                    var definitions = new ArrayList<Object>();
+                    for (int child : cache.archive(3).getFileIds(group))
+                    {
+                        byte[] raw = cache.archive(3).loadData(group, child);
+                        definitions.add(OriginalCapture.map("child", child, "sourceSha256", OriginalCapture.hash(raw),
+                            "definition", loader.load(group << 16 | child, raw)));
+                    }
+                    Files.writeString(Path.of(args[1]).resolve("interface-" + group + ".json"), OriginalCapture.JSON.toJson(definitions));
+                    System.out.println("SOURCE_INTERFACE group=" + group + " children=" + definitions.size());
                 }
                 else if (args[i].startsWith("widget:"))
                     findWidgetScripts(cache, Integer.parseInt(args[i].substring(7)));
