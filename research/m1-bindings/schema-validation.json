@@ -1,6 +1,6 @@
 {
   "artifact_reloaded": true,
-  "artifact_sha256": "57462592102e1491f2c5bf00ca59dc80e75d03feb0859c49e66f4063ea36ebf5",
+  "artifact_sha256": "0dec331c94d434b4ed67f142d92f60ebbdfa0a49d764deb757b8e8dd24a9358d",
   "canonical_game_content_deserialized": true,
   "engine_api_scope": "Construction, authenticated-lifecycle boundary, read-only views and first source input only; not a full journey or browser/presentation acceptance.",
   "engine_constructed": true,
@@ -117,7 +117,7 @@
   "real_source_appearance_request_passed": true,
   "recipes": 13,
   "regions": 29,
-  "revision": "m1.source-backed.v4.b0a5ed1cb5d01668",
+  "revision": "m1.source-backed.v4.37b793c6c8e65947",
   "runtime_compiled": true,
   "skills": 24,
   "source_initial_world_and_character_validated": true,

@@ -77,6 +77,17 @@ inventory/equipment ownership guards remain real source conditions. Six source
 tests and the native owned-net/missing-net UI cases pass without an engine
 first-match fallback or duplicate resources.
 
+The later Director departure repair `e8c3c43d5b1cd9f16b0b78ab34dcc958f93d9888`
+is integrated as generator-only `715099acc58e14122a88fc9c652532540f608da6`.
+It runs before recovery normalization and combines only exactly identical
+primary tutorial question/guard branches. The retained Magic Instructor entry
+offers the original stay/info/normal choices in their original order.
+The newer audio-enabled UI4 product is regenerated, not replaced with the
+Director's older compiled product. Native offer/stay/info/confirm cases preserve
+items, XP, QP, entitlements, mode and location; only confirm authorizes the source
+Home Teleport. This follows the integrated timed-UI travel interruption repair
+`b888b55347f0b1668f3221a5aa734523e57dd8aa`. No existing `6f` world is repinned.
+
 `anvil-checkpoint.json` records the actual v3 journey's stage/items/XP/location
 from runner `089639ebc0123107fdceb7d12dec06b8e18dfd40`, not a new starting
 character or production seed. The server regression loads the real current

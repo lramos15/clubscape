@@ -7,8 +7,8 @@
     "contract_commit": "8d3b4004cd66b720d5bd7d96f10765c3b034eb25",
     "implementation_candidate_commit": "5b4006f3a14f85da8b017d4bf20c124f188c7d3d",
     "authority_item_implemented_and_verified": true,
-    "raw_sha256": "57462592102e1491f2c5bf00ca59dc80e75d03feb0859c49e66f4063ea36ebf5",
-    "compressed_sha256": "52ca6143589182caee23a9ca967602094d787c4346bb30aec25ae67beb46d348",
+    "raw_sha256": "0dec331c94d434b4ed67f142d92f60ebbdfa0a49d764deb757b8e8dd24a9358d",
+    "compressed_sha256": "177089d214f4938b663df7a23918fe3b17c6cc1e3b3ab50dc91191011bb5c340",
     "existing_6f_worlds_repin_attempted": false
   },
   "shared_contract_commit": "e48e6f52d68aa97fbbb4f5664bf6e1c5ef7e71e8",
