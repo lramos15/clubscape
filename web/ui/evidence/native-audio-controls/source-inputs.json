@@ -1,0 +1,320 @@
+{
+  "scope": "Native source audio control geometry/preferences only; no listener/scene projection or audible world acceptance",
+  "references": [
+    {
+      "kind": "ui",
+      "name": "native-audio-default.png",
+      "sha256": "e398fd9fba281a300a1314d745c29d13c06d108b119013c9f1180c23d0844bfa",
+      "bytes": 112969
+    },
+    {
+      "kind": "ui",
+      "name": "native-audio-master-0.png",
+      "sha256": "80d7a3b7f7fa0426f7a173b727df913e6fce6bc5a2a912ce0b29ed6246714785",
+      "bytes": 112589
+    },
+    {
+      "kind": "ui",
+      "name": "native-audio-master-50.png",
+      "sha256": "ecf591fafb0913bca3a0fb8f40f9e407d741cd8a88b2f37bedaa50f298256b6b",
+      "bytes": 112977
+    },
+    {
+      "kind": "ui",
+      "name": "native-audio-music-0.png",
+      "sha256": "8db4b51ed35cdedd124a31483d4adad7ca47451ddd192740631f37fa32371884",
+      "bytes": 112842
+    },
+    {
+      "kind": "ui",
+      "name": "native-audio-music-50.png",
+      "sha256": "f13d124d317afa868b891e52f631045f36b2d03f19529a4ff02762e9cd180a59",
+      "bytes": 112971
+    },
+    {
+      "kind": "ui",
+      "name": "native-audio-effects-0.png",
+      "sha256": "1f3fe1b7378b8e4d562cec8271d7e1e460a20fdf2b6e8dc5f2a2e2279146ae05",
+      "bytes": 112821
+    },
+    {
+      "kind": "ui",
+      "name": "native-audio-area-0.png",
+      "sha256": "30da2499c9359092324c8dd67ee06463f2327bb864c4d67f8d0807b99e925b47",
+      "bytes": 112900
+    },
+    {
+      "kind": "ui",
+      "name": "native-audio-mixed.png",
+      "sha256": "90be67a22e262d6faf3328d6bbab73574334809fbfe02a3c2a46e01f2393e23d",
+      "bytes": 113163
+    },
+    {
+      "kind": "ui",
+      "name": "native-audio-channel-boundaries.png",
+      "sha256": "c9e29b9eccf152ec318ba302260e449232eb19bb7bf5947fdbded9c22d26180e",
+      "bytes": 112859
+    }
+  ],
+  "inputs": [
+    {
+      "case": "native-audio-default",
+      "percentages": [
+        100,
+        100,
+        100,
+        100
+      ],
+      "varps": [
+        3796,
+        168,
+        169,
+        872,
+        5588
+      ],
+      "sourceAreaOverride": 0,
+      "sourcePageVarbit9683": 1,
+      "scope": "Explicit original UI preference fields; not a scene-varp bridge, production balance or audible playback proof."
+    },
+    {
+      "case": "native-audio-master-0",
+      "percentages": [
+        0,
+        100,
+        100,
+        100
+      ],
+      "varps": [
+        3796,
+        168,
+        169,
+        872,
+        5588
+      ],
+      "sourceAreaOverride": 0,
+      "sourcePageVarbit9683": 1,
+      "scope": "Explicit original UI preference fields; not a scene-varp bridge, production balance or audible playback proof."
+    },
+    {
+      "case": "native-audio-master-50",
+      "percentages": [
+        50,
+        100,
+        100,
+        100
+      ],
+      "varps": [
+        3796,
+        168,
+        169,
+        872,
+        5588
+      ],
+      "sourceAreaOverride": 0,
+      "sourcePageVarbit9683": 1,
+      "scope": "Explicit original UI preference fields; not a scene-varp bridge, production balance or audible playback proof."
+    },
+    {
+      "case": "native-audio-music-0",
+      "percentages": [
+        100,
+        0,
+        100,
+        100
+      ],
+      "varps": [
+        3796,
+        168,
+        169,
+        872,
+        5588
+      ],
+      "sourceAreaOverride": 0,
+      "sourcePageVarbit9683": 1,
+      "scope": "Explicit original UI preference fields; not a scene-varp bridge, production balance or audible playback proof."
+    },
+    {
+      "case": "native-audio-music-50",
+      "percentages": [
+        100,
+        50,
+        100,
+        100
+      ],
+      "varps": [
+        3796,
+        168,
+        169,
+        872,
+        5588
+      ],
+      "sourceAreaOverride": 0,
+      "sourcePageVarbit9683": 1,
+      "scope": "Explicit original UI preference fields; not a scene-varp bridge, production balance or audible playback proof."
+    },
+    {
+      "case": "native-audio-effects-0",
+      "percentages": [
+        100,
+        100,
+        0,
+        100
+      ],
+      "varps": [
+        3796,
+        168,
+        169,
+        872,
+        5588
+      ],
+      "sourceAreaOverride": 0,
+      "sourcePageVarbit9683": 1,
+      "scope": "Explicit original UI preference fields; not a scene-varp bridge, production balance or audible playback proof."
+    },
+    {
+      "case": "native-audio-area-0",
+      "percentages": [
+        100,
+        100,
+        100,
+        0
+      ],
+      "varps": [
+        3796,
+        168,
+        169,
+        872,
+        5588
+      ],
+      "sourceAreaOverride": 0,
+      "sourcePageVarbit9683": 1,
+      "scope": "Explicit original UI preference fields; not a scene-varp bridge, production balance or audible playback proof."
+    },
+    {
+      "case": "native-audio-mixed",
+      "percentages": [
+        37,
+        21,
+        66,
+        83
+      ],
+      "varps": [
+        3796,
+        168,
+        169,
+        872,
+        5588
+      ],
+      "sourceAreaOverride": 0,
+      "sourcePageVarbit9683": 1,
+      "scope": "Explicit original UI preference fields; not a scene-varp bridge, production balance or audible playback proof."
+    },
+    {
+      "case": "native-audio-channel-boundaries",
+      "percentages": [
+        100,
+        1,
+        99,
+        25
+      ],
+      "varps": [
+        3796,
+        168,
+        169,
+        872,
+        5588
+      ],
+      "sourceAreaOverride": 0,
+      "sourcePageVarbit9683": 1,
+      "scope": "Explicit original UI preference fields; not a scene-varp bridge, production balance or audible playback proof."
+    }
+  ],
+  "sourceScripts": [
+    {
+      "id": 313,
+      "sha256": "fdccbbaf79fa7614fd1777226e0454fa7a2ee6e77ef3375dac9324957ad3361f",
+      "intArgs": 2,
+      "objectArgs": 0
+    },
+    {
+      "id": 2257,
+      "sha256": "8546254858e2b48fd0c867ecb5a037e8ff7892d40bcdc24bb3e825e1f24142e6",
+      "intArgs": 2,
+      "objectArgs": 0
+    },
+    {
+      "id": 3927,
+      "sha256": "a9ac22423ca0dbfc4638009762a6840eae98124decc2d0aa3ec068fdfb814cda",
+      "intArgs": 2,
+      "objectArgs": 0
+    },
+    {
+      "id": 3928,
+      "sha256": "fd0467c7ea370e3a520fd0d3d2a3608565742e57f0387b81018022091c77dc63",
+      "intArgs": 2,
+      "objectArgs": 0
+    },
+    {
+      "id": 7101,
+      "sha256": "e34d0970c5c0575750c2c32f5f353e02f662f7032071f25c18cdcde56841230b",
+      "intArgs": 1,
+      "objectArgs": 0
+    },
+    {
+      "id": 9232,
+      "sha256": "f497baa6652cfe3a94a026e3c975d54d98f616465f01102ba9cffa3b09ef60ce",
+      "intArgs": 4,
+      "objectArgs": 0
+    },
+    {
+      "id": 9234,
+      "sha256": "31acbcdaaccd7105b2ad49df8db587220d2014eb32bcf581869860303d96d9f8",
+      "intArgs": 2,
+      "objectArgs": 0
+    },
+    {
+      "id": 9238,
+      "sha256": "d234740ed07060e371dcf579d88ac51a3363971f76e13c231c8a8e545dc7d2cf",
+      "intArgs": 4,
+      "objectArgs": 0
+    },
+    {
+      "id": 9240,
+      "sha256": "84d828fb14e378d5506c6e6367f89feea269888a0c992254a2e80a715639d004",
+      "intArgs": 2,
+      "objectArgs": 0
+    },
+    {
+      "id": 9244,
+      "sha256": "4f3d1eb197b2eafe7a2ae31249d6b2975c362adad3c15eb6bcc445bc11217b25",
+      "intArgs": 4,
+      "objectArgs": 0
+    },
+    {
+      "id": 9246,
+      "sha256": "d26bdced9d8850e8c1bf328adb234536b13736fdfd990827568dbc8979f6fb68",
+      "intArgs": 2,
+      "objectArgs": 0
+    },
+    {
+      "id": 9252,
+      "sha256": "e00ab1d67107976af82259a9ce764e08a9200b3d62bcc8957f67c998c1e157a0",
+      "intArgs": 2,
+      "objectArgs": 0
+    },
+    {
+      "id": 9253,
+      "sha256": "443fec75f7cb1163fe38854b7762638baccb289102517d3ca5efaecdcf19fc63",
+      "intArgs": 8,
+      "objectArgs": 2
+    },
+    {
+      "id": 9255,
+      "sha256": "2d15852656ee689f0b53b51384be7224f15c61efe5cdee9582289bd257bba54b",
+      "intArgs": 7,
+      "objectArgs": 2
+    }
+  ],
+  "sourcePackSha256": "b62e19704e17d3d3e4e819f803ef49ba7cc54034ae407184b423427c65d9674d",
+  "finalAcceptance": false
+}
