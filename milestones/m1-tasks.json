@@ -35,7 +35,7 @@
     {
       "id": "M1-GAMEPLAY-UI-CONTRACTS",
       "goal": "Close the actual source-backed engine/data/protocol contracts required by the approved M1 interface controls.",
-      "status": "IMPLEMENTING",
+      "status": "DONE",
       "specs": ["spec/browser-implementation.md", "web/ui/contract-gaps.json", "spec/game-contracts.md", "spec/game-networking.md", "prompt.md sections30/3.3"],
       "dependencies": ["M1-FLEET-LIVE-SERVER", "M1-FLEET-BINDING-APPLICATION", "M1-SHOP-REVIEW-FIXES", "M1-ACTOR-REVIEW-FIXES"],
       "allowed_paths": ["crates/server/**", "crates/protocol/**", "crates/game-types/**", "crates/world-engine/**", "crates/simulation/**", "crates/content/**", "crates/client-core/tests/**", "content/m1/**", "tools/m1-content/**", "research/m1-bindings/**", "research/interface-contracts/**", "web/shared/contracts.ts", "spec/game-contracts.md", "spec/game-networking.md", "spec/browser-implementation.md"],
@@ -48,7 +48,7 @@
       "source_notes": ["The delivered UI has87/87 source raster checks but its listed authority/control gaps are real. Reuse current engine planners and canonical sources; routine stock behavior is not an adaptation."],
       "parity_entries": [],
       "adaptations": [],
-      "evidence": []
+      "evidence": ["Bounded offline/native/Hello assessment and allqualifiedfollowups integrated dd82f81/4d40c48/be53f83/afeebdb/ce34519. Originalruntime/scene/penguin/window/XPTrackerpanel workoffline; no live gain or tier accepted.", "Startupfix2c5fe68 and actualcanonical headlessruned442fcf close oldprerequisites; renewedtwo-attempt allocation isexplicit, prior threeattemptsnotreset."]
     },
     {
       "id": "M1-GAME-ROOT-STARTUP",
@@ -66,7 +66,7 @@
       "source_notes": ["Canonical shell descriptor406574bytes and compact journey descriptor272433bytes exceed old262144byte limit; Config::from_env incorrectly nests GameRoot parsing under WebRoot."],
       "parity_entries": [],
       "adaptations": [],
-      "evidence": ["2c5fe68 integratesc062976:game/web environment roots parsedindependently, invalidgame neverignored;512KiB private descriptor accepts272433/406574/exact524288bytes and rejects+1.33serverunitchecks/strictClippypass. Actualcanonicalstartupfollow-up is running inheadless/shell; tasknotyetacceptedfromfixturechecks."]
+      "evidence": ["2c5fe68 integratesc062976:independentgame/web envparsing and512KiBprivate descriptor withpositive/exact/+1tests.33serverunit/strictClippypass.", "Headlessworker verifiedACTUAL standalonecanonicalsource startup inownedruned442fcf030a421b:5010originalassets,df3eartifact,strictordinaryprofile,realPG/Hello game.v1,publicnormalRegister/Login/CreateCharacter/Join,sourceinitialstate andappearance/experience transitions at ticks4/5. NoWebRoot/dummyUI,sourceassetomission,seededprogressoroldworldrepin. Fulljourneyremainsinprogress."]
     },
     {
       "id": "M1-RUNELITE-FEASIBILITY",
@@ -79,7 +79,7 @@
       "outputs": ["Pinned executable native-runtime integration attempt", "Live authoritative scene/player/event/plugin evidence or diagnosed blockers", "Bounded architecture comparison and explicit support status"],
       "validation_commands": [],
       "test_requirements": ["Real ClubScape loopback account/world connection", "Original runtime renders live scene and penguin", "At least one genuine generic plugin consumes actual authoritative events", "No upstream launch/API mock or invented XP counts as compatibility"],
-      "acceptance": ["At most two materially distinct architectures and three live integration attempts; stop with executable evidence, exact gaps and recommendation", "No desktop deferral is accepted without owner approval; no separate native client substitution"],
+      "acceptance": ["Original three-invocation allocation remains frozen; milestones/m1-runelite-live-renewal.json admits two additional attempts after actual source startup was verified, global invocations4/5, totalmaximum5 and atmosttwo architectures", "Stop on the complete real tuple or the renewed bound; no automatic sixth invocation", "No desktop deferral is accepted without owner approval; no separate native client substitution"],
       "reserved_namespaces": ["org.clubscape.runelite"],
       "source_notes": ["Official RuneLite1.12.38/injected revision240 and cache2695 are already pinned; no repeated baseline freshness discovery."],
       "parity_entries": [],

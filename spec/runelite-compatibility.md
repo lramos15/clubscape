@@ -6,10 +6,14 @@ No support tier is established.**
 **Current prerequisite status:** startup fix2c5fe68 is integrated as4953c4d.
 The game-root environment and private descriptor-capacity blockers are
 **resolved**, not current interlocks. The unchanged candidate fits512KiB.
-The explicitly unchanged three-invocation allocation is exhausted; the live
-runtime/server/scene/player/event/plugin tuple remains unverified pending
-explicit renewed live admission. Historical sections below preserve prior
-failures rather than relabeling them as current.
+The original three-invocation allocation remains exhausted and immutable.
+After independent real-source startup verification, the Director admitted
+two additional attempts in
+[`m1-runelite-live-renewal.json`](../milestones/m1-runelite-live-renewal.json).
+They are global invocations4/5, not a reset of the first allocation.
+The live runtime/server/scene/player/event/plugin tuple remains unverified.
+Historical sections below preserve earlier limits/failures rather than
+relabelling them as current.
 
 The upstream versions and host smoke evidence in
 [`docs/machines/sparky.md`](../docs/machines/sparky.md) do not establish a

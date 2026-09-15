@@ -1,0 +1,49 @@
+{
+  "schema_version": 1,
+  "milestone": "m1-starter-journey",
+  "task": "M1-RUNELITE-FEASIBILITY",
+  "authority": "director",
+  "decision": "admitted_bounded_followup",
+  "scope": "Two additional real-runtime integration attempts within the existing owner-approved M1 companion; no desktop deferral or later milestone.",
+  "reason": "The first allocation identified two shared startup defects. Both are now fixed, and the independent headless runner has verified actual canonical standalone startup, normal character creation and source tutorial transitions.",
+  "prerequisites": {
+    "startup_fix": "2c5fe68b9a6e2e99bcbf3543174f5540be02e95f",
+    "source_checkpoint": "3a74cbe5911e699fd30e51cdedf944e4616f86b5",
+    "source_artifact_sha256": "df3e2a452c100ecd94d2abc68e5cb1556f58090700474f547e7fd36de6682b3d",
+    "independent_startup_run": "ed442fcf030a421b",
+    "startup_reported_by": "81ac9884-4f39-4f27-b516-6e9a42b09b51",
+    "startup_scope": "Real PostgreSQL, game.v1 Hello, normal public account/character creation and appearance/experience transitions only; not full journey acceptance."
+  },
+  "prior_allocation": {
+    "record_revision": "ce34519437f9879ea7cc86f6621af93b6ae467f1",
+    "ledger": "research/runelite-feasibility/experiment.json",
+    "invocations_consumed": 3,
+    "preserve_unchanged": true
+  },
+  "followup_bounds": {
+    "additional_live_invocations": 2,
+    "global_invocation_numbers": [4, 5],
+    "total_live_invocations_maximum": 5,
+    "total_materially_distinct_architectures_maximum": 2,
+    "live_attempt_timeout_seconds": 600,
+    "jvm_heap_mib": 3072,
+    "jvm_active_processors": 2,
+    "rust_build_jobs": 2,
+    "database_cpus": 2,
+    "database_memory_mib": 512,
+    "nested_agents": 0
+  },
+  "hypothesis": "After repaired real-source startup, architecture A can project actual normal-account state and a legitimate first XP gain into the unchanged native scene/penguin and genuine XP Tracker.",
+  "requirements": [
+    "Use the same reserved worker and preserve all prior failures, hashes and allocation history.",
+    "Keep the exact artifact/world identity throughout each attempt; do not repin or reseed acknowledged state.",
+    "No external game account, invented XP callbacks, direct progress/item grants, faster source ticks or omitted source assets.",
+    "Require real server receipts, native state/rendering, actual window evidence and genuine plugin gain together.",
+    "Stop on complete evidence or exhaustion of the additional allocation; no automatic sixth invocation."
+  ],
+  "source_reference_approval_unchanged": true,
+  "compatibility_accepted": false,
+  "desktop_deferral_approved": false,
+  "milestone_accepted": false,
+  "later_milestone_authorized": false
+}
