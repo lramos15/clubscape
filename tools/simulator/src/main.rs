@@ -1,14 +1,16 @@
 use anyhow::{Context, Result, bail, ensure};
 use clap::{Parser, Subcommand};
 use clubscape_protocol::{
-    Account, ClientMessage, CurrentAccount, ErrorCode, Hello, Login, Logout, MAX_REQUEST_BYTES,
-    MEDIA_TYPE, PROTOCOL_VERSION, Register, ServerMessage, client_message::Command,
-    server_message::Result as Outcome,
+    Account, ClientMessage, CurrentAccount, ErrorCode, Hello, Login, Logout,
+    MAX_GAME_RESPONSE_BYTES, MAX_REQUEST_BYTES, MEDIA_TYPE, PROTOCOL_VERSION, Register,
+    ServerMessage, client_message::Command, server_message::Result as Outcome,
 };
 use prost::Message;
 use reqwest::{Client, StatusCode, Url};
 use std::{net::IpAddr, time::Duration};
 use uuid::Uuid;
+
+mod journey;
 
 #[derive(Parser)]
 #[command(about = "Protocol-level ClubScape checks; no game progress is fabricated")]
@@ -23,6 +25,8 @@ enum Scenario {
         #[arg(long, default_value = "http://127.0.0.1:4010")]
         url: String,
     },
+    /// Execute a source-backed named journey, never a fixture or seeded character.
+    Scenario(journey::Arguments),
 }
 
 struct Connection {
@@ -66,20 +70,37 @@ impl Connection {
         token: Option<&str>,
     ) -> Result<(StatusCode, Outcome)> {
         let request_id = Uuid::new_v4().to_string();
+        self.request_with_id(command, token, &request_id).await
+    }
+
+    async fn request_with_id(
+        &self,
+        command: Command,
+        token: Option<&str>,
+        request_id: &str,
+    ) -> Result<(StatusCode, Outcome)> {
         let message = ClientMessage {
             protocol_version: PROTOCOL_VERSION,
-            request_id: request_id.clone(),
+            request_id: request_id.to_owned(),
             command: Some(command),
         };
+        clubscape_protocol::validate_client_message(&message)?;
+        let bytes = message.encode_to_vec();
+        ensure!(
+            bytes.len() <= MAX_REQUEST_BYTES,
+            "Request exceeds protocol budget"
+        );
         let mut request = self
             .client
             .post(self.endpoint.clone())
             .header(reqwest::header::CONTENT_TYPE, MEDIA_TYPE)
-            .body(message.encode_to_vec());
+            .body(bytes);
         if let Some(token) = token {
             request = request.bearer_auth(token);
         }
-        let mut response = request.send().await.context("Account RPC failed")?;
+        let mut response = request.send().await.context(
+            "RPC transport failed; a submitted write may have committed. No new operation was retried",
+        )?;
         let status = response.status();
         ensure!(
             response
@@ -92,7 +113,7 @@ impl Connection {
         let mut bytes = Vec::new();
         while let Some(chunk) = response.chunk().await? {
             ensure!(
-                bytes.len() + chunk.len() <= MAX_REQUEST_BYTES,
+                bytes.len() + chunk.len() <= MAX_GAME_RESPONSE_BYTES,
                 "Server response exceeds the protocol budget"
             );
             bytes.extend_from_slice(&chunk);
@@ -301,6 +322,7 @@ async fn account_lifecycle(url: &str) -> Result<()> {
 async fn main() -> Result<()> {
     match Arguments::parse().command {
         Scenario::AccountLifecycle { url } => account_lifecycle(&url).await,
+        Scenario::Scenario(arguments) => journey::run(arguments).await,
     }
 }
 
