@@ -603,7 +603,9 @@ fn activity(value: &Activity) -> &'static str {
         Activity::Idle => "idle",
         Activity::Walking { .. } => "walking",
         Activity::Gathering { .. } => "gathering",
-        Activity::Producing { .. } | Activity::ProducingAt { .. } => "producing",
+        Activity::Producing { .. }
+        | Activity::ProducingAt { .. }
+        | Activity::ProducingSelected { .. } => "producing",
         Activity::Fighting { .. } => "fighting",
         Activity::Casting { .. } => "casting",
     }

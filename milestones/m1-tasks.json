@@ -7,10 +7,11 @@
     "admissions_open": true,
     "active": [
       {"id": "director", "task": "M1-FLEET-CONTRACTS"},
-      {"id": "0f5ddddf-0aa0-4908-b0d3-1ffc6b1f7a20", "task": "M1-FLEET-ENGINE-CLOSURE"}
+      {"id": "56283b56-0ae0-4839-a961-1a23a850dd1b", "task": "M1-FLEET-PUBLIC-REFERENCES"}
     ],
     "reserved": [
-      {"id": "56283b56-0ae0-4839-a961-1a23a850dd1b", "task": "M1-FLEET-PUBLIC-REFERENCES"}
+      {"id": "2766e089-44e5-4a1d-974e-7b03ad9c269d", "task": "M1-FLEET-LIVE-SERVER"},
+      {"id": "fdda1fb0-1135-4cf8-8cff-3db550e48f54", "task": "M1-FLEET-BINDING-APPLICATION"}
     ],
     "queued": [],
     "parked": [
@@ -45,7 +46,7 @@
     {
       "id": "M1-FLEET-BINDING-APPLICATION",
       "goal": "Apply source resolutions and the explicit goblin adaptation to canonical content generation without losing coupled state/value updates or provenance.",
-      "status": "BLOCKED",
+      "status": "READY",
       "specs": ["research/runtime-bindings/**", "milestones/m1-goblin-loot-approval.json", "spec/adaptations.md"],
       "dependencies": ["M1-FLEET-SOURCE-BINDINGS", "M1-FLEET-CONTENT-ASSET-REFRESH"],
       "allowed_paths": ["content/m1/**", "tools/m1-content/**", "research/m1-bindings/**", "tools/runtime-bindings/**", "research/runtime-bindings/application*.json"],
@@ -63,7 +64,7 @@
     {
       "id": "M1-FLEET-ENGINE-CLOSURE",
       "goal": "Finish the remaining precise M1 runtime selectors, source traversal/engagement/recovery UI and compatible compiler restrictions.",
-      "status": "IMPLEMENTING",
+      "status": "DONE",
       "specs": ["crates/world-engine/README.md", "spec/game-contracts.md", "research/journey-rules/**"],
       "dependencies": ["M1-FLEET-MECHANICS-CONTRACTS"],
       "allowed_paths": ["crates/world-engine/**", "crates/game-types/**", "crates/content/**", "crates/simulation/tests/**", "crates/server/tests/game_storage.rs", "spec/game-contracts.md"],
@@ -76,7 +77,7 @@
       "source_notes": ["The prior broad mechanics schemas are implemented; this is a targeted final compatibility/runtime pass."],
       "parity_entries": [],
       "adaptations": [],
-      "evidence": []
+      "evidence": ["e816f57+a310ede integratedas c2dd52d+9ee0650;content/artifact3 selectors andcomplete bound runtime,exact conditionalvitalpolicy,lifecycle/read-onlyviews implemented.386nativetests and26PGtestsrunsreported;parentworkspace testspassedafterviewactivitycompatibility."]
     },
     {
       "id": "M1-FLEET-CONTENT-ASSET-REFRESH",
@@ -135,7 +136,7 @@
     {
       "id": "M1-FLEET-LIVE-SERVER",
       "goal": "Wire compiled source content, the headless engine and fenced transactional persistence into real game RPCs and source-cadence scheduling.",
-      "status": "BLOCKED",
+      "status": "READY",
       "specs": ["spec/game-contracts.md", "spec/networking.md", "crates/server/README.md"],
       "dependencies": ["M1-FLEET-STORAGE", "M1-FLEET-MECHANICS-CONTRACTS"],
       "allowed_paths": ["crates/server/**", "crates/protocol/**", "crates/client-core/tests/**", "spec/game-networking.md"],
