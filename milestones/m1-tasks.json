@@ -49,7 +49,7 @@
       "source_notes": ["Legitimate journey reached8/70edges and owned a net; four evaluatedlandfaces includingwest/south returnedOutOfReach because the water tile's movement mask was treated as a required walking edge."],
       "parity_entries": [],
       "adaptations": [],
-      "evidence": []
+      "evidence": ["5f2c983 integrated2828643:actualunchangeddf3source Netwest/south admission andGatheringqueue pass withno catchroll/items/XP/geometrychange.Explicitstationarycardinalfaces retainland/access/wall/sight/guard/plane/reach/instancechecks;ordinaryactorsnotexempt.", "240engine testsincl4focusedstationary/scenery/scripted/multitile/negative suites andnative/WASMClippypass.33realPG/HTTP+11accountchecks pass. Actualsourcejourney Net/catch verification remainsinprogress."]
     },
     {
       "id": "M1-CONSUMABLE-ASSET-CLOSURE",
