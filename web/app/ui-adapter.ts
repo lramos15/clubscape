@@ -1,4 +1,7 @@
-import { forwardWorldPointer, getUiPreviewBounds, onUiCameraRequest, setUiCamera, setUiPreview } from "../ui/index.ts";
+import {
+  bindUiAudio, forwardWorldPointer, getUiMusicState, getUiPreviewBounds, getUiPreviewRequest,
+  onUiCameraRequest, onUiMusicStateChange, setUiCamera, setUiMusicState, setUiPreview,
+} from "../ui/index.ts";
 import type { WorldPointer } from "../ui/index.ts";
 import type { RenderCamera, UiHandle } from "../shared/contracts.ts";
 
@@ -14,4 +17,7 @@ export const sourceUiAdapter: UiWorldAdapter = {
   cameraRequests: onUiCameraRequest,
 };
 
-export const sourceUiPreviewAdapter = { bounds: getUiPreviewBounds, publish: setUiPreview };
+export const sourceUiPreviewAdapter = { bounds: getUiPreviewBounds, request: getUiPreviewRequest, publish: setUiPreview };
+export const sourceUiAudioAdapter = {
+  bind: bindUiAudio, music: setUiMusicState, readMusic: getUiMusicState, musicChanges: onUiMusicStateChange,
+};

@@ -268,7 +268,7 @@ while explicitly reporting the then-missing inputs. They are historical:
 the next-selector and nine-publication blockers are now closed, while actual
 scene/manual-state/event provenance remains separate.
 
-The new immutable candidate is `.local/source-audio-native255-df3e2a45`,
+The retained audio-closure candidate is `.local/source-audio-native255-df3e2a45`,
 world UUID `61d4c53c-1b63-4d50-b515-7587f3cd6cf6`, with the same canonical
 `df3e2a45...` game artifact. Previous world/asset bundles are not rewritten.
 Its audio input/control fixture checks all nine actual served decodes against
@@ -281,7 +281,7 @@ The latter uses only the actual canonical account/world path; absent source
 scene/manual-state facts remain explicitly unavailable.
 
 ```sh
-GAME=.local/source-audio-native255-df3e2a45
+GAME=.local/source-ui-handoff-legacy-df3
 CLUBSCAPE_CLIENT_MANIFEST="$GAME/content/manifest.json" \
 CLUBSCAPE_CLIENT_ASSET_ROOT="$GAME" \
 CLUBSCAPE_CONTENT_OWNER=game pnpm --dir web build
@@ -289,15 +289,29 @@ CLUBSCAPE_CONTENT_OWNER=game pnpm --dir web build
 CLUBSCAPE_GAME_ROOT="$PWD/$GAME" pnpm --dir web serve
 ```
 
-The authorized UI commits `069b5028`, `f34663c3`, `6a1b11fa` add the actual
-self-subscribing UI. `ui-assets.ts` verifies `assets/compiled/ui/provenance.json`
-and selects catalogue-referenced title/sprite/item/portrait/minimap PNGs plus
-the published compass/seven dot primitives used directly by the UI's runtime
-minimap adapter. All are hash-verified through the same provenance; no
-panel/evidence PNG is copied. There are1,187 image primitives and7,181 total
-source/audio/UI/render assets in the current combined candidate. The
-24,658,127-byte UI catalogue remains an independent bounded asset; it is not
-inserted into actor snapshots.
+The initial UI commits and the authorized ordered handoff
+`6988951/b7d6f8a/669e1f4/b76babf/b151d01/53ed974/8d99bf1`, followed by
+nullable UI corrections `0ef2344/a85ff40`, are integrated. All nine patches
+were checked for prior consumption; no broad backend commits were imported.
+`ui-assets.ts` verifies the compiled provenance and inspects the losslessly
+interned `native-widget-pool-v1` catalogue using `decodeUiCatalogue`, while
+publishing its original bytes unchanged. Selection includes original
+title/sprite/item/portrait/minimap primitives, compass/seven dots and the
+content-addressed isolated static model artwork used by native modal widgets.
+No panel/evidence PNG is copied.
+
+The current UI catalogue is12,071,338 bytes, SHA-256
+`b83d7b1b03ada3a1f1bf62baf4f0205e5ea73ffc3667ba86f39a083ad1686081`.
+The fresh `.local/source-ui-handoff-legacy-df3` bundle contains7,623 assets
+and208,906,375 public bytes, with world UUID
+`0481aa39-1e41-4c7a-843b-273bab91c4cd`. It deliberately retains the exact
+`df3e2a45...` legacy-v3 artifact for bounded diagnostics, not a final-v4
+source-fingerprint candidate. No acknowledged world or earlier asset bundle
+is rewritten, and no source generator is run to bypass the final relay.
+The actual updated UI/auth/title-audio/source-world/restart check is recorded in
+`.local/evidence/ui-handoff-legacy-source/result.json`. It explicitly records
+the unavailable rich preview inputs and unmatched full-HUD projection rather
+than promoting older preview/GPU receipts to complete UI fidelity.
 
 Use a **new** directory/world UUID when adding UI to an earlier pinned bundle:
 
@@ -310,7 +324,7 @@ CLUBSCAPE_CONTENT_OWNER=game \
 pnpm --dir web build
 ```
 
-The actual game root owns7,182 public asset/manifest routes; the web root serves
+The current game root owns7,624 public asset/manifest routes; the web root serves
 only the compiled HTML/JS/CSS/WASM and build identity, with no overlapping routes.
 The independent account/audio Chrome check instantiates
 the actual audio factory through the shell, verifies recoverable gesture
@@ -403,8 +417,9 @@ scene/block duplicates are not shipped. Gzip URLs keep their exact names;
 physical `.gz.bin` carriers satisfy the server allowlist without changing
 bytes or content encoding.
 
-The current immutable native255 source-stream candidate has7,181 declared assets
-(221,090,292 public bytes including its content manifest), separate from all
+The retained pre-UI-handoff native255 candidate has7,181 declared assets
+(221,090,292 public bytes including its content manifest); the newer UI handoff
+diagnostic has the7,623 assets described above. They are separate from all
 retained earlier bundles. Create a **new** directory and world UUID:
 
 ```sh
@@ -433,8 +448,12 @@ cargo run -p clubscape-server
 
 This mode keeps actual scene `blocks@3056,3056`, route `region.osrs.12336`,
 and workload `recorded-camera-not-journey`. The first real entry loads nine
-published squares and forwards ten canonical dynamic objects. Its native
-480x315 model-only preview does not advance world frame counters. Full source
+published squares and forwards ten canonical dynamic objects. Earlier
+480x315 model-only preview receipts remain historical. The richer current
+`getUiPreviewRequest` preserves native model bounds/widget/zoom/rotation,
+local approved appearance and actual equipment/base; missing metadata or
+unsupported renderer inputs produce explicit unavailability, never an empty
+loadout or world-state rewrite. No preview receives world-FPS credit. Full source
 signup/creation/appearance/logout/relogin and same-artifact server restart are
 real. The separate game-device-loss fault check destroys only that browser's
 actual configured device and verifies explicit UI failure/no fallback.
@@ -469,6 +488,14 @@ for `blocks@` scenes). The owned adapter normalizes that one flag only after
 actual assembly/base/size/square agreement, preserves the raw observation
 and reports the mismatch. No minimap, entity-count or motion fidelity is
 inferred from it.
+
+Actual UI audio binding uses `bindUiAudio` with the native handle. The shell
+feeds each committed world/event batch once, then routes real music state
+through `setUiMusicState`; `getUiMusicState` observes applied preferences.
+Player-scoped change callbacks are wired with stale-owner checks. Persistent
+music saving, remembered mute, exactly three saved playlists and public Skip
+Track await the audio owner's versioned helpers. They are not approximated
+with guessed restore values, stored unlock lists or mode-flip requests.
 
 The published native CPU/GPU suite now runs all mandatory scene/NPC cases
 without runtime skipping. Ten obsolete, ignored raw twins left by the prior

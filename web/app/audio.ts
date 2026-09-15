@@ -15,6 +15,7 @@ export interface AudioAdapter {
   observe(handle: AudioHandle, listener: (state: AudioSnapshot) => void): () => void;
   scene(handle: AudioHandle, scene: SourceAudioScene | null): void;
   musicState(handle: AudioHandle, state: SourceMusicState): void;
+  readMusicState?(handle: AudioHandle): Readonly<SourceMusicState> | null;
 }
 export const sourceAudioAdapter: AudioAdapter = {
   create: createAudio, read: readAudioState, observe: observeAudioState,
@@ -114,9 +115,15 @@ export class SourceAudioSession {
   observations(): AssetObservation[] { return Array.from(this.#observations.values(), (value) => ({ ...value })); }
   enabled(): boolean { return playbackEnabled(this.snapshot()); }
   controls() {
+    const source = this.#api.readMusicState ? this.#api.readMusicState(this.#handle) : this.#musicState;
+    const musicState = source === null ? null : deepFreeze(structuredClone(source));
     return Object.freeze({ ...sourceControlState(this.snapshot()),
-      sourceSceneSupplied: this.#hasScene, sourceMusicStateSupplied: this.#musicState !== null,
-      providedMusicState: this.#musicState, musicContinuation: "native-bound" as const });
+      sourceSceneSupplied: this.#hasScene, sourceMusicStateSupplied: musicState !== null,
+      providedMusicState: musicState, musicContinuation: "native-bound" as const });
+  }
+
+  bindUi(bind: (handle: AudioHandle) => Promise<() => void>): Promise<() => void> {
+    return bind(this.#handle);
   }
 
   unlock(): Promise<void> {

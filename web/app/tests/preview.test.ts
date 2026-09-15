@@ -3,25 +3,33 @@ import { test } from "node:test";
 import { ModelPreview } from "../preview.ts";
 import type { PreviewBounds } from "../preview.ts";
 import type { AppError } from "../errors.ts";
+import type { UiPreviewRequest } from "../../ui/index.ts";
 
 const settle = () => new Promise<void>((resolve) => setImmediate(resolve));
 const pixels = (width: number, height: number) => ({ width, height, data: new Uint8ClampedArray(width * height * 4) }) as ImageData;
+const descriptor = (bounds: PreviewBounds): UiPreviewRequest => ({
+  purpose: "appearance", bounds, modelBounds: { ...bounds, width: 136, height: 192 },
+  sourceWidget: 44499017, modelZoom: 450, modelRotation: [0, 0, 0], appearance: { body_type: 0 },
+  equipment: null, base: null,
+});
 
 test("model-only previews preserve exact native size, bound readbacks, and discard closed/stale results", async () => {
   let bounds: PreviewBounds | null = { x: 10, y: 20, width: 480, height: 315 };
-  const requests: Array<{ size: { width: number; height: number }; complete(image: ImageData | null): void }> = [];
+  const requests: Array<{ request: Readonly<UiPreviewRequest>; complete(image: ImageData | null): void }> = [];
   const published: Array<HTMLCanvasElement | null> = [], painted: ImageData[] = [], errors: AppError[] = [];
   const surface = { width: 0, height: 0, getContext: () => ({ putImageData(image: ImageData, x: number, y: number) {
     assert.deepEqual([x, y], [0, 0]); painted.push(image);
   } }) } as unknown as HTMLCanvasElement;
   const preview = new ModelPreview({
-    bounds: () => bounds, frame: (size) => new Promise((complete) => requests.push({ size, complete })),
+    request: () => bounds ? descriptor(bounds) : null,
+    frame: (request) => new Promise((complete) => requests.push({ request, complete })),
     publish: (image) => published.push(image), surface: () => surface, report: (error) => errors.push(error),
   });
   preview.update("source-character");
   preview.update("source-character");
   assert.equal(requests.length, 1, "readbacks are bounded independently from world frames");
-  assert.deepEqual(requests[0]!.size, { width: 480, height: 315 });
+  assert.deepEqual(requests[0]!.request, descriptor(bounds));
+  assert(Object.isFrozen(requests[0]!.request.appearance));
   requests[0]!.complete(pixels(480, 315));
   await settle();
   assert.deepEqual([surface.width, surface.height], [480, 315]);
@@ -38,7 +46,7 @@ test("model-only previews preserve exact native size, bound readbacks, and disca
   assert.equal(published.at(-1), null);
   bounds = { x: 40, y: 20, width: 400, height: 250 };
   preview.update("next-authoritative-owner");
-  assert.deepEqual(requests[2]!.size, { width: 400, height: 250 });
+  assert.deepEqual(requests[2]!.request.bounds, bounds);
   requests[2]!.complete(pixels(400, 250));
   await settle();
   assert.deepEqual([surface.width, surface.height], [400, 250]);
@@ -52,7 +60,7 @@ test("wrong-size, absent and rejected preview output is explicit, never resized 
     const errors: AppError[] = [];
     let requests = 0;
     const preview = new ModelPreview({
-      bounds: () => ({ x: 0, y: 0, width: 480, height: 315 }),
+      request: () => descriptor({ x: 0, y: 0, width: 480, height: 315 }),
       async frame() {
         requests++;
         if (result === "gpu-error") throw new Error("fixture GPU rejection");
@@ -60,6 +68,29 @@ test("wrong-size, absent and rejected preview output is explicit, never resized 
       },
       publish: (image) => assert.equal(image, null),
       report: (error) => errors.push(error),
+    });
+
+    test("local appearance and native widget changes invalidate stale preview readbacks at the same size", async () => {
+      let request = descriptor({ x: 0, y: 0, width: 480, height: 315 });
+      const pending: Array<(image: ImageData) => void> = [];
+      const received: Readonly<UiPreviewRequest>[] = [];
+      const preview = new ModelPreview({
+        request: () => request,
+        frame: (value) => { received.push(value); return new Promise((resolve) => pending.push(resolve)); },
+        publish: (image) => assert.equal(image, null), report: () => {},
+      });
+      preview.update("actor.fixture");
+      request = { ...request, appearance: { body_type: 1 }, modelZoom: 550 };
+      preview.update("actor.fixture");
+      pending[0]!(pixels(480, 315));
+      await settle();
+      assert.equal(preview.observe().publishedImages, 0);
+      preview.update("actor.fixture");
+      assert.deepEqual(received[1], request);
+      preview.dispose();
+      pending[1]!(pixels(480, 315));
+      await settle();
+      assert.equal(preview.observe().publishedImages, 0);
     });
     preview.update("owner");
     await settle();

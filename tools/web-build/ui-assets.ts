@@ -4,6 +4,7 @@ import { dirname, resolve, sep } from "node:path";
 import { fileURLToPath } from "node:url";
 import { SOURCE_PACK_SHA256 } from "../../web/shared/contracts.ts";
 import type { UiCatalogue } from "../../web/ui/assets.ts";
+import { decodeUiCatalogue } from "../../web/ui/assets.ts";
 import type { AssetRecord } from "../../web/app/manifest.ts";
 import type { PublicFile } from "./deliver.ts";
 
@@ -20,6 +21,7 @@ export function uiRuntimeImages(catalogue: UiCatalogue, pins: ReadonlyMap<string
     catalogue.titleBackground,
     ...Object.values(catalogue.sprites).map((sprite) => sprite.asset),
     ...Object.values(catalogue.portraits).map((portrait) => portrait.asset),
+    ...Object.values(catalogue.staticModels).map((model) => model.asset),
     ...catalogue.minimaps.map((map) => map.asset), ...minimap,
     ...Object.values(catalogue.items).flatMap((item) => item.icons.flatMap((icon) =>
       [icon.asset, icon.selectedAsset, icon.zeroShadowAsset])),
@@ -52,7 +54,7 @@ export async function deliverUiAssets(directory: string): Promise<{
     return data;
   };
   const catalogueBytes = await checked("ui/manifest.json");
-  const catalogue = JSON.parse(catalogueBytes.toString("utf8")) as UiCatalogue;
+  const catalogue = decodeUiCatalogue(JSON.parse(catalogueBytes.toString("utf8")));
   if (catalogue.version !== 1 || catalogue.sourcePackSha256 !== SOURCE_PACK_SHA256 || catalogue.sourceCache !== 2695) {
     throw new Error("UI catalogue is not the approved source-cache projection.");
   }
@@ -74,7 +76,8 @@ export async function deliverUiAssets(directory: string): Promise<{
   await emit("ui/provenance.json", "asset.source.ui.provenance", "/content/ui/provenance.json", provenanceBytes, "application/json");
   let index = 0;
   for (const id of images) {
-    if (id !== "ui/title-background.png" && !/^ui\/(?:sprites|items|portraits|minimaps)\/[A-Za-z0-9_-]+\.png$/.test(id)) {
+    if (id !== "ui/title-background.png" && !/^ui\/(?:sprites|items|portraits|minimaps)\/[A-Za-z0-9_-]+\.png$/.test(id)
+      && !/^ui\/models\/[0-9a-f]{64}\.png$/.test(id)) {
       throw new Error(`Non-primitive UI image reference is not eligible for client delivery: ${id}`);
     }
     await emit(id, `asset.source.ui.image.${index++}`, `/assets/${id}`, await checked(id), "image/png");

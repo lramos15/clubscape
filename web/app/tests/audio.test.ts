@@ -116,6 +116,20 @@ test("an unset preference does not fabricate source default channel gains", () =
   assert.deepEqual(JSON.parse(writes[0]!).audio, { music: 0.4 });
 });
 
+test("applied native master and mute changes alter settings identity without inventing persisted preferences", async () => {
+  const settings = new Settings(null);
+  const audio = { masterPercent: 100, volumes: { music: 1, effects: 1, area: 1 },
+    nativeMixer: { ...sourceAudioDefaults().mixer }, muted: false };
+  const before = await settings.hash({ audio });
+  const master = { ...audio, masterPercent: 50, nativeMixer: {
+    music: sourceSliderToMixer("music", 100, 50), effects: sourceSliderToMixer("effects", 100, 50),
+    area: sourceSliderToMixer("area", 100, 50),
+  } };
+  assert.notEqual(await settings.hash({ audio: master }), before);
+  assert.notEqual(await settings.hash({ audio: { ...audio, muted: true } }), before);
+  assert.deepEqual(settings.audioOverrides(), {});
+});
+
 test("source slider positions and observed native mixer levels are not double-normalized", async () => {
   const source = sourceAudioDefaults();
   assert.deepEqual(source.mixer, { music: 255, effects: 127, area: 127 });
@@ -214,6 +228,33 @@ test("control observations distinguish configured mixer levels from each actual 
   assert.equal(changed.voices[0]!.gain, 1);
   assert.equal(changed.voices[0]!.renderedNativeLevel, 255);
   assert(Object.isFrozen(changed.voices[0]));
+});
+
+test("UI binding receives the real audio handle and reads applied UI preferences without duplicating world updates", async () => {
+  let updates = 0, disposed = false, stopped = false;
+  let applied: SourceMusicState | null = null;
+  const handle: AudioHandle = {
+    update() { updates++; }, unlock: async () => {}, mute() {}, volume() {}, disconnected() {},
+    dispose: async () => { disposed = true; },
+  };
+  const api: AudioAdapter = {
+    create: async () => handle, read: snapshot, observe: () => () => {}, scene() {}, musicState() {},
+    readMusicState: () => applied,
+  };
+  const audio = await SourceAudioSession.create({} as ClientAssets, [], () => {}, () => {}, api);
+  const stop = await audio.bindUi(async (bound) => {
+    assert.equal(bound, handle);
+    return () => { stopped = true; };
+  });
+  assert.equal(updates, 0, "Binding is an observer, not another audio world feed.");
+  applied = { mode: "single", areaMode: "modern", unlockedGroups: [163], selectedGroup: 163,
+    playlistGroups: [], loopEnabled: false };
+  assert.deepEqual(audio.controls().providedMusicState, applied);
+  assert(Object.isFrozen(audio.controls().providedMusicState));
+  stop();
+  assert(stopped && !disposed);
+  await audio.dispose();
+  assert(disposed);
 });
 
 test("native music-state rejection preserves its actual error code and is not treated as supplied state", async () => {

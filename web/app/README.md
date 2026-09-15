@@ -189,8 +189,11 @@ appearance confirmation, logout/relogin and a real server restart while the
 browser retains its memory token and the exact world/artifact pin.
 `window.__clubscapeClientStateV1.read()` is an immutable observation-only view
 for this boundary; it exposes no credential, mutation or outcome setter.
-The source title, native-size penguin preview and actual streamed starting
-region are visibly rendered; logical/backing resize boundaries are tested.
+The source title and actual streamed starting region are visibly rendered;
+logical/backing resize boundaries are tested. Earlier native-size penguin
+preview receipts predate the richer UI request contract and are historical.
+The current legacy server lacks its authoritative preview base metadata;
+that absence is explicit rather than an invented base/loadout.
 The current real run receives ten dynamic object records through WASM.
 Their `object_id` must be a valid canonical ObjectId with source metadata in
 the validated content catalog. `sourceId` is never parsed from an ID suffix or
@@ -281,17 +284,28 @@ that flag when actual base/size/scene/loaded-square diagnostics agree, reports
 the compatibility issue, and preserves `nativeScenePlacement` alongside it.
 Neither placement observation is a dynamic minimap.
 
-`ModelPreview` calls `getUiPreviewBounds()` every animation frame while the
-interface is open, requests `framePlayerPreview()` at the exact native size,
-copies its completed RGBA readback into a same-sized canvas with
-`putImageData`, and passes that canvas to `setUiPreview()`. No scaling, source
-PNG or human preview substitutes for it. One preview readback may be pending
-independently of two world frames; closure/owner/size changes discard stale
-results. Actual preview readbacks are separate diagnostics, never world FPS.
-The first source character uses the real 480x315 preview before creation.
-The renderer has no public actor-reset API: a different fresh character after
-a previous world session gets explicit preview-unavailable feedback until
-reload/actual new actor update, rather than inheriting prior equipment.
+`ModelPreview` now consumes the complete `getUiPreviewRequest()` every frame:
+purpose, surface/model bounds, source widget, model zoom/rotation, local approved
+appearance, actual equipment and base. The detached request is frozen while
+pending; changes to any of those inputs invalidate stale readbacks even at
+the same canvas size.
+
+The owned `frameUiPreview` adapter maps a supported source widget's model
+centre into the exact native-sized surface and forwards its source model
+parameters to `framePlayerPreview`. It does not change the world-camera zoom
+or rescale UI geometry. Authoritative base/equipment must be available and
+match the renderer's actual actor; unsupported widgets or local appearance
+edits that the current renderer cannot apply independently fail explicitly.
+No world snapshot is rewritten to render a tentative UI selection. Null
+equipment/base is unavailable, never a dummy empty loadout or guessed base.
+The current legacy-v3 initial request is 480x315/widget679:73 with unavailable
+base/equipment, so it is reported unavailable and publishes no substitute.
+
+Successful RGBA readbacks still use a same-sized canvas/`putImageData` followed
+by `setUiPreview`, with one pending preview independent of two world frames.
+There is no source PNG, human preview, UI scaling or world-FPS credit. Full
+base/local-appearance/equipment preview alignment and actor reset remain
+renderer/final-v4 dependencies.
 
 The adapter's diagnostics currently expose actual loaded assets/scene/device/
 timestamps, but discard the raw WASM `entities_drawn` field and do not expose
@@ -307,12 +321,42 @@ evidence. Hat/shield gear-fit violations also remain unaccepted.
 
 The real streamed Chrome/Xvfb check is engineering-only. It covers actual UI
 signup, wrong-password feedback, empty creation/appearance, source block
-fetches, ten canonical dynamic objects, native preview, pinned server restart,
+fetches, ten canonical dynamic objects, exact preview-request/unavailability
+semantics, pinned server restart,
 logout/relogin, and an actual game-device-loss fault check. It keeps
 `game.ui.v1` and rendered-count readiness false. Frame distributions and
 failing 60-FPS/gap budgets remain exact evidence, not a Mac/Edge/M1 acceptance.
 
 ## Actual audio adapter
+
+The ordered UI handoff `6988951`, `b7d6f8a`, `669e1f4`, `b76babf`,
+`b151d01`, `53ed974`, `8d99bf1`, then nullable corrections `0ef2344` and
+`a85ff40` is integrated after its shared/audio prerequisites. No broad backend
+or final-v4 source-generation commit was pulled in with those owned patches.
+The UI still owns exactly one AppServices subscription; no extra `ui.update`
+or UI-side `audio.update(world, events)` feed is installed.
+
+Composition binds `bindUiAudio` to the **real native AudioHandle**, not the
+SourceAudioSession wrapper. The UI observes source percentages, raw mixers and
+actual128/255 voice representations. Its title gesture reaches the same
+`unlockAudio` path and mute leaves channel percentages intact. UI disposal
+detaches its observer without taking ownership of the audio engine.
+Applied settings hashes also include the observed native master/channel/mute
+values and actual UI-applied music preferences, not just stored slider values.
+Automatic track changes and waveform/fade counters are not preferences.
+Identical settings do not repeatedly invalidate the hash while frames run.
+
+For supplied source music state, the single committed `audio.update(world,
+events)` precedes `setUiMusicState(ui, actualPlayerId, state)`. The latter
+applies the state to both native audio and UI; `getUiMusicState` is used for
+applied-state observation without replaying that setter. The player ID is
+checked again before handling `onUiMusicStateChange` persistence feedback.
+The versioned preference helper has not been relayed: applied in-session
+preferences get explicit persistence-unavailable feedback rather than being
+silently saved under another player, storing unlocks, or inventing restored
+values. Native Skip Track, exactly three saved playlists and remembered mute
+are likewise left to the audio owner's forthcoming public helpers, not mode
+flips or a guessed storage schema.
 
 `audio.ts` wraps the imported factory and the authorized native policy/Cook
 delta updates `888f9384` + `f74652a5`; it is not a second audio engine. `SourceAudioSession` forwards

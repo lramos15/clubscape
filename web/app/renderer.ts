@@ -10,6 +10,8 @@ import { publicPath } from "./identity.ts";
 import { canonicalPick } from "./picking.ts";
 import { RENDER_MANIFEST_SHA256 } from "./render-identity.ts";
 import { residentRendererAssets, sourceScenePlacement } from "./render-state.ts";
+import { nativeUiPreviewRequest } from "./ui-preview-request.ts";
+import type { UiPreviewRequest } from "../ui/index.ts";
 
 export { regionSceneId, sourceZoomForViewportHeight };
 
@@ -18,6 +20,7 @@ export interface ShellRenderer extends RendererHandle {
   diagnostics(): RendererDiagnostics;
   supportsScene(id: string): boolean;
   framePlayerPreview(request: PlayerPreviewRequest): Promise<ImageData | null>;
+  frameUiPreview(request: Readonly<UiPreviewRequest>): Promise<ImageData | null>;
   playerFitReport(): PlayerFitReport[];
   scenePlacement(): ScenePlacement | null;
 }
@@ -94,6 +97,7 @@ export async function createShellRenderer(canvas: HTMLCanvasElement, config: Ren
       return { ...state, assets: residentRendererAssets(manifest, state), lastFrame };
     },
     framePlayerPreview(request) { return native.framePlayerPreview(request); },
+    async frameUiPreview(request) { return native.framePlayerPreview(nativeUiPreviewRequest(request, world, manifest)); },
     playerFitReport() { return native.playerFitReport(); },
     scenePlacement() { return placement(native.diagnostics()).value; },
     observe() {

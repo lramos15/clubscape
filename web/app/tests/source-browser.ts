@@ -226,6 +226,14 @@ export async function sourceBrowserCheck(): Promise<void> {
       await page.getByRole("button", { name: "New account", exact: true }).waitFor();
     }
     checks.push("actual logical UI/backing-pixel separation at approved minimum/maximum/primary resize sizes");
+    const audioPositions = await page.evaluate(() => window.__clubscapeClientStateV1!.audioControls()?.channels);
+    await page.getByRole("button", { name: "Enable sound", exact: true }).click();
+    await page.waitForFunction(() => window.__clubscapeClientStateV1!.read().soundEnabled);
+    await page.getByRole("button", { name: "Mute sound", exact: true }).click();
+    await page.waitForFunction(() => !window.__clubscapeClientStateV1!.read().soundEnabled);
+    const afterMute = await page.evaluate(() => window.__clubscapeClientStateV1!.audioControls()?.channels);
+    assert.deepEqual(afterMute, audioPositions);
+    checks.push("actual source title controls bind to the real audio graph, unlock on gesture and mute without resetting source positions");
     await page.getByRole("button", { name: "New account", exact: true }).click();
     await page.getByRole("button", { name: "Create account", exact: true }).waitFor();
     await fields(page, true);
@@ -250,13 +258,18 @@ export async function sourceBrowserCheck(): Promise<void> {
     checks.push("real UI login without seeded character/world");
     await page.waitForFunction(() => {
       const state = window.__clubscapeBenchmarkV1!.read(null) as ObservedSnapshot;
-      return state.diagnostics.modelPreview?.state === "ready" && state.diagnostics.modelPreview.publishedImages >= 2;
+      return state.diagnostics.modelPreview?.state === "unavailable";
     }, undefined, { timeout: 30_000 });
     const preview = await page.evaluate(() => (window.__clubscapeBenchmarkV1!.read(null) as ObservedSnapshot).diagnostics.modelPreview);
     assert.deepEqual(preview?.nativeSize, { width: 480, height: 315 });
+    assert.equal(preview?.purpose, "appearance");
+    assert.equal(preview?.sourceWidget, 44499017);
+    assert.match(preview?.problem ?? "", /base\/equipment metadata is unavailable/);
+    assert.equal(preview?.publishedImages, 0);
     assert.equal(await page.evaluate(() => window.__clubscapeBenchmarkV1!.read(null).renderedFrames), 0);
-    await page.screenshot({ path: resolve(evidence, "actual-model-only-character-preview.png") });
-    checks.push("actual native-size penguin preview GPU readback before creation; zero world frames counted");
+    await page.screenshot({ path: resolve(evidence, "source-character-preview-contract-gap.png") });
+    checks.push("complete native preview request retains unavailable base/equipment; no dummy loadout or preview substitution");
+    await dismissNotices(page);
     await page.getByRole("button", { name: "Confirm appearance", exact: true }).click();
     if (earlyScene === null && recordedCamera === null) {
       await page.waitForFunction(() => ["world", "error"].includes(window.__clubscapeClientStateV1?.read().phase ?? ""), undefined, { timeout: 30_000 });

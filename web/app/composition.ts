@@ -18,16 +18,16 @@ import { RpcTransport } from "./transport.ts";
 import { presenceOf } from "./public-state.ts";
 import { SourceAudioSession, audioProblem, playbackEnabled, sourceAudioAdapter } from "./audio.ts";
 import { sourceZoomForViewportHeight } from "./renderer.ts";
-import type { SourceAudioScene, SourceMusicState } from "../audio/index.ts";
-import type { PlayerPreviewRequest } from "../renderer/src/index.ts";
+import type { AudioSnapshot, SourceAudioScene, SourceMusicState } from "../audio/index.ts";
+import type { UiPreviewRequest } from "../ui/index.ts";
 import { ModelPreview } from "./preview.ts";
-import { sourceUiPreviewAdapter } from "./ui-adapter.ts";
+import { sourceUiAudioAdapter, sourceUiPreviewAdapter } from "./ui-adapter.ts";
 
 export interface ObservedRenderer extends RendererHandle {
   /** Observation only; all values must come from the real decoder/render path. */
   observe?(): RendererObservation;
   supportsScene?(id: string): boolean;
-  framePlayerPreview?(request: PlayerPreviewRequest): Promise<ImageData | null>;
+  frameUiPreview?(request: Readonly<UiPreviewRequest>): Promise<ImageData | null>;
 }
 export interface ApplicationHandle { app: BrowserApp; dispose(): Promise<void> }
 
@@ -70,11 +70,16 @@ export async function mountApplication(options: {
   let disposed = false;
   let stopDevice: (() => void) | null = null;
   let unsubscribe: (() => void) | null = null;
+  let stopAudioUi: (() => void) | null = null;
+  let stopMusicPreferences: (() => void) | null = null;
   let resize: ResizeObserver | null = null;
   let hashGeneration = 0;
   let componentFailed = false;
   let appliedRenderSettings: Readonly<Record<string, unknown>> | null = null;
   let appliedRenderSettingsJson = "";
+  let appliedAudioSettings: Pick<AudioSnapshot, "masterPercent" | "volumes" | "nativeMixer" | "muted"> | null = null;
+  let appliedSettingsKey = "";
+  let settingsActor: string | null = null;
   const lifecycle = new AbortController();
   const transport = new RpcTransport();
   let storage: Storage | null;
@@ -86,10 +91,17 @@ export async function mountApplication(options: {
   };
 
   async function settingsHash(): Promise<void> {
+    if (disposed || appliedRenderSettings === null) return;
+    const source = ui ? sourceUiAudioAdapter.readMusic(ui) : null;
+    const music = source ? { mode: source.mode, areaMode: source.areaMode, selectedGroup: source.selectedGroup,
+      playlistGroups: [...source.playlistGroups], loopEnabled: source.loopEnabled } : null;
+    const visual = { declaredProfile: build.visualSettings, renderer: appliedRenderSettings, audio: appliedAudioSettings, music };
+    const key = canonicalJson({ visual, preferences: settings.read(), overrides: settings.audioOverrides() });
+    if (key === appliedSettingsKey) return;
+    appliedSettingsKey = key;
     const generation = ++hashGeneration;
     benchmark.settings("");
-    if (appliedRenderSettings === null) return;
-    const hash = await settings.hash({ declaredProfile: build.visualSettings, renderer: appliedRenderSettings });
+    const hash = await settings.hash(visual);
     if (!disposed && generation === hashGeneration) benchmark.settings(hash);
   }
 
@@ -178,6 +190,8 @@ export async function mountApplication(options: {
     preview?.dispose();
     renderer?.dispose();
     stopDevice?.();
+    stopMusicPreferences?.();
+    stopAudioUi?.();
     ui?.dispose();
     assets?.dispose();
     await app.dispose();
@@ -213,6 +227,11 @@ export async function mountApplication(options: {
         const presence = presenceOf(state.world);
         benchmark.worldReady(state.phase === "world" && sceneLoaded && presence?.connected === true && presence.presentInWorld
           && app.gameplayUi().available);
+        const actor = state.world?.player.id ?? null;
+        if (actor !== settingsActor) {
+          settingsActor = actor;
+          void settingsHash().catch(() => app.report(new AppError("Player-scoped applied settings could not be hashed.", { kind: "benchmark" })));
+        }
       } catch {
         componentFailed = true;
         sceneLoaded = false;
@@ -261,10 +280,10 @@ export async function mountApplication(options: {
         sourcePackSha256: SOURCE_PACK_SHA256, width: worldCanvas.width, height: worldCanvas.height,
       });
       const previewRenderer = renderer;
-      if (previewRenderer.framePlayerPreview) {
+      if (previewRenderer.frameUiPreview) {
         preview = new ModelPreview({
-          bounds: () => sourceUiPreviewAdapter.bounds(ui!),
-          frame: (size) => previewRenderer.framePlayerPreview!(size),
+          request: () => sourceUiPreviewAdapter.request(ui!),
+          frame: (request) => previewRenderer.frameUiPreview!(request),
           publish: (surface) => sourceUiPreviewAdapter.publish(ui!, surface),
           report: (error) => app.report(error),
         });
@@ -273,10 +292,31 @@ export async function mountApplication(options: {
     audio = await SourceAudioSession.create(assets, assets.manifest.assets,
       (error) => app.report(audioProblem(error)),
       (state) => {
+        appliedAudioSettings = { masterPercent: state.masterPercent, volumes: { ...state.volumes },
+          nativeMixer: { ...state.nativeMixer }, muted: state.muted };
         app.audioStatus(playbackEnabled(state));
         benchmark.audio(state);
         observeAssets();
-      }, { ...sourceAudioAdapter, create: components.createAudio });
+        void settingsHash().catch(() => app.report(new AppError("Observed native audio settings could not be hashed.", { kind: "benchmark" })));
+      }, {
+        ...sourceAudioAdapter, create: components.createAudio,
+        musicState(_handle, state) {
+          const world = app.state().world;
+          invariant(ui && world, "Source music state requires the actual current player and UI binding.", "audio");
+          sourceUiAudioAdapter.music(ui, world.player.id, state);
+          void settingsHash().catch(() => app.report(new AppError("Applied music settings could not be hashed.", { kind: "benchmark" })));
+        },
+        readMusicState() { return ui ? sourceUiAudioAdapter.readMusic(ui) : null; },
+      });
+    stopAudioUi = await audio.bindUi((handle) => sourceUiAudioAdapter.bind(ui!, handle));
+    stopMusicPreferences = sourceUiAudioAdapter.musicChanges(ui, (playerId, state) => {
+      invariant(app.state().world?.player.id === playerId
+        && canonicalJson(sourceUiAudioAdapter.readMusic(ui!)) === canonicalJson(state),
+      "Applied music preferences no longer belong to the current player snapshot.", "audio_preferences");
+      void settingsHash().catch(() => app.report(new AppError("Applied music preferences could not be hashed.", { kind: "benchmark" })));
+      throw new AppError("Music preferences were applied for this player, but persistent saving is unavailable until the audio owner's versioned client-preference helper is integrated. No unlocks or guessed restored values were stored.",
+        { kind: "audio_preferences", errorId: "audio.preferences.persistence_unavailable" });
+    });
     const overrides = settings.audioOverrides();
     for (const channel of ["music", "effects", "area"] as const) {
       if (overrides[channel] !== undefined) audio.volume(channel, overrides[channel]);
