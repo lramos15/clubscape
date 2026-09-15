@@ -188,6 +188,20 @@ export interface MinimapSurface {
 
 export interface LoadedAsset { id: string; sha256: string; loaded: boolean }
 
+/** `RenderFrame` plus the adapter's CPU breakdown of `cpuEncodeMs` (ms on the main thread). */
+export interface ClubscapeRenderFrame extends RenderFrame {
+  cpuBreakdownMs?: {
+    /** Scene traversal + projection (`build_frame`). */
+    build: number;
+    /** Triangle stream → GPU layout + bin lists (`pack_frame`). */
+    pack: number;
+    /** Buffer uploads + compute encode/submit. */
+    upload: number;
+    /** Canvas texture acquire, blit, present. */
+    present: number;
+  };
+}
+
 /** Extra, adapter-only options; the shared `RendererConfig` is not modified. */
 export interface RendererAdapterOptions {
   /** URL of the wasm-bindgen output (`clubscape_renderer_bg.wasm`). Defaults to the sibling `pkg/` file. */
@@ -534,13 +548,14 @@ export const createRenderer: (canvas: HTMLCanvasElement, config: RendererConfig,
         inFlight += 1;
         try {
           const record = await renderer.frame(nowMs);
-          const frame: RenderFrame = {
+          const frame: ClubscapeRenderFrame = {
             sequence: record.sequence,
             submittedAtMs: record.submitted_at_ms,
             completedAtMs: record.completed_at_ms,
             drawCalls: record.draw_calls,
             primitives: record.primitives,
             cpuEncodeMs: record.cpu_encode_ms,
+            cpuBreakdownMs: { build: record.cpu_build_ms, pack: record.cpu_pack_ms, upload: record.cpu_upload_ms, present: record.cpu_present_ms },
             ...(record.gpu_duration_known ? { gpuDurationMs: record.gpu_duration_ms } : {}),
           };
           if (record.skipped.length > 0) diagnostic(`entities skipped: ${record.skipped}`);

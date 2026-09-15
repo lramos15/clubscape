@@ -416,19 +416,20 @@ impl<'a> ModelDrawer<'a> {
             let var14 = avg(1, 2);
             let var15 = avg(3, 4);
             let var16 = avg(6, 8);
-            let list10: Vec<u32> = s.priority_lists[10].clone();
-            let list11: Vec<u32> = s.priority_lists[11].clone();
-            let d10: Vec<i32> = s.depth10.clone();
-            let d11: Vec<i32> = s.depth11.clone();
-            let ordered: Vec<Vec<u32>> = (0..10).map(|p| s.priority_lists[p].clone()).collect();
+            // Move the per-priority lists out of the scratch (no per-model allocation) so faces
+            // can be emitted through `&mut self`; they are handed back below.
+            let lists: [Vec<u32>; 12] = std::mem::take(&mut s.priority_lists);
+            let d10: Vec<i32> = std::mem::take(&mut s.depth10);
+            let d11: Vec<i32> = std::mem::take(&mut s.depth11);
+            let (list10, list11) = (&lists[10], &lists[11]);
             // Cursor over the priority-10 list followed by the priority-11 list.
             let mut using11 = list10.is_empty();
             let mut idx = 0usize;
             let current_depth = |using11: bool, idx: usize| -> i32 {
                 let (list, depths) = if using11 {
-                    (&list11, &d11)
+                    (list11, &d11)
                 } else {
-                    (&list10, &d10)
+                    (list10, &d10)
                 };
                 if idx < list.len() { depths[idx] } else { -1000 }
             };
@@ -449,28 +450,60 @@ impl<'a> ModelDrawer<'a> {
                 *var17 = current_depth(*using11, *idx);
                 Ok(())
             };
-            for var9 in 0..10usize {
-                while var9 == 0 && var17 > var14 {
-                    emit_dynamic(self, &mut using11, &mut idx, &mut var17, out)?;
+            let mut result = Ok(());
+            'draw: {
+                for var9 in 0..10usize {
+                    while var9 == 0 && var17 > var14 {
+                        if let Err(e) = emit_dynamic(self, &mut using11, &mut idx, &mut var17, out)
+                        {
+                            result = Err(e);
+                            break 'draw;
+                        }
+                    }
+                    while var9 == 3 && var17 > var15 {
+                        if let Err(e) = emit_dynamic(self, &mut using11, &mut idx, &mut var17, out)
+                        {
+                            result = Err(e);
+                            break 'draw;
+                        }
+                    }
+                    while var9 == 5 && var17 > var16 {
+                        if let Err(e) = emit_dynamic(self, &mut using11, &mut idx, &mut var17, out)
+                        {
+                            result = Err(e);
+                            break 'draw;
+                        }
+                    }
+                    for &face in &lists[var9] {
+                        if let Err(e) = self.draw_face(model, face as usize, pick, out) {
+                            result = Err(e);
+                            break 'draw;
+                        }
+                    }
                 }
-                while var9 == 3 && var17 > var15 {
-                    emit_dynamic(self, &mut using11, &mut idx, &mut var17, out)?;
-                }
-                while var9 == 5 && var17 > var16 {
-                    emit_dynamic(self, &mut using11, &mut idx, &mut var17, out)?;
-                }
-                for &face in &ordered[var9] {
-                    self.draw_face(model, face as usize, pick, out)?;
+                while var17 != -1000 {
+                    if let Err(e) = emit_dynamic(self, &mut using11, &mut idx, &mut var17, out) {
+                        result = Err(e);
+                        break 'draw;
+                    }
                 }
             }
-            while var17 != -1000 {
-                emit_dynamic(self, &mut using11, &mut idx, &mut var17, out)?;
-            }
+            let s = &mut *self.scratch;
+            s.priority_lists = lists;
+            s.depth10 = d10;
+            s.depth11 = d11;
+            result?;
         } else {
-            let order: Vec<u32> = s.order.iter().map(|&(_, f)| f).collect();
-            for face in order {
-                self.draw_face(model, face as usize, pick, out)?;
+            let order = std::mem::take(&mut s.order);
+            let mut result = Ok(());
+            for &(_, face) in &order {
+                if let Err(e) = self.draw_face(model, face as usize, pick, out) {
+                    result = Err(e);
+                    break;
+                }
             }
+            self.scratch.order = order;
+            result?;
         }
         Ok(())
     }

@@ -197,6 +197,8 @@ pub struct SceneDrawer {
     scene_camera: SceneCamera,
     tile_scratch: TileScratch,
     model_scratch: ModelScratch,
+    /// Projected output of static placements for the current camera (see [`StaticModelCache`]).
+    model_cache: StaticModelCache,
     pub picks: Vec<PickTarget>,
     /// Objects whose model reference was missing (asset failure surfaced, never silently skipped).
     pub missing_models: Vec<i32>,
@@ -254,6 +256,7 @@ impl SceneDrawer {
             scene_camera: SceneCamera::from_angles(0, 0, far_clip),
             tile_scratch: TileScratch::default(),
             model_scratch: ModelScratch::default(),
+            model_cache: StaticModelCache::default(),
             picks: Vec::new(),
             missing_models: Vec::new(),
             scratch_objects: Vec::new(),
@@ -573,6 +576,19 @@ impl SceneDrawer {
             yaw_cos: t.cosf16384[y],
         };
         self.scene_camera = SceneCamera::from_angles(pitch, view.yaw, view.far_clip);
+        self.model_cache.begin_frame(CameraSignature {
+            cp: self.cp,
+            cq: self.cq,
+            cl: self.cl,
+            pitch,
+            yaw: view.yaw,
+            far_clip: view.far_clip,
+            width: self.state.width,
+            height: self.state.height,
+            center_x: self.state.center_x,
+            center_y: self.state.center_y,
+            zoom: self.state.zoom,
+        });
         // bh(true, kb)
         self.frame = self.frame.wrapping_add(1);
         let dd = scene.draw_distance;
@@ -796,6 +812,21 @@ impl SceneDrawer {
             self.missing_models.push(model_index);
             return;
         };
+        // Static placements project identically while the camera holds still: replay the
+        // cached triangles (with this frame's pick id) instead of re-projecting the model.
+        let key = (model_index < TEMP_MODEL_BASE).then_some(StaticPlacementKey {
+            model: model_index,
+            orientation,
+            x,
+            height,
+            z,
+        });
+        if let Some(key) = key
+            && self.model_cache.replay(key, pick, out)
+        {
+            return;
+        }
+        let start = out.len();
         let mut drawer = ModelDrawer {
             state: self.state,
             palette: &self.palette,
@@ -812,6 +843,14 @@ impl SceneDrawer {
             pick,
             out,
         );
+        if let Some(key) = key {
+            self.model_cache.store(key, &out[start..]);
+        }
+    }
+
+    /// Cache statistics of the last frame: (static placements replayed, projected).
+    pub fn model_cache_stats(&self) -> (usize, usize) {
+        (self.model_cache.hits, self.model_cache.misses)
     }
 
     fn draw_paint(
@@ -1542,6 +1581,83 @@ impl SceneDrawer {
                     self.enqueue(n3);
                 }
             }
+        }
+    }
+}
+
+/// Everything the projected output of a static placement depends on besides the placement.
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+struct CameraSignature {
+    cp: i32,
+    cq: i32,
+    cl: i32,
+    pitch: i32,
+    yaw: i32,
+    far_clip: i32,
+    width: i32,
+    height: i32,
+    center_x: i32,
+    center_y: i32,
+    zoom: i32,
+}
+
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash)]
+struct StaticPlacementKey {
+    model: i32,
+    orientation: i32,
+    x: i32,
+    height: i32,
+    z: i32,
+}
+
+/// Projected triangles of static placements (scene models at fixed positions) for one camera
+/// signature. The traversal order and every draw decision still run each frame; only the
+/// per-model projection is replayed, so the triangle stream is identical to a full rebuild.
+/// Entries are stored only once the camera has held still for a frame (a moving camera pays
+/// no copy), and dropped whenever the signature changes.
+#[derive(Default)]
+struct StaticModelCache {
+    camera: Option<CameraSignature>,
+    /// Whether the current camera equals the previous frame's (entries may be stored).
+    settled: bool,
+    entries: HashMap<StaticPlacementKey, Vec<Tri>>,
+    hits: usize,
+    misses: usize,
+}
+
+impl StaticModelCache {
+    fn begin_frame(&mut self, camera: CameraSignature) {
+        if self.camera == Some(camera) {
+            self.settled = true;
+        } else {
+            self.camera = Some(camera);
+            self.settled = false;
+            self.entries.clear();
+        }
+        self.hits = 0;
+        self.misses = 0;
+    }
+
+    fn replay(&mut self, key: StaticPlacementKey, pick: u32, out: &mut Vec<Tri>) -> bool {
+        match self.entries.get(&key) {
+            Some(tris) => {
+                out.extend(tris.iter().map(|tri| Tri { pick, ..*tri }));
+                self.hits += 1;
+                true
+            }
+            None => {
+                self.misses += 1;
+                false
+            }
+        }
+    }
+
+    fn store(&mut self, key: StaticPlacementKey, tris: &[Tri]) {
+        if self.settled {
+            self.entries.insert(
+                key,
+                tris.iter().map(|tri| Tri { pick: 0, ..*tri }).collect(),
+            );
         }
     }
 }

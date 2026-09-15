@@ -152,17 +152,37 @@ map-square edge, replays the 58 approved model captures, runs the scenarios (gea
 required action motion, ground items + fire, door state, roof mode, interface preview readback;
 `--scenarios 0` skips), checks 1024×768 / 1280×720 / 2560×1440, a live resize and picks, and
 writes `report.json` with GPU-completed frame statistics. `--workload-ms N` adds a frozen
-representative workload (streamed Lumbridge scene, geared walking player, 7 animated NPCs, fire,
-ground items; ≈ 69k primitives).
+representative workload (streamed Lumbridge scene, geared fighting player, 7 animated NPCs, fire,
+ground items; ≈ 69k primitives) with the camera held on the player; `--workload-moving 1` glides
+the camera one tile per 0.6 s instead (the original walk pace), so every frame re-projects the
+whole scene; `--uncapped 1` removes Chrome's 60 Hz compositor pacing to measure the throughput
+ceiling (frames are still presented). Each frame record carries `cpuBreakdownMs`
+(`build` = traversal + projection, `pack` = GPU layout + bins, `upload`, `present`).
 
-Latest Sparky results (Chrome 153, Xvfb, NVIDIA GB10; not an owner/Mac/Edge acceptance):
-every scene and model capture identical to the source PNGs (2073600/2073600 pixels);
-fixture scenes 1749–1802 GPU-completed frames per 30 s (58.3–60.1 fps, GPU pass 0.5–0.9 ms);
-workload 30 s: 1802 frames (59.85 fps), CPU build p50 7 / p95 12 ms, GPU p50 1.5 / p95 3.1 ms,
-completion gap p95 30 ms, max 36 ms; workload 180 s: 10801 frames (59.85 fps), GPU p95 3.1 ms,
-completion gap p95 28 ms, max 55 ms, 61 of 10800 gaps above 33.4 ms. These are Sparky
-engineering measurements of genuine GPU-completed frames (RAF-capped at 60 Hz under Xvfb), not
-the ≥ 60 fps contract proof on the owner's hardware.
+Performance work in the renderer: static placements (scene models at fixed positions) are
+projected once per camera signature and replayed while the camera holds still (the traversal
+and every draw decision still run each frame; `tests/static_cache.rs` proves the stream equals a
+fresh build, actors moving included, and that a camera move drops the cache); the model face
+ordering and the GPU packing no longer allocate per model/frame. Nothing is culled, scaled or
+skipped: primitives, resolution and draw distance are unchanged.
+
+Latest Sparky results (Chrome 153, Xvfb, NVIDIA GB10, 1920×1080; not an owner/Mac/Edge
+acceptance): every scene and model capture identical to the source PNGs (2073600/2073600
+pixels). Frozen workload at the display cadence — 30 s: 1802 GPU-completed frames, 60.01 fps
+between the first and last completion (59.67 fps over the harness window, which includes the
+harness's own wait/evaluate overhead), CPU p50 5 / p95 8 ms (build 3 / pack 2 / upload 1),
+GPU p95 2.6 ms, completion gap p95 18 ms, max 28 ms, 0 gaps above 33.4 ms; 180 s: 10801
+frames, 60.00 fps between completions (59.75 over the window), CPU p50 6 / p95 8 ms, GPU p95
+2.9 ms, gap p95 20 ms, max 37 ms, 1 of 10800 gaps above 33.4 ms. Moving camera, 30 s: 1800
+frames, 59.96 fps between completions, CPU p50 7 / p95 10 ms (build 5), gap p95 20 ms, max
+35 ms, 1 gap above 33.4 ms, 59.5k–81.5k primitives. Uncapped throughput ceiling, 30 s: 73.5 fps
+(static camera) and 99.1 fps (moving camera; the static case is bounded by main-thread
+completion scheduling, not by CPU or GPU time). Before this work the same workload measured
+59.85 fps with gap p95 28–30 ms and 61 gaps above 33.4 ms per 180 s. These remain Sparky
+engineering measurements of genuine GPU-completed frames — the display cadence is Chrome's
+60 Hz compositor under Xvfb, so "60.00 fps" is the cadence with no dropped frame, not a
+renderer ceiling — and are not the frozen ≥ 60 fps / gap-p95 contract proof on the owner's
+hardware; the 180 s gap p95 sits exactly at 20 ms.
 
 ## Contract notes for the shell
 

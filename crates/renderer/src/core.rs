@@ -2320,6 +2320,14 @@ impl RendererCore {
         &self.tris
     }
 
+    /// Static-placement projection cache statistics of the last frame: (replayed, projected).
+    pub fn model_cache_stats(&self) -> (usize, usize) {
+        self.drawer
+            .as_ref()
+            .map(|d| d.model_cache_stats())
+            .unwrap_or((0, 0))
+    }
+
     pub fn load_model(&mut self, id: &str, bytes: &[u8]) -> Result<(), RenderError> {
         let model = Model::from_chunks(bytes)?;
         self.models.insert(id.to_string(), model);

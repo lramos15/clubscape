@@ -28,6 +28,7 @@ use wasm_bindgen_futures::future_to_promise;
 
 use crate::core::{Camera, ModelFixture, PlayerPreview, RendererCore, WorldPick};
 use crate::error::RenderError;
+use crate::gpu::pack::{PackScratch, PackedFrame};
 use crate::gpu::{GpuRasterizer, GpuTextures, pack_frame};
 use crate::palette::Palette;
 
@@ -64,6 +65,9 @@ struct Inner {
     /// Separate small rasterizer for interface model previews (surface-sized, coverage alpha).
     preview_raster: Option<GpuRasterizer>,
     preview_dirty: bool,
+    /// Reused GPU-layout buffers of the scene frame (no per-frame allocation once warm).
+    packed: PackedFrame,
+    pack_scratch: PackScratch,
 }
 
 #[wasm_bindgen]
@@ -79,6 +83,12 @@ pub struct FrameRecordJs {
     pub draw_calls: u32,
     pub primitives: u32,
     pub cpu_encode_ms: f64,
+    /// CPU breakdown of `cpu_encode_ms`: scene build (traversal + projection), GPU-layout
+    /// packing, buffer upload + compute encode/submit, canvas acquire/blit/present.
+    pub cpu_build_ms: f64,
+    pub cpu_pack_ms: f64,
+    pub cpu_upload_ms: f64,
+    pub cpu_present_ms: f64,
     pub gpu_duration_ms: f64,
     pub gpu_duration_known: bool,
     pub entities_drawn: u32,
@@ -198,6 +208,8 @@ impl WasmRenderer {
                 textures_dirty: true,
                 preview_raster: None,
                 preview_dirty: true,
+                packed: PackedFrame::default(),
+                pack_scratch: PackScratch::default(),
             };
             Ok(WasmRenderer {
                 inner: Rc::new(RefCell::new(inner)),
@@ -423,7 +435,18 @@ impl WasmRenderer {
                     }
                 };
                 let state = inner.core.state;
-                let packed = pack_frame(&state, inner.core.triangles(), &inner.core.textures);
+                let t_built = js_sys::Date::now();
+                {
+                    let Inner {
+                        core,
+                        packed,
+                        pack_scratch,
+                        ..
+                    } = &mut *inner;
+                    packed.pack(pack_scratch, &state, core.triangles(), &core.textures);
+                }
+                let t_packed = js_sys::Date::now();
+                let t_uploaded;
                 let (w, h) = (inner.width, inner.height);
                 let (gpu_frame, presented, texture_fallbacks) = {
                     let Inner {
@@ -431,11 +454,13 @@ impl WasmRenderer {
                         surface,
                         queue,
                         format,
+                        packed,
                         ..
                     } = &mut *inner;
                     let raster = raster.as_mut().expect("raster created above");
                     raster.resize(w, h);
-                    let gpu_frame = raster.render(&state, &packed, clear).map_err(js_err)?;
+                    let gpu_frame = raster.render(&state, packed, clear).map_err(js_err)?;
+                    t_uploaded = js_sys::Date::now();
                     let surface_texture = match surface.get_current_texture() {
                         wgpu::CurrentSurfaceTexture::Success(t)
                         | wgpu::CurrentSurfaceTexture::Suboptimal(t) => t,
@@ -456,7 +481,8 @@ impl WasmRenderer {
                         raster.last_record.texture_fallbacks,
                     )
                 };
-                let cpu_encode_ms = js_sys::Date::now() - cpu_start;
+                let t_presented = js_sys::Date::now();
+                let cpu_encode_ms = t_presented - cpu_start;
                 inner.sequence += 1;
                 let summary = inner.core.last_summary.clone();
                 let record = FrameRecordJs {
@@ -466,6 +492,10 @@ impl WasmRenderer {
                     draw_calls: 2,
                     primitives: summary.triangles as u32,
                     cpu_encode_ms,
+                    cpu_build_ms: t_built - cpu_start,
+                    cpu_pack_ms: t_packed - t_built,
+                    cpu_upload_ms: t_uploaded - t_packed,
+                    cpu_present_ms: t_presented - t_uploaded,
                     gpu_duration_ms: 0.0,
                     gpu_duration_known: false,
                     entities_drawn: summary.entities_drawn as u32,

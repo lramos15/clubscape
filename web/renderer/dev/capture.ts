@@ -79,7 +79,9 @@ async function main(): Promise<void> {
     headless: false,
     chromiumSandbox: true,
     ignoreDefaultArgs: ["--enable-unsafe-swiftshader"],
-    args: ["--enable-automation", ...GRAPHICS_ARGS],
+    // `--uncapped 1` removes Chrome's 60 Hz compositor pacing so the throughput ceiling can be
+    // measured; frames are still real presented frames. Default runs keep the display cadence.
+    args: ["--enable-automation", ...GRAPHICS_ARGS, ...(argValue("--uncapped", "0") === "1" ? ["--disable-frame-rate-limit", "--disable-gpu-vsync"] : [])],
     viewport: { width: 1920, height: 1080 },
     deviceScaleFactor: 1,
     locale: "en-US",
@@ -170,8 +172,9 @@ async function main(): Promise<void> {
       // Frozen representative workload: geared player, animated NPCs, fire and ground items in the
       // streamed Lumbridge scene; every counted frame is a GPU-completed record.
       const workloadMs = Number(argValue("--workload-ms", "0"));
+      const workloadScenario = argValue("--workload-moving", "0") === "1" ? "workload-moving" : "workload";
       if (workloadMs > 0) {
-        const applied = await page.evaluate(() => window.__clubscapeDev.applyScenario!("workload"));
+        const applied = await page.evaluate((s) => window.__clubscapeDev.applyScenario!(s), workloadScenario);
         await waitFrames(page, (await snapshot(page, null)).renderedFrames + 5);
         await canvas.screenshot({ path: path.join(out, "region-workload-lumbridge-castle.png") });
         const before = await snapshot(page, null);
@@ -179,22 +182,32 @@ async function main(): Promise<void> {
         await page.waitForTimeout(workloadMs);
         const after = await snapshot(page, before.renderedFrames);
         const elapsedMs = Date.now() - started;
-        const frames: Array<{ sequence: number; submittedAtMs: number; completedAtMs: number; cpuEncodeMs?: number; gpuDurationMs?: number; primitives: number }> = after.frames;
+        const frames: Array<{ sequence: number; submittedAtMs: number; completedAtMs: number; cpuEncodeMs?: number; gpuDurationMs?: number; primitives: number; cpuBreakdownMs?: { build: number; pack: number; upload: number; present: number } }> = after.frames;
         const latency = frames.map((f) => f.completedAtMs - f.submittedAtMs);
+        const breakdown = (key: "build" | "pack" | "upload" | "present") => {
+          const values = frames.map((f) => f.cpuBreakdownMs?.[key] ?? 0);
+          return { p50: percentile(values, 0.5), p95: percentile(values, 0.95), max: Math.max(...values) };
+        };
         const gaps = frames.slice(1).map((f, i) => f.completedAtMs - frames[i]!.completedAtMs);
         const counted = after.renderedFrames - before.renderedFrames;
+        // Rate from the GPU-completed records themselves (first to last completion), free of the
+        // harness's own wait/evaluate overhead that `fps` divides by.
+        const span = frames.length > 1 ? frames[frames.length - 1]!.completedAtMs - frames[0]!.completedAtMs : 0;
+        const completionFps = span > 0 ? (frames.length - 1) / (span / 1000) : 0;
         const workload = {
-          screenshot: "region-workload-lumbridge-castle.png", applied, windowMs: workloadMs, elapsedMs,
-          gpuCompletedFrames: counted, recordedFrames: frames.length, fps: counted / (elapsedMs / 1000),
+          screenshot: "region-workload-lumbridge-castle.png", scenario: workloadScenario, applied, windowMs: workloadMs, elapsedMs,
+          gpuCompletedFrames: counted, recordedFrames: frames.length, fps: counted / (elapsedMs / 1000), completionFps,
           primitives: { min: Math.min(...frames.map((f) => f.primitives)), max: Math.max(...frames.map((f) => f.primitives)) },
           cpuEncodeMs: { p50: percentile(frames.map((f) => f.cpuEncodeMs ?? 0), 0.5), p95: percentile(frames.map((f) => f.cpuEncodeMs ?? 0), 0.95), max: Math.max(...frames.map((f) => f.cpuEncodeMs ?? 0)) },
+          cpuBreakdownMs: { build: breakdown("build"), pack: breakdown("pack"), upload: breakdown("upload"), present: breakdown("present") },
           gpuDurationMs: { p50: percentile(frames.flatMap((f) => f.gpuDurationMs === undefined ? [] : [f.gpuDurationMs]), 0.5), p95: percentile(frames.flatMap((f) => f.gpuDurationMs === undefined ? [] : [f.gpuDurationMs]), 0.95), known: frames.filter((f) => f.gpuDurationMs !== undefined).length },
           submitToCompleteMs: { p50: percentile(latency, 0.5), p95: percentile(latency, 0.95), max: latency.length ? Math.max(...latency) : null },
           completionGapMs: { p50: percentile(gaps, 0.5), p95: percentile(gaps, 0.95), max: gaps.length ? Math.max(...gaps) : null, over33ms: gaps.filter((g) => g > 33.4).length },
+          pacing: argValue("--uncapped", "0") === "1" ? "uncapped (--disable-frame-rate-limit --disable-gpu-vsync)" : "display cadence (Chrome compositor 60 Hz)",
           note: "Xvfb headful Chrome 153 on the Sparky GB10; frames are queue-completion records, not requestAnimationFrame counts. Not an owner/Mac/Edge acceptance measurement.",
         };
         regionResults.push({ step: "workload", tile: [3222, 3218], ...workload });
-        console.log(`workload ${workloadMs} ms: ${counted} GPU-completed frames (${workload.fps.toFixed(2)} fps), prims ${workload.primitives.min}..${workload.primitives.max}, gpu p95 ${workload.gpuDurationMs.p95}, gap p95 ${workload.completionGapMs.p95} max ${workload.completionGapMs.max}, gaps>33ms ${workload.completionGapMs.over33ms}`);
+        console.log(`${workloadScenario} ${workloadMs} ms: ${counted} GPU-completed frames (${workload.fps.toFixed(2)} fps over the harness window, ${completionFps.toFixed(2)} fps between first and last completion), prims ${workload.primitives.min}..${workload.primitives.max}, cpu p50 ${workload.cpuEncodeMs.p50} p95 ${workload.cpuEncodeMs.p95} (build/pack/upload/present p50 ${workload.cpuBreakdownMs.build.p50}/${workload.cpuBreakdownMs.pack.p50}/${workload.cpuBreakdownMs.upload.p50}/${workload.cpuBreakdownMs.present.p50}), gpu p95 ${workload.gpuDurationMs.p95}, gap p95 ${workload.completionGapMs.p95} max ${workload.completionGapMs.max}, gaps>33ms ${workload.completionGapMs.over33ms}`);
         await page.evaluate(() => window.__clubscapeDev.walkTo!(3222, 3218));
       }
       // Walk north-west in 4-tile steps toward Draynor's square edge; the scene must recenter.

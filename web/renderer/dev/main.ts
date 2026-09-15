@@ -265,12 +265,30 @@ async function main(): Promise<void> {
       await handle.loadScene(sceneId);
       const px = Number(param("px", "3222"));
       const py = Number(param("py", "3218"));
-      const follow = (x: number, y: number) => {
+      /** Camera offset in source units applied on top of the followed tile (moving workload). */
+      let cameraShift = 0;
+      let cameraTile = { x: px, y: py };
+      const placeCamera = () => {
         handle.camera({
-          x: x * 128 + 64, height: Number(param("cam_h", "-1540")), y: (y - 8) * 128, pitch: 2048, yaw: Number(param("yaw", "0")),
+          x: cameraTile.x * 128 + 64 + Math.trunc(cameraShift), height: Number(param("cam_h", "-1540")), y: (cameraTile.y - 8) * 128, pitch: 2048, yaw: Number(param("yaw", "0")),
           unitsPerTurn: 16384, zoom: sourceZoomForViewportHeight(canvas.height), near: 50, far: 32768,
         });
+      };
+      const follow = (x: number, y: number) => {
+        cameraTile = { x, y };
+        cameraShift = 0;
+        placeCamera();
         handle.update(devWorld(x, y, sceneId));
+      };
+      /** Moving-camera workload: the camera glides one tile per 0.6 s (the original walk pace)
+       *  back and forth, so every frame re-projects the whole scene (no static replay). */
+      let moving = false;
+      let movingDirection = 1;
+      const advanceCamera = () => {
+        if (!moving) return;
+        cameraShift += movingDirection * (128 / 36);
+        if (Math.abs(cameraShift) >= 128 * 3) movingDirection = -movingDirection;
+        placeCamera();
       };
       follow(px, py);
       const minimapCanvas = document.getElementById("minimap") as HTMLCanvasElement;
@@ -288,9 +306,12 @@ async function main(): Promise<void> {
       window.__clubscapeDev.walkTo = (x: number, y: number) => { follow(x, y); };
       window.__clubscapeDev.minimap = () => showMinimap();
       window.__clubscapeDev.applyScenario = async (name: string) => {
-        if (name === "workload") {
+        if (name === "workload" || name === "workload-moving") {
+          moving = name === "workload-moving";
+          cameraShift = 0;
+          placeCamera();
           handle.update(workloadWorld(px, py, sceneId));
-          return { fit: handle.playerFitReport(), placement: handle.scenePlacement() };
+          return { fit: handle.playerFitReport(), placement: handle.scenePlacement(), movingCamera: moving };
         }
         if (name === "door-open" || name === "door-closed") {
           // Lumbridge castle west large door (source object 12349 at 3213,3221, exported with its
@@ -298,13 +319,14 @@ async function main(): Promise<void> {
           handle.update(devWorld(px, py, sceneId, name === "door-open" ? [{ id: "door-dev", objectId: "asset.source.osrs.cache2695.object.12349", tile: { x: 3213, y: 3221, plane: 0 }, instance: null, doorOpen: true, quarterTurns: 1 }] : []));
           return showMinimap();
         }
-        throw new Error(`region mode knows workload/door-open/door-closed, not ${name}`);
+        throw new Error(`region mode knows workload/workload-moving/door-open/door-closed, not ${name}`);
       };
       state.ready = true;
       publish();
       if (param("status", "0") === "1") status.hidden = false;
       const loop = () => {
         if (!state.paused) {
+          advanceCamera();
           handle.frame(performance.now()).then((frame) => {
             if (frame && !status.hidden) {
               const d = handle.diagnostics();
