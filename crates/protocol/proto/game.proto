@@ -350,12 +350,23 @@ message GameplayUiRequest {
     UiChat public_chat = 18;
     UiDocumentPage document_page = 19;
     UiIdentity placeholder = 20;
+    UiProductionAll production_all = 22;
+    UiBankAmount bank_amount = 23;
+    UiRecoveryTake recovery_take = 24;
+    UiRecoveryBankAll recovery_bank_all = 25;
   }
 }
 message UiIdentity { string id = 1; }
 message UiTab { uint32 tab = 1; }
 message UiToggle { bool enabled = 1; }
 message UiProductionSelection { string menu_id = 1; string recipe = 2; uint32 quantity = 3; ProductionMode mode = 4; }
+message UiProductionAll { string menu_id = 1; string recipe = 2; }
+message UiAmount { oneof selection { uint32 quantity = 1; Empty all = 2; } }
+message UiBankAmount { UiAmount amount = 1; bool noted = 2; }
+message UiRecoveryItemAmount { string id = 1; UiAmount amount = 2; }
+message UiRecoveryRecordSelection { string death = 1; repeated string items = 2; }
+message UiRecoveryTake { string death = 1; RecoveryStorage storage = 2; repeated UiRecoveryItemAmount items = 3; }
+message UiRecoveryBankAll { repeated UiRecoveryRecordSelection records = 1; }
 message UiItemAction { uint32 inventory_slot = 1; string expected_item = 2; optional string expected_instance = 3; string action = 4; }
 message UiBankMove { string entry_id = 1; optional string before_entry_id = 2; uint32 tab = 3; }
 message UiBankWithdrawal { string entry_id = 1; uint32 quantity = 2; bool noted = 3; }
@@ -367,7 +378,7 @@ message UiDocumentPage { string id = 1; uint32 page = 2; }
 
 message UiItem { Stack stack = 1; string name = 2; optional uint32 source_id = 3; optional string asset = 4; }
 message UiXp { string skill = 1; string amount_tenths = 2; }
-message UiProductionChoice { string recipe = 1; string name = 2; repeated UiItem outputs = 3; Permission single = 4; Permission make_x = 5; }
+message UiProductionChoice { string recipe = 1; string name = 2; repeated UiItem outputs = 3; Permission single = 4; Permission make_x = 5; Permission all = 6; }
 // target is absent for genuine inventory-only production, never a fabricated facility.
 message UiProduction { string id = 1; string interface = 2; WorldTarget target = 3; repeated UiProductionChoice recipes = 4; }
 message UiReward {
@@ -394,9 +405,25 @@ message UiBank {
   string revision = 1; uint32 capacity = 2; uint32 selected_tab = 3; bool insert_mode = 4; bool placeholders = 5;
   uint32 amount = 6; bool noted = 7; repeated UiBankTab tabs = 8; repeated UiBankEntry entries = 9;
   Permission deposit_equipment = 10; repeated UiItemOperation unavailable_containers = 11;
+  UiAmount amount_selection = 12;
 }
 message UiDeathPreview { string scope = 1; repeated UiItem kept = 2; repeated UiItem lost = 3; string full_grave_fee = 4; string full_office_fee = 5; string value_revision = 6; }
-message UiRecoveryControls { string coffer_balance = 1; Permission discard = 2; Permission coffer_offer = 3; repeated UiInventoryActions coffer_items = 4; }
+message UiRecoveryControls {
+  string coffer_balance = 1; Permission discard = 2; Permission coffer_offer = 3;
+  repeated UiInventoryActions coffer_items = 4; UiRecoveryManagement management = 5;
+}
+message UiRecoveryEntryControl {
+  string id = 1; UiItem item = 2; string unit_fee = 3; string full_stack_fee = 4;
+  uint32 inventory_capacity = 5; uint32 bank_capacity = 6; Permission take = 7; Permission bank = 8;
+}
+message UiRecoveryPanelControl {
+  string death = 1; RecoveryStorage storage = 2; repeated UiRecoveryEntryControl entries = 3;
+  string full_selection_fee = 4; Permission take_all = 5;
+}
+message UiRecoveryManagement {
+  string bank_revision = 1; repeated UiRecoveryPanelControl panels = 2;
+  Permission bank_all = 3; repeated UiRecoveryRecordSelection bank_all_records = 4;
+}
 message UiAppearanceChoice { uint32 value = 1; optional string label = 2; Permission permission = 3; }
 message UiAppearanceParameter { string key = 1; repeated UiAppearanceChoice choices = 2; }
 message UiPenguinBase { string asset = 1; uint32 source_npc = 2; string adaptation = 3; }

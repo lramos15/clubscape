@@ -70,6 +70,8 @@ pub struct ProductionChoiceUiView {
     pub outputs: Vec<UiItem>,
     pub single: UiPermission,
     pub make_x: UiPermission,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub all: Option<UiPermission>,
 }
 
 #[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
@@ -158,6 +160,8 @@ pub struct BankUiView {
     pub insert_mode: bool,
     pub placeholders: bool,
     pub amount: u32,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub amount_selection: Option<crate::UiAmount>,
     pub noted: bool,
     pub tabs: Vec<BankTabUiView>,
     pub entries: Vec<BankEntryUiView>,
@@ -200,6 +204,8 @@ pub struct RecoveryUiControls {
     pub discard: UiPermission,
     pub coffer_offer: UiPermission,
     pub coffer_items: Vec<InventoryActionsUiView>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub management: Option<crate::RecoveryManagementView>,
 }
 #[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]

@@ -3,6 +3,7 @@ use serde::{Deserialize, Serialize};
 use std::collections::{BTreeMap, BTreeSet};
 
 pub const UI_STATE_VERSION: u32 = 1;
+pub const BANK_LAYOUT_AMOUNT_VERSION: u32 = 2;
 
 #[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]
@@ -21,6 +22,8 @@ pub struct GameplayUiDefinition {
     pub unarmed_style_names: BTreeMap<CombatStyleId, String>,
     pub item_actions: BTreeMap<ItemId, Vec<ItemUiDefinition>>,
     pub bank: BankUiDefinition,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub recovery: Option<RecoveryUiDefinition>,
     pub coffer: SourceBinding<CofferUiDefinition>,
     pub chat: ChatUiDefinition,
     pub appearance_base: SourceBinding<PenguinBaseUiView>,
@@ -201,8 +204,24 @@ pub struct BankLayout {
     pub insert: bool,
     pub placeholders: bool,
     pub amount: u32,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub amount_all: Option<bool>,
     pub noted: bool,
 }
+
+impl BankLayout {
+    pub fn amount_selection(&self) -> GameResult<UiAmount> {
+        let quantity = Quantity::new(self.amount)?;
+        match (self.version, self.amount_all) {
+            (1, None) | (BANK_LAYOUT_AMOUNT_VERSION, Some(false)) => {
+                Ok(UiAmount::Quantity { quantity })
+            }
+            (BANK_LAYOUT_AMOUNT_VERSION, Some(true)) => Ok(UiAmount::All {}),
+            _ => Err(ui_state_error()),
+        }
+    }
+}
+
 #[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]
 pub struct BankLayoutEntry {
@@ -297,12 +316,14 @@ impl GameplayUiRuntime {
                 insert: definition.initial_insert,
                 placeholders: definition.initial_placeholders,
                 amount: 1,
+                amount_all: None,
                 noted: false,
             },
         })
     }
 
     pub fn validate_shape(&self) -> GameResult<()> {
+        self.bank.amount_selection()?;
         for selection in self
             .production
             .iter()
@@ -347,10 +368,7 @@ impl GameplayUiRuntime {
             || self.chat_ticks.len() > 128
             || self.chat_ticks.iter().any(|tick| *tick > i64::MAX as u64)
             || self.chat_ticks.windows(2).any(|ticks| ticks[0] > ticks[1])
-            || self.bank.version != 1
             || self.bank.entries.len() > 4096
-            || self.bank.amount == 0
-            || self.bank.amount > MAX_STACK_QUANTITY
             || self.bank.next_entry == 0
             || self.bank.next_entry > i64::MAX as u64
             || self.bank.revision > i64::MAX as u64

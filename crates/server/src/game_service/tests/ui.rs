@@ -1,7 +1,7 @@
 use super::*;
 use game::gameplay_ui_request::Request as Ui;
 
-fn pack() -> Pack {
+pub(super) fn pack() -> Pack {
     let mut pack = Pack::ui();
     pack.definition.initial_state.tile = fixtures::tile(1004, 1002);
     pack.definition.initial_state.inventory.slots[5] =
@@ -56,7 +56,7 @@ fn chat(text: &str) -> Ui {
     })
 }
 
-fn recovery_pack() -> Pack {
+pub(super) fn recovery_pack() -> Pack {
     let mut pack = Pack::combat();
     fixtures::ui::projection(&mut pack.definition);
     pack.definition.initial_state.interfaces = pack.definition.interfaces.keys().cloned().collect();
@@ -86,7 +86,7 @@ fn recovery_pack() -> Pack {
     pack
 }
 
-async fn wait_for(
+pub(super) async fn wait_for(
     endpoint: &Endpoint,
     account: &Account,
     joined: &game::WorldJoined,
@@ -103,6 +103,52 @@ async fn wait_for(
     })
     .await
     .expect("bounded real source-tick observation")
+}
+
+pub(super) async fn finish_disconnected_death(
+    database: &Database,
+    pack: &Pack,
+    actor: &ActorId,
+) -> DeathId {
+    let store = GameStore::new(database.pool.clone());
+    let lease = store
+        .acquire_world_lease(pack.world_id, OWNER_LEASE)
+        .await
+        .unwrap();
+    let engine = Arc::new(WorldEngine::new(Arc::new(pack.definition.clone())).unwrap());
+    let mut world = store.load_world(pack.world_id).await.unwrap();
+    for _ in 0..128 {
+        if matches!(
+            world.state.characters[actor].runtime.life,
+            LifeState::FirstDeathOffice { .. }
+        ) {
+            break;
+        }
+        let engine = engine.clone();
+        world = store
+            .commit_live_tick(&lease, world.state.tick, Vec::new(), move |world, _| {
+                let context = engine.tick_context(world)?;
+                engine.process_advanced_tick_with_context(
+                    world,
+                    &mut engine_fixtures::v2::Hits(0),
+                    &context,
+                )
+            })
+            .await
+            .unwrap()
+            .snapshot;
+    }
+    assert!(matches!(
+        world.state.characters[actor].runtime.life,
+        LifeState::FirstDeathOffice { .. }
+    ));
+    let death = world.state.characters[actor]
+        .runtime
+        .active_death
+        .clone()
+        .unwrap();
+    store.release_world_lease(&lease).await.unwrap();
+    death
 }
 
 #[test]
@@ -396,11 +442,9 @@ async fn authenticated_ui_controls_commit_once_and_preserve_bank_identity_across
         )
         .await
         .error(StatusCode::CONFLICT);
-    let production = Ui::Production(game::UiProductionSelection {
+    let production = Ui::ProductionAll(game::UiProductionAll {
         menu_id: menu.id,
         recipe: "recipe.test.bar".into(),
-        quantity: 1,
-        mode: game::ProductionMode::Single as i32,
     });
     let operation = Uuid::new_v4();
     let accepted = endpoint
@@ -1125,44 +1169,7 @@ async fn real_death_owned_reclaim_coffer_confirmation_and_discard_are_durable_pr
     .await
     .unwrap();
     service.stop().await.unwrap();
-    let store = GameStore::new(database.pool.clone());
-    let lease = store
-        .acquire_world_lease(pack.world_id, OWNER_LEASE)
-        .await
-        .unwrap();
-    let engine = Arc::new(WorldEngine::new(Arc::new(pack.definition.clone())).unwrap());
-    let mut world = store.load_world(pack.world_id).await.unwrap();
-    for _ in 0..128 {
-        if matches!(
-            world.state.characters[&actor].runtime.life,
-            LifeState::FirstDeathOffice { .. }
-        ) {
-            break;
-        }
-        let engine = engine.clone();
-        world = store
-            .commit_live_tick(&lease, world.state.tick, Vec::new(), move |world, _| {
-                let context = engine.tick_context(world)?;
-                engine.process_advanced_tick_with_context(
-                    world,
-                    &mut engine_fixtures::v2::Hits(0),
-                    &context,
-                )
-            })
-            .await
-            .unwrap()
-            .snapshot;
-    }
-    assert!(matches!(
-        world.state.characters[&actor].runtime.life,
-        LifeState::FirstDeathOffice { .. }
-    ));
-    let death = world.state.characters[&actor]
-        .runtime
-        .active_death
-        .clone()
-        .unwrap();
-    store.release_world_lease(&lease).await.unwrap();
+    let death = finish_disconnected_death(&database, &pack, &actor).await;
     let restarted = Live::start(pack.config(&database)).await;
     let account = restarted.endpoint.relogin(&account).await;
     let joined = restarted.endpoint.join(&account).await;

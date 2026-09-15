@@ -199,7 +199,11 @@ fn production_menu_has_real_target_and_single_make_x_one_remain_distinct() {
         failure_effects: Vec::new(),
         lifecycle: RecipeLifecycle::InventoryConversion,
     });
-    for (mode, delay) in [(ProductionMode::Single, 1), (ProductionMode::MakeX, 3)] {
+    for (mode, delay, all) in [
+        (ProductionMode::Single, 1, false),
+        (ProductionMode::MakeX, 3, false),
+        (ProductionMode::MakeX, 3, true),
+    ] {
         let (engine, mut world) = setup(content.clone());
         engine
             .apply_intent(
@@ -243,11 +247,18 @@ fn production_menu_has_real_target_and_single_make_x_one_remain_distinct() {
         ui(
             &engine,
             &mut world,
-            GameplayUiRequest::ProductionSelect {
-                menu_id: menu.id,
-                recipe: RecipeId::new("recipe.test.bar").unwrap(),
-                quantity: 1,
-                mode,
+            if all {
+                GameplayUiRequest::ProductionSelectAll {
+                    menu_id: menu.id,
+                    recipe: RecipeId::new("recipe.test.bar").unwrap(),
+                }
+            } else {
+                GameplayUiRequest::ProductionSelect {
+                    menu_id: menu.id,
+                    recipe: RecipeId::new("recipe.test.bar").unwrap(),
+                    quantity: 1,
+                    mode,
+                }
             },
         )
         .unwrap();
@@ -255,6 +266,133 @@ fn production_menu_has_real_target_and_single_make_x_one_remain_distinct() {
             matches!(&world.characters[&actor()].activity, Activity::ProducingSelected { next_tick, .. } if *next_tick == starts_at + delay)
         );
     }
+}
+
+#[test]
+fn make_all_derives_current_complete_input_sets_and_rejects_stale_menus() {
+    let mut content = data();
+    content.initial_state.tile = source::tile(1004, 1002);
+    let recipe = RecipeId::new("recipe.test.bar").unwrap();
+    for input in &content.recipes[&recipe].inputs {
+        for slot in &mut content.initial_state.inventory.slots {
+            if slot.as_ref().is_some_and(|stack| stack.item == input.item) {
+                *slot = None;
+            }
+        }
+        clubscape_simulation::inventory::add(
+            &mut content.initial_state.inventory,
+            &content.items,
+            &ItemStack {
+                quantity: Quantity::new(input.quantity.get() * 3).unwrap(),
+                ..input.clone()
+            },
+        )
+        .unwrap();
+    }
+    let (engine, mut world) = setup(content);
+    engine
+        .apply_intent(
+            &mut world,
+            &actor(),
+            &GameIntent::Interact {
+                target: SpawnId::new("spawn.test.furnace").unwrap(),
+                action: "Smelt".into(),
+            },
+            &mut NoRandom,
+        )
+        .unwrap();
+    let menu = engine
+        .ui_view(&world, &actor())
+        .unwrap()
+        .production
+        .unwrap();
+    assert!(menu.recipes[0].all.as_ref().unwrap().allowed);
+    next(&engine, &mut world);
+    let inventory = world.characters[&actor()].inventory.clone();
+    let request = GameplayUiRequest::ProductionSelectAll {
+        menu_id: menu.id,
+        recipe,
+    };
+    ui(&engine, &mut world, request.clone()).unwrap();
+    assert_eq!(world.characters[&actor()].inventory, inventory);
+    assert!(matches!(
+        &world.characters[&actor()].activity,
+        Activity::ProducingSelected {
+            remaining: 3,
+            mode: ProductionMode::MakeX,
+            ..
+        }
+    ));
+    let before = world.clone();
+    assert!(ui(&engine, &mut world, request).is_err());
+    assert_eq!(world, before);
+}
+
+#[test]
+fn semantic_bank_all_survives_serialization_and_literal_options_clear_it() {
+    let mut content = data();
+    content.initial_state.tile = source::tile(1002, 1001);
+    let (engine, mut world) = setup(content);
+    interact(&engine, &mut world, "Bank");
+    let before = world.characters[&actor()].clone();
+    let initial = engine.ui_view(&world, &actor()).unwrap().bank.unwrap();
+    assert_eq!(
+        initial.amount_selection,
+        Some(UiAmount::Quantity {
+            quantity: Quantity::new(1).unwrap()
+        })
+    );
+    let legacy = serde_json::to_value(&before.runtime.ui).unwrap();
+    assert!(legacy["bank"].get("amount_all").is_none());
+    ui(
+        &engine,
+        &mut world,
+        GameplayUiRequest::BankSetAmount {
+            amount: UiAmount::All {},
+            noted: true,
+        },
+    )
+    .unwrap();
+    let saved = serde_json::to_vec(&world).unwrap();
+    let mut damaged = serde_json::to_value(&world).unwrap();
+    let bank = &mut damaged["characters"][actor().as_str()]["runtime"]["ui"]["bank"];
+    assert_eq!(bank["version"], BANK_LAYOUT_AMOUNT_VERSION);
+    bank.as_object_mut().unwrap().remove("amount_all");
+    let damaged: WorldState = serde_json::from_value(damaged).unwrap();
+    assert!(
+        engine.ui_view(&damaged, &actor()).is_err(),
+        "versioned All history cannot become a legacy default"
+    );
+    let mut restored: WorldState = serde_json::from_slice(&saved).unwrap();
+    let bank = engine.ui_view(&restored, &actor()).unwrap().bank.unwrap();
+    assert_eq!(bank.amount_selection, Some(UiAmount::All {}));
+    assert_eq!(bank.amount, 1, "the old literal is not an All sentinel");
+    assert!(bank.noted);
+    assert_ne!(bank.revision, initial.revision);
+    let after = &restored.characters[&actor()];
+    assert_eq!(before.inventory, after.inventory);
+    assert_eq!(before.bank, after.bank);
+    assert_eq!(before.skills, after.skills);
+    assert_eq!(before.runtime.entitlements, after.runtime.entitlements);
+    assert_eq!(before.last_action_tick, after.last_action_tick);
+    ui(
+        &engine,
+        &mut restored,
+        GameplayUiRequest::BankSetOptions {
+            amount: 5,
+            noted: false,
+        },
+    )
+    .unwrap();
+    let bank = engine.ui_view(&restored, &actor()).unwrap().bank.unwrap();
+    assert_eq!(
+        bank.amount_selection,
+        Some(UiAmount::Quantity {
+            quantity: Quantity::new(5).unwrap()
+        })
+    );
+    assert_eq!(bank.amount, 5);
+    assert!(!bank.noted);
 }
 
 #[test]

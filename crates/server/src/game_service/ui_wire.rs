@@ -74,6 +74,63 @@ fn target(value: types::WorldTarget) -> game::WorldTarget {
     }
 }
 
+fn amount(value: types::UiAmount) -> game::UiAmount {
+    game::UiAmount {
+        selection: Some(match value {
+            types::UiAmount::Quantity { quantity } => {
+                game::ui_amount::Selection::Quantity(quantity.get())
+            }
+            types::UiAmount::All {} => game::ui_amount::Selection::All(game::Empty {}),
+        }),
+    }
+}
+
+fn storage(value: types::RecoveryStorage) -> i32 {
+    match value {
+        types::RecoveryStorage::Grave => game::RecoveryStorage::Grave as i32,
+        types::RecoveryStorage::DeathOffice => game::RecoveryStorage::DeathOffice as i32,
+    }
+}
+
+fn recovery_management(value: types::RecoveryManagementView) -> game::UiRecoveryManagement {
+    game::UiRecoveryManagement {
+        bank_revision: value.bank_revision,
+        panels: value
+            .panels
+            .into_iter()
+            .map(|panel| game::UiRecoveryPanelControl {
+                death: panel.death.to_string(),
+                storage: storage(panel.storage),
+                entries: panel
+                    .entries
+                    .into_iter()
+                    .map(|entry| game::UiRecoveryEntryControl {
+                        id: entry.id.to_string(),
+                        item: Some(item(entry.item)),
+                        unit_fee: entry.unit_fee,
+                        full_stack_fee: entry.full_stack_fee,
+                        inventory_capacity: entry.inventory_capacity,
+                        bank_capacity: entry.bank_capacity,
+                        take: Some(permission(entry.take)),
+                        bank: Some(permission(entry.bank)),
+                    })
+                    .collect(),
+                full_selection_fee: panel.full_selection_fee,
+                take_all: Some(permission(panel.take_all)),
+            })
+            .collect(),
+        bank_all: Some(permission(value.bank_all)),
+        bank_all_records: value
+            .bank_all_records
+            .into_iter()
+            .map(|record| game::UiRecoveryRecordSelection {
+                death: record.death.to_string(),
+                items: record.items.into_iter().map(|id| id.to_string()).collect(),
+            })
+            .collect(),
+    }
+}
+
 pub(super) fn view(value: types::GameplayUiView) -> Result<game::GameplayUiView, ApiError> {
     if value.version != types::GAMEPLAY_UI_VIEW_VERSION {
         return Err(ApiError::internal("ui_view_version"));
@@ -147,6 +204,7 @@ pub(super) fn view(value: types::GameplayUiView) -> Result<game::GameplayUiView,
                     outputs: choice.outputs.into_iter().map(item).collect(),
                     single: Some(permission(choice.single)),
                     make_x: Some(permission(choice.make_x)),
+                    all: choice.all.map(permission),
                 })
                 .collect(),
         }),
@@ -219,6 +277,7 @@ pub(super) fn view(value: types::GameplayUiView) -> Result<game::GameplayUiView,
             insert_mode: bank.insert_mode,
             placeholders: bank.placeholders,
             amount: bank.amount,
+            amount_selection: bank.amount_selection.map(amount),
             noted: bank.noted,
             tabs: bank
                 .tabs
@@ -265,6 +324,7 @@ pub(super) fn view(value: types::GameplayUiView) -> Result<game::GameplayUiView,
                 .into_iter()
                 .map(inventory_actions)
                 .collect(),
+            management: recovery.management.map(recovery_management),
         }),
         appearance: Some(game::UiAppearance {
             choices: value

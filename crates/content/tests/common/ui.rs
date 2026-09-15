@@ -286,6 +286,20 @@ pub fn projection(content: &mut GameContent) {
             unavailable_containers: Vec::new(),
             source: sources.clone(),
         },
+        recovery: content
+            .mechanics
+            .death
+            .as_ref()
+            .map(|_| RecoveryUiDefinition {
+                grave_bank: RecoveryBankRule::Allowed {
+                    guard: Guard::Always,
+                    source: sources.clone(),
+                },
+                office_bank: RecoveryBankRule::Allowed {
+                    guard: Guard::Always,
+                    source: sources.clone(),
+                },
+            }),
         coffer: SourceBinding::Bound {
             value: CofferUiDefinition {
                 eligible_items: content

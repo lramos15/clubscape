@@ -1,6 +1,36 @@
 use crate::game_input::{bounded_text, inventory_slot, quantity};
 use crate::{ReadOnlyQuote, ValidationError, game, invalid, quote_request};
-use clubscape_game_types::{GameplayUiRequest, ItemId, ItemInstanceId, ProductionMode};
+use clubscape_game_types::{
+    DeathId, GameplayUiRequest, ItemId, ItemInstanceId, ProductionMode, RecoveryItemAmount,
+    RecoveryItemId, RecoveryRecordSelection, RecoveryStorage, UiAmount,
+};
+use std::collections::BTreeSet;
+
+fn amount(value: Option<&game::UiAmount>) -> Result<UiAmount, ValidationError> {
+    match value.and_then(|value| value.selection.as_ref()) {
+        Some(game::ui_amount::Selection::Quantity(value)) => Ok(UiAmount::Quantity {
+            quantity: quantity(*value)?,
+        }),
+        Some(game::ui_amount::Selection::All(_)) => Ok(UiAmount::All {}),
+        None => Err(invalid("An explicit quantity or All amount is required.")),
+    }
+}
+
+fn death(value: &str) -> Result<DeathId, ValidationError> {
+    DeathId::new(value).map_err(|_| invalid("An owned source death identity is required."))
+}
+
+fn recovery_id(value: &str) -> Result<RecoveryItemId, ValidationError> {
+    RecoveryItemId::new(value).map_err(|_| invalid("An owned recovery entry identity is required."))
+}
+
+fn storage(value: i32) -> Result<RecoveryStorage, ValidationError> {
+    match game::RecoveryStorage::try_from(value) {
+        Ok(game::RecoveryStorage::Grave) => Ok(RecoveryStorage::Grave),
+        Ok(game::RecoveryStorage::DeathOffice) => Ok(RecoveryStorage::DeathOffice),
+        _ => Err(invalid("A source recovery storage is required.")),
+    }
+}
 
 fn entry(value: &str) -> Result<String, ValidationError> {
     let number = value
@@ -60,6 +90,82 @@ pub fn ui_request(value: &game::GameplayUiRequest) -> Result<GameplayUiRequest, 
                 }
             },
         },
+        R::ProductionAll(value) => GameplayUiRequest::ProductionSelectAll {
+            menu_id: bounded_text(&value.menu_id, 192)?,
+            recipe: clubscape_game_types::RecipeId::new(&value.recipe)
+                .map_err(|_| invalid("Invalid source recipe."))?,
+        },
+        R::BankAmount(value) => GameplayUiRequest::BankSetAmount {
+            amount: amount(value.amount.as_ref())?,
+            noted: value.noted,
+        },
+        R::RecoveryTake(value) => {
+            let items = value
+                .items
+                .iter()
+                .map(|entry| {
+                    Ok(RecoveryItemAmount {
+                        id: recovery_id(&entry.id)?,
+                        amount: amount(entry.amount.as_ref())?,
+                    })
+                })
+                .collect::<Result<Vec<_>, ValidationError>>()?;
+            if items.is_empty()
+                || items.len() > 4096
+                || items
+                    .iter()
+                    .map(|entry| &entry.id)
+                    .collect::<BTreeSet<_>>()
+                    .len()
+                    != items.len()
+            {
+                return Err(invalid("Select distinct bounded recovery entries."));
+            }
+            GameplayUiRequest::RecoveryTake {
+                death: death(&value.death)?,
+                storage: storage(value.storage)?,
+                items,
+            }
+        }
+        R::RecoveryBankAll(value) => {
+            let records = value
+                .records
+                .iter()
+                .map(|record| {
+                    let items = record
+                        .items
+                        .iter()
+                        .map(|id| recovery_id(id))
+                        .collect::<Result<Vec<_>, _>>()?;
+                    if items.is_empty()
+                        || items.iter().collect::<BTreeSet<_>>().len() != items.len()
+                    {
+                        return Err(invalid("Select distinct nonempty recovery records."));
+                    }
+                    Ok(RecoveryRecordSelection {
+                        death: death(&record.death)?,
+                        items,
+                    })
+                })
+                .collect::<Result<Vec<_>, ValidationError>>()?;
+            if records.is_empty()
+                || records.len() > 4096
+                || records
+                    .iter()
+                    .map(|record| &record.death)
+                    .collect::<BTreeSet<_>>()
+                    .len()
+                    != records.len()
+                || records
+                    .iter()
+                    .map(|record| record.items.len())
+                    .sum::<usize>()
+                    > 4096
+            {
+                return Err(invalid("Select distinct bounded recovery records."));
+            }
+            GameplayUiRequest::RecoveryBankAll { records }
+        }
         R::ItemAction(value) => GameplayUiRequest::ItemAction {
             inventory_slot: inventory_slot(value.inventory_slot)?,
             expected_item: item(&value.expected_item)?,

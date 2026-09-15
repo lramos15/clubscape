@@ -57,6 +57,12 @@ input quantity and preserves Make-X first/repeat cadence even for All-of-one.
 `bank_set_options.amount` remains a literal quantity and clears All mode.
 `ui.bank.amountSelection` is authoritative; absent means an older unsupported
 `game.ui.amounts.v1` extension. Ordinary deposits retain `WorldView.bank.banker`.
+The initial selection is the legacy source literal quantity1. Persisted bank
+layout1 keeps its existing literal `amount`; the first semantic amount command
+upgrades only that bank metadata to layout2 with required `amount_all`.
+Missing `amount_all` in layout2 is corruption, never a new quantity1 default.
+The world/runtime/UI envelopes remain version1, and migration never clears an
+existing selection, reward/chat history, bank entries or revision.
 
 `recovery_take` carries death/storage and distinct `{id, amount:UiAmount}`
 entries. A partial quantity cannot become a whole-entry reclaim.
@@ -74,10 +80,36 @@ credit. Legacy `RecoveryView.items.cost` has the latter whole-entry meaning.
 Clients must not multiply a unit quote or add row quotes to bypass source
 rounding/credit/combined caps. `fullSelectionFee`, actual inventory/bank
 capacities and `UiPermission` come from the immutable execution planner.
+Each capacity is the maximum executable quantity for that entry **alone**,
+including current funds, source permission and restoration/auto-equip behavior.
+Capacities and row fees must not be summed into a Take-All/Bank-All prediction.
 All u64 fees/revisions remain decimal strings. Missing management data means
-unsupported, never a fabricated free/capacity-zero result. These fields are
-published before their implementation; the capability is advertised only when
-the working source-backed endpoint exists.
+unsupported, never a fabricated free/capacity-zero result.
+
+Protobuf request fields22/23/24/25 are `production_all`, `bank_amount`,
+`recovery_take` and `recovery_bank_all`. `UiAmount.selection` is quantity1 or
+empty All2. Projections use `UiProductionChoice.all`6,
+`UiBank.amount_selection`12 and `UiRecoveryControls.management`5.
+Bank-All takes the current context's exact ordered record/entry identities;
+it never accepts a client-provided destination world or source banking rule.
+
+Invalid ownership/context, repeated IDs, stale Bank-All identities, bad amounts
+or stale bank revisions fail without state, fees or a committed sequence.
+An otherwise valid capacity/funds-limited transfer may commit fewer units with
+an explicit remaining-items message. Partial entries retain their identity and
+remaining fee credit; only fully recovered entries become reclaimed tombstones.
+Legacy whole-ID reclaim uses the same planner with All amounts. Planning copies
+only owned death records and bounded character/container candidates, not a world
+or a speculative intent. State, bank revisions, fees and the command receipt
+still commit together; timeout remains an unknown outcome recovered by retry.
+
+Recovery banking is explicitly source-gated. Current Office669 has no Bank-All
+action; the normal M1 grave's legacy602 bank-permission flag is not verified.
+Both are therefore unavailable in the current M1 profile, with explicit reasons.
+The real identity-bound banking implementation serves only a source profile
+whose guard actually permits it; neither fee values nor a visible native button
+can grant that permission. `normal_grave_bank_all` remains a recorded source
+permission gap, not a claim of whole-UI/M1 completion.
 
 `GameplayUiView` / `GameplayUiRequest` in `game-types/src/gameplay_ui.rs` and
 `GameplayUiView` / `GameplayUiIntent` in `web/shared/contracts.ts` are the exact

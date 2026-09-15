@@ -748,16 +748,27 @@ pub(crate) fn live_shop_extras<'a>(
     })
 }
 
-pub(crate) fn transfer_up_to<T>(
-    character: &mut CharacterState,
+pub(crate) struct TransferPlan<T> {
+    pub character: CharacterState,
+    pub quantity: u32,
+    pub value: T,
+    pub partial_reason: Option<GameError>,
+}
+
+pub(crate) fn plan_transfer_up_to<T>(
+    character: &CharacterState,
     quantity: Quantity,
     operation: impl Fn(&mut CharacterState, Quantity) -> GameResult<T>,
-) -> GameResult<(u32, T)> {
+) -> GameResult<TransferPlan<T>> {
     let mut full = character.clone();
     let first_error = match operation(&mut full, quantity) {
         Ok(value) => {
-            *character = full;
-            return Ok((quantity.get(), value));
+            return Ok(TransferPlan {
+                character: full,
+                quantity: quantity.get(),
+                value,
+                partial_reason: None,
+            });
         }
         Err(error) if capacity_error(&error.code) => error,
         Err(error) => return Err(error),
@@ -777,14 +788,28 @@ pub(crate) fn transfer_up_to<T>(
         }
     }
     if let Some((count, draft, value)) = best {
-        *character = draft;
-        Ok((count, value))
+        Ok(TransferPlan {
+            character: draft,
+            quantity: count,
+            value,
+            partial_reason: Some(first_error),
+        })
     } else {
         Err(first_error)
     }
 }
 
-fn capacity_error(code: &GameErrorCode) -> bool {
+pub(crate) fn transfer_up_to<T>(
+    character: &mut CharacterState,
+    quantity: Quantity,
+    operation: impl Fn(&mut CharacterState, Quantity) -> GameResult<T>,
+) -> GameResult<(u32, T)> {
+    let plan = plan_transfer_up_to(character, quantity, operation)?;
+    *character = plan.character;
+    Ok((plan.quantity, plan.value))
+}
+
+pub(crate) fn capacity_error(code: &GameErrorCode) -> bool {
     matches!(
         code,
         GameErrorCode::InsufficientItems

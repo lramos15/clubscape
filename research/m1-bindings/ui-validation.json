@@ -44,11 +44,30 @@
   ],
   "cooks_states": 10,
   "gameplay_acceptance": false,
+  "native_level_associations": {
+    "interface.level_up": {
+      "body_widget": 15269890,
+      "continue_widget": 15269891,
+      "source_group": 233,
+      "style": "chatbox_level_up",
+      "title_widget": 15269889
+    },
+    "interface.level_up_notification": {
+      "body_widget": 43253768,
+      "source_group": 660,
+      "source_script": 3343,
+      "style": "notification_popup",
+      "title_widget": 43253764
+    }
+  },
   "presentation_acceptance": false,
-  "retained_v3_behavior_sha256": "0cdf08e3541091b51d435b93f53ac8021b8f5cc7f9bf69d0b6e6b7a3f169891e",
+  "remaining_source_permissions": [
+    "normal_grave_bank_all"
+  ],
+  "retained_v3_behavior_sha256": "62b66389bf51d0166b22649aed8627580e8210834a865bd7ab6789d67a1b748a",
   "schema_version": 1,
   "source_scope_passed": true,
   "tutorial_states": 71,
-  "ui_sha256": "2c4c198b104be6faa50aafeb7873a4f2f06dab2e8d39a6bd216178e2d306ea29",
+  "ui_sha256": "0013227595afc17d9b1e42f77abbf694627cbcee7c8e6fc6656179063c391644",
   "ui_version": 1
 }

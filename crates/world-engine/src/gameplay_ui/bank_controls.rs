@@ -46,6 +46,22 @@ impl WorldEngine {
                 Quantity::new(*amount)?;
                 let layout = &mut ui_mut(character)?.bank;
                 layout.amount = *amount;
+                if layout.version == BANK_LAYOUT_AMOUNT_VERSION {
+                    layout.amount_all = Some(false);
+                }
+                layout.noted = *noted;
+                bank_layout::bump(layout)?;
+            }
+            GameplayUiRequest::BankSetAmount { amount, noted } => {
+                let layout = &mut ui_mut(character)?.bank;
+                layout.version = BANK_LAYOUT_AMOUNT_VERSION;
+                match amount {
+                    UiAmount::Quantity { quantity } => {
+                        layout.amount = quantity.get();
+                        layout.amount_all = Some(false);
+                    }
+                    UiAmount::All {} => layout.amount_all = Some(true),
+                }
                 layout.noted = *noted;
                 bank_layout::bump(layout)?;
             }

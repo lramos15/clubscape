@@ -26,6 +26,27 @@ must echo the decimal `ui.bank.revision` in
 `GameplayUiRequest.expected_bank_revision`; clocks changing the whole-character
 revision do not invalidate an otherwise unchanged bank.
 
+The additive `game.ui.amounts.v1` and `game.ui.recovery.v1` contracts provide
+source-derived Make-All, a persistent semantic bank All selection, and
+identity-bound partial recovery. Bank-All echoes the current recovery
+management view's bank revision; journal duplicates are recovered before that
+precondition or the current context is re-evaluated. The same bank receives
+owned recovery stacks, with normal note normalization and placeholder capacity.
+No client supplies prices, destination state or source authorization.
+
+Recovery unit/full-entry/combined quotes and per-row executable quantities use
+the same bounded immutable plans as mutation. Invalid identities/permissions
+change nothing; a valid capacity-limited transfer can explicitly commit fewer
+units and retain the entry's identity and fee credit. Office669 has no source
+Bank-All control; normal M1 grave banking remains explicitly unavailable until
+its source permission is verified. Capability support is not permission to
+enable that control or a claim of complete M1 UI fidelity.
+
+Bank layout1 retains its actual legacy literal amount. A semantic amount
+command upgrades only bank metadata to layout2 with required `amount_all`;
+missing layout2 preference data fails instead of resetting to quantity1.
+Existing UI history and the state/runtime/UI version1 envelopes are preserved.
+
 Use `cargo run --locked -p clubscape-server -- migrate-ui --from <old-raw-sha256>`
 with `DATABASE_URL` and a complete target `CLUBSCAPE_GAME_ROOT` for an explicit
 UI-only content upgrade. It requires exclusive world ownership and audits the

@@ -8,6 +8,9 @@ use crate::{
     tag, unavailable, unknown,
 };
 
+mod recovery;
+pub(crate) use recovery::{RecoveryBatch, RecoveryDestination, RecoveryTransfer};
+
 impl WorldEngine {
     pub(crate) fn advance_death(
         &self,
@@ -579,15 +582,21 @@ impl WorldEngine {
     }
 
     fn enforce_office_capacity(&self, world: &mut WorldState, actor: &ActorId) -> GameResult<()> {
+        self.enforce_office_records(&mut world.runtime.deaths, actor)
+    }
+
+    fn enforce_office_records(
+        &self,
+        records: &mut BTreeMap<DeathId, DeathRecord>,
+        actor: &ActorId,
+    ) -> GameResult<()> {
         let policy = self
             .content
             .mechanics
             .death
             .as_ref()
             .ok_or_else(|| unknown("Missing Office policy."))?;
-        let count = world
-            .runtime
-            .deaths
+        let count = records
             .values()
             .filter(|record| &record.owner == actor)
             .flat_map(|record| &record.office)
@@ -605,9 +614,7 @@ impl WorldEngine {
                 "Death Office is full.",
             ));
         }
-        let mut entries: Vec<_> = world
-            .runtime
-            .deaths
+        let mut entries: Vec<_> = records
             .iter()
             .filter(|(_, record)| &record.owner == actor)
             .flat_map(|(id, record)| {
@@ -633,12 +640,7 @@ impl WorldEngine {
                 break;
             }
         }
-        for record in world
-            .runtime
-            .deaths
-            .values_mut()
-            .filter(|record| &record.owner == actor)
-        {
+        for record in records.values_mut().filter(|record| &record.owner == actor) {
             record
                 .office
                 .retain(|entry| !removed.contains(&recovery_slot_key(&entry.stack)));
@@ -654,237 +656,20 @@ impl WorldEngine {
         storage: RecoveryStorage,
         items: &[RecoveryItemId],
     ) -> GameResult<Vec<GameEvent>> {
-        if items.is_empty()
-            || items.len() > 4096
-            || items.iter().collect::<BTreeSet<_>>().len() != items.len()
-        {
-            return Err(invalid_state("Select distinct recovery entries."));
-        }
-        let policy = self
-            .content
-            .mechanics
-            .death
-            .as_ref()
-            .ok_or_else(|| unavailable("Recovery policy is not bound."))?;
-        let record = world
-            .runtime
-            .deaths
-            .get(id)
-            .ok_or_else(|| GameError::new(GameErrorCode::NotOwned, "Unknown death record."))?;
-        if record.owner != character.actor_id {
-            return Err(GameError::new(
-                GameErrorCode::NotOwned,
-                "Recovery belongs to another actor.",
-            ));
-        }
-        match storage {
-            RecoveryStorage::Grave => {
-                let grave = record
-                    .grave
-                    .as_ref()
-                    .ok_or_else(|| GameError::new(GameErrorCode::NotOwned, "No active grave."))?;
-                if grave.location.instance != character.runtime.instance
-                    || character
-                        .tile
-                        .distance(grave.location.tile)
-                        .is_none_or(|distance| distance > policy.reclaim_range)
-                    || policy.require_line_of_sight
-                        && !self
-                            .collision_for(world, character.runtime.instance.as_ref())?
-                            .line_of_sight(character.tile, grave.location.tile)
-                {
-                    return Err(GameError::new(
-                        GameErrorCode::OutOfReach,
-                        "Grave is out of range, sight or instance.",
-                    ));
-                }
-            }
-            RecoveryStorage::DeathOffice => {
-                let location = policy.first_office.require()?;
-                let in_office = match (&location.instance, &character.runtime.instance) {
-                    (Some(template), Some(id)) => {
-                        world.runtime.instances.get(id).is_some_and(|state| {
-                            &state.template == template
-                                && state.owner.as_ref() == Some(&character.actor_id)
-                        })
-                    }
-                    (None, None) => character.region == location.region,
-                    _ => false,
-                };
-                if !in_office {
-                    return Err(GameError::new(
-                        GameErrorCode::OutOfReach,
-                        "Office recovery requires actual source Office presence.",
-                    ));
-                }
-            }
-        }
-        if storage == RecoveryStorage::DeathOffice && record.grave.is_some() {
-            let record = world
-                .runtime
-                .deaths
-                .get_mut(id)
-                .ok_or_else(|| invalid_state("Missing recovery record."))?;
-            record.office.extend(
-                record
-                    .grave
-                    .take()
-                    .ok_or_else(|| invalid_state("Missing grave."))?
-                    .items,
-            );
-            self.enforce_office_capacity(world, &character.actor_id)?;
-        }
-        let fee_rule = if storage == RecoveryStorage::Grave {
-            policy.grave_fee.require()?
-        } else {
-            policy.office_fee.require()?
-        };
-        let auto_equip = character
-            .runtime
-            .settings
-            .death_auto_equip
-            .ok_or_else(|| unavailable("Source death auto-equip setting must be bound."))?;
-        let mut reclaimed = Vec::new();
-        let mut transferred_items = Vec::new();
-        let mut total_fee = 0_u64;
-        let mut prior_error = None;
-        for selected in items {
-            let record = world
-                .runtime
-                .deaths
-                .get(id)
-                .ok_or_else(|| invalid_state("Missing death record."))?;
-            if record.reclaimed.contains(selected) {
-                return Err(GameError::new(
-                    GameErrorCode::NotOwned,
-                    "Recovery entry was already reclaimed.",
-                ));
-            }
-            let entries = match storage {
-                RecoveryStorage::Grave => {
-                    &record
-                        .grave
-                        .as_ref()
-                        .ok_or_else(|| invalid_state("Missing grave."))?
-                        .items
-                }
-                RecoveryStorage::DeathOffice => &record.office,
-            };
-            let item = entries
+        let batches = [RecoveryBatch {
+            death: id.clone(),
+            storage,
+            items: items
                 .iter()
-                .find(|entry| &entry.id == selected)
-                .cloned()
-                .ok_or_else(|| {
-                    GameError::new(
-                        GameErrorCode::NotOwned,
-                        "Entry is not in this recovery storage.",
-                    )
-                })?;
-            let attempt = |amount| -> GameResult<(CharacterState, u64)> {
-                let mut candidate = character.clone();
-                let mut selected_item = item.clone();
-                selected_item.stack.quantity = Quantity::new(amount)?;
-                let mut fee = recovery_fee(fee_rule, &selected_item, amount)?;
-                if let RecoveryFee::Bands { maximum_total, .. } = fee_rule {
-                    fee = fee.min(maximum_total.saturating_sub(total_fee));
-                }
-                self.restore_recovery_item(&mut candidate, &selected_item, auto_equip)?;
-                self.pay_fee(&mut candidate, policy, fee)?;
-                Ok((candidate, fee))
-            };
-            let quantity = item.stack.quantity.get();
-            let mut accepted = match attempt(quantity) {
-                Ok((candidate, fee)) => Some((quantity, candidate, fee)),
-                Err(error) if recovery_capacity_error(&error.code) => {
-                    prior_error = Some(error);
-                    None
-                }
-                Err(error) => return Err(error),
-            };
-            if accepted.is_none() && quantity > 1 {
-                let (mut low, mut high) = (1, quantity - 1);
-                while low <= high {
-                    let mid = low + (high - low) / 2;
-                    match attempt(mid) {
-                        Ok((candidate, fee)) => {
-                            accepted = Some((mid, candidate, fee));
-                            low = mid + 1;
-                        }
-                        Err(error) if recovery_capacity_error(&error.code) => high = mid - 1,
-                        Err(error) => return Err(error),
-                    }
-                }
-            }
-            if let Some((amount, candidate, fee)) = accepted {
-                *character = candidate;
-                total_fee = total_fee
-                    .checked_add(fee)
-                    .ok_or_else(|| invalid_state("Recovery fee overflow."))?;
-                let record = world
-                    .runtime
-                    .deaths
-                    .get_mut(id)
-                    .ok_or_else(|| invalid_state("Missing death record."))?;
-                let entries = match storage {
-                    RecoveryStorage::Grave => {
-                        &mut record
-                            .grave
-                            .as_mut()
-                            .ok_or_else(|| invalid_state("Missing grave."))?
-                            .items
-                    }
-                    RecoveryStorage::DeathOffice => &mut record.office,
-                };
-                if amount == quantity {
-                    entries.retain(|entry| &entry.id != selected);
-                    record.reclaimed.insert(selected.clone());
-                } else {
-                    let remaining = entries
-                        .iter_mut()
-                        .find(|entry| &entry.id == selected)
-                        .ok_or_else(|| invalid_state("Recovery remainder disappeared."))?;
-                    remaining.stack.quantity = Quantity::new(quantity - amount)?;
-                    let mut unpaid = item.clone();
-                    unpaid.fee_paid = 0;
-                    let applied_credit = recovery_fee(fee_rule, &unpaid, amount)?;
-                    remaining.fee_paid = remaining.fee_paid.saturating_sub(applied_credit);
-                }
-                transferred_items.push(ItemStack {
-                    quantity: Quantity::new(amount)?,
-                    ..item.stack
-                });
-                reclaimed.push(selected.clone());
-            }
-        }
-        if reclaimed.is_empty() {
-            return Err(prior_error.unwrap_or_else(|| {
-                GameError::new(GameErrorCode::NotOwned, "Nothing can be reclaimed.")
-            }));
-        }
-        let mut events = vec![
-            GameEvent::Recovered,
-            GameEvent::RecoveryCompleted {
-                death: id.clone(),
-                storage,
-                items: reclaimed,
-                fee: total_fee,
-            },
-            GameEvent::ItemTransferred {
-                from: if storage == RecoveryStorage::Grave {
-                    ContainerKind::Grave
-                } else {
-                    ContainerKind::DeathOffice
-                },
-                to: ContainerKind::Inventory,
-                items: transferred_items,
-            },
-        ];
-        if let Some(error) = prior_error {
-            events.push(GameEvent::Message {
-                text: format!("Some recovery items remain: {}", error.message),
-            });
-        }
-        Ok(events)
+                .map(|id| RecoveryItemAmount {
+                    id: id.clone(),
+                    amount: UiAmount::All {},
+                })
+                .collect(),
+        }];
+        let plan =
+            self.plan_recovery(world, character, &batches, RecoveryDestination::Inventory)?;
+        Ok(plan.install(world, character))
     }
 
     fn restore_recovery_item(
@@ -1185,13 +970,4 @@ pub(crate) fn recovery_fee_value(
         }
     };
     Ok(fee.saturating_sub(paid))
-}
-
-fn recovery_capacity_error(code: &GameErrorCode) -> bool {
-    matches!(
-        code,
-        GameErrorCode::InventoryFull
-            | GameErrorCode::StackOverflow
-            | GameErrorCode::InsufficientItems
-    )
 }

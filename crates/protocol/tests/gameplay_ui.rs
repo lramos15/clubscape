@@ -15,6 +15,44 @@ fn every_typed_ui_request_round_trips_with_exact_decimal_bank_preconditions() {
     let requests = vec![
         (Ui::Dismiss(game::UiIdentity { id: "ui.1".into() }), false),
         (
+            Ui::ProductionAll(game::UiProductionAll {
+                menu_id: "ui.1".into(),
+                recipe: "recipe.test.bar".into(),
+            }),
+            false,
+        ),
+        (
+            Ui::BankAmount(game::UiBankAmount {
+                amount: Some(game::UiAmount {
+                    selection: Some(game::ui_amount::Selection::All(game::Empty {})),
+                }),
+                noted: true,
+            }),
+            true,
+        ),
+        (
+            Ui::RecoveryTake(game::UiRecoveryTake {
+                death: "death.test.owned".into(),
+                storage: game::RecoveryStorage::DeathOffice as i32,
+                items: vec![game::UiRecoveryItemAmount {
+                    id: "recovery_item.test.owned".into(),
+                    amount: Some(game::UiAmount {
+                        selection: Some(game::ui_amount::Selection::Quantity(5)),
+                    }),
+                }],
+            }),
+            false,
+        ),
+        (
+            Ui::RecoveryBankAll(game::UiRecoveryBankAll {
+                records: vec![game::UiRecoveryRecordSelection {
+                    death: "death.test.owned".into(),
+                    items: vec!["recovery_item.test.owned".into()],
+                }],
+            }),
+            true,
+        ),
+        (
             Ui::DocumentPage(game::UiDocumentPage {
                 id: "ui.1".into(),
                 page: 1,
@@ -140,6 +178,46 @@ fn every_typed_ui_request_round_trips_with_exact_decimal_bank_preconditions() {
 
 #[test]
 fn ui_bounds_reject_noncanonical_revisions_slots_modes_and_empty_selections() {
+    for selection in [
+        None,
+        Some(game::ui_amount::Selection::Quantity(0)),
+        Some(game::ui_amount::Selection::Quantity(u32::MAX)),
+    ] {
+        assert!(
+            ui_request(&message(
+                Ui::BankAmount(game::UiBankAmount {
+                    amount: Some(game::UiAmount { selection }),
+                    noted: false,
+                }),
+                true
+            ))
+            .is_err()
+        );
+    }
+    assert!(
+        ui_request(&message(
+            Ui::RecoveryBankAll(game::UiRecoveryBankAll { records: vec![] }),
+            true
+        ))
+        .is_err()
+    );
+    let entry = game::UiRecoveryItemAmount {
+        id: "recovery_item.test.owned".into(),
+        amount: Some(game::UiAmount {
+            selection: Some(game::ui_amount::Selection::All(game::Empty {})),
+        }),
+    };
+    assert!(
+        ui_request(&message(
+            Ui::RecoveryTake(game::UiRecoveryTake {
+                death: "death.test.owned".into(),
+                storage: game::RecoveryStorage::Grave as i32,
+                items: vec![entry.clone(), entry],
+            }),
+            false
+        ))
+        .is_err()
+    );
     for revision in ["", "01", "+1", "-1", "1.0", "9223372036854775808"] {
         let mut wire = message(Ui::SelectTab(game::UiTab { tab: 0 }), true);
         wire.expected_bank_revision = Some(revision.into());

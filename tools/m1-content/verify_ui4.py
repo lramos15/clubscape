@@ -31,6 +31,16 @@ def verify_ui4(content):
         require(row["effective_death_value"] == max(row["guide_price"], row["high_alchemy"])
                 == provider["values"]["value"][item["id"]], "Container death valuation drift")
     ui = content["ui"]
+    levels = load(ROOT / "research/interface-contracts/level-up-native.json")
+    for identifier, binding in levels["canonical_associations"].items():
+        require(content["interfaces"][identifier]["source_ids"] == [binding["source_group"]],
+                "Native level-up group association changed")
+    require(ui["level_up"]["interface"] == "interface.level_up",
+            "Existing level-up chat history/default was silently changed")
+    require(ui["recovery"]["office_bank"]["kind"] == "unavailable",
+            "Source Office unit-fee metadata was turned into banking authorization")
+    require(ui["recovery"]["grave_bank"]["kind"] == "unavailable",
+            "An unverified normal-grave Bank-All permission was invented")
     require(ui["quest_rewards"]["quest.cooks_assistant"]["quest_points"] == 1
             and ui["quest_rewards"]["quest.cooks_assistant"]["xp"] == [{"skill": "skill.cooking", "amount_tenths": 3000}]
             and ui["quest_rewards"]["quest.cooks_assistant"]["items"] == [], "Cook reward display minted coins or changed the actual reward")
@@ -51,6 +61,8 @@ def verify_ui4(content):
         "schema_version": 1, "ui_version": 1, "source_scope_passed": True,
         "retained_v3_behavior_sha256": application["runtime3"]["content_behavior_sha256"],
         "ui_sha256": sha(canonical(ui)), "container_values": rows,
+        "native_level_associations": levels["canonical_associations"],
+        "remaining_source_permissions": ["normal_grave_bank_all"],
         "tutorial_states": len(content["tutorial"]), "cooks_states": len(content["quests"]["quest.cooks_assistant"]["journal"]),
         "asset_publication_claimed": False, "gameplay_acceptance": False, "presentation_acceptance": False,
     }

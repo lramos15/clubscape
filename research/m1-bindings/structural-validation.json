@@ -8,7 +8,7 @@
     "death_source_transitions": 6,
     "dialogues": 21,
     "equipment_slots": 11,
-    "interfaces": 30,
+    "interfaces": 31,
     "items": 122,
     "mechanics": {
       "collision_groups": 49,
@@ -64,8 +64,8 @@
   ],
   "source_status_occurrences": {
     "approved_adaptation": 2,
-    "inference": 3298,
-    "verified_reference": 15803
+    "inference": 3302,
+    "verified_reference": 15946
   },
   "structural_checks_passed": true,
   "unpublished_asset_references": []

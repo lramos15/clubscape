@@ -60,6 +60,18 @@ impl Validator<'_> {
             text(&control.reason, "ui.bank.container.reason", 2048)?;
         }
         self.guard(&ui.chat.guard, "ui.chat.guard")?;
+        if let Some(recovery) = &ui.recovery {
+            for rule in [&recovery.grave_bank, &recovery.office_bank] {
+                match rule {
+                    RecoveryBankRule::Allowed { guard, .. } => {
+                        self.guard(guard, "ui.recovery.bank.guard")?
+                    }
+                    RecoveryBankRule::Unavailable { reason, .. } => {
+                        text(reason, "ui.recovery.bank.reason", 2048)?
+                    }
+                }
+            }
+        }
         for (stage, rules) in &ui.stage_interfaces {
             let ids: BTreeSet<_> = rules.iter().map(|rule| &rule.interface).collect();
             if ids.len() != rules.len()

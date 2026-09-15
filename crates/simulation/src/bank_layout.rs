@@ -83,8 +83,8 @@ fn reconcile_inner(bank: &Bank, layout: &mut BankLayout, contents_changed: bool)
 }
 
 pub fn validate(bank: &Bank, layout: &BankLayout) -> GameResult<()> {
-    if layout.version != 1
-        || layout.next_entry == 0
+    layout.amount_selection()?;
+    if layout.next_entry == 0
         || layout.next_entry > i64::MAX as u64
         || layout.revision > i64::MAX as u64
         || bank.slots.len() > usize::from(bank.capacity)

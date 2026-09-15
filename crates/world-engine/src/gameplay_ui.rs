@@ -2,6 +2,7 @@ mod bank_controls;
 mod inventory_actions;
 mod production;
 mod projections;
+mod recovery_controls;
 mod validation;
 
 use clubscape_game_types::*;
@@ -295,42 +296,16 @@ impl WorldEngine {
                 quantity,
                 mode,
             } => {
-                self.require_ui_free(&character)?;
-                let menu = ui_mut(&mut character)?
-                    .production
-                    .clone()
-                    .filter(|menu| &menu.id == menu_id)
-                    .ok_or_else(|| {
-                        GameError::new(
-                            GameErrorCode::StaleCommand,
-                            "Production menu is no longer open.",
-                        )
-                    })?;
-                if !menu.recipes.contains(recipe) || menu.instance != character.runtime.instance {
-                    return Err(GameError::new(
-                        GameErrorCode::NotOwned,
-                        "Recipe does not belong to the open source facility.",
-                    ));
-                }
-                if let Some(selection) = &menu.inventory_selection {
-                    self.production_inventory_permission(&character, selection, &menu.recipes)?;
-                }
-                self.production_permission(
-                    &draft,
-                    &character,
-                    recipe,
-                    menu.target.as_ref(),
-                    *quantity,
-                    *mode,
-                )?;
-                self.start_selected_production(
+                self.select_production_ui(
                     &mut draft,
                     &mut character,
+                    menu_id,
                     recipe,
-                    menu.target,
-                    *quantity,
-                    *mode,
+                    Some((*quantity, *mode)),
                 )?;
+            }
+            GameplayUiRequest::ProductionSelectAll { menu_id, recipe } => {
+                self.select_production_ui(&mut draft, &mut character, menu_id, recipe, None)?;
             }
             GameplayUiRequest::ItemAction {
                 inventory_slot,
@@ -351,6 +326,22 @@ impl WorldEngine {
             GameplayUiRequest::OpenDeathPreview => {
                 self.death_preview_permission(&draft, &character)?;
                 ui_mut(&mut character)?.death_preview = true;
+            }
+            GameplayUiRequest::RecoveryTake {
+                death,
+                storage,
+                items,
+            } => {
+                events.extend(self.take_recovery_ui(
+                    &mut draft,
+                    &mut character,
+                    death,
+                    *storage,
+                    items,
+                )?);
+            }
+            GameplayUiRequest::RecoveryBankAll { records } => {
+                events.extend(self.bank_all_recovery_ui(&mut draft, &mut character, records)?);
             }
             GameplayUiRequest::RequestRecoveryDiscard {
                 death,
@@ -419,6 +410,9 @@ impl WorldEngine {
     pub fn ui_request_requires_tick(&self, request: &GameplayUiRequest) -> GameResult<bool> {
         Ok(match request {
             GameplayUiRequest::ProductionSelect { .. }
+            | GameplayUiRequest::ProductionSelectAll { .. }
+            | GameplayUiRequest::RecoveryTake { .. }
+            | GameplayUiRequest::RecoveryBankAll { .. }
             | GameplayUiRequest::BankDepositEquipment
             | GameplayUiRequest::BankPlaceholder { .. }
             | GameplayUiRequest::BankWithdrawEntry { .. }

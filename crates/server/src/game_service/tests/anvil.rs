@@ -34,7 +34,7 @@ struct InventoryLine {
 struct NoDraw;
 impl clubscape_world_engine::RandomSource for NoDraw {
     fn draw_below(&mut self, _: u32) -> GameResult<u32> {
-        panic!("opening a source smithing menu must not roll production")
+        panic!("this source control must not roll a gameplay outcome")
     }
 }
 
@@ -245,6 +245,195 @@ fn actual_anvil_checkpoint_opens_source_312_and_advances_only_the_menu_hook_via_
     let snapshot = assert_open(&compiled, &engine, &checkpoint, &before, &world, &actor, 1);
     let decoded = game::WorldSnapshot::decode(snapshot.encode_to_vec().as_slice()).unwrap();
     assert_eq!(decoded, snapshot);
+}
+
+#[test]
+fn canonical_first_death_exposes_the_actual_private_template_and_four_existing_chunks() {
+    let (_, engine, _) = source();
+    let actor: ActorId = fixtures::id("actor.canonical.scene");
+    let other: ActorId = fixtures::id("actor.canonical.other");
+    let policy = engine.content().mechanics.death.as_ref().unwrap();
+    let location = policy.respawn.require().unwrap();
+    let mut character = engine
+        .character_from_initial(actor.clone(), "Scene", BTreeMap::new())
+        .unwrap();
+    character.region = location.region.clone();
+    character.tile = location.tile;
+    character.tutorial_stage = fixtures::id("stage.tutorial.mainland");
+    for slot in &mut character.inventory.slots[..4] {
+        *slot = Some(ItemStack {
+            item: fixtures::id("item.bones"),
+            quantity: Quantity::new(1).unwrap(),
+            instance: None,
+        });
+    }
+    let mut world = engine.initial_world().unwrap();
+    world.characters.insert(actor.clone(), character);
+    world.characters.insert(
+        other.clone(),
+        engine
+            .character_from_initial(other.clone(), "Other", BTreeMap::new())
+            .unwrap(),
+    );
+    for id in [&actor, &other] {
+        engine
+            .apply_lifecycle(&mut world, id, LifecycleTransition::Join)
+            .unwrap();
+    }
+    world.characters.get_mut(&actor).unwrap().hitpoints = 0;
+    let timing = policy.timing.require().unwrap();
+    for _ in 0..=timing.dying_ticks + timing.respawn_ticks + 2 {
+        let context = engine.tick_context(&world).unwrap();
+        engine
+            .tick_with_context(&mut world, &mut engine_fixtures::v2::Hits(0), &context)
+            .unwrap();
+        if matches!(
+            world.characters[&actor].runtime.life,
+            LifeState::FirstDeathOffice { .. }
+        ) {
+            break;
+        }
+    }
+    assert!(matches!(
+        world.characters[&actor].runtime.life,
+        LifeState::FirstDeathOffice { .. }
+    ));
+    let before = world.clone();
+    let scene = engine.scene_view(&world, &actor).unwrap();
+    assert_eq!(scene.instance, world.characters[&actor].runtime.instance);
+    assert_eq!(
+        scene.instance_template,
+        Some(fixtures::id("instance_template.death.office"))
+    );
+    let id = scene.instance.as_ref().unwrap();
+    assert_eq!(world.runtime.instances[id].owner.as_ref(), Some(&actor));
+    let template = &engine.content().mechanics.instances[scene.instance_template.as_ref().unwrap()];
+    assert_eq!(template.chunk_size, 8);
+    assert!(template.private_to_character);
+    assert_eq!(template.chunks.len(), 4);
+    let origins: BTreeSet<_> = template
+        .chunks
+        .iter()
+        .map(|chunk| {
+            assert_eq!(chunk.source_origin, chunk.destination_origin);
+            assert_eq!(chunk.source_region, chunk.destination_region);
+            assert_eq!(chunk.quarter_turns, 0);
+            (
+                chunk.source_origin.x(),
+                chunk.source_origin.y(),
+                chunk.source_origin.plane(),
+            )
+        })
+        .collect();
+    assert_eq!(
+        origins,
+        BTreeSet::from([
+            (3168, 5720, 0),
+            (3168, 5728, 0),
+            (3176, 5720, 0),
+            (3176, 5728, 0)
+        ])
+    );
+    assert!(
+        engine
+            .scene_view(&world, &other)
+            .unwrap()
+            .instance_template
+            .is_none()
+    );
+    assert_eq!(world, before);
+}
+
+#[test]
+fn canonical_earned_level_uses_real_chat_payload_and_exact_native_popup_association() {
+    let (_, engine, _) = source();
+    let content = engine.content();
+    assert_eq!(
+        content.interfaces[&fixtures::id("interface.level_up")].source_ids,
+        vec![233]
+    );
+    assert_eq!(
+        content.interfaces[&fixtures::id("interface.level_up_notification")].source_ids,
+        vec![660]
+    );
+    let native: serde_json::Value = serde_json::from_slice(
+        &fs::read(
+            PathBuf::from(env!("CARGO_MANIFEST_DIR"))
+                .join("../../research/interface-contracts/level-up-native.json"),
+        )
+        .unwrap(),
+    )
+    .unwrap();
+    assert_eq!(
+        native["groups"]["LevelupDisplay"]["widgets"]["TEXT1"]["definition"]["fontId"],
+        497
+    );
+    assert_eq!(
+        native["groups"]["NotificationDisplay"]["symbols"]["TITLE_TEXT"],
+        43253764
+    );
+    let actor: ActorId = fixtures::id("actor.canonical.level");
+    let skill: SkillId = fixtures::id("skill.prayer");
+    let threshold = content.skills[&skill].xp_thresholds_tenths[1];
+    let mut character = engine
+        .character_from_initial(actor.clone(), "Level", BTreeMap::new())
+        .unwrap();
+    character.tutorial_stage = fixtures::id("stage.tutorial.mainland");
+    character.skills.get_mut(&skill).unwrap().xp_tenths = threshold - 45;
+    character.inventory.slots[0] = Some(ItemStack {
+        item: fixtures::id("item.bones"),
+        quantity: Quantity::new(1).unwrap(),
+        instance: None,
+    });
+    let mut world = engine.initial_world().unwrap();
+    world.characters.insert(actor.clone(), character);
+    engine
+        .apply_lifecycle(&mut world, &actor, LifecycleTransition::Join)
+        .unwrap();
+    let before = world.characters[&actor].clone();
+    engine
+        .apply_intent(
+            &mut world,
+            &actor,
+            &GameIntent::Ui {
+                request: GameplayUiRequest::ItemAction {
+                    inventory_slot: 0,
+                    expected_item: fixtures::id("item.bones"),
+                    expected_instance: None,
+                    action: "bury".into(),
+                },
+            },
+            &mut NoDraw,
+        )
+        .unwrap();
+    for _ in 0..2 {
+        let context = engine.tick_context(&world).unwrap();
+        engine
+            .tick_with_context(&mut world, &mut engine_fixtures::v2::Hits(0), &context)
+            .unwrap();
+    }
+    let view = engine.ui_view(&world, &actor).unwrap();
+    let reward = view.reward.as_ref().unwrap();
+    assert_eq!(reward.kind, RewardUiKind::LevelUp);
+    assert_eq!(reward.interface.as_str(), "interface.level_up");
+    assert_eq!(reward.skill.as_ref(), Some(&skill));
+    assert_eq!(reward.level, Some(2));
+    assert!(reward.title.contains("Prayer") && reward.lines[0].contains('2'));
+    assert!(reward.quest.is_none() && reward.items.is_empty() && reward.xp.is_empty());
+    assert_eq!(world.characters[&actor].skills[&skill].xp_tenths, threshold);
+    assert_eq!(world.characters[&actor].quest_points, before.quest_points);
+    assert_eq!(
+        world.characters[&actor].runtime.entitlements,
+        before.runtime.entitlements
+    );
+    let wire = super::super::ui_wire::view(view).unwrap();
+    assert_eq!(wire.reward.unwrap().interface, "interface.level_up");
+    let restored: WorldState =
+        serde_json::from_slice(&serde_json::to_vec(&world).unwrap()).unwrap();
+    assert_eq!(
+        engine.ui_view(&restored, &actor).unwrap().reward,
+        engine.ui_view(&world, &actor).unwrap().reward
+    );
 }
 
 #[tokio::test(flavor = "multi_thread", worker_threads = 4)]

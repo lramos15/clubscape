@@ -1,6 +1,28 @@
 use serde::{Deserialize, Serialize};
 
-use crate::{DeathId, Quantity, RecoveryItemId, RecoveryStorage, UiItem, UiPermission};
+use crate::{
+    DeathId, Guard, Quantity, RecoveryItemId, RecoveryStorage, SourceRecord, UiItem, UiPermission,
+};
+
+#[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub struct RecoveryUiDefinition {
+    pub grave_bank: RecoveryBankRule,
+    pub office_bank: RecoveryBankRule,
+}
+
+#[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(tag = "kind", rename_all = "snake_case", deny_unknown_fields)]
+pub enum RecoveryBankRule {
+    Allowed {
+        guard: Guard,
+        source: Vec<SourceRecord>,
+    },
+    Unavailable {
+        reason: String,
+        source: Vec<SourceRecord>,
+    },
+}
 
 /// Semantic source amount selection. All is never encoded as a guessed integer sentinel.
 #[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
@@ -33,7 +55,9 @@ pub struct RecoveryEntryControlView {
     pub unit_fee: String,
     /// Quote for this entire remaining entry now; not a per-unit value to multiply in the UI.
     pub full_stack_fee: String,
+    /// Maximum executable units for this entry alone, including funds and source auto-equip.
     pub inventory_capacity: u32,
+    /// Maximum executable units for this entry alone under the declared banking permission.
     pub bank_capacity: u32,
     pub take: UiPermission,
     pub bank: UiPermission,

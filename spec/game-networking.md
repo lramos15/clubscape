@@ -247,6 +247,16 @@ operation with the same intent/sequence recovers its committed receipt before
 this mutable-state precondition is checked. The existing
 `WorldInput.expected_character_revision` remains an observation hint.
 
+Ready UI profiles also advertise `game.ui.amounts.v1` and
+`game.ui.recovery.v1`. Make-All sends only menu/recipe identities; semantic bank
+amounts never overload a numeric sentinel. Recovery requests carry actual owned
+entry identities and positive quantity upper bounds or All. Bank-All echoes
+`ui.recovery.management.bankRevision`, even though the ordinary bank window is
+closed. It uses the same post-deduplication bank precondition.
+Unit/full-entry/full-selection fee strings and per-row executable capacities
+come from the shared immutable transfer planner. Unknown/source-disabled
+banking is an explicit permission denial, not an empty successful transfer.
+
 Views distinguish the selected tab from contextual/modal state and expose
 target-bound production, entitlement rewards/continuations, native bank
 metadata, exact per-actor abilities/bonuses/weight, recovery/coffer controls,

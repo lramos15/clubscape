@@ -4,7 +4,7 @@ from copy import deepcopy, copy
 from common import ROOT, BINDINGS, ASSET_PREFIX, load, bound, canonical, sha, source_record, unique_sources, always, tutorial_at
 
 CONTAINER_ITEMS = {"item.vial": 229, "item.vial.noted": 230, "item.beer_glass": 1919, "item.beer_glass.noted": 1920}
-UI_INTERFACES = {"interface.level_up", "interface.read_book", "interface.newcomer_map", "interface.grouping"}
+UI_INTERFACES = {"interface.level_up", "interface.level_up_notification", "interface.read_book", "interface.newcomer_map", "interface.grouping"}
 
 
 def legacy_content(content):
@@ -17,7 +17,8 @@ def legacy_content(content):
     for item in CONTAINER_ITEMS:
         del result["items"][item]
     for interface in UI_INTERFACES:
-        del result["interfaces"][interface]
+        if interface in result["interfaces"]:
+            del result["interfaces"][interface]
     provider = result["mechanics"]["value_providers"]["value_provider.osrs.death"]
     for item in CONTAINER_ITEMS:
         del provider["values"]["value"][item]
@@ -66,6 +67,20 @@ def apply_ui(inputs, content, bindings):
         "inference", provider["revision"])])
     facts = load(ROOT / "research/interface-contracts/sources.json")
     native = load(ROOT / "research/interface-contracts/native-ui.json")
+    levels_path = ROOT / "research/interface-contracts/level-up-native.json"
+    levels = load(levels_path)
+    controls_path = ROOT / "research/interface-contracts/control-bindings.json"
+    controls = load(controls_path)
+    if levels["cache_id"] != 2695 or controls["cache_id"] != 2695:
+        raise ValueError("UI controls do not match the pinned native source")
+    level_source = [source_record(str(levels_path.relative_to(ROOT)),
+        "Exact original233 chat and660 notification widget/style associations. Default chat remains233; "
+        "generic notification metadata does not create an additional reward or force a second modal.",
+        "verified_reference", sha(levels_path.read_bytes()))]
+    recovery_source = [source_record(str(controls_path.relative_to(ROOT)),
+        "Original669 selected-item1/5/X/All+Take-All and unit-fee wording. "
+        "Retrieval602 Bank-All requires an explicit server permission; Office669 varp263 is instead its unit fee.",
+        "verified_reference", sha(controls_path.read_bytes()))]
     sources = facts["sources"]
 
     def source(page, notes, status="verified_reference"):
@@ -83,6 +98,11 @@ def apply_ui(inputs, content, bindings):
             "source": native_source,
         }
     interface("interface.level_up", "LEVELUP_DISPLAY")
+    interface("interface.level_up_notification", "NOTIFICATION_DISPLAY")
+    for identifier, binding in levels["canonical_associations"].items():
+        if content["interfaces"][identifier]["source_ids"] != [binding["source_group"]]:
+            raise ValueError("Level-up interface does not match its original native widget group")
+        content["interfaces"][identifier]["source"] = level_source
     interface("interface.read_book", "BOOK")
     interface("interface.newcomer_map", "AIDE_MAP")
     interface("interface.grouping", "GROUPING", False)
@@ -214,7 +234,7 @@ def apply_ui(inputs, content, bindings):
     content["ui"] = {
         "version": 1, "production_interfaces": production, "direct_production": sorted(direct_production), "quest_rewards": rewards,
         "level_up": {"interface": "interface.level_up", "title": "Congratulations, you have just advanced a {skill} level!",
-                     "line": "Your {skill} level is now {level}.", "source": native_source},
+                     "line": "Your {skill} level is now {level}.", "source": level_source},
         "stage_interfaces": rules, "stage_overlays": overlays,
         "equipment_stats_interface": "interface.equipment_stats", "death_preview_interface": "interface.items_kept_on_death",
         "ability_names": abilities, "weapon_style_names": names, "unarmed_style_names": unarmed_names,
@@ -227,6 +247,18 @@ def apply_ui(inputs, content, bindings):
                      for identifier, label in [("rune_pouch", "Rune pouch"), ("looting_bag", "Looting bag"), ("potion_storage", "Potion storage")]
                  ],
                  "source": bank_source + [source_record("research/interface-contracts/sources.json", "Explicit native bank preference migration defaults; not observed per-account settings.", "inference", "ui-contract-v1")]},
+        "recovery": {
+            "grave_bank": {
+                "kind": "unavailable",
+                "reason": "The normal M1 grave profile has no verified Bank-All permission. A legacy source retrieval button is not authorization.",
+                "source": recovery_source,
+            },
+            "office_bank": {
+                "kind": "unavailable",
+                "reason": "The current source Death's Office offers 1/5/X/All and Take-All, not a Bank-All action.",
+                "source": recovery_source,
+            },
+        },
         "coffer": bound({"eligible_items": [], "exchange_values": exchange, "minimum_value": facts["coffer"]["minimum_exchange_value"],
                          "credit": {"numerator": 105, "denominator": 100}, "maximum_balance": 2147483647, "source": coffer_source}, coffer_source),
         "chat": {"guard": mainland, "maximum_bytes": 80, "radius": 15, "messages_per_window": 5, "window_ticks": 8,
@@ -240,6 +272,10 @@ def apply_ui(inputs, content, bindings):
     }
     content["schema_version"] = 4
     bindings["ui"] = {"schema_version": 1, "capability": "game.ui.v1", "source_facts": "research/interface-contracts/sources.json",
+                      "additive_capabilities": ["game.ui.amounts.v1", "game.ui.recovery.v1"],
+                      "native_level_associations": levels["canonical_associations"],
+                      "native_control_bindings": str(controls_path.relative_to(ROOT)),
+                      "remaining_source_permissions": ["normal_grave_bank_all"],
                       "semantic_states": len(rules), "introduced_containers": ["item.vial", "item.beer_glass"],
                       "death_value_extension": {"revision": provider["revision"], "rows": value_rows},
                       "scope": "Required consumption replacements only; no new acquisition family, source geometry or reward change."}

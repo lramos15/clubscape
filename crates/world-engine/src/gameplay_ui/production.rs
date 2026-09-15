@@ -2,6 +2,102 @@ use super::*;
 use clubscape_simulation::inventory;
 
 impl WorldEngine {
+    pub(super) fn select_production_ui(
+        &self,
+        world: &mut WorldState,
+        character: &mut CharacterState,
+        menu_id: &str,
+        recipe: &RecipeId,
+        selection: Option<(u32, ProductionMode)>,
+    ) -> GameResult<()> {
+        self.require_ui_free(character)?;
+        let menu = ui_mut(character)?
+            .production
+            .as_ref()
+            .filter(|menu| menu.id == menu_id)
+            .cloned()
+            .ok_or_else(|| {
+                GameError::new(
+                    GameErrorCode::StaleCommand,
+                    "Production menu is no longer open.",
+                )
+            })?;
+        if !menu.recipes.contains(recipe) || menu.instance != character.runtime.instance {
+            return Err(GameError::new(
+                GameErrorCode::NotOwned,
+                "Recipe does not belong to the open source production context.",
+            ));
+        }
+        if let Some(inputs) = &menu.inventory_selection {
+            self.production_inventory_permission(character, inputs, &menu.recipes)?;
+        }
+        let (quantity, mode) = match selection {
+            Some(selection) => selection,
+            None => (
+                self.production_all_quantity(world, character, recipe, menu.target.as_ref())?,
+                ProductionMode::MakeX,
+            ),
+        };
+        self.production_permission(
+            world,
+            character,
+            recipe,
+            menu.target.as_ref(),
+            quantity,
+            mode,
+        )?;
+        self.start_selected_production(world, character, recipe, menu.target, quantity, mode)
+    }
+
+    pub(super) fn production_all_quantity(
+        &self,
+        world: &WorldState,
+        character: &CharacterState,
+        id: &RecipeId,
+        target: Option<&WorldTarget>,
+    ) -> GameResult<u32> {
+        let recipe = self
+            .content
+            .recipes
+            .get(id)
+            .ok_or_else(|| unknown("Unknown source recipe."))?;
+        let mut inputs = BTreeMap::<ItemId, u32>::new();
+        for stack in &recipe.inputs {
+            let required = inputs.entry(stack.item.clone()).or_default();
+            *required = required
+                .checked_add(stack.quantity.get())
+                .ok_or_else(|| invalid_content("Source recipe input quantity overflow."))?;
+        }
+        let quantity = inputs
+            .iter()
+            .map(|(item, required)| {
+                inventory::count(&character.inventory, &self.content.items, item)
+                    .map(|available| available / required)
+            })
+            .collect::<GameResult<Vec<_>>>()?
+            .into_iter()
+            .min()
+            .ok_or_else(|| unavailable("Make-All requires finite source inventory inputs."))?;
+        if quantity == 0 {
+            return Err(GameError::new(
+                GameErrorCode::InsufficientItems,
+                "There are no complete source input sets to produce.",
+            ));
+        }
+        self.production_permission(
+            world,
+            character,
+            id,
+            target,
+            quantity,
+            ProductionMode::MakeX,
+        )?;
+        if quantity > 1 {
+            self.recipe_delay(recipe, false, true)?;
+        }
+        Ok(quantity)
+    }
+
     pub(crate) fn production_inventory_permission(
         &self,
         character: &CharacterState,

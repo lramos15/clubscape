@@ -210,6 +210,7 @@ export interface RecoveryManagementView {
       id: string; item: ItemView;
       /** Quotes for one unit and the full remaining entry; neither implies a UI pricing formula. */
       unitFee: string; fullStackFee: string;
+      /** Per-entry executable quantities include funds/source permissions; they are not additive. */
       inventoryCapacity: number; bankCapacity: number; take: UiPermission; bank: UiPermission;
     }>;
     fullSelectionFee: string; takeAll: UiPermission;

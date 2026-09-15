@@ -2,7 +2,7 @@ use super::*;
 use crate::{ContextView, Permission};
 use clubscape_simulation::{bank, bank_layout};
 
-fn permission(result: GameResult<()>) -> GameResult<UiPermission> {
+pub(super) fn permission(result: GameResult<()>) -> GameResult<UiPermission> {
     let value = Permission::evaluate(result)?;
     Ok(UiPermission {
         allowed: value.allowed,
@@ -51,7 +51,16 @@ impl WorldEngine {
         match &context {
             ContextView::Shop { view } => active = view.interface.clone(),
             ContextView::Recovery { views } => {
-                active = views.first().and_then(|view| view.interface.clone())
+                active = match views.first().and_then(|view| view.interface.clone()) {
+                    Some(interface) => Some(interface),
+                    None => match &runtime::schedule(character)?.access {
+                        Some(
+                            ContainerSession::Grave { interface, .. }
+                            | ContainerSession::DeathOffice { interface },
+                        ) => Some(interface.clone()),
+                        _ => None,
+                    },
+                }
             }
             _ => {}
         }
@@ -90,6 +99,15 @@ impl WorldEngine {
                                         1,
                                         ProductionMode::MakeX,
                                     ))?,
+                                    all: Some(permission(
+                                        self.production_all_quantity(
+                                            world,
+                                            character,
+                                            id,
+                                            menu.target.as_ref(),
+                                        )
+                                        .map(|_| ()),
+                                    )?),
                                 })
                             })
                             .collect::<GameResult<Vec<_>>>()?;
@@ -313,6 +331,18 @@ impl WorldEngine {
                     ))
                 })?,
                 coffer_items,
+                management: Some(self.recovery_management_view(
+                    world,
+                    character,
+                    match &context {
+                        ContextView::Recovery { views } => views,
+                        _ => {
+                            return Err(invalid_state(
+                                "Recovery controls lost their source context.",
+                            ));
+                        }
+                    },
+                )?),
             })
         } else {
             None
@@ -527,6 +557,7 @@ impl WorldEngine {
             insert_mode: layout.insert,
             placeholders: layout.placeholders,
             amount: layout.amount,
+            amount_selection: Some(layout.amount_selection()?),
             noted: layout.noted,
             tabs,
             entries,

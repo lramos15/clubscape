@@ -66,6 +66,8 @@ def input_lock(inputs):
     paths += [ROOT / "research/interface-contracts/sources.json", ROOT / "research/interface-contracts/native-ui.json",
               BINDINGS / "ui-item-definitions.json.gz"]
     paths += [ROOT / "research/interface-contracts/actor-observer-bindings.json"]
+    paths += [ROOT / "research/interface-contracts/level-up-native.json",
+              ROOT / "research/interface-contracts/control-bindings.json"]
     paths += [ROOT / "research/current-source/m1-consumable-validation.json",
               ROOT / "tools/cache-import/CONSUMABLE_ASSETS.md"]
     paths += [ROOT / "research/runtime-bindings" / name for name in (

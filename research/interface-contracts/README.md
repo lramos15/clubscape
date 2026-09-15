@@ -6,6 +6,30 @@ metadata and the approved 71 semantic tutorial-state / 11 HUD-signature
 mapping. The signatures explicitly leave unmentioned controls unknown; absence
 is not a license to invent hidden tabs or numeric varp281 stages.
 
+The additive amount/recovery contract was published as
+`005204affcd098e85cf63349cb1993410134e6a9`, after the current-scene template
+observer `c7f3578e4b31cb659fd52b68c685200d970646ba`.
+`level-up-native.json` and `control-bindings.json` were published early in
+`2fef76d1fba50ca03dc8c38e16ed7c2c84634fc9`. They retain exact original decoded
+widgets, named child IDs, script hashes and qualifications, not new layouts,
+screenshots or a source-pack replacement. The bounded offline probe verifies
+the original cache CRCs/versions and pinned files before and after inspection.
+
+Source233 is the existing level-up chat layout (text1/2, continue3, font497);
+source660 is the generic notification style (title4/body8, script3343).
+Canonical default/history stays233. Both associations use the existing reward
+kind/interface/skill/level/continuation; there is no fake quest scroll, extra
+grant or assertion that every level gain opens both interfaces.
+
+Office669 supplies true1/5/X/All and Take-All controls. Its varp263 is a unit
+fee. Retrieval602 uses that varp differently for a conditional Bank-All button;
+it is not evidence to grant Office banking. The normal M1 grave permission is
+still explicitly unverified, and672 is a separate original grave layout, not a
+silent replacement for the accepted602 association. The generic banking
+implementation is real and source-gated; the canonical permission gap remains
+visible as `normal_grave_bank_all`. No source-world pin is silently changed to
+hide that qualification.
+
 `tools/m1-content/ui4.py` applies the focused UI extension **after** the audited
 104 source bindings, seven coupled updates and source selector/geometry
 projection. `verify_ui4.py` removes only that enumerated additive extension and

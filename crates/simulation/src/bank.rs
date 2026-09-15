@@ -202,6 +202,31 @@ fn stack_at(bank: &Bank, slot: usize) -> GameResult<&ItemStack> {
         })
 }
 
+/// Transfers an already-owned ordinary stack from a trusted external container into the same bank.
+/// The caller must remove the source ownership in the same transaction.
+pub fn receive_owned_stack(
+    character: &mut CharacterState,
+    content: &GameContent,
+    stack: &ItemStack,
+) -> GameResult<ItemStack> {
+    crate::require_ordinary_stack(stack)?;
+    validate(&character.bank, &content.items)?;
+    let (unnoted, _) = forms(&content.items, &stack.item)?;
+    let received = ItemStack {
+        item: unnoted.id.clone(),
+        ..stack.clone()
+    };
+    let mut draft = character.clone();
+    add_to_bank(
+        &mut draft.bank,
+        &received,
+        draft.runtime.ui.as_ref().map(|ui| &ui.bank),
+    )?;
+    reconcile_ui(&mut draft, true)?;
+    *character = draft;
+    Ok(received)
+}
+
 fn add_to_bank(
     bank: &mut Bank,
     stack: &ItemStack,

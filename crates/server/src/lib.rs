@@ -410,6 +410,8 @@ async fn execute_command(
                 capabilities.push(clubscape_protocol::ACTOR_OBSERVER_CAPABILITY.to_owned());
                 if state.game.as_ref().is_some_and(|game| game.gameplay_ui) {
                     capabilities.push(clubscape_protocol::GAMEPLAY_UI_CAPABILITY.to_owned());
+                    capabilities.push(clubscape_protocol::UI_AMOUNTS_CAPABILITY.to_owned());
+                    capabilities.push(clubscape_protocol::UI_RECOVERY_CAPABILITY.to_owned());
                 }
             }
             Ok(server_message::Result::Hello(ServerHello {

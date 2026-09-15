@@ -1,3 +1,4 @@
+mod amounts;
 mod anvil;
 #[path = "../../../world-engine/tests/support/mod.rs"]
 mod engine_fixtures;
