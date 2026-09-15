@@ -97,7 +97,7 @@ const intentCheck: Validator = (value, path) => {
 const projectionCheck = object({
   version: oneOf(1), activeInterface: nullable(identity),
   production: nullable(object({
-    id: identity, interface: identity, target,
+    id: identity, interface: identity, target: nullable(target),
     recipes: array(object({ recipe: identity, name: text, outputs: array(item), single: permission, makeX: permission }), "recipe"),
   })),
   reward: nullable(object({
@@ -155,8 +155,6 @@ export function gameplayUiProblem(world: WorldView): UiContractProblem | null {
 }
 
 function validateProjection(ui: GameplayUiView): UiContractProblem | null {
-  if (isRecord(ui.production) && ui.production.target === null)
-    return { message: "Inventory-only production requires the published nullable-target correction.", code: "ui.production.target.unsupported" };
   const invalid = (detail: string): UiContractProblem => ({
     message: `Invalid ${GAMEPLAY_UI_CAPABILITY} projection: ${detail}.`, code: "ui.projection.invalid",
   });
@@ -227,8 +225,6 @@ export function checkUiIntent(world: WorldView, intent: GameplayUiIntent): UiCon
     case "production_select": {
       const menu = ui.production;
       if (!menu || menu.id !== intent.menu_id) return stale("That production menu has changed or closed.");
-      // The published correction is pending; never manufacture a target for an inventory-only menu.
-      if (!menu.target) return { message: "Inventory-only production requires the published nullable-target correction.", code: "ui.production.target.unsupported" };
       const choice = menu.recipes.find(row => row.recipe === intent.recipe);
       return denied(intent.mode === "single" ? choice?.single : choice?.makeX, "Production");
     }

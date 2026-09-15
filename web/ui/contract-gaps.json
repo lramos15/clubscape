@@ -8,6 +8,16 @@
     "authorized_cherry_pick": "5d56c93",
     "typescript": "web/shared/contracts.ts",
     "rust": "crates/game-types/src/gameplay_ui.rs",
+    "nullable_production_correction": {"upstream": "351847f3f5255f6de6e345d5217a7910eaa145a3", "authorized_pick": "ccbfbb0", "meaning": "Explicit null is legitimate inventory-only production; omitted/malformed target fields are invalid."},
+    "transport_handoff": {
+      "world_snapshot_ui_tag": 20,
+      "world_input_ui_tag": 41,
+      "expected_bank_revision_field": 21,
+      "expected_bank_revision_source": "Exact decimal ui.bank.revision at request creation, never world/character revision; retain on retries.",
+      "wire_implementation_in_ui": false,
+      "broad_runtime_commits_not_integrated": ["9ae74e89", "50f212269d664ae4f18230c11ccde843cb039734"],
+      "awaiting": "Owner-relayed final v4 runtime/assets/dialogue/observer integration."
+    },
     "status": "Types published; backend implementation/protobuf/canonical projection remain a separate closure. No service implementation is inferred from types.",
     "version_rule": "WorldView.ui.version must equal 1. Absent, unknown or malformed projections are explicit unsupported/error states, never fabricated empty views."
   },
@@ -41,11 +51,6 @@
       "scope": "Real backend/protocol/shell implementation of the published contract",
       "extension": "No new fork: implement the published GameplayUiView/GameplayUiIntent and project WorldView.ui.version=1 through AppServices.state/subscribe/send.",
       "reason": "The exact type publication is integrated, but component service-double acknowledgements do not prove protobuf transport, authoritative execution, canonical data, persistence or the real-server journey."
-    },
-    {
-      "scope": "Inventory-only production target correction",
-      "extension": "GameplayUiView.production.target: WorldTarget | null, with the corresponding authoritative Rust/protobuf correction relayed by its owner.",
-      "reason": "The published d1532d6 target is nonnullable. Runtime null explicitly reports ui.production.target.unsupported. No dummy facility is manufactured for dough or another inventory-only recipe."
     },
     {
       "scope": "Source Make-All and persistent bank All defaults",

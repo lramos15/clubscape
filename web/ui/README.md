@@ -13,13 +13,20 @@ treated as a revocation of the external approval. Asset preparation now runs the
 unchanged strict pack validator before generating assets.
 
 The authorized contract publication `d1532d6` is integrated as `5d56c93`.
+The independent nullable-production correction `351847f3` is integrated as
+`ccbfbb0`: `production.target: null` is legitimate inventory-only production,
+not a missing capability or an invitation to invent a facility. Omitted or
+malformed target fields still fail the complete version1 projection check.
+The bounded correction's unit/browser/native-modal evidence is recorded in
+`evidence/production-correction/`; preceding complete-source reports retain
+their original commit basis rather than claiming unrelated tests were rerun.
 `GameplayUiView` / `GameplayUiIntent` are binding, **not proof that the backend
 or protobuf bridge implements them**. Actual versioned projection data is
 required; absent/unknown/malformed `WorldView.ui` is explicit unsupported/error
 feedback rather than a fabricated empty success.
 
-Current component validation: TypeScript and 38 UI unit tests pass; all 20 legacy,
-15 versioned, 7 real-audio-observer and 6 music-state browser cases pass. The 29 integrated audio
+Current component validation: TypeScript and 39 UI unit tests pass; all 20 legacy,
+16 versioned, 7 real-audio-observer and 6 music-state browser cases pass. The 29 integrated audio
 policy/reward tests also pass. All **87/87** native-panel/full-overlay/owner-composition
 comparisons pass at the original zero tolerances. This resolves the earlier
 shop and guide-family raster differences, but does not complete the missing
@@ -150,6 +157,19 @@ instance. Production retains menu/recipe IDs and separate single/make-X
 permission. Bank menus and drag/drop retain entry IDs, reject changed
 identities, and wait for authoritative tab/quantity/notes updates. Placeholders
 remain `value: null`, never a zero-quantity spendable `ItemView`.
+
+The relayed final-wire constraints are `WorldSnapshot.ui` tag20 and
+`WorldInput.ui` tag41, with complete `ui.version === 1` negotiation. The future
+`expected_bank_revision` field21 must echo the decimal **`ui.bank.revision`**
+captured for that request, not the passive-tick-changing world/character
+revision. Retries retain the original complete request. This overlay sends
+the current published `GameIntent` through `AppServices`; it does not invent
+unpublished transport fields or marshal protobuf itself.
+
+Only the small nullable correction has been integrated here. Broad runtime
+commits `9ae74e89` / `50f21226` remain unconsumed pending the owner's final v4
+relay. Component production fixtures are not a bypass for the live anvil
+contextual-menu/progression blocker.
 
 Quest rewards project their supplied narrative and structured item/XP/point
 fields into the real source text slots9–15; continuation sends the supplied
@@ -426,8 +446,8 @@ Additional UI implementation/fidelity work remains:
   signatures (the 71 states, 29 families and 11 signatures are retained);
 * native source comparison of live data projections, not only source-widget
   replay, including all modal/choice/scroll/selected/disabled variants;
-* real backend/protobuf/canonical-data implementation of `game.ui.v1`,
-  including the separately promised nullable production-target correction;
+* the final v4 backend/protobuf/canonical-data integration for `game.ui.v1`;
+  the independent nullable production-target correction is already consumed;
 * canonical level-up chat/popup source associations and complete native layouts;
 * published production Make-All and bank default-All quantity semantics;
 * authoritative recovery fee-unit/capacity/per-row/bank-all data and partial

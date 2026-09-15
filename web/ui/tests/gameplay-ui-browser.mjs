@@ -258,6 +258,36 @@ try {
     assert.equal(await page.evaluate(() => window.component.ui.capturesPointer(850, 550)), true);
     await capture("smithing-v1-native-rows");
   });
+  await check("inventory-only null target renders native controls and preserves authority on reject/cancel", async () => {
+    await mount();
+    await patch(() => {
+      const s = window.component.services, w = structuredClone(s.state().world), yes = { allowed: true, code: null, reason: null };
+      w.ui.activeInterface = "interface.cooking";
+      w.ui.production = { id: "inventory.menu.opaque", interface: "interface.cooking", target: null,
+        recipes: [{ recipe: "inventory.dough.opaque", name: "Bread dough",
+          outputs: [{ ...w.player.inventory[2].item, id: "item.bread.dough", name: "Bread dough", sourceId: 2307, quantity: 1 }],
+          single: yes, makeX: { allowed: false, code: "Tutorial", reason: "Only single production is permitted." } }] };
+      s.patchWorld(w);
+    });
+    await reset();
+    await click("production-inventory.dough.opaque");
+    assert.deepEqual(await last(), { kind: "production_select", menu_id: "inventory.menu.opaque",
+      recipe: "inventory.dough.opaque", quantity: 1, mode: "single" });
+    assert.equal(await page.evaluate(() => window.component.services.state().world.ui.production.target), null);
+    assert.equal(await page.evaluate(() => window.component.services.state().world.player.inventory.some(row => row.item?.id === "item.bread.dough")), false);
+    await page.locator('[data-ui-control="production-inventory.dough.opaque"]').click({ button: "right" }); await frame();
+    assert.equal(await page.getByRole("button", { name: "Make-X Bread dough", exact: true }).isDisabled(), true);
+    await page.getByRole("button", { name: "Cancel", exact: true }).click(); await frame();
+    await patch(() => { window.component.services.rejection = { message: "Authoritative ingredients are unavailable.", errorId: "source.ingredients" }; });
+    await click("production-inventory.dough.opaque");
+    assert.match(await page.getByRole("status").innerText(), /source.ingredients/);
+    await click("notice-close");
+    assert.equal(await page.locator('[data-ui-control="production-inventory.dough.opaque"]').count(), 1);
+    await capture("inventory-only-null-production");
+    await reset(); await page.locator("canvas").press("Escape"); await frame();
+    assert.deepEqual(await last(), { kind: "close_interface" });
+    assert.equal(await page.evaluate(() => window.component.services.state().world.ui.production.id), "inventory.menu.opaque");
+  });
   await check("death preview uses actual kept/lost rows and exact monetary strings, not fixture classifications", async () => {
     await mount();
     await patch(() => {

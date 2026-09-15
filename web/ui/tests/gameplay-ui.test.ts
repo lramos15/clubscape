@@ -85,10 +85,29 @@ test("production retains menu/recipe identities and distinct single/make-X permi
   assert.equal(checkUiIntent(world, { ...request, menu_id: "expired-menu" })?.code, "ui.identity.stale");
   assert.equal(checkUiIntent(world, { ...request, mode: "make_x" })?.code, "Tutorial");
   assert.equal(checkUiIntent(world, { ...request, quantity: 4294967296 })?.code, "ui.request.invalid");
-  Reflect.set(world.ui.production, "target", null);
-  assert.equal(checkUiIntent(world, request)?.code, "ui.production.target.unsupported");
 });
 
+test("inventory-only production accepts explicit null, not a missing or malformed target field", () => {
+  const world = worldWithUi();
+  world.ui.production = { id: "inventory-menu", interface: "interface.cooking", target: null,
+    recipes: [{ recipe: "inventory-recipe", name: "Bread dough", outputs: [], single: allowed,
+      makeX: { allowed: false, code: "Tutorial", reason: "Only single production is permitted." } }] };
+  const request: GameplayUiIntent = { kind: "production_select", menu_id: "inventory-menu", recipe: "inventory-recipe", quantity: 1, mode: "single" };
+  assert.equal(gameplayUiProblem(world), null);
+  assert.equal(checkUiIntent(world, request), null);
+  assert.equal(checkUiIntent(world, { ...request, mode: "make_x" })?.code, "Tutorial");
+  assert.equal(checkUiIntent(world, { ...request, menu_id: "closed-menu" })?.code, "ui.identity.stale");
+  Reflect.deleteProperty(world.ui.production, "target");
+  assert.match(gameplayUiProblem(world)!.message, /ui.production.target/);
+  Reflect.set(world.ui.production, "target", { kind: "spawn", spawn: "" });
+  assert.equal(gameplayUiProblem(world)?.code, "ui.projection.invalid");
+  world.ui.production.target = { kind: "temporary_object", object: "actual-facility" };
+  assert.equal(checkUiIntent(world, request), null);
+  world.ui.production.target = null;
+  immutable(world);
+  assert.equal(checkUiIntent(world, request), null);
+  assert.equal(world.ui.production.target, null);
+});
 test("bank requests retain stable entries, placeholders and tab identities", () => {
   const world = bankWorld();
   immutable(world);

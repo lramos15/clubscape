@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import hashlib
 import json
+import argparse
 from pathlib import Path
 import re
 import shutil
@@ -67,7 +68,52 @@ def passed_tap(name, count):
     return {"passed": count, "total": count}
 
 
+def production_correction():
+    units = passed_tap("unit.tap", 39)
+    browser = passed("gameplay-ui-v1-tests.json", 16)
+    source = passed("presentation-comparison.json", 45)
+    if (RESULTS / "typecheck.log").read_text().strip():
+        raise ValueError("TypeScript diagnostics remain")
+    directory = EVIDENCE / "production-correction"
+    for name in ("typecheck.log", "unit.tap", "gameplay-ui-v1-tests.json", "presentation-comparison.json"):
+        copy(RESULTS / name, directory / name)
+    copy(RESULTS / "versioned/inventory-only-null-production.png", directory / "inventory-only-null-production.png")
+    for kind in ("presentations", "presentation-projections"):
+        for path in (RESULTS / kind).glob("*.png"):
+            copy(path, directory / kind / path.name)
+    contract = read(ROOT / "web/ui/contract-gaps.json")
+    report = {
+        "scope": "Bounded nullable-production UI correction; component fixture only, not live anvil/progression evidence.",
+        "implementation_commit": subprocess.check_output(["git", "rev-parse", "HEAD"], cwd=ROOT, text=True).strip(),
+        "authorized_correction": contract["published_contract"]["nullable_production_correction"],
+        "sourcePackSha256": contract["source_pack_sha256"],
+        "typecheck": {"passed": True}, "unit": units, "versioned_browser_cases": len(browser["cases"]),
+        "source_modal_checks": {"passed": len(source["results"]), "tolerance": 0},
+        "transport_handoff": contract["published_contract"]["transport_handoff"],
+        "files": [{"path": name, "sha256": digest(ROOT / name)} for name in [
+            "web/shared/contracts.ts", "crates/game-types/src/gameplay_ui.rs",
+            "web/ui/gameplay-ui.ts", "web/ui/tests/gameplay-ui.test.ts", "web/ui/tests/gameplay-ui-browser.mjs",
+        ]],
+        "finalAcceptance": False, "gameplayAcceptance": False,
+    }
+    write(directory / "summary.json", report)
+    prior = read(EVIDENCE / "summary.json")
+    prior["latest_bounded_followup"] = {
+        "path": "web/ui/evidence/production-correction/summary.json",
+        "implementation_commit": report["implementation_commit"],
+        "scope": "Nullable-production correction; preceding complete-source evidence retains its recorded commit basis.",
+    }
+    prior["remaining"] = contract
+    write(EVIDENCE / "summary.json", prior)
+    print(json.dumps({key: report[key] for key in ("implementation_commit", "unit", "versioned_browser_cases", "source_modal_checks")}))
+
+
 def main():
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--production-correction", action="store_true", help="Archive only the bounded nullable-target regression lane")
+    if parser.parse_args().production_correction:
+        production_correction()
+        return
     comparisons = {
         "source": passed("source-comparison.json", 87),
         "modes": passed("mode-comparison.json", 106),
@@ -76,10 +122,10 @@ def main():
         "music_ui": passed("music-ui-comparison.json", 8),
     }
     components = passed("component-tests.json", 20)
-    versioned = passed("gameplay-ui-v1-tests.json", 15)
+    versioned = passed("gameplay-ui-v1-tests.json", 16)
     audio_ui = passed("audio-ui-tests.json", 7)
     music_ui = passed("music-ui-tests.json", 6)
-    units = passed_tap("unit.tap", 38)
+    units = passed_tap("unit.tap", 39)
     audio_units = passed_tap("audio-policy.tap", 29)
     glyphs = read(RESULTS / "glyph-proof.json")
     if glyphs["failures"] or glyphs["checkedSpriteFrames"] < 1099 or glyphs["checkedFontGlyphs"] != 1024:
@@ -195,6 +241,7 @@ def main():
         "implementation_commit": subprocess.check_output(["git", "rev-parse", "HEAD"], cwd=ROOT, text=True).strip(),
         "source_pack_sha256": glyphs["sourcePackSha256"],
         "published_contract_upstream": "d1532d6fc063d2a02383a7b4bb1ca3c449e214ce",
+        "nullable_production_correction": "351847f3f5255f6de6e345d5217a7910eaa145a3",
         "contract_implementation_inferred_from_types": False,
         "typecheck": {"passed": True, "command": "pnpm exec tsc --noEmit"},
         "unit": units,
