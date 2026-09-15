@@ -92,17 +92,17 @@
       "status": "IMPLEMENTING",
       "specs": ["crates/world-engine/README.md", "spec/game-contracts.md"],
       "dependencies": ["M1-ENGINE-REVIEW"],
-      "allowed_paths": ["crates/world-engine/src/entities.rs", "crates/world-engine/src/combat.rs", "crates/world-engine/src/activities.rs", "crates/world-engine/src/lib.rs", "crates/world-engine/tests/actor_review.rs"],
+      "allowed_paths": ["crates/world-engine/src/entities.rs", "crates/world-engine/src/combat.rs", "crates/world-engine/src/activities.rs", "crates/world-engine/src/engagement.rs", "crates/world-engine/src/lib.rs", "crates/world-engine/tests/actor_review.rs"],
       "forbidden_paths": ["prompt.md", "crates/game-types/**", "crates/world-engine/src/commerce.rs", "crates/protocol/**", "crates/server/**", "content/**", "assets/**", "web/**", "milestones/**"],
       "outputs": ["Presence-correct NPC navigation", "Synchronized selected/queued combat style with preserved cadence"],
       "validation_commands": ["cargo test -p clubscape-world-engine", "cargo clippy -p clubscape-world-engine --all-targets -- -D warnings"],
-      "test_requirements": ["Offline does not block", "Connected/pending combat disconnect still blocks", "Legacy presence requires authority", "Weapon changes do not stop legal combat or accelerate attack", "Shared lib.rs changes are NPC tick-context plumbing only"],
+      "test_requirements": ["Offline does not block", "Connected/pending combat disconnect still blocks", "Legacy presence requires authority", "Weapon changes do not stop legal combat or accelerate attack", "Shared lib.rs and engagement.rs changes are NPC tick-context plumbing only, not engagement-policy changes"],
       "acceptance": ["SQL m1-actor-review-fixes records actual reviewed-bug regressions passing"],
       "reserved_namespaces": [],
       "source_notes": ["Independent review e6925772 at89f3386"],
       "parity_entries": [],
       "adaptations": [],
-      "evidence": []
+      "evidence": ["Partial8705f1d synchronizes queued combat and tracked collision;185prior+11newtests pass,4enabledlegacy-presence tests still fail. The same worker is authorized to forward the already available TickContext from engagement.rs return-to-spawn and finish all helper/caller plumbing. Do not integrate or markdone until all regressions pass."]
     },
     {
       "id": "M1-HEADLESS-JOURNEY",
