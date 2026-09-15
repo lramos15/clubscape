@@ -72,6 +72,11 @@ Purchases currently fail explicitly, before network/sequence allocation,
 pending the relayed expected-item wire safety contract. This is a narrow
 purchase safety dependency, not the former backend view/lifecycle interlock.
 
+`inventoryActions` in the display catalog contains only labels extracted from
+verified original item `interfaceOptions`, preserving their order. The source
+server still validates every item request. PlayedTime/GroundClock persistence
+remains private; the browser neither reads those clocks nor sets/advances them.
+
 Only `clubscape.preferences.v1` stores local, schema-checked normalized channel
 volumes and the named visual profile. Tokens/account names/passwords are not
 preferences. Browser storage denial/quota failure leaves memory-only settings.
@@ -84,6 +89,13 @@ preferences. Browser storage denial/quota failure leaves memory-only settings.
 audio/renderer adapters register successful decoding of verified bytes.
 `retain(ids)` releases previous-region caches, retaining requested startup/
 region assets rather than downloading the whole source cache.
+
+The source-definition delivery tool now supplies real canonical item/NPC/
+object/region JSON and original inventory labels. The browser regression helper
+can fetch, hash-check and decode original item/region records through the same
+loader. This metadata delivery is not a renderer/UI/audio adapter or a source
+world connection; its currently oversized private game descriptor fails the
+actual server's limit rather than silently dropping asset IDs.
 
 Renderer frame promises must resolve **after that actual render submission's
 `GPUQueue.onSubmittedWorkDone()` receipt**. RAF requests stay pipelined; no

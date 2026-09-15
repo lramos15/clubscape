@@ -97,6 +97,9 @@ test("untrusted asset paths and duplicate/foreign source manifest identities are
   const manifest = await fixtureManifest();
   assert.throws(() => parseContentManifest({ ...manifest, sourcePackSha256: "0".repeat(64) }));
   assert.throws(() => parseContentManifest({ ...manifest, assets: [...manifest.assets, manifest.assets[0]] }));
+  assert.throws(() => parseContentManifest({
+    ...manifest, catalog: { ...manifest.catalog, inventoryActions: { "item.not_in_source_catalog": ["Drop"] } },
+  }));
 });
 
 test("preferences persist only a bounded allowlist, never arbitrary input fields", async () => {

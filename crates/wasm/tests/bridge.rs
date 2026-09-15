@@ -255,6 +255,8 @@ fn malformed_inputs_and_creation_options_do_not_enter_the_pending_queue() {
         r#"{"kind":"walk","destination":{"x":3200,"y":3200,"plane":4},"running":false}"#,
         r#"{"kind":"set_setting","setting":{"setting":"invented","enabled":true}}"#,
         r#"{"kind":"produce_selected","recipe":"recipe.fixture","target":null,"quantity":2,"mode":"single"}"#,
+        r#"{"kind":"set_played_time","ticks":"120000"}"#,
+        r#"{"kind":"set_ground_clock","ground_item_id":"ground.fixture","clock":"owner_online"}"#,
     ] {
         assert!(bridge.submit(&id(4), input).is_err());
     }
@@ -523,6 +525,26 @@ fn source_models_are_not_fabricated_icons_and_unevaluated_permissions_stay_unava
     assert_eq!(state["world"]["groundItems"][0]["canTake"], false);
     assert!(
         state["world"]["unavailableViews"]
+            .as_array()
+            .unwrap()
+            .iter()
+            .any(|view| view["view"] == "inventory_actions")
+    );
+    catalog
+        .inventory_actions
+        .insert("item.fixture".into(), vec!["Wield".into(), "Drop".into()]);
+    let labelled: Value = serde_json::from_str(
+        &bridge
+            .set_catalog(&serde_json::to_string(&catalog).unwrap())
+            .unwrap(),
+    )
+    .unwrap();
+    assert_eq!(
+        labelled["world"]["player"]["inventory"][0]["item"]["actions"],
+        json!(["Wield", "Drop"])
+    );
+    assert!(
+        !labelled["world"]["unavailableViews"]
             .as_array()
             .unwrap()
             .iter()

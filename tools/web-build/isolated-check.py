@@ -82,6 +82,27 @@ def main():
         env["CLUBSCAPE_WEB_ROOT"] = str(ROOT / "web/dist")
         env["CLUBSCAPE_BUILD_REVISION"] = command(["git", "rev-parse", "HEAD"])
         env["TMPDIR"] = str(runtime)
+        probe_root = os.environ.get("CLUBSCAPE_GAME_DESCRIPTOR_PROBE")
+        if probe_root:
+            probe_root = (ROOT / probe_root).resolve()
+            if not probe_root.is_relative_to(ROOT):
+                raise RuntimeError("Game descriptor probe must use an owned worktree directory.")
+            descriptor = probe_root / "clubscape-game.json"
+            probe_env = dict(env, CLUBSCAPE_GAME_ROOT=str(probe_root))
+            probe = subprocess.run([str(target / "debug/clubscape-server")], cwd=ROOT,
+                                   env=probe_env, capture_output=True, text=True, timeout=20)
+            events = [json.loads(line).get("fields", {}) for line in probe.stdout.splitlines() if line]
+            failure = next((event for event in events if event.get("event") == "startup_failure"), None)
+            if probe.returncode == 0 or failure is None or failure.get("error_kind") != "game_file_size":
+                raise RuntimeError("Canonical game-root probe did not fail at the expected descriptor bound; reassess the integration rather than preserving an obsolete blocker.")
+            (evidence / "game-root-startup.json").write_text(json.dumps({
+                "kind": "actual-canonical-game-root-startup",
+                "result": "blocked", "testedRevision": env["CLUBSCAPE_BUILD_REVISION"],
+                "artifactSha256": json.loads(descriptor.read_text())["sha256"],
+                "descriptorBytes": descriptor.stat().st_size, "descriptorLimit": 256 * 1024,
+                "exitCode": probe.returncode, "errorId": failure.get("error_id"),
+                "errorKind": failure["error_kind"], "gameplayAccepted": False,
+            }, indent=2) + "\n")
         log_path = local / "server.jsonl"
         with log_path.open("w") as log:
             process = subprocess.Popen([str(target / "debug/clubscape-server")], cwd=ROOT, env=env,

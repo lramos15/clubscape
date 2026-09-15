@@ -5,6 +5,9 @@ import { boundedBytes } from "./transport.ts";
 export { BrowserApp } from "./client.ts";
 export { RpcTransport } from "./transport.ts";
 export { checkCapability } from "./capability.ts";
+export { AssetLoader } from "./assets.ts";
+export { parseContentManifest } from "./manifest.ts";
+export { loadBuild, verifiedJson } from "./build.ts";
 export type { PublicWorld, PublicRecovery, QuoteRequest, QuoteView, ShopPurchaseIntent } from "./public-state.ts";
 
 /** Programmatic bridge entry; not a UI, fixture world, or account bypass. */

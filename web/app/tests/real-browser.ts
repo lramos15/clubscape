@@ -78,7 +78,8 @@ export async function browserCheck(): Promise<void> {
       || document.querySelector<HTMLElement>("#bootstrap-status")?.hidden === true);
     const result = await page.evaluate(async () => {
       const path = "/client/bridge.js";
-      const { BrowserApp, RpcTransport, createProtocolClient, checkCapability } = await import(path) as typeof import("../bridge.ts");
+      const { BrowserApp, RpcTransport, createProtocolClient, checkCapability, AssetLoader, loadBuild, verifiedJson, parseContentManifest } =
+        await import(path) as typeof import("../bridge.ts");
       const checks: string[] = [];
       const require: (condition: unknown, message: string) => asserts condition = (condition, message) => {
         if (!condition) throw new Error(message);
@@ -93,9 +94,36 @@ export async function browserCheck(): Promise<void> {
       const loginName = `browser_${random().slice(0, 10)}`;
       const password = random() + random();
       let capability: { available: boolean; failure: string | null };
+      let sourceMetadata: { contentRevision: string; artifactSha256: string; manifestSha256: string; assets: number; decoded: number } | null = null;
       try { await checkCapability(); capability = { available: true, failure: null }; }
       catch (error) { capability = { available: false, failure: error instanceof Error ? error.message : "capability unavailable" }; }
       try {
+        const build = await loadBuild();
+        if (build.content) {
+          const document = await verifiedJson(build.content.path, build.content.sha256, 8 * 1024 * 1024, fetch.bind(globalThis));
+          const manifest = parseContentManifest(document.value);
+          const assets = new AssetLoader(manifest, document.sha256);
+          try {
+            const item = Object.entries(manifest.catalog.items).find(([, item]) => item.asset !== null && item.sourceId !== null);
+            const region = Object.values(manifest.regions)[0];
+            require(item && item[1].asset && region, "Real source metadata selection is missing.");
+            const definition = await assets.json(item[1].asset) as { id: number; interfaceOptions: Array<string | null> };
+            require(definition.id === item[1].sourceId, "Published original item identity changed.");
+            require(JSON.stringify(manifest.catalog.inventoryActions?.[item[0]])
+              === JSON.stringify(definition.interfaceOptions.filter((name) => name !== null && name !== "")),
+            "Inventory action labels are not the original source definition's labels.");
+            const terrain = await assets.json(region.sceneAsset);
+            require(terrain !== null && typeof terrain === "object" && Object.keys(terrain).length > 0,
+              "Original region metadata did not decode.");
+            const observed = assets.observe();
+            require(observed.length === 2 && observed.every((asset) => asset.fetched && asset.decoded),
+              "Source fetch/decode observations do not describe completed work.");
+            sourceMetadata = { contentRevision: manifest.contentRevision, artifactSha256: manifest.artifactSha256,
+              manifestSha256: document.sha256, assets: manifest.assets.length, decoded: observed.length };
+            checks.push("real canonical ContentManifest and original item/region fetch/hash/decode");
+            checks.push("inventory action labels retain original source definition values");
+          } finally { assets.dispose(); }
+        }
         await app.start();
         require(app.state().phase === "title", "Hello did not reach the title phase.");
         checks.push("real browser WASM initialization and binary hello");
@@ -163,7 +191,7 @@ export async function browserCheck(): Promise<void> {
         for (let index = 0; index < 20; index++) require(window.__clubscapeBenchmarkV1?.read(null).renderedFrames === firstFrames, "read() advanced counters.");
         checks.push("benchmark read-only and absent-renderer readiness/counters remain false/zero");
         return {
-          checks, capability, crossOriginIsolated,
+          checks, capability, sourceMetadata, crossOriginIsolated,
           userAgent: navigator.userAgent,
           build: benchmark.identity, benchmarkReady: benchmark.ready, completedRendererFrames: benchmark.renderedFrames,
           visibleBootstrapDiagnostic: document.querySelector("#bootstrap-status")?.textContent,
@@ -182,6 +210,7 @@ export async function browserCheck(): Promise<void> {
       profile: "sparky-vulkan-x11; headful Xvfb1280x800/DPR1; not physical presentation",
       sandbox: { namespaceAndSeccompVerified: true, gpuProcessSandboxed: system.gpu.auxAttributes?.sandboxed ?? null },
       build: result.build, capability: result.capability, requestPaths: [...requestPaths].sort(),
+      sourceMetadata: result.sourceMetadata,
       benchmarkReady: result.benchmarkReady, completedRendererFrames: result.completedRendererFrames,
       screenshot: "bootstrap-integration-diagnostic.png",
       screenshotSha256: createHash("sha256").update(await readFile(resolve(output, "bootstrap-integration-diagnostic.png"))).digest("hex"),

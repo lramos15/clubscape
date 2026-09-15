@@ -109,17 +109,73 @@ compiler over stdin. Region scene-asset IDs must match that
 compiled content. Files reside under `asset-root` at their public URL paths
 without the leading slash. No entire cache is copied.
 
-Canonical artifact3 is `m1.source-backed.v3.95f50b40601a821f`, raw SHA-256
-`0181ec69456101defccbc8dd99b579ed849caae6301d801387732bea70fe98f5`.
+Canonical artifact3 is `m1.source-backed.v3.327d3a78f3bdad7c`, raw SHA-256
+`a200ca08c80f6a3fc812fe02ca95f52325e183084f83b12e8d470a1f37cc6d62`.
 The checked projection contains118 item definitions,29 runtime regions,
 one shop and5,010 compiled referenced asset IDs. Its exact six remaining
 unresolved paths are preserved in `contentValidation`, not treated as active
 failures or erased. `crates/server/src/game_service/readiness.rs` owns the
 executable F2P inactivity proofs and revalidates restored/mutated state.
-The shell neither duplicates those proofs nor bypasses them. Compiler/display
-projection is **not runtime readiness**: the pending source solid-target reach
-and fresh manual-drop offline-clock probes remain engine-owner work.
+The shell neither duplicates those proofs nor bypasses them. The authorized
+`faa8002` native fix passes source-solid near-face contact, Single1/Make-X-one3,
+owner-online ground clocks and the120000 played-tick boundary. The former
+two-native-failure interlock is obsolete. Compiler/display projection alone
+still does not establish a deployed server's readiness; that remains the
+actual backend's job.
 Projection evidence: `.local/evidence/m1-artifact3-projection.json`.
+
+### Real original-definition delivery
+
+```sh
+pnpm --dir web source:bundle .local/source-definition-a200ca08 <stable-world-uuid>
+```
+
+This new-directory-only tool strictly projects the current canonical artifact,
+uses the existing verified source-publication loader, and emits only the5,010
+required original item/NPC/object/region definitions. Region gzip is decoded
+losslessly and checked against its original JSON digest; collection members
+are canonically serialized without changing fields. Original inventory action
+labels come from `interfaceOptions`. Source hashes/selectors/transformations
+are recorded in the private `source-provenance.json`; no whole cache or private
+game state is exposed. Original geometry and asset IDs are retained.
+
+It is **not a renderer/UI/audio pack**: renderer manifest, cameras and controls
+remain explicitly unconfigured. The real source metadata can be delivered
+and decoded through `CLUBSCAPE_CONTENT_OWNER=web`, independently of gameplay.
+
+**Current concrete deployment blocker:** this artifact's asset membership
+cannot fit the backend's256-KiB `clubscape-game.json` limit. Even a hypothetical
+single shared shortest-form URL needs272,413 bytes; the real compact descriptor
+with distinct source routes is406,574 bytes. This is unrelated to the now-fixed
+native source probes. The command returns exit2 and `serverCompatible:false`
+while retaining its valid static outputs. It does not launch a truncated
+world, drop asset IDs, or bypass validation. The backend owner must relay a
+descriptor-budget/index-contract adjustment before this full canonical game
+root can start. A512-KiB descriptor bound would cover the current emitted map.
+
+The refusal is verified against the actual server binary, not inferred from
+the renderer: `.local/evidence/browser-shell/game-root-startup.json` records
+`game_file_size`, the exact canonical hash, byte counts and real error ID.
+The account-only service can independently deliver/decode these original
+source files without pretending a world was initialized:
+
+```sh
+CLUBSCAPE_CLIENT_MANIFEST=.local/source-definition-a200ca08/content/manifest.json \
+CLUBSCAPE_CLIENT_ASSET_ROOT=.local/source-definition-a200ca08 \
+CLUBSCAPE_CONTENT_OWNER=web \
+pnpm --dir web build
+
+CLUBSCAPE_GAME_DESCRIPTOR_PROBE=.local/source-definition-a200ca08 \
+CLUBSCAPE_BROWSER_EXECUTABLE=/path/to/verified/native/chrome \
+pnpm --dir web test:isolated
+```
+
+That run serves5,021 explicit public files, performs actual original item/region
+fetch/hash/JSON decoding and verifies source inventory labels in headful Chrome,
+alongside the real account lifecycle. It remains **not** rendered-game/UI
+signup, audio, journey or performance acceptance. The optional descriptor probe
+uses the owned test database configuration, must encounter the specific current
+startup bound, and never substitutes an account-only world response for it.
 
 For a game-owned asset bundle:
 
@@ -220,7 +276,9 @@ Before integrated-client completion:
    plus source inventory action labels. Preserve shop ItemId through the
    selection/WASM boundary; purchases stay unsent until the separate exact
    expected-item purchase wire contract is relayed. Do not manufacture that
-   field's ABI or work around source contact/offline-clock bugs.
+   field's ABI. Source contact/offline-clock fixes are integrated; the newly
+   demonstrated game-descriptor size limit and the separately pending actor
+   collision/style fixes remain visible, never bypassed with seeded state.
 4. Align renderer `observe()`/applied settings/GPU completion ABI and actual
    audio decode observations described in `web/app/README.md`. UI context menus
    may expose `worldContext(pick,x,y)`. Source entity/pose/morph/dynamic-object

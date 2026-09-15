@@ -26,8 +26,7 @@ pub(crate) fn stack(value: &game::Stack, catalog: &DisplayCatalog) -> Result<Val
         "id":value.item, "name":definition.name, "quantity":value.quantity,
         "sourceId":definition.source_id, "iconAsset":catalog.icons.get(&value.item),
         "instanceId":value.instance_id, "charges":value.charges,
-        // This protocol revision has no authorized inventory-menu projection.
-        "actions":[],
+        "actions":catalog.inventory_actions.get(&value.item).cloned().unwrap_or_default(),
     }))
 }
 
@@ -195,10 +194,15 @@ pub(crate) fn world(
         .iter()
         .map(|view| json!({"view":view.view,"reason":view.reason}))
         .collect();
-    if !player.inventory.is_empty() {
+    if player
+        .inventory
+        .iter()
+        .filter_map(|slot| slot.stack.as_ref())
+        .any(|stack| !catalog.inventory_actions.contains_key(&stack.item))
+    {
         unavailable_views.push(json!({
             "view":"inventory_actions",
-            "reason":"This generated protocol revision has no source inventory-menu projection; item actions remain unavailable.",
+            "reason":"Original inventory action-label bindings are missing for a visible item; labels are unavailable, not inferred.",
         }));
     }
     let recovery_context = context::recovery(value.recovery.as_ref(), catalog)?;

@@ -73,8 +73,9 @@ errors intact. It does not implement another guard/price/readiness engine.
   from an index. The separate expected-item purchase-wire safety fix is still
   pending exact relay. Both raw/index-only and selected purchases are refused
   before sequence allocation until that ABI is integrated.
-* Inventory **action-label** bindings are still absent, not an engine/context
-  API blocker. Source-labelled UI adapters must supply these separately.
+* Original inventory **action-label** bindings can be carried in the catalog
+  from the verified source collection's `interfaceOptions`. They are labels,
+  not an item-ownership or permission verdict. Missing labels stay explicit.
 * Additive public properties are typed in `web/app/public-state.ts`;
   `web/shared/contracts.ts` remains unchanged.
 * Animation strings and source audio asset IDs are passed through. An absent
@@ -97,7 +98,10 @@ as inventory sprites. It reports every remaining source binding without
 blanket-rejecting the six proved inactive alternatives and without classifying
 them itself. Actual readiness belongs to the server's executable
 `readiness.rs` profile checks; `runtimeReadinessEstablished` remains false.
-The pending solid-target/manual-drop clock engine probes are not bypassed.
+The authorized `faa8002` fix now supplies correct source-solid contact,
+owner-online ground clocks and private authoritative playtime. Its source
+probes pass; the former two-probe interlock is obsolete. No playtime/ground-clock
+field or setter is exposed through this bridge.
 The owned build tool also accepts canonical `.csc.gz` through bounded
 decompression and stdin. See `tools/web-build/README.md`.
 

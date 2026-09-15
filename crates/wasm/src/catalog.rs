@@ -38,6 +38,8 @@ pub struct DisplayCatalog {
     pub icons: BTreeMap<String, String>,
     #[serde(default)]
     pub shops: BTreeMap<String, ShopDefinition>,
+    #[serde(default)]
+    pub inventory_actions: BTreeMap<String, Vec<String>>,
 }
 
 #[cfg(not(target_arch = "wasm32"))]
@@ -130,5 +132,6 @@ pub fn from_compiled(content: &clubscape_content::CompiledContent) -> DisplayCat
                 )
             })
             .collect(),
+        inventory_actions: BTreeMap::new(),
     }
 }

@@ -43,6 +43,7 @@ export interface DisplayCatalog {
   equipmentSlots: string[];
   icons?: Record<string, string>;
   shops?: Record<string, { name: string; currency: string }>;
+  inventoryActions?: Record<string, string[]>;
 }
 
 export interface ContentValidation {
@@ -119,6 +120,11 @@ export function parseContentManifest(value: unknown): ContentManifest {
     invariant((Object.hasOwn(manifest.catalog.items, id) || Object.hasOwn(manifest.catalog.skills, id))
       && manifest.assets.some((entry) => entry.id === asset && entry.contentType.startsWith("image/")),
     "Source icon bindings must reference known content IDs and declared raster assets.");
+  }
+  for (const [id, actions] of Object.entries(manifest.catalog.inventoryActions ?? {})) {
+    invariant(Object.hasOwn(manifest.catalog.items, id) && Array.isArray(actions)
+      && actions.length <= 16 && actions.every((name) => typeof name === "string" && name.length > 0 && name.length <= 128),
+    "Invalid original inventory action-label binding.");
   }
   const assetsExist = (list: unknown): list is string[] => Array.isArray(list) && list.length <= 20_000
     && new Set(list).size === list.length && list.every((id) => ids.has(id));
