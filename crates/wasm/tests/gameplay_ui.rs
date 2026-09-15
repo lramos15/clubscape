@@ -148,10 +148,42 @@ fn invalid_versions_and_spendable_placeholder_shapes_fail_without_dummy_ui_value
     assert!(
         result["production"].is_null() && result["reward"].is_null() && result["bank"].is_null()
     );
+}
+
+#[test]
+fn inventory_only_production_preserves_an_explicit_null_without_a_dummy_facility() {
+    let mut source = view();
+    source.production.as_mut().unwrap().target = None;
+    let raw = serde_json::to_value(&source).unwrap();
+    assert!(raw["production"]["target"].is_null());
+    let decoded: GameplayUiView = serde_json::from_value(raw).unwrap();
+    let projected = gameplay_ui::project(&decoded).unwrap();
+    assert_eq!(projected["production"]["id"], "menu.fixture");
+    assert!(projected["production"]["target"].is_null());
+    assert_eq!(
+        projected["production"]["recipes"][0]["recipe"],
+        "recipe.fixture"
+    );
+    assert_eq!(
+        projected["production"]["recipes"][0]["single"],
+        permission()
+    );
+    assert_eq!(
+        decoded, source,
+        "A targetless menu is not an absent UI view."
+    );
+
+    let mut raw = serde_json::to_value(&source).unwrap();
+    raw["production"].as_object_mut().unwrap().remove("target");
+    let absent_wire_target: GameplayUiView = serde_json::from_value(raw).unwrap();
+    assert!(gameplay_ui::project(&absent_wire_target).unwrap()["production"]["target"].is_null());
+
     let mut raw = serde_json::to_value(view()).unwrap();
-    raw["production"]["target"] = Value::Null;
-    assert!(
-        serde_json::from_value::<GameplayUiView>(raw).is_err(),
-        "The pending nullable-target contract must not be approximated with a dummy spawn."
+    raw["production"]["target"] =
+        json!({"kind":"temporary_object","object":"dynamic_object.fixture"});
+    let placed: GameplayUiView = serde_json::from_value(raw).unwrap();
+    assert_eq!(
+        gameplay_ui::project(&placed).unwrap()["production"]["target"],
+        json!({"kind":"temporary_object","object":"dynamic_object.fixture"})
     );
 }

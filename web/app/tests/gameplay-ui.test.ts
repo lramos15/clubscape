@@ -79,12 +79,46 @@ test("exact UI fees/XP/revisions/weights and identities survive validation and r
   assert.throws(() => validateGameplayUi(overflow), /decimal strings/);
 });
 
-test("placeholders and pending production target correction never acquire fake values or targets", () => {
+test("placeholders never acquire fake spendable values", () => {
   const malformed = view();
   malformed.bank!.entries[0]!.placeholder = false;
   assert.throws(() => validateGameplayUi(malformed), /placeholder/);
-  const pending = view();
-  Reflect.set(pending.production!, "target", null);
-  assert.throws(() => validateGameplayUi(pending), /no dummy target/);
-  assert.equal(pending.production!.target, null);
+});
+
+test("inventory-only production accepts explicit null while retaining complete version-1 negotiation", () => {
+  const source = view();
+  source.production!.target = null;
+  const before = JSON.stringify(source);
+  validateGameplayUi(source);
+  const world = { ui: source } as WorldView;
+  assert.equal(gameplayUiSupport([GAMEPLAY_UI_CAPABILITY], true, world).available, true);
+  assert.throws(() => gameplayUiSupport([], true, world), /without negotiated/);
+  assert.throws(() => gameplayUiSupport([GAMEPLAY_UI_CAPABILITY], false, world), /generated wire decoder/);
+  assert.equal(JSON.stringify(source), before);
+  assert.equal(source.production!.id, "menu.original");
+  assert.equal(source.production!.target, null, "No dummy facility is installed.");
+  source.production!.target = { kind: "temporary_object", object: "dynamic_object.original" };
+  validateGameplayUi(source);
+});
+
+test("a missing or malformed projected target remains a protocol error, not an inventory-only menu", () => {
+  for (const target of [undefined, {}, [], 1, { kind: "spawn", spawn: "" }, { kind: "inventory" }]) {
+    const malformed = view();
+    Reflect.set(malformed.production!, "target", target);
+    assert.throws(() => validateGameplayUi(malformed), (error: unknown) =>
+      error instanceof Error && "kind" in error && error.kind === "protocol");
+  }
+  const absent = view();
+  Reflect.deleteProperty(absent.production!, "target");
+  assert.throws(() => validateGameplayUi(absent), /target field is missing/);
+});
+
+test("the exact bank revision is retained independently of advancing world revisions", () => {
+  const source = view();
+  for (const revision of ["9007199254741993", "9007199254741994"]) {
+    const world = { revision, tick: revision, ui: source } as WorldView;
+    assert.equal(gameplayUiSupport([GAMEPLAY_UI_CAPABILITY], true, world).available, true);
+    assert.equal(world.ui!.bank!.revision, "9007199254740993");
+    assert.notEqual(world.ui!.bank!.revision, world.revision);
+  }
 });

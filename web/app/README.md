@@ -46,8 +46,20 @@ decimal strings and placeholder shapes before state is recursively frozen.
 The native shared-DTO projection is prepared and fixture-tested, not wired
 to synthetic outcomes. Full M1/benchmark readiness also requires the actual
 versioned projection. Renderer/audio APIs, SourceAudioSettings, minimap and
-model-preview ownership are unchanged. The pending nullable production target
-correction must arrive through the exact shared contract—never a dummy target.
+model-preview ownership are unchanged. The authorized `351847f3` correction
+is integrated: an active production menu can have `target:null` for genuine
+inventory-only production. Null is valid data, not a missing capability or an
+absent production menu; no dummy facility is manufactured. A complete projected
+menu must still include the target field, and non-null values remain typed
+world targets.
+
+Full final-v4 wire integration remains deferred. The relayed tags are
+`WorldSnapshot.ui = 20`, `WorldInput.ui = 41`, and the naturally optional
+production target field3. Bank request field21 (`expected_bank_revision`)
+must take the exact decimal `ui.bank.revision`, never a character/world
+revision that changes on passive ticks. The current projection retains that
+independent string unchanged; no hand-written wire message, bank precondition
+substitution or progression bypass is added ahead of the generated protocol.
 
 `composition.ts` is also dependency-injectable for bounded component tests.
 Such injected handles are not an integrated game. The real UI owns its

@@ -181,7 +181,17 @@ grants, rewards, volumes, model previews or minimap data are computed here.
 
 The runtime does not install that projection from fixtures or source defaults.
 Legacy `WorldView.ui` stays **absent**, not `{version:1,...empty values}`.
-The pending `production.target` nullable correction has not been relayed:
-this implementation follows the currently published target type and never
-adds a dummy spawn for inventory-only production. Integrate that exact shared
-type change and actual engine/protocol projection before enabling wire support.
+The authorized `351847f3` correction is integrated:
+`ProductionUiView.target: Option<WorldTarget>` serializes to a typed target or
+explicit null. A null target is legitimate inventory-only production, not
+an unavailable capability or a reason to fabricate a facility. Menu/recipe/
+permission identities remain intact.
+
+The broad runtime implementation/companion commits are not integrated; final
+v4 must be relayed before enabling generated wire support. The reserved
+`WorldSnapshot.ui`/`WorldInput.ui` tags are20/41; production target field3
+remains optional. `expected_bank_revision` field21 must echo the exact
+decimal `ui.bank.revision`, never passive-tick-changing character revision.
+The pure DTO projection already preserves this independent bank string. It
+does not manufacture a request precondition, wire implementation or gameplay
+progress to bypass a missing backend contextual menu.

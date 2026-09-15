@@ -535,8 +535,13 @@ rejected before wire/sequence allocation; `WorldView.ui` remains absent on
 the actual legacy server. The pure DTO projector and browser version/decimal/
 identity validation are prepared, not enabled as a backend implementation.
 Actual ServerHello capability, generated wire support and a complete version-1
-view are all required. The pending production-target nullability correction
-is not approximated with a fake target. Evidence for this current unsupported
+view are all required. The authorized `351847f3` target-nullability correction
+is integrated: explicit null denotes inventory-only production, not a missing
+capability or a dummy facility. Broad runtime commits remain deferred for
+the final-v4 relay. Future `WorldSnapshot.ui20`/`WorldInput.ui41` decoding must
+retain optional production target3, and bank request `expected_bank_revision21`
+must use the exact decimal `ui.bank.revision`, not character revision.
+Evidence for the earlier contract-only unsupported
 boundary is recorded separately under
 `.local/evidence/early-render-ui-contract-v1/result.json`.
 

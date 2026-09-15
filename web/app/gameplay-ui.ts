@@ -49,10 +49,13 @@ export function validateGameplayUi(view: GameplayUiView): void {
   }
   if (view.recovery !== null) decimal(view.recovery.cofferBalance);
   if (view.production !== null) {
-    // The nullable-target correction has not been relayed. Never manufacture a
-    // target for inventory-only production to make this published shape pass.
-    invariant(view.production.target !== null && view.production.target !== undefined,
-      "Production target nullability requires the exact shared contract correction; no dummy target was supplied.", "unsupported_protocol");
+    invariant(Object.hasOwn(view.production, "target") && view.production.target !== undefined,
+      "The authoritative production target field is missing; inventory-only production must carry explicit null.", "protocol");
+    const target = view.production.target;
+    invariant(target === null || (typeof target === "object" && !Array.isArray(target)
+      && ((target.kind === "spawn" && typeof target.spawn === "string" && target.spawn.length > 0)
+        || (target.kind === "temporary_object" && typeof target.object === "string" && target.object.length > 0))),
+    "The authoritative production target is neither null nor a typed world target.", "protocol");
   }
 }
 
