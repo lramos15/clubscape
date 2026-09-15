@@ -1,0 +1,110 @@
+{
+  "schema_version": 1,
+  "task": "m1-headless-journey",
+  "status": "blocked",
+  "full_original_journey_passed": false,
+  "milestone_accepted": false,
+  "ui_audio_performance_or_runelite_claims": false,
+  "obsolete_collision_deadline_blocker_repeated": false,
+  "source_seeded_or_geometry_rng_clock_changed": false,
+  "current_source": {
+    "revision": "m1.source-backed.v3.0e506f3dab24bbe0",
+    "raw_artifact_sha256": "df3e2a452c100ecd94d2abc68e5cb1556f58090700474f547e7fd36de6682b3d",
+    "server_revision_label": "6809ace53af84bdce6193c635d1fa87e47fa7b11",
+    "collision_profile_parent": "5104c46485ccc17b168069983c15c24b1b466ac8",
+    "collision_fix_parent": "eda966a96465226a2dfb84106a0d17dfeafa09fc",
+    "actual_fixed_door_crossing_evidence": "tools/journey-tests/evidence/door-cache-6809ace.json"
+  },
+  "best_real_run": {
+    "run_id": "ed153448b9494ad7",
+    "recorded_at_unix_ms": 1789454996731,
+    "command": "python3 tools/journey-tests/run.py --report .local/evidence/m1-cache-fishing-faces.json",
+    "world_id": "34336c07-8ffb-48d0-86d0-72f52646ac1c",
+    "account_id": "522929eb-2566-4826-811c-cbbb7cb35c81",
+    "actor_id": "actor.6e5e25d6d2294981924288774b3d7b25",
+    "creation": "Real public Register/Login/CreateCharacter(empty options)/JoinWorld",
+    "successful_source_checks": 60,
+    "tutorial_edges_passed_in_this_account": 8,
+    "source_edges": [
+      {"from": "appearance", "to": "experience", "tick": 4},
+      {"from": "experience", "to": "guide_greeting", "tick": 5},
+      {"from": "guide_greeting", "to": "settings_open", "tick": 11},
+      {"from": "settings_open", "to": "guide_settings", "tick": 12},
+      {"from": "guide_settings", "to": "starting_exit", "tick": 50},
+      {"from": "starting_exit", "to": "survival_greeting", "tick": 57},
+      {"from": "survival_greeting", "to": "inventory_open", "tick": 93},
+      {"from": "inventory_open", "to": "catch_shrimp", "tick": 94}
+    ],
+    "legitimate_inventory": [{"item": "item.fishing_net.small", "quantity": 1, "slot": 0}],
+    "fishing_xp_tenths": 0,
+    "actual_shrimp_granted_or_caught": false,
+    "final_tick": 109,
+    "final_next_sequence": 34,
+    "source_service_exit_clean": true,
+    "owned_resources_cleaned": true
+  },
+  "new_required_action_blocker": {
+    "stage": "stage.tutorial.catch_shrimp",
+    "action": "Net",
+    "target": "spawn.tutorial.fishing_spot.3099.3090.p0",
+    "definition": "npc.tutorial.fishing_spot",
+    "original_source_npc_id": 3317,
+    "target_tile": {"x": 3099, "y": 3090, "plane": 0},
+    "declared_source_reach": 1,
+    "authoritative_evaluated_permission": "OUT_OF_REACH: The target is out of reach.",
+    "real_declared_in_reach_access_denials": [
+      {"tile": {"x": 3098, "y": 3091, "plane": 0}, "tick": 101, "next_sequence": 31},
+      {"tile": {"x": 3098, "y": 3090, "plane": 0}, "tick": 103, "next_sequence": 32, "face": "cardinal west"},
+      {"tile": {"x": 3098, "y": 3089, "plane": 0}, "tick": 106, "next_sequence": 33},
+      {"tile": {"x": 3099, "y": 3089, "plane": 0}, "tick": 109, "next_sequence": 34, "face": "cardinal south"}
+    ],
+    "remaining_declared_in_reach_tile": {"x": 3100, "y": 3090, "plane": 0},
+    "remaining_tile_probe": "The client found no route in the current canonical navigation map; it did not teleport or claim a server movement failure for that unsubmitted route.",
+    "final_report_reason": "No bounded source route from Tile { x: 3099, y: 3089, plane: 0 } to {Tile { x: 3100, y: 3090, plane: 0 }}; missing travel/collision is not a teleport",
+    "scope_of_runtime_evidence": "Four actual source-tile Walk acknowledgments followed by evaluated guarded Net-denial views. The client never reports a denied Net as a gathering success or submits fabricated catch events."
+  },
+  "exact_source_and_code_context": {
+    "target_water_cell": {"walkable": false, "blocked_movement": 255, "blocked_sight": 0},
+    "cardinal_west_land_cell": {"tile": {"x": 3098, "y": 3090, "plane": 0}, "walkable": true, "blocked_movement": 0, "blocked_sight": 0},
+    "cardinal_south_land_cell": {"tile": {"x": 3099, "y": 3089, "plane": 0}, "walkable": true, "blocked_movement": 0, "blocked_sight": 0},
+    "npc_navigation": "Stationary / NonWalkingResource with declared access tiles",
+    "inspection": [
+      "world-engine/navigation.rs:594-623 assigns the declared NPC access list but sets solid_footprint=false and opaque_footprint=false.",
+      "world-engine/permissions.rs:499-504 accepts only declared stationary access, then the reach1 path at509-525 still needs touch_edge or the near-face fallback.",
+      "touch_edge at634-649 rejects the selected target water tile's blocked_movement=255.",
+      "solid_face_reachable at605-612 requires solid_footprint, so it cannot authorize this declared water-resource NPC."
+    ],
+    "owner_fix_boundary": "Repair legitimate declared non-walking-resource contact while retaining source water/walls, distance/plane/instance/tool/stage restrictions. Do not relocate the NPC, clear clipping, grant shrimp, or alter success probability/cadence."
+  },
+  "owned_runner_corrections_verified": [
+    "Mobile target re-approach can retain the same canonical NPC/action when both actual public snapshots permit it but the NPC moved away and back between views; rejection and unchanged-sequence reconciliation remain explicit and bounded.",
+    "Dialogue pursuit uses at most16 reopened choices and a600-source-tick guard; no successful choice or unknown write is replayed.",
+    "A shared stationary-NPC definition access list is intersected with the selected spawn's actual footprint/reach, rather than choosing another spawn's nearby tile.",
+    "Alternative declared in-reach stationary faces are probed by bounded real walks and guarded views, not by state mutation."
+  ],
+  "earlier_current_cache_candidates": [
+    {"run_id": "b9b68f5c7ff24796", "result": "Mobile Guide OutOfReach after an away-and-back movement, without visible position delta; same permitted-target reconciliation was added."},
+    {"run_id": "ff9f694ec58840f1", "tutorial_edges_passed": 6, "result": "Actual post-door deadline repair proved at tick94; later moving Survival Expert choice exhausted the old four-attempt client bound."},
+    {"run_id": "e646595faf22458f", "tutorial_edges_passed": 8, "result": "Net and inventory lesson passed; shared definition access list selected a tile belonging to another fishing spawn. Corrected in owned client."},
+    {"run_id": "2b9642aa4edc4830", "tutorial_edges_passed": 8, "result": "Correct selected-spawn diagonal source access still received authoritative OUT_OF_REACH; expanded bounded face observation exposed cardinal denials too."}
+  ],
+  "validation": [
+    {"command": "cargo fmt --package clubscape-sim --check", "result": "passed"},
+    {"command": "cargo test --quiet --package clubscape-sim --package clubscape-protocol --all-features", "result": "passed", "passed_tests": 38},
+    {"command": "cargo test --quiet --package clubscape-server --test shop_intent_compatibility", "result": "passed", "passed_tests": 2},
+    {"command": "cargo clippy --quiet --package clubscape-sim --all-features --all-targets -- -D warnings", "result": "passed"},
+    {"command": "python3 -m unittest discover -s tools/journey-tests -p 'test_*.py' -q", "result": "passed", "passed_tests": 12}
+  ],
+  "exact_build_identity": {
+    "server_sha256": "a618aefd4ad88e19eaedcb515aa88ebfea7d80778699f4e0b9e60276935c8142",
+    "simulator_sha256": "f5a9932f6bf39a1e802eafae86f55aba84bb308618ab40aa59aadd7fd311aa54",
+    "descriptor_sha256": "dd4cc87fd93571862d1dc8e996c7378ee135f3b56a6c1e4bffe4d06c809e6f90",
+    "assets_manifest_sha256": "e5cc5ab112bfc3f14860df32df0cd2c28a20cc1903666535a69bcef82304a28c"
+  },
+  "all_current_candidates_keep_original_artifact_within_run": true,
+  "source_oracles": "Independent research/journey-rules source expectations; canonical source binding/geometry used only to select legitimate targets/access. Exact protocol/source hashes are retained in each detailed actual run report.",
+  "required_gameplay_restarts_executed": 0,
+  "remaining_unchecked": "The remaining62 successful-path tutorial transitions, actual gathering/production/combat/prayer/magic/HomeTeleport, Lumbridge, Cook acquisition/rewards, death/grave and planned onboarding/post-quest restart/reconnect/replay.",
+  "sql_collision_performance_task": "done on actual live door crossing",
+  "sql_full_journey_task": "blocked on the new source fishing access failure"
+}

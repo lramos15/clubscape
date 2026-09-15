@@ -302,6 +302,37 @@ deployment configuration.
 `milestone_accepted`, browser/UI, audio, performance and RuneLite verification
 remain false. Unit fixtures below establish client machinery only:
 
+The authorized profile `5104c464…` and exact-state collision-cache repair
+`eda966a9…` are integrated locally as `cfa2b5f` and `6809ace`. Historical
+first-door deadline reports above are retained, not automatically applied to
+the repaired candidate. A fresh real source crossing is required to close that
+specific blocker. No source content, actor permissions, collision masks, RNG,
+600 ms cadence or five-second deadline is changed by the simulator.
+
+[`evidence/door-cache-6809ace.json`](evidence/door-cache-6809ace.json) records the
+actual repaired production path: source door Open sequence29, crossing
+sequence30, and the real `starting_exit -> survival_greeting` transition at
+tick94, with continued world processing through tick176. SQL
+`m1-dynamic-collision-performance` is done for this deadline blocker only.
+The later moving-NPC dialogue stop is separate and does not invalidate the
+measured crossing or certify the rest of M1.
+
+[`evidence/fishing-access-6809ace.json`](evidence/fishing-access-6809ace.json)
+records the subsequent fresh source candidate: eight acknowledged tutorial
+transitions, the actual one-net grant and inventory lesson, and a **new**
+`Net` reach denial for the original stationary fishing NPC3317 at3099,3090.
+The client now intersects shared definition access lists with the selected
+spawn's footprint/reach and checks alternative declared faces. Four real
+in-reach source land tiles, including cardinal west/south, receive evaluated
+`OUT_OF_REACH`; no catch/XP is fabricated. The remaining candidate tile had no
+route in the client's canonical map and was not teleported to.
+
+Source/code evidence points to `touch_edge` requiring movement through the
+water NPC's blocked target cell while NPC `solid_footprint` remains false.
+The engine owner must address declared non-walking-resource contact without
+clearing water/wall clipping or moving the source fishing spot. The cache
+repair remains verified; this is not the historical tick deadline.
+
 ```sh
 python3 -m unittest discover -s tools/journey-tests -p 'test_*.py' -q
 ```

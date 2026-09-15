@@ -1,0 +1,65 @@
+{
+  "schema_version": 1,
+  "scope": "Actual canonical source starting-door Open and crossing after the collision cache repair",
+  "deadline_blocker_verified_fixed": true,
+  "full_original_journey_passed": false,
+  "milestone_accepted": false,
+  "ui_audio_performance_or_runelite_claims": false,
+  "authorized_parent_commits": [
+    "5104c46485ccc17b168069983c15c24b1b466ac8",
+    "eda966a96465226a2dfb84106a0d17dfeafa09fc"
+  ],
+  "local_integrations": ["cfa2b5f", "6809ace53af84bdce6193c635d1fa87e47fa7b11"],
+  "pinned_raw_artifact_sha256": "df3e2a452c100ecd94d2abc68e5cb1556f58090700474f547e7fd36de6682b3d",
+  "source_changed_by_runner": false,
+  "geometry_rng_cadence_or_deadline_overridden": false,
+  "old_unknown_outcome_write_retried": false,
+  "fresh_real_run": {
+    "run_id": "ff9f694ec58840f1",
+    "command": "python3 tools/journey-tests/run.py --report .local/evidence/m1-cache-source-journey.json",
+    "production_server": "clubscape-server, not a fixture or substitute",
+    "world_id": "6de3ec9a-de63-41d3-8a96-5644aa729957",
+    "account_id": "f17c5e00-c93b-4a56-acb8-a4620d67fe8b",
+    "actor_id": "actor.e069f82840494833b0c32ba84a6e2cef",
+    "account_and_character_creation": "Normal public Register/Login/CreateCharacter(empty options)/JoinWorld",
+    "door_open": {
+      "target": "spawn.tutorial.start_door.3098.3107.p0.t0.r0",
+      "action": "Open",
+      "sequence": 29,
+      "operation_id": "fcae4c43-971f-413e-948f-0b0e0a0239f1",
+      "actual_acknowledgment": true
+    },
+    "crossing": {
+      "input": "Walk",
+      "destination": {"x": 3098, "y": 3107, "plane": 0},
+      "sequence": 30,
+      "operation_id": "7b4ce32e-1a06-49f0-a46c-01c7b7985b88",
+      "actual_acknowledgment": true,
+      "source_transition": "transition.tutorial.starting_door",
+      "from": "stage.tutorial.starting_exit",
+      "to": "stage.tutorial.survival_greeting",
+      "observed_tick": 94
+    },
+    "world_continued_through_observed_tick": 176,
+    "post_door_game_commit_tick_deadline_observed": false,
+    "successful_tutorial_edges_in_this_account": 6,
+    "later_stop": {
+      "stage": "stage.tutorial.survival_greeting",
+      "speaker": "spawn.survival_expert",
+      "choice": "fishing_intro",
+      "reason": "Four bounded reopened choices were invalidated by actual mobile-NPC reach changes; not a collision/deadline regression.",
+      "source_progress_claimed_for_that_choice": false
+    },
+    "server_exit_clean": true,
+    "owned_resources_cleaned": true
+  },
+  "exact_build_identity": {
+    "server_revision_label": "6809ace53af84bdce6193c635d1fa87e47fa7b11",
+    "server_sha256": "a618aefd4ad88e19eaedcb515aa88ebfea7d80778699f4e0b9e60276935c8142",
+    "simulator_sha256": "bc373397bee7ea2f0ab8ea29ce9140db7e00205d261401e06b8b78fdc917be22",
+    "descriptor_sha256": "e4c71c8e33ac81fd92ae6db4371c6580f0b4d1985b8e2ad5d6b9d55f08e5c6bb",
+    "assets_manifest_sha256": "e5cc5ab112bfc3f14860df32df0cd2c28a20cc1903666535a69bcef82304a28c"
+  },
+  "sql_task": "m1-dynamic-collision-performance marked done only after this actual source crossing",
+  "full_journey_task": "Separate and unpassed; later source onboarding, Lumbridge, Cook, death and recovery still require real execution."
+}

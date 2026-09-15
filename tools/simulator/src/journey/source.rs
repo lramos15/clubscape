@@ -402,19 +402,37 @@ impl Source {
             Some("npc") => {
                 let definition = &self.content["npcs"]
                     [spawn["kind"]["npc"].as_str().context("Missing NPC ID")?];
-                if let Some(access) = definition
-                    .pointer("/navigation/anchor/access_tiles")
-                    .and_then(Value::as_array)
-                {
-                    return access
-                        .iter()
-                        .map(|tile| serde_json::from_value(tile.clone()).map_err(Into::into))
-                        .collect();
-                }
                 width = definition["size"]
                     .as_u64()
                     .context("Missing NPC footprint")? as u32;
                 height = width;
+                ensure!((1..=64).contains(&width), "Invalid NPC footprint");
+                if let Some(access) = definition
+                    .pointer("/navigation/anchor/access_tiles")
+                    .and_then(Value::as_array)
+                {
+                    let declared = access
+                        .iter()
+                        .map(|tile| serde_json::from_value(tile.clone()).map_err(Into::into))
+                        .collect::<Result<Vec<Tile>>>()?;
+                    let goals: BTreeSet<_> = declared
+                        .into_iter()
+                        .filter(|candidate| {
+                            let contact = Tile::new(
+                                candidate.x.clamp(tile.x, tile.x + width - 1),
+                                candidate.y.clamp(tile.y, tile.y + height - 1),
+                                tile.plane,
+                            );
+                            candidate.distance(contact) <= reach as u32
+                                && navigation.walkable(*candidate)
+                        })
+                        .collect();
+                    ensure!(
+                        !goals.is_empty(),
+                        "No declared access tile is in reach of this specific spawn: {id}"
+                    );
+                    return Ok(goals);
+                }
             }
             Some("object") => {
                 let definition_id = live
@@ -664,5 +682,28 @@ mod tests {
             .target_goals("spawn.gielinor_guide", "Talk-to", None, &map)
             .unwrap();
         assert!(map.route(Tile::new(3094, 3106, 0), &guide).is_some());
+    }
+
+    #[test]
+    fn shared_stationary_access_lists_are_filtered_for_the_selected_spawn() {
+        let source = Source::load(&Path::new(env!("CARGO_MANIFEST_DIR")).join("../..")).unwrap();
+        let map = source
+            .navigation_with_states(&BTreeMap::new(), false)
+            .unwrap();
+        let goals = source
+            .target_goals(
+                "spawn.tutorial.fishing_spot.3099.3090.p0",
+                "Net",
+                None,
+                &map,
+            )
+            .unwrap();
+        assert!(!goals.contains(&Tile::new(3101, 3093, 0)));
+        assert!(
+            goals
+                .iter()
+                .all(|point| point.distance(Tile::new(3099, 3090, 0)) <= 1)
+        );
+        assert!(!goals.is_empty());
     }
 }

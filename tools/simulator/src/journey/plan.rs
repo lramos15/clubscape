@@ -754,6 +754,13 @@ impl Runner {
         self.evidence
             .append("source_target", self.source.source_identity(target)?)?;
         let started = self.snapshot.tick;
+        let npc = self.source.spawn(target)?["kind"]["npc"]
+            .as_str()
+            .map(str::to_owned);
+        let stationary = npc.as_ref().is_some_and(|npc| {
+            self.source.content["npcs"][npc]["navigation"]["kind"] == "stationary"
+        });
+        let mut rejected_access = BTreeSet::new();
         for _ in 0..12 {
             if self.observed_action_available(target, action) {
                 return Ok(());
@@ -765,9 +772,14 @@ impl Runner {
             let navigation = self
                 .source
                 .navigation_with_states(&self.observed_states, true)?;
-            let goals =
+            let mut goals =
                 self.source
                     .target_goals(target, action, self.entities.get(target), &navigation)?;
+            goals.retain(|tile| !rejected_access.contains(tile));
+            ensure!(
+                !goals.is_empty(),
+                "All source-declared in-reach access tiles reject {target}/{action}: {rejected_access:?}"
+            );
             self.go_to(goals.clone()).await?;
             if self.observed_action_available(target, action) {
                 return Ok(());
@@ -779,6 +791,31 @@ impl Runner {
                 self.source
                     .target_goals(target, action, self.entities.get(target), &current)?;
             if current_goals.contains(&self.tile()?) {
+                let reach_denied = self.entities.get(target).is_some_and(|entity| {
+                    entity.actions_evaluated
+                        && entity.interaction_options.iter().any(|option| {
+                            option.name == action
+                                && option.permission.as_ref().is_some_and(|permission| {
+                                    !permission.allowed
+                                        && permission.denial.as_ref().is_some_and(|denial| {
+                                            denial.code == game::RuleErrorCode::OutOfReach as i32
+                                        })
+                                })
+                        })
+                });
+                if stationary && reach_denied {
+                    let tile = self.tile()?;
+                    rejected_access.insert(tile);
+                    self.evidence.append("source_stationary_access_denied", json!({
+                        "target": target, "action": action, "actor_tile": tile,
+                        "tick": self.snapshot.tick, "next_sequence": self.sequence,
+                        "target_view": self.entities.get(target).map(|entity|
+                            evidence::message_json("clubscape.game.v1.Entity", entity)).transpose()?,
+                        "source_expected": "This tile is explicitly declared and within the selected spawn footprint reach; the server still decides actual permission.",
+                        "no_gather_success_claimed": true
+                    }))?;
+                    continue;
+                }
                 return Ok(());
             }
         }
@@ -919,11 +956,12 @@ impl Runner {
             self.sequence == sequence,
             "Rejected target action consumed a sequence; outcome is not safe to retry"
         );
-        let retry = moving_target_changed(before, self.entities.get(target), action);
+        let retry = mobile_target_reapproachable(before, self.entities.get(target), action);
         self.evidence.append("rejected_npc_target_reconciliation", json!({
             "target": target, "requested_action": action,
             "original_error_id": rejected.error_id, "original_reason": rejected.message,
-            "same_next_sequence": sequence, "observed_target_changed_or_out_of_reach": retry,
+            "same_next_sequence": sequence, "same_source_target_reapproachable": retry,
+            "position_change_observed": before.zip(self.entities.get(target)).is_some_and(|(before, after)| before.tile != after.tile),
             "before": before.map(|value| evidence::message_json("clubscape.game.v1.Entity", value)).transpose()?,
             "after": self.entities.get(target).map(|value| evidence::message_json("clubscape.game.v1.Entity", value)).transpose()?,
             "rng_overridden": false, "unknown_transport_outcome_retried": false
@@ -950,7 +988,12 @@ impl Runner {
     }
 
     async fn speak(&mut self, speaker: &str, choice: &str) -> Result<Receipt> {
-        for _ in 0..4 {
+        let started = self.snapshot.tick;
+        for attempt in 0..16 {
+            ensure!(
+                self.snapshot.tick.saturating_sub(started) < 600,
+                "Source dialogue {speaker}/{choice} exhausted its 600-tick pursuit budget"
+            );
             self.interact(speaker, "Talk-to").await?;
             let before = self.entities.get(speaker).cloned();
             match self.choose(speaker, choice).await {
@@ -962,10 +1005,15 @@ impl Runner {
                     {
                         return Err(error);
                     }
+                    self.evidence.append("bounded_source_dialogue_reopen", json!({
+                        "speaker": speaker, "choice": choice, "attempt": attempt + 1,
+                        "maximum_attempts": 16, "source_ticks_elapsed": self.snapshot.tick - started,
+                        "reason": "Definite rejection reconciled against the same mobile source target; no successful choice was replayed."
+                    }))?;
                 }
             }
         }
-        bail!("Source speaker {speaker} moved out of reach of choice {choice} four times")
+        bail!("Source speaker {speaker} invalidated choice {choice} in sixteen bounded attempts")
     }
 
     async fn choose(&mut self, speaker: &str, choice: &str) -> Result<Receipt> {
@@ -2124,7 +2172,7 @@ impl Runner {
     }
 }
 
-fn moving_target_changed(
+fn mobile_target_reapproachable(
     before: Option<&game::Entity>,
     after: Option<&game::Entity>,
     action: &str,
@@ -2135,7 +2183,12 @@ fn moving_target_changed(
     if before.id != after.id || !before.actions_evaluated || !after.actions_evaluated {
         return false;
     }
+    let permitted_before_and_after = before.available
+        && after.available
+        && before.actions.iter().any(|name| name == action)
+        && after.actions.iter().any(|name| name == action);
     before.tile != after.tile
+        || permitted_before_and_after
         || after.interaction_options.iter().any(|option| {
             option.name == action
                 && option.permission.as_ref().is_some_and(|permission| {
@@ -2199,7 +2252,7 @@ mod tests {
     use std::path::Path;
 
     #[test]
-    fn movement_retry_requires_same_observed_target_and_movement_or_typed_reach_denial() {
+    fn movement_retry_requires_same_observed_target_and_current_source_evidence() {
         let before = game::Entity {
             id: "spawn.gielinor_guide".into(),
             tile: Some(Tile::new(3094, 3107, 0).wire()),
@@ -2207,19 +2260,19 @@ mod tests {
             ..Default::default()
         };
         let mut after = before.clone();
-        assert!(!moving_target_changed(
+        assert!(!mobile_target_reapproachable(
             Some(&before),
             Some(&after),
             "Talk-to"
         ));
         after.tile = Some(Tile::new(3095, 3107, 0).wire());
-        assert!(moving_target_changed(
+        assert!(mobile_target_reapproachable(
             Some(&before),
             Some(&after),
             "Talk-to"
         ));
         after.id = "spawn.survival_expert".into();
-        assert!(!moving_target_changed(
+        assert!(!mobile_target_reapproachable(
             Some(&before),
             Some(&after),
             "Talk-to"
@@ -2235,13 +2288,44 @@ mod tests {
                 }),
             }),
         });
-        assert!(moving_target_changed(
+        assert!(mobile_target_reapproachable(
             Some(&before),
             Some(&after),
             "Talk-to"
         ));
         after.actions_evaluated = false;
-        assert!(!moving_target_changed(
+        assert!(!mobile_target_reapproachable(
+            Some(&before),
+            Some(&after),
+            "Talk-to"
+        ));
+    }
+
+    #[test]
+    fn mobile_npc_returning_to_same_tile_can_be_reapproached_without_claiming_observed_movement() {
+        let before = game::Entity {
+            id: "spawn.gielinor_guide".into(),
+            tile: Some(Tile::new(3094, 3107, 0).wire()),
+            actions_evaluated: true,
+            available: true,
+            actions: vec!["Talk-to".into()],
+            ..Default::default()
+        };
+        let mut after = before.clone();
+        assert!(mobile_target_reapproachable(
+            Some(&before),
+            Some(&after),
+            "Talk-to"
+        ));
+        after.actions.clear();
+        assert!(!mobile_target_reapproachable(
+            Some(&before),
+            Some(&after),
+            "Talk-to"
+        ));
+        after = before.clone();
+        after.available = false;
+        assert!(!mobile_target_reapproachable(
             Some(&before),
             Some(&after),
             "Talk-to"

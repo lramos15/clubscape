@@ -118,11 +118,16 @@ Moving NPC approaches prefer the actual evaluated interaction menu over the
 client's conservative geometry candidates. Approach replanning has a 12-attempt
 limit and a 240-source-tick guard between bounded walk plans; rejected interactions
 have an eight-attempt bound, and reopened
-dialogue choices a four-attempt bound. Retargeting stays on the same source NPC
+dialogue choices a sixteen-attempt bound with a 600-source-tick pursuit guard.
+Retargeting stays on the same source NPC
 and choice. A definite conflict is reconciled through actual snapshots and
 unchanged sequence; an invalidated open dialogue may be closed only with a real
 acknowledged `CloseInterface`. All denials and target observations are retained.
 Unknown HTTP503/write outcomes are not treated as movement races.
+If a mobile NPC moves away and back between observations, the exact same action
+may be re-approached within the existing bound when both actual public views
+permit it and the rejected command did not consume a sequence. The trace labels
+that as current permission evidence, not as an observed position change.
 
 Reports include exact source/artifact/protocol hashes, the server's build
 identifier, input sequence/operation IDs, source expected-vs-actual checkpoints,
