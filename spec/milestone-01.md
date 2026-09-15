@@ -98,7 +98,10 @@ unblocked milestone work where possible, then report the milestone as
 incomplete with a durable checkpoint. Never relabel that checkpoint as an
 accepted slice.
 
-The current [native/source checkpoint](../milestones/evidence/m1-engine-review-repairs.json)
-records strict source content and real backend/persistence conformance.
-The full headless/browser journey, source comparisons, runtime presentation,
-performance and final owner review still need their own evidence.
+The current [UI integration checkpoint](../milestones/evidence/m1-ui-controls.json)
+records passing native-source UI/control components and preserves the
+[real source journey checkpoint](../milestones/evidence/m1-source-journey31.json):
+31 of70 required tutorial transitions and onboarding recovery, followed by the
+contextual smithing-menu blocker. Final authoritative UI integration, the
+remaining real journey, complete runtime presentation, performance and owner
+review still need their own evidence.

@@ -9,11 +9,11 @@
   "candidate_revision": null,
   "accepted_revision": null,
   "checkpoint": {
-    "report": "milestones/evidence/m1-source-journey31.json",
+    "report": "milestones/evidence/m1-ui-controls.json",
     "verified_infrastructure_revision": "275d3cc83d6a7c2118d0afcf82490f364e5d2986",
     "infrastructure_evidence": "milestones/evidence/m1-account-foundations.json",
-    "runtime_revision": "8b617c63bc33c5a448162dce5db1a946fb5cb49f",
-    "scope_note": "One normal-account source journey verifies31/70 transitions and onboarding recovery, then stops at the missing contextual smithing-menu event. Twelve independent original dynamic-layer cases are integrated; candidate comparisons and full browser/gameplay/presentation/performance acceptance remain outstanding. Upcoming authoritative UI4 is not yet integrated."
+    "runtime_revision": "227f46989198f0e54c04c20a23368b1f807d087e",
+    "scope_note": "Source journey remains31/70 with onboarding recovery and an anvil contextual-menu blocker. Integrated native UI/audio controls pass their component/source comparisons, not the complete browser journey. Final authoritative UI4, native remaining controls, full renderer/audio composition, performance, Mac and owner acceptance remain outstanding."
   },
   "scope_approval": {
     "authority": "owner",

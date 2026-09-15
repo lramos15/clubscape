@@ -1,0 +1,104 @@
+{
+  "schema_version": 1,
+  "milestone": "m1-starter-journey",
+  "result": "integrated_source_ui_components_verified_with_required_controls_still_in_progress",
+  "code_revision": "227f46989198f0e54c04c20a23368b1f807d087e",
+  "recorded_date": "2026-09-15",
+  "prior_gameplay_checkpoint": {
+    "path": "milestones/evidence/m1-source-journey31.json",
+    "sha256": "bff07c5341d0dc5960e7f70cf950956b8e8ea2395cf6ce69a3db55913a82952c",
+    "successful_tutorial_transitions": 31,
+    "required_success_path_transitions": 70,
+    "current_blocker": "Source anvil Smith does not open the contextual smithing menu required for the next lesson.",
+    "source_artifact_sha256": "bb99ad96add9669fd49c4162832fbd8e9cb151997a4e4c4682b33b1f1882e2e1",
+    "content_artifact_version": 3,
+    "final_ui4_integrated": false
+  },
+  "owned_integrations": [
+    {"original": "69889510a58801cf4d5cf5d7a10bf82a4933d68a", "integrated": "6b4f45a", "scope": "Native filters, recovery layouts and source title effects"},
+    {"original": "b7d6f8a88112fb00369c9b98a5e78ffa0b4981b1", "integrated": "3f3d41e", "scope": "Versioned authoritative-control consumers and native modal layouts"},
+    {"original": "669e1f49a27408608968a7726b942bbdb7087704", "integrated": "d55da49", "scope": "Original modal and component evidence"},
+    {"original": "b76babfc7713742e4cc4fda57ecd6cae7c65e9cd", "integrated": "a0d421b", "scope": "Actual source audio observer and native slider controls"},
+    {"original": "b151d01ac0acd788d0181165ec74831f2f09a8f2", "integrated": "d65c1f6", "scope": "Original audio-control evidence"},
+    {"original": "53ed974059e75adc9d42d81e8538be064b0c40bd", "integrated": "4f94c4c", "scope": "Player-scoped native music-state controls and fourth metadata route"},
+    {"original": "8d99bf11472f545419b5a26e0c34f4784c4e108f", "integrated": "7325702", "scope": "Original music-control and native255 evidence"}
+  ],
+  "parent_validation": {
+    "typecheck": {"command": "pnpm --dir web exec tsc --noEmit", "result": "passed"},
+    "unit_tests": {
+      "command": "node --test web/ui/tests/unit.test.ts web/ui/tests/gameplay-ui.test.ts web/ui/tests/audio-controls.test.ts web/ui/tests/music-controls.test.ts web/audio/audio.test.ts web/audio/native-policy.test.ts web/audio/reward-levels.test.ts web/audio/supplement.test.ts",
+      "passed": 67,
+      "ui": 38,
+      "audio": 29,
+      "failed": 0,
+      "skipped": 0
+    },
+    "original_frames": {
+      "command": "python3 tools/ui-assets/glyph_proof.py",
+      "passed": true,
+      "distinct_original_frames_checked_on_parent": 1108,
+      "distinct_font_masks": 1024,
+      "duplicate_publication_comparisons": 0,
+      "different_pixels": 0,
+      "qualification": "Counts are measured against the parent's complete original publication chain. Earlier worker reports retain their historical1100 count."
+    },
+    "browser": {
+      "product": "Chrome for Testing",
+      "version": "153.0.8010.12",
+      "platform": "Sparky Linux ARM64",
+      "headless": false,
+      "display": "owned Xvfb2560x1440x24, source cases at their declared viewport",
+      "chromium_sandbox_requested": true,
+      "sandbox_qualification": "No sandbox-disabling switches or global policy changes. This run is not new process-level attestation; the existing Sparky Vulkan profile's documented GPU-process sandbox limitation remains.",
+      "audio_output_muted": true,
+      "component_cases": 20,
+      "versioned_ui_cases": 15,
+      "real_audio_observer_cases": 7,
+      "music_state_cases": 6,
+      "failed_cases": 0,
+      "source_capture_cases": 16,
+      "scripts": ["component-browser.mjs", "gameplay-ui-browser.mjs", "source-browser.mjs", "modes-browser.mjs", "presentations-browser.mjs", "audio-browser.mjs", "music-browser.mjs"],
+      "script_directory": "web/ui/tests",
+      "launch_command_prefix": "TMPDIR=\"$PWD/web/ui/.cache/xvfb\" xvfb-run --auto-servernum --server-args='-screen 0 2560x1440x24 -nolisten tcp'",
+      "log_sha256": "39b7e10df4ad290b9d854a3b1cf16cc93ee451894685f00d336562250f3f6aa1",
+      "qualification": "Real Canvas/DOM and WebAudio component execution against explicitly deterministic AppServices doubles. No gameplay, audible-world, Metal/Edge or performance acceptance.",
+      "owned_browsers_and_servers_closed": true,
+      "empty_browser_scratch_removed": true
+    },
+    "source_comparisons": [
+      {"command": "python3 tools/ui-assets/compare.py", "checks": 87, "passed": 87, "path": "web/ui/evidence/source-comparison.json", "sha256": "709182c79680c7036c723c87cffdbefc9a263a155e4dd1f5ca8c572ac5b5ad47"},
+      {"command": "python3 tools/ui-assets/compare_modes.py", "checks": 106, "passed": 106, "path": "web/ui/evidence/mode-comparison.json", "sha256": "6062cb2de4ace09233bedfe6bbcd3ec31c40732951c17e19df33612147d3afca"},
+      {"command": "python3 tools/ui-assets/compare_modes.py --presentations", "checks": 45, "passed": 45, "path": "web/ui/evidence/native-presentations/comparison.json", "sha256": "d99446517fc875e915621f226422d5bfbdbffa0a242cf5f90c051d3122f8345e"},
+      {"command": "python3 tools/ui-assets/compare_modes.py --audio-ui", "checks": 18, "passed": 18, "path": "web/ui/evidence/native-audio-controls/comparison.json", "sha256": "bef93a95913496c85c4015d4e9f5b292546e302e99e4fee8adcdf536a0fc512b"},
+      {"command": "python3 tools/ui-assets/compare_modes.py --music-ui", "checks": 8, "passed": 8, "path": "web/ui/evidence/native-music-controls/comparison.json", "sha256": "8c2cc86cb855b27e2f03d0d71a6f0fd33ec061e33605aac1512f293428a9bebf"}
+    ],
+    "comparison_tolerance_different_pixels": 0,
+    "all_comparison_reports_match_archived_bytes": true,
+    "nested_region_checks_are_not_disjoint_image_counts": true,
+    "component_report_qualification": "The20 parent component cases match archived names/assertions/outcomes; only their per-case wall-clock milliseconds differ. These durations are not FPS evidence.",
+    "frozen_pack": {"command": "python3 tools/reference-pack/validate.py --require-complete", "result": "passed", "unchanged_hash_bound_inputs": 1307}
+  },
+  "reference_pack_sha256": "b62e19704e17d3d3e4e819f803ef49ba7cc54034ae407184b423427c65d9674d",
+  "approval_record": "milestones/approvals/m1-reference-pack-v1.3.0.json",
+  "historical_evidence_resolution": "Resolve mutable evidence paths at code_revision. Later UI evidence must not rewrite this historical result.",
+  "pending_collected_integration": {
+    "shared_nullable_contract": "351847f3f5255f6de6e345d5217a7910eaa145a3",
+    "ui_code": "0ef23449a42db521c6a9af9bdce95b102d12b175",
+    "ui_evidence": "a85ff402c71f7f6b111a4a098d0828f458cc5d00",
+    "reason": "Integrate together with regenerated authoritative v4, rather than changing the current v3 source-input fingerprint without its product."
+  },
+  "required_work_continuing": [
+    "Authoritative v4 source closure, contextual smithing event, nullable production and actual render observer fields.",
+    "Explicit source Make-All/bank-All semantics, complete recovery quantities/fees/permissions and canonical level-up associations.",
+    "Native All Settings and remaining bank/tab/placeholder/highlight/level-up source layouts.",
+    "Bounded M1-AUDIO-PREFERENCE-CONTROLS: native direct Skip Track, Playlist1/2/3 and remembered mute preferences.",
+    "Actual shell protocol/composition, renderer preview/dynamic minimap and real source audio scene/varp/event/persistence inputs.",
+    "Remaining39 tutorial transitions, Lumbridge/Cook/death/postquest recovery and real browser journey.",
+    "Unchanged source-fidelity, equipment-fit, roof, performance, Mac Chrome/Edge, independent review and owner acceptance gates."
+  ],
+  "complete_ui_verified": false,
+  "full_journey_verified": false,
+  "presentation_accepted": false,
+  "milestone_accepted": false,
+  "later_milestone_authorized": false
+}
