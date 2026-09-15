@@ -2,7 +2,7 @@
   "artifact_version": 3,
   "collision_groups": 49,
   "combined_collision_selections": 136,
-  "content_behavior_sha256": "62b66389bf51d0166b22649aed8627580e8210834a865bd7ab6789d67a1b748a",
+  "content_behavior_sha256": "0cdf08e3541091b51d435b93f53ac8021b8f5cc7f9bf69d0b6e6b7a3f169891e",
   "content_schema_version": 3,
   "death_timing": {
     "source": [
@@ -101,6 +101,24 @@
   "source_index_sha256": "2076c006b7eac60b5a17f212430fc5cb18f1b8fc44bf2ad100bae3ad92e5b395",
   "source_supported_inference_not_observed": true,
   "traversal_definitions": 9,
+  "tutorial_choice_entries": [
+    {
+      "dialogue": "dialogue.magic_instructor",
+      "entry": "transition.tutorial.decline_departure",
+      "guard_sha256": "9a8eb63461c79a4e5dafc574ffab90930756e5a91adfafccac21c87c946e1169",
+      "merged_entry_ids": [
+        "transition.tutorial.decline_departure",
+        "transition.tutorial.ironman_information",
+        "transition.tutorial.confirm_normal_departure"
+      ],
+      "original_choice_ids": [
+        "stay_on_island",
+        "ask_ironman_tutor",
+        "confirm_normal_mainland"
+      ],
+      "question_and_choice_payloads_preserved": true
+    }
+  ],
   "tutorial_recovery_entries": [
     {
       "dialogue": "dialogue.survival_expert",

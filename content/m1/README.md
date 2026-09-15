@@ -10,8 +10,8 @@ clocks pass; the complete real player journey remains a separate gate. See
 current [`status.json`](../../research/m1-bindings/status.json), plus the
 [UI4 candidate and remaining control work](../../research/interface-contracts/verification.json).
 
-The current revision is `m1.source-backed.v4.67e4f1fcc55d71d5`, raw artifact
-`6fdb60e4740372c5e299fe385875cfac32e04f22ea26ad17b53049296256c1b3`.
+The current revision is `m1.source-backed.v4.3ff4292b311453cc`, raw artifact
+`5e0aa8a28851752ae0b8b0a08c635c6c8d2979f509f3a3e564ee74e2abfc8e6f`.
 Persisted state/runtime remain version1, with explicit UI state version1.
 An existing world must keep its exact artifact unless the operator performs
 the documented fenced `migrate-ui --from <old-raw-sha256>` upgrade; do not
@@ -130,6 +130,17 @@ capacity behavior remain unchanged. This is an explicit source-supported
 dialogue-routing interpretation; the original source records are not rewritten.
 `test_dialogue_entries.py` and the native `dialogue_entries` example verify the
 lesson, lost-tool, equipped-tool, full-inventory and departure boundaries.
+
+Primary tutorial entries with the same source question and guard are one
+choice menu, not competing entry candidates. The Magic Instructor's departure
+question retains all three original decline, Ironman-information and normal
+confirmation choices, including their order, guards and transition effects.
+Only normal confirmation authorizes Home Teleport; no menu choice performs
+departure or awards provisions. Incompatible text, duplicate choices or
+explicit node continuations fail normalization instead of gaining arbitrary
+entry priority. `test_departure_entries.py` and the native `departure_entries`
+example cover all four offer/confirmation branches and wrong-stage refusal.
+This lowering runs after the unchanged104+7 source application.
 
 Ordered grants, line satisfaction and durable entitlements implement partial
 Vannaka supplies and missing-only/top-up recovery. The normal inventory remains

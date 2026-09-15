@@ -1,6 +1,6 @@
 {
   "command": [
-    "/usr/bin/python3.12",
+    "/usr/bin/python3",
     "tools/runtime-bindings/validate.py",
     "--baseline-commit",
     "e9073ab",
