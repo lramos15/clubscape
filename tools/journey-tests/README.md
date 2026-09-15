@@ -450,6 +450,23 @@ isolated database/artifact. It also records the new exact source blocker:
 Magic Instructor entries. No first-entry fallback, forced Home Teleport,
 unknown-write replay or completed-departure claim is made.
 
+### Timed UI travel interruption integration
+
+Authorized `0575fe0051b649adbd19b194b8521f328a54aad2` is applied as `9291564`
+at a safe boundary with no active owned candidate. The complete five-file
+repair includes only the existing flate2 test dependency edge, not new package
+versions. Timed UI dispatch now invokes the existing source
+`interrupt_travel(AnotherAction)` before the action; read-only UI keeps its
+noninterrupting behavior and refusals remain transactional.
+
+[`evidence/ui-travel-9291564.json`](evidence/ui-travel-9291564.json)
+records five targeted travel regressions, 48 client/protocol tests, strict
+Clippy/formatting and the unchanged `6fdb…c1b3` artifact. No new service, world
+repin or unknown-operation retry was needed. The independent Magic Instructor
+confirmation-entry blocker and prior actual66-edge evidence remain intact;
+these component passes are not a completed journey or new live Home Teleport
+acceptance.
+
 ```sh
 python3 -m unittest discover -s tools/journey-tests -p 'test_*.py' -q
 ```
