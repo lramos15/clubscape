@@ -17,10 +17,12 @@ import { Settings } from "./settings.ts";
 import { RpcTransport } from "./transport.ts";
 import { presenceOf } from "./public-state.ts";
 import { SourceAudioSession, audioProblem, playbackEnabled, sourceAudioAdapter } from "./audio.ts";
+import { sourceZoomForViewportHeight } from "./renderer.ts";
 
 export interface ObservedRenderer extends RendererHandle {
   /** Observation only; all values must come from the real decoder/render path. */
   observe?(): RendererObservation;
+  supportsScene?(id: string): boolean;
 }
 export interface ApplicationHandle { app: BrowserApp; dispose(): Promise<void> }
 
@@ -32,8 +34,10 @@ export async function mountApplication(options: {
   worldCanvas: HTMLCanvasElement;
   uiCanvas: HTMLCanvasElement;
   status: HTMLElement;
+  earlyScene?: string | null;
 }): Promise<ApplicationHandle> {
   const { build, components, bridge, benchmark, worldCanvas, uiCanvas, status } = options;
+  const earlyScene = options.earlyScene ?? null;
   let ui: UiHandle | null = null;
   let audio: SourceAudioSession | null = null;
   let renderer: ObservedRenderer | null = null;
@@ -83,21 +87,27 @@ export async function mountApplication(options: {
       invariant(region, `No compiled source presentation exists for ${world.player.region}.`, "integration");
       sceneLoaded = false;
       benchmark.worldReady(false);
-      if (!renderer || !region.camera || !region.controls) {
-        app.report(new AppError("The authoritative world is connected, but its real 3D renderer/camera integration is unavailable. No replacement viewport or character preview was started.", { kind: "integration" }));
-        return;
+      const fixture = earlyScene === null ? null : assets.manifest.renderer?.fixtures[earlyScene];
+      if (earlyScene !== null && !fixture) throw new AppError("The explicitly requested early scene is not an exported source fixture.", { kind: "region_unavailable" });
+      const sceneId = earlyScene ?? region.sceneId;
+      const camera = fixture?.camera ?? region.camera;
+      if (!renderer || !renderer.supportsScene?.(sceneId) || camera === null) {
+        throw new AppError(`The actual renderer does not yet cover authoritative region ${world.player.region}. Named source fixtures are available only through explicit early-presentation mode; no arbitrary scene or blank fallback was selected.`, { kind: "region_unavailable" });
       }
-      required = Array.from(new Set([...assets.manifest.bootstrap, ...region.requiredAssets,
+      required = Array.from(new Set([...assets.manifest.bootstrap, ...(fixture?.requiredAssets ?? region.requiredAssets),
         ...(assets.manifest.rendererManifest ? [assets.manifest.rendererManifest] : [])]));
       const uiAssets = Object.entries(assets.manifest.aliases ?? {}).filter(([id]) => id.startsWith("ui/")).map(([, id]) => id);
       assets.retain([...required, ...uiAssets]);
-      benchmark.scene(region.sceneId, region.routeId, region.workloadId, assets.manifestSha256,
+      benchmark.scene(sceneId, earlyScene ? `early.presentation.${sceneId}` : region.routeId,
+        earlyScene ? "early-presentation-not-journey" : region.workloadId,
+        assets.manifest.renderer?.manifestSha256 ?? assets.manifestSha256,
         new Map(required.map((id) => [id, assets!.manifest.assets.find((asset) => asset.id === id)!.sha256])));
       await assets.preload(required);
       renderer.update(world);
-      await renderer.loadScene(region.sceneId);
+      await renderer.loadScene(sceneId);
       input?.dispose();
-      input = new InputController(uiCanvas, ui!, renderer, app, region.camera, region.controls, world.player.tile,
+      input = new InputController(uiCanvas, ui!, renderer, app, { ...camera, zoom: sourceZoomForViewportHeight(worldCanvas.height) },
+        fixture ? null : region.controls, world.player.tile,
         () => ({ width: worldCanvas.width, height: worldCanvas.height }));
       sceneLoaded = true;
     },
@@ -178,6 +188,7 @@ export async function mountApplication(options: {
         worldCanvas.width = pixelsWide; worldCanvas.height = pixelsHigh;
       }
       renderer?.resize(pixelsWide, pixelsHigh);
+      input?.resizeZoom(sourceZoomForViewportHeight(pixelsHigh));
       ui?.resize(width, height);
       benchmark.viewport(width, height, scale);
     };
@@ -191,6 +202,10 @@ export async function mountApplication(options: {
       return { app, dispose };
     }
     if (components.createRenderer && assets.manifest.rendererManifest) {
+      worldCanvas.addEventListener("clubscape-render-diagnostic", (event) => {
+        const message = (event as CustomEvent<unknown>).detail;
+        if (typeof message === "string") app.report(new AppError(message, { kind: "renderer" }));
+      }, { signal: lifecycle.signal });
       stopDevice = watchCanvasDevice(worldCanvas, (epoch, ready, timestamps) => benchmark.device(epoch, ready, timestamps), (error) => {
         sceneLoaded = false;
         benchmark.worldReady(false);
@@ -198,7 +213,7 @@ export async function mountApplication(options: {
         app.report(error);
       });
       renderer = await components.createRenderer(worldCanvas, {
-        assetBaseUrl: assets.baseUrl, manifestUrl: assets.url(assets.manifest.rendererManifest),
+        assetBaseUrl: assets.manifest.renderer?.assetBaseUrl ?? assets.baseUrl, manifestUrl: assets.url(assets.manifest.rendererManifest),
         sourcePackSha256: SOURCE_PACK_SHA256, width: worldCanvas.width, height: worldCanvas.height,
       });
     }
@@ -229,7 +244,9 @@ export async function mountApplication(options: {
           if (disposed) return;
           if (completed !== null) benchmark.completed(completed);
           const observation = renderer?.observe?.() ?? null;
-          benchmark.renderer(observation);
+          benchmark.renderer(observation ? { ...observation, assets: observation.assets.map((asset) => ({
+            ...asset, id: assets?.manifest.renderer?.assetIds[asset.id] ?? asset.id,
+          })) } : null);
           const settingsJson = observation?.settings ? canonicalJson(observation.settings) : "";
           if (settingsJson !== appliedRenderSettingsJson) {
             appliedRenderSettingsJson = settingsJson;

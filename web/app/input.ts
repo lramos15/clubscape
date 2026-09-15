@@ -2,6 +2,7 @@ import type { AppServices, RenderCamera, RendererHandle, Tile, UiHandle } from "
 import type { SourceCameraControls } from "./manifest.ts";
 import { sourceUiAdapter } from "./ui-adapter.ts";
 import type { UiWorldAdapter } from "./ui-adapter.ts";
+import { AppError } from "./errors.ts";
 
 export function textInput(target: EventTarget | null): boolean {
   if (!target || typeof target !== "object") return false;
@@ -16,7 +17,8 @@ export class InputController {
   #renderer: RendererHandle;
   #services: AppServices;
   #camera: RenderCamera;
-  #controls: SourceCameraControls;
+  #controls: SourceCameraControls | null;
+  #baseZoom: number;
   #keys = new Set<string>();
   #pointer: { id: number; button: number; x: number; y: number; startX: number; startY: number } | null = null;
   #listeners = new AbortController();
@@ -26,7 +28,7 @@ export class InputController {
   #renderSize: () => { width: number; height: number };
 
   constructor(surface: HTMLCanvasElement, ui: UiHandle, renderer: RendererHandle, services: AppServices,
-    camera: RenderCamera, controls: SourceCameraControls, focus: Tile,
+    camera: RenderCamera, controls: SourceCameraControls | null, focus: Tile,
     renderSize: () => { width: number; height: number } = () => ({ width: surface.width, height: surface.height }),
     uiAdapter: UiWorldAdapter = sourceUiAdapter) {
     this.#surface = surface;
@@ -34,7 +36,8 @@ export class InputController {
     this.#renderer = renderer;
     this.#services = services;
     this.#camera = { ...camera };
-    this.#controls = { ...controls };
+    this.#controls = controls ? { ...controls } : null;
+    this.#baseZoom = camera.zoom;
     this.#focus = { ...focus };
     this.#renderSize = renderSize;
     this.#uiAdapter = uiAdapter;
@@ -81,6 +84,11 @@ export class InputController {
     this.#pointer = { id: event.pointerId, button: event.button, x, y, startX: x, startY: y };
     if (event.button === 1) {
       event.preventDefault();
+      if (!this.#controls) {
+        this.#pointer = null;
+        this.#services.report(new AppError("This explicit source fixture uses its recorded camera; live mouse-camera bindings are not supplied.", { kind: "integration" }));
+        return;
+      }
       this.#surface.setPointerCapture(event.pointerId);
     }
   };
@@ -95,6 +103,7 @@ export class InputController {
       }
       return;
     }
+    if (!this.#controls) return;
     this.#rotate((x - pointer.x) * this.#controls.yawUnitsPerPixel, (y - pointer.y) * this.#controls.pitchUnitsPerPixel);
     pointer.x = x;
     pointer.y = y;
@@ -128,11 +137,15 @@ export class InputController {
     const { x, y } = this.#point(event);
     if (this.#blocked(event) || textInput(document.activeElement) || this.#ui.capturesPointer(x, y)) return;
     event.preventDefault();
+    if (!this.#controls) {
+      this.#services.report(new AppError("This source fixture uses the viewport-derived zoom; no live scroll-zoom policy was invented.", { kind: "integration" }));
+      return;
+    }
     if (event.deltaY !== 0) this.#zoom(Math.sign(event.deltaY) * this.#controls.zoomPerWheelStep);
   };
 
   #keyDown = (event: KeyboardEvent): void => {
-    if (this.#blocked(event) || textInput(document.activeElement) || event.altKey || event.metaKey || event.ctrlKey) return;
+    if (!this.#controls || this.#blocked(event) || textInput(document.activeElement) || event.altKey || event.metaKey || event.ctrlKey) return;
     if (["ArrowLeft", "ArrowRight", "ArrowUp", "ArrowDown"].includes(event.code)) {
       this.#keys.add(event.code);
       event.preventDefault();
@@ -143,10 +156,11 @@ export class InputController {
 
   #rotate(yaw: number, pitch: number): void {
     this.#camera.yaw = ((this.#camera.yaw + yaw) % 16384 + 16384) % 16384;
-    this.#camera.pitch = Math.min(this.#controls.maximumPitch, Math.max(this.#controls.minimumPitch, this.#camera.pitch + pitch));
+    if (this.#controls) this.#camera.pitch = Math.min(this.#controls.maximumPitch, Math.max(this.#controls.minimumPitch, this.#camera.pitch + pitch));
     this.#applyCamera();
   }
   #zoom(delta: number): void {
+    if (!this.#controls) return;
     this.#camera.zoom = Math.min(this.#controls.maximumZoom, Math.max(this.#controls.minimumZoom, this.#camera.zoom + delta));
     this.#applyCamera();
   }
@@ -156,8 +170,18 @@ export class InputController {
     this.#uiAdapter.camera(this.#ui, { ...this.#camera });
   }
 
+  resizeZoom(zoom: number): void {
+    const offset = this.#camera.zoom - this.#baseZoom;
+    this.#baseZoom = zoom;
+    this.#camera.zoom = this.#controls
+      ? Math.min(this.#controls.maximumZoom, Math.max(this.#controls.minimumZoom, zoom + offset))
+      : zoom;
+    this.#applyCamera();
+  }
+
   update(milliseconds: number): void {
     if (this.#services.state().phase !== "world" || textInput(document.activeElement)) { this.#keys.clear(); return; }
+    if (!this.#controls) return;
     const seconds = Math.min(100, Math.max(0, milliseconds)) / 1000;
     const yaw = (Number(this.#keys.has("ArrowRight")) - Number(this.#keys.has("ArrowLeft"))) * seconds * this.#controls.keyboardYawUnitsPerSecond;
     const pitch = (Number(this.#keys.has("ArrowDown")) - Number(this.#keys.has("ArrowUp"))) * seconds * this.#controls.keyboardPitchUnitsPerSecond;

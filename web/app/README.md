@@ -3,15 +3,17 @@
 `main.ts` starts the real WASM bridge and loads the three independent component
 entry points:
 
-* `web/renderer/index.ts`: `createRenderer: CreateRenderer`
+* `web/renderer/src/index.ts`: actual `createRenderer` + diagnostics extension
 * `web/ui/index.ts`: `createUi: CreateUi`
 * `web/audio/index.ts`: `createAudio: CreateAudio`
 
 These are Vite module imports, not script-tag loading or a substitute renderer.
-The actual UI/audio are integrated; the remaining renderer factory is nullable.
-Real UI account/source-state operation can continue with explicit missing-3D
-feedback and benchmark readiness false. No viewport/model-preview substitute
-is created. The small HTML bootstrap diagnostic remains only a fatal startup
+All three actual factories are integrated. The initial renderer exports five
+named source **fixture scenes**, not a complete authoritative-region stream.
+Normal entry rejects uncovered source regions explicitly; it never selects
+the nearest/first fixture or a blank viewport as a fallback. Explicit early
+presentation mode is separate and labeled; no model-preview substitute is
+created. The small HTML bootstrap diagnostic remains only a fatal startup
 fallback, **not** approved title/login presentation.
 
 Build delivery separately checks the exact external reference approval and
@@ -142,8 +144,58 @@ browser retains its memory token and the exact world/artifact pin.
 `window.__clubscapeClientStateV1.read()` is an immutable observation-only view
 for this boundary; it exposes no credential, mutation or outcome setter.
 The source title is visibly rendered and logical/backing resize boundaries are
-tested. Missing 3D/penguin preview and the UI owner's remaining field/control
-contracts stay explicit; this is not a complete Tutorial Island journey.
+tested. Full live-region/3D coverage, penguin preview and the UI owner's
+remaining field/control contracts stay explicit; this is not a complete Tutorial Island journey.
+
+## Actual renderer adapter and explicit early presentation
+
+The authorized six renderer commits are integrated through their real
+`web/renderer/src/index.ts` factory and `web/renderer/build.sh`; the shell does
+not implement a rasterizer. Build output uses wasm-bindgen0.2.128 and, on this
+host, matches the relayed WASM hash `04c20b009bf401b78fff0489b3248b30123e4c97a14454d5cd1b29ba70b9e43c`.
+The original renderer manifest stays
+`3fd1ec1953183de5537a2e7d239389c8dceed50c2e5d658dcc82c49113468845`.
+
+`renderer.ts` validates that exact manifest, passes the compiled WASM URL and
+actual asset base, forwards source `WorldView` unchanged, and maps diagnostics.
+`source-fetch.ts` enforces same-origin, redirect-error, no-cookie/no-referrer
+policy even for component factories that internally call global `fetch`.
+
+Normal region IDs are never rewritten to fixture names. Explicit
+`/?presentation_scene=tutorial-starting-house` selects that named fixture for
+**early presentation only**, with a visible warning and workload identity
+`early-presentation-not-journey`. Its exact camera comes from the approved
+source capture, not a claimed live-player initial camera. Real UI requests,
+source account/character state and server restart remain real, but the fixture
+scene/layout must not be counted as legitimate journey/streaming proof.
+Other exported fixture names are equally explicit; unsupported names fail.
+
+The camera uses16384 units/turn, near50 and
+`sourceZoomForViewportHeight(backingHeight)` (662 at1080). Live resize updates
+the same camera/zoom in renderer and UI. An early fixture with no live control
+calibration keeps its recorded camera: no guessed mouse sensitivity or scroll
+curve. Actual actor IDs are mapped back from the renderer's wrapping64-bit
+hash ABI; ambiguous/unmapped scene-object hashes are rejected with feedback,
+never converted to guessed spawns or a walk-through interaction.
+
+Initial renderer frame timestamps are wall-clock `Date.now()` values.
+`CanvasGpuClock` independently observes **actual game-canvas texture acquisition,
+queue submission and `onSubmittedWorkDone` receipt**, recording the last real
+canvas submission on `performance.now()` and waiting for that receipt before
+publishing each genuine renderer-completed frame. It does not rewrite counters,
+estimate latency or substitute RAF. The extra completion observations are real
+measurement overhead and remain present during checks.
+
+The adapter's diagnostics currently expose actual loaded assets/scene/device/
+timestamps, but discard the raw WASM `entities_drawn` field and do not expose
+per-kind workload counts. `observe().entities` therefore stays `{}` and
+benchmark readiness stays false; no manifest/static/server-snapshot count is
+passed off as rendered entities. Renderer continuation must supply the real
+counts, live-region mapping, complete actions/equipment, object-pick identities,
+dynamic minimap and model-only preview. No missing-entrypoint blocker remains.
+The initial native adapter admits one frame in flight and returns null for a
+busy call; the shell does not add another limiter or serialize RAF behind its
+promise. Report the genuine completed cadence, not a configured refresh rate.
 
 ## Actual audio adapter
 

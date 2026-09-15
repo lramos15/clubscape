@@ -82,6 +82,7 @@ export async function deliver(): Promise<void> {
   }
   let content: { path: string; sha256: string; owner: "web" | "game" } | null = null;
   const external: PublicFile[] = [];
+  const routeOverrides = new Map<string, string>();
   const manifestInput = process.env.CLUBSCAPE_CLIENT_MANIFEST;
   if (manifestInput) {
     const input = repoInput(manifestInput);
@@ -95,13 +96,14 @@ export async function deliver(): Promise<void> {
     publicPath(manifestRoute, "/content/");
     const assetRoot = repoInput(process.env.CLUBSCAPE_CLIENT_ASSET_ROOT ?? dirname(relative(root, repoInput(manifestInput))));
     for (const asset of manifest.assets) {
-      const path = asset.url.slice(1);
+      const path = asset.url.endsWith(".gz") ? `${asset.url.slice(1)}.bin` : asset.url.slice(1);
       const record = await publicFile(assetRoot, path, asset.url, asset);
       if (owner === "web") {
         const output = join(dist, path);
         await mkdir(dirname(output), { recursive: true });
         await copyFile(join(assetRoot, path), output);
         await publicFile(dist, path, asset.url, asset);
+        routeOverrides.set(path, asset.url);
       } else external.push(record);
     }
     if (owner === "web") {
@@ -114,6 +116,7 @@ export async function deliver(): Promise<void> {
     content = { path: manifestRoute, sha256: digest(bytes), owner };
   }
   const files = await collectBuild(dist);
+  for (const file of files) file.url = routeOverrides.get(file.path) ?? file.url;
   let total = 0;
   for (const file of files) total += (await lstat(join(dist, file.path))).size;
   if (total > 512 * 1024 * 1024) throw new Error("Browser build exceeds the server's total byte limit.");
@@ -127,7 +130,7 @@ export async function deliver(): Promise<void> {
   await writeFile(join(dist, "client/build-artifact.json"), artifact);
   files.push(await publicFile(dist, "client/build-artifact.json", "/client/build-artifact.json"));
   const components = Object.fromEntries(await Promise.all(["renderer", "ui", "audio"].map(async (name) => {
-    const path = join(root, "web", name, "index.ts");
+    const path = join(root, "web", name, ...(name === "renderer" ? ["src", "index.ts"] : ["index.ts"]));
     return [name, await lstat(path).then((stat) => stat.isFile() && !stat.isSymbolicLink()).catch(() => false)];
   })));
   const revision = execFileSync("git", ["rev-parse", "HEAD"], { cwd: root, encoding: "utf8" }).trim();

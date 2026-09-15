@@ -12,6 +12,7 @@ import type { PublicFile } from "./deliver.ts";
 import { deliverAudioAssets } from "./audio-assets.ts";
 import { captureSourceRunPin } from "./run-pins.ts";
 import { deliverUiAssets } from "./ui-assets.ts";
+import { deliverRenderAssets } from "./render-assets.ts";
 
 const root = resolve(fileURLToPath(new URL("../../", import.meta.url)));
 const sha = (bytes: Uint8Array | string): string => createHash("sha256").update(bytes).digest("hex");
@@ -46,12 +47,16 @@ export async function prepareSourceBundle(directory: string, worldId: string): P
   })) as { assets: AssetRecord[]; files: PublicFile[]; inventoryActions: Record<string, string[]>; bytes: number };
   const audio = await deliverAudioAssets(output);
   const ui = await deliverUiAssets(output);
+  const render = await deliverRenderAssets(output);
   source.assets.push(...audio.assets);
   source.assets.push(...ui.assets);
+  source.assets.push(...render.assets);
   source.files.push(...audio.files);
   source.files.push(...ui.files);
+  source.files.push(...render.files);
   source.bytes += audio.bytes;
   source.bytes += ui.bytes;
+  source.bytes += render.bytes;
   const actions: Record<string, string[]> = {};
   for (const [id, definition] of Object.entries(projection.catalog.items)) {
     if (definition.asset !== null && source.inventoryActions[definition.asset] !== undefined) {
@@ -62,7 +67,7 @@ export async function prepareSourceBundle(directory: string, worldId: string): P
     schemaVersion: 1, sourcePackSha256: SOURCE_PACK_SHA256, contentRevision: manifest.revision,
     artifactSha256: sha(bytes), catalog: { ...projection.catalog, inventoryActions: actions },
     contentValidation: projection.contentValidation, assets: source.assets, aliases: { ...audio.aliases, ...ui.aliases },
-    bootstrap: [...audio.metadata, ...ui.startup], rendererManifest: null,
+    bootstrap: [...audio.metadata, ...ui.startup], rendererManifest: "asset.source.render.manifest", renderer: render.renderer,
     regions: Object.fromEntries(Object.entries(projection.regions).map(([id, region]) => {
       if (region.sceneAsset === null) throw new Error(`Canonical region ${id} has no source scene asset.`);
       return [id, { sceneId: region.sceneAsset, sceneAsset: region.sceneAsset, requiredAssets: [region.sceneAsset],

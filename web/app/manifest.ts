@@ -54,6 +54,14 @@ export interface ContentValidation {
   runtimeReadinessEstablished: false;
 }
 
+export interface RendererDelivery {
+  manifestSha256: string;
+  assetBaseUrl: string;
+  assetIds: Record<string, string>;
+  fixtures: Record<string, { sourceInputId: string; camera: RenderCamera; requiredAssets: string[] }>;
+  coverage: "named_fixture_scenes_only";
+}
+
 export interface ContentManifest {
   schemaVersion: 1;
   sourcePackSha256: string;
@@ -66,6 +74,7 @@ export interface ContentManifest {
   regions: Record<string, RegionPresentation>;
   contentValidation?: ContentValidation;
   aliases?: Record<string, string>;
+  renderer?: RendererDelivery;
 }
 
 export function parseContentManifest(value: unknown): ContentManifest {
@@ -167,6 +176,24 @@ export function parseContentManifest(value: unknown): ContentManifest {
         && region.controls.maximumPitch <= 16384
         && region.controls.minimumZoom < region.controls.maximumZoom,
       "Invalid source camera input bindings.");
+    }
+  }
+  if (manifest.renderer !== undefined) {
+    const renderer = manifest.renderer;
+    publicPath(`${renderer.assetBaseUrl.replace(/\/$/, "")}/manifest.json`, "/assets/");
+    invariant(renderer.coverage === "named_fixture_scenes_only" && isHash(renderer.manifestSha256)
+      && manifest.assets.find((asset) => asset.id === manifest.rendererManifest)?.sha256 === renderer.manifestSha256,
+    "Invalid pinned renderer coverage/manifest identity.");
+    for (const [path, id] of Object.entries(renderer.assetIds)) {
+      publicPath(`${renderer.assetBaseUrl}${path}`, "/assets/");
+      invariant(manifest.assets.some((asset) => asset.id === id && asset.url === `${renderer.assetBaseUrl}${path}`),
+        "Renderer buffer is not bound to its exact declared public asset.");
+    }
+    for (const fixture of Object.values(renderer.fixtures)) {
+      invariant(typeof fixture.sourceInputId === "string" && fixture.sourceInputId.startsWith("original.scenes.")
+        && assetsExist(fixture.requiredAssets) && fixture.camera.unitsPerTurn === 16384
+        && fixture.camera.near === 50 && Object.values(fixture.camera).every((value) => Number.isFinite(value)),
+      "Invalid original renderer fixture/camera binding.");
     }
   }
   return deepFreeze(manifest);

@@ -14,6 +14,7 @@ From the repository root:
 ```sh
 pnpm --dir web install --frozen-lockfile
 pnpm --dir web wasm
+pnpm --dir web renderer
 pnpm --dir web typecheck
 pnpm --dir web test
 pnpm --dir web reference:check
@@ -29,11 +30,18 @@ the real `wasm-bindgen --target web` tool. It never hand-writes WASM glue.
 Generated protocol JS/WASM are under `web/generated/protocol/`. Generated
 declarations are tracked so standalone typechecking works after a clean
 checkout; `pnpm build` regenerates the real matching implementation first.
-Only the root Cargo lock's new workspace-member entry is needed—dependency
-versions already existed in the base lock. Root `Cargo.lock` is outside this
-worker's ownership; the integrator must retain Cargo's new `clubscape-wasm`
-member entry when merging. The build command performs normal Cargo resolution,
+Root `Cargo.lock` is outside this worker's ownership. The integrator must retain
+Cargo's `clubscape-wasm` entry and the authorized renderer's wgpu30.0.1/
+bytemuck/browser/native dependency graph when merging; renderer dependencies
+are not all present in the original base lock. The build command performs normal Cargo resolution,
 not a global tool installation or guessed alternate bindgen version.
+
+`pnpm renderer` calls the actual owned renderer unpack/build commands, checks
+CLI0.2.128, and records the resulting JS/WASM/manifest hashes under
+`.local/evidence/renderer-build.json`. `pnpm build` invokes it automatically.
+The renderer's dev TypeScript project is checked by its own build; the main
+app checks `renderer/src`/`pkg` but does not merge the dev fixture's incompatible
+global benchmark declaration into the production observer.
 
 ### Frozen reference integrity and current authority
 
@@ -188,10 +196,11 @@ labels come from `interfaceOptions`. Source hashes/selectors/transformations
 are recorded in the private `source-provenance.json`; no whole cache or private
 game state is exposed. Original geometry and asset IDs are retained.
 
-The real audio and UI factories/assets are now integrated. The remaining
-renderer manifest, camera bindings and model-only penguin preview are still
-explicitly unconfigured; no reference panel/image or software 3D fallback is
-used to fill them.
+The real audio, UI and initial WebGPU factories/assets are now integrated.
+The renderer's five named source fixture scenes are not a full authoritative
+region map; normal uncovered-region entry is explicit unavailability, never
+an arbitrary fixture or blank/software3D fallback. Live region/camera/actions/
+equipment/minimap/model-preview coverage remains renderer-owner continuation.
 
 The authorized `2c5fe68b` repair resolves the former descriptor blocker:
 512KiB admits the actual406,574-byte map, with the exact limit/limit+1 covered
@@ -205,7 +214,7 @@ outputs additionally include its exported `AUDIO_INPUTS` documents and exact
 264 FLACs plus two original reference WAVs, with no alias
 invented for the source silence. Original source path IDs resolve through
 explicit same-origin aliases. The private game membership map still contains
-only the5,010 compiler-required IDs; audio delivery does not hide or inflate
+only the5,010 compiler-required IDs; presentation delivery does not hide or inflate
 that descriptor's source validation. No waveform, gain, delay, loop or playlist
 is changed by the build layer.
 
@@ -258,8 +267,10 @@ logout/relogin. A real server restart at the same origin retains the memory
 token and acknowledged character state; no replacement artifact, seed or
 network mock is used. Credentials stay in browser memory and are never
 reported. Evidence includes actual title pixels, startup/run pins and the
-onboarding result. The missing 3D renderer leaves zero GPU frames/readiness
-false; complete journey, world fidelity, audio calibration and M1 acceptance
+onboarding result. With the initial renderer, normal region coverage is not
+yet mapped and fails explicitly. The earlier UI-only onboarding proof remains
+historical; explicit early-presentation mode below is not a replacement
+journey proof. Complete journey, world fidelity, audio calibration and M1 acceptance
 remain separate. The legacy descriptor-probe environment name now selects
 real startup, not an expected failure.
 
@@ -286,6 +297,48 @@ only listed public files and the manifest. The server correctly rejects
 overlapping web/game routes; do not ship the same routes through both roots.
 
 ## Static deployment identity
+
+### Actual renderer asset delivery and early composition
+
+`render-assets.ts` pins original manifest
+`3fd1ec1953183de5537a2e7d239389c8dceed50c2e5d658dcc82c49113468845`
+and publishes59 checked buffers after lossless unpack of the10 scene/model
+gzip twins. Compressed URLs retain the exact names expected by the actual
+adapter; physical `.gz.bin` carriers satisfy the existing server extension
+allowlist without changing bytes or using content-encoding tricks. Native
+validation-only optional tables/bakes are not fabricated if absent.
+
+The combined source/UI/audio/render bundle has6,520 declared assets and is
+separate from older immutable bundles. Use a new directory and world UUID:
+
+```sh
+pnpm --dir web renderer
+pnpm --dir web source:bundle .local/source-render-df3e2a45 <new-isolated-world-uuid>
+CLUBSCAPE_CLIENT_MANIFEST=.local/source-render-df3e2a45/content/manifest.json \
+CLUBSCAPE_CLIENT_ASSET_ROOT=.local/source-render-df3e2a45 \
+CLUBSCAPE_CONTENT_OWNER=game \
+pnpm --dir web build
+
+CLUBSCAPE_EARLY_SCENE=tutorial-starting-house \
+CLUBSCAPE_BROWSER_EVIDENCE=.local/evidence/early-render-df3e2a45 \
+CLUBSCAPE_BROWSER_EXECUTABLE=/path/to/verified/native/chrome \
+pnpm --dir web test:isolated --game-root .local/source-render-df3e2a45
+```
+
+The early runner adds only a named `presentation_scene` query—never a token,
+account identity or game outcome—and uses real UI/signup/source creation/
+appearance/logout/relogin and same-artifact server restart. Its screenshot
+contains the actual WebGPU scene with real UI, not a source PNG in a viewport.
+Sparky checks find1,336,507 nonblack pixels and11,068 colours in the initial
+composed1920×1080 starting-house capture. Genuine GPU-completed frames advance;
+the current missing rendered-entity-count diagnostics keep benchmark readiness
+false. This is **early presentation**, not a full region/journey/performance
+pass. The unchanged native renderer GPU tests compare all five scenes against
+CPU/source at zero differences; those fixture checks remain separate.
+
+Without `CLUBSCAPE_EARLY_SCENE`, the current live-region test records an explicit
+coverage blocker rather than borrowing a fixture. No alias/mapping from
+`region.osrs.12336` to `tutorial-starting-house` is invented.
 
 `web/dist/clubscape-web.json` implements the existing server contract:
 
@@ -350,9 +403,10 @@ files stay in the project and owned processes/resources are cleaned.
 
 Before integrated-client completion:
 
-1. Merge the remaining actual `web/renderer/index.ts` adapter and run the
-   renderer owner's actual WASM/assets build step. Add that agreed build ABI
-   to orchestration once its real output paths are known.
+1. The actual renderer entrypoint/build are integrated. Consume its continuation
+   for authoritative region streaming, action/equipment packs, exact canonical
+   object picks, dynamic minimap and model-only preview; do not promote named
+   fixture coverage into those obligations.
 2. Supply the real compiled source asset/region/camera bindings and a matching
    server public ContentManifest/asset deployment. Do not substitute the test
    fixtures for those resources.
@@ -368,7 +422,9 @@ Before integrated-client completion:
    Source contact/offline-clock and512KiB descriptor/environment repairs are
    integrated without trimmed content or seeded state. The complete actor/collision/style
    repairs are integrated without a new browser outcome API.
-4. Align renderer `observe()`/applied settings/GPU completion ABI and the
+4. The shell observes real canvas queue completions and adapts actual renderer
+   diagnostics/source zoom. The renderer still needs to expose rendered entity
+   counts (not discarded raw stats) and the
    actual source audio event provenance described in `web/app/README.md`.
    The audio factory and real decoder observations are integrated; source
    cycle/group/delay/action/cue and Cook-widget linkage are not present in
@@ -381,6 +437,6 @@ Before integrated-client completion:
    asset/
    device failures and nonblank world/UI/audio. Run the independent frozen
    source comparisons and genuine completed-frame harness, then the owner's
-   M-series Mac Chrome **and** Edge acceptance runs. The infrastructure helper,
-   its black diagnostic canvas, and the missing-adapter build do not pass any
+   M-series Mac Chrome **and** Edge acceptance runs. The historical infrastructure
+   helper and the current explicit early fixture composition do not pass any
    of those gates.

@@ -8,16 +8,19 @@ import type { ApplicationHandle } from "./composition.ts";
 import { appError } from "./errors.ts";
 import "./style.css";
 import type { AppState } from "../shared/contracts.ts";
+import { installSourceFetch } from "./source-fetch.ts";
 
 declare global {
   interface Window {
     __clubscapeClientStateV1?: { read(): Readonly<AppState> };
+    __clubscapePresentationV1?: Readonly<{ mode: "live" | "early_fixture"; sceneId: string | null }>;
   }
 }
 
 let application: ApplicationHandle | null = null;
 let bridge: BrowserClient | null = null;
 const status = document.querySelector<HTMLElement>("#bootstrap-status")!;
+const restoreFetch = installSourceFetch();
 
 async function start(): Promise<void> {
   const build = await loadBuild();
@@ -27,14 +30,20 @@ async function start(): Promise<void> {
   bridge = await createProtocolClient();
   benchmark.startup(performance.now() - startedAt);
   const components = await loadComponents();
+  const earlyScene = new URLSearchParams(location.search).get("presentation_scene");
+  window.__clubscapePresentationV1 = Object.freeze({ mode: earlyScene === null ? "live" : "early_fixture", sceneId: earlyScene });
   const ownedBridge = bridge;
   bridge = null;
   application = await mountApplication({
-    build, benchmark, bridge: ownedBridge, components, status,
+    build, benchmark, bridge: ownedBridge, components, status, earlyScene,
     worldCanvas: document.querySelector<HTMLCanvasElement>("#world")!,
     uiCanvas: document.querySelector<HTMLCanvasElement>("#overlay")!,
   });
   window.__clubscapeClientStateV1 = Object.freeze({ read: () => application!.app.state() });
+  if (earlyScene !== null) {
+    status.hidden = false;
+    status.textContent = `Early presentation fixture: ${earlyScene}. Not a legitimate journey or acceptance run.`;
+  }
 }
 
 void start().catch((value: unknown) => {
@@ -49,5 +58,7 @@ void start().catch((value: unknown) => {
 
 window.addEventListener("pagehide", () => {
   delete window.__clubscapeClientStateV1;
+  delete window.__clubscapePresentationV1;
+  restoreFetch();
   void application?.dispose();
 }, { once: true });

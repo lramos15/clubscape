@@ -384,6 +384,13 @@ export class BrowserApp implements AppServices {
   #failed(error: AppError): void {
     let state: Readonly<BridgeState> | null = null;
     try { state = bridgeState(this.#bridge.state()); } catch { /* Keep the last valid immutable view. */ }
+    if (error.kind === "region_unavailable") {
+      this.#stopPoll();
+      this.#hooks.disconnected();
+      this.#publish({ phase: "error", world: null, loading: null });
+      this.report(error);
+      return;
+    }
     const definitiveServerRejection = error.kind === "server" && error.code !== 7;
     const lost = !definitiveServerRejection && (error.kind === "transport" || error.kind === "protocol"
       || state?.phase === "reconnecting" || this.#state.phase === "reconnecting");

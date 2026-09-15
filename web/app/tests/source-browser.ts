@@ -1,5 +1,5 @@
 import assert from "node:assert/strict";
-import { spawn } from "node:child_process";
+import { execFileSync, spawn } from "node:child_process";
 import type { ChildProcess } from "node:child_process";
 import { mkdir, rm, writeFile } from "node:fs/promises";
 import { resolve, sep } from "node:path";
@@ -115,6 +115,8 @@ export async function sourceBrowserCheck(): Promise<void> {
   const origin = process.env.CLUBSCAPE_BROWSER_ORIGIN;
   const executable = process.env.CLUBSCAPE_BROWSER_EXECUTABLE;
   const gameRoot = process.env.CLUBSCAPE_SOURCE_GAME_ROOT;
+  const earlyScene = process.env.CLUBSCAPE_EARLY_SCENE ?? null;
+  if (earlyScene !== null) assert(/^[a-z0-9-]{1,80}$/.test(earlyScene), "Invalid explicit early-presentation scene.");
   assert(origin && /^http:\/\/127\.0\.0\.1:\d+$/.test(origin) && executable && gameRoot && process.env.DISPLAY);
   const evidence = resolve(root, process.env.CLUBSCAPE_BROWSER_EVIDENCE ?? ".local/evidence/source-ui");
   assert(evidence.startsWith(root + sep));
@@ -154,9 +156,10 @@ export async function sourceBrowserCheck(): Promise<void> {
     page.on("request", (request) => {
       const url = new URL(request.url());
       if (url.protocol === "data:" || url.protocol === "blob:") return;
-      if (url.origin !== origin || url.search || url.hash || url.username || url.password) unexpected.add("noncanonical browser request");
+      const permittedScene = earlyScene !== null && url.pathname === "/" && url.search === `?presentation_scene=${earlyScene}`;
+      if (url.origin !== origin || (url.search && !permittedScene) || url.hash || url.username || url.password) unexpected.add("noncanonical browser request");
     });
-    await page.goto(origin, { waitUntil: "networkidle" });
+    await page.goto(`${origin}${earlyScene === null ? "" : `/?presentation_scene=${earlyScene}`}`, { waitUntil: "networkidle" });
     await page.waitForFunction(() => window.__clubscapeClientStateV1?.read().phase === "title", undefined, { timeout: 45_000 });
     await page.locator("#overlay").focus();
     await page.keyboard.press("Escape");
@@ -206,6 +209,25 @@ export async function sourceBrowserCheck(): Promise<void> {
     assert.equal(await page.evaluate(() => window.__clubscapeClientStateV1!.read().world), null);
     checks.push("real UI login without seeded character/world");
     await page.getByRole("button", { name: "Confirm appearance", exact: true }).click();
+    if (earlyScene === null) {
+      await page.waitForFunction(() => ["world", "error"].includes(window.__clubscapeClientStateV1?.read().phase ?? ""), undefined, { timeout: 30_000 });
+      const state = await page.evaluate(() => window.__clubscapeClientStateV1!.read());
+      if (state.phase === "error") {
+        assert.match(state.error?.message ?? "", /does not yet cover authoritative region/);
+        assert.equal(state.world, null);
+        const benchmark = await page.evaluate(() => window.__clubscapeBenchmarkV1!.read(null));
+        assert.equal(benchmark.renderedFrames, 0);
+        await writeFile(resolve(evidence, "result.json"), JSON.stringify({
+          kind: "actual-live-renderer-coverage-boundary", result: "blocked", checks,
+          sourceRunPin: pin, error: state.error, rendererCreated: true, automaticFixtureFallback: false,
+          renderedFrames: benchmark.renderedFrames, fullJourneyTested: false, presentationAccepted: false,
+        }, null, 2) + "\n");
+        console.log(JSON.stringify({ result: "blocked", kind: "actual-live-renderer-coverage-boundary",
+          reason: state.error?.message, evidence: resolve(evidence, "result.json") }));
+        process.exitCode = 2;
+        return;
+      }
+    }
     await page.waitForFunction(() => {
       const state = window.__clubscapeClientStateV1?.read();
       return state?.phase === "world" && (state.world?.player as { appearanceConfirmed?: boolean } | undefined)?.appearanceConfirmed === true;
@@ -217,6 +239,19 @@ export async function sourceBrowserCheck(): Promise<void> {
     assert(first.player.presence?.connected);
     assert(!JSON.stringify(first).includes("played_time") && !JSON.stringify(first).includes("ground_provenance"));
     checks.push("empty source creation, real join and separate sequenced appearance confirmation from UI");
+    let renderPixels: unknown = null;
+    if (earlyScene !== null) {
+      await page.waitForFunction(() => (window.__clubscapeBenchmarkV1?.read(null).renderedFrames ?? 0) >= 8, undefined, { timeout: 30_000 });
+      await dismissNotices(page);
+      const screenshot = await page.locator("#world").screenshot({ path: resolve(evidence, "actual-early-source-world.png") });
+      const probe = execFileSync("python3", ["-B", "-c",
+        "import io,json,sys;from PIL import Image;im=Image.open(io.BytesIO(sys.stdin.buffer.read())).convert('RGB'); p=list(im.getdata()); print(json.dumps({'width':im.width,'height':im.height,'nonblack':sum(max(v)>12 for v in p),'unique':len(set(p))}))",
+      ], { cwd: root, input: screenshot, encoding: "utf8", maxBuffer: 1024 * 1024 });
+      renderPixels = JSON.parse(probe) as { nonblack: number; unique: number };
+      assert((renderPixels as { nonblack: number }).nonblack > 100_000);
+      assert((renderPixels as { unique: number }).unique > 1000);
+      checks.push("explicit early fixture: actual nonblank WebGPU world composed with real UI/source actor state");
+    }
     const progress = publicProgress(first);
     restarted = await restartSource(origin, pin, gameRoot);
     await page.waitForFunction((actorId) => {
@@ -253,18 +288,28 @@ export async function sourceBrowserCheck(): Promise<void> {
     assert(privacy);
     assert.equal(unexpected.size, 0);
     const benchmark = await page.evaluate(() => window.__clubscapeBenchmarkV1!.read(null));
-    assert.equal(benchmark.ready, false, "Absent renderer cannot be benchmark-ready.");
-    assert.equal(benchmark.renderedFrames, 0);
+    assert.equal(benchmark.ready, false, "Unexposed actual entity counts cannot be treated as a complete benchmark workload.");
+    if (earlyScene !== null) {
+      assert(benchmark.renderedFrames > 0);
+      assert(benchmark.lastSubmittedAtMs > 0 && benchmark.lastCompletedAtMs >= benchmark.lastSubmittedAtMs
+        && benchmark.lastCompletedAtMs <= benchmark.nowMs);
+      assert.equal(benchmark.identity.sceneId, earlyScene);
+      assert.equal(benchmark.identity.workloadId, "early-presentation-not-journey");
+      checks.push("GPU-completed frame records use actual canvas submission/receipt observations and correct performance.now clock");
+    }
     await assertSourceRunPin(gameRoot, pin);
     await writeFile(resolve(evidence, "result.json"), JSON.stringify({
-      kind: "real-ui-wasm-canonical-source-onboarding", result: "passed", recordedAt: new Date().toISOString(),
+      kind: earlyScene ? "early-render-ui-canonical-source-entry" : "real-ui-wasm-canonical-source-onboarding",
+      result: "passed", recordedAt: new Date().toISOString(),
       checks, sourceRunPin: pin, browser: version, sandbox: { namespaceAndSeccomp: true, gpuProcessSandboxed: system.gpu.auxAttributes?.sandboxed ?? null },
       titlePixels: title, build: benchmark.identity, rendererReady: benchmark.ready, renderedFrames: benchmark.renderedFrames,
       actualUiSignup: true, actualCanonicalWorld: true, actualServerRestart: true,
-      fullJourneyTested: false, worldRendererIntegrated: false, presentationAccepted: false, milestoneAccepted: false,
+      earlyScene, renderPixels, fullJourneyTested: false, worldRendererIntegrated: earlyScene !== null,
+      regionStreamingComplete: false, presentationAccepted: false, milestoneAccepted: false,
     }, null, 2) + "\n");
     await rm(resolve(evidence, "failure.json"), { force: true });
-    console.log(JSON.stringify({ result: "passed", kind: "real-ui-wasm-canonical-source-onboarding", checks: checks.length, evidence: resolve(evidence, "result.json"), fullJourney: false }));
+    console.log(JSON.stringify({ result: "passed", kind: earlyScene ? "early-render-ui-canonical-source-entry" : "real-ui-wasm-canonical-source-onboarding",
+      checks: checks.length, evidence: resolve(evidence, "result.json"), fullJourney: false }));
   } catch (error) {
     const diagnostic = await page?.evaluate(() => {
       const state = window.__clubscapeClientStateV1?.read();
