@@ -10,11 +10,10 @@
       {"id": "bb7f85f7-096a-4377-80cb-3e7eae196c6b", "task": "M1-BROWSER-RENDERER"},
       {"id": "cc864d7a-37cc-4869-a7b4-d484d01cede5", "task": "M1-BROWSER-UI"},
       {"id": "78d01af9-70a4-4b02-8339-6a61eb377374", "task": "M1-BROWSER-SHELL"},
-      {"id": "2766e089-44e5-4a1d-974e-7b03ad9c269d", "task": "M1-GAMEPLAY-UI-CONTRACTS"}
+      {"id": "2766e089-44e5-4a1d-974e-7b03ad9c269d", "task": "M1-GAMEPLAY-UI-CONTRACTS"},
+      {"id": "81ac9884-4f39-4f27-b516-6e9a42b09b51", "task": "M1-HEADLESS-JOURNEY"}
     ],
-    "reserved": [
-      {"id": "81ac9884-4f39-4f27-b516-6e9a42b09b51", "task": "M1-HEADLESS-JOURNEY", "reason": "Verified66/70 on actual6f canonical4, then source confirmation-menu ambiguity. Owned services cleaned; same runner waits for a verified source repair without retrying the unknown offer_mainland outcome."}
-    ],
+    "reserved": [],
     "queued": [],
     "parked": [
       {"id": "ac0f0856-44af-445b-bd90-6db7a1f4fc74", "reason": "Original scenery phase supplement6c68672d integratedb9cdd0f; parent36tests and exact27-observation/index verification pass. Renderer received active4/3/2 phases and original clocks; no automatic resumption."},
@@ -50,7 +49,7 @@
       "source_notes": ["Fresh normal v4 account reached66/70 and1Learning-the-RopesQP. offer_mainland returned500game_source_view; three primary entries share the same question text and departure_confirmation guard. Outcome was not retried or labeled rolled back."],
       "parity_entries": [],
       "adaptations": [],
-      "evidence": []
+      "evidence": ["Generator e8c3c43 and canonical4 productdf6ea49 integratebacbdf1/8778fb3. Only identical-question/guard isolated tutorial branches merge; original three choices/order/guards/effects are preserved and incompatible continuations fail. Actualold6f nativeprobe reproducesMultipleentries; new5e artifactpassesoffer/stay/info/normal4branches,wrong-stageatomicrefusal andimmutablequeries without items/XP/QP/entitlements/mode/location changes orautomatictravel.", "77source tests/full93-output repeat pass; only decodedrevision+Magicdialogue change(nodes7->5), allmechanics/tutorial/quests/items/geometry/initialstate unchanged. Exactraw5e0aa8a28851752ae0b8b0a08c635c6c8d2979f509f3a3e564ee74e2abfc8e6f, revisionm1.source-backed.v4.3ff4292b311453cc. Parent refreshes the generatedrawfile explicitly before its nativeprobe; a stale6f rawfile is not confused with the newcommittedproduct. Freshrealjourney resumption remains separate; research/m1-bindings/departure-entry-validation.json."]
     },
     {
       "id": "M1-UI-TRAVEL-INTERRUPTION",
@@ -325,7 +324,7 @@
     {
       "id": "M1-HEADLESS-JOURNEY",
       "goal": "Implement and execute the complete legitimate M1 protocol journey with real account/world/persistence boundaries, not seeded states.",
-      "status": "BLOCKED",
+      "status": "IMPLEMENTING",
       "specs": ["prompt.md section 30.1", "research/journey-rules/**", "spec/game-networking.md", "content/m1/README.md"],
       "dependencies": ["M1-FLEET-ENGINE-CLOSURE"],
       "allowed_paths": ["tools/simulator/**", "tools/journey-tests/**", "tests/scenarios/**"],

@@ -9,11 +9,11 @@
   "candidate_revision": null,
   "accepted_revision": null,
   "checkpoint": {
-    "report": "milestones/evidence/m1-ui-travel-interruption.json",
+    "report": "research/m1-bindings/departure-entry-validation.json",
     "verified_infrastructure_revision": "275d3cc83d6a7c2118d0afcf82490f364e5d2986",
     "infrastructure_evidence": "milestones/evidence/m1-account-foundations.json",
-    "runtime_revision": "40a00e0236810aa1226c08bae014de1fdf378a97",
-    "scope_note": "Canonical4 raw6fdb is unchanged. The independently reviewed timed-UI travel bypass is reproduced and repaired, with5 regressions and41 realPG checks passing. Original scenery phases4/3/2 are independently recorded for renderer consumption. Full live journey, current UI4 consumer adaptation, remaining controls/source audio authority, all-pose fitting, composed fidelity/performance/Mac and owner gates remain incomplete."
+    "runtime_revision": "8778fb3d0126fbd4235564d63912ece0af6eab47",
+    "scope_note": "Actual6f canonical4 normal-account journey reached66/70,263checks andLearning-the-Ropes1QP with onboarding recovery. Newcanonical4 raw5e0a repairs the source departure menu, passing77source tests,93 repeated outputs and4native branches; a freshrealcontinuation is resumed separately. Mainland/Cook/death/postquest, current UI4 adaptation, source authority, fitting/fidelity/performance/Mac and owner gates remain incomplete."
   },
   "scope_approval": {
     "authority": "owner",
@@ -32,7 +32,7 @@
     {"id": "benchmark-contract", "status": "implemented", "evidence": [], "blocker": "Pre-implementation contract is spec/m1-benchmark-contract.json. Sparky profile is pinned for permitted engineering; exact owner Mac/Chrome/Edge fields and final measurements remain to be collected."},
     {"id": "early-presentation-benchmark", "status": "in_progress", "evidence": [], "blocker": "Reference pack is approved; actual renderer/UI/audio composition and source comparisons are still being implemented."},
     {"id": "real-ui-account-creation", "status": "in_progress", "evidence": [], "blocker": null},
-    {"id": "complete-tutorial", "status": "in_progress", "evidence": [], "blocker": "31/70 source transitions verified in one fresh v3 account. Canonical4 now passes the controlled legacy-protocol anvil menu boundary; the same runner is verifying it in a fresh normal v4 journey before claiming further progress."},
+    {"id": "complete-tutorial", "status": "in_progress", "evidence": [], "blocker": "Actualfresh6f normal account completed66/70 transitions; departure confirmation then failed from three competing source entries. New5e canonical4 has one correct source menu and passes all native branches; real continuation is being verified, not assumed."},
     {"id": "legitimate-lumbridge-arrival", "status": "in_progress", "evidence": [], "blocker": null},
     {"id": "lumbridge-activities", "status": "in_progress", "evidence": [], "blocker": null},
     {"id": "death-and-recovery", "status": "in_progress", "evidence": [], "blocker": null},

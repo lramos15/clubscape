@@ -98,12 +98,13 @@ unblocked milestone work where possible, then report the milestone as
 incomplete with a durable checkpoint. Never relabel that checkpoint as an
 accepted slice.
 
-The current [authoritative UI4 checkpoint](../milestones/evidence/m1-game-ui4.json)
-records passing source/native/persistence checks and the repaired contextual
-smithing-menu boundary. A fresh normal v4 journey is running; the
-[prior real journey](../milestones/evidence/m1-source-journey31.json) remains
-31 of70 transitions with onboarding recovery. The
-[native UI component comparisons](../milestones/evidence/m1-ui-controls.json)
-remain qualified separately. Current UI4 consumer adaptation, remaining
-controls, the full journey, runtime presentation, performance and owner review
-still need their own evidence.
+The current [departure-menu checkpoint](../research/m1-bindings/departure-entry-validation.json)
+preserves a real normal-account journey through66 of70 source transitions,
+Learning the Ropes'1QP reward and onboarding recovery. The next source
+confirmation-menu blocker is repaired in canonical4; its native branch
+checks are not a substitute for the resumed real journey.
+The [native UI comparisons](../milestones/evidence/m1-ui-controls.json),
+[renderer/audio results](../milestones/evidence/m1-render-audio-integration.json)
+and [reviewed travel repair](../milestones/evidence/m1-ui-travel-interruption.json)
+remain qualified separately. Remaining controls, the full journey, runtime
+presentation, performance and owner review still need their own evidence.
