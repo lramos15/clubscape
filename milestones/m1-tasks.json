@@ -33,6 +33,24 @@
   },
   "tasks": [
     {
+      "id": "M1-DYNAMIC-COLLISION-PERFORMANCE",
+      "goal": "Measure and repair the reproduced canonical post-door world tick deadline without changing source geometry, actors, cadence or five-second storage bounds.",
+      "status": "IMPLEMENTING",
+      "specs": ["tools/journey-tests/evidence/first-door-tick-dea24a0.json", "spec/m1-benchmark-contract.json", "spec/game-contracts.md"],
+      "dependencies": ["M1-GAME-ROOT-STARTUP", "M1-ACTOR-REVIEW-FIXES"],
+      "allowed_paths": ["crates/world-engine/src/navigation.rs", "crates/world-engine/src/collision_cache.rs", "crates/world-engine/src/lib.rs", "crates/world-engine/tests/collision_cache.rs", "tools/m1-content/schema-check/src/bin/collision-profile.rs", "crates/world-engine/README.md", "spec/game-contracts.md"],
+      "forbidden_paths": ["prompt.md", "content/**", "assets/**", "web/**", "crates/server/**", "crates/game-types/**", "crates/world-engine/src/actions.rs", "crates/world-engine/src/queries.rs"],
+      "outputs": ["Before/after canonical component profile with unchanged state/event hashes", "Bounded exact-state collision reuse if profiling confirms the hotspot", "Door/temporary/instance/invalidation regressions and actual journey continuation"],
+      "validation_commands": ["cargo test --locked -p clubscape-world-engine", "cargo clippy --locked -p clubscape-world-engine --all-targets -- -D warnings"],
+      "test_requirements": ["Do not raise5s deadlines or600ms source cadence", "No state/revision-only cache key that can miss same-tick changes", "No stale collision after door/temporary/instance changes", "Bound memory and preserve error/ownership semantics", "Measure the actual source map, not a tiny synthetic proxy"],
+      "acceptance": ["SQL m1-dynamic-collision-performance records measured root cause, complete regressions, and genuine post-door source progress separately from final performance acceptance"],
+      "reserved_namespaces": [],
+      "source_notes": ["Two independent normal accounts ACKed the source starting-doorOpen thenfailed the nextWalk due game_commit_tick5000ms; potential collision rebuild hotspot is unconfirmed until measured."],
+      "parity_entries": [],
+      "adaptations": [],
+      "evidence": []
+    },
+    {
       "id": "M1-GAMEPLAY-UI-CONTRACTS",
       "goal": "Close the actual source-backed engine/data/protocol contracts required by the approved M1 interface controls.",
       "status": "DONE",
