@@ -7,7 +7,7 @@ import type { PlayerAudioControls } from "../player-audio.ts";
 import type { PlayerAudioUi } from "../player-audio-composition.ts";
 import { PlayerAudioComposition } from "../player-audio-composition.ts";
 import { PlayerAudioPreferenceStore } from "../player-audio-store.ts";
-import { AppError } from "../errors.ts";
+import { AppError, deepFreeze } from "../errors.ts";
 import { audioFixtureRecord, audioFixtureWorld, FixturePreferenceRuntime } from "./player-audio-fixture.ts";
 
 function fixtureUi(runtime: FixturePreferenceRuntime) {
@@ -78,6 +78,66 @@ test("missing authority and unadapted UI are explicit distinct gaps, never an em
   await source.prepare(world); source.events(world, []);
   assert.equal(errors.length, 2, "Repeated polls do not hide or repeatedly announce the same known gap.");
   assert(!runtime.calls.some((call) => call.kind === "world"));
+  await source.dispose();
+});
+
+test("saved tracks, visible music/settings tabs and current world hints cannot reconstruct authority across restart", async () => {
+  let reads = 0, writes = 0;
+  const record = serializeSourceAudioPreferences(audioFixtureRecord(21));
+  const preferences = new PlayerAudioPreferenceStore({
+    read: () => { reads++; return record; }, write() { writes++; },
+  });
+  const initial = audioFixtureWorld();
+  const later = deepFreeze({
+    ...initial, revision: "9007199254740995", tick: "9007199254740996",
+    player: {
+      ...initial.player, region: "region.lumbridge", tile: { x: 3222, y: 3218, plane: 0 },
+      tutorialStage: "stage.tutorial.complete", unlockedInterfaces: ["interface.music", "interface.settings"],
+      quests: [{ id: "quest.cooks_assistant", name: "Fixture quest", stage: "stage.fixture.complete",
+        journal: "Controlled authority-boundary fixture, not game progress.", completed: true }],
+    },
+  });
+  for (const snapshots of [[initial, later], [later]]) {
+    const runtime = new FixturePreferenceRuntime(), ui = fixtureUi(runtime), errors: AppError[] = [];
+    const source = new PlayerAudioComposition(preferences, runtime, ui.ui, {}, (error) => errors.push(error));
+    for (const world of snapshots) {
+      await source.prepare(world);
+      source.events(world, []);
+      const status = source.observe();
+      assert.equal(status.preferences.origin, "stored");
+      assert.equal(status.preferences.phase, "waiting_unlocks");
+      assert.equal(status.sourceUnlocksSupplied, false);
+      assert.equal(status.appliedWorld, null);
+      assert.deepEqual(status.issues.map((issue) => issue.errorId), ["audio.preferences.source_unlocks_required"]);
+    }
+    assert(!runtime.calls.some((call) => call.kind === "world" || call.kind === "apply"));
+    assert.deepEqual(ui.active(), { observers: 0, controls: 0 }, "A supplied UI adapter cannot bypass missing source facts.");
+    assert.equal(errors.length, 1);
+    await source.dispose();
+  }
+  assert.equal(reads, 2, "A fresh composition reloads only the genuine client-preference record.");
+  assert.equal(writes, 0, "Visited tiles, quest hints and saved tracks never become client-owned unlock/history/varp storage.");
+});
+
+test("an explicitly unavailable authority producer cannot fall back to a legacy supplied music selection", async () => {
+  const runtime = new FixturePreferenceRuntime(), world = audioFixtureWorld(), ui = fixtureUi(runtime);
+  let legacyReads = 0, sceneReads = 0;
+  const source = new PlayerAudioComposition(store(), runtime, ui.ui, {
+    unlockedGroups: () => undefined,
+    music: () => {
+      legacyReads++;
+      return { mode: "single", areaMode: "classic", unlockedGroups: [62, 76],
+        selectedGroup: 76, playlistGroups: [76], loopEnabled: true };
+    },
+    scene: () => { sceneReads++; return undefined; },
+  }, () => {});
+  await source.prepare(world);
+  source.events(world, []);
+  assert.equal(source.observe().preferences.phase, "waiting_unlocks");
+  assert.equal(source.observe().sourceUnlocksSupplied, false);
+  assert.equal(legacyReads, 0);
+  assert.equal(sceneReads, 0);
+  assert(!runtime.calls.some((call) => call.kind === "world" || call.kind === "apply"));
   await source.dispose();
 });
 

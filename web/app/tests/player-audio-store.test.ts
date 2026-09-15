@@ -68,6 +68,10 @@ test("corrupt, oversized, unknown-version and compacted records are preserved wi
     JSON.stringify({ ...valid, version: 2 }),
     JSON.stringify({ ...valid, playerId: player }),
     JSON.stringify({ ...valid, unlockedGroups: [62] }),
+    JSON.stringify({ ...valid, visitHistory: ["region.lumbridge"] }),
+    JSON.stringify({ ...valid, sourceVarps: { 281: 100 } }),
+    JSON.stringify({ ...valid, music: { ...valid.music, unlockedGroups: [62, 76] } }),
+    JSON.stringify({ ...valid, music: { ...valid.music, history: [62, 76] } }),
     JSON.stringify({ ...valid, music: { ...valid.music, savedPlaylist1: [62] } }),
     JSON.stringify({ ...valid, volumes: { ...valid.volumes, remembered: { ...valid.volumes.remembered, master: 101 } } }),
   ];
@@ -81,6 +85,11 @@ test("corrupt, oversized, unknown-version and compacted records are preserved wi
   const sparse = { ...valid, music: { ...valid.music, savedPlaylist1: Array<number | null>(100) } };
   const store = new PlayerAudioPreferenceStore({ read: () => null, write() { throw new Error("Invalid record reached storage."); } });
   await assert.rejects(store.save(player, sparse), /100 explicit/);
+  for (const authority of [
+    { ...valid, unlockedGroups: [62, 76] },
+    { ...valid, visitHistory: ["region.lumbridge"] },
+    { ...valid, sourceVarps: { 281: 100 } },
+  ]) await assert.rejects(store.save(player, authority), /missing, extra, or accessor fields/);
 });
 
 test("all three exact100-slot arrays retain holes, native flags and current/remembered volumes", async () => {

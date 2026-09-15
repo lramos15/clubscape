@@ -9,7 +9,7 @@ import type { PlayerAudioPreferenceStore } from "./player-audio-store.ts";
 export interface PlayerAudioSources {
   scene?(world: WorldView): SourceAudioScene | undefined;
   unlockedGroups?(world: WorldView): readonly number[] | undefined;
-  /** Existing authority producer; only its unlocks are used, never inferred preferences. */
+  /** Optional supplied authority, not a production facts adapter; only its unlocks are used. */
   music?(world: WorldView): SourceMusicState | undefined;
 }
 export interface PlayerAudioUi {

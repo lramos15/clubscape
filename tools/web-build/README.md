@@ -283,7 +283,14 @@ legacy UI setter/mute map is not that adapter. Missing inputs are visible via
 `audioPreferenceStatus()` and keep world audio/controls disconnected, without
 inventing unlocks or blocking acknowledged server state.
 
-The189 package tests cover all41 native audio unit cases plus owned storage/
+No proven generic backend counter/event adapter currently supplies the missing
+music unlock/history or native-varp facts. The optional shell source hooks are
+injection ports only; the default entrypoint supplies none. Current tiles,
+quest/tutorial state and visible interfaces cannot reconstruct past visits or
+be persisted as client-owned grants. Await the actual backend projection and
+source bindings rather than guessing wire fields or varp values.
+
+Package tests cover all41 native audio unit cases plus owned storage/
 entry/transport/input/delivery checks. A separate real Chrome fixture verifies
 native preference persistence using explicit fixture world/unlocks/UI ports.
 It is not an actual UI preference journey. Source registration/appearance/

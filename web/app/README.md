@@ -437,6 +437,18 @@ It reports `audio.preferences.ui_adapter_required` and
 without blocking real server/renderer/UI progress. It never invents `[]` or
 grants a region's tracks, buffers old events for replay, or claims audio ready.
 
+There is **no proven generic backend facts adapter** for music unlock/history
+or source-native varps in this client. `main.ts` supplies no `sourceAudio`
+producer; `PlayerAudioSources` is an injection boundary, not an implemented
+projection. Current tile/region/instance, tutorial/quest state, visible music
+or settings tabs, and client-saved track selections are not substitutes for
+durable source unlock/history or exact native-varp facts. Revisiting a current
+tile after restart cannot reconstruct past visits. The separately owned backend
+closure must publish its actual fields/source bindings before wiring them here;
+no speculative wire tags, counter mappings or quest-to-varp conversions are added.
+An explicit unlock producer returning `undefined` remains unavailable even if
+a legacy music callback is also supplied.
+
 `window.__clubscapeClientStateV1.audioPreferenceStatus()` is observation-only:
 load origin, entry/phase/save/error state, actual UI binding/source-input
 availability and last applied actor/revision/tick. It exposes no credential or
