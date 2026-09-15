@@ -236,7 +236,12 @@ window), CPU p50 7 / p95 8 ms, GPU p95 2.9 ms, gap p95 18 ms, max 33 ms, 0 of 10
 33.4 ms. Moving camera, 30 s: 1801 frames, 59.97 fps between completions (59.60 window), CPU
 p50 7 / p95 12 ms (build 5), GPU p95 3.4 ms, gap p95 28 ms, max 36 ms, 6 gaps above 33.4 ms
 (host load average 5; the earlier quiet-host run measured gap p95 20 ms, 1 gap) — this case
-is **below** the frozen gap target and is reported failing. Earlier quiet-host runs: 30 s 60.01
+is **below** the frozen gap target and is reported failing. Re-measured after the attachment
+fit / hand-override / observer work (moving camera, 30 s): 1802 frames, 60.02 fps between
+completions (59.68 over the harness window), CPU p50 7 / p95 10 / max 13 ms (build 4 / 7 / 8,
+pack 2, upload 1), GPU p95 3.5 ms, submit→complete max 18 ms, gap p95 19 ms, max 34 ms, 2 gaps
+above 33.4 ms — within the gap target on this run but still two dropped frames, so not a ≥ 60
+window and not a pass. Earlier quiet-host runs: 30 s 60.01
 fps / gap p95 18 ms / 0 gaps; uncapped throughput ceiling 73.5 fps (static camera) and 99.1 fps
 (moving camera; the static case is bounded by main-thread completion scheduling, not by CPU or
 GPU time). Before the static-placement cache the same workload measured 59.85 fps with gap p95
