@@ -1,95 +1,316 @@
 {
+  "scope": "UI component and original-source validation only. No real-server journey, final visual/audio or hardware acceptance.",
   "status": "blocked",
-  "type_check": "passed",
-  "unit_tests": {
-    "passed": 14,
-    "total": 14
+  "implementation_commit": "b7d6f8a88112fb00369c9b98a5e78ffa0b4981b1",
+  "source_pack_sha256": "b62e19704e17d3d3e4e819f803ef49ba7cc54034ae407184b423427c65d9674d",
+  "published_contract_upstream": "d1532d6fc063d2a02383a7b4bb1ca3c449e214ce",
+  "contract_implementation_inferred_from_types": false,
+  "typecheck": {
+    "passed": true,
+    "command": "pnpm exec tsc --noEmit"
   },
-  "browser_component_cases": {
-    "passed": 20,
-    "total": 20
+  "unit": {
+    "passed": 28,
+    "total": 28
   },
-  "source_cases": {
-    "native_hud": 16,
-    "owner_compositions": 7
+  "component_browser": {
+    "legacy": 20,
+    "versioned": 15,
+    "browser": "153.0.8010.12"
   },
-  "source_checks": {
-    "passed": 87,
-    "total": 87
+  "source_comparisons": {
+    "source": {
+      "passed": 87,
+      "total": 87,
+      "tolerance": 0
+    },
+    "modes": {
+      "passed": 106,
+      "total": 106,
+      "tolerance": 0
+    },
+    "presentations": {
+      "passed": 45,
+      "total": 45,
+      "tolerance": 0
+    }
   },
-  "source_failures": [],
-  "glyphs": {
-    "original_frames_checked": 1099,
-    "font_masks_checked": 1024,
-    "mismatches": 0
+  "original_frames": {
+    "scope": "Original individual source frames/masks/offsets/alpha, no panel crops",
+    "checkedSpriteFrames": 1100,
+    "checkedFontGlyphs": 1024,
+    "failures": [],
+    "toleranceDifferentPixels": 0,
+    "sourcePackSha256": "b62e19704e17d3d3e4e819f803ef49ba7cc54034ae407184b423427c65d9674d",
+    "gameplayAcceptance": false,
+    "finalAcceptance": false
   },
-  "text_oracles": {
-    "metric_checked": 696,
-    "explicitly_unrecorded": 2
+  "strict_source_hashes_checked": 1307,
+  "compiled_assets": {
+    "sprites": 747,
+    "fonts": 4,
+    "items": 240,
+    "native_templates": 109,
+    "static_model_contexts": 475,
+    "static_model_images": 68,
+    "manifest_sha256": "c367e804392cf0bb1c19d9425f94e8ec349f621ca5eb5ffaff9a29735cd24f8b"
   },
-  "factoring_registry": {
-    "states": 71,
-    "families": 29,
-    "hud_signatures": 11,
-    "live_journey_verified": false
-  },
-  "remaining_controls": "web/ui/contract-gaps.json",
-  "claims_excluded": [
-    "real-server gameplay",
-    "world/3D fidelity",
-    "audible playback",
-    "M1 presentation acceptance",
-    "performance acceptance",
-    "Mac/Edge certification",
-    "RuneLite compatibility"
+  "implementation_files": [
+    {
+      "path": "tools/ui-assets/UiAbilityCatalog.java",
+      "sha256": "7c4e67c6ab4b6dbd90022774cafa342ae6897505975ce7244fdfae4544004c14"
+    },
+    {
+      "path": "tools/ui-assets/UiAssetExport.java",
+      "sha256": "09d1601aad22565fb3167ef7fe5bfb7ad943c283b8d97c0ff8f41a5369aac2bc"
+    },
+    {
+      "path": "tools/ui-assets/UiFlameCapture.java",
+      "sha256": "d3864664f96a53649a9a7ef775610b0de04482580b4f625d3bcecbb849967c3f"
+    },
+    {
+      "path": "tools/ui-assets/UiModeCapture.java",
+      "sha256": "d277e223ffbe2f3c07838bbc7438a00e7e8904cf039035a8efc8188b769426eb"
+    },
+    {
+      "path": "tools/ui-assets/UiPresentationCapture.java",
+      "sha256": "d431619b37119ad7793ae06a0405811f6495113ffe06ef2fe10e2ecd500ffe62"
+    },
+    {
+      "path": "tools/ui-assets/UiScriptDump.java",
+      "sha256": "70010ef400ae9a4b83f205c40b568c8c457e3235fe6c301826f996f366eec54f"
+    },
+    {
+      "path": "tools/ui-assets/archive_evidence.py",
+      "sha256": "4d7862e5f8bea199ced119e289520c6d8fe97e2b48c4d34694b1536b4caff88e"
+    },
+    {
+      "path": "tools/ui-assets/compare.py",
+      "sha256": "d82991c9423bb866cdc9bda3ec7d2744be2a630109b0b4315a4a0f076db35edb"
+    },
+    {
+      "path": "tools/ui-assets/compare_modes.py",
+      "sha256": "892c502f7c42a61a84e60f75c0c8298f75b1cc49140f9db814f9ac5ebe4c6c7b"
+    },
+    {
+      "path": "tools/ui-assets/glyph_proof.py",
+      "sha256": "5e9aa18621548dd150d0b17d0153b0848447519b2acfaeeeff08aac2ea65b0bd"
+    },
+    {
+      "path": "tools/ui-assets/inspect_scripts.py",
+      "sha256": "027e1481be063a3063cba24d906d10b874c368516eb8392417bcccd802b99884"
+    },
+    {
+      "path": "tools/ui-assets/prepare.py",
+      "sha256": "e0dc6e37fb322aa5da16726bc789111e00f242d97fa20430269b690bc7b07e0d"
+    },
+    {
+      "path": "web/ui/assets.ts",
+      "sha256": "8cbcac9009eaf1b5693722e91cf1d213f1ddff2e49e8158c952ccaf467834dbd"
+    },
+    {
+      "path": "web/ui/death-preview.ts",
+      "sha256": "12d827148aeaaec5b3ea5a604eb8ca3bf8ddeb135ae73db54fa0047786337044"
+    },
+    {
+      "path": "web/ui/entry.ts",
+      "sha256": "f29a704cedbcf3d60fc2012c094c28415d01f0dbdd579b8526bb8ebe41b7527d"
+    },
+    {
+      "path": "web/ui/filters.ts",
+      "sha256": "cf12f419ef4c894f644f38152ee89fb5789d8e6dc5f37aadb3d4b30e2855fd21"
+    },
+    {
+      "path": "web/ui/flames.ts",
+      "sha256": "51c9407ecf0850b61833f5163a76d28aedccd5600aabe5484febc61f4c01041c"
+    },
+    {
+      "path": "web/ui/gameplay-ui.ts",
+      "sha256": "f18599ded5c838df4c4dbadf00a5f10f3896ecbecfb334ffe6b64d6ff6563abf"
+    },
+    {
+      "path": "web/ui/index.ts",
+      "sha256": "63d530081680ba77e86ad960efda2631ec9076e94b011d77340c63850604ec3b"
+    },
+    {
+      "path": "web/ui/input.ts",
+      "sha256": "f0ec42df07eae2162d578d71bb997bcea6312a93d3771dafd13ea8bc93f164e3"
+    },
+    {
+      "path": "web/ui/layout.ts",
+      "sha256": "1f199694399600f01f5b4f3a4442dcb096fe4df7278b2d837b22aa6d48c4c7c0"
+    },
+    {
+      "path": "web/ui/minimap.ts",
+      "sha256": "5ef7c6368397b9f1d4f4caffa3ae10ee0e2796444665c22eacf0dd3f48dac057"
+    },
+    {
+      "path": "web/ui/presentations.ts",
+      "sha256": "b8499c46f1a64d5af696c2053852553e308129e4d37da532e6b9097e2f9063e5"
+    },
+    {
+      "path": "web/ui/production.ts",
+      "sha256": "7824c7d23e7e709d9fbd97eab81c70826f6d7af5cd59f5c5a88def1b4cf50903"
+    },
+    {
+      "path": "web/ui/raster.ts",
+      "sha256": "bfd637b1be59f047ce0817c835ae61b0bd7ca1333b8d20a4b83fbc0c0ac8bcf4"
+    },
+    {
+      "path": "web/ui/recovery.ts",
+      "sha256": "bec15478c31c23112e231f5ff0cc9afef4e856041507f6df03064bc7cdfa05ee"
+    },
+    {
+      "path": "web/ui/rewards.ts",
+      "sha256": "58c4bb2f30ec1757f06ed8459410c36eb89257cf20004fb6f908bebe8f08e740"
+    },
+    {
+      "path": "web/ui/tests/browser-host.mjs",
+      "sha256": "1f5b6afbe48e608143354a6b35cfcf96ae0c835074d62b39714cb8ac657ac531"
+    },
+    {
+      "path": "web/ui/tests/component-browser.mjs",
+      "sha256": "7d72da243c16a3d029f064e5b316530a04ef46585bf89c76cb657161aaeff6a5"
+    },
+    {
+      "path": "web/ui/tests/component-fixture.ts",
+      "sha256": "9343d55cd804704e1c45a9aaf175058e007c14038b14846da1de7ad6463f6dec"
+    },
+    {
+      "path": "web/ui/tests/gameplay-ui-browser.mjs",
+      "sha256": "435781966f71f3bd26347c5c8a15e149dd7b5241f49f3587971011e0fc49ac1a"
+    },
+    {
+      "path": "web/ui/tests/gameplay-ui.test.ts",
+      "sha256": "8f9dfd8da02b8de69abc649edbd588ea0f02c8759e06b44100273a1beb2accff"
+    },
+    {
+      "path": "web/ui/tests/modes-browser.mjs",
+      "sha256": "bdb30ff0125259cf6334ff7dade574ddf42ca03bfb8e41b0fedff2196b3462f6"
+    },
+    {
+      "path": "web/ui/tests/presentation-fixture.ts",
+      "sha256": "2ec0c49559b2c09736c86b43363faf3438cffa71c2914626796fc9971ab41913"
+    },
+    {
+      "path": "web/ui/tests/presentations-browser.mjs",
+      "sha256": "6b373a763d0ed35a8526b170cd5e1935b3da0766b08fd5fe4c1e7de85fca8f8d"
+    },
+    {
+      "path": "web/ui/tests/source-browser.mjs",
+      "sha256": "e764d653751a8c687186490c1a3415e63689b9aef036f527cf9b4ebfbca84823"
+    },
+    {
+      "path": "web/ui/tests/source-fixture.ts",
+      "sha256": "ad24f5da5b541f5dda7b0f7babd64206b9a63c71e7b9ebff1dbda23f9b510878"
+    },
+    {
+      "path": "web/ui/tests/unit.test.ts",
+      "sha256": "a0fb00a12519e85e4b9b72f8cba34a5fac22e30b26a44834bed589f9fd33204b"
+    },
+    {
+      "path": "web/ui/world-view.ts",
+      "sha256": "aa341aec59f5ab95b26f705d15e2bfd1e4d06f4e08edab4b680f9f708e96ff35"
+    }
   ],
-  "reference_integrity": {
-    "authorized_parent": "9bf696947936e54c7fac34126981727f8c1c6429",
-    "cherry_pick": "8952d36",
-    "hash_bound_files": 1307,
-    "pack_tests_passed": 85,
-    "manifest_unchanged": true,
-    "tolerances_unchanged": true,
-    "approval_authority": "external_owner_record",
-    "repair_in_current_ancestry": "9bf6969"
-  },
-  "shop_identity": {
-    "status": "implemented_component_verified",
-    "authorized_commits": [
-      "3310032cc6621f41d395103a35e81b2cfd87e1ae",
-      "af75e17b98eeb94adbb9ef6d1066b3ec805a866a"
+  "remaining": {
+    "status": "blocked",
+    "source_pack_sha256": "b62e19704e17d3d3e4e819f803ef49ba7cc54034ae407184b423427c65d9674d",
+    "shared_contract_changed_by_ui": false,
+    "published_contract": {
+      "capability": "game.ui.v1",
+      "upstream_commit": "d1532d6fc063d2a02383a7b4bb1ca3c449e214ce",
+      "authorized_cherry_pick": "5d56c93",
+      "typescript": "web/shared/contracts.ts",
+      "rust": "crates/game-types/src/gameplay_ui.rs",
+      "status": "Types published; backend implementation/protobuf/canonical projection remain a separate closure. No service implementation is inferred from types.",
+      "version_rule": "WorldView.ui.version must equal 1. Absent, unknown or malformed projections are explicit unsupported/error states, never fabricated empty views."
+    },
+    "wired_versioned_controls": [
+      "Opaque inventory action IDs with canonical item and instance identity; declared permission rejection, local use selection and no optimistic ownership changes.",
+      "Production menu/recipe IDs, single versus make_x permission, 1/5/10/X requests, native one-through-eighteen-choice layouts and the source bronze smithing table. Unoffered source rows remain present with explicit feedback.",
+      "Quest reward title, narrative/item/XP/quest-point fields, native source 9..15 text slots, exact continuation request and stable presentation identity.",
+      "Opaque confirmations with real title/lines/items/u64 credit, pagination, accept/cancel and Escape.",
+      "Selected/visible/permitted abilities and interface states; combat style association retains identity even if view row ordering changes.",
+      "Equipment bonuses/weight and exact native equipment-preview request geometry; no missing-stat zero defaults.",
+      "Stable bank entries/tabs, drag/move/new-tab/collapse, placeholders, original placeholder sprites, note/amount/insert preferences and deposit-equipment permissions.",
+      "Death-preview kept/lost rows, exact fee strings and value revision. Unsupported alternate scopes retain their source controls and feedback.",
+      "Recovery coffer balance, discard permission/request and inventory coffer offering, with confirmation identity retained and no local credit/item changes.",
+      "Public chat permission, declared channel and UTF-8 byte limit; rejected drafts retained, no optimistic echo or clearing before the authoritative own-message update.",
+      "Declared body_type 0/1 permissions and confirmation, with local appearance/equipment preview descriptors. Human kit/colour/pronoun controls do not create new penguin variants.",
+      "All shop buys still send displayed canonical expected_item; held menus/amounts never retarget a reused row."
     ],
-    "integrated_commits": [
-      "44e6de1",
-      "480d434"
+    "requests": [
+      {
+        "scope": "Real backend/protocol/shell implementation of the published contract",
+        "extension": "No new fork: implement the published GameplayUiView/GameplayUiIntent and project WorldView.ui.version=1 through AppServices.state/subscribe/send.",
+        "reason": "The exact type publication is integrated, but component service-double acknowledgements do not prove protobuf transport, authoritative execution, canonical data, persistence or the real-server journey."
+      },
+      {
+        "scope": "Inventory-only production target correction",
+        "extension": "GameplayUiView.production.target: WorldTarget | null, with the corresponding authoritative Rust/protobuf correction relayed by its owner.",
+        "reason": "The published d1532d6 target is nonnullable. Runtime null explicitly reports ui.production.target.unsupported. No dummy facility is manufactured for dough or another inventory-only recipe."
+      },
+      {
+        "scope": "Source Make-All and persistent bank All defaults",
+        "extension": "Publish the exact bank_set_options.amount All encoding, and either an authoritative production all-quantity value or an explicit All request mode.",
+        "reason": "The current u32 fields do not define either sentinel. The original All controls remain visible and report required integration. Withdraw-All already uses the current authoritative bank entry quantity; it is not blocked by this question."
+      },
+      {
+        "scope": "Complete recovery fee/quantity/bank controls",
+        "extension": "Publish RecoveryView.items.cost unit-versus-stack semantics, effective unit fee/capacity/per-row UiPermission/bank-all permission, and identity-bound partial-quantity retrieval and bank-all requests.",
+        "reason": "reclaim currently accepts whole recovery item IDs only. Partial 1/5/X cannot become a full-stack reclaim; fee units and capacity cannot be inferred. Null per-row display permission stays unknown, while existing whole-item requests remain server-validated. Coffer, discard and coffer-offer fields are now wired and no longer requested as missing."
+      },
+      {
+        "scope": "Canonical level-up chat/popup source association",
+        "extension": "Publish canonical reward.interface IDs and corresponding current source widget/style bindings for each required level-up chat/popup variant; use the existing kind/interface fields, not a second reward contract.",
+        "reason": "Only interface.quest_reward currently has a canonical source association in the published content catalogue. Other reward layouts explicitly display ui.source.reward.layout with the real payload and continuation, not a fabricated quest scroll. Native level-up variants remain required."
+      },
+      {
+        "scope": "Contextual ordinary bank deposits",
+        "extension": "Continue supplying WorldView.bank.banker alongside an open GameplayUiView.bank, or publish the replacement identity-bound ordinary-deposit request.",
+        "reason": "The v1 bank projection itself contains no banker identity. Existing bank_deposit still requires it. The UI explicitly reports contextual_banker_identity if a v1-only bank omits that required legacy context."
+      },
+      {
+        "scope": "Dynamic minimap and real model-only previews",
+        "extension": "Renderer/shell must provide the actual changing minimap surface plus base tile/plane/source mask state, and consume getUiPreviewRequest(handle) with setUiPreview(handle, nativeSizeModelSurface).",
+        "reason": "The UI now exports source widget/model bounds, native model parameters, approved local body selection and authoritative equipment/base metadata. Static minimap rasters and absent previews are not a finished renderer. These are component adapters, not new server defaults or shared-ABI edits."
+      },
+      {
+        "scope": "Actual source audio settings and controls",
+        "extension": "Consume the audio/shell owner's published SourceAudioSettings and source slider/mix/music policy when available.",
+        "reason": "soundEnabled and write-only setters do not expose actual saved channel/music state. No new audio policy or fake production volume value is invented by the UI."
+      }
     ],
-    "patch_ids": [
-      "fa8350490190cf58168e8be25e72727e6fc0d56c",
-      "fcc48f310b38fd372274c8578f3f8ad9a7fc5d7a"
+    "implementation_gaps_without_contract_extension": [
+      "Complete source-selected/highlight/hidden/disabled projection coverage for every required current-source signature and live 71-state route. The existing 71 states/29 families/11 signatures are preserved, not reduced or declared accepted.",
+      "Complete native level-up chat and popup layouts once their canonical association is supplied; current explicit failure/continuation coverage is not visual completion.",
+      "Matched full-panel source comparisons for remaining live bank-tab/placeholder/highlight variants and their canonical data, beyond the preserved original bank replay and current versioned interaction tests.",
+      "Real-server startup-to-quest-completion journey, reconnect/restart/concurrent-state behavior and final visual/audio/hardware acceptance remain separate gates."
     ],
-    "prerequisite_parent": "b3e8e12",
-    "preserved_parent": "faa8002",
-    "all_new_buys": "displayed canonical item.id",
-    "separate_ui_quote_rpc": false,
-    "retarget_on_retry": false,
-    "backend_regressions_rerun_in_ui_task": false
+    "source_comparison_scope": {
+      "preserved_native_and_owner_composition_checks": {
+        "passed": 87,
+        "total": 87,
+        "tolerance": 0
+      },
+      "preserved_native_mode_and_effect_checks": {
+        "passed": 106,
+        "total": 106,
+        "tolerance": 0
+      },
+      "additional_production_death_reward_checks": {
+        "passed": 45,
+        "total": 45,
+        "tolerance": 0
+      },
+      "full_panels_excluded": 0,
+      "source_fixture_balances_are_production_values": false,
+      "component_double_is_live_gameplay": false
+    },
+    "final_m1_acceptance": false
   },
-  "additional_source_modes": {
-    "passed": 106,
-    "total": 106,
-    "tolerance": 0,
-    "scope": "native UI/effect and explicit-field projection components only"
-  },
-  "independent_controls_finished": [
-    "prayer/spell filters and exact Classic reflow/icon sizing",
-    "populated/selected/fee/retrieval-option and 80-slot scrolling projections",
-    "original procedural title animation and current source reconnect banner",
-    "approved startup/error framing, glyph-safe paging and body_type-only appearance controls"
-  ],
-  "asset_factoring": {
-    "encoding": "native-widget-pool-v1",
-    "widget_occurrences": 63789,
-    "unique_widgets": 6263,
-    "manifest_bytes": 10270488
-  }
+  "full_panels_excluded": 0,
+  "gameplay_acceptance": false,
+  "final_m1_acceptance": false
 }

@@ -1,0 +1,581 @@
+{
+  "scope": "Original controlled UI widget/model fields; synthetic fixture quantities, never production balances or rewards",
+  "references": [
+    {
+      "kind": "ui",
+      "name": "native-production-choice-11.png",
+      "sha256": "4fb9ad51dded3eca53f6e95c147c829f3bceedbc0e90b24b20b0480d2d68f203",
+      "bytes": 95088
+    },
+    {
+      "kind": "ui",
+      "name": "native-production-choice-14.png",
+      "sha256": "4fb9ad51dded3eca53f6e95c147c829f3bceedbc0e90b24b20b0480d2d68f203",
+      "bytes": 95088
+    },
+    {
+      "kind": "ui",
+      "name": "native-production-choice-8.png",
+      "sha256": "b7e380b275efc50e4e506a9c8ebc566c2f76809e99bfb7dd1b680456e63eb8c9",
+      "bytes": 96377
+    },
+    {
+      "kind": "ui",
+      "name": "native-production-choice-12.png",
+      "sha256": "4fb9ad51dded3eca53f6e95c147c829f3bceedbc0e90b24b20b0480d2d68f203",
+      "bytes": 95088
+    },
+    {
+      "kind": "ui",
+      "name": "native-production-choice-10.png",
+      "sha256": "3f198dfe3e07f21afd110943610eca42e65e53449f16ff67e702bca7060d4e4c",
+      "bytes": 94991
+    },
+    {
+      "kind": "ui",
+      "name": "native-production-choice-17.png",
+      "sha256": "4fb9ad51dded3eca53f6e95c147c829f3bceedbc0e90b24b20b0480d2d68f203",
+      "bytes": 95088
+    },
+    {
+      "kind": "ui",
+      "name": "native-production-choice-1.png",
+      "sha256": "489a879949e876fe517f752a13da8420e16605a5d73b532462ce14dce0ac17ab",
+      "bytes": 104181
+    },
+    {
+      "kind": "ui",
+      "name": "native-production-amount-5.png",
+      "sha256": "2bf8afec638cec180fe4d1b007bbd9922d0a5bf23b601c707bfa1f25b3f4d978",
+      "bytes": 101020
+    },
+    {
+      "kind": "ui",
+      "name": "native-production-choice-9.png",
+      "sha256": "ca6322e8661da6763e7e674c32485b05e09f57c13d6337372270817dcf4991dd",
+      "bytes": 95351
+    },
+    {
+      "kind": "ui",
+      "name": "native-production-hover.png",
+      "sha256": "10595be896a3c213be2449df83f829af998f7e4c4601d73fabe58673a1fe2541",
+      "bytes": 101188
+    },
+    {
+      "kind": "ui",
+      "name": "native-production-choice-5.png",
+      "sha256": "e14228551c1364d8397e7717a97db89015bb73b592769d3847418a2388a657a6",
+      "bytes": 95440
+    },
+    {
+      "kind": "ui",
+      "name": "native-production-choice-3.png",
+      "sha256": "0ec4d8c663c955b546beb4a8594de3b794a6f219c5b2d200ccb139417093c648",
+      "bytes": 98965
+    },
+    {
+      "kind": "ui",
+      "name": "native-production-choice-15.png",
+      "sha256": "4fb9ad51dded3eca53f6e95c147c829f3bceedbc0e90b24b20b0480d2d68f203",
+      "bytes": 95088
+    },
+    {
+      "kind": "ui",
+      "name": "native-production-choice-4.png",
+      "sha256": "8b6393595a1eaefbd79dc4a0573ef7e81d8cc101422bc2f26a4a0876d566d09b",
+      "bytes": 95570
+    },
+    {
+      "kind": "ui",
+      "name": "native-death-preview-populated.png",
+      "sha256": "8466d4987889ae3cb92e3f87378def20c7fe7c5fb37b09c07cc8217436d01b17",
+      "bytes": 156486
+    },
+    {
+      "kind": "ui",
+      "name": "native-smithing-bronze.png",
+      "sha256": "aab3268d0b459157987802e26f14f1a6ab57f8712de139510983b817cfdd30db",
+      "bytes": 160457
+    },
+    {
+      "kind": "ui",
+      "name": "native-production-choice-6.png",
+      "sha256": "7e9a818cd15d9bb1ed9cf1a37518b3b99a6dfb32e6cb39631202c061ae738bf0",
+      "bytes": 96747
+    },
+    {
+      "kind": "ui",
+      "name": "native-production-choice-13.png",
+      "sha256": "4fb9ad51dded3eca53f6e95c147c829f3bceedbc0e90b24b20b0480d2d68f203",
+      "bytes": 95088
+    },
+    {
+      "kind": "ui",
+      "name": "native-production-choice-2.png",
+      "sha256": "5d947cd4993b21e8a210b831b0551974396e9e19d32cb72c71f4fdc58028972b",
+      "bytes": 100992
+    },
+    {
+      "kind": "ui",
+      "name": "native-production-choice-18.png",
+      "sha256": "4fb9ad51dded3eca53f6e95c147c829f3bceedbc0e90b24b20b0480d2d68f203",
+      "bytes": 95088
+    },
+    {
+      "kind": "ui",
+      "name": "native-production-choice-7.png",
+      "sha256": "5f64a73beefb4327caeb855f6a5b172e2a741332e008353180ddb17c535c369b",
+      "bytes": 96953
+    },
+    {
+      "kind": "ui",
+      "name": "native-production-choice-16.png",
+      "sha256": "4fb9ad51dded3eca53f6e95c147c829f3bceedbc0e90b24b20b0480d2d68f203",
+      "bytes": 95088
+    },
+    {
+      "kind": "ui",
+      "name": "native-reward-fields.png",
+      "sha256": "dfb2e7c22ec16bef3e5ebe08fe5bac28a0cce73d08c8b0acad9392cca7c404f9",
+      "bytes": 140757
+    }
+  ],
+  "inputs": [
+    {
+      "case": "native-production-choice-1",
+      "group": 270,
+      "script": 2046,
+      "operationType": 0,
+      "maximumQuantity": 28,
+      "selectedQuantity": 1,
+      "sourceItems": [
+        2349
+      ],
+      "scope": "Explicit source-only display fields, not legal quantities or a gameplay menu."
+    },
+    {
+      "case": "native-production-choice-2",
+      "group": 270,
+      "script": 2046,
+      "operationType": 0,
+      "maximumQuantity": 28,
+      "selectedQuantity": 1,
+      "sourceItems": [
+        2349,
+        2349
+      ],
+      "scope": "Explicit source-only display fields, not legal quantities or a gameplay menu."
+    },
+    {
+      "case": "native-production-choice-3",
+      "group": 270,
+      "script": 2046,
+      "operationType": 0,
+      "maximumQuantity": 28,
+      "selectedQuantity": 1,
+      "sourceItems": [
+        2349,
+        2349,
+        2349
+      ],
+      "scope": "Explicit source-only display fields, not legal quantities or a gameplay menu."
+    },
+    {
+      "case": "native-production-choice-4",
+      "group": 270,
+      "script": 2046,
+      "operationType": 0,
+      "maximumQuantity": 28,
+      "selectedQuantity": 1,
+      "sourceItems": [
+        2349,
+        2349,
+        2349,
+        2349
+      ],
+      "scope": "Explicit source-only display fields, not legal quantities or a gameplay menu."
+    },
+    {
+      "case": "native-production-choice-5",
+      "group": 270,
+      "script": 2046,
+      "operationType": 0,
+      "maximumQuantity": 28,
+      "selectedQuantity": 1,
+      "sourceItems": [
+        2349,
+        2349,
+        2349,
+        2349,
+        2349
+      ],
+      "scope": "Explicit source-only display fields, not legal quantities or a gameplay menu."
+    },
+    {
+      "case": "native-production-choice-6",
+      "group": 270,
+      "script": 2046,
+      "operationType": 0,
+      "maximumQuantity": 28,
+      "selectedQuantity": 1,
+      "sourceItems": [
+        2349,
+        2349,
+        2349,
+        2349,
+        2349,
+        2349
+      ],
+      "scope": "Explicit source-only display fields, not legal quantities or a gameplay menu."
+    },
+    {
+      "case": "native-production-choice-7",
+      "group": 270,
+      "script": 2046,
+      "operationType": 0,
+      "maximumQuantity": 28,
+      "selectedQuantity": 1,
+      "sourceItems": [
+        2349,
+        2349,
+        2349,
+        2349,
+        2349,
+        2349,
+        2349
+      ],
+      "scope": "Explicit source-only display fields, not legal quantities or a gameplay menu."
+    },
+    {
+      "case": "native-production-choice-8",
+      "group": 270,
+      "script": 2046,
+      "operationType": 0,
+      "maximumQuantity": 28,
+      "selectedQuantity": 1,
+      "sourceItems": [
+        2349,
+        2349,
+        2349,
+        2349,
+        2349,
+        2349,
+        2349,
+        2349
+      ],
+      "scope": "Explicit source-only display fields, not legal quantities or a gameplay menu."
+    },
+    {
+      "case": "native-production-choice-9",
+      "group": 270,
+      "script": 2046,
+      "operationType": 0,
+      "maximumQuantity": 28,
+      "selectedQuantity": 1,
+      "sourceItems": [
+        2349,
+        2349,
+        2349,
+        2349,
+        2349,
+        2349,
+        2349,
+        2349,
+        2349
+      ],
+      "scope": "Explicit source-only display fields, not legal quantities or a gameplay menu."
+    },
+    {
+      "case": "native-production-choice-10",
+      "group": 270,
+      "script": 2046,
+      "operationType": 0,
+      "maximumQuantity": 28,
+      "selectedQuantity": 1,
+      "sourceItems": [
+        2349,
+        2349,
+        2349,
+        2349,
+        2349,
+        2349,
+        2349,
+        2349,
+        2349,
+        2349
+      ],
+      "scope": "Explicit source-only display fields, not legal quantities or a gameplay menu."
+    },
+    {
+      "case": "native-production-choice-11",
+      "group": 270,
+      "script": 2046,
+      "operationType": 0,
+      "maximumQuantity": 28,
+      "selectedQuantity": 1,
+      "sourceItems": [
+        2349,
+        2349,
+        2349,
+        2349,
+        2349,
+        2349,
+        2349,
+        2349,
+        2349,
+        2349,
+        2349
+      ],
+      "scope": "Explicit source-only display fields, not legal quantities or a gameplay menu."
+    },
+    {
+      "case": "native-production-choice-12",
+      "group": 270,
+      "script": 2046,
+      "operationType": 0,
+      "maximumQuantity": 28,
+      "selectedQuantity": 1,
+      "sourceItems": [
+        2349,
+        2349,
+        2349,
+        2349,
+        2349,
+        2349,
+        2349,
+        2349,
+        2349,
+        2349,
+        2349,
+        2349
+      ],
+      "scope": "Explicit source-only display fields, not legal quantities or a gameplay menu."
+    },
+    {
+      "case": "native-production-choice-13",
+      "group": 270,
+      "script": 2046,
+      "operationType": 0,
+      "maximumQuantity": 28,
+      "selectedQuantity": 1,
+      "sourceItems": [
+        2349,
+        2349,
+        2349,
+        2349,
+        2349,
+        2349,
+        2349,
+        2349,
+        2349,
+        2349,
+        2349,
+        2349,
+        2349
+      ],
+      "scope": "Explicit source-only display fields, not legal quantities or a gameplay menu."
+    },
+    {
+      "case": "native-production-choice-14",
+      "group": 270,
+      "script": 2046,
+      "operationType": 0,
+      "maximumQuantity": 28,
+      "selectedQuantity": 1,
+      "sourceItems": [
+        2349,
+        2349,
+        2349,
+        2349,
+        2349,
+        2349,
+        2349,
+        2349,
+        2349,
+        2349,
+        2349,
+        2349,
+        2349,
+        2349
+      ],
+      "scope": "Explicit source-only display fields, not legal quantities or a gameplay menu."
+    },
+    {
+      "case": "native-production-choice-15",
+      "group": 270,
+      "script": 2046,
+      "operationType": 0,
+      "maximumQuantity": 28,
+      "selectedQuantity": 1,
+      "sourceItems": [
+        2349,
+        2349,
+        2349,
+        2349,
+        2349,
+        2349,
+        2349,
+        2349,
+        2349,
+        2349,
+        2349,
+        2349,
+        2349,
+        2349,
+        2349
+      ],
+      "scope": "Explicit source-only display fields, not legal quantities or a gameplay menu."
+    },
+    {
+      "case": "native-production-choice-16",
+      "group": 270,
+      "script": 2046,
+      "operationType": 0,
+      "maximumQuantity": 28,
+      "selectedQuantity": 1,
+      "sourceItems": [
+        2349,
+        2349,
+        2349,
+        2349,
+        2349,
+        2349,
+        2349,
+        2349,
+        2349,
+        2349,
+        2349,
+        2349,
+        2349,
+        2349,
+        2349,
+        2349
+      ],
+      "scope": "Explicit source-only display fields, not legal quantities or a gameplay menu."
+    },
+    {
+      "case": "native-production-choice-17",
+      "group": 270,
+      "script": 2046,
+      "operationType": 0,
+      "maximumQuantity": 28,
+      "selectedQuantity": 1,
+      "sourceItems": [
+        2349,
+        2349,
+        2349,
+        2349,
+        2349,
+        2349,
+        2349,
+        2349,
+        2349,
+        2349,
+        2349,
+        2349,
+        2349,
+        2349,
+        2349,
+        2349,
+        2349
+      ],
+      "scope": "Explicit source-only display fields, not legal quantities or a gameplay menu."
+    },
+    {
+      "case": "native-production-choice-18",
+      "group": 270,
+      "script": 2046,
+      "operationType": 0,
+      "maximumQuantity": 28,
+      "selectedQuantity": 1,
+      "sourceItems": [
+        2349,
+        2349,
+        2349,
+        2349,
+        2349,
+        2349,
+        2349,
+        2349,
+        2349,
+        2349,
+        2349,
+        2349,
+        2349,
+        2349,
+        2349,
+        2349,
+        2349,
+        2349
+      ],
+      "scope": "Explicit source-only display fields, not legal quantities or a gameplay menu."
+    },
+    {
+      "case": "native-smithing-bronze",
+      "group": 312,
+      "varbit3216": 1,
+      "sourceBar": 2349,
+      "script": 430,
+      "scope": "Source UI-only bronze table, not authoritative allowed recipes."
+    },
+    {
+      "case": "native-death-preview-populated",
+      "group": 4,
+      "script": 972,
+      "intArguments": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        -1,
+        -1,
+        -1,
+        -1
+      ],
+      "textArgument": "",
+      "sourceItems": [
+        1265,
+        1351,
+        1205,
+        315,
+        556,
+        558,
+        995,
+        2309
+      ],
+      "itemContainer": 584,
+      "classificationContainer": 468,
+      "classificationMarkers": [
+        323,
+        323,
+        323,
+        367,
+        367,
+        367,
+        367,
+        367
+      ],
+      "feePlusOne": 1,
+      "explicitTextFields": {
+        "4:18": "View retrieval fees"
+      },
+      "scope": "Explicit source-only death-preview inputs; no client death classification or fee calculation."
+    },
+    {
+      "case": "native-reward-fields",
+      "group": 153,
+      "title": "Source fixture reward",
+      "lines": [
+        "Source-only award line",
+        "2 x Shrimps",
+        "1,234.5 Cooking XP",
+        "1 Quest point"
+      ],
+      "totalQuestPoints": 7,
+      "scope": "Explicit synthetic text/item/XP fields in original widgets; not real journey rewards."
+    }
+  ],
+  "sourcePackSha256": "b62e19704e17d3d3e4e819f803ef49ba7cc54034ae407184b423427c65d9674d",
+  "finalAcceptance": false
+}
