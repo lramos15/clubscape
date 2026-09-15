@@ -39,6 +39,12 @@ pub(super) fn snapshot(
     let presence = engine
         .presence_view(&world.state, actor)
         .map_err(engine_error)?;
+    let (animation, observation) = super::observer::project(
+        content,
+        engine
+            .actor_observer(&world.state, actor)
+            .map_err(engine_error)?,
+    )?;
     let skills = character
         .skills
         .iter()
@@ -135,7 +141,10 @@ pub(super) fn snapshot(
             .map(ToString::to_string)
             .collect(),
         activity: activity(&character.activity).into(),
-        animation: String::new(),
+        animation,
+        running: Some(observation.running),
+        movement_tick: observation.movement_tick,
+        action: observation.action.map(super::observer::action),
         settings,
         experience: character
             .runtime
@@ -356,6 +365,12 @@ pub(super) fn snapshot(
         if !presence.present_in_world {
             continue;
         }
+        let (animation, observation) = super::observer::project(
+            content,
+            engine
+                .actor_observer(&world.state, id)
+                .map_err(engine_error)?,
+        )?;
         entities.push(game::Entity {
             id: id.to_string(),
             kind: game::EntityKind::Player as i32,
@@ -369,6 +384,10 @@ pub(super) fn snapshot(
                 .collect(),
             instance: player.instance.clone(),
             presence: Some(presence_view(&presence)),
+            animation,
+            running: Some(observation.running),
+            movement_tick: observation.movement_tick,
+            action: observation.action.map(super::observer::action),
             width: 1,
             height: 1,
             ..Default::default()

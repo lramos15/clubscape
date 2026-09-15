@@ -216,6 +216,8 @@ pub struct CharacterRuntime {
     /// Legacy absence is migrated from the actual bank/state, never fabricated history.
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub ui: Option<GameplayUiRuntime>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub observation: Option<ActorObservation>,
 }
 
 impl Default for CharacterRuntime {
@@ -244,6 +246,7 @@ impl Default for CharacterRuntime {
             presence: PresenceState::Untracked,
             played_time: None,
             ui: None,
+            observation: None,
         }
     }
 }

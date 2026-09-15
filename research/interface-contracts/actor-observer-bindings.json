@@ -1,0 +1,41 @@
+{
+  "version": 1,
+  "baseline": "OSRS live build 240 / cache 2695; post-July-2026 normal F2P behavior contracts",
+  "action_sequences": {
+    "action.fishing.shrimps": 621,
+    "action.mining.copper": 625,
+    "action.mining.tin": 625,
+    "action.woodcutting.normal": 879,
+    "action.firemaking.normal": 733,
+    "action.smelting.bronze": 899,
+    "action.smithing.bronze_dagger": 898,
+    "action.prayer.bones": 827,
+    "action.cooks.milk": 2305
+  },
+  "recipe_sequences": {
+    "recipe.cooking.bread.range": 896,
+    "recipe.cooking.bread.lumbridge_range": 896,
+    "recipe.cooking.shrimps.range": 896,
+    "recipe.cooking.shrimps.lumbridge_range": 896,
+    "recipe.cooking.shrimps.fire": 897
+  },
+  "movement_sequences": {
+    "walk": 819,
+    "run": 824
+  },
+  "source": [
+    {
+      "reference": "https://raw.githubusercontent.com/runelite/runelite/ac79ed8bd8926bec7bf172aa291574b4d944b0e7/runelite-api/src/main/java/net/runelite/api/AnimationID.java",
+      "revision": "ac79ed8bd8926bec7bf172aa291574b4d944b0e7",
+      "sha256": "f6e2f25cefefb73e6f664ec7ec2c41427f12962d0c3e8612b536452f88c14695",
+      "qualification": "Exact named source constants: FISHING_NET621, MINING_BRONZE_PICKAXE625, WOODCUTTING_BRONZE879, FIREMAKING733, SMITHING_SMELTING899, SMITHING_ANVIL898, BURYING_BONES827, MILKING_COW2305, COOKING_RANGE896 and COOKING_FIRE897. Applied to the matching compiled M1 action/recipe identity, never nearby scenery."
+    },
+    {
+      "reference": "crates/renderer/src/actor.rs",
+      "revision": "19372013625be92d582981029f839583ef2f34ac",
+      "qualification": "Existing source player appearance sequences PLAYER_WALK819 and PLAYER_RUN824; movement selection is actual engine execution, not checkbox or adjacency."
+    }
+  ],
+  "unknown_policy": "No numeric combat, spell or inventory-dough sequence is invented. Preserve exact source style/spell/recipe identity unless an explicit bound animation event/definition supplies a sequence.",
+  "acceptance": false
+}

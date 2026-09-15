@@ -121,6 +121,11 @@
     }
   },
   "native_ui_control_probes": {
+    "actual_movement_observer": {
+      "movement_tick": "1",
+      "passed": true,
+      "running": true
+    },
     "appearance": {
       "approved_source_npc": 2063,
       "body_type": [

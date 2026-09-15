@@ -2,6 +2,7 @@
 
 ## Renderer observer contract, version 1
 
+The additive capability is `game.observer.v1`.
 `PlayerView.running?` and the visible-player `EntityView.running?` report actual
 current-tick movement, not the run checkbox or a prediction. `movementTick?`
 correlates that movement; final two-step movement remains running when its path
@@ -23,6 +24,12 @@ instance, state?, doorOpen?, quarterTurns?}` entries from the existing complete
 the shell resolves canonical `objectId` only through its validated definition
 catalogue. These are observer values, never client-owned stock/state setters.
 Renderer handle, HUD/audio contracts and source cadence remain unchanged.
+
+Source sequence bindings are in
+`research/interface-contracts/actor-observer-bindings.json`. They are qualified
+against the exact canonical baseline and pinned original named animation
+constants. Other baselines keep explicit animation references or exact action
+identity; they do not inherit M1 numeric defaults.
 
 ## Authoritative gameplay UI contract, version 1
 

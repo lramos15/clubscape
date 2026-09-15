@@ -14,6 +14,7 @@ mod gameplay_ui;
 mod grants;
 mod lifecycle;
 mod navigation;
+mod observer;
 mod permissions;
 mod progression;
 mod queries;
@@ -257,6 +258,7 @@ impl WorldEngine {
         )?;
         self.progress(&mut draft, &mut character, &before, &mut events, random)?;
         self.observe_ui(&before, &mut character, &events)?;
+        self.observe_actor_action(draft.tick, &before, &mut character, &events)?;
         self.validate_open_dialogue(&draft, &character)?;
         self.check_reward_atomicity(&before, &character)?;
         self.session_close_event(&before, &character, &mut events)?;
@@ -305,6 +307,7 @@ impl WorldEngine {
         draft.tick = runtime::deadline(draft.tick, 1)?;
         let events = self.process_tick_draft(&mut draft, random, context)?;
         self.observe_world_ui(world, &mut draft, &events)?;
+        self.observe_world_actions(world, &mut draft, &events)?;
         draft.validate_runtime(&self.content)?;
         *world = draft;
         Ok(events)
@@ -325,6 +328,7 @@ impl WorldEngine {
         let mut draft = world.clone();
         let events = self.process_tick_draft(&mut draft, random, context)?;
         self.observe_world_ui(world, &mut draft, &events)?;
+        self.observe_world_actions(world, &mut draft, &events)?;
         draft.validate_runtime(&self.content)?;
         *world = draft;
         Ok(events)

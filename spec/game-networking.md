@@ -186,6 +186,39 @@ storage APIs remain compatible.
 
 ## Public protocol and views
 
+Ready game servers advertise `game.observer.v1`. `Player.running` field30 and
+visible-player `Entity.running` field20 are optional for older peers but always
+populated by the new server. They report actual current-tick steps, not a run
+checkbox or queued-path prediction. `movement_tick` fields31/21 are decimal
+strings and preserve the final run step even if activity is now idle or energy
+has reached zero; subsequent nonmoving ticks report false/no movement tick.
+
+`Player.action` field32 and `Entity.action` field22 contain the typed
+`ActorAction` observer. The engine records exact activity/method/recipe/target/
+style/spell identity and stable action-instance/cycle timing inside the existing
+transaction. Queries and reconnects do not restart that identity. Observer
+metadata is additive, bounded runtime state, not a client-write API, source
+gameplay rule, RNG draw or cadence change.
+`nextActionTick` describes the source gameplay phase, not a replacement for
+original sequence frame lengths/client-cycle timing. The renderer uses those
+validated sequence definitions for playback.
+
+The server uses explicit bound animation references first. For the exact
+canonical M1 baseline, `research/interface-contracts/actor-observer-bindings.json`
+maps named original RuneLite animation constants to the actual method/recipe;
+range and fire cooking are distinct recipe selections. It never searches
+nearby scenery. Unknown numeric animations retain the precise source
+recipe/action/spell/style identity in the compatibility `animation` string and
+typed action; they are not assigned an unrelated sequence. The renderer/shell
+must consume that identity and must not reinstate adjacency fallbacks.
+
+`WorldSnapshot.dynamic_objects` field13 stays unchanged and complete. The shell
+forwards it as typed `WorldView.dynamicObjects`, including canonical `objectId`,
+instance, state, doorOpen and quarterTurns. It may attach numeric `sourceId`
+only by lookup in the validated definition catalogue, never by parsing IDs or
+creating client-owned door state. Renderer handles, HUD/audio APIs and source
+world/stock ownership remain unchanged.
+
 `CreateCharacter` copies the source normal-account initial definition exactly.
 Creation has no grants or signup-triggered progress. Creation options must be
 empty; appearance confirmation and experience selection are real subsequent

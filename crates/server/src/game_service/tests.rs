@@ -2,6 +2,7 @@
 mod engine_fixtures;
 #[path = "../../../content/tests/common/mod.rs"]
 mod fixtures;
+mod observer;
 mod production;
 mod ui;
 

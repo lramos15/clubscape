@@ -35,6 +35,7 @@ impl WorldEngine {
             }
             Activity::Idle => Ok(vec![]),
             Activity::Walking { mut path, running } => {
+                let origin = character.tile;
                 self.authorize(character, &["walk".into()])?;
                 let requested = running || character.runtime.settings.run_enabled == Some(true);
                 let running = requested && character.run_energy > 0 && path.len() > 1;
@@ -55,6 +56,19 @@ impl WorldEngine {
                     entering = *next;
                 }
                 let events = map.step_path(&mut character.tile, &mut path, running)?;
+                if !events.is_empty() {
+                    character
+                        .runtime
+                        .observation
+                        .get_or_insert_with(ActorObservation::default)
+                        .movement = Some(MovementObservation {
+                        tick: world.tick,
+                        from: origin,
+                        to: character.tile,
+                        instance: character.runtime.instance.clone(),
+                        running: running && events.len() == 2,
+                    });
+                }
                 character.region = self
                     .regions_by_tile
                     .get(&character.tile)

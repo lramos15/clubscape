@@ -121,6 +121,11 @@ pub(super) fn validate_character(character: &CharacterState, tick: u64) -> Resul
     character.runtime.validate_shape().map_err(|_| {
         ApiError::invalid("The character runtime has an unsupported shape or bound.")
     })?;
+    if let Some(observation) = &character.runtime.observation {
+        observation.validate(tick).map_err(|_| {
+            ApiError::invalid("The actor observation has an unsupported shape or bound.")
+        })?;
+    }
     encode(character, MAX_CHARACTER_BYTES)?;
     Ok(())
 }

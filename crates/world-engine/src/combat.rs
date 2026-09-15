@@ -331,6 +331,26 @@ impl WorldEngine {
                 )?;
                 let mut events = self.start_travel(world, character, travel, rng)?;
                 events.extend(self.award_xp(character, &spell.launch_xp)?);
+                self.record_actor_action(
+                    world.tick,
+                    character,
+                    ObservedAction {
+                        activity: "casting".into(),
+                        action_id: None,
+                        target: None,
+                        recipe_id: None,
+                        style_id: None,
+                        spell_id: Some(id.clone()),
+                        animation: None,
+                    },
+                    character
+                        .runtime
+                        .pending_travel
+                        .as_ref()
+                        .map(|travel| travel.completes_at_tick),
+                    true,
+                    character.runtime.pending_travel.is_none(),
+                )?;
                 Ok(events)
             }
         }
@@ -685,6 +705,26 @@ impl WorldEngine {
         } else {
             events.extend(self.award_xp(character, launch_xp)?);
             events.extend(self.apply_strike(world, character, &strike, rng)?);
+        }
+        if let Some(spell) = spell_id {
+            self.record_actor_action(
+                world.tick,
+                character,
+                ObservedAction {
+                    activity: "casting".into(),
+                    action_id: None,
+                    target: Some(WorldTarget::Spawn {
+                        spawn: target.clone(),
+                    }),
+                    recipe_id: None,
+                    style_id: Some(style_id.clone()),
+                    spell_id: Some(spell.clone()),
+                    animation: None,
+                },
+                Some(deadline),
+                true,
+                true,
+            )?;
         }
         Ok(events)
     }

@@ -29,6 +29,7 @@ engine.apply_lifecycle(world, actor, LifecycleTransition) -> GameResult<Vec<Acto
 engine.reconcile_presence(world, &verified_connected_actors) -> GameResult<Vec<ActorEvent>>;
 engine.presence_view(world, actor) -> GameResult<PresenceView>;
 engine.tick_context(world) -> GameResult<TickContext>;
+engine.actor_observer(world, actor) -> GameResult<ActorObserverView>;
 engine.ui_view(world, actor) -> GameResult<GameplayUiView>;
 engine.apply_ui_request(world, actor, &GameplayUiRequest, rng) -> GameResult<Vec<ActorEvent>>;
 engine.ui_request_requires_tick(&GameplayUiRequest) -> GameResult<bool>;
@@ -49,6 +50,13 @@ without quantity/value; entry IDs survive reorder/refill, and stale selections
 fail. Reward dismissal never grants anything. `WorldRuntime.ui_version` makes
 lost UI state an explicit error, not a lazy default; only new-character
 construction and an operator-authorized legacy migration initialize it.
+
+Actor observers record executed movement and exact active source action identity
+with stable instance/cycle timing. They do not predict running from settings,
+infer production by adjacent scenery, change action cadence or sample RNG.
+The final actual run step remains observable after the activity becomes idle.
+Only current movement is reported; action metadata and explicit source animation
+references survive serialization and repeated reads without restarting a clip.
 
 `ActorEvent { actor_id, event: GameEvent }` includes routing for credited actors
 other than the finisher. The caller supplies **compiler-validated** content and

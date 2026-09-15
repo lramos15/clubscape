@@ -397,6 +397,7 @@ impl WorldEngine {
         self.check_reward_atomicity(&before, &character)?;
         self.session_close_event(&before, &character, &mut events)?;
         self.observe_ui(&before, &mut character, &events)?;
+        self.observe_actor_action(draft.tick, &before, &mut character, &events)?;
         if timed {
             character.last_action_tick = draft.tick;
             runtime::schedule_mut(&mut character)?.command_seen = true;

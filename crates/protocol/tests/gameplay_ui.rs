@@ -273,3 +273,44 @@ fn inventory_production_transports_an_absent_world_target_not_an_empty_fake_targ
     assert_eq!(decoded, menu);
     assert!(decoded.target.is_none());
 }
+
+#[test]
+fn observer_motion_action_and_dynamic_objects_keep_optional_and_wide_clock_semantics() {
+    let old = game::Player::default();
+    assert!(old.running.is_none() && old.movement_tick.is_none() && old.action.is_none());
+    let current = game::WorldSnapshot {
+        player: Some(game::Player {
+            running: Some(true),
+            movement_tick: Some("9007199254740993".into()),
+            action: Some(game::ActorAction {
+                version: 1,
+                id: "actor_action.test.7".into(),
+                activity: "producing".into(),
+                recipe_id: Some("recipe.cooking.dough".into()),
+                target: None,
+                started_at_tick: "9007199254740993".into(),
+                cycle_started_at_tick: "9007199254740993".into(),
+                observed_at_tick: "9007199254740993".into(),
+                ..Default::default()
+            }),
+            ..Default::default()
+        }),
+        dynamic_objects: vec![game::DynamicObject {
+            id: "transform.source.door".into(),
+            object_id: Some("object.source.door".into()),
+            state: Some("object_state.open".into()),
+            door_open: Some(true),
+            quarter_turns: 1,
+            instance: Some("instance.owned.1".into()),
+            ..Default::default()
+        }],
+        ..Default::default()
+    };
+    let decoded = game::WorldSnapshot::decode(current.encode_to_vec().as_slice()).unwrap();
+    assert_eq!(decoded, current);
+    assert!(decoded.player.unwrap().action.unwrap().target.is_none());
+    assert_eq!(
+        decoded.dynamic_objects[0].object_id.as_deref(),
+        Some("object.source.door")
+    );
+}

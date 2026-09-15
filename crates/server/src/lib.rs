@@ -407,6 +407,7 @@ async fn execute_command(
             };
             if available {
                 capabilities.push(clubscape_protocol::GAME_CAPABILITY.to_owned());
+                capabilities.push(clubscape_protocol::ACTOR_OBSERVER_CAPABILITY.to_owned());
                 if state.game.as_ref().is_some_and(|game| game.gameplay_ui) {
                     capabilities.push(clubscape_protocol::GAMEPLAY_UI_CAPABILITY.to_owned());
                 }

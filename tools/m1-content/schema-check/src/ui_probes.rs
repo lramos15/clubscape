@@ -187,6 +187,22 @@ pub fn run(engine: &WorldEngine) -> Result<Value> {
         {
             return Err("Actual source menu collapsed Single and Make-X-of-one".into());
         }
+        let observed = engine
+            .actor_observer(&world, &actor)?
+            .action
+            .ok_or("Missing source production action observer")?;
+        if observed
+            .recipe_id
+            .as_ref()
+            .is_none_or(|id| id.as_str() != "recipe.cooking.bread.lumbridge_range")
+            || observed.target.is_none()
+            || observed.cycle_started_at_tick != now.to_string()
+            || observed.next_action_tick.as_deref() != Some(&(now + delay).to_string())
+        {
+            return Err(
+                "Source production observer guessed identity or lost actual phase timing".into(),
+            );
+        }
         modes.push(json!({"mode": mode, "delay_ticks": delay}));
     }
     let mut world = base.clone();
@@ -264,6 +280,27 @@ pub fn run(engine: &WorldEngine) -> Result<Value> {
             );
         }
     }
+    let mut movement_world = base.clone();
+    let character = movement_world.characters.get_mut(&actor).unwrap();
+    character.run_energy = 100;
+    character.runtime.settings.run_enabled = Some(true);
+    engine.apply_intent(
+        &mut movement_world,
+        &actor,
+        &GameIntent::Walk {
+            destination: Tile::new(3224, 3218, 0)?,
+            running: false,
+        },
+        &mut NoRandom,
+    )?;
+    if engine.actor_observer(&movement_world, &actor)?.running {
+        return Err("Queued walk was presented as executed running".into());
+    }
+    engine.tick(&mut movement_world, &mut random)?;
+    let movement = engine.actor_observer(&movement_world, &actor)?;
+    if !movement.running || movement.movement_tick.as_deref() != Some("1") {
+        return Err("Actual source two-step movement lost its running observation".into());
+    }
     Ok(json!({
         "passed": true, "semantic_immutable_ui_states": checked,
         "appearance": {"body_type": [0, 1], "approved_source_npc": 2063},
@@ -271,6 +308,7 @@ pub fn run(engine: &WorldEngine) -> Result<Value> {
         "selected_bury_ticks": 2, "selected_bury_xp_tenths": 45, "real_source_production_menu_modes": modes,
         "inventory_only_dough": {"passed": true, "target": null, "selected_slots": [8, 9], "earlier_matching_copies_preserved": true,
             "original_dough_and_empty_containers_preserved": true},
+        "actual_movement_observer": {"passed": true, "running": movement.running, "movement_tick": movement.movement_tick},
         "scope": "Actual unmodified strict content4 and real engine control execution on explicit source-precondition component states. Not a fresh-account journey, source capture or presentation acceptance."
     }))
 }

@@ -237,6 +237,24 @@ message Player {
   bool appearance_confirmed = 27;
   optional string combat_style = 28;
   Presence presence = 29;
+  optional bool running = 30;
+  optional string movement_tick = 31;
+  ActorAction action = 32;
+}
+message ActorAction {
+  uint32 version = 1;
+  string id = 2;
+  string activity = 3;
+  optional string action_id = 4;
+  WorldTarget target = 5;
+  optional string recipe_id = 6;
+  optional string style_id = 7;
+  optional string spell_id = 8;
+  optional string animation = 9;
+  string started_at_tick = 10;
+  string cycle_started_at_tick = 11;
+  optional string next_action_tick = 12;
+  string observed_at_tick = 13;
 }
 enum PresenceKind { PRESENCE_UNSPECIFIED = 0; CONNECTED = 1; DISCONNECTING = 2; OFFLINE = 3; }
 message Presence { PresenceKind kind = 1; bool connected = 2; bool accepts_input = 3; bool present_in_world = 4; }
@@ -266,6 +284,9 @@ message Entity {
   uint32 width = 17;
   uint32 height = 18;
   Presence presence = 19;
+  optional bool running = 20;
+  optional string movement_tick = 21;
+  ActorAction action = 22;
 }
 message GroundItem {
   string id = 1;

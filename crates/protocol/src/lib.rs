@@ -17,6 +17,7 @@ pub const MAX_REQUEST_BYTES: usize = 16 * 1024;
 pub const MAX_GAME_RESPONSE_BYTES: usize = 256 * 1024;
 pub const GAME_CAPABILITY: &str = "game.v1";
 pub const GAMEPLAY_UI_CAPABILITY: &str = "game.ui.v1";
+pub const ACTOR_OBSERVER_CAPABILITY: &str = "game.observer.v1";
 pub const MEDIA_TYPE: &str = "application/x-protobuf";
 pub const CAPABILITIES: &[&str] = &["accounts.v1", "sessions.v1"];
 pub const GAMEPLAY_UNAVAILABLE_REASON: &str =

@@ -1,6 +1,6 @@
 {
   "artifact_reloaded": true,
-  "artifact_sha256": "080a0865031c4115b26f3aa8d4400928034295bfa8f2bb3174f6cea43c8db0db",
+  "artifact_sha256": "e0204edafe8e212b8bd08a80f598901ecd0cd68e9ecec98083e1a9566979ebd8",
   "canonical_game_content_deserialized": true,
   "engine_api_scope": "Construction, authenticated-lifecycle boundary, read-only views and first source input only; not a full journey or browser/presentation acceptance.",
   "engine_constructed": true,
@@ -72,6 +72,11 @@
     }
   },
   "native_ui_control_probes": {
+    "actual_movement_observer": {
+      "movement_tick": "1",
+      "passed": true,
+      "running": true
+    },
     "appearance": {
       "approved_source_npc": 2063,
       "body_type": [
@@ -112,7 +117,7 @@
   "real_source_appearance_request_passed": true,
   "recipes": 13,
   "regions": 29,
-  "revision": "m1.source-backed.v4.ac88bd2afbe844ca",
+  "revision": "m1.source-backed.v4.0ebcdd3119923043",
   "runtime_compiled": true,
   "skills": 24,
   "source_initial_world_and_character_validated": true,

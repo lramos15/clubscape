@@ -1,4 +1,5 @@
 mod content;
+mod observer;
 mod random;
 mod readiness;
 mod ui_wire;

@@ -102,6 +102,7 @@ pub(super) fn load(config: &Config) -> Result<Option<LoadedContent>, StartupErro
     }
     let engine = WorldEngine::new(Arc::new(compiled.definition().clone()))
         .map_err(|_| failure("game_engine_initialization"))?;
+    super::observer::validate().map_err(|_| failure("game_observer_bindings"))?;
     Ok(Some(LoadedContent {
         world_id: manifest.world_id,
         artifact_hash: manifest.sha256,

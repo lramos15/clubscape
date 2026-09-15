@@ -79,6 +79,7 @@ export interface ActorActionView {
   nextActionTick: string | null;
   observedAtTick: string;
 }
+export const ACTOR_OBSERVER_CAPABILITY = "game.observer.v1";
 export interface DynamicObjectView {
   id: string;
   /** Canonical object definition ID, never a client-selected replacement. */

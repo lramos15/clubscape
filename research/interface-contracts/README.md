@@ -49,6 +49,22 @@ combat/movement cooldown. Source markup/control tags and private channels are
 rejected. Pattern-colour codes13-20, private chat and clan/social expansion are
 not advertised.
 
+The renderer observer contract is published as
+`e0e42d714793d5fa815d3fcc4dff63b36f0a2a3f`. `game.observer.v1` supplies actual
+current-tick running/movement and exact action identity/phase metadata for the
+local and visible other players. `actor-observer-bindings.json` records the
+pinned original RuneLite AnimationID source and baseline-qualified method/
+recipe mappings. Range cooking is not confused with fire cooking; inventory
+dough, combat and spells retain their exact identities when no numeric source
+animation is bound. No neighbour inference or fabricated sequence fills a gap.
+The renderer owns skeletal retargeting and source frame playback.
+
+Typed `dynamicObjects` forwards the existing complete authoritative door/object
+list. Canonical object IDs resolve through the validated definition catalogue;
+numeric source IDs are never parsed from strings or invented. Observer
+metadata changes no gameplay outcome, stock setter, RNG draw, cadence, physics,
+avatar asset, HUD or audio ABI.
+
 Only the declared body_type0/1 and approved penguin base2063 are projected.
 Original book transcript attribution remains in `sources.json`; the newcomer
 map uses the pinned AIDE_MAP615 metadata, not the rejected RAIDS_REWARDS539
