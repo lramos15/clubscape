@@ -98,6 +98,8 @@ public final class RenderExport
         if (all || profile.equals("scenes")) new SceneExport(this).run();
         if (profile.equals("blocks")) new BlockExport(this).run(args);
         if (profile.equals("anim")) new AnimExport(this).run(args);
+        if (profile.equals("dynamic")) new DynamicExport(this).run(args);
+        if (profile.equals("widgets")) new WidgetExport(this).run(args);
         if (profile.equals("scenes-pinned"))
         {
             SceneExport pinned = new SceneExport(this);

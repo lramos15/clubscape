@@ -148,6 +148,8 @@ pub struct SceneData {
     pub object_flags: Vec<i8>,
     heights: Vec<i32>,
     roofs: Vec<i32>,
+    /// Original tile settings (`vs`): bit 1 blocked, bit 2 bridge, bit 4 roof, bit 8 lowest.
+    settings: Vec<i8>,
     pub paints: HashMap<usize, TilePaint>,
     pub tile_models: HashMap<usize, TileModel>,
     pub walls: HashMap<usize, Wall>,
@@ -207,6 +209,7 @@ impl SceneData {
             object_flags: vec![0; tile_count * 5],
             heights: vec![0; (planes * (grid + 1) * (grid + 1)) as usize],
             roofs: vec![0; (planes * grid * grid) as usize],
+            settings: vec![0; (planes * grid * grid) as usize],
             paints: HashMap::new(),
             tile_models: HashMap::new(),
             walls: HashMap::new(),
@@ -233,6 +236,30 @@ impl SceneData {
         let w = self.width as usize;
         let h = self.height as usize;
         self.roofs[plane as usize * w * h + x as usize * h + y as usize] = value;
+    }
+
+    /// `ez.vs[plane][x][y]` tile settings in extended coordinates (0 when not exported).
+    #[inline]
+    pub fn setting(&self, plane: i32, x: i32, y: i32) -> i32 {
+        let w = self.width as usize;
+        let h = self.height as usize;
+        self.settings
+            .get(plane as usize * w * h + x as usize * h + y as usize)
+            .copied()
+            .unwrap_or(0) as i32
+    }
+
+    #[inline]
+    pub fn set_setting(&mut self, plane: i32, x: i32, y: i32, value: i8) {
+        let w = self.width as usize;
+        let h = self.height as usize;
+        self.settings[plane as usize * w * h + x as usize * h + y as usize] = value;
+    }
+
+    /// `ez.ff`: whether the tile carries the roof setting bit.
+    #[inline]
+    pub fn is_roof_tile(&self, plane: i32, x: i32, y: i32) -> bool {
+        self.setting(plane, x, y) & 4 != 0
     }
 
     /// Resolves a model reference for the current animation clock: static indices pass
@@ -272,6 +299,9 @@ impl SceneData {
             return Err(RenderError::InvalidAsset("scene heights size".into()));
         }
         let roofs = chunks.ints("ROOF")?;
+        let settings = chunks
+            .bytes_opt("TSET")?
+            .unwrap_or_else(|| vec![0; roofs.len()]);
         let mut scene = SceneData {
             name: chunks.text("NAME")?,
             base_x: h[0],
@@ -299,6 +329,7 @@ impl SceneData {
             object_flags: chunks.bytes("OBJF")?,
             heights,
             roofs,
+            settings,
             paints: HashMap::new(),
             tile_models: HashMap::new(),
             walls: HashMap::new(),

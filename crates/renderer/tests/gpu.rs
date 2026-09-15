@@ -298,11 +298,13 @@ fn scene_triangles(case: &SceneCase, palette: &Palette, state: RasterState) -> V
         pitch: case.pitch,
         yaw: case.yaw,
         plane: 0,
+        top_plane: 0,
         focal_x: (case.focal[0] - case.base[0]) * 128,
         focal_z: (case.focal[1] - case.base[1]) * 128,
         center_on_camera: true,
         far_clip: 32768,
         animation_cycles: 0,
+        roof: Default::default(),
     };
     let mut tris = Vec::new();
     drawer.begin_frame(&scene);
@@ -349,4 +351,144 @@ fn gpu_matches_cpu_and_source_on_scene_fixtures() {
             case.name
         );
     }
+}
+
+/// Interface preview surfaces: coverage alpha marks exactly the pixels a triangle wrote, the
+/// colours match the CPU reference, and the asynchronous readback path delivers the same bytes.
+#[test]
+fn gpu_preview_surface_has_exact_coverage_alpha() {
+    let Some(mut g) = gpu(480, 315) else { return };
+    let tree = Model::from_chunks(
+        &std::fs::read(
+            repo_root().join("assets/compiled/render/models/object-1277-model-1570-lit.bin"),
+        )
+        .unwrap(),
+    )
+    .unwrap();
+    // The interface projection: component centre, zoom 512, pitch 150 (content type 328).
+    let mut state = RasterState::new(480, 315, 512);
+    state.center_x = 240;
+    state.center_y = 187;
+    let t = clubscape_renderer::tables::tables();
+    let zoom = 450;
+    let (sin_x, cos_x) = ((t.sin2048[150] * zoom) >> 16, (t.cos2048[150] * zoom) >> 16);
+    let mut tris = Vec::new();
+    let mut scratch = ModelScratch::default();
+    {
+        let mut drawer = ModelDrawer {
+            state,
+            palette: &g.palette.rgb,
+            scratch: &mut scratch,
+            alpha_pass: 2,
+        };
+        drawer
+            .draw_legacy(
+                &tree,
+                0,
+                0,
+                0,
+                150,
+                0,
+                sin_x + 175,
+                cos_x + 175,
+                0,
+                &mut tris,
+            )
+            .unwrap();
+    }
+    assert!(tris.len() > 50);
+    // A pixel is covered when some triangle wrote it: opaque fills are clear-independent,
+    // translucent fills differ from both clear colours.
+    let dark = cpu_render(&state, &tris, &g.palette, &g.textures, 0x010203);
+    let light = cpu_render(&state, &tris, &g.palette, &g.textures, 0xFEFDFC);
+    let black = cpu_render(&state, &tris, &g.palette, &g.textures, 0);
+    let covered: Vec<bool> = dark
+        .iter()
+        .zip(&light)
+        .map(|(a, b)| !((a & 0xFFFFFF) == 0x010203 && (b & 0xFFFFFF) == 0xFEFDFC))
+        .collect();
+    let packed = pack_frame(&state, &tris, &g.textures);
+    let frame = g
+        .raster
+        .render_with_coverage(&state, &packed, 0, true)
+        .unwrap();
+    let pending = g.raster.begin_read_back();
+    // Poll like the browser does until the map callback fired.
+    for _ in 0..10_000 {
+        if pending.is_ready().is_some() {
+            break;
+        }
+        g.raster.poll_once().unwrap();
+    }
+    assert!(frame.is_complete(), "queue completion did not fire");
+    let rgba = pending.take().unwrap();
+    assert_eq!(rgba.len(), 480 * 315 * 4);
+    let mut alpha_mismatch = 0;
+    let mut color_mismatch = 0;
+    let mut covered_count = 0;
+    for (i, c) in covered.iter().enumerate() {
+        let p = &rgba[i * 4..i * 4 + 4];
+        let alpha = p[3];
+        if *c {
+            covered_count += 1;
+            if alpha != 255 {
+                alpha_mismatch += 1;
+            }
+            let rgb = ((p[0] as i32) << 16) | ((p[1] as i32) << 8) | p[2] as i32;
+            if rgb != (black[i] & 0xFFFFFF) {
+                color_mismatch += 1;
+            }
+        } else if alpha != 0 {
+            alpha_mismatch += 1;
+        }
+    }
+    let mut gpu_only = 0;
+    let mut cpu_only = 0;
+    let mut sample = Vec::new();
+    for (i, c) in covered.iter().enumerate() {
+        let alpha = rgba[i * 4 + 3];
+        if *c && alpha != 255 {
+            cpu_only += 1;
+        }
+        if !*c && alpha != 0 {
+            gpu_only += 1;
+            if sample.len() < 5 {
+                let p = &rgba[i * 4..i * 4 + 4];
+                sample.push((
+                    i % 480,
+                    i / 480,
+                    p[0],
+                    p[1],
+                    p[2],
+                    dark[i] & 0xFFFFFF,
+                    light[i] & 0xFFFFFF,
+                ));
+            }
+        }
+    }
+    eprintln!(
+        "preview coverage {covered_count} px on {} (gpu-only {gpu_only}, cpu-only {cpu_only}) sample {sample:?}",
+        g.adapter_name
+    );
+    assert!(
+        covered_count > 500,
+        "tree preview covered {covered_count} px"
+    );
+    assert_eq!(
+        alpha_mismatch, 0,
+        "coverage alpha differs from the CPU coverage"
+    );
+    assert_eq!(
+        color_mismatch, 0,
+        "covered colours differ from the CPU reference"
+    );
+    // The opaque path is unchanged: every alpha is 255.
+    g.raster.render(&state, &packed, 0x303030).unwrap();
+    let opaque = g.raster.read_back().unwrap();
+    assert_eq!(opaque.len(), 480 * 315);
+    let (n, max, _) = diff_count(
+        &opaque,
+        &cpu_render(&state, &tris, &g.palette, &g.textures, 0x303030),
+    );
+    assert_eq!((n, max), (0, 0), "opaque preview differs from CPU");
 }

@@ -5,7 +5,7 @@
 use std::path::PathBuf;
 
 use clubscape_renderer::actor::{ActivityContext, player_sequence_for};
-use clubscape_renderer::core::{Camera, RendererCore};
+use clubscape_renderer::core::{Camera, PlayerPreview, RendererCore};
 use clubscape_renderer::palette::Palette;
 use clubscape_renderer::raster::software::Software;
 use clubscape_renderer::scene::draw::PickTarget;
@@ -486,4 +486,460 @@ fn player_pose_sheet_renders() {
         eprintln!("pose {name}: {} triangles", core.triangles().len());
     }
     write_png("player-pose-sheet", 1920, 1080, &sheet);
+}
+
+/// Live layers: ground items, the animated fire temporary object, door states and roof removal.
+#[test]
+fn dynamic_layers_draw_from_the_world_view() {
+    let manifest = manifest();
+    if manifest.get("dynamic_objects").is_none() {
+        eprintln!("skipping: run tools/render-assets/export.py --profile dynamic");
+        return;
+    }
+    let Some(mut core) = core_with_actors() else {
+        return;
+    };
+    let textures = textures();
+    for object in manifest["dynamic_objects"].as_array().unwrap() {
+        let id = object["object_id"].as_i64().unwrap() as i32;
+        for variant in object["variants"].as_array().unwrap() {
+            let frames: Vec<Vec<u8>> = variant["frames"]
+                .as_array()
+                .map(|f| f.iter().map(|p| asset(p.as_str().unwrap())).collect())
+                .unwrap_or_default();
+            let lengths: Vec<i32> = variant["frame_lengths_client_cycles"]
+                .as_array()
+                .map(|l| l.iter().map(|v| v.as_i64().unwrap() as i32).collect())
+                .unwrap_or_default();
+            core.load_dynamic_object(
+                id,
+                variant["type"].as_i64().unwrap() as i32,
+                variant["orientation"].as_i64().unwrap() as i32,
+                &asset(variant["model"].as_str().unwrap()),
+                &frames,
+                lengths,
+            )
+            .unwrap();
+        }
+    }
+    for item in manifest["ground_items"].as_array().unwrap() {
+        let id = item["item_id"].as_i64().unwrap() as i32;
+        for variant in item["variants"].as_array().unwrap() {
+            core.load_ground_item(
+                id,
+                variant["min_quantity"].as_i64().unwrap(),
+                &asset(variant["model"].as_str().unwrap()),
+            )
+            .unwrap();
+        }
+    }
+    load_house(&mut core);
+    core.update_world(
+        &world((3098, 3098), "idle", "", &[], serde_json::json!([])),
+        0.0,
+    )
+    .unwrap();
+    core.build_frame(0.0).unwrap();
+    let baseline = rasterize(&core, &textures);
+    let baseline_tris = core.triangles().len();
+
+    // Ground items: logs, coins (quantity variant) and shrimps on one tile → top three drawn.
+    let mut view: serde_json::Value =
+        serde_json::from_str(&world((3098, 3098), "idle", "", &[], serde_json::json!([]))).unwrap();
+    view["groundItems"] = serde_json::json!([
+        {"id": "g1", "tile": {"x": 3096, "y": 3099, "plane": 0}, "item": {"id": "item.logs", "name": "Logs", "quantity": 1, "sourceId": 1511}, "canTake": true},
+        {"id": "g2", "tile": {"x": 3096, "y": 3099, "plane": 0}, "item": {"id": "item.coins", "name": "Coins", "quantity": 250, "sourceId": 995}, "canTake": true},
+        {"id": "g3", "tile": {"x": 3097, "y": 3100, "plane": 0}, "item": {"id": "item.shrimps", "name": "Raw shrimps", "quantity": 1, "sourceId": 317}, "canTake": true}
+    ]);
+    core.update_world(&view.to_string(), 0.0).unwrap();
+    let summary = core.build_frame(0.0).unwrap().clone();
+    assert!(
+        summary.entities_skipped.is_empty(),
+        "{:?}",
+        summary.entities_skipped
+    );
+    let with_items = rasterize(&core, &textures);
+    assert_ne!(with_items, baseline, "ground items drew nothing");
+    assert!(core.triangles().len() > baseline_tris);
+    let mut item_pick = None;
+    for y in (400..1000).step_by(2) {
+        for x in (600..1400).step_by(2) {
+            if let Some(clubscape_renderer::core::WorldPick::Scenery {
+                object_id,
+                kind,
+                x: tx,
+                y: ty,
+                ..
+            }) = core.pick_world(x, y)
+                && kind == 3
+            {
+                item_pick = Some((object_id, tx, ty));
+            }
+        }
+    }
+    assert!(
+        matches!(
+            item_pick,
+            Some((1511, 3096, 3099)) | Some((995, 3096, 3099)) | Some((317, 3097, 3100))
+        ),
+        "ground item pick {item_pick:?}"
+    );
+
+    // Fire temporary object: animated through its exported frames.
+    view["groundItems"] = serde_json::json!([]);
+    view["entities"] = serde_json::json!([
+        {"id": "dynamic_object.fire_1", "kind": "temporary_object", "definitionId": "object.fire.normal", "sourceId": 26185, "name": "Fire",
+         "tile": {"x": 3097, "y": 3096, "plane": 0}, "animation": "", "available": true, "actions": [], "appearance": {}, "equipment": []}
+    ]);
+    core.update_world(&view.to_string(), 0.0).unwrap();
+    let summary = core.build_frame(0.0).unwrap().clone();
+    assert!(
+        summary.entities_skipped.is_empty(),
+        "{:?}",
+        summary.entities_skipped
+    );
+    let fire0 = rasterize(&core, &textures);
+    core.build_frame(20.0 * 7.0).unwrap();
+    let fire1 = rasterize(&core, &textures);
+    assert_ne!(fire0, baseline, "fire drew nothing");
+    assert_ne!(fire0, fire1, "fire did not animate");
+
+    // Door state: the starting-house door (object 9398 at 3098,3107) opens by one quarter turn.
+    view["entities"] = serde_json::json!([]);
+    view["dynamicObjects"] = serde_json::json!([
+        {"id": "transform.scenery.start_door", "objectId": "asset.source.osrs.cache2695.object.9398", "tile": {"x": 3098, "y": 3107, "plane": 0},
+         "instance": null, "state": "object_state.open", "doorOpen": true, "quarterTurns": 1}
+    ]);
+    core.update_world(&view.to_string(), 0.0).unwrap();
+    let summary = core.build_frame(0.0).unwrap().clone();
+    assert!(
+        summary.entities_skipped.is_empty(),
+        "{:?}",
+        summary.entities_skipped
+    );
+    let door_open = rasterize(&core, &textures);
+    assert_ne!(door_open, baseline, "open door did not change the wall");
+    write_png("dynamic-layers-door-open", 1920, 1080, &door_open);
+
+    // Roof removal mode 1 hides the roof over the player's tile inside the house.
+    view["dynamicObjects"] = serde_json::json!([]);
+    view["player"]["tile"] = serde_json::json!({"x": 3094, "y": 3106, "plane": 0});
+    core.update_world(&view.to_string(), 0.0).unwrap();
+    core.set_roof_mode(0);
+    core.build_frame(0.0).unwrap();
+    let roofs_on = rasterize(&core, &textures);
+    let on_tris = core.triangles().len();
+    core.set_roof_mode(1);
+    core.build_frame(0.0).unwrap();
+    let roofs_off = rasterize(&core, &textures);
+    eprintln!(
+        "roof triangles: visible {on_tris}, removed {}",
+        core.triangles().len()
+    );
+    assert_ne!(
+        roofs_on, roofs_off,
+        "roof removal mode 1 changed nothing over the player"
+    );
+    write_png("dynamic-layers-roof-removed", 1920, 1080, &roofs_off);
+    core.set_roof_mode(0);
+}
+
+/// The character-creator preview: interface 679 component 73's model draw (zoom 512, model zoom
+/// 450, offsetY2 175, rotations 0) centred on the component inside its 480x315 parent layer.
+#[test]
+fn player_preview_reproduces_the_interface_model_draw() {
+    let Some(mut core) = core_with_actors() else {
+        return;
+    };
+    let textures = textures();
+    let manifest = manifest();
+    let widget = manifest["model_widgets"]
+        .as_array()
+        .and_then(|w| w.iter().find(|w| w["id"] == 44499017))
+        .expect("exported interface 679 component 73 (export.py --profile widgets)");
+    // The exported source fields are the defaults the preview uses.
+    let defaults = PlayerPreview::default();
+    assert_eq!(
+        widget["model_zoom"].as_i64().unwrap() as i32,
+        defaults.model_zoom
+    );
+    assert_eq!(
+        widget["offset_y2"].as_i64().unwrap() as i32,
+        defaults.offset_y
+    );
+    assert_eq!(
+        widget["offset_x2"].as_i64().unwrap() as i32,
+        defaults.offset_x
+    );
+    assert_eq!(
+        widget["rotation_x"].as_i64().unwrap() as i32,
+        defaults.rotation_x
+    );
+    assert_eq!(
+        widget["rotation_z"].as_i64().unwrap() as i32,
+        defaults.rotation_z
+    );
+    assert_eq!(
+        widget["content_type"].as_i64().unwrap() as i32,
+        defaults.content_type
+    );
+    // Content type 328: pitch 150 and the client-cycle sway (cycle 0 → 0, cycle 63 → 255).
+    assert_eq!(defaults.draw_rotation(0.0), (150, 0));
+    assert_eq!(
+        defaults.draw_rotation(63.0 * 20.0),
+        (150, ((63.0f64 / 40.0).sin() * 256.0) as i32)
+    );
+    assert_eq!(
+        defaults.draw_rotation(200.0 * 20.0),
+        (150, (((200.0f64 / 40.0).sin() * 256.0) as i32) & 2047)
+    );
+    assert!(
+        defaults.draw_rotation(200.0 * 20.0).1 > 1024,
+        "negative sway must wrap into 0..2047"
+    );
+    assert_eq!(
+        widget["rasterizer_zoom"].as_i64().unwrap() as i32,
+        defaults.rasterizer_zoom
+    );
+    assert!(!widget["ortho"].as_bool().unwrap());
+    assert_eq!(
+        (
+            widget["width"].as_i64().unwrap(),
+            widget["height"].as_i64().unwrap()
+        ),
+        (136, 192)
+    );
+
+    // No world yet (character creation): the naked approved body at the idle motion.
+    let frame = core
+        .build_player_preview_frame(&defaults, 0.0)
+        .unwrap()
+        .expect("player body loaded");
+    assert_eq!(frame.sequence, clubscape_renderer::actor::PLAYER_IDLE);
+    assert!(
+        frame.summary.triangles > 100,
+        "preview drew {} triangles",
+        frame.summary.triangles
+    );
+    let state = frame.state;
+    assert_eq!(
+        (
+            state.width,
+            state.height,
+            state.center_x,
+            state.center_y,
+            state.zoom
+        ),
+        (480, 315, 240, 187, 512)
+    );
+    let render = |core: &RendererCore, clear: i32| {
+        let mut pixels = vec![clear; (480 * 315) as usize];
+        {
+            let mut raster = Software::new(state, &mut pixels, &core.palette.rgb, &textures);
+            for tri in core.preview_triangles() {
+                let _ = raster.draw(tri);
+            }
+        }
+        pixels
+    };
+    let dark = render(&core, 0x010203);
+    let light = render(&core, 0xFEFDFC);
+    let covered: Vec<bool> = dark
+        .iter()
+        .zip(&light)
+        .map(|(a, b)| !((a & 0xFFFFFF) == 0x010203 && (b & 0xFFFFFF) == 0xFEFDFC))
+        .collect();
+    let count = covered.iter().filter(|c| **c).count();
+    let (mut min_x, mut max_x, mut min_y, mut max_y) = (i32::MAX, i32::MIN, i32::MAX, i32::MIN);
+    for (i, c) in covered.iter().enumerate() {
+        if *c {
+            let (x, y) = ((i % 480) as i32, (i / 480) as i32);
+            min_x = min_x.min(x);
+            max_x = max_x.max(x);
+            min_y = min_y.min(y);
+            max_y = max_y.max(y);
+        }
+    }
+    eprintln!("preview coverage {count} px, bounds x {min_x}..{max_x} y {min_y}..{max_y}");
+    assert!(count > 800, "preview covered only {count} pixels");
+    // At sway phase 0 the body faces the viewer, horizontally centred on the component; with
+    // pitch 150 and offsetY2 175 its feet project to about 245 px, inside the 91..283 component.
+    assert!(
+        (min_x + max_x) / 2 >= 240 - 8 && (min_x + max_x) / 2 <= 240 + 8,
+        "preview off-centre: {min_x}..{max_x}"
+    );
+    assert!(
+        max_y <= 283 && min_y >= 91,
+        "preview leaves the 136x192 component: {min_y}..{max_y}"
+    );
+    assert!(
+        (235..=255).contains(&max_y),
+        "feet not where the original projection puts them: {max_y}"
+    );
+    let mut png = vec![0; dark.len()];
+    for (i, p) in png.iter_mut().enumerate() {
+        *p = if covered[i] {
+            dark[i] & 0xFFFFFF
+        } else {
+            0x303030
+        };
+    }
+    write_png("player-preview-679-73", 480, 315, &png);
+
+    // A frame override and a walk sequence produce different, still in-bounds images.
+    let walking = PlayerPreview {
+        sequence: Some(clubscape_renderer::actor::PLAYER_WALK),
+        frame: Some(2),
+        ..PlayerPreview::default()
+    };
+    core.build_player_preview_frame(&walking, 0.0)
+        .unwrap()
+        .unwrap();
+    let walk = render(&core, 0x010203);
+    assert_ne!(walk, dark, "walk frame identical to the idle preview");
+    // The scene raster state and picks are untouched by preview rendering.
+    assert_eq!((core.state.width, core.state.height), (1920, 1080));
+
+    // Gear from the world view appears in the preview (bronze axe in the weapon slot).
+    load_house(&mut core);
+    core.update_world(
+        &world(
+            (3098, 3098),
+            "idle",
+            "",
+            &[("weapon", 1351)],
+            serde_json::json!([]),
+        ),
+        0.0,
+    )
+    .unwrap();
+    let with_axe = core
+        .build_player_preview_frame(
+            &PlayerPreview {
+                frame: Some(0),
+                ..PlayerPreview::default()
+            },
+            0.0,
+        )
+        .unwrap()
+        .unwrap();
+    let axe = render(&core, 0x010203);
+    let idle0 = {
+        core.update_world(
+            &world((3098, 3098), "idle", "", &[], serde_json::json!([])),
+            0.0,
+        )
+        .unwrap();
+        core.build_player_preview_frame(
+            &PlayerPreview {
+                frame: Some(0),
+                ..PlayerPreview::default()
+            },
+            0.0,
+        )
+        .unwrap()
+        .unwrap();
+        render(&core, 0x010203)
+    };
+    assert!(
+        with_axe.summary.triangles > frame.summary.triangles,
+        "gear added no triangles"
+    );
+    assert_ne!(axe, idle0, "gear did not change the preview");
+}
+
+/// The stock top-plane rule (`cz.ch`): every plane is drawn until a roof-flagged tile of the
+/// player's plane lies on the camera tile or the camera→player line (pitch < 2480), then only the
+/// player's plane; the approved fixture captures pinned the `dh` plane argument to 0 instead.
+#[test]
+fn stock_top_plane_rule_hides_upper_planes_under_roofs() {
+    let Some(mut core) = core_with_actors() else {
+        return;
+    };
+    let textures = textures();
+    load_house(&mut core);
+    // Fixture reproduction: draw plane 0, the approved capture inputs.
+    core.set_top_plane_override(Some(0));
+    core.update_world(
+        &world((3098, 3098), "idle", "", &[], serde_json::json!([])),
+        0.0,
+    )
+    .unwrap();
+    core.build_frame(0.0).unwrap();
+    let pinned = core.triangles().len();
+    let pinned_pixels = rasterize(&core, &textures);
+    // Stock rule with the player outside (camera at 3094,3095 looking north over open ground):
+    // upper planes (the house roof and walls) are drawn.
+    core.set_top_plane_override(None);
+    core.build_frame(0.0).unwrap();
+    let outside = core.triangles().len();
+    let outside_pixels = rasterize(&core, &textures);
+    assert!(
+        outside > pinned,
+        "stock rule drew {outside} triangles vs pinned plane 0 {pinned}"
+    );
+    assert_ne!(outside_pixels, pinned_pixels);
+    write_png("top-plane-stock-outside", 1920, 1080, &outside_pixels);
+    // Player inside the starting house (roof-flagged tile): the top plane drops to plane 0 again.
+    core.update_world(
+        &world((3094, 3106), "idle", "", &[], serde_json::json!([])),
+        0.0,
+    )
+    .unwrap();
+    core.build_frame(0.0).unwrap();
+    let inside = core.triangles().len();
+    let inside_pixels = rasterize(&core, &textures);
+    assert!(
+        inside < outside,
+        "player under the roof still drew {inside} triangles (outside {outside})"
+    );
+    write_png("top-plane-stock-inside", 1920, 1080, &inside_pixels);
+    // A player outside but with the camera line crossing the house also hides the upper planes.
+    core.set_camera(Camera {
+        x: 3048 * 128 + (3094 - 3048) * 128 + 64,
+        height: -2360,
+        y: 3056 * 128 + (3112 - 3056) * 128,
+        pitch: 2048,
+        yaw: 8192,
+        zoom: 662,
+        far: 32768,
+    })
+    .unwrap();
+    core.update_world(
+        &world((3094, 3100), "idle", "", &[], serde_json::json!([])),
+        0.0,
+    )
+    .unwrap();
+    core.build_frame(0.0).unwrap();
+    let crossing = core.triangles().len();
+    let crossing_pixels = rasterize(&core, &textures);
+    write_png("top-plane-stock-camera-line", 1920, 1080, &crossing_pixels);
+    core.set_camera(Camera {
+        x: 3048 * 128 + (3094 - 3048) * 128 + 64,
+        height: -2360,
+        y: 3056 * 128 + (3112 - 3056) * 128,
+        pitch: 2048 + 1024,
+        zoom: 662,
+        yaw: 8192,
+        far: 32768,
+    })
+    .unwrap();
+    core.build_frame(0.0).unwrap();
+    let steep = core.triangles().len();
+    eprintln!(
+        "top plane triangles: pinned0 {pinned}, stock outside {outside}, inside {inside}, camera line crossing {crossing}, steep pitch {steep}"
+    );
+    assert!(
+        steep > crossing,
+        "pitch >= 2480 must not apply the roof line rule ({steep} vs {crossing})"
+    );
+    // Instanced maps always draw up to the player's plane (same steep camera: fewer triangles).
+    core.set_instanced_map(true);
+    core.build_frame(0.0).unwrap();
+    let instanced = core.triangles().len();
+    assert!(
+        instanced < steep,
+        "instanced map still drew upper planes ({instanced} vs {steep})"
+    );
+    core.set_instanced_map(false);
 }

@@ -30,6 +30,9 @@ python3 tools/render-assets/export.py --profile prune-textures
 python3 tools/render-assets/export.py --profile blocks      # all 61 M1 map squares (content/m1/geometry)
 python3 tools/render-assets/export.py --profile blocks 12850 12851   # selected squares
 python3 tools/render-assets/export.py --profile scenes-pinned  # frame-0 validation twins for the block tests
+python3 tools/render-assets/export.py --profile anim        # skeletal sequences, NPC definitions, player body, worn items
+python3 tools/render-assets/export.py --profile dynamic     # door/fire/state object variants and ground-item stacks
+python3 tools/render-assets/export.py --profile widgets     # original if3 model components (interface 679:73)
 python3 tools/render-assets/export.py --profile compress    # (re)write scenes/*.gz, blocks/*.gz + manifest
 python3 tools/render-assets/export.py --profile unpack      # restore raw scenes/*.bin from *.gz
 python3 tools/render-assets/export.py --verify-only         # hash-check assets/compiled/render
@@ -37,8 +40,20 @@ python3 tools/render-assets/export.py --verify-only         # hash-check assets/
 
 Profiles: `tables`, `palette`, `textures`, `models` (tree 1277 / model 1570 lit as captured),
 `npcs` (3028 goblin, 2063 penguin; sequences 6181/6180 and 5668/5666), `scenes`, `blocks`,
-`scenes-pinned`, `prune-textures` (keep only textures referenced by the exported
-scenes/blocks/models), `compress`, `unpack`.
+`scenes-pinned`, `anim`, `dynamic`, `widgets`, `prune-textures` (keep only textures referenced by
+the exported scenes/blocks/models), `compress`, `unpack`.
+
+`anim` (`AnimExport.java`) writes the original skeletons and frames (`et`/`em`) of the required
+player sequences (808/819/824/836, 879, 625, 621, 733, 897/896/899/898, 386/390/422/423, 426,
+711, 829/12526/827) plus every stand/walk/rotate/run/combat sequence of the 27 M1 NPC
+definitions, each definition's lit base model (`pl.ag` lighting, no animation), the 12 equippable
+M1 items' worn models (`op.jm`, lit as `lc.bd` does) and the default male body as the human
+label-retarget reference. `dynamic` (`DynamicExport.java`) lights door objects at wall types 0/9 ×
+4 rotations, the fire (26185, 5 frames of sequence 475) and flour-bin states through the original
+`om.sg`, and the 116 ground items per quantity threshold through `op.aa`. `widgets`
+(`WidgetExport.java`) decodes interface 679's model component with the original `lw.ag` if3
+decoder and records its zoom/offset/rotation/content-type fields. Scenes and blocks also carry
+the tile settings (`TSET`/`BSET`, `ez.vs`) used by roof removal.
 
 `blocks` loads every requested 64×64 map square through the original loader with ≥ 16 tiles of
 real neighbour margin (bases on the 8-tile chunk lattice), serialises the square's own tile

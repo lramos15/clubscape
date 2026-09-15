@@ -137,7 +137,7 @@ def main() -> int:
     parser.add_argument("--source", type=Path)
     parser.add_argument("--output", type=Path, default=DEFAULT_OUTPUT)
     parser.add_argument("--profile", default="all",
-                        choices=["all", "tables", "palette", "textures", "models", "npcs", "scenes", "scenes-pinned", "blocks", "anim", "prune-textures", "compress", "unpack"])
+                        choices=["all", "tables", "palette", "textures", "models", "npcs", "scenes", "scenes-pinned", "blocks", "anim", "dynamic", "widgets", "prune-textures", "compress", "unpack"])
     parser.add_argument("--verify-only", action="store_true")
     parser.add_argument("--java-home", type=Path, default=Path.home() / ".local/share/jdks/temurin-17.0.20.1+1")
     parser.add_argument("extra", nargs="*", help="Profile-specific arguments passed to the Java exporter")
@@ -183,7 +183,7 @@ def main() -> int:
         print(log[-8000:])
     result.check_returncode()
     for line in log.splitlines():
-        if line.startswith(("TABLES", "PALETTE", "TEXTURES", "MODEL", "NPCS", "NPCDEF", "ITEMDEF", "ANIM", "SCENE", "BLOCK", "RENDER_EXPORT_OK")):
+        if line.startswith(("TABLES", "PALETTE", "TEXTURES", "MODEL", "NPCS", "NPCDEF", "ITEMDEF", "ANIM", "DYN", "GROUNDITEM", "WIDGETS", "SCENE", "BLOCK", "RENDER_EXPORT_OK")):
             print(line)
     manifest_path = args.output / "manifest.json"
     manifest = normalize(json.loads(manifest_path.read_text()))

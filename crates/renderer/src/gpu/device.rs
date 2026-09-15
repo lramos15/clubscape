@@ -49,24 +49,86 @@ struct Params {
     center_y: i32,
     zoom: i32,
     clear_color: u32,
+    /// 1: alpha marks pixel coverage (uncovered pixels stay transparent) for model-only
+    /// surfaces; 0: opaque output.
+    coverage_alpha: u32,
+    _pad: [u32; 3],
+}
+
+/// Timestamp query set, its resolve buffer, a ring of readback buffers with in-use flags and the
+/// queue's timestamp period.
+type Timestamps = (
+    wgpu::QuerySet,
+    wgpu::Buffer,
+    Vec<(wgpu::Buffer, Arc<AtomicBool>)>,
+    f32,
+);
+
+/// A flag set from a GPU callback plus the waker of whoever awaits it, so async callers wake
+/// as soon as the callback runs instead of polling on a timer.
+#[derive(Default)]
+struct Signal {
+    done: AtomicBool,
+    waker: Mutex<Option<std::task::Waker>>,
+}
+
+impl Signal {
+    fn set(&self) {
+        self.done.store(true, Ordering::Release);
+        if let Some(waker) = self.waker.lock().expect("lock").take() {
+            waker.wake();
+        }
+    }
+    fn is_set(&self) -> bool {
+        self.done.load(Ordering::Acquire)
+    }
+    fn poll(&self, cx: &mut std::task::Context<'_>) -> std::task::Poll<()> {
+        if self.is_set() {
+            return std::task::Poll::Ready(());
+        }
+        *self.waker.lock().expect("lock") = Some(cx.waker().clone());
+        // Re-check: the callback may have run between the flag test and storing the waker.
+        if self.is_set() {
+            std::task::Poll::Ready(())
+        } else {
+            std::task::Poll::Pending
+        }
+    }
 }
 
 /// Shared completion flag set from the queue's submitted-work-done callback.
 #[derive(Clone)]
 pub struct GpuFrame {
     pub sequence: u64,
-    done: Arc<AtomicBool>,
+    done: Arc<Signal>,
+    /// Set once the timestamp readback (when issued for this frame) has been mapped and read.
+    timestamps_read: Option<Arc<Signal>>,
     gpu_duration_ns: Arc<Mutex<Option<u64>>>,
 }
 
 impl GpuFrame {
     pub fn is_complete(&self) -> bool {
-        self.done.load(Ordering::Acquire)
+        self.done.is_set()
     }
     /// GPU timestamp span in nanoseconds when the device supports timestamp queries and the
     /// resolve buffer has been read back.
     pub fn gpu_duration_ns(&self) -> Option<u64> {
         *self.gpu_duration_ns.lock().expect("lock")
+    }
+    /// Whether this frame issued a timestamp readback that has not been mapped yet.
+    pub fn timestamps_pending(&self) -> bool {
+        self.timestamps_read.as_ref().is_some_and(|s| !s.is_set())
+    }
+    /// Resolves when the queue reported the submitted work complete.
+    pub fn completed(&self) -> impl Future<Output = ()> + '_ {
+        std::future::poll_fn(move |cx| self.done.poll(cx))
+    }
+    /// Resolves when this frame's timestamp readback (if any) has been read.
+    pub fn timestamps_ready(&self) -> impl Future<Output = ()> + '_ {
+        std::future::poll_fn(move |cx| match &self.timestamps_read {
+            Some(signal) => signal.poll(cx),
+            None => std::task::Poll::Ready(()),
+        })
     }
 }
 
@@ -98,10 +160,7 @@ pub struct GpuRasterizer {
     width: u32,
     height: u32,
     sequence: u64,
-    timestamps: Option<(wgpu::QuerySet, wgpu::Buffer, wgpu::Buffer, f32)>,
-    /// Set while the timestamp readback buffer is mapped by a previous frame; timestamps are
-    /// skipped (and reported unknown) for frames submitted meanwhile.
-    timestamp_busy: Arc<AtomicBool>,
+    timestamps: Option<Timestamps>,
     pub last_record: FrameRecord,
 }
 
@@ -274,13 +333,20 @@ impl GpuRasterizer {
                 usage: wgpu::BufferUsages::QUERY_RESOLVE | wgpu::BufferUsages::COPY_SRC,
                 mapped_at_creation: false,
             });
-            let read = device.create_buffer(&wgpu::BufferDescriptor {
-                label: Some("clubscape-timestamp-read"),
-                size: 16,
-                usage: wgpu::BufferUsages::MAP_READ | wgpu::BufferUsages::COPY_DST,
-                mapped_at_creation: false,
-            });
-            Some((set, resolve, read, queue.get_timestamp_period()))
+            // A small ring of readback buffers so frames in flight keep their own timing
+            // instead of skipping timestamps while a previous frame's buffer is still mapped.
+            let reads = (0..3)
+                .map(|_| {
+                    let read = device.create_buffer(&wgpu::BufferDescriptor {
+                        label: Some("clubscape-timestamp-read"),
+                        size: 16,
+                        usage: wgpu::BufferUsages::MAP_READ | wgpu::BufferUsages::COPY_DST,
+                        mapped_at_creation: false,
+                    });
+                    (read, Arc::new(AtomicBool::new(false)))
+                })
+                .collect();
+            Some((set, resolve, reads, queue.get_timestamp_period()))
         } else {
             None
         };
@@ -305,7 +371,6 @@ impl GpuRasterizer {
             height,
             sequence: 0,
             timestamps,
-            timestamp_busy: Arc::new(AtomicBool::new(false)),
             last_record: FrameRecord::default(),
         })
     }
@@ -359,6 +424,20 @@ impl GpuRasterizer {
         self.output_view = view;
     }
 
+    /// The wgpu device (native tests poll it to drive map callbacks).
+    pub fn device(&self) -> &wgpu::Device {
+        &self.device
+    }
+
+    /// Native helper: processes pending device work once (drives map/completion callbacks).
+    #[cfg(not(target_arch = "wasm32"))]
+    pub fn poll_once(&self) -> Result<(), RenderError> {
+        self.device
+            .poll(wgpu::PollType::Poll)
+            .map(|_| ())
+            .map_err(|e| RenderError::Gpu(format!("poll: {e:?}")))
+    }
+
     pub fn size(&self) -> (u32, u32) {
         (self.width, self.height)
     }
@@ -398,6 +477,18 @@ impl GpuRasterizer {
         packed: &PackedFrame,
         clear_color: u32,
     ) -> Result<GpuFrame, RenderError> {
+        self.render_with_coverage(state, packed, clear_color, false)
+    }
+
+    /// Like [`Self::render`]; with `coverage_alpha` the output alpha is 1 only where a triangle
+    /// covered the pixel (model-only interface surfaces).
+    pub fn render_with_coverage(
+        &mut self,
+        state: &RasterState,
+        packed: &PackedFrame,
+        clear_color: u32,
+        coverage_alpha: bool,
+    ) -> Result<GpuFrame, RenderError> {
         if state.width as u32 != self.width || state.height as u32 != self.height {
             return Err(RenderError::Gpu(format!(
                 "frame size {}x{} does not match target {}x{}",
@@ -414,6 +505,8 @@ impl GpuRasterizer {
             center_y: state.center_y,
             zoom: state.zoom,
             clear_color,
+            coverage_alpha: u32::from(coverage_alpha),
+            _pad: [0; 3],
         };
         self.queue
             .write_buffer(&self.params, 0, bytemuck::bytes_of(&params));
@@ -473,8 +566,14 @@ impl GpuRasterizer {
             .create_command_encoder(&wgpu::CommandEncoderDescriptor {
                 label: Some("clubscape-frame"),
             });
-        let use_timestamps =
-            self.timestamps.is_some() && !self.timestamp_busy.swap(true, Ordering::AcqRel);
+        // The query set itself is reused each frame (resolve happens in queue order); only the
+        // readback buffer must be free, so pick the first ring entry not currently mapped.
+        let timestamp_slot = self.timestamps.as_ref().and_then(|(_, _, reads, _)| {
+            reads
+                .iter()
+                .position(|(_, busy)| !busy.swap(true, Ordering::AcqRel))
+        });
+        let use_timestamps = timestamp_slot.is_some();
         {
             let timestamp_writes = if use_timestamps {
                 self.timestamps
@@ -495,22 +594,26 @@ impl GpuRasterizer {
             pass.set_bind_group(0, &bind_group, &[]);
             pass.dispatch_workgroups(packed.bins_x, packed.bins_y, 1);
         }
-        if use_timestamps && let Some((set, resolve, read, _)) = &self.timestamps {
+        if let (Some(slot), Some((set, resolve, reads, _))) = (timestamp_slot, &self.timestamps) {
             encoder.resolve_query_set(set, 0..2, resolve, 0);
-            encoder.copy_buffer_to_buffer(resolve, 0, read, 0, 16);
+            encoder.copy_buffer_to_buffer(resolve, 0, &reads[slot].0, 0, 16);
         }
         self.queue.submit([encoder.finish()]);
         self.sequence += 1;
-        let done = Arc::new(AtomicBool::new(false));
+        let done = Arc::new(Signal::default());
         let flag = done.clone();
-        self.queue
-            .on_submitted_work_done(move || flag.store(true, Ordering::Release));
+        self.queue.on_submitted_work_done(move || flag.set());
         let gpu_duration_ns = Arc::new(Mutex::new(None));
-        if use_timestamps && let Some((_, _, read, period)) = &self.timestamps {
+        let mut timestamps_read = None;
+        if let (Some(index), Some((_, _, reads, period))) = (timestamp_slot, &self.timestamps) {
+            let (read, busy) = &reads[index];
             let slot = gpu_duration_ns.clone();
             let period = *period;
             let read_clone = read.clone();
-            let busy = self.timestamp_busy.clone();
+            let busy = busy.clone();
+            let read_signal = Arc::new(Signal::default());
+            let read_flag = read_signal.clone();
+            timestamps_read = Some(read_signal);
             read.map_async(wgpu::MapMode::Read, .., move |result| {
                 if result.is_ok() {
                     if let Ok(view) = read_clone.get_mapped_range(..) {
@@ -523,6 +626,7 @@ impl GpuRasterizer {
                     read_clone.unmap();
                 }
                 busy.store(false, Ordering::Release);
+                read_flag.set();
             });
         }
         self.last_record = FrameRecord {
@@ -534,6 +638,7 @@ impl GpuRasterizer {
         Ok(GpuFrame {
             sequence: self.sequence,
             done,
+            timestamps_read,
             gpu_duration_ns,
         })
     }
@@ -541,13 +646,13 @@ impl GpuRasterizer {
     /// Registers a fresh completion flag for all work submitted so far (used after `blit` so
     /// frame completion covers the present copy as well as the fill pass).
     pub fn completion_signal(&mut self) -> GpuFrame {
-        let done = Arc::new(AtomicBool::new(false));
+        let done = Arc::new(Signal::default());
         let flag = done.clone();
-        self.queue
-            .on_submitted_work_done(move || flag.store(true, Ordering::Release));
+        self.queue.on_submitted_work_done(move || flag.set());
         GpuFrame {
             sequence: self.sequence,
             done,
+            timestamps_read: None,
             gpu_duration_ns: Arc::new(Mutex::new(None)),
         }
     }
@@ -641,10 +746,9 @@ impl GpuRasterizer {
         self.queue.submit([encoder.finish()]);
     }
 
-    /// Copies the output texture into a mappable buffer and returns it as `0xRRGGBB` pixels.
-    /// Blocks on native backends; not available on WebGPU (use the surface instead).
-    #[cfg(not(target_arch = "wasm32"))]
-    pub fn read_back(&self) -> Result<Vec<i32>, RenderError> {
+    /// Starts copying the output texture into a mappable buffer. Poll [`ReadBack::is_ready`]
+    /// (native: after `device.poll`; WebGPU: across browser turns) and then [`ReadBack::take`].
+    pub fn begin_read_back(&self) -> ReadBack {
         let bytes_per_row = (self.width * 4).div_ceil(256) * 256;
         let size = u64::from(bytes_per_row) * u64::from(self.height);
         let buffer = self.device.create_buffer(&wgpu::BufferDescriptor {
@@ -680,30 +784,81 @@ impl GpuRasterizer {
             },
         );
         self.queue.submit([encoder.finish()]);
-        let (tx, rx) = std::sync::mpsc::channel();
+        let status: Arc<Mutex<Option<Result<(), String>>>> = Arc::new(Mutex::new(None));
+        let mapped = Arc::new(Signal::default());
+        let (slot, flag) = (status.clone(), mapped.clone());
         buffer.map_async(wgpu::MapMode::Read, .., move |r| {
-            let _ = tx.send(r);
+            *slot.lock().expect("lock") = Some(r.map_err(|e| format!("{e:?}")));
+            flag.set();
         });
+        ReadBack {
+            buffer,
+            width: self.width,
+            height: self.height,
+            bytes_per_row,
+            status,
+            mapped,
+        }
+    }
+
+    /// Copies the output texture into a mappable buffer and returns it as `0xRRGGBB` pixels.
+    /// Blocks on native backends; not available on WebGPU (use [`Self::begin_read_back`]).
+    #[cfg(not(target_arch = "wasm32"))]
+    pub fn read_back(&self) -> Result<Vec<i32>, RenderError> {
+        let pending = self.begin_read_back();
         self.device
             .poll(wgpu::PollType::wait_indefinitely())
             .map_err(|e| RenderError::Gpu(format!("poll: {e:?}")))?;
-        rx.recv()
-            .map_err(|e| RenderError::Gpu(e.to_string()))?
-            .map_err(|e| RenderError::Gpu(format!("map: {e:?}")))?;
-        let view = buffer
+        let rgba = pending.take()?;
+        Ok(rgba
+            .as_chunks::<4>()
+            .0
+            .iter()
+            .map(|p| ((p[0] as i32) << 16) | ((p[1] as i32) << 8) | p[2] as i32)
+            .collect())
+    }
+}
+
+/// A pending output-texture readback (see [`GpuRasterizer::begin_read_back`]).
+pub struct ReadBack {
+    buffer: wgpu::Buffer,
+    width: u32,
+    height: u32,
+    bytes_per_row: u32,
+    status: Arc<Mutex<Option<Result<(), String>>>>,
+    mapped: Arc<Signal>,
+}
+
+impl ReadBack {
+    /// `Some(Ok)` once the buffer is mapped, `Some(Err)` when mapping failed, `None` while pending.
+    pub fn is_ready(&self) -> Option<Result<(), String>> {
+        self.status.lock().expect("lock").clone()
+    }
+
+    /// Resolves when the map callback has run (then [`Self::is_ready`] is `Some`).
+    pub fn mapped(&self) -> impl Future<Output = ()> + '_ {
+        std::future::poll_fn(move |cx| self.mapped.poll(cx))
+    }
+
+    /// Tightly packed RGBA8 pixels (row-major, top-left origin). Requires [`Self::is_ready`].
+    pub fn take(self) -> Result<Vec<u8>, RenderError> {
+        match self.is_ready() {
+            Some(Ok(())) => {}
+            Some(Err(e)) => return Err(RenderError::Gpu(format!("map: {e}"))),
+            None => return Err(RenderError::Gpu("readback buffer not mapped yet".into())),
+        }
+        let view = self
+            .buffer
             .get_mapped_range(..)
             .map_err(|e| RenderError::Gpu(format!("mapped range: {e:?}")))?;
-        let mut out = vec![0i32; (self.width * self.height) as usize];
+        let row_bytes = self.width as usize * 4;
+        let mut out = Vec::with_capacity(row_bytes * self.height as usize);
         for y in 0..self.height as usize {
-            let row = &view[y * bytes_per_row as usize..];
-            for x in 0..self.width as usize {
-                let p = &row[x * 4..x * 4 + 4];
-                out[y * self.width as usize + x] =
-                    ((p[0] as i32) << 16) | ((p[1] as i32) << 8) | p[2] as i32;
-            }
+            let row = &view[y * self.bytes_per_row as usize..];
+            out.extend_from_slice(&row[..row_bytes]);
         }
         drop(view);
-        buffer.unmap();
+        self.buffer.unmap();
         Ok(out)
     }
 }

@@ -135,6 +135,7 @@ pub struct Block {
     object_flags: Vec<i8>,
     heights: Vec<i32>,
     roofs: Vec<i32>,
+    settings: Vec<i8>,
     paints: Vec<Placed<TilePaint>>,
     tile_models: Vec<Placed<TileModel>>,
     walls: Vec<Placed<Wall>>,
@@ -171,6 +172,7 @@ impl Block {
         let object_flags = chunks.bytes("BOBF")?;
         let heights = chunks.ints("BHGT")?;
         let roofs = chunks.ints("BROF")?;
+        let settings = chunks.bytes_opt("BSET")?.unwrap_or_else(|| vec![0; tiles]);
         if flags.len() != tiles
             || link.len() != tiles
             || object_count.len() != tiles
@@ -194,6 +196,7 @@ impl Block {
             object_flags,
             heights,
             roofs,
+            settings,
             paints: Vec::new(),
             tile_models: Vec::new(),
             walls: Vec::new(),
@@ -572,6 +575,7 @@ pub fn assemble(
                     scene.object_flags[index * 5..index * 5 + 5]
                         .copy_from_slice(&block.object_flags[local * 5..local * 5 + 5]);
                     scene.set_roof(plane, ex, ey, block.roofs[local]);
+                    scene.set_setting(plane, ex, ey, block.settings[local]);
                 }
             }
         }

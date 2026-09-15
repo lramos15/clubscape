@@ -37,6 +37,8 @@ declare global {
       resizeTo(width: number, height: number): void;
       /** Region mode: move the developer player (camera follows, scene recenters like the original). */
       walkTo?(x: number, y: number): void;
+      /** Scenario mode: apply a named developer scenario (see `scenarioWorld`). */
+      applyScenario?(name: string): Promise<unknown>;
     };
     __clubscapeBenchmarkV1?: {
       bindRun?(binding: { contractId: string; contractSha256: string }): void;
@@ -66,6 +68,107 @@ function actorsWorld(fixture: FixtureCamera): WorldView {
     },
     entities: [entity("goblin-dev", 3028, goblinTile[0]!, goblinTile[1]!, "6181")],
     groundItems: [], dialogue: null, bank: null, shop: null, recovery: null, messages: [],
+  };
+}
+
+/**
+ * Developer scenarios on the tutorial starting-house fixture: live layers and player actions the
+ * shell will drive from the authoritative WorldView. Tiles and ids are real source values; the
+ * scenarios are not journeys.
+ */
+function scenarioWorld(name: string): WorldView & { dynamicObjects?: unknown[] } {
+  const tile = (x: number, y: number) => ({ x, y, plane: 0 });
+  const base = actorsWorld(FIXTURES.find((f) => f.scene === "tutorial-starting-house")!);
+  const item = (id: string, sourceId: number, quantity = 1) => ({ id, name: id, quantity, sourceId, iconAsset: null, instanceId: null, charges: null, actions: [] });
+  const player = (x: number, y: number, activity: string, equipment: Array<[string, number, string]>) => ({
+    ...base.player, tile: tile(x, y), activity, animation: "",
+    equipment: equipment.map(([slot, sourceId, id]) => ({ slot, item: item(id, sourceId) })),
+  });
+  const npc = (id: string, sourceId: number, x: number, y: number) => ({
+    id, definitionId: `asset.source.osrs.cache2695.npc.${sourceId}`, sourceId, name: id, kind: "npc" as const, tile: tile(x, y), instance: null,
+    hitpoints: 5, maxHitpoints: 5, available: true, animation: "", actions: [], appearance: {}, equipment: [],
+  });
+  const object = (id: string, sourceId: number, x: number, y: number, kind: "object" | "temporary_object" = "object") => ({
+    id, definitionId: `asset.source.osrs.cache2695.object.${sourceId}`, sourceId, name: id, kind, tile: tile(x, y), instance: null,
+    hitpoints: 0, maxHitpoints: 0, available: true, animation: "", actions: [], appearance: {}, equipment: [],
+  });
+  switch (name) {
+    case "gear-idle":
+      return { ...base, player: player(3098, 3098, "idle", [["weapon", 1277, "item.bronze_sword"], ["shield", 1171, "item.wooden_shield"], ["head", 1949, "item.chefs_hat"]]), entities: [npc("guide", 3308, 3096, 3101)] };
+    case "gear-fighting":
+      return { ...base, player: player(3098, 3098, "fighting", [["weapon", 1277, "item.bronze_sword"], ["shield", 1171, "item.wooden_shield"]]), entities: [npc("rat", 2813, 3099, 3098)] };
+    case "woodcutting":
+      return { ...base, player: player(3098, 3098, "gathering", [["weapon", 1351, "item.bronze_axe"]]), entities: [object("tree", 1276, 3099, 3098)] };
+    case "mining":
+      return { ...base, player: player(3098, 3098, "gathering", [["weapon", 1265, "item.bronze_pickaxe"]]), entities: [object("rocks", 10079, 3099, 3098)] };
+    case "fishing":
+      return { ...base, player: player(3098, 3098, "gathering", []), entities: [npc("fishing-spot", 3317, 3099, 3098)] };
+    case "firemaking":
+      return { ...base, player: player(3098, 3098, "producing", []), entities: [] };
+    case "cooking":
+      return { ...base, player: player(3098, 3098, "producing", []), entities: [object("fire", 26185, 3099, 3098, "temporary_object")] };
+    case "walking":
+      return { ...base, player: player(3098, 3098, "walking", [["weapon", 1351, "item.bronze_axe"]]), entities: [] };
+    case "ranged":
+      return { ...base, player: player(3098, 3098, "fighting", [["weapon", 841, "item.shortbow"], ["ammo", 882, "item.bronze_arrow"]]), entities: [npc("rat", 2813, 3101, 3098)] };
+    case "casting":
+      return { ...base, player: player(3098, 3098, "casting", []), entities: [npc("rat", 2813, 3101, 3098)] };
+    case "death":
+      return { ...base, player: { ...player(3098, 3098, "idle", []), hitpoints: 0 }, entities: [] };
+    case "ground-items-fire":
+      return {
+        ...base, player: player(3098, 3098, "idle", []),
+        entities: [object("fire", 26185, 3097, 3096, "temporary_object"), npc("goblin", 3028, 3096, 3096)],
+        groundItems: [
+          { id: "g1", tile: tile(3096, 3099), item: item("item.logs", 1511), canTake: true },
+          { id: "g2", tile: tile(3096, 3099), item: item("item.coins", 995, 250), canTake: true },
+          { id: "g3", tile: tile(3097, 3100), item: item("item.shrimps", 317), canTake: true },
+          { id: "g4", tile: tile(3099, 3100), item: item("item.bronze_axe", 1351), canTake: true },
+        ],
+      };
+    case "door-open":
+      return {
+        ...base, player: player(3098, 3098, "idle", []), entities: [],
+        dynamicObjects: [{ id: "transform.scenery.start_door", objectId: "asset.source.osrs.cache2695.object.9398", tile: tile(3098, 3107), instance: null, state: "object_state.open", doorOpen: true, quarterTurns: 1 }],
+      };
+    case "roof-player":
+      return { ...base, player: player(3094, 3106, "idle", []), entities: [] };
+    case "preview":
+      return { ...base, player: player(3098, 3098, "idle", [["weapon", 1277, "item.bronze_sword"], ["shield", 1171, "item.wooden_shield"]]), entities: [] };
+    default:
+      throw new Error(`unknown scenario ${name}`);
+  }
+}
+
+/**
+ * Representative live workload for frozen performance measurement (region mode): the geared
+ * player, animated NPCs from the source definitions, a fire and ground items around the tile.
+ */
+function workloadWorld(x: number, y: number, region: string): WorldView {
+  const base = devWorld(x, y, region);
+  const tile = (tx: number, ty: number) => ({ x: tx, y: ty, plane: 0 });
+  const item = (id: string, sourceId: number, quantity = 1) => ({ id, name: id, quantity, sourceId, iconAsset: null, instanceId: null, charges: null, actions: [] });
+  const npc = (id: string, sourceId: number, tx: number, ty: number) => ({
+    id, definitionId: `asset.source.osrs.cache2695.npc.${sourceId}`, sourceId, name: id, kind: "npc" as const, tile: tile(tx, ty), instance: null,
+    hitpoints: 5, maxHitpoints: 5, available: true, animation: "", actions: [], appearance: {}, equipment: [],
+  });
+  const fire = {
+    id: "fire", definitionId: "asset.source.osrs.cache2695.object.26185", sourceId: 26185, name: "Fire", kind: "temporary_object" as const, tile: tile(x - 2, y + 1), instance: null,
+    hitpoints: 0, maxHitpoints: 0, available: true, animation: "", actions: [], appearance: {}, equipment: [],
+  };
+  return {
+    ...base,
+    player: { ...base.player, activity: "walking", equipment: [{ slot: "weapon", item: item("item.bronze_sword", 1277) }, { slot: "shield", item: item("item.wooden_shield", 1171) }] },
+    entities: [
+      npc("goblin-a", 3028, x + 3, y + 2), npc("goblin-b", 3028, x - 4, y + 3), npc("goblin-c", 3028, x + 5, y - 3),
+      npc("rat-a", 2813, x - 3, y - 2), npc("rat-b", 2814, x + 2, y - 4), npc("guide", 306, x + 1, y + 5), npc("survival-expert", 8503, x - 6, y),
+      fire,
+    ],
+    groundItems: [
+      { id: "g1", tile: tile(x + 1, y + 1), item: item("item.logs", 1511), canTake: true },
+      { id: "g2", tile: tile(x + 1, y + 1), item: item("item.coins", 995, 250), canTake: true },
+      { id: "g3", tile: tile(x - 1, y - 1), item: item("item.bronze_axe", 1351), canTake: true },
+    ],
   };
 }
 
@@ -115,7 +218,7 @@ async function main(): Promise<void> {
     read(afterFrame) {
       const diagnostics = state.handle?.diagnostics();
       const frames = afterFrame === null ? [] : pending.filter((f) => f.sequence > afterFrame);
-      pending = pending.slice(-256);
+      pending = pending.slice(-16384); // 180 s at 60 Hz fits; the harness reads exact counts from renderedFrames
       const last = diagnostics?.lastFrame ?? null;
       return {
         version: 1, clock: "performance.now", application: "clubscape",
@@ -137,7 +240,7 @@ async function main(): Promise<void> {
       sourcePackSha256: APPROVED_SOURCE_PACK, width, height,
     }, {
       wasmUrl: "/web/renderer/dist/renderer/pkg/clubscape_renderer_bg.wasm",
-      onFrame(frame) { pending.push(frame); state.frames.push(frame); if (state.frames.length > 4096) state.frames.shift(); },
+      onFrame(frame) { pending.push(frame); state.frames.push(frame); if (state.frames.length > 16384) state.frames.shift(); },
       onDiagnostic(message) { console.warn(`[renderer] ${message}`); },
     });
     state.handle = handle;
@@ -162,27 +265,30 @@ async function main(): Promise<void> {
       };
       follow(px, py);
       window.__clubscapeDev.walkTo = (x: number, y: number) => { follow(x, y); };
+      window.__clubscapeDev.applyScenario = async (name: string) => {
+        if (name !== "workload") throw new Error(`region mode only knows the workload scenario, not ${name}`);
+        handle.update(workloadWorld(px, py, sceneId));
+        return { fit: handle.playerFitReport(), placement: handle.scenePlacement() };
+      };
       state.ready = true;
       publish();
       if (param("status", "0") === "1") status.hidden = false;
-      const loop = async () => {
+      const loop = () => {
         if (!state.paused) {
-          try {
-            const frame = await handle.frame(performance.now());
+          handle.frame(performance.now()).then((frame) => {
             if (frame && !status.hidden) {
               const d = handle.diagnostics();
               status.textContent = `${d.sceneId} base=${d.sceneBase?.x},${d.sceneBase?.y} squares=${d.loadedSquares.length} #${frame.sequence} prims=${frame.primitives} gpu=${frame.gpuDurationMs?.toFixed(2) ?? "n/a"}ms`;
             }
-          } catch (error) {
+          }, (error) => {
             state.error = String(error);
             publish();
             console.error(error);
-            return;
-          }
+          });
         }
-        requestAnimationFrame(() => { void loop(); });
+        if (!state.error) requestAnimationFrame(loop);
       };
-      void loop();
+      loop();
       return;
     }
     if (!fixture) throw new Error(`unknown fixture scene ${sceneId}`);
@@ -192,26 +298,47 @@ async function main(): Promise<void> {
       pitch: fixture.pitch, yaw: fixture.yaw, unitsPerTurn: 16384, zoom: sourceZoomForViewportHeight(height), near: 50, far: 32768,
     });
     if (param("actors", "0") === "1") handle.update(actorsWorld(fixture));
+    const previewCanvas = document.getElementById("preview") as HTMLCanvasElement;
+    window.__clubscapeDev.applyScenario = async (name: string) => {
+      handle.setRoofMode(name === "roof-player" ? 1 : 0);
+      // Scenarios show live rendering: the stock top-plane rule instead of the pinned plane 0.
+      handle.setTopPlane(name.startsWith("pinned-") ? 0 : null);
+      handle.update(scenarioWorld(name.replace(/^pinned-/, "")));
+      if (name === "preview") {
+        // The UI's preview bounds are the 480x315 parent layer; the renderer returns exactly that.
+        const image = await handle.framePlayerPreview({ width: 480, height: 315 });
+        if (!image) throw new Error("no player body loaded for the preview");
+        previewCanvas.width = image.width;
+        previewCanvas.height = image.height;
+        previewCanvas.getContext("2d")!.putImageData(image, 0, 0);
+        let covered = 0;
+        for (let i = 3; i < image.data.length; i += 4) if (image.data[i] === 255) covered += 1;
+        return { width: image.width, height: image.height, covered, fit: handle.playerFitReport() };
+      }
+      previewCanvas.width = 0;
+      previewCanvas.height = 0;
+      return { fit: handle.playerFitReport(), placement: handle.scenePlacement() };
+    };
     state.ready = true;
     publish();
     if (param("status", "0") === "1") status.hidden = false;
-    const loop = async () => {
+    // One frame is issued per animation frame; the adapter lets the next build overlap the
+    // previous frame's GPU completion and returns null while its in-flight limit is reached.
+    const loop = () => {
       if (!state.paused) {
-        try {
-          const frame = await handle.frame(performance.now());
+        handle.frame(performance.now()).then((frame) => {
           if (frame && !status.hidden) {
             status.textContent = `${sceneId} #${frame.sequence} prims=${frame.primitives} cpu=${frame.cpuEncodeMs?.toFixed(1)}ms gpu=${frame.gpuDurationMs?.toFixed(2) ?? "n/a"}ms total=${(frame.completedAtMs - frame.submittedAtMs).toFixed(1)}ms`;
           }
-        } catch (error) {
+        }, (error) => {
           state.error = String(error);
           publish();
           console.error(error);
-          return;
-        }
+        });
       }
-      requestAnimationFrame(() => { void loop(); });
+      if (!state.error) requestAnimationFrame(loop);
     };
-    void loop();
+    loop();
   } catch (error) {
     state.error = error instanceof Error ? `${error.message}\n${error.stack ?? ""}` : String(error);
     publish();

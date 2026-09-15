@@ -15,7 +15,7 @@ use std::collections::{HashMap, VecDeque};
 use super::flag;
 use super::tile::{TileCamera, TileScratch, draw_tile_model, draw_tile_paint};
 use super::visibility::Visibility;
-use super::{GameObject, SceneData};
+use super::{GameObject, SceneData, Wall};
 use crate::model::Model;
 use crate::model_draw::{ModelDrawer, ModelScratch, SceneCamera};
 use crate::raster::{RasterState, Tri};
@@ -40,8 +40,13 @@ pub struct SceneView {
     /// 16384 units per turn.
     pub pitch: i32,
     pub yaw: i32,
-    /// Draw plane (`br`).
+    /// World plane (`jd.ag`): the player's plane, used by roof lookups.
     pub plane: i32,
+    /// Top drawn plane (`br`, the `dh` plane argument): tiles whose logical plane exceeds it are
+    /// skipped unless roof removal is active. The live client passes `cz.ch()` (3, or the world
+    /// plane when a roof-flagged tile lies on the camera→focal line at pitch < 2480); the
+    /// approved fixture captures passed 0.
+    pub top_plane: i32,
     /// Focal point in local units (used for the tile range when `center_on_camera` is false).
     pub focal_x: i32,
     pub focal_z: i32,
@@ -51,6 +56,21 @@ pub struct SceneView {
     pub far_clip: i32,
     /// Client cycles (20 ms) elapsed on the scene's animation clock; selects baked scenery frames.
     pub animation_cycles: i64,
+    /// Original roof removal (`ez.ny` bits + the tiles `ez.or` reads): 1 = player's tile,
+    /// 2 = hovered tile, 4 = walk destination, 8 = tiles on the camera→player line (pitch < 2480).
+    /// Mode 0 (stock client) draws every roof.
+    pub roof: RoofRemoval,
+}
+
+/// Inputs of the original roof-removal pass. Tiles are main-area local (0..104).
+#[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
+pub struct RoofRemoval {
+    pub mode: i32,
+    pub player_tile: Option<(i32, i32)>,
+    pub hovered_tile: Option<(i32, i32)>,
+    pub destination_tile: Option<(i32, i32)>,
+    /// Camera tile for the line check (mode bit 8).
+    pub camera_tile: Option<(i32, i32)>,
 }
 
 /// What a triangle belongs to, for picking.
@@ -95,6 +115,19 @@ struct ObjectState {
     distance: i32,
 }
 
+/// One tile's ground items for this frame (original `eq`: top three item models, height,
+/// deferred offset and hash).
+#[derive(Clone, Debug)]
+pub struct ItemLayer {
+    pub models: Vec<usize>,
+    pub x: i32,
+    pub height: i32,
+    pub z: i32,
+    pub offset: i32,
+    pub deferred: bool,
+    pub hash: i64,
+}
+
 /// A temporary actor placed into the scene for one frame (`ez.bo` with the temporary flag).
 #[derive(Clone, Debug)]
 pub struct TemporaryEntity {
@@ -121,6 +154,14 @@ pub struct SceneDrawer {
     pub state: RasterState,
     palette: Vec<i32>,
     animation_cycles: i64,
+    /// `ez.jz`: roof ids hidden this frame.
+    hidden_roofs: Vec<i32>,
+    /// Live wall replacements this frame (door states): tile index → wall record.
+    wall_overrides: HashMap<usize, Wall>,
+    /// Live item layers (`ez.fk`): tile index → up to three models drawn at the tile centre,
+    /// with the original deferred flag (`8192`, drawn after the tile's walls/objects) and the
+    /// item hash for picking.
+    item_layers: HashMap<usize, ItemLayer>,
     flags: Vec<i32>,
     object_count: Vec<i8>,
     link: Vec<i8>,
@@ -169,6 +210,9 @@ impl SceneDrawer {
             state,
             palette: palette.to_vec(),
             animation_cycles: 0,
+            hidden_roofs: Vec::new(),
+            wall_overrides: HashMap::new(),
+            item_layers: HashMap::new(),
             flags: scene.flags.clone(),
             object_count: scene.object_count.clone(),
             link: scene.link.clone(),
@@ -266,9 +310,116 @@ impl SceneDrawer {
         self.object_flags.copy_from_slice(&scene.object_flags);
         self.slots.clone_from(&scene.slots);
         self.temp_objects.clear();
+        self.wall_overrides.clear();
+        for (index, layer) in self.item_layers.drain() {
+            let _ = layer;
+            // Restore the flags the previous frame's item layers set.
+            if index < self.flags.len() {
+                self.flags[index] &= !(flag::ITEM_LAYER | flag::ITEM_LAYER_DEFERRED);
+            }
+        }
         self.objects.truncate(scene.game_objects.len());
         self.objects
             .resize(scene.game_objects.len(), ObjectState::default());
+    }
+
+    /// Replaces a wall's models/orientations for this frame (original door-state wall update:
+    /// same tile and hash, new model and orientation). `tile_x/tile_y` are main-area local.
+    pub fn override_wall(
+        &mut self,
+        scene: &SceneData,
+        plane: i32,
+        tile_x: i32,
+        tile_y: i32,
+        wall: Wall,
+    ) -> bool {
+        let oy = scene.offset;
+        let ex = tile_x + oy;
+        let ey = tile_y + oy;
+        if ex < 0 || ey < 0 || ex >= scene.width || ey >= scene.height {
+            return false;
+        }
+        let index = scene.tile_index(plane, ex, ey);
+        if !scene.walls.contains_key(&index) {
+            return false;
+        }
+        self.wall_overrides.insert(index, wall);
+        true
+    }
+
+    #[inline]
+    fn wall_at(&self, scene: &SceneData, index: usize) -> Option<Wall> {
+        match self.wall_overrides.get(&index) {
+            Some(w) => Some(w.clone()),
+            None => scene.walls.get(&index).cloned(),
+        }
+    }
+
+    /// `ez.ck` (item layer add): registers a tile's ground items for this frame.
+    pub fn add_item_layer(
+        &mut self,
+        scene: &SceneData,
+        plane: i32,
+        tile_x: i32,
+        tile_y: i32,
+        layer: ItemLayer,
+    ) -> bool {
+        let oy = scene.offset;
+        let ex = tile_x + oy;
+        let ey = tile_y + oy;
+        if ex < 0 || ey < 0 || ex >= scene.width || ey >= scene.height || layer.models.is_empty() {
+            return false;
+        }
+        let index = scene.tile_index(plane, ex, ey);
+        for p in (0..=plane).rev() {
+            let i = scene.tile_index(p, ex, ey);
+            self.flags[i] |= flag::EXISTS;
+        }
+        self.flags[index] &= !(flag::ITEM_LAYER | flag::ITEM_LAYER_DEFERRED);
+        self.flags[index] |= if layer.deferred {
+            flag::ITEM_LAYER_DEFERRED
+        } else {
+            flag::ITEM_LAYER
+        };
+        self.item_layers.insert(index, layer);
+        true
+    }
+
+    fn draw_item_layer<M: ModelSource>(
+        &mut self,
+        scene: &SceneData,
+        models: &M,
+        temp_models: &[Model],
+        index: usize,
+        deferred_offset: bool,
+        plane: i32,
+        x: i32,
+        y: i32,
+        out: &mut Vec<Tri>,
+    ) {
+        let Some(layer) = self.item_layers.get(&index).cloned() else {
+            return;
+        };
+        let height = if deferred_offset {
+            layer.height - layer.offset
+        } else {
+            layer.height
+        };
+        for model in layer.models {
+            let pick = self.pick_object(layer.hash, plane, x, y);
+            self.draw_model(
+                scene,
+                models,
+                temp_models,
+                TEMP_MODEL_BASE + model as i32,
+                0,
+                layer.x,
+                height,
+                layer.z,
+                pick,
+                out,
+            );
+        }
     }
 
     /// `ez.bo(..., temporary = true)`: registers an actor in every tile it spans for this frame.
@@ -406,7 +557,7 @@ impl SceneDrawer {
         self.cv = (self.cl >> 7) + scene.offset;
         self.cs = (view.focal_x >> 7) + scene.offset;
         self.cy = (view.focal_z >> 7) + scene.offset;
-        self.br = view.plane;
+        self.br = view.top_plane;
         let pitch = view.pitch.clamp(1, 4160);
         self.pitch_bucket = (pitch - 1) / 256;
         self.yaw_bucket = view.yaw / 1024;
@@ -449,9 +600,71 @@ impl SceneDrawer {
         self.dz = self.cd - n3;
         self.dn = self.cv - n;
         self.remaining = 0;
+        // or: collect the roof ids to hide (original mode bits), then ei marks visible tiles.
+        let roof_mode = view.roof.mode;
+        let roof_hiding = roof_mode != 0 && scene.main_scene;
+        self.hidden_roofs.clear();
+        if roof_hiding {
+            let world_plane = view.plane;
+            let oy = scene.offset;
+            let in_main = |t: (i32, i32)| {
+                t.0 >= scene.min_x && t.0 < scene.max_x && t.1 >= scene.min_y && t.1 < scene.max_y
+            };
+            let add = |drawer: &mut SceneDrawer, id: i32| {
+                // ez.aq: ids with the top nibble set are never removed.
+                if id != 0 && id >> 28 == 0 && !drawer.hidden_roofs.contains(&id) {
+                    drawer.hidden_roofs.push(id);
+                }
+            };
+            if roof_mode & 1 != 0
+                && let Some(t) = view.roof.player_tile
+                && in_main(t)
+            {
+                add(self, scene.roof(world_plane, t.0 + oy, t.1 + oy));
+            }
+            if roof_mode & 2 != 0
+                && let Some(t) = view.roof.hovered_tile
+                && in_main(t)
+            {
+                add(self, scene.roof(world_plane, t.0 + oy, t.1 + oy));
+            }
+            if roof_mode & 4 != 0
+                && let Some(t) = view.roof.destination_tile
+                && in_main(t)
+            {
+                add(self, scene.roof(world_plane, t.0 + oy, t.1 + oy));
+            }
+            if roof_mode & 8 != 0
+                && view.pitch < 2480
+                && let (Some(player), Some(camera)) = (view.roof.player_tile, view.roof.camera_tile)
+                && in_main(player)
+                && in_main(camera)
+            {
+                // Bresenham walk from the camera tile to the player tile (original or()).
+                let (px, py) = player;
+                let (mut cx, mut cy) = camera;
+                let dx = (px - cx).abs();
+                let sx = (px - cx).signum();
+                let dy = -(py - cy).abs();
+                let sy = (py - cy).signum();
+                let mut err = dx + dy;
+                while cx != px || cy != py {
+                    if scene.is_roof_tile(world_plane, cx + oy, cy + oy) {
+                        add(self, scene.roof(world_plane, cx + oy, cy + oy));
+                    }
+                    let e2 = 2 * err;
+                    if e2 >= dy {
+                        err += dy;
+                        cx += sx;
+                    } else {
+                        err += dx;
+                        cy += sy;
+                    }
+                }
+            }
+        }
         // ei: mark visible tiles
-        let roof_hiding = scene.roof_mode != 0 && scene.main_scene;
-        let world_plane = 0;
+        let world_plane = view.plane;
         for plane in (scene.min_level..scene.planes).rev() {
             for x in self.cr..self.cu {
                 for yy in self.cb..self.ct {
@@ -473,7 +686,10 @@ impl SceneDrawer {
                         || scene.height(plane, x, yy) - self.cq >= 2000;
                     let drawn = (logical <= self.br || roof_hiding)
                         && vis_ok
-                        && (!roof_hiding || world_plane >= logical || roof == 0);
+                        && (!roof_hiding
+                            || world_plane >= logical
+                            || roof == 0
+                            || !self.hidden_roofs.contains(&roof));
                     if drawn {
                         let mut f = self.flags[i];
                         f |= 6;
@@ -742,7 +958,7 @@ impl SceneDrawer {
                         self.draw_shaped(scene, n20, 0, n26, n27, out);
                     }
                     if n19 & flag::WALL != 0 {
-                        if let Some(w) = scene.walls.get(&n20).cloned() {
+                        if let Some(w) = self.wall_at(scene, n20) {
                             let pick = self.pick_object(w.hash, 0, n26, n27);
                             self.draw_model(
                                 scene,
@@ -777,6 +993,36 @@ impl SceneDrawer {
                             );
                         }
                     }
+                    if n19 & flag::FLOOR_DECOR != 0
+                        && let Some(f) = scene.floor_decorations.get(&n20).cloned()
+                    {
+                        let pick = self.pick_object(f.hash, 0, n26, n27);
+                        self.draw_model(
+                            scene,
+                            models,
+                            temp_models,
+                            f.model,
+                            0,
+                            f.x,
+                            f.height,
+                            f.z,
+                            pick,
+                            out,
+                        );
+                    }
+                    if self.flags[n20] & (flag::ITEM_LAYER | flag::ITEM_LAYER_DEFERRED) != 0 {
+                        self.draw_item_layer(
+                            scene,
+                            models,
+                            temp_models,
+                            n20,
+                            true,
+                            0,
+                            n26,
+                            n27,
+                            out,
+                        );
+                    }
                 }
                 let mut drew_ground = false;
                 if n28 & flag::PAINT != 0 {
@@ -808,7 +1054,7 @@ impl SceneDrawer {
                     n18 = WALL_HIDE_MASK[n19];
                 }
                 if n28 & flag::WALL != 0 {
-                    if let Some(w) = scene.walls.get(&n2).cloned() {
+                    if let Some(w) = self.wall_at(scene, n2) {
                         if w.orientation_a & n18 != 0 {
                             let (n16, n15) = match w.orientation_a {
                                 16 => (3, DIAG_16[n19]),
@@ -928,7 +1174,19 @@ impl SceneDrawer {
                             );
                         }
                     }
-                    // Item layers (ground items) are not part of static scene exports.
+                    if self.flags[n2] & flag::ITEM_LAYER != 0 {
+                        self.draw_item_layer(
+                            scene,
+                            models,
+                            temp_models,
+                            n2,
+                            false,
+                            n23,
+                            n26,
+                            n27,
+                            out,
+                        );
+                    }
                 }
                 let n17 = self.link[n2] as i32;
                 if n21 < self.cd && n21 >= self.cr && n21 < self.cu - 1 && (n17 & 4) != 0 {
@@ -972,7 +1230,7 @@ impl SceneDrawer {
                     }
                 }
                 if ready {
-                    if let Some(w) = scene.walls.get(&n2).cloned() {
+                    if let Some(w) = self.wall_at(scene, n2) {
                         let pick = self.pick_object(w.hash, n23, n26, n27);
                         self.draw_model(
                             scene,
@@ -1160,7 +1418,9 @@ impl SceneDrawer {
             self.flags[n2] &= !flag::VISIBLE;
             n28 = self.flags[n2];
             self.remaining -= 1;
-            // Deferred item layers are not part of static scene exports.
+            if n28 & flag::ITEM_LAYER_DEFERRED != 0 {
+                self.draw_item_layer(scene, models, temp_models, n2, true, n23, n26, n27, out);
+            }
             if n28 & 0xC000 != 0 && self.wall_direction(n2) != 0 {
                 if n28 & flag::WALL_DECOR != 0 {
                     if let Some(d) = scene.wall_decorations.get(&n2).cloned() {
@@ -1217,7 +1477,7 @@ impl SceneDrawer {
                     }
                 }
                 if n28 & flag::WALL != 0 {
-                    if let Some(w) = scene.walls.get(&n2).cloned() {
+                    if let Some(w) = self.wall_at(scene, n2) {
                         let n50 = self.wall_direction(n2);
                         if w.orientation_b & n50 != 0 {
                             let pick = self.pick_object(w.hash, n23, n26, n27);

@@ -20,7 +20,7 @@ use crate::raster::software::{Software, TextureSource};
 use crate::raster::{DrawStats, Fill, RasterState, Tri};
 use crate::scene::SceneData;
 use crate::scene::block::{self, BLOCK_SIZE, Block};
-use crate::scene::draw::{PickTarget, SceneDrawer, SceneView, TemporaryEntity};
+use crate::scene::draw::{PickTarget, RoofRemoval, SceneDrawer, SceneView, TemporaryEntity};
 use crate::texture::{Texture, TextureSet};
 
 /// One original client cycle in milliseconds (animation frame lengths are in cycles).
@@ -170,6 +170,9 @@ pub struct WorldEntity {
     pub activity: Option<String>,
     pub hitpoints: Option<i32>,
     pub max_hitpoints: Option<i32>,
+    /// Shell extension (`PublicWorld`): `asset.source.osrs.cache2695.object.<id>` for scenery.
+    pub asset_id: Option<String>,
+    pub definition_id: Option<String>,
 }
 
 #[derive(Deserialize, Debug, Clone, Default)]
@@ -199,12 +202,77 @@ pub struct WorldPlayer {
 }
 
 #[derive(Deserialize, Debug, Clone, Default)]
-#[serde(default)]
+#[serde(default, rename_all = "camelCase")]
+pub struct WorldGroundItem {
+    pub id: String,
+    pub tile: WorldTile,
+    pub item: WorldGroundStack,
+}
+
+#[derive(Deserialize, Debug, Clone, Default)]
+#[serde(default, rename_all = "camelCase")]
+pub struct WorldGroundStack {
+    pub id: String,
+    pub quantity: i64,
+    pub source_id: Option<i32>,
+}
+
+/// Optional shell extension mirroring the protocol `DynamicObject` (door states, temporary
+/// objects). Not part of the frozen shared contract; ignored when absent.
+#[derive(Deserialize, Debug, Clone, Default)]
+#[serde(default, rename_all = "camelCase")]
+pub struct WorldDynamicObject {
+    pub id: String,
+    pub object_id: Option<String>,
+    pub source_id: Option<i32>,
+    pub tile: WorldTile,
+    pub instance: Option<String>,
+    pub state: Option<String>,
+    pub door_open: Option<bool>,
+    pub quarter_turns: Option<i32>,
+}
+
+#[derive(Deserialize, Debug, Clone, Default)]
+#[serde(default, rename_all = "camelCase")]
 pub struct WorldViewInput {
     pub revision: String,
     pub tick: String,
     pub player: WorldPlayer,
     pub entities: Vec<WorldEntity>,
+    pub ground_items: Vec<WorldGroundItem>,
+    pub dynamic_objects: Vec<WorldDynamicObject>,
+}
+
+/// A lit dynamic object variant (`models/dynamic/object-<id>-t<type>-r<rot>[-f<frame>].bin`).
+#[derive(Clone, Debug)]
+pub struct DynamicObjectModel {
+    pub plain: Model,
+    pub frames: Vec<Model>,
+    pub frame_lengths: Vec<i32>,
+}
+
+#[derive(Clone, Debug)]
+struct GroundItemState {
+    id: String,
+    tile: WorldTile,
+    item: i32,
+    quantity: i64,
+}
+
+#[derive(Clone, Debug)]
+struct TemporaryObjectState {
+    id: String,
+    object: i32,
+    tile: WorldTile,
+    started_ms: f64,
+}
+
+#[derive(Clone, Debug)]
+struct DoorState {
+    object: i32,
+    tile: WorldTile,
+    open: bool,
+    quarter_turns: i32,
 }
 
 #[derive(Clone, Debug)]
@@ -275,6 +343,82 @@ pub enum WorldPick {
     },
 }
 
+/// An original interface model draw (`gp` type-6 branch): the component's centre becomes the
+/// projection centre inside the parent layer's clip rectangle and the model is drawn with the
+/// legacy `fx.be(0, rotation_z, rotation_y, rotation_x, offset_x, sin[rotation_x] * model_zoom >> 16
+/// + offset_y, cos[rotation_x] * model_zoom >> 16 + offset_y)` at the interface rasterizer zoom
+/// (512). Defaults are the exported interface 679 component 73 fields (`manifest.model_widgets`).
+///
+/// Content type 328 (the character-design preview) is special-cased by the original right
+/// before the draw (`gp.ab`): `rotation_x = 150`, `rotation_z = (int)(sin(cycle / 40.0) * 256)
+/// & 2047` with the 20 ms client cycle, model type 5 = the local player's own animated model.
+#[derive(Clone, Debug)]
+pub struct PlayerPreview {
+    /// Surface size: the parent layer (clip rectangle) the UI hands out as the preview bounds.
+    pub width: i32,
+    pub height: i32,
+    /// Model component centre inside that surface.
+    pub center_x: i32,
+    pub center_y: i32,
+    /// Original component content type; 328 applies the character-design overrides.
+    pub content_type: i32,
+    pub rasterizer_zoom: i32,
+    pub model_zoom: i32,
+    pub rotation_x: i32,
+    pub rotation_y: i32,
+    pub rotation_z: i32,
+    pub offset_x: i32,
+    pub offset_y: i32,
+    /// Sequence to play; `None` selects the player's idle motion. `frame` overrides the clock.
+    pub sequence: Option<i32>,
+    pub frame: Option<usize>,
+}
+
+impl Default for PlayerPreview {
+    fn default() -> Self {
+        Self {
+            width: 480,
+            height: 315,
+            center_x: 172 + 136 / 2,
+            center_y: 91 + 192 / 2,
+            content_type: 328,
+            rasterizer_zoom: 512,
+            model_zoom: 450,
+            rotation_x: 0,
+            rotation_y: 0,
+            rotation_z: 0,
+            offset_x: 0,
+            offset_y: 175,
+            sequence: None,
+            frame: None,
+        }
+    }
+}
+
+impl PlayerPreview {
+    /// Rotation X/Z actually used for the draw at `elapsed_ms` since the preview started
+    /// (content type 328 sways the model with the 20 ms client cycle).
+    pub fn draw_rotation(&self, elapsed_ms: f64) -> (i32, i32) {
+        if self.content_type == 328 {
+            let cycle = (elapsed_ms / CLIENT_CYCLE_MS).floor().max(0.0) as i32;
+            let sway = ((f64::from(cycle) / 40.0).sin() * 256.0) as i32 & 2047;
+            (150, sway)
+        } else {
+            (self.rotation_x, self.rotation_z)
+        }
+    }
+}
+
+/// A built interface preview: its own raster state (surface size, component centre, zoom 512);
+/// the painter-ordered triangles are read through [`RendererCore::preview_triangles`].
+#[derive(Clone, Debug)]
+pub struct PreviewFrame {
+    pub state: RasterState,
+    pub sequence: i32,
+    pub frame: usize,
+    pub summary: FrameSummary,
+}
+
 /// Parameters of an approved model capture (`drawFrustum(0, yaw, 0, 128, 0, camera_y, camera_z)`).
 #[derive(Clone, Debug, Default)]
 pub struct ModelFixture {
@@ -330,12 +474,31 @@ pub struct RendererCore {
     frame_cache: HashMap<(i32, i32, usize), Model>,
     /// The penguin player body and retargeting table (needs the human reference model).
     player_body: Option<PlayerBody>,
+    /// Lit dynamic object models by (object id, type, orientation) with optional frames.
+    dynamic_objects: HashMap<(i32, i32, i32), DynamicObjectModel>,
+    /// Ground item models by item id: (min quantity, model) ascending.
+    ground_item_models: HashMap<i32, Vec<(i64, Model)>>,
+    /// Live layers from the last WorldView.
+    ground_items: Vec<GroundItemState>,
+    temporary_objects: Vec<TemporaryObjectState>,
+    door_states: Vec<DoorState>,
+    /// Roof removal mode bits (`ez.ny`; 0 = stock client, every roof drawn).
+    roof_mode: i32,
+    hovered_tile: Option<(i32, i32)>,
+    destination_tile: Option<(i32, i32)>,
     /// Equipped-item models by item id.
     equip_models: HashMap<i32, EquipModel>,
     /// Assembled player model (body + gear) and the gear ids it was built for.
     player_assembled: Option<(Vec<i32>, Model, Vec<FitReport>)>,
     player_frame_cache: HashMap<(i32, usize), Model>,
     player_gear: Vec<(String, i32)>,
+    /// Explicit `br` (the approved fixture captures used 0); `None` applies the stock rule.
+    top_plane_override: Option<i32>,
+    /// Instanced map flag (`cy.as`): the stock rule then always draws up to the player's plane.
+    instanced_map: bool,
+    /// Clock origin of the interface preview animation (first preview frame).
+    preview_started_ms: Option<f64>,
+    preview_tris: Vec<Tri>,
     player_activity: String,
     player_animation: String,
     player_dead: bool,
@@ -373,10 +536,22 @@ impl RendererCore {
             npc_defs: HashMap::new(),
             frame_cache: HashMap::new(),
             player_body: None,
+            dynamic_objects: HashMap::new(),
+            ground_item_models: HashMap::new(),
+            ground_items: Vec::new(),
+            temporary_objects: Vec::new(),
+            door_states: Vec::new(),
+            roof_mode: 0,
+            hovered_tile: None,
+            destination_tile: None,
             equip_models: HashMap::new(),
             player_assembled: None,
             player_frame_cache: HashMap::new(),
             player_gear: Vec::new(),
+            top_plane_override: None,
+            instanced_map: false,
+            preview_started_ms: None,
+            preview_tris: Vec::new(),
             player_activity: String::new(),
             player_animation: String::new(),
             player_dead: false,
@@ -478,6 +653,69 @@ impl RendererCore {
         self.player_assembled = None;
         self.player_frame_cache.clear();
         Ok(())
+    }
+
+    /// Loads a lit dynamic object variant (door state, fire, morph variant) with its frames.
+    pub fn load_dynamic_object(
+        &mut self,
+        object_id: i32,
+        kind: i32,
+        orientation: i32,
+        plain: &[u8],
+        frames: &[Vec<u8>],
+        frame_lengths: Vec<i32>,
+    ) -> Result<(), RenderError> {
+        let plain = Model::from_chunks(plain)?;
+        let mut frame_models = Vec::with_capacity(frames.len());
+        for bytes in frames {
+            frame_models.push(Model::from_chunks(bytes)?);
+        }
+        if frame_models.len() != frame_lengths.len() {
+            return Err(RenderError::InvalidAsset(format!(
+                "object {object_id} has {} frames but {} lengths",
+                frame_models.len(),
+                frame_lengths.len()
+            )));
+        }
+        self.dynamic_objects.insert(
+            (object_id, kind, orientation),
+            DynamicObjectModel {
+                plain,
+                frames: frame_models,
+                frame_lengths,
+            },
+        );
+        Ok(())
+    }
+
+    pub fn has_dynamic_object(&self, object_id: i32, kind: i32, orientation: i32) -> bool {
+        self.dynamic_objects
+            .contains_key(&(object_id, kind, orientation))
+    }
+
+    /// Loads a ground item model for quantities `>= min_quantity`.
+    pub fn load_ground_item(
+        &mut self,
+        item_id: i32,
+        min_quantity: i64,
+        bytes: &[u8],
+    ) -> Result<(), RenderError> {
+        let model = Model::from_chunks(bytes)?;
+        let entry = self.ground_item_models.entry(item_id).or_default();
+        entry.retain(|(q, _)| *q != min_quantity);
+        entry.push((min_quantity, model));
+        entry.sort_by_key(|(q, _)| *q);
+        Ok(())
+    }
+
+    fn ground_item_model(&self, item_id: i32, quantity: i64) -> Option<&Model> {
+        let variants = self.ground_item_models.get(&item_id)?;
+        variants
+            .iter()
+            .rev()
+            .find(|(q, _)| quantity >= *q)
+            .map(|(_, m)| m)
+            .or_else(|| variants.first().map(|(_, m)| m))
     }
 
     /// Retargeting table and last equipment fit report (proposal data for owner review).
@@ -806,11 +1044,68 @@ impl RendererCore {
                 size,
             }
         };
+        let object_source = |e: &WorldEntity| -> Option<i32> {
+            e.source_id.or_else(|| {
+                let asset = e.asset_id.as_deref().or(e.definition_id.as_deref())?;
+                asset.rsplit('.').next()?.parse().ok()
+            })
+        };
         self.scenery_entities = view
             .entities
             .iter()
             .filter(|e| e.kind == "object" || e.kind == "temporary_object")
-            .filter_map(|e| e.source_id.map(|id| (e.id.clone(), id, e.tile.clone())))
+            .filter_map(|e| object_source(e).map(|id| (e.id.clone(), id, e.tile.clone())))
+            .collect();
+        // Temporary objects (fires): animated from the moment they first appear.
+        let previous_temporary = std::mem::take(&mut self.temporary_objects);
+        self.temporary_objects = view
+            .entities
+            .iter()
+            .filter(|e| e.kind == "temporary_object" && e.instance == view.player.instance)
+            .filter_map(|e| {
+                let object = object_source(e)?;
+                let started_ms = previous_temporary
+                    .iter()
+                    .find(|p| p.id == e.id)
+                    .map(|p| p.started_ms)
+                    .unwrap_or(now_ms);
+                Some(TemporaryObjectState {
+                    id: e.id.clone(),
+                    object,
+                    tile: e.tile.clone(),
+                    started_ms,
+                })
+            })
+            .collect();
+        // Ground items: the original item layer shows the tile's top three stacks.
+        self.ground_items = view
+            .ground_items
+            .iter()
+            .filter_map(|g| {
+                g.item.source_id.map(|item| GroundItemState {
+                    id: g.id.clone(),
+                    tile: g.tile.clone(),
+                    item,
+                    quantity: g.item.quantity.max(1),
+                })
+            })
+            .collect();
+        // Door states (shell extension mirroring the protocol DynamicObject).
+        self.door_states = view
+            .dynamic_objects
+            .iter()
+            .filter(|d| d.instance == view.player.instance && d.door_open.is_some())
+            .filter_map(|d| {
+                let object = d
+                    .source_id
+                    .or_else(|| d.object_id.as_deref()?.rsplit('.').next()?.parse().ok())?;
+                Some(DoorState {
+                    object,
+                    tile: d.tile.clone(),
+                    open: d.door_open.unwrap_or(false),
+                    quarter_turns: d.quarter_turns.unwrap_or(0),
+                })
+            })
             .collect();
         next.push(apply(
             &view.player.id,
@@ -990,6 +1285,154 @@ impl RendererCore {
         Ok(Some(model))
     }
 
+    /// Overrides the top drawn plane (`br`). The approved fixture captures were taken with the
+    /// original `dh` plane argument 0 (ground plane only); live rendering uses the stock rule.
+    pub fn set_top_plane_override(&mut self, limit: Option<i32>) {
+        self.top_plane_override = limit.map(|l| l.clamp(0, 3));
+    }
+
+    /// Marks the loaded map as instanced (`cy.as`): the stock top-plane rule then always draws up
+    /// to the player's plane.
+    pub fn set_instanced_map(&mut self, instanced: bool) {
+        self.instanced_map = instanced;
+    }
+
+    /// Port of `cz.ch`: the top plane the live client draws. 3 (everything) unless the camera
+    /// pitch is below 310 legacy units (2480) and the player's plane carries the roof setting
+    /// (bit 4) on the camera tile or any tile of the Bresenham line from the camera tile to the
+    /// focal (player) tile, in which case the player's plane. Outside the main area, or in an
+    /// instanced map, the player's plane.
+    fn stock_top_plane(&self, base_x: i32, base_y: i32) -> i32 {
+        let Some(scene) = self.scene.as_ref() else {
+            return self.plane;
+        };
+        let plane = self.plane;
+        if self.instanced_map {
+            return plane;
+        }
+        let mut top = 3;
+        let focal = self
+            .entities
+            .iter()
+            .find(|e| e.is_player)
+            .map(|e| (e.tile.x - base_x, e.tile.y - base_y))
+            .unwrap_or((
+                (self.camera.x - base_x * 128) >> 7,
+                (self.camera.y - base_y * 128) >> 7,
+            ));
+        if self.camera.pitch < 310 << 3 {
+            let (mut cx, mut cy) = (
+                (self.camera.x - base_x * 128) >> 7,
+                (self.camera.y - base_y * 128) >> 7,
+            );
+            let (fx, fy) = focal;
+            // `dz.as/ax` for the main worldview: the 104x104 main area (`ok..pe`, `ne..un`).
+            let inside = |x: i32, y: i32| {
+                x >= scene.min_x && y >= scene.min_y && x < scene.max_x && y < scene.max_y
+            };
+            if !inside(cx, cy) || !inside(fx, fy) {
+                return plane;
+            }
+            let oy = scene.offset;
+            let roof = |x: i32, y: i32| scene.setting(plane, x + oy, y + oy) & 4 != 0;
+            if roof(cx, cy) {
+                top = plane;
+            }
+            let dx = (fx - cx).abs();
+            let dy = (fy - cy).abs();
+            if dx > dy {
+                let step = dy * 65536 / dx;
+                let mut acc = 32768;
+                while cx != fx {
+                    if cx < fx {
+                        cx += 1;
+                    } else if cx > fx {
+                        cx -= 1;
+                    }
+                    if roof(cx, cy) {
+                        top = plane;
+                    }
+                    acc += step;
+                    if acc >= 65536 {
+                        acc -= 65536;
+                        if cy < fy {
+                            cy += 1;
+                        } else if cy > fy {
+                            cy -= 1;
+                        }
+                        if roof(cx, cy) {
+                            top = plane;
+                        }
+                    }
+                }
+            } else if dy > 0 {
+                let step = dx * 65536 / dy;
+                let mut acc = 32768;
+                while cy != fy {
+                    if cy < fy {
+                        cy += 1;
+                    } else if cy > fy {
+                        cy -= 1;
+                    }
+                    if roof(cx, cy) {
+                        top = plane;
+                    }
+                    acc += step;
+                    if acc >= 65536 {
+                        acc -= 65536;
+                        if cx < fx {
+                            cx += 1;
+                        } else if cx > fx {
+                            cx -= 1;
+                        }
+                        if roof(cx, cy) {
+                            top = plane;
+                        }
+                    }
+                }
+            }
+        }
+        top
+    }
+
+    /// Sets the original roof-removal mode bits (1 player tile, 2 hovered tile, 4 destination,
+    /// 8 camera line). 0 keeps every roof, as the stock client and the approved captures do.
+    pub fn set_roof_mode(&mut self, mode: i32) {
+        self.roof_mode = mode & 15;
+    }
+
+    /// Hovered world tile and walk destination for roof removal modes 2 and 4.
+    pub fn set_roof_context(
+        &mut self,
+        hovered: Option<(i32, i32)>,
+        destination: Option<(i32, i32)>,
+    ) {
+        self.hovered_tile = hovered;
+        self.destination_tile = destination;
+    }
+
+    fn roof_removal(&self) -> RoofRemoval {
+        let Some(scene) = &self.scene else {
+            return RoofRemoval::default();
+        };
+        let local = |t: (i32, i32)| (t.0 - scene.base_x, t.1 - scene.base_y);
+        let player = self
+            .entities
+            .iter()
+            .find(|e| e.is_player)
+            .map(|e| local((e.tile.x, e.tile.y)));
+        RoofRemoval {
+            mode: self.roof_mode,
+            player_tile: player,
+            hovered_tile: self.hovered_tile.map(local),
+            destination_tile: self.destination_tile.map(local),
+            camera_tile: Some((
+                (self.camera.x >> 7) - scene.base_x,
+                (self.camera.y >> 7) - scene.base_y,
+            )),
+        }
+    }
+
     /// Developer preview: the assembled player (body + the given gear) at a sequence frame,
     /// animated and scaled exactly like the in-scene actor.
     pub fn player_model_for_preview(
@@ -1137,8 +1580,216 @@ impl RendererCore {
             let Some(model) = model else { continue };
             resolved.push((entity.clone(), model));
         }
+        // Live layers: door states, temporary objects (fires) and ground items.
+        let mut door_walls: Vec<(i32, i32, i32, crate::scene::Wall)> = Vec::new();
+        for door in &self.door_states {
+            let rotation = door.quarter_turns.rem_euclid(4);
+            let Some(scene) = self.scene.as_ref() else {
+                break;
+            };
+            let lx = door.tile.x - base_x;
+            let ly = door.tile.y - base_y;
+            let ex = lx + scene.offset;
+            let ey = ly + scene.offset;
+            if ex < 0 || ey < 0 || ex >= scene.width || ey >= scene.height {
+                continue;
+            }
+            let plane = door.tile.plane.clamp(0, scene.planes - 1);
+            let index = scene.tile_index(plane, ex, ey);
+            let Some(existing) = scene.walls.get(&index) else {
+                skipped.push(format!(
+                    "door {} at {},{}: no wall on that tile",
+                    door.object, door.tile.x, door.tile.y
+                ));
+                continue;
+            };
+            let Some(variant) = self.dynamic_objects.get(&(door.object, 0, rotation)) else {
+                skipped.push(format!(
+                    "door {} rotation {rotation}: model not loaded",
+                    door.object
+                ));
+                continue;
+            };
+            let model_index = temp_models.len();
+            temp_models.push(variant.plain.clone());
+            let wall = crate::scene::Wall {
+                model_a: crate::scene::draw::TEMP_MODEL_BASE + model_index as i32,
+                model_b: -1,
+                orientation_a: 1 << rotation,
+                orientation_b: 0,
+                x: existing.x,
+                height: existing.height,
+                z: existing.z,
+                hash: existing.hash,
+            };
+            let _ = door.open;
+            door_walls.push((plane, lx, ly, wall));
+        }
+        let mut temporaries: Vec<(TemporaryEntity, Model)> = Vec::new();
+        for temporary in &self.temporary_objects {
+            let Some(scene) = self.scene.as_ref() else {
+                break;
+            };
+            let Some(variant) = self.dynamic_objects.get(&(temporary.object, 10, 0)) else {
+                skipped.push(format!(
+                    "{}: temporary object {} model not loaded",
+                    temporary.id, temporary.object
+                ));
+                continue;
+            };
+            let model = if variant.frames.is_empty() {
+                variant.plain.clone()
+            } else {
+                let total: i64 = variant
+                    .frame_lengths
+                    .iter()
+                    .map(|&l| i64::from(l.max(1)))
+                    .sum();
+                let cycles = ((now_ms - temporary.started_ms) / CLIENT_CYCLE_MS)
+                    .floor()
+                    .max(0.0) as i64
+                    % total.max(1);
+                let mut acc = 0i64;
+                let mut frame = 0usize;
+                for (i, &len) in variant.frame_lengths.iter().enumerate() {
+                    acc += i64::from(len.max(1));
+                    if cycles < acc {
+                        frame = i;
+                        break;
+                    }
+                }
+                variant.frames[frame].clone()
+            };
+            let lx = temporary.tile.x - base_x;
+            let ly = temporary.tile.y - base_y;
+            if lx < 0 || ly < 0 || lx >= scene.max_x || ly >= scene.max_y {
+                continue;
+            }
+            let plane = temporary.tile.plane.clamp(0, scene.planes - 1);
+            let x = lx * 128 + 64;
+            let z = ly * 128 + 64;
+            let height = tile_height(scene, plane, x, z);
+            // Original object tag: x | y<<7 | type<<14 | plane<<16 | id<<20.
+            let hash = i64::from(lx & 127)
+                | (i64::from(ly & 127) << 7)
+                | (2i64 << 14)
+                | (i64::from(plane) << 16)
+                | (i64::from(temporary.object) << 20);
+            temporaries.push((
+                TemporaryEntity {
+                    plane,
+                    tile_x: lx,
+                    tile_y: ly,
+                    size_x: 1,
+                    size_y: 1,
+                    x,
+                    height,
+                    z,
+                    orientation: 0,
+                    hash,
+                    model: 0,
+                },
+                model,
+            ));
+        }
+        let mut item_layers: Vec<(i32, i32, i32, crate::scene::draw::ItemLayer)> = Vec::new();
+        {
+            let mut per_tile: HashMap<(i32, i32, i32), Vec<&GroundItemState>> = HashMap::new();
+            for item in &self.ground_items {
+                per_tile
+                    .entry((item.tile.plane, item.tile.x, item.tile.y))
+                    .or_default()
+                    .push(item);
+            }
+            for ((plane, tx, ty), stack) in per_tile {
+                let Some(scene) = self.scene.as_ref() else {
+                    break;
+                };
+                let lx = tx - base_x;
+                let ly = ty - base_y;
+                if lx < 0 || ly < 0 || lx >= scene.max_x || ly >= scene.max_y {
+                    continue;
+                }
+                let plane = plane.clamp(0, scene.planes - 1);
+                let x = lx * 128 + 64;
+                let z = ly * 128 + 64;
+                let height = tile_height(scene, plane, x, z);
+                // The original shows the three most recently dropped stacks (list head first).
+                let mut models = Vec::new();
+                for item in stack.iter().take(3) {
+                    match self.ground_item_model(item.item, item.quantity) {
+                        Some(model) => {
+                            models.push(temp_models.len());
+                            temp_models.push(model.clone());
+                        }
+                        None => skipped.push(format!(
+                            "{}: ground item {} model not loaded",
+                            item.id, item.item
+                        )),
+                    }
+                }
+                if models.is_empty() {
+                    continue;
+                }
+                let hash = i64::from(lx & 127)
+                    | (i64::from(ly & 127) << 7)
+                    | (3i64 << 14)
+                    | (i64::from(plane) << 16)
+                    | (i64::from(stack[0].item) << 20);
+                item_layers.push((
+                    plane,
+                    lx,
+                    ly,
+                    crate::scene::draw::ItemLayer {
+                        models,
+                        x,
+                        height,
+                        z,
+                        offset: 0,
+                        deferred: false,
+                        hash,
+                    },
+                ));
+            }
+        }
+        let roof = self.roof_removal();
+        let top_plane = match self.top_plane_override {
+            Some(limit) => limit,
+            None => self.stock_top_plane(base_x, base_y),
+        };
         let scene = self.scene.as_ref().expect("scene checked above");
         let drawer = self.drawer.as_mut().expect("drawer follows scene");
+        for (plane, lx, ly, wall) in door_walls {
+            if !drawer.override_wall(scene, plane, lx, ly, wall) {
+                skipped.push(format!(
+                    "door at {},{}: override refused",
+                    lx + base_x,
+                    ly + base_y
+                ));
+            }
+        }
+        for (mut entity, model) in temporaries {
+            entity.model = temp_models.len();
+            temp_models.push(model);
+            if drawer.add_temporary(scene, &entity) {
+                drawn += 1;
+            } else {
+                skipped.push(format!(
+                    "temporary object at {},{}: tile slots full",
+                    entity.tile_x + base_x,
+                    entity.tile_y + base_y
+                ));
+            }
+        }
+        for (plane, lx, ly, layer) in item_layers {
+            if !drawer.add_item_layer(scene, plane, lx, ly, layer) {
+                skipped.push(format!(
+                    "ground items at {},{}: outside scene",
+                    lx + base_x,
+                    ly + base_y
+                ));
+            }
+        }
         for (entity, model) in resolved {
             let local_x = entity.tile.x - base_x;
             let local_y = entity.tile.y - base_y;
@@ -1183,11 +1834,13 @@ impl RendererCore {
             pitch: self.camera.pitch,
             yaw: self.camera.yaw,
             plane: self.plane,
+            top_plane,
             focal_x: self.camera.x - base_x * 128,
             focal_z: self.camera.y - base_y * 128,
             center_on_camera: true,
             far_clip: self.camera.far,
             animation_cycles,
+            roof,
         };
         if self.camera.zoom > 0 {
             self.state.zoom = self.camera.zoom;
@@ -1301,6 +1954,98 @@ impl RendererCore {
             cpu_build_ms: now() - start,
         };
         Ok(&self.last_summary)
+    }
+
+    /// Builds the model-only player preview an interface model component shows (character
+    /// creator): the current body and gear, animated by the player's idle motion unless a
+    /// sequence/frame is given. The triangle stream targets a `width`×`height` surface whose
+    /// uncovered pixels must stay transparent; the scene frame, its picks and raster state are
+    /// left untouched. Returns `Ok(None)` when no player body is loaded.
+    pub fn build_player_preview_frame(
+        &mut self,
+        preview: &PlayerPreview,
+        now_ms: f64,
+    ) -> Result<Option<PreviewFrame>, RenderError> {
+        let start = now();
+        if preview.width <= 0 || preview.height <= 0 {
+            return Err(RenderError::Scene(format!(
+                "preview surface {}x{} is empty",
+                preview.width, preview.height
+            )));
+        }
+        let sequence_id = preview.sequence.unwrap_or(crate::actor::PLAYER_IDLE);
+        let started = *self.preview_started_ms.get_or_insert(now_ms);
+        let frame = match preview.frame {
+            Some(frame) => frame,
+            None => {
+                let Some((frame, _)) = self.sequence_frame(sequence_id, now_ms - started) else {
+                    return Err(RenderError::Scene(format!(
+                        "preview sequence {sequence_id} is not loaded"
+                    )));
+                };
+                frame
+            }
+        };
+        let Some(mut model) = self.player_frame_model(sequence_id, frame)? else {
+            return Ok(None);
+        };
+        model.compute_cylinder_bounds();
+        let (rotation_x, rotation_z) = preview.draw_rotation(now_ms - started);
+        let t = crate::tables::tables();
+        let sin_x =
+            (t.sin2048[(rotation_x & 2047) as usize].wrapping_mul(preview.model_zoom)) >> 16;
+        let cos_x =
+            (t.cos2048[(rotation_x & 2047) as usize].wrapping_mul(preview.model_zoom)) >> 16;
+        let mut state = RasterState::new(preview.width, preview.height, preview.rasterizer_zoom);
+        state.center_x = preview.center_x;
+        state.center_y = preview.center_y;
+        let mut scratch = ModelScratch::default();
+        self.preview_tris.clear();
+        {
+            let mut drawer = ModelDrawer {
+                state,
+                palette: &self.palette.rgb,
+                scratch: &mut scratch,
+                alpha_pass: 2,
+            };
+            drawer
+                .draw_legacy(
+                    &model,
+                    0,
+                    rotation_z,
+                    preview.rotation_y,
+                    rotation_x,
+                    preview.offset_x,
+                    sin_x + preview.offset_y,
+                    cos_x + preview.offset_y,
+                    0,
+                    &mut self.preview_tris,
+                )
+                .map_err(|_| RenderError::Scene("player preview draw aborted".into()))?;
+        }
+        let mut stats = DrawStats::default();
+        for tri in &self.preview_tris {
+            stats.count(tri);
+        }
+        let summary = FrameSummary {
+            triangles: self.preview_tris.len(),
+            stats,
+            entities_drawn: 1,
+            entities_skipped: Vec::new(),
+            missing_models: 0,
+            cpu_build_ms: now() - start,
+        };
+        Ok(Some(PreviewFrame {
+            state,
+            sequence: sequence_id,
+            frame,
+            summary,
+        }))
+    }
+
+    /// Triangles of the last [`Self::build_player_preview_frame`].
+    pub fn preview_triangles(&self) -> &[Tri] {
+        &self.preview_tris
     }
 
     pub fn pick_targets(&self) -> &[PickTarget] {

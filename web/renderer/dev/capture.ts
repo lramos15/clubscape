@@ -157,6 +157,36 @@ async function main(): Promise<void> {
         });
       };
       regionResults.push({ step: "lumbridge-castle", tile: [3222, 3218], ...(await shot("region-lumbridge-castle-3222-3218.png")) });
+      // Frozen representative workload: geared player, animated NPCs, fire and ground items in the
+      // streamed Lumbridge scene; every counted frame is a GPU-completed record.
+      const workloadMs = Number(argValue("--workload-ms", "0"));
+      if (workloadMs > 0) {
+        const applied = await page.evaluate(() => window.__clubscapeDev.applyScenario!("workload"));
+        await waitFrames(page, (await snapshot(page, null)).renderedFrames + 5);
+        await canvas.screenshot({ path: path.join(out, "region-workload-lumbridge-castle.png") });
+        const before = await snapshot(page, null);
+        const started = Date.now();
+        await page.waitForTimeout(workloadMs);
+        const after = await snapshot(page, before.renderedFrames);
+        const elapsedMs = Date.now() - started;
+        const frames: Array<{ sequence: number; submittedAtMs: number; completedAtMs: number; cpuEncodeMs?: number; gpuDurationMs?: number; primitives: number }> = after.frames;
+        const latency = frames.map((f) => f.completedAtMs - f.submittedAtMs);
+        const gaps = frames.slice(1).map((f, i) => f.completedAtMs - frames[i]!.completedAtMs);
+        const counted = after.renderedFrames - before.renderedFrames;
+        const workload = {
+          screenshot: "region-workload-lumbridge-castle.png", applied, windowMs: workloadMs, elapsedMs,
+          gpuCompletedFrames: counted, recordedFrames: frames.length, fps: counted / (elapsedMs / 1000),
+          primitives: { min: Math.min(...frames.map((f) => f.primitives)), max: Math.max(...frames.map((f) => f.primitives)) },
+          cpuEncodeMs: { p50: percentile(frames.map((f) => f.cpuEncodeMs ?? 0), 0.5), p95: percentile(frames.map((f) => f.cpuEncodeMs ?? 0), 0.95), max: Math.max(...frames.map((f) => f.cpuEncodeMs ?? 0)) },
+          gpuDurationMs: { p50: percentile(frames.flatMap((f) => f.gpuDurationMs === undefined ? [] : [f.gpuDurationMs]), 0.5), p95: percentile(frames.flatMap((f) => f.gpuDurationMs === undefined ? [] : [f.gpuDurationMs]), 0.95), known: frames.filter((f) => f.gpuDurationMs !== undefined).length },
+          submitToCompleteMs: { p50: percentile(latency, 0.5), p95: percentile(latency, 0.95), max: latency.length ? Math.max(...latency) : null },
+          completionGapMs: { p50: percentile(gaps, 0.5), p95: percentile(gaps, 0.95), max: gaps.length ? Math.max(...gaps) : null, over33ms: gaps.filter((g) => g > 33.4).length },
+          note: "Xvfb headful Chrome 153 on the Sparky GB10; frames are queue-completion records, not requestAnimationFrame counts. Not an owner/Mac/Edge acceptance measurement.",
+        };
+        regionResults.push({ step: "workload", tile: [3222, 3218], ...workload });
+        console.log(`workload ${workloadMs} ms: ${counted} GPU-completed frames (${workload.fps.toFixed(2)} fps), prims ${workload.primitives.min}..${workload.primitives.max}, gpu p95 ${workload.gpuDurationMs.p95}, gap p95 ${workload.completionGapMs.p95} max ${workload.completionGapMs.max}, gaps>33ms ${workload.completionGapMs.over33ms}`);
+        await page.evaluate(() => window.__clubscapeDev.walkTo!(3222, 3218));
+      }
       // Walk north-west in 4-tile steps toward Draynor's square edge; the scene must recenter.
       const route: Array<[number, number]> = [[3210, 3230], [3200, 3240], [3190, 3250], [3180, 3260], [3170, 3270], [3160, 3280]];
       for (const [x, y] of route) {
@@ -206,6 +236,42 @@ async function main(): Promise<void> {
     }
     report.models = modelResults;
     console.log(`model fixtures captured: ${modelResults.length}`);
+
+    // Live-layer and player-action scenarios on the starting-house fixture (developer WorldViews
+    // with real source ids): gear, activity motions, ground items + fire, door state, roof mode
+    // and the model-only interface preview readback.
+    const scenarioNames = ["pinned-gear-idle", "gear-idle", "gear-fighting", "woodcutting", "mining", "fishing", "firemaking", "cooking", "walking", "ranged", "casting", "death", "ground-items-fire", "door-open", "roof-player", "preview"];
+    const scenarioDir = path.join(out, "scenarios");
+    await mkdir(scenarioDir, { recursive: true });
+    const scenarioResults: unknown[] = [];
+    if (argValue("--scenarios", "1") === "1") {
+      await page.setViewportSize({ width: 1920, height: 1080 });
+      await page.goto(`http://127.0.0.1:${port}/?scene=tutorial-starting-house&w=1920&h=1080`);
+      await waitReady(page);
+      await waitFrames(page, 3);
+      const canvas = page.locator("canvas[data-clubscape-surface]");
+      for (const name of scenarioNames) {
+        const applied = await page.evaluate((n) => window.__clubscapeDev.applyScenario!(n), name);
+        const startFrames = (await snapshot(page, null)).renderedFrames;
+        await waitFrames(page, startFrames + 3);
+        await canvas.screenshot({ path: path.join(scenarioDir, `${name}-t0.png`) });
+        await page.waitForTimeout(600);
+        await canvas.screenshot({ path: path.join(scenarioDir, `${name}-t1.png`) });
+        if (name === "preview") {
+          await page.locator("canvas[data-clubscape-preview]").screenshot({ path: path.join(scenarioDir, "preview-surface.png"), omitBackground: true });
+        }
+        const last = await page.evaluate(() => window.__clubscapeDev.handle!.diagnostics().lastFrame);
+        const picks = await page.evaluate(() => {
+          const handle = window.__clubscapeDev.handle!;
+          const points: Array<[number, number]> = [[960, 540], [1030, 560], [880, 520], [1100, 470]];
+          return points.map(([x, y]) => ({ x, y, pick: handle.pick(x, y) }));
+        });
+        scenarioResults.push({ name, applied, lastFrame: last, picks });
+        console.log(`scenario ${name}: prims=${last?.primitives} ${JSON.stringify(applied).slice(0, 200)}`);
+      }
+      await page.evaluate(() => window.__clubscapeDev.applyScenario!("pinned-gear-idle"));
+    }
+    report.scenarios = scenarioResults;
 
     // Resize range checks on one scene.
     const resizes: unknown[] = [];

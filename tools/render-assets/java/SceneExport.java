@@ -304,6 +304,12 @@ final class SceneExport
         cursor = 0;
         for (int p = 0; p < planes; p++) for (int x = 0; x < width; x++) for (int y = 0; y < height; y++) roofFlat[cursor++] = ez.xc[p][x][y];
         writer.ints("ROOF", roofFlat, roofFlat.length);
+        // Original tile settings (vs): bit 1 blocked, bit 2 bridge, bit 4 roof, bit 8 force-lowest.
+        byte[][][] settings = ez.vs;
+        byte[] settingsFlat = new byte[planes * width * height];
+        cursor = 0;
+        for (int p = 0; p < planes; p++) for (int x = 0; x < width; x++) for (int y = 0; y < height; y++) settingsFlat[cursor++] = settings[p][x][y];
+        writer.bytes("TSET", settingsFlat, settingsFlat.length);
 
         List<Integer> paints = new ArrayList<>();
         List<Integer> tileModels = new ArrayList<>();

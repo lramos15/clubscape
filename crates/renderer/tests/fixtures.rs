@@ -352,11 +352,13 @@ fn render_scene_fixture(fixture: &SceneFixture) -> (Vec<i32>, usize) {
         pitch: fixture.pitch,
         yaw: fixture.yaw,
         plane: 0,
+        top_plane: 0,
         focal_x: (fixture.focal_tile[0] - fixture.base[0]) * 128,
         focal_z: (fixture.focal_tile[1] - fixture.base[1]) * 128,
         center_on_camera: true,
         far_clip: 32768,
         animation_cycles: 0,
+        roof: Default::default(),
     };
     let mut tris: Vec<Tri> = Vec::new();
     drawer.begin_frame(&scene);

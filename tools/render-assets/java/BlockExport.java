@@ -155,6 +155,7 @@ final class BlockExport
         byte[] objectFlags = new byte[planes * SIZE * SIZE * 5];
         int[] heightFlat = new int[planes * (SIZE + 1) * (SIZE + 1)];
         int[] roofFlat = new int[planes * SIZE * SIZE];
+        byte[] settingsFlat = new byte[planes * SIZE * SIZE];
         List<Integer> paints = new ArrayList<>();
         List<Integer> tileModels = new ArrayList<>();
         List<Integer> walls = new ArrayList<>();
@@ -184,6 +185,7 @@ final class BlockExport
                     objectCount[local] = ez.jm[index];
                     System.arraycopy(ez.fm, index * 5, objectFlags, local * 5, 5);
                     roofFlat[local] = ez.xc[p][ex][ey];
+                    settingsFlat[local] = ez.vs[p][ex][ey];
                     fj paint = ez.je[index];
                     if (paint != null)
                     {
@@ -282,7 +284,7 @@ final class BlockExport
         writer.text("NAME", "block-" + square);
         writer.ints("BLHD", square, rx, ry, originX, originY, SIZE, planes, baseX, baseY, MARGIN, ez.ny, SceneExport.rawInt(ez, "bl"), dynamicSets.size());
         writer.ints("BFLG", flags, flags.length).bytes("BLNK", link, link.length).bytes("BOBC", objectCount, objectCount.length).bytes("BOBF", objectFlags, objectFlags.length);
-        writer.ints("BHGT", heightFlat, heightFlat.length).ints("BROF", roofFlat, roofFlat.length);
+        writer.ints("BHGT", heightFlat, heightFlat.length).ints("BROF", roofFlat, roofFlat.length).bytes("BSET", settingsFlat, settingsFlat.length);
         writer.ints("BPNT", SceneExport.toArray(paints)).ints("BTMD", SceneExport.toArray(tileModels)).ints("BWAL", SceneExport.toArray(walls));
         writer.ints("BWDC", SceneExport.toArray(wallDecor)).ints("BFDC", SceneExport.toArray(floorDecor)).ints("BOBJ", SceneExport.toArray(gameObjects));
         writer.ints("BDYN", SceneExport.toArray(dynamic));

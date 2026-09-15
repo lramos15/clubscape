@@ -17,6 +17,10 @@ struct Params {
     center_y: i32,
     zoom: i32,
     clear_color: u32,
+    coverage_alpha: u32,
+    _pad0: u32,
+    _pad1: u32,
+    _pad2: u32,
 };
 
 @group(0) @binding(0) var<storage, read> tris: array<i32>;
@@ -271,6 +275,7 @@ fn main(@builtin(workgroup_id) wg: vec3<u32>, @builtin(local_invocation_id) lid:
     let in_image = px < i32(params.width) && py < i32(params.height);
     let local_index = lid.y * 17u + lid.x;
     var color: i32 = i32(params.clear_color);
+    var touched = false;
     let bin = wg.y * params.bins_x + wg.x;
     let begin = bin_offsets[bin];
     let end = bin_offsets[bin + 1u];
@@ -287,6 +292,7 @@ fn main(@builtin(workgroup_id) wg: vec3<u32>, @builtin(local_invocation_id) lid:
         if (kind == KIND_FLAT) { shift = 0u; }
         if (kind >= KIND_TEX_MODEL) { shift = 9u; }
         var covered = false;
+        var wrote = false;
         var new_color = color;
         if (in_image) {
             let row = row_state(base, py, shift);
@@ -300,6 +306,7 @@ fn main(@builtin(workgroup_id) wg: vec3<u32>, @builtin(local_invocation_id) lid:
                 if (xs < xe && px >= xs && px < xe) {
                     covered = true;
                     if (kind == KIND_GOURAUD) {
+                        wrote = true;
                         let cdx = color_dx(base, 8u);
                         let var7 = row.color + cdx * xs;
                         let k = (px - xs) >> 2u;
@@ -312,6 +319,7 @@ fn main(@builtin(workgroup_id) wg: vec3<u32>, @builtin(local_invocation_id) lid:
                             new_color = blend_channels(rgb, 256 - alpha) + blend_channels(color, alpha);
                         }
                     } else if (kind == KIND_FLAT) {
+                        wrote = true;
                         let rgb = tris[base + 6u];
                         if (alpha == 0) {
                             new_color = rgb;
@@ -373,12 +381,14 @@ fn main(@builtin(workgroup_id) wg: vec3<u32>, @builtin(local_invocation_id) lid:
                         if (!model_variant || alpha == 0) {
                             if (tex_opaque || texel != 0) {
                                 new_color = shade_texel(texel, shade);
+                                wrote = true;
                             }
                         } else {
                             let shade0 = var8 >> 8u;
                             let premul = (shade0 * (256 - alpha)) >> 8u;
                             if (tex_opaque || texel != 0) {
                                 new_color = blend_texel(texel, premul, color, alpha);
+                                wrote = true;
                             }
                         }
                     }
@@ -399,6 +409,7 @@ fn main(@builtin(workgroup_id) wg: vec3<u32>, @builtin(local_invocation_id) lid:
         }
         if (covered) {
             color = new_color;
+            if (wrote) { touched = true; }
         }
     }
     if (in_image && lid.x < 16u) {
@@ -406,6 +417,8 @@ fn main(@builtin(workgroup_id) wg: vec3<u32>, @builtin(local_invocation_id) lid:
         let r = f32((c >> 16u) & 255u) / 255.0;
         let g = f32((c >> 8u) & 255u) / 255.0;
         let b = f32(c & 255u) / 255.0;
-        textureStore(output, vec2<i32>(px, py), vec4<f32>(r, g, b, 1.0));
+        var a = 1.0;
+        if (params.coverage_alpha != 0u && !touched) { a = 0.0; }
+        textureStore(output, vec2<i32>(px, py), vec4<f32>(r, g, b, a));
     }
 }

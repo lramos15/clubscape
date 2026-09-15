@@ -32,7 +32,90 @@ export interface RenderAssetManifest {
     square: number; file: string; sha256: string; models_file: string; models_sha256: string;
     origin_x: number; origin_y: number; size: number; file_gz?: string; models_file_gz?: string;
   }>;
+  /** Skeletal sequences (`export.py --profile anim`): player actions, NPC definition motions. */
+  sequences?: Array<{ sequence_id: number; file: string; sha256: string; frame_count: number; frame_lengths_client_cycles: number[] }>;
+  /** NPC definitions with their lit base model and original stand/walk/rotate/run sequence ids. */
+  npc_definitions?: Array<{
+    npc_id: number; name: string; base_model: string; size: number; width_scale: number; height_scale: number;
+    sequences: { stand: number; walk: number; rotate_180: number; rotate_left: number; rotate_right: number; idle_rotate_left: number; idle_rotate_right: number; run: number };
+    combat_sequences: number[];
+  }>;
+  /** Equippable M1 items: worn model (null for ammunition) and source params. */
+  equipment_items?: Array<{ item_id: number; name: string; equip_model: string | null }>;
+  /** Human reference body for label retargeting (the drawn body is NPC 2063 model 21547 at 75/128). */
+  player_reference?: { model: string; classification: string };
+  /** Door/fire/state objects: per type+orientation lit models with optional baked frames. */
+  dynamic_objects?: Array<{
+    object_id: number; name: string; sequence: number;
+    variants: Array<{ type: number; orientation: number; model: string; frames?: string[]; frame_lengths_client_cycles?: number[] }>;
+  }>;
+  /** Ground-item stack models per quantity threshold. */
+  ground_items?: Array<{ item_id: number; name: string; variants: Array<{ min_quantity: number; model: string }> }>;
+  /** Original interface model components (`export.py --profile widgets`), e.g. 679:73. */
+  model_widgets?: Array<{
+    id: number; group: number; child: number; parent: number; content_type: number; original_x: number; original_y: number;
+    width: number; height: number; x_mode: number; y_mode: number; model_zoom: number; offset_x2: number; offset_y2: number;
+    rotation_x: number; rotation_y: number; rotation_z: number; rasterizer_zoom: number; ortho: boolean;
+  }>;
   files: Record<string, { sha256: string; size_bytes: number; detail?: { encoding?: string; decompressed?: string; decompressed_sha256?: string } }>;
+}
+
+/**
+ * Optional shell extension mirroring the protocol `WorldSnapshot.dynamic_objects` (door states).
+ * `WorldView` does not carry it; pass it as `update({ ...world, dynamicObjects })`.
+ */
+export interface RendererDynamicObject {
+  id: string;
+  /** Source object id or `asset.source.osrs.cache2695.object.<id>`. */
+  objectId?: string;
+  sourceId?: number;
+  tile: { x: number; y: number; plane: number };
+  instance: string | null;
+  state?: string;
+  doorOpen?: boolean;
+  quarterTurns?: number;
+}
+
+/** Per-item gear fit on the penguin body (source units before the 75/128 draw scale). */
+export interface PlayerFitReport {
+  itemId: number;
+  slot: string;
+  humanLabel: number;
+  penguinLabel: number;
+  anchorGap: number;
+  penetration: number;
+  scale: number;
+}
+
+/** Model-only interface preview request; defaults reproduce interface 679 component 73. */
+export interface PlayerPreviewRequest {
+  /** Surface size in native pixels (the UI's `getUiPreviewBounds()` width/height). */
+  width: number;
+  height: number;
+  /** Model component centre inside the surface; defaults to the exported component placement. */
+  centerX?: number;
+  centerY?: number;
+  /** Original component content type (328 = character-design pitch/sway). */
+  contentType?: number;
+  rasterizerZoom?: number;
+  modelZoom?: number;
+  rotationX?: number;
+  rotationY?: number;
+  rotationZ?: number;
+  offsetX?: number;
+  offsetY?: number;
+  /** Sequence/frame override (defaults: the player's idle motion on the renderer clock). */
+  sequence?: number;
+  frame?: number;
+}
+
+/** Scene placement for HUD helpers (the dynamic minimap draws over the source terrain raster). */
+export interface ScenePlacement {
+  baseX: number;
+  baseY: number;
+  sizeTiles: number;
+  /** True when the scene is assembled from streamed world blocks (false for fixture scenes). */
+  blocks: boolean;
 }
 
 export interface LoadedAsset { id: string; sha256: string; loaded: boolean }
@@ -45,6 +128,11 @@ export interface RendererAdapterOptions {
   onFrame?: (frame: RenderFrame) => void;
   /** Hook receiving non-fatal diagnostics (skipped entities, texture fallbacks). */
   onDiagnostic?: (message: string) => void;
+  /**
+   * Frames allowed in flight (default 2): the next frame's CPU build overlaps the previous
+   * frame's GPU completion. 1 serializes build → completion like a single-buffered loop.
+   */
+  maxFramesInFlight?: number;
 }
 
 /** Diagnostics the shell needs for the benchmark protocol (`RenderSnapshot`). */
@@ -77,6 +165,30 @@ export interface ClubscapeRendererHandle extends RendererHandle {
   diagnostics(): RendererDiagnostics;
   /** Developer-only replay of an approved model/animation capture on the canvas. */
   frameModelFixture(request: ModelFixtureRequest): Promise<RenderFrame>;
+  /**
+   * Renders the model-only player preview (current body + gear) through the original interface
+   * model projection into `ImageData` of exactly `width` × `height` with coverage alpha, after
+   * the GPU completed the work. Resolves `null` when no player body is loaded. Intended for the
+   * UI's `setUiPreview()`; never a reference capture.
+   */
+  framePlayerPreview(request: PlayerPreviewRequest): Promise<ImageData | null>;
+  /**
+   * Top drawn plane (`br`). `null` = the stock live rule (all planes unless a roof-flagged tile of
+   * the player's plane lies on the camera→player line at pitch < 2480). The approved fixture
+   * captures were taken with plane 0; `loadScene()` of a fixture scene pins 0 and region scenes
+   * restore the stock rule, so shells only call this to deviate deliberately.
+   */
+  setTopPlane(limit: number | null): void;
+  /** Instanced map flag (`cy.as`): the stock top-plane rule then draws up to the player's plane. */
+  setInstancedMap(instanced: boolean): void;
+  /** Original roof-removal mode bits (1 player, 2 hovered, 4 destination, 8 camera line); 0 = stock. */
+  setRoofMode(mode: number): void;
+  /** Hovered/destination tiles consulted by roof modes 2 and 4. */
+  setRoofContext(hovered: { x: number; y: number } | null, destination: { x: number; y: number } | null): void;
+  /** Current gear fit report (empty until a body and gear are assembled). */
+  playerFitReport(): PlayerFitReport[];
+  /** Current scene placement (null without a scene). */
+  scenePlacement(): ScenePlacement | null;
 }
 
 async function sha256Hex(bytes: Uint8Array): Promise<string> {
@@ -145,11 +257,49 @@ export const createRenderer: (canvas: HTMLCanvasElement, config: RendererConfig,
     for (const npc of manifest.npcs) {
       renderer.load_npc_pack(npc.npc_id, await fetchAsset(npc.pack));
     }
+    // Skeletal animation, NPC definitions, the approved player body and its gear.
+    for (const sequence of manifest.sequences ?? []) {
+      renderer.load_sequence(await fetchAsset(sequence.file));
+    }
+    for (const definition of manifest.npc_definitions ?? []) {
+      renderer.load_npc_definition(JSON.stringify(definition), await fetchAsset(definition.base_model));
+    }
+    const penguin = manifest.npc_definitions?.find((d) => d.npc_id === 2063);
+    if (penguin && manifest.player_reference) {
+      renderer.load_player_body(
+        await fetchAsset(penguin.base_model), penguin.width_scale, penguin.height_scale,
+        Int32Array.from([penguin.sequences.stand, penguin.sequences.walk]), await fetchAsset(manifest.player_reference.model),
+      );
+    }
+    for (const item of manifest.equipment_items ?? []) {
+      if (item.equip_model) renderer.load_equip_model(item.item_id, await fetchAsset(item.equip_model));
+    }
+    // Live layers: doors/fires/state objects and ground-item stacks.
+    for (const object of manifest.dynamic_objects ?? []) {
+      for (const variant of object.variants) {
+        const frames = await Promise.all((variant.frames ?? []).map((file) => fetchAsset(file)));
+        renderer.load_dynamic_object(
+          object.object_id, variant.type, variant.orientation, await fetchAsset(variant.model),
+          frames, Int32Array.from(variant.frame_lengths_client_cycles ?? []),
+        );
+      }
+    }
+    for (const item of manifest.ground_items ?? []) {
+      for (const variant of item.variants) {
+        renderer.load_ground_item(item.item_id, variant.min_quantity, await fetchAsset(variant.model));
+      }
+    }
+    const previewWidget = manifest.model_widgets?.find((w) => w.id === 44499017);
     const loadedModels = new Set<string>();
 
     let renderedFrames = 0;
     let lastFrame: RenderFrame | null = null;
-    let inFlight = false;
+    // Frames in flight: one may be awaiting GPU completion while the next is being built, so
+    // CPU scene traversal overlaps GPU execution. Each promise still resolves only on genuine
+    // completion of its own submission (the queue executes in order).
+    let inFlight = 0;
+    const MAX_IN_FLIGHT = options.maxFramesInFlight ?? 2;
+    let exclusive = false;
     let disposed = false;
     let sceneId: string | null = null;
     // World-block streaming state (region scenes assembled around the player).
@@ -219,6 +369,8 @@ export const createRenderer: (canvas: HTMLCanvasElement, config: RendererConfig,
         if (scene) {
           const [sceneBytes, packBytes] = await Promise.all([fetchAsset(scene.file_gz ?? scene.file), fetchAsset(scene.models_file_gz ?? scene.models_file)]);
           renderer.load_scene(id, sceneBytes, packBytes);
+          // Fixture scenes reproduce the approved captures: original `dh` plane argument 0.
+          renderer.set_top_plane_override(0);
           sceneId = id;
           blockMode = false;
           sceneBase = null;
@@ -247,9 +399,10 @@ export const createRenderer: (canvas: HTMLCanvasElement, config: RendererConfig,
           baseY = base[1]!;
         }
         blockMode = true;
+        renderer.set_top_plane_override(undefined);
         await assembleAround(baseX, baseY);
       },
-      update(world: WorldView) {
+      update(world: WorldView & { dynamicObjects?: RendererDynamicObject[] }) {
         requireLive();
         renderer.update_world(JSON.stringify(world), performance.now());
         if (blockMode && !assembling) {
@@ -270,8 +423,8 @@ export const createRenderer: (canvas: HTMLCanvasElement, config: RendererConfig,
       },
       async frame(nowMs) {
         requireLive();
-        if (inFlight || sceneId === null) return null;
-        inFlight = true;
+        if (exclusive || inFlight >= MAX_IN_FLIGHT || sceneId === null) return null;
+        inFlight += 1;
         try {
           const record = await renderer.frame(nowMs);
           const frame: RenderFrame = {
@@ -291,13 +444,13 @@ export const createRenderer: (canvas: HTMLCanvasElement, config: RendererConfig,
           options.onFrame?.(frame);
           return frame;
         } finally {
-          inFlight = false;
+          inFlight -= 1;
         }
       },
       async frameModelFixture(request) {
         requireLive();
-        if (inFlight) throw new Error("a frame is already in flight");
-        inFlight = true;
+        if (inFlight > 0 || exclusive) throw new Error("a frame is already in flight");
+        exclusive = true;
         try {
           if (!request.npc) {
             if (!request.model) throw new Error("model fixture needs `model` or `npc`");
@@ -320,13 +473,65 @@ export const createRenderer: (canvas: HTMLCanvasElement, config: RendererConfig,
           lastFrame = frame;
           return frame;
         } finally {
-          inFlight = false;
+          exclusive = false;
         }
       },
       pick(x, y) {
         requireLive();
         const json = renderer.pick(Math.trunc(x), Math.trunc(y));
         return json === undefined ? null : (JSON.parse(json) as ScenePick);
+      },
+      async framePlayerPreview(request) {
+        requireLive();
+        const width = Math.trunc(request.width);
+        const height = Math.trunc(request.height);
+        if (!(width > 0 && height > 0)) throw new Error(`preview size ${request.width}x${request.height} is empty`);
+        // The exported component sits at its original offset inside the parent layer; centre it
+        // the way the original layout does (xMode 1 centre, yMode 2 bottom-anchored originalY).
+        const defaults = previewWidget
+          ? {
+            centerX: Math.trunc((width - previewWidget.width) / 2) + Math.trunc(previewWidget.width / 2),
+            centerY: height - previewWidget.original_y - previewWidget.height + Math.trunc(previewWidget.height / 2),
+            contentType: previewWidget.content_type, rasterizerZoom: previewWidget.rasterizer_zoom, modelZoom: previewWidget.model_zoom,
+            rotationX: previewWidget.rotation_x, rotationY: previewWidget.rotation_y, rotationZ: previewWidget.rotation_z,
+            offsetX: previewWidget.offset_x2, offsetY: previewWidget.offset_y2,
+          }
+          : {};
+        const options = { ...defaults, ...request, width, height };
+        const pixels = (await renderer.frame_player_preview(JSON.stringify(options), performance.now())) as Uint8ClampedArray | undefined;
+        if (pixels === undefined) return null;
+        if (pixels.length !== width * height * 4) throw new Error(`preview readback returned ${pixels.length} bytes for ${width}x${height}`);
+        const image = new ImageData(width, height);
+        image.data.set(pixels);
+        return image;
+      },
+      setTopPlane(limit) {
+        requireLive();
+        renderer.set_top_plane_override(limit === null ? undefined : Math.trunc(limit));
+      },
+      setInstancedMap(instanced) {
+        requireLive();
+        renderer.set_instanced_map(Boolean(instanced));
+      },
+      setRoofMode(mode) {
+        requireLive();
+        renderer.set_roof_mode(Math.trunc(mode));
+      },
+      setRoofContext(hovered, destination) {
+        requireLive();
+        renderer.set_roof_context(
+          hovered ? Math.trunc(hovered.x) : undefined, hovered ? Math.trunc(hovered.y) : undefined,
+          destination ? Math.trunc(destination.x) : undefined, destination ? Math.trunc(destination.y) : undefined,
+        );
+      },
+      playerFitReport() {
+        requireLive();
+        return JSON.parse(renderer.player_fit_report()) as PlayerFitReport[];
+      },
+      scenePlacement() {
+        requireLive();
+        const json = renderer.scene_placement();
+        return json === undefined ? null : (JSON.parse(json) as ScenePlacement);
       },
       dispose() {
         if (disposed) return;
