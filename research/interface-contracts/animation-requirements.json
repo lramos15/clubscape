@@ -1,0 +1,39 @@
+{
+  "schema_version": 1,
+  "status": "early_confirmed_asset_inventory_binding_work_in_progress",
+  "renderer_observer_consumption_commit": "8c6bab0",
+  "source_baseline": "OSRS game240/cache2695",
+  "source_symbols": {
+    "url": "https://raw.githubusercontent.com/runelite/runelite/ac79ed8bd8926bec7bf172aa291574b4d944b0e7/runelite-api/src/main/java/net/runelite/api/gameval/AnimationID.java",
+    "revision": "ac79ed8bd8926bec7bf172aa291574b4d944b0e7",
+    "sha256": "9d721378614dc02cbcee83859678d8527a7729edbb83122d5a3f9dd79ad1eead",
+    "legacy_constants_sha256": "f6e2f25cefefb73e6f664ec7ec2c41427f12962d0c3e8612b536452f88c14695"
+  },
+  "confirmed_additional_actor_sequences_required": [
+    {"id": 2305, "symbol": "MILKIT / MILKING_COW", "use": "actual recipe.cooks.milk action; original source milking"},
+    {"id": 4847, "symbol": "AIDE_DRAWING_CHALK_CIRCLE / BOOK_HOME_TELEPORT_1", "use": "ordinary source Home Teleport draw-circle phase"},
+    {"id": 4850, "symbol": "AIDE_SITTING_DOWN_CROSSLEGGED / BOOK_HOME_TELEPORT_2", "use": "ordinary source Home Teleport sitting phase"},
+    {"id": 4853, "symbol": "AIDE_PLAYER_GETTING_BOOK / BOOK_HOME_TELEPORT_3", "use": "ordinary source Home Teleport book phase"},
+    {"id": 4855, "symbol": "AIDE_RECITING_INCANTATION / BOOK_HOME_TELEPORT_4", "use": "ordinary source Home Teleport recitation phase"},
+    {"id": 4857, "symbol": "AIDE_PLAYER_TELEPORTING / BOOK_HOME_TELEPORT_5", "use": "ordinary source Home Teleport disappearance phase"}
+  ],
+  "renderer_manifest_actor_fit_sequences_at_8c6bab0": [
+    386, 390, 422, 423, 426, 5666, 5668, 621, 625, 711, 733,
+    808, 819, 820, 821, 822, 823, 824, 827, 829, 836, 879,
+    896, 897, 898, 899, 12526
+  ],
+  "export_boundary": [
+    "All six confirmed additions are absent from the renderer manifest sequence inventory and its 27-sequence gear-fit table.",
+    "The asset owner exports the original sequence/frame/skeleton dependencies and any original hand/model overrides; this task does not modify avatar assets or the renderer.",
+    "Five ordinary actor Home Teleport sequences are not the similarly numbered giant-rat4931..4935 or goblin6180..6185 sequences.",
+    "Other AIDE sequence symbols4848/4849/4854/4856/4858 are not automatically asserted as actor animations; graphic/loop relationships and exact phase timing still require source verification."
+  ],
+  "remaining_binding_investigation": [
+    "Exact legal bronze axe/pickaxe/spear/sword/dagger style-to-sequence mapping, not animation selection from a style label alone.",
+    "Inventory dough animation or verified deliberate absence; HUMAN_POTTERYWHEEL883 is not a dough fallback.",
+    "Ordinary Home Teleport native phase timing/holding/graphic relationships across the unchanged source24-tick channel.",
+    "Actual instant consumable/death/cast observer lifetime and source action identity, including movement/combat coexistence."
+  ],
+  "no_world_or_content_pin_changed": true,
+  "asset_export_or_presentation_acceptance_claimed": false
+}
