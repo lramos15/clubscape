@@ -312,7 +312,18 @@ refuses buffers whose hash differs.
   (1.54). `gear/pose-fit-failures.json` lists every failing frame with all measures and, as
   context only, the same item on the human body at the same pose: 356 of the 666 penetration
   failures exceed that design overlap by more than the target (necklace 299, net 37, wooden
-  shield 8, bow 1, sword 1); the other 310 are within the overlap the source itself has. The
+  shield 8, bow 1, sword 1); the other 310 are within the overlap the source itself has.
+  Provenance of the penetration figure (`embedded_penetration` per failure,
+  `over_penetration_box_half_only` in the summary): only 61 of the 666 are decided by the
+  carried-box half alone (body geometry behind the item inside its box, no item geometry inside
+  the body — square shield 53, wooden shield 6, pickaxe 1, hat 1); the other 605 have item
+  geometry genuinely inside the penguin mesh (necklace chain 8–13.6 deep, wooden shield plate
+  into the belly in walk frames up to 18.7, square shield up to 11, net bag 10.4, bow 5.3, hilts
+  through the flipper 1.5–3.7). An exact mesh-intersection measure would therefore not change
+  the verdict for those 605; closing them needs the gear geometry itself adapted (permitted
+  minimal deterministic mesh fitting: widening the chain around the neck anchor, keeping the
+  plate/bag clear of the body, a hilt seat in the flipper) — not started, no such edit is
+  applied yet. The
   pre-declared targets and measures are unchanged; the gate test stays failing (ignored with the
   count) rather than passing on the surface-only placement, and the previous "3 220 item-frames
   pass" figure is superseded: it certified surface clearance, not attachment.
