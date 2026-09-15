@@ -4,7 +4,7 @@ from copy import deepcopy
 import unittest
 from unittest.mock import patch
 
-from common import BINDINGS, CONTENT, ROOT, Inputs, canonical, load, sha
+from common import BINDINGS, CONTENT, PUBLICATION, PUBLICATION_SHA256, ROOT, Inputs, canonical, load, sha
 from verify_assets import BASELINE, CATALOG_SHA256, behavior_projection, inspect_assets
 from ui4 import CONTAINER_ITEMS, legacy_content
 from verify_ui4 import verify_ui4
@@ -24,9 +24,14 @@ class AssetRefreshTests(unittest.TestCase):
         self.assertEqual(report["resolved"], {"item_definition_ids": 72, "model_ids": 68,
                                               "npc_definition_ids": 6, "interface_groups": 13})
         self.assertEqual(report["product_assets_resolved"], 5257)
-        self.assertEqual(report["merged_inventory_records"], 12400)
+        self.assertEqual(report["merged_inventory_records"], 12410)
         self.assertEqual(report["new_original_assets"], 272)
         self.assertEqual(report["new_original_outputs"], 1137)
+        self.assertEqual(report["consumables_new_assets"], 10)
+        self.assertEqual(report["consumables_new_published_outputs"], 20)
+        self.assertEqual(report["consumables_reused_dependencies"], 7)
+        self.assertEqual(report["current_published_asset_references"], 5266)
+        self.assertTrue(report["current_asset_closure_passed"])
         self.assertEqual(report["remaining_missing_inputs"], [])
         self.assertEqual(report["current_asset_closure_passed"], load(CONTENT / "manifest.json")["asset_closure_passed"])
 
@@ -44,7 +49,6 @@ class AssetRefreshTests(unittest.TestCase):
                 if identifier in CONTAINER_ITEMS:
                     self.assertEqual(definition["source_id"], CONTAINER_ITEMS[identifier])
                     self.assertEqual(definition["asset"], f"asset.source.osrs.cache2695.item.{CONTAINER_ITEMS[identifier]}")
-                    continue
                 if self.application and identifier in self.application["item_extensions"]:
                     self.assertIsNotNone(definition["asset"])
                     self.assertEqual(definition["source_id"], self.application["item_extensions"][identifier]["source_id"])
@@ -56,6 +60,23 @@ class AssetRefreshTests(unittest.TestCase):
         self.assertEqual(self.content["npcs"]["npc.cook"]["asset"], "asset.source.osrs.cache2695.npc.4626")
         self.assertEqual(self.inputs.asset("model", 13897), "asset.source.osrs.cache2695.model.13897")
         self.assertEqual(self.inputs.asset("interface", 679), "asset.source.osrs.cache2695.interface.679")
+
+    def test_consumed_containers_resolve_through_all_four_immutable_layers(self):
+        self.assertEqual([path.name for path, _ in self.inputs.publication_chain], [
+            "cache2695-published.json", "cache2695-content-v2-published.json",
+            "cache2695-potions-published.json", "cache2695-consumables-published.json",
+        ])
+        self.assertEqual(sha(PUBLICATION.read_bytes()), PUBLICATION_SHA256)
+        for identifier, number in CONTAINER_ITEMS.items():
+            asset = f"asset.source.osrs.cache2695.item.{number}"
+            locator = f"assets/source/osrs/cache2695/consumables/collections/item.json.gz#{asset}"
+            self.assertEqual(self.inputs.asset("item", number), asset)
+            self.assertEqual(self.inputs.definition_source("item", number)[0]["reference"], locator)
+            self.assertTrue(any(record["reference"] == locator for record in self.content["items"][identifier]["source"]))
+        snapshot = load(ROOT / "research/current-source/m1-consumable-validation.json")
+        self.assertEqual(snapshot["remaining_missing_inputs"], [])
+        self.assertFalse(snapshot["existing_frozen_pack_modified"])
+        self.assertFalse(snapshot["gameplay_sound_or_presentation_approval_claimed"])
 
     def test_original_catalog_records_and_collection_values_are_unchanged(self):
         base = load(ROOT / "assets/manifests/osrs/cache2695-full-bundle.json.gz")

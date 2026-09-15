@@ -36,8 +36,9 @@ def apply_ui(inputs, content, bindings):
     for identifier in extra_items:
         if identifier in content["items"]:
             raise ValueError(f"UI replacement identity already exists: {identifier}")
-        # The reference is known even before publication; a missing image/model is not a null icon.
-        extra_items[identifier]["asset"] = f"{ASSET_PREFIX}item.{extra_items[identifier]['source_id']}"
+        expected = f"{ASSET_PREFIX}item.{extra_items[identifier]['source_id']}"
+        if extra_items[identifier]["asset"] != expected or inputs.asset("item", extra_items[identifier]["source_id"]) != expected:
+            raise ValueError(f"Required original container is not in the validated publication: {identifier}")
     content["items"].update(extra_items)
     bindings["items"].update(extra_bindings)
     prices = {row["id"]: row["price"] for row in load(ROOT / "research/runtime-bindings/inputs/guide-prices.json.gz")}

@@ -1,7 +1,7 @@
 """Independent assertions about source bindings and safe authored projections, not a live game."""
 
 from collections import Counter
-from copy import deepcopy
+from copy import copy, deepcopy
 import unittest
 
 from common import BINDINGS, CONTENT, Inputs, counter_value, item_stack, load, position
@@ -105,16 +105,14 @@ class AuthoredContentTests(unittest.TestCase):
 
     def test_asset_publication_is_a_distinct_mandatory_gate_not_null_icon_success(self):
         manifest = load(CONTENT / "manifest.json")
-        if not manifest["asset_closure_passed"]:
-            self.assertEqual(set(manifest["unpublished_asset_ids"]), {
-                f"asset.source.osrs.cache2695.{kind}.{number}"
-                for kind, numbers in (("item", [229, 230, 1919, 1920]), ("model", [561, 2548, 2747, 8234]))
-                for number in numbers
-            })
-            with self.assertRaisesRegex(ValueError, "Unpublished asset references"):
-                check_content(self.content, self.inputs, self.world, self.bindings)
-        else:
-            self.assertTrue(check_content(self.content, self.inputs, self.world, self.bindings)["asset_closure_passed"])
+        self.assertTrue(manifest["asset_closure_passed"])
+        self.assertEqual(manifest["unpublished_asset_ids"], [])
+        self.assertTrue(check_content(self.content, self.inputs, self.world, self.bindings)["asset_closure_passed"])
+        incomplete = copy(self.inputs)
+        incomplete.assets = dict(self.inputs.assets)
+        del incomplete.assets["asset.source.osrs.cache2695.item.229"]
+        with self.assertRaisesRegex(ValueError, "Unpublished asset references"):
+            check_content(self.content, incomplete, self.world, self.bindings)
 
     def test_exact_source_variants_not_similarly_named_npcs(self):
         npcs, items = self.content["npcs"], self.content["items"]

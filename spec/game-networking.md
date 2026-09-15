@@ -105,14 +105,16 @@ are not authenticated by compilation or by these reachability/capacity proofs.
 The actual regenerated v4 product and its public asset bundle remain launch
 prerequisites; synthetic fixtures are not substitutes.
 
-The UI4 candidate records its publication gate independently:
-`asset_closure_passed=false` and the exact missing item/model IDs in
-`content/m1/manifest.json`. Build/check/asset-verification commands still fail
-that gate even when strict source compilation, reload and native probes pass.
-Required item assets are explicit references, not nullable replacement icons.
-Publishing original items229/230/1919/1920 and models561/2548/2747/8234 through
-the validated source publication chain is required before this candidate can
-be packaged as a complete game directory.
+The UI4 source uses all four immutable publication layers: base, content-v2,
+potions and `assets/manifests/osrs/cache2695-consumables-published.json`.
+The fourth manifest is pinned to SHA-256
+`2340ea5e3e6eeeeecdbda5de7f371f3ff2eb57576f4c783009344a1c348dbede`.
+Original items229/230/1919/1920 and models561/2548/2747/8234 are published and
+bound; `content/m1/manifest.json` records `asset_closure_passed=true` with an
+empty missing list. No replacement output or original asset is substituted.
+Build/check/asset verification continue to reject any missing or mismatched
+required input. Asset closure and source/UI component checks do not establish
+the full source journey, browser/audio presentation or owner M1 acceptance.
 
 ## Transactions, time and connection lifecycle
 

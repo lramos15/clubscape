@@ -1,18 +1,18 @@
 {
   "active_source_binding_count": 0,
   "artifact_version": 4,
-  "asset_closure_passed": false,
+  "asset_closure_passed": true,
   "baseline": "OSRS live build 240 / cache 2695; post-July-2026 normal F2P behavior contracts",
   "build_command": "python3 tools/m1-content/build.py",
   "check_command": "python3 tools/m1-content/check.py",
   "compiled_artifact": {
     "artifact_version": 4,
-    "bytes": 519879,
+    "bytes": 519863,
     "path": "content/m1/game-content.csc.gz",
     "schema_version": 4,
-    "sha256": "5491b01951ad35111563a941639527cdb6184a2389767cf63080f0f368383099",
-    "uncompressed_bytes": 13083530,
-    "uncompressed_sha256": "7db2892a303c1a9eac1158c4802859ccb99fc9141281cfb06761468c0d10f894"
+    "sha256": "a46efa7300de9cdb155fff4bc4d53e118af069a273b7e5e833fa7e6be95daa22",
+    "uncompressed_bytes": 13083882,
+    "uncompressed_sha256": "080a0865031c4115b26f3aa8d4400928034295bfa8f2bb3174f6cea43c8db0db"
   },
   "compiler_command": "python3 tools/m1-content/compile.py --compiler-manifest crates/content/Cargo.toml",
   "content_schema_version": 4,
@@ -66,29 +66,29 @@
   },
   "declared_v3_selectors_authored": true,
   "inactive_full_target_binding_count": 6,
-  "input_aggregate_sha256": "1e255aadeb163e856703a2833d4464dc8481a445172fe7bdddb97a2cc5f54e20",
+  "input_aggregate_sha256": "ac88bd2afbe844caeaefc03a7f19b1d487ce16d36f073066e3813471daf71cfa",
   "milestone_accepted": false,
   "outputs": [
     {
-      "bytes": 339176,
-      "json_bytes": 339176,
-      "json_sha256": "75f3320e1bc975dc4f89d9cdfba97716044ad9074875ffb1faf56e6d0e0786ae",
+      "bytes": 344981,
+      "json_bytes": 344981,
+      "json_sha256": "d414d8b0aaffe538b6f37e448f8d3973933e33e6ffa4ec3a6fdc7a4c4b11140d",
       "path": "research/m1-bindings/input-lock.json",
-      "sha256": "75f3320e1bc975dc4f89d9cdfba97716044ad9074875ffb1faf56e6d0e0786ae"
+      "sha256": "d414d8b0aaffe538b6f37e448f8d3973933e33e6ffa4ec3a6fdc7a4c4b11140d"
     },
     {
-      "bytes": 509874,
-      "json_bytes": 15553501,
-      "json_sha256": "30fcefde81832e714710079404e38e794b4bf9f4ba0be0a8dd563108e5591dc4",
+      "bytes": 509864,
+      "json_bytes": 15553853,
+      "json_sha256": "f7755990f2ded4c13a6ba5434a20ec33c004887e2006a08f63dbabe2f63217ec",
       "path": "content/m1/game-content.json.gz",
-      "sha256": "0e33cc051f7d970c2e43ef7375c029527bcef98c933cf191b918d5b5c5d86d89"
+      "sha256": "05a7f7b76e9e3c91984805979537f77b14849d6d6b935134c0e3dd7b66d250ac"
     },
     {
       "bytes": 189277,
       "json_bytes": 189277,
-      "json_sha256": "52b434b649313bc8d9226a90bcfec5711546233b0f8a058c1fc9ea09be4cd79b",
+      "json_sha256": "dabe86aad289c9b771e3d29d1763fe287e77d71de6a3e5f03f71f46bf91f8f54",
       "path": "research/m1-bindings/application-result.json",
-      "sha256": "52b434b649313bc8d9226a90bcfec5711546233b0f8a058c1fc9ea09be4cd79b"
+      "sha256": "dabe86aad289c9b771e3d29d1763fe287e77d71de6a3e5f03f71f46bf91f8f54"
     },
     {
       "bytes": 4211,
@@ -532,11 +532,11 @@
       "sha256": "aab8341ed233c3151d1c395d1c98681c112c0c12a74cf5352e766db604da2639"
     },
     {
-      "bytes": 82599,
-      "json_bytes": 82599,
-      "json_sha256": "74fdfce9029a66bb3b58b1ff68ce6200ac2a6e21d452de31f6c7931909f42ee3",
+      "bytes": 82461,
+      "json_bytes": 82461,
+      "json_sha256": "03ef445b4ad3284f69e780532a5be32bf57449047f84fef0aef2769ba8fab53d",
       "path": "research/m1-bindings/item-bindings.json",
-      "sha256": "74fdfce9029a66bb3b58b1ff68ce6200ac2a6e21d452de31f6c7931909f42ee3"
+      "sha256": "03ef445b4ad3284f69e780532a5be32bf57449047f84fef0aef2769ba8fab53d"
     },
     {
       "bytes": 22049,
@@ -623,23 +623,23 @@
       "sha256": "77556ad0703b50d58289f495db911c53be4fa8b7f4c86adf55b5e86264ad9a33"
     },
     {
-      "bytes": 1965286,
-      "json_bytes": 1965286,
-      "json_sha256": "88eef0c537227c48c568106331f6a38b9acce3f3b351ae0f5cf2b762e246b885",
+      "bytes": 1968530,
+      "json_bytes": 1968530,
+      "json_sha256": "943c250f1b9726392b769a3686fe59328736a25b709743d77957f5741e1b90dc",
       "path": "content/m1/asset-references.json",
-      "sha256": "88eef0c537227c48c568106331f6a38b9acce3f3b351ae0f5cf2b762e246b885"
+      "sha256": "943c250f1b9726392b769a3686fe59328736a25b709743d77957f5741e1b90dc"
     },
     {
-      "bytes": 2670,
-      "json_bytes": 2670,
-      "json_sha256": "ba30fbc0df119cd361d404eb5fcf7692eacdf52ee84b7c46622b7dd14915734d",
+      "bytes": 2209,
+      "json_bytes": 2209,
+      "json_sha256": "d2db4e621c92ddca5bcba2a99fa982eac7bf6f3e61eb149ff91097550a606b7d",
       "path": "research/m1-bindings/structural-validation.json",
-      "sha256": "ba30fbc0df119cd361d404eb5fcf7692eacdf52ee84b7c46622b7dd14915734d"
+      "sha256": "d2db4e621c92ddca5bcba2a99fa982eac7bf6f3e61eb149ff91097550a606b7d"
     }
   ],
   "presentation_approved": false,
   "readiness_dependency": "research/m1-bindings/contract-gaps.json",
-  "revision": "m1.source-backed.v4.1e255aadeb163e85",
+  "revision": "m1.source-backed.v4.ac88bd2afbe844ca",
   "runtime_compile_passed": true,
   "runtime_ready": false,
   "runtime_schema_version": 1,
@@ -750,15 +750,6 @@
     "source_regions": 61,
     "walls": 21619
   },
-  "unpublished_asset_ids": [
-    "asset.source.osrs.cache2695.item.1919",
-    "asset.source.osrs.cache2695.item.1920",
-    "asset.source.osrs.cache2695.item.229",
-    "asset.source.osrs.cache2695.item.230",
-    "asset.source.osrs.cache2695.model.2548",
-    "asset.source.osrs.cache2695.model.2747",
-    "asset.source.osrs.cache2695.model.561",
-    "asset.source.osrs.cache2695.model.8234"
-  ],
+  "unpublished_asset_ids": [],
   "unresolved_binding_count": 6
 }

@@ -4,11 +4,12 @@
 import argparse
 import json
 
-from common import BINDINGS, CONTENT, PUBLICATION, ROOT, Inputs, canonical, load, sha, write
+from common import BINDINGS, CONTENT, PUBLICATION, PUBLICATION_SHA256, ROOT, Inputs, canonical, load, sha, write
 
 
 BASELINE = BINDINGS / "asset-refresh-baseline.json"
-CATALOG_SHA256 = "a6bcdca0fe8288b4b586a11537a646c7e745d49c874aa1329e508639a939381e"
+CATALOG_SHA256 = "f9997077e46419d4f7c6d1954f5a097ddb4eb8566b16f70d68a5594b585298fd"
+POTION_CATALOG_SHA256 = "a6bcdca0fe8288b4b586a11537a646c7e745d49c874aa1329e508639a939381e"
 REQUESTED = {"item_definition_ids": 72, "model_ids": 68, "npc_definition_ids": 6, "interface_groups": 13}
 KINDS = {"item_definition_ids": "item", "model_ids": "model", "npc_definition_ids": "npc", "interface_groups": "interface"}
 
@@ -71,20 +72,41 @@ def inspect_assets():
     inputs = Inputs()  # The shared loader validates all catalog, publication, shard and source-output hashes.
     baseline = load(BASELINE)
     content = load(CONTENT / "game-content.json.gz")
+    current_content = content
     ui_profile = content.get("ui")
     if ui_profile is not None:
-        from ui4 import CONTAINER_ITEMS, legacy_content
+        from ui4 import legacy_content
         from verify_ui4 import verify_ui4
         verify_ui4(content)
         content = legacy_content(content)
     manifest = load(CONTENT / "manifest.json")
     references = load(CONTENT / "asset-references.json")
-    ancestor = next(publication for _, publication in inputs.publication_chain
-                    if publication.get("merged_inventory", {}).get("path", "").endswith("cache2695-content-v2-bundle.json.gz"))
+    layers = {path.name: publication for path, publication in inputs.publication_chain}
+    require(list(layers) == ["cache2695-published.json", "cache2695-content-v2-published.json",
+                            "cache2695-potions-published.json", "cache2695-consumables-published.json"],
+            "All four immutable publication layers must be loaded in source order")
+    require(sha(PUBLICATION.read_bytes()) == PUBLICATION_SHA256, "Wrong authorized consumables publication")
+    ancestor = layers["cache2695-content-v2-published.json"]
+    potions = layers["cache2695-potions-published.json"]
+    consumables = layers["cache2695-consumables-published.json"]
+    require(sha((ROOT / potions["merged_inventory"]["path"]).read_bytes()) == POTION_CATALOG_SHA256,
+            "Previously published potion catalog changed")
     request = load(ROOT / ancestor["request"]["path"])
     closure = load(ROOT / ancestor["closure_report"]["path"])
-    potion_request = load(ROOT / inputs.publication["request"]["path"])
-    potion_closure = load(ROOT / inputs.publication["closure_report"]["path"])
+    potion_request = load(ROOT / potions["request"]["path"])
+    potion_closure = load(ROOT / potions["closure_report"]["path"])
+    consumed_request = load(ROOT / consumables["request"]["path"])
+    consumed_closure = load(ROOT / consumables["closure_report"]["path"])
+    consumed_requested = {"item_definition_ids": 4, "model_ids": 4, "npc_definition_ids": 0, "interface_groups": 0}
+    require(consumed_closure["requested"] == consumed_requested and consumed_closure["resolved"] == consumed_requested
+            and not consumed_closure["remaining_missing_inputs"], "Required original consumed-container assets are not closed")
+    consumed_assets = {f"asset.source.osrs.cache2695.{kind}.{number}"
+                       for kind, numbers in (("item", [229, 230, 1919, 1920]), ("model", [561, 2548, 2747, 8234]))
+                       for number in numbers}
+    require(set(consumed_request["required_asset_ids"]) == consumed_assets, "Consumed-container root scope changed")
+    require(set(consumed_closure["new_asset_ids"]) == consumed_assets | {
+        "asset.source.osrs.cache2695.item.15245", "asset.source.osrs.cache2695.item.19159"},
+        "An unrelated asset was added to the consumed-container layer")
     unresolved = load(BINDINGS / "unresolved-bindings.json")
     application_path = BINDINGS / "application-result.json"
     application = load(application_path) if application_path.exists() else None
@@ -117,19 +139,14 @@ def inspect_assets():
         require(sha((ROOT / name).read_bytes()) == expected, f"Protected source content changed: {name}")
     require(references["manifest"] == inputs.catalog_path, "Product still points at the old source catalog")
     missing = references["source_closure_missing"]
-    if ui_profile:
-        require(set(missing["item_definition_ids"]).issubset(set(CONTAINER_ITEMS.values()))
-                and set(missing["model_ids"]).issubset({561, 2548, 2747, 8234})
-                and not missing["npc_definition_ids"] and not missing["interface_groups"],
-                "A previously closed source asset became missing outside the exact UI extension")
-    else:
-        require(all(not values for values in missing.values()), "Product asset closure is not empty")
+    require(all(not values for values in missing.values()), "Product asset closure is not empty")
     require(set(references["source_closure_missing"]) == set(REQUESTED), "Missing closure category")
     require(closure["requested"] == REQUESTED and closure["resolved"] == REQUESTED, "Wrong frozen source closure request")
     required = set(potion_request["required_asset_ids"])
     actual = {record["id"] for record in references["assets"]}
     ui_assets = {ui_profile["appearance_base"]["value"]["asset"]} if ui_profile else set()
-    require(actual == required | ui_assets and len(required) == 5257, "Product changed the exact original source asset boundary")
+    require(actual == required | ui_assets | consumed_assets and len(required) == 5257,
+            "Product changed the exact original source asset boundary")
     require(len(actual) == len(references["assets"]), "Duplicate product asset reference")
     resolved = {}
     for category, expected_count in REQUESTED.items():
@@ -139,7 +156,7 @@ def inspect_assets():
         resolved[category] = sum(inputs.asset(KINDS[category], number) in actual for number in identifiers)
     require(resolved == REQUESTED, "A requested original asset is still not connected")
     for category, kind in (("items", "item"), ("npcs", "npc"), ("objects", "object")):
-        for identifier, definition in content[category].items():
+        for identifier, definition in current_content[category].items():
             asset = inputs.asset(kind, definition["source_id"])
             if identifier in extensions:
                 require(asset is not None and definition["asset"] == asset, "Published source potion asset was not bound")
@@ -153,7 +170,7 @@ def inspect_assets():
     npc_bindings = load(BINDINGS / "npc-bindings.json")
     interface_bindings = load(BINDINGS / "interface-bindings.json")
     require(all(record["asset_available"] and not record["missing_model_ids"] for identifier, record in
-                list(item_bindings.items()) + list(npc_bindings.items()) if not ui_profile or identifier not in CONTAINER_ITEMS),
+                list(item_bindings.items()) + list(npc_bindings.items())),
             "Previously completed definition/model binding became unavailable")
     require(all(not record["missing_source_groups"] for record in interface_bindings.values()), "Interface binding still unavailable")
     for record in references["assets"]:
@@ -210,8 +227,12 @@ def inspect_assets():
         "product_assets_resolved": len(required), "current_published_asset_references": len(actual),
         "current_asset_closure_passed": not any(missing.values()), "merged_inventory_records": len(inputs.assets),
         "new_original_assets": len(closure["new_asset_ids"]) + len(potion_closure["new_asset_ids"]),
-        "new_original_outputs": sum(len(publication["published_files"]) for _, publication in inputs.publication_chain[1:]),
+        "new_original_outputs": sum(len(publication["published_files"]) for _, publication in inputs.publication_chain[1:3]),
         "potion_requested_resolved": potion_closure["resolved"],
+        "consumables_requested_resolved": consumed_closure["resolved"],
+        "consumables_new_assets": len(consumed_closure["new_asset_ids"]),
+        "consumables_new_published_outputs": len(consumables["published_files"]),
+        "consumables_reused_dependencies": consumed_closure["redecoded_existing_assets_identical"],
         "publication_chain": [str(path.relative_to(ROOT)) for path, _ in inputs.publication_chain],
         "original_catalog_records_preserved": ancestor["existing_inventory_records_preserved"],
         "original_source_files_validated": protected["original_published_files_unchanged"],
@@ -231,6 +252,7 @@ def inspect_assets():
         "remaining_data_hookup": "Consumers resolve the merged catalog and its additive publication/shards; "
                                  "Canonical source application/selectors are checked separately. Potion3010/3011, "
                                  "original model2697 and source placeholder19365 are now published and bound. "
+                                 "The fourth layer also binds original consumed containers229/230/1919/1920 and their four models. "
                                  "Original assets are not scene/render/audio acceptance.",
     }
     write(BINDINGS / "asset-refresh-validation.json", report, pretty=True)

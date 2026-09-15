@@ -29,12 +29,17 @@ container definitions and their notes are retained in
 `research/m1-bindings/ui-item-definitions.json.gz`. They add no new acquisition
 family. Their weights and values are source data, not fixture defaults.
 
-The published asset catalog currently lacks items229/230/1919/1920 and
-models561/2548/2747/8234. Required `item.asset` references remain explicit.
-Canonical build/check/asset verification exits failure until the source owner
-publishes and validates those exact assets. The v4 source/artifact candidate is
-coherent and strictly compiled, but `asset_closure_passed` remains false.
-No sourcepack/assets/reference tools or approval files are changed here.
+The original consumed-container closure is integrated from authorized parent
+commit `82e0a41acaaa8c69fe70369aaa559c05844253b8`. Its fourth immutable publication,
+`assets/manifests/osrs/cache2695-consumables-published.json`, is pinned to
+`2340ea5e3e6eeeeecdbda5de7f371f3ff2eb57576f4c783009344a1c348dbede`.
+It closes items229/230/1919/1920 and models561/2548/2747/8234, adding only original
+placeholder dependencies15245/19159 and reusing seven existing dependencies.
+All four publication layers and their output/provenance shards feed canonical
+generation. `build_items` supplies the true item assets; no manual alias or null
+icon substitutes for them. Canonical build/check/asset verification now passes
+with an empty missing list. Earlier source/reference/audio inputs remain
+unchanged. Independent sourcepack or physics edits are not part of this UI task.
 
 Public chat uses the normal public channel and the source tutorial restriction.
 Fifteen-square player locality is qualified protocol-source reconstruction, not

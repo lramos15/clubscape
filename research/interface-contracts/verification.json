@@ -4,7 +4,9 @@
   "shared_contract_commit": "e48e6f52d68aa97fbbb4f5664bf6e1c5ef7e71e8",
   "nullable_production_contract_commit": "351847f3f5255f6de6e345d5217a7910eaa145a3",
   "implementation_verified": true,
-  "overall_status": "blocked_required_asset_publication",
+  "overall_status": "implemented_verified",
+  "authorized_consumables_parent_commit": "82e0a41acaaa8c69fe70369aaa559c05844253b8",
+  "authorized_consumables_local_commit": "4677409552f33d211819504efacfee1a760d597a",
   "versions": {
     "content": 4,
     "artifact": 4,
@@ -16,18 +18,18 @@
   },
   "artifact": {
     "path": "content/m1/game-content.csc.gz",
-    "raw_sha256": "7db2892a303c1a9eac1158c4802859ccb99fc9141281cfb06761468c0d10f894",
-    "compressed_sha256": "5491b01951ad35111563a941639527cdb6184a2389767cf63080f0f368383099",
+    "raw_sha256": "080a0865031c4115b26f3aa8d4400928034295bfa8f2bb3174f6cea43c8db0db",
+    "compressed_sha256": "a46efa7300de9cdb155fff4bc4d53e118af069a273b7e5e833fa7e6be95daa22",
     "strict_runtime_compile": true,
     "strict_reload": true,
     "byte_identical_outputs_across_two_builds": 83,
-    "asset_closure_passed": false
+    "asset_closure_passed": true
   },
   "validation": {
     "native": {
       "command": "cargo test -p clubscape-game-types -p clubscape-simulation -p clubscape-world-engine -p clubscape-content -p clubscape-protocol -p clubscape-server -p clubscape-client-core --all-targets --quiet",
       "binaries": 41,
-      "passed": 528,
+      "passed": 536,
       "failed": 0,
       "ignored_postgresql_tests": 39
     },
@@ -40,7 +42,7 @@
     },
     "source_tests": {
       "command": "python3 -m unittest discover -s tools/m1-content -p 'test_*.py'",
-      "passed": 64,
+      "passed": 65,
       "source_bindings_preserved": 104,
       "coupled_updates_preserved": 7,
       "loot_joint_vectors": 8192,
@@ -75,12 +77,20 @@
     "shared_typescript_strict_typecheck": "passed"
   },
   "required_asset_publication": {
+    "status": "published_verified",
+    "manifest": "assets/manifests/osrs/cache2695-consumables-published.json",
+    "manifest_sha256": "2340ea5e3e6eeeeecdbda5de7f371f3ff2eb57576f4c783009344a1c348dbede",
+    "publication_layers": 4,
     "item_ids": [229, 230, 1919, 1920],
     "model_ids": [561, 2548, 2747, 8234],
+    "new_original_placeholder_ids": [15245, 19159],
+    "reused_existing_dependencies": 7,
+    "importer_tests_passed": 73,
     "source_definitions": "research/m1-bindings/ui-item-definitions.json.gz",
     "definition_import_sha256": "27d6b60e109a5a42cdbf704aaf4b882403aa4ea37a2cfa80944a79027e444014",
-    "build_check_and_asset_verifier_exit": 1,
-    "policy": "Publish and validate original source assets, then regenerate. No null icons, substituted models, removed source outcomes or relaxed startup checks."
+    "build_check_and_asset_verifier_exit": 0,
+    "remaining_missing_inputs": [],
+    "policy": "All four validated immutable layers preserve source/reference/audio inputs. Required original items/models and replacement outcomes remain intact; no null icons, aliases or relaxed startup checks."
   },
   "caller_contract": {
     "view": "WorldSnapshot.ui / WorldView.ui version1, capability game.ui.v1",

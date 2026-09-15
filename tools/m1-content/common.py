@@ -13,10 +13,13 @@ BINDINGS = ROOT / "research/m1-bindings"
 SOURCE = ROOT / "assets/source/osrs/cache2695"
 JOURNEY = ROOT / "research/journey-rules"
 ASSET_PREFIX = "asset.source.osrs.cache2695."
-PUBLICATION = ROOT / "assets/manifests/osrs/cache2695-potions-published.json"
+PUBLICATION = ROOT / "assets/manifests/osrs/cache2695-consumables-published.json"
+PUBLICATION_SHA256 = "2340ea5e3e6eeeeecdbda5de7f371f3ff2eb57576f4c783009344a1c348dbede"
 
 
 def published_inputs():
+    if sha(PUBLICATION.read_bytes()) != PUBLICATION_SHA256:
+        raise ValueError("The selected consumables publication differs from its authorized hash")
     previous_path = list(sys.path)
     previous_bytecode = sys.dont_write_bytecode
     try:

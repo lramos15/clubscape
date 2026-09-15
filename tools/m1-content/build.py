@@ -65,6 +65,8 @@ def input_lock(inputs):
     paths += [ROOT / "assets/manifests/osrs/audio-runtime.json"]
     paths += [ROOT / "research/interface-contracts/sources.json", ROOT / "research/interface-contracts/native-ui.json",
               BINDINGS / "ui-item-definitions.json.gz"]
+    paths += [ROOT / "research/current-source/m1-consumable-validation.json",
+              ROOT / "tools/cache-import/CONSUMABLE_ASSETS.md"]
     paths += [ROOT / "research/runtime-bindings" / name for name in (
         "resolutions.json", "application-context.json", "sources.json", "oracles.json",
         "death-values.json", "profile-resolutions.json", "inputs/guide-prices.json.gz")]
@@ -416,6 +418,14 @@ def build(args):
             "scope": "The actual3-dose potion identity, reciprocal note and original model2697 resolve through "
                      "the additive potion publication, including its original placeholder19365 dependency. "
                      "No fabricated assets or pending source-publication exception.",
+        },
+        "consumed_container_extensions": {
+            "path": "research/m1-bindings/ui-item-definitions.json.gz",
+            "sha256": sha((BINDINGS / "ui-item-definitions.json.gz").read_bytes()),
+            "items": bindings["ui"]["introduced_containers"],
+            "publication": str(PUBLICATION.relative_to(ROOT)),
+            "publication_sha256": sha(PUBLICATION.read_bytes()),
+            "scope": "Original vial/beer-glass definitions, reciprocal notes and inventory/held models from the fourth immutable publication layer.",
         },
         "output_path_policy": "Asset outputs keep their canonical extraction-relative paths. Resolve committed "
                               "closure bytes with published_files[].extraction_path -> path in the additive publication; "

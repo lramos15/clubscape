@@ -62,41 +62,40 @@
   },
   "compiled_artifact": {
     "artifact_version": 4,
-    "bytes": 519879,
+    "bytes": 519863,
     "path": "content/m1/game-content.csc.gz",
     "schema_version": 4,
-    "sha256": "5491b01951ad35111563a941639527cdb6184a2389767cf63080f0f368383099",
-    "uncompressed_bytes": 13083530,
-    "uncompressed_sha256": "7db2892a303c1a9eac1158c4802859ccb99fc9141281cfb06761468c0d10f894"
+    "sha256": "a46efa7300de9cdb155fff4bc4d53e118af069a273b7e5e833fa7e6be95daa22",
+    "uncompressed_bytes": 13083882,
+    "uncompressed_sha256": "080a0865031c4115b26f3aa8d4400928034295bfa8f2bb3174f6cea43c8db0db"
   },
-  "current_asset_closure_passed": false,
+  "consumables_new_assets": 10,
+  "consumables_new_published_outputs": 20,
+  "consumables_requested_resolved": {
+    "interface_groups": 0,
+    "item_definition_ids": 4,
+    "model_ids": 4,
+    "npc_definition_ids": 0
+  },
+  "consumables_reused_dependencies": 7,
+  "current_asset_closure_passed": true,
   "current_audio_files_hash_validated": 264,
-  "current_published_asset_references": 5258,
+  "current_published_asset_references": 5266,
   "gameplay_executed": false,
   "geometry_and_prior_asset_closure_preserved": true,
   "historical_audio_file_count": 258,
   "merged_catalog": {
-    "path": "assets/manifests/osrs/cache2695-potions-bundle.json.gz",
-    "sha256": "a6bcdca0fe8288b4b586a11537a646c7e745d49c874aa1329e508639a939381e",
-    "size_bytes": 1916698
+    "path": "assets/manifests/osrs/cache2695-consumables-bundle.json.gz",
+    "sha256": "f9997077e46419d4f7c6d1954f5a097ddb4eb8566b16f70d68a5594b585298fd",
+    "size_bytes": 1919477
   },
-  "merged_inventory_records": 12400,
+  "merged_inventory_records": 12410,
   "new_original_assets": 272,
   "new_original_outputs": 1137,
   "new_verified_definition_publication_needed": {
     "interface_groups": [],
-    "item_definition_ids": [
-      229,
-      230,
-      1919,
-      1920
-    ],
-    "model_ids": [
-      561,
-      2548,
-      2747,
-      8234
-    ],
+    "item_definition_ids": [],
+    "model_ids": [],
     "npc_definition_ids": []
   },
   "original_catalog_records_preserved": 12128,
@@ -118,10 +117,11 @@
   "publication_chain": [
     "assets/manifests/osrs/cache2695-published.json",
     "assets/manifests/osrs/cache2695-content-v2-published.json",
-    "assets/manifests/osrs/cache2695-potions-published.json"
+    "assets/manifests/osrs/cache2695-potions-published.json",
+    "assets/manifests/osrs/cache2695-consumables-published.json"
   ],
-  "publication_sha256": "b592db6ba6121e278e03b5c7e435f2fa69bc8da9534adcec22d177ae1b855024",
-  "remaining_data_hookup": "Consumers resolve the merged catalog and its additive publication/shards; Canonical source application/selectors are checked separately. Potion3010/3011, original model2697 and source placeholder19365 are now published and bound. Original assets are not scene/render/audio acceptance.",
+  "publication_sha256": "2340ea5e3e6eeeeecdbda5de7f371f3ff2eb57576f4c783009344a1c348dbede",
+  "remaining_data_hookup": "Consumers resolve the merged catalog and its additive publication/shards; Canonical source application/selectors are checked separately. Potion3010/3011, original model2697 and source placeholder19365 are now published and bound. The fourth layer also binds original consumed containers229/230/1919/1920 and their four models. Original assets are not scene/render/audio acceptance.",
   "remaining_missing_inputs": [],
   "requested": {
     "interface_groups": 13,
@@ -135,8 +135,8 @@
     "model_ids": 68,
     "npc_definition_ids": 6
   },
-  "result": "blocked_new_assets",
-  "revision": "m1.source-backed.v4.1e255aadeb163e85",
+  "result": "passed",
+  "revision": "m1.source-backed.v4.ac88bd2afbe844ca",
   "runtime_compile_passed": true,
   "schema_version": 1,
   "scope": "Prior original asset/provenance closure preserved; current UI publication is a separate mandatory gate. Not M1 acceptance.",

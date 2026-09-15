@@ -243,12 +243,9 @@
       }
     },
     "item.beer_glass": {
-      "asset_available": false,
+      "asset_available": true,
       "interpretation": "Notes use the source template/base composition. Item models, recolors, retextures, icon framing and wear attachments remain in the original definition.",
-      "missing_model_ids": [
-        2548,
-        8234
-      ],
+      "missing_model_ids": [],
       "models": [
         2548,
         8234
@@ -268,12 +265,9 @@
       "source_params": {}
     },
     "item.beer_glass.noted": {
-      "asset_available": false,
+      "asset_available": true,
       "interpretation": "Notes use the source template/base composition. Item models, recolors, retextures, icon framing and wear attachments remain in the original definition.",
-      "missing_model_ids": [
-        2548,
-        8234
-      ],
+      "missing_model_ids": [],
       "models": [
         2548,
         8234
@@ -2820,12 +2814,9 @@
       "source_params": {}
     },
     "item.vial": {
-      "asset_available": false,
+      "asset_available": true,
       "interpretation": "Notes use the source template/base composition. Item models, recolors, retextures, icon framing and wear attachments remain in the original definition.",
-      "missing_model_ids": [
-        561,
-        2747
-      ],
+      "missing_model_ids": [],
       "models": [
         561,
         2747
@@ -2845,12 +2836,9 @@
       "source_params": {}
     },
     "item.vial.noted": {
-      "asset_available": false,
+      "asset_available": true,
       "interpretation": "Notes use the source template/base composition. Item models, recolors, retextures, icon framing and wear attachments remain in the original definition.",
-      "missing_model_ids": [
-        561,
-        2747
-      ],
+      "missing_model_ids": [],
       "models": [
         561,
         2747

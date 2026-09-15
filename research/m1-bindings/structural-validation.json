@@ -1,5 +1,5 @@
 {
-  "asset_closure_passed": false,
+  "asset_closure_passed": true,
   "counts": {
     "cooks_projected_edges": 22,
     "cooks_source_transitions": 22,
@@ -68,22 +68,5 @@
     "verified_reference": 15803
   },
   "structural_checks_passed": true,
-  "unpublished_asset_references": [
-    {
-      "asset": "asset.source.osrs.cache2695.item.1919",
-      "path": "content/items/item.beer_glass"
-    },
-    {
-      "asset": "asset.source.osrs.cache2695.item.1920",
-      "path": "content/items/item.beer_glass.noted"
-    },
-    {
-      "asset": "asset.source.osrs.cache2695.item.229",
-      "path": "content/items/item.vial"
-    },
-    {
-      "asset": "asset.source.osrs.cache2695.item.230",
-      "path": "content/items/item.vial.noted"
-    }
-  ]
+  "unpublished_asset_references": []
 }
