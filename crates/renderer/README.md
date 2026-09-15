@@ -33,10 +33,14 @@ handed over by the shell. It contains no game rules, no hit points, no interacti
 ## Building and testing
 
 ```bash
-# native library + CPU tests (no GPU needed)
+# native library + CPU tests on published inputs only (what CI runs; no GPU needed)
 cargo test -p clubscape-renderer --release
-# native GPU differential tests (wgpu Vulkan/Metal adapter required)
+# native GPU fidelity tests: a hardware wgpu adapter (Vulkan/Metal) is REQUIRED; without one
+# every GPU test fails — a missing or software adapter is never a pass
 cargo test -p clubscape-renderer --release --features gpu
+# tests over reproducible local exports (ignored by default; missing files then fail):
+#   export.py --profile blocks / --profile scenes-pinned / --profile npcs
+cargo test -p clubscape-renderer --release --features gpu -- --include-ignored
 # lints as CI runs them
 cargo clippy -p clubscape-renderer --release --features gpu --all-targets -- -D warnings
 cargo clippy -p clubscape-renderer --features web --target wasm32-unknown-unknown -- -D warnings
@@ -44,23 +48,35 @@ cargo clippy -p clubscape-renderer --features web --target wasm32-unknown-unknow
 web/renderer/build.sh
 ```
 
-Runtime inputs live in `assets/compiled/render` (see `tools/render-assets/README.md`). The raw
-scene buffers are published only as deterministic gzip twins; restore them before running the
-scene tests with `python3 tools/render-assets/export.py --profile unpack`. Tests that need an
-absent local export skip themselves and say so.
+Runtime inputs live in `assets/compiled/render` (see `tools/render-assets/README.md`). Tests read
+published buffers through `tests/common/mod.rs`: raw scene buffers are published only as
+deterministic gzip twins and are inflated on the fly, so a clean checkout runs every scene and
+NPC case; a declared input that is missing fails the test. No test skips a mandatory case at
+run time — suites over unpublished, reproducible exports (world blocks, pinned validation
+twins, per-frame bakes) are `#[ignore]`d with the reproduction command and fail on missing
+files when run with `--include-ignored`.
 
-Tests:
+Tests (published inputs unless noted):
 
-* `tests/fixtures.rs` – palette/table parity, tree ×4 yaws, 54 baked NPC frames (when baked dumps
-  are present), the five scene fixtures, `RendererCore` actors/animation/picking.
+* `tests/fixtures.rs` – palette/table parity, tree ×4 yaws, **all 54 goblin/penguin capture
+  frames from the published packs** (`models/npc-<id>.pack.bin`), the five scene fixtures,
+  `RendererCore` actors/picking; ignored: local per-frame bakes equal the pack frames after the
+  original `(int)` vertex truncation.
 * `tests/robustness.rs` – truncated/corrupt buffers, out-of-range indices, missing textures and
   mismatched packs fail explicitly; unknown NPCs/sequences are reported; animation cadence equals
   the source frame lengths; NPC packs reproduce the approved frame captures through
-  `RendererCore`; resize keeps the projection centre and coverage; picking respects bounds.
-* `tests/gpu.rs` – GPU output equals the CPU port and the source PNGs for every fixture.
-* `tests/blocks.rs` – scenes assembled from world blocks are pixel-identical to the original
-  loader's direct export at all five fixture bases (animated scenery pinned to frame 0 on both
-  sides); recentering around the player keeps the whole visible world.
+  `RendererCore`; the skeletal port reproduces every baked pack frame vertex- and pixel-exactly;
+  resize keeps the projection centre and coverage; picking respects bounds.
+* `tests/actors.rs` – NPC definitions animate/pick/filter by instance, player action motions and
+  gear fit, live layers (items, fire, doors, roof modes), the stock top-plane rule, the interface
+  preview projection.
+* `tests/gpu.rs` (`--features gpu`) – GPU output equals the CPU port and the source PNGs for the
+  five scenes and all 58 model captures (4 tree yaws + 54 pack frames); coverage alpha and the
+  asynchronous readback. Logged GPU times are the completed frame's timestamp-query span or
+  are labelled unavailable; wall time is reported separately.
+* `tests/blocks.rs` (ignored by default) – scenes assembled from world blocks are pixel-identical
+  to the original loader's direct export at all five fixture bases (animated scenery pinned to
+  frame 0 on both sides); recentering around the player keeps the whole visible world.
 
 ## Coordinate and unit conventions
 

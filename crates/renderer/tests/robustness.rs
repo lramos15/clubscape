@@ -2,7 +2,9 @@
 //! follows the source frame lengths, NPC packs reproduce the approved frame captures, resizing
 //! keeps the projection consistent and picking stays inside bounds.
 
-use std::path::{Path, PathBuf};
+mod common;
+
+use std::path::Path;
 
 use clubscape_renderer::RenderError;
 use clubscape_renderer::core::{Camera, ModelFixture, NpcPack, RendererCore};
@@ -12,15 +14,15 @@ use clubscape_renderer::raster::software::Software;
 use clubscape_renderer::scene::draw::PickTarget;
 use clubscape_renderer::texture::{Texture, TextureSet};
 
-fn repo_root() -> PathBuf {
-    Path::new(env!("CARGO_MANIFEST_DIR"))
-        .join("../..")
-        .canonicalize()
-        .unwrap()
-}
+use common::repo_root;
 
+/// Reads a repository file; render assets under `assets/compiled/render/` go through the shared
+/// loader so published gzip twins serve a clean checkout.
 fn read(rel: &str) -> Vec<u8> {
-    std::fs::read(repo_root().join(rel)).unwrap_or_else(|e| panic!("{rel}: {e}"))
+    match rel.strip_prefix("assets/compiled/render/") {
+        Some(key) => common::read_asset(key),
+        None => std::fs::read(repo_root().join(rel)).unwrap_or_else(|e| panic!("{rel}: {e}")),
+    }
 }
 
 fn read_png_rgb(path: &Path) -> (u32, u32, Vec<i32>) {
@@ -70,12 +72,6 @@ fn core_with_assets(width: i32, height: i32) -> RendererCore {
     )
     .unwrap();
     core
-}
-
-fn scene_available(name: &str) -> bool {
-    repo_root()
-        .join(format!("assets/compiled/render/scenes/{name}.bin"))
-        .exists()
 }
 
 fn load_house(core: &mut RendererCore) {
@@ -157,12 +153,6 @@ fn face_indices_out_of_range_are_rejected() {
 
 #[test]
 fn scene_load_reports_missing_textures_and_pack_mismatch() {
-    if !scene_available("tutorial-starting-house") {
-        eprintln!(
-            "skipping: scene export not present (run tools/render-assets/export.py --profile unpack)"
-        );
-        return;
-    }
     let scene = read("assets/compiled/render/scenes/tutorial-starting-house.bin");
     let pack = read("assets/compiled/render/scenes/tutorial-starting-house.models.bin");
     // No textures loaded: the scene must refuse to load rather than draw fallbacks silently.
@@ -199,9 +189,6 @@ fn scene_load_reports_missing_textures_and_pack_mismatch() {
 
 #[test]
 fn unknown_npcs_and_sequences_are_reported_not_faked() {
-    if !scene_available("tutorial-starting-house") {
-        return;
-    }
     let mut core = core_with_assets(1920, 1080);
     load_house(&mut core);
     let world = serde_json::json!({
@@ -431,9 +418,6 @@ fn npc_pack_frames_match_source_captures_via_core() {
 
 #[test]
 fn resize_reprojects_and_picking_stays_in_bounds() {
-    if !scene_available("tutorial-starting-house") {
-        return;
-    }
     let textures = textures();
     let mut core = core_with_assets(1920, 1080);
     load_house(&mut core);
@@ -546,13 +530,11 @@ fn animation_port_reproduces_baked_original_frames_exactly() {
         )))
         .unwrap();
         for sequence_id in sequences {
-            let path =
-                repo_root().join(format!("assets/compiled/render/anim/seq-{sequence_id}.bin"));
-            if !path.exists() {
-                eprintln!("skipping sequence {sequence_id}: run export.py --profile anim");
-                continue;
-            }
-            let sequence = Sequence::from_chunks(&std::fs::read(path).unwrap()).unwrap();
+            // Published input (`anim/seq-<id>.bin`): missing means a broken checkout, not a skip.
+            let sequence = Sequence::from_chunks(&read(&format!(
+                "assets/compiled/render/anim/seq-{sequence_id}.bin"
+            )))
+            .unwrap();
             let baked = pack.sequences.get(&sequence_id).expect("baked sequence");
             assert_eq!(
                 sequence.lengths, baked.lengths,

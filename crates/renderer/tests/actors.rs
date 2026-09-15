@@ -2,7 +2,7 @@
 //! sequences, the penguin player with retargeted human action sequences, modular equipment
 //! attachment with measured fit, instance filtering and picking by WorldView id.
 
-use std::path::PathBuf;
+mod common;
 
 use clubscape_renderer::actor::{ActivityContext, player_sequence_for};
 use clubscape_renderer::core::{Camera, PlayerPreview, RendererCore};
@@ -11,20 +11,18 @@ use clubscape_renderer::raster::software::Software;
 use clubscape_renderer::scene::draw::PickTarget;
 use clubscape_renderer::texture::{Texture, TextureSet};
 
-fn repo_root() -> PathBuf {
-    std::path::Path::new(env!("CARGO_MANIFEST_DIR"))
-        .join("../..")
-        .canonicalize()
-        .unwrap()
-}
+use common::repo_root;
 
 fn read(rel: &str) -> Vec<u8> {
-    std::fs::read(repo_root().join(rel)).unwrap_or_else(|e| panic!("{rel}: {e}"))
+    match rel.strip_prefix("assets/compiled/render/") {
+        Some(key) => common::read_asset(key),
+        None => std::fs::read(repo_root().join(rel)).unwrap_or_else(|e| panic!("{rel}: {e}")),
+    }
 }
 
 /// Manifest file keys are relative to assets/compiled/render.
 fn asset(key: &str) -> Vec<u8> {
-    read(&format!("assets/compiled/render/{key}"))
+    common::read_asset(key)
 }
 
 fn textures() -> TextureSet {
@@ -43,11 +41,20 @@ fn manifest() -> serde_json::Value {
 }
 
 /// Loads textures, every exported sequence, every NPC definition, the player body and gear.
+/// These are published manifest sections; a manifest without them is a broken checkout.
 fn core_with_actors() -> Option<RendererCore> {
     let manifest = manifest();
-    if manifest.get("sequences").is_none() || manifest.get("player_reference").is_none() {
-        eprintln!("skipping: run tools/render-assets/export.py --profile anim");
-        return None;
+    for section in [
+        "sequences",
+        "npc_definitions",
+        "equipment_items",
+        "player_reference",
+    ] {
+        assert!(
+            manifest.get(section).is_some(),
+            "manifest section {section} missing: assets/compiled/render is incomplete \
+             (reproduce with tools/render-assets/export.py --profile anim)"
+        );
     }
     let mut core = RendererCore::new(
         Palette::from_chunks(&read("assets/compiled/render/palette.bin")).unwrap(),
@@ -492,10 +499,10 @@ fn player_pose_sheet_renders() {
 #[test]
 fn dynamic_layers_draw_from_the_world_view() {
     let manifest = manifest();
-    if manifest.get("dynamic_objects").is_none() {
-        eprintln!("skipping: run tools/render-assets/export.py --profile dynamic");
-        return;
-    }
+    assert!(
+        manifest.get("dynamic_objects").is_some() && manifest.get("ground_items").is_some(),
+        "manifest sections dynamic_objects/ground_items missing (export.py --profile dynamic)"
+    );
     let Some(mut core) = core_with_actors() else {
         return;
     };

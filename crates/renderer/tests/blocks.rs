@@ -2,7 +2,7 @@
 //! direct 104x104 export at the same base (both with animated scenery pinned to frame 0), and
 //! recentering around the player must keep the whole visible world present.
 
-use std::path::PathBuf;
+mod common;
 
 use clubscape_renderer::core::{Camera, RendererCore};
 use clubscape_renderer::palette::Palette;
@@ -10,15 +10,13 @@ use clubscape_renderer::raster::software::Software;
 use clubscape_renderer::scene::draw::PickTarget;
 use clubscape_renderer::texture::{Texture, TextureSet};
 
-fn repo_root() -> PathBuf {
-    std::path::Path::new(env!("CARGO_MANIFEST_DIR"))
-        .join("../..")
-        .canonicalize()
-        .unwrap()
-}
+use common::repo_root;
 
 fn read(rel: &str) -> Vec<u8> {
-    std::fs::read(repo_root().join(rel)).unwrap_or_else(|e| panic!("{rel}: {e}"))
+    match rel.strip_prefix("assets/compiled/render/") {
+        Some(key) => common::read_asset(key),
+        None => std::fs::read(repo_root().join(rel)).unwrap_or_else(|e| panic!("{rel}: {e}")),
+    }
 }
 
 fn textures() -> TextureSet {
@@ -42,22 +40,18 @@ fn core_with_textures() -> RendererCore {
     core
 }
 
-fn blocks_present(squares: &[i32]) -> bool {
-    squares.iter().all(|s| {
-        repo_root()
-            .join(format!("assets/compiled/render/blocks/{s}.bin"))
-            .exists()
-    })
-}
+const REPRODUCE_BLOCKS: &str = "python3 tools/render-assets/export.py --profile blocks";
+const REPRODUCE_PINNED: &str = "python3 tools/render-assets/export.py --profile scenes-pinned";
 
+/// World blocks are reproducible local exports (61 squares, ~75 MB gzip, hashes in the
+/// manifest) and deliberately not published; a missing square fails the (ignored-by-default)
+/// test rather than skipping the case.
 fn load_blocks(core: &mut RendererCore, squares: &[i32]) {
     for &square in squares {
         core.load_block(
             square,
-            &read(&format!("assets/compiled/render/blocks/{square}.bin")),
-            &read(&format!(
-                "assets/compiled/render/blocks/{square}.models.bin"
-            )),
+            &common::read_local_export(&format!("blocks/{square}.bin"), REPRODUCE_BLOCKS),
+            &common::read_local_export(&format!("blocks/{square}.models.bin"), REPRODUCE_BLOCKS),
         )
         .unwrap();
     }
@@ -133,32 +127,28 @@ fn camera(f: &Fixture) -> Camera {
     }
 }
 
+/// Ignored by default: needs the reproducible local block and pinned-scene exports. Run with
+/// `cargo test -p clubscape-renderer --release --test blocks -- --include-ignored`; every one of
+/// the five fixture bases must then be present and identical.
 #[test]
+#[ignore = "needs local exports: export.py --profile blocks and --profile scenes-pinned"]
 fn assembled_blocks_match_direct_pinned_exports() {
     let textures = textures();
     let mut checked = 0;
     for fixture in &FIXTURES {
-        let pinned = repo_root().join(format!(
-            "assets/compiled/render/scenes/{}.pinned.bin",
-            fixture.name
-        ));
         let squares = RendererCore::squares_for_base(fixture.base.0, fixture.base.1);
-        if !pinned.exists() || !blocks_present(&squares) {
-            eprintln!(
-                "skipping {}: needs export.py --profile blocks and --profile scenes-pinned",
-                fixture.name
-            );
-            continue;
-        }
         let mut direct = core_with_textures();
         direct
             .load_scene(
                 fixture.name,
-                &std::fs::read(&pinned).unwrap(),
-                &read(&format!(
-                    "assets/compiled/render/scenes/{}.pinned.models.bin",
-                    fixture.name
-                )),
+                &common::read_local_export(
+                    &format!("scenes/{}.pinned.bin", fixture.name),
+                    REPRODUCE_PINNED,
+                ),
+                &common::read_local_export(
+                    &format!("scenes/{}.pinned.models.bin", fixture.name),
+                    REPRODUCE_PINNED,
+                ),
             )
             .unwrap();
         direct.set_camera(camera(fixture)).unwrap();
@@ -244,16 +234,13 @@ fn assembled_blocks_match_direct_pinned_exports() {
 }
 
 #[test]
+#[ignore = "needs local exports: export.py --profile blocks"]
 fn recentering_follows_the_player_and_keeps_scenery() {
     // Player on the Tutorial Island starting-house tile: the original centres the scene on the
     // player's chunk, base = ((tile >> 3) - 6) * 8.
     let (bx, by) = RendererCore::base_for_tile(3094, 3103);
     assert_eq!((bx, by), (3040, 3048));
     let squares = RendererCore::squares_for_base(bx, by);
-    if !blocks_present(&squares) {
-        eprintln!("skipping: blocks not exported");
-        return;
-    }
     let textures = textures();
     let mut core = core_with_textures();
     load_blocks(&mut core, &squares);

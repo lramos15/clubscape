@@ -3,9 +3,11 @@
 
 #![cfg(feature = "gpu")]
 
-use std::path::{Path, PathBuf};
+mod common;
 
-use clubscape_renderer::gpu::{GpuRasterizer, GpuTextures, pack_frame};
+use std::path::Path;
+
+use clubscape_renderer::gpu::{GpuFrame, GpuRasterizer, GpuTextures, pack_frame};
 use clubscape_renderer::model::Model;
 use clubscape_renderer::model_draw::{ModelDrawer, ModelScratch};
 use clubscape_renderer::palette::Palette;
@@ -15,9 +17,7 @@ use clubscape_renderer::scene::SceneData;
 use clubscape_renderer::scene::draw::{SceneDrawer, SceneView};
 use clubscape_renderer::texture::{Texture, TextureSet};
 
-fn repo_root() -> PathBuf {
-    Path::new(env!("CARGO_MANIFEST_DIR")).join("../..")
-}
+use common::{read_asset, repo_root};
 
 fn load_palette() -> Palette {
     Palette::from_chunks(
@@ -60,26 +60,45 @@ struct Gpu {
     adapter_name: String,
 }
 
-fn gpu(width: u32, height: u32) -> Option<Gpu> {
+/// An explicit `--features gpu` run is a GPU fidelity run: no hardware adapter is a failure,
+/// never a pass with the cases skipped. Runs without a GPU simply do not enable the feature.
+fn gpu(width: u32, height: u32) -> Gpu {
     let (adapter, device, queue) =
         match pollster::block_on(clubscape_renderer::gpu::device::request_native_device()) {
             Ok(v) => v,
-            Err(e) => {
-                eprintln!("skipping GPU test: {e}");
-                return None;
-            }
+            Err(e) => panic!(
+                "GPU fidelity tests need a hardware wgpu adapter (Vulkan/Metal): {e}. \
+                 Run without `--features gpu` on machines without one; a missing GPU is not a pass."
+            ),
         };
     let palette = load_palette();
     let textures = load_textures();
     let gpu_textures = GpuTextures::from_set(&textures);
     let raster =
         GpuRasterizer::new(device, queue, &palette.rgb, &gpu_textures, width, height).unwrap();
-    Some(Gpu {
+    Gpu {
         raster,
         palette,
         textures,
         adapter_name: adapter.get_info().name,
-    })
+    }
+}
+
+/// Human-readable GPU pass duration of a completed frame: the timestamp-query span when the
+/// adapter supports it and the readback has been mapped, otherwise explicitly unavailable.
+fn gpu_time_label(g: &Gpu, frame: &GpuFrame) -> String {
+    if !g.raster.timestamps_supported() {
+        return "gpu time unavailable (adapter has no timestamp queries)".into();
+    }
+    let mut polls = 0;
+    while frame.timestamps_pending() && polls < 1000 {
+        g.raster.poll_once().unwrap();
+        polls += 1;
+    }
+    match frame.gpu_duration_ns() {
+        Some(ns) => format!("gpu pass {:.3} ms (timestamp query)", ns as f64 / 1e6),
+        None => "gpu time unavailable (timestamp readback not mapped)".into(),
+    }
 }
 
 fn cpu_render(
@@ -114,7 +133,9 @@ fn diff_count(a: &[i32], b: &[i32]) -> (usize, i32, Option<usize>) {
     (n, max, first)
 }
 
-fn gpu_render(g: &mut Gpu, state: &RasterState, tris: &[Tri], clear: u32) -> Vec<i32> {
+/// Renders on the GPU and returns the pixels with the completed frame (its completion callback
+/// must have fired before the readback returned; the caller reads timing from the frame).
+fn gpu_render(g: &mut Gpu, state: &RasterState, tris: &[Tri], clear: u32) -> (Vec<i32>, GpuFrame) {
     let packed = pack_frame(state, tris, &g.textures);
     let frame = g.raster.render(state, &packed, clear).unwrap();
     let pixels = g.raster.read_back().unwrap();
@@ -122,56 +143,28 @@ fn gpu_render(g: &mut Gpu, state: &RasterState, tris: &[Tri], clear: u32) -> Vec
         frame.is_complete(),
         "queue completion callback did not fire before readback"
     );
-    pixels
+    (pixels, frame)
 }
 
+/// All 58 approved model captures (4 tree yaws + 54 NPC frames from the published packs) must
+/// match both the CPU port and the source PNG on the GPU; no case may be skipped.
 #[test]
-fn gpu_matches_cpu_on_model_fixtures() {
-    let Some(mut g) = gpu(1920, 1080) else { return };
+fn gpu_matches_cpu_and_source_on_all_58_model_captures() {
+    let mut g = gpu(1920, 1080);
     eprintln!("adapter: {}", g.adapter_name);
     let state = RasterState::new(1920, 1080, 1024);
-    let mut cases: Vec<(String, Model, i32, i32, i32, Option<String>)> = Vec::new();
-    let tree = Model::from_chunks(
-        &std::fs::read(
-            repo_root().join("assets/compiled/render/models/object-1277-model-1570-lit.bin"),
-        )
-        .unwrap(),
-    )
-    .unwrap();
+    let mut cases: Vec<(String, Model, i32, i32, i32)> = Vec::new();
+    let tree = Model::from_chunks(&read_asset("models/object-1277-model-1570-lit.bin")).unwrap();
     for yaw in [0, 256, 512, 1024] {
-        cases.push((
-            format!("tree yaw {yaw}"),
-            tree.clone(),
-            yaw,
-            250,
-            750,
-            Some(format!("tree-1277-yaw-{yaw}")),
-        ));
+        cases.push((format!("tree-1277-yaw-{yaw}"), tree.clone(), yaw, 250, 750));
     }
-    for (npc, seq, frames, y, z) in [
-        (3028, 6181, 16, 240, 650),
-        (3028, 6180, 16, 240, 650),
-        (2063, 5668, 14, 160, 400),
-        (2063, 5666, 8, 160, 400),
-    ] {
-        for frame in 0..frames {
-            let path = repo_root().join(format!(
-                "assets/compiled/render/models/baked/npc-{npc}-seq-{seq}-frame-{frame}.bin"
-            ));
-            if let Ok(bytes) = std::fs::read(&path) {
-                cases.push((
-                    format!("npc {npc} seq {seq} frame {frame}"),
-                    Model::from_chunks(&bytes).unwrap(),
-                    256,
-                    y,
-                    z,
-                    Some(format!("npc-{npc}-sequence-{seq}-frame-{frame}")),
-                ));
-            }
-        }
+    for (capture, model, y, z) in common::npc_capture_models() {
+        cases.push((capture, model, 256, y, z));
     }
+    assert_eq!(cases.len(), 58, "4 tree yaws + 54 NPC frames");
     let mut scratch = ModelScratch::default();
-    for (name, model, yaw, y, z, capture) in cases {
+    let mut gpu_ns: Vec<u64> = Vec::new();
+    for (capture, model, yaw, y, z) in &cases {
         let mut tris = Vec::new();
         let mut drawer = ModelDrawer {
             state,
@@ -180,26 +173,38 @@ fn gpu_matches_cpu_on_model_fixtures() {
             alpha_pass: 2,
         };
         drawer
-            .draw_legacy(&model, 0, yaw, 0, 128, 0, y, z, 0, &mut tris)
+            .draw_legacy(model, 0, *yaw, 0, 128, 0, *y, *z, 0, &mut tris)
             .unwrap();
         let cpu = cpu_render(&state, &tris, &g.palette, &g.textures, 0x303030);
-        let gpu = gpu_render(&mut g, &state, &tris, 0x303030);
+        let (gpu, frame) = gpu_render(&mut g, &state, &tris, 0x303030);
         let (n, max, first) = diff_count(&gpu, &cpu);
         assert_eq!(
             n, 0,
-            "{name}: GPU differs from CPU in {n} pixels (max channel {max}), first index {first:?}"
+            "{capture}: GPU differs from CPU in {n} pixels (max channel {max}), first index {first:?}"
         );
-        if let Some(capture) = capture {
-            let expected = read_png_rgb(
-                &repo_root().join(format!("assets/reference/osrs240/models/{capture}.png")),
-            );
-            let (n, max, _) = diff_count(&gpu, &expected);
-            assert_eq!(
-                n, 0,
-                "{name}: GPU differs from source capture in {n} pixels (max channel {max})"
-            );
+        let expected = read_png_rgb(
+            &repo_root().join(format!("assets/reference/osrs240/models/{capture}.png")),
+        );
+        let (n, max, _) = diff_count(&gpu, &expected);
+        assert_eq!(
+            n, 0,
+            "{capture}: GPU differs from source capture in {n} pixels (max channel {max})"
+        );
+        let label = gpu_time_label(&g, &frame);
+        if let Some(ns) = frame.gpu_duration_ns() {
+            gpu_ns.push(ns);
         }
+        eprintln!(
+            "{capture}: {} tris, identical to CPU and source; {label}",
+            tris.len()
+        );
     }
+    eprintln!(
+        "58/58 model captures identical on {} ({} with timestamp spans, max {:.3} ms)",
+        g.adapter_name,
+        gpu_ns.len(),
+        gpu_ns.iter().copied().max().unwrap_or(0) as f64 / 1e6
+    );
 }
 
 struct SceneCase {
@@ -275,15 +280,9 @@ fn fixture_camera(name: &str) -> [i32; 3] {
 }
 
 fn scene_triangles(case: &SceneCase, palette: &Palette, state: RasterState) -> Vec<Tri> {
-    let data =
-        std::fs::read(repo_root().join(format!("assets/compiled/render/scenes/{}.bin", case.name)))
-            .unwrap();
+    let data = read_asset(&format!("scenes/{}.bin", case.name));
     let scene = SceneData::from_chunks(&data).unwrap();
-    let pack = std::fs::read(repo_root().join(format!(
-        "assets/compiled/render/scenes/{}.models.bin",
-        case.name
-    )))
-    .unwrap();
+    let pack = read_asset(&format!("scenes/{}.models.bin", case.name));
     let models: Vec<Option<Model>> = clubscape_renderer::model::parse_model_pack(&pack)
         .unwrap()
         .into_iter()
@@ -315,7 +314,7 @@ fn scene_triangles(case: &SceneCase, palette: &Palette, state: RasterState) -> V
 
 #[test]
 fn gpu_matches_cpu_and_source_on_scene_fixtures() {
-    let Some(mut g) = gpu(1920, 1080) else { return };
+    let mut g = gpu(1920, 1080);
     eprintln!(
         "adapter: {} timestamps: {}",
         g.adapter_name,
@@ -326,19 +325,25 @@ fn gpu_matches_cpu_and_source_on_scene_fixtures() {
         let tris = scene_triangles(case, &g.palette, state);
         let cpu = cpu_render(&state, &tris, &g.palette, &g.textures, 0);
         let start = std::time::Instant::now();
-        let gpu = gpu_render(&mut g, &state, &tris, 0);
+        let (gpu, frame) = gpu_render(&mut g, &state, &tris, 0);
         let elapsed = start.elapsed();
         let (n, max, first) = diff_count(&gpu, &cpu);
         let expected = read_png_rgb(
             &repo_root().join(format!("assets/reference/osrs240/scenes/{}.png", case.name)),
         );
         let (ns, maxs, _) = diff_count(&gpu, &expected);
+        assert_eq!(
+            g.raster.last_record.triangles,
+            tris.len(),
+            "frame record triangle count"
+        );
         eprintln!(
-            "{}: {} tris, gpu vs cpu {n} px (max {max}), gpu vs source {ns} px (max {maxs}), {:?} incl. readback, gpu ns {:?}",
+            "{}: {} tris, gpu vs cpu {n} px (max {max}), gpu vs source {ns} px (max {maxs}), \
+             {:?} wall time incl. submit+readback, {}",
             case.name,
             tris.len(),
             elapsed,
-            g.raster.last_record.triangles
+            gpu_time_label(&g, &frame)
         );
         assert_eq!(
             n, 0,
@@ -357,14 +362,8 @@ fn gpu_matches_cpu_and_source_on_scene_fixtures() {
 /// colours match the CPU reference, and the asynchronous readback path delivers the same bytes.
 #[test]
 fn gpu_preview_surface_has_exact_coverage_alpha() {
-    let Some(mut g) = gpu(480, 315) else { return };
-    let tree = Model::from_chunks(
-        &std::fs::read(
-            repo_root().join("assets/compiled/render/models/object-1277-model-1570-lit.bin"),
-        )
-        .unwrap(),
-    )
-    .unwrap();
+    let mut g = gpu(480, 315);
+    let tree = Model::from_chunks(&read_asset("models/object-1277-model-1570-lit.bin")).unwrap();
     // The interface projection: component centre, zoom 512, pitch 150 (content type 328).
     let mut state = RasterState::new(480, 315, 512);
     state.center_x = 240;

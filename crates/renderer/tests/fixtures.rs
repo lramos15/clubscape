@@ -4,7 +4,9 @@
 //! software renderer output for the approved model fixtures. They are the foundation for the
 //! GPU differential tests; they do not by themselves constitute presentation acceptance.
 
-use std::path::{Path, PathBuf};
+mod common;
+
+use std::path::Path;
 
 use clubscape_renderer::model::Model;
 use clubscape_renderer::model_draw::{ModelDrawer, ModelScratch};
@@ -13,9 +15,7 @@ use clubscape_renderer::raster::software::Software;
 use clubscape_renderer::raster::{RasterState, Tri};
 use clubscape_renderer::texture::{Texture, TextureSet};
 
-fn repo_root() -> PathBuf {
-    Path::new(env!("CARGO_MANIFEST_DIR")).join("../..")
-}
+use common::{read_asset, repo_root};
 
 fn read_png_rgb(path: &Path) -> (u32, u32, Vec<i32>) {
     let file = std::fs::File::open(path).unwrap_or_else(|e| panic!("{}: {e}", path.display()));
@@ -56,9 +56,7 @@ fn load_textures() -> TextureSet {
 }
 
 fn load_model(name: &str) -> Model {
-    let data = std::fs::read(repo_root().join(format!("assets/compiled/render/models/{name}.bin")))
-        .expect("model");
-    Model::from_chunks(&data).expect("model parse")
+    Model::from_chunks(&read_asset(&format!("models/{name}.bin"))).expect("model parse")
 }
 
 struct Diff {
@@ -143,40 +141,55 @@ fn tree_1277_all_yaws_match_source_pixels() {
     }
 }
 
+/// All 54 approved goblin/penguin capture frames, built from the published NPC packs
+/// (`models/npc-<id>.pack.bin`), must match the source PNGs pixel for pixel. Nothing is skipped:
+/// the packs are committed inputs, so a clean checkout runs every frame.
 #[test]
-fn baked_goblin_frames_match_source_pixels() {
+fn published_npc_pack_frames_match_all_54_source_captures() {
     let palette = load_palette();
     let textures = load_textures();
-    for (seq, frames) in [(6181, 16), (6180, 16)] {
-        for frame in 0..frames {
-            let name = format!("npc-3028-seq-{seq}-frame-{frame}");
-            let path = repo_root().join(format!("assets/compiled/render/models/baked/{name}.bin"));
-            if !path.exists() {
-                eprintln!("skipping {name}: baked frame not exported locally");
-                continue;
-            }
-            let model = Model::from_chunks(&std::fs::read(path).unwrap()).unwrap();
-            let pixels = render_legacy(&model, 256, 240, 650, &palette, &textures);
-            assert_exact(&format!("npc-3028-sequence-{seq}-frame-{frame}"), &pixels);
-        }
+    let frames = common::npc_capture_models();
+    assert_eq!(frames.len(), 54);
+    for (capture, model, y, z) in &frames {
+        let pixels = render_legacy(model, 256, *y, *z, &palette, &textures);
+        assert_exact(capture, &pixels);
     }
+    eprintln!("54/54 NPC capture frames identical (published packs)");
 }
 
+/// The reproducible per-frame bakes (`models/baked/`, not published) are the same geometry the
+/// packs carry: the bakes keep the scaled float positions, the packs the `(int)`-truncated
+/// values the original draw reads (`(int)fx.wh[i]`), so they must agree after truncation.
+/// Ignored by default because the bakes are local; run with `--include-ignored` after
+/// `export.py --profile npcs`, where a missing bake is a failure rather than a skipped case.
 #[test]
-fn baked_penguin_frames_match_source_pixels() {
-    let palette = load_palette();
-    let textures = load_textures();
-    for (seq, frames) in [(5668, 14), (5666, 8)] {
+#[ignore = "needs the local bakes from `tools/render-assets/export.py --profile npcs`"]
+fn local_baked_frames_equal_published_pack_frames() {
+    for (npc, seq, frames, _, _) in common::NPC_CAPTURES {
+        let pack = clubscape_renderer::core::NpcPack::from_chunks(&read_asset(&format!(
+            "models/npc-{npc}.pack.bin"
+        )))
+        .unwrap();
         for frame in 0..frames {
-            let name = format!("npc-2063-seq-{seq}-frame-{frame}");
-            let path = repo_root().join(format!("assets/compiled/render/models/baked/{name}.bin"));
-            if !path.exists() {
-                eprintln!("skipping {name}: baked frame not exported locally");
-                continue;
-            }
-            let model = Model::from_chunks(&std::fs::read(path).unwrap()).unwrap();
-            let pixels = render_legacy(&model, 256, 160, 400, &palette, &textures);
-            assert_exact(&format!("npc-2063-sequence-{seq}-frame-{frame}"), &pixels);
+            let key = format!("models/baked/npc-{npc}-seq-{seq}-frame-{frame}.bin");
+            let baked = Model::from_chunks(&common::read_local_export(
+                &key,
+                "python3 tools/render-assets/export.py --profile npcs",
+            ))
+            .unwrap();
+            let from_pack = pack.frame_model(seq, frame).unwrap();
+            let trunc = |v: &[f32]| v.iter().map(|x| *x as i32).collect::<Vec<_>>();
+            assert_eq!(
+                (trunc(&baked.xs), trunc(&baked.ys), trunc(&baked.zs)),
+                (
+                    trunc(&from_pack.xs),
+                    trunc(&from_pack.ys),
+                    trunc(&from_pack.zs)
+                ),
+                "{key}"
+            );
+            assert_eq!(baked.face_count, from_pack.face_count, "{key}");
+            assert_eq!(baked.color_a, from_pack.color_a, "{key} lit colours");
         }
     }
 }
@@ -293,12 +306,9 @@ const SCENE_FIXTURES: &[SceneFixture] = &[
 ];
 
 fn load_scene(name: &str) -> (clubscape_renderer::scene::SceneData, Vec<Option<Model>>) {
-    let data = std::fs::read(repo_root().join(format!("assets/compiled/render/scenes/{name}.bin")))
-        .expect("scene file");
+    let data = read_asset(&format!("scenes/{name}.bin"));
     let scene = clubscape_renderer::scene::SceneData::from_chunks(&data).expect("scene parse");
-    let pack =
-        std::fs::read(repo_root().join(format!("assets/compiled/render/scenes/{name}.models.bin")))
-            .expect("scene model pack");
+    let pack = read_asset(&format!("scenes/{name}.models.bin"));
     let entries = clubscape_renderer::model::parse_model_pack(&pack).expect("model pack parse");
     assert_eq!(entries.len(), scene.model_keys.len());
     let models = entries
@@ -486,34 +496,20 @@ fn scene_models_report_alpha_254_flat_faces() {
 fn core_places_world_view_entities_in_scene() {
     use clubscape_renderer::core::{Camera, RendererCore};
     let root = repo_root();
-    let scene_path = root.join("assets/compiled/render/scenes/tutorial-starting-house.bin");
-    if !scene_path.exists() {
-        eprintln!("skipping: scene export not present");
-        return;
-    }
     let palette = load_palette();
     let mut core = RendererCore::new(palette, 1920, 1080);
     for entry in std::fs::read_dir(root.join("assets/compiled/render/textures")).unwrap() {
         core.add_texture(&std::fs::read(entry.unwrap().path()).unwrap())
             .unwrap();
     }
-    core.load_npc_pack_as(
-        3028,
-        &std::fs::read(root.join("assets/compiled/render/models/npc-3028.pack.bin")).unwrap(),
-    )
-    .unwrap();
-    core.load_npc_pack_as(
-        2063,
-        &std::fs::read(root.join("assets/compiled/render/models/npc-2063.pack.bin")).unwrap(),
-    )
-    .unwrap();
+    core.load_npc_pack_as(3028, &read_asset("models/npc-3028.pack.bin"))
+        .unwrap();
+    core.load_npc_pack_as(2063, &read_asset("models/npc-2063.pack.bin"))
+        .unwrap();
     core.load_scene(
         "tutorial-starting-house",
-        &std::fs::read(&scene_path).unwrap(),
-        &std::fs::read(
-            root.join("assets/compiled/render/scenes/tutorial-starting-house.models.bin"),
-        )
-        .unwrap(),
+        &read_asset("scenes/tutorial-starting-house.bin"),
+        &read_asset("scenes/tutorial-starting-house.models.bin"),
     )
     .unwrap();
     // Fixture camera expressed in world units (tile 3094,3095 base 3048,3056).
