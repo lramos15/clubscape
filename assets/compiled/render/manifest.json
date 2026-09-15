@@ -7669,6 +7669,496 @@
    "rasterizer_zoom": 512
   }
  ],
+ "minimap_blocks": [
+  {
+   "square": 11822,
+   "file": "minimap/blocks/11822.bin",
+   "sha256": "77ce5ac83711483a04712ea7c380f607df96a0784d037108d654c18527b092d2",
+   "walls": 21,
+   "object_definitions": 38,
+   "source_pipeline": "Original rl4.fn scene load (same base as the block export); fe.getConfig per wall; om mapSceneId/size/mapIcon per referenced object id"
+  },
+  {
+   "square": 11823,
+   "file": "minimap/blocks/11823.bin",
+   "sha256": "4510d43e6fc6374cf599e4256bbcb2bb9c4f9b9a4aa4f0bcc2ea784b5b648aa0",
+   "walls": 384,
+   "object_definitions": 111,
+   "source_pipeline": "Original rl4.fn scene load (same base as the block export); fe.getConfig per wall; om mapSceneId/size/mapIcon per referenced object id"
+  },
+  {
+   "square": 11824,
+   "file": "minimap/blocks/11824.bin",
+   "sha256": "f77c3274b135effcaea063ca712c57a1b2670bd105e07ab96d509731e56d271e",
+   "walls": 0,
+   "object_definitions": 30,
+   "source_pipeline": "Original rl4.fn scene load (same base as the block export); fe.getConfig per wall; om mapSceneId/size/mapIcon per referenced object id"
+  },
+  {
+   "square": 11825,
+   "file": "minimap/blocks/11825.bin",
+   "sha256": "be90ddb4b87fa6549d66d39e4bd0569f8b80e2417a7e4b9cd5258acfd62210ad",
+   "walls": 258,
+   "object_definitions": 180,
+   "source_pipeline": "Original rl4.fn scene load (same base as the block export); fe.getConfig per wall; om mapSceneId/size/mapIcon per referenced object id"
+  },
+  {
+   "square": 11826,
+   "file": "minimap/blocks/11826.bin",
+   "sha256": "90bae7d2f3831bba68d3018cbd82dd3aaac1b04ae3462eaf827b42ce3cd236b6",
+   "walls": 413,
+   "object_definitions": 188,
+   "source_pipeline": "Original rl4.fn scene load (same base as the block export); fe.getConfig per wall; om mapSceneId/size/mapIcon per referenced object id"
+  },
+  {
+   "square": 12078,
+   "file": "minimap/blocks/12078.bin",
+   "sha256": "8df80500736b9b82b990bd6bbe9aea63bed8420a23e297b9eb1667c61f19393f",
+   "walls": 452,
+   "object_definitions": 168,
+   "source_pipeline": "Original rl4.fn scene load (same base as the block export); fe.getConfig per wall; om mapSceneId/size/mapIcon per referenced object id"
+  },
+  {
+   "square": 12079,
+   "file": "minimap/blocks/12079.bin",
+   "sha256": "1c0358789621cb1fb64d5fa1e562339209aa9688c890ced483a94ebacafa0cd3",
+   "walls": 9,
+   "object_definitions": 33,
+   "source_pipeline": "Original rl4.fn scene load (same base as the block export); fe.getConfig per wall; om mapSceneId/size/mapIcon per referenced object id"
+  },
+  {
+   "square": 12080,
+   "file": "minimap/blocks/12080.bin",
+   "sha256": "bdf503ca646f21c2f6a18892c16215dddbde2c1793e14341aaa2d80f7fd1fcd8",
+   "walls": 31,
+   "object_definitions": 27,
+   "source_pipeline": "Original rl4.fn scene load (same base as the block export); fe.getConfig per wall; om mapSceneId/size/mapIcon per referenced object id"
+  },
+  {
+   "square": 12081,
+   "file": "minimap/blocks/12081.bin",
+   "sha256": "ea647fffde6d380648780cfd6f378df6d611dfbc07be1f52379ea7de5e06a269",
+   "walls": 332,
+   "object_definitions": 168,
+   "source_pipeline": "Original rl4.fn scene load (same base as the block export); fe.getConfig per wall; om mapSceneId/size/mapIcon per referenced object id"
+  },
+  {
+   "square": 12082,
+   "file": "minimap/blocks/12082.bin",
+   "sha256": "8bd2a6f185ce1d7fc2a60c0fe5de08dc9a29e63c60770fe4bd486f70b394c6c7",
+   "walls": 981,
+   "object_definitions": 250,
+   "source_pipeline": "Original rl4.fn scene load (same base as the block export); fe.getConfig per wall; om mapSceneId/size/mapIcon per referenced object id"
+  },
+  {
+   "square": 12179,
+   "file": "minimap/blocks/12179.bin",
+   "sha256": "6fab58be217243762787b32ba188aebdaf0f22a8891e81058523f7c3108d7d2c",
+   "walls": 256,
+   "object_definitions": 1,
+   "source_pipeline": "Original rl4.fn scene load (same base as the block export); fe.getConfig per wall; om mapSceneId/size/mapIcon per referenced object id"
+  },
+  {
+   "square": 12180,
+   "file": "minimap/blocks/12180.bin",
+   "sha256": "7a3f0d54c4c1ca0c2ba3acee76753921a7d6e112f883520a4f4b01be0f4f9746",
+   "walls": 0,
+   "object_definitions": 2,
+   "source_pipeline": "Original rl4.fn scene load (same base as the block export); fe.getConfig per wall; om mapSceneId/size/mapIcon per referenced object id"
+  },
+  {
+   "square": 12181,
+   "file": "minimap/blocks/12181.bin",
+   "sha256": "bfc93767ef6c530edcf7043e4a8cf40b026575e760290d33c734757996b9c3e7",
+   "walls": 645,
+   "object_definitions": 66,
+   "source_pipeline": "Original rl4.fn scene load (same base as the block export); fe.getConfig per wall; om mapSceneId/size/mapIcon per referenced object id"
+  },
+  {
+   "square": 12334,
+   "file": "minimap/blocks/12334.bin",
+   "sha256": "de39ea18808c90209f2129cc89dad621a03eed80743b765727cd938b145ae9a8",
+   "walls": 23,
+   "object_definitions": 19,
+   "source_pipeline": "Original rl4.fn scene load (same base as the block export); fe.getConfig per wall; om mapSceneId/size/mapIcon per referenced object id"
+  },
+  {
+   "square": 12335,
+   "file": "minimap/blocks/12335.bin",
+   "sha256": "7741ba2b7173c8b9c481a91b995f73343c2b09800841d867884c81c80506d5e3",
+   "walls": 378,
+   "object_definitions": 114,
+   "source_pipeline": "Original rl4.fn scene load (same base as the block export); fe.getConfig per wall; om mapSceneId/size/mapIcon per referenced object id"
+  },
+  {
+   "square": 12336,
+   "file": "minimap/blocks/12336.bin",
+   "sha256": "d852cb000341465b0784cde7139381e2e501ba8afaa603bd53653eb8574f5f7f",
+   "walls": 825,
+   "object_definitions": 160,
+   "source_pipeline": "Original rl4.fn scene load (same base as the block export); fe.getConfig per wall; om mapSceneId/size/mapIcon per referenced object id"
+  },
+  {
+   "square": 12337,
+   "file": "minimap/blocks/12337.bin",
+   "sha256": "614a323039ec86267fd8b01345ace5d8d9e225b92f8d3d1d9f16c7663df3244d",
+   "walls": 341,
+   "object_definitions": 99,
+   "source_pipeline": "Original rl4.fn scene load (same base as the block export); fe.getConfig per wall; om mapSceneId/size/mapIcon per referenced object id"
+  },
+  {
+   "square": 12338,
+   "file": "minimap/blocks/12338.bin",
+   "sha256": "acb95e8f5e6abb5ceda88beeeed041cf4ed15af17a219a1a2acc106d381d12dd",
+   "walls": 450,
+   "object_definitions": 245,
+   "source_pipeline": "Original rl4.fn scene load (same base as the block export); fe.getConfig per wall; om mapSceneId/size/mapIcon per referenced object id"
+  },
+  {
+   "square": 12339,
+   "file": "minimap/blocks/12339.bin",
+   "sha256": "505ccc06394560f3fa6c1ca2de52fec4e64afe031feeaa71a99c3743de7d546d",
+   "walls": 319,
+   "object_definitions": 138,
+   "source_pipeline": "Original rl4.fn scene load (same base as the block export); fe.getConfig per wall; om mapSceneId/size/mapIcon per referenced object id"
+  },
+  {
+   "square": 12340,
+   "file": "minimap/blocks/12340.bin",
+   "sha256": "de17d5d3b161bddc01f0b51323d840bdd38f2ee29e02c0c0a34fe9b35ff9aa77",
+   "walls": 718,
+   "object_definitions": 187,
+   "source_pipeline": "Original rl4.fn scene load (same base as the block export); fe.getConfig per wall; om mapSceneId/size/mapIcon per referenced object id"
+  },
+  {
+   "square": 12341,
+   "file": "minimap/blocks/12341.bin",
+   "sha256": "7368199f75f09f6480668bb22e442a6a9229f23c15914ad82b706bfe1ea51b42",
+   "walls": 341,
+   "object_definitions": 214,
+   "source_pipeline": "Original rl4.fn scene load (same base as the block export); fe.getConfig per wall; om mapSceneId/size/mapIcon per referenced object id"
+  },
+  {
+   "square": 12435,
+   "file": "minimap/blocks/12435.bin",
+   "sha256": "1cf608c5ac701ef27b6b231b70cb92e38c2509b2757740cedb4cd8e5fa4e26fa",
+   "walls": 508,
+   "object_definitions": 1,
+   "source_pipeline": "Original rl4.fn scene load (same base as the block export); fe.getConfig per wall; om mapSceneId/size/mapIcon per referenced object id"
+  },
+  {
+   "square": 12436,
+   "file": "minimap/blocks/12436.bin",
+   "sha256": "15f09de4533a1cc0fb8ef89b2795b3f1831dde5d8468d818f37e8466fe6b4314",
+   "walls": 221,
+   "object_definitions": 43,
+   "source_pipeline": "Original rl4.fn scene load (same base as the block export); fe.getConfig per wall; om mapSceneId/size/mapIcon per referenced object id"
+  },
+  {
+   "square": 12437,
+   "file": "minimap/blocks/12437.bin",
+   "sha256": "a1da31147d8599e0e0d7a18a87815c26e106d731ce65ff2fe32437a85ee7a3bc",
+   "walls": 222,
+   "object_definitions": 50,
+   "source_pipeline": "Original rl4.fn scene load (same base as the block export); fe.getConfig per wall; om mapSceneId/size/mapIcon per referenced object id"
+  },
+  {
+   "square": 12590,
+   "file": "minimap/blocks/12590.bin",
+   "sha256": "8a1910e0ae60f4dad5f8f8730070369e0200305699de0dc9db407a8a6e69e69f",
+   "walls": 339,
+   "object_definitions": 74,
+   "source_pipeline": "Original rl4.fn scene load (same base as the block export); fe.getConfig per wall; om mapSceneId/size/mapIcon per referenced object id"
+  },
+  {
+   "square": 12591,
+   "file": "minimap/blocks/12591.bin",
+   "sha256": "6051a400ccb71333c7ed01da36c3a8376177ff9230a53cef55dfe6a23a4ec200",
+   "walls": 32,
+   "object_definitions": 64,
+   "source_pipeline": "Original rl4.fn scene load (same base as the block export); fe.getConfig per wall; om mapSceneId/size/mapIcon per referenced object id"
+  },
+  {
+   "square": 12592,
+   "file": "minimap/blocks/12592.bin",
+   "sha256": "fbb7fd2662bd39d20972e9be874afa9bde3261bd58e0fdc610cd212245911b58",
+   "walls": 117,
+   "object_definitions": 54,
+   "source_pipeline": "Original rl4.fn scene load (same base as the block export); fe.getConfig per wall; om mapSceneId/size/mapIcon per referenced object id"
+  },
+  {
+   "square": 12593,
+   "file": "minimap/blocks/12593.bin",
+   "sha256": "683fa3e08789fcc2101873aedc3ed9d2499193c4afd37dc0d82d7db7ab2ef3b0",
+   "walls": 37,
+   "object_definitions": 101,
+   "source_pipeline": "Original rl4.fn scene load (same base as the block export); fe.getConfig per wall; om mapSceneId/size/mapIcon per referenced object id"
+  },
+  {
+   "square": 12594,
+   "file": "minimap/blocks/12594.bin",
+   "sha256": "15f2fe9cb5e6f4cf02a0e0049d4e57f3c98c9e4f303ca3968f5a2dd64b627ebe",
+   "walls": 134,
+   "object_definitions": 97,
+   "source_pipeline": "Original rl4.fn scene load (same base as the block export); fe.getConfig per wall; om mapSceneId/size/mapIcon per referenced object id"
+  },
+  {
+   "square": 12595,
+   "file": "minimap/blocks/12595.bin",
+   "sha256": "54a2daefa6586435e5265afbd2a8f571ec7c80204a1d04b7eb8cb105c1b298f9",
+   "walls": 469,
+   "object_definitions": 183,
+   "source_pipeline": "Original rl4.fn scene load (same base as the block export); fe.getConfig per wall; om mapSceneId/size/mapIcon per referenced object id"
+  },
+  {
+   "square": 12596,
+   "file": "minimap/blocks/12596.bin",
+   "sha256": "c38460fa28f3858892a6ea45100ad528a973f73740e40499e6759ad50cf1fe95",
+   "walls": 450,
+   "object_definitions": 167,
+   "source_pipeline": "Original rl4.fn scene load (same base as the block export); fe.getConfig per wall; om mapSceneId/size/mapIcon per referenced object id"
+  },
+  {
+   "square": 12597,
+   "file": "minimap/blocks/12597.bin",
+   "sha256": "d5fe65d5bf3632440657f06d39e2837bf86a8f340878a5ea37afcbd827cfd5c6",
+   "walls": 1135,
+   "object_definitions": 385,
+   "source_pipeline": "Original rl4.fn scene load (same base as the block export); fe.getConfig per wall; om mapSceneId/size/mapIcon per referenced object id"
+  },
+  {
+   "square": 12633,
+   "file": "minimap/blocks/12633.bin",
+   "sha256": "9470a0adfc26e0933a6abde5f41b7b452f4faf7584a0c3ffec6e8930d24e0143",
+   "walls": 40,
+   "object_definitions": 60,
+   "source_pipeline": "Original rl4.fn scene load (same base as the block export); fe.getConfig per wall; om mapSceneId/size/mapIcon per referenced object id"
+  },
+  {
+   "square": 12693,
+   "file": "minimap/blocks/12693.bin",
+   "sha256": "0456c697193c0e38ed03a77d13ab95be4ab3a090204e06a4771e9a8a20300a11",
+   "walls": 10,
+   "object_definitions": 52,
+   "source_pipeline": "Original rl4.fn scene load (same base as the block export); fe.getConfig per wall; om mapSceneId/size/mapIcon per referenced object id"
+  },
+  {
+   "square": 12694,
+   "file": "minimap/blocks/12694.bin",
+   "sha256": "970ef75cc71636ba22d9288a059aad9cf8e821c2386f58b2626e191b9dd0ebc9",
+   "walls": 605,
+   "object_definitions": 49,
+   "source_pipeline": "Original rl4.fn scene load (same base as the block export); fe.getConfig per wall; om mapSceneId/size/mapIcon per referenced object id"
+  },
+  {
+   "square": 12695,
+   "file": "minimap/blocks/12695.bin",
+   "sha256": "1bd9cd3e27387786be3c6b9fe6981a6ec6a860d91052dd40d427020ff8f0ce07",
+   "walls": 157,
+   "object_definitions": 29,
+   "source_pipeline": "Original rl4.fn scene load (same base as the block export); fe.getConfig per wall; om mapSceneId/size/mapIcon per referenced object id"
+  },
+  {
+   "square": 12846,
+   "file": "minimap/blocks/12846.bin",
+   "sha256": "c490e38c7ff5e3f5d78daa1ba3d49465998312d6e0e8bf19c2ce2317fa82d5f9",
+   "walls": 0,
+   "object_definitions": 28,
+   "source_pipeline": "Original rl4.fn scene load (same base as the block export); fe.getConfig per wall; om mapSceneId/size/mapIcon per referenced object id"
+  },
+  {
+   "square": 12847,
+   "file": "minimap/blocks/12847.bin",
+   "sha256": "60f95325d910a150d9fb9b71bb66991b031796e99ef07afa227d95483d7ce209",
+   "walls": 0,
+   "object_definitions": 18,
+   "source_pipeline": "Original rl4.fn scene load (same base as the block export); fe.getConfig per wall; om mapSceneId/size/mapIcon per referenced object id"
+  },
+  {
+   "square": 12848,
+   "file": "minimap/blocks/12848.bin",
+   "sha256": "795220f77d08aa745ed54f26779452d564823d7b512f58b9c2674611d35e7588",
+   "walls": 0,
+   "object_definitions": 36,
+   "source_pipeline": "Original rl4.fn scene load (same base as the block export); fe.getConfig per wall; om mapSceneId/size/mapIcon per referenced object id"
+  },
+  {
+   "square": 12849,
+   "file": "minimap/blocks/12849.bin",
+   "sha256": "de6bf0d3c574dd10f44ebbb7cfa88ae9b5c722d0d17304e3432786989f2d0174",
+   "walls": 124,
+   "object_definitions": 135,
+   "source_pipeline": "Original rl4.fn scene load (same base as the block export); fe.getConfig per wall; om mapSceneId/size/mapIcon per referenced object id"
+  },
+  {
+   "square": 12850,
+   "file": "minimap/blocks/12850.bin",
+   "sha256": "3dff4b3aadcc973a93551a1f3092a95ce10b6617d85a2ecbda0bd531d8c2dc8f",
+   "walls": 1336,
+   "object_definitions": 357,
+   "source_pipeline": "Original rl4.fn scene load (same base as the block export); fe.getConfig per wall; om mapSceneId/size/mapIcon per referenced object id"
+  },
+  {
+   "square": 12851,
+   "file": "minimap/blocks/12851.bin",
+   "sha256": "1fae23a9314729e72d3fd73c207be99032bfc2e89ea49096ac0f3a51428c6a3b",
+   "walls": 404,
+   "object_definitions": 145,
+   "source_pipeline": "Original rl4.fn scene load (same base as the block export); fe.getConfig per wall; om mapSceneId/size/mapIcon per referenced object id"
+  },
+  {
+   "square": 12852,
+   "file": "minimap/blocks/12852.bin",
+   "sha256": "147f71ccdd03f4cf00cb9f7d6e9c6c1ef787adaed5f1b7ece047d555eeb1769d",
+   "walls": 759,
+   "object_definitions": 237,
+   "source_pipeline": "Original rl4.fn scene load (same base as the block export); fe.getConfig per wall; om mapSceneId/size/mapIcon per referenced object id"
+  },
+  {
+   "square": 12853,
+   "file": "minimap/blocks/12853.bin",
+   "sha256": "25ecd0111f37ea2a365256edc766cba50bd6bd4f36a648917d0376f5764237cb",
+   "walls": 1682,
+   "object_definitions": 458,
+   "source_pipeline": "Original rl4.fn scene load (same base as the block export); fe.getConfig per wall; om mapSceneId/size/mapIcon per referenced object id"
+  },
+  {
+   "square": 12949,
+   "file": "minimap/blocks/12949.bin",
+   "sha256": "079c50268848fa22b702fd39bd2c0df4430ff805b5a34dd535bdf68a874a7303",
+   "walls": 4,
+   "object_definitions": 52,
+   "source_pipeline": "Original rl4.fn scene load (same base as the block export); fe.getConfig per wall; om mapSceneId/size/mapIcon per referenced object id"
+  },
+  {
+   "square": 12950,
+   "file": "minimap/blocks/12950.bin",
+   "sha256": "68901102de0d0398d2dd1b1138a14c08e6f6bc737d64bc644c0ba463ab7ab8b7",
+   "walls": 95,
+   "object_definitions": 77,
+   "source_pipeline": "Original rl4.fn scene load (same base as the block export); fe.getConfig per wall; om mapSceneId/size/mapIcon per referenced object id"
+  },
+  {
+   "square": 12951,
+   "file": "minimap/blocks/12951.bin",
+   "sha256": "53b06246291b257bf8298bebbf2130bce25cb8cd51a7a011c877413e2e64e98d",
+   "walls": 198,
+   "object_definitions": 42,
+   "source_pipeline": "Original rl4.fn scene load (same base as the block export); fe.getConfig per wall; om mapSceneId/size/mapIcon per referenced object id"
+  },
+  {
+   "square": 13104,
+   "file": "minimap/blocks/13104.bin",
+   "sha256": "50377675e3812eaf3c1909690b74163061b8b4f5da9f64caece0fe038048d6f6",
+   "walls": 49,
+   "object_definitions": 74,
+   "source_pipeline": "Original rl4.fn scene load (same base as the block export); fe.getConfig per wall; om mapSceneId/size/mapIcon per referenced object id"
+  },
+  {
+   "square": 13105,
+   "file": "minimap/blocks/13105.bin",
+   "sha256": "bf76a0cf885e8543d4d59d67b2cfc43df9aa4079dd287190cb6143840dda9adc",
+   "walls": 981,
+   "object_definitions": 195,
+   "source_pipeline": "Original rl4.fn scene load (same base as the block export); fe.getConfig per wall; om mapSceneId/size/mapIcon per referenced object id"
+  },
+  {
+   "square": 13106,
+   "file": "minimap/blocks/13106.bin",
+   "sha256": "0157aa4f006ef9af2249dd3eb46b0217a013e371414be579b9806e4fea6ae9a9",
+   "walls": 378,
+   "object_definitions": 138,
+   "source_pipeline": "Original rl4.fn scene load (same base as the block export); fe.getConfig per wall; om mapSceneId/size/mapIcon per referenced object id"
+  },
+  {
+   "square": 13107,
+   "file": "minimap/blocks/13107.bin",
+   "sha256": "b0c1b60df8d4740bf007a86670c5f6ea589b47adab2fabe0c78b151f9c98da49",
+   "walls": 75,
+   "object_definitions": 54,
+   "source_pipeline": "Original rl4.fn scene load (same base as the block export); fe.getConfig per wall; om mapSceneId/size/mapIcon per referenced object id"
+  },
+  {
+   "square": 13108,
+   "file": "minimap/blocks/13108.bin",
+   "sha256": "1ab527c9db62d31d1bb8eb3897c6e4437676c33c7e90532d19d4c9909d62dcac",
+   "walls": 516,
+   "object_definitions": 159,
+   "source_pipeline": "Original rl4.fn scene load (same base as the block export); fe.getConfig per wall; om mapSceneId/size/mapIcon per referenced object id"
+  },
+  {
+   "square": 13109,
+   "file": "minimap/blocks/13109.bin",
+   "sha256": "4b05808630c92c0d9c25394f8a583075d54eadd2899b166b1ce7a5f12418227d",
+   "walls": 591,
+   "object_definitions": 209,
+   "source_pipeline": "Original rl4.fn scene load (same base as the block export); fe.getConfig per wall; om mapSceneId/size/mapIcon per referenced object id"
+  },
+  {
+   "square": 13205,
+   "file": "minimap/blocks/13205.bin",
+   "sha256": "9bb3f77037510b3fd8b3ccf8945fc0e317732cdb3eb9ef91a47dedb733e77de8",
+   "walls": 109,
+   "object_definitions": 4,
+   "source_pipeline": "Original rl4.fn scene load (same base as the block export); fe.getConfig per wall; om mapSceneId/size/mapIcon per referenced object id"
+  },
+  {
+   "square": 13206,
+   "file": "minimap/blocks/13206.bin",
+   "sha256": "6ad1b99afa613c1b6b0903d7fdb27e6c7bb70d6d4d682a5d360244651f77b612",
+   "walls": 14,
+   "object_definitions": 43,
+   "source_pipeline": "Original rl4.fn scene load (same base as the block export); fe.getConfig per wall; om mapSceneId/size/mapIcon per referenced object id"
+  },
+  {
+   "square": 13360,
+   "file": "minimap/blocks/13360.bin",
+   "sha256": "b4bd0a69f4e79ef36bd4e683a4181d4500500ef6b774cc8eab7345ff628d77a4",
+   "walls": 56,
+   "object_definitions": 41,
+   "source_pipeline": "Original rl4.fn scene load (same base as the block export); fe.getConfig per wall; om mapSceneId/size/mapIcon per referenced object id"
+  },
+  {
+   "square": 13361,
+   "file": "minimap/blocks/13361.bin",
+   "sha256": "b68a95198121da7c4305051f36646eabba9f6cff8f9e52c475e52aaab312895c",
+   "walls": 273,
+   "object_definitions": 139,
+   "source_pipeline": "Original rl4.fn scene load (same base as the block export); fe.getConfig per wall; om mapSceneId/size/mapIcon per referenced object id"
+  },
+  {
+   "square": 13362,
+   "file": "minimap/blocks/13362.bin",
+   "sha256": "d346187051649f99e80d410fdbb96b1445a9e760b52d0c01f8fac6a38b840152",
+   "walls": 1972,
+   "object_definitions": 161,
+   "source_pipeline": "Original rl4.fn scene load (same base as the block export); fe.getConfig per wall; om mapSceneId/size/mapIcon per referenced object id"
+  },
+  {
+   "square": 13363,
+   "file": "minimap/blocks/13363.bin",
+   "sha256": "bef55d76a71d852eb1f709065ca21f5a39296ce005fe9a5efd7817f8cc2df72b",
+   "walls": 746,
+   "object_definitions": 238,
+   "source_pipeline": "Original rl4.fn scene load (same base as the block export); fe.getConfig per wall; om mapSceneId/size/mapIcon per referenced object id"
+  },
+  {
+   "square": 13364,
+   "file": "minimap/blocks/13364.bin",
+   "sha256": "8811d3df3e9f9219171e0602eadcf2bf5cfc3364e41e394ae08a6445ef21be0f",
+   "walls": 314,
+   "object_definitions": 123,
+   "source_pipeline": "Original rl4.fn scene load (same base as the block export); fe.getConfig per wall; om mapSceneId/size/mapIcon per referenced object id"
+  },
+  {
+   "square": 13365,
+   "file": "minimap/blocks/13365.bin",
+   "sha256": "dbc9fcff330533b8c301db15d42e30d0ffbbdb6e0eac05ad27c6be8ca38e3e40",
+   "walls": 517,
+   "object_definitions": 118,
+   "source_pipeline": "Original rl4.fn scene load (same base as the block export); fe.getConfig per wall; om mapSceneId/size/mapIcon per referenced object id"
+  }
+ ],
  "files": {
   "tables.bin": {
    "sha256": "954c4395b0b236169129950ce3c98cfdaa662de33b7ad67e7270757fc7c247c6",
@@ -21594,6 +22084,748 @@
      "min_quantity": 1,
      "source": "op.aa ground item model, lit 64+ambient/768+contrast (-50,-10,-50)"
     }
+   }
+  },
+  "minimap/mapscenes.bin": {
+   "sha256": "fb78786f304bfbf3a0b42d8d31dfe22c826053cf25a98e6ca345904cfb28a8f2",
+   "size_bytes": 19249,
+   "detail": {
+    "sprites": 272,
+    "sprite_group": 317,
+    "shape_masks": 16,
+    "source": "oy.aq via hk.ao/fs.ac; client.gq() tile-shape rasterisation"
+   }
+  },
+  "minimap/blocks/12850.bin": {
+   "sha256": "3dff4b3aadcc973a93551a1f3092a95ce10b6617d85a2ecbda0bd531d8c2dc8f",
+   "size_bytes": 28605,
+   "detail": {
+    "square": 12850,
+    "file": "minimap/blocks/12850.bin",
+    "sha256": "3dff4b3aadcc973a93551a1f3092a95ce10b6617d85a2ecbda0bd531d8c2dc8f",
+    "walls": 1336,
+    "object_definitions": 357,
+    "source_pipeline": "Original rl4.fn scene load (same base as the block export); fe.getConfig per wall; om mapSceneId/size/mapIcon per referenced object id"
+   }
+  },
+  "minimap/blocks/12849.bin": {
+   "sha256": "de6bf0d3c574dd10f44ebbb7cfa88ae9b5c722d0d17304e3432786989f2d0174",
+   "size_bytes": 4773,
+   "detail": {
+    "square": 12849,
+    "file": "minimap/blocks/12849.bin",
+    "sha256": "de6bf0d3c574dd10f44ebbb7cfa88ae9b5c722d0d17304e3432786989f2d0174",
+    "walls": 124,
+    "object_definitions": 135,
+    "source_pipeline": "Original rl4.fn scene load (same base as the block export); fe.getConfig per wall; om mapSceneId/size/mapIcon per referenced object id"
+   }
+  },
+  "minimap/blocks/11822.bin": {
+   "sha256": "77ce5ac83711483a04712ea7c380f607df96a0784d037108d654c18527b092d2",
+   "size_bytes": 1185,
+   "detail": {
+    "square": 11822,
+    "file": "minimap/blocks/11822.bin",
+    "sha256": "77ce5ac83711483a04712ea7c380f607df96a0784d037108d654c18527b092d2",
+    "walls": 21,
+    "object_definitions": 38,
+    "source_pipeline": "Original rl4.fn scene load (same base as the block export); fe.getConfig per wall; om mapSceneId/size/mapIcon per referenced object id"
+   }
+  },
+  "minimap/blocks/11823.bin": {
+   "sha256": "4510d43e6fc6374cf599e4256bbcb2bb9c4f9b9a4aa4f0bcc2ea784b5b648aa0",
+   "size_bytes": 8453,
+   "detail": {
+    "square": 11823,
+    "file": "minimap/blocks/11823.bin",
+    "sha256": "4510d43e6fc6374cf599e4256bbcb2bb9c4f9b9a4aa4f0bcc2ea784b5b648aa0",
+    "walls": 384,
+    "object_definitions": 111,
+    "source_pipeline": "Original rl4.fn scene load (same base as the block export); fe.getConfig per wall; om mapSceneId/size/mapIcon per referenced object id"
+   }
+  },
+  "minimap/blocks/11824.bin": {
+   "sha256": "f77c3274b135effcaea063ca712c57a1b2670bd105e07ab96d509731e56d271e",
+   "size_bytes": 689,
+   "detail": {
+    "square": 11824,
+    "file": "minimap/blocks/11824.bin",
+    "sha256": "f77c3274b135effcaea063ca712c57a1b2670bd105e07ab96d509731e56d271e",
+    "walls": 0,
+    "object_definitions": 30,
+    "source_pipeline": "Original rl4.fn scene load (same base as the block export); fe.getConfig per wall; om mapSceneId/size/mapIcon per referenced object id"
+   }
+  },
+  "minimap/blocks/11825.bin": {
+   "sha256": "be90ddb4b87fa6549d66d39e4bd0569f8b80e2417a7e4b9cd5258acfd62210ad",
+   "size_bytes": 7817,
+   "detail": {
+    "square": 11825,
+    "file": "minimap/blocks/11825.bin",
+    "sha256": "be90ddb4b87fa6549d66d39e4bd0569f8b80e2417a7e4b9cd5258acfd62210ad",
+    "walls": 258,
+    "object_definitions": 180,
+    "source_pipeline": "Original rl4.fn scene load (same base as the block export); fe.getConfig per wall; om mapSceneId/size/mapIcon per referenced object id"
+   }
+  },
+  "minimap/blocks/11826.bin": {
+   "sha256": "90bae7d2f3831bba68d3018cbd82dd3aaac1b04ae3462eaf827b42ce3cd236b6",
+   "size_bytes": 10457,
+   "detail": {
+    "square": 11826,
+    "file": "minimap/blocks/11826.bin",
+    "sha256": "90bae7d2f3831bba68d3018cbd82dd3aaac1b04ae3462eaf827b42ce3cd236b6",
+    "walls": 413,
+    "object_definitions": 188,
+    "source_pipeline": "Original rl4.fn scene load (same base as the block export); fe.getConfig per wall; om mapSceneId/size/mapIcon per referenced object id"
+   }
+  },
+  "minimap/blocks/12078.bin": {
+   "sha256": "8df80500736b9b82b990bd6bbe9aea63bed8420a23e297b9eb1667c61f19393f",
+   "size_bytes": 10681,
+   "detail": {
+    "square": 12078,
+    "file": "minimap/blocks/12078.bin",
+    "sha256": "8df80500736b9b82b990bd6bbe9aea63bed8420a23e297b9eb1667c61f19393f",
+    "walls": 452,
+    "object_definitions": 168,
+    "source_pipeline": "Original rl4.fn scene load (same base as the block export); fe.getConfig per wall; om mapSceneId/size/mapIcon per referenced object id"
+   }
+  },
+  "minimap/blocks/12079.bin": {
+   "sha256": "1c0358789621cb1fb64d5fa1e562339209aa9688c890ced483a94ebacafa0cd3",
+   "size_bytes": 893,
+   "detail": {
+    "square": 12079,
+    "file": "minimap/blocks/12079.bin",
+    "sha256": "1c0358789621cb1fb64d5fa1e562339209aa9688c890ced483a94ebacafa0cd3",
+    "walls": 9,
+    "object_definitions": 33,
+    "source_pipeline": "Original rl4.fn scene load (same base as the block export); fe.getConfig per wall; om mapSceneId/size/mapIcon per referenced object id"
+   }
+  },
+  "minimap/blocks/12080.bin": {
+   "sha256": "bdf503ca646f21c2f6a18892c16215dddbde2c1793e14341aaa2d80f7fd1fcd8",
+   "size_bytes": 1125,
+   "detail": {
+    "square": 12080,
+    "file": "minimap/blocks/12080.bin",
+    "sha256": "bdf503ca646f21c2f6a18892c16215dddbde2c1793e14341aaa2d80f7fd1fcd8",
+    "walls": 31,
+    "object_definitions": 27,
+    "source_pipeline": "Original rl4.fn scene load (same base as the block export); fe.getConfig per wall; om mapSceneId/size/mapIcon per referenced object id"
+   }
+  },
+  "minimap/blocks/12081.bin": {
+   "sha256": "ea647fffde6d380648780cfd6f378df6d611dfbc07be1f52379ea7de5e06a269",
+   "size_bytes": 8761,
+   "detail": {
+    "square": 12081,
+    "file": "minimap/blocks/12081.bin",
+    "sha256": "ea647fffde6d380648780cfd6f378df6d611dfbc07be1f52379ea7de5e06a269",
+    "walls": 332,
+    "object_definitions": 168,
+    "source_pipeline": "Original rl4.fn scene load (same base as the block export); fe.getConfig per wall; om mapSceneId/size/mapIcon per referenced object id"
+   }
+  },
+  "minimap/blocks/12082.bin": {
+   "sha256": "8bd2a6f185ce1d7fc2a60c0fe5de08dc9a29e63c60770fe4bd486f70b394c6c7",
+   "size_bytes": 20785,
+   "detail": {
+    "square": 12082,
+    "file": "minimap/blocks/12082.bin",
+    "sha256": "8bd2a6f185ce1d7fc2a60c0fe5de08dc9a29e63c60770fe4bd486f70b394c6c7",
+    "walls": 981,
+    "object_definitions": 250,
+    "source_pipeline": "Original rl4.fn scene load (same base as the block export); fe.getConfig per wall; om mapSceneId/size/mapIcon per referenced object id"
+   }
+  },
+  "minimap/blocks/12179.bin": {
+   "sha256": "6fab58be217243762787b32ba188aebdaf0f22a8891e81058523f7c3108d7d2c",
+   "size_bytes": 4205,
+   "detail": {
+    "square": 12179,
+    "file": "minimap/blocks/12179.bin",
+    "sha256": "6fab58be217243762787b32ba188aebdaf0f22a8891e81058523f7c3108d7d2c",
+    "walls": 256,
+    "object_definitions": 1,
+    "source_pipeline": "Original rl4.fn scene load (same base as the block export); fe.getConfig per wall; om mapSceneId/size/mapIcon per referenced object id"
+   }
+  },
+  "minimap/blocks/12180.bin": {
+   "sha256": "7a3f0d54c4c1ca0c2ba3acee76753921a7d6e112f883520a4f4b01be0f4f9746",
+   "size_bytes": 129,
+   "detail": {
+    "square": 12180,
+    "file": "minimap/blocks/12180.bin",
+    "sha256": "7a3f0d54c4c1ca0c2ba3acee76753921a7d6e112f883520a4f4b01be0f4f9746",
+    "walls": 0,
+    "object_definitions": 2,
+    "source_pipeline": "Original rl4.fn scene load (same base as the block export); fe.getConfig per wall; om mapSceneId/size/mapIcon per referenced object id"
+   }
+  },
+  "minimap/blocks/12181.bin": {
+   "sha256": "bfc93767ef6c530edcf7043e4a8cf40b026575e760290d33c734757996b9c3e7",
+   "size_bytes": 11729,
+   "detail": {
+    "square": 12181,
+    "file": "minimap/blocks/12181.bin",
+    "sha256": "bfc93767ef6c530edcf7043e4a8cf40b026575e760290d33c734757996b9c3e7",
+    "walls": 645,
+    "object_definitions": 66,
+    "source_pipeline": "Original rl4.fn scene load (same base as the block export); fe.getConfig per wall; om mapSceneId/size/mapIcon per referenced object id"
+   }
+  },
+  "minimap/blocks/12334.bin": {
+   "sha256": "de39ea18808c90209f2129cc89dad621a03eed80743b765727cd938b145ae9a8",
+   "size_bytes": 837,
+   "detail": {
+    "square": 12334,
+    "file": "minimap/blocks/12334.bin",
+    "sha256": "de39ea18808c90209f2129cc89dad621a03eed80743b765727cd938b145ae9a8",
+    "walls": 23,
+    "object_definitions": 19,
+    "source_pipeline": "Original rl4.fn scene load (same base as the block export); fe.getConfig per wall; om mapSceneId/size/mapIcon per referenced object id"
+   }
+  },
+  "minimap/blocks/12335.bin": {
+   "sha256": "7741ba2b7173c8b9c481a91b995f73343c2b09800841d867884c81c80506d5e3",
+   "size_bytes": 8417,
+   "detail": {
+    "square": 12335,
+    "file": "minimap/blocks/12335.bin",
+    "sha256": "7741ba2b7173c8b9c481a91b995f73343c2b09800841d867884c81c80506d5e3",
+    "walls": 378,
+    "object_definitions": 114,
+    "source_pipeline": "Original rl4.fn scene load (same base as the block export); fe.getConfig per wall; om mapSceneId/size/mapIcon per referenced object id"
+   }
+  },
+  "minimap/blocks/12336.bin": {
+   "sha256": "d852cb000341465b0784cde7139381e2e501ba8afaa603bd53653eb8574f5f7f",
+   "size_bytes": 16489,
+   "detail": {
+    "square": 12336,
+    "file": "minimap/blocks/12336.bin",
+    "sha256": "d852cb000341465b0784cde7139381e2e501ba8afaa603bd53653eb8574f5f7f",
+    "walls": 825,
+    "object_definitions": 160,
+    "source_pipeline": "Original rl4.fn scene load (same base as the block export); fe.getConfig per wall; om mapSceneId/size/mapIcon per referenced object id"
+   }
+  },
+  "minimap/blocks/12337.bin": {
+   "sha256": "614a323039ec86267fd8b01345ace5d8d9e225b92f8d3d1d9f16c7663df3244d",
+   "size_bytes": 7525,
+   "detail": {
+    "square": 12337,
+    "file": "minimap/blocks/12337.bin",
+    "sha256": "614a323039ec86267fd8b01345ace5d8d9e225b92f8d3d1d9f16c7663df3244d",
+    "walls": 341,
+    "object_definitions": 99,
+    "source_pipeline": "Original rl4.fn scene load (same base as the block export); fe.getConfig per wall; om mapSceneId/size/mapIcon per referenced object id"
+   }
+  },
+  "minimap/blocks/12338.bin": {
+   "sha256": "acb95e8f5e6abb5ceda88beeeed041cf4ed15af17a219a1a2acc106d381d12dd",
+   "size_bytes": 12189,
+   "detail": {
+    "square": 12338,
+    "file": "minimap/blocks/12338.bin",
+    "sha256": "acb95e8f5e6abb5ceda88beeeed041cf4ed15af17a219a1a2acc106d381d12dd",
+    "walls": 450,
+    "object_definitions": 245,
+    "source_pipeline": "Original rl4.fn scene load (same base as the block export); fe.getConfig per wall; om mapSceneId/size/mapIcon per referenced object id"
+   }
+  },
+  "minimap/blocks/12339.bin": {
+   "sha256": "505ccc06394560f3fa6c1ca2de52fec4e64afe031feeaa71a99c3743de7d546d",
+   "size_bytes": 7953,
+   "detail": {
+    "square": 12339,
+    "file": "minimap/blocks/12339.bin",
+    "sha256": "505ccc06394560f3fa6c1ca2de52fec4e64afe031feeaa71a99c3743de7d546d",
+    "walls": 319,
+    "object_definitions": 138,
+    "source_pipeline": "Original rl4.fn scene load (same base as the block export); fe.getConfig per wall; om mapSceneId/size/mapIcon per referenced object id"
+   }
+  },
+  "minimap/blocks/12340.bin": {
+   "sha256": "de17d5d3b161bddc01f0b51323d840bdd38f2ee29e02c0c0a34fe9b35ff9aa77",
+   "size_bytes": 15317,
+   "detail": {
+    "square": 12340,
+    "file": "minimap/blocks/12340.bin",
+    "sha256": "de17d5d3b161bddc01f0b51323d840bdd38f2ee29e02c0c0a34fe9b35ff9aa77",
+    "walls": 718,
+    "object_definitions": 187,
+    "source_pipeline": "Original rl4.fn scene load (same base as the block export); fe.getConfig per wall; om mapSceneId/size/mapIcon per referenced object id"
+   }
+  },
+  "minimap/blocks/12341.bin": {
+   "sha256": "7368199f75f09f6480668bb22e442a6a9229f23c15914ad82b706bfe1ea51b42",
+   "size_bytes": 9825,
+   "detail": {
+    "square": 12341,
+    "file": "minimap/blocks/12341.bin",
+    "sha256": "7368199f75f09f6480668bb22e442a6a9229f23c15914ad82b706bfe1ea51b42",
+    "walls": 341,
+    "object_definitions": 214,
+    "source_pipeline": "Original rl4.fn scene load (same base as the block export); fe.getConfig per wall; om mapSceneId/size/mapIcon per referenced object id"
+   }
+  },
+  "minimap/blocks/12435.bin": {
+   "sha256": "1cf608c5ac701ef27b6b231b70cb92e38c2509b2757740cedb4cd8e5fa4e26fa",
+   "size_bytes": 8237,
+   "detail": {
+    "square": 12435,
+    "file": "minimap/blocks/12435.bin",
+    "sha256": "1cf608c5ac701ef27b6b231b70cb92e38c2509b2757740cedb4cd8e5fa4e26fa",
+    "walls": 508,
+    "object_definitions": 1,
+    "source_pipeline": "Original rl4.fn scene load (same base as the block export); fe.getConfig per wall; om mapSceneId/size/mapIcon per referenced object id"
+   }
+  },
+  "minimap/blocks/12436.bin": {
+   "sha256": "15f09de4533a1cc0fb8ef89b2795b3f1831dde5d8468d818f37e8466fe6b4314",
+   "size_bytes": 4485,
+   "detail": {
+    "square": 12436,
+    "file": "minimap/blocks/12436.bin",
+    "sha256": "15f09de4533a1cc0fb8ef89b2795b3f1831dde5d8468d818f37e8466fe6b4314",
+    "walls": 221,
+    "object_definitions": 43,
+    "source_pipeline": "Original rl4.fn scene load (same base as the block export); fe.getConfig per wall; om mapSceneId/size/mapIcon per referenced object id"
+   }
+  },
+  "minimap/blocks/12437.bin": {
+   "sha256": "a1da31147d8599e0e0d7a18a87815c26e106d731ce65ff2fe32437a85ee7a3bc",
+   "size_bytes": 4641,
+   "detail": {
+    "square": 12437,
+    "file": "minimap/blocks/12437.bin",
+    "sha256": "a1da31147d8599e0e0d7a18a87815c26e106d731ce65ff2fe32437a85ee7a3bc",
+    "walls": 222,
+    "object_definitions": 50,
+    "source_pipeline": "Original rl4.fn scene load (same base as the block export); fe.getConfig per wall; om mapSceneId/size/mapIcon per referenced object id"
+   }
+  },
+  "minimap/blocks/12590.bin": {
+   "sha256": "8a1910e0ae60f4dad5f8f8730070369e0200305699de0dc9db407a8a6e69e69f",
+   "size_bytes": 6993,
+   "detail": {
+    "square": 12590,
+    "file": "minimap/blocks/12590.bin",
+    "sha256": "8a1910e0ae60f4dad5f8f8730070369e0200305699de0dc9db407a8a6e69e69f",
+    "walls": 339,
+    "object_definitions": 74,
+    "source_pipeline": "Original rl4.fn scene load (same base as the block export); fe.getConfig per wall; om mapSceneId/size/mapIcon per referenced object id"
+   }
+  },
+  "minimap/blocks/12591.bin": {
+   "sha256": "6051a400ccb71333c7ed01da36c3a8376177ff9230a53cef55dfe6a23a4ec200",
+   "size_bytes": 1881,
+   "detail": {
+    "square": 12591,
+    "file": "minimap/blocks/12591.bin",
+    "sha256": "6051a400ccb71333c7ed01da36c3a8376177ff9230a53cef55dfe6a23a4ec200",
+    "walls": 32,
+    "object_definitions": 64,
+    "source_pipeline": "Original rl4.fn scene load (same base as the block export); fe.getConfig per wall; om mapSceneId/size/mapIcon per referenced object id"
+   }
+  },
+  "minimap/blocks/12592.bin": {
+   "sha256": "fbb7fd2662bd39d20972e9be874afa9bde3261bd58e0fdc610cd212245911b58",
+   "size_bytes": 3041,
+   "detail": {
+    "square": 12592,
+    "file": "minimap/blocks/12592.bin",
+    "sha256": "fbb7fd2662bd39d20972e9be874afa9bde3261bd58e0fdc610cd212245911b58",
+    "walls": 117,
+    "object_definitions": 54,
+    "source_pipeline": "Original rl4.fn scene load (same base as the block export); fe.getConfig per wall; om mapSceneId/size/mapIcon per referenced object id"
+   }
+  },
+  "minimap/blocks/12593.bin": {
+   "sha256": "683fa3e08789fcc2101873aedc3ed9d2499193c4afd37dc0d82d7db7ab2ef3b0",
+   "size_bytes": 2701,
+   "detail": {
+    "square": 12593,
+    "file": "minimap/blocks/12593.bin",
+    "sha256": "683fa3e08789fcc2101873aedc3ed9d2499193c4afd37dc0d82d7db7ab2ef3b0",
+    "walls": 37,
+    "object_definitions": 101,
+    "source_pipeline": "Original rl4.fn scene load (same base as the block export); fe.getConfig per wall; om mapSceneId/size/mapIcon per referenced object id"
+   }
+  },
+  "minimap/blocks/12594.bin": {
+   "sha256": "15f2fe9cb5e6f4cf02a0e0049d4e57f3c98c9e4f303ca3968f5a2dd64b627ebe",
+   "size_bytes": 4173,
+   "detail": {
+    "square": 12594,
+    "file": "minimap/blocks/12594.bin",
+    "sha256": "15f2fe9cb5e6f4cf02a0e0049d4e57f3c98c9e4f303ca3968f5a2dd64b627ebe",
+    "walls": 134,
+    "object_definitions": 97,
+    "source_pipeline": "Original rl4.fn scene load (same base as the block export); fe.getConfig per wall; om mapSceneId/size/mapIcon per referenced object id"
+   }
+  },
+  "minimap/blocks/12595.bin": {
+   "sha256": "54a2daefa6586435e5265afbd2a8f571ec7c80204a1d04b7eb8cb105c1b298f9",
+   "size_bytes": 11253,
+   "detail": {
+    "square": 12595,
+    "file": "minimap/blocks/12595.bin",
+    "sha256": "54a2daefa6586435e5265afbd2a8f571ec7c80204a1d04b7eb8cb105c1b298f9",
+    "walls": 469,
+    "object_definitions": 183,
+    "source_pipeline": "Original rl4.fn scene load (same base as the block export); fe.getConfig per wall; om mapSceneId/size/mapIcon per referenced object id"
+   }
+  },
+  "minimap/blocks/12596.bin": {
+   "sha256": "c38460fa28f3858892a6ea45100ad528a973f73740e40499e6759ad50cf1fe95",
+   "size_bytes": 10629,
+   "detail": {
+    "square": 12596,
+    "file": "minimap/blocks/12596.bin",
+    "sha256": "c38460fa28f3858892a6ea45100ad528a973f73740e40499e6759ad50cf1fe95",
+    "walls": 450,
+    "object_definitions": 167,
+    "source_pipeline": "Original rl4.fn scene load (same base as the block export); fe.getConfig per wall; om mapSceneId/size/mapIcon per referenced object id"
+   }
+  },
+  "minimap/blocks/12597.bin": {
+   "sha256": "d5fe65d5bf3632440657f06d39e2837bf86a8f340878a5ea37afcbd827cfd5c6",
+   "size_bytes": 25949,
+   "detail": {
+    "square": 12597,
+    "file": "minimap/blocks/12597.bin",
+    "sha256": "d5fe65d5bf3632440657f06d39e2837bf86a8f340878a5ea37afcbd827cfd5c6",
+    "walls": 1135,
+    "object_definitions": 385,
+    "source_pipeline": "Original rl4.fn scene load (same base as the block export); fe.getConfig per wall; om mapSceneId/size/mapIcon per referenced object id"
+   }
+  },
+  "minimap/blocks/12633.bin": {
+   "sha256": "9470a0adfc26e0933a6abde5f41b7b452f4faf7584a0c3ffec6e8930d24e0143",
+   "size_bytes": 1929,
+   "detail": {
+    "square": 12633,
+    "file": "minimap/blocks/12633.bin",
+    "sha256": "9470a0adfc26e0933a6abde5f41b7b452f4faf7584a0c3ffec6e8930d24e0143",
+    "walls": 40,
+    "object_definitions": 60,
+    "source_pipeline": "Original rl4.fn scene load (same base as the block export); fe.getConfig per wall; om mapSceneId/size/mapIcon per referenced object id"
+   }
+  },
+  "minimap/blocks/12693.bin": {
+   "sha256": "0456c697193c0e38ed03a77d13ab95be4ab3a090204e06a4771e9a8a20300a11",
+   "size_bytes": 1289,
+   "detail": {
+    "square": 12693,
+    "file": "minimap/blocks/12693.bin",
+    "sha256": "0456c697193c0e38ed03a77d13ab95be4ab3a090204e06a4771e9a8a20300a11",
+    "walls": 10,
+    "object_definitions": 52,
+    "source_pipeline": "Original rl4.fn scene load (same base as the block export); fe.getConfig per wall; om mapSceneId/size/mapIcon per referenced object id"
+   }
+  },
+  "minimap/blocks/12694.bin": {
+   "sha256": "970ef75cc71636ba22d9288a059aad9cf8e821c2386f58b2626e191b9dd0ebc9",
+   "size_bytes": 10749,
+   "detail": {
+    "square": 12694,
+    "file": "minimap/blocks/12694.bin",
+    "sha256": "970ef75cc71636ba22d9288a059aad9cf8e821c2386f58b2626e191b9dd0ebc9",
+    "walls": 605,
+    "object_definitions": 49,
+    "source_pipeline": "Original rl4.fn scene load (same base as the block export); fe.getConfig per wall; om mapSceneId/size/mapIcon per referenced object id"
+   }
+  },
+  "minimap/blocks/12695.bin": {
+   "sha256": "1bd9cd3e27387786be3c6b9fe6981a6ec6a860d91052dd40d427020ff8f0ce07",
+   "size_bytes": 3181,
+   "detail": {
+    "square": 12695,
+    "file": "minimap/blocks/12695.bin",
+    "sha256": "1bd9cd3e27387786be3c6b9fe6981a6ec6a860d91052dd40d427020ff8f0ce07",
+    "walls": 157,
+    "object_definitions": 29,
+    "source_pipeline": "Original rl4.fn scene load (same base as the block export); fe.getConfig per wall; om mapSceneId/size/mapIcon per referenced object id"
+   }
+  },
+  "minimap/blocks/12846.bin": {
+   "sha256": "c490e38c7ff5e3f5d78daa1ba3d49465998312d6e0e8bf19c2ce2317fa82d5f9",
+   "size_bytes": 649,
+   "detail": {
+    "square": 12846,
+    "file": "minimap/blocks/12846.bin",
+    "sha256": "c490e38c7ff5e3f5d78daa1ba3d49465998312d6e0e8bf19c2ce2317fa82d5f9",
+    "walls": 0,
+    "object_definitions": 28,
+    "source_pipeline": "Original rl4.fn scene load (same base as the block export); fe.getConfig per wall; om mapSceneId/size/mapIcon per referenced object id"
+   }
+  },
+  "minimap/blocks/12847.bin": {
+   "sha256": "60f95325d910a150d9fb9b71bb66991b031796e99ef07afa227d95483d7ce209",
+   "size_bytes": 449,
+   "detail": {
+    "square": 12847,
+    "file": "minimap/blocks/12847.bin",
+    "sha256": "60f95325d910a150d9fb9b71bb66991b031796e99ef07afa227d95483d7ce209",
+    "walls": 0,
+    "object_definitions": 18,
+    "source_pipeline": "Original rl4.fn scene load (same base as the block export); fe.getConfig per wall; om mapSceneId/size/mapIcon per referenced object id"
+   }
+  },
+  "minimap/blocks/12848.bin": {
+   "sha256": "795220f77d08aa745ed54f26779452d564823d7b512f58b9c2674611d35e7588",
+   "size_bytes": 809,
+   "detail": {
+    "square": 12848,
+    "file": "minimap/blocks/12848.bin",
+    "sha256": "795220f77d08aa745ed54f26779452d564823d7b512f58b9c2674611d35e7588",
+    "walls": 0,
+    "object_definitions": 36,
+    "source_pipeline": "Original rl4.fn scene load (same base as the block export); fe.getConfig per wall; om mapSceneId/size/mapIcon per referenced object id"
+   }
+  },
+  "minimap/blocks/12851.bin": {
+   "sha256": "1fae23a9314729e72d3fd73c207be99032bfc2e89ea49096ac0f3a51428c6a3b",
+   "size_bytes": 9453,
+   "detail": {
+    "square": 12851,
+    "file": "minimap/blocks/12851.bin",
+    "sha256": "1fae23a9314729e72d3fd73c207be99032bfc2e89ea49096ac0f3a51428c6a3b",
+    "walls": 404,
+    "object_definitions": 145,
+    "source_pipeline": "Original rl4.fn scene load (same base as the block export); fe.getConfig per wall; om mapSceneId/size/mapIcon per referenced object id"
+   }
+  },
+  "minimap/blocks/12852.bin": {
+   "sha256": "147f71ccdd03f4cf00cb9f7d6e9c6c1ef787adaed5f1b7ece047d555eeb1769d",
+   "size_bytes": 16973,
+   "detail": {
+    "square": 12852,
+    "file": "minimap/blocks/12852.bin",
+    "sha256": "147f71ccdd03f4cf00cb9f7d6e9c6c1ef787adaed5f1b7ece047d555eeb1769d",
+    "walls": 759,
+    "object_definitions": 237,
+    "source_pipeline": "Original rl4.fn scene load (same base as the block export); fe.getConfig per wall; om mapSceneId/size/mapIcon per referenced object id"
+   }
+  },
+  "minimap/blocks/12853.bin": {
+   "sha256": "25ecd0111f37ea2a365256edc766cba50bd6bd4f36a648917d0376f5764237cb",
+   "size_bytes": 36161,
+   "detail": {
+    "square": 12853,
+    "file": "minimap/blocks/12853.bin",
+    "sha256": "25ecd0111f37ea2a365256edc766cba50bd6bd4f36a648917d0376f5764237cb",
+    "walls": 1682,
+    "object_definitions": 458,
+    "source_pipeline": "Original rl4.fn scene load (same base as the block export); fe.getConfig per wall; om mapSceneId/size/mapIcon per referenced object id"
+   }
+  },
+  "minimap/blocks/12949.bin": {
+   "sha256": "079c50268848fa22b702fd39bd2c0df4430ff805b5a34dd535bdf68a874a7303",
+   "size_bytes": 1193,
+   "detail": {
+    "square": 12949,
+    "file": "minimap/blocks/12949.bin",
+    "sha256": "079c50268848fa22b702fd39bd2c0df4430ff805b5a34dd535bdf68a874a7303",
+    "walls": 4,
+    "object_definitions": 52,
+    "source_pipeline": "Original rl4.fn scene load (same base as the block export); fe.getConfig per wall; om mapSceneId/size/mapIcon per referenced object id"
+   }
+  },
+  "minimap/blocks/12950.bin": {
+   "sha256": "68901102de0d0398d2dd1b1138a14c08e6f6bc737d64bc644c0ba463ab7ab8b7",
+   "size_bytes": 3149,
+   "detail": {
+    "square": 12950,
+    "file": "minimap/blocks/12950.bin",
+    "sha256": "68901102de0d0398d2dd1b1138a14c08e6f6bc737d64bc644c0ba463ab7ab8b7",
+    "walls": 95,
+    "object_definitions": 77,
+    "source_pipeline": "Original rl4.fn scene load (same base as the block export); fe.getConfig per wall; om mapSceneId/size/mapIcon per referenced object id"
+   }
+  },
+  "minimap/blocks/12951.bin": {
+   "sha256": "53b06246291b257bf8298bebbf2130bce25cb8cd51a7a011c877413e2e64e98d",
+   "size_bytes": 4097,
+   "detail": {
+    "square": 12951,
+    "file": "minimap/blocks/12951.bin",
+    "sha256": "53b06246291b257bf8298bebbf2130bce25cb8cd51a7a011c877413e2e64e98d",
+    "walls": 198,
+    "object_definitions": 42,
+    "source_pipeline": "Original rl4.fn scene load (same base as the block export); fe.getConfig per wall; om mapSceneId/size/mapIcon per referenced object id"
+   }
+  },
+  "minimap/blocks/13104.bin": {
+   "sha256": "50377675e3812eaf3c1909690b74163061b8b4f5da9f64caece0fe038048d6f6",
+   "size_bytes": 2353,
+   "detail": {
+    "square": 13104,
+    "file": "minimap/blocks/13104.bin",
+    "sha256": "50377675e3812eaf3c1909690b74163061b8b4f5da9f64caece0fe038048d6f6",
+    "walls": 49,
+    "object_definitions": 74,
+    "source_pipeline": "Original rl4.fn scene load (same base as the block export); fe.getConfig per wall; om mapSceneId/size/mapIcon per referenced object id"
+   }
+  },
+  "minimap/blocks/13105.bin": {
+   "sha256": "bf76a0cf885e8543d4d59d67b2cfc43df9aa4079dd287190cb6143840dda9adc",
+   "size_bytes": 19685,
+   "detail": {
+    "square": 13105,
+    "file": "minimap/blocks/13105.bin",
+    "sha256": "bf76a0cf885e8543d4d59d67b2cfc43df9aa4079dd287190cb6143840dda9adc",
+    "walls": 981,
+    "object_definitions": 195,
+    "source_pipeline": "Original rl4.fn scene load (same base as the block export); fe.getConfig per wall; om mapSceneId/size/mapIcon per referenced object id"
+   }
+  },
+  "minimap/blocks/13106.bin": {
+   "sha256": "0157aa4f006ef9af2249dd3eb46b0217a013e371414be579b9806e4fea6ae9a9",
+   "size_bytes": 8897,
+   "detail": {
+    "square": 13106,
+    "file": "minimap/blocks/13106.bin",
+    "sha256": "0157aa4f006ef9af2249dd3eb46b0217a013e371414be579b9806e4fea6ae9a9",
+    "walls": 378,
+    "object_definitions": 138,
+    "source_pipeline": "Original rl4.fn scene load (same base as the block export); fe.getConfig per wall; om mapSceneId/size/mapIcon per referenced object id"
+   }
+  },
+  "minimap/blocks/13107.bin": {
+   "sha256": "b0c1b60df8d4740bf007a86670c5f6ea589b47adab2fabe0c78b151f9c98da49",
+   "size_bytes": 2369,
+   "detail": {
+    "square": 13107,
+    "file": "minimap/blocks/13107.bin",
+    "sha256": "b0c1b60df8d4740bf007a86670c5f6ea589b47adab2fabe0c78b151f9c98da49",
+    "walls": 75,
+    "object_definitions": 54,
+    "source_pipeline": "Original rl4.fn scene load (same base as the block export); fe.getConfig per wall; om mapSceneId/size/mapIcon per referenced object id"
+   }
+  },
+  "minimap/blocks/13108.bin": {
+   "sha256": "1ab527c9db62d31d1bb8eb3897c6e4437676c33c7e90532d19d4c9909d62dcac",
+   "size_bytes": 11525,
+   "detail": {
+    "square": 13108,
+    "file": "minimap/blocks/13108.bin",
+    "sha256": "1ab527c9db62d31d1bb8eb3897c6e4437676c33c7e90532d19d4c9909d62dcac",
+    "walls": 516,
+    "object_definitions": 159,
+    "source_pipeline": "Original rl4.fn scene load (same base as the block export); fe.getConfig per wall; om mapSceneId/size/mapIcon per referenced object id"
+   }
+  },
+  "minimap/blocks/13109.bin": {
+   "sha256": "4b05808630c92c0d9c25394f8a583075d54eadd2899b166b1ce7a5f12418227d",
+   "size_bytes": 13725,
+   "detail": {
+    "square": 13109,
+    "file": "minimap/blocks/13109.bin",
+    "sha256": "4b05808630c92c0d9c25394f8a583075d54eadd2899b166b1ce7a5f12418227d",
+    "walls": 591,
+    "object_definitions": 209,
+    "source_pipeline": "Original rl4.fn scene load (same base as the block export); fe.getConfig per wall; om mapSceneId/size/mapIcon per referenced object id"
+   }
+  },
+  "minimap/blocks/13205.bin": {
+   "sha256": "9bb3f77037510b3fd8b3ccf8945fc0e317732cdb3eb9ef91a47dedb733e77de8",
+   "size_bytes": 1913,
+   "detail": {
+    "square": 13205,
+    "file": "minimap/blocks/13205.bin",
+    "sha256": "9bb3f77037510b3fd8b3ccf8945fc0e317732cdb3eb9ef91a47dedb733e77de8",
+    "walls": 109,
+    "object_definitions": 4,
+    "source_pipeline": "Original rl4.fn scene load (same base as the block export); fe.getConfig per wall; om mapSceneId/size/mapIcon per referenced object id"
+   }
+  },
+  "minimap/blocks/13206.bin": {
+   "sha256": "6ad1b99afa613c1b6b0903d7fdb27e6c7bb70d6d4d682a5d360244651f77b612",
+   "size_bytes": 1173,
+   "detail": {
+    "square": 13206,
+    "file": "minimap/blocks/13206.bin",
+    "sha256": "6ad1b99afa613c1b6b0903d7fdb27e6c7bb70d6d4d682a5d360244651f77b612",
+    "walls": 14,
+    "object_definitions": 43,
+    "source_pipeline": "Original rl4.fn scene load (same base as the block export); fe.getConfig per wall; om mapSceneId/size/mapIcon per referenced object id"
+   }
+  },
+  "minimap/blocks/13360.bin": {
+   "sha256": "b4bd0a69f4e79ef36bd4e683a4181d4500500ef6b774cc8eab7345ff628d77a4",
+   "size_bytes": 1805,
+   "detail": {
+    "square": 13360,
+    "file": "minimap/blocks/13360.bin",
+    "sha256": "b4bd0a69f4e79ef36bd4e683a4181d4500500ef6b774cc8eab7345ff628d77a4",
+    "walls": 56,
+    "object_definitions": 41,
+    "source_pipeline": "Original rl4.fn scene load (same base as the block export); fe.getConfig per wall; om mapSceneId/size/mapIcon per referenced object id"
+   }
+  },
+  "minimap/blocks/13361.bin": {
+   "sha256": "b68a95198121da7c4305051f36646eabba9f6cff8f9e52c475e52aaab312895c",
+   "size_bytes": 7237,
+   "detail": {
+    "square": 13361,
+    "file": "minimap/blocks/13361.bin",
+    "sha256": "b68a95198121da7c4305051f36646eabba9f6cff8f9e52c475e52aaab312895c",
+    "walls": 273,
+    "object_definitions": 139,
+    "source_pipeline": "Original rl4.fn scene load (same base as the block export); fe.getConfig per wall; om mapSceneId/size/mapIcon per referenced object id"
+   }
+  },
+  "minimap/blocks/13362.bin": {
+   "sha256": "d346187051649f99e80d410fdbb96b1445a9e760b52d0c01f8fac6a38b840152",
+   "size_bytes": 34861,
+   "detail": {
+    "square": 13362,
+    "file": "minimap/blocks/13362.bin",
+    "sha256": "d346187051649f99e80d410fdbb96b1445a9e760b52d0c01f8fac6a38b840152",
+    "walls": 1972,
+    "object_definitions": 161,
+    "source_pipeline": "Original rl4.fn scene load (same base as the block export); fe.getConfig per wall; om mapSceneId/size/mapIcon per referenced object id"
+   }
+  },
+  "minimap/blocks/13363.bin": {
+   "sha256": "bef55d76a71d852eb1f709065ca21f5a39296ce005fe9a5efd7817f8cc2df72b",
+   "size_bytes": 16785,
+   "detail": {
+    "square": 13363,
+    "file": "minimap/blocks/13363.bin",
+    "sha256": "bef55d76a71d852eb1f709065ca21f5a39296ce005fe9a5efd7817f8cc2df72b",
+    "walls": 746,
+    "object_definitions": 238,
+    "source_pipeline": "Original rl4.fn scene load (same base as the block export); fe.getConfig per wall; om mapSceneId/size/mapIcon per referenced object id"
+   }
+  },
+  "minimap/blocks/13364.bin": {
+   "sha256": "8811d3df3e9f9219171e0602eadcf2bf5cfc3364e41e394ae08a6445ef21be0f",
+   "size_bytes": 7573,
+   "detail": {
+    "square": 13364,
+    "file": "minimap/blocks/13364.bin",
+    "sha256": "8811d3df3e9f9219171e0602eadcf2bf5cfc3364e41e394ae08a6445ef21be0f",
+    "walls": 314,
+    "object_definitions": 123,
+    "source_pipeline": "Original rl4.fn scene load (same base as the block export); fe.getConfig per wall; om mapSceneId/size/mapIcon per referenced object id"
+   }
+  },
+  "minimap/blocks/13365.bin": {
+   "sha256": "dbc9fcff330533b8c301db15d42e30d0ffbbdb6e0eac05ad27c6be8ca38e3e40",
+   "size_bytes": 10721,
+   "detail": {
+    "square": 13365,
+    "file": "minimap/blocks/13365.bin",
+    "sha256": "dbc9fcff330533b8c301db15d42e30d0ffbbdb6e0eac05ad27c6be8ca38e3e40",
+    "walls": 517,
+    "object_definitions": 118,
+    "source_pipeline": "Original rl4.fn scene load (same base as the block export); fe.getConfig per wall; om mapSceneId/size/mapIcon per referenced object id"
    }
   }
  }

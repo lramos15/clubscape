@@ -90,7 +90,28 @@ plus:
   needed squares (gzip, hash-verified) and dropping distant ones; `diagnostics().sceneBase` /
   `loadedSquares` expose the state. Squares outside the exported world stay empty, as unloaded
   map squares do in the original. Frames rendered while the player's tile is outside the loaded
-  scene report `entities skipped` rather than drawing a substitute.
+  scene report `entities skipped` rather than drawing a substitute. Each streamed square also
+  fetches its minimap sidecar (`minimap/blocks/<square>.bin`) and, once, the map-scene sprite
+  asset (`minimap/mapscenes.bin`).
+* `minimapSurface()` returns the **source minimap** of the current scene on the player's
+  plane: the original `client.bm(world, 512×512, 4.0, plane, 0, 0, 48, 48)` sweep ported to
+  Rust and drawn over the streamed blocks with the current door states (`dynamicObjects`) —
+  terrain shapes and colours, bridge tiles, wall marks (red interactive/door, white plain),
+  diagonal walls and map-scene sprites — as `MinimapSurface {pixels: ImageData, mask, width,
+  height, scale: 4, marginX/Y: 48, baseX, baseY, plane, revision, complete, stats, notes,
+  icons}`. It is redrawn only when the scene, plane or door states change (`revision`), so the
+  UI can cache by revision. Scene tile (x, y) covers raster x `48 + (x − baseX) * 4` and y
+  `512 − 48 − (y − baseY + 1) * 4`; the UI's `MinimapPainter.project(widget, image,
+  (player.x − baseX) * 4 + 50, 462 − (player.y − baseY) * 4)` centring applies unchanged with
+  `baseX/baseY` taken from the surface instead of a static raster's catalogue entry. `mask` is
+  1 where the original drew map data (0 where no tile exists — those pixels hold the source
+  fill value `0x000001`). `icons` lists the map-element ids of floor decorations on the plane
+  (what the original minimap widget draws as map icons; their sprites are UI catalogue data).
+  The call throws when no scene, no map-scene asset or — with `complete: false` and `notes` —
+  when a square's sidecar is missing; it never returns a blank, static or approximate map.
+  Native comparison: all 15 approved minimap rasters match pixel-exactly over the scene
+  interior; the outer 5-tile band of a scene differs (base-dependent floor blending, see
+  `crates/renderer/README.md`, "Known deviations").
 
 ## Building
 
@@ -175,3 +196,9 @@ the ≥ 60 fps contract proof on the owner's hardware.
   worn gear matches, and hand the `ImageData` to `setUiPreview()` via a canvas of the same size.
   The renderer sways the model with the original 20 ms cycle, so re-request per animation frame
   while the interface is open.
+* Minimap: call `minimapSurface()` when the UI paints its minimap widget (cheap when the
+  `revision` is unchanged) and give `pixels`, `baseX`, `baseY`, `plane` and `mask` to the
+  UI's painter in place of the static `ui/minimaps/<base>-<plane>.png` catalogue raster. The
+  surface follows the streamed scene (recentering changes `baseX/baseY`), the player's plane
+  and door states; entity dots, the player marker and map-element icon sprites remain the
+  UI's layer over it.

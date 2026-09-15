@@ -32,6 +32,8 @@ export interface RenderAssetManifest {
     square: number; file: string; sha256: string; models_file: string; models_sha256: string;
     origin_x: number; origin_y: number; size: number; file_gz?: string; models_file_gz?: string;
   }>;
+  /** Minimap sidecars (`export.py --profile minimap`): per square wall configs + object map fields. */
+  minimap_blocks?: Array<{ square: number; file: string; sha256: string; walls: number; object_definitions: number }>;
   /** Skeletal sequences (`export.py --profile anim`): player actions, NPC definition motions. */
   sequences?: Array<{ sequence_id: number; file: string; sha256: string; frame_count: number; frame_lengths_client_cycles: number[] }>;
   /** NPC definitions with their lit base model and original stand/walk/rotate/run sequence ids. */
@@ -151,6 +153,39 @@ export interface ScenePlacement {
   blocks: boolean;
 }
 
+/** A map-element icon position the original minimap widget draws (`bu.aa`); sprites are UI data. */
+export interface MinimapIcon { x: number; y: number; plane: number; element: number }
+
+/**
+ * The source minimap raster of the current scene and plane: the original `client.bm(world,
+ * 512x512, 4.0, plane, 0, 0, 48, 48)` sweep (terrain shapes/colours, wall/door/diagonal marks,
+ * map-scene sprites) redrawn from the streamed blocks, door states and instance. Scene tile
+ * (x, y) covers raster x `marginX + (x - baseX) * scale` .. +scale and y
+ * `height - marginY - (y - baseY + 1) * scale` .. +scale; a player at (px, py) is centred at
+ * `(marginX + (px - baseX) * scale + 2, height - marginY - (py - baseY) * scale - 2)`.
+ */
+export interface MinimapSurface {
+  width: number;
+  height: number;
+  scale: number;
+  marginX: number;
+  marginY: number;
+  baseX: number;
+  baseY: number;
+  plane: number;
+  /** Increments whenever the raster was redrawn (scene, plane or door state changed). */
+  revision: number;
+  /** False when a placement lacked its exported config/definition; see `notes`. */
+  complete: boolean;
+  stats: { terrainTiles: number; wallMarks: number; diagonalMarks: number; mapScenes: number; unresolved: number };
+  notes: string[];
+  icons: MinimapIcon[];
+  /** RGBA8 (alpha 255 everywhere, as the native capture wrote it). */
+  pixels: ImageData;
+  /** 1 where the original sweep drew map data, 0 where no tile exists (the source fill value). */
+  mask: Uint8Array;
+}
+
 export interface LoadedAsset { id: string; sha256: string; loaded: boolean }
 
 /** Extra, adapter-only options; the shared `RendererConfig` is not modified. */
@@ -228,6 +263,12 @@ export interface ClubscapeRendererHandle extends RendererHandle {
   playerFitReport(): PlayerFitReport[];
   /** Current scene placement (null without a scene). */
   scenePlacement(): ScenePlacement | null;
+  /**
+   * The source minimap of the current scene on the player's plane (see `MinimapSurface`), for
+   * the UI's minimap widget. Throws when the scene, the map-scene asset or a square's minimap
+   * sidecar is missing — never a blank or approximate map. Cached until the state changes.
+   */
+  minimapSurface(): MinimapSurface;
   /** Whether the player is running (two tiles per server tick, or the `run` setting without ticks). */
   playerRunning(): boolean;
   /**
@@ -357,6 +398,18 @@ export const createRenderer: (canvas: HTMLCanvasElement, config: RendererConfig,
     let assembling: Promise<void> | null = null;
     const blocksBySquare = new Map<number, NonNullable<RenderAssetManifest["blocks"]>[number]>();
     for (const block of manifest.blocks ?? []) blocksBySquare.set(block.square, block);
+    const minimapBySquare = new Map<number, NonNullable<RenderAssetManifest["minimap_blocks"]>[number]>();
+    for (const entry of manifest.minimap_blocks ?? []) minimapBySquare.set(entry.square, entry);
+    let mapScenes: Promise<void> | null = null;
+    /** The map-scene sprites/shape masks, fetched once with the first world block. */
+    const ensureMapScenes = (): Promise<void> => {
+      if (!manifest.files["minimap/mapscenes.bin"]) return Promise.resolve();
+      mapScenes ??= (async () => {
+        const bytes = await fetchAsset("minimap/mapscenes.bin");
+        if (!disposed) renderer.load_map_scenes(bytes);
+      })();
+      return mapScenes;
+    };
     const ensureBlock = (square: number): Promise<boolean> => {
       if (loadedSquares.has(square)) return Promise.resolve(true);
       const entry = blocksBySquare.get(square);
@@ -364,9 +417,16 @@ export const createRenderer: (canvas: HTMLCanvasElement, config: RendererConfig,
       let pending = blockFetches.get(square);
       if (!pending) {
         pending = (async () => {
-          const [blockBytes, packBytes] = await Promise.all([fetchAsset(entry.file_gz ?? entry.file), fetchAsset(entry.models_file_gz ?? entry.models_file)]);
+          const minimap = minimapBySquare.get(square);
+          const [blockBytes, packBytes, sidecar] = await Promise.all([
+            fetchAsset(entry.file_gz ?? entry.file),
+            fetchAsset(entry.models_file_gz ?? entry.models_file),
+            minimap ? fetchAsset(minimap.file) : Promise.resolve(null),
+            ensureMapScenes(),
+          ]);
           if (disposed) return false;
           renderer.load_block(square, blockBytes, packBytes);
+          if (sidecar) renderer.load_minimap_block(square, sidecar);
           loadedSquares.add(square);
           return true;
         })().finally(() => blockFetches.delete(square));
@@ -579,6 +639,15 @@ export const createRenderer: (canvas: HTMLCanvasElement, config: RendererConfig,
         requireLive();
         const json = renderer.scene_placement();
         return json === undefined ? null : (JSON.parse(json) as ScenePlacement);
+      },
+      minimapSurface() {
+        requireLive();
+        const meta = JSON.parse(renderer.minimap_surface()) as Omit<MinimapSurface, "pixels" | "mask">;
+        const rgba = renderer.minimap_pixels();
+        const mask = renderer.minimap_mask();
+        const image = new ImageData(meta.width, meta.height);
+        image.data.set(rgba);
+        return { ...meta, pixels: image, mask };
       },
       playerRunning() {
         requireLive();

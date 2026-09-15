@@ -21,6 +21,7 @@ use crate::raster::{DrawStats, Fill, RasterState, Tri};
 use crate::scene::SceneData;
 use crate::scene::block::{self, BLOCK_SIZE, Block};
 use crate::scene::draw::{PickTarget, RoofRemoval, SceneDrawer, SceneView, TemporaryEntity};
+use crate::scene::minimap::{self, MapScenes, MinimapStats, WallColours};
 use crate::texture::{Texture, TextureSet};
 
 /// One original client cycle in milliseconds (animation frame lengths are in cycles).
@@ -326,6 +327,50 @@ struct DoorState {
     quarter_turns: i32,
 }
 
+/// State a cached minimap surface was drawn for.
+#[derive(Clone, Debug, PartialEq, Eq)]
+struct MinimapKey {
+    scene: String,
+    plane: i32,
+    doors: Vec<(i32, i32, i32, i32)>,
+}
+
+/// A map-element icon position (`om.getMapIconId` of a floor decoration), as the original
+/// collects them for the minimap widget (`bu.aa`): the sprite itself is UI data.
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub struct MinimapIcon {
+    pub x: i32,
+    pub y: i32,
+    pub plane: i32,
+    pub element: i32,
+}
+
+/// The source minimap raster of the current scene and plane: `client.bm(world, 512x512, 4.0,
+/// plane, 0, 0, 48, 48)`, so tile (x, y) of the scene occupies raster x `48 + (x - base_x) * 4`
+/// and y `512 - 48 - (y - base_y + 1) * 4` (rows run north to south).
+#[derive(Clone, Debug)]
+pub struct MinimapSurface {
+    pub width: i32,
+    pub height: i32,
+    /// Raster pixels per tile.
+    pub scale: i32,
+    /// Raster offset of scene tile (0, 0): `(48, 48)` from the left and bottom edges.
+    pub margin: (i32, i32),
+    pub base_x: i32,
+    pub base_y: i32,
+    pub plane: i32,
+    /// RGBA8, alpha 255 everywhere (as the native capture wrote it).
+    pub rgba: Vec<u8>,
+    /// 1 where the sweep drew map data, 0 where the original fill value survived.
+    pub mask: Vec<u8>,
+    /// Increments whenever the surface is redrawn (scene, plane or door state changed).
+    pub revision: u64,
+    pub stats: MinimapStats,
+    /// False when a placement lacked its exported config/definition (see `stats.notes`).
+    pub complete: bool,
+    pub icons: Vec<MinimapIcon>,
+}
+
 #[derive(Clone, Debug)]
 struct EntityState {
     id: String,
@@ -568,6 +613,13 @@ pub struct RendererCore {
     models: HashMap<String, Model>,
     /// World blocks (64x64 map squares) keyed by square id, with their model packs.
     blocks: HashMap<i32, (Block, Vec<(String, Model)>)>,
+    /// Original map-scene sprites and tile-shape masks (`minimap/mapscenes.bin`).
+    map_scenes: Option<MapScenes>,
+    /// Minimap sidecar bytes per square (`minimap/blocks/<square>.bin`), attached to blocks.
+    minimap_sidecars: HashMap<i32, Vec<u8>>,
+    /// Cached minimap surface and the state it was drawn for.
+    minimap: Option<(MinimapKey, MinimapSurface)>,
+    minimap_revision: u64,
     /// WorldView scenery entities (`object`/`temporary_object`): id, source object id, tile.
     scenery_entities: Vec<(String, i32, WorldTile)>,
     /// Animation clock origin (ms) of the current scene.
@@ -624,6 +676,10 @@ impl RendererCore {
             player_instance: None,
             models: HashMap::new(),
             blocks: HashMap::new(),
+            map_scenes: None,
+            minimap_sidecars: HashMap::new(),
+            minimap: None,
+            minimap_revision: 0,
             scenery_entities: Vec::new(),
             scene_started_ms: 0.0,
             entities: Vec::new(),
@@ -878,12 +934,15 @@ impl RendererCore {
         block_bytes: &[u8],
         pack_bytes: &[u8],
     ) -> Result<(), RenderError> {
-        let block = Block::from_chunks(block_bytes)?;
+        let mut block = Block::from_chunks(block_bytes)?;
         if block.square != square {
             return Err(RenderError::InvalidAsset(format!(
                 "block file is square {} but was registered as {square}",
                 block.square
             )));
+        }
+        if let Some(sidecar) = self.minimap_sidecars.get(&square) {
+            block.attach_minimap(sidecar)?;
         }
         let models = parse_model_pack(pack_bytes)?;
         if models.len() != block.model_keys.len() {
@@ -899,6 +958,164 @@ impl RendererCore {
 
     pub fn has_block(&self, square: i32) -> bool {
         self.blocks.contains_key(&square)
+    }
+
+    /// Loads the original map-scene sprites and tile-shape masks the minimap needs.
+    pub fn load_map_scenes(&mut self, bytes: &[u8]) -> Result<(), RenderError> {
+        self.map_scenes = Some(MapScenes::from_chunks(bytes)?);
+        self.minimap = None;
+        Ok(())
+    }
+
+    pub fn has_map_scenes(&self) -> bool {
+        self.map_scenes.is_some()
+    }
+
+    /// Loads a square's minimap sidecar (wall placement configs and object-definition map
+    /// fields). Attaches to the block immediately when it is loaded, and to any later load.
+    pub fn load_minimap_block(&mut self, square: i32, bytes: &[u8]) -> Result<(), RenderError> {
+        if let Some((block, _)) = self.blocks.get_mut(&square) {
+            block.attach_minimap(bytes)?;
+        } else {
+            // Validate the header now so a wrong file fails at load time, not at assembly.
+            let chunks = Chunks::parse(bytes)?;
+            let h = chunks.ints("MBHD")?;
+            if h.first() != Some(&square) {
+                return Err(RenderError::InvalidAsset(format!(
+                    "minimap sidecar is square {:?} but was registered as {square}",
+                    h.first()
+                )));
+            }
+        }
+        self.minimap_sidecars.insert(square, bytes.to_vec());
+        self.minimap = None;
+        Ok(())
+    }
+
+    pub fn has_minimap_block(&self, square: i32) -> bool {
+        self.blocks
+            .get(&square)
+            .is_some_and(|(block, _)| block.minimap_ready)
+    }
+
+    /// Door-state wall replacements by tile index, for the minimap (`fe.getConfig` type 0 at
+    /// the door's rotation; the original tag keeps its interactive bit).
+    fn minimap_wall_overrides(&self, scene: &SceneData) -> HashMap<usize, crate::scene::Wall> {
+        let mut out = HashMap::new();
+        for door in &self.door_states {
+            let rotation = door.quarter_turns.rem_euclid(4);
+            let ex = door.tile.x - scene.base_x + scene.offset;
+            let ey = door.tile.y - scene.base_y + scene.offset;
+            if ex < 0 || ey < 0 || ex >= scene.width || ey >= scene.height {
+                continue;
+            }
+            let plane = door.tile.plane.clamp(0, scene.planes - 1);
+            let index = scene.tile_index(plane, ex, ey);
+            if let Some(existing) = scene.walls.get(&index) {
+                let mut wall = existing.clone();
+                wall.orientation_a = 1 << rotation;
+                wall.orientation_b = 0;
+                wall.model_b = -1;
+                wall.config = rotation << 6;
+                out.insert(index, wall);
+            }
+        }
+        out
+    }
+
+    /// The source minimap of the current scene on the player's plane (see [`MinimapSurface`]),
+    /// redrawn only when the scene, plane or door states change. Requires the map-scene assets
+    /// and a scene whose blocks carry their minimap sidecars; missing inputs are errors, never
+    /// a blank or approximate map.
+    pub fn minimap_surface(&mut self) -> Result<&MinimapSurface, RenderError> {
+        let scene = self
+            .scene
+            .as_ref()
+            .ok_or_else(|| RenderError::Scene("no scene loaded for the minimap".into()))?;
+        let assets = self.map_scenes.as_ref().ok_or_else(|| {
+            RenderError::MissingAsset("minimap/mapscenes.bin is not loaded".into())
+        })?;
+        let plane = self.plane.clamp(0, scene.planes - 1);
+        let mut doors: Vec<(i32, i32, i32, i32)> = self
+            .door_states
+            .iter()
+            .map(|d| {
+                (
+                    d.tile.plane,
+                    d.tile.x,
+                    d.tile.y,
+                    d.quarter_turns.rem_euclid(4),
+                )
+            })
+            .collect();
+        doors.sort_unstable();
+        let key = MinimapKey {
+            scene: self.scene_id.clone().unwrap_or_default(),
+            plane,
+            doors,
+        };
+        if self.minimap.as_ref().is_some_and(|(k, _)| *k == key) {
+            return Ok(&self.minimap.as_ref().expect("checked").1);
+        }
+        let overrides = self.minimap_wall_overrides(scene);
+        let mut raster = minimap::Raster::new(512, 512);
+        let stats = minimap::render(
+            scene,
+            plane,
+            assets,
+            WallColours::REFERENCE,
+            &overrides,
+            4.0,
+            (0, 0),
+            (48, 48),
+            &mut raster,
+        )?;
+        let (rgba, mask) = minimap::to_rgba(&raster);
+        // bu.aa: floor decorations with a map element on the drawn plane, main area only.
+        let mut icons = Vec::new();
+        for x in 0..scene.max_x {
+            for y in 0..scene.max_y {
+                let index = scene.tile_index(plane, x + scene.offset, y + scene.offset);
+                if scene.flags.get(index).is_none_or(|f| f & 1 == 0) {
+                    continue;
+                }
+                let Some(decor) = scene.floor_decorations.get(&index) else {
+                    continue;
+                };
+                let Some(def) = scene
+                    .object_defs
+                    .get(&crate::scene::tag_object_id(decor.hash))
+                else {
+                    continue;
+                };
+                if def.map_icon >= 0 {
+                    icons.push(MinimapIcon {
+                        x: scene.base_x + x,
+                        y: scene.base_y + y,
+                        plane,
+                        element: def.map_icon,
+                    });
+                }
+            }
+        }
+        self.minimap_revision += 1;
+        let surface = MinimapSurface {
+            width: raster.width,
+            height: raster.height,
+            scale: 4,
+            margin: (48, 48),
+            base_x: scene.base_x,
+            base_y: scene.base_y,
+            plane,
+            rgba,
+            mask,
+            revision: self.minimap_revision,
+            complete: stats.unresolved == 0,
+            stats,
+            icons,
+        };
+        self.minimap = Some((key, surface));
+        Ok(&self.minimap.as_ref().expect("just set").1)
     }
 
     pub fn unload_block(&mut self, square: i32) {
@@ -1847,6 +2064,8 @@ impl RendererCore {
                 height: existing.height,
                 z: existing.z,
                 hash: existing.hash,
+                // A door variant is always a straight wall (type 0) at the given rotation.
+                config: rotation << 6,
             };
             let _ = door.open;
             door_walls.push((plane, lx, ly, wall));
@@ -2376,6 +2595,16 @@ impl RendererCore {
 
     pub fn scene(&self) -> Option<&SceneData> {
         self.scene.as_ref()
+    }
+
+    /// The plane frames and the minimap are drawn for (normally the player's tile plane from
+    /// the WorldView; developer fixtures without a player set it directly).
+    pub fn set_plane(&mut self, plane: i32) {
+        self.plane = plane;
+    }
+
+    pub fn plane(&self) -> i32 {
+        self.plane
     }
 }
 

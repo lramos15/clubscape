@@ -157,6 +157,16 @@ async function main(): Promise<void> {
         });
       };
       regionResults.push({ step: "lumbridge-castle", tile: [3222, 3218], ...(await shot("region-lumbridge-castle-3222-3218.png")) });
+      // Source minimap surface over the streamed blocks (client.bm port), closed and open door.
+      const minimapCanvas = page.locator("canvas[data-clubscape-minimap]");
+      const minimapShot = async (name: string, scenario: string | null) => {
+        const meta = await page.evaluate((s) => s ? window.__clubscapeDev.applyScenario!(s) : window.__clubscapeDev.minimap!(), scenario);
+        await minimapCanvas.screenshot({ path: path.join(out, name) });
+        return { screenshot: name, ...(meta as object) };
+      };
+      regionResults.push({ step: "minimap", tile: [3222, 3218], ...(await minimapShot("region-minimap-lumbridge-3200-3168.png", null)) });
+      regionResults.push({ step: "minimap-door-open", ...(await minimapShot("region-minimap-lumbridge-door-open.png", "door-open")) });
+      regionResults.push({ step: "minimap-door-closed", ...(await minimapShot("region-minimap-lumbridge-door-closed.png", "door-closed")) });
       // Frozen representative workload: geared player, animated NPCs, fire and ground items in the
       // streamed Lumbridge scene; every counted frame is a GPU-completed record.
       const workloadMs = Number(argValue("--workload-ms", "0"));
@@ -199,12 +209,13 @@ async function main(): Promise<void> {
       await page.waitForTimeout(1500);
       await waitFrames(page, (await snapshot(page, null)).renderedFrames + 3);
       regionResults.push({ step: "tutorial-island", tile: [3096, 3105], ...(await shot("region-tutorial-island-3096-3105.png")) });
+      regionResults.push({ step: "minimap-tutorial", tile: [3096, 3105], ...(await minimapShot("region-minimap-tutorial-island.png", null)) });
       const picks = await page.evaluate(() => {
         const handle = window.__clubscapeDev.handle!;
         return [[960, 540], [700, 600], [1200, 700]].map(([x, y]) => ({ x, y, pick: handle.pick(x!, y!) }));
       });
       regionResults.push({ step: "picks", picks });
-      console.log("region mode", JSON.stringify(regionResults.map((r: any) => ({ step: r.step, base: r.sceneBase, squares: r.loadedSquares?.length, prims: r.lastFrame?.primitives, picks: r.picks }))));
+      console.log("region mode", JSON.stringify(regionResults.map((r: any) => ({ step: r.step, base: r.sceneBase ?? (r.baseX !== undefined ? [r.baseX, r.baseY, r.plane] : undefined), squares: r.loadedSquares?.length, prims: r.lastFrame?.primitives, picks: r.picks, minimap: r.revision !== undefined ? { revision: r.revision, complete: r.complete, stats: r.stats, covered: r.covered, icons: r.icons?.length } : undefined }))));
     }
     report.regions = regionResults;
 

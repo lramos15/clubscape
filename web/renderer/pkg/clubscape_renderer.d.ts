@@ -58,6 +58,8 @@ export class WasmRenderer {
      */
     frame_player_preview(options_json: string, now_ms: number): Promise<any>;
     has_block(square: number): boolean;
+    has_map_scenes(): boolean;
+    has_minimap_block(square: number): boolean;
     last_frame_triangles(): number;
     /**
      * Loads a world block (64x64 map square) for scene assembly.
@@ -76,6 +78,16 @@ export class WasmRenderer {
      * Loads a ground-item stack model for quantities `>= min_quantity`.
      */
     load_ground_item(item_id: number, min_quantity: number, bytes: Uint8Array): void;
+    /**
+     * Loads the original map-scene sprites and tile-shape masks (`minimap/mapscenes.bin`) the
+     * minimap needs.
+     */
+    load_map_scenes(bytes: Uint8Array): void;
+    /**
+     * Loads a square's minimap sidecar (`minimap/blocks/<square>.bin`: wall placement configs
+     * and object-definition map fields). Order relative to `load_block` does not matter.
+     */
+    load_minimap_block(square: number, bytes: Uint8Array): void;
     load_model(id: string, bytes: Uint8Array): void;
     /**
      * Loads an NPC definition (`manifest.npc_definitions[i]` as JSON) with its lit base model.
@@ -95,6 +107,25 @@ export class WasmRenderer {
      * Returns the sequence id.
      */
     load_sequence(bytes: Uint8Array): number;
+    /**
+     * Coverage mask (`Uint8Array`, width * height): 1 where the original sweep drew map data,
+     * 0 where the source fill value survived (no tile).
+     */
+    minimap_mask(): Uint8Array;
+    /**
+     * RGBA8 pixels (`Uint8ClampedArray`, width * height * 4, alpha 255) of the surface
+     * `minimap_surface()` last described.
+     */
+    minimap_pixels(): Uint8ClampedArray;
+    /**
+     * Metadata of the source minimap surface for the current scene and plane (JSON:
+     * `width`, `height`, `scale`, `marginX`, `marginY`, `baseX`, `baseY`, `plane`, `revision`,
+     * `complete`, `stats {terrainTiles, wallMarks, diagonalMarks, mapScenes, unresolved}`,
+     * `notes[]`, `icons[{x, y, plane, element}]`). Draws (or reuses the cached raster) with the
+     * original `client.bm` port; rejects when no scene, no map-scene asset or no sidecars.
+     * Pixels and mask follow from `minimap_pixels()` / `minimap_mask()` for the same revision.
+     */
+    minimap_surface(): string;
     /**
      * Whether the tile is within `margin` tiles of the current scene edge (or no scene exists).
      */
@@ -141,6 +172,11 @@ export class WasmRenderer {
      * the world view supplies no source animation. Off by default; not final M1 logic.
      */
     set_motion_fallback(enabled: boolean): void;
+    /**
+     * Sets the plane frames and the minimap are drawn for when no WorldView supplies a player
+     * (developer fixtures); the WorldView's player plane overrides it on the next update.
+     */
+    set_plane(plane: number): void;
     /**
      * Hovered world tile and walk destination consulted by roof modes 2 and 4 (`undefined`
      * clears either).
@@ -209,17 +245,24 @@ export interface InitOutput {
     readonly wasmrenderer_frame_model_fixture: (a: number, b: number, c: number, d: number, e: number, f: number, g: number, h: number, i: number) => any;
     readonly wasmrenderer_frame_player_preview: (a: number, b: number, c: number, d: number) => any;
     readonly wasmrenderer_has_block: (a: number, b: number) => number;
+    readonly wasmrenderer_has_map_scenes: (a: number) => number;
+    readonly wasmrenderer_has_minimap_block: (a: number, b: number) => number;
     readonly wasmrenderer_last_frame_triangles: (a: number) => number;
     readonly wasmrenderer_load_block: (a: number, b: number, c: number, d: number, e: number, f: number) => [number, number];
     readonly wasmrenderer_load_dynamic_object: (a: number, b: number, c: number, d: number, e: number, f: number, g: any, h: number, i: number) => [number, number];
     readonly wasmrenderer_load_equip_model: (a: number, b: number, c: number, d: number) => [number, number];
     readonly wasmrenderer_load_ground_item: (a: number, b: number, c: number, d: number, e: number) => [number, number];
+    readonly wasmrenderer_load_map_scenes: (a: number, b: number, c: number) => [number, number];
+    readonly wasmrenderer_load_minimap_block: (a: number, b: number, c: number, d: number) => [number, number];
     readonly wasmrenderer_load_model: (a: number, b: number, c: number, d: number, e: number) => [number, number];
     readonly wasmrenderer_load_npc_definition: (a: number, b: number, c: number, d: number, e: number) => [number, number, number];
     readonly wasmrenderer_load_npc_pack: (a: number, b: number, c: number, d: number) => [number, number];
     readonly wasmrenderer_load_player_body: (a: number, b: number, c: number, d: number, e: number, f: number, g: number, h: number, i: number) => [number, number];
     readonly wasmrenderer_load_scene: (a: number, b: number, c: number, d: number, e: number, f: number, g: number) => [number, number];
     readonly wasmrenderer_load_sequence: (a: number, b: number, c: number) => [number, number, number];
+    readonly wasmrenderer_minimap_mask: (a: number) => [number, number, number];
+    readonly wasmrenderer_minimap_pixels: (a: number) => [number, number, number];
+    readonly wasmrenderer_minimap_surface: (a: number) => [number, number, number, number];
     readonly wasmrenderer_needs_recenter: (a: number, b: number, c: number, d: number) => number;
     readonly wasmrenderer_new: (a: any, b: number, c: number, d: number, e: number) => any;
     readonly wasmrenderer_pick: (a: number, b: number, c: number) => [number, number];
@@ -231,6 +274,7 @@ export interface InitOutput {
     readonly wasmrenderer_set_camera: (a: number, b: number, c: number, d: number, e: number, f: number, g: number, h: number) => [number, number];
     readonly wasmrenderer_set_instanced_map: (a: number, b: number) => void;
     readonly wasmrenderer_set_motion_fallback: (a: number, b: number) => void;
+    readonly wasmrenderer_set_plane: (a: number, b: number) => void;
     readonly wasmrenderer_set_roof_context: (a: number, b: number, c: number, d: number, e: number) => void;
     readonly wasmrenderer_set_roof_mode: (a: number, b: number) => void;
     readonly wasmrenderer_set_top_plane_override: (a: number, b: number) => void;
@@ -242,10 +286,10 @@ export interface InitOutput {
     readonly wasm_bindgen_765df639e0572edc___convert__closures_____invoke___js_sys_3b7301898fbf4e22___Function_fn_wasm_bindgen_765df639e0572edc___JsValue_____wasm_bindgen_765df639e0572edc___sys__Undefined___js_sys_3b7301898fbf4e22___Function_fn_wasm_bindgen_765df639e0572edc___JsValue_____wasm_bindgen_765df639e0572edc___sys__Undefined_______true_: (a: number, b: number, c: any, d: any) => void;
     readonly wasm_bindgen_765df639e0572edc___convert__closures_____invoke___wasm_bindgen_765df639e0572edc___JsValue__core_ed718c3d60ebd546___result__Result_____wasm_bindgen_765df639e0572edc___JsError___true_: (a: number, b: number, c: any) => [number, number];
     readonly wasm_bindgen_765df639e0572edc___convert__closures_____invoke___wasm_bindgen_765df639e0572edc___sys__JsNullable_wgpu_fb237351f69b1e72___backend__webgpu__webgpu_sys__gen_GpuError__GpuError___core_ed718c3d60ebd546___result__Result_____wasm_bindgen_765df639e0572edc___JsError___true_: (a: number, b: number, c: any) => [number, number];
-    readonly wasm_bindgen_765df639e0572edc___convert__closures_____invoke___wasm_bindgen_765df639e0572edc___sys__JsNullable_wgpu_fb237351f69b1e72___backend__webgpu__webgpu_sys__gen_GpuError__GpuError___core_ed718c3d60ebd546___result__Result_____wasm_bindgen_765df639e0572edc___JsError___true__66: (a: number, b: number, c: any) => [number, number];
-    readonly wasm_bindgen_765df639e0572edc___convert__closures_____invoke___wasm_bindgen_765df639e0572edc___sys__JsNullable_wgpu_fb237351f69b1e72___backend__webgpu__webgpu_sys__gen_GpuError__GpuError___core_ed718c3d60ebd546___result__Result_____wasm_bindgen_765df639e0572edc___JsError___true__67: (a: number, b: number, c: any) => [number, number];
+    readonly wasm_bindgen_765df639e0572edc___convert__closures_____invoke___wasm_bindgen_765df639e0572edc___sys__JsNullable_wgpu_fb237351f69b1e72___backend__webgpu__webgpu_sys__gen_GpuError__GpuError___core_ed718c3d60ebd546___result__Result_____wasm_bindgen_765df639e0572edc___JsError___true__74: (a: number, b: number, c: any) => [number, number];
+    readonly wasm_bindgen_765df639e0572edc___convert__closures_____invoke___wasm_bindgen_765df639e0572edc___sys__JsNullable_wgpu_fb237351f69b1e72___backend__webgpu__webgpu_sys__gen_GpuError__GpuError___core_ed718c3d60ebd546___result__Result_____wasm_bindgen_765df639e0572edc___JsError___true__75: (a: number, b: number, c: any) => [number, number];
     readonly wasm_bindgen_765df639e0572edc___convert__closures_____invoke___wgpu_fb237351f69b1e72___backend__webgpu__webgpu_sys__gen_GpuDeviceLostInfo__GpuDeviceLostInfo______true_: (a: number, b: number, c: any) => void;
-    readonly wasm_bindgen_765df639e0572edc___convert__closures_____invoke___wgpu_fb237351f69b1e72___backend__webgpu__webgpu_sys__gen_GpuDeviceLostInfo__GpuDeviceLostInfo______true__65: (a: number, b: number, c: any) => void;
+    readonly wasm_bindgen_765df639e0572edc___convert__closures_____invoke___wgpu_fb237351f69b1e72___backend__webgpu__webgpu_sys__gen_GpuDeviceLostInfo__GpuDeviceLostInfo______true__73: (a: number, b: number, c: any) => void;
     readonly __wbindgen_malloc: (a: number, b: number) => number;
     readonly __wbindgen_realloc: (a: number, b: number, c: number, d: number) => number;
     readonly __wbindgen_exn_store: (a: number) => void;

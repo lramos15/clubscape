@@ -576,6 +576,102 @@ impl WasmRenderer {
         self.inner.borrow().core.has_block(square)
     }
 
+    /// Loads the original map-scene sprites and tile-shape masks (`minimap/mapscenes.bin`) the
+    /// minimap needs.
+    pub fn load_map_scenes(&self, bytes: Vec<u8>) -> Result<(), JsValue> {
+        self.inner
+            .borrow_mut()
+            .core
+            .load_map_scenes(&bytes)
+            .map_err(js_err)
+    }
+
+    pub fn has_map_scenes(&self) -> bool {
+        self.inner.borrow().core.has_map_scenes()
+    }
+
+    /// Loads a square's minimap sidecar (`minimap/blocks/<square>.bin`: wall placement configs
+    /// and object-definition map fields). Order relative to `load_block` does not matter.
+    pub fn load_minimap_block(&self, square: i32, bytes: Vec<u8>) -> Result<(), JsValue> {
+        self.inner
+            .borrow_mut()
+            .core
+            .load_minimap_block(square, &bytes)
+            .map_err(js_err)
+    }
+
+    pub fn has_minimap_block(&self, square: i32) -> bool {
+        self.inner.borrow().core.has_minimap_block(square)
+    }
+
+    /// Metadata of the source minimap surface for the current scene and plane (JSON:
+    /// `width`, `height`, `scale`, `marginX`, `marginY`, `baseX`, `baseY`, `plane`, `revision`,
+    /// `complete`, `stats {terrainTiles, wallMarks, diagonalMarks, mapScenes, unresolved}`,
+    /// `notes[]`, `icons[{x, y, plane, element}]`). Draws (or reuses the cached raster) with the
+    /// original `client.bm` port; rejects when no scene, no map-scene asset or no sidecars.
+    /// Pixels and mask follow from `minimap_pixels()` / `minimap_mask()` for the same revision.
+    pub fn minimap_surface(&self) -> Result<String, JsValue> {
+        let mut inner = self.inner.borrow_mut();
+        let surface = inner.core.minimap_surface().map_err(js_err)?;
+        let icons: Vec<String> = surface
+            .icons
+            .iter()
+            .map(|i| {
+                format!(
+                    r#"{{"x":{},"y":{},"plane":{},"element":{}}}"#,
+                    i.x, i.y, i.plane, i.element
+                )
+            })
+            .collect();
+        let notes: Vec<String> = surface.stats.notes.iter().map(|n| json_string(n)).collect();
+        Ok(format!(
+            r#"{{"width":{},"height":{},"scale":{},"marginX":{},"marginY":{},"baseX":{},"baseY":{},"plane":{},"revision":{},"complete":{},"stats":{{"terrainTiles":{},"wallMarks":{},"diagonalMarks":{},"mapScenes":{},"unresolved":{}}},"notes":[{}],"icons":[{}]}}"#,
+            surface.width,
+            surface.height,
+            surface.scale,
+            surface.margin.0,
+            surface.margin.1,
+            surface.base_x,
+            surface.base_y,
+            surface.plane,
+            surface.revision,
+            surface.complete,
+            surface.stats.terrain_tiles,
+            surface.stats.wall_marks,
+            surface.stats.diagonal_marks,
+            surface.stats.map_scenes,
+            surface.stats.unresolved,
+            notes.join(","),
+            icons.join(",")
+        ))
+    }
+
+    /// RGBA8 pixels (`Uint8ClampedArray`, width * height * 4, alpha 255) of the surface
+    /// `minimap_surface()` last described.
+    pub fn minimap_pixels(&self) -> Result<js_sys::Uint8ClampedArray, JsValue> {
+        let mut inner = self.inner.borrow_mut();
+        let surface = inner.core.minimap_surface().map_err(js_err)?;
+        let array = js_sys::Uint8ClampedArray::new_with_length(surface.rgba.len() as u32);
+        array.copy_from(&surface.rgba);
+        Ok(array)
+    }
+
+    /// Coverage mask (`Uint8Array`, width * height): 1 where the original sweep drew map data,
+    /// 0 where the source fill value survived (no tile).
+    pub fn minimap_mask(&self) -> Result<js_sys::Uint8Array, JsValue> {
+        let mut inner = self.inner.borrow_mut();
+        let surface = inner.core.minimap_surface().map_err(js_err)?;
+        let array = js_sys::Uint8Array::new_with_length(surface.mask.len() as u32);
+        array.copy_from(&surface.mask);
+        Ok(array)
+    }
+
+    /// Sets the plane frames and the minimap are drawn for when no WorldView supplies a player
+    /// (developer fixtures); the WorldView's player plane overrides it on the next update.
+    pub fn set_plane(&self, plane: i32) {
+        self.inner.borrow_mut().core.set_plane(plane);
+    }
+
     pub fn unload_block(&self, square: i32) {
         self.inner.borrow_mut().core.unload_block(square);
     }

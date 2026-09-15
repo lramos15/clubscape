@@ -33,6 +33,7 @@ python3 tools/render-assets/export.py --profile scenes-pinned  # frame-0 validat
 python3 tools/render-assets/export.py --profile anim        # skeletal sequences, NPC definitions, player body, worn items
 python3 tools/render-assets/export.py --profile dynamic     # door/fire/state object variants and ground-item stacks
 python3 tools/render-assets/export.py --profile widgets     # original if3 model components (interface 679:73)
+python3 tools/render-assets/export.py --profile minimap     # map-scene sprites/shape masks + per-square minimap sidecars
 python3 tools/render-assets/export.py --profile compress    # (re)write scenes/*.gz, blocks/*.gz + manifest
 python3 tools/render-assets/export.py --profile unpack      # restore raw scenes/*.bin from *.gz
 python3 tools/render-assets/export.py --verify-only         # hash-check assets/compiled/render
@@ -40,8 +41,8 @@ python3 tools/render-assets/export.py --verify-only         # hash-check assets/
 
 Profiles: `tables`, `palette`, `textures`, `models` (tree 1277 / model 1570 lit as captured),
 `npcs` (3028 goblin, 2063 penguin; sequences 6181/6180 and 5668/5666), `scenes`, `blocks`,
-`scenes-pinned`, `anim`, `dynamic`, `widgets`, `prune-textures` (keep only textures referenced by
-the exported scenes/blocks/models), `compress`, `unpack`.
+`scenes-pinned`, `anim`, `dynamic`, `widgets`, `minimap`, `prune-textures` (keep only textures
+referenced by the exported scenes/blocks/models), `compress`, `unpack`.
 
 `anim` (`AnimExport.java`) writes the original skeletons and frames (`et`/`em`) of the required
 player sequences (808/819/824/836, 879, 625, 621, 733, 897/896/899/898, 386/390/422/423, 426,
@@ -62,6 +63,16 @@ one lit model per source frame (`dy.vn` with the state pinned) plus the plain mo
 sequence timing (`ou.bk/bu/bf/bo`). `scenes-pinned` re-exports the five fixture scenes with the
 same frame-0 pinning so `crates/renderer/tests/blocks.rs` can prove block assembly equals the
 direct 104×104 export.
+
+`minimap` (`MinimapExport.java`) writes what the renderer's port of the original minimap
+(`client.bm`) needs beyond the blocks: `minimap/mapscenes.bin` — the map-scene indexed sprites
+(`oy.aq`, loaded with `hk.ao`/`fs.ac` from the sprite group the graphics defaults name) and the 16
+tile-shape coverage masks `client.gq()` rasterises from the tile-shape models — and, per square,
+`minimap/blocks/<square>.bin` with every wall's placement config (`fe.getConfig()`, type |
+rotation << 6; the block records only keep the orientation, which types 1 and 3 share) and the
+`mapSceneId`/size/`mapIconId` of every object definition referenced by the square's walls, game
+objects and floor decorations. The squares are loaded exactly as the block export loads them.
+The sidecars are small (~640 KB for the 61 M1 squares) and published with the manifest.
 
 The scene profile replays the capture's model profile first so the seeded random start frames
 of animated scenery match the approved captures, then loads the scenes in capture order

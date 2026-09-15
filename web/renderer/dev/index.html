@@ -14,6 +14,8 @@
   <canvas id="surface" data-clubscape-surface></canvas>
   <!-- Interface preview readback target; kept out of the world canvas so screenshots never overlap. -->
   <canvas id="preview" data-clubscape-preview width="0" height="0" style="display: block; background: #3e3529;"></canvas>
+  <!-- Source minimap surface (region mode): the renderer's client.bm port over the streamed blocks. -->
+  <canvas id="minimap" data-clubscape-minimap width="0" height="0" style="display: block;"></canvas>
   <div id="status" hidden></div>
   <script type="module" src="/web/renderer/dist/renderer/dev/main.js"></script>
 </body>

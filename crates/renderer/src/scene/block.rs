@@ -10,7 +10,8 @@ use crate::chunk::Chunks;
 use crate::error::RenderError;
 use crate::model::Model;
 use crate::scene::{
-    FloorDecoration, GameObject, SceneData, TileModel, TilePaint, Wall, WallDecoration,
+    FloorDecoration, GameObject, MapObjectDef, SceneData, TileModel, TilePaint, Wall,
+    WallDecoration,
 };
 
 pub const BLOCK_SIZE: i32 = 64;
@@ -144,6 +145,10 @@ pub struct Block {
     objects: Vec<BlockObject>,
     animated: Vec<AnimatedSet>,
     pub model_keys: Vec<String>,
+    /// Object-definition minimap fields from the `minimap/blocks/<square>.bin` sidecar.
+    pub object_defs: HashMap<i32, MapObjectDef>,
+    /// Whether the minimap sidecar (wall configs + definitions) has been attached.
+    pub minimap_ready: bool,
 }
 
 fn join(lo: i32, hi: i32) -> i64 {
@@ -209,6 +214,8 @@ impl Block {
                 .lines()
                 .map(|s| s.to_string())
                 .collect(),
+            object_defs: HashMap::new(),
+            minimap_ready: false,
         };
         for r in chunks.ints("BPNT")?.as_chunks::<10>().0 {
             block.paints.push(Placed {
@@ -293,6 +300,7 @@ impl Block {
                     height: r[8],
                     z: r[9],
                     hash: join(r[10], r[11]),
+                    config: -1,
                 },
             });
         }
@@ -449,6 +457,53 @@ fn phase_for(seed: u64, frames: usize, length_of_frame: impl Fn(usize) -> i32) -
 /// Assembles a scene from blocks. `blocks` is a list of `(block, models)` where `models` are the
 /// block's pack entries in key order; the returned scene's model list is the deduplicated union
 /// (by content key) and every reference is remapped onto it.
+impl Block {
+    /// Attaches the `minimap` export sidecar: the original placement config of every wall
+    /// (`fe.getConfig()`) and the minimap fields of every referenced object definition.
+    pub fn attach_minimap(&mut self, data: &[u8]) -> Result<(), RenderError> {
+        let chunks = Chunks::parse(data)?;
+        let h = chunks.ints("MBHD")?;
+        if h.len() < 9 {
+            return Err(RenderError::Format("minimap block header".into()));
+        }
+        if h[0] != self.square {
+            return Err(RenderError::InvalidAsset(format!(
+                "minimap sidecar is square {} but block is {}",
+                h[0], self.square
+            )));
+        }
+        let mut configs: HashMap<(i32, i32, i32), i32> = HashMap::new();
+        for r in chunks.ints("MWAL")?.as_chunks::<4>().0 {
+            configs.insert((r[0], r[1], r[2]), r[3]);
+        }
+        for wall in &mut self.walls {
+            match configs.get(&(wall.plane, wall.bx, wall.by)) {
+                Some(&config) => wall.record.config = config,
+                None => {
+                    return Err(RenderError::InvalidAsset(format!(
+                        "minimap sidecar of square {} lacks the wall at plane {} {},{}",
+                        self.square, wall.plane, wall.bx, wall.by
+                    )));
+                }
+            }
+        }
+        self.object_defs.clear();
+        for r in chunks.ints("MDEF")?.as_chunks::<5>().0 {
+            self.object_defs.insert(
+                r[0],
+                MapObjectDef {
+                    map_scene: r[1],
+                    size_x: r[2],
+                    size_y: r[3],
+                    map_icon: r[4],
+                },
+            );
+        }
+        self.minimap_ready = true;
+        Ok(())
+    }
+}
+
 pub fn assemble(
     base_x: i32,
     base_y: i32,
@@ -669,6 +724,9 @@ pub fn assemble(
         }
         scene.roof_mode = block.roof_mode;
         scene.min_level = block.min_level;
+        scene
+            .object_defs
+            .extend(block.object_defs.iter().map(|(k, v)| (*k, *v)));
     }
     scene.model_keys = {
         let mut keys = vec![String::new(); merged_models.len()];

@@ -3,6 +3,7 @@
 
 pub mod block;
 pub mod draw;
+pub mod minimap;
 pub mod tile;
 pub mod visibility;
 
@@ -71,6 +72,30 @@ pub struct Wall {
     pub height: i32,
     pub z: i32,
     pub hash: i64,
+    /// `fe.getConfig()`: placement type (`& 31`) and rotation (`>> 6 & 3`); -1 when the export
+    /// did not carry it (fixture scenes without a minimap sidecar).
+    pub config: i32,
+}
+
+/// Object-definition fields the original minimap reads (`om.getMapSceneId/zf/ib/getMapIconId`).
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub struct MapObjectDef {
+    pub map_scene: i32,
+    pub size_x: i32,
+    pub size_y: i32,
+    pub map_icon: i32,
+}
+
+/// Object id carried in an original object tag (bits 20..51).
+#[inline]
+pub fn tag_object_id(hash: i64) -> i32 {
+    ((hash >> 20) & 0xFFFF_FFFF) as i32
+}
+
+/// Whether an original object tag marks the object as non-interactive (bit 19).
+#[inline]
+pub fn tag_non_interactive(hash: i64) -> bool {
+    hash & (1 << 19) != 0
 }
 
 #[derive(Clone, Debug)]
@@ -167,6 +192,9 @@ pub struct SceneData {
     pub animated: Vec<block::AnimatedSet>,
     /// Per-placement animation instances referenced as `-(index) - 2` model references.
     pub animated_instances: Vec<block::AnimatedInstance>,
+    /// Minimap fields of the object definitions referenced by this scene's placements (block
+    /// scenes with a minimap sidecar; empty otherwise).
+    pub object_defs: HashMap<i32, MapObjectDef>,
 }
 
 impl SceneData {
@@ -221,6 +249,7 @@ impl SceneData {
             model_keys: Vec::new(),
             animated: Vec::new(),
             animated_instances: Vec::new(),
+            object_defs: HashMap::new(),
         }
     }
 
@@ -345,6 +374,7 @@ impl SceneData {
                 .collect(),
             animated: Vec::new(),
             animated_instances: Vec::new(),
+            object_defs: HashMap::new(),
         };
         if scene.link.len() != tile_count
             || scene.object_count.len() != tile_count
@@ -425,6 +455,7 @@ impl SceneData {
                     height: r[6],
                     z: r[7],
                     hash: join(r[8], r[9]),
+                    config: -1,
                 },
             );
         }

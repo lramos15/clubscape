@@ -39,6 +39,8 @@ declare global {
       walkTo?(x: number, y: number): void;
       /** Scenario mode: apply a named developer scenario (see `scenarioWorld`). */
       applyScenario?(name: string): Promise<unknown>;
+      /** Region mode: draw the source minimap surface onto the dev minimap canvas; returns its metadata. */
+      minimap?(): unknown;
     };
     __clubscapeBenchmarkV1?: {
       bindRun?(binding: { contractId: string; contractSha256: string }): void;
@@ -180,9 +182,9 @@ function workloadWorld(x: number, y: number, region: string): WorldView {
 }
 
 /** Developer WorldView with the penguin player on a tile (region mode). */
-function devWorld(x: number, y: number, region: string): WorldView {
+function devWorld(x: number, y: number, region: string, dynamicObjects: unknown[] = []): WorldView & { dynamicObjects: unknown[] } {
   return {
-    revision: "dev", tick: "0",
+    revision: "dev", tick: "0", dynamicObjects,
     player: {
       id: "player-dev", displayName: "dev", appearance: {}, region, tile: { x, y, plane: 0 },
       instance: null, inventory: [], equipment: [], skills: [], hitpoints: 10, prayerPoints: 1, runEnergy: 100, questPoints: 0,
@@ -271,11 +273,32 @@ async function main(): Promise<void> {
         handle.update(devWorld(x, y, sceneId));
       };
       follow(px, py);
+      const minimapCanvas = document.getElementById("minimap") as HTMLCanvasElement;
+      /** Draws the source minimap surface of the current scene/plane onto the dev canvas. */
+      const showMinimap = () => {
+        const surface = handle.minimapSurface();
+        minimapCanvas.width = surface.width;
+        minimapCanvas.height = surface.height;
+        minimapCanvas.getContext("2d")!.putImageData(surface.pixels, 0, 0);
+        const { pixels: _pixels, mask, ...meta } = surface;
+        let covered = 0;
+        for (const m of mask) covered += m;
+        return { ...meta, covered };
+      };
       window.__clubscapeDev.walkTo = (x: number, y: number) => { follow(x, y); };
+      window.__clubscapeDev.minimap = () => showMinimap();
       window.__clubscapeDev.applyScenario = async (name: string) => {
-        if (name !== "workload") throw new Error(`region mode only knows the workload scenario, not ${name}`);
-        handle.update(workloadWorld(px, py, sceneId));
-        return { fit: handle.playerFitReport(), placement: handle.scenePlacement() };
+        if (name === "workload") {
+          handle.update(workloadWorld(px, py, sceneId));
+          return { fit: handle.playerFitReport(), placement: handle.scenePlacement() };
+        }
+        if (name === "door-open" || name === "door-closed") {
+          // Lumbridge castle west large door (source object 12349 at 3213,3221, exported with its
+          // four rotations): the developer view turns it a quarter on its own tile.
+          handle.update(devWorld(px, py, sceneId, name === "door-open" ? [{ id: "door-dev", objectId: "asset.source.osrs.cache2695.object.12349", tile: { x: 3213, y: 3221, plane: 0 }, instance: null, doorOpen: true, quarterTurns: 1 }] : []));
+          return showMinimap();
+        }
+        throw new Error(`region mode knows workload/door-open/door-closed, not ${name}`);
       };
       state.ready = true;
       publish();
