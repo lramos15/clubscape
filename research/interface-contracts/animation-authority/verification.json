@@ -1,6 +1,7 @@
 {
   "schema_version": 1,
   "scope": "Bounded source actor-animation authority, not renderer or avatar asset publication",
+  "implementation_candidate_commit": "c66286922652d103e8cae7728e7f8b171e849ced",
   "early_inventory_commits": [
     "4b7f3d445bb79eeae5b783728bba6cae127dcae9",
     "838c7670f44dc83c6562f14cfe70c2f7c08597b8"

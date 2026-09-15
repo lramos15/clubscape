@@ -3,6 +3,7 @@
   "task": "m1-gameplay-ui-contracts",
   "latest_animation_authority": {
     "verification": "research/interface-contracts/animation-authority/verification.json",
+    "implementation_candidate_commit": "c66286922652d103e8cae7728e7f8b171e849ced",
     "raw_sha256": "5b3ba5f108ed3fec8f8b5f7f49b429c059e21b6f192ec99a0569616e08330059",
     "compressed_sha256": "8da1e85a1e2ebb0355e29e7a15a0ca7cdab2f2751bc1341dd5efd5322b925ca6",
     "remaining_source_gaps": ["inventory_dough_motion", "empty_container_motion"],
