@@ -254,6 +254,51 @@ descriptor limit (272,433 > 262,144 bytes), before character creation. The actua
 GameRoot environment nesting also remains. These are deployment gates, not
 reports that any of the four engine repairs failed.
 
+### Verified standalone startup and continued source actions
+
+The authorized startup repair `2c5fe68b…` was applied as `dea24a0`. The real
+production binary now parses game-only configuration independently and accepts
+the complete canonical descriptor within its private 512 KiB bound. Neither
+public RPC/asset limits nor source checks were relaxed.
+
+The first post-fix run exposed an owned packaging error: extensionless payload
+storage paths violate the server's existing allowlist. Payloads now use `.bin`
+storage paths with the **same original bytes/hashes**, canonical asset IDs and
+public URLs. A regression covers this distinction. No asset is omitted or
+replaced.
+
+[`evidence/startup-dea24a0.json`](evidence/startup-dea24a0.json) records actual
+production startup and source-readiness proofs, `game.v1` Hello, real registration/
+login, empty-option character creation/join and acknowledged source appearance/
+experience transitions. SQL `m1-game-root-startup` was closed only after that
+evidence. Full gameplay acceptance remains separate.
+
+Moving-NPC targeting prefers actual guarded public interaction permissions over
+conservative client access candidates. Definite conflicts are reconciled only
+for the same mobile NPC and an unchanged sequence, with observed movement or a
+typed reach denial. Re-approaches and reopened dialogue choices are bounded.
+If that same previously opened speaker moves away and its guarded query itself
+rejects, the client may submit a normal `CloseInterface` and re-approach; that
+real input must acknowledge and actually close the stale dialogue. Every denied
+action/query remains recorded. Unknown transport outcomes are not retried,
+source clock/RNG/geometry is not altered, and no speaker/choice/stage is
+silently substituted.
+
+The latest full-path attempt and one independent fresh-world reproduction both
+reached five acknowledged tutorial transitions and opened the actual starting
+door. The following one-tile walk receives HTTP503 when **`game_commit_tick`
+exceeds its 5,000 ms storage-group deadline**; the coordinator then stops and
+reports an unknown outcome. Neither unknown write was automatically retried.
+Resource reaping/removal succeeded, but source-service `clean:false` is recorded
+separately and can never become a clean-world/full-journey pass.
+
+[`evidence/first-door-tick-dea24a0.json`](evidence/first-door-tick-dea24a0.json)
+contains both exact worlds, actor/input/operation IDs, ticks, errors, binary/
+source/protocol hashes, earlier diagnostics, 38 Rust and 12 machinery checks,
+and the still-unchecked original scope. The startup task is done; the full
+journey is blocked on this actual next source-tick failure, not on the repaired
+deployment configuration.
+
 `milestone_accepted`, browser/UI, audio, performance and RuneLite verification
 remain false. Unit fixtures below establish client machinery only:
 

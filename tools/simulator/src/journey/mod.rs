@@ -53,6 +53,27 @@ struct Receipt {
     action: Action,
 }
 
+#[derive(Debug)]
+struct RpcRejected {
+    context: &'static str,
+    status: u16,
+    code: i32,
+    error_id: String,
+    message: String,
+}
+
+impl std::fmt::Display for RpcRejected {
+    fn fmt(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(
+            formatter,
+            "Real {} rejected: HTTP {}, code={}, error_id={}, reason={}",
+            self.context, self.status, self.code, self.error_id, self.message
+        )
+    }
+}
+
+impl std::error::Error for RpcRejected {}
+
 struct Runner {
     arguments: Arguments,
     source: Source,
@@ -264,13 +285,14 @@ impl Runner {
             .request(command, token.then_some(self.token.as_str()))
             .await?;
         if let Outcome::Error(error) = &result {
-            bail!(
-                "Real server rejected RPC: HTTP {status}, code={}, error_id={}, reason={}, retry_after_seconds={}; no replacement operation submitted",
-                error.code,
-                error.error_id,
-                error.message,
-                error.retry_after_seconds
-            );
+            return Err(RpcRejected {
+                context: "RPC",
+                status: status.as_u16(),
+                code: error.code,
+                error_id: error.error_id.clone(),
+                message: error.message.clone(),
+            }
+            .into());
         }
         ensure!(status.is_success(), "RPC failed with HTTP {status}");
         Ok(result)
@@ -593,12 +615,14 @@ impl Runner {
                     self.refresh_rejected_shop(buy.expected_item.as_deref(), "shop_buy_conflict")
                         .await?;
                 }
-                bail!(
-                    "Real game action rejected: HTTP {status}, code={}, error_id={}, reason={}",
-                    error.code,
-                    error.error_id,
-                    error.message
-                );
+                return Err(RpcRejected {
+                    context: "game action",
+                    status: status.as_u16(),
+                    code: error.code,
+                    error_id: error.error_id,
+                    message: error.message,
+                }
+                .into());
             }
             _ => bail!("WorldInput returned an unexpected Protobuf result/status {status}"),
         }

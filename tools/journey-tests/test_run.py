@@ -129,6 +129,25 @@ class OrchestratorTests(unittest.TestCase):
         finally:
             shutil.rmtree(directory)
 
+    def test_payload_storage_uses_allowed_binary_extension_without_changing_public_identity(self):
+        self.assertEqual(RUN.payload_locations(0), ("/assets/0", "assets/0.bin"))
+        self.assertEqual(RUN.payload_locations(35), ("/assets/23", "assets/23.bin"))
+        for index in (-1, 20000, "1"):
+            with self.assertRaises(RUN.JourneyError):
+                RUN.payload_locations(index)
+
+    def test_reaped_server_error_cannot_turn_into_clean_world_success(self):
+        report = {"status": "passed", "full_journey_passed": True}
+        RUN.record_server_exit(report, 1)
+        self.assertTrue(report["owned_server_reaped"])
+        self.assertFalse(report["server_exit_clean"])
+        self.assertFalse(report["full_journey_passed"])
+        self.assertEqual(report["status"], "blocked")
+        original = {"phase": "source_tick", "reason": "unknown outcome"}
+        report["first_failure"] = original
+        RUN.record_server_exit(report, 1)
+        self.assertEqual(report["first_failure"], original)
+
 
 if __name__ == "__main__":
     unittest.main()

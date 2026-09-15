@@ -163,6 +163,22 @@ def full_journey_passed(report):
         )
     )
 
+def payload_locations(index):
+    require(type(index) is int and 0 <= index < 20000, "Invalid bounded payload index.")
+    return f"/assets/{index:x}", f"assets/{index:x}.bin"
+
+def record_server_exit(report, code):
+    report["owned_server_exit_code"] = code
+    report["server_exit_clean"] = code == 0
+    report["owned_server_reaped"] = True
+    if code != 0:
+        report["status"] = "blocked"
+        report["full_journey_passed"] = False
+        report.setdefault("first_failure", {
+            "phase": "server_shutdown",
+            "reason": f"The owned real server exited unsuccessfully ({code}); resource cleanup is not clean-world success.",
+        })
+
 
 class OwnedServer:
     def __init__(self, binary, env, log_path):
@@ -322,13 +338,12 @@ def publish_product_root(directory, report, inspector, env):
             continue
         source, digest = matched
         if digest not in copied:
-            relative = f"assets/{len(copied):x}"
+            url, relative = payload_locations(len(copied))
             destination = game_root / relative
             destination.parent.mkdir(parents=True, exist_ok=True)
             shutil.copyfile(source, destination)
             total_bytes += destination.stat().st_size
             require(total_bytes <= 512 * 1024 * 1024, "Product GameRoot exceeds server static-byte budget.")
-            url = "/" + relative
             files.append({
                 "url": url, "path": relative, "sha256": digest,
                 "content_type": "application/octet-stream",
@@ -557,6 +572,8 @@ def run(args):
         report["product_gameplay_readiness"] = "awaiting_generated_protobuf_hello"
         report["current_phase"] = "real_m1_fresh_account_scenario"
         scenario_report_path = evidence_directory / "m1-fresh-account.json"
+        report["journey_report"] = str(scenario_report_path.relative_to(ROOT))
+        write_json(report_path, report)
         command = [
             str(client), "scenario", "m1_fresh_account", "--url", address,
             "--report", str(scenario_report_path.relative_to(ROOT)),
@@ -644,8 +661,7 @@ def run(args):
             report["owned_simulator_reaped"] = True
         if server is not None:
             try:
-                server.stop()
-                report["owned_server_reaped"] = True
+                record_server_exit(report, server.stop())
             except (JourneyError, OSError, subprocess.TimeoutExpired) as error:
                 cleanup_errors.append(str(error))
         try:

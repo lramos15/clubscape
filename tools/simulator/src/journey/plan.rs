@@ -5,7 +5,7 @@ use clubscape_protocol::game::{self, world_input::Action};
 use serde_json::{Value, json};
 
 use super::{
-    Receipt, Runner, evidence,
+    Receipt, RpcRejected, Runner, evidence,
     source::{Source, Tile},
 };
 
@@ -753,7 +753,15 @@ impl Runner {
     async fn approach(&mut self, target: &str, action: &str) -> Result<()> {
         self.evidence
             .append("source_target", self.source.source_identity(target)?)?;
-        for _ in 0..4 {
+        let started = self.snapshot.tick;
+        for _ in 0..12 {
+            if self.observed_action_available(target, action) {
+                return Ok(());
+            }
+            ensure!(
+                self.snapshot.tick.saturating_sub(started) < 240,
+                "Observed approach to {target} exhausted its source-tick budget"
+            );
             let navigation = self
                 .source
                 .navigation_with_states(&self.observed_states, true)?;
@@ -761,7 +769,9 @@ impl Runner {
                 self.source
                     .target_goals(target, action, self.entities.get(target), &navigation)?;
             self.go_to(goals.clone()).await?;
-            self.poll().await?;
+            if self.observed_action_available(target, action) {
+                return Ok(());
+            }
             let current = self
                 .source
                 .navigation_with_states(&self.observed_states, false)?;
@@ -773,15 +783,32 @@ impl Runner {
             }
         }
         bail!(
-            "Moving source target {target} did not remain reachable within four observed approaches"
+            "Moving source target {target} did not remain reachable within twelve observed approaches"
         )
+    }
+
+    fn observed_action_available(&self, target: &str, action: &str) -> bool {
+        self.entities.get(target).is_some_and(|entity| {
+            entity.actions_evaluated
+                && entity.available
+                && entity.actions.iter().any(|name| name == action)
+        })
     }
 
     async fn interact_here(&mut self, target: &str, action: &str) -> Result<Receipt> {
         self.source.interaction(target, action)?;
-        let entity = self.entities.get(target).with_context(|| {
+        let entity = self.entities.get(target).cloned().with_context(|| {
             format!("Source target {target} absent from authoritative interest view")
         })?;
+        self.evidence.append(
+            "target_observation",
+            json!({
+                "tick": self.snapshot.tick,
+                "actor_tile": self.tile()?,
+                "target": evidence::message_json("clubscape.game.v1.Entity", &entity)?,
+                "requested_action": action
+            }),
+        )?;
         ensure!(
             entity.actions_evaluated,
             "Guarded interaction permissions are unavailable for {target}; declared action names are not authority"
@@ -799,8 +826,109 @@ impl Runner {
     }
 
     async fn interact(&mut self, target: &str, action: &str) -> Result<Receipt> {
-        self.approach(target, action).await?;
-        self.interact_here(target, action).await
+        for attempt in 0..8 {
+            self.approach(target, action).await?;
+            let before = self.entities.get(target).cloned();
+            match self.interact_here(target, action).await {
+                Ok(receipt) => return Ok(receipt),
+                Err(error) => {
+                    if !self
+                        .retry_moving_target(target, action, before.as_ref(), &error)
+                        .await?
+                    {
+                        return Err(error);
+                    }
+                    self.evidence.append(
+                        "bounded_npc_reapproach",
+                        json!({
+                            "target": target, "action": action, "attempt": attempt + 1,
+                            "maximum_attempts": 8
+                        }),
+                    )?;
+                }
+            }
+        }
+        bail!("Moving source target {target} remained out of reach after eight observed attempts")
+    }
+
+    async fn retry_moving_target(
+        &mut self,
+        target: &str,
+        action: &str,
+        before: Option<&game::Entity>,
+        error: &anyhow::Error,
+    ) -> Result<bool> {
+        let Some(rejected) = error.downcast_ref::<RpcRejected>() else {
+            return Ok(false);
+        };
+        if rejected.status != 409 || rejected.code != clubscape_protocol::ErrorCode::Conflict as i32
+        {
+            return Ok(false);
+        }
+        let spawn = self.source.spawn(target)?;
+        let Some(npc) = spawn["kind"]["npc"].as_str() else {
+            return Ok(false);
+        };
+        if self.source.content["npcs"][npc]["navigation"]["kind"] != "mobile" {
+            return Ok(false);
+        }
+        let sequence = self.sequence;
+        if let Err(query_error) = self.poll().await {
+            let query_conflict = query_error
+                .downcast_ref::<RpcRejected>()
+                .is_some_and(|error| {
+                    error.status == 409
+                        && error.code == clubscape_protocol::ErrorCode::Conflict as i32
+                });
+            if !query_conflict
+                || self
+                    .snapshot
+                    .dialogue
+                    .as_ref()
+                    .is_none_or(|dialogue| dialogue.speaker != target)
+            {
+                return Err(query_error);
+            }
+            self.evidence.append("source_dialogue_query_rejected", json!({
+                "speaker": target, "rejected_input_error_id": rejected.error_id,
+                "query_error": format!("{query_error:#}"),
+                "next_sequence_before_close": sequence,
+                "recovery": "Normal CloseInterface input; no query error is presented as successful state."
+            }))?;
+            self.input(Action::CloseInterface(game::Empty {})).await?;
+            ensure!(
+                self.sequence == sequence + 1,
+                "Closing an invalid dialogue consumed an unexpected sequence"
+            );
+            self.evidence.append(
+                "source_invalid_dialogue_closed",
+                json!({
+                    "speaker": target, "next_sequence": self.sequence,
+                    "dialogue_closed": self.snapshot.dialogue.is_none(),
+                    "new_target": self.entities.get(target).map(|value|
+                        evidence::message_json("clubscape.game.v1.Entity", value)).transpose()?
+                }),
+            )?;
+            ensure!(
+                self.snapshot.dialogue.is_none(),
+                "Normal CloseInterface did not close the stale source dialogue"
+            );
+            return Ok(true);
+        }
+        ensure!(
+            self.sequence == sequence,
+            "Rejected target action consumed a sequence; outcome is not safe to retry"
+        );
+        let retry = moving_target_changed(before, self.entities.get(target), action);
+        self.evidence.append("rejected_npc_target_reconciliation", json!({
+            "target": target, "requested_action": action,
+            "original_error_id": rejected.error_id, "original_reason": rejected.message,
+            "same_next_sequence": sequence, "observed_target_changed_or_out_of_reach": retry,
+            "before": before.map(|value| evidence::message_json("clubscape.game.v1.Entity", value)).transpose()?,
+            "after": self.entities.get(target).map(|value| evidence::message_json("clubscape.game.v1.Entity", value)).transpose()?,
+            "rng_overridden": false, "unknown_transport_outcome_retried": false
+        }))?;
+        Ok(retry)
     }
 
     async fn cross(&mut self, door: &str, goal: Tile) -> Result<()> {
@@ -822,8 +950,22 @@ impl Runner {
     }
 
     async fn speak(&mut self, speaker: &str, choice: &str) -> Result<Receipt> {
-        self.interact(speaker, "Talk-to").await?;
-        self.choose(speaker, choice).await
+        for _ in 0..4 {
+            self.interact(speaker, "Talk-to").await?;
+            let before = self.entities.get(speaker).cloned();
+            match self.choose(speaker, choice).await {
+                Ok(receipt) => return Ok(receipt),
+                Err(error) => {
+                    if !self
+                        .retry_moving_target(speaker, "Talk-to", before.as_ref(), &error)
+                        .await?
+                    {
+                        return Err(error);
+                    }
+                }
+            }
+        }
+        bail!("Source speaker {speaker} moved out of reach of choice {choice} four times")
     }
 
     async fn choose(&mut self, speaker: &str, choice: &str) -> Result<Receipt> {
@@ -1982,6 +2124,29 @@ impl Runner {
     }
 }
 
+fn moving_target_changed(
+    before: Option<&game::Entity>,
+    after: Option<&game::Entity>,
+    action: &str,
+) -> bool {
+    let (Some(before), Some(after)) = (before, after) else {
+        return false;
+    };
+    if before.id != after.id || !before.actions_evaluated || !after.actions_evaluated {
+        return false;
+    }
+    before.tile != after.tile
+        || after.interaction_options.iter().any(|option| {
+            option.name == action
+                && option.permission.as_ref().is_some_and(|permission| {
+                    !permission.allowed
+                        && permission.denial.as_ref().is_some_and(|denial| {
+                            denial.code == game::RuleErrorCode::OutOfReach as i32
+                        })
+                })
+        })
+}
+
 fn recovery_entries(snapshot: &Value, death: &str) -> Result<Vec<(String, u64)>> {
     let mut pending = vec![snapshot];
     let mut found = None;
@@ -2032,6 +2197,56 @@ mod tests {
     use super::*;
     use prost::Message;
     use std::path::Path;
+
+    #[test]
+    fn movement_retry_requires_same_observed_target_and_movement_or_typed_reach_denial() {
+        let before = game::Entity {
+            id: "spawn.gielinor_guide".into(),
+            tile: Some(Tile::new(3094, 3107, 0).wire()),
+            actions_evaluated: true,
+            ..Default::default()
+        };
+        let mut after = before.clone();
+        assert!(!moving_target_changed(
+            Some(&before),
+            Some(&after),
+            "Talk-to"
+        ));
+        after.tile = Some(Tile::new(3095, 3107, 0).wire());
+        assert!(moving_target_changed(
+            Some(&before),
+            Some(&after),
+            "Talk-to"
+        ));
+        after.id = "spawn.survival_expert".into();
+        assert!(!moving_target_changed(
+            Some(&before),
+            Some(&after),
+            "Talk-to"
+        ));
+        after = before.clone();
+        after.interaction_options.push(game::InteractionOption {
+            name: "Talk-to".into(),
+            permission: Some(game::Permission {
+                allowed: false,
+                denial: Some(game::RuleDenial {
+                    code: game::RuleErrorCode::OutOfReach as i32,
+                    message: "Out of reach".into(),
+                }),
+            }),
+        });
+        assert!(moving_target_changed(
+            Some(&before),
+            Some(&after),
+            "Talk-to"
+        ));
+        after.actions_evaluated = false;
+        assert!(!moving_target_changed(
+            Some(&before),
+            Some(&after),
+            "Talk-to"
+        ));
+    }
 
     #[test]
     fn explicit_plan_covers_every_source_state_without_cycle_shortcuts() {

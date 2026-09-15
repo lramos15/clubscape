@@ -1,0 +1,176 @@
+{
+  "schema_version": 1,
+  "task": "m1-headless-journey",
+  "status": "blocked",
+  "startup_verified": true,
+  "full_original_journey_passed": false,
+  "milestone_accepted": false,
+  "ui_audio_performance_or_runelite_claims": false,
+  "gameplay_sql_or_state_seeding_used": false,
+  "pinned_source": {
+    "revision": "m1.source-backed.v3.0e506f3dab24bbe0",
+    "raw_artifact_sha256": "df3e2a452c100ecd94d2abc68e5cb1556f58090700474f547e7fd36de6682b3d",
+    "generated_protocol_descriptor_sha256": "648448015cd056b77fdce0c7b9d1fb3dd7243f22236123eb0e3c5e8cb189c0eb",
+    "assets_manifest_sha256": "e5cc5ab112bfc3f14860df32df0cd2c28a20cc1903666535a69bcef82304a28c",
+    "original_asset_mappings": 5010,
+    "artifact_swapped_within_run": false,
+    "clock_or_rng_overridden": false
+  },
+  "verified_segments": {
+    "normal_public_registration_login": true,
+    "source_create_character_empty_options_and_join": true,
+    "independent_source_initial_state_checks": true,
+    "appearance_confirmation": true,
+    "experience_brand_new_selection": true,
+    "actual_gielinor_guide_greeting_dialogue": true,
+    "actual_settings_interface_open": true,
+    "actual_guide_settings_and_door_permission_dialogue": true,
+    "actual_source_start_door_open": true,
+    "maximum_successful_tutorial_edges_in_one_account": 5,
+    "source_tutorial_success_path_edges": 70,
+    "coverage_is_not_summed_across_accounts": true
+  },
+  "exact_next_action": {
+    "stage": "stage.tutorial.starting_exit",
+    "prior_acknowledged_action": {
+      "kind": "Interact",
+      "target": "spawn.tutorial.start_door.3098.3107.p0.t0.r0",
+      "action": "Open",
+      "guarded_permission": "allowed in the actual authoritative target view"
+    },
+    "failing_input": {
+      "kind": "Walk",
+      "from": {"x": 3097, "y": 3107, "plane": 0},
+      "destination": {"x": 3098, "y": 3107, "plane": 0},
+      "running": false
+    },
+    "observed_failure": {
+      "http_status": 503,
+      "protocol_code": "Unavailable",
+      "message": "The operation deadline expired; its outcome may be unknown. Do not automatically retry.",
+      "server_event": "database_deadline",
+      "server_operation": "game_commit_tick",
+      "server_phase": "database_operation",
+      "deadline_ms": 5000,
+      "outcome_unknown": true,
+      "following_event": "game_loop_failure / world processing stopped"
+    },
+    "unknown_write_retried": false,
+    "outcome_claimed_rolled_back": false,
+    "source_stage_skipped": false
+  },
+  "independent_reproductions": [
+    {
+      "run_id": "ba7e1829c4944a29",
+      "recorded_at_unix_ms": 1789449102845,
+      "command": "python3 tools/journey-tests/run.py --report .local/evidence/m1-full-dialogue-recovery.json",
+      "world_id": "768a025e-ebad-48d2-b979-7ed6dc01973a",
+      "account_id": "498d3397-751e-4f03-b546-a2dd06cbc5f0",
+      "actor_id": "actor.24dbdd388d8c4638ba3de40a68a62d85",
+      "source_checks_passed": 53,
+      "successful_tutorial_edges": 5,
+      "door_open_sequence": 15,
+      "door_open_operation": "f848de62-0982-484e-b9a0-7444bfcc16a8",
+      "failing_walk_sequence": 16,
+      "failing_walk_operation": "a3bec739-b7d1-45fb-ba44-2d31945036d1",
+      "last_observed_tick": 37,
+      "error_id": "f61ea101-72fa-4092-88f1-3858efed935c",
+      "descriptor_sha256": "9475d234d8c0874fa38c8fdc46fecb4192308fb9f6ebb61f2c2655249633feb1",
+      "source_shutdown_clean": false,
+      "owned_resources_cleaned": true
+    },
+    {
+      "run_id": "79757f6ba41e44a6",
+      "recorded_at_unix_ms": 1789449551530,
+      "command": "python3 tools/journey-tests/run.py --report .local/evidence/m1-door-tick-reproduction.json",
+      "fresh_normal_account_and_world": true,
+      "not_a_retry_of_the_previous_unknown_operation": true,
+      "world_id": "1ac479b1-0d33-45b3-91ae-39ebc5954e91",
+      "account_id": "5b5e6a01-2cf9-4236-94c9-6380092bc9e0",
+      "actor_id": "actor.15306c5e64ad44019d979ac355f38c41",
+      "source_checks_passed": 53,
+      "successful_tutorial_edges": 5,
+      "door_open_sequence": 19,
+      "door_open_operation": "8736448e-5439-40b9-ac89-8429c7e137e7",
+      "failing_walk_sequence": 20,
+      "failing_walk_operation": "0ca4605d-6060-42e9-8289-8e1e1426c9cf",
+      "last_observed_tick": 52,
+      "error_id": "30948443-42bf-4d84-847a-5496e09e1b6a",
+      "descriptor_sha256": "a9d17bb94541d23138a3abbc105480de527c6859ca4ca08b8da978676643db25",
+      "source_service_exit_code": 1,
+      "source_shutdown_clean": false,
+      "owned_resources_cleaned": true
+    }
+  ],
+  "exact_executables_for_both_reproductions": {
+    "server": "3b913c23af6612eaaf86a41b721084fa91a62e4588966bf36ddd3c93b72ef0a4",
+    "simulator": "9328542064f3fb9fd00fce14e2735e86d53869fb472d34ddf25e9699b141052a",
+    "server_revision_label": "dea24a024e39d6e17f5db472300717c1c39e2e23"
+  },
+  "other_real_diagnostics_retained": [
+    {
+      "run_id": "005c795db065490f",
+      "result": "Source readiness passed, then game_assets rejected extensionless owned payload storage paths; corrected to .bin without changing original bytes."
+    },
+    {
+      "run_id": "ed442fcf030a421b",
+      "tutorial_edges_passed": 2,
+      "result": "Actual startup/creation/first-action proof; Guide Talk-to raced movement and returned OutOfReach."
+    },
+    {
+      "run_id": "2badcd1611714951",
+      "tutorial_edges_passed": 4,
+      "result": "Four conservative client approach attempts exhausted; corrected to prefer actual guarded source permissions with explicit bounds."
+    },
+    {
+      "run_id": "bddec6605b1d41f0",
+      "tutorial_edges_passed": 2,
+      "result": "A moving speaker invalidated active dialogue. Actual DialogueChoice rejected OutOfReach, then guarded PollWorld returned409. Normal CloseInterface recovery was added; denied queries are not treated as successful snapshots."
+    }
+  ],
+  "native_validation": [
+    {"command": "cargo fmt --package clubscape-sim --check", "result": "passed"},
+    {
+      "command": "cargo test --quiet --package clubscape-sim --package clubscape-protocol --all-features",
+      "result": "passed",
+      "passed_tests": 36
+    },
+    {
+      "command": "cargo test --quiet --package clubscape-server --test shop_intent_compatibility",
+      "result": "passed",
+      "passed_tests": 2
+    },
+    {
+      "command": "cargo clippy --quiet --package clubscape-sim --all-features --all-targets -- -D warnings",
+      "result": "passed"
+    },
+    {
+      "command": "python3 -m unittest discover -s tools/journey-tests -p 'test_*.py' -q",
+      "result": "passed",
+      "passed_tests": 12
+    }
+  ],
+  "next_owner_investigation": {
+    "required": "Diagnose the actual source world tick exceeding its five-second storage-group deadline after the first dynamic door transform; do not waive deadlines, omit source geometry/NPCs or assume the failed walk did not commit.",
+    "unconfirmed_hot_path_to_profile": "world-engine/navigation.rs collision_for loses its initial-state borrowed-map path after an object changes, rebuilds cells and clones regions; NPC movement/reach calls it repeatedly. This is a code-inspection hypothesis, not a measured root-cause or a fix.",
+    "additional_observation": "An out-of-reach open NPC dialogue can make guarded PollWorld itself reject. The client records that failure and uses an acknowledged normal CloseInterface instead of fabricating state."
+  },
+  "remaining_unchecked": [
+    "Source starting-door crossing and the remaining65 tutorial transitions",
+    "Tutorial gathering/fire/cooking/smithing/equipment/combat/prayer/magic/Home Teleport",
+    "Lumbridge mining, inventory/equipment/bank/shop and goblin combat",
+    "Actual goblin death/Office/grave recovery",
+    "Cook ingredient acquisition, mill, partial delivery and complete rewards",
+    "Onboarding/post-quest logout/login/reconnect/owned restart and replay"
+  ],
+  "required_gameplay_restarts_executed": 0,
+  "sql_startup_task": "done; independently verified before continuing",
+  "sql_full_journey_task": "blocked; no full original-scope pass",
+  "older_owned_commits_not_patch_equivalent_in_parent_2c5fe68": [
+    "34e3a635caa5b4f9c79ba2de72227bdb5193d2ab",
+    "fae5791318193cbbe101704848f5cac6150bf0f4",
+    "a9b9ea1d45dadc15ca29f16d16ccfea9af4626a0",
+    "cbd6d8796bd7be869d2ca1273f760b392a505085",
+    "6c1c2b95d415675fdffb2c3400aab35d8a4add0d"
+  ]
+}
