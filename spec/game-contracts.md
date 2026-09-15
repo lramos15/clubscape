@@ -1,5 +1,31 @@
 # Shared M1 game contracts
 
+## Authoritative gameplay UI contract, version 1
+
+`GameplayUiView` / `GameplayUiRequest` in `game-types/src/gameplay_ui.rs` and
+`GameplayUiView` / `GameplayUiIntent` in `web/shared/contracts.ts` are the exact
+shared M1 UI contract. The additive capability is `game.ui.v1`; `WorldView.ui`
+is absent only for older unsupported servers, not a successful empty view.
+The current view must have `version = 1`. Nullable members mean a genuinely
+closed/not-applicable production, reward, confirmation, bank or recovery view.
+Rust/protobuf names use snake_case; the TypeScript projection uses the declared
+camelCase names. Item DTOs map to the existing `ItemView`; renderer/audio ABIs
+are unchanged.
+
+Requests include identity-bound production selection and inventory actions,
+native bank entry/tab/preferences controls, presentation dismissal, owned
+recovery discard/coffer confirmation and public chat. They never specify
+outcomes or grant amounts. Bank entry/reward/confirmation IDs are opaque stable
+strings. XP tenths, clocks, bank revisions, monetary totals/coffer balances and
+weights cross JavaScript as decimal strings. Local bank search and prayer/spell
+filters remain UI filtering over complete authoritative data. Only declared
+appearance parameters and the approved penguin base are exposed; audio/minimap/
+preview controls retain their separate ownership.
+
+This commit publishes the contract before its consumers. Capability
+advertisement requires the subsequent engine/data/protocol implementation and
+validation; the types alone are not an implementation or acceptance claim.
+
 This extends the working account service; it does not replace it or mark any
 M1 acceptance gate passed. Source selection may change under
 `milestones/m1-fleet-resumption.json`.

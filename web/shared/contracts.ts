@@ -16,6 +16,7 @@ export type Setting =
   | { setting: "death_auto_equip"; enabled: boolean }
   | { setting: "death_supply_piles"; enabled: boolean };
 export type GameIntent =
+  | GameplayUiIntent
   | { kind: "walk"; destination: Tile; running: boolean }
   | { kind: "interact"; target: string; action: string }
   | { kind: "interact_with"; target: WorldTarget; action: string }
@@ -131,6 +132,8 @@ export interface AudioEvent {
   payload: Readonly<Record<string, string | number | boolean>>;
 }
 export interface WorldView {
+  /** Absent only on older unsupported servers. game.ui.v1 requires version 1. */
+  ui?: GameplayUiView;
   revision: string;
   tick: string;
   player: PlayerView;
@@ -141,6 +144,74 @@ export interface WorldView {
   shop: ShopView | null;
   recovery: RecoveryView | null;
   messages: Array<{ id: string; text: string; channel: string }>;
+}
+
+export const GAMEPLAY_UI_CAPABILITY = "game.ui.v1";
+export type GameplayUiIntent =
+  | { kind: "ui_dismiss"; presentation_id: string }
+  | { kind: "production_select"; menu_id: string; recipe: string; quantity: number; mode: "single" | "make_x" }
+  | { kind: "item_action"; inventory_slot: number; expected_item: string; expected_instance: string | null; action: string }
+  | { kind: "bank_select_tab"; tab: number }
+  | { kind: "bank_create_tab"; entry_id: string }
+  | { kind: "bank_move"; entry_id: string; before_entry_id: string | null; tab: number }
+  | { kind: "bank_collapse_tab"; tab: number }
+  | { kind: "bank_set_insert"; enabled: boolean }
+  | { kind: "bank_set_placeholders"; enabled: boolean }
+  | { kind: "bank_release_placeholder"; entry_id: string }
+  | { kind: "bank_deposit_equipment" }
+  | { kind: "bank_withdraw_entry"; entry_id: string; quantity: number; noted: boolean }
+  | { kind: "bank_set_options"; amount: number; noted: boolean }
+  | { kind: "open_death_preview" }
+  | { kind: "request_recovery_discard"; death: string; storage: "grave" | "death_office"; items: string[] }
+  | { kind: "coffer_offer"; inventory_slot: number; expected_item: string; expected_instance: string | null; quantity: number }
+  | { kind: "ui_confirm"; confirmation_id: string; accept: boolean }
+  | { kind: "public_chat"; channel: "public"; text: string };
+export interface UiPermission { allowed: boolean; code: string | null; reason: string | null }
+export interface AbilityUiView { id: string; name: string; selected: boolean; visible: boolean; permission: UiPermission }
+export interface InventoryActionsUiView {
+  slot: number; item: string; instance: string | null;
+  actions: Array<{ id: string; label: string; permission: UiPermission }>;
+}
+export interface GameplayUiView {
+  version: 1;
+  activeInterface: string | null;
+  production: {
+    id: string; interface: string; target: WorldTarget;
+    recipes: Array<{ recipe: string; name: string; outputs: ItemView[]; single: UiPermission; makeX: UiPermission }>;
+  } | null;
+  reward: {
+    id: string; kind: "quest" | "level_up"; interface: string; title: string; lines: string[]; items: ItemView[];
+    xp: Array<{ skill: string; amountTenths: string }>; questPoints: number; quest: string | null;
+    skill: string | null; level: number | null; continuation: GameplayUiIntent;
+  } | null;
+  confirmation: { id: string; kind: string; title: string; lines: string[]; items: ItemView[]; credit: string | null } | null;
+  interfaces: Array<{ interface: string; visibility: "hidden" | "locked" | "enabled"; highlighted: boolean; permission: UiPermission }>;
+  combatStyle: string | null;
+  combatStyles: AbilityUiView[];
+  prayers: AbilityUiView[];
+  spells: AbilityUiView[];
+  equipment: {
+    bonuses: { attack: Record<string, number>; defence: Record<string, number>; meleeStrength: number; rangedStrength: number; magicDamagePercent: number; prayer: number };
+    weightGrams: string; slots: string[];
+  };
+  inventoryActions: InventoryActionsUiView[];
+  bank: {
+    revision: string; capacity: number; selectedTab: number; insertMode: boolean; placeholders: boolean; amount: number; noted: boolean;
+    tabs: Array<{ tab: number; firstEntry: string | null; entries: number }>;
+    entries: Array<{ id: string; slot: number; tab: number; item: string; value: ItemView | null; placeholder: boolean }>;
+    depositEquipment: UiPermission;
+    unavailableContainers: Array<{ id: string; label: string; permission: UiPermission }>;
+  } | null;
+  keptOnDeath: { scope: "normal_unsafe_non_pvp"; kept: ItemView[]; lost: ItemView[]; fullGraveFee: string; fullOfficeFee: string; valueRevision: string } | null;
+  recovery: { cofferBalance: string; discard: UiPermission; cofferOffer: UiPermission; cofferItems: InventoryActionsUiView[] } | null;
+  appearance: {
+    choices: Record<string, Array<{ value: number; label: string | null; permission: UiPermission }>>;
+    base: { asset: string; sourceNpc: number; adaptation: string } | null; confirmed: boolean;
+  };
+  publicChat: {
+    permission: UiPermission; maximumBytes: number; channel: "public";
+    messages: Array<{ id: string; actor: string; sender: string; channel: "public"; text: string; colour: number; effect: number }>;
+  };
 }
 export interface AppState {
   phase: "capability_check" | "title" | "register" | "login" | "connecting" | "character" | "world" | "reconnecting" | "error";

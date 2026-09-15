@@ -1,6 +1,7 @@
 mod content;
 mod error;
 mod execution;
+mod gameplay_ui;
 mod ids;
 mod intent;
 mod mechanics;
@@ -12,6 +13,7 @@ mod state;
 pub use content::*;
 pub use error::*;
 pub use execution::*;
+pub use gameplay_ui::*;
 pub use ids::*;
 pub use intent::*;
 pub use mechanics::*;
