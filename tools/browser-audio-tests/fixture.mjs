@@ -1,4 +1,7 @@
-import { createAudio, observeAudioState, readAudioState } from "/web/audio/index.ts";
+import {
+  createAudio, observeAudioState, readAudioState, setSourceMusicSelector,
+  setSourceAudioScene, setSourceMasterVolume, sourceMusicRegion, sourceAudioDefaults,
+} from "/web/audio/index.ts";
 
 const native = {
   contexts: [], starts: [], ends: [], destinations: [], connections: new Map(),
@@ -74,6 +77,7 @@ function recordError(error) {
 
 async function initialize() {
   handle = await createAudio(assets, recordError);
+  setSourceMusicSelector(handle, null, "classic");
   stopObserving = observeAudioState(handle, (state) => {
     document.querySelector("#status").textContent =
       `${state.contextState}; gesture=${state.pendingGesture}; voices=${state.voices.length}`;
@@ -178,6 +182,9 @@ for (const channel of ["music", "effects", "area"]) {
     handle.volume(channel, Number(event.target.value) / 100);
   });
 }
+document.querySelector("#master").addEventListener("input", (event) => {
+  setSourceMasterVolume(handle, Number(event.target.value));
+});
 
 window.audioFixture = {
   get handle() { return handle; },
@@ -186,6 +193,10 @@ window.audioFixture = {
   get lastUnlock() { return lastUnlock; },
   errors, native, syntheticWorld, event, update, capture, stats,
   snapshot: () => readAudioState(handle),
+  setSourceAudioScene: (scene) => setSourceAudioScene(handle, scene),
+  setSourceMasterVolume: (value) => setSourceMasterVolume(handle, value),
+  setSourceMusicSelector: (selector, mode = "modern") => setSourceMusicSelector(handle, selector, mode),
+  sourceMusicRegion, sourceAudioDefaults,
   originalsConnected: () => native.destinations.some((node) =>
     node.context === native.contexts.at(-1) && node !== monitorSink &&
     native.connections.get(node)?.has(node.context.destination)),

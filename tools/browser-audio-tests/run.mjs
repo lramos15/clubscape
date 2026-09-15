@@ -138,6 +138,10 @@ function wavSamples(bytes) {
   return Array.from({ length: pcm.length / 2 }, (_, i) => pcm.readInt16LE(i * 2) / 32768);
 }
 const originalRat = wavSamples(await readFile(registry.get("reference.audio.sfx.710")));
+const nativePreferences = JSON.parse(await readFile("research/browser-audio-policy/native-preferences.json", "utf8"));
+const nativePosition = JSON.parse(await readFile("research/browser-audio-policy/native-position.json", "utf8"));
+const nativeMusic = JSON.parse(await readFile("research/browser-audio-policy/native-music.json", "utf8"));
+const nativeCurve = nativePreferences.cases.find((item) => item.case === "native-nonlinear-lookup-tables");
 
 async function check(name, body) {
   const start = Date.now();
@@ -148,7 +152,7 @@ async function check(name, body) {
 async function snapshot() { return page.evaluate(() => audioFixture.snapshot()); }
 async function waitVoice(sourceId, kind = null) {
   await page.waitForFunction(({ id, kind }) => audioFixture.snapshot().voices.some(
-    (v) => v.sourceId === id && (kind === null || v.kind === kind),
+    (v) => v.sourceId === id && v.when <= audioFixture.context.currentTime && (kind === null || v.kind === kind),
   ), { id: sourceId, kind }, { timeout: 20_000 });
 }
 async function waitEnded(eventId) {
@@ -278,6 +282,28 @@ try {
     return { nativeStart: playback.nativeStarts[0], monitor, actualTimeAdvance: b.currentTime - a.currentTime };
   });
 
+  await check("actual native defaults, master-before-lookup slider composition and qualified Modern geography", async () => {
+    assert.deepEqual((await snapshot()).nativeMixer, { music: 255, effects: 127, area: 127 });
+    assert.deepEqual(await page.evaluate(() => audioFixture.sourceAudioDefaults().assetGain),
+      { music: 255/128, effects: 127/128, area: 127/128 });
+    await page.locator("#master").focus();
+    await page.keyboard.press("Home");
+    for (let i=0;i<50;i++) await page.keyboard.press("ArrowRight");
+    assert.deepEqual((await snapshot()).nativeMixer, { music: 44, effects: 22, area: 22 });
+    await page.keyboard.press("End");
+    await waitVoice(0);
+    const regions = await page.evaluate(() => [
+      audioFixture.sourceMusicRegion({ x:3222,y:3218,plane:0 }),
+      audioFixture.sourceMusicRegion({ x:3222,y:3280,plane:0 }),
+      audioFixture.sourceMusicRegion({ x:3166,y:3300,plane:0 }),
+    ]);
+    assert.ok(regions.every((r) => r.areaId===1 && r.defaultGroup===76));
+    assert.ok(regions.every((r) => JSON.stringify(r.groups)==="[2,64,327,163,76,145]"));
+    return { nativeDefaultMixer: { music:255,effects:127,area:127 }, nativeMaster50Mixer: { music:44,effects:22,area:22 },
+      modernArea:1, originalGroups:regions[0].groups, publicPolygonRevision:15258397,
+      classification:"dated_public_source_geography_with_native_music_table_corroboration" };
+  });
+
   await check("needed-region music 62 / 144 / 76 / east 2, repeated snapshots, reset and reconnect", async () => {
     const routes = [
       ["region.osrs.12336", 62], ["region.osrs.12436", 144],
@@ -378,7 +404,8 @@ try {
           audioFixture.update(audioFixture.world, [e]);
         });
       });
-      const expected = originalRat.map((v) => v * 0.5 * percent / 100);
+      const nativeVolume = nativeCurve.effect_and_area[Math.round(percent / 100 * 127)];
+      const expected = originalRat.map((v) => v * nativeVolume / 256);
       const first = expected.findIndex((v) => v !== 0);
       const actualFirst = captured.samples.findIndex((v) => Math.abs(v) > 1e-8);
       const shift = actualFirst - first;
@@ -393,9 +420,11 @@ try {
       }
       assert.ok(maxError <= 0.000023, `Original PCM/gain mismatch: ${maxError}`);
       assert.equal(clips, 0);
-      measurements.push({ sliderPercent: percent, gain: percent / 100, maxAbsoluteError: maxError, peak, extraClipSamples: clips, shiftSamples: shift });
+      measurements.push({ sliderPercent: percent, nativeVolume, assetGain: nativeVolume / 128,
+        maxAbsoluteError: maxError, peak, extraClipSamples: clips, shiftSamples: shift });
     }
-    assert.ok(Math.abs(20 * Math.log10(measurements[1].peak / measurements[0].peak) - 20 * Math.log10(0.5)) < 0.25);
+    assert.ok(Math.abs(20 * Math.log10(measurements[1].peak / measurements[0].peak) -
+      20 * Math.log10(measurements[1].nativeVolume / measurements[0].nativeVolume)) < 0.25);
     return { measurements, originalWavSha256: reference.reference_templates.find((a) => a.source_group === 710).sha256 };
   });
   await gain("effects", 100);
@@ -533,6 +562,7 @@ try {
   });
 
   await check("50-entry FIFO overflow is preserved on real sources with no stress-fixture clipping", async () => {
+    const clipBaseline = (await page.evaluate(() => audioFixture.stats())).clips;
     const before = await page.evaluate(() => audioFixture.native.starts.length);
     await page.evaluate(() => {
       const events = Array.from({ length: 51 }, (_, i) => audioFixture.event({
@@ -550,86 +580,81 @@ try {
       .every((t) => t.data.processingCalls === 3), true);
     assert.equal(await page.evaluate(() => audioFixture.native.starts.length), before + 50);
     const monitor = await page.evaluate(() => audioFixture.stats());
-    assert.equal(monitor.clips, 0);
-    return { capacity: 50, submitted: 51, started: 50, newEntryDropped: "fifo/50", processingCallsForDelay2: 3, perEventFixtureGain: 0.01, additionalClipSamples: monitor.clips };
+    assert.equal(monitor.clips - clipBaseline, 0);
+    return { capacity: 50, submitted: 51, started: 50, newEntryDropped: "fifo/50", processingCallsForDelay2: 3, perEventFixtureGain: 0.01, additionalClipSamples: monitor.clips - clipBaseline };
   });
 
-  await check("positional source gain, plane/instance, explicit retention, active-object loops and movement cleanup", async () => {
+  await check("native scene emitter gain, footprint, signed fades, plane/instance and movement without sourceGain", async () => {
     await gain("music", 0);
     await gain("area", 100);
-    const actor = "object.fixture.range";
-    await page.evaluate((actor) => {
-      const world = audioFixture.world;
-      world.revision = String(BigInt(world.revision) + 1n);
-      world.entities.push({
-        id: actor, definitionId: "fixture.original-range-114", sourceId: 114, name: "Fixture original cooking range",
-        kind: "object", tile: { ...world.player.tile, x: world.player.tile.x + 1 },
-        instance: null, hitpoints: 1, maxHitpoints: 1, available: true, animation: "", actions: [], appearance: {}, equipment: [],
-      });
-      audioFixture.update(world);
-    }, actor);
-    const tile = await page.evaluate((actor) => audioFixture.world.entities.find((e) => e.id === actor).tile, actor);
-    const base = {
-      sourceId: 2065, actorId: actor, tile,
-      payload: { committed: true, ambient: true, objectId: 114, active: true, phase: "start", repeatCount: 1, delayCycles: 2, sourceDistance: 1, sourceGain: 0.5 },
+    const tile = await page.evaluate(() => ({ ...audioFixture.world.player.tile }));
+    const scene = {
+      listener: { x: tile.x * 128 + 64, y: tile.y * 128 + 64 },
+      plane: tile.plane, instance: null, owner: null,
+      emitters: [{ id: "native-range", objectId: 114, tile, orientation: 0, instance: null, owner: null, present: true }],
     };
-    const originalStart = await emit(base);
+    const sendScene = (value) => page.evaluate((value) => {
+      audioFixture.setSourceAudioScene({ ...value, varps: new Map() });
+    }, value);
+    await sendScene(scene);
     await waitVoice(2065, "sfx");
-    await page.waitForTimeout(100);
     const state = await snapshot();
     const voice = state.voices.find((v) => v.sourceId === 2065);
     assert.equal(voice.loop, true);
     assert.equal(voice.loopEnd, 2);
-    assert.equal(voice.gain, 0.5);
+    assert.equal(voice.gain, 127 / 128);
+    assert.equal(state.queueSize, 0, "Native object streams do not occupy the packet FIFO");
     const starts = await page.evaluate(() => audioFixture.native.starts.length);
-    await emit(base);
+    await sendScene(scene);
     assert.equal(await page.evaluate(() => audioFixture.native.starts.length), starts);
-    await page.evaluate(({ actor, tile }) => {
-      const world = audioFixture.world;
-      world.revision = String(BigInt(world.revision) + 1n);
-      world.player.tile.x++;
-      const event = audioFixture.event({
-        sourceId: 2065, actorId: actor, tile,
-        payload: { committed: true, ambient: true, objectId: 114, phase: "update", sourceDistance: 0, sourceGain: 0.25 },
-      });
-      audioFixture.update(world, [event]);
-    }, { actor, tile });
+    const distant = { ...scene, listener: { x: (tile.x + 1) * 128 + 192, y: tile.y * 128 + 64 } };
+    await sendScene(distant);
+    await page.waitForTimeout(180);
     assert.equal((await snapshot()).voices.find((v) => v.sourceId === 2065).id, voice.id);
-    assert.equal((await snapshot()).voices.find((v) => v.sourceId === 2065).gain, 0.25);
-    await emit({ ...base, payload: { ...base.payload, phase: "update", sourceDistance: 3.1, sourceGain: 0 } });
+    assert.equal((await snapshot()).voices.find((v) => v.sourceId === 2065).gain, 85 / 128);
+    await sendScene(scene);
+    await page.waitForTimeout(40);
+    assert.equal((await snapshot()).voices.find((v) => v.sourceId === 2065).gain, 127 / 128);
+    await sendScene({ ...scene, plane: 1 });
+    await page.waitForTimeout(200);
     assert.equal((await snapshot()).voices.some((v) => v.sourceId === 2065), false);
-    const retained = await emit({
-      sourceId: 710, actorId: actor, tile,
-      payload: { committed: true, repeatCount: 1, delayCycles: 2, range: 5, retain: 2, sourceDistance: 6, sourceGain: 0.2, cueId: "retained-packet" },
-    });
-    await waitVoice(710, "sfx");
-    await emit({
-      sourceId: 710, actorId: actor, tile,
-      payload: { committed: true, phase: "update", range: 5, retain: 2, sourceDistance: 7.1, sourceGain: 0, cueId: "retained-packet" },
-    });
-    assert.equal((await snapshot()).voices.some((v) => v.eventId === retained), false);
     const beforeInvalid = await page.evaluate(() => audioFixture.native.starts.length);
-    await emit({ ...base, tile: { ...tile, plane: 1 } });
-    await emit({ ...base, payload: { ...base.payload, instance: "other-instance" } });
-    await page.waitForTimeout(120);
+    await sendScene({ ...scene, emitters: [{ ...scene.emitters[0], instance: "other-instance" }] });
+    await page.waitForTimeout(60);
     assert.equal(await page.evaluate(() => audioFixture.native.starts.length), beforeInvalid);
-    await emit({ ...base, payload: { committed: true, repeatCount: 1, delayCycles: 2, range: 3, retain: 0 } });
-    assert.ok(await page.evaluate(() => audioFixture.errors.some((e) => e.code === "AUDIO_SPATIAL_POLICY")));
-    await emit(base);
-    await waitVoice(2065);
-    await page.evaluate(() => {
-      const world = audioFixture.world;
-      world.revision = String(BigInt(world.revision) + 1n);
-      world.player.tile.x++;
-      audioFixture.update(world);
-    });
-    assert.equal((await snapshot()).voices.some((v) => v.sourceId === 2065), false);
-    assert.ok((await snapshot()).policyLimits.includes("spatial-update"));
+    await page.evaluate(() => audioFixture.setSourceAudioScene(null));
     return {
-      sourceLoopId: 2065, startedEvent: originalStart, originalLoopEndSeconds: 2,
-      sameNodeGainUpdate: [0.5, 0.25], sourceRangeRetain: [5, 2], retainedDistance: 6, droppedDistance: 7.1,
-      missingCurveReportedNotInvented: true, wrongPlaneOrInstanceSources: 0, staleMovementNodes: 0,
+      originalObject: 114, originalFootprint: [1, 2], originalLoopEndSeconds: 2,
+      nativeMixerVolumes: [127, 85, 127], unchangedVoiceId: voice.id,
+      callerSuppliedSourceGain: false, normalFadeBaseMs: 300, visibilityFadeMs: 150,
+      wrongPlaneOrInstanceSources: 0, packetFifoOccupancy: 0,
     };
+  });
+
+  await check("native morph variables suppress inactive base sounds and random ambience runs independently of the FIFO", async () => {
+    const tile = await page.evaluate(() => ({ ...audioFixture.world.player.tile }));
+    const scene = {
+      listener: { x:tile.x*128+64,y:tile.y*128+64 }, plane:tile.plane, instance:null, owner:null,
+      emitters: [{ id:"native-morph",objectId:34815,tile,orientation:0,instance:null,owner:null,present:true }],
+    };
+    const before = requests.length;
+    await page.evaluate((scene) => audioFixture.setSourceAudioScene({ ...scene,varps:new Map([[491,0]]) }), scene);
+    await page.waitForTimeout(80);
+    assert.equal((await snapshot()).voices.some((v) => v.sourceId===3141), false);
+    await page.evaluate((scene) => audioFixture.setSourceAudioScene({ ...scene,varps:new Map([[491,4]]) }), scene);
+    await page.waitForTimeout(80);
+    assert.equal(requests.length,before);
+    const randomScene = { ...scene,emitters:[{ ...scene.emitters[0],id:"native-random",objectId:16433 }] };
+    await page.evaluate((scene) => audioFixture.setSourceAudioScene({ ...scene,varps:new Map() }), randomScene);
+    await waitVoice(2184);
+    await page.waitForFunction(() => audioFixture.snapshot().voices.some(
+      (v) => [1984,1985,1986,1987,1988].includes(v.sourceId)), null, { timeout:10_000 });
+    assert.equal((await snapshot()).queueSize,0);
+    await page.evaluate(() => audioFixture.setSourceAudioScene(null));
+    assert.equal((await snapshot()).voices.some((v) => v.kind==="sfx"),false);
+    return { originalMorph:34815,sourceVarp:491,values:[0,4],inactiveBaseSoundNotPlayed:3141,
+      randomObject:16433,originalRandomGroups:[1984,1985,1986,1987,1988],sourceIntervalRangeCycles:[150,300],
+      packetFifoOccupancy:0 };
   });
 
   await check("last accepted jingle wins in both directions; sentinel and auxiliary values have no priority", async () => {
@@ -900,45 +925,65 @@ try {
     return { actualSilentSinkRejected: true, realDefaultSinkRestored: true, timeoutFaultInjected: true, timeoutCode: timeout.code, actualRecoveredState: (await snapshot()).contextState };
   });
 
-  await check("single mode uses the pinned MIDI boundary, with a real offline waveform check excluding release padding", async () => {
+  await check("native fade steps run on the real graph and offline PCM, without a fabricated seamless music loop", async () => {
     const autumn = manifest.assets.find((a) => a.kind === "music" && a.source_group === 2);
+    const nativeFade = nativeMusic.cases.find((c) => c.case === "original-wo-wp-music-fade-steps").observed
+      .find((c) => c.volume === 255 && c.fade_cycles === 60 && c.direction === "in").native_volumes;
     await emit({
       kind: "music", sourceId: 2,
-      payload: { mode: "single", unlocked: true, boundary: "native_midi_end" },
+      payload: { mode: "single", unlocked: true, boundary: "native_duration",
+        fadeOutCycles: 0, fadeInDelayCycles: 0, fadeInCycles: 60 },
     });
+
     await waitVoice(2, "music");
+    await page.waitForFunction(() => audioFixture.snapshot().voices.filter((v) => v.kind === "music").length === 1);
     const actualVoice = (await snapshot()).voices.find((v) => v.kind === "music");
-    assert.equal(actualVoice.loop, true);
-    assert.equal(actualVoice.loopEnd, autumn.loop.source_engine_end_frame / 22050);
-    assert.notEqual(actualVoice.loopEnd, autumn.signal.duration_seconds);
-    const offline = await page.evaluate(async ({ frames, endFrame }) => {
+    assert.equal(actualVoice.loop, false);
+    assert.equal(actualVoice.loopEnd, 0);
+    const measured = [];
+    for (const elapsed of [0.2,0.4,0.6,0.8,1.25]) {
+      await page.waitForFunction((time) => audioFixture.context.currentTime >= time, actualVoice.when + elapsed);
+      const state = await snapshot();
+      const gainValue = state.voices.find((v) => v.id === actualVoice.id).gain;
+      const index = Math.min(60, Math.floor((state.currentTime - actualVoice.when) / 0.02));
+      assert.ok([index-1,index,index+1].some((i) => nativeFade[Math.max(0,Math.min(60,i))] / 128 === gainValue));
+      measured.push({ elapsed: state.currentTime - actualVoice.when, nativeMixerLevel: gainValue * 128 });
+    }
+    const offline = await page.evaluate(async ({ frames, nativeFade }) => {
       const original = audioFixture.native.buffers.get(frames);
-      const context = new OfflineAudioContext(2, endFrame + 4096, 22050);
+      const context = new OfflineAudioContext(2, 44100, 22050);
       const source = context.createBufferSource();
       const gain = context.createGain();
       source.buffer = original;
-      source.loop = true;
-      source.loopStart = 0;
-      source.loopEnd = endFrame / 22050;
-      gain.gain.value = 0.5;
+      for (let i=0;i<nativeFade.length;i++) gain.gain.setValueAtTime(nativeFade[i]/128,i*0.02);
       source.connect(gain);
       gain.connect(context.destination);
       source.start();
       const output = await context.startRendering();
-      let maxError = 0, clips = 0;
+      let maxError = 0, clips = 0, boundarySamples = 0;
       for (let channel = 0; channel < 2; channel++) {
         const samples = output.getChannelData(channel);
         const expected = original.getChannelData(channel);
-        for (let i = 0; i < 4096; i++) {
-          maxError = Math.max(maxError, Math.abs(samples[endFrame + i] - expected[i] * 0.5));
+        for (let i = 0; i < samples.length; i++) {
+          const frame = Math.min(nativeFade.length-1,Math.floor(i/441));
+          const level = nativeFade[frame];
+          let error = Math.abs(samples[i] - Math.fround(expected[i]*level/128));
+          // Every sample is checked. At the exact discrete boundary, floating
+          // time-to-sample rounding may choose the immediately adjacent step.
+          if (error > 0 && i % 441 === 0 && frame > 0) {
+            const adjacent = Math.abs(samples[i] - Math.fround(expected[i]*nativeFade[frame-1]/128));
+            if (adjacent < error) { error = adjacent; boundarySamples++; }
+          }
+          maxError = Math.max(maxError, error);
         }
         for (const value of samples) if (Math.abs(value) > 1) clips++;
       }
       source.disconnect();
       gain.disconnect();
-      return { frames: output.length, sampleRate: output.sampleRate, channels: output.numberOfChannels, maxError, extraClipSamples: clips };
-    }, { frames: autumn.signal.frames, endFrame: autumn.loop.source_engine_end_frame });
-    assert.ok(offline.maxError <= 0.000023);
+      return { frames: output.length, sampleRate: output.sampleRate, channels: output.numberOfChannels,
+        maxError, boundarySamples, maximumBoundaryRoundingMs: 1000 / 22050, extraClipSamples: clips };
+    }, { frames: autumn.signal.frames, nativeFade });
+    assert.ok(offline.maxError <= 0.000023, JSON.stringify(offline));
     assert.equal(offline.extraClipSamples, 0);
     const starts = await page.evaluate(() => audioFixture.native.starts.length);
     await page.evaluate(() => {
@@ -952,22 +997,44 @@ try {
     assert.equal(await page.evaluate(() => audioFixture.native.starts.length), starts);
     assert.equal((await snapshot()).voices.find((v) => v.kind === "music").sourceId, 2);
     return {
-      originalNativeEndFrame: autumn.loop.source_engine_end_frame, releaseTailFramesExcluded: 22050,
-      liveLoopEndSeconds: actualVoice.loopEnd, manualModeSurvivesRegionChange: true, offline,
-      scope: "Explicit native_midi_end request; not proof of native MIDI voice carry-over or mixer calibration.",
+      actualNativeFadeCycles: 60, measured, nativeLoopFlag: false,
+      manualModeSurvivesRegionChange: true, offline, replayTimerSeconds: 229 * 0.6,
     };
   });
 
+  await check("new native publication/representation requirements fail explicitly instead of clipping or fabricating assets", async () => {
+    await emit({ kind:"music",sourceId:-1,payload:{ mode:"area" } });
+    const before = await page.evaluate(() => audioFixture.native.starts.length);
+    for (const group of [40,54,58,64,65]) {
+      await emit({ kind:"jingle",sourceId:group,payload:{ committed:true } });
+      await page.waitForFunction((group) => audioFixture.errors.some(
+        (e) => e.code==="AUDIO_NATIVE_GAIN_INPUT_REQUIRED" && e.detail?.sourceId===group),group);
+    }
+    assert.equal(await page.evaluate(() => audioFixture.native.starts.length),before);
+    const fetches=requests.length;
+    for (const group of [64,327,163,145]) await emit({ kind:"music",sourceId:group,payload:{ mode:"area" } });
+    assert.equal(requests.length,fetches);
+    const errors = await page.evaluate(() => audioFixture.errors.filter((e) => e.code==="AUDIO_SOURCE_MUSIC_ASSET_REQUIRED"));
+    assert.deepEqual(errors.map((e) => e.detail.sourceGroup),[64,327,163,145]);
+    await emit({ kind:"music",sourceId:2,payload:{ mode:"area",fadeOutCycles:0,fadeInDelayCycles:0,fadeInCycles:0 } });
+    await waitVoice(2);
+    return { native255RepresentationNeeded:[40,54,58,64,65],newOriginalMusicGroupsNeeded:[64,327,163,145],
+      guardedSourceStarts:0,unpublishedAssetFetches:0,originalFilesChanged:0 };
+  });
+
   if (!process.argv.includes("--quick")) {
-    await check("full-length live playlist advances 2 to 76 at the native end, without looping release padding", async () => {
+    await check("full-length live playlist uses the native table44 timer and preserves the one-pass release", async () => {
+      const clipBaseline = (await page.evaluate(() => audioFixture.stats())).clips;
       await emit({
         kind: "music", sourceId: 2,
-        payload: { mode: "playlist", unlocked: true, boundary: "native_midi_end", playlist: "[2,76]" },
+        payload: { mode: "playlist", unlocked: true, boundary: "native_duration", playlist: "[2,76]",
+          fadeOutCycles: 0, fadeInDelayCycles: 0, fadeInCycles: 0 },
       });
       await waitVoice(2, "music");
+      await page.waitForFunction(() => audioFixture.snapshot().voices.filter((v) => v.kind === "music").length === 1);
       const original = (await snapshot()).voices.find((v) => v.kind === "music" && v.sourceId === 2);
       const autumn = manifest.assets.find((a) => a.kind === "music" && a.source_group === 2);
-      const boundary = original.when + autumn.loop.source_engine_end_frame / 22050;
+      const boundary = original.when + 229 * 0.6;
       await page.waitForFunction((boundary) => audioFixture.context.currentTime >= boundary + 0.2 &&
         audioFixture.snapshot().voices.some((v) => v.kind === "music" && v.sourceId === 76 && v.when <= audioFixture.context.currentTime),
       boundary, { timeout: 155_000 });
@@ -979,13 +1046,14 @@ try {
       const timingErrorMs = Math.abs(harmony.when - boundary) * 1000;
       assert.ok(timingErrorMs <= 20);
       const monitor = await page.evaluate(() => audioFixture.stats());
-      assert.equal(monitor.clips, 0);
+      assert.equal(monitor.clips - clipBaseline, 0);
       assert.equal(monitor.channels, 2);
       return {
         actualElapsedSourceSeconds: state.currentTime - original.when,
         from: 2, to: 76, expectedBoundary: boundary, actualScheduledBoundary: harmony.when,
         timingErrorMs, originalNaturallyEndedAt: ended.audioTime, simultaneousPlayingMusicSources: 1,
-        releaseTailFramesNotRepeated: 22050, monitor,
+        sourceDurationTicks: 229, sourceReleaseTailPreserved: 22050,
+        additionalClipSamples: monitor.clips - clipBaseline, monitor,
       };
     });
   }

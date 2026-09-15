@@ -1,0 +1,115 @@
+{
+  "schema_version": 1,
+  "source_pack_sha256": "b62e19704e17d3d3e4e819f803ef49ba7cc54034ae407184b423427c65d9674d",
+  "frozen_source_files_modified": false,
+  "requirements": [
+    {
+      "kind": "missing_original_track",
+      "index": 6,
+      "group": 64,
+      "native_music_row": 2583,
+      "name": "Book of Spells",
+      "native_row_sha256": "d6faf0a38bafaa416f9352db7375ccd760ccc931c0f7c2757752d374195d55db",
+      "native_area": 1,
+      "reason": "Native table44 Modern Lumbridge membership; no approved playable publication exists."
+    },
+    {
+      "kind": "missing_original_track",
+      "index": 6,
+      "group": 327,
+      "native_music_row": 2674,
+      "name": "Dream",
+      "native_row_sha256": "4f19529050447b0042e09e9bf383f4eaebd6ac5746321635687c3ae351336fdd",
+      "native_area": 1,
+      "reason": "Native table44 Modern Lumbridge membership; no approved playable publication exists."
+    },
+    {
+      "kind": "missing_original_track",
+      "index": 6,
+      "group": 163,
+      "native_music_row": 2721,
+      "name": "Flute Salad",
+      "native_row_sha256": "b31f31aac5f2cb9fb87a3aaa46d47418d093b2a3aeeef267d9bb20571e14d576",
+      "native_area": 1,
+      "reason": "Native table44 Modern Lumbridge membership; no approved playable publication exists."
+    },
+    {
+      "kind": "missing_original_track",
+      "index": 6,
+      "group": 145,
+      "native_music_row": 3237,
+      "name": "Yesteryear",
+      "native_row_sha256": "f7e822265106bfd593109b53c35843aae7aa60c17e6c73d13fcbf678999ce4f7",
+      "native_area": 1,
+      "reason": "Native table44 Modern Lumbridge membership; no approved playable publication exists."
+    },
+    {
+      "kind": "native_mixer_representation",
+      "index": 11,
+      "group": 40,
+      "native_volume": 255,
+      "unchanged_128_pcm_sha256": "921de6e98c794d040c7fef31f3e4ac201a66dcb6cdc74ff48f267fc2e5560649",
+      "required_native_255_pcm_sha256": "1cbff8dcba97002230b6319fe71479786230c1e9d7fa05c9ae5d71153591e386",
+      "frames": 149945,
+      "source_native_clip_samples": 12,
+      "additional_clips_if_scaling_current_file": 1,
+      "reason": "Do not modify frozen files or add a limiter/normalization; provide original native-level representation or dynamic original synthesis."
+    },
+    {
+      "kind": "native_mixer_representation",
+      "index": 11,
+      "group": 54,
+      "native_volume": 255,
+      "unchanged_128_pcm_sha256": "a3ccbddfe5dd0ec21a89aca8354b1ed299116b1d7861aefbf69077e71361142e",
+      "required_native_255_pcm_sha256": "31997c21b737acf5bff4c083007bfef76663e2d5c57181fa2df61274e01933a9",
+      "frames": 154355,
+      "source_native_clip_samples": 555,
+      "additional_clips_if_scaling_current_file": 8,
+      "reason": "Do not modify frozen files or add a limiter/normalization; provide original native-level representation or dynamic original synthesis."
+    },
+    {
+      "kind": "native_mixer_representation",
+      "index": 11,
+      "group": 58,
+      "native_volume": 255,
+      "unchanged_128_pcm_sha256": "429e27a28ea03cf39ddcfeb8bd47494fee34e79d96071cd27628091f22cdb180",
+      "required_native_255_pcm_sha256": "626b00ad85ed0bd92f48ecbb6634ee0bfcaca0447c73cb6156cf9bcf8e70cdd0",
+      "frames": 138478,
+      "source_native_clip_samples": 18,
+      "additional_clips_if_scaling_current_file": 2,
+      "reason": "Do not modify frozen files or add a limiter/normalization; provide original native-level representation or dynamic original synthesis."
+    },
+    {
+      "kind": "native_mixer_representation",
+      "index": 11,
+      "group": 64,
+      "native_volume": 255,
+      "unchanged_128_pcm_sha256": "3972328bedca226a2714a437bce51e2c8e0bb31dbe2da3e55b94b25b50588bb2",
+      "required_native_255_pcm_sha256": "5996e7128a756e52f084e5e5ec7d167dd6adc1f31ac2eada4f71e4c0663532ec",
+      "frames": 139654,
+      "source_native_clip_samples": 93,
+      "additional_clips_if_scaling_current_file": 11,
+      "reason": "Do not modify frozen files or add a limiter/normalization; provide original native-level representation or dynamic original synthesis."
+    },
+    {
+      "kind": "native_mixer_representation",
+      "index": 11,
+      "group": 65,
+      "native_volume": 255,
+      "unchanged_128_pcm_sha256": "bc6ec2da8a0ac4154ba85e849c19bdb44f1fb3ef8da1ba1007152a162e75126f",
+      "required_native_255_pcm_sha256": "de584c2198d3cfff3a900b11cb5c7ce7a5d392c9610954b7d5272d16c00146dc",
+      "frames": 154355,
+      "source_native_clip_samples": 169,
+      "additional_clips_if_scaling_current_file": 2,
+      "reason": "Do not modify frozen files or add a limiter/normalization; provide original native-level representation or dynamic original synthesis."
+    }
+  ],
+  "calibration_inputs": {
+    "native-objects.json": "d5690dd20f5bbb0cd70fd59fde0d91394fee421676f654f35c8e94546e42098c",
+    "native-catalog.json": "d83b32c6bde8d781b560d76c762fc2fee4470ecd25c1809239fc82c394cb02ee",
+    "music-geography.json": "5a9379d411c9fb1d7cc558e79620d4d67a44a2997bf6183cfd81c78657839bc9",
+    "native-pcm.json": "667989b9ae4181a5ee316c36629719b5ec261d371f897e183e65f3028cbdad9a"
+  },
+  "bridge_contract": "web/audio/native-scene.ts: SourceAudioScene, SourceMusicSelector; web/audio/README.md",
+  "acceptance": false
+}

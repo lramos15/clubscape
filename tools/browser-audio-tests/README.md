@@ -1,145 +1,150 @@
-# Real browser source-audio checks
+# Running-browser/native audio comparison
 
-These tests import `web/audio/index.ts` and run its actual
-`createAudio(ClientAssets, report)` implementation. Synthetic immutable world
-snapshots and scalar audio events are **test-only inputs**, not a substitute for
-the legitimate server/UI journey or a new source reference.
+The fixture imports the real `web/audio/index.ts` factory. It is not a second
+audio engine or a file-decoder substitute. The source comparisons now use
+executed original native policies in `research/browser-audio-policy/`, in
+addition to the frozen v1.3.0 source files. Neither the fixture's synthetic
+world snapshots nor its HTML controls are ClubScape gameplay/UI acceptance.
 
-Read the repository agent guide, specification, and
-`docs/machines/sparky.md` before running builds/browser tests. On the verified
-ARM64 host the existing worktree package is TypeScript **7.0.2** and
-Playwright Core **1.63.0**, with Node **24.18.0**. Restore only if missing:
+Read `AGENTS.md`, `prompt.md`, and `docs/machines/sparky.md` first. The already
+verified worktree dependencies are Node24.18, TypeScript7.0.2 and Playwright
+Core1.63.0. Restore only after a missing-dependency failure:
 
 ```sh
 pnpm --dir web install --frozen-lockfile
 ```
 
-From this worktree's root:
+## Commands
 
 ```sh
 pnpm --dir web exec tsc --noEmit
-node --test web/audio/audio.test.ts
+node --test web/audio/audio.test.ts web/audio/native-policy.test.ts
 
-# Full test, including an actual ~136-second Autumn -> Harmony transition:
+# Full actual playback; includes the complete Autumn -> Harmony timer replay:
 node tools/browser-audio-tests/run.mjs
 
-# Iteration only: omits that full-length live transition, but keeps the
-# real offline waveform boundary check and all shorter lifecycle tests:
+# Iteration: shorter lifecycle checks plus actual offline waveform/fade render:
 node tools/browser-audio-tests/run.mjs --quick
 ```
 
-`CLUBSCAPE_CHROME` can point to the already verified Chrome for Testing **153**.
-The default is the host snapshot's
-`~/.cache/ms-playwright/chromium-1243/chrome-linux-arm64/chrome`.
-The runner checks the executable version before launch. No browser/tool
-installation, global audio service, driver, sandbox policy or external account
-is changed.
+Reproduce the native probes first when changing policy:
 
-## What is measured
+```sh
+python3 tools/browser-audio-tests/native/probe.py preferences
+python3 tools/browser-audio-tests/native/probe.py position
+python3 tools/browser-audio-tests/native/probe.py music
+python3 tools/browser-audio-tests/native/probe.py objects
+python3 tools/browser-audio-tests/native/probe.py catalog
+python3 tools/browser-audio-tests/native/probe.py scripts
+python3 tools/browser-audio-tests/native/probe.py pcm
+python3 tools/browser-audio-tests/native/public_maps.py
+python3 tools/browser-audio-tests/native/generate_policy.py
+```
 
-* Chromium's actual namespace/PID/network/seccomp sandbox page, and absence of
-  `--no-sandbox` and `--mute-audio`.
-* The actual `AudioContext` state/current time/rate/device latency and actual
-  native `AudioBufferSourceNode.start` calls and `ended` events.
-* Initial native suspension and no playable-file requests before permission.
-  Programmatic unlock and a synthetic DOM click are rejected.
-* Trusted Playwright mouse/keyboard input to enable/resume/mute and move the
-  real range inputs. **All JS orchestration uses CDP `userGesture:false`.**
-  Playwright's ordinary `evaluate` grants a synthetic user gesture and would
-  invalidate this test; it is deliberately not used for fixture evaluation.
-* A real AudioWorklet observes the post-gain/post-mute signal, both stereo
-  channels' peak/clip counts, sample times, and selected waveform windows.
-  Its own observation branch outputs zero. The runtime's **separate enabled
-  master-to-AudioDestinationNode connection remains connected and is checked**.
-  Nonzero monitor samples alone are not the entire playback proof.
-* Live rat-710 waveform/gain against independent PCM parsed from the approved
-  original WAV. The comparison uses the approved `2.3e-5` float allowance and
-  `0.25 dB` gain allowance, not an output-derived baseline.
-* Source-cycle timing for all prepared gathering frame cues and the food
-  adaptation. The food waveform onset includes exactly the original
-  9393-sample leading content, never a second baked-offset delay.
-* An actual `OfflineAudioContext` render across a complete musical MIDI-end
-  loop, checking source samples on both channels and excluding the release
-  padding. The **full** run additionally waits for the real-time Autumn
-  source's natural MIDI-end stop and the actual scheduled Harmony start.
-* Stable-ID/frame deduplication, muted/rejected requests, source silence
-  2411's 74/100 weighting and real FIFO occupancy, capacity-50 overflow and
-  delay-2/third-processing-call behavior.
-* Jingle replacement both directions, ignored auxiliary values, the `-1`
-  no-op sentinel, source scroll-deferred Cook reward ordering, one-time
-  Learning completion and reconnect baselines.
-* Same-track region continuity, region change during a jingle, manual mode
-  retention, positional gain updates, planes/instances, source retention,
-  active-object sample loops, and stale/inactive emitter cleanup.
-* Rejected IDs/selectors/bytes/metadata/origins, real network faults,
-  no snapshot-driven retry storm, cold-load cancellation, injected decoder/
-  resume rejection/timeout, **real** context suspension/closure, and a real
-  browser-local silent output sink followed by real device-route recovery.
-* Idempotent disposal, zero remaining fixture/runtime graph connections, and
-  closed/cleaned owned browser and loopback server processes.
+The native runner reuses hash-locked source-owner artifacts/private cache.
+`--reuse`/`--cache` can select equivalent verified local copies. It does not
+fetch a game pack or launch a game/account session. The owned isolated JVM
+sets `-Duser.home` and `-Djava.io.tmpdir`; no personal preferences are read or
+written. See the native research README for exact method/data bindings.
 
-The FIFO saturation fixture uses explicit `sourceGain: 0.01` for 50 simultaneous
-voices. That tests FIFO/playback/cleanup without manufacturing an aggregate
-clip. It is **not** a calibrated source-session mixer setting or a claim that
-50 unity-gain overlapping signals cannot clip. No limiter/normalizer masks
-clipping in either production or tests.
+## Real browser evidence
 
-## Evidence and containment
+The browser executable is checked as Chrome for Testing153. Default:
+`~/.cache/ms-playwright/chromium-1243/chrome-linux-arm64/chrome`;
+`CLUBSCAPE_CHROME` may point to an equivalent already verified executable.
+The actual sandbox page must confirm namespace/PID/network/seccomp protection.
+`--no-sandbox` is never used and the default headless `--mute-audio` is removed.
 
-`results.json` is generated by the last run and records its scope, version,
-actual native/source timing, waveform/gain/clip measurements, expected injected
-failures, source-file identity checks and implementation input hashes.
-`validationScope` distinguishes `--quick` from the full real-time boundary
-test. A failure exits nonzero and retains compact diagnostic state. The full
-command must pass before using its full-playback result.
+**All fixture JS evaluation uses CDP `userGesture:false`.** Playwright's normal
+`evaluate` marks evaluation as a user gesture and would invalidate autoplay
+proof. Only actual mouse/keyboard input unlocks/resumes the context. Both
+programmatic unlock and synthetic DOM click are rejected beforehand.
 
-### Recorded full run (2026-09-15 UTC)
+The tests instrument native `AudioBufferSourceNode.start`/`ended` calls, context
+state/time/rate, and actual graph connections. A real AudioWorklet monitors
+post-gain/post-mute samples and both channels' clipping/peak counts. Its own
+branch outputs zero, but the production master remains **independently
+connected to the real AudioDestinationNode**, and that connection is checked.
+Neither a decoded buffer nor a nonzero monitor alone is treated as playback.
 
-The committed `results.json` records **24 passing browser checks** and unchanged
-implementation hashes. The independent typecheck and **11 unit checks** also
-passed. No source-timing/loading/cancellation error was hidden in the passing
-run's feedback list; the listed errors are the deliberately exercised failure
-and permission/policy cases.
+The suite exercises:
 
-| Measurement | Actual result |
-| --- | --- |
-| Native source starts / browser `ended` callbacks | 101 / 100; the final live source was destroyed by the deliberate real context-close failure |
-| All native starts while context running | Yes |
-| Rat reference WAV maximum absolute waveform error | `0.000009179115295410156` at unity channel gain; half-gain error `0.000004589557647705078` |
-| Gathering frame onset maximum error | `9.614512471311969 ms` against source-cycle sums, within 20 ms |
-| Approved eating start / processing calls | `78.36734693834302 ms` / 4 calls |
-| Eating waveform onset error, one baked offset only | `0.045351473492161176 ms` (one 22050 Hz sample) |
-| Actual complete Autumn → Harmony transition | `136.2314739229025 s` observed; scheduled boundary error `0 ms` |
-| Additional clipping in the observed stereo mix | 0 samples; measured peak `0.5325480103492737` |
-| Playable payloads requested / originals rechecked unchanged | 29 / 266 |
-| Active graph connections / queued sources after disposal | 0 / 0 |
+* Corrected original music0/62/144/76/2 and actual bow2693, rat710/713/711,
+  goblin469/472/471, smelt2725 and source gathering/eating cues.
+* Real native defaults255/127/127, nonlinear channel/master composition, live
+  original-WAV waveform/gain comparisons, and source fader master steps.
+* Native packet FIFO50, delay2 on processing call3, `-10` loading grace,
+  original silence2411's74/100 branch and its queue occupancy.
+* Stable IDs, server/frame callback correlation, both approved adaptations,
+  repeat snapshots, source modal-deferred Cook reward33, reconnect/reset,
+  last-accepted jingle replacement, ignored auxiliary values and `-1`.
+* A source scene projection with original object114's **1×2 footprint**, native
+  rectangle/retention gain, signed fades, native150ms visibility fade, wrong
+  plane/instance, old-node cleanup and no caller-supplied `sourceGain`.
+* Original morph34815/source varp491 preventing false base-sound3141 playback;
+  actual random object16433 ambience from its source groups/interval, outside
+  the packet FIFO.
+* Actual native MIDI fade steps and an `OfflineAudioContext` waveform render.
+  Every sample is checked. The exact discontinuity may select the immediately
+  adjacent gain step due to a single time-to-sample rounding; that error is
+  recorded independently in sample/time units, well within the existing20ms
+  event bound, rather than widening the PCM tolerance.
+* Full-length explicit playlist replay at source table44's229×600ms duration
+  (**137.4s**), distinct from the asset's exact native MIDI EOT. The file's
+  original release is retained; it is not made into a seamless buffer loop.
+  This is a declared source-duration projection, not a capture of the server's
+  exact per-account next-song submission time.
+* Unknown/mismatched IDs, noncommitted input, corrupt/truncated bytes, HTTP
+  failure, same-origin/hash checks, decoder failure, cancelled stale loads,
+  and no snapshot-driven large-file retry storm.
+* Real context suspension/closure and a real browser-local silent output sink,
+  plus explicitly labeled injected resume rejection/timeout, with real
+  gesture recovery and no duplicate resumed music.
+* Explicit guards for four unpublished Modern music groups and five
+  native-full-gain jingle representation failures. Missing source bytes or
+  extra clipping are never relabeled successful playback.
 
-The missing final `ended` callback is recorded honestly, not manufactured:
-Chrome's closed context no longer processes that source's event callback.
-Actual context closure, source/gain disconnection and zero retained connections
-were independently asserted. The full musical boundary also has an actual
-**natural** source-end callback, separate from this failure test.
+The saturation fixture uses an explicit0.01 gain for50 simultaneous packet
+effects. It proves queue/order/lifecycle behavior without manufacturing a mix
+clip; it does not claim50 adversarial unity-gain overlaps cannot clip.
 
-The runner binds a random **loopback-only** port and serves a fixed allowlist:
-the tested modules, fixture, three pinned metadata files and their original
-source payloads. Other browser network requests are blocked. It verifies all
-266 original playable payloads before and after the test and rejects a
-runtime/harness source-file change during a run. Node's built-in type stripping
-serves the TS modules; TypeScript 7's native compiler performs the independent
-typecheck.
+## Clipping, tolerances and qualification
 
-The browser uses a worktree-local disposable profile and caches under this
-directory's ignored `.run/`. Its short scratch/socket root is the existing
-owned `web/audio/` directory, avoiding Linux's 108-byte Unix-socket limit.
-Only newly created Chromium/Playwright scratch entries are removed afterward.
-No `/tmp` path, shell detachment, personal browser profile or source audio
-rewrite is used.
+The unchanged bounds are in `research/browser-audio-policy/bounds.json`:
+original/decoded source identity, decoder float allowance2.3e-5, gain0.25dB,
+known source-cycle timing20ms, zero **additional** clipping.
 
-These are audio-only **headless** browser tests, with Chromium's default
-headless mute flag explicitly removed. No screenshot fidelity is claimed;
-tests needing screenshots must follow the machine guide's headful Xvfb
-instructions instead. Output routing and rendered sample evidence do not prove
-physical host-speaker perception. Owner Mac Chrome, Edge, full app integration,
-native mixer-policy calibration and M1 acceptance remain separate, unexecuted
-gates. See `web/audio/README.md` for the exact app event adapter and remaining
-source-policy limitations.
+Native source full volume can itself clip. Independent original native128 and
+255 renders of all35 musical inputs distinguish this from new clipping.
+Jingle33 at native255, for example, has12 saturated source samples; the frozen
+128 render scaled to the corresponding gain has8 at a subset of those positions.
+The suite does not falsely assert an absolute-zero global clip counter after
+that legitimate native configuration. SFX stress and safe music transition
+checks compare their **additional** clip counts, and the five proven unsafe
+scaled-jingle cases are explicitly refused. No limiter or normalizer is used.
+The original native render, gain error, clip-mask difference and remaining
+representation requirements are retained in `native-pcm.json`.
+
+## Reproducibility and containment
+
+`results.json` records the last run's full/quick scope, versions, actual native
+starts/ends, waveform/gain/timing, observed failures, and tested implementation
+hashes. All266 original playable files are checked before and after every run.
+A code/harness change during a run invalidates its result. Missing callbacks
+after deliberately closing the actual context are recorded as missing, not
+fabricated; graph/resource cleanup is separately asserted.
+
+The server binds a random **loopback-only** port and serves only allowlisted
+modules, fixture, pinned metadata and original audio. Other browser network
+requests are blocked. The worktree-local profile/caches use ignored `.run/`;
+Chromium's short socket root is the existing owned `web/audio/` directory.
+Only this runner's newly created scratch entries are removed. No `/tmp`,
+global sound service, driver, sandbox setting, personal profile, process
+detachment or source-file rewrite is used. Browsers and server are closed in
+`finally`, and the final runtime graph has no retained connections.
+
+These are audio-only headless tests. Screenshots would require the machine
+guide's headful Xvfb setup. Physical host-speaker perception, real game/server
+journey, owner Mac/Edge, presentation fidelity acceptance and full M1 acceptance
+are still separate gates. The exact source publication/bridge needs are in
+`web/audio/README.md` and `research/browser-audio-policy/README.md`.

@@ -82,6 +82,18 @@ test("pending decode does not dispatch a placeholder, and cancellation removes o
   }
 });
 
+test("the original -10-cycle loading grace expires without late playback", () => {
+  const queue = new SourceQueue<number>();
+  queue.enqueue(2735, 0);
+  const expired: number[] = [];
+  for (let i = 0; i < 10; i++) queue.process(() => false, (value) => expired.push(value));
+  assert.equal(queue.size, 1);
+  assert.equal(expired.length, 0);
+  queue.process(() => false, (value) => expired.push(value));
+  assert.equal(queue.size, 0);
+  assert.deepEqual(expired, [2735]);
+});
+
 test("frame-1 eating after four cycles cannot inherit the additional packet-delay-2 convention", () => {
   const queue = new SourceQueue<number>();
   queue.enqueue(2393, 4 - 1);

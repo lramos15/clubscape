@@ -20,15 +20,21 @@ export class SourceQueue<T> {
     return true;
   }
 
-  process(dispatch: (value: T) => boolean): void {
+  process(dispatch: (value: T) => boolean, expired?: (value: T) => void): void {
     this.entries = this.entries.filter((entry) => !entry.dispatched);
     for (const entry of this.entries) {
       entry.delay--;
+      if (entry.delay < -10) {
+        entry.dispatched = true;
+        expired?.(entry.value);
+        continue;
+      }
       if (entry.delay < 0 && dispatch(entry.value)) {
         entry.dispatched = true;
         entry.delay = -100;
       }
     }
+    this.entries = this.entries.filter((entry) => entry.delay >= -10 || entry.delay === -100);
   }
 
   values(): readonly T[] { return this.entries.filter((e) => !e.dispatched).map((e) => e.value); }

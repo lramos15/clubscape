@@ -1,0 +1,1112 @@
+{
+  "schema_version": 1,
+  "runtime": "unmodified injected-client-1.12.38",
+  "game_build": 240,
+  "cache_id": 2695,
+  "result": "passed",
+  "cases": [
+    {
+      "case": "actual-native-client-ib-position-and-pcm",
+      "observed": [
+        {
+          "listener": [
+            1344,
+            1344
+          ],
+          "source_tile": [
+            10,
+            10
+          ],
+          "range_field": 5,
+          "retain_field": 0,
+          "distance_source_units": 0,
+          "retained_source_units": 0,
+          "expected_native_volume": 127,
+          "all_stereo_samples_integer_error": 0,
+          "native_pcm_sha256": "14298303f620e35e706c30f5ad90679bedee2f9bae65267e0499db72aaa7a254"
+        },
+        {
+          "listener": [
+            1408,
+            1344
+          ],
+          "source_tile": [
+            10,
+            10
+          ],
+          "range_field": 5,
+          "retain_field": 0,
+          "distance_source_units": 0,
+          "retained_source_units": 0,
+          "expected_native_volume": 127,
+          "all_stereo_samples_integer_error": 0,
+          "native_pcm_sha256": "14298303f620e35e706c30f5ad90679bedee2f9bae65267e0499db72aaa7a254"
+        },
+        {
+          "listener": [
+            1472,
+            1344
+          ],
+          "source_tile": [
+            10,
+            10
+          ],
+          "range_field": 5,
+          "retain_field": 0,
+          "distance_source_units": 0,
+          "retained_source_units": 0,
+          "expected_native_volume": 127,
+          "all_stereo_samples_integer_error": 0,
+          "native_pcm_sha256": "14298303f620e35e706c30f5ad90679bedee2f9bae65267e0499db72aaa7a254"
+        },
+        {
+          "listener": [
+            1536,
+            1472
+          ],
+          "source_tile": [
+            10,
+            10
+          ],
+          "range_field": 5,
+          "retain_field": 0,
+          "distance_source_units": 192,
+          "retained_source_units": 0,
+          "expected_native_volume": 89,
+          "all_stereo_samples_integer_error": 0,
+          "native_pcm_sha256": "56e4c77ecf00d465fd8b05b0e39ab83abb125510d46205ddeb20cc689da3350f"
+        },
+        {
+          "listener": [
+            1727,
+            1344
+          ],
+          "source_tile": [
+            10,
+            10
+          ],
+          "range_field": 5,
+          "retain_field": 0,
+          "distance_source_units": 255,
+          "retained_source_units": 0,
+          "expected_native_volume": 77,
+          "all_stereo_samples_integer_error": 0,
+          "native_pcm_sha256": "3905d1aee246814d64b9a3d1764bdc697f34755cf371ef603111ea841ac35804"
+        },
+        {
+          "listener": [
+            1856,
+            1344
+          ],
+          "source_tile": [
+            10,
+            10
+          ],
+          "range_field": 5,
+          "retain_field": 0,
+          "distance_source_units": 384,
+          "retained_source_units": 0,
+          "expected_native_volume": 51,
+          "all_stereo_samples_integer_error": 0,
+          "native_pcm_sha256": "b9ca7150c4f11daaf696bc56c9f20381871997b1fa2d23aa5b1dc567cdef3537"
+        },
+        {
+          "listener": [
+            1984,
+            1344
+          ],
+          "source_tile": [
+            10,
+            10
+          ],
+          "range_field": 5,
+          "retain_field": 0,
+          "distance_source_units": 512,
+          "retained_source_units": 0,
+          "expected_native_volume": 26,
+          "all_stereo_samples_integer_error": 0,
+          "native_pcm_sha256": "00c0d92087a632f04c25a0134b8054ce0956355715f9d13651f2246494e5abb3"
+        },
+        {
+          "listener": [
+            1344,
+            1344
+          ],
+          "source_tile": [
+            10,
+            10
+          ],
+          "range_field": 5,
+          "retain_field": 1,
+          "distance_source_units": 0,
+          "retained_source_units": 0,
+          "expected_native_volume": 127,
+          "all_stereo_samples_integer_error": 0,
+          "native_pcm_sha256": "14298303f620e35e706c30f5ad90679bedee2f9bae65267e0499db72aaa7a254"
+        },
+        {
+          "listener": [
+            1408,
+            1344
+          ],
+          "source_tile": [
+            10,
+            10
+          ],
+          "range_field": 5,
+          "retain_field": 1,
+          "distance_source_units": 0,
+          "retained_source_units": 0,
+          "expected_native_volume": 127,
+          "all_stereo_samples_integer_error": 0,
+          "native_pcm_sha256": "14298303f620e35e706c30f5ad90679bedee2f9bae65267e0499db72aaa7a254"
+        },
+        {
+          "listener": [
+            1472,
+            1344
+          ],
+          "source_tile": [
+            10,
+            10
+          ],
+          "range_field": 5,
+          "retain_field": 1,
+          "distance_source_units": 0,
+          "retained_source_units": 0,
+          "expected_native_volume": 127,
+          "all_stereo_samples_integer_error": 0,
+          "native_pcm_sha256": "14298303f620e35e706c30f5ad90679bedee2f9bae65267e0499db72aaa7a254"
+        },
+        {
+          "listener": [
+            1536,
+            1472
+          ],
+          "source_tile": [
+            10,
+            10
+          ],
+          "range_field": 5,
+          "retain_field": 1,
+          "distance_source_units": 192,
+          "retained_source_units": 0,
+          "expected_native_volume": 89,
+          "all_stereo_samples_integer_error": 0,
+          "native_pcm_sha256": "56e4c77ecf00d465fd8b05b0e39ab83abb125510d46205ddeb20cc689da3350f"
+        },
+        {
+          "listener": [
+            1727,
+            1344
+          ],
+          "source_tile": [
+            10,
+            10
+          ],
+          "range_field": 5,
+          "retain_field": 1,
+          "distance_source_units": 255,
+          "retained_source_units": 0,
+          "expected_native_volume": 77,
+          "all_stereo_samples_integer_error": 0,
+          "native_pcm_sha256": "3905d1aee246814d64b9a3d1764bdc697f34755cf371ef603111ea841ac35804"
+        },
+        {
+          "listener": [
+            1856,
+            1344
+          ],
+          "source_tile": [
+            10,
+            10
+          ],
+          "range_field": 5,
+          "retain_field": 1,
+          "distance_source_units": 384,
+          "retained_source_units": 0,
+          "expected_native_volume": 51,
+          "all_stereo_samples_integer_error": 0,
+          "native_pcm_sha256": "b9ca7150c4f11daaf696bc56c9f20381871997b1fa2d23aa5b1dc567cdef3537"
+        },
+        {
+          "listener": [
+            1984,
+            1344
+          ],
+          "source_tile": [
+            10,
+            10
+          ],
+          "range_field": 5,
+          "retain_field": 1,
+          "distance_source_units": 512,
+          "retained_source_units": 0,
+          "expected_native_volume": 26,
+          "all_stereo_samples_integer_error": 0,
+          "native_pcm_sha256": "00c0d92087a632f04c25a0134b8054ce0956355715f9d13651f2246494e5abb3"
+        },
+        {
+          "listener": [
+            1344,
+            1344
+          ],
+          "source_tile": [
+            10,
+            10
+          ],
+          "range_field": 5,
+          "retain_field": 3,
+          "distance_source_units": 0,
+          "retained_source_units": 256,
+          "expected_native_volume": 127,
+          "all_stereo_samples_integer_error": 0,
+          "native_pcm_sha256": "14298303f620e35e706c30f5ad90679bedee2f9bae65267e0499db72aaa7a254"
+        },
+        {
+          "listener": [
+            1408,
+            1344
+          ],
+          "source_tile": [
+            10,
+            10
+          ],
+          "range_field": 5,
+          "retain_field": 3,
+          "distance_source_units": 0,
+          "retained_source_units": 256,
+          "expected_native_volume": 127,
+          "all_stereo_samples_integer_error": 0,
+          "native_pcm_sha256": "14298303f620e35e706c30f5ad90679bedee2f9bae65267e0499db72aaa7a254"
+        },
+        {
+          "listener": [
+            1472,
+            1344
+          ],
+          "source_tile": [
+            10,
+            10
+          ],
+          "range_field": 5,
+          "retain_field": 3,
+          "distance_source_units": 0,
+          "retained_source_units": 256,
+          "expected_native_volume": 127,
+          "all_stereo_samples_integer_error": 0,
+          "native_pcm_sha256": "14298303f620e35e706c30f5ad90679bedee2f9bae65267e0499db72aaa7a254"
+        },
+        {
+          "listener": [
+            1536,
+            1472
+          ],
+          "source_tile": [
+            10,
+            10
+          ],
+          "range_field": 5,
+          "retain_field": 3,
+          "distance_source_units": 192,
+          "retained_source_units": 256,
+          "expected_native_volume": 127,
+          "all_stereo_samples_integer_error": 0,
+          "native_pcm_sha256": "14298303f620e35e706c30f5ad90679bedee2f9bae65267e0499db72aaa7a254"
+        },
+        {
+          "listener": [
+            1727,
+            1344
+          ],
+          "source_tile": [
+            10,
+            10
+          ],
+          "range_field": 5,
+          "retain_field": 3,
+          "distance_source_units": 255,
+          "retained_source_units": 256,
+          "expected_native_volume": 127,
+          "all_stereo_samples_integer_error": 0,
+          "native_pcm_sha256": "14298303f620e35e706c30f5ad90679bedee2f9bae65267e0499db72aaa7a254"
+        },
+        {
+          "listener": [
+            1856,
+            1344
+          ],
+          "source_tile": [
+            10,
+            10
+          ],
+          "range_field": 5,
+          "retain_field": 3,
+          "distance_source_units": 384,
+          "retained_source_units": 256,
+          "expected_native_volume": 85,
+          "all_stereo_samples_integer_error": 0,
+          "native_pcm_sha256": "905b1f078b665728cb3455cd73833b590b1ee93dec9147de301d8ad5ea64e1bf"
+        },
+        {
+          "listener": [
+            1984,
+            1344
+          ],
+          "source_tile": [
+            10,
+            10
+          ],
+          "range_field": 5,
+          "retain_field": 3,
+          "distance_source_units": 512,
+          "retained_source_units": 256,
+          "expected_native_volume": 43,
+          "all_stereo_samples_integer_error": 0,
+          "native_pcm_sha256": "c38e9f400b1aa4321e8f718e357140479da8837bcbdf55d10bf2a84f0d4b43c7"
+        },
+        {
+          "listener": [
+            1344,
+            1344
+          ],
+          "source_tile": [
+            10,
+            10
+          ],
+          "range_field": 5,
+          "retain_field": 7,
+          "distance_source_units": 0,
+          "retained_source_units": 768,
+          "expected_native_volume": 127,
+          "all_stereo_samples_integer_error": 0,
+          "native_pcm_sha256": "14298303f620e35e706c30f5ad90679bedee2f9bae65267e0499db72aaa7a254"
+        },
+        {
+          "listener": [
+            1408,
+            1344
+          ],
+          "source_tile": [
+            10,
+            10
+          ],
+          "range_field": 5,
+          "retain_field": 7,
+          "distance_source_units": 0,
+          "retained_source_units": 768,
+          "expected_native_volume": 127,
+          "all_stereo_samples_integer_error": 0,
+          "native_pcm_sha256": "14298303f620e35e706c30f5ad90679bedee2f9bae65267e0499db72aaa7a254"
+        },
+        {
+          "listener": [
+            1472,
+            1344
+          ],
+          "source_tile": [
+            10,
+            10
+          ],
+          "range_field": 5,
+          "retain_field": 7,
+          "distance_source_units": 0,
+          "retained_source_units": 768,
+          "expected_native_volume": 127,
+          "all_stereo_samples_integer_error": 0,
+          "native_pcm_sha256": "14298303f620e35e706c30f5ad90679bedee2f9bae65267e0499db72aaa7a254"
+        },
+        {
+          "listener": [
+            1536,
+            1472
+          ],
+          "source_tile": [
+            10,
+            10
+          ],
+          "range_field": 5,
+          "retain_field": 7,
+          "distance_source_units": 192,
+          "retained_source_units": 768,
+          "expected_native_volume": 127,
+          "all_stereo_samples_integer_error": 0,
+          "native_pcm_sha256": "14298303f620e35e706c30f5ad90679bedee2f9bae65267e0499db72aaa7a254"
+        },
+        {
+          "listener": [
+            1727,
+            1344
+          ],
+          "source_tile": [
+            10,
+            10
+          ],
+          "range_field": 5,
+          "retain_field": 7,
+          "distance_source_units": 255,
+          "retained_source_units": 768,
+          "expected_native_volume": 127,
+          "all_stereo_samples_integer_error": 0,
+          "native_pcm_sha256": "14298303f620e35e706c30f5ad90679bedee2f9bae65267e0499db72aaa7a254"
+        },
+        {
+          "listener": [
+            1856,
+            1344
+          ],
+          "source_tile": [
+            10,
+            10
+          ],
+          "range_field": 5,
+          "retain_field": 7,
+          "distance_source_units": 384,
+          "retained_source_units": 768,
+          "expected_native_volume": 127,
+          "all_stereo_samples_integer_error": 0,
+          "native_pcm_sha256": "14298303f620e35e706c30f5ad90679bedee2f9bae65267e0499db72aaa7a254"
+        },
+        {
+          "listener": [
+            1984,
+            1344
+          ],
+          "source_tile": [
+            10,
+            10
+          ],
+          "range_field": 5,
+          "retain_field": 7,
+          "distance_source_units": 512,
+          "retained_source_units": 768,
+          "expected_native_volume": 127,
+          "all_stereo_samples_integer_error": 0,
+          "native_pcm_sha256": "14298303f620e35e706c30f5ad90679bedee2f9bae65267e0499db72aaa7a254"
+        }
+      ]
+    },
+    {
+      "case": "native-ambient-rectangle-manhattan-minus64",
+      "observed": [
+        {
+          "listener": [
+            1280,
+            1280
+          ],
+          "bounds": [
+            1280,
+            1280,
+            1536,
+            1536
+          ],
+          "native_distance": 0,
+          "independent_expected": 0
+        },
+        {
+          "listener": [
+            1344,
+            1344
+          ],
+          "bounds": [
+            1280,
+            1280,
+            1536,
+            1536
+          ],
+          "native_distance": 0,
+          "independent_expected": 0
+        },
+        {
+          "listener": [
+            1536,
+            1536
+          ],
+          "bounds": [
+            1280,
+            1280,
+            1536,
+            1536
+          ],
+          "native_distance": 0,
+          "independent_expected": 0
+        },
+        {
+          "listener": [
+            1600,
+            1600
+          ],
+          "bounds": [
+            1280,
+            1280,
+            1536,
+            1536
+          ],
+          "native_distance": 64,
+          "independent_expected": 64
+        },
+        {
+          "listener": [
+            1664,
+            1664
+          ],
+          "bounds": [
+            1280,
+            1280,
+            1536,
+            1536
+          ],
+          "native_distance": 192,
+          "independent_expected": 192
+        },
+        {
+          "listener": [
+            1024,
+            1024
+          ],
+          "bounds": [
+            1280,
+            1280,
+            1536,
+            1536
+          ],
+          "native_distance": 448,
+          "independent_expected": 448
+        },
+        {
+          "listener": [
+            1700,
+            1400
+          ],
+          "bounds": [
+            1280,
+            1280,
+            1536,
+            1536
+          ],
+          "native_distance": 100,
+          "independent_expected": 100
+        }
+      ]
+    },
+    {
+      "case": "native-rq-world-entity-visibility",
+      "observed": [
+        {
+          "listener_owner": 0,
+          "emitter_owner": 0,
+          "cross_owner_flag": false,
+          "native_audible": true
+        },
+        {
+          "listener_owner": 0,
+          "emitter_owner": 0,
+          "cross_owner_flag": true,
+          "native_audible": true
+        },
+        {
+          "listener_owner": 0,
+          "emitter_owner": 1,
+          "cross_owner_flag": false,
+          "native_audible": false
+        },
+        {
+          "listener_owner": 0,
+          "emitter_owner": 1,
+          "cross_owner_flag": true,
+          "native_audible": false
+        },
+        {
+          "listener_owner": 0,
+          "emitter_owner": 2,
+          "cross_owner_flag": false,
+          "native_audible": false
+        },
+        {
+          "listener_owner": 0,
+          "emitter_owner": 2,
+          "cross_owner_flag": true,
+          "native_audible": false
+        },
+        {
+          "listener_owner": 1,
+          "emitter_owner": 0,
+          "cross_owner_flag": false,
+          "native_audible": true
+        },
+        {
+          "listener_owner": 1,
+          "emitter_owner": 0,
+          "cross_owner_flag": true,
+          "native_audible": true
+        },
+        {
+          "listener_owner": 1,
+          "emitter_owner": 1,
+          "cross_owner_flag": false,
+          "native_audible": true
+        },
+        {
+          "listener_owner": 1,
+          "emitter_owner": 1,
+          "cross_owner_flag": true,
+          "native_audible": true
+        },
+        {
+          "listener_owner": 1,
+          "emitter_owner": 2,
+          "cross_owner_flag": false,
+          "native_audible": false
+        },
+        {
+          "listener_owner": 1,
+          "emitter_owner": 2,
+          "cross_owner_flag": true,
+          "native_audible": true
+        },
+        {
+          "listener_owner": 2,
+          "emitter_owner": 0,
+          "cross_owner_flag": false,
+          "native_audible": true
+        },
+        {
+          "listener_owner": 2,
+          "emitter_owner": 0,
+          "cross_owner_flag": true,
+          "native_audible": true
+        },
+        {
+          "listener_owner": 2,
+          "emitter_owner": 1,
+          "cross_owner_flag": false,
+          "native_audible": false
+        },
+        {
+          "listener_owner": 2,
+          "emitter_owner": 1,
+          "cross_owner_flag": true,
+          "native_audible": true
+        },
+        {
+          "listener_owner": 2,
+          "emitter_owner": 2,
+          "cross_owner_flag": false,
+          "native_audible": true
+        },
+        {
+          "listener_owner": 2,
+          "emitter_owner": 2,
+          "cross_owner_flag": true,
+          "native_audible": true
+        }
+      ]
+    },
+    {
+      "case": "actual-original-cooking-range-emitter",
+      "observed": [
+        {
+          "listener_x": 1344,
+          "source_id": 2065,
+          "plane": 0,
+          "native_radius": 384,
+          "native_retain": 0,
+          "continuous_stream": true,
+          "initial_stream_volume": 127,
+          "independent_expected": 127
+        },
+        {
+          "listener_x": 1472,
+          "source_id": 2065,
+          "plane": 0,
+          "native_radius": 384,
+          "native_retain": 0,
+          "continuous_stream": true,
+          "initial_stream_volume": 127,
+          "independent_expected": 127
+        },
+        {
+          "listener_x": 1536,
+          "source_id": 2065,
+          "plane": 0,
+          "native_radius": 384,
+          "native_retain": 0,
+          "continuous_stream": true,
+          "initial_stream_volume": 106,
+          "independent_expected": 106
+        },
+        {
+          "listener_x": 1664,
+          "source_id": 2065,
+          "plane": 0,
+          "native_radius": 384,
+          "native_retain": 0,
+          "continuous_stream": true,
+          "initial_stream_volume": 64,
+          "independent_expected": 64
+        },
+        {
+          "listener_x": 1792,
+          "source_id": 2065,
+          "plane": 0,
+          "native_radius": 384,
+          "native_retain": 0,
+          "continuous_stream": true,
+          "initial_stream_volume": 22,
+          "independent_expected": 22
+        },
+        {
+          "listener_x": 1856,
+          "source_id": 2065,
+          "plane": 0,
+          "native_radius": 384,
+          "native_retain": 0,
+          "continuous_stream": false,
+          "initial_stream_volume": 0,
+          "independent_expected": 0
+        },
+        {
+          "listener_x": 1920,
+          "source_id": 2065,
+          "plane": 0,
+          "native_radius": 384,
+          "native_retain": 0,
+          "continuous_stream": false,
+          "initial_stream_volume": 0,
+          "independent_expected": 0
+        }
+      ]
+    },
+    {
+      "case": "actual-dz-ambient-plane-visibility",
+      "observed": [
+        {
+          "source_plane": 0,
+          "listener_plane": 0,
+          "visibility_id": 0,
+          "native_visible": true
+        },
+        {
+          "source_plane": 0,
+          "listener_plane": 1,
+          "visibility_id": 0,
+          "native_visible": false
+        },
+        {
+          "source_plane": 0,
+          "listener_plane": 2,
+          "visibility_id": 0,
+          "native_visible": false
+        },
+        {
+          "source_plane": 0,
+          "listener_plane": 3,
+          "visibility_id": 0,
+          "native_visible": false
+        },
+        {
+          "source_plane": 0,
+          "listener_plane": 0,
+          "visibility_id": 1,
+          "native_visible": true
+        },
+        {
+          "source_plane": 0,
+          "listener_plane": 1,
+          "visibility_id": 1,
+          "native_visible": false
+        },
+        {
+          "source_plane": 0,
+          "listener_plane": 2,
+          "visibility_id": 1,
+          "native_visible": false
+        },
+        {
+          "source_plane": 0,
+          "listener_plane": 3,
+          "visibility_id": 1,
+          "native_visible": false
+        },
+        {
+          "source_plane": 0,
+          "listener_plane": 0,
+          "visibility_id": 2,
+          "native_visible": true
+        },
+        {
+          "source_plane": 0,
+          "listener_plane": 1,
+          "visibility_id": 2,
+          "native_visible": false
+        },
+        {
+          "source_plane": 0,
+          "listener_plane": 2,
+          "visibility_id": 2,
+          "native_visible": false
+        },
+        {
+          "source_plane": 0,
+          "listener_plane": 3,
+          "visibility_id": 2,
+          "native_visible": false
+        }
+      ]
+    },
+    {
+      "case": "native-wc-signed-fade-and-volume-rounding",
+      "observed": [
+        {
+          "start": 127,
+          "target": 0,
+          "base": 127,
+          "configured_ms": 300,
+          "native_duration_ms": 300,
+          "elapsed_ms": [
+            0,
+            1,
+            20,
+            75,
+            150,
+            225,
+            300,
+            400
+          ],
+          "native_volumes": [
+            127,
+            126,
+            118,
+            95,
+            63,
+            31,
+            0,
+            0
+          ]
+        },
+        {
+          "start": 127,
+          "target": 63,
+          "base": 127,
+          "configured_ms": 300,
+          "native_duration_ms": 151,
+          "elapsed_ms": [
+            0,
+            1,
+            20,
+            75,
+            150,
+            225,
+            300,
+            400
+          ],
+          "native_volumes": [
+            127,
+            126,
+            118,
+            95,
+            63,
+            63,
+            63,
+            63
+          ]
+        },
+        {
+          "start": 63,
+          "target": 127,
+          "base": 127,
+          "configured_ms": 300,
+          "native_duration_ms": -151,
+          "elapsed_ms": [
+            0,
+            1,
+            20,
+            75,
+            150,
+            225,
+            300,
+            400
+          ],
+          "native_volumes": [
+            127,
+            127,
+            127,
+            127,
+            127,
+            127,
+            127,
+            127
+          ]
+        },
+        {
+          "start": 0,
+          "target": 127,
+          "base": 127,
+          "configured_ms": 300,
+          "native_duration_ms": -300,
+          "elapsed_ms": [
+            0,
+            1,
+            20,
+            75,
+            150,
+            225,
+            300,
+            400
+          ],
+          "native_volumes": [
+            127,
+            127,
+            127,
+            127,
+            127,
+            127,
+            127,
+            127
+          ]
+        },
+        {
+          "start": 127,
+          "target": 0,
+          "base": 127,
+          "configured_ms": 150,
+          "native_duration_ms": 150,
+          "elapsed_ms": [
+            0,
+            1,
+            20,
+            75,
+            150,
+            225,
+            300,
+            400
+          ],
+          "native_volumes": [
+            127,
+            126,
+            110,
+            63,
+            0,
+            0,
+            0,
+            0
+          ]
+        }
+      ]
+    }
+  ],
+  "external_account": false,
+  "personal_preferences_read": false,
+  "hardware_audio_opened": false,
+  "source_pack_modified": false,
+  "acceptance": false,
+  "input_artifacts": [
+    {
+      "name": "cache-1.12.39-SNAPSHOT.jar",
+      "size_bytes": 444766,
+      "sha256": "8056039bee74da629e596896048645085f7753159a064da51c24e9bd99f13e8e"
+    },
+    {
+      "name": "client-1.12.38.jar",
+      "size_bytes": 5261401,
+      "sha256": "6dcd0da2fdbf48d35c3d8f666d801d05afa964030c553e806eb173dba97323d5"
+    },
+    {
+      "name": "commons-compress-1.10.jar",
+      "size_bytes": 409475,
+      "sha256": "807c95293e41e8159477442077da6d0962a7f486d4b980be61f60a8db9cb290f"
+    },
+    {
+      "name": "gson-2.8.5.jar",
+      "size_bytes": 241622,
+      "sha256": "233a0149fc365c9f6edbd683cfe266b19bdc773be98eabdaf6b3c924b48e7d81"
+    },
+    {
+      "name": "guava-23.2-jre.jar",
+      "size_bytes": 2649860,
+      "sha256": "5be9a7d05ba0ccd74708bc8018ae412255f85843c0b92302e9b9befa6ed52564"
+    },
+    {
+      "name": "injected-client-1.12.38.jar",
+      "size_bytes": 4235748,
+      "sha256": "7fdedf1194261cc5b99faa35e0d2b4e45b6d56665402ccbde7f3aa6207c3f947"
+    },
+    {
+      "name": "jna-5.9.0.jar",
+      "size_bytes": 1729586,
+      "sha256": "eafcc780b445434d3c5ae7fa2fb6665de1a7560d537d2c408a8e80cd14d27161"
+    },
+    {
+      "name": "json-20090211.jar",
+      "size_bytes": 45944,
+      "sha256": "055be110a570f9cda3eba8d70a006ff46c77a048bc67868524879211c48b330a"
+    },
+    {
+      "name": "runelite-api-1.12.38-runtime.jar",
+      "size_bytes": 272846,
+      "sha256": "6d50aa843c070120a5093c5ead29d72e92742074346241e0359a133dad008852"
+    },
+    {
+      "name": "slf4j-api-1.7.25.jar",
+      "size_bytes": 41203,
+      "sha256": "18c4a0095d5c1da6b817592e767bb23d29dd2f560ad74df75ff3961dbde25b79"
+    },
+    {
+      "name": "slf4j-simple-1.7.25.jar",
+      "size_bytes": 15257,
+      "sha256": "0966e86fffa5be52d3d9e7b89dd674d98a03eed0a454fbaf7c1bd9493bd9d874"
+    }
+  ],
+  "probe_sources": [
+    {
+      "path": "tools/audio-import/SourceAudio.java",
+      "size_bytes": 18150,
+      "sha256": "1ece6e31e04c5ea51ff899f483dbb57a08ee1565ac283c59d29adeaf26f59555"
+    },
+    {
+      "path": "tools/audio-import/BindingCache.java",
+      "size_bytes": 6484,
+      "sha256": "4730fe7ec8cc16e91a6f40f6cc8e587fb42b25dd92ef853a7619f104a59cae43"
+    },
+    {
+      "path": "tools/audio-import/BindingExtract.java",
+      "size_bytes": 11128,
+      "sha256": "53ac21f8928b3edaec00815a8a64bfee7fb60c511a24d0b81735fb5e5d9626ec"
+    },
+    {
+      "path": "tools/source-capture/FixturePreferenceWrites.java",
+      "size_bytes": 905,
+      "sha256": "7ca846b781906131e57594db73c57db0f87d17bfaf0fa9f06f200ec87135391a"
+    },
+    {
+      "path": "tools/browser-audio-tests/native/NativeArchive.java",
+      "size_bytes": 2115,
+      "sha256": "48ecaa0e9c12387dab5724029759d1394a5782830e5c91e01f7bcde9a3f364a4"
+    },
+    {
+      "path": "tools/browser-audio-tests/native/NativeScriptPolicy.java",
+      "size_bytes": 3836,
+      "sha256": "84ccc3ffc7918910b153c751ed98bdc442bfb69caf700cc03f096f6123552bc5"
+    },
+    {
+      "path": "tools/browser-audio-tests/native/NativeObjects.java",
+      "size_bytes": 4566,
+      "sha256": "bd3e4fd050ead78d14e4c10d5b55796d2e20032db2006f74eb4ed8cc279e1642"
+    },
+    {
+      "path": "tools/browser-audio-tests/native/NativeMusicPcm.java",
+      "size_bytes": 4753,
+      "sha256": "8dd50e45d66657b66cdc055977d6efe73926365db0ef71ce943f1164c8eec927"
+    },
+    {
+      "path": "tools/browser-audio-tests/native/NativePolicyProbe.java",
+      "size_bytes": 26884,
+      "sha256": "448c059f0bf7792f1d3fc69f428a5845a0ddcf74f35c28276b6300a4f19e6bf6"
+    }
+  ],
+  "runner": {
+    "path": "tools/browser-audio-tests/native/probe.py",
+    "size_bytes": 4776,
+    "sha256": "1ad275d5c98d639c5c67f05202ff7e4f6f74ba8efab9a01f70663944668940d9"
+  }
+}

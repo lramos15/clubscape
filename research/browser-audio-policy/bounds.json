@@ -1,0 +1,17 @@
+{
+  "schema_version": 1,
+  "scope": "Native policy calibration, established before evaluating changed browser policy output",
+  "frozen_reference_pack_sha256": "b62e19704e17d3d3e4e819f803ef49ba7cc54034ae407184b423427c65d9674d",
+  "source_artifact_hash_difference": 0,
+  "native_integer_policy_difference": 0,
+  "native_float_policy_comparison": "Match the source operation order and Java float32 conversions, not a fitted falloff or volume curve",
+  "browser_source_pcm_float_absolute_error_max": 0.000023,
+  "gain_error_db_max": 0.25,
+  "known_frame_event_onset_error_ms_max": 20,
+  "channel_transition_overlap_error_ms_max": 20,
+  "additional_clip_samples_relative_to_same_native_mixer_configuration": 0,
+  "duplicate_playing_sources": 0,
+  "source_packet_and_gameplay_authority": "No client-side invention of packet IDs, committed outcomes, server music-region selections, instance transforms, or source morph variables",
+  "native_quantization": "Record original pre-device and device-quantized values separately. Source clipping is not silently relabeled an extra browser clip or removed by normalization.",
+  "acceptance": false
+}

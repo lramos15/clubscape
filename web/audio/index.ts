@@ -10,6 +10,21 @@ import {
   SOURCE_RATE, sourceRandomBelow, sourceRoll, validTile,
 } from "./source.ts";
 import type { AssetKind, FrameCue, SourceAsset, SourceCatalog } from "./source.ts";
+import {
+  sourceAudioDefaults, sourceMixerToAssetGain, sourceSliderToMixer, sourcePacketSpatial,
+  sourceAmbientSpatial, sourceObjectBounds, sourceAmbientVisible, sourceAmbientFadeDuration,
+  sourceAmbientFadeVolume, sourceMusicFade,
+} from "./native-policy.ts";
+import {
+  sourceObjectDefinition, resolveSourceObject, sourceMusicRegion, sourceMusicDurationSeconds,
+  SOURCE_BACKGROUND_TRANSITION, SOURCE_TITLE_TRANSITION, SOURCE_JINGLE_TRANSITION,
+  SOURCE_MIX_REPRESENTATION_NEEDS,
+  SOURCE_UNPUBLISHED_M1_MUSIC,
+} from "./native-scene.ts";
+import type { SourceAudioScene, SourceMusicTransition, SourceMusicSelector } from "./native-scene.ts";
+
+export * from "./native-policy.ts";
+export * from "./native-scene.ts";
 
 export { AudioFailure } from "./errors.ts";
 export { AUDIO_INPUTS } from "./source.ts";
@@ -34,6 +49,8 @@ export interface AudioSnapshot {
   readonly disposed: boolean;
   readonly outputEnabled: boolean;
   readonly volumes: Readonly<Record<Channel, number>>;
+  readonly nativeMixer: Readonly<Record<Channel, number>>;
+  readonly masterPercent: number;
   readonly queueSize: number;
   readonly background: Readonly<{ groups: readonly number[]; cursor: number; mode: string; exhausted: boolean; failed: boolean }>;
   readonly voices: readonly Readonly<{
@@ -57,6 +74,10 @@ interface Spatial {
   retain: number;
   distance: number;
   listenerStamp: string;
+  nativeComputed: boolean;
+  ambient: boolean;
+  objectId: number | null;
+  orientation: number;
 }
 interface Effect {
   eventId: string;
@@ -67,6 +88,7 @@ interface Effect {
   gain: number;
   repeats: number;
   ambient: boolean;
+  ambientRandom: boolean;
   spatial: Spatial | null;
   buffer: AudioBuffer | null;
   error: AudioFailure | null;
@@ -89,14 +111,21 @@ interface Voice {
   level: number;
   spatial: Spatial | null;
   ambient: boolean;
+  ambientRandom: boolean;
   musicToken: number;
   stopped: boolean;
+  calibrationGain: number;
+  ambientFade: { from: number; target: number; start: number; durationMs: number; stop: boolean } | null;
+  retiring: boolean;
+  musicFader: { direction: "in" | "out"; cycles: number; current: number; nextAt: number; retire: boolean } | null;
 }
 interface MusicPlan {
   groups: readonly number[];
   cursor: number;
   mode: "once" | "single" | "playlist";
   regionBound: boolean;
+  transition?: SourceMusicTransition;
+  scopeGroups?: readonly number[];
 }
 
 const runtimes = new WeakMap<AudioHandle, Runtime>();
@@ -129,10 +158,21 @@ class Runtime implements AudioHandle {
   private readonly buses: Record<Channel, GainNode>;
   private readonly voices = new Map<number, Voice>();
   private readonly queue = new SourceQueue<Effect>();
+  private readonly ambientPending = new Map<string, Effect>();
   private readonly traces: AudioTrace[] = [];
   private readonly policyLimits = new Set<string>();
   private readonly observers = new Set<(state: AudioSnapshot) => void>();
   private readonly volumes: Record<Channel, number> = { music: 1, effects: 1, area: 1 };
+  private readonly nativeMixer: Record<Channel, number> = { ...sourceAudioDefaults().mixer };
+  private masterPercent = 100;
+  private sourceScene: SourceAudioScene | null = null;
+  private sceneSequence = 0;
+  private readonly sourceSceneErrors = new Set<string>();
+  private readonly ambientIntervals = new Map<string, number>();
+  private musicSelector: SourceMusicSelector | null = null;
+  private sourceRequestDue: { plan: MusicPlan; group: number; token: number; at: number } | null = null;
+  private nativeAreaMode: "modern" | "classic" = "modern";
+  private musicAreaName: string | null = null;
   private listener: Listener | null = null;
   private playerId: string | null = null;
   private revision: bigint | null = null;
@@ -194,6 +234,7 @@ class Runtime implements AudioHandle {
       connected: this.connected, disposed: this.disposed,
       outputEnabled: !this.disposed && !this.outputDisabled && this.context.state !== "closed",
       volumes: Object.freeze({ ...this.volumes }), queueSize: this.queue.size,
+      nativeMixer: Object.freeze({ ...this.nativeMixer }), masterPercent: this.masterPercent,
       background: Object.freeze({
         groups: Object.freeze([...this.music.groups]), cursor: this.music.cursor,
         mode: this.music.mode, exhausted: this.musicExhausted, failed: this.musicFailed,
@@ -201,7 +242,8 @@ class Runtime implements AudioHandle {
       voices: Object.freeze(Array.from(this.voices.values(), (voice) => Object.freeze({
         id: voice.id, sourceId: voice.asset.sourceId, kind: voice.asset.kind,
         channel: voice.channel, eventId: voice.eventId, when: voice.when,
-        gain: voice.level * voice.asset.inputGain, loop: voice.source.loop, loopEnd: voice.source.loopEnd,
+        gain: voice.gain.gain.value,
+        loop: voice.source.loop, loopEnd: voice.source.loopEnd,
       }))),
       cache: Object.freeze(this.cache.state), policyLimits: Object.freeze([...this.policyLimits]),
       traces: Object.freeze([...this.traces]),
@@ -308,22 +350,25 @@ class Runtime implements AudioHandle {
         if (this.baseline) {
           for (const quest of world.player.quests) if (quest.completed) this.completed.add(quest.id);
         }
-        if (previous?.region !== this.listener.region || previous?.instance !== this.listener.instance ||
+        const musicRegion = sourceMusicRegion(this.listener.tile, this.nativeAreaMode);
+        const changedMusicArea = (musicRegion?.name ?? null) !== this.musicAreaName;
+        this.musicAreaName = musicRegion?.name ?? null;
+        if (changedMusicArea || previous?.region !== this.listener.region || previous?.instance !== this.listener.instance ||
           previous.id !== this.listener.id) {
           this.epoch++;
           this.queue.clear();
           this.prepared.clear();
           this.stopWhere((voice) => voice.asset.kind === "sfx", "region_changed");
           if (this.music.regionBound) {
-            const group = regionalTrack(this.listener.region);
+            const group = musicRegion?.defaultGroup ?? regionalTrack(this.listener.region);
             if (group === null || group !== this.music.groups[this.music.cursor]) {
               this.musicToken++;
               this.musicPending = null;
               this.musicExhausted = false;
               this.musicFailed = false;
               this.nextBackground = null;
-              this.stopWhere((voice) => voice.asset.kind === "music", "region_music_changed");
-              this.music = { groups: group === null ? [] : [group], cursor: 0, mode: "once", regionBound: true };
+              this.music = { groups: group === null ? [] : [group], cursor: 0, mode: "once", regionBound: true,
+                transition: SOURCE_BACKGROUND_TRANSITION, scopeGroups: musicRegion?.groups ?? [] };
             }
             this.trace("region", { region: this.listener.region, group });
             if (group === null && !inputs.some((event) => event.kind === "music")) {
@@ -368,26 +413,149 @@ class Runtime implements AudioHandle {
       requireAudio(["music", "effects", "area"].includes(channel) && unit(value),
         "AUDIO_VOLUME", "Audio volume must be a finite channel gain between 0 and 1.");
       this.volumes[channel] = value;
-      this.buses[channel].gain.setValueAtTime(value, this.context.currentTime);
-      this.trace("volume", { channel, value });
-      if (value === 0) {
-        if (channel === "music") this.stopMusical();
-        else {
-          this.queue.remove((effect) => effect.channel === channel);
-          this.stopWhere((voice) => voice.channel === channel, "channel_muted");
+      this.nativeMixer[channel] = sourceSliderToMixer(channel, Math.round(value * 100), this.masterPercent);
+      this.trace("volume", { channel, value, nativeMixer: this.nativeMixer[channel] });
+      if (channel === "music") {
+        for (const voice of this.voices.values()) if (voice.channel === "music") {
+          if (this.needsNativeGainInput(voice.asset, this.nativeMixer.music)) {
+            this.stopVoice(voice, "native_gain_representation_required");
+            if (voice.asset.kind === "jingle") {
+              this.jingle = null;
+              this.jinglePending = null;
+              this.musicalToken++;
+            }
+            this.notifyError(new AudioFailure("AUDIO_NATIVE_GAIN_INPUT_REQUIRED",
+              `Original ${voice.asset.kind} ${voice.asset.sourceId} cannot be raised to this native level using the frozen128 representation without extra clipping.`,
+              true, { sourceId: voice.asset.sourceId, nativeMixer: this.nativeMixer.music }));
+            continue;
+          }
+          voice.calibrationGain = sourceMixerToAssetGain(this.nativeMixer.music);
+          if (!voice.musicFader) voice.gain.gain.setValueAtTime(voice.level * voice.asset.inputGain * voice.calibrationGain, this.context.currentTime);
         }
+      }
+      if (this.nativeMixer[channel] === 0) {
+        if (channel === "music") this.stopMusical();
+        // Original ordinary effects sample the native mixer at dispatch; their
+        // already-playing streams are not rewritten by a preference change.
+        else if (channel === "area") this.reconcileSpatial();
         this.cancelUnusedLoads();
       } else if (channel === "music") {
         this.musicFailed = false;
         this.backgroundPreparation = null;
         void this.ensureMusic().catch((error) => this.notifyError(failure(error, "AUDIO_PLAYBACK", "Cannot restore music")));
       }
+
       this.publish();
     } catch (error) {
       this.notifyError(failure(error, "AUDIO_VOLUME", "Cannot change audio volume"));
     }
   }
 
+      sourceMaster(percent: number): void {
+        requireAudio(integer(percent, 0, 100), "AUDIO_SOURCE_VOLUME", "Invalid original master slider percentage.");
+        this.masterPercent = percent;
+        for (const channel of ["music", "effects", "area"] as const) this.volume(channel, this.volumes[channel]);
+      }
+
+      sourceMusicDriver(selector: SourceMusicSelector | null, areaMode: "modern" | "classic"): void {
+        this.musicSelector = selector;
+        this.nativeAreaMode = areaMode;
+        this.musicAreaName = null;
+        if (selector && this.musicExhausted && this.music.groups[this.music.cursor] !== undefined) {
+          void this.requestSourceNext(this.music, this.music.groups[this.music.cursor]!, this.musicToken);
+        }
+      }
+
+      setSourceScene(scene: SourceAudioScene | null): void {
+        if (scene === null) {
+          this.sourceScene = null;
+          this.ambientPending.clear();
+          this.ambientIntervals.clear();
+          this.stopWhere((voice) => voice.ambient, "source_scene_removed");
+          this.cancelUnusedLoads();
+          return;
+        }
+        requireAudio(integer(scene.plane, 0, 3) && Number.isFinite(scene.listener.x) &&
+          Number.isFinite(scene.listener.y) && scene.emitters.length <= 10_000,
+        "AUDIO_SOURCE_SCENE", "Invalid original audio scene projection.");
+        const emitters = scene.emitters.map((entry) => {
+          requireAudio(stableId(entry.id) && validTile(entry.tile) && integer(entry.orientation, 0, 3) &&
+            integer(entry.objectId, 0, 1_000_000) && typeof entry.present === "boolean",
+          "AUDIO_SOURCE_SCENE", "Invalid source object emitter.");
+          return Object.freeze({ ...entry, tile: Object.freeze({ ...entry.tile }), owner: entry.owner ? Object.freeze({ ...entry.owner }) : null });
+        });
+        this.sourceScene = Object.freeze({
+          ...scene, listener: Object.freeze({ ...scene.listener }),
+          owner: scene.owner ? Object.freeze({ ...scene.owner }) : null,
+          varps: new Map(scene.varps), emitters: Object.freeze(emitters),
+        });
+        const presentIds = new Set(emitters.filter((entry) => entry.present).map((entry) => entry.id));
+        for (const id of this.ambientIntervals.keys()) if (!presentIds.has(id)) this.ambientIntervals.delete(id);
+        for (const [key, pending] of this.ambientPending) {
+          if (!presentIds.has(pending.spatial?.actorId ?? "")) this.ambientPending.delete(key);
+        }
+        this.sourceSceneErrors.clear();
+        this.reconcileSpatial();
+        this.reconcileSourceEmitters();
+      }
+
+      private reconcileSourceEmitters(advanceRandom = false): void {
+        if (!this.sourceScene || !this.listener || !this.canPlay() || this.muted || this.nativeMixer.area === 0) return;
+        for (const emitter of this.sourceScene.emitters) {
+          try {
+          if (!emitter.present || emitter.instance !== this.listener.instance) continue;
+          const definition = resolveSourceObject(emitter.objectId, this.sourceScene.varps);
+          if (!definition?.sound) continue;
+          if (!sourceAmbientVisible(this.sourceScene.plane, emitter.tile.plane, this.sourceScene.owner,
+            emitter.owner, definition.sound.visibility)) continue;
+          const mix = sourceAmbientSpatial(this.sourceScene.listener,
+            sourceObjectBounds(emitter.tile, definition.sizeX, definition.sizeY, emitter.orientation),
+            definition.sound.range, definition.sound.retain, this.nativeMixer.area);
+          if (!mix.audible) continue;
+          const key = `ambient/${emitter.id}/${definition.sound.id}`;
+          if (definition.sound.id >= 0 && !this.ambientPending.has(key) &&
+            !Array.from(this.voices.values()).some((v) => v.ambient && !v.ambientRandom && v.spatial?.actorId === emitter.id)) {
+          const event: AudioEvent = {
+            id: `source-scene/${++this.sceneSequence}`, kind: "sound", sourceId: definition.sound.id,
+            assetId: null, actorId: emitter.id, tile: emitter.tile, sourceCycle: null,
+            payload: { committed: true, ambient: true, active: true, objectId: emitter.objectId,
+              orientation: emitter.orientation, repeatCount: 1, delayCycles: 0 },
+          };
+          this.enqueue(event, this.asset("sfx", definition.sound.id, null), key, 0, 1,
+            definition.sound.range, definition.sound.retain);
+          }
+          const random = definition.random;
+          if (random?.ids?.length) {
+            if (!this.ambientIntervals.has(emitter.id)) this.ambientIntervals.set(emitter.id,
+              random.minCycles + (random.maxCycles > random.minCycles ? sourceRandomBelow(random.maxCycles - random.minCycles) : 0));
+            if (!advanceRandom) continue;
+            const randomKey = `ambient-random/${emitter.id}`;
+            if (this.ambientPending.has(randomKey) || Array.from(this.voices.values()).some((v) => v.key === randomKey)) continue;
+            const remaining = this.ambientIntervals.get(emitter.id)! - 1;
+            this.ambientIntervals.set(emitter.id, remaining);
+            if (remaining <= 0) {
+              const id = random.ids[sourceRandomBelow(random.ids.length)]!;
+              const event: AudioEvent = {
+                id: `source-scene-random/${++this.sceneSequence}`, kind: "sound", sourceId: id,
+                assetId: null, actorId: emitter.id, tile: emitter.tile, sourceCycle: null,
+                payload: { committed: true, ambient: true, ambientRandom: true, active: true,
+                  objectId: emitter.objectId, orientation: emitter.orientation, repeatCount: 1, delayCycles: 0 },
+              };
+              this.enqueue(event, this.asset("sfx", id, null), randomKey, 0, 1, definition.sound.range, definition.sound.retain);
+              this.ambientIntervals.set(emitter.id, random.minCycles +
+                (random.maxCycles > random.minCycles ? sourceRandomBelow(random.maxCycles - random.minCycles) : 0));
+            }
+          }
+          } catch (error) {
+            const problem = failure(error, "AUDIO_SOURCE_SCENE", "Cannot resolve source emitter");
+            const key = `${emitter.id}/${problem.code}`;
+            if (!this.sourceSceneErrors.has(key)) {
+              this.sourceSceneErrors.add(key);
+              this.notifyError(problem);
+            }
+          }
+        }
+      }
   mute(value: boolean): void {
     if (this.disposed) return;
     if (typeof value !== "boolean") {
@@ -633,13 +801,6 @@ class Runtime implements AudioHandle {
     }
     const listener = this.listener!;
     const actor = event.actorId === listener.id ? listener : this.listener!.entities.get(event.actorId ?? "");
-    const isLocal = event.actorId === listener.id && sameTile(event.tile, listener.tile);
-    const gain = event.payload.sourceGain ?? (isLocal ? 1 : undefined);
-    requireAudio(unit(gain), "AUDIO_SPATIAL_POLICY",
-      "Nonlocal sounds require the bound sourceGain. The export does not establish a distance/fade curve.");
-    const distance = event.payload.sourceDistance ?? (isLocal ? 0 : undefined);
-    requireAudio(typeof distance === "number" && Number.isFinite(distance) && distance >= 0 && distance <= 65535,
-      "AUDIO_SPATIAL_POLICY", "Supply distance in the source range field's units; no guessed camera/Euclidean attenuation is used.");
     const sourceRange = range ?? event.payload.range;
     const sourceRetain = retain ?? event.payload.retain;
     requireAudio((range === undefined || event.payload.range === undefined || event.payload.range === range) &&
@@ -650,14 +811,41 @@ class Runtime implements AudioHandle {
     requireAudio(event.payload.instance === undefined || typeof event.payload.instance === "string",
       "AUDIO_EVENT", "Invalid source emitter instance.");
     const instance = typeof event.payload.instance === "string"
-      ? event.payload.instance : actor?.instance ?? null;
-    return {
-      gain,
-      spatial: {
-        tile: { ...event.tile }, actorId: event.actorId, instance,
-        range: sourceRange, retain: sourceRetain, distance, listenerStamp: stamp(listener),
-      },
+      ? event.payload.instance : this.sourceScene?.emitters.find((entry) => entry.id === event.actorId)?.instance
+        ?? actor?.instance ?? null;
+    const spatial: Spatial = {
+      tile: { ...event.tile }, actorId: event.actorId, instance,
+      range: sourceRange, retain: sourceRetain, distance: 0, listenerStamp: stamp(listener),
+      nativeComputed: event.payload.sourceGain === undefined,
+      ambient: event.payload.ambient === true,
+      objectId: integer(event.payload.objectId, 0, 1_000_000) ? event.payload.objectId : null,
+      orientation: integer(event.payload.orientation, 0, 3) ? event.payload.orientation : 0,
     };
+    const result = this.nativePosition(spatial);
+    spatial.distance = result.distance;
+    if (event.payload.sourceGain !== undefined) {
+      requireAudio(unit(event.payload.sourceGain), "AUDIO_SOURCE_POSITION", "Invalid explicit source gain.");
+      return { gain: event.payload.sourceGain, spatial };
+    }
+    return { gain: this.nativeMixer.area === 0 ? 0 : result.volume / this.nativeMixer.area, spatial };
+  }
+
+  private nativePosition(spatial: Spatial): ReturnType<typeof sourcePacketSpatial> {
+    const listener = this.sourceScene?.listener ?? {
+      x: this.listener!.tile.x * 128 + 64, y: this.listener!.tile.y * 128 + 64,
+    };
+    if (spatial.ambient) {
+      requireAudio(spatial.objectId !== null, "AUDIO_SOURCE_OBJECT", "A native ambient sound needs its original object identity.");
+      const definition = resolveSourceObject(spatial.objectId, this.sourceScene?.varps ?? new Map());
+      if (definition === null || definition.sound === null) {
+        return { distance: Infinity, radius: 0, retainedRadius: 0, volume: 0, audible: false };
+      }
+      return sourceAmbientSpatial(listener,
+        sourceObjectBounds(spatial.tile, definition.sizeX, definition.sizeY, spatial.orientation),
+        definition.sound.range, definition.sound.retain, this.nativeMixer.area);
+    }
+    return sourcePacketSpatial(listener, { x: spatial.tile.x * 128, y: spatial.tile.y * 128 },
+      spatial.range, spatial.retain, this.nativeMixer.area);
   }
 
   private enqueue(
@@ -671,27 +859,31 @@ class Runtime implements AudioHandle {
     requireAudio(!asset.id.startsWith("reference.audio.") || repeats <= 1,
       "AUDIO_REPEAT_POLICY", "These original reference WAVs bind one observed pass, not an unverified raw-sample repeat boundary.");
     const ambient = event.payload.ambient === true;
+    const ambientRandom = event.payload.ambientRandom === true;
     if (ambient) {
-      const definition = this.catalog.ambient.get(event.payload.objectId as number);
-      requireAudio(definition && definition.sourceIds.includes(asset.sourceId) &&
-        event.payload.active === true && event.actorId !== null &&
-        this.listener!.entities.get(event.actorId)?.available === true &&
-        this.listener!.entities.get(event.actorId)?.sourceId === definition.objectId &&
-        asset.loopEnd > asset.loopStart,
+      const originalId = event.payload.objectId as number;
+      const definition = resolveSourceObject(originalId, this.sourceScene?.varps ?? new Map());
+      const scene = this.sourceScene?.emitters.find((entry) => entry.id === event.actorId);
+      const world = this.listener!.entities.get(event.actorId ?? "");
+      requireAudio(definition?.sound && (ambientRandom ? definition.random?.ids?.includes(asset.sourceId) : definition.sound.id === asset.sourceId) &&
+        event.payload.active === true &&
+        event.actorId !== null &&
+        ((scene?.present && scene.objectId === originalId) || (world?.available && world.sourceId === originalId)) &&
+        (ambientRandom || asset.loopEnd > asset.loopStart),
       "AUDIO_AMBIENT", "Ambient playback needs the active original object/morph and actual sample loop, not a cache candidate alone.");
-      range = definition.range;
-      retain = definition.retain;
-      key = `ambient/${event.actorId}/${asset.sourceId}`;
+      range = definition.sound.range;
+      retain = definition.sound.retain;
+      key = ambientRandom ? `ambient-random/${event.actorId}` : `ambient/${event.actorId}/${asset.sourceId}`;
       if (Array.from(this.voices.values()).some((voice) => voice.key === key) ||
-        this.queue.values().some((effect) => effect.key === key)) {
+        this.ambientPending.has(key)) {
         this.trace("duplicate_emitter", { eventId: event.id, key });
         return;
       }
     }
     const position = this.spatial(event, range, retain);
     const channel = position.spatial === null ? "effects" : "area";
-    this.ledger.cue(ambient ? event.id : key);
-    if (!this.canPlay() || this.muted || this.volumes[channel] === 0 || repeats === 0 ||
+    if (!ambient) this.ledger.cue(key);
+    if (!this.canPlay() || this.muted || this.nativeMixer[channel] === 0 || repeats === 0 ||
       (position.spatial !== null && !this.inRange(position.spatial))) {
       this.trace("effect_gated", { eventId: event.id, sourceId: asset.sourceId, channel, repeats });
       if (!this.hasUnlocked || this.context.state !== "running") this.gestureFeedback();
@@ -700,11 +892,33 @@ class Runtime implements AudioHandle {
     const now = this.context.currentTime;
     const effect: Effect = {
       eventId: event.id, actionId: actionId(event), key, asset, channel, gain: position.gain,
-      repeats, ambient, spatial: position.spatial,
+      repeats, ambient, ambientRandom, spatial: position.spatial,
       buffer: null, error: null, lateReported: false, requestedAt: now,
       dueAt: this.nextCycleAt + delay * SOURCE_CYCLE_SECONDS,
       enqueuedCycle: this.processingCycle, epoch: this.epoch,
     };
+    if (ambient) {
+      this.ambientPending.set(key, effect);
+      void this.cache.load(asset).then((buffer) => {
+        if (this.ambientPending.get(key) !== effect || effect.epoch !== this.epoch || !this.canPlay() ||
+          this.muted || !effect.spatial || !this.inRange(effect.spatial)) return;
+        if (effect.eventId.startsWith("source-scene")) {
+          const current = this.sourceScene?.emitters.find((entry) => entry.id === effect.spatial?.actorId);
+          if (!current?.present || current.objectId !== effect.spatial.objectId) return;
+          const resolved = resolveSourceObject(current.objectId, this.sourceScene!.varps);
+          if (ambientRandom ? !resolved?.random?.ids?.includes(asset.sourceId) : resolved?.sound?.id !== asset.sourceId) return;
+        }
+        const calculated = this.nativePosition(effect.spatial);
+        const level = effect.spatial.nativeComputed ? calculated.volume / this.nativeMixer.area : effect.gain;
+        this.startVoice(asset, buffer, "area", effect.eventId, effect.actionId, key,
+          level, this.context.currentTime, effect.spatial, true, 0, undefined, false, undefined, ambientRandom);
+      }).catch((error) => {
+        if (effect.epoch === this.epoch && error?.code !== "AUDIO_CANCELLED") {
+          this.notifyError(failure(error, "AUDIO_AMBIENT", "Cannot load native object sound"));
+        }
+      }).finally(() => { if (this.ambientPending.get(key) === effect) this.ambientPending.delete(key); });
+      return;
+    }
     if (!this.queue.enqueue(effect, delay)) {
       this.trace("queue_overflow", { eventId: event.id, capacity: 50, sourceId: asset.sourceId });
       this.notifyError(new AudioFailure("AUDIO_QUEUE_FULL", "The native 50-entry FIFO is full; the new request was dropped."));
@@ -724,18 +938,18 @@ class Runtime implements AudioHandle {
     if (phase === "stop") {
       this.queue.remove((effect) => effect.key === key && effect.asset.id === asset.id);
       this.prepared.delete(actionId(event));
+      this.ambientPending.delete(key);
       this.stopWhere((voice) => voice.key === key && voice.asset.id === asset.id, "emitter_stopped");
       this.cancelUnusedLoads();
       return;
     }
     const definition = event.payload.ambient === true
-      ? this.catalog.ambient.get(event.payload.objectId as number) : null;
+      ? resolveSourceObject(event.payload.objectId as number, this.sourceScene?.varps ?? new Map()) : null;
     if (event.payload.ambient === true) {
-      requireAudio(definition?.sourceIds.includes(asset.sourceId) &&
-        this.listener!.entities.get(event.actorId ?? "")?.sourceId === definition.objectId,
+      requireAudio(definition?.sound?.id === asset.sourceId,
       "AUDIO_AMBIENT", "An ambient update must identify the same original emitter definition.");
     }
-    const position = this.spatial(event, definition?.range, definition?.retain);
+    const position = this.spatial(event, definition?.sound?.range, definition?.sound?.retain);
     requireAudio(position.spatial !== null, "AUDIO_SPATIAL_POLICY", "An emitter update needs an explicit position.");
     for (const effect of this.queue.values()) if (effect.key === key && effect.asset.id === asset.id) {
       effect.spatial = position.spatial;
@@ -754,29 +968,79 @@ class Runtime implements AudioHandle {
 
   private inRange(spatial: Spatial): boolean {
     const listener = this.listener;
-    return listener !== null && spatial.tile.plane === listener.tile.plane &&
-      spatial.instance === listener.instance && spatial.distance <= spatial.range + spatial.retain;
+    if (listener === null || spatial.instance !== listener.instance) return false;
+    if (spatial.ambient) {
+      const definition = spatial.objectId === null ? null : sourceObjectDefinition(spatial.objectId);
+      const source = this.sourceScene?.emitters.find((emitter) => emitter.id === spatial.actorId);
+      if (!sourceAmbientVisible(this.sourceScene?.plane ?? listener.tile.plane, spatial.tile.plane,
+        this.sourceScene?.owner ?? null, source?.owner ?? null, definition?.sound?.visibility ?? 2)) return false;
+    } else if (spatial.tile.plane !== listener.tile.plane) return false;
+    const position = this.nativePosition(spatial);
+    spatial.distance = position.distance;
+    return position.audible;
   }
 
   private reconcileSpatial(): void {
     if (!this.listener) return;
-    const listener = this.listener;
     for (const voice of this.voices.values()) {
       const spatial = voice.spatial;
-      if (!spatial) continue;
-      if (!this.inRange(spatial)) {
-        this.stopVoice(voice, "outside_retention");
-        continue;
+      // Native queued one-shots keep the gain sampled at dispatch. Original
+      // continuous object sounds, unlike those packets, are updated each cycle.
+      if (!spatial || !voice.ambient) continue;
+      try {
+      const actor = this.listener.entities.get(spatial.actorId ?? "");
+      const sceneEmitter = this.sourceScene?.emitters.find((entry) => entry.id === spatial.actorId);
+      if (sceneEmitter) {
+        spatial.tile = { ...sceneEmitter.tile };
+        spatial.instance = sceneEmitter.instance;
+        spatial.orientation = sceneEmitter.orientation;
       }
-      const actor = spatial.actorId === listener.id ? listener : listener.entities.get(spatial.actorId ?? "");
-      if (voice.ambient && (!actor || ("available" in actor && !actor.available))) {
-        this.stopVoice(voice, "emitter_inactive");
-      } else if (spatial.listenerStamp !== stamp(listener) ||
-        (actor && !sameTile(spatial.tile, actor.tile))) {
-        this.stopVoice(voice, "spatial_update_required");
-        this.unbound("spatial-update",
-          "A moving positional emitter/listener needs updated source distance/gain data. Stale spatial nodes were stopped, not given an invented curve.");
+      else if (actor) spatial.tile = { ...actor.tile };
+      const definition = spatial.objectId === null ? null
+        : resolveSourceObject(spatial.objectId, this.sourceScene?.varps ?? new Map());
+      const present = sceneEmitter?.present ?? (actor?.available === true);
+      const selected = voice.ambientRandom ? definition?.random?.ids?.includes(voice.asset.sourceId)
+        : definition?.sound?.id === voice.asset.sourceId;
+      const audible = present && selected && this.inRange(spatial);
+      const position = this.nativePosition(spatial);
+      const target = audible ? (spatial.nativeComputed ? position.volume
+        : Math.ceil(voice.level * this.nativeMixer.area)) : 0;
+      const hardIneligible = this.nativeMixer.area === 0 || spatial.tile.plane !== (this.sourceScene?.plane ?? this.listener.tile.plane) ||
+        spatial.instance !== this.listener.instance;
+      this.fadeAmbient(voice, target, hardIneligible ? 150 : definition?.sound?.fadeOutMs ?? 300, !audible);
+      } catch (error) {
+        this.stopVoice(voice, "source_emitter_policy_failure");
+        this.notifyError(failure(error, "AUDIO_SOURCE_SCENE", "Cannot update original emitter state"));
       }
+    }
+  }
+
+  private fadeAmbient(voice: Voice, target: number, configuredMs: number, stop: boolean): void {
+    if (voice.ambientFade?.target === target && voice.ambientFade.stop === stop) return;
+    const now = this.context.currentTime;
+    let current = Math.round(voice.gain.gain.value / voice.asset.inputGain * 128);
+    if (voice.ambientFade) {
+      const f = voice.ambientFade;
+      current = sourceAmbientFadeVolume(f.from, f.target, f.durationMs, (now - f.start) * 1000);
+    }
+    if (current === target && !stop) return;
+    const base = this.nativeMixer.area || Math.max(1, current);
+    const durationMs = sourceAmbientFadeDuration(current, target, base, configuredMs);
+    voice.ambientFade = { from: current, target, start: now, durationMs, stop };
+    this.trace("native_ambient_fade", { voiceId: voice.id, from: current, target, durationMs, stop });
+    this.advanceAmbientFade(voice, now);
+  }
+
+  private advanceAmbientFade(voice: Voice, now: number): void {
+    const fade = voice.ambientFade;
+    if (!fade) return;
+    const level = sourceAmbientFadeVolume(fade.from, fade.target, fade.durationMs, (now - fade.start) * 1000);
+    voice.gain.gain.setValueAtTime(sourceMixerToAssetGain(level) * voice.asset.inputGain, now);
+    if (fade.durationMs <= 0 || (now - fade.start) * 1000 >= fade.durationMs) {
+      voice.ambientFade = null;
+      voice.calibrationGain = sourceMixerToAssetGain(this.nativeMixer.area);
+      voice.level = this.nativeMixer.area ? fade.target / this.nativeMixer.area : 0;
+      if (fade.stop && fade.target === 0) this.stopVoice(voice, "native_ambient_fade_finished");
     }
   }
 
@@ -794,8 +1058,8 @@ class Runtime implements AudioHandle {
     let repeatMode: MusicPlan["mode"] = "once";
     if (mode !== "area") {
       requireAudio(event.payload.unlocked === true, "AUDIO_MUSIC", "Manual music selection requires authoritative unlocked-track data.");
-      requireAudio(event.payload.boundary === "native_midi_end", "AUDIO_MUSIC_POLICY",
-        "A repeat/playlist request must explicitly select the pinned native MIDI end boundary; the release-padded file is never a loop.");
+      requireAudio(event.payload.boundary === undefined || event.payload.boundary === "native_duration",
+        "AUDIO_MUSIC_POLICY", "Source replays use the native duration/timer policy, not a seamless MIDI-end buffer loop.");
       if (mode === "single") repeatMode = "single";
       else {
         requireAudio(typeof event.payload.playlist === "string", "AUDIO_MUSIC", "A playlist must be an explicit list of unlocked source groups.");
@@ -816,14 +1080,26 @@ class Runtime implements AudioHandle {
         repeatMode = "playlist";
       }
     }
-    this.music = { groups: Object.freeze(groups), cursor: groups.indexOf(selected.sourceId), mode: repeatMode, regionBound: mode === "area" };
+    const transition: SourceMusicTransition = {
+      fadeOutDelayCycles: this.transitionNumber(event, "fadeOutDelayCycles", 0),
+      fadeOutCycles: this.transitionNumber(event, "fadeOutCycles", 60),
+      fadeInDelayCycles: this.transitionNumber(event, "fadeInDelayCycles", 60),
+      fadeInCycles: this.transitionNumber(event, "fadeInCycles", 0),
+    };
+    this.music = { groups: Object.freeze(groups), cursor: groups.indexOf(selected.sourceId),
+      mode: repeatMode, regionBound: mode === "area", transition };
     this.musicToken++;
     this.musicExhausted = false;
     this.musicFailed = false;
     this.musicPending = null;
-    this.stopWhere((voice) => voice.asset.kind === "music", "music_selection");
     this.cancelUnusedLoads();
     this.trace("music_plan", { eventId: event.id, group: selected.sourceId, mode: String(mode), count: groups.length });
+  }
+
+  private transitionNumber(event: AudioEvent, key: string, fallback: number): number {
+    const value = event.payload[key] ?? fallback;
+    requireAudio(integer(value, 0, 65535), "AUDIO_SOURCE_MUSIC", `Invalid native ${key}.`);
+    return value;
   }
 
   private playJingleEvent(event: AudioEvent): void {
@@ -848,7 +1124,7 @@ class Runtime implements AudioHandle {
       this.trace("duplicate_cue", { eventId, key });
       return;
     }
-    if (!this.canPlay() || this.muted || this.volumes.music === 0) {
+    if (!this.canPlay() || this.muted || this.nativeMixer.music === 0) {
       this.trace("jingle_gated", { eventId, group: asset.sourceId });
       if (!this.hasUnlocked || this.context.state !== "running") this.gestureFeedback();
       return;
@@ -866,6 +1142,7 @@ class Runtime implements AudioHandle {
             if (token !== this.musicalToken) return;
             this.jingle = null;
             this.jinglePending = null;
+            this.music.transition = SOURCE_JINGLE_TRANSITION;
             this.trace("jingle_finished", { eventId, group: asset.sourceId });
             void this.ensureMusic().catch((error) => this.notifyError(failure(error, "AUDIO_PLAYBACK", "Cannot resume remembered music")));
           });
@@ -881,7 +1158,7 @@ class Runtime implements AudioHandle {
   }
 
   private async ensureMusic(): Promise<void> {
-    if (!this.canPlay() || this.muted || this.volumes.music === 0 || this.music.groups.length === 0 ||
+    if (!this.canPlay() || this.muted || this.nativeMixer.music === 0 || this.music.groups.length === 0 ||
       this.musicExhausted || this.musicFailed) return;
     if (this.jingle !== null || this.jinglePending !== null) {
       const asset = this.asset("music", this.music.groups[this.music.cursor]!, null);
@@ -898,7 +1175,8 @@ class Runtime implements AudioHandle {
       return;
     }
     if (this.musicPending !== null) return this.musicPending;
-    if (Array.from(this.voices.values()).some((voice) => voice.asset.kind === "music")) return;
+    if (Array.from(this.voices.values()).some((voice) => voice.asset.kind === "music" &&
+      voice.musicToken === this.musicToken && !voice.retiring)) return;
     const token = this.musicToken;
     const plan = this.music;
     this.musicPending = this.startBackground(plan, plan.cursor, this.context.currentTime, token)
@@ -916,35 +1194,108 @@ class Runtime implements AudioHandle {
       this.musicFailed = true;
       throw error;
     }
-    if (token !== this.musicToken || !this.canPlay() || this.muted || this.volumes.music === 0 ||
+    if (token !== this.musicToken || !this.canPlay() || this.muted || this.nativeMixer.music === 0 ||
       this.jingle !== null || this.jinglePending !== null) return;
-    const actualWhen = Math.max(this.context.currentTime, when);
-    const duration = plan.mode === "playlist" ? asset.endFrame! / SOURCE_RATE : undefined;
+    const transition = plan.transition ?? (this.listener === null ? SOURCE_TITLE_TRANSITION : SOURCE_BACKGROUND_TRANSITION);
+    const readyAt = Math.max(this.context.currentTime, when);
+    const actualWhen = readyAt + transition.fadeInDelayCycles * SOURCE_CYCLE_SECONDS;
+    for (const old of [...this.voices.values()]) if (old.asset.kind === "music" && !old.retiring) {
+      this.musicFade(old, "out", transition.fadeOutCycles, readyAt + transition.fadeOutDelayCycles * SOURCE_CYCLE_SECONDS, true);
+    }
     const voice = this.startVoice(asset, buffer, "music", `music/${token}/${cursor}`, "",
-      `music/${token}/${cursor}`, 1, actualWhen, null, false, token, duration,
-      plan.mode === "single", () => {
+      `music/${token}/${cursor}`, transition.fadeInCycles ? 0 : 1, actualWhen, null, false, token, undefined,
+      false, () => {
         if (token !== this.musicToken) return;
         if (plan.mode === "once") {
-          // Exhaustion is a state, not a reason to restart this file on every snapshot.
           this.musicExhausted = true;
-          this.unbound("area-next-track",
-            "The area pass ended. Supply the next source playlist selection; automatic Modern-area membership/repetition is not in the five-track input.");
-        } else if (plan.mode === "playlist") {
+          if (!this.sourceRequestDue) void this.requestSourceNext(plan, asset.sourceId, token);
+        } else if (plan.mode === "playlist" || plan.mode === "single") {
           plan.cursor = (cursor + 1) % plan.groups.length;
         }
       });
+    if (transition.fadeInCycles) this.musicFade(voice, "in", transition.fadeInCycles, actualWhen, false);
     this.trace("music_started", { group: asset.sourceId, voiceId: voice.id, mode: plan.mode, when: actualWhen });
-    if (plan.mode === "playlist") {
-      // Only one next track is needed. Fetch it now; its node is scheduled on the
-      // audio clock, not after an onended callback or after one second of padding.
+    if (plan.mode === "once") {
+      const duration = sourceMusicDurationSeconds(asset.sourceId);
+      this.sourceRequestDue = duration === null ? null : { plan, group: asset.sourceId, token, at: actualWhen + duration };
+    }
+    if (plan.mode === "playlist" || plan.mode === "single") {
       const next = (cursor + 1) % plan.groups.length;
-      const nextWhen = actualWhen + asset.endFrame! / SOURCE_RATE;
-      void this.prepareNextBackground(plan, next, nextWhen, token).catch((error) => {
+      const interval = sourceMusicDurationSeconds(asset.sourceId);
+      requireAudio(interval !== null, "AUDIO_SOURCE_MUSIC", "This source track has no native player duration row.");
+      const nextWhen = actualWhen + interval;
+      void this.prepareNextBackground({ ...plan, transition: SOURCE_JINGLE_TRANSITION }, next, nextWhen, token).catch((error) => {
         if (token === this.musicToken) this.notifyError(failure(error, "AUDIO_PLAYLIST", "Cannot prepare the next source track"));
       });
     }
+
   }
 
+    private async requestSourceNext(plan: MusicPlan, group: number, token: number): Promise<void> {
+      if (!this.listener) {
+        this.trace("source_title_pass_finished", { group });
+        return;
+      }
+      const region = sourceMusicRegion(this.listener.tile, this.nativeAreaMode);
+      if (!this.musicSelector) {
+        this.notifyError(new AudioFailure("AUDIO_SOURCE_MUSIC_SELECTION_REQUIRED",
+          "The native player requests its next source selection. Connect SourceMusicSelector; do not fabricate a playlist or leave an exhausted track as success.",
+          true, { previousGroup: group, nativeArea: region?.areaId ?? -1,
+            requiredGroups: (region?.groups ?? []).join(",") }));
+        return;
+      }
+      try {
+        const selection = await deadline(this.musicSelector({
+          previousGroup: group, mode: plan.mode === "once" ? "area" : plan.mode,
+          region, durationTicks: sourceMusicDurationSeconds(group) === null ? null : sourceMusicDurationSeconds(group)! / 0.6,
+        }), 15_000, new AudioFailure("AUDIO_SOURCE_MUSIC_SELECTION_TIMEOUT", "The source music selector did not provide its next request."));
+        if (token !== this.musicToken || !this.canPlay()) return;
+        this.asset("music", selection.group, null);
+        this.music = { groups: [selection.group], cursor: 0, mode: "once", regionBound: true,
+          transition: selection.transition ?? SOURCE_BACKGROUND_TRANSITION };
+        this.musicToken++;
+        this.musicExhausted = false;
+        this.musicFailed = false;
+        await this.ensureMusic();
+      } catch (error) {
+        this.notifyError(failure(error, "AUDIO_SOURCE_MUSIC", "Cannot play the next original native selection"));
+      }
+    }
+
+    private musicFade(voice: Voice, direction: "in" | "out", cycles: number, when: number, retire: boolean): void {
+      if (retire && cycles === 0 && when <= this.context.currentTime) {
+        this.stopVoice(voice, "native_zero_fade_replacement");
+        return;
+      }
+      const nativeVolume = Math.round(voice.calibrationGain * 128);
+      const current = voice.musicFader?.current ?? (direction === "in" ? 0
+        : Math.round(voice.gain.gain.value / voice.asset.inputGain * 128));
+      voice.musicFader = { direction, cycles, current, nextAt: when + SOURCE_CYCLE_SECONDS, retire };
+      voice.level = direction === "in" ? 1 : 0;
+      this.trace("native_music_fade", { voiceId: voice.id, direction, cycles, when, nativeVolume,
+        startLevel: current });
+      if (retire) voice.retiring = true;
+    }
+
+    private advanceMusicFade(voice: Voice, cycleAt: number): void {
+      const fade = voice.musicFader;
+      if (!fade || cycleAt + 0.000001 < fade.nextAt) return;
+      const target = Math.round(voice.calibrationGain * 128);
+      const active = fade.direction === "in" ? fade.current < target : fade.current > 0;
+      if (!active) {
+        voice.musicFader = null;
+        if (fade.retire) this.stopVoice(voice, "native_music_fade_finished");
+        return;
+      }
+      const step = fade.cycles === 0 ? target : Math.fround(target / fade.cycles);
+      fade.current = fade.direction === "in"
+        ? Math.min(target, Math.fround(fade.current + (step === 0 ? target : step)))
+        : Math.max(0, Math.fround(fade.current - (step === 0 ? target : step)));
+      voice.gain.gain.setValueAtTime(sourceMixerToAssetGain(Math.trunc(fade.current)) * voice.asset.inputGain,
+        Math.max(this.context.currentTime, fade.nextAt));
+      fade.nextAt += SOURCE_CYCLE_SECONDS;
+      if (fade.retire && fade.current <= 0) this.stopVoice(voice, "native_music_fade_finished");
+    }
   private async prepareNextBackground(plan: MusicPlan, cursor: number, when: number, token: number): Promise<void> {
     const asset = this.asset("music", plan.groups[cursor]!, null);
     try {
@@ -962,23 +1313,42 @@ class Runtime implements AudioHandle {
   private nextBackground: { plan: MusicPlan; cursor: number; when: number; token: number } | null = null;
 
   private asset(kind: AssetKind, sourceId: number | null, assetId: string | null): SourceAsset {
+    if (kind === "music" && sourceId !== null &&
+      (SOURCE_UNPUBLISHED_M1_MUSIC as readonly number[]).includes(sourceId)) {
+      throw new AudioFailure("AUDIO_SOURCE_MUSIC_ASSET_REQUIRED",
+        `Native music table44 requires index6 group${sourceId}; it has no approved playable publication. No FLAC alias or substituted song is created.`,
+        true, { sourceIndex: 6, sourceGroup: sourceId });
+    }
     const asset = this.catalog.groups.get(`${kind}:${sourceId}`);
     requireAudio(asset && (assetId === null || assetId === asset.id), "AUDIO_ASSET_ID",
       `Unknown or mismatched original ${kind} identity ${sourceId}. No replacement is permitted.`);
     return asset;
   }
 
+  private needsNativeGainInput(asset: SourceAsset, volume: number): boolean {
+    return asset.kind !== "sfx" && SOURCE_MIX_REPRESENTATION_NEEDS.some((need) =>
+      need.index === (asset.kind === "music" ? 6 : 11) && need.group === asset.sourceId) &&
+      asset.peak * sourceMixerToAssetGain(volume) > 1;
+  }
+
   private startVoice(
     asset: SourceAsset, buffer: AudioBuffer, channel: Channel, eventId: string, action: string, key: string,
     level: number, when: number, spatial: Spatial | null, ambient: boolean, musicToken: number,
-    duration?: number, musicalLoop = false, ended?: () => void,
+    duration?: number, musicalLoop = false, ended?: () => void, ambientRandom = false,
   ): Voice {
     this.requireOpen();
+    if (this.needsNativeGainInput(asset, this.nativeMixer.music)) {
+      throw new AudioFailure("AUDIO_NATIVE_GAIN_INPUT_REQUIRED",
+        `Original ${asset.kind} ${asset.sourceId} needs a native mixer-level representation at volume ${this.nativeMixer.music}; scaling the frozen128 PCM would add clipping. No limiter or normalization is substituted.`,
+        true, { sourceId: asset.sourceId, nativeMixer: this.nativeMixer.music });
+    }
+
     const source = this.context.createBufferSource();
     const gain = this.context.createGain();
     source.buffer = buffer;
-    gain.gain.setValueAtTime(level * asset.inputGain, when);
-    if (ambient) {
+    const calibrationGain = sourceMixerToAssetGain(this.nativeMixer[channel]);
+    gain.gain.setValueAtTime(level * asset.inputGain * calibrationGain, when);
+    if (ambient && !ambientRandom) {
       source.loop = true;
       source.loopStart = asset.loopStart / SOURCE_RATE;
       source.loopEnd = asset.loopEnd / SOURCE_RATE;
@@ -991,7 +1361,8 @@ class Runtime implements AudioHandle {
     gain.connect(this.buses[channel]);
     const voice: Voice = {
       id: ++this.voiceId, asset, source, gain, channel, eventId, actionId: action, key,
-      when, level, spatial, ambient, musicToken, stopped: false,
+      when, level, spatial, ambient, ambientRandom, musicToken, stopped: false, calibrationGain,
+      ambientFade: null, retiring: false, musicFader: null,
     };
     this.voices.set(voice.id, voice);
     source.onended = () => {
@@ -1000,7 +1371,7 @@ class Runtime implements AudioHandle {
       source.disconnect();
       gain.disconnect();
       this.voices.delete(voice.id);
-      this.trace("ended", { voiceId: voice.id, sourceId: asset.sourceId, eventId, natural: true });
+      this.trace("ended", { voiceId: voice.id, sourceId: asset.sourceId, eventId, natural: !voice.retiring });
       ended?.();
       this.publish();
     };
@@ -1010,7 +1381,7 @@ class Runtime implements AudioHandle {
       this.trace("started", {
         voiceId: voice.id, sourceId: asset.sourceId, kind: asset.kind, channel, eventId, when,
         duration: duration ?? buffer.duration, loop: source.loop,
-        loopEnd: source.loopEnd, gain: level * asset.inputGain,
+        loopEnd: source.loopEnd, gain: level * asset.inputGain * calibrationGain,
       });
       if (asset.kind !== "sfx") this.publish();
       return voice;
@@ -1047,12 +1418,15 @@ class Runtime implements AudioHandle {
     this.jinglePending = null;
     this.jingle = null;
     this.nextBackground = null;
+    this.sourceRequestDue = null;
     this.stopWhere((voice) => voice.channel === "music", "musical_replacement");
   }
 
   private resetPlaying(): void {
     this.epoch++;
     this.queue.clear();
+    this.ambientPending.clear();
+    this.ambientIntervals.clear();
     this.prepared.clear();
     this.stopMusical();
     this.stopWhere(() => true, "reset");
@@ -1061,8 +1435,9 @@ class Runtime implements AudioHandle {
 
   private cancelUnusedLoads(): void {
     const wanted = new Set(this.queue.values().map((effect) => effect.asset.id));
+    for (const effect of this.ambientPending.values()) wanted.add(effect.asset.id);
     for (const assets of this.prepared.values()) for (const id of assets) wanted.add(id);
-    if (this.connected && !this.muted && this.volumes.music > 0) {
+    if (this.connected && !this.muted && this.nativeMixer.music > 0) {
       for (const group of [this.music.groups[this.music.cursor], this.nextBackground?.plan.groups[this.nextBackground.cursor]]) {
         const asset = this.catalog.groups.get(`music:${group}`);
         if (asset) wanted.add(asset.id);
@@ -1111,7 +1486,7 @@ class Runtime implements AudioHandle {
       this.processingCycle++;
       this.queue.process((effect) => {
         changed = true;
-        if (effect.epoch !== this.epoch || this.muted || this.volumes[effect.channel] === 0) return true;
+        if (effect.epoch !== this.epoch || this.muted || this.nativeMixer[effect.channel] === 0) return true;
         if (!effect.asset.playable) {
           this.trace("source_silence", {
             eventId: effect.eventId, sourceId: 2411, when: Math.max(now, cycleAt), frames: 110,
@@ -1132,12 +1507,15 @@ class Runtime implements AudioHandle {
           }
           return false;
         }
-        if (effect.spatial !== null && (!this.inRange(effect.spatial) ||
-          effect.spatial.listenerStamp !== stamp(this.listener!))) {
+        if (effect.spatial !== null && !this.inRange(effect.spatial)) {
           this.trace("effect_out_of_range", { eventId: effect.eventId });
           return true;
         }
         try {
+          if (effect.spatial?.nativeComputed) {
+            const position = this.nativePosition(effect.spatial);
+            effect.gain = this.nativeMixer.area ? position.volume / this.nativeMixer.area : 0;
+          }
           const buffer = effect.ambient ? effect.buffer : repeatedEffect(this.context, effect.buffer, effect.asset, effect.repeats);
           const when = Math.max(now, cycleAt, effect.dueAt);
           if (when - effect.dueAt > SOURCE_CYCLE_SECONDS + 1 / SOURCE_RATE) {
@@ -1158,7 +1536,15 @@ class Runtime implements AudioHandle {
           this.notifyError(failure(error, "AUDIO_PLAYBACK", "Cannot start source effect"));
         }
         return true;
+      }, (effect) => {
+        this.notifyError(new AudioFailure("AUDIO_SOURCE_QUEUE_EXPIRED",
+          `Original source queue expired undecoded cue ${effect.asset.sourceId} after its -10-cycle grace.`,
+          true, { eventId: effect.eventId, sourceId: effect.asset.sourceId }));
       });
+      this.reconcileSpatial();
+      for (const voice of [...this.voices.values()]) if (voice.ambientFade) this.advanceAmbientFade(voice, Math.max(now, cycleAt));
+      for (const voice of [...this.voices.values()]) if (voice.musicFader) this.advanceMusicFade(voice, cycleAt);
+      this.reconcileSourceEmitters(true);
     }
     if (this.nextBackground && this.nextBackground.when - now <= 0.1) {
       const next = this.nextBackground;
@@ -1166,6 +1552,11 @@ class Runtime implements AudioHandle {
       if (next.token === this.musicToken) {
         void this.startBackground(next.plan, next.cursor, next.when, next.token)
           .catch((error) => this.notifyError(failure(error, "AUDIO_PLAYLIST", "Cannot advance source playlist")));
+      }
+      if (this.sourceRequestDue && this.sourceRequestDue.at <= now) {
+        const request = this.sourceRequestDue;
+        this.sourceRequestDue = null;
+        if (request.token === this.musicToken) void this.requestSourceNext(request.plan, request.group, request.token);
       }
     }
     if (changed) this.publish();
@@ -1289,4 +1680,24 @@ export function observeAudioState(handle: AudioHandle, observer: (state: AudioSn
   const runtime = runtimes.get(handle);
   requireAudio(runtime, "AUDIO_HANDLE", "Not a ClubScape source-audio handle.");
   return runtime.subscribe(observer);
+}
+
+export function setSourceMasterVolume(handle: AudioHandle, percent: number): void {
+  const runtime = runtimes.get(handle);
+  requireAudio(runtime, "AUDIO_HANDLE", "Not a ClubScape source-audio handle.");
+  runtime.sourceMaster(percent);
+}
+
+export function setSourceAudioScene(handle: AudioHandle, scene: SourceAudioScene | null): void {
+  const runtime = runtimes.get(handle);
+  requireAudio(runtime, "AUDIO_HANDLE", "Not a ClubScape source-audio handle.");
+  runtime.setSourceScene(scene);
+}
+
+export function setSourceMusicSelector(
+  handle: AudioHandle, selector: SourceMusicSelector | null, areaMode: "modern" | "classic" = "modern",
+): void {
+  const runtime = runtimes.get(handle);
+  requireAudio(runtime, "AUDIO_HANDLE", "Not a ClubScape source-audio handle.");
+  runtime.sourceMusicDriver(selector, areaMode);
 }
