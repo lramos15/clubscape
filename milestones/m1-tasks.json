@@ -12,11 +12,10 @@
       {"id": "cdfad64d-9162-439f-a525-58e1114dd7f4", "task": "M1-BROWSER-AUDIO"},
       {"id": "78d01af9-70a4-4b02-8339-6a61eb377374", "task": "M1-BROWSER-SHELL"},
       {"id": "81ac9884-4f39-4f27-b516-6e9a42b09b51", "task": "M1-HEADLESS-JOURNEY"},
-      {"id": "2a0ae699-6af8-45d5-90c7-3addfc56ee53", "task": "M1-RUNELITE-FEASIBILITY"}
-    ],
-    "reserved": [
+      {"id": "2a0ae699-6af8-45d5-90c7-3addfc56ee53", "task": "M1-RUNELITE-FEASIBILITY"},
       {"id": "2766e089-44e5-4a1d-974e-7b03ad9c269d", "task": "M1-GAMEPLAY-UI-CONTRACTS"}
     ],
+    "reserved": [],
     "queued": [],
     "parked": [
       {"id": "aab1ae0f-0238-4254-bff3-b7c046349c6b", "reason": "Shop capacity/identity fixes integrated as3310032+af75e17 with18 passing regressions; no automatic resumption."},
@@ -36,7 +35,7 @@
     {
       "id": "M1-GAMEPLAY-UI-CONTRACTS",
       "goal": "Close the actual source-backed engine/data/protocol contracts required by the approved M1 interface controls.",
-      "status": "READY",
+      "status": "IMPLEMENTING",
       "specs": ["spec/browser-implementation.md", "web/ui/contract-gaps.json", "spec/game-contracts.md", "spec/game-networking.md", "prompt.md sections30/3.3"],
       "dependencies": ["M1-FLEET-LIVE-SERVER", "M1-FLEET-BINDING-APPLICATION", "M1-SHOP-REVIEW-FIXES", "M1-ACTOR-REVIEW-FIXES"],
       "allowed_paths": ["crates/server/**", "crates/protocol/**", "crates/game-types/**", "crates/world-engine/**", "crates/simulation/**", "crates/content/**", "crates/client-core/tests/**", "content/m1/**", "tools/m1-content/**", "research/m1-bindings/**", "research/interface-contracts/**", "web/shared/contracts.ts", "spec/game-contracts.md", "spec/game-networking.md", "spec/browser-implementation.md"],
@@ -67,7 +66,7 @@
       "source_notes": ["Canonical shell descriptor406574bytes and compact journey descriptor272433bytes exceed old262144byte limit; Config::from_env incorrectly nests GameRoot parsing under WebRoot."],
       "parity_entries": [],
       "adaptations": [],
-      "evidence": []
+      "evidence": ["2c5fe68 integratesc062976:game/web environment roots parsedindependently, invalidgame neverignored;512KiB private descriptor accepts272433/406574/exact524288bytes and rejects+1.33serverunitchecks/strictClippypass. Actualcanonicalstartupfollow-up is running inheadless/shell; tasknotyetacceptedfromfixturechecks."]
     },
     {
       "id": "M1-RUNELITE-FEASIBILITY",
@@ -193,7 +192,7 @@
       "source_notes": ["research/reference-pack/v1/manifest.json"],
       "parity_entries": [],
       "adaptations": ["Approved penguin base and equipment-fit criteria"],
-      "evidence": []
+      "evidence": ["Initial exactraster/scene/GPU/WASM components integrated66ecd4d/67aacfe/55c2a1e/487b8a9/6969a43/63b911d; centraldependencylock627fb17 preservesexistingversions.", "Parent restored10publishedbuffers andverified nativeGB10 all5source scenes/treecases withzeropixeldifference; actualWASM/TypeScriptbuild passes.21testfunctions pass, BUT legacy standaloneNPC54case loopsskip absentper-framefiles; CPU pack-basedNPCcoveragepasses. Worker mustcorrectrequiredGPUfixturecoverage andmislabelled trianglecount-as-nanoseconds print; no fullrenderer/performance acceptance.", "Sameworker continuesrequiredaction animations/modulargear/fit/roof/items/dynamicworld/regionstreaming/preview/minimap. Passingearlyfixtures are not entireM1rendering."]
     },
     {
       "id": "M1-BROWSER-UI",
@@ -211,7 +210,7 @@
       "source_notes": ["Approved original/public/native HUD families"],
       "parity_entries": [],
       "adaptations": ["Seven approved web/branding compositions"],
-      "evidence": []
+      "evidence": ["OwnedUI0e88812/c9845a1/22164d5 integrated069b502/f34663c/6a1b11f.87/87zero-tolerance sourcecomponent comparisons,1099originalspriteframes,10unit/17sandboxedbrowser cases pass; shopidentityretained.", "Requiredlive controls/projections remainincomplete. UIownercontinuesnativefilters/recovery/startupvariants; M1-GAMEPLAY-UI-CONTRACTS suppliesactualauthority/data. No wholeM1/UIacceptance."]
     },
     {
       "id": "M1-BROWSER-AUDIO",
