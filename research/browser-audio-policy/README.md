@@ -125,6 +125,13 @@ replace current work with zero fades, retain the background playlist, and
 overwrite the global remembered transition values with **[0,0,0,0]**. Resume
 reinitializes the remembered track; it does not preserve an old MIDI playhead.
 
+The bounded preference continuation additionally executes the later-request
+case: a different background request during that jingle replaces the remembered
+track and transition parameters; a same-group request is ignored. See
+[`preference-controls.md`](preference-controls.md) for the12 native state
+fixtures, first-use/remembered volume distinctions, three original saved slots
+and actual-browser control contract.
+
 The client-side source does not choose arbitrary next songs on buffer EOF:
 the native reference census shows the last-track, area override and fresh-login
 preference effects crossing the server/script boundary. The module provides an

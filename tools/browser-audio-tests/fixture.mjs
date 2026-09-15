@@ -2,6 +2,10 @@ import {
   createAudio, observeAudioState, readAudioState, setSourceMusicSelector,
   setSourceAudioScene, setSourceMasterVolume, sourceMusicRegion, sourceAudioDefaults,
   setSourceMusicState,
+  readSourceAudioPreferences, applySourceAudioPreferences, setSourceMusicPreferences,
+  setSourceSavedPlaylist, editSourceSavedPlaylist, selectSourcePlaylist, toggleSourceAudioMute,
+  setSourceAudioPercent, requestSourceMusicSkip, sourceAudioPreferenceDefaults,
+  serializeSourceAudioPreferences, deserializeSourceAudioPreferences,
 } from "/web/audio/index.ts";
 
 const native = {
@@ -66,6 +70,7 @@ let nextCapture = 0;
 const captures = new Map();
 const statsRequests = new Map();
 let lastUnlock = null;
+let lastControl = null;
 let world = null;
 let eventSequence = 0;
 
@@ -82,6 +87,9 @@ async function initialize() {
   stopObserving = observeAudioState(handle, (state) => {
     document.querySelector("#status").textContent =
       `${state.contextState}; gesture=${state.pendingGesture}; voices=${state.voices.length}`;
+    for (const channel of ["music", "effects", "area", "master"]) {
+      document.querySelector(`#${channel}`).value = String(channel === "master" ? state.masterPercent : Math.round(state.volumes[channel] * 100));
+    }
   });
   const context = native.contexts.at(-1);
   const output = native.destinations.findLast((node) => node.context === context);
@@ -186,12 +194,49 @@ for (const channel of ["music", "effects", "area"]) {
 document.querySelector("#master").addEventListener("input", (event) => {
   setSourceMasterVolume(handle, Number(event.target.value));
 });
+function controlResult(promise) {
+  lastControl = Promise.resolve(promise).then(
+    (result) => ({ success: true, result }),
+    (error) => ({ success: false, code: error.code ?? error.name, message: error.message }),
+  );
+}
+document.querySelector("#skip").addEventListener("click", (event) => {
+  native.gestures.push({ control: "skip", trusted: event.isTrusted, active: navigator.userActivation.isActive });
+  controlResult(requestSourceMusicSkip(handle, world?.player.id));
+});
+for (const channel of ["master", "music", "effects", "area"]) {
+  document.querySelector(`#toggle-${channel}`).addEventListener("click", (event) => {
+    native.gestures.push({ control: `toggle-${channel}`, trusted: event.isTrusted, active: navigator.userActivation.isActive });
+    const permission = handle.unlock();
+    try {
+      const result = toggleSourceAudioMute(handle, world?.player.id, channel);
+      controlResult(permission.then(() => result));
+    } catch (error) {
+      void permission.catch(recordError);
+      controlResult(Promise.reject(error));
+    }
+  });
+}
+for (const slot of [0, 1, 2, 3]) {
+  document.querySelector(`#playlist-${slot}`).addEventListener("click", (event) => {
+    native.gestures.push({ control: `playlist-${slot}`, trusted: event.isTrusted, active: navigator.userActivation.isActive });
+    const permission = handle.unlock();
+    try {
+      const result = selectSourcePlaylist(handle, world?.player.id, slot);
+      controlResult(permission.then(() => result));
+    } catch (error) {
+      void permission.catch(recordError);
+      controlResult(Promise.reject(error));
+    }
+  });
+}
 
 window.audioFixture = {
   get handle() { return handle; },
   get context() { return native.contexts.at(-1); },
   get world() { return structuredClone(world); },
   get lastUnlock() { return lastUnlock; },
+  get lastControl() { return lastControl; },
   errors, native, syntheticWorld, event, update, capture, stats,
   snapshot: () => readAudioState(handle),
   setSourceAudioScene: (scene) => setSourceAudioScene(handle, scene),
@@ -199,6 +244,19 @@ window.audioFixture = {
   setSourceMusicSelector: (selector, mode = "modern") => setSourceMusicSelector(handle, selector, mode),
   setSourceMusicState: (state) => setSourceMusicState(handle, state),
   sourceMusicRegion, sourceAudioDefaults,
+  controls: {
+    defaults: sourceAudioPreferenceDefaults,
+    read: () => readSourceAudioPreferences(handle),
+    apply: (value, unlocked, playerId = world?.player.id) => applySourceAudioPreferences(handle, playerId, value, unlocked),
+    music: (value, playerId = world?.player.id) => setSourceMusicPreferences(handle, playerId, value),
+    saved: (slot, entries, playerId = world?.player.id) => setSourceSavedPlaylist(handle, playerId, slot, entries),
+    edit: (slot, edit, playerId = world?.player.id) => editSourceSavedPlaylist(handle, playerId, slot, edit),
+    select: (slot, playerId = world?.player.id) => selectSourcePlaylist(handle, playerId, slot),
+    toggle: (channel, playerId = world?.player.id) => toggleSourceAudioMute(handle, playerId, channel),
+    percent: (channel, percent, playerId = world?.player.id) => setSourceAudioPercent(handle, playerId, channel, percent),
+    skip: (playerId = world?.player.id) => requestSourceMusicSkip(handle, playerId),
+    serialize: serializeSourceAudioPreferences, deserialize: deserializeSourceAudioPreferences,
+  },
   originalsConnected: () => native.destinations.some((node) =>
     node.context === native.contexts.at(-1) && node !== monitorSink &&
     native.connections.get(node)?.has(node.context.destination)),

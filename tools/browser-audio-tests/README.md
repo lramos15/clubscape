@@ -18,13 +18,19 @@ pnpm --dir web install --frozen-lockfile
 
 ```sh
 pnpm --dir web exec tsc --noEmit
-node --test web/audio/audio.test.ts web/audio/native-policy.test.ts web/audio/reward-levels.test.ts web/audio/supplement.test.ts
+node --test web/audio/audio.test.ts web/audio/native-policy.test.ts web/audio/reward-levels.test.ts web/audio/supplement.test.ts web/audio/preferences.test.ts
 
 # Full actual playback; complete playlist, Modern-area and single timer replays:
 node tools/browser-audio-tests/run.mjs
 
 # Iteration: shorter lifecycle checks plus actual offline waveform/fade render:
 node tools/browser-audio-tests/run.mjs --quick
+
+# Bounded preference controls only; muted output for shared-host privacy:
+python3 tools/browser-audio-tests/native/preference_controls.py run
+node tools/browser-audio-tests/run.mjs --preferences-only --quick --mute-output
+# Full existing playback + new preference/native Single duration comparisons:
+node tools/browser-audio-tests/run.mjs --mute-output
 ```
 
 Reproduce the native probes first when changing policy:
@@ -70,7 +76,10 @@ The browser executable is checked as Chrome for Testing153. Default:
 `~/.cache/ms-playwright/chromium-1243/chrome-linux-arm64/chrome`;
 `CLUBSCAPE_CHROME` may point to an equivalent already verified executable.
 The actual sandbox page must confirm namespace/PID/network/seccomp protection.
-`--no-sandbox` is never used and the default headless `--mute-audio` is removed.
+`--no-sandbox` is never used. Normally the default headless `--mute-audio` is
+removed. The explicit `--mute-output` option retains that **browser-local**
+privacy flag and records it in the evidence; it does not change host sound
+services, sink routing, native context state or the real production graph.
 
 **All fixture JS evaluation uses CDP `userGesture:false`.** Playwright's normal
 `evaluate` marks evaluation as a user gesture and would invalidate autoplay
@@ -129,6 +138,20 @@ The suite exercises:
   gesture recovery and no duplicate resumed music.
 * Pre-trained Cook2→5 reward deferral and source-group preservation plus
   pre-trained21→21 with no level-up playback, both through the real factory.
+* Direct Skip through a real keyboard gesture, native Area/Single guards,
+  source click2266, same pending request coalescing, remembered jingle track/
+  transition replacement, same-group zero-transition retention, and complete
+  shuffle bags across mute, reconnect and rollover.
+* Three separately identified100-slot saved playlists, actual source track
+  encoding, holes/first-hole reuse, original selection/keep-playing behavior,
+  explicit empty state, and rejected corrupt/unknown/locked preferences.
+* Native first-use100/20/45/25 and actual saved37/21/66/83 mute restoration,
+  slider-zero memory semantics, global privacy mute without preference changes,
+  detached serialization, same-state idempotence, reset/character noninheritance
+  and an old pending gesture rejected after logout/re-entry with the same ID.
+* A full194×600ms bound-preference Single replay with native4137 clear,
+  corresponding to original9630's unconditional Single re-entry, without
+  looping the released samples or introducing clipping.
 
 The saturation fixture uses an explicit0.01 gain for50 simultaneous packet
 effects. It proves queue/order/lifecycle behavior without manufacturing a mix
@@ -175,6 +198,14 @@ before and after every run; the base manifest/approval hashes remain unchanged.
 A code/harness change during a run invalidates its result. Missing callbacks
 after deliberately closing the actual context are recorded as missing, not
 fabricated; graph/resource cleanup is separately asserted.
+`--preferences-only` writes the separate `preference-results.json`, so focused
+iterations do not replace the broader playback result. A full run includes all
+prior32 browser cases and nine additional preference/control cases. Historical
+29-unit/32-browser/85-pack evidence remains in the earlier component commit;
+new calibration is additive and does not promote those checks to gameplay
+acceptance. The native preference probe is limited to twelve fixed state
+fixtures; it repeats those same cases in two isolated JVMs, never opens an
+account and fails on swallowed native interpreter errors.
 
 The server binds a random **loopback-only** port and serves only allowlisted
 modules, fixture, pinned metadata and original audio. Other browser network

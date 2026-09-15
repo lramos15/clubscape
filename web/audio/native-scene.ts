@@ -135,7 +135,7 @@ export interface SourceMusicState {
   readonly unlockedGroups: readonly number[];
   readonly selectedGroup: number | null;
   readonly playlistGroups: readonly number[];
-  /** Re-entry uses fresh one-pass sources, never the exported release padding as a sample loop. */
+  /** Legacy continuation directive, not native4137. Bound preferences apply Single's unconditional re-entry. */
   readonly loopEnabled: boolean;
 }
 

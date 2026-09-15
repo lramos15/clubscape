@@ -1,0 +1,118 @@
+{
+  "schema_version": 1,
+  "task": "m1-audio-preference-controls",
+  "result": "passed_bounded_native_and_browser_component",
+  "scope": "Direct source Skip, three numbered saved playlists, original remembered mute values and detached version1 client preferences consumed by the actual createAudio factory.",
+  "prior_owned_component_commits": [
+    "877011123e18b8f9f3be1708d1d2ae2f49dab905",
+    "d8eb730c3d65aae65c8393eabdfde8bf45c74b4b",
+    "a0ab06da833908bc4b99211402e51fb8f81b9273",
+    "e7a2651e487e3120e69fddb89a7db8aec6dc9920"
+  ],
+  "source_identity": {
+    "pack_sha256": "b62e19704e17d3d3e4e819f803ef49ba7cc54034ae407184b423427c65d9674d",
+    "external_approval_sha256": "e910cb02b6984a94be542af1c56e29dc67bfe2e1cd14b72deda8b4b369feeb70",
+    "supplement_manifest_sha256": "840aef91bac9a1fd042bdb1c3662ff92a378e279f48335108730e168af550d91",
+    "injected_runtime_sha256": "7fdedf1194261cc5b99faa35e0d2b4e45b6d56665402ccbde7f3aa6207c3f947",
+    "runtime": 240,
+    "cache": 2695,
+    "frozen_reference_hashes_checked": 1307,
+    "unchanged_original_audio_files": 266,
+    "unchanged_supplement_files": 9,
+    "unchanged_original_cache_files": 25,
+    "source_assets_or_manifests_changed": false,
+    "numeric_tolerances_changed": false
+  },
+  "native_policy": {
+    "path": "research/browser-audio-policy/native-preference-controls.json",
+    "sha256": "c6e8454034724e2a51a6f229601399e927a29b340939925a9d30e73a3157d1c7",
+    "controlled_state_fixtures": 12,
+    "fresh_jvm_repetitions": 2,
+    "identical_native_results": true,
+    "script_closure_hashes": 129,
+    "first_use_unmute_percentages_master_music_effects_area": [100, 20, 45, 25],
+    "first_use_synced_music_effects_area_mixers": [9, 18, 8],
+    "genuine_saved_percentages": [37, 21, 66, 83],
+    "genuine_saved_synced_mixers": [3, 7, 10],
+    "playlist_slots": [1, 2, 3],
+    "entries_per_slot": 100,
+    "same_group_jingle_request_keeps_zero_transition": true,
+    "different_group_jingle_request_replaces_track_and_transition": [0, 60, 60, 0],
+    "native_server_next_row_chooser_captured": false
+  },
+  "validation": {
+    "typescript": "passed",
+    "audio_unit_tests": 41,
+    "preserved_prior_unit_tests": 29,
+    "reference_pack_tests": 85,
+    "strict_reference_validator": "passed_1307_hashes_126_cases_71_states",
+    "browser": "Google Chrome for Testing 153.0.8010.12",
+    "full_browser_tests": 41,
+    "preserved_prior_browser_tests": 32,
+    "focused_browser_tests_including_disposal": 9,
+    "full_browser_report": {
+      "path": "tools/browser-audio-tests/results.json",
+      "sha256": "970971fa26a08c54b66edd02c87947dcbf0509fcafbce6b9059a432effb17598",
+      "started_at": "2026-09-15T13:07:53.449Z",
+      "finished_at": "2026-09-15T13:18:19.102Z",
+      "real_native_source_starts": 159,
+      "real_native_end_callbacks": 158,
+      "missing_callback_explanation": "The final deliberate AudioContext close can destroy the last source without an ended callback; none is fabricated. Complete graph/cache cleanup is independently asserted.",
+      "started_only_while_running": true,
+      "source_file_changes": 0,
+      "tested_implementation_changes_during_run": 0,
+      "active_connections_after_disposal": 0
+    },
+    "focused_browser_report": {
+      "path": "tools/browser-audio-tests/preference-results.json",
+      "sha256": "5e01a2f429bf8fd9258985acdcf052dbb41a87d53e9e4e906d268295837b38f8"
+    },
+    "timing": {
+      "source_playlist_duration_seconds": 137.4,
+      "source_playlist_boundary_error_ms": 0,
+      "source_modern_area_boundary_error_ms": 0,
+      "legacy_single_boundary_error_ms": 0,
+      "bound_native_single_duration_seconds": 116.4,
+      "bound_native_single_boundary_error_ms": 0,
+      "skip_incoming_delay_cycles": 60,
+      "skip_delay_error_ms": 1.1324274851176597e-11,
+      "jingle_then_skip_transition_error_ms": 5.306122448917039,
+      "same_group_zero_reentry_error_ms": 5.306122448985207,
+      "unchanged_source_cycle_tolerance_ms": 20,
+      "bound_single_added_clip_samples": 0
+    },
+    "lifecycle": {
+      "real_mouse_and_keyboard_gestures": true,
+      "cdp_evaluation_user_gesture": false,
+      "enabled_production_destination_connection": true,
+      "namespace_and_seccomp_sandbox": true,
+      "browser_local_output_muted_for_shared_host": true,
+      "source_pool_or_slot_grants_from_preferences": 0,
+      "skipped_or_double_consumed_bag_entries": 0,
+      "same_character_reset_rejects_old_pending_skip": true,
+      "audio_local_persistence": false,
+      "cook_pretrained_and_no_level_cases_preserved": true
+    }
+  },
+  "commands": [
+    "python3 tools/browser-audio-tests/native/preference_controls.py run",
+    "pnpm --dir web exec tsc --noEmit",
+    "node --test web/audio/audio.test.ts web/audio/native-policy.test.ts web/audio/reward-levels.test.ts web/audio/supplement.test.ts web/audio/preferences.test.ts",
+    "node tools/browser-audio-tests/run.mjs --preferences-only --quick --mute-output",
+    "node tools/browser-audio-tests/run.mjs --mute-output",
+    "PYTHONDONTWRITEBYTECODE=1 python3 tools/reference-pack/validate.py --require-complete",
+    "PYTHONDONTWRITEBYTECODE=1 python3 -m unittest discover -s tools/reference-pack -p 'test_*.py' -q"
+  ],
+  "remaining_integration": [
+    "Shell resolves genuine player-scoped preferences before forwarding the first world, applies them synchronously after audio.update, and owns serialized/coalesced persistence.",
+    "UI routes direct Skip/numbered playlist/native mute APIs and projects their returned binding.musicState; All Settings native presentation remains UI-owned.",
+    "Existing source scene/listener/owner/instance/varps and actual unlock authority are still required, not fabricated by preferences.",
+    "Existing coherent Cook skill/base-level delta and committed matching Widget153 close remain required inputs."
+  ],
+  "host_speaker_perception": "not_tested",
+  "mac_edge": "not_tested",
+  "live_server_gameplay_journey": "not_tested",
+  "full_m1_acceptance": false,
+  "external_accounts_or_personal_preferences": false,
+  "new_owner_adaptation_required": false
+}

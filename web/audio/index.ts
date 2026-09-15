@@ -22,9 +22,20 @@ import {
 import type { SourceAudioScene, SourceMusicTransition, SourceMusicSelector, SourceMusicState } from "./native-scene.ts";
 import { baseSkills, committedRewardLevel, observeRewardLevels } from "./reward-levels.ts";
 import type { BaseSkills, RewardLevels } from "./reward-levels.ts";
+import {
+  parseSourceAudioPreferences, parseSourceMusicPreferences, parseSourceSavedPlaylist,
+  sourcePreferenceUnlocks, validateSourcePreferenceUnlocks,
+  sourceToggleVolumeMute, sourceSelectPlaylist, sourceEditPlaylist,
+  sourceSavedPlaylist, sourcePlaylistGroups,
+} from "./preferences.ts";
+import type {
+  SourceAudioPreferences, SourceAudioPreferenceBinding, SourceMusicPreferences, SourcePercentages,
+  SourceVolumeChannel, SourcePlaylistSlot, SourcePlaylistSelection, SourcePlaylistEdit, SourceMusicSkipResult,
+} from "./preferences.ts";
 
 export * from "./native-policy.ts";
 export * from "./native-scene.ts";
+export * from "./preferences.ts";
 
 export { AudioFailure } from "./errors.ts";
 export { AUDIO_INPUTS } from "./source.ts";
@@ -51,6 +62,7 @@ export interface AudioSnapshot {
   readonly volumes: Readonly<Record<Channel, number>>;
   readonly nativeMixer: Readonly<Record<Channel, number>>;
   readonly masterPercent: number;
+  readonly preferences: SourceAudioPreferenceBinding | null;
   readonly queueSize: number;
   readonly background: Readonly<{ groups: readonly number[]; cursor: number; mode: string; exhausted: boolean; failed: boolean }>;
   readonly voices: readonly Readonly<{
@@ -181,9 +193,16 @@ class Runtime implements AudioHandle {
   private sourceRequestDue: { plan: MusicPlan; group: number; token: number; at: number } | null = null;
   private nextPreparation: { assetId: string; token: number; when: number } | null = null;
   private nativeAreaMode: "modern" | "classic" = "modern";
+  private defaultAreaMode: "modern" | "classic" = "modern";
   private musicAreaName: string | null = null;
   private musicState: SourceMusicState | null = null;
   private areaShuffle: { key: string; remaining: number[] } | null = null;
+  private playlistChoice: { key: string; plan: MusicPlan; cursor: number } | null = null;
+  private preferences: SourceAudioPreferences | null = null;
+  private preferenceUnlocks: readonly number[] = [];
+  private pendingSkip: { previousGroup: number; nextGroup: number } | null = null;
+  private controlSequence = 0;
+  private controlEpoch = 0;
   private listener: Listener | null = null;
   private playerId: string | null = null;
   private revision: bigint | null = null;
@@ -250,6 +269,7 @@ class Runtime implements AudioHandle {
       outputEnabled: !this.disposed && !this.outputDisabled && this.context.state !== "closed",
       volumes: Object.freeze({ ...this.volumes }), queueSize: this.queue.size,
       nativeMixer: Object.freeze({ ...this.nativeMixer }), masterPercent: this.masterPercent,
+      preferences: this.preferenceBinding(),
       background: Object.freeze({
         groups: Object.freeze([...this.music.groups]), cursor: this.music.cursor,
         mode: this.music.mode, exhausted: this.musicExhausted, failed: this.musicFailed,
@@ -319,6 +339,7 @@ class Runtime implements AudioHandle {
       if (world === null) {
         if (previous !== null || !this.connected) {
           this.resetPlaying();
+          this.clearCharacterPreferences();
           this.listener = null;
           this.revision = null;
           this.baseline = true;
@@ -347,9 +368,7 @@ class Runtime implements AudioHandle {
         if (world.player.id !== this.playerId) {
           this.resetPlaying();
           this.playerId = world.player.id;
-          this.musicState = null;
-          this.areaShuffle = null;
-          this.sourceScene = null;
+          this.clearCharacterPreferences();
           this.ledger = new EventLedger();
           this.completed = new Set();
           this.baseline = true;
@@ -402,7 +421,13 @@ class Runtime implements AudioHandle {
               this.nextBackground = null;
               this.music = { groups: group === null ? [] : [group], cursor: 0, mode: "once", regionBound: true,
                 transition: SOURCE_BACKGROUND_TRANSITION, scopeGroups: scope,
-                loopEnabled: this.musicState?.loopEnabled ?? true };
+                loopEnabled: this.preferences ? this.preferences.music.repeatInAreaShuffle || scope.length > 1
+                  : this.musicState?.loopEnabled ?? true };
+              this.pendingSkip = null;
+              this.playlistChoice = null;
+              if (this.preferences && this.musicState) this.musicState = Object.freeze({
+                ...this.musicState, loopEnabled: this.music.loopEnabled!,
+              });
             }
             this.trace("region", { region: this.listener.region, group });
             if (group === null && !inputs.some((event) => event.kind === "music")) {
@@ -464,41 +489,60 @@ class Runtime implements AudioHandle {
     if (this.disposed) return;
     try {
       requireAudio(["music", "effects", "area"].includes(channel) && unit(value),
-        "AUDIO_VOLUME", "Audio volume must be a finite channel gain between 0 and 1.");
-      this.volumes[channel] = value;
-      this.nativeMixer[channel] = sourceSliderToMixer(channel, Math.round(value * 100), this.masterPercent);
-      this.trace("volume", { channel, value, nativeMixer: this.nativeMixer[channel] });
-      if (channel === "music") {
-        void this.refreshMusicVoices().catch((error) => this.notifyError(failure(error,
-          "AUDIO_NATIVE_REPRESENTATION", "Cannot apply the configured original mixer representation")));
-      }
-      if (this.nativeMixer[channel] === 0) {
-        if (channel === "music") this.stopMusical();
-        // Original ordinary effects sample the native mixer at dispatch; their
-        // already-playing streams are not rewritten by a preference change.
-        else if (channel === "area") this.reconcileSpatial();
-        this.cancelUnusedLoads();
-      } else if (channel === "music") {
-        this.musicFailed = false;
-        this.backgroundPreparation = null;
-        void this.ensureMusic().catch((error) => this.notifyError(failure(error, "AUDIO_PLAYBACK", "Cannot restore music")));
-      }
-
-      this.publish();
+        "AUDIO_VOLUME", "Audio volume must be a finite source slider position between 0 and 1.");
+      this.applyVolumes({ ...this.percentages(), [channel]: Math.round(value * 100) });
     } catch (error) {
       this.notifyError(failure(error, "AUDIO_VOLUME", "Cannot change audio volume"));
     }
   }
 
-      sourceMaster(percent: number): void {
-        requireAudio(integer(percent, 0, 100), "AUDIO_SOURCE_VOLUME", "Invalid original master slider percentage.");
-        this.masterPercent = percent;
-        for (const channel of ["music", "effects", "area"] as const) this.volume(channel, this.volumes[channel]);
+  private percentages(): SourcePercentages {
+    return { master: this.masterPercent, music: Math.round(this.volumes.music * 100),
+      effects: Math.round(this.volumes.effects * 100), area: Math.round(this.volumes.area * 100) };
+  }
+
+  private applyVolumes(current: SourcePercentages, resumeMusic = true, publish = true): void {
+    const before = this.percentages();
+    if (Object.keys(before).every((key) => before[key as SourceVolumeChannel] === current[key as SourceVolumeChannel])) return;
+    const musicBefore = this.nativeMixer.music, areaBefore = this.nativeMixer.area;
+    this.masterPercent = current.master;
+    for (const channel of ["music", "effects", "area"] as const) {
+      this.volumes[channel] = current[channel] / 100;
+      this.nativeMixer[channel] = sourceSliderToMixer(channel, current[channel], current.master);
+    }
+    if (this.preferences) this.preferences = parseSourceAudioPreferences({
+      ...this.preferences, volumes: { ...this.preferences.volumes, current },
+    });
+    if (musicBefore !== this.nativeMixer.music) {
+      if (this.nativeMixer.music === 0) this.stopMusical();
+      else {
+        void this.refreshMusicVoices().catch((error) => this.notifyError(failure(error,
+          "AUDIO_NATIVE_REPRESENTATION", "Cannot apply the configured original mixer representation")));
+        this.musicFailed = false;
+        this.backgroundPreparation = null;
+        if (resumeMusic) void this.ensureMusic().catch((error) => this.notifyError(failure(error, "AUDIO_PLAYBACK", "Cannot restore music")));
       }
+    }
+    if (areaBefore !== this.nativeMixer.area) this.reconcileSpatial();
+    this.cancelUnusedLoads();
+    this.trace("volume_preferences", { ...current, nativeMusic: this.nativeMixer.music,
+      nativeEffects: this.nativeMixer.effects, nativeArea: this.nativeMixer.area });
+    if (publish) this.publish();
+  }
+
+  sourceMaster(percent: number): void {
+    this.requireOpen();
+    requireAudio(integer(percent, 0, 100), "AUDIO_SOURCE_VOLUME", "Invalid original master slider percentage.");
+    this.applyVolumes({ ...this.percentages(), master: percent });
+  }
 
       sourceMusicDriver(selector: SourceMusicSelector | null, areaMode: "modern" | "classic"): void {
+        this.requireOpen();
+        requireAudio((selector === null || typeof selector === "function") && ["modern", "classic"].includes(areaMode),
+          "AUDIO_SOURCE_MUSIC", "Invalid source music driver or area mode.");
         this.musicSelector = selector;
         this.nativeAreaMode = areaMode;
+        this.defaultAreaMode = areaMode;
         this.musicAreaName = null;
         this.areaShuffle = null;
         if (selector && this.musicExhausted && this.music.groups[this.music.cursor] !== undefined) {
@@ -506,58 +550,291 @@ class Runtime implements AudioHandle {
         }
       }
 
-      setMusicState(state: SourceMusicState): void {
-        requireAudio(["area","single","shuffle","playlist"].includes(state.mode) &&
-          ["modern","classic"].includes(state.areaMode) && typeof state.loopEnabled === "boolean" &&
-          Array.isArray(state.unlockedGroups) && Array.isArray(state.playlistGroups) &&
-          state.unlockedGroups.length <= 100 && state.playlistGroups.length <= 100,
-        "AUDIO_SOURCE_MUSIC", "Invalid bounded original music state.");
-        const unlocked = [...new Set(state.unlockedGroups)];
-        const playlist = [...new Set(state.playlistGroups)];
-        for (const group of unlocked) this.asset("music", group, null);
-        for (const group of playlist) requireAudio(unlocked.includes(group), "AUDIO_SOURCE_MUSIC", "A playlist cannot grant a locked track.");
-        requireAudio(state.selectedGroup === null || unlocked.includes(state.selectedGroup),
-          "AUDIO_SOURCE_MUSIC", "A manually selected track must be source-unlocked.");
-        const same = this.musicState && this.musicState.mode === state.mode && this.musicState.areaMode === state.areaMode &&
-          this.musicState.selectedGroup === state.selectedGroup && this.musicState.loopEnabled === state.loopEnabled &&
-          this.musicState.unlockedGroups.join(",") === unlocked.join(",") &&
-          this.musicState.playlistGroups.join(",") === playlist.join(",");
-        if (same) return;
-        this.musicState = Object.freeze({ ...state, unlockedGroups: Object.freeze(unlocked), playlistGroups: Object.freeze(playlist) });
-        this.nativeAreaMode = state.areaMode;
-        this.areaShuffle = null;
-        let groups: number[], mode: MusicPlan["mode"];
-        if (state.mode === "area") {
-          requireAudio(this.listener, "AUDIO_SOURCE_MUSIC", "Area mode requires an authoritative world.");
-          const region = sourceMusicRegion(this.listener.tile, state.areaMode);
-          requireAudio(region, "AUDIO_SOURCE_REGION", "The declared world has no source music region.");
-          const available = region.groups.filter((group) => unlocked.includes(group));
-          requireAudio(available.length > 0, "AUDIO_SOURCE_MUSIC", "No source-unlocked track is available in this area.");
-          const first = available.includes(region.defaultGroup) ? region.defaultGroup : available[0]!;
-          groups = [first]; mode = "once";
-          this.musicAreaName = region.name;
-          this.music = { groups, cursor: 0, mode, regionBound: true,
-            scopeGroups: available, loopEnabled: state.loopEnabled, transition: SOURCE_BACKGROUND_TRANSITION };
-        } else {
-          groups = state.mode === "single"
-            ? (state.selectedGroup === null ? [] : [state.selectedGroup])
-            : (state.mode === "playlist" ? playlist : unlocked);
-          requireAudio(groups.length > 0, "AUDIO_SOURCE_MUSIC", "A declared music mode needs its original selected tracks.");
-          const shuffle = state.mode === "shuffle" || state.mode === "playlist";
-          if (shuffle) groups = this.shuffled(groups);
-          const cursor = state.selectedGroup !== null && groups.includes(state.selectedGroup) ? groups.indexOf(state.selectedGroup) : 0;
-          mode = state.mode === "single" ? "single" : "playlist";
-          this.music = { groups: Object.freeze(groups), cursor, mode, regionBound: false,
-            loopEnabled: state.loopEnabled, shuffle, transition: SOURCE_BACKGROUND_TRANSITION };
-        }
-        this.musicToken++;
-        this.musicPending = null;
-        this.musicExhausted = false;
-        this.musicFailed = false;
-        this.nextBackground = null;
-        this.sourceRequestDue = null;
-        void this.ensureMusic().catch((error) => this.notifyError(failure(error, "AUDIO_SOURCE_MUSIC", "Cannot apply declared music state")));
+  setMusicState(state: SourceMusicState): void {
+    this.requireOpen();
+    if (this.preferences) {
+      requireAudio(this.sameMusicState(state), "AUDIO_PREFERENCE_BINDING",
+        "Numbered preferences are bound. Use setSourceMusicPreferences/selectSourcePlaylist; the legacy state has no saved-slot or native repeat-bit identity.");
+      return;
+    }
+    this.declareMusicState(state);
+  }
+
+  private sameMusicState(state: SourceMusicState): boolean {
+    return !!state && !!this.musicState && this.musicState.mode === state.mode &&
+      this.musicState.areaMode === state.areaMode && this.musicState.selectedGroup === state.selectedGroup &&
+      this.musicState.loopEnabled === state.loopEnabled && Array.isArray(state.unlockedGroups) &&
+      Array.isArray(state.playlistGroups) && this.musicState.unlockedGroups.join(",") === state.unlockedGroups.join(",") &&
+      this.musicState.playlistGroups.join(",") === state.playlistGroups.join(",");
+  }
+
+  private declareMusicState(state: SourceMusicState, keepGroup: number | null = null, nativeEmpty = false): void {
+    requireAudio(state && ["area", "single", "shuffle", "playlist"].includes(state.mode) &&
+      ["modern", "classic"].includes(state.areaMode) && typeof state.loopEnabled === "boolean" &&
+      Array.isArray(state.unlockedGroups) && Array.isArray(state.playlistGroups) &&
+      state.unlockedGroups.length <= 100 && state.playlistGroups.length <= 100 &&
+      new Set(state.unlockedGroups).size === state.unlockedGroups.length &&
+      new Set(state.playlistGroups).size === state.playlistGroups.length,
+    "AUDIO_SOURCE_MUSIC", "Invalid bounded original music state.");
+    const unlocked = [...state.unlockedGroups], playlist = [...state.playlistGroups];
+    for (const group of unlocked) this.asset("music", group, null);
+    for (const group of playlist) requireAudio(unlocked.includes(group), "AUDIO_SOURCE_MUSIC", "A playlist cannot grant a locked track.");
+    requireAudio(state.selectedGroup === null || unlocked.includes(state.selectedGroup),
+      "AUDIO_SOURCE_MUSIC", "A manually selected track must be source-unlocked.");
+    if (this.sameMusicState(state)) return;
+    let plan: MusicPlan, areaName = this.musicAreaName;
+    if (state.mode === "area") {
+      requireAudio(this.listener, "AUDIO_SOURCE_MUSIC", "Area mode requires an authoritative world.");
+      const region = sourceMusicRegion(this.listener.tile, state.areaMode);
+      requireAudio(region, "AUDIO_SOURCE_REGION", "The declared world has no source music region.");
+      const available = region.groups.filter((group) => unlocked.includes(group));
+      requireAudio(available.length > 0, "AUDIO_SOURCE_MUSIC", "No source-unlocked track is available in this area.");
+      const first = keepGroup !== null && available.includes(keepGroup) ? keepGroup
+        : available.includes(region.defaultGroup) ? region.defaultGroup : available[0]!;
+      areaName = region.name;
+      plan = { groups: [first], cursor: 0, mode: "once", regionBound: true, scopeGroups: available,
+        loopEnabled: state.loopEnabled, transition: SOURCE_BACKGROUND_TRANSITION };
+    } else {
+      const eligible = state.mode === "single" ? (state.selectedGroup === null ? [] : [state.selectedGroup])
+        : state.mode === "playlist" ? playlist : unlocked;
+      requireAudio(eligible.length > 0 || nativeEmpty, "AUDIO_SOURCE_MUSIC", "A declared music mode needs its original selected tracks.");
+      const shuffle = state.mode === "shuffle" || state.mode === "playlist";
+      let groups = shuffle ? this.shuffled(eligible) : [...eligible];
+      const selected = keepGroup !== null && (eligible.includes(keepGroup) || nativeEmpty) ? keepGroup : state.selectedGroup;
+      if (selected !== null && groups.includes(selected)) groups = [selected, ...groups.filter((group) => group !== selected)];
+      plan = { groups: Object.freeze(groups), cursor: 0, mode: state.mode === "single" ? "single" : "playlist",
+        regionBound: false, loopEnabled: state.loopEnabled, shuffle, transition: SOURCE_BACKGROUND_TRANSITION };
+      if (keepGroup !== null && !eligible.includes(keepGroup) && nativeEmpty && state.mode !== "single") {
+        plan = { ...plan, groups: [keepGroup], scopeGroups: eligible };
       }
+    }
+    if (plan.groups[0] === this.music.groups[this.music.cursor] && this.music.transition) {
+      plan.transition = this.music.transition;
+    }
+    const retained = [...this.voices.values()].find((voice) => voice.asset.kind === "music" && !voice.retiring &&
+      voice.asset.sourceId === plan.groups[0] && voice.when <= this.context.currentTime);
+    this.musicState = Object.freeze({ ...state, unlockedGroups: Object.freeze(unlocked), playlistGroups: Object.freeze(playlist) });
+    this.controlEpoch++;
+    this.nativeAreaMode = state.areaMode;
+    this.musicAreaName = areaName;
+    this.areaShuffle = null;
+    this.playlistChoice = null;
+    this.pendingSkip = null;
+    this.music = plan;
+    const token = ++this.musicToken;
+    this.musicPending = null;
+    this.musicExhausted = false;
+    this.musicFailed = false;
+    this.nextBackground = null;
+    this.nextPreparation = null;
+    this.sourceRequestDue = null;
+    this.stopWhere((voice) => voice.asset.kind === "music" && voice.when > this.context.currentTime, "superseded_scheduled_music");
+    if (retained) {
+      retained.musicToken = token;
+      retained.onComplete = () => this.backgroundEnded(retained.asset, token);
+      this.armBackground(plan, 0, retained.asset, retained.when, token);
+      this.trace("music_retained", { voiceId: retained.id, group: retained.asset.sourceId });
+    } else if (plan.groups.length === 0) {
+      this.stopWhere((voice) => voice.asset.kind === "music", "empty_native_playlist");
+      this.notifyError(new AudioFailure("AUDIO_PLAYLIST_EMPTY", "The selected original playlist is empty; no track is substituted."));
+    }
+    this.cancelUnusedLoads();
+    void this.ensureMusic().catch((error) => this.notifyError(failure(error, "AUDIO_SOURCE_MUSIC", "Cannot apply declared music state")));
+    this.publish();
+  }
+
+  preferenceBinding(): SourceAudioPreferenceBinding | null {
+    if (!this.preferences || !this.playerId || !this.musicState) return null;
+    return Object.freeze({ playerId: this.playerId, preferences: parseSourceAudioPreferences(this.preferences),
+      unlockedGroups: Object.freeze([...this.preferenceUnlocks]),
+      musicState: Object.freeze({ ...this.musicState, unlockedGroups: Object.freeze([...this.musicState.unlockedGroups]),
+        playlistGroups: Object.freeze([...this.musicState.playlistGroups]) }) });
+  }
+
+  private requireCharacter(playerId: string): void {
+    this.requireOpen();
+    requireAudio(stableId(playerId) && this.listener?.id === playerId && this.playerId === playerId,
+      "AUDIO_PREFERENCE_CHARACTER", "Apply client preferences only after audio.update() for the same active character.");
+  }
+
+  private requireControl(playerId: string, epoch: number): void {
+    this.requireCharacter(playerId);
+    requireAudio(this.controlEpoch === epoch, "AUDIO_CONTROL_SUPERSEDED",
+      "This source control belongs to a replaced character session or music selection.");
+  }
+
+  private boundPreferences(playerId: string): SourceAudioPreferences {
+    this.requireCharacter(playerId);
+    requireAudio(this.preferences, "AUDIO_PREFERENCES_REQUIRED",
+      "The shell must first supply this character's real client preferences or an explicitly new record.");
+    return this.preferences;
+  }
+
+  private preferenceState(value: SourceAudioPreferences, unlocked: readonly number[]): SourceMusicState {
+    const music = value.music, groups = sourcePlaylistGroups(music, unlocked);
+    let eligible = groups;
+    if (music.mode === "area") {
+      requireAudio(this.listener, "AUDIO_SOURCE_MUSIC", "Area preferences require an authoritative world.");
+      const region = sourceMusicRegion(this.listener.tile, music.areaMode);
+      requireAudio(region, "AUDIO_SOURCE_REGION", "The declared world has no calibrated source music area.");
+      eligible = region.groups.filter((group) => unlocked.includes(group));
+      requireAudio(eligible.length > 0, "AUDIO_SOURCE_MUSIC", "No source-unlocked track is available in this area.");
+    }
+    return Object.freeze({
+      mode: music.mode === "shuffle" && music.currentPlaylist !== 0 ? "playlist" : music.mode,
+      areaMode: music.areaMode, unlockedGroups: unlocked, selectedGroup: music.selectedGroup,
+      playlistGroups: music.currentPlaylist === 0 ? [] : groups,
+      loopEnabled: music.mode === "single" || music.repeatInAreaShuffle || eligible.length > 1,
+    });
+  }
+
+  applyPreferences(playerId: string, input: unknown, unlocks: readonly number[]): SourceAudioPreferenceBinding {
+    this.requireCharacter(playerId);
+    let next = parseSourceAudioPreferences(input);
+    const unlocked = sourcePreferenceUnlocks(unlocks);
+    validateSourcePreferenceUnlocks(next, unlocked);
+    if (!this.preferences && !next.music.rememberModeOnLogin) {
+      next = parseSourceAudioPreferences({ ...next, music: { ...next.music, mode: "area",
+        currentPlaylist: next.music.keepPlayingOnPlaylistChange ? next.music.currentPlaylist : 0 } });
+    }
+    const projection = this.preferenceState(next, unlocked);
+    const before = this.preferences;
+    const sameMusic = before && before.music.mode === next.music.mode && before.music.areaMode === next.music.areaMode &&
+      (next.music.mode === "area" || before.music.selectedGroup === next.music.selectedGroup) &&
+      before.music.repeatInAreaShuffle === next.music.repeatInAreaShuffle &&
+      (next.music.mode !== "shuffle" ||
+        sourcePlaylistGroups(before.music, this.preferenceUnlocks).join(",") === sourcePlaylistGroups(next.music, unlocked).join(",")) &&
+      this.preferenceUnlocks.join(",") === unlocked.join(",");
+    const same = sameMusic && JSON.stringify(before) === JSON.stringify(next);
+    if (same) return this.preferenceBinding()!;
+    const current = this.music.groups[this.music.cursor] ?? null;
+    const manualChanged = before?.music.selectedGroup !== next.music.selectedGroup;
+    const keep = !manualChanged && current !== null && unlocked.includes(current) &&
+      (next.music.mode === "area" ? this.music.regionBound : next.music.mode === "single"
+        ? current === next.music.selectedGroup
+        : next.music.keepPlayingOnPlaylistChange || sourcePlaylistGroups(next.music, unlocked).includes(current));
+    this.preferences = next;
+    this.preferenceUnlocks = unlocked;
+    this.applyVolumes(next.volumes.current, false, false);
+    if (!sameMusic) this.declareMusicState(projection, keep ? current : null,
+      next.music.mode === "shuffle" && (next.music.keepPlayingOnPlaylistChange || projection.playlistGroups.length === 0));
+    else {
+      this.musicState = projection;
+      void this.ensureMusic().catch((error) => this.notifyError(failure(error, "AUDIO_PLAYBACK", "Cannot apply source volume preferences")));
+    }
+    this.trace("preferences_applied", { playerId, version: 1, currentPlaylist: next.music.currentPlaylist });
+    this.publish();
+    return this.preferenceBinding()!;
+  }
+
+  setMusicPreferences(playerId: string, value: SourceMusicPreferences): SourceAudioPreferenceBinding {
+    const before = this.boundPreferences(playerId), music = parseSourceMusicPreferences(value);
+    return this.applyPreferences(playerId, { ...before, music }, this.preferenceUnlocks);
+  }
+
+  setSavedPlaylist(playerId: string, slot: SourcePlaylistSlot, value: readonly (number | null)[]): SourceAudioPreferenceBinding {
+    const before = this.boundPreferences(playerId);
+    sourceSavedPlaylist(before.music, slot);
+    const key = slot === 1 ? "savedPlaylist1" : slot === 2 ? "savedPlaylist2" : "savedPlaylist3";
+    return this.setMusicPreferences(playerId, { ...before.music, [key]: parseSourceSavedPlaylist(value) });
+  }
+
+  editSavedPlaylist(playerId: string, slot: SourcePlaylistSlot, edit: SourcePlaylistEdit): SourceAudioPreferenceBinding {
+    const before = this.boundPreferences(playerId);
+    return this.setSavedPlaylist(playerId, slot, sourceEditPlaylist(sourceSavedPlaylist(before.music, slot), edit));
+  }
+
+  selectPlaylist(playerId: string, slot: SourcePlaylistSelection): SourceAudioPreferenceBinding {
+    const before = this.boundPreferences(playerId);
+    const next = sourceSelectPlaylist(before.music, slot, this.music.groups[this.music.cursor] ?? null);
+    const result = this.setMusicPreferences(playerId, next);
+    this.controlClick("playlist/9297");
+    return result;
+  }
+
+  toggleChannelMute(playerId: string, channel: SourceVolumeChannel): SourceAudioPreferenceBinding {
+    const before = this.boundPreferences(playerId), volumes = sourceToggleVolumeMute(before.volumes, channel);
+    this.controlClick("mute/9255");
+    return this.applyPreferences(playerId, { ...before, volumes }, this.preferenceUnlocks);
+  }
+
+  setPercent(playerId: string, channel: SourceVolumeChannel, percent: number): SourceAudioPreferenceBinding {
+    const before = this.boundPreferences(playerId);
+    requireAudio(["master", "music", "effects", "area"].includes(channel) && integer(percent, 0, 100),
+      "AUDIO_SOURCE_VOLUME", "Source volume controls require an integer percentage in [0,100].");
+    return this.applyPreferences(playerId, { ...before, volumes: { ...before.volumes,
+      current: { ...before.volumes.current, [channel]: percent } } }, this.preferenceUnlocks);
+  }
+
+  private controlClick(binding: string): void {
+    const id = `source-control/${++this.controlSequence}`;
+    const event: AudioEvent = { id, kind: "sound", sourceId: 2266, assetId: null,
+      actorId: this.playerId, tile: null, sourceCycle: null, payload: { repeatCount: 1, delayCycles: 0 } };
+    this.enqueue(event, this.asset("sfx", 2266, null), id, 0, 1);
+    this.trace("source_control_click", { binding, eventId: id, sourceId: 2266 });
+  }
+
+  async skipMusic(playerId: string): Promise<SourceMusicSkipResult> {
+    this.requireCharacter(playerId);
+    const epoch = this.controlEpoch;
+    const mode = () => this.preferences?.music.mode ?? this.musicState?.mode;
+    const result = (status: SourceMusicSkipResult["status"], nextGroup: number | null = null): SourceMusicSkipResult =>
+      Object.freeze({ status, previousGroup: this.music.groups[this.music.cursor] ?? null, nextGroup });
+    if (mode() !== "shuffle" && mode() !== "playlist") return result("disabled_mode");
+    requireAudio(this.connected, "AUDIO_DISCONNECTED", "Skip Track is unavailable while the world transport is disconnected.");
+    if (this.muted || this.nativeMixer.music === 0) {
+      this.controlClick("skip/9292");
+      return result("muted");
+    }
+    if (!this.canPlay()) await this.unlock(); // Native resume is invoked before any await/network in unlock().
+    this.requireControl(playerId, epoch);
+    requireAudio(this.connected, "AUDIO_DISCONNECTED", "The character disconnected during the Skip gesture.");
+    if (mode() !== "shuffle" && mode() !== "playlist") return result("disabled_mode");
+    if (this.muted || this.nativeMixer.music === 0) return result("muted");
+    this.settleSkip();
+    this.controlClick("skip/9292");
+    if (this.pendingSkip) {
+      const pending = this.pendingSkip;
+      this.musicFailed = false;
+      await this.ensureMusic();
+      this.requireControl(playerId, epoch);
+      requireAudio(this.music.groups[this.music.cursor] === pending.nextGroup, "AUDIO_CONTROL_SUPERSEDED",
+        "The pending Skip request was superseded by another source selection.");
+      return Object.freeze({ status: "pending", ...pending });
+    }
+    const previousGroup = this.music.groups[this.music.cursor] ?? null;
+    if (previousGroup === null) return result("no_alternative");
+    const choice = this.nextPlaylistChoice(this.music, this.music.cursor);
+    const nextGroup = choice.plan.groups[choice.cursor] ?? null;
+    if (nextGroup === null || nextGroup === previousGroup) return result("no_alternative");
+    this.pendingSkip = { previousGroup, nextGroup };
+    this.music = { ...choice.plan, cursor: choice.cursor, transition: SOURCE_BACKGROUND_TRANSITION };
+    this.musicToken++;
+    this.musicPending = null;
+    this.musicFailed = false;
+    this.musicExhausted = false;
+    this.nextBackground = null;
+    this.nextPreparation = null;
+    this.sourceRequestDue = null;
+    this.stopWhere((voice) => voice.asset.kind === "music" && voice.when > this.context.currentTime, "skip_superseded_schedule");
+    this.trace("skip_requested", { previousGroup, nextGroup, duringJingle: this.jingle !== null || this.jinglePending !== null });
+    this.cancelUnusedLoads();
+    await this.ensureMusic();
+    this.requireControl(playerId, epoch);
+    requireAudio(this.music.groups[this.music.cursor] === nextGroup, "AUDIO_CONTROL_SUPERSEDED",
+      "The Skip request was superseded by another source selection.");
+    this.publish();
+    return Object.freeze({ status: "requested", previousGroup, nextGroup });
+  }
+
+  private settleSkip(): void {
+    if (!this.pendingSkip) return;
+    if ([...this.voices.values()].some((voice) => voice.asset.kind === "music" && !voice.retiring &&
+      voice.asset.sourceId === this.pendingSkip!.nextGroup && voice.when <= this.context.currentTime)) {
+      this.trace("skip_started", { ...this.pendingSkip });
+      this.pendingSkip = null;
+    }
+  }
 
       setSourceScene(scene: SourceAudioScene | null): void {
         if (scene === null) {
@@ -671,6 +948,7 @@ class Runtime implements AudioHandle {
   disconnected(): void {
     if (this.disposed || !this.connected) return;
     this.connected = false;
+    this.controlEpoch++;
     this.resetPlaying();
     this.stopClock();
     this.questScroll = null;
@@ -1164,6 +1442,7 @@ class Runtime implements AudioHandle {
 
   private selectMusic(event: AudioEvent): void {
     if (event.sourceId === -1) {
+      this.controlEpoch++;
       this.stopMusical();
       this.music = { groups: [], cursor: 0, mode: "once", regionBound: false };
       this.cancelUnusedLoads();
@@ -1209,7 +1488,10 @@ class Runtime implements AudioHandle {
     this.music = { groups: Object.freeze(groups), cursor: groups.indexOf(selected.sourceId),
       mode: repeatMode, regionBound: mode === "area", transition,
       loopEnabled: event.payload.loopEnabled !== false, shuffle: mode === "shuffle" || event.payload.shuffle === true };
+    this.controlEpoch++;
     this.musicToken++;
+    this.playlistChoice = null;
+    this.pendingSkip = null;
     this.musicExhausted = false;
     this.musicFailed = false;
     this.musicPending = null;
@@ -1251,6 +1533,7 @@ class Runtime implements AudioHandle {
       return;
     }
     this.stopMusical();
+    this.music.transition = SOURCE_JINGLE_TRANSITION;
     this.jingle = asset;
     const token = this.musicalToken;
     this.trace("jingle_accepted", { eventId, group: asset.sourceId });
@@ -1271,7 +1554,6 @@ class Runtime implements AudioHandle {
             if (token !== this.musicalToken) return;
             this.jingle = null;
             this.jinglePending = null;
-            this.music.transition = SOURCE_JINGLE_TRANSITION;
             this.trace("jingle_finished", { eventId, group: asset.sourceId });
             void this.ensureMusic().catch((error) => this.notifyError(failure(error, "AUDIO_PLAYBACK", "Cannot resume remembered music")));
           });
@@ -1337,19 +1619,22 @@ class Runtime implements AudioHandle {
     }
     const voice = this.startVoice(asset, buffer, "music", `music/${token}/${cursor}`, "",
       `music/${token}/${cursor}`, transition.fadeInCycles ? 0 : 1, actualWhen, null, false, token, undefined,
-      false, () => {
-        if (token !== this.musicToken) return;
-        if (plan.mode === "once") {
-          this.musicExhausted = true;
-          if (sourceMusicDurationSeconds(asset.sourceId) === null) void this.requestSourceNext(plan, asset.sourceId, token);
-        } else if (plan.loopEnabled === false) {
-          this.musicExhausted = true;
-        } else if (plan.mode === "playlist" || plan.mode === "single") {
-          plan.cursor = (cursor + 1) % plan.groups.length;
-        }
-      });
+      false, () => this.backgroundEnded(asset, token));
     if (transition.fadeInCycles) this.musicFade(voice, "in", transition.fadeInCycles, actualWhen, false);
     this.trace("music_started", { group: asset.sourceId, voiceId: voice.id, mode: plan.mode, when: actualWhen });
+    this.armBackground(plan, cursor, asset, actualWhen, token);
+  }
+
+  private backgroundEnded(asset: SourceAsset, token: number): void {
+    if (token !== this.musicToken) return;
+    const plan = this.music;
+    if (plan.mode === "once" || plan.loopEnabled === false) this.musicExhausted = true;
+    if (plan.mode === "once" && sourceMusicDurationSeconds(asset.sourceId) === null) {
+      void this.requestSourceNext(plan, asset.sourceId, token);
+    }
+  }
+
+  private armBackground(plan: MusicPlan, cursor: number, asset: SourceAsset, actualWhen: number, token: number): void {
     if (plan.mode === "once") {
       const duration = sourceMusicDurationSeconds(asset.sourceId);
       this.sourceRequestDue = duration === null ? null : { plan, group: asset.sourceId, token, at: actualWhen + duration };
@@ -1357,7 +1642,8 @@ class Runtime implements AudioHandle {
         const region = sourceMusicRegion(this.listener.tile, this.nativeAreaMode);
         const nextGroup = this.nextAreaTrack(plan, asset.sourceId, region?.groups ?? plan.scopeGroups ?? plan.groups);
         const nextPlan: MusicPlan = { groups: [nextGroup], cursor: 0, mode: "once", regionBound: true,
-          scopeGroups: region?.groups ?? plan.scopeGroups ?? plan.groups, transition: SOURCE_JINGLE_TRANSITION };
+          scopeGroups: region?.groups ?? plan.scopeGroups ?? plan.groups, transition: SOURCE_JINGLE_TRANSITION,
+          loopEnabled: true };
         void this.prepareNextBackground(nextPlan, 0, actualWhen + duration, token).then(() => {
           if (this.sourceRequestDue?.token === token && this.sourceRequestDue.at === actualWhen + duration &&
             this.nextBackground?.token === token && this.nextBackground.when === actualWhen + duration) {
@@ -1369,22 +1655,19 @@ class Runtime implements AudioHandle {
       }
     }
     if ((plan.mode === "playlist" || plan.mode === "single") && plan.loopEnabled !== false) {
-      let next = (cursor + 1) % plan.groups.length;
-      let nextPlan = { ...plan, transition: SOURCE_JINGLE_TRANSITION };
-      if (next === 0 && plan.shuffle && plan.groups.length > 1) {
-        let order = this.shuffled(plan.groups);
-        if (order[0] === asset.sourceId) [order[0], order[1]] = [order[1]!, order[0]!];
-        nextPlan = { ...nextPlan, groups: Object.freeze(order), cursor: 0 };
-        next = 0;
+      const choice = this.nextPlaylistChoice(plan, cursor);
+      if (choice.plan.groups.length === 0) {
+        plan.loopEnabled = false;
+        this.notifyError(new AudioFailure("AUDIO_PLAYLIST_EMPTY", "The selected saved playlist has no next original track."));
+        return;
       }
       const interval = sourceMusicDurationSeconds(asset.sourceId);
       requireAudio(interval !== null, "AUDIO_SOURCE_MUSIC", "This source track has no native player duration row.");
       const nextWhen = actualWhen + interval;
-      void this.prepareNextBackground(nextPlan, next, nextWhen, token).catch((error) => {
+      void this.prepareNextBackground(choice.plan, choice.cursor, nextWhen, token).catch((error) => {
         if (token === this.musicToken) this.notifyError(failure(error, "AUDIO_PLAYLIST", "Cannot prepare the next source track"));
       });
     }
-
   }
 
     private async requestSourceNext(plan: MusicPlan, group: number, token: number): Promise<void> {
@@ -1471,6 +1754,24 @@ class Runtime implements AudioHandle {
   }
 
   private nextBackground: { plan: MusicPlan; cursor: number; when: number; token: number } | null = null;
+
+  private nextPlaylistChoice(plan: MusicPlan, cursor: number): { plan: MusicPlan; cursor: number } {
+    const key = `${plan.mode}/${!!plan.shuffle}/${plan.groups.join(",")}/${cursor}/${plan.scopeGroups?.join(",") ?? ""}`;
+    if (this.playlistChoice?.key === key) return this.playlistChoice;
+    const { scopeGroups, ...base } = plan;
+    let groups = plan.groups, next = (cursor + 1) % Math.max(1, groups.length);
+    if (scopeGroups !== undefined) {
+      groups = this.shuffled(scopeGroups);
+      next = 0;
+    } else if (next === 0 && plan.shuffle && groups.length > 1) {
+      const order = this.shuffled(groups);
+      if (order[0] === groups[cursor]) [order[0], order[1]] = [order[1]!, order[0]!];
+      groups = order;
+    }
+    this.playlistChoice = { key, plan: { ...base, groups: Object.freeze([...groups]), cursor: next,
+      transition: SOURCE_JINGLE_TRANSITION }, cursor: next };
+    return this.playlistChoice;
+  }
 
   private shuffled(groups: readonly number[]): number[] {
     const result = [...groups];
@@ -1681,6 +1982,21 @@ class Runtime implements AudioHandle {
     this.cancelUnusedLoads();
   }
 
+  private clearCharacterPreferences(): void {
+    this.controlEpoch++;
+    this.preferences = null;
+    this.preferenceUnlocks = [];
+    this.musicState = null;
+    this.nativeAreaMode = this.defaultAreaMode;
+    this.musicAreaName = null;
+    this.areaShuffle = null;
+    this.playlistChoice = null;
+    this.pendingSkip = null;
+    this.sourceScene = null;
+    this.sourceSceneErrors.clear();
+    this.applyVolumes(sourceAudioDefaults().sliders, false, false);
+  }
+
   private cancelUnusedLoads(): void {
     const wanted = new Set(this.queue.values().map((effect) => effect.asset.id));
     for (const effect of this.ambientPending.values()) wanted.add(effect.asset.id);
@@ -1714,6 +2030,7 @@ class Runtime implements AudioHandle {
 
   private processCycle = (): void => {
     if (!this.canPlay()) return;
+    this.settleSkip();
     const now = this.context.currentTime;
     let changed = false;
     if (now - this.nextCycleAt > 0.1) {
@@ -1803,11 +2120,11 @@ class Runtime implements AudioHandle {
         void this.startBackground(next.plan, next.cursor, next.when, next.token)
           .catch((error) => this.notifyError(failure(error, "AUDIO_PLAYLIST", "Cannot advance source playlist")));
       }
-      if (this.sourceRequestDue && this.sourceRequestDue.at <= now) {
-        const request = this.sourceRequestDue;
-        this.sourceRequestDue = null;
-        if (request.token === this.musicToken) void this.requestSourceNext(request.plan, request.group, request.token);
-      }
+    }
+    if (this.sourceRequestDue && this.sourceRequestDue.at <= now) {
+      const request = this.sourceRequestDue;
+      this.sourceRequestDue = null;
+      if (request.token === this.musicToken) void this.requestSourceNext(request.plan, request.group, request.token);
     }
     if (changed) this.publish();
   };
@@ -1956,4 +2273,60 @@ export function setSourceMusicState(handle: AudioHandle, state: SourceMusicState
   const runtime = runtimes.get(handle);
   requireAudio(runtime, "AUDIO_HANDLE", "Not a ClubScape source-audio handle.");
   runtime.setMusicState(state);
+}
+
+function preferenceRuntime(handle: AudioHandle): Runtime {
+  const runtime = runtimes.get(handle);
+  requireAudio(runtime, "AUDIO_HANDLE", "Not a ClubScape source-audio handle.");
+  return runtime;
+}
+
+export function readSourceAudioPreferences(handle: AudioHandle): SourceAudioPreferenceBinding | null {
+  return preferenceRuntime(handle).preferenceBinding();
+}
+
+export function applySourceAudioPreferences(
+  handle: AudioHandle, playerId: string, value: unknown, unlockedGroups: readonly number[],
+): SourceAudioPreferenceBinding {
+  return preferenceRuntime(handle).applyPreferences(playerId, value, unlockedGroups);
+}
+
+export function setSourceMusicPreferences(
+  handle: AudioHandle, playerId: string, value: SourceMusicPreferences,
+): SourceAudioPreferenceBinding {
+  return preferenceRuntime(handle).setMusicPreferences(playerId, value);
+}
+
+export function setSourceSavedPlaylist(
+  handle: AudioHandle, playerId: string, slot: SourcePlaylistSlot, entries: readonly (number | null)[],
+): SourceAudioPreferenceBinding {
+  return preferenceRuntime(handle).setSavedPlaylist(playerId, slot, entries);
+}
+
+export function editSourceSavedPlaylist(
+  handle: AudioHandle, playerId: string, slot: SourcePlaylistSlot, edit: SourcePlaylistEdit,
+): SourceAudioPreferenceBinding {
+  return preferenceRuntime(handle).editSavedPlaylist(playerId, slot, edit);
+}
+
+export function selectSourcePlaylist(
+  handle: AudioHandle, playerId: string, slot: SourcePlaylistSelection,
+): SourceAudioPreferenceBinding {
+  return preferenceRuntime(handle).selectPlaylist(playerId, slot);
+}
+
+export function toggleSourceAudioMute(
+  handle: AudioHandle, playerId: string, channel: SourceVolumeChannel,
+): SourceAudioPreferenceBinding {
+  return preferenceRuntime(handle).toggleChannelMute(playerId, channel);
+}
+
+export function setSourceAudioPercent(
+  handle: AudioHandle, playerId: string, channel: SourceVolumeChannel, percent: number,
+): SourceAudioPreferenceBinding {
+  return preferenceRuntime(handle).setPercent(playerId, channel, percent);
+}
+
+export function requestSourceMusicSkip(handle: AudioHandle, playerId: string): Promise<SourceMusicSkipResult> {
+  return preferenceRuntime(handle).skipMusic(playerId);
 }

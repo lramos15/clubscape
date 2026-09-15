@@ -1,0 +1,571 @@
+{
+  "schemaVersion": 1,
+  "fixtureOnly": true,
+  "sourcePackSha256": "b62e19704e17d3d3e4e819f803ef49ba7cc54034ae407184b423427c65d9674d",
+  "browser": "Google Chrome for Testing 153.0.8010.12",
+  "node": "v24.18.0",
+  "startedAt": "2026-09-15T13:02:23.384Z",
+  "sourceAssets": 275,
+  "sourceFilesChanged": 0,
+  "sandbox": {
+    "namespace": true,
+    "seccompBpf": true,
+    "noSandboxFlag": false,
+    "muteAudioFlag": true
+  },
+  "audioDevice": {
+    "state": "running",
+    "sampleRate": 22050,
+    "baseLatency": 0.01070294784580499,
+    "outputLatency": 0.032,
+    "sinkId": "",
+    "enabledProductionConnection": true
+  },
+  "frozenOriginalAssets": 266,
+  "additiveAssets": 9,
+  "supplementManifestSha256": "840aef91bac9a1fd042bdb1c3662ff92a378e279f48335108730e168af550d91",
+  "implementationFiles": [
+    {
+      "path": "web/audio/buffers.ts",
+      "sha256": "90992badd533b2f301c81e774353aedac377272f3a799124e639d4248829f6ec"
+    },
+    {
+      "path": "web/audio/errors.ts",
+      "sha256": "99d956ccee69b27a17d3e47b1d9af18aa6b0e64365c9768c76193f6bc32629f1"
+    },
+    {
+      "path": "web/audio/events.ts",
+      "sha256": "f1d337a085eddba8a4e87a469e4fb8adfdd840235fd0bc79fe4977e57e07436e"
+    },
+    {
+      "path": "web/audio/index.ts",
+      "sha256": "12f6bcc74d1e5af25a95ced416cfb6c22641f0460ce74fc549d46278c22fe2d3"
+    },
+    {
+      "path": "web/audio/native-data.ts",
+      "sha256": "b7a1e322d98c5f0aebba2e3e35bf6372d6ad06de45d8bb9cfa7a13caa67283d5"
+    },
+    {
+      "path": "web/audio/native-policy.ts",
+      "sha256": "1a0564343d649c11435ac2f11b88bfb192da4d64ceeccc1272101a251b3fa5e8"
+    },
+    {
+      "path": "web/audio/native-scene.ts",
+      "sha256": "52cac53d37381c975eafc8038adb997cca772d0b67bf0b96c49b8c809ee5b183"
+    },
+    {
+      "path": "web/audio/preferences.ts",
+      "sha256": "1cb445e484b7f9e600a2879554ec62299f0bb8d7de891000bfe24fec993d8447"
+    },
+    {
+      "path": "web/audio/queue.ts",
+      "sha256": "c9ee41978eaacbccc799d39e382e62be15e3cd9daf1c312aaaff2f1b2a08fa41"
+    },
+    {
+      "path": "web/audio/reward-levels.ts",
+      "sha256": "ff41337cefe8a29a8b8da80e07d674ea25dbe479e675097439b9a9f21b3a2a99"
+    },
+    {
+      "path": "web/audio/source.ts",
+      "sha256": "a8e1cc35306e413307e35624a641b36a4dc25d10ed3f601c48063a6e7a770fd1"
+    },
+    {
+      "path": "web/shared/contracts.ts",
+      "sha256": "9f4a2619082c01d02b27951160ae63c9386509040f2164c74a3b35217b5431bc"
+    },
+    {
+      "path": "tools/browser-audio-tests/run.mjs",
+      "sha256": "6901deba149023901aeeaedba1f6f6413970d26d84da2a3dd00aa70a5be788f6"
+    },
+    {
+      "path": "tools/browser-audio-tests/fixture.mjs",
+      "sha256": "5b3059d5c8215df5268a6cba16b3de62ae44062d36c495b4c20405fa1c846d00"
+    },
+    {
+      "path": "tools/browser-audio-tests/fixture.html",
+      "sha256": "f936bc3fbe614b068307860118ba9e7dbceb9dff979d91e4da70af9fed36f305"
+    },
+    {
+      "path": "tools/browser-audio-tests/monitor.js",
+      "sha256": "b3bc16008ecc23319883fee06c32ee19358a1339ba1ba0dab2a84159eb10b28b"
+    },
+    {
+      "path": "research/browser-audio-policy/cook-reward-boundary.json",
+      "sha256": "c0ac07c608c6f7c84beeee31612c6bc36966233fd1c4cf1ef7ed457b644a1575"
+    },
+    {
+      "path": "assets/manifests/osrs/audio-m1-supplement.json",
+      "sha256": "840aef91bac9a1fd042bdb1c3662ff92a378e279f48335108730e168af550d91"
+    },
+    {
+      "path": "research/browser-audio-policy/supplement-browser-oracles.json",
+      "sha256": "60340d777362b6a88de76853508a633f75d2c93be7e90b0ff624cd780c1e0d65"
+    },
+    {
+      "path": "tools/browser-audio-tests/preferences.mjs",
+      "sha256": "cd4891e76706aa0b64f7592c931f73a34ea92602a3b61f4b496aa3deaf19d797"
+    },
+    {
+      "path": "research/browser-audio-policy/native-preference-controls.json",
+      "sha256": "c6e8454034724e2a51a6f229601399e927a29b340939925a9d30e73a3157d1c7"
+    }
+  ],
+  "headless": true,
+  "hostSpeakerPerception": "not tested",
+  "macEdge": "not tested",
+  "validationScope": "native-preference-controls-component",
+  "longDurationChecks": false,
+  "browserOutputMutedForSharedHost": true,
+  "gameplayOrM1Acceptance": false,
+  "results": [
+    {
+      "name": "client preferences require the real character and detach all three slots without autoplay or persistence",
+      "passed": true,
+      "durationMs": 19,
+      "version": 1,
+      "nativeSavedSlots": [
+        1,
+        2,
+        3
+      ],
+      "slotsPerPlaylist": 100,
+      "detached": true,
+      "idempotentReapplications": 20,
+      "autoplaySources": 0,
+      "audioOwnedPersistenceKeys": 0
+    },
+    {
+      "name": "direct Skip unlocks from a real keyboard gesture and obeys source Area/Single eligibility",
+      "passed": true,
+      "durationMs": 5025,
+      "originalCallback": 9292,
+      "originalClick": 2266,
+      "rejectedSyntheticUnlock": "AUDIO_GESTURE_REQUIRED",
+      "trustedGesture": {
+        "control": "skip",
+        "trusted": true,
+        "active": true
+      },
+      "requested": {
+        "status": "requested",
+        "previousGroup": 62,
+        "nextGroup": 2
+      },
+      "actualStartedGroup": 2,
+      "actualStart": 1.8443537414965987,
+      "nativeTransitionCycles": [
+        0,
+        60,
+        60,
+        0
+      ],
+      "delayErrorMs": 2.220446049250313e-13,
+      "disabledModes": [
+        "area",
+        "single"
+      ]
+    },
+    {
+      "name": "three native saved playlists keep holes, selection rules and explicit empty/unpublished rejection",
+      "passed": true,
+      "durationMs": 1597,
+      "inactivePlaylistStarts": 0,
+      "holeAfterRemoval": 1,
+      "firstHoleInsertion": 2,
+      "slot2LastGroup": 144,
+      "sourceSelectionMode": 1,
+      "allMusicSelectionMode": 0,
+      "emptyPlaylistReported": true,
+      "invalid": {
+        "codes": [
+          "AUDIO_PREFERENCES",
+          "AUDIO_PREFERENCE_TRACK",
+          "AUDIO_PREFERENCE_VERSION"
+        ],
+        "unchanged": true
+      }
+    },
+    {
+      "name": "native remembered mute vectors, first-use fallbacks and slider-zero differ from global privacy mute",
+      "passed": true,
+      "durationMs": 3457,
+      "originalRestore": [
+        100,
+        20,
+        45,
+        25
+      ],
+      "restoredSavedVector": [
+        37,
+        21,
+        66,
+        83
+      ],
+      "restoredNativeMixer": [
+        3,
+        7,
+        10
+      ],
+      "sliderZeroDidNotRewriteMemory": true,
+      "globalMutePersistedAsChannelZero": false,
+      "mutedMonitorPeak": 0
+    },
+    {
+      "name": "Skip during a jingle updates remembered source and fades without consuming another bag entry",
+      "passed": true,
+      "durationMs": 9310,
+      "previous": 62,
+      "remembered": 2,
+      "repeatedRequests": [
+        "pending",
+        "pending"
+      ],
+      "nativeTransition": [
+        0,
+        60,
+        60,
+        0
+      ],
+      "expectedJingleEnd": 18.117868480725623,
+      "nextSourceStart": 19.323174603174603,
+      "transitionErrorMs": 5.306122448980988,
+      "sameRememberedTrackRetainedItsZeroTransition": true,
+      "sameGroupReentryErrorMs": 5.306122448978101,
+      "jingleNativeVoiceId": 20,
+      "jingleRestarts": 0,
+      "nativeStartsIncludingBoundClicks": 4
+    },
+    {
+      "name": "Shuffle preserves every entry across pending Skip, mute, reconnect and bag rollover",
+      "passed": true,
+      "durationMs": 6531,
+      "order": [
+        62,
+        2,
+        76
+      ],
+      "firstBagActuallyPlayed": [
+        62,
+        2,
+        76
+      ],
+      "pendingSkipPreservedThroughMute": 2,
+      "reconnectRestartedOnlyCurrentGroup": 2,
+      "nextBagFirst": 62,
+      "skippedOrDoubleConsumedEntries": 0,
+      "snapshotStarts": 0
+    },
+    {
+      "name": "native keep-playing and Single membership selection retain nodes; one-song Shuffle cannot invent an alternative",
+      "passed": true,
+      "durationMs": 1518,
+      "retainedNativeVoiceId": 30,
+      "keepPlayingRestartCount": 0,
+      "nonmemberSelectionSwitchedToNativeShuffle": true,
+      "onlyEligibleGroup": 144,
+      "inventedNextTrack": false
+    },
+    {
+      "name": "gesture failure and cross-character reset cannot inherit preferences, tracks or pending commands",
+      "passed": true,
+      "durationMs": 2872,
+      "injectedResumeFailure": "AUDIO_UNLOCK",
+      "nativeBagChangedOnFailure": false,
+      "deferredResumeAcrossSameIdReset": "AUDIO_CONTROL_SUPERSEDED",
+      "staleSkipAppliedToNewSession": false,
+      "previousPlayer": "player.audio-preference-bag",
+      "newPlayer": "player.audio-preference-new-character",
+      "inheritedBinding": false,
+      "freshLoginMode": "area",
+      "nativeCurrentPlaylist": 0
+    },
+    {
+      "name": "real AudioContext closure is a device failure, followed by idempotent complete disposal",
+      "passed": true,
+      "durationMs": 18,
+      "contextClosed": true,
+      "activeNodesAfterDispose": 0,
+      "queuedAfterDispose": 0,
+      "decodedCacheBytesAfterDispose": 0
+    }
+  ],
+  "failures": [],
+  "complete": true,
+  "nativePlayback": {
+    "starts": 33,
+    "ends": 32,
+    "startedOnlyWhileRunning": true,
+    "endedSourceIds": [
+      1,
+      2,
+      3,
+      5,
+      4,
+      6,
+      7,
+      8,
+      9,
+      11,
+      10,
+      12,
+      13,
+      15,
+      14,
+      16,
+      18,
+      17,
+      19,
+      21,
+      22,
+      23,
+      20,
+      24,
+      25,
+      26,
+      27,
+      28,
+      29,
+      30,
+      31,
+      32
+    ],
+    "gestures": [
+      {
+        "control": "skip",
+        "trusted": true,
+        "active": true
+      },
+      {
+        "control": "skip",
+        "trusted": true,
+        "active": true
+      },
+      {
+        "control": "skip",
+        "trusted": true,
+        "active": true
+      },
+      {
+        "control": "playlist-1",
+        "trusted": true,
+        "active": true
+      },
+      {
+        "control": "playlist-0",
+        "trusted": true,
+        "active": true
+      },
+      {
+        "control": "playlist-3",
+        "trusted": true,
+        "active": true
+      },
+      {
+        "control": "skip",
+        "trusted": true,
+        "active": true
+      },
+      {
+        "control": "toggle-master",
+        "trusted": true,
+        "active": true
+      },
+      {
+        "control": "toggle-music",
+        "trusted": true,
+        "active": true
+      },
+      {
+        "control": "toggle-effects",
+        "trusted": true,
+        "active": true
+      },
+      {
+        "control": "toggle-area",
+        "trusted": true,
+        "active": true
+      },
+      {
+        "control": "toggle-music",
+        "trusted": true,
+        "active": true
+      },
+      {
+        "control": "toggle-master",
+        "trusted": true,
+        "active": true
+      },
+      {
+        "control": "toggle-music",
+        "trusted": true,
+        "active": true
+      },
+      {
+        "control": "toggle-effects",
+        "trusted": true,
+        "active": true
+      },
+      {
+        "control": "toggle-area",
+        "trusted": true,
+        "active": true
+      },
+      {
+        "control": "toggle-master",
+        "trusted": true,
+        "active": true
+      },
+      {
+        "control": "toggle-music",
+        "trusted": true,
+        "active": true
+      },
+      {
+        "control": "toggle-effects",
+        "trusted": true,
+        "active": true
+      },
+      {
+        "control": "toggle-area",
+        "trusted": true,
+        "active": true
+      },
+      {
+        "control": "playlist-2",
+        "trusted": true,
+        "active": true
+      },
+      {
+        "control": "skip",
+        "trusted": true,
+        "active": true
+      },
+      {
+        "control": "skip",
+        "trusted": true,
+        "active": true
+      },
+      {
+        "control": "skip",
+        "trusted": true,
+        "active": true
+      },
+      {
+        "control": "skip",
+        "trusted": true,
+        "active": true
+      },
+      {
+        "control": "skip",
+        "trusted": true,
+        "active": true
+      },
+      {
+        "control": "skip",
+        "trusted": true,
+        "active": true
+      },
+      {
+        "control": "skip",
+        "trusted": true,
+        "active": true
+      },
+      {
+        "control": "skip",
+        "trusted": true,
+        "active": true
+      },
+      {
+        "control": "playlist-2",
+        "trusted": true,
+        "active": true
+      },
+      {
+        "control": "playlist-2",
+        "trusted": true,
+        "active": true
+      },
+      {
+        "control": "skip",
+        "trusted": true,
+        "active": true
+      },
+      {
+        "control": "skip",
+        "trusted": true,
+        "active": true
+      },
+      {
+        "control": "unlock",
+        "trusted": true,
+        "active": true,
+        "input": "mouse"
+      },
+      {
+        "control": "skip",
+        "trusted": true,
+        "active": true
+      }
+    ]
+  },
+  "observedRuntimeErrors": [
+    {
+      "code": "AUDIO_GESTURE_REQUIRED",
+      "message": "Sound is waiting for a real mouse or keyboard gesture. AudioContext has not been unlocked.",
+      "recoverable": true,
+      "detail": {
+        "state": "suspended"
+      }
+    },
+    {
+      "code": "AUDIO_CLOCK_LATE",
+      "message": "The browser stopped servicing source cycles; stale effects were discarded rather than burst after a stalled tab.",
+      "recoverable": true,
+      "detail": {
+        "lateMs": 150.88435374149665
+      }
+    },
+    {
+      "code": "AUDIO_PLAYLIST_EMPTY",
+      "message": "The selected original playlist is empty; no track is substituted.",
+      "recoverable": true,
+      "detail": {}
+    },
+    {
+      "code": "AUDIO_CONTEXT_SUSPENDED",
+      "message": "AudioContext is suspended; playback is not running. Use a real gesture to resume.",
+      "recoverable": true,
+      "detail": {}
+    },
+    {
+      "code": "AUDIO_UNLOCK",
+      "message": "Cannot enable audio: Injected source control resume denial",
+      "recoverable": true,
+      "detail": {}
+    },
+    {
+      "code": "AUDIO_CONTEXT_SUSPENDED",
+      "message": "AudioContext is suspended; playback is not running. Use a real gesture to resume.",
+      "recoverable": true,
+      "detail": {}
+    },
+    {
+      "code": "AUDIO_CONTEXT_CLOSED",
+      "message": "AudioContext is closed; playback is not running. Recreate the audio handle.",
+      "recoverable": false,
+      "detail": {}
+    }
+  ],
+  "implementationChangedDuringRun": [],
+  "requestedPlayableIds": [
+    "asset.source.osrs.cache2695.audio-runtime.music.62",
+    "asset.source.osrs.cache2695.audio-runtime.music.2",
+    "asset.source.osrs.cache2695.audio-supplement.music.64.native255",
+    "asset.source.osrs.cache2695.audio-runtime.music.76",
+    "asset.source.osrs.cache2695.audio-runtime.sfx.2266",
+    "asset.source.osrs.cache2695.audio-supplement.music.327.native255",
+    "asset.source.osrs.cache2695.audio-runtime.jingle.33",
+    "asset.source.osrs.cache2695.audio-runtime.music.144"
+  ],
+  "finishedAt": "2026-09-15T13:02:54.676Z"
+}

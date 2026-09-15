@@ -5,6 +5,13 @@
 playback engine; this revision binds independently executed original native
 policies into it. It does not implement UI or gameplay authority.
 
+For current UI/shell integration, use the
+[player-scoped preference controls](#player-scoped-preference-controls-v1).
+The legacy composition example below does not identify saved playlists or
+persisted mute memory. Current bounded evidence is12 native state fixtures,
+41 unit checks,41 real-Chrome checks and85 unchanged pack tests; see
+`research/browser-audio-policy/preference-validation.json`.
+
 The source pack stays
 `b62e19704e17d3d3e4e819f803ef49ba7cc54034ae407184b423427c65d9674d`.
 All264 original FLACs and the original710/2693 reference WAVs are unchanged.
@@ -219,6 +226,11 @@ advance with one prepared successor, and neither loops the release padding.
 Same-area square crossings preserve music; a real area change resets selection.
 Different characters do not inherit the preceding character's unlock list.
 
+The zero jingle/resume parameters describe a jingle with **no subsequent
+different background request**. Such a request replaces the remembered
+parameters too; the native preference-control continuation below verifies both
+that case and the same-group no-op guard.
+
 ## Shared AudioEvent payloads
 
 The existing shared envelope remains unchanged. `sourceId` is an index4 group
@@ -332,3 +344,208 @@ being relabeled native-server captures. Legitimate app/server journey, physical
 speaker perception, owner Mac Chrome/Edge and full M1 acceptance remain actual
 product-level checks outside this bounded component. No such acceptance is
 claimed by the native or isolated browser fixtures.
+
+## Player-scoped preference controls (v1)
+
+The four UI contract gaps now have working factory controls: direct **Skip
+Track**, actual **Playlist 1/2/3**, original remembered mute percentages and a
+detached serializable client record. `AudioHandle` and `AUDIO_INPUTS` are
+unchanged. No new asset, waveform, manifest, source approval or shared contract
+is needed. The source proof is
+`research/browser-audio-policy/native-preference-controls.json`: **12 unique
+controlled states**, repeated in two fresh isolated original JVMs.
+
+The shell owns storage and its real character key. Audio reads/writes **no**
+localStorage, account file, credential or saved history. Resolve that character's
+stored record **before** forwarding its first world to audio, then make these
+two calls in the same synchronous turn:
+
+```ts
+import {
+  applySourceAudioPreferences, sourceAudioPreferenceDefaults,
+  deserializeSourceAudioPreferences, serializeSourceAudioPreferences,
+  readSourceAudioPreferences, requestSourceMusicSkip,
+  selectSourcePlaylist, editSourceSavedPlaylist, toggleSourceAudioMute,
+  setSourceMusicPreferences,
+} from "./audio/index.ts";
+
+// These storage/authority functions belong to the shell, not this module.
+const stored = await loadPlayerAudioPreferences(world.player.id);
+const preferences = stored === null // CONFIRMED absent record, not a failed read
+  ? sourceAudioPreferenceDefaults()
+  : deserializeSourceAudioPreferences(stored);
+
+audio.update(world, committedAudioEvents);
+const binding = applySourceAudioPreferences(
+  audio, world.player.id, preferences, actualSourceUnlockedGroups,
+);
+setUiMusicState(ui, binding.playerId, binding.musicState);
+
+skipButton.onclick = () => {
+  // Calls real unlock/resume before awaiting, when permission is needed.
+  void requestSourceMusicSkip(audio, world.player.id)
+    .then(showSkipResult, reportAudioFeedback);
+};
+
+muteButton.onclick = () => {
+  const permission = audio.unlock(); // IN the actual gesture, before any await
+  try {
+    const next = toggleSourceAudioMute(audio, world.player.id, "music");
+    void savePlayerAudioPreferences(
+      next.playerId, serializeSourceAudioPreferences(next.preferences),
+    ).catch(reportAudioFeedback);
+  } catch (error) {
+    reportAudioFeedback(error);
+  }
+  void permission.catch(reportAudioFeedback);
+};
+
+// Other explicit source controls, using the genuine selected slot:
+const next = selectSourcePlaylist(audio, world.player.id, 2);
+editSourceSavedPlaylist(audio, world.player.id, 2, { kind: "add", group: 76 });
+setSourceMusicPreferences(audio, world.player.id, {
+  ...readSourceAudioPreferences(audio)!.preferences.music,
+  mode: "single", selectedGroup: 76,
+});
+```
+
+`savePlayerAudioPreferences` must serialize/coalesce writes **per character**;
+an older asynchronous write must not overwrite a newer control value. Persist
+only `binding.preferences`, never `binding.unlockedGroups` or the runtime
+snapshot. The example's explicit76 is a source-unlocked user choice, not an
+automatic grant; real handlers use the user's actual selected, permitted row.
+Load errors and corrupt records must be reported, not passed through the
+new-record defaults helper. The normal world/scene/Cook event contract above
+remains required; preferences do not synthesize those inputs.
+
+### Exact record and APIs
+
+`SourceAudioPreferences` is an immutable, detached plain-JSON record:
+
+```ts
+interface SourceAudioPreferences {
+  version: 1;
+  volumes: {
+    current: { master: number; music: number; effects: number; area: number };
+    remembered: { master: number; music: number; effects: number; area: number };
+  };
+  music: {
+    mode: "area" | "shuffle" | "single";
+    areaMode: "modern" | "classic";
+    selectedGroup: number | null;
+    currentPlaylist: 0 | 1 | 2 | 3; // 0 = original "All music"
+    savedPlaylist1: readonly (number | null)[]; // EXACTLY 100 explicit slots
+    savedPlaylist2: readonly (number | null)[];
+    savedPlaylist3: readonly (number | null)[];
+    repeatInAreaShuffle: boolean; // original4137, NOT a Single stop switch
+    rememberModeOnLogin: boolean; // original19734
+    keepPlayingOnPlaylistChange: boolean; // original19736
+  };
+}
+```
+
+All percentages are integers0..100. Zero remembered percentage is the native
+uninitialized sentinel. Unknown versions/keys, accessors, sparse arrays,
+duplicates, nonfinite/fractional/out-of-range numbers, missing fields, unknown
+tracks and locked selections fail explicitly. JSON input is bounded to16KiB.
+The schema covers this bounded client-control state, **not the full All
+Settings window**. It contains no actor identity, unlock grants, playhead,
+audio permission or global privacy-mute value.
+
+| API | Exact contract |
+| --- | --- |
+| `sourceAudioPreferenceDefaults(): SourceAudioPreferences` | Explicit new client record: constructor percentages100/100/100/100, remembered0/0/0/0, Area/Modern, All music, three empty100-slot arrays, source-zero repeat/remember/keep flags. Not invented existing-account state. |
+| `parseSourceAudioPreferences(unknown)` / `deserializeSourceAudioPreferences(string)` | Strict validation plus detached/deep-frozen record. `serializeSourceAudioPreferences(record): string` validates before serialization. |
+| `applySourceAudioPreferences(handle, playerId, unknown, unlockedGroups): SourceAudioPreferenceBinding` | Must follow the same character's `audio.update`. Installs real client preferences with separately supplied authority; identical values and reordered unlock sets do not restart/reshuffle music. |
+| `readSourceAudioPreferences(handle): SourceAudioPreferenceBinding \| null` | Also exposed as `readAudioState(handle).preferences`. Null means **not bound**, not three invented saved playlists. Binding contains `playerId`, `preferences`, `unlockedGroups`, `musicState`. |
+| `setSourceMusicPreferences(handle, playerId, SourceMusicPreferences)` | Replaces the complete typed music preference subset, retaining volume memory. |
+| `setSourceSavedPlaylist(handle, playerId, slot: 1\|2\|3, entries)` | Validated full100-slot replacement of that identified saved playlist only. |
+| `editSourceSavedPlaylist(handle, playerId, slot, {kind:"add"\|"remove", group})` | Add fills the first native hole; remove leaves a hole; duplicate add is idempotent. Neither compacts other entries nor touches another slot. |
+| `selectSourcePlaylist(handle, playerId, selection: 0\|1\|2\|3)` | Original9297 mode/Single-membership/keep-playing rules. Empty is a real selected empty playlist with `AUDIO_PLAYLIST_EMPTY`, not an arbitrary replacement song. |
+| `toggleSourceAudioMute(handle, playerId, channel)` | Original9255 remembered-current/fallback behavior for master/music/effects/area. |
+| `setSourceAudioPercent(handle, playerId, channel, integerPercent)` | Source slider0..100. Moving a slider to0 does **not** rewrite mute memory. Existing `volume(channel, percent/100)` and `setSourceMasterVolume` also update the bound current percentages. |
+| `requestSourceMusicSkip(handle, playerId): Promise<SourceMusicSkipResult>` | Direct command, no caller-selected next track. Result `{status, previousGroup, nextGroup}`; statuses `requested`, `pending`, `disabled_mode`, `muted`, `no_alternative`. |
+| `sourceVolumePreferencesFromVarps(ReadonlyMap)` | Reads actual3796/168/169 and872 or5589 (explicit5588 override), plus saved14817/12426/12427/12428. Missing input is an error, not0. |
+| `sourceSavedPlaylistsFromVarps(ReadonlyMap)` / `sourceSavedPlaylistsToVarps(slots)` | Exact5239..5388 packing, with native track identities, not group/row aliases. |
+| `sourceAudioPreferencesFromVarps(ReadonlyMap)` | Combines actual volume/slot data,18/19 flags and3883 row. Source enum684 is Modern0/Classic1; source row-1 is no current track. No guessed varps/unlocks are supplied. |
+
+All handle preference setters return `SourceAudioPreferenceBinding`. Feed their
+returned `musicState` into the UI's existing `setUiMusicState` projection.
+After opting into this richer binding, a matching legacy
+`setSourceMusicState` remains idempotent; a *different* legacy state fails with
+`AUDIO_PREFERENCE_BINDING` rather than guessing a numbered slot or confusing
+native4137 with the old continuation directive. UI control handlers should use
+the new preference/command APIs, then project the returned canonical state.
+Unbound legacy callers keep their existing API and behavior.
+
+The currently published menu groups are2/62/64/76/144/145/163/327.
+Scape Main0 is the original title source, not a fabricated menu/unlock row.
+Source saved-track IDs are respectively117/2700/123/226/406/601/215/203.
+Their native storage is two16-bit entries per varp;0 is empty. These numbers
+are **not** interchangeable with index6 groups or table44 row IDs. Actual
+unlocks remain mandatory, and unsupported/unpublished tracks are rejected
+without requesting a file or changing the stored selection.
+
+### Native behavior and lifecycle
+
+Original9255 restores first-use **master100 / music20 / effects45 / area25**,
+whose effective channel mixers after original option synchronization are
+**9/18/8**. Genuine remembered37/21/66/83 restores those exact percentages and
+mixers**3/7/10**. Constructor effective255/127/127 is a different fact. The
+original sidebar callback changes varps; the native option-sync scripts apply
+them to the mixer. This adapter performs both parts without waiting for a
+fictional account/server update.
+
+Skip is disabled in native Area0 and Single2, valid in Shuffle1 (including a
+numbered playlist). It uses the existing source-duration/no-repeat policy and
+original request transition **[0,60,60,0]**, not a mode-flipping workaround.
+Same pending commands coalesce; a prepared next choice is not discarded on
+mute/jingle/reconnect, and a bag is not advanced twice. At zero effective music
+or global privacy mute it does not consume a choice; a one-song pool has no
+invented alternative. Returned `requested` means a source request, **not**
+playback permission or a claim that decoding/device output succeeded. Actual
+state, start time, sources and errors stay observable.
+
+Native9292 itself guards the primary action and queues2266/repeat1/delay0;
+the original **server-side next-row chooser is not client bytecode**. The
+browser command uses the already-qualified source selection/timer projection
+and the executed original3201/rj.bc request policy. It does not assert measured
+external server response time. Skip, numbered selection and channel mute
+automatically queue only their specifically bound9292/9297/9255 click; callers
+must not duplicate that through a fabricated committed gameplay event.
+
+A jingle initially replaces remembered transition parameters with zeros. A
+**different** accepted background request during it replaces the remembered
+track **and** parameters; last request wins without restarting the jingle.
+A same-group request is ignored by native `fm.ax` and keeps the existing
+parameters. Thus changing a kept playlist during a jingle does not insert an
+unrequested1.2s delay; a real Skip during it does retain the original60-cycle
+incoming delay. Unrelated/inactive preference changes leave the playing voice
+and pending choice intact.
+
+Native9630 allows repeated same-track requests unconditionally in Single;
+4137 controls repeated selections outside Single. The new
+`repeatInAreaShuffle` field preserves that distinction. Re-entry always uses
+fresh one-pass sources and source600ms duration units, never a sample loop over
+release padding. The old `SourceMusicState.loopEnabled` and event
+`loopEnabled:false` remain explicit legacy continuation directives, not a
+literal native4137 setting.
+
+`disconnected()` retains the same character's preferences and remembered
+playlist, while cancelling transient controls/audio. `update(null, [])`
+clears the binding and returns to title; changing character clears preferences,
+unlocks, source scene, bags and pending controls, restoring constructor
+percentages until the shell synchronously supplies the new record. Global
+privacy mute and browser permission remain separate device/handle state.
+An async Skip carries a control generation as well as player identity, so even
+logout/re-entry with the **same ID** cannot execute an old pending gesture.
+On first binding, native19734 false restores Area; when doing so,19736 false
+also restores All music. A reconnect of the existing binding does not pretend
+to be a new login.
+
+The remaining app work is to supply/load/save the real player-scoped record,
+route these native controls and project their returned state. Actual listener/
+owner/instance/varps, authoritative unlocks, coherent Cook skill deltas and the
+committed matching153 close still belong to their existing owners. The full
+All Settings window, legitimate server journey, speakers and Mac/Edge/M1
+acceptance are not claimed by this component.

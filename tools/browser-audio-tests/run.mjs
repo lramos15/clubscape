@@ -7,11 +7,14 @@ import { dirname, join, resolve } from "node:path";
 import { stripTypeScriptTypes } from "node:module";
 import { fileURLToPath } from "node:url";
 import { chromium } from "../../web/node_modules/playwright-core/index.mjs";
+import { preferenceChecks } from "./preferences.mjs";
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), "../..");
 process.chdir(root);
 const owned = "tools/browser-audio-tests";
 const run = `${owned}/.run`;
+const preferencesOnly = process.argv.includes("--preferences-only");
+const muteOutput = process.argv.includes("--mute-output");
 const chrome = process.env.CLUBSCAPE_CHROME ??
   "/home/lramos15/.cache/ms-playwright/chromium-1243/chrome-linux-arm64/chrome";
 const version = execFileSync(chrome, ["--version"], { encoding: "utf8" }).trim();
@@ -53,6 +56,7 @@ for (const path of [
   "web/shared/contracts.ts", `${owned}/run.mjs`, `${owned}/fixture.mjs`,
   `${owned}/fixture.html`, `${owned}/monitor.js`, "research/browser-audio-policy/cook-reward-boundary.json",
   "assets/manifests/osrs/audio-m1-supplement.json", "research/browser-audio-policy/supplement-browser-oracles.json",
+  `${owned}/preferences.mjs`, "research/browser-audio-policy/native-preference-controls.json",
 ]) implementationFiles.push({ path, sha256: digest(await readFile(path)) });
 
 const server = createServer(async (request, response) => {
@@ -120,7 +124,9 @@ const report = {
   supplementManifestSha256: digest(await readFile("assets/manifests/osrs/audio-m1-supplement.json")),
   implementationFiles,
   headless: true, hostSpeakerPerception: "not tested", macEdge: "not tested",
-  validationScope: process.argv.includes("--quick") ? "lifecycle-smoke-with-offline-boundary" : "full-browser-audio-control-and-native-playlist-boundary",
+  validationScope: preferencesOnly ? "native-preference-controls-component" :
+    process.argv.includes("--quick") ? "lifecycle-smoke-with-offline-boundary" : "full-browser-audio-control-and-native-playlist-boundary",
+  longDurationChecks: !process.argv.includes("--quick"), browserOutputMutedForSharedHost: muteOutput,
   gameplayOrM1Acceptance: false, results, failures: [], complete: false,
 };
 
@@ -146,6 +152,7 @@ const originalRat = wavSamples(await readFile(registry.get("reference.audio.sfx.
 const nativePreferences = JSON.parse(await readFile("research/browser-audio-policy/native-preferences.json", "utf8"));
 const nativePosition = JSON.parse(await readFile("research/browser-audio-policy/native-position.json", "utf8"));
 const nativeMusic = JSON.parse(await readFile("research/browser-audio-policy/native-music.json", "utf8"));
+const nativeControls = JSON.parse(await readFile("research/browser-audio-policy/native-preference-controls.json", "utf8"));
 const cookRewardBoundary = JSON.parse(await readFile("research/browser-audio-policy/cook-reward-boundary.json", "utf8"));
 const supplementOracles = JSON.parse(await readFile("research/browser-audio-policy/supplement-browser-oracles.json", "utf8"));
 assert.equal(supplementOracles.manifest_sha256, digest(await readFile("assets/manifests/osrs/audio-m1-supplement.json")));
@@ -200,7 +207,7 @@ async function trustedUnlock() {
 try {
   context = await chromium.launchPersistentContext(resolve(`${run}/profile`), {
     executablePath: chrome, headless: true, chromiumSandbox: true,
-    ignoreDefaultArgs: ["--mute-audio"],
+    ignoreDefaultArgs: muteOutput ? [] : ["--mute-audio"],
     args: ["--enable-automation", "--autoplay-policy=document-user-activation-required"],
     viewport: { width: 1280, height: 800 },
     serviceWorkers: "block",
@@ -239,7 +246,8 @@ try {
     throw new Error(`Gesture-free browser wait timed out: ${fn.toString()}`);
   };
   const commandLine = (await cdp.send("Browser.getBrowserCommandLine")).arguments;
-  assert.equal(commandLine.some((arg) => arg === "--no-sandbox" || arg === "--mute-audio"), false);
+  assert.equal(commandLine.includes("--no-sandbox"), false);
+  assert.equal(commandLine.includes("--mute-audio"), muteOutput);
   const sandboxPage = await context.newPage();
   await sandboxPage.goto("chrome://sandbox");
   const sandbox = await sandboxPage.locator("body").innerText();
@@ -247,11 +255,12 @@ try {
   assert.match(sandbox, /PID namespaces\s+Yes/);
   assert.match(sandbox, /Network namespaces\s+Yes/);
   assert.match(sandbox, /Seccomp-BPF sandbox\s+Yes/);
-  report.sandbox = { namespace: true, seccompBpf: true, noSandboxFlag: false, muteAudioFlag: false };
+  report.sandbox = { namespace: true, seccompBpf: true, noSandboxFlag: false, muteAudioFlag: muteOutput };
   await sandboxPage.close();
   await page.goto(origin);
   await page.evaluate(() => audioFixture.ready);
 
+  if (!preferencesOnly) {
   await check("explicit permission: no startup audio request or source before a real gesture", async () => {
     const before = await snapshot();
     assert.equal(before.pendingGesture, true);
@@ -1324,6 +1333,15 @@ try {
     return { committedCookingDelta:{before:sample.before,after:sample.after},levelUpSources:0,
       currentLevelBoostNotTreatedAsBaseGain:true,productionQuestOrXpMutations:0 };
   });
+  }
+
+  await preferenceChecks({ page, check, snapshot, waitVoice, emit, faults, manifest,
+    native: nativeControls, quick: process.argv.includes("--quick") });
+  if (report.audioDevice === null) report.audioDevice = await page.evaluate(() => ({
+    state: audioFixture.context.state, sampleRate: audioFixture.context.sampleRate,
+    baseLatency: audioFixture.context.baseLatency, outputLatency: audioFixture.context.outputLatency,
+    sinkId: audioFixture.context.sinkId ?? null, enabledProductionConnection: audioFixture.originalsConnected(),
+  }));
 
   await check("real AudioContext closure is a device failure, followed by idempotent complete disposal", async () => {
     await page.evaluate(() => audioFixture.context.close());
@@ -1379,7 +1397,7 @@ try {
   }
   report.requestedPlayableIds = [...new Set(requests.filter((r) => sources.some((a) => (a.asset_id ?? a.id) === r.id)).map((r) => r.id))];
   report.finishedAt = new Date().toISOString();
-  await writeFile(`${owned}/results.json`, `${JSON.stringify(report, null, 2)}\n`);
+  await writeFile(`${owned}/${preferencesOnly ? "preference-results" : "results"}.json`, `${JSON.stringify(report, null, 2)}\n`);
   await rm(run, { recursive: true, force: true });
   for (const name of await readdir("web/audio")) {
     if (!scratchBefore.has(name) && /^(?:\.?org\.chromium\.|playwright-)/.test(name)) {
