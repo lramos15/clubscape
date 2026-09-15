@@ -12,12 +12,14 @@
       {"id": "cdfad64d-9162-439f-a525-58e1114dd7f4", "task": "M1-BROWSER-AUDIO"},
       {"id": "78d01af9-70a4-4b02-8339-6a61eb377374", "task": "M1-BROWSER-SHELL"},
       {"id": "81ac9884-4f39-4f27-b516-6e9a42b09b51", "task": "M1-HEADLESS-JOURNEY"},
-      {"id": "2a0ae699-6af8-45d5-90c7-3addfc56ee53", "task": "M1-RUNELITE-FEASIBILITY"},
       {"id": "2766e089-44e5-4a1d-974e-7b03ad9c269d", "task": "M1-GAMEPLAY-UI-CONTRACTS"}
     ],
-    "reserved": [],
+    "reserved": [
+      {"id": "ac0f0856-44af-445b-bd90-6db7a1f4fc74", "task": "M1-CONSUMABLE-ASSET-CLOSURE"}
+    ],
     "queued": [],
     "parked": [
+      {"id": "2a0ae699-6af8-45d5-90c7-3addfc56ee53", "reason": "Renewed five-invocation assessment complete; live creation/scene/window/baseline work, firstXP unverified after driverOutOfReach. No sixth invocation or automatic resumption."},
       {"id": "aab1ae0f-0238-4254-bff3-b7c046349c6b", "reason": "Shop capacity/identity fixes integrated as3310032+af75e17 with18 passing regressions; no automatic resumption."},
       {"id": "0f5ddddf-0aa0-4908-b0d3-1ffc6b1f7a20", "reason": "Actor presence/cadence fixes integrated as62a003c+e1076a8 with15 passing regressions; no automatic resumption."},
       {"id": "fdda1fb0-1135-4cf8-8cff-3db550e48f54", "reason": "Canonical v3 content and both demonstrated executor repairs are integrated and source-native conformance passes; no automatic resumption."},
@@ -33,9 +35,27 @@
   },
   "tasks": [
     {
+      "id": "M1-CONSUMABLE-ASSET-CLOSURE",
+      "goal": "Publish only the missing original empty-container assets required by actual M1 drinking replacements.",
+      "status": "READY",
+      "specs": ["tools/cache-import/POTION_ASSETS.md", "tools/cache-import/CONTENT_CLOSURE.md", "research/m1-bindings/ui-item-definitions.json.gz"],
+      "dependencies": ["M1-FLEET-POTION-ASSETS"],
+      "allowed_paths": ["tools/cache-import/**", "research/current-source/**", "assets/source/osrs/cache2695/**", "assets/manifests/osrs/**"],
+      "forbidden_paths": ["prompt.md", "crates/**", "content/**", "web/**", "spec/**", "research/reference-pack/**", "tools/reference-pack/**", "assets/reference/**", "assets/source/osrs/audio-runtime/**", "milestones/**"],
+      "outputs": ["Additive original item/model/dependency publication and exact hashes", "No remaining requested source assets or changed predecessor payloads"],
+      "validation_commands": ["python3 tools/cache-import/import_cache.py validate-published", "python3 -m unittest discover -s tools/cache-import -p 'test_*.py' -q"],
+      "test_requirements": ["Original229/230/1919/1920 item definitions and models2548/2747/561/8234", "Only genuine transitive dependencies", "All prior source/reference/audio hashes unchanged", "Merged catalog/publication-chain consumption"],
+      "acceptance": ["SQL m1-consumable-assets records exact requested closure and reproducible original-source validation, not gameplay/presentation acceptance"],
+      "reserved_namespaces": ["asset.source.osrs.*"],
+      "source_notes": ["BackendUIcontract implementation imported exact definitions read-only with CRC/hash locks; actualsourcepublication is missing and canonicalbuild correctly rejects it."],
+      "parity_entries": [],
+      "adaptations": [],
+      "evidence": []
+    },
+    {
       "id": "M1-DYNAMIC-COLLISION-PERFORMANCE",
       "goal": "Measure and repair the reproduced canonical post-door world tick deadline without changing source geometry, actors, cadence or five-second storage bounds.",
-      "status": "IMPLEMENTING",
+      "status": "DONE",
       "specs": ["tools/journey-tests/evidence/first-door-tick-dea24a0.json", "spec/m1-benchmark-contract.json", "spec/game-contracts.md"],
       "dependencies": ["M1-GAME-ROOT-STARTUP", "M1-ACTOR-REVIEW-FIXES"],
       "allowed_paths": ["crates/world-engine/src/navigation.rs", "crates/world-engine/src/collision_cache.rs", "crates/world-engine/src/lib.rs", "crates/world-engine/tests/collision_cache.rs", "tools/m1-content/schema-check/examples/collision_profile.rs", "crates/world-engine/README.md", "spec/game-contracts.md"],
@@ -66,7 +86,7 @@
       "source_notes": ["The delivered UI has87/87 source raster checks but its listed authority/control gaps are real. Reuse current engine planners and canonical sources; routine stock behavior is not an adaptation."],
       "parity_entries": [],
       "adaptations": [],
-      "evidence": ["Bounded offline/native/Hello assessment and allqualifiedfollowups integrated dd82f81/4d40c48/be53f83/afeebdb/ce34519. Originalruntime/scene/penguin/window/XPTrackerpanel workoffline; no live gain or tier accepted.", "Startupfix2c5fe68 and actualcanonical headlessruned442fcf close oldprerequisites; renewedtwo-attempt allocation isexplicit, prior threeattemptsnotreset."]
+      "evidence": ["Initial andrenewedboundedassessment preserved; newownedcommits integrated591a5a0/5a9959d/bb13381. Fiveof fiveinvocationsconsumed; no sixth authorized.", "Live normalcreation/join/originalscene/penguin/window andgenuineXPTrackerbaseline verified. Sourceappearance/experience transitions occurred, thenclientdriverTalk-to lackedcurrentmoving-target approach andreturnedOutOfReach beforemovement/XP. This was NOTthelaterpost-door tick503. Fulltuple/tier/RuneLitecompatibilityremainUNVERIFIED; no desktopdeferral/M1acceptance."]
     },
     {
       "id": "M1-GAME-ROOT-STARTUP",
