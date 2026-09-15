@@ -195,6 +195,10 @@ pub struct SceneData {
     /// Minimap fields of the object definitions referenced by this scene's placements (block
     /// scenes with a minimap sidecar; empty otherwise).
     pub object_defs: HashMap<i32, MapObjectDef>,
+    /// The original minimap icon pass recorded per block sidecar, mapped into this scene:
+    /// `(plane, world x, world y, map element)`; the renderer's own icon list is checked
+    /// against it (`MinimapSurface::icon_check`).
+    pub source_icons: Vec<(i32, i32, i32, i32)>,
 }
 
 impl SceneData {
@@ -250,6 +254,7 @@ impl SceneData {
             animated: Vec::new(),
             animated_instances: Vec::new(),
             object_defs: HashMap::new(),
+            source_icons: Vec::new(),
         }
     }
 
@@ -383,6 +388,7 @@ impl SceneData {
             animated: Vec::new(),
             animated_instances: Vec::new(),
             object_defs: HashMap::new(),
+            source_icons: Vec::new(),
         };
         if scene.link.len() != tile_count
             || scene.object_count.len() != tile_count

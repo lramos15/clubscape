@@ -63,6 +63,95 @@ pub struct IndexedSprite {
     pub indices: Vec<u8>,
 }
 
+/// One original map-element minimap sprite (`ps.as(false)`): `0xRRGGBB` pixels as the sprite
+/// loader produced them; the original blit (`ym.af`) skips pixels whose value is 0 (transparent).
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub struct MapIconSprite {
+    pub element: i32,
+    pub width: i32,
+    pub height: i32,
+    pub offset_x: i32,
+    pub offset_y: i32,
+    pub max_width: i32,
+    pub max_height: i32,
+    pub category: i32,
+    /// `0xRRGGBB` per pixel, 0 = transparent (never drawn by the original).
+    pub argb: Vec<i32>,
+}
+
+/// `minimap/mapicons.bin`: every map element the original shows on the minimap (`ps.ay`) with
+/// its sprite. Drawn by the HUD over the minimap surface with the original `bo.as` rule (see
+/// [`MapIcons::DRAW_RULE`]), never baked into the surface (the original paints them per frame).
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub struct MapIcons {
+    pub map_elements: i32,
+    pub sprites: Vec<MapIconSprite>,
+}
+
+impl MapIcons {
+    /// Original placement (`client.zr` → `bo.as`): for each icon, `dx = (tileX << 7) + 64 −
+    /// playerX`, `dy = (tileY << 7) + 64 − playerY` (source units), both scaled by the minimap
+    /// zoom, rotated by the map angle (`x' = dx·cos + dy·sin`, `y' = dy·cos − dx·sin`, >> 16 of
+    /// the 65536-scaled trig), drawn with its top-left at `(cx + x' − width/2, cy − y' −
+    /// height/2)` relative to the widget centre; skipped when `dx² + dy² > 6400` (80 units),
+    /// clipped to the widget when beyond 2500 (50 units).
+    pub const DRAW_RULE: &'static str = "client.zr/bo.as";
+
+    pub fn from_chunks(data: &[u8]) -> Result<Self, RenderError> {
+        let chunks = Chunks::parse(data)?;
+        let h = chunks.ints("MIHD")?;
+        if h.len() < 3 || h[2] != 9 {
+            return Err(RenderError::Format("mapicons header".into()));
+        }
+        let header = chunks.ints("MIEL")?;
+        let pixels = chunks.bytes("MIPX")?;
+        if header.len() != h[1] as usize * 9 {
+            return Err(RenderError::Format("mapicons element table".into()));
+        }
+        let mut sprites = Vec::with_capacity(h[1] as usize);
+        let mut cursor = 0usize;
+        for r in header.as_chunks::<9>().0 {
+            let count = r[8] as usize;
+            let end = cursor + count * 4;
+            if end > pixels.len() {
+                return Err(RenderError::Format("mapicons pixel data truncated".into()));
+            }
+            if r[1] < 0 || r[2] < 0 || (r[1] * r[2]) as usize != count {
+                return Err(RenderError::InvalidAsset(format!(
+                    "map icon {} sprite size {}x{} vs {count} pixels",
+                    r[0], r[1], r[2]
+                )));
+            }
+            let argb = pixels[cursor..end]
+                .as_chunks::<4>()
+                .0
+                .iter()
+                .map(|b| i32::from_be_bytes([b[0] as u8, b[1] as u8, b[2] as u8, b[3] as u8]))
+                .collect();
+            sprites.push(MapIconSprite {
+                element: r[0],
+                width: r[1],
+                height: r[2],
+                offset_x: r[3],
+                offset_y: r[4],
+                max_width: r[5],
+                max_height: r[6],
+                category: r[7],
+                argb,
+            });
+            cursor = end;
+        }
+        Ok(MapIcons {
+            map_elements: h[0],
+            sprites,
+        })
+    }
+
+    pub fn sprite(&self, element: i32) -> Option<&MapIconSprite> {
+        self.sprites.iter().find(|s| s.element == element)
+    }
+}
+
 /// The original map-scene sprite set (`oy.aq`) and tile-shape masks (`client.zw`).
 #[derive(Clone, Debug)]
 pub struct MapScenes {

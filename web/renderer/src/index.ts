@@ -34,7 +34,7 @@ export interface RenderAssetManifest {
     origin_x: number; origin_y: number; size: number; file_gz?: string; models_file_gz?: string;
   }>;
   /** Minimap sidecars (`export.py --profile minimap`): per square wall configs + object map fields. */
-  minimap_blocks?: Array<{ square: number; file: string; sha256: string; walls: number; object_definitions: number }>;
+  minimap_blocks?: Array<{ square: number; file: string; sha256: string; walls: number; object_definitions: number; map_icons?: number }>;
   /** Skeletal sequences (`export.py --profile anim`): player actions, NPC definition motions. */
   sequences?: Array<{ sequence_id: number; file: string; sha256: string; frame_count: number; frame_lengths_client_cycles: number[] }>;
   /** NPC definitions with their lit base model and original stand/walk/rotate/run sequence ids. */
@@ -230,11 +230,39 @@ export interface MinimapSurface {
   complete: boolean;
   stats: { terrainTiles: number; wallMarks: number; diagonalMarks: number; mapScenes: number; unresolved: number };
   notes: string[];
+  /**
+   * Minimap icons on the drawn plane (the original `bu.aa` pass: floor decorations whose object
+   * definition names a map element the original shows on the minimap). Drawn by the HUD over
+   * `pixels` with `mapIconSprites()` and the original `client.zr`/`bo.as` rule: for each icon
+   * `dx = (x << 7) + 64 - playerX`, `dy = (y << 7) + 64 - playerY` (source units, the player's
+   * fine position), scaled by the minimap zoom and rotated by the map angle, sprite top-left at
+   * `(centreX + dx' - width / 2, centreY - dy' - height / 2)`; skipped when `dx² + dy² > 6400`
+   * (80 units), clipped to the widget beyond 2500. Never baked into `pixels`.
+   */
   icons: MinimapIcon[];
+  /**
+   * How `icons` compares with the original pass the block sidecars recorded for this plane:
+   * 0 = identical sets; n = n icons differ (named in `notes`); null = sidecars without a record.
+   */
+  sourceIconMismatches: number | null;
   /** RGBA8 (alpha 255 everywhere, as the native capture wrote it). */
   pixels: ImageData;
   /** 1 where the original sweep drew map data, 0 where no tile exists (the source fill value). */
   mask: Uint8Array;
+}
+
+/** One original map-element minimap sprite (`minimap/mapicons.bin`, `ps.as(false)`). */
+export interface MapIconSprite {
+  element: number;
+  width: number;
+  height: number;
+  offsetX: number;
+  offsetY: number;
+  maxWidth: number;
+  maxHeight: number;
+  category: number;
+  /** RGBA8; alpha 0 exactly where the original blit skips the pixel (value 0), 255 elsewhere. */
+  pixels: ImageData;
 }
 
 export interface LoadedAsset { id: string; sha256: string; loaded: boolean }
@@ -352,6 +380,11 @@ export interface ClubscapeRendererHandle extends RendererHandle {
    * sidecar is missing — never a blank or approximate map. Cached until the state changes.
    */
   minimapSurface(): MinimapSurface;
+  /**
+   * The original map-element minimap sprites (`minimap/mapicons.bin`), keyed by element for
+   * `MinimapSurface.icons`. Empty until the asset is loaded (fetched with the first world block).
+   */
+  mapIconSprites(): Map<number, MapIconSprite>;
   /**
    * Whether the player is running: `PlayerView.running` (`game.observer.v1`, the movement
    * actually executed this tick) when present, else the two-tiles-per-server-tick rule (or the
@@ -510,15 +543,22 @@ export const createRenderer: (canvas: HTMLCanvasElement, config: RendererConfig,
     const minimapBySquare = new Map<number, NonNullable<RenderAssetManifest["minimap_blocks"]>[number]>();
     for (const entry of manifest.minimap_blocks ?? []) minimapBySquare.set(entry.square, entry);
     let mapScenes: Promise<void> | null = null;
-    /** The map-scene sprites/shape masks, fetched once with the first world block. */
+    /** The map-scene sprites/shape masks and the map-element icon sprites, fetched once with the first world block. */
     const ensureMapScenes = (): Promise<void> => {
       if (!manifest.files["minimap/mapscenes.bin"]) return Promise.resolve();
       mapScenes ??= (async () => {
         const bytes = await fetchAsset("minimap/mapscenes.bin");
         if (!disposed) renderer.load_map_scenes(bytes);
+        if (manifest.files["minimap/mapicons.bin"]) {
+          const icons = await fetchAsset("minimap/mapicons.bin");
+          if (!disposed) renderer.load_map_icons(icons);
+        } else {
+          diagnostic("minimap: manifest lists no minimap/mapicons.bin; the HUD has no original icon sprites to draw");
+        }
       })();
       return mapScenes;
     };
+    let mapIconCache: Map<number, MapIconSprite> | null = null;
     const ensureBlock = (square: number): Promise<boolean> => {
       if (loadedSquares.has(square)) return Promise.resolve(true);
       const entry = blocksBySquare.get(square);
@@ -773,6 +813,24 @@ export const createRenderer: (canvas: HTMLCanvasElement, config: RendererConfig,
         const image = new ImageData(meta.width, meta.height);
         image.data.set(rgba);
         return { ...meta, pixels: image, mask };
+      },
+      mapIconSprites() {
+        requireLive();
+        if (mapIconCache) return mapIconCache;
+        const meta = JSON.parse(renderer.map_icon_sprites()) as Array<Omit<MapIconSprite, "pixels">>;
+        if (meta.length === 0) return new Map();
+        const pixels = renderer.map_icon_pixels();
+        const out = new Map<number, MapIconSprite>();
+        let cursor = 0;
+        for (const sprite of meta) {
+          const count = sprite.width * sprite.height * 4;
+          const image = new ImageData(Math.max(1, sprite.width), Math.max(1, sprite.height));
+          if (count > 0) image.data.set(pixels.subarray(cursor, cursor + count));
+          cursor += count;
+          out.set(sprite.element, { ...sprite, pixels: image });
+        }
+        mapIconCache = out;
+        return out;
       },
       playerRunning() {
         requireLive();

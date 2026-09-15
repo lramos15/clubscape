@@ -92,6 +92,11 @@ export class WasmRenderer {
      */
     load_ground_item(item_id: number, min_quantity: number, bytes: Uint8Array): void;
     /**
+     * Loads the original map-element minimap sprites (`minimap/mapicons.bin`, `ps.as(false)`
+     * per element the original shows on the minimap). Returns the sprite count.
+     */
+    load_map_icons(bytes: Uint8Array): number;
+    /**
      * Loads the original map-scene sprites and tile-shape masks (`minimap/mapscenes.bin`) the
      * minimap needs.
      */
@@ -127,6 +132,21 @@ export class WasmRenderer {
      * Returns the sequence id.
      */
     load_sequence(bytes: Uint8Array): number;
+    /**
+     * RGBA8 pixels of every map-element sprite concatenated in `map_icon_sprites()` order
+     * (width × height × 4 each). The original sprite blit (`ym.af`) skips pixels whose value is
+     * 0, so those get alpha 0 and every other pixel alpha 255.
+     */
+    map_icon_pixels(): Uint8ClampedArray;
+    /**
+     * The loaded map-element sprites (JSON array of `{element, width, height, offsetX, offsetY,
+     * maxWidth, maxHeight, category}` in the order `map_icon_pixels()` packs them). The HUD
+     * draws them over the minimap surface with the original rule: for each `icons[]` entry,
+     * `dx = (x << 7) + 64 - playerX`, `dy = (y << 7) + 64 - playerY` (source units), scaled by
+     * the minimap zoom and rotated by the map angle, top-left at `(centreX + dx' - width / 2,
+     * centreY - dy' - height / 2)`; skipped beyond 80 units, clipped to the widget beyond 50.
+     */
+    map_icon_sprites(): string;
     /**
      * Coverage mask (`Uint8Array`, width * height): 1 where the original sweep drew map data,
      * 0 where the source fill value survived (no tile).
@@ -315,6 +335,7 @@ export interface InitOutput {
     readonly wasmrenderer_load_dynamic_object: (a: number, b: number, c: number, d: number, e: number, f: number, g: any, h: number, i: number) => [number, number];
     readonly wasmrenderer_load_equip_model: (a: number, b: number, c: number, d: number) => [number, number];
     readonly wasmrenderer_load_ground_item: (a: number, b: number, c: number, d: number, e: number) => [number, number];
+    readonly wasmrenderer_load_map_icons: (a: number, b: number, c: number) => [number, number, number];
     readonly wasmrenderer_load_map_scenes: (a: number, b: number, c: number) => [number, number];
     readonly wasmrenderer_load_minimap_block: (a: number, b: number, c: number, d: number) => [number, number];
     readonly wasmrenderer_load_model: (a: number, b: number, c: number, d: number, e: number) => [number, number];
@@ -324,6 +345,8 @@ export interface InitOutput {
     readonly wasmrenderer_load_pose_fit_table: (a: number, b: number, c: number, d: number) => [number, number, number];
     readonly wasmrenderer_load_scene: (a: number, b: number, c: number, d: number, e: number, f: number, g: number) => [number, number];
     readonly wasmrenderer_load_sequence: (a: number, b: number, c: number) => [number, number, number];
+    readonly wasmrenderer_map_icon_pixels: (a: number) => any;
+    readonly wasmrenderer_map_icon_sprites: (a: number) => [number, number];
     readonly wasmrenderer_minimap_mask: (a: number) => [number, number, number];
     readonly wasmrenderer_minimap_pixels: (a: number) => [number, number, number];
     readonly wasmrenderer_minimap_surface: (a: number) => [number, number, number, number];
@@ -356,10 +379,10 @@ export interface InitOutput {
     readonly wasm_bindgen_765df639e0572edc___convert__closures_____invoke___js_sys_3b7301898fbf4e22___Function_fn_wasm_bindgen_765df639e0572edc___JsValue_____wasm_bindgen_765df639e0572edc___sys__Undefined___js_sys_3b7301898fbf4e22___Function_fn_wasm_bindgen_765df639e0572edc___JsValue_____wasm_bindgen_765df639e0572edc___sys__Undefined_______true_: (a: number, b: number, c: any, d: any) => void;
     readonly wasm_bindgen_765df639e0572edc___convert__closures_____invoke___wasm_bindgen_765df639e0572edc___JsValue__core_ed718c3d60ebd546___result__Result_____wasm_bindgen_765df639e0572edc___JsError___true_: (a: number, b: number, c: any) => [number, number];
     readonly wasm_bindgen_765df639e0572edc___convert__closures_____invoke___wasm_bindgen_765df639e0572edc___sys__JsNullable_wgpu_fb237351f69b1e72___backend__webgpu__webgpu_sys__gen_GpuError__GpuError___core_ed718c3d60ebd546___result__Result_____wasm_bindgen_765df639e0572edc___JsError___true_: (a: number, b: number, c: any) => [number, number];
-    readonly wasm_bindgen_765df639e0572edc___convert__closures_____invoke___wasm_bindgen_765df639e0572edc___sys__JsNullable_wgpu_fb237351f69b1e72___backend__webgpu__webgpu_sys__gen_GpuError__GpuError___core_ed718c3d60ebd546___result__Result_____wasm_bindgen_765df639e0572edc___JsError___true__90: (a: number, b: number, c: any) => [number, number];
-    readonly wasm_bindgen_765df639e0572edc___convert__closures_____invoke___wasm_bindgen_765df639e0572edc___sys__JsNullable_wgpu_fb237351f69b1e72___backend__webgpu__webgpu_sys__gen_GpuError__GpuError___core_ed718c3d60ebd546___result__Result_____wasm_bindgen_765df639e0572edc___JsError___true__91: (a: number, b: number, c: any) => [number, number];
+    readonly wasm_bindgen_765df639e0572edc___convert__closures_____invoke___wasm_bindgen_765df639e0572edc___sys__JsNullable_wgpu_fb237351f69b1e72___backend__webgpu__webgpu_sys__gen_GpuError__GpuError___core_ed718c3d60ebd546___result__Result_____wasm_bindgen_765df639e0572edc___JsError___true__93: (a: number, b: number, c: any) => [number, number];
+    readonly wasm_bindgen_765df639e0572edc___convert__closures_____invoke___wasm_bindgen_765df639e0572edc___sys__JsNullable_wgpu_fb237351f69b1e72___backend__webgpu__webgpu_sys__gen_GpuError__GpuError___core_ed718c3d60ebd546___result__Result_____wasm_bindgen_765df639e0572edc___JsError___true__94: (a: number, b: number, c: any) => [number, number];
     readonly wasm_bindgen_765df639e0572edc___convert__closures_____invoke___wgpu_fb237351f69b1e72___backend__webgpu__webgpu_sys__gen_GpuDeviceLostInfo__GpuDeviceLostInfo______true_: (a: number, b: number, c: any) => void;
-    readonly wasm_bindgen_765df639e0572edc___convert__closures_____invoke___wgpu_fb237351f69b1e72___backend__webgpu__webgpu_sys__gen_GpuDeviceLostInfo__GpuDeviceLostInfo______true__89: (a: number, b: number, c: any) => void;
+    readonly wasm_bindgen_765df639e0572edc___convert__closures_____invoke___wgpu_fb237351f69b1e72___backend__webgpu__webgpu_sys__gen_GpuDeviceLostInfo__GpuDeviceLostInfo______true__92: (a: number, b: number, c: any) => void;
     readonly __wbindgen_malloc: (a: number, b: number) => number;
     readonly __wbindgen_realloc: (a: number, b: number, c: number, d: number) => number;
     readonly __wbindgen_exn_store: (a: number) => void;

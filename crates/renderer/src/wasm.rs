@@ -620,6 +620,67 @@ impl WasmRenderer {
         self.inner.borrow().core.has_map_scenes()
     }
 
+    /// Loads the original map-element minimap sprites (`minimap/mapicons.bin`, `ps.as(false)`
+    /// per element the original shows on the minimap). Returns the sprite count.
+    pub fn load_map_icons(&self, bytes: Vec<u8>) -> Result<u32, JsValue> {
+        self.inner
+            .borrow_mut()
+            .core
+            .load_map_icons(&bytes)
+            .map(|n| n as u32)
+            .map_err(js_err)
+    }
+
+    /// The loaded map-element sprites (JSON array of `{element, width, height, offsetX, offsetY,
+    /// maxWidth, maxHeight, category}` in the order `map_icon_pixels()` packs them). The HUD
+    /// draws them over the minimap surface with the original rule: for each `icons[]` entry,
+    /// `dx = (x << 7) + 64 - playerX`, `dy = (y << 7) + 64 - playerY` (source units), scaled by
+    /// the minimap zoom and rotated by the map angle, top-left at `(centreX + dx' - width / 2,
+    /// centreY - dy' - height / 2)`; skipped beyond 80 units, clipped to the widget beyond 50.
+    pub fn map_icon_sprites(&self) -> String {
+        let inner = self.inner.borrow();
+        let Some(icons) = inner.core.map_icons() else {
+            return "[]".into();
+        };
+        let items: Vec<String> = icons
+            .sprites
+            .iter()
+            .map(|s| {
+                format!(
+                    r#"{{"element":{},"width":{},"height":{},"offsetX":{},"offsetY":{},"maxWidth":{},"maxHeight":{},"category":{}}}"#,
+                    s.element,
+                    s.width,
+                    s.height,
+                    s.offset_x,
+                    s.offset_y,
+                    s.max_width,
+                    s.max_height,
+                    s.category
+                )
+            })
+            .collect();
+        format!("[{}]", items.join(","))
+    }
+
+    /// RGBA8 pixels of every map-element sprite concatenated in `map_icon_sprites()` order
+    /// (width × height × 4 each). The original sprite blit (`ym.af`) skips pixels whose value is
+    /// 0, so those get alpha 0 and every other pixel alpha 255.
+    pub fn map_icon_pixels(&self) -> js_sys::Uint8ClampedArray {
+        let inner = self.inner.borrow();
+        let mut out: Vec<u8> = Vec::new();
+        if let Some(icons) = inner.core.map_icons() {
+            for sprite in &icons.sprites {
+                for &rgb in &sprite.argb {
+                    let a = if rgb == 0 { 0 } else { 255 };
+                    out.extend_from_slice(&[(rgb >> 16) as u8, (rgb >> 8) as u8, rgb as u8, a]);
+                }
+            }
+        }
+        let array = js_sys::Uint8ClampedArray::new_with_length(out.len() as u32);
+        array.copy_from(&out);
+        array
+    }
+
     /// Loads a square's minimap sidecar (`minimap/blocks/<square>.bin`: wall placement configs
     /// and object-definition map fields). Order relative to `load_block` does not matter.
     pub fn load_minimap_block(&self, square: i32, bytes: Vec<u8>) -> Result<(), JsValue> {
@@ -654,8 +715,12 @@ impl WasmRenderer {
             })
             .collect();
         let notes: Vec<String> = surface.stats.notes.iter().map(|n| json_string(n)).collect();
+        let source_icon_mismatches = surface
+            .source_icon_mismatches
+            .map(|n| n.to_string())
+            .unwrap_or_else(|| "null".into());
         Ok(format!(
-            r#"{{"width":{},"height":{},"scale":{},"marginX":{},"marginY":{},"baseX":{},"baseY":{},"plane":{},"revision":{},"complete":{},"stats":{{"terrainTiles":{},"wallMarks":{},"diagonalMarks":{},"mapScenes":{},"unresolved":{}}},"notes":[{}],"icons":[{}]}}"#,
+            r#"{{"width":{},"height":{},"scale":{},"marginX":{},"marginY":{},"baseX":{},"baseY":{},"plane":{},"revision":{},"complete":{},"stats":{{"terrainTiles":{},"wallMarks":{},"diagonalMarks":{},"mapScenes":{},"unresolved":{}}},"notes":[{}],"icons":[{}],"sourceIconMismatches":{source_icon_mismatches}}}"#,
             surface.width,
             surface.height,
             surface.scale,

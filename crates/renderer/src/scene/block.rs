@@ -147,6 +147,10 @@ pub struct Block {
     pub model_keys: Vec<String>,
     /// Object-definition minimap fields from the `minimap/blocks/<square>.bin` sidecar.
     pub object_defs: HashMap<i32, MapObjectDef>,
+    /// The original minimap icon pass (`bu.aa`) recorded by the sidecar per plane:
+    /// `(plane, bx, by, map element)` — the reference the renderer's own icon list is checked
+    /// against, not a substitute for it.
+    pub source_icons: Vec<(i32, i32, i32, i32)>,
     /// Whether the minimap sidecar (wall configs + definitions) has been attached.
     pub minimap_ready: bool,
 }
@@ -221,6 +225,7 @@ impl Block {
                 .map(|s| s.to_string())
                 .collect(),
             object_defs: HashMap::new(),
+            source_icons: Vec::new(),
             minimap_ready: false,
         };
         for r in chunks.ints("BPNT")?.as_chunks::<10>().0 {
@@ -505,6 +510,17 @@ impl Block {
                 },
             );
         }
+        self.source_icons = chunks
+            .ints_opt("MICN")?
+            .map(|icons| {
+                icons
+                    .as_chunks::<4>()
+                    .0
+                    .iter()
+                    .map(|r| (r[0], r[1], r[2], r[3]))
+                    .collect()
+            })
+            .unwrap_or_default();
         self.minimap_ready = true;
         Ok(())
     }
@@ -882,6 +898,19 @@ pub fn assemble_mapped(
         scene
             .object_defs
             .extend(block.object_defs.iter().map(|(k, v)| (*k, *v)));
+        // The original icon pass covers the 104x104 main area only (`bu.aa`: 0..104).
+        for &(plane, bx, by, element) in &block.source_icons {
+            for (dest_plane, ex, ey, _, _) in destinations(plane, bx, by) {
+                if (OFFSET..OFFSET + MAIN).contains(&ex) && (OFFSET..OFFSET + MAIN).contains(&ey) {
+                    scene.source_icons.push((
+                        dest_plane,
+                        base_x + ex - OFFSET,
+                        base_y + ey - OFFSET,
+                        element,
+                    ));
+                }
+            }
+        }
     }
     scene.model_keys = {
         let mut keys = vec![String::new(); merged_models.len()];

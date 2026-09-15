@@ -80,6 +80,8 @@ fn core() -> RendererCore {
     }
     core.load_map_scenes(&common::read_asset("minimap/mapscenes.bin"))
         .unwrap();
+    core.load_map_icons(&common::read_asset("minimap/mapicons.bin"))
+        .unwrap();
     core
 }
 
@@ -296,15 +298,36 @@ fn assembled_minimaps_equal_the_native_captures() {
                     expected[first]
                 ));
             }
+            // The icon list must equal the original `bu.aa` pass the sidecars recorded, and
+            // every listed element must have an exported sprite.
+            match surface.source_icon_mismatches {
+                Some(0) => {}
+                Some(n) => failures.push(format!(
+                    "{name}: {n} minimap icons differ from the original pass: {:?}",
+                    surface.stats.notes
+                )),
+                None => failures.push(format!("{name}: sidecars carry no original icon record")),
+            }
+            let icons = core.map_icons().expect("map icons loaded");
+            for icon in &surface.icons {
+                assert!(
+                    icons.sprite(icon.element).is_some(),
+                    "{name}: map element {} at {},{} has no exported minimap sprite",
+                    icon.element,
+                    icon.x,
+                    icon.y
+                );
+            }
             report.push(format!(
-                "{name}: interior_mismatches={} edge_band_mismatches={} terrain={} walls={} diagonals={} mapscenes={} icons={}",
+                "{name}: interior_mismatches={} edge_band_mismatches={} terrain={} walls={} diagonals={} mapscenes={} icons={} icon_mismatches={:?}",
                 interior.len(),
                 band,
                 surface.stats.terrain_tiles,
                 surface.stats.wall_marks,
                 surface.stats.diagonal_marks,
                 surface.stats.map_scenes,
-                surface.icons.len()
+                surface.icons.len(),
+                surface.source_icon_mismatches
             ));
         }
     }

@@ -311,11 +311,27 @@ async function main(): Promise<void> {
         const surface = handle.minimapSurface();
         minimapCanvas.width = surface.width;
         minimapCanvas.height = surface.height;
-        minimapCanvas.getContext("2d")!.putImageData(surface.pixels, 0, 0);
+        const context = minimapCanvas.getContext("2d")!;
+        context.putImageData(surface.pixels, 0, 0);
+        // Developer view of the icon layer: each icon's original sprite centred on its tile in
+        // the unrotated surface (the HUD applies the full `bo.as` rule with zoom/rotation).
+        const sprites = handle.mapIconSprites();
+        let drawnIcons = 0;
+        for (const icon of surface.icons) {
+          const sprite = sprites.get(icon.element);
+          if (!sprite) continue;
+          const cx = surface.marginX + (icon.x - surface.baseX) * surface.scale + surface.scale / 2;
+          const cy = surface.height - surface.marginY - (icon.y - surface.baseY) * surface.scale - surface.scale / 2;
+          const layer = document.createElement("canvas");
+          layer.width = sprite.width; layer.height = sprite.height;
+          layer.getContext("2d")!.putImageData(sprite.pixels, 0, 0);
+          context.drawImage(layer, Math.round(cx - sprite.width / 2), Math.round(cy - sprite.height / 2));
+          drawnIcons++;
+        }
         const { pixels: _pixels, mask, ...meta } = surface;
         let covered = 0;
         for (const m of mask) covered += m;
-        return { ...meta, covered };
+        return { ...meta, covered, drawnIcons, spriteCount: sprites.size };
       };
       window.__clubscapeDev.walkTo = (x: number, y: number) => { follow(x, y); };
       window.__clubscapeDev.minimap = () => showMinimap();

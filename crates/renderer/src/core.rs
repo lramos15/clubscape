@@ -21,7 +21,7 @@ use crate::raster::{DrawStats, Fill, RasterState, Tri};
 use crate::scene::SceneData;
 use crate::scene::block::{self, BLOCK_SIZE, Block};
 use crate::scene::draw::{PickTarget, RoofRemoval, SceneDrawer, SceneView, TemporaryEntity};
-use crate::scene::minimap::{self, MapScenes, MinimapStats, WallColours};
+use crate::scene::minimap::{self, MapIcons, MapScenes, MinimapStats, WallColours};
 use crate::texture::{Texture, TextureSet};
 
 /// One original client cycle in milliseconds (animation frame lengths are in cycles).
@@ -578,7 +578,12 @@ pub struct MinimapSurface {
     pub stats: MinimapStats,
     /// False when a placement lacked its exported config/definition (see `stats.notes`).
     pub complete: bool,
+    /// Minimap icons on the drawn plane (the original `bu.aa` pass over floor decorations).
     pub icons: Vec<MinimapIcon>,
+    /// The original icon pass recorded by the block sidecars for the drawn plane, and how the
+    /// renderer's list compares: `Some(0)` = identical sets; `Some(n)` = n icons differ (listed
+    /// in `stats.notes`); `None` when the loaded blocks carry no icon record (older sidecars).
+    pub source_icon_mismatches: Option<usize>,
 }
 
 #[derive(Clone, Debug)]
@@ -844,6 +849,8 @@ pub struct RendererCore {
     blocks: HashMap<i32, (Block, Vec<(String, Model)>)>,
     /// Original map-scene sprites and tile-shape masks (`minimap/mapscenes.bin`).
     map_scenes: Option<MapScenes>,
+    /// Original map-element minimap sprites (`minimap/mapicons.bin`), for the HUD icon layer.
+    map_icons: Option<MapIcons>,
     /// Minimap sidecar bytes per square (`minimap/blocks/<square>.bin`), attached to blocks.
     minimap_sidecars: HashMap<i32, Vec<u8>>,
     /// Cached minimap surface and the state it was drawn for.
@@ -914,6 +921,7 @@ impl RendererCore {
             models: HashMap::new(),
             blocks: HashMap::new(),
             map_scenes: None,
+            map_icons: None,
             minimap_sidecars: HashMap::new(),
             minimap: None,
             minimap_revision: 0,
@@ -1221,6 +1229,18 @@ impl RendererCore {
         self.map_scenes.is_some()
     }
 
+    /// Loads the original map-element minimap sprites (`minimap/mapicons.bin`).
+    pub fn load_map_icons(&mut self, bytes: &[u8]) -> Result<usize, RenderError> {
+        let icons = MapIcons::from_chunks(bytes)?;
+        let count = icons.sprites.len();
+        self.map_icons = Some(icons);
+        Ok(count)
+    }
+
+    pub fn map_icons(&self) -> Option<&MapIcons> {
+        self.map_icons.as_ref()
+    }
+
     /// Loads a square's minimap sidecar (wall placement configs and object-definition map
     /// fields). Attaches to the block immediately when it is loaded, and to any later load.
     pub fn load_minimap_block(&mut self, square: i32, bytes: &[u8]) -> Result<(), RenderError> {
@@ -1348,6 +1368,39 @@ impl RendererCore {
                 }
             }
         }
+        // The original pass, as the sidecars recorded it for this plane: the two sets must be
+        // identical (position and element); differences are counted and named.
+        let mut source: Vec<(i32, i32, i32)> = scene
+            .source_icons
+            .iter()
+            .filter(|(p, _, _, _)| *p == plane)
+            .map(|(_, x, y, e)| (*x, *y, *e))
+            .collect();
+        source.sort_unstable();
+        source.dedup();
+        let mut ours: Vec<(i32, i32, i32)> = icons.iter().map(|i| (i.x, i.y, i.element)).collect();
+        ours.sort_unstable();
+        let has_source_record = !scene.source_icons.is_empty();
+        let mut stats = stats;
+        let source_icon_mismatches = if has_source_record {
+            let missing: Vec<_> = source.iter().filter(|s| !ours.contains(s)).collect();
+            let extra: Vec<_> = ours.iter().filter(|o| !source.contains(o)).collect();
+            for m in &missing {
+                stats.notes.push(format!(
+                    "minimap icon missing: original draws element {} at {},{} plane {plane}",
+                    m.2, m.0, m.1
+                ));
+            }
+            for e in &extra {
+                stats.notes.push(format!(
+                    "minimap icon extra: renderer lists element {} at {},{} plane {plane} which the original does not",
+                    e.2, e.0, e.1
+                ));
+            }
+            Some(missing.len() + extra.len())
+        } else {
+            None
+        };
         self.minimap_revision += 1;
         let surface = MinimapSurface {
             width: raster.width,
@@ -1363,6 +1416,7 @@ impl RendererCore {
             complete: stats.unresolved == 0,
             stats,
             icons,
+            source_icon_mismatches,
         };
         self.minimap = Some((key, surface));
         Ok(&self.minimap.as_ref().expect("just set").1)

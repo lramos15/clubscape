@@ -50,6 +50,7 @@ export const wasmrenderer_load_block: (a: number, b: number, c: number, d: numbe
 export const wasmrenderer_load_dynamic_object: (a: number, b: number, c: number, d: number, e: number, f: number, g: any, h: number, i: number) => [number, number];
 export const wasmrenderer_load_equip_model: (a: number, b: number, c: number, d: number) => [number, number];
 export const wasmrenderer_load_ground_item: (a: number, b: number, c: number, d: number, e: number) => [number, number];
+export const wasmrenderer_load_map_icons: (a: number, b: number, c: number) => [number, number, number];
 export const wasmrenderer_load_map_scenes: (a: number, b: number, c: number) => [number, number];
 export const wasmrenderer_load_minimap_block: (a: number, b: number, c: number, d: number) => [number, number];
 export const wasmrenderer_load_model: (a: number, b: number, c: number, d: number, e: number) => [number, number];
@@ -59,6 +60,8 @@ export const wasmrenderer_load_player_body: (a: number, b: number, c: number, d:
 export const wasmrenderer_load_pose_fit_table: (a: number, b: number, c: number, d: number) => [number, number, number];
 export const wasmrenderer_load_scene: (a: number, b: number, c: number, d: number, e: number, f: number, g: number) => [number, number];
 export const wasmrenderer_load_sequence: (a: number, b: number, c: number) => [number, number, number];
+export const wasmrenderer_map_icon_pixels: (a: number) => any;
+export const wasmrenderer_map_icon_sprites: (a: number) => [number, number];
 export const wasmrenderer_minimap_mask: (a: number) => [number, number, number];
 export const wasmrenderer_minimap_pixels: (a: number) => [number, number, number];
 export const wasmrenderer_minimap_surface: (a: number) => [number, number, number, number];
@@ -91,10 +94,10 @@ export const wasmrenderer_update_world: (a: number, b: number, c: number, d: num
 export const wasm_bindgen_765df639e0572edc___convert__closures_____invoke___js_sys_3b7301898fbf4e22___Function_fn_wasm_bindgen_765df639e0572edc___JsValue_____wasm_bindgen_765df639e0572edc___sys__Undefined___js_sys_3b7301898fbf4e22___Function_fn_wasm_bindgen_765df639e0572edc___JsValue_____wasm_bindgen_765df639e0572edc___sys__Undefined_______true_: (a: number, b: number, c: any, d: any) => void;
 export const wasm_bindgen_765df639e0572edc___convert__closures_____invoke___wasm_bindgen_765df639e0572edc___JsValue__core_ed718c3d60ebd546___result__Result_____wasm_bindgen_765df639e0572edc___JsError___true_: (a: number, b: number, c: any) => [number, number];
 export const wasm_bindgen_765df639e0572edc___convert__closures_____invoke___wasm_bindgen_765df639e0572edc___sys__JsNullable_wgpu_fb237351f69b1e72___backend__webgpu__webgpu_sys__gen_GpuError__GpuError___core_ed718c3d60ebd546___result__Result_____wasm_bindgen_765df639e0572edc___JsError___true_: (a: number, b: number, c: any) => [number, number];
-export const wasm_bindgen_765df639e0572edc___convert__closures_____invoke___wasm_bindgen_765df639e0572edc___sys__JsNullable_wgpu_fb237351f69b1e72___backend__webgpu__webgpu_sys__gen_GpuError__GpuError___core_ed718c3d60ebd546___result__Result_____wasm_bindgen_765df639e0572edc___JsError___true__90: (a: number, b: number, c: any) => [number, number];
-export const wasm_bindgen_765df639e0572edc___convert__closures_____invoke___wasm_bindgen_765df639e0572edc___sys__JsNullable_wgpu_fb237351f69b1e72___backend__webgpu__webgpu_sys__gen_GpuError__GpuError___core_ed718c3d60ebd546___result__Result_____wasm_bindgen_765df639e0572edc___JsError___true__91: (a: number, b: number, c: any) => [number, number];
+export const wasm_bindgen_765df639e0572edc___convert__closures_____invoke___wasm_bindgen_765df639e0572edc___sys__JsNullable_wgpu_fb237351f69b1e72___backend__webgpu__webgpu_sys__gen_GpuError__GpuError___core_ed718c3d60ebd546___result__Result_____wasm_bindgen_765df639e0572edc___JsError___true__93: (a: number, b: number, c: any) => [number, number];
+export const wasm_bindgen_765df639e0572edc___convert__closures_____invoke___wasm_bindgen_765df639e0572edc___sys__JsNullable_wgpu_fb237351f69b1e72___backend__webgpu__webgpu_sys__gen_GpuError__GpuError___core_ed718c3d60ebd546___result__Result_____wasm_bindgen_765df639e0572edc___JsError___true__94: (a: number, b: number, c: any) => [number, number];
 export const wasm_bindgen_765df639e0572edc___convert__closures_____invoke___wgpu_fb237351f69b1e72___backend__webgpu__webgpu_sys__gen_GpuDeviceLostInfo__GpuDeviceLostInfo______true_: (a: number, b: number, c: any) => void;
-export const wasm_bindgen_765df639e0572edc___convert__closures_____invoke___wgpu_fb237351f69b1e72___backend__webgpu__webgpu_sys__gen_GpuDeviceLostInfo__GpuDeviceLostInfo______true__89: (a: number, b: number, c: any) => void;
+export const wasm_bindgen_765df639e0572edc___convert__closures_____invoke___wgpu_fb237351f69b1e72___backend__webgpu__webgpu_sys__gen_GpuDeviceLostInfo__GpuDeviceLostInfo______true__92: (a: number, b: number, c: any) => void;
 export const __wbindgen_malloc: (a: number, b: number) => number;
 export const __wbindgen_realloc: (a: number, b: number, c: number, d: number) => number;
 export const __wbindgen_exn_store: (a: number) => void;

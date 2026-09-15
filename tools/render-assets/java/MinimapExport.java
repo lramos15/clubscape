@@ -49,6 +49,7 @@ final class MinimapExport
         fq.ab(32768);
         ez.cc(25);
         exportMapScenes();
+        exportMapIcons();
         List<Object> records = new ArrayList<>();
         for (int square : squares)
         {
@@ -116,7 +117,9 @@ final class MinimapExport
         int planes = SceneExport.rawInt(ez, "bq");
         int oy = ez.oy;
         int yBits = ez.fb, planeShift = ez.xu;
+        mapElements();
         List<Integer> walls = new ArrayList<>();
+        List<Integer> icons = new ArrayList<>();
         TreeMap<Integer, om> definitions = new TreeMap<>();
         for (int p = 0; p < planes; p++)
         {
@@ -133,7 +136,22 @@ final class MinimapExport
                         definition(definitions, wall.getHash());
                     }
                     eo floor = ez.si[index];
-                    if (floor != null) definition(definitions, floor.getHash());
+                    if (floor != null)
+                    {
+                        definition(definitions, floor.getHash());
+                        // The original minimap icon pass (`bu.aa`): `ez.ct` yields the floor
+                        // decoration's tag only on tiles flagged valid (`ez.eb`); its object
+                        // definition names a map element (`om.di`) whose `ay` flag shows it.
+                        long tag = ez.ct(p, bx + BlockExport.MARGIN, by + BlockExport.MARGIN);
+                        if (tag != 0L)
+                        {
+                            int element = om.ck((int) (tag >>> 20 & 0xFFFFFFFFL)).getMapIconId();
+                            if (element >= 0 && fj.az(element, (byte) -93).ay)
+                            {
+                                icons.add(p); icons.add(bx); icons.add(by); icons.add(element);
+                            }
+                        }
+                    }
                     int slots = ez.jm[index];
                     for (int slot = 0; slot < slots; slot++)
                     {
@@ -154,6 +172,7 @@ final class MinimapExport
         writer.ints("MBHD", square, rx, ry, originX, originY, BlockExport.SIZE, planes, walls.size() / 4, definitions.size());
         writer.ints("MWAL", SceneExport.toArray(walls));
         writer.ints("MDEF", SceneExport.toArray(defs));
+        writer.ints("MICN", SceneExport.toArray(icons));
         String fileKey = "minimap/blocks/" + square + ".bin";
         Path file = export.output.resolve(fileKey);
         Files.createDirectories(file.getParent());
@@ -164,10 +183,96 @@ final class MinimapExport
         record.put("sha256", sha);
         record.put("walls", walls.size() / 4);
         record.put("object_definitions", definitions.size());
-        record.put("source_pipeline", "Original rl4.fn scene load (same base as the block export); fe.getConfig per wall; om mapSceneId/size/mapIcon per referenced object id");
+        record.put("map_icons", icons.size() / 4);
+        record.put("source_pipeline", "Original rl4.fn scene load (same base as the block export); fe.getConfig per wall; om mapSceneId/size/mapIcon per referenced object id; bu.aa icon rule (ez.ct floor decoration -> om.di -> ps.ay) per plane");
         export.record(fileKey, sha, Files.size(file), record);
         System.out.println("MINIMAP " + square + " walls=" + walls.size() / 4 + " definitions=" + definitions.size());
         return record;
+    }
+
+    /** The original map-element table (`yv.ag`, package-private class) through reflection. */
+    static Class<?> mapElementTable() throws Exception { return Class.forName("yv"); }
+
+    static ps[] mapElementArray() throws Exception
+    {
+        java.lang.reflect.Field field = mapElementTable().getDeclaredField("ag");
+        field.setAccessible(true);
+        return (ps[]) field.get(null);
+    }
+
+    boolean mapElementsDecoded;
+
+    /** Original map-element definitions (`ps`, archive 2 group 35) and their sprite archive, as client init loads them. */
+    void mapElements() throws Exception
+    {
+        if (mapElementsDecoded) return;
+        mapElementsDecoded = true;
+        vp configs = export.cache.archive(2);
+        ps.ab = export.cache.archive(8);
+        int count = configs.bh(35, 479724292);
+        WorldCapture.staticField(ps.class, "af", int.class, count * -1749753703);
+        ps[] table = new ps[count];
+        for (int i = 0; i < count; i++)
+        {
+            byte[] data = va.tc(configs, 35, i, -703079961);
+            table[i] = new ps(i);
+            if (data != null)
+            {
+                table[i].ae(new xy(data), (byte) -2);
+                table[i].ag(-1946863999);
+            }
+        }
+        java.lang.reflect.Field field = mapElementTable().getDeclaredField("ag");
+        field.setAccessible(true);
+        field.set(null, table);
+    }
+
+    /**
+     * {@code minimap/mapicons.bin}: every map element whose original minimap flag ({@code ps.ay})
+     * is set and that has a minimap sprite ({@code ps.as(false)}, the client's own minimap fetch):
+     * element id, sprite id, width, height, offsets, max size, category, ARGB pixels straight
+     * from the original sprite loader. The renderer's minimap surface lists icon positions by
+     * element id; the UI draws these sprites with the original {@code bo.as} rule.
+     */
+    void exportMapIcons() throws Exception
+    {
+        mapElements();
+        ChunkWriter writer = new ChunkWriter();
+        writer.text("NAME", "mapicons");
+        List<Integer> header = new ArrayList<>();
+        java.io.ByteArrayOutputStream pixels = new java.io.ByteArrayOutputStream();
+        int exported = 0;
+        ps[] table = mapElementArray();
+        for (int id = 0; id < table.length; id++)
+        {
+            ps element = table[id];
+            if (element == null || !element.ay) continue;
+            // `ps.as(false)` is the client's own minimap-sprite fetch (`bu.aa`/`ba`), decoding
+            // the sprite id with the field's inverse multiplier.
+            ym sprite = element.as(false, 592907760);
+            if (sprite == null) continue;
+            int[] argb = sprite.getPixels();
+            header.add(id); header.add(sprite.getWidth()); header.add(sprite.getHeight());
+            header.add(sprite.getOffsetX()); header.add(sprite.getOffsetY());
+            header.add(sprite.getMaxWidth()); header.add(sprite.getMaxHeight());
+            header.add(element.getCategory()); header.add(argb.length);
+            java.nio.ByteBuffer buffer = java.nio.ByteBuffer.allocate(argb.length * 4);
+            for (int p : argb) buffer.putInt(p);
+            pixels.write(buffer.array());
+            exported++;
+        }
+        writer.ints("MIHD", table.length, exported, 9);
+        writer.ints("MIEL", SceneExport.toArray(header));
+        byte[] pixelBytes = pixels.toByteArray();
+        writer.bytes("MIPX", pixelBytes, pixelBytes.length);
+        String fileKey = "minimap/mapicons.bin";
+        Path file = export.output.resolve(fileKey);
+        Files.createDirectories(file.getParent());
+        String sha = writer.write(file);
+        export.record(fileKey, sha, Files.size(file), OriginalCapture.map("map_elements", table.length, "icons", exported,
+            "source", "ps (archive 2 group 35) decoded as in client init; ps.as(false) sprite through the original sprite loader; ARGB int32 big-endian",
+            "draw_rule", "client.zr/bo.as: per icon at ((tileX<<7)+64-playerX, (tileY<<7)+64-playerY) scaled by the minimap zoom, rotated by the map angle, centred minus (width/2, height/2); drawn only within 80 units of the centre, clipped to the widget beyond 50"));
+        System.out.println("MAPICONS elements=" + table.length + " icons=" + exported);
     }
 
     /** Object id from the original tag (bits 20..51) and its definition, loaded once. */
