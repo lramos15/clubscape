@@ -5,6 +5,7 @@ import { SourceRaster, escapeText, sourceLines, textAdvance } from "./raster.ts"
 import type { TitleFlames } from "./flames.ts";
 
 export interface EntryModel {
+  audioEnabled?: boolean;
   state: Readonly<AppState>; name: string; password: string; confirmation: string;
   focus: string | null; hideName: boolean; busy: boolean;
   error: { message: string; errorId: string | null; recoverable: boolean } | null;
@@ -171,7 +172,8 @@ export function paintEntry(raster: SourceRaster, model: EntryModel, actions: Ent
     controls.push({ x: pad + 5, y: 463, width: 100, height: 35, id: "world-switch", label: "World switch",
       actions: [{ label: "World switch", run: () => actions.unavailable("World switching") }] });
   }
-  raster.sprite(811, pad + 725, 463, { frame: model.state.soundEnabled ? 0 : 1 });
-  controls.push({ x: pad + 725, y: 463, width: 40, height: 40, id: "title-audio", label: model.state.soundEnabled ? "Mute sound" : "Enable sound",
+  const audioEnabled = model.audioEnabled ?? model.state.soundEnabled;
+  raster.sprite(811, pad + 725, 463, { frame: audioEnabled ? 0 : 1 });
+  controls.push({ x: pad + 725, y: 463, width: 40, height: 40, id: "title-audio", label: audioEnabled ? "Mute sound" : "Enable sound",
     actions: [{ label: "Sound", run: actions.audio }] });
 }

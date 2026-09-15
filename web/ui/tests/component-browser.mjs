@@ -64,7 +64,9 @@ try {
   await check("capability/loading/connecting feedback and audio controls use real app state", async () => {
     await mount("title");
     await click("title-audio");
-    assert.equal(await page.evaluate(() => window.component.services.calls.filter(c => c.method === "audioVolume").length), 3);
+    assert.equal(await page.evaluate(() => window.component.services.calls.filter(c => c.method === "audioVolume").length), 0);
+    assert.match(await page.getByRole("status").innerText(), /ui.audio.observer_binding/);
+    await page.locator("canvas").press("Escape"); await frame();
     await page.evaluate(() => { const s = window.component.services; s.publish({ ...s.state(), phase: "capability_check",
       loading: { completed: 2, total: 7, label: "Loading original source sprites" } }); }); await frame();
     await capture("loading-real-counters");

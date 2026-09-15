@@ -42,23 +42,31 @@ def passed(name, count):
     return report
 
 
+def passed_tap(name, count):
+    tap = (RESULTS / name).read_text()
+    tests = re.search(r"^# tests (\d+)$", tap, re.MULTILINE)
+    passes = re.search(r"^# pass (\d+)$", tap, re.MULTILINE)
+    failures = re.search(r"^# fail (\d+)$", tap, re.MULTILINE)
+    if not tests or not passes or not failures or int(tests[1]) != count or tests[1] != passes[1] or failures[1] != "0":
+        raise ValueError(f"Expected {count} passing tests in {name}")
+    return {"passed": count, "total": count}
+
+
 def main():
     comparisons = {
         "source": passed("source-comparison.json", 87),
         "modes": passed("mode-comparison.json", 106),
         "presentations": passed("presentation-comparison.json", 45),
+        "audio_ui": passed("audio-ui-comparison.json", 18),
     }
     components = passed("component-tests.json", 20)
     versioned = passed("gameplay-ui-v1-tests.json", 15)
+    audio_ui = passed("audio-ui-tests.json", 7)
+    units = passed_tap("unit.tap", 33)
+    audio_units = passed_tap("audio-policy.tap", 25)
     glyphs = read(RESULTS / "glyph-proof.json")
     if glyphs["failures"] or glyphs["checkedSpriteFrames"] < 1099 or glyphs["checkedFontGlyphs"] != 1024:
         raise ValueError("Original glyph/frame proof is incomplete")
-    tap = (RESULTS / "unit.tap").read_text()
-    tests = re.search(r"^# tests (\d+)$", tap, re.MULTILINE)
-    passes = re.search(r"^# pass (\d+)$", tap, re.MULTILINE)
-    failures = re.search(r"^# fail (\d+)$", tap, re.MULTILINE)
-    if not tests or not passes or not failures or int(tests[1]) != 28 or tests[1] != passes[1] or failures[1] != "0":
-        raise ValueError("Expected the complete passing unit TAP report")
     if (RESULTS / "typecheck.log").read_text().strip():
         raise ValueError("TypeScript diagnostics remain")
     strict = read(ROOT / "tools/ui-assets/.cache/source-validation.json")
@@ -105,9 +113,48 @@ def main():
         "finalAcceptance": False,
     })
     manifest = read(ROOT / "assets/compiled/ui/manifest.json")
+    audio_archive = EVIDENCE / "native-audio-controls"
+    audio_references = []
+    records = manifest["nativeAudioControls"]
+    if len(records) != 9 or not audio_ui["browserOutputMuted"]:
+        raise ValueError("Native audio UI cases or shared-host output boundary are incomplete")
+    for record in records:
+        name = record["case"] + ".png"
+        if Path(name).name != name:
+            raise ValueError("Unexpected audio source case path")
+        source = NATIVE / "ui-only" / name
+        if not source.exists():
+            source = audio_archive / "original/ui" / name
+        if source != audio_archive / "original/ui" / name:
+            copy(source, audio_archive / "original/ui" / name)
+        audio_references.append({"kind": "ui", "name": name, "sha256": digest(source), "bytes": source.stat().st_size})
+    for kind in ("audio-source", "audio-projections", "audio-components"):
+        for path in (RESULTS / kind).glob("*.png"):
+            copy(path, audio_archive / kind / path.name)
+    copy(RESULTS / "audio-ui-tests.json", audio_archive / "browser.json")
+    copy(RESULTS / "audio-ui-comparison.json", audio_archive / "comparison.json")
+    copy(RESULTS / "audio-policy.tap", audio_archive / "audio-policy.tap")
+    script_ids = [313, 2257, 3927, 3928, 7101, 9232, 9234, 9238, 9240, 9244, 9246, 9252, 9253, 9255]
+    scripts = []
+    for identifier in script_ids:
+        path = ROOT / "tools/ui-assets/.cache/scripts" / f"{identifier}.json"
+        if path.exists():
+            source = read(path)
+            scripts.append({key: source[key] for key in ("id", "sha256", "intArgs", "objectArgs")})
+    if len(scripts) != len(script_ids):
+        prior = audio_archive / "source-inputs.json"
+        scripts = read(prior)["sourceScripts"] if prior.exists() else []
+    if len(scripts) != len(script_ids):
+        raise ValueError("Original source slider/tooltip/mute script hashes are incomplete")
+    write(audio_archive / "source-inputs.json", {
+        "scope": "Native source audio control geometry/preferences only; no listener/scene projection or audible world acceptance",
+        "references": audio_references, "inputs": records, "sourceScripts": scripts, "sourcePackSha256": glyphs["sourcePackSha256"],
+        "finalAcceptance": False,
+    })
     owned_sources = sorted([
         *ROOT.glob("web/ui/*.ts"), *ROOT.glob("web/ui/tests/*.ts"), *ROOT.glob("web/ui/tests/*.mjs"),
         *ROOT.glob("tools/ui-assets/*.java"), *ROOT.glob("tools/ui-assets/*.py"),
+        *ROOT.glob("web/audio/*.ts"),
     ])
     summary = {
         "scope": "UI component and original-source validation only. No real-server journey, final visual/audio or hardware acceptance.",
@@ -117,8 +164,18 @@ def main():
         "published_contract_upstream": "d1532d6fc063d2a02383a7b4bb1ca3c449e214ce",
         "contract_implementation_inferred_from_types": False,
         "typecheck": {"passed": True, "command": "pnpm exec tsc --noEmit"},
-        "unit": {"passed": int(passes[1]), "total": int(tests[1])},
-        "component_browser": {"legacy": len(components["cases"]), "versioned": len(versioned["cases"]), "browser": versioned["browser"]},
+        "unit": units,
+        "integrated_audio_policy_units": audio_units,
+        "component_browser": {"legacy": len(components["cases"]), "versioned": len(versioned["cases"]),
+                              "source_audio_ui": len(audio_ui["cases"]), "browser": versioned["browser"]},
+        "audio_contract": {
+            "upstream_commits": ["888f9384e111b5f7fefeee36859bae4f873e5c95", "f74652a59834815b4e57e04366dc857681fd83c1"],
+            "authorized_picks": ["b7cc380", "d2082e8"],
+            "volume_semantics": "Source normalized slider position, never linear gain; master is applied before lookup.",
+            "observer": "observeAudioState via bindUiAudio",
+            "browser_output_muted_for_component_tests": True,
+            "scene_or_committed_gameplay_events_fabricated": False,
+        },
         "source_comparisons": {kind: {"passed": len(report["results"]), "total": len(report["results"]), "tolerance": 0}
                                for kind, report in comparisons.items()},
         "original_frames": glyphs,

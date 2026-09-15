@@ -1,6 +1,6 @@
 import type {
   AppServices, AppState, ClientAssets, CreateUi, GameIntent, ItemTarget, ItemView,
-  RenderCamera, ScenePick, UiHandle, WorldTarget, WorldView, GameplayUiIntent, GameplayUiView,
+  RenderCamera, ScenePick, UiHandle, WorldTarget, WorldView, GameplayUiIntent, GameplayUiView, AudioHandle,
 } from "../shared/contracts.ts";
 import { UiAssets, contains } from "./assets.ts";
 import type { NativeWidget, Rect } from "./assets.ts";
@@ -17,6 +17,8 @@ import { checkUiIntent, gameplayUi, gameplayUiProblem, isGameplayUiIntent, permi
 import { paintConfirmation } from "./presentations.ts";
 import type { ProductionAmount } from "./production.ts";
 import { rewardDetails } from "./rewards.ts";
+import { audioSliderPercent, observedAudio } from "./audio-controls.ts";
+import type { UiAudioChannel, UiAudioView } from "./audio-controls.ts";
 
 export interface UiNotice { message: string; errorId: string | null; recoverable: boolean; scope: "error" | "unavailable" | "information" }
 export interface AmountPrompt { label: string; value: string; confirm: (quantity: number) => void; pending?: boolean }
@@ -38,6 +40,7 @@ export interface LocalUiState {
   recoverySelected: string | null;
   chatDraft: string;
   productionAmount: ProductionAmount;
+  settingsPage: "controls" | "audio";
 }
 export interface WorldPointer {
   kind: "move" | "primary" | "context";
@@ -61,7 +64,6 @@ export interface GameViewContext {
   shopActions: (index: number) => UiAction[];
   depositAll: () => void;
   logout: () => void;
-  volume: (channel: "music" | "effects" | "area", value: number) => void;
   confirmAppearance: () => void;
   minimapClick: (widget: NativeWidget) => void;
   faceNorth: () => void;
@@ -71,20 +73,25 @@ export interface GameViewContext {
   hoveredProduction: string | null;
   capture: (bounds: Rect) => void;
   preview: (bounds: Rect, model: NativeWidget) => void;
+  audio: UiAudioView | null;
+  audioValue: (channel: UiAudioChannel) => number | null;
+  audioPercent: (channel: UiAudioChannel, percent: number) => void;
+  audioMute: (channel: UiAudioChannel) => void;
 }
 
 function emptyLocal(): LocalUiState {
   return { tab: 3, selectedItem: null, selectedSpell: null, bankSearch: "", bankSearchOpen: false,
     bankAmount: 1, bankNotes: false, shopAmount: 1, shopValue: true, scroll: 0,
     journal: null, modal: null, dialoguePage: 0, amount: null, appearance: { body_type: 0 },
-    quickPrayer: true, magicFilter: false, filterPanel: null, prayerFilters: 0, magicFilters: 0, recoverySelected: null, chatDraft: "", productionAmount: 1 };
+    quickPrayer: true, magicFilter: false, filterPanel: null, prayerFilters: 0, magicFilters: 0, recoverySelected: null, chatDraft: "", productionAmount: 1, settingsPage: "controls" };
 }
 
 function errorDetails(error: unknown): { message: string; errorId: string | null; recoverable: boolean } {
   const record = typeof error === "object" && error !== null ? error as Record<string, unknown> : {};
   return {
     message: typeof record.message === "string" ? record.message : String(error),
-    errorId: typeof record.errorId === "string" ? record.errorId : typeof record.error_id === "string" ? record.error_id : null,
+    errorId: typeof record.errorId === "string" ? record.errorId : typeof record.error_id === "string" ? record.error_id
+      : typeof record.code === "string" ? record.code : null,
     recoverable: record.recoverable !== false,
   };
 }
@@ -158,6 +165,14 @@ export function getUiPreviewRequest(handle: UiHandle): Readonly<UiPreviewRequest
   return request ? structuredClone(request) : null;
 }
 
+/** Observe the real audio graph; UI disposal detaches without disposing the shell's audio handle. */
+export async function bindUiAudio(handle: UiHandle, audio: AudioHandle): Promise<() => void> {
+  const module = await import("../audio/index.ts");
+  const controller = controllers.get(handle);
+  if (!controller) throw new Error("UI handle has been disposed.");
+  return controller.bindAudio(audio, module.observeAudioState, module.setSourceMasterVolume);
+}
+
 /** Supply only an actual model-only renderer surface at the requested native dimensions. */
 export function setUiPreview(handle: UiHandle, image: HTMLCanvasElement | OffscreenCanvas | ImageBitmap | null): void {
   const controller = controllers.get(handle);
@@ -212,6 +227,13 @@ class UiController {
   private entryErrorKind: "capability" | "runtime-error" = "runtime-error";
   private entryErrorPage = 0;
   private chatSubmission: { text: string; messageIds: Set<string>; accepted: boolean } | null = null;
+  private audioHandle: AudioHandle | null = null;
+  private audioView: UiAudioView | null = null;
+  private stopAudio: (() => void) | null = null;
+  private masterVolume: ((percent: number) => void) | null = null;
+  private readonly mutedPercentages = new Map<UiAudioChannel, number>();
+  private sliderDrag: { id: string; grab: number } | null = null;
+  private audioTrace: import("../audio/index.ts").AudioTrace | null = null;
 
   constructor(canvas: HTMLCanvasElement, services: AppServices, assets: UiAssets) {
     this.canvas = canvas; this.services = services; this.assets = assets;
@@ -251,10 +273,10 @@ class UiController {
     }, { signal: this.abort.signal, passive: false });
     window.addEventListener("pointerup", event => {
       const inControls = event.target instanceof Node && this.surface.root.contains(event.target);
-      if ((this.drag || this.bankDrag) && !inControls && event.target !== canvas) this.pointer(event, null, "up");
+      if ((this.drag || this.bankDrag || this.sliderDrag) && !inControls && event.target !== canvas) this.pointer(event, null, "up");
     }, { signal: this.abort.signal });
-    window.addEventListener("blur", () => { this.drag = null; this.bankDrag = null; this.menu = null; this.renderSoon(); }, { signal: this.abort.signal });
-    window.addEventListener("pointercancel", () => { this.drag = null; this.bankDrag = null; this.renderSoon(); }, { signal: this.abort.signal });
+    window.addEventListener("blur", () => { this.drag = null; this.bankDrag = null; this.sliderDrag = null; this.menu = null; this.renderSoon(); }, { signal: this.abort.signal });
+    window.addEventListener("pointercancel", () => { this.drag = null; this.bankDrag = null; this.sliderDrag = null; this.renderSoon(); }, { signal: this.abort.signal });
     assets.changed(() => this.renderSoon());
     this.unsubscribe = services.subscribe(state => this.update(state));
     const bounds = canvas.getBoundingClientRect();
@@ -267,6 +289,43 @@ class UiController {
     requestAnimationFrame(() => {
       if (!this.disposed && (this.state.phase === "login" || this.state.phase === "register")) this.surface.focus("name");
     });
+  }
+
+  bindAudio(handle: AudioHandle, observe: typeof import("../audio/index.ts").observeAudioState,
+    master: typeof import("../audio/index.ts").setSourceMasterVolume): () => void {
+    this.stopAudio?.();
+    this.mutedPercentages.clear();
+    this.audioTrace = null;
+    const stop = observe(handle, snapshot => {
+      if (this.disposed) return;
+      const result = observedAudio(snapshot);
+      if (result.problem) {
+        this.audioView = null;
+        this.show(result.problem, "error", "ui.audio.observation");
+      } else if (JSON.stringify(result.value) !== JSON.stringify(this.audioView)) {
+        this.audioView = result.value; this.renderSoon();
+      }
+      const failure = snapshot.traces.findLast(trace => trace.type === "error");
+      if (failure && failure !== this.audioTrace) {
+        this.audioTrace = failure;
+        const message = failure.data.message, code = failure.data.code;
+        if (typeof message === "string" && typeof code === "string") {
+          if (code === "AUDIO_GESTURE_REQUIRED") this.surface.announce(`${message} Error ID: ${code}`);
+          else this.show(message, "error", code);
+        }
+      }
+    });
+    this.audioHandle = handle;
+    this.masterVolume = percent => master(handle, percent);
+    const cleanup = () => {
+      stop();
+      if (this.stopAudio === cleanup) {
+        this.stopAudio = null; this.audioHandle = null; this.audioView = null; this.masterVolume = null; this.sliderDrag = null; this.audioTrace = null;
+        this.renderSoon();
+      }
+    };
+    this.stopAudio = cleanup;
+    return cleanup;
   }
 
   private xy(event: Pick<MouseEvent, "clientX" | "clientY">): [number, number] {
@@ -338,12 +397,13 @@ class UiController {
     this.canvas.style.width = `${Math.round(width)}px`; this.canvas.style.height = `${Math.round(height)}px`;
     this.raster.context.imageSmoothingEnabled = false;
     this.surface.align();
-    this.menu = null; this.drag = null; this.bankDrag = null; this.renderSoon();
+    this.menu = null; this.drag = null; this.bankDrag = null; this.sliderDrag = null; this.renderSoon();
   }
 
   dispose(): void {
     if (this.disposed) return;
     this.disposed = true; this.authGeneration++;
+    this.stopAudio?.(); this.mutedPercentages.clear();
     this.password = ""; this.confirmation = ""; this.name = "";
     cancelAnimationFrame(this.scheduled);
     this.unsubscribe(); this.abort.abort(); this.surface.dispose(); this.assets.dispose();
@@ -538,14 +598,50 @@ class UiController {
   }
 
   private audio(): void {
+    if (!this.audioHandle || !this.audioView || this.audioView.disposed) {
+      this.show("Source sound controls require bindUiAudio and the actual audio observer.", "error", "ui.audio.observer_binding"); return;
+    }
+    const handle = this.audioHandle;
+    if (this.audioView.enabled) { handle.mute(true); return; }
     void this.request("audio-unlock", async () => {
+      handle.mute(false);
       await this.services.unlockAudio();
-      const value = this.state.soundEnabled ? 0 : 1;
-      for (const channel of ["music", "effects", "area"] as const) this.services.audioVolume(channel, value);
     });
   }
 
+  private audioPercent(channel: UiAudioChannel, percent: number): void {
+    if (!this.audioView || this.audioView.disposed || !this.audioHandle) {
+      this.show("Actual source audio settings are unavailable.", "error", "ui.audio.observer_binding"); return;
+    }
+    if (!Number.isInteger(percent) || percent < 0 || percent > 100) {
+      this.show("Source slider positions must be integer percentages from 0 to 100.", "error", "ui.audio.slider"); return;
+    }
+    void this.request(`audio-${channel}-${percent}`, async () => {
+      if (channel === "master") this.masterVolume!(percent);
+      else this.services.audioVolume(channel, percent / 100);
+    });
+  }
+
+  private audioMute(channel: UiAudioChannel): void {
+    if (!this.audioView || this.audioView.disposed) {
+      this.show("Actual source audio settings are unavailable.", "error", "ui.audio.observer_binding"); return;
+    }
+    const current = this.audioView.percentages[channel];
+    if (current > 0) {
+      this.mutedPercentages.set(channel, current);
+      this.audioPercent(channel, 0);
+    } else {
+      const restore = this.mutedPercentages.get(channel);
+      if (restore === undefined) {
+        this.show("The remembered native mute value was not supplied. Set the desired source position with the slider; no saved value is invented.",
+          "error", "ui.audio.remembered_mute"); return;
+      }
+      this.audioPercent(channel, restore);
+    }
+  }
+
   private cancel(): void {
+    if (this.sliderDrag) { this.sliderDrag = null; this.renderSoon(); return; }
     if (this.menu) this.menu = null;
     else if (this.notice) this.notice = null;
     else if (this.state.error && this.dismissedError !== this.state.error) this.dismissedError = this.state.error;
@@ -571,6 +667,15 @@ class UiController {
     if (event.isComposing) return;
     if (event.key === "Escape") { event.preventDefault(); event.stopPropagation(); this.cancel(); return; }
     if (this.surface.activeInput()) return;
+    const slider = this.controls.find(control => control.id === this.focus && control.slider);
+    if (slider && ["ArrowLeft", "ArrowRight", "ArrowUp", "ArrowDown", "Home", "End", "PageUp", "PageDown"].includes(event.key)) {
+      event.preventDefault(); event.stopPropagation();
+      const current = slider.slider!.current();
+      if (slider.disabled || current === null) return;
+      const value = event.key === "Home" ? 0 : event.key === "End" ? 100 : current +
+        (event.key === "PageUp" ? 10 : event.key === "PageDown" ? -10 : ["ArrowLeft", "ArrowDown"].includes(event.key) ? -1 : 1);
+      slider.slider!.change(Math.max(0, Math.min(100, value))); return;
+    }
     if (event.key === "ContextMenu" || (event.shiftKey && event.key === "F10")) {
       const control = this.controls.find(c => c.id === this.focus);
       if (control) { event.preventDefault(); this.openMenu(control.actions, control.x, control.y + control.height); }
@@ -649,6 +754,13 @@ class UiController {
 
   private pointer(event: PointerEvent, control: Control | null, phase: "down" | "move" | "up"): void {
     const [x, y] = this.xy(event); this.point = { x, y };
+    if (this.sliderDrag && phase !== "down") {
+      const slider = this.controls.find(control => control.id === this.sliderDrag!.id);
+      if (phase === "move" && slider?.slider && !slider.disabled && event.buttons & 1)
+        slider.slider.change(audioSliderPercent(x - slider.x, slider.width, this.sliderDrag.grab));
+      if (phase === "up") this.sliderDrag = null;
+      this.renderSoon(); return;
+    }
     if (phase === "move") {
       if (this.drag && (event.buttons & 1) && performance.now() - this.drag.start >= 100 &&
           Math.max(Math.abs(x - this.drag.x), Math.abs(y - this.drag.y)) >= 5) this.drag.active = true;
@@ -660,6 +772,14 @@ class UiController {
       this.suppressNextClick = false;
       if (this.menu && !control?.id.startsWith("menu-")) { this.menu = null; this.suppressNextClick = true; this.renderSoon(); return; }
       if (event.button !== 0 || this.notice || this.local.amount || control?.disabled) return;
+      if (control?.slider && control.slider.value !== null) {
+        const left = control.x + Math.trunc(control.slider.value * (control.width - 16) / 100);
+        const grab = x >= left && x < left + 16 ? x - left : 0;
+        this.sliderDrag = { id: control.id, grab };
+        control.slider.change(audioSliderPercent(x - control.x, control.width, grab));
+        if (event.isTrusted && event.target instanceof Element) event.target.setPointerCapture(event.pointerId);
+        return;
+      }
       if (control?.bankEntryId && this.state.world) {
         const entry = gameplayUi(this.state.world)?.bank?.entries.find(entry => entry.id === control.bankEntryId);
         if (entry) this.bankDrag = { entry: entry.id, item: entry.item, instance: entry.value?.instanceId ?? null,
@@ -967,6 +1087,7 @@ class UiController {
   capturesPointer(x: number, y: number): boolean {
     if (this.disposed) return false;
     if (!this.state.world || this.state.phase !== "world" || this.notice || this.local.amount ||
+        this.sliderDrag ||
         (this.state.error && this.state.error !== this.dismissedError)) return true;
     const presentation = gameplayUi(this.state.world);
     if (presentation?.reward || presentation?.confirmation) return true;
@@ -1056,6 +1177,7 @@ class UiController {
       const cycle = Math.floor((performance.now() - this.titleStartedAt) / 20);
       this.titleFlames.advance(cycle);
       paintEntry(this.raster, { state: this.state, name: this.name, password: this.password, confirmation: this.confirmation,
+        ...(this.audioView ? { audioEnabled: this.audioView.enabled } : {}),
         focus: this.focus, hideName: this.hideName, busy: this.pending.has("auth"), error,
         errorKind: this.entryErrorKind, cursorVisible: cycle % 40 < 20,
         errorPage: this.entryErrorPage,
@@ -1086,9 +1208,6 @@ class UiController {
         bankActions: slot => this.bankActions(slot), bankEntryActions: entry => this.bankEntryActions(entry), shopActions: slot => this.shopActions(slot),
         depositAll: () => { void this.request("deposit-inventory", () => this.depositAll()); },
         logout: () => { void this.request("logout", () => this.services.logout()); },
-        volume: (channel, value) => {
-          void this.request(`volume-${channel}`, async () => { await this.services.unlockAudio(); this.services.audioVolume(channel, value); });
-        },
         confirmAppearance: () => this.confirmAppearance(),
         minimapClick: widget => {
           const destination = this.minimap.destination(widget, world.player.tile, this.point.x, this.point.y);
@@ -1098,6 +1217,9 @@ class UiController {
         sendChat: () => { void this.sendChat(); },
         continueReward: (id, continuation) => this.continueReward(id, continuation),
         hoveredProduction: this.hover?.productionRecipe ?? null,
+        audio: this.audioView, audioPercent: (channel, percent) => this.audioPercent(channel, percent),
+        audioValue: channel => this.audioView?.percentages[channel] ?? null,
+        audioMute: channel => this.audioMute(channel),
         capture: bounds => this.panelBounds.push(bounds),
         preview: (bounds, model) => {
           this.recordPreview("equipment", bounds, model);
@@ -1180,6 +1302,7 @@ class UiController {
       controls.length = 0; inputs.length = 0;
       paintReconnect(this.raster);
     }
+    if (this.hover && this.hover.id !== "world") this.hover = controls.find(control => control.id === this.hover!.id) ?? null;
     if (this.menu) {
       const menu = this.menu, rect = { x: menu.x, y: menu.y, width: menu.width, height: menu.actions.length * 15 + 22 };
       this.raster.fill(rect, 0x5d5447); this.raster.fill({ x: rect.x + 1, y: rect.y + 1, width: rect.width - 2, height: 16 }, 0);

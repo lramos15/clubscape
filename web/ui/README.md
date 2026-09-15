@@ -18,8 +18,9 @@ or protobuf bridge implements them**. Actual versioned projection data is
 required; absent/unknown/malformed `WorldView.ui` is explicit unsupported/error
 feedback rather than a fabricated empty success.
 
-Current component validation: TypeScript and 28 unit tests pass; all 20 legacy
-and 15 versioned browser cases pass. All **87/87** native-panel/full-overlay/owner-composition
+Current component validation: TypeScript and 33 UI unit tests pass; all 20 legacy,
+15 versioned and 7 real-audio-observer browser cases pass. The 25 integrated audio
+policy/reward tests also pass. All **87/87** native-panel/full-overlay/owner-composition
 comparisons pass at the original zero tolerances. This resolves the earlier
 shop and guide-family raster differences, but does not complete the missing
 controls, live-data projections or real-server acceptance gates below.
@@ -33,6 +34,10 @@ frame/projection comparisons. These use controlled source-only inputs and a
 deterministic component double, not a real server or final M1 acceptance.
 See `evidence/mode-comparison.json` and
 `evidence/native-presentations/comparison.json`.
+Nine native audio preference states add **18/18** full-overlay source/reprojection
+checks at zero tolerance, recorded in `evidence/native-audio-controls/`. Those
+browser controls use the real WebAudio adapter, with browser output muted for
+shared-host privacy; they do not claim audible world playback.
 
 ## Shell integration
 
@@ -158,6 +163,74 @@ submission while awaiting that update is stopped. Menus, quantity prompts,
 drag state, Escape, blur, outside-pointer release and reconnect retain their
 identity/error semantics. The world cannot receive clicks through a native
 modal's blank interior.
+
+### Source audio controls
+
+The exact native-audio and Cook reward corrections are integrated as `b7cc380`
+and `d2082e8` (upstream `888f9384`, then `f74652a5`). Their stable patches match
+the authorized originals; the shared `AudioHandle` ABI and frozen source pack
+were not changed.
+
+```ts
+import { bindUiAudio } from "./ui/index.ts";
+
+// AppServices routes each normalized SOURCE position once:
+// audioVolume(channel, position) { audio.volume(channel, position); }
+// unlockAudio() { return audio.unlock(); }
+const stopAudioUi = await bindUiAudio(ui, audio);
+// Optional on teardown; ui.dispose() also detaches the observer.
+stopAudioUi();
+```
+
+`bindUiAudio(UiHandle, AudioHandle): Promise<() => void>` consumes the audio
+owner's `observeAudioState`. It observes actual source integer percentages and
+raw mixers, and draws current slider/playback/permission state; it never installs guessed
+defaults into the graph. `sourceAudioDefaults`, `sourceSliderToMixer` and
+`sourceMixerToAssetGain` preserve the effective **255/127/127** defaults and
+native nonlinear semantics. A music slider at50% is sent as **0.5**, not44/255,
+44/128 or a provisional half-amplitude gain. Master50 is applied before the
+lookup: with channel100, native levels are44/22/22. Diagnostic gain values are
+not substituted for percentages in the visible source controls.
+
+The native Audio settings subpage uses original sprites, geometry, mute
+overlays and source tooltip strings. Track clicks/drag use the source integer
+position formula; arrows/Home/End/PageUp/PageDown provide keyboard access.
+Fast keyboard input reads the latest actual observation, not a stale painted
+thumb value. Escape stops the drag without pretending to roll back changes
+already applied to the graph. Source master-zero grey thumbs retain source
+behavior rather than a guessed game-permission rule.
+
+Channel Mute/Unmute remembers the actual in-session percentage. If a persisted
+zero setting's remembered value was never supplied, explicit
+`ui.audio.remembered_mute` feedback requests that value; no saved preference is
+invented. Native source first-use fallback values are distinct from effective
+constructor defaults. The title toggle uses real activation/global `mute()`
+and **does not reset the three channel positions**. UI disposal detaches only
+its observer; audio lifetime remains owned by the shell. Actual audio error
+messages/codes are surfaced. Without a binding, thumbs remain unprojected and
+controls explicitly unavailable rather than falsely showing100%.
+
+Music modes retain native **area0 / shuffle1 / single2** control identities.
+Manual selection still requires the actual unlocked-track/preferences/request
+bridge. The UI does not fabricate `unlocked:true`, a playlist, a committed
+music event or the old rejected `native_midi_end` directive.
+
+The shell/renderer, not this UI, must call `setSourceAudioScene` with the actual
+128-unit listener, plane/instance/owner, placed scenery emitters/orientations
+and original varps, and connect `setSourceMusicSelector` to actual selection.
+Native helpers own distance, retention, visibility and fades; do not reintroduce
+caller-computed gain/distance. Do not turn a reconnect into `audio.update(null,
+[])`. Likewise, clicking reward Continue sends only the gameplay request:
+Cook level audio requires coherent committed before/after skill batches,
+`skillId` and completion attribution, followed by the **actual** matching
+Widget153 close. No base-level gain means no level cue. The UI never generates
+that delta or close event from an optimistic click.
+
+Original Modern Lumbridge groups64/327/163/145 and native255 jingle
+representations40/54/58/64/65 remain pending the audio owner's additive
+publication/AUDIO_INPUTS relay. No frozen file is changed or missing variant
+scaled/invented here. The broader All Settings window and persisted mute/music
+preference projection remain explicit required integrations.
 
 ## Asset contract
 
@@ -313,8 +386,10 @@ Additional UI implementation/fidelity work remains:
 * authoritative recovery fee-unit/capacity/per-row/bank-all data and partial
   retrieval/bank-all requests; coffer/discard/coffer-offer wiring is complete;
 * the actual renderer preview and dynamic minimap surface/state;
-* in-game source audio sliders/music policy and actual settings, owned by the
-  audio/shell closure.
+* real source-scene/varp/music/event wiring and the forthcoming additive audio
+  publications; native audio sidebar sliders/current observation are complete;
+* persisted remembered mute/music preferences and the broader All Settings
+  window projection.
 
 Controls whose service capability is absent do not silently succeed or invent
 values. Out-of-scope controls retain their source placement and explicit
@@ -331,7 +406,8 @@ The existing frozen web dependencies are used.
 ```bash
 cd web
 pnpm exec tsc --noEmit
-node --test ui/tests/unit.test.ts ui/tests/gameplay-ui.test.ts
+node --test ui/tests/unit.test.ts ui/tests/gameplay-ui.test.ts ui/tests/audio-controls.test.ts
+node --test audio/audio.test.ts audio/native-policy.test.ts audio/reward-levels.test.ts
 cd ..
 python3 tools/ui-assets/glyph_proof.py
 
@@ -354,6 +430,10 @@ TMPDIR="$PWD/web/ui/.cache/xvfb" xvfb-run --auto-servernum \
   --server-args='-screen 0 2560x1440x24 -nolisten tcp' \
   node web/ui/tests/presentations-browser.mjs
 python3 tools/ui-assets/compare_modes.py --presentations
+TMPDIR="$PWD/web/ui/.cache/xvfb" xvfb-run --auto-servernum \
+  --server-args='-screen 0 2560x1440x24 -nolisten tcp' \
+  node web/ui/tests/audio-browser.mjs
+python3 tools/ui-assets/compare_modes.py --audio-ui
 ```
 
 The browser tests use sandboxed **headful** Chrome under Xvfb. Set

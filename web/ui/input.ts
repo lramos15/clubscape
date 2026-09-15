@@ -7,6 +7,7 @@ export interface Control extends Rect {
   shiftAction?: UiAction;
   bankEntryId?: string; bankTab?: number; bankCreate?: boolean;
   productionRecipe?: string; shortcut?: string;
+  slider?: { value: number | null; current: () => number | null; change: (value: number) => void };
 }
 export interface InputField extends Rect {
   id: string; label: string; type: "text" | "password"; value: string; autocomplete: string;
@@ -118,6 +119,16 @@ export class InputSurface {
       button.setAttribute("aria-description", control.disabled ?? control.actions[0]?.disabled ?? control.tooltip ?? "");
       button.setAttribute("aria-disabled", String(Boolean(control.disabled ?? control.actions[0]?.disabled)));
       button.disabled = Boolean(control.disabled);
+      if (control.slider) {
+        button.setAttribute("role", "slider");
+        button.setAttribute("aria-valuemin", "0"); button.setAttribute("aria-valuemax", "100");
+        if (control.slider.value !== null) button.setAttribute("aria-valuenow", String(control.slider.value));
+        else button.removeAttribute("aria-valuenow");
+        button.setAttribute("aria-valuetext", control.slider.value === null ? "Unavailable" : `${control.slider.value}%`);
+      } else {
+        button.removeAttribute("role"); button.removeAttribute("aria-valuemin"); button.removeAttribute("aria-valuemax");
+        button.removeAttribute("aria-valuenow"); button.removeAttribute("aria-valuetext");
+      }
       button.tabIndex = control.focusable === false ? -1 : 0;
       if (control.pressed !== undefined) button.setAttribute("aria-pressed", String(control.pressed));
       else button.removeAttribute("aria-pressed");

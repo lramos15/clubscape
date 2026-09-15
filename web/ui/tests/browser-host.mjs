@@ -7,8 +7,20 @@ import { pathToFileURL } from "node:url";
 const root = resolve(import.meta.dirname, "../../..");
 export const results = resolve(root, "web/ui/test-results");
 
-export async function browserHost() {
+export async function browserHost({ audioAssets = false } = {}) {
   await mkdir(results, { recursive: true });
+  const audio = new Map();
+  if (audioAssets) {
+    for (const path of ["assets/manifests/osrs/audio-runtime.json", "research/audio-source/source-map.json",
+      "research/reference-pack/v1/audio-reference.json"]) audio.set(path, resolve(root, path));
+    const manifest = JSON.parse(await readFile(audio.get("assets/manifests/osrs/audio-runtime.json"), "utf8"));
+    const reference = JSON.parse(await readFile(audio.get("research/reference-pack/v1/audio-reference.json"), "utf8"));
+    for (const entry of [...manifest.assets, ...reference.reference_templates]) {
+      const path = resolve(root, entry.path);
+      if (!path.startsWith(root + sep)) throw new Error("Invalid original audio fixture path.");
+      audio.set(entry.asset_id ?? entry.id, path);
+    }
+  }
   const server = http.createServer(async (request, response) => {
     const url = new URL(request.url, "http://127.0.0.1");
     if (url.pathname === "/") {
@@ -20,8 +32,19 @@ export async function browserHost() {
         window.sourceFixture=sourceFixture;window.ownerFixture=ownerFixture;window.flameFixture=flameFixture;window.filterProjection=filterProjection;window.recoveryProjection=recoveryProjection;window.reconnectFixture=reconnectFixture;</script></body></html>`);
       return;
     }
+    if (url.pathname.startsWith("/audio-asset/")) {
+      const path = audio.get(decodeURIComponent(url.pathname.slice(13)));
+      if (!path) { response.writeHead(404).end(); return; }
+      try {
+        const data = await readFile(path);
+        response.writeHead(200, { "Content-Type": path.endsWith(".json") ? "application/json" : "application/octet-stream",
+          "Content-Length": data.byteLength, "Cache-Control": "no-store" });
+        response.end(data);
+      } catch (error) { response.writeHead(500).end(`Original audio fixture input failed: ${String(error)}`); }
+      return;
+    }
     const directories = { "/assets/": resolve(root, "assets/compiled"), "/web/ui/": resolve(root, "web/ui"),
-      "/web/shared/": resolve(root, "web/shared") };
+      "/web/shared/": resolve(root, "web/shared"), "/web/audio/": resolve(root, "web/audio") };
     const entry = Object.entries(directories).find(([prefix]) => url.pathname.startsWith(prefix));
     if (!entry) { response.writeHead(404).end(); return; }
     const path = resolve(entry[1], "." + url.pathname.slice(entry[0].length - 1));
@@ -41,7 +64,7 @@ export async function browserHost() {
     close: () => new Promise(resolve => server.close(resolve)) };
 }
 
-export async function launchBrowser() {
+export async function launchBrowser({ muteAudio = false } = {}) {
   const { chromium } = await import("playwright-core");
   // Chromium's Unix socket path must fit sockaddr_un, including its generated suffix.
   const scratch = resolve(root, "web/ui/.s");
@@ -51,7 +74,7 @@ export async function launchBrowser() {
     executablePath: process.env.CLUBSCAPE_CHROME ?? `${process.env.HOME}/.cache/ms-playwright/chromium-1243/chrome-linux-arm64/chrome`,
     chromiumSandbox: true, headless: false,
     args: ["--enable-unsafe-webgpu", "--enable-features=Vulkan", "--use-angle=vulkan",
-      "--enable-gpu", "--ignore-gpu-blocklist", "--ozone-platform=x11"],
+      "--enable-gpu", "--ignore-gpu-blocklist", "--ozone-platform=x11", ...(muteAudio ? ["--mute-audio"] : [])],
   });
 }
 

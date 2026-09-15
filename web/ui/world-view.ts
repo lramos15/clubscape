@@ -16,6 +16,8 @@ import { formatUiFixed, formatUiInteger, gameplayUi, gameplayUiProblem, permissi
 import { productionChoiceLabel, productionSource, projectProduction } from "./production.ts";
 import { deathPreviewDetails, projectDeathPreview } from "./death-preview.ts";
 import { projectQuestReward, rewardDetails } from "./rewards.ts";
+import { audioSourceControl, audioTooltip, projectAudioControls } from "./audio-controls.ts";
+import { SOURCE_MUSIC_MODE_IDS, SOURCE_MUSIC_ROWS } from "../audio/native-scene.ts";
 
 const EQUIPMENT = ["head", "cape", "neck", "weapon", "body", "shield", "legs", "hands", "feet", "ring", "ammo"];
 const SKILLS = ["attack", "strength", "defence", "ranged", "prayer", "magic", "runecraft", "construction",
@@ -122,6 +124,7 @@ export function paintGame(raster: SourceRaster, ui: GameViewContext): void {
   const regions = frameRegions(width, height);
   const tab = TABS[local.tab] ?? TABS[3];
   let templateName: string = banking ? "native-bank" : world.shop ? "native-shop" : tab.template;
+  if (!banking && !world.shop && local.tab === 11 && local.settingsPage === "audio") templateName = "native-audio-default";
   const thickSkinSelected = authoritative ? authoritative.prayers.find(row => row.id === "prayer.thick_skin")?.selected === true
     : world.player.activePrayers.includes("prayer.thick_skin");
   if (!banking && !world.shop && local.tab === 5 && thickSkinSelected &&
@@ -134,6 +137,7 @@ export function paintGame(raster: SourceRaster, ui: GameViewContext): void {
     templateName = `native-${filterKind}-mask-0-filters`;
   if (!catalogue.templates[templateName]) templateName = "native-inventory";
   let widgets = cloneTemplate(catalogue.templates[templateName]!);
+  if (templateName === "native-audio-default") widgets = projectAudioControls(catalogue, ui.audio);
   if (!banking && !world.shop && filterKind) {
     const mask = filterKind === "prayer" ? local.prayerFilters : local.magicFilters;
     if (local.filterPanel === filterKind) projectFilterPanel(widgets, filterKind, mask);
@@ -314,7 +318,7 @@ export function paintGame(raster: SourceRaster, ui: GameViewContext): void {
     if (rect.width <= 0 || rect.height <= 0) return;
     const menu = [...actions];
     if (widget.item < 0 && ![149, 15, 301, 387, 593].includes(widget.id >> 16) &&
-        !(authoritative && [4, 12, 153, 270, 312].includes(widget.id >> 16))) {
+        !(authoritative && [4, 12, 153, 270, 312].includes(widget.id >> 16)) && widget.id >> 16 !== 116) {
       for (const operation of widget.actions ?? []) if (operation &&
         !menu.some(action => plainText(action.label).startsWith(plainText(operation)))) {
         menu.push({ label: operation, run: () => ui.unavailable(plainText(operation)) });
@@ -606,18 +610,48 @@ export function paintGame(raster: SourceRaster, ui: GameViewContext): void {
       register(widget, logout ? "logout" : `logout-scope-${widgetKey(widget)}`, logout ? "Logout" : op,
         [{ label: logout ? "Logout" : op, run: logout ? ui.logout : () => ui.unavailable(op) }]);
     }
+    if (group === 116 && widget.index === -1 && [58, 66, 67].includes(child)) {
+      const page = child === 58 ? "controls" : child === 66 ? "audio" : null;
+      const name = page === "audio" ? "Audio settings" : page === "controls" ? "Controls settings" : "Display settings";
+      register(widget, `settings-page-${child}`, name, [{ label: name, run: () => page
+        ? ui.change(() => { local.settingsPage = page; })
+        : ui.required("Display settings", "renderer_display_settings") }], { pressed: page === local.settingsPage });
+      return;
+    }
+    const audioControl = local.settingsPage === "audio" ? audioSourceControl(widget) : undefined;
+    if (audioControl) {
+      const unavailable = !ui.audio || ui.audio.disposed ? "Bind the actual source audio observer to enable these controls." : undefined;
+      const track = child === audioControl.track;
+      const label = track ? audioControl.label : `${ui.audio?.percentages[audioControl.channel] === 0 ? "Unmute" : "Mute"} ${audioControl.label}`;
+      const tooltip = ui.audio ? track ? audioTooltip(ui.audio, audioControl.channel) : label : unavailable!;
+      register(widget, `audio-${track ? "slider" : "mute"}-${audioControl.channel}`, label,
+        track ? [] : [{ label, run: () => ui.audioMute(audioControl.channel) }],
+        { tooltip, ...(unavailable ? { disabled: unavailable } : {}),
+          ...(track ? { slider: { value: ui.audio?.percentages[audioControl.channel] ?? null,
+            current: () => ui.audioValue(audioControl.channel),
+            change: value => ui.audioPercent(audioControl.channel, value) } } : {}) });
+      return;
+    }
     if (group === 116 && op) {
       register(widget, `settings-${child}-${widget.index}`, op, [{ label: op, run: () => {
         if (/all settings/i.test(op)) {
-          ui.change(() => { local.modal = "all-settings"; });
-          ui.send({ kind: "open_interface", interface: "interface.settings" });
+          ui.required("All Settings", "source_all_settings_projection");
         } else if (/run/i.test(op)) ui.send({ kind: "set_setting", setting: { setting: "run",
           enabled: !world.player.settings.find(s => s.setting === "run")?.enabled } });
-        else if (/music|sound|area/i.test(op)) ui.required("Audio controls", "native_audio_slider_value");
+        else if (/music|sound|area/i.test(op)) ui.required("Additional audio preferences", "source_audio_preference_projection");
         else ui.unavailable(op);
       } }]);
     }
-    if ([707, 109, 429, 712, 216, 239].includes(group) && op) register(widget, `scope-${widgetKey(widget)}`, op,
+    if (group === 239 && widget.index === -1 && [14, 15, 16].includes(child)) {
+      const mode = child === 14 ? "area" : child === 15 ? "shuffle" : "single";
+      const label = `${mode[0]!.toUpperCase()}${mode.slice(1)} Mode`;
+      register(widget, `music-mode-${SOURCE_MUSIC_MODE_IDS[mode]}`, label, [{
+        label, run: () => ui.required(label, "authoritative_music_selection_and_unlocks"),
+      }]);
+    } else if (group === 239 && op) register(widget, `music-${widgetKey(widget)}`, label || op, [{
+      label: label || op, run: () => ui.required(label || "Music selection", "authoritative_music_selection_and_unlocks"),
+    }]);
+    if ([707, 109, 429, 712, 216].includes(group) && op) register(widget, `scope-${widgetKey(widget)}`, op,
       [{ label: op, run: () => ui.unavailable(op) }]);
     if (group === 399 && widget.type === 4 && widget.text && widget.index >= 0) {
       const name = plainText(widget.text);
@@ -783,6 +817,8 @@ export function paintGame(raster: SourceRaster, ui: GameViewContext): void {
     if (group === 300 && child === 1 && widget.type === 4) widget.text = escapeText(world.shop!.name);
     if (group === 116 && widget.type === 4 && /^\d+%$/.test(widget.text))
       widget.text = `${Math.floor(world.player.runEnergy / (catalogue.presentation?.runEnergyScale ?? 100))}%`;
+    if (group === 239 && child === 4) widget.text = ui.audio?.playingGroup === null || !ui.audio
+      ? "" : escapeText(SOURCE_MUSIC_ROWS.get(ui.audio.playingGroup)?.name ?? "Source track name unavailable");
     if (group === 162 && widget.type === 4 && widget.text.includes("Reference")) widget.text = escapeText(world.player.displayName) + ":";
     if (group === 231 && dialogue) {
       if (child === 4) widget.text = escapeText(dialogue.speakerName);
@@ -845,6 +881,9 @@ export function paintGame(raster: SourceRaster, ui: GameViewContext): void {
     const frame = tree.find(widget => widget.id === widgetId(modalGroup, 0) && widget.index === -1);
     if (frame) ui.capture(intersect(frame, frame.clip));
   }
+  if (local.tab === 11 && local.settingsPage === "audio" && !ui.audio)
+    for (const control of controls.filter(control => control.id.startsWith("audio-slider-")))
+      raster.textBox("Unavailable", control, { font: 494, color: 0xffff00, xAlign: 1, yAlign: 1 });
 
   // Empty inventory cells remain real drop targets; they are not fabricated item widgets.
   const inventoryRoot = tree.find(w => w.id >> 16 === inventoryGroup && w.index === -1);

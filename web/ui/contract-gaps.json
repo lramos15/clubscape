@@ -11,6 +11,14 @@
     "status": "Types published; backend implementation/protobuf/canonical projection remain a separate closure. No service implementation is inferred from types.",
     "version_rule": "WorldView.ui.version must equal 1. Absent, unknown or malformed projections are explicit unsupported/error states, never fabricated empty views."
   },
+  "published_audio_policy": {
+    "upstream_commits": ["888f9384e111b5f7fefeee36859bae4f873e5c95", "f74652a59834815b4e57e04366dc857681fd83c1"],
+    "authorized_picks": ["b7cc380", "d2082e8"],
+    "audio_handle_abi_changed": false,
+    "volume_argument": "Source normalized slider position; percent/100 is sent exactly once, never mixer/native asset gain.",
+    "current_values": "bindUiAudio uses observeAudioState, sourceAudioDefaults, sourceSliderToMixer and sourceMixerToAssetGain. Native defaults are effective mixer 255/127/127.",
+    "committed_gameplay_events_created_by_ui": false
+  },
   "wired_versioned_controls": [
     "Opaque inventory action IDs with canonical item and instance identity; declared permission rejection, local use selection and no optimistic ownership changes.",
     "Production menu/recipe IDs, single versus make_x permission, 1/5/10/X requests, native one-through-eighteen-choice layouts and the source bronze smithing table. Unoffered source rows remain present with explicit feedback.",
@@ -23,7 +31,8 @@
     "Recovery coffer balance, discard permission/request and inventory coffer offering, with confirmation identity retained and no local credit/item changes.",
     "Public chat permission, declared channel and UTF-8 byte limit; rejected drafts retained, no optimistic echo or clearing before the authoritative own-message update.",
     "Declared body_type 0/1 permissions and confirmation, with local appearance/equipment preview descriptors. Human kit/colour/pronoun controls do not create new penguin variants.",
-    "All shop buys still send displayed canonical expected_item; held menus/amounts never retarget a reused row."
+    "All shop buys still send displayed canonical expected_item; held menus/amounts never retarget a reused row.",
+    "Native master/music/effects/area sliders and per-channel mute controls consume actual audio observations, preserve remembered in-session positions and source integer/nonlinear semantics; title audio uses explicit global mute rather than resetting all channel positions."
   ],
   "requests": [
     {
@@ -62,9 +71,29 @@
       "reason": "The UI now exports source widget/model bounds, native model parameters, approved local body selection and authoritative equipment/base metadata. Static minimap rasters and absent previews are not a finished renderer. These are component adapters, not new server defaults or shared-ABI edits."
     },
     {
-      "scope": "Actual source audio settings and controls",
-      "extension": "Consume the audio/shell owner's published SourceAudioSettings and source slider/mix/music policy when available.",
-      "reason": "soundEnabled and write-only setters do not expose actual saved channel/music state. No new audio policy or fake production volume value is invented by the UI."
+      "scope": "Real source audio listener/object/varp and next-music bridge",
+      "extension": "Use the published setSourceAudioScene(handle, scene) with real 128-unit listener coordinates, plane/instance/owner, placed emitters/orientations and bound original varps; use setSourceMusicSelector with the actual next selection.",
+      "reason": "UI observer/volume wiring is complete, but shell/renderer scene inputs are not owned here. No tile-center guess, invented gain/distance/fade, empty-emitter success or playlist is supplied by UI."
+    },
+    {
+      "scope": "Authoritative music preferences, unlocks and manual requests",
+      "extension": "Publish current native area0/shuffle1/single2 preference, authoritative unlocked tracks/playlist and a manual-selection request bridge; retain sourceDuration/native_duration semantics.",
+      "reason": "AudioSnapshot's playback plan does not establish saved music preference or unlock ownership. Original mode controls are present with exact native IDs and required feedback; no committed music event or unlocked:true flag is fabricated from a click."
+    },
+    {
+      "scope": "Native remembered mute values and full settings window",
+      "extension": "Expose the actual remembered mute percentages (source varbits14817/12426/12427/12428) when restoring persisted settings. Complete the separate All Settings window projection.",
+      "reason": "Current percentages/mixers and source sidebar sliders are wired. In-session Mute/Unmute preserves the observed previous value. A zero value whose saved restoration value was never supplied reports ui.audio.remembered_mute instead of inventing it. The broader All Settings button has explicit required feedback, not a silent open acknowledgement."
+    },
+    {
+      "scope": "Additive original audio publications",
+      "extension": "Integrate the audio owner's forthcoming AUDIO_INPUTS/routes for index6 groups64/327/163/145 and native255 index11 groups40/54/58/64/65.",
+      "reason": "These additions are not yet relayed on this branch. The frozen 266 files/base pack remain unchanged; missing tracks or unsafe scaled representations are not substituted, normalized or invented."
+    },
+    {
+      "scope": "Committed Cook reward/Widget153 close audio batches",
+      "extension": "Shell must forward coherent before/after skill observations and committed level_up events with skillId, preserved sourceId and matching completion attribution; forward actual committed Widget153 close with questId/completionId.",
+      "reason": "The authorized audio gate handles pre-trained/multi-level gains and suppresses no-level-gain rewards. UI continuation remains a request, not proof of close, XP delta or permission to create a level-up event."
     }
   ],
   "implementation_gaps_without_contract_extension": [
@@ -77,6 +106,7 @@
     "preserved_native_and_owner_composition_checks": { "passed": 87, "total": 87, "tolerance": 0 },
     "preserved_native_mode_and_effect_checks": { "passed": 106, "total": 106, "tolerance": 0 },
     "additional_production_death_reward_checks": { "passed": 45, "total": 45, "tolerance": 0 },
+    "additional_audio_control_checks": { "passed": 18, "total": 18, "tolerance": 0 },
     "full_panels_excluded": 0,
     "source_fixture_balances_are_production_values": false,
     "component_double_is_live_gameplay": false
