@@ -95,6 +95,7 @@ impl WorldEngine {
         shop: &ShopId,
         index: usize,
         quantity: Quantity,
+        expected_item: Option<&ItemId>,
     ) -> GameResult<()> {
         self.shop_access(world, character, shop)?;
         let definition = self
@@ -102,8 +103,35 @@ impl WorldEngine {
             .shops
             .get(shop)
             .ok_or_else(|| unknown("Unknown shop."))?;
-        let row = self.shop_row(world, definition, index)?;
-        self.trade(world, character, definition, &row, quantity, None)
+        let (row, plan) =
+            self.buy_plan(world, character, definition, index, quantity, expected_item)?;
+        self.commit_trade(world, character, definition, &row, plan)
+    }
+
+    pub(crate) fn buy_plan(
+        &self,
+        world: &WorldState,
+        character: &CharacterState,
+        shop: &ShopDefinition,
+        index: usize,
+        quantity: Quantity,
+        expected_item: Option<&ItemId>,
+    ) -> GameResult<(ShopItem, TradePlan)> {
+        if expected_item.is_none() && index >= shop.stock.len() {
+            return Err(GameError::new(
+                GameErrorCode::RequirementNotMet,
+                "An expected item identity is required for unstocked shop purchases.",
+            ));
+        }
+        let row = self.shop_row(world, shop, index)?;
+        if expected_item.is_some_and(|expected| expected != &row.item) {
+            return Err(GameError::new(
+                GameErrorCode::StaleCommand,
+                "Shop row identity changed; refresh the shop before buying.",
+            ));
+        }
+        let plan = self.trade_plan(world, character, shop, &row, quantity, None)?;
+        Ok((row, plan))
     }
 
     pub(crate) fn sell(
@@ -122,7 +150,8 @@ impl WorldEngine {
             .ok_or_else(|| unknown("Unknown shop."))?;
         let item = &inventory::stack_at(&character.inventory, slot)?.item;
         let row = self.sale_row(world, definition, item)?;
-        self.trade(world, character, definition, &row, quantity, Some(slot))
+        let plan = self.trade_plan(world, character, definition, &row, quantity, Some(slot))?;
+        self.commit_trade(world, character, definition, &row, plan)
     }
 
     pub(crate) fn sale_row(
@@ -158,14 +187,7 @@ impl WorldEngine {
                         .shops
                         .get(&definition.id)
                         .ok_or_else(|| unknown("Missing shop stock."))?;
-                    let extras = state
-                        .stock
-                        .iter()
-                        .filter(|(id, stock)| {
-                            (*base_stock != 0 || **stock != 0)
-                                && !definition.stock.iter().any(|row| &row.item == *id)
-                        })
-                        .count();
+                    let extras = live_shop_extras(definition, state).count();
                     let existing = state
                         .stock
                         .get(item)
@@ -207,16 +229,14 @@ impl WorldEngine {
         Ok(row)
     }
 
-    fn trade(
+    fn commit_trade(
         &self,
         world: &mut WorldState,
         character: &mut CharacterState,
         shop: &ShopDefinition,
         row: &ShopItem,
-        quantity: Quantity,
-        sale_slot: Option<usize>,
+        plan: TradePlan,
     ) -> GameResult<()> {
-        let plan = self.trade_plan(world, character, shop, row, quantity, sale_slot)?;
         *character = plan.character;
         world
             .shops
@@ -470,13 +490,11 @@ impl WorldEngine {
         else {
             return Err(invalid_state("Shop index is out of range."));
         };
-        let item = world
+        let state = world
             .shops
             .get(&shop.id)
-            .ok_or_else(|| unknown("Missing shop state."))?
-            .stock
-            .keys()
-            .filter(|id| !shop.stock.iter().any(|row| &row.item == *id))
+            .ok_or_else(|| unknown("Missing shop state."))?;
+        let (item, _) = live_shop_extras(shop, state)
             .nth(index - shop.stock.len())
             .ok_or_else(|| invalid_state("Unstocked row index is out of range."))?;
         Ok(ShopItem {
@@ -715,6 +733,19 @@ impl WorldEngine {
         }
         Ok(())
     }
+}
+
+pub(crate) fn live_shop_extras<'a>(
+    shop: &'a ShopDefinition,
+    state: &'a ShopState,
+) -> impl Iterator<Item = (&'a ItemId, &'a u32)> {
+    let replenishes = matches!(
+        shop.unstocked,
+        Some(UnstockedShopPolicy::Accept { base_stock, .. }) if base_stock != 0
+    );
+    state.stock.iter().filter(move |(item, stock)| {
+        (**stock != 0 || replenishes) && !shop.stock.iter().any(|row| &row.item == *item)
+    })
 }
 
 pub(crate) fn transfer_up_to<T>(

@@ -295,16 +295,13 @@ impl WorldEngine {
             .shops
             .get(shop)
             .ok_or_else(|| unknown("Unknown opened shop."))?;
-        let stock = &world
+        let state = world
             .shops
             .get(shop)
-            .ok_or_else(|| invalid_state("Missing shop stock."))?
-            .stock;
-        let count = definition.stock.len()
-            + stock
-                .keys()
-                .filter(|item| !definition.stock.iter().any(|row| &row.item == *item))
-                .count();
+            .ok_or_else(|| invalid_state("Missing shop stock."))?;
+        let stock = &state.stock;
+        let count =
+            definition.stock.len() + crate::commerce::live_shop_extras(definition, state).count();
         let mut lines = Vec::new();
         for index in 0..count {
             let row = self.shop_row(world, definition, index)?;
@@ -335,6 +332,7 @@ impl WorldEngine {
         shop: &ShopId,
         index: u16,
         quantity: Quantity,
+        expected_item: Option<&ItemId>,
     ) -> GameResult<ShopQuote> {
         let character = self.query_actor(world, actor)?;
         self.input_permission(character)?;
@@ -345,6 +343,7 @@ impl WorldEngine {
                 shop: shop.clone(),
                 item_index: index,
                 quantity,
+                expected_item: expected_item.cloned(),
             },
         )?;
         let definition = self
@@ -352,8 +351,14 @@ impl WorldEngine {
             .shops
             .get(shop)
             .ok_or_else(|| unknown("Unknown shop."))?;
-        let row = self.shop_row(world, definition, usize::from(index))?;
-        let plan = self.trade_plan(world, character, definition, &row, quantity, None)?;
+        let (row, plan) = self.buy_plan(
+            world,
+            character,
+            definition,
+            usize::from(index),
+            quantity,
+            expected_item,
+        )?;
         Ok(ShopQuote {
             shop: shop.clone(),
             item: row.item,

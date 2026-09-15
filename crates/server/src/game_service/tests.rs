@@ -1804,6 +1804,7 @@ async fn guarded_bank_shop_dialogue_and_quotes_are_real_immutable_public_views()
                         shop: id.clone(),
                         item_index: 0,
                         quantity: 1,
+                        expected_item: None,
                     })),
                 }),
             }),
@@ -1827,6 +1828,7 @@ async fn guarded_bank_shop_dialogue_and_quotes_are_real_immutable_public_views()
                 shop: id,
                 item_index: 0,
                 quantity: 1,
+                expected_item: None,
             }),
         )
         .await

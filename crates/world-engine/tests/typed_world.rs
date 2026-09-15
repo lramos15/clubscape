@@ -470,6 +470,7 @@ fn world_epoch_restock_does_not_fire_early_after_an_old_clock_sat_at_base_stock(
             shop: shop(),
             item_index: 0,
             quantity: quantity(1),
+            expected_item: None,
         },
     );
     ticks(&engine, &mut world, 9, &mut NeverDraw);
@@ -481,6 +482,7 @@ fn world_epoch_restock_does_not_fire_early_after_an_old_clock_sat_at_base_stock(
             shop: shop(),
             item_index: 0,
             quantity: quantity(1),
+            expected_item: None,
         },
     );
     next(&engine, &mut world);

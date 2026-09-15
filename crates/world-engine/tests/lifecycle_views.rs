@@ -313,7 +313,7 @@ fn bank_and_shop_queries_are_read_only_and_quotes_match_the_actual_transfers() {
     let shop = engine.shop_view(&world, &actor()).unwrap();
     assert_eq!(shop.lines[0].buy_price, 2);
     let quote = engine
-        .shop_buy_quote(&world, &actor(), &shop.shop, 0, quantity(50))
+        .shop_buy_quote(&world, &actor(), &shop.shop, 0, quantity(50), None)
         .unwrap();
     assert_eq!(quote.quantity, 5);
     assert_eq!(quote.total_price, 10);
@@ -326,6 +326,7 @@ fn bank_and_shop_queries_are_read_only_and_quotes_match_the_actual_transfers() {
             shop: shop.shop,
             item_index: 0,
             quantity: quantity(50),
+            expected_item: None,
         },
     );
     assert_eq!(count(&engine, &world, "pot"), quote.quantity);

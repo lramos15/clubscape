@@ -612,7 +612,7 @@ bank_deposit_quote(&WorldState, &ActorId, u8, Quantity) -> GameResult<BankQuote>
 bank_withdraw_quote(&WorldState, &ActorId, u16, Quantity, bool)
     -> GameResult<BankQuote>;
 shop_view(&WorldState, &ActorId) -> GameResult<ShopView>;
-shop_buy_quote(&WorldState, &ActorId, &ShopId, u16, Quantity)
+shop_buy_quote(&WorldState, &ActorId, &ShopId, u16, Quantity, Option<&ItemId>)
     -> GameResult<ShopQuote>;
 shop_sell_quote(&WorldState, &ActorId, &ShopId, u8, Quantity)
     -> GameResult<ShopQuote>;
@@ -677,15 +677,37 @@ not old empty keys. Cleanup does not reset another row's restock phase, and a
 positive-base extra at zero remains eligible for its source replenishment.
 
 Extra-row indices are not stable identities: another customer's sale or an
-empty-row removal can change their meaning. **The identity repair is pending**;
-the current `ShopBuy` wire message and `shop_buy` intent still carry only shop,
-index and quantity. Sending an unrecognized JSON `expected_item` does not enforce
-identity, and a cached extra-row index is not yet safe to buy.
+empty-row removal can change their meaning. A shop buy binds the displayed
+index to the actual row's `ItemId` with optional `expected_item`:
 
-The approved additive repair requires optional `expected_item: ItemId`, omitted
-from canonical JSON when absent, with a matching optional Protobuf string and
-shared TypeScript field. The immutable buy planner must reject a mismatched
-identity before charging; identity-less requests may target only fixed source
-catalogue rows. Read-only quotes must validate the same identity. Integrating
-that repair requires the actual shop dispatch in `actions.rs`, queries in
-`queries.rs`, and the server quote adapter, not only the commerce implementation.
+```json
+{"kind":"shop_buy","shop":"shop.example","item_index":2,"quantity":1,"expected_item":"item.tin"}
+```
+
+`GameIntent::ShopBuy.expected_item` is `Option<ItemId>` with Serde `default` and
+`skip_serializing_if = "Option::is_none"`. Shared TypeScript uses
+`expected_item?: string`. The existing `clubscape.game.v1.ShopBuy` Protobuf
+message keeps `string shop = 1`, `uint32 item_index = 2`, and `uint32 quantity = 3`,
+and adds `optional string expected_item = 4`. Both `WorldInput.shop_buy` (tag 25)
+and `QuoteRequest.shop_buy` (tag 3) use that same message. Present identities must
+be valid item IDs; an empty string is not an absent identity.
+
+The immutable buy planner checks identity before pricing or transferring items.
+Mismatches return `StaleCommand` atomically, including when the expected item
+still exists at a different index. Refresh the shop view rather than silently
+substituting another row. Identity-less requests may target only immutable
+fixed source catalogue indices; extra-row requests without identity return
+`RequirementNotMet`. Supplied identities are checked for fixed rows too.
+
+Read-only buy quotes accept the same optional identity as their final argument
+and use the same planner as execution. Views, quotes and execution skip old empty
+zero-base extras consistently without mutating state during a query. An identity
+is not a price lock: every unit is priced from current authoritative stock and
+source rules, never a client-supplied price or stale displayed total.
+
+Absent or JSON-null identities serialize without the new field. Golden tests
+retain exact legacy JSON, canonical sorted JSON, domain-separated v1 SHA-256
+hashes and Protobuf bytes, including historically committed identity-less extra
+requests. Their encoding is preserved for durable receipt replay; that does not
+authorize a new identity-less extra purchase. No protocol, content or persisted
+state version is changed by this additive request field.

@@ -1,7 +1,7 @@
 use clubscape_game_types::{
     CharacterSetting, DeathId, DynamicObjectId, ExperienceId, GameIntent, INVENTORY_SLOTS,
-    InterfaceId, ItemTarget, ProductionMode, Quantity, RecipeId, RecoveryItemId, RecoveryStorage,
-    ShopId, SlotId, SpawnId, Tile, WorldTarget,
+    InterfaceId, ItemId, ItemTarget, ProductionMode, Quantity, RecipeId, RecoveryItemId,
+    RecoveryStorage, ShopId, SlotId, SpawnId, Tile, WorldTarget,
 };
 
 use crate::{ValidationError, game, invalid};
@@ -48,6 +48,15 @@ fn spawn(value: &str) -> Result<SpawnId, ValidationError> {
 
 fn optional_spawn(value: &Option<String>) -> Result<Option<SpawnId>, ValidationError> {
     value.as_deref().map(spawn).transpose()
+}
+
+fn optional_item(value: &Option<String>) -> Result<Option<ItemId>, ValidationError> {
+    value
+        .as_deref()
+        .map(|value| {
+            ItemId::new(value).map_err(|_| invalid("A valid expected item ID is required."))
+        })
+        .transpose()
 }
 
 pub fn validate_character_options(options: &game::CreateCharacter) -> Result<(), ValidationError> {
@@ -205,6 +214,7 @@ pub fn game_intent(input: &game::WorldInput) -> Result<GameIntent, ValidationErr
                 shop: ShopId::new(&action.shop).map_err(|_| invalid("Invalid shop ID."))?,
                 item_index: bounded_index(action.item_index)?,
                 quantity: quantity(action.quantity)?,
+                expected_item: optional_item(&action.expected_item)?,
             },
             Action::ShopSell(action) => GameIntent::ShopSell {
                 shop: ShopId::new(&action.shop).map_err(|_| invalid("Invalid shop ID."))?,
@@ -344,6 +354,7 @@ pub enum ReadOnlyQuote {
         shop: ShopId,
         index: u16,
         quantity: Quantity,
+        expected_item: Option<ItemId>,
     },
     ShopSell {
         shop: ShopId,
@@ -378,6 +389,7 @@ pub fn quote_request(request: &game::QuoteRequest) -> Result<ReadOnlyQuote, Vali
                 shop: ShopId::new(&value.shop).map_err(|_| invalid("Invalid shop ID."))?,
                 index: bounded_index(value.item_index)?,
                 quantity: quantity(value.quantity)?,
+                expected_item: optional_item(&value.expected_item)?,
             },
             Request::ShopSell(value) => ReadOnlyQuote::ShopSell {
                 shop: ShopId::new(&value.shop).map_err(|_| invalid("Invalid shop ID."))?,

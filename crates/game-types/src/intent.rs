@@ -80,6 +80,8 @@ pub enum GameIntent {
         shop: ShopId,
         item_index: u16,
         quantity: Quantity,
+        #[serde(default, skip_serializing_if = "Option::is_none")]
+        expected_item: Option<ItemId>,
     },
     ShopSell {
         shop: ShopId,
@@ -678,6 +680,41 @@ impl EventCondition {
 mod tests {
     use super::*;
     use crate::Tile;
+
+    #[test]
+    fn shop_buy_absent_or_null_identity_preserves_legacy_json_bytes() {
+        let legacy = r#"{"kind":"shop_buy","shop":"shop.example","item_index":2,"quantity":50}"#;
+        let intent = GameIntent::ShopBuy {
+            shop: ShopId::new("shop.example").unwrap(),
+            item_index: 2,
+            quantity: Quantity::new(50).unwrap(),
+            expected_item: None,
+        };
+        assert_eq!(serde_json::from_str::<GameIntent>(legacy).unwrap(), intent);
+        assert_eq!(serde_json::to_vec(&intent).unwrap(), legacy.as_bytes());
+
+        let mut with_null: serde_json::Value = serde_json::from_str(legacy).unwrap();
+        with_null["expected_item"] = serde_json::Value::Null;
+        let restored: GameIntent = serde_json::from_value(with_null).unwrap();
+        assert_eq!(restored, intent);
+        assert_eq!(serde_json::to_vec(&restored).unwrap(), legacy.as_bytes());
+    }
+
+    #[test]
+    fn shop_buy_expected_identity_roundtrips_and_rejects_invalid_item_ids() {
+        let json = r#"{"kind":"shop_buy","shop":"shop.example","item_index":2,"quantity":1,"expected_item":"item.tin"}"#;
+        let intent: GameIntent = serde_json::from_str(json).unwrap();
+        assert!(matches!(
+            &intent,
+            GameIntent::ShopBuy { expected_item: Some(item), .. } if item.as_str() == "item.tin"
+        ));
+        assert_eq!(serde_json::to_vec(&intent).unwrap(), json.as_bytes());
+        for invalid in ["", "spawn.tin", "item.invalid id"] {
+            let mut value: serde_json::Value = serde_json::from_str(json).unwrap();
+            value["expected_item"] = invalid.into();
+            assert!(serde_json::from_value::<GameIntent>(value).is_err());
+        }
+    }
 
     #[test]
     fn transition_identity_is_shared_and_unambiguous() {

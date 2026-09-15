@@ -81,7 +81,13 @@ message MoveInventory { uint32 from = 1; uint32 to = 2; }
 message Produce { string recipe = 1; optional string target = 2; uint32 quantity = 3; }
 message BankDeposit { string banker = 1; uint32 inventory_slot = 2; uint32 quantity = 3; }
 message BankWithdraw { string banker = 1; uint32 bank_slot = 2; uint32 quantity = 3; bool noted = 4; }
-message ShopBuy { string shop = 1; uint32 item_index = 2; uint32 quantity = 3; }
+message ShopBuy {
+  string shop = 1;
+  uint32 item_index = 2;
+  uint32 quantity = 3;
+  // Required for mutable extra rows; absence is supported only for fixed source catalogue rows.
+  optional string expected_item = 4;
+}
 message ShopSell { string shop = 1; uint32 inventory_slot = 2; uint32 quantity = 3; }
 message SetCombatStyle { string style = 1; }
 message Cast { string spell = 1; optional string target = 2; }

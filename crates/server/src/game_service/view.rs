@@ -545,9 +545,17 @@ fn quote_view(
             shop,
             index,
             quantity,
+            expected_item,
         } => Wire::Shop(shop_quote(
             engine
-                .shop_buy_quote(world, actor, shop, *index, *quantity)
+                .shop_buy_quote(
+                    world,
+                    actor,
+                    shop,
+                    *index,
+                    *quantity,
+                    expected_item.as_ref(),
+                )
                 .map_err(engine_error)?,
         )),
         ReadOnlyQuote::ShopSell {

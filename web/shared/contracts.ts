@@ -34,7 +34,7 @@ export type GameIntent =
   | { kind: "produce_selected"; recipe: string; target: WorldTarget | null; quantity: number; mode: "single" | "make_x" }
   | { kind: "bank_deposit"; banker: string; inventory_slot: number; quantity: number }
   | { kind: "bank_withdraw"; banker: string; bank_slot: number; quantity: number; noted: boolean }
-  | { kind: "shop_buy"; shop: string; item_index: number; quantity: number }
+  | { kind: "shop_buy"; shop: string; item_index: number; quantity: number; expected_item?: string }
   | { kind: "shop_sell"; shop: string; inventory_slot: number; quantity: number }
   | { kind: "set_combat_style"; style: string }
   | { kind: "cast"; spell: string; target: string | null }

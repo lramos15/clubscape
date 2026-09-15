@@ -279,7 +279,15 @@ impl WorldEngine {
                 shop,
                 item_index,
                 quantity,
-            } => self.buy(world, character, shop, usize::from(*item_index), *quantity)?,
+                expected_item,
+            } => self.buy(
+                world,
+                character,
+                shop,
+                usize::from(*item_index),
+                *quantity,
+                expected_item.as_ref(),
+            )?,
             GameIntent::ShopSell {
                 shop,
                 inventory_slot,

@@ -77,6 +77,16 @@ fn buy(index: u16, amount: u32) -> GameIntent {
         shop: shop(),
         item_index: index,
         quantity: quantity(amount),
+        expected_item: None,
+    }
+}
+
+fn buy_item(index: u16, amount: u32, name: &str) -> GameIntent {
+    GameIntent::ShopBuy {
+        shop: shop(),
+        item_index: index,
+        quantity: quantity(amount),
+        expected_item: Some(item(name)),
     }
 }
 
@@ -119,7 +129,7 @@ fn buying_last_extra_removes_row_and_clock_and_reuses_capacity() {
     assert_eq!(world.runtime.stock_deadlines[&shop()][&item("ore")], 11);
     next(&engine, &mut world);
 
-    apply(&engine, &mut world, buy(2, 1));
+    apply(&engine, &mut world, buy_item(2, 1, "ore"));
     assert_reclaimed(&world, "ore");
     assert_eq!(count(&engine, &world, "ore"), 2);
     assert_eq!(count(&engine, &world, "coins"), 27);
@@ -218,7 +228,7 @@ fn legacy_fixed_source_buy_also_reclaims_old_empty_extras() {
     world = restarted(&world);
     let before = world.clone();
     let quote = engine
-        .shop_buy_quote(&world, &actor(), &shop(), 0, quantity(1))
+        .shop_buy_quote(&world, &actor(), &shop(), 0, quantity(1), None)
         .unwrap();
     assert_eq!(quote.item, item("pot"));
     assert_eq!(quote.total_price, 2);
@@ -282,7 +292,14 @@ fn partial_buy_keeps_the_remaining_live_extra_and_conserves_items_and_currency()
     apply(&engine, &mut world, intent);
     next(&engine, &mut world);
     let quote = engine
-        .shop_buy_quote(&world, &actor(), &shop(), 2, quantity(50))
+        .shop_buy_quote(
+            &world,
+            &actor(),
+            &shop(),
+            2,
+            quantity(50),
+            Some(&item("ore")),
+        )
         .unwrap();
     assert_eq!(quote.quantity, 1);
     assert_eq!(quote.total_price, 6);
@@ -292,7 +309,7 @@ fn partial_buy_keeps_the_remaining_live_extra_and_conserves_items_and_currency()
         GameErrorCode::InsufficientItems
     );
 
-    apply(&engine, &mut world, buy(2, 50));
+    apply(&engine, &mut world, buy_item(2, 50, "ore"));
     assert_eq!(count(&engine, &world, "coins"), 3);
     assert_eq!(count(&engine, &world, "ore"), 1);
     assert_eq!(world.shops[&shop()].stock[&item("ore")], 1);
@@ -429,7 +446,7 @@ fn positive_base_extra_at_zero_retains_capacity_and_its_restock_clock() {
     apply(&engine, &mut world, intent);
     assert_eq!(world.shops[&shop()].stock[&item("ore")], 3);
     next(&engine, &mut world);
-    apply(&engine, &mut world, buy(2, 3));
+    apply(&engine, &mut world, buy_item(2, 3, "ore"));
     assert_eq!(world.shops[&shop()].stock[&item("ore")], 0);
     assert_eq!(world.runtime.stock_deadlines[&shop()][&item("ore")], 6);
     world = restarted(&world);
@@ -447,7 +464,6 @@ fn positive_base_extra_at_zero_retains_capacity_and_its_restock_clock() {
 }
 
 #[test]
-#[ignore = "Identity fix needs ownership of actions.rs, queries.rs and server game_service/view.rs."]
 fn stale_expected_extra_identity_must_reject_without_charging_another_item() {
     let (engine, mut world) = setup(shop_content(2, 0, 10));
     world.characters.insert(
@@ -500,13 +516,350 @@ fn stale_expected_extra_identity_must_reject_without_charging_another_item() {
     }))
     .unwrap();
     let before = world.clone();
-    let result = engine.apply_intent(&mut world, &actor(), &request, &mut NeverDraw);
-    assert!(
-        result.is_err(),
-        "stale row bought ore instead of tin: coins={}, ore={}, tin={}, result={result:?}",
-        count(&engine, &world, "coins"),
-        count(&engine, &world, "ore"),
-        count(&engine, &world, "tin"),
+    assert_eq!(
+        engine
+            .shop_buy_quote(
+                &world,
+                &actor(),
+                &shop(),
+                viewed.index,
+                quantity(1),
+                Some(&item("tin")),
+            )
+            .unwrap_err()
+            .code,
+        GameErrorCode::StaleCommand
     );
     assert_eq!(world, before);
+    let result = engine.apply_intent(&mut world, &actor(), &request, &mut NeverDraw);
+    assert_eq!(result.unwrap_err().code, GameErrorCode::StaleCommand);
+    assert_eq!(world, before);
+
+    let current = engine
+        .shop_view(&world, &actor())
+        .unwrap()
+        .lines
+        .into_iter()
+        .find(|line| line.item == item("tin"))
+        .unwrap();
+    assert_eq!(current.index, 3);
+    let quote = engine
+        .shop_buy_quote(
+            &world,
+            &actor(),
+            &shop(),
+            current.index,
+            quantity(1),
+            Some(&current.item),
+        )
+        .unwrap();
+    assert_eq!(quote.item, item("tin"));
+    assert_eq!(quote.total_price, 10);
+    assert_eq!(quote.stock_after, 0);
+    assert_eq!(world, before);
+    apply(&engine, &mut world, buy_item(current.index, 1, "tin"));
+    assert_eq!(count(&engine, &world, "coins"), 20);
+    assert_eq!(count(&engine, &world, "ore"), 2);
+    assert_eq!(count(&engine, &world, "tin"), 2);
+    assert_eq!(
+        world.characters[&actor_two()],
+        before.characters[&actor_two()]
+    );
+    assert_reclaimed(&world, "tin");
+    assert_eq!(world.shops[&shop()].stock[&item("ore")], 1);
+    assert_eq!(world.runtime.stock_deadlines[&shop()][&item("ore")], 12);
+}
+
+#[test]
+fn legacy_extra_quotes_and_buys_reject_but_legacy_fixed_source_purchases_succeed() {
+    let (engine, mut world) = opened_shop(shop_content(1, 0, 10));
+    let intent = sell(&world, "ore", 1);
+    apply(&engine, &mut world, intent);
+    next(&engine, &mut world);
+    let before = world.clone();
+    assert_eq!(
+        engine
+            .shop_buy_quote(&world, &actor(), &shop(), 2, quantity(1), None)
+            .unwrap_err()
+            .code,
+        GameErrorCode::RequirementNotMet
+    );
+    assert_eq!(world, before);
+    error_unchanged(
+        &engine,
+        &mut world,
+        buy(2, 1),
+        GameErrorCode::RequirementNotMet,
+    );
+
+    let quote = engine
+        .shop_buy_quote(&world, &actor(), &shop(), 0, quantity(1), None)
+        .unwrap();
+    assert_eq!(quote.item, item("pot"));
+    assert_eq!(quote.total_price, 2);
+    assert_eq!(world, before);
+    apply(&engine, &mut world, buy(0, 1));
+    assert_eq!(count(&engine, &world, "pot"), 1);
+    assert_eq!(count(&engine, &world, "coins"), 31);
+}
+
+#[test]
+fn fixed_source_rows_also_check_any_supplied_identity() {
+    let (engine, mut world) = opened_shop(shop_content(1, 0, 10));
+    let before = world.clone();
+    assert_eq!(
+        engine
+            .shop_buy_quote(
+                &world,
+                &actor(),
+                &shop(),
+                0,
+                quantity(1),
+                Some(&item("ore"))
+            )
+            .unwrap_err()
+            .code,
+        GameErrorCode::StaleCommand
+    );
+    assert_eq!(world, before);
+    error_unchanged(
+        &engine,
+        &mut world,
+        buy_item(0, 1, "ore"),
+        GameErrorCode::StaleCommand,
+    );
+    let quote = engine
+        .shop_buy_quote(
+            &world,
+            &actor(),
+            &shop(),
+            0,
+            quantity(1),
+            Some(&item("pot")),
+        )
+        .unwrap();
+    assert_eq!(quote.item, item("pot"));
+    assert_eq!(world, before);
+    apply(&engine, &mut world, buy_item(0, 1, "pot"));
+    assert_eq!(count(&engine, &world, "pot"), 1);
+    assert_eq!(count(&engine, &world, "coins"), 28);
+}
+
+#[test]
+fn indices_reused_after_last_buy_or_decay_reject_the_previous_item_identity() {
+    for decay in [false, true] {
+        let (engine, mut world) = opened_shop(shop_content(1, 0, 4));
+        let intent = sell(&world, "ore", 1);
+        apply(&engine, &mut world, intent);
+        let old = engine.shop_view(&world, &actor()).unwrap().lines[2].clone();
+        if decay {
+            ticks(&engine, &mut world, 4, &mut NeverDraw);
+        } else {
+            next(&engine, &mut world);
+            apply(&engine, &mut world, buy_item(old.index, 1, "ore"));
+            next(&engine, &mut world);
+        }
+        assert_reclaimed(&world, "ore");
+        let intent = sell(&world, "tin", 1);
+        apply(&engine, &mut world, intent);
+        next(&engine, &mut world);
+        world = restarted(&world);
+        let current = engine.shop_view(&world, &actor()).unwrap().lines[2].clone();
+        assert_eq!(current.index, old.index);
+        assert_eq!(current.item, item("tin"));
+        let before = world.clone();
+        assert_eq!(
+            engine
+                .shop_buy_quote(
+                    &world,
+                    &actor(),
+                    &shop(),
+                    old.index,
+                    quantity(1),
+                    Some(&old.item),
+                )
+                .unwrap_err()
+                .code,
+            GameErrorCode::StaleCommand
+        );
+        assert_eq!(world, before);
+        error_unchanged(
+            &engine,
+            &mut world,
+            buy_item(old.index, 1, "ore"),
+            GameErrorCode::StaleCommand,
+        );
+        apply(&engine, &mut world, buy_item(current.index, 1, "tin"));
+        assert_eq!(
+            count(&engine, &world, "coins"),
+            count(&engine, &before, "coins") - 10
+        );
+        assert_eq!(
+            count(&engine, &world, "ore"),
+            count(&engine, &before, "ore")
+        );
+        assert_eq!(count(&engine, &world, "tin"), 1);
+        assert_reclaimed(&world, "tin");
+    }
+}
+
+#[test]
+fn old_empty_keys_are_hidden_consistently_from_live_views_quotes_and_buy_plans() {
+    let (engine, mut world) = opened_shop(shop_content(2, 0, 10));
+    old_extra(&mut world, "ore", 0, 1000);
+    old_extra(&mut world, "tin", 1, 2000);
+    old_extra(&mut world, "pot", 4, 7);
+    world = restarted(&world);
+    let before = world.clone();
+    let view = engine.shop_view(&world, &actor()).unwrap();
+    assert_eq!(view.lines.len(), 3);
+    assert_eq!(view.lines[2].item, item("tin"));
+    assert_eq!(view.lines[2].index, 2);
+    assert_eq!(world, before);
+    error_unchanged(
+        &engine,
+        &mut world,
+        buy_item(2, 1, "ore"),
+        GameErrorCode::StaleCommand,
+    );
+    let quote = engine
+        .shop_buy_quote(
+            &world,
+            &actor(),
+            &shop(),
+            2,
+            quantity(1),
+            Some(&item("tin")),
+        )
+        .unwrap();
+    assert_eq!(quote.item, item("tin"));
+    assert_eq!(quote.total_price, 10);
+    assert_eq!(world, before);
+    apply(&engine, &mut world, buy_item(2, 1, "tin"));
+    assert_eq!(count(&engine, &world, "coins"), 20);
+    assert_eq!(count(&engine, &world, "tin"), 2);
+    assert_reclaimed(&world, "ore");
+    assert_reclaimed(&world, "tin");
+    assert_eq!(world.shops[&shop()].stock[&item("pot")], 4);
+    assert_eq!(world.runtime.stock_deadlines[&shop()][&item("pot")], 7);
+    world.validate_runtime(engine.content()).unwrap();
+}
+
+#[test]
+fn valid_identity_does_not_bypass_funds_or_opened_shop_permissions() {
+    let (engine, mut world) = opened_shop(shop_content(1, 0, 10));
+    let intent = sell(&world, "ore", 1);
+    apply(&engine, &mut world, intent);
+    next(&engine, &mut world);
+    let coins = locate(&world, "coins");
+    state_mut(&mut world).inventory.slots[usize::from(coins)] = Some(stack("coins", 1));
+    let before = world.clone();
+    assert_eq!(
+        engine
+            .shop_buy_quote(
+                &world,
+                &actor(),
+                &shop(),
+                2,
+                quantity(1),
+                Some(&item("ore"))
+            )
+            .unwrap_err()
+            .code,
+        GameErrorCode::InsufficientItems
+    );
+    assert_eq!(world, before);
+    error_unchanged(
+        &engine,
+        &mut world,
+        buy_item(2, 1, "ore"),
+        GameErrorCode::InsufficientItems,
+    );
+    apply(&engine, &mut world, GameIntent::CloseInterface);
+    next(&engine, &mut world);
+    let before = world.clone();
+    assert_eq!(
+        engine
+            .shop_buy_quote(
+                &world,
+                &actor(),
+                &shop(),
+                2,
+                quantity(1),
+                Some(&item("ore"))
+            )
+            .unwrap_err()
+            .code,
+        GameErrorCode::RequirementNotMet
+    );
+    assert_eq!(world, before);
+    error_unchanged(
+        &engine,
+        &mut world,
+        buy_item(2, 1, "ore"),
+        GameErrorCode::RequirementNotMet,
+    );
+}
+
+#[test]
+fn a_matching_identity_uses_current_source_prices_for_every_unit_not_old_view_prices() {
+    let mut content = shop_content(1, 0, 10);
+    content.items.get_mut(&item("pot")).unwrap().base_value = 100;
+    let mut mechanics = shop_mechanics(10);
+    let ShopPricing::StockSensitive { buy, .. } = &mut mechanics.pricing else {
+        unreachable!()
+    };
+    buy.change_per_stock = 100;
+    buy.minimum_per_mille = 100;
+    buy.maximum_per_mille = 2000;
+    content.shops.get_mut(&shop()).unwrap().stock[0].mechanics = Some(mechanics);
+    content
+        .initial_state
+        .inventory
+        .slots
+        .iter_mut()
+        .flatten()
+        .find(|stack| stack.item == item("coins"))
+        .unwrap()
+        .quantity = quantity(500);
+    let (engine, mut world) = setup(content);
+    world.characters.insert(
+        actor_two(),
+        engine
+            .character_from_initial(actor_two(), "Other shop customer", BTreeMap::new())
+            .unwrap(),
+    );
+    apply(&engine, &mut world, interact("store"));
+    engine
+        .apply_intent(&mut world, &actor_two(), &interact("store"), &mut NeverDraw)
+        .unwrap();
+    next(&engine, &mut world);
+    let viewed = engine.shop_view(&world, &actor()).unwrap().lines[0].clone();
+    assert_eq!(viewed.buy_price, 100);
+    engine
+        .apply_intent(
+            &mut world,
+            &actor_two(),
+            &buy_item(0, 1, "pot"),
+            &mut NeverDraw,
+        )
+        .unwrap();
+    let before = world.clone();
+    let quote = engine
+        .shop_buy_quote(
+            &world,
+            &actor(),
+            &shop(),
+            0,
+            quantity(2),
+            Some(&viewed.item),
+        )
+        .unwrap();
+    assert_eq!(quote.total_price, 110 + 120);
+    assert_eq!(quote.stock_after, 2);
+    assert_eq!(world, before);
+    apply(&engine, &mut world, buy_item(0, 2, "pot"));
+    assert_eq!(count(&engine, &world, "coins"), 270);
+    assert_eq!(count(&engine, &world, "pot"), 2);
+    assert_eq!(world.shops[&shop()].stock[&item("pot")], quote.stock_after);
 }

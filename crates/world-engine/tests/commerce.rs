@@ -166,6 +166,7 @@ fn open_interface_event_is_not_bank_or_shop_authorization() {
             shop: shop(),
             item_index: 0,
             quantity: quantity(1),
+            expected_item: None,
         },
         GameErrorCode::RequirementNotMet,
     );
@@ -224,6 +225,7 @@ fn fixed_price_shop_mutates_source_stock_and_currency_atomically() {
             shop: shop(),
             item_index: 0,
             quantity: quantity(50),
+            expected_item: None,
         },
     );
     assert_eq!(count(&engine, &world, "pot"), 3);
@@ -275,6 +277,7 @@ fn shop_capacity_failure_preserves_coins_stock_and_slots() {
             shop: shop(),
             item_index: 0,
             quantity: quantity(2),
+            expected_item: None,
         },
         GameErrorCode::InventoryFull,
     );
@@ -294,6 +297,7 @@ fn exact_currency_stack_can_be_replaced_when_inventory_is_full() {
             shop: shop(),
             item_index: 0,
             quantity: quantity(50),
+            expected_item: None,
         },
     );
     assert_eq!(count(&engine, &world, "pot"), 1);
