@@ -140,6 +140,12 @@ The subsequent [three-dose potion supplement](POTION_ASSETS.md) uses
 `plan-potions` and the same extractor. It adds items3010/3011, model2697 and the
 necessary original placeholder19365 through another immutable publication layer.
 
+The following [consumed-container supplement](CONSUMABLE_ASSETS.md) uses
+`plan-consumables` after the potions chain. It closes Vial229/note230 and
+Beer glass1919/note1920, their four distinct inventory/held models and only the
+two genuine source placeholder dependencies. Prior files and frozen-pack inputs
+remain unchanged.
+
 ## Decoder validation
 
 The importer verifies CRC and the low 16-bit disk revision trailer before

@@ -578,6 +578,8 @@ def validate_published(selection: dict) -> dict:
         result["content_closure"] = content_closure.validate_publication(extension)
         if content_closure.POTION_PUBLICATION.exists():
             result["potion_assets"] = content_closure.validate_publication(content_closure.POTION_PUBLICATION)
+        if content_closure.CONSUMABLE_PUBLICATION.exists():
+            result["consumable_assets"] = content_closure.validate_publication(content_closure.CONSUMABLE_PUBLICATION)
     return result
 
 
@@ -586,12 +588,13 @@ def main() -> int:
     parser.add_argument("command", choices=["fetch", "reuse", "prepare", "verify", "scan", "extract", "probe", "validate",
                                           "publish", "validate-published", "test-integrity", "plan-closure",
                                           "extract-closure", "publish-closure", "validate-closure",
-                                          "validate-closure-request", "plan-potions"])
+                                          "validate-closure-request", "plan-potions", "plan-consumables"])
     parser.add_argument("--selection", type=Path, default=DEFAULT_SELECTION)
     parser.add_argument("--cache", type=Path, default=LOCAL / "cache-2695")
     parser.add_argument("--output", type=Path)
     parser.add_argument("--request", type=Path)
     parser.add_argument("--reuse-source", type=Path)
+    parser.add_argument("--definitions", type=Path, help="Read-only original UI definition snapshot for plan-consumables")
     parser.add_argument("--runelite-source", type=Path,
                         default=Path.home() / ".cache/clubscape/upstream/runelite")
     parser.add_argument("--java-home")
@@ -616,6 +619,11 @@ def main() -> int:
     elif args.command == "plan-potions":
         import content_closure
         print(json.dumps(content_closure.plan(content_closure.POTION_REQUEST, potions=True), separators=(",", ":")))
+    elif args.command == "plan-consumables":
+        import content_closure
+        if args.definitions is None:
+            raise InputError("plan-consumables requires --definitions pointing to the original UI item snapshot")
+        print(json.dumps(content_closure.plan_consumables(args.definitions), separators=(",", ":")))
     elif args.command == "validate-closure-request":
         import content_closure
         request = read_json(args.request)

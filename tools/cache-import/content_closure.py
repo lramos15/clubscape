@@ -18,6 +18,10 @@ PUBLICATION = MANIFESTS / "cache2695-content-v2-published.json"
 REQUEST = ROOT / "research/current-source/m1-content-closure-request.json"
 POTION_PUBLICATION = MANIFESTS / "cache2695-potions-published.json"
 POTION_REQUEST = ROOT / "research/current-source/m1-potion-request.json"
+CONSUMABLE_PUBLICATION = MANIFESTS / "cache2695-consumables-published.json"
+CONSUMABLE_REQUEST = ROOT / "research/current-source/m1-consumable-request.json"
+CONSUMABLE_ITEM_IDS = [229, 230, 1919, 1920]
+CONSUMABLE_MODEL_IDS = [561, 2548, 2747, 8234]
 PREFIX = "asset.source.osrs.cache2695."
 FIELDS = {
     "item_definition_ids": ("item", "item_ids"),
@@ -151,6 +155,58 @@ def plan(path: Path = REQUEST, *, potions: bool = False) -> dict:
             "required_product_asset_ids": len(required)}
 
 
+def plan_consumables(definitions_path: Path) -> dict:
+    validate_publication(POTION_PUBLICATION)
+    parent = cache.read_json(POTION_PUBLICATION)
+    base_bundle = ROOT / parent["merged_inventory"]["path"]
+    base = cache.read_json(base_bundle)
+    known = record_index(base["records"])
+    payload = definitions_path.read_bytes()
+    supplement = json.loads(gzip.decompress(payload), object_pairs_hook=cache.unique_mapping)
+    if supplement["item_group"] != base["groups"]["2/10"]:
+        raise cache.InputError("UI container definitions use a different original archive identity")
+    missing = set(map(str, CONSUMABLE_ITEM_IDS)) - supplement["items"].keys()
+    if missing:
+        raise cache.InputError(f"Missing required original UI container definitions: {sorted(missing)}")
+    required_models = set()
+    for number in CONSUMABLE_ITEM_IDS:
+        value = supplement["items"][str(number)]["definition"]
+        if value["id"] != number:
+            raise cache.InputError(f"UI definition/source ID mismatch: {number}")
+        required_models.update(value[field] for field in ITEM_MODELS if value[field] >= 0)
+    missing_models = {number for number in required_models if identity("model", number) not in known}
+    if missing_models != set(CONSUMABLE_MODEL_IDS):
+        raise cache.InputError(f"Original container model relationships differ: {sorted(missing_models)}")
+    snapshot_path = ROOT / "research/current-source/m1-consumable-definitions.json.gz"
+    snapshot = immutable_bytes(snapshot_path, payload)
+    if definitions_path.read_bytes() != payload:
+        raise cache.InputError("UI definition snapshot changed during read-only acquisition")
+    reported = {"item_definition_ids": CONSUMABLE_ITEM_IDS, "model_ids": CONSUMABLE_MODEL_IDS,
+                "npc_definition_ids": [], "interface_groups": []}
+    required = [identity(kind, number) for kind, numbers in
+                (("item", CONSUMABLE_ITEM_IDS), ("model", CONSUMABLE_MODEL_IDS)) for number in numbers]
+    request = {
+        "schema_version": 1, "cache_id": 2695, "game_revision": 240, "publication_tag": "consumables",
+        "scope": "Exact M1 Drink/Empty replacement source assets and native dependencies, not acquisition expansion or game execution.",
+        "base_bundle": input_record(base_bundle), "base_publication": input_record(POTION_PUBLICATION),
+        "selection": input_record(cache.DEFAULT_SELECTION), "decoder_lock": input_record(cache.TOOL / "dependencies.json"),
+        "product_inputs": [snapshot], "product_definitions_snapshot": snapshot,
+        "source_definition_origin": {"path": str(definitions_path.resolve()), "size_bytes": len(payload),
+                                     "sha256": hashlib.sha256(payload).hexdigest(), "access": "read-only"},
+        "product_revision": "ui-item-definitions/" + snapshot["sha256"],
+        "product_inputs_policy": "Immutable copy of the backend worker's original definition evidence; no dependency on later mutable backend output.",
+        "reported_missing_ids": reported, "required_asset_ids": sorted(required),
+        "item_ids": CONSUMABLE_ITEM_IDS, "model_ids": CONSUMABLE_MODEL_IDS,
+        "npc_ids": [], "interface_groups": [],
+        "audit_existing": {"item_ids": [], "npc_ids": [], "interface_groups": []},
+        "dependency_policy": "Only the eight declared roots and genuine source links are extracted; prior publication records and outputs are reused without mutation.",
+    }
+    validate_request(request, verify_product_inputs=True)
+    immutable_json(CONSUMABLE_REQUEST, request)
+    return {"request": cache.file_record(CONSUMABLE_REQUEST),
+            "requested": {kind: len(values) for kind, values in reported.items()}}
+
+
 def validate_request(request: dict, verify_product_inputs: bool = False) -> dict:
     required_fields = {
         "schema_version", "cache_id", "game_revision", "base_bundle", "base_publication", "selection",
@@ -162,8 +218,13 @@ def validate_request(request: dict, verify_product_inputs: bool = False) -> dict
         raise cache.InputError("Incomplete content-closure request: missing " + ", ".join(missing))
     if (request["schema_version"], request["cache_id"], request["game_revision"]) != (1, 2695, 240):
         raise cache.InputError("Unsupported content-closure source identity/schema")
-    if request.get("publication_tag") not in (None, "potions"):
+    if request.get("publication_tag") not in (None, "potions", "consumables"):
         raise cache.InputError("Unsupported source publication tag")
+    if request.get("publication_tag") == "consumables" and (
+            request["item_ids"] != CONSUMABLE_ITEM_IDS or request["model_ids"] != CONSUMABLE_MODEL_IDS
+            or request["npc_ids"] or request["interface_groups"]
+            or any(request["audit_existing"].values())):
+        raise cache.InputError("Consumables request differs from the reserved eight-root scope")
     inputs = [request["base_bundle"], request["base_publication"], request["selection"],
               request["decoder_lock"], request["product_definitions_snapshot"]]
     if verify_product_inputs:
@@ -490,8 +551,10 @@ def publish(directory: Path, request_path: Path = REQUEST) -> dict:
         raise cache.InputError("Publication request differs from the actual extraction")
     tag = extracted["request"].get("publication_tag", "content-v2")
     destination = SOURCE / tag
-    publication_path = POTION_PUBLICATION if tag == "potions" else PUBLICATION
-    report_name = "m1-potion-closure.json" if tag == "potions" else "m1-content-closure.json"
+    publication_path = {"content-v2": PUBLICATION, "potions": POTION_PUBLICATION,
+                        "consumables": CONSUMABLE_PUBLICATION}[tag]
+    report_name = {"content-v2": "m1-content-closure.json", "potions": "m1-potion-closure.json",
+                   "consumables": "m1-consumable-closure.json"}[tag]
     published = []
     for record in additions:
         for output in record["outputs"]:
@@ -545,14 +608,16 @@ def publish(directory: Path, request_path: Path = REQUEST) -> dict:
         "redecoded_existing_assets_identical": len(repeated),
         "source_gameplay_or_presentation_accepted": False, "owner_reference_pack_approved": False,
     }
-    if tag == "potions":
+    if tag in ("potions", "consumables"):
+        singular = {"potions": "potion", "consumables": "consumable"}[tag]
         publication["publication_tag"] = tag
-        publication["extension_full_output_default_directory"] = ".local/current-source/potions"
+        publication["extension_full_output_default_directory"] = f".local/current-source/{tag}"
         publication["reproduction"] = [
             "python3 tools/cache-import/import_cache.py reuse --reuse-source /path/to/verified/current-source",
-            "python3 tools/cache-import/import_cache.py plan-potions",
-            "python3 tools/cache-import/import_cache.py extract-closure --request research/current-source/m1-potion-request.json --output .local/current-source/potions",
-            "python3 tools/cache-import/import_cache.py publish-closure --request research/current-source/m1-potion-request.json --output .local/current-source/potions",
+            f"python3 tools/cache-import/import_cache.py plan-{tag}" + (
+                " --definitions /path/to/ui-item-definitions.json.gz" if tag == "consumables" else ""),
+            f"python3 tools/cache-import/import_cache.py extract-closure --request research/current-source/m1-{singular}-request.json --output .local/current-source/{tag}",
+            f"python3 tools/cache-import/import_cache.py publish-closure --request research/current-source/m1-{singular}-request.json --output .local/current-source/{tag}",
             "python3 tools/cache-import/import_cache.py validate-published",
         ]
     immutable_json(publication_path, publication)

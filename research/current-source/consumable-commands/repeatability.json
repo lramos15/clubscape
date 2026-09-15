@@ -1,0 +1,7 @@
+{
+  "result": "passed",
+  "records": 17,
+  "byte_identical_outputs": 35,
+  "bundle_sha256": "b19f65a43c468af300dd555470ab88ba21002c566803195421ecc95ed5b5b512",
+  "publication_repeated_without_changing_bytes": true
+}
