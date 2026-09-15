@@ -82,8 +82,17 @@ export interface PlayerFitReport {
   slot: string;
   humanLabel: number;
   penguinLabel: number;
-  anchorGap: number;
+  /** Deepest body vertex inside the item's oriented box after the contact solve (target ≤ 1). */
   penetration: number;
+  /** Clearance between item and body surfaces, 0 when touching (target ≤ 2). */
+  gap: number;
+  /** Contact-solve translation from the retargeted design position (informational). */
+  anchorShift: number;
+  shiftDirection: [number, number, number];
+  /** The box measure in the principal-axis frame alone (looser; shown so the box choice is visible). */
+  pcaBoxPenetration: number;
+  /** The same measure of the item on the human body it was designed for. */
+  designPenetration: number;
   scale: number;
 }
 

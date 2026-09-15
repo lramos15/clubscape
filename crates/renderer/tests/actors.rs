@@ -391,7 +391,11 @@ fn player_uses_original_action_motion_and_wears_modular_gear() {
     assert_eq!(fits.len(), 4, "{fits:?}");
     for fit in fits {
         eprintln!("fit {:?}", fit);
-        assert!(fit.anchor_gap <= 2.0, "{fit:?}");
+        assert!(
+            fit.penetration <= clubscape_renderer::actor::FIT_MAX_PENETRATION,
+            "{fit:?}"
+        );
+        assert!(fit.gap <= clubscape_renderer::actor::FIT_MAX_GAP, "{fit:?}");
     }
     let armed = rasterize(&core, &textures);
     assert_ne!(armed, chop0);

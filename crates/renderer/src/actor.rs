@@ -110,7 +110,17 @@ pub struct EquipModel {
     pub model: Model,
 }
 
-/// Fit measurement of one attached item relative to the penguin body part it is anchored to.
+/// Fit measurement of one attached item on the penguin body (source units, unscaled body).
+///
+/// * `penetration`: deepest body vertex (any part) inside the item's oriented bounding box after
+///   the contact solve — the "unintended penetration" figure, target ≤ 1.
+/// * `gap`: clearance between the item and the body — the smallest distance from any item vertex
+///   to a body triangle or from any body vertex to an item triangle (0 when they touch or
+///   overlap) — the "gap" figure, target ≤ 2, i.e. the item rests on the body and does not float.
+/// * `anchor_shift`: how far the contact solve translated the item from its retargeted design
+///   position (informational; the original item geometry is never edited).
+/// * `design_penetration`: the same box measure of the item on the human reference body it was
+///   designed for (the source's own overlap, e.g. a hat wrapping the skull), for comparison.
 #[derive(Debug, Clone, PartialEq)]
 pub struct FitReport {
     pub item_id: i32,
@@ -118,10 +128,14 @@ pub struct FitReport {
     /// Human label the item's vertices are bound to, and the penguin label chosen.
     pub human_label: i32,
     pub penguin_label: i32,
-    /// Distance (source units, unscaled body) between the item's anchor and the body anchor.
-    pub anchor_gap: f64,
-    /// Deepest body-part vertex found inside the item's bounding box (source units), 0 if none.
+    pub anchor_shift: f64,
+    /// Direction of the contact-solve shift in body space (`x`, `y`, `z`), zero when unshifted.
+    pub shift_direction: [f64; 3],
     pub penetration: f64,
+    /// Body-vertex depth in the principal-axis box alone (looser frame; see `pca_box_penetration`).
+    pub pca_box_penetration: f64,
+    pub gap: f64,
+    pub design_penetration: f64,
     pub scale: f64,
 }
 
@@ -137,7 +151,15 @@ pub struct PlayerBody {
     pub penguin_centroids: Vec<LabelCentroid>,
     pub human_min_y: f64,
     pub penguin_min_y: f64,
+    /// The human reference body (design baseline for the fit measures).
+    pub human: Model,
 }
+
+/// Maximum penetration (source units) the fit accepts; the contact solve stops here so the item
+/// still touches the body instead of floating.
+pub const FIT_MAX_PENETRATION: f64 = 1.0;
+/// Maximum clearance (source units) between an item and the body.
+pub const FIT_MAX_GAP: f64 = 2.0;
 
 impl PlayerBody {
     pub fn new(
@@ -168,6 +190,7 @@ impl PlayerBody {
             penguin_centroids,
             human_min_y,
             penguin_min_y,
+            human: human_reference.clone(),
         }
     }
 
@@ -276,23 +299,16 @@ impl PlayerBody {
                 part.ys[v] = ((f64::from(part.ys[v]) - ia.y) * scale + translate.1) as f32;
                 part.zs[v] = ((f64::from(part.zs[v]) - ia.z) * scale + translate.2) as f32;
             }
-            // Measured fit: body vertices of the anchor part inside the item's oriented box.
-            // When the item cuts deeper than the allowed 1 unit, push it outward along the
-            // box's thinnest axis, spending at most the 2-unit anchor allowance; the residual is
-            // reported, never hidden.
-            let mut penetration = penetration_depth(&self.base, penguin_label, &part);
-            let mut anchor_gap = 0.0f64;
-            if penetration > 1.0 {
-                let (axis, sign) = outward_axis(&self.base, &part);
-                let shift = (penetration - 1.0).min(2.0);
-                for v in 0..part.vertex_count {
-                    part.xs[v] += (axis[0] * sign * shift) as f32;
-                    part.ys[v] += (axis[1] * sign * shift) as f32;
-                    part.zs[v] += (axis[2] * sign * shift) as f32;
-                }
-                anchor_gap = shift;
-                penetration = penetration_depth(&self.base, penguin_label, &part);
-            }
+            // Contact solve: the retargeted design position is kept unless a body vertex (any
+            // part) sits deeper than FIT_MAX_PENETRATION inside the item's oriented box; then the
+            // whole item is translated along the box axis that resolves it with the smallest
+            // shift, stopping at contact so it rests on the body. Geometry is never edited.
+            let design_penetration = fit_penetration(&self.human, &item.model);
+            let (anchor_shift, shift_direction) =
+                contact_solve(&self.base, slot_outward(slot), &mut part);
+            let penetration = fit_penetration(&self.base, &part);
+            let pca_box_penetration = pca_box_penetration(&self.base, &part);
+            let gap = clearance(&self.base, &part);
             relabel(&mut part, |human| {
                 if human == item_label {
                     penguin_label
@@ -306,17 +322,22 @@ impl PlayerBody {
                 slot: slot.clone(),
                 human_label,
                 penguin_label,
-                anchor_gap,
+                anchor_shift,
+                shift_direction,
                 penetration,
+                pca_box_penetration,
+                gap,
+                design_penetration,
                 scale,
             });
         }
         (merged, reports)
     }
 
-    /// Animated, scaled player model for a sequence frame. Native penguin sequences apply
-    /// directly; human sequences are retargeted.
-    pub fn frame(
+    /// Animated player model for a sequence frame in source units (before the definition's
+    /// 75/128 draw scale). Native penguin sequences apply directly; human sequences are
+    /// retargeted.
+    pub fn pose(
         &self,
         assembled: &Model,
         sequence: &Sequence,
@@ -329,10 +350,143 @@ impl PlayerBody {
             Some(&self.label_map)
         };
         apply_frame(&mut model, sequence, frame, map)?;
+        Ok(model)
+    }
+
+    /// Animated, scaled player model for a sequence frame (what is drawn).
+    pub fn frame(
+        &self,
+        assembled: &Model,
+        sequence: &Sequence,
+        frame: usize,
+    ) -> Result<Model, RenderError> {
+        let mut model = self.pose(assembled, sequence, frame)?;
         scale_float(&mut model, self.width_scale, self.height_scale);
         model.compute_cylinder_bounds();
         Ok(model)
     }
+}
+
+/// Splits an assembled+posed player model back into the body and one attached part (the part
+/// occupies the vertices/faces appended after the body by `merge_into`).
+pub fn split_part(assembled: &Model, body_vertices: usize, body_faces: usize) -> (Model, Model) {
+    let mut body = assembled.clone();
+    body.vertex_count = body_vertices;
+    body.face_count = body_faces;
+    body.xs.truncate(body_vertices);
+    body.ys.truncate(body_vertices);
+    body.zs.truncate(body_vertices);
+    body.face_a.truncate(body_faces);
+    body.face_b.truncate(body_faces);
+    body.face_c.truncate(body_faces);
+    let limit = body_vertices as i32;
+    if let Some(groups) = body.vertex_groups.as_mut() {
+        for group in groups.iter_mut() {
+            group.retain(|v| *v < limit);
+        }
+    }
+    let face_limit = body_faces as i32;
+    for groups in [body.face_groups.as_mut(), body.face_groups_alt.as_mut()]
+        .into_iter()
+        .flatten()
+    {
+        for group in groups.iter_mut() {
+            group.retain(|f| *f < face_limit);
+        }
+    }
+    let mut part = assembled.clone();
+    part.vertex_count = assembled.vertex_count - body_vertices;
+    part.face_count = assembled.face_count - body_faces;
+    part.xs = assembled.xs[body_vertices..assembled.vertex_count].to_vec();
+    part.ys = assembled.ys[body_vertices..assembled.vertex_count].to_vec();
+    part.zs = assembled.zs[body_vertices..assembled.vertex_count].to_vec();
+    let offset = body_vertices as i32;
+    part.face_a = assembled.face_a[body_faces..assembled.face_count]
+        .iter()
+        .map(|v| v - offset)
+        .collect();
+    part.face_b = assembled.face_b[body_faces..assembled.face_count]
+        .iter()
+        .map(|v| v - offset)
+        .collect();
+    part.face_c = assembled.face_c[body_faces..assembled.face_count]
+        .iter()
+        .map(|v| v - offset)
+        .collect();
+    part.vertex_groups = None;
+    part.face_groups_alt = None;
+    (body, part)
+}
+
+/// Oriented box: axes (rows), centre, and per-axis min/max extents of the item's vertices.
+type ItemBox = ([[f64; 3]; 3], [f64; 3], [f64; 3], [f64; 3]);
+
+/// Candidate oriented boxes for an item: its covariance (principal-axis) box and its
+/// model-axis-aligned box. [`item_box`] keeps the tighter one: an oriented bounding box is the
+/// minimum-volume box, and the principal-axis frame is only a heuristic for it that degenerates
+/// (arbitrary tilt, loose box) when two variances are nearly equal, as for a chef's hat.
+fn item_boxes(model: &Model) -> [ItemBox; 2] {
+    let (pca_axes, mean) = principal_axes(model);
+    let aligned = [[1.0, 0.0, 0.0], [0.0, 1.0, 0.0], [0.0, 0.0, 1.0]];
+    let extents = |axes: [[f64; 3]; 3]| -> ItemBox {
+        let mut min = [f64::MAX; 3];
+        let mut max = [f64::MIN; 3];
+        for v in 0..model.vertex_count {
+            let d = [
+                f64::from(model.xs[v]) - mean[0],
+                f64::from(model.ys[v]) - mean[1],
+                f64::from(model.zs[v]) - mean[2],
+            ];
+            for (i, axis) in axes.iter().enumerate() {
+                let p = dot(&d, axis);
+                min[i] = min[i].min(p);
+                max[i] = max[i].max(p);
+            }
+        }
+        (axes, mean, min, max)
+    };
+    [extents(pca_axes), extents(aligned)]
+}
+
+fn box_volume(b: &ItemBox) -> f64 {
+    (0..3).map(|i| (b.3[i] - b.2[i]).max(1e-6)).product()
+}
+
+/// The item's minimum-volume box among the candidates (see [`item_boxes`]).
+fn item_box(model: &Model) -> ItemBox {
+    let [pca, aligned] = item_boxes(model);
+    if box_volume(&aligned) < box_volume(&pca) {
+        aligned
+    } else {
+        pca
+    }
+}
+
+/// Deepest `group` vertex inside one oriented box.
+fn depth_in_box(body: &Model, group: &[i32], (axes, mean, min, max): &ItemBox) -> f64 {
+    let mut deepest = 0.0f64;
+    for &v in group {
+        let v = v as usize;
+        let d = [
+            f64::from(body.xs[v]) - mean[0],
+            f64::from(body.ys[v]) - mean[1],
+            f64::from(body.zs[v]) - mean[2],
+        ];
+        let mut inside = true;
+        let mut depth = f64::MAX;
+        for (i, axis) in axes.iter().enumerate() {
+            let p = dot(&d, axis);
+            if p < min[i] || p > max[i] {
+                inside = false;
+                break;
+            }
+            depth = depth.min((p - min[i]).min(max[i] - p));
+        }
+        if inside {
+            deepest = deepest.max(depth);
+        }
+    }
+    deepest
 }
 
 /// Principal axes of a model's vertices (covariance eigenvectors by Jacobi iteration) and its
@@ -418,60 +572,203 @@ fn dot(a: &[f64; 3], b: &[f64; 3]) -> f64 {
     a[0] * b[0] + a[1] * b[1] + a[2] * b[2]
 }
 
-/// Deepest body-part vertex inside the item's oriented bounding box (source units, unscaled).
-fn penetration_depth(body: &Model, penguin_label: i32, item: &Model) -> f64 {
-    let Some(groups) = &body.vertex_groups else {
-        return 0.0;
-    };
-    let Some(group) = groups.get(penguin_label as usize) else {
-        return 0.0;
+/// Deepest body vertex inside the item's oriented bounding box (source units, unscaled): the
+/// smallest distance from the vertex to any box face. `part` restricts the body vertices to one
+/// label; `None` measures the whole body.
+pub fn penetration_depth(body: &Model, part: Option<i32>, item: &Model) -> f64 {
+    let all: Vec<i32>;
+    let group: &[i32] = match part {
+        Some(label) => match body
+            .vertex_groups
+            .as_ref()
+            .and_then(|g| g.get(label as usize))
+        {
+            Some(group) => group,
+            None => return 0.0,
+        },
+        None => {
+            all = (0..body.vertex_count as i32).collect();
+            &all
+        }
     };
     if item.vertex_count == 0 || group.is_empty() {
         return 0.0;
     }
-    let (axes, mean) = principal_axes(item);
-    let mut min = [f64::MAX; 3];
-    let mut max = [f64::MIN; 3];
-    for v in 0..item.vertex_count {
-        let d = [
-            f64::from(item.xs[v]) - mean[0],
-            f64::from(item.ys[v]) - mean[1],
-            f64::from(item.zs[v]) - mean[2],
-        ];
-        for (i, axis) in axes.iter().enumerate() {
-            let p = dot(&d, axis);
-            min[i] = min[i].min(p);
-            max[i] = max[i].max(p);
-        }
+    depth_in_box(body, group, &item_box(item))
+}
+
+/// The same measure in the principal-axis frame only (the earlier, looser reading of the box
+/// metric); reported alongside so the box choice is visible, not silently applied.
+pub fn pca_box_penetration(body: &Model, item: &Model) -> f64 {
+    if item.vertex_count == 0 || body.vertex_count == 0 {
+        return 0.0;
     }
+    let all: Vec<i32> = (0..body.vertex_count as i32).collect();
+    let [pca, _] = item_boxes(item);
+    depth_in_box(body, &all, &pca)
+}
+
+/// Deepest item vertex inside the body mesh (source units): inside/outside by the generalized
+/// winding number of the body triangles, depth as the distance to the body surface. Catches
+/// items swallowed by a thicker body part, which the box measure above cannot see.
+pub fn embedded_depth(body: &Model, item: &Model) -> f64 {
+    let vertex = |m: &Model, v: usize| [f64::from(m.xs[v]), f64::from(m.ys[v]), f64::from(m.zs[v])];
     let mut deepest = 0.0f64;
-    for &v in group {
-        let v = v as usize;
-        let d = [
-            f64::from(body.xs[v]) - mean[0],
-            f64::from(body.ys[v]) - mean[1],
-            f64::from(body.zs[v]) - mean[2],
-        ];
-        let mut inside = true;
-        let mut depth = f64::MAX;
-        for (i, axis) in axes.iter().enumerate() {
-            let p = dot(&d, axis);
-            if p < min[i] || p > max[i] {
-                inside = false;
-                break;
-            }
-            depth = depth.min((p - min[i]).min(max[i] - p));
+    for p in 0..item.vertex_count {
+        let point = vertex(item, p);
+        let mut winding = 0.0f64;
+        for f in 0..body.face_count {
+            winding += solid_angle(
+                &point,
+                &vertex(body, body.face_a[f] as usize),
+                &vertex(body, body.face_b[f] as usize),
+                &vertex(body, body.face_c[f] as usize),
+            );
         }
-        if inside {
-            deepest = deepest.max(depth);
+        if winding.abs() >= 2.0 * std::f64::consts::PI {
+            let mut nearest = f64::MAX;
+            for f in 0..body.face_count {
+                nearest = nearest.min(point_triangle_distance(
+                    &point,
+                    &vertex(body, body.face_a[f] as usize),
+                    &vertex(body, body.face_b[f] as usize),
+                    &vertex(body, body.face_c[f] as usize),
+                ));
+            }
+            deepest = deepest.max(nearest);
         }
     }
     deepest
 }
 
-/// The item's thinnest principal axis, signed to point away from the body centroid.
-fn outward_axis(body: &Model, item: &Model) -> ([f64; 3], f64) {
-    let (axes, mean) = principal_axes(item);
+/// Signed solid angle of triangle `abc` seen from `p` (Van Oosterom–Strackee).
+fn solid_angle(p: &[f64; 3], a: &[f64; 3], b: &[f64; 3], c: &[f64; 3]) -> f64 {
+    let ra = [a[0] - p[0], a[1] - p[1], a[2] - p[2]];
+    let rb = [b[0] - p[0], b[1] - p[1], b[2] - p[2]];
+    let rc = [c[0] - p[0], c[1] - p[1], c[2] - p[2]];
+    let la = dot(&ra, &ra).sqrt();
+    let lb = dot(&rb, &rb).sqrt();
+    let lc = dot(&rc, &rc).sqrt();
+    let cross = [
+        rb[1] * rc[2] - rb[2] * rc[1],
+        rb[2] * rc[0] - rb[0] * rc[2],
+        rb[0] * rc[1] - rb[1] * rc[0],
+    ];
+    let numerator = dot(&ra, &cross);
+    let denominator = la * lb * lc + dot(&ra, &rb) * lc + dot(&ra, &rc) * lb + dot(&rb, &rc) * la;
+    2.0 * numerator.atan2(denominator)
+}
+
+/// Combined fit penetration: the deeper of body-into-item (box) and item-into-body (mesh).
+pub fn fit_penetration(body: &Model, item: &Model) -> f64 {
+    penetration_depth(body, None, item).max(embedded_depth(body, item))
+}
+
+/// Rigid motion (rotation rows, translation) that carries `from` onto `to`, recovered from a
+/// non-degenerate vertex triple; exact for the per-label rigid transforms of sequences.
+fn rigid_motion(from: &Model, to: &Model) -> Option<([[f64; 3]; 3], [f64; 3])> {
+    let v = |m: &Model, i: usize| [f64::from(m.xs[i]), f64::from(m.ys[i]), f64::from(m.zs[i])];
+    let sub = |a: &[f64; 3], b: &[f64; 3]| [a[0] - b[0], a[1] - b[1], a[2] - b[2]];
+    let cross = |a: &[f64; 3], b: &[f64; 3]| {
+        [
+            a[1] * b[2] - a[2] * b[1],
+            a[2] * b[0] - a[0] * b[2],
+            a[0] * b[1] - a[1] * b[0],
+        ]
+    };
+    let unit = |a: &[f64; 3]| {
+        let l = dot(a, a).sqrt();
+        (l > 1e-9).then(|| [a[0] / l, a[1] / l, a[2] / l])
+    };
+    let frame = |m: &Model, a: usize, b: usize, c: usize| -> Option<[[f64; 3]; 3]> {
+        let e0 = unit(&sub(&v(m, b), &v(m, a)))?;
+        let ac = sub(&v(m, c), &v(m, a));
+        let e2 = unit(&cross(&e0, &ac))?;
+        let e1 = cross(&e2, &e0);
+        Some([e0, e1, e2])
+    };
+    let n = from.vertex_count.min(to.vertex_count);
+    if n < 3 {
+        return None;
+    }
+    let mut best: Option<(f64, usize, usize, usize)> = None;
+    for a in 0..n {
+        for b in (a + 1)..n {
+            for c in (b + 1)..n {
+                let ab = sub(&v(from, b), &v(from, a));
+                let ac = sub(&v(from, c), &v(from, a));
+                let area = dot(&cross(&ab, &ac), &cross(&ab, &ac));
+                if best.is_none_or(|(ba, _, _, _)| area > ba) {
+                    best = Some((area, a, b, c));
+                }
+            }
+            if best.is_some_and(|(area, _, _, _)| area > 1e6) {
+                break;
+            }
+        }
+    }
+    let (_, a, b, c) = best?;
+    let f0 = frame(from, a, b, c)?;
+    let f1 = frame(to, a, b, c)?;
+    // R = F1^T F0 maps bind-frame coordinates to posed coordinates: R x = F1^T (F0 x).
+    let mut r = [[0.0; 3]; 3];
+    for i in 0..3 {
+        for j in 0..3 {
+            r[i][j] = (0..3).map(|k| f1[k][i] * f0[k][j]).sum();
+        }
+    }
+    let pa = v(from, a);
+    let qa = v(to, a);
+    let rpa = [dot(&r[0], &pa), dot(&r[1], &pa), dot(&r[2], &pa)];
+    Some((r, [qa[0] - rpa[0], qa[1] - rpa[1], qa[2] - rpa[2]]))
+}
+
+/// Body-into-item box depth for a posed pair, with the box fixed at the bind pose (`bind_item`)
+/// and carried rigidly with the item, so the figure does not change with the box's orientation
+/// heuristics when a rigidly attached item merely turns with its part.
+pub fn posed_box_penetration(bind_item: &Model, body: &Model, item: &Model) -> f64 {
+    let (axes, mean, min, max) = item_box(bind_item);
+    let Some((r, t)) = rigid_motion(bind_item, item) else {
+        return penetration_depth(body, None, item);
+    };
+    let rot = |x: &[f64; 3]| [dot(&r[0], x), dot(&r[1], x), dot(&r[2], x)];
+    let posed_axes = [rot(&axes[0]), rot(&axes[1]), rot(&axes[2])];
+    let rm = rot(&mean);
+    let posed_mean = [rm[0] + t[0], rm[1] + t[1], rm[2] + t[2]];
+    let all: Vec<i32> = (0..body.vertex_count as i32).collect();
+    depth_in_box(body, &all, &(posed_axes, posed_mean, min, max))
+}
+
+/// Combined fit penetration for a posed pair (see [`posed_box_penetration`]).
+pub fn posed_fit_penetration(bind_item: &Model, body: &Model, item: &Model) -> f64 {
+    posed_box_penetration(bind_item, body, item).max(embedded_depth(body, item))
+}
+
+/// The direction an item of `slot` moves to clear the body: away from the body along the
+/// slot's natural outward axis (character's right hand is model −X, left hand +X, head up,
+/// amulet forward, cape back). `None` for slots without a fixed side (radial fallback).
+pub fn slot_outward(slot: &str) -> Option<[f64; 3]> {
+    match slot {
+        "weapon" | "hands" => Some([-1.0, 0.0, 0.0]),
+        "shield" => Some([1.0, 0.0, 0.0]),
+        "head" => Some([0.0, -1.0, 0.0]),
+        "amulet" => Some([0.0, 0.0, -1.0]),
+        "cape" => Some([0.0, 0.0, 1.0]),
+        _ => None,
+    }
+}
+
+/// Translates `item` along the slot's outward direction by the smallest distance that brings
+/// the combined penetration to at most [`FIT_MAX_PENETRATION`] while the clearance stays within
+/// [`FIT_MAX_GAP`] (the item rests on the body). When that direction cannot satisfy both, every
+/// body axis, the radial direction and the item's box axes are tried and the smallest shift
+/// meeting both wins (then the smallest meeting penetration alone). Geometry is never edited.
+/// Returns the shift and its direction.
+fn contact_solve(body: &Model, outward: Option<[f64; 3]>, item: &mut Model) -> (f64, [f64; 3]) {
+    if fit_penetration(body, item) <= FIT_MAX_PENETRATION && clearance(body, item) <= FIT_MAX_GAP {
+        return (0.0, [0.0; 3]);
+    }
+    let (axes, mean, _, _) = item_box(item);
     let n = body.vertex_count.max(1) as f64;
     let mut body_mean = [0.0f64; 3];
     for v in 0..body.vertex_count {
@@ -484,12 +781,173 @@ fn outward_axis(body: &Model, item: &Model) -> ([f64; 3], f64) {
         mean[1] - body_mean[1],
         mean[2] - body_mean[2],
     ];
-    let sign = if dot(&away, &axes[0]) >= 0.0 {
-        1.0
-    } else {
-        -1.0
+    const COARSE: f64 = 0.5;
+    const LIMIT: f64 = 64.0;
+    let shifted = |dir: &[f64; 3], t: f64| {
+        let mut probe = item.clone();
+        for v in 0..probe.vertex_count {
+            probe.xs[v] = (f64::from(item.xs[v]) + dir[0] * t) as f32;
+            probe.ys[v] = (f64::from(item.ys[v]) + dir[1] * t) as f32;
+            probe.zs[v] = (f64::from(item.zs[v]) + dir[2] * t) as f32;
+        }
+        probe
     };
-    (axes[0], sign)
+    // Smallest shift along `dir` meeting the penetration target, and whether it also meets the
+    // gap target there.
+    let solve_along = |dir: &[f64; 3]| -> Option<(f64, bool)> {
+        let mut previous = 0.0;
+        let mut t = COARSE;
+        while t <= LIMIT {
+            if fit_penetration(body, &shifted(dir, t)) <= FIT_MAX_PENETRATION {
+                let (mut lo, mut hi) = (previous, t);
+                for _ in 0..6 {
+                    let mid = 0.5 * (lo + hi);
+                    if fit_penetration(body, &shifted(dir, mid)) <= FIT_MAX_PENETRATION {
+                        hi = mid;
+                    } else {
+                        lo = mid;
+                    }
+                }
+                let contact = clearance(body, &shifted(dir, hi)) <= FIT_MAX_GAP;
+                return Some((hi, contact));
+            }
+            previous = t;
+            t += COARSE;
+        }
+        None
+    };
+    let mut chosen: Option<(f64, [f64; 3])> = None;
+    if let Some(dir) = outward
+        && let Some((t, true)) = solve_along(&dir)
+    {
+        chosen = Some((t, dir));
+    }
+    if chosen.is_none() {
+        let mut directions: Vec<[f64; 3]> = Vec::new();
+        let radial = dot(&away, &away).sqrt();
+        if radial > 1e-6 {
+            directions.push([away[0] / radial, away[1] / radial, away[2] / radial]);
+        }
+        for axis in [[1.0, 0.0, 0.0], [0.0, 1.0, 0.0], [0.0, 0.0, 1.0]]
+            .iter()
+            .chain(axes.iter())
+        {
+            directions.push(*axis);
+            directions.push([-axis[0], -axis[1], -axis[2]]);
+        }
+        let mut best: Option<(f64, bool, [f64; 3])> = None;
+        for dir in &directions {
+            let Some((t, contact)) = solve_along(dir) else {
+                continue;
+            };
+            let better = match best {
+                None => true,
+                Some((bt, bc, _)) => (contact && !bc) || (contact == bc && t < bt - 1e-9),
+            };
+            if better {
+                best = Some((t, contact, *dir));
+            }
+        }
+        chosen = best.map(|(t, _, dir)| (t, dir));
+    }
+    let Some((t, dir)) = chosen else {
+        return (0.0, [0.0; 3]);
+    };
+    for v in 0..item.vertex_count {
+        item.xs[v] = (f64::from(item.xs[v]) + dir[0] * t) as f32;
+        item.ys[v] = (f64::from(item.ys[v]) + dir[1] * t) as f32;
+        item.zs[v] = (f64::from(item.zs[v]) + dir[2] * t) as f32;
+    }
+    (t, dir)
+}
+
+/// Smallest distance between the item and the body surfaces: item vertices to body triangles
+/// and body vertices to item triangles (0 when they touch or overlap).
+pub fn clearance(body: &Model, item: &Model) -> f64 {
+    fn sweep(points: &Model, tris: &Model, best: &mut f64) {
+        let vertex =
+            |m: &Model, v: usize| [f64::from(m.xs[v]), f64::from(m.ys[v]), f64::from(m.zs[v])];
+        for p in 0..points.vertex_count {
+            let point = vertex(points, p);
+            for f in 0..tris.face_count {
+                let d = point_triangle_distance(
+                    &point,
+                    &vertex(tris, tris.face_a[f] as usize),
+                    &vertex(tris, tris.face_b[f] as usize),
+                    &vertex(tris, tris.face_c[f] as usize),
+                );
+                if d < *best {
+                    *best = d;
+                    if *best == 0.0 {
+                        return;
+                    }
+                }
+            }
+        }
+    }
+    let mut best = f64::MAX;
+    sweep(item, body, &mut best);
+    if best > 0.0 {
+        sweep(body, item, &mut best);
+    }
+    if best == f64::MAX { 0.0 } else { best }
+}
+
+/// Euclidean distance from `p` to triangle `abc` (Ericson, Real-Time Collision Detection 5.1.5).
+fn point_triangle_distance(p: &[f64; 3], a: &[f64; 3], b: &[f64; 3], c: &[f64; 3]) -> f64 {
+    let sub = |u: &[f64; 3], v: &[f64; 3]| [u[0] - v[0], u[1] - v[1], u[2] - v[2]];
+    let len = |u: &[f64; 3]| dot(u, u).sqrt();
+    let ab = sub(b, a);
+    let ac = sub(c, a);
+    let ap = sub(p, a);
+    let d1 = dot(&ab, &ap);
+    let d2 = dot(&ac, &ap);
+    if d1 <= 0.0 && d2 <= 0.0 {
+        return len(&ap);
+    }
+    let bp = sub(p, b);
+    let d3 = dot(&ab, &bp);
+    let d4 = dot(&ac, &bp);
+    if d3 >= 0.0 && d4 <= d3 {
+        return len(&bp);
+    }
+    let vc = d1 * d4 - d3 * d2;
+    if vc <= 0.0 && d1 >= 0.0 && d3 <= 0.0 {
+        let v = d1 / (d1 - d3);
+        let q = [a[0] + ab[0] * v, a[1] + ab[1] * v, a[2] + ab[2] * v];
+        return len(&sub(p, &q));
+    }
+    let cp = sub(p, c);
+    let d5 = dot(&ab, &cp);
+    let d6 = dot(&ac, &cp);
+    if d6 >= 0.0 && d5 <= d6 {
+        return len(&cp);
+    }
+    let vb = d5 * d2 - d1 * d6;
+    if vb <= 0.0 && d2 >= 0.0 && d6 <= 0.0 {
+        let w = d2 / (d2 - d6);
+        let q = [a[0] + ac[0] * w, a[1] + ac[1] * w, a[2] + ac[2] * w];
+        return len(&sub(p, &q));
+    }
+    let va = d3 * d6 - d5 * d4;
+    if va <= 0.0 && (d4 - d3) >= 0.0 && (d5 - d6) >= 0.0 {
+        let w = (d4 - d3) / ((d4 - d3) + (d5 - d6));
+        let q = [
+            b[0] + (c[0] - b[0]) * w,
+            b[1] + (c[1] - b[1]) * w,
+            b[2] + (c[2] - b[2]) * w,
+        ];
+        return len(&sub(p, &q));
+    }
+    let denom = 1.0 / (va + vb + vc);
+    let v = vb * denom;
+    let w = vc * denom;
+    let q = [
+        a[0] + ab[0] * v + ac[0] * w,
+        a[1] + ab[1] * v + ac[1] * w,
+        a[2] + ab[2] * v + ac[2] * w,
+    ];
+    len(&sub(p, &q))
 }
 
 fn relabel(model: &mut Model, map: impl Fn(i32) -> i32) {

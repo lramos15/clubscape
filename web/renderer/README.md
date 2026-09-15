@@ -29,7 +29,7 @@ plus:
 | `framePlayerPreview({ width, height, … })` → `Promise<ImageData \| null>` | Model-only penguin preview (current body + worn gear) through the original interface model draw, at exactly the requested native size with coverage alpha; for the UI's `setUiPreview(getUiPreviewBounds())`. Defaults come from the exported interface 679:73 component (`manifest.model_widgets`); `null` until the player body is loaded. Never a reference capture. |
 | `setTopPlane(limit \| null)`, `setInstancedMap(bool)` | Top drawn plane. Fixture scenes pin 0 (the approved captures' `dh` argument); region scenes use the stock live rule (`null`). |
 | `setRoofMode(bits)`, `setRoofContext(hovered, destination)` | Original roof removal bits (1 player, 2 hovered, 4 destination, 8 camera line); 0 = stock. |
-| `playerFitReport()` | Per worn item: bound human label, penguin label, anchor gap, deepest penetration (source units), retarget scale. |
+| `playerFitReport()` | Per worn item: bound human label, penguin label, `penetration` (≤ 1), `gap` (≤ 2), `anchorShift`, `designPenetration` (same measure on the human body), retarget scale — source units. |
 | `scenePlacement()` | `{ baseX, baseY, sizeTiles: 104, blocks }` — the source scene placement for a dynamic minimap (the UI's minimap raster is keyed by base/plane). |
 | `frameModelFixture()` | Developer-only replay of an approved model capture. |
 

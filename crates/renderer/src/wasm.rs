@@ -750,8 +750,11 @@ impl WasmRenderer {
     }
 
     /// JSON report of the current gear fit on the penguin body: per item the bound human label,
-    /// the penguin label chosen, anchor gap and deepest penetration in source units, and the
-    /// retarget scale. Empty array before a body/gear is assembled.
+    /// the penguin label chosen, `penetration` (deepest body vertex inside the item's box, target
+    /// ≤ 1), `gap` (item↔body clearance, target ≤ 2), `anchorShift` (contact-solve translation
+    /// from the retargeted design position), `designPenetration` (the same box measure on the
+    /// human body the item was designed for) in source units, and the retarget scale. Empty
+    /// array before a body/gear is assembled.
     pub fn player_fit_report(&self) -> String {
         let inner = self.inner.borrow();
         let Some((_, fits)) = inner.core.player_fit_report() else {
@@ -761,13 +764,19 @@ impl WasmRenderer {
             .iter()
             .map(|f| {
                 format!(
-                    r#"{{"itemId":{},"slot":{},"humanLabel":{},"penguinLabel":{},"anchorGap":{:.3},"penetration":{:.3},"scale":{:.4}}}"#,
+                    r#"{{"itemId":{},"slot":{},"humanLabel":{},"penguinLabel":{},"penetration":{:.3},"gap":{:.3},"anchorShift":{:.3},"shiftDirection":[{:.3},{:.3},{:.3}],"pcaBoxPenetration":{:.3},"designPenetration":{:.3},"scale":{:.4}}}"#,
                     f.item_id,
                     json_string(&f.slot),
                     f.human_label,
                     f.penguin_label,
-                    f.anchor_gap,
                     f.penetration,
+                    f.gap,
+                    f.anchor_shift,
+                    f.shift_direction[0],
+                    f.shift_direction[1],
+                    f.shift_direction[2],
+                    f.pca_box_penetration,
+                    f.design_penetration,
                     f.scale
                 )
             })
