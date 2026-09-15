@@ -78,22 +78,27 @@ export async function mountApplication(options: {
       return assets.manifest.catalog;
     },
     async prepareWorld(world: WorldView) {
-      invariant(renderer && assets, "The real renderer/source loader is not ready.", "integration");
+      invariant(assets, "The validated source loader is not ready.", "integration");
       const region = assets.manifest.regions[world.player.region];
       invariant(region, `No compiled source presentation exists for ${world.player.region}.`, "integration");
-      invariant(region.camera && region.controls, "This region has no recorded source camera/input binding.", "integration");
       sceneLoaded = false;
       benchmark.worldReady(false);
+      if (!renderer || !region.camera || !region.controls) {
+        app.report(new AppError("The authoritative world is connected, but its real 3D renderer/camera integration is unavailable. No replacement viewport or character preview was started.", { kind: "integration" }));
+        return;
+      }
       required = Array.from(new Set([...assets.manifest.bootstrap, ...region.requiredAssets,
         ...(assets.manifest.rendererManifest ? [assets.manifest.rendererManifest] : [])]));
-      assets.retain(required);
+      const uiAssets = Object.entries(assets.manifest.aliases ?? {}).filter(([id]) => id.startsWith("ui/")).map(([, id]) => id);
+      assets.retain([...required, ...uiAssets]);
       benchmark.scene(region.sceneId, region.routeId, region.workloadId, assets.manifestSha256,
         new Map(required.map((id) => [id, assets!.manifest.assets.find((asset) => asset.id === id)!.sha256])));
       await assets.preload(required);
       renderer.update(world);
       await renderer.loadScene(region.sceneId);
       input?.dispose();
-      input = new InputController(uiCanvas, ui!, renderer, app, region.camera, region.controls, world.player.tile);
+      input = new InputController(uiCanvas, ui!, renderer, app, region.camera, region.controls, world.player.tile,
+        () => ({ width: worldCanvas.width, height: worldCanvas.height }));
       sceneLoaded = true;
     },
     events(world, events) {
@@ -150,7 +155,7 @@ export async function mountApplication(options: {
     unsubscribe = app.subscribe((state) => {
       if (componentFailed) return;
       try {
-        ui?.update(state);
+        // createUi owns its state subscription; this observer drives only the renderer/benchmark.
         if (state.world && renderer && sceneLoaded) renderer.update(state.world);
         const presence = presenceOf(state.world);
         benchmark.worldReady(state.phase === "world" && sceneLoaded && presence?.connected === true && presence.presentInWorld);
@@ -172,11 +177,8 @@ export async function mountApplication(options: {
       if (worldCanvas.width !== pixelsWide || worldCanvas.height !== pixelsHigh) {
         worldCanvas.width = pixelsWide; worldCanvas.height = pixelsHigh;
       }
-      if (uiCanvas.width !== pixelsWide || uiCanvas.height !== pixelsHigh) {
-        uiCanvas.width = pixelsWide; uiCanvas.height = pixelsHigh;
-      }
       renderer?.resize(pixelsWide, pixelsHigh);
-      ui?.resize(pixelsWide, pixelsHigh);
+      ui?.resize(width, height);
       benchmark.viewport(width, height, scale);
     };
     resizeSurfaces();
@@ -188,17 +190,18 @@ export async function mountApplication(options: {
       app.report(capabilityError);
       return { app, dispose };
     }
-    invariant(assets.manifest.rendererManifest, "The public source manifest has no renderer adapter manifest.", "integration");
-    stopDevice = watchCanvasDevice(worldCanvas, (epoch, ready, timestamps) => benchmark.device(epoch, ready, timestamps), (error) => {
-      sceneLoaded = false;
-      benchmark.worldReady(false);
-      audio?.disconnected();
-      app.report(error);
-    });
-    renderer = await components.createRenderer(worldCanvas, {
-      assetBaseUrl: assets.baseUrl, manifestUrl: assets.url(assets.manifest.rendererManifest),
-      sourcePackSha256: SOURCE_PACK_SHA256, width: worldCanvas.width, height: worldCanvas.height,
-    });
+    if (components.createRenderer && assets.manifest.rendererManifest) {
+      stopDevice = watchCanvasDevice(worldCanvas, (epoch, ready, timestamps) => benchmark.device(epoch, ready, timestamps), (error) => {
+        sceneLoaded = false;
+        benchmark.worldReady(false);
+        audio?.disconnected();
+        app.report(error);
+      });
+      renderer = await components.createRenderer(worldCanvas, {
+        assetBaseUrl: assets.baseUrl, manifestUrl: assets.url(assets.manifest.rendererManifest),
+        sourcePackSha256: SOURCE_PACK_SHA256, width: worldCanvas.width, height: worldCanvas.height,
+      });
+    }
     audio = await SourceAudioSession.create(assets, assets.manifest.assets,
       (error) => app.report(audioProblem(error)),
       (state) => {

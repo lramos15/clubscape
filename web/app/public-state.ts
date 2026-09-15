@@ -18,7 +18,7 @@ export interface PublicRecovery extends RecoveryView {
   }>;
 }
 export interface PublicWorld extends WorldView {
-  player: PlayerView & { presence: SourcePresence | null };
+  player: PlayerView & { presence: SourcePresence | null; appearanceConfirmed: boolean };
   entities: Array<EntityView & {
     assetId: string | null; width: number; height: number; presence: SourcePresence | null;
     actions: Array<EntityView["actions"][number] & { denial: SourceDenial | null }>;

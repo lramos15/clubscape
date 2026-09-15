@@ -188,41 +188,48 @@ labels come from `interfaceOptions`. Source hashes/selectors/transformations
 are recorded in the private `source-provenance.json`; no whole cache or private
 game state is exposed. Original geometry and asset IDs are retained.
 
-It is **not a renderer/UI/audio pack**: renderer manifest, cameras and controls
-remain explicitly unconfigured. The real source metadata can be delivered
-and decoded through `CLUBSCAPE_CONTENT_OWNER=web`, independently of gameplay.
+The real audio and UI factories/assets are now integrated. The remaining
+renderer manifest, camera bindings and model-only penguin preview are still
+explicitly unconfigured; no reference panel/image or software 3D fallback is
+used to fill them.
 
-**Current concrete deployment blocker:** this artifact's asset membership
-cannot fit the backend's256-KiB `clubscape-game.json` limit. Even a hypothetical
-single shared shortest-form URL needs272,413 bytes; the real compact descriptor
-with distinct source routes is406,574 bytes. This is unrelated to the now-fixed
-native source probes. The command returns exit2 and `serverCompatible:false`
-while retaining its valid static outputs. It does not launch a truncated
-world, drop asset IDs, or bypass validation. The backend owner must relay a
-descriptor-budget/index-contract adjustment before this full canonical game
-root can start. A512-KiB descriptor bound would cover the current emitted map.
+The authorized `2c5fe68b` repair resolves the former descriptor blocker:
+512KiB admits the actual406,574-byte map, with the exact limit/limit+1 covered
+by backend tests. GAME_ROOT also works independently of WEB_ROOT. Actual
+canonical standalone startup and game+web startup now pass. Public asset/
+request budgets are unchanged, no asset IDs are trimmed, and old
+`game_file_size` evidence remains historical rather than a current interlock.
 
 The authorized audio factory `7ea817f5` is now integrated. New source-bundle
 outputs additionally include its exported `AUDIO_INPUTS` documents and exact
-264 FLACs plus two original reference WAVs:5,279 assets total, with no alias
+264 FLACs plus two original reference WAVs, with no alias
 invented for the source silence. Original source path IDs resolve through
 explicit same-origin aliases. The private game membership map still contains
 only the5,010 compiler-required IDs; audio delivery does not hide or inflate
 that descriptor's source validation. No waveform, gain, delay, loop or playlist
 is changed by the build layer.
 
-Use a **new** directory when adding audio to an earlier generated bundle:
+The authorized UI commits `069b5028`, `f34663c3`, `6a1b11fa` add the actual
+self-subscribing UI. `ui-assets.ts` verifies `assets/compiled/ui/provenance.json`
+and selects only catalogue-referenced title/sprite/item/portrait/minimap PNGs,
+plus the real catalogue/provenance JSON. It does not copy panel/evidence PNGs.
+There are1,179 image primitives and6,460 total source/audio/UI assets. The
+24,658,127-byte UI catalogue remains an independent bounded asset; it is not
+inserted into actor snapshots.
+
+Use a **new** directory/world UUID when adding UI to an earlier pinned bundle:
 
 ```sh
-pnpm --dir web source:bundle .local/source-audio-df3e2a45 <new-isolated-world-uuid>
-# Exit2 currently records the unchanged descriptor-budget blocker; public outputs remain valid.
-CLUBSCAPE_CLIENT_MANIFEST=.local/source-audio-df3e2a45/content/manifest.json \
-CLUBSCAPE_CLIENT_ASSET_ROOT=.local/source-audio-df3e2a45 \
-CLUBSCAPE_CONTENT_OWNER=web \
+pnpm --dir web source:bundle .local/source-ui-df3e2a45-v2 <new-isolated-world-uuid>
+CLUBSCAPE_CLIENT_MANIFEST=.local/source-ui-df3e2a45-v2/content/manifest.json \
+CLUBSCAPE_CLIENT_ASSET_ROOT=.local/source-ui-df3e2a45-v2 \
+CLUBSCAPE_CONTENT_OWNER=game \
 pnpm --dir web build
 ```
 
-This build serves5,290 explicit public files. The real Chrome check instantiates
+The actual game root owns6,461 public asset/manifest routes; the web root serves
+only the compiled HTML/JS/CSS/WASM and build identity, with no overlapping routes.
+The independent account/audio Chrome check instantiates
 the actual audio factory through the shell, verifies recoverable gesture
 feedback, original Scape Main0 on genuine input, actual decoded-buffer
 observations and source-clock advancement, then checks disconnect versus real
@@ -230,30 +237,31 @@ title reset. It does not use a mock world/cue loop, replace the audio-owner
 fixture, or establish gameplay/presentation or source-policy calibration.
 Evidence appears as `titleAudio` in the normal browser result JSON.
 
-The refusal is verified against the actual server binary, not inferred from
-the renderer: `.local/evidence/browser-shell/game-root-startup.json` records
-`game_file_size`, the exact canonical hash, byte counts and real error ID.
-The account-only service can independently deliver/decode these original
-source files without pretending a world was initialized:
+For actual UI/WASM/canonical-world integration:
 
 ```sh
-CLUBSCAPE_CLIENT_MANIFEST=.local/source-audio-df3e2a45/content/manifest.json \
-CLUBSCAPE_CLIENT_ASSET_ROOT=.local/source-audio-df3e2a45 \
-CLUBSCAPE_CONTENT_OWNER=web \
+CLUBSCAPE_CLIENT_MANIFEST=.local/source-ui-df3e2a45-v2/content/manifest.json \
+CLUBSCAPE_CLIENT_ASSET_ROOT=.local/source-ui-df3e2a45-v2 \
+CLUBSCAPE_CONTENT_OWNER=game \
 pnpm --dir web build
 
-CLUBSCAPE_GAME_DESCRIPTOR_PROBE=.local/source-audio-df3e2a45 \
-CLUBSCAPE_BROWSER_EVIDENCE=.local/evidence/browser-shell-df3e2a45 \
+CLUBSCAPE_BROWSER_EVIDENCE=.local/evidence/source-ui-df3e2a45-v2 \
 CLUBSCAPE_BROWSER_EXECUTABLE=/path/to/verified/native/chrome \
-pnpm --dir web test:isolated
+pnpm --dir web test:isolated --game-root .local/source-ui-df3e2a45-v2
 ```
 
-That run serves5,021 explicit public files, performs actual original item/region
-fetch/hash/JSON decoding and verifies source inventory labels in headful Chrome,
-alongside the real account lifecycle. It remains **not** rendered-game/UI
-signup, audio, journey or performance acceptance. The optional descriptor probe
-uses the owned test database configuration, must encounter the specific current
-startup bound, and never substitutes an account-only world response for it.
+The source-mode runner uses its bounded owned PostgreSQL database. It first
+starts the real world **without** WEB_ROOT, stops it gracefully, then starts the
+same pinned world alongside the built browser code. Real source UI controls
+perform registration, auth-error/login, empty creation, sequenced appearance,
+logout/relogin. A real server restart at the same origin retains the memory
+token and acknowledged character state; no replacement artifact, seed or
+network mock is used. Credentials stay in browser memory and are never
+reported. Evidence includes actual title pixels, startup/run pins and the
+onboarding result. The missing 3D renderer leaves zero GPU frames/readiness
+false; complete journey, world fidelity, audio calibration and M1 acceptance
+remain separate. The legacy descriptor-probe environment name now selects
+real startup, not an expected failure.
 
 For a game-owned asset bundle:
 
@@ -342,7 +350,7 @@ files stay in the project and owned processes/resources are cleaned.
 
 Before integrated-client completion:
 
-1. Merge the remaining actual `web/{renderer,ui}/index.ts` adapters and run the
+1. Merge the remaining actual `web/renderer/index.ts` adapter and run the
    renderer owner's actual WASM/assets build step. Add that agreed build ABI
    to orchestration once its real output paths are known.
 2. Supply the real compiled source asset/region/camera bindings and a matching
@@ -356,19 +364,21 @@ Before integrated-client completion:
    canonical `item.id` as exact `expected_item` (ShopBuy tag4). Legacy None
    bytes/hashes and original uncertain intents are preserved. Rejected
    selections refresh without retargeting or silently retrying another item.
-   No shop identity/backend capacity blocker remains. Source contact/offline-clock fixes are integrated; the newly
-   demonstrated game-descriptor size limit remains visible, never bypassed
-   with trimmed content or seeded state. The complete actor/collision/style
+   No shop identity/backend capacity or game-root descriptor blocker remains.
+   Source contact/offline-clock and512KiB descriptor/environment repairs are
+   integrated without trimmed content or seeded state. The complete actor/collision/style
    repairs are integrated without a new browser outcome API.
 4. Align renderer `observe()`/applied settings/GPU completion ABI and the
    actual source audio event provenance described in `web/app/README.md`.
    The audio factory and real decoder observations are integrated; source
    cycle/group/delay/action/cue and Cook-widget linkage are not present in
-   the current event wire and must not be guessed. UI context menus
-   may expose `worldContext(pick,x,y)`. Source entity/pose/morph/dynamic-object
+   the current event wire and must not be guessed. The actual UI consumes
+   `forwardWorldPointer`, `setUiCamera` and `onUiCameraRequest` in logical pixels;
+   renderer picking remains backing-pixel based. Source entity/pose/morph/dynamic-object
    state must come from the real view, not fixtures or fabricated animations.
-5. Exercise actual source UI registration and the real character/world journey
-   against the source server, including gameplay reconnect/restart, asset/
+5. The actual source UI registration/character/appearance/logout/restart path
+   now passes against the canonical server. Complete the remaining full journey,
+   asset/
    device failures and nonblank world/UI/audio. Run the independent frozen
    source comparisons and genuine completed-frame harness, then the owner's
    M-series Mac Chrome **and** Edge acceptance runs. The infrastructure helper,

@@ -39,7 +39,8 @@ export async function checkTitleAudio(page: Page): Promise<unknown> {
       state.trusted = navigator.userActivation.isActive;
       void app.unlockAudio().catch(() => {});
     });
-    document.querySelector("#bootstrap-status")!.append(button);
+    Object.assign(button.style, { position: "fixed", left: "8px", top: "8px", zIndex: "20" });
+    document.body.append(button);
     Object.assign(window, { __clubscapeAudioShellCheck: state });
     return true;
   });

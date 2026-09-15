@@ -18,11 +18,13 @@ class FixtureBridge implements WasmClient {
   };
   intents: unknown[] = [];
   operations: string[] = [];
+  inputs: Array<{ operation: string; input: string }> = [];
   lastOperation = "";
   freed = false;
   pending = false;
   selected: Array<{ input: string; itemId: string }> = [];
-  prepare(_request: string, operation: string): Uint8Array {
+  prepare(_request: string, operation: string, input: string): Uint8Array {
+    this.inputs.push({ operation, input });
     this.operations.push(operation); this.lastOperation = operation;
     return new Uint8Array([1]);
   }
@@ -43,6 +45,9 @@ class FixtureBridge implements WasmClient {
       this.stateValue.phase = "in_world";
       this.stateValue.worldJoined = true;
     }
+    if (this.lastOperation === "create_character") this.stateValue.characterInitialized = true;
+    if (this.lastOperation === "intent" && (this.intents.at(-1) as { kind?: string } | undefined)?.kind === "confirm_appearance"
+      && this.stateValue.world) this.stateValue.world.player.appearanceConfirmed = true;
     if (this.lastOperation === "leave") this.stateValue.worldJoined = false;
     if (this.lastOperation === "logout") {
       this.stateValue.authenticated = false; this.stateValue.accountName = null; this.stateValue.world = null;
@@ -62,7 +67,7 @@ class FixtureBridge implements WasmClient {
     this.stateValue.world = {
       revision: "9007199254740993", tick: "9007199254740993",
       player: { region: "region.fixture", instance: null, tile: { x: 1, y: 1, plane: 0 }, skills: [],
-        presence: { kind: "connected", connected: true, acceptsInput: true, presentInWorld: true } },
+        presence: { kind: "connected", connected: true, acceptsInput: true, presentInWorld: true }, appearanceConfirmed: false },
       recoveryContext: null,
     } as unknown as PublicWorld;
     return this.state();
@@ -104,6 +109,25 @@ test("composition serializes one authoritative intent at a time and snapshots mu
   assert(!JSON.stringify(app.state()).includes("not-a-real-token"));
   await app.dispose();
   assert.equal(bridge.freed, true);
+});
+
+test("actual UI appearance submission keeps source creation empty and confirms only after joining", async () => {
+  const bridge = new FixtureBridge();
+  bridge.stateValue.characterInitialized = false;
+  const app = new BrowserApp(bridge, new RpcTransport((async () =>
+    new Response(new Uint8Array([1]), { headers: { "content-type": "application/x-protobuf" } })) as Fetch), hooks());
+  const appearance = { body_type: 0 };
+  const created = app.createCharacter(appearance);
+  appearance.body_type = 99;
+  await created;
+  assert.equal(bridge.inputs.find((request) => request.operation === "create_character")?.input, "{}");
+  assert(bridge.operations.indexOf("create_character") < bridge.operations.indexOf("join"));
+  assert.deepEqual(bridge.intents, [{ kind: "confirm_appearance", appearance: { body_type: 0 } }]);
+  assert.equal((app.state().world as PublicWorld).player.appearanceConfirmed, true);
+  assert.equal(app.state().phase, "world");
+  await assert.rejects(app.createCharacter({ body_type: 0 }), /already confirmed/);
+  assert.equal(bridge.operations.filter((operation) => operation === "create_character").length, 1);
+  await app.dispose();
 });
 
 test("connection loss drops unsent actions instead of replaying stale UI intent", async () => {
@@ -267,7 +291,7 @@ test("an observed source-offline body is not automatically rejoined", async () =
     new Response(new Uint8Array([1]), { headers: { "content-type": "application/x-protobuf" } })) as Fetch), hooks());
   await app.enterWorld();
   await app.send({ kind: "cancel_activity" });
-  assert.equal(app.state().phase, "character");
+  assert.equal(app.state().phase, "error");
   assert.equal(app.state().world, null);
   const joins = bridge.operations.filter((operation) => operation === "join").length;
   await app.reconnect();

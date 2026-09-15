@@ -11,6 +11,7 @@ import { projectArtifact, readArtifact } from "./artifact.ts";
 import type { PublicFile } from "./deliver.ts";
 import { deliverAudioAssets } from "./audio-assets.ts";
 import { captureSourceRunPin } from "./run-pins.ts";
+import { deliverUiAssets } from "./ui-assets.ts";
 
 const root = resolve(fileURLToPath(new URL("../../", import.meta.url)));
 const sha = (bytes: Uint8Array | string): string => createHash("sha256").update(bytes).digest("hex");
@@ -44,9 +45,13 @@ export async function prepareSourceBundle(directory: string, worldId: string): P
     maxBuffer: 8 * 1024 * 1024, timeout: 180_000,
   })) as { assets: AssetRecord[]; files: PublicFile[]; inventoryActions: Record<string, string[]>; bytes: number };
   const audio = await deliverAudioAssets(output);
+  const ui = await deliverUiAssets(output);
   source.assets.push(...audio.assets);
+  source.assets.push(...ui.assets);
   source.files.push(...audio.files);
+  source.files.push(...ui.files);
   source.bytes += audio.bytes;
+  source.bytes += ui.bytes;
   const actions: Record<string, string[]> = {};
   for (const [id, definition] of Object.entries(projection.catalog.items)) {
     if (definition.asset !== null && source.inventoryActions[definition.asset] !== undefined) {
@@ -56,8 +61,8 @@ export async function prepareSourceBundle(directory: string, worldId: string): P
   const content = parseContentManifest({
     schemaVersion: 1, sourcePackSha256: SOURCE_PACK_SHA256, contentRevision: manifest.revision,
     artifactSha256: sha(bytes), catalog: { ...projection.catalog, inventoryActions: actions },
-    contentValidation: projection.contentValidation, assets: source.assets, aliases: audio.aliases,
-    bootstrap: audio.metadata, rendererManifest: null,
+    contentValidation: projection.contentValidation, assets: source.assets, aliases: { ...audio.aliases, ...ui.aliases },
+    bootstrap: [...audio.metadata, ...ui.startup], rendererManifest: null,
     regions: Object.fromEntries(Object.entries(projection.regions).map(([id, region]) => {
       if (region.sceneAsset === null) throw new Error(`Canonical region ${id} has no source scene asset.`);
       return [id, { sceneId: region.sceneAsset, sceneAsset: region.sceneAsset, requiredAssets: [region.sceneAsset],
@@ -91,8 +96,8 @@ export async function prepareSourceBundle(directory: string, worldId: string): P
     { flag: "wx", mode: 0o600 });
   return { directory: output, worldId, artifactSha256: sha(bytes), contentRevision: manifest.revision,
     publicAssets: source.assets.length, publicBytes: source.bytes + Buffer.byteLength(contentBytes),
-    serverDescriptorBytes: Buffer.byteLength(gameDescriptor), serverDescriptorLimit: 256 * 1024,
-    serverCompatible: Buffer.byteLength(gameDescriptor) <= 256 * 1024 };
+    serverDescriptorBytes: Buffer.byteLength(gameDescriptor), serverDescriptorLimit: 512 * 1024,
+    serverCompatible: Buffer.byteLength(gameDescriptor) <= 512 * 1024 };
 }
 
 if (process.argv[1] && resolve(process.argv[1]) === fileURLToPath(import.meta.url)) {

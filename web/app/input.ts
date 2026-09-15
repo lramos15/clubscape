@@ -1,6 +1,7 @@
-import type { AppServices, RenderCamera, RendererHandle, ScenePick, Tile, UiHandle } from "../shared/contracts.ts";
+import type { AppServices, RenderCamera, RendererHandle, Tile, UiHandle } from "../shared/contracts.ts";
 import type { SourceCameraControls } from "./manifest.ts";
-import { AppError } from "./errors.ts";
+import { sourceUiAdapter } from "./ui-adapter.ts";
+import type { UiWorldAdapter } from "./ui-adapter.ts";
 
 export function textInput(target: EventTarget | null): boolean {
   if (!target || typeof target !== "object") return false;
@@ -9,13 +10,9 @@ export function textInput(target: EventTarget | null): boolean {
     || element.isContentEditable === true || element.getAttribute?.("role") === "textbox";
 }
 
-export interface WorldContextUi extends UiHandle {
-  worldContext?(pick: ScenePick | null, x: number, y: number): void;
-}
-
 export class InputController {
   #surface: HTMLCanvasElement;
-  #ui: WorldContextUi;
+  #ui: UiHandle;
   #renderer: RendererHandle;
   #services: AppServices;
   #camera: RenderCamera;
@@ -24,9 +21,14 @@ export class InputController {
   #pointer: { id: number; button: number; x: number; y: number; startX: number; startY: number } | null = null;
   #listeners = new AbortController();
   #focus: Tile;
+  #uiAdapter: UiWorldAdapter;
+  #stopCamera: () => void;
+  #renderSize: () => { width: number; height: number };
 
   constructor(surface: HTMLCanvasElement, ui: UiHandle, renderer: RendererHandle, services: AppServices,
-    camera: RenderCamera, controls: SourceCameraControls, focus: Tile) {
+    camera: RenderCamera, controls: SourceCameraControls, focus: Tile,
+    renderSize: () => { width: number; height: number } = () => ({ width: surface.width, height: surface.height }),
+    uiAdapter: UiWorldAdapter = sourceUiAdapter) {
     this.#surface = surface;
     this.#ui = ui;
     this.#renderer = renderer;
@@ -34,6 +36,11 @@ export class InputController {
     this.#camera = { ...camera };
     this.#controls = { ...controls };
     this.#focus = { ...focus };
+    this.#renderSize = renderSize;
+    this.#uiAdapter = uiAdapter;
+    this.#stopCamera = uiAdapter.cameraRequests(ui, (yaw) => {
+      if (Number.isFinite(yaw)) this.#rotate(yaw - this.#camera.yaw, 0);
+    });
     const signal = this.#listeners.signal;
     surface.addEventListener("pointerdown", this.#down, { signal });
     surface.addEventListener("pointermove", this.#move, { signal });
@@ -45,7 +52,7 @@ export class InputController {
     document.addEventListener("keydown", this.#keyDown, { signal });
     document.addEventListener("keyup", this.#keyUp, { signal });
     window.addEventListener("blur", this.#cancel, { signal });
-    this.#renderer.camera(this.#camera);
+    this.#applyCamera();
   }
 
   #point(event: MouseEvent): { x: number; y: number } {
@@ -59,6 +66,11 @@ export class InputController {
   #blocked(event: Event): boolean {
     return event.defaultPrevented || this.#services.state().phase !== "world"
       || event.composedPath().some(textInput);
+  }
+
+  #pick(x: number, y: number) {
+    const dimensions = this.#renderSize();
+    return this.#renderer.pick(x * dimensions.width / this.#surface.width, y * dimensions.height / this.#surface.height);
   }
 
   #down = (event: PointerEvent): void => {
@@ -75,8 +87,14 @@ export class InputController {
 
   #move = (event: PointerEvent): void => {
     const pointer = this.#pointer;
-    if (!pointer || pointer.id !== event.pointerId || pointer.button !== 1 || this.#blocked(event)) return;
+    if (this.#blocked(event)) return;
     const { x, y } = this.#point(event);
+    if (!pointer || pointer.id !== event.pointerId || pointer.button !== 1) {
+      if (!this.#ui.capturesPointer(x, y) && !textInput(document.activeElement)) {
+        this.#uiAdapter.pointer(this.#ui, { kind: "move", x, y, pick: this.#pick(x, y), control: event.ctrlKey });
+      }
+      return;
+    }
     this.#rotate((x - pointer.x) * this.#controls.yawUnitsPerPixel, (y - pointer.y) * this.#controls.pitchUnitsPerPixel);
     pointer.x = x;
     pointer.y = y;
@@ -95,30 +113,7 @@ export class InputController {
     if (event.button !== 0 || this.#blocked(event) || textInput(document.activeElement)
       || this.#surface.hasPointerCapture(event.pointerId) || this.#ui.capturesPointer(x, y)
       || Math.hypot(x - pointer.startX, y - pointer.startY) > 5) return;
-    const pick = this.#renderer.pick(x, y);
-    if (!pick) return;
-    const world = this.#services.state().world;
-    if (!world) return;
-    if (pick.kind === "tile") {
-      const run = world.player.settings.find((setting) => setting.setting === "run");
-      if (!run) {
-        this.#services.report(new AppError("The server has not supplied the source run setting.", { kind: "state" }));
-        return;
-      }
-      void this.#services.send({ kind: "walk", destination: { ...pick.tile }, running: run.enabled !== event.ctrlKey }).catch(() => {});
-    } else {
-      const entity = world.entities.find((entity) => entity.id === pick.id);
-      const action = entity?.actions.find((action) => action.allowed);
-      if (!entity || !action) {
-        this.#services.report(new AppError(entity?.actions[0]?.reason ?? "No authorized interaction is available for this target.", { kind: "state" }));
-        return;
-      }
-      void this.#services.send({
-        kind: "interact_with",
-        target: entity.kind === "temporary_object" ? { kind: "temporary_object", object: entity.id } : { kind: "spawn", spawn: entity.id },
-        action: action.name,
-      }).catch(() => {});
-    }
+    this.#uiAdapter.pointer(this.#ui, { kind: "primary", x, y, pick: this.#pick(x, y), control: event.ctrlKey });
   };
 
   #context = (event: MouseEvent): void => {
@@ -126,7 +121,7 @@ export class InputController {
     this.#pointer = null;
     if (this.#blocked(event) || this.#ui.capturesPointer(x, y)) return;
     event.preventDefault();
-    this.#ui.worldContext?.(this.#renderer.pick(x, y), x, y);
+    this.#uiAdapter.pointer(this.#ui, { kind: "context", x, y, pick: this.#pick(x, y), control: event.ctrlKey });
   };
 
   #wheel = (event: WheelEvent): void => {
@@ -149,11 +144,16 @@ export class InputController {
   #rotate(yaw: number, pitch: number): void {
     this.#camera.yaw = ((this.#camera.yaw + yaw) % 16384 + 16384) % 16384;
     this.#camera.pitch = Math.min(this.#controls.maximumPitch, Math.max(this.#controls.minimumPitch, this.#camera.pitch + pitch));
-    this.#renderer.camera({ ...this.#camera });
+    this.#applyCamera();
   }
   #zoom(delta: number): void {
     this.#camera.zoom = Math.min(this.#controls.maximumZoom, Math.max(this.#controls.minimumZoom, this.#camera.zoom + delta));
+    this.#applyCamera();
+  }
+
+  #applyCamera(): void {
     this.#renderer.camera({ ...this.#camera });
+    this.#uiAdapter.camera(this.#ui, { ...this.#camera });
   }
 
   update(milliseconds: number): void {
@@ -167,11 +167,12 @@ export class InputController {
       this.#camera.x += (tile.x - this.#focus.x) * this.#controls.tileWorldUnits;
       this.#camera.y += (tile.y - this.#focus.y) * this.#controls.tileWorldUnits;
       this.#focus = { ...tile };
-      this.#renderer.camera({ ...this.#camera });
+      this.#applyCamera();
     }
   }
   dispose(): void {
     this.#listeners.abort();
+    this.#stopCamera();
     this.#cancel();
   }
 }

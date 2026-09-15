@@ -144,6 +144,10 @@ export class BrowserApp implements AppServices {
       const state = await this.#request("account");
       this.#reconnectAttempts = 0;
       this.#logoutRequested = false;
+      if (state.characterInitialized && state.gameplayAvailable) {
+        await this.#join();
+        return;
+      }
       this.#publish({
         phase: "character", accountName: state.accountName, world: null, loading: null,
         error: state.gameplayAvailable ? null : {
@@ -155,16 +159,26 @@ export class BrowserApp implements AppServices {
   }
 
   async createCharacter(appearance: Record<string, number>): Promise<void> {
+    const selection = structuredClone(appearance);
     await this.#serial(async () => {
-      if (Object.keys(appearance).length !== 0) {
-        throw new AppError("Character creation takes no appearance options. The source appearance confirmation is a sequenced in-world action.", { kind: "input" });
-      }
       const before = bridgeState(this.#bridge.state());
-      if (before.characterInitialized) throw new AppError("A character already exists. Enter the world to resume it.", { kind: "state" });
       this.#publish({ phase: "connecting", error: null });
-      await this.#request("hello");
-      await this.#request("create_character");
-      await this.#join();
+      if (!before.characterInitialized) {
+        await this.#request("hello");
+        await this.#request("create_character");
+      }
+      if (!before.worldJoined || before.phase !== "in_world") await this.#join();
+      if (Object.keys(selection).length !== 0) {
+        const current = bridgeState(this.#bridge.state());
+        if (current.world?.player.appearanceConfirmed !== false) {
+          throw new AppError("The source appearance is already confirmed or its confirmation state is unavailable.", { kind: "state" });
+        }
+        await this.#acceptWorld(await this.#exchange(this.#bridge.submit(crypto.randomUUID(), JSON.stringify({
+          kind: "confirm_appearance", appearance: selection,
+        }))));
+      } else {
+        await this.#acceptWorld(bridgeState(this.#bridge.state()));
+      }
     });
   }
 
@@ -303,7 +317,7 @@ export class BrowserApp implements AppServices {
       this.#worldPrepared = null;
       this.#hooks.disconnected();
       this.#publish({
-        phase: "character", world: null, accountName: state.accountName,
+        phase: this.#logoutRequested ? "character" : "error", world: null, accountName: state.accountName,
         error: this.#logoutRequested ? null : {
           message: "The authoritative world presence is offline. Enter the world explicitly to reconnect.",
           errorId: null, recoverable: true,
@@ -433,7 +447,7 @@ export class BrowserApp implements AppServices {
         return;
       }
       if (presenceOf(bridgeState(this.#bridge.state()).world)?.presentInWorld === false) {
-        this.#publish({ phase: "character", world: null });
+        this.#publish({ phase: "error", world: null });
         return;
       }
       await this.#request("hello");

@@ -34,6 +34,11 @@ The shell does not save or automatically retry those fields. Creation takes
 exactly `{}`; source appearance/experience confirmation are separate
 sequenced game intents. Registration is not login.
 
+The TypeScript `AppServices.createCharacter(appearance)` method now composes
+that empty creation RPC, real join and separate `ConfirmAppearance` for the
+actual source UI. Its argument is never forwarded as creation options.
+Already initialized accounts resume rather than creating/reconfirming again.
+
 `state()`/`receive_for()` return the `BridgeState` documented in
 `web/app/client.ts`. The browser parses and recursively freezes it before
 passing `AppState`/`WorldView` to components. Every U64 revision, sequence,

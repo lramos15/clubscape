@@ -7,6 +7,13 @@ import { mountApplication } from "./composition.ts";
 import type { ApplicationHandle } from "./composition.ts";
 import { appError } from "./errors.ts";
 import "./style.css";
+import type { AppState } from "../shared/contracts.ts";
+
+declare global {
+  interface Window {
+    __clubscapeClientStateV1?: { read(): Readonly<AppState> };
+  }
+}
 
 let application: ApplicationHandle | null = null;
 let bridge: BrowserClient | null = null;
@@ -27,6 +34,7 @@ async function start(): Promise<void> {
     worldCanvas: document.querySelector<HTMLCanvasElement>("#world")!,
     uiCanvas: document.querySelector<HTMLCanvasElement>("#overlay")!,
   });
+  window.__clubscapeClientStateV1 = Object.freeze({ read: () => application!.app.state() });
 }
 
 void start().catch((value: unknown) => {
@@ -39,4 +47,7 @@ void start().catch((value: unknown) => {
   status.textContent = `${error.message}\nError ID: ${error.errorId}`;
 });
 
-window.addEventListener("pagehide", () => { void application?.dispose(); }, { once: true });
+window.addEventListener("pagehide", () => {
+  delete window.__clubscapeClientStateV1;
+  void application?.dispose();
+}, { once: true });

@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 """Owned PostgreSQL/HTTP/Chrome contract check; explicitly not a game journey."""
+import argparse
 import json
 import os
 from pathlib import Path
@@ -34,8 +35,53 @@ def command(args, env=None, timeout=120):
         raise RuntimeError(f"{args[0]} failed ({process.returncode}): {(stdout + stderr)[-4000:]}")
     return stdout.strip()
 
+def wait_server(process, log_path):
+    deadline = time.monotonic() + 35
+    while time.monotonic() < deadline:
+        if process.poll() is not None:
+            failures = [json.loads(line).get("fields", {}) for line in log_path.read_text().splitlines() if line]
+            reason = next((row.get("error_kind") for row in failures if row.get("event") == "startup_failure"), "unknown")
+            raise RuntimeError(f"Owned server failed startup ({reason}); no account-only fallback was selected.")
+        for line in log_path.read_text().splitlines():
+            fields = json.loads(line).get("fields", {})
+            if fields.get("event") == "listening":
+                address = fields.get("address", "")
+                if not re.fullmatch(r"127\.0\.0\.1:[0-9]+", address):
+                    raise RuntimeError("Owned service did not bind loopback.")
+                origin = "http://" + address
+                opener = urllib.request.build_opener(urllib.request.ProxyHandler({}))
+                with opener.open(origin + "/healthz", timeout=5) as health:
+                    if health.status != 200:
+                        raise RuntimeError("Owned service failed its real readiness check.")
+                return origin
+        time.sleep(0.1)
+    raise RuntimeError("Owned service did not become ready.")
+
+
+def start_server(binary, env, log_path):
+    with log_path.open("w") as log:
+        process = subprocess.Popen([str(binary)], cwd=ROOT, env=env, stdin=subprocess.DEVNULL,
+                                   stdout=log, stderr=subprocess.STDOUT)
+    return process
+
+
+def stop_server(process):
+    if process.poll() is None:
+        process.terminate()
+        try:
+            process.wait(timeout=20)
+        except subprocess.TimeoutExpired:
+            process.kill()
+            process.wait(timeout=5)
+            raise RuntimeError("Owned source server required forced termination.")
+    if process.returncode != 0:
+        raise RuntimeError("Owned source server exited unsuccessfully.")
+
 
 def main():
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--game-root", type=Path, help="Use the real pinned canonical world, never a fixture or reseeded artifact.")
+    arguments = parser.parse_args()
     run_id = uuid.uuid4().hex[:16]
     evidence = (ROOT / os.environ.get("CLUBSCAPE_BROWSER_EVIDENCE", ".local/evidence/browser-shell")).resolve()
     if evidence == ROOT or not evidence.is_relative_to(ROOT):
@@ -49,6 +95,7 @@ def main():
     created = False
     process = None
     source_pin = None
+    game_root = arguments.game_root or os.environ.get("CLUBSCAPE_GAME_DESCRIPTOR_PROBE")
     try:
         command(["cargo", "build", "--quiet", "-p", "clubscape-server"], timeout=300)
         target = Path(json.loads(command(["cargo", "metadata", "--no-deps", "--format-version=1"]))["target_directory"])
@@ -85,55 +132,34 @@ def main():
         env["CLUBSCAPE_WEB_ROOT"] = str(ROOT / "web/dist")
         env["CLUBSCAPE_BUILD_REVISION"] = command(["git", "rev-parse", "HEAD"])
         env["TMPDIR"] = str(runtime)
-        probe_root = os.environ.get("CLUBSCAPE_GAME_DESCRIPTOR_PROBE")
-        if probe_root:
-            probe_root = (ROOT / probe_root).resolve()
-            if not probe_root.is_relative_to(ROOT):
-                raise RuntimeError("Game descriptor probe must use an owned worktree directory.")
-            descriptor = probe_root / "clubscape-game.json"
-            source_pin = json.loads(command(["node", "tools/web-build/run-pins.ts", str(probe_root)]))
-            probe_env = dict(env, CLUBSCAPE_GAME_ROOT=str(probe_root))
-            probe = subprocess.run([str(target / "debug/clubscape-server")], cwd=ROOT,
-                                   env=probe_env, capture_output=True, text=True, timeout=20)
-            events = [json.loads(line).get("fields", {}) for line in probe.stdout.splitlines() if line]
-            failure = next((event for event in events if event.get("event") == "startup_failure"), None)
-            if probe.returncode == 0 or failure is None or failure.get("error_kind") != "game_file_size":
-                raise RuntimeError("Canonical game-root probe did not fail at the expected descriptor bound; reassess the integration rather than preserving an obsolete blocker.")
+        if game_root:
+            game_root = (ROOT / game_root).resolve()
+            if game_root == ROOT or not game_root.is_relative_to(ROOT):
+                raise RuntimeError("The source run must use an owned worktree bundle.")
+            source_pin = json.loads(command(["node", "tools/web-build/run-pins.ts", str(game_root)]))
+            build = json.loads((ROOT / "web/dist/client/build.json").read_text())
+            if not build.get("content") or build["content"]["owner"] != "game" or build["content"]["sha256"] != source_pin["contentManifestSha256"]:
+                raise RuntimeError("Build this exact source manifest with CLUBSCAPE_CONTENT_OWNER=game before real world integration; overlapping web/game assets are not allowed.")
+            env["CLUBSCAPE_GAME_ROOT"] = str(game_root)
+            standalone = dict(env)
+            standalone.pop("CLUBSCAPE_WEB_ROOT")
+            standalone_log = local / "standalone.jsonl"
+            process = start_server(target / "debug/clubscape-server", standalone, standalone_log)
+            wait_server(process, standalone_log)
+            stop_server(process)
+            process = None
+            after = json.loads(command(["node", "tools/web-build/run-pins.ts", str(game_root)]))
+            if after != source_pin:
+                raise RuntimeError("Canonical artifact changed during standalone source startup.")
             (evidence / "game-root-startup.json").write_text(json.dumps({
-                "kind": "actual-canonical-game-root-startup",
-                "result": "blocked", "testedRevision": env["CLUBSCAPE_BUILD_REVISION"],
-                "artifactSha256": json.loads(descriptor.read_text())["sha256"],
-                "descriptorBytes": descriptor.stat().st_size, "descriptorLimit": 256 * 1024,
-                "exitCode": probe.returncode, "errorId": failure.get("error_id"),
-                "errorKind": failure["error_kind"], "gameplayAccepted": False,
-                "sourceRunPin": source_pin,
+                "kind": "actual-canonical-game-root-startup", "result": "passed",
+                "testedRevision": env["CLUBSCAPE_BUILD_REVISION"], "sourceRunPin": source_pin,
+                "standaloneWithoutWebRoot": True, "descriptorBytes": (game_root / "clubscape-game.json").stat().st_size,
+                "descriptorLimit": 512 * 1024, "gameplayAccepted": False,
             }, indent=2) + "\n")
         log_path = local / "server.jsonl"
-        with log_path.open("w") as log:
-            process = subprocess.Popen([str(target / "debug/clubscape-server")], cwd=ROOT, env=env,
-                                       stdin=subprocess.DEVNULL, stdout=log, stderr=subprocess.STDOUT)
-        origin = None
-        deadline = time.monotonic() + 30
-        while time.monotonic() < deadline:
-            if process.poll() is not None:
-                raise RuntimeError("Owned account server failed startup; no empty-client fallback is allowed.")
-            for line in log_path.read_text().splitlines():
-                entry = json.loads(line)
-                fields = entry.get("fields", {})
-                if fields.get("event") == "listening":
-                    if not re.fullmatch(r"127\.0\.0\.1:[0-9]+", fields.get("address", "")):
-                        raise RuntimeError("Account service did not bind loopback.")
-                    origin = "http://" + fields["address"]
-                    break
-            if origin:
-                break
-            time.sleep(0.1)
-        if not origin:
-            raise RuntimeError("Owned account server did not become ready.")
-        opener = urllib.request.build_opener(urllib.request.ProxyHandler({}))
-        with opener.open(origin + "/healthz", timeout=5) as health:
-            if health.status != 200:
-                raise RuntimeError("Owned account service failed its real database health check.")
+        process = start_server(target / "debug/clubscape-server", env, log_path)
+        origin = wait_server(process, log_path)
         browser_env = {key: value for key, value in os.environ.items()
                        if key not in ("DATABASE_URL", "CLUBSCAPE_TEST_DATABASE_URL", "POSTGRES_PASSWORD")}
         browser_env["CLUBSCAPE_BROWSER_ORIGIN"] = origin
@@ -141,6 +167,11 @@ def main():
         browser_env["TMPDIR"] = str(runtime)
         browser_env["TMP"] = str(runtime)
         browser_env["TEMP"] = str(runtime)
+        if game_root:
+            browser_env["CLUBSCAPE_SOURCE_GAME_ROOT"] = str(game_root)
+            browser_env["CLUBSCAPE_SOURCE_SERVER_BINARY"] = str(target / "debug/clubscape-server")
+            browser_env["CLUBSCAPE_SOURCE_SERVER_PID"] = str(process.pid)
+            browser_env["CLUBSCAPE_SOURCE_DATABASE_URL"] = env["DATABASE_URL"]
         if not browser_env.get("CLUBSCAPE_BROWSER_EXECUTABLE"):
             raise RuntimeError("Set CLUBSCAPE_BROWSER_EXECUTABLE after verifying this host's machine guide.")
         authority = local / "Xauthority"
@@ -148,17 +179,17 @@ def main():
         args = [
             "xvfb-run", "--auto-servernum", "--auth-file", str(authority),
             "--error-file", str(local / "xvfb.log"),
-            "--server-args=-screen 0 1280x800x24 -nolisten tcp",
-            "node", "tools/web-build/browser-check.ts",
+            "--server-args=-screen 0 2560x1440x24 -nolisten tcp" if game_root else "--server-args=-screen 0 1280x800x24 -nolisten tcp",
+            "node", "tools/web-build/source-browser-check.ts" if game_root else "tools/web-build/browser-check.ts",
         ]
-        print(command(args, env=browser_env, timeout=180))
+        print(command(args, env=browser_env, timeout=240 if game_root else 180))
         if source_pin is not None:
-            after = json.loads(command(["node", "tools/web-build/run-pins.ts", str(probe_root)]))
+            after = json.loads(command(["node", "tools/web-build/run-pins.ts", str(game_root)]))
             if after != source_pin:
                 raise RuntimeError("Source artifact/run identity changed during the isolated check; no refreshed or reseeded run can count as a restart.")
             (evidence / "source-run-pin.json").write_text(json.dumps({
                 "kind": "unchanged-source-run-pin", "result": "passed", "pin": source_pin,
-                "scope": "Actual startup attempt plus source/browser delivery; not gameplay acceptance.",
+                "scope": "Actual canonical startup, UI onboarding and pinned restart; not full-journey/presentation acceptance.",
             }, indent=2) + "\n")
     finally:
         cleanup_failure = None

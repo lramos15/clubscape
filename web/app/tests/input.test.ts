@@ -3,6 +3,7 @@ import { test } from "node:test";
 import { InputController } from "../input.ts";
 import type { AppServices, AppState, GameIntent, RenderCamera, RendererHandle, UiHandle } from "../../shared/contracts.ts";
 import type { SourceCameraControls } from "../manifest.ts";
+import type { UiWorldAdapter } from "../ui-adapter.ts";
 
 class Surface extends EventTarget {
   width = 1920; height = 1080; captured = new Set<number>();
@@ -27,8 +28,11 @@ test("test-only input surface honors source UI capture, menus, drags, and editab
   const surface = new Surface();
   let capturedByUi = false;
   let contextMenus = 0;
+  const picks: Array<[number, number]> = [];
   const intents: GameIntent[] = [];
   const cameras: RenderCamera[] = [];
+  const uiCameras: RenderCamera[] = [];
+  let requestCamera: (yaw: number) => void = () => {};
   const state = {
     phase: "world", world: { player: { tile: { x: 3200, y: 3200, plane: 0 }, settings: [{ setting: "run", enabled: false }] } },
   } as AppState;
@@ -39,11 +43,10 @@ test("test-only input surface honors source UI capture, menus, drags, and editab
   } as unknown as AppServices;
   const ui = {
     capturesPointer: () => capturedByUi,
-    worldContext: () => { contextMenus++; },
   } as unknown as UiHandle;
   const renderer = {
     camera: (camera: RenderCamera) => { cameras.push({ ...camera }); },
-    pick: () => ({ kind: "tile", tile: { x: 3201, y: 3200, plane: 0 } }),
+    pick: (x: number, y: number) => { picks.push([x, y]); return { kind: "tile", tile: { x: 3201, y: 3200, plane: 0 } }; },
   } as unknown as RendererHandle;
   const controls: SourceCameraControls = {
     yawUnitsPerPixel: 8, pitchUnitsPerPixel: 8, keyboardYawUnitsPerSecond: 200,
@@ -51,11 +54,26 @@ test("test-only input surface honors source UI capture, menus, drags, and editab
     zoomPerWheelStep: 10, minimumZoom: 100, maximumZoom: 1000, tileWorldUnits: 128,
   };
   const camera: RenderCamera = { x: 1, y: 2, height: 3, pitch: 2000, yaw: 0, unitsPerTurn: 16384, zoom: 500, near: 1, far: 5000 };
-  const input = new InputController(surface as unknown as HTMLCanvasElement, ui, renderer, services, camera, controls, { x: 3200, y: 3200, plane: 0 });
+  const adapter: UiWorldAdapter = {
+    pointer(_ui, event) {
+      if (event.kind === "context") contextMenus++;
+      if (event.kind === "primary" && event.pick?.kind === "tile") {
+        void services.send({ kind: "walk", destination: event.pick.tile, running: Boolean(event.control) });
+      }
+      assert.equal(event.x, 500);
+      assert.equal(event.y, 400);
+      return true;
+    },
+    camera(_ui, camera) { uiCameras.push({ ...camera }); },
+    cameraRequests(_ui, listener) { requestCamera = listener; return () => {}; },
+  };
+  const input = new InputController(surface as unknown as HTMLCanvasElement, ui, renderer, services, camera, controls,
+    { x: 3200, y: 3200, plane: 0 }, () => ({ width: 3840, height: 2160 }), adapter);
   const click = (button = 0) => { surface.dispatchEvent(pointer("pointerdown", { button })); surface.dispatchEvent(pointer("pointerup", { button })); };
   try {
     click();
     assert.deepEqual(intents, [{ kind: "walk", destination: { x: 3201, y: 3200, plane: 0 }, running: false }]);
+    assert.deepEqual(picks[0], [1000, 800], "Only renderer picking uses backing-pixel coordinates.");
     capturedByUi = true; click();
     capturedByUi = false;
     click(2); surface.dispatchEvent(pointer("contextmenu", { button: 2 }));
@@ -88,6 +106,9 @@ test("test-only input surface honors source UI capture, menus, drags, and editab
     input.update(100);
     assert.equal(cameras.at(-1)?.yaw, 100);
     doc.dispatchEvent(pointer("keyup", { code: "ArrowRight" }));
+    requestCamera(0);
+    assert.equal(cameras.at(-1)?.yaw, 0);
+    assert.deepEqual(uiCameras.at(-1), cameras.at(-1), "UI and renderer observe the same actual camera.");
     const cancelled = pointer("pointerdown");
     cancelled.preventDefault();
     surface.dispatchEvent(cancelled);

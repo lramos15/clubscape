@@ -8,8 +8,11 @@ entry points:
 * `web/audio/index.ts`: `createAudio: CreateAudio`
 
 These are Vite module imports, not script-tag loading or a substitute renderer.
-Missing components fail visibly with an integration error ID. The small HTML
-bootstrap diagnostic is **not approved title/login presentation**.
+The actual UI/audio are integrated; the remaining renderer factory is nullable.
+Real UI account/source-state operation can continue with explicit missing-3D
+feedback and benchmark readiness false. No viewport/model-preview substitute
+is created. The small HTML bootstrap diagnostic remains only a fatal startup
+fallback, **not** approved title/login presentation.
 
 Build delivery separately checks the exact external reference approval and
 the complete unchanged strict pack validator. The restored hash-bound
@@ -21,22 +24,31 @@ owner record, not a rewrite of those frozen inputs.
 Such injected handles are not an integrated game. The real UI owns its
 source-sprite/font composition, selections, drag state, menus and accessible
 controls; the shell supplies immutable authoritative state and real services.
+`createUi` subscribes itself. Composition does not call `ui.update` a second
+time; its separate observer updates only renderer/benchmark state.
 
 ## Input and lifecycle
 
 * UI pointer capture/default prevention is checked before world picking.
   A press captured by UI cannot become a world action on release. Right-click
   only requests a context menu; middle drag only changes the camera.
-* World left-clicks use `RendererHandle.pick()`: exact tiles become `Walk`;
-  entity IDs and server-evaluated action names become typed `InteractWith`.
-  There is no guessed target or local pathfinding/authority mutation.
+* World picks come only from `RendererHandle.pick()` and are forwarded once to
+  the actual `forwardWorldPointer` adapter, including move/primary/context and
+  control-key state. The UI owns selected-item/spell/ground/entity action
+  choice; the shell never independently sends a duplicate world action.
 * Arrow keys and middle-drag camera/scroll zoom use explicit source camera
   bindings in the current region manifest. There are no fabricated initial
   camera defaults. Keyboard controls are ignored for editable/accessible
   input focus; focus loss clears held keys.
-* `UiHandle.capturesPointer`, optional `worldContext(pick,x,y)`, renderer picking
-  and component resizing use **canvas backing-pixel coordinates**. Canvas CSS
-  size remains the whole viewport. DPR is honored without downscaling.
+* UI capture/forwarding/resizing use **viewport-local logical pixels**, as the
+  real adapter requires. Only renderer picking/resizing is converted to its
+  backing pixels; the world stays full resolution. The same camera is sent to
+  `renderer.camera` and `setUiCamera`. `onUiCameraRequest` is disposed with input.
+* `createCharacter(appearance)` is the actual UI workflow adapter: a new actor
+  gets the empty source creation RPC, then joins, then receives a separate
+  sequenced `ConfirmAppearance` request with the UI choice. No appearance,
+  inventory, XP or stage is seeded in creation. Existing initialized accounts
+  join/resume directly at login; repeated appearance confirmation is rejected.
 * `services.logout()` requests actual `LeaveWorld` before account logout.
   A source/combat/presence failure does not clear the account or claim logout.
   Literal `send({kind:"request_logout"})` first sends that exact sequenced game
@@ -114,12 +126,24 @@ audio/renderer adapters register successful decoding of verified bytes.
 `retain(ids)` releases previous-region caches, retaining requested startup/
 region assets rather than downloading the whole source cache.
 
-The source-definition delivery tool now supplies real canonical item/NPC/
-object/region JSON and original inventory labels. The browser regression helper
-can fetch, hash-check and decode original item/region records through the same
-loader. This metadata delivery is not a renderer/UI/audio adapter or a source
-world connection; its currently oversized private game descriptor fails the
-actual server's limit rather than silently dropping asset IDs.
+The delivery tool supplies real canonical definitions, original audio, and
+the actual compiled UI catalogue/primitives. `ui/manifest.json` and `ui/*`
+images resolve through explicit aliases and provenance SHA/byte checks; no
+whole panel/reference image is published as UI. Startup accounting includes
+the catalogue, title and source sprite dependencies, not merely three audio
+metadata files. Lazy item/portrait/minimap images remain on demand.
+
+The authorized512-KiB descriptor and independent GAME_ROOT parsing repair is
+integrated. The actual canonical world now starts standalone and alongside
+the code bundle, using game-owned nonoverlapping asset routes. The real UI
+test exercises signup, wrong-password feedback, login, empty source creation,
+appearance confirmation, logout/relogin and a real server restart while the
+browser retains its memory token and the exact world/artifact pin.
+`window.__clubscapeClientStateV1.read()` is an immutable observation-only view
+for this boundary; it exposes no credential, mutation or outcome setter.
+The source title is visibly rendered and logical/backing resize boundaries are
+tested. Missing 3D/penguin preview and the UI owner's remaining field/control
+contracts stay explicit; this is not a complete Tutorial Island journey.
 
 ## Actual audio adapter
 

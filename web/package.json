@@ -12,7 +12,7 @@
     "reference:check": "node ../tools/web-build/reference.ts",
     "typecheck": "tsc --noEmit",
     "check": "pnpm typecheck",
-    "test": "node --test app/tests/*.test.ts audio/*.test.ts ../tools/web-build/tests/*.test.ts",
+    "test": "node --test app/tests/*.test.ts audio/*.test.ts ui/tests/unit.test.ts ../tools/web-build/tests/*.test.ts",
     "build": "pnpm wasm && pnpm typecheck && vite build && node ../tools/web-build/deliver.ts",
     "dev": "pnpm build && pnpm serve",
     "serve": "node ../tools/web-build/serve.ts",
