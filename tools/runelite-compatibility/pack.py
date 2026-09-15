@@ -37,8 +37,9 @@ def asset_ids(value):
     return result
 
 
-def package(destination, source):
-    destination.mkdir(parents=True, exist_ok=True)
+def package(destination, source, *, report_path=None, catalog_path=None):
+    report_path = report_path or ROOT / "research/runelite-feasibility/source-pack.json"
+    catalog_path = catalog_path or LOCAL / "catalog.json"
     manifest = json.loads((ROOT / "content/m1/manifest.json").read_text())
     compiled = manifest["compiled_artifact"]
     compressed = (ROOT / compiled["path"]).read_bytes()
@@ -47,10 +48,20 @@ def package(destination, source):
     artifact = gzip.decompress(compressed)
     if sha(artifact) != compiled["uncompressed_sha256"]:
         raise ValueError("Compiled source artifact decompression mismatch")
-    (destination / "world.csc").write_bytes(artifact)
     definition = json.loads(gzip.decompress((ROOT / "content/m1/game-content.json.gz").read_bytes()))
     if definition["schema_version"] != 3:
         raise ValueError("Expected actual integrated content schema 3")
+    descriptor_path = destination / "clubscape-game.json"
+    existing = json.loads(descriptor_path.read_text()) if descriptor_path.exists() else {}
+    if existing and existing.get("sha256") != sha(artifact):
+        raise ValueError("Canonical artifact changed; choose a new --output instead of overwriting historical inputs.")
+    if report_path.exists() and json.loads(report_path.read_text()).get("artifact_sha256") != sha(artifact):
+        raise ValueError("Canonical artifact changed; choose a new --report instead of relabeling old evidence.")
+    if catalog_path.exists() and json.loads(catalog_path.read_text()).get("content_revision") != definition["revision"]:
+        raise ValueError("Canonical content changed; choose a new --catalog instead of overwriting historical inputs.")
+    destination.mkdir(parents=True, exist_ok=True)
+    catalog_path.parent.mkdir(parents=True, exist_ok=True)
+    (destination / "world.csc").write_bytes(artifact)
     references = json.loads((ROOT / "content/m1/asset-references.json").read_text())
     required = asset_ids(definition)
     available = {r["id"]: r for r in references["assets"]}
@@ -89,8 +100,6 @@ def package(destination, source):
     (destination / "manifest.json").write_bytes(public_bytes)
     files.append({"url": "/content/manifest.json", "path": "manifest.json", "sha256": sha(public_bytes),
                   "content_type": "application/json"})
-    descriptor_path = destination / "clubscape-game.json"
-    existing = json.loads(descriptor_path.read_text()) if descriptor_path.exists() else {}
     descriptor = {
         "schema_version": 1, "world_id": existing.get("world_id", str(uuid.uuid4())),
         "artifact": "world.csc", "sha256": sha(artifact),
@@ -115,7 +124,7 @@ def package(destination, source):
         "items": {key: int(value["asset"].rsplit(".", 1)[1]) for key, value in definition["items"].items()},
         "npcs": {key: int(value["asset"].rsplit(".", 1)[1]) for key, value in definition["npcs"].items()},
     }
-    (LOCAL / "catalog.json").write_bytes(encode(catalog))
+    catalog_path.write_bytes(encode(catalog))
     lower_bound = len(encode(dict.fromkeys(required, "/assets/")))
     report = {
         "schema_version": 1, "kind": "unchanged_source_pack",
@@ -128,9 +137,11 @@ def package(destination, source):
         "minimum_assets_object_bytes_even_if_every_asset_shared_shortest_legal_url": lower_bound,
         "fits_base_server_descriptor_limit": len(encoded_descriptor) <= 256 * 1024,
         "source_content_changed": False, "server_guards_changed": False,
+        "game_root": str(destination.relative_to(ROOT)),
+        "adapter_catalog": str(catalog_path.relative_to(ROOT)),
         "compatibility_verified": False,
     }
-    (ROOT / "research/runelite-feasibility/source-pack.json").write_text(json.dumps(report, indent=2) + "\n")
+    report_path.write_text(json.dumps(report, indent=2) + "\n")
     print(json.dumps(report))
     return report
 
@@ -139,8 +150,14 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("--output", type=Path, default=LOCAL / "game")
     parser.add_argument("--source", type=Path, default=SOURCE)
+    parser.add_argument("--report", type=Path, default=ROOT / "research/runelite-feasibility/source-pack.json")
+    parser.add_argument("--catalog", type=Path, default=LOCAL / "catalog.json")
     args = parser.parse_args()
     output = args.output.resolve()
     if not output.is_relative_to(LOCAL):
         parser.error("Game pack output must stay in the owned ignored artifacts directory.")
-    package(output, args.source.resolve())
+    report = args.report.resolve()
+    catalog = args.catalog.resolve()
+    if not report.is_relative_to(ROOT / "research/runelite-feasibility") or not catalog.is_relative_to(LOCAL):
+        parser.error("Reports and catalogs must stay in their owned research/artifact directories.")
+    package(output, args.source.resolve(), report_path=report, catalog_path=catalog)

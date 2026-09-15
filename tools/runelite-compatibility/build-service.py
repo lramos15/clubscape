@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 """Build the real shared service's public-configuration probe, preserving locked inputs."""
+import argparse
 import json
 import os
 from pathlib import Path
@@ -10,6 +11,12 @@ from prepare import ROOT, LOCAL, digest
 MANIFEST = ROOT / "runelite/integration-tests/service-probe/Cargo.toml"
 
 if __name__ == "__main__":
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--report", type=Path, default=ROOT / "research/runelite-feasibility/service-probe-build.json")
+    args = parser.parse_args()
+    report_path = args.report.resolve()
+    if not report_path.is_relative_to(ROOT / "research/runelite-feasibility"):
+        parser.error("Build reports must remain in the owned research directory.")
     home = LOCAL / "build-home"
     home.mkdir(parents=True, exist_ok=True)
     environment = {**os.environ, "CARGO_BUILD_JOBS": "2",
@@ -30,7 +37,7 @@ if __name__ == "__main__":
         "binary_sha256": digest(binary) if result.returncode == 0 else None,
         "compatibility_verified": False,
     }
-    (ROOT / "research/runelite-feasibility/service-probe-build.json").write_text(json.dumps(report, indent=2) + "\n")
+    report_path.write_text(json.dumps(report, indent=2) + "\n")
     print(json.dumps(report))
     if result.returncode:
         print((result.stdout + result.stderr)[-8000:])

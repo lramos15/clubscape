@@ -1,0 +1,100 @@
+{
+  "schema_version": 1,
+  "task": "M1-RUNELITE-FEASIBILITY",
+  "work_status": "blocked_after_authorized_canonical_refresh",
+  "authorization_received": "2026-09-14T23:21:13.756-04:00",
+  "upstream_commit": "faa800286cfeeed4f3bec0b924d1fb01c65b97d9",
+  "original_fix_commit": "9bff13e9260cc185d22cf6b3db5335ac35320cb4",
+  "cherry_pick_commit": "c841f6a6dcd4a1a2b3e7a9e121c62849140c8634",
+  "prerequisites_already_present": [
+    "1ea2e65",
+    "e8dfa2d"
+  ],
+  "canonical_source": {
+    "raw_artifact_sha256": "a200ca08c80f6a3fc812fe02ca95f52325e183084f83b12e8d470a1f37cc6d62",
+    "artifact_version": 3,
+    "content_schema_version": 3,
+    "content_revision": "m1.source-backed.v3.327d3a78f3bdad7c",
+    "active_bindings": 0,
+    "inactive_bindings": 6,
+    "source_native_policy_conformance_record": true,
+    "formerly_failing_native_requirements": [
+      {
+        "id": "single_and_make_x_one",
+        "status": "resolved"
+      },
+      {
+        "id": "fresh_manual_drop_offline_clock",
+        "status": "resolved"
+      }
+    ],
+    "source_geometry_assets_and_proto_changes": false,
+    "scope": "Canonical fixes accepted; no obsolete solid-contact/manual-drop-clock interlock. Upstream component results are not live RuneLite or whole-M1 acceptance."
+  },
+  "current_owned_checks": {
+    "strict_compiler_load": {
+      "artifact_sha256": "a200ca08c80f6a3fc812fe02ca95f52325e183084f83b12e8d470a1f37cc6d62",
+      "base_server_descriptor_limit": 262144,
+      "compatibility_verified": false,
+      "fits_even_before_descriptor_metadata": false,
+      "minimum_assets_map_bytes": 267049,
+      "referenced_assets_from_actual_compiler": 5010,
+      "strict_compiler_load": true
+    },
+    "java_build": "research/runelite-feasibility/build-faa8002.json",
+    "rust_probe_build": "research/runelite-feasibility/service-probe-build-faa8002.json",
+    "validation": "research/runelite-feasibility/validation-faa8002.json",
+    "java_codec_projection_checks": 9,
+    "python_harness_checks": 5,
+    "actual_static_probe_command": [
+      "runelite/compatibility/artifacts/rust-target/debug/clubscape-runelite-service-probe",
+      "--inspect-artifact",
+      "runelite/compatibility/artifacts/game-faa8002/world.csc"
+    ],
+    "actual_static_probe_exit": 0
+  },
+  "current_pack": {
+    "report": "research/runelite-feasibility/source-pack-faa8002.json",
+    "game_root": "runelite/compatibility/artifacts/game-faa8002",
+    "catalog": "runelite/compatibility/artifacts/game-faa8002/adapter-catalog.json",
+    "descriptor_bytes": 283075,
+    "descriptor_sha256": "7e0ca06b1667a2b6dd509e17ca6032baf8be102b9ee28c1c1897947e6bfadb88"
+  },
+  "remaining_director_owned_blockers": [
+    {
+      "id": "game-root-environment-nesting",
+      "path": "crates/server/src/config.rs",
+      "sha256": "ea9c8764da422f6f59c334fcb1d72c2da718d9944950fb4ec451f7c055049926",
+      "unchanged_since_previous_live_failure": true,
+      "required_change": "Parse CLUBSCAPE_GAME_ROOT independently of optional CLUBSCAPE_WEB_ROOT and retain fail-closed validation."
+    },
+    {
+      "id": "strict-game-descriptor-capacity",
+      "path": "crates/server/src/game_service/content.rs",
+      "sha256": "9c914d88b9d97a8dba841ff78625cd6c4c49faa48862f7f504c07b9e8b3c09c9",
+      "unchanged_since_previous_live_failure": true,
+      "current_limit_bytes": 262144,
+      "actual_descriptor_bytes": 283075,
+      "current_strict_compiler_minimum_assets_map_bytes": 267049,
+      "required_change": "Increase the private bounded descriptor limit enough for the actual source pack (e.g.1MiB); retain all membership/hash/path/readiness guards and add full-source startup coverage."
+    }
+  ],
+  "history_preserved": {
+    "original_assessment_commit": "400ec9e2be4fa9e6796343f77818ceb19a56e124",
+    "unchanged_research_files": 42,
+    "invocation_ledger_sha256": "026c99b9ebac16b9af97a8e901775a97ea097b0c29f78c9608855ace84ac11cd",
+    "invocations_used": 3,
+    "maximum_reserved_invocations": 3,
+    "new_live_invocations": 0,
+    "old_service_probe": "runelite/compatibility/artifacts/preserved-service-probe-3fc9277",
+    "old_adapter_classes": "runelite/compatibility/artifacts/preserved-classes-400ec9e"
+  },
+  "compatibility_verified": false,
+  "tier": null,
+  "desktop_deferral_approved": false,
+  "whole_m1_or_presentation_claimed": false,
+  "new_services_started": 0,
+  "live_credentials_created": false,
+  "next_action": "Director must repair the two unchanged startup surfaces; establish renewed explicit live bounds before using the current game-root/catalog selection for actual signup/join/first-XP integration. Do not seed around pending shop/actor/style defects.",
+  "parked": true
+}

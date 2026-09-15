@@ -5,6 +5,14 @@ complete, not the live demonstration. See
 [`review.md`](../../research/runelite-feasibility/review.md) and
 [`assessment.json`](../../research/runelite-feasibility/assessment.json).
 
+**Canonical update:** authorized faa8002 is integrated as c841f6a, with the
+current `a200…d62` source artifact and resolved source contact/clock probes.
+The independent environment/descriptor startup blockers remain unchanged.
+Use the separately named current pack/catalog and commands in
+[`canonical-faa8002.md`](../../research/runelite-feasibility/canonical-faa8002.md);
+do not overwrite the original experiment's inputs or treat its old pack as
+current. No additional live invocation was admitted.
+
 This is a Java protocol/state/render/event adapter around the **actual unchanged**
 official RuneLite 1.12.38 runtime and injected revision-240 client. It uses the
 official `RuneLiteModule`, `ClientUI`, `PluginManager`, `Hooks`, `EventBus`, and
@@ -63,7 +71,12 @@ evidence that it reflected server state.
   through first fishing XP. It cannot seed XP/items/stages or advance ticks.
   It is not the independent full headless/browser M1 acceptance journey.
 
-## Reproducible build and small checks
+## Original-assessment build and small checks
+
+These default output names reproduce the original400ec9e assessment checkout.
+On the updated canonical checkout, use the separately named outputs in the
+[faa8002 reproduction](../../research/runelite-feasibility/canonical-faa8002.md)
+instead; the packer intentionally rejects overwriting historical source inputs.
 
 Read `AGENTS.md`, `prompt.md` Sections12/30/44, and
 `docs/machines/sparky.md` first. The following JDK path was checked on the current
@@ -119,6 +132,11 @@ failed in the harness before any service; it is conservatively charged to the
 bound. Attempt2 exercised the documented environment launch. Attempt3 used
 the small Rust `service-probe`: it calls the **existing public configuration
 API and unchanged `Service`**, not another authority implementation.
+
+After shared fixes and renewed explicit bounds, the runner's `--game-root` and
+`--catalog` arguments select the current pack. It verifies current canonical
+artifact identity and matching catalog/content revision before starting services.
+Character-created/world-joined revisions must match that selected catalog too.
 
 **All three reserved integration invocations are exhausted. Do not run a fourth,
 reset the ledger, alter content/guards, or start another adapter architecture to

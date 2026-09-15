@@ -10,7 +10,9 @@ import subprocess
 from prepare import ROOT, LOCAL, DEFAULT_SOURCE, digest, verify
 
 
-def build(java_home, source):
+def build(java_home, source, *, report_path=None, history_path=None):
+    report_path = report_path or ROOT / "research/runelite-feasibility/build.json"
+    history_path = history_path or ROOT / "research/runelite-feasibility/build-history.json"
     home = LOCAL / "build-home"
     home.mkdir(parents=True, exist_ok=True)
     cache = LOCAL / "cache-2695"
@@ -43,8 +45,7 @@ def build(java_home, source):
         "inputs": [{"path": str(p.relative_to(ROOT)), "sha256": digest(p)} for p in files],
         "upstream_modifications": [], "compatibility_verified": False,
     }
-    (ROOT / "research/runelite-feasibility/build.json").write_text(json.dumps(report, indent=2) + "\n")
-    history_path = ROOT / "research/runelite-feasibility/build-history.json"
+    report_path.write_text(json.dumps(report, indent=2) + "\n")
     history = json.loads(history_path.read_text()) if history_path.exists() else []
     history.append({"command": arguments, "exit_code": result.returncode,
                     "input_hashes": {entry["path"]: entry["sha256"] for entry in report["inputs"]},
@@ -61,5 +62,10 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("--java-home", type=Path, required=True)
     parser.add_argument("--source", type=Path, default=DEFAULT_SOURCE)
+    parser.add_argument("--report", type=Path, default=ROOT / "research/runelite-feasibility/build.json")
+    parser.add_argument("--history", type=Path, default=ROOT / "research/runelite-feasibility/build-history.json")
     args = parser.parse_args()
-    raise SystemExit(build(args.java_home.resolve(), args.source.resolve()))
+    report, history = args.report.resolve(), args.history.resolve()
+    if not all(path.is_relative_to(ROOT / "research/runelite-feasibility") for path in [report, history]):
+        parser.error("Build reports must remain in the owned research directory.")
+    raise SystemExit(build(args.java_home.resolve(), args.source.resolve(), report_path=report, history_path=history))

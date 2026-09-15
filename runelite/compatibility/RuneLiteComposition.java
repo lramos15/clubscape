@@ -65,9 +65,9 @@ public final class RuneLiteComposition
 
     private RuneLiteComposition(Evidence evidence) { this.evidence = evidence; }
 
-    private void start(Path root, Path artifacts, VerifiedCache cache) throws Exception
+    private void start(Path root, Path artifacts, VerifiedCache cache, Path catalogPath) throws Exception
     {
-        catalog = Evidence.JSON.fromJson(Files.readString(artifacts.resolve("catalog.json")), JsonObject.class);
+        catalog = Evidence.JSON.fromJson(Files.readString(catalogPath), JsonObject.class);
         OkHttpClient http = new OkHttpClient.Builder()
             .addInterceptor(chain ->
             {
@@ -327,7 +327,7 @@ public final class RuneLiteComposition
         {
             try (ClubScapeTransport transport = new ClubScapeTransport(origin, evidence))
             {
-                transport.signupAndJoin(this::apply);
+                transport.signupAndJoin(this::apply, catalog.get("content_revision").getAsString());
                 new FirstXpJourney(transport, projection, evidence).run();
                 journey.complete(null);
                 // Leave/logout happen only after the main thread has preserved the complete live tuple.
@@ -398,6 +398,7 @@ public final class RuneLiteComposition
         Path root = Path.of(args[0]).toAbsolutePath();
         Path artifacts = root.resolve("runelite/compatibility/artifacts");
         Path output = Path.of(args[1]).toAbsolutePath();
+        Path catalog = args.length > 3 ? Path.of(args[3]).toAbsolutePath() : artifacts.resolve("catalog.json");
         boolean preflight = args[2].equals("preflight");
         RuneLiteComposition runtime = null;
         try (Evidence evidence = new Evidence(output.resolve("events.jsonl"));
@@ -406,12 +407,12 @@ public final class RuneLiteComposition
             Locale.setDefault(Locale.ENGLISH);
             ImageIO.setUseCache(false);
             Path home = Path.of(System.getProperty("user.home")).toAbsolutePath();
-            if (!home.startsWith(artifacts) || !output.startsWith(artifacts))
+            if (!home.startsWith(artifacts) || !output.startsWith(artifacts) || !catalog.startsWith(artifacts))
                 throw new IllegalArgumentException("Explicit Java user.home and output must be owned isolated paths");
             evidence.record("experiment_mode", "mode", preflight ? "developer-only offline preflight" : "live integration",
                 "compatibility_verified", false, "upstream_runtime", "1.12.38", "architecture", "A");
             runtime = new RuneLiteComposition(evidence);
-            runtime.start(root, artifacts, cache);
+            runtime.start(root, artifacts, cache, catalog);
             if (preflight) runtime.preflight(output);
             else runtime.live(URI.create(args[2]), output);
             exit = 0;

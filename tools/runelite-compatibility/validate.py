@@ -13,7 +13,11 @@ from run import clean_environment
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("--java-home", type=Path, required=True)
+    parser.add_argument("--report", type=Path, default=ROOT / "research/runelite-feasibility/validation.json")
     args = parser.parse_args()
+    report_path = args.report.resolve()
+    if not report_path.is_relative_to(ROOT / "research/runelite-feasibility"):
+        parser.error("Validation reports must remain in the owned research directory.")
     home = LOCAL / "build-home"
     home.mkdir(parents=True, exist_ok=True)
     classpath = os.pathsep.join([str(LOCAL / "classes"), (LOCAL / "classpath.txt").read_text()])
@@ -44,7 +48,7 @@ if __name__ == "__main__":
                         "stdout": result.stdout, "stderr": result.stderr})
     report = {"schema_version": 1, "checks": records, "compatibility_verified": False,
               "all_small_checks_passed": all(record["exit_code"] == 0 for record in records)}
-    (ROOT / "research/runelite-feasibility/validation.json").write_text(json.dumps(report, indent=2) + "\n")
+    report_path.write_text(json.dumps(report, indent=2) + "\n")
     print(json.dumps({"all_small_checks_passed": report["all_small_checks_passed"],
                       "checks": [{"name": r["name"], "exit_code": r["exit_code"]} for r in records],
                       "live_compatibility_proof": False}))

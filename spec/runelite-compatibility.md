@@ -53,6 +53,27 @@ changing the client architecture cannot repair these service prerequisites.
 The worker is stopped; no fourth live invocation or automatic later milestone
 is authorized.
 
+## Authorized canonical source update
+
+The later explicit faa8002 authorization is integrated as
+`c841f6a6dcd4a1a2b3e7a9e121c62849140c8634`. The current raw artifact is
+`a200ca08c80f6a3fc812fe02ca95f52325e183084f83b12e8d470a1f37cc6d62`,
+content/artifact3, zero active bindings and six inactive proofs. Source-solid
+contact and owner-online clock/playtime conformance are resolved, not retained
+as obsolete interlocks.
+
+The RuneLite companion's **different** startup blockers remain: the game-root
+environment lookup is still nested and the current5010-asset map alone still
+exceeds the unchanged256KiB descriptor limit. The current source was repackaged
+separately and loaded through the rebuilt strict compiler. No fourth live
+invocation or current live-world/plugin acceptance is claimed.
+
+See [current evidence and reproduction](../research/runelite-feasibility/canonical-faa8002.md)
+and [machine-readable status](../research/runelite-feasibility/canonical-faa8002.json).
+Prior experiment records remain frozen. Real integration is blocked pending
+Director startup fixes and renewed explicit live bounds; browser/headless work
+continues independently and desktop deferral remains unapproved.
+
 ## Original bounded M1 companion contract
 
 Task `M1-RUNELITE-FEASIBILITY` reserves one worker within the shared25-agent

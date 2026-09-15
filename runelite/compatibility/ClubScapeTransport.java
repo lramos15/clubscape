@@ -92,7 +92,7 @@ final class ClubScapeTransport implements AutoCloseable
         return message;
     }
 
-    void signupAndJoin(Consumer<Game.WorldSnapshot> consumer) throws Exception
+    void signupAndJoin(Consumer<Game.WorldSnapshot> consumer, String expectedContentRevision) throws Exception
     {
         this.consumer = consumer;
         ServerMessage hello = request(ClientMessage.newBuilder().setHello(AccountOuterClass.Hello.getDefaultInstance()));
@@ -117,9 +117,13 @@ final class ClubScapeTransport implements AutoCloseable
         ServerMessage created = request(ClientMessage.newBuilder()
             .setCreateCharacter(Game.CreateCharacter.getDefaultInstance()));
         if (!created.hasCharacterCreated()) throw new IOException("Expected empty-options source character creation");
+        if (!created.getCharacterCreated().getContentRevision().equals(expectedContentRevision))
+            throw new IOException("Authoritative character source revision differs from the selected original catalog");
         actor = created.getCharacterCreated().getActorId();
         ServerMessage joined = request(ClientMessage.newBuilder().setJoinWorld(Game.JoinWorld.getDefaultInstance()));
         if (!joined.hasWorldJoined()) throw new IOException("Expected actual world join");
+        if (!joined.getWorldJoined().getContentRevision().equals(expectedContentRevision))
+            throw new IOException("Authoritative world source revision differs from the selected original catalog");
         session = joined.getWorldJoined().getWorldSessionId();
         sequence = joined.getWorldJoined().getNextSequence();
         evidence.record("joined", "origin", rpc.getScheme() + "://" + rpc.getAuthority(),

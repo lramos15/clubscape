@@ -117,7 +117,7 @@ def native_errors(path):
     return errors[:20]
 
 
-def native(java_home, output, mode, environment):
+def native(java_home, output, mode, environment, catalog=None):
     verify_cache()
     xvfb = log = None
     try:
@@ -133,6 +133,8 @@ def native(java_home, output, mode, environment):
             f"-Xlog:exceptions=info:file={output / 'native-exceptions.log'}",
             "-cp", classpath, "RuneLiteComposition", str(ROOT), str(output), mode,
         ]
+        if catalog is not None:
+            arguments.append(str(catalog))
         with (output / "runtime.log").open("w") as runtime_log:
             process = subprocess.Popen(arguments, cwd=ROOT, env=environment, stdout=runtime_log, stderr=subprocess.STDOUT)
             try:
@@ -212,18 +214,30 @@ def wait_server(process, path):
     raise RuntimeError("No bounded service readiness; not proof of impossibility")
 
 
-def live(java_home, output, environment, report, server_binary):
+def validate_pack_selection(game_root, catalog):
+    descriptor = json.loads((game_root / "clubscape-game.json").read_text())
+    canonical = json.loads((ROOT / "content/m1/manifest.json").read_text())["compiled_artifact"]
+    if descriptor["sha256"] != canonical["uncompressed_sha256"]:
+        raise ValueError("Selected game pack is not the current canonical artifact; choose a current --game-root.")
+    public = json.loads((game_root / "manifest.json").read_text())
+    adapter = json.loads(catalog.read_text())
+    if adapter["content_revision"] != public["content_revision"]:
+        raise ValueError("Selected --catalog belongs to a different source content revision.")
+
+
+def live(java_home, output, environment, report, server_binary, game_root, catalog):
     name = None
     server = None
     try:
         name, database_url = start_database(output, environment, report)
         server_environment = {**environment, "DATABASE_URL": database_url,
-            "CLUBSCAPE_GAME_ROOT": str(LOCAL / "game"), "CLUBSCAPE_BIND": "127.0.0.1:0",
+            "CLUBSCAPE_GAME_ROOT": str(game_root), "CLUBSCAPE_BIND": "127.0.0.1:0",
             "CLUBSCAPE_BUILD_REVISION": require(["git", "rev-parse", "HEAD"]),
             "TOKIO_WORKER_THREADS": "2",
         }
         report["server"] = {"command": [str(server_binary)], "sha256": digest(server_binary),
-                            "game_descriptor_sha256": digest(LOCAL / "game/clubscape-game.json")}
+                            "game_descriptor_sha256": digest(game_root / "clubscape-game.json"),
+                            "game_root": str(game_root), "adapter_catalog": str(catalog)}
         log_path = output / "server.log"
         with log_path.open("w") as log:
             server = subprocess.Popen([str(server_binary)], cwd=ROOT, env=server_environment,
@@ -233,7 +247,7 @@ def live(java_home, output, environment, report, server_binary):
             report["server"]["origin"] = origin
             report["server"]["responsive"] = True
             report["phase"] = "real_runtime_scene_state_plugin"
-            report["native"] = native(java_home, output, origin, environment)
+            report["native"] = native(java_home, output, origin, environment, catalog)
             report["exit_code"] = report["native"]["exit_code"]
             events = [json.loads(line) for line in (output / "events.jsonl").read_text().splitlines()]
             report["complete_tuple"] = next((event for event in events if event["kind"] == "complete_tuple"), None)
@@ -257,9 +271,26 @@ def main():
     parser.add_argument("--attempt", type=int)
     parser.add_argument("--hypothesis")
     parser.add_argument("--server-binary", type=Path, default=LOCAL / "rust-target/debug/clubscape-server")
+    parser.add_argument("--game-root", type=Path, default=LOCAL / "game")
+    parser.add_argument("--catalog", type=Path)
     args = parser.parse_args()
     if not args.name.replace("-", "").isalnum():
         parser.error("Use an alphanumeric/hyphen owned evidence directory name")
+    game_root = args.game_root.resolve()
+    catalog = (args.catalog or (game_root / "adapter-catalog.json"
+        if (game_root / "adapter-catalog.json").exists() else LOCAL / "catalog.json")).resolve()
+    if not game_root.is_relative_to(LOCAL) or not catalog.is_relative_to(LOCAL):
+        parser.error("Game roots and catalogs must remain in the owned artifacts directory.")
+    experiment_path = ROOT / "research/runelite-feasibility/experiment.json"
+    experiment = json.loads(experiment_path.read_text())
+    if args.mode == "live":
+        if not args.hypothesis:
+            parser.error("Each live attempt requires its own falsifiable --hypothesis")
+        if args.attempt not in (1, 2, 3) or any(a["number"] == args.attempt for a in experiment["live_attempts"]):
+            parser.error("A new explicitly numbered live attempt within the three-attempt bound is required")
+        if len(experiment["live_attempts"]) >= 3:
+            parser.error("The live integration bound is exhausted")
+        validate_pack_selection(game_root, catalog)
     output = LOCAL / args.name
     output.mkdir(mode=0o700)
     home = output / "home"
@@ -271,15 +302,7 @@ def main():
         "architecture": "A", "compatibility_verified": False, "exit_code": 1,
         "evidence_directory": str(output.relative_to(ROOT)),
     }
-    experiment_path = ROOT / "research/runelite-feasibility/experiment.json"
-    experiment = json.loads(experiment_path.read_text())
     if args.mode == "live":
-        if not args.hypothesis:
-            parser.error("Each live attempt requires its own falsifiable --hypothesis")
-        if args.attempt not in (1, 2, 3) or any(a["number"] == args.attempt for a in experiment["live_attempts"]):
-            parser.error("A new explicitly numbered live attempt within the three-attempt bound is required")
-        if len(experiment["live_attempts"]) >= 3:
-            parser.error("The live integration bound is exhausted")
         experiment["live_attempts"].append({
             "number": args.attempt, "architecture": "A", "name": args.name,
             "hypothesis": args.hypothesis,
@@ -289,10 +312,10 @@ def main():
         experiment_path.write_text(json.dumps(experiment, indent=2) + "\n")
     try:
         if args.mode == "preflight":
-            report["native"] = native(args.java_home.resolve(), output, "preflight", environment)
+            report["native"] = native(args.java_home.resolve(), output, "preflight", environment, catalog)
             report["exit_code"] = report["native"]["exit_code"]
         else:
-            live(args.java_home.resolve(), output, environment, report, args.server_binary.resolve())
+            live(args.java_home.resolve(), output, environment, report, args.server_binary.resolve(), game_root, catalog)
     except BaseException as error:
         report["error"] = f"{type(error).__name__}: {error}"
     finally:
