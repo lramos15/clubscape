@@ -490,6 +490,7 @@ dependencies = [
  "clubscape-content",
  "clubscape-game-types",
  "clubscape-simulation",
+ "flate2",
  "serde",
  "serde_json",
 ]

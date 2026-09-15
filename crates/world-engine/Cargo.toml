@@ -12,6 +12,7 @@ serde.workspace = true
 
 [dev-dependencies]
 clubscape-content = { path = "../content" }
+flate2 = "1.1"
 serde_json.workspace = true
 
 [lints]

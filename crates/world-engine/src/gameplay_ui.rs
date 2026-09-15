@@ -247,6 +247,9 @@ impl WorldEngine {
         }
         let before = character.clone();
         let mut events = Vec::new();
+        if timed {
+            events.extend(self.interrupt_travel(&mut character, InterruptionCause::AnotherAction)?);
+        }
         let mut recipients = Vec::new();
         match request {
             GameplayUiRequest::UiDismiss { presentation_id } => {

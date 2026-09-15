@@ -44,6 +44,9 @@ labels, selected-slot drink/bury/read/empty operations, bank controls and
 source-normal death/coffer/public-chat policies. UI preferences/continuations
 and chat do not consume a gameplay phase; item/container mutations do.
 Chats preserve movement/combat and have only their declared admission bound.
+Timed UI actions use the same source travel interruption/refusal policy as
+ordinary actions, with invalid requests rolling back any tentative interruption.
+Read-only UI, continuations and chat leave pending travel and its phase intact.
 
 Bank entries refer to the actual persistent bank. Placeholders reserve capacity
 without quantity/value; entry IDs survive reorder/refill, and stale selections
