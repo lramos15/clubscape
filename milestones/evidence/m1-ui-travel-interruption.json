@@ -1,0 +1,75 @@
+{
+  "schema_version": 1,
+  "milestone": "m1-starter-journey",
+  "task": "M1-UI-TRAVEL-INTERRUPTION",
+  "result": "reviewed_source_defect_reproduced_and_repaired",
+  "code_revision": "40a00e0236810aa1226c08bae014de1fdf378a97",
+  "owned_revision": "0575fe0051b649adbd19b194b8521f328a54aad2",
+  "source_artifact_sha256": "6fdb60e4740372c5e299fe385875cfac32e04f22ea26ad17b53049296256c1b3",
+  "review": {
+    "reviewer": "e6925772-df1f-4ff7-9efc-219f800a5a14",
+    "reviewed_revision": "ff37669a464eb92bd022403337b9464e9a637b0d",
+    "severity": "medium",
+    "confidence": "high",
+    "finding": "UI item actions bypassed the existing source pending-travel interruption gate. An acknowledged burial remained behind travel and could be discarded on arrival.",
+    "original_evidence": "Static source-bound trace; executable reproduction was performed separately by the Director."
+  },
+  "before_repair": {
+    "regression_tests": 5,
+    "passed": 3,
+    "failed": 2,
+    "failures": ["Canonical burial acknowledged while source travel remained pending.", "A source policy forbidding AnotherAction interruption still acknowledged the timed UI mutation."]
+  },
+  "repair": {
+    "file": "crates/world-engine/src/gameplay_ui.rs",
+    "behavior": "Before timed UI dispatch, reuse interrupt_travel(AnotherAction) on the existing atomic draft. Source refusal rejects the request; later validation failure rolls back the tentative interruption.",
+    "timed_classifier_reused": "ui_request_requires_tick",
+    "schema_content_cadence_or_rng_changed": false,
+    "new_state_defaults_or_receipt_rewrites": false,
+    "test_dependency": "Existing flate2 version, one dev-dependency edge, to decode the real committed canonical artifact."
+  },
+  "executed_cases": [
+    "Real canonical Home Teleport starts atT0; selected tutorial bone burial atT1 interrupts through source policy and emits TeleportInterrupted.",
+    "The original source transition re-arms stage.tutorial.home_teleport, rather than inventing a new stage or forcing departure.",
+    "Serialized/restored pending burial consumes only slot5 atT3 and awards45 Prayer XP-tenths with one ProductionResolved; the other bone remains.",
+    "Advancing past the old24-tick arrival deadline causes no arrival, provision grant, entitlement change or duplicate burial XP.",
+    "A controlled refusal-policy fixture preserves all prior state when AnotherAction interruption is forbidden.",
+    "Invalid selected-slot and same-tick requests preserve all prior state.",
+    "Explicit generic read-only UI fixtures preserve travel and its action phase through chat, reading, paging and dismissal; actual Tutorial chat/book guards were not weakened."
+  ],
+  "validation": {
+    "engine_command": "cargo test --locked --quiet -p clubscape-world-engine",
+    "engine_tests_passed": 272,
+    "new_regression_tests": 5,
+    "test_path": "crates/world-engine/tests/ui_travel_interruption.rs",
+    "test_sha256": "c33618c5a7959ce53398927b104f0a5cf9d2e5e87d61a540e0c5da8cbf8f763b",
+    "native_all_target_and_wasm_library_clippy": "passed",
+    "parent_targeted_regression": "passed5/5",
+    "parent_postgresql_command": "python3 tools/dev.py integration --report .local/evidence/ui-travel-parent.json",
+    "parent_postgresql_http_regressions_passed": 41,
+    "independent_account_checks": 11,
+    "postgres_report_sha256": "afb9bd9854f5d847d6005b1d2a87ce079deefa852b96815b5c24760dba1ee351",
+    "owned_process_container_and_database_cleanup": "verified",
+    "strict_canonical_reload_and_native_source_probes": "passed_with_same6fdb_artifact",
+    "unchanged_frozen_reference_hashes": 1307
+  },
+  "source_phase_supplement": {
+    "integrated_revision": "b9cdd0f",
+    "phase_index_sha256": "b54a72df1eaa3777a87ae0f4360aca4f6be544a765ab00e4f306c7f9ed2d0d16",
+    "original_case_index_sha256": "dde300e30ff909e539c283fa7053c673abc9428ce357894f0727be08da8ad557",
+    "parent_tests_passed": 36,
+    "parent_original_observations_verified": 27,
+    "active_controller": "dy.ac",
+    "source_placements": [
+      {"object": 24969, "tile": [3095, 3102, 0], "sequence": 477, "frame": 4},
+      {"object": 196, "tile": [3096, 3105, 0], "sequence": 481, "frame": 3},
+      {"object": 196, "tile": [3096, 3110, 0], "sequence": 481, "frame": 2}
+    ],
+    "qualification": "Independent original-only observations, not candidate-fitted phases. All old images/inputs remain unchanged. Renderer consumption and complete source matching remain separate."
+  },
+  "prior_full_integration_checkpoint": "milestones/evidence/m1-render-audio-integration.json",
+  "full_fresh_journey_verified": false,
+  "composed_client_type_and_presentation_gates_complete": false,
+  "milestone_accepted": false,
+  "later_milestone_authorized": false
+}

@@ -11,12 +11,12 @@
       {"id": "cc864d7a-37cc-4869-a7b4-d484d01cede5", "task": "M1-BROWSER-UI"},
       {"id": "78d01af9-70a4-4b02-8339-6a61eb377374", "task": "M1-BROWSER-SHELL"},
       {"id": "2766e089-44e5-4a1d-974e-7b03ad9c269d", "task": "M1-GAMEPLAY-UI-CONTRACTS"},
-      {"id": "ac0f0856-44af-445b-bd90-6db7a1f4fc74", "task": "M1-SCENERY-PHASE-EVIDENCE"},
       {"id": "81ac9884-4f39-4f27-b516-6e9a42b09b51", "task": "M1-HEADLESS-JOURNEY"}
     ],
     "reserved": [],
     "queued": [],
     "parked": [
+      {"id": "ac0f0856-44af-445b-bd90-6db7a1f4fc74", "reason": "Original scenery phase supplement6c68672d integratedb9cdd0f; parent36tests and exact27-observation/index verification pass. Renderer received active4/3/2 phases and original clocks; no automatic resumption."},
       {"id": "e6925772-df1f-4ff7-9efc-219f800a5a14", "reason": "Bounded UI4 review complete: one medium source-travel interruption bypass in timed UI actions. Director repair M1-UI-TRAVEL-INTERRUPTION is active; this is not final candidate signoff."},
       {"id": "cdfad64d-9162-439f-a525-58e1114dd7f4", "reason": "Native preference/Skip/three-playlist controls64bd3257 integratedd13b3c7; parent41unit/41fullChrome checks and all275audio/1307pack hashes pass. Actual UI/shell persistence and source authority are separately owned; no automatic resumption."},
       {"id": "2a0ae699-6af8-45d5-90c7-3addfc56ee53", "reason": "Renewed five-invocation assessment complete; live creation/scene/window/baseline work, firstXP unverified after driverOutOfReach. No sixth invocation or automatic resumption."},
@@ -36,10 +36,10 @@
     {
       "id": "M1-UI-TRAVEL-INTERRUPTION",
       "goal": "Apply the existing source travel interruption/refusal policy to timed UI actions so acknowledged activities cannot be discarded by pending travel.",
-      "status": "IMPLEMENTING",
+      "status": "DONE",
       "specs": ["spec/game-contracts.md", "crates/world-engine/src/actions.rs", "crates/world-engine/src/world.rs"],
       "dependencies": ["M1-GAMEPLAY-UI-REVIEW"],
-      "allowed_paths": ["crates/world-engine/src/gameplay_ui.rs", "crates/world-engine/tests/ui_travel_interruption.rs", "crates/world-engine/README.md", "crates/server/src/game_service/tests/ui_travel.rs", "crates/server/src/game_service/tests.rs"],
+      "allowed_paths": ["crates/world-engine/src/gameplay_ui.rs", "crates/world-engine/tests/ui_travel_interruption.rs", "crates/world-engine/README.md", "crates/world-engine/Cargo.toml", "Cargo.lock"],
       "forbidden_paths": ["prompt.md", "assets/**", "content/**", "web/**", "crates/game-types/**", "crates/world-engine/src/actions.rs", "crates/world-engine/src/world.rs", "research/reference-pack/**", "tools/reference-pack/**"],
       "outputs": ["Executable reproduction of the reviewed UI burial/teleport defect", "Shared-policy timed-UI interruption with atomic refusal/invalid-input rollback", "Noninterrupting chat/read-only controls retained"],
       "validation_commands": ["cargo test --locked -p clubscape-world-engine --test ui_travel_interruption", "cargo clippy --locked -p clubscape-world-engine --all-targets -- -D warnings"],
@@ -49,7 +49,7 @@
       "source_notes": ["Independent reviewer found gameplay_ui.rs332-346 bypasses actions.rs18-29; pending_travel wins tick processing over the accepted InventoryAction. Concrete source case is bone burial during travel.tutorial.departure at stage.tutorial.teleport_channel."],
       "parity_entries": [],
       "adaptations": [],
-      "evidence": []
+      "evidence": ["Owned0575fe0 integrated40a00e0. Exact canonical burial/teleport failure and forbidden-policy acceptance reproduced before repair; existing interrupt_travel(AnotherAction) now runs only for timed UI on the atomic draft. Source interruption re-arms home_teleport; selected bone resolvesT3 with45PrayerXP and one ProductionResolved, including serialized-state recovery; no original-deadline arrival/provision/entitlement duplication.", "All5 regressions,272 engine tests, native/WASM Clippy, parent41 realPG/HTTP+11account checks and strict unchanged6f canonical/native checks pass. Read-only chat/read/page/dismiss are covered by explicit generic fixtures without weakening actual Tutorial guards. All1307 approved input hashes remain unchanged. milestones/evidence/m1-ui-travel-interruption.json records scoped results; no fullM1 acceptance."]
     },
     {
       "id": "M1-GAMEPLAY-UI-REVIEW",
@@ -72,7 +72,7 @@
     {
       "id": "M1-SCENERY-PHASE-EVIDENCE",
       "goal": "Record original native per-placement animation phases for the existing twelve dynamic reference cases without changing their images or capture inputs.",
-      "status": "IMPLEMENTING",
+      "status": "DONE",
       "specs": ["tools/source-layer-capture/README.md", "assets/reference/osrs240/m1-dynamic/case-index.json", "research/source-layers/comparison-procedure.json"],
       "dependencies": ["M1-SOURCE-DYNAMIC-REFERENCES"],
       "allowed_paths": ["tools/source-layer-capture/SceneryPhaseProbe.java", "tools/source-layer-capture/probe_phases.py", "tools/source-layer-capture/test_phases.py", "research/source-layers/phases/**", "assets/reference/osrs240/m1-dynamic/phases/**"],
@@ -85,7 +85,7 @@
       "source_notes": ["Renderer compared11 of12 original cases:8 source scene interiors match exactly, while3 Tutorial plane0 cases differ at animated objects24969 and196 because their original randomized start phases were not recorded. Source metadata, not fitted candidate phases, is required."],
       "parity_entries": [],
       "adaptations": [],
-      "evidence": []
+      "evidence": ["6c68672d integratedb9cdd0f. Independent active dy.ac controller phases are4/3/2 for24969@(3095,3102),196@(3096,3105),196@(3096,3110), not candidate-fit4/0/2. Sequences477/481/481; sourcecycle0, last-update-1->0, within-frame0->1; publicgetAnimCycle==-1 remains unavailable. Same three original Tutorial PNG/native-state replays match exactly and27 observations repeat identically.", "Phase-index SHA b54a72df1eaa3777a87ae0f4360aca4f6be544a765ab00e4f306c7f9ed2d0d16; oldindex dde300e...4557 andalloldfiles unchanged. Parent36 source-layer tests(14new+22prior) andprobe_phases --verify-only pass. Renderer received exact source-led inputs, not a pass or permission to mask flame/player boxes; worker parked."]
     },
     {
       "id": "M1-AUDIO-PREFERENCE-CONTROLS",

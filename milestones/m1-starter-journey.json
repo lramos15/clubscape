@@ -9,11 +9,11 @@
   "candidate_revision": null,
   "accepted_revision": null,
   "checkpoint": {
-    "report": "milestones/evidence/m1-render-audio-integration.json",
+    "report": "milestones/evidence/m1-ui-travel-interruption.json",
     "verified_infrastructure_revision": "275d3cc83d6a7c2118d0afcf82490f364e5d2986",
     "infrastructure_evidence": "milestones/evidence/m1-account-foundations.json",
-    "runtime_revision": "95f718ef3789074450566b71059916fd7c47b198",
-    "scope_note": "Canonical4 raw6fdb passes native/source/persistence checks and a fresh real journey is running. Renderer mechanisms and native audio preferences are integrated, but only8/12 new source scene cases pass and2595 posed item-frames violate gear penetration. Current UI4 type adaptation, source music authority, remaining controls/composition/performance/Mac/owner gates remain incomplete. Prior real v3 progress remains31/70, not full acceptance."
+    "runtime_revision": "40a00e0236810aa1226c08bae014de1fdf378a97",
+    "scope_note": "Canonical4 raw6fdb is unchanged. The independently reviewed timed-UI travel bypass is reproduced and repaired, with5 regressions and41 realPG checks passing. Original scenery phases4/3/2 are independently recorded for renderer consumption. Full live journey, current UI4 consumer adaptation, remaining controls/source audio authority, all-pose fitting, composed fidelity/performance/Mac and owner gates remain incomplete."
   },
   "scope_approval": {
     "authority": "owner",
