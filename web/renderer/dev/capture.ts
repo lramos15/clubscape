@@ -223,12 +223,28 @@ async function main(): Promise<void> {
       await waitFrames(page, (await snapshot(page, null)).renderedFrames + 3);
       regionResults.push({ step: "tutorial-island", tile: [3096, 3105], ...(await shot("region-tutorial-island-3096-3105.png")) });
       regionResults.push({ step: "minimap-tutorial", tile: [3096, 3105], ...(await minimapShot("region-minimap-tutorial-island.png", null)) });
+      // The canonical M1 Death Office instance: only the four declared chunks of template 12633
+      // are assembled (everything else unloaded in the scene and on the minimap), then back out.
+      const instance = await page.evaluate(() => window.__clubscapeDev.applyScenario!("death-office")) as any;
+      await waitFrames(page, (await snapshot(page, null)).renderedFrames + 3);
+      await canvas.screenshot({ path: path.join(out, "region-instance-death-office.png") });
+      await minimapCanvas.screenshot({ path: path.join(out, "region-minimap-death-office.png") });
+      const instanceFrame = await page.evaluate(() => window.__clubscapeDev.handle!.diagnostics().lastFrame);
+      const instancePicks = await page.evaluate(() => {
+        const handle = window.__clubscapeDev.handle!;
+        return [[960, 540], [600, 300], [1400, 800]].map(([x, y]) => ({ x, y, pick: handle.pick(x!, y!) }));
+      });
+      regionResults.push({ step: "instance-death-office", ...instance, lastFrame: instanceFrame, picks: instancePicks, screenshot: "region-instance-death-office.png" });
+      const left = await page.evaluate(() => window.__clubscapeDev.applyScenario!("leave-instance")) as any;
+      await waitFrames(page, (await snapshot(page, null)).renderedFrames + 3);
+      regionResults.push({ step: "leave-instance", ...left });
       const picks = await page.evaluate(() => {
         const handle = window.__clubscapeDev.handle!;
         return [[960, 540], [700, 600], [1200, 700]].map(([x, y]) => ({ x, y, pick: handle.pick(x!, y!) }));
       });
       regionResults.push({ step: "picks", picks });
-      console.log("region mode", JSON.stringify(regionResults.map((r: any) => ({ step: r.step, base: r.sceneBase ?? (r.baseX !== undefined ? [r.baseX, r.baseY, r.plane] : undefined), squares: r.loadedSquares?.length, prims: r.lastFrame?.primitives, picks: r.picks, minimap: r.revision !== undefined ? { revision: r.revision, complete: r.complete, stats: r.stats, covered: r.covered, icons: r.icons?.length, placed: r.placements?.icons?.length, clipped: r.placements?.icons?.filter((i: any) => i.clipped).length, angle: r.placements?.minimapAngle } : undefined }))));
+      const minimapSummary = (m: any) => m && m.revision !== undefined ? { revision: m.revision, complete: m.complete, stats: m.stats, covered: m.covered, icons: m.icons?.length, placed: m.placements?.icons?.length, clipped: m.placements?.icons?.filter((i: any) => i.clipped).length, angle: m.placements?.minimapAngle, base: [m.baseX, m.baseY, m.plane] } : undefined;
+      console.log("region mode", JSON.stringify(regionResults.map((r: any) => ({ step: r.step, sceneId: r.sceneId, base: r.sceneBase ?? (r.baseX !== undefined ? [r.baseX, r.baseY, r.plane] : undefined), squares: r.loadedSquares, prims: r.lastFrame?.primitives, picks: r.picks, minimap: minimapSummary(r.revision !== undefined ? r : r.minimap) }))));
     }
     report.regions = regionResults;
 

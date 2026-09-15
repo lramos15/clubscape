@@ -708,14 +708,24 @@ export const createRenderer: (canvas: HTMLCanvasElement, config: RendererConfig,
         const unexported = missing.filter((s) => blocksBySquare.has(s));
         if (unexported.length > 0) throw new Error(`blocks ${unexported.join(",")} were fetched but not loaded`);
         sceneBase = { x: baseX, y: baseY };
-        sceneId = `blocks@${baseX},${baseY}`;
+        // The core's own id: `blocks@x,y` or `blocks@x,y#<instance template>` inside an instance.
+        sceneId = renderer.scene_id() ?? `blocks@${baseX},${baseY}`;
         // Keep only squares near the new scene resident.
         for (const square of Array.from(loadedSquares)) {
           if (!squares.includes(square)) { renderer.unload_block(square); loadedSquares.delete(square); }
         }
-      })().finally(() => { assembling = null; });
+      })().finally(() => {
+        assembling = null;
+        // A layout change that arrived while this assembly ran is applied now, not on the next
+        // world update.
+        if (!disposed && lastPlayerTile && renderer.instance_layout_changed()) {
+          const base = WasmRenderer.base_for_tile(lastPlayerTile.x, lastPlayerTile.y);
+          void assembleAround(base[0]!, base[1]!).catch((error) => diagnostic(`scene assembly failed: ${String(error)}`));
+        }
+      });
       return assembling;
     };
+    let lastPlayerTile: { x: number; y: number } | null = null;
     const REGION_ID = /^(?:region[.:]osrs[.:]|region[.:]|square[.:]|blocks?[.:])?(\d{4,5})$/;
     const diagnostic = (message: string) => options.onDiagnostic?.(message);
     const requireLive = () => {
@@ -775,6 +785,7 @@ export const createRenderer: (canvas: HTMLCanvasElement, config: RendererConfig,
       update(world: WorldView & RendererWorldExtensions) {
         requireLive();
         renderer.update_world(JSON.stringify(world), performance.now());
+        lastPlayerTile = { x: world.player.tile.x, y: world.player.tile.y };
         if (blockMode && !assembling) {
           const { x, y } = world.player.tile;
           // A changed instance layout rebuilds the scene from the declared chunks (or back to

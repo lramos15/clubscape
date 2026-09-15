@@ -5,7 +5,7 @@
  * genuine GPU-completed frame records, and `window.__clubscapeDev` for the capture script.
  */
 import type { DynamicObjectView, RenderFrame, WorldView } from "../../shared/contracts.ts";
-import { MINIMAP_STOCK_SCALE, createRenderer, fullHudZoomForViewport, sourceZoomForViewportHeight, type ClubscapeRendererHandle, type MinimapIconPlacements, type PlayerPoseFit } from "../src/index.ts";
+import { MINIMAP_STOCK_SCALE, createRenderer, fullHudZoomForViewport, sourceZoomForViewportHeight, type ClubscapeRendererHandle, type MinimapIconPlacements, type PlayerPoseFit, type RendererInstanceLayout } from "../src/index.ts";
 
 /** Per-pose gear fits of the frames drawn so far: counts, worst measures and the failures. */
 function summarizePoseFits(fits: PlayerPoseFit[]) {
@@ -249,12 +249,24 @@ function workloadWorld(x: number, y: number, region: string): WorldView {
 }
 
 /** Developer WorldView with the penguin player on a tile (region mode). */
-function devWorld(x: number, y: number, region: string, dynamicObjects: DynamicObjectView[] = []): WorldView {
+/**
+ * The canonical M1 Death Office instance: template region 12633 mapped 1:1 onto four 8x8 chunks
+ * at origins (3168,5720) (3168,5728) (3176,5720) (3176,5728), plane 0, no turn (the backend's
+ * `mechanics.instances` template; the shell forwards it as `instanceLayout`).
+ */
+const DEATH_OFFICE_LAYOUT: RendererInstanceLayout = {
+  template: "instance.template.death-office",
+  chunks: [[396, 715], [396, 716], [397, 715], [397, 716]].map(([cx, cy]) => ({
+    plane: 0, chunkX: cx!, chunkY: cy!, sourcePlane: 0, sourceChunkX: cx!, sourceChunkY: cy!, quarterTurns: 0,
+  })),
+};
+
+function devWorld(x: number, y: number, region: string, dynamicObjects: DynamicObjectView[] = [], instanceLayout: RendererInstanceLayout | null = null): WorldView & { instanceLayout: RendererInstanceLayout | null } {
   return {
-    revision: "dev", tick: "0", dynamicObjects,
+    revision: "dev", tick: "0", dynamicObjects, instanceLayout,
     player: {
       id: "player-dev", displayName: "dev", appearance: {}, region, tile: { x, y, plane: 0 },
-      instance: null, inventory: [], equipment: [], skills: [], hitpoints: 10, prayerPoints: 1, runEnergy: 100, questPoints: 0,
+      instance: instanceLayout ? "instance.death-office.dev" : null, inventory: [], equipment: [], skills: [], hitpoints: 10, prayerPoints: 1, runEnergy: 100, questPoints: 0,
       tutorialStage: "", tutorialInstruction: "", quests: [], unlockedInterfaces: [], activePrayers: [], activity: "idle", animation: "5668", settings: [],
     },
     entities: [], groundItems: [], dialogue: null, bank: null, shop: null, recovery: null, messages: [],
@@ -341,11 +353,12 @@ async function main(): Promise<void> {
           unitsPerTurn: 16384, zoom: sourceZoomForViewportHeight(canvas.height), near: 50, far: 32768,
         });
       };
+      let instanceLayout: RendererInstanceLayout | null = null;
       const follow = (x: number, y: number) => {
         cameraTile = { x, y };
         cameraShift = 0;
         placeCamera();
-        handle.update(devWorld(x, y, sceneId));
+        handle.update(devWorld(x, y, sceneId, [], instanceLayout));
       };
       /** Moving-camera workload: the camera glides one tile per 0.6 s (the original walk pace)
        *  back and forth, so every frame re-projects the whole scene (no static replay). */
@@ -413,7 +426,26 @@ async function main(): Promise<void> {
           handle.update(devWorld(px, py, sceneId, name === "door-open" ? [{ id: "door-dev", objectId: "asset.source.osrs.cache2695.object.12349", sourceId: 12349, tile: { x: 3213, y: 3221, plane: 0 }, instance: null, doorOpen: true, quarterTurns: 1 }] : []));
           return showMinimap();
         }
-        throw new Error(`region mode knows workload/workload-moving/door-open/door-closed, not ${name}`);
+        if (name === "death-office" || name === "leave-instance") {
+          // Enter the Death Office instance (declared chunks only; the adapter reassembles from
+          // the template's source square) or return to the ordinary world at the previous tile.
+          instanceLayout = name === "death-office" ? DEATH_OFFICE_LAYOUT : null;
+          const [x, y] = name === "death-office" ? [3172, 5724] : [px, py];
+          follow(x, y);
+          // The assembly runs asynchronously (block fetch + assemble); wait until the scene reports
+          // the declared layout (or the plain world) before measuring.
+          const wanted = instanceLayout ? `#${instanceLayout.template}` : "";
+          for (let i = 0; i < 600; i++) {
+            const id = handle.diagnostics().sceneId ?? "";
+            if (instanceLayout ? id.endsWith(wanted) : !id.includes("#")) break;
+            await new Promise((r) => setTimeout(r, 50));
+          }
+          const d = handle.diagnostics();
+          if (instanceLayout && !(d.sceneId ?? "").endsWith(wanted)) throw new Error(`instance assembly did not complete: scene ${d.sceneId}`);
+          const minimap = showMinimap();
+          return { sceneId: d.sceneId, sceneBase: d.sceneBase, loadedSquares: d.loadedSquares, minimap, tile: { x, y } };
+        }
+        throw new Error(`region mode knows workload/workload-moving/door-open/door-closed/death-office/leave-instance, not ${name}`);
       };
       state.ready = true;
       publish();
