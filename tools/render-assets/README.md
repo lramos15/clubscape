@@ -36,13 +36,38 @@ python3 tools/render-assets/export.py --profile widgets     # original if3 model
 python3 tools/render-assets/export.py --profile minimap     # map-scene sprites/shape masks + per-square minimap sidecars
 python3 tools/render-assets/export.py --profile compress    # (re)write scenes/*.gz, blocks/*.gz + manifest
 python3 tools/render-assets/export.py --profile unpack      # restore raw scenes/*.bin from *.gz
+python3 tools/render-assets/export.py --profile pack-blocks # deterministic world-block pack + blocks.index.json
+python3 tools/render-assets/export.py --profile unpack-blocks .local/render-assets/dist/clubscape-render-blocks-<hash>.tar
+python3 tools/render-assets/export.py --profile verify-blocks  # strict: every pinned block buffer present + hashed
 python3 tools/render-assets/export.py --verify-only         # hash-check assets/compiled/render
 ```
 
 Profiles: `tables`, `palette`, `textures`, `models` (tree 1277 / model 1570 lit as captured),
 `npcs` (3028 goblin, 2063 penguin; sequences 6181/6180 and 5668/5666), `scenes`, `blocks`,
 `scenes-pinned`, `anim`, `dynamic`, `widgets`, `minimap`, `prune-textures` (keep only textures
-referenced by the exported scenes/blocks/models), `compress`, `unpack`.
+referenced by the exported scenes/blocks/models), `compress`, `unpack`, `pack-blocks`,
+`unpack-blocks`, `verify-blocks`.
+
+### World block package (no source cache or JDK needed to consume)
+
+The 61 M1 map squares are reproducible original-loader exports (`blocks`, ≈ 56 MB as gzip twins)
+and are not committed. `pack-blocks` writes them plus the 61 minimap sidecars into one
+deterministic tar (sorted PAX entries, mtime 0, uid/gid 0, mode 0644 — the same bytes on every
+run) under `.local/render-assets/dist/clubscape-render-blocks-<content-hash>.tar`, and records
+in the committed `assets/compiled/render/blocks.index.json` the pack's SHA-256/size, the manifest
+hash it belongs to, and every member's key, SHA-256 and size (gzip and inflated). The shell can
+publish/host that tar or its extracted members under its render asset base URL: the adapter
+fetches `blocks/<square>.bin.gz` / `blocks/<square>.models.bin.gz` / `minimap/blocks/<square>.bin`
+by manifest key and verifies both the gzip and inflated hashes. `unpack-blocks <tar>` installs
+the members into the asset tree, checking the pack hash, every member hash, path containment
+and the inflated raw buffers (which the native tests read), with plain Python 3 — no source
+cache, JDK or original runtime. `verify-blocks` is the strict presence + hash check
+(`--verify-only` treats blocks as optional).
+
+Current pack: `clubscape-render-blocks-d76bc2ab72b552a1.tar`, SHA-256
+`99984d72eb3e00e9614ba712f6ecb5ebeab1ba6c7c29116826dc735369d30aeb`, 56 381 440 bytes,
+183 members (122 block twins + 61 sidecars), content hash
+`d76bc2ab72b552a1a097bea19296beb0d8f79b34ca0d1e424cd84813a57f787e`.
 
 `anim` (`AnimExport.java`) writes the original skeletons and frames (`et`/`em`) of the required
 player sequences (808/819/824/836, 879, 625, 621, 733, 897/896/899/898, 386/390/422/423, 426,

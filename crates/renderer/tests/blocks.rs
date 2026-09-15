@@ -40,7 +40,7 @@ fn core_with_textures() -> RendererCore {
     core
 }
 
-const REPRODUCE_BLOCKS: &str = "python3 tools/render-assets/export.py --profile blocks";
+const REPRODUCE_BLOCKS: &str = "python3 tools/render-assets/export.py --profile blocks (or --profile unpack-blocks <pack.tar>, see blocks.index.json)";
 const REPRODUCE_PINNED: &str = "python3 tools/render-assets/export.py --profile scenes-pinned";
 
 /// World blocks are reproducible local exports (61 squares, ~75 MB gzip, hashes in the

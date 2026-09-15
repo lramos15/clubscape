@@ -15,7 +15,7 @@ use clubscape_renderer::scene::minimap::{self, MapScenes, Raster, WallColours};
 
 use common::repo_root;
 
-const REPRODUCE_BLOCKS: &str = "python3 tools/render-assets/export.py --profile blocks";
+const REPRODUCE_BLOCKS: &str = "python3 tools/render-assets/export.py --profile blocks (or --profile unpack-blocks <pack.tar>, see blocks.index.json)";
 
 /// Native minimap captures: scene base and the planes the capture recorded.
 const REFERENCES: [(i32, i32); 5] = [

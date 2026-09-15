@@ -9,6 +9,8 @@ from __future__ import annotations
 
 import argparse
 import gzip
+import io
+import tarfile
 import hashlib
 import importlib.util
 import json
@@ -109,6 +111,120 @@ def unpack_scenes(output: Path) -> int:
     return restored
 
 
+BLOCK_INDEX = "blocks.index.json"
+
+
+def block_files(manifest: dict) -> list[str]:
+    """Published (gzip) world block buffers in manifest order: what a runtime needs to stream."""
+    names = []
+    for block in manifest.get("blocks", []):
+        for key in ("file_gz", "models_file_gz"):
+            if key not in block:
+                raise ValueError(f"Block {block['square']} has no published gzip twin ({key}); run --profile compress")
+            names.append(block[key])
+    for entry in manifest.get("minimap_blocks", []):
+        names.append(entry["file"])
+    return names
+
+
+def pack_blocks(output: Path, dist: Path) -> dict:
+    """
+    Packages the 61 world blocks (+ minimap sidecars) as one deterministic tar the shell can
+    publish, and writes `blocks.index.json` beside the manifest: per file key, SHA-256 and size,
+    plus the pack's own hash. Consumers need only Python 3 (`--profile unpack-blocks`), not the
+    source cache or a JDK.
+    """
+    manifest = json.loads((output / "manifest.json").read_text())
+    names = block_files(manifest)
+    entries = []
+    for name in names:
+        record = manifest["files"][name]
+        path = output / name
+        if not path.is_file():
+            raise ValueError(f"Block buffer {name} is not exported locally; run --profile blocks/minimap first")
+        if sha(path) != record["sha256"]:
+            raise ValueError(f"Block buffer {name} differs from the manifest hash")
+        entries.append({"file": name, "sha256": record["sha256"], "size_bytes": record["size_bytes"],
+                        **({"decompressed": record["detail"]["decompressed"], "decompressed_sha256": record["detail"]["decompressed_sha256"]}
+                           if record.get("detail", {}).get("encoding") == "gzip" else {})})
+    dist.mkdir(parents=True, exist_ok=True)
+    content_hash = hashlib.sha256("\n".join(f"{e['file']} {e['sha256']}" for e in entries).encode()).hexdigest()
+    pack_name = f"clubscape-render-blocks-{content_hash[:16]}.tar"
+    pack_path = dist / pack_name
+    with tarfile.open(pack_path, "w", format=tarfile.PAX_FORMAT) as tar:
+        for entry in entries:
+            info = tarfile.TarInfo(entry["file"])
+            data = (output / entry["file"]).read_bytes()
+            info.size = len(data)
+            info.mtime = 0
+            info.mode = 0o644
+            info.uid = info.gid = 0
+            info.uname = info.gname = ""
+            tar.addfile(info, io.BytesIO(data))
+    index = {
+        "schema_version": 1,
+        "kind": "clubscape_render_blocks",
+        "manifest_sha256": sha(output / "manifest.json"),
+        "approved_reference_pack_sha256": manifest["approved_reference_pack_sha256"],
+        "content_sha256": content_hash,
+        "pack": {"file": pack_name, "sha256": sha(pack_path), "size_bytes": pack_path.stat().st_size},
+        "squares": [b["square"] for b in manifest.get("blocks", [])],
+        "files": entries,
+        "install": "python3 tools/render-assets/export.py --profile unpack-blocks <pack.tar>  (verifies every hash; no source cache or JDK needed)",
+        "classification": "Reproducible original-loader exports (blocks profile); runtime inputs for world streaming, not reference images.",
+    }
+    (output / BLOCK_INDEX).write_text(json.dumps(index, indent=1) + "\n")
+    return {"pack": str(pack_path), "sha256": index["pack"]["sha256"], "size_bytes": index["pack"]["size_bytes"], "files": len(entries)}
+
+
+def unpack_blocks(output: Path, pack_path: Path) -> dict:
+    """Installs a block pack into the asset tree, verifying the pack and every file against `blocks.index.json`."""
+    index = json.loads((output / BLOCK_INDEX).read_text())
+    if sha(pack_path) != index["pack"]["sha256"]:
+        raise ValueError(f"Block pack hash differs from {BLOCK_INDEX}: {pack_path}")
+    expected = {e["file"]: e for e in index["files"]}
+    installed = inflated = 0
+    with tarfile.open(pack_path, "r") as tar:
+        for member in tar.getmembers():
+            entry = expected.get(member.name)
+            if entry is None or not member.isfile():
+                raise ValueError(f"Unexpected pack member {member.name}")
+            data = tar.extractfile(member).read()
+            if hashlib.sha256(data).hexdigest() != entry["sha256"] or len(data) != entry["size_bytes"]:
+                raise ValueError(f"Pack member {member.name} does not match its pinned hash")
+            target = (output / member.name).resolve()
+            if not target.is_relative_to(output.resolve()):
+                raise ValueError(f"Pack member escapes the asset tree: {member.name}")
+            target.parent.mkdir(parents=True, exist_ok=True)
+            target.write_bytes(data)
+            installed += 1
+            if "decompressed" in entry:
+                # The native tests read the raw block buffers; restore them next to the twins.
+                raw = gzip.decompress(data)
+                if hashlib.sha256(raw).hexdigest() != entry["decompressed_sha256"]:
+                    raise ValueError(f"Pack member {member.name} inflates to a different buffer")
+                (output / entry["decompressed"]).write_bytes(raw)
+                inflated += 1
+        present = {m.name for m in tar.getmembers()}
+    missing = sorted(set(expected) - present)
+    if missing:
+        raise ValueError(f"Pack lacks pinned files: {missing[:5]}")
+    return {"installed": installed, "inflated_raw": inflated, "squares": len(index["squares"])}
+
+
+def verify_blocks(output: Path) -> dict:
+    """Strict check that every pinned block buffer is present with its hash (unlike `--verify-only`, which treats blocks as optional)."""
+    index = json.loads((output / BLOCK_INDEX).read_text())
+    manifest = json.loads((output / "manifest.json").read_text())
+    if index["manifest_sha256"] != sha(output / "manifest.json"):
+        raise ValueError("blocks.index.json was written for a different manifest.json")
+    for entry in index["files"]:
+        path = output / entry["file"]
+        if not path.is_file() or sha(path) != entry["sha256"] or manifest["files"][entry["file"]]["sha256"] != entry["sha256"]:
+            raise ValueError(f"Pinned block buffer missing or changed: {entry['file']}")
+    return {"result": "passed", "files": len(index["files"]), "squares": len(index["squares"]), "content_sha256": index["content_sha256"]}
+
+
 def verify_manifest(output: Path) -> dict:
     manifest = json.loads((output / "manifest.json").read_text())
     if manifest["source_cache_id"] != 2695 or manifest["source_revision"] != 240 or manifest["brightness"] != 0.8:
@@ -137,7 +253,8 @@ def main() -> int:
     parser.add_argument("--source", type=Path)
     parser.add_argument("--output", type=Path, default=DEFAULT_OUTPUT)
     parser.add_argument("--profile", default="all",
-                        choices=["all", "tables", "palette", "textures", "models", "npcs", "scenes", "scenes-pinned", "blocks", "minimap", "anim", "dynamic", "widgets", "prune-textures", "compress", "unpack"])
+                        choices=["all", "tables", "palette", "textures", "models", "npcs", "scenes", "scenes-pinned", "blocks", "minimap", "anim", "dynamic", "widgets", "prune-textures", "compress", "unpack",
+                                 "pack-blocks", "unpack-blocks", "verify-blocks"])
     parser.add_argument("--verify-only", action="store_true")
     parser.add_argument("--java-home", type=Path, default=Path.home() / ".local/share/jdks/temurin-17.0.20.1+1")
     parser.add_argument("extra", nargs="*", help="Profile-specific arguments passed to the Java exporter")
@@ -154,6 +271,19 @@ def main() -> int:
     if args.profile == "unpack":
         print(f"UNPACK {unpack_scenes(args.output)} buffers")
         print(json.dumps(verify_manifest(args.output), separators=(",", ":")))
+        return 0
+    if args.profile == "pack-blocks":
+        print("PACK_BLOCKS " + json.dumps(pack_blocks(args.output, LOCAL / "dist"), separators=(",", ":")))
+        print(json.dumps(verify_blocks(args.output), separators=(",", ":")))
+        return 0
+    if args.profile == "unpack-blocks":
+        if len(args.extra) != 1:
+            raise ValueError("unpack-blocks needs the pack .tar path")
+        print("UNPACK_BLOCKS " + json.dumps(unpack_blocks(args.output, Path(args.extra[0])), separators=(",", ":")))
+        print(json.dumps(verify_blocks(args.output), separators=(",", ":")))
+        return 0
+    if args.profile == "verify-blocks":
+        print(json.dumps(verify_blocks(args.output), separators=(",", ":")))
         return 0
     capture = load_capture_module()
     if args.profile in ("blocks", "minimap") and not args.extra:

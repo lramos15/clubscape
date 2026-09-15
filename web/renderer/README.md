@@ -202,3 +202,9 @@ the ≥ 60 fps contract proof on the owner's hardware.
   surface follows the streamed scene (recentering changes `baseX/baseY`), the player's plane
   and door states; entity dots, the player marker and map-element icon sprites remain the
   UI's layer over it.
+* World blocks are streamed by manifest key from `assetBaseUrl` (`blocks/<square>.bin.gz`,
+  `blocks/<square>.models.bin.gz`, `minimap/blocks/<square>.bin`, `minimap/mapscenes.bin`).
+  They are not committed: host the members of the deterministic pack described in
+  `assets/compiled/render/blocks.index.json` (`tools/render-assets/README.md`, "World block
+  package") under the same base URL; the adapter verifies every gzip and inflated hash and
+  fails explicitly on a mismatch or missing square that the manifest lists.

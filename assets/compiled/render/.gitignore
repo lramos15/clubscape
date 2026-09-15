@@ -7,6 +7,8 @@
 /scenes/*.bin
 # Deterministic frame-0 validation exports used by the block-assembly tests (not runtime inputs).
 /scenes/*.pinned*
-# World blocks (61 map squares, ~75 MB gzip) are reproducible with `export.py --profile blocks`;
-# their hashes are in manifest.json and the renderer streams them per square.
+# World blocks (61 map squares, ~56 MB gzip) are reproducible with `export.py --profile blocks`
+# and packaged by `--profile pack-blocks` (hash-pinned in blocks.index.json, installable with
+# `--profile unpack-blocks <tar>` without the source cache or a JDK); the renderer streams them
+# per square from the shell's asset host.
 /blocks/
