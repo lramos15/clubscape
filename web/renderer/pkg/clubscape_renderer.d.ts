@@ -88,6 +88,14 @@ export class WasmRenderer {
      */
     load_equip_model(item_id: number, bytes: Uint8Array): void;
     /**
+     * Loads the floor underlay/overlay definitions (`terrain/floors.bin`, manifest
+     * `floor_definitions`). Block scenes assembled afterwards run the original terrain pass
+     * (`rl4.ad`: blend, light, tile shapes) from the squares' raw terrain at the scene's own
+     * base, so every tile — the outer five included — is what the live client builds. Returns
+     * `[underlays, overlays]`.
+     */
+    load_floor_defs(bytes: Uint8Array): Uint32Array;
+    /**
      * Loads a ground-item stack model for quantities `>= min_quantity`.
      */
     load_ground_item(item_id: number, min_quantity: number, bytes: Uint8Array): void;
@@ -316,6 +324,13 @@ export class WasmRenderer {
      * holding declared source chunks inside an instance, `squares_for_base` otherwise.
      */
     squares_needed(base_x: number, base_y: number): Int32Array;
+    /**
+     * Statistics of the terrain pass of the current block scene (JSON `{paints, tileModels,
+     * missingOverlays, missingUnderlays}`), or `undefined` when the scene's tiles are the
+     * exported lit ones (fixture scenes, or blocks/definitions without raw terrain — then
+     * `unknown_motions()` carries the reason).
+     */
+    terrain_rebuilt(): string | undefined;
     timestamps_supported(): boolean;
     /**
      * Source actions the last `update_world` reported without a bound animation
@@ -385,6 +400,7 @@ export interface InitOutput {
     readonly wasmrenderer_load_block: (a: number, b: number, c: number, d: number, e: number, f: number) => [number, number];
     readonly wasmrenderer_load_dynamic_object: (a: number, b: number, c: number, d: number, e: number, f: number, g: any, h: number, i: number) => [number, number];
     readonly wasmrenderer_load_equip_model: (a: number, b: number, c: number, d: number) => [number, number];
+    readonly wasmrenderer_load_floor_defs: (a: number, b: number, c: number) => [number, number, number, number];
     readonly wasmrenderer_load_ground_item: (a: number, b: number, c: number, d: number, e: number) => [number, number];
     readonly wasmrenderer_load_map_icons: (a: number, b: number, c: number) => [number, number, number];
     readonly wasmrenderer_load_map_scenes: (a: number, b: number, c: number) => [number, number];
@@ -428,6 +444,7 @@ export interface InitOutput {
     readonly wasmrenderer_set_top_plane_override: (a: number, b: number) => void;
     readonly wasmrenderer_squares_for_base: (a: number, b: number) => [number, number];
     readonly wasmrenderer_squares_needed: (a: number, b: number, c: number) => [number, number];
+    readonly wasmrenderer_terrain_rebuilt: (a: number) => [number, number];
     readonly wasmrenderer_timestamps_supported: (a: number) => number;
     readonly wasmrenderer_unbound_actions: (a: number) => [number, number];
     readonly wasmrenderer_unknown_motions: (a: number) => [number, number];
@@ -436,10 +453,10 @@ export interface InitOutput {
     readonly wasm_bindgen_765df639e0572edc___convert__closures_____invoke___js_sys_3b7301898fbf4e22___Function_fn_wasm_bindgen_765df639e0572edc___JsValue_____wasm_bindgen_765df639e0572edc___sys__Undefined___js_sys_3b7301898fbf4e22___Function_fn_wasm_bindgen_765df639e0572edc___JsValue_____wasm_bindgen_765df639e0572edc___sys__Undefined_______true_: (a: number, b: number, c: any, d: any) => void;
     readonly wasm_bindgen_765df639e0572edc___convert__closures_____invoke___wasm_bindgen_765df639e0572edc___JsValue__core_ed718c3d60ebd546___result__Result_____wasm_bindgen_765df639e0572edc___JsError___true_: (a: number, b: number, c: any) => [number, number];
     readonly wasm_bindgen_765df639e0572edc___convert__closures_____invoke___wasm_bindgen_765df639e0572edc___sys__JsNullable_wgpu_fb237351f69b1e72___backend__webgpu__webgpu_sys__gen_GpuError__GpuError___core_ed718c3d60ebd546___result__Result_____wasm_bindgen_765df639e0572edc___JsError___true_: (a: number, b: number, c: any) => [number, number];
-    readonly wasm_bindgen_765df639e0572edc___convert__closures_____invoke___wasm_bindgen_765df639e0572edc___sys__JsNullable_wgpu_fb237351f69b1e72___backend__webgpu__webgpu_sys__gen_GpuError__GpuError___core_ed718c3d60ebd546___result__Result_____wasm_bindgen_765df639e0572edc___JsError___true__100: (a: number, b: number, c: any) => [number, number];
-    readonly wasm_bindgen_765df639e0572edc___convert__closures_____invoke___wasm_bindgen_765df639e0572edc___sys__JsNullable_wgpu_fb237351f69b1e72___backend__webgpu__webgpu_sys__gen_GpuError__GpuError___core_ed718c3d60ebd546___result__Result_____wasm_bindgen_765df639e0572edc___JsError___true__99: (a: number, b: number, c: any) => [number, number];
+    readonly wasm_bindgen_765df639e0572edc___convert__closures_____invoke___wasm_bindgen_765df639e0572edc___sys__JsNullable_wgpu_fb237351f69b1e72___backend__webgpu__webgpu_sys__gen_GpuError__GpuError___core_ed718c3d60ebd546___result__Result_____wasm_bindgen_765df639e0572edc___JsError___true__101: (a: number, b: number, c: any) => [number, number];
+    readonly wasm_bindgen_765df639e0572edc___convert__closures_____invoke___wasm_bindgen_765df639e0572edc___sys__JsNullable_wgpu_fb237351f69b1e72___backend__webgpu__webgpu_sys__gen_GpuError__GpuError___core_ed718c3d60ebd546___result__Result_____wasm_bindgen_765df639e0572edc___JsError___true__102: (a: number, b: number, c: any) => [number, number];
     readonly wasm_bindgen_765df639e0572edc___convert__closures_____invoke___wgpu_fb237351f69b1e72___backend__webgpu__webgpu_sys__gen_GpuDeviceLostInfo__GpuDeviceLostInfo______true_: (a: number, b: number, c: any) => void;
-    readonly wasm_bindgen_765df639e0572edc___convert__closures_____invoke___wgpu_fb237351f69b1e72___backend__webgpu__webgpu_sys__gen_GpuDeviceLostInfo__GpuDeviceLostInfo______true__98: (a: number, b: number, c: any) => void;
+    readonly wasm_bindgen_765df639e0572edc___convert__closures_____invoke___wgpu_fb237351f69b1e72___backend__webgpu__webgpu_sys__gen_GpuDeviceLostInfo__GpuDeviceLostInfo______true__100: (a: number, b: number, c: any) => void;
     readonly __wbindgen_malloc: (a: number, b: number) => number;
     readonly __wbindgen_realloc: (a: number, b: number, c: number, d: number) => number;
     readonly __wbindgen_exn_store: (a: number) => void;

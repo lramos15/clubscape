@@ -4,6 +4,7 @@
 pub mod block;
 pub mod draw;
 pub mod minimap;
+pub mod terrain;
 pub mod tile;
 pub mod visibility;
 
@@ -199,6 +200,9 @@ pub struct SceneData {
     /// `(plane, world x, world y, map element)`; the renderer's own icon list is checked
     /// against it (`MinimapSurface::icon_check`).
     pub source_icons: Vec<(i32, i32, i32, i32)>,
+    /// Statistics of the assembly-time terrain pass (`scene::terrain::apply`) when the scene's
+    /// tiles were rebuilt from raw block terrain; `None` when the exported lit tiles are in use.
+    pub terrain_rebuilt: Option<terrain::TerrainStats>,
 }
 
 impl SceneData {
@@ -255,6 +259,7 @@ impl SceneData {
             animated_instances: Vec::new(),
             object_defs: HashMap::new(),
             source_icons: Vec::new(),
+            terrain_rebuilt: None,
         }
     }
 
@@ -389,6 +394,7 @@ impl SceneData {
             animated_instances: Vec::new(),
             object_defs: HashMap::new(),
             source_icons: Vec::new(),
+            terrain_rebuilt: None,
         };
         if scene.link.len() != tile_count
             || scene.object_count.len() != tile_count

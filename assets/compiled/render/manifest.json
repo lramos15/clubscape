@@ -437,7 +437,7 @@
   {
    "square": 11822,
    "file": "blocks/11822.bin",
-   "sha256": "f4282b6bfc34d2d583057845304b62dbf93698f16350ac1d6d70306aa0f6c883",
+   "sha256": "685847b7df7757126c0ff78441eceb899ee1cf3e1dfb13ac24d2bef1f00d5000",
    "models_file": "blocks/11822.models.bin",
    "models_sha256": "bed9beadda34e7d23709e36666bfd3a565139298382782ce024085bf656470a6",
    "origin_x": 2944,
@@ -447,6 +447,8 @@
     2920,
     2920
    ],
+   "raw_terrain": true,
+   "shadow_writes": 179,
    "paints": 3936,
    "tile_models": 160,
    "walls": 21,
@@ -462,7 +464,7 @@
   {
    "square": 11823,
    "file": "blocks/11823.bin",
-   "sha256": "c23816a516f4c84141c83e4e2abed5d84d9d133e8db58542bee0e50b6a1b9c64",
+   "sha256": "e94279c478f58821991ccde6c687ff57d5435d47f7a1193062553c8c6234dee1",
    "models_file": "blocks/11823.models.bin",
    "models_sha256": "497f3b66de9a3f083e5309e7a91961ec5c8c78c3902a8b21e738a1f8e5f1150d",
    "origin_x": 2944,
@@ -472,6 +474,8 @@
     2920,
     2984
    ],
+   "raw_terrain": true,
+   "shadow_writes": 2110,
    "paints": 4251,
    "tile_models": 219,
    "walls": 384,
@@ -487,7 +491,7 @@
   {
    "square": 11824,
    "file": "blocks/11824.bin",
-   "sha256": "6ef41e595d939ad446a4b3cafdc0299db35022109579e11fcb924ca94aeb1d70",
+   "sha256": "9b816b71fe7425af262c1c33a866c5c4566e9c8b478ba3bd44f14f9b228922b2",
    "models_file": "blocks/11824.models.bin",
    "models_sha256": "0fc3f812daee7afebf1e8a5529e9071e0e935a73647d9d17d1bbfed564b1a046",
    "origin_x": 2944,
@@ -497,6 +501,8 @@
     2920,
     3048
    ],
+   "raw_terrain": true,
+   "shadow_writes": 160,
    "paints": 4024,
    "tile_models": 72,
    "walls": 0,
@@ -512,7 +518,7 @@
   {
    "square": 11825,
    "file": "blocks/11825.bin",
-   "sha256": "65280b32472ae78b1f6740a1a457ab57ed9941c2764d79b112337a53ece581e8",
+   "sha256": "9835dca16491ab6e7297e3011a77fc6f013762d41a2681ff60834f9051ddc700",
    "models_file": "blocks/11825.models.bin",
    "models_sha256": "9740dc8d4a72c672961b2b0298b5d208abf51d47a9127697a580e6747c1ef9a3",
    "origin_x": 2944,
@@ -522,6 +528,8 @@
     2920,
     3112
    ],
+   "raw_terrain": true,
+   "shadow_writes": 1798,
    "paints": 4085,
    "tile_models": 205,
    "walls": 258,
@@ -537,7 +545,7 @@
   {
    "square": 11826,
    "file": "blocks/11826.bin",
-   "sha256": "9a655d6d84ba2184b53aac68d9836eb4df08f29c77bf6d8c34663ea2348d7144",
+   "sha256": "42ece021fde662c17107cdf8ab02a14ab6d5c01b9075488bf05915418e91540f",
    "models_file": "blocks/11826.models.bin",
    "models_sha256": "cebad5d2097cc74e6a8e086db01de3e2cbfa39426a9bba9459f6f8aecbb70d92",
    "origin_x": 2944,
@@ -547,6 +555,8 @@
     2920,
     3176
    ],
+   "raw_terrain": true,
+   "shadow_writes": 2891,
    "paints": 3869,
    "tile_models": 324,
    "walls": 413,
@@ -562,7 +572,7 @@
   {
    "square": 12078,
    "file": "blocks/12078.bin",
-   "sha256": "a45b2f559e14be5af3a661c9a9837885c0f077e4be8c8ec3be5b304d3fa5eb49",
+   "sha256": "1201b22a5210618d3a6c86a231dbb365ec0f0750d1eb2d34053d9d84ccadfe93",
    "models_file": "blocks/12078.models.bin",
    "models_sha256": "e18030f6a2cb2cde6d1df523d33bca887913cca6f333263de3cc6584f5f6cda0",
    "origin_x": 3008,
@@ -572,6 +582,8 @@
     2984,
     2920
    ],
+   "raw_terrain": true,
+   "shadow_writes": 2618,
    "paints": 4179,
    "tile_models": 690,
    "walls": 452,
@@ -587,7 +599,7 @@
   {
    "square": 12079,
    "file": "blocks/12079.bin",
-   "sha256": "da1e7478d21672539ef36375e68a481bd9f266718e5c8bfcd39bd0200f72ed22",
+   "sha256": "9bdf0b0fac200e36d478667c5e8d553cfde4e461ce4066086801886f96e6ba32",
    "models_file": "blocks/12079.models.bin",
    "models_sha256": "8da5a2a19a62ddafb778c573da9b9dd7e14972b185d51fdb1adb3f2ce6080c1d",
    "origin_x": 3008,
@@ -597,6 +609,8 @@
     2984,
     2984
    ],
+   "raw_terrain": true,
+   "shadow_writes": 201,
    "paints": 3992,
    "tile_models": 181,
    "walls": 9,
@@ -612,7 +626,7 @@
   {
    "square": 12080,
    "file": "blocks/12080.bin",
-   "sha256": "1c046df48a8848e57c87be157417e21aac0aaea27a7dcdcdb68198f1ff6b1742",
+   "sha256": "4b2fe264f81483d7d29baf9e2ba4309429a61652a43d8e33f76d0c1ded6b3a7d",
    "models_file": "blocks/12080.models.bin",
    "models_sha256": "fa39f3ab8d16e04d8a40adf02282d957e57f8310a75d10013192b8bafa23d9a6",
    "origin_x": 3008,
@@ -622,6 +636,8 @@
     2984,
     3048
    ],
+   "raw_terrain": true,
+   "shadow_writes": 158,
    "paints": 3756,
    "tile_models": 522,
    "walls": 31,
@@ -637,7 +653,7 @@
   {
    "square": 12081,
    "file": "blocks/12081.bin",
-   "sha256": "54f8de294bbb70d6116e2bb62e8c908599a5e22e1d3a51d03e095bc69fb235b5",
+   "sha256": "d907664c1af53546326ab79659b8dbda43e8401a2c322c9ea2b1d05c679656ae",
    "models_file": "blocks/12081.models.bin",
    "models_sha256": "5f13f9ad7dff90cb2b14bbcad328d8cb0648acb6d9c92a4a5cf6af92b496ed42",
    "origin_x": 3008,
@@ -647,6 +663,8 @@
     2984,
     3112
    ],
+   "raw_terrain": true,
+   "shadow_writes": 2364,
    "paints": 4345,
    "tile_models": 133,
    "walls": 332,
@@ -662,7 +680,7 @@
   {
    "square": 12082,
    "file": "blocks/12082.bin",
-   "sha256": "983f15f4f48ab0a6623ae8b1502b78fe22c5b6d80ba04aff1475729537df3363",
+   "sha256": "e9d66b06db9ccb9add8a402413d88493471727192a2056d407698d1c15a12dfd",
    "models_file": "blocks/12082.models.bin",
    "models_sha256": "9ad2514caddb74739d49c4aa24c6902f8cec170f8b290b8d670f033025a9a9dc",
    "origin_x": 3008,
@@ -672,6 +690,8 @@
     2984,
     3176
    ],
+   "raw_terrain": true,
+   "shadow_writes": 5937,
    "paints": 4994,
    "tile_models": 194,
    "walls": 981,
@@ -687,7 +707,7 @@
   {
    "square": 12179,
    "file": "blocks/12179.bin",
-   "sha256": "8d4b99a5bbaf32e4452b537602f1f789a581c98a686c521d0281daaeee254f6f",
+   "sha256": "67ab2da7b5fe7b34bdd2b3c095cb07618ace7657ef778fe0967193b5fa374459",
    "models_file": "blocks/12179.models.bin",
    "models_sha256": "d7c44b723f0e2d7e4ecdc131fb752d30bdfc9a86d2c04d45c8a9ef24ad20a576",
    "origin_x": 3008,
@@ -697,6 +717,8 @@
     2984,
     9384
    ],
+   "raw_terrain": true,
+   "shadow_writes": 0,
    "paints": 0,
    "tile_models": 0,
    "walls": 256,
@@ -712,7 +734,7 @@
   {
    "square": 12180,
    "file": "blocks/12180.bin",
-   "sha256": "9eac72417f868e8d6f989a94edc59de5f2e25f13c9724e40e4bf2ae188bd62ef",
+   "sha256": "4a70f798f6f39c28d60555fb32895b15ad4ef6454e94fe306ad825997ea4905d",
    "models_file": "blocks/12180.models.bin",
    "models_sha256": "a066cd467f4a074ce1dfb339b99223023bebd6ba8b088bafa4977278f50c1913",
    "origin_x": 3008,
@@ -722,6 +744,8 @@
     2984,
     9448
    ],
+   "raw_terrain": true,
+   "shadow_writes": 5476,
    "paints": 1088,
    "tile_models": 0,
    "walls": 0,
@@ -737,7 +761,7 @@
   {
    "square": 12181,
    "file": "blocks/12181.bin",
-   "sha256": "7fcd185d75386579245ff3f263405880276be5f076de190330f6f814c40edf85",
+   "sha256": "e76ac57fbfd3620aab3ab300ae49b8ac5d5121fab4255db761e479b4ce15ec56",
    "models_file": "blocks/12181.models.bin",
    "models_sha256": "99931c817c175595158308e901d809a28f6229d8dc46ecce836af785c7ff4c32",
    "origin_x": 3008,
@@ -747,6 +771,8 @@
     2984,
     9512
    ],
+   "raw_terrain": true,
+   "shadow_writes": 7544,
    "paints": 2642,
    "tile_models": 261,
    "walls": 645,
@@ -762,7 +788,7 @@
   {
    "square": 12334,
    "file": "blocks/12334.bin",
-   "sha256": "161e7f041fbd5b78f0695ff3eb79846911bc83255962599ea6a11b6e59f4876d",
+   "sha256": "f5c4f1c396830c3aad700aaa049e009efc9456663344cbb26823942ec35ee941",
    "models_file": "blocks/12334.models.bin",
    "models_sha256": "eec1ba89f4fa22a3bf5aa56d240a773d3de77f87403ce58e5e9e426b02c4b33d",
    "origin_x": 3072,
@@ -772,6 +798,8 @@
     3048,
     2920
    ],
+   "raw_terrain": true,
+   "shadow_writes": 124,
    "paints": 4127,
    "tile_models": 0,
    "walls": 23,
@@ -787,7 +815,7 @@
   {
    "square": 12335,
    "file": "blocks/12335.bin",
-   "sha256": "8539446ca1949ddea21fba638e407c5f449a07719c7768362a394989113a1f1d",
+   "sha256": "4f5ac558bb437d7bd222a8c334a33f013ecc99ead49d1b862bca987099ebd8d0",
    "models_file": "blocks/12335.models.bin",
    "models_sha256": "18fc3d26d13cf9506a176bd1db18dcbc4c2b616ddd2f6f6ccb945b6a9b43aa26",
    "origin_x": 3072,
@@ -797,6 +825,8 @@
     3048,
     2984
    ],
+   "raw_terrain": true,
+   "shadow_writes": 1236,
    "paints": 3660,
    "tile_models": 866,
    "walls": 378,
@@ -812,7 +842,7 @@
   {
    "square": 12336,
    "file": "blocks/12336.bin",
-   "sha256": "a4568f39337e6a204d6fb6ae7fc8b8dd58fadc676f9c662a6c5742604212ede0",
+   "sha256": "d20e78fb9e2fe7d2000d3ca93a1e6b54781e0302295bffdba6c9242dcdf0a2a9",
    "models_file": "blocks/12336.models.bin",
    "models_sha256": "3283e8e8068c553a6505d661f56d10fb05143a3faff3a5ea76d88a9d3a31944b",
    "origin_x": 3072,
@@ -822,6 +852,8 @@
     3048,
     3048
    ],
+   "raw_terrain": true,
+   "shadow_writes": 3736,
    "paints": 3927,
    "tile_models": 515,
    "walls": 825,
@@ -837,7 +869,7 @@
   {
    "square": 12337,
    "file": "blocks/12337.bin",
-   "sha256": "5dc423342ad995b122131e1bb173ca6823beca44cb99f99385a81335fef66579",
+   "sha256": "2dcef66fd958f0ccf125d709f3b5f41a62766d788fad89e4ebe29db2b73ed58b",
    "models_file": "blocks/12337.models.bin",
    "models_sha256": "3c0f485fd18bbae08f8f1e91c893c26901df35db511e8d570ad0a84d3c98ddd2",
    "origin_x": 3072,
@@ -847,6 +879,8 @@
     3048,
     3112
    ],
+   "raw_terrain": true,
+   "shadow_writes": 1160,
    "paints": 4348,
    "tile_models": 312,
    "walls": 341,
@@ -862,7 +896,7 @@
   {
    "square": 12338,
    "file": "blocks/12338.bin",
-   "sha256": "6d90b5d72559e16101e54d1356c42d01fd156ece39df442a74b63f686d7b31d4",
+   "sha256": "a0515d6a8a484ce7e5db4c25c31fddca1c39284aa55ac20d0bf9bb9186f65c45",
    "models_file": "blocks/12338.models.bin",
    "models_sha256": "b21461f54f4b3c4c49af769d4cb78fba82c513dd403a877c56240a7bfc07b2be",
    "origin_x": 3072,
@@ -872,6 +906,8 @@
     3048,
     3176
    ],
+   "raw_terrain": true,
+   "shadow_writes": 2834,
    "paints": 3984,
    "tile_models": 271,
    "walls": 450,
@@ -887,7 +923,7 @@
   {
    "square": 12339,
    "file": "blocks/12339.bin",
-   "sha256": "186d7413d8dd47c525301ea566362f7c1b9bc8f3ac7c1ce38feaebdd2757e59d",
+   "sha256": "a6676d5adbf8fed5ccd0345fc1471dc6fce01c742e40c06b326320a8e86e0c3a",
    "models_file": "blocks/12339.models.bin",
    "models_sha256": "28a3f07c03786fb7d696671d861299e40ac0e343321af235c3a1374d552fe363",
    "origin_x": 3072,
@@ -897,6 +933,8 @@
     3048,
     3240
    ],
+   "raw_terrain": true,
+   "shadow_writes": 2625,
    "paints": 3934,
    "tile_models": 340,
    "walls": 319,
@@ -912,7 +950,7 @@
   {
    "square": 12340,
    "file": "blocks/12340.bin",
-   "sha256": "df5a17710f1b054e2aaeb026b0630dc2760ae0ce104cf2b9438a8a8751195f0b",
+   "sha256": "b1b64c4ececa607ce2d58256b4bdbaa7337b7d762444023b80b6fa0dd938f449",
    "models_file": "blocks/12340.models.bin",
    "models_sha256": "9268819ed71316e58f877c994685bca655162f318e1b3d788fc91a5930076ccd",
    "origin_x": 3072,
@@ -922,6 +960,8 @@
     3048,
     3304
    ],
+   "raw_terrain": true,
+   "shadow_writes": 6948,
    "paints": 4663,
    "tile_models": 109,
    "walls": 718,
@@ -937,7 +977,7 @@
   {
    "square": 12341,
    "file": "blocks/12341.bin",
-   "sha256": "b836bc075afe4e77b36c16708c08350a8314e16e38b8ffc33bf48e754d57b138",
+   "sha256": "4e609592dcb4ddfdb75632ef33fd95183cdda3e76b4561650de8cb4d0c909114",
    "models_file": "blocks/12341.models.bin",
    "models_sha256": "573e3d9a1d09562807db565a1daf851959bc623ba0ae97ffbfd15906a7b5bdbc",
    "origin_x": 3072,
@@ -947,6 +987,8 @@
     3048,
     3368
    ],
+   "raw_terrain": true,
+   "shadow_writes": 2688,
    "paints": 3891,
    "tile_models": 357,
    "walls": 341,
@@ -962,7 +1004,7 @@
   {
    "square": 12435,
    "file": "blocks/12435.bin",
-   "sha256": "173b20bdd6b6e764ea4d49e572698443a1058d192bf59b5210e4eaec5757a8c3",
+   "sha256": "61c8476b8b509653d527350efaf022328b122b4d38ce599c2e4353ce22afda6e",
    "models_file": "blocks/12435.models.bin",
    "models_sha256": "d7c44b723f0e2d7e4ecdc131fb752d30bdfc9a86d2c04d45c8a9ef24ad20a576",
    "origin_x": 3072,
@@ -972,6 +1014,8 @@
     3048,
     9384
    ],
+   "raw_terrain": true,
+   "shadow_writes": 0,
    "paints": 0,
    "tile_models": 0,
    "walls": 508,
@@ -987,7 +1031,7 @@
   {
    "square": 12436,
    "file": "blocks/12436.bin",
-   "sha256": "840effc2b27e23251746a981f7a911ac87edad698abfd5a1e1781aea5c437a39",
+   "sha256": "7d5328fb3a9c09d52cc9df671cd2b0398f6a489c004bc19d17f20eab9d6d4e0f",
    "models_file": "blocks/12436.models.bin",
    "models_sha256": "861a0e86b17ac7638e0cb89a8e190c1d8fe0dfac368c42dd2477a81ab61f06e4",
    "origin_x": 3072,
@@ -997,6 +1041,8 @@
     3048,
     9448
    ],
+   "raw_terrain": true,
+   "shadow_writes": 13689,
    "paints": 4315,
    "tile_models": 95,
    "walls": 221,
@@ -1012,7 +1058,7 @@
   {
    "square": 12437,
    "file": "blocks/12437.bin",
-   "sha256": "6e31ab08afa2f2005dd050175e269c07634f9788a5c0f6f02f29cb98d3a2d3ce",
+   "sha256": "50f13daa55cc2d32acb695bb1e89c93998317284d48d283d26acdde386f5cf36",
    "models_file": "blocks/12437.models.bin",
    "models_sha256": "2056d2ed7304ac72272f228205747a174ac1ae261ab7d2352db1db0254ad0988",
    "origin_x": 3072,
@@ -1022,6 +1068,8 @@
     3048,
     9512
    ],
+   "raw_terrain": true,
+   "shadow_writes": 3525,
    "paints": 1190,
    "tile_models": 28,
    "walls": 222,
@@ -1037,7 +1085,7 @@
   {
    "square": 12590,
    "file": "blocks/12590.bin",
-   "sha256": "54a71c6df4100f3ad26716decedf883a8306b4086e3b03c5ed25e4129dd3fd85",
+   "sha256": "5df803995bab1817092cbda35bcb2d0908ccde4720b37e5e4fd6083b63c19c2c",
    "models_file": "blocks/12590.models.bin",
    "models_sha256": "1c98e63ecb71fbef5c57fcd2a8ada81ea027a36a1a6f0bd659fb3e9089c4a3a0",
    "origin_x": 3136,
@@ -1047,6 +1095,8 @@
     3112,
     2920
    ],
+   "raw_terrain": true,
+   "shadow_writes": 1232,
    "paints": 4168,
    "tile_models": 241,
    "walls": 339,
@@ -1062,7 +1112,7 @@
   {
    "square": 12591,
    "file": "blocks/12591.bin",
-   "sha256": "b79e6df50f50e87983a8d3d511a61540e260f343e8b38bd2199871494ea82cea",
+   "sha256": "46e0eb9e8caceff9ba2c9b5f169fcc33775288b8af6dda0814ef9aa8f2c196c3",
    "models_file": "blocks/12591.models.bin",
    "models_sha256": "2ffe1bbfb7310afe7a6df9840e6548f554c8627223a199e36a06ad9c6bf0b0a6",
    "origin_x": 3136,
@@ -1072,6 +1122,8 @@
     3112,
     2984
    ],
+   "raw_terrain": true,
+   "shadow_writes": 371,
    "paints": 3971,
    "tile_models": 125,
    "walls": 32,
@@ -1087,7 +1139,7 @@
   {
    "square": 12592,
    "file": "blocks/12592.bin",
-   "sha256": "9259b185ab304320ca422f28d380da4ebbea54c5a5034d962586b6c704f9e39b",
+   "sha256": "45ba89e97b261eb1caf8357c14e9bcc5d830d5cf795cb7e74940c7910b41e767",
    "models_file": "blocks/12592.models.bin",
    "models_sha256": "6e60b5adc21f0f4f90b849e15b7fb3ea6a06a3b4d2e504f54f64a0359fe83bc3",
    "origin_x": 3136,
@@ -1097,6 +1149,8 @@
     3112,
     3048
    ],
+   "raw_terrain": true,
+   "shadow_writes": 683,
    "paints": 3819,
    "tile_models": 518,
    "walls": 117,
@@ -1112,7 +1166,7 @@
   {
    "square": 12593,
    "file": "blocks/12593.bin",
-   "sha256": "8dff49b99aacdf099e55443a43598461662f756f8fbf07f9369e1b8d56c14705",
+   "sha256": "3487985c1b1795878f7870a0eaafa25d09d8167deb45d929a359ec21e4f90e7d",
    "models_file": "blocks/12593.models.bin",
    "models_sha256": "d8fc770124216627e4989b6a94be68372dbc0385b93151db5c9b582aa88a55c4",
    "origin_x": 3136,
@@ -1122,6 +1176,8 @@
     3112,
     3112
    ],
+   "raw_terrain": true,
+   "shadow_writes": 1471,
    "paints": 3797,
    "tile_models": 299,
    "walls": 37,
@@ -1137,7 +1193,7 @@
   {
    "square": 12594,
    "file": "blocks/12594.bin",
-   "sha256": "6ae69da3e1ecddfde2c736d0c5fa78f95062e01c5008912b85b69a4f080c5fc2",
+   "sha256": "fca9f2e3f96a14e3a6465681d6e6d3617959caf30a04e3183eacf9bb6104364d",
    "models_file": "blocks/12594.models.bin",
    "models_sha256": "34e2f9268c5ace04d691b28e97f232e9f124e845e65f6c8cb9902d431f843ec7",
    "origin_x": 3136,
@@ -1147,6 +1203,8 @@
     3112,
     3176
    ],
+   "raw_terrain": true,
+   "shadow_writes": 2337,
    "paints": 3919,
    "tile_models": 177,
    "walls": 134,
@@ -1162,7 +1220,7 @@
   {
    "square": 12595,
    "file": "blocks/12595.bin",
-   "sha256": "9ee7ef37a2a44a8ee700a821fc6714cd2701c521b2c8d54d9b5e1b924ccbd49a",
+   "sha256": "ffa71ae17b2c811f95f87004483cdffaea18eb2ac640cecabf6710f01672f0e1",
    "models_file": "blocks/12595.models.bin",
    "models_sha256": "d692ed9764b29c409cfecd589c5f0f0d9de1b9a0346aa3f68b71892a37c1e72c",
    "origin_x": 3136,
@@ -1172,6 +1230,8 @@
     3112,
     3240
    ],
+   "raw_terrain": true,
+   "shadow_writes": 2833,
    "paints": 3865,
    "tile_models": 326,
    "walls": 469,
@@ -1187,7 +1247,7 @@
   {
    "square": 12596,
    "file": "blocks/12596.bin",
-   "sha256": "6d5f9e9e831d4dffa08486e798481cfd766143bc0627a9bc75c19063e12526e1",
+   "sha256": "dfca3fcda9c6e22dd4c725796c30b4b8855de55c17f22c16214510ab1f342731",
    "models_file": "blocks/12596.models.bin",
    "models_sha256": "133426b01168ad7911718cda5887e4fbb939b1515696fbccdc0e401a829dc2b2",
    "origin_x": 3136,
@@ -1197,6 +1257,8 @@
     3112,
     3304
    ],
+   "raw_terrain": true,
+   "shadow_writes": 2426,
    "paints": 4106,
    "tile_models": 410,
    "walls": 450,
@@ -1212,7 +1274,7 @@
   {
    "square": 12597,
    "file": "blocks/12597.bin",
-   "sha256": "2e1e53067c83da3356a3837572bc7a067d33d3ad4c26d6dae766211ed71994c6",
+   "sha256": "96192a86c5d611ee5d7eb294ddd7b5e6c02bd9b4023d1be902b88ce93a93cb07",
    "models_file": "blocks/12597.models.bin",
    "models_sha256": "b8587389f45c269719ebe7b2be534e7b962b718d22cb2e973a09e282338ab66f",
    "origin_x": 3136,
@@ -1222,6 +1284,8 @@
     3112,
     3368
    ],
+   "raw_terrain": true,
+   "shadow_writes": 4602,
    "paints": 4686,
    "tile_models": 334,
    "walls": 1135,
@@ -1237,7 +1301,7 @@
   {
    "square": 12633,
    "file": "blocks/12633.bin",
-   "sha256": "91d9fd05803238954ff97a2348ad1c5c01afeee21a2c21e0e1f2a4dc46d41291",
+   "sha256": "3ee1ccc983e092e310064875ae93aa5e26c81071f79ac02ad335a19dc4074be1",
    "models_file": "blocks/12633.models.bin",
    "models_sha256": "4e2226f1c3ac608271fd34c4088f63a0e33ecd24d601bf6719e9e3f4ef245fd0",
    "origin_x": 3136,
@@ -1247,6 +1311,8 @@
     3112,
     5672
    ],
+   "raw_terrain": true,
+   "shadow_writes": 685,
    "paints": 252,
    "tile_models": 0,
    "walls": 40,
@@ -1262,7 +1328,7 @@
   {
    "square": 12693,
    "file": "blocks/12693.bin",
-   "sha256": "d2ba35aee0572a94542d5eeb0d65cbe88948651e4da19ac1769c33fa29191fa1",
+   "sha256": "ca19b6e9902d1c3dbd36d02aa59a0188407df0a1ef3a750e8804368656d30068",
    "models_file": "blocks/12693.models.bin",
    "models_sha256": "a3e26ba518300b95cb1d063786c01c1d3d7ad8dec634950dc2585f4e2117e3b6",
    "origin_x": 3136,
@@ -1272,6 +1338,8 @@
     3112,
     9512
    ],
+   "raw_terrain": true,
+   "shadow_writes": 15070,
    "paints": 1804,
    "tile_models": 656,
    "walls": 10,
@@ -1287,7 +1355,7 @@
   {
    "square": 12694,
    "file": "blocks/12694.bin",
-   "sha256": "9192fce33535610ad3b276fb9ea9cf704e088278f6acfe67db9b8b8f47574a31",
+   "sha256": "9113db8cc86c994f795a1a15d93795416dd5c6e7314468d0402afa6e654b45ef",
    "models_file": "blocks/12694.models.bin",
    "models_sha256": "b9e4f6e9c09db352ae19da37f235e3401986a0ac2e8cdd5b047747de3bee1623",
    "origin_x": 3136,
@@ -1297,6 +1365,8 @@
     3112,
     9576
    ],
+   "raw_terrain": true,
+   "shadow_writes": 11679,
    "paints": 1444,
    "tile_models": 246,
    "walls": 605,
@@ -1312,7 +1382,7 @@
   {
    "square": 12695,
    "file": "blocks/12695.bin",
-   "sha256": "0dd7d0a8d8fc5565a48260a2db0d22b7bb90806ab51211c2a724d27f510266b7",
+   "sha256": "7d0941290c42210763ad187943a326d8d06ba3092d97c89b58342efb3f7d164d",
    "models_file": "blocks/12695.models.bin",
    "models_sha256": "7c0162a3b74f060a4cbe6a74746e0021ed074e4632c9c0c80dd0428ab8f2adeb",
    "origin_x": 3136,
@@ -1322,6 +1392,8 @@
     3112,
     9640
    ],
+   "raw_terrain": true,
+   "shadow_writes": 1662,
    "paints": 570,
    "tile_models": 224,
    "walls": 157,
@@ -1337,7 +1409,7 @@
   {
    "square": 12846,
    "file": "blocks/12846.bin",
-   "sha256": "e93929e61d37774d44f61e84aa41681a13a84f67512f2cb0b5caa9ac1b6028e8",
+   "sha256": "fbe989820b483db937c437ab1121258981a83b54e844b7fc1f81d483a2388591",
    "models_file": "blocks/12846.models.bin",
    "models_sha256": "87cb543df23fc71a36e90bd33bdba0d53a120f54ae62aa7c18802265752be283",
    "origin_x": 3200,
@@ -1347,6 +1419,8 @@
     3176,
     2920
    ],
+   "raw_terrain": true,
+   "shadow_writes": 102,
    "paints": 3856,
    "tile_models": 240,
    "walls": 0,
@@ -1362,7 +1436,7 @@
   {
    "square": 12847,
    "file": "blocks/12847.bin",
-   "sha256": "9dda4b23283c020f689a7f542daa7dfd50dd925e0195a3197eb5f56dec9393a2",
+   "sha256": "1e2d05694ca62434c938d45ef9b8ca93cb5b93b24f1d4d053fa8ee59ca02bf29",
    "models_file": "blocks/12847.models.bin",
    "models_sha256": "857be7b026d196ef23389a6da22707d858d5f19543b65bb3c1d02561be3564a6",
    "origin_x": 3200,
@@ -1372,6 +1446,8 @@
     3176,
     2984
    ],
+   "raw_terrain": true,
+   "shadow_writes": 161,
    "paints": 4093,
    "tile_models": 3,
    "walls": 0,
@@ -1387,7 +1463,7 @@
   {
    "square": 12848,
    "file": "blocks/12848.bin",
-   "sha256": "4289867ae4cd941ee7808d39c35e6ef44b0bab7277abb8feeadfe830be8385fb",
+   "sha256": "1151857ba852ab9617051f91caec6c7bf21eb510bbba7968a9b0fff337bda02c",
    "models_file": "blocks/12848.models.bin",
    "models_sha256": "86c2d7c84a058b7687b36393adcecedb95c1c95fe59c27074794bf6e610d8228",
    "origin_x": 3200,
@@ -1397,6 +1473,8 @@
     3176,
     3048
    ],
+   "raw_terrain": true,
+   "shadow_writes": 461,
    "paints": 3990,
    "tile_models": 106,
    "walls": 0,
@@ -1412,7 +1490,7 @@
   {
    "square": 12849,
    "file": "blocks/12849.bin",
-   "sha256": "3f476509193c61e240b23770dd10cc8ab1b1972fc5885605d7a1f04497458d30",
+   "sha256": "fa1be9afb09624ff1cee4ca4ed9ebf5cd3bd59d9b21fac3fcbde7f8ea82f70ae",
    "models_file": "blocks/12849.models.bin",
    "models_sha256": "3db944005d859fd21e0da341b9140a8eb4536bda74c25aa1d7d041bfe695a476",
    "origin_x": 3200,
@@ -1422,6 +1500,8 @@
     3176,
     3112
    ],
+   "raw_terrain": true,
+   "shadow_writes": 1256,
    "paints": 3703,
    "tile_models": 445,
    "walls": 124,
@@ -1437,7 +1517,7 @@
   {
    "square": 12850,
    "file": "blocks/12850.bin",
-   "sha256": "41785c4cb5ad0fed598c185e5934eb1ad566e2fd5cd918d357c799c4c6f11d27",
+   "sha256": "37a49ec9f3b35fb3f7c731ef0aadf88ce5aae07274252d22fba3193044d258ae",
    "models_file": "blocks/12850.models.bin",
    "models_sha256": "01e2a273c8c9d16fc8a5c9a39151af9cb3d76a0667e30e3011e35c976b46d963",
    "origin_x": 3200,
@@ -1447,6 +1527,8 @@
     3176,
     3176
    ],
+   "raw_terrain": true,
+   "shadow_writes": 4783,
    "paints": 4288,
    "tile_models": 445,
    "walls": 1336,
@@ -1462,7 +1544,7 @@
   {
    "square": 12851,
    "file": "blocks/12851.bin",
-   "sha256": "8a7ef6098574631b3ce65c72b13c9726cdf69fa419637692d802c0d027955f71",
+   "sha256": "9d45907c662a271eb2da3f4059355936cec29b86c1478818a1bc9aec059421e5",
    "models_file": "blocks/12851.models.bin",
    "models_sha256": "d1cd051674920bf772de0e31346c1a4fef872f16cdd524d3c1da07cc3aa962bd",
    "origin_x": 3200,
@@ -1472,6 +1554,8 @@
     3176,
     3240
    ],
+   "raw_terrain": true,
+   "shadow_writes": 2043,
    "paints": 3671,
    "tile_models": 526,
    "walls": 404,
@@ -1487,7 +1571,7 @@
   {
    "square": 12852,
    "file": "blocks/12852.bin",
-   "sha256": "ff5d8750f527108556bd5f78b9f03180b2fb959a0c947c9ee12cc136a53cafb2",
+   "sha256": "aa9edd6203acab56bd3dc9b2f46c452073996c5c418c935b8fc616519acb862c",
    "models_file": "blocks/12852.models.bin",
    "models_sha256": "3ed7a5abe5ed3a85c1a0969ca18daf5d9b3620ca413b05b90eb7fe51fb157721",
    "origin_x": 3200,
@@ -1497,6 +1581,8 @@
     3176,
     3304
    ],
+   "raw_terrain": true,
+   "shadow_writes": 3167,
    "paints": 4090,
    "tile_models": 269,
    "walls": 759,
@@ -1512,7 +1598,7 @@
   {
    "square": 12853,
    "file": "blocks/12853.bin",
-   "sha256": "12265b4f2d34946ee9d1704f18e4413e14964bd227741e973c3a6c5e4649969f",
+   "sha256": "1f59e7ce3ef6dd8bcfbdb03859901bd9909d55825e8dca9504f1039233fea72d",
    "models_file": "blocks/12853.models.bin",
    "models_sha256": "5de79c818bd89f756d616728391ad37f81ecf6bebdc18aed999c1edeb0b76b76",
    "origin_x": 3200,
@@ -1522,6 +1608,8 @@
     3176,
     3368
    ],
+   "raw_terrain": true,
+   "shadow_writes": 5647,
    "paints": 5196,
    "tile_models": 660,
    "walls": 1682,
@@ -1537,7 +1625,7 @@
   {
    "square": 12949,
    "file": "blocks/12949.bin",
-   "sha256": "ddc560596baa9945e4ef1daefb39c4936b37f6f48bfabc972f33d0d6ec47bd92",
+   "sha256": "bbc6e7de3edec11193d2a8883e83fd7d69a38328d27e6873864d49fcb3e52159",
    "models_file": "blocks/12949.models.bin",
    "models_sha256": "7e58d26a9b3de2e5ab398b6cb4b4d8e5957d3094002bc9e60b92e3ff57bf5795",
    "origin_x": 3200,
@@ -1547,6 +1635,8 @@
     3176,
     9512
    ],
+   "raw_terrain": true,
+   "shadow_writes": 17099,
    "paints": 1746,
    "tile_models": 534,
    "walls": 4,
@@ -1562,7 +1652,7 @@
   {
    "square": 12950,
    "file": "blocks/12950.bin",
-   "sha256": "c462510a7f1de064ffe1e32c7d78cbad97479941ab80221ac87df902fe474099",
+   "sha256": "9e99e9c88d1afa341d885797410af76485081fb85e2e74eaf5c9d9ba3d5e514f",
    "models_file": "blocks/12950.models.bin",
    "models_sha256": "fd2a429f3363bd64220b2517585e08cb9d47fe33c925504ac421afd42bb5e913",
    "origin_x": 3200,
@@ -1572,6 +1662,8 @@
     3176,
     9576
    ],
+   "raw_terrain": true,
+   "shadow_writes": 22343,
    "paints": 1618,
    "tile_models": 553,
    "walls": 95,
@@ -1587,7 +1679,7 @@
   {
    "square": 12951,
    "file": "blocks/12951.bin",
-   "sha256": "a0af7b0425d3dc7b8677e9d6ee1e703aebb2c34f072faa8b43c196fa04433ed0",
+   "sha256": "92fb10f9a8d7c8a1e684c9783e29c657d409b9d88b426128f52fda9221e4e26e",
    "models_file": "blocks/12951.models.bin",
    "models_sha256": "d8de7e18daea36e29e0360ef9db7ebd049b295c83c581a6de502550b476b78a5",
    "origin_x": 3200,
@@ -1597,6 +1689,8 @@
     3176,
     9640
    ],
+   "raw_terrain": true,
+   "shadow_writes": 12502,
    "paints": 375,
    "tile_models": 131,
    "walls": 198,
@@ -1612,7 +1706,7 @@
   {
    "square": 13104,
    "file": "blocks/13104.bin",
-   "sha256": "8b4b130b19bcaddc76c8b4ad38e58f6d33027b1f8d5d2bb82417700e06d0a44e",
+   "sha256": "94f259c3d773193a62370f688b4fd8348dde5d831fd228e40d5d632279de917a",
    "models_file": "blocks/13104.models.bin",
    "models_sha256": "4db9eaf7cd4f3f266abf8e712c252cd9caa2d991a0533e2890e5d34f2331e740",
    "origin_x": 3264,
@@ -1622,6 +1716,8 @@
     3240,
     3048
    ],
+   "raw_terrain": true,
+   "shadow_writes": 248,
    "paints": 4028,
    "tile_models": 68,
    "walls": 49,
@@ -1637,7 +1733,7 @@
   {
    "square": 13105,
    "file": "blocks/13105.bin",
-   "sha256": "8e6ec4e59d1340adde77a834ee6faaef08a25e1112b5f3e87d74d5e443337f78",
+   "sha256": "63f2f869c027cd0575de421c9e17e31446e8a772565c0d9ce5054e98bda7f357",
    "models_file": "blocks/13105.models.bin",
    "models_sha256": "16c1b7959b6e90c2a5f8d7c672f32701b0482d312f8f8db59af0d53aa25b8166",
    "origin_x": 3264,
@@ -1647,6 +1743,8 @@
     3240,
     3112
    ],
+   "raw_terrain": true,
+   "shadow_writes": 3267,
    "paints": 5461,
    "tile_models": 128,
    "walls": 981,
@@ -1662,7 +1760,7 @@
   {
    "square": 13106,
    "file": "blocks/13106.bin",
-   "sha256": "340a2fd029a94698e10596195209779f73472356441bd69c354abf579bb43991",
+   "sha256": "9d5a48ff6755dabbe1daa6f2908241c9800c47ee0667c97c904445ce3bd71a5e",
    "models_file": "blocks/13106.models.bin",
    "models_sha256": "ab96c491b1f216d3e32e4fd2f96e34d2e383b8668e7c5422d756b3ac5cf09986",
    "origin_x": 3264,
@@ -1672,6 +1770,8 @@
     3240,
     3176
    ],
+   "raw_terrain": true,
+   "shadow_writes": 1306,
    "paints": 4028,
    "tile_models": 212,
    "walls": 378,
@@ -1687,7 +1787,7 @@
   {
    "square": 13107,
    "file": "blocks/13107.bin",
-   "sha256": "7f69bc463ddb2c6c962da4a9d7ca4a20b6c6bf8d6d20fd092c8bf4e1c58b069a",
+   "sha256": "c5f546bb8c71a7aba912c44288c12a0afa02d16efb0343ff39c949b405fa6d9f",
    "models_file": "blocks/13107.models.bin",
    "models_sha256": "b85228edcd41414a839219bd9dea7e83498424d8c9fffd65b6262d8676d1a901",
    "origin_x": 3264,
@@ -1697,6 +1797,8 @@
     3240,
     3240
    ],
+   "raw_terrain": true,
+   "shadow_writes": 278,
    "paints": 3946,
    "tile_models": 150,
    "walls": 75,
@@ -1712,7 +1814,7 @@
   {
    "square": 13108,
    "file": "blocks/13108.bin",
-   "sha256": "2869f201e4b47ed3bc11b118ccf05348f32040323c7edf7e92402f6a69dcea91",
+   "sha256": "1b9844ba8e24c8421037a14cac31337e76a5d9d33f6c3de6519bc6cde6e53d53",
    "models_file": "blocks/13108.models.bin",
    "models_sha256": "54273a5cbeb9800e0c801bdcf76e732d0ef607f543651f4a03d998c232d0494b",
    "origin_x": 3264,
@@ -1722,6 +1824,8 @@
     3240,
     3304
    ],
+   "raw_terrain": true,
+   "shadow_writes": 2308,
    "paints": 3818,
    "tile_models": 359,
    "walls": 516,
@@ -1737,7 +1841,7 @@
   {
    "square": 13109,
    "file": "blocks/13109.bin",
-   "sha256": "2109712a5e64eb70eae313ff12f58edc124ab083dea3fe01ca0d89edd0b0ce78",
+   "sha256": "3bb151fa27c3a99cca8cec709680e8fb03595812ec85bc335b7654489901e6ad",
    "models_file": "blocks/13109.models.bin",
    "models_sha256": "4d772ff10ad2cb9ca8d79c512375cb74dae655e8539bfe9396cd4d7d0d0774bc",
    "origin_x": 3264,
@@ -1747,6 +1851,8 @@
     3240,
     3368
    ],
+   "raw_terrain": true,
+   "shadow_writes": 3043,
    "paints": 4023,
    "tile_models": 319,
    "walls": 591,
@@ -1762,7 +1868,7 @@
   {
    "square": 13205,
    "file": "blocks/13205.bin",
-   "sha256": "f0f4e87bf4c631f420d303165093c8fe1036449f2e635b8a667d16dcfc0ea8df",
+   "sha256": "fe1ef3d78ba2308a1cd636d13718f750fa3d91993760e58e55e2b3bd06c4893d",
    "models_file": "blocks/13205.models.bin",
    "models_sha256": "5a82550586fc052ef51884d17104f3badc895c33d746b052266fc28ec50a6eaa",
    "origin_x": 3264,
@@ -1772,6 +1878,8 @@
     3240,
     9512
    ],
+   "raw_terrain": true,
+   "shadow_writes": 1851,
    "paints": 591,
    "tile_models": 39,
    "walls": 109,
@@ -1787,7 +1895,7 @@
   {
    "square": 13206,
    "file": "blocks/13206.bin",
-   "sha256": "cbdff17da1ad148b1eb4e24378b0d5269bce62400ad989ebd6fdf4a9659fed64",
+   "sha256": "6ef807793b32c7eeb956de07804be203b2ba2b0368ff6b82de616c1356bef0ca",
    "models_file": "blocks/13206.models.bin",
    "models_sha256": "c7d226761ec4b07b0e2124283706ac31d7782d1768f8b481c1e8475632618ff1",
    "origin_x": 3264,
@@ -1797,6 +1905,8 @@
     3240,
     9576
    ],
+   "raw_terrain": true,
+   "shadow_writes": 19348,
    "paints": 1204,
    "tile_models": 858,
    "walls": 14,
@@ -1812,7 +1922,7 @@
   {
    "square": 13360,
    "file": "blocks/13360.bin",
-   "sha256": "eba4d5d6a8992667d4907043ec0f10f28b0b6827899cb4a206a750e074146913",
+   "sha256": "7b771eb4c72434c167cddf06c7231e523c2f20a56a538d6c42bff2286e32d6f3",
    "models_file": "blocks/13360.models.bin",
    "models_sha256": "7cdecf876e066a111be675fc1eac9dd91d14b6308167e21017a1b29fe15d1dec",
    "origin_x": 3328,
@@ -1822,6 +1932,8 @@
     3304,
     3048
    ],
+   "raw_terrain": true,
+   "shadow_writes": 368,
    "paints": 3879,
    "tile_models": 239,
    "walls": 56,
@@ -1837,7 +1949,7 @@
   {
    "square": 13361,
    "file": "blocks/13361.bin",
-   "sha256": "33fa28a31bd659572331175446a0fbb8b76ace991ee9177cf440311a5984898e",
+   "sha256": "5c596b97099535ffbc8821321774834236edad2dce4f9cc3c537895accd86d51",
    "models_file": "blocks/13361.models.bin",
    "models_sha256": "a637b56349d6b2f62404ea18000294f4789e5f9f2e7e3338484b58d78072112c",
    "origin_x": 3328,
@@ -1847,6 +1959,8 @@
     3304,
     3112
    ],
+   "raw_terrain": true,
+   "shadow_writes": 1746,
    "paints": 3683,
    "tile_models": 434,
    "walls": 273,
@@ -1862,7 +1976,7 @@
   {
    "square": 13362,
    "file": "blocks/13362.bin",
-   "sha256": "33809c0bee961dbedbaf56544a33ee64b9a1d6d872a4fbccd12794bfe2e7bbdc",
+   "sha256": "b3ebe5f89fdf8efbca61a83bbcd5ebfe0be7e726a43a35b17d1a74521a987d4a",
    "models_file": "blocks/13362.models.bin",
    "models_sha256": "8b86f01fd0298d0a1120654b29a50cab2403783fd5d9af6fd3a6dc70f056681d",
    "origin_x": 3328,
@@ -1872,6 +1986,8 @@
     3304,
     3176
    ],
+   "raw_terrain": true,
+   "shadow_writes": 6929,
    "paints": 6062,
    "tile_models": 535,
    "walls": 1972,
@@ -1887,7 +2003,7 @@
   {
    "square": 13363,
    "file": "blocks/13363.bin",
-   "sha256": "8305b78cb15f83674364cecea70545ef07a57094b321e2892e1c80a64155964c",
+   "sha256": "c570b0cadcf573909288b00f690175336cae8252a8e8f208d1436f3d35374665",
    "models_file": "blocks/13363.models.bin",
    "models_sha256": "6c65254c886e1bd621105f6e1a16cce94d45dc9de1298f8c41e1f9df588fcaab",
    "origin_x": 3328,
@@ -1897,6 +2013,8 @@
     3304,
     3240
    ],
+   "raw_terrain": true,
+   "shadow_writes": 2718,
    "paints": 4385,
    "tile_models": 310,
    "walls": 746,
@@ -1912,7 +2030,7 @@
   {
    "square": 13364,
    "file": "blocks/13364.bin",
-   "sha256": "17fcf2e89d4629dd8398baed1bf8602fde7acc4dd0c6b4685f96715e00c10f01",
+   "sha256": "1f878909be0752df24e23229d59d1383788e9c0bde19f9a85dd59d882d973870",
    "models_file": "blocks/13364.models.bin",
    "models_sha256": "710c5e3d147c3d352a27bfbc645dd43bd47e998913faf8e0e9fa6d953de7e4b2",
    "origin_x": 3328,
@@ -1922,6 +2040,8 @@
     3304,
     3304
    ],
+   "raw_terrain": true,
+   "shadow_writes": 2838,
    "paints": 3845,
    "tile_models": 251,
    "walls": 314,
@@ -1937,7 +2057,7 @@
   {
    "square": 13365,
    "file": "blocks/13365.bin",
-   "sha256": "2436f021e89e06df2f030cf3df3a46aa25c8496b493b7c8f81be7d722c694a60",
+   "sha256": "00782cee55c1124fc9d3e1a2e86b0db733376445f6a1c8f951adb30e6cb6ad46",
    "models_file": "blocks/13365.models.bin",
    "models_sha256": "235f455ab06357e86ec02a9ab9713eb7aff207e7a38524522598657aef426e79",
    "origin_x": 3328,
@@ -1947,6 +2067,8 @@
     3304,
     3368
    ],
+   "raw_terrain": true,
+   "shadow_writes": 2662,
    "paints": 4017,
    "tile_models": 183,
    "walls": 517,
@@ -8600,6 +8722,12 @@
   ],
   "kit_count": 307
  },
+ "floor_definitions": {
+  "file": "terrain/floors.bin",
+  "sha256": "b6c2356d8a663e3f15c218bf67ea631acdf1eb6cbe13ad42b3610d86488622d2",
+  "underlays": 251,
+  "overlays": 643
+ },
  "files": {
   "tables.bin": {
    "sha256": "954c4395b0b236169129950ce3c98cfdaa662de33b7ad67e7270757fc7c247c6",
@@ -10392,12 +10520,12 @@
    }
   },
   "blocks/11822.bin": {
-   "sha256": "f4282b6bfc34d2d583057845304b62dbf93698f16350ac1d6d70306aa0f6c883",
-   "size_bytes": 554640,
+   "sha256": "685847b7df7757126c0ff78441eceb899ee1cf3e1dfb13ac24d2bef1f00d5000",
+   "size_bytes": 952168,
    "detail": {
     "square": 11822,
     "file": "blocks/11822.bin",
-    "sha256": "f4282b6bfc34d2d583057845304b62dbf93698f16350ac1d6d70306aa0f6c883",
+    "sha256": "685847b7df7757126c0ff78441eceb899ee1cf3e1dfb13ac24d2bef1f00d5000",
     "models_file": "blocks/11822.models.bin",
     "models_sha256": "bed9beadda34e7d23709e36666bfd3a565139298382782ce024085bf656470a6",
     "origin_x": 2944,
@@ -10407,6 +10535,8 @@
      2920,
      2920
     ],
+    "raw_terrain": true,
+    "shadow_writes": 179,
     "paints": 3936,
     "tile_models": 160,
     "walls": 21,
@@ -10427,12 +10557,12 @@
    }
   },
   "blocks/11823.bin": {
-   "sha256": "c23816a516f4c84141c83e4e2abed5d84d9d133e8db58542bee0e50b6a1b9c64",
-   "size_bytes": 706080,
+   "sha256": "e94279c478f58821991ccde6c687ff57d5435d47f7a1193062553c8c6234dee1",
+   "size_bytes": 1149952,
    "detail": {
     "square": 11823,
     "file": "blocks/11823.bin",
-    "sha256": "c23816a516f4c84141c83e4e2abed5d84d9d133e8db58542bee0e50b6a1b9c64",
+    "sha256": "e94279c478f58821991ccde6c687ff57d5435d47f7a1193062553c8c6234dee1",
     "models_file": "blocks/11823.models.bin",
     "models_sha256": "497f3b66de9a3f083e5309e7a91961ec5c8c78c3902a8b21e738a1f8e5f1150d",
     "origin_x": 2944,
@@ -10442,6 +10572,8 @@
      2920,
      2984
     ],
+    "raw_terrain": true,
+    "shadow_writes": 2110,
     "paints": 4251,
     "tile_models": 219,
     "walls": 384,
@@ -10462,12 +10594,12 @@
    }
   },
   "blocks/11824.bin": {
-   "sha256": "6ef41e595d939ad446a4b3cafdc0299db35022109579e11fcb924ca94aeb1d70",
-   "size_bytes": 534211,
+   "sha256": "9b816b71fe7425af262c1c33a866c5c4566e9c8b478ba3bd44f14f9b228922b2",
+   "size_bytes": 931283,
    "detail": {
     "square": 11824,
     "file": "blocks/11824.bin",
-    "sha256": "6ef41e595d939ad446a4b3cafdc0299db35022109579e11fcb924ca94aeb1d70",
+    "sha256": "9b816b71fe7425af262c1c33a866c5c4566e9c8b478ba3bd44f14f9b228922b2",
     "models_file": "blocks/11824.models.bin",
     "models_sha256": "0fc3f812daee7afebf1e8a5529e9071e0e935a73647d9d17d1bbfed564b1a046",
     "origin_x": 2944,
@@ -10477,6 +10609,8 @@
      2920,
      3048
     ],
+    "raw_terrain": true,
+    "shadow_writes": 160,
     "paints": 4024,
     "tile_models": 72,
     "walls": 0,
@@ -10497,12 +10631,12 @@
    }
   },
   "blocks/11825.bin": {
-   "sha256": "65280b32472ae78b1f6740a1a457ab57ed9941c2764d79b112337a53ece581e8",
-   "size_bytes": 762988,
+   "sha256": "9835dca16491ab6e7297e3011a77fc6f013762d41a2681ff60834f9051ddc700",
+   "size_bytes": 1199372,
    "detail": {
     "square": 11825,
     "file": "blocks/11825.bin",
-    "sha256": "65280b32472ae78b1f6740a1a457ab57ed9941c2764d79b112337a53ece581e8",
+    "sha256": "9835dca16491ab6e7297e3011a77fc6f013762d41a2681ff60834f9051ddc700",
     "models_file": "blocks/11825.models.bin",
     "models_sha256": "9740dc8d4a72c672961b2b0298b5d208abf51d47a9127697a580e6747c1ef9a3",
     "origin_x": 2944,
@@ -10512,6 +10646,8 @@
      2920,
      3112
     ],
+    "raw_terrain": true,
+    "shadow_writes": 1798,
     "paints": 4085,
     "tile_models": 205,
     "walls": 258,
@@ -10532,12 +10668,12 @@
    }
   },
   "blocks/11826.bin": {
-   "sha256": "9a655d6d84ba2184b53aac68d9836eb4df08f29c77bf6d8c34663ea2348d7144",
-   "size_bytes": 955260,
+   "sha256": "42ece021fde662c17107cdf8ab02a14ab6d5c01b9075488bf05915418e91540f",
+   "size_bytes": 1417876,
    "detail": {
     "square": 11826,
     "file": "blocks/11826.bin",
-    "sha256": "9a655d6d84ba2184b53aac68d9836eb4df08f29c77bf6d8c34663ea2348d7144",
+    "sha256": "42ece021fde662c17107cdf8ab02a14ab6d5c01b9075488bf05915418e91540f",
     "models_file": "blocks/11826.models.bin",
     "models_sha256": "cebad5d2097cc74e6a8e086db01de3e2cbfa39426a9bba9459f6f8aecbb70d92",
     "origin_x": 2944,
@@ -10547,6 +10683,8 @@
      2920,
      3176
     ],
+    "raw_terrain": true,
+    "shadow_writes": 2891,
     "paints": 3869,
     "tile_models": 324,
     "walls": 413,
@@ -10567,12 +10705,12 @@
    }
   },
   "blocks/12078.bin": {
-   "sha256": "a45b2f559e14be5af3a661c9a9837885c0f077e4be8c8ec3be5b304d3fa5eb49",
-   "size_bytes": 853924,
+   "sha256": "1201b22a5210618d3a6c86a231dbb365ec0f0750d1eb2d34053d9d84ccadfe93",
+   "size_bytes": 1309988,
    "detail": {
     "square": 12078,
     "file": "blocks/12078.bin",
-    "sha256": "a45b2f559e14be5af3a661c9a9837885c0f077e4be8c8ec3be5b304d3fa5eb49",
+    "sha256": "1201b22a5210618d3a6c86a231dbb365ec0f0750d1eb2d34053d9d84ccadfe93",
     "models_file": "blocks/12078.models.bin",
     "models_sha256": "e18030f6a2cb2cde6d1df523d33bca887913cca6f333263de3cc6584f5f6cda0",
     "origin_x": 3008,
@@ -10582,6 +10720,8 @@
      2984,
      2920
     ],
+    "raw_terrain": true,
+    "shadow_writes": 2618,
     "paints": 4179,
     "tile_models": 690,
     "walls": 452,
@@ -10602,12 +10742,12 @@
    }
   },
   "blocks/12079.bin": {
-   "sha256": "da1e7478d21672539ef36375e68a481bd9f266718e5c8bfcd39bd0200f72ed22",
-   "size_bytes": 559264,
+   "sha256": "9bdf0b0fac200e36d478667c5e8d553cfde4e461ce4066086801886f96e6ba32",
+   "size_bytes": 957320,
    "detail": {
     "square": 12079,
     "file": "blocks/12079.bin",
-    "sha256": "da1e7478d21672539ef36375e68a481bd9f266718e5c8bfcd39bd0200f72ed22",
+    "sha256": "9bdf0b0fac200e36d478667c5e8d553cfde4e461ce4066086801886f96e6ba32",
     "models_file": "blocks/12079.models.bin",
     "models_sha256": "8da5a2a19a62ddafb778c573da9b9dd7e14972b185d51fdb1adb3f2ce6080c1d",
     "origin_x": 3008,
@@ -10617,6 +10757,8 @@
      2984,
      2984
     ],
+    "raw_terrain": true,
+    "shadow_writes": 201,
     "paints": 3992,
     "tile_models": 181,
     "walls": 9,
@@ -10637,12 +10779,12 @@
    }
   },
   "blocks/12080.bin": {
-   "sha256": "1c046df48a8848e57c87be157417e21aac0aaea27a7dcdcdb68198f1ff6b1742",
-   "size_bytes": 647073,
+   "sha256": "4b2fe264f81483d7d29baf9e2ba4309429a61652a43d8e33f76d0c1ded6b3a7d",
+   "size_bytes": 1044097,
    "detail": {
     "square": 12080,
     "file": "blocks/12080.bin",
-    "sha256": "1c046df48a8848e57c87be157417e21aac0aaea27a7dcdcdb68198f1ff6b1742",
+    "sha256": "4b2fe264f81483d7d29baf9e2ba4309429a61652a43d8e33f76d0c1ded6b3a7d",
     "models_file": "blocks/12080.models.bin",
     "models_sha256": "fa39f3ab8d16e04d8a40adf02282d957e57f8310a75d10013192b8bafa23d9a6",
     "origin_x": 3008,
@@ -10652,6 +10794,8 @@
      2984,
      3048
     ],
+    "raw_terrain": true,
+    "shadow_writes": 158,
     "paints": 3756,
     "tile_models": 522,
     "walls": 31,
@@ -10672,12 +10816,12 @@
    }
   },
   "blocks/12081.bin": {
-   "sha256": "54f8de294bbb70d6116e2bb62e8c908599a5e22e1d3a51d03e095bc69fb235b5",
-   "size_bytes": 718517,
+   "sha256": "d907664c1af53546326ab79659b8dbda43e8401a2c322c9ea2b1d05c679656ae",
+   "size_bytes": 1168485,
    "detail": {
     "square": 12081,
     "file": "blocks/12081.bin",
-    "sha256": "54f8de294bbb70d6116e2bb62e8c908599a5e22e1d3a51d03e095bc69fb235b5",
+    "sha256": "d907664c1af53546326ab79659b8dbda43e8401a2c322c9ea2b1d05c679656ae",
     "models_file": "blocks/12081.models.bin",
     "models_sha256": "5f13f9ad7dff90cb2b14bbcad328d8cb0648acb6d9c92a4a5cf6af92b496ed42",
     "origin_x": 3008,
@@ -10687,6 +10831,8 @@
      2984,
      3112
     ],
+    "raw_terrain": true,
+    "shadow_writes": 2364,
     "paints": 4345,
     "tile_models": 133,
     "walls": 332,
@@ -10707,12 +10853,12 @@
    }
   },
   "blocks/12082.bin": {
-   "sha256": "983f15f4f48ab0a6623ae8b1502b78fe22c5b6d80ba04aff1475729537df3363",
-   "size_bytes": 979025,
+   "sha256": "e9d66b06db9ccb9add8a402413d88493471727192a2056d407698d1c15a12dfd",
+   "size_bytes": 1514745,
    "detail": {
     "square": 12082,
     "file": "blocks/12082.bin",
-    "sha256": "983f15f4f48ab0a6623ae8b1502b78fe22c5b6d80ba04aff1475729537df3363",
+    "sha256": "e9d66b06db9ccb9add8a402413d88493471727192a2056d407698d1c15a12dfd",
     "models_file": "blocks/12082.models.bin",
     "models_sha256": "9ad2514caddb74739d49c4aa24c6902f8cec170f8b290b8d670f033025a9a9dc",
     "origin_x": 3008,
@@ -10722,6 +10868,8 @@
      2984,
      3176
     ],
+    "raw_terrain": true,
+    "shadow_writes": 5937,
     "paints": 4994,
     "tile_models": 194,
     "walls": 981,
@@ -10742,12 +10890,12 @@
    }
   },
   "blocks/12179.bin": {
-   "sha256": "8d4b99a5bbaf32e4452b537602f1f789a581c98a686c521d0281daaeee254f6f",
-   "size_bytes": 342304,
+   "sha256": "67ab2da7b5fe7b34bdd2b3c095cb07618ace7657ef778fe0967193b5fa374459",
+   "size_bytes": 735536,
    "detail": {
     "square": 12179,
     "file": "blocks/12179.bin",
-    "sha256": "8d4b99a5bbaf32e4452b537602f1f789a581c98a686c521d0281daaeee254f6f",
+    "sha256": "67ab2da7b5fe7b34bdd2b3c095cb07618ace7657ef778fe0967193b5fa374459",
     "models_file": "blocks/12179.models.bin",
     "models_sha256": "d7c44b723f0e2d7e4ecdc131fb752d30bdfc9a86d2c04d45c8a9ef24ad20a576",
     "origin_x": 3008,
@@ -10757,6 +10905,8 @@
      2984,
      9384
     ],
+    "raw_terrain": true,
+    "shadow_writes": 0,
     "paints": 0,
     "tile_models": 0,
     "walls": 256,
@@ -10777,12 +10927,12 @@
    }
   },
   "blocks/12180.bin": {
-   "sha256": "9eac72417f868e8d6f989a94edc59de5f2e25f13c9724e40e4bf2ae188bd62ef",
-   "size_bytes": 548463,
+   "sha256": "4a70f798f6f39c28d60555fb32895b15ad4ef6454e94fe306ad825997ea4905d",
+   "size_bytes": 1073119,
    "detail": {
     "square": 12180,
     "file": "blocks/12180.bin",
-    "sha256": "9eac72417f868e8d6f989a94edc59de5f2e25f13c9724e40e4bf2ae188bd62ef",
+    "sha256": "4a70f798f6f39c28d60555fb32895b15ad4ef6454e94fe306ad825997ea4905d",
     "models_file": "blocks/12180.models.bin",
     "models_sha256": "a066cd467f4a074ce1dfb339b99223023bebd6ba8b088bafa4977278f50c1913",
     "origin_x": 3008,
@@ -10792,6 +10942,8 @@
      2984,
      9448
     ],
+    "raw_terrain": true,
+    "shadow_writes": 5476,
     "paints": 1088,
     "tile_models": 0,
     "walls": 0,
@@ -10812,12 +10964,12 @@
    }
   },
   "blocks/12181.bin": {
-   "sha256": "7fcd185d75386579245ff3f263405880276be5f076de190330f6f814c40edf85",
-   "size_bytes": 922082,
+   "sha256": "e76ac57fbfd3620aab3ab300ae49b8ac5d5121fab4255db761e479b4ce15ec56",
+   "size_bytes": 1496370,
    "detail": {
     "square": 12181,
     "file": "blocks/12181.bin",
-    "sha256": "7fcd185d75386579245ff3f263405880276be5f076de190330f6f814c40edf85",
+    "sha256": "e76ac57fbfd3620aab3ab300ae49b8ac5d5121fab4255db761e479b4ce15ec56",
     "models_file": "blocks/12181.models.bin",
     "models_sha256": "99931c817c175595158308e901d809a28f6229d8dc46ecce836af785c7ff4c32",
     "origin_x": 3008,
@@ -10827,6 +10979,8 @@
      2984,
      9512
     ],
+    "raw_terrain": true,
+    "shadow_writes": 7544,
     "paints": 2642,
     "tile_models": 261,
     "walls": 645,
@@ -10847,12 +11001,12 @@
    }
   },
   "blocks/12334.bin": {
-   "sha256": "161e7f041fbd5b78f0695ff3eb79846911bc83255962599ea6a11b6e59f4876d",
-   "size_bytes": 520946,
+   "sha256": "f5c4f1c396830c3aad700aaa049e009efc9456663344cbb26823942ec35ee941",
+   "size_bytes": 917154,
    "detail": {
     "square": 12334,
     "file": "blocks/12334.bin",
-    "sha256": "161e7f041fbd5b78f0695ff3eb79846911bc83255962599ea6a11b6e59f4876d",
+    "sha256": "f5c4f1c396830c3aad700aaa049e009efc9456663344cbb26823942ec35ee941",
     "models_file": "blocks/12334.models.bin",
     "models_sha256": "eec1ba89f4fa22a3bf5aa56d240a773d3de77f87403ce58e5e9e426b02c4b33d",
     "origin_x": 3072,
@@ -10862,6 +11016,8 @@
      3048,
      2920
     ],
+    "raw_terrain": true,
+    "shadow_writes": 124,
     "paints": 4127,
     "tile_models": 0,
     "walls": 23,
@@ -10882,12 +11038,12 @@
    }
   },
   "blocks/12335.bin": {
-   "sha256": "8539446ca1949ddea21fba638e407c5f449a07719c7768362a394989113a1f1d",
-   "size_bytes": 808347,
+   "sha256": "4f5ac558bb437d7bd222a8c334a33f013ecc99ead49d1b862bca987099ebd8d0",
+   "size_bytes": 1231243,
    "detail": {
     "square": 12335,
     "file": "blocks/12335.bin",
-    "sha256": "8539446ca1949ddea21fba638e407c5f449a07719c7768362a394989113a1f1d",
+    "sha256": "4f5ac558bb437d7bd222a8c334a33f013ecc99ead49d1b862bca987099ebd8d0",
     "models_file": "blocks/12335.models.bin",
     "models_sha256": "18fc3d26d13cf9506a176bd1db18dcbc4c2b616ddd2f6f6ccb945b6a9b43aa26",
     "origin_x": 3072,
@@ -10897,6 +11053,8 @@
      3048,
      2984
     ],
+    "raw_terrain": true,
+    "shadow_writes": 1236,
     "paints": 3660,
     "tile_models": 866,
     "walls": 378,
@@ -10917,12 +11075,12 @@
    }
   },
   "blocks/12336.bin": {
-   "sha256": "a4568f39337e6a204d6fb6ae7fc8b8dd58fadc676f9c662a6c5742604212ede0",
-   "size_bytes": 998987,
+   "sha256": "d20e78fb9e2fe7d2000d3ca93a1e6b54781e0302295bffdba6c9242dcdf0a2a9",
+   "size_bytes": 1481883,
    "detail": {
     "square": 12336,
     "file": "blocks/12336.bin",
-    "sha256": "a4568f39337e6a204d6fb6ae7fc8b8dd58fadc676f9c662a6c5742604212ede0",
+    "sha256": "d20e78fb9e2fe7d2000d3ca93a1e6b54781e0302295bffdba6c9242dcdf0a2a9",
     "models_file": "blocks/12336.models.bin",
     "models_sha256": "3283e8e8068c553a6505d661f56d10fb05143a3faff3a5ea76d88a9d3a31944b",
     "origin_x": 3072,
@@ -10932,6 +11090,8 @@
      3048,
      3048
     ],
+    "raw_terrain": true,
+    "shadow_writes": 3736,
     "paints": 3927,
     "tile_models": 515,
     "walls": 825,
@@ -10952,12 +11112,12 @@
    }
   },
   "blocks/12337.bin": {
-   "sha256": "5dc423342ad995b122131e1bb173ca6823beca44cb99f99385a81335fef66579",
-   "size_bytes": 680233,
+   "sha256": "2dcef66fd958f0ccf125d709f3b5f41a62766d788fad89e4ebe29db2b73ed58b",
+   "size_bytes": 1101305,
    "detail": {
     "square": 12337,
     "file": "blocks/12337.bin",
-    "sha256": "5dc423342ad995b122131e1bb173ca6823beca44cb99f99385a81335fef66579",
+    "sha256": "2dcef66fd958f0ccf125d709f3b5f41a62766d788fad89e4ebe29db2b73ed58b",
     "models_file": "blocks/12337.models.bin",
     "models_sha256": "3c0f485fd18bbae08f8f1e91c893c26901df35db511e8d570ad0a84d3c98ddd2",
     "origin_x": 3072,
@@ -10967,6 +11127,8 @@
      3048,
      3112
     ],
+    "raw_terrain": true,
+    "shadow_writes": 1160,
     "paints": 4348,
     "tile_models": 312,
     "walls": 341,
@@ -10987,12 +11149,12 @@
    }
   },
   "blocks/12338.bin": {
-   "sha256": "6d90b5d72559e16101e54d1356c42d01fd156ece39df442a74b63f686d7b31d4",
-   "size_bytes": 824428,
+   "sha256": "a0515d6a8a484ce7e5db4c25c31fddca1c39284aa55ac20d0bf9bb9186f65c45",
+   "size_bytes": 1285676,
    "detail": {
     "square": 12338,
     "file": "blocks/12338.bin",
-    "sha256": "6d90b5d72559e16101e54d1356c42d01fd156ece39df442a74b63f686d7b31d4",
+    "sha256": "a0515d6a8a484ce7e5db4c25c31fddca1c39284aa55ac20d0bf9bb9186f65c45",
     "models_file": "blocks/12338.models.bin",
     "models_sha256": "b21461f54f4b3c4c49af769d4cb78fba82c513dd403a877c56240a7bfc07b2be",
     "origin_x": 3072,
@@ -11002,6 +11164,8 @@
      3048,
      3176
     ],
+    "raw_terrain": true,
+    "shadow_writes": 2834,
     "paints": 3984,
     "tile_models": 271,
     "walls": 450,
@@ -11022,12 +11186,12 @@
    }
   },
   "blocks/12339.bin": {
-   "sha256": "186d7413d8dd47c525301ea566362f7c1b9bc8f3ac7c1ce38feaebdd2757e59d",
-   "size_bytes": 955719,
+   "sha256": "a6676d5adbf8fed5ccd0345fc1471dc6fce01c742e40c06b326320a8e86e0c3a",
+   "size_bytes": 1411951,
    "detail": {
     "square": 12339,
     "file": "blocks/12339.bin",
-    "sha256": "186d7413d8dd47c525301ea566362f7c1b9bc8f3ac7c1ce38feaebdd2757e59d",
+    "sha256": "a6676d5adbf8fed5ccd0345fc1471dc6fce01c742e40c06b326320a8e86e0c3a",
     "models_file": "blocks/12339.models.bin",
     "models_sha256": "28a3f07c03786fb7d696671d861299e40ac0e343321af235c3a1374d552fe363",
     "origin_x": 3072,
@@ -11037,6 +11201,8 @@
      3048,
      3240
     ],
+    "raw_terrain": true,
+    "shadow_writes": 2625,
     "paints": 3934,
     "tile_models": 340,
     "walls": 319,
@@ -11057,12 +11223,12 @@
    }
   },
   "blocks/12340.bin": {
-   "sha256": "df5a17710f1b054e2aaeb026b0630dc2760ae0ce104cf2b9438a8a8751195f0b",
-   "size_bytes": 1000320,
+   "sha256": "b1b64c4ececa607ce2d58256b4bdbaa7337b7d762444023b80b6fa0dd938f449",
+   "size_bytes": 1560304,
    "detail": {
     "square": 12340,
     "file": "blocks/12340.bin",
-    "sha256": "df5a17710f1b054e2aaeb026b0630dc2760ae0ce104cf2b9438a8a8751195f0b",
+    "sha256": "b1b64c4ececa607ce2d58256b4bdbaa7337b7d762444023b80b6fa0dd938f449",
     "models_file": "blocks/12340.models.bin",
     "models_sha256": "9268819ed71316e58f877c994685bca655162f318e1b3d788fc91a5930076ccd",
     "origin_x": 3072,
@@ -11072,6 +11238,8 @@
      3048,
      3304
     ],
+    "raw_terrain": true,
+    "shadow_writes": 6948,
     "paints": 4663,
     "tile_models": 109,
     "walls": 718,
@@ -11092,12 +11260,12 @@
    }
   },
   "blocks/12341.bin": {
-   "sha256": "b836bc075afe4e77b36c16708c08350a8314e16e38b8ffc33bf48e754d57b138",
-   "size_bytes": 898174,
+   "sha256": "4e609592dcb4ddfdb75632ef33fd95183cdda3e76b4561650de8cb4d0c909114",
+   "size_bytes": 1355918,
    "detail": {
     "square": 12341,
     "file": "blocks/12341.bin",
-    "sha256": "b836bc075afe4e77b36c16708c08350a8314e16e38b8ffc33bf48e754d57b138",
+    "sha256": "4e609592dcb4ddfdb75632ef33fd95183cdda3e76b4561650de8cb4d0c909114",
     "models_file": "blocks/12341.models.bin",
     "models_sha256": "573e3d9a1d09562807db565a1daf851959bc623ba0ae97ffbfd15906a7b5bdbc",
     "origin_x": 3072,
@@ -11107,6 +11275,8 @@
      3048,
      3368
     ],
+    "raw_terrain": true,
+    "shadow_writes": 2688,
     "paints": 3891,
     "tile_models": 357,
     "walls": 341,
@@ -11127,12 +11297,12 @@
    }
   },
   "blocks/12435.bin": {
-   "sha256": "173b20bdd6b6e764ea4d49e572698443a1058d192bf59b5210e4eaec5757a8c3",
-   "size_bytes": 354400,
+   "sha256": "61c8476b8b509653d527350efaf022328b122b4d38ce599c2e4353ce22afda6e",
+   "size_bytes": 747632,
    "detail": {
     "square": 12435,
     "file": "blocks/12435.bin",
-    "sha256": "173b20bdd6b6e764ea4d49e572698443a1058d192bf59b5210e4eaec5757a8c3",
+    "sha256": "61c8476b8b509653d527350efaf022328b122b4d38ce599c2e4353ce22afda6e",
     "models_file": "blocks/12435.models.bin",
     "models_sha256": "d7c44b723f0e2d7e4ecdc131fb752d30bdfc9a86d2c04d45c8a9ef24ad20a576",
     "origin_x": 3072,
@@ -11142,6 +11312,8 @@
      3048,
      9384
     ],
+    "raw_terrain": true,
+    "shadow_writes": 0,
     "paints": 0,
     "tile_models": 0,
     "walls": 508,
@@ -11162,12 +11334,12 @@
    }
   },
   "blocks/12436.bin": {
-   "sha256": "840effc2b27e23251746a981f7a911ac87edad698abfd5a1e1781aea5c437a39",
-   "size_bytes": 1044993,
+   "sha256": "7d5328fb3a9c09d52cc9df671cd2b0398f6a489c004bc19d17f20eab9d6d4e0f",
+   "size_bytes": 1766761,
    "detail": {
     "square": 12436,
     "file": "blocks/12436.bin",
-    "sha256": "840effc2b27e23251746a981f7a911ac87edad698abfd5a1e1781aea5c437a39",
+    "sha256": "7d5328fb3a9c09d52cc9df671cd2b0398f6a489c004bc19d17f20eab9d6d4e0f",
     "models_file": "blocks/12436.models.bin",
     "models_sha256": "861a0e86b17ac7638e0cb89a8e190c1d8fe0dfac368c42dd2477a81ab61f06e4",
     "origin_x": 3072,
@@ -11177,6 +11349,8 @@
      3048,
      9448
     ],
+    "raw_terrain": true,
+    "shadow_writes": 13689,
     "paints": 4315,
     "tile_models": 95,
     "walls": 221,
@@ -11197,12 +11371,12 @@
    }
   },
   "blocks/12437.bin": {
-   "sha256": "6e31ab08afa2f2005dd050175e269c07634f9788a5c0f6f02f29cb98d3a2d3ce",
-   "size_bytes": 535151,
+   "sha256": "50f13daa55cc2d32acb695bb1e89c93998317284d48d283d26acdde386f5cf36",
+   "size_bytes": 1012983,
    "detail": {
     "square": 12437,
     "file": "blocks/12437.bin",
-    "sha256": "6e31ab08afa2f2005dd050175e269c07634f9788a5c0f6f02f29cb98d3a2d3ce",
+    "sha256": "50f13daa55cc2d32acb695bb1e89c93998317284d48d283d26acdde386f5cf36",
     "models_file": "blocks/12437.models.bin",
     "models_sha256": "2056d2ed7304ac72272f228205747a174ac1ae261ab7d2352db1db0254ad0988",
     "origin_x": 3072,
@@ -11212,6 +11386,8 @@
      3048,
      9512
     ],
+    "raw_terrain": true,
+    "shadow_writes": 3525,
     "paints": 1190,
     "tile_models": 28,
     "walls": 222,
@@ -11232,12 +11408,12 @@
    }
   },
   "blocks/12590.bin": {
-   "sha256": "54a71c6df4100f3ad26716decedf883a8306b4086e3b03c5ed25e4129dd3fd85",
-   "size_bytes": 635859,
+   "sha256": "5df803995bab1817092cbda35bcb2d0908ccde4720b37e5e4fd6083b63c19c2c",
+   "size_bytes": 1058659,
    "detail": {
     "square": 12590,
     "file": "blocks/12590.bin",
-    "sha256": "54a71c6df4100f3ad26716decedf883a8306b4086e3b03c5ed25e4129dd3fd85",
+    "sha256": "5df803995bab1817092cbda35bcb2d0908ccde4720b37e5e4fd6083b63c19c2c",
     "models_file": "blocks/12590.models.bin",
     "models_sha256": "1c98e63ecb71fbef5c57fcd2a8ada81ea027a36a1a6f0bd659fb3e9089c4a3a0",
     "origin_x": 3136,
@@ -11247,6 +11423,8 @@
      3112,
      2920
     ],
+    "raw_terrain": true,
+    "shadow_writes": 1232,
     "paints": 4168,
     "tile_models": 241,
     "walls": 339,
@@ -11267,12 +11445,12 @@
    }
   },
   "blocks/12591.bin": {
-   "sha256": "b79e6df50f50e87983a8d3d511a61540e260f343e8b38bd2199871494ea82cea",
-   "size_bytes": 580573,
+   "sha256": "46e0eb9e8caceff9ba2c9b5f169fcc33775288b8af6dda0814ef9aa8f2c196c3",
+   "size_bytes": 982709,
    "detail": {
     "square": 12591,
     "file": "blocks/12591.bin",
-    "sha256": "b79e6df50f50e87983a8d3d511a61540e260f343e8b38bd2199871494ea82cea",
+    "sha256": "46e0eb9e8caceff9ba2c9b5f169fcc33775288b8af6dda0814ef9aa8f2c196c3",
     "models_file": "blocks/12591.models.bin",
     "models_sha256": "2ffe1bbfb7310afe7a6df9840e6548f554c8627223a199e36a06ad9c6bf0b0a6",
     "origin_x": 3136,
@@ -11282,6 +11460,8 @@
      3112,
      2984
     ],
+    "raw_terrain": true,
+    "shadow_writes": 371,
     "paints": 3971,
     "tile_models": 125,
     "walls": 32,
@@ -11302,12 +11482,12 @@
    }
   },
   "blocks/12592.bin": {
-   "sha256": "9259b185ab304320ca422f28d380da4ebbea54c5a5034d962586b6c704f9e39b",
-   "size_bytes": 697369,
+   "sha256": "45ba89e97b261eb1caf8357c14e9bcc5d830d5cf795cb7e74940c7910b41e767",
+   "size_bytes": 1106993,
    "detail": {
     "square": 12592,
     "file": "blocks/12592.bin",
-    "sha256": "9259b185ab304320ca422f28d380da4ebbea54c5a5034d962586b6c704f9e39b",
+    "sha256": "45ba89e97b261eb1caf8357c14e9bcc5d830d5cf795cb7e74940c7910b41e767",
     "models_file": "blocks/12592.models.bin",
     "models_sha256": "6e60b5adc21f0f4f90b849e15b7fb3ea6a06a3b4d2e504f54f64a0359fe83bc3",
     "origin_x": 3136,
@@ -11317,6 +11497,8 @@
      3112,
      3048
     ],
+    "raw_terrain": true,
+    "shadow_writes": 683,
     "paints": 3819,
     "tile_models": 518,
     "walls": 117,
@@ -11337,12 +11519,12 @@
    }
   },
   "blocks/12593.bin": {
-   "sha256": "8dff49b99aacdf099e55443a43598461662f756f8fbf07f9369e1b8d56c14705",
-   "size_bytes": 759296,
+   "sha256": "3487985c1b1795878f7870a0eaafa25d09d8167deb45d929a359ec21e4f90e7d",
+   "size_bytes": 1187832,
    "detail": {
     "square": 12593,
     "file": "blocks/12593.bin",
-    "sha256": "8dff49b99aacdf099e55443a43598461662f756f8fbf07f9369e1b8d56c14705",
+    "sha256": "3487985c1b1795878f7870a0eaafa25d09d8167deb45d929a359ec21e4f90e7d",
     "models_file": "blocks/12593.models.bin",
     "models_sha256": "d8fc770124216627e4989b6a94be68372dbc0385b93151db5c9b582aa88a55c4",
     "origin_x": 3136,
@@ -11352,6 +11534,8 @@
      3112,
      3112
     ],
+    "raw_terrain": true,
+    "shadow_writes": 1471,
     "paints": 3797,
     "tile_models": 299,
     "walls": 37,
@@ -11372,12 +11556,12 @@
    }
   },
   "blocks/12594.bin": {
-   "sha256": "6ae69da3e1ecddfde2c736d0c5fa78f95062e01c5008912b85b69a4f080c5fc2",
-   "size_bytes": 808838,
+   "sha256": "fca9f2e3f96a14e3a6465681d6e6d3617959caf30a04e3183eacf9bb6104364d",
+   "size_bytes": 1258158,
    "detail": {
     "square": 12594,
     "file": "blocks/12594.bin",
-    "sha256": "6ae69da3e1ecddfde2c736d0c5fa78f95062e01c5008912b85b69a4f080c5fc2",
+    "sha256": "fca9f2e3f96a14e3a6465681d6e6d3617959caf30a04e3183eacf9bb6104364d",
     "models_file": "blocks/12594.models.bin",
     "models_sha256": "34e2f9268c5ace04d691b28e97f232e9f124e845e65f6c8cb9902d431f843ec7",
     "origin_x": 3136,
@@ -11387,6 +11571,8 @@
      3112,
      3176
     ],
+    "raw_terrain": true,
+    "shadow_writes": 2337,
     "paints": 3919,
     "tile_models": 177,
     "walls": 134,
@@ -11407,12 +11593,12 @@
    }
   },
   "blocks/12595.bin": {
-   "sha256": "9ee7ef37a2a44a8ee700a821fc6714cd2701c521b2c8d54d9b5e1b924ccbd49a",
-   "size_bytes": 886176,
+   "sha256": "ffa71ae17b2c811f95f87004483cdffaea18eb2ac640cecabf6710f01672f0e1",
+   "size_bytes": 1347400,
    "detail": {
     "square": 12595,
     "file": "blocks/12595.bin",
-    "sha256": "9ee7ef37a2a44a8ee700a821fc6714cd2701c521b2c8d54d9b5e1b924ccbd49a",
+    "sha256": "ffa71ae17b2c811f95f87004483cdffaea18eb2ac640cecabf6710f01672f0e1",
     "models_file": "blocks/12595.models.bin",
     "models_sha256": "d692ed9764b29c409cfecd589c5f0f0d9de1b9a0346aa3f68b71892a37c1e72c",
     "origin_x": 3136,
@@ -11422,6 +11608,8 @@
      3112,
      3240
     ],
+    "raw_terrain": true,
+    "shadow_writes": 2833,
     "paints": 3865,
     "tile_models": 326,
     "walls": 469,
@@ -11442,12 +11630,12 @@
    }
   },
   "blocks/12596.bin": {
-   "sha256": "6d5f9e9e831d4dffa08486e798481cfd766143bc0627a9bc75c19063e12526e1",
-   "size_bytes": 878585,
+   "sha256": "dfca3fcda9c6e22dd4c725796c30b4b8855de55c17f22c16214510ab1f342731",
+   "size_bytes": 1330041,
    "detail": {
     "square": 12596,
     "file": "blocks/12596.bin",
-    "sha256": "6d5f9e9e831d4dffa08486e798481cfd766143bc0627a9bc75c19063e12526e1",
+    "sha256": "dfca3fcda9c6e22dd4c725796c30b4b8855de55c17f22c16214510ab1f342731",
     "models_file": "blocks/12596.models.bin",
     "models_sha256": "133426b01168ad7911718cda5887e4fbb939b1515696fbccdc0e401a829dc2b2",
     "origin_x": 3136,
@@ -11457,6 +11645,8 @@
      3112,
      3304
     ],
+    "raw_terrain": true,
+    "shadow_writes": 2426,
     "paints": 4106,
     "tile_models": 410,
     "walls": 450,
@@ -11477,12 +11667,12 @@
    }
   },
   "blocks/12597.bin": {
-   "sha256": "2e1e53067c83da3356a3837572bc7a067d33d3ad4c26d6dae766211ed71994c6",
-   "size_bytes": 1068368,
+   "sha256": "96192a86c5d611ee5d7eb294ddd7b5e6c02bd9b4023d1be902b88ce93a93cb07",
+   "size_bytes": 1572048,
    "detail": {
     "square": 12597,
     "file": "blocks/12597.bin",
-    "sha256": "2e1e53067c83da3356a3837572bc7a067d33d3ad4c26d6dae766211ed71994c6",
+    "sha256": "96192a86c5d611ee5d7eb294ddd7b5e6c02bd9b4023d1be902b88ce93a93cb07",
     "models_file": "blocks/12597.models.bin",
     "models_sha256": "b8587389f45c269719ebe7b2be534e7b962b718d22cb2e973a09e282338ab66f",
     "origin_x": 3136,
@@ -11492,6 +11682,8 @@
      3112,
      3368
     ],
+    "raw_terrain": true,
+    "shadow_writes": 4602,
     "paints": 4686,
     "tile_models": 334,
     "walls": 1135,
@@ -11512,12 +11704,12 @@
    }
   },
   "blocks/12633.bin": {
-   "sha256": "91d9fd05803238954ff97a2348ad1c5c01afeee21a2c21e0e1f2a4dc46d41291",
-   "size_bytes": 373712,
+   "sha256": "3ee1ccc983e092e310064875ae93aa5e26c81071f79ac02ad335a19dc4074be1",
+   "size_bytes": 783384,
    "detail": {
     "square": 12633,
     "file": "blocks/12633.bin",
-    "sha256": "91d9fd05803238954ff97a2348ad1c5c01afeee21a2c21e0e1f2a4dc46d41291",
+    "sha256": "3ee1ccc983e092e310064875ae93aa5e26c81071f79ac02ad335a19dc4074be1",
     "models_file": "blocks/12633.models.bin",
     "models_sha256": "4e2226f1c3ac608271fd34c4088f63a0e33ecd24d601bf6719e9e3f4ef245fd0",
     "origin_x": 3136,
@@ -11527,6 +11719,8 @@
      3112,
      5672
     ],
+    "raw_terrain": true,
+    "shadow_writes": 685,
     "paints": 252,
     "tile_models": 0,
     "walls": 40,
@@ -11547,12 +11741,12 @@
    }
   },
   "blocks/12693.bin": {
-   "sha256": "d2ba35aee0572a94542d5eeb0d65cbe88948651e4da19ac1769c33fa29191fa1",
-   "size_bytes": 1163587,
+   "sha256": "ca19b6e9902d1c3dbd36d02aa59a0188407df0a1ef3a750e8804368656d30068",
+   "size_bytes": 1918499,
    "detail": {
     "square": 12693,
     "file": "blocks/12693.bin",
-    "sha256": "d2ba35aee0572a94542d5eeb0d65cbe88948651e4da19ac1769c33fa29191fa1",
+    "sha256": "ca19b6e9902d1c3dbd36d02aa59a0188407df0a1ef3a750e8804368656d30068",
     "models_file": "blocks/12693.models.bin",
     "models_sha256": "a3e26ba518300b95cb1d063786c01c1d3d7ad8dec634950dc2585f4e2117e3b6",
     "origin_x": 3136,
@@ -11562,6 +11756,8 @@
      3112,
      9512
     ],
+    "raw_terrain": true,
+    "shadow_writes": 15070,
     "paints": 1804,
     "tile_models": 656,
     "walls": 10,
@@ -11582,12 +11778,12 @@
    }
   },
   "blocks/12694.bin": {
-   "sha256": "9192fce33535610ad3b276fb9ea9cf704e088278f6acfe67db9b8b8f47574a31",
-   "size_bytes": 993528,
+   "sha256": "9113db8cc86c994f795a1a15d93795416dd5c6e7314468d0402afa6e654b45ef",
+   "size_bytes": 1667056,
    "detail": {
     "square": 12694,
     "file": "blocks/12694.bin",
-    "sha256": "9192fce33535610ad3b276fb9ea9cf704e088278f6acfe67db9b8b8f47574a31",
+    "sha256": "9113db8cc86c994f795a1a15d93795416dd5c6e7314468d0402afa6e654b45ef",
     "models_file": "blocks/12694.models.bin",
     "models_sha256": "b9e4f6e9c09db352ae19da37f235e3401986a0ac2e8cdd5b047747de3bee1623",
     "origin_x": 3136,
@@ -11597,6 +11793,8 @@
      3112,
      9576
     ],
+    "raw_terrain": true,
+    "shadow_writes": 11679,
     "paints": 1444,
     "tile_models": 246,
     "walls": 605,
@@ -11617,12 +11815,12 @@
    }
   },
   "blocks/12695.bin": {
-   "sha256": "0dd7d0a8d8fc5565a48260a2db0d22b7bb90806ab51211c2a724d27f510266b7",
-   "size_bytes": 489205,
+   "sha256": "7d0941290c42210763ad187943a326d8d06ba3092d97c89b58342efb3f7d164d",
+   "size_bytes": 922325,
    "detail": {
     "square": 12695,
     "file": "blocks/12695.bin",
-    "sha256": "0dd7d0a8d8fc5565a48260a2db0d22b7bb90806ab51211c2a724d27f510266b7",
+    "sha256": "7d0941290c42210763ad187943a326d8d06ba3092d97c89b58342efb3f7d164d",
     "models_file": "blocks/12695.models.bin",
     "models_sha256": "7c0162a3b74f060a4cbe6a74746e0021ed074e4632c9c0c80dd0428ab8f2adeb",
     "origin_x": 3136,
@@ -11632,6 +11830,8 @@
      3112,
      9640
     ],
+    "raw_terrain": true,
+    "shadow_writes": 1662,
     "paints": 570,
     "tile_models": 224,
     "walls": 157,
@@ -11652,12 +11852,12 @@
    }
   },
   "blocks/12846.bin": {
-   "sha256": "e93929e61d37774d44f61e84aa41681a13a84f67512f2cb0b5caa9ac1b6028e8",
-   "size_bytes": 574152,
+   "sha256": "fbe989820b483db937c437ab1121258981a83b54e844b7fc1f81d483a2388591",
+   "size_bytes": 969832,
    "detail": {
     "square": 12846,
     "file": "blocks/12846.bin",
-    "sha256": "e93929e61d37774d44f61e84aa41681a13a84f67512f2cb0b5caa9ac1b6028e8",
+    "sha256": "fbe989820b483db937c437ab1121258981a83b54e844b7fc1f81d483a2388591",
     "models_file": "blocks/12846.models.bin",
     "models_sha256": "87cb543df23fc71a36e90bd33bdba0d53a120f54ae62aa7c18802265752be283",
     "origin_x": 3200,
@@ -11667,6 +11867,8 @@
      3176,
      2920
     ],
+    "raw_terrain": true,
+    "shadow_writes": 102,
     "paints": 3856,
     "tile_models": 240,
     "walls": 0,
@@ -11687,12 +11889,12 @@
    }
   },
   "blocks/12847.bin": {
-   "sha256": "9dda4b23283c020f689a7f542daa7dfd50dd925e0195a3197eb5f56dec9393a2",
-   "size_bytes": 548985,
+   "sha256": "1e2d05694ca62434c938d45ef9b8ca93cb5b93b24f1d4d053fa8ee59ca02bf29",
+   "size_bytes": 946081,
    "detail": {
     "square": 12847,
     "file": "blocks/12847.bin",
-    "sha256": "9dda4b23283c020f689a7f542daa7dfd50dd925e0195a3197eb5f56dec9393a2",
+    "sha256": "1e2d05694ca62434c938d45ef9b8ca93cb5b93b24f1d4d053fa8ee59ca02bf29",
     "models_file": "blocks/12847.models.bin",
     "models_sha256": "857be7b026d196ef23389a6da22707d858d5f19543b65bb3c1d02561be3564a6",
     "origin_x": 3200,
@@ -11702,6 +11904,8 @@
      3176,
      2984
     ],
+    "raw_terrain": true,
+    "shadow_writes": 161,
     "paints": 4093,
     "tile_models": 3,
     "walls": 0,
@@ -11722,12 +11926,12 @@
    }
   },
   "blocks/12848.bin": {
-   "sha256": "4289867ae4cd941ee7808d39c35e6ef44b0bab7277abb8feeadfe830be8385fb",
-   "size_bytes": 558452,
+   "sha256": "1151857ba852ab9617051f91caec6c7bf21eb510bbba7968a9b0fff337bda02c",
+   "size_bytes": 962748,
    "detail": {
     "square": 12848,
     "file": "blocks/12848.bin",
-    "sha256": "4289867ae4cd941ee7808d39c35e6ef44b0bab7277abb8feeadfe830be8385fb",
+    "sha256": "1151857ba852ab9617051f91caec6c7bf21eb510bbba7968a9b0fff337bda02c",
     "models_file": "blocks/12848.models.bin",
     "models_sha256": "86c2d7c84a058b7687b36393adcecedb95c1c95fe59c27074794bf6e610d8228",
     "origin_x": 3200,
@@ -11737,6 +11941,8 @@
      3176,
      3048
     ],
+    "raw_terrain": true,
+    "shadow_writes": 461,
     "paints": 3990,
     "tile_models": 106,
     "walls": 0,
@@ -11757,12 +11963,12 @@
    }
   },
   "blocks/12849.bin": {
-   "sha256": "3f476509193c61e240b23770dd10cc8ab1b1972fc5885605d7a1f04497458d30",
-   "size_bytes": 764973,
+   "sha256": "fa1be9afb09624ff1cee4ca4ed9ebf5cd3bd59d9b21fac3fcbde7f8ea82f70ae",
+   "size_bytes": 1188349,
    "detail": {
     "square": 12849,
     "file": "blocks/12849.bin",
-    "sha256": "3f476509193c61e240b23770dd10cc8ab1b1972fc5885605d7a1f04497458d30",
+    "sha256": "fa1be9afb09624ff1cee4ca4ed9ebf5cd3bd59d9b21fac3fcbde7f8ea82f70ae",
     "models_file": "blocks/12849.models.bin",
     "models_sha256": "3db944005d859fd21e0da341b9140a8eb4536bda74c25aa1d7d041bfe695a476",
     "origin_x": 3200,
@@ -11772,6 +11978,8 @@
      3176,
      3112
     ],
+    "raw_terrain": true,
+    "shadow_writes": 1256,
     "paints": 3703,
     "tile_models": 445,
     "walls": 124,
@@ -11792,12 +12000,12 @@
    }
   },
   "blocks/12850.bin": {
-   "sha256": "41785c4cb5ad0fed598c185e5934eb1ad566e2fd5cd918d357c799c4c6f11d27",
-   "size_bytes": 1046964,
+   "sha256": "37a49ec9f3b35fb3f7c731ef0aadf88ce5aae07274252d22fba3193044d258ae",
+   "size_bytes": 1554988,
    "detail": {
     "square": 12850,
     "file": "blocks/12850.bin",
-    "sha256": "41785c4cb5ad0fed598c185e5934eb1ad566e2fd5cd918d357c799c4c6f11d27",
+    "sha256": "37a49ec9f3b35fb3f7c731ef0aadf88ce5aae07274252d22fba3193044d258ae",
     "models_file": "blocks/12850.models.bin",
     "models_sha256": "01e2a273c8c9d16fc8a5c9a39151af9cb3d76a0667e30e3011e35c976b46d963",
     "origin_x": 3200,
@@ -11807,6 +12015,8 @@
      3176,
      3176
     ],
+    "raw_terrain": true,
+    "shadow_writes": 4783,
     "paints": 4288,
     "tile_models": 445,
     "walls": 1336,
@@ -11827,12 +12037,12 @@
    }
   },
   "blocks/12851.bin": {
-   "sha256": "8a7ef6098574631b3ce65c72b13c9726cdf69fa419637692d802c0d027955f71",
-   "size_bytes": 825518,
+   "sha256": "9d45907c662a271eb2da3f4059355936cec29b86c1478818a1bc9aec059421e5",
+   "size_bytes": 1267782,
    "detail": {
     "square": 12851,
     "file": "blocks/12851.bin",
-    "sha256": "8a7ef6098574631b3ce65c72b13c9726cdf69fa419637692d802c0d027955f71",
+    "sha256": "9d45907c662a271eb2da3f4059355936cec29b86c1478818a1bc9aec059421e5",
     "models_file": "blocks/12851.models.bin",
     "models_sha256": "d1cd051674920bf772de0e31346c1a4fef872f16cdd524d3c1da07cc3aa962bd",
     "origin_x": 3200,
@@ -11842,6 +12052,8 @@
      3176,
      3240
     ],
+    "raw_terrain": true,
+    "shadow_writes": 2043,
     "paints": 3671,
     "tile_models": 526,
     "walls": 404,
@@ -11862,12 +12074,12 @@
    }
   },
   "blocks/12852.bin": {
-   "sha256": "ff5d8750f527108556bd5f78b9f03180b2fb959a0c947c9ee12cc136a53cafb2",
-   "size_bytes": 1050014,
+   "sha256": "aa9edd6203acab56bd3dc9b2f46c452073996c5c418c935b8fc616519acb862c",
+   "size_bytes": 1519254,
    "detail": {
     "square": 12852,
     "file": "blocks/12852.bin",
-    "sha256": "ff5d8750f527108556bd5f78b9f03180b2fb959a0c947c9ee12cc136a53cafb2",
+    "sha256": "aa9edd6203acab56bd3dc9b2f46c452073996c5c418c935b8fc616519acb862c",
     "models_file": "blocks/12852.models.bin",
     "models_sha256": "3ed7a5abe5ed3a85c1a0969ca18daf5d9b3620ca413b05b90eb7fe51fb157721",
     "origin_x": 3200,
@@ -11877,6 +12089,8 @@
      3176,
      3304
     ],
+    "raw_terrain": true,
+    "shadow_writes": 3167,
     "paints": 4090,
     "tile_models": 269,
     "walls": 759,
@@ -11897,12 +12111,12 @@
    }
   },
   "blocks/12853.bin": {
-   "sha256": "12265b4f2d34946ee9d1704f18e4413e14964bd227741e973c3a6c5e4649969f",
-   "size_bytes": 1254048,
+   "sha256": "1f59e7ce3ef6dd8bcfbdb03859901bd9909d55825e8dca9504f1039233fea72d",
+   "size_bytes": 1782808,
    "detail": {
     "square": 12853,
     "file": "blocks/12853.bin",
-    "sha256": "12265b4f2d34946ee9d1704f18e4413e14964bd227741e973c3a6c5e4649969f",
+    "sha256": "1f59e7ce3ef6dd8bcfbdb03859901bd9909d55825e8dca9504f1039233fea72d",
     "models_file": "blocks/12853.models.bin",
     "models_sha256": "5de79c818bd89f756d616728391ad37f81ecf6bebdc18aed999c1edeb0b76b76",
     "origin_x": 3200,
@@ -11912,6 +12126,8 @@
      3176,
      3368
     ],
+    "raw_terrain": true,
+    "shadow_writes": 5647,
     "paints": 5196,
     "tile_models": 660,
     "walls": 1682,
@@ -11932,12 +12148,12 @@
    }
   },
   "blocks/12949.bin": {
-   "sha256": "ddc560596baa9945e4ef1daefb39c4936b37f6f48bfabc972f33d0d6ec47bd92",
-   "size_bytes": 1176408,
+   "sha256": "bbc6e7de3edec11193d2a8883e83fd7d69a38328d27e6873864d49fcb3e52159",
+   "size_bytes": 1980016,
    "detail": {
     "square": 12949,
     "file": "blocks/12949.bin",
-    "sha256": "ddc560596baa9945e4ef1daefb39c4936b37f6f48bfabc972f33d0d6ec47bd92",
+    "sha256": "bbc6e7de3edec11193d2a8883e83fd7d69a38328d27e6873864d49fcb3e52159",
     "models_file": "blocks/12949.models.bin",
     "models_sha256": "7e58d26a9b3de2e5ab398b6cb4b4d8e5957d3094002bc9e60b92e3ff57bf5795",
     "origin_x": 3200,
@@ -11947,6 +12163,8 @@
      3176,
      9512
     ],
+    "raw_terrain": true,
+    "shadow_writes": 17099,
     "paints": 1746,
     "tile_models": 534,
     "walls": 4,
@@ -11967,12 +12185,12 @@
    }
   },
   "blocks/12950.bin": {
-   "sha256": "c462510a7f1de064ffe1e32c7d78cbad97479941ab80221ac87df902fe474099",
-   "size_bytes": 1293530,
+   "sha256": "9e99e9c88d1afa341d885797410af76485081fb85e2e74eaf5c9d9ba3d5e514f",
+   "size_bytes": 2222994,
    "detail": {
     "square": 12950,
     "file": "blocks/12950.bin",
-    "sha256": "c462510a7f1de064ffe1e32c7d78cbad97479941ab80221ac87df902fe474099",
+    "sha256": "9e99e9c88d1afa341d885797410af76485081fb85e2e74eaf5c9d9ba3d5e514f",
     "models_file": "blocks/12950.models.bin",
     "models_sha256": "fd2a429f3363bd64220b2517585e08cb9d47fe33c925504ac421afd42bb5e913",
     "origin_x": 3200,
@@ -11982,6 +12200,8 @@
      3176,
      9576
     ],
+    "raw_terrain": true,
+    "shadow_writes": 22343,
     "paints": 1618,
     "tile_models": 553,
     "walls": 95,
@@ -12002,12 +12222,12 @@
    }
   },
   "blocks/12951.bin": {
-   "sha256": "a0af7b0425d3dc7b8677e9d6ee1e703aebb2c34f072faa8b43c196fa04433ed0",
-   "size_bytes": 778427,
+   "sha256": "92fb10f9a8d7c8a1e684c9783e29c657d409b9d88b426128f52fda9221e4e26e",
+   "size_bytes": 1471707,
    "detail": {
     "square": 12951,
     "file": "blocks/12951.bin",
-    "sha256": "a0af7b0425d3dc7b8677e9d6ee1e703aebb2c34f072faa8b43c196fa04433ed0",
+    "sha256": "92fb10f9a8d7c8a1e684c9783e29c657d409b9d88b426128f52fda9221e4e26e",
     "models_file": "blocks/12951.models.bin",
     "models_sha256": "d8de7e18daea36e29e0360ef9db7ebd049b295c83c581a6de502550b476b78a5",
     "origin_x": 3200,
@@ -12017,6 +12237,8 @@
      3176,
      9640
     ],
+    "raw_terrain": true,
+    "shadow_writes": 12502,
     "paints": 375,
     "tile_models": 131,
     "walls": 198,
@@ -12037,12 +12259,12 @@
    }
   },
   "blocks/13104.bin": {
-   "sha256": "8b4b130b19bcaddc76c8b4ad38e58f6d33027b1f8d5d2bb82417700e06d0a44e",
-   "size_bytes": 554923,
+   "sha256": "94f259c3d773193a62370f688b4fd8348dde5d831fd228e40d5d632279de917a",
+   "size_bytes": 954107,
    "detail": {
     "square": 13104,
     "file": "blocks/13104.bin",
-    "sha256": "8b4b130b19bcaddc76c8b4ad38e58f6d33027b1f8d5d2bb82417700e06d0a44e",
+    "sha256": "94f259c3d773193a62370f688b4fd8348dde5d831fd228e40d5d632279de917a",
     "models_file": "blocks/13104.models.bin",
     "models_sha256": "4db9eaf7cd4f3f266abf8e712c252cd9caa2d991a0533e2890e5d34f2331e740",
     "origin_x": 3264,
@@ -12052,6 +12274,8 @@
      3240,
      3048
     ],
+    "raw_terrain": true,
+    "shadow_writes": 248,
     "paints": 4028,
     "tile_models": 68,
     "walls": 49,
@@ -12072,12 +12296,12 @@
    }
   },
   "blocks/13105.bin": {
-   "sha256": "8e6ec4e59d1340adde77a834ee6faaef08a25e1112b5f3e87d74d5e443337f78",
-   "size_bytes": 850865,
+   "sha256": "63f2f869c027cd0575de421c9e17e31446e8a772565c0d9ce5054e98bda7f357",
+   "size_bytes": 1322505,
    "detail": {
     "square": 13105,
     "file": "blocks/13105.bin",
-    "sha256": "8e6ec4e59d1340adde77a834ee6faaef08a25e1112b5f3e87d74d5e443337f78",
+    "sha256": "63f2f869c027cd0575de421c9e17e31446e8a772565c0d9ce5054e98bda7f357",
     "models_file": "blocks/13105.models.bin",
     "models_sha256": "16c1b7959b6e90c2a5f8d7c672f32701b0482d312f8f8db59af0d53aa25b8166",
     "origin_x": 3264,
@@ -12087,6 +12311,8 @@
      3240,
      3112
     ],
+    "raw_terrain": true,
+    "shadow_writes": 3267,
     "paints": 5461,
     "tile_models": 128,
     "walls": 981,
@@ -12107,12 +12333,12 @@
    }
   },
   "blocks/13106.bin": {
-   "sha256": "340a2fd029a94698e10596195209779f73472356441bd69c354abf579bb43991",
-   "size_bytes": 676203,
+   "sha256": "9d5a48ff6755dabbe1daa6f2908241c9800c47ee0667c97c904445ce3bd71a5e",
+   "size_bytes": 1100779,
    "detail": {
     "square": 13106,
     "file": "blocks/13106.bin",
-    "sha256": "340a2fd029a94698e10596195209779f73472356441bd69c354abf579bb43991",
+    "sha256": "9d5a48ff6755dabbe1daa6f2908241c9800c47ee0667c97c904445ce3bd71a5e",
     "models_file": "blocks/13106.models.bin",
     "models_sha256": "ab96c491b1f216d3e32e4fd2f96e34d2e383b8668e7c5422d756b3ac5cf09986",
     "origin_x": 3264,
@@ -12122,6 +12348,8 @@
      3240,
      3176
     ],
+    "raw_terrain": true,
+    "shadow_writes": 1306,
     "paints": 4028,
     "tile_models": 212,
     "walls": 378,
@@ -12142,12 +12370,12 @@
    }
   },
   "blocks/13107.bin": {
-   "sha256": "7f69bc463ddb2c6c962da4a9d7ca4a20b6c6bf8d6d20fd092c8bf4e1c58b069a",
-   "size_bytes": 602942,
+   "sha256": "c5f546bb8c71a7aba912c44288c12a0afa02d16efb0343ff39c949b405fa6d9f",
+   "size_bytes": 1002846,
    "detail": {
     "square": 13107,
     "file": "blocks/13107.bin",
-    "sha256": "7f69bc463ddb2c6c962da4a9d7ca4a20b6c6bf8d6d20fd092c8bf4e1c58b069a",
+    "sha256": "c5f546bb8c71a7aba912c44288c12a0afa02d16efb0343ff39c949b405fa6d9f",
     "models_file": "blocks/13107.models.bin",
     "models_sha256": "b85228edcd41414a839219bd9dea7e83498424d8c9fffd65b6262d8676d1a901",
     "origin_x": 3264,
@@ -12157,6 +12385,8 @@
      3240,
      3240
     ],
+    "raw_terrain": true,
+    "shadow_writes": 278,
     "paints": 3946,
     "tile_models": 150,
     "walls": 75,
@@ -12177,12 +12407,12 @@
    }
   },
   "blocks/13108.bin": {
-   "sha256": "2869f201e4b47ed3bc11b118ccf05348f32040323c7edf7e92402f6a69dcea91",
-   "size_bytes": 976667,
+   "sha256": "1b9844ba8e24c8421037a14cac31337e76a5d9d33f6c3de6519bc6cde6e53d53",
+   "size_bytes": 1425291,
    "detail": {
     "square": 13108,
     "file": "blocks/13108.bin",
-    "sha256": "2869f201e4b47ed3bc11b118ccf05348f32040323c7edf7e92402f6a69dcea91",
+    "sha256": "1b9844ba8e24c8421037a14cac31337e76a5d9d33f6c3de6519bc6cde6e53d53",
     "models_file": "blocks/13108.models.bin",
     "models_sha256": "54273a5cbeb9800e0c801bdcf76e732d0ef607f543651f4a03d998c232d0494b",
     "origin_x": 3264,
@@ -12192,6 +12422,8 @@
      3240,
      3304
     ],
+    "raw_terrain": true,
+    "shadow_writes": 2308,
     "paints": 3818,
     "tile_models": 359,
     "walls": 516,
@@ -12212,12 +12444,12 @@
    }
   },
   "blocks/13109.bin": {
-   "sha256": "2109712a5e64eb70eae313ff12f58edc124ab083dea3fe01ca0d89edd0b0ce78",
-   "size_bytes": 923545,
+   "sha256": "3bb151fa27c3a99cca8cec709680e8fb03595812ec85bc335b7654489901e6ad",
+   "size_bytes": 1389809,
    "detail": {
     "square": 13109,
     "file": "blocks/13109.bin",
-    "sha256": "2109712a5e64eb70eae313ff12f58edc124ab083dea3fe01ca0d89edd0b0ce78",
+    "sha256": "3bb151fa27c3a99cca8cec709680e8fb03595812ec85bc335b7654489901e6ad",
     "models_file": "blocks/13109.models.bin",
     "models_sha256": "4d772ff10ad2cb9ca8d79c512375cb74dae655e8539bfe9396cd4d7d0d0774bc",
     "origin_x": 3264,
@@ -12227,6 +12459,8 @@
      3240,
      3368
     ],
+    "raw_terrain": true,
+    "shadow_writes": 3043,
     "paints": 4023,
     "tile_models": 319,
     "walls": 591,
@@ -12247,12 +12481,12 @@
    }
   },
   "blocks/13205.bin": {
-   "sha256": "f0f4e87bf4c631f420d303165093c8fe1036449f2e635b8a667d16dcfc0ea8df",
-   "size_bytes": 417551,
+   "sha256": "fe1ef3d78ba2308a1cd636d13718f750fa3d91993760e58e55e2b3bd06c4893d",
+   "size_bytes": 855207,
    "detail": {
     "square": 13205,
     "file": "blocks/13205.bin",
-    "sha256": "f0f4e87bf4c631f420d303165093c8fe1036449f2e635b8a667d16dcfc0ea8df",
+    "sha256": "fe1ef3d78ba2308a1cd636d13718f750fa3d91993760e58e55e2b3bd06c4893d",
     "models_file": "blocks/13205.models.bin",
     "models_sha256": "5a82550586fc052ef51884d17104f3badc895c33d746b052266fc28ec50a6eaa",
     "origin_x": 3264,
@@ -12262,6 +12496,8 @@
      3240,
      9512
     ],
+    "raw_terrain": true,
+    "shadow_writes": 1851,
     "paints": 591,
     "tile_models": 39,
     "walls": 109,
@@ -12282,12 +12518,12 @@
    }
   },
   "blocks/13206.bin": {
-   "sha256": "cbdff17da1ad148b1eb4e24378b0d5269bce62400ad989ebd6fdf4a9659fed64",
-   "size_bytes": 1278483,
+   "sha256": "6ef807793b32c7eeb956de07804be203b2ba2b0368ff6b82de616c1356bef0ca",
+   "size_bytes": 2136067,
    "detail": {
     "square": 13206,
     "file": "blocks/13206.bin",
-    "sha256": "cbdff17da1ad148b1eb4e24378b0d5269bce62400ad989ebd6fdf4a9659fed64",
+    "sha256": "6ef807793b32c7eeb956de07804be203b2ba2b0368ff6b82de616c1356bef0ca",
     "models_file": "blocks/13206.models.bin",
     "models_sha256": "c7d226761ec4b07b0e2124283706ac31d7782d1768f8b481c1e8475632618ff1",
     "origin_x": 3264,
@@ -12297,6 +12533,8 @@
      3240,
      9576
     ],
+    "raw_terrain": true,
+    "shadow_writes": 19348,
     "paints": 1204,
     "tile_models": 858,
     "walls": 14,
@@ -12317,12 +12555,12 @@
    }
   },
   "blocks/13360.bin": {
-   "sha256": "eba4d5d6a8992667d4907043ec0f10f28b0b6827899cb4a206a750e074146913",
-   "size_bytes": 566262,
+   "sha256": "7b771eb4c72434c167cddf06c7231e523c2f20a56a538d6c42bff2286e32d6f3",
+   "size_bytes": 968326,
    "detail": {
     "square": 13360,
     "file": "blocks/13360.bin",
-    "sha256": "eba4d5d6a8992667d4907043ec0f10f28b0b6827899cb4a206a750e074146913",
+    "sha256": "7b771eb4c72434c167cddf06c7231e523c2f20a56a538d6c42bff2286e32d6f3",
     "models_file": "blocks/13360.models.bin",
     "models_sha256": "7cdecf876e066a111be675fc1eac9dd91d14b6308167e21017a1b29fe15d1dec",
     "origin_x": 3328,
@@ -12332,6 +12570,8 @@
      3304,
      3048
     ],
+    "raw_terrain": true,
+    "shadow_writes": 368,
     "paints": 3879,
     "tile_models": 239,
     "walls": 56,
@@ -12352,12 +12592,12 @@
    }
   },
   "blocks/13361.bin": {
-   "sha256": "33fa28a31bd659572331175446a0fbb8b76ace991ee9177cf440311a5984898e",
-   "size_bytes": 820421,
+   "sha256": "5c596b97099535ffbc8821321774834236edad2dce4f9cc3c537895accd86d51",
+   "size_bytes": 1255557,
    "detail": {
     "square": 13361,
     "file": "blocks/13361.bin",
-    "sha256": "33fa28a31bd659572331175446a0fbb8b76ace991ee9177cf440311a5984898e",
+    "sha256": "5c596b97099535ffbc8821321774834236edad2dce4f9cc3c537895accd86d51",
     "models_file": "blocks/13361.models.bin",
     "models_sha256": "a637b56349d6b2f62404ea18000294f4789e5f9f2e7e3338484b58d78072112c",
     "origin_x": 3328,
@@ -12367,6 +12607,8 @@
      3304,
      3112
     ],
+    "raw_terrain": true,
+    "shadow_writes": 1746,
     "paints": 3683,
     "tile_models": 434,
     "walls": 273,
@@ -12387,12 +12629,12 @@
    }
   },
   "blocks/13362.bin": {
-   "sha256": "33809c0bee961dbedbaf56544a33ee64b9a1d6d872a4fbccd12794bfe2e7bbdc",
-   "size_bytes": 1009304,
+   "sha256": "b3ebe5f89fdf8efbca61a83bbcd5ebfe0be7e726a43a35b17d1a74521a987d4a",
+   "size_bytes": 1568832,
    "detail": {
     "square": 13362,
     "file": "blocks/13362.bin",
-    "sha256": "33809c0bee961dbedbaf56544a33ee64b9a1d6d872a4fbccd12794bfe2e7bbdc",
+    "sha256": "b3ebe5f89fdf8efbca61a83bbcd5ebfe0be7e726a43a35b17d1a74521a987d4a",
     "models_file": "blocks/13362.models.bin",
     "models_sha256": "8b86f01fd0298d0a1120654b29a50cab2403783fd5d9af6fd3a6dc70f056681d",
     "origin_x": 3328,
@@ -12402,6 +12644,8 @@
      3304,
      3176
     ],
+    "raw_terrain": true,
+    "shadow_writes": 6929,
     "paints": 6062,
     "tile_models": 535,
     "walls": 1972,
@@ -12422,12 +12666,12 @@
    }
   },
   "blocks/13363.bin": {
-   "sha256": "8305b78cb15f83674364cecea70545ef07a57094b321e2892e1c80a64155964c",
-   "size_bytes": 868842,
+   "sha256": "c570b0cadcf573909288b00f690175336cae8252a8e8f208d1436f3d35374665",
+   "size_bytes": 1327306,
    "detail": {
     "square": 13363,
     "file": "blocks/13363.bin",
-    "sha256": "8305b78cb15f83674364cecea70545ef07a57094b321e2892e1c80a64155964c",
+    "sha256": "c570b0cadcf573909288b00f690175336cae8252a8e8f208d1436f3d35374665",
     "models_file": "blocks/13363.models.bin",
     "models_sha256": "6c65254c886e1bd621105f6e1a16cce94d45dc9de1298f8c41e1f9df588fcaab",
     "origin_x": 3328,
@@ -12437,6 +12681,8 @@
      3304,
      3240
     ],
+    "raw_terrain": true,
+    "shadow_writes": 2718,
     "paints": 4385,
     "tile_models": 310,
     "walls": 746,
@@ -12457,12 +12703,12 @@
    }
   },
   "blocks/13364.bin": {
-   "sha256": "17fcf2e89d4629dd8398baed1bf8602fde7acc4dd0c6b4685f96715e00c10f01",
-   "size_bytes": 760982,
+   "sha256": "1f878909be0752df24e23229d59d1383788e9c0bde19f9a85dd59d882d973870",
+   "size_bytes": 1222326,
    "detail": {
     "square": 13364,
     "file": "blocks/13364.bin",
-    "sha256": "17fcf2e89d4629dd8398baed1bf8602fde7acc4dd0c6b4685f96715e00c10f01",
+    "sha256": "1f878909be0752df24e23229d59d1383788e9c0bde19f9a85dd59d882d973870",
     "models_file": "blocks/13364.models.bin",
     "models_sha256": "710c5e3d147c3d352a27bfbc645dd43bd47e998913faf8e0e9fa6d953de7e4b2",
     "origin_x": 3328,
@@ -12472,6 +12718,8 @@
      3304,
      3304
     ],
+    "raw_terrain": true,
+    "shadow_writes": 2838,
     "paints": 3845,
     "tile_models": 251,
     "walls": 314,
@@ -12492,12 +12740,12 @@
    }
   },
   "blocks/13365.bin": {
-   "sha256": "2436f021e89e06df2f030cf3df3a46aa25c8496b493b7c8f81be7d722c694a60",
-   "size_bytes": 806572,
+   "sha256": "00782cee55c1124fc9d3e1a2e86b0db733376445f6a1c8f951adb30e6cb6ad46",
+   "size_bytes": 1263692,
    "detail": {
     "square": 13365,
     "file": "blocks/13365.bin",
-    "sha256": "2436f021e89e06df2f030cf3df3a46aa25c8496b493b7c8f81be7d722c694a60",
+    "sha256": "00782cee55c1124fc9d3e1a2e86b0db733376445f6a1c8f951adb30e6cb6ad46",
     "models_file": "blocks/13365.models.bin",
     "models_sha256": "235f455ab06357e86ec02a9ab9713eb7aff207e7a38524522598657aef426e79",
     "origin_x": 3328,
@@ -12507,6 +12755,8 @@
      3304,
      3368
     ],
+    "raw_terrain": true,
+    "shadow_writes": 2662,
     "paints": 4017,
     "tile_models": 183,
     "walls": 517,
@@ -12519,13 +12769,13 @@
    }
   },
   "blocks/11822.bin.gz": {
-   "sha256": "f028365b613b66bd59eb02b3c13335b7e1c5896b05ed79cdb00e92ac31284adc",
-   "size_bytes": 44061,
+   "sha256": "197dc10c283420d2dd76e0b61643ef92df6df8e4d062ba6921f3d1b474253cd8",
+   "size_bytes": 53010,
    "detail": {
     "encoding": "gzip",
     "decompressed": "blocks/11822.bin",
-    "decompressed_sha256": "f4282b6bfc34d2d583057845304b62dbf93698f16350ac1d6d70306aa0f6c883",
-    "decompressed_size_bytes": 554640
+    "decompressed_sha256": "685847b7df7757126c0ff78441eceb899ee1cf3e1dfb13ac24d2bef1f00d5000",
+    "decompressed_size_bytes": 952168
    }
   },
   "blocks/11822.models.bin.gz": {
@@ -12539,13 +12789,13 @@
    }
   },
   "blocks/11823.bin.gz": {
-   "sha256": "f7cdd6a3644db15f49870b258fe22d988b1e6eaeca7676f2a83ac9d775897e1f",
-   "size_bytes": 102630,
+   "sha256": "c3f8a26e896bb0aca6d0b00a6a737e1f85c32b7d3755ebba35b4389c9b175df0",
+   "size_bytes": 118610,
    "detail": {
     "encoding": "gzip",
     "decompressed": "blocks/11823.bin",
-    "decompressed_sha256": "c23816a516f4c84141c83e4e2abed5d84d9d133e8db58542bee0e50b6a1b9c64",
-    "decompressed_size_bytes": 706080
+    "decompressed_sha256": "e94279c478f58821991ccde6c687ff57d5435d47f7a1193062553c8c6234dee1",
+    "decompressed_size_bytes": 1149952
    }
   },
   "blocks/11823.models.bin.gz": {
@@ -12559,13 +12809,13 @@
    }
   },
   "blocks/11824.bin.gz": {
-   "sha256": "1349cd288a0c82c90fe888d8b4f42068b53801ea6c5945fb3ffe11eaab5af6ce",
-   "size_bytes": 33538,
+   "sha256": "75416031d614f4ac4241a9cf37827e2448e5bf8cdb0cd2b29a2f5fbbb73b50cf",
+   "size_bytes": 39479,
    "detail": {
     "encoding": "gzip",
     "decompressed": "blocks/11824.bin",
-    "decompressed_sha256": "6ef41e595d939ad446a4b3cafdc0299db35022109579e11fcb924ca94aeb1d70",
-    "decompressed_size_bytes": 534211
+    "decompressed_sha256": "9b816b71fe7425af262c1c33a866c5c4566e9c8b478ba3bd44f14f9b228922b2",
+    "decompressed_size_bytes": 931283
    }
   },
   "blocks/11824.models.bin.gz": {
@@ -12579,13 +12829,13 @@
    }
   },
   "blocks/11825.bin.gz": {
-   "sha256": "90034f81b06e7d3ee0abcb59ca56a05fa13fc06a87336aa9bacac104884a4846",
-   "size_bytes": 143809,
+   "sha256": "40a57ca6288aafbadcb9a72479a9cbd7aa5f8c24d440f4833226b013f5e9f344",
+   "size_bytes": 162947,
    "detail": {
     "encoding": "gzip",
     "decompressed": "blocks/11825.bin",
-    "decompressed_sha256": "65280b32472ae78b1f6740a1a457ab57ed9941c2764d79b112337a53ece581e8",
-    "decompressed_size_bytes": 762988
+    "decompressed_sha256": "9835dca16491ab6e7297e3011a77fc6f013762d41a2681ff60834f9051ddc700",
+    "decompressed_size_bytes": 1199372
    }
   },
   "blocks/11825.models.bin.gz": {
@@ -12599,13 +12849,13 @@
    }
   },
   "blocks/11826.bin.gz": {
-   "sha256": "ad8efe8b26edaabc1293b55b00db378bed4044462727f5c8bd5e791b2d464154",
-   "size_bytes": 232889,
+   "sha256": "7368f95910365da4bc3d24a3f54d9eea1c5c8bb5dad4a28519304d859c776f60",
+   "size_bytes": 261633,
    "detail": {
     "encoding": "gzip",
     "decompressed": "blocks/11826.bin",
-    "decompressed_sha256": "9a655d6d84ba2184b53aac68d9836eb4df08f29c77bf6d8c34663ea2348d7144",
-    "decompressed_size_bytes": 955260
+    "decompressed_sha256": "42ece021fde662c17107cdf8ab02a14ab6d5c01b9075488bf05915418e91540f",
+    "decompressed_size_bytes": 1417876
    }
   },
   "blocks/11826.models.bin.gz": {
@@ -12619,13 +12869,13 @@
    }
   },
   "blocks/12078.bin.gz": {
-   "sha256": "ff7a2907cb1aaddfe6fd5e155c72ebd680b1b8695307e4e3ed95c4f8ffaf1b3b",
-   "size_bytes": 133704,
+   "sha256": "9addcfd2cb369175a34d1e0b9c605ffc148c8b710d660364a93fae6feffe3736",
+   "size_bytes": 153940,
    "detail": {
     "encoding": "gzip",
     "decompressed": "blocks/12078.bin",
-    "decompressed_sha256": "a45b2f559e14be5af3a661c9a9837885c0f077e4be8c8ec3be5b304d3fa5eb49",
-    "decompressed_size_bytes": 853924
+    "decompressed_sha256": "1201b22a5210618d3a6c86a231dbb365ec0f0750d1eb2d34053d9d84ccadfe93",
+    "decompressed_size_bytes": 1309988
    }
   },
   "blocks/12078.models.bin.gz": {
@@ -12639,13 +12889,13 @@
    }
   },
   "blocks/12079.bin.gz": {
-   "sha256": "f4c9e8e736dd5be03d96fffcd582e6311842291cde3bc9b278a4f74b81b78d70",
-   "size_bytes": 35837,
+   "sha256": "eac21c0114b4584d4ec6ffba8802e3b568492028d4e66a821593b27b4b6759a4",
+   "size_bytes": 41999,
    "detail": {
     "encoding": "gzip",
     "decompressed": "blocks/12079.bin",
-    "decompressed_sha256": "da1e7478d21672539ef36375e68a481bd9f266718e5c8bfcd39bd0200f72ed22",
-    "decompressed_size_bytes": 559264
+    "decompressed_sha256": "9bdf0b0fac200e36d478667c5e8d553cfde4e461ce4066086801886f96e6ba32",
+    "decompressed_size_bytes": 957320
    }
   },
   "blocks/12079.models.bin.gz": {
@@ -12659,13 +12909,13 @@
    }
   },
   "blocks/12080.bin.gz": {
-   "sha256": "b45ad371e56a041ab7f84b37c77066a562f6847de2a82032889bec8d440a990a",
-   "size_bytes": 64976,
+   "sha256": "9c12503124090e231bcfa77c68b6dbf6fb159b30e47d5c0caa03ff905c92f5b4",
+   "size_bytes": 73110,
    "detail": {
     "encoding": "gzip",
     "decompressed": "blocks/12080.bin",
-    "decompressed_sha256": "1c046df48a8848e57c87be157417e21aac0aaea27a7dcdcdb68198f1ff6b1742",
-    "decompressed_size_bytes": 647073
+    "decompressed_sha256": "4b2fe264f81483d7d29baf9e2ba4309429a61652a43d8e33f76d0c1ded6b3a7d",
+    "decompressed_size_bytes": 1044097
    }
   },
   "blocks/12080.models.bin.gz": {
@@ -12679,13 +12929,13 @@
    }
   },
   "blocks/12081.bin.gz": {
-   "sha256": "1e26b8ac14ca0278fa755e35c4b0a14f70cbba829ae6aae700244bf32cd9aeed",
-   "size_bytes": 111297,
+   "sha256": "0382c81c8bc356ec5cbd155a2ff09247ef378e2d3a821553daa1ac6f21a7df1b",
+   "size_bytes": 127121,
    "detail": {
     "encoding": "gzip",
     "decompressed": "blocks/12081.bin",
-    "decompressed_sha256": "54f8de294bbb70d6116e2bb62e8c908599a5e22e1d3a51d03e095bc69fb235b5",
-    "decompressed_size_bytes": 718517
+    "decompressed_sha256": "d907664c1af53546326ab79659b8dbda43e8401a2c322c9ea2b1d05c679656ae",
+    "decompressed_size_bytes": 1168485
    }
   },
   "blocks/12081.models.bin.gz": {
@@ -12699,13 +12949,13 @@
    }
   },
   "blocks/12082.bin.gz": {
-   "sha256": "e47ae0ceb420e8d2d7db334575dd57535415ee39f5f4d0df0132b54a97c42f15",
-   "size_bytes": 192438,
+   "sha256": "d0c6fd888aa7382cb2b604fdef82bf15e63144e76d99df64ba7a0a5252512a84",
+   "size_bytes": 221353,
    "detail": {
     "encoding": "gzip",
     "decompressed": "blocks/12082.bin",
-    "decompressed_sha256": "983f15f4f48ab0a6623ae8b1502b78fe22c5b6d80ba04aff1475729537df3363",
-    "decompressed_size_bytes": 979025
+    "decompressed_sha256": "e9d66b06db9ccb9add8a402413d88493471727192a2056d407698d1c15a12dfd",
+    "decompressed_size_bytes": 1514745
    }
   },
   "blocks/12082.models.bin.gz": {
@@ -12719,13 +12969,13 @@
    }
   },
   "blocks/12179.bin.gz": {
-   "sha256": "04000496a7657d0094ba8d2fead89736d5d9748c4a6d771a8984e0983040f0aa",
-   "size_bytes": 3768,
+   "sha256": "8b7bfa2ccaf4ad9a06643a9206f9ce80f826d0d96e766511a5fe8924ad0667a3",
+   "size_bytes": 5020,
    "detail": {
     "encoding": "gzip",
     "decompressed": "blocks/12179.bin",
-    "decompressed_sha256": "8d4b99a5bbaf32e4452b537602f1f789a581c98a686c521d0281daaeee254f6f",
-    "decompressed_size_bytes": 342304
+    "decompressed_sha256": "67ab2da7b5fe7b34bdd2b3c095cb07618ace7657ef778fe0967193b5fa374459",
+    "decompressed_size_bytes": 735536
    }
   },
   "blocks/12179.models.bin.gz": {
@@ -12739,13 +12989,13 @@
    }
   },
   "blocks/12180.bin.gz": {
-   "sha256": "3f625999cabe0cc2a9fd185c287bbbc628bc129ac4f983db36e3aad63b660a86",
-   "size_bytes": 90022,
+   "sha256": "d81fc3077a60f31060912b0fd7b147b4b5e0ab08635af4c2c2d12e924d7ed897",
+   "size_bytes": 123446,
    "detail": {
     "encoding": "gzip",
     "decompressed": "blocks/12180.bin",
-    "decompressed_sha256": "9eac72417f868e8d6f989a94edc59de5f2e25f13c9724e40e4bf2ae188bd62ef",
-    "decompressed_size_bytes": 548463
+    "decompressed_sha256": "4a70f798f6f39c28d60555fb32895b15ad4ef6454e94fe306ad825997ea4905d",
+    "decompressed_size_bytes": 1073119
    }
   },
   "blocks/12180.models.bin.gz": {
@@ -12759,13 +13009,13 @@
    }
   },
   "blocks/12181.bin.gz": {
-   "sha256": "9e287c77f093d5b9542ca920b4492c0216ea9ba1caf4dec50953a9cb30c4bba9",
-   "size_bytes": 219225,
+   "sha256": "5976a4c5070b0f3d52d3f77be9ce9d1ca6c7e283fa2bed80534509ab83456235",
+   "size_bytes": 257390,
    "detail": {
     "encoding": "gzip",
     "decompressed": "blocks/12181.bin",
-    "decompressed_sha256": "7fcd185d75386579245ff3f263405880276be5f076de190330f6f814c40edf85",
-    "decompressed_size_bytes": 922082
+    "decompressed_sha256": "e76ac57fbfd3620aab3ab300ae49b8ac5d5121fab4255db761e479b4ce15ec56",
+    "decompressed_size_bytes": 1496370
    }
   },
   "blocks/12181.models.bin.gz": {
@@ -12779,13 +13029,13 @@
    }
   },
   "blocks/12334.bin.gz": {
-   "sha256": "f3378a182885d8051f486145a8aeedba7759bb7dabf9c4a0181c4b48f76f8953",
-   "size_bytes": 26526,
+   "sha256": "a457040f3fcf4500300e435c4385ed419677a054fa1d75565d4f6ed35f8d6b2c",
+   "size_bytes": 28888,
    "detail": {
     "encoding": "gzip",
     "decompressed": "blocks/12334.bin",
-    "decompressed_sha256": "161e7f041fbd5b78f0695ff3eb79846911bc83255962599ea6a11b6e59f4876d",
-    "decompressed_size_bytes": 520946
+    "decompressed_sha256": "f5c4f1c396830c3aad700aaa049e009efc9456663344cbb26823942ec35ee941",
+    "decompressed_size_bytes": 917154
    }
   },
   "blocks/12334.models.bin.gz": {
@@ -12799,13 +13049,13 @@
    }
   },
   "blocks/12335.bin.gz": {
-   "sha256": "ed10c6e8b6ebc0320c7d816e9aba013e2ecc52e4e5bb9e709a7e55d2524fa1b4",
-   "size_bytes": 120804,
+   "sha256": "a562f84bf7be3f31986bf944fd251d0c70d02ce69894ad0cbc048c1470a0fa8d",
+   "size_bytes": 137994,
    "detail": {
     "encoding": "gzip",
     "decompressed": "blocks/12335.bin",
-    "decompressed_sha256": "8539446ca1949ddea21fba638e407c5f449a07719c7768362a394989113a1f1d",
-    "decompressed_size_bytes": 808347
+    "decompressed_sha256": "4f5ac558bb437d7bd222a8c334a33f013ecc99ead49d1b862bca987099ebd8d0",
+    "decompressed_size_bytes": 1231243
    }
   },
   "blocks/12335.models.bin.gz": {
@@ -12819,13 +13069,13 @@
    }
   },
   "blocks/12336.bin.gz": {
-   "sha256": "19498d9e1ed05af35d5aa143c98e1cc2876c19736f4504b53e46e602b17207fd",
-   "size_bytes": 227305,
+   "sha256": "82e40eed45684c2dc5b60ffab58c56b1989719f398459f4eda33a87c254ca4f1",
+   "size_bytes": 262092,
    "detail": {
     "encoding": "gzip",
     "decompressed": "blocks/12336.bin",
-    "decompressed_sha256": "a4568f39337e6a204d6fb6ae7fc8b8dd58fadc676f9c662a6c5742604212ede0",
-    "decompressed_size_bytes": 998987
+    "decompressed_sha256": "d20e78fb9e2fe7d2000d3ca93a1e6b54781e0302295bffdba6c9242dcdf0a2a9",
+    "decompressed_size_bytes": 1481883
    }
   },
   "blocks/12336.models.bin.gz": {
@@ -12839,13 +13089,13 @@
    }
   },
   "blocks/12337.bin.gz": {
-   "sha256": "5f0588a416dbdfd6a5c9e2c3bc2840314c225cff4695a1bbb83e6529f0da7150",
-   "size_bytes": 81648,
+   "sha256": "ce903855c1d100b5e3fe0e6e36d9d2aa73fc065c34702701b0c75b60b785e0c7",
+   "size_bytes": 94581,
    "detail": {
     "encoding": "gzip",
     "decompressed": "blocks/12337.bin",
-    "decompressed_sha256": "5dc423342ad995b122131e1bb173ca6823beca44cb99f99385a81335fef66579",
-    "decompressed_size_bytes": 680233
+    "decompressed_sha256": "2dcef66fd958f0ccf125d709f3b5f41a62766d788fad89e4ebe29db2b73ed58b",
+    "decompressed_size_bytes": 1101305
    }
   },
   "blocks/12337.models.bin.gz": {
@@ -12859,13 +13109,13 @@
    }
   },
   "blocks/12338.bin.gz": {
-   "sha256": "156e2cba7cd9fb7ee7b77fff3b9402ea992f86c6a5e16d61270567bec88690ed",
-   "size_bytes": 168536,
+   "sha256": "68a123d69aecbb9cab09d6ad138f7b85c2f51fa946d910146268ee78fca434b9",
+   "size_bytes": 193753,
    "detail": {
     "encoding": "gzip",
     "decompressed": "blocks/12338.bin",
-    "decompressed_sha256": "6d90b5d72559e16101e54d1356c42d01fd156ece39df442a74b63f686d7b31d4",
-    "decompressed_size_bytes": 824428
+    "decompressed_sha256": "a0515d6a8a484ce7e5db4c25c31fddca1c39284aa55ac20d0bf9bb9186f65c45",
+    "decompressed_size_bytes": 1285676
    }
   },
   "blocks/12338.models.bin.gz": {
@@ -12879,13 +13129,13 @@
    }
   },
   "blocks/12339.bin.gz": {
-   "sha256": "85689ed0b4965f07185bbb83aa24a9e428c8fa3a60aed12a986c8ece5e0c1f78",
-   "size_bytes": 202910,
+   "sha256": "02be5f5962918913505aacbbb383df928448372c69a75b006ef0344bd711a943",
+   "size_bytes": 233396,
    "detail": {
     "encoding": "gzip",
     "decompressed": "blocks/12339.bin",
-    "decompressed_sha256": "186d7413d8dd47c525301ea566362f7c1b9bc8f3ac7c1ce38feaebdd2757e59d",
-    "decompressed_size_bytes": 955719
+    "decompressed_sha256": "a6676d5adbf8fed5ccd0345fc1471dc6fce01c742e40c06b326320a8e86e0c3a",
+    "decompressed_size_bytes": 1411951
    }
   },
   "blocks/12339.models.bin.gz": {
@@ -12899,13 +13149,13 @@
    }
   },
   "blocks/12340.bin.gz": {
-   "sha256": "f473cd49e22dc95c8c651ea5a45c05b9522ee3001204a947c36e41db457ef8df",
-   "size_bytes": 216042,
+   "sha256": "5716afaf8fe7a5d62007e19e1e60cc6856121138979eb42c28a272c1f752fa94",
+   "size_bytes": 256648,
    "detail": {
     "encoding": "gzip",
     "decompressed": "blocks/12340.bin",
-    "decompressed_sha256": "df5a17710f1b054e2aaeb026b0630dc2760ae0ce104cf2b9438a8a8751195f0b",
-    "decompressed_size_bytes": 1000320
+    "decompressed_sha256": "b1b64c4ececa607ce2d58256b4bdbaa7337b7d762444023b80b6fa0dd938f449",
+    "decompressed_size_bytes": 1560304
    }
   },
   "blocks/12340.models.bin.gz": {
@@ -12919,13 +13169,13 @@
    }
   },
   "blocks/12341.bin.gz": {
-   "sha256": "1f0bb76afb754ff07e9c5948234e5ad747f275eccc36a35101a16c016285aa2e",
-   "size_bytes": 203980,
+   "sha256": "940d4087e08bd45eef5b05ea2b56f13eacd9caaaae6a5a0d5967fb08c920665d",
+   "size_bytes": 232797,
    "detail": {
     "encoding": "gzip",
     "decompressed": "blocks/12341.bin",
-    "decompressed_sha256": "b836bc075afe4e77b36c16708c08350a8314e16e38b8ffc33bf48e754d57b138",
-    "decompressed_size_bytes": 898174
+    "decompressed_sha256": "4e609592dcb4ddfdb75632ef33fd95183cdda3e76b4561650de8cb4d0c909114",
+    "decompressed_size_bytes": 1355918
    }
   },
   "blocks/12341.models.bin.gz": {
@@ -12939,13 +13189,13 @@
    }
   },
   "blocks/12435.bin.gz": {
-   "sha256": "8ee2e28a1d478e8c4d6fc7c45e4f58b86d545c389c52f41556d06196f97198e8",
-   "size_bytes": 5903,
+   "sha256": "8937c2583c08c679d150b060f788baff7a0199b9bc7c8cad012c717f0c0b2b2a",
+   "size_bytes": 7312,
    "detail": {
     "encoding": "gzip",
     "decompressed": "blocks/12435.bin",
-    "decompressed_sha256": "173b20bdd6b6e764ea4d49e572698443a1058d192bf59b5210e4eaec5757a8c3",
-    "decompressed_size_bytes": 354400
+    "decompressed_sha256": "61c8476b8b509653d527350efaf022328b122b4d38ce599c2e4353ce22afda6e",
+    "decompressed_size_bytes": 747632
    }
   },
   "blocks/12435.models.bin.gz": {
@@ -12959,13 +13209,13 @@
    }
   },
   "blocks/12436.bin.gz": {
-   "sha256": "09236f0e5be2c3789d38ebfb239a56b871772bdd1ed0efbd1e8bb7e3c4990776",
-   "size_bytes": 253571,
+   "sha256": "438678d1ef1fabb63fd505db5774c7d2cfdb1ea1d07fef7eff5db45782c6ed38",
+   "size_bytes": 311569,
    "detail": {
     "encoding": "gzip",
     "decompressed": "blocks/12436.bin",
-    "decompressed_sha256": "840effc2b27e23251746a981f7a911ac87edad698abfd5a1e1781aea5c437a39",
-    "decompressed_size_bytes": 1044993
+    "decompressed_sha256": "7d5328fb3a9c09d52cc9df671cd2b0398f6a489c004bc19d17f20eab9d6d4e0f",
+    "decompressed_size_bytes": 1766761
    }
   },
   "blocks/12436.models.bin.gz": {
@@ -12979,13 +13229,13 @@
    }
   },
   "blocks/12437.bin.gz": {
-   "sha256": "002c146e533618c3b50a9dd65579559b3bc0bdccaf64d5470157cadbaa51226d",
-   "size_bytes": 81874,
+   "sha256": "899ebe3677043a8cd3412cf6bb40dd07994b65b3a69983b2c706b5f6e080c853",
+   "size_bytes": 110593,
    "detail": {
     "encoding": "gzip",
     "decompressed": "blocks/12437.bin",
-    "decompressed_sha256": "6e31ab08afa2f2005dd050175e269c07634f9788a5c0f6f02f29cb98d3a2d3ce",
-    "decompressed_size_bytes": 535151
+    "decompressed_sha256": "50f13daa55cc2d32acb695bb1e89c93998317284d48d283d26acdde386f5cf36",
+    "decompressed_size_bytes": 1012983
    }
   },
   "blocks/12437.models.bin.gz": {
@@ -12999,13 +13249,13 @@
    }
   },
   "blocks/12590.bin.gz": {
-   "sha256": "c065f79204bfbb6d70aa9ce8c95e8540aafd8bf76a8a820cf2df1c6f65bb4e3b",
-   "size_bytes": 90941,
+   "sha256": "0f59ee38548a6995eed1eafd5ba4dce314fc08597b620a4d7a3e7454b2d592f7",
+   "size_bytes": 114356,
    "detail": {
     "encoding": "gzip",
     "decompressed": "blocks/12590.bin",
-    "decompressed_sha256": "54a71c6df4100f3ad26716decedf883a8306b4086e3b03c5ed25e4129dd3fd85",
-    "decompressed_size_bytes": 635859
+    "decompressed_sha256": "5df803995bab1817092cbda35bcb2d0908ccde4720b37e5e4fd6083b63c19c2c",
+    "decompressed_size_bytes": 1058659
    }
   },
   "blocks/12590.models.bin.gz": {
@@ -13019,13 +13269,13 @@
    }
   },
   "blocks/12591.bin.gz": {
-   "sha256": "e17567172604768062e915d6fe281c72be4ef96461a3555cf2f7bbe950494a5a",
-   "size_bytes": 69875,
+   "sha256": "25a11ebdb43cc4a0628fbf250766803dead7f4342ad83dbdcfa13b3920bda937",
+   "size_bytes": 86402,
    "detail": {
     "encoding": "gzip",
     "decompressed": "blocks/12591.bin",
-    "decompressed_sha256": "b79e6df50f50e87983a8d3d511a61540e260f343e8b38bd2199871494ea82cea",
-    "decompressed_size_bytes": 580573
+    "decompressed_sha256": "46e0eb9e8caceff9ba2c9b5f169fcc33775288b8af6dda0814ef9aa8f2c196c3",
+    "decompressed_size_bytes": 982709
    }
   },
   "blocks/12591.models.bin.gz": {
@@ -13039,13 +13289,13 @@
    }
   },
   "blocks/12592.bin.gz": {
-   "sha256": "bd1753c00b14782b4b644753bb4ca0a70f9b2e76f15e7e5424ff1aab903cd41d",
-   "size_bytes": 84111,
+   "sha256": "1a0b7574eab1cbdfee3bc1130bfa740b25550d863f62bdc6da29df76943a6131",
+   "size_bytes": 95997,
    "detail": {
     "encoding": "gzip",
     "decompressed": "blocks/12592.bin",
-    "decompressed_sha256": "9259b185ab304320ca422f28d380da4ebbea54c5a5034d962586b6c704f9e39b",
-    "decompressed_size_bytes": 697369
+    "decompressed_sha256": "45ba89e97b261eb1caf8357c14e9bcc5d830d5cf795cb7e74940c7910b41e767",
+    "decompressed_size_bytes": 1106993
    }
   },
   "blocks/12592.models.bin.gz": {
@@ -13059,13 +13309,13 @@
    }
   },
   "blocks/12593.bin.gz": {
-   "sha256": "96f701e2e91fc200a8b8f6455ddbd244514ff3b840b56a5e0468bb6734ae4d16",
-   "size_bytes": 147243,
+   "sha256": "9c0fd9c5165e377a438256990e5457484c42644f2b54000fa6374abbb8b568b0",
+   "size_bytes": 169466,
    "detail": {
     "encoding": "gzip",
     "decompressed": "blocks/12593.bin",
-    "decompressed_sha256": "8dff49b99aacdf099e55443a43598461662f756f8fbf07f9369e1b8d56c14705",
-    "decompressed_size_bytes": 759296
+    "decompressed_sha256": "3487985c1b1795878f7870a0eaafa25d09d8167deb45d929a359ec21e4f90e7d",
+    "decompressed_size_bytes": 1187832
    }
   },
   "blocks/12593.models.bin.gz": {
@@ -13079,13 +13329,13 @@
    }
   },
   "blocks/12594.bin.gz": {
-   "sha256": "3441a891bee8a90e34ad946575b8ddc828138b700f038df54a80948a33d7fd7f",
-   "size_bytes": 175738,
+   "sha256": "774c9124dfe5a0a3ac4081124b8032b2ee7573cae48e4fea98132fa21d96eaee",
+   "size_bytes": 204399,
    "detail": {
     "encoding": "gzip",
     "decompressed": "blocks/12594.bin",
-    "decompressed_sha256": "6ae69da3e1ecddfde2c736d0c5fa78f95062e01c5008912b85b69a4f080c5fc2",
-    "decompressed_size_bytes": 808838
+    "decompressed_sha256": "fca9f2e3f96a14e3a6465681d6e6d3617959caf30a04e3183eacf9bb6104364d",
+    "decompressed_size_bytes": 1258158
    }
   },
   "blocks/12594.models.bin.gz": {
@@ -13099,13 +13349,13 @@
    }
   },
   "blocks/12595.bin.gz": {
-   "sha256": "2893654371c96361092ae91356ee0168f009fd3cb5e26fc26b66069b704e71e8",
-   "size_bytes": 197029,
+   "sha256": "3716fac193c49e60bbbb23dfed1e999522f384451abb4662e7040473366a87b7",
+   "size_bytes": 225932,
    "detail": {
     "encoding": "gzip",
     "decompressed": "blocks/12595.bin",
-    "decompressed_sha256": "9ee7ef37a2a44a8ee700a821fc6714cd2701c521b2c8d54d9b5e1b924ccbd49a",
-    "decompressed_size_bytes": 886176
+    "decompressed_sha256": "ffa71ae17b2c811f95f87004483cdffaea18eb2ac640cecabf6710f01672f0e1",
+    "decompressed_size_bytes": 1347400
    }
   },
   "blocks/12595.models.bin.gz": {
@@ -13119,13 +13369,13 @@
    }
   },
   "blocks/12596.bin.gz": {
-   "sha256": "90129c10a95df308ff021fb7e03aec68ff60f7efdd3fcd76419ee8f73633584e",
-   "size_bytes": 189974,
+   "sha256": "9f391ededfca2ca5794c253d953c1fb292b63320cb9620ae80baab163082e9c1",
+   "size_bytes": 216516,
    "detail": {
     "encoding": "gzip",
     "decompressed": "blocks/12596.bin",
-    "decompressed_sha256": "6d5f9e9e831d4dffa08486e798481cfd766143bc0627a9bc75c19063e12526e1",
-    "decompressed_size_bytes": 878585
+    "decompressed_sha256": "dfca3fcda9c6e22dd4c725796c30b4b8855de55c17f22c16214510ab1f342731",
+    "decompressed_size_bytes": 1330041
    }
   },
   "blocks/12596.models.bin.gz": {
@@ -13139,13 +13389,13 @@
    }
   },
   "blocks/12597.bin.gz": {
-   "sha256": "5ea8b36281cabd8bc1bac19898b3ff1e879828463a2a1a460eaec61c34309b87",
-   "size_bytes": 247254,
+   "sha256": "22a8f946caf0ae929e2f3d2103493d9a6b2781d25cc9ef6246e1637c3c0d7d47",
+   "size_bytes": 277884,
    "detail": {
     "encoding": "gzip",
     "decompressed": "blocks/12597.bin",
-    "decompressed_sha256": "2e1e53067c83da3356a3837572bc7a067d33d3ad4c26d6dae766211ed71994c6",
-    "decompressed_size_bytes": 1068368
+    "decompressed_sha256": "96192a86c5d611ee5d7eb294ddd7b5e6c02bd9b4023d1be902b88ce93a93cb07",
+    "decompressed_size_bytes": 1572048
    }
   },
   "blocks/12597.models.bin.gz": {
@@ -13159,13 +13409,13 @@
    }
   },
   "blocks/12633.bin.gz": {
-   "sha256": "f54e4b1e43e3f2280b62fd6076dac7b9676c6a6a53c52b983b82fd4beba009c6",
-   "size_bytes": 16775,
+   "sha256": "9489a084e6d3462e46060b2f21708b4855eca26dc0540279ed60d687f4bfd906",
+   "size_bytes": 21387,
    "detail": {
     "encoding": "gzip",
     "decompressed": "blocks/12633.bin",
-    "decompressed_sha256": "91d9fd05803238954ff97a2348ad1c5c01afeee21a2c21e0e1f2a4dc46d41291",
-    "decompressed_size_bytes": 373712
+    "decompressed_sha256": "3ee1ccc983e092e310064875ae93aa5e26c81071f79ac02ad335a19dc4074be1",
+    "decompressed_size_bytes": 783384
    }
   },
   "blocks/12633.models.bin.gz": {
@@ -13179,13 +13429,13 @@
    }
   },
   "blocks/12693.bin.gz": {
-   "sha256": "297400f1b761a3b8ea6ff4ca058b174c3ddcfb5e9f6553bed3455b4366ee9da0",
-   "size_bytes": 305710,
+   "sha256": "cd7c823e963d2a15fc278ffc7bb1d1447058803cb1d920a9f136fd410e5059e4",
+   "size_bytes": 370184,
    "detail": {
     "encoding": "gzip",
     "decompressed": "blocks/12693.bin",
-    "decompressed_sha256": "d2ba35aee0572a94542d5eeb0d65cbe88948651e4da19ac1769c33fa29191fa1",
-    "decompressed_size_bytes": 1163587
+    "decompressed_sha256": "ca19b6e9902d1c3dbd36d02aa59a0188407df0a1ef3a750e8804368656d30068",
+    "decompressed_size_bytes": 1918499
    }
   },
   "blocks/12693.models.bin.gz": {
@@ -13199,13 +13449,13 @@
    }
   },
   "blocks/12694.bin.gz": {
-   "sha256": "0fea7049631f5c466de5104ab14c70fe06e05a404eacdffbe0a5cfb1ac1dd96d",
-   "size_bytes": 269645,
+   "sha256": "1c2d4f3c47626c5f89f5deb1e509116a8bc854ab4cc6d705135d91ffbbc042ed",
+   "size_bytes": 321625,
    "detail": {
     "encoding": "gzip",
     "decompressed": "blocks/12694.bin",
-    "decompressed_sha256": "9192fce33535610ad3b276fb9ea9cf704e088278f6acfe67db9b8b8f47574a31",
-    "decompressed_size_bytes": 993528
+    "decompressed_sha256": "9113db8cc86c994f795a1a15d93795416dd5c6e7314468d0402afa6e654b45ef",
+    "decompressed_size_bytes": 1667056
    }
   },
   "blocks/12694.models.bin.gz": {
@@ -13219,13 +13469,13 @@
    }
   },
   "blocks/12695.bin.gz": {
-   "sha256": "a1103d9e98c72aca230c67154262ebc12be1b6fe9e02b23c96959637f2bf92db",
-   "size_bytes": 66378,
+   "sha256": "148a08aae96ee0602d88ce866a2241742b2c0ff5930633ea94432051ef1db120",
+   "size_bytes": 90434,
    "detail": {
     "encoding": "gzip",
     "decompressed": "blocks/12695.bin",
-    "decompressed_sha256": "0dd7d0a8d8fc5565a48260a2db0d22b7bb90806ab51211c2a724d27f510266b7",
-    "decompressed_size_bytes": 489205
+    "decompressed_sha256": "7d0941290c42210763ad187943a326d8d06ba3092d97c89b58342efb3f7d164d",
+    "decompressed_size_bytes": 922325
    }
   },
   "blocks/12695.models.bin.gz": {
@@ -13239,13 +13489,13 @@
    }
   },
   "blocks/12846.bin.gz": {
-   "sha256": "52a57f61976c433ab13fed4e2de70e8855da215dca7469456dee4cd607550328",
-   "size_bytes": 85594,
+   "sha256": "01df7cc8273825f2f3ad19ff1ff2a934d92d771c63d6cd9c9e84dee318fb5804",
+   "size_bytes": 111431,
    "detail": {
     "encoding": "gzip",
     "decompressed": "blocks/12846.bin",
-    "decompressed_sha256": "e93929e61d37774d44f61e84aa41681a13a84f67512f2cb0b5caa9ac1b6028e8",
-    "decompressed_size_bytes": 574152
+    "decompressed_sha256": "fbe989820b483db937c437ab1121258981a83b54e844b7fc1f81d483a2388591",
+    "decompressed_size_bytes": 969832
    }
   },
   "blocks/12846.models.bin.gz": {
@@ -13259,13 +13509,13 @@
    }
   },
   "blocks/12847.bin.gz": {
-   "sha256": "71b8ac3febf9786475929a9cc4bf0ed978ed57688a7c9b41f11fd2aa67ab7aad",
-   "size_bytes": 67489,
+   "sha256": "9baaf7d037ebf92459e416c8c0950386052eacf5d8e23ef79bee0c3701cc2c82",
+   "size_bytes": 86604,
    "detail": {
     "encoding": "gzip",
     "decompressed": "blocks/12847.bin",
-    "decompressed_sha256": "9dda4b23283c020f689a7f542daa7dfd50dd925e0195a3197eb5f56dec9393a2",
-    "decompressed_size_bytes": 548985
+    "decompressed_sha256": "1e2d05694ca62434c938d45ef9b8ca93cb5b93b24f1d4d053fa8ee59ca02bf29",
+    "decompressed_size_bytes": 946081
    }
   },
   "blocks/12847.models.bin.gz": {
@@ -13279,13 +13529,13 @@
    }
   },
   "blocks/12848.bin.gz": {
-   "sha256": "b9747ff3b02717a0b3d3f67373f225f21ae13c614b085daa08f957ec5ef2fec4",
-   "size_bytes": 62213,
+   "sha256": "1382280d651fb0fe0c47e55753d975b4b3f75c67611e8ca55be628222216e411",
+   "size_bytes": 80509,
    "detail": {
     "encoding": "gzip",
     "decompressed": "blocks/12848.bin",
-    "decompressed_sha256": "4289867ae4cd941ee7808d39c35e6ef44b0bab7277abb8feeadfe830be8385fb",
-    "decompressed_size_bytes": 558452
+    "decompressed_sha256": "1151857ba852ab9617051f91caec6c7bf21eb510bbba7968a9b0fff337bda02c",
+    "decompressed_size_bytes": 962748
    }
   },
   "blocks/12848.models.bin.gz": {
@@ -13299,13 +13549,13 @@
    }
   },
   "blocks/12849.bin.gz": {
-   "sha256": "5aab8392c223608b1fa19afaabf3e3b706ce909507d5abec220e0083205acfb8",
-   "size_bytes": 144953,
+   "sha256": "a5610ec8403a5b0d1a04a1a5bb1faf36f354459bcf4595d434728eba40e95a5e",
+   "size_bytes": 166477,
    "detail": {
     "encoding": "gzip",
     "decompressed": "blocks/12849.bin",
-    "decompressed_sha256": "3f476509193c61e240b23770dd10cc8ab1b1972fc5885605d7a1f04497458d30",
-    "decompressed_size_bytes": 764973
+    "decompressed_sha256": "fa1be9afb09624ff1cee4ca4ed9ebf5cd3bd59d9b21fac3fcbde7f8ea82f70ae",
+    "decompressed_size_bytes": 1188349
    }
   },
   "blocks/12849.models.bin.gz": {
@@ -13319,13 +13569,13 @@
    }
   },
   "blocks/12850.bin.gz": {
-   "sha256": "9be58cc908d7674c54b1de579d9e9e940821966a9f0af8b94f58c479ba400f4c",
-   "size_bytes": 245646,
+   "sha256": "cd0e617afbbc549a379c98fe6ece820478e7c5ea19364bd81036d5ee85e82086",
+   "size_bytes": 277748,
    "detail": {
     "encoding": "gzip",
     "decompressed": "blocks/12850.bin",
-    "decompressed_sha256": "41785c4cb5ad0fed598c185e5934eb1ad566e2fd5cd918d357c799c4c6f11d27",
-    "decompressed_size_bytes": 1046964
+    "decompressed_sha256": "37a49ec9f3b35fb3f7c731ef0aadf88ce5aae07274252d22fba3193044d258ae",
+    "decompressed_size_bytes": 1554988
    }
   },
   "blocks/12850.models.bin.gz": {
@@ -13339,13 +13589,13 @@
    }
   },
   "blocks/12851.bin.gz": {
-   "sha256": "678ac7bd1dc061d6a9cf66c4f8646492c4493044e43dab174f40ddb4bd880570",
-   "size_bytes": 168926,
+   "sha256": "677ca0374349e0a76cd072a29f2ee8a44e4347f1e06f582c2308341ff1d9dc01",
+   "size_bytes": 195467,
    "detail": {
     "encoding": "gzip",
     "decompressed": "blocks/12851.bin",
-    "decompressed_sha256": "8a7ef6098574631b3ce65c72b13c9726cdf69fa419637692d802c0d027955f71",
-    "decompressed_size_bytes": 825518
+    "decompressed_sha256": "9d45907c662a271eb2da3f4059355936cec29b86c1478818a1bc9aec059421e5",
+    "decompressed_size_bytes": 1267782
    }
   },
   "blocks/12851.models.bin.gz": {
@@ -13359,13 +13609,13 @@
    }
   },
   "blocks/12852.bin.gz": {
-   "sha256": "13b6165c4a8aa1bf0c1506a9f05f8bc66b445744d10fa66640c32ece0ad1cb25",
-   "size_bytes": 245375,
+   "sha256": "f8c88954678c907809716d8e1d41c731ab111be5574c580fd4f7bcc4fcec65be",
+   "size_bytes": 273241,
    "detail": {
     "encoding": "gzip",
     "decompressed": "blocks/12852.bin",
-    "decompressed_sha256": "ff5d8750f527108556bd5f78b9f03180b2fb959a0c947c9ee12cc136a53cafb2",
-    "decompressed_size_bytes": 1050014
+    "decompressed_sha256": "aa9edd6203acab56bd3dc9b2f46c452073996c5c418c935b8fc616519acb862c",
+    "decompressed_size_bytes": 1519254
    }
   },
   "blocks/12852.models.bin.gz": {
@@ -13379,13 +13629,13 @@
    }
   },
   "blocks/12853.bin.gz": {
-   "sha256": "af954bc81b08450f532e446b65f837d36f9ff03e6aa8e64fa8977b3fcece3dae",
-   "size_bytes": 274385,
+   "sha256": "9f29524d699a6f9081d9b96a5213c7c73c87a85ce7a7506665802367cb8e0034",
+   "size_bytes": 302128,
    "detail": {
     "encoding": "gzip",
     "decompressed": "blocks/12853.bin",
-    "decompressed_sha256": "12265b4f2d34946ee9d1704f18e4413e14964bd227741e973c3a6c5e4649969f",
-    "decompressed_size_bytes": 1254048
+    "decompressed_sha256": "1f59e7ce3ef6dd8bcfbdb03859901bd9909d55825e8dca9504f1039233fea72d",
+    "decompressed_size_bytes": 1782808
    }
   },
   "blocks/12853.models.bin.gz": {
@@ -13399,13 +13649,13 @@
    }
   },
   "blocks/12949.bin.gz": {
-   "sha256": "4cb29e99616835b151332cb576490f50a2ea0830f84d6ca1e5993bf3c603947e",
-   "size_bytes": 315258,
+   "sha256": "6bf116d9abd74a10b5c5c4aad416328867ba4f47fd09af865d70f292a666401a",
+   "size_bytes": 383873,
    "detail": {
     "encoding": "gzip",
     "decompressed": "blocks/12949.bin",
-    "decompressed_sha256": "ddc560596baa9945e4ef1daefb39c4936b37f6f48bfabc972f33d0d6ec47bd92",
-    "decompressed_size_bytes": 1176408
+    "decompressed_sha256": "bbc6e7de3edec11193d2a8883e83fd7d69a38328d27e6873864d49fcb3e52159",
+    "decompressed_size_bytes": 1980016
    }
   },
   "blocks/12949.models.bin.gz": {
@@ -13419,13 +13669,13 @@
    }
   },
   "blocks/12950.bin.gz": {
-   "sha256": "8bbab0352c088d8a567b8f42aa0a852b38000c08cf9707fe9e8bf3e937e57a8b",
-   "size_bytes": 353684,
+   "sha256": "f4d1d5dab6114c898ad7574fcb6b2cf8422082a5adc80f96669db4babb4b8bb0",
+   "size_bytes": 434138,
    "detail": {
     "encoding": "gzip",
     "decompressed": "blocks/12950.bin",
-    "decompressed_sha256": "c462510a7f1de064ffe1e32c7d78cbad97479941ab80221ac87df902fe474099",
-    "decompressed_size_bytes": 1293530
+    "decompressed_sha256": "9e99e9c88d1afa341d885797410af76485081fb85e2e74eaf5c9d9ba3d5e514f",
+    "decompressed_size_bytes": 2222994
    }
   },
   "blocks/12950.models.bin.gz": {
@@ -13439,13 +13689,13 @@
    }
   },
   "blocks/12951.bin.gz": {
-   "sha256": "56950ae91d1289ce2f655cb8220b8b2cc79f67d1e9370a01a4204b5895f7c806",
-   "size_bytes": 137158,
+   "sha256": "c27bd7c583a8917e56c00f0f3007c8c1bb658d06306c178c32d0be7e5078b910",
+   "size_bytes": 185215,
    "detail": {
     "encoding": "gzip",
     "decompressed": "blocks/12951.bin",
-    "decompressed_sha256": "a0af7b0425d3dc7b8677e9d6ee1e703aebb2c34f072faa8b43c196fa04433ed0",
-    "decompressed_size_bytes": 778427
+    "decompressed_sha256": "92fb10f9a8d7c8a1e684c9783e29c657d409b9d88b426128f52fda9221e4e26e",
+    "decompressed_size_bytes": 1471707
    }
   },
   "blocks/12951.models.bin.gz": {
@@ -13459,13 +13709,13 @@
    }
   },
   "blocks/13104.bin.gz": {
-   "sha256": "4320cf065559d45e45504162e8d94ef698d9c514bbc7c6714a007d7e7344b14b",
-   "size_bytes": 73886,
+   "sha256": "e8a1e2954e6ec69f6d98b97607e79c5d28fb5d2cd944db4259e6b5454ea4bd24",
+   "size_bytes": 94290,
    "detail": {
     "encoding": "gzip",
     "decompressed": "blocks/13104.bin",
-    "decompressed_sha256": "8b4b130b19bcaddc76c8b4ad38e58f6d33027b1f8d5d2bb82417700e06d0a44e",
-    "decompressed_size_bytes": 554923
+    "decompressed_sha256": "94f259c3d773193a62370f688b4fd8348dde5d831fd228e40d5d632279de917a",
+    "decompressed_size_bytes": 954107
    }
   },
   "blocks/13104.models.bin.gz": {
@@ -13479,13 +13729,13 @@
    }
   },
   "blocks/13105.bin.gz": {
-   "sha256": "4315dc0f625a8bb2785cd6c714585c786a36198f848b80fe88240bce748de935",
-   "size_bytes": 149269,
+   "sha256": "b9fe5cedeb7cea52d79886fab69fbeee3044395e36a025ab72c9cdd9a7f1b067",
+   "size_bytes": 175459,
    "detail": {
     "encoding": "gzip",
     "decompressed": "blocks/13105.bin",
-    "decompressed_sha256": "8e6ec4e59d1340adde77a834ee6faaef08a25e1112b5f3e87d74d5e443337f78",
-    "decompressed_size_bytes": 850865
+    "decompressed_sha256": "63f2f869c027cd0575de421c9e17e31446e8a772565c0d9ce5054e98bda7f357",
+    "decompressed_size_bytes": 1322505
    }
   },
   "blocks/13105.models.bin.gz": {
@@ -13499,13 +13749,13 @@
    }
   },
   "blocks/13106.bin.gz": {
-   "sha256": "24cb13dec13fb23aaef9a59f87723968db15929a6602a3c64c147b55ec04e1a9",
-   "size_bytes": 114512,
+   "sha256": "4d4e23fa7b0385e1d2e2f4e764f7e5f4ddd473fc3f92bac353da0883660a186e",
+   "size_bytes": 138830,
    "detail": {
     "encoding": "gzip",
     "decompressed": "blocks/13106.bin",
-    "decompressed_sha256": "340a2fd029a94698e10596195209779f73472356441bd69c354abf579bb43991",
-    "decompressed_size_bytes": 676203
+    "decompressed_sha256": "9d5a48ff6755dabbe1daa6f2908241c9800c47ee0667c97c904445ce3bd71a5e",
+    "decompressed_size_bytes": 1100779
    }
   },
   "blocks/13106.models.bin.gz": {
@@ -13519,13 +13769,13 @@
    }
   },
   "blocks/13107.bin.gz": {
-   "sha256": "2a72bf430306e8078bc173a5ea78f54c615e10ba8ddab3ffb6bde0beab055803",
-   "size_bytes": 91124,
+   "sha256": "7c9e14eb08207e8e008f0b6dee99ec7cc1bff8b01528d594ecad6ac5115100a8",
+   "size_bytes": 109571,
    "detail": {
     "encoding": "gzip",
     "decompressed": "blocks/13107.bin",
-    "decompressed_sha256": "7f69bc463ddb2c6c962da4a9d7ca4a20b6c6bf8d6d20fd092c8bf4e1c58b069a",
-    "decompressed_size_bytes": 602942
+    "decompressed_sha256": "c5f546bb8c71a7aba912c44288c12a0afa02d16efb0343ff39c949b405fa6d9f",
+    "decompressed_size_bytes": 1002846
    }
   },
   "blocks/13107.models.bin.gz": {
@@ -13539,13 +13789,13 @@
    }
   },
   "blocks/13108.bin.gz": {
-   "sha256": "5f029e0b5987ddbe28bd8919e846ccb5ca6b46b3335b4c1d688fe383fd82b098",
-   "size_bytes": 246755,
+   "sha256": "9f8945001d90adead809df28b79f875109395bf12a028a710846d819eaf205f9",
+   "size_bytes": 274562,
    "detail": {
     "encoding": "gzip",
     "decompressed": "blocks/13108.bin",
-    "decompressed_sha256": "2869f201e4b47ed3bc11b118ccf05348f32040323c7edf7e92402f6a69dcea91",
-    "decompressed_size_bytes": 976667
+    "decompressed_sha256": "1b9844ba8e24c8421037a14cac31337e76a5d9d33f6c3de6519bc6cde6e53d53",
+    "decompressed_size_bytes": 1425291
    }
   },
   "blocks/13108.models.bin.gz": {
@@ -13559,13 +13809,13 @@
    }
   },
   "blocks/13109.bin.gz": {
-   "sha256": "a8cf8a9e3d5c0240b6fb410c6aefa5db0bfc3996f671aa91a7f949d6f591b52f",
-   "size_bytes": 215130,
+   "sha256": "b6cb1be8b11c7a4bc09a5211b0e8998396f4a406172e649c1b99dfc945ee6101",
+   "size_bytes": 242313,
    "detail": {
     "encoding": "gzip",
     "decompressed": "blocks/13109.bin",
-    "decompressed_sha256": "2109712a5e64eb70eae313ff12f58edc124ab083dea3fe01ca0d89edd0b0ce78",
-    "decompressed_size_bytes": 923545
+    "decompressed_sha256": "3bb151fa27c3a99cca8cec709680e8fb03595812ec85bc335b7654489901e6ad",
+    "decompressed_size_bytes": 1389809
    }
   },
   "blocks/13109.models.bin.gz": {
@@ -13579,13 +13829,13 @@
    }
   },
   "blocks/13205.bin.gz": {
-   "sha256": "ca1321fa9f1acbdbd648687e84ae05ee62f27704eaf8cd0acd3818fd66790ba7",
-   "size_bytes": 39982,
+   "sha256": "00962a6e40dfc86faffb3092cf4623322dbcc374e28f041f4d3f90453652fe8c",
+   "size_bytes": 63807,
    "detail": {
     "encoding": "gzip",
     "decompressed": "blocks/13205.bin",
-    "decompressed_sha256": "f0f4e87bf4c631f420d303165093c8fe1036449f2e635b8a667d16dcfc0ea8df",
-    "decompressed_size_bytes": 417551
+    "decompressed_sha256": "fe1ef3d78ba2308a1cd636d13718f750fa3d91993760e58e55e2b3bd06c4893d",
+    "decompressed_size_bytes": 855207
    }
   },
   "blocks/13205.models.bin.gz": {
@@ -13599,13 +13849,13 @@
    }
   },
   "blocks/13206.bin.gz": {
-   "sha256": "16cf0afd0db8067de0c4603f8ec2e8032672425170cd2f00cfbb013c661514ab",
-   "size_bytes": 341429,
+   "sha256": "daa6d920534e0d436168b7b1a814b2a3191bd30d2d21c6875c7122c5ae2919ae",
+   "size_bytes": 415230,
    "detail": {
     "encoding": "gzip",
     "decompressed": "blocks/13206.bin",
-    "decompressed_sha256": "cbdff17da1ad148b1eb4e24378b0d5269bce62400ad989ebd6fdf4a9659fed64",
-    "decompressed_size_bytes": 1278483
+    "decompressed_sha256": "6ef807793b32c7eeb956de07804be203b2ba2b0368ff6b82de616c1356bef0ca",
+    "decompressed_size_bytes": 2136067
    }
   },
   "blocks/13206.models.bin.gz": {
@@ -13619,13 +13869,13 @@
    }
   },
   "blocks/13360.bin.gz": {
-   "sha256": "19a28ea7cf6152c6cb0602d0221b942b043fe6a35cb15ee372a8a027695b0489",
-   "size_bytes": 73069,
+   "sha256": "30efffe3bb49a299e82d4cefca50dbc6b78acf54beff94f91326362c21a6b97d",
+   "size_bytes": 93189,
    "detail": {
     "encoding": "gzip",
     "decompressed": "blocks/13360.bin",
-    "decompressed_sha256": "eba4d5d6a8992667d4907043ec0f10f28b0b6827899cb4a206a750e074146913",
-    "decompressed_size_bytes": 566262
+    "decompressed_sha256": "7b771eb4c72434c167cddf06c7231e523c2f20a56a538d6c42bff2286e32d6f3",
+    "decompressed_size_bytes": 968326
    }
   },
   "blocks/13360.models.bin.gz": {
@@ -13639,13 +13889,13 @@
    }
   },
   "blocks/13361.bin.gz": {
-   "sha256": "bf308b407da5775136498a41a092b4c00750f672165d2507971c9f3a5de63091",
-   "size_bytes": 173774,
+   "sha256": "2c1fb7e0a46db2e21f7ac6cbaeb628304365666f74d4c1d7e469ef05c8b2d655",
+   "size_bytes": 202832,
    "detail": {
     "encoding": "gzip",
     "decompressed": "blocks/13361.bin",
-    "decompressed_sha256": "33fa28a31bd659572331175446a0fbb8b76ace991ee9177cf440311a5984898e",
-    "decompressed_size_bytes": 820421
+    "decompressed_sha256": "5c596b97099535ffbc8821321774834236edad2dce4f9cc3c537895accd86d51",
+    "decompressed_size_bytes": 1255557
    }
   },
   "blocks/13361.models.bin.gz": {
@@ -13659,13 +13909,13 @@
    }
   },
   "blocks/13362.bin.gz": {
-   "sha256": "a6c89b8ca819697ab63efaa89343b949cc859f66eca15e91263a50f620258865",
-   "size_bytes": 155459,
+   "sha256": "f73bb09d280aa96b903eba699b30b6efaa127015a2600e81df2695edda0cf56c",
+   "size_bytes": 186218,
    "detail": {
     "encoding": "gzip",
     "decompressed": "blocks/13362.bin",
-    "decompressed_sha256": "33809c0bee961dbedbaf56544a33ee64b9a1d6d872a4fbccd12794bfe2e7bbdc",
-    "decompressed_size_bytes": 1009304
+    "decompressed_sha256": "b3ebe5f89fdf8efbca61a83bbcd5ebfe0be7e726a43a35b17d1a74521a987d4a",
+    "decompressed_size_bytes": 1568832
    }
   },
   "blocks/13362.models.bin.gz": {
@@ -13679,13 +13929,13 @@
    }
   },
   "blocks/13363.bin.gz": {
-   "sha256": "6f39f2aca8c920bd8b6cea3aa2bd1c72f190b38600257f72c82c7c809d6f394b",
-   "size_bytes": 180727,
+   "sha256": "cec2edd4d95bc75caa426b95144ef1edab2e0cf3956457b7035340981b3a19a9",
+   "size_bytes": 208087,
    "detail": {
     "encoding": "gzip",
     "decompressed": "blocks/13363.bin",
-    "decompressed_sha256": "8305b78cb15f83674364cecea70545ef07a57094b321e2892e1c80a64155964c",
-    "decompressed_size_bytes": 868842
+    "decompressed_sha256": "c570b0cadcf573909288b00f690175336cae8252a8e8f208d1436f3d35374665",
+    "decompressed_size_bytes": 1327306
    }
   },
   "blocks/13363.models.bin.gz": {
@@ -13699,13 +13949,13 @@
    }
   },
   "blocks/13364.bin.gz": {
-   "sha256": "874a14312428c29116460e1004b609bcf7a0cf89ee1bc936af7c77ac44bf0942",
-   "size_bytes": 145439,
+   "sha256": "0db2db521ce22a532ac555823a152a835013c3c472e35262f86b21aeaf2ffd63",
+   "size_bytes": 171118,
    "detail": {
     "encoding": "gzip",
     "decompressed": "blocks/13364.bin",
-    "decompressed_sha256": "17fcf2e89d4629dd8398baed1bf8602fde7acc4dd0c6b4685f96715e00c10f01",
-    "decompressed_size_bytes": 760982
+    "decompressed_sha256": "1f878909be0752df24e23229d59d1383788e9c0bde19f9a85dd59d882d973870",
+    "decompressed_size_bytes": 1222326
    }
   },
   "blocks/13364.models.bin.gz": {
@@ -13719,13 +13969,13 @@
    }
   },
   "blocks/13365.bin.gz": {
-   "sha256": "2cc1ab47be986b4aa59741be97297326b274077aa5f89e17a6277a4f66e04d54",
-   "size_bytes": 155447,
+   "sha256": "251f6bb6f36baa61b59ec0a234333a1d8c58669f333352a776ee987b6ed6c181",
+   "size_bytes": 176402,
    "detail": {
     "encoding": "gzip",
     "decompressed": "blocks/13365.bin",
-    "decompressed_sha256": "2436f021e89e06df2f030cf3df3a46aa25c8496b493b7c8f81be7d722c694a60",
-    "decompressed_size_bytes": 806572
+    "decompressed_sha256": "00782cee55c1124fc9d3e1a2e86b0db733376445f6a1c8f951adb30e6cb6ad46",
+    "decompressed_size_bytes": 1263692
    }
   },
   "blocks/13365.models.bin.gz": {
@@ -23396,6 +23646,15 @@
   "gear/pose-fit-failures.json": {
    "sha256": "01a96b563b94ad6c33482375925b9fc5259fd5dc6feabce4f5e0126c01cb59f1",
    "size_bytes": 183823
+  },
+  "terrain/floors.bin": {
+   "sha256": "b6c2356d8a663e3f15c218bf67ea631acdf1eb6cbe13ad42b3610d86488622d2",
+   "size_bytes": 30764,
+   "detail": {
+    "underlays": 251,
+    "overlays": 643,
+    "source": "config archive 2 groups 1 (ph) and 4 (ow); fields as rl4.ad reads them"
+   }
   }
  }
 }

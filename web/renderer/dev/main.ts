@@ -443,7 +443,7 @@ async function main(): Promise<void> {
           const d = handle.diagnostics();
           if (instanceLayout && !(d.sceneId ?? "").endsWith(wanted)) throw new Error(`instance assembly did not complete: scene ${d.sceneId}`);
           const minimap = showMinimap();
-          return { sceneId: d.sceneId, sceneBase: d.sceneBase, loadedSquares: d.loadedSquares, minimap, tile: { x, y } };
+          return { sceneId: d.sceneId, sceneBase: d.sceneBase, loadedSquares: d.loadedSquares, terrainRebuilt: d.terrainRebuilt, minimap, tile: { x, y } };
         }
         throw new Error(`region mode knows workload/workload-moving/door-open/door-closed/death-office/leave-instance, not ${name}`);
       };

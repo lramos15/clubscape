@@ -45,6 +45,9 @@ fn workload_cpu_profile() {
         core.add_texture(&bytes).unwrap();
         textures.insert(Texture::from_chunks(&bytes).unwrap());
     }
+    // Block scenes run the live terrain pass from raw block terrain (published floor defs).
+    core.load_floor_defs(&common::read_asset("terrain/floors.bin"))
+        .unwrap();
     for seq in manifest["sequences"].as_array().unwrap() {
         core.load_sequence(&asset(seq["file"].as_str().unwrap()))
             .unwrap();

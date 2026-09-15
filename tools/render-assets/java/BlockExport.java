@@ -59,9 +59,49 @@ final class BlockExport
             records.add(exportBlock(square));
         }
         usedTextures.addAll(scenes.usedTextures);
+        exportFloorDefinitions();
         export.manifest.put("blocks", records);
         export.manifest.put("block_texture_ids", new ArrayList<>(usedTextures));
         System.out.println("BLOCKS exported=" + records.size() + " textures=" + usedTextures.size());
+    }
+
+    /**
+     * Every floor underlay (`ph`, config archive 2 group 1) and overlay (`ow`, group 4) definition
+     * of the source cache as the original terrain pass reads them: the derived HSL fields the
+     * underlay blend sums (`pk/eb/fs/bq` = hue, saturation, lightness, hue multiplier) and the
+     * overlay's texture / primary colour + HSL / secondary colour + HSL. `terrain/floors.bin`.
+     */
+    void exportFloorDefinitions() throws Exception
+    {
+        rl4 loader = scenes.lastLoader;
+        List<Integer> underlays = new ArrayList<>();
+        for (int id : export.cache.archive(2).getFileIds(1))
+        {
+            ph def = loader.uh(id);
+            underlays.add(id); underlays.add(def.pk()); underlays.add(def.eb()); underlays.add(def.fs()); underlays.add(def.bq());
+        }
+        List<Integer> overlays = new ArrayList<>();
+        for (int id : export.cache.archive(2).getFileIds(4))
+        {
+            ow def = loader.hu(id);
+            overlays.add(id); overlays.add(def.ab()); overlays.add(def.qa()); overlays.add(def.bk()); overlays.add(def.ge()); overlays.add(def.jc());
+            overlays.add(def.gy()); overlays.add(def.lf()); overlays.add(def.th()); overlays.add(def.cs());
+        }
+        ChunkWriter writer = new ChunkWriter();
+        writer.ints("FUND", SceneExport.toArray(underlays)).ints("FOVL", SceneExport.toArray(overlays));
+        String key = "terrain/floors.bin";
+        Path file = export.output.resolve(key);
+        Files.createDirectories(file.getParent());
+        String sha = writer.write(file);
+        export.record(key, sha, Files.size(file), OriginalCapture.map("underlays", underlays.size() / 5, "overlays", overlays.size() / 10,
+            "source", "config archive 2 groups 1 (ph) and 4 (ow); fields as rl4.ad reads them"));
+        Map<String, Object> record = new LinkedHashMap<>();
+        record.put("file", key);
+        record.put("sha256", sha);
+        record.put("underlays", underlays.size() / 5);
+        record.put("overlays", overlays.size() / 10);
+        export.manifest.put("floor_definitions", record);
+        System.out.println("FLOORS underlays=" + underlays.size() / 5 + " overlays=" + overlays.size() / 10);
     }
 
     /** Animated renderable state: frames baked one by one through the original model builder. */
@@ -288,6 +328,99 @@ final class BlockExport
         writer.ints("BPNT", SceneExport.toArray(paints)).ints("BTMD", SceneExport.toArray(tileModels)).ints("BWAL", SceneExport.toArray(walls));
         writer.ints("BWDC", SceneExport.toArray(wallDecor)).ints("BFDC", SceneExport.toArray(floorDecor)).ints("BOBJ", SceneExport.toArray(gameObjects));
         writer.ints("BDYN", SceneExport.toArray(dynamic));
+        // Raw terrain of the square and the shadows its own scenery casts, from a second load of
+        // the same scene whose region list holds only this square: what the live loader stores
+        // for the square before blending and lighting (`rl4.xl`: underlay/overlay ids, overlay
+        // shape path and rotation, settings, corner heights; `ci.aq`: the `bf` shadow values).
+        // The renderer rebuilds the terrain colours of a whole 104x104 scene from these with the
+        // original `rl4.ad` pass, so the outer tiles blend and light exactly as the live scene
+        // does at its own base.
+        scenes.loadScene(baseX, baseY, List.of(square));
+        rl4 raw = scenes.lastLoader;
+        int vj = (Integer) SceneExport.rawTyped(raw, rl4.class, "vj", int.class);
+        short[][][] underlay = (short[][][]) SceneExport.rawTyped(raw, rl4.class, "uz", short[][][].class);
+        short[][][] overlay = (short[][][]) SceneExport.rawTyped(raw, rl4.class, "xw", short[][][].class);
+        byte[][][] overlayPath = (byte[][][]) SceneExport.rawTyped(raw, rl4.class, "om", byte[][][].class);
+        byte[][][] overlayRotation = (byte[][][]) SceneExport.rawTyped(raw, rl4.class, "vq", byte[][][].class);
+        byte[][][] rawSettings = (byte[][][]) SceneExport.rawTyped(raw, rl4.class, "fv", byte[][][].class);
+        byte[][][] shadows = (byte[][][]) SceneExport.rawTyped(raw, rl4.class, "bf", byte[][][].class);
+        int[][][] rawHeights = (int[][][]) SceneExport.rawTyped(raw, rl4.class, "ai", int[][][].class);
+        int[] terrain = new int[planes * SIZE * SIZE * 6];
+        for (int p = 0; p < planes; p++)
+        {
+            for (int bx = 0; bx < SIZE; bx++)
+            {
+                for (int by = 0; by < SIZE; by++)
+                {
+                    int ex = bx + MARGIN + vj, ey = by + MARGIN + vj;
+                    int o = ((p * SIZE + bx) * SIZE + by) * 6;
+                    terrain[o] = underlay[p][ex][ey];
+                    terrain[o + 1] = overlay[p][ex][ey];
+                    terrain[o + 2] = overlayPath[p][ex][ey];
+                    terrain[o + 3] = overlayRotation[p][ex][ey];
+                    terrain[o + 4] = rawSettings[p][ex][ey];
+                    terrain[o + 5] = rawHeights[p][ex][ey];
+                }
+            }
+        }
+        // Shadow footprints attributed to the location that casts them: the live loader places a
+        // location only when its origin tile lies strictly inside the scene (`rl4.ws`: 1..=102),
+        // so the renderer must be able to drop a square's locations whose origin falls on the
+        // scene edge or beyond. Every location of the square is re-placed alone (`rl4.it` →
+        // `ci.aq`, the same code that wrote `bf` during the load) on the emptied tile slots and
+        // its `bf` writes are read back: (plane, origin x, origin y, tile x, tile y, value),
+        // tiles relative to the square origin.
+        byte[] locations = ((byte[][]) SceneExport.rawTyped(raw, rl4.class, "kb", byte[][].class))[0];
+        gc[] collision = (gc[]) SceneExport.rawTyped(raw, rl4.class, "ke", gc[].class);
+        ez single = scenes.lastScene;
+        java.util.Arrays.fill(single.jm, (byte) 0);
+        java.util.Arrays.fill(single.yx, null);
+        java.util.Arrays.fill(single.oc, null);
+        java.util.Arrays.fill(single.si, null);
+        java.util.Arrays.fill(single.vh, null);
+        for (byte[][] plane : shadows) for (byte[] column : plane) java.util.Arrays.fill(column, (byte) 0);
+        List<Integer> shadowList = new ArrayList<>();
+        xy buffer = new xy(locations);
+        int id = -1;
+        int gw = (Integer) SceneExport.rawTyped(raw, rl4.class, "gw", int.class);
+        int oq = (Integer) SceneExport.rawTyped(raw, rl4.class, "oq", int.class);
+        int yc = (Integer) SceneExport.rawTyped(raw, rl4.class, "yc", int.class);
+        int uzLimit = (Integer) SceneExport.rawTyped(raw, rl4.class, "uz", int.class);
+        while (true)
+        {
+            int idDelta = buffer.mn();
+            if (idDelta == 0) break;
+            id += idDelta;
+            int position = 0;
+            while (true)
+            {
+                int positionDelta = buffer.pd();
+                if (positionDelta == 0) break;
+                position += positionDelta - 1;
+                int ly = position & 63, lx = position >> 6 & 63, plane = position >> 12;
+                int attributes = buffer.ga();
+                int type = attributes >> 2, orientation = attributes & 3;
+                int x = lx + MARGIN, y = ly + MARGIN;
+                if (!(x > gw && y > oq && x < yc - 1 && y < uzLimit - 1)) continue;
+                int collisionPlane = plane;
+                if ((rawSettings[1][x + vj][y + vj] & 2) == 2) collisionPlane = plane - 1;
+                rl4.it(scenes.lastWorld, plane, x, y, id, orientation, type, collisionPlane >= 0 ? collision[collisionPlane] : null);
+                // Shadows land within the location's footprint (+1): scan a bounded window.
+                for (int ex = x + vj - 1; ex <= x + vj + 12; ex++)
+                {
+                    for (int ey = y + vj - 1; ey <= y + vj + 12; ey++)
+                    {
+                        if (ex < 0 || ey < 0 || ex >= shadows[plane].length || ey >= shadows[plane][ex].length) continue;
+                        int v = shadows[plane][ex][ey];
+                        if (v == 0) continue;
+                        shadowList.add(plane); shadowList.add(lx); shadowList.add(ly);
+                        shadowList.add(ex - vj - MARGIN); shadowList.add(ey - vj - MARGIN); shadowList.add(v);
+                        shadows[plane][ex][ey] = 0;
+                    }
+                }
+            }
+        }
+        writer.ints("BTER", terrain, terrain.length).ints("BSHD", SceneExport.toArray(shadowList));
         StringBuilder keys = new StringBuilder();
         for (String key : scenes.modelKeys) keys.append(key).append('\n');
         writer.text("MODL", keys.toString());
@@ -310,6 +443,8 @@ final class BlockExport
         record.put("origin_y", originY);
         record.put("size", SIZE);
         record.put("export_base", List.of(baseX, baseY));
+        record.put("raw_terrain", true);
+        record.put("shadow_writes", shadowList.size() / 6);
         record.put("paints", counts[0]);
         record.put("tile_models", counts[1]);
         record.put("walls", counts[2]);

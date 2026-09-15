@@ -874,6 +874,9 @@ pub struct RendererCore {
     unbound_actions: Vec<UnboundAction>,
     /// Kit ids present in the source cache, for the sequence hand-override decode (`lc.bd`).
     hand_override_kits: std::collections::HashSet<i32>,
+    /// Floor underlay/overlay definitions (`terrain/floors.bin`) for the assembly-time terrain
+    /// pass over block scenes.
+    floor_defs: Option<crate::scene::terrain::FloorDefs>,
     player_running: bool,
     /// Whether the last WorldView carried `game.observer.v1` fields (`running`/`action`).
     observer_fields_seen: bool,
@@ -955,6 +958,7 @@ impl RendererCore {
             player_motion_tick: None,
             unbound_actions: Vec::new(),
             hand_override_kits: std::collections::HashSet::new(),
+            floor_defs: None,
             player_running: false,
             observer_fields_seen: false,
             action_motions: HashMap::new(),
@@ -1528,13 +1532,51 @@ impl RendererCore {
                 "no blocks loaded for scene base {base_x},{base_y} (needs {wanted:?})"
             )));
         }
-        let (scene, models) = block::assemble_mapped(
+        let (mut scene, models) = block::assemble_mapped(
             base_x,
             base_y,
             &present,
             randomize_phases,
             self.instance_layout.as_ref(),
         )?;
+        // The live terrain pass over the assembled scene: blend, light and shape every tile from
+        // the squares' raw terrain exactly as `rl4.ad` does for a scene at this base (the outer
+        // tiles see nothing beyond the scene edge). Needs the floor definitions and raw terrain
+        // in every present block; otherwise the exported lit tiles stay and the gap is reported.
+        match (
+            self.floor_defs.as_ref(),
+            block::scene_terrain(base_x, base_y, &present, self.instance_layout.as_ref()),
+        ) {
+            (Some(defs), Some(terrain)) => {
+                let textures = &self.textures;
+                let stats = crate::scene::terrain::apply(
+                    &mut scene,
+                    &terrain,
+                    defs,
+                    &self.palette,
+                    &|id| textures.average_rgb(id),
+                );
+                scene.terrain_rebuilt = Some(stats);
+            }
+            (defs, terrain) => {
+                let note = format!(
+                    "scene {base_x},{base_y}: terrain not rebuilt from raw block terrain ({}{}); exported lit tiles in use — outer-edge floor colours are not the live scene's",
+                    if defs.is_none() {
+                        "terrain/floors.bin not loaded"
+                    } else {
+                        ""
+                    },
+                    if terrain.is_none() {
+                        " a present block carries no BTER raw terrain"
+                    } else {
+                        ""
+                    }
+                );
+                if !self.unknown_motions.contains(&note) {
+                    self.unknown_motions.push(note);
+                }
+            }
+        }
         let id = match &self.instance_layout {
             Some(layout) => format!("blocks@{base_x},{base_y}#{}", layout.template),
             None => format!("blocks@{base_x},{base_y}"),
@@ -2617,6 +2659,25 @@ impl RendererCore {
 
     /// Kit ids present in the source cache (manifest `sequence_hand_overrides.values` with
     /// `kind: kit, kit_exists: true`), consulted when a sequence puts a kit into a hand slot.
+    /// Loads `terrain/floors.bin` (every underlay/overlay definition of the source cache); block
+    /// scenes assembled afterwards run the live terrain pass from their raw terrain.
+    pub fn load_floor_defs(&mut self, bytes: &[u8]) -> Result<(usize, usize), RenderError> {
+        let defs = crate::scene::terrain::FloorDefs::from_chunks(bytes)?;
+        let counts = (defs.underlays.len(), defs.overlays.len());
+        self.floor_defs = Some(defs);
+        Ok(counts)
+    }
+
+    pub fn floor_defs(&self) -> Option<&crate::scene::terrain::FloorDefs> {
+        self.floor_defs.as_ref()
+    }
+
+    /// Statistics of the terrain pass of the current block scene (`None`: fixture scene or the
+    /// exported lit tiles are in use).
+    pub fn terrain_rebuilt(&self) -> Option<&crate::scene::terrain::TerrainStats> {
+        self.scene.as_ref().and_then(|s| s.terrain_rebuilt.as_ref())
+    }
+
     pub fn set_hand_override_kits(&mut self, kits: &[i32]) {
         self.hand_override_kits = kits.iter().copied().collect();
         self.player_assembled = None;

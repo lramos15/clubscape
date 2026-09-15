@@ -288,6 +288,12 @@ figures (59.60–59.77) reaches 60.
   worn gear matches, and hand the `ImageData` to `setUiPreview()` via a canvas of the same size.
   The renderer sways the model with the original 20 ms cycle, so re-request per animation frame
   while the interface is open.
+* Terrain: with the first world block the adapter also loads `terrain/floors.bin`
+  (`manifest.floor_definitions`); every block scene is then rebuilt by the original terrain
+  pass at its own base (`diagnostics().terrainRebuilt` reports the paint / shaped-tile counts;
+  `null` plus a diagnostic when definitions or a block's raw terrain are missing and the
+  exported lit tiles stay in use). Without it the outer five tiles of a scene carry colours
+  blended with the squares' real neighbours instead of the live scene's truncated blend.
 * Minimap: call `minimapSurface()` when the UI paints its minimap widget (cheap when the
   `revision` is unchanged) and give `pixels`, `baseX`, `baseY`, `plane` and `mask` to the
   UI's painter in place of the static `ui/minimaps/<base>-<plane>.png` catalogue raster. The
@@ -298,7 +304,8 @@ figures (59.60–59.77) reaches 60.
   50 px adding the sprite's own offsets, mask-clipped blit beyond it without them).
 * World blocks are streamed by manifest key from `assetBaseUrl` (`blocks/<square>.bin.gz`,
   `blocks/<square>.models.bin.gz`, `minimap/blocks/<square>.bin`, `minimap/mapscenes.bin`,
-  `minimap/mapicons.bin`); `gear/pose-fits.json` and `hud/zoom-table.json` are published.
+  `minimap/mapicons.bin`); `terrain/floors.bin`, `gear/pose-fits.json` and
+  `hud/zoom-table.json` are published.
   They are not committed: host the members of the deterministic pack described in
   `assets/compiled/render/blocks.index.json` (`tools/render-assets/README.md`, "World block
   package") under the same base URL; the adapter verifies every gzip and inflated hash and

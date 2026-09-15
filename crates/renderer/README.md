@@ -375,22 +375,31 @@ refuses buffers whose hash differs.
 * Minimap (`scene::minimap`, `tests/minimap.rs`): all 15 native minimap captures (5 scenes ×
   planes 0–2) are reproduced pixel-exactly over the scene interior (tiles 5..98) from streamed
   blocks — terrain shapes/colours, bridge tiles, wall/door/diagonal marks, map-scene sprites.
-  The outer 5-tile band of a 104×104 scene differs (plane 0: 8 455 / 13 341 / 14 207 / 3 110 /
-  485 of 262 144 pixels on the five references; planes 1–2: 43 / 8 / 0 elsewhere; interior 0
-  everywhere) — **UNMET**. Cause, from the current loader (`rl4`): the top-level region arrays
-  are 184×184 (`vj = 40` margin) but at the stock draw distance (`wq = 0`) `rl4.fn` loads only
-  the scene's own squares (its margin ring `xo ± (6 + wq) >> 3` minus `xo ± 6 >> 3` is empty),
-  so `rl4.ad`'s 5-tile floor blend counts no tiles outside the 104×104 scene and the band is
-  blended from a truncated neighbourhood that depends on the scene base; blocks carry colours
-  blended once with their real neighbours (24-tile export margin). The same band exists in the
-  assembled 3D scene (never within the original's 16-tile recenter margin of the player, rarely
-  visible at draw distance 25). Exact band colours need the terrain colour build ported to
-  assembly time from raw per-tile data the block export does not yet carry: underlay/overlay
-  ids, overlay shape/rotation and settings per plane (`lw`), then `rl4.ad` (height normals →
-  `tp` light with the (−50, −10, −50) direction, the running 5-tile HSL box blend limited to the
-  loaded scene, underlay/overlay definitions, tile shapes → paints / tile models) reproducing the
-  exported interior colours bit-exactly as its own test. The same port is the prerequisite for
-  turned instance chunks (the original lights the terrain after rotating the chunk).
+  **All 15 captures are now exact over the whole 512×512 surface — outer five tiles
+  included** (interior 0, edge band 0, icon lists 0 mismatches). The block scene runs the
+  original terrain pass at assembly time (`scene::terrain`, an exact port of `rl4.ad` +
+  `ez.bn` + the shaped-tile constructor `fn`): the squares' raw tiles (`BTER`: underlay /
+  overlay id, overlay shape path and rotation, settings, corner height — what `rl4.xl` stores)
+  and the shadow footprints of their scenery (`BSHD`, `ci.aq` writes attributed to the casting
+  location's origin) are laid into the live loader's 184×184 arrays for the scene's own base —
+  only the 104×104 scene filled, the far row/column and margin zero, exactly as the live client
+  at the stock draw distance (`rl4.fn` lists no extra squares, `rl4.xl` keeps `0 <= x < 104`) —
+  then height-normal light with the (−50, −10, −50) direction and the shadow map, the running
+  5-tile HSL box blend of the underlays (`terrain/floors.bin` definitions), `qr`/`hs`/`he`
+  colour packing, paints / shaped models (`bn`), and the bridge tile stack turn (`ez.bm`).
+  Scenery follows the same loader rule: a location is placed only when its origin tile lies
+  strictly inside the scene (`rl4.ws`/`pn`, 1..=102), so edge-tile scenery and out-of-scene
+  shadow spill are absent like in the original. Oracle
+  (`tests/blocks.rs::terrain_pass_reproduces_the_direct_scene_tiles`): over the five fixture
+  bases the rebuilt scene equals the original loader's own per-base export tile for tile —
+  50 913 paints, 6 980 shaped tile models (every vertex, colour and texture), every corner
+  height and paint/model flag on all four planes. The 3D pinned-scene comparisons, the 11
+  dynamic cases and the five Tutorial source cases in Chrome are unchanged (pixel-identical).
+  The same pass builds instance scenes from their declared chunks only (blend and light see
+  nothing beyond the declared area, undeclared corners hold no height), which is what the
+  original instance loader produces; turned chunks (`quarter_turns != 0`) are still rejected —
+  the terrain could now turn with the raw data, but the lit scenery models cannot be re-lit at
+  a turned orientation from the exported inputs.
   Map-element icons: the surface's icon list equals the original `bu.aa` pass recorded per
   square on all 15 native cases (`sourceIconMismatches: 0`), and the original sprites are
   exported (`minimap/mapicons.bin`, 386 elements) with the `bo.as` placement rule for the HUD;

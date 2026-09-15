@@ -155,7 +155,7 @@ async function main(): Promise<void> {
         await canvas.screenshot({ path: path.join(out, name) });
         return page.evaluate(() => {
           const d = window.__clubscapeDev.handle!.diagnostics();
-          return { sceneId: d.sceneId, sceneBase: d.sceneBase, loadedSquares: d.loadedSquares, lastFrame: d.lastFrame };
+          return { sceneId: d.sceneId, sceneBase: d.sceneBase, loadedSquares: d.loadedSquares, terrainRebuilt: d.terrainRebuilt, lastFrame: d.lastFrame };
         });
       };
       regionResults.push({ step: "lumbridge-castle", tile: [3222, 3218], ...(await shot("region-lumbridge-castle-3222-3218.png")) });
@@ -244,7 +244,7 @@ async function main(): Promise<void> {
       });
       regionResults.push({ step: "picks", picks });
       const minimapSummary = (m: any) => m && m.revision !== undefined ? { revision: m.revision, complete: m.complete, stats: m.stats, covered: m.covered, icons: m.icons?.length, placed: m.placements?.icons?.length, clipped: m.placements?.icons?.filter((i: any) => i.clipped).length, angle: m.placements?.minimapAngle, base: [m.baseX, m.baseY, m.plane] } : undefined;
-      console.log("region mode", JSON.stringify(regionResults.map((r: any) => ({ step: r.step, sceneId: r.sceneId, base: r.sceneBase ?? (r.baseX !== undefined ? [r.baseX, r.baseY, r.plane] : undefined), squares: r.loadedSquares, prims: r.lastFrame?.primitives, picks: r.picks, minimap: minimapSummary(r.revision !== undefined ? r : r.minimap) }))));
+      console.log("region mode", JSON.stringify(regionResults.map((r: any) => ({ step: r.step, sceneId: r.sceneId, base: r.sceneBase ?? (r.baseX !== undefined ? [r.baseX, r.baseY, r.plane] : undefined), squares: r.loadedSquares, terrainRebuilt: r.terrainRebuilt, prims: r.lastFrame?.primitives, picks: r.picks, minimap: minimapSummary(r.revision !== undefined ? r : r.minimap) }))));
     }
     report.regions = regionResults;
 

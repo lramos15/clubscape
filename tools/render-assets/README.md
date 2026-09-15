@@ -27,7 +27,7 @@ python3 tools/render-assets/export.py                       # everything (profil
 python3 tools/render-assets/export.py --profile scenes      # the five fixture scenes + gzip twins
 python3 tools/render-assets/export.py --profile npcs        # NPC base models, baked frames, packs
 python3 tools/render-assets/export.py --profile prune-textures
-python3 tools/render-assets/export.py --profile blocks      # all 61 M1 map squares (content/m1/geometry)
+python3 tools/render-assets/export.py --profile blocks      # all 61 M1 map squares (content/m1/geometry) + terrain/floors.bin
 python3 tools/render-assets/export.py --profile blocks 12850 12851   # selected squares
 python3 tools/render-assets/export.py --profile scenes-pinned  # frame-0 validation twins for the block tests
 python3 tools/render-assets/export.py --profile anim        # skeletal sequences, NPC definitions, player body, worn items
@@ -79,14 +79,13 @@ their content changed (e.g. the minimap sidecars gained the `MICN` icon chunk) t
 regenerated from the local exports, and if those are not present the export fails rather than
 leaving an index that `unpack-blocks`/`verify-blocks` would reject. The renderer test
 `tests/package_index.rs` re-checks the binding on published inputs alone. Current package:
-`clubscape-render-blocks-dde248f04ea70392.tar` (SHA-256
-`3a16edb732bba6ea5aa1e5f0468bf85ed07e9395b52624ba7df43f58fafe9d73`, 56 381 440 bytes, 183
-members: the 122 block twins unchanged from `d76bc2ab…`, the 61 sidecars updated).
-
-Current pack: `clubscape-render-blocks-d76bc2ab72b552a1.tar`, SHA-256
-`99984d72eb3e00e9614ba712f6ecb5ebeab1ba6c7c29116826dc735369d30aeb`, 56 381 440 bytes,
-183 members (122 block twins + 61 sidecars), content hash
-`d76bc2ab72b552a1a097bea19296beb0d8f79b34ca0d1e424cd84813a57f787e`.
+`clubscape-render-blocks-ffa5b7d7089c4a90.tar` (SHA-256
+`880924edb755f3613a58d60b62d91c7507da968071998d2aaef91b77d7739b49`, 58 030 080 bytes, 183
+members: all 61 block twins regenerated with the `BTER`/`BSHD` raw terrain and shadow chunks,
+the 61 sidecars unchanged from `dde248f0…`; content hash
+`ffa5b7d7089c4a90779b31cbf9ee7446d5eb0eb64e6d424631d383488c4d0908`). Previous packs:
+`dde248f04ea70392` (SHA-256 `3a16edb7…`, 56 381 440 bytes, sidecars with `MICN`) and
+`d76bc2ab72b552a1` (SHA-256 `99984d72…`).
 
 `anim` (`AnimExport.java`) writes the original skeletons and frames (`et`/`em`) of the required
 player sequences (808/819/824/836, 879, 625, 621, 733, 897/896/899/898, 386/390/422/423, 426,
@@ -131,10 +130,21 @@ decorations, game objects, zone lists) together with a deduplicated model pack.
 map with SHA-256 + size for every buffer. Formats are documented in
 `crates/renderer/README.md`.
 
+Each block also carries the square's raw terrain (`BTER`: per plane × tile underlay id + 1,
+overlay id + 1, overlay shape path, overlay rotation, settings, south-west corner height — the
+live loader's `rl4.xl` arrays from a load whose region list holds only that square) and the
+shadow writes of its scenery (`BSHD`: plane, casting location origin x/y, tile x/y, value —
+every location re-placed alone through the original `rl4.it`/`ci.aq` on emptied tile slots).
+The `blocks` profile also writes `terrain/floors.bin` (`FUND`: id, hue, saturation,
+lightness, hue multiplier per underlay `ph`; `FOVL`: id, texture, rgb, hue/sat/light,
+secondary rgb + hue/sat/light per overlay `ow` — config archive 2 groups 1 and 4) and
+registers it as `floor_definitions`. With these the renderer rebuilds every scene's terrain at
+its own base exactly like the live client (see `crates/renderer/README.md`, "Minimap").
+
 Published in git: `manifest.json`, `palette.bin`, `textures/*.bin` (43 used textures), base
 models, NPC packs, `scenes/*.bin.gz` (deterministic gzip: mtime 0, level 9, ≈ 11 MB for the
-five scenes), `minimap/*` (map scenes, map icons, 61 sidecars), `hud/zoom-table.json` and
-`gear/pose-fits.json` and `gear/pose-fit-failures.json` (every legal item-frame over a fit
+five scenes), `minimap/*` (map scenes, map icons, 61 sidecars), `hud/zoom-table.json`,
+`terrain/floors.bin`, `gear/pose-fits.json` and `gear/pose-fit-failures.json` (every legal item-frame over a fit
 target with all measures and the same-pose human-design context; the pose gate is unmet — see
 `crates/renderer/README.md`). The `anim` profile also exports `sequence_hand_overrides`: the
 `lc.bd` decode of every required sequence's `leftHandItem`/`rightHandItem` (item / kit / nothing,

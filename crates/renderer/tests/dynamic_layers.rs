@@ -83,6 +83,9 @@ fn core_for(inputs: &Inputs, scene: &str) -> RendererCore {
     for bytes in common::texture_bytes() {
         core.add_texture(&bytes).unwrap();
     }
+    // Block scenes run the live terrain pass from raw block terrain (published floor defs).
+    core.load_floor_defs(&common::read_asset("terrain/floors.bin"))
+        .unwrap();
     for object in manifest["dynamic_objects"].as_array().unwrap() {
         let id = object["object_id"].as_i64().unwrap() as i32;
         for variant in object["variants"].as_array().unwrap() {

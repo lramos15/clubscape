@@ -54,6 +54,8 @@ export interface RenderAssetManifest {
    * `playerPoseFits()`.
    */
   gear_pose_fits?: { file: string; schema_version: number; body_npc: number; items: number; sequences: number; item_frames: number; item_frames_over_target: number };
+  /** `terrain/floors.bin`: every floor underlay/overlay definition, for the assembly-time terrain pass. */
+  floor_definitions?: { file: string; sha256: string; underlays: number; overlays: number };
   /** Source `lc.bd` hand-item overrides of the required sequences (kit existence per value). */
   sequence_hand_overrides?: {
     rule: string;
@@ -379,6 +381,12 @@ export interface RendererDiagnostics {
   /** Current scene base (world tiles) and the map squares loaded into the renderer. */
   sceneBase: { x: number; y: number } | null;
   loadedSquares: number[];
+  /**
+   * The current block scene's terrain pass (paints / shaped tile models rebuilt from raw block
+   * terrain at this base by the original `rl4.ad` port), or `null` when the scene's tiles are the
+   * exported lit ones (fixture scenes; blocks or definitions without raw terrain — reported).
+   */
+  terrainRebuilt: { paints: number; tileModels: number; missingOverlays: number; missingUnderlays: number } | null;
   timestampsSupported: boolean;
   deviceEpoch: string;
   manifestSha256: string;
@@ -656,10 +664,22 @@ export const createRenderer: (canvas: HTMLCanvasElement, config: RendererConfig,
     const minimapBySquare = new Map<number, NonNullable<RenderAssetManifest["minimap_blocks"]>[number]>();
     for (const entry of manifest.minimap_blocks ?? []) minimapBySquare.set(entry.square, entry);
     let mapScenes: Promise<void> | null = null;
-    /** The map-scene sprites/shape masks and the map-element icon sprites, fetched once with the first world block. */
+    /**
+     * The map-scene sprites/shape masks, the map-element icon sprites and the floor definitions
+     * (for the assembly-time terrain pass), fetched once with the first world block.
+     */
     const ensureMapScenes = (): Promise<void> => {
       if (!manifest.files["minimap/mapscenes.bin"]) return Promise.resolve();
       mapScenes ??= (async () => {
+        if (manifest.floor_definitions) {
+          const floors = await fetchAsset(manifest.floor_definitions.file);
+          if (!disposed) {
+            const [underlays, overlays] = renderer.load_floor_defs(floors);
+            diagnostic(`terrain: ${underlays} underlay / ${overlays} overlay definitions loaded; block scenes run the original terrain pass at their own base`);
+          }
+        } else {
+          diagnostic("terrain: manifest lists no floor_definitions; block scenes keep the exported lit tiles (outer-edge floor colours are not the live scene's)");
+        }
         const bytes = await fetchAsset("minimap/mapscenes.bin");
         if (!disposed) renderer.load_map_scenes(bytes);
         if (manifest.files["minimap/mapicons.bin"]) {
@@ -1002,6 +1022,7 @@ export const createRenderer: (canvas: HTMLCanvasElement, config: RendererConfig,
           adapter: renderer.adapter_info(),
           sceneBase,
           loadedSquares: Array.from(loadedSquares).sort((a, b) => a - b),
+          terrainRebuilt: (() => { const t = renderer.terrain_rebuilt(); return t === undefined ? null : JSON.parse(t); })(),
           timestampsSupported: renderer.timestamps_supported(),
           deviceEpoch: String(renderer.device_epoch()),
           manifestSha256,

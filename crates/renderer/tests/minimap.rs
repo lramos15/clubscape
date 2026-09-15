@@ -82,6 +82,8 @@ fn core() -> RendererCore {
         .unwrap();
     core.load_map_icons(&common::read_asset("minimap/mapicons.bin"))
         .unwrap();
+    core.load_floor_defs(&common::read_asset("terrain/floors.bin"))
+        .unwrap();
     core
 }
 
@@ -222,9 +224,10 @@ fn terrain_fill_matches_the_original_shape_sampling() {
 const EDGE_BAND: i32 = 5;
 
 /// Every native minimap capture (5 scenes x 3 planes) must be reproduced exactly from the
-/// world blocks and the minimap sidecars over the scene interior (tiles 5..98): terrain
-/// colours and shapes, wall/door/diagonal marks, map-scene sprites and bridge tiles. Edge-band
-/// differences are counted and must stay confined to the band. Needs the block exports.
+/// world blocks and the minimap sidecars over the whole surface — interior (tiles 5..98) and
+/// the outer five-tile band alike, now that the terrain is rebuilt per scene base by the
+/// original pass: terrain colours and shapes, wall/door/diagonal marks, map-scene sprites and
+/// bridge tiles. Needs the block exports.
 #[test]
 #[ignore = "needs the local world block exports (export.py --profile blocks)"]
 fn assembled_minimaps_equal_the_native_captures() {
@@ -297,6 +300,11 @@ fn assembled_minimaps_equal_the_native_captures() {
                     actual[first],
                     expected[first]
                 ));
+            }
+            // With the assembly-time terrain pass the outer five tiles are exact too: the whole
+            // 512x512 surface must equal the native capture.
+            if band > 0 {
+                failures.push(format!("{name}: {band} edge-band pixels differ"));
             }
             // The icon list must equal the original `bu.aa` pass the sidecars recorded, and
             // every listed element must have an exported sprite.

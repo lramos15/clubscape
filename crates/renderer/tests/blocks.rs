@@ -36,6 +36,9 @@ fn core_with_textures() -> RendererCore {
     for bytes in common::texture_bytes() {
         core.add_texture(&bytes).unwrap();
     }
+    // Block scenes run the live terrain pass from raw block terrain (published floor defs).
+    core.load_floor_defs(&common::read_asset("terrain/floors.bin"))
+        .unwrap();
     core
 }
 
@@ -382,13 +385,29 @@ fn instance_layout_assembles_only_declared_chunks() {
                 let plain_index =
                     plain_scene.tile_index(plane, lx + plain_scene.offset, ly + plain_scene.offset);
                 if declared(plane, wx, wy) {
-                    // Declared chunks equal the ordinary world tile for tile (paint, height,
-                    // walls, floor decorations, object slots).
-                    assert_eq!(
-                        scene.paints.get(&index),
-                        plain_scene.paints.get(&plain_index),
-                        "paint {plane} {wx},{wy}"
-                    );
+                    // Declared chunks equal the ordinary world tile for tile (walls, floor
+                    // decorations, object slots, heights of declared corners). Terrain colours
+                    // equal the ordinary world where the live pass sees the same inputs — the
+                    // 5-tile blend window and the light normals inside the declared area; at
+                    // the area's edge the instance blends against nothing, exactly like the
+                    // original instance scene, so those tiles legitimately differ.
+                    let blend_interior =
+                        (-5..=5).all(|ox| (-5..=5).all(|oy| declared(plane, wx + ox, wy + oy)));
+                    if blend_interior {
+                        assert_eq!(
+                            scene.paints.get(&index),
+                            plain_scene.paints.get(&plain_index),
+                            "paint {plane} {wx},{wy}"
+                        );
+                    } else {
+                        assert_eq!(
+                            scene.paints.contains_key(&index)
+                                || scene.tile_models.contains_key(&index),
+                            plain_scene.paints.contains_key(&plain_index)
+                                || plain_scene.tile_models.contains_key(&plain_index),
+                            "tile presence {plane} {wx},{wy}"
+                        );
+                    }
                     assert_eq!(
                         scene.walls.get(&index),
                         plain_scene.walls.get(&plain_index),
@@ -400,17 +419,24 @@ fn instance_layout_assembles_only_declared_chunks() {
                         "floor {plane} {wx},{wy}"
                     );
                     for corner in [(0, 0), (1, 0), (0, 1), (1, 1)] {
+                        // The live loader stores a corner height with the tile it is the
+                        // south-west corner of: a corner on an undeclared tile holds none (0).
+                        let expected = if declared(plane, wx + corner.0, wy + corner.1) {
+                            plain_scene.height(
+                                plane,
+                                lx + plain_scene.offset + corner.0,
+                                ly + plain_scene.offset + corner.1,
+                            )
+                        } else {
+                            0
+                        };
                         assert_eq!(
                             scene.height(
                                 plane,
                                 lx + scene.offset + corner.0,
                                 ly + scene.offset + corner.1
                             ),
-                            plain_scene.height(
-                                plane,
-                                lx + plain_scene.offset + corner.0,
-                                ly + plain_scene.offset + corner.1
-                            ),
+                            expected,
                             "height {plane} {wx},{wy} corner {corner:?}"
                         );
                     }
@@ -534,10 +560,12 @@ fn instance_layout_assembles_only_declared_chunks() {
                 400 * 8 + lx - base_x + moved_scene.offset,
                 718 * 8 + ly - base_y + moved_scene.offset,
             );
+            // A lone 8x8 chunk blends and lights against nothing beyond itself (live instance
+            // semantics), so its colours are not the ordinary world's: the tile set is.
             assert_eq!(
-                moved_scene.paints.get(&dst),
-                plain_scene.paints.get(&src),
-                "translated paint {lx},{ly}"
+                moved_scene.paints.contains_key(&dst) || moved_scene.tile_models.contains_key(&dst),
+                plain_scene.paints.contains_key(&src) || plain_scene.tile_models.contains_key(&src),
+                "translated tile presence {lx},{ly}"
             );
             moved_paints += usize::from(moved_scene.paints.contains_key(&dst));
             if let (Some(w), Some(p)) = (moved_scene.walls.get(&dst), plain_scene.walls.get(&src)) {
@@ -545,17 +573,26 @@ fn instance_layout_assembles_only_declared_chunks() {
                 assert_eq!(w.z - p.z, 24 * 128, "wall z shifted by 24 tiles");
             }
             for corner in [(0, 0), (1, 1)] {
+                // A corner is stored with the tile it is the south-west corner of; the lone
+                // chunk's far corners belong to undeclared tiles and hold no height (0), as in
+                // the original instance loader.
+                let inside = lx + corner.0 < 8 && ly + corner.1 < 8;
                 assert_eq!(
                     moved_scene.height(
                         0,
                         400 * 8 + lx - base_x + moved_scene.offset + corner.0,
                         718 * 8 + ly - base_y + moved_scene.offset + corner.1
                     ),
-                    plain_scene.height(
-                        0,
-                        396 * 8 + lx - base_x + plain_scene.offset + corner.0,
-                        715 * 8 + ly - base_y + plain_scene.offset + corner.1
-                    )
+                    if inside {
+                        plain_scene.height(
+                            0,
+                            396 * 8 + lx - base_x + plain_scene.offset + corner.0,
+                            715 * 8 + ly - base_y + plain_scene.offset + corner.1,
+                        )
+                    } else {
+                        0
+                    },
+                    "translated corner {lx},{ly} {corner:?}"
                 );
             }
         }
@@ -595,4 +632,131 @@ fn instance_layout_assembles_only_declared_chunks() {
         .unwrap();
     assert!(inst.instance_layout_changed());
     assert_eq!(inst.squares_needed(base_x, base_y), squares);
+}
+
+/// The assembly-time terrain pass (`scene::terrain`, the `rl4.ad` port over the squares' raw
+/// terrain) reproduces the directly exported per-base scene tile for tile over the whole
+/// 104×104 main area — every paint colour, every shaped tile model vertex/colour/texture and
+/// every corner height on all four planes, outer five tiles included — for each of the five
+/// fixture bases. The direct export is the original loader's own output at that base, so this
+/// is the exactness oracle of the port; before it, the blocks' lit tiles differed in the band.
+#[test]
+#[ignore = "needs local exports: export.py --profile blocks (with BTER raw terrain) and --profile scenes-pinned"]
+fn terrain_pass_reproduces_the_direct_scene_tiles() {
+    let floors = common::read_asset("terrain/floors.bin");
+    let mut compared_paints = 0usize;
+    let mut compared_models = 0usize;
+    for fixture in &FIXTURES {
+        let squares = RendererCore::squares_for_base(fixture.base.0, fixture.base.1);
+        let mut direct = core_with_textures();
+        direct
+            .load_scene(
+                fixture.name,
+                &common::read_local_export(
+                    &format!("scenes/{}.pinned.bin", fixture.name),
+                    REPRODUCE_PINNED,
+                ),
+                &common::read_local_export(
+                    &format!("scenes/{}.pinned.models.bin", fixture.name),
+                    REPRODUCE_PINNED,
+                ),
+            )
+            .unwrap();
+        let mut assembled = core_with_textures();
+        assembled.load_floor_defs(&floors).unwrap();
+        load_blocks(&mut assembled, &squares);
+        let missing = assembled
+            .assemble_scene(fixture.base.0, fixture.base.1, false, 0.0)
+            .unwrap();
+        assert!(
+            missing.is_empty(),
+            "{}: blocks missing {missing:?}",
+            fixture.name
+        );
+        let stats = assembled
+            .terrain_rebuilt()
+            .unwrap_or_else(|| {
+                panic!(
+                    "{}: terrain was not rebuilt from raw block terrain: {:?}",
+                    fixture.name,
+                    assembled.unknown_motions()
+                )
+            })
+            .clone();
+        assert_eq!(stats.missing_overlays, 0, "{}: {stats:?}", fixture.name);
+        assert_eq!(stats.missing_underlays, 0, "{}: {stats:?}", fixture.name);
+        let expected = direct.scene().unwrap();
+        let actual = assembled.scene().unwrap();
+        assert_eq!(expected.offset, actual.offset);
+        let mut differences: Vec<String> = Vec::new();
+        for plane in 0..4 {
+            for sx in 0..104 {
+                for sy in 0..104 {
+                    let ex = sx + expected.offset;
+                    let ey = sy + expected.offset;
+                    let index = expected.tile_index(plane, ex, ey);
+                    if expected.paints.get(&index) != actual.paints.get(&index) {
+                        differences.push(format!(
+                            "plane {plane} tile {sx},{sy}: paint direct {:?} vs rebuilt {:?}",
+                            expected.paints.get(&index),
+                            actual.paints.get(&index)
+                        ));
+                    } else if expected.paints.contains_key(&index) {
+                        compared_paints += 1;
+                    }
+                    if expected.tile_models.get(&index) != actual.tile_models.get(&index) {
+                        let (e, a) = (
+                            expected.tile_models.get(&index),
+                            actual.tile_models.get(&index),
+                        );
+                        differences.push(format!(
+                            "plane {plane} tile {sx},{sy}: tile model direct {} vs rebuilt {}",
+                            e.map(|m| format!("shape {} rot {} colours {:?}/{:?}/{:?} xs {:?} ys {:?} zs {:?} tex {:?} rgb {}/{}", m.shape, m.rotation, m.color_a, m.color_b, m.color_c, m.xs, m.ys, m.zs, m.textures, m.underlay_rgb, m.overlay_rgb)).unwrap_or("none".into()),
+                            a.map(|m| format!("shape {} rot {} colours {:?}/{:?}/{:?} xs {:?} ys {:?} zs {:?} tex {:?} rgb {}/{}", m.shape, m.rotation, m.color_a, m.color_b, m.color_c, m.xs, m.ys, m.zs, m.textures, m.underlay_rgb, m.overlay_rgb)).unwrap_or("none".into())
+                        ));
+                    } else if expected.tile_models.contains_key(&index) {
+                        compared_models += 1;
+                    }
+                    let (fe, fa) = (
+                        expected.flags[index] & (256 | 512 | 1024),
+                        actual.flags[index] & (256 | 512 | 1024),
+                    );
+                    if fe != fa {
+                        differences.push(format!(
+                            "plane {plane} tile {sx},{sy}: tile flags direct {fe} vs rebuilt {fa}"
+                        ));
+                    }
+                }
+            }
+            for sx in 0..=104 {
+                for sy in 0..=104 {
+                    let (he, ha) = (
+                        expected.height(plane, sx + expected.offset, sy + expected.offset),
+                        actual.height(plane, sx + actual.offset, sy + actual.offset),
+                    );
+                    if he != ha {
+                        differences.push(format!(
+                            "plane {plane} corner {sx},{sy}: height direct {he} vs rebuilt {ha}"
+                        ));
+                    }
+                }
+            }
+        }
+        assert!(
+            differences.is_empty(),
+            "{}: {} tile differences between the direct export and the rebuilt block scene; first 12:\n  {}",
+            fixture.name,
+            differences.len(),
+            differences
+                .iter()
+                .take(12)
+                .cloned()
+                .collect::<Vec<_>>()
+                .join("\n  ")
+        );
+        eprintln!("{}: terrain pass exact ({stats:?})", fixture.name);
+    }
+    eprintln!(
+        "terrain pass: {compared_paints} paints and {compared_models} tile models identical to the direct exports over the five bases"
+    );
 }

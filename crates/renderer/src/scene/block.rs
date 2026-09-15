@@ -166,6 +166,9 @@ pub struct Block {
     pub source_icons: Vec<(i32, i32, i32, i32)>,
     /// Whether the minimap sidecar (wall configs + definitions) has been attached.
     pub minimap_ready: bool,
+    /// The square's raw terrain and scenery shadows (`BTER`/`BSHD`), for the assembly-time
+    /// terrain pass; `None` for blocks exported before they were carried.
+    pub raw_terrain: Option<super::terrain::RawTerrain>,
 }
 
 fn join(lo: i32, hi: i32) -> i64 {
@@ -173,6 +176,22 @@ fn join(lo: i32, hi: i32) -> i64 {
 }
 
 impl Block {
+    /// The exported (lit, full-neighbour) paint at a block tile, for diagnostics and tests.
+    pub fn paint_at(&self, plane: i32, bx: i32, by: i32) -> Option<&TilePaint> {
+        self.paints
+            .iter()
+            .find(|p| p.plane == plane && p.bx == bx && p.by == by)
+            .map(|p| &p.record)
+    }
+
+    /// The exported shaped tile model at a block tile, for diagnostics and tests.
+    pub fn tile_model_at(&self, plane: i32, bx: i32, by: i32) -> Option<&TileModel> {
+        self.tile_models
+            .iter()
+            .find(|p| p.plane == plane && p.bx == bx && p.by == by)
+            .map(|p| &p.record)
+    }
+
     pub fn from_chunks(data: &[u8]) -> Result<Self, RenderError> {
         let chunks = Chunks::parse(data)?;
         let h = chunks.ints("BLHD")?;
@@ -240,6 +259,7 @@ impl Block {
             object_defs: HashMap::new(),
             source_icons: Vec::new(),
             minimap_ready: false,
+            raw_terrain: super::terrain::RawTerrain::from_block_chunks(&chunks)?,
         };
         for r in chunks.ints("BPNT")?.as_chunks::<10>().0 {
             block.paints.push(Placed {
@@ -820,6 +840,18 @@ pub fn assemble_mapped(
                 })
                 .collect()
         };
+        // Scenery placements follow the live loader (`rl4.ws` / `rl4.pn`): a location is placed
+        // only when its origin tile lies strictly inside the scene (1..=102 on both axes); tiles
+        // on the scene edge and in the margin carry none, exactly like the original scene.
+        let placed = |plane: i32, bx: i32, by: i32| -> Vec<(i32, usize, i32, i32, i32, i32)> {
+            place(plane, bx, by)
+                .into_iter()
+                .filter(|(_, _, tx, ty, _, _)| {
+                    // (tx, ty) is the destination scene tile (block tile + total shift).
+                    *tx > 0 && *ty > 0 && *tx < MAIN - 1 && *ty < MAIN - 1
+                })
+                .collect()
+        };
         for p in &block.paints {
             for (_, index, _, _, _, _) in place(p.plane, p.bx, p.by) {
                 scene.paints.insert(index, p.record.clone());
@@ -838,7 +870,7 @@ pub fn assemble_mapped(
             }
         }
         for w in &block.walls {
-            for (_, index, mx, my, sx, sy) in place(w.plane, w.bx, w.by) {
+            for (_, index, mx, my, sx, sy) in placed(w.plane, w.bx, w.by) {
                 let mut wall = w.record.clone();
                 wall.x += sx * 128;
                 wall.z += sy * 128;
@@ -849,7 +881,7 @@ pub fn assemble_mapped(
             }
         }
         for d in &block.wall_decorations {
-            for (_, index, mx, my, sx, sy) in place(d.plane, d.bx, d.by) {
+            for (_, index, mx, my, sx, sy) in placed(d.plane, d.bx, d.by) {
                 let mut decor = d.record.clone();
                 decor.x += sx * 128;
                 decor.z += sy * 128;
@@ -860,7 +892,7 @@ pub fn assemble_mapped(
             }
         }
         for f in &block.floor_decorations {
-            for (_, index, mx, my, sx, sy) in place(f.plane, f.bx, f.by) {
+            for (_, index, mx, my, sx, sy) in placed(f.plane, f.bx, f.by) {
                 let mut floor = f.record.clone();
                 floor.x += sx * 128;
                 floor.z += sy * 128;
@@ -874,6 +906,13 @@ pub fn assemble_mapped(
             // keeps its geometry (the original places a location whole by its origin) while
             // the unloaded tiles carry no slot.
             for (_, index, _, _, sx, sy) in place(o.plane, o.bx, o.by) {
+                // The location's origin (its south-west tile) decides placement, not the
+                // covered tile being copied.
+                // (`sx`, `sy` is the total tile shift of this placement, block → scene.)
+                let (ox, oy) = (o.object.min_x + sx, o.object.min_y + sy);
+                if !(ox > 0 && oy > 0 && ox < MAIN - 1 && oy < MAIN - 1) {
+                    continue;
+                }
                 let mut object = o.object.clone();
                 object.x += sx * 128;
                 object.z += sy * 128;
@@ -911,10 +950,15 @@ pub fn assemble_mapped(
         scene
             .object_defs
             .extend(block.object_defs.iter().map(|(k, v)| (*k, *v)));
-        // The original icon pass covers the 104x104 main area only (`bu.aa`: 0..104).
+        // The original icon pass covers the 104x104 main area (`bu.aa`: 0..104) and reads the
+        // floor decorations the loader placed — origins strictly inside the scene (1..=102),
+        // like every location; the sidecar records the square's decorations, so the ones that
+        // land on this scene's edge are not expected.
         for &(plane, bx, by, element) in &block.source_icons {
             for (dest_plane, ex, ey, _, _) in destinations(plane, bx, by) {
-                if (OFFSET..OFFSET + MAIN).contains(&ex) && (OFFSET..OFFSET + MAIN).contains(&ey) {
+                if (OFFSET + 1..OFFSET + MAIN - 1).contains(&ex)
+                    && (OFFSET + 1..OFFSET + MAIN - 1).contains(&ey)
+                {
                     scene.source_icons.push((
                         dest_plane,
                         base_x + ex - OFFSET,
@@ -933,6 +977,82 @@ pub fn assemble_mapped(
         keys
     };
     Ok((scene, merged_models))
+}
+
+/// The live loader's raw terrain arrays for a scene at `base` from the present blocks (their
+/// declared chunks only under a layout): every tile of the 104×104 scene that a loaded square
+/// covers, its south-west corner height, and the shadows the loaded squares' scenery casts.
+/// `None` when a present block was exported without raw terrain — the exported lit tiles then
+/// stay in use and the caller reports it.
+pub fn scene_terrain(
+    base_x: i32,
+    base_y: i32,
+    blocks: &[(&Block, &[(String, Model)])],
+    layout: Option<&InstanceLayout>,
+) -> Option<super::terrain::SceneTerrain> {
+    use super::terrain::SceneTerrain;
+    let mut terrain = SceneTerrain::empty();
+    for (block, _) in blocks {
+        let raw = block.raw_terrain.as_ref()?;
+        let dx = block.origin_x - base_x;
+        let dy = block.origin_y - base_y;
+        let placements = |plane: i32, wx: i32, wy: i32| -> Vec<(i32, i32, i32, i32)> {
+            match layout {
+                None => vec![(plane, 0, 0, 0)],
+                Some(layout) => layout
+                    .chunks
+                    .iter()
+                    .filter(|c| {
+                        c.source_plane == plane
+                            && c.source_chunk_x == wx >> 3
+                            && c.source_chunk_y == wy >> 3
+                    })
+                    .map(|c| {
+                        (
+                            c.plane,
+                            (c.chunk_x - c.source_chunk_x) * 8,
+                            (c.chunk_y - c.source_chunk_y) * 8,
+                            c.quarter_turns & 3,
+                        )
+                    })
+                    .collect(),
+            }
+        };
+        for plane in 0..PLANES {
+            for bx in 0..BLOCK_SIZE {
+                for by in 0..BLOCK_SIZE {
+                    let wx = block.origin_x + bx;
+                    let wy = block.origin_y + by;
+                    for (dest_plane, sx, sy, turns) in placements(plane, wx, wy) {
+                        let tx = bx + dx + sx;
+                        let ty = by + dy + sy;
+                        terrain.set_tile(raw, plane, bx, by, dest_plane, tx, ty, turns);
+                        terrain.set_height(
+                            dest_plane,
+                            tx,
+                            ty,
+                            raw.heights[super::terrain::RawTerrain::index(plane, bx, by)],
+                        );
+                    }
+                }
+            }
+        }
+        for &(plane, ox, oy, x, y, value) in &raw.shadows {
+            // A shadow write belongs to the location cast from origin (ox, oy): it is applied
+            // only where the live loader would place that location — origin strictly inside the
+            // scene (`rl4.ws`) and, under a layout, in a declared chunk (the instance loader
+            // copies whole locations by their origin chunk); the write itself may spill past.
+            for (dest_plane, sx, sy, _) in
+                placements(plane, block.origin_x + ox, block.origin_y + oy)
+            {
+                let (origin_x, origin_y) = (ox + dx + sx, oy + dy + sy);
+                if super::terrain::SceneTerrain::places_location(origin_x, origin_y) {
+                    terrain.add_shadow(dest_plane, x + dx + sx, y + dy + sy, value);
+                }
+            }
+        }
+    }
+    Some(terrain)
 }
 
 #[inline]

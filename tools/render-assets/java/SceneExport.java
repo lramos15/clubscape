@@ -108,6 +108,23 @@ final class SceneExport
         return field.get(instance);
     }
 
+    /**
+     * A field by name and type: obfuscated classes may declare several fields of one name with
+     * different types (`rl4.uz` is both an int and the underlay array).
+     */
+    static Object rawTyped(Object instance, Class<?> owner, String name, Class<?> type) throws Exception
+    {
+        for (Field field : owner.getDeclaredFields())
+        {
+            if (field.getName().equals(name) && field.getType() == type)
+            {
+                field.setAccessible(true);
+                return field.get(instance);
+            }
+        }
+        throw new NoSuchFieldException(owner.getName() + "." + name + " of type " + type.getName());
+    }
+
     /** Resolves a Renderable to the lit model the original would draw in this state. */
     /** Result of resolving a renderable: the model and whether it is a shared animation scratch instance. */
     record Resolved(fx model, boolean shared) {}
@@ -221,12 +238,6 @@ final class SceneExport
     /** Builds an original 104x104 scene at `baseX/baseY` through the pinned map loader (rl4.fn). */
     ez loadScene(int baseX, int baseY) throws Exception
     {
-        dz world = new dz(0, 104, 104, 25, ex.az);
-        WorldCapture.logicalInt(world, dz.class, "ac", -1444178379, baseX);
-        WorldCapture.logicalInt(world, dz.class, "aa", -351145363, baseY);
-        is.dk = world;
-        cq.lq = world;
-        xk request = new xk();
         List<Integer> squares = new ArrayList<>();
         for (int x = (baseX - 40) >> 6; x <= (baseX + 143) >> 6; x++)
         {
@@ -236,12 +247,35 @@ final class SceneExport
                 if (export.cache.store.findIndex(5).getArchive(square) != null) squares.add(square);
             }
         }
+        return loadScene(baseX, baseY, squares);
+    }
+
+    /** The original loader (`client.rs`), world and scene of the last `loadScene` call. */
+    rl4 lastLoader;
+    dz lastWorld;
+    ez lastScene;
+
+    /**
+     * Loads a 104x104 scene at `baseX/baseY` through the original loader with exactly the given
+     * map squares in its region list (the live client lists the squares of the scene itself;
+     * tiles outside the scene are never stored whichever squares are listed).
+     */
+    ez loadScene(int baseX, int baseY, List<Integer> squares) throws Exception
+    {
+        dz world = new dz(0, 104, 104, 25, ex.az);
+        WorldCapture.logicalInt(world, dz.class, "ac", -1444178379, baseX);
+        WorldCapture.logicalInt(world, dz.class, "aa", -351145363, baseY);
+        is.dk = world;
+        cq.lq = world;
+        xk request = new xk();
         request.af = squares.stream().mapToInt(Integer::intValue).toArray();
         loadedSquares = squares;
         world.zn = request.af;
         world.bp = request.ae;
         world.gi = false;
         rl4 loader = new rl4(null, 0, world, request);
+        lastLoader = loader;
+        lastWorld = world;
         loader.wb = baseX;
         loader.za = baseY;
         loader.xo = baseX / 8 + 6;
@@ -262,6 +296,7 @@ final class SceneExport
         world.aj = loader.zw;
         Scene scene = loader.gb;
         scene.setDrawDistance(25);
+        lastScene = loader.gb;
         return loader.gb;
     }
 

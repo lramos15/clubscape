@@ -88,6 +88,12 @@ pub struct TextureSet {
 }
 
 impl TextureSet {
+    /// `ec.ab`: the texture's source average colour, 0 for an unknown texture (the original
+    /// returns 0 for a texture it has not loaded).
+    pub fn average_rgb(&self, id: i32) -> i32 {
+        self.textures.get(&id).map(|t| t.average_rgb).unwrap_or(0)
+    }
+
     pub fn insert(&mut self, texture: Texture) {
         self.textures.insert(texture.id, texture);
     }
@@ -126,6 +132,6 @@ impl crate::raster::software::TextureSource for TextureSet {
     }
 
     fn average(&self, id: i32) -> i32 {
-        self.textures.get(&id).map(|t| t.average_rgb).unwrap_or(0)
+        self.average_rgb(id)
     }
 }

@@ -620,6 +620,33 @@ impl WasmRenderer {
         self.inner.borrow().core.has_map_scenes()
     }
 
+    /// Loads the floor underlay/overlay definitions (`terrain/floors.bin`, manifest
+    /// `floor_definitions`). Block scenes assembled afterwards run the original terrain pass
+    /// (`rl4.ad`: blend, light, tile shapes) from the squares' raw terrain at the scene's own
+    /// base, so every tile — the outer five included — is what the live client builds. Returns
+    /// `[underlays, overlays]`.
+    pub fn load_floor_defs(&self, bytes: Vec<u8>) -> Result<Vec<u32>, JsValue> {
+        self.inner
+            .borrow_mut()
+            .core
+            .load_floor_defs(&bytes)
+            .map(|(u, o)| vec![u as u32, o as u32])
+            .map_err(js_err)
+    }
+
+    /// Statistics of the terrain pass of the current block scene (JSON `{paints, tileModels,
+    /// missingOverlays, missingUnderlays}`), or `undefined` when the scene's tiles are the
+    /// exported lit ones (fixture scenes, or blocks/definitions without raw terrain — then
+    /// `unknown_motions()` carries the reason).
+    pub fn terrain_rebuilt(&self) -> Option<String> {
+        self.inner.borrow().core.terrain_rebuilt().map(|s| {
+            format!(
+                r#"{{"paints":{},"tileModels":{},"missingOverlays":{},"missingUnderlays":{}}}"#,
+                s.paints, s.tile_models, s.missing_overlays, s.missing_underlays
+            )
+        })
+    }
+
     /// Loads the original map-element minimap sprites (`minimap/mapicons.bin`, `ps.as(false)`
     /// per element the original shows on the minimap). Returns the sprite count.
     pub fn load_map_icons(&self, bytes: Vec<u8>) -> Result<u32, JsValue> {
