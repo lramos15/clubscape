@@ -249,12 +249,16 @@ pub(crate) fn audio(event: &game::Event) -> Option<Value> {
         ),
         _ => return None,
     };
+    let mut payload = json!({"committed":true});
+    if kind == "level_up" && !event.skill.is_empty() {
+        payload["skillId"] = json!(event.skill);
+    }
     Some(json!({
         "id":event.event_id,"kind":kind,"sourceId":null,"assetId":asset.filter(|id| !id.is_empty()),
         "actorId":(!event.actor_id.is_empty()).then_some(&event.actor_id),
         "tile":null,"sourceCycle":null,
         // These events came from client-core's validated committed event stream.
         // Source-cycle/group/cue metadata absent from this wire must stay absent.
-        "payload":{"committed":true},
+        "payload":payload,
     }))
 }

@@ -9,6 +9,7 @@ import type { BrowserContext, Page } from "playwright-core";
 import { assertSourceRunPin, captureSourceRunPin } from "../../../tools/web-build/run-pins.ts";
 import type { SourceRunPin } from "../../../tools/web-build/run-pins.ts";
 import type { PublicWorld } from "../public-state.ts";
+import { sourceAudioDefaults } from "../../audio/index.ts";
 
 const root = resolve(fileURLToPath(new URL("../../../", import.meta.url)));
 type SecretWindow = Window & { __sourceUiCredentials?: { name: string; password: string } };
@@ -47,7 +48,10 @@ async function dismissNotices(page: Page): Promise<void> {
   for (let index = 0; index < 8; index++) {
     const notice = page.locator('[data-ui-control="notice-close"]');
     if (await notice.count() === 0) return;
-    await notice.click();
+    // Source notices can disappear when their asynchronous render completes.
+    // Use the actual UI's stable keyboard cancellation path, not a stale button handle.
+    await page.locator("#overlay").focus();
+    await page.keyboard.press("Escape");
     await page.waitForTimeout(50);
   }
 }
@@ -244,6 +248,17 @@ export async function sourceBrowserCheck(): Promise<void> {
     assert.equal(gameplayUi.reason, "not_advertised");
     assert.equal(first.ui, undefined, "Contract publication cannot fabricate a version-1 server UI projection.");
     checks.push("legacy game.ui.v1 absence is explicitly unsupported; no fake complete UI state");
+    const audioControls = await page.evaluate(() => window.__clubscapeClientStateV1!.audioControls());
+    assert(audioControls);
+    assert.equal(audioControls.semantics, "native-source-slider-v1");
+    assert.equal(audioControls.masterPercent, sourceAudioDefaults().sliders.master);
+    for (const channel of ["music", "effects", "area"] as const) {
+      assert.equal(audioControls.channels[channel].percent, sourceAudioDefaults().sliders[channel]);
+      assert.equal(audioControls.channels[channel].nativeMixer, sourceAudioDefaults().mixer[channel]);
+    }
+    assert.equal(audioControls.sourceSceneSupplied, false);
+    assert.equal(audioControls.musicSelectorBound, false);
+    checks.push("native calibrated source audio defaults observed; absent scene/next-selection facts remain unavailable");
     let renderPixels: unknown = null;
     if (earlyScene !== null) {
       await page.waitForFunction(() => (window.__clubscapeBenchmarkV1?.read(null).renderedFrames ?? 0) >= 8, undefined, { timeout: 30_000 });
@@ -306,7 +321,7 @@ export async function sourceBrowserCheck(): Promise<void> {
     await writeFile(resolve(evidence, "result.json"), JSON.stringify({
       kind: earlyScene ? "early-render-ui-canonical-source-entry" : "real-ui-wasm-canonical-source-onboarding",
       result: "passed", recordedAt: new Date().toISOString(),
-      checks, gameplayUi, sourceRunPin: pin, browser: version, sandbox: { namespaceAndSeccomp: true, gpuProcessSandboxed: system.gpu.auxAttributes?.sandboxed ?? null },
+      checks, gameplayUi, audioControls, sourceRunPin: pin, browser: version, sandbox: { namespaceAndSeccomp: true, gpuProcessSandboxed: system.gpu.auxAttributes?.sandboxed ?? null },
       titlePixels: title, build: benchmark.identity, rendererReady: benchmark.ready, renderedFrames: benchmark.renderedFrames,
       actualUiSignup: true, actualCanonicalWorld: true, actualServerRestart: true,
       earlyScene, renderPixels, fullJourneyTested: false, worldRendererIntegrated: earlyScene !== null,

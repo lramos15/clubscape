@@ -1,5 +1,8 @@
-import { AudioFailure, createAudio, observeAudioState, readAudioState } from "../audio/index.ts";
-import type { AudioSnapshot, AudioTrace } from "../audio/index.ts";
+import {
+  AudioFailure, createAudio, observeAudioState, readAudioState, setSourceAudioScene, setSourceMusicSelector,
+  sourceAudioDefaults, sourceSliderToMixer, sourceMixerToAssetGain,
+} from "../audio/index.ts";
+import type { AudioSnapshot, AudioTrace, SourceAudioScene, SourceMusicSelector } from "../audio/index.ts";
 import type { AudioEvent, AudioHandle, ClientAssets, CreateAudio, WorldView } from "../shared/contracts.ts";
 import type { AssetObservation } from "./assets.ts";
 import type { AssetRecord } from "./manifest.ts";
@@ -10,10 +13,28 @@ export interface AudioAdapter {
   create: CreateAudio;
   read(handle: AudioHandle): AudioSnapshot;
   observe(handle: AudioHandle, listener: (state: AudioSnapshot) => void): () => void;
+  scene(handle: AudioHandle, scene: SourceAudioScene | null): void;
+  music(handle: AudioHandle, selector: SourceMusicSelector | null, areaMode: "modern" | "classic"): void;
 }
 export const sourceAudioAdapter: AudioAdapter = {
   create: createAudio, read: readAudioState, observe: observeAudioState,
+  scene: setSourceAudioScene, music: setSourceMusicSelector,
 };
+
+export function sourceControlState(state: AudioSnapshot) {
+  const control = (channel: AudioChannel) => {
+    const percent = Math.round(state.volumes[channel] * 100);
+    return Object.freeze({
+      normalizedPosition: state.volumes[channel], percent,
+      nativeMixer: state.nativeMixer[channel],
+      lookupMixer: sourceSliderToMixer(channel, percent, state.masterPercent),
+      assetCalibrationGain: sourceMixerToAssetGain(state.nativeMixer[channel]),
+    });
+  };
+  return Object.freeze({ semantics: "native-source-slider-v1" as const, masterPercent: state.masterPercent,
+    channels: Object.freeze({ music: control("music"), effects: control("effects"), area: control("area") }),
+    defaults: sourceAudioDefaults() });
+}
 
 export function audioProblem(error: unknown): AppError {
   if (error instanceof AppError) return error;
@@ -38,6 +59,9 @@ export class SourceAudioSession {
   #report: (error: AppError) => void;
   #observations = new Map<string, AssetObservation>();
   #seen = new WeakSet<AudioTrace>();
+  #hasScene = false;
+  #sceneUnavailableReported = false;
+  #musicSelectorBound = false;
 
   private constructor(handle: AudioHandle, api: AudioAdapter, records: readonly AssetRecord[],
     report: (error: AppError) => void, observed: (state: AudioSnapshot) => void) {
@@ -79,6 +103,10 @@ export class SourceAudioSession {
   snapshot(): AudioSnapshot { return this.#api.read(this.#handle); }
   observations(): AssetObservation[] { return Array.from(this.#observations.values(), (value) => ({ ...value })); }
   enabled(): boolean { return playbackEnabled(this.snapshot()); }
+  controls() {
+    return Object.freeze({ ...sourceControlState(this.snapshot()),
+      sourceSceneSupplied: this.#hasScene, musicSelectorBound: this.#musicSelectorBound });
+  }
 
   unlock(): Promise<void> {
     // Both calls happen in the trusted handler stack, before the first await.
@@ -87,7 +115,37 @@ export class SourceAudioSession {
   }
   mute(value: boolean): void { this.#handle.mute(value); }
   volume(channel: AudioChannel, value: number): void { this.#handle.volume(channel, value); }
-  update(world: WorldView | null, events: readonly AudioEvent[]): void {
+  musicSelector(selector: SourceMusicSelector | null, areaMode: "modern" | "classic"): void {
+    this.#api.music(this.#handle, selector, areaMode);
+    this.#musicSelectorBound = selector !== null;
+  }
+  update(world: WorldView | null, events: readonly AudioEvent[], scene?: SourceAudioScene | null): void {
+    try {
+      if (world === null) {
+        if (this.#hasScene) this.#api.scene(this.#handle, null);
+        this.#hasScene = false;
+        this.#sceneUnavailableReported = false;
+      } else if (scene !== undefined) {
+        this.#api.scene(this.#handle, scene);
+        this.#hasScene = scene !== null;
+        this.#sceneUnavailableReported = false;
+      } else {
+        if (this.#hasScene) this.#api.scene(this.#handle, null);
+        this.#hasScene = false;
+        if (!this.#sceneUnavailableReported) {
+          this.#sceneUnavailableReported = true;
+          this.#report(audioProblem(new AudioFailure("AUDIO_SOURCE_SCENE_REQUIRED",
+            "Native audio scene input is unavailable: provide the real 128-unit listener, plane/instance/owner, placed emitters and bound original varps. No tile-centre, empty-scene or gain/distance substitute was made.")));
+        }
+      }
+    } catch (error) {
+      this.#report(audioProblem(error));
+      this.#hasScene = false;
+      try { this.#api.scene(this.#handle, null); }
+      catch (error) { this.#report(audioProblem(error)); }
+    }
+    // Preserve each coherent committed world/event batch for the audio-owned
+    // before/after Cook skill-delta gate. Never generate a completion or jingle.
     try { this.#handle.update(world, events); }
     catch (error) { this.#report(audioProblem(error)); }
   }

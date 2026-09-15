@@ -7,6 +7,7 @@ import { presenceOf } from "./public-state.ts";
 import type { PublicWorld, QuoteRequest, QuoteView, ShopPurchaseIntent } from "./public-state.ts";
 import { gameplayUiSupport } from "./gameplay-ui.ts";
 import type { GameplayUiSupport } from "./gameplay-ui.ts";
+import type { SourceAudioSession } from "./audio.ts";
 
 export interface WasmClient {
   prepare(requestId: string, operation: string, input: string): Uint8Array;
@@ -53,6 +54,7 @@ export interface ClientHooks {
   events(world: WorldView | null, events: readonly AudioEvent[]): void;
   unlockAudio(): Promise<void>;
   audioEnabled?(): boolean;
+  audioControls?(): ReturnType<SourceAudioSession["controls"]> | null;
   volume(channel: AudioChannel, value: number): void;
   disconnected(): void;
 }
@@ -112,6 +114,7 @@ export class BrowserApp implements AppServices {
 
   state(): Readonly<AppState> { return this.#state; }
   gameplayUi(): Readonly<GameplayUiSupport> { return this.#uiSupport; }
+  audioControls(): ReturnType<SourceAudioSession["controls"]> | null { return this.#hooks.audioControls?.() ?? null; }
   subscribe(listener: (state: Readonly<AppState>) => void): () => void {
     this.#listeners.add(listener);
     listener(this.#state);

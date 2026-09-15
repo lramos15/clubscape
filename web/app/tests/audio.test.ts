@@ -1,9 +1,10 @@
 import assert from "node:assert/strict";
 import { test } from "node:test";
-import { AudioFailure } from "../../audio/index.ts";
+import { AudioFailure, sourceAudioDefaults, sourceSliderToMixer, sourceMixerToAssetGain, SOURCE_MUSIC_MODE_IDS } from "../../audio/index.ts";
 import type { AudioSnapshot } from "../../audio/index.ts";
+import type { SourceAudioScene, SourceMusicSelector } from "../../audio/index.ts";
 import type { AudioEvent, AudioHandle, ClientAssets, WorldView } from "../../shared/contracts.ts";
-import { SourceAudioSession, audioProblem, playbackEnabled } from "../audio.ts";
+import { SourceAudioSession, audioProblem, playbackEnabled, sourceControlState } from "../audio.ts";
 import type { AudioAdapter } from "../audio.ts";
 import { Settings } from "../settings.ts";
 
@@ -12,6 +13,8 @@ function snapshot(): AudioSnapshot {
     sourcePackSha256: "fixture", contextState: "suspended", currentTime: 0, sampleRate: 22050,
     pendingGesture: true, unlocked: false, muted: false, connected: true, disposed: false, outputEnabled: true,
     volumes: { music: 0.25, effects: 0.5, area: 0.75 }, queueSize: 0,
+    nativeMixer: { music: sourceSliderToMixer("music", 25), effects: sourceSliderToMixer("effects", 50), area: sourceSliderToMixer("area", 75) },
+    masterPercent: 100,
     background: { groups: [0], cursor: 0, mode: "once", exhausted: false, failed: false },
     voices: [], cache: { decodedBytes: 0, cached: 0, pending: 0 }, policyLimits: [], traces: [],
   };
@@ -34,6 +37,7 @@ test("factory initialization failures retain their actual audio code and recover
   const api: AudioAdapter = {
     create: async () => { throw new AudioFailure("AUDIO_INTEGRITY", "Pinned bytes changed.", true); },
     read: () => snapshot(), observe: () => () => {},
+    scene() {}, music() {},
   };
   await assert.rejects(SourceAudioSession.create({} as ClientAssets, [], () => {}, () => {}, api),
     (error: unknown) => error instanceof Error && error.message.includes("[AUDIO_INTEGRITY]"));
@@ -51,6 +55,7 @@ test("composition delegates the trusted call synchronously and never substitutes
   };
   const api: AudioAdapter = {
     create: async () => handle, read: () => state, observe: (_handle, listener) => { listener(state); return () => {}; },
+    scene() {}, music() {},
   };
   const audio = await SourceAudioSession.create({} as ClientAssets, [], () => {}, () => {}, api);
   assert.equal(calls.length, 0, "No default gain or playback policy is applied by the shell.");
@@ -84,6 +89,7 @@ test("only actual decoded/evicted audio notices establish source residency", asy
   const handle = { dispose: async () => {} } as AudioHandle;
   const api: AudioAdapter = {
     create: async () => handle, read: () => state, observe: (_handle, listener) => { observer = listener; listener(state); return () => {}; },
+    scene() {}, music() {},
   };
   const audio = await SourceAudioSession.create({} as ClientAssets, [{
     id: "asset.fixture", url: "/assets/fixture.flac", bytes: 100, sha256: "a".repeat(64), contentType: "audio/flac",
@@ -108,4 +114,97 @@ test("an unset preference does not fabricate source default channel gains", () =
   settings.volume("music", 0.4);
   assert.deepEqual(settings.audioOverrides(), { music: 0.4 });
   assert.deepEqual(JSON.parse(writes[0]!).audio, { music: 0.4 });
+});
+
+test("source slider positions and observed native mixer levels are not double-normalized", async () => {
+  const source = sourceAudioDefaults();
+  assert.deepEqual(source.mixer, { music: 255, effects: 127, area: 127 });
+  assert.deepEqual(SOURCE_MUSIC_MODE_IDS, { area: 0, shuffle: 1, single: 2 });
+  const observed = snapshot();
+  const controls = sourceControlState(observed);
+  assert.equal(controls.channels.music.normalizedPosition, 0.25);
+  assert.equal(controls.channels.music.percent, 25);
+  assert.equal(controls.channels.music.nativeMixer, sourceSliderToMixer("music", 25));
+  assert.equal(controls.channels.music.assetCalibrationGain, sourceMixerToAssetGain(observed.nativeMixer.music));
+  let received: number | undefined;
+  const handle = { volume: (_channel: string, value: number) => { received = value; }, dispose: async () => {} } as AudioHandle;
+  const api: AudioAdapter = { create: async () => handle, read: () => observed,
+    observe: () => () => {}, scene() {}, music() {} };
+  const audio = await SourceAudioSession.create({} as ClientAssets, [], () => {}, () => {}, api);
+  audio.volume("music", 0.5);
+  assert.equal(received, 0.5, "AudioHandle receives source normalized position, never a mixer level or linear gain.");
+  assert.equal(audio.controls().sourceSceneSupplied, false);
+  assert.equal(audio.controls().musicSelectorBound, false);
+  await audio.dispose();
+});
+
+test("actual native scene and music inputs are forwarded intact; missing input is not an empty-scene success", async () => {
+  const calls: unknown[][] = [];
+  const errors: string[] = [];
+  const scene: SourceAudioScene = {
+    listener: { x: 3200 * 128 + 37, y: 3201 * 128 + 92 }, plane: 2, instance: "instance.actual",
+    owner: { id: "source.owner", exteriorPlane: 0, audibleInteriorPlane: 2 },
+    varps: new Map([[281, 17]]),
+    emitters: [{
+      id: "placement.original", objectId: 23, tile: { x: 3202, y: 3201, plane: 2 }, orientation: 1,
+      instance: "instance.actual", owner: { id: "source.owner", exteriorPlane: 0, audibleInteriorPlane: 2 }, present: true,
+    }],
+  };
+  const handle = { update: (world: unknown, events: unknown) => { calls.push(["world", world, events]); },
+    disconnected: () => { calls.push(["disconnected"]); }, dispose: async () => {} } as AudioHandle;
+  const api: AudioAdapter = {
+    create: async () => handle, read: snapshot, observe: () => () => {},
+    scene: (_handle, input) => { calls.push(["scene", input]); },
+    music: (_handle, selector, mode) => { calls.push(["music", selector, mode]); },
+  };
+  const audio = await SourceAudioSession.create({} as ClientAssets, [], (error) => { errors.push(error.message); }, () => {}, api);
+  const world = { revision: "44" } as WorldView;
+  audio.update(world, [], scene);
+  assert.equal(calls[0]![1], scene);
+  assert.equal(calls[1]![1], world);
+  assert.equal(audio.controls().sourceSceneSupplied, true);
+  const selector: SourceMusicSelector = async () => ({ group: 76 });
+  audio.musicSelector(selector, "modern");
+  assert.deepEqual(calls.at(-1), ["music", selector, "modern"]);
+  assert.equal(audio.controls().musicSelectorBound, true);
+  audio.disconnected();
+  assert.deepEqual(calls.at(-1), ["disconnected"], "Disconnect does not synthesize a title or replacement scene.");
+  audio.update(world, []);
+  assert.deepEqual(calls.at(-2), ["scene", null], "Unavailable new scene stops stale ambience.");
+  assert.equal(audio.controls().sourceSceneSupplied, false);
+  assert(errors.some((error) => error.includes("AUDIO_SOURCE_SCENE_REQUIRED")));
+  assert.equal(scene.listener.x, 3200 * 128 + 37);
+  assert.equal(scene.varps.get(281), 17);
+  await audio.dispose();
+});
+
+test("committed before/after Cook batches and source-selected reward metadata are never rewritten", async () => {
+  const delivered: Array<{ world: WorldView | null; events: readonly AudioEvent[] }> = [];
+  const handle = { update: (world: WorldView | null, events: readonly AudioEvent[]) => { delivered.push({ world, events }); },
+    dispose: async () => {} } as AudioHandle;
+  const api: AudioAdapter = { create: async () => handle, read: snapshot, observe: () => () => {}, scene() {}, music() {} };
+  const audio = await SourceAudioSession.create({} as ClientAssets, [], () => {}, () => {}, api);
+  const before = { revision: "50", player: { skills: [{ id: "skill.cooking", baseLevel: 10, xpTenths: "9007199254740993" }] } } as unknown as WorldView;
+  const after = { revision: "51", player: { skills: [{ id: "skill.cooking", baseLevel: 11, xpTenths: "9007199254743993" }] } } as unknown as WorldView;
+  const level: AudioEvent = Object.freeze({
+    id: "level.original", kind: "level_up", sourceId: 54, assetId: null, actorId: "actor.original",
+    sourceCycle: 500, tile: null, payload: Object.freeze({
+      committed: true, skillId: "skill.cooking", causeQuestId: "quest.cooks_assistant",
+      previousLevel: 10, level: 11, completionId: "completion.original", actionId: "action.reward", cueId: "cue.original",
+    }),
+  });
+  const completion: AudioEvent = Object.freeze({
+    id: "completion.original", kind: "quest_complete", sourceId: 152, assetId: null, actorId: "actor.original",
+    sourceCycle: 500, tile: null, payload: Object.freeze({ committed: true, questId: "quest.cooks_assistant" }),
+  });
+  const events = Object.freeze([level, completion]);
+  audio.update(before, []);
+  audio.update(after, events);
+  assert.equal(delivered.length, 2);
+  assert.equal(delivered[0]!.world, before);
+  assert.equal(delivered[1]!.world, after);
+  assert.equal(delivered[1]!.events, events);
+  assert.equal(delivered[1]!.events[0]!.sourceId, 54, "Pre-trained levels do not force the golden-case group33.");
+  assert.equal(after.player.skills[0]!.xpTenths, "9007199254743993");
+  await audio.dispose();
 });

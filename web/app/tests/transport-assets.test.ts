@@ -8,7 +8,7 @@ import type { ContentManifest } from "../manifest.ts";
 import { SOURCE_PACK_SHA256 } from "../../shared/contracts.ts";
 import { RpcTransport, boundedBytes } from "../transport.ts";
 import type { Fetch } from "../transport.ts";
-import { Settings, PREFERENCE_KEY } from "../settings.ts";
+import { Settings, PREFERENCE_KEY, LEGACY_PREFERENCE_KEY } from "../settings.ts";
 import { checkCapability } from "../capability.ts";
 
 export async function fixtureManifest(bytes = new TextEncoder().encode('{"fixture":"not gameplay"}')): Promise<ContentManifest> {
@@ -123,15 +123,34 @@ test("only explicitly declared source path aliases resolve to verified canonical
 test("preferences persist only a bounded allowlist, never arbitrary input fields", async () => {
   const writes = new Map<string, string>();
   const settings = new Settings({
-    getItem: () => JSON.stringify({ schemaVersion: 1, profile: "source-resizable-classic-v1", audio: { music: 0.3, effects: 99 }, password: "not copied", token: "not copied" }),
+    getItem: (key) => key === PREFERENCE_KEY ? JSON.stringify({ schemaVersion: 2, profile: "source-resizable-classic-v1",
+      audioSemantics: "native-source-slider-v1", audio: { music: 0.3, effects: 99 }, password: "not copied", token: "not copied" }) : null,
     setItem: (key, value) => { writes.set(key, value); },
   });
+
   assert.equal(settings.read().audio.music, 0.3);
   assert.equal(settings.read().audio.effects, 1);
   assert.equal(settings.volume("effects", -7), 0);
   const written = writes.get(PREFERENCE_KEY)!;
   assert(!written.includes("password") && !written.includes("token") && !written.includes("not copied"));
   assert.match(await settings.hash({ source: "test-fixture-only" }), /^[0-9a-f]{64}$/);
+});
+
+test("old provisional gain preferences are not silently reinterpreted as nonlinear source slider positions", () => {
+  const store = new Map([[LEGACY_PREFERENCE_KEY, JSON.stringify({
+    schemaVersion: 1, profile: "source-resizable-classic-v1", audio: { music: 0.5, effects: 0.25, area: 0.75 },
+  })]]);
+  const settings = new Settings({ getItem: (key) => store.get(key) ?? null, setItem: (key, value) => { store.set(key, value); } });
+  assert.deepEqual(settings.audioOverrides(), {});
+  assert.match(settings.migrationNotice()?.message ?? "", /not reinterpreted/);
+  assert.deepEqual(settings.read().audio, { music: 1, effects: 1, area: 1 });
+  assert.equal(settings.volume("music", 0.375), 0.38);
+  const saved = JSON.parse(store.get(PREFERENCE_KEY)!);
+  assert.equal(saved.schemaVersion, 2);
+  assert.equal(saved.audioSemantics, "native-source-slider-v1");
+  assert.deepEqual(saved.audio, { music: 0.38 });
+  assert(store.has(LEGACY_PREFERENCE_KEY), "Historical preferences are not overwritten.");
+  assert.throws(() => settings.volume("music", Number.NaN), /finite normalized/);
 });
 
 test("capability failure never selects a software/WebGL fallback", async () => {

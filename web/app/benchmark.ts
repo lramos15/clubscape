@@ -62,6 +62,7 @@ export class Benchmark implements ClubscapeBenchmarkV1 {
       unlocked: state.unlocked, outputEnabled: state.outputEnabled, muted: state.muted,
       connected: state.connected, disposed: state.disposed, currentTime: state.currentTime,
       volumes: { ...state.volumes }, cache: { ...state.cache }, background: structuredClone(state.background),
+      volumeSemantics: "native-source-slider-v1", nativeMixer: { ...state.nativeMixer }, masterPercent: state.masterPercent,
       playingVoices: state.voices.length, policyLimits: [...state.policyLimits],
     };
   }

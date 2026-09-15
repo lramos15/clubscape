@@ -18,6 +18,7 @@ import { RpcTransport } from "./transport.ts";
 import { presenceOf } from "./public-state.ts";
 import { SourceAudioSession, audioProblem, playbackEnabled, sourceAudioAdapter } from "./audio.ts";
 import { sourceZoomForViewportHeight } from "./renderer.ts";
+import type { SourceAudioScene, SourceMusicSelector } from "../audio/index.ts";
 
 export interface ObservedRenderer extends RendererHandle {
   /** Observation only; all values must come from the real decoder/render path. */
@@ -35,6 +36,10 @@ export async function mountApplication(options: {
   uiCanvas: HTMLCanvasElement;
   status: HTMLElement;
   earlyScene?: string | null;
+  sourceAudio?: {
+    scene(world: WorldView): SourceAudioScene | undefined;
+    music?: { selector: SourceMusicSelector; areaMode: "modern" | "classic" };
+  };
 }): Promise<ApplicationHandle> {
   const { build, components, bridge, benchmark, worldCanvas, uiCanvas, status } = options;
   const earlyScene = options.earlyScene ?? null;
@@ -112,13 +117,17 @@ export async function mountApplication(options: {
       sceneLoaded = true;
     },
     events(world, events) {
-      audio?.update(world, events);
+      let scene: SourceAudioScene | null | undefined;
+      try { scene = world === null ? null : options.sourceAudio?.scene(world); }
+      catch (error) { app.report(audioProblem(error)); }
+      audio?.update(world, events, scene);
     },
     async unlockAudio() {
       if (!audio) throw new AppError("The source audio component is not ready.", { kind: "audio" });
       await audio.unlock();
     },
     audioEnabled() { return audio?.enabled() === true; },
+    audioControls() { return audio?.controls() ?? null; },
     volume(channel, value) {
       const bounded = settings.volume(channel, value);
       audio?.volume(channel, bounded);
@@ -229,6 +238,7 @@ export async function mountApplication(options: {
     for (const channel of ["music", "effects", "area"] as const) {
       if (overrides[channel] !== undefined) audio.volume(channel, overrides[channel]);
     }
+    if (options.sourceAudio?.music) audio.musicSelector(options.sourceAudio.music.selector, options.sourceAudio.music.areaMode);
     audio.update(null, []);
     const render = (now: number): void => {
       if (disposed) return;
@@ -270,6 +280,8 @@ export async function mountApplication(options: {
     }, { signal: lifecycle.signal });
     window.addEventListener("offline", () => transport.abort(), { signal: lifecycle.signal });
     await app.start();
+    const migration = settings.migrationNotice();
+    if (migration) app.report(migration);
     return { app, dispose };
   } catch (value) {
     const error = appError(value);

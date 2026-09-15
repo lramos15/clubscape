@@ -218,6 +218,31 @@ only the5,010 compiler-required IDs; presentation delivery does not hide or infl
 that descriptor's source validation. No waveform, gain, delay, loop or playlist
 is changed by the build layer.
 
+The authorized native policy/Cook delta commits `888f9384` and `f74652a5`
+are also integrated. Runtime volume arguments are source normalized slider
+positions, with native defaults255/127/127 and nonlinear lookup inside audio.
+The shell uses a v2 preference-semantic marker instead of reinterpreting old
+linear values, delegates typed source-scene/next-music inputs, preserves
+coherent before/after committed reward batches, and exposes actual native
+control observations. No source gain/distance/varp/next-song math is duplicated.
+The current bridge still lacks actual128-unit listener, all placed emitters,
+bound original varps and next-selection provenance; no dummy values are supplied.
+
+The remaining music64/327/163/145 and native255 jingle40/54/58/64/65
+publications belong to the audio owner. Current `AUDIO_INPUTS`/266 frozen
+payloads stay exact; new supplemental IDs/routes must be relayed before they
+can be delivered. No missing native representation is replaced by scaling
+the frozen128 input. Native policy calibration is no longer a generic blocker;
+the exact pending data/publications and real-source wiring are.
+
+Native-control shell evidence is separate from earlier provisional-volume runs:
+`.local/evidence/native-audio-title-v2/result.json` records actual default
+255/127/127 levels and a50% music position producing native mixer44 (asset
+calibration44/128), not a linear0.5 gain. The real canonical source entry under
+`.local/evidence/early-native-audio-v2/result.json` records those actual defaults
+while explicitly reporting no supplied source scene or next-music selector.
+These checks are not completion of the missing authoritative audio inputs.
+
 The authorized UI commits `069b5028`, `f34663c3`, `6a1b11fa` add the actual
 self-subscribing UI. `ui-assets.ts` verifies `assets/compiled/ui/provenance.json`
 and selects only catalogue-referenced title/sprite/item/portrait/minimap PNGs,
@@ -270,7 +295,7 @@ reported. Evidence includes actual title pixels, startup/run pins and the
 onboarding result. With the initial renderer, normal region coverage is not
 yet mapped and fails explicitly. The earlier UI-only onboarding proof remains
 historical; explicit early-presentation mode below is not a replacement
-journey proof. Complete journey, world fidelity, audio calibration and M1 acceptance
+journey proof. Complete journey, world fidelity, real audio-scene/selection wiring and M1 acceptance
 remain separate. The legacy descriptor-probe environment name now selects
 real startup, not an expected failure.
 
@@ -444,7 +469,10 @@ boundary is recorded separately under
    actual source audio event provenance described in `web/app/README.md`.
    The audio factory and real decoder observations are integrated; source
    cycle/group/delay/action/cue and Cook-widget linkage are not present in
-   the current event wire and must not be guessed. The actual UI consumes
+   the current event wire and must not be guessed. Native gain/spatial/fade/
+   duration/default policies are integrated; actual source listener/varps/
+   emitters, committed Cook attribution and the additive source publications
+   remain concrete inputs, not permission to invent gains or next songs. The actual UI consumes
    `forwardWorldPointer`, `setUiCamera` and `onUiCameraRequest` in logical pixels;
    renderer picking remains backing-pixel based. Source entity/pose/morph/dynamic-object
    state must come from the real view, not fixtures or fabricated animations.

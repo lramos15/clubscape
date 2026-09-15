@@ -104,6 +104,11 @@ errors intact. It does not implement another guard/price/readiness engine.
   explicitly; this wire does not yet carry those fields. No 600ms tick is
   relabeled as an audio source cycle and no incompatible generic XP/text/damage
   keys are sent to the factory.
+  An explicit `level_up.skill` is preserved as `payload.skillId`; the bridge
+  never invents before/after levels, quest attribution, a completion ID or
+  group33. Native audio now validates actual committed Cook deltas and owns
+  deferral/no-level-gain behavior. Its source-scene/varp/owner inputs are a
+  separate pending projection, not guessed from this server's tile/quest data.
 
 ## Validated source projection
 

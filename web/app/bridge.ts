@@ -8,10 +8,12 @@ export { checkCapability } from "./capability.ts";
 export { AssetLoader } from "./assets.ts";
 export { parseContentManifest } from "./manifest.ts";
 export { loadBuild, verifiedJson } from "./build.ts";
-export { SourceAudioSession, audioProblem, playbackEnabled } from "./audio.ts";
+export { SourceAudioSession, audioProblem, playbackEnabled, sourceControlState } from "./audio.ts";
 export { AUDIO_INPUTS } from "../audio/index.ts";
 export { gameplayUiSupport, validateGameplayUi } from "./gameplay-ui.ts";
 export type { GameplayUiView, GameplayUiIntent } from "../shared/contracts.ts";
+export { sourceAudioDefaults, sourceSliderToMixer, sourceMixerToAssetGain, SOURCE_MUSIC_MODE_IDS } from "../audio/index.ts";
+export type { SourceAudioScene, SourceMusicSelector } from "../audio/index.ts";
 export type { PublicWorld, PublicRecovery, QuoteRequest, QuoteView, ShopPurchaseIntent } from "./public-state.ts";
 
 /** Programmatic bridge entry; not a UI, fixture world, or account bypass. */

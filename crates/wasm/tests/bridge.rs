@@ -140,6 +140,34 @@ fn walk() -> &'static str {
 }
 
 #[test]
+fn committed_level_metadata_preserves_explicit_skill_without_fabricating_cook_deltas_or_jingle_groups()
+ {
+    let mut bridge = joined();
+    let mut state = snapshot(9_007_199_254_740_994);
+    state.events.push(game::Event {
+        event_id: "event.level.original".into(),
+        kind: "level_up".into(),
+        skill: "skill.fixture".into(),
+        actor_id: "actor.fixture".into(),
+        sound_asset: "asset.original.jingle".into(),
+        xp_tenths: 3000,
+        ..Default::default()
+    });
+    let result: Value = serde_json::from_str(&poll(&mut bridge, 4, state)).unwrap();
+    let event = &result["events"][0];
+    assert_eq!(
+        event["payload"],
+        json!({"committed":true,"skillId":"skill.fixture"})
+    );
+    assert_eq!(event["assetId"], "asset.original.jingle");
+    assert!(event["sourceId"].is_null());
+    assert!(event["sourceCycle"].is_null());
+    assert!(event["payload"].get("previousLevel").is_none());
+    assert!(event["payload"].get("causeQuestId").is_none());
+    assert!(event["payload"].get("completionId").is_none());
+}
+
+#[test]
 fn public_state_keeps_u64_exact_and_excludes_auth_lease_and_closed_bank() {
     let bridge = joined();
     let text = bridge.state().unwrap();

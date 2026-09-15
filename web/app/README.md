@@ -141,9 +141,13 @@ verified original item `interfaceOptions`, preserving their order. The source
 server still validates every item request. PlayedTime/GroundClock persistence
 remains private; the browser neither reads those clocks nor sets/advances them.
 
-Only `clubscape.preferences.v1` stores local, schema-checked normalized channel
-volumes and the named visual profile. Tokens/account names/passwords are not
-preferences. Browser storage denial/quota failure leaves memory-only settings.
+`clubscape.preferences.v2` stores schema-checked **source normalized slider
+positions**, explicitly marked `native-source-slider-v1`, and the named visual
+profile. Values are quantized to source integer percentages. Old v1 provisional
+linear-gain values are not silently reinterpreted: the old record is retained,
+native defaults apply, and a recoverable migration notice asks for explicit
+source controls. Tokens/account names/passwords are never preferences.
+Browser storage denial/quota failure leaves memory-only settings.
 
 ## Actual loading and benchmark observations
 
@@ -225,8 +229,8 @@ promise. Report the genuine completed cadence, not a configured refresh rate.
 
 ## Actual audio adapter
 
-`audio.ts` wraps the imported factory from parent `7ea817f5` (local cherry-pick
-`270b62a`); it is not a second audio engine. `SourceAudioSession` forwards
+`audio.ts` wraps the imported factory and the authorized native policy/Cook
+delta updates `888f9384` + `f74652a5`; it is not a second audio engine. `SourceAudioSession` forwards
 validated world/events and delegates mute, volume, unlock, disconnect and
 disposal. The trusted UI handler reaches the factory's real `resume()` call
 before any unrelated await. `AUDIO_GESTURE_REQUIRED` remains recoverable, and
@@ -241,10 +245,33 @@ are actually supplied.
 
 The decoder, original WAV half-gain, queues, silence, sample offsets, fades,
 positional mixes and playlist policy remain exclusively in `web/audio`.
-The shell applies only explicit persisted/user channel overrides; an unset
-preference does not assert a source volume default. No default-next song or
-calibration is invented. Read `web/audio/README.md` for the complete contract
-and outstanding audio-owner calibration work.
+`AudioHandle.volume` now receives a **source normalized slider position**,
+never a provisional linear gain. The shell forwards it exactly once; native
+integer percentage lookup and nonlinear mixing remain in the audio engine.
+Defaults come from `sourceAudioDefaults()` (effective255/127/127), not old
+linear unity assumptions. `SourceAudioSession.controls()`, `BrowserApp.audioControls()`
+and the read-only client observer expose actual positions/mixer/master state,
+with `sourceSliderToMixer` and `sourceMixerToAssetGain` used only for control
+observation—not applied again to playback. The native music mode IDs remain
+area0/shuffle1/single2. Old `native_midi_end` directives are not emitted.
+
+`mountApplication` accepts an optional `sourceAudio` producer whose `scene(world)`
+returns the exact imported `SourceAudioScene` and whose optional music selector
+uses the exact audio-owner `SourceMusicSelector` contract. The wrapper delegates
+`setSourceAudioScene`/`setSourceMusicSelector` without computing attenuation,
+retention, owner visibility, fades, next songs or varps. Scene coordinates stay
+in128-unit space; orientation, instance/owner and varp values are unchanged.
+An unavailable new scene stops stale ambience with explicit feedback, not an
+empty-scene success. Current renderer/protocol exports still lack the real
+listener/scenery/varp projection and authoritative next-selection input:
+`sourceSceneSupplied:false` / `musicSelectorBound:false` describe that absence.
+These flags describe supplied inputs, not proof that every emitter/asset is ready.
+
+Native policies are now calibrated, not the earlier generic gain/distance/fade
+placeholders. Actual source-scene/event/selection wiring and the separately
+owned additive publications remain uncompleted. Do not convert tiles to guessed
+listener centres, use only interactable entities as all audible scenery, or
+derive varps from quest-stage names.
 
 `AssetLoader` supports an explicit `aliases` table for the original
 `AUDIO_INPUTS` metadata path IDs and payload paths. Aliases resolve only to
@@ -267,11 +294,29 @@ server-tick conversion, duplicate animation cue or synthetic completion.
 the backend/renderer/UI boundary is relayed. Unit forwarding checks are not
 a substitute for that legitimate journey integration.
 
+For Cook reward audio, the shell forwards **one coherent** committed world/
+event batch after the previous immutable world, preserving `skillId`,
+`previousLevel`, `level`, `completionId` and the source-selected group when
+actually supplied. The audio owner captures/validates the before/after
+base-level/XP delta and defers it until matching widget153 closure. The wrapper
+does not manufacture group33/level4, derive a jingle from XP, split the batch
+with an intermediate empty update, or generate a cue for no level gain.
+Existing wire `level_up.skill`, if supplied, is preserved as `skillId`; absent
+attribution/group/level/widget fields remain absent. A spatial-input error
+does not discard the committed world/event batch.
+
+Four Modern Lumbridge groups64/327/163/145 and source-native255 jingle inputs
+40/54/58/64/65 await the audio owner's exact additive publication/route relay.
+The existing264 FLACs, two WAVs, metadata hashes and approved pack are unchanged.
+No alias, scaled substitute, limiter or base-pack rewrite supplies missing inputs.
+
 The real Chrome shell check now exercises source title track0 through this
 factory, a genuine trusted input, actual22050-Hz decoding/clock advancement,
 recoverable startup permission feedback, retained disconnect selection, and
 explicit title reset. It uses no fake world or game-cue loop and does not
-certify source gains/defaults/positional/fade/playlist calibration or gameplay.
+certify complete source-scene/music-selection wiring, gameplay, host-speaker
+perception or presentation acceptance. Checks now also observe native defaults
+and a real50% source-slider lookup without double normalization.
 
 Renderer frame promises must resolve **after that actual render submission's
 `GPUQueue.onSubmittedWorkDone()` receipt**. RAF requests stay pipelined; no

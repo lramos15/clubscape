@@ -1,5 +1,6 @@
 import assert from "node:assert/strict";
 import type { Page } from "playwright-core";
+import { sourceAudioDefaults, sourceSliderToMixer, sourceMixerToAssetGain } from "../../audio/index.ts";
 
 /** Actual title/factory composition only; no synthetic world or game cue loop. */
 export async function checkTitleAudio(page: Page): Promise<unknown> {
@@ -58,6 +59,8 @@ export async function checkTitleAudio(page: Page): Promise<unknown> {
     assert.equal(before.app.phase, "title");
     assert.equal(before.app.soundEnabled, false);
     assert.equal(before.audio.pendingGesture, true);
+    assert.deepEqual(before.audio.nativeMixer, sourceAudioDefaults().mixer);
+    assert.equal(before.audio.masterPercent, sourceAudioDefaults().sliders.master);
     assert.equal(before.audio.cache.cached, 0, "Factory initialization cannot eagerly decode the whole soundtrack.");
     assert(before.errors.some((error) => error.message.includes("AUDIO_GESTURE_REQUIRED") && error.recoverable));
     await page.locator("#source-audio-contract-unlock").click();
@@ -69,13 +72,22 @@ export async function checkTitleAudio(page: Page): Promise<unknown> {
     }, undefined, { timeout: 30_000 });
     const running = await page.evaluate(() => {
       const state = (window as unknown as { __clubscapeAudioShellCheck: Harness }).__clubscapeAudioShellCheck;
-      return { audio: state.audio.snapshot(), assets: state.audio.observations(), trusted: state.trusted };
+      return { audio: state.audio.snapshot(), controls: state.audio.controls(), assets: state.audio.observations(), trusted: state.trusted };
     });
     await page.waitForTimeout(120);
     const later = await page.evaluate(() => (window as unknown as { __clubscapeAudioShellCheck: Harness }).__clubscapeAudioShellCheck.audio.snapshot().currentTime);
     assert(later > running.audio.currentTime);
     assert.equal(running.trusted, true);
     assert.equal(running.audio.sampleRate, 22050);
+    const adjusted = await page.evaluate(() => {
+      const state = (window as unknown as { __clubscapeAudioShellCheck: Harness }).__clubscapeAudioShellCheck;
+      state.app.audioVolume("music", 0.5);
+      return state.audio.controls();
+    });
+    assert.equal(adjusted.channels.music.normalizedPosition, 0.5);
+    assert.equal(adjusted.channels.music.percent, 50);
+    assert.equal(adjusted.channels.music.nativeMixer, sourceSliderToMixer("music", 50));
+    assert.equal(adjusted.channels.music.assetCalibrationGain, sourceMixerToAssetGain(sourceSliderToMixer("music", 50)));
     const stopped = await page.evaluate(() => {
       const state = (window as unknown as { __clubscapeAudioShellCheck: Harness }).__clubscapeAudioShellCheck;
       state.audio.disconnected();
@@ -92,6 +104,8 @@ export async function checkTitleAudio(page: Page): Promise<unknown> {
     return {
       kind: "real-title-audio-shell-composition", result: "passed", trustedGesture: true,
       sampleRate: running.audio.sampleRate, contextClockAdvanced: true,
+      nativeControls: running.controls,
+      changedSourceSlider: adjusted,
       loaded: running.assets, backgroundSourceIds: running.audio.background.groups,
       sourceDefaultsChanged: false, disconnectPreservedSelection: true,
       explicitTitleReset: true, gameCuesOrJourneyTested: false, presentationAccepted: false,
