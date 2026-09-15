@@ -298,6 +298,12 @@ export interface ClubscapeRendererHandle extends RendererHandle {
    * selector): the top drawn plane is the player's plane. Off by default; the UI's settings own it.
    */
   setHideRoofs(hidden: boolean): void;
+  /**
+   * Developer fixture control only (not a gameplay state): draw no body for the local player, as
+   * in the controlled original dynamic-layer references, which were rendered without one. The
+   * player's tile still drives the plane, roof rule and minimap.
+   */
+  setHideLocalPlayerBody(hidden: boolean): void;
   /** Original roof-removal mode bits (1 player, 2 hovered, 4 destination, 8 camera line); 0 = stock. */
   setRoofMode(mode: number): void;
   /** Hovered/destination tiles consulted by roof modes 2 and 4. */
@@ -701,6 +707,10 @@ export const createRenderer: (canvas: HTMLCanvasElement, config: RendererConfig,
         requireLive();
         renderer.set_hide_roofs(hidden);
       },
+      setHideLocalPlayerBody(hidden) {
+        requireLive();
+        renderer.set_hide_local_player_body(hidden);
+      },
       setRoofMode(mode) {
         requireLive();
         renderer.set_roof_mode(Math.trunc(mode));
@@ -771,14 +781,69 @@ export const createRenderer: (canvas: HTMLCanvasElement, config: RendererConfig,
   };
 
 /**
- * The original client's viewport zoom for a viewport height (662 at 1080 px, 883 at 1440 px,
- * 471 at 768 px). Pass it as `RenderCamera.zoom` unless reproducing another source zoom state;
- * the renderer never rescales on its own.
+ * The original client's viewport-only zoom (`client.oh` with the stock parameters fy 256 /
+ * fg 205) for a viewport height: 662 at 1080 px, 883 at 1440 px, 471 at 768 px. This is the
+ * projection of the frozen viewport-only scene fixtures (`assets/reference/osrs240/*`); use
+ * `fullHudZoomForViewport` for the composed Resizable-Classic HUD.
  */
 export function sourceZoomForViewportHeight(height: number): number {
   const n = Math.trunc(height) - 334;
   const d = n < 0 ? 256 : n >= 100 ? 205 : Math.trunc(((205 - 256) * n) / 100) + 256;
   return Math.trunc((Math.trunc(height) * d) / 334);
+}
+
+/**
+ * Zoom parameters the original Resizable-Classic layout (root 161) installs through cs2
+ * opcodes 6200/6202 before sizing the 3D viewport (`assets/compiled/render/hud/zoom-table.json`,
+ * read from the running original client): hop values fy = fg = 127 (`2^(v/256+7)`), limits
+ * fu 1 / fz 32767 / fh 1 / fq 32767.
+ */
+export const FULL_HUD_ZOOM_PARAMETERS = { fy: 127, fg: 127, fu: 1, fz: 32767, fh: 1, fq: 32767 } as const;
+
+/**
+ * The original client's full-HUD zoom for a Resizable-Classic viewport of `width` × `height`
+ * pixels — the port of `rl.cu` (cs2 6203 `if_setviewport`), the double-precision twin of
+ * `client.oh`: hop = fy below 334 px, fg from 434 px, interpolated between; the aspect ratio
+ * `height·hop·512 / (width·334)` is clamped to fh..fq (recomputing hop, capped at fz / fu with
+ * letterbox bars); zoom = ⌊height·hop / 334⌋. With the layout's parameters this is
+ * ⌊height·127/334⌋: 410 at 1920×1080 (the frozen native full-HUD probe), 292 at 1024×768,
+ * 547 at 2560×1440. Returns the zoom and the letterboxed viewport rectangle (equal to the input
+ * unless the limits engage, which they do not for the layout's stock values).
+ */
+export function fullHudViewport(width: number, height: number, p = FULL_HUD_ZOOM_PARAMETERS): { zoom: number; x: number; y: number; width: number; height: number } {
+  let x = 0, y = 0;
+  let w = Math.max(1, Math.trunc(width));
+  let h = Math.max(1, Math.trunc(height));
+  const n = h - 334;
+  let hop: number = n < 0 ? p.fy : n >= 100 ? p.fg : Math.trunc(((p.fg - p.fy) * n) / 100) + p.fy;
+  let ratio = (h * hop * 512.0) / (w * 334);
+  if (ratio < p.fh) {
+    ratio = p.fh;
+    hop = (ratio * w * 334.0) / (h * 512);
+    if (hop > p.fz) {
+      hop = p.fz;
+      const inner = (h * hop * 512.0) / (ratio * 334.0);
+      const bar = Math.trunc((w - inner) / 2.0);
+      x += bar;
+      w -= bar * 2;
+    }
+  } else if (ratio > p.fq) {
+    ratio = p.fq;
+    hop = (ratio * w * 334.0) / (h * 512);
+    if (hop < p.fu) {
+      hop = p.fu;
+      const inner = (ratio * w * 334.0) / (hop * 512.0);
+      const bar = Math.trunc((h - inner) / 2.0);
+      y += bar;
+      h -= bar * 2;
+    }
+  }
+  return { zoom: Math.trunc((h * hop) / 334.0), x, y, width: w, height: h };
+}
+
+/** `fullHudViewport(width, height).zoom`: the full-HUD `RenderCamera.zoom` for a canvas size. */
+export function fullHudZoomForViewport(width: number, height: number): number {
+  return fullHudViewport(width, height).zoom;
 }
 
 /** Contract-typed alias for shells that only want the shared signature. */

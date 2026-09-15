@@ -8391,6 +8391,22 @@
    "source_pipeline": "Original rl4.fn scene load (same base as the block export); fe.getConfig per wall; om mapSceneId/size/mapIcon per referenced object id"
   }
  ],
+ "gear_pose_fits": {
+  "file": "gear/pose-fits.json",
+  "schema_version": 1,
+  "body_npc": 2063,
+  "items": 10,
+  "sequences": 27,
+  "item_frames": 3220,
+  "item_frames_over_target": 20,
+  "classification": "Per-item per-pose rigid contact shifts against the penguin body (targets penetration <= 1, gap <= 2 source units); precomputed runtime input, not a fit waiver"
+ },
+ "hud_zoom": {
+  "file": "hud/zoom-table.json",
+  "samples": 16,
+  "full_hud_zoom_1920x1080": 410,
+  "viewport_only_fixture_zoom": 662
+ },
  "files": {
   "tables.bin": {
    "sha256": "954c4395b0b236169129950ce3c98cfdaa662de33b7ad67e7270757fc7c247c6",
@@ -23063,16 +23079,13 @@
   "gear/pose-fits.json": {
    "sha256": "4e37128c89be873529346ca8892be885001cd287ae6dda7f0c1029375880b9be",
    "size_bytes": 292704
+  },
+  "hud/zoom-table.json": {
+   "sha256": "8375bbcd0c071466b0869f0a89d2525e50a73c35c4a23c6a07d3089ae241d21f",
+   "size_bytes": 1554,
+   "detail": {
+    "samples": 16
+   }
   }
- },
- "gear_pose_fits": {
-  "file": "gear/pose-fits.json",
-  "schema_version": 1,
-  "body_npc": 2063,
-  "items": 10,
-  "sequences": 27,
-  "item_frames": 3220,
-  "item_frames_over_target": 20,
-  "classification": "Per-item per-pose rigid contact shifts against the penguin body (targets penetration <= 1, gap <= 2 source units); precomputed runtime input, not a fit waiver"
  }
 }

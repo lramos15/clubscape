@@ -5,7 +5,7 @@
  * genuine GPU-completed frame records, and `window.__clubscapeDev` for the capture script.
  */
 import type { DynamicObjectView, RenderFrame, WorldView } from "../../shared/contracts.ts";
-import { createRenderer, sourceZoomForViewportHeight, type ClubscapeRendererHandle } from "../src/index.ts";
+import { createRenderer, fullHudZoomForViewport, sourceZoomForViewportHeight, type ClubscapeRendererHandle } from "../src/index.ts";
 
 interface FixtureCamera { scene: string; base: [number, number]; local: [number, number, number]; pitch: number; yaw: number }
 
@@ -141,8 +141,8 @@ function scenarioWorld(name: string): WorldView & { dynamicObjects?: unknown[] }
     case "preview":
       return { ...base, player: player(3098, 3098, "idle", [["weapon", 1277, "item.bronze_sword"], ["shield", 1171, "item.wooden_shield"]]), entities: [] };
     // Original dynamic-layer reference cases (assets/reference/osrs240/m1-dynamic): exact case
-    // inputs, rendered at the native full-HUD zoom 410 (see applyScenario). No player body is
-    // drawn in those frames, so the player is placed without a body-carrying scene position.
+    // inputs, rendered at the native full-HUD zoom (see applyScenario), which also switches the
+    // local player body off because the source frames carry none.
     case "source-door-closed":
     case "source-door-open":
       return {
@@ -371,16 +371,20 @@ async function main(): Promise<void> {
       handle.setTopPlane(name.startsWith("pinned-") ? 0 : null);
       if (name.startsWith("source-")) {
         // Original dynamic-layer reference inputs: the locked camera of the fixture at the native
-        // full-HUD zoom 410, the case's recorded draw plane, the original hide-roofs preference.
+        // full-HUD zoom (410 at 1920x1080, `fullHudZoomForViewport`), the case's recorded draw
+        // plane, the original hide-roofs preference, and — as in the source frames — no local
+        // player body (developer fixture control, not a gameplay state).
         handle.camera({
           x: fixture.base[0] * 128 + fixture.local[0], height: fixture.local[1], y: fixture.base[1] * 128 + fixture.local[2],
-          pitch: fixture.pitch, yaw: fixture.yaw, unitsPerTurn: 16384, zoom: 410, near: 50, far: 32768,
+          pitch: fixture.pitch, yaw: fixture.yaw, unitsPerTurn: 16384, zoom: fullHudZoomForViewport(width, height), near: 50, far: 32768,
         });
         const hidden = name === "source-roofs-hidden" || name.startsWith("source-door");
         handle.setHideRoofs(hidden);
         handle.setTopPlane(hidden ? 0 : 3);
+        handle.setHideLocalPlayerBody(true);
       } else {
         handle.setHideRoofs(false);
+        handle.setHideLocalPlayerBody(false);
         handle.camera({
           x: fixture.base[0] * 128 + fixture.local[0], height: fixture.local[1], y: fixture.base[1] * 128 + fixture.local[2],
           pitch: fixture.pitch, yaw: fixture.yaw, unitsPerTurn: 16384, zoom: sourceZoomForViewportHeight(height), near: 50, far: 32768,

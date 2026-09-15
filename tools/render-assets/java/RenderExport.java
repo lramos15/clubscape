@@ -101,6 +101,7 @@ public final class RenderExport
         if (profile.equals("dynamic")) new DynamicExport(this).run(args);
         if (profile.equals("minimap")) new MinimapExport(this).run(args);
         if (profile.equals("widgets")) new WidgetExport(this).run(args);
+        if (profile.equals("zoom")) new ZoomExport(this).run(args);
         if (profile.equals("scenes-pinned"))
         {
             SceneExport pinned = new SceneExport(this);

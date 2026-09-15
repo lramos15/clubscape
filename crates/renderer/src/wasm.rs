@@ -908,6 +908,15 @@ impl WasmRenderer {
         self.inner.borrow_mut().core.set_hide_roofs(hidden);
     }
 
+    /// Developer fixture control only: draw no body for the local player, as in the controlled
+    /// original dynamic-layer references (`assets/reference/osrs240/m1-dynamic`). Off by default.
+    pub fn set_hide_local_player_body(&self, hidden: bool) {
+        self.inner
+            .borrow_mut()
+            .core
+            .set_hide_local_player_body(hidden);
+    }
+
     /// Developer-only: derive action motions from the activity string and adjacent scenery when
     /// the world view supplies no source animation. Off by default; not final M1 logic.
     pub fn set_motion_fallback(&self, enabled: bool) {

@@ -319,6 +319,98 @@ pub fn parse_sequence_id(text: &str) -> Option<i32> {
     }
 }
 
+/// Zoom parameters the original Resizable-Classic layout (root 161) installs through cs2
+/// opcodes 6200/6202 before sizing the 3D viewport (`hud/zoom-table.json`, read from the running
+/// original client): hop values `fy = fg = 127`, limits `fu 1 / fz 32767 / fh 1 / fq 32767`.
+pub const FULL_HUD_ZOOM_PARAMETERS: ZoomParameters = ZoomParameters {
+    fy: 127,
+    fg: 127,
+    fu: 1,
+    fz: 32767,
+    fh: 1,
+    fq: 32767,
+};
+
+/// The stock viewport-only parameters (`client` static defaults: fy 256 / fg 205) of the frozen
+/// viewport-only scene fixtures (zoom 662 at 1080 px).
+pub const VIEWPORT_ONLY_ZOOM_PARAMETERS: ZoomParameters = ZoomParameters {
+    fy: 256,
+    fg: 205,
+    fu: 1,
+    fz: 32767,
+    fh: 1,
+    fq: 32767,
+};
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct ZoomParameters {
+    pub fy: i32,
+    pub fg: i32,
+    pub fu: i32,
+    pub fz: i32,
+    pub fh: i32,
+    pub fq: i32,
+}
+
+/// Letterboxed viewport rectangle and zoom of the original `rl.cu` (cs2 6203) for a canvas.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct HudViewport {
+    pub zoom: i32,
+    pub x: i32,
+    pub y: i32,
+    pub width: i32,
+    pub height: i32,
+}
+
+/// Port of `rl.cu(x, y, width, height, …)`, the double-precision viewport sizing the original
+/// client runs from the layout scripts: hop = `fy` below 334 px, `fg` from 434 px, interpolated
+/// between; `height·hop·512 / (width·334)` is clamped to `fh..fq` (recomputing hop, capped at
+/// `fz` / `fu` with letterbox bars); zoom = `(height·hop / 334) as i32`. With
+/// [`FULL_HUD_ZOOM_PARAMETERS`] this is `⌊height·127/334⌋`: 410 at 1920×1080, 292 at 1024×768,
+/// 547 at 2560×1440 — pinned to the native probe table by `tests/hud_zoom.rs`.
+pub fn hud_viewport(width: i32, height: i32, p: ZoomParameters) -> HudViewport {
+    let (mut x, mut y) = (0i32, 0i32);
+    let mut w = width.max(1);
+    let mut h = height.max(1);
+    let n = h - 334;
+    let mut hop: f64 = if n < 0 {
+        f64::from(p.fy)
+    } else if n >= 100 {
+        f64::from(p.fg)
+    } else {
+        f64::from((p.fg - p.fy) * n / 100 + p.fy)
+    };
+    let mut ratio = f64::from(h) * hop * 512.0 / f64::from(w * 334);
+    if ratio < f64::from(p.fh) {
+        ratio = f64::from(p.fh);
+        hop = ratio * f64::from(w) * 334.0 / f64::from(h * 512);
+        if hop > f64::from(p.fz) {
+            hop = f64::from(p.fz);
+            let inner = f64::from(h) * hop * 512.0 / (ratio * 334.0);
+            let bar = ((f64::from(w) - inner) / 2.0) as i32;
+            x += bar;
+            w -= bar * 2;
+        }
+    } else if ratio > f64::from(p.fq) {
+        ratio = f64::from(p.fq);
+        hop = ratio * f64::from(w) * 334.0 / f64::from(h * 512);
+        if hop < f64::from(p.fu) {
+            hop = f64::from(p.fu);
+            let inner = ratio * f64::from(w) * 334.0 / (hop * 512.0);
+            let bar = ((f64::from(h) - inner) / 2.0) as i32;
+            y += bar;
+            h -= bar * 2;
+        }
+    }
+    HudViewport {
+        zoom: (f64::from(h) * hop / 334.0) as i32,
+        x,
+        y,
+        width: w,
+        height: h,
+    }
+}
+
 /// Whether an actor moves this tick. `game.observer.v1` data wins: `running` reports executed
 /// movement (a final exhausted run step included) and `movementTick` correlates the tick of the
 /// latest movement, so an actor whose movement tick is not the current tick stands still even if
@@ -672,6 +764,9 @@ pub struct RendererCore {
     /// The original "hide roofs" preference (`cy.as`, read by `cz.ch` first): the top drawn
     /// plane is then always the player's plane.
     hide_roofs: bool,
+    /// Developer fixture control: draw no body for the local player (the original controlled
+    /// dynamic-layer references were rendered without one). Never a gameplay state.
+    hide_local_player_body: bool,
     /// Clock origin of the interface preview animation (first preview frame).
     preview_started_ms: Option<f64>,
     preview_tris: Vec<Tri>,
@@ -749,6 +844,7 @@ impl RendererCore {
             top_plane_override: None,
             instanced_map: false,
             hide_roofs: false,
+            hide_local_player_body: false,
             preview_started_ms: None,
             preview_tris: Vec::new(),
             player_activity: String::new(),
@@ -2034,6 +2130,14 @@ impl RendererCore {
         self.hide_roofs
     }
 
+    /// Developer fixture control only: when set, the local player's body is not drawn, matching
+    /// the controlled original dynamic-layer references (rendered without a local player body).
+    /// The player's tile still drives the plane, roof rule and minimap. Off by default; not a
+    /// gameplay or presentation state.
+    pub fn set_hide_local_player_body(&mut self, hidden: bool) {
+        self.hide_local_player_body = hidden;
+    }
+
     pub fn set_instanced_map(&mut self, instanced: bool) {
         self.instanced_map = instanced;
     }
@@ -2344,6 +2448,11 @@ impl RendererCore {
         let mut resolved: Vec<(usize, EntityState, Model)> = Vec::with_capacity(entities.len());
         for (entity_index, entity) in entities.iter().enumerate() {
             let elapsed = now_ms - entity.sequence_started_ms;
+            if self.hide_local_player_body && entity_index == 0 && entity.is_player {
+                // Developer fixture: the local player (always the first actor) has no body, as in
+                // the controlled original dynamic-layer references.
+                continue;
+            }
             let model = if entity.is_player && self.player_body.is_some() {
                 let sequence_id = if self.sequences.contains_key(&entity.sequence) {
                     entity.sequence
