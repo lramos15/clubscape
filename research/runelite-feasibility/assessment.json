@@ -1,0 +1,220 @@
+{
+  "schema_version": 1,
+  "task": "M1-RUNELITE-FEASIBILITY",
+  "base_commit": "3fc927788a69fed2aa4d7b77b317ef64acb90be0",
+  "assessment_complete": true,
+  "compatibility_verified": false,
+  "tier": null,
+  "desktop_deferral_approved": false,
+  "native_client_substitution_authorized": false,
+  "browser_headless_acceptance_claimed": false,
+  "bounds": {
+    "architectures_maximum": 2,
+    "architectures_executed": 1,
+    "live_invocations_maximum": 3,
+    "numbered_invocations_executed": 3,
+    "first_invocation_failed_before_services_and_is_conservatively_counted": true,
+    "actual_http_invocations": 1,
+    "offline_native_preflights": 5,
+    "nested_agents": 0,
+    "exhausted": true
+  },
+  "tuple": {
+    "runtime": {
+      "name": "client-1.12.38.jar",
+      "size_bytes": 5261401,
+      "sha256": "6dcd0da2fdbf48d35c3d8f666d801d05afa964030c553e806eb173dba97323d5"
+    },
+    "injected_client": {
+      "name": "injected-client-1.12.38.jar",
+      "size_bytes": 4235748,
+      "sha256": "7fdedf1194261cc5b99faa35e0d2b4e45b6d56665402ccbde7f3aa6207c3f947"
+    },
+    "api": {
+      "name": "runelite-api-1.12.38-runtime.jar",
+      "size_bytes": 272846,
+      "sha256": "6d50aa843c070120a5093c5ead29d72e92742074346241e0359a133dad008852"
+    },
+    "plugin": {
+      "name": "XP Tracker",
+      "class": "net.runelite.client.plugins.xptracker.XpTrackerPlugin",
+      "class_sha256": "52b1ad192ddd43db97864be31b467b0e9eb2512c362d174c3b9a8a2b2e16905f",
+      "modified": false
+    },
+    "revision_before_original_init": 0,
+    "revision_after_original_init": 240,
+    "opaque_build_id": "33653951311.245",
+    "cache_id": 2695,
+    "cache_file_manifest_sha256": "8f473271eb810624731eef42d42c125fbf33d9e851911967034b5f93cc6e8747",
+    "decoder": {
+      "name": "cache-1.12.39-SNAPSHOT.jar",
+      "size_bytes": 444766,
+      "sha256": "8056039bee74da629e596896048645085f7753159a064da51c24e9bd99f13e8e"
+    },
+    "decoder_revision": "ac79ed8bd8926bec7bf172aa291574b4d944b0e7",
+    "jdk": {
+      "java": "/home/lramos15/.local/share/jdks/temurin-17.0.20.1+1/bin/java",
+      "version": "openjdk version \"17.0.20.1\" 2026-08-18\nOpenJDK Runtime Environment Temurin-17.0.20.1+1 (build 17.0.20.1+1)\nOpenJDK 64-Bit Server VM Temurin-17.0.20.1+1 (build 17.0.20.1+1, mixed mode, sharing)",
+      "sha256": "185fdd3e40d7736c600cb948403f77fd3421e8877e2ff13271673f28a501531f"
+    },
+    "protoc": {
+      "name": "protoc-3.21.12-linux-aarch_64.exe",
+      "sha256": "aa609ec1d4b08375a140b1a42340684932cd2cd0cd56ffe8d791a72f9f3894bc",
+      "upstream_sha1": "5c040e609f94d5d2fb2e8b0a77eb7adaa9e9148a"
+    },
+    "launcher_used": false,
+    "entry": "RuneLiteComposition with real RuneLiteModule/ClientUI/PluginManager/Hooks",
+    "upstream_bytecode_patches": []
+  },
+  "verified_separately": {
+    "original_runtime_ui_plugin_offline": true,
+    "native_scene_offline": {
+      "at": "2026-09-15T02:31:12.015490875Z",
+      "kind": "native_scene_loaded",
+      "loader": "unchanged rl4.fn",
+      "renderer": "unchanged ez.dh",
+      "base_x": 3040,
+      "base_y": 3056,
+      "tiles": 36107,
+      "object_tile_references": 2646,
+      "regions": [
+        11823,
+        11824,
+        11825,
+        12079,
+        12080,
+        12081,
+        12335,
+        12336,
+        12337,
+        12591,
+        12592,
+        12593
+      ],
+      "cache_id": 2695
+    },
+    "original_penguin_offline": {
+      "at": "2026-09-15T02:31:12.049672335Z",
+      "kind": "native_player",
+      "actor_id": "00000000-0000-4000-8000-000000000012",
+      "x": 3094,
+      "y": 3106,
+      "plane": 0,
+      "native_x": 3094,
+      "native_y": 3106,
+      "npc_transform": 2063,
+      "model_id": 21547,
+      "native_vertices": 200,
+      "native_faces": 396,
+      "pose_animation": 5668,
+      "source_scale": "75/128",
+      "server_animation": "",
+      "activity": ""
+    },
+    "original_startup_canvas": {
+      "at": "2026-09-15T02:31:11.456508934Z",
+      "kind": "native_canvas_binding",
+      "class": "td",
+      "reused_from_original_startup": true,
+      "client_children": 1,
+      "gpu": false
+    },
+    "native_actor_visibility_offline": {
+      "at": "2026-09-15T02:31:13.664553405Z",
+      "kind": "native_actor_visibility",
+      "differing_pixels": 220,
+      "width": 1280,
+      "height": 800,
+      "classification": "developer-only offline source fixture; no server connection",
+      "method": "same current native scene/camera, original draw with versus without local player",
+      "source_ground_height": -1360,
+      "frames": 30
+    },
+    "actual_window_readback_offline": {
+      "at": "2026-09-15T02:31:13.931324795Z",
+      "kind": "actual_window_pixel_readback",
+      "equal_native_pixels": 1024000,
+      "total_pixels": 1024000,
+      "nonblack_screen_pixels": 696282,
+      "method": "AWT Robot readback from the real official RuneLite window; no PNG embedded in a viewport"
+    },
+    "offline_xp_callbacks_posted": 0,
+    "real_postgres_http_hello": true,
+    "strict_compiler_capacity": {
+      "artifact_sha256": "0181ec69456101defccbc8dd99b579ed849caae6301d801387732bea70fe98f5",
+      "base_server_descriptor_limit": 262144,
+      "compatibility_verified": false,
+      "fits_even_before_descriptor_metadata": false,
+      "minimum_assets_map_bytes": 267049,
+      "referenced_assets_from_actual_compiler": 5010,
+      "strict_compiler_load": true
+    },
+    "strict_service_rejection": "game_content/game_file_size"
+  },
+  "unverified": [
+    "Actual ClubScape signup/login from this runtime",
+    "Authoritative game-world join and player projections",
+    "Live source scene/penguin reflecting authoritative movement or events",
+    "Genuine XP Tracker gain over committed server XP events",
+    "Any support tier, other plugin, complete RuneLite entry lifecycle, full native HUD or broad API coverage"
+  ],
+  "invocations": [
+    {
+      "number": 1,
+      "exit_code": 1,
+      "phase": "harness_before_services",
+      "result": "Path.open(opener=...) TypeError; corrected and covered by private-file unit test",
+      "actual_http_connection": false
+    },
+    {
+      "number": 2,
+      "exit_code": 1,
+      "phase": "real_http_hello",
+      "result": "Actual original runtime reached real PostgreSQL-backed HTTP Hello, then refused gameplay-unavailable readiness",
+      "actual_http_connection": true,
+      "authenticated_game_world": false
+    },
+    {
+      "number": 3,
+      "exit_code": 1,
+      "phase": "strict_source_service_startup",
+      "result": "Existing public Config::with_game_root and unchanged Service::bind rejected full source descriptor: game_file_size",
+      "actual_http_connection": false
+    }
+  ],
+  "required_director_extensions": [
+    "Move game-root environment parsing outside the optional web-root branch, with subprocess configuration tests",
+    "Increase the bounded game descriptor capacity to fit the real source pack, retaining all strict guards and adding actual source startup coverage"
+  ],
+  "recommendation": {
+    "action": "Continue narrowly after both shared prerequisites are fixed, pending owner review and renewed bounded M1 integration authorization",
+    "status": "proposed; not automatic execution or approved deferral",
+    "shared_fixes_estimated_engineer_days": [
+      0.5,
+      1
+    ],
+    "first_xp_integration_estimated_engineer_days": [
+      2,
+      5
+    ],
+    "untested_lifecycle_interception_alternative_estimated_engineer_days": [
+      5,
+      10
+    ],
+    "costs_are_estimates_not_success_or_deadline_claims": true
+  },
+  "validation": {
+    "final_java_compile_exit": 0,
+    "synthetic_java_checks": 9,
+    "python_harness_tests": 3,
+    "owned_rust_probe_build_exit": 0,
+    "owned_rust_probe_clippy_exit": 0,
+    "owned_rust_probe_rustfmt_exit": 0,
+    "final_native_render_errors": []
+  },
+  "validation_commands": "research/runelite-feasibility/validation.json",
+  "evidence_inventory": "research/runelite-feasibility/evidence-inventory.json",
+  "review": "research/runelite-feasibility/review.md",
+  "cleanup": "research/runelite-feasibility/cleanup.json",
+  "stop_state": "Bound exhausted; preserving evidence and parking. No scheduled work, new native client, or later milestone."
+}

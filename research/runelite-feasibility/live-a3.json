@@ -1,0 +1,49 @@
+{
+  "schema_version": 1,
+  "mode": "live",
+  "name": "live-a3",
+  "recorded_at": "2026-09-15T02:32:11.142261+00:00",
+  "architecture": "A",
+  "compatibility_verified": false,
+  "exit_code": 1,
+  "evidence_directory": "runelite/compatibility/artifacts/live-a3",
+  "database": {
+    "name": "clubscape-rl-cc5916b8529349ce",
+    "image": "postgres:16-alpine@sha256:cf78e76683b9ca8c5733cbbdce6c9262b45b6767934dd0a95e671f9a0fc20685",
+    "command": [
+      "docker",
+      "run",
+      "--detach",
+      "--rm",
+      "--name",
+      "clubscape-rl-cc5916b8529349ce",
+      "--cpus=2",
+      "--memory=512m",
+      "--publish",
+      "127.0.0.1::5432",
+      "--mount",
+      "type=bind,src=/home/lramos15/clubscape/.worktrees/m1-runelite-feasibility/runelite/compatibility/artifacts/live-a3/postgres-password,dst=/run/secrets/password,readonly",
+      "--env",
+      "POSTGRES_PASSWORD_FILE=/run/secrets/password",
+      "--env",
+      "POSTGRES_USER=clubscape",
+      "--env",
+      "POSTGRES_DB=clubscape",
+      "postgres:16-alpine@sha256:cf78e76683b9ca8c5733cbbdce6c9262b45b6767934dd0a95e671f9a0fc20685"
+    ],
+    "cpus": 2,
+    "memory_mib": 512,
+    "responsive": true,
+    "cleanup_exit_code": 0
+  },
+  "server": {
+    "command": [
+      "/home/lramos15/clubscape/.worktrees/m1-runelite-feasibility/runelite/compatibility/artifacts/rust-target/debug/clubscape-runelite-service-probe"
+    ],
+    "sha256": "6813c4bb170e3bbf73ebd19926b1802213524f3a72aae7f26e34927a707dcc26",
+    "game_descriptor_sha256": "ff693f357b1d105ae9f0972bf2e18c60217a440cf099ff8aee9c9b52453da1ab",
+    "exit_code": 1
+  },
+  "phase": "strict_authoritative_service_readiness",
+  "error": "RuntimeError: Strict authoritative server exited 1 before listening"
+}

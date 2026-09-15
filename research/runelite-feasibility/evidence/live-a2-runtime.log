@@ -1,0 +1,15 @@
+2026-09-14 22:21:25 EDT [main] INFO  n.r.client.RuntimeConfigLoader - Using local runtime config: RuntimeConfig(props={}, sysProps={}, compilerControl=null, outageMessage=null, outageLinks=null, outageStart=null, outageEnd=null, ignoreDeadNpcs=null, forceDeadNpcs=null, resetDeadOnChangeNpcs=null, forceDeadAnimations=null, healthCheckDeadNpcs=null, outdatedClientVersions=null, outdatedPluginVersions=null, updateLauncherWinVers=null, updateRollout=0.0)
+2026-09-14 22:21:26 EDT [main] INFO  n.r.client.config.ConfigManager - Creating profile: default (2108759265665480)
+java.util.concurrent.ExecutionException: java.lang.IllegalStateException: Actual server is not gameplay-ready
+	at java.base/java.util.concurrent.CompletableFuture.reportGet(CompletableFuture.java:396)
+	at java.base/java.util.concurrent.CompletableFuture.get(CompletableFuture.java:2073)
+	at RuneLiteComposition.live(RuneLiteComposition.java:331)
+	at RuneLiteComposition.main(RuneLiteComposition.java:396)
+Caused by: java.lang.IllegalStateException: Actual server is not gameplay-ready
+	at ClubScapeTransport.signupAndJoin(ClubScapeTransport.java:101)
+	at RuneLiteComposition.lambda$live$9(RuneLiteComposition.java:310)
+	at java.base/java.util.concurrent.Executors$RunnableAdapter.call(Executors.java:539)
+	at java.base/java.util.concurrent.FutureTask.run(FutureTask.java:264)
+	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1136)
+	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:635)
+	at java.base/java.lang.Thread.run(Thread.java:840)

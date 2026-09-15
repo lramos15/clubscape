@@ -1,0 +1,2 @@
+2026-09-14 22:31:10 EDT [main] INFO  n.r.client.RuntimeConfigLoader - Using local runtime config: RuntimeConfig(props={}, sysProps={}, compilerControl=null, outageMessage=null, outageLinks=null, outageStart=null, outageEnd=null, ignoreDeadNpcs=null, forceDeadNpcs=null, resetDeadOnChangeNpcs=null, forceDeadAnimations=null, healthCheckDeadNpcs=null, outdatedClientVersions=null, outdatedPluginVersions=null, updateLauncherWinVers=null, updateRollout=0.0)
+2026-09-14 22:31:11 EDT [main] INFO  n.r.client.config.ConfigManager - Creating profile: default (2109344671656527)

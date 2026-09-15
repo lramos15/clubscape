@@ -1,0 +1,133 @@
+{
+  "schema_version": 1,
+  "task": "M1-RUNELITE-FEASIBILITY",
+  "approved_scope": "Bounded Section 12 companion to M1; independent of browser/headless acceptance. No replacement native client or external game account.",
+  "base_commit": "3fc927788a69fed2aa4d7b77b317ef64acb90be0",
+  "established_before_implementation": true,
+  "bounds": {
+    "materially_distinct_architectures": 2,
+    "live_integration_attempts": 3,
+    "nested_agents": 0,
+    "jvm_heap_mib": 3072,
+    "jvm_active_processors": 2,
+    "rust_build_jobs": 2,
+    "database_cpus": 2,
+    "database_memory_mib": 512,
+    "live_attempt_timeout_seconds": 600,
+    "stop": "Stop on a complete real-runtime demonstration or exhaustion of the architecture/live-attempt bound. Diagnostic-only preflight checks never establish compatibility. A resource/time bound is not proof of impossibility."
+  },
+  "pinned_source": {
+    "runtime": "Official RuneLite client and injected-client 1.12.38",
+    "plugin": "net.runelite.client.plugins.xptracker.XpTrackerPlugin from official client-1.12.38.jar",
+    "game_revision_after_original_init": 240,
+    "cache": 2695,
+    "decoder_revision": "ac79ed8bd8926bec7bf172aa291574b4d944b0e7",
+    "decoder_artifact": "cache-1.12.39-SNAPSHOT.jar",
+    "source_identity": "research/current-source/selection.json",
+    "source_capture_helpers": "tools/source-capture (read-only reuse; offline evidence is not live evidence)"
+  },
+  "architectures": [
+    {
+      "id": "A",
+      "name": "Unmodified runtime with a composition-root protocol adapter",
+      "hypothesis": "An unchanged native client, official RuneLite Guice module, ClientUI, plugin lifecycle, EventBus and XP Tracker can be composed around generated ClubScape protobuf transport. Original scene/player rendering can consume committed authoritative projections without running the unrelated OSRS network/login pump.",
+      "falsification": "The official client/scene or plugin requires an unavailable native lifecycle invariant that cannot be supplied by a narrow state/render adapter; or the real server event cannot be linked to native state and the named plugin without fabricating authoritative state.",
+      "diagnostics": [
+        "Original init revision and exact artifact hashes",
+        "Official ClientUI and plugin class identity/lifecycle",
+        "Committed HTTP/protobuf receipt, revision/tick, typed player position and XP",
+        "Native scene tile/object counts, native penguin model/position and real canvas pixels",
+        "Deduplicated server event to StatChanged to XP Tracker observable result"
+      ],
+      "status": "implemented; original-runtime offline preflight passed; live tuple unverified"
+    },
+    {
+      "id": "B",
+      "name": "Focused original-runtime lifecycle interception",
+      "hypothesis": "If composition fails specifically on startup or callback ownership, a narrowly pinned lifecycle interception can keep RuneLite's original entry/lifecycle while replacing only OSRS transport/tick entry points with ClubScape adapter scheduling.",
+      "falsification": "Required interception expands into a replacement client or inseparable OSRS protocol/game-rule emulation, or the remaining bounded live attempts still cannot establish the complete tuple.",
+      "diagnostics": [
+        "Exact modified classes/methods and original hashes",
+        "Original lifecycle versus adapter scheduling ownership",
+        "Same end-to-end live scene/player/event/plugin assertions as A",
+        "Maintenance surface and unsupported semantics"
+      ],
+      "status": "not executed; client lifecycle interception cannot solve reproduced shared service prerequisites"
+    }
+  ],
+  "acceptance": {
+    "required_together": [
+      "Original RuneLite runtime and genuine XP Tracker launch",
+      "Actual loopback authoritative ClubScape service with isolated PostgreSQL and fresh ClubScape signup/login",
+      "Source slice scene and source penguin player rendered live by the original renderer",
+      "Live authoritative state and events reflected in client state",
+      "Legitimate in-scope XP-producing action reflected in the genuine generic plugin"
+    ],
+    "not_sufficient": [
+      "Compilation or API-shaped shim",
+      "Offline source fixtures or PNG viewport",
+      "Injected fake XP callbacks",
+      "Upstream EULA launch",
+      "Seeded progression, XP, items, faster ticks or weakened engine guards"
+    ],
+    "compatibility_verified": false,
+    "tier": null,
+    "desktop_deferral_approved": false
+  },
+  "live_attempts": [
+    {
+      "number": 1,
+      "architecture": "A",
+      "name": "live-a1",
+      "hypothesis": "The owned integration harness can start isolated real services and execute the original-runtime adapter.",
+      "diagnostics": [
+        "strict server readiness/exit",
+        "actual protobuf receipts",
+        "native scene/player",
+        "real plugin output"
+      ],
+      "status": "failed",
+      "report": "research/runelite-feasibility/live-a1.json",
+      "phase": null,
+      "exit_code": 1,
+      "diagnostic_result": "Path.open(opener=...) TypeError; corrected and covered by private-file unit test"
+    },
+    {
+      "number": 2,
+      "architecture": "A",
+      "name": "live-a2",
+      "hypothesis": "The documented game-root-only environment launch activates the actual authoritative game service.",
+      "diagnostics": [
+        "strict server readiness/exit",
+        "actual protobuf receipts",
+        "native scene/player",
+        "real plugin output"
+      ],
+      "status": "failed",
+      "report": "research/runelite-feasibility/live-a2.json",
+      "phase": "real_runtime_scene_state_plugin",
+      "exit_code": 1,
+      "diagnostic_result": "Actual original runtime reached real PostgreSQL-backed HTTP Hello, then refused gameplay-unavailable readiness"
+    },
+    {
+      "number": 3,
+      "architecture": "A",
+      "name": "live-a3",
+      "hypothesis": "The public Config::with_game_root constructor activates the unchanged strict source service independently of the defective environment nesting; the full source pack can bind only if its 283075-byte descriptor passes the real bounded loader.",
+      "diagnostics": [
+        "strict server readiness/exit",
+        "actual protobuf receipts",
+        "native scene/player",
+        "real plugin output"
+      ],
+      "status": "failed",
+      "report": "research/runelite-feasibility/live-a3.json",
+      "phase": "strict_authoritative_service_readiness",
+      "exit_code": 1,
+      "diagnostic_result": "Existing public Config::with_game_root and unchanged Service::bind rejected full source descriptor: game_file_size"
+    }
+  ],
+  "assessment_complete": true,
+  "live_invocation_bound_exhausted": true,
+  "stop_state": "parked after three conservatively counted invocations; no fourth run or unapproved later milestone"
+}

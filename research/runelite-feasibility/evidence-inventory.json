@@ -1,0 +1,197 @@
+{
+  "schema_version": 1,
+  "files": [
+    {
+      "path": "research/runelite-feasibility/evidence/preflight-a1-runtime.log",
+      "size_bytes": 1525,
+      "sha256": "0815dfc2ba638eea83f58e32b87ee1e693170b722900b6f9809f1feec620a68a",
+      "classification": "preflight"
+    },
+    {
+      "path": "research/runelite-feasibility/evidence/preflight-a1-events.jsonl",
+      "size_bytes": 3598,
+      "sha256": "43d4bf81b2f1416d8bb7affc1267908b2cf73c93851d80ef0474149ce7810397",
+      "classification": "preflight"
+    },
+    {
+      "path": "research/runelite-feasibility/evidence/preflight-a1-xvfb.log",
+      "size_bytes": 4169,
+      "sha256": "0cee9b419c5747b72a4287b3641cc393a24d4c59aadbfa8c3ddadfd776c7fded",
+      "classification": "preflight"
+    },
+    {
+      "path": "research/runelite-feasibility/evidence/preflight-a2-runtime.log",
+      "size_bytes": 860,
+      "sha256": "cb93f237478a19b183eb38a3378c908ecb1b5198e84d73ac4f82bba89c0e0127",
+      "classification": "preflight"
+    },
+    {
+      "path": "research/runelite-feasibility/evidence/preflight-a2-events.jsonl",
+      "size_bytes": 4073,
+      "sha256": "19779fbb0eab6b681d4abc69bdbb36fff4af35342f6e4d070e4cc1da6a923323",
+      "classification": "preflight"
+    },
+    {
+      "path": "research/runelite-feasibility/evidence/preflight-a2-xvfb.log",
+      "size_bytes": 4169,
+      "sha256": "0cee9b419c5747b72a4287b3641cc393a24d4c59aadbfa8c3ddadfd776c7fded",
+      "classification": "preflight"
+    },
+    {
+      "path": "research/runelite-feasibility/evidence/preflight-a3-runtime.log",
+      "size_bytes": 571,
+      "sha256": "838879175d29611ec9b04c3b8a697697fec2c93e1b609ce717595e80205c4a79",
+      "classification": "preflight"
+    },
+    {
+      "path": "research/runelite-feasibility/evidence/preflight-a3-events.jsonl",
+      "size_bytes": 4550,
+      "sha256": "4352b496db617d1de15828797309353da84ea8dfefb55b5481c4b350db72eaa2",
+      "classification": "preflight"
+    },
+    {
+      "path": "research/runelite-feasibility/evidence/preflight-a3-xvfb.log",
+      "size_bytes": 4169,
+      "sha256": "0cee9b419c5747b72a4287b3641cc393a24d4c59aadbfa8c3ddadfd776c7fded",
+      "classification": "preflight"
+    },
+    {
+      "path": "runelite/compatibility/artifacts/preflight-a3/developer-only-preflight-canvas.png",
+      "size_bytes": 616906,
+      "sha256": "258b154fa2ca95c5e32a5d2e7baf97b7bf1efb199ff18c9c38a5e718939dba04",
+      "width": 1280,
+      "height": 800,
+      "classification": "developer-only offline preflight; never live compatibility evidence",
+      "committed": false
+    },
+    {
+      "path": "runelite/compatibility/artifacts/preflight-a3/developer-only-preflight-official-window.png",
+      "size_bytes": 5446,
+      "sha256": "51c52cb372cf8fced81a4ffc866944459919787dd8e3363d7970d2bd52f7787b",
+      "width": 1311,
+      "height": 800,
+      "classification": "developer-only offline preflight; never live compatibility evidence",
+      "committed": false
+    },
+    {
+      "path": "research/runelite-feasibility/evidence/preflight-a4-runtime.log",
+      "size_bytes": 2544,
+      "sha256": "c2a10d11574ff4bf2dde648b21edf8cb937d93c5f5b2b640853c01527dbe8b00",
+      "classification": "preflight"
+    },
+    {
+      "path": "research/runelite-feasibility/evidence/preflight-a4-events.jsonl",
+      "size_bytes": 4664,
+      "sha256": "f468e153ebb416b2b7ce52ef76bf58539347eb5ceb4e01b8d8b9f8f3748e585b",
+      "classification": "preflight"
+    },
+    {
+      "path": "research/runelite-feasibility/evidence/preflight-a4-xvfb.log",
+      "size_bytes": 4169,
+      "sha256": "0cee9b419c5747b72a4287b3641cc393a24d4c59aadbfa8c3ddadfd776c7fded",
+      "classification": "preflight"
+    },
+    {
+      "path": "runelite/compatibility/artifacts/preflight-a4/developer-only-preflight-canvas.png",
+      "size_bytes": 616918,
+      "sha256": "57c2b3003fa320807532fa1f614f322050fd02f858dd2d68f9c5f6f053bfde66",
+      "width": 1280,
+      "height": 800,
+      "classification": "developer-only offline preflight; never live compatibility evidence",
+      "committed": false
+    },
+    {
+      "path": "runelite/compatibility/artifacts/preflight-a4/developer-only-preflight-official-window.png",
+      "size_bytes": 9513,
+      "sha256": "e0265ace8e8798758897daba1b9d6f4d86b5de7ed2a97b6398a53b981571a015",
+      "width": 1553,
+      "height": 800,
+      "classification": "developer-only offline preflight; never live compatibility evidence",
+      "committed": false
+    },
+    {
+      "path": "runelite/compatibility/artifacts/preflight-a4/developer-only-preflight-screen-canvas.png",
+      "size_bytes": 3057,
+      "sha256": "2ae356ff20427ad085bc7870c24a3fc1d3cc6c8db876be9619a4dfd8e57d9d28",
+      "width": 1280,
+      "height": 800,
+      "classification": "developer-only offline preflight; never live compatibility evidence",
+      "committed": false
+    },
+    {
+      "path": "research/runelite-feasibility/evidence/preflight-a5-runtime.log",
+      "size_bytes": 571,
+      "sha256": "caa0e16d248ceb2b1805872518ad0580d9c92a8377bdd219da796562cf17bced",
+      "classification": "preflight"
+    },
+    {
+      "path": "research/runelite-feasibility/evidence/preflight-a5-events.jsonl",
+      "size_bytes": 5040,
+      "sha256": "cce2cd28f0bf0981441d51a7047563c5aae030375ae717822d7476cc04d194d1",
+      "classification": "preflight"
+    },
+    {
+      "path": "research/runelite-feasibility/evidence/preflight-a5-xvfb.log",
+      "size_bytes": 4169,
+      "sha256": "0cee9b419c5747b72a4287b3641cc393a24d4c59aadbfa8c3ddadfd776c7fded",
+      "classification": "preflight"
+    },
+    {
+      "path": "runelite/compatibility/artifacts/preflight-a5/developer-only-preflight-canvas.png",
+      "size_bytes": 616914,
+      "sha256": "c67ef35bc9cdc4e5fca0d34200f01a2e606345cdb04195222f41dfaab89fdc38",
+      "width": 1280,
+      "height": 800,
+      "classification": "developer-only offline preflight; never live compatibility evidence",
+      "committed": false
+    },
+    {
+      "path": "runelite/compatibility/artifacts/preflight-a5/developer-only-preflight-official-window.png",
+      "size_bytes": 650132,
+      "sha256": "6bb523125f88a28a88c7daa3e45f455c0e699359125c4d11a9260bdd418d8041",
+      "width": 1553,
+      "height": 800,
+      "classification": "developer-only offline preflight; never live compatibility evidence",
+      "committed": false
+    },
+    {
+      "path": "runelite/compatibility/artifacts/preflight-a5/developer-only-preflight-screen-canvas.png",
+      "size_bytes": 616914,
+      "sha256": "c67ef35bc9cdc4e5fca0d34200f01a2e606345cdb04195222f41dfaab89fdc38",
+      "width": 1280,
+      "height": 800,
+      "classification": "developer-only offline preflight; never live compatibility evidence",
+      "committed": false
+    },
+    {
+      "path": "research/runelite-feasibility/evidence/live-a2-runtime.log",
+      "size_bytes": 1587,
+      "sha256": "696f0c028750a6b6138e538352e86e5a1c7939811fffff526d3e82d06c91269a",
+      "classification": "live"
+    },
+    {
+      "path": "research/runelite-feasibility/evidence/live-a2-events.jsonl",
+      "size_bytes": 3695,
+      "sha256": "d8e74c436a8b21f7d2d91c5fa3cfca71ff261eea513d8b248876501f2f41caf2",
+      "classification": "live"
+    },
+    {
+      "path": "research/runelite-feasibility/evidence/live-a2-server.log",
+      "size_bytes": 799,
+      "sha256": "1cb2f2179806fbf915fffe38e8dffcc5b6c560782b18bd9952fad4577c829e43",
+      "classification": "live"
+    },
+    {
+      "path": "research/runelite-feasibility/evidence/live-a2-xvfb.log",
+      "size_bytes": 4301,
+      "sha256": "df315573ce921287d8c371da01530eb679e2adbfdbeefd5cfd3f69e27646da65",
+      "classification": "live"
+    },
+    {
+      "path": "research/runelite-feasibility/evidence/live-a3-server.log",
+      "size_bytes": 423,
+      "sha256": "1f7dc81cb3227a577137194ae4ae10cdfdc368e00b35f0a4d684e04089185712",
+      "classification": "live"
+    }
+  ]
+}

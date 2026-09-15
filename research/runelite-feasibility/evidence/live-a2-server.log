@@ -1,0 +1,4 @@
+{"timestamp":"2026-09-15T02:21:24.275069Z","level":"INFO","fields":{"message":"account service listening on loopback","event":"listening","address":"127.0.0.1:36933"},"target":"clubscape_server"}
+{"timestamp":"2026-09-15T02:21:26.461606Z","level":"INFO","fields":{"message":"account RPC completed","event":"rpc_completed","request_id":"13a68e1d-ac7b-4be4-9411-c07286f68fbe","error_id":"","status":200,"elapsed_ms":0},"target":"clubscape_server"}
+{"timestamp":"2026-09-15T02:21:27.026254Z","level":"INFO","fields":{"message":"account service shutting down","event":"shutdown_started"},"target":"clubscape_server::transport"}
+{"timestamp":"2026-09-15T02:21:27.026449Z","level":"INFO","fields":{"message":"account service stopped","event":"shutdown_complete","clean":true},"target":"clubscape_server"}

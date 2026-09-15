@@ -1,23 +1,59 @@
 # RuneLite status
 
-Status: **ClubScape compatibility not implemented or verified**.
+Status: **Experimental adapter implemented; ClubScape compatibility UNVERIFIED.
+No support tier is established.**
 
 The upstream versions and host smoke evidence in
 [`docs/machines/sparky.md`](../docs/machines/sparky.md) do not establish a
 ClubScape scene bridge, state/event model, live connection or plugin support.
 
-The first compatibility experiment must be separately bounded before execution:
-pin runtime/plugin builds, available tools/resources, the launch/scene/event
-interfaces to exercise and a stop condition. Require a live ClubScape scene
-with penguin and at least one real generic overlay/tracker. An API-shaped mock
-or upstream launch is not Tier 1.
+The first bounded M1 assessment has executed. Its real-runtime preflight is
+not the required live demonstration: authenticated game state/events and a
+genuine plugin gain remain unverified. Require a live ClubScape scene with
+penguin and at least one real generic overlay/tracker. An API-shaped mock,
+offline original-renderer fixture or upstream launch is not Tier 1.
 
-No experiment or desktop deferral is approved as completed in this checkpoint.
-Browser delivery may proceed independently. Any eventual deferral requires the
-Section 12 evidence review and owner approval; no native-client substitution
+The bounded assessment is complete, **not compatibility acceptance**. No desktop
+deferral has been approved. Browser delivery proceeds independently. Any eventual
+deferral requires Section12 evidence review and owner approval; no native-client
+substitution is authorized.
+
+## Executed assessment (2026-09-14/15)
+
+Reviewed authority/content base:
+`3fc927788a69fed2aa4d7b77b317ef64acb90be0`.
+See the [feasibility review](../research/runelite-feasibility/review.md),
+[machine-readable assessment](../research/runelite-feasibility/assessment.json),
+and [runnable adapter](../runelite/compatibility/README.md).
+
+* Architecture A uses unchanged official RuneLite1.12.38/injected revision240,
+  cache2695, actual RuneLite UI/event/plugin components and generated protobuf
+  transport. Its alternate composition root is not the stock launcher entry.
+* A labeled **offline** preflight displayed the original scene and approved
+  penguin in the actual RuneLite window with the genuine XP Tracker panel.
+  All1,024,000 screen pixels matched the native framebuffer; no XP callbacks
+  were generated. This does not prove live server projection.
+* Three numbered integration invocations exhausted the conservative bound:
+  a repaired harness initialization error; a real PostgreSQL/HTTP `Hello` that
+  exposed accidentally nested game-root environment parsing; and a strict
+  public-API service launch rejected by the descriptor's256KiB size guard.
+* The real strict compiler reports5010 source assets. Their minimum JSON map
+  alone needs267,049 bytes; the unchanged pack's actual descriptor is283,075
+  bytes. No source content, engine guard or readiness proof was weakened.
+* Live signup/login/join, state/events, penguin movement and XP Tracker gain
+  remain **unverified**. No other plugin or overlay is claimed.
+
+Director-owned prerequisites are recorded in
+[`contract-gaps.json`](../research/runelite-feasibility/contract-gaps.json):
+independent game-root environment parsing and a sufficiently bounded descriptor
+capacity with full-source tests. The recommendation is a narrowly renewed
+integration attempt after those fixes, pending owner review and new bounds—not
+an approved desktop deferral. Architecture B was reserved but not executed;
+changing the client architecture cannot repair these service prerequisites.
+The worker is stopped; no fourth live invocation or automatic later milestone
 is authorized.
 
-## Bounded M1 companion experiment
+## Original bounded M1 companion contract
 
 Task `M1-RUNELITE-FEASIBILITY` reserves one worker within the shared25-agent
 ceiling. It does not gate or expand the mandatory browser/headless journey.

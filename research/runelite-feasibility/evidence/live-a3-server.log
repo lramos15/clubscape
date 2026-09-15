@@ -1,0 +1,2 @@
+{"timestamp":"2026-09-15T02:32:12.943221Z","level":"ERROR","fields":{"message":"server startup failed","event":"startup_failure","stage":"game_content","error_id":"81716f78-bbce-495b-a87d-ec3dc6b7cab0","error_kind":"game_file_size"},"target":"clubscape_server::error"}
+Unchanged authoritative Service::bind rejected the source pack: server startup failed during game_content (error ID 81716f78-bbce-495b-a87d-ec3dc6b7cab0)

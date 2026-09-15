@@ -1,0 +1,20 @@
+{
+  "schema_version": 1,
+  "owned_services": [
+    {
+      "attempt": "live-a2",
+      "container": "clubscape-rl-bc9fcd3993354692",
+      "container_absent": true,
+      "credential_file_removed": true,
+      "server_exit_code": 0
+    },
+    {
+      "attempt": "live-a3",
+      "container": "clubscape-rl-cc5916b8529349ce",
+      "container_absent": true,
+      "credential_file_removed": true,
+      "server_exit_code": 1
+    }
+  ],
+  "jvm_xvfb": "Owned Popen processes waited/stopped in each recorded runner's finally block"
+}
