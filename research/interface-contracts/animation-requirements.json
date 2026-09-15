@@ -17,6 +17,26 @@
     {"id": 4855, "symbol": "AIDE_RECITING_INCANTATION / BOOK_HOME_TELEPORT_4", "use": "ordinary source Home Teleport recitation phase"},
     {"id": 4857, "symbol": "AIDE_PLAYER_TELEPORTING / BOOK_HOME_TELEPORT_5", "use": "ordinary source Home Teleport disappearance phase"}
   ],
+  "additional_sequences_for_qualified_legal_style_bindings": [
+    {"id": 395, "symbol": "HUMAN_AXE_HACK", "use": "bronze axe slash attacks"},
+    {"id": 400, "symbol": "HUMAN_BLUNT_SPIKE", "use": "bronze pickaxe stab attacks"},
+    {"id": 401, "symbol": "HUMAN_BLUNT_POUND", "use": "bronze axe/pickaxe crush attacks"},
+    {"id": 428, "symbol": "HUMAN_SPEAR_SPIKE", "use": "bronze spear stab attacks"},
+    {"id": 429, "symbol": "HUMAN_SPEAR_LUNGE", "use": "bronze spear crush attacks"},
+    {"id": 440, "symbol": "HUMAN_SCYTHE_SWEEP", "use": "shared bronze spear slash sweep; explicitly qualified dispatch inference"}
+  ],
+  "native_hand_override_words": {
+    "2305": {"left": 6244, "right": 2437},
+    "4847": {"left": 0, "right": 10214},
+    "4850": {"left": 0, "right": 0},
+    "4853": {"left": 0, "right": 0},
+    "4855": {"left": 0, "right": 0},
+    "4857": {"left": 0, "right": 0}
+  },
+  "source_metadata": "research/interface-contracts/animation-authority/inputs.json",
+  "source_metadata_sha256": "43fafa676d29a22f4d7b57bd545860993350b5c627494e20ee52db98496ca4b0",
+  "ordinary_home_phase_ticks": [0, 6, 12, 16, 21],
+  "ordinary_home_channel_ticks": 24,
   "renderer_manifest_actor_fit_sequences_at_8c6bab0": [
     386, 390, 422, 423, 426, 5666, 5668, 621, 625, 711, 733,
     808, 819, 820, 821, 822, 823, 824, 827, 829, 836, 879,
@@ -29,9 +49,9 @@
     "Other AIDE sequence symbols4848/4849/4854/4856/4858 are not automatically asserted as actor animations; graphic/loop relationships and exact phase timing still require source verification."
   ],
   "remaining_binding_investigation": [
-    "Exact legal bronze axe/pickaxe/spear/sword/dagger style-to-sequence mapping, not animation selection from a style label alone.",
+    "Legal style dispatch is qualified from native identities/canonical attack types and pinned secondary corroboration; inconsistent secondary numeric style indexes are rejected, not copied.",
     "Inventory dough animation or verified deliberate absence; HUMAN_POTTERYWHEEL883 is not a dough fallback.",
-    "Ordinary Home Teleport native phase timing/holding/graphic relationships across the unchanged source24-tick channel.",
+    "Ordinary Home phase ticks0/6/12/16/21 are qualified from the frozen source crop and native active/terminal-hold frames; exact original server phase emission is not claimed.",
     "Actual instant consumable/death/cast observer lifetime and source action identity, including movement/combat coexistence."
   ],
   "no_world_or_content_pin_changed": true,

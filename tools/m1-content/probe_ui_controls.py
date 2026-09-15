@@ -29,8 +29,10 @@ def main():
     parser.add_argument("--source", type=Path, required=True)
     parser.add_argument("--tooling", type=Path, required=True)
     parser.add_argument("--java-home", type=Path, required=True)
+    parser.add_argument("--animations", action="store_true")
     args = parser.parse_args()
-    work = ROOT / ".local/evidence/ui-controls"
+    work = ROOT / (".local/evidence/animation-authority" if args.animations else ".local/evidence/ui-controls")
+    probe = "NativeAnimationProbe" if args.animations else "NativeControlProbe"
     for name in ("classes", "java-home", "java-work"):
         (work / name).mkdir(parents=True, exist_ok=True)
     lock = read(ROOT / "tools/cache-import/dependencies.json")
@@ -47,14 +49,14 @@ def main():
     sources = sorted((ROOT / "tools/source-capture").glob("*.java"))
     subprocess.run([str(args.java_home / "bin/javac"), "--release", "17", "-cp", cp,
                     "-d", str(work / "classes"), *map(str, sources),
-                    str(ROOT / "tools/m1-content/NativeControlProbe.java")],
+                    str(ROOT / "tools/m1-content" / (probe + ".java"))],
                    cwd=ROOT, env=env, check=True)
     subprocess.run([str(args.java_home / "bin/java"), "-ea", "-Xmx2g",
                     "-Djava.awt.headless=true",
                     f"-Duser.home={work / 'java-home'}",
                     f"-Djava.io.tmpdir={work / 'java-work'}",
                     "-cp", str(work / "classes") + os.pathsep + cp,
-                    "NativeControlProbe", str(args.source), str(work / "native-probe.json")],
+                    probe, str(args.source), str(work / "native-probe.json")],
                    cwd=ROOT, env=env, check=True, timeout=180)
     for record in source_records:
         verified(args.source / record["name"], record)
