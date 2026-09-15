@@ -14,10 +14,11 @@
       {"id": "81ac9884-4f39-4f27-b516-6e9a42b09b51", "task": "M1-HEADLESS-JOURNEY"},
       {"id": "2766e089-44e5-4a1d-974e-7b03ad9c269d", "task": "M1-GAMEPLAY-UI-CONTRACTS"}
     ],
-    "reserved": [],
+    "reserved": [
+      {"id": "ac0f0856-44af-445b-bd90-6db7a1f4fc74", "task": "M1-SOURCE-DYNAMIC-REFERENCES"}
+    ],
     "queued": [],
     "parked": [
-      {"id": "ac0f0856-44af-445b-bd90-6db7a1f4fc74", "reason": "Exact consumed-container source closure integrated82e0a41;73 importer tests and all prior hashes preserved; no automatic resumption."},
       {"id": "2a0ae699-6af8-45d5-90c7-3addfc56ee53", "reason": "Renewed five-invocation assessment complete; live creation/scene/window/baseline work, firstXP unverified after driverOutOfReach. No sixth invocation or automatic resumption."},
       {"id": "aab1ae0f-0238-4254-bff3-b7c046349c6b", "reason": "Shop capacity/identity fixes integrated as3310032+af75e17 with18 passing regressions; no automatic resumption."},
       {"id": "0f5ddddf-0aa0-4908-b0d3-1ffc6b1f7a20", "reason": "Actor presence/cadence fixes integrated as62a003c+e1076a8 with15 passing regressions; no automatic resumption."},
@@ -34,9 +35,45 @@
   },
   "tasks": [
     {
+      "id": "M1-TUTORIAL-DIALOGUE-ENTRIES",
+      "goal": "Repair overlapping source lesson/recovery dialogue entries while preserving all grants, source stages and explicit missing-supply recovery.",
+      "status": "IMPLEMENTING",
+      "specs": ["tools/journey-tests/evidence/survival-tools-entry-dcec4a5.json", "research/journey-rules/tutorial.json", "spec/game-contracts.md"],
+      "dependencies": ["M1-NONWALKING-CONTACT"],
+      "allowed_paths": ["tools/m1-content/progression.py", "tools/m1-content/test_dialogue_entries.py", "tools/m1-content/schema-check/examples/dialogue_entries.rs", "content/m1/**", "research/m1-bindings/**", "content/m1/README.md"],
+      "forbidden_paths": ["prompt.md", "crates/**", "web/**", "assets/**", "research/journey-rules/**", "research/reference-pack/**"],
+      "outputs": ["Unambiguous source lesson and recovery entry selection", "No present-supply replacement or repeated reward", "Strict canonical regeneration and native/source regressions"],
+      "validation_commands": ["python3 tools/m1-content/validate.py --repeat"],
+      "test_requirements": ["Primary survival_tools entry works with legitimately owned net", "Lost supplies still recover under exact original eligibility", "Multiple missing grants cannot cause multiple matching entries", "No engine first-entry fallback or source stage/reward mutation"],
+      "acceptance": ["SQL m1-tutorial-dialogue-entries records actual unambiguous source entry checks and live continuation separately"],
+      "reserved_namespaces": [],
+      "source_notes": ["Two normal accounts passed10/70sourceedges plus onboardingrecovery; reachable SurvivalExpert producesInvalidContent because primarylesson andnetrecovery entries overlap."],
+      "parity_entries": [],
+      "adaptations": [],
+      "evidence": []
+    },
+    {
+      "id": "M1-SOURCE-DYNAMIC-REFERENCES",
+      "goal": "Capture bounded supplemental original-runtime evidence for required dynamic world layers under the already approved presentation target.",
+      "status": "READY",
+      "specs": ["tools/source-capture/README.md", "tools/source-capture/NATIVE_HUD.md", "spec/browser-implementation.md", "research/reference-pack/v1/comparison-policy.json"],
+      "dependencies": ["M1-REFERENCE-APPROVAL"],
+      "allowed_paths": ["tools/source-layer-capture/**", "assets/reference/osrs240/m1-dynamic/**", "research/source-layers/**"],
+      "forbidden_paths": ["prompt.md", "crates/**", "web/**", "content/**", "tools/source-capture/**", "assets/reference/osrs240/native-hud/**", "research/reference-pack/**", "tools/reference-pack/**", "assets/source/**", "milestones/**"],
+      "outputs": ["Original door closed/open, ground-stack, fire, roof and minimap states with exact inputs/hashes", "Reproducible unchanged-native capture and finite source case matrix"],
+      "validation_commands": [],
+      "test_requirements": ["Original unchanged runtime drawing, never candidate raster or embedded screenshots", "Same stock1920x1080/DPR1/camera/source geometry/tolerances", "No existing frozen input or owner approval rewritten", "Offline controlled state is not authenticated source progression"],
+      "acceptance": ["At most12 controlled native cases; source fixtures and complete hashes are ready for independent candidate comparison, not self-approved product output"],
+      "reserved_namespaces": ["reference.m1.dynamic.*"],
+      "source_notes": ["Existing renderer has dynamic geometry/pixel-change checks but needs matched original source evidence; source target/tolerances do not change."],
+      "parity_entries": [],
+      "adaptations": [],
+      "evidence": []
+    },
+    {
       "id": "M1-NONWALKING-CONTACT",
       "goal": "Repair declared stationary-resource/actor face contact without making source water/scenery walkable or relaxing wall/plane/guard checks.",
-      "status": "IMPLEMENTING",
+      "status": "DONE",
       "specs": ["tools/journey-tests/evidence/fishing-access-6809ace.json", "spec/game-contracts.md"],
       "dependencies": ["M1-DYNAMIC-COLLISION-PERFORMANCE"],
       "allowed_paths": ["crates/world-engine/src/permissions.rs", "crates/world-engine/tests/nonwalking_contact.rs", "tools/m1-content/schema-check/examples/nonwalking_contact.rs", "crates/world-engine/README.md", "spec/game-contracts.md"],
@@ -49,7 +86,7 @@
       "source_notes": ["Legitimate journey reached8/70edges and owned a net; four evaluatedlandfaces includingwest/south returnedOutOfReach because the water tile's movement mask was treated as a required walking edge."],
       "parity_entries": [],
       "adaptations": [],
-      "evidence": ["5f2c983 integrated2828643:actualunchangeddf3source Netwest/south admission andGatheringqueue pass withno catchroll/items/XP/geometrychange.Explicitstationarycardinalfaces retainland/access/wall/sight/guard/plane/reach/instancechecks;ordinaryactorsnotexempt.", "240engine testsincl4focusedstationary/scenery/scripted/multitile/negative suites andnative/WASMClippypass.33realPG/HTTP+11accountchecks pass. Actualsourcejourney Net/catch verification remainsinprogress."]
+      "evidence": ["2828643 repairs explicitstationarycardinalfacecontact withwater/sourceguardsunchanged;240engine/33PGtests pass.", "ACTUALnormalaccountsource Netadmissiontick98,stochasticcatchtick123 producesone rawshrimp and100FishingXP-tenths,catch_shrimp->skills_open; sourceproof720e2fa. Twoaccountsreach10/70edges andpass onboardingreconnect/logout/login/ownedserverrestart/replaywithoutduplication. NewSurvivalExpertentryoverlaptrackedseparately; notwholeM1."]
     },
     {
       "id": "M1-CONSUMABLE-ASSET-CLOSURE",

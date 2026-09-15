@@ -411,6 +411,7 @@ name = "clubscape-renderer"
 version = "0.1.0"
 dependencies = [
  "bytemuck",
+ "flate2",
  "js-sys",
  "png",
  "pollster",
