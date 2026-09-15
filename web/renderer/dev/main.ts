@@ -80,8 +80,11 @@ function scenarioWorld(name: string): WorldView & { dynamicObjects?: unknown[] }
   const tile = (x: number, y: number) => ({ x, y, plane: 0 });
   const base = actorsWorld(FIXTURES.find((f) => f.scene === "tutorial-starting-house")!);
   const item = (id: string, sourceId: number, quantity = 1) => ({ id, name: id, quantity, sourceId, iconAsset: null, instanceId: null, charges: null, actions: [] });
-  const player = (x: number, y: number, activity: string, equipment: Array<[string, number, string]>) => ({
-    ...base.player, tile: tile(x, y), activity, animation: "",
+  // Motion identity is explicit: the server-bound source sequence in catalog form (what the
+  // backend's Player.animation / animation events carry), never derived from the activity here.
+  const sequence = (id: number) => `asset.source.osrs.cache2695.sequence.${id}`;
+  const player = (x: number, y: number, activity: string, equipment: Array<[string, number, string]>, animation = "") => ({
+    ...base.player, tile: tile(x, y), activity, animation,
     equipment: equipment.map(([slot, sourceId, id]) => ({ slot, item: item(id, sourceId) })),
   });
   const npc = (id: string, sourceId: number, x: number, y: number) => ({
@@ -96,25 +99,25 @@ function scenarioWorld(name: string): WorldView & { dynamicObjects?: unknown[] }
     case "gear-idle":
       return { ...base, player: player(3098, 3098, "idle", [["weapon", 1277, "item.bronze_sword"], ["shield", 1171, "item.wooden_shield"], ["head", 1949, "item.chefs_hat"]]), entities: [npc("guide", 3308, 3096, 3101)] };
     case "gear-fighting":
-      return { ...base, player: player(3098, 3098, "fighting", [["weapon", 1277, "item.bronze_sword"], ["shield", 1171, "item.wooden_shield"]]), entities: [npc("rat", 2813, 3099, 3098)] };
+      return { ...base, player: player(3098, 3098, "fighting", [["weapon", 1277, "item.bronze_sword"], ["shield", 1171, "item.wooden_shield"]], sequence(390)), entities: [npc("rat", 2813, 3099, 3098)] };
     case "woodcutting":
-      return { ...base, player: player(3098, 3098, "gathering", [["weapon", 1351, "item.bronze_axe"]]), entities: [object("tree", 1276, 3099, 3098)] };
+      return { ...base, player: player(3098, 3098, "gathering", [["weapon", 1351, "item.bronze_axe"]], sequence(879)), entities: [object("tree", 1276, 3099, 3098)] };
     case "mining":
-      return { ...base, player: player(3098, 3098, "gathering", [["weapon", 1265, "item.bronze_pickaxe"]]), entities: [object("rocks", 10079, 3099, 3098)] };
+      return { ...base, player: player(3098, 3098, "gathering", [["weapon", 1265, "item.bronze_pickaxe"]], sequence(625)), entities: [object("rocks", 10079, 3099, 3098)] };
     case "fishing":
-      return { ...base, player: player(3098, 3098, "gathering", []), entities: [npc("fishing-spot", 3317, 3099, 3098)] };
+      return { ...base, player: player(3098, 3098, "gathering", [], sequence(621)), entities: [npc("fishing-spot", 3317, 3099, 3098)] };
     case "firemaking":
-      return { ...base, player: player(3098, 3098, "producing", []), entities: [] };
+      return { ...base, player: player(3098, 3098, "producing", [], sequence(733)), entities: [] };
     case "cooking":
-      return { ...base, player: player(3098, 3098, "producing", []), entities: [object("fire", 26185, 3099, 3098, "temporary_object")] };
+      return { ...base, player: player(3098, 3098, "producing", [], sequence(897)), entities: [object("fire", 26185, 3099, 3098, "temporary_object")] };
     case "walking":
       return { ...base, player: player(3098, 3098, "walking", [["weapon", 1351, "item.bronze_axe"]]), entities: [] };
     case "ranged":
-      return { ...base, player: player(3098, 3098, "fighting", [["weapon", 841, "item.shortbow"], ["ammo", 882, "item.bronze_arrow"]]), entities: [npc("rat", 2813, 3101, 3098)] };
+      return { ...base, player: player(3098, 3098, "fighting", [["weapon", 841, "item.shortbow"], ["ammo", 882, "item.bronze_arrow"]], sequence(426)), entities: [npc("rat", 2813, 3101, 3098)] };
     case "casting":
-      return { ...base, player: player(3098, 3098, "casting", []), entities: [npc("rat", 2813, 3101, 3098)] };
+      return { ...base, player: player(3098, 3098, "casting", [], sequence(711)), entities: [npc("rat", 2813, 3101, 3098)] };
     case "death":
-      return { ...base, player: { ...player(3098, 3098, "idle", []), hitpoints: 0 }, entities: [] };
+      return { ...base, player: { ...player(3098, 3098, "idle", [], sequence(836)), hitpoints: 0 }, entities: [] };
     case "ground-items-fire":
       return {
         ...base, player: player(3098, 3098, "idle", []),
@@ -135,6 +138,10 @@ function scenarioWorld(name: string): WorldView & { dynamicObjects?: unknown[] }
       return { ...base, player: player(3094, 3106, "idle", []), entities: [] };
     case "preview":
       return { ...base, player: player(3098, 3098, "idle", [["weapon", 1277, "item.bronze_sword"], ["shield", 1171, "item.wooden_shield"]]), entities: [] };
+    case "unknown-motion":
+      // The backend interop gap as it stands today: an action reported with no source
+      // animation. The renderer keeps the stance and reports `motion unknown` — never a guess.
+      return { ...base, player: player(3098, 3098, "gathering", [["weapon", 1351, "item.bronze_axe"]]), entities: [object("tree", 1276, 3099, 3098)] };
     default:
       throw new Error(`unknown scenario ${name}`);
   }
@@ -158,7 +165,7 @@ function workloadWorld(x: number, y: number, region: string): WorldView {
   };
   return {
     ...base,
-    player: { ...base.player, activity: "walking", equipment: [{ slot: "weapon", item: item("item.bronze_sword", 1277) }, { slot: "shield", item: item("item.wooden_shield", 1171) }] },
+    player: { ...base.player, activity: "fighting", animation: "asset.source.osrs.cache2695.sequence.390", equipment: [{ slot: "weapon", item: item("item.bronze_sword", 1277) }, { slot: "shield", item: item("item.wooden_shield", 1171) }] },
     entities: [
       npc("goblin-a", 3028, x + 3, y + 2), npc("goblin-b", 3028, x - 4, y + 3), npc("goblin-c", 3028, x + 5, y - 3),
       npc("rat-a", 2813, x - 3, y - 2), npc("rat-b", 2814, x + 2, y - 4), npc("guide", 306, x + 1, y + 5), npc("survival-expert", 8503, x - 6, y),
@@ -317,7 +324,7 @@ async function main(): Promise<void> {
       }
       previewCanvas.width = 0;
       previewCanvas.height = 0;
-      return { fit: handle.playerFitReport(), placement: handle.scenePlacement() };
+      return { fit: handle.playerFitReport(), placement: handle.scenePlacement(), unknownMotions: handle.unknownMotions(), running: handle.playerRunning() };
     };
     state.ready = true;
     publish();

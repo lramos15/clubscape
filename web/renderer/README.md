@@ -51,18 +51,27 @@ plus:
 * `camera()` takes `RenderCamera` in world units (128 per tile; `x`/`y` horizontal source axes,
   `height` negative-up, 16384 angle units per turn). Pass `zoom = sourceZoomForViewportHeight(h)`
   to reproduce the client's viewport curve (662 at 1080 px); the renderer never rescales itself.
-* `update(world)` serialises the `WorldView` (optionally extended with `dynamicObjects`, see
-  below). The player is the approved penguin body (NPC 2063 / model 21547 at 75/128) wearing the
-  `equipment[].item.sourceId` models, animated from `activity` (walk 819, woodcutting 879,
-  mining 625, net fishing 621, firemaking 733, cooking 897/896, smelting 899, smithing 898,
-  melee 386/390/422, shortbow 426, wind strike 711, death 836 when `hitpoints` is 0, idle 808),
-  with the object/NPC next to the player deciding between gathering/producing variants. NPC
-  entities with a source definition play their own stand/walk/death motions; goblin/penguin
-  fixtures may still use the baked `animation` ids. `temporary_object` entities (fire 26185)
-  animate through the source frames, `groundItems` draw the tile's top three stacks (quantity
-  variants), and `dynamicObjects` swap door walls. Entities in another `instance` than the
-  player are skipped; unknown ids or missing models are reported through
-  `options.onDiagnostic`, never invented.
+* `update(world)` serialises the `WorldView` plus the optional `RendererWorldExtensions`
+  (`dynamicObjects`, `events`). The player is the approved penguin body (NPC 2063 / model 21547
+  at 75/128) wearing the `equipment[].item.sourceId` models. **Motion identity is explicit
+  only** (the original client plays what the server sends and never derives actions locally):
+  the sequence comes from `player.animation` / `entity.animation` as a bare id (`"879"`) or the
+  catalog id (`asset.source.osrs.cache2695.sequence.879`), else from the latest animation event
+  for that actor (`events[]`, mirroring the protocol `Event{kind:"animation", actorId,
+  animationAsset, eventId}`; it plays until it ends, a newer event arrives, the actor moves or
+  the activity returns to rest), else the movement stance: stand 808, walk 819 or run 824 —
+  running by the original rule (two tiles in one server `tick`; the `run` setting decides only
+  when several ticks elapsed with an in-between step count, or when no tick is available). An
+  `activity` such as `gathering`/`producing`/`fighting`/`casting`, or `hitpoints === 0`, with no
+  source animation keeps the stance and is reported as `motion unknown: …` through
+  `onDiagnostic` / `unknownMotions()` — the current backend interop gap (`Player.animation` is
+  empty), never a guessed pose. NPC entities with a source definition play the definition's
+  own stand/walk sequences locally exactly as the original client does; their deaths and
+  actions are server animations too. `temporary_object` entities (fire 26185) animate through
+  the source frames, `groundItems` draw the tile's top three stacks (quantity variants), and
+  `dynamicObjects` swap door walls. Entities in another `instance` than the player are
+  skipped; unknown ids or missing models are reported, never invented. The activity-based
+  table (`developerMotionFallback`, `set_motion_fallback`) exists for developer fixtures only.
 * `frame(nowMs)` returns `null` before a scene is loaded or while `maxFramesInFlight` (default 2)
   frames are pending, otherwise a `RenderFrame` whose `completedAtMs` is taken after the WebGPU
   queue's submitted-work-done signal (`gpuDurationMs` from timestamp queries when supported;
@@ -144,12 +153,23 @@ the ≥ 60 fps contract proof on the owner's hardware.
   `spanY`) beside the contract fields; the contract itself is unchanged.
 * `RendererConfig` needs no change. Optional additions that would help the shell but were **not**
   made to the shared file: a `zoom` derivation helper (provided here as
-  `sourceZoomForViewportHeight`), a diagnostics accessor (provided as the
-  `ClubscapeRendererHandle` extension), and two view fields the renderer can only consume if
-  the shell forwards them: `WorldView.dynamicObjects` (mirror of the protocol
-  `WorldSnapshot.dynamic_objects`: `{ id, objectId | sourceId, tile, instance, state, doorOpen,
-  quarterTurns }`, typed here as `RendererDynamicObject`) for door states, and a running flag
-  (`activity === "walking"` currently plays the walk sequence; run 824 needs the flag).
+  `sourceZoomForViewportHeight`) and a diagnostics accessor (provided as the
+  `ClubscapeRendererHandle` extension).
+* **Data the renderer needs from backend/shell** (typed in `RendererWorldExtensions` /
+  `RendererAnimationEvent` / `RendererDynamicObject`; the frozen contract already has the
+  first two channels):
+  1. `PlayerView.animation` and `EntityView.animation` filled with the source sequence identity
+     (`asset.source.osrs.cache2695.sequence.<id>` or `<id>`) for every action, combat swing and
+     death the server plays — today the backend sends `""` (interop gap) and the renderer
+     reports `motion unknown`.
+  2. `PlayerView.settings` containing `{ setting: "run", enabled }` and a monotonically
+     increasing `WorldView.tick` per server tick (both already in the contract) — running is
+     derived from tiles per tick like the original.
+  3. `events?: RendererAnimationEvent[]` — optional alternative to (1) when the shell forwards
+     protocol `Event`s of kind `animation` (`actorId`, `animationAsset`, `eventId`).
+  4. `dynamicObjects?: RendererDynamicObject[]` — the protocol `WorldSnapshot.dynamic_objects`
+     with catalog-resolved `objectId` (`asset.source.osrs.cache2695.object.<id>`) or numeric
+     `sourceId`, `tile`, `instance`, `doorOpen`, `quarterTurns`, for door states.
 * Interface preview: call `framePlayerPreview({ width, height })` with the UI's
   `getUiPreviewBounds()` size (480×315 for the character creator) after `update(world)` so the
   worn gear matches, and hand the `ImageData` to `setUiPreview()` via a canvas of the same size.

@@ -240,7 +240,7 @@ async function main(): Promise<void> {
     // Live-layer and player-action scenarios on the starting-house fixture (developer WorldViews
     // with real source ids): gear, activity motions, ground items + fire, door state, roof mode
     // and the model-only interface preview readback.
-    const scenarioNames = ["pinned-gear-idle", "gear-idle", "gear-fighting", "woodcutting", "mining", "fishing", "firemaking", "cooking", "walking", "ranged", "casting", "death", "ground-items-fire", "door-open", "roof-player", "preview"];
+    const scenarioNames = ["pinned-gear-idle", "gear-idle", "gear-fighting", "woodcutting", "mining", "fishing", "firemaking", "cooking", "walking", "ranged", "casting", "death", "unknown-motion", "ground-items-fire", "door-open", "roof-player", "preview"];
     const scenarioDir = path.join(out, "scenarios");
     await mkdir(scenarioDir, { recursive: true });
     const scenarioResults: unknown[] = [];

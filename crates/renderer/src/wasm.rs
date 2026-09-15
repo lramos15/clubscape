@@ -727,6 +727,31 @@ impl WasmRenderer {
         self.inner.borrow_mut().core.set_instanced_map(instanced);
     }
 
+    /// Developer-only: derive action motions from the activity string and adjacent scenery when
+    /// the world view supplies no source animation. Off by default; not final M1 logic.
+    pub fn set_motion_fallback(&self, enabled: bool) {
+        self.inner.borrow_mut().core.set_motion_fallback(enabled);
+    }
+
+    /// Whether the player is running (original two-tiles-per-server-tick rule, or the `run`
+    /// setting when ticks are unavailable).
+    pub fn player_running(&self) -> bool {
+        self.inner.borrow().core.player_running()
+    }
+
+    /// Actors whose reported state implies an action but whose source motion was not supplied
+    /// in the last world view (JSON array of strings). Empty when every motion is explicit.
+    pub fn unknown_motions(&self) -> String {
+        let inner = self.inner.borrow();
+        let items: Vec<String> = inner
+            .core
+            .unknown_motions()
+            .iter()
+            .map(|m| json_string(m))
+            .collect();
+        format!("[{}]", items.join(","))
+    }
+
     /// Original roof-removal mode bits (1 player tile, 2 hovered tile, 4 walk destination,
     /// 8 camera line); 0 draws every roof like the stock client the fixtures were captured with.
     pub fn set_roof_mode(&self, mode: i32) {

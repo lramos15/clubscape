@@ -76,6 +76,30 @@ export interface RendererDynamicObject {
   quarterTurns?: number;
 }
 
+/**
+ * Optional shell extension mirroring the protocol `Event` with `kind === "animation"`: the
+ * server's source action animation for an actor. `animationAsset` is
+ * `asset.source.osrs.cache2695.sequence.<id>` (or a bare id). Each new `eventId` starts the
+ * sequence on `actorId`; when it ends the actor returns to its movement/stand motion.
+ */
+export interface RendererAnimationEvent {
+  kind: "animation";
+  eventId: string;
+  actorId: string;
+  animationAsset: string;
+}
+
+/**
+ * Renderer-consumed world inputs beyond the frozen `WorldView` fields. Motion identity is never
+ * guessed: `player.animation` / `entity.animation` (bare or catalog sequence ids), animation
+ * events and the `run` setting are the only sources; running is otherwise derived from the
+ * original two-tiles-per-tick rule using `WorldView.tick`.
+ */
+export interface RendererWorldExtensions {
+  dynamicObjects?: RendererDynamicObject[];
+  events?: RendererAnimationEvent[];
+}
+
 /** Per-item gear fit on the penguin body (source units before the 75/128 draw scale). */
 export interface PlayerFitReport {
   itemId: number;
@@ -142,6 +166,12 @@ export interface RendererAdapterOptions {
    * frame's GPU completion. 1 serializes build → completion like a single-buffered loop.
    */
   maxFramesInFlight?: number;
+  /**
+   * Developer fixtures only: derive action motions from `activity` and adjacent scenery when no
+   * source animation is supplied. Off by default — not final M1 logic; production shells leave
+   * motion identity to the server's `animation` fields and animation events.
+   */
+  developerMotionFallback?: boolean;
 }
 
 /** Diagnostics the shell needs for the benchmark protocol (`RenderSnapshot`). */
@@ -198,6 +228,13 @@ export interface ClubscapeRendererHandle extends RendererHandle {
   playerFitReport(): PlayerFitReport[];
   /** Current scene placement (null without a scene). */
   scenePlacement(): ScenePlacement | null;
+  /** Whether the player is running (two tiles per server tick, or the `run` setting without ticks). */
+  playerRunning(): boolean;
+  /**
+   * Actors whose reported state implies an action but whose source motion the last `update()`
+   * did not supply (also reported through `onDiagnostic` as `motion unknown: …`).
+   */
+  unknownMotions(): string[];
 }
 
 async function sha256Hex(bytes: Uint8Array): Promise<string> {
@@ -299,6 +336,7 @@ export const createRenderer: (canvas: HTMLCanvasElement, config: RendererConfig,
       }
     }
     const previewWidget = manifest.model_widgets?.find((w) => w.id === 44499017);
+    if (options.developerMotionFallback) renderer.set_motion_fallback(true);
     const loadedModels = new Set<string>();
 
     let renderedFrames = 0;
@@ -411,7 +449,7 @@ export const createRenderer: (canvas: HTMLCanvasElement, config: RendererConfig,
         renderer.set_top_plane_override(undefined);
         await assembleAround(baseX, baseY);
       },
-      update(world: WorldView & { dynamicObjects?: RendererDynamicObject[] }) {
+      update(world: WorldView & RendererWorldExtensions) {
         requireLive();
         renderer.update_world(JSON.stringify(world), performance.now());
         if (blockMode && !assembling) {
@@ -541,6 +579,14 @@ export const createRenderer: (canvas: HTMLCanvasElement, config: RendererConfig,
         requireLive();
         const json = renderer.scene_placement();
         return json === undefined ? null : (JSON.parse(json) as ScenePlacement);
+      },
+      playerRunning() {
+        requireLive();
+        return renderer.player_running();
+      },
+      unknownMotions() {
+        requireLive();
+        return JSON.parse(renderer.unknown_motions()) as string[];
       },
       dispose() {
         if (disposed) return;

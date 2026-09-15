@@ -153,8 +153,10 @@ fn world(
     .to_string()
 }
 
+/// The developer fallback table (activity + surroundings → original motion) is opt-in and
+/// not final M1 logic; it still has to name the bound source sequences it stands in for.
 #[test]
-fn activity_defaults_follow_the_bound_source_sequences() {
+fn developer_activity_fallback_names_the_bound_source_sequences() {
     let ctx = ActivityContext::default();
     assert_eq!(player_sequence_for("idle", &ctx), 808);
     assert_eq!(player_sequence_for("walking", &ctx), 819);
@@ -277,6 +279,186 @@ fn activity_defaults_follow_the_bound_source_sequences() {
     );
 }
 
+/// Motion identity comes only from explicit data: `animation` (bare or catalog sequence id),
+/// animation events, the `run` setting / two-tiles-per-tick rule. Missing motion is reported,
+/// never guessed, unless the developer fallback is switched on.
+#[test]
+fn motion_identity_is_explicit_or_reported_unknown() {
+    use clubscape_renderer::core::parse_sequence_id;
+    assert_eq!(parse_sequence_id("879"), Some(879));
+    assert_eq!(parse_sequence_id(" 879 "), Some(879));
+    assert_eq!(parse_sequence_id("sequence.879"), Some(879));
+    assert_eq!(
+        parse_sequence_id("asset.source.osrs.cache2695.sequence.879"),
+        Some(879)
+    );
+    assert_eq!(
+        parse_sequence_id("asset.source.osrs.cache2695.object.879"),
+        None,
+        "not a sequence"
+    );
+    assert_eq!(parse_sequence_id(""), None);
+    assert_eq!(parse_sequence_id("-1"), None);
+    assert_eq!(parse_sequence_id("chop"), None);
+
+    let Some(mut core) = core_with_actors() else {
+        return;
+    };
+    let textures = textures();
+    load_house(&mut core);
+    let mut view: serde_json::Value = serde_json::from_str(&world(
+        (3098, 3098),
+        "idle",
+        "",
+        &[("weapon", 1351)],
+        serde_json::json!([]),
+    ))
+    .unwrap();
+    // Idle: no diagnostic, stand sequence.
+    core.update_world(&view.to_string(), 0.0).unwrap();
+    let summary = core.build_frame(0.0).unwrap().clone();
+    assert!(
+        summary.entities_skipped.is_empty(),
+        "{:?}",
+        summary.entities_skipped
+    );
+    let idle = rasterize(&core, &textures);
+    // Gathering without a source animation: explicit unknown-motion diagnostic, stand stance,
+    // no invented woodcutting.
+    view["player"]["activity"] = serde_json::json!("gathering");
+    view["entities"] = serde_json::json!([{"id": "tree", "kind": "object", "sourceId": 1276, "tile": {"x": 3099, "y": 3098, "plane": 0}, "animation": ""}]);
+    core.update_world(&view.to_string(), 0.0).unwrap();
+    let summary = core.build_frame(0.0).unwrap().clone();
+    assert!(
+        summary
+            .entities_skipped
+            .iter()
+            .any(|s| s.starts_with("motion unknown: player-1: activity \"gathering\"")),
+        "{:?}",
+        summary.entities_skipped
+    );
+    assert_eq!(core.unknown_motions().len(), 1);
+    assert_eq!(
+        rasterize(&core, &textures),
+        idle,
+        "unknown motion must not invent a pose"
+    );
+    // Catalog sequence id in player.animation: the source motion plays, no diagnostic.
+    view["player"]["animation"] = serde_json::json!("asset.source.osrs.cache2695.sequence.879");
+    core.update_world(&view.to_string(), 0.0).unwrap();
+    let summary = core.build_frame(0.0).unwrap().clone();
+    assert!(
+        summary.entities_skipped.is_empty(),
+        "{:?}",
+        summary.entities_skipped
+    );
+    let chop = rasterize(&core, &textures);
+    assert_ne!(chop, idle);
+    // Animation event (shell extension) for the player: same result through the event channel.
+    view["player"]["animation"] = serde_json::json!("");
+    view["events"] = serde_json::json!([{"kind": "animation", "eventId": "evt-1", "actorId": "player-1", "animationAsset": "asset.source.osrs.cache2695.sequence.879"}]);
+    core.update_world(&view.to_string(), 0.0).unwrap();
+    let summary = core.build_frame(0.0).unwrap().clone();
+    assert!(
+        summary.entities_skipped.is_empty(),
+        "{:?}",
+        summary.entities_skipped
+    );
+    assert_eq!(
+        rasterize(&core, &textures),
+        chop,
+        "event-driven motion equals the named motion"
+    );
+    // An event naming a non-sequence asset is reported, not applied.
+    view["events"] = serde_json::json!([{"kind": "animation", "eventId": "evt-2", "actorId": "player-1", "animationAsset": "asset.source.osrs.cache2695.object.1276"}]);
+    core.update_world(&view.to_string(), 0.0).unwrap();
+    let summary = core.build_frame(0.0).unwrap().clone();
+    assert!(
+        summary
+            .entities_skipped
+            .iter()
+            .any(|s| s.contains("names no source sequence")),
+        "{:?}",
+        summary.entities_skipped
+    );
+    // Dead player without a source animation: reported, no invented death pose.
+    view["events"] = serde_json::json!([]);
+    view["player"]["activity"] = serde_json::json!("idle");
+    view["player"]["hitpoints"] = serde_json::json!(0);
+    core.update_world(&view.to_string(), 0.0).unwrap();
+    let summary = core.build_frame(0.0).unwrap().clone();
+    assert!(
+        summary
+            .entities_skipped
+            .iter()
+            .any(|s| s.contains("hitpoints 0")),
+        "{:?}",
+        summary.entities_skipped
+    );
+    assert_eq!(rasterize(&core, &textures), idle);
+    // Developer fallback on: the activity table applies (and is labelled as such by the flag).
+    core.set_motion_fallback(true);
+    view["player"]["hitpoints"] = serde_json::json!(10);
+    view["player"]["activity"] = serde_json::json!("gathering");
+    core.update_world(&view.to_string(), 0.0).unwrap();
+    let summary = core.build_frame(0.0).unwrap().clone();
+    assert!(
+        summary.entities_skipped.is_empty(),
+        "{:?}",
+        summary.entities_skipped
+    );
+    assert_eq!(rasterize(&core, &textures), chop);
+    core.set_motion_fallback(false);
+
+    // Running: two tiles in one server tick plays 824, one tile plays 819; the run setting
+    // decides only when several ticks elapsed and the step count is between.
+    let step = |core: &mut RendererCore, tick: i64, x: i32, run: Option<bool>| {
+        let mut v: serde_json::Value =
+            serde_json::from_str(&world((x, 3098), "walking", "", &[], serde_json::json!([])))
+                .unwrap();
+        v["tick"] = serde_json::json!(tick.to_string());
+        if let Some(run) = run {
+            v["player"]["settings"] = serde_json::json!([{"setting": "run", "enabled": run}]);
+        }
+        core.update_world(&v.to_string(), 0.0).unwrap();
+        core.build_frame(0.0).unwrap();
+        core.player_running()
+    };
+    step(&mut core, 10, 3090, None);
+    assert!(!step(&mut core, 11, 3091, None), "one tile per tick walks");
+    assert!(step(&mut core, 12, 3093, None), "two tiles per tick runs");
+    assert!(
+        step(&mut core, 14, 3097, None),
+        "four tiles over two ticks runs"
+    );
+    assert!(
+        !step(&mut core, 16, 3099, None),
+        "two tiles over two ticks walks"
+    );
+    assert!(
+        step(&mut core, 18, 3102, Some(true)),
+        "three tiles over two ticks: run setting decides"
+    );
+    assert!(!step(&mut core, 20, 3105, Some(false)));
+    assert!(
+        !step(&mut core, 22, 3108, None),
+        "ambiguous without a setting keeps the last state"
+    );
+    // No tick information at all: only the setting can say.
+    let mut v: serde_json::Value = serde_json::from_str(&world(
+        (3110, 3098),
+        "walking",
+        "",
+        &[],
+        serde_json::json!([]),
+    ))
+    .unwrap();
+    v["tick"] = serde_json::json!("");
+    v["player"]["settings"] = serde_json::json!([{"setting": "run", "enabled": true}]);
+    core.update_world(&v.to_string(), 0.0).unwrap();
+    assert!(core.player_running());
+}
+
 #[test]
 fn npc_definitions_animate_through_the_skeletal_port() {
     let Some(mut core) = core_with_actors() else {
@@ -380,7 +562,13 @@ fn player_uses_original_action_motion_and_wears_modular_gear() {
         ("ammo", 882),
     ];
     core.update_world(
-        &world((3098, 3098), "fighting", "", &gear, serde_json::json!([])),
+        &world(
+            (3098, 3098),
+            "fighting",
+            "390",
+            &gear,
+            serde_json::json!([]),
+        ),
         0.0,
     )
     .unwrap();
@@ -399,23 +587,29 @@ fn player_uses_original_action_motion_and_wears_modular_gear() {
     }
     let armed = rasterize(&core, &textures);
     assert_ne!(armed, chop0);
-    // Sword slash is chosen for a bronze sword; the frame differs from the unarmed punch.
+    // The server names the combat motion: punch (422) and sword slash (390) differ.
     core.update_world(
-        &world((3098, 3098), "fighting", "", &[], serde_json::json!([])),
+        &world((3098, 3098), "fighting", "422", &[], serde_json::json!([])),
         0.0,
     )
     .unwrap();
     core.build_frame(20.0 * 3.0).unwrap();
     let punch = rasterize(&core, &textures);
     core.update_world(
-        &world((3098, 3098), "fighting", "", &gear, serde_json::json!([])),
+        &world(
+            (3098, 3098),
+            "fighting",
+            "390",
+            &gear,
+            serde_json::json!([]),
+        ),
         0.0,
     )
     .unwrap();
     core.build_frame(20.0 * 3.0).unwrap();
     let slash = rasterize(&core, &textures);
     assert_ne!(punch, slash);
-    // Explicit server-bound animation wins over the activity default.
+    // Server-bound death animation.
     core.update_world(
         &world((3098, 3098), "idle", "836", &[], serde_json::json!([])),
         0.0,

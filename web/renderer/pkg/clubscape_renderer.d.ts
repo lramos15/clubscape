@@ -109,10 +109,18 @@ export class WasmRenderer {
     pick(x: number, y: number): string | undefined;
     /**
      * JSON report of the current gear fit on the penguin body: per item the bound human label,
-     * the penguin label chosen, anchor gap and deepest penetration in source units, and the
-     * retarget scale. Empty array before a body/gear is assembled.
+     * the penguin label chosen, `penetration` (deepest body vertex inside the item's box, target
+     * ≤ 1), `gap` (item↔body clearance, target ≤ 2), `anchorShift` (contact-solve translation
+     * from the retargeted design position), `designPenetration` (the same box measure on the
+     * human body the item was designed for) in source units, and the retarget scale. Empty
+     * array before a body/gear is assembled.
      */
     player_fit_report(): string;
+    /**
+     * Whether the player is running (original two-tiles-per-server-tick rule, or the `run`
+     * setting when ticks are unavailable).
+     */
+    player_running(): boolean;
     resize(width: number, height: number): void;
     scene_id(): string | undefined;
     /**
@@ -128,6 +136,11 @@ export class WasmRenderer {
      * Instanced map flag (`cy.as`): the stock rule then always draws up to the player's plane.
      */
     set_instanced_map(instanced: boolean): void;
+    /**
+     * Developer-only: derive action motions from the activity string and adjacent scenery when
+     * the world view supplies no source animation. Off by default; not final M1 logic.
+     */
+    set_motion_fallback(enabled: boolean): void;
     /**
      * Hovered world tile and walk destination consulted by roof modes 2 and 4 (`undefined`
      * clears either).
@@ -150,6 +163,11 @@ export class WasmRenderer {
      */
     static squares_for_base(base_x: number, base_y: number): Int32Array;
     timestamps_supported(): boolean;
+    /**
+     * Actors whose reported state implies an action but whose source motion was not supplied
+     * in the last world view (JSON array of strings). Empty when every motion is explicit.
+     */
+    unknown_motions(): string;
     unload_block(square: number): void;
     update_world(json: string, now_ms: number): void;
 }
@@ -206,25 +224,28 @@ export interface InitOutput {
     readonly wasmrenderer_new: (a: any, b: number, c: number, d: number, e: number) => any;
     readonly wasmrenderer_pick: (a: number, b: number, c: number) => [number, number];
     readonly wasmrenderer_player_fit_report: (a: number) => [number, number];
+    readonly wasmrenderer_player_running: (a: number) => number;
     readonly wasmrenderer_resize: (a: number, b: number, c: number) => void;
     readonly wasmrenderer_scene_id: (a: number) => [number, number];
     readonly wasmrenderer_scene_placement: (a: number) => [number, number];
     readonly wasmrenderer_set_camera: (a: number, b: number, c: number, d: number, e: number, f: number, g: number, h: number) => [number, number];
     readonly wasmrenderer_set_instanced_map: (a: number, b: number) => void;
+    readonly wasmrenderer_set_motion_fallback: (a: number, b: number) => void;
     readonly wasmrenderer_set_roof_context: (a: number, b: number, c: number, d: number, e: number) => void;
     readonly wasmrenderer_set_roof_mode: (a: number, b: number) => void;
     readonly wasmrenderer_set_top_plane_override: (a: number, b: number) => void;
     readonly wasmrenderer_squares_for_base: (a: number, b: number) => [number, number];
     readonly wasmrenderer_timestamps_supported: (a: number) => number;
+    readonly wasmrenderer_unknown_motions: (a: number) => [number, number];
     readonly wasmrenderer_unload_block: (a: number, b: number) => void;
     readonly wasmrenderer_update_world: (a: number, b: number, c: number, d: number) => [number, number];
     readonly wasm_bindgen_765df639e0572edc___convert__closures_____invoke___js_sys_3b7301898fbf4e22___Function_fn_wasm_bindgen_765df639e0572edc___JsValue_____wasm_bindgen_765df639e0572edc___sys__Undefined___js_sys_3b7301898fbf4e22___Function_fn_wasm_bindgen_765df639e0572edc___JsValue_____wasm_bindgen_765df639e0572edc___sys__Undefined_______true_: (a: number, b: number, c: any, d: any) => void;
     readonly wasm_bindgen_765df639e0572edc___convert__closures_____invoke___wasm_bindgen_765df639e0572edc___JsValue__core_ed718c3d60ebd546___result__Result_____wasm_bindgen_765df639e0572edc___JsError___true_: (a: number, b: number, c: any) => [number, number];
     readonly wasm_bindgen_765df639e0572edc___convert__closures_____invoke___wasm_bindgen_765df639e0572edc___sys__JsNullable_wgpu_fb237351f69b1e72___backend__webgpu__webgpu_sys__gen_GpuError__GpuError___core_ed718c3d60ebd546___result__Result_____wasm_bindgen_765df639e0572edc___JsError___true_: (a: number, b: number, c: any) => [number, number];
-    readonly wasm_bindgen_765df639e0572edc___convert__closures_____invoke___wasm_bindgen_765df639e0572edc___sys__JsNullable_wgpu_fb237351f69b1e72___backend__webgpu__webgpu_sys__gen_GpuError__GpuError___core_ed718c3d60ebd546___result__Result_____wasm_bindgen_765df639e0572edc___JsError___true__63: (a: number, b: number, c: any) => [number, number];
-    readonly wasm_bindgen_765df639e0572edc___convert__closures_____invoke___wasm_bindgen_765df639e0572edc___sys__JsNullable_wgpu_fb237351f69b1e72___backend__webgpu__webgpu_sys__gen_GpuError__GpuError___core_ed718c3d60ebd546___result__Result_____wasm_bindgen_765df639e0572edc___JsError___true__64: (a: number, b: number, c: any) => [number, number];
+    readonly wasm_bindgen_765df639e0572edc___convert__closures_____invoke___wasm_bindgen_765df639e0572edc___sys__JsNullable_wgpu_fb237351f69b1e72___backend__webgpu__webgpu_sys__gen_GpuError__GpuError___core_ed718c3d60ebd546___result__Result_____wasm_bindgen_765df639e0572edc___JsError___true__66: (a: number, b: number, c: any) => [number, number];
+    readonly wasm_bindgen_765df639e0572edc___convert__closures_____invoke___wasm_bindgen_765df639e0572edc___sys__JsNullable_wgpu_fb237351f69b1e72___backend__webgpu__webgpu_sys__gen_GpuError__GpuError___core_ed718c3d60ebd546___result__Result_____wasm_bindgen_765df639e0572edc___JsError___true__67: (a: number, b: number, c: any) => [number, number];
     readonly wasm_bindgen_765df639e0572edc___convert__closures_____invoke___wgpu_fb237351f69b1e72___backend__webgpu__webgpu_sys__gen_GpuDeviceLostInfo__GpuDeviceLostInfo______true_: (a: number, b: number, c: any) => void;
-    readonly wasm_bindgen_765df639e0572edc___convert__closures_____invoke___wgpu_fb237351f69b1e72___backend__webgpu__webgpu_sys__gen_GpuDeviceLostInfo__GpuDeviceLostInfo______true__62: (a: number, b: number, c: any) => void;
+    readonly wasm_bindgen_765df639e0572edc___convert__closures_____invoke___wgpu_fb237351f69b1e72___backend__webgpu__webgpu_sys__gen_GpuDeviceLostInfo__GpuDeviceLostInfo______true__65: (a: number, b: number, c: any) => void;
     readonly __wbindgen_malloc: (a: number, b: number) => number;
     readonly __wbindgen_realloc: (a: number, b: number, c: number, d: number) => number;
     readonly __wbindgen_exn_store: (a: number) => void;

@@ -199,6 +199,28 @@ pub struct WorldPlayer {
     pub hitpoints: Option<i32>,
     pub instance: Option<String>,
     pub equipment: Vec<WorldEquipment>,
+    /// Shared-contract settings; `{ "setting": "run", "enabled": bool }` is the run toggle.
+    pub settings: Vec<WorldSetting>,
+}
+
+#[derive(Deserialize, Debug, Clone, Default)]
+#[serde(default, rename_all = "camelCase")]
+pub struct WorldSetting {
+    pub setting: String,
+    pub enabled: Option<bool>,
+}
+
+/// Optional shell extension mirroring the protocol `Event` with `kind == "animation"`: the
+/// server's source action animation for an actor (`animationAsset` =
+/// `asset.source.osrs.cache2695.sequence.<id>` or a bare id). Each new `eventId` starts that
+/// sequence on the actor; when it ends the actor returns to its movement/stand motion.
+#[derive(Deserialize, Debug, Clone, Default)]
+#[serde(default, rename_all = "camelCase")]
+pub struct WorldAnimationEvent {
+    pub kind: String,
+    pub event_id: String,
+    pub actor_id: String,
+    pub animation_asset: String,
 }
 
 #[derive(Deserialize, Debug, Clone, Default)]
@@ -241,6 +263,35 @@ pub struct WorldViewInput {
     pub entities: Vec<WorldEntity>,
     pub ground_items: Vec<WorldGroundItem>,
     pub dynamic_objects: Vec<WorldDynamicObject>,
+    /// Shell extension: server animation events (see [`WorldAnimationEvent`]).
+    pub events: Vec<WorldAnimationEvent>,
+}
+
+/// Parses a source sequence identity: a bare id (`"879"`), `sequence.879` or the catalog form
+/// `asset.source.osrs.cache2695.sequence.879`. Anything else (including other asset kinds) is
+/// not a sequence.
+pub fn parse_sequence_id(text: &str) -> Option<i32> {
+    let text = text.trim();
+    if text.is_empty() {
+        return None;
+    }
+    if let Ok(id) = text.parse::<i32>() {
+        return (id >= 0).then_some(id);
+    }
+    let (kind, id) = text.rsplit_once('.')?;
+    if kind == "sequence" || kind.ends_with(".sequence") {
+        id.parse::<i32>().ok().filter(|id| *id >= 0)
+    } else {
+        None
+    }
+}
+
+/// One server animation event applied to an actor: the sequence and when it started.
+#[derive(Clone, Debug, PartialEq)]
+struct ActionMotion {
+    event_id: String,
+    sequence: i32,
+    started_ms: f64,
 }
 
 /// A lit dynamic object variant (`models/dynamic/object-<id>-t<type>-r<rot>[-f<frame>].bin`).
@@ -502,6 +553,16 @@ pub struct RendererCore {
     player_activity: String,
     player_animation: String,
     player_dead: bool,
+    /// Developer-only fallback: derive action motions from the activity string and adjacent
+    /// scenery when the server supplies no animation. Off by default (not final M1 logic).
+    motion_fallback: bool,
+    /// Player movement tracking for the original run rule (two tiles per server tick).
+    player_motion_tick: Option<(i64, WorldTile)>,
+    player_running: bool,
+    /// Latest server animation events per actor id (shell extension), with start times.
+    action_motions: HashMap<String, ActionMotion>,
+    /// Actors whose reported activity implies an action but whose motion is unknown this view.
+    unknown_motions: Vec<String>,
     player_instance: Option<String>,
     /// Standalone lit models (e.g. the tree fixture) addressed by manifest id.
     models: HashMap<String, Model>,
@@ -555,6 +616,11 @@ impl RendererCore {
             player_activity: String::new(),
             player_animation: String::new(),
             player_dead: false,
+            motion_fallback: false,
+            player_motion_tick: None,
+            player_running: false,
+            action_motions: HashMap::new(),
+            unknown_motions: Vec::new(),
             player_instance: None,
             models: HashMap::new(),
             blocks: HashMap::new(),
@@ -992,29 +1058,149 @@ impl RendererCore {
             self.player_assembled = None;
             self.player_frame_cache.clear();
         }
-        // The player's sequence: the server-bound animation when named, otherwise the original
-        // motion for the reported activity and surroundings.
+        // Server animation events (shell extension): a new event id starts that sequence on
+        // its actor at this update; stale actors are dropped with their events.
+        self.unknown_motions.clear();
+        let mut live_actors: std::collections::HashSet<String> =
+            view.entities.iter().map(|e| e.id.clone()).collect();
+        live_actors.insert(view.player.id.clone());
+        self.action_motions
+            .retain(|actor, _| live_actors.contains(actor));
+        for event in view.events.iter().filter(|e| e.kind == "animation") {
+            let Some(sequence) = parse_sequence_id(&event.animation_asset) else {
+                self.unknown_motions.push(format!(
+                    "{}: animation event {} names no source sequence ({:?})",
+                    event.actor_id, event.event_id, event.animation_asset
+                ));
+                continue;
+            };
+            let fresh = self
+                .action_motions
+                .get(&event.actor_id)
+                .is_none_or(|m| m.event_id != event.event_id);
+            if fresh {
+                self.action_motions.insert(
+                    event.actor_id.clone(),
+                    ActionMotion {
+                        event_id: event.event_id.clone(),
+                        sequence,
+                        started_ms: now_ms,
+                    },
+                );
+            }
+        }
+        // Movement: the original plays the run sequence when the player covers two tiles in
+        // one server tick, the walk sequence for one. Ticks come from the view; the run toggle
+        // setting disambiguates when several ticks elapsed between views.
         let moving = previous
             .iter()
             .find(|e| e.is_player && e.id == view.player.id)
             .is_some_and(|o| o.tile.x != player_tile.x || o.tile.y != player_tile.y);
-        let player_sequence = match view.player.animation.trim().parse::<i32>() {
-            Ok(id) if id >= 0 => id,
-            _ => {
-                let context = ActivityContext {
-                    weapon_item: self
-                        .player_gear
-                        .iter()
-                        .find(|(slot, _)| slot == "weapon")
-                        .map(|(_, id)| *id),
-                    moving,
-                    running: false,
-                    dead: self.player_dead,
-                    ..self.adjacent_context(&player_tile)
-                };
-                player_sequence_for(&view.player.activity, &context)
+        let run_setting = view
+            .player
+            .settings
+            .iter()
+            .find(|s| s.setting == "run")
+            .and_then(|s| s.enabled);
+        let tick = view.tick.trim().parse::<i64>().ok();
+        if let (Some(tick), Some((last_tick, last_tile))) = (tick, self.player_motion_tick.as_ref())
+            && tick > *last_tick
+        {
+            let ticks = tick - last_tick;
+            let steps = i64::from(
+                (player_tile.x - last_tile.x)
+                    .abs()
+                    .max((player_tile.y - last_tile.y).abs()),
+            );
+            self.player_running = if steps >= 2 * ticks {
+                true
+            } else if steps <= ticks {
+                false
+            } else {
+                run_setting.unwrap_or(self.player_running)
+            };
+        } else if tick.is_none() {
+            // No tick information: only the run toggle can say (explicit data, never a default).
+            self.player_running = run_setting.unwrap_or(false);
+        }
+        if let Some(tick) = tick
+            && self
+                .player_motion_tick
+                .as_ref()
+                .is_none_or(|(t, _)| tick > *t)
+        {
+            self.player_motion_tick = Some((tick, player_tile.clone()));
+        }
+        // The player's sequence, from explicit data only: the server-bound `animation` (bare or
+        // catalog sequence id), else the latest animation event for the player, else the
+        // movement stance (walk/run/stand). Activities without a supplied source animation are
+        // reported as unknown motion rather than guessed — unless the developer fallback
+        // (activity + adjacent scenery, not final M1 logic) is switched on.
+        let stance = if moving {
+            if self.player_running {
+                crate::actor::PLAYER_RUN
+            } else {
+                crate::actor::PLAYER_WALK
+            }
+        } else {
+            crate::actor::PLAYER_IDLE
+        };
+        // An event motion ends with its sequence, with a newer event, when the actor moves, or
+        // when the server reports the activity back at rest.
+        let at_rest = matches!(view.player.activity.as_str(), "" | "idle" | "walking");
+        let expired = self.action_motions.get(&view.player.id).is_some_and(|m| {
+            moving
+                || at_rest
+                || self
+                    .sequence_frame(m.sequence, now_ms - m.started_ms)
+                    .is_some_and(|(_, ended)| ended)
+        });
+        if expired {
+            self.action_motions.remove(&view.player.id);
+        }
+        let player_sequence = match parse_sequence_id(&view.player.animation) {
+            Some(id) => id,
+            None => {
+                let event_motion = self.action_motions.get(&view.player.id).map(|m| m.sequence);
+                match event_motion {
+                    Some(id) if !moving => id,
+                    _ => {
+                        let action_reported = self.player_dead
+                            || !matches!(view.player.activity.as_str(), "" | "idle" | "walking");
+                        if action_reported && self.motion_fallback {
+                            let context = ActivityContext {
+                                weapon_item: self
+                                    .player_gear
+                                    .iter()
+                                    .find(|(slot, _)| slot == "weapon")
+                                    .map(|(_, id)| *id),
+                                moving,
+                                running: self.player_running,
+                                dead: self.player_dead,
+                                ..self.adjacent_context(&player_tile)
+                            };
+                            player_sequence_for(&view.player.activity, &context)
+                        } else {
+                            if action_reported {
+                                self.unknown_motions.push(format!(
+                                    "{}: activity {:?}{} without a source animation (player.animation empty, no animation event); playing the {} stance",
+                                    view.player.id,
+                                    view.player.activity,
+                                    if self.player_dead { " (hitpoints 0)" } else { "" },
+                                    if moving { "movement" } else { "stand" }
+                                ));
+                            }
+                            stance
+                        }
+                    }
+                }
             }
         };
+        let event_started: HashMap<String, f64> = self
+            .action_motions
+            .iter()
+            .map(|(actor, m)| (actor.clone(), m.started_ms))
+            .collect();
         let apply = |id: &str,
                      npc: i32,
                      tile: &WorldTile,
@@ -1031,7 +1217,7 @@ impl RendererCore {
             }
             let started = match old {
                 Some(o) if o.sequence == sequence => o.sequence_started_ms,
-                _ => now_ms,
+                _ => event_started.get(id).copied().unwrap_or(now_ms),
             };
             EntityState {
                 id: id.to_string(),
@@ -1127,26 +1313,44 @@ impl RendererCore {
             let Some(npc) = entity.source_id else {
                 continue;
             };
-            let named = entity
-                .animation
-                .trim()
-                .parse::<i32>()
-                .ok()
-                .filter(|id| *id >= 0);
             let def = self.npc_defs.get(&npc);
             let old = previous.iter().find(|e| e.id == entity.id);
             let moved = old.is_some_and(|o| o.tile.x != entity.tile.x || o.tile.y != entity.tile.y);
+            let event_expired = self.action_motions.get(&entity.id).is_some_and(|m| {
+                moved
+                    || self
+                        .sequence_frame(m.sequence, now_ms - m.started_ms)
+                        .is_some_and(|(_, ended)| ended)
+            });
+            if event_expired {
+                self.action_motions.remove(&entity.id);
+            }
+            let named = parse_sequence_id(&entity.animation)
+                .or_else(|| self.action_motions.get(&entity.id).map(|m| m.sequence));
             let dead = entity.hitpoints.is_some_and(|hp| hp <= 0)
                 && entity.max_hitpoints.is_some_and(|m| m > 0);
+            // The original client plays the definition's own stand/walk sequences locally;
+            // deaths and actions are server-sent animations.
             let sequence = match (named, def) {
                 (Some(id), _) => id,
                 (None, Some(def)) => {
-                    if dead && let Some(&death) = def.record.combat_sequences.last() {
+                    if dead
+                        && self.motion_fallback
+                        && let Some(&death) = def.record.combat_sequences.last()
+                    {
                         death
-                    } else if moved && def.walk() >= 0 {
-                        def.walk()
                     } else {
-                        def.stand()
+                        if dead {
+                            self.unknown_motions.push(format!(
+                                "{}: hitpoints 0 without a source animation; playing the definition stance",
+                                entity.id
+                            ));
+                        }
+                        if moved && def.walk() >= 0 {
+                            def.walk()
+                        } else {
+                            def.stand()
+                        }
                     }
                 }
                 (None, None) => -1,
@@ -1395,6 +1599,23 @@ impl RendererCore {
         top
     }
 
+    /// Developer-only: derive action motions from the activity string and adjacent scenery when
+    /// the server supplies no animation. Not final M1 logic; off by default.
+    pub fn set_motion_fallback(&mut self, enabled: bool) {
+        self.motion_fallback = enabled;
+    }
+
+    /// Actors whose reported state implies an action but whose source motion was not supplied
+    /// in the last world view (explicit interop gaps, never guessed).
+    pub fn unknown_motions(&self) -> &[String] {
+        &self.unknown_motions
+    }
+
+    /// Whether the player is currently running (original two-tiles-per-tick rule / run toggle).
+    pub fn player_running(&self) -> bool {
+        self.player_running
+    }
+
     /// Sets the original roof-removal mode bits (1 player tile, 2 hovered tile, 4 destination,
     /// 8 camera line). 0 keeps every roof, as the stock client and the approved captures do.
     pub fn set_roof_mode(&mut self, mode: i32) {
@@ -1481,7 +1702,12 @@ impl RendererCore {
             (scene.base_x, scene.base_y)
         };
         let mut temp_models: Vec<Model> = Vec::new();
-        let mut skipped = Vec::new();
+        // Unknown motions are interop gaps the shell must see (never silently idle).
+        let mut skipped: Vec<String> = self
+            .unknown_motions
+            .iter()
+            .map(|m| format!("motion unknown: {m}"))
+            .collect();
         let mut drawn = 0usize;
         // Resolve every actor's model first (the skeletal path may need &mut self for caches).
         let entities = self.entities.clone();
