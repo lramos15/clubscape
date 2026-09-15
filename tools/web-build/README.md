@@ -133,8 +133,8 @@ compiler over stdin. Region scene-asset IDs must match that
 compiled content. Files reside under `asset-root` at their public URL paths
 without the leading slash. No entire cache is copied.
 
-Canonical artifact3 is `m1.source-backed.v3.327d3a78f3bdad7c`, raw SHA-256
-`a200ca08c80f6a3fc812fe02ca95f52325e183084f83b12e8d470a1f37cc6d62`.
+Current canonical artifact3 is `m1.source-backed.v3.0e506f3dab24bbe0`, raw SHA-256
+`df3e2a452c100ecd94d2abc68e5cb1556f58090700474f547e7fd36de6682b3d`.
 The checked projection contains118 item definitions,29 runtime regions,
 one shop and5,010 compiled referenced asset IDs. Its exact six remaining
 unresolved paths are preserved in `contentValidation`, not treated as active
@@ -146,12 +146,37 @@ owner-online ground clocks and the120000 played-tick boundary. The former
 two-native-failure interlock is obsolete. Compiler/display projection alone
 still does not establish a deployed server's readiness; that remains the
 actual backend's job.
-Projection evidence: `.local/evidence/m1-artifact3-projection.json`.
+Current projection/run evidence:
+`.local/evidence/browser-shell-df3e2a45/source-projection.json`,
+`source-refresh.json` and `source-run-pin.json` in that same directory.
+Earlier `.local/evidence/m1-artifact3-projection.json` remains historical.
+
+The complete actor fix pair `62a003c` + `e1076a8`, then source refresh
+`3a74cbe`, are integrated. Source JSON comparison changes **only `/revision`**;
+gameplay rules, geometry, assets and source policies are otherwise identical.
+Queued/current attack deadlines and effective presence remain engine-owned.
+There is no remaining shop/actor review-finding blocker.
+
+Existing `.local/source-definition-a200ca08` and `.local/source-audio-a200ca08`
+bundles retain raw artifact
+`a200ca08c80f6a3fc812fe02ca95f52325e183084f83b12e8d470a1f37cc6d62`
+for historical diagnostics. They are never rewritten to the new canonical
+revision. A new candidate uses a new output directory and a **different
+isolated world UUID**; acknowledged progress is not migrated or reseeded.
+
+`run-pins.ts` captures an existing bundle's world UUID, actual artifact,
+public-content revision/hash and descriptor/asset-manifest hashes without
+consulting the latest canonical source. `assertSourceRunPin` rejects changes
+even when replacement files are internally self-consistent. New bundles
+include private `source-run-pin.json`; the isolated runner also compares the
+captured pin before/after its checks. Keep that exact pin across reconnect/
+restart within a run. Current canonical refreshes authorize a new candidate,
+not a silent artifact swap inside a retained world.
 
 ### Real original-definition delivery
 
 ```sh
-pnpm --dir web source:bundle .local/source-definition-a200ca08 <stable-world-uuid>
+pnpm --dir web source:bundle .local/source-definition-df3e2a45 <new-isolated-world-uuid>
 ```
 
 This new-directory-only tool strictly projects the current canonical artifact,
@@ -189,10 +214,10 @@ is changed by the build layer.
 Use a **new** directory when adding audio to an earlier generated bundle:
 
 ```sh
-pnpm --dir web source:bundle .local/source-audio-a200ca08 <stable-world-uuid>
+pnpm --dir web source:bundle .local/source-audio-df3e2a45 <new-isolated-world-uuid>
 # Exit2 currently records the unchanged descriptor-budget blocker; public outputs remain valid.
-CLUBSCAPE_CLIENT_MANIFEST=.local/source-audio-a200ca08/content/manifest.json \
-CLUBSCAPE_CLIENT_ASSET_ROOT=.local/source-audio-a200ca08 \
+CLUBSCAPE_CLIENT_MANIFEST=.local/source-audio-df3e2a45/content/manifest.json \
+CLUBSCAPE_CLIENT_ASSET_ROOT=.local/source-audio-df3e2a45 \
 CLUBSCAPE_CONTENT_OWNER=web \
 pnpm --dir web build
 ```
@@ -212,12 +237,13 @@ The account-only service can independently deliver/decode these original
 source files without pretending a world was initialized:
 
 ```sh
-CLUBSCAPE_CLIENT_MANIFEST=.local/source-definition-a200ca08/content/manifest.json \
-CLUBSCAPE_CLIENT_ASSET_ROOT=.local/source-definition-a200ca08 \
+CLUBSCAPE_CLIENT_MANIFEST=.local/source-audio-df3e2a45/content/manifest.json \
+CLUBSCAPE_CLIENT_ASSET_ROOT=.local/source-audio-df3e2a45 \
 CLUBSCAPE_CONTENT_OWNER=web \
 pnpm --dir web build
 
-CLUBSCAPE_GAME_DESCRIPTOR_PROBE=.local/source-definition-a200ca08 \
+CLUBSCAPE_GAME_DESCRIPTOR_PROBE=.local/source-audio-df3e2a45 \
+CLUBSCAPE_BROWSER_EVIDENCE=.local/evidence/browser-shell-df3e2a45 \
 CLUBSCAPE_BROWSER_EXECUTABLE=/path/to/verified/native/chrome \
 pnpm --dir web test:isolated
 ```
@@ -331,8 +357,9 @@ Before integrated-client completion:
    bytes/hashes and original uncertain intents are preserved. Rejected
    selections refresh without retargeting or silently retrying another item.
    No shop identity/backend capacity blocker remains. Source contact/offline-clock fixes are integrated; the newly
-   demonstrated game-descriptor size limit and the separately pending actor
-   collision/style fixes remain visible, never bypassed with seeded state.
+   demonstrated game-descriptor size limit remains visible, never bypassed
+   with trimmed content or seeded state. The complete actor/collision/style
+   repairs are integrated without a new browser outcome API.
 4. Align renderer `observe()`/applied settings/GPU completion ABI and the
    actual source audio event provenance described in `web/app/README.md`.
    The audio factory and real decoder observations are integrated; source

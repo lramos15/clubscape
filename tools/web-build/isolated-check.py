@@ -37,15 +37,18 @@ def command(args, env=None, timeout=120):
 
 def main():
     run_id = uuid.uuid4().hex[:16]
+    evidence = (ROOT / os.environ.get("CLUBSCAPE_BROWSER_EVIDENCE", ".local/evidence/browser-shell")).resolve()
+    if evidence == ROOT or not evidence.is_relative_to(ROOT):
+        raise RuntimeError("Browser evidence must stay in a worktree-owned directory.")
     local = ROOT / ".local" / "browser-shell-checks" / run_id
     local.mkdir(parents=True, mode=0o700)
     runtime = local / "runtime"
     runtime.mkdir(mode=0o700)
-    evidence = ROOT / ".local" / "evidence" / "browser-shell"
     evidence.mkdir(parents=True, exist_ok=True)
     container = "clubscape-browser-shell-" + run_id
     created = False
     process = None
+    source_pin = None
     try:
         command(["cargo", "build", "--quiet", "-p", "clubscape-server"], timeout=300)
         target = Path(json.loads(command(["cargo", "metadata", "--no-deps", "--format-version=1"]))["target_directory"])
@@ -88,6 +91,7 @@ def main():
             if not probe_root.is_relative_to(ROOT):
                 raise RuntimeError("Game descriptor probe must use an owned worktree directory.")
             descriptor = probe_root / "clubscape-game.json"
+            source_pin = json.loads(command(["node", "tools/web-build/run-pins.ts", str(probe_root)]))
             probe_env = dict(env, CLUBSCAPE_GAME_ROOT=str(probe_root))
             probe = subprocess.run([str(target / "debug/clubscape-server")], cwd=ROOT,
                                    env=probe_env, capture_output=True, text=True, timeout=20)
@@ -102,6 +106,7 @@ def main():
                 "descriptorBytes": descriptor.stat().st_size, "descriptorLimit": 256 * 1024,
                 "exitCode": probe.returncode, "errorId": failure.get("error_id"),
                 "errorKind": failure["error_kind"], "gameplayAccepted": False,
+                "sourceRunPin": source_pin,
             }, indent=2) + "\n")
         log_path = local / "server.jsonl"
         with log_path.open("w") as log:
@@ -147,6 +152,14 @@ def main():
             "node", "tools/web-build/browser-check.ts",
         ]
         print(command(args, env=browser_env, timeout=180))
+        if source_pin is not None:
+            after = json.loads(command(["node", "tools/web-build/run-pins.ts", str(probe_root)]))
+            if after != source_pin:
+                raise RuntimeError("Source artifact/run identity changed during the isolated check; no refreshed or reseeded run can count as a restart.")
+            (evidence / "source-run-pin.json").write_text(json.dumps({
+                "kind": "unchanged-source-run-pin", "result": "passed", "pin": source_pin,
+                "scope": "Actual startup attempt plus source/browser delivery; not gameplay acceptance.",
+            }, indent=2) + "\n")
     finally:
         cleanup_failure = None
         if process is not None and process.poll() is None:

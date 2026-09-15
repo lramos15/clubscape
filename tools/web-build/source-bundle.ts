@@ -10,6 +10,7 @@ import { canonicalJson } from "../../web/app/identity.ts";
 import { projectArtifact, readArtifact } from "./artifact.ts";
 import type { PublicFile } from "./deliver.ts";
 import { deliverAudioAssets } from "./audio-assets.ts";
+import { captureSourceRunPin } from "./run-pins.ts";
 
 const root = resolve(fileURLToPath(new URL("../../", import.meta.url)));
 const sha = (bytes: Uint8Array | string): string => createHash("sha256").update(bytes).digest("hex");
@@ -17,6 +18,7 @@ const sha = (bytes: Uint8Array | string): string => createHash("sha256").update(
 /** Real source metadata + canonical content, not a renderer/UI/audio bundle or a seeded world. */
 export async function prepareSourceBundle(directory: string, worldId: string): Promise<{
   directory: string; artifactSha256: string; contentRevision: string; publicAssets: number; publicBytes: number;
+  worldId: string;
   serverDescriptorBytes: number; serverDescriptorLimit: number; serverCompatible: boolean;
 }> {
   const output = resolve(root, directory);
@@ -85,7 +87,9 @@ export async function prepareSourceBundle(directory: string, worldId: string): P
     readiness_profile: { id: "ordinary_normal_f2p", excluded_items: ["item.ensouled_goblin_head", "item.milk.bottomless_bucket"] },
   }) + "\n";
   await writeFile(resolve(output, "clubscape-game.json"), gameDescriptor, { mode: 0o600 });
-  return { directory: output, artifactSha256: sha(bytes), contentRevision: manifest.revision,
+  await writeFile(resolve(output, "source-run-pin.json"), JSON.stringify(await captureSourceRunPin(output), null, 2) + "\n",
+    { flag: "wx", mode: 0o600 });
+  return { directory: output, worldId, artifactSha256: sha(bytes), contentRevision: manifest.revision,
     publicAssets: source.assets.length, publicBytes: source.bytes + Buffer.byteLength(contentBytes),
     serverDescriptorBytes: Buffer.byteLength(gameDescriptor), serverDescriptorLimit: 256 * 1024,
     serverCompatible: Buffer.byteLength(gameDescriptor) <= 256 * 1024 };
