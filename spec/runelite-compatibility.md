@@ -53,10 +53,10 @@ changing the client architecture cannot repair these service prerequisites.
 The worker is stopped; no fourth live invocation or automatic later milestone
 is authorized.
 
-## Authorized canonical source update
+## Earlier authorized canonical source update (faa8002)
 
 The later explicit faa8002 authorization is integrated as
-`c841f6a6dcd4a1a2b3e7a9e121c62849140c8634`. The current raw artifact is
+`c841f6a6dcd4a1a2b3e7a9e121c62849140c8634`. The then-current raw artifact was
 `a200ca08c80f6a3fc812fe02ca95f52325e183084f83b12e8d470a1f37cc6d62`,
 content/artifact3, zero active bindings and six inactive proofs. Source-solid
 contact and owner-online clock/playtime conformance are resolved, not retained
@@ -89,6 +89,25 @@ wire/JSON/v1-hash golden tests pass. See
 commands, scope and limitations. No live shop or generic-plugin acceptance is
 claimed. The independent startup blockers and exhausted invocation ledger
 remain unchanged; no desktop deferral or later milestone is authorized.
+
+## Complete actor/source refresh
+
+Authorized62a003c thene1076a87 are integrated asfe87989/5150ead **together**, followed
+by3a74cbe as32167ca. The current candidate is now
+`df3e2a452c100ecd94d2abc68e5cb1556f58090700474f547e7fd36de6682b3d`,
+revision `m1.source-backed.v3.0e506f3dab24bbe0`. Structural comparison proves only
+the input-derived source `/revision` changed. All15 actor and18 shop regressions
+are active and passing; no engine finding is retained as an obsolete interlock.
+
+Current descriptors/catalogs are separately generated under `game-3a74cbe`.
+Older pinned world artifacts and acknowledged progress are not swapped or
+reseeded. The current5010-asset descriptor still exceeds the unchanged256KiB
+limit, and game-root environment nesting remains. These independent startup
+surfaces and renewed explicit live bounds still block the real RuneLite tuple.
+
+See [current source, checks and world-preservation evidence](../research/runelite-feasibility/canonical-3a74cbe.md).
+No new live invocation, support tier, whole-M1/presentation acceptance, desktop
+deferral or later milestone is claimed.
 
 ## Original bounded M1 companion contract
 

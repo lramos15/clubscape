@@ -1,0 +1,18 @@
+{
+  "schema_version": 1,
+  "kind": "unchanged_source_pack",
+  "artifact_sha256": "df3e2a452c100ecd94d2abc68e5cb1556f58090700474f547e7fd36de6682b3d",
+  "content_revision": "m1.source-backed.v3.0e506f3dab24bbe0",
+  "referenced_source_assets": 5010,
+  "source_bytes": 7658110,
+  "descriptor_bytes": 283075,
+  "descriptor_sha256": "7de30a533cd883659ff2e196631e265734b6104bf95218702288c9c7952b7feb",
+  "strict_server_descriptor_limit_bytes_at_base": 262144,
+  "minimum_assets_object_bytes_even_if_every_asset_shared_shortest_legal_url": 267049,
+  "fits_base_server_descriptor_limit": false,
+  "source_content_changed": false,
+  "server_guards_changed": false,
+  "game_root": "runelite/compatibility/artifacts/game-3a74cbe",
+  "adapter_catalog": "runelite/compatibility/artifacts/game-3a74cbe/adapter-catalog.json",
+  "compatibility_verified": false
+}

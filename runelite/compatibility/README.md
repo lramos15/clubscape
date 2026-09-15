@@ -5,13 +5,20 @@ complete, not the live demonstration. See
 [`review.md`](../../research/runelite-feasibility/review.md) and
 [`assessment.json`](../../research/runelite-feasibility/assessment.json).
 
-**Canonical update:** authorized faa8002 is integrated as c841f6a, with the
-current `a200…d62` source artifact and resolved source contact/clock probes.
+**Current candidate:** the complete62a003c/e1076a87 actor pair and3a74cbe source
+refresh are integrated. Use `game-3a74cbe` / `df3e…b3d` and its matching catalog,
+not a200, for any newly admitted candidate. See
+[current packaging and preserved-world evidence](../../research/runelite-feasibility/canonical-3a74cbe.md).
+Only the source `/revision` changed; older pinned worlds/runs remain untouched.
+Independent startup blockers and the original exhausted live bound remain.
+
+**Prior canonical update:** authorized faa8002 is integrated as c841f6a, with the
+then-current `a200…d62` source artifact and resolved source contact/clock probes.
 The independent environment/descriptor startup blockers remain unchanged.
-Use the separately named current pack/catalog and commands in
+The separately named historical pack/catalog and commands remain in
 [`canonical-faa8002.md`](../../research/runelite-feasibility/canonical-faa8002.md);
-do not overwrite the original experiment's inputs or treat its old pack as
-current. No additional live invocation was admitted.
+do not overwrite those inputs or treat that old pack as current. No additional
+live invocation was admitted by that refresh.
 
 **Shop ABI update:** authorized3310032 thenaf75e17 are integrated, and the
 owned buy/quote transport now pins immutable displayed canonical item identities,
@@ -86,7 +93,7 @@ evidence that it reflected server state.
 
 These default output names reproduce the original400ec9e assessment checkout.
 On the updated canonical checkout, use the separately named outputs in the
-[faa8002 reproduction](../../research/runelite-feasibility/canonical-faa8002.md)
+[current reproduction](../../research/runelite-feasibility/canonical-3a74cbe.md)
 instead; the packer intentionally rejects overwriting historical source inputs.
 
 Read `AGENTS.md`, `prompt.md` Sections12/30/44, and
