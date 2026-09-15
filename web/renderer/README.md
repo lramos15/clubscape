@@ -54,8 +54,14 @@ plus:
 * `update(world)` serialises the `WorldView` plus the optional `RendererWorldExtensions`
   (`dynamicObjects`, `events`, `instanceLayout`). The player is the approved penguin body (NPC
   2063 / model 21547 at 75/128) wearing the `equipment[].item.sourceId` models with the
-  bind-pose and per-pose contact fit (`playerFitReport()`, `playerPoseFits()`; the recorded
-  `gear/pose-fits.json` is loaded with the assets so no frame solves at draw time). **Motion
+  playing sequence's source hand overrides applied (`lc.bd`: death and the eat/spell/fishing/
+  smithing family hide the hand slots, woodcutting/mining/fishing/firemaking/smithing put their
+  own tool in a hand) and the attachment-preserving bind + per-pose fits (`playerFitReport()`,
+  `playerPoseFits()` with `penetration` ≤ 1, surface `gap` ≤ 2 and `attachmentGap` ≤ 2 targets;
+  the recorded `gear/pose-fits.json` schema 2 is loaded with the assets so no frame solves at
+  draw time — the gate over all legal item-frames is currently unmet, see
+  `crates/renderer/README.md` "Known deviations"; `meetsTargets: false` entries are exact
+  failures, never hidden). **Motion
   identity is explicit only** (the original client plays what the server sends and never derives
   actions locally), in this precedence: `player.animation` / `entity.animation` as a bare id
   (`"879"`) or the catalog id (`asset.source.osrs.cache2695.sequence.879`); the
@@ -74,7 +80,12 @@ plus:
   in-between or without ticks). `observerV1()` reports whether the last view carried the
   observer fields. An `activity` such as `gathering`/`producing`/`fighting`/`casting`, or
   `hitpoints === 0`, with no source animation keeps the stance and is reported as
-  `motion unknown: …` through `onDiagnostic` / `unknownMotions()`, never a guessed pose. NPC
+  `motion unknown: …` through `onDiagnostic` / `unknownMotions()`, never a guessed pose;
+  observer-v1 actions with `animation: null` are additionally listed with their exact
+  `id`/`activity`/`actionId`/`recipeId`/`styleId`/`spellId` by `unboundActions()` for the
+  backend's binding work. Observer ticks (`tick`, `movementTick`, `cycleStartedAtTick`) are
+  decoded losslessly as decimal `u64` strings — a malformed one on an observer view makes
+  `update()` throw before any state changes (no silent clock reset). NPC
   entities with a source definition play the definition's own stand/walk sequences locally
   exactly as the original client does; their deaths and actions are server animations too.
   `temporary_object` entities (fire 26185) animate through the source frames, `groundItems`
@@ -142,8 +153,13 @@ plus:
   per square by the export (0 on all 15 native cases). `mapIconSprites()` returns the original
   map-element sprites (`minimap/mapicons.bin`, 386 elements, fetched with the map-scene asset)
   as `Map<element, MapIconSprite {pixels: ImageData, width, height, …}>`; the HUD draws them
-  over the surface per frame with the original `client.zr`/`bo.as` rule documented on
-  `MinimapSurface.icons` (offset from the player's fine position, minimap zoom, map rotation,
+  over the surface per frame with the original `client.zr`/`bo.as` rule, computed exactly by
+  `placeMinimapIcon(...)` / `minimapIconPlacements(playerTileX, playerTileY, scale, widgetW,
+  widgetH)` → `MinimapIconPlacement {x, y, drawX, drawY, clipped, dx, dy}` in **minimap pixels**
+  (`MINIMAP_STOCK_SCALE` = 1/32: 4 px per tile; cut-off 80 px = 20 tiles, mask-clipped beyond
+  50 px; the minimap angle is the camera yaw in 16384 units) — the earlier prose that read the
+  6400/2500 thresholds as fine units was wrong (that would drop markers beyond ~0.6 tile);
+  the placement doc on `MinimapSurface.icons` is now the pixel rule (offset from the player's fine position, minimap zoom, map rotation,
   80-unit radius). The call throws when no scene, no map-scene asset or — with `complete: false`
   and `notes` — when a square's sidecar is missing; it never returns a blank, static or
   approximate map. Native comparison: all 15 approved minimap rasters match pixel-exactly over
@@ -272,8 +288,9 @@ figures (59.60–59.77) reaches 60.
   UI's painter in place of the static `ui/minimaps/<base>-<plane>.png` catalogue raster. The
   surface follows the streamed scene (recentering changes `baseX/baseY`), the player's plane
   and door states; entity dots and the player marker remain the UI's layer over it, and the map
-  icons are drawn by the UI from `surface.icons` with `mapIconSprites()` (original sprites) by
-  the `bo.as` rule documented on `MinimapSurface.icons`.
+  icons are drawn by the UI from `surface.icons` with `mapIconSprites()` (original sprites) at
+  the positions `minimapIconPlacements()` returns (the exact `bo.as` rule; plain blit inside
+  50 px adding the sprite's own offsets, mask-clipped blit beyond it without them).
 * World blocks are streamed by manifest key from `assetBaseUrl` (`blocks/<square>.bin.gz`,
   `blocks/<square>.models.bin.gz`, `minimap/blocks/<square>.bin`, `minimap/mapscenes.bin`,
   `minimap/mapicons.bin`); `gear/pose-fits.json` and `hud/zoom-table.json` are published.

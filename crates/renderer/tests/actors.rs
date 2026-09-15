@@ -830,16 +830,27 @@ fn player_uses_original_action_motion_and_wears_modular_gear() {
     let summary = core.build_frame(0.0).unwrap().clone();
     assert_eq!(summary.entities_drawn, 1, "{:?}", summary.entities_skipped);
     let (_, fits) = core.player_fit_report().unwrap();
-    // Arrows have no worn model in the original (op.jm male model -1), so four items attach.
+    // Arrows have no worn model in the original (op.jm male model -1), so four items attach —
+    // each within the attachment bound of its anchor. The penetration / surface-gap targets
+    // are gated per pose in tests/gear_fit.rs (currently unmet for attached items).
     assert_eq!(fits.len(), 4, "{fits:?}");
     for fit in fits {
         eprintln!("fit {:?}", fit);
         assert!(
-            fit.penetration <= clubscape_renderer::actor::FIT_MAX_PENETRATION,
+            fit.attachment_gap <= clubscape_renderer::actor::FIT_MAX_ATTACHMENT + 1e-9,
             "{fit:?}"
         );
-        assert!(fit.gap <= clubscape_renderer::actor::FIT_MAX_GAP, "{fit:?}");
     }
+    let sword_and_shield: Vec<i32> = core
+        .player_pose_fits()
+        .values()
+        .flatten()
+        .map(|f| f.item_id)
+        .collect();
+    assert!(
+        sword_and_shield.contains(&1277) && sword_and_shield.contains(&1171),
+        "slash (390) leaves the worn sword and shield drawn: {sword_and_shield:?}"
+    );
     let armed = rasterize(&core, &textures);
     common::assert_pixels_differ(&armed, &chop0, "worn gear changed nothing");
     // The server names the combat motion: punch (422) and sword slash (390) differ.
@@ -1499,4 +1510,245 @@ fn stock_top_plane_rule_hides_upper_planes_under_roofs() {
         "instanced map still drew upper planes ({instanced} vs {steep})"
     );
     core.set_instanced_map(false);
+}
+
+/// `game.observer.v1` ticks are decoded losslessly as `u64`: a malformed tick or cycle start on
+/// an observer view is a contract error (no silent clock reset), 2^53+1 survives, a cycle start
+/// dated after the view's tick is reported and anchored at the update, and legacy views (no
+/// observer fields) keep the optional tick.
+#[test]
+fn observer_ticks_are_lossless_u64_and_malformed_ticks_are_errors() {
+    use clubscape_renderer::core::parse_observer_tick;
+    assert_eq!(
+        parse_observer_tick("tick", "9007199254740993").unwrap(),
+        9_007_199_254_740_993
+    );
+    assert_eq!(
+        parse_observer_tick("tick", "18446744073709551615").unwrap(),
+        u64::MAX
+    );
+    for bad in [
+        "",
+        " ",
+        "-1",
+        "+3",
+        "1.0",
+        "1e3",
+        "abc",
+        "18446744073709551616",
+        "12 3",
+    ] {
+        let err = parse_observer_tick("tick", bad).unwrap_err().to_string();
+        assert!(
+            err.contains("observer v1") && err.contains("tick"),
+            "{bad:?}: {err}"
+        );
+    }
+    let Some(mut core) = core_with_actors() else {
+        return;
+    };
+    load_house(&mut core);
+    let big = 9_007_199_254_740_993u64; // 2^53 + 1: not representable as f64/JSON number
+    let view = |tick: &str, running: Option<bool>, movement: Option<&str>, cycle: Option<&str>| {
+        let mut v: serde_json::Value = serde_json::from_str(&world(
+            (3098, 3098),
+            "gathering",
+            "",
+            &[],
+            serde_json::json!([]),
+        ))
+        .unwrap();
+        v["tick"] = serde_json::json!(tick);
+        if let Some(r) = running {
+            v["player"]["running"] = serde_json::json!(r);
+        }
+        v["player"]["movementTick"] = match movement {
+            Some(m) => serde_json::json!(m),
+            None => serde_json::Value::Null,
+        };
+        if let Some(c) = cycle {
+            v["player"]["action"] = serde_json::json!({
+                "version": 1, "id": "act-big", "activity": "gathering", "actionId": "action.woodcutting.chop",
+                "target": null, "recipeId": null, "styleId": null, "spellId": null,
+                "animation": "asset.source.osrs.cache2695.sequence.879", "startedAtTick": c,
+                "cycleStartedAtTick": c, "nextActionTick": c, "observedAtTick": tick
+            });
+        }
+        v.to_string()
+    };
+    // Legacy view: a non-numeric tick is tolerated (no observer fields).
+    core.update_world(&view("not-a-tick", None, None, None), 0.0)
+        .unwrap();
+    assert!(!core.observer_v1());
+    // Observer view: malformed ticks are errors and leave no half-applied state.
+    let before = core.player_running();
+    for (tick, movement, cycle) in [
+        ("not-a-tick", Some("5"), None),
+        ("5", Some("x"), None),
+        ("5", Some("5"), Some("-1")),
+        ("5", Some("5"), Some("18446744073709551616")),
+    ] {
+        let err = core
+            .update_world(&view(tick, Some(true), movement, cycle), 0.0)
+            .unwrap_err()
+            .to_string();
+        assert!(err.contains("observer v1"), "{err}");
+    }
+    assert_eq!(core.player_running(), before);
+    // Lossless: movementTick == tick at 2^53+1 is a move this tick (an f64 decode would make
+    // 2^53+1 == 2^53 and mis-correlate the neighbouring tick).
+    let big_s = big.to_string();
+    let prev_s = (big - 1).to_string();
+    core.update_world(&view(&big_s, Some(true), Some(&big_s), None), 0.0)
+        .unwrap();
+    assert!(core.observer_v1() && core.player_running());
+    core.update_world(&view(&big_s, Some(false), Some(&prev_s), None), 0.0)
+        .unwrap();
+    assert!(
+        !core.player_running(),
+        "movementTick 2^53 is not this tick (2^53+1)"
+    );
+    // A cycle start after the view's tick: explicit diagnostic, anchored at this update.
+    let later = (big + 7).to_string();
+    core.update_world(&view(&big_s, Some(false), None, Some(&later)), 5000.0)
+        .unwrap();
+    let notes = core.unknown_motions().join("\n");
+    assert!(
+        notes.contains("cycleStartedAtTick") && notes.contains("after the view tick"),
+        "{notes}"
+    );
+    assert!(core.unbound_actions().is_empty());
+    // An action without a bound animation is reported with its exact identity.
+    let mut v: serde_json::Value =
+        serde_json::from_str(&view(&big_s, Some(false), None, Some(&big_s))).unwrap();
+    v["player"]["action"]["animation"] = serde_json::Value::Null;
+    v["player"]["action"]["id"] = serde_json::json!("act-unbound");
+    v["player"]["action"]["actionId"] = serde_json::json!("action.cooking.cook");
+    v["player"]["action"]["recipeId"] = serde_json::json!("recipe.shrimps");
+    core.update_world(&v.to_string(), 6000.0).unwrap();
+    let unbound = core.unbound_actions();
+    assert_eq!(unbound.len(), 1);
+    assert_eq!(unbound[0].id, "act-unbound");
+    assert_eq!(unbound[0].action_id.as_deref(), Some("action.cooking.cook"));
+    assert_eq!(unbound[0].recipe_id.as_deref(), Some("recipe.shrimps"));
+    assert_eq!(unbound[0].activity, "gathering");
+    assert_eq!(
+        serde_json::to_value(&unbound[0]).unwrap()["actionId"],
+        "action.cooking.cook"
+    );
+}
+
+/// `lc.bd`: the playing sequence's hand items replace the worn weapon/shield models — the death
+/// sequence hides both hands (hat and necklace stay), woodcutting draws the axe through the
+/// shield slot with the weapon slot hidden, mining draws the pickaxe in both hands, and the
+/// sequence hand items (net/tinderbox/hammer) appear only in their own sequences.
+#[test]
+fn sequence_hand_overrides_replace_the_worn_hand_models() {
+    let Some(mut core) = core_with_actors() else {
+        return;
+    };
+    load_house(&mut core);
+    let textures = textures();
+    let gear = [
+        ("weapon", 1277),
+        ("shield", 1171),
+        ("head", 1949),
+        ("amulet", 1009),
+    ];
+    let drawn = |core: &mut RendererCore, animation: &str| -> Vec<(String, i32)> {
+        core.update_world(
+            &world(
+                (3098, 3098),
+                "fighting",
+                animation,
+                &gear,
+                serde_json::json!([]),
+            ),
+            0.0,
+        )
+        .unwrap();
+        core.build_frame(0.0).unwrap();
+        let mut items: Vec<(String, i32)> = core
+            .player_pose_fits()
+            .values()
+            .flatten()
+            .map(|f| (f.slot.clone(), f.item_id))
+            .collect();
+        items.sort();
+        items.dedup();
+        items
+    };
+    let s = |slot: &str, id: i32| (slot.to_string(), id);
+    assert_eq!(
+        drawn(&mut core, "808"),
+        vec![
+            s("amulet", 1009),
+            s("head", 1949),
+            s("shield", 1171),
+            s("weapon", 1277)
+        ]
+    );
+    // Death (836): both hands hidden.
+    assert_eq!(
+        drawn(&mut core, "836"),
+        vec![s("amulet", 1009), s("head", 1949)]
+    );
+    assert!(
+        core.unknown_motions()
+            .iter()
+            .any(|n| n.contains("sequence 836") && n.contains("hides the shield slot")),
+        "{:?}",
+        core.unknown_motions()
+    );
+    let dead = rasterize(&core, &textures);
+    // Woodcutting (879): the axe in the shield slot, the worn sword hidden.
+    assert_eq!(
+        drawn(&mut core, "879"),
+        vec![s("amulet", 1009), s("head", 1949), s("shield", 1351)]
+    );
+    // Mining (625): the pickaxe in both slots (drawn twice, as the source merges both).
+    assert_eq!(
+        drawn(&mut core, "625"),
+        vec![
+            s("amulet", 1009),
+            s("head", 1949),
+            s("shield", 1265),
+            s("weapon", 1265)
+        ]
+    );
+    // Fishing (621) / firemaking (733) / smithing (898): the sequence's own tool.
+    assert_eq!(
+        drawn(&mut core, "621"),
+        vec![
+            s("amulet", 1009),
+            s("head", 1949),
+            s("shield", 303),
+            s("weapon", 303)
+        ]
+    );
+    assert_eq!(
+        drawn(&mut core, "733"),
+        vec![s("amulet", 1009), s("head", 1949), s("weapon", 590)]
+    );
+    assert_eq!(
+        drawn(&mut core, "898"),
+        vec![s("amulet", 1009), s("head", 1949), s("weapon", 2347)]
+    );
+    let smithing = rasterize(&core, &textures);
+    common::assert_pixels_differ(&dead, &smithing, "death equals smithing");
+    // The preview obeys the same rule.
+    let preview_death = core
+        .player_model_for_preview(836, 0, &[("weapon", 1277), ("head", 1949)])
+        .unwrap()
+        .unwrap();
+    let preview_idle = core
+        .player_model_for_preview(808, 0, &[("weapon", 1277), ("head", 1949)])
+        .unwrap()
+        .unwrap();
+    assert!(
+        preview_death.vertex_count < preview_idle.vertex_count,
+        "death preview still carries the sword ({} vs {} vertices)",
+        preview_death.vertex_count,
+        preview_idle.vertex_count
+    );
 }

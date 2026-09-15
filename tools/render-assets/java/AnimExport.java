@@ -81,15 +81,72 @@ final class AnimExport
         }
         export.manifest.put("npc_definitions", npcRecords);
         List<Object> itemRecords = new ArrayList<>();
+        TreeSet<Integer> exportedItems = new TreeSet<>();
         for (int itemId : new int[] {882, 1351, 877, 1009, 1949, 1205, 1265, 1173, 1171, 841, 1237, 1277})
         {
             itemRecords.add(exportItem(itemId, sequences));
+            exportedItems.add(itemId);
         }
-        export.manifest.put("equipment_items", itemRecords);
-        export.manifest.put("player_reference", exportPlayerReference());
         List<Object> sequenceRecordsOut = new ArrayList<>();
         for (int id : sequences) sequenceRecordsOut.add(exportSequence(id));
         export.manifest.put("sequences", sequenceRecordsOut);
+        // The original hand-item override (lc.bd): a sequence with leftHandItem / rightHandItem
+        // >= 0 replaces the shield (slot 5) / weapon (slot 3) equipment id with
+        // `value - 512 + 2048`; >= 2048 is item `value - 512`, 256..2047 is kit `id - 256`.
+        // Every item such a required sequence shows is exported like the worn items; every kit
+        // is checked against the cache (value 0 maps to kit 1280, which does not exist -> the
+        // slot draws nothing).
+        int[] kitFiles = export.cache.archive(2).getFileIds(3);
+        TreeSet<Integer> kitIds = new TreeSet<>();
+        for (int id : kitFiles) kitIds.add(id);
+        Map<String, Object> overrides = new LinkedHashMap<>();
+        overrides.put("rule", "lc.bd: sequence.leftHandItem >= 0 -> equipment[5] = value - 512 + 2048; rightHandItem >= 0 -> equipment[3] = value - 512 + 2048; ids >= 2048 are items (id - 2048), 256..2047 kits (id - 256), others nothing");
+        overrides.put("source", "ou.by (opcode 6) / ou.bq (opcode 7) decoded per required sequence; lc.at conversion; lc.lk / lc.ak range checks; kit table = archive 2 group 3 file ids");
+        List<Object> values = new ArrayList<>();
+        TreeSet<Integer> seen = new TreeSet<>();
+        for (Object recordObj : sequenceRecordsOut)
+        {
+            @SuppressWarnings("unchecked") Map<String, Object> record = (Map<String, Object>) recordObj;
+            for (String key : new String[] {"left_hand_item", "right_hand_item"})
+            {
+                int value = ((Number) record.get(key)).intValue();
+                if (value < 0 || !seen.add(value)) continue;
+                int equipment = value - 512 + 2048;
+                Map<String, Object> entry = new LinkedHashMap<>();
+                entry.put("value", value);
+                entry.put("equipment_id", equipment);
+                if (equipment >= 2048)
+                {
+                    int itemId = equipment - 2048;
+                    entry.put("kind", "item");
+                    entry.put("item_id", itemId);
+                    if (exportedItems.add(itemId))
+                    {
+                        Map<String, Object> itemRecord = exportItem(itemId, sequences);
+                        itemRecord.put("role", "sequence_hand_item");
+                        itemRecords.add(itemRecord);
+                    }
+                }
+                else if (equipment >= 256)
+                {
+                    int kitId = equipment - 256;
+                    entry.put("kind", "kit");
+                    entry.put("kit_id", kitId);
+                    entry.put("kit_exists", kitIds.contains(kitId));
+                    entry.put("draws", kitIds.contains(kitId) ? "kit model (unsupported on the penguin body)" : "nothing: no such kit file");
+                }
+                else
+                {
+                    entry.put("kind", "none");
+                }
+                values.add(entry);
+            }
+        }
+        overrides.put("values", values);
+        overrides.put("kit_count", kitIds.size());
+        export.manifest.put("sequence_hand_overrides", overrides);
+        export.manifest.put("equipment_items", itemRecords);
+        export.manifest.put("player_reference", exportPlayerReference());
         System.out.println("ANIM sequences=" + sequences.size() + " npcs=" + npcRecords.size() + " items=" + itemRecords.size());
     }
 

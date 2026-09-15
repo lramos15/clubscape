@@ -932,3 +932,277 @@ pub fn to_rgba(raster: &Raster) -> (Vec<u8>, Vec<u8>) {
     }
     (rgba, mask)
 }
+
+/// Where one minimap marker sprite lands on the minimap widget: the exact `client.zr` → `bo.as`
+/// arithmetic. Everything after the fine-unit offset is in **minimap pixels** (at the stock
+/// scale `1/32` a tile is 4 px), not source fine units.
+#[derive(Debug, Clone, Copy, PartialEq, Eq, serde::Serialize)]
+#[serde(rename_all = "camelCase")]
+pub struct IconPlacement {
+    /// `bo.as` sprite-canvas top-left relative to the widget origin: `W/2 + rx − maxWidth/2`,
+    /// `H/2 − ry − maxHeight/2` (the sprite's full canvas size, `ym.aw/ak`).
+    pub x: i32,
+    pub y: i32,
+    /// Where the sprite's stored sub-image (`width × height` pixels) actually lands, relative
+    /// to the widget origin. Plain blit (`aap.ro`): canvas position + the sprite's own
+    /// `offsetX/offsetY`. Clipped blit (`ym.bc`): the canvas position itself — `bc` does not add
+    /// the sprite offsets — with each row limited to the widget sprite's mask span
+    /// (`kh.ab[row]..+kh.ae[row]`) and rows to `0..H`.
+    pub draw_x: i32,
+    pub draw_y: i32,
+    /// `dx² + dy² > 2500` (beyond 50 px): drawn through the widget mask (`ym.bc`) instead of the
+    /// plain blit (`aap.ro`). In both paths value-0 sprite pixels are skipped.
+    pub clipped: bool,
+    /// Scaled, unrotated offset from the player in minimap pixels (`(int)(fine * scale)`).
+    pub dx: i32,
+    pub dy: i32,
+}
+
+/// Stock minimap scale (`client.fa` → `zo(widget, x, y, 0.03125F)`): fine units → pixels, i.e.
+/// 128 fine units (one tile) → 4 px. The RuneLite zoom path uses `zoom / 128` instead.
+pub const MINIMAP_STOCK_SCALE: f32 = 0.03125;
+/// `bo.as`: markers farther than this (squared pixels; 80 px = 20 tiles at the stock scale) are
+/// not drawn.
+pub const MINIMAP_ICON_MAX_DISTANCE_SQ: i32 = 6400;
+/// `bo.as`: markers beyond this (squared pixels; 50 px) are drawn clipped to the widget mask.
+pub const MINIMAP_ICON_CLIP_DISTANCE_SQ: i32 = 2500;
+
+/// `client.zr` + `bo.as` for one map-element marker at scene tile `(tile_x, tile_y)` (scene-local
+/// tiles, as `ba.au/ai` hold them) around the player's fine scene position `(player_fine_x,
+/// player_fine_y)` (`client.np/nq`, 128 units per tile): `dx = ((tile << 7) + 64 - player) *
+/// scale` (truncated), skipped when `dx² + dy² > 6400`, rotated by the minimap angle
+/// (`up.aj`/`up.rj`: 16384-step 16.16 sine/cosine, `>> 16`), then placed at
+/// `(W/2 + rx - maxWidth/2, H/2 - ry - maxHeight/2)` inside a `widget_w × widget_h` widget for
+/// a sprite whose canvas is `sprite_max_w × sprite_max_h` with its sub-image at
+/// `(sprite_offset_x, sprite_offset_y)` (`MapIconSprite` fields). `None` when the marker is out
+/// of range.
+#[allow(clippy::too_many_arguments)]
+pub fn icon_placement(
+    tile_x: i32,
+    tile_y: i32,
+    player_fine_x: i32,
+    player_fine_y: i32,
+    scale: f32,
+    minimap_angle: i32,
+    widget_w: i32,
+    widget_h: i32,
+    sprite_max_w: i32,
+    sprite_max_h: i32,
+    sprite_offset_x: i32,
+    sprite_offset_y: i32,
+) -> Option<IconPlacement> {
+    let dx_fine = (tile_x << 7) + 64 - player_fine_x;
+    let dy_fine = (tile_y << 7) + 64 - player_fine_y;
+    // Java: `(int)(var6 * var3)` — float multiply, truncation toward zero.
+    let dx = (dx_fine as f32 * scale) as i32;
+    let dy = (dy_fine as f32 * scale) as i32;
+    let dist_sq = dy * dy + dx * dx;
+    if dist_sq > MINIMAP_ICON_MAX_DISTANCE_SQ {
+        return None;
+    }
+    let t = crate::tables::tables();
+    let angle = (minimap_angle & 16383) as usize;
+    let sin = t.sin16384[angle];
+    let cos = t.cos16384[angle];
+    let rx = (dy * sin + dx * cos) >> 16;
+    let ry = (cos * dy - sin * dx) >> 16;
+    let clipped = dist_sq > MINIMAP_ICON_CLIP_DISTANCE_SQ;
+    let x = widget_w / 2 + rx - sprite_max_w / 2;
+    let y = widget_h / 2 - ry - sprite_max_h / 2;
+    Some(IconPlacement {
+        x,
+        y,
+        draw_x: if clipped { x } else { x + sprite_offset_x },
+        draw_y: if clipped { y } else { y + sprite_offset_y },
+        clipped,
+        dx,
+        dy,
+    })
+}
+
+#[cfg(test)]
+mod icon_placement_tests {
+    use super::*;
+
+    #[test]
+    fn stock_scale_maps_one_tile_to_four_pixels_and_radius_80_to_twenty_tiles() {
+        // Player at the centre of tile (50, 50): fine (50 * 128 + 64).
+        let (px, py) = (50 * 128 + 64, 50 * 128 + 64);
+        let place = |tx: i32, ty: i32, angle: i32| {
+            icon_placement(
+                tx,
+                ty,
+                px,
+                py,
+                MINIMAP_STOCK_SCALE,
+                angle,
+                152,
+                152,
+                15,
+                15,
+                0,
+                0,
+            )
+        };
+        // Same tile: centred (sprite 15x15 → top-left 76 − 7 = 69).
+        let here = place(50, 50, 0).unwrap();
+        assert_eq!(
+            (here.dx, here.dy, here.x, here.y, here.clipped),
+            (0, 0, 69, 69, false)
+        );
+        // One tile east = 4 px right; one tile north (+y) = 4 px up (screen y decreases).
+        let east = place(51, 50, 0).unwrap();
+        assert_eq!((east.dx, east.dy, east.x, east.y), (4, 0, 73, 69));
+        let north = place(50, 51, 0).unwrap();
+        assert_eq!((north.dx, north.dy, north.x, north.y), (0, 4, 69, 65));
+        // 20 tiles = 80 px is the last drawn distance; 21 tiles (84 px) is not drawn.
+        assert!(place(70, 50, 0).is_some_and(|p| p.clipped && p.dx == 80));
+        assert!(place(71, 50, 0).is_none());
+        assert!(place(50, 29, 0).is_none());
+        // 12 tiles (48 px) plain; 13 tiles (52 px) clipped to the widget mask.
+        assert!(!place(62, 50, 0).unwrap().clipped);
+        assert!(place(63, 50, 0).unwrap().clipped);
+        // Diagonal: 15 tiles east + 14 north = 60² + 56² = 6736 > 6400 → not drawn, although
+        // each axis alone is within range.
+        assert!(place(65, 64, 0).is_none());
+        // Player off the tile centre: the fine offset is kept before scaling (truncation).
+        let off = icon_placement(
+            51,
+            50,
+            px + 40,
+            py,
+            MINIMAP_STOCK_SCALE,
+            0,
+            152,
+            152,
+            15,
+            15,
+            0,
+            0,
+        )
+        .unwrap();
+        assert_eq!(off.dx, ((128 - 40) as f32 * MINIMAP_STOCK_SCALE) as i32); // 2.75 → 2
+        assert_eq!(off.dx, 2);
+        // Sprite canvas vs sub-image: the plain blit adds the sprite's own offsets, the clipped
+        // blit (`ym.bc`) does not.
+        let plain = icon_placement(
+            52,
+            50,
+            px,
+            py,
+            MINIMAP_STOCK_SCALE,
+            0,
+            152,
+            152,
+            15,
+            15,
+            3,
+            2,
+        )
+        .unwrap();
+        assert_eq!(
+            (plain.x, plain.y, plain.draw_x, plain.draw_y, plain.clipped),
+            (77, 69, 80, 71, false)
+        );
+        let masked = icon_placement(
+            65,
+            50,
+            px,
+            py,
+            MINIMAP_STOCK_SCALE,
+            0,
+            152,
+            152,
+            15,
+            15,
+            3,
+            2,
+        )
+        .unwrap();
+        assert_eq!(
+            (masked.x, masked.draw_x, masked.draw_y, masked.clipped),
+            (129, 129, 69, true)
+        );
+    }
+
+    #[test]
+    fn rotation_uses_the_16384_step_fixed_point_tables() {
+        let (px, py) = (50 * 128 + 64, 50 * 128 + 64);
+        // A quarter turn (4096): one tile east lands one tile up (rx = dy·sin + dx·cos with
+        // sin = 65536, cos = 0 → rx = 0, ry = −dx → y = H/2 + 4 ...). Check against the tables.
+        let t = crate::tables::tables();
+        for angle in [0, 1024, 4096, 6000, 8192, 12288, 16000] {
+            let p = icon_placement(
+                53,
+                50,
+                px,
+                py,
+                MINIMAP_STOCK_SCALE,
+                angle,
+                152,
+                152,
+                15,
+                15,
+                0,
+                0,
+            )
+            .unwrap();
+            let (dx, dy) = (12, 0);
+            let rx = (dy * t.sin16384[angle as usize] + dx * t.cos16384[angle as usize]) >> 16;
+            let ry = (t.cos16384[angle as usize] * dy - t.sin16384[angle as usize] * dx) >> 16;
+            assert_eq!((p.x, p.y), (76 + rx - 7, 76 - ry - 7), "angle {angle}");
+        }
+        let quarter = icon_placement(
+            53,
+            50,
+            px,
+            py,
+            MINIMAP_STOCK_SCALE,
+            4096,
+            152,
+            152,
+            15,
+            15,
+            0,
+            0,
+        )
+        .unwrap();
+        assert_eq!(
+            (quarter.x, quarter.y),
+            (69, 69 + 12),
+            "east marker turns to screen-down at 4096"
+        );
+        // Angles wrap (`& 16383`).
+        let wrapped = icon_placement(
+            53,
+            50,
+            px,
+            py,
+            MINIMAP_STOCK_SCALE,
+            4096 + 16384,
+            152,
+            152,
+            15,
+            15,
+            0,
+            0,
+        )
+        .unwrap();
+        assert_eq!((wrapped.x, wrapped.y), (quarter.x, quarter.y));
+    }
+
+    #[test]
+    fn zoomed_scale_changes_pixels_per_tile_not_the_pixel_thresholds() {
+        let (px, py) = (50 * 128 + 64, 50 * 128 + 64);
+        // RuneLite zoom 8 → scale 8/128 = 1/16: one tile is 8 px, so the 80 px cutoff is 10 tiles.
+        let scale = 8.0f32 / 128.0;
+        assert_eq!(
+            icon_placement(51, 50, px, py, scale, 0, 152, 152, 15, 15, 0, 0)
+                .unwrap()
+                .dx,
+            8
+        );
+        assert!(icon_placement(60, 50, px, py, scale, 0, 152, 152, 15, 15, 0, 0).is_some());
+        assert!(icon_placement(61, 50, px, py, scale, 0, 152, 152, 15, 15, 0, 0).is_none());
+    }
+}

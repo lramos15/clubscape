@@ -465,25 +465,58 @@ pub fn hud_viewport(width: i32, height: i32, p: ZoomParameters) -> HudViewport {
 /// between successive views is the only evidence.
 fn observed_moving(
     running: Option<bool>,
-    movement_tick: Option<&String>,
-    tick: Option<i64>,
+    movement_tick: Option<u64>,
+    tick: Option<u64>,
     tile_changed: bool,
 ) -> bool {
     if running == Some(true) {
         return true;
     }
     match (movement_tick, tick) {
-        (Some(moved_at), Some(now)) => moved_at.trim().parse::<i64>().ok() == Some(now),
+        (Some(moved_at), Some(now)) => moved_at == now,
         // Observer present but no movement correlation (`movementTick: null`): standing.
         (None, _) if running.is_some() => false,
         _ => tile_changed,
     }
 }
 
+/// Lossless decode of a `game.observer.v1` tick timestamp: the contract carries ticks as
+/// decimal strings (`WorldView.tick`, `movementTick`, `cycleStartedAtTick`, …) so that 64-bit
+/// values survive JSON. Only plain ASCII digits that fit a `u64` are accepted; anything else is
+/// a contract violation (never a silent clock reset).
+pub fn parse_observer_tick(field: &str, text: &str) -> Result<u64, RenderError> {
+    let digits = text.trim();
+    if digits.is_empty() || !digits.bytes().all(|b| b.is_ascii_digit()) {
+        return Err(RenderError::Scene(format!(
+            "observer v1: {field} {text:?} is not a decimal u64 tick"
+        )));
+    }
+    digits.parse::<u64>().map_err(|e| {
+        RenderError::Scene(format!(
+            "observer v1: {field} {text:?} does not fit a u64 tick ({e})"
+        ))
+    })
+}
+
+/// A source action reported by the observer without a bound source animation: the exact
+/// identity the backend owes a binding for (`ActorActionView.animation: null`).
+#[derive(Clone, Debug, PartialEq, Eq, serde::Serialize)]
+#[serde(rename_all = "camelCase")]
+pub struct UnboundAction {
+    pub actor_id: String,
+    pub id: String,
+    pub activity: String,
+    pub action_id: Option<String>,
+    pub recipe_id: Option<String>,
+    pub style_id: Option<String>,
+    pub spell_id: Option<String>,
+}
+
 /// The player body with its current gear attached: gear ids (sorted), merged bind-pose model,
 /// bind fit reports and the attached part ranges for the per-pose fit.
 struct AssembledPlayer {
-    gear_ids: Vec<i32>,
+    /// Effective `(slot, item)` gear (worn gear with the sequence's hand overrides applied).
+    gear: Vec<(String, i32)>,
     model: Model,
     fits: Vec<FitReport>,
     parts: Vec<AttachedPart>,
@@ -836,7 +869,11 @@ pub struct RendererCore {
     /// scenery when the server supplies no animation. Off by default (not final M1 logic).
     motion_fallback: bool,
     /// Player movement tracking for the original run rule (two tiles per server tick).
-    player_motion_tick: Option<(i64, WorldTile)>,
+    player_motion_tick: Option<(u64, WorldTile)>,
+    /// Source actions reported without a bound animation (exact ids, per actor), this update.
+    unbound_actions: Vec<UnboundAction>,
+    /// Kit ids present in the source cache, for the sequence hand-override decode (`lc.bd`).
+    hand_override_kits: std::collections::HashSet<i32>,
     player_running: bool,
     /// Whether the last WorldView carried `game.observer.v1` fields (`running`/`action`).
     observer_fields_seen: bool,
@@ -916,6 +953,8 @@ impl RendererCore {
             player_dead: false,
             motion_fallback: false,
             player_motion_tick: None,
+            unbound_actions: Vec::new(),
+            hand_override_kits: std::collections::HashSet::new(),
             player_running: false,
             observer_fields_seen: false,
             action_motions: HashMap::new(),
@@ -1712,6 +1751,12 @@ impl RendererCore {
         self.pick_buffer = None;
     }
 
+    /// The current scene camera (native 16384-unit yaw/pitch; the yaw is also the minimap angle
+    /// `client.jv`).
+    pub fn camera(&self) -> Camera {
+        self.camera
+    }
+
     pub fn set_camera(&mut self, camera: Camera) -> Result<(), RenderError> {
         if camera.zoom <= 0 {
             return Err(RenderError::Scene("camera zoom must be positive".into()));
@@ -1740,6 +1785,48 @@ impl RendererCore {
     pub fn update_world(&mut self, json: &str, now_ms: f64) -> Result<(), RenderError> {
         let view: WorldViewInput = serde_json::from_str(json)
             .map_err(|e| RenderError::Scene(format!("world view json: {e}")))?;
+        // game.observer.v1 clocks are decoded losslessly before any state changes: a view that
+        // carries observer fields must carry well-formed u64 ticks (contract error otherwise);
+        // views without observer fields keep the legacy optional tick.
+        let observer_view = view.player.running.is_some()
+            || view.player.action.is_some()
+            || view
+                .entities
+                .iter()
+                .any(|e| e.running.is_some() || e.action.is_some());
+        let tick: Option<u64> = if observer_view {
+            Some(parse_observer_tick("tick", &view.tick)?)
+        } else {
+            view.tick.trim().parse::<u64>().ok()
+        };
+        let movement_tick: Option<u64> = match view.player.movement_tick.as_deref() {
+            Some(t) if observer_view => Some(parse_observer_tick("player.movementTick", t)?),
+            Some(t) => t.trim().parse::<u64>().ok(),
+            None => None,
+        };
+        if observer_view {
+            for entity in &view.entities {
+                if let Some(t) = entity.movement_tick.as_deref() {
+                    parse_observer_tick(&format!("{} movementTick", entity.id), t)?;
+                }
+            }
+        }
+        let mut cycle_ticks: HashMap<String, u64> = HashMap::new();
+        for (actor, action) in std::iter::once((&view.player.id, view.player.action.as_ref()))
+            .chain(view.entities.iter().map(|e| (&e.id, e.action.as_ref())))
+        {
+            if let Some(action) = action
+                && action.version == 1
+            {
+                cycle_ticks.insert(
+                    actor.clone(),
+                    parse_observer_tick(
+                        &format!("{actor} action {} cycleStartedAtTick", action.id),
+                        &action.cycle_started_at_tick,
+                    )?,
+                );
+            }
+        }
         let mut next: Vec<EntityState> = Vec::new();
         let previous = std::mem::take(&mut self.entities);
         let player_tile = view.player.tile.clone();
@@ -1802,7 +1889,7 @@ impl RendererCore {
                 );
             }
         }
-        let tick = view.tick.trim().parse::<i64>().ok();
+        self.unbound_actions.clear();
         // game.observer.v1 actions: the authoritative action instance/phase per actor. A stable
         // id keeps its clock across polls and reconnects; a new cycle start re-anchors the
         // sequence to that tick; `animation: null` keeps only the action identity (reported,
@@ -1833,6 +1920,15 @@ impl RendererCore {
             }
             let Some(sequence) = action.animation.as_deref().and_then(parse_sequence_id) else {
                 // Only the source action is known: explicit, but no motion to play.
+                self.unbound_actions.push(UnboundAction {
+                    actor_id: actor.clone(),
+                    id: action.id.clone(),
+                    activity: action.activity.clone(),
+                    action_id: action.action_id.clone(),
+                    recipe_id: action.recipe_id.clone(),
+                    style_id: action.style_id.clone(),
+                    spell_id: action.spell_id.clone(),
+                });
                 self.unknown_motions.push(format!(
                     "{actor}: action {} ({}{}) has no bound source animation (animation {:?}); playing the stance",
                     action.id,
@@ -1854,13 +1950,21 @@ impl RendererCore {
                 .is_none_or(|m| m.event_id != key);
             if fresh {
                 // Anchor the cycle start on the renderer clock from the tick distance (600 ms
-                // per source tick); the same id + cycle never restarts on later polls.
-                let cycle_tick = action.cycle_started_at_tick.trim().parse::<i64>().ok();
-                let started_ms = match (tick, cycle_tick) {
-                    (Some(now_tick), Some(cycle)) if now_tick >= cycle => {
-                        now_ms - (now_tick - cycle) as f64 * SERVER_TICK_MS
-                    }
-                    _ => now_ms,
+                // per source tick); the same id + cycle never restarts on later polls. Both
+                // ticks were decoded losslessly above.
+                let now_tick = tick.expect("observer view tick decoded");
+                let cycle = cycle_ticks[actor.as_str()];
+                let started_ms = if now_tick >= cycle {
+                    now_ms - (now_tick - cycle) as f64 * SERVER_TICK_MS
+                } else {
+                    // The view dates the cycle start after its own tick: a contract
+                    // inconsistency reported explicitly; the cycle is taken to start now and
+                    // keeps that anchor on later polls (no clock reset).
+                    self.unknown_motions.push(format!(
+                        "{actor}: action {} cycleStartedAtTick {cycle} is after the view tick {now_tick}; anchoring the cycle at this update",
+                        action.id
+                    ));
+                    now_ms
                 };
                 self.action_motions.insert(
                     actor.clone(),
@@ -1900,12 +2004,7 @@ impl RendererCore {
             .iter()
             .find(|e| e.is_player && e.id == view.player.id)
             .is_some_and(|o| o.tile.x != player_tile.x || o.tile.y != player_tile.y);
-        let moving = observed_moving(
-            view.player.running,
-            view.player.movement_tick.as_ref(),
-            tick,
-            tile_changed,
-        );
+        let moving = observed_moving(view.player.running, movement_tick, tick, tile_changed);
         let run_setting = view
             .player
             .settings
@@ -1919,10 +2018,10 @@ impl RendererCore {
             && tick > *last_tick
         {
             let ticks = tick - last_tick;
-            let steps = i64::from(
+            let steps = u64::from(
                 (player_tile.x - last_tile.x)
-                    .abs()
-                    .max((player_tile.y - last_tile.y).abs()),
+                    .unsigned_abs()
+                    .max((player_tile.y - last_tile.y).unsigned_abs()),
             );
             self.player_running = if steps >= 2 * ticks {
                 true
@@ -2151,12 +2250,12 @@ impl RendererCore {
             let old = previous.iter().find(|e| e.id == entity.id);
             let tile_changed =
                 old.is_some_and(|o| o.tile.x != entity.tile.x || o.tile.y != entity.tile.y);
-            let moved = observed_moving(
-                entity.running,
-                entity.movement_tick.as_ref(),
-                tick,
-                tile_changed,
-            );
+            // Validated above for observer views; legacy views keep the optional decode.
+            let entity_movement_tick = entity
+                .movement_tick
+                .as_deref()
+                .and_then(|t| t.trim().parse::<u64>().ok());
+            let moved = observed_moving(entity.running, entity_movement_tick, tick, tile_changed);
             let event_expired = self.action_motions.get(&entity.id).is_some_and(|m| {
                 (moved && !m.observed)
                     || self
@@ -2306,29 +2405,45 @@ impl RendererCore {
         let Some(body) = self.player_body.as_ref() else {
             return Ok(None);
         };
-        let gear_ids: Vec<i32> = self.player_gear.iter().map(|(_, id)| *id).collect();
+        let Some(sequence) = self.sequences.get(&sequence_id) else {
+            return Ok(None);
+        };
+        // `lc.bd`: the playing sequence's hand items replace the worn shield/weapon slot models.
+        let (effective, notes) =
+            crate::actor::effective_gear(&self.player_gear, sequence, &self.hand_override_kits);
+        for note in notes {
+            if !self.unknown_motions.contains(&note) {
+                self.unknown_motions.push(note);
+            }
+        }
         if self
             .player_assembled
             .as_ref()
-            .is_none_or(|a| a.gear_ids != gear_ids)
+            .is_none_or(|a| a.gear != effective)
         {
-            let gear: Vec<(String, &EquipModel)> = self
-                .player_gear
-                .iter()
-                .filter_map(|(slot, id)| self.equip_models.get(id).map(|m| (slot.clone(), m)))
-                .collect();
+            let mut gear: Vec<(String, &EquipModel)> = Vec::with_capacity(effective.len());
+            for (slot, id) in &effective {
+                match self.equip_models.get(id) {
+                    Some(model) => gear.push((slot.clone(), model)),
+                    None => {
+                        let note = format!(
+                            "player: equipped model for item {id} ({slot} slot, sequence {sequence_id}) is not loaded; the slot draws nothing until it is"
+                        );
+                        if !self.unknown_motions.contains(&note) {
+                            self.unknown_motions.push(note);
+                        }
+                    }
+                }
+            }
             let (model, fits, parts) = body.assemble_parts(&gear);
             self.player_assembled = Some(AssembledPlayer {
-                gear_ids: gear_ids.clone(),
+                gear: effective.clone(),
                 model,
                 fits,
                 parts,
             });
             self.player_pose_fits.clear();
         }
-        let Some(sequence) = self.sequences.get(&sequence_id) else {
-            return Ok(None);
-        };
         let assembled = self.player_assembled.as_ref().expect("assembled above");
         let (model, pose_fits) = body.frame_fitted(
             &assembled.model,
@@ -2494,6 +2609,20 @@ impl RendererCore {
 
     /// Actors whose reported state implies an action but whose source motion was not supplied
     /// in the last world view (explicit interop gaps, never guessed).
+    /// Source actions the last world update reported without a bound animation
+    /// (`ActorActionView.animation: null`): exact ids for the backend's binding work.
+    pub fn unbound_actions(&self) -> &[UnboundAction] {
+        &self.unbound_actions
+    }
+
+    /// Kit ids present in the source cache (manifest `sequence_hand_overrides.values` with
+    /// `kind: kit, kit_exists: true`), consulted when a sequence puts a kit into a hand slot.
+    pub fn set_hand_override_kits(&mut self, kits: &[i32]) {
+        self.hand_override_kits = kits.iter().copied().collect();
+        self.player_assembled = None;
+        self.player_frame_cache.clear();
+    }
+
     pub fn unknown_motions(&self) -> &[String] {
         &self.unknown_motions
     }
@@ -2555,9 +2684,13 @@ impl RendererCore {
         let Some(sequence) = self.sequences.get(&sequence_id) else {
             return Ok(None);
         };
-        let gear: Vec<(String, &EquipModel)> = gear
+        // The preview obeys the sequence's hand overrides like the in-scene actor.
+        let worn: Vec<(String, i32)> = gear.iter().map(|(s, id)| (s.to_string(), *id)).collect();
+        let (effective, _) =
+            crate::actor::effective_gear(&worn, sequence, &self.hand_override_kits);
+        let gear: Vec<(String, &EquipModel)> = effective
             .iter()
-            .filter_map(|(slot, id)| self.equip_models.get(id).map(|m| (slot.to_string(), m)))
+            .filter_map(|(slot, id)| self.equip_models.get(id).map(|m| (slot.clone(), m)))
             .collect();
         let (assembled, _, parts) = body.assemble_parts(&gear);
         let frame = frame.min(sequence.frame_count().saturating_sub(1));
@@ -2578,9 +2711,9 @@ impl RendererCore {
     pub fn load_pose_fit_table(&mut self, json: &str, body_npc: i32) -> Result<usize, RenderError> {
         let table: PoseFitTable = serde_json::from_str(json)
             .map_err(|e| RenderError::InvalidAsset(format!("pose-fit table: {e}")))?;
-        if table.schema_version != 1 {
+        if table.schema_version != 2 {
             return Err(RenderError::InvalidAsset(format!(
-                "pose-fit table schema {} (expected 1)",
+                "pose-fit table schema {} (expected 2: rotation + shift fits with attachment gaps)",
                 table.schema_version
             )));
         }
@@ -2592,13 +2725,16 @@ impl RendererCore {
         }
         if table.targets.penetration != crate::actor::FIT_MAX_PENETRATION
             || table.targets.gap != crate::actor::FIT_MAX_GAP
+            || table.targets.attachment != crate::actor::FIT_MAX_ATTACHMENT
         {
             return Err(RenderError::InvalidAsset(format!(
-                "pose-fit table targets {}/{} differ from {}/{}",
+                "pose-fit table targets {}/{}/{} differ from {}/{}/{}",
                 table.targets.penetration,
                 table.targets.gap,
+                table.targets.attachment,
                 crate::actor::FIT_MAX_PENETRATION,
-                crate::actor::FIT_MAX_GAP
+                crate::actor::FIT_MAX_GAP,
+                crate::actor::FIT_MAX_ATTACHMENT
             )));
         }
         let mismatches =
@@ -2634,9 +2770,13 @@ impl RendererCore {
         let Some(sequence) = self.sequences.get(&sequence_id) else {
             return Ok(None);
         };
-        let gear: Vec<(String, &EquipModel)> = gear
+        // The preview obeys the sequence's hand overrides like the in-scene actor.
+        let worn: Vec<(String, i32)> = gear.iter().map(|(s, id)| (s.to_string(), *id)).collect();
+        let (effective, _) =
+            crate::actor::effective_gear(&worn, sequence, &self.hand_override_kits);
+        let gear: Vec<(String, &EquipModel)> = effective
             .iter()
-            .filter_map(|(slot, id)| self.equip_models.get(id).map(|m| (slot.to_string(), m)))
+            .filter_map(|(slot, id)| self.equip_models.get(id).map(|m| (slot.clone(), m)))
             .collect();
         let (assembled, _) = body.assemble(&gear);
         let frame = frame.min(sequence.frame_count().saturating_sub(1));

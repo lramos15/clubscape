@@ -228,7 +228,7 @@ async function main(): Promise<void> {
         return [[960, 540], [700, 600], [1200, 700]].map(([x, y]) => ({ x, y, pick: handle.pick(x!, y!) }));
       });
       regionResults.push({ step: "picks", picks });
-      console.log("region mode", JSON.stringify(regionResults.map((r: any) => ({ step: r.step, base: r.sceneBase ?? (r.baseX !== undefined ? [r.baseX, r.baseY, r.plane] : undefined), squares: r.loadedSquares?.length, prims: r.lastFrame?.primitives, picks: r.picks, minimap: r.revision !== undefined ? { revision: r.revision, complete: r.complete, stats: r.stats, covered: r.covered, icons: r.icons?.length } : undefined }))));
+      console.log("region mode", JSON.stringify(regionResults.map((r: any) => ({ step: r.step, base: r.sceneBase ?? (r.baseX !== undefined ? [r.baseX, r.baseY, r.plane] : undefined), squares: r.loadedSquares?.length, prims: r.lastFrame?.primitives, picks: r.picks, minimap: r.revision !== undefined ? { revision: r.revision, complete: r.complete, stats: r.stats, covered: r.covered, icons: r.icons?.length, placed: r.placements?.icons?.length, clipped: r.placements?.icons?.filter((i: any) => i.clipped).length, angle: r.placements?.minimapAngle } : undefined }))));
     }
     report.regions = regionResults;
 
@@ -265,6 +265,8 @@ async function main(): Promise<void> {
     // with real source ids): gear, activity motions, ground items + fire, door state, roof mode
     // and the model-only interface preview readback.
     const scenarioNames = ["pinned-gear-idle", "gear-idle", "gear-fighting", "woodcutting", "mining", "fishing", "firemaking", "cooking", "walking", "ranged", "casting", "death", "unknown-motion", "ground-items-fire", "door-open", "roof-player", "preview",
+      // Source hand overrides on the full wearable set and the observer-v1 unbound-action report.
+      "gear-death", "gear-woodcutting", "gear-mining", "gear-smithing", "observer-unbound",
       // Original dynamic-layer reference inputs at the native full-HUD zoom 410 (Tutorial cases).
       "source-door-closed", "source-door-open", "source-roofs-outside", "source-roofs-inside", "source-roofs-hidden"];
     // `--scenario-filter a,b` limits the scenario pass to the named scenarios.
@@ -312,7 +314,10 @@ async function main(): Promise<void> {
           const points: Array<[number, number]> = [[960, 540], [1030, 560], [880, 520], [1100, 470]];
           return points.map(([x, y]) => ({ x, y, pick: handle.pick(x, y) }));
         });
-        scenarioResults.push({ name, applied, lastFrame: last, picks, playerBox });
+        // State after the frames above were drawn: the fits of the rendered frames, motion and
+        // observer reports, icon placements (`applied` is the pre-frame state).
+        const drawn = await page.evaluate(() => window.__clubscapeDev.scenarioReport?.() ?? null);
+        scenarioResults.push({ name, applied, drawn, lastFrame: last, picks, playerBox });
         console.log(`scenario ${name}: prims=${last?.primitives} ${JSON.stringify(applied).slice(0, 200)}`);
       }
       await page.evaluate(() => window.__clubscapeDev.applyScenario!("pinned-gear-idle"));

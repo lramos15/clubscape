@@ -1,7 +1,7 @@
 {
  "schema_version": 1,
  "kind": "clubscape_render_blocks",
- "manifest_sha256": "2d228d79f526cb4d84a444118c9e8f3961d2f08213f56ffe5f8a81af17b9cceb",
+ "manifest_sha256": "e635ed1dd82e717d44b58716d9d6c06aabee68632fbca0854f60753fd849dc1e",
  "approved_reference_pack_sha256": "b62e19704e17d3d3e4e819f803ef49ba7cc54034ae407184b423427c65d9674d",
  "content_sha256": "dde248f04ea703924b766235594c0102c9cb6c04aad8c60c117aa4b6e65beaca",
  "pack": {

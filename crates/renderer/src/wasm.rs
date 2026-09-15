@@ -633,10 +633,11 @@ impl WasmRenderer {
 
     /// The loaded map-element sprites (JSON array of `{element, width, height, offsetX, offsetY,
     /// maxWidth, maxHeight, category}` in the order `map_icon_pixels()` packs them). The HUD
-    /// draws them over the minimap surface with the original rule: for each `icons[]` entry,
-    /// `dx = (x << 7) + 64 - playerX`, `dy = (y << 7) + 64 - playerY` (source units), scaled by
-    /// the minimap zoom and rotated by the map angle, top-left at `(centreX + dx' - width / 2,
-    /// centreY - dy' - height / 2)`; skipped beyond 80 units, clipped to the widget beyond 50.
+    /// draws them over the minimap surface with the original rule (`minimap_icon_placement` /
+    /// `minimap_icon_placements` compute it exactly): `dx = ((x << 7) + 64 - playerFineX) *
+    /// scale` in minimap pixels (4 px per tile at the stock 1/32), rotated by the map angle,
+    /// canvas top-left at `(W/2 + dx' - maxWidth/2, H/2 - dy' - maxHeight/2)`; skipped beyond
+    /// 80 px (20 tiles), mask-clipped beyond 50 px.
     pub fn map_icon_sprites(&self) -> String {
         let inner = self.inner.borrow();
         let Some(icons) = inner.core.map_icons() else {
@@ -660,6 +661,106 @@ impl WasmRenderer {
             })
             .collect();
         format!("[{}]", items.join(","))
+    }
+
+    /// Exact `client.zr` → `bo.as` placement of one minimap marker (JSON `{x, y, drawX, drawY,
+    /// clipped, dx, dy}` in **minimap pixels** relative to the widget origin, or `undefined`
+    /// when the marker is out of range). `tile_x/tile_y` and `player_fine_x/player_fine_y`
+    /// share one tile domain (world or scene-local): the player's fine position is
+    /// `tile * 128 + 64` (the renderer draws actors at tile centres); `scale` is the minimap
+    /// zoom (stock `0.03125` = 1/32: 4 px per tile; RuneLite zoom `z` → `z / 128`);
+    /// `minimap_angle` the camera yaw in 16384 units (`client.jv`); `widget_w/h` the minimap
+    /// widget sprite size; the sprite fields come from `map_icon_sprites()` (`maxWidth`,
+    /// `maxHeight`, `offsetX`, `offsetY`). Cut-off `dx² + dy² > 6400` (80 px = 20 tiles at the
+    /// stock scale), mask-clipped beyond 2500 (50 px).
+    #[allow(clippy::too_many_arguments)]
+    pub fn minimap_icon_placement(
+        &self,
+        tile_x: i32,
+        tile_y: i32,
+        player_fine_x: i32,
+        player_fine_y: i32,
+        scale: f32,
+        minimap_angle: i32,
+        widget_w: i32,
+        widget_h: i32,
+        sprite_max_w: i32,
+        sprite_max_h: i32,
+        sprite_offset_x: i32,
+        sprite_offset_y: i32,
+    ) -> Option<String> {
+        crate::scene::minimap::icon_placement(
+            tile_x,
+            tile_y,
+            player_fine_x,
+            player_fine_y,
+            scale,
+            minimap_angle,
+            widget_w,
+            widget_h,
+            sprite_max_w,
+            sprite_max_h,
+            sprite_offset_x,
+            sprite_offset_y,
+        )
+        .map(|p| serde_json::to_string(&p).unwrap_or_default())
+    }
+
+    /// Every marker of the current `minimap_surface()` placed for the widget (JSON array of
+    /// `{element, tileX, tileY, x, y, drawX, drawY, clipped, dx, dy}` — `x/y` per
+    /// `minimap_icon_placement`), using the loaded sprites' canvas sizes/offsets and the
+    /// current camera yaw as the minimap angle; markers out of range or without a loaded sprite
+    /// are omitted (the latter counted in `missingSprites`). Player at the centre of
+    /// `(player_tile_x, player_tile_y)` (world tiles, like `minimap_surface().icons`).
+    pub fn minimap_icon_placements(
+        &self,
+        player_tile_x: i32,
+        player_tile_y: i32,
+        scale: f32,
+        widget_w: i32,
+        widget_h: i32,
+    ) -> Result<String, JsValue> {
+        let mut inner = self.inner.borrow_mut();
+        let angle = inner.core.camera().yaw;
+        let surface = inner.core.minimap_surface().map_err(js_err)?;
+        let icons = surface.icons.clone();
+        let Some(sprites) = inner.core.map_icons() else {
+            return Err(js_err(
+                "map icon sprites are not loaded (minimap/mapicons.bin)",
+            ));
+        };
+        let (pfx, pfy) = ((player_tile_x << 7) + 64, (player_tile_y << 7) + 64);
+        let mut placed: Vec<String> = Vec::new();
+        let mut missing = 0usize;
+        for icon in &icons {
+            let Some(sprite) = sprites.sprites.iter().find(|s| s.element == icon.element) else {
+                missing += 1;
+                continue;
+            };
+            if let Some(p) = crate::scene::minimap::icon_placement(
+                icon.x,
+                icon.y,
+                pfx,
+                pfy,
+                scale,
+                angle,
+                widget_w,
+                widget_h,
+                sprite.max_width,
+                sprite.max_height,
+                sprite.offset_x,
+                sprite.offset_y,
+            ) {
+                placed.push(format!(
+                    r#"{{"element":{},"tileX":{},"tileY":{},"x":{},"y":{},"drawX":{},"drawY":{},"clipped":{},"dx":{},"dy":{}}}"#,
+                    icon.element, icon.x, icon.y, p.x, p.y, p.draw_x, p.draw_y, p.clipped, p.dx, p.dy
+                ));
+            }
+        }
+        Ok(format!(
+            r#"{{"minimapAngle":{angle},"scale":{scale},"missingSprites":{missing},"icons":[{}]}}"#,
+            placed.join(",")
+        ))
     }
 
     /// RGBA8 pixels of every map-element sprite concatenated in `map_icon_sprites()` order
@@ -881,29 +982,53 @@ impl WasmRenderer {
     }
 
     /// Per-pose gear fits of the player frames drawn since the gear last changed (JSON array of
-    /// `{sequence, frame, itemId, slot, shift, direction, precomputed, penetration, gap,
-    /// meetsTargets}`); entries with `meetsTargets: false` are the exact current fit failures.
+    /// `{sequence, frame, itemId, slot, shift, direction, rotation, precomputed, penetration,
+    /// gap, attachmentGap, anchorClearance, meetsTargets}`): `penetration`
+    /// is the carried-bind-box depth (≤ 1), `gap` the item↔body surface clearance (≤ 2) and
+    /// `attachmentGap` the grip's distance from where the posed anchor bone carries it (≤ 2);
+    /// entries with `meetsTargets: false` are the exact current fit failures.
     pub fn player_pose_fits(&self) -> String {
         let inner = self.inner.borrow();
         let mut entries: Vec<String> = Vec::new();
         for (&(sequence, frame), fits) in inner.core.player_pose_fits() {
             for fit in fits {
                 entries.push(format!(
-                    "{{\"sequence\":{sequence},\"frame\":{frame},\"itemId\":{},\"slot\":{},\"shift\":{},\"direction\":[{},{},{}],\"precomputed\":{},\"penetration\":{},\"gap\":{},\"meetsTargets\":{}}}",
+                    "{{\"sequence\":{sequence},\"frame\":{frame},\"itemId\":{},\"slot\":{},\"shift\":{},\"direction\":[{},{},{}],\"rotation\":[{},{},{}],\"precomputed\":{},\"penetration\":{},\"gap\":{},\"attachmentGap\":{},\"anchorClearance\":{},\"meetsTargets\":{}}}",
                     fit.item_id,
                     json_string(&fit.slot),
                     fit.shift,
                     fit.direction[0],
                     fit.direction[1],
                     fit.direction[2],
+                    fit.rotation[0],
+                    fit.rotation[1],
+                    fit.rotation[2],
                     fit.precomputed,
                     fit.penetration,
                     fit.gap,
+                    fit.attachment_gap,
+                    fit.anchor_clearance,
                     fit.meets_targets()
                 ));
             }
         }
         format!("[{}]", entries.join(","))
+    }
+
+    /// Source actions the last `update_world` reported without a bound animation
+    /// (`ActorActionView.animation: null`), JSON array of `{actorId, id, activity, actionId,
+    /// recipeId, styleId, spellId}`: the exact identities awaiting a backend binding. Empty
+    /// when every reported action names its source sequence.
+    pub fn unbound_actions(&self) -> String {
+        serde_json::to_string(self.inner.borrow().core.unbound_actions())
+            .unwrap_or_else(|_| "[]".to_string())
+    }
+
+    /// Kit ids present in the source cache (manifest `sequence_hand_overrides.values[*]` with
+    /// `kind: "kit"` and `kit_exists: true`) for the `lc.bd` hand-override decode: a sequence
+    /// whose hand item names a kit the cache lacks draws nothing in that slot.
+    pub fn set_hand_override_kits(&self, kits: Vec<i32>) {
+        self.inner.borrow_mut().core.set_hand_override_kits(&kits);
     }
 
     /// Loads an equippable item's worn model (`models/item-<id>-equip.bin`).

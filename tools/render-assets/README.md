@@ -35,7 +35,7 @@ python3 tools/render-assets/export.py --profile dynamic     # door/fire/state ob
 python3 tools/render-assets/export.py --profile widgets     # original if3 model components (interface 679:73)
 python3 tools/render-assets/export.py --profile minimap     # map-scene sprites/shape masks, map-element icon sprites, per-square minimap sidecars (+ original icon pass)
 python3 tools/render-assets/export.py --profile zoom        # original full-HUD viewport zoom per canvas size (hud/zoom-table.json)
-python3 tools/render-assets/export.py --profile pose-fits   # per-item per-pose gear contact fits (gear/pose-fits.json; runs the renderer's pose-fit-table bin, no JDK/cache)
+python3 tools/render-assets/export.py --profile pose-fits   # per-item per-pose gear attachment fits (gear/pose-fits.json schema 2 + gear/pose-fit-failures.json; runs the renderer's pose-fit-table bin, no JDK/cache)
 python3 tools/render-assets/export.py --profile compress    # (re)write scenes/*.gz, blocks/*.gz + manifest
 python3 tools/render-assets/export.py --profile unpack      # restore raw *.bin from published *.gz (pinned bytes; unpublished block twins optional)
 python3 tools/render-assets/export.py --profile pack-blocks # deterministic world-block pack + blocks.index.json
@@ -134,7 +134,13 @@ map with SHA-256 + size for every buffer. Formats are documented in
 Published in git: `manifest.json`, `palette.bin`, `textures/*.bin` (43 used textures), base
 models, NPC packs, `scenes/*.bin.gz` (deterministic gzip: mtime 0, level 9, ≈ 11 MB for the
 five scenes), `minimap/*` (map scenes, map icons, 61 sidecars), `hud/zoom-table.json` and
-`gear/pose-fits.json`. Kept local and reproducible (hashes in the manifest): `tables.bin`,
+`gear/pose-fits.json` and `gear/pose-fit-failures.json` (every legal item-frame over a fit
+target with all measures and the same-pose human-design context; the pose gate is unmet — see
+`crates/renderer/README.md`). The `anim` profile also exports `sequence_hand_overrides`: the
+`lc.bd` decode of every required sequence's `leftHandItem`/`rightHandItem` (item / kit / nothing,
+with kit existence against the cache's kit table) and the equipped models of the sequence hand
+items it names (net 303, tinderbox 590, hammer 2347; `role: sequence_hand_item`). Kept local and
+reproducible (hashes in the manifest): `tables.bin`,
 `models/baked/*` validation bakes, raw `scenes/*.bin`, `scenes/*.pinned*`, and `blocks/`
 (61 squares, ≈ 75 MB gzip — serve them next to the manifest for region scenes).
 

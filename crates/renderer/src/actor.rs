@@ -128,8 +128,9 @@ pub struct FitReport {
     /// Human label the item's vertices are bound to, and the penguin label chosen.
     pub human_label: i32,
     pub penguin_label: i32,
+    /// Length of the translation the attachment fit applied (= the bind attachment gap).
     pub anchor_shift: f64,
-    /// Direction of the contact-solve shift in body space (`x`, `y`, `z`), zero when unshifted.
+    /// Direction of that translation in body space (`x`, `y`, `z`), zero when unshifted.
     pub shift_direction: [f64; 3],
     pub penetration: f64,
     /// Body-vertex depth in the principal-axis box alone (looser frame; see `pca_box_penetration`).
@@ -137,6 +138,29 @@ pub struct FitReport {
     pub gap: f64,
     pub design_penetration: f64,
     pub scale: f64,
+    /// Attachment gap (source units): how far the item's grip/contact point sits from where the
+    /// retargeted anchor carries it (target ≤ [`FIT_MAX_ATTACHMENT`]); see [`Attachment`].
+    pub attachment_gap: f64,
+    /// Rotation about the grip the attachment fit applied, degrees (0 = design orientation).
+    pub rotation_deg: f64,
+    /// Clearance between the item and the anchor body part alone (the part it is worn on /
+    /// held by): 0 when touching it, larger when it rests on some other part.
+    pub anchor_clearance: f64,
+}
+
+/// Maximum attachment gap (source units): the item's grip/contact point may sit at most this
+/// far from where the retargeted anchor bone carries it (frozen comparison policy
+/// `proposed_attachment_gap_source_units_max`).
+pub const FIT_MAX_ATTACHMENT: f64 = 2.0;
+
+/// How an item is attached to its anchor body part.
+#[derive(Debug, Clone, Copy, PartialEq, Eq, serde::Serialize, serde::Deserialize)]
+pub enum Attachment {
+    /// Gripped (weapon / shield slots): the grip point must follow the hand bone.
+    Held,
+    /// Resting (head / neck / body …): the contact point must follow the bone and the item
+    /// must touch that part.
+    Worn,
 }
 
 /// One item attached by [`PlayerBody::assemble_parts`]: where its vertices and faces sit in the
@@ -147,6 +171,17 @@ pub struct AttachedPart {
     pub slot: String,
     pub vertices: std::ops::Range<usize>,
     pub faces: std::ops::Range<usize>,
+    /// Index (within the part) of the grip / contact vertex: the item vertex nearest the human
+    /// anchor label's centroid in the design.
+    pub grip: usize,
+    /// Outward direction of the slot in body space (away from the body).
+    pub outward: [f64; 3],
+    /// Penguin anchor label the grip follows.
+    pub anchor_label: i32,
+    pub attachment: Attachment,
+    /// Translation the bind attachment fit applied (body space); the bind attachment gap is its
+    /// length and every pose starts from it.
+    pub bind_offset: [f64; 3],
 }
 
 /// Fit of one attached item in one posed frame after the per-pose contact solve (source units,
@@ -155,22 +190,230 @@ pub struct AttachedPart {
 pub struct PoseFit {
     pub item_id: i32,
     pub slot: String,
+    /// Length of the translation applied this frame (body space, source units).
     pub shift: f64,
     pub direction: [f64; 3],
     /// The translation applied (body space, source units); `shift` is its length.
     pub offset: [f64; 3],
-    /// True when the shift came from a [`PoseFitTable`] entry instead of a live solve.
+    /// Rotation about the posed grip point applied this frame (axis-angle, radians).
+    pub rotation: [f64; 3],
+    /// True when the transform came from a [`PoseFitTable`] entry instead of a live solve.
     pub precomputed: bool,
-    /// Carried-bind-box / embedded penetration after the shift (target ≤ [`FIT_MAX_PENETRATION`]).
+    /// Carried-bind-box / embedded penetration after the fit (target ≤ [`FIT_MAX_PENETRATION`]).
     pub penetration: f64,
-    /// Item↔body clearance after the shift (target ≤ [`FIT_MAX_GAP`]).
+    /// Item↔body surface clearance after the fit (target ≤ [`FIT_MAX_GAP`]).
     pub gap: f64,
+    /// Attachment gap: distance between the fitted grip point and where the posed anchor bone
+    /// carries the retargeted grip (target ≤ [`FIT_MAX_ATTACHMENT`]).
+    pub attachment_gap: f64,
+    /// Clearance between the item and its anchor body part alone.
+    pub anchor_clearance: f64,
 }
 
 impl PoseFit {
+    /// Penetration, surface clearance and attachment targets all met.
     pub fn meets_targets(&self) -> bool {
-        self.penetration <= FIT_MAX_PENETRATION && self.gap <= FIT_MAX_GAP
+        self.penetration <= FIT_MAX_PENETRATION
+            && self.gap <= FIT_MAX_GAP
+            && self.attachment_gap <= FIT_MAX_ATTACHMENT
     }
+}
+
+/// What a sequence's hand-item override (`lc.bd`, source `ou.by` / `ou.bq`) puts into the
+/// shield (left) or weapon (right) equipment slot while it plays.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum HandSlot {
+    /// The sequence does not touch the slot (value −1): the worn item shows.
+    Worn,
+    /// The slot draws nothing (a kit id the cache does not have, e.g. value 0 → kit 1280).
+    Hidden,
+    /// The slot draws this item's equipped model instead of the worn one.
+    Item(i32),
+    /// The slot draws a player kit (body part) — the source rule allows it, the penguin body has
+    /// no kits; reported, drawn as nothing.
+    Kit(i32),
+}
+
+/// Decodes a sequence hand-item value exactly as `lc.bd`/`lc.at` do: `value − 512 + 2048` is an
+/// equipment id; `>= 2048` an item (`− 2048`), `256..2047` a kit (`− 256`), else nothing. `kits`
+/// are the kit ids present in the source cache (manifest `sequence_hand_overrides`); a kit id
+/// the cache lacks draws nothing.
+pub fn hand_override(value: i32, kits: &std::collections::HashSet<i32>) -> HandSlot {
+    if value < 0 {
+        return HandSlot::Worn;
+    }
+    let equipment = value - 512 + 2048;
+    if equipment >= 2048 {
+        HandSlot::Item(equipment - 2048)
+    } else if equipment >= 256 {
+        let kit = equipment - 256;
+        if kits.contains(&kit) {
+            HandSlot::Kit(kit)
+        } else {
+            HandSlot::Hidden
+        }
+    } else {
+        HandSlot::Hidden
+    }
+}
+
+/// Equipment slot names the hand overrides address.
+pub const WEAPON_SLOT: &str = "weapon";
+pub const SHIELD_SLOT: &str = "shield";
+
+/// The effective equipment of a frame: the worn `(slot, item)` list with the sequence's hand
+/// overrides applied (`lc.bd`: `leftHandItem` replaces the shield slot, `rightHandItem` the
+/// weapon slot; the same item in both slots is drawn twice, as the original merges both slot
+/// models). Returns the list and the source-rule notes for slots that draw nothing or a kit.
+pub fn effective_gear(
+    worn: &[(String, i32)],
+    sequence: &Sequence,
+    kits: &std::collections::HashSet<i32>,
+) -> (Vec<(String, i32)>, Vec<String>) {
+    let left = hand_override(sequence.left_hand_item, kits);
+    let right = hand_override(sequence.right_hand_item, kits);
+    let mut out: Vec<(String, i32)> = worn
+        .iter()
+        .filter(|(slot, _)| {
+            !(slot == SHIELD_SLOT && left != HandSlot::Worn)
+                && !(slot == WEAPON_SLOT && right != HandSlot::Worn)
+        })
+        .cloned()
+        .collect();
+    let mut notes = Vec::new();
+    for (slot, hand, value) in [
+        (SHIELD_SLOT, left, sequence.left_hand_item),
+        (WEAPON_SLOT, right, sequence.right_hand_item),
+    ] {
+        match hand {
+            HandSlot::Worn => {}
+            HandSlot::Item(item) => out.push((slot.to_string(), item)),
+            HandSlot::Hidden => notes.push(format!(
+                "sequence {} hand item {value} hides the {slot} slot (equipment id {} is no item and no cached kit)",
+                sequence.id,
+                value - 512 + 2048
+            )),
+            HandSlot::Kit(kit) => notes.push(format!(
+                "sequence {} hand item {value} puts kit {kit} into the {slot} slot; player kits are not drawn on the penguin body",
+                sequence.id
+            )),
+        }
+    }
+    (out, notes)
+}
+
+/// Whether an item worn in `slot` is drawn while `sequence` plays, from the source hand
+/// overrides alone.
+#[derive(Debug, Clone, Copy, PartialEq, Eq, serde::Serialize)]
+#[serde(rename_all = "snake_case")]
+pub enum ItemVisibility {
+    /// Drawn as worn (the sequence does not override its slot).
+    Worn,
+    /// Drawn because the sequence itself puts this item into a hand slot.
+    Override,
+    /// Not drawn: the sequence overrides its slot with something else or nothing.
+    Hidden,
+}
+
+pub fn item_visibility(
+    slot: &str,
+    item_id: i32,
+    sequence: &Sequence,
+    kits: &std::collections::HashSet<i32>,
+) -> ItemVisibility {
+    let left = hand_override(sequence.left_hand_item, kits);
+    let right = hand_override(sequence.right_hand_item, kits);
+    if left == HandSlot::Item(item_id) || right == HandSlot::Item(item_id) {
+        return ItemVisibility::Override;
+    }
+    let overridden = (slot == SHIELD_SLOT && left != HandSlot::Worn)
+        || (slot == WEAPON_SLOT && right != HandSlot::Worn);
+    if overridden {
+        ItemVisibility::Hidden
+    } else {
+        ItemVisibility::Worn
+    }
+}
+
+/// Combat sequences among the required set (stab, slash, punch, kick, bow): whether a given
+/// worn weapon or shield can be present while one plays follows the backend's weapon-category →
+/// animation binding (being assigned), not the sequence data; the fit gate keeps every such
+/// combination (a superset) until that binding is published.
+pub const COMBAT_SEQUENCES: [i32; 5] = [386, 390, 422, 423, 426];
+
+/// Legality class of an item × sequence combination for the fit gate, from the source rules.
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash, PartialOrd, Ord, serde::Serialize)]
+#[serde(rename_all = "snake_case")]
+pub enum FitLegality {
+    /// Drawn as equipped: the sequence leaves the item's slot alone.
+    Worn,
+    /// Drawn because the sequence itself puts the item into a hand slot (`lc.bd`).
+    Override,
+    /// A worn weapon/shield during a combat sequence: legal until the backend's
+    /// weapon-category → animation binding says otherwise (kept as a superset).
+    CombatBindingPending,
+    /// The sequence's hand override replaces the item's slot: not drawn, no fit exists.
+    Hidden,
+    /// A sequence hand item (net, tinderbox, hammer) outside its own sequences: the player
+    /// cannot wear it, so the combination never occurs.
+    NotEquippable,
+}
+
+impl FitLegality {
+    /// Whether the combination is drawn (and therefore fitted and gated).
+    pub fn is_drawn(self) -> bool {
+        matches!(
+            self,
+            FitLegality::Worn | FitLegality::Override | FitLegality::CombatBindingPending
+        )
+    }
+
+    pub fn name(self) -> &'static str {
+        match self {
+            FitLegality::Worn => "worn",
+            FitLegality::Override => "override",
+            FitLegality::CombatBindingPending => "combat_binding_pending",
+            FitLegality::Hidden => "hidden",
+            FitLegality::NotEquippable => "not_equippable",
+        }
+    }
+}
+
+/// [`FitLegality`] of `item_id` worn in `slot` while `sequence` plays; `equippable` is false
+/// for sequence hand items the player cannot wear (manifest `role: sequence_hand_item`).
+pub fn fit_legality(
+    slot: &str,
+    item_id: i32,
+    sequence: &Sequence,
+    kits: &std::collections::HashSet<i32>,
+    equippable: bool,
+) -> FitLegality {
+    match item_visibility(slot, item_id, sequence, kits) {
+        ItemVisibility::Hidden => FitLegality::Hidden,
+        ItemVisibility::Override => FitLegality::Override,
+        ItemVisibility::Worn if !equippable => FitLegality::NotEquippable,
+        ItemVisibility::Worn => {
+            if COMBAT_SEQUENCES.contains(&sequence.id)
+                && (slot == WEAPON_SLOT || slot == SHIELD_SLOT)
+            {
+                FitLegality::CombatBindingPending
+            } else {
+                FitLegality::Worn
+            }
+        }
+    }
+}
+
+/// Kit ids the source cache has, from the manifest's `sequence_hand_overrides.values`
+/// (`kind: "kit"` with `kit_exists: true`).
+pub fn cached_kits(manifest: &serde_json::Value) -> std::collections::HashSet<i32> {
+    manifest["sequence_hand_overrides"]["values"]
+        .as_array()
+        .into_iter()
+        .flatten()
+        .filter(|v| v["kind"] == "kit" && v["kit_exists"] == true)
+        .filter_map(|v| v["kit_id"].as_i64().map(|k| k as i32))
+        .collect()
 }
 
 /// Required M1 player sequences (server appearance defaults, actions, combat, death, and the
@@ -180,13 +423,20 @@ pub const REQUIRED_PLAYER_SEQUENCES: [i32; 27] = [
     898, 386, 390, 422, 423, 426, 711, 5668, 5666,
 ];
 
-/// One precomputed per-pose fit: the rigid shift the solve applies to the item in that frame and
-/// the measures it leaves (source units, unscaled body).
+/// One precomputed per-pose fit: the rigid transform the attachment fit applies to the item in
+/// that frame — a rotation (axis-angle) about the posed grip vertex followed by a translation —
+/// and the measures it leaves (source units, unscaled body).
 #[derive(Debug, Clone, PartialEq, serde::Serialize, serde::Deserialize)]
 pub struct TableFrameFit {
     pub shift: [f64; 3],
+    #[serde(default)]
+    pub rotation: [f64; 3],
     pub penetration: f64,
     pub gap: f64,
+    #[serde(default)]
+    pub attachment_gap: f64,
+    #[serde(default)]
+    pub anchor_clearance: f64,
 }
 
 /// Precomputed fits of one item: keyed by sequence id (decimal string), one entry per frame.
@@ -195,6 +445,9 @@ pub struct TableItemFits {
     pub slot: String,
     /// Manifest SHA-256 of the item's equipped model the fits were computed against.
     pub model_sha256: String,
+    /// Grip vertex (index within the item's part) the rotations pivot about.
+    #[serde(default)]
+    pub grip: usize,
     pub sequences: HashMap<String, Vec<TableFrameFit>>,
 }
 
@@ -217,6 +470,8 @@ pub struct PoseFitTable {
 pub struct TableTargets {
     pub penetration: f64,
     pub gap: f64,
+    #[serde(default)]
+    pub attachment: f64,
 }
 
 impl PoseFitTable {
@@ -413,35 +668,65 @@ impl PlayerBody {
             let (Some(ha), Some(pa)) = (human_anchor, penguin_anchor) else {
                 continue;
             };
-            let ia = &ia;
-            // Offset of the item relative to the human part it is worn on, kept in penguin scale.
-            let rel = (
-                (ia.x - ha.x) * scale,
-                (ia.y - ha.y) * scale,
-                (ia.z - ha.z) * scale,
-            );
-            let translate = (pa.x + rel.0, pa.y + rel.1, pa.z + rel.2);
+            let outward = outward_for(human_label, slot);
+            let attachment = attachment_for(human_label, slot);
+            // Grip / contact point: the item vertex nearest the human anchor label's centroid in
+            // the design (the hilt in the hand, the strap on the arm, the hat's underside).
+            let grip = (0..item.model.vertex_count)
+                .min_by(|&a, &b| {
+                    let d = |v: usize| {
+                        (f64::from(item.model.xs[v]) - ha.x).powi(2)
+                            + (f64::from(item.model.ys[v]) - ha.y).powi(2)
+                            + (f64::from(item.model.zs[v]) - ha.z).powi(2)
+                    };
+                    d(a).total_cmp(&d(b))
+                })
+                .unwrap_or(0);
+            let grip_design = [
+                f64::from(item.model.xs[grip]),
+                f64::from(item.model.ys[grip]),
+                f64::from(item.model.zs[grip]),
+            ];
+            // Surface-anchored retarget: the design offset of the grip from the anchor part's
+            // outward surface (its extreme along the slot's outward axis) is preserved, in
+            // penguin scale, from the penguin anchor part's outward surface — so a thicker
+            // flipper or chest carries the item out with it instead of swallowing it.
+            let human_surface =
+                label_surface_anchor(&self.human, human_label, ha, &outward, attachment);
+            let penguin_surface =
+                label_surface_anchor(&self.base, penguin_label, pa, &outward, attachment);
+            let target = [
+                penguin_surface[0] + (grip_design[0] - human_surface[0]) * scale,
+                penguin_surface[1] + (grip_design[1] - human_surface[1]) * scale,
+                penguin_surface[2] + (grip_design[2] - human_surface[2]) * scale,
+            ];
             let mut part = item.model.clone();
             for v in 0..part.vertex_count {
-                part.xs[v] = ((f64::from(part.xs[v]) - ia.x) * scale + translate.0) as f32;
-                part.ys[v] = ((f64::from(part.ys[v]) - ia.y) * scale + translate.1) as f32;
-                part.zs[v] = ((f64::from(part.zs[v]) - ia.z) * scale + translate.2) as f32;
+                part.xs[v] = ((f64::from(part.xs[v]) - grip_design[0]) * scale + target[0]) as f32;
+                part.ys[v] = ((f64::from(part.ys[v]) - grip_design[1]) * scale + target[1]) as f32;
+                part.zs[v] = ((f64::from(part.zs[v]) - grip_design[2]) * scale + target[2]) as f32;
             }
-            // Contact solve: the retargeted design position is kept unless a body vertex (any
-            // part) sits deeper than FIT_MAX_PENETRATION inside the item's oriented box; then the
-            // whole item is translated along the box axis that resolves it with the smallest
-            // shift, stopping at contact so it rests on the body. Geometry is never edited.
             let design_penetration = fit_penetration(&self.human, &item.model);
-            let (anchor_shift, shift_direction, _) = contact_solve(
+            // Attachment fit at the bind pose: a rotation about the grip plus a translation of at
+            // most FIT_MAX_ATTACHMENT — the grip stays where the anchor carries it (within that
+            // bound) while the item turns away from the body. Geometry is never edited.
+            let anchor_part = label_part(&self.base, penguin_label);
+            let bind_reference = part.clone();
+            let fit = attachment_fit(
                 &self.base,
-                slot_outward(slot),
+                &anchor_part,
+                &outward,
+                attachment,
+                &bind_reference,
                 &mut part,
-                &|body, item| penetration_depth(body, None, item),
-                &fit_penetration,
+                grip,
+                &[0.0; 3],
+                0.0,
             );
             let penetration = fit_penetration(&self.base, &part);
             let pca_box_penetration = pca_box_penetration(&self.base, &part);
             let gap = clearance(&self.base, &part);
+            let anchor_clearance = clearance(&anchor_part, &part);
             relabel(&mut part, |human| {
                 if human == item_label {
                     penguin_label
@@ -457,19 +742,27 @@ impl PlayerBody {
                 slot: slot.clone(),
                 vertices: vertex_start..merged.vertex_count,
                 faces: face_start..merged.face_count,
+                grip,
+                outward,
+                anchor_label: penguin_label,
+                attachment,
+                bind_offset: fit.offset,
             });
             reports.push(FitReport {
                 item_id: item.item_id,
                 slot: slot.clone(),
                 human_label,
                 penguin_label,
-                anchor_shift,
-                shift_direction,
+                anchor_shift: fit.shift,
+                shift_direction: fit.direction,
                 penetration,
                 pca_box_penetration,
                 gap,
                 design_penetration,
                 scale,
+                attachment_gap: fit.attachment_gap,
+                rotation_deg: fit.rotation_deg(),
+                anchor_clearance,
             });
         }
         (merged, reports, parts)
@@ -494,15 +787,16 @@ impl PlayerBody {
         Ok(model)
     }
 
-    /// [`PlayerBody::pose`] followed by the per-pose contact fit: each attached item is
+    /// [`PlayerBody::pose`] followed by the per-pose attachment fit: each attached item is
     /// measured against the posed body with the bind-pose box it was fitted with (carried
     /// rigidly with the item) and, where a body part swings into it deeper than
     /// [`FIT_MAX_PENETRATION`] or it drifts further than [`FIT_MAX_GAP`] from the body, the item
-    /// alone is translated — along its slot's outward axis first, else the smallest resolving
-    /// shift — until it rests on the body again. Item geometry and the source frame transforms
-    /// are never edited; the shift is a rigid attachment correction per frame. Items are fitted
-    /// against the body only (not against each other), so no gear combination is special.
-    /// Returns the model and one [`PoseFit`] per part (targets not met stay reported).
+    /// alone is turned about its posed grip point and translated by at most
+    /// [`FIT_MAX_ATTACHMENT`] — the grip keeps following the anchor bone, so the attachment gap
+    /// is bounded by construction while penetration is minimised. Item geometry and the source
+    /// frame transforms are never edited; items are fitted against the body only (no gear
+    /// combination is special). Returns the model and one [`PoseFit`] per part with every
+    /// measure (targets not met stay reported).
     pub fn pose_fitted(
         &self,
         assembled: &Model,
@@ -517,15 +811,24 @@ impl PlayerBody {
             return Ok((model, fits));
         }
         let body = extract_range(&model, 0..self.base.vertex_count, 0..self.base.face_count);
+        let anchor_parts: HashMap<i32, Model> = parts
+            .iter()
+            .map(|p| (p.anchor_label, label_part(&body, p.anchor_label)))
+            .collect();
         for part in parts {
             if part.vertices.is_empty() {
                 continue;
             }
+            let bind_part = extract_range(assembled, part.vertices.clone(), part.faces.clone());
+            let mut posed = extract_range(&model, part.vertices.clone(), part.faces.clone());
+            let anchor_part = &anchor_parts[&part.anchor_label];
             if let Some(fit) = table.and_then(|t| t.frame(part.item_id, sequence.id, frame)) {
-                for v in part.vertices.clone() {
-                    model.xs[v] = (f64::from(model.xs[v]) + fit.shift[0]) as f32;
-                    model.ys[v] = (f64::from(model.ys[v]) + fit.shift[1]) as f32;
-                    model.zs[v] = (f64::from(model.zs[v]) + fit.shift[2]) as f32;
+                let grip = grip_point(&posed, part.grip);
+                apply_rigid(&mut posed, &grip, &fit.rotation, &fit.shift);
+                for (i, v) in part.vertices.clone().enumerate() {
+                    model.xs[v] = posed.xs[i];
+                    model.ys[v] = posed.ys[i];
+                    model.zs[v] = posed.zs[i];
                 }
                 let len = dot(&fit.shift, &fit.shift).sqrt();
                 fits.push(PoseFit {
@@ -538,45 +841,40 @@ impl PlayerBody {
                         [0.0; 3]
                     },
                     offset: fit.shift,
+                    rotation: fit.rotation,
                     precomputed: true,
                     penetration: fit.penetration,
                     gap: fit.gap,
+                    attachment_gap: fit.attachment_gap,
+                    anchor_clearance: fit.anchor_clearance,
                 });
                 continue;
             }
-            let bind_part = extract_range(assembled, part.vertices.clone(), part.faces.clone());
-            let mut posed = extract_range(&model, part.vertices.clone(), part.faces.clone());
-            let carried_box = carried_box(&bind_part, &posed);
-            let anchor = [
-                f64::from(posed.xs[0]),
-                f64::from(posed.ys[0]),
-                f64::from(posed.zs[0]),
-            ];
-            let box_measure = |body: &Model, item: &Model| -> f64 {
-                // The carried box moves rigidly with the item: follow the shift of the item's
-                // first vertex from the unshifted posed part.
-                let (axes, mean, min, max) = carried_box;
-                let shift = [
-                    f64::from(item.xs[0]) - anchor[0],
-                    f64::from(item.ys[0]) - anchor[1],
-                    f64::from(item.zs[0]) - anchor[2],
-                ];
-                let centre = [mean[0] + shift[0], mean[1] + shift[1], mean[2] + shift[2]];
-                let all: Vec<i32> = (0..body.vertex_count as i32).collect();
-                depth_in_box(body, &all, &(axes, centre, min, max))
-            };
-            let full_measure = |body: &Model, item: &Model| {
-                box_measure(body, item).max(embedded_depth(body, item))
-            };
-            let (shift, direction, offset) = contact_solve(
+            // The bind fit's translation carried into this pose by the anchor bone's rotation:
+            // the grip already sits that far from the anchor-carried design grip.
+            let carried = rigid_motion(&bind_part, &posed)
+                .map(|(r, _)| {
+                    [
+                        dot(&r[0], &part.bind_offset),
+                        dot(&r[1], &part.bind_offset),
+                        dot(&r[2], &part.bind_offset),
+                    ]
+                })
+                .unwrap_or(part.bind_offset);
+            let fit = attachment_fit(
                 &body,
-                slot_outward(&part.slot),
+                anchor_part,
+                &part.outward,
+                part.attachment,
+                &bind_part,
                 &mut posed,
-                &box_measure,
-                &full_measure,
+                part.grip,
+                &carried,
+                dot(&part.bind_offset, &part.bind_offset).sqrt(),
             );
-            let penetration = full_measure(&body, &posed);
+            let penetration = posed_fit_penetration(&bind_part, &body, &posed);
             let gap = clearance(&body, &posed);
+            let anchor_clearance = clearance(anchor_part, &posed);
             for (i, v) in part.vertices.clone().enumerate() {
                 model.xs[v] = posed.xs[i];
                 model.ys[v] = posed.ys[i];
@@ -585,19 +883,23 @@ impl PlayerBody {
             fits.push(PoseFit {
                 item_id: part.item_id,
                 slot: part.slot.clone(),
-                shift,
-                direction,
-                offset,
+                shift: fit.shift,
+                direction: fit.direction,
+                offset: fit.offset,
+                rotation: fit.rotation,
                 precomputed: false,
                 penetration,
                 gap,
+                attachment_gap: fit.attachment_gap,
+                anchor_clearance,
             });
         }
         Ok((model, fits))
     }
 
-    /// The exact translation [`PlayerBody::pose_fitted`] applies to each part in a frame (for
-    /// building a [`PoseFitTable`]): shift vector, penetration and gap per part.
+    /// The exact transform [`PlayerBody::pose_fitted`] applies to each part in a frame (for
+    /// building a [`PoseFitTable`]): rotation about the posed grip, translation, and every
+    /// measure per part.
     pub fn pose_fit_offsets(
         &self,
         assembled: &Model,
@@ -610,14 +912,17 @@ impl PlayerBody {
             .into_iter()
             .map(|fit| TableFrameFit {
                 shift: fit.offset,
+                rotation: fit.rotation,
                 penetration: fit.penetration,
                 gap: fit.gap,
+                attachment_gap: fit.attachment_gap,
+                anchor_clearance: fit.anchor_clearance,
             })
             .collect())
     }
 
     /// Animated, scaled player model for a sequence frame (what is drawn): the pose with the
-    /// per-pose contact fit applied. Returns the per-part fits alongside.
+    /// per-pose attachment fit applied. Returns the per-part fits alongside.
     pub fn frame_fitted(
         &self,
         assembled: &Model,
@@ -1096,300 +1401,440 @@ pub fn slot_outward(slot: &str) -> Option<[f64; 3]> {
     }
 }
 
-/// Rigid contact fit of one item against the body. Candidate directions are the slot's outward
-/// axis, the body axes, the radial direction from the body centre and the item's box axes; for
-/// each, the smallest translation bringing the combined penetration to at most
-/// [`FIT_MAX_PENETRATION`] is found (cheap box measure bracketed and bisected, full measure
-/// confirming), noting whether the clearance there stays within [`FIT_MAX_GAP`]. The smallest
-/// shift wins; a shift that also keeps contact is preferred when it is not much longer
-/// (within 1.5× + 2 units), and the outward axis breaks near-ties, so a hat is nudged back a
-/// unit rather than lifted a hand's width. When the chosen shift leaves the item floating, a
-/// second, perpendicular slide of at most 24 units is searched that restores contact without
-/// re-entering the body. Geometry is never edited; the result is the total translation and its
-/// direction, and unmet targets stay measurable afterwards.
-fn contact_solve(
-    body: &Model,
-    outward: Option<[f64; 3]>,
-    item: &mut Model,
-    box_measure: &dyn Fn(&Model, &Model) -> f64,
-    full_measure: &dyn Fn(&Model, &Model) -> f64,
-) -> (f64, [f64; 3], [f64; 3]) {
-    if full_measure(body, item) <= FIT_MAX_PENETRATION && clearance(body, item) <= FIT_MAX_GAP {
-        return (0.0, [0.0; 3], [0.0; 3]);
+/// Outward axis of an item from the human label its vertices are bound to (the side of the body
+/// the design attaches it to), falling back to the equipment slot: right-hand labels 27/50 and
+/// the right arm −X, left-hand 28 and the left arm +X, head labels up, neck/chest forward. A
+/// sequence hand-item override can put a right-hand tool into the shield slot (`lc.bd`), so the
+/// label decides before the slot does.
+pub fn outward_for(human_label: i32, slot: &str) -> [f64; 3] {
+    match human_label {
+        27 | 50 | 17 | 19 | 20 | 21 => [-1.0, 0.0, 0.0],
+        28 | 22 | 23 | 25 | 26 => [1.0, 0.0, 0.0],
+        1..=3 => [0.0, -1.0, 0.0],
+        4 | 5 | 8 | 29 | 30 => [0.0, 0.0, -1.0],
+        _ => slot_outward(slot).unwrap_or([0.0, -1.0, 0.0]),
     }
-    let (axes, mean, _, _) = item_box(item);
-    let n = body.vertex_count.max(1) as f64;
-    let mut body_mean = [0.0f64; 3];
-    for v in 0..body.vertex_count {
-        body_mean[0] += f64::from(body.xs[v]) / n;
-        body_mean[1] += f64::from(body.ys[v]) / n;
-        body_mean[2] += f64::from(body.zs[v]) / n;
+}
+
+/// How an item bound to `human_label` attaches: gripped by a hand label, worn otherwise.
+pub fn attachment_for(human_label: i32, slot: &str) -> Attachment {
+    match human_label {
+        27 | 28 | 50 => Attachment::Held,
+        _ if slot == "weapon" || slot == "shield" => Attachment::Held,
+        _ => Attachment::Worn,
     }
-    let away = [
-        mean[0] - body_mean[0],
-        mean[1] - body_mean[1],
-        mean[2] - body_mean[2],
-    ];
-    const COARSE: f64 = 0.5;
-    const LIMIT: f64 = 64.0;
-    const SLIDE_LIMIT: f64 = 48.0;
-    let translated = |offset: &[f64; 3]| {
-        let mut probe = item.clone();
-        for v in 0..probe.vertex_count {
-            probe.xs[v] = (f64::from(item.xs[v]) + offset[0]) as f32;
-            probe.ys[v] = (f64::from(item.ys[v]) + offset[1]) as f32;
-            probe.zs[v] = (f64::from(item.zs[v]) + offset[2]) as f32;
-        }
-        probe
+}
+
+/// The anchor part's outward surface point. A held item passes through its anchor (the hilt
+/// through the palm): the surface is where the ray from the label centroid along `outward`
+/// leaves the part's own triangles (the outer face of the hand or flipper at the centroid's
+/// height). A worn item rests on its anchor's outer extreme (the hat on the top of the skull,
+/// the necklace on the front of the chest): the label's extreme along `outward`. Falls back to
+/// the extreme when the ray meets no triangle, and to the centroid for a label without vertices.
+fn label_surface_anchor(
+    model: &Model,
+    label: i32,
+    centroid: &LabelCentroid,
+    outward: &[f64; 3],
+    attachment: Attachment,
+) -> [f64; 3] {
+    let origin = [centroid.x, centroid.y, centroid.z];
+    let part = if attachment == Attachment::Held {
+        label_part(model, label)
+    } else {
+        let mut empty = model.clone();
+        empty.face_count = 0;
+        empty
     };
-    let scaled = |dir: &[f64; 3], t: f64| [dir[0] * t, dir[1] * t, dir[2] * t];
-    let shifted = |dir: &[f64; 3], t: f64| translated(&scaled(dir, t));
-    // Smallest shift along `dir` clearing the cheap box measure (bracketed and bisected).
-    let box_clear_along = |dir: &[f64; 3]| -> Option<f64> {
-        let mut previous = 0.0;
-        let mut t = COARSE;
-        while t <= LIMIT {
-            if box_measure(body, &shifted(dir, t)) <= FIT_MAX_PENETRATION {
-                let (mut lo, mut h) = (previous, t);
-                for _ in 0..6 {
-                    let mid = 0.5 * (lo + h);
-                    if box_measure(body, &shifted(dir, mid)) <= FIT_MAX_PENETRATION {
-                        h = mid;
-                    } else {
-                        lo = mid;
-                    }
+    let mut hit: Option<f64> = None;
+    for f in 0..part.face_count {
+        let tri = [part.face_a[f], part.face_b[f], part.face_c[f]].map(|i| {
+            let i = i as usize;
+            [
+                f64::from(part.xs[i]),
+                f64::from(part.ys[i]),
+                f64::from(part.zs[i]),
+            ]
+        });
+        if let Some(t) = ray_triangle(&origin, outward, &tri[0], &tri[1], &tri[2])
+            && t >= 0.0
+            && hit.is_none_or(|h| t > h)
+        {
+            // The farthest exit along the ray: the part's outer surface.
+            hit = Some(t);
+        }
+    }
+    let reach = hit.unwrap_or_else(|| {
+        let mut reach = 0.0f64;
+        if let Some(group) = model
+            .vertex_groups
+            .as_ref()
+            .and_then(|g| g.get(label as usize))
+        {
+            for &v in group {
+                let v = v as usize;
+                let d = [
+                    f64::from(model.xs[v]) - centroid.x,
+                    f64::from(model.ys[v]) - centroid.y,
+                    f64::from(model.zs[v]) - centroid.z,
+                ];
+                reach = reach.max(dot(&d, outward));
+            }
+        }
+        reach
+    });
+    [
+        centroid.x + outward[0] * reach,
+        centroid.y + outward[1] * reach,
+        centroid.z + outward[2] * reach,
+    ]
+}
+
+/// Möller–Trumbore ray/triangle intersection: the ray parameter of the hit, if any (either
+/// facing).
+fn ray_triangle(
+    origin: &[f64; 3],
+    dir: &[f64; 3],
+    a: &[f64; 3],
+    b: &[f64; 3],
+    c: &[f64; 3],
+) -> Option<f64> {
+    let e1 = [b[0] - a[0], b[1] - a[1], b[2] - a[2]];
+    let e2 = [c[0] - a[0], c[1] - a[1], c[2] - a[2]];
+    let cross = |u: &[f64; 3], v: &[f64; 3]| {
+        [
+            u[1] * v[2] - u[2] * v[1],
+            u[2] * v[0] - u[0] * v[2],
+            u[0] * v[1] - u[1] * v[0],
+        ]
+    };
+    let h = cross(dir, &e2);
+    let det = dot(&e1, &h);
+    if det.abs() < 1e-12 {
+        return None;
+    }
+    let inv = 1.0 / det;
+    let s = [origin[0] - a[0], origin[1] - a[1], origin[2] - a[2]];
+    let u = inv * dot(&s, &h);
+    if !(-1e-9..=1.0 + 1e-9).contains(&u) {
+        return None;
+    }
+    let q = cross(&s, &e1);
+    let v = inv * dot(dir, &q);
+    if v < -1e-9 || u + v > 1.0 + 1e-9 {
+        return None;
+    }
+    Some(inv * dot(&e2, &q))
+}
+
+/// The triangles of `model` whose three vertices all carry `label` (the anchor body part as a
+/// standalone mesh, for the anchor-clearance measure); empty when the label has none.
+pub fn label_part(model: &Model, label: i32) -> Model {
+    let mut part = model.clone();
+    let in_label: Vec<bool> = {
+        let mut flags = vec![false; model.vertex_count];
+        if let Some(group) = model
+            .vertex_groups
+            .as_ref()
+            .and_then(|g| g.get(label as usize))
+        {
+            for &v in group {
+                if (v as usize) < flags.len() {
+                    flags[v as usize] = true;
                 }
-                return Some(h);
-            }
-            previous = t;
-            t += COARSE;
-        }
-        None
-    };
-    // The full measure (box + item-inside-body) confirms a box-clearing shift and drives further
-    // coarse steps only when the item is still swallowed by the body; then whether the item
-    // still touches the body there.
-    let confirm_along = |dir: &[f64; 3], mut t: f64| -> Option<(f64, bool)> {
-        while full_measure(body, &shifted(dir, t)) > FIT_MAX_PENETRATION {
-            t += COARSE;
-            if t > LIMIT {
-                return None;
             }
         }
-        let contact = clearance(body, &shifted(dir, t)) <= FIT_MAX_GAP;
-        Some((t, contact))
+        flags
     };
+    let mut faces = Vec::new();
+    for f in 0..model.face_count {
+        let (a, b, c) = (
+            model.face_a[f] as usize,
+            model.face_b[f] as usize,
+            model.face_c[f] as usize,
+        );
+        if in_label[a] || in_label[b] || in_label[c] {
+            faces.push(f);
+        }
+    }
+    part.face_count = faces.len();
+    part.face_a = faces.iter().map(|&f| model.face_a[f]).collect();
+    part.face_b = faces.iter().map(|&f| model.face_b[f]).collect();
+    part.face_c = faces.iter().map(|&f| model.face_c[f]).collect();
+    part.vertex_groups = None;
+    part.face_groups = None;
+    part.face_groups_alt = None;
+    part
+}
+
+/// Position of the part's grip vertex.
+pub fn grip_point(part: &Model, grip: usize) -> [f64; 3] {
+    let g = grip.min(part.vertex_count.saturating_sub(1));
+    [
+        f64::from(part.xs[g]),
+        f64::from(part.ys[g]),
+        f64::from(part.zs[g]),
+    ]
+}
+
+/// Rotation matrix (rows) of an axis-angle vector (Rodrigues).
+fn rotation_matrix(rotvec: &[f64; 3]) -> [[f64; 3]; 3] {
+    let angle = dot(rotvec, rotvec).sqrt();
+    if angle < 1e-12 {
+        return [[1.0, 0.0, 0.0], [0.0, 1.0, 0.0], [0.0, 0.0, 1.0]];
+    }
+    let k = [rotvec[0] / angle, rotvec[1] / angle, rotvec[2] / angle];
+    let (s, c) = angle.sin_cos();
+    let t = 1.0 - c;
+    [
+        [
+            c + k[0] * k[0] * t,
+            k[0] * k[1] * t - k[2] * s,
+            k[0] * k[2] * t + k[1] * s,
+        ],
+        [
+            k[1] * k[0] * t + k[2] * s,
+            c + k[1] * k[1] * t,
+            k[1] * k[2] * t - k[0] * s,
+        ],
+        [
+            k[2] * k[0] * t - k[1] * s,
+            k[2] * k[1] * t + k[0] * s,
+            c + k[2] * k[2] * t,
+        ],
+    ]
+}
+
+/// Applies `v' = R (v − pivot) + pivot + shift` to every vertex of `part`.
+pub fn apply_rigid(part: &mut Model, pivot: &[f64; 3], rotvec: &[f64; 3], shift: &[f64; 3]) {
+    let r = rotation_matrix(rotvec);
+    for v in 0..part.vertex_count {
+        let p = [
+            f64::from(part.xs[v]) - pivot[0],
+            f64::from(part.ys[v]) - pivot[1],
+            f64::from(part.zs[v]) - pivot[2],
+        ];
+        let q = [dot(&r[0], &p), dot(&r[1], &p), dot(&r[2], &p)];
+        part.xs[v] = (q[0] + pivot[0] + shift[0]) as f32;
+        part.ys[v] = (q[1] + pivot[1] + shift[1]) as f32;
+        part.zs[v] = (q[2] + pivot[2] + shift[2]) as f32;
+    }
+}
+
+/// Result of [`attachment_fit`]: the rigid transform applied about the grip and the attachment
+/// gap it left.
+#[derive(Debug, Clone, Copy, PartialEq)]
+pub struct AttachmentFit {
+    pub rotation: [f64; 3],
+    pub offset: [f64; 3],
+    pub shift: f64,
+    pub direction: [f64; 3],
+    pub attachment_gap: f64,
+}
+
+impl AttachmentFit {
+    pub fn rotation_deg(&self) -> f64 {
+        dot(&self.rotation, &self.rotation).sqrt().to_degrees()
+    }
+}
+
+/// Attachment-preserving fit of one item against the body: the item may turn about its grip
+/// point (up to 90° about any of 13 lattice axes, refined) and translate by at most
+/// [`FIT_MAX_ATTACHMENT`]; the grip therefore stays within the attachment bound of where the
+/// anchor bone carries it. Among the candidates the one with the smallest combined penetration
+/// (carried bind box + item-inside-body) wins, preferring ones that also keep the item touching
+/// the body and its anchor part, then the smallest rotation; unmet targets remain measurable.
+/// The item is left in its fitted position; geometry is never edited.
+#[allow(clippy::too_many_arguments)]
+fn attachment_fit(
+    body: &Model,
+    anchor_part: &Model,
+    outward: &[f64; 3],
+    attachment: Attachment,
+    bind_reference: &Model,
+    item: &mut Model,
+    grip: usize,
+    base_offset: &[f64; 3],
+    base_len: f64,
+) -> AttachmentFit {
+    // `base_offset` is where the item's grip already sits relative to the anchor-carried design
+    // grip (the bind fit's translation carried into this pose by the bone's rotation; its exact
+    // length is `base_len`). The attachment gap of a candidate translation `s` is
+    // |base_offset + s| and the whole budget is FIT_MAX_ATTACHMENT.
+    let identity = AttachmentFit {
+        rotation: [0.0; 3],
+        offset: [0.0; 3],
+        shift: 0.0,
+        direction: [0.0; 3],
+        attachment_gap: base_len,
+    };
+    let measure = |candidate: &Model| -> (f64, f64, f64) {
+        let pen = posed_fit_penetration(bind_reference, body, candidate);
+        let gap = clearance(body, candidate);
+        let anchor_gap = if anchor_part.face_count > 0 {
+            clearance(anchor_part, candidate)
+        } else {
+            gap
+        };
+        (pen, gap, anchor_gap)
+    };
+    let cheap =
+        |candidate: &Model| -> f64 { posed_box_penetration(bind_reference, body, candidate) };
+    let acceptable = |pen: f64, gap: f64, anchor_gap: f64| {
+        pen <= FIT_MAX_PENETRATION
+            && gap <= FIT_MAX_GAP
+            && (attachment == Attachment::Held || anchor_gap <= FIT_MAX_GAP)
+    };
+    let (pen0, gap0, anchor0) = measure(item);
+    if acceptable(pen0, gap0, anchor0) {
+        return identity;
+    }
+    let pivot = grip_point(item, grip);
     let normalize = |v: [f64; 3]| -> Option<[f64; 3]> {
         let len = dot(&v, &v).sqrt();
-        (len > 1e-6).then(|| [v[0] / len, v[1] / len, v[2] / len])
+        (len > 1e-9).then(|| [v[0] / len, v[1] / len, v[2] / len])
     };
-    let mut directions: Vec<[f64; 3]> = Vec::new();
-    let push = |d: [f64; 3], directions: &mut Vec<[f64; 3]>| {
-        if let Some(d) = normalize(d)
-            && !directions.iter().any(|e| (dot(e, &d) - 1.0).abs() < 1e-6)
-        {
-            directions.push(d);
-        }
-    };
-    if let Some(dir) = outward {
-        push(dir, &mut directions);
-    }
-    for axis in [[1.0, 0.0, 0.0], [0.0, 1.0, 0.0], [0.0, 0.0, 1.0]] {
-        push(axis, &mut directions);
-        push([-axis[0], -axis[1], -axis[2]], &mut directions);
-    }
-    push(away, &mut directions);
-    for axis in &axes {
-        push(*axis, &mut directions);
-        push([-axis[0], -axis[1], -axis[2]], &mut directions);
-    }
-    // Box-clearing shift per direction; only directions that could still win (within the
-    // contact-preference margin of the shortest, or the outward axis within its tie margin) pay
-    // for the exact confirmation.
-    let mut boxed: Vec<(f64, [f64; 3])> = directions
-        .iter()
-        .filter_map(|dir| box_clear_along(dir).map(|t| (t, *dir)))
-        .collect();
-    boxed.sort_by(|a, b| a.0.total_cmp(&b.0));
-    let Some(&(shortest_box, _)) = boxed.first() else {
-        return (0.0, [0.0; 3], [0.0; 3]);
-    };
-    let is_outward = |d: &[f64; 3]| outward.is_some_and(|out| (dot(d, &out) - 1.0).abs() < 1e-6);
-    // (shift, contact, direction) per direction that clears the penetration.
-    let solved: Vec<(f64, bool, [f64; 3])> = boxed
-        .iter()
-        .filter(|(t, dir)| *t <= shortest_box * 3.0 + 8.0 || is_outward(dir))
-        .filter_map(|(t, dir)| confirm_along(dir, *t).map(|(t, contact)| (t, contact, *dir)))
-        .collect();
-    let Some(&shortest) = solved.iter().min_by(|a, b| a.0.total_cmp(&b.0)) else {
-        return (0.0, [0.0; 3], [0.0; 3]);
-    };
-    let shortest_contact = solved
-        .iter()
-        .filter(|c| c.1)
-        .min_by(|a, b| a.0.total_cmp(&b.0))
-        .copied();
-    let mut chosen = match shortest_contact {
-        Some(c) if c.0 <= shortest.0 * 3.0 + 8.0 => c,
-        _ => shortest,
-    };
-    if let Some(o) = solved.iter().find(|c| is_outward(&c.2))
-        && o.1 == chosen.1
-        && o.0 <= chosen.0 * 1.15 + 0.5
-    {
-        chosen = *o;
-    }
-    let (t, _, dir) = chosen;
-    let mut offset = scaled(&dir, t);
-    if !chosen.1 {
-        // Floating after the clearing shift: slide perpendicular to it until the item touches
-        // the body again (smallest slide that keeps the penetration target).
-        let seed = if dir[0].abs() < 0.9 {
-            [1.0, 0.0, 0.0]
-        } else {
-            [0.0, 1.0, 0.0]
-        };
-        let u = normalize([
-            dir[1] * seed[2] - dir[2] * seed[1],
-            dir[2] * seed[0] - dir[0] * seed[2],
-            dir[0] * seed[1] - dir[1] * seed[0],
-        ])
-        .unwrap_or([0.0, 1.0, 0.0]);
-        let w = [
-            dir[1] * u[2] - dir[2] * u[1],
-            dir[2] * u[0] - dir[0] * u[2],
-            dir[0] * u[1] - dir[1] * u[0],
-        ];
-        let mut best: Option<(f64, [f64; 3])> = None;
-        let start_gap = clearance(body, &translated(&offset));
-        for k in 0..8 {
-            let angle = f64::from(k) * std::f64::consts::FRAC_PI_4;
-            let (sa, ca) = angle.sin_cos();
-            let side = [
-                u[0] * ca + w[0] * sa,
-                u[1] * ca + w[1] * sa,
-                u[2] * ca + w[2] * sa,
-            ];
-            // The clearance cannot shrink faster than the item moves, so each probe jumps by
-            // the distance still to close (never less than a coarse step).
-            let at = |slide: f64| {
-                [
-                    offset[0] + side[0] * slide,
-                    offset[1] + side[1] * slide,
-                    offset[2] + side[2] * slide,
-                ]
-            };
-            // The clearance cannot shrink faster than the item moves, so a probe with a known
-            // clearance jumps by the distance still to close; where the box measure fails the
-            // clearance is not evaluated and the walk continues in coarse steps (the item may
-            // pass a thin part and rest on the body beyond it).
-            let mut known_gap = Some(start_gap);
-            let mut slide = 0.0;
-            loop {
-                slide += match known_gap {
-                    Some(gap) => (gap - FIT_MAX_GAP).max(COARSE),
-                    None => COARSE,
-                };
-                if slide > SLIDE_LIMIT || best.is_some_and(|(b, _)| slide >= b) {
-                    break;
-                }
-                let total = at(slide);
-                let probe = translated(&total);
-                if box_measure(body, &probe) > FIT_MAX_PENETRATION {
-                    known_gap = None;
-                    continue;
-                }
-                let gap = clearance(body, &probe);
-                known_gap = Some(gap);
-                if gap <= FIT_MAX_GAP && full_measure(body, &probe) <= FIT_MAX_PENETRATION {
-                    best = Some((slide, total));
-                    break;
-                }
-            }
-        }
-        if best.is_none() {
-            // Still floating: a bounded local search around the clearing shift (26 lattice
-            // directions, growing radius, smallest first) for any touching position.
-            let mut lattice: Vec<[f64; 3]> = Vec::new();
-            for x in -1..=1 {
-                for y in -1..=1 {
-                    for z in -1..=1 {
-                        if let Some(d) = normalize([f64::from(x), f64::from(y), f64::from(z)]) {
-                            lattice.push(d);
-                        }
-                    }
-                }
-            }
-            let mut clearance_budget = 160;
-            'radius: for step in 1..=24 {
-                let radius = f64::from(step) * 2.0 * COARSE;
-                for d in &lattice {
-                    let total = [
-                        offset[0] + d[0] * radius,
-                        offset[1] + d[1] * radius,
-                        offset[2] + d[2] * radius,
-                    ];
-                    let probe = translated(&total);
-                    if box_measure(body, &probe) > FIT_MAX_PENETRATION {
-                        continue;
-                    }
-                    if clearance_budget == 0 {
-                        break 'radius;
-                    }
-                    clearance_budget -= 1;
-                    if clearance(body, &probe) <= FIT_MAX_GAP
-                        && full_measure(body, &probe) <= FIT_MAX_PENETRATION
-                    {
-                        best = Some((radius, total));
-                        break 'radius;
-                    }
-                }
-            }
-        }
-        if best.is_none() {
-            // Last resort: the smallest shift in any of the 124 lattice directions (components
-            // −2..2) at which both targets hold, searched from the unshifted item.
-            let mut dense: Vec<[f64; 3]> = Vec::new();
-            for x in -2..=2 {
-                for y in -2..=2 {
-                    for z in -2..=2 {
-                        if let Some(d) = normalize([f64::from(x), f64::from(y), f64::from(z)]) {
-                            dense.push(d);
-                        }
-                    }
-                }
-            }
-            let mut feasible: Option<(f64, [f64; 3])> = None;
-            for d in &dense {
-                let Some(t) = box_clear_along(d) else {
-                    continue;
-                };
-                if feasible.is_some_and(|(b, _)| t >= b) {
-                    continue;
-                }
-                let probe = shifted(d, t);
-                if full_measure(body, &probe) <= FIT_MAX_PENETRATION
-                    && clearance(body, &probe) <= FIT_MAX_GAP
+    let mut axes: Vec<[f64; 3]> = Vec::new();
+    for x in -1..=1 {
+        for y in -1..=1 {
+            for z in -1..=1 {
+                if let Some(a) = normalize([f64::from(x), f64::from(y), f64::from(z)])
+                    && !axes.iter().any(|e| (dot(e, &a).abs() - 1.0).abs() < 1e-9)
                 {
-                    feasible = Some((t, *d));
+                    axes.push(a);
                 }
             }
-            if let Some((t, d)) = feasible {
-                best = Some((t, scaled(&d, t)));
+        }
+    }
+    // Candidate grip positions: the ball of radius FIT_MAX_ATTACHMENT around the anchor-carried
+    // design grip (its centre, ±2 on each axis, +2 outward) plus staying put; expressed as
+    // translations from the item's current position so every candidate keeps |gap| ≤ bound.
+    let mut targets: Vec<[f64; 3]> = vec![[0.0; 3]];
+    for axis in [[1.0, 0.0, 0.0], [0.0, 1.0, 0.0], [0.0, 0.0, 1.0]] {
+        for sign in [1.0, -1.0] {
+            targets.push([
+                axis[0] * sign * FIT_MAX_ATTACHMENT,
+                axis[1] * sign * FIT_MAX_ATTACHMENT,
+                axis[2] * sign * FIT_MAX_ATTACHMENT,
+            ]);
+        }
+    }
+    targets.push([
+        outward[0] * FIT_MAX_ATTACHMENT,
+        outward[1] * FIT_MAX_ATTACHMENT,
+        outward[2] * FIT_MAX_ATTACHMENT,
+    ]);
+    // (translation, exact attachment gap it leaves): the targets' components are exact so
+    // their lengths are too (no boundary rounding against the bound).
+    let mut shifts: Vec<([f64; 3], f64)> = vec![([0.0; 3], base_len)];
+    for t in &targets {
+        let s = [
+            t[0] - base_offset[0],
+            t[1] - base_offset[1],
+            t[2] - base_offset[2],
+        ];
+        if dot(&s, &s) > 1e-18 {
+            shifts.push((s, dot(t, t).sqrt()));
+        }
+    }
+    let candidate_model = |rotvec: &[f64; 3], shift: &[f64; 3]| -> Model {
+        let mut c = item.clone();
+        apply_rigid(&mut c, &pivot, rotvec, shift);
+        c
+    };
+    // Coarse: cheap box measure over rotations × bounded shifts.
+    let angles_deg: [f64; 10] = [0.0, 5.0, 10.0, 15.0, 20.0, 30.0, 45.0, 60.0, 75.0, 90.0];
+    /// (translation, exact attachment gap it leaves)
+    type Shift = ([f64; 3], f64);
+    /// (box penetration, |angle|°, rotation vector, shift)
+    type Ranked = (f64, f64, [f64; 3], Shift);
+    /// (penetration, gap, anchor clearance, |angle|°, rotation vector, shift)
+    type Best = (f64, f64, f64, f64, [f64; 3], Shift);
+    let mut ranked: Vec<Ranked> = Vec::new();
+    for axis in &axes {
+        for deg in angles_deg {
+            for sign in [1.0f64, -1.0] {
+                if deg == 0.0 && sign < 0.0 {
+                    continue;
+                }
+                let angle: f64 = (deg * sign).to_radians();
+                let rotvec = [axis[0] * angle, axis[1] * angle, axis[2] * angle];
+                for shift in &shifts {
+                    let c = candidate_model(&rotvec, &shift.0);
+                    ranked.push((cheap(&c), deg, rotvec, *shift));
+                }
+                if deg == 0.0 {
+                    break;
+                }
             }
         }
-        if let Some((_, total)) = best {
-            offset = total;
+    }
+    ranked.sort_by(|a, b| a.0.total_cmp(&b.0).then(a.1.total_cmp(&b.1)));
+    // Exact confirmation of the best few (box + embedded, clearance, anchor clearance): the first
+    // acceptable candidate wins; otherwise the candidate with the smallest exact penetration.
+    let mut best: Option<Best> = None;
+    let mut budget = 24usize;
+    for (_, deg, rotvec, shift) in ranked.iter() {
+        if budget == 0 {
+            break;
+        }
+        budget -= 1;
+        let c = candidate_model(rotvec, &shift.0);
+        let (pen, gap, anchor_gap) = measure(&c);
+        let better = match &best {
+            None => true,
+            Some((bp, bg, ba, bd, _, _)) => {
+                let ok_new = acceptable(pen, gap, anchor_gap);
+                let ok_old = acceptable(*bp, *bg, *ba);
+                (ok_new && !ok_old)
+                    || (ok_new == ok_old
+                        && (pen < bp - 1e-9 || ((pen - bp).abs() <= 1e-9 && deg < bd)))
+            }
+        };
+        if better {
+            best = Some((pen, gap, anchor_gap, *deg, *rotvec, *shift));
+            if acceptable(pen, gap, anchor_gap) && *deg <= 15.0 {
+                break;
+            }
         }
     }
-    for v in 0..item.vertex_count {
-        item.xs[v] = (f64::from(item.xs[v]) + offset[0]) as f32;
-        item.ys[v] = (f64::from(item.ys[v]) + offset[1]) as f32;
-        item.zs[v] = (f64::from(item.zs[v]) + offset[2]) as f32;
+    let Some((pen, gap, anchor_gap, deg, mut rotvec, (shift, attachment_gap))) = best else {
+        return identity;
+    };
+    // Refine the angle by bisection towards the smallest rotation that still meets the targets.
+    if acceptable(pen, gap, anchor_gap) && deg > 0.0 {
+        let axis = normalize(rotvec).unwrap_or([0.0, 1.0, 0.0]);
+        let (mut lo, mut hi) = (0.0f64, deg);
+        for _ in 0..5 {
+            let mid = 0.5 * (lo + hi);
+            let rv = [
+                axis[0] * mid.to_radians(),
+                axis[1] * mid.to_radians(),
+                axis[2] * mid.to_radians(),
+            ];
+            let c = candidate_model(&rv, &shift);
+            let (p, g, a) = measure(&c);
+            if acceptable(p, g, a) {
+                hi = mid;
+            } else {
+                lo = mid;
+            }
+        }
+        rotvec = [
+            axis[0] * hi.to_radians(),
+            axis[1] * hi.to_radians(),
+            axis[2] * hi.to_radians(),
+        ];
     }
-    let len = dot(&offset, &offset).sqrt();
-    let direction = normalize(offset).unwrap_or([0.0; 3]);
-    (len, direction, offset)
+    apply_rigid(item, &pivot, &rotvec, &shift);
+    let len = dot(&shift, &shift).sqrt();
+    AttachmentFit {
+        rotation: rotvec,
+        offset: shift,
+        shift: len,
+        direction: normalize(shift).unwrap_or([0.0; 3]),
+        attachment_gap,
+    }
 }
 
 /// Smallest distance between the item and the body surfaces: item vertices to body triangles

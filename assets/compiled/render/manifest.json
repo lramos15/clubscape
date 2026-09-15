@@ -2829,6 +2829,66 @@
     "13": 0,
     "14": 4
    }
+  },
+  {
+   "item_id": 303,
+   "name": "Small fishing net",
+   "equip_model": "models/item-303-equip.bin",
+   "labels": [
+    {
+     "label": 130,
+     "vertices": 12,
+     "centroid": [
+      0,
+      -76,
+      -34.666666666666664
+     ],
+     "min_y": -92,
+     "max_y": -60
+    }
+   ],
+   "params": {},
+   "role": "sequence_hand_item"
+  },
+  {
+   "item_id": 590,
+   "name": "Tinderbox",
+   "equip_model": "models/item-590-equip.bin",
+   "labels": [
+    {
+     "label": 50,
+     "vertices": 18,
+     "centroid": [
+      -32.111111111111114,
+      -92.5,
+      -17.72222222222222
+     ],
+     "min_y": -112,
+     "max_y": -76
+    }
+   ],
+   "params": {},
+   "role": "sequence_hand_item"
+  },
+  {
+   "item_id": 2347,
+   "name": "Hammer",
+   "equip_model": "models/item-2347-equip.bin",
+   "labels": [
+    {
+     "label": 50,
+     "vertices": 20,
+     "centroid": [
+      -31,
+      -100.3,
+      -41.9
+     ],
+     "min_y": -114,
+     "max_y": -90
+    }
+   ],
+   "params": {},
+   "role": "sequence_hand_item"
   }
  ],
  "player_reference": {
@@ -8454,19 +8514,91 @@
  ],
  "gear_pose_fits": {
   "file": "gear/pose-fits.json",
-  "schema_version": 1,
+  "failures_file": "gear/pose-fit-failures.json",
+  "schema_version": 2,
   "body_npc": 2063,
-  "items": 10,
+  "items": 13,
   "sequences": 27,
-  "item_frames": 3220,
-  "item_frames_over_target": 0,
-  "classification": "Per-item per-pose rigid contact shifts against the penguin body (targets penetration <= 1, gap <= 2 source units); precomputed runtime input, not a fit waiver"
+  "item_frames": 1587,
+  "item_frames_not_drawn": 2599,
+  "legality_frame_counts": [
+   {
+    "class": "combat_binding_pending",
+    "item_frames": 288
+   },
+   {
+    "class": "hidden",
+    "item_frames": 2281
+   },
+   {
+    "class": "not_equippable",
+    "item_frames": 318
+   },
+   {
+    "class": "override",
+    "item_frames": 95
+   },
+   {
+    "class": "worn",
+    "item_frames": 1204
+   }
+  ],
+  "item_frames_over_target": 671,
+  "over_penetration": 666,
+  "over_gap": 8,
+  "over_attachment": 0,
+  "classification": "Per-item per-pose rigid attachment fits (rotation about the grip + shift) against the penguin body; targets penetration <= 1 (carried bind box), surface gap <= 2, attachment gap <= 2 source units; precomputed runtime input, not a fit waiver"
  },
  "hud_zoom": {
   "file": "hud/zoom-table.json",
   "samples": 16,
   "full_hud_zoom_1920x1080": 410,
   "viewport_only_fixture_zoom": 662
+ },
+ "sequence_hand_overrides": {
+  "rule": "lc.bd: sequence.leftHandItem >= 0 -> equipment[5] = value - 512 + 2048; rightHandItem >= 0 -> equipment[3] = value - 512 + 2048; ids >= 2048 are items (id - 2048), 256..2047 kits (id - 256), others nothing",
+  "source": "ou.by (opcode 6) / ou.bq (opcode 7) decoded per required sequence; lc.at conversion; lc.lk / lc.ak range checks; kit table = archive 2 group 3 file ids",
+  "values": [
+   {
+    "value": 815,
+    "equipment_id": 2351,
+    "kind": "item",
+    "item_id": 303
+   },
+   {
+    "value": 1777,
+    "equipment_id": 3313,
+    "kind": "item",
+    "item_id": 1265
+   },
+   {
+    "value": 0,
+    "equipment_id": 1536,
+    "kind": "kit",
+    "kit_id": 1280,
+    "kit_exists": false,
+    "draws": "nothing: no such kit file"
+   },
+   {
+    "value": 1102,
+    "equipment_id": 2638,
+    "kind": "item",
+    "item_id": 590
+   },
+   {
+    "value": 1863,
+    "equipment_id": 3399,
+    "kind": "item",
+    "item_id": 1351
+   },
+   {
+    "value": 2859,
+    "equipment_id": 4395,
+    "kind": "item",
+    "item_id": 2347
+   }
+  ],
+  "kit_count": 307
  },
  "files": {
   "tables.bin": {
@@ -23199,8 +23331,8 @@
    }
   },
   "gear/pose-fits.json": {
-   "sha256": "09c8a3316124701ef478466a12ef461d7227022f7baf060ee66c5e2d2206a43a",
-   "size_bytes": 292744
+   "sha256": "6a91b00ba19342f71028d49f761c2a46c2eaaabbb9d8c9a8b0343f4d9027c905",
+   "size_bytes": 331320
   },
   "hud/zoom-table.json": {
    "sha256": "8375bbcd0c071466b0869f0a89d2525e50a73c35c4a23c6a07d3089ae241d21f",
@@ -23218,6 +23350,52 @@
     "source": "ps (archive 2 group 35) decoded as in client init; ps.as(false) sprite through the original sprite loader; ARGB int32 big-endian",
     "draw_rule": "client.zr/bo.as: per icon at ((tileX<<7)+64-playerX, (tileY<<7)+64-playerY) scaled by the minimap zoom, rotated by the map angle, centred minus (width/2, height/2); drawn only within 80 units of the centre, clipped to the widget beyond 50"
    }
+  },
+  "models/item-303-equip.bin": {
+   "sha256": "aba48fc62c48016866197f29b0dd11b54f43c9d85953857fd5f586b19b995ac8",
+   "size_bytes": 2000,
+   "detail": {
+    "vertices": 12,
+    "faces": 24,
+    "textured_faces": 24,
+    "detail": {
+     "item_id": 303,
+     "gender": 0,
+     "source": "op.jm equipped model, lit as in lc.bd"
+    }
+   }
+  },
+  "models/item-590-equip.bin": {
+   "sha256": "12d1d62763d720d28644e7c7e69751ffecdb254aeaddf448e2c4ce87947907c1",
+   "size_bytes": 1572,
+   "detail": {
+    "vertices": 18,
+    "faces": 28,
+    "textured_faces": 0,
+    "detail": {
+     "item_id": 590,
+     "gender": 0,
+     "source": "op.jm equipped model, lit as in lc.bd"
+    }
+   }
+  },
+  "models/item-2347-equip.bin": {
+   "sha256": "66676b3b753d2713212a61f0127dbce87c5284e29d3c85bd71c396ce17d5c7d6",
+   "size_bytes": 1828,
+   "detail": {
+    "vertices": 20,
+    "faces": 36,
+    "textured_faces": 0,
+    "detail": {
+     "item_id": 2347,
+     "gender": 0,
+     "source": "op.jm equipped model, lit as in lc.bd"
+    }
+   }
+  },
+  "gear/pose-fit-failures.json": {
+   "sha256": "01a96b563b94ad6c33482375925b9fc5259fd5dc6feabce4f5e0126c01cb59f1",
+   "size_bytes": 183823
   }
  }
 }

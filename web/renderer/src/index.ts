@@ -54,6 +54,13 @@ export interface RenderAssetManifest {
    * `playerPoseFits()`.
    */
   gear_pose_fits?: { file: string; schema_version: number; body_npc: number; items: number; sequences: number; item_frames: number; item_frames_over_target: number };
+  /** Source `lc.bd` hand-item overrides of the required sequences (kit existence per value). */
+  sequence_hand_overrides?: {
+    rule: string;
+    source: string;
+    kit_count: number;
+    values: Array<{ value: number; equipment_id: number; kind: "item" | "kit" | "none"; item_id?: number; kit_id?: number; kit_exists?: boolean; draws?: string }>;
+  };
   /** Door/fire/state objects: per type+orientation lit models with optional baked frames. */
   dynamic_objects?: Array<{
     object_id: number; name: string; sequence: number;
@@ -166,12 +173,40 @@ export interface PlayerPoseFit {
   frame: number;
   itemId: number;
   slot: string;
+  /** Length of the rigid translation applied this frame (body space, source units). */
   shift: number;
   direction: [number, number, number];
+  /** Rotation about the posed grip point applied this frame (axis-angle, radians). */
+  rotation: [number, number, number];
   precomputed: boolean;
+  /** Carried-bind-box penetration after the fit (target ≤ 1 source unit). */
   penetration: number;
+  /** Item↔body surface clearance after the fit (target ≤ 2): a surface metric only. */
   gap: number;
+  /**
+   * Attachment gap: how far the item's grip/contact point sits from where the posed anchor
+   * bone (the item's slot part, retargeted) carries it (target ≤ 2). Distinguishes an item
+   * that merely touches the body from one held/worn where the source attaches it.
+   */
+  attachmentGap: number;
+  /** Clearance between the item and its anchor part alone (worn items must touch it). */
+  anchorClearance: number;
+  /** penetration ≤ 1 ∧ gap ≤ 2 ∧ attachmentGap ≤ 2. */
   meetsTargets: boolean;
+}
+
+/**
+ * A source action the observer reported without a bound animation (`ActorActionView.animation:
+ * null`): the exact identity the backend binding is owed for. Never turned into a guessed motion.
+ */
+export interface UnboundAction {
+  actorId: string;
+  id: string;
+  activity: string;
+  actionId: string | null;
+  recipeId: string | null;
+  styleId: string | null;
+  spellId: string | null;
 }
 
 /** Model-only interface preview request; defaults reproduce interface 679 component 73. */
@@ -233,12 +268,15 @@ export interface MinimapSurface {
   notes: string[];
   /**
    * Minimap icons on the drawn plane (the original `bu.aa` pass: floor decorations whose object
-   * definition names a map element the original shows on the minimap). Drawn by the HUD over
-   * `pixels` with `mapIconSprites()` and the original `client.zr`/`bo.as` rule: for each icon
-   * `dx = (x << 7) + 64 - playerX`, `dy = (y << 7) + 64 - playerY` (source units, the player's
-   * fine position), scaled by the minimap zoom and rotated by the map angle, sprite top-left at
-   * `(centreX + dx' - width / 2, centreY - dy' - height / 2)`; skipped when `dx² + dy² > 6400`
-   * (80 units), clipped to the widget beyond 2500. Never baked into `pixels`.
+   * definition names a map element the original shows on the minimap), in world tiles. Drawn by
+   * the HUD over `pixels` with `mapIconSprites()` and the original `client.zr`/`bo.as` rule,
+   * which `placeMinimapIcon()` / `minimapIconPlacements()` compute exactly: `dx = ((x << 7) + 64
+   * - playerFineX) * scale` truncated to **minimap pixels** (stock scale 1/32 → 4 px per tile),
+   * skipped when `dx² + dy² > 6400` px² (80 px = 20 tiles), rotated by the minimap angle with the
+   * 16384-step 16.16 sine/cosine tables, canvas top-left at `(W/2 + dx' - maxWidth/2, H/2 - dy'
+   * - maxHeight/2)`; beyond 2500 px² (50 px) blitted through the widget's per-row mask
+   * (`ym.bc`, no sprite offsets) instead of plainly (`aap.ro`, sprite offsets added). Never
+   * baked into `pixels`.
    */
   icons: MinimapIcon[];
   /**
@@ -265,6 +303,38 @@ export interface MapIconSprite {
   /** RGBA8; alpha 0 exactly where the original blit skips the pixel (value 0), 255 elsewhere. */
   pixels: ImageData;
 }
+
+/**
+ * Exact `client.zr` → `bo.as` placement of one minimap marker, in minimap pixels relative to the
+ * widget origin. `x/y` is the sprite canvas top-left (`W/2 + dx' - maxWidth/2`, `H/2 - dy' -
+ * maxHeight/2`); `drawX/drawY` is where the stored `width × height` sub-image lands: plain blit
+ * (`aap.ro`, within 50 px) adds the sprite's `offsetX/offsetY`, the mask-clipped blit (`ym.bc`,
+ * beyond 50 px) does not and limits each row to the widget sprite's visible span. Value-0
+ * sprite pixels (alpha 0 in `MapIconSprite.pixels`) are skipped in both.
+ */
+export interface MinimapIconPlacement {
+  x: number;
+  y: number;
+  drawX: number;
+  drawY: number;
+  clipped: boolean;
+  /** Scaled, unrotated offset from the player in minimap pixels. */
+  dx: number;
+  dy: number;
+}
+
+/** `minimapIconPlacements()`: every in-range marker of the current surface placed for a widget. */
+export interface MinimapIconPlacements {
+  /** Minimap angle used (the camera yaw, 16384 units per turn — `client.jv`). */
+  minimapAngle: number;
+  scale: number;
+  /** Markers whose element has no loaded sprite (omitted from `icons`). */
+  missingSprites: number;
+  icons: Array<MinimapIconPlacement & { element: number; tileX: number; tileY: number }>;
+}
+
+/** Stock minimap scale (`client.fa` → `zo(..., 0.03125F)`): 128 fine units = 4 px. */
+export const MINIMAP_STOCK_SCALE = 0.03125;
 
 export interface LoadedAsset { id: string; sha256: string; loaded: boolean }
 
@@ -379,11 +449,18 @@ export interface ClubscapeRendererHandle extends RendererHandle {
   playerFitReport(): PlayerFitReport[];
   /**
    * Per-pose gear fits of every player frame drawn or previewed since the gear last changed:
-   * the rigid per-frame shift each worn item received against the posed body (from the
-   * precomputed table or a live solve) and the penetration/gap it left. `meetsTargets: false`
-   * entries are the exact remaining fit failures (targets: penetration ≤ 1, gap ≤ 2 source units).
+   * the rigid per-frame rotation (about the grip) + shift each drawn item received against the
+   * posed body (from the precomputed table or a live solve) and the penetration / surface gap /
+   * attachment gap it left. Items a sequence hides (`lc.bd` hand overrides) have no entry.
+   * `meetsTargets: false` entries are the exact remaining fit failures (targets: penetration
+   * ≤ 1, gap ≤ 2, attachmentGap ≤ 2 source units).
    */
   playerPoseFits(): PlayerPoseFit[];
+  /**
+   * Source actions the last `update()` reported with `animation: null` (exact ids per actor),
+   * awaiting the backend's animation binding. Also reported through `unknownMotions()`.
+   */
+  unboundActions(): UnboundAction[];
   /** Current scene placement (null without a scene). */
   scenePlacement(): ScenePlacement | null;
   /**
@@ -397,6 +474,23 @@ export interface ClubscapeRendererHandle extends RendererHandle {
    * `MinimapSurface.icons`. Empty until the asset is loaded (fetched with the first world block).
    */
   mapIconSprites(): Map<number, MapIconSprite>;
+  /**
+   * Exact `client.zr`/`bo.as` placement of one marker at world tile `(tileX, tileY)` for a player
+   * standing on world tile `(playerTileX, playerTileY)` (actors are drawn at tile centres, so the
+   * player's fine position is `tile * 128 + 64`), a minimap zoom `scale` (`MINIMAP_STOCK_SCALE`
+   * or RuneLite `zoom / 128`), the minimap angle (camera yaw, 16384 units), the widget sprite
+   * size and the marker's sprite. `null` when the marker is farther than 80 minimap pixels.
+   */
+  placeMinimapIcon(
+    tileX: number, tileY: number, playerTileX: number, playerTileY: number, scale: number, minimapAngle: number,
+    widgetWidth: number, widgetHeight: number, sprite: Pick<MapIconSprite, "maxWidth" | "maxHeight" | "offsetX" | "offsetY">,
+  ): MinimapIconPlacement | null;
+  /**
+   * Every in-range marker of the current `minimapSurface()` placed for a widget, with the loaded
+   * sprites and the current camera yaw as the minimap angle. Throws like `minimapSurface()` when
+   * the scene or map data is missing, or when the sprites are not loaded.
+   */
+  minimapIconPlacements(playerTileX: number, playerTileY: number, scale: number, widgetWidth: number, widgetHeight: number): MinimapIconPlacements;
   /**
    * Whether the player is running: `PlayerView.running` (`game.observer.v1`, the movement
    * actually executed this tick) when present, else the two-tiles-per-server-tick rule (or the
@@ -498,6 +592,15 @@ export const createRenderer: (canvas: HTMLCanvasElement, config: RendererConfig,
     }
     for (const item of manifest.equipment_items ?? []) {
       if (item.equip_model) renderer.load_equip_model(item.item_id, await fetchAsset(item.equip_model));
+    }
+    if (manifest.sequence_hand_overrides) {
+      renderer.set_hand_override_kits(
+        new Int32Array(
+          manifest.sequence_hand_overrides.values
+            .filter((v) => v.kind === "kit" && v.kit_exists === true && typeof v.kit_id === "number")
+            .map((v) => v.kit_id as number),
+        ),
+      );
     }
     if (manifest.gear_pose_fits && penguin) {
       const table = new TextDecoder().decode(await fetchAsset(manifest.gear_pose_fits.file));
@@ -850,6 +953,18 @@ export const createRenderer: (canvas: HTMLCanvasElement, config: RendererConfig,
         mapIconCache = out;
         return out;
       },
+      placeMinimapIcon(tileX, tileY, playerTileX, playerTileY, scale, minimapAngle, widgetWidth, widgetHeight, sprite) {
+        if (disposed) return null;
+        const json = renderer.minimap_icon_placement(
+          tileX, tileY, playerTileX * 128 + 64, playerTileY * 128 + 64, scale, minimapAngle, widgetWidth, widgetHeight,
+          sprite.maxWidth, sprite.maxHeight, sprite.offsetX, sprite.offsetY,
+        );
+        return json === undefined ? null : (JSON.parse(json) as MinimapIconPlacement);
+      },
+      minimapIconPlacements(playerTileX, playerTileY, scale, widgetWidth, widgetHeight) {
+        if (disposed) throw new Error("renderer disposed");
+        return JSON.parse(renderer.minimap_icon_placements(playerTileX, playerTileY, scale, widgetWidth, widgetHeight)) as MinimapIconPlacements;
+      },
       playerRunning() {
         requireLive();
         return renderer.player_running();
@@ -857,6 +972,10 @@ export const createRenderer: (canvas: HTMLCanvasElement, config: RendererConfig,
       observerV1() {
         requireLive();
         return renderer.observer_v1();
+      },
+      unboundActions() {
+        requireLive();
+        return JSON.parse(renderer.unbound_actions()) as UnboundAction[];
       },
       unknownMotions() {
         requireLive();

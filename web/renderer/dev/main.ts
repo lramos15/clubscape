@@ -5,18 +5,22 @@
  * genuine GPU-completed frame records, and `window.__clubscapeDev` for the capture script.
  */
 import type { DynamicObjectView, RenderFrame, WorldView } from "../../shared/contracts.ts";
-import { createRenderer, fullHudZoomForViewport, sourceZoomForViewportHeight, type ClubscapeRendererHandle, type PlayerPoseFit } from "../src/index.ts";
+import { MINIMAP_STOCK_SCALE, createRenderer, fullHudZoomForViewport, sourceZoomForViewportHeight, type ClubscapeRendererHandle, type MinimapIconPlacements, type PlayerPoseFit } from "../src/index.ts";
 
 /** Per-pose gear fits of the frames drawn so far: counts, worst measures and the failures. */
 function summarizePoseFits(fits: PlayerPoseFit[]) {
   const failing = fits.filter((f) => !f.meetsTargets);
+  const drawn = [...new Set(fits.map((f) => `${f.slot}:${f.itemId}`))].sort();
   return {
     frames: fits.length,
     precomputed: fits.filter((f) => f.precomputed).length,
+    /** Distinct (slot, item) pairs actually drawn — the sequence's `lc.bd` hand overrides applied. */
+    drawn,
     maxPenetration: fits.reduce((m, f) => Math.max(m, f.penetration), 0),
     maxGap: fits.reduce((m, f) => Math.max(m, f.gap), 0),
+    maxAttachmentGap: fits.reduce((m, f) => Math.max(m, f.attachmentGap), 0),
     maxShift: fits.reduce((m, f) => Math.max(m, f.shift), 0),
-    failing: failing.map((f) => ({ sequence: f.sequence, frame: f.frame, itemId: f.itemId, penetration: f.penetration, gap: f.gap })),
+    failing: failing.map((f) => ({ sequence: f.sequence, frame: f.frame, itemId: f.itemId, slot: f.slot, penetration: f.penetration, gap: f.gap, attachmentGap: f.attachmentGap })),
   };
 }
 
@@ -52,6 +56,12 @@ declare global {
       walkTo?(x: number, y: number): void;
       /** Scenario mode: apply a named developer scenario (see `scenarioWorld`). */
       applyScenario?(name: string): Promise<unknown>;
+      /**
+       * Scenario mode: the state after frames were drawn — pose fits of the frames actually
+       * rendered since the scenario was applied, motion/observer reports and icon placements
+       * (`applyScenario` returns the state before its first frame).
+       */
+      scenarioReport?(): unknown;
       /** Region mode: draw the source minimap surface onto the dev minimap canvas; returns its metadata. */
       minimap?(): unknown;
     };
@@ -110,6 +120,9 @@ function scenarioWorld(name: string): WorldView & { dynamicObjects?: unknown[] }
     id, definitionId: `asset.source.osrs.cache2695.object.${sourceId}`, sourceId, name: id, kind, tile: tile(x, y), instance: null,
     hitpoints: 0, maxHitpoints: 0, available: true, animation: "", actions: [], appearance: {}, equipment: [],
   });
+  const FULL_GEAR: Array<[string, number, string]> = [
+    ["weapon", 1277, "item.bronze_sword"], ["shield", 1171, "item.wooden_shield"], ["head", 1949, "item.chefs_hat"], ["amulet", 1009, "item.brass_necklace"],
+  ];
   switch (name) {
     case "gear-idle":
       return { ...base, player: player(3098, 3098, "idle", [["weapon", 1277, "item.bronze_sword"], ["shield", 1171, "item.wooden_shield"], ["head", 1949, "item.chefs_hat"]]), entities: [npc("guide", 3308, 3096, 3101)] };
@@ -133,6 +146,33 @@ function scenarioWorld(name: string): WorldView & { dynamicObjects?: unknown[] }
       return { ...base, player: player(3098, 3098, "casting", [], sequence(711)), entities: [npc("rat", 2813, 3101, 3098)] };
     case "death":
       return { ...base, player: { ...player(3098, 3098, "idle", [], sequence(836)), hitpoints: 0 }, entities: [] };
+    case "gear-death":
+      // Full M1 wearable set dying: `lc.bd` hides both hand slots (sword, shield), keeps hat/necklace.
+      return { ...base, player: { ...player(3098, 3098, "idle", FULL_GEAR, sequence(836)), hitpoints: 0 }, entities: [] };
+    case "gear-woodcutting":
+      // Worn sword + shield while chopping: 879 puts the axe in the shield slot and hides the weapon slot.
+      return { ...base, player: player(3098, 3098, "gathering", FULL_GEAR, sequence(879)), entities: [object("tree", 1276, 3099, 3098)] };
+    case "gear-mining":
+      // 625 draws the pickaxe in both hand slots.
+      return { ...base, player: player(3098, 3098, "gathering", FULL_GEAR, sequence(625)), entities: [object("rocks", 10079, 3099, 3098)] };
+    case "gear-smithing":
+      // 898: the hammer (a sequence hand item, not equippable) in the weapon slot, shield hidden.
+      return { ...base, player: player(3098, 3098, "producing", FULL_GEAR, sequence(898)), entities: [object("anvil", 2097, 3099, 3098)] };
+    case "observer-unbound":
+      // game.observer.v1 view: a 2^53+1 tick (string), running false, an action whose animation
+      // binding the backend has not published (`animation: null`): reported, never guessed.
+      return {
+        ...base, tick: "9007199254740993",
+        player: {
+          ...player(3098, 3098, "producing", FULL_GEAR), running: false, movementTick: null,
+          action: {
+            version: 1, id: "act-dev-1", activity: "producing", actionId: "action.cooking.cook", target: null, recipeId: "recipe.cooking.shrimps",
+            styleId: null, spellId: null, animation: null, startedAtTick: "9007199254740990", cycleStartedAtTick: "9007199254740990",
+            nextActionTick: "9007199254740994", observedAtTick: "9007199254740993",
+          },
+        } as unknown as WorldView["player"],
+        entities: [],
+      };
     case "ground-items-fire":
       return {
         ...base, player: player(3098, 3098, "idle", []),
@@ -344,7 +384,18 @@ async function main(): Promise<void> {
         const { pixels: _pixels, mask, ...meta } = surface;
         let covered = 0;
         for (const m of mask) covered += m;
-        return { ...meta, covered, drawnIcons, spriteCount: sprites.size };
+        // Exact HUD placement of the markers around the developer player for the stock 152x152
+        // widget (`client.zr`/`bo.as`): dx/dy in minimap pixels, mask-clipped beyond 50 px.
+        const placements = handle.minimapIconPlacements(cameraTile.x, cameraTile.y, MINIMAP_STOCK_SCALE, 152, 152);
+        // Cross-check against the pure per-icon helper at the same inputs.
+        for (const placed of placements.icons) {
+          const sprite = sprites.get(placed.element)!;
+          const single = handle.placeMinimapIcon(placed.tileX, placed.tileY, cameraTile.x, cameraTile.y, MINIMAP_STOCK_SCALE, placements.minimapAngle, 152, 152, sprite);
+          if (!single || single.x !== placed.x || single.y !== placed.y || single.drawX !== placed.drawX || single.clipped !== placed.clipped) {
+            throw new Error(`icon placement mismatch for element ${placed.element} at ${placed.tileX},${placed.tileY}: ${JSON.stringify(single)} vs ${JSON.stringify(placed)}`);
+          }
+        }
+        return { ...meta, covered, drawnIcons, spriteCount: sprites.size, placements };
       };
       window.__clubscapeDev.walkTo = (x: number, y: number) => { follow(x, y); };
       window.__clubscapeDev.minimap = () => showMinimap();
@@ -485,8 +536,28 @@ async function main(): Promise<void> {
       }
       previewCanvas.width = 0;
       previewCanvas.height = 0;
-      return { fit: handle.playerFitReport(), poseFits: summarizePoseFits(handle.playerPoseFits()), placement: handle.scenePlacement(), unknownMotions: handle.unknownMotions(), running: handle.playerRunning(), sourcePhases };
+      currentScenario = name;
+      return { ...report(name), sourcePhases };
     };
+    let currentScenario = "";
+    const report = (name: string) => {
+      // Exact minimap marker placement for a stock 152x152 widget around the player (icons of
+      // the fixture's plane; an error object when the scene has no map data or sprites).
+      let icons: MinimapIconPlacements | { error: string } | null = null;
+      if (name.startsWith("gear-") || name === "observer-unbound") {
+        const tile = scenarioWorld(name.replace(/^pinned-/, "")).player.tile;
+        try {
+          icons = handle.minimapIconPlacements(tile.x, tile.y, MINIMAP_STOCK_SCALE, 152, 152);
+        } catch (error) {
+          icons = { error: String(error) };
+        }
+      }
+      return {
+        fit: handle.playerFitReport(), poseFits: summarizePoseFits(handle.playerPoseFits()), placement: handle.scenePlacement(),
+        unknownMotions: handle.unknownMotions(), unboundActions: handle.unboundActions(), observerV1: handle.observerV1(), running: handle.playerRunning(), icons,
+      };
+    };
+    window.__clubscapeDev.scenarioReport = () => report(currentScenario);
     state.ready = true;
     publish();
     if (param("status", "0") === "1") status.hidden = false;

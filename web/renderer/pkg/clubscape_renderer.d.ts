@@ -141,12 +141,35 @@ export class WasmRenderer {
     /**
      * The loaded map-element sprites (JSON array of `{element, width, height, offsetX, offsetY,
      * maxWidth, maxHeight, category}` in the order `map_icon_pixels()` packs them). The HUD
-     * draws them over the minimap surface with the original rule: for each `icons[]` entry,
-     * `dx = (x << 7) + 64 - playerX`, `dy = (y << 7) + 64 - playerY` (source units), scaled by
-     * the minimap zoom and rotated by the map angle, top-left at `(centreX + dx' - width / 2,
-     * centreY - dy' - height / 2)`; skipped beyond 80 units, clipped to the widget beyond 50.
+     * draws them over the minimap surface with the original rule (`minimap_icon_placement` /
+     * `minimap_icon_placements` compute it exactly): `dx = ((x << 7) + 64 - playerFineX) *
+     * scale` in minimap pixels (4 px per tile at the stock 1/32), rotated by the map angle,
+     * canvas top-left at `(W/2 + dx' - maxWidth/2, H/2 - dy' - maxHeight/2)`; skipped beyond
+     * 80 px (20 tiles), mask-clipped beyond 50 px.
      */
     map_icon_sprites(): string;
+    /**
+     * Exact `client.zr` → `bo.as` placement of one minimap marker (JSON `{x, y, drawX, drawY,
+     * clipped, dx, dy}` in **minimap pixels** relative to the widget origin, or `undefined`
+     * when the marker is out of range). `tile_x/tile_y` and `player_fine_x/player_fine_y`
+     * share one tile domain (world or scene-local): the player's fine position is
+     * `tile * 128 + 64` (the renderer draws actors at tile centres); `scale` is the minimap
+     * zoom (stock `0.03125` = 1/32: 4 px per tile; RuneLite zoom `z` → `z / 128`);
+     * `minimap_angle` the camera yaw in 16384 units (`client.jv`); `widget_w/h` the minimap
+     * widget sprite size; the sprite fields come from `map_icon_sprites()` (`maxWidth`,
+     * `maxHeight`, `offsetX`, `offsetY`). Cut-off `dx² + dy² > 6400` (80 px = 20 tiles at the
+     * stock scale), mask-clipped beyond 2500 (50 px).
+     */
+    minimap_icon_placement(tile_x: number, tile_y: number, player_fine_x: number, player_fine_y: number, scale: number, minimap_angle: number, widget_w: number, widget_h: number, sprite_max_w: number, sprite_max_h: number, sprite_offset_x: number, sprite_offset_y: number): string | undefined;
+    /**
+     * Every marker of the current `minimap_surface()` placed for the widget (JSON array of
+     * `{element, tileX, tileY, x, y, drawX, drawY, clipped, dx, dy}` — `x/y` per
+     * `minimap_icon_placement`), using the loaded sprites' canvas sizes/offsets and the
+     * current camera yaw as the minimap angle; markers out of range or without a loaded sprite
+     * are omitted (the latter counted in `missingSprites`). Player at the centre of
+     * `(player_tile_x, player_tile_y)` (world tiles, like `minimap_surface().icons`).
+     */
+    minimap_icon_placements(player_tile_x: number, player_tile_y: number, scale: number, widget_w: number, widget_h: number): string;
     /**
      * Coverage mask (`Uint8Array`, width * height): 1 where the original sweep drew map data,
      * 0 where the source fill value survived (no tile).
@@ -195,8 +218,11 @@ export class WasmRenderer {
     player_fit_report(): string;
     /**
      * Per-pose gear fits of the player frames drawn since the gear last changed (JSON array of
-     * `{sequence, frame, itemId, slot, shift, direction, precomputed, penetration, gap,
-     * meetsTargets}`); entries with `meetsTargets: false` are the exact current fit failures.
+     * `{sequence, frame, itemId, slot, shift, direction, rotation, precomputed, penetration,
+     * gap, attachmentGap, anchorClearance, meetsTargets}`): `penetration`
+     * is the carried-bind-box depth (≤ 1), `gap` the item↔body surface clearance (≤ 2) and
+     * `attachmentGap` the grip's distance from where the posed anchor bone carries it (≤ 2);
+     * entries with `meetsTargets: false` are the exact current fit failures.
      */
     player_pose_fits(): string;
     /**
@@ -222,6 +248,12 @@ export class WasmRenderer {
      * Camera in world units (tile * 128), 16384 units per turn, height negative-up.
      */
     set_camera(x: number, height: number, y: number, pitch: number, yaw: number, zoom: number, far: number): void;
+    /**
+     * Kit ids present in the source cache (manifest `sequence_hand_overrides.values[*]` with
+     * `kind: "kit"` and `kit_exists: true`) for the `lc.bd` hand-override decode: a sequence
+     * whose hand item names a kit the cache lacks draws nothing in that slot.
+     */
+    set_hand_override_kits(kits: Int32Array): void;
     /**
      * Developer fixture control only: draw no body for the local player, as in the controlled
      * original dynamic-layer references (`assets/reference/osrs240/m1-dynamic`). Off by default.
@@ -285,6 +317,13 @@ export class WasmRenderer {
      */
     squares_needed(base_x: number, base_y: number): Int32Array;
     timestamps_supported(): boolean;
+    /**
+     * Source actions the last `update_world` reported without a bound animation
+     * (`ActorActionView.animation: null`), JSON array of `{actorId, id, activity, actionId,
+     * recipeId, styleId, spellId}`: the exact identities awaiting a backend binding. Empty
+     * when every reported action names its source sequence.
+     */
+    unbound_actions(): string;
     /**
      * Actors whose reported state implies an action but whose source motion was not supplied
      * in the last world view (JSON array of strings). Empty when every motion is explicit.
@@ -359,6 +398,8 @@ export interface InitOutput {
     readonly wasmrenderer_load_sequence: (a: number, b: number, c: number) => [number, number, number];
     readonly wasmrenderer_map_icon_pixels: (a: number) => any;
     readonly wasmrenderer_map_icon_sprites: (a: number) => [number, number];
+    readonly wasmrenderer_minimap_icon_placement: (a: number, b: number, c: number, d: number, e: number, f: number, g: number, h: number, i: number, j: number, k: number, l: number, m: number) => [number, number];
+    readonly wasmrenderer_minimap_icon_placements: (a: number, b: number, c: number, d: number, e: number, f: number) => [number, number, number, number];
     readonly wasmrenderer_minimap_mask: (a: number) => [number, number, number];
     readonly wasmrenderer_minimap_pixels: (a: number) => [number, number, number];
     readonly wasmrenderer_minimap_surface: (a: number) => [number, number, number, number];
@@ -374,6 +415,7 @@ export interface InitOutput {
     readonly wasmrenderer_scene_id: (a: number) => [number, number];
     readonly wasmrenderer_scene_placement: (a: number) => [number, number];
     readonly wasmrenderer_set_camera: (a: number, b: number, c: number, d: number, e: number, f: number, g: number, h: number) => [number, number];
+    readonly wasmrenderer_set_hand_override_kits: (a: number, b: number, c: number) => void;
     readonly wasmrenderer_set_hide_local_player_body: (a: number, b: number) => void;
     readonly wasmrenderer_set_hide_roofs: (a: number, b: number) => void;
     readonly wasmrenderer_set_instanced_map: (a: number, b: number) => void;
@@ -387,16 +429,17 @@ export interface InitOutput {
     readonly wasmrenderer_squares_for_base: (a: number, b: number) => [number, number];
     readonly wasmrenderer_squares_needed: (a: number, b: number, c: number) => [number, number];
     readonly wasmrenderer_timestamps_supported: (a: number) => number;
+    readonly wasmrenderer_unbound_actions: (a: number) => [number, number];
     readonly wasmrenderer_unknown_motions: (a: number) => [number, number];
     readonly wasmrenderer_unload_block: (a: number, b: number) => void;
     readonly wasmrenderer_update_world: (a: number, b: number, c: number, d: number) => [number, number];
     readonly wasm_bindgen_765df639e0572edc___convert__closures_____invoke___js_sys_3b7301898fbf4e22___Function_fn_wasm_bindgen_765df639e0572edc___JsValue_____wasm_bindgen_765df639e0572edc___sys__Undefined___js_sys_3b7301898fbf4e22___Function_fn_wasm_bindgen_765df639e0572edc___JsValue_____wasm_bindgen_765df639e0572edc___sys__Undefined_______true_: (a: number, b: number, c: any, d: any) => void;
     readonly wasm_bindgen_765df639e0572edc___convert__closures_____invoke___wasm_bindgen_765df639e0572edc___JsValue__core_ed718c3d60ebd546___result__Result_____wasm_bindgen_765df639e0572edc___JsError___true_: (a: number, b: number, c: any) => [number, number];
     readonly wasm_bindgen_765df639e0572edc___convert__closures_____invoke___wasm_bindgen_765df639e0572edc___sys__JsNullable_wgpu_fb237351f69b1e72___backend__webgpu__webgpu_sys__gen_GpuError__GpuError___core_ed718c3d60ebd546___result__Result_____wasm_bindgen_765df639e0572edc___JsError___true_: (a: number, b: number, c: any) => [number, number];
-    readonly wasm_bindgen_765df639e0572edc___convert__closures_____invoke___wasm_bindgen_765df639e0572edc___sys__JsNullable_wgpu_fb237351f69b1e72___backend__webgpu__webgpu_sys__gen_GpuError__GpuError___core_ed718c3d60ebd546___result__Result_____wasm_bindgen_765df639e0572edc___JsError___true__95: (a: number, b: number, c: any) => [number, number];
-    readonly wasm_bindgen_765df639e0572edc___convert__closures_____invoke___wasm_bindgen_765df639e0572edc___sys__JsNullable_wgpu_fb237351f69b1e72___backend__webgpu__webgpu_sys__gen_GpuError__GpuError___core_ed718c3d60ebd546___result__Result_____wasm_bindgen_765df639e0572edc___JsError___true__96: (a: number, b: number, c: any) => [number, number];
+    readonly wasm_bindgen_765df639e0572edc___convert__closures_____invoke___wasm_bindgen_765df639e0572edc___sys__JsNullable_wgpu_fb237351f69b1e72___backend__webgpu__webgpu_sys__gen_GpuError__GpuError___core_ed718c3d60ebd546___result__Result_____wasm_bindgen_765df639e0572edc___JsError___true__100: (a: number, b: number, c: any) => [number, number];
+    readonly wasm_bindgen_765df639e0572edc___convert__closures_____invoke___wasm_bindgen_765df639e0572edc___sys__JsNullable_wgpu_fb237351f69b1e72___backend__webgpu__webgpu_sys__gen_GpuError__GpuError___core_ed718c3d60ebd546___result__Result_____wasm_bindgen_765df639e0572edc___JsError___true__99: (a: number, b: number, c: any) => [number, number];
     readonly wasm_bindgen_765df639e0572edc___convert__closures_____invoke___wgpu_fb237351f69b1e72___backend__webgpu__webgpu_sys__gen_GpuDeviceLostInfo__GpuDeviceLostInfo______true_: (a: number, b: number, c: any) => void;
-    readonly wasm_bindgen_765df639e0572edc___convert__closures_____invoke___wgpu_fb237351f69b1e72___backend__webgpu__webgpu_sys__gen_GpuDeviceLostInfo__GpuDeviceLostInfo______true__94: (a: number, b: number, c: any) => void;
+    readonly wasm_bindgen_765df639e0572edc___convert__closures_____invoke___wgpu_fb237351f69b1e72___backend__webgpu__webgpu_sys__gen_GpuDeviceLostInfo__GpuDeviceLostInfo______true__98: (a: number, b: number, c: any) => void;
     readonly __wbindgen_malloc: (a: number, b: number) => number;
     readonly __wbindgen_realloc: (a: number, b: number, c: number, d: number) => number;
     readonly __wbindgen_exn_store: (a: number) => void;

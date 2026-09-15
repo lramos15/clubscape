@@ -277,10 +277,13 @@ def refresh_blocks_index(output: Path) -> dict:
 
 def build_pose_fits(output: Path) -> dict:
     """
-    `--profile pose-fits`: runs the renderer's `pose-fit-table` tool (the same per-pose contact
-    solve the runtime uses) over the 10 M1 worn models × 27 required player sequences and
-    registers `gear/pose-fits.json` in the manifest so the browser applies recorded shifts instead
-    of solving on first display. Frames still over the fit targets are counted, never hidden.
+    `--profile pose-fits`: runs the renderer's `pose-fit-table` tool (the same per-pose
+    attachment solve the runtime uses) over the M1 worn models × the required player sequences
+    they are drawn in (source `lc.bd` hand overrides decide visibility; hidden combinations have
+    no fit) and registers `gear/pose-fits.json` (schema 2: rotation about the grip + shift,
+    penetration / surface gap / attachment gap) plus `gear/pose-fit-failures.json` (every frame
+    over a target, with its legality class) in the manifest. Frames still over the fit targets
+    are counted, never hidden.
     """
     cargo = shutil.which("cargo") or str(Path.home() / ".cargo/bin/cargo")
     result = subprocess.run([cargo, "run", "--release", "-p", "clubscape-renderer", "--features", "tools",
@@ -290,12 +293,17 @@ def build_pose_fits(output: Path) -> dict:
     manifest_path = output / "manifest.json"
     manifest = json.loads(manifest_path.read_text())
     table_path = output / "gear/pose-fits.json"
+    failures_path = output / "gear/pose-fit-failures.json"
     manifest["files"]["gear/pose-fits.json"] = {"sha256": sha(table_path), "size_bytes": table_path.stat().st_size}
+    manifest["files"]["gear/pose-fit-failures.json"] = {"sha256": sha(failures_path), "size_bytes": failures_path.stat().st_size}
     manifest["gear_pose_fits"] = {
-        "file": "gear/pose-fits.json", "schema_version": 1, "body_npc": 2063,
+        "file": "gear/pose-fits.json", "failures_file": "gear/pose-fit-failures.json", "schema_version": 2, "body_npc": 2063,
         "items": summary["items"], "sequences": summary["sequences"], "item_frames": summary["item_frames"],
+        "item_frames_not_drawn": summary["item_frames_not_drawn"],
+        "legality_frame_counts": summary["legality_frame_counts"],
         "item_frames_over_target": summary["item_frames_over_target"],
-        "classification": "Per-item per-pose rigid contact shifts against the penguin body (targets penetration <= 1, gap <= 2 source units); precomputed runtime input, not a fit waiver",
+        "over_penetration": summary["over_penetration"], "over_gap": summary["over_gap"], "over_attachment": summary["over_attachment"],
+        "classification": "Per-item per-pose rigid attachment fits (rotation about the grip + shift) against the penguin body; targets penetration <= 1 (carried bind box), surface gap <= 2, attachment gap <= 2 source units; precomputed runtime input, not a fit waiver",
     }
     manifest_path.write_text(json.dumps(manifest, indent=1) + "\n")
     return summary
