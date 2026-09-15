@@ -22,6 +22,17 @@ selected slots across serialization, and produces the declared dough/empty
 containers without consuming earlier matching copies. Native and real
 PostgreSQL/HTTP cases also cover stale selections, exact-once retries and restart.
 
+The Director's source lesson/recovery entry repair is integrated from
+`2f775f7971a78ad990e7ed80f2cf04c3e89e4c89`. Its single `selectors3` hook runs
+after the frozen104+7 binding application and before UI4. Original
+`progression.py`/`add_recovery` and v2/source-application fingerprints remain
+unchanged. Eligible lessons precede one `tutorial_supply_recovery` entry;
+existing `finish.`/`replace.` choice IDs and grant effects are retained as
+choices, not restored as independent competing entries. Missing/top-up and
+inventory/equipment ownership guards remain real source conditions. Six source
+tests and the native owned-net/missing-net UI cases pass without an engine
+first-match fallback or duplicate resources.
+
 The selected source potion restores 15% (1500 run units), with a separate
 three-tick timer, and leaves the next original dose or original vial229.
 Beer leaves beer glass1919;1923 is a bowl, not a replacement. The original

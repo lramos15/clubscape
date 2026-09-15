@@ -45,7 +45,7 @@
   "cooks_states": 10,
   "gameplay_acceptance": false,
   "presentation_acceptance": false,
-  "retained_v3_behavior_sha256": "9ec6c175b0f9af817ef804a5a783f59ce8a9da8e7244292877fb1142e1db47d5",
+  "retained_v3_behavior_sha256": "62b66389bf51d0166b22649aed8627580e8210834a865bd7ab6789d67a1b748a",
   "schema_version": 1,
   "source_scope_passed": true,
   "tutorial_states": 71,

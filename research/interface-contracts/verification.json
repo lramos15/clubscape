@@ -4,6 +4,8 @@
   "shared_contract_commit": "e48e6f52d68aa97fbbb4f5664bf6e1c5ef7e71e8",
   "nullable_production_contract_commit": "351847f3f5255f6de6e345d5217a7910eaa145a3",
   "renderer_observer_contract_commit": "e0e42d714793d5fa815d3fcc4dff63b36f0a2a3f",
+  "source_entry_parent_commit": "2f775f7971a78ad990e7ed80f2cf04c3e89e4c89",
+  "source_entry_local_commit": "747871a15587c4ce247d63517adf2bd00357dd17",
   "implementation_verified": true,
   "overall_status": "implemented_verified",
   "authorized_consumables_parent_commit": "82e0a41acaaa8c69fe70369aaa559c05844253b8",
@@ -19,8 +21,8 @@
   },
   "artifact": {
     "path": "content/m1/game-content.csc.gz",
-    "raw_sha256": "e0204edafe8e212b8bd08a80f598901ecd0cd68e9ecec98083e1a9566979ebd8",
-    "compressed_sha256": "068bf8e305c730f88e57ef465ee14a535ade39a693b51fed7e81dd8b5a76f7cf",
+    "raw_sha256": "6fdb60e4740372c5e299fe385875cfac32e04f22ea26ad17b53049296256c1b3",
+    "compressed_sha256": "f53a28402baad5588ccf071310b4c239e24391715290aaac2616ed0215284aa6",
     "strict_runtime_compile": true,
     "strict_reload": true,
     "byte_identical_outputs_across_two_builds": 83,
@@ -43,13 +45,27 @@
     },
     "source_tests": {
       "command": "python3 -m unittest discover -s tools/m1-content -p 'test_*.py'",
-      "passed": 65,
+      "passed": 71,
       "source_bindings_preserved": 104,
       "coupled_updates_preserved": 7,
       "loot_joint_vectors": 8192,
       "currency_vectors": 5,
       "active_unresolved_bindings": 0,
       "proof_scoped_inactive_bindings": 6
+    },
+    "source_dialogue_entries": {
+      "normalized_dialogues": 5,
+      "focused_source_state_tests": 6,
+      "native_canonical_cases": 2,
+      "owned_net_primary_lesson": "woodcutting_firemaking_intro",
+      "missing_net_recovery_choice": "replace.net",
+      "one_recovery_entry": "tutorial_supply_recovery",
+      "source_grants_and_choice_effects_preserved": true,
+      "v2_source_application_fingerprints_preserved": true,
+      "original_progression_builder_unchanged": true,
+      "engine_ambiguity_checks_unchanged": true,
+      "native_fixture_correction": "The pre-existing net entitlement is complete only with its satisfied item set populated; no runtime validation was weakened and no inventory item was granted by this fixture correction.",
+      "scope": "Post-104+7 source normalization and real native UI/entry checks on controlled source states, not a fresh player journey."
     },
     "canonical_engine_ui_probes": {
       "report": "research/m1-bindings/schema-validation.json#native_ui_control_probes",

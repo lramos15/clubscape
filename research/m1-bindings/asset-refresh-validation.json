@@ -62,12 +62,12 @@
   },
   "compiled_artifact": {
     "artifact_version": 4,
-    "bytes": 519875,
+    "bytes": 520426,
     "path": "content/m1/game-content.csc.gz",
     "schema_version": 4,
-    "sha256": "068bf8e305c730f88e57ef465ee14a535ade39a693b51fed7e81dd8b5a76f7cf",
-    "uncompressed_bytes": 13083882,
-    "uncompressed_sha256": "e0204edafe8e212b8bd08a80f598901ecd0cd68e9ecec98083e1a9566979ebd8"
+    "sha256": "f53a28402baad5588ccf071310b4c239e24391715290aaac2616ed0215284aa6",
+    "uncompressed_bytes": 13117277,
+    "uncompressed_sha256": "6fdb60e4740372c5e299fe385875cfac32e04f22ea26ad17b53049296256c1b3"
   },
   "consumables_new_assets": 10,
   "consumables_new_published_outputs": 20,
@@ -136,7 +136,7 @@
     "npc_definition_ids": 6
   },
   "result": "passed",
-  "revision": "m1.source-backed.v4.0ebcdd3119923043",
+  "revision": "m1.source-backed.v4.67e4f1fcc55d71d5",
   "runtime_compile_passed": true,
   "schema_version": 1,
   "scope": "Prior original asset/provenance closure preserved; current UI publication is a separate mandatory gate. Not M1 acceptance.",

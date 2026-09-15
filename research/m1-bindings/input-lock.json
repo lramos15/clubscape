@@ -1,5 +1,5 @@
 {
-  "aggregate_sha256": "0ebcdd31199230432c44890f087764b8c2604ff7d5486f2babd30a7f02926992",
+  "aggregate_sha256": "67e4f1fcc55d71d5a70ca66b8b5d642e89a88b58a560c681dc3a55f8d8f4eea2",
   "inputs": [
     {
       "bytes": 845835,
@@ -9047,6 +9047,11 @@
       "sha256": "7c011d42ce5dbccc317d0d8ff121980f8dce976697bd9d1626fe1cf2244cc253"
     },
     {
+      "bytes": 3115,
+      "path": "tools/m1-content/dialogue_entries.py",
+      "sha256": "95b44e82d6eea13d99354e9708c475f8fdf5dfa7361a76029b49e23ca885c733"
+    },
+    {
       "bytes": 12383,
       "path": "tools/m1-content/geometry.py",
       "sha256": "a77ce32922e30f76da6c5607efd74472d012a623b4bd9e5fbdbea0563529ec9c"
@@ -9122,9 +9127,9 @@
       "sha256": "cc621e0304d720571bf9fe5e7e2a88cf27136b6c7755ad1bca4b30cdc880d95c"
     },
     {
-      "bytes": 22615,
+      "bytes": 22787,
       "path": "tools/m1-content/selectors3.py",
-      "sha256": "74a3ccb50900cb41cf39fc162c39159ee00ee0129a689c545964c3b8b2a89a36"
+      "sha256": "e3e5f21b2ec3dd0b1ab526e20efd16bb9f1d2cb4e6adb97976e55d5a8015b00e"
     },
     {
       "bytes": 15187,
@@ -9145,6 +9150,11 @@
       "bytes": 27086,
       "path": "tools/m1-content/test_content.py",
       "sha256": "75327d76415142d062be80af1253ca9953db100d263f972a4a95b063b9efa505"
+    },
+    {
+      "bytes": 4850,
+      "path": "tools/m1-content/test_dialogue_entries.py",
+      "sha256": "06651fa92d4ada8695c5d22451f1e8c2bbe67709d636388a74204140cde91b3b"
     },
     {
       "bytes": 16071,

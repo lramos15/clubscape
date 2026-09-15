@@ -1,5 +1,5 @@
 {
-  "content_compressed_sha256": "a4cad6f7a7eac41d0dcd1c9da9dedc0fc48e9631ddbe1e233878e71a1511b84a",
+  "content_compressed_sha256": "539d7d051a1f7b9bfdf3b249f91d03324309429f8f72717eeb1eba8b5bf75233",
   "coupled_updates_checked": 7,
   "death_values_checked": 122,
   "departure": {
@@ -191,7 +191,7 @@
     "cooks_states": 10,
     "gameplay_acceptance": false,
     "presentation_acceptance": false,
-    "retained_v3_behavior_sha256": "9ec6c175b0f9af817ef804a5a783f59ce8a9da8e7244292877fb1142e1db47d5",
+    "retained_v3_behavior_sha256": "62b66389bf51d0166b22649aed8627580e8210834a865bd7ab6789d67a1b748a",
     "schema_version": 1,
     "source_scope_passed": true,
     "tutorial_states": 71,
