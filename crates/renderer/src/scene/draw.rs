@@ -78,12 +78,37 @@ struct ObjectState {
     distance: i32,
 }
 
-pub struct SceneDrawer<'a, M: ModelSource> {
-    scene: &'a SceneData,
-    models: &'a M,
+/// A temporary actor placed into the scene for one frame (`ez.bo` with the temporary flag).
+#[derive(Clone, Debug)]
+pub struct TemporaryEntity {
+    pub plane: i32,
+    /// Main-area tile of the south-west corner and the tile footprint.
+    pub tile_x: i32,
+    pub tile_y: i32,
+    pub size_x: i32,
+    pub size_y: i32,
+    /// Position in local units and orientation (2048 units per turn).
+    pub x: i32,
+    pub height: i32,
+    pub z: i32,
+    pub orientation: i32,
+    pub hash: i64,
+    /// Index into the per-frame temporary model list.
+    pub model: usize,
+}
+
+/// Model index space for temporaries appended after the scene's static models.
+pub const TEMP_MODEL_BASE: i32 = 1 << 24;
+
+pub struct SceneDrawer {
     pub state: RasterState,
-    palette: &'a [i32],
+    palette: Vec<i32>,
     flags: Vec<i32>,
+    object_count: Vec<i8>,
+    link: Vec<i8>,
+    object_flags: Vec<i8>,
+    slots: HashMap<usize, usize>,
+    temp_objects: Vec<GameObject>,
     objects: Vec<ObjectState>,
     frame: u32,
     remaining: i32,
@@ -119,15 +144,18 @@ pub struct SceneDrawer<'a, M: ModelSource> {
     scratch_objects: Vec<usize>,
 }
 
-impl<'a, M: ModelSource> SceneDrawer<'a, M> {
-    pub fn new(scene: &'a SceneData, models: &'a M, state: RasterState, palette: &'a [i32], far_clip: i32) -> Self {
+impl SceneDrawer {
+    pub fn new(scene: &SceneData, state: RasterState, palette: &[i32], far_clip: i32) -> Self {
         let visibility = Visibility::new(state.width, state.height, far_clip, scene.draw_distance);
         Self {
-            scene,
-            models,
             state,
-            palette,
+            palette: palette.to_vec(),
             flags: scene.flags.clone(),
+            object_count: scene.object_count.clone(),
+            link: scene.link.clone(),
+            object_flags: scene.object_flags.clone(),
+            slots: scene.slots.clone(),
+            temp_objects: Vec::new(),
             objects: vec![ObjectState::default(); scene.game_objects.len()],
             frame: 0,
             remaining: 0,
@@ -177,16 +205,100 @@ impl<'a, M: ModelSource> SceneDrawer<'a, M> {
     }
     /// `ez.ym`: logical plane (0 when forced).
     #[inline]
-    fn logical_plane(&self, i: usize) -> i32 {
-        let plane = (i as i32 >> self.scene.plane_shift) & 3;
+    fn logical_plane(&self, scene: &SceneData, i: usize) -> i32 {
+        let plane = (i as i32 >> scene.plane_shift) & 3;
         if self.flags[i] & flag::FORCE_PLANE_0 != 0 { 0 } else { plane }
     }
     /// `ez.xm`: plane adjusted by the bridge flag of the plane-0 tile.
     #[inline]
-    fn bridge_plane(&self, i: usize) -> i32 {
-        let plane = (i as i32 >> self.scene.plane_shift) & 3;
-        let base = i & (self.scene.plane_stride as usize - 1);
+    fn bridge_plane(&self, scene: &SceneData, i: usize) -> i32 {
+        let plane = (i as i32 >> scene.plane_shift) & 3;
+        let base = i & (scene.plane_stride as usize - 1);
         (plane + ((self.flags[base] >> 5) & 1)) & 3
+    }
+
+    /// Static or temporary game object by combined id.
+    #[inline]
+    fn object<'s>(&'s self, scene: &'s SceneData, id: usize) -> &'s GameObject {
+        if id < scene.game_objects.len() { &scene.game_objects[id] } else { &self.temp_objects[id - scene.game_objects.len()] }
+    }
+
+    /// Restores the static object slots/links/counts before placing this frame's actors
+    /// (`ez.gc` clears temporaries after the frame in the original).
+    pub fn begin_frame(&mut self, scene: &SceneData) {
+        self.object_count.copy_from_slice(&scene.object_count);
+        self.link.copy_from_slice(&scene.link);
+        self.object_flags.copy_from_slice(&scene.object_flags);
+        self.slots.clone_from(&scene.slots);
+        self.temp_objects.clear();
+        self.objects.truncate(scene.game_objects.len());
+        self.objects.resize(scene.game_objects.len(), ObjectState::default());
+    }
+
+    /// `ez.bo(..., temporary = true)`: registers an actor in every tile it spans for this frame.
+    /// Returns false when the original would refuse (out of range or a tile already has 5 objects).
+    pub fn add_temporary(&mut self, scene: &SceneData, entity: &TemporaryEntity) -> bool {
+        let oy = scene.offset;
+        let n13 = entity.tile_x + oy;
+        let n14 = entity.tile_y + oy;
+        for n12 in n13..n13 + entity.size_x {
+            for i in n14..n14 + entity.size_y {
+                if n12 < 0 || i < 0 || n12 >= scene.width || i >= scene.height {
+                    return false;
+                }
+                let n11 = scene.tile_index(entity.plane, n12, i);
+                if self.flags[n11] & flag::EXISTS != 0 && self.object_count[n11] >= 5 {
+                    return false;
+                }
+            }
+        }
+        let id = scene.game_objects.len() + self.temp_objects.len();
+        self.temp_objects.push(GameObject {
+            model: TEMP_MODEL_BASE + entity.model as i32,
+            orientation: entity.orientation,
+            x: entity.x,
+            height: entity.height,
+            z: entity.z,
+            min_x: entity.tile_x,
+            max_x: entity.tile_x + entity.size_x - 1,
+            min_y: entity.tile_y,
+            max_y: entity.tile_y + entity.size_y - 1,
+            config: 0,
+            slot_flag: 0,
+            dynamic: false,
+            hash: entity.hash,
+        });
+        self.objects.push(ObjectState::default());
+        for i in n13..n13 + entity.size_x {
+            for n11 in n14..n14 + entity.size_y {
+                let mut n19 = 0i32;
+                if i > n13 {
+                    n19 |= 1;
+                }
+                if i < n13 + entity.size_x - 1 {
+                    n19 |= 4;
+                }
+                if n11 > n14 {
+                    n19 |= 8;
+                }
+                if n11 < n14 + entity.size_y - 1 {
+                    n19 |= 2;
+                }
+                // Original also creates tile records on lower planes; the exported flags already
+                // have EXISTS for every ground tile the loader created, so only set it here.
+                for n18 in (0..=entity.plane).rev() {
+                    let n17 = scene.tile_index(n18, i, n11);
+                    self.flags[n17] |= flag::EXISTS;
+                }
+                let n18 = scene.tile_index(entity.plane, i, n11);
+                let n17 = self.object_count[n18] as usize;
+                self.slots.insert(n18 * 5 + n17, id);
+                self.object_flags[n18 * 5 + n17] = n19 as i8;
+                self.link[n18] |= n19 as i8;
+                self.object_count[n18] += 1;
+            }
+        }
+        true
     }
     #[inline]
     fn wall_cull_a(&self, i: usize) -> i32 {
@@ -232,9 +344,9 @@ impl<'a, M: ModelSource> SceneDrawer<'a, M> {
 
     // ------------------------------------------------------------------ frame
 
-    /// `ez.dh` + `bh(true, ..)` + `ei`: draws the whole frame into `out`.
-    pub fn draw(&mut self, view: &SceneView, out: &mut Vec<Tri>) {
-        let scene = self.scene;
+    /// `ez.dh` + `bh(true, ..)` + `ei`: draws the whole frame into `out`. Temporary entities must
+    /// have been registered with [`Self::add_temporary`] after [`Self::begin_frame`].
+    pub fn draw<M: ModelSource>(&mut self, scene: &SceneData, models: &M, temp_models: &[Model], view: &SceneView, out: &mut Vec<Tri>) {
         let t = tables();
         self.picks.clear();
         self.missing_models.clear();
@@ -291,7 +403,7 @@ impl<'a, M: ModelSource> SceneDrawer<'a, M> {
                     if !self.exists(i) {
                         continue;
                     }
-                    let logical = self.logical_plane(i);
+                    let logical = self.logical_plane(scene, i);
                     let roof = scene.roof(world_plane, x, yy);
                     let vis_ok = !scene.main_scene
                         || self.visibility.tile_visible(
@@ -307,7 +419,7 @@ impl<'a, M: ModelSource> SceneDrawer<'a, M> {
                     if drawn {
                         let mut f = self.flags[i];
                         f |= 6;
-                        f |= if scene.object_count[i] <= 0 && (f & 128) == 0 { 0 } else { 8 };
+                        f |= if self.object_count[i] <= 0 && (f & 128) == 0 { 0 } else { 8 };
                         f &= 0xFF00FFEFu32 as i32;
                         self.flags[i] = f;
                         self.remaining += 1;
@@ -336,13 +448,13 @@ impl<'a, M: ModelSource> SceneDrawer<'a, M> {
                             if y_a >= self.cb && y_a < self.ct {
                                 let i = scene.tile_index(plane, x_a, y_a);
                                 if (self.flags[i] & 3) == 3 {
-                                    self.draw_tile(i, first, out);
+                                    self.draw_tile(scene, models, temp_models, i, first, out);
                                 }
                             }
                             if y_b >= self.cb && y_b < self.ct {
                                 let i = scene.tile_index(plane, x_a, y_b);
                                 if (self.flags[i] & 3) == 3 {
-                                    self.draw_tile(i, first, out);
+                                    self.draw_tile(scene, models, temp_models, i, first, out);
                                 }
                             }
                         }
@@ -350,13 +462,13 @@ impl<'a, M: ModelSource> SceneDrawer<'a, M> {
                             if y_a >= self.cb && y_a < self.ct {
                                 let i = scene.tile_index(plane, x_b, y_a);
                                 if (self.flags[i] & 3) == 3 {
-                                    self.draw_tile(i, first, out);
+                                    self.draw_tile(scene, models, temp_models, i, first, out);
                                 }
                             }
                             if y_b >= self.cb && y_b < self.ct {
                                 let i = scene.tile_index(plane, x_b, y_b);
                                 if (self.flags[i] & 3) == 3 {
-                                    self.draw_tile(i, first, out);
+                                    self.draw_tile(scene, models, temp_models, i, first, out);
                                 }
                             }
                         }
@@ -380,28 +492,34 @@ impl<'a, M: ModelSource> SceneDrawer<'a, M> {
     }
 
     /// `ez.zm` → `fx.xm`: draw a model at a scene position.
-    fn draw_model(&mut self, model_index: i32, orientation: i32, x: i32, height: i32, z: i32, pick: u32, out: &mut Vec<Tri>) {
+    fn draw_model<M: ModelSource>(
+        &mut self, models: &M, temp_models: &[Model], model_index: i32, orientation: i32, x: i32, height: i32, z: i32, pick: u32,
+        out: &mut Vec<Tri>,
+    ) {
         if model_index < 0 {
             return;
         }
-        let Some(model) = self.models.model(model_index) else {
+        let model = if model_index >= TEMP_MODEL_BASE {
+            temp_models.get((model_index - TEMP_MODEL_BASE) as usize)
+        } else {
+            models.model(model_index)
+        };
+        let Some(model) = model else {
             self.missing_models.push(model_index);
             return;
         };
-        let mut drawer = ModelDrawer { state: self.state, palette: self.palette, scratch: &mut self.model_scratch, alpha_pass: 2 };
+        let mut drawer = ModelDrawer { state: self.state, palette: &self.palette, scratch: &mut self.model_scratch, alpha_pass: 2 };
         let _ = drawer.draw_scene(model, orientation, &self.scene_camera, x - self.cp, height - self.cq, z - self.cl, pick, out);
     }
 
-    fn draw_paint(&mut self, tile_index: usize, plane: i32, x: i32, y: i32, out: &mut Vec<Tri>) {
-        let scene = self.scene;
+    fn draw_paint(&mut self, scene: &SceneData, tile_index: usize, plane: i32, x: i32, y: i32, out: &mut Vec<Tri>) {
         if let Some(paint) = scene.paints.get(&tile_index) {
             let pick = self.pick_tile(plane, x, y);
             draw_tile_paint(scene, &self.state, &self.tile_camera, paint, plane, x, y, pick, out);
         }
     }
 
-    fn draw_shaped(&mut self, tile_index: usize, plane: i32, x: i32, y: i32, out: &mut Vec<Tri>) {
-        let scene = self.scene;
+    fn draw_shaped(&mut self, scene: &SceneData, tile_index: usize, plane: i32, x: i32, y: i32, out: &mut Vec<Tri>) {
         if let Some(model) = scene.tile_models.get(&tile_index) {
             let pick = self.pick_tile(plane, x, y);
             draw_tile_model(&self.state, &self.tile_camera, model, &mut self.tile_scratch, pick, out);
@@ -421,8 +539,7 @@ impl<'a, M: ModelSource> SceneDrawer<'a, M> {
     }
 
     /// `ez.ee`: the per-tile linked draw.
-    fn draw_tile(&mut self, start: usize, mut first_pass: bool, out: &mut Vec<Tri>) {
-        let scene = self.scene;
+    fn draw_tile<M: ModelSource>(&mut self, scene: &SceneData, models: &M, temp_models: &[Model], start: usize, mut first_pass: bool, out: &mut Vec<Tri>) {
         let oy = scene.offset;
         let gf = scene.plane_stride as usize;
         let mh = scene.x_stride as usize;
@@ -432,8 +549,7 @@ impl<'a, M: ModelSource> SceneDrawer<'a, M> {
                 continue;
             }
             let (n23, n21, n22) = scene.decode_index(n2);
-            let n24 = self.bridge_plane(n2);
-            let n25 = self.logical_plane(n2);
+            let n24 = self.bridge_plane(scene, n2);
             let n26 = n21 - oy;
             let n27 = n22 - oy;
             let mut n28 = self.flags[n2];
@@ -448,25 +564,25 @@ impl<'a, M: ModelSource> SceneDrawer<'a, M> {
                     }
                     if !defer && n21 <= self.cd && n21 > self.cr {
                         let n20 = n2 - mh;
-                        if self.exists(n20) && self.visible(n20) && (self.draw_primary(n20) || (scene.link[n2] & 1) == 0) {
+                        if self.exists(n20) && self.visible(n20) && (self.draw_primary(n20) || (self.link[n2] & 1) == 0) {
                             defer = true;
                         }
                     }
                     if !defer && n21 >= self.cd && n21 < self.cu - 1 {
                         let n20 = n2 + mh;
-                        if self.exists(n20) && self.visible(n20) && (self.draw_primary(n20) || (scene.link[n2] & 4) == 0) {
+                        if self.exists(n20) && self.visible(n20) && (self.draw_primary(n20) || (self.link[n2] & 4) == 0) {
                             defer = true;
                         }
                     }
                     if !defer && n22 <= self.cv && n22 > self.cb {
                         let n20 = n2 - 1;
-                        if self.exists(n20) && self.visible(n20) && (self.draw_primary(n20) || (scene.link[n2] & 8) == 0) {
+                        if self.exists(n20) && self.visible(n20) && (self.draw_primary(n20) || (self.link[n2] & 8) == 0) {
                             defer = true;
                         }
                     }
                     if !defer && n22 >= self.cv && n22 < self.ct - 1 {
                         let n20 = n2 + 1;
-                        if self.exists(n20) && self.visible(n20) && (self.draw_primary(n20) || (scene.link[n2] & 2) == 0) {
+                        if self.exists(n20) && self.visible(n20) && (self.draw_primary(n20) || (self.link[n2] & 2) == 0) {
                             defer = true;
                         }
                     }
@@ -482,22 +598,22 @@ impl<'a, M: ModelSource> SceneDrawer<'a, M> {
                     let n20 = scene.tile_index(3, n21, n22);
                     let n19 = self.flags[n20];
                     if n19 & flag::PAINT != 0 {
-                        self.draw_paint(n20, 0, n26, n27, out);
+                        self.draw_paint(scene, n20, 0, n26, n27, out);
                     } else if n19 & flag::TILE_MODEL != 0 {
-                        self.draw_shaped(n20, 0, n26, n27, out);
+                        self.draw_shaped(scene, n20, 0, n26, n27, out);
                     }
                     if n19 & flag::WALL != 0 {
                         if let Some(w) = scene.walls.get(&n20).cloned() {
                             let pick = self.pick_object(w.hash, 0, n26, n27);
-                            self.draw_model(w.model_a, 0, w.x, w.height, w.z, pick, out);
+                            self.draw_model(models, temp_models, w.model_a, 0, w.x, w.height, w.z, pick, out);
                         }
                     }
-                    let count = scene.object_count[n20] as i32;
+                    let count = self.object_count[n20] as i32;
                     for slot in 0..count {
-                        if let Some(&id) = scene.slots.get(&(n20 * 5 + slot as usize)) {
-                            let o = scene.game_objects[id].clone();
+                        if let Some(&id) = self.slots.get(&(n20 * 5 + slot as usize)) {
+                            let o = self.object(scene, id).clone();
                             let pick = self.pick_object(o.hash, 0, n26, n27);
-                            self.draw_model(o.model, o.orientation, o.x, o.height, o.z, pick, out);
+                            self.draw_model(models, temp_models, o.model, o.orientation, o.x, o.height, o.z, pick, out);
                         }
                     }
                 }
@@ -505,11 +621,11 @@ impl<'a, M: ModelSource> SceneDrawer<'a, M> {
                 if n28 & flag::PAINT != 0 {
                     drew_ground = true;
                     if n28 & flag::PAINT_VISIBLE != 0 || n23 <= self.paint_plane {
-                        self.draw_paint(n2, n24, n26, n27, out);
+                        self.draw_paint(scene, n2, n24, n26, n27, out);
                     }
                 } else if n28 & flag::TILE_MODEL != 0 {
                     drew_ground = true;
-                    self.draw_shaped(n2, n24, n26, n27, out);
+                    self.draw_shaped(scene, n2, n24, n26, n27, out);
                 }
                 let mut n19 = 0usize;
                 let mut n30 = 0;
@@ -549,11 +665,11 @@ impl<'a, M: ModelSource> SceneDrawer<'a, M> {
                         }
                         if w.orientation_a & n30 != 0 {
                             let pick = self.pick_object(w.hash, n23, n26, n27);
-                            self.draw_model(w.model_a, 0, w.x, w.height, w.z, pick, out);
+                            self.draw_model(models, temp_models, w.model_a, 0, w.x, w.height, w.z, pick, out);
                         }
                         if w.orientation_b & n30 != 0 {
                             let pick = self.pick_object(w.hash, n23, n26, n27);
-                            self.draw_model(w.model_b, 0, w.x, w.height, w.z, pick, out);
+                            self.draw_model(models, temp_models, w.model_b, 0, w.x, w.height, w.z, pick, out);
                         }
                     }
                 }
@@ -561,7 +677,7 @@ impl<'a, M: ModelSource> SceneDrawer<'a, M> {
                     if let Some(d) = scene.wall_decorations.get(&n2).cloned() {
                         if d.orientation & n30 != 0 {
                             let pick = self.pick_object(d.hash, n23, n26, n27);
-                            self.draw_model(d.model_a, 0, d.x + d.offset_x, d.height, d.z + d.offset_z, pick, out);
+                            self.draw_model(models, temp_models, d.model_a, 0, d.x + d.offset_x, d.height, d.z + d.offset_z, pick, out);
                         } else if d.orientation == 256 {
                             let n16 = d.x - self.cp;
                             let n15 = d.z - self.cl;
@@ -570,10 +686,10 @@ impl<'a, M: ModelSource> SceneDrawer<'a, M> {
                             let n13 = if n14 != 2 && n14 != 3 { n15 } else { -n15 };
                             if n13 < n12 {
                                 let pick = self.pick_object(d.hash, n23, n26, n27);
-                                self.draw_model(d.model_a, 0, d.x + d.offset_x, d.height, d.z + d.offset_z, pick, out);
+                                self.draw_model(models, temp_models, d.model_a, 0, d.x + d.offset_x, d.height, d.z + d.offset_z, pick, out);
                             } else if d.model_b >= 0 {
                                 let pick = self.pick_object(d.hash, n23, n26, n27);
-                                self.draw_model(d.model_b, 0, d.x + d.offset_x2, d.height, d.z + d.offset_z2, pick, out);
+                                self.draw_model(models, temp_models, d.model_b, 0, d.x + d.offset_x2, d.height, d.z + d.offset_z2, pick, out);
                             }
                         }
                     }
@@ -582,12 +698,12 @@ impl<'a, M: ModelSource> SceneDrawer<'a, M> {
                     if self.flags[n2] & flag::FLOOR_DECOR != 0 {
                         if let Some(f) = scene.floor_decorations.get(&n2).cloned() {
                             let pick = self.pick_object(f.hash, n23, n26, n27);
-                            self.draw_model(f.model, 0, f.x, f.height, f.z, pick, out);
+                            self.draw_model(models, temp_models, f.model, 0, f.x, f.height, f.z, pick, out);
                         }
                     }
                     // Item layers (ground items) are not part of static scene exports.
                 }
-                let n17 = scene.link[n2] as i32;
+                let n17 = self.link[n2] as i32;
                 if n21 < self.cd && n21 >= self.cr && n21 < self.cu - 1 && (n17 & 4) != 0 {
                     let n16 = n2 + mh;
                     if self.exists(n16) && self.visible(n16) {
@@ -615,10 +731,10 @@ impl<'a, M: ModelSource> SceneDrawer<'a, M> {
             }
             if n28 & flag::WALL_DEFERRED != 0 {
                 let mut ready = true;
-                let count = scene.object_count[n2] as usize;
+                let count = self.object_count[n2] as usize;
                 for slot in 0..count {
-                    let Some(&id) = scene.slots.get(&(n2 * 5 + slot)) else { continue };
-                    let n18 = scene.object_flags[n2 * 5 + slot] as i32;
+                    let Some(&id) = self.slots.get(&(n2 * 5 + slot)) else { continue };
+                    let n18 = self.object_flags[n2 * 5 + slot] as i32;
                     if self.objects[id].drawn_frame != self.frame && (n18 & self.wall_cull_a(n2)) == self.wall_cull_b(n2) {
                         ready = false;
                         break;
@@ -627,7 +743,7 @@ impl<'a, M: ModelSource> SceneDrawer<'a, M> {
                 if ready {
                     if let Some(w) = scene.walls.get(&n2).cloned() {
                         let pick = self.pick_object(w.hash, n23, n26, n27);
-                        self.draw_model(w.model_a, 0, w.x, w.height, w.z, pick, out);
+                        self.draw_model(models, temp_models, w.model_a, 0, w.x, w.height, w.z, pick, out);
                     }
                     self.flags[n2] &= !flag::WALL_DEFERRED;
                     n28 = self.flags[n2];
@@ -637,13 +753,14 @@ impl<'a, M: ModelSource> SceneDrawer<'a, M> {
                 self.flags[n2] &= !flag::DRAW_OBJECTS;
                 n28 = self.flags[n2];
                 self.scratch_objects.clear();
-                let count = scene.object_count[n2] as usize;
+                let count = self.object_count[n2] as usize;
                 'objects: for slot in 0..count {
-                    let Some(&id) = scene.slots.get(&(n2 * 5 + slot)) else { continue };
+                    let Some(&id) = self.slots.get(&(n2 * 5 + slot)) else { continue };
                     if self.objects[id].drawn_frame == self.frame {
                         continue;
                     }
-                    let o = &scene.game_objects[id];
+                    let o = self.object(scene, id).clone();
+                    let o = &o;
                     for n18 in o.min_x..=o.max_x {
                         for n17 in o.min_y..=o.max_y {
                             let n16 = n18 + oy;
@@ -712,8 +829,8 @@ impl<'a, M: ModelSource> SceneDrawer<'a, M> {
                             continue;
                         }
                         let Some(b) = best else { continue };
-                        let o = &scene.game_objects[id];
-                        let bo = &scene.game_objects[self.scratch_objects[b]];
+                        let o = self.object(scene, id);
+                        let bo = self.object(scene, self.scratch_objects[b]);
                         let n16 = o.x - self.cp;
                         let n15 = o.z - self.cl;
                         let n14 = bo.x - self.cp;
@@ -725,9 +842,9 @@ impl<'a, M: ModelSource> SceneDrawer<'a, M> {
                     let Some(pos) = best else { break };
                     let id = self.scratch_objects[pos];
                     self.objects[id].drawn_frame = self.frame;
-                    let o = scene.game_objects[id].clone();
+                    let o = self.object(scene, id).clone();
                     let pick = self.pick_object(o.hash, n23, o.min_x, o.min_y);
-                    self.draw_model(o.model, o.orientation, o.x, o.height, o.z, pick, out);
+                    self.draw_model(models, temp_models, o.model, o.orientation, o.x, o.height, o.z, pick, out);
                     for n43 in o.min_x..=o.max_x {
                         for n16 in o.min_y..=o.max_y {
                             let n15 = n43 + oy;
@@ -787,7 +904,7 @@ impl<'a, M: ModelSource> SceneDrawer<'a, M> {
                     if let Some(d) = scene.wall_decorations.get(&n2).cloned() {
                         if d.orientation & self.wall_direction(n2) != 0 {
                             let pick = self.pick_object(d.hash, n23, n26, n27);
-                            self.draw_model(d.model_a, 0, d.x + d.offset_x, d.height, d.z + d.offset_z, pick, out);
+                            self.draw_model(models, temp_models, d.model_a, 0, d.x + d.offset_x, d.height, d.z + d.offset_z, pick, out);
                         } else if d.orientation == 256 {
                             let n48 = d.x - self.cp;
                             let n49 = d.z - self.cl;
@@ -796,10 +913,10 @@ impl<'a, M: ModelSource> SceneDrawer<'a, M> {
                             let n16 = if n18 != 2 && n18 != 3 { n49 } else { -n49 };
                             if n16 >= n17 {
                                 let pick = self.pick_object(d.hash, n23, n26, n27);
-                                self.draw_model(d.model_a, 0, d.x + d.offset_x, d.height, d.z + d.offset_z, pick, out);
+                                self.draw_model(models, temp_models, d.model_a, 0, d.x + d.offset_x, d.height, d.z + d.offset_z, pick, out);
                             } else if d.model_b >= 0 {
                                 let pick = self.pick_object(d.hash, n23, n26, n27);
-                                self.draw_model(d.model_b, 0, d.x + d.offset_x2, d.height, d.z + d.offset_z2, pick, out);
+                                self.draw_model(models, temp_models, d.model_b, 0, d.x + d.offset_x2, d.height, d.z + d.offset_z2, pick, out);
                             }
                         }
                     }
@@ -809,11 +926,11 @@ impl<'a, M: ModelSource> SceneDrawer<'a, M> {
                         let n50 = self.wall_direction(n2);
                         if w.orientation_b & n50 != 0 {
                             let pick = self.pick_object(w.hash, n23, n26, n27);
-                            self.draw_model(w.model_b, 0, w.x, w.height, w.z, pick, out);
+                            self.draw_model(models, temp_models, w.model_b, 0, w.x, w.height, w.z, pick, out);
                         }
                         if w.orientation_a & n50 != 0 {
                             let pick = self.pick_object(w.hash, n23, n26, n27);
-                            self.draw_model(w.model_a, 0, w.x, w.height, w.z, pick, out);
+                            self.draw_model(models, temp_models, w.model_a, 0, w.x, w.height, w.z, pick, out);
                         }
                     }
                 }

@@ -71,7 +71,7 @@ def main() -> int:
     parser.add_argument("--source", type=Path)
     parser.add_argument("--output", type=Path, default=DEFAULT_OUTPUT)
     parser.add_argument("--profile", default="all",
-                        choices=["all", "tables", "palette", "textures", "models", "npcs", "scenes"])
+                        choices=["all", "tables", "palette", "textures", "models", "npcs", "scenes", "prune-textures"])
     parser.add_argument("--verify-only", action="store_true")
     parser.add_argument("--java-home", type=Path, default=Path.home() / ".local/share/jdks/temurin-17.0.20.1+1")
     parser.add_argument("extra", nargs="*", help="Profile-specific arguments passed to the Java exporter")

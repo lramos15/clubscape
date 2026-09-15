@@ -236,3 +236,31 @@ impl Model {
         self.compute_cylinder_bounds();
     }
 }
+
+/// Parses a `CSMP` scene model pack: `count`, then `[key_len][data_len][key][data]` entries in
+/// scene model-index order. Returns models in that order together with their content keys.
+pub fn parse_model_pack(data: &[u8]) -> Result<Vec<(String, Model)>, RenderError> {
+    if data.len() < 8 || &data[0..4] != b"CSMP" {
+        return Err(RenderError::Format("missing CSMP magic".into()));
+    }
+    let count = u32::from_le_bytes(data[4..8].try_into().expect("4 bytes")) as usize;
+    let mut offset = 8usize;
+    let mut out = Vec::with_capacity(count);
+    for _ in 0..count {
+        if offset + 8 > data.len() {
+            return Err(RenderError::Format("truncated model pack entry".into()));
+        }
+        let key_len = u32::from_le_bytes(data[offset..offset + 4].try_into().expect("4 bytes")) as usize;
+        let data_len = u32::from_le_bytes(data[offset + 4..offset + 8].try_into().expect("4 bytes")) as usize;
+        offset += 8;
+        let end = offset + key_len + data_len;
+        if end > data.len() {
+            return Err(RenderError::Format("truncated model pack payload".into()));
+        }
+        let key = String::from_utf8(data[offset..offset + key_len].to_vec()).map_err(|e| RenderError::Format(e.to_string()))?;
+        let model = Model::from_chunks(&data[offset + key_len..end])?;
+        out.push((key, model));
+        offset = end;
+    }
+    Ok(out)
+}

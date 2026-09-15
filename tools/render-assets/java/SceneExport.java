@@ -53,6 +53,7 @@ final class SceneExport
             modelIndex.clear();
             modelKeys.clear();
             contentIndex.clear();
+            modelBytes.clear();
             scenes.add(exportScene((String) entry[0], (Integer) entry[1], (Integer) entry[2]));
         }
         export.manifest.put("scenes", scenes);
@@ -127,6 +128,7 @@ final class SceneExport
     }
 
     final Map<String, Integer> contentIndex = new java.util.HashMap<>();
+    final List<byte[]> modelBytes = new ArrayList<>();
 
     int modelId(Resolved resolved) throws Exception
     {
@@ -145,14 +147,7 @@ final class SceneExport
             if (!resolved.shared()) modelIndex.put(model, byContent);
             return byContent;
         }
-        String key = "models/scene/" + sha + ".bin";
-        Path file = export.output.resolve(key);
-        if (!Files.exists(file))
-        {
-            Files.createDirectories(file.getParent());
-            Files.write(file, bytes);
-        }
-        export.record(key, sha, bytes.length, OriginalCapture.map("vertices", model.by, "faces", model.bd));
+        modelBytes.add(bytes);
         if (model.cq != null)
         {
             for (int i = 0; i < model.bd; i++) if (model.cq[i] != -1) usedTextures.add((int) model.cq[i]);
@@ -355,6 +350,22 @@ final class SceneExport
         String fileKey = "scenes/" + name + ".bin";
         Path file = export.output.resolve(fileKey);
         String sha = writer.write(file);
+        // Single-fetch model pack for streaming: every model the scene references, in index order.
+        java.io.ByteArrayOutputStream pack = new java.io.ByteArrayOutputStream();
+        pack.writeBytes("CSMP".getBytes(java.nio.charset.StandardCharsets.US_ASCII));
+        pack.writeBytes(java.nio.ByteBuffer.allocate(4).order(java.nio.ByteOrder.LITTLE_ENDIAN).putInt(modelKeys.size()).array());
+        for (int i = 0; i < modelKeys.size(); i++)
+        {
+            byte[] keyBytes = modelKeys.get(i).getBytes(java.nio.charset.StandardCharsets.US_ASCII);
+            byte[] data = modelBytes.get(i);
+            pack.writeBytes(java.nio.ByteBuffer.allocate(8).order(java.nio.ByteOrder.LITTLE_ENDIAN).putInt(keyBytes.length).putInt(data.length).array());
+            pack.writeBytes(keyBytes);
+            pack.writeBytes(data);
+        }
+        String packKey = "scenes/" + name + ".models.bin";
+        byte[] packBytes = pack.toByteArray();
+        Files.write(export.output.resolve(packKey), packBytes);
+        export.record(packKey, ChunkWriter.sha256(packBytes), packBytes.length, OriginalCapture.map("models", modelKeys.size(), "scene", name));
         Map<String, Object> record = OriginalCapture.map("name", name, "file", fileKey, "sha256", sha, "base_x", baseX, "base_y", baseY,
             "region_ids", squares, "tiles", tiles, "placed_object_tile_references", objects,
             "paints", counts[0], "tile_models", counts[1], "walls", counts[2], "wall_decorations", counts[3], "floor_decorations", counts[4],

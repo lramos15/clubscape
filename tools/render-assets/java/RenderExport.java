@@ -96,6 +96,8 @@ public final class RenderExport
         if (all || profile.equals("models")) exportFixtureModels();
         if (all || profile.equals("npcs")) exportNpcs();
         if (all || profile.equals("scenes")) new SceneExport(this).run();
+        if (profile.equals("prune-textures")) pruneTextures();
+        manifest.put("approved_reference_pack_sha256", "b62e19704e17d3d3e4e819f803ef49ba7cc54034ae407184b423427c65d9674d");
         manifest.put("files", files);
         Files.writeString(output.resolve("manifest.json"), OriginalCapture.JSON.toJson(manifest) + "\n");
         System.out.println("RENDER_EXPORT_OK files=" + files.size());
@@ -166,6 +168,51 @@ public final class RenderExport
         if (textures.size() < 30) throw new IllegalStateException("Too few textures " + textures.size());
         manifest.put("textures", textures);
         System.out.println("TEXTURES count=" + textures.size());
+    }
+
+    /** Keeps only textures referenced by exported scenes/models; unreferenced dumps are deleted. */
+    @SuppressWarnings("unchecked")
+    void pruneTextures() throws Exception
+    {
+        java.util.Set<Integer> used = new java.util.TreeSet<>();
+        Object listed = manifest.get("scene_texture_ids");
+        if (listed instanceof List) for (Object id : (List<Object>) listed) used.add(((Number) id).intValue());
+        for (String key : new ArrayList<>(files.keySet()))
+        {
+            if (!key.startsWith("models/") || !key.endsWith(".bin") || key.contains("/baked/")) continue;
+            Path file = output.resolve(key);
+            if (!Files.exists(file)) continue;
+            byte[] data = Files.readAllBytes(file);
+            int offset = 8;
+            while (offset + 8 <= data.length)
+            {
+                String tag = new String(data, offset, 4, java.nio.charset.StandardCharsets.US_ASCII);
+                int length = java.nio.ByteBuffer.wrap(data, offset + 4, 4).order(java.nio.ByteOrder.LITTLE_ENDIAN).getInt();
+                if (tag.equals("FTEX"))
+                {
+                    for (int i = 0; i < length; i += 2)
+                    {
+                        short texture = java.nio.ByteBuffer.wrap(data, offset + 8 + i, 2).order(java.nio.ByteOrder.LITTLE_ENDIAN).getShort();
+                        if (texture != -1) used.add((int) texture);
+                    }
+                }
+                offset += 8 + length;
+            }
+        }
+        int removed = 0;
+        for (String key : new ArrayList<>(files.keySet()))
+        {
+            if (!key.startsWith("textures/")) continue;
+            int id = Integer.parseInt(key.substring("textures/".length(), key.length() - 4));
+            if (!used.contains(id))
+            {
+                Files.deleteIfExists(output.resolve(key));
+                files.remove(key);
+                removed++;
+            }
+        }
+        manifest.put("textures", new ArrayList<>(used));
+        System.out.println("TEXTURES pruned removed=" + removed + " kept=" + used.size());
     }
 
     static int decodedEd(fx model)
@@ -260,6 +307,13 @@ public final class RenderExport
                 "light_direction", new int[]{-30, -50, -30}, "width_scale", definition.getWidthScale(), "height_scale", definition.getHeightScale(),
                 "note", "Lit before animation and before source scale; scale applies after animation as in pl.ag"));
             Map<String, Object> sequences = new LinkedHashMap<>();
+            // Runtime animation pack: the lit base model plus, per required sequence, the original
+            // per-frame vertex positions (int-truncated exactly as the draw path consumes them) and
+            // the original float-derived bounds. Frame timing is the source frame length table.
+            ChunkWriter pack = model(base);
+            List<Integer> animTable = new ArrayList<>();
+            List<Short> framePositions = new ArrayList<>();
+            List<Integer> frameBounds = new ArrayList<>();
             for (int i = 1; i < entry.length; i++)
             {
                 int sequenceId = entry[i];
@@ -267,19 +321,50 @@ public final class RenderExport
                 if (sequence == null) throw new IllegalStateException("Missing native animation " + sequenceId);
                 net.runelite.api.Animation animation = sequence;
                 int frames = animation.getNumFrames();
+                int[] lengths = animation.getFrameLengths();
+                animTable.add(sequenceId); animTable.add(frames);
+                for (int frame = 0; frame < frames; frame++) animTable.add(lengths[frame]);
                 List<String> frameFiles = new ArrayList<>();
                 for (int frame = 0; frame < frames; frame++)
                 {
                     fx model = definition.ag(sequence, frame, null, -1, null, -520150610);
+                    if (model.by != base.by) throw new IllegalStateException("Animated vertex count differs from base");
+                    fx.et(model);
+                    frameBounds.add(model.cg); frameBounds.add(model.ch); frameBounds.add(model.cn); frameBounds.add(decodedEd(model)); frameBounds.add(model.cz);
+                    float radius = 0;
+                    for (int v = 0; v < model.by; v++)
+                    {
+                        float d = model.wh[v] * model.wh[v] + model.mn[v] * model.mn[v] + model.pa[v] * model.pa[v];
+                        if (d > radius) radius = d;
+                    }
+                    frameBounds.add((int) Math.ceil(Math.sqrt(radius)));
+                    for (int v = 0; v < model.by; v++)
+                    {
+                        int x = (int) model.wh[v], y = (int) model.pa[v], z = (int) model.mn[v];
+                        if (x != (short) x || y != (short) y || z != (short) z) throw new IllegalStateException("Frame position exceeds int16");
+                        framePositions.add((short) x); framePositions.add((short) y); framePositions.add((short) z);
+                    }
                     String name = "npc-" + npcId + "-seq-" + sequenceId + "-frame-" + frame;
                     writeModel("baked/" + name, model, OriginalCapture.map("npc_id", npcId, "sequence_id", sequenceId, "frame", frame,
-                        "classification", "Native original frame bake for validation of the Rust animation port; source scale already applied"));
+                        "classification", "Native original frame bake for validation; source scale already applied"));
                     frameFiles.add("models/baked/" + name + ".bin");
                 }
                 sequences.put(String.valueOf(sequenceId), OriginalCapture.map("frame_count", frames,
-                    "frame_lengths_client_cycles", animation.getFrameLengths(), "baked_frames", frameFiles));
+                    "frame_lengths_client_cycles", lengths, "baked_frames", frameFiles));
             }
+            pack.ints("ANIM", animTable.stream().mapToInt(Integer::intValue).toArray());
+            short[] positions = new short[framePositions.size()];
+            for (int i = 0; i < positions.length; i++) positions[i] = framePositions.get(i);
+            pack.shorts("FRMS", positions, positions.length);
+            pack.ints("FBND", frameBounds.stream().mapToInt(Integer::intValue).toArray());
+            pack.ints("SCAL", definition.getWidthScale(), definition.getHeightScale());
+            Path packFile = output.resolve("models/npc-" + npcId + ".pack.bin");
+            String packSha = pack.write(packFile);
+            record("models/npc-" + npcId + ".pack.bin", packSha, Files.size(packFile), OriginalCapture.map("npc_id", npcId,
+                "sequences", new ArrayList<>(sequences.keySet()), "frame_position_format", "int16 xyz per vertex per frame, int-truncated like fx.xm",
+                "scale_note", "Frames already include the source NPC scale; base model is unscaled"));
             npcs.add(OriginalCapture.map("npc_id", npcId, "name", definition.getName(), "base_model", "models/" + baseName + ".bin",
+                "pack", "models/npc-" + npcId + ".pack.bin",
                 "width_scale", definition.getWidthScale(), "height_scale", definition.getHeightScale(), "sequences", sequences));
         }
         manifest.put("npcs", npcs);

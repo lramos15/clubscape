@@ -210,14 +210,13 @@ const SCENE_FIXTURES: &[SceneFixture] = &[
 fn load_scene(name: &str) -> (clubscape_renderer::scene::SceneData, Vec<Option<Model>>) {
     let data = std::fs::read(repo_root().join(format!("assets/compiled/render/scenes/{name}.bin"))).expect("scene file");
     let scene = clubscape_renderer::scene::SceneData::from_chunks(&data).expect("scene parse");
-    let models = scene
-        .model_keys
-        .iter()
-        .map(|key| {
-            let path = repo_root().join(format!("assets/compiled/render/models/scene/{key}.bin"));
-            Some(Model::from_chunks(&std::fs::read(&path).unwrap_or_else(|e| panic!("{}: {e}", path.display()))).expect("scene model"))
-        })
-        .collect();
+    let pack = std::fs::read(repo_root().join(format!("assets/compiled/render/scenes/{name}.models.bin"))).expect("scene model pack");
+    let entries = clubscape_renderer::model::parse_model_pack(&pack).expect("model pack parse");
+    assert_eq!(entries.len(), scene.model_keys.len());
+    let models = entries.into_iter().zip(&scene.model_keys).map(|((key, model), expected)| {
+        assert_eq!(&key, expected, "model pack order differs from scene model keys");
+        Some(model)
+    }).collect();
     (scene, models)
 }
 
@@ -240,7 +239,7 @@ fn render_scene_fixture(fixture: &SceneFixture) -> (Vec<i32>, usize) {
     let textures = load_textures();
     let (scene, models) = load_scene(fixture.scene);
     let state = RasterState::new(1920, 1080, 662);
-    let mut drawer = clubscape_renderer::scene::draw::SceneDrawer::new(&scene, &models, state, &palette.rgb, 32768);
+    let mut drawer = clubscape_renderer::scene::draw::SceneDrawer::new(&scene, state, &palette.rgb, 32768);
     let view = clubscape_renderer::scene::draw::SceneView {
         camera_x: camera[0],
         camera_height: camera[1],
@@ -254,7 +253,8 @@ fn render_scene_fixture(fixture: &SceneFixture) -> (Vec<i32>, usize) {
         far_clip: 32768,
     };
     let mut tris: Vec<Tri> = Vec::new();
-    drawer.draw(&view, &mut tris);
+    drawer.begin_frame(&scene);
+    drawer.draw(&scene, &models, &[], &view, &mut tris);
     assert!(drawer.missing_models.is_empty(), "missing models: {:?}", drawer.missing_models);
     assert!(tris.len() > 10000, "scene emitted only {} triangles", tris.len());
     let mut pixels = vec![0i32; 1920 * 1080];
@@ -343,4 +343,123 @@ fn scene_models_report_alpha_254_flat_faces() {
         }
     }
     eprintln!("alpha faces: {total_alpha}, flat alpha-254 faces: {flat_254}");
+}
+
+// ---------------------------------------------------------------- core with entities
+
+#[test]
+fn core_places_world_view_entities_in_scene() {
+    use clubscape_renderer::core::{Camera, RendererCore};
+    let root = repo_root();
+    let scene_path = root.join("assets/compiled/render/scenes/tutorial-starting-house.bin");
+    if !scene_path.exists() {
+        eprintln!("skipping: scene export not present");
+        return;
+    }
+    let palette = load_palette();
+    let mut core = RendererCore::new(palette, 1920, 1080);
+    for entry in std::fs::read_dir(root.join("assets/compiled/render/textures")).unwrap() {
+        core.add_texture(&std::fs::read(entry.unwrap().path()).unwrap()).unwrap();
+    }
+    core.load_npc_pack_as(3028, &std::fs::read(root.join("assets/compiled/render/models/npc-3028.pack.bin")).unwrap()).unwrap();
+    core.load_npc_pack_as(2063, &std::fs::read(root.join("assets/compiled/render/models/npc-2063.pack.bin")).unwrap()).unwrap();
+    core.load_scene(
+        "tutorial-starting-house",
+        &std::fs::read(&scene_path).unwrap(),
+        &std::fs::read(root.join("assets/compiled/render/scenes/tutorial-starting-house.models.bin")).unwrap(),
+    )
+    .unwrap();
+    // Fixture camera expressed in world units (tile 3094,3095 base 3048,3056).
+    core.set_camera(Camera { x: 3048 * 128 + 5888, height: -2360, y: 3056 * 128 + 4992, pitch: 2048, yaw: 0, zoom: 662, far: 32768 }).unwrap();
+    let baseline = core.build_frame(0.0).unwrap().triangles;
+    let baseline_pixels = {
+        let textures = load_textures();
+        let mut pixels = vec![0i32; 1920 * 1080];
+        let mut raster = Software::new(core.state, &mut pixels, &core.palette.rgb, &textures);
+        for tri in core.triangles() {
+            let _ = raster.draw(tri);
+        }
+        pixels
+    };
+    let world = serde_json::json!({
+        "revision": "1", "tick": "1",
+        "player": {"id": "player-1", "tile": {"x": 3098, "y": 3098, "plane": 0}, "animation": "5668"},
+        "entities": [
+            {"id": "npc-goblin", "kind": "npc", "sourceId": 3028, "tile": {"x": 3097, "y": 3097, "plane": 0}, "animation": "6180"},
+            {"id": "npc-unknown", "kind": "npc", "sourceId": 3308, "tile": {"x": 3092, "y": 3103, "plane": 0}, "animation": "808"}
+        ]
+    });
+    core.update_world(&world.to_string(), 1000.0).unwrap();
+    let summary = core.build_frame(1000.0).unwrap().clone();
+    eprintln!("summary: drawn {} skipped {:?} missing {}", summary.entities_drawn, summary.entities_skipped, summary.missing_models);
+    assert_eq!(summary.entities_drawn, 2, "{:?}", summary.entities_skipped);
+    assert_eq!(summary.entities_skipped.len(), 1, "unknown npc must be reported, not hidden");
+    assert!(summary.triangles > baseline, "entities added no triangles");
+    // Animation advances: walk frame index changes over time within the source frame lengths.
+    let textures = load_textures();
+    let mut frames = Vec::new();
+    for t in [1000.0, 1000.0 + 20.0 * 3.0, 1000.0 + 20.0 * 8.0] {
+        core.build_frame(t).unwrap();
+        let mut pixels = vec![0i32; 1920 * 1080];
+        let state = core.state;
+        let mut raster = Software::new(state, &mut pixels, &core.palette.rgb, &textures);
+        for tri in core.triangles() {
+            let _ = raster.draw(tri);
+        }
+        frames.push(pixels);
+    }
+    assert_ne!(frames[0], frames[2], "walk animation did not advance");
+    {
+        let mut bbox = (i32::MAX, i32::MAX, i32::MIN, i32::MIN, 0usize);
+        for (i, (&a, &b)) in frames[0].iter().zip(&baseline_pixels).enumerate() {
+            if a != b {
+                let (x, y) = ((i % 1920) as i32, (i / 1920) as i32);
+                bbox = (bbox.0.min(x), bbox.1.min(y), bbox.2.max(x), bbox.3.max(y), bbox.4 + 1);
+            }
+        }
+        eprintln!("visible entity pixels vs baseline: {bbox:?}");
+    }
+    write_debug_png("tutorial-starting-house-entities", 1920, 1080, &frames[0]);
+    // Picking returns the entity under a pixel it covers and tiles elsewhere.
+    let mut boxes: std::collections::HashMap<i64, (i32, i32, i32, i32)> = std::collections::HashMap::new();
+    for y in 0..1080 {
+        for x in 0..1920 {
+            if let Some(clubscape_renderer::scene::draw::PickTarget::Object { hash, .. }) = core.pick(x, y) {
+                if hash >= 0x1000_0000_0000 || hash < 0 {
+                    let b = boxes.entry(hash).or_insert((x, y, x, y));
+                    b.0 = b.0.min(x); b.1 = b.1.min(y); b.2 = b.2.max(x); b.3 = b.3.max(y);
+                }
+            }
+        }
+    }
+    eprintln!("entity pick boxes: {boxes:?}");
+    {
+        let picks = core.pick_targets().to_vec();
+        let mut per: std::collections::HashMap<i64, (usize, i32, i32, i32, i32)> = std::collections::HashMap::new();
+        for tri in core.triangles() {
+            if tri.pick == 0 { continue; }
+            if let clubscape_renderer::scene::draw::PickTarget::Object { hash, .. } = picks[tri.pick as usize - 1] {
+                if hash >= 0x1000_0000_0000 || hash < 0 {
+                    let e = per.entry(hash).or_insert((0, i32::MAX, i32::MAX, i32::MIN, i32::MIN));
+                    e.0 += 1;
+                    for i in 0..3 { e.1 = e.1.min(tri.x[i]); e.2 = e.2.min(tri.y[i]); e.3 = e.3.max(tri.x[i]); e.4 = e.4.max(tri.y[i]); }
+                }
+            }
+        }
+        eprintln!("entity triangles: {per:?}");
+    }
+    let pick_center = core.pick(960, 540);
+    assert!(pick_center.is_some(), "center pixel should resolve to scene geometry");
+    let mut found_entity = false;
+    for y in (300..900).step_by(4) {
+        for x in (600..1300).step_by(4) {
+            if let Some(clubscape_renderer::scene::draw::PickTarget::Object { hash, .. }) = core.pick(x, y) {
+                if hash >= 0x1000_0000_0000 || hash < 0 {
+                    found_entity = true;
+                }
+            }
+        }
+    }
+    assert!(found_entity, "no pixel resolved to an entity");
+    assert_eq!(boxes.len(), 2, "both the goblin and the penguin player must be pickable on open ground: {boxes:?}");
 }

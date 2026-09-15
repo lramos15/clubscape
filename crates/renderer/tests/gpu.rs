@@ -162,13 +162,10 @@ fn fixture_camera(name: &str) -> [i32; 3] {
 fn scene_triangles(case: &SceneCase, palette: &Palette, state: RasterState) -> Vec<Tri> {
     let data = std::fs::read(repo_root().join(format!("assets/compiled/render/scenes/{}.bin", case.name))).unwrap();
     let scene = SceneData::from_chunks(&data).unwrap();
-    let models: Vec<Option<Model>> = scene
-        .model_keys
-        .iter()
-        .map(|k| Some(Model::from_chunks(&std::fs::read(repo_root().join(format!("assets/compiled/render/models/scene/{k}.bin"))).unwrap()).unwrap()))
-        .collect();
+    let pack = std::fs::read(repo_root().join(format!("assets/compiled/render/scenes/{}.models.bin", case.name))).unwrap();
+    let models: Vec<Option<Model>> = clubscape_renderer::model::parse_model_pack(&pack).unwrap().into_iter().map(|(_, m)| Some(m)).collect();
     let camera = fixture_camera(case.name);
-    let mut drawer = SceneDrawer::new(&scene, &models, state, &palette.rgb, 32768);
+    let mut drawer = SceneDrawer::new(&scene, state, &palette.rgb, 32768);
     let view = SceneView {
         camera_x: camera[0],
         camera_height: camera[1],
@@ -182,7 +179,8 @@ fn scene_triangles(case: &SceneCase, palette: &Palette, state: RasterState) -> V
         far_clip: 32768,
     };
     let mut tris = Vec::new();
-    drawer.draw(&view, &mut tris);
+    drawer.begin_frame(&scene);
+    drawer.draw(&scene, &models, &[], &view, &mut tris);
     let _ = case.camera;
     tris
 }

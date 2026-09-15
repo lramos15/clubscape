@@ -13,6 +13,7 @@
 //! browser shell.
 
 pub mod chunk;
+pub mod core;
 pub mod error;
 #[cfg(feature = "gpu")]
 pub mod gpu;
