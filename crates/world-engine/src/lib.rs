@@ -3,6 +3,7 @@
 
 mod actions;
 mod activities;
+mod collision_cache;
 mod combat;
 mod commerce;
 mod context;
@@ -26,7 +27,7 @@ pub mod random;
 pub mod source_math;
 
 use std::collections::BTreeMap;
-use std::sync::Arc;
+use std::sync::{Arc, Mutex};
 
 use clubscape_game_types::*;
 use clubscape_simulation::navigation::CollisionMap;
@@ -52,7 +53,8 @@ pub struct ActorEvent {
 #[derive(Clone, Debug)]
 pub struct WorldEngine {
     content: Arc<GameContent>,
-    collision: CollisionMap,
+    collision: Arc<CollisionMap>,
+    collision_cache: Arc<Mutex<collision_cache::CollisionCache>>,
     regions_by_tile: BTreeMap<Tile, RegionId>,
 }
 
@@ -60,7 +62,7 @@ impl WorldEngine {
     /// Requires compiler-validated content. Local checks are additional, not a compiler.
     pub fn new(content: Arc<GameContent>) -> GameResult<Self> {
         validation::content(&content)?;
-        let collision = CollisionMap::from_regions(content.regions.values())?;
+        let collision = Arc::new(CollisionMap::from_regions(content.regions.values())?);
         let regions_by_tile = content
             .regions
             .iter()
@@ -69,6 +71,7 @@ impl WorldEngine {
         let engine = Self {
             content,
             collision,
+            collision_cache: Arc::new(Mutex::new(collision_cache::CollisionCache::default())),
             regions_by_tile,
         };
         engine.validate_destination(

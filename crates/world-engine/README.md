@@ -49,6 +49,41 @@ Ranges are checked, and no seeded generator or player-supplied draw is exported.
 The caller also owns durable RNG cursor handling: a cloned gameplay draft
 cannot roll back an external RNG.
 
+## Derived physical collision reuse
+
+The immutable initial map and at most eight derived maps are shared through
+`Arc`. The bounded derived cache uses exact selected transform states, the
+instance template and that instance's temporary-object definitions/tiles.
+It is not keyed by tick or world revision: an accepted door/morph/temporary
+change within a transaction must take effect immediately. Identical physical
+instance copies may share a map; actor traversal/ownership/occupancy guards
+remain outside the cache and execute for the actual actor.
+
+Map construction still uses the original complete source replacement and
+instance-rotation algorithm. Cached maps cannot be mutated by later opens,
+closes, expiration or eviction. The cache is process-local, never persisted
+as authority, and stores no RNG, actor permissions or gameplay outcomes.
+Poisoned synchronization fails explicitly rather than substituting an old map.
+
+The first canonical open-door profile exposed repeated full-map reconstruction:
+roughly9.57 seconds per debug tick versus26-28ms while all objects were initial.
+Exact-state reuse reduced the same open-door component to about125-128ms cold
+and27-30ms warm in debug, with byte-identical world/event results; optimized
+one/five-actor samples were below10ms. These are source-sized component results,
+not final server/browser performance or full-journey acceptance.
+
+Reproduce with the actual raw Runtime artifact, without altering its bytes:
+
+```sh
+cargo run --release --locked --manifest-path tools/m1-content/schema-check/Cargo.toml \
+  --example collision_profile -- /path/to/m1.csc 60 5
+```
+
+The profile labels its controlled physical-door selection and retains all
+536 canonical entities/46358 cells. The real five-second storage deadline and
+600ms source cadence are unchanged; actual player-door traversal is validated
+separately through the protocol journey.
+
 ## Live adapter: lifecycle and read-only views
 
 The parent `2030e97` adapter can use `apply_lifecycle` for authenticated

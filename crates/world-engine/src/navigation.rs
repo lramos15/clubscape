@@ -1,12 +1,14 @@
 use std::{
-    borrow::Cow,
     collections::{BTreeMap, VecDeque},
+    sync::Arc,
 };
 
 use clubscape_game_types::*;
 use clubscape_simulation::navigation::CollisionMap;
 
-use crate::{WorldEngine, invalid_state, runtime, unknown};
+use crate::{
+    WorldEngine, collision_cache::CollisionKey, invalid_state, runtime, unavailable, unknown,
+};
 
 pub(crate) const ROUTE_ORDER: [Direction; 8] = [
     Direction::West,
@@ -121,7 +123,7 @@ impl WorldEngine {
         &self,
         world: &WorldState,
         instance: Option<&InstanceId>,
-    ) -> GameResult<Cow<'_, CollisionMap>> {
+    ) -> GameResult<Arc<CollisionMap>> {
         if instance.is_none()
             && world.runtime.object_states.iter().all(|(id, state)| {
                 self.content
@@ -132,8 +134,26 @@ impl WorldEngine {
             })
             && world.runtime.temporary_objects.is_empty()
         {
-            return Ok(Cow::Borrowed(&self.collision));
+            return Ok(Arc::clone(&self.collision));
         }
+        let key = CollisionKey::from_world(world, instance)?;
+        let mut cache = self
+            .collision_cache
+            .lock()
+            .map_err(|_| unavailable("Physical collision cache lock is poisoned."))?;
+        if let Some(map) = cache.get(&key) {
+            return Ok(map);
+        }
+        let map = Arc::new(self.build_collision_map(world, instance)?);
+        cache.insert(key, Arc::clone(&map));
+        Ok(map)
+    }
+
+    pub(crate) fn build_collision_map(
+        &self,
+        world: &WorldState,
+        instance: Option<&InstanceId>,
+    ) -> GameResult<CollisionMap> {
         let mut cells = BTreeMap::new();
         if let Some(id) = instance {
             let state = world
@@ -225,7 +245,7 @@ impl WorldEngine {
                 .filter_map(|cell| cells.get(&cell.tile).copied())
                 .collect();
         }
-        CollisionMap::from_regions(regions.values()).map(Cow::Owned)
+        CollisionMap::from_regions(regions.values())
     }
 
     fn apply_collision_states(

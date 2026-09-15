@@ -530,6 +530,15 @@ edges, plane, distance, instance and target availability still apply. This
 query does not modify collision; a reachable cooking range remains nonwalkable.
 Wall-layer doors retain their explicit, separately validated face-query rules.
 
+Physical collision maps are immutable and use a bounded eight-entry derived
+cache. Its exact identity is the current transform selection, instance
+template, and instance-scoped temporary definitions/tiles, never tick or world
+revision. Same-tick changes therefore cannot reuse stale geometry. Actor
+traversal, occupancy and ownership checks remain separate and uncached.
+This is process-local derived data, not persisted authority; future physical
+inputs added to map construction must also be represented in the cache key.
+The original map-construction rules and all source masks remain unchanged.
+
 Traversal guards apply while routing and again to every consumed walking/running
 step. A diagonal checks both cardinal routes. Instance rules map source edges
 through their chunk rotation; a shared open door never grants another actor
