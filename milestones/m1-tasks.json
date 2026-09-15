@@ -12,12 +12,12 @@
       {"id": "78d01af9-70a4-4b02-8339-6a61eb377374", "task": "M1-BROWSER-SHELL"},
       {"id": "2766e089-44e5-4a1d-974e-7b03ad9c269d", "task": "M1-GAMEPLAY-UI-CONTRACTS"},
       {"id": "ac0f0856-44af-445b-bd90-6db7a1f4fc74", "task": "M1-SCENERY-PHASE-EVIDENCE"},
-      {"id": "81ac9884-4f39-4f27-b516-6e9a42b09b51", "task": "M1-HEADLESS-JOURNEY"},
-      {"id": "e6925772-df1f-4ff7-9efc-219f800a5a14", "task": "M1-GAMEPLAY-UI-REVIEW"}
+      {"id": "81ac9884-4f39-4f27-b516-6e9a42b09b51", "task": "M1-HEADLESS-JOURNEY"}
     ],
     "reserved": [],
     "queued": [],
     "parked": [
+      {"id": "e6925772-df1f-4ff7-9efc-219f800a5a14", "reason": "Bounded UI4 review complete: one medium source-travel interruption bypass in timed UI actions. Director repair M1-UI-TRAVEL-INTERRUPTION is active; this is not final candidate signoff."},
       {"id": "cdfad64d-9162-439f-a525-58e1114dd7f4", "reason": "Native preference/Skip/three-playlist controls64bd3257 integratedd13b3c7; parent41unit/41fullChrome checks and all275audio/1307pack hashes pass. Actual UI/shell persistence and source authority are separately owned; no automatic resumption."},
       {"id": "2a0ae699-6af8-45d5-90c7-3addfc56ee53", "reason": "Renewed five-invocation assessment complete; live creation/scene/window/baseline work, firstXP unverified after driverOutOfReach. No sixth invocation or automatic resumption."},
       {"id": "aab1ae0f-0238-4254-bff3-b7c046349c6b", "reason": "Shop capacity/identity fixes integrated as3310032+af75e17 with18 passing regressions; no automatic resumption."},
@@ -34,9 +34,27 @@
   },
   "tasks": [
     {
+      "id": "M1-UI-TRAVEL-INTERRUPTION",
+      "goal": "Apply the existing source travel interruption/refusal policy to timed UI actions so acknowledged activities cannot be discarded by pending travel.",
+      "status": "IMPLEMENTING",
+      "specs": ["spec/game-contracts.md", "crates/world-engine/src/actions.rs", "crates/world-engine/src/world.rs"],
+      "dependencies": ["M1-GAMEPLAY-UI-REVIEW"],
+      "allowed_paths": ["crates/world-engine/src/gameplay_ui.rs", "crates/world-engine/tests/ui_travel_interruption.rs", "crates/world-engine/README.md", "crates/server/src/game_service/tests/ui_travel.rs", "crates/server/src/game_service/tests.rs"],
+      "forbidden_paths": ["prompt.md", "assets/**", "content/**", "web/**", "crates/game-types/**", "crates/world-engine/src/actions.rs", "crates/world-engine/src/world.rs", "research/reference-pack/**", "tools/reference-pack/**"],
+      "outputs": ["Executable reproduction of the reviewed UI burial/teleport defect", "Shared-policy timed-UI interruption with atomic refusal/invalid-input rollback", "Noninterrupting chat/read-only controls retained"],
+      "validation_commands": ["cargo test --locked -p clubscape-world-engine --test ui_travel_interruption", "cargo clippy --locked -p clubscape-world-engine --all-targets -- -D warnings"],
+      "test_requirements": ["Real source AnotherAction permission used, not a hardcoded teleport cancellation", "Burial consumes only the selected bone and awards source XP after two ticks", "Forbidden interruptions and invalid actions preserve all prior state", "Read-only UI/chat do not consume an action phase or interrupt travel", "No content/schema/cadence/grant/RNG change or journey seeding"],
+      "acceptance": ["SQL m1-ui-travel-interruption records reproduced failure and executed positive/negative/source regressions; live M1 acceptance stays separate"],
+      "reserved_namespaces": [],
+      "source_notes": ["Independent reviewer found gameplay_ui.rs332-346 bypasses actions.rs18-29; pending_travel wins tick processing over the accepted InventoryAction. Concrete source case is bone burial during travel.tutorial.departure at stage.tutorial.teleport_channel."],
+      "parity_entries": [],
+      "adaptations": [],
+      "evidence": []
+    },
+    {
       "id": "M1-GAMEPLAY-UI-REVIEW",
       "goal": "Independently review the new authoritative UI4 transaction, state and migration implementation for high-confidence correctness defects.",
-      "status": "REVIEW",
+      "status": "DONE",
       "specs": ["spec/game-contracts.md", "spec/game-networking.md", "research/interface-contracts/verification.json"],
       "dependencies": ["M1-ENGINE-REVIEW", "M1-SHOP-REVIEW-FIXES", "M1-ACTOR-REVIEW-FIXES"],
       "allowed_paths": [],
@@ -49,7 +67,7 @@
       "source_notes": ["Source artifact6fdb60e4740372c5e299fe385875cfac32e04f22ea26ad17b53049296256c1b3; prior shop/actor fixes preserved. Backend follow-up controls run separately and are not part of this frozen review delta."],
       "parity_entries": [],
       "adaptations": [],
-      "evidence": []
+      "evidence": ["Reviewer e692 completed immutable f22fc99->ff37669 review: one medium/high-confidence source-bound finding. Timed UI item actions bypass source pending-travel interruption; accepted burial can be lost when travel takes tick priority and arrival clears the activity. Static trace only, no executable reproduction claimed. Director is reproducing/repairing under M1-UI-TRAVEL-INTERRUPTION; no final composed-client/security/style/M1 signoff."]
     },
     {
       "id": "M1-SCENERY-PHASE-EVIDENCE",
