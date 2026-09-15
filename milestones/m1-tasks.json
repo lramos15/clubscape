@@ -9,16 +9,15 @@
       {"id": "director", "task": "M1-FLEET-CONTRACTS"},
       {"id": "bb7f85f7-096a-4377-80cb-3e7eae196c6b", "task": "M1-BROWSER-RENDERER"},
       {"id": "cc864d7a-37cc-4869-a7b4-d484d01cede5", "task": "M1-BROWSER-UI"},
-      {"id": "cdfad64d-9162-439f-a525-58e1114dd7f4", "task": "M1-BROWSER-AUDIO"},
       {"id": "78d01af9-70a4-4b02-8339-6a61eb377374", "task": "M1-BROWSER-SHELL"},
       {"id": "81ac9884-4f39-4f27-b516-6e9a42b09b51", "task": "M1-HEADLESS-JOURNEY"},
-      {"id": "2766e089-44e5-4a1d-974e-7b03ad9c269d", "task": "M1-GAMEPLAY-UI-CONTRACTS"}
-    ],
-    "reserved": [
+      {"id": "2766e089-44e5-4a1d-974e-7b03ad9c269d", "task": "M1-GAMEPLAY-UI-CONTRACTS"},
       {"id": "ac0f0856-44af-445b-bd90-6db7a1f4fc74", "task": "M1-SOURCE-DYNAMIC-REFERENCES"}
     ],
+    "reserved": [],
     "queued": [],
     "parked": [
+      {"id": "cdfad64d-9162-439f-a525-58e1114dd7f4", "reason": "Native-calibrated audio and exact9asset supplement integratedf9e466d;29unit/32browser/85pack checks pass. Composed app/speaker/Mac/Edge acceptance remains separate; no automatic resumption."},
       {"id": "2a0ae699-6af8-45d5-90c7-3addfc56ee53", "reason": "Renewed five-invocation assessment complete; live creation/scene/window/baseline work, firstXP unverified after driverOutOfReach. No sixth invocation or automatic resumption."},
       {"id": "aab1ae0f-0238-4254-bff3-b7c046349c6b", "reason": "Shop capacity/identity fixes integrated as3310032+af75e17 with18 passing regressions; no automatic resumption."},
       {"id": "0f5ddddf-0aa0-4908-b0d3-1ffc6b1f7a20", "reason": "Actor presence/cadence fixes integrated as62a003c+e1076a8 with15 passing regressions; no automatic resumption."},
@@ -40,7 +39,7 @@
       "status": "IMPLEMENTING",
       "specs": ["tools/journey-tests/evidence/survival-tools-entry-dcec4a5.json", "research/journey-rules/tutorial.json", "spec/game-contracts.md"],
       "dependencies": ["M1-NONWALKING-CONTACT"],
-      "allowed_paths": ["tools/m1-content/progression.py", "tools/m1-content/test_dialogue_entries.py", "tools/m1-content/schema-check/examples/dialogue_entries.rs", "content/m1/**", "research/m1-bindings/**", "content/m1/README.md"],
+      "allowed_paths": ["tools/m1-content/dialogue_entries.py", "tools/m1-content/selectors3.py", "tools/m1-content/test_dialogue_entries.py", "tools/m1-content/schema-check/examples/dialogue_entries.rs", "content/m1/**", "research/m1-bindings/**", "content/m1/README.md"],
       "forbidden_paths": ["prompt.md", "crates/**", "web/**", "assets/**", "research/journey-rules/**", "research/reference-pack/**"],
       "outputs": ["Unambiguous source lesson and recovery entry selection", "No present-supply replacement or repeated reward", "Strict canonical regeneration and native/source regressions"],
       "validation_commands": ["python3 tools/m1-content/validate.py --repeat"],
@@ -55,7 +54,7 @@
     {
       "id": "M1-SOURCE-DYNAMIC-REFERENCES",
       "goal": "Capture bounded supplemental original-runtime evidence for required dynamic world layers under the already approved presentation target.",
-      "status": "READY",
+      "status": "IMPLEMENTING",
       "specs": ["tools/source-capture/README.md", "tools/source-capture/NATIVE_HUD.md", "spec/browser-implementation.md", "research/reference-pack/v1/comparison-policy.json"],
       "dependencies": ["M1-REFERENCE-APPROVAL"],
       "allowed_paths": ["tools/source-layer-capture/**", "assets/reference/osrs240/m1-dynamic/**", "research/source-layers/**"],
@@ -307,7 +306,7 @@
     {
       "id": "M1-BROWSER-AUDIO",
       "goal": "Implement actual original-source browser audio playback, source mixer/positional/music defaults and region/event/jingle/control lifecycle.",
-      "status": "IMPLEMENTING",
+      "status": "DONE",
       "specs": ["spec/browser-implementation.md", "web/shared/contracts.ts", "research/reference-pack/v1/audio-reference.json", "milestones/m1-audio-trigger-approval.json"],
       "dependencies": ["M1-REFERENCE-APPROVAL"],
       "allowed_paths": ["web/audio/**", "tools/browser-audio-tests/**", "research/browser-audio-policy/**", "assets/source/osrs/audio-supplement/**", "assets/manifests/osrs/audio-m1-supplement.json"],
@@ -320,7 +319,7 @@
       "source_notes": ["Corrected audio manifest and approved pack"],
       "parity_entries": [],
       "adaptations": ["adaptation.m1.learning_the_ropes_completion_audio", "adaptation.m1.ordinary_food_audio"],
-      "evidence": ["Nativecalibrationd8eb730 andCookdeltafixa0ab06d integrated888f938/f74652a.23nativeprobefamilies,25unit/27realChromechecksreportedpass; source255/127/127defaults,nonlinearsliders,position/morph/fade/musicpoliciesbound.Original266files/cacheunchanged.", "Sameworker nowowns ONLYadditivepublication/consumption of4requiredmusicgroups64/327/163/145 andnative255representations forjingles40/54/58/64/65, backedbypublication-needs.json hashes. Frozenbaseaudio/referencepack mustremainunchanged; no limiter orfakegain substitute. RealM1/speaker/Mac/Edgeacceptance staysseparate."]
+      "evidence": ["Nativecalibration888f938/Cookdeltaf74652a +originalsupplementf9e466d completeboundedcomponent.9newnative255assets (4Modernmusic+5jingles) consumedstrictly; manifest840aef91bac9a1fd042bdb1c3662ff92a378e279f48335108730e168af550d91. Original266files/1307packhashesunchanged.", "29unit/32realChrome/85packchecks pass; exactoriginalPCM,zeronewclipping and0msreplayschedulingerror. Realnonlinearsliders/position/morph/fade/musicstatecontinuation andcommittedCookleveldelta/dismissal implemented. Actualcomposedapp/speakers/Mac/Edge/M1acceptance remains separate; workerparked."]
     },
     {
       "id": "M1-BROWSER-SHELL",
