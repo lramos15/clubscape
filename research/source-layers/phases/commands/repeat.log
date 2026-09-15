@@ -1,0 +1,4 @@
+ORIGINAL_PHASE_REPLAY tutorial-door-closed 9dca3aa324a3806e26c6fecc059c7d6be698a5c04f3272acd6dc8f33fc67033c
+ORIGINAL_PHASE_REPLAY tutorial-door-open 7e933c5457c260297611d3f15bafb6557c16f4ebe1f72a1ad831171f80a3f60f
+ORIGINAL_PHASE_REPLAY tutorial-roofs-hidden 51a34b9acdc1cda789ab422c5f0187cf9755688b1890dc46ec9519da132de308
+{"result":"passed","cases":3,"placements_per_case":3,"observations":27,"original_png_and_native_pixel_hashes_unchanged":true,"candidate_evidence_used":false,"animation_targets_modified":false}
