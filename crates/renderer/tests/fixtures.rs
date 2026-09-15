@@ -356,6 +356,7 @@ fn render_scene_fixture(fixture: &SceneFixture) -> (Vec<i32>, usize) {
         focal_z: (fixture.focal_tile[1] - fixture.base[1]) * 128,
         center_on_camera: true,
         far_clip: 32768,
+        animation_cycles: 0,
     };
     let mut tris: Vec<Tri> = Vec::new();
     drawer.begin_frame(&scene);

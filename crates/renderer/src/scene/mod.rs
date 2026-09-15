@@ -1,6 +1,7 @@
 //! Original scene structures (`ez`) as exported by `tools/render-assets` and the exact port of
 //! the original scene traversal that turns them into the ordered triangle stream.
 
+pub mod block;
 pub mod draw;
 pub mod tile;
 pub mod visibility;
@@ -160,9 +161,98 @@ pub struct SceneData {
     pub zone_dynamic: HashMap<(i32, i32), Vec<usize>>,
     /// Model content hashes referenced by index from the records above.
     pub model_keys: Vec<String>,
+    /// Baked animated scenery sets (block scenes only; fixture scenes are static exports).
+    pub animated: Vec<block::AnimatedSet>,
+    /// Per-placement animation instances referenced as `-(index) - 2` model references.
+    pub animated_instances: Vec<block::AnimatedInstance>,
 }
 
 impl SceneData {
+    /// An empty extended grid (all tiles absent) for block assembly.
+    #[allow(clippy::too_many_arguments)]
+    pub fn empty_grid(
+        name: String,
+        base_x: i32,
+        base_y: i32,
+        grid: i32,
+        planes: i32,
+        offset: i32,
+        main: i32,
+        tile_count: usize,
+    ) -> Self {
+        SceneData {
+            name,
+            base_x,
+            base_y,
+            width: grid,
+            height: grid,
+            planes,
+            draw_distance: 25,
+            offset,
+            min_x: 0,
+            max_x: main,
+            min_y: 0,
+            max_y: main,
+            main_scene: true,
+            roof_mode: 0,
+            y_bits: 8,
+            plane_shift: 16,
+            plane_stride: 65536,
+            x_stride: 256,
+            tile_count,
+            min_level: 0,
+            flags: vec![0; tile_count],
+            link: vec![0; tile_count],
+            object_count: vec![0; tile_count],
+            object_flags: vec![0; tile_count * 5],
+            heights: vec![0; (planes * (grid + 1) * (grid + 1)) as usize],
+            roofs: vec![0; (planes * grid * grid) as usize],
+            paints: HashMap::new(),
+            tile_models: HashMap::new(),
+            walls: HashMap::new(),
+            wall_decorations: HashMap::new(),
+            floor_decorations: HashMap::new(),
+            game_objects: Vec::new(),
+            slots: HashMap::new(),
+            zone_dynamic: HashMap::new(),
+            model_keys: Vec::new(),
+            animated: Vec::new(),
+            animated_instances: Vec::new(),
+        }
+    }
+
+    #[inline]
+    pub fn set_height(&mut self, plane: i32, x: i32, y: i32, value: i32) {
+        let w = (self.width + 1) as usize;
+        let h = (self.height + 1) as usize;
+        self.heights[plane as usize * w * h + x as usize * h + y as usize] = value;
+    }
+
+    #[inline]
+    pub fn set_roof(&mut self, plane: i32, x: i32, y: i32, value: i32) {
+        let w = self.width as usize;
+        let h = self.height as usize;
+        self.roofs[plane as usize * w * h + x as usize * h + y as usize] = value;
+    }
+
+    /// Resolves a model reference for the current animation clock: static indices pass
+    /// through; animated instances select the source frame (or the plain model once a one-shot
+    /// sequence finished).
+    #[inline]
+    pub fn resolve_model(&self, reference: i32, cycles: i64) -> i32 {
+        if reference > -2 {
+            return reference;
+        }
+        let Some(instance) = self.animated_instances.get((-(reference) - 2) as usize) else {
+            return -1;
+        };
+        let set = &self.animated[instance.set];
+        match set.frame_at(instance.start_frame, instance.start_cycle, cycles) {
+            Some(frame) => set.models.get(frame).copied().unwrap_or(-1),
+            None => instance.plain,
+        }
+    }
+
     pub fn from_chunks(data: &[u8]) -> Result<Self, RenderError> {
         let chunks = Chunks::parse(data)?;
         let h = chunks.ints("SCHD")?;
@@ -222,6 +312,8 @@ impl SceneData {
                 .lines()
                 .map(|s| s.to_string())
                 .collect(),
+            animated: Vec::new(),
+            animated_instances: Vec::new(),
         };
         if scene.link.len() != tile_count
             || scene.object_count.len() != tile_count

@@ -26,14 +26,17 @@ use std::sync::{Arc, Mutex};
 use wasm_bindgen::prelude::*;
 use wasm_bindgen_futures::future_to_promise;
 
-use crate::core::{Camera, ModelFixture, RendererCore};
+use crate::core::{Camera, ModelFixture, RendererCore, WorldPick};
 use crate::error::RenderError;
 use crate::gpu::{GpuRasterizer, GpuTextures, pack_frame};
 use crate::palette::Palette;
-use crate::scene::draw::PickTarget;
 
 fn js_err(error: impl std::fmt::Display) -> JsValue {
     JsValue::from_str(&error.to_string())
+}
+
+fn json_string(value: &str) -> String {
+    serde_json::to_string(value).unwrap_or_else(|_| "\"\"".into())
 }
 
 enum FrameKind {
@@ -509,25 +512,96 @@ impl WasmRenderer {
     /// JSON `{"kind":"tile","tile":{...}}` / `{"kind":"entity","id":..,"tile":{...}}` or null.
     pub fn pick(&self, x: i32, y: i32) -> Option<String> {
         let mut inner = self.inner.borrow_mut();
-        let (base_x, base_y) = inner.core.scene_base()?;
-        let target = inner.core.pick(x, y)?;
-        Some(match target {
-            PickTarget::Tile { plane, x, y } => format!(
-                r#"{{"kind":"tile","tile":{{"x":{},"y":{},"plane":{}}}}}"#,
-                x + base_x,
-                y + base_y,
-                plane
-            ),
-            PickTarget::Object { hash, plane, x, y } => {
+        let pick = inner.core.pick_world(x, y)?;
+        let tile = |x: i32, y: i32, plane: i32| format!(r#"{{"x":{x},"y":{y},"plane":{plane}}}"#);
+        Some(match pick {
+            WorldPick::Tile { x, y, plane } => {
+                format!(r#"{{"kind":"tile","tile":{}}}"#, tile(x, y, plane))
+            }
+            WorldPick::Actor { id, x, y, plane } => {
                 format!(
-                    r#"{{"kind":"entity","id":"{}","tile":{{"x":{},"y":{},"plane":{}}}}}"#,
-                    hash,
-                    x + base_x,
-                    y + base_y,
-                    plane
+                    r#"{{"kind":"entity","id":{},"tile":{}}}"#,
+                    json_string(&id),
+                    tile(x, y, plane)
                 )
             }
+            WorldPick::Scenery {
+                object_id,
+                kind,
+                x,
+                y,
+                plane,
+                span_x,
+                span_y,
+                entity,
+            } => {
+                let detail = format!(
+                    r#""scenery":{{"objectId":{object_id},"type":{kind},"spanX":{span_x},"spanY":{span_y}}}"#
+                );
+                match entity {
+                    // Scenery the WorldView lists as an interactable object entity.
+                    Some(id) => format!(
+                        r#"{{"kind":"entity","id":{},"tile":{},{detail}}}"#,
+                        json_string(&id),
+                        tile(x, y, plane)
+                    ),
+                    // Plain scenery: a tile pick for the contract, with the source object noted.
+                    None => format!(r#"{{"kind":"tile","tile":{},{detail}}}"#, tile(x, y, plane)),
+                }
+            }
         })
+    }
+
+    /// Loads a world block (64x64 map square) for scene assembly.
+    pub fn load_block(
+        &self,
+        square: i32,
+        block_bytes: Vec<u8>,
+        pack_bytes: Vec<u8>,
+    ) -> Result<(), JsValue> {
+        self.inner
+            .borrow_mut()
+            .core
+            .load_block(square, &block_bytes, &pack_bytes)
+            .map_err(js_err)
+    }
+
+    pub fn has_block(&self, square: i32) -> bool {
+        self.inner.borrow().core.has_block(square)
+    }
+
+    pub fn unload_block(&self, square: i32) {
+        self.inner.borrow_mut().core.unload_block(square);
+    }
+
+    /// Map squares (`x << 8 | y`) a scene at `base` needs, as the original loader requests them.
+    pub fn squares_for_base(base_x: i32, base_y: i32) -> Vec<i32> {
+        RendererCore::squares_for_base(base_x, base_y)
+    }
+
+    /// Original scene base for a player tile (`((tile >> 3) - 6) * 8`).
+    pub fn base_for_tile(x: i32, y: i32) -> Vec<i32> {
+        let (bx, by) = RendererCore::base_for_tile(x, y);
+        vec![bx, by]
+    }
+
+    /// Whether the tile is within `margin` tiles of the current scene edge (or no scene exists).
+    pub fn needs_recenter(&self, x: i32, y: i32, margin: i32) -> bool {
+        self.inner.borrow().core.needs_recenter(x, y, margin)
+    }
+
+    /// Assembles the scene around `base` from loaded blocks; returns the missing squares.
+    pub fn assemble_scene(
+        &self,
+        base_x: i32,
+        base_y: i32,
+        now_ms: f64,
+    ) -> Result<Vec<i32>, JsValue> {
+        self.inner
+            .borrow_mut()
+            .core
+            .assemble_scene(base_x, base_y, true, now_ms)
+            .map_err(js_err)
     }
 
     pub fn last_frame_triangles(&self) -> u32 {

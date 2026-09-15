@@ -109,6 +109,54 @@ final class ChunkWriter
         return bytes.toByteArray();
     }
 
+    /** Serialized chunks with the named tags removed (header kept); used for shape hashing. */
+    byte[] toBytesExcept(String... tags)
+    {
+        java.util.Set<String> skip = java.util.Set.of(tags);
+        byte[] data = toBytes();
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        out.write(data, 0, 8);
+        int offset = 8;
+        while (offset + 8 <= data.length)
+        {
+            String tag = new String(data, offset, 4, StandardCharsets.US_ASCII);
+            int length = ByteBuffer.wrap(data, offset + 4, 4).order(ByteOrder.LITTLE_ENDIAN).getInt();
+            if (!skip.contains(tag)) out.write(data, offset, 8 + length);
+            offset += 8 + length;
+        }
+        return out.toByteArray();
+    }
+
+    /** Payload of the first chunk with `tag` in a serialized chunk file, or null. */
+    static byte[] chunkOf(byte[] data, String tag)
+    {
+        int offset = 8;
+        while (offset + 8 <= data.length)
+        {
+            String current = new String(data, offset, 4, StandardCharsets.US_ASCII);
+            int length = ByteBuffer.wrap(data, offset + 4, 4).order(ByteOrder.LITTLE_ENDIAN).getInt();
+            if (current.equals(tag)) return java.util.Arrays.copyOfRange(data, offset + 8, offset + 8 + length);
+            offset += 8 + length;
+        }
+        return null;
+    }
+
+    /** Appends the named chunks of another writer verbatim. */
+    ChunkWriter copyChunks(ChunkWriter source, String... tags)
+    {
+        java.util.Set<String> wanted = java.util.Set.of(tags);
+        byte[] data = source.toBytes();
+        int offset = 8;
+        while (offset + 8 <= data.length)
+        {
+            String tag = new String(data, offset, 4, StandardCharsets.US_ASCII);
+            int length = ByteBuffer.wrap(data, offset + 4, 4).order(ByteOrder.LITTLE_ENDIAN).getInt();
+            if (wanted.contains(tag)) bytes.write(data, offset, 8 + length);
+            offset += 8 + length;
+        }
+        return this;
+    }
+
     String write(Path file) throws Exception
     {
         Files.createDirectories(file.getParent());

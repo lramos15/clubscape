@@ -283,7 +283,7 @@ pub fn parse_model_pack(data: &[u8]) -> Result<Vec<(String, Model)>, RenderError
     }
     let count = u32::from_le_bytes(data[4..8].try_into().expect("4 bytes")) as usize;
     let mut offset = 8usize;
-    let mut out = Vec::with_capacity(count);
+    let mut out: Vec<(String, Model)> = Vec::with_capacity(count);
     for _ in 0..count {
         if offset + 8 > data.len() {
             return Err(RenderError::Format("truncated model pack entry".into()));
@@ -299,7 +299,73 @@ pub fn parse_model_pack(data: &[u8]) -> Result<Vec<(String, Model)>, RenderError
         }
         let key = String::from_utf8(data[offset..offset + key_len].to_vec())
             .map_err(|e| RenderError::Format(e.to_string()))?;
-        let model = Model::from_chunks(&data[offset + key_len..end])?;
+        let body = &data[offset + key_len..end];
+        let chunks = Chunks::parse(body)?;
+        let model = match chunks.ints_opt("BASE")? {
+            // Ground-contoured copy: same lit geometry/colours as an earlier entry with its own
+            // header, bounds and vertex Y.
+            Some(base) => {
+                let index = *base
+                    .first()
+                    .ok_or_else(|| RenderError::Format("empty BASE".into()))?
+                    as usize;
+                let (_, base_model) = out.get(index).ok_or_else(|| {
+                    RenderError::InvalidAsset(format!("model pack BASE {index} precedes nothing"))
+                })?;
+                let mut model: Model = base_model.clone();
+                let header = chunks.ints("MDHD")?;
+                let b = chunks.ints("BNDC")?;
+                if header.len() < 8 || b.len() < 5 {
+                    return Err(RenderError::Format("model delta header".into()));
+                }
+                // Face-less placeholder models validate to zero counts; otherwise the delta must
+                // describe the same topology as its base.
+                let empty_base = model.vertex_count == 0 && model.face_count == 0;
+                if !empty_base
+                    && (header[0] as usize != model.vertex_count
+                        || header[1] as usize != model.face_count)
+                {
+                    return Err(RenderError::InvalidAsset(
+                        "model delta counts differ from base".into(),
+                    ));
+                }
+                if empty_base && header[1] != 0 {
+                    return Err(RenderError::InvalidAsset(
+                        "model delta adds faces to an empty base".into(),
+                    ));
+                }
+                if let Some(xs) = chunks.floats_opt("VRTX")? {
+                    model.xs = xs;
+                }
+                if let Some(ys) = chunks.floats_opt("VRTY")? {
+                    model.ys = ys;
+                }
+                if let Some(zs) = chunks.floats_opt("VRTZ")? {
+                    model.zs = zs;
+                }
+                if model.xs.len() < model.vertex_count
+                    || model.ys.len() < model.vertex_count
+                    || model.zs.len() < model.vertex_count
+                {
+                    return Err(RenderError::InvalidAsset(
+                        "model delta vertex arrays short".into(),
+                    ));
+                }
+                model.override_faces = header[3];
+                model.transparency = header[4];
+                model.clickable = header[5] != 0;
+                model.render_mode = header[6];
+                model.bounds = Bounds {
+                    bucket_offset: b[0],
+                    radius: b[1],
+                    bottom: b[2],
+                    height: b[3],
+                    bucket_range: b[4],
+                };
+                model
+            }
+            None => Model::from_chunks(body)?,
+        };
         out.push((key, model));
         offset = end;
     }

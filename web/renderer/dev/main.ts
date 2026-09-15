@@ -35,6 +35,8 @@ declare global {
       setWorld(world: WorldView | null): void; pause(): void; resume(): void; frameOnce(): Promise<RenderFrame | null>;
       /** Live resize with the source zoom curve for the new height (what a shell does on resize). */
       resizeTo(width: number, height: number): void;
+      /** Region mode: move the developer player (camera follows, scene recenters like the original). */
+      walkTo?(x: number, y: number): void;
     };
     __clubscapeBenchmarkV1?: {
       bindRun?(binding: { contractId: string; contractSha256: string }): void;
@@ -67,6 +69,19 @@ function actorsWorld(fixture: FixtureCamera): WorldView {
   };
 }
 
+/** Developer WorldView with the penguin player on a tile (region mode). */
+function devWorld(x: number, y: number, region: string): WorldView {
+  return {
+    revision: "dev", tick: "0",
+    player: {
+      id: "player-dev", displayName: "dev", appearance: {}, region, tile: { x, y, plane: 0 },
+      instance: null, inventory: [], equipment: [], skills: [], hitpoints: 10, prayerPoints: 1, runEnergy: 100, questPoints: 0,
+      tutorialStage: "", tutorialInstruction: "", quests: [], unlockedInterfaces: [], activePrayers: [], activity: "idle", animation: "5668", settings: [],
+    },
+    entities: [], groundItems: [], dialogue: null, bank: null, shop: null, recovery: null, messages: [],
+  };
+}
+
 async function main(): Promise<void> {
   const canvas = document.getElementById("surface") as HTMLCanvasElement;
   const status = document.getElementById("status") as HTMLDivElement;
@@ -74,8 +89,9 @@ async function main(): Promise<void> {
   const width = Number(param("w", "1920"));
   const height = Number(param("h", "1080"));
   const modelMode = param("mode", "scene") === "model";
+  const regionMode = /^region[.:]|^\d{4,5}$|^blocks@/.test(sceneId);
   const fixture = FIXTURES.find((f) => f.scene === sceneId);
-  if (!fixture && !modelMode) throw new Error(`unknown fixture scene ${sceneId}`);
+  if (!fixture && !modelMode && !regionMode) throw new Error(`unknown fixture scene ${sceneId}`);
   const state: DevState = { ready: false, error: null, handle: null, frames: [], sceneId, paused: false };
   let pending: RenderFrame[] = [];
   window.__clubscapeDev = {
@@ -129,6 +145,44 @@ async function main(): Promise<void> {
       // Model capture replay: the capture script drives handle.frameModelFixture directly.
       state.ready = true;
       publish();
+      return;
+    }
+    if (regionMode) {
+      // Region mode: the world is assembled from blocks around the player; the camera follows a
+      // developer player tile (`?px=&py=`) with the source fixture pitch/zoom.
+      await handle.loadScene(sceneId);
+      const px = Number(param("px", "3222"));
+      const py = Number(param("py", "3218"));
+      const follow = (x: number, y: number) => {
+        handle.camera({
+          x: x * 128 + 64, height: Number(param("cam_h", "-1540")), y: (y - 8) * 128, pitch: 2048, yaw: Number(param("yaw", "0")),
+          unitsPerTurn: 16384, zoom: sourceZoomForViewportHeight(canvas.height), near: 50, far: 32768,
+        });
+        handle.update(devWorld(x, y, sceneId));
+      };
+      follow(px, py);
+      window.__clubscapeDev.walkTo = (x: number, y: number) => { follow(x, y); };
+      state.ready = true;
+      publish();
+      if (param("status", "0") === "1") status.hidden = false;
+      const loop = async () => {
+        if (!state.paused) {
+          try {
+            const frame = await handle.frame(performance.now());
+            if (frame && !status.hidden) {
+              const d = handle.diagnostics();
+              status.textContent = `${d.sceneId} base=${d.sceneBase?.x},${d.sceneBase?.y} squares=${d.loadedSquares.length} #${frame.sequence} prims=${frame.primitives} gpu=${frame.gpuDurationMs?.toFixed(2) ?? "n/a"}ms`;
+            }
+          } catch (error) {
+            state.error = String(error);
+            publish();
+            console.error(error);
+            return;
+          }
+        }
+        requestAnimationFrame(() => { void loop(); });
+      };
+      void loop();
       return;
     }
     if (!fixture) throw new Error(`unknown fixture scene ${sceneId}`);

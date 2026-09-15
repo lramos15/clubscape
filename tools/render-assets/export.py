@@ -50,7 +50,7 @@ def normalize(value):
 
 # Raw scene buffers are large (5-15 MB each) and reproducible; only their gzip form is published.
 # A raw file may therefore be absent when its .gz twin verifies (see `unpack`).
-COMPRESSED_PREFIXES = ("scenes/",)
+COMPRESSED_PREFIXES = ("scenes/", "blocks/")
 
 
 def gzip_bytes(data: bytes) -> bytes:
@@ -78,7 +78,7 @@ def compress_scenes(output: Path) -> int:
                        "decompressed_size_bytes": len(data)},
         }
         written += 1
-    for scene in manifest.get("scenes", []):
+    for scene in [*manifest.get("scenes", []), *manifest.get("blocks", [])]:
         for key in ("file", "models_file"):
             if key in scene and (scene[key] + ".gz") in manifest["files"]:
                 scene[key + "_gz"] = scene[key] + ".gz"
@@ -114,7 +114,9 @@ def verify_manifest(output: Path) -> dict:
     if manifest["source_cache_id"] != 2695 or manifest["source_revision"] != 240 or manifest["brightness"] != 0.8:
         raise ValueError("Render asset manifest identity differs from the approved source selection")
     checked = 0
-    optional_prefixes = ("models/baked/", "tables.bin")
+    # Validation bakes, trig tables and the world blocks (reproducible, ~75 MB gzip) are not
+    # published; their hashes still pin the reproduction.
+    optional_prefixes = ("models/baked/", "tables.bin", "blocks/")
     for name, record in manifest["files"].items():
         path = output / name
         if not path.is_file():
@@ -135,7 +137,7 @@ def main() -> int:
     parser.add_argument("--source", type=Path)
     parser.add_argument("--output", type=Path, default=DEFAULT_OUTPUT)
     parser.add_argument("--profile", default="all",
-                        choices=["all", "tables", "palette", "textures", "models", "npcs", "scenes", "prune-textures", "compress", "unpack"])
+                        choices=["all", "tables", "palette", "textures", "models", "npcs", "scenes", "scenes-pinned", "blocks", "prune-textures", "compress", "unpack"])
     parser.add_argument("--verify-only", action="store_true")
     parser.add_argument("--java-home", type=Path, default=Path.home() / ".local/share/jdks/temurin-17.0.20.1+1")
     parser.add_argument("extra", nargs="*", help="Profile-specific arguments passed to the Java exporter")
@@ -154,6 +156,9 @@ def main() -> int:
         print(json.dumps(verify_manifest(args.output), separators=(",", ":")))
         return 0
     capture = load_capture_module()
+    if args.profile == "blocks" and not args.extra:
+        # The M1 world: every full source map square the content pack retains.
+        args.extra = sorted(path.name.split(".")[0] for path in (ROOT / "content/m1/geometry").glob("*.json.gz"))
     if args.source is None:
         reused = ROOT.parent / "m1-runtime-inputs/.local/current-source"
         args.source = reused if reused.exists() else ROOT / ".local/current-source"
@@ -178,13 +183,13 @@ def main() -> int:
         print(log[-8000:])
     result.check_returncode()
     for line in log.splitlines():
-        if line.startswith(("TABLES", "PALETTE", "TEXTURES", "MODEL", "NPCS", "SCENE", "RENDER_EXPORT_OK")):
+        if line.startswith(("TABLES", "PALETTE", "TEXTURES", "MODEL", "NPCS", "SCENE", "BLOCK", "RENDER_EXPORT_OK")):
             print(line)
     manifest_path = args.output / "manifest.json"
     manifest = normalize(json.loads(manifest_path.read_text()))
     manifest["brightness"] = 0.8
     manifest_path.write_text(json.dumps(manifest, indent=1) + "\n")
-    if args.profile in ("all", "scenes"):
+    if args.profile in ("all", "scenes", "blocks"):
         print(f"COMPRESS {compress_scenes(args.output)} buffers")
     print(json.dumps(verify_manifest(args.output), separators=(",", ":")))
     return 0

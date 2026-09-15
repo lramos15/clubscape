@@ -5,3 +5,8 @@
 # Raw scene buffers (5-15 MB each) are published only as deterministic gzip twins (scenes/*.gz);
 # `tools/render-assets/export.py --profile unpack` restores them for the native tests.
 /scenes/*.bin
+# Deterministic frame-0 validation exports used by the block-assembly tests (not runtime inputs).
+/scenes/*.pinned*
+# World blocks (61 map squares, ~75 MB gzip) are reproducible with `export.py --profile blocks`;
+# their hashes are in manifest.json and the renderer streams them per square.
+/blocks/

@@ -302,6 +302,7 @@ fn scene_triangles(case: &SceneCase, palette: &Palette, state: RasterState) -> V
         focal_z: (case.focal[1] - case.base[1]) * 128,
         center_on_camera: true,
         far_clip: 32768,
+        animation_cycles: 0,
     };
     let mut tris = Vec::new();
     drawer.begin_frame(&scene);

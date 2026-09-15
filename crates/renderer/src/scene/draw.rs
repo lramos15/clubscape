@@ -49,6 +49,8 @@ pub struct SceneView {
     pub center_on_camera: bool,
     /// `fq.ae()`: far clip in units.
     pub far_clip: i32,
+    /// Client cycles (20 ms) elapsed on the scene's animation clock; selects baked scenery frames.
+    pub animation_cycles: i64,
 }
 
 /// What a triangle belongs to, for picking.
@@ -118,6 +120,7 @@ pub const TEMP_MODEL_BASE: i32 = 1 << 24;
 pub struct SceneDrawer {
     pub state: RasterState,
     palette: Vec<i32>,
+    animation_cycles: i64,
     flags: Vec<i32>,
     object_count: Vec<i8>,
     link: Vec<i8>,
@@ -165,6 +168,7 @@ impl SceneDrawer {
         Self {
             state,
             palette: palette.to_vec(),
+            animation_cycles: 0,
             flags: scene.flags.clone(),
             object_count: scene.object_count.clone(),
             link: scene.link.clone(),
@@ -389,6 +393,7 @@ impl SceneDrawer {
         let t = tables();
         self.picks.clear();
         self.missing_models.clear();
+        self.animation_cycles = view.animation_cycles;
         // dh
         self.cp = view
             .camera_x
@@ -551,6 +556,7 @@ impl SceneDrawer {
     /// `ez.zm` → `fx.xm`: draw a model at a scene position.
     fn draw_model<M: ModelSource>(
         &mut self,
+        scene: &SceneData,
         models: &M,
         temp_models: &[Model],
         model_index: i32,
@@ -561,6 +567,7 @@ impl SceneDrawer {
         pick: u32,
         out: &mut Vec<Tri>,
     ) {
+        let model_index = scene.resolve_model(model_index, self.animation_cycles);
         if model_index < 0 {
             return;
         }
@@ -738,6 +745,7 @@ impl SceneDrawer {
                         if let Some(w) = scene.walls.get(&n20).cloned() {
                             let pick = self.pick_object(w.hash, 0, n26, n27);
                             self.draw_model(
+                                scene,
                                 models,
                                 temp_models,
                                 w.model_a,
@@ -756,6 +764,7 @@ impl SceneDrawer {
                             let o = self.object(scene, id).clone();
                             let pick = self.pick_object(o.hash, 0, n26, n27);
                             self.draw_model(
+                                scene,
                                 models,
                                 temp_models,
                                 o.model,
@@ -818,6 +827,7 @@ impl SceneDrawer {
                         if w.orientation_a & n30 != 0 {
                             let pick = self.pick_object(w.hash, n23, n26, n27);
                             self.draw_model(
+                                scene,
                                 models,
                                 temp_models,
                                 w.model_a,
@@ -832,6 +842,7 @@ impl SceneDrawer {
                         if w.orientation_b & n30 != 0 {
                             let pick = self.pick_object(w.hash, n23, n26, n27);
                             self.draw_model(
+                                scene,
                                 models,
                                 temp_models,
                                 w.model_b,
@@ -850,6 +861,7 @@ impl SceneDrawer {
                         if d.orientation & n30 != 0 {
                             let pick = self.pick_object(d.hash, n23, n26, n27);
                             self.draw_model(
+                                scene,
                                 models,
                                 temp_models,
                                 d.model_a,
@@ -869,6 +881,7 @@ impl SceneDrawer {
                             if n13 < n12 {
                                 let pick = self.pick_object(d.hash, n23, n26, n27);
                                 self.draw_model(
+                                    scene,
                                     models,
                                     temp_models,
                                     d.model_a,
@@ -882,6 +895,7 @@ impl SceneDrawer {
                             } else if d.model_b >= 0 {
                                 let pick = self.pick_object(d.hash, n23, n26, n27);
                                 self.draw_model(
+                                    scene,
                                     models,
                                     temp_models,
                                     d.model_b,
@@ -901,6 +915,7 @@ impl SceneDrawer {
                         if let Some(f) = scene.floor_decorations.get(&n2).cloned() {
                             let pick = self.pick_object(f.hash, n23, n26, n27);
                             self.draw_model(
+                                scene,
                                 models,
                                 temp_models,
                                 f.model,
@@ -960,6 +975,7 @@ impl SceneDrawer {
                     if let Some(w) = scene.walls.get(&n2).cloned() {
                         let pick = self.pick_object(w.hash, n23, n26, n27);
                         self.draw_model(
+                            scene,
                             models,
                             temp_models,
                             w.model_a,
@@ -1080,6 +1096,7 @@ impl SceneDrawer {
                     let o = self.object(scene, id).clone();
                     let pick = self.pick_object(o.hash, n23, o.min_x, o.min_y);
                     self.draw_model(
+                        scene,
                         models,
                         temp_models,
                         o.model,
@@ -1150,6 +1167,7 @@ impl SceneDrawer {
                         if d.orientation & self.wall_direction(n2) != 0 {
                             let pick = self.pick_object(d.hash, n23, n26, n27);
                             self.draw_model(
+                                scene,
                                 models,
                                 temp_models,
                                 d.model_a,
@@ -1169,6 +1187,7 @@ impl SceneDrawer {
                             if n16 >= n17 {
                                 let pick = self.pick_object(d.hash, n23, n26, n27);
                                 self.draw_model(
+                                    scene,
                                     models,
                                     temp_models,
                                     d.model_a,
@@ -1182,6 +1201,7 @@ impl SceneDrawer {
                             } else if d.model_b >= 0 {
                                 let pick = self.pick_object(d.hash, n23, n26, n27);
                                 self.draw_model(
+                                    scene,
                                     models,
                                     temp_models,
                                     d.model_b,
@@ -1202,6 +1222,7 @@ impl SceneDrawer {
                         if w.orientation_b & n50 != 0 {
                             let pick = self.pick_object(w.hash, n23, n26, n27);
                             self.draw_model(
+                                scene,
                                 models,
                                 temp_models,
                                 w.model_b,
@@ -1216,6 +1237,7 @@ impl SceneDrawer {
                         if w.orientation_a & n50 != 0 {
                             let pick = self.pick_object(w.hash, n23, n26, n27);
                             self.draw_model(
+                                scene,
                                 models,
                                 temp_models,
                                 w.model_a,

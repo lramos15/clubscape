@@ -78,6 +78,14 @@ impl<'a> Chunks<'a> {
         }
     }
 
+    pub fn floats_opt(&self, tag: &str) -> Result<Option<Vec<f32>>, RenderError> {
+        if self.has(tag) {
+            self.floats(tag).map(Some)
+        } else {
+            Ok(None)
+        }
+    }
+
     pub fn floats(&self, tag: &str) -> Result<Vec<f32>, RenderError> {
         let raw = self.raw(tag)?;
         if raw.len() % 4 != 0 {

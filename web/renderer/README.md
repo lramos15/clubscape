@@ -49,6 +49,14 @@ ids/hashes, rendered frame count, last frame, device-loss reason) and the develo
   entity (`id` is the scene object hash or the entity id hash). It never mutates state.
 * `resize(w, h)` resizes the canvas, surface and projection; call `camera()` again with the new
   zoom.
+* Region scenes: `loadScene("region.osrs.12850")` (content region id) or a bare map square id
+  assembles the world from the manifest's blocks around that square, exactly as the original
+  builds a 104×104 scene around the player's chunk. Afterwards `update(world)` recenters when the
+  player comes within 16 tiles of the scene edge (`base = ((tile >> 3) - 6) * 8`), streaming the
+  needed squares (gzip, hash-verified) and dropping distant ones; `diagnostics().sceneBase` /
+  `loadedSquares` expose the state. Squares outside the exported world stay empty, as unloaded
+  map squares do in the original. Frames rendered while the player's tile is outside the loaded
+  scene report `entities skipped` rather than drawing a substitute.
 
 ## Building
 
@@ -91,9 +99,12 @@ the source PNGs (2073600/2073600 pixels), ≈ 59–60 GPU-completed fps at 1920�
 
 ## Contract notes for the shell
 
-* Scene ids are the exported names: `lumbridge-castle-plaza`, `lumbridge-river-bridge`,
+* Scene ids: the fixture names `lumbridge-castle-plaza`, `lumbridge-river-bridge`,
   `tutorial-starting-house`, `tutorial-survival-coast`, `lumbridge-windmill-route`
-  (`FIXTURE_SCENE_IDS`). The manifest is the source of truth for further regions.
+  (`FIXTURE_SCENE_IDS`, static captures) and region ids `region.osrs.<square>` /
+  `regionSceneId(square)` for the streamed world (`PlayerView.region` uses the same form).
+* `ScenePick` for scenery carries an extra `scenery` object (`objectId`, `type`, `spanX`,
+  `spanY`) beside the contract fields; the contract itself is unchanged.
 * `RendererConfig` needs no change. Two optional additions would help the shell but are **not**
   required and were not made to the shared file: a `zoom` derivation helper (provided here as
   `sourceZoomForViewportHeight`) and a diagnostics accessor on `RendererHandle` (provided as the

@@ -141,6 +141,43 @@ async function main(): Promise<void> {
       console.log(`${scene}: ${frames.length} GPU-completed frames in ${measureMs} ms, prims=${frames[0]?.primitives}, gpu p50=${(scenes[scene] as any).measured.gpuDurationMs.p50}`);
     }
 
+    // Region mode: the world assembled from blocks, following a player across a map-square edge.
+    const regionResults: unknown[] = [];
+    if (argValue("--regions", "1") === "1") {
+      await page.setViewportSize({ width: 1920, height: 1080 });
+      await page.goto(`http://127.0.0.1:${port}/?scene=region.osrs.12850&px=3222&py=3218&w=1920&h=1080`);
+      await waitReady(page, 300_000);
+      await waitFrames(page, 3);
+      const canvas = page.locator("canvas[data-clubscape-surface]");
+      const shot = async (name: string) => {
+        await canvas.screenshot({ path: path.join(out, name) });
+        return page.evaluate(() => {
+          const d = window.__clubscapeDev.handle!.diagnostics();
+          return { sceneId: d.sceneId, sceneBase: d.sceneBase, loadedSquares: d.loadedSquares, lastFrame: d.lastFrame };
+        });
+      };
+      regionResults.push({ step: "lumbridge-castle", tile: [3222, 3218], ...(await shot("region-lumbridge-castle-3222-3218.png")) });
+      // Walk north-west in 4-tile steps toward Draynor's square edge; the scene must recenter.
+      const route: Array<[number, number]> = [[3210, 3230], [3200, 3240], [3190, 3250], [3180, 3260], [3170, 3270], [3160, 3280]];
+      for (const [x, y] of route) {
+        await page.evaluate(([px, py]) => window.__clubscapeDev.walkTo!(px!, py!), [x, y] as [number, number]);
+        await page.waitForTimeout(400);
+        await waitFrames(page, (await snapshot(page, null)).renderedFrames + 2);
+      }
+      regionResults.push({ step: "after-recenter", tile: [3160, 3280], ...(await shot("region-after-recenter-3160-3280.png")) });
+      await page.evaluate(() => window.__clubscapeDev.walkTo!(3096, 3105));
+      await page.waitForTimeout(1500);
+      await waitFrames(page, (await snapshot(page, null)).renderedFrames + 3);
+      regionResults.push({ step: "tutorial-island", tile: [3096, 3105], ...(await shot("region-tutorial-island-3096-3105.png")) });
+      const picks = await page.evaluate(() => {
+        const handle = window.__clubscapeDev.handle!;
+        return [[960, 540], [700, 600], [1200, 700]].map(([x, y]) => ({ x, y, pick: handle.pick(x!, y!) }));
+      });
+      regionResults.push({ step: "picks", picks });
+      console.log("region mode", JSON.stringify(regionResults.map((r: any) => ({ step: r.step, base: r.sceneBase, squares: r.loadedSquares?.length, prims: r.lastFrame?.primitives, picks: r.picks }))));
+    }
+    report.regions = regionResults;
+
     // Approved model/animation captures replayed through the legacy draw path in the browser.
     await page.setViewportSize({ width: 1920, height: 1080 });
     await page.goto(`http://127.0.0.1:${port}/?mode=model&w=1920&h=1080`);

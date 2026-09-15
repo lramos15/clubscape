@@ -232,6 +232,81 @@ fn unknown_npcs_and_sequences_are_reported_not_faked() {
     assert!(core.update_world("{not json", 0.0).is_err());
 }
 
+#[test]
+fn model_pack_deltas_reconstruct_full_models_and_reject_bad_bases() {
+    use clubscape_renderer::model::parse_model_pack;
+    let base = read("assets/compiled/render/models/object-1277-model-1570-lit.bin");
+    let model = Model::from_chunks(&base).unwrap();
+    // Build a delta entry: BASE 0 + header + bounds + a shifted VRTY.
+    let mut delta = Vec::new();
+    delta.extend_from_slice(b"CSRC");
+    delta.extend_from_slice(&1u32.to_le_bytes());
+    let mut chunk = |tag: &[u8], payload: &[u8]| {
+        delta.extend_from_slice(tag);
+        delta.extend_from_slice(&(payload.len() as u32).to_le_bytes());
+        delta.extend_from_slice(payload);
+    };
+    chunk(b"BASE", &0i32.to_le_bytes());
+    let header: Vec<u8> = [
+        model.vertex_count as i32,
+        model.face_count as i32,
+        model.tex_p.len() as i32,
+        model.override_faces,
+        model.transparency,
+        0,
+        model.render_mode,
+        1,
+        0,
+    ]
+    .iter()
+    .flat_map(|v| v.to_le_bytes())
+    .collect();
+    chunk(b"MDHD", &header);
+    let bounds: Vec<u8> = [7, 8, 9, 10, 11i32]
+        .iter()
+        .flat_map(|v| v.to_le_bytes())
+        .collect();
+    chunk(b"BNDC", &bounds);
+    let ys: Vec<u8> = model
+        .ys
+        .iter()
+        .flat_map(|y| (y + 16.0).to_le_bytes())
+        .collect();
+    chunk(b"VRTY", &ys);
+    let mut pack = Vec::new();
+    pack.extend_from_slice(b"CSMP");
+    pack.extend_from_slice(&2u32.to_le_bytes());
+    for (key, body) in [("full", &base), ("delta", &delta)] {
+        pack.extend_from_slice(&(key.len() as u32).to_le_bytes());
+        pack.extend_from_slice(&(body.len() as u32).to_le_bytes());
+        pack.extend_from_slice(key.as_bytes());
+        pack.extend_from_slice(body);
+    }
+    let parsed = parse_model_pack(&pack).unwrap();
+    assert_eq!(parsed.len(), 2);
+    let (_, rebuilt) = &parsed[1];
+    assert_eq!(rebuilt.xs, model.xs);
+    assert_eq!(rebuilt.zs, model.zs);
+    assert!(
+        rebuilt
+            .ys
+            .iter()
+            .zip(&model.ys)
+            .all(|(a, b)| (a - b - 16.0).abs() < 1e-6)
+    );
+    assert_eq!(rebuilt.face_a, model.face_a);
+    assert_eq!(rebuilt.color_a, model.color_a);
+    assert_eq!(rebuilt.bounds.radius, 8);
+    // A delta whose base comes later (or does not exist) is rejected.
+    let mut bad = pack.clone();
+    let base_pos = bad.windows(4).position(|w| w == b"BASE").unwrap() + 8;
+    bad[base_pos..base_pos + 4].copy_from_slice(&5i32.to_le_bytes());
+    assert!(matches!(
+        parse_model_pack(&bad),
+        Err(RenderError::InvalidAsset(_))
+    ));
+}
+
 // ------------------------------------------------------------------ animation cadence
 
 #[test]

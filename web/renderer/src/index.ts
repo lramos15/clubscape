@@ -27,6 +27,11 @@ export interface RenderAssetManifest {
     /** Published gzip twins of the raw buffers (raw files are reproducible and not published). */
     file_gz?: string; models_file_gz?: string;
   }>;
+  /** World blocks: one 64x64 map square each (`square = x << 8 | y`), assembled around the player. */
+  blocks?: Array<{
+    square: number; file: string; sha256: string; models_file: string; models_sha256: string;
+    origin_x: number; origin_y: number; size: number; file_gz?: string; models_file_gz?: string;
+  }>;
   files: Record<string, { sha256: string; size_bytes: number; detail?: { encoding?: string; decompressed?: string; decompressed_sha256?: string } }>;
 }
 
@@ -45,6 +50,9 @@ export interface RendererAdapterOptions {
 /** Diagnostics the shell needs for the benchmark protocol (`RenderSnapshot`). */
 export interface RendererDiagnostics {
   adapter: string;
+  /** Current scene base (world tiles) and the map squares loaded into the renderer. */
+  sceneBase: { x: number; y: number } | null;
+  loadedSquares: number[];
   timestampsSupported: boolean;
   deviceEpoch: string;
   manifestSha256: string;
@@ -144,6 +152,51 @@ export const createRenderer: (canvas: HTMLCanvasElement, config: RendererConfig,
     let inFlight = false;
     let disposed = false;
     let sceneId: string | null = null;
+    // World-block streaming state (region scenes assembled around the player).
+    let blockMode = false;
+    let sceneBase: { x: number; y: number } | null = null;
+    const loadedSquares = new Set<number>();
+    const blockFetches = new Map<number, Promise<boolean>>();
+    let assembling: Promise<void> | null = null;
+    const blocksBySquare = new Map<number, NonNullable<RenderAssetManifest["blocks"]>[number]>();
+    for (const block of manifest.blocks ?? []) blocksBySquare.set(block.square, block);
+    const ensureBlock = (square: number): Promise<boolean> => {
+      if (loadedSquares.has(square)) return Promise.resolve(true);
+      const entry = blocksBySquare.get(square);
+      if (!entry) return Promise.resolve(false); // not part of the exported world (empty in the original too)
+      let pending = blockFetches.get(square);
+      if (!pending) {
+        pending = (async () => {
+          const [blockBytes, packBytes] = await Promise.all([fetchAsset(entry.file_gz ?? entry.file), fetchAsset(entry.models_file_gz ?? entry.models_file)]);
+          if (disposed) return false;
+          renderer.load_block(square, blockBytes, packBytes);
+          loadedSquares.add(square);
+          return true;
+        })().finally(() => blockFetches.delete(square));
+        blockFetches.set(square, pending);
+      }
+      return pending;
+    };
+    /** Rebuilds the scene around `base` once every exported square it needs is loaded. */
+    const assembleAround = (baseX: number, baseY: number): Promise<void> => {
+      if (assembling) return assembling;
+      assembling = (async () => {
+        const squares = Array.from(WasmRenderer.squares_for_base(baseX, baseY));
+        await Promise.all(squares.map((s) => ensureBlock(s)));
+        if (disposed) return;
+        const missing = Array.from(renderer.assemble_scene(baseX, baseY, performance.now()));
+        const unexported = missing.filter((s) => blocksBySquare.has(s));
+        if (unexported.length > 0) throw new Error(`blocks ${unexported.join(",")} were fetched but not loaded`);
+        sceneBase = { x: baseX, y: baseY };
+        sceneId = `blocks@${baseX},${baseY}`;
+        // Keep only squares near the new scene resident.
+        for (const square of Array.from(loadedSquares)) {
+          if (!squares.includes(square)) { renderer.unload_block(square); loadedSquares.delete(square); }
+        }
+      })().finally(() => { assembling = null; });
+      return assembling;
+    };
+    const REGION_ID = /^(?:region[.:]osrs[.:]|region[.:]|square[.:]|blocks?[.:])?(\d{4,5})$/;
     const diagnostic = (message: string) => options.onDiagnostic?.(message);
     const requireLive = () => {
       if (disposed) throw new Error("renderer has been disposed");
@@ -163,14 +216,49 @@ export const createRenderer: (canvas: HTMLCanvasElement, config: RendererConfig,
       async loadScene(id) {
         requireLive();
         const scene = manifest.scenes.find((entry) => entry.name === id);
-        if (!scene) throw new Error(`scene ${id} is not exported; available: ${manifest.scenes.map((s) => s.name).join(", ")}`);
-        const [sceneBytes, packBytes] = await Promise.all([fetchAsset(scene.file_gz ?? scene.file), fetchAsset(scene.models_file_gz ?? scene.models_file)]);
-        renderer.load_scene(id, sceneBytes, packBytes);
-        sceneId = id;
+        if (scene) {
+          const [sceneBytes, packBytes] = await Promise.all([fetchAsset(scene.file_gz ?? scene.file), fetchAsset(scene.models_file_gz ?? scene.models_file)]);
+          renderer.load_scene(id, sceneBytes, packBytes);
+          sceneId = id;
+          blockMode = false;
+          sceneBase = null;
+          return;
+        }
+        // Region scene: `region.osrs.12850` (content region ids), a bare map square id, or
+        // `blocks@x,y` for an explicit chunk-aligned base. The world is assembled from blocks
+        // around the square centre and follows the player afterwards (see update()).
+        const explicit = /^blocks@(-?\d+),(-?\d+)$/.exec(id);
+        const region = REGION_ID.exec(id);
+        if (!explicit && !region) {
+          throw new Error(`scene ${id} is not exported; available: ${manifest.scenes.map((s) => s.name).join(", ")} or region.osrs.<square>`);
+        }
+        let baseX: number;
+        let baseY: number;
+        if (explicit) {
+          baseX = Number(explicit[1]);
+          baseY = Number(explicit[2]);
+        } else {
+          const square = Number(region![1]);
+          if (!blocksBySquare.has(square)) throw new Error(`map square ${square} is not part of the exported world`);
+          const originX = (square >> 8) * 64;
+          const originY = (square & 0xff) * 64;
+          const base = WasmRenderer.base_for_tile(originX + 32, originY + 32);
+          baseX = base[0]!;
+          baseY = base[1]!;
+        }
+        blockMode = true;
+        await assembleAround(baseX, baseY);
       },
       update(world: WorldView) {
         requireLive();
         renderer.update_world(JSON.stringify(world), performance.now());
+        if (blockMode && !assembling) {
+          const { x, y } = world.player.tile;
+          if (renderer.needs_recenter(x, y, 16)) {
+            const base = WasmRenderer.base_for_tile(x, y);
+            void assembleAround(base[0]!, base[1]!).catch((error) => diagnostic(`scene recenter failed: ${String(error)}`));
+          }
+        }
       },
       camera(value: RenderCamera) {
         requireLive();
@@ -248,6 +336,8 @@ export const createRenderer: (canvas: HTMLCanvasElement, config: RendererConfig,
       diagnostics() {
         return {
           adapter: renderer.adapter_info(),
+          sceneBase,
+          loadedSquares: Array.from(loadedSquares).sort((a, b) => a - b),
           timestampsSupported: renderer.timestamps_supported(),
           deviceEpoch: String(renderer.device_epoch()),
           manifestSha256,
@@ -275,6 +365,11 @@ export function sourceZoomForViewportHeight(height: number): number {
 
 /** Contract-typed alias for shells that only want the shared signature. */
 export const createRendererContract: CreateRenderer = (canvas, config) => createRenderer(canvas, config);
+
+/** Region scene id for a content region (`region.osrs.<square>`) or a map square number. */
+export function regionSceneId(square: number): string {
+  return `region.osrs.${square}`;
+}
 
 /** Exported scene ids in `assets/compiled/render/manifest.json` (fixture scenes of the approved pack). */
 export const FIXTURE_SCENE_IDS = [

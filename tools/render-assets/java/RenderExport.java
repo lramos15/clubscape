@@ -96,6 +96,13 @@ public final class RenderExport
         if (all || profile.equals("models")) exportFixtureModels();
         if (all || profile.equals("npcs")) exportNpcs();
         if (all || profile.equals("scenes")) new SceneExport(this).run();
+        if (profile.equals("blocks")) new BlockExport(this).run(args);
+        if (profile.equals("scenes-pinned"))
+        {
+            SceneExport pinned = new SceneExport(this);
+            pinned.pinFrames = true;
+            pinned.run();
+        }
         if (profile.equals("prune-textures")) pruneTextures();
         manifest.put("approved_reference_pack_sha256", "b62e19704e17d3d3e4e819f803ef49ba7cc54034ae407184b423427c65d9674d");
         manifest.put("files", files);
@@ -175,8 +182,11 @@ public final class RenderExport
     void pruneTextures() throws Exception
     {
         java.util.Set<Integer> used = new java.util.TreeSet<>();
-        Object listed = manifest.get("scene_texture_ids");
-        if (listed instanceof List) for (Object id : (List<Object>) listed) used.add(((Number) id).intValue());
+        for (String table : new String[] {"scene_texture_ids", "block_texture_ids"})
+        {
+            Object listed = manifest.get(table);
+            if (listed instanceof List) for (Object id : (List<Object>) listed) used.add(((Number) id).intValue());
+        }
         for (String key : new ArrayList<>(files.keySet()))
         {
             if (!key.startsWith("models/") || !key.endsWith(".bin") || key.contains("/baked/")) continue;

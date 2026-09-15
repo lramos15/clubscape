@@ -34,6 +34,14 @@ final class SceneExport
     final Map<fx, Integer> modelIndex = new IdentityHashMap<>();
     final List<String> modelKeys = new ArrayList<>();
     final java.util.Set<Integer> usedTextures = new java.util.TreeSet<>();
+    /** Map squares the last `loadScene` handed to the original loader. */
+    List<Integer> loadedSquares = new ArrayList<>();
+    /**
+     * Validation mode: pin every animated renderable to frame 0 before resolving its model and
+     * write `scenes/<name>.pinned*` without manifest records. Block assembly is checked against
+     * these deterministic exports (the captured fixture scenes keep their random frames).
+     */
+    boolean pinFrames = false;
 
     SceneExport(RenderExport export) { this.export = export; }
 
@@ -53,15 +61,19 @@ final class SceneExport
             modelIndex.clear();
             modelKeys.clear();
             contentIndex.clear();
+            shapeIndex.clear();
             modelBytes.clear();
             scenes.add(exportScene((String) entry[0], (Integer) entry[1], (Integer) entry[2]));
         }
-        export.manifest.put("scenes", scenes);
-        export.manifest.put("scene_texture_ids", new ArrayList<>(usedTextures));
-        System.out.println("SCENES exported=" + scenes.size() + " textures=" + usedTextures.size());
+        if (!pinFrames)
+        {
+            export.manifest.put("scenes", scenes);
+            export.manifest.put("scene_texture_ids", new ArrayList<>(usedTextures));
+        }
+        System.out.println("SCENES exported=" + scenes.size() + " textures=" + usedTextures.size() + (pinFrames ? " pinned" : ""));
     }
 
-    private void initializeVariables() throws Exception
+    void initializeVariables() throws Exception
     {
         int maximumVarp = 0;
         vp configurations = export.cache.archive(2);
@@ -121,6 +133,20 @@ final class SceneExport
         }
         if (getter == null) throw new IllegalStateException("Unexpected scene renderable " + renderable.getClass().getName());
         getter.setAccessible(true);
+        if (pinFrames && renderable instanceof dy)
+        {
+            // Same frame-0 construction as the block export (dy.vn with the pinned state), so the
+            // two exports are comparable without the per-draw cycle advance of ee.ae/dy.rf.
+            qr state = (qr) raw(renderable, dy.class, "ac");
+            java.lang.reflect.Method pin = qr.class.getDeclaredMethod("ct", int.class, int.class, int.class);
+            pin.setAccessible(true);
+            pin.invoke(state, 0, 0, 0);
+            java.lang.reflect.Method build = dy.class.getDeclaredMethod("vn", rl21.class, qr.class);
+            build.setAccessible(true);
+            fx pinned = (fx) build.invoke(renderable, rl21.lz, state);
+            if (dynamicNotes != null) dynamicNotes.add(renderable.getClass().getName() + (pinned == null ? "-null" : ""));
+            return new Resolved(pinned, true);
+        }
         fx model = (fx) getter.invoke(renderable, -1455788262);
         if (dynamicNotes != null) dynamicNotes.add(renderable.getClass().getName() + (model == null ? "-null" : ""));
         // Animated renderables return a shared scratch model whose contents change per call.
@@ -128,8 +154,16 @@ final class SceneExport
     }
 
     final Map<String, Integer> contentIndex = new java.util.HashMap<>();
+    /** Non-Y content hash -> pack index of the first model with that geometry/colouring. */
+    final Map<String, Integer> shapeIndex = new java.util.HashMap<>();
     final List<byte[]> modelBytes = new ArrayList<>();
 
+    /**
+     * Registers a model in the pack. Ground-contoured placements and baked animation frames of the
+     * same lit model differ only in vertex positions and bounds, so such copies are stored as
+     * `BASE` deltas (header, bounds, changed vertex arrays) against the first full copy; the
+     * reader reconstructs the identical model.
+     */
     int modelId(Resolved resolved) throws Exception
     {
         fx model = resolved.model();
@@ -139,7 +173,8 @@ final class SceneExport
             Integer existing = modelIndex.get(model);
             if (existing != null) return existing;
         }
-        byte[] bytes = RenderExport.model(model).toBytes();
+        ChunkWriter full = RenderExport.model(model);
+        byte[] bytes = full.toBytes();
         String sha = ChunkWriter.sha256(bytes);
         Integer byContent = contentIndex.get(sha);
         if (byContent != null)
@@ -147,7 +182,31 @@ final class SceneExport
             if (!resolved.shared()) modelIndex.put(model, byContent);
             return byContent;
         }
-        modelBytes.add(bytes);
+        // Contoured placements differ only in Y; baked animation frames differ in X/Y/Z. Both keep
+        // the lit face data of the first copy, so the delta stores header, bounds and only the
+        // vertex arrays that changed.
+        byte[] shapeBytes = full.toBytesExcept("MDHD", "BNDC", "VRTX", "VRTY", "VRTZ");
+        // Face data alone does not pin the vertex count (unreferenced vertices); include the counts.
+        String shape = ChunkWriter.sha256(java.nio.ByteBuffer.allocate(shapeBytes.length + 12).put(shapeBytes)
+            .putInt(model.by).putInt(model.bd).putInt(model.cv).array());
+        Integer base = shapeIndex.get(shape);
+        if (base != null)
+        {
+            ChunkWriter delta = new ChunkWriter();
+            delta.ints("BASE", base);
+            delta.copyChunks(full, "MDHD", "BNDC");
+            byte[] baseBytes = modelBytes.get(base);
+            for (String tag : new String[] {"VRTX", "VRTY", "VRTZ"})
+            {
+                if (!java.util.Arrays.equals(ChunkWriter.chunkOf(baseBytes, tag), ChunkWriter.chunkOf(bytes, tag))) delta.copyChunks(full, tag);
+            }
+            modelBytes.add(delta.toBytes());
+        }
+        else
+        {
+            modelBytes.add(bytes);
+            shapeIndex.put(shape, modelKeys.size());
+        }
         if (model.cq != null)
         {
             for (int i = 0; i < model.bd; i++) if (model.cq[i] != -1) usedTextures.add((int) model.cq[i]);
@@ -159,7 +218,8 @@ final class SceneExport
         return id;
     }
 
-    Map<String, Object> exportScene(String name, int baseX, int baseY) throws Exception
+    /** Builds an original 104x104 scene at `baseX/baseY` through the pinned map loader (rl4.fn). */
+    ez loadScene(int baseX, int baseY) throws Exception
     {
         dz world = new dz(0, 104, 104, 25, ex.az);
         WorldCapture.logicalInt(world, dz.class, "ac", -1444178379, baseX);
@@ -177,6 +237,7 @@ final class SceneExport
             }
         }
         request.af = squares.stream().mapToInt(Integer::intValue).toArray();
+        loadedSquares = squares;
         world.zn = request.af;
         world.bp = request.ae;
         world.gi = false;
@@ -201,7 +262,13 @@ final class SceneExport
         world.aj = loader.zw;
         Scene scene = loader.gb;
         scene.setDrawDistance(25);
-        ez ez = loader.gb;
+        return loader.gb;
+    }
+
+    Map<String, Object> exportScene(String name, int baseX, int baseY) throws Exception
+    {
+        ez ez = loadScene(baseX, baseY);
+        Scene scene = ez;
         int tiles = 0, objects = 0;
         for (Tile[][] plane : scene.getExtendedTiles())
         {
@@ -347,34 +414,40 @@ final class SceneExport
         StringBuilder keys = new StringBuilder();
         for (String key : modelKeys) keys.append(key).append('\n');
         writer.text("MODL", keys.toString());
-        String fileKey = "scenes/" + name + ".bin";
+        String fileKey = "scenes/" + name + (pinFrames ? ".pinned" : "") + ".bin";
         Path file = export.output.resolve(fileKey);
         String sha = writer.write(file);
         // Single-fetch model pack for streaming: every model the scene references, in index order.
+        String packKey = "scenes/" + name + (pinFrames ? ".pinned" : "") + ".models.bin";
+        byte[] packBytes = pack(modelKeys, modelBytes);
+        Files.write(export.output.resolve(packKey), packBytes);
+        if (!pinFrames) export.record(packKey, ChunkWriter.sha256(packBytes), packBytes.length, OriginalCapture.map("models", modelKeys.size(), "scene", name));
+        Map<String, Object> record = OriginalCapture.map("name", name, "file", fileKey, "sha256", sha,
+            "models_file", packKey, "models_sha256", ChunkWriter.sha256(packBytes), "base_x", baseX, "base_y", baseY,
+            "region_ids", loadedSquares, "tiles", tiles, "placed_object_tile_references", objects,
+            "paints", counts[0], "tile_models", counts[1], "walls", counts[2], "wall_decorations", counts[3], "floor_decorations", counts[4],
+            "game_object_slots", counts[5], "distinct_models", modelKeys.size(), "dynamic_renderables", dynamicNotes.size(),
+            "source_pipeline", "Original rl4.fn map decoding, placement, floor blending, shadowing; live ez arrays serialized without re-rendering");
+        if (!pinFrames) export.record(fileKey, sha, Files.size(file), record);
+        System.out.println("SCENE " + name + " tiles=" + tiles + " objects=" + objects + " models=" + modelKeys.size() + " dynamic=" + dynamicNotes.size());
+        return record;
+    }
+
+    /** `CSMP` model pack: count, then (keyLen, dataLen, key, model chunk file) in index order. */
+    static byte[] pack(List<String> keys, List<byte[]> models) throws Exception
+    {
         java.io.ByteArrayOutputStream pack = new java.io.ByteArrayOutputStream();
         pack.writeBytes("CSMP".getBytes(java.nio.charset.StandardCharsets.US_ASCII));
-        pack.writeBytes(java.nio.ByteBuffer.allocate(4).order(java.nio.ByteOrder.LITTLE_ENDIAN).putInt(modelKeys.size()).array());
-        for (int i = 0; i < modelKeys.size(); i++)
+        pack.writeBytes(java.nio.ByteBuffer.allocate(4).order(java.nio.ByteOrder.LITTLE_ENDIAN).putInt(keys.size()).array());
+        for (int i = 0; i < keys.size(); i++)
         {
-            byte[] keyBytes = modelKeys.get(i).getBytes(java.nio.charset.StandardCharsets.US_ASCII);
-            byte[] data = modelBytes.get(i);
+            byte[] keyBytes = keys.get(i).getBytes(java.nio.charset.StandardCharsets.US_ASCII);
+            byte[] data = models.get(i);
             pack.writeBytes(java.nio.ByteBuffer.allocate(8).order(java.nio.ByteOrder.LITTLE_ENDIAN).putInt(keyBytes.length).putInt(data.length).array());
             pack.writeBytes(keyBytes);
             pack.writeBytes(data);
         }
-        String packKey = "scenes/" + name + ".models.bin";
-        byte[] packBytes = pack.toByteArray();
-        Files.write(export.output.resolve(packKey), packBytes);
-        export.record(packKey, ChunkWriter.sha256(packBytes), packBytes.length, OriginalCapture.map("models", modelKeys.size(), "scene", name));
-        Map<String, Object> record = OriginalCapture.map("name", name, "file", fileKey, "sha256", sha,
-            "models_file", packKey, "models_sha256", ChunkWriter.sha256(packBytes), "base_x", baseX, "base_y", baseY,
-            "region_ids", squares, "tiles", tiles, "placed_object_tile_references", objects,
-            "paints", counts[0], "tile_models", counts[1], "walls", counts[2], "wall_decorations", counts[3], "floor_decorations", counts[4],
-            "game_object_slots", counts[5], "distinct_models", modelKeys.size(), "dynamic_renderables", dynamicNotes.size(),
-            "source_pipeline", "Original rl4.fn map decoding, placement, floor blending, shadowing; live ez arrays serialized without re-rendering");
-        export.record(fileKey, sha, Files.size(file), record);
-        System.out.println("SCENE " + name + " tiles=" + tiles + " objects=" + objects + " models=" + modelKeys.size() + " dynamic=" + dynamicNotes.size());
-        return record;
+        return pack.toByteArray();
     }
 
     static int[] toArray(List<Integer> values)
