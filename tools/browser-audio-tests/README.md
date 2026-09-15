@@ -31,7 +31,18 @@ python3 tools/browser-audio-tests/native/preference_controls.py run
 node tools/browser-audio-tests/run.mjs --preferences-only --quick --mute-output
 # Full existing playback + new preference/native Single duration comparisons:
 node tools/browser-audio-tests/run.mjs --mute-output
+
+# New results without replacing historical component evidence:
+node tools/browser-audio-tests/run.mjs --mute-output \
+  --report-file research/browser-audio-policy/cue-timing/component-full.json
 ```
+
+The cue-timing continuation also runs the original shell's composed
+audio/storage fixture against its immutable delivered bridge and the owned
+candidate repair. See `research/browser-audio-policy/cue-timing/README.md`.
+Both harnesses now retain the real server's COOP/COEP/CSP; all script
+orchestration in the owned driver remains gesture-free. These are page
+response headers, not changes to global browser/graphics/sound settings.
 
 Reproduce the native probes first when changing policy:
 

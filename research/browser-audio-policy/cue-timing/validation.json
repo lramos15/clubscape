@@ -1,0 +1,132 @@
+{
+  "schemaVersion": 1,
+  "task": "m1-audio-cue-timing",
+  "result": "passed_bounded_audio_repair_and_actual_composed_audio_fixture",
+  "admissionCommit": "81fbd06dc05294481728b647a93ce46ad6749864",
+  "historicalComponent": "64bd3257bd99d693d221df26a55470c7275047f1",
+  "historicalReportsUnchanged": true,
+  "sourcePackSha256": "b62e19704e17d3d3e4e819f803ef49ba7cc54034ae407184b423427c65d9674d",
+  "supplementManifestSha256": "840aef91bac9a1fd042bdb1c3662ff92a378e279f48335108730e168af550d91",
+  "ownedRuntimeChanges": [
+    "Device-aware scheduling lookahead, using baseLatency plus one128-frame quantum, capped at one20ms source cycle.",
+    "Selected decoded cues immediately service the existing clock; no whole-pack preload or synthetic warmup.",
+    "An undecoded future dispatch cycle waits until ready or actually due; native countdown/expiry rules remain unchanged.",
+    "SFX dispatch reads the actual current cursor and exposes request/source-cycle anchors."
+  ],
+  "unchangedPolicies": {
+    "sourceCycleSeconds": 0.02,
+    "sampleRate": 22050,
+    "dispatchToleranceMs": 20.045351473922903,
+    "fifoCapacity": 50,
+    "delay2DispatchProcessingCall": 3,
+    "eatingDispatchProcessingCall": 4,
+    "waveformsOrSourceOffsetsChanged": false,
+    "weightedSilenceOrJinglePolicyChanged": false,
+    "gameplayOrAuthorityChanged": false
+  },
+  "originalShellEvidence": {
+    "shellCommit": "35e12584681fd45fa1671805f26adc64feae511a",
+    "originalFixturePath": "web/app/tests/real-player-audio.ts",
+    "originalFixtureSha256": "6d542410b0c39c8ca09f42442b2a7057cf98fc6f21a5c349cd8add505084f2dc",
+    "originalDelivery": ".worktrees/m1-browser-shell/.local/web-ui4-6f-bd4a693e",
+    "originalArtifactSha256": "bd4a693e2ab10a724c2f30c1f2473632f90845d2dee1cdc109bd770db6464582",
+    "originalContentManifestSha256": "8051180dcdc2ec2728626d60d4a7d4ab476376f86e847d46fbbe822efbb97404",
+    "handoffSha256": "f78bedca7eedb9ea324b73e99c0a26c703ea85c0429819d1866709b87f56b3b7",
+    "resultSha256": "1b7725389cd06626e6380b7aaa5fdd793a91607b74462721266f32c23448f01f",
+    "originalDispatchSamples": 18,
+    "originalDispatchOverruns": 11,
+    "originalMaximumLatenessMs": 26.4399092970522,
+    "laterRendererHandoffSha256": "bbf9977bf9e6957e989f0f4bf5233cd95ba5fd617bd0536a1b84602a18ccd734",
+    "laterRendererHandoffAudioFailures": 9,
+    "originalOrLaterOverallPassAsserted": false
+  },
+  "matrix": {
+    "scope": "One bounded matrix over the exact recorded shell audio/storage fixture, including its coordinated and direct-native comparisons; no new account, gamepack, invented source state or synthetic CPU/GPU load.",
+    "before": {
+      "path": "research/browser-audio-policy/cue-timing/before.json",
+      "sha256": "0b622bed8a90b6d012789199dc2a314b9957984f7c9b720e9d68c58b6bdd73a3",
+      "contractChecks": 6,
+      "dispatches": 18,
+      "timingAndLoadingFailures": 2,
+      "dispatchOverruns": 1,
+      "maximumLatenessMs": 23.854875283446653,
+      "directNativeMemberOverranOnThisRun": false
+    },
+    "firstAfter": {
+      "path": "research/browser-audio-policy/cue-timing/after.json",
+      "sha256": "8acf5049de3cbc96657a4deb9aa6c79cbf192aa4122a8217a42085fd805fa7d1",
+      "timingAndLoadingFailures": 0,
+      "dispatchOverruns": 0,
+      "maximumLatenessMs": 0
+    },
+    "finalAfter": {
+      "path": "research/browser-audio-policy/cue-timing/after-final.json",
+      "sha256": "5c350aa8d62391a00470b98791f58df9aaf0a8f5b199ba71eff65313982c72da",
+      "contractChecks": 6,
+      "dispatches": 18,
+      "coordinatedSamples": 6,
+      "directNativeSamples": 6,
+      "timingAndLoadingFailures": 0,
+      "dispatchOverruns": 0,
+      "maximumTraceLatenessMs": 0,
+      "maximumActualStartCallLatenessMs": 0,
+      "maximumIndependentAbsoluteOnsetErrorMs": 16.19047619047633,
+      "pcmComparisons": 18,
+      "maximumPCMAbsoluteError": 1.2021633688519273e-14,
+      "maximumOnsetRoundingSamples": 1,
+      "additionalClippingSamples": 0,
+      "liveMonitoringNodesAdded": 0
+    },
+    "initialDiagnostic": {
+      "path": "research/browser-audio-policy/cue-timing/before-unisolated-diagnostic.json",
+      "sha256": "c39be6b1d399275570f9fc11055dc7cc76cea612da477c31e065130223775e7d",
+      "qualification": "Omitted original COOP/COEP; retained but not treated as a composed reproduction or a repair."
+    }
+  },
+  "rootObservation": {
+    "oldLookaheadMs": 10,
+    "deviceBaseLatencyMs": 10.70294784580499,
+    "observedCommonClockStepFrames": 256,
+    "recordedPreMissAudioTime": 1.0274829931972789,
+    "unchangedRecordedCueDeadline": 1.0384580498866214,
+    "nextCallbackWallGapMs": 24.21,
+    "recordedLateDispatchTime": 1.062312925170068,
+    "newDeviceLookaheadMs": 16.50793650793651,
+    "maximumSourceLookaheadMs": 20
+  },
+  "regression": {
+    "typecheck": "passed",
+    "audioUnitTests": 45,
+    "existingAudioUnitTests": 41,
+    "fullBrowserTests": 41,
+    "fullBrowserReport": {
+      "path": "research/browser-audio-policy/cue-timing/component-full.json",
+      "sha256": "d065273f8ddf5d3576449318c1e5bfad26e91f361eab4be7ba391fa4368fca5c",
+      "realSourceStarts": 158,
+      "realEndCallbacks": 157,
+      "missingCallbackQualification": "Final deliberate context close destroys the last source; no ended callback is fabricated.",
+      "crossOriginIsolated": true,
+      "sourceFilesChanged": 0,
+      "implementationChangedDuringRun": false,
+      "eatingProcessingCalls": 4,
+      "eatingStartDelayMs": 84.39909297010217,
+      "eatingWaveformOnsetErrorMs": 0.045351473509924745,
+      "allFourLongMusicBoundaryErrorsMs": [0, 0, 0, 0]
+    },
+    "referencePackTests": 85,
+    "frozenHashesVerified": 1307,
+    "unchangedPlayableFiles": 275,
+    "unchangedNumericBounds": true
+  },
+  "acceptance": {
+    "actualComposedAudioFixtureRechecked": true,
+    "entireSourceUiAccountRendererHarnessRerun": false,
+    "gameSourceAuthorityInvented": false,
+    "productionUiCompileErrorsFixed": false,
+    "browserLocalOutputMuted": true,
+    "globalCpuGpuAudioSandboxChanges": false,
+    "physicalSpeakers": false,
+    "macEdge": false,
+    "fullM1": false
+  }
+}

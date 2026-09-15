@@ -5,6 +5,7 @@ import { BufferCache, repeatedEffect } from "./buffers.ts";
 import { actionId, COOK, cueKey, LEARNING, OBSERVED_SELECTORS, stableId, validateEvent } from "./events.ts";
 import { AudioFailure, failure, integer, requireAudio, unit } from "./errors.ts";
 import { EventLedger, SourceQueue } from "./queue.ts";
+import { sourceSchedulingLookahead } from "./clock.ts";
 import {
   APPROVED_PACK, loadCatalog, regionalTrack, selectWeighted, SOURCE_CYCLE_SECONDS,
   SOURCE_RATE, sourceRandomBelow, sourceRoll, validTile, sourceAssetForLevel,
@@ -170,6 +171,7 @@ function deadline<T>(promise: Promise<T>, milliseconds: number, error: AudioFail
 
 class Runtime implements AudioHandle {
   private readonly context: AudioContext;
+  private readonly schedulingLookahead: number;
   private readonly catalog: SourceCatalog;
   private readonly report: (error: Error) => void;
   private readonly cache: BufferCache;
@@ -240,6 +242,7 @@ class Runtime implements AudioHandle {
 
   constructor(context: AudioContext, catalog: SourceCatalog, assets: ClientAssets, report: (error: Error) => void) {
     this.context = context;
+    this.schedulingLookahead = sourceSchedulingLookahead(context.baseLatency);
     this.catalog = catalog;
     this.report = report;
     this.master = context.createGain();
@@ -1320,9 +1323,13 @@ class Runtime implements AudioHandle {
       this.notifyError(new AudioFailure("AUDIO_QUEUE_FULL", "The native 50-entry FIFO is full; the new request was dropped."));
       return;
     }
-    this.trace("queued", { eventId: event.id, sourceId: asset.sourceId, delay, dueAt: effect.dueAt, key });
+    this.trace("queued", { eventId: event.id, sourceId: asset.sourceId, delay, dueAt: effect.dueAt, key,
+      requestedAt: now, schedulingLookahead: this.schedulingLookahead });
     if (!asset.playable) return;
-    void this.cache.load(asset).then((buffer) => { effect.buffer = buffer; }, (error) => {
+    void this.cache.load(asset).then((buffer) => {
+      effect.buffer = buffer;
+      if (effect.epoch === this.epoch) this.processCycle();
+    }, (error) => {
       effect.error = failure(error, "AUDIO_LOAD", `Cannot load effect ${asset.sourceId}`);
     });
   }
@@ -2044,11 +2051,12 @@ class Runtime implements AudioHandle {
       }
       this.nextCycleAt = now + SOURCE_CYCLE_SECONDS;
     }
-    // Process 50 Hz source cycles with a short scheduling lookahead. A 20 ms
-    // JS interval drifts against 128-sample audio quanta; scheduling start(when)
-    // ahead of the audio deadline avoids adding an accidental fourth/fifth tick.
-    while (this.nextCycleAt <= now + 0.01) {
+    // The device may publish several render quanta at once. Cover that cursor
+    // step, but never schedule more than one native client cycle ahead.
+    while (this.nextCycleAt <= now + this.schedulingLookahead) {
       const cycleAt = this.nextCycleAt;
+      if (cycleAt > now && !this.queue.readyForNextCycle((effect) =>
+        !effect.asset.playable || effect.buffer !== null || effect.error !== null)) break;
       this.nextCycleAt += SOURCE_CYCLE_SECONDS;
       this.processingCycle++;
       this.queue.process((effect) => {
@@ -2084,7 +2092,7 @@ class Runtime implements AudioHandle {
             effect.gain = this.nativeMixer.area ? position.volume / this.nativeMixer.area : 0;
           }
           const buffer = effect.ambient ? effect.buffer : repeatedEffect(this.context, effect.buffer, effect.asset, effect.repeats);
-          const when = Math.max(now, cycleAt, effect.dueAt);
+          const when = Math.max(this.context.currentTime, cycleAt, effect.dueAt);
           if (when - effect.dueAt > SOURCE_CYCLE_SECONDS + 1 / SOURCE_RATE) {
             this.notifyError(new AudioFailure("AUDIO_TIMING_LATE",
               `Cue ${effect.asset.sourceId} missed its source-cycle timing tolerance.`,
@@ -2094,6 +2102,7 @@ class Runtime implements AudioHandle {
             effect.gain, when, effect.spatial, effect.ambient, 0);
           this.trace("effect_dispatched", {
             eventId: effect.eventId, sourceId: effect.asset.sourceId, dueAt: effect.dueAt, when,
+            requestedAt: effect.requestedAt, sourceCycleAt: cycleAt,
             sourceOnset: effect.asset.firstNonzeroFrame === null ? null
               : when + effect.asset.firstNonzeroFrame / SOURCE_RATE,
             lateMs: Math.max(0, when - effect.dueAt) * 1000,

@@ -15,6 +15,12 @@ const owned = "tools/browser-audio-tests";
 const run = `${owned}/.run`;
 const preferencesOnly = process.argv.includes("--preferences-only");
 const muteOutput = process.argv.includes("--mute-output");
+const reportArgument = process.argv.indexOf("--report-file");
+const reportPath = reportArgument === -1 ? `${owned}/${preferencesOnly ? "preference-results" : "results"}.json`
+  : process.argv[reportArgument + 1];
+assert.ok(typeof reportPath === "string" &&
+  ["tools/browser-audio-tests/", "research/browser-audio-policy/"].some((prefix) => reportPath.startsWith(prefix)) &&
+  !reportPath.split("/").includes("..") && reportPath.endsWith(".json"), "Reports must use an explicit owned JSON path.");
 const chrome = process.env.CLUBSCAPE_CHROME ??
   "/home/lramos15/.cache/ms-playwright/chromium-1243/chrome-linux-arm64/chrome";
 const version = execFileSync(chrome, ["--version"], { encoding: "utf8" }).trim();
@@ -61,6 +67,9 @@ for (const path of [
 
 const server = createServer(async (request, response) => {
   try {
+    response.setHeader("cross-origin-opener-policy", "same-origin");
+    response.setHeader("cross-origin-embedder-policy", "require-corp");
+    response.setHeader("content-security-policy", "default-src 'self'; script-src 'self' 'wasm-unsafe-eval'; style-src 'self'; img-src 'self' data:; media-src 'self' blob:; connect-src 'self'; object-src 'none'; base-uri 'none'; frame-ancestors 'none'");
     const url = new URL(request.url, "http://127.0.0.1");
     let data, type = "application/octet-stream";
     if (url.pathname.startsWith("/asset/")) {
@@ -258,6 +267,8 @@ try {
   report.sandbox = { namespace: true, seccompBpf: true, noSandboxFlag: false, muteAudioFlag: muteOutput };
   await sandboxPage.close();
   await page.goto(origin);
+  assert.equal(await page.evaluate(() => crossOriginIsolated), true);
+  report.crossOriginIsolated = true;
   await page.evaluate(() => audioFixture.ready);
 
   if (!preferencesOnly) {
@@ -1397,7 +1408,8 @@ try {
   }
   report.requestedPlayableIds = [...new Set(requests.filter((r) => sources.some((a) => (a.asset_id ?? a.id) === r.id)).map((r) => r.id))];
   report.finishedAt = new Date().toISOString();
-  await writeFile(`${owned}/${preferencesOnly ? "preference-results" : "results"}.json`, `${JSON.stringify(report, null, 2)}\n`);
+  await mkdir(dirname(reportPath), { recursive: true });
+  await writeFile(reportPath, `${JSON.stringify(report, null, 2)}\n`);
   await rm(run, { recursive: true, force: true });
   for (const name of await readdir("web/audio")) {
     if (!scratchBefore.has(name) && /^(?:\.?org\.chromium\.|playwright-)/.test(name)) {

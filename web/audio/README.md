@@ -65,6 +65,12 @@ The UI/reporting variables in this example belong to app composition.
 `update(null, [])` is an explicit title/logout reset and selects Scape Main0;
 do not send it merely because transport is reconnecting.
 
+The separately admitted composed cue-timing repair is documented in
+`research/browser-audio-policy/cue-timing/README.md`. It covers the real
+device/render-quantum scheduling window and ready-cue servicing, retaining the
+native source-cycle/countdown rules and unchanged timing bounds. Historical
+64bd325 component evidence is preserved rather than overwritten.
+
 **Important migration changes:**
 
 * `volume(channel, normalizedPosition)` now maps the normalized UI position to

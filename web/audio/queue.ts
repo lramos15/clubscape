@@ -38,6 +38,9 @@ export class SourceQueue<T> {
   }
 
   values(): readonly T[] { return this.entries.filter((e) => !e.dispatched).map((e) => e.value); }
+  readyForNextCycle(ready: (value: T) => boolean): boolean {
+    return this.entries.every((entry) => entry.dispatched || entry.delay > 0 || ready(entry.value));
+  }
   remove(predicate: (value: T) => boolean): void {
     this.entries = this.entries.filter((entry) => !predicate(entry.value));
   }
