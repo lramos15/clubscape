@@ -168,7 +168,8 @@ export async function mountApplication(options: {
         // createUi owns its state subscription; this observer drives only the renderer/benchmark.
         if (state.world && renderer && sceneLoaded) renderer.update(state.world);
         const presence = presenceOf(state.world);
-        benchmark.worldReady(state.phase === "world" && sceneLoaded && presence?.connected === true && presence.presentInWorld);
+        benchmark.worldReady(state.phase === "world" && sceneLoaded && presence?.connected === true && presence.presentInWorld
+          && app.gameplayUi().available);
       } catch {
         componentFailed = true;
         sceneLoaded = false;

@@ -9,10 +9,11 @@ import { appError } from "./errors.ts";
 import "./style.css";
 import type { AppState } from "../shared/contracts.ts";
 import { installSourceFetch } from "./source-fetch.ts";
+import type { GameplayUiSupport } from "./gameplay-ui.ts";
 
 declare global {
   interface Window {
-    __clubscapeClientStateV1?: { read(): Readonly<AppState> };
+    __clubscapeClientStateV1?: { read(): Readonly<AppState>; gameplayUi(): Readonly<GameplayUiSupport> };
     __clubscapePresentationV1?: Readonly<{ mode: "live" | "early_fixture"; sceneId: string | null }>;
   }
 }
@@ -39,7 +40,9 @@ async function start(): Promise<void> {
     worldCanvas: document.querySelector<HTMLCanvasElement>("#world")!,
     uiCanvas: document.querySelector<HTMLCanvasElement>("#overlay")!,
   });
-  window.__clubscapeClientStateV1 = Object.freeze({ read: () => application!.app.state() });
+  window.__clubscapeClientStateV1 = Object.freeze({
+    read: () => application!.app.state(), gameplayUi: () => application!.app.gameplayUi(),
+  });
   if (earlyScene !== null) {
     status.hidden = false;
     status.textContent = `Early presentation fixture: ${earlyScene}. Not a legitimate journey or acceptance run.`;

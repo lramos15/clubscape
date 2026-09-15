@@ -138,3 +138,37 @@ cd web && pnpm wasm
 Rust fixtures test wire mapping, malformed/stale/duplicate replies, uncertain
 outcomes, auth revocation, precision and privacy. They do not establish a real
 character/world journey or presentation fidelity.
+
+## Published `game.ui.v1` boundary (contract-only)
+
+The authorized `d1532d6f` contract is integrated. `GameplayUiRequest` and
+`GameplayUiView` are reused directly from `clubscape-game-types`, and the
+browser uses the exact `GameplayUiIntent`/`GameplayUiView` shared types.
+No engine, Protobuf message, capability advertisement or canonical data
+implementation was included in that publication.
+
+`BridgeState.capabilities` records the actual validated ServerHello values.
+`gameplayUiWireSupported` is explicitly **false** until the generated wire
+adapter is implemented. Valid new UI requests are parsed through the exact
+shared Rust request enum, then rejected as `unsupported_capability` or
+`unsupported_protocol` **before sequence allocation or transport**. They are
+never downgraded to old production/bank/item actions that discard menu, entry,
+presentation, confirmation or expected item/instance identities. A future
+server advertising `game.ui.v1` cannot make this old decoder create/join a
+world while silently dropping its required UI view.
+
+`gameplay_ui::project` is a pure Rust-DTO to shared-TypeScript-DTO projection,
+ready for the eventual generated snapshot adapter. It is **not exposed as a
+WASM state setter or accepted client outcome**. It preserves every stable
+entry/menu/presentation/confirmation/item/instance ID, declared appearance/
+ability/permission state, public chat text and source continuation. Balances,
+fees, XP, revisions and weight remain exact decimal strings. A bank placeholder
+has `value:null`, never a spendable zero-quantity stack. No guards, prices,
+grants, rewards, volumes, model previews or minimap data are computed here.
+
+The runtime does not install that projection from fixtures or source defaults.
+Legacy `WorldView.ui` stays **absent**, not `{version:1,...empty values}`.
+The pending `production.target` nullable correction has not been relayed:
+this implementation follows the currently published target type and never
+adds a dummy spawn for inventory-only production. Integrate that exact shared
+type change and actual engine/protocol projection before enabling wire support.

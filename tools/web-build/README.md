@@ -403,6 +403,17 @@ files stay in the project and owned processes/resources are cleaned.
 
 Before integrated-client completion:
 
+The `d1532d6f` versioned gameplay UI publication is contract-only. Current
+`game.ui.v1` requests are recognized through the exact shared Rust enum but
+rejected before wire/sequence allocation; `WorldView.ui` remains absent on
+the actual legacy server. The pure DTO projector and browser version/decimal/
+identity validation are prepared, not enabled as a backend implementation.
+Actual ServerHello capability, generated wire support and a complete version-1
+view are all required. The pending production-target nullability correction
+is not approximated with a fake target. Evidence for this current unsupported
+boundary is recorded separately under
+`.local/evidence/early-render-ui-contract-v1/result.json`.
+
 1. The actual renderer entrypoint/build are integrated. Consume its continuation
    for authoritative region streaming, action/equipment packs, exact canonical
    object picks, dynamic minimap and model-only preview; do not promote named
@@ -410,7 +421,7 @@ Before integrated-client completion:
 2. Supply the real compiled source asset/region/camera bindings and a matching
    server public ContentManifest/asset deployment. Do not substitute the test
    fixtures for those resources.
-3. The authorized backend/content commits are integrated: guarded contexts,
+3. Existing backend/content commits are integrated: guarded contexts,
    quotes, presence, all three additive intents and lifecycle-journal retries
    are mapped. Align UI consumption of multi-panel recovery and exact U64 fees,
    plus source inventory action labels. Shop expected-item/capacity fixes
@@ -422,6 +433,11 @@ Before integrated-client completion:
    Source contact/offline-clock and512KiB descriptor/environment repairs are
    integrated without trimmed content or seeded state. The complete actor/collision/style
    repairs are integrated without a new browser outcome API.
+   The newly published `GameplayUiView`/`GameplayUiIntent` still requires its
+   actual engine, generated Protobuf and canonical data implementation before
+   versioned production/reward/confirmation/ability/bank/death/chat/appearance
+   controls can be admitted. Preserve the stable IDs and string numeric fields
+   when that implementation is relayed; no old-view empty-success fallback.
 4. The shell observes real canvas queue completions and adapts actual renderer
    diagnostics/source zoom. The renderer still needs to expose rendered entity
    counts (not discarded raw stats) and the

@@ -6,12 +6,14 @@ import { RpcTransport } from "../transport.ts";
 import type { Fetch } from "../transport.ts";
 import type { PublicWorld } from "../public-state.ts";
 import { AppError } from "../errors.ts";
+import type { GameplayUiIntent } from "../../shared/contracts.ts";
 
 // These doubles isolate composition/order/privacy, not protocol or gameplay correctness.
 class FixtureBridge implements WasmClient {
   stateValue: BridgeState = {
     version: 1, phase: "account_ready", authenticated: true, accountName: "fixture",
     characterInitialized: true, gameplayAvailable: true, unavailableReason: null,
+    capabilities: ["game.v1"], gameplayUiWireSupported: false,
     serverBuild: "fixture-not-game", contentRevision: "fixture", contentManifestPath: "/content/manifest.json",
     world: null, events: [], nextSequence: "1", uncertainInput: false,
     worldJoined: false, quote: null, quoteError: null,
@@ -127,6 +129,39 @@ test("actual UI appearance submission keeps source creation empty and confirms o
   assert.equal(app.state().phase, "world");
   await assert.rejects(app.createCharacter({ body_type: 0 }), /already confirmed/);
   assert.equal(bridge.operations.filter((operation) => operation === "create_character").length, 1);
+  await app.dispose();
+});
+
+test("published gameplay UI requests preserve their selection but send no legacy substitute or optimistic state", async () => {
+  const bridge = new FixtureBridge();
+  let requests = 0;
+  const app = new BrowserApp(bridge, new RpcTransport((async () => {
+    requests++;
+    return new Response(new Uint8Array([1]), { headers: { "content-type": "application/x-protobuf" } });
+  }) as Fetch), hooks());
+  await app.enterWorld();
+  assert.equal(app.gameplayUi().available, false);
+  assert.equal(app.gameplayUi().reason, "not_advertised");
+  assert.equal(app.state().world?.ui, undefined);
+  assert.match(app.state().error?.message ?? "", /game.ui.v1/);
+  const baseline = requests;
+  let seen: unknown;
+  bridge.submit = (_id, input) => {
+    seen = JSON.parse(input);
+    throw new AppError("game.ui.v1 is not advertised; no wire request was sent.", { kind: "unsupported_capability" });
+  };
+  const intent: Extract<GameplayUiIntent, { kind: "item_action" }> = { kind: "item_action", inventory_slot: 1, expected_item: "item.original",
+    expected_instance: "item_instance.original", action: "action.original" };
+  const pending = app.send(intent);
+  intent.expected_item = "item.replacement";
+  intent.expected_instance = null;
+  await assert.rejects(pending, /no wire request/);
+  assert.deepEqual(seen, { kind: "item_action", inventory_slot: 1, expected_item: "item.original",
+    expected_instance: "item_instance.original", action: "action.original" });
+  assert.equal(requests, baseline);
+  assert.equal(app.state().phase, "world");
+  assert.equal(bridge.stateValue.nextSequence, "1");
+  assert.equal(Object.hasOwn(app.state().world!, "ui"), false);
   await app.dispose();
 });
 

@@ -22,6 +22,32 @@ art/interface context files intentionally keep pre-approval prose; current
 implementation authority is in the browser/milestone guidance and external
 owner record, not a rewrite of those frozen inputs.
 
+## Published gameplay UI capability
+
+The authorized `d1532d6f` contract publication is present, but its backend/
+Protobuf/data implementation is not. The shell treats `game.ui.v1` as a
+negotiated capability requiring both an implemented wire decoder and the
+**complete** `WorldView.ui.version === 1` projection. Published types alone
+cannot enable it. `BrowserApp.gameplayUi()` and the observation-only
+`window.__clubscapeClientStateV1.gameplayUi()` distinguish not advertised,
+wire unavailable and missing versioned view; legacy world state never receives
+a fabricated empty UI object.
+
+The real legacy-server entry displays one recoverable unsupported-capability
+notice, not repeated cosmetic failures on every poll. New identity-bound
+`GameplayUiIntent` requests still go through WASM, which parses the shared
+Rust request type and refuses unsupported wire operations before sending or
+allocating a sequence. Old quantity/index/close-interface intents are not
+substitutes for new stable entry/menu/reward/confirmation identities.
+
+`gameplay-ui.ts` validates the full published versioned projection, exact
+decimal strings and placeholder shapes before state is recursively frozen.
+The native shared-DTO projection is prepared and fixture-tested, not wired
+to synthetic outcomes. Full M1/benchmark readiness also requires the actual
+versioned projection. Renderer/audio APIs, SourceAudioSettings, minimap and
+model-preview ownership are unchanged. The pending nullable production target
+correction must arrive through the exact shared contract—never a dummy target.
+
 `composition.ts` is also dependency-injectable for bounded component tests.
 Such injected handles are not an integrated game. The real UI owns its
 source-sprite/font composition, selections, drag state, menus and accessible

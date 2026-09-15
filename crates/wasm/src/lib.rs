@@ -1,5 +1,6 @@
 pub mod catalog;
 mod context;
+pub mod gameplay_ui;
 mod intent;
 mod quote;
 mod view;
@@ -93,6 +94,7 @@ pub struct Bridge {
     content_revision: Option<String>,
     manifest_path: Option<String>,
     gameplay_available: bool,
+    capabilities: BTreeSet<String>,
     unavailable_reason: Option<String>,
     server_build: Option<String>,
     uncertain_sequence: Option<u64>,
@@ -173,6 +175,15 @@ impl Bridge {
             _ => return Err(BridgeError::input("Unsupported bridge operation.")),
         };
         let lifecycle = matches!(command, Command::LeaveWorld(_) | Command::Logout(_));
+        if matches!(command, Command::CreateCharacter(_) | Command::JoinWorld(_))
+            && self.capabilities.contains(gameplay_ui::CAPABILITY)
+            && !gameplay_ui::WIRE_SUPPORTED
+        {
+            return Err(BridgeError::new(
+                "unsupported_protocol",
+                "The server advertises game.ui.v1, but this client has no generated gameplay UI wire decoder yet. No character/world request was sent.",
+            ));
+        }
         if self.pending_lifecycle.is_some()
             && (lifecycle || matches!(command, Command::JoinWorld(_)))
         {
@@ -196,6 +207,25 @@ impl Bridge {
     }
 
     pub fn submit(&mut self, request_id: &str, input: &str) -> Result<Vec<u8>, BridgeError> {
+        if input.len() > clubscape_protocol::MAX_REQUEST_BYTES {
+            return Err(BridgeError::input(
+                "The UI/game input exceeds its protocol byte budget.",
+            ));
+        }
+        if gameplay_ui::request(input).is_some() {
+            return Err(BridgeError::new(
+                if self.capabilities.contains(gameplay_ui::CAPABILITY) {
+                    "unsupported_protocol"
+                } else {
+                    "unsupported_capability"
+                },
+                if self.capabilities.contains(gameplay_ui::CAPABILITY) {
+                    "The published gameplay UI request has no generated Protobuf mapping in this client. Nothing was sent or optimistically changed."
+                } else {
+                    "This server has not advertised game.ui.v1 or provided its version-1 authoritative view. The UI request is unsupported; nothing was sent."
+                },
+            ));
+        }
         let action = intent::action(input)?;
         self.submit_action(request_id, action)
     }
@@ -481,6 +511,7 @@ impl Bridge {
         }
         match outcome {
             Some(Outcome::Hello(hello)) => {
+                self.capabilities = hello.capabilities.into_iter().collect();
                 self.gameplay_available = hello.gameplay_available;
                 self.unavailable_reason = (!hello.gameplay_unavailable_reason.is_empty())
                     .then_some(hello.gameplay_unavailable_reason);
@@ -618,6 +649,7 @@ impl Bridge {
             "accountName":self.core.account().map(|account| &account.login_name),
             "characterInitialized":self.character_initialized,
             "gameplayAvailable":self.gameplay_available,"unavailableReason":self.unavailable_reason,
+            "capabilities":self.capabilities,"gameplayUiWireSupported":gameplay_ui::WIRE_SUPPORTED,
             "serverBuild":self.server_build,"contentRevision":self.content_revision,
             "contentManifestPath":self.manifest_path,"world":world,"events":audio,
             "worldJoined":self.session.is_some(),

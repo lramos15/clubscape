@@ -253,6 +253,97 @@ fn new_shop_purchases_use_the_selected_identity_and_never_replace_conflicting_id
 }
 
 #[test]
+fn every_published_gameplay_ui_request_is_typed_but_explicitly_unsupported_without_wire_or_capability()
+ {
+    let requests = [
+        json!({"kind":"ui_dismiss","presentation_id":"presentation.original"}),
+        json!({"kind":"production_select","menu_id":"menu.original","recipe":"recipe.fixture","quantity":1,"mode":"make_x"}),
+        json!({"kind":"item_action","inventory_slot":0,"expected_item":"item.fixture","expected_instance":"item_instance.original","action":"action.original"}),
+        json!({"kind":"bank_select_tab","tab":1}),
+        json!({"kind":"bank_create_tab","entry_id":"entry.original"}),
+        json!({"kind":"bank_move","entry_id":"entry.original","before_entry_id":"entry.before","tab":1}),
+        json!({"kind":"bank_collapse_tab","tab":1}),
+        json!({"kind":"bank_set_insert","enabled":true}),
+        json!({"kind":"bank_set_placeholders","enabled":false}),
+        json!({"kind":"bank_release_placeholder","entry_id":"entry.original"}),
+        json!({"kind":"bank_deposit_equipment"}),
+        json!({"kind":"bank_withdraw_entry","entry_id":"entry.original","quantity":5,"noted":true}),
+        json!({"kind":"bank_set_options","amount":5,"noted":false}),
+        json!({"kind":"open_death_preview"}),
+        json!({"kind":"request_recovery_discard","death":"death.original","storage":"grave","items":["recovery_item.original"]}),
+        json!({"kind":"coffer_offer","inventory_slot":0,"expected_item":"item.fixture","expected_instance":null,"quantity":1}),
+        json!({"kind":"ui_confirm","confirmation_id":"confirmation.original","accept":true}),
+        json!({"kind":"public_chat","channel":"public","text":"Exact public input"}),
+    ];
+    let mut bridge = joined();
+    let before = bridge.state().unwrap();
+    for request in requests {
+        let parsed: clubscape_game_types::GameplayUiRequest =
+            serde_json::from_value(request.clone()).unwrap();
+        assert_eq!(
+            serde_json::to_value(parsed).unwrap(),
+            request,
+            "The shared request preserves every selection identity."
+        );
+        let error = bridge.submit(&id(4), &request.to_string()).unwrap_err();
+        let error = serde_json::to_value(error).unwrap();
+        assert_eq!(error["kind"], "unsupported_capability");
+        assert!(
+            !error.to_string().contains("Exact public input"),
+            "Chat content must not be logged in capability feedback."
+        );
+        assert_eq!(
+            bridge.state().unwrap(),
+            before,
+            "Unsupported UI requests cannot consume a sequence or manufacture state."
+        );
+    }
+    assert!(bridge.submit(&id(4), walk()).is_ok());
+}
+
+#[test]
+fn advertising_ui_types_cannot_enable_an_absent_protobuf_decoder_or_create_a_character() {
+    let mut bridge = authenticated();
+    bridge.prepare(&id(3), "hello", "{}").unwrap();
+    reply(
+        &mut bridge,
+        3,
+        Outcome::Hello(clubscape_protocol::ServerHello {
+            capabilities: vec![GAME_CAPABILITY.into(), "game.ui.v1".into()],
+            gameplay_available: true,
+            ..Default::default()
+        }),
+    )
+    .unwrap();
+    let state: Value = serde_json::from_str(&bridge.state().unwrap()).unwrap();
+    assert_eq!(state["gameplayUiWireSupported"], false);
+    assert!(
+        state["capabilities"]
+            .as_array()
+            .unwrap()
+            .contains(&json!("game.ui.v1"))
+    );
+    for operation in ["create_character", "join"] {
+        let error = bridge.prepare(&id(4), operation, "{}").unwrap_err();
+        assert_eq!(
+            serde_json::to_value(error).unwrap()["kind"],
+            "unsupported_protocol"
+        );
+    }
+    let error = bridge
+        .submit(
+            &id(4),
+            r#"{"kind":"ui_confirm","confirmation_id":"confirmation.original","accept":true}"#,
+        )
+        .unwrap_err();
+    assert_eq!(
+        serde_json::to_value(error).unwrap()["kind"],
+        "unsupported_protocol"
+    );
+    assert_eq!(bridge.state().unwrap(), state.to_string());
+}
+
+#[test]
 fn uncertain_shop_retry_retains_original_item_identity_and_stale_rejection_keeps_sequence() {
     let mut bridge = joined();
     let json = r#"{"kind":"shop_buy","shop":"shop.fixture","item_index":2,"quantity":5,"expected_item":"item.original"}"#;

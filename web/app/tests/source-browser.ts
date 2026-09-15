@@ -239,6 +239,11 @@ export async function sourceBrowserCheck(): Promise<void> {
     assert(first.player.presence?.connected);
     assert(!JSON.stringify(first).includes("played_time") && !JSON.stringify(first).includes("ground_provenance"));
     checks.push("empty source creation, real join and separate sequenced appearance confirmation from UI");
+    const gameplayUi = await page.evaluate(() => window.__clubscapeClientStateV1!.gameplayUi());
+    assert.equal(gameplayUi.available, false);
+    assert.equal(gameplayUi.reason, "not_advertised");
+    assert.equal(first.ui, undefined, "Contract publication cannot fabricate a version-1 server UI projection.");
+    checks.push("legacy game.ui.v1 absence is explicitly unsupported; no fake complete UI state");
     let renderPixels: unknown = null;
     if (earlyScene !== null) {
       await page.waitForFunction(() => (window.__clubscapeBenchmarkV1?.read(null).renderedFrames ?? 0) >= 8, undefined, { timeout: 30_000 });
@@ -301,7 +306,7 @@ export async function sourceBrowserCheck(): Promise<void> {
     await writeFile(resolve(evidence, "result.json"), JSON.stringify({
       kind: earlyScene ? "early-render-ui-canonical-source-entry" : "real-ui-wasm-canonical-source-onboarding",
       result: "passed", recordedAt: new Date().toISOString(),
-      checks, sourceRunPin: pin, browser: version, sandbox: { namespaceAndSeccomp: true, gpuProcessSandboxed: system.gpu.auxAttributes?.sandboxed ?? null },
+      checks, gameplayUi, sourceRunPin: pin, browser: version, sandbox: { namespaceAndSeccomp: true, gpuProcessSandboxed: system.gpu.auxAttributes?.sandboxed ?? null },
       titlePixels: title, build: benchmark.identity, rendererReady: benchmark.ready, renderedFrames: benchmark.renderedFrames,
       actualUiSignup: true, actualCanonicalWorld: true, actualServerRestart: true,
       earlyScene, renderPixels, fullJourneyTested: false, worldRendererIntegrated: earlyScene !== null,

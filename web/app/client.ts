@@ -5,6 +5,8 @@ import type { AudioChannel } from "./settings.ts";
 import { RpcTransport } from "./transport.ts";
 import { presenceOf } from "./public-state.ts";
 import type { PublicWorld, QuoteRequest, QuoteView, ShopPurchaseIntent } from "./public-state.ts";
+import { gameplayUiSupport } from "./gameplay-ui.ts";
+import type { GameplayUiSupport } from "./gameplay-ui.ts";
 
 export interface WasmClient {
   prepare(requestId: string, operation: string, input: string): Uint8Array;
@@ -30,6 +32,8 @@ export interface BridgeState {
   accountName: string | null;
   characterInitialized: boolean;
   gameplayAvailable: boolean;
+  capabilities: string[];
+  gameplayUiWireSupported: boolean;
   unavailableReason: string | null;
   serverBuild: string | null;
   contentRevision: string | null;
@@ -56,6 +60,12 @@ export interface ClientHooks {
 export function bridgeState(json: string): Readonly<BridgeState> {
   const state = JSON.parse(json) as BridgeState;
   invariant(state.version === 1 && typeof state.authenticated === "boolean", "Invalid WASM state envelope.", "protocol");
+  invariant(Array.isArray(state.capabilities) && state.capabilities.every((value) => typeof value === "string")
+    && typeof state.gameplayUiWireSupported === "boolean", "Invalid WASM capability negotiation state.", "protocol");
+  const support = gameplayUiSupport(state.capabilities, state.gameplayUiWireSupported, state.world);
+  if (state.world !== null && support.reason === "view_missing") {
+    throw new AppError(support.message!, { kind: "unsupported_protocol" });
+  }
   invariant(state.nextSequence === null || (typeof state.nextSequence === "string" && /^[1-9][0-9]*$/.test(state.nextSequence)), "Invalid WASM sequence.", "protocol");
   if (state.world) {
     invariant(typeof state.world.revision === "string" && /^\d+$/.test(state.world.revision)
@@ -91,6 +101,8 @@ export class BrowserApp implements AppServices {
   #reconnectAttempts = 0;
   #worldPrepared: string | null = null;
   #logoutRequested = false;
+  #uiWarning: string | null = null;
+  #uiSupport: Readonly<GameplayUiSupport> = gameplayUiSupport([], false, null);
 
   constructor(bridge: WasmClient, transport: RpcTransport, hooks: ClientHooks) {
     this.#bridge = bridge;
@@ -99,6 +111,7 @@ export class BrowserApp implements AppServices {
   }
 
   state(): Readonly<AppState> { return this.#state; }
+  gameplayUi(): Readonly<GameplayUiSupport> { return this.#uiSupport; }
   subscribe(listener: (state: Readonly<AppState>) => void): () => void {
     this.#listeners.add(listener);
     listener(this.#state);
@@ -309,6 +322,7 @@ export class BrowserApp implements AppServices {
   }
 
   async #acceptWorld(state: Readonly<BridgeState>): Promise<void> {
+    this.#uiSupport = gameplayUiSupport(state.capabilities, state.gameplayUiWireSupported, state.world);
     const world = state.world;
     if (!world) return;
     const presence = presenceOf(world);
@@ -333,6 +347,13 @@ export class BrowserApp implements AppServices {
     }
     this.#publish({ world, accountName: state.accountName, phase: "world" });
     this.#hooks.events(world, state.events);
+    const support = this.#uiSupport;
+    if (!support.available && support.message !== this.#uiWarning) {
+      this.#uiWarning = support.message;
+      this.report(new AppError(support.message!, { kind: "unsupported_capability" }));
+    } else if (support.available) {
+      this.#uiWarning = null;
+    }
     const unavailable = (world as WorldView & { unavailableViews?: Array<{ view: string; reason: string }> }).unavailableViews;
     if (unavailable?.length) {
       this.#publish({ error: {
@@ -351,7 +372,11 @@ export class BrowserApp implements AppServices {
       const requestId = this.#bridge.request_id(bytes);
       const token = this.#bridge.authorization();
       const response = await this.#transport.post(bytes, token);
-      try { return bridgeState(this.#bridge.receive_for(requestId, response)); }
+      try {
+        const state = bridgeState(this.#bridge.receive_for(requestId, response));
+        this.#uiSupport = gameplayUiSupport(state.capabilities, state.gameplayUiWireSupported, state.world);
+        return state;
+      }
       finally { response.fill(0); }
     } finally { bytes.fill(0); }
   }
