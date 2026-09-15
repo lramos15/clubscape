@@ -1,0 +1,34 @@
+{
+  "schema_version": 1,
+  "established_without_candidate_evaluation": true,
+  "source_index": "assets/reference/osrs240/m1-dynamic/case-index.json",
+  "pair_metrics": "assets/reference/osrs240/m1-dynamic/pair-metrics.json",
+  "approved_pack": {
+    "path": "research/reference-pack/v1/manifest.json",
+    "sha256": "b62e19704e17d3d3e4e819f803ef49ba7cc54034ae407184b423427c65d9674d",
+    "approval_record": "milestones/approvals/m1-reference-pack-v1.3.0.json",
+    "modified": false
+  },
+  "numeric_policy": {
+    "path": "research/reference-pack/v1/comparison-policy.json",
+    "sha256": "6e43cd3d9625e6fedb01861ca1ccb292ad031be53e613c7b53a9779d4d4f1747",
+    "profiles": ["native_scene_model", "native_hud"],
+    "new_or_loosened_thresholds": false
+  },
+  "procedure": [
+    "Verify source PNG, original native ARGB, source-input and per-pair geometry hashes before any candidate comparison.",
+    "Select the exact source case and reproduce its camera, projection, world/plane, controlled container state, model/shape/orientation, source animation frame and recorded native terrain tint.",
+    "Retain full1920x1080 pixel accounting, source scale128, negative-up heights,16384 scene angle units, stock root161 and native UIscale1.",
+    "Apply the unchanged native_scene_model limits to the matching scene and the unchanged native_hud zero-error requirements to source UI/control/glyph geometry. No image rescaling, translational registration or new tolerance is introduced.",
+    "Derive the existing one-pixel scene edge band from the SOURCE before evaluating a candidate, under the approved policy. Never mask a whole panel, creature, scenery layer or failing geometry.",
+    "Do not subtract source-to-source pair differences from candidate errors. They describe controlled state changes, not acceptance allowances.",
+    "The sidebar container includes world-visible gutters. Their pixels are retained in the complete matching source case; the full native inventory panel remains exact across these source pairs.",
+    "Evaluate the locked-camera roof branch shown in the images separately from the recorded normal-camera selector. Do not relabel one as the other or infer authenticated progression.",
+    "Keep the explicitly controlled open orientation and mapped-chunk qualifications. These references do not establish unobserved server packets or live timing."
+  ],
+  "candidate_evaluations_performed": 0,
+  "reference_images_embedded_in_candidate": false,
+  "frozen_pack_modified": false,
+  "new_owner_approval_requested_or_claimed": false,
+  "m1_or_performance_acceptance": false
+}

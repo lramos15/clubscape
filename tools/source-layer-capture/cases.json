@@ -1,0 +1,37 @@
+{
+  "schema_version": 1,
+  "classification": "controlled offline original-client rendering",
+  "source_cache_id": 2695,
+  "source_game_revision": 240,
+  "seed": 0,
+  "dimensions": [1920, 1080],
+  "dpr": 1,
+  "ui_scale": 1,
+  "comparison_policy": "research/reference-pack/v1/comparison-policy.json",
+  "comparison_profiles": ["native_scene_model", "native_hud"],
+  "cases": [
+    {"id": "tutorial-door-closed", "camera": "tutorial-starting-house", "layer": "door", "orientation": 0, "hide_roofs": true, "player_tile": [3094, 3103], "plane": 0},
+    {"id": "tutorial-door-open", "camera": "tutorial-starting-house", "layer": "door", "orientation": 1, "hide_roofs": true, "player_tile": [3094, 3103], "plane": 0},
+    {"id": "lumbridge-ground-single", "camera": "lumbridge-castle-plaza", "layer": "ground", "items": [[995, 1]], "hide_roofs": true, "player_tile": [3222, 3218], "plane": 0},
+    {"id": "lumbridge-ground-stack", "camera": "lumbridge-castle-plaza", "layer": "ground", "items": [[995, 10000]], "hide_roofs": true, "player_tile": [3222, 3218], "plane": 0},
+    {"id": "lumbridge-ground-top-three", "camera": "lumbridge-castle-plaza", "layer": "ground", "items": [[1925, 1], [1277, 1], [995, 10000], [1511, 1]], "hide_roofs": true, "player_tile": [3222, 3218], "plane": 0},
+    {"id": "lumbridge-fire-frame-zero", "camera": "lumbridge-castle-plaza", "layer": "fire", "animation_frame": 0, "hide_roofs": true, "player_tile": [3222, 3218], "plane": 0},
+    {"id": "lumbridge-fire-frame-three", "camera": "lumbridge-castle-plaza", "layer": "fire", "animation_frame": 3, "hide_roofs": true, "player_tile": [3222, 3218], "plane": 0},
+    {"id": "tutorial-roofs-outside", "camera": "tutorial-starting-house", "layer": "roof", "hide_roofs": false, "player_tile": [3094, 3099], "plane": 0},
+    {"id": "tutorial-roofs-inside", "camera": "tutorial-starting-house", "layer": "roof", "hide_roofs": false, "player_tile": [3094, 3103], "plane": 0},
+    {"id": "tutorial-roofs-hidden", "camera": "tutorial-starting-house", "layer": "roof", "hide_roofs": true, "player_tile": [3094, 3099], "plane": 0},
+    {"id": "lumbridge-minimap-plane-one", "camera": "lumbridge-castle-plaza", "layer": "plane", "hide_roofs": true, "player_tile": [3222, 3218], "plane": 1},
+    {"id": "lumbridge-minimap-mapped-chunk", "camera": "lumbridge-castle-plaza", "layer": "mapped-chunk", "hide_roofs": true, "player_tile": [3222, 3218], "plane": 0}
+  ],
+  "pairs": [
+    {"id": "door", "before": "tutorial-door-closed", "after": "tutorial-door-open", "changes": ["controlled native door orientation", "native minimap"]},
+    {"id": "ground-quantity", "before": "lumbridge-ground-single", "after": "lumbridge-ground-stack", "changes": ["native quantity-selected item model"]},
+    {"id": "ground-top-three", "before": "lumbridge-ground-stack", "after": "lumbridge-ground-top-three", "changes": ["native distinct-item pile selection and drawpoints"]},
+    {"id": "fire", "before": "lumbridge-fire-frame-zero", "after": "lumbridge-fire-frame-three", "changes": ["source sequence475 frame"]},
+    {"id": "roof-player-location", "before": "tutorial-roofs-outside", "after": "tutorial-roofs-inside", "changes": ["controlled player location; original stock roof selectors evaluated"]},
+    {"id": "roof-preference", "before": "tutorial-roofs-outside", "after": "tutorial-roofs-hidden", "changes": ["original hide-roofs preference"]},
+    {"id": "minimap-plane", "before": "lumbridge-ground-single", "after": "lumbridge-minimap-plane-one", "changes": ["controlled plane0 to1", "ground pile absent"]},
+    {"id": "minimap-mapped-chunk", "before": "lumbridge-ground-single", "after": "lumbridge-minimap-mapped-chunk", "changes": ["controlled source chunk mapping, not a live instance packet", "ground pile absent"]}
+  ],
+  "limits": "At most twelve supplementary source fixtures. No candidate comparison, authenticated journey, server timing observation or new approval."
+}

@@ -1,0 +1,12 @@
+{
+  "schema_version": 1,
+  "runtime_selection": "research/current-source/selection.json",
+  "runtime_and_decoder_lock": "tools/cache-import/dependencies.json",
+  "matching_client_resource_lock": "tools/source-capture/dependencies.json",
+  "frozen_helpers": "All tools/source-capture/*.java are compiled read-only, unchanged; exact hashes are in case-index.json.",
+  "java": {"release": 17, "verified_runtime": "Eclipse Temurin 17.0.20.1+1 ARM64", "new_installation": false},
+  "python": {"verified_version": "3.12.3", "packages": [{"name": "Pillow", "verified_version": "10.2.0", "role": "PNG integrity and source-to-source pixel analysis only, never native rendering"}]},
+  "framebuffer": "Original tg provider, headless AWT; software source renderer and native root161 widgets.",
+  "network_downloads": false,
+  "source_account_or_personal_runelite_state": false
+}

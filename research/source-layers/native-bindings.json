@@ -1,0 +1,117 @@
+{
+  "schema_version": 1,
+  "task": "m1-source-dynamic-references",
+  "classification": "controlled offline original-client rendering",
+  "source_case_index": "assets/reference/osrs240/m1-dynamic/case-index.json",
+  "source_pair_metrics": "assets/reference/osrs240/m1-dynamic/pair-metrics.json",
+  "runtime": {
+    "injected_client": "1.12.38",
+    "injected_client_sha256": "7fdedf1194261cc5b99faa35e0d2b4e45b6d56665402ccbde7f3aa6207c3f947",
+    "api_sha256": "6d50aa843c070120a5093c5ead29d72e92742074346241e0359a133dad008852",
+    "cache_id": 2695,
+    "game_revision": 240,
+    "jar_modified": false,
+    "source_capture_helpers_modified": false,
+    "private_cache_copy": true,
+    "network_transport": null,
+    "personal_runelite_state_read": false
+  },
+  "entrypoints": {
+    "terrain_and_scene": {
+      "calls": ["OriginalCache.archive -> vp.az/va.bw", "rl4.fn", "pq.as via gb.co", "gp.az via qi.ck", "cz.az", "ez.dh"],
+      "data": "Original complete source map groups, file0 terrain/file1 locations; CRC/full index revisions and disk trailer checks remain active.",
+      "scene_owner": "dz world ID0; world.ae=loader.gb, world.al=loader.nw, world.aj=loader.zw, scene.jd=world",
+      "framebuffer": "Original tg at wo.qi; native pixel array captured through unchanged OriginalCapture.save",
+      "camera": "ki.jl/nl.jr/ai.jo and up pitch/yaw at client.jj/jt; original locked-camera path client.kb=true"
+    },
+    "door": {
+      "call": "mi.ey(dz, plane, category, localX, localY, objectID, orientation, shape, animationOverride, byte) -> fk.at -> ez.br",
+      "arguments": ["world", 0, 0, 50, 51, 9398, "0 or 1", 0, -1, 0],
+      "world_tile": [3098, 3107, 0],
+      "native_model": 9476,
+      "native_wall_orientation_masks": [1, 2],
+      "qualification": "Original wall-type0 geometry at the actual source placement. The open orientation is controlled, not an observed authoritative server hinge/open packet; the source definition still exposes Open."
+    },
+    "ground_items": {
+      "call": "bu.dg -> original dl TileItem and nn deque -> lj.es -> original item layer",
+      "arguments": ["world", 0, 53, 49, "source item ID", "quantity", 31, 0, 600, 0, false, 0],
+      "tile": [3221, 3217, 0],
+      "draw_anchor_x_height_y": [6848, -240, 6336],
+      "support_height": 0,
+      "single_and_stack": "Native995 quantity1 versus10000 choose different original models.",
+      "four_queued_items": [[1925, 1], [1277, 1], [995, 10000], [1511, 1]],
+      "selected_api_slots": {"bottom": 1277, "middle": 1925, "top": 995},
+      "lifetime_qualification": "The visible/despawn offsets and ownership are controlled native fields, not measured source gameplay timers or loot ownership observations."
+    },
+    "fire": {
+      "placement": "mi.ey(world,0,2,53,49,26185,0,10,-1,0)",
+      "phase": "Original dy(world,26185,10,0,0,53,49,475,false,null), then dy.rf/ou.pl stepping",
+      "sequence": 475,
+      "source_frame_lengths_client_cycles": [6, 6, 6, 6, 6],
+      "captured_frames": [0, 3],
+      "native_cycles_to_select_frames": [0, 19],
+      "scene_cycle_during_both_captures": 0,
+      "last_update_field": "dy.ao, decode multiplier1618438999; rebased after native stepping so unrelated scenery does not advance",
+      "native_anim_cycle_api_result": -1,
+      "audio": "Existing silent native animation-event consumer only; no audio synthesis or trigger acceptance"
+    },
+    "roofs": {
+      "preference": "Original cy.as boolean consumed by cy.bu, controlled in isolated RAM without preference persistence",
+      "following_camera_selector": "cz.ch(927500664)",
+      "actual_image_branch": "Original cz.az locked-camera branch; actual scene draw plane read from ez.br",
+      "outside_tile": [3094, 3099, 0],
+      "inside_tile": [3094, 3103, 0],
+      "source_tile_settings": [0, 4],
+      "locked_camera_planes_outside_inside_hidden": [3, 3, 0],
+      "following_camera_selector_outside_inside_hidden": [3, 0, 0],
+      "roof_removal_plugin_mode": 0,
+      "qualification": "The inside locked-camera image does not auto-hide roofs. Normal-camera selection is measured separately, never relabeled as the path that painted the image."
+    },
+    "minimap": {
+      "call": "client.bm(world, native ym512, 4.0, world.getPlane(), 0, 0, 48, 48)",
+      "display": "Original root161/native minimap widget; no generic minimap drawing or screenshot background",
+      "plane_case": "Controlled plane1, not a verified walkable arrival account",
+      "mapped_case": {
+        "native_loader": "xk.az=true, xk.ae mappings -> rl4.fn",
+        "target_local_chunk": [0, 6, 6],
+        "source_chunk": [0, 402, 402],
+        "rotation_quarter_turns": 2,
+        "packed_template": 6589588,
+        "other_chunks": "Identity mapping for all four planes of the core104x104 source area",
+        "source_scene_geometry_counts": "Unchanged loaded tile/model/object counts, recorded independently per pair",
+        "qualification": "Controlled native source chunk mapping, not a captured live instance packet or legitimate route."
+      }
+    }
+  },
+  "projection_and_randomness": {
+    "camera_positions": "Unchanged frozen Tutorial starting-house and Lumbridge castle/plaza source camera inputs",
+    "scene_angle_units_per_turn": 16384,
+    "native_units_per_tile": 128,
+    "height_axis": "Negative is up",
+    "full_hud_zoom": 410,
+    "viewport_only_reference_zoom": 662,
+    "projection_proof": "Existing frozen native inventory PNG and ARGB pixels replayed byte-identically under the unchanged original HUD calculation.",
+    "brightness": 0.8,
+    "draw_distance": 25,
+    "texture_resolution": 128,
+    "fixture_far_clip": 32768,
+    "math_random_seed": 0,
+    "observed_native_terrain_hue_offset": 2,
+    "observed_native_terrain_lightness_offset": -6,
+    "tint_readback": "di.at/di.an; modular inverses of original class-initializer write multipliers2133726259/-93161891",
+    "no_wall_clock_game_ticks_invented": true
+  },
+  "preparation_failures_repaired": [
+    "Scene API methods with unusual native class descriptors are called through their exact RuneLite interface or descriptor-aware reflection; the original JAR was not patched.",
+    "A Model renderable is already the model; inherited Renderable.getModel can return null. Model instances are handled directly and geometry still fails closed.",
+    "Spawned fire initially used a randomized source phase. Original nonrandom construction/native stepping now reaches and verifies the exact declared frame before and after painting.",
+    "Tile3094,3100 has source roof flag4, so it was not an outside sample. The outside control uses actual source tile3094,3099 flag0.",
+    "The viewport-only662 zoom is not the full-HUD zoom. A byte-identical frozen HUD replay establishes the original410 calculation without forcing a replacement projection.",
+    "A native sidebar container includes unpainted world gutters. All pixels remain accounted for; its complete inventory panel is checked separately and remains exact.",
+    "Uncalled obfuscator aliases are not used for roof selection or scene mutation. Live cz.ch/mi.ey/bu.dg call paths were traced in the unchanged runtime."
+  ],
+  "remaining_native_render_failures": [],
+  "source_behavior_not_observed": ["Authenticated door-open server state", "Live ground-item lifetime/ownership", "Live instanced-world packet mapping", "Ordinary source-session wall-clock timing"],
+  "candidate_compared": false,
+  "new_gameplay_presentation_or_performance_acceptance": false
+}
