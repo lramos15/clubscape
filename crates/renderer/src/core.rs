@@ -821,6 +821,8 @@ pub struct RendererCore {
     instance_layout: Option<block::InstanceLayout>,
     /// Set when the last `update_world` changed the layout (the scene must be reassembled).
     instance_layout_changed: bool,
+    /// Developer/test control: fixed scenery animation clock (client cycles since scene start).
+    scenery_clock_override: Option<i64>,
     /// Developer fixture control: draw no body for the local player (the original controlled
     /// dynamic-layer references were rendered without one). Never a gameplay state.
     hide_local_player_body: bool,
@@ -904,6 +906,7 @@ impl RendererCore {
             instanced_map: false,
             hide_roofs: false,
             hide_local_player_body: false,
+            scenery_clock_override: None,
             instance_layout: None,
             instance_layout_changed: false,
             preview_started_ms: None,
@@ -1533,10 +1536,12 @@ impl RendererCore {
         }
     }
 
-    /// Sets the start frame of every animated scenery instance of source object `object_id`
-    /// placed on world tile (`x`, `y`, `plane`) — the original picks this phase with
-    /// `Math.random()` per placement at scene load. Returns how many instances were set.
-    /// Developer/test control for matching a specific original capture; not gameplay state.
+    /// Sets the controller state (`frame`, `cycle` within the frame) of every animated scenery
+    /// instance of source object `object_id` placed on world tile (`x`, `y`, `plane`) as it
+    /// stands at scene start — the original picks the frame with `Math.random()` per placement
+    /// at scene load (`dy` constructor), and an original capture's recorded state can be
+    /// replayed exactly. Returns how many instances were set. Developer/test control for
+    /// matching a specific original capture; not gameplay state.
     pub fn set_scenery_phase(
         &mut self,
         plane: i32,
@@ -1544,6 +1549,7 @@ impl RendererCore {
         y: i32,
         object_id: i32,
         start_frame: i32,
+        start_cycle: i32,
     ) -> usize {
         let Some(scene) = self.scene.as_mut() else {
             return 0;
@@ -1590,7 +1596,7 @@ impl RendererCore {
                     .get_mut((-(reference) - 2) as usize)
             {
                 instance.start_frame = start_frame;
-                instance.start_cycle = 0;
+                instance.start_cycle = start_cycle.max(0);
                 set += 1;
             }
         }
@@ -1602,9 +1608,81 @@ impl RendererCore {
 
     /// Client cycles elapsed on the scene animation clock.
     pub fn animation_cycles(&self, now_ms: f64) -> i64 {
+        if let Some(cycles) = self.scenery_clock_override {
+            return cycles;
+        }
         ((now_ms - self.scene_started_ms) / CLIENT_CYCLE_MS)
             .floor()
             .max(0.0) as i64
+    }
+
+    /// Developer/test control: freezes the scenery animation clock at `cycles` client cycles
+    /// since scene start (`None` = real time), so a frame can be built at exactly the cycle an
+    /// original capture was drawn at (e.g. 1: the original drew at cycle 0 with `lastUpdate`
+    /// −1). Actors, fires and the frame clock are untouched. Not gameplay state.
+    pub fn set_scenery_clock_override(&mut self, cycles: Option<i64>) {
+        self.scenery_clock_override = cycles;
+    }
+
+    /// The controller state `(frame, cycle)` each animated instance of `object_id` on the tile
+    /// would show when drawn `elapsed` cycles after scene start (the state the original `qr`
+    /// holds after `dy.rf`), for checking a replayed phase against an original observation.
+    pub fn scenery_phase_state(
+        &self,
+        plane: i32,
+        x: i32,
+        y: i32,
+        object_id: i32,
+        elapsed: i64,
+    ) -> Vec<(usize, i64)> {
+        let Some(scene) = self.scene.as_ref() else {
+            return Vec::new();
+        };
+        let ex = x - scene.base_x + scene.offset;
+        let ey = y - scene.base_y + scene.offset;
+        if ex < 0 || ey < 0 || ex >= scene.width || ey >= scene.height {
+            return Vec::new();
+        }
+        let index = scene.tile_index(plane, ex, ey);
+        let matches = |hash: i64| crate::scene::tag_object_id(hash) == object_id;
+        let mut refs: Vec<i32> = Vec::new();
+        if let Some(w) = scene.walls.get(&index).filter(|w| matches(w.hash)) {
+            refs.extend([w.model_a, w.model_b]);
+        }
+        if let Some(d) = scene
+            .wall_decorations
+            .get(&index)
+            .filter(|d| matches(d.hash))
+        {
+            refs.extend([d.model_a, d.model_b]);
+        }
+        if let Some(f) = scene
+            .floor_decorations
+            .get(&index)
+            .filter(|f| matches(f.hash))
+        {
+            refs.push(f.model);
+        }
+        let count = scene.object_count.get(index).copied().unwrap_or(0).max(0) as usize;
+        for slot in 0..count.min(5) {
+            if let Some(&id) = scene.slots.get(&(index * 5 + slot)) {
+                let object = &scene.game_objects[id];
+                if matches(object.hash) {
+                    refs.push(object.model);
+                }
+            }
+        }
+        refs.into_iter()
+            .filter(|r| *r <= -2)
+            .filter_map(|r| scene.animated_instances.get((-(r) - 2) as usize))
+            .filter_map(|instance| {
+                scene.animated[instance.set].advance(
+                    instance.start_frame,
+                    instance.start_cycle,
+                    elapsed,
+                )
+            })
+            .collect()
     }
 
     /// World tile bounds of a map square (`x << 8 | y`).

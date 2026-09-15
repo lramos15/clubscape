@@ -510,14 +510,227 @@ fn fire_view() -> String {
 
 /// The Tutorial plane-0 frames show animated flames — object 24969 (a 5-frame flame at
 /// 3095,3102) and object 196 wall torches (5-frame sets at 3096,3105 and 3096,3110) — whose
-/// start phases the original picks with `Math.random()` per placement at scene load; the case
-/// records do not carry them. The fixture scene export holds the approved capture's phases, so
-/// those cases are measured with every differing pixel attributed (by the exact triangle
-/// stream) to those placements and reported as unpassed-with-cause;
-/// `flame_phases_identified_from_blocks` (block exports carry every baked frame) then finds the
-/// frames the reference shows and re-measures.
+/// start phases the original picks with `Math.random()` per placement at scene load. The
+/// independent source phase sidecar (`assets/reference/osrs240/m1-dynamic/phases`, read-only
+/// observations of the ACTIVE controller `dy.ac` in byte-identical replays of the three cases)
+/// records them: seq 477 frame 4, seq 481 frame 3, seq 481 frame 2, all at cycle 0 within the
+/// frame, drawn at client cycle 0 with `lastUpdate` −1 (one cycle of advance, after which the
+/// controller holds frame/cycle 1). The static fixture scene export bakes one frame per flame, so
+/// those cases are matched on the block-assembled scene (every frame baked) at exactly that
+/// recorded state — never at a frame guessed from the reference pixels.
 const ANIMATED_PLACEMENTS: [(i32, i32, i32); 3] =
     [(24969, 3095, 3102), (196, 3096, 3105), (196, 3096, 3110)];
+
+const PHASE_INDEX_SHA256: &str = "b54a72df1eaa3777a87ae0f4360aca4f6be544a765ab00e4f306c7f9ed2d0d16";
+
+/// One original observation of an animated placement's active controller.
+#[derive(Debug, Clone, PartialEq)]
+struct SourcePhase {
+    object: i32,
+    tile: (i32, i32, i32),
+    sequence: i32,
+    frame: i32,
+    frame_cycle: i32,
+    frame_lengths: Vec<i32>,
+    last_update_cycle: i64,
+    source_cycle: i64,
+}
+
+/// The recorded `before-original-draw` and `after-original-draw` controller states of a case,
+/// with the sidecar verified against the phase index and the phase index against the case
+/// index it was recorded for.
+fn source_phases(case_id: &str) -> (Vec<SourcePhase>, Vec<SourcePhase>) {
+    let root = repo_root().join("assets/reference/osrs240/m1-dynamic");
+    let index_bytes = std::fs::read(root.join("phases/phase-index.json")).expect("phase index");
+    assert_eq!(
+        common::sha256_hex(&index_bytes),
+        PHASE_INDEX_SHA256,
+        "phase-index.json is not the recorded sidecar index"
+    );
+    let index: serde_json::Value = serde_json::from_slice(&index_bytes).unwrap();
+    let case_index_bytes = std::fs::read(root.join("case-index.json")).unwrap();
+    assert_eq!(
+        common::sha256_hex(&case_index_bytes),
+        index["original_case_index"]["sha256"].as_str().unwrap(),
+        "phase sidecar was recorded against another case index"
+    );
+    let entry = index["cases"]
+        .as_array()
+        .unwrap()
+        .iter()
+        .find(|c| c["case_id"] == case_id)
+        .unwrap_or_else(|| panic!("{case_id}: no phase sidecar"));
+    let sidecar_path = repo_root().join(entry["sidecar"]["path"].as_str().unwrap());
+    let sidecar_bytes = std::fs::read(&sidecar_path).unwrap();
+    assert_eq!(
+        common::sha256_hex(&sidecar_bytes),
+        entry["sidecar"]["sha256"].as_str().unwrap(),
+        "{case_id}: sidecar hash"
+    );
+    let sidecar: serde_json::Value = serde_json::from_slice(&sidecar_bytes).unwrap();
+    assert_eq!(sidecar["candidate_images_or_frame_guesses_read"], false);
+    assert_eq!(sidecar["animation_state_modified_by_probe"], false);
+    // The replay reproduced the published image byte for byte, so its observations describe
+    // exactly the state that drew it.
+    let case = CaseRecord::load(case_id);
+    assert_eq!(
+        sidecar["source_image_replay"]["png_sha256"], case.json["capture"]["sha256"],
+        "{case_id}: replay image differs from the published case image"
+    );
+    let parse = |o: &serde_json::Value| SourcePhase {
+        object: o["source_object_id"].as_i64().unwrap() as i32,
+        tile: (
+            o["world_tile"][0].as_i64().unwrap() as i32,
+            o["world_tile"][1].as_i64().unwrap() as i32,
+            o["world_tile"][2].as_i64().unwrap() as i32,
+        ),
+        sequence: o["sequence_id"].as_i64().unwrap() as i32,
+        frame: o["active_controller"]["frame"].as_i64().unwrap() as i32,
+        frame_cycle: o["active_controller"]["frame_cycle"].as_i64().unwrap() as i32,
+        frame_lengths: o["active_controller"]["frame_lengths"]
+            .as_array()
+            .unwrap()
+            .iter()
+            .map(|v| v.as_i64().unwrap() as i32)
+            .collect(),
+        last_update_cycle: o["last_update_cycle"].as_i64().unwrap(),
+        source_cycle: o["source_cycle"].as_i64().unwrap(),
+    };
+    let observations = sidecar["observations"].as_array().unwrap();
+    let phase = |name: &str| -> Vec<SourcePhase> {
+        observations
+            .iter()
+            .filter(|o| o["observation_phase"] == name && o["rendering_controller"] == "dy.ac")
+            .map(parse)
+            .collect()
+    };
+    let before = phase("before-original-draw");
+    let after = phase("after-original-draw");
+    assert_eq!(
+        before.len(),
+        ANIMATED_PLACEMENTS.len(),
+        "{case_id}: before-draw observations"
+    );
+    assert_eq!(
+        after.len(),
+        ANIMATED_PLACEMENTS.len(),
+        "{case_id}: after-draw observations"
+    );
+    for (object, x, y) in ANIMATED_PLACEMENTS {
+        assert!(
+            before
+                .iter()
+                .any(|p| p.object == object && p.tile == (x, y, 0)),
+            "{case_id}: no observation for object {object} at {x},{y}"
+        );
+    }
+    (before, after)
+}
+
+/// Loads the world blocks of the Tutorial starting-house base into a core (block exports:
+/// every baked flame frame), assembled without random phases.
+fn core_from_tutorial_blocks(inputs: &Inputs) -> RendererCore {
+    let (bx, by) = scene_base("tutorial-starting-house");
+    let mut core = core_for(inputs, "lumbridge-castle-plaza");
+    let mut loaded = 0;
+    for square in RendererCore::squares_for_base(bx, by) {
+        let path = repo_root().join(format!("assets/compiled/render/blocks/{square}.bin"));
+        if path.exists() {
+            core.load_block(
+                square,
+                &common::read_local_export(
+                    &format!("blocks/{square}.bin"),
+                    "python3 tools/render-assets/export.py --profile blocks",
+                ),
+                &common::read_local_export(
+                    &format!("blocks/{square}.models.bin"),
+                    "python3 tools/render-assets/export.py --profile blocks",
+                ),
+            )
+            .unwrap();
+            loaded += 1;
+        }
+    }
+    assert!(
+        loaded > 0,
+        "no Tutorial block exports (export.py --profile blocks)"
+    );
+    core.assemble_scene(bx, by, false, 0.0).unwrap();
+    core
+}
+
+/// Replays the recorded controller states on the block scene and freezes its clock at the
+/// original's advance (`source_cycle − last_update_cycle` cycles), checking the bake's sequence
+/// timing and the post-draw state against the sidecar. Returns the elapsed cycles.
+fn apply_source_phases(core: &mut RendererCore, case_id: &str) -> i64 {
+    let (before, after) = source_phases(case_id);
+    let mut elapsed: Option<i64> = None;
+    for phase in &before {
+        let this = phase.source_cycle - phase.last_update_cycle;
+        assert!(elapsed.is_none_or(|e| e == this), "{case_id}: mixed clocks");
+        elapsed = Some(this);
+        let (x, y, plane) = phase.tile;
+        assert!(
+            core.set_scenery_phase(plane, x, y, phase.object, phase.frame, phase.frame_cycle) > 0,
+            "{case_id}: no animated instance of object {} at {x},{y},{plane}",
+            phase.object
+        );
+        // The bake carries the same sequence timing the original controller ran.
+        let scene = core.scene().unwrap();
+        let states = core.scenery_phase_state(plane, x, y, phase.object, 0);
+        assert!(!states.is_empty());
+        let ex = x - scene.base_x + scene.offset;
+        let ey = y - scene.base_y + scene.offset;
+        let index = scene.tile_index(plane, ex, ey);
+        let set_lengths: Vec<Vec<i32>> = scene
+            .walls
+            .get(&index)
+            .map(|w| vec![w.model_a, w.model_b])
+            .into_iter()
+            .chain(
+                scene
+                    .wall_decorations
+                    .get(&index)
+                    .map(|d| vec![d.model_a, d.model_b]),
+            )
+            .chain(scene.floor_decorations.get(&index).map(|f| vec![f.model]))
+            .chain(
+                (0..5)
+                    .filter_map(|slot| scene.slots.get(&(index * 5 + slot)))
+                    .map(|&id| vec![scene.game_objects[id].model]),
+            )
+            .flatten()
+            .filter(|r| *r <= -2)
+            .filter_map(|r| scene.animated_instances.get((-(r) - 2) as usize))
+            .map(|i| scene.animated[i.set].lengths.clone())
+            .collect();
+        assert!(
+            set_lengths.contains(&phase.frame_lengths),
+            "{case_id}: object {} at {x},{y}: baked frame lengths {set_lengths:?} differ from the original controller's {:?} (seq {})",
+            phase.object,
+            phase.frame_lengths,
+            phase.sequence
+        );
+    }
+    let elapsed = elapsed.expect("observations");
+    core.set_scenery_clock_override(Some(elapsed));
+    // After the original draw the controller advanced by `elapsed` cycles: the port must hold
+    // the same frame and cycle (frame 4 of a 1-cycle terminal frame stays put at cycle 1).
+    for phase in &after {
+        let (x, y, plane) = phase.tile;
+        let states = core.scenery_phase_state(plane, x, y, phase.object, elapsed);
+        assert!(
+            states
+                .iter()
+                .any(|&(f, c)| f as i32 == phase.frame && c == i64::from(phase.frame_cycle)),
+            "{case_id}: object {} at {x},{y}: port advanced to {states:?}, original controller holds frame {} cycle {}",
+            phase.object,
+            phase.frame,
+            phase.frame_cycle
+        );
+    }
+    elapsed
+}
 
 /// Screen rectangle (1 px dilated) covered by the triangles of one placed object in the last
 /// frame, from the exact triangle stream and its pick targets.
@@ -773,19 +986,18 @@ fn dynamic_layer_cases_match_the_original_references() {
         };
         let mut line = report_line(&outcome);
         if let Some((rects, outside)) = outside_flame {
+            // The static fixture scene holds one baked frame per flame (the fixture session's
+            // own random phase), so this case is decided on the block scene at the recorded
+            // source controller state (`tutorial_flame_cases_match_at_the_recorded_source_phases`);
+            // here every differing pixel must still lie on those placements.
             line.push_str(&format!(
-                " | animated flames {ANIMATED_PLACEMENTS:?} (screen boxes {rects:?}): unrecorded source random phases; differing scene pixels outside them: {outside}"
+                " | animated flames {ANIMATED_PLACEMENTS:?} (screen boxes {rects:?}) at the static fixture's phase; differing scene pixels outside them: {outside}; decided at the recorded source phases on the block scene"
             ));
             if outside > 0 {
                 failures.push(format!(
-                    "{}: {outside} differing pixels are not on the unrecorded-phase flame",
+                    "{}: {outside} differing pixels are not on the animated flames",
                     spec.id
                 ));
-            }
-            if !m.passed() {
-                line.push_str(
-                    " | UNPASSED at the fixture phase (see flame_phase_identified_from_blocks)",
-                );
             }
         } else if !m.passed() {
             failures.push(line.clone());
@@ -819,118 +1031,60 @@ fn dynamic_layer_cases_match_the_original_references() {
     );
 }
 
-/// Identifies the flame phases the three Tutorial references show by rendering the scene
-/// assembled from world blocks (which carry every baked frame of the 5-frame flame sequences)
-/// with each animated placement stepped through its frames independently (their screen boxes
-/// are disjoint), and requires the approved profile to pass at the identified combination.
-/// The phases are read off the reference, since the source harness does not record them; the
-/// geometry, colours and every other pixel are then measured strictly. Needs the block exports.
+/// The three Tutorial flame cases on the block-assembled scene at the recorded source controller
+/// states (phase sidecar): full strict `native_scene_model` metric, no flame-box accounting,
+/// pixel-identical over every scene pixel. Needs the block exports.
 #[test]
 #[ignore = "needs the local world block exports (export.py --profile blocks)"]
-fn flame_phases_identified_from_blocks() {
+fn tutorial_flame_cases_match_at_the_recorded_source_phases() {
     let inputs = inputs();
-    let (bx, by) = scene_base("tutorial-starting-house");
     let mut report = Vec::new();
     for spec in case_specs().into_iter().filter(|s| s.flame) {
         let case = CaseRecord::load(spec.id);
-        let mut core = core_for(&inputs, "lumbridge-castle-plaza");
-        for square in RendererCore::squares_for_base(bx, by) {
-            let path = repo_root().join(format!("assets/compiled/render/blocks/{square}.bin"));
-            if path.exists() {
-                core.load_block(
-                    square,
-                    &common::read_local_export(
-                        &format!("blocks/{square}.bin"),
-                        "python3 tools/render-assets/export.py --profile blocks",
-                    ),
-                    &common::read_local_export(
-                        &format!("blocks/{square}.models.bin"),
-                        "python3 tools/render-assets/export.py --profile blocks",
-                    ),
-                )
-                .unwrap();
-            }
-        }
-        core.assemble_scene(bx, by, false, 0.0).unwrap();
+        let mut core = core_from_tutorial_blocks(&inputs);
         core.set_camera(camera(&case, "tutorial-starting-house"))
             .unwrap();
         core.set_plane(case.source_plane());
         core.set_top_plane_override(Some(case.draw_plane()));
         core.set_hide_roofs(case.hide_roofs());
         core.update_world(&spec.view, 0.0).unwrap();
+        let elapsed = apply_source_phases(&mut core, spec.id);
+        core.build_frame(0.0).unwrap();
+        let summary = core.last_summary.clone();
+        assert_eq!(
+            summary.entities_skipped,
+            vec![NO_PLAYER_BODY.to_string()],
+            "{}",
+            spec.id
+        );
+        let candidate = rasterize(&core, &inputs.textures);
         let (w, h, source) = read_png_rgb(&case.frame_path());
         let hud = case.hud_rects();
-        // Every flame instance starts at frame 0 on the scene clock (randomize_phases = false);
-        // step each placement through its five frames while the others stay at frame 0 and keep
-        // the frame whose screen box shows no difference to the reference.
-        let mut chosen = Vec::new();
-        for &(object, x, y) in &ANIMATED_PLACEMENTS {
-            let mut best: Option<(i32, usize)> = None;
-            for frame in 0..5 {
-                for &(o, ox, oy) in &ANIMATED_PLACEMENTS {
-                    let f = if (o, ox, oy) == (object, x, y) {
-                        frame
-                    } else {
-                        0
-                    };
-                    assert!(
-                        core.set_scenery_phase(0, ox, oy, o, f) > 0,
-                        "{}: no animated instance of {o} at {ox},{oy}",
-                        spec.id
-                    );
-                }
-                core.build_frame(0.0).unwrap();
-                let Some(rect) = placement_screen_box(&core, object) else {
-                    continue;
-                };
-                let candidate = rasterize(&core, &inputs.textures);
-                let mut differing = 0usize;
-                for yy in rect.1.max(0)..=rect.3.min(h as i32 - 1) {
-                    for xx in rect.0.max(0)..=rect.2.min(w as i32 - 1) {
-                        let i = (yy as usize) * w as usize + xx as usize;
-                        if candidate[i] != source[i] {
-                            differing += 1;
-                        }
-                    }
-                }
-                if best.is_none_or(|(_, d)| differing < d) {
-                    best = Some((frame, differing));
-                }
-            }
-            let (frame, differing) = best.expect("placement drawn in at least one frame");
-            report.push(format!("{}: object {object} at {x},{y}: source phase = frame {frame} ({differing} differing pixels in its box)", spec.id));
-            chosen.push((object, x, y, frame));
-        }
-        for &(object, x, y, frame) in &chosen {
-            core.set_scenery_phase(0, x, y, object, frame);
-        }
-        core.build_frame(0.0).unwrap();
-        let candidate = rasterize(&core, &inputs.textures);
+        let out_dir = repo_root().join(".local/render-assets/test-output/dynamic");
+        std::fs::create_dir_all(&out_dir).unwrap();
+        write_png_rgb(
+            &out_dir.join(format!("{}-phased-candidate.png", spec.id)),
+            w,
+            h,
+            &candidate,
+        );
         let m = metric(
             &candidate,
             &source,
             w as usize,
             h as usize,
             &hud,
-            Some(&repo_root().join(format!(
-                ".local/render-assets/test-output/dynamic/{}-blocks-diff.png",
-                spec.id
-            ))),
-        );
-        write_png_rgb(
-            &repo_root().join(format!(
-                ".local/render-assets/test-output/dynamic/{}-blocks-candidate.png",
-                spec.id
-            )),
-            w,
-            h,
-            &candidate,
+            Some(&out_dir.join(format!("{}-phased-diff.png", spec.id))),
         );
         let line = format!(
-            "{}: {} at identified phases {:?} | scene identical {} of {} | interior max {} mean {:.4} changed {} | band changed {} ({:.5}) | first {:?}",
+            "{}: {} at the recorded source phases (dy.ac frames {:?}, advance {elapsed} cycle) | scene identical {} of {} | interior max {} mean {:.4} changed {} | band changed {} ({:.5}) | first {:?}",
             spec.id,
             if m.passed() { "PASS" } else { "FAIL" },
-            chosen.iter().map(|c| c.3).collect::<Vec<_>>(),
+            source_phases(spec.id)
+                .0
+                .iter()
+                .map(|p| p.frame)
+                .collect::<Vec<_>>(),
             m.scene_identical,
             m.scene_pixels,
             m.interior_max,
@@ -946,17 +1100,91 @@ fn flame_phases_identified_from_blocks() {
         eprintln!("{line}");
         report.push(line.clone());
         assert!(m.passed(), "{line}");
-    }
-    for line in &report {
-        eprintln!("{line}");
+        assert_eq!(
+            m.scene_identical, m.scene_pixels,
+            "{}: not identical to the source over the scene",
+            spec.id
+        );
     }
     let out_dir = repo_root().join(".local/render-assets/test-output/dynamic");
-    std::fs::create_dir_all(&out_dir).unwrap();
     std::fs::write(
         out_dir.join("flame-phase-report.txt"),
         report.join("\n") + "\n",
     )
     .unwrap();
+}
+
+/// The same three cases through the wgpu compute rasterizer: GPU = CPU = source at the recorded
+/// phases. Compiled with `--features gpu`; needs the block exports and a hardware adapter.
+#[cfg(feature = "gpu")]
+#[test]
+#[ignore = "needs the local world block exports (export.py --profile blocks) and a hardware adapter"]
+fn tutorial_flame_cases_match_on_the_gpu_at_the_recorded_source_phases() {
+    use clubscape_renderer::gpu::pack::pack_frame;
+    use clubscape_renderer::gpu::{GpuRasterizer, GpuTextures};
+    let inputs = inputs();
+    let (adapter, device, queue) = match pollster::block_on(
+        clubscape_renderer::gpu::device::request_native_device(),
+    ) {
+        Ok(v) => v,
+        Err(e) => panic!(
+            "GPU fidelity tests need a hardware wgpu adapter (Vulkan/Metal): {e}. A missing GPU is not a pass."
+        ),
+    };
+    let palette = Palette::from_chunks(&common::read_asset("palette.bin")).unwrap();
+    let gpu_textures = GpuTextures::from_set(&inputs.textures);
+    let mut raster =
+        GpuRasterizer::new(device, queue, &palette.rgb, &gpu_textures, 1920, 1080).unwrap();
+    eprintln!("adapter: {}", adapter.get_info().name);
+    for spec in case_specs().into_iter().filter(|s| s.flame) {
+        let case = CaseRecord::load(spec.id);
+        let mut core = core_from_tutorial_blocks(&inputs);
+        core.set_camera(camera(&case, "tutorial-starting-house"))
+            .unwrap();
+        core.set_plane(case.source_plane());
+        core.set_top_plane_override(Some(case.draw_plane()));
+        core.set_hide_roofs(case.hide_roofs());
+        core.update_world(&spec.view, 0.0).unwrap();
+        apply_source_phases(&mut core, spec.id);
+        core.build_frame(0.0).unwrap();
+        let cpu = rasterize(&core, &inputs.textures);
+        let packed = pack_frame(&core.state, core.triangles(), &inputs.textures);
+        let frame = raster.render(&core.state, &packed, 0).unwrap();
+        let mut gpu = raster.read_back().unwrap();
+        assert!(
+            frame.is_complete(),
+            "{}: queue completion did not fire",
+            spec.id
+        );
+        gpu.iter_mut().for_each(|p| *p &= 0xFF_FFFF);
+        let (w, h, source) = read_png_rgb(&case.frame_path());
+        let hud = case.hud_rects();
+        let vs_cpu = common::diff_buffers(&gpu, &cpu);
+        let m = metric(&gpu, &source, w as usize, h as usize, &hud, None);
+        eprintln!(
+            "{}: gpu vs cpu {} px differ | gpu vs source at recorded phases: {} | scene identical {} of {}",
+            spec.id,
+            vs_cpu.differing,
+            if m.passed() { "PASS" } else { "FAIL" },
+            m.scene_identical,
+            m.scene_pixels
+        );
+        assert_eq!(
+            vs_cpu.differing, 0,
+            "{}: GPU differs from CPU: {vs_cpu:?}",
+            spec.id
+        );
+        assert!(
+            m.passed(),
+            "{}: GPU frame outside the approved profile",
+            spec.id
+        );
+        assert_eq!(
+            m.scene_identical, m.scene_pixels,
+            "{}: GPU frame not identical",
+            spec.id
+        );
+    }
 }
 
 /// The same eight phase-independent cases through the wgpu compute rasterizer on a hardware

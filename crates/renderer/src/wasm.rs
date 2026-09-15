@@ -985,6 +985,34 @@ impl WasmRenderer {
         self.inner.borrow_mut().core.set_hide_roofs(hidden);
     }
 
+    /// Developer fixture control only: replays an original capture's recorded animated-scenery
+    /// controller state (`dy.ac`: frame and cycle within the frame at scene start) for every
+    /// animated instance of `object_id` on the world tile. Returns how many instances were set.
+    pub fn set_scenery_phase(
+        &self,
+        plane: i32,
+        x: i32,
+        y: i32,
+        object_id: i32,
+        frame: i32,
+        cycle: i32,
+    ) -> u32 {
+        self.inner
+            .borrow_mut()
+            .core
+            .set_scenery_phase(plane, x, y, object_id, frame, cycle) as u32
+    }
+
+    /// Developer fixture control only: freezes the scenery animation clock at `cycles` client
+    /// cycles since scene start (negative = real time again), so frames render at exactly the
+    /// cycle an original capture was drawn at. Actors/fires/frame timestamps are untouched.
+    pub fn set_scenery_clock_override(&self, cycles: i32) {
+        self.inner
+            .borrow_mut()
+            .core
+            .set_scenery_clock_override((cycles >= 0).then_some(i64::from(cycles)));
+    }
+
     /// Developer fixture control only: draw no body for the local player, as in the controlled
     /// original dynamic-layer references (`assets/reference/osrs240/m1-dynamic`). Off by default.
     pub fn set_hide_local_player_body(&self, hidden: bool) {
@@ -1091,7 +1119,10 @@ impl WasmRenderer {
         let (base_x, base_y) = inner.core.scene_base()?;
         Some(format!(
             r#"{{"baseX":{base_x},"baseY":{base_y},"sizeTiles":104,"blocks":{}}}"#,
-            inner.core.scene_id().is_none()
+            inner
+                .core
+                .scene_id()
+                .is_none_or(|id| id.starts_with("blocks@"))
         ))
     }
 

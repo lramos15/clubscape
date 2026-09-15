@@ -42,6 +42,19 @@ impl AnimatedSet {
     /// model. A displayed state keeps `cycle` within `0..=lengths[frame]`; the loop only moves on
     /// once the cycle exceeds the frame length, exactly like the original `while` loop.
     pub fn frame_at(&self, start_frame: i32, start_cycle: i32, elapsed: i64) -> Option<usize> {
+        self.advance(start_frame, start_cycle, elapsed)
+            .map(|(frame, _)| frame)
+    }
+
+    /// The full controller state `(frame, cycle within the frame)` after the advance — what the
+    /// original `qr` holds after `dy.rf` ran for `elapsed` cycles (`rd.az`: `cycle += elapsed`,
+    /// then `while cycle > length[frame]` move on). `None` once a one-shot sequence finished.
+    pub fn advance(
+        &self,
+        start_frame: i32,
+        start_cycle: i32,
+        elapsed: i64,
+    ) -> Option<(usize, i64)> {
         let n = self.lengths.len() as i32;
         if n == 0 || self.models.len() < n as usize {
             return None;
@@ -74,7 +87,7 @@ impl AnimatedSet {
             if period <= 0 && frame >= loop_start {
                 // Every looping frame has length 0: the original spins to the frame whose length
                 // is exceeded; treat as the loop start.
-                return Some(loop_start as usize);
+                return Some((loop_start as usize, 0));
             }
             cycle -= len(frame);
             frame += 1;
@@ -92,7 +105,7 @@ impl AnimatedSet {
                 break;
             }
         }
-        Some(frame as usize)
+        Some((frame as usize, cycle))
     }
 }
 

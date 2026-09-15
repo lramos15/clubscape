@@ -394,15 +394,62 @@ async function main(): Promise<void> {
     });
     if (param("actors", "0") === "1") handle.update(actorsWorld(fixture));
     const previewCanvas = document.getElementById("preview") as HTMLCanvasElement;
+    /** Whether the handle currently shows the block-assembled scene at the fixture base (source-* scenarios). */
+    let onBlockScene = false;
+    /**
+     * Original per-placement animated-scenery phases of a Tutorial case (independent source
+     * sidecar, read-only `dy.ac` observations before the original draw): replayed on the block
+     * scene, which bakes every flame frame. Returns the recorded advance (source cycle −
+     * lastUpdate) the frame is drawn at.
+     */
+    const applySourcePhases = async (caseId: string): Promise<{ frames: number[]; elapsed: number } | null> => {
+      const response = await fetch(`/assets/reference/osrs240/m1-dynamic/phases/${caseId}.phases.json`);
+      if (response.status === 404) {
+        // No sidecar: the case shows no animated flame (roofs outside/inside); the block scene
+        // keeps its own phases and the recorded draw cycle (game cycle 0, one cycle of advance).
+        handle.setSceneryClock(1);
+        return null;
+      }
+      if (!response.ok) throw new Error(`phase sidecar for ${caseId}: ${response.status}`);
+      const sidecar = await response.json() as {
+        observations: Array<{
+          observation_phase: string; rendering_controller: string; source_object_id: number; world_tile: [number, number, number];
+          active_controller: { frame: number; frame_cycle: number }; source_cycle: number; last_update_cycle: number;
+        }>;
+      };
+      const before = sidecar.observations.filter((o) => o.observation_phase === "before-original-draw" && o.rendering_controller === "dy.ac");
+      if (before.length === 0) throw new Error(`phase sidecar for ${caseId} has no before-draw dy.ac observations`);
+      let elapsed: number | null = null;
+      const frames: number[] = [];
+      for (const o of before) {
+        const [x, y, plane] = o.world_tile;
+        const set = handle.setSceneryPhase(plane, x, y, o.source_object_id, o.active_controller.frame, o.active_controller.frame_cycle);
+        if (set === 0) throw new Error(`no animated instance of object ${o.source_object_id} at ${x},${y},${plane}`);
+        const advance = o.source_cycle - o.last_update_cycle;
+        if (elapsed !== null && elapsed !== advance) throw new Error("mixed source clocks in the phase sidecar");
+        elapsed = advance;
+        frames.push(o.active_controller.frame);
+      }
+      handle.setSceneryClock(elapsed);
+      return { frames, elapsed: elapsed! };
+    };
     window.__clubscapeDev.applyScenario = async (name: string) => {
       handle.setRoofMode(name === "roof-player" ? 1 : 0);
       // Scenarios show live rendering: the stock top-plane rule instead of the pinned plane 0.
       handle.setTopPlane(name.startsWith("pinned-") ? 0 : null);
+      let sourcePhases: { frames: number[]; elapsed: number } | null = null;
       if (name.startsWith("source-")) {
-        // Original dynamic-layer reference inputs: the locked camera of the fixture at the native
-        // full-HUD zoom (410 at 1920x1080, `fullHudZoomForViewport`), the case's recorded draw
-        // plane, the original hide-roofs preference, and — as in the source frames — no local
-        // player body (developer fixture control, not a gameplay state).
+        // Original dynamic-layer reference inputs: the world assembled from blocks at the
+        // fixture's own base (every flame frame baked; proven identical to the fixture scene),
+        // the recorded animated-scenery controller states and draw cycle, the locked camera at
+        // the native full-HUD zoom (410 at 1920x1080, `fullHudZoomForViewport`), the case's
+        // recorded draw plane, the original hide-roofs preference, and — as in the source frames
+        // — no local player body (developer fixture controls, not gameplay state).
+        if (!onBlockScene) {
+          await handle.loadScene(`blocks@${fixture.base[0]},${fixture.base[1]}`);
+          onBlockScene = true;
+        }
+        sourcePhases = await applySourcePhases(name.replace(/^source-/, "tutorial-"));
         handle.camera({
           x: fixture.base[0] * 128 + fixture.local[0], height: fixture.local[1], y: fixture.base[1] * 128 + fixture.local[2],
           pitch: fixture.pitch, yaw: fixture.yaw, unitsPerTurn: 16384, zoom: fullHudZoomForViewport(width, height), near: 50, far: 32768,
@@ -412,6 +459,11 @@ async function main(): Promise<void> {
         handle.setTopPlane(hidden ? 0 : 3);
         handle.setHideLocalPlayerBody(true);
       } else {
+        if (onBlockScene) {
+          await handle.loadScene(sceneId);
+          onBlockScene = false;
+        }
+        handle.setSceneryClock(null);
         handle.setHideRoofs(false);
         handle.setHideLocalPlayerBody(false);
         handle.camera({
@@ -433,7 +485,7 @@ async function main(): Promise<void> {
       }
       previewCanvas.width = 0;
       previewCanvas.height = 0;
-      return { fit: handle.playerFitReport(), poseFits: summarizePoseFits(handle.playerPoseFits()), placement: handle.scenePlacement(), unknownMotions: handle.unknownMotions(), running: handle.playerRunning() };
+      return { fit: handle.playerFitReport(), poseFits: summarizePoseFits(handle.playerPoseFits()), placement: handle.scenePlacement(), unknownMotions: handle.unknownMotions(), running: handle.playerRunning(), sourcePhases };
     };
     state.ready = true;
     publish();

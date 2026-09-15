@@ -360,6 +360,17 @@ export interface ClubscapeRendererHandle extends RendererHandle {
    * player's tile still drives the plane, roof rule and minimap.
    */
   setHideLocalPlayerBody(hidden: boolean): void;
+  /**
+   * Developer fixture control only: replay an original capture's recorded animated-scenery
+   * controller state (`dy.ac` frame and cycle within the frame at scene start) for the animated
+   * instances of `objectId` on a world tile; returns how many instances were set.
+   */
+  setSceneryPhase(plane: number, x: number, y: number, objectId: number, frame: number, cycle: number): number;
+  /**
+   * Developer fixture control only: freeze the scenery animation clock at `cycles` client cycles
+   * since scene start (`null` = real time), to render at exactly the cycle a capture was drawn at.
+   */
+  setSceneryClock(cycles: number | null): void;
   /** Original roof-removal mode bits (1 player, 2 hovered, 4 destination, 8 camera line); 0 = stock. */
   setRoofMode(mode: number): void;
   /** Hovered/destination tiles consulted by roof modes 2 and 4. */
@@ -779,6 +790,14 @@ export const createRenderer: (canvas: HTMLCanvasElement, config: RendererConfig,
       setHideLocalPlayerBody(hidden) {
         requireLive();
         renderer.set_hide_local_player_body(hidden);
+      },
+      setSceneryPhase(plane, x, y, objectId, frame, cycle) {
+        requireLive();
+        return renderer.set_scenery_phase(plane, x, y, objectId, frame, cycle);
+      },
+      setSceneryClock(cycles) {
+        requireLive();
+        renderer.set_scenery_clock_override(cycles === null ? -1 : Math.trunc(cycles));
       },
       setRoofMode(mode) {
         requireLive();

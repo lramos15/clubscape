@@ -188,8 +188,11 @@ screenshots the visible canvas element for the five scenes, streams the world ac
 map-square edge, replays the 58 approved model captures, runs the scenarios (gear, every
 required action motion, ground items + fire, door state, roof mode, interface preview readback;
 `--scenarios 0` skips; `--scenario-filter a,b` selects; `source-*` scenarios reproduce the
-Tutorial dynamic-layer reference inputs at the native full-HUD zoom 410 and record the drawn
-player's screen box), checks 1024×768 / 1280×720 / 2560×1440, a live resize and picks, and
+Tutorial dynamic-layer reference inputs exactly — the block scene at the fixture base, the
+source phase sidecar's `dy.ac` controller states and one-cycle advance
+(`setSceneryPhase`/`setSceneryClock`), native full-HUD zoom from `fullHudZoomForViewport`, no
+local player body — and match all five original frames over every scene pixel on Sparky),
+checks 1024×768 / 1280×720 / 2560×1440, a live resize and picks, and
 writes `report.json` with GPU-completed frame statistics. `--workload-ms N` adds a frozen
 representative workload (streamed Lumbridge scene, geared fighting player, 7 animated NPCs, fire,
 ground items; ≈ 69k primitives) with the camera held on the player; `--workload-moving 1` glides
