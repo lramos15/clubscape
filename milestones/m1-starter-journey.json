@@ -9,11 +9,11 @@
   "candidate_revision": null,
   "accepted_revision": null,
   "checkpoint": {
-    "report": "research/m1-bindings/departure-entry-validation.json",
+    "report": "milestones/evidence/m1-mainland-shop-entry.json",
     "verified_infrastructure_revision": "275d3cc83d6a7c2118d0afcf82490f364e5d2986",
     "infrastructure_evidence": "milestones/evidence/m1-account-foundations.json",
-    "runtime_revision": "8778fb3d0126fbd4235564d63912ece0af6eab47",
-    "scope_note": "Actual6f canonical4 normal-account journey reached66/70,263checks andLearning-the-Ropes1QP with onboarding recovery. Newcanonical4 raw5e0a repairs the source departure menu, passing77source tests,93 repeated outputs and4native branches; a freshrealcontinuation is resumed separately. Mainland/Cook/death/postquest, current UI4 adaptation, source authority, fitting/fidelity/performance/Mac and owner gates remain incomplete."
+    "runtime_revision": "9d67cef9de29b74d58ff6cde2762656b7c1c2452",
+    "scope_note": "Actual5e normal account completes70/70 tutorial transitions,285checks, legitimateHomeTeleport/Lumbridgecopper/bank and onboarding recovery. The next guarded shop-entry bug is repaired without changing5e; live continuation is resumed separately. Goblin/death/Cook/postquest, current UI4 adaptation/source authority, actual attachment fitting and full composed fidelity/performance/Mac/owner gates remain incomplete."
   },
   "scope_approval": {
     "authority": "owner",
@@ -32,7 +32,7 @@
     {"id": "benchmark-contract", "status": "implemented", "evidence": [], "blocker": "Pre-implementation contract is spec/m1-benchmark-contract.json. Sparky profile is pinned for permitted engineering; exact owner Mac/Chrome/Edge fields and final measurements remain to be collected."},
     {"id": "early-presentation-benchmark", "status": "in_progress", "evidence": [], "blocker": "Reference pack is approved; actual renderer/UI/audio composition and source comparisons are still being implemented."},
     {"id": "real-ui-account-creation", "status": "in_progress", "evidence": [], "blocker": null},
-    {"id": "complete-tutorial", "status": "in_progress", "evidence": [], "blocker": "Actualfresh6f normal account completed66/70 transitions; departure confirmation then failed from three competing source entries. New5e canonical4 has one correct source menu and passes all native branches; real continuation is being verified, not assumed."},
+    {"id": "complete-tutorial", "status": "in_progress", "evidence": [], "blocker": "Headless normal-account source journey now completes70/70 with correct departure possessions/XP/1QP. Final reviewed-build browser journey and composed presentation checks remain separate and unexecuted."},
     {"id": "legitimate-lumbridge-arrival", "status": "in_progress", "evidence": [], "blocker": null},
     {"id": "lumbridge-activities", "status": "in_progress", "evidence": [], "blocker": null},
     {"id": "death-and-recovery", "status": "in_progress", "evidence": [], "blocker": null},

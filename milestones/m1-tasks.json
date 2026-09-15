@@ -10,11 +10,10 @@
       {"id": "bb7f85f7-096a-4377-80cb-3e7eae196c6b", "task": "M1-BROWSER-RENDERER"},
       {"id": "cc864d7a-37cc-4869-a7b4-d484d01cede5", "task": "M1-BROWSER-UI"},
       {"id": "78d01af9-70a4-4b02-8339-6a61eb377374", "task": "M1-BROWSER-SHELL"},
-      {"id": "2766e089-44e5-4a1d-974e-7b03ad9c269d", "task": "M1-GAMEPLAY-UI-CONTRACTS"}
+      {"id": "2766e089-44e5-4a1d-974e-7b03ad9c269d", "task": "M1-GAMEPLAY-UI-CONTRACTS"},
+      {"id": "81ac9884-4f39-4f27-b516-6e9a42b09b51", "task": "M1-HEADLESS-JOURNEY"}
     ],
-    "reserved": [
-      {"id": "81ac9884-4f39-4f27-b516-6e9a42b09b51", "task": "M1-HEADLESS-JOURNEY", "reason": "Actual70/70 tutorial and Lumbridge copper/bank progress pass. Shop Trade is denied by an ungranted contextual-interface flag; no Trade mutation was submitted, and owned services are cleaned."}
-    ],
+    "reserved": [],
     "queued": [],
     "parked": [
       {"id": "ac0f0856-44af-445b-bd90-6db7a1f4fc74", "reason": "Original scenery phase supplement6c68672d integratedb9cdd0f; parent36tests and exact27-observation/index verification pass. Renderer received active4/3/2 phases and original clocks; no automatic resumption."},
@@ -37,7 +36,7 @@
     {
       "id": "M1-CONTEXTUAL-SHOP-ENTRY",
       "goal": "Admit a legitimate guarded source shop interaction without inventing a persistent shop-tab unlock or bypassing source context.",
-      "status": "IMPLEMENTING",
+      "status": "DONE",
       "specs": ["tools/journey-tests/evidence/departure-mainland-shop-1c7a449.json", "spec/game-contracts.md", "crates/world-engine/src/actions.rs", "crates/world-engine/src/queries.rs"],
       "dependencies": ["M1-DEPARTURE-CHOICE-ENTRIES"],
       "allowed_paths": ["crates/world-engine/src/actions.rs", "crates/world-engine/src/queries.rs", "crates/world-engine/tests/contextual_shop_entry.rs", "crates/world-engine/README.md", "spec/game-contracts.md"],
@@ -50,7 +49,7 @@
       "source_notes": ["One fresh normal5e account completed70/70 and285checks, then keeperTrade permission denied because interface.shop is contextual, never unlocked by the canonical source, and incorrectly requires character.interfaces membership. Both source stage and commerce permissions already pass."],
       "parity_entries": [],
       "adaptations": [],
-      "evidence": []
+      "evidence": ["Nativebefore5tests4pass/1FAIL reproducedtheactualkeeperpermissionbug. Ownedf0a579a integrates9d67cef: ONLYOpenShop/query inheritguardedsourceShopadmissionpluscontextkindvalidationwithoutunearnedtabtoken; no unlockgrant. Existingbank/productionmembershipandgenericcontextualtabrefusalremainunchanged.", "Bothoriginalkeepersquery/open/UiView/ShopView/serializationandallstage/range/invalidkindnegatives pass.277engine/new5regressions/native+WASMClippy,parent41actualPG+11accountchecks andsame5e strictsource reloadpass; servicesclean. Live continuation isseparate, no wholeM1acceptance; milestones/evidence/m1-mainland-shop-entry.json."]
     },
     {
       "id": "M1-DEPARTURE-CHOICE-ENTRIES",
@@ -343,7 +342,7 @@
     {
       "id": "M1-HEADLESS-JOURNEY",
       "goal": "Implement and execute the complete legitimate M1 protocol journey with real account/world/persistence boundaries, not seeded states.",
-      "status": "BLOCKED",
+      "status": "IMPLEMENTING",
       "specs": ["prompt.md section 30.1", "research/journey-rules/**", "spec/game-networking.md", "content/m1/README.md"],
       "dependencies": ["M1-FLEET-ENGINE-CLOSURE"],
       "allowed_paths": ["tools/simulator/**", "tools/journey-tests/**", "tests/scenarios/**"],
@@ -392,7 +391,7 @@
       "source_notes": ["research/reference-pack/v1/manifest.json"],
       "parity_entries": [],
       "adaptations": ["Approved penguin base and equipment-fit criteria"],
-      "evidence": ["Eight further owned renderer commits are integrated through549fa2f. ParentGPU suite41passed/7explicitignored plus3 executed package-dependent minimap/recenter cases, native/WASM Clippy and all58model/5scene source captures pass. Current published roof regression passes; pinned raw/gzip and mandatoryTSET checks replace unsafe input preference, with bounded diagnostics.", "Current source dynamic comparison is8/12 scene-only passes,3 Tutorial flame-phase failures(maxchannel67>2) and1 unsupported mapped-chunk case; complete HUD/player compositions are not claimed. Original phase metadata is independently assigned. Bind fit passes all10 items, but2595/3220 posed item-frames still penetrate>1(max20.76913173884589;266 item-sequence pairs). Human-design overlap is not a waiver; full pose/edge/icon/instance/observer/full-HUD/performance work continues.", "Actual183member/61square package installs with plainPython. Parentfound stale full-manifest index afterdynamic metadata;95f718e refreshesonlythat hash and strictverificationpasses, same56381440byte/SHA99984d72...d30aeb payload. Currentbetween-completion/full-window/moving-camera performance isnotfrozen-contract/Mac acceptance. See milestones/evidence/m1-render-audio-integration.json."]
+      "evidence": ["Furtherobserver/zoom/pose/instance/icon/phase commits integratedthrough04bf60b. ParentdefaultGPU45tests pass/12explicitignored; dynamic4/minimap5include-ignored selections andactualdeclaredinstance testpass, withnative/WASMClippy. Exactindependentsourcephases4/3/2 nowgive11/11renderedsourceSCENEcases; theturnedmapped-chunkcaseandfullHUD/playercompositionsremainunpassed. Full-HUDzoomhelperisnative-calibratedat16sizes; observersand386sourceiconsurfacesarepublished.", "Per-pose3220SURFACE-penetration/nearest-body-clearancechecksnowpass, but frozencriterionisATTACHMENTgap. Parentfoundwholegeartranslationsup to57.039sourceunits whilebody/gripanchorsarenotmeasured; actualattachment/grippreservationisrequiredandunverified, notcoveredbythesurfaceproxy. Rendererownsrepair/measurementandoriginaliconoffset-unitvalidation. Outer5tileminimapblend,turnedchunks,moving-camera28msp95,actualsourceanimationbindings/composition remainopen; no metric/ownerwaiver.", "NewMICNsidecars requireclubscape-render-blocks-dde248f04ea70392.tar SHA3a16edb732bba6ea5aa1e5f0468bf85ed07e9395b52624ba7df43f58fafe9d73,56381440bytes/183members/61squares. ParentplainPythoninstall/strictverificationpasses; automaticindexrefreshnowpreventsstale full-manifestbinding. OldD76packcannotbeusedwithnewsidecars. milestones/evidence/m1-mainland-shop-entry.json preservesqualifiedresults."]
     },
     {
       "id": "M1-BROWSER-UI",

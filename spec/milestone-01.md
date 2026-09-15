@@ -98,11 +98,12 @@ unblocked milestone work where possible, then report the milestone as
 incomplete with a durable checkpoint. Never relabel that checkpoint as an
 accepted slice.
 
-The current [departure-menu checkpoint](../research/m1-bindings/departure-entry-validation.json)
-preserves a real normal-account journey through66 of70 source transitions,
-Learning the Ropes'1QP reward and onboarding recovery. The next source
-confirmation-menu blocker is repaired in canonical4; its native branch
-checks are not a substitute for the resumed real journey.
+The current [mainland/shop checkpoint](../milestones/evidence/m1-mainland-shop-entry.json)
+preserves a real normal-account journey through all70 source tutorial
+transitions, Learning the Ropes'1QP reward, legitimate Lumbridge arrival,
+copper mining, bank operations and onboarding recovery. The next source shop
+entry blocker is repaired without changing the canonical artifact; its native
+checks are not a substitute for the resumed mainland journey.
 The [native UI comparisons](../milestones/evidence/m1-ui-controls.json),
 [renderer/audio results](../milestones/evidence/m1-render-audio-integration.json)
 and [reviewed travel repair](../milestones/evidence/m1-ui-travel-interruption.json)
