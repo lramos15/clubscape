@@ -6,10 +6,11 @@ Tutorial Island-to-Lumbridge/Cook's Assistant journey in
 accepted visual/audio slice yet. Account infrastructure is not a reduced
 vertical slice.
 
-The current [native runtime checkpoint](milestones/evidence/m1-native-runtime3.json)
+The current [native runtime checkpoint](milestones/evidence/m1-engine-review-repairs.json)
 records the strictly compiled source content, authoritative backend and
 persistence results. The [task ledger](milestones/m1-tasks.json) tracks active
-review repairs and browser/journey integration. The earlier
+browser/journey integration; all four reported engine review findings are
+repaired. The earlier
 [account-only checkpoint](docs/checkpoints/2026-09-13-m1-blocked.md) is historical.
 
 Read [AGENTS.md](AGENTS.md), the [machine setup](docs/machines/sparky.md) and

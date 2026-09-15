@@ -9,11 +9,11 @@
   "candidate_revision": null,
   "accepted_revision": null,
   "checkpoint": {
-    "report": "milestones/evidence/m1-native-runtime3.json",
+    "report": "milestones/evidence/m1-engine-review-repairs.json",
     "verified_infrastructure_revision": "275d3cc83d6a7c2118d0afcf82490f364e5d2986",
     "infrastructure_evidence": "milestones/evidence/m1-account-foundations.json",
-    "runtime_revision": "faa800286cfeeed4f3bec0b924d1fb01c65b97d9",
-    "scope_note": "Native/source runtime and persistence checkpoint only. Review repairs, full legitimate journey and real browser/presentation/performance acceptance remain outstanding."
+    "runtime_revision": "3a74cbe5911e699fd30e51cdedf944e4616f86b5",
+    "scope_note": "All four reported engine review defects are repaired. This is native/source/persistence evidence only; complete legitimate journey and real browser/presentation/performance acceptance remain outstanding."
   },
   "scope_approval": {
     "authority": "owner",
@@ -39,7 +39,7 @@
     {"id": "complete-cooks-assistant", "status": "in_progress", "evidence": [], "blocker": null},
     {"id": "shared-authoritative-headless-path", "status": "in_progress", "evidence": [], "blocker": null},
     {"id": "tutorial-and-quest-persistence", "status": "in_progress", "evidence": [], "blocker": null},
-    {"id": "content-compilation-and-stable-ids", "status": "implemented", "evidence": [{"path": "milestones/evidence/m1-native-runtime3.json", "sha256": "8f456eb8b804c231c9eefdd72d5b88f5895fa52fe031a5cc4717c9abce8cd714"}], "blocker": "Strict source/native conformance passes; complete live journey and final candidate validation remain separate."},
+    {"id": "content-compilation-and-stable-ids", "status": "implemented", "evidence": [{"path": "milestones/evidence/m1-engine-review-repairs.json", "sha256": "b46eed3abaafe59c06c139edc095872fce97fcbfa7fd3548ad162ee1a6d12593"}], "blocker": "Strict source/native conformance and all reported engine review repairs pass; complete live journey and final candidate validation remain separate."},
     {"id": "asset-manifest-validation", "status": "in_progress", "evidence": [], "blocker": null},
     {"id": "interface-controls-and-resizing", "status": "in_progress", "evidence": [], "blocker": null},
     {"id": "capability-feedback", "status": "in_progress", "evidence": [], "blocker": null},
