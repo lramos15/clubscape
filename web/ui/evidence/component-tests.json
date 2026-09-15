@@ -5,47 +5,47 @@
     {
       "name": "real password fields, registration mismatch, rejection and retained input",
       "passed": true,
-      "milliseconds": 1278
+      "milliseconds": 1727
     },
     {
       "name": "login submit, keyboard focus and cancel route through services",
       "passed": true,
-      "milliseconds": 491
+      "milliseconds": 504
     },
     {
       "name": "capability/loading/connecting feedback and audio controls use real app state",
       "passed": true,
-      "milliseconds": 1276
+      "milliseconds": 914
     },
     {
       "name": "native character controls without a fabricated WorldView retain selection on reject",
       "passed": true,
-      "milliseconds": 528
+      "milliseconds": 565
     },
     {
       "name": "inventory default, right-click, item selection, cancellation and no optimistic grants",
       "passed": true,
-      "milliseconds": 644
+      "milliseconds": 675
     },
     {
       "name": "drag/swap dispatch, no client mutation, and following click remains live",
       "passed": true,
-      "milliseconds": 537
+      "milliseconds": 553
     },
     {
       "name": "rejected game action displays actual reason/error ID and retains state",
       "passed": true,
-      "milliseconds": 448
+      "milliseconds": 453
     },
     {
       "name": "genuine tutorial lock dispatches no actions for mouse or keyboard",
       "passed": true,
-      "milliseconds": 364
+      "milliseconds": 365
     },
     {
       "name": "bank quantity, notes, search, cancel, rejected amount and atomic state boundary",
       "passed": true,
-      "milliseconds": 1121
+      "milliseconds": 1386
     },
     {
       "name": "shop value, buy, sell, zero stock and server rejection",
@@ -55,52 +55,52 @@
     {
       "name": "every buy amount sends the displayed canonical identity, never source ID or price",
       "passed": true,
-      "milliseconds": 935
+      "milliseconds": 967
     },
     {
       "name": "reused extra rows cannot retarget a held buy menu, quantity prompt or price view",
       "passed": true,
-      "milliseconds": 1439
+      "milliseconds": 1550
     },
     {
       "name": "server stale/uncertain rejection preserves the original buy intent without automatic retargeting",
       "passed": true,
-      "milliseconds": 1144
+      "milliseconds": 1173
     },
     {
       "name": "equipment, skills XP, combat/auto-retaliate, run and prayer controls",
       "passed": true,
-      "milliseconds": 1089
+      "milliseconds": 1155
     },
     {
       "name": "spell selection, actual renderer world-pick bridge, unavailable target and minimap",
       "passed": true,
-      "milliseconds": 731
+      "milliseconds": 623
     },
     {
       "name": "native prayer and spell filters toggle locally, disable dependent options and reflow",
       "passed": true,
-      "milliseconds": 1337
+      "milliseconds": 1462
     },
     {
       "name": "native recovery selection/amount controls preserve items and do not invent balance fields",
       "passed": true,
-      "milliseconds": 830
+      "milliseconds": 788
     },
     {
       "name": "source title animates without app-state progress and long runtime errors paginate",
       "passed": true,
-      "milliseconds": 937
+      "milliseconds": 919
     },
     {
       "name": "dialogue choices/continue, authoritative text and quest journal",
       "passed": true,
-      "milliseconds": 846
+      "milliseconds": 843
     },
     {
       "name": "resize anchors, no offscreen required controls, reconnect and disposal",
       "passed": true,
-      "milliseconds": 981
+      "milliseconds": 938
     }
   ],
   "browserErrors": [],

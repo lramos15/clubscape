@@ -1,0 +1,33 @@
+{
+  "scope": "Real source music control/adapter component ONLY; supplied test unlocks, browser output muted, not live-server or M1 acceptance",
+  "cases": [
+    {
+      "name": "four metadata routes and all nine exact additive asset identities resolve without aliasing base files",
+      "passed": true
+    },
+    {
+      "name": "declared native modes and manual source selection use the actual audio engine, not fabricated music events",
+      "passed": true
+    },
+    {
+      "name": "held track actions recheck current unlock identity and never silently retarget",
+      "passed": true
+    },
+    {
+      "name": "current playlist and loop controls retain supplied groups and report missing numbered-slot bindings explicitly",
+      "passed": true
+    },
+    {
+      "name": "player-scoped state rejects foreign updates and clears on character change",
+      "passed": true
+    },
+    {
+      "name": "native scrollbar, dropdown cancellation and skip placement remain real controls",
+      "passed": true
+    }
+  ],
+  "errors": [],
+  "browser": "153.0.8010.12",
+  "browserOutputMuted": true,
+  "finalAcceptance": false
+}

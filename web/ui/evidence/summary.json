@@ -1,7 +1,7 @@
 {
   "scope": "UI component and original-source validation only. No real-server journey, final visual/audio or hardware acceptance.",
   "status": "blocked",
-  "implementation_commit": "b76babfc7713742e4cc4fda57ecd6cae7c65e9cd",
+  "implementation_commit": "53ed974059e75adc9d42d81e8538be064b0c40bd",
   "source_pack_sha256": "b62e19704e17d3d3e4e819f803ef49ba7cc54034ae407184b423427c65d9674d",
   "published_contract_upstream": "d1532d6fc063d2a02383a7b4bb1ca3c449e214ce",
   "contract_implementation_inferred_from_types": false,
@@ -10,30 +10,36 @@
     "command": "pnpm exec tsc --noEmit"
   },
   "unit": {
-    "passed": 33,
-    "total": 33
+    "passed": 38,
+    "total": 38
   },
   "integrated_audio_policy_units": {
-    "passed": 25,
-    "total": 25
+    "passed": 29,
+    "total": 29
   },
   "component_browser": {
     "legacy": 20,
     "versioned": 15,
     "source_audio_ui": 7,
+    "source_music_ui": 6,
     "browser": "153.0.8010.12"
   },
   "audio_contract": {
     "upstream_commits": [
       "888f9384e111b5f7fefeee36859bae4f873e5c95",
-      "f74652a59834815b4e57e04366dc857681fd83c1"
+      "f74652a59834815b4e57e04366dc857681fd83c1",
+      "f9e466d3feb6626785ae46b9d6549e4e7eb00443"
     ],
     "authorized_picks": [
       "b7cc380",
-      "d2082e8"
+      "d2082e8",
+      "7475596"
     ],
     "volume_semantics": "Source normalized slider position, never linear gain; master is applied before lookup.",
     "observer": "observeAudioState via bindUiAudio",
+    "music_state": "setUiMusicState delegates the published SourceMusicState with current player identity; native continuation is internal.",
+    "supplement_manifest_sha256": "840aef91bac9a1fd042bdb1c3662ff92a378e279f48335108730e168af550d91",
+    "supplement_assets": 9,
     "browser_output_muted_for_component_tests": true,
     "scene_or_committed_gameplay_events_fabricated": false
   },
@@ -57,6 +63,11 @@
       "passed": 18,
       "total": 18,
       "tolerance": 0
+    },
+    "music_ui": {
+      "passed": 8,
+      "total": 8,
+      "tolerance": 0
     }
   },
   "original_frames": {
@@ -74,10 +85,10 @@
     "sprites": 760,
     "fonts": 4,
     "items": 240,
-    "native_templates": 118,
+    "native_templates": 122,
     "static_model_contexts": 475,
     "static_model_images": 68,
-    "manifest_sha256": "4d3ae9efdfcb94a180b79c73e4a02a7d5c96f71c1d5989a0111eebc80b537ff9"
+    "manifest_sha256": "b83d7b1b03ada3a1f1bf62baf4f0205e5ea73ffc3667ba86f39a083ad1686081"
   },
   "implementation_files": [
     {
@@ -101,6 +112,10 @@
       "sha256": "d277e223ffbe2f3c07838bbc7438a00e7e8904cf039035a8efc8188b769426eb"
     },
     {
+      "path": "tools/ui-assets/UiMusicCapture.java",
+      "sha256": "9cd3c9a836565b5b45b53f09e9a522d2f0d59d948cc8d836d3a2e7c3c405002e"
+    },
+    {
       "path": "tools/ui-assets/UiPresentationCapture.java",
       "sha256": "d431619b37119ad7793ae06a0405811f6495113ffe06ef2fe10e2ecd500ffe62"
     },
@@ -110,7 +125,7 @@
     },
     {
       "path": "tools/ui-assets/archive_evidence.py",
-      "sha256": "e089956449fc37bc8a8c027ebeb3deef916c74db45f662036adba61ccc4ab4a5"
+      "sha256": "380a4cf669e226e02b53eb53412f620f378253f0913837d5a43261c2d456992e"
     },
     {
       "path": "tools/ui-assets/compare.py",
@@ -118,7 +133,7 @@
     },
     {
       "path": "tools/ui-assets/compare_modes.py",
-      "sha256": "ff4b5097244cc96af1f7bb032486c70ff7ac2768c811530b86f3b71af477a800"
+      "sha256": "52730cbd0f940782facdb6682361c827c59d13ec0f08b24a25187c0bfa5fc70b"
     },
     {
       "path": "tools/ui-assets/glyph_proof.py",
@@ -130,7 +145,7 @@
     },
     {
       "path": "tools/ui-assets/prepare.py",
-      "sha256": "4ab20d748759957204f7ef14e10efa87434b9285718cd17722736a400d90e7df"
+      "sha256": "d8648f133c6c80f2636daccf69a53c5b05af382b1f9afae071abde3dff92926b"
     },
     {
       "path": "web/audio/audio.test.ts",
@@ -146,11 +161,11 @@
     },
     {
       "path": "web/audio/events.ts",
-      "sha256": "1d546ce241b5257f77011d94ddabc7185fcf93009139bb598cb69be6b739e7ac"
+      "sha256": "f1d337a085eddba8a4e87a469e4fb8adfdd840235fd0bc79fe4977e57e07436e"
     },
     {
       "path": "web/audio/index.ts",
-      "sha256": "23a0014b5a3347cfdd0c19f0c614e4b40f571955485cf0ea88e59b0e751d9d30"
+      "sha256": "e90908a8e7ff790e8a525243d5834401fe1a42060f30699c87820cc4fc6b4ef0"
     },
     {
       "path": "web/audio/native-data.ts",
@@ -162,11 +177,11 @@
     },
     {
       "path": "web/audio/native-policy.ts",
-      "sha256": "05cbdc66e93dff95f78fd336b5be1e953d8e3f3c9f7dc6bb6f7b6901b3fcd8a6"
+      "sha256": "1a0564343d649c11435ac2f11b88bfb192da4d64ceeccc1272101a251b3fa5e8"
     },
     {
       "path": "web/audio/native-scene.ts",
-      "sha256": "c030baaa966d333346d380f238cde05c238fb464ee8f86492dde4f9ba0d5050b"
+      "sha256": "52cac53d37381c975eafc8038adb997cca772d0b67bf0b96c49b8c809ee5b183"
     },
     {
       "path": "web/audio/queue.ts",
@@ -182,15 +197,19 @@
     },
     {
       "path": "web/audio/source.ts",
-      "sha256": "654010ea1b0da6ab7d31d673e7ffe2621476697cd9ce16552404f8943acec75d"
+      "sha256": "a8e1cc35306e413307e35624a641b36a4dc25d10ed3f601c48063a6e7a770fd1"
+    },
+    {
+      "path": "web/audio/supplement.test.ts",
+      "sha256": "4c540a0c73212de82c73cdd6782d4b22d306e63652b2b505b728f1d9eb338277"
     },
     {
       "path": "web/ui/assets.ts",
-      "sha256": "8cbcac9009eaf1b5693722e91cf1d213f1ddff2e49e8158c952ccaf467834dbd"
+      "sha256": "cfebff84490c24e973aebcaaaf91c990587135a24191a501074895a7b1e9e3d5"
     },
     {
       "path": "web/ui/audio-controls.ts",
-      "sha256": "d3780e61af1e2852a97f05af826e8a0f89a0cbdf8e677b75e50c6cd98a0bf22d"
+      "sha256": "684662c202e51e4d0bcd2a44a1fc5377067d63795ad8593fcf69a6ac569269b4"
     },
     {
       "path": "web/ui/death-preview.ts",
@@ -214,11 +233,11 @@
     },
     {
       "path": "web/ui/index.ts",
-      "sha256": "622145d598ae48a8d28d49c832d4dbb987cc0c48e477cf10d68251da4577568b"
+      "sha256": "4edaaa36b88aacd50c378643e2c41ccd0b3f737f43f09dbe8358389f7bae4429"
     },
     {
       "path": "web/ui/input.ts",
-      "sha256": "838eca122a4a1e821c574f8c04189c092fbf712103f7670f2e7f9057ed152de7"
+      "sha256": "de001e22c2dd83f149c79f9786794530353cafb1ef0ae42dd3d92f54849428dc"
     },
     {
       "path": "web/ui/layout.ts",
@@ -227,6 +246,10 @@
     {
       "path": "web/ui/minimap.ts",
       "sha256": "5ef7c6368397b9f1d4f4caffa3ae10ee0e2796444665c22eacf0dd3f48dac057"
+    },
+    {
+      "path": "web/ui/music-controls.ts",
+      "sha256": "736aec3ee903afe9fe09d4c2ce87d582175fd96245d060cd71c09e9b880c339a"
     },
     {
       "path": "web/ui/presentations.ts",
@@ -250,19 +273,19 @@
     },
     {
       "path": "web/ui/tests/audio-browser.mjs",
-      "sha256": "c20499a58cf1a8ce84e92aa6ea28e92a06efda8dac404561222a73702717508b"
+      "sha256": "3e4dc99e483183295c2f67a1b63e84ec8933f178316dddaf26f611ee074662b5"
     },
     {
       "path": "web/ui/tests/audio-controls.test.ts",
-      "sha256": "4c42d3e89c3fc547754a12a9036b7a0566acde5dfe9d70a0bb47abc3b265a026"
+      "sha256": "45d3fb25e7f319553d03767cbf22fbfdd5d270d09e84815d270be1e7114c907e"
     },
     {
       "path": "web/ui/tests/audio-fixture.ts",
-      "sha256": "fb377351c6b988d27ab5944e93fc9ca23b79536c22956743583d965f7c1b194e"
+      "sha256": "5fd45bf827d919802c1af2e0451204f403fbb08b2692cbadeed90156a2127fff"
     },
     {
       "path": "web/ui/tests/browser-host.mjs",
-      "sha256": "d42aa2dd0fcf705ae3a41abeb048ff7be382176479de0a3253276f10a24db7f2"
+      "sha256": "c473afbda7700dff687c81e8f6bbaa780d596a5fe971219058c1137f15834e11"
     },
     {
       "path": "web/ui/tests/component-browser.mjs",
@@ -283,6 +306,14 @@
     {
       "path": "web/ui/tests/modes-browser.mjs",
       "sha256": "bdb30ff0125259cf6334ff7dade574ddf42ca03bfb8e41b0fedff2196b3462f6"
+    },
+    {
+      "path": "web/ui/tests/music-browser.mjs",
+      "sha256": "556b60cfb990941760085c0b8b40fbcb68e5ef5cec00066c6620525e0359caa4"
+    },
+    {
+      "path": "web/ui/tests/music-controls.test.ts",
+      "sha256": "7640b24c030d779b4bf9c806047a72fd551f3f9cd63958f745fe0acefe3ffc9e"
     },
     {
       "path": "web/ui/tests/presentation-fixture.ts",
@@ -306,7 +337,7 @@
     },
     {
       "path": "web/ui/world-view.ts",
-      "sha256": "4ee4f976c5981db70503b482b7d8589944a2409d0f21087361ee5ea50f357667"
+      "sha256": "8ec1093b91f3845dbf24a23264e72828e8c19344011bea39a14b1801a7fa6e4f"
     }
   ],
   "remaining": {
@@ -325,15 +356,23 @@
     "published_audio_policy": {
       "upstream_commits": [
         "888f9384e111b5f7fefeee36859bae4f873e5c95",
-        "f74652a59834815b4e57e04366dc857681fd83c1"
+        "f74652a59834815b4e57e04366dc857681fd83c1",
+        "f9e466d3feb6626785ae46b9d6549e4e7eb00443"
       ],
       "authorized_picks": [
         "b7cc380",
-        "d2082e8"
+        "d2082e8",
+        "7475596"
       ],
       "audio_handle_abi_changed": false,
       "volume_argument": "Source normalized slider position; percent/100 is sent exactly once, never mixer/native asset gain.",
-      "current_values": "bindUiAudio uses observeAudioState, sourceAudioDefaults, sourceSliderToMixer and sourceMixerToAssetGain. Native defaults are effective mixer 255/127/127.",
+      "current_values": "bindUiAudio uses actual observed percentages/mixers and per-voice renderedNativeLevel/appliedNativeLevel. sourceMixerToAssetGain uses the actual 128 or 255 denominator, never an assumed music-channel gain.",
+      "supplement": {
+        "manifest": "assets/manifests/osrs/audio-m1-supplement.json",
+        "sha256": "840aef91bac9a1fd042bdb1c3662ff92a378e279f48335108730e168af550d91",
+        "assets": 9,
+        "status": "published_consumed_and_routed_in_ui_component_host"
+      },
       "committed_gameplay_events_created_by_ui": false
     },
     "wired_versioned_controls": [
@@ -349,7 +388,8 @@
       "Public chat permission, declared channel and UTF-8 byte limit; rejected drafts retained, no optimistic echo or clearing before the authoritative own-message update.",
       "Declared body_type 0/1 permissions and confirmation, with local appearance/equipment preview descriptors. Human kit/colour/pronoun controls do not create new penguin variants.",
       "All shop buys still send displayed canonical expected_item; held menus/amounts never retarget a reused row.",
-      "Native master/music/effects/area sliders and per-channel mute controls consume actual audio observations, preserve remembered in-session positions and source integer/nonlinear semantics; title audio uses explicit global mute rather than resetting all channel positions."
+      "Native master/music/effects/area sliders and per-channel mute controls consume actual audio observations, preserve remembered in-session positions and source integer/nonlinear semantics; title audio uses explicit global mute rather than resetting all channel positions.",
+      "Player-scoped setUiMusicState delegates the exact published state to the audio engine. Native modes, canonical manual tracks, actual unlock coloring/counts, current playlist, loop flags, scrollbar and source dropdown cancellation are wired without fabricated music events or caller-selected next songs."
     ],
     "requests": [
       {
@@ -388,24 +428,19 @@
         "reason": "The UI now exports source widget/model bounds, native model parameters, approved local body selection and authoritative equipment/base metadata. Static minimap rasters and absent previews are not a finished renderer. These are component adapters, not new server defaults or shared-ABI edits."
       },
       {
-        "scope": "Real source audio listener/object/varp and next-music bridge",
-        "extension": "Use the published setSourceAudioScene(handle, scene) with real 128-unit listener coordinates, plane/instance/owner, placed emitters/orientations and bound original varps; use setSourceMusicSelector with the actual next selection.",
-        "reason": "UI observer/volume wiring is complete, but shell/renderer scene inputs are not owned here. No tile-center guess, invented gain/distance/fade, empty-emitter success or playlist is supplied by UI."
+        "scope": "Real source audio listener/object/varp and music-state app composition",
+        "extension": "Use setSourceAudioScene with real 128-unit listener, plane/instance/owner, placed emitters/orientations and original varps; call setUiMusicState(ui, playerId, actual SourceMusicState) after audio.update(world, events).",
+        "reason": "UI/state integration and native internal continuation are implemented. Actual shell/renderer inputs remain outside UI ownership. No caller-guessed gain, empty scene or next-song callback is required or supplied."
       },
       {
-        "scope": "Authoritative music preferences, unlocks and manual requests",
-        "extension": "Publish current native area0/shuffle1/single2 preference, authoritative unlocked tracks/playlist and a manual-selection request bridge; retain sourceDuration/native_duration semantics.",
-        "reason": "AudioSnapshot's playback plan does not establish saved music preference or unlock ownership. Original mode controls are present with exact native IDs and required feedback; no committed music event or unlocked:true flag is fabricated from a click."
+        "scope": "Direct skip request and numbered playlist slots",
+        "extension": "Expose a direct Skip Track request into the audio engine's existing native next-track policy; supply saved Playlist1/2/3 identities/contents for the original numbered-slot controls.",
+        "reason": "SourceMusicState and UI controls now cover actual modes/unlocks/manual selection/current playlist/loop flags. It does not identify three saved slots, and identical-state idempotence is not a skip API. No mode-flipping workaround or caller-guessed next track is used."
       },
       {
         "scope": "Native remembered mute values and full settings window",
         "extension": "Expose the actual remembered mute percentages (source varbits14817/12426/12427/12428) when restoring persisted settings. Complete the separate All Settings window projection.",
         "reason": "Current percentages/mixers and source sidebar sliders are wired. In-session Mute/Unmute preserves the observed previous value. A zero value whose saved restoration value was never supplied reports ui.audio.remembered_mute instead of inventing it. The broader All Settings button has explicit required feedback, not a silent open acknowledgement."
-      },
-      {
-        "scope": "Additive original audio publications",
-        "extension": "Integrate the audio owner's forthcoming AUDIO_INPUTS/routes for index6 groups64/327/163/145 and native255 index11 groups40/54/58/64/65.",
-        "reason": "These additions are not yet relayed on this branch. The frozen 266 files/base pack remain unchanged; missing tracks or unsafe scaled representations are not substituted, normalized or invented."
       },
       {
         "scope": "Committed Cook reward/Widget153 close audio batches",
@@ -438,6 +473,11 @@
       "additional_audio_control_checks": {
         "passed": 18,
         "total": 18,
+        "tolerance": 0
+      },
+      "additional_music_control_checks": {
+        "passed": 8,
+        "total": 8,
         "tolerance": 0
       },
       "full_panels_excluded": 0,

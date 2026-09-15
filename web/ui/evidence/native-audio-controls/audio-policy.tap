@@ -2,159 +2,183 @@ TAP version 13
 # Subtest: the active pack, corrected manifest, source map and all 266 original payloads retain their hashes
 ok 1 - the active pack, corrected manifest, source map and all 266 original payloads retain their hashes
   ---
-  duration_ms: 109.315621
+  duration_ms: 158.591088
   type: 'test'
   ...
 # Subtest: native delay 2 dispatches on processing call 3 and occupies capacity until call 4
 ok 2 - native delay 2 dispatches on processing call 3 and occupies capacity until call 4
   ---
-  duration_ms: 0.474803
+  duration_ms: 0.284962
   type: 'test'
   ...
 # Subtest: native 50-entry FIFO drops only the new overflow request, never reprioritizes existing entries
 ok 3 - native 50-entry FIFO drops only the new overflow request, never reprioritizes existing entries
   ---
-  duration_ms: 0.296113
+  duration_ms: 0.146961
   type: 'test'
   ...
 # Subtest: pending decode does not dispatch a placeholder, and cancellation removes only matching actions
 ok 4 - pending decode does not dispatch a placeholder, and cancellation removes only matching actions
   ---
-  duration_ms: 0.547587
+  duration_ms: 0.31757
   type: 'test'
   ...
 # Subtest: the original -10-cycle loading grace expires without late playback
 ok 5 - the original -10-cycle loading grace expires without late playback
   ---
-  duration_ms: 0.189825
+  duration_ms: 0.084577
   type: 'test'
   ...
 # Subtest: frame-1 eating after four cycles cannot inherit the additional packet-delay-2 convention
 ok 6 - frame-1 eating after four cycles cannot inherit the additional packet-delay-2 convention
   ---
-  duration_ms: 0.146753
+  duration_ms: 0.047328
   type: 'test'
   ...
 # Subtest: all 100 original sequence 13612 weights include the 74 silent outcomes
 ok 7 - all 100 original sequence 13612 weights include the 74 silent outcomes
   ---
-  duration_ms: 2.56296
+  duration_ms: 1.159608
   type: 'test'
   ...
 # Subtest: source frame correlation deduplicates server and animation callbacks, independent of event IDs
 ok 8 - source frame correlation deduplicates server and animation callbacks, independent of event IDs
   ---
-  duration_ms: 0.266706
+  duration_ms: 0.259698
   type: 'test'
   ...
 # Subtest: events reject unsafe IDs, nonfinite values, invalid positions, and mutable compound payloads
 ok 9 - events reject unsafe IDs, nonfinite values, invalid positions, and mutable compound payloads
   ---
-  duration_ms: 0.369634
+  duration_ms: 0.397442
   type: 'test'
   ...
 # Subtest: named selectors use actual shortbow/rat/goblin/smelting IDs; no generic UI click binding
 ok 10 - named selectors use actual shortbow/rat/goblin/smelting IDs; no generic UI click binding
   ---
-  duration_ms: 0.099585
+  duration_ms: 0.116096
   type: 'test'
   ...
 # Subtest: journey region routing does not call the mill extraction seed the Autumn Classic square
 ok 11 - journey region routing does not call the mill extraction seed the Autumn Classic square
   ---
-  duration_ms: 0.05856
+  duration_ms: 0.066208
   type: 'test'
   ...
 # Subtest: finite SFX repetition copies native loop samples and retains the actual tail without resampling
 ok 12 - finite SFX repetition copies native loop samples and retains the actual tail without resampling
   ---
-  duration_ms: 0.119793
+  duration_ms: 0.133937
   type: 'test'
   ...
 # Subtest: native constructor/refresh defaults and exact nonlinear lookup tables
 ok 13 - native constructor/refresh defaults and exact nonlinear lookup tables
   ---
-  duration_ms: 2.695761
+  duration_ms: 5.203652
   type: 'test'
   ...
 # Subtest: original source-cycle queue position and PCM-calibrated integer gains
 ok 14 - original source-cycle queue position and PCM-calibrated integer gains
   ---
-  duration_ms: 0.68562
+  duration_ms: 2.668802
   type: 'test'
   ...
 # Subtest: original object rectangle, inner retention and native plane/world-owner policy
 ok 15 - original object rectangle, inner retention and native plane/world-owner policy
   ---
-  duration_ms: 0.900998
+  duration_ms: 1.611083
   type: 'test'
   ...
 # Subtest: actual signed ambient fade behavior, including immediate upward changes
 ok 16 - actual signed ambient fade behavior, including immediate upward changes
   ---
-  duration_ms: 0.702484
+  duration_ms: 0.778261
   type: 'test'
   ...
 # Subtest: original music fade uses float32 stepped native master levels, not a generic linear ramp
 ok 17 - original music fade uses float32 stepped native master levels, not a generic linear ramp
   ---
-  duration_ms: 0.701765
+  duration_ms: 0.672916
   type: 'test'
   ...
 # Subtest: all native M1 morph cases use real varbit masks and original target definitions
 ok 18 - all native M1 morph cases use real varbit masks and original target definitions
   ---
-  duration_ms: 0.838581
+  duration_ms: 0.788229
   type: 'test'
   ...
 # Subtest: source polygons and native table44 select the real six-track Modern area, not three guessed songs
 ok 19 - source polygons and native table44 select the real six-track Modern area, not three guessed songs
   ---
-  duration_ms: 0.60986
+  duration_ms: 0.554212
   type: 'test'
   ...
 # Subtest: native mix comparisons stay source-qualified and explicitly identify unrepresentable clipping cases
 ok 20 - native mix comparisons stay source-qualified and explicitly identify unrepresentable clipping cases
   ---
-  duration_ms: 1.045207
+  duration_ms: 2.022526
   type: 'test'
   ...
 # Subtest: source-supported extra cooking changes the committed Cook base-level delta, not the XP rule
 ok 21 - source-supported extra cooking changes the committed Cook base-level delta, not the XP rule
   ---
-  duration_ms: 1.015014
+  duration_ms: 0.978135
   type: 'test'
   ...
 # Subtest: the observed 33/level4 example does not restrict a pre-trained 2-to-5 reward
 ok 22 - the observed 33/level4 example does not restrict a pre-trained 2-to-5 reward
   ---
-  duration_ms: 0.377506
+  duration_ms: 0.344418
   type: 'test'
   ...
 # Subtest: a committed reward with XP but no base-level gain has no level-up cue, including boosted current levels
 ok 23 - a committed reward with XP but no base-level gain has no level-up cue, including boosted current levels
   ---
-  duration_ms: 0.085425
+  duration_ms: 0.083712
   type: 'test'
   ...
 # Subtest: reward events cannot invent a completion association, skill, before level or XP delta
 ok 24 - reward events cannot invent a completion association, skill, before level or XP delta
   ---
-  duration_ms: 0.133905
+  duration_ms: 0.129313
   type: 'test'
   ...
 # Subtest: deferral retains the committed reward delta even if later training raises the current snapshot
 ok 25 - deferral retains the committed reward delta even if later training raises the current snapshot
   ---
-  duration_ms: 0.065488
+  duration_ms: 0.062497
   type: 'test'
   ...
-1..25
-# tests 25
+# Subtest: the additive manifest keeps all base identities and publishes only the exact nine native inputs
+ok 26 - the additive manifest keeps all base identities and publishes only the exact nine native inputs
+  ---
+  duration_ms: 106.171705
+  type: 'test'
+  ...
+# Subtest: native representation selection preserves old IDs at safe levels and resolves native255 only when required
+ok 27 - native representation selection preserves old IDs at safe levels and resolves native255 only when required
+  ---
+  duration_ms: 0.625844
+  type: 'test'
+  ...
+# Subtest: native255 PCM is never blindly amplified as a native128 render
+ok 28 - native255 PCM is never blindly amplified as a native128 render
+  ---
+  duration_ms: 0.29893
+  type: 'test'
+  ...
+# Subtest: independent native44/native136 controls meet the pre-existing mixer-gain and clipping bounds
+ok 29 - independent native44/native136 controls meet the pre-existing mixer-gain and clipping bounds
+  ---
+  duration_ms: 2.381088
+  type: 'test'
+  ...
+1..29
+# tests 29
 # suites 0
-# pass 25
+# pass 29
 # fail 0
 # cancelled 0
 # skipped 0
 # todo 0
-# duration_ms 204.408738
+# duration_ms 274.264522

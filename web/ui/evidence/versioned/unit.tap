@@ -2,207 +2,237 @@ TAP version 13
 # Subtest: UI source percentages retain the observed nonlinear mixer, never invert it into a linear slider
 ok 1 - UI source percentages retain the observed nonlinear mixer, never invert it into a linear slider
   ---
-  duration_ms: 0.928214
+  duration_ms: 1.030055
+  type: 'test'
+  ...
+# Subtest: musical observations preserve native255 denominators and distinguish configured from applied levels
+ok 2 - musical observations preserve native255 denominators and distinguish configured from applied levels
+  ---
+  duration_ms: 0.16021
   type: 'test'
   ...
 # Subtest: source audio observation distinguishes real permission/output and accepts intermediate master refreshes
-ok 2 - source audio observation distinguishes real permission/output and accepts intermediate master refreshes
+ok 3 - source audio observation distinguishes real permission/output and accepts intermediate master refreshes
   ---
-  duration_ms: 0.165713
+  duration_ms: 0.147937
   type: 'test'
   ...
 # Subtest: native slider hit conversion uses floor scaling and retains the original thumb grab offset
-ok 3 - native slider hit conversion uses floor scaling and retains the original thumb grab offset
+ok 4 - native slider hit conversion uses floor scaling and retains the original thumb grab offset
   ---
-  duration_ms: 0.202945
+  duration_ms: 0.215809
   type: 'test'
   ...
 # Subtest: source audio projection follows exact thumb/mute geometry and never invents unobserved positions
-ok 4 - source audio projection follows exact thumb/mute geometry and never invents unobserved positions
+ok 5 - source audio projection follows exact thumb/mute geometry and never invents unobserved positions
   ---
-  duration_ms: 1.118343
+  duration_ms: 1.180568
   type: 'test'
   ...
 # Subtest: native audio controls remain unclipped within supported Classic HUD anchors
-ok 5 - native audio controls remain unclipped within supported Classic HUD anchors
+ok 6 - native audio controls remain unclipped within supported Classic HUD anchors
   ---
-  duration_ms: 7.366926
+  duration_ms: 4.848113
   type: 'test'
   ...
 # Subtest: game.ui.v1 requires the exact complete projection, never a fabricated empty success
-ok 6 - game.ui.v1 requires the exact complete projection, never a fabricated empty success
+ok 7 - game.ui.v1 requires the exact complete projection, never a fabricated empty success
   ---
-  duration_ms: 1.215656
+  duration_ms: 1.402089
   type: 'test'
   ...
 # Subtest: nested malformed fields and duplicate identities are explicit projection failures
-ok 7 - nested malformed fields and duplicate identities are explicit projection failures
+ok 8 - nested malformed fields and duplicate identities are explicit projection failures
   ---
-  duration_ms: 2.252158
+  duration_ms: 4.089788
   type: 'test'
   ...
 # Subtest: decimal formatting retains u64 XP/credit and signed gram precision
-ok 8 - decimal formatting retains u64 XP/credit and signed gram precision
+ok 9 - decimal formatting retains u64 XP/credit and signed gram precision
   ---
-  duration_ms: 8.357987
+  duration_ms: 13.806303
   type: 'test'
   ...
 # Subtest: opaque inventory actions recheck item, instance and actual permission without mutating inventory
-ok 9 - opaque inventory actions recheck item, instance and actual permission without mutating inventory
+ok 10 - opaque inventory actions recheck item, instance and actual permission without mutating inventory
   ---
-  duration_ms: 0.879157
+  duration_ms: 0.832662
   type: 'test'
   ...
 # Subtest: production retains menu/recipe identities and distinct single/make-X permissions
-ok 10 - production retains menu/recipe identities and distinct single/make-X permissions
+ok 11 - production retains menu/recipe identities and distinct single/make-X permissions
   ---
-  duration_ms: 0.472931
+  duration_ms: 0.586132
   type: 'test'
   ...
 # Subtest: bank requests retain stable entries, placeholders and tab identities
-ok 11 - bank requests retain stable entries, placeholders and tab identities
+ok 12 - bank requests retain stable entries, placeholders and tab identities
   ---
-  duration_ms: 0.344051
+  duration_ms: 0.90039
   type: 'test'
   ...
 # Subtest: placeholder zero-quantity objects, mismatched item IDs and duplicate source slots are not valid bank views
-ok 12 - placeholder zero-quantity objects, mismatched item IDs and duplicate source slots are not valid bank views
+ok 13 - placeholder zero-quantity objects, mismatched item IDs and duplicate source slots are not valid bank views
   ---
-  duration_ms: 0.599827
+  duration_ms: 0.231889
   type: 'test'
   ...
 # Subtest: coffer/discard requests depend on declared permissions and preserve recovery/instance identity
-ok 13 - coffer/discard requests depend on declared permissions and preserve recovery/instance identity
+ok 14 - coffer/discard requests depend on declared permissions and preserve recovery/instance identity
   ---
-  duration_ms: 0.267185
+  duration_ms: 0.279138
   type: 'test'
   ...
 # Subtest: public chat checks declared channel, UTF-8 bytes and server permission, not JS string length
-ok 14 - public chat checks declared channel, UTF-8 bytes and server permission, not JS string length
+ok 15 - public chat checks declared channel, UTF-8 bytes and server permission, not JS string length
   ---
-  duration_ms: 0.234322
+  duration_ms: 0.379379
   type: 'test'
   ...
 # Subtest: presentation requests are exhaustive and require the current opaque identity
-ok 15 - presentation requests are exhaustive and require the current opaque identity
+ok 16 - presentation requests are exhaustive and require the current opaque identity
   ---
-  duration_ms: 0.204737
+  duration_ms: 0.206833
+  type: 'test'
+  ...
+# Subtest: native music rows bind source database/group/widget identities without label-based dispatch
+ok 17 - native music rows bind source database/group/widget identities without label-based dispatch
+  ---
+  duration_ms: 0.497332
+  type: 'test'
+  ...
+# Subtest: music UI requests retain actual unlocks and do not guess a next track
+ok 18 - music UI requests retain actual unlocks and do not guess a next track
+  ---
+  duration_ms: 0.535812
+  type: 'test'
+  ...
+# Subtest: current playlist and loop changes preserve source identities and reject invalid states
+ok 19 - current playlist and loop changes preserve source identities and reject invalid states
+  ---
+  duration_ms: 0.123841
+  type: 'test'
+  ...
+# Subtest: music projection replaces fixture unlock counts/colors and scrolls real source rows
+ok 20 - music projection replaces fixture unlock counts/colors and scrolls real source rows
+  ---
+  duration_ms: 6.9176
   type: 'test'
   ...
 # Subtest: exact owner approval and source-font metrics are bound
-ok 16 - exact owner approval and source-font metrics are bound
+ok 21 - exact owner approval and source-font metrics are bound
   ---
-  duration_ms: 1.002198
+  duration_ms: 1.41305
   type: 'test'
   ...
 # Subtest: lossless source-widget pool rejects corrupt references
-ok 17 - lossless source-widget pool rejects corrupt references
+ok 22 - lossless source-widget pool rejects corrupt references
   ---
-  duration_ms: 0.244241
+  duration_ms: 0.295826
   type: 'test'
   ...
 # Subtest: native CP1252 mapping, escapes, line breaks and indivisible tokens
-ok 18 - native CP1252 mapping, escapes, line breaks and indivisible tokens
+ok 23 - native CP1252 mapping, escapes, line breaks and indivisible tokens
   ---
-  duration_ms: 0.298865
+  duration_ms: 0.316674
   type: 'test'
   ...
 # Subtest: 696 pinned text records match metrics; two explicitly unrecorded texts remain unknown
-ok 19 - 696 pinned text records match metrics; two explicitly unrecorded texts remain unknown
+ok 24 - 696 pinned text records match metrics; two explicitly unrecorded texts remain unknown
   ---
-  duration_ms: 12.927152
+  duration_ms: 13.816702
   type: 'test'
   ...
 # Subtest: 71-state/29-family/11-signature coverage is retained without declaring unknown controls hidden
-ok 20 - 71-state/29-family/11-signature coverage is retained without declaring unknown controls hidden
+ok 25 - 71-state/29-family/11-signature coverage is retained without declaring unknown controls hidden
   ---
-  duration_ms: 0.270674
+  duration_ms: 0.301986
   type: 'test'
   ...
 # Subtest: native anchors remain source-aligned across the approved resize range
-ok 21 - native anchors remain source-aligned across the approved resize range
+ok 26 - native anchors remain source-aligned across the approved resize range
   ---
-  duration_ms: 3.388421
+  duration_ms: 3.457416
   type: 'test'
   ...
 # Subtest: genuine source lock uses authoritative unlocks, never inferred negative evidence
-ok 22 - genuine source lock uses authoritative unlocks, never inferred negative evidence
+ok 27 - genuine source lock uses authoritative unlocks, never inferred negative evidence
   ---
-  duration_ms: 0.461059
+  duration_ms: 0.608724
   type: 'test'
   ...
 # Subtest: quantity parser rejects zero, negative, fractional, exponent, overflow and blank
-ok 23 - quantity parser rejects zero, negative, fractional, exponent, overflow and blank
+ok 28 - quantity parser rejects zero, negative, fractional, exponent, overflow and blank
   ---
-  duration_ms: 0.160337
+  duration_ms: 0.156929
   type: 'test'
   ...
 # Subtest: skill XP formatting never loses u64/string precision or creates XP
-ok 24 - skill XP formatting never loses u64/string precision or creates XP
+ok 29 - skill XP formatting never loses u64/string precision or creates XP
   ---
-  duration_ms: 7.565487
+  duration_ms: 7.592484
   type: 'test'
   ...
 # Subtest: content-derived weapon IDs and experience choices remain data-only source bindings
-ok 25 - content-derived weapon IDs and experience choices remain data-only source bindings
+ok 30 - content-derived weapon IDs and experience choices remain data-only source bindings
   ---
-  duration_ms: 53.19313
+  duration_ms: 52.598233
   type: 'test'
   ...
 # Subtest: failed asset requests require explicit retry and release references on dispose
-ok 26 - failed asset requests require explicit retry and release references on dispose
+ok 31 - failed asset requests require explicit retry and release references on dispose
   ---
-  duration_ms: 5.643235
+  duration_ms: 5.88012
   type: 'test'
   ...
 # Subtest: source filter predicates retain unknown requirements and use exact Classic grid arithmetic
-ok 27 - source filter predicates retain unknown requirements and use exact Classic grid arithmetic
+ok 32 - source filter predicates retain unknown requirements and use exact Classic grid arithmetic
   ---
-  duration_ms: 0.216641
+  duration_ms: 0.228177
   type: 'test'
   ...
 # Subtest: web-only error pages preserve long identifiers without overlap or native glyph clipping
-ok 28 - web-only error pages preserve long identifiers without overlap or native glyph clipping
+ok 33 - web-only error pages preserve long identifiers without overlap or native glyph clipping
   ---
-  duration_ms: 0.528227
+  duration_ms: 0.545076
   type: 'test'
   ...
 # Subtest: recovery display uses explicit fee/coffer inputs and native controls without granting items
-ok 29 - recovery display uses explicit fee/coffer inputs and native controls without granting items
+ok 34 - recovery display uses explicit fee/coffer inputs and native controls without granting items
   ---
-  duration_ms: 3.348245
+  duration_ms: 3.809834
   type: 'test'
   ...
 # Subtest: source production model replacement preserves widget identity and native choice coordinates
-ok 30 - source production model replacement preserves widget identity and native choice coordinates
+ok 35 - source production model replacement preserves widget identity and native choice coordinates
   ---
-  duration_ms: 4.301019
+  duration_ms: 4.662672
   type: 'test'
   ...
 # Subtest: bank placeholder artwork uses the actual original placeholder definition, never an alpha-tinted normal item
-ok 31 - bank placeholder artwork uses the actual original placeholder definition, never an alpha-tinted normal item
+ok 36 - bank placeholder artwork uses the actual original placeholder definition, never an alpha-tinted normal item
   ---
-  duration_ms: 0.115553
+  duration_ms: 0.173537
   type: 'test'
   ...
 # Subtest: death preview projects only supplied rows, opaque quantities and full monetary text
-ok 32 - death preview projects only supplied rows, opaque quantities and full monetary text
+ok 37 - death preview projects only supplied rows, opaque quantities and full monetary text
   ---
-  duration_ms: 0.90607
+  duration_ms: 1.09932
   type: 'test'
   ...
 # Subtest: quest reward lines use the real source 9..15 slots and never retain native fixture awards
-ok 33 - quest reward lines use the real source 9..15 slots and never retain native fixture awards
+ok 38 - quest reward lines use the real source 9..15 slots and never retain native fixture awards
   ---
-  duration_ms: 0.645492
+  duration_ms: 0.771509
   type: 'test'
   ...
-1..33
-# tests 33
+1..38
+# tests 38
 # suites 0
-# pass 33
+# pass 38
 # fail 0
 # cancelled 0
 # skipped 0
 # todo 0
-# duration_ms 317.878929
+# duration_ms 407.435836
