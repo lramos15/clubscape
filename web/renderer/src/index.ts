@@ -49,8 +49,9 @@ export interface RenderAssetManifest {
   player_reference?: { model: string; classification: string };
   /**
    * Precomputed per-item per-pose gear fits (`export.py --profile pose-fits`): the shifts the
-   * runtime contact solve would apply, so first display of a frame costs no solve. Frames still
-   * over the fit targets are counted here and reported per frame by `playerPoseFits()`.
+   * runtime contact solve would apply, so first display of a frame costs no solve. Frames over
+   * the fit targets (0 in the published table) are counted here and reported per frame by
+   * `playerPoseFits()`.
    */
   gear_pose_fits?: { file: string; schema_version: number; body_npc: number; items: number; sequences: number; item_frames: number; item_frames_over_target: number };
   /** Door/fire/state objects: per type+orientation lit models with optional baked frames. */
@@ -490,11 +491,9 @@ export const createRenderer: (canvas: HTMLCanvasElement, config: RendererConfig,
     if (manifest.gear_pose_fits && penguin) {
       const table = new TextDecoder().decode(await fetchAsset(manifest.gear_pose_fits.file));
       const entries = renderer.load_pose_fit_table(table, penguin.npc_id);
-      if (manifest.gear_pose_fits.item_frames_over_target > 0) {
-        options.onDiagnostic?.(
-          `gear pose fits: ${manifest.gear_pose_fits.item_frames_over_target} of ${manifest.gear_pose_fits.item_frames} item-frames remain over the fit targets (${entries} item×sequence entries loaded)`,
-        );
-      }
+      options.onDiagnostic?.(
+        `gear pose fits: ${entries} item×sequence entries loaded; ${manifest.gear_pose_fits.item_frames_over_target} of ${manifest.gear_pose_fits.item_frames} item-frames over the fit targets`,
+      );
     } else if (penguin) {
       options.onDiagnostic?.("gear pose fits: no precomputed table in the manifest; player frames solve their fit live on first display");
     }

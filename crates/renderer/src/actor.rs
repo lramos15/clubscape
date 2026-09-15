@@ -1218,7 +1218,7 @@ fn contact_solve(
     // (shift, contact, direction) per direction that clears the penetration.
     let solved: Vec<(f64, bool, [f64; 3])> = boxed
         .iter()
-        .filter(|(t, dir)| *t <= shortest_box * 1.5 + 4.0 || is_outward(dir))
+        .filter(|(t, dir)| *t <= shortest_box * 3.0 + 8.0 || is_outward(dir))
         .filter_map(|(t, dir)| confirm_along(dir, *t).map(|(t, contact)| (t, contact, *dir)))
         .collect();
     let Some(&shortest) = solved.iter().min_by(|a, b| a.0.total_cmp(&b.0)) else {
@@ -1230,7 +1230,7 @@ fn contact_solve(
         .min_by(|a, b| a.0.total_cmp(&b.0))
         .copied();
     let mut chosen = match shortest_contact {
-        Some(c) if c.0 <= shortest.0 * 1.5 + 2.0 => c,
+        Some(c) if c.0 <= shortest.0 * 3.0 + 8.0 => c,
         _ => shortest,
     };
     if let Some(o) = solved.iter().find(|c| is_outward(&c.2))
@@ -1320,8 +1320,8 @@ fn contact_solve(
                     }
                 }
             }
-            let mut clearance_budget = 48;
-            'radius: for step in 1..=12 {
+            let mut clearance_budget = 160;
+            'radius: for step in 1..=24 {
                 let radius = f64::from(step) * 2.0 * COARSE;
                 for d in &lattice {
                     let total = [
@@ -1344,6 +1344,38 @@ fn contact_solve(
                         break 'radius;
                     }
                 }
+            }
+        }
+        if best.is_none() {
+            // Last resort: the smallest shift in any of the 124 lattice directions (components
+            // −2..2) at which both targets hold, searched from the unshifted item.
+            let mut dense: Vec<[f64; 3]> = Vec::new();
+            for x in -2..=2 {
+                for y in -2..=2 {
+                    for z in -2..=2 {
+                        if let Some(d) = normalize([f64::from(x), f64::from(y), f64::from(z)]) {
+                            dense.push(d);
+                        }
+                    }
+                }
+            }
+            let mut feasible: Option<(f64, [f64; 3])> = None;
+            for d in &dense {
+                let Some(t) = box_clear_along(d) else {
+                    continue;
+                };
+                if feasible.is_some_and(|(b, _)| t >= b) {
+                    continue;
+                }
+                let probe = shifted(d, t);
+                if full_measure(body, &probe) <= FIT_MAX_PENETRATION
+                    && clearance(body, &probe) <= FIT_MAX_GAP
+                {
+                    feasible = Some((t, *d));
+                }
+            }
+            if let Some((t, d)) = feasible {
+                best = Some((t, scaled(&d, t)));
             }
         }
         if let Some((_, total)) = best {

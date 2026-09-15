@@ -5,7 +5,20 @@
  * genuine GPU-completed frame records, and `window.__clubscapeDev` for the capture script.
  */
 import type { DynamicObjectView, RenderFrame, WorldView } from "../../shared/contracts.ts";
-import { createRenderer, fullHudZoomForViewport, sourceZoomForViewportHeight, type ClubscapeRendererHandle } from "../src/index.ts";
+import { createRenderer, fullHudZoomForViewport, sourceZoomForViewportHeight, type ClubscapeRendererHandle, type PlayerPoseFit } from "../src/index.ts";
+
+/** Per-pose gear fits of the frames drawn so far: counts, worst measures and the failures. */
+function summarizePoseFits(fits: PlayerPoseFit[]) {
+  const failing = fits.filter((f) => !f.meetsTargets);
+  return {
+    frames: fits.length,
+    precomputed: fits.filter((f) => f.precomputed).length,
+    maxPenetration: fits.reduce((m, f) => Math.max(m, f.penetration), 0),
+    maxGap: fits.reduce((m, f) => Math.max(m, f.gap), 0),
+    maxShift: fits.reduce((m, f) => Math.max(m, f.shift), 0),
+    failing: failing.map((f) => ({ sequence: f.sequence, frame: f.frame, itemId: f.itemId, penetration: f.penetration, gap: f.gap })),
+  };
+}
 
 interface FixtureCamera { scene: string; base: [number, number]; local: [number, number, number]; pitch: number; yaw: number }
 
@@ -341,7 +354,7 @@ async function main(): Promise<void> {
           cameraShift = 0;
           placeCamera();
           handle.update(workloadWorld(px, py, sceneId));
-          return { fit: handle.playerFitReport(), placement: handle.scenePlacement(), movingCamera: moving };
+          return { fit: handle.playerFitReport(), poseFits: summarizePoseFits(handle.playerPoseFits()), placement: handle.scenePlacement(), movingCamera: moving };
         }
         if (name === "door-open" || name === "door-closed") {
           // Lumbridge castle west large door (source object 12349 at 3213,3221, exported with its
@@ -416,11 +429,11 @@ async function main(): Promise<void> {
         previewCanvas.getContext("2d")!.putImageData(image, 0, 0);
         let covered = 0;
         for (let i = 3; i < image.data.length; i += 4) if (image.data[i] === 255) covered += 1;
-        return { width: image.width, height: image.height, covered, fit: handle.playerFitReport() };
+        return { width: image.width, height: image.height, covered, fit: handle.playerFitReport(), poseFits: summarizePoseFits(handle.playerPoseFits()) };
       }
       previewCanvas.width = 0;
       previewCanvas.height = 0;
-      return { fit: handle.playerFitReport(), placement: handle.scenePlacement(), unknownMotions: handle.unknownMotions(), running: handle.playerRunning() };
+      return { fit: handle.playerFitReport(), poseFits: summarizePoseFits(handle.playerPoseFits()), placement: handle.scenePlacement(), unknownMotions: handle.unknownMotions(), running: handle.playerRunning() };
     };
     state.ready = true;
     publish();

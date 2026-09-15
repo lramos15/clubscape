@@ -8459,7 +8459,7 @@
   "items": 10,
   "sequences": 27,
   "item_frames": 3220,
-  "item_frames_over_target": 20,
+  "item_frames_over_target": 0,
   "classification": "Per-item per-pose rigid contact shifts against the penguin body (targets penetration <= 1, gap <= 2 source units); precomputed runtime input, not a fit waiver"
  },
  "hud_zoom": {
@@ -23199,8 +23199,8 @@
    }
   },
   "gear/pose-fits.json": {
-   "sha256": "4e37128c89be873529346ca8892be885001cd287ae6dda7f0c1029375880b9be",
-   "size_bytes": 292704
+   "sha256": "09c8a3316124701ef478466a12ef461d7227022f7baf060ee66c5e2d2206a43a",
+   "size_bytes": 292744
   },
   "hud/zoom-table.json": {
    "sha256": "8375bbcd0c071466b0869f0a89d2525e50a73c35c4a23c6a07d3089ae241d21f",

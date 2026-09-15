@@ -519,3 +519,71 @@ fn shield_direction_candidates() {
         }
     }
 }
+
+/// Developer experiment: for the remaining sq-shield gap failures, sweep every fixed direction
+/// with a fine step and report the smallest shift at which both targets hold, if any.
+#[test]
+#[ignore = "developer experiment; sweeps the remaining sq shield frames"]
+fn sq_shield_remaining_frames() {
+    let inputs = inputs();
+    let (id, name, model) = inputs.items.iter().find(|(id, _, _)| *id == 1173).unwrap();
+    let equip = EquipModel {
+        item_id: *id,
+        model: model.clone(),
+    };
+    let (assembled, _, _) = inputs
+        .body
+        .assemble_parts(&[("shield".to_string(), &equip)]);
+    let (_, bind_part) = split_part(&assembled, inputs.base.vertex_count, inputs.base.face_count);
+    for (seq_id, frame) in [(829, 5usize), (829, 6), (625, 11)] {
+        let sequence = inputs.sequences.iter().find(|s| s.id == seq_id).unwrap();
+        let posed = inputs.body.pose(&assembled, sequence, frame).unwrap();
+        let (body, part) = split_part(&posed, inputs.base.vertex_count, inputs.base.face_count);
+        eprintln!(
+            "{name} seq {seq_id} frame {frame}: raw pen {:.2} gap {:.2}",
+            posed_fit_penetration(&bind_part, &body, &part),
+            clearance(&body, &part)
+        );
+        let mut best: Option<(f64, [f64; 3], f64, f64)> = None;
+        let mut dirs = Vec::new();
+        for x in -2..=2 {
+            for y in -2..=2 {
+                for z in -2..=2 {
+                    let v = [f64::from(x), f64::from(y), f64::from(z)];
+                    let len = (v[0] * v[0] + v[1] * v[1] + v[2] * v[2]).sqrt();
+                    if len > 0.0 {
+                        dirs.push([v[0] / len, v[1] / len, v[2] / len]);
+                    }
+                }
+            }
+        }
+        for dir in &dirs {
+            let mut t = 0.5;
+            while t <= 40.0 {
+                let mut probe = part.clone();
+                for v in 0..probe.vertex_count {
+                    probe.xs[v] = (f64::from(part.xs[v]) + dir[0] * t) as f32;
+                    probe.ys[v] = (f64::from(part.ys[v]) + dir[1] * t) as f32;
+                    probe.zs[v] = (f64::from(part.zs[v]) + dir[2] * t) as f32;
+                }
+                let pen = posed_fit_penetration(&bind_part, &body, &probe);
+                if pen <= FIT_MAX_PENETRATION {
+                    let gap = clearance(&body, &probe);
+                    if gap <= FIT_MAX_GAP && best.is_none_or(|b| t < b.0) {
+                        best = Some((t, *dir, pen, gap));
+                    }
+                    break;
+                }
+                t += 0.5;
+            }
+        }
+        match best {
+            Some((t, dir, pen, gap)) => {
+                eprintln!("   feasible: shift {t:.1} dir {dir:?} pen {pen:.2} gap {gap:.2}")
+            }
+            None => eprintln!(
+                "   no translation ≤ 40 in 124 directions meets both targets (box measure vs surface clearance)"
+            ),
+        }
+    }
+}

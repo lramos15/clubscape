@@ -85,9 +85,9 @@ Tests (published inputs unless noted):
   top-plane rule, the interface preview projection.
 * `tests/gear_fit.rs` – the bind-pose fit of all 10 worn models, and the **pose gate**: every
   item × 27 required sequences × frame after the per-pose contact fit must meet penetration ≤ 1
-  and gap ≤ 2; the test FAILS while any frame is over (currently 20 of 3 220 item-frames over
-  the gap target, see "Known deviations"); the published `gear/pose-fits.json` equals the live
-  solve and its over-target count.
+  and gap ≤ 2 (the test fails on any frame over; all 3 220 item-frames pass, see "Known
+  deviations"); the published `gear/pose-fits.json` equals the live solve and its over-target
+  count (0).
 * `tests/hud_zoom.rs` – the `rl.cu` full-HUD zoom port against the original client's own values
   for 16 canvas sizes (`hud/zoom-table.json`), and the viewport-only 662/471/883 values.
 * `tests/dynamic_layers.rs` – the 12 independent original dynamic-layer cases (see "Known
@@ -276,25 +276,24 @@ refuses buffers whose hash differs.
   `gear/pose-fits.json`): after each frame's retargeted pose, every worn item is measured
   against the posed body with the bind-pose box carried rigidly with the item (plus the
   embedded measure) and, where a body part swings into it deeper than 1 or it drifts further
-  than 2 from the body, the item alone is translated rigidly for that frame: the shortest
-  clearing shift over the slot axis, body axes, radial and item-box axes wins, a shift that
-  also keeps contact is preferred within 1.5× + 4 units, the slot axis breaks near-ties, and a
-  perpendicular slide / bounded lattice search restores contact when the clearing shift left
-  the item floating. Items are fitted against the body only (no gear combination is special);
-  item geometry and the source frame transforms are never edited. The same solve is recorded
-  per item × sequence × frame in `gear/pose-fits.json` (deterministic, `export.py --profile
-  pose-fits`) so the browser applies a recorded shift; `published_pose_fit_table_matches_the_live_solve`
-  checks the table against the live solve. **Result over the 3 220 item-frames (10 items × 27
-  required sequences): penetration ≤ 1 in every frame; 20 frames in 10 item × sequence entries
-  still exceed gap 2 and the pose gate FAILS on them** — Bronze sq shield seq 829/12526 (5
-  frames each, max gap 4.63), 625 (1, 3.08), 899 (1, 4.73), 711 (1, 3.09); Wooden shield
-  829/12526 (2 each, 3.04); Bronze pickaxe 836 (1, 2.12), 625 (1, 2.78), 733 (1, 9.21). In those
-  frames no rigid translation within the search bounds meets both targets: the box measure
-  (a slab around a shield / a long handle) clears the round body only where the item's surface
-  is already more than 2 units away. Largest shifts applied: sq shield 57 (seq 426 — bow
-  motion, not wearable with a shield), 48.5 wooden shield (426), 24 pickaxe (733), 17 necklace
-  (625), 7 hat (625/621); the source's own human motions drive the same items through the
-  human body (design penetration shield 10–11, hat 6–7, pickaxe 5). Reported, not waived.
+  than 2 from the body, the item alone is translated rigidly for that frame. Candidate
+  directions are the slot axis, the body axes, the radial direction and the item-box axes: the
+  shortest clearing shift wins, a shift that also keeps contact is preferred within 3× + 8
+  units, the slot axis breaks near-ties; when the clearing shift leaves the item floating, a
+  perpendicular slide (≤ 48 units), a bounded lattice search around it and finally the
+  smallest shift over 124 lattice directions that meets both targets are tried. Items are
+  fitted against the body only (no gear combination is special); item geometry and the source
+  frame transforms are never edited. The same solve is recorded per item × sequence × frame in
+  `gear/pose-fits.json` (deterministic, `export.py --profile pose-fits`) so the browser applies
+  a recorded shift; `published_pose_fit_table_matches_the_live_solve` checks the table against
+  the live solve. **Result over the 3 220 item-frames (10 items × 27 required sequences):
+  penetration ≤ 1 and gap ≤ 2 in every frame — the pose gate passes** (max penetration 1.00,
+  max gap 1.99 on the square shield). Largest shifts applied: square shield 57 and wooden
+  shield 48.5 (both in seq 426 — the bow motion, not wearable with a shield), pickaxe 24.7
+  (733), shortbow 14.7 (733), necklace 11.3 (625), hat and axe 7.2, others ≤ 6.6; the source's
+  own human motions drive the same items through the human body (design penetration shields
+  10–11, hat 6–7, pickaxe 5). A shift is a rigid per-frame attachment correction, reported per
+  frame through `playerPoseFits()`; it is not a source capture of a penguin wearing the item.
 * Dynamic layers against the independent original references (`tests/dynamic_layers.rs`,
   `assets/reference/osrs240/m1-dynamic`, 12 controlled offline original-client renderings at
   the native **full-HUD zoom 410** — a second original projection beside the frozen
