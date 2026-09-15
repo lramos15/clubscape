@@ -9,6 +9,8 @@ import { readQuantity, isInterfaceUnlocked } from "../index.ts";
 import { skillTooltip } from "../world-view.ts";
 import { fixtureWorld, immutable } from "./component-fixture.ts";
 import type { UiCatalogue } from "../assets.ts";
+import { UiAssets } from "../assets.ts";
+import type { ClientAssets } from "../../shared/contracts.ts";
 
 const root = resolve(import.meta.dirname, "../../..");
 const catalogue: UiCatalogue = JSON.parse(readFileSync(resolve(root, "assets/compiled/ui/manifest.json"), "utf8"));
@@ -104,4 +106,28 @@ test("content-derived weapon IDs and experience choices remain data-only source 
   const content = JSON.parse(gunzipSync(readFileSync(resolve(root, "content/m1/game-content.json.gz"))).toString());
   assert.deepEqual(catalogue.presentation!.weapons["1277"], content.items["item.sword.bronze"].equipment.weapon.styles);
   assert.deepEqual(catalogue.presentation!.experiences.map(c => c.id).sort(), Object.keys(content.mechanics.experiences).sort());
+});
+
+test("failed asset requests require explicit retry and release references on dispose", async () => {
+  let attempts = 0;
+  const errors: string[] = [];
+  const client: ClientAssets = {
+    baseUrl: "/assets/", url: id => "/assets/" + id,
+    json: async () => catalogue,
+    image: async id => {
+      if (id === "component-test/lazy" && ++attempts === 1) throw new Error("Exact asset failure");
+      return { naturalWidth: 1, naturalHeight: 1 } as HTMLImageElement;
+    },
+  };
+  const assets = await UiAssets.load(client, error => errors.push(error.message));
+  assert.equal(assets.image("component-test/lazy"), null);
+  await new Promise(resolve => setImmediate(resolve));
+  assert.deepEqual(errors, ["Exact asset failure"]);
+  assert.equal(assets.image("component-test/lazy"), null);
+  assert.equal(attempts, 1);
+  await assets.retryFailed();
+  assert.ok(assets.image("component-test/lazy"));
+  assert.equal(attempts, 2);
+  assets.dispose();
+  assert.equal(assets.images.size, 0);
 });

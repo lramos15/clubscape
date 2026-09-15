@@ -155,7 +155,7 @@ export class InputSurface {
   dispose(): void {
     this.abort.abort();
     for (const field of this.fields.values()) field.value = "";
-    this.fields.clear(); this.buttons.clear(); this.root.remove();
+    this.fields.clear(); this.buttons.clear(); this.controls.clear(); this.root.remove();
     if (this.oldCanvasTabIndex === null) this.canvas.removeAttribute("tabindex");
     else this.canvas.setAttribute("tabindex", this.oldCanvasTabIndex);
   }

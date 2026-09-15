@@ -12,6 +12,7 @@ export interface NativeWidget extends Rect {
   text: string; sprite: number; item: number; item_quantity: number;
   font: number; color: number; shadow: boolean; lineHeight: number; xText: number; yText: number;
   opacity: number; filled: boolean; tiling: boolean; flipX: boolean; flipY: boolean; border: number;
+  spriteShadow: number;
   scrollX: number; scrollY: number; scrollWidth: number; scrollHeight: number;
   originalX: number; originalY: number; originalWidth: number; originalHeight: number;
   xMode: number; yMode: number; widthMode: number; heightMode: number;
@@ -25,7 +26,7 @@ export interface ItemAsset {
   name: string; examine: string; stackable: number;
   interfaceOptions: Array<string | null>; shiftClickDropIndex: number;
   notedID: number; notedTemplate: number;
-  icons: Array<{ minimum: number; asset: string; selectedAsset: string }>;
+  icons: Array<{ minimum: number; asset: string; selectedAsset: string; zeroShadowAsset: string }>;
 }
 export interface TutorialBinding {
   state_id: string; case_id: string; hud_signature_id: string; declared_controls: string[];
@@ -76,6 +77,7 @@ export function intersect(a: Rect, b: Rect): Rect {
 export class UiAssets {
   readonly images = new Map<string, HTMLImageElement>();
   private readonly loading = new Map<string, Promise<HTMLImageElement>>();
+  private readonly failed = new Set<string>();
   private onLoad: () => void = () => {};
   private disposed = false;
   readonly catalogue: UiCatalogue;
@@ -104,7 +106,10 @@ export class UiAssets {
   }
 
   changed(listener: () => void): void { this.onLoad = listener; }
-  dispose(): void { this.disposed = true; this.onLoad = () => {}; this.images.clear(); }
+  dispose(): void {
+    this.disposed = true; this.onLoad = () => {};
+    this.images.clear(); this.loading.clear(); this.failed.clear();
+  }
 
   require(id: string): Promise<HTMLImageElement> {
     const old = this.loading.get(id);
@@ -113,6 +118,9 @@ export class UiAssets {
       if (!image.naturalWidth || !image.naturalHeight) throw new Error(`UI image has no pixels: ${id}`);
       if (!this.disposed) { this.images.set(id, image); this.onLoad(); }
       return image;
+    }).catch(error => {
+      if (!this.disposed) this.failed.add(id);
+      throw error;
     });
     this.loading.set(id, request);
     return request;
@@ -121,7 +129,7 @@ export class UiAssets {
   image(id: string): HTMLImageElement | null {
     const image = this.images.get(id);
     if (image) return image;
-    if (!this.loading.has(id)) {
+    if (!this.loading.has(id) && !this.failed.has(id)) {
       void this.require(id).catch(error => {
         if (!this.disposed) this.onError(error instanceof Error ? error : new Error(String(error)), `ui.asset.${id}`);
       });
@@ -129,16 +137,23 @@ export class UiAssets {
     return null;
   }
 
-  async preloadItems(ids: readonly number[]): Promise<void> {
-    await Promise.all(ids.flatMap(id => this.catalogue.items[id]?.icons.flatMap(icon =>
-      [this.require(icon.asset), this.require(icon.selectedAsset)]) ?? []));
+  async retryFailed(): Promise<void> {
+    if (this.disposed) return;
+    const ids = [...this.failed];
+    for (const id of ids) { this.failed.delete(id); this.loading.delete(id); }
+    await Promise.all(ids.map(id => this.require(id)));
   }
 
-  itemAsset(sourceId: number, quantity: number, selected = false): string | null {
+  async preloadItems(ids: readonly number[]): Promise<void> {
+    await Promise.all(ids.flatMap(id => this.catalogue.items[id]?.icons.flatMap(icon =>
+      [this.require(icon.asset), this.require(icon.selectedAsset), this.require(icon.zeroShadowAsset)]) ?? []));
+  }
+
+  itemAsset(sourceId: number, quantity: number, selected = false, shadow = 0x333333): string | null {
     const definitions = this.catalogue.items[sourceId]?.icons;
     if (!definitions) return null;
     let chosen = definitions[0];
     for (const icon of definitions) if (quantity >= icon.minimum) chosen = icon;
-    return chosen ? (selected ? chosen.selectedAsset : chosen.asset) : null;
+    return chosen ? (selected ? chosen.selectedAsset : shadow === 0 ? chosen.zeroShadowAsset : chosen.asset) : null;
   }
 }

@@ -53,6 +53,7 @@ public final class UiAssetExport
             "font", w.getFontId(), "color", w.getTextColor(), "shadow", w.getTextShadowed(),
             "lineHeight", w.getLineHeight(), "xText", w.getXTextAlignment(), "yText", w.getYTextAlignment(),
             "opacity", w.getOpacity(), "filled", w.isFilled(), "tiling", w.getSpriteTiling(),
+            "spriteShadow", spriteShadow(w),
             "flipX", w.isFlippedHorizontally(), "flipY", w.isFlippedVertically(), "border", w.getBorderType(),
             "scrollX", w.getScrollX(), "scrollY", w.getScrollY(),
             "scrollWidth", w.getScrollWidth(), "scrollHeight", w.getScrollHeight(),
@@ -65,6 +66,22 @@ public final class UiAssetExport
             "modelType", w.getModelType(), "model", w.getModelId(),
             "modelZoom", w.getModelZoom(), "modelRotation", new int[]{w.getRotationX(), w.getRotationY(), w.getRotationZ()},
             "onOp", w.getOnOpListener(), "noClickThrough", w.getNoClickThrough(), "if3", w.isIf3());
+    }
+
+    static int spriteShadow(Widget widget)
+    {
+        // gp.ae -> lj.ab reads lw.dm * 880555563 as its fourth (shadow) argument.
+        try
+        {
+            for (var field : lw.class.getDeclaredFields())
+                if (field.getName().equals("dm") && field.getType() == int.class)
+                {
+                    field.setAccessible(true);
+                    return field.getInt(widget) * 880555563;
+                }
+            throw new IllegalStateException("Pinned native sprite-shadow field is missing");
+        }
+        catch (IllegalAccessException error) { throw new IllegalStateException(error); }
     }
 
     static void sprite(OriginalCapture capture, int id) throws Exception
@@ -231,6 +248,9 @@ public final class UiAssetExport
                 png(out.resolve(request[0] + "-" + request[1] + "-" + outline + ".png"),
                     icon.getPixels(), icon.getWidth(), icon.getHeight(), false);
             }
+            SpritePixels unshadowed = capture.game.createItemSprite(request[0], request[1], 1, 0, 0, false, 512);
+            png(out.resolve(request[0] + "-" + request[1] + "-1-shadow0.png"),
+                unshadowed.getPixels(), unshadowed.getWidth(), unshadowed.getHeight(), false);
         }
         Files.writeString(capture.output.resolve("item-metadata.json"), OriginalCapture.JSON.toJson(metadata));
         Path maps = directory(capture, "minimaps");

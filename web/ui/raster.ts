@@ -106,6 +106,7 @@ export class SourceRaster {
   }
 
   clear(): void { this.context.clearRect(0, 0, this.canvas.width, this.canvas.height); }
+  dispose(): void { this.clear(); this.coloredFonts.clear(); this.scaledSprites.clear(); }
   fill(rect: Rect, color: number): void {
     this.context.fillStyle = css(color);
     this.context.fillRect(Math.floor(rect.x), Math.floor(rect.y), Math.floor(rect.width), Math.floor(rect.height));
@@ -156,13 +157,17 @@ export class SourceRaster {
         const sourceContext = input.getContext("2d", { willReadFrequently: true })!;
         sourceContext.drawImage(image, frame.x, frame.y, frame.width, frame.height, 0, 0, frame.width, frame.height);
         const source = sourceContext.getImageData(0, 0, frame.width, frame.height).data;
-        scaled = document.createElement("canvas"); scaled.width = w; scaled.height = h;
-        const target = scaled.getContext("2d")!, pixels = target.createImageData(w, h);
         const stepX = Math.floor(frame.canvasWidth * 65536 / w), stepY = Math.floor(frame.canvasHeight * 65536 / h);
-        for (let dy = 0; dy < h; dy++) for (let dx = 0; dx < w; dx++) {
+        const startX = Math.ceil(frame.offsetX * 65536 / stepX), startY = Math.ceil(frame.offsetY * 65536 / stepY);
+        const phaseX = startX * stepX - frame.offsetX * 65536, phaseY = startY * stepY - frame.offsetY * 65536;
+        const endX = frame.width < frame.canvasWidth ? startX + Math.ceil((frame.width * 65536 - phaseX) / stepX) : w;
+        const endY = frame.height < frame.canvasHeight ? startY + Math.ceil((frame.height * 65536 - phaseY) / stepY) : h;
+        scaled = document.createElement("canvas"); scaled.width = Math.max(w, endX); scaled.height = Math.max(h, endY);
+        const target = scaled.getContext("2d")!, pixels = target.createImageData(scaled.width, scaled.height);
+        for (let dy = startY; dy < endY; dy++) for (let dx = startX; dx < endX; dx++) {
           const sx = (dx * stepX >> 16) - frame.offsetX, sy = (dy * stepY >> 16) - frame.offsetY;
           if (sx < 0 || sy < 0 || sx >= frame.width || sy >= frame.height) continue;
-          const from = (sy * frame.width + sx) * 4, to = (dy * w + dx) * 4;
+          const from = (sy * frame.width + sx) * 4, to = (dy * scaled.width + dx) * 4;
           pixels.data.set(source.subarray(from, from + 4), to);
         }
         target.putImageData(pixels, 0, 0); this.scaledSprites.set(key, scaled);
@@ -267,7 +272,7 @@ export class SourceRaster {
     const noWrap = rect.height < maxAscent + maxDescent + lineHeight && rect.height < lineHeight * 2;
     const lines = sourceLines(text, noWrap ? Number.MAX_SAFE_INTEGER : rect.width, metrics);
     let y = rect.y + maxAscent;
-    if (options.yAlign === 1) y = rect.y + maxAscent + Math.floor((rect.height - maxAscent - maxDescent - (lines.length - 1) * lineHeight) / 2);
+    if (options.yAlign === 1) y = rect.y + maxAscent + Math.trunc((rect.height - maxAscent - maxDescent - (lines.length - 1) * lineHeight) / 2);
     if (options.yAlign === 2) y = rect.y + rect.height - maxDescent - (lines.length - 1) * lineHeight;
     let spacing = lineHeight;
     if (options.yAlign === 3) {
@@ -279,7 +284,7 @@ export class SourceRaster {
       let carry = "";
       for (const line of lines) {
         const width = this.measure(line, font);
-        const x = rect.x + (options.xAlign === 1 ? Math.floor((rect.width - width) / 2) : options.xAlign === 2 ? rect.width - width : 0);
+        const x = rect.x + (options.xAlign === 1 ? Math.trunc((rect.width - width) / 2) : options.xAlign === 2 ? rect.width - width : 0);
         this.text(carry + line, x, y, font, options.color ?? 0xffffff, options.shadow === undefined ? 0 : options.shadow);
         carry += (line.match(/<(?:\/?(?:col|str|u|shad)(?:=[^>]+)?)>/g) ?? []).join("");
         y += spacing;
@@ -288,8 +293,8 @@ export class SourceRaster {
     if (options.clip === false) draw(); else this.clip(rect, draw);
   }
 
-  item(sourceId: number, quantity: number, x: number, y: number, quantityMode = 2, selected = false, opacity = 0): boolean {
-    const path = this.assets.itemAsset(sourceId, quantity, selected);
+  item(sourceId: number, quantity: number, x: number, y: number, quantityMode = 2, selected = false, opacity = 0, shadow = 0x333333): boolean {
+    const path = this.assets.itemAsset(sourceId, quantity, selected, shadow);
     if (!path || !this.image(path, x, y, opacity)) return false;
     if (quantityMode === 1 || (quantityMode === 2 && (this.assets.catalogue.items[sourceId]?.stackable === 1 || quantity !== 1))) {
       const count = countText(quantity);
@@ -316,7 +321,7 @@ export class SourceRaster {
       this.textBox(widget.text, widget, { font: widget.font, color: widget.color, shadow: widget.shadow ? 0 : null,
         lineHeight: widget.lineHeight, xAlign: widget.xText, yAlign: widget.yText, clip: false });
     } else if (widget.type === 5) {
-      if (widget.item >= 0) this.item(widget.item, widget.item_quantity, widget.x, widget.y, widget.quantityMode, widget.border === 2, widget.opacity);
+      if (widget.item >= 0) this.item(widget.item, widget.item_quantity, widget.x, widget.y, widget.quantityMode, widget.border === 2, widget.opacity, widget.spriteShadow);
       else if (widget.sprite >= 0) this.sprite(widget.sprite, widget.x, widget.y, {
         width: widget.width, height: widget.height, tiling: widget.tiling, opacity: widget.opacity, flipX: widget.flipX, flipY: widget.flipY,
       });

@@ -40,6 +40,18 @@ def verified(path, record):
     return path
 
 
+def validate_frozen_pack():
+    result = subprocess.run(
+        ["python3", "tools/reference-pack/validate.py", "--require-complete"],
+        cwd=ROOT, env=dict(os.environ, PYTHONDONTWRITEBYTECODE="1"),
+        capture_output=True, text=True, check=True)
+    validation = json.loads(result.stdout)
+    if validation["manifest"]["sha256"] != PACK_SHA or not validation["complete_reference_pack"]:
+        raise ValueError("Strict frozen source-pack validation did not pass")
+    write(WORK / "source-validation.json", validation)
+    return validation
+
+
 def collections(kind):
     result = {}
     for prefix in (SOURCE, SOURCE / "content-v2", SOURCE / "potions"):
@@ -172,6 +184,7 @@ def main():
     if sha(pack_path) != PACK_SHA or approval["decision"] != "approved" or approval["reference_pack_sha256"] != PACK_SHA:
         raise ValueError("Exact owner-approved source pack is required")
     pack = read(pack_path)
+    validation = validate_frozen_pack()
     items = collections("item")
     for capture in read(ROOT / "assets/reference/osrs240/native-hud/captures.json")["captures"]:
         for widget in capture["source"]["visible_widgets"]:
@@ -224,7 +237,8 @@ def main():
             item_catalog[str(item["id"])].update(native_items[str(item["id"])])
         item_catalog[str(item["id"])]["icons"] = [
             {"minimum": q, "asset": f"ui/items/{item['id']}-{q}-1.png",
-             "selectedAsset": f"ui/items/{item['id']}-{q}-2.png"} for q in quantities]
+             "selectedAsset": f"ui/items/{item['id']}-{q}-2.png",
+             "zeroShadowAsset": f"ui/items/{item['id']}-{q}-1-shadow0.png"} for q in quantities]
     factoring = pack["evidence_factorization"]
     content = read(ROOT / "content/m1/game-content.json.gz")
     manifest = {
@@ -263,6 +277,12 @@ def main():
     write(OUT / "manifest.json", manifest)
     write(OUT / "provenance.json", {
         "sourcePackSha256": PACK_SHA, "originalRuntimeArtifacts": artifacts,
+        "strictPackValidation": {
+            "hashBoundFilesChecked": validation["hash_bound_files_checked"],
+            "requiredCasesChecked": validation["required_case_ids_checked"],
+            "completeReferencePack": validation["complete_reference_pack"],
+            "authority": "external_owner_approval_not_historical_status_labels",
+        },
         "readbackInstrumentationSource": {"path": "tools/source-capture/HudCapture.java",
                                           "sha256": sha(ROOT / "tools/source-capture/HudCapture.java")},
         "nativeFixturesUnchanged": matches,

@@ -834,10 +834,10 @@
       "profile": "native_hud",
       "checked_pixels": 146400,
       "coverage": 1.0,
-      "different_pixels": 3,
-      "maximum_channel_error": 131,
+      "different_pixels": 0,
+      "maximum_channel_error": 0,
       "tolerance_different_pixels": 0,
-      "passed": false
+      "passed": true
     },
     {
       "case": "native-shop",
@@ -853,10 +853,10 @@
       "profile": "native_hud",
       "checked_pixels": 2073600,
       "coverage": 1.0,
-      "different_pixels": 3,
-      "maximum_channel_error": 131,
+      "different_pixels": 0,
+      "maximum_channel_error": 0,
       "tolerance_different_pixels": 0,
-      "passed": false
+      "passed": true
     },
     {
       "case": "native-guide-dialogue",
@@ -1005,10 +1005,10 @@
       "profile": "native_hud",
       "checked_pixels": 80735,
       "coverage": 1.0,
-      "different_pixels": 190,
-      "maximum_channel_error": 255,
+      "different_pixels": 0,
+      "maximum_channel_error": 0,
       "tolerance_different_pixels": 0,
-      "passed": false
+      "passed": true
     },
     {
       "case": "family-guide",
@@ -1043,10 +1043,10 @@
       "profile": "native_hud",
       "checked_pixels": 2073600,
       "coverage": 1.0,
-      "different_pixels": 190,
-      "maximum_channel_error": 255,
+      "different_pixels": 0,
+      "maximum_channel_error": 0,
       "tolerance_different_pixels": 0,
-      "passed": false
+      "passed": true
     },
     {
       "case": "family-survival",

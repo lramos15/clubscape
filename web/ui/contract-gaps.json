@@ -53,8 +53,12 @@
     "Native prayer/spell filter controls and their distinct source layouts.",
     "Complete native recovery grid/fee/discard layout calibration.",
     "All required live-data source comparisons, selected/disabled/scroll variants and full tutorial UI projections.",
-    "Native authentication-failure/terms and animated-title variants beyond the implemented approved source-framed screens.",
-    "Remaining zero-tolerance native sprite/label differences recorded by the source comparator."
+    "Native authentication-failure/terms and animated-title variants beyond the implemented approved source-framed screens."
   ],
+  "resolved_source_replay_gaps": {
+    "native_shop": "Exact native trimmed-sprite fixed-point extents; no tolerance change.",
+    "family_guide": "Native decorative-item shadow and truncating text alignment; no pixel patching.",
+    "checks": {"passed": 87, "total": 87}
+  },
   "final_m1_acceptance": false
 }

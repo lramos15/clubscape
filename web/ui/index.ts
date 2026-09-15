@@ -258,7 +258,8 @@ class UiController {
     this.password = ""; this.confirmation = ""; this.name = "";
     cancelAnimationFrame(this.scheduled);
     this.unsubscribe(); this.abort.abort(); this.surface.dispose(); this.assets.dispose();
-    this.local = emptyLocal(); this.pending.clear(); this.raster.clear();
+    this.local = emptyLocal(); this.pending.clear(); this.raster.dispose();
+    this.controls = []; this.hover = null; this.menu = null; this.drag = null; this.notice = null;
     this.preview = null; this.previewBounds = null; this.cameraRequest = null;
   }
 
@@ -702,9 +703,11 @@ class UiController {
       { screen: screen => this.screen(screen), submit: () => { void this.submitAuth(); },
         change: (field, value) => { this[field] = value; this.renderSoon(); },
         retry: () => {
-          this.notice = null; this.dismissedError = this.state.error;
-          if (this.state.phase === "error") void this.request("retry", () => this.services.enterWorld());
-          this.renderSoon();
+          void this.request("retry", async () => {
+            await this.assets.retryFailed();
+            this.notice = null; this.dismissedError = this.state.error;
+            if (this.state.phase === "error") await this.services.enterWorld();
+          });
         },
         dismiss: () => this.cancel(), audio: () => this.audio(), hideName: () => { this.hideName = !this.hideName; this.renderSoon(); },
         unavailable: name => this.unavailable(name),
