@@ -1,0 +1,99 @@
+{
+  "schema_version": 1,
+  "task": "m1-headless-journey",
+  "scope": "Bounded read-only diagnosis of the exact preserved dying-state checkpoint.",
+  "diagnosis": "Confirmed on the saved state: ui_view propagates equipped_weapon's RequirementNotMet for a stored bronze-sword style after that sword was lost.",
+  "checkpoint": {
+    "run_id": "7fa370e14c9b421e",
+    "archive_sha256": "d2e586a51f78ed36ab30443f0297b1273e984957ae5b8f78c73b86be53ca16e1",
+    "archive_mode": "0600",
+    "private_inventory_sha256": "7a4253a1f067f84320f8d513c6757f269a02fd29861d75b7f53e0acececcf6c6",
+    "raw_artifact_sha256": "5e0aa8a28851752ae0b8b0a08c635c6c8d2979f509f3a3e564ee74e2abfc8e6f",
+    "world_tick": 1616,
+    "world_revision": 1928,
+    "archive_or_world_modified": false
+  },
+  "sanitized_requested_fields": {
+    "selected_combat_style": "style.sword.bronze.stab.accurate",
+    "equipped_canonical_items_by_slot": {},
+    "retained_weapon_canonical_ids": ["item.axe.bronze"],
+    "retained_is_not_equipped": true,
+    "lost_grave_weapon_canonical_ids": [
+      "item.dagger.bronze",
+      "item.pickaxe.bronze",
+      "item.shortbow",
+      "item.sword.bronze"
+    ],
+    "lost_office_weapon_canonical_ids": [],
+    "ui": {
+      "active_interface": null,
+      "death_preview": false,
+      "production_present": false,
+      "document_present": false
+    }
+  },
+  "immutable_query_results": {
+    "presence_view": "ok",
+    "actor_observer": "ok",
+    "context_view": "ok",
+    "ground_item_views": "ok",
+    "ui_view": {
+      "result": "error",
+      "code": "RequirementNotMet",
+      "message": "Style is not offered by the equipped weapon or source unarmed profile."
+    },
+    "serialized_world_before_after_equal": true
+  },
+  "exact_failure_path": {
+    "entry": "WorldEngine::ui_view",
+    "entry_location": "crates/world-engine/src/gameplay_ui/projections.rs:159-165",
+    "call": "stored character.runtime.combat.style -> self.equipped_weapon(character, style) -> transpose()?",
+    "failing_function": "WorldEngine::equipped_weapon",
+    "failure_location": "crates/world-engine/src/combat.rs:214-257",
+    "observed_condition": "No equipment remains, the selected style is still the bronze-sword stab style, and the sword is in the actual grave record.",
+    "counterfactual_re_equipping_healing_or_style_reset_tested": false
+  },
+  "existing_server_log": {
+    "path": ".local/evidence/journey-7fa370e14c9b421e/product-server-0.jsonl",
+    "matching_line": 166,
+    "event": "rpc_completed",
+    "level": "INFO",
+    "request_id": "6ec49ce1-3987-43d4-9bc9-37afc6c6f2a3",
+    "error_id": "688aab5a-a58b-4a57-bb48-ec9dcdd1391a",
+    "status": 409,
+    "elapsed_ms": 281,
+    "engine_error_warning_recorded_for_this_failure": false,
+    "qualification": "The exact inner code/message above comes from the new immutable native query, not a warning retroactively attributed to the original server log."
+  },
+  "diagnostic_execution": {
+    "source_revision": "9e3a6fb41439fd3c592af5a618ac40c9c76b8b84",
+    "artifact_loader": "clubscape_content::load_compiled with ValidationMode::Runtime",
+    "engine": "WorldEngine::new from the same strictly loaded5e definition",
+    "world": "Actual game_worlds.state extracted from the verified private custom archive, not seeded fixtures or reconstructed progress.",
+    "extracted_state_matches_private_postgresql_fingerprint": true,
+    "native_query_input_matches_that_exact_state": true,
+    "query_calls": ["presence_view", "actor_observer", "context_view", "ground_item_views", "ui_view"],
+    "execution_isolation": "Owned read-only Docker utilities with --network=none; the native utility mounted only its executable/runtime libraries and the two read-only diagnostic inputs.",
+    "host_unprivileged_network_namespace_available": false,
+    "network_disabled_docker_alternative_used": true,
+    "probe_source_sha256": "1968df83e952fb84d40ac697fbafabdd083a1c8600678cb6e3237d26c5dd253e",
+    "probe_binary_sha256": "93cb3737e31129c37ec8a6bbc5c5b31019f664dd2718f40a8d25a669fcbf78f4",
+    "sanitized_result_sha256": "25550cec65fff6c67648d59cabf7a54a063b8008cbf4044f64fef251bf9aa432",
+    "game_or_postgresql_server_started": false,
+    "game_rpc_or_game_input_executed": false,
+    "tick_advanced": false,
+    "world_restored_repinned_healed_or_seeded": false,
+    "private_auth_rng_or_world_payload_published": false
+  },
+  "cleanup": {
+    "private_diagnostic_sql_and_world_json_copies_deleted": true,
+    "owned_network_disabled_utility_containers_removed": true,
+    "latest_archive_hash_and_0600_mode_unchanged": true,
+    "no_game_or_postgresql_service_started": true
+  },
+  "next_boundary": "Remain parked. Parent owns the fix; continue only after a verified fix and explicit source-safe dying-resume authorization.",
+  "new_journey_progress_claimed": false,
+  "full_original_journey_passed": false,
+  "milestone_accepted": false,
+  "ui_audio_performance_or_runelite_acceptance": false
+}

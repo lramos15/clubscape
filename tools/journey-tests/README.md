@@ -632,6 +632,16 @@ All owned services are cleaned. The remaining blocker is authoritative
 world/UI query observability during legitimate dying/respawn progression;
 Office/grave/Cook/post-quest recovery remain unchecked.
 
+The subsequent bounded
+[read-only dying diagnostic](evidence/dying-ui-style-7fa370e14c9b421e.json)
+isolates the exact saved-state failure: no equipment remains, but the selected
+style is still `style.sword.bronze.stab.accurate` and the sword is in the grave.
+Immutable `ui_view` calls `equipped_weapon` for that stale style and propagates
+`RequirementNotMet`; presence, actor-observer, context and ground-item queries
+succeed. No world input, tick, restore, healing or style/equipment change was
+performed. This diagnosis adds no journey progress and does not authorize
+continuation of the preserved dying checkpoint.
+
 ```sh
 python3 -m unittest discover -s tools/journey-tests -p 'test_*.py' -q
 ```
