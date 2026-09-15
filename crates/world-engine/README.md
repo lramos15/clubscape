@@ -150,6 +150,12 @@ token is revoked. Rejoin preserves acknowledged state. Tick entry points derive
 tracked mechanical presence/idle clocks; a supplied legacy context cannot force
 an offline actor online. The server still owns auth, leases and durable commit.
 
+Death retention refreshes the derived combat style after equipment loss, so
+dying/respawning views do not require a weapon already moved to a grave. Trusted
+join/rejoin/restart reconciliation also repairs that stale metadata in older
+intermediate death states, without advancing death phases or changing items,
+XP, death records or gameplay sequences. Read-only views never perform repairs.
+
 Read-only, serializable projections are exposed by `context_view`,
 `dialogue_view`, `bank_view`, `bank_deposit_quote`, `bank_withdraw_quote`,
 `shop_view`, `shop_buy_quote`, `shop_sell_quote`, `recovery_view`,

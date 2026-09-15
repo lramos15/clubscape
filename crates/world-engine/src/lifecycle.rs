@@ -202,6 +202,19 @@ impl WorldEngine {
         character: &mut CharacterState,
         transition: LifecycleTransition,
     ) -> GameResult<Vec<GameEvent>> {
+        if matches!(
+            transition,
+            LifecycleTransition::Join
+                | LifecycleTransition::Rejoin
+                | LifecycleTransition::CoordinatorRestart
+        ) && matches!(
+            character.runtime.life,
+            LifeState::Dying { .. }
+                | LifeState::Respawning { .. }
+                | LifeState::FirstDeathOffice { .. }
+        ) {
+            self.refresh_combat_style(character)?;
+        }
         match transition {
             LifecycleTransition::Join | LifecycleTransition::Rejoin => {
                 if !matches!(character.runtime.presence, PresenceState::Connected { .. }) {

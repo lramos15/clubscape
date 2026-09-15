@@ -260,6 +260,7 @@ impl WorldEngine {
                 });
             }
         }
+        self.refresh_combat_style(character)?;
         let items_lost = !lost.is_empty();
         let respawn =
             self.resolve_location(world, &character.actor_id, policy.respawn.require()?)?;
