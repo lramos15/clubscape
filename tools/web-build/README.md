@@ -10,6 +10,8 @@ performance and owner acceptance are unchanged.
 The owned UI4/WASM mapping and fresh FINAL4 delivery work, but the current
 UI-owner schema/dispatch tables lack `activeTab`, `document`,
 `bank_placeholder` and `ui_document_page`, and its component fixture is stale.
+Its audio fixture also lacks the new native `AudioSnapshot.preferences` field.
+These are five current UI-owner compile errors.
 Those UI files have not been edited outside ownership. Normal `pnpm typecheck`
 and therefore `pnpm build` remain blocked on that owner follow-up.
 Any separately recorded Vite/real-browser run is a diagnostic build, not a
@@ -262,6 +264,40 @@ control observations. No source gain/distance/varp/next-song math is duplicated.
 The current bridge still lacks actual128-unit listener, all placed emitters,
 bound original varps and actual manual/unlock-state preferences; no dummy values
 are supplied. Native source-bound next-track selection needs no caller callback.
+
+The native preference/helper closure `64bd3257` is integrated as well.
+Player storage uses the exact audio-owned v1 serializer and a separate real
+actor key, never an account identity/unlock grant in the record. Genuine
+record loading precedes the synchronous world -> native preference apply ->
+UI projection boundary. Serial/coalesced per-character writes, explicit
+read/corruption/save errors, preserved100-slot holes and entry-scoped
+control/Skip/save fencing are implemented in `web/app/player-audio*.ts`.
+Global v2 slider preferences remain device/title-only and are not silently
+migrated into player records. No new asset or audio metadata route is needed.
+
+Current runtime configuration still needs genuine
+`mountApplication.sourceAudio.unlockedGroups(world)` (and source scene/varp/
+committed-event inputs), plus the UI owner's actual rich native-control
+adapter connected through `Components.bindUiAudioPreferences`. The existing
+legacy UI setter/mute map is not that adapter. Missing inputs are visible via
+`audioPreferenceStatus()` and keep world audio/controls disconnected, without
+inventing unlocks or blocking acknowledged server state.
+
+The189 package tests cover all41 native audio unit cases plus owned storage/
+entry/transport/input/delivery checks. A separate real Chrome fixture verifies
+native preference persistence using explicit fixture world/unlocks/UI ports.
+It is not an actual UI preference journey. Source registration/appearance/
+onboarding/restart tests remain real canonical RPC/WASM/PG work.
+The source runner records native cue2266 lateness separately from successful
+storage/entry assertions and exits nonzero on that unchanged timing gate.
+Warm direct-native calls without the preference coordinator also overran the
+20.045351473922903ms bound on Sparky; no tolerance or source audio policy was
+changed. Final receipts are under `.local/evidence/audio-preferences-final`;
+earlier cold/bulk and source-timed failures remain in
+`audio-preferences-source-candidate`, `audio-preferences-source-v2` and
+`audio-preferences-profile-v3`. These are engineering diagnostics, not
+audio/speaker/Mac/Edge/M1 acceptance. Test Chrome output alone is locally muted;
+system drivers, mixer settings and sandbox requirements are unchanged.
 
 The authorized `f9e466d3` closure is integrated. All four required `AUDIO_INPUTS`
 metadata routes and all nine original native255 assets are delivered.

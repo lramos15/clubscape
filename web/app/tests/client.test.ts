@@ -7,6 +7,9 @@ import type { Fetch } from "../transport.ts";
 import type { PublicWorld } from "../public-state.ts";
 import { AppError } from "../errors.ts";
 import type { GameplayUiIntent } from "../../shared/contracts.ts";
+import { PlayerAudioPreferences } from "../player-audio.ts";
+import { PlayerAudioPreferenceStore } from "../player-audio-store.ts";
+import { FixturePreferenceRuntime } from "./player-audio-fixture.ts";
 
 // These doubles isolate composition/order/privacy, not protocol or gameplay correctness.
 class FixtureBridge implements WasmClient {
@@ -68,7 +71,7 @@ class FixtureBridge implements WasmClient {
   set_catalog(): string {
     this.stateValue.world = {
       revision: "9007199254740993", tick: "9007199254740993",
-      player: { region: "region.fixture", instance: null, tile: { x: 1, y: 1, plane: 0 }, skills: [],
+      player: { id: "actor.client_fixture", region: "region.fixture", instance: null, tile: { x: 1, y: 1, plane: 0 }, skills: [],
         presence: { kind: "connected", connected: true, acceptsInput: true, presentInWorld: true }, appearanceConfirmed: false },
       recoveryContext: null,
     } as unknown as PublicWorld;
@@ -111,6 +114,53 @@ test("composition serializes one authoritative intent at a time and snapshots mu
   assert(!JSON.stringify(app.state()).includes("not-a-real-token"));
   await app.dispose();
   assert.equal(bridge.freed, true);
+});
+
+test("world audio waits for genuine preference preparation; requested logout cancels a stalled load", async () => {
+  const bridge = new FixtureBridge(), loadStarted = Promise.withResolvers<void>(), load = Promise.withResolvers<string | null>();
+  const runtime = new FixturePreferenceRuntime(), batches: unknown[] = [];
+  const preferences = new PlayerAudioPreferences(new PlayerAudioPreferenceStore({
+    read: () => { loadStarted.resolve(); return load.promise; }, write() {},
+  }), runtime, () => {}, () => {});
+  const app = new BrowserApp(bridge, new RpcTransport((async () =>
+    new Response(new Uint8Array([1]), { headers: { "content-type": "application/x-protobuf" } })) as Fetch), {
+    ...hooks(),
+    prepareAudio: (world) => preferences.prepare(world.player.id),
+    events: (world) => { batches.push(world); },
+    disconnected: () => preferences.invalidate(false),
+  });
+  const entry = app.enterWorld();
+  const rejected = assert.rejects(entry, (error: unknown) => error instanceof AppError && error.kind === "cancelled");
+  await loadStarted.promise;
+  assert.equal(app.state().phase, "connecting");
+  assert.equal(batches.length, 0);
+  await app.logout();
+  await rejected;
+  assert.equal(app.state().phase, "title");
+  assert.deepEqual(batches, [null], "A superseded entry cannot feed a late world update before logout.");
+  load.resolve(null);
+  await app.dispose();
+});
+
+test("requested logout during scene loading does not re-enable audio when that old scene finishes", async () => {
+  const bridge = new FixtureBridge(), started = Promise.withResolvers<void>(), release = Promise.withResolvers<void>();
+  const calls: string[] = [];
+  const app = new BrowserApp(bridge, new RpcTransport((async () =>
+    new Response(new Uint8Array([1]), { headers: { "content-type": "application/x-protobuf" } })) as Fetch), {
+    ...hooks(),
+    prepareWorld: async () => { started.resolve(); await release.promise; },
+    prepareAudio: async () => { calls.push("audio prepared"); },
+    events: (world) => calls.push(world ? "world" : "title"),
+    disconnected: () => { calls.push("disconnect"); },
+  });
+  const entering = app.enterWorld();
+  await started.promise;
+  const leaving = app.logout();
+  release.resolve();
+  await Promise.all([entering, leaving]);
+  assert(!calls.includes("audio prepared") && !calls.includes("world"));
+  assert(calls.includes("title"));
+  await app.dispose();
 });
 
 test("actual UI appearance submission keeps source creation empty and confirms only after joining", async () => {

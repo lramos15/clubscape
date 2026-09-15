@@ -11,6 +11,7 @@ import type { AppState } from "../shared/contracts.ts";
 import { installSourceFetch } from "./source-fetch.ts";
 import type { GameplayUiSupport } from "./gameplay-ui.ts";
 import type { SourceAudioSession } from "./audio.ts";
+import type { PlayerAudioCompositionStatus } from "./player-audio-composition.ts";
 import { presentationOptions } from "./presentation.ts";
 
 declare global {
@@ -18,6 +19,7 @@ declare global {
     __clubscapeClientStateV1?: {
       read(): Readonly<AppState>; gameplayUi(): Readonly<GameplayUiSupport>;
       audioControls(): ReturnType<SourceAudioSession["controls"]> | null;
+      audioPreferenceStatus(): Readonly<PlayerAudioCompositionStatus> | null;
     };
     __clubscapePresentationV1?: Readonly<{
       mode: "live" | "early_fixture" | "recorded_camera"; sceneId: string | null; cameraInput: string | null;
@@ -55,6 +57,7 @@ async function start(): Promise<void> {
   window.__clubscapeClientStateV1 = Object.freeze({
     read: () => application!.app.state(), gameplayUi: () => application!.app.gameplayUi(),
     audioControls: () => application!.app.audioControls(),
+    audioPreferenceStatus: () => application!.app.audioPreferenceStatus(),
   });
   if (earlyScene !== null || recordedCamera !== null) {
     status.hidden = false;
@@ -77,5 +80,10 @@ window.addEventListener("pagehide", () => {
   delete window.__clubscapeClientStateV1;
   delete window.__clubscapePresentationV1;
   restoreFetch();
-  void application?.dispose();
+  void application?.dispose().catch((value: unknown) => {
+    const error = appError(value, "The client closed, but its pending player preferences could not be saved.");
+    status.hidden = false;
+    status.setAttribute("role", "alert");
+    status.textContent = `${error.message}\nError ID: ${error.errorId}`;
+  });
 }, { once: true });

@@ -14,6 +14,7 @@ import type { RenderSnapshot } from "../../../tools/browser-harness/src/protocol
 import type { PreviewObservation } from "../preview.ts";
 import { presentationOptions } from "../presentation.ts";
 import type { MinimapObservation } from "../minimap.ts";
+import { checkPlayerAudioPreferences } from "./real-player-audio.ts";
 
 const root = resolve(fileURLToPath(new URL("../../../", import.meta.url)));
 type SecretWindow = Window & { __sourceUiCredentials?: { name: string; password: string } };
@@ -160,7 +161,7 @@ export async function sourceBrowserCheck(): Promise<void> {
       executablePath: executable, chromiumSandbox: true, headless: false, env,
       ignoreDefaultArgs: ["--enable-unsafe-swiftshader"],
       args: ["--enable-unsafe-webgpu", "--enable-features=Vulkan", "--use-angle=vulkan",
-        "--enable-gpu", "--ignore-gpu-blocklist", "--ozone-platform=x11", "--enable-automation"],
+        "--enable-gpu", "--ignore-gpu-blocklist", "--ozone-platform=x11", "--enable-automation", "--mute-audio"],
       viewport: { width: 1920, height: 1080 }, deviceScaleFactor: 1,
     });
     const cdp = await context.browser()!.newBrowserCDPSession();
@@ -168,6 +169,7 @@ export async function sourceBrowserCheck(): Promise<void> {
     const system = await cdp.send("SystemInfo.getInfo");
     const command = await cdp.send("Browser.getBrowserCommandLine");
     assert(!command.arguments.some((argument) => /^(--no-sandbox|--disable-.*sandbox|--disable-web-security)(=|$)/.test(argument)));
+    assert(command.arguments.includes("--mute-audio"));
     const sandbox = await context.newPage();
     await sandbox.goto("chrome://sandbox");
     const isolation = await sandbox.locator("body").innerText();
@@ -366,7 +368,19 @@ export async function sourceBrowserCheck(): Promise<void> {
     assert.equal(audioControls.sourceMusicStateSupplied, false);
     assert.equal(audioControls.providedMusicState, null);
     assert.equal(audioControls.musicContinuation, "native-bound");
-    checks.push("native audio defaults and internal music continuation observed; no source scene or manual unlock state invented");
+    assert.equal(audioControls.preferences, null);
+    const audioPreferenceStatus = await page.evaluate(() => window.__clubscapeClientStateV1!.audioPreferenceStatus());
+    assert(audioPreferenceStatus);
+    assert.equal(audioPreferenceStatus.preferences.playerId, first.player.id);
+    assert.equal(audioPreferenceStatus.preferences.origin, "confirmed_absent");
+    assert.equal(audioPreferenceStatus.preferences.phase, "waiting_unlocks");
+    assert.equal(audioPreferenceStatus.uiPreferencesBound, false);
+    assert.equal(audioPreferenceStatus.sourceUnlocksSupplied, false);
+    assert.equal(audioPreferenceStatus.appliedWorld, null);
+    assert.deepEqual(audioPreferenceStatus.issues.map((issue) => issue.errorId).sort(),
+      ["audio.preferences.source_unlocks_required", "audio.preferences.ui_adapter_required"]);
+    assert.equal(await page.evaluate(() => window.__clubscapeClientStateV1!.read().soundEnabled), false);
+    checks.push("genuine player preference absence is distinguished from failure; unavailable source unlocks/UI adapter explicitly block world audio without a legacy-control fallback");
     let renderPixels: unknown = null;
     if (earlyScene !== null || recordedCamera !== null) {
       await page.waitForFunction(() => (window.__clubscapeBenchmarkV1?.read(null).renderedFrames ?? 0) >= 8, undefined, { timeout: 30_000 });
@@ -437,6 +451,10 @@ export async function sourceBrowserCheck(): Promise<void> {
     await page.getByRole("button", { name: "Login", exact: true }).click();
     await page.waitForFunction(() => window.__clubscapeClientStateV1?.read().phase === "world", undefined, { timeout: 30_000 });
     assert.deepEqual(publicProgress(await page.evaluate(() => window.__clubscapeClientStateV1!.read().world) as PublicWorld), progress);
+    const reenteredAudio = await page.evaluate(() => window.__clubscapeClientStateV1!.audioPreferenceStatus());
+    assert.equal(reenteredAudio?.preferences.playerId, first.player.id);
+    assert.equal(reenteredAudio?.preferences.origin, "confirmed_absent");
+    assert.equal(reenteredAudio?.uiPreferencesBound, false);
     checks.push("actual UI logout/relogin resumes the same source character without repeating creation");
     const privacy = await page.evaluate(() => {
       const secret = (window as SecretWindow).__sourceUiCredentials!;
@@ -482,14 +500,18 @@ export async function sourceBrowserCheck(): Promise<void> {
     assert.equal(await page.evaluate(() => window.__clubscapeBenchmarkV1!.read(null).renderedFrames), failedFrames);
     assert.equal(await page.evaluate(() => window.__clubscapeBenchmarkV1!.read(null).ready), false);
     checks.push("actual game-device-loss fault check stops GPU frame publication and displays a terminal UI error; no fallback");
+    const audioPreferenceFixture = await checkPlayerAudioPreferences(page);
+    checks.push("separate native audio/storage contract fixture after GPU teardown verifies load/apply/save/entry fences; fixture world/unlocks/UI port are NOT game-journey or simultaneous-workload evidence");
     await assertSourceRunPin(gameRoot, pin);
     await writeFile(resolve(evidence, "result.json"), JSON.stringify({
       kind: earlyScene ? "early-render-ui-canonical-source-entry" : "real-streamed-render-ui-canonical-source-entry",
-      result: "passed", recordedAt: new Date().toISOString(),
+      result: audioPreferenceFixture.nativeCueTiming.passed ? "passed" : "failed_native_audio_timing",
+      recordedAt: new Date().toISOString(),
       checks, gameplayUi, experience, publicChat: chatProof,
-      audioControls, sourceRunPin: pin, browser: version, sandbox: { namespaceAndSeccomp: true, gpuProcessSandboxed: system.gpu.auxAttributes?.sandboxed ?? null },
+      audioControls, audioPreferenceStatus, audioPreferenceFixture, sourceRunPin: pin, browser: version, sandbox: { namespaceAndSeccomp: true, gpuProcessSandboxed: system.gpu.auxAttributes?.sandboxed ?? null },
       titlePixels: title, build: benchmark.identity, rendererReady: benchmark.ready, renderedFrames: benchmark.renderedFrames,
       actualUiSignup: true, actualCanonicalWorld: true, actualServerRestart: true, actualDeviceLossHandled: true,
+      browserLocalOutputMuted: true, physicalSpeakersAccepted: false,
       earlyScene, recordedCamera, projection, renderPixels, preview, timing,
       dynamicObjects: { received: first.dynamicObjects.length, canonicalSourceMetadata: true },
       fullJourneyTested: false, worldRendererIntegrated: true,
@@ -497,6 +519,9 @@ export async function sourceBrowserCheck(): Promise<void> {
       regionStreamingComplete: false, presentationAccepted: false, milestoneAccepted: false,
     }, null, 2) + "\n");
     await rm(resolve(evidence, "failure.json"), { force: true });
+    if (!audioPreferenceFixture.nativeCueTiming.passed) {
+      throw new Error(`Preference storage/entry contracts passed, but the native cue timing gate failed (${audioPreferenceFixture.nativeCueTiming.failures.length} reported failures, ${audioPreferenceFixture.nativeCueTiming.dispatchOverruns} measured overruns). Exact unchanged tolerance/dispatch measurements are retained in result.json; this is not an audio-timing pass.`);
+    }
     console.log(JSON.stringify({ result: "passed", kind: earlyScene ? "early-render-ui-canonical-source-entry" : "real-streamed-render-ui-canonical-source-entry",
       checks: checks.length, evidence: resolve(evidence, "result.json"), fullJourney: false }));
   } catch (error) {

@@ -1,6 +1,8 @@
 import {
   AudioFailure, createAudio, observeAudioState, readAudioState, setSourceAudioScene, setSourceMusicState,
   sourceAudioDefaults, sourceSliderToMixer, sourceMixerToAssetGain,
+  applySourceAudioPreferences, readSourceAudioPreferences, setSourceMusicPreferences, selectSourcePlaylist,
+  setSourceSavedPlaylist, editSourceSavedPlaylist, toggleSourceAudioMute, setSourceAudioPercent, requestSourceMusicSkip,
 } from "../audio/index.ts";
 import type { AudioSnapshot, AudioTrace, SourceAudioScene, SourceMusicState } from "../audio/index.ts";
 import type { AudioEvent, AudioHandle, ClientAssets, CreateAudio, WorldView } from "../shared/contracts.ts";
@@ -8,6 +10,7 @@ import type { AssetObservation } from "./assets.ts";
 import type { AssetRecord } from "./manifest.ts";
 import { AppError, deepFreeze } from "./errors.ts";
 import type { AudioChannel } from "./settings.ts";
+import type { NativeAudioPreferences } from "./player-audio.ts";
 
 export interface AudioAdapter {
   create: CreateAudio;
@@ -50,10 +53,10 @@ export function audioProblem(error: unknown): AppError {
   if (error instanceof AppError) return error;
   if (error instanceof AudioFailure) {
     return new AppError(`[${error.code}] ${error.message}`, {
-      kind: "audio", recoverable: error.code === "AUDIO_GESTURE_REQUIRED" || error.recoverable,
+      kind: "audio", errorId: error.code, recoverable: error.code === "AUDIO_GESTURE_REQUIRED" || error.recoverable,
     });
   }
-  return new AppError("The source audio adapter failed.", { kind: "audio" });
+  return new AppError("The source audio adapter failed.", { kind: "audio", errorId: "audio.adapter.failure" });
 }
 
 export function playbackEnabled(state: AudioSnapshot): boolean {
@@ -115,11 +118,27 @@ export class SourceAudioSession {
   observations(): AssetObservation[] { return Array.from(this.#observations.values(), (value) => ({ ...value })); }
   enabled(): boolean { return playbackEnabled(this.snapshot()); }
   controls() {
+    const snapshot = this.snapshot();
     const source = this.#api.readMusicState ? this.#api.readMusicState(this.#handle) : this.#musicState;
     const musicState = source === null ? null : deepFreeze(structuredClone(source));
-    return Object.freeze({ ...sourceControlState(this.snapshot()),
+    return Object.freeze({ ...sourceControlState(snapshot),
       sourceSceneSupplied: this.#hasScene, sourceMusicStateSupplied: musicState !== null,
-      providedMusicState: musicState, musicContinuation: "native-bound" as const });
+      providedMusicState: musicState, musicContinuation: "native-bound" as const,
+      preferences: snapshot.preferences });
+  }
+
+  preferenceApi(): NativeAudioPreferences {
+    return {
+      read: () => readSourceAudioPreferences(this.#handle),
+      apply: (player, record, unlocked) => applySourceAudioPreferences(this.#handle, player, record, unlocked),
+      music: (player, value) => setSourceMusicPreferences(this.#handle, player, value),
+      playlist: (player, slot) => selectSourcePlaylist(this.#handle, player, slot),
+      replace: (player, slot, entries) => setSourceSavedPlaylist(this.#handle, player, slot, entries),
+      edit: (player, slot, edit) => editSourceSavedPlaylist(this.#handle, player, slot, edit),
+      toggle: (player, channel) => toggleSourceAudioMute(this.#handle, player, channel),
+      percent: (player, channel, value) => setSourceAudioPercent(this.#handle, player, channel, value),
+      skip: (player) => requestSourceMusicSkip(this.#handle, player),
+    };
   }
 
   bindUi(bind: (handle: AudioHandle) => Promise<() => void>): Promise<() => void> {
@@ -178,7 +197,7 @@ export class SourceAudioSession {
     // One coherent batch preserves the audio-owned before/after Cook delta. A new
     // actor resets native scene/music inputs, so bind those after that first update.
     try { this.#handle.update(world, events); }
-    catch (error) { this.#report(audioProblem(error)); }
+    catch (error) { throw audioProblem(error); }
     this.#actor = actor;
     if (changedActor || world === null) this.#applyScene(world, scene);
     if (world !== null && musicState !== undefined) {

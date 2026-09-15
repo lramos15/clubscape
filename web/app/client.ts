@@ -8,6 +8,7 @@ import type { PublicWorld, QuoteRequest, QuoteView, ShopPurchaseIntent } from ".
 import { captureUiBankRevision, gameplayUiSupport, validateActorObservers } from "./gameplay-ui.ts";
 import type { GameplayUiSupport } from "./gameplay-ui.ts";
 import type { SourceAudioSession } from "./audio.ts";
+import type { PlayerAudioCompositionStatus } from "./player-audio-composition.ts";
 
 export interface WasmClient {
   prepare(requestId: string, operation: string, input: string): Uint8Array;
@@ -51,10 +52,12 @@ export interface BridgeState {
 export interface ClientHooks {
   content(revision: string, path: string): Promise<DisplayCatalog>;
   prepareWorld(world: WorldView): Promise<void>;
+  prepareAudio?(world: WorldView): Promise<void>;
   events(world: WorldView | null, events: readonly AudioEvent[]): void;
   unlockAudio(): Promise<void>;
   audioEnabled?(): boolean;
   audioControls?(): ReturnType<SourceAudioSession["controls"]> | null;
+  audioPreferenceStatus?(): Readonly<PlayerAudioCompositionStatus> | null;
   volume(channel: AudioChannel, value: number): void;
   disconnected(): void;
 }
@@ -104,6 +107,7 @@ export class BrowserApp implements AppServices {
   #reconnectAttempts = 0;
   #worldPrepared: string | null = null;
   #logoutRequested = false;
+  #pendingExits = 0;
   #uiWarning: string | null = null;
   #uiSupport: Readonly<GameplayUiSupport> = gameplayUiSupport([], false, null);
 
@@ -116,6 +120,7 @@ export class BrowserApp implements AppServices {
   state(): Readonly<AppState> { return this.#state; }
   gameplayUi(): Readonly<GameplayUiSupport> { return this.#uiSupport; }
   audioControls(): ReturnType<SourceAudioSession["controls"]> | null { return this.#hooks.audioControls?.() ?? null; }
+  audioPreferenceStatus(): Readonly<PlayerAudioCompositionStatus> | null { return this.#hooks.audioPreferenceStatus?.() ?? null; }
   subscribe(listener: (state: Readonly<AppState>) => void): () => void {
     this.#listeners.add(listener);
     listener(this.#state);
@@ -215,6 +220,7 @@ export class BrowserApp implements AppServices {
   }
 
   async #join(): Promise<void> {
+    this.#hooks.disconnected();
     await this.#request("hello");
     const state = await this.#request("join");
     this.#publish({ error: null });
@@ -238,13 +244,17 @@ export class BrowserApp implements AppServices {
   }
 
   async logout(): Promise<void> {
-    await this.#serial(async () => {
-      this.#logoutRequested = true;
-      this.#stopPoll();
-      const state = bridgeState(this.#bridge.state());
-      if (state.worldJoined && state.phase !== "reconnecting") await this.#request("leave");
-      await this.#finishLogout();
-    });
+    this.#pendingExits++;
+    this.#hooks.disconnected();
+    try {
+      await this.#serial(async () => {
+        this.#logoutRequested = true;
+        this.#stopPoll();
+        const state = bridgeState(this.#bridge.state());
+        if (state.worldJoined && state.phase !== "reconnecting") await this.#request("leave");
+        await this.#finishLogout();
+      });
+    } finally { this.#pendingExits--; }
   }
 
   async #finishLogout(): Promise<void> {
@@ -275,7 +285,11 @@ export class BrowserApp implements AppServices {
     const json = JSON.stringify(selection);
     const kind = intent.kind;
     const itemId = kind === "shop_buy" ? intent.expected_item : null;
-    await this.#serial(async () => {
+    if (kind === "request_logout") {
+      this.#pendingExits++;
+      this.#hooks.disconnected();
+    }
+    try { await this.#serial(async () => {
       if (this.#state.phase !== "world") throw new AppError("Wait for the world connection before acting.", { kind: "state" });
       if (presenceOf(this.#state.world)?.acceptsInput === false) {
         throw new AppError("The authoritative presence view does not currently accept game input.", { kind: "state" });
@@ -296,7 +310,9 @@ export class BrowserApp implements AppServices {
       }
       await this.#acceptWorld(result);
       if (kind === "request_logout") await this.#finishLogout();
-    });
+    }); } finally {
+      if (kind === "request_logout") this.#pendingExits--;
+    }
   }
 
   async quote(request: QuoteRequest): Promise<Readonly<QuoteView>> {
@@ -356,8 +372,11 @@ export class BrowserApp implements AppServices {
       await this.#hooks.prepareWorld(world);
       this.#worldPrepared = key;
     }
+    if (this.#disposed || this.#terminal) return;
+    if (this.#pendingExits === 0 && !this.#logoutRequested) await this.#hooks.prepareAudio?.(world);
+    if (this.#disposed || this.#terminal) return;
     this.#publish({ world, accountName: state.accountName, phase: "world" });
-    this.#hooks.events(world, state.events);
+    if (this.#pendingExits === 0 && !this.#logoutRequested) this.#hooks.events(world, state.events);
     const support = this.#uiSupport;
     if (!support.available && support.message !== this.#uiWarning) {
       this.#uiWarning = support.message;
@@ -535,7 +554,12 @@ export class BrowserApp implements AppServices {
   }
 
   audioVolume(channel: AudioChannel, value: number): void {
-    this.#hooks.volume(channel, value);
+    try { this.#hooks.volume(channel, value); }
+    catch (error) {
+      const problem = appError(error, "The current entry's audio controls are unavailable.");
+      this.report(problem);
+      throw problem;
+    }
   }
 
   report(error: Error, errorId?: string): void {
@@ -558,6 +582,7 @@ export class BrowserApp implements AppServices {
 
   async dispose(): Promise<void> {
     this.#disposed = true;
+    this.#hooks.disconnected();
     this.#generation++;
     this.#stopPoll();
     if (this.#reconnect !== undefined) clearTimeout(this.#reconnect);

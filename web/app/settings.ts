@@ -20,6 +20,11 @@ const defaults = (): Preferences => {
 };
 export interface PreferenceStore { getItem(key: string): string | null; setItem(key: string, value: string): void }
 
+export function sourceSliderPosition(value: number): number {
+  if (!Number.isFinite(value)) throw new AppError("A source audio slider requires a finite normalized position.", { kind: "input" });
+  return Math.round(Math.min(1, Math.max(0, value)) * 100) / 100;
+}
+
 export class Settings {
   #value: Preferences;
   #store: PreferenceStore | null;
@@ -53,8 +58,7 @@ export class Settings {
 
   volume(channel: AudioChannel, value: number): number {
     if (!["music", "effects", "area"].includes(channel)) throw new AppError("Unknown audio preference channel.", { kind: "input" });
-    if (!Number.isFinite(value)) throw new AppError("A source audio slider requires a finite normalized position.", { kind: "input" });
-    const bounded = Math.round(Math.min(1, Math.max(0, value)) * 100) / 100;
+    const bounded = sourceSliderPosition(value);
     this.#value.audio[channel] = bounded;
     this.#explicit.add(channel);
     try { this.#store?.setItem(PREFERENCE_KEY, JSON.stringify({ ...this.#value, audio: this.audioOverrides() })); } catch { /* Memory-only preferences still work. */ }

@@ -13,17 +13,21 @@ import { AppError, appError, invariant } from "./errors.ts";
 import { InputController } from "./input.ts";
 import { canonicalJson } from "./identity.ts";
 import { parseContentManifest } from "./manifest.ts";
-import { Settings } from "./settings.ts";
+import { Settings, sourceSliderPosition } from "./settings.ts";
 import { RpcTransport } from "./transport.ts";
 import { presenceOf } from "./public-state.ts";
 import { SourceAudioSession, audioProblem, playbackEnabled, sourceAudioAdapter } from "./audio.ts";
 import { sourceZoomForViewportHeight } from "./renderer.ts";
-import type { AudioSnapshot, SourceAudioScene, SourceMusicState } from "../audio/index.ts";
+import type { AudioSnapshot, SourceAudioPreferences } from "../audio/index.ts";
 import type { UiPreviewRequest } from "../ui/index.ts";
 import type { MinimapSurface } from "../renderer/src/index.ts";
 import { ModelPreview } from "./preview.ts";
 import { MinimapRelay } from "./minimap.ts";
 import { sourceUiAudioAdapter, sourceUiPreviewAdapter } from "./ui-adapter.ts";
+import { PlayerAudioComposition } from "./player-audio-composition.ts";
+import type { PlayerAudioSources } from "./player-audio-composition.ts";
+import { browserPlayerAudioStorage, PlayerAudioPreferenceStore } from "./player-audio-store.ts";
+import type { PlayerAudioStorage } from "./player-audio-store.ts";
 
 export interface ObservedRenderer extends RendererHandle {
   /** Observation only; all values must come from the real decoder/render path. */
@@ -44,10 +48,8 @@ export async function mountApplication(options: {
   status: HTMLElement;
   earlyScene?: string | null;
   recordedCamera?: string | null;
-  sourceAudio?: {
-    scene?(world: WorldView): SourceAudioScene | undefined;
-    music?(world: WorldView): SourceMusicState | undefined;
-  };
+  sourceAudio?: PlayerAudioSources;
+  playerAudioStorage?: PlayerAudioStorage;
 }): Promise<ApplicationHandle> {
   const { build, components, bridge, benchmark, worldCanvas, uiCanvas, status } = options;
   const earlyScene = options.earlyScene ?? null;
@@ -56,6 +58,7 @@ export async function mountApplication(options: {
   const diagnosticWorkload = earlyScene ? "early-presentation-not-journey" : recordedCamera ? "recorded-camera-not-journey" : null;
   let ui: UiHandle | null = null;
   let audio: SourceAudioSession | null = null;
+  let playerAudio: PlayerAudioComposition | null = null;
   let renderer: ObservedRenderer | null = null;
   let preview: ModelPreview | null = null;
   let appliedWorld: WorldView | null = null;
@@ -76,14 +79,13 @@ export async function mountApplication(options: {
   let disposed = false;
   let stopDevice: (() => void) | null = null;
   let unsubscribe: (() => void) | null = null;
-  let stopAudioUi: (() => void) | null = null;
-  let stopMusicPreferences: (() => void) | null = null;
   let resize: ResizeObserver | null = null;
   let hashGeneration = 0;
   let componentFailed = false;
   let appliedRenderSettings: Readonly<Record<string, unknown>> | null = null;
   let appliedRenderSettingsJson = "";
   let appliedAudioSettings: Pick<AudioSnapshot, "masterPercent" | "volumes" | "nativeMixer" | "muted"> | null = null;
+  let appliedAudioPreferences: SourceAudioPreferences | null = null;
   let appliedSettingsKey = "";
   let settingsActor: string | null = null;
   const lifecycle = new AbortController();
@@ -101,7 +103,8 @@ export async function mountApplication(options: {
     const source = ui ? sourceUiAudioAdapter.readMusic(ui) : null;
     const music = source ? { mode: source.mode, areaMode: source.areaMode, selectedGroup: source.selectedGroup,
       playlistGroups: [...source.playlistGroups], loopEnabled: source.loopEnabled } : null;
-    const visual = { declaredProfile: build.visualSettings, renderer: appliedRenderSettings, audio: appliedAudioSettings, music };
+    const visual = { declaredProfile: build.visualSettings, renderer: appliedRenderSettings,
+      audio: appliedAudioSettings, playerAudioPreferences: appliedAudioPreferences, music };
     const key = canonicalJson({ visual, preferences: settings.read(), overrides: settings.audioOverrides() });
     if (key === appliedSettingsKey) return;
     appliedSettingsKey = key;
@@ -159,14 +162,17 @@ export async function mountApplication(options: {
         () => ({ width: worldCanvas.width, height: worldCanvas.height }));
       sceneLoaded = true;
     },
+    async prepareAudio(world) {
+      if (!playerAudio) throw new AppError("The real player audio composition is not ready.", { kind: "audio" });
+      await playerAudio.prepare(world);
+    },
     events(world, events) {
-      let scene: SourceAudioScene | null | undefined;
-      let music: SourceMusicState | undefined;
-      try { scene = world === null ? null : options.sourceAudio?.scene?.(world); }
-      catch (error) { app.report(audioProblem(error)); }
-      try { music = world === null ? undefined : options.sourceAudio?.music?.(world); }
-      catch (error) { app.report(audioProblem(error)); }
-      audio?.update(world, events, scene, music);
+      if (world === null) {
+        void playerAudio?.title().catch((error: unknown) => {
+          const problem = audioProblem(error);
+          if (problem.kind !== "cancelled") app.report(problem);
+        });
+      } else playerAudio?.events(world, events);
     },
     async unlockAudio() {
       if (!audio) throw new AppError("The source audio component is not ready.", { kind: "audio" });
@@ -174,14 +180,22 @@ export async function mountApplication(options: {
     },
     audioEnabled() { return audio?.enabled() === true; },
     audioControls() { return audio?.controls() ?? null; },
+    audioPreferenceStatus() { return playerAudio?.observe() ?? null; },
     volume(channel, value) {
-      const bounded = settings.volume(channel, value);
-      audio?.volume(channel, bounded);
+      const world = app.state().world;
+      if (world) {
+        if (!playerAudio) throw new AppError("The real player audio composition is not ready.", { kind: "audio" });
+        playerAudio.controls().setPercent(world.player.id, channel, Math.round(sourceSliderPosition(value) * 100));
+      } else {
+        const bounded = settings.volume(channel, value);
+        audio?.volume(channel, bounded);
+      }
       void settingsHash().catch(() => app.report(new AppError("Settings identity could not be calculated.", { kind: "benchmark" })));
     },
     disconnected() {
       benchmark.worldReady(false);
-      audio?.disconnected();
+      if (playerAudio) playerAudio.disconnected();
+      else audio?.disconnected();
     },
   });
 
@@ -196,12 +210,15 @@ export async function mountApplication(options: {
     preview?.dispose();
     renderer?.dispose();
     stopDevice?.();
-    stopMusicPreferences?.();
-    stopAudioUi?.();
-    ui?.dispose();
-    assets?.dispose();
-    await app.dispose();
-    await audio?.dispose();
+    try { await app.dispose(); }
+    finally {
+      try { await playerAudio?.dispose(); }
+      finally {
+        ui?.dispose();
+        assets?.dispose();
+        await audio?.dispose();
+      }
+    }
   };
 
   try {
@@ -281,7 +298,8 @@ export async function mountApplication(options: {
       }, (error) => {
         sceneLoaded = false;
         benchmark.worldReady(false);
-        audio?.disconnected();
+        if (playerAudio) playerAudio.disconnected();
+        else audio?.disconnected();
         app.report(error);
       });
       renderer = await components.createRenderer(worldCanvas, {
@@ -305,34 +323,47 @@ export async function mountApplication(options: {
       (state) => {
         appliedAudioSettings = { masterPercent: state.masterPercent, volumes: { ...state.volumes },
           nativeMixer: { ...state.nativeMixer }, muted: state.muted };
+        appliedAudioPreferences = state.preferences?.preferences ?? null;
+        playerAudio?.changed(state.preferences);
         app.audioStatus(playbackEnabled(state));
         benchmark.audio(state);
         observeAssets();
         void settingsHash().catch(() => app.report(new AppError("Observed native audio settings could not be hashed.", { kind: "benchmark" })));
       }, {
         ...sourceAudioAdapter, create: components.createAudio,
-        musicState(_handle, state) {
-          const world = app.state().world;
-          invariant(ui && world, "Source music state requires the actual current player and UI binding.", "audio");
-          sourceUiAudioAdapter.music(ui, world.player.id, state);
-          void settingsHash().catch(() => app.report(new AppError("Applied music settings could not be hashed.", { kind: "benchmark" })));
-        },
         readMusicState() { return ui ? sourceUiAudioAdapter.readMusic(ui) : null; },
       });
-    stopAudioUi = await audio.bindUi((handle) => sourceUiAudioAdapter.bind(ui!, handle));
-    stopMusicPreferences = sourceUiAudioAdapter.musicChanges(ui, (playerId, state) => {
-      invariant(app.state().world?.player.id === playerId
-        && canonicalJson(sourceUiAudioAdapter.readMusic(ui!)) === canonicalJson(state),
-      "Applied music preferences no longer belong to the current player snapshot.", "audio_preferences");
-      void settingsHash().catch(() => app.report(new AppError("Applied music preferences could not be hashed.", { kind: "benchmark" })));
-      throw new AppError("Music preferences were applied for this player, but persistent saving is unavailable until the audio owner's versioned client-preference helper is integrated. No unlocks or guessed restored values were stored.",
-        { kind: "audio_preferences", errorId: "audio.preferences.persistence_unavailable" });
-    });
+    const nativeAudio = audio;
+    const nativeUi = ui;
+    const bindPreferences = components.bindUiAudioPreferences;
+    playerAudio = new PlayerAudioComposition(
+      new PlayerAudioPreferenceStore(options.playerAudioStorage ?? browserPlayerAudioStorage()),
+      {
+        update: (world, events, scene) => nativeAudio.update(world, events, scene),
+        disconnected: () => nativeAudio.disconnected(), preferences: nativeAudio.preferenceApi(),
+      }, {
+        bindAudio: () => nativeAudio.bindUi((handle) => sourceUiAudioAdapter.bind(nativeUi, handle)),
+        ...(bindPreferences ? { bindPreferences(controls) {
+          const stop = bindPreferences(nativeUi, controls);
+          const stopChanges = sourceUiAudioAdapter.musicChanges(nativeUi, async (playerId, state) => {
+            const applied = controls.read();
+            invariant(applied?.playerId === playerId && app.state().world?.player.id === playerId
+              && canonicalJson(applied.musicState) === canonicalJson(state),
+            "A legacy UI request cannot substitute for this entry's applied native preferences.", "audio_preferences");
+            await controls.persistCurrent(playerId);
+          });
+          return () => { stopChanges(); stop(); };
+        } } : {}),
+        project(binding) {
+          sourceUiAudioAdapter.music(nativeUi, binding.playerId, binding.musicState);
+          void settingsHash().catch(() => app.report(new AppError("Applied music preferences could not be hashed.", { kind: "benchmark" })));
+        },
+      }, options.sourceAudio ?? {}, (error) => app.report(error));
     const overrides = settings.audioOverrides();
     for (const channel of ["music", "effects", "area"] as const) {
       if (overrides[channel] !== undefined) audio.volume(channel, overrides[channel]);
     }
-    audio.update(null, []);
+    await playerAudio.title();
     const render = (now: number): void => {
       if (disposed) return;
       frame = requestAnimationFrame(render);

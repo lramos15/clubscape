@@ -15,6 +15,7 @@ function snapshot(): AudioSnapshot {
     volumes: { music: 0.25, effects: 0.5, area: 0.75 }, queueSize: 0,
     nativeMixer: { music: sourceSliderToMixer("music", 25), effects: sourceSliderToMixer("effects", 50), area: sourceSliderToMixer("area", 75) },
     masterPercent: 100,
+    preferences: null,
     background: { groups: [0], cursor: 0, mode: "once", exhausted: false, failed: false },
     voices: [], cache: { decodedBytes: 0, cached: 0, pending: 0 }, policyLimits: [], traces: [],
   };

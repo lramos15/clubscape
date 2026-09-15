@@ -62,7 +62,9 @@ substitutes for this contract.
 
 The current UI-owner module predates the added active-tab/document and
 placeholder/document-page cases. Its exhaustive TypeScript schema/dispatch
-tables and component fixture do not yet compile against FINAL4; those files
+tables and component fixture do not yet compile against FINAL4. Its audio
+fixture also lacks the native snapshot's required `preferences` field; these
+are five current UI-owner compile errors, and those files
 remain outside this worker's edit scope. Normal `pnpm build` is therefore
 blocked on the UI-owner follow-up, not on the implemented WASM/API mapping.
 Diagnostic Vite bundling is explicitly separate from a passing production
@@ -165,13 +167,15 @@ verified original item `interfaceOptions`, preserving their order. The source
 server still validates every item request. PlayedTime/GroundClock persistence
 remains private; the browser neither reads those clocks nor sets/advances them.
 
-`clubscape.preferences.v2` stores schema-checked **source normalized slider
+`clubscape.preferences.v2` retains device/title-only **source normalized slider
 positions**, explicitly marked `native-source-slider-v1`, and the named visual
 profile. Values are quantized to source integer percentages. Old v1 provisional
 linear-gain values are not silently reinterpreted: the old record is retained,
 native defaults apply, and a recoverable migration notice asks for explicit
 source controls. Tokens/account names/passwords are never preferences.
-Browser storage denial/quota failure leaves memory-only settings.
+This older device record is never migrated into a character's saved playlists,
+mute memory or native flags. In-world volume requests use the player binding
+below, not the global device record.
 
 ## Actual loading and benchmark observations
 
@@ -364,21 +368,80 @@ actual128/255 voice representations. Its title gesture reaches the same
 `unlockAudio` path and mute leaves channel percentages intact. UI disposal
 detaches its observer without taking ownership of the audio engine.
 Applied settings hashes also include the observed native master/channel/mute
-values and actual UI-applied music preferences, not just stored slider values.
+values, the actual applied native preference record and UI-applied music
+state, not just stored slider values.
 Automatic track changes and waveform/fade counters are not preferences.
 Identical settings do not repeatedly invalidate the hash while frames run.
 
-For supplied source music state, the single committed `audio.update(world,
-events)` precedes `setUiMusicState(ui, actualPlayerId, state)`. The latter
-applies the state to both native audio and UI; `getUiMusicState` is used for
-applied-state observation without replaying that setter. The player ID is
-checked again before handling `onUiMusicStateChange` persistence feedback.
-The versioned preference helper has not been relayed: applied in-session
-preferences get explicit persistence-unavailable feedback rather than being
-silently saved under another player, storing unlocks, or inventing restored
-values. Native Skip Track, exactly three saved playlists and remembered mute
-are likewise left to the audio owner's forthcoming public helpers, not mode
-flips or a guessed storage schema.
+The authorized `64bd3257` native preference closure is integrated. The shell
+uses the exact audio-owned parser/serializer, defaults and control APIs.
+There is no longer a missing preference-helper dependency. `PlayerAudioPreferenceStore`
+stores only native `SourceAudioPreferences` v1 under
+`clubscape.player-audio.v1.<actual-actor-id>`. The actor is a separate key:
+account IDs/names, unlocks, playheads, permission and privacy mute are not in
+the record. Three exact100-slot arrays retain null holes and numbered identity;
+current and remembered percentages remain separate. Native source defaults,
+mute fallbacks, flag policy, group encodings and next-track choice stay with audio.
+
+Only a confirmed storage `null` uses `sourceAudioPreferenceDefaults()`.
+Denied/failed reads, invalid return values, corrupt JSON, unknown versions and
+invalid native records produce explicit errors, retain the stored bytes, and
+do not apply defaults or rewrite the record. Per-character writes are serial;
+pending values coalesce with explicit stored/superseded receipts. A read waits
+for that actor's outstanding writes. A failed save rejects active/pending
+receipts and cannot silently restore stale storage; explicit persistence can
+retry without an observer-driven retry loop.
+
+`PlayerAudioComposition` connects the awaited `ClientHooks.prepareAudio` to
+the single synchronous boundary:
+
+```text
+load genuine actor record -> validate separately supplied source unlocks
+-> bind actual UI observer/native-control adapter
+-> publish authoritative world
+-> audio.update(world, committedEvents)
+-> applySourceAudioPreferences(audio, actorId, record, actualUnlockedGroups)
+-> setUiMusicState(ui, binding.playerId, binding.musicState)
+```
+
+No storage/network await or intermediate empty world update splits the last
+three calls. Only the returned native record is saved. Unchanged snapshots
+do not reproject/rewrite preferences, and the native record remains immutable.
+Pending storage loads are cancellable without preventing requested logout.
+Disconnect retains genuine loaded state while cancelling controls; acknowledged
+title/logout clears the native binding and reloads even the same actor on
+re-entry. Old UI control objects, async Skip and save completions are fenced
+by entry generation as well as actor ID. A reconnect during a pending write
+obtains a current-entry receipt rather than remaining permanently pending.
+Disposal detaches observers and flushes real writes, surfacing failures.
+
+The optional owned injection port
+`Components.bindUiAudioPreferences(ui, controls): () => void` requires the
+**actual UI owner's native-control routing**. It receives an entry-scoped
+`PlayerAudioControls` object with `read`, `observe`, `setMusic`,
+`selectPlaylist`, `setSavedPlaylist`, `editSavedPlaylist`, `toggleMute`,
+`setPercent`, `skip` and `persistCurrent`. Mutations delegate the corresponding
+native API and project its returned canonical state; Skip never flips modes.
+UI handlers must still start `services.unlockAudio()` in the trusted handler
+before awaiting anything (native Skip starts its own required resume).
+The detach function must remove those entry's handlers.
+
+`loadComponents()` currently has no relayed implementation for that port.
+The existing UI's legacy mute map and different legacy `setSourceMusicState`
+cannot represent rich bound preferences, so world controls remain detached
+rather than silently using them. `onUiMusicStateChange` persistence is installed
+only with the real new adapter and requires the current entry's actual native
+binding. The default host also lacks authoritative music unlock inputs.
+It reports `audio.preferences.ui_adapter_required` and
+`audio.preferences.source_unlocks_required`, keeping world audio disconnected
+without blocking real server/renderer/UI progress. It never invents `[]` or
+grants a region's tracks, buffers old events for replay, or claims audio ready.
+
+`window.__clubscapeClientStateV1.audioPreferenceStatus()` is observation-only:
+load origin, entry/phase/save/error state, actual UI binding/source-input
+availability and last applied actor/revision/tick. It exposes no credential or
+mutation API. `audioControls().preferences` is the actual native binding or
+null, not a guessed projection of a pending record.
 
 `audio.ts` wraps the imported factory and the authorized native policy/Cook
 delta updates `888f9384` + `f74652a5`; it is not a second audio engine. `SourceAudioSession` forwards
@@ -412,10 +475,12 @@ The native music mode IDs remain
 area0/shuffle1/single2. Old `native_midi_end` directives are not emitted.
 
 `mountApplication` accepts optional `sourceAudio.scene(world)` and
-`sourceAudio.music(world)` producers returning the imported `SourceAudioScene`
-and `SourceMusicState`. The latter preserves actual mode, Modern/Classic,
-unlocked groups, selected group, playlist and loop preference. The wrapper
-delegates `setSourceAudioScene`/`setSourceMusicState` without computing attenuation,
+`sourceAudio.unlockedGroups(world)` producers returning real `SourceAudioScene`
+and authoritative published source groups. The older `sourceAudio.music(world)`
+producer is accepted only for its actual `unlockedGroups` when no explicit
+unlock producer exists; its legacy selection/playlist/loop fields are never
+interpreted as saved slots or native flags. Genuine client preferences come
+only from the native record. The wrapper delegates scene/preference APIs without computing attenuation,
 retention, owner visibility, fades, next songs or varps. Scene coordinates stay
 in128-unit space; orientation, instance/owner and varp values are unchanged.
 An unavailable new scene stops stale ambience with explicit feedback, not an
@@ -431,11 +496,12 @@ that policy, while `playback` reports the actual background plan.
 `sourceSceneSupplied` and `sourceMusicStateSupplied` describe supplied inputs,
 not proof that every emitter/asset is ready. `providedMusicState` is an immutable
 last accepted input, not an unlock grant or an echo of guessed source defaults.
-An omitted music update retains that actor's last supplied preference; title/
-actor changes clear the shell record and different actors never inherit it.
+The player coordinator retains only the same actor's genuine loaded record;
+title/actor changes clear it and different actors never inherit it.
 Current renderer/protocol exports still lack the real listener/scenery/varp
-projection and manual/unlock-state input. The known M1 area's internal
-continuation is not blocked on either an invented unlock list or caller selector.
+projection and authoritative unlock input. Internal native selection is
+implemented, but does not establish those supplied facts or authorize playback
+with unbound constructor preferences. No caller selector is required.
 
 Native policies are now calibrated, not the earlier generic gain/distance/fade
 placeholders. The authorized `f9e466d3` publication closes the nine native255
@@ -503,6 +569,26 @@ explicit music-state fixtures are not account unlocks; it creates no synthetic
 world or committed gameplay/jingle event. Full-duration native continuation
 and jingle calibration remain the separate audio-owner component proofs.
 
+The additional native preference/storage fixture uses the real AudioHandle,
+verified original files and browser localStorage. It exercises actual load/
+apply/save ordering, source remembered/fallback percentages and nonlinear
+mixers, three-slot holes, typed Skip status, same-ID re-entry and delayed
+coalesced writes. Its explicit world/unlock/UI-port fixtures are **not** the
+actual game UI adapter or a legitimate journey. It runs after game GPU teardown;
+it does not prove simultaneous rendering/audio performance.
+
+Sparky runs exposed `AUDIO_LOADING_LATE`/`AUDIO_TIMING_LATE` for native click2266.
+The original failed runs are retained, and the narrower diagnostic compares
+coordinated controls with direct native API calls without the preference
+coordinator. Both paths exceeded the unchanged native
+20.045351473922903ms dispatch tolerance (26.4399092970522ms observed in the
+profiling run); API-call durations were below0.5ms. That is evidence of a real
+native/host timing gap, not proof of its root cause or permission for a timing
+override. The runner records exact dispatches/failures and exits unsuccessfully
+when that gate fails, even when all storage/entry contracts passed.
+Browser-local test output is muted for shared-host privacy; speakers, Mac/Edge
+and M1 acceptance remain unexecuted.
+
 Renderer frame promises must resolve **after that actual render submission's
 `GPUQueue.onSubmittedWorkDone()` receipt**. RAF requests stay pipelined; no
 frame is counted from RAF, a timer, an empty submission, or a screenshot.
@@ -536,7 +622,10 @@ Settings digest is SHA-256 of canonical compact JSON:
 {
   "visual": {
     "declaredProfile": <build's frozen visual profile>,
-    "renderer": <actual applied settings from observe()>
+    "renderer": <actual applied settings from observe()>,
+    "audio": <observed master/volumes/nativeMixer/privacy mute>,
+    "playerAudioPreferences": <actual applied native record or null>,
+    "music": <actual UI-applied mode/area/selection/playlist/loop or null>
   },
   "preferences": <bounded Settings.read() value with only explicit audioOverrides()>
 }
