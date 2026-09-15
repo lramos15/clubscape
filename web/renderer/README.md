@@ -52,26 +52,47 @@ plus:
   `height` negative-up, 16384 angle units per turn). Pass `zoom = sourceZoomForViewportHeight(h)`
   to reproduce the client's viewport curve (662 at 1080 px); the renderer never rescales itself.
 * `update(world)` serialises the `WorldView` plus the optional `RendererWorldExtensions`
-  (`dynamicObjects`, `events`). The player is the approved penguin body (NPC 2063 / model 21547
-  at 75/128) wearing the `equipment[].item.sourceId` models. **Motion identity is explicit
-  only** (the original client plays what the server sends and never derives actions locally):
-  the sequence comes from `player.animation` / `entity.animation` as a bare id (`"879"`) or the
-  catalog id (`asset.source.osrs.cache2695.sequence.879`), else from the latest animation event
-  for that actor (`events[]`, mirroring the protocol `Event{kind:"animation", actorId,
-  animationAsset, eventId}`; it plays until it ends, a newer event arrives, the actor moves or
-  the activity returns to rest), else the movement stance: stand 808, walk 819 or run 824 —
-  running by the original rule (two tiles in one server `tick`; the `run` setting decides only
-  when several ticks elapsed with an in-between step count, or when no tick is available). An
-  `activity` such as `gathering`/`producing`/`fighting`/`casting`, or `hitpoints === 0`, with no
-  source animation keeps the stance and is reported as `motion unknown: …` through
-  `onDiagnostic` / `unknownMotions()` — the current backend interop gap (`Player.animation` is
-  empty), never a guessed pose. NPC entities with a source definition play the definition's
-  own stand/walk sequences locally exactly as the original client does; their deaths and
-  actions are server animations too. `temporary_object` entities (fire 26185) animate through
-  the source frames, `groundItems` draw the tile's top three stacks (quantity variants), and
-  `dynamicObjects` swap door walls. Entities in another `instance` than the player are
-  skipped; unknown ids or missing models are reported, never invented. The activity-based
-  table (`developerMotionFallback`, `set_motion_fallback`) exists for developer fixtures only.
+  (`dynamicObjects`, `events`, `instanceLayout`). The player is the approved penguin body (NPC
+  2063 / model 21547 at 75/128) wearing the `equipment[].item.sourceId` models with the
+  bind-pose and per-pose contact fit (`playerFitReport()`, `playerPoseFits()`; the recorded
+  `gear/pose-fits.json` is loaded with the assets so no frame solves at draw time). **Motion
+  identity is explicit only** (the original client plays what the server sends and never derives
+  actions locally), in this precedence: `player.animation` / `entity.animation` as a bare id
+  (`"879"`) or the catalog id (`asset.source.osrs.cache2695.sequence.879`); the
+  **`game.observer.v1` fields** — `running` / `movementTick` are the movement actually executed
+  this tick (a final exhausted run step is running; a later non-moving tick is not; explicit
+  values win over any inference) and `action: ActorActionView` plays its bound `animation`
+  anchored on `cycleStartedAtTick` at 600 ms per tick, keeping its clock across polls and
+  reconnects for the same `id`/cycle, re-anchoring on a new cycle, ending on `action: null`,
+  and with `animation: null` keeping the stance while reporting the explicit action
+  (`motion unknown: <actor>: action <id> (<activity>, <actionId>) has no bound source
+  animation`) — never a nearby-object or default motion; the latest animation event for that
+  actor (`events[]`, mirroring the protocol `Event{kind:"animation", actorId, animationAsset,
+  eventId}`; it plays until it ends, a newer event arrives, the actor moves or the activity
+  returns to rest); else the movement stance: stand 808, walk 819 or run 824 — for observers
+  without `running`, by the original two-tiles-per-`tick` rule (the `run` setting decides only
+  in-between or without ticks). `observerV1()` reports whether the last view carried the
+  observer fields. An `activity` such as `gathering`/`producing`/`fighting`/`casting`, or
+  `hitpoints === 0`, with no source animation keeps the stance and is reported as
+  `motion unknown: …` through `onDiagnostic` / `unknownMotions()`, never a guessed pose. NPC
+  entities with a source definition play the definition's own stand/walk sequences locally
+  exactly as the original client does; their deaths and actions are server animations too.
+  `temporary_object` entities (fire 26185) animate through the source frames, `groundItems`
+  draw the tile's top three stacks (quantity variants), and `dynamicObjects` swap door walls —
+  selected through the shell's validated `sourceId` only (an entry without one is reported and
+  not drawn; `objectId` strings are never parsed). Entities in another `instance` than the
+  player are skipped; unknown ids or missing models are reported, never invented. The
+  activity-based table (`developerMotionFallback`, `set_motion_fallback`) exists for developer
+  fixtures only.
+* `instanceLayout` (`RendererInstanceLayout`: the backend template identity plus its validated
+  `GenericInstanceChunkMapping` entries `{plane, chunkX, chunkY, sourcePlane, sourceChunkX,
+  sourceChunkY, quarterTurns}`, forwarded by the shell): while set, region scenes are assembled
+  from the declared chunks only — each source chunk copied to its destination chunk, every other
+  chunk unloaded (no terrain, scenery, picks or minimap data, like the original template loader)
+  — block fetches shrink to the declared source squares, and a changed layout (or `null`, back
+  to the ordinary world) reassembles on the next `update()`. The renderer never infers a layout
+  from an instance id. `quarterTurns !== 0` is rejected with a diagnostic naming the mapping
+  (block exports hold lit placed geometry that cannot be turned exactly).
 * `frame(nowMs)` returns `null` before a scene is loaded or while `maxFramesInFlight` (default 2)
   frames are pending, otherwise a `RenderFrame` whose `completedAtMs` is taken after the WebGPU
   queue's submitted-work-done signal (`gpuDurationMs` from timestamp queries when supported;
@@ -79,10 +100,15 @@ plus:
   frame's GPU completion; every record still describes its own submission. Issue one `frame()`
   per animation frame and do not await it before scheduling the next tick. Uncaptured WebGPU
   errors, pipeline validation failures and device loss reject the promise.
-* Two original projections exist at 1080 px: the frozen viewport-only scene fixtures use zoom
-  662 (`sourceZoomForViewportHeight`), the composed full-HUD frames of the dynamic-layer
-  references use the native full-HUD zoom 410. The shell must pass the zoom of the composition it
-  is reproducing; the renderer applies exactly the zoom it is given.
+* Two original projections exist: the frozen viewport-only scene fixtures use the stock
+  `client.oh` curve (`sourceZoomForViewportHeight`: 662 at 1080 px, fy 256 / fg 205), the
+  composed Resizable-Classic HUD uses the layout scripts' parameters (fy = fg = 127 through cs2
+  6200, read from the running original client into `hud/zoom-table.json`):
+  `fullHudZoomForViewport(width, height)` / `fullHudViewport()` port `rl.cu` and give
+  ⌊height·127/334⌋ — 410 at 1920×1080, 292 at 1024×768, 273 at 1280×720, 547 at 2560×1440 —
+  pinned to the original's own value at 16 canvas sizes (`crates/renderer/tests/hud_zoom.rs`).
+  The shell passes the zoom of the composition it is reproducing (`fullHudZoomForViewport` for
+  the live HUD); the renderer applies exactly the zoom it is given.
 * `pick(x, y)` replays the last frame's exact fill coverage and returns the topmost tile or
   entity; scenery carries `scenery.objectId`/`type` (placement type), item piles resolve to
   their tile (the WorldView lists the items there). It never mutates state.
@@ -110,13 +136,19 @@ plus:
   (player.x − baseX) * 4 + 50, 462 − (player.y − baseY) * 4)` centring applies unchanged with
   `baseX/baseY` taken from the surface instead of a static raster's catalogue entry. `mask` is
   1 where the original drew map data (0 where no tile exists — those pixels hold the source
-  fill value `0x000001`). `icons` lists the map-element ids of floor decorations on the plane
-  (what the original minimap widget draws as map icons; their sprites are UI catalogue data).
-  The call throws when no scene, no map-scene asset or — with `complete: false` and `notes` —
-  when a square's sidecar is missing; it never returns a blank, static or approximate map.
-  Native comparison: all 15 approved minimap rasters match pixel-exactly over the scene
-  interior; the outer 5-tile band of a scene differs (base-dependent floor blending, see
-  `crates/renderer/README.md`, "Known deviations").
+  fill value `0x000001`). `icons` lists the map icons of the plane exactly as the original
+  `bu.aa` pass collects them (floor decorations whose object definition names a map element the
+  original shows), and `sourceIconMismatches` compares that list with the original pass recorded
+  per square by the export (0 on all 15 native cases). `mapIconSprites()` returns the original
+  map-element sprites (`minimap/mapicons.bin`, 386 elements, fetched with the map-scene asset)
+  as `Map<element, MapIconSprite {pixels: ImageData, width, height, …}>`; the HUD draws them
+  over the surface per frame with the original `client.zr`/`bo.as` rule documented on
+  `MinimapSurface.icons` (offset from the player's fine position, minimap zoom, map rotation,
+  80-unit radius). The call throws when no scene, no map-scene asset or — with `complete: false`
+  and `notes` — when a square's sidecar is missing; it never returns a blank, static or
+  approximate map. Native comparison: all 15 approved minimap rasters match pixel-exactly over
+  the scene interior and in their icon lists; the outer 5-tile band of a scene differs
+  (base-dependent floor blending, see `crates/renderer/README.md`, "Known deviations").
 
 ## Building
 
@@ -175,21 +207,25 @@ skipped: primitives, resolution and draw distance are unchanged.
 
 Latest Sparky results (Chrome 153, Xvfb, NVIDIA GB10, 1920×1080; not an owner/Mac/Edge
 acceptance): every scene and model capture identical to the source PNGs (2073600/2073600
-pixels). Frozen workload at the display cadence — 30 s: 1802 GPU-completed frames, 60.01 fps
-between the first and last completion (59.67 fps over the harness window, which includes the
-harness's own wait/evaluate overhead), CPU p50 5 / p95 8 ms (build 3 / pack 2 / upload 1),
-GPU p95 2.6 ms, completion gap p95 18 ms, max 28 ms, 0 gaps above 33.4 ms; 180 s: 10801
-frames, 60.00 fps between completions (59.75 over the window), CPU p50 6 / p95 8 ms, GPU p95
-2.9 ms, gap p95 20 ms, max 37 ms, 1 of 10800 gaps above 33.4 ms. Moving camera, 30 s: 1800
-frames, 59.96 fps between completions, CPU p50 7 / p95 10 ms (build 5), gap p95 20 ms, max
-35 ms, 1 gap above 33.4 ms, 59.5k–81.5k primitives. Uncapped throughput ceiling, 30 s: 73.5 fps
-(static camera) and 99.1 fps (moving camera; the static case is bounded by main-thread
-completion scheduling, not by CPU or GPU time). Before this work the same workload measured
-59.85 fps with gap p95 28–30 ms and 61 gaps above 33.4 ms per 180 s. These remain Sparky
-engineering measurements of genuine GPU-completed frames — the display cadence is Chrome's
-60 Hz compositor under Xvfb, so "60.00 fps" is the cadence with no dropped frame, not a
-renderer ceiling — and are not the frozen ≥ 60 fps / gap-p95 contract proof on the owner's
-hardware; the 180 s gap p95 sits exactly at 20 ms.
+pixels). Frozen workload at the display cadence, with the per-pose gear fit table, observer
+fields and icon layer in place — 30 s: 1800 GPU-completed frames, 59.97 fps between the first
+and last completion (59.66 fps over the harness window, which includes the harness's own
+wait/evaluate overhead), CPU p50 7 / p95 8 ms (build 3 / pack 3 / upload 1), GPU p95 3.0 ms,
+completion gap p95 21 ms, max 54 ms, 1 gap above 33.4 ms (run under a host load average of
+10 from other workers); 180 s: 10802 frames, 60.00 fps between completions (59.77 over the
+window), CPU p50 7 / p95 8 ms, GPU p95 2.9 ms, gap p95 18 ms, max 33 ms, 0 of 10801 gaps above
+33.4 ms. Moving camera, 30 s: 1801 frames, 59.97 fps between completions (59.60 window), CPU
+p50 7 / p95 12 ms (build 5), GPU p95 3.4 ms, gap p95 28 ms, max 36 ms, 6 gaps above 33.4 ms
+(host load average 5; the earlier quiet-host run measured gap p95 20 ms, 1 gap) — this case
+is **below** the frozen gap target and is reported failing. Earlier quiet-host runs: 30 s 60.01
+fps / gap p95 18 ms / 0 gaps; uncapped throughput ceiling 73.5 fps (static camera) and 99.1 fps
+(moving camera; the static case is bounded by main-thread completion scheduling, not by CPU or
+GPU time). Before the static-placement cache the same workload measured 59.85 fps with gap p95
+28–30 ms and 61 gaps above 33.4 ms per 180 s. These remain Sparky engineering measurements of
+genuine GPU-completed frames — the display cadence is Chrome's 60 Hz compositor under Xvfb, so
+"60.00 fps" is the cadence with no dropped frame, not a renderer ceiling — and are not the
+frozen ≥ 60 fps / gap-p95 contract proof on the owner's hardware; none of the window fps
+figures (59.60–59.77) reaches 60.
 
 ## Contract notes for the shell
 
@@ -203,21 +239,26 @@ hardware; the 180 s gap p95 sits exactly at 20 ms.
   made to the shared file: a `zoom` derivation helper (provided here as
   `sourceZoomForViewportHeight`) and a diagnostics accessor (provided as the
   `ClubscapeRendererHandle` extension).
-* **Data the renderer needs from backend/shell** (typed in `RendererWorldExtensions` /
-  `RendererAnimationEvent` / `RendererDynamicObject`; the frozen contract already has the
-  first two channels):
-  1. `PlayerView.animation` and `EntityView.animation` filled with the source sequence identity
-     (`asset.source.osrs.cache2695.sequence.<id>` or `<id>`) for every action, combat swing and
-     death the server plays — today the backend sends `""` (interop gap) and the renderer
-     reports `motion unknown`.
-  2. `PlayerView.settings` containing `{ setting: "run", enabled }` and a monotonically
-     increasing `WorldView.tick` per server tick (both already in the contract) — running is
-     derived from tiles per tick like the original.
-  3. `events?: RendererAnimationEvent[]` — optional alternative to (1) when the shell forwards
-     protocol `Event`s of kind `animation` (`actorId`, `animationAsset`, `eventId`).
-  4. `dynamicObjects?: RendererDynamicObject[]` — the protocol `WorldSnapshot.dynamic_objects`
-     with catalog-resolved `objectId` (`asset.source.osrs.cache2695.object.<id>`) or numeric
-     `sourceId`, `tile`, `instance`, `doorOpen`, `quarterTurns`, for door states.
+* **Data the renderer consumes from backend/shell** (the `game.observer.v1` contract plus the
+  typed `RendererWorldExtensions`):
+  1. `game.observer.v1`: `PlayerView.running` / `movementTick` and `action: ActorActionView`
+     (also on visible-player `EntityView`s) — the executed movement and the authoritative action
+     instance/phase; `action.animation` must carry the source sequence identity
+     (`asset.source.osrs.cache2695.sequence.<id>` or `<id>`) for the motion to play, otherwise
+     the renderer keeps the stance and reports the explicit action as `motion unknown`.
+     Missing observer fields mean an older observer (`observerV1() === false`): movement falls
+     back to the tick rule, actions to (2)/(3).
+  2. `PlayerView.animation` / `EntityView.animation` with the source sequence identity for
+     server-played motions (deaths, NPC actions).
+  3. `events?: RendererAnimationEvent[]` — legacy alternative when the shell forwards protocol
+     `Event`s of kind `animation` (`actorId`, `animationAsset`, `eventId`).
+  4. `WorldView.dynamicObjects` (`DynamicObjectView`) — door states with the shell's validated
+     `sourceId`; entries without one are reported and not drawn (no id-string parsing).
+  5. `instanceLayout?: RendererInstanceLayout | null` — the backend instance template identity
+     and its validated chunk mappings while the player is inside an instance (the M1 Death
+     Office template: four turn-0 8×8 mappings of region 12633); `null` outside.
+  6. `PlayerView.settings` `{ setting: "run", enabled }` and a monotonic `WorldView.tick` — used
+     only by the legacy movement inference when `running` is absent.
 * Interface preview: call `framePlayerPreview({ width, height })` with the UI's
   `getUiPreviewBounds()` size (480×315 for the character creator) after `update(world)` so the
   worn gear matches, and hand the `ImageData` to `setUiPreview()` via a canvas of the same size.
@@ -227,10 +268,12 @@ hardware; the 180 s gap p95 sits exactly at 20 ms.
   `revision` is unchanged) and give `pixels`, `baseX`, `baseY`, `plane` and `mask` to the
   UI's painter in place of the static `ui/minimaps/<base>-<plane>.png` catalogue raster. The
   surface follows the streamed scene (recentering changes `baseX/baseY`), the player's plane
-  and door states; entity dots, the player marker and map-element icon sprites remain the
-  UI's layer over it.
+  and door states; entity dots and the player marker remain the UI's layer over it, and the map
+  icons are drawn by the UI from `surface.icons` with `mapIconSprites()` (original sprites) by
+  the `bo.as` rule documented on `MinimapSurface.icons`.
 * World blocks are streamed by manifest key from `assetBaseUrl` (`blocks/<square>.bin.gz`,
-  `blocks/<square>.models.bin.gz`, `minimap/blocks/<square>.bin`, `minimap/mapscenes.bin`).
+  `blocks/<square>.models.bin.gz`, `minimap/blocks/<square>.bin`, `minimap/mapscenes.bin`,
+  `minimap/mapicons.bin`); `gear/pose-fits.json` and `hud/zoom-table.json` are published.
   They are not committed: host the members of the deterministic pack described in
   `assets/compiled/render/blocks.index.json` (`tools/render-assets/README.md`, "World block
   package") under the same base URL; the adapter verifies every gzip and inflated hash and

@@ -33,7 +33,9 @@ python3 tools/render-assets/export.py --profile scenes-pinned  # frame-0 validat
 python3 tools/render-assets/export.py --profile anim        # skeletal sequences, NPC definitions, player body, worn items
 python3 tools/render-assets/export.py --profile dynamic     # door/fire/state object variants and ground-item stacks
 python3 tools/render-assets/export.py --profile widgets     # original if3 model components (interface 679:73)
-python3 tools/render-assets/export.py --profile minimap     # map-scene sprites/shape masks + per-square minimap sidecars
+python3 tools/render-assets/export.py --profile minimap     # map-scene sprites/shape masks, map-element icon sprites, per-square minimap sidecars (+ original icon pass)
+python3 tools/render-assets/export.py --profile zoom        # original full-HUD viewport zoom per canvas size (hud/zoom-table.json)
+python3 tools/render-assets/export.py --profile pose-fits   # per-item per-pose gear contact fits (gear/pose-fits.json; runs the renderer's pose-fit-table bin, no JDK/cache)
 python3 tools/render-assets/export.py --profile compress    # (re)write scenes/*.gz, blocks/*.gz + manifest
 python3 tools/render-assets/export.py --profile unpack      # restore raw *.bin from published *.gz (pinned bytes; unpublished block twins optional)
 python3 tools/render-assets/export.py --profile pack-blocks # deterministic world-block pack + blocks.index.json
@@ -44,9 +46,14 @@ python3 tools/render-assets/export.py --verify-only         # hash-check assets/
 
 Profiles: `tables`, `palette`, `textures`, `models` (tree 1277 / model 1570 lit as captured),
 `npcs` (3028 goblin, 2063 penguin; sequences 6181/6180 and 5668/5666), `scenes`, `blocks`,
-`scenes-pinned`, `anim`, `dynamic`, `widgets`, `minimap`, `prune-textures` (keep only textures
-referenced by the exported scenes/blocks/models), `compress`, `unpack`, `pack-blocks`,
-`unpack-blocks`, `verify-blocks`.
+`scenes-pinned`, `anim`, `dynamic`, `widgets`, `minimap` (also `minimap/mapicons.bin`: every
+map element the original shows on the minimap with its sprite from `ps.as(false)`, and the
+original `bu.aa` icon pass per square in the sidecar's `MICN` chunk), `zoom` (runs the original
+Resizable-Classic layout at 16 canvas sizes and records `client.fk` plus the cs2 6200/6202 zoom
+parameters), `pose-fits` (Rust only: `cargo run --release -p clubscape-renderer --features tools
+--bin pose-fit-table`, deterministic, frames over the fit targets counted in the manifest's
+`gear_pose_fits`), `prune-textures` (keep only textures referenced by the exported
+scenes/blocks/models), `compress`, `unpack`, `pack-blocks`, `unpack-blocks`, `verify-blocks`.
 
 ### World block package (no source cache or JDK needed to consume)
 
@@ -113,8 +120,9 @@ map with SHA-256 + size for every buffer. Formats are documented in
 `crates/renderer/README.md`.
 
 Published in git: `manifest.json`, `palette.bin`, `textures/*.bin` (43 used textures), base
-models, NPC packs and `scenes/*.bin.gz` (deterministic gzip: mtime 0, level 9, ≈ 11 MB for the
-five scenes). Kept local and reproducible (hashes in the manifest): `tables.bin`,
+models, NPC packs, `scenes/*.bin.gz` (deterministic gzip: mtime 0, level 9, ≈ 11 MB for the
+five scenes), `minimap/*` (map scenes, map icons, 61 sidecars), `hud/zoom-table.json` and
+`gear/pose-fits.json`. Kept local and reproducible (hashes in the manifest): `tables.bin`,
 `models/baked/*` validation bakes, raw `scenes/*.bin`, `scenes/*.pinned*`, and `blocks/`
 (61 squares, ≈ 75 MB gzip — serve them next to the manifest for region scenes).
 
