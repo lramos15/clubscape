@@ -11,14 +11,13 @@
       {"id": "cc864d7a-37cc-4869-a7b4-d484d01cede5", "task": "M1-BROWSER-UI"},
       {"id": "78d01af9-70a4-4b02-8339-6a61eb377374", "task": "M1-BROWSER-SHELL"},
       {"id": "2766e089-44e5-4a1d-974e-7b03ad9c269d", "task": "M1-GAMEPLAY-UI-CONTRACTS"},
-      {"id": "cdfad64d-9162-439f-a525-58e1114dd7f4", "task": "M1-AUDIO-PREFERENCE-CONTROLS"}
+      {"id": "cdfad64d-9162-439f-a525-58e1114dd7f4", "task": "M1-AUDIO-PREFERENCE-CONTROLS"},
+      {"id": "ac0f0856-44af-445b-bd90-6db7a1f4fc74", "task": "M1-SCENERY-PHASE-EVIDENCE"},
+      {"id": "81ac9884-4f39-4f27-b516-6e9a42b09b51", "task": "M1-HEADLESS-JOURNEY"}
     ],
-    "reserved": [
-      {"id": "81ac9884-4f39-4f27-b516-6e9a42b09b51", "task": "M1-HEADLESS-JOURNEY", "reason": "31/70 real source transitions and onboarding recovery verified. Runner is idle until the authoritative contextual smithing menu and final v4 candidate are integrated; no live service remains."}
-    ],
+    "reserved": [],
     "queued": [],
     "parked": [
-      {"id": "ac0f0856-44af-445b-bd90-6db7a1f4fc74", "reason": "Twelve independent original dynamic-layer cases integrated8b617c6; exact image/state/pair integrity and frozen full-HUD replay verified. Candidate comparisons belong to renderer; no automatic resumption."},
       {"id": "2a0ae699-6af8-45d5-90c7-3addfc56ee53", "reason": "Renewed five-invocation assessment complete; live creation/scene/window/baseline work, firstXP unverified after driverOutOfReach. No sixth invocation or automatic resumption."},
       {"id": "aab1ae0f-0238-4254-bff3-b7c046349c6b", "reason": "Shop capacity/identity fixes integrated as3310032+af75e17 with18 passing regressions; no automatic resumption."},
       {"id": "0f5ddddf-0aa0-4908-b0d3-1ffc6b1f7a20", "reason": "Actor presence/cadence fixes integrated as62a003c+e1076a8 with15 passing regressions; no automatic resumption."},
@@ -34,6 +33,24 @@
     "usage_accounting": "milestones/evidence/m1-usage-snapshot.json records the available delayed session snapshot; final project-wide credits/currency are unavailable."
   },
   "tasks": [
+    {
+      "id": "M1-SCENERY-PHASE-EVIDENCE",
+      "goal": "Record original native per-placement animation phases for the existing twelve dynamic reference cases without changing their images or capture inputs.",
+      "status": "IMPLEMENTING",
+      "specs": ["tools/source-layer-capture/README.md", "assets/reference/osrs240/m1-dynamic/case-index.json", "research/source-layers/comparison-procedure.json"],
+      "dependencies": ["M1-SOURCE-DYNAMIC-REFERENCES"],
+      "allowed_paths": ["tools/source-layer-capture/SceneryPhaseProbe.java", "tools/source-layer-capture/probe_phases.py", "tools/source-layer-capture/test_phases.py", "research/source-layers/phases/**", "assets/reference/osrs240/m1-dynamic/phases/**"],
+      "forbidden_paths": ["prompt.md", "crates/**", "web/**", "content/**", "assets/source/**", "assets/manifests/**", "tools/source-capture/**", "research/reference-pack/**", "tools/reference-pack/**", "milestones/**", "assets/reference/osrs240/m1-dynamic/case-index.json", "assets/reference/osrs240/m1-dynamic/frames/**", "tools/source-layer-capture/LayerCapture.java", "tools/source-layer-capture/capture.py"],
+      "outputs": ["Additive original frame/sequence/cycle observations for visible scenery", "Existing image hashes reproduced unchanged", "Original-only replay arguments and exact source metadata"],
+      "validation_commands": [],
+      "test_requirements": ["At most the same12 original cases; no new source compositions", "No candidate frame search or candidate-derived source phase", "Record native phase before/after draw without advancing it to a desired image", "Preserve old index SHA dde300e30ff909e539c283fa7053c673abc9428ce357894f0727be08da8ad557 and every existing image/helper hash", "Do not mask the flame placements or loosen numeric tolerances"],
+      "acceptance": ["SQL m1-scenery-phase-evidence distinguishes original observed phases and unchanged replay from candidate matching; source worker parks after this bounded supplement"],
+      "reserved_namespaces": ["reference.m1.dynamic.phases.*"],
+      "source_notes": ["Renderer compared11 of12 original cases:8 source scene interiors match exactly, while3 Tutorial plane0 cases differ at animated objects24969 and196 because their original randomized start phases were not recorded. Source metadata, not fitted candidate phases, is required."],
+      "parity_entries": [],
+      "adaptations": [],
+      "evidence": []
+    },
     {
       "id": "M1-AUDIO-PREFERENCE-CONTROLS",
       "goal": "Complete the original music skip, saved playlist slots and remembered mute-preference APIs required by the actual M1 UI.",
@@ -253,7 +270,7 @@
     {
       "id": "M1-HEADLESS-JOURNEY",
       "goal": "Implement and execute the complete legitimate M1 protocol journey with real account/world/persistence boundaries, not seeded states.",
-      "status": "BLOCKED",
+      "status": "IMPLEMENTING",
       "specs": ["prompt.md section 30.1", "research/journey-rules/**", "spec/game-networking.md", "content/m1/README.md"],
       "dependencies": ["M1-FLEET-ENGINE-CLOSURE"],
       "allowed_paths": ["tools/simulator/**", "tools/journey-tests/**", "tests/scenarios/**"],
@@ -266,7 +283,7 @@
       "source_notes": ["Real server protobuf APIs and canonical source content"],
       "parity_entries": [],
       "adaptations": [],
-      "evidence": ["089639eb integratede357222. One fresh normal account on exactbb99 v3 completed31/70 source transitions and162 source checks, including legitimate gathering/fire/cooking/mining/smelting and transport/logout/login/owned-server restart/durable-grant replay. tools/journey-tests/evidence/anvil-open-f2b1870.json preserves source/build/protocol/event identities and real outcomes.", "Current blocker is acknowledged source Smith at anvil_open emitting only a selection message, not contextual interface.smithing opening. Backend UI owner is closing the real production boundary. No forged interface event/direct dagger/stage skip, old-world repinning, unknown mutation retry or combined-account coverage. Remaining39 transitions, Lumbridge/Cook/death/postquest recovery and full M1 acceptance are unverified.", "Parent40 simulator/protocol Rust tests,12 orchestration tests, fmt and strict Clippy pass. Acknowledged-input history is reconciled only by exact last-event payload overlap in the server's chronological suffix or a no-gap read-only actual-cursor poll; wire gap and proof remain recorded."]
+      "evidence": ["089639eb integratede357222. One fresh normal account on exactbb99 v3 completed31/70 source transitions and162 source checks, including legitimate gathering/fire/cooking/mining/smelting and transport/logout/login/owned-server restart/durable-grant replay. tools/journey-tests/evidence/anvil-open-f2b1870.json preserves source/build/protocol/event identities and real outcomes.", "The v3 blocker is source Smith at anvil_open emitting only a selection message. Passed worker candidate78fcec4 on canonical4 raw6fdb60e4740372c5e299fe385875cfac32e04f22ea26ad17b53049296256c1b3 now proves the actual legacy target-bound menu/event boundary in controlled canonical and realPG tests. Same runner is explicitly resumed on a fresh normal v4 candidate to verify and continue it live. No forged event/direct dagger/stage skip, old-world repinning, unknown mutation retry or combined-account coverage. Remaining39 transitions, Lumbridge/Cook/death/postquest recovery and full M1 acceptance are unverified.", "Parent40 simulator/protocol Rust tests,12 orchestration tests, fmt and strict Clippy pass on prior v3. Acknowledged-input history is reconciled only by exact last-event payload overlap in the server's chronological suffix or a no-gap read-only actual-cursor poll; wire gap and proof remain recorded."]
     },
     {
       "id": "M1-ENGINE-REVIEW",
