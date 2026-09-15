@@ -17,6 +17,7 @@ export interface PreferenceStore { getItem(key: string): string | null; setItem(
 export class Settings {
   #value: Preferences;
   #store: PreferenceStore | null;
+  #explicit = new Set<AudioChannel>();
   constructor(store: PreferenceStore | null) {
     this.#store = store;
     this.#value = defaults();
@@ -29,6 +30,7 @@ export class Settings {
             const volume = value.audio?.[channel];
             if (typeof volume === "number" && Number.isFinite(volume) && volume >= 0 && volume <= 1) {
               this.#value.audio[channel] = volume;
+              this.#explicit.add(channel);
             }
           }
         }
@@ -45,11 +47,18 @@ export class Settings {
     if (!Number.isFinite(value)) return this.#value.audio[channel];
     const bounded = Math.round(Math.min(1, Math.max(0, value)) * 1000) / 1000;
     this.#value.audio[channel] = bounded;
-    try { this.#store?.setItem(PREFERENCE_KEY, JSON.stringify(this.#value)); } catch { /* Memory-only preferences still work. */ }
+    this.#explicit.add(channel);
+    try { this.#store?.setItem(PREFERENCE_KEY, JSON.stringify({ ...this.#value, audio: this.audioOverrides() })); } catch { /* Memory-only preferences still work. */ }
     return bounded;
   }
 
+  audioOverrides(): Readonly<Partial<Record<AudioChannel, number>>> {
+    return deepFreeze(Object.fromEntries([...this.#explicit].map((channel) => [channel, this.#value.audio[channel]])));
+  }
+
   async hash(visual: unknown): Promise<string> {
-    return sha256(new TextEncoder().encode(canonicalJson({ visual, preferences: this.read() })));
+    return sha256(new TextEncoder().encode(canonicalJson({
+      visual, preferences: { ...this.read(), audio: this.audioOverrides() },
+    })));
   }
 }

@@ -71,6 +71,7 @@ catalog: display names/source IDs, equipment slots, quest completion IDs,
          generic asset references and explicit source icon bindings
 assets[]: { id, url, sha256, bytes, contentType }
 bootstrap[]: required startup asset IDs
+aliases: explicit original source path IDs -> declared asset IDs
 rendererManifest: declared asset ID, or null when unavailable
 regions[authoritativeRegionId]:
   { sceneId, sceneAsset, requiredAssets[], routeId, workloadId, camera, controls }
@@ -152,6 +153,34 @@ while retaining its valid static outputs. It does not launch a truncated
 world, drop asset IDs, or bypass validation. The backend owner must relay a
 descriptor-budget/index-contract adjustment before this full canonical game
 root can start. A512-KiB descriptor bound would cover the current emitted map.
+
+The authorized audio factory `7ea817f5` is now integrated. New source-bundle
+outputs additionally include its exported `AUDIO_INPUTS` documents and exact
+264 FLACs plus two original reference WAVs:5,279 assets total, with no alias
+invented for the source silence. Original source path IDs resolve through
+explicit same-origin aliases. The private game membership map still contains
+only the5,010 compiler-required IDs; audio delivery does not hide or inflate
+that descriptor's source validation. No waveform, gain, delay, loop or playlist
+is changed by the build layer.
+
+Use a **new** directory when adding audio to an earlier generated bundle:
+
+```sh
+pnpm --dir web source:bundle .local/source-audio-a200ca08 <stable-world-uuid>
+# Exit2 currently records the unchanged descriptor-budget blocker; public outputs remain valid.
+CLUBSCAPE_CLIENT_MANIFEST=.local/source-audio-a200ca08/content/manifest.json \
+CLUBSCAPE_CLIENT_ASSET_ROOT=.local/source-audio-a200ca08 \
+CLUBSCAPE_CONTENT_OWNER=web \
+pnpm --dir web build
+```
+
+This build serves5,290 explicit public files. The real Chrome check instantiates
+the actual audio factory through the shell, verifies recoverable gesture
+feedback, original Scape Main0 on genuine input, actual decoded-buffer
+observations and source-clock advancement, then checks disconnect versus real
+title reset. It does not use a mock world/cue loop, replace the audio-owner
+fixture, or establish gameplay/presentation or source-policy calibration.
+Evidence appears as `titleAudio` in the normal browser result JSON.
 
 The refusal is verified against the actual server binary, not inferred from
 the renderer: `.local/evidence/browser-shell/game-root-startup.json` records
@@ -264,7 +293,7 @@ files stay in the project and owned processes/resources are cleaned.
 
 Before integrated-client completion:
 
-1. Merge the actual `web/{renderer,ui,audio}/index.ts` adapters and run the
+1. Merge the remaining actual `web/{renderer,ui}/index.ts` adapters and run the
    renderer owner's actual WASM/assets build step. Add that agreed build ABI
    to orchestration once its real output paths are known.
 2. Supply the real compiled source asset/region/camera bindings and a matching
@@ -279,8 +308,11 @@ Before integrated-client completion:
    field's ABI. Source contact/offline-clock fixes are integrated; the newly
    demonstrated game-descriptor size limit and the separately pending actor
    collision/style fixes remain visible, never bypassed with seeded state.
-4. Align renderer `observe()`/applied settings/GPU completion ABI and actual
-   audio decode observations described in `web/app/README.md`. UI context menus
+4. Align renderer `observe()`/applied settings/GPU completion ABI and the
+   actual source audio event provenance described in `web/app/README.md`.
+   The audio factory and real decoder observations are integrated; source
+   cycle/group/delay/action/cue and Cook-widget linkage are not present in
+   the current event wire and must not be guessed. UI context menus
    may expose `worldContext(pick,x,y)`. Source entity/pose/morph/dynamic-object
    state must come from the real view, not fixtures or fabricated animations.
 5. Exercise actual source UI registration and the real character/world journey

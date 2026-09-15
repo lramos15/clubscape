@@ -47,6 +47,7 @@ export interface ClientHooks {
   prepareWorld(world: WorldView): Promise<void>;
   events(world: WorldView | null, events: readonly AudioEvent[]): void;
   unlockAudio(): Promise<void>;
+  audioEnabled?(): boolean;
   volume(channel: AudioChannel, value: number): void;
   disconnected(): void;
 }
@@ -268,7 +269,6 @@ export class BrowserApp implements AppServices {
       this.#stopPoll();
       this.#worldPrepared = null;
       this.#hooks.disconnected();
-      this.#hooks.events(null, state.events);
       this.#publish({
         phase: "character", world: null, accountName: state.accountName,
         error: this.#logoutRequested ? null : {
@@ -421,14 +421,22 @@ export class BrowserApp implements AppServices {
       return;
     }
     if (this.#queued !== 0) return;
+    if (screen === "title") this.#hooks.events(null, []);
     this.#publish({ phase: screen, loading: null, error: null });
+  }
+
+  audioStatus(enabled: boolean): void {
+    this.#publish({
+      soundEnabled: enabled,
+      ...(enabled && this.#state.error?.message.startsWith("[AUDIO_GESTURE_REQUIRED]") ? { error: null } : {}),
+    });
   }
 
   async unlockAudio(): Promise<void> {
     try {
       // Called synchronously from the UI's trusted gesture before any network await.
       await this.#hooks.unlockAudio();
-      this.#publish({ soundEnabled: true });
+      this.audioStatus(this.#hooks.audioEnabled?.() === true);
     } catch (value) {
       const error = appError(value, "Browser audio could not be unlocked. Use a trusted pointer/keyboard gesture.");
       this.report(error);

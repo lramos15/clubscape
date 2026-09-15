@@ -97,6 +97,56 @@ loader. This metadata delivery is not a renderer/UI/audio adapter or a source
 world connection; its currently oversized private game descriptor fails the
 actual server's limit rather than silently dropping asset IDs.
 
+## Actual audio adapter
+
+`audio.ts` wraps the imported factory from parent `7ea817f5` (local cherry-pick
+`270b62a`); it is not a second audio engine. `SourceAudioSession` forwards
+validated world/events and delegates mute, volume, unlock, disconnect and
+disposal. The trusted UI handler reaches the factory's real `resume()` call
+before any unrelated await. `AUDIO_GESTURE_REQUIRED` remains recoverable, and
+`soundEnabled` comes from actual running/unlocked/output-enabled/connected/
+unmuted state—not factory resolution or a completed button promise.
+
+Transport loss or an observed offline body invokes only `disconnected()`.
+It does **not** call `update(null,[])`: that reset is reserved for actual
+title selection and acknowledged logout. Committed source/correlation fields
+are forwarded unchanged, including widget153/quest/completion IDs when they
+are actually supplied.
+
+The decoder, original WAV half-gain, queues, silence, sample offsets, fades,
+positional mixes and playlist policy remain exclusively in `web/audio`.
+The shell applies only explicit persisted/user channel overrides; an unset
+preference does not assert a source volume default. No default-next song or
+calibration is invented. Read `web/audio/README.md` for the complete contract
+and outstanding audio-owner calibration work.
+
+`AssetLoader` supports an explicit `aliases` table for the original
+`AUDIO_INPUTS` metadata path IDs and payload paths. Aliases resolve only to
+declared hash-pinned same-origin assets, never arbitrary repository paths.
+The source bundle includes the exact three metadata documents,264 FLACs and
+two original cue WAVs. Only metadata loads before a gesture; payloads are
+decoded by the actual factory on demand. Observations use its successful
+`decoded`/`evicted` notices; a fetch attempt is not counted as a load, and
+float PCM cache bytes are not mistaken for transfer bytes.
+
+**Current event-wire dependency:** generated `game.Event` still has only
+kind/asset/actor/event IDs plus generic outcome fields. It does not carry
+numeric audio/sequence groups, received delay/repeat, actual source cycles,
+action/cue correlations, or Cook widget/completion/reward linkage. The WASM
+bridge marks only its already-validated committed event stream and removes
+incompatible generic payload keys. Missing timing/group/correlation fields
+remain missing and produce explicit audio feedback, not a guessed zero delay,
+server-tick conversion, duplicate animation cue or synthetic completion.
+`SourceAudioSession.update` is ready to pass the exact enriched events once
+the backend/renderer/UI boundary is relayed. Unit forwarding checks are not
+a substitute for that legitimate journey integration.
+
+The real Chrome shell check now exercises source title track0 through this
+factory, a genuine trusted input, actual22050-Hz decoding/clock advancement,
+recoverable startup permission feedback, retained disconnect selection, and
+explicit title reset. It uses no fake world or game-cue loop and does not
+certify source gains/defaults/positional/fade/playlist calibration or gameplay.
+
 Renderer frame promises must resolve **after that actual render submission's
 `GPUQueue.onSubmittedWorkDone()` receipt**. RAF requests stay pipelined; no
 frame is counted from RAF, a timer, an empty submission, or a screenshot.
@@ -132,7 +182,7 @@ Settings digest is SHA-256 of canonical compact JSON:
     "declaredProfile": <build's frozen visual profile>,
     "renderer": <actual applied settings from observe()>
   },
-  "preferences": <bounded Settings.read() value>
+  "preferences": <bounded Settings.read() value with only explicit audioOverrides()>
 }
 ```
 

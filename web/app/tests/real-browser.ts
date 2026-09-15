@@ -7,6 +7,7 @@ import { fileURLToPath } from "node:url";
 import { chromium } from "playwright-core";
 import type { BrowserContext } from "playwright-core";
 import type { WasmClient } from "../client.ts";
+import { checkTitleAudio } from "./real-audio.ts";
 
 export async function browserCheck(): Promise<void> {
   const root = resolve(fileURLToPath(new URL("../../../", import.meta.url)));
@@ -199,6 +200,8 @@ export async function browserCheck(): Promise<void> {
       } finally { await app.dispose(); }
     });
     checks.push(...result.checks);
+    const titleAudio = await checkTitleAudio(page);
+    if (titleAudio !== null) checks.push("actual source audio factory + shell trusted gesture/title/disconnect composition");
     assert.equal(result.crossOriginIsolated, true);
     assert.equal(external.size, 0, "No credentials or transport may escape the same-origin public routes.");
     await page.screenshot({ path: resolve(output, "bootstrap-integration-diagnostic.png"), fullPage: false });
@@ -211,6 +214,7 @@ export async function browserCheck(): Promise<void> {
       sandbox: { namespaceAndSeccompVerified: true, gpuProcessSandboxed: system.gpu.auxAttributes?.sandboxed ?? null },
       build: result.build, capability: result.capability, requestPaths: [...requestPaths].sort(),
       sourceMetadata: result.sourceMetadata,
+      titleAudio,
       benchmarkReady: result.benchmarkReady, completedRendererFrames: result.completedRendererFrames,
       screenshot: "bootstrap-integration-diagnostic.png",
       screenshotSha256: createHash("sha256").update(await readFile(resolve(output, "bootstrap-integration-diagnostic.png"))).digest("hex"),

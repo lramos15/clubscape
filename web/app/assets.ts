@@ -15,6 +15,7 @@ export class AssetLoader implements ClientAssets {
   readonly manifest: ContentManifest;
   readonly manifestSha256: string;
   #entries: Map<string, AssetRecord>;
+  #aliases: Map<string, string>;
   #observations = new Map<string, AssetObservation>();
   #bytes = new Map<string, Promise<Uint8Array<ArrayBuffer>>>();
   #images = new Map<string, Promise<HTMLImageElement>>();
@@ -27,6 +28,7 @@ export class AssetLoader implements ClientAssets {
     this.manifest = manifest;
     this.manifestSha256 = manifestSha256;
     this.#entries = new Map(manifest.assets.map((asset) => [asset.id, asset]));
+    this.#aliases = new Map(Object.entries(manifest.aliases ?? {}));
     this.#fetch = options.fetch ?? globalThis.fetch.bind(globalThis);
     this.#changed = options.changed ?? (() => {});
   }
@@ -36,12 +38,13 @@ export class AssetLoader implements ClientAssets {
   }
 
   #entry(id: string): AssetRecord {
-    const entry = this.#entries.get(id);
+    const entry = this.#entries.get(this.#aliases.get(id) ?? id);
     if (!entry) throw new AppError(`Required source asset is unavailable: ${id}.`, { kind: "asset" });
     return entry;
   }
 
   async bytes(id: string): Promise<Uint8Array<ArrayBuffer>> {
+    id = this.#entry(id).id;
     let promise = this.#bytes.get(id);
     if (!promise) {
       promise = this.#loadBytes(id);
@@ -82,6 +85,7 @@ export class AssetLoader implements ClientAssets {
   }
 
   async json(id: string): Promise<unknown> {
+    id = this.#entry(id).id;
     let promise = this.#json.get(id);
     if (!promise) {
       promise = (async () => {
@@ -101,6 +105,7 @@ export class AssetLoader implements ClientAssets {
   }
 
   async decode<T>(id: string, decoder: (bytes: Uint8Array<ArrayBuffer>) => Promise<T>): Promise<T> {
+    id = this.#entry(id).id;
     const bytes = await this.bytes(id);
     const before = performance.now();
     const result = await decoder(bytes);
@@ -109,7 +114,7 @@ export class AssetLoader implements ClientAssets {
   }
 
   retain(ids: readonly string[]): void {
-    const keep = new Set(ids);
+    const keep = new Set(ids.map((id) => this.#entry(id).id));
     for (const id of keep) this.#entry(id);
     for (const id of this.#bytes.keys()) {
       if (!keep.has(id)) {
@@ -123,6 +128,7 @@ export class AssetLoader implements ClientAssets {
   }
 
   async image(id: string): Promise<HTMLImageElement> {
+    id = this.#entry(id).id;
     let promise = this.#images.get(id);
     if (!promise) {
       promise = (async () => {
@@ -177,7 +183,7 @@ export class AssetLoader implements ClientAssets {
   }
 
   counts(ids: readonly string[]): { fetched: number; decoded: number; total: number } {
-    const states = ids.map((id) => this.#observations.get(id));
+    const states = ids.map((id) => this.#observations.get(this.#entry(id).id));
     return {
       total: ids.length, fetched: states.filter((state) => state?.fetched).length,
       decoded: states.filter((state) => state?.decoded).length,

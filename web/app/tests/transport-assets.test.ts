@@ -100,6 +100,24 @@ test("untrusted asset paths and duplicate/foreign source manifest identities are
   assert.throws(() => parseContentManifest({
     ...manifest, catalog: { ...manifest.catalog, inventoryActions: { "item.not_in_source_catalog": ["Drop"] } },
   }));
+  assert.throws(() => parseContentManifest({ ...manifest, aliases: { "../private": "asset.fixture" } }));
+  assert.throws(() => parseContentManifest({ ...manifest, aliases: { "research/source.json": "asset.unknown" } }));
+});
+
+test("only explicitly declared source path aliases resolve to verified canonical assets", async () => {
+  const manifest = parseContentManifest({ ...await fixtureManifest(), aliases: { "research/audio-source/source-map.json": "asset.fixture" } });
+  let requests = 0;
+  const assets = new AssetLoader(manifest, "b".repeat(64), { fetch: (async (url) => {
+    assert.equal(url, "/assets/fixture.json"); requests++;
+    return new Response('{"fixture":"not gameplay"}', { headers: { "content-type": "application/json" } });
+  }) as Fetch });
+  assert.equal(assets.url("research/audio-source/source-map.json"), "/assets/fixture.json");
+  await assets.json("research/audio-source/source-map.json");
+  await assets.json("asset.fixture");
+  assert.equal(requests, 1);
+  assert.equal(assets.observe()[0]?.id, "asset.fixture");
+  assert.throws(() => assets.url("research/private.json"));
+  assets.dispose();
 });
 
 test("preferences persist only a bounded allowlist, never arbitrary input fields", async () => {

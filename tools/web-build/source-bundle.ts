@@ -9,6 +9,7 @@ import type { AssetRecord } from "../../web/app/manifest.ts";
 import { canonicalJson } from "../../web/app/identity.ts";
 import { projectArtifact, readArtifact } from "./artifact.ts";
 import type { PublicFile } from "./deliver.ts";
+import { deliverAudioAssets } from "./audio-assets.ts";
 
 const root = resolve(fileURLToPath(new URL("../../", import.meta.url)));
 const sha = (bytes: Uint8Array | string): string => createHash("sha256").update(bytes).digest("hex");
@@ -40,6 +41,10 @@ export async function prepareSourceBundle(directory: string, worldId: string): P
     input: JSON.stringify({ assetIds: projection.referencedAssets, directory: output }),
     maxBuffer: 8 * 1024 * 1024, timeout: 180_000,
   })) as { assets: AssetRecord[]; files: PublicFile[]; inventoryActions: Record<string, string[]>; bytes: number };
+  const audio = await deliverAudioAssets(output);
+  source.assets.push(...audio.assets);
+  source.files.push(...audio.files);
+  source.bytes += audio.bytes;
   const actions: Record<string, string[]> = {};
   for (const [id, definition] of Object.entries(projection.catalog.items)) {
     if (definition.asset !== null && source.inventoryActions[definition.asset] !== undefined) {
@@ -49,7 +54,8 @@ export async function prepareSourceBundle(directory: string, worldId: string): P
   const content = parseContentManifest({
     schemaVersion: 1, sourcePackSha256: SOURCE_PACK_SHA256, contentRevision: manifest.revision,
     artifactSha256: sha(bytes), catalog: { ...projection.catalog, inventoryActions: actions },
-    contentValidation: projection.contentValidation, assets: source.assets, bootstrap: [], rendererManifest: null,
+    contentValidation: projection.contentValidation, assets: source.assets, aliases: audio.aliases,
+    bootstrap: audio.metadata, rendererManifest: null,
     regions: Object.fromEntries(Object.entries(projection.regions).map(([id, region]) => {
       if (region.sceneAsset === null) throw new Error(`Canonical region ${id} has no source scene asset.`);
       return [id, { sceneId: region.sceneAsset, sceneAsset: region.sceneAsset, requiredAssets: [region.sceneAsset],
@@ -57,7 +63,7 @@ export async function prepareSourceBundle(directory: string, worldId: string): P
     })),
   });
   const contentBytes = canonicalJson(content) + "\n";
-  await mkdir(resolve(output, "content"));
+  await mkdir(resolve(output, "content"), { recursive: true });
   await writeFile(resolve(output, "content/manifest.json"), contentBytes);
   await writeFile(resolve(output, "world.csc"), bytes);
   source.files.push({
@@ -66,10 +72,15 @@ export async function prepareSourceBundle(directory: string, worldId: string): P
   const publicManifest = JSON.stringify({ schema_version: 1, files: source.files }) + "\n";
   if (Buffer.byteLength(publicManifest) > 2 * 1024 * 1024) throw new Error("Public source delivery manifest exceeds its byte budget.");
   await writeFile(resolve(output, "clubscape-game-assets.json"), publicManifest);
+  const urls = new Map(source.assets.map((asset) => [asset.id, asset.url]));
   const gameDescriptor = JSON.stringify({
     schema_version: 1, world_id: worldId, artifact: "world.csc", sha256: sha(bytes),
     content_manifest_path: "/content/manifest.json",
-    assets: Object.fromEntries(source.assets.map((asset) => [asset.id, asset.url])),
+    assets: Object.fromEntries(projection.referencedAssets.map((id) => {
+      const url = urls.get(id);
+      if (!url) throw new Error(`Compiled source asset ${id} is missing.`);
+      return [id, url];
+    })),
     // Selection only: the server computes the proofs and validates every restored/mutated world.
     readiness_profile: { id: "ordinary_normal_f2p", excluded_items: ["item.ensouled_goblin_head", "item.milk.bottomless_bucket"] },
   }) + "\n";

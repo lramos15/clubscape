@@ -4,6 +4,7 @@ import type { BuildConfig } from "./build.ts";
 import type { AssetObservation } from "./assets.ts";
 import { deepFreeze, invariant } from "./errors.ts";
 import { isHash } from "./identity.ts";
+import type { AudioSnapshot } from "../audio/index.ts";
 
 export interface RendererObservation {
   ready: boolean;
@@ -33,6 +34,7 @@ export class Benchmark implements ClubscapeBenchmarkV1 {
   #worldReady = false;
   #timestampFeature = false;
   #startupMs: number | null = null;
+  #audio: unknown = null;
   #now: () => number;
 
   constructor(build: BuildConfig, now: () => number = () => performance.now()) {
@@ -54,6 +56,15 @@ export class Benchmark implements ClubscapeBenchmarkV1 {
     this.#settingsSha = hash;
   }
   startup(milliseconds: number): void { this.#startupMs = milliseconds; }
+  audio(state: AudioSnapshot): void {
+    this.#audio = {
+      contextState: state.contextState, sampleRate: state.sampleRate, pendingGesture: state.pendingGesture,
+      unlocked: state.unlocked, outputEnabled: state.outputEnabled, muted: state.muted,
+      connected: state.connected, disposed: state.disposed, currentTime: state.currentTime,
+      volumes: { ...state.volumes }, cache: { ...state.cache }, background: structuredClone(state.background),
+      playingVoices: state.voices.length, policyLimits: [...state.policyLimits],
+    };
+  }
   viewport(width: number, height: number, deviceScaleFactor: number): void {
     this.#viewport = { width, height, deviceScaleFactor };
   }
@@ -146,6 +157,7 @@ export class Benchmark implements ClubscapeBenchmarkV1 {
           samples: this.#frames.filter((frame) => frame.gpuDurationMs !== undefined).length,
         },
         assetFetches: this.#assets.map((value) => ({ ...value })),
+        audio: this.#audio,
       },
     } satisfies RenderSnapshot & { diagnostics: unknown });
   }

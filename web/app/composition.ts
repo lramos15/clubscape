@@ -1,4 +1,4 @@
-import type { AudioHandle, RendererHandle, UiHandle, WorldView } from "../shared/contracts.ts";
+import type { RendererHandle, UiHandle, WorldView } from "../shared/contracts.ts";
 import { SOURCE_PACK_SHA256 } from "../shared/contracts.ts";
 import { AssetLoader } from "./assets.ts";
 import type { BuildConfig } from "./build.ts";
@@ -16,6 +16,7 @@ import { parseContentManifest } from "./manifest.ts";
 import { Settings } from "./settings.ts";
 import { RpcTransport } from "./transport.ts";
 import { presenceOf } from "./public-state.ts";
+import { SourceAudioSession, audioProblem, playbackEnabled, sourceAudioAdapter } from "./audio.ts";
 
 export interface ObservedRenderer extends RendererHandle {
   /** Observation only; all values must come from the real decoder/render path. */
@@ -34,7 +35,7 @@ export async function mountApplication(options: {
 }): Promise<ApplicationHandle> {
   const { build, components, bridge, benchmark, worldCanvas, uiCanvas, status } = options;
   let ui: UiHandle | null = null;
-  let audio: AudioHandle | null = null;
+  let audio: SourceAudioSession | null = null;
   let renderer: ObservedRenderer | null = null;
   let input: InputController | null = null;
   let assets: AssetLoader | null = null;
@@ -56,6 +57,10 @@ export async function mountApplication(options: {
   let storage: Storage | null;
   try { storage = localStorage; } catch { storage = null; }
   const settings = new Settings(storage);
+  const observeAssets = (): void => {
+    const observed = new Map([...(assets?.observe() ?? []), ...(audio?.observations() ?? [])].map((asset) => [asset.id, asset]));
+    benchmark.assets([...observed.values()]);
+  };
 
   async function settingsHash(): Promise<void> {
     const generation = ++hashGeneration;
@@ -92,13 +97,13 @@ export async function mountApplication(options: {
       sceneLoaded = true;
     },
     events(world, events) {
-      try { audio?.update(world, events); }
-      catch { app.report(new AppError("The source audio component could not apply the authoritative event batch.", { kind: "audio" })); }
+      audio?.update(world, events);
     },
     async unlockAudio() {
       if (!audio) throw new AppError("The source audio component is not ready.", { kind: "audio" });
       await audio.unlock();
     },
+    audioEnabled() { return audio?.enabled() === true; },
     volume(channel, value) {
       const bounded = settings.volume(channel, value);
       audio?.volume(channel, bounded);
@@ -136,7 +141,7 @@ export async function mountApplication(options: {
         if (!assets) return;
         const counts = assets.counts(required);
         app.loading(counts.fetched, counts.total, `Source assets: ${counts.fetched}/${counts.total} fetched, ${counts.decoded} decoded`);
-        benchmark.assets(assets.observe());
+        observeAssets();
       },
     });
     required = [...assets.manifest.bootstrap];
@@ -194,8 +199,17 @@ export async function mountApplication(options: {
       assetBaseUrl: assets.baseUrl, manifestUrl: assets.url(assets.manifest.rendererManifest),
       sourcePackSha256: SOURCE_PACK_SHA256, width: worldCanvas.width, height: worldCanvas.height,
     });
-    audio = await components.createAudio(assets, (error) => app.report(appError(error, "A source audio asset or playback operation failed.")));
-    for (const channel of ["music", "effects", "area"] as const) audio.volume(channel, settings.read().audio[channel]);
+    audio = await SourceAudioSession.create(assets, assets.manifest.assets,
+      (error) => app.report(audioProblem(error)),
+      (state) => {
+        app.audioStatus(playbackEnabled(state));
+        benchmark.audio(state);
+        observeAssets();
+      }, { ...sourceAudioAdapter, create: components.createAudio });
+    const overrides = settings.audioOverrides();
+    for (const channel of ["music", "effects", "area"] as const) {
+      if (overrides[channel] !== undefined) audio.volume(channel, overrides[channel]);
+    }
     audio.update(null, []);
     const render = (now: number): void => {
       if (disposed) return;

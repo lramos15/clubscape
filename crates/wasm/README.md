@@ -81,6 +81,11 @@ errors intact. It does not implement another guard/price/readiness engine.
 * Animation strings and source audio asset IDs are passed through. An absent
   source animation/cycle/portrait remains absent; there is no pose clock or
   inferred level-up/quest-completion reward.
+  Audio payloads mark only the client-core-validated committed stream.
+  The real audio adapter rejects missing group/delay/correlation/widget data
+  explicitly; this wire does not yet carry those fields. No 600ms tick is
+  relabeled as an audio source cycle and no incompatible generic XP/text/damage
+  keys are sent to the factory.
 
 ## Validated source projection
 

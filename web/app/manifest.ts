@@ -65,6 +65,7 @@ export interface ContentManifest {
   rendererManifest: string | null;
   regions: Record<string, RegionPresentation>;
   contentValidation?: ContentValidation;
+  aliases?: Record<string, string>;
 }
 
 export function parseContentManifest(value: unknown): ContentManifest {
@@ -116,6 +117,15 @@ export function parseContentManifest(value: unknown): ContentManifest {
     bytes += asset.bytes;
   }
   invariant(bytes <= 512 * 1024 * 1024, "The public content pack exceeds its deployment byte budget.");
+  if (manifest.aliases !== undefined) {
+    invariant(manifest.aliases && typeof manifest.aliases === "object" && !Array.isArray(manifest.aliases)
+      && Object.keys(manifest.aliases).length <= 20_000, "Invalid source path alias table.");
+    for (const [path, id] of Object.entries(manifest.aliases)) {
+      publicPath(`/${path}`);
+      invariant(!path.startsWith("/") && ids.has(id) && !ids.has(path),
+        "Source path aliases must resolve only to declared same-origin assets.");
+    }
+  }
   for (const [id, asset] of Object.entries(manifest.catalog.icons ?? {})) {
     invariant((Object.hasOwn(manifest.catalog.items, id) || Object.hasOwn(manifest.catalog.skills, id))
       && manifest.assets.some((entry) => entry.id === asset && entry.contentType.startsWith("image/")),

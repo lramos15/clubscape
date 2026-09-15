@@ -253,7 +253,8 @@ pub(crate) fn audio(event: &game::Event) -> Option<Value> {
         "id":event.event_id,"kind":kind,"sourceId":null,"assetId":asset.filter(|id| !id.is_empty()),
         "actorId":(!event.actor_id.is_empty()).then_some(&event.actor_id),
         "tile":null,"sourceCycle":null,
-        "payload":{"target":event.target,"text":event.text,"skill":event.skill,
-            "xpTenths":event.xp_tenths.to_string(),"damage":event.damage},
+        // These events came from client-core's validated committed event stream.
+        // Source-cycle/group/cue metadata absent from this wire must stay absent.
+        "payload":{"committed":true},
     }))
 }

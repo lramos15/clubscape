@@ -8,6 +8,8 @@ export { checkCapability } from "./capability.ts";
 export { AssetLoader } from "./assets.ts";
 export { parseContentManifest } from "./manifest.ts";
 export { loadBuild, verifiedJson } from "./build.ts";
+export { SourceAudioSession, audioProblem, playbackEnabled } from "./audio.ts";
+export { AUDIO_INPUTS } from "../audio/index.ts";
 export type { PublicWorld, PublicRecovery, QuoteRequest, QuoteView, ShopPurchaseIntent } from "./public-state.ts";
 
 /** Programmatic bridge entry; not a UI, fixture world, or account bypass. */

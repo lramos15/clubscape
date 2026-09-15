@@ -26,7 +26,7 @@ function path(key: string): string {
 }
 const projection = await projectArtifact(path("--artifact"));
 const bindings = JSON.parse(await readFile(path("--bindings"), "utf8")) as Pick<ContentManifest,
-  "sourcePackSha256" | "assets" | "bootstrap" | "rendererManifest"> & {
+  "sourcePackSha256" | "assets" | "bootstrap" | "rendererManifest" | "aliases"> & {
     regions: Record<string, RegionPresentation>; icons?: Record<string, string>;
   };
 if (bindings.sourcePackSha256 !== SOURCE_PACK_SHA256) throw new Error("Presentation bindings do not match the approved source pack.");
@@ -44,6 +44,7 @@ const manifest = parseContentManifest({
   artifactSha256: projection.artifactSha256,
   catalog: { ...projection.catalog, icons: bindings.icons ?? projection.catalog.icons ?? {} },
   contentValidation: projection.contentValidation,
+  ...(bindings.aliases === undefined ? {} : { aliases: bindings.aliases }),
   assets: bindings.assets, bootstrap: bindings.bootstrap, rendererManifest: bindings.rendererManifest, regions: bindings.regions,
 });
 for (const asset of manifest.assets) await publicFile(path("--asset-root"), asset.url.slice(1), asset.url, asset);
