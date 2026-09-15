@@ -486,6 +486,11 @@ fn scene_models_report_alpha_254_flat_faces() {
 
 // ---------------------------------------------------------------- core with entities
 
+/// Original tag layer bits (16..18): 0 player, 1 npc; scenery is 2, item piles 3.
+fn is_actor_tag(hash: i64) -> bool {
+    (hash >> 16) & 7 <= 1
+}
+
 #[test]
 fn core_places_world_view_entities_in_scene() {
     use clubscape_renderer::core::{Camera, RendererCore};
@@ -584,7 +589,7 @@ fn core_places_world_view_entities_in_scene() {
         for x in 0..1920 {
             if let Some(clubscape_renderer::scene::draw::PickTarget::Object { hash, .. }) =
                 core.pick(x, y)
-                && (!(0..0x1000_0000_0000).contains(&hash))
+                && is_actor_tag(hash)
             {
                 let b = boxes.entry(hash).or_insert((x, y, x, y));
                 b.0 = b.0.min(x);
@@ -605,7 +610,7 @@ fn core_places_world_view_entities_in_scene() {
             }
             if let clubscape_renderer::scene::draw::PickTarget::Object { hash, .. } =
                 picks[tri.pick as usize - 1]
-                && (!(0..0x1000_0000_0000).contains(&hash))
+                && is_actor_tag(hash)
             {
                 let e = per
                     .entry(hash)
@@ -631,7 +636,7 @@ fn core_places_world_view_entities_in_scene() {
         for x in (600..1300).step_by(4) {
             if let Some(clubscape_renderer::scene::draw::PickTarget::Object { hash, .. }) =
                 core.pick(x, y)
-                && (!(0..0x1000_0000_0000).contains(&hash))
+                && is_actor_tag(hash)
             {
                 found_entity = true;
             }

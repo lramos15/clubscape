@@ -79,8 +79,13 @@ plus:
   frame's GPU completion; every record still describes its own submission. Issue one `frame()`
   per animation frame and do not await it before scheduling the next tick. Uncaptured WebGPU
   errors, pipeline validation failures and device loss reject the promise.
+* Two original projections exist at 1080 px: the frozen viewport-only scene fixtures use zoom
+  662 (`sourceZoomForViewportHeight`), the composed full-HUD frames of the dynamic-layer
+  references use the native full-HUD zoom 410. The shell must pass the zoom of the composition it
+  is reproducing; the renderer applies exactly the zoom it is given.
 * `pick(x, y)` replays the last frame's exact fill coverage and returns the topmost tile or
-  entity (`id` is the scene object hash or the entity id hash). It never mutates state.
+  entity; scenery carries `scenery.objectId`/`type` (placement type), item piles resolve to
+  their tile (the WorldView lists the items there). It never mutates state.
 * `resize(w, h)` resizes the canvas, surface and projection; call `camera()` again with the new
   zoom.
 * Region scenes: `loadScene("region.osrs.12850")` (content region id) or a bare map square id

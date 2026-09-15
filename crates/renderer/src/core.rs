@@ -574,6 +574,8 @@ pub struct RendererCore {
     dynamic_objects: HashMap<(i32, i32, i32), DynamicObjectModel>,
     /// Ground item models by item id: (min quantity, model) ascending.
     ground_item_models: HashMap<i32, Vec<(i64, Model)>>,
+    /// `op.ef` shop value and `op.ek == 1` stackable flag per item: the `lj.es` pile inputs.
+    ground_item_defs: HashMap<i32, (i64, bool)>,
     /// Live layers from the last WorldView.
     ground_items: Vec<GroundItemState>,
     temporary_objects: Vec<TemporaryObjectState>,
@@ -592,6 +594,9 @@ pub struct RendererCore {
     top_plane_override: Option<i32>,
     /// Instanced map flag (`cy.as`): the stock rule then always draws up to the player's plane.
     instanced_map: bool,
+    /// The original "hide roofs" preference (`cy.as`, read by `cz.ch` first): the top drawn
+    /// plane is then always the player's plane.
+    hide_roofs: bool,
     /// Clock origin of the interface preview animation (first preview frame).
     preview_started_ms: Option<f64>,
     preview_tris: Vec<Tri>,
@@ -651,6 +656,7 @@ impl RendererCore {
             player_body: None,
             dynamic_objects: HashMap::new(),
             ground_item_models: HashMap::new(),
+            ground_item_defs: HashMap::new(),
             ground_items: Vec::new(),
             temporary_objects: Vec::new(),
             door_states: Vec::new(),
@@ -663,6 +669,7 @@ impl RendererCore {
             player_gear: Vec::new(),
             top_plane_override: None,
             instanced_map: false,
+            hide_roofs: false,
             preview_started_ms: None,
             preview_tris: Vec::new(),
             player_activity: String::new(),
@@ -828,6 +835,12 @@ impl RendererCore {
         entry.push((min_quantity, model));
         entry.sort_by_key(|(q, _)| *q);
         Ok(())
+    }
+
+    /// Registers the item definition fields the original pile selection reads (`lj.es`): the
+    /// shop value `op.ef` and whether the item stacks (`op.ek == 1`).
+    pub fn register_ground_item_definition(&mut self, item_id: i32, price: i64, stackable: bool) {
+        self.ground_item_defs.insert(item_id, (price, stackable));
     }
 
     fn ground_item_model(&self, item_id: i32, quantity: i64) -> Option<&Model> {
@@ -1187,6 +1200,73 @@ impl RendererCore {
         self.install_scene(&id, scene, models)?;
         self.scene_started_ms = now_ms;
         Ok(missing)
+    }
+
+    /// Sets the start frame of every animated scenery instance of source object `object_id`
+    /// placed on world tile (`x`, `y`, `plane`) — the original picks this phase with
+    /// `Math.random()` per placement at scene load. Returns how many instances were set.
+    /// Developer/test control for matching a specific original capture; not gameplay state.
+    pub fn set_scenery_phase(
+        &mut self,
+        plane: i32,
+        x: i32,
+        y: i32,
+        object_id: i32,
+        start_frame: i32,
+    ) -> usize {
+        let Some(scene) = self.scene.as_mut() else {
+            return 0;
+        };
+        let ex = x - scene.base_x + scene.offset;
+        let ey = y - scene.base_y + scene.offset;
+        if ex < 0 || ey < 0 || ex >= scene.width || ey >= scene.height {
+            return 0;
+        }
+        let index = scene.tile_index(plane, ex, ey);
+        let mut refs: Vec<i32> = Vec::new();
+        let matches = |hash: i64| crate::scene::tag_object_id(hash) == object_id;
+        if let Some(w) = scene.walls.get(&index).filter(|w| matches(w.hash)) {
+            refs.extend([w.model_a, w.model_b]);
+        }
+        if let Some(d) = scene
+            .wall_decorations
+            .get(&index)
+            .filter(|d| matches(d.hash))
+        {
+            refs.extend([d.model_a, d.model_b]);
+        }
+        if let Some(f) = scene
+            .floor_decorations
+            .get(&index)
+            .filter(|f| matches(f.hash))
+        {
+            refs.push(f.model);
+        }
+        let count = scene.object_count.get(index).copied().unwrap_or(0).max(0) as usize;
+        for slot in 0..count.min(5) {
+            if let Some(&id) = scene.slots.get(&(index * 5 + slot)) {
+                let object = &scene.game_objects[id];
+                if matches(object.hash) {
+                    refs.push(object.model);
+                }
+            }
+        }
+        let mut set = 0;
+        for reference in refs {
+            if reference <= -2
+                && let Some(instance) = scene
+                    .animated_instances
+                    .get_mut((-(reference) - 2) as usize)
+            {
+                instance.start_frame = start_frame;
+                instance.start_cycle = 0;
+                set += 1;
+            }
+        }
+        if set > 0 {
+            self.minimap = None;
+        }
+        set
     }
 
     /// Client cycles elapsed on the scene animation clock.
@@ -1714,6 +1794,16 @@ impl RendererCore {
 
     /// Marks the loaded map as instanced (`cy.as`): the stock top-plane rule then always draws up
     /// to the player's plane.
+    /// The original "hide roofs" client preference (`ab.kn.bu`): `cz.ch` then selects the
+    /// player's plane before any camera-line evaluation. Off by default (stock preference).
+    pub fn set_hide_roofs(&mut self, hidden: bool) {
+        self.hide_roofs = hidden;
+    }
+
+    pub fn hide_roofs(&self) -> bool {
+        self.hide_roofs
+    }
+
     pub fn set_instanced_map(&mut self, instanced: bool) {
         self.instanced_map = instanced;
     }
@@ -1723,12 +1813,19 @@ impl RendererCore {
     /// (bit 4) on the camera tile or any tile of the Bresenham line from the camera tile to the
     /// focal (player) tile, in which case the player's plane. Outside the main area, or in an
     /// instanced map, the player's plane.
+    /// The stock normal-camera top-plane selection (`cz.ch`) for the current player tile and
+    /// camera, exposed for tests and diagnostics; frames apply it when no override is set.
+    pub fn stock_top_plane_public(&self, base_x: i32, base_y: i32) -> i32 {
+        self.stock_top_plane(base_x, base_y)
+    }
+
     fn stock_top_plane(&self, base_x: i32, base_y: i32) -> i32 {
         let Some(scene) = self.scene.as_ref() else {
             return self.plane;
         };
         let plane = self.plane;
-        if self.instanced_map {
+        // cz.ch: the hide-roofs preference wins first, then instanced maps (`dz.ag`).
+        if self.hide_roofs || self.instanced_map {
             return plane;
         }
         let mut top = 3;
@@ -1928,8 +2025,8 @@ impl RendererCore {
         let mut drawn = 0usize;
         // Resolve every actor's model first (the skeletal path may need &mut self for caches).
         let entities = self.entities.clone();
-        let mut resolved: Vec<(EntityState, Model)> = Vec::with_capacity(entities.len());
-        for entity in &entities {
+        let mut resolved: Vec<(usize, EntityState, Model)> = Vec::with_capacity(entities.len());
+        for (entity_index, entity) in entities.iter().enumerate() {
             let elapsed = now_ms - entity.sequence_started_ms;
             let model = if entity.is_player && self.player_body.is_some() {
                 let sequence_id = if self.sequences.contains_key(&entity.sequence) {
@@ -2021,7 +2118,7 @@ impl RendererCore {
                 continue;
             };
             let Some(model) = model else { continue };
-            resolved.push((entity.clone(), model));
+            resolved.push((entity_index, entity.clone(), model));
         }
         // Live layers: door states, temporary objects (fires) and ground items.
         let mut door_walls: Vec<(i32, i32, i32, crate::scene::Wall)> = Vec::new();
@@ -2159,9 +2256,63 @@ impl RendererCore {
                 let x = lx * 128 + 64;
                 let z = ly * 128 + 64;
                 let height = tile_height(scene, plane, x, z);
-                // The original shows the three most recently dropped stacks (list head first).
+                // lj.es over the tile's deque, replayed per arrival: `bu.dg` appends each drop
+                // (nn.ab, tail), then the pile is re-evaluated — the greatest value (shop price,
+                // times quantity + 1 when stackable; the first maximum in deque order wins) is
+                // moved to the head (nn.og) — so the final deque order depends on that history.
+                // The WorldView lists a tile's items oldest first, which is the arrival order;
+                // removals (pick-ups) would also re-evaluate without reordering. The three drawn
+                // renderables are then: top (head after the last evaluation) plus the first two
+                // other distinct ids in deque order, drawn second (`ag`), third (`as`), top (`ab`).
+                let value = |item: &GroundItemState| -> i64 {
+                    let Some(&(price, stackable)) = self.ground_item_defs.get(&item.item) else {
+                        return 0;
+                    };
+                    if stackable {
+                        price.wrapping_mul(if item.quantity < i64::from(i32::MAX) {
+                            item.quantity + 1
+                        } else {
+                            item.quantity
+                        })
+                    } else {
+                        price
+                    }
+                };
+                for item in stack.iter() {
+                    if !self.ground_item_defs.contains_key(&item.item) {
+                        skipped.push(format!(
+                            "{}: ground item {} has no definition (value/stackable) loaded; pile order uses value 0",
+                            item.id, item.item
+                        ));
+                    }
+                }
+                let mut deque: Vec<&GroundItemState> = Vec::with_capacity(stack.len());
+                for item in stack.iter() {
+                    deque.push(item);
+                    let mut best_value = -99_999_999i64;
+                    let mut best = 0usize;
+                    for (i, entry) in deque.iter().enumerate() {
+                        let v = value(entry);
+                        if v > best_value {
+                            best_value = v;
+                            best = i;
+                        }
+                    }
+                    let top = deque.remove(best);
+                    deque.insert(0, top);
+                }
+                let Some(&top) = deque.first() else { continue };
+                let mut second: Option<&GroundItemState> = None;
+                let mut third: Option<&GroundItemState> = None;
+                for item in deque.iter().copied().filter(|i| i.item != top.item) {
+                    match second {
+                        None => second = Some(item),
+                        Some(s) if item.item != s.item && third.is_none() => third = Some(item),
+                        _ => {}
+                    }
+                }
                 let mut models = Vec::new();
-                for item in stack.iter().take(3) {
+                for item in [second, third, Some(top)].into_iter().flatten() {
                     match self.ground_item_model(item.item, item.quantity) {
                         Some(model) => {
                             models.push(temp_models.len());
@@ -2176,11 +2327,11 @@ impl RendererCore {
                 if models.is_empty() {
                     continue;
                 }
+                // Original item-pile tag (rf.ac): x | y << 7 | plane << 14 | layer 3 << 16, id 0.
                 let hash = i64::from(lx & 127)
                     | (i64::from(ly & 127) << 7)
-                    | (3i64 << 14)
-                    | (i64::from(plane) << 16)
-                    | (i64::from(stack[0].item) << 20);
+                    | (i64::from(plane & 3) << 14)
+                    | (3i64 << 16);
                 item_layers.push((
                     plane,
                     lx,
@@ -2235,7 +2386,7 @@ impl RendererCore {
                 ));
             }
         }
-        for (entity, model) in resolved {
+        for (entity_index, entity, model) in resolved {
             let local_x = entity.tile.x - base_x;
             let local_y = entity.tile.y - base_y;
             if local_x < 0 || local_y < 0 || local_x >= scene.max_x || local_y >= scene.max_y {
@@ -2262,7 +2413,7 @@ impl RendererCore {
                     height,
                     z,
                     orientation: entity.orientation,
-                    hash: entity_hash(&entity.id, entity.is_player),
+                    hash: actor_tag(plane, local_x, local_y, entity.is_player, entity_index),
                     model: model_index,
                 },
             );
@@ -2518,10 +2669,14 @@ impl RendererCore {
                 plane,
             },
             PickTarget::Object { hash, plane, x, y } => {
-                if let Some(entity) = self
-                    .entities
-                    .iter()
-                    .find(|e| entity_hash(&e.id, e.is_player) == hash)
+                // Actors carry the original tag layout with layer 0 (player) / 1 (npc) and the
+                // actor's index in the WorldView actor list as id.
+                let layer = ((hash >> 16) & 7) as i32;
+                if layer <= 1
+                    && let Some(entity) = self
+                        .entities
+                        .get(((hash >> 20) & 0xFFFF_FFFF) as usize)
+                        .filter(|e| e.is_player == (layer == 0))
                 {
                     return Some(WorldPick::Actor {
                         id: entity.id.clone(),
@@ -2530,9 +2685,20 @@ impl RendererCore {
                         plane: entity.tile.plane,
                     });
                 }
-                // Original object tag layout: x | y << 7 | type << 14 | plane << 16 | id << 20.
+                // Original tag layout: x | y << 7 | plane << 14 | layer << 16 | id << 20 (layer
+                // 0 player, 1 npc, 2 scenery object, 3 item pile with id 0, 5 graphics).
+                if layer == 3 {
+                    // A ground-item pile: the WorldView lists the items on that tile.
+                    return Some(WorldPick::Tile {
+                        x: x + base_x,
+                        y: y + base_y,
+                        plane,
+                    });
+                }
                 let object_id = ((hash >> 20) & 0xFFFF_FFFF) as i32;
-                let kind = ((hash >> 14) & 3) as i32;
+                // Placement type (`config & 31`): walls 0-3, diagonal 9, game objects 10/11,
+                // floor decoration 22; -1 when the placement kind does not carry its config.
+                let mut kind = -1;
                 let (mut tx, mut ty, mut span) = (x + base_x, y + base_y, (1, 1));
                 if let Some(object) = scene.game_objects.iter().find(|o| o.hash == hash) {
                     tx = object.min_x + base_x;
@@ -2541,6 +2707,22 @@ impl RendererCore {
                         object.max_x - object.min_x + 1,
                         object.max_y - object.min_y + 1,
                     );
+                    kind = object.config & 31;
+                } else {
+                    let index = scene.tile_index(plane, x + scene.offset, y + scene.offset);
+                    if let Some(wall) = scene.walls.get(&index).filter(|w| w.hash == hash) {
+                        kind = if wall.config >= 0 {
+                            wall.config & 31
+                        } else {
+                            -1
+                        };
+                    } else if scene
+                        .floor_decorations
+                        .get(&index)
+                        .is_some_and(|d| d.hash == hash)
+                    {
+                        kind = 22;
+                    }
                 }
                 let entity = self
                     .scenery_entities
@@ -2672,16 +2854,14 @@ fn tile_height(scene: &SceneData, plane: i32, x: i32, z: i32) -> i32 {
     (a * (128 - fz) + b * fz) >> 7
 }
 
-fn entity_hash(id: &str, is_player: bool) -> i64 {
-    let mut h: i64 = if is_player {
-        0x1000_0000_0000
-    } else {
-        0x2000_0000_0000
-    };
-    for b in id.bytes() {
-        h = h.wrapping_mul(31).wrapping_add(i64::from(b));
-    }
-    h
+/// Original actor tag (`rf.ac`): x | y << 7 | plane << 14 | layer << 16 | index << 20 with layer 0
+/// for the player and 1 for NPCs; the id is the actor's index in the WorldView actor list.
+fn actor_tag(plane: i32, x: i32, y: i32, is_player: bool, index: usize) -> i64 {
+    i64::from(x & 127)
+        | (i64::from(y & 127) << 7)
+        | (i64::from(plane & 3) << 14)
+        | (i64::from(!is_player) << 16)
+        | ((index as i64 & 0xFFFF_FFFF) << 20)
 }
 
 #[cfg(not(target_arch = "wasm32"))]

@@ -52,7 +52,7 @@ export interface RenderAssetManifest {
     variants: Array<{ type: number; orientation: number; model: string; frames?: string[]; frame_lengths_client_cycles?: number[] }>;
   }>;
   /** Ground-item stack models per quantity threshold. */
-  ground_items?: Array<{ item_id: number; name: string; variants: Array<{ min_quantity: number; model: string }> }>;
+  ground_items?: Array<{ item_id: number; name: string; price?: number; stackable?: boolean; variants: Array<{ min_quantity: number; model: string }> }>;
   /** Original interface model components (`export.py --profile widgets`), e.g. 679:73. */
   model_widgets?: Array<{
     id: number; group: number; child: number; parent: number; content_type: number; original_x: number; original_y: number;
@@ -267,8 +267,13 @@ export interface ClubscapeRendererHandle extends RendererHandle {
    * restore the stock rule, so shells only call this to deviate deliberately.
    */
   setTopPlane(limit: number | null): void;
-  /** Instanced map flag (`cy.as`): the stock top-plane rule then draws up to the player's plane. */
+  /** Instanced map flag (`dz.ag`): the stock top-plane rule then draws up to the player's plane. */
   setInstancedMap(instanced: boolean): void;
+  /**
+   * The original "hide roofs" client preference (`cy.as`, read first by the stock `cz.ch`
+   * selector): the top drawn plane is the player's plane. Off by default; the UI's settings own it.
+   */
+  setHideRoofs(hidden: boolean): void;
   /** Original roof-removal mode bits (1 player, 2 hovered, 4 destination, 8 camera line); 0 = stock. */
   setRoofMode(mode: number): void;
   /** Hovered/destination tiles consulted by roof modes 2 and 4. */
@@ -386,6 +391,11 @@ export const createRenderer: (canvas: HTMLCanvasElement, config: RendererConfig,
       }
     }
     for (const item of manifest.ground_items ?? []) {
+      if (typeof item.price === "number" && typeof item.stackable === "boolean") {
+        renderer.register_ground_item_definition(item.item_id, item.price, item.stackable);
+      } else {
+        options.onDiagnostic?.(`ground item ${item.item_id}: manifest lacks price/stackable (pile order will use value 0)`);
+      }
       for (const variant of item.variants) {
         renderer.load_ground_item(item.item_id, variant.min_quantity, await fetchAsset(variant.model));
       }
@@ -634,6 +644,10 @@ export const createRenderer: (canvas: HTMLCanvasElement, config: RendererConfig,
       setInstancedMap(instanced) {
         requireLive();
         renderer.set_instanced_map(Boolean(instanced));
+      },
+      setHideRoofs(hidden) {
+        requireLive();
+        renderer.set_hide_roofs(hidden);
       },
       setRoofMode(mode) {
         requireLive();

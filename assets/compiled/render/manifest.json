@@ -6416,6 +6416,8 @@
   {
    "item_id": 288,
    "name": "Goblin mail",
+   "price": 40,
+   "stackable": false,
    "variants": [
     {
      "min_quantity": 1,
@@ -6426,6 +6428,8 @@
   {
    "item_id": 289,
    "name": "Goblin mail",
+   "price": 40,
+   "stackable": true,
    "variants": [
     {
      "min_quantity": 1,
@@ -6436,6 +6440,8 @@
   {
    "item_id": 303,
    "name": "Small fishing net",
+   "price": 5,
+   "stackable": false,
    "variants": [
     {
      "min_quantity": 1,
@@ -6446,6 +6452,8 @@
   {
    "item_id": 304,
    "name": "Small fishing net",
+   "price": 5,
+   "stackable": true,
    "variants": [
     {
      "min_quantity": 1,
@@ -6456,6 +6464,8 @@
   {
    "item_id": 315,
    "name": "Shrimps",
+   "price": 5,
+   "stackable": false,
    "variants": [
     {
      "min_quantity": 1,
@@ -6466,6 +6476,8 @@
   {
    "item_id": 316,
    "name": "Shrimps",
+   "price": 5,
+   "stackable": true,
    "variants": [
     {
      "min_quantity": 1,
@@ -6476,6 +6488,8 @@
   {
    "item_id": 317,
    "name": "Raw shrimps",
+   "price": 5,
+   "stackable": false,
    "variants": [
     {
      "min_quantity": 1,
@@ -6486,6 +6500,8 @@
   {
    "item_id": 318,
    "name": "Raw shrimps",
+   "price": 5,
+   "stackable": true,
    "variants": [
     {
      "min_quantity": 1,
@@ -6496,6 +6512,8 @@
   {
    "item_id": 436,
    "name": "Copper ore",
+   "price": 3,
+   "stackable": false,
    "variants": [
     {
      "min_quantity": 1,
@@ -6506,6 +6524,8 @@
   {
    "item_id": 437,
    "name": "Copper ore",
+   "price": 3,
+   "stackable": true,
    "variants": [
     {
      "min_quantity": 1,
@@ -6516,6 +6536,8 @@
   {
    "item_id": 438,
    "name": "Tin ore",
+   "price": 3,
+   "stackable": false,
    "variants": [
     {
      "min_quantity": 1,
@@ -6526,6 +6548,8 @@
   {
    "item_id": 439,
    "name": "Tin ore",
+   "price": 3,
+   "stackable": true,
    "variants": [
     {
      "min_quantity": 1,
@@ -6536,6 +6560,8 @@
   {
    "item_id": 526,
    "name": "Bones",
+   "price": 1,
+   "stackable": false,
    "variants": [
     {
      "min_quantity": 1,
@@ -6546,6 +6572,8 @@
   {
    "item_id": 527,
    "name": "Bones",
+   "price": 1,
+   "stackable": true,
    "variants": [
     {
      "min_quantity": 1,
@@ -6556,6 +6584,8 @@
   {
    "item_id": 550,
    "name": "Newcomer map",
+   "price": 1,
+   "stackable": false,
    "variants": [
     {
      "min_quantity": 1,
@@ -6566,6 +6596,8 @@
   {
    "item_id": 551,
    "name": "Newcomer map",
+   "price": 1,
+   "stackable": true,
    "variants": [
     {
      "min_quantity": 1,
@@ -6576,6 +6608,8 @@
   {
    "item_id": 555,
    "name": "Water rune",
+   "price": 4,
+   "stackable": true,
    "variants": [
     {
      "min_quantity": 1,
@@ -6586,6 +6620,8 @@
   {
    "item_id": 556,
    "name": "Air rune",
+   "price": 4,
+   "stackable": true,
    "variants": [
     {
      "min_quantity": 1,
@@ -6596,6 +6632,8 @@
   {
    "item_id": 557,
    "name": "Earth rune",
+   "price": 4,
+   "stackable": true,
    "variants": [
     {
      "min_quantity": 1,
@@ -6606,6 +6644,8 @@
   {
    "item_id": 558,
    "name": "Mind rune",
+   "price": 3,
+   "stackable": true,
    "variants": [
     {
      "min_quantity": 1,
@@ -6616,6 +6656,8 @@
   {
    "item_id": 559,
    "name": "Body rune",
+   "price": 3,
+   "stackable": true,
    "variants": [
     {
      "min_quantity": 1,
@@ -6626,6 +6668,8 @@
   {
    "item_id": 590,
    "name": "Tinderbox",
+   "price": 1,
+   "stackable": false,
    "variants": [
     {
      "min_quantity": 1,
@@ -6636,6 +6680,8 @@
   {
    "item_id": 591,
    "name": "Tinderbox",
+   "price": 1,
+   "stackable": true,
    "variants": [
     {
      "min_quantity": 1,
@@ -6646,6 +6692,8 @@
   {
    "item_id": 592,
    "name": "Ashes",
+   "price": 2,
+   "stackable": false,
    "variants": [
     {
      "min_quantity": 1,
@@ -6656,6 +6704,8 @@
   {
    "item_id": 593,
    "name": "Ashes",
+   "price": 2,
+   "stackable": true,
    "variants": [
     {
      "min_quantity": 1,
@@ -6666,6 +6716,8 @@
   {
    "item_id": 841,
    "name": "Shortbow",
+   "price": 50,
+   "stackable": false,
    "variants": [
     {
      "min_quantity": 1,
@@ -6676,6 +6728,8 @@
   {
    "item_id": 842,
    "name": "Shortbow",
+   "price": 50,
+   "stackable": true,
    "variants": [
     {
      "min_quantity": 1,
@@ -6686,6 +6740,8 @@
   {
    "item_id": 877,
    "name": "Bronze bolts",
+   "price": 0,
+   "stackable": true,
    "variants": [
     {
      "min_quantity": 1,
@@ -6712,6 +6768,8 @@
   {
    "item_id": 882,
    "name": "Bronze arrow",
+   "price": 1,
+   "stackable": true,
    "variants": [
     {
      "min_quantity": 1,
@@ -6738,6 +6796,8 @@
   {
    "item_id": 946,
    "name": "Knife",
+   "price": 6,
+   "stackable": false,
    "variants": [
     {
      "min_quantity": 1,
@@ -6748,6 +6808,8 @@
   {
    "item_id": 947,
    "name": "Knife",
+   "price": 6,
+   "stackable": true,
    "variants": [
     {
      "min_quantity": 1,
@@ -6758,6 +6820,8 @@
   {
    "item_id": 952,
    "name": "Spade",
+   "price": 3,
+   "stackable": false,
    "variants": [
     {
      "min_quantity": 1,
@@ -6768,6 +6832,8 @@
   {
    "item_id": 953,
    "name": "Spade",
+   "price": 3,
+   "stackable": true,
    "variants": [
     {
      "min_quantity": 1,
@@ -6778,6 +6844,8 @@
   {
    "item_id": 995,
    "name": "Coins",
+   "price": 1,
+   "stackable": true,
    "variants": [
     {
      "min_quantity": 1,
@@ -6824,6 +6892,8 @@
   {
    "item_id": 1009,
    "name": "Brass necklace",
+   "price": 30,
+   "stackable": false,
    "variants": [
     {
      "min_quantity": 1,
@@ -6834,6 +6904,8 @@
   {
    "item_id": 1010,
    "name": "Brass necklace",
+   "price": 30,
+   "stackable": true,
    "variants": [
     {
      "min_quantity": 1,
@@ -6844,6 +6916,8 @@
   {
    "item_id": 1171,
    "name": "Wooden shield",
+   "price": 20,
+   "stackable": false,
    "variants": [
     {
      "min_quantity": 1,
@@ -6854,6 +6928,8 @@
   {
    "item_id": 1172,
    "name": "Wooden shield",
+   "price": 20,
+   "stackable": true,
    "variants": [
     {
      "min_quantity": 1,
@@ -6864,6 +6940,8 @@
   {
    "item_id": 1173,
    "name": "Bronze sq shield",
+   "price": 48,
+   "stackable": false,
    "variants": [
     {
      "min_quantity": 1,
@@ -6874,6 +6952,8 @@
   {
    "item_id": 1174,
    "name": "Bronze sq shield",
+   "price": 48,
+   "stackable": true,
    "variants": [
     {
      "min_quantity": 1,
@@ -6884,6 +6964,8 @@
   {
    "item_id": 1205,
    "name": "Bronze dagger",
+   "price": 10,
+   "stackable": false,
    "variants": [
     {
      "min_quantity": 1,
@@ -6894,6 +6976,8 @@
   {
    "item_id": 1206,
    "name": "Bronze dagger",
+   "price": 10,
+   "stackable": true,
    "variants": [
     {
      "min_quantity": 1,
@@ -6904,6 +6988,8 @@
   {
    "item_id": 1237,
    "name": "Bronze spear (Members)",
+   "price": 26,
+   "stackable": false,
    "variants": [
     {
      "min_quantity": 1,
@@ -6914,6 +7000,8 @@
   {
    "item_id": 1238,
    "name": "Bronze spear (Members)",
+   "price": 26,
+   "stackable": true,
    "variants": [
     {
      "min_quantity": 1,
@@ -6924,6 +7012,8 @@
   {
    "item_id": 1265,
    "name": "Bronze pickaxe",
+   "price": 1,
+   "stackable": false,
    "variants": [
     {
      "min_quantity": 1,
@@ -6934,6 +7024,8 @@
   {
    "item_id": 1266,
    "name": "Bronze pickaxe",
+   "price": 1,
+   "stackable": true,
    "variants": [
     {
      "min_quantity": 1,
@@ -6944,6 +7036,8 @@
   {
    "item_id": 1277,
    "name": "Bronze sword",
+   "price": 26,
+   "stackable": false,
    "variants": [
     {
      "min_quantity": 1,
@@ -6954,6 +7048,8 @@
   {
    "item_id": 1278,
    "name": "Bronze sword",
+   "price": 26,
+   "stackable": true,
    "variants": [
     {
      "min_quantity": 1,
@@ -6964,6 +7060,8 @@
   {
    "item_id": 1351,
    "name": "Bronze axe",
+   "price": 16,
+   "stackable": false,
    "variants": [
     {
      "min_quantity": 1,
@@ -6974,6 +7072,8 @@
   {
    "item_id": 1352,
    "name": "Bronze axe",
+   "price": 16,
+   "stackable": true,
    "variants": [
     {
      "min_quantity": 1,
@@ -6984,6 +7084,8 @@
   {
    "item_id": 1438,
    "name": "Air talisman",
+   "price": 4,
+   "stackable": false,
    "variants": [
     {
      "min_quantity": 1,
@@ -6994,6 +7096,8 @@
   {
    "item_id": 1439,
    "name": "Air talisman",
+   "price": 4,
+   "stackable": true,
    "variants": [
     {
      "min_quantity": 1,
@@ -7004,6 +7108,8 @@
   {
    "item_id": 1511,
    "name": "Logs",
+   "price": 4,
+   "stackable": false,
    "variants": [
     {
      "min_quantity": 1,
@@ -7014,6 +7120,8 @@
   {
    "item_id": 1512,
    "name": "Logs",
+   "price": 4,
+   "stackable": true,
    "variants": [
     {
      "min_quantity": 1,
@@ -7024,6 +7132,8 @@
   {
    "item_id": 1735,
    "name": "Shears",
+   "price": 1,
+   "stackable": false,
    "variants": [
     {
      "min_quantity": 1,
@@ -7034,6 +7144,8 @@
   {
    "item_id": 1736,
    "name": "Shears",
+   "price": 1,
+   "stackable": true,
    "variants": [
     {
      "min_quantity": 1,
@@ -7044,6 +7156,8 @@
   {
    "item_id": 1755,
    "name": "Chisel",
+   "price": 1,
+   "stackable": false,
    "variants": [
     {
      "min_quantity": 1,
@@ -7054,6 +7168,8 @@
   {
    "item_id": 1756,
    "name": "Chisel",
+   "price": 1,
+   "stackable": true,
    "variants": [
     {
      "min_quantity": 1,
@@ -7064,6 +7180,8 @@
   {
    "item_id": 1887,
    "name": "Cake tin",
+   "price": 10,
+   "stackable": false,
    "variants": [
     {
      "min_quantity": 1,
@@ -7074,6 +7192,8 @@
   {
    "item_id": 1888,
    "name": "Cake tin",
+   "price": 10,
+   "stackable": true,
    "variants": [
     {
      "min_quantity": 1,
@@ -7084,6 +7204,8 @@
   {
    "item_id": 1917,
    "name": "Beer",
+   "price": 2,
+   "stackable": false,
    "variants": [
     {
      "min_quantity": 1,
@@ -7094,6 +7216,8 @@
   {
    "item_id": 1918,
    "name": "Beer",
+   "price": 2,
+   "stackable": true,
    "variants": [
     {
      "min_quantity": 1,
@@ -7104,6 +7228,8 @@
   {
    "item_id": 1923,
    "name": "Bowl",
+   "price": 4,
+   "stackable": false,
    "variants": [
     {
      "min_quantity": 1,
@@ -7114,6 +7240,8 @@
   {
    "item_id": 1924,
    "name": "Bowl",
+   "price": 4,
+   "stackable": true,
    "variants": [
     {
      "min_quantity": 1,
@@ -7124,6 +7252,8 @@
   {
    "item_id": 1925,
    "name": "Bucket",
+   "price": 2,
+   "stackable": false,
    "variants": [
     {
      "min_quantity": 1,
@@ -7134,6 +7264,8 @@
   {
    "item_id": 1926,
    "name": "Bucket",
+   "price": 2,
+   "stackable": true,
    "variants": [
     {
      "min_quantity": 1,
@@ -7144,6 +7276,8 @@
   {
    "item_id": 1927,
    "name": "Bucket of milk",
+   "price": 6,
+   "stackable": false,
    "variants": [
     {
      "min_quantity": 1,
@@ -7154,6 +7288,8 @@
   {
    "item_id": 1928,
    "name": "Bucket of milk",
+   "price": 6,
+   "stackable": true,
    "variants": [
     {
      "min_quantity": 1,
@@ -7164,6 +7300,8 @@
   {
    "item_id": 1929,
    "name": "Bucket of water",
+   "price": 6,
+   "stackable": false,
    "variants": [
     {
      "min_quantity": 1,
@@ -7174,6 +7312,8 @@
   {
    "item_id": 1930,
    "name": "Bucket of water",
+   "price": 6,
+   "stackable": true,
    "variants": [
     {
      "min_quantity": 1,
@@ -7184,6 +7324,8 @@
   {
    "item_id": 1931,
    "name": "Pot",
+   "price": 1,
+   "stackable": false,
    "variants": [
     {
      "min_quantity": 1,
@@ -7194,6 +7336,8 @@
   {
    "item_id": 1932,
    "name": "Pot",
+   "price": 1,
+   "stackable": true,
    "variants": [
     {
      "min_quantity": 1,
@@ -7204,6 +7348,8 @@
   {
    "item_id": 1933,
    "name": "Pot of flour",
+   "price": 10,
+   "stackable": false,
    "variants": [
     {
      "min_quantity": 1,
@@ -7214,6 +7360,8 @@
   {
    "item_id": 1934,
    "name": "Pot of flour",
+   "price": 10,
+   "stackable": true,
    "variants": [
     {
      "min_quantity": 1,
@@ -7224,6 +7372,8 @@
   {
    "item_id": 1935,
    "name": "Jug",
+   "price": 1,
+   "stackable": false,
    "variants": [
     {
      "min_quantity": 1,
@@ -7234,6 +7384,8 @@
   {
    "item_id": 1936,
    "name": "Jug",
+   "price": 1,
+   "stackable": true,
    "variants": [
     {
      "min_quantity": 1,
@@ -7244,6 +7396,8 @@
   {
    "item_id": 1944,
    "name": "Egg",
+   "price": 4,
+   "stackable": false,
    "variants": [
     {
      "min_quantity": 1,
@@ -7254,6 +7408,8 @@
   {
    "item_id": 1945,
    "name": "Egg",
+   "price": 4,
+   "stackable": true,
    "variants": [
     {
      "min_quantity": 1,
@@ -7264,6 +7420,8 @@
   {
    "item_id": 1947,
    "name": "Grain",
+   "price": 2,
+   "stackable": false,
    "variants": [
     {
      "min_quantity": 1,
@@ -7274,6 +7432,8 @@
   {
    "item_id": 1948,
    "name": "Grain",
+   "price": 2,
+   "stackable": true,
    "variants": [
     {
      "min_quantity": 1,
@@ -7284,6 +7444,8 @@
   {
    "item_id": 1949,
    "name": "Chef's hat",
+   "price": 2,
+   "stackable": false,
    "variants": [
     {
      "min_quantity": 1,
@@ -7294,6 +7456,8 @@
   {
    "item_id": 1950,
    "name": "Chef's hat",
+   "price": 2,
+   "stackable": true,
    "variants": [
     {
      "min_quantity": 1,
@@ -7304,6 +7468,8 @@
   {
    "item_id": 2307,
    "name": "Bread dough",
+   "price": 4,
+   "stackable": false,
    "variants": [
     {
      "min_quantity": 1,
@@ -7314,6 +7480,8 @@
   {
    "item_id": 2308,
    "name": "Bread dough",
+   "price": 4,
+   "stackable": true,
    "variants": [
     {
      "min_quantity": 1,
@@ -7324,6 +7492,8 @@
   {
    "item_id": 2309,
    "name": "Bread",
+   "price": 12,
+   "stackable": false,
    "variants": [
     {
      "min_quantity": 1,
@@ -7334,6 +7504,8 @@
   {
    "item_id": 2310,
    "name": "Bread",
+   "price": 12,
+   "stackable": true,
    "variants": [
     {
      "min_quantity": 1,
@@ -7344,6 +7516,8 @@
   {
    "item_id": 2311,
    "name": "Burnt bread",
+   "price": 1,
+   "stackable": false,
    "variants": [
     {
      "min_quantity": 1,
@@ -7354,6 +7528,8 @@
   {
    "item_id": 2312,
    "name": "Burnt bread",
+   "price": 1,
+   "stackable": true,
    "variants": [
     {
      "min_quantity": 1,
@@ -7364,6 +7540,8 @@
   {
    "item_id": 2347,
    "name": "Hammer",
+   "price": 1,
+   "stackable": false,
    "variants": [
     {
      "min_quantity": 1,
@@ -7374,6 +7552,8 @@
   {
    "item_id": 2348,
    "name": "Hammer",
+   "price": 1,
+   "stackable": true,
    "variants": [
     {
      "min_quantity": 1,
@@ -7384,6 +7564,8 @@
   {
    "item_id": 2349,
    "name": "Bronze bar",
+   "price": 8,
+   "stackable": false,
    "variants": [
     {
      "min_quantity": 1,
@@ -7394,6 +7576,8 @@
   {
    "item_id": 2350,
    "name": "Bronze bar",
+   "price": 8,
+   "stackable": true,
    "variants": [
     {
      "min_quantity": 1,
@@ -7404,6 +7588,8 @@
   {
    "item_id": 2530,
    "name": "Bones",
+   "price": 1,
+   "stackable": false,
    "variants": [
     {
      "min_quantity": 1,
@@ -7414,6 +7600,8 @@
   {
    "item_id": 2531,
    "name": "Bones",
+   "price": 1,
+   "stackable": true,
    "variants": [
     {
      "min_quantity": 1,
@@ -7424,6 +7612,8 @@
   {
    "item_id": 3008,
    "name": "Energy potion(4)",
+   "price": 146,
+   "stackable": false,
    "variants": [
     {
      "min_quantity": 1,
@@ -7434,6 +7624,8 @@
   {
    "item_id": 3009,
    "name": "Energy potion(4)",
+   "price": 146,
+   "stackable": true,
    "variants": [
     {
      "min_quantity": 1,
@@ -7444,6 +7636,8 @@
   {
    "item_id": 3012,
    "name": "Energy potion(2)",
+   "price": 72,
+   "stackable": false,
    "variants": [
     {
      "min_quantity": 1,
@@ -7454,6 +7648,8 @@
   {
    "item_id": 3013,
    "name": "Energy potion(2)",
+   "price": 72,
+   "stackable": true,
    "variants": [
     {
      "min_quantity": 1,
@@ -7464,6 +7660,8 @@
   {
    "item_id": 3014,
    "name": "Energy potion(1)",
+   "price": 36,
+   "stackable": false,
    "variants": [
     {
      "min_quantity": 1,
@@ -7474,6 +7672,8 @@
   {
    "item_id": 3015,
    "name": "Energy potion(1)",
+   "price": 36,
+   "stackable": true,
    "variants": [
     {
      "min_quantity": 1,
@@ -7484,6 +7684,8 @@
   {
    "item_id": 6801,
    "name": "Goblin champion scroll (Members)",
+   "price": 1,
+   "stackable": false,
    "variants": [
     {
      "min_quantity": 1,
@@ -7494,6 +7696,8 @@
   {
    "item_id": 7954,
    "name": "Burnt shrimp",
+   "price": 1,
+   "stackable": false,
    "variants": [
     {
      "min_quantity": 1,
@@ -7504,6 +7708,8 @@
   {
    "item_id": 7955,
    "name": "Burnt shrimp",
+   "price": 1,
+   "stackable": true,
    "variants": [
     {
      "min_quantity": 1,
@@ -7514,6 +7720,8 @@
   {
    "item_id": 9003,
    "name": "Security book",
+   "price": 2,
+   "stackable": false,
    "variants": [
     {
      "min_quantity": 1,
@@ -7524,6 +7732,8 @@
   {
    "item_id": 9014,
    "name": "Security book",
+   "price": 2,
+   "stackable": true,
    "variants": [
     {
      "min_quantity": 1,
@@ -7534,6 +7744,8 @@
   {
    "item_id": 10999,
    "name": "Goblin book (Members)",
+   "price": 1,
+   "stackable": false,
    "variants": [
     {
      "min_quantity": 1,
@@ -7544,6 +7756,8 @@
   {
    "item_id": 11000,
    "name": "Goblin book (Members)",
+   "price": 1,
+   "stackable": true,
    "variants": [
     {
      "min_quantity": 1,
@@ -7554,6 +7768,8 @@
   {
    "item_id": 13447,
    "name": "Ensouled goblin head (Members)",
+   "price": 52,
+   "stackable": false,
    "variants": [
     {
      "min_quantity": 1,
@@ -7564,6 +7780,8 @@
   {
    "item_id": 13448,
    "name": "Ensouled goblin head (Members)",
+   "price": 52,
+   "stackable": false,
    "variants": [
     {
      "min_quantity": 1,
@@ -7574,6 +7792,8 @@
   {
    "item_id": 13449,
    "name": "Ensouled goblin head (Members)",
+   "price": 52,
+   "stackable": true,
    "variants": [
     {
      "min_quantity": 1,
@@ -7584,6 +7804,8 @@
   {
    "item_id": 20742,
    "name": "Empty jug pack",
+   "price": 140,
+   "stackable": false,
    "variants": [
     {
      "min_quantity": 1,
@@ -7594,6 +7816,8 @@
   {
    "item_id": 20743,
    "name": "Empty jug pack",
+   "price": 140,
+   "stackable": true,
    "variants": [
     {
      "min_quantity": 1,
@@ -7604,6 +7828,8 @@
   {
    "item_id": 22660,
    "name": "Empty bucket pack",
+   "price": 500,
+   "stackable": false,
    "variants": [
     {
      "min_quantity": 1,
@@ -7614,6 +7840,8 @@
   {
    "item_id": 22661,
    "name": "Empty bucket pack",
+   "price": 500,
+   "stackable": true,
    "variants": [
     {
      "min_quantity": 1,
@@ -7624,6 +7852,8 @@
   {
    "item_id": 33089,
    "name": "Bottomless milk bucket (Members)",
+   "price": 15000,
+   "stackable": false,
    "variants": [
     {
      "min_quantity": 1,
@@ -7634,6 +7864,8 @@
   {
    "item_id": 33091,
    "name": "Bottomless milk bucket (empty) (Members)",
+   "price": 15000,
+   "stackable": false,
    "variants": [
     {
      "min_quantity": 1,

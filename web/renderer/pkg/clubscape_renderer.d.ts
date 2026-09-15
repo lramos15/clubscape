@@ -160,6 +160,12 @@ export class WasmRenderer {
      * setting when ticks are unavailable).
      */
     player_running(): boolean;
+    /**
+     * Item definition fields the original pile selection (`lj.es`) reads: shop value `op.ef`
+     * and the stackable flag (`manifest.ground_items[].price` / `.stackable`). The pile's top
+     * is the greatest value (times quantity + 1 when stackable), then two other distinct ids.
+     */
+    register_ground_item_definition(item_id: number, price: number, stackable: boolean): void;
     resize(width: number, height: number): void;
     scene_id(): string | undefined;
     /**
@@ -171,6 +177,11 @@ export class WasmRenderer {
      * Camera in world units (tile * 128), 16384 units per turn, height negative-up.
      */
     set_camera(x: number, height: number, y: number, pitch: number, yaw: number, zoom: number, far: number): void;
+    /**
+     * The original "hide roofs" preference (`cy.as`): the stock top-plane rule then draws up
+     * to the player's plane only. Off by default.
+     */
+    set_hide_roofs(hidden: boolean): void;
     /**
      * Instanced map flag (`cy.as`): the stock rule then always draws up to the player's plane.
      */
@@ -284,10 +295,12 @@ export interface InitOutput {
     readonly wasmrenderer_pick: (a: number, b: number, c: number) => [number, number];
     readonly wasmrenderer_player_fit_report: (a: number) => [number, number];
     readonly wasmrenderer_player_running: (a: number) => number;
+    readonly wasmrenderer_register_ground_item_definition: (a: number, b: number, c: number, d: number) => void;
     readonly wasmrenderer_resize: (a: number, b: number, c: number) => void;
     readonly wasmrenderer_scene_id: (a: number) => [number, number];
     readonly wasmrenderer_scene_placement: (a: number) => [number, number];
     readonly wasmrenderer_set_camera: (a: number, b: number, c: number, d: number, e: number, f: number, g: number, h: number) => [number, number];
+    readonly wasmrenderer_set_hide_roofs: (a: number, b: number) => void;
     readonly wasmrenderer_set_instanced_map: (a: number, b: number) => void;
     readonly wasmrenderer_set_motion_fallback: (a: number, b: number) => void;
     readonly wasmrenderer_set_plane: (a: number, b: number) => void;
@@ -302,10 +315,10 @@ export interface InitOutput {
     readonly wasm_bindgen_765df639e0572edc___convert__closures_____invoke___js_sys_3b7301898fbf4e22___Function_fn_wasm_bindgen_765df639e0572edc___JsValue_____wasm_bindgen_765df639e0572edc___sys__Undefined___js_sys_3b7301898fbf4e22___Function_fn_wasm_bindgen_765df639e0572edc___JsValue_____wasm_bindgen_765df639e0572edc___sys__Undefined_______true_: (a: number, b: number, c: any, d: any) => void;
     readonly wasm_bindgen_765df639e0572edc___convert__closures_____invoke___wasm_bindgen_765df639e0572edc___JsValue__core_ed718c3d60ebd546___result__Result_____wasm_bindgen_765df639e0572edc___JsError___true_: (a: number, b: number, c: any) => [number, number];
     readonly wasm_bindgen_765df639e0572edc___convert__closures_____invoke___wasm_bindgen_765df639e0572edc___sys__JsNullable_wgpu_fb237351f69b1e72___backend__webgpu__webgpu_sys__gen_GpuError__GpuError___core_ed718c3d60ebd546___result__Result_____wasm_bindgen_765df639e0572edc___JsError___true_: (a: number, b: number, c: any) => [number, number];
-    readonly wasm_bindgen_765df639e0572edc___convert__closures_____invoke___wasm_bindgen_765df639e0572edc___sys__JsNullable_wgpu_fb237351f69b1e72___backend__webgpu__webgpu_sys__gen_GpuError__GpuError___core_ed718c3d60ebd546___result__Result_____wasm_bindgen_765df639e0572edc___JsError___true__82: (a: number, b: number, c: any) => [number, number];
-    readonly wasm_bindgen_765df639e0572edc___convert__closures_____invoke___wasm_bindgen_765df639e0572edc___sys__JsNullable_wgpu_fb237351f69b1e72___backend__webgpu__webgpu_sys__gen_GpuError__GpuError___core_ed718c3d60ebd546___result__Result_____wasm_bindgen_765df639e0572edc___JsError___true__83: (a: number, b: number, c: any) => [number, number];
+    readonly wasm_bindgen_765df639e0572edc___convert__closures_____invoke___wasm_bindgen_765df639e0572edc___sys__JsNullable_wgpu_fb237351f69b1e72___backend__webgpu__webgpu_sys__gen_GpuError__GpuError___core_ed718c3d60ebd546___result__Result_____wasm_bindgen_765df639e0572edc___JsError___true__84: (a: number, b: number, c: any) => [number, number];
+    readonly wasm_bindgen_765df639e0572edc___convert__closures_____invoke___wasm_bindgen_765df639e0572edc___sys__JsNullable_wgpu_fb237351f69b1e72___backend__webgpu__webgpu_sys__gen_GpuError__GpuError___core_ed718c3d60ebd546___result__Result_____wasm_bindgen_765df639e0572edc___JsError___true__85: (a: number, b: number, c: any) => [number, number];
     readonly wasm_bindgen_765df639e0572edc___convert__closures_____invoke___wgpu_fb237351f69b1e72___backend__webgpu__webgpu_sys__gen_GpuDeviceLostInfo__GpuDeviceLostInfo______true_: (a: number, b: number, c: any) => void;
-    readonly wasm_bindgen_765df639e0572edc___convert__closures_____invoke___wgpu_fb237351f69b1e72___backend__webgpu__webgpu_sys__gen_GpuDeviceLostInfo__GpuDeviceLostInfo______true__81: (a: number, b: number, c: any) => void;
+    readonly wasm_bindgen_765df639e0572edc___convert__closures_____invoke___wgpu_fb237351f69b1e72___backend__webgpu__webgpu_sys__gen_GpuDeviceLostInfo__GpuDeviceLostInfo______true__83: (a: number, b: number, c: any) => void;
     readonly __wbindgen_malloc: (a: number, b: number) => number;
     readonly __wbindgen_realloc: (a: number, b: number, c: number, d: number) => number;
     readonly __wbindgen_exn_store: (a: number) => void;

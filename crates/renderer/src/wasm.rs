@@ -840,6 +840,16 @@ impl WasmRenderer {
             .map_err(js_err)
     }
 
+    /// Item definition fields the original pile selection (`lj.es`) reads: shop value `op.ef`
+    /// and the stackable flag (`manifest.ground_items[].price` / `.stackable`). The pile's top
+    /// is the greatest value (times quantity + 1 when stackable), then two other distinct ids.
+    pub fn register_ground_item_definition(&self, item_id: i32, price: f64, stackable: bool) {
+        self.inner
+            .borrow_mut()
+            .core
+            .register_ground_item_definition(item_id, price as i64, stackable);
+    }
+
     /// Top drawn plane override (`br`, the original `dh` plane argument). The approved fixture
     /// captures pinned it to 0 (ground plane only); `undefined` restores the stock live rule
     /// (`cz.ch`: all planes unless a roof-flagged tile of the player's plane lies on the
@@ -851,6 +861,12 @@ impl WasmRenderer {
     /// Instanced map flag (`cy.as`): the stock rule then always draws up to the player's plane.
     pub fn set_instanced_map(&self, instanced: bool) {
         self.inner.borrow_mut().core.set_instanced_map(instanced);
+    }
+
+    /// The original "hide roofs" preference (`cy.as`): the stock top-plane rule then draws up
+    /// to the player's plane only. Off by default.
+    pub fn set_hide_roofs(&self, hidden: bool) {
+        self.inner.borrow_mut().core.set_hide_roofs(hidden);
     }
 
     /// Developer-only: derive action motions from the activity string and adjacent scenery when

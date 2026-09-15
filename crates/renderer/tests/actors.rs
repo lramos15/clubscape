@@ -740,6 +740,15 @@ fn dynamic_layers_draw_from_the_world_view() {
     }
     for item in manifest["ground_items"].as_array().unwrap() {
         let id = item["item_id"].as_i64().unwrap() as i32;
+        core.register_ground_item_definition(
+            id,
+            item["price"]
+                .as_i64()
+                .expect("manifest ground_items[].price"),
+            item["stackable"]
+                .as_bool()
+                .expect("manifest ground_items[].stackable"),
+        );
         for variant in item["variants"].as_array().unwrap() {
             core.load_ground_item(
                 id,
@@ -777,26 +786,31 @@ fn dynamic_layers_draw_from_the_world_view() {
     let with_items = rasterize(&core, &textures);
     common::assert_pixels_differ(&with_items, &baseline, "ground items drew nothing");
     assert!(core.triangles().len() > baseline_tris);
+    // An item pile is picked as its tile (original tag layer 3, id 0): the WorldView lists the
+    // items standing there.
     let mut item_pick = None;
     for y in (400..1000).step_by(2) {
         for x in (600..1400).step_by(2) {
-            if let Some(clubscape_renderer::core::WorldPick::Scenery {
-                object_id,
-                kind,
-                x: tx,
-                y: ty,
-                ..
-            }) = core.pick_world(x, y)
-                && kind == 3
+            if let Some(clubscape_renderer::scene::draw::PickTarget::Object { hash, .. }) =
+                core.pick(x, y)
+                && (hash >> 16) & 7 == 3
             {
-                item_pick = Some((object_id, tx, ty));
+                item_pick = core.pick_world(x, y);
             }
         }
     }
     assert!(
         matches!(
             item_pick,
-            Some((1511, 3096, 3099)) | Some((995, 3096, 3099)) | Some((317, 3097, 3100))
+            Some(clubscape_renderer::core::WorldPick::Tile {
+                x: 3096,
+                y: 3099,
+                plane: 0
+            }) | Some(clubscape_renderer::core::WorldPick::Tile {
+                x: 3097,
+                y: 3100,
+                plane: 0
+            })
         ),
         "ground item pick {item_pick:?}"
     );

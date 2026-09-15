@@ -113,6 +113,9 @@ final class DynamicExport
         Map<String, Object> record = new LinkedHashMap<>();
         record.put("item_id", itemId);
         record.put("name", item.getName());
+        // `lj.es` pile selection inputs: shop value (`op.ef`) and the stackable flag (`op.ek == 1`).
+        record.put("price", item.getPrice());
+        record.put("stackable", item.isStackable());
         List<Object> variants = new ArrayList<>();
         int[] thresholds = thresholds(item);
         int lastModel = Integer.MIN_VALUE;
