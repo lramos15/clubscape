@@ -98,10 +98,12 @@ unblocked milestone work where possible, then report the milestone as
 incomplete with a durable checkpoint. Never relabel that checkpoint as an
 accepted slice.
 
-The current [UI integration checkpoint](../milestones/evidence/m1-ui-controls.json)
-records passing native-source UI/control components and preserves the
-[real source journey checkpoint](../milestones/evidence/m1-source-journey31.json):
-31 of70 required tutorial transitions and onboarding recovery, followed by the
-contextual smithing-menu blocker. Final authoritative UI integration, the
-remaining real journey, complete runtime presentation, performance and owner
-review still need their own evidence.
+The current [authoritative UI4 checkpoint](../milestones/evidence/m1-game-ui4.json)
+records passing source/native/persistence checks and the repaired contextual
+smithing-menu boundary. A fresh normal v4 journey is running; the
+[prior real journey](../milestones/evidence/m1-source-journey31.json) remains
+31 of70 transitions with onboarding recovery. The
+[native UI component comparisons](../milestones/evidence/m1-ui-controls.json)
+remain qualified separately. Current UI4 consumer adaptation, remaining
+controls, the full journey, runtime presentation, performance and owner review
+still need their own evidence.

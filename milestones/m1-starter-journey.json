@@ -9,11 +9,11 @@
   "candidate_revision": null,
   "accepted_revision": null,
   "checkpoint": {
-    "report": "milestones/evidence/m1-ui-controls.json",
+    "report": "milestones/evidence/m1-game-ui4.json",
     "verified_infrastructure_revision": "275d3cc83d6a7c2118d0afcf82490f364e5d2986",
     "infrastructure_evidence": "milestones/evidence/m1-account-foundations.json",
-    "runtime_revision": "227f46989198f0e54c04c20a23368b1f807d087e",
-    "scope_note": "Source journey remains31/70 with onboarding recovery and an anvil contextual-menu blocker. Integrated native UI/audio controls pass their component/source comparisons, not the complete browser journey. Final authoritative UI4, native remaining controls, full renderer/audio composition, performance, Mac and owner acceptance remain outstanding."
+    "runtime_revision": "ff37669a464eb92bd022403337b9464e9a637b0d",
+    "scope_note": "Canonical4 raw6fdb is integrated and passes548 native,41 realPG and the full93-output source repeat. It fixes the controlled anvil menu boundary; a fresh real journey is running. Current UI4 consumer type adaptation and remaining required controls/composition/fidelity/performance/Mac/owner gates remain incomplete. Prior real v3 progress remains31/70, not full acceptance."
   },
   "scope_approval": {
     "authority": "owner",
@@ -32,7 +32,7 @@
     {"id": "benchmark-contract", "status": "implemented", "evidence": [], "blocker": "Pre-implementation contract is spec/m1-benchmark-contract.json. Sparky profile is pinned for permitted engineering; exact owner Mac/Chrome/Edge fields and final measurements remain to be collected."},
     {"id": "early-presentation-benchmark", "status": "in_progress", "evidence": [], "blocker": "Reference pack is approved; actual renderer/UI/audio composition and source comparisons are still being implemented."},
     {"id": "real-ui-account-creation", "status": "in_progress", "evidence": [], "blocker": null},
-    {"id": "complete-tutorial", "status": "in_progress", "evidence": [], "blocker": "31/70 source transitions verified in one fresh normal account. The actual anvil Smith action does not yet open the contextual source smithing interface required for the next lesson; backend production/UI closure is in progress."},
+    {"id": "complete-tutorial", "status": "in_progress", "evidence": [], "blocker": "31/70 source transitions verified in one fresh v3 account. Canonical4 now passes the controlled legacy-protocol anvil menu boundary; the same runner is verifying it in a fresh normal v4 journey before claiming further progress."},
     {"id": "legitimate-lumbridge-arrival", "status": "in_progress", "evidence": [], "blocker": null},
     {"id": "lumbridge-activities", "status": "in_progress", "evidence": [], "blocker": null},
     {"id": "death-and-recovery", "status": "in_progress", "evidence": [], "blocker": null},

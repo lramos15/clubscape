@@ -1,13 +1,22 @@
-# Source-bound M1 content, schema 3
+# Source-bound M1 content, schema 4
 
-**The actual content/artifact-3 pack strictly compiles, reloads and passes its
-native source-policy probes.** All declared v3 selectors
-and the conditional vital enum are authored. There are zero active
+**The actual content/artifact-4 pack strictly compiles, reloads and passes its
+native source-policy, UI and actor-observer probes.** All prior source selectors
+and the conditional vital enum are retained. There are zero active
 `SourceBinding::Unresolved` values and six proof-scoped inactive dependencies,
-not an old v2/decoder/asset blocker. Source-solid contact and fresh manual-drop
-clocks now pass; the complete real player journey remains a separate gate. See
+not an old decoder/asset blocker. Source-solid contact and fresh manual-drop
+clocks pass; the complete real player journey remains a separate gate. See
 [`contract-gaps.json`](../../research/m1-bindings/contract-gaps.json) and the
-current [`status.json`](../../research/m1-bindings/status.json).
+current [`status.json`](../../research/m1-bindings/status.json), plus the
+[UI4 candidate and remaining control work](../../research/interface-contracts/verification.json).
+
+The current revision is `m1.source-backed.v4.67e4f1fcc55d71d5`, raw artifact
+`6fdb60e4740372c5e299fe385875cfac32e04f22ea26ad17b53049296256c1b3`.
+Persisted state/runtime remain version1, with explicit UI state version1.
+An existing world must keep its exact artifact unless the operator performs
+the documented fenced `migrate-ui --from <old-raw-sha256>` upgrade; do not
+silently repin it or recreate missing UI history. Fresh journey candidates
+use ordinary account creation, not seeded checkpoints.
 
 ## Build and verify
 
@@ -41,11 +50,11 @@ compressed/uncompressed hashes. Gzip timestamps/filenames are normalized.
 
 | Content | Count |
 | --- | ---: |
-| Items / reciprocal ordinary note pairs | 118 / 53 |
+| Items / reciprocal ordinary note pairs | 122 / 55 |
 | Skills / normal equipment slots | 24 / 11 |
 | NPC / object definitions | 26 / 4,837 |
 | Runtime spawns: NPC / object / item | 166 / 360 / 10 |
-| Recipes / dialogues / interfaces / shops | 13 / 21 / 26 / 1 |
+| Recipes / dialogues / interfaces / shops | 13 / 21 / 30 / 1 |
 | Typed counters / grants / entitlements | 134 / 18 / 13 |
 | Physical door transforms / source door groups | 68 / 49 |
 | Complete combined collision selections / mixed-leaf states | 136 / 38 |
@@ -103,7 +112,7 @@ creates an owned temporary fire, retains the ground log on failure, and uses
 the source cardinal step order. No stochastic activity is replaced by guaranteed
 success.
 
-Every tutorial edge has an authoritative content-3 hook. Real dialogue
+Every tutorial edge retains its authoritative source hook in content4. Real dialogue
 choices, source actor targets, UI contexts, production method/outcome, credited
 kill method, valid Wind Strike hit/splash and completed source travel are checked.
 There is no client stage-advance command or v1-disabled group of 36 edges.
@@ -250,7 +259,9 @@ The raw compiled file is generated at
 `tools/m1-content/.local/compiler/m1.csc`; its committed reproducible gzip is
 `content/m1/game-content.csc.gz`. `content/m1/manifest.json` provides the exact
 raw hash. Source asset resolution starts at
-`assets/manifests/osrs/cache2695-potions-published.json` and follows its ancestors.
+`assets/manifests/osrs/cache2695-consumables-published.json` and follows all four
+publication layers. Original empty vial/beer-glass items, notes and models are
+published; their real replacement outcomes are not omitted.
 The backend owns `CLUBSCAPE_GAME_ROOT/clubscape-game.json` and
 `clubscape-game-assets.json` deployment descriptors; this task does not create a
 world UUID, seed state, publish files or claim a working server/browser journey.
