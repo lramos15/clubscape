@@ -298,6 +298,53 @@ pub struct WorldViewInput {
     pub dynamic_objects: Vec<WorldDynamicObject>,
     /// Shell extension: server animation events (see [`WorldAnimationEvent`]).
     pub events: Vec<WorldAnimationEvent>,
+    /// Shell extension: the instance the player stands in, as the authoritative template
+    /// identity and its validated chunk mappings (see [`WorldInstanceLayout`]). `None` (absent or
+    /// null) is the ordinary world; the renderer never infers a layout from an instance id.
+    pub instance_layout: Option<WorldInstanceLayout>,
+}
+
+/// One `GenericInstanceChunkMapping` forwarded by the shell: destination chunk (absolute chunk
+/// coordinates, `tile >> 3`) showing a source chunk turned by `quarter_turns`.
+#[derive(Deserialize, Debug, Clone, Default, PartialEq, Eq)]
+#[serde(default, rename_all = "camelCase")]
+pub struct WorldChunkMapping {
+    pub plane: i32,
+    pub chunk_x: i32,
+    pub chunk_y: i32,
+    pub source_plane: i32,
+    pub source_chunk_x: i32,
+    pub source_chunk_y: i32,
+    pub quarter_turns: i32,
+}
+
+/// The instance template identity and every chunk it declares; undeclared chunks stay unloaded.
+#[derive(Deserialize, Debug, Clone, Default, PartialEq, Eq)]
+#[serde(default, rename_all = "camelCase")]
+pub struct WorldInstanceLayout {
+    pub template: String,
+    pub chunks: Vec<WorldChunkMapping>,
+}
+
+impl WorldInstanceLayout {
+    fn to_layout(&self) -> block::InstanceLayout {
+        block::InstanceLayout {
+            template: self.template.clone(),
+            chunks: self
+                .chunks
+                .iter()
+                .map(|c| block::ChunkMapping {
+                    plane: c.plane,
+                    chunk_x: c.chunk_x,
+                    chunk_y: c.chunk_y,
+                    source_plane: c.source_plane,
+                    source_chunk_x: c.source_chunk_x,
+                    source_chunk_y: c.source_chunk_y,
+                    quarter_turns: c.quarter_turns,
+                })
+                .collect(),
+        }
+    }
 }
 
 /// Parses a source sequence identity: a bare id (`"879"`), `sequence.879` or the catalog form
@@ -764,6 +811,11 @@ pub struct RendererCore {
     /// The original "hide roofs" preference (`cy.as`, read by `cz.ch` first): the top drawn
     /// plane is then always the player's plane.
     hide_roofs: bool,
+    /// Instance layout of the current scene (`WorldView.instanceLayout`), applied by
+    /// [`Self::assemble_scene`]; `None` assembles the ordinary world.
+    instance_layout: Option<block::InstanceLayout>,
+    /// Set when the last `update_world` changed the layout (the scene must be reassembled).
+    instance_layout_changed: bool,
     /// Developer fixture control: draw no body for the local player (the original controlled
     /// dynamic-layer references were rendered without one). Never a gameplay state.
     hide_local_player_body: bool,
@@ -845,6 +897,8 @@ impl RendererCore {
             instanced_map: false,
             hide_roofs: false,
             hide_local_player_body: false,
+            instance_layout: None,
+            instance_layout_changed: false,
             preview_started_ms: None,
             preview_tris: Vec::new(),
             player_activity: String::new(),
@@ -1378,11 +1432,51 @@ impl RendererCore {
                 "no blocks loaded for scene base {base_x},{base_y} (needs {wanted:?})"
             )));
         }
-        let (scene, models) = block::assemble(base_x, base_y, &present, randomize_phases)?;
-        let id = format!("blocks@{base_x},{base_y}");
+        let (scene, models) = block::assemble_mapped(
+            base_x,
+            base_y,
+            &present,
+            randomize_phases,
+            self.instance_layout.as_ref(),
+        )?;
+        let id = match &self.instance_layout {
+            Some(layout) => format!("blocks@{base_x},{base_y}#{}", layout.template),
+            None => format!("blocks@{base_x},{base_y}"),
+        };
         self.install_scene(&id, scene, models)?;
+        self.set_instanced_map(self.instance_layout.is_some());
         self.scene_started_ms = now_ms;
+        self.instance_layout_changed = false;
         Ok(missing)
+    }
+
+    /// Whether the last world view changed the instance layout, so the block scene must be
+    /// reassembled (`assemble_scene`) before it matches the world. Cleared by the assembly.
+    pub fn instance_layout_changed(&self) -> bool {
+        self.instance_layout_changed
+    }
+
+    /// The instance layout the current/next block scene is assembled with.
+    pub fn instance_layout(&self) -> Option<&block::InstanceLayout> {
+        self.instance_layout.as_ref()
+    }
+
+    /// Map squares whose blocks a scene at `base` needs, restricted to the declared source
+    /// chunks when an instance layout is set (undeclared squares are never fetched).
+    pub fn squares_needed(&self, base_x: i32, base_y: i32) -> Vec<i32> {
+        match &self.instance_layout {
+            None => Self::squares_for_base(base_x, base_y),
+            Some(layout) => {
+                let mut squares: Vec<i32> = layout
+                    .chunks
+                    .iter()
+                    .map(|c| ((c.source_chunk_x >> 3) << 8) | (c.source_chunk_y >> 3))
+                    .collect();
+                squares.sort_unstable();
+                squares.dedup();
+                squares
+            }
+        }
     }
 
     /// Sets the start frame of every animated scenery instance of source object `object_id`
@@ -1537,6 +1631,12 @@ impl RendererCore {
             self.player_gear = gear;
             self.player_assembled = None;
             self.player_frame_cache.clear();
+        }
+        // Instance layout: explicit template mappings only (never derived from the instance id).
+        let layout = view.instance_layout.as_ref().map(|l| l.to_layout());
+        if layout != self.instance_layout {
+            self.instance_layout = layout;
+            self.instance_layout_changed = true;
         }
         // Server animation events (shell extension): a new event id starts that sequence on
         // its actor at this update; stale actors are dropped with their events.

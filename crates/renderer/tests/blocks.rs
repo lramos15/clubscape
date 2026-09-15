@@ -278,3 +278,321 @@ fn recentering_follows_the_player_and_keeps_scenery() {
         );
     }
 }
+
+/// Instance scenes: only the declared chunks are assembled (the M1 Death Office template — four
+/// 8×8 identity mappings of region 12633 at plane 0, turn 0 — and a translated turn-0 mapping),
+/// everything else stays unloaded in the scene and on the minimap, block fetches shrink to the
+/// declared source squares, and a turned chunk is rejected explicitly rather than approximated.
+#[test]
+#[ignore = "needs local exports: export.py --profile blocks"]
+fn instance_layout_assembles_only_declared_chunks() {
+    let textures = textures();
+    // Death Office: template region 12633 (square x 49, y 89 → chunk origin 392,712); origins
+    // (3168,5720) (3168,5728) (3176,5720) (3176,5728) → chunks (396,715) (396,716) (397,715)
+    // (397,716); the player stands inside.
+    let death_office: Vec<serde_json::Value> = [(396, 715), (396, 716), (397, 715), (397, 716)]
+        .iter()
+        .map(|(cx, cy)| {
+            serde_json::json!({"plane": 0, "chunkX": cx, "chunkY": cy, "sourcePlane": 0, "sourceChunkX": cx, "sourceChunkY": cy, "quarterTurns": 0})
+        })
+        .collect();
+    let player = (3172, 5724);
+    let (base_x, base_y) = RendererCore::base_for_tile(player.0, player.1);
+    assert_eq!((base_x, base_y), (3120, 5672));
+    let world = |layout: serde_json::Value| -> String {
+        serde_json::json!({
+            "revision": "1", "tick": "1",
+            "player": {"id": "player-1", "tile": {"x": player.0, "y": player.1, "plane": 0}, "animation": "808",
+                       "activity": "idle", "hitpoints": 10, "instance": "instance.death-office.1", "equipment": []},
+            "entities": [], "instanceLayout": layout
+        })
+        .to_string()
+    };
+    // Ordinary world at the same base (all squares the original loader would request).
+    let mut plain = core_with_textures();
+    let squares = RendererCore::squares_for_base(base_x, base_y);
+    let available: Vec<i32> = squares
+        .iter()
+        .copied()
+        .filter(|s| {
+            repo_root()
+                .join(format!("assets/compiled/render/blocks/{s}.bin"))
+                .is_file()
+        })
+        .collect();
+    assert!(available.contains(&12633), "square 12633 export present");
+    load_blocks(&mut plain, &available);
+    plain
+        .load_map_scenes(&common::read_asset("minimap/mapscenes.bin"))
+        .unwrap();
+    for &s in &available {
+        plain
+            .load_minimap_block(s, &common::read_asset(&format!("minimap/blocks/{s}.bin")))
+            .unwrap();
+    }
+    plain
+        .update_world(&world(serde_json::Value::Null), 0.0)
+        .unwrap();
+    assert!(!plain.instance_layout_changed());
+    plain.assemble_scene(base_x, base_y, false, 0.0).unwrap();
+    let plain_scene = plain.scene().unwrap().clone();
+
+    // The instance: same blocks loaded, layout applied.
+    let mut inst = core_with_textures();
+    load_blocks(&mut inst, &available);
+    inst.load_map_scenes(&common::read_asset("minimap/mapscenes.bin"))
+        .unwrap();
+    for &s in &available {
+        inst.load_minimap_block(s, &common::read_asset(&format!("minimap/blocks/{s}.bin")))
+            .unwrap();
+    }
+    inst.update_world(
+        &world(serde_json::json!({"template": "instance.template.death-office", "chunks": death_office})),
+        0.0,
+    )
+    .unwrap();
+    assert!(
+        inst.instance_layout_changed(),
+        "a new layout asks for reassembly"
+    );
+    assert_eq!(
+        inst.squares_needed(base_x, base_y),
+        vec![12633],
+        "only the declared source square"
+    );
+    inst.assemble_scene(base_x, base_y, false, 0.0).unwrap();
+    assert!(!inst.instance_layout_changed());
+    let scene = inst.scene().unwrap().clone();
+    assert_eq!(
+        scene.name,
+        "blocks@3120,5672#instance.template.death-office"
+    );
+    // The template declares plane 0 of the four chunks only; the upper planes of those chunks
+    // are as unloaded as every other chunk (the original template array has no entry for them).
+    let declared = |plane: i32, x: i32, y: i32| {
+        plane == 0 && (396..=397).contains(&(x >> 3)) && (715..=716).contains(&(y >> 3))
+    };
+    let mut inside_paints = 0usize;
+    let mut compared = 0usize;
+    for plane in 0..4 {
+        for lx in 0..104 {
+            for ly in 0..104 {
+                let (wx, wy) = (base_x + lx, base_y + ly);
+                let index = scene.tile_index(plane, lx + scene.offset, ly + scene.offset);
+                let plain_index =
+                    plain_scene.tile_index(plane, lx + plain_scene.offset, ly + plain_scene.offset);
+                if declared(plane, wx, wy) {
+                    // Declared chunks equal the ordinary world tile for tile (paint, height,
+                    // walls, floor decorations, object slots).
+                    assert_eq!(
+                        scene.paints.get(&index),
+                        plain_scene.paints.get(&plain_index),
+                        "paint {plane} {wx},{wy}"
+                    );
+                    assert_eq!(
+                        scene.walls.get(&index),
+                        plain_scene.walls.get(&plain_index),
+                        "wall {plane} {wx},{wy}"
+                    );
+                    assert_eq!(
+                        scene.floor_decorations.get(&index),
+                        plain_scene.floor_decorations.get(&plain_index),
+                        "floor {plane} {wx},{wy}"
+                    );
+                    for corner in [(0, 0), (1, 0), (0, 1), (1, 1)] {
+                        assert_eq!(
+                            scene.height(
+                                plane,
+                                lx + scene.offset + corner.0,
+                                ly + scene.offset + corner.1
+                            ),
+                            plain_scene.height(
+                                plane,
+                                lx + plain_scene.offset + corner.0,
+                                ly + plain_scene.offset + corner.1
+                            ),
+                            "height {plane} {wx},{wy} corner {corner:?}"
+                        );
+                    }
+                    assert_eq!(
+                        scene.object_count[index], plain_scene.object_count[plain_index],
+                        "objects {plane} {wx},{wy}"
+                    );
+                    assert_eq!(
+                        scene.tile_models.get(&index),
+                        plain_scene.tile_models.get(&plain_index),
+                        "tile model {plane} {wx},{wy}"
+                    );
+                    inside_paints += usize::from(
+                        scene.paints.contains_key(&index) || scene.tile_models.contains_key(&index),
+                    );
+                    compared += 1;
+                } else {
+                    // Undeclared chunks are unloaded: no paint, wall, decoration or object slot.
+                    assert!(
+                        !scene.paints.contains_key(&index),
+                        "paint leaked to {plane} {wx},{wy}"
+                    );
+                    assert!(
+                        !scene.walls.contains_key(&index),
+                        "wall leaked to {plane} {wx},{wy}"
+                    );
+                    assert!(!scene.floor_decorations.contains_key(&index));
+                    assert!(!scene.wall_decorations.contains_key(&index));
+                    assert!(!scene.tile_models.contains_key(&index));
+                    for slot in 0..5 {
+                        assert!(
+                            !scene.slots.contains_key(&(index * 5 + slot)),
+                            "object slot leaked to {plane} {wx},{wy}"
+                        );
+                    }
+                }
+            }
+        }
+    }
+    assert_eq!(compared, 256, "16x16 declared tiles on plane 0 compared");
+    assert!(
+        inside_paints >= 84,
+        "the Death Office chunks carry terrain ({inside_paints} painted/shaped tiles)"
+    );
+    // A frame renders; the minimap shows map data only inside the declared chunks.
+    inst.set_camera(Camera {
+        x: 3172 * 128,
+        height: -1200,
+        y: 5724 * 128,
+        pitch: 2048,
+        yaw: 0,
+        zoom: 410,
+        far: 32768,
+    })
+    .unwrap();
+    inst.build_frame(0.0).unwrap();
+    let pixels = rasterize(&inst, &textures);
+    common::write_png("instance-death-office", 1920, 1080, &pixels);
+    let surface = inst.minimap_surface().unwrap().clone();
+    let minimap_rgb: Vec<i32> = surface
+        .rgba
+        .chunks(4)
+        .map(|p| (i32::from(p[0]) << 16) | (i32::from(p[1]) << 8) | i32::from(p[2]))
+        .collect();
+    common::write_png(
+        "instance-death-office-minimap",
+        surface.width as u32,
+        surface.height as u32,
+        &minimap_rgb,
+    );
+    let (sx, sy) = surface.margin;
+    let mut drawn_outside = 0usize;
+    let mut drawn_inside = 0usize;
+    for ty in 0..104 {
+        for tx in 0..104 {
+            let (wx, wy) = (base_x + tx, base_y + ty);
+            // Centre pixel of the tile in the 4 px/tile raster (y grows downwards from the top).
+            let px = sx + tx * surface.scale + 2;
+            let py = surface.height - 1 - (sy + ty * surface.scale + 2);
+            let drawn = surface.mask[(py * surface.width + px) as usize] != 0;
+            if declared(0, wx, wy) {
+                drawn_inside += usize::from(drawn);
+            } else {
+                drawn_outside += usize::from(drawn);
+            }
+        }
+    }
+    assert_eq!(
+        drawn_outside, 0,
+        "minimap drew {drawn_outside} tiles outside the declared chunks"
+    );
+    assert!(
+        drawn_inside >= 60,
+        "minimap shows the declared chunks ({drawn_inside} tiles)"
+    );
+
+    // A translated turn-0 mapping: source chunk (396,715) shown at (400,718) equals the source
+    // chunk's tiles shifted by (32, 24) tiles.
+    let mut moved = core_with_textures();
+    load_blocks(&mut moved, &available);
+    moved
+        .update_world(
+            &world(serde_json::json!({"template": "test.translated", "chunks": [
+                {"plane": 0, "chunkX": 400, "chunkY": 718, "sourcePlane": 0, "sourceChunkX": 396, "sourceChunkY": 715, "quarterTurns": 0}
+            ]})),
+            0.0,
+        )
+        .unwrap();
+    moved.assemble_scene(base_x, base_y, false, 0.0).unwrap();
+    let moved_scene = moved.scene().unwrap().clone();
+    let mut moved_paints = 0usize;
+    for lx in 0..8 {
+        for ly in 0..8 {
+            let src = plain_scene.tile_index(
+                0,
+                396 * 8 + lx - base_x + plain_scene.offset,
+                715 * 8 + ly - base_y + plain_scene.offset,
+            );
+            let dst = moved_scene.tile_index(
+                0,
+                400 * 8 + lx - base_x + moved_scene.offset,
+                718 * 8 + ly - base_y + moved_scene.offset,
+            );
+            assert_eq!(
+                moved_scene.paints.get(&dst),
+                plain_scene.paints.get(&src),
+                "translated paint {lx},{ly}"
+            );
+            moved_paints += usize::from(moved_scene.paints.contains_key(&dst));
+            if let (Some(w), Some(p)) = (moved_scene.walls.get(&dst), plain_scene.walls.get(&src)) {
+                assert_eq!(w.x - p.x, 32 * 128, "wall x shifted by 32 tiles");
+                assert_eq!(w.z - p.z, 24 * 128, "wall z shifted by 24 tiles");
+            }
+            for corner in [(0, 0), (1, 1)] {
+                assert_eq!(
+                    moved_scene.height(
+                        0,
+                        400 * 8 + lx - base_x + moved_scene.offset + corner.0,
+                        718 * 8 + ly - base_y + moved_scene.offset + corner.1
+                    ),
+                    plain_scene.height(
+                        0,
+                        396 * 8 + lx - base_x + plain_scene.offset + corner.0,
+                        715 * 8 + ly - base_y + plain_scene.offset + corner.1
+                    )
+                );
+            }
+        }
+    }
+    assert!(moved_paints > 0);
+    let moved_src = moved_scene.tile_index(
+        0,
+        396 * 8 - base_x + moved_scene.offset,
+        715 * 8 - base_y + moved_scene.offset,
+    );
+    assert!(
+        !moved_scene.paints.contains_key(&moved_src),
+        "the source position itself is unloaded"
+    );
+
+    // A turned chunk is rejected, naming the mapping.
+    let mut turned = core_with_textures();
+    load_blocks(&mut turned, &[12633]);
+    turned
+        .update_world(
+            &world(serde_json::json!({"template": "test.turned", "chunks": [
+                {"plane": 0, "chunkX": 396, "chunkY": 715, "sourcePlane": 0, "sourceChunkX": 396, "sourceChunkY": 715, "quarterTurns": 2}
+            ]})),
+            0.0,
+        )
+        .unwrap();
+    let error = turned
+        .assemble_scene(base_x, base_y, false, 0.0)
+        .unwrap_err()
+        .to_string();
+    assert!(
+        error.contains("turned 2 quarter turns is not supported"),
+        "{error}"
+    );
+    // Back to the ordinary world: `null` clears the layout and asks for reassembly.
+    inst.update_world(&world(serde_json::Value::Null), 0.0)
+        .unwrap();
+    assert!(inst.instance_layout_changed());
+    assert_eq!(inst.squares_needed(base_x, base_y), squares);
+}

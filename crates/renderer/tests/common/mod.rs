@@ -282,3 +282,20 @@ pub fn npc_capture_models() -> Vec<(String, clubscape_renderer::model::Model, i3
     assert_eq!(out.len(), 54, "the approved pack has 54 NPC capture frames");
     out
 }
+
+/// Writes an RGB PNG of packed `0xRRGGBB` pixels to `.local/render-assets/test-output/<name>.png`.
+#[allow(dead_code)]
+pub fn write_png(name: &str, width: u32, height: u32, pixels: &[i32]) {
+    let dir = repo_root().join(".local/render-assets/test-output");
+    std::fs::create_dir_all(&dir).unwrap();
+    let file = std::fs::File::create(dir.join(format!("{name}.png"))).unwrap();
+    let mut encoder = png::Encoder::new(std::io::BufWriter::new(file), width, height);
+    encoder.set_color(png::ColorType::Rgb);
+    encoder.set_depth(png::BitDepth::Eight);
+    let mut writer = encoder.write_header().unwrap();
+    let bytes: Vec<u8> = pixels
+        .iter()
+        .flat_map(|p| [(p >> 16) as u8, (p >> 8) as u8, *p as u8])
+        .collect();
+    writer.write_image_data(&bytes).unwrap();
+}

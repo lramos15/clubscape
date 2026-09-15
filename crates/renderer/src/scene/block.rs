@@ -510,15 +510,113 @@ impl Block {
     }
 }
 
+/// One instanced chunk placement (the original `rl4.fn` template entry, unpacked): the 8×8
+/// source chunk (absolute chunk coordinates `world_tile >> 3`, plane) that appears at the
+/// destination chunk of the instance scene, turned by `quarter_turns`.
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub struct ChunkMapping {
+    pub plane: i32,
+    pub chunk_x: i32,
+    pub chunk_y: i32,
+    pub source_plane: i32,
+    pub source_chunk_x: i32,
+    pub source_chunk_y: i32,
+    pub quarter_turns: i32,
+}
+
+impl ChunkMapping {
+    /// The original packed template word: `plane << 24 | chunk_x << 14 | chunk_y << 3 | turns << 1`
+    /// (source coordinates; the destination is the array position).
+    pub fn packed_template(&self) -> i32 {
+        (self.source_plane << 24)
+            | (self.source_chunk_x << 14)
+            | (self.source_chunk_y << 3)
+            | ((self.quarter_turns & 3) << 1)
+    }
+}
+
+/// An instance scene: only the declared chunk mappings are loaded; every other chunk of the
+/// 104×104 scene stays unloaded (no terrain, no scenery, black on the minimap), exactly as the
+/// original template loader leaves undeclared chunks.
+#[derive(Clone, Debug, Default, PartialEq, Eq)]
+pub struct InstanceLayout {
+    pub template: String,
+    pub chunks: Vec<ChunkMapping>,
+}
+
 pub fn assemble(
     base_x: i32,
     base_y: i32,
     blocks: &[(&Block, &[(String, Model)])],
     randomize_phases: bool,
 ) -> Result<(SceneData, Vec<Option<Model>>), RenderError> {
+    assemble_mapped(base_x, base_y, blocks, randomize_phases, None)
+}
+
+/// [`assemble`] with an optional instance layout. With a layout, a block tile or placement is
+/// copied only when its chunk is a declared source chunk, to that mapping's destination chunk
+/// (a source chunk may appear several times); undeclared chunks are left unloaded. Block exports
+/// carry the original scene's final placed geometry (terrain blended and lit, scenery models
+/// lit at their placed orientation), so a mapping is exact for `quarter_turns == 0`; a turned
+/// chunk would need the terrain re-lit and every model re-lit at the turned orientation from
+/// raw inputs the blocks do not carry, and is rejected instead of approximated.
+pub fn assemble_mapped(
+    base_x: i32,
+    base_y: i32,
+    blocks: &[(&Block, &[(String, Model)])],
+    randomize_phases: bool,
+    layout: Option<&InstanceLayout>,
+) -> Result<(SceneData, Vec<Option<Model>>), RenderError> {
+    if let Some(layout) = layout {
+        if let Some(turned) = layout.chunks.iter().find(|c| c.quarter_turns & 3 != 0) {
+            return Err(RenderError::Scene(format!(
+                "instance template {}: chunk ({},{},{}) from source ({},{},{}) turned {} quarter turns is not supported: block exports hold lit placed geometry that cannot be turned exactly (raw terrain/location inputs needed)",
+                layout.template,
+                turned.plane,
+                turned.chunk_x,
+                turned.chunk_y,
+                turned.source_plane,
+                turned.source_chunk_x,
+                turned.source_chunk_y,
+                turned.quarter_turns
+            )));
+        }
+        if layout.chunks.is_empty() {
+            return Err(RenderError::Scene(format!(
+                "instance template {} declares no chunks",
+                layout.template
+            )));
+        }
+    }
+    // Destination placements of a block tile: identity (offset 0) without a layout; with one,
+    // every mapping whose source chunk is the tile's chunk, as a (plane, dx, dy) tile offset.
+    let placements_for = |block_plane: i32, wx: i32, wy: i32| -> Vec<(i32, i32, i32)> {
+        match layout {
+            None => vec![(block_plane, 0, 0)],
+            Some(layout) => layout
+                .chunks
+                .iter()
+                .filter(|c| {
+                    c.source_plane == block_plane
+                        && c.source_chunk_x == wx >> 3
+                        && c.source_chunk_y == wy >> 3
+                })
+                .map(|c| {
+                    (
+                        c.plane,
+                        (c.chunk_x - c.source_chunk_x) * 8,
+                        (c.chunk_y - c.source_chunk_y) * 8,
+                    )
+                })
+                .collect(),
+        }
+    };
     let tile_count = (PLANES as usize) << 16;
     let mut scene = SceneData::empty_grid(
-        format!("blocks@{base_x},{base_y}"),
+        match layout {
+            Some(layout) => format!("blocks@{base_x},{base_y}#{}", layout.template),
+            None => format!("blocks@{base_x},{base_y}"),
+        },
         base_x,
         base_y,
         GRID,
@@ -573,8 +671,6 @@ pub fn assemble(
         }
         let dx = block.origin_x - base_x;
         let dy = block.origin_y - base_y;
-        let unit_dx = dx * 128;
-        let unit_dy = dy * 128;
         // An animated reference becomes a per-placement instance with its own start phase.
         let instance = |scene: &mut SceneData, m: i32, hash: i64, salt: i32| -> i32 {
             if m > -2 {
@@ -608,65 +704,115 @@ pub fn assemble(
             (hash & !0x3FFF) | i64::from(mx & 127) | (i64::from(my & 127) << 7)
         };
         let in_grid = |ex: i32, ey: i32| (0..GRID).contains(&ex) && (0..GRID).contains(&ey);
+        // Every destination of a block tile: (destination plane, scene ex, scene ey, tile shift).
+        let destinations = |plane: i32, bx: i32, by: i32| -> Vec<(i32, i32, i32, i32, i32)> {
+            placements_for(plane, block.origin_x + bx, block.origin_y + by)
+                .into_iter()
+                .map(|(dest_plane, sx, sy)| {
+                    (
+                        dest_plane,
+                        bx + dx + sx + OFFSET,
+                        by + dy + sy + OFFSET,
+                        dx + sx,
+                        dy + sy,
+                    )
+                })
+                .collect()
+        };
         for plane in 0..PLANES {
-            for bx in 0..=BLOCK_SIZE {
-                for by in 0..=BLOCK_SIZE {
-                    let ex = bx + dx + OFFSET;
-                    let ey = by + dy + OFFSET;
-                    if !(0..=GRID).contains(&ex) || !(0..=GRID).contains(&ey) {
-                        continue;
+            if layout.is_none() {
+                for bx in 0..=BLOCK_SIZE {
+                    for by in 0..=BLOCK_SIZE {
+                        let ex = bx + dx + OFFSET;
+                        let ey = by + dy + OFFSET;
+                        if !(0..=GRID).contains(&ex) || !(0..=GRID).contains(&ey) {
+                            continue;
+                        }
+                        let h = block.heights
+                            [((plane * (BLOCK_SIZE + 1) + bx) * (BLOCK_SIZE + 1) + by) as usize];
+                        scene.set_height(plane, ex, ey, h);
                     }
-                    let h = block.heights
-                        [((plane * (BLOCK_SIZE + 1) + bx) * (BLOCK_SIZE + 1) + by) as usize];
-                    scene.set_height(plane, ex, ey, h);
+                }
+            } else {
+                // Mapped chunks: every loaded tile carries its four corner heights (the block
+                // grid holds the far edge row/column), so a chunk's edge is exact and an
+                // unloaded neighbour leaves nothing behind.
+                for bx in 0..BLOCK_SIZE {
+                    for by in 0..BLOCK_SIZE {
+                        for (dest_plane, ex, ey, _, _) in destinations(plane, bx, by) {
+                            for (cx, cy) in [(0, 0), (1, 0), (0, 1), (1, 1)] {
+                                let h = block.heights[((plane * (BLOCK_SIZE + 1) + bx + cx)
+                                    * (BLOCK_SIZE + 1)
+                                    + by
+                                    + cy)
+                                    as usize];
+                                if (0..=GRID).contains(&(ex + cx))
+                                    && (0..=GRID).contains(&(ey + cy))
+                                {
+                                    scene.set_height(dest_plane, ex + cx, ey + cy, h);
+                                }
+                            }
+                        }
+                    }
                 }
             }
             for bx in 0..BLOCK_SIZE {
                 for by in 0..BLOCK_SIZE {
-                    let ex = bx + dx + OFFSET;
-                    let ey = by + dy + OFFSET;
-                    if !in_grid(ex, ey) {
-                        continue;
-                    }
                     let local = block.local(plane, bx, by);
-                    let index = scene.tile_index(plane, ex, ey);
-                    scene.flags[index] = block.flags[local];
-                    scene.link[index] = block.link[local];
-                    scene.object_count[index] = block.object_count[local];
-                    scene.object_flags[index * 5..index * 5 + 5]
-                        .copy_from_slice(&block.object_flags[local * 5..local * 5 + 5]);
-                    scene.set_roof(plane, ex, ey, block.roofs[local]);
-                    scene.set_setting(plane, ex, ey, block.settings[local]);
+                    for (dest_plane, ex, ey, _, _) in destinations(plane, bx, by) {
+                        if !in_grid(ex, ey) {
+                            continue;
+                        }
+                        let index = scene.tile_index(dest_plane, ex, ey);
+                        scene.flags[index] = block.flags[local];
+                        scene.link[index] = block.link[local];
+                        scene.object_count[index] = block.object_count[local];
+                        scene.object_flags[index * 5..index * 5 + 5]
+                            .copy_from_slice(&block.object_flags[local * 5..local * 5 + 5]);
+                        scene.set_roof(dest_plane, ex, ey, block.roofs[local]);
+                        scene.set_setting(dest_plane, ex, ey, block.settings[local]);
+                    }
                 }
             }
         }
-        let place = |plane: i32, bx: i32, by: i32| -> Option<(usize, i32, i32)> {
-            let ex = bx + dx + OFFSET;
-            let ey = by + dy + OFFSET;
-            in_grid(ex, ey).then(|| (scene_index(plane, ex, ey), bx + dx, by + dy))
+        let place = |plane: i32, bx: i32, by: i32| -> Vec<(i32, usize, i32, i32, i32, i32)> {
+            destinations(plane, bx, by)
+                .into_iter()
+                .filter(|(_, ex, ey, _, _)| in_grid(*ex, *ey))
+                .map(|(dest_plane, ex, ey, sx, sy)| {
+                    (
+                        dest_plane,
+                        scene_index(dest_plane, ex, ey),
+                        bx + sx,
+                        by + sy,
+                        sx,
+                        sy,
+                    )
+                })
+                .collect()
         };
         for p in &block.paints {
-            if let Some((index, _, _)) = place(p.plane, p.bx, p.by) {
+            for (_, index, _, _, _, _) in place(p.plane, p.bx, p.by) {
                 scene.paints.insert(index, p.record.clone());
             }
         }
         for t in &block.tile_models {
-            if let Some((index, _, _)) = place(t.plane, t.bx, t.by) {
+            for (_, index, _, _, sx, sy) in place(t.plane, t.bx, t.by) {
                 let mut model = t.record.clone();
                 for v in &mut model.xs {
-                    *v += unit_dx;
+                    *v += sx * 128;
                 }
                 for v in &mut model.zs {
-                    *v += unit_dy;
+                    *v += sy * 128;
                 }
                 scene.tile_models.insert(index, model);
             }
         }
         for w in &block.walls {
-            if let Some((index, mx, my)) = place(w.plane, w.bx, w.by) {
+            for (_, index, mx, my, sx, sy) in place(w.plane, w.bx, w.by) {
                 let mut wall = w.record.clone();
-                wall.x += unit_dx;
-                wall.z += unit_dy;
+                wall.x += sx * 128;
+                wall.z += sy * 128;
                 wall.hash = rebase_hash(wall.hash, mx, my);
                 wall.model_a = instance(&mut scene, wall.model_a, wall.hash, 1);
                 wall.model_b = instance(&mut scene, wall.model_b, wall.hash, 2);
@@ -674,10 +820,10 @@ pub fn assemble(
             }
         }
         for d in &block.wall_decorations {
-            if let Some((index, mx, my)) = place(d.plane, d.bx, d.by) {
+            for (_, index, mx, my, sx, sy) in place(d.plane, d.bx, d.by) {
                 let mut decor = d.record.clone();
-                decor.x += unit_dx;
-                decor.z += unit_dy;
+                decor.x += sx * 128;
+                decor.z += sy * 128;
                 decor.hash = rebase_hash(decor.hash, mx, my);
                 decor.model_a = instance(&mut scene, decor.model_a, decor.hash, 3);
                 decor.model_b = instance(&mut scene, decor.model_b, decor.hash, 4);
@@ -685,24 +831,27 @@ pub fn assemble(
             }
         }
         for f in &block.floor_decorations {
-            if let Some((index, mx, my)) = place(f.plane, f.bx, f.by) {
+            for (_, index, mx, my, sx, sy) in place(f.plane, f.bx, f.by) {
                 let mut floor = f.record.clone();
-                floor.x += unit_dx;
-                floor.z += unit_dy;
+                floor.x += sx * 128;
+                floor.z += sy * 128;
                 floor.hash = rebase_hash(floor.hash, mx, my);
                 floor.model = instance(&mut scene, floor.model, floor.hash, 5);
                 scene.floor_decorations.insert(index, floor);
             }
         }
         for o in &block.objects {
-            if let Some((index, _, _)) = place(o.plane, o.bx, o.by) {
+            // Objects are copied per covered tile slot; a span reaching into an unloaded chunk
+            // keeps its geometry (the original places a location whole by its origin) while
+            // the unloaded tiles carry no slot.
+            for (_, index, _, _, sx, sy) in place(o.plane, o.bx, o.by) {
                 let mut object = o.object.clone();
-                object.x += unit_dx;
-                object.z += unit_dy;
-                object.min_x += dx;
-                object.max_x += dx;
-                object.min_y += dy;
-                object.max_y += dy;
+                object.x += sx * 128;
+                object.z += sy * 128;
+                object.min_x += sx;
+                object.max_x += sx;
+                object.min_y += sy;
+                object.max_y += sy;
                 object.hash = rebase_hash(object.hash, object.min_x, object.min_y);
                 // The same original instance spans every tile it covers, possibly across blocks:
                 // group by its world-anchored identity before drawing state is created.

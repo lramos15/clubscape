@@ -108,6 +108,33 @@ export interface RendererAnimationEvent {
 export interface RendererWorldExtensions {
   dynamicObjects?: RendererDynamicObject[];
   events?: RendererAnimationEvent[];
+  /**
+   * The instance the player stands in, as the authoritative template identity and its
+   * validated chunk mappings (backend `mechanics.instances` templates / `GenericInstanceChunkMapping`,
+   * forwarded by the shell). While set, the block scene is assembled from the declared chunks
+   * only — every other chunk stays unloaded (no terrain/scenery, black minimap) like the original
+   * template loader — and `squares_needed` restricts block fetches to the declared source
+   * squares. `null`/absent is the ordinary world. The renderer never infers a layout from an
+   * instance id. `quarterTurns !== 0` is rejected explicitly (block exports carry lit placed
+   * geometry that cannot be turned exactly).
+   */
+  instanceLayout?: RendererInstanceLayout | null;
+}
+
+/** One instance chunk mapping: destination chunk (absolute `tile >> 3`) showing a source chunk. */
+export interface RendererChunkMapping {
+  plane: number;
+  chunkX: number;
+  chunkY: number;
+  sourcePlane: number;
+  sourceChunkX: number;
+  sourceChunkY: number;
+  quarterTurns: number;
+}
+
+export interface RendererInstanceLayout {
+  template: string;
+  chunks: RendererChunkMapping[];
 }
 
 export type { ActorActionView };
@@ -520,7 +547,8 @@ export const createRenderer: (canvas: HTMLCanvasElement, config: RendererConfig,
     const assembleAround = (baseX: number, baseY: number): Promise<void> => {
       if (assembling) return assembling;
       assembling = (async () => {
-        const squares = Array.from(WasmRenderer.squares_for_base(baseX, baseY));
+        // Inside an instance only the declared source squares are fetched and assembled.
+        const squares = Array.from(renderer.squares_needed(baseX, baseY));
         await Promise.all(squares.map((s) => ensureBlock(s)));
         if (disposed) return;
         const missing = Array.from(renderer.assemble_scene(baseX, baseY, performance.now()));
@@ -596,9 +624,11 @@ export const createRenderer: (canvas: HTMLCanvasElement, config: RendererConfig,
         renderer.update_world(JSON.stringify(world), performance.now());
         if (blockMode && !assembling) {
           const { x, y } = world.player.tile;
-          if (renderer.needs_recenter(x, y, 16)) {
+          // A changed instance layout rebuilds the scene from the declared chunks (or back to
+          // the ordinary world); otherwise the original 16-tile edge rule recentres it.
+          if (renderer.instance_layout_changed() || renderer.needs_recenter(x, y, 16)) {
             const base = WasmRenderer.base_for_tile(x, y);
-            void assembleAround(base[0]!, base[1]!).catch((error) => diagnostic(`scene recenter failed: ${String(error)}`));
+            void assembleAround(base[0]!, base[1]!).catch((error) => diagnostic(`scene assembly failed: ${String(error)}`));
           }
         }
       },

@@ -32,7 +32,7 @@ pub mod flag {
     pub const WALL_DECOR: i32 = 32768;
 }
 
-#[derive(Clone, Debug)]
+#[derive(Clone, Debug, PartialEq, Eq)]
 pub struct TilePaint {
     pub sw: i32,
     pub se: i32,
@@ -43,7 +43,7 @@ pub struct TilePaint {
     pub rgb: i32,
 }
 
-#[derive(Clone, Debug)]
+#[derive(Clone, Debug, PartialEq, Eq)]
 pub struct TileModel {
     pub shape: i32,
     pub rotation: i32,
@@ -62,7 +62,7 @@ pub struct TileModel {
     pub textures: Option<Vec<i32>>,
 }
 
-#[derive(Clone, Debug)]
+#[derive(Clone, Debug, PartialEq, Eq)]
 pub struct Wall {
     pub model_a: i32,
     pub model_b: i32,
@@ -98,7 +98,7 @@ pub fn tag_non_interactive(hash: i64) -> bool {
     hash & (1 << 19) != 0
 }
 
-#[derive(Clone, Debug)]
+#[derive(Clone, Debug, PartialEq, Eq)]
 pub struct WallDecoration {
     pub model_a: i32,
     pub model_b: i32,
@@ -114,7 +114,7 @@ pub struct WallDecoration {
     pub hash: i64,
 }
 
-#[derive(Clone, Debug)]
+#[derive(Clone, Debug, PartialEq, Eq)]
 pub struct FloorDecoration {
     pub model: i32,
     pub x: i32,
@@ -123,7 +123,7 @@ pub struct FloorDecoration {
     pub hash: i64,
 }
 
-#[derive(Clone, Debug)]
+#[derive(Clone, Debug, PartialEq, Eq)]
 pub struct GameObject {
     pub model: i32,
     pub orientation: i32,

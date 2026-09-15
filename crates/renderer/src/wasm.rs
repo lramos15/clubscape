@@ -722,6 +722,18 @@ impl WasmRenderer {
         self.inner.borrow().core.needs_recenter(x, y, margin)
     }
 
+    /// Map squares a scene at `base` needs under the current instance layout: only the squares
+    /// holding declared source chunks inside an instance, `squares_for_base` otherwise.
+    pub fn squares_needed(&self, base_x: i32, base_y: i32) -> Vec<i32> {
+        self.inner.borrow().core.squares_needed(base_x, base_y)
+    }
+
+    /// Whether the last `update_world` changed the instance layout (`WorldView.instanceLayout`),
+    /// so the block scene must be reassembled before it matches the world.
+    pub fn instance_layout_changed(&self) -> bool {
+        self.inner.borrow().core.instance_layout_changed()
+    }
+
     /// Assembles the scene around `base` from loaded blocks; returns the missing squares.
     pub fn assemble_scene(
         &self,
