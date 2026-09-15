@@ -11,7 +11,7 @@ use std::{
 
 use anyhow::{Context, Result, bail, ensure};
 use clubscape_protocol::{
-    CurrentAccount, Hello, Register, client_message::Command, game,
+    CurrentAccount, ErrorCode, Hello, Register, client_message::Command, game,
     server_message::Result as Outcome,
 };
 use game::world_input::Action;
@@ -587,6 +587,12 @@ impl Runner {
                     "http_status": status.as_u16(), "code": error.code, "error_id": error.error_id,
                     "reason": error.message, "retry_after_seconds": error.retry_after_seconds
                 }))?;
+                if error.code == ErrorCode::Conflict as i32
+                    && let Action::ShopBuy(buy) = &receipt.action
+                {
+                    self.refresh_rejected_shop(buy.expected_item.as_deref(), "shop_buy_conflict")
+                        .await?;
+                }
                 bail!(
                     "Real game action rejected: HTTP {status}, code={}, error_id={}, reason={}",
                     error.code,
@@ -636,18 +642,40 @@ impl Runner {
         tokio::time::sleep(SOURCE_TICK).await;
         let sequence = self.sequence;
         let before = evidence::stable_player(self.player()?);
+        let expected_item = match &request {
+            game::quote_request::Request::ShopBuy(buy) => buy.expected_item.clone(),
+            _ => None,
+        };
+        let request = game::QuoteRequest {
+            request: Some(request),
+        };
+        self.evidence.append(
+            "quote_request",
+            json!({
+                "next_sequence": sequence,
+                "request": evidence::message_json("clubscape.game.v1.QuoteRequest", &request)?
+            }),
+        )?;
         let result = self
             .rpc(
                 Command::PollWorld(game::PollWorld {
                     world_session_id: self.world_session.clone(),
                     after_revision: self.snapshot.revision,
-                    quote: Some(game::QuoteRequest {
-                        request: Some(request),
-                    }),
+                    quote: Some(request),
                 }),
                 true,
             )
-            .await?;
+            .await;
+        let result = match result {
+            Ok(result) => result,
+            Err(error) => {
+                if expected_item.is_some() {
+                    self.refresh_rejected_shop(expected_item.as_deref(), "shop_quote_rejected")
+                        .await?;
+                }
+                return Err(error);
+            }
+        };
         let Outcome::WorldSnapshot(snapshot) = result else {
             bail!("Quote PollWorld returned the wrong generated Protobuf result");
         };
@@ -666,6 +694,31 @@ impl Runner {
             evidence::stable_player(self.player()?),
         )?;
         Ok(quote)
+    }
+
+    async fn refresh_rejected_shop(
+        &mut self,
+        expected_item: Option<&str>,
+        context: &str,
+    ) -> Result<()> {
+        let sequence = self.sequence;
+        let refresh_error = self.poll().await.err().map(|error| format!("{error:#}"));
+        self.evidence.append("shop_selection_requires_new_choice", json!({
+            "context": context,
+            "original_expected_item": expected_item,
+            "next_sequence_before_refresh": sequence,
+            "next_sequence_after_refresh": self.sequence,
+            "view_refresh_error": refresh_error,
+            "current_shop": self.snapshot.shop.as_ref().map(|shop|
+                evidence::message_json_with_defaults("clubscape.game.v1.ShopView", shop)).transpose()?,
+            "retry_submitted": false,
+            "policy": "Refresh is read-only. The original intent/identity is retained; no different item or row is chosen automatically."
+        }))?;
+        ensure!(
+            sequence == self.sequence,
+            "Rejected shop operation consumed a sequence"
+        );
+        Ok(())
     }
 
     async fn wait_for(

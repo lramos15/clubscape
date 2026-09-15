@@ -178,8 +178,8 @@ actual two runs, 29 Rust and 10 orchestration checks, complete genuine mapping,
 exact identities, startup errors and cleanup. No source character or required
 gameplay restart was reached.
 
-Shop-row/reclaim identity, offline collision and queued-style review work remain
-parent integration, not client exceptions. The simulator uses generated explicit Single
+Offline collision and queued-style review work remain parent integration, not
+client exceptions. The simulator uses generated explicit Single
 production requests and live guarded shop-row identities/quotes, and records
 public presence, bank, shop, recovery and quote contexts. No failed source action
 is transformed into a pass.
@@ -206,6 +206,29 @@ source fix is being reported as a continuing failure.
 records this actual new-artifact run, 29 Rust/10 orchestration checks, 11 real
 account checks, current identities, exact `game_file_size` error and complete
 cleanup. No product character, tutorial edge or required gameplay restart passed.
+
+### Authorized shop identity/capacity ABI
+
+Parent `3310032cc6621f41d395103a35e81b2cfd87e1ae` then
+`af75e17b98eeb94adbb9ef6d1066b3ec805a866a` were explicitly authorized and applied
+as `d44cde2` then `d35f4fc`. They reclaim empty extra shop rows and bind purchases/
+quotes to the optional canonical expected item without changing old `None`
+bytes, fixed catalogue indices, restock phase or historical receipt hashes.
+The canonical `a200ca08…6d62` artifact and prior native clock/contact repair are
+preserved.
+
+New simulator buy and quote requests always carry the displayed row's canonical
+`expected_item`, through the existing generated `ShopBuy` field 4 and unchanged
+action/quote envelope tags. They never supply a numeric source ID or price.
+Focused client tests cover buy/quote encoding, ambiguous rows and preservation
+of the original retry intent after a row is reused. Conflicts refresh the real
+view read-only and stop; the client never silently retargets or downgrades to an
+identity-less request. These client tests are not an executed shop/M1 journey.
+[`evidence/shop-identity-d35f4fc.json`](evidence/shop-identity-d35f4fc.json)
+records 35 client/protocol Rust checks, 2 historical server-intent checks,
+10 orchestration checks and a fresh real-Service run with the preserved canonical
+artifact. The actual run still stops at the independent private descriptor-size
+gate, before any product shop trade or character creation; cleanup passed.
 
 `milestone_accepted`, browser/UI, audio, performance and RuneLite verification
 remain false. Unit fixtures below establish client machinery only:

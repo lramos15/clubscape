@@ -94,6 +94,20 @@ real read-only quote, verifies source item/quantity/price, and submits the publi
 purchase/sale. Quotes must preserve progression and input sequence. Public
 presence and bank/shop/recovery/quote contexts are retained in the trace.
 
+Every **new buy and buy-quote** carries `ShopBuy.expected_item` from the
+displayed row's canonical `item` string. It is never the numeric cache/source ID
+or a client price. The exact same selected row/identity payload is quoted and
+submitted. Missing, duplicate, ambiguous or out-of-stock selections fail
+explicitly. An original retry receipt retains its original operation ID,
+sequence, row and optional identity; a refreshed view cannot rewrite it.
+
+On a definite buy conflict or rejected buy quote, the scenario refreshes the
+authoritative shop view read-only, records the original expected identity and
+current view, and stops for a new explicit selection. It does not silently
+choose a replacement item, remove the identity field, or resubmit an uncertain
+operation under another ID. Historical `None` wire/intent compatibility belongs
+to the unchanged server/protocol journal contract, not a new-client fallback.
+
 Polls wait 600 ms. Gathering/combat/ignition waits and retries are bounded and
 observed; success probabilities are never modified or statistically certified by
 one run. Writes with uncertain transport outcomes are not retried under new

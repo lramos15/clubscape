@@ -1435,17 +1435,7 @@ impl Runner {
             shop.shop == SHOP,
             "Opened shop identity differs from the source target"
         );
-        let index = shop
-            .lines
-            .iter()
-            .find(|line| line.item == "item.bucket")
-            .context("Source bucket is absent from the guarded current shop rows")?
-            .index;
-        let buy = game::ShopBuy {
-            shop: SHOP.into(),
-            item_index: index,
-            quantity: 1,
-        };
+        let buy = Self::displayed_shop_buy(shop, "item.bucket", 1)?;
         let quote = self
             .quote(game::quote_request::Request::ShopBuy(buy.clone()))
             .await?;
@@ -1533,6 +1523,40 @@ impl Runner {
         self.take_ground(&ground).await?;
         self.evidence.passed("goblin_combat")?;
         self.source_death().await
+    }
+
+    fn displayed_shop_buy(
+        view: &game::ShopView,
+        selected_item: &str,
+        quantity: u32,
+    ) -> Result<game::ShopBuy> {
+        ensure!(quantity > 0, "Shop selection requires a positive quantity");
+        let mut matching = view.lines.iter().filter(|row| row.item == selected_item);
+        let row = matching
+            .next()
+            .context("Selected canonical item is absent from the current guarded shop view")?;
+        ensure!(
+            matching.next().is_none(),
+            "Canonical shop item appears in more than one displayed row"
+        );
+        ensure!(
+            view.lines
+                .iter()
+                .filter(|other| other.index == row.index)
+                .count()
+                == 1,
+            "Displayed shop row index is ambiguous"
+        );
+        ensure!(
+            row.stock > 0,
+            "Selected displayed shop item is out of stock"
+        );
+        Ok(game::ShopBuy {
+            shop: view.shop.clone(),
+            item_index: row.index,
+            quantity,
+            expected_item: Some(row.item.clone()),
+        })
     }
 
     async fn take_ground(&mut self, ground: &game::GroundItem) -> Result<()> {
@@ -2006,6 +2030,7 @@ fn recovery_entries(snapshot: &Value, death: &str) -> Result<Vec<(String, u64)>>
 #[cfg(test)]
 mod tests {
     use super::*;
+    use prost::Message;
     use std::path::Path;
 
     #[test]
@@ -2055,5 +2080,87 @@ mod tests {
             checked.len() > 35,
             "Literal source-selector coverage unexpectedly shrank"
         );
+    }
+
+    fn displayed_bucket() -> game::ShopView {
+        game::ShopView {
+            shop: "shop.synthetic.store".into(),
+            lines: vec![game::ShopLine {
+                index: 42,
+                item: "item.bucket".into(),
+                stock: 3,
+                buy_price: 2,
+                sell_price: 0,
+            }],
+            ..Default::default()
+        }
+    }
+
+    #[test]
+    fn new_buy_and_quote_requests_pin_the_displayed_canonical_item() {
+        let view = displayed_bucket();
+        let buy = Runner::displayed_shop_buy(&view, "item.bucket", 1).unwrap();
+        assert_eq!(buy.item_index, 42);
+        assert_eq!(
+            buy.expected_item.as_deref(),
+            Some(view.lines[0].item.as_str())
+        );
+        let action = game::WorldInput {
+            action: Some(Action::ShopBuy(buy.clone())),
+            ..Default::default()
+        };
+        let decoded = game::WorldInput::decode(action.encode_to_vec().as_slice()).unwrap();
+        assert!(matches!(decoded.action, Some(Action::ShopBuy(ref actual)) if actual == &buy));
+        let quote = game::QuoteRequest {
+            request: Some(game::quote_request::Request::ShopBuy(buy.clone())),
+        };
+        let decoded = game::QuoteRequest::decode(quote.encode_to_vec().as_slice()).unwrap();
+        assert!(
+            matches!(decoded.request, Some(game::quote_request::Request::ShopBuy(ref actual)) if actual == &buy)
+        );
+        let value = evidence::action_json(&Action::ShopBuy(buy)).unwrap();
+        assert_eq!(value["shopBuy"]["expectedItem"], "item.bucket");
+        assert!(value["shopBuy"].get("price").is_none());
+        assert!(value["shopBuy"].get("sourceId").is_none());
+    }
+
+    #[test]
+    fn refreshed_shop_rows_cannot_retarget_an_original_retry_intent() {
+        let mut view = displayed_bucket();
+        let original = Runner::displayed_shop_buy(&view, "item.bucket", 1).unwrap();
+        let receipt = Receipt {
+            operation_id: "00000000-0000-4000-8000-000000000123".into(),
+            sequence: 7,
+            observed_revision: 21,
+            action: Action::ShopBuy(original.clone()),
+        };
+        view.lines[0].item = "item.pot".into();
+        assert!(Runner::displayed_shop_buy(&view, "item.bucket", 1).is_err());
+        view.lines.push(game::ShopLine {
+            index: 43,
+            item: "item.bucket".into(),
+            stock: 1,
+            buy_price: 2,
+            sell_price: 0,
+        });
+        let new_selection = Runner::displayed_shop_buy(&view, "item.bucket", 1).unwrap();
+        assert_eq!(new_selection.item_index, 43);
+        assert_eq!(receipt.action, Action::ShopBuy(original.clone()));
+        assert_eq!(original.item_index, 42);
+        assert_eq!(original.expected_item.as_deref(), Some("item.bucket"));
+        assert_eq!(receipt.sequence, 7);
+        assert_eq!(receipt.operation_id, "00000000-0000-4000-8000-000000000123");
+    }
+
+    #[test]
+    fn ambiguous_empty_and_numeric_source_id_selections_are_rejected() {
+        let mut view = displayed_bucket();
+        assert!(Runner::displayed_shop_buy(&view, "1925", 1).is_err());
+        assert!(Runner::displayed_shop_buy(&view, "item.bucket", 0).is_err());
+        view.lines.push(view.lines[0].clone());
+        assert!(Runner::displayed_shop_buy(&view, "item.bucket", 1).is_err());
+        view.lines.pop();
+        view.lines[0].stock = 0;
+        assert!(Runner::displayed_shop_buy(&view, "item.bucket", 1).is_err());
     }
 }

@@ -1,0 +1,117 @@
+{
+  "schema_version": 1,
+  "task": "m1-headless-journey",
+  "shop_client_contract_adaptation": "implemented_and_unit_verified",
+  "original_journey_status": "blocked",
+  "full_original_journey_passed": false,
+  "milestone_accepted": false,
+  "ui_audio_performance_or_runelite_claims": false,
+  "gameplay_sql_or_state_seeding_used": false,
+  "authorized_parent_commits_in_order": [
+    "3310032cc6621f41d395103a35e81b2cfd87e1ae",
+    "af75e17b98eeb94adbb9ef6d1066b3ec805a866a"
+  ],
+  "local_cherry_picks_in_order": [
+    "d44cde2",
+    "d35f4fc47363fe2e15d1caa81418dd406ba64958"
+  ],
+  "preserved_native_source_fix": "098487726df526eb8ddbe8c88169969cd995c627",
+  "new_client_policy": {
+    "buy_identity": "Some(displayed_shop_row.item), never numeric source_id or client price",
+    "quote_identity": "The exact same generated ShopBuy payload cloned from the selected displayed row",
+    "wire_contract": "ShopBuy optional expected_item tag4; unchanged WorldInput shop_buy tag25 and QuoteRequest shop_buy tag3",
+    "selection_guards": ["canonical item present", "one matching item row", "unambiguous row index", "positive quantity", "nonzero displayed stock"],
+    "stale_selection": "Read-only authoritative view refresh followed by explicit failure/new-selection requirement; no automatic retarget or resubmission",
+    "uncertain_retry": "Original operation ID, sequence, observation hint and action/expected_item remain unchanged",
+    "historical_none": "No new-client fallback to None; server/protocol compatibility tests preserve historical None bytes and canonical v1 intent hashes"
+  },
+  "native_checks": [
+    {"command": "cargo fmt --package clubscape-sim --check", "result": "passed"},
+    {
+      "command": "cargo test --quiet --package clubscape-sim --package clubscape-protocol --all-features",
+      "result": "passed",
+      "passed_tests": 35,
+      "breakdown": {
+        "protocol_unit": 12,
+        "protocol_game": 3,
+        "protocol_shop_identity_wire_compatibility": 3,
+        "simulator_unit": 16,
+        "simulator_loopback": 1
+      }
+    },
+    {
+      "command": "cargo test --quiet --package clubscape-server --test shop_intent_compatibility",
+      "result": "passed",
+      "passed_tests": 2,
+      "scope": "Historical canonical intent compatibility; not a product shop trade"
+    },
+    {
+      "command": "cargo clippy --quiet --package clubscape-sim --all-features --all-targets -- -D warnings",
+      "result": "passed"
+    },
+    {
+      "command": "python3 -m unittest discover -s tools/journey-tests -p 'test_*.py' -q",
+      "result": "passed",
+      "passed_tests": 10
+    }
+  ],
+  "added_client_regressions": [
+    "new_buy_and_quote_requests_pin_the_displayed_canonical_item",
+    "refreshed_shop_rows_cannot_retarget_an_original_retry_intent",
+    "ambiguous_empty_and_numeric_source_id_selections_are_rejected"
+  ],
+  "preserved_source_and_protocol_identity": {
+    "content_revision": "m1.source-backed.v3.327d3a78f3bdad7c",
+    "raw_artifact_sha256": "a200ca08c80f6a3fc812fe02ca95f52325e183084f83b12e8d470a1f37cc6d62",
+    "protocol_version": 1,
+    "game_proto_sha256": "3e00a9029cffb89788182728e15a6e1f8460693c7244201cf0181fecbad6bcd7",
+    "generated_protocol_descriptor_sha256": "648448015cd056b77fdce0c7b9d1fb3dd7243f22236123eb0e3c5e8cb189c0eb",
+    "cargo_lock_sha256_used_for_build_not_committed": "865211f6a32c844860f53dea5c77abd739f238e2e7be18b6acbc51687f2c63e3",
+    "source_oracles": "Unchanged independently authored research/journey-rules requirements and tests/scenarios/m1_fresh_account.json; exact hashes are retained in the detailed actual run report."
+  },
+  "real_run": {
+    "run_id": "93ccbed6463a44b1",
+    "recorded_at_unix_ms": 1789443624229,
+    "revision_label": "d35f4fc47363fe2e15d1caa81418dd406ba64958",
+    "owned_runner_changes_uncommitted_at_execution": true,
+    "command": "python3 tools/journey-tests/run.py --server-entrypoint public-api --report .local/evidence/m1-headless-shop-identity.json",
+    "exit_code": 1,
+    "real_account_checks_passed": 11,
+    "real_account_only_negative_readiness_check": "passed; not gameplay",
+    "compiler_required_assets_and_genuine_mappings": 5010,
+    "original_collection_deliveries": 4981,
+    "original_payload_files": 35,
+    "world_id": "223266ee-369c-46ab-b37f-f944251f3030",
+    "descriptor_sha256": "13f191b1e2765ecb0c0df1eb452d26f5121f624bd239b696a7886807726f4359",
+    "first_failure": {
+      "phase": "strict_product_server_startup",
+      "event": "startup_failure",
+      "stage": "game_content",
+      "error_kind": "game_file_size",
+      "error_id": "3b7afc03-25bf-4c4d-a0ef-6363c4f0f95f",
+      "file": "crates/server/src/game_service/content.rs",
+      "line": 46,
+      "actual_descriptor_bytes": 272433,
+      "private_limit_bytes": 262144,
+      "classification": "Deployment bound, not a shop-identity or native-source failure"
+    },
+    "binary_sha256": {
+      "production_account_server": "776b8d4ddf37ab451679a258105f364c1cbe6778ebeb446304ed5bc35603399e",
+      "real_service_launcher": "02c5833757c6f916b94374a1cadbc4f5c504e0e122c6be5a38c9822169ba6b15",
+      "simulator": "213da2184f942455d9b3c8dcc524c9213c8112dab40dab89e7dd8fb8d52eb420"
+    },
+    "all_owned_processes_containers_credentials_and_game_roots_cleaned": true
+  },
+  "whole_journey_evidence": {
+    "product_characters_created": 0,
+    "live_product_shop_trades_executed": 0,
+    "product_tutorial_edges_executed": 0,
+    "required_gameplay_restarts_executed": 0,
+    "remaining": "All source gameplay, Cook acquisition/rewards, goblin death/Office/grave and onboarding/post-quest recovery remain unchecked until real deployment startup succeeds."
+  },
+  "remaining_parent_integration": [
+    "Increase the private deployment descriptor bound without relaxing real asset/source readiness or public RPC budgets.",
+    "Independently parse GameRoot instead of nesting it under WebRoot in the production binary.",
+    "Actor collision/style work remains separate; shop identity/capacity repairs are integrated, not reported as missing."
+  ]
+}
