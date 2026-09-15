@@ -12,12 +12,12 @@
       {"id": "cdfad64d-9162-439f-a525-58e1114dd7f4", "task": "M1-BROWSER-AUDIO"},
       {"id": "78d01af9-70a4-4b02-8339-6a61eb377374", "task": "M1-BROWSER-SHELL"},
       {"id": "81ac9884-4f39-4f27-b516-6e9a42b09b51", "task": "M1-HEADLESS-JOURNEY"},
-      {"id": "2766e089-44e5-4a1d-974e-7b03ad9c269d", "task": "M1-GAMEPLAY-UI-CONTRACTS"},
-      {"id": "ac0f0856-44af-445b-bd90-6db7a1f4fc74", "task": "M1-CONSUMABLE-ASSET-CLOSURE"}
+      {"id": "2766e089-44e5-4a1d-974e-7b03ad9c269d", "task": "M1-GAMEPLAY-UI-CONTRACTS"}
     ],
     "reserved": [],
     "queued": [],
     "parked": [
+      {"id": "ac0f0856-44af-445b-bd90-6db7a1f4fc74", "reason": "Exact consumed-container source closure integrated82e0a41;73 importer tests and all prior hashes preserved; no automatic resumption."},
       {"id": "2a0ae699-6af8-45d5-90c7-3addfc56ee53", "reason": "Renewed five-invocation assessment complete; live creation/scene/window/baseline work, firstXP unverified after driverOutOfReach. No sixth invocation or automatic resumption."},
       {"id": "aab1ae0f-0238-4254-bff3-b7c046349c6b", "reason": "Shop capacity/identity fixes integrated as3310032+af75e17 with18 passing regressions; no automatic resumption."},
       {"id": "0f5ddddf-0aa0-4908-b0d3-1ffc6b1f7a20", "reason": "Actor presence/cadence fixes integrated as62a003c+e1076a8 with15 passing regressions; no automatic resumption."},
@@ -34,9 +34,27 @@
   },
   "tasks": [
     {
+      "id": "M1-NONWALKING-CONTACT",
+      "goal": "Repair declared stationary-resource/actor face contact without making source water/scenery walkable or relaxing wall/plane/guard checks.",
+      "status": "IMPLEMENTING",
+      "specs": ["tools/journey-tests/evidence/fishing-access-6809ace.json", "spec/game-contracts.md"],
+      "dependencies": ["M1-DYNAMIC-COLLISION-PERFORMANCE"],
+      "allowed_paths": ["crates/world-engine/src/permissions.rs", "crates/world-engine/tests/nonwalking_contact.rs", "tools/m1-content/schema-check/examples/nonwalking_contact.rs", "crates/world-engine/README.md", "spec/game-contracts.md"],
+      "forbidden_paths": ["prompt.md", "content/**", "assets/**", "web/**", "crates/server/**", "crates/game-types/**", "crates/world-engine/src/navigation.rs", "crates/world-engine/src/collision_cache.rs"],
+      "outputs": ["Real declared-land access to source nonwalking NPC footprints", "Native source and negative wall/guard/instance tests", "Actual source Net journey continuation"],
+      "validation_commands": ["cargo test --locked -p clubscape-world-engine", "cargo clippy --locked -p clubscape-world-engine --all-targets -- -D warnings"],
+      "test_requirements": ["Source fishing NPC3317 remains in water", "Explicit cardinal land access works", "Unlisted/blocked/wrong-plane targets remain rejected", "Scripted/scenery-bound declared access follows the same correct boundary", "No source odds/cadence/geometry/item changes"],
+      "acceptance": ["SQL m1-nonwalking-contact records real source contact and regression results separately from full M1 acceptance"],
+      "reserved_namespaces": [],
+      "source_notes": ["Legitimate journey reached8/70edges and owned a net; four evaluatedlandfaces includingwest/south returnedOutOfReach because the water tile's movement mask was treated as a required walking edge."],
+      "parity_entries": [],
+      "adaptations": [],
+      "evidence": []
+    },
+    {
       "id": "M1-CONSUMABLE-ASSET-CLOSURE",
       "goal": "Publish only the missing original empty-container assets required by actual M1 drinking replacements.",
-      "status": "IMPLEMENTING",
+      "status": "DONE",
       "specs": ["tools/cache-import/POTION_ASSETS.md", "tools/cache-import/CONTENT_CLOSURE.md", "research/m1-bindings/ui-item-definitions.json.gz"],
       "dependencies": ["M1-FLEET-POTION-ASSETS"],
       "allowed_paths": ["tools/cache-import/**", "research/current-source/**", "assets/source/osrs/cache2695/**", "assets/manifests/osrs/**"],
@@ -49,7 +67,7 @@
       "source_notes": ["BackendUIcontract implementation imported exact definitions read-only with CRC/hash locks; actualsourcepublication is missing and canonicalbuild correctly rejects it."],
       "parity_entries": [],
       "adaptations": [],
-      "evidence": []
+      "evidence": ["fb41e713 integrated82e0a41:exactitems229/230/1919/1920 andmodels2548/2747/561/8234;onlynewplaceholderdefs15245/19159.73importertests/35repeatableextractionoutputs/unchangedrepublication andallprior1307packhashespass; backendreceivedfour-layerpublicationhookup."]
     },
     {
       "id": "M1-DYNAMIC-COLLISION-PERFORMANCE",
@@ -67,7 +85,7 @@
       "source_notes": ["Two independent normal accounts ACKed the source starting-doorOpen thenfailed the nextWalk due game_commit_tick5000ms; potential collision rebuild hotspot is unconfirmed until measured."],
       "parity_entries": [],
       "adaptations": [],
-      "evidence": ["Measured canonical source closed ticks26-28ms versus open9565-9567ms; immutable exact-state cache5104c46+eda966a8 reducesopen to125-128mscold/27-30mswarmdebug andmax9.691msrelease withidenticalworld/eventhashes.", "236engine testsincl8cacheinvalidation/expiry/instance/concurrency/eviction/error cases andnative/WASMClippypass;33realPG/HTTP+11accountchecks pass. Fullpost-doorprotocoljourney is re-running; no finalserver/browserperformanceacceptance."]
+      "evidence": ["Measured canonicalsource closed26-28ms/open9565-9567ms;5104c46+eda966a8 reduceopen to125-128mscold/27-30mswarmdebug,max9.691msrelease withidenticalworld/eventhashes.236engine/33PGtests pass.", "ACTUALsource doorOpen->crossing passed inrunff9f694ec58840f1,starting_exit->survival_greeting tick94 andworldcontinued176; laterfreshcandidatesreachedcatch_shrimp. Integrated958fed9 records proof. Sourcecadence/geometry/RNG/5sdeadline unchanged. Newfishingcontact failureisseparate; no finalperformance/M1acceptance."]
     },
     {
       "id": "M1-GAMEPLAY-UI-CONTRACTS",
