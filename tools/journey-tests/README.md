@@ -178,8 +178,8 @@ actual two runs, 29 Rust and 10 orchestration checks, complete genuine mapping,
 exact identities, startup errors and cleanup. No source character or required
 gameplay restart was reached.
 
-Offline collision and queued-style review work remain parent integration, not
-client exceptions. The simulator uses generated explicit Single
+All four engine review findings are integrated in the latest candidate below;
+none is a client exception or a continuing engine blocker. The simulator uses generated explicit Single
 production requests and live guarded shop-row identities/quotes, and records
 public presence, bank, shop, recovery and quote contexts. No failed source action
 is transformed into a pass.
@@ -229,6 +229,30 @@ records 35 client/protocol Rust checks, 2 historical server-intent checks,
 10 orchestration checks and a fresh real-Service run with the preserved canonical
 artifact. The actual run still stops at the independent private descriptor-size
 gate, before any product shop trade or character creation; cleanup passed.
+
+### Complete actor pair and final revision refresh
+
+The complete authorized actor pair `62a003c6…` then `e1076a87…` was applied as
+`0d31957` then `e844639` **before testing**, followed by source refresh
+`3a74cbe5911e699fd30e51cdedf944e4616f86b5` as `2d4c6d4`. Only the director-owned
+`milestones/m1-tasks.json` import conflicted; its existing worktree record was
+preserved rather than altering acceptance metadata. All source/runtime changes
+were applied. No partial actor candidate or parent `c58f` was used.
+
+The current revision is `m1.source-backed.v3.0e506f3dab24bbe0`, raw artifact
+`df3e2a452c100ecd94d2abc68e5cb1556f58090700474f547e7fd36de6682b3d`.
+An independent decoded-JSON comparison confirmed that only `/revision` changed.
+The earlier `a200ca08…` reports remain historical; the new candidate uses a
+fresh isolated world and does not repin or reset any acknowledged older world.
+Restart identity checks inside a run remain unchanged.
+
+[`evidence/all-reviews-2d4c6d4.json`](evidence/all-reviews-2d4c6d4.json)
+records the new candidate's 35 client/protocol tests, 2 legacy-intent tests,
+10 orchestration tests, 11 real account checks and exact identities/cleanup.
+The fresh real-Service attempt still fails only at the unchanged deployment
+descriptor limit (272,433 > 262,144 bytes), before character creation. The actual
+GameRoot environment nesting also remains. These are deployment gates, not
+reports that any of the four engine repairs failed.
 
 `milestone_accepted`, browser/UI, audio, performance and RuneLite verification
 remain false. Unit fixtures below establish client machinery only:
