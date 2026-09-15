@@ -1,0 +1,70 @@
+{
+  "schema_version": 1,
+  "milestone": "m1-starter-journey",
+  "result": "source_mechanisms_verified_attachment_aware_pose_gate_failed",
+  "code_revision": "9fd94346794ed508dbc89805b7ce8f7d37f79729",
+  "owned_commits": ["b4b563aa665dd1f9fe466fe145f40eb88c7ff6eb", "a33945b7b22db393a24048ce56440289f4801c14", "6854a9b841f159f1f7365db3131aa87afb97c797", "784f164ce2fc9981d61c4e0d4f88f54b8b72f063"],
+  "integrated_commits": ["3c24db8", "0a1a9ce", "01e770a", "9fd9434"],
+  "verified_mechanisms": [
+    "Actual grip/anchor displacement is measured separately from nearest body-surface clearance.",
+    "Original sequence hand overrides govern runtime and preview visibility/selection.",
+    "Observer ticks decode as u64, with malformed observer input rejected before state mutation.",
+    "Native minimap icon placement uses4pixels/tile,80pixel radius,50pixel mask threshold and original sprite-offset modes.",
+    "Late instance layout changes reassemble the scene and expose the actual core scene identity."
+  ],
+  "parent_validation": {
+    "manifest_and_current_block_index": "passed904files",
+    "default_gpu_command": "cargo test --release --locked -p clubscape-renderer --features gpu",
+    "default_test_functions_passed": 51,
+    "default_explicit_ignored": 11,
+    "dynamic_and_minimap_include_ignored_selection": "4 dynamic and5 minimap functions passed; these overlap the default selection.",
+    "declared_instance_layout_test": "passed",
+    "native_all_target_and_wasm_library_clippy": "passed",
+    "pose_gate_command": "cargo test --release --quiet --locked -p clubscape-renderer --features gpu --test gear_fit pose_fit_gate_every_legal_item_frame_meets_the_targets -- --ignored",
+    "pose_gate_result": "failed",
+    "pose_gate_failed_functions": 1,
+    "pose_gate_ignored_in_explicit_execution": 0
+  },
+  "actual_fit": {
+    "legal_item_frames_measured": 1587,
+    "source_not_drawn_item_frames": 2599,
+    "legality": {"worn": 1204, "sequence_override": 95, "combat_binding_pending_superset": 288, "source_hidden": 2281, "not_equippable": 318},
+    "item_frames_over_one_or_more_targets": 671,
+    "penetration_over_one": 666,
+    "surface_gap_over_two": 8,
+    "attachment_gap_over_two": 0,
+    "beyond_source_same_pose_overlap_plus_one": 356,
+    "source_overlap_is_not_an_automatic_waiver": true,
+    "failure_record": "assets/compiled/render/gear/pose-fit-failures.json",
+    "attachment_target_source_units": 2,
+    "unintended_penetration_target_source_units": 1,
+    "fitting_complete": false
+  },
+  "source_preservation": {
+    "source_scene_model_fixtures": "5 scenes and58 models preserved",
+    "independent_tutorial_phase_cases": "5 Tutorial cases remain exact over the scene pixels; full HUD/player composition is separate.",
+    "block_pack_sha256": "3a16edb732bba6ea5aa1e5f0468bf85ed07e9395b52624ba7df43f58fafe9d73",
+    "old_d76_pack_not_substituted": true,
+    "reference_policy_or_tolerances_changed": false
+  },
+  "required_work": [
+    "Minimal approved equipment geometry/rig fitting to meet every legal pose target; no floating items, whole-item masks or unapproved avatar redesign.",
+    "Raw terrain export and original assembly-time colour/light/HSL blending for the full scene/minimap outer band.",
+    "Turned chunk mapping and complete source comparisons, preserving the actual M1 Death Office layout.",
+    "Actual source animation bindings and composed camera/UI/minimap/preview integration.",
+    "Frozen-window performance, final Mac Chrome/Edge evidence and owner visual/audio acceptance."
+  ],
+  "separate_audio_timing_failure": {
+    "source": ".worktrees/m1-browser-shell/.local/evidence/audio-preferences-handoff.json",
+    "maximum_dispatch_ms": 26.4399092970522,
+    "unchanged_allowed_ms": 20.045351473922903,
+    "reproduced_without_preference_coordinator": true,
+    "repair_task": "M1-AUDIO-CUE-TIMING",
+    "result": "unpassed"
+  },
+  "prior_gameplay_checkpoint": "milestones/evidence/m1-mainland-shop-entry.json",
+  "production_browser_build_passed": false,
+  "full_m1_journey_verified": false,
+  "milestone_accepted": false,
+  "later_milestone_authorized": false
+}
