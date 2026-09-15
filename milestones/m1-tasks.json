@@ -11,10 +11,11 @@
       {"id": "cc864d7a-37cc-4869-a7b4-d484d01cede5", "task": "M1-BROWSER-UI"},
       {"id": "78d01af9-70a4-4b02-8339-6a61eb377374", "task": "M1-BROWSER-SHELL"},
       {"id": "2766e089-44e5-4a1d-974e-7b03ad9c269d", "task": "M1-GAMEPLAY-UI-CONTRACTS"},
-      {"id": "81ac9884-4f39-4f27-b516-6e9a42b09b51", "task": "M1-HEADLESS-JOURNEY"},
       {"id": "cdfad64d-9162-439f-a525-58e1114dd7f4", "task": "M1-AUDIO-CUE-TIMING"}
     ],
-    "reserved": [],
+    "reserved": [
+      {"id": "81ac9884-4f39-4f27-b516-6e9a42b09b51", "task": "M1-HEADLESS-JOURNEY", "reason": "Actualsame5eaccount321checks passes70/70,shop,goblin andloot, withtwoverifiedprivate restores. DyingPollWorld409 isbeinglocalized; protectedcheckpoint7fa370e14c9b421e remainsunchanged andno gameplayresume isauthorized yet."}
+    ],
     "queued": [],
     "parked": [
       {"id": "ac0f0856-44af-445b-bd90-6db7a1f4fc74", "reason": "Original scenery phase supplement6c68672d integratedb9cdd0f; parent36tests and exact27-observation/index verification pass. Renderer received active4/3/2 phases and original clocks; no automatic resumption."},
@@ -33,6 +34,24 @@
     "usage_accounting": "milestones/evidence/m1-usage-snapshot.json records the available delayed session snapshot; final project-wide credits/currency are unavailable."
   },
   "tasks": [
+    {
+      "id": "M1-DYING-OBSERVATION",
+      "goal": "Keep legitimate dying/respawn states observable through public world polling without changing source death outcomes or input refusals.",
+      "status": "IMPLEMENTING",
+      "specs": ["tools/journey-tests/evidence/shop-goblin-dying-8ab279a.json", "spec/game-contracts.md", "crates/server/src/game_service/view.rs", "crates/world-engine/src/death.rs"],
+      "dependencies": ["M1-CONTEXTUAL-SHOP-ENTRY"],
+      "allowed_paths": ["crates/world-engine/src/death.rs", "crates/world-engine/src/combat.rs", "crates/world-engine/src/lifecycle.rs", "crates/world-engine/src/gameplay_ui/projections.rs", "crates/world-engine/tests/dying_observation.rs", "crates/server/src/game_service/tests/dying_observation.rs", "crates/server/src/game_service/tests.rs", "crates/world-engine/README.md", "spec/game-contracts.md"],
+      "forbidden_paths": ["prompt.md", "assets/**", "content/**", "web/**", "research/reference-pack/**", "tools/reference-pack/**", ".local/journey-checkpoints/**"],
+      "outputs": ["Exact failing observation query localized and reproduced", "Minimal source-preserving life-transition/read-only correction", "Positive phase observation and negative input/persistence regressions"],
+      "validation_commands": [],
+      "test_requirements": ["No heal, death skip, fake arrival or state seeding", "No broad catch/empty view/permission weakening", "Preserve privatecheckpoint/RNG/items/XP/receipts/source pin", "Reconcile derived metadata only through a demonstrated legitimate boundary", "Public polling stays read-only"],
+      "acceptance": ["SQL m1-dying-observation records proven cause, executable regressions and a separately authorized source-safe checkpoint continuation"],
+      "reserved_namespaces": [],
+      "source_notes": ["Actualgoblin-causeddeath: lastpublictick1613HP1, preservedtick1616HP0/lifeDying. PollWorld409error688aab5a. Stalecombatstyleafterequipmentremoval is a candidate only; exact private-state diagnostic is pending."],
+      "parity_entries": [],
+      "adaptations": [],
+      "evidence": []
+    },
     {
       "id": "M1-AUDIO-CUE-TIMING",
       "goal": "Repair the native cue-timing overruns reproduced by the actual composed browser harness without changing the approved timing bound.",
@@ -360,7 +379,7 @@
     {
       "id": "M1-HEADLESS-JOURNEY",
       "goal": "Implement and execute the complete legitimate M1 protocol journey with real account/world/persistence boundaries, not seeded states.",
-      "status": "IMPLEMENTING",
+      "status": "BLOCKED",
       "specs": ["prompt.md section 30.1", "research/journey-rules/**", "spec/game-networking.md", "content/m1/README.md"],
       "dependencies": ["M1-FLEET-ENGINE-CLOSURE"],
       "allowed_paths": ["tools/simulator/**", "tools/journey-tests/**", "tests/scenarios/**"],

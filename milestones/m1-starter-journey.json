@@ -9,11 +9,11 @@
   "candidate_revision": null,
   "accepted_revision": null,
   "checkpoint": {
-    "report": "milestones/evidence/m1-mainland-shop-entry.json",
+    "report": "milestones/evidence/m1-authority-controls.json",
     "verified_infrastructure_revision": "275d3cc83d6a7c2118d0afcf82490f364e5d2986",
     "infrastructure_evidence": "milestones/evidence/m1-account-foundations.json",
-    "runtime_revision": "9d67cef9de29b74d58ff6cde2762656b7c1c2452",
-    "scope_note": "Actual5e normal account completes70/70 tutorial transitions,285checks, legitimateHomeTeleport/Lumbridgecopper/bank and onboarding recovery. The next guarded shop-entry bug is repaired without changing5e; live continuation is resumed separately. Goblin/death/Cook/postquest, current UI4 adaptation/source authority, actual attachment fitting and full composed fidelity/performance/Mac/owner gates remain incomplete."
+    "runtime_revision": "49bf011b3f5dff77877310d61f56ac6320ea7a90",
+    "scope_note": "Newauthority-enabled5b3canonical4 passes588native,46realPG and94source/95repeat checks; existing5e/6fworlds are notrepinned. Actualsame5e journey reaches321checks,shop/goblin/loot withtwoverifiedprivate restores, thenDyingPollWorld409; privatecheckpointpreserved. Source-safe death continuation,Cook/postquest,completeclient/fidelity/performance/owner gates remainincomplete."
   },
   "scope_approval": {
     "authority": "owner",

@@ -10,13 +10,24 @@ clocks pass; the complete real player journey remains a separate gate. See
 current [`status.json`](../../research/m1-bindings/status.json), plus the
 [UI4 candidate and remaining control work](../../research/interface-contracts/verification.json).
 
-The current revision is `m1.source-backed.v4.3ff4292b311453cc`, raw artifact
-`5e0aa8a28851752ae0b8b0a08c635c6c8d2979f509f3a3e564ee74e2abfc8e6f`.
+The current revision is `m1.source-backed.v4.bdbf8a3788b842be`, raw artifact
+`5b3ba5f108ed3fec8f8b5f7f49b429c059e21b6f192ec99a0569616e08330059`.
 Persisted state/runtime remain version1, with explicit UI state version1.
 An existing world must keep its exact artifact unless the operator performs
 the documented fenced `migrate-ui --from <old-raw-sha256>` upgrade; do not
 silently repin it or recreate missing UI history. Fresh journey candidates
 use ordinary account creation, not seeded checkpoints.
+
+This candidate adds semantic All amounts, partial recovery, original level-up
+bindings, the actual instance-template observer, server-owned music unlock
+history and qualified source actor-animation rules. Bank layout2 explicitly
+stores All preferences. Audio histories distinguish tracked-from-creation from
+legacy-untracked; unknown history is not an empty or fully unlocked account.
+Native variable491 exposes only its verified bit mask, not a fabricated whole
+word. Existing5e/6f worlds remain pinned until an explicit fenced migration.
+The original clips listed in `animation-requirements.json`, normal-grave
+Bank-All permission and dough/Empty motion remain separate source/presentation
+requirements, not claims of complete M1 acceptance.
 
 ## Build and verify
 
