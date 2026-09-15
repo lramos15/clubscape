@@ -49,12 +49,12 @@
     "tutorial_states": 71
   },
   "engine_constructed": true,
-  "engine_validation_diagnostic": "Error: \"Native source-policy conformance failed; see the exact probe result.\"\n",
-  "engine_validation_exit_code": 1,
+  "engine_validation_diagnostic": "",
+  "engine_validation_exit_code": 0,
   "exact_geometry_scope": "Explicit imported cells and source-bound object placement equality, not an observed live clipping dump.",
   "execution_requirements": "research/m1-bindings/contract-gaps.json",
   "gameplay_executed": false,
-  "native_source_policy_checks_passed": false,
+  "native_source_policy_checks_passed": true,
   "native_source_policy_probes": {
     "consume_only": {
       "controlled_component_random_draws": 24,
@@ -64,62 +64,59 @@
       "xp_tenths": 45
     },
     "fresh_manual_drop_offline_clock": {
-      "actual_expiry_after_offline_tick": 300,
+      "actual_expiry_after_offline_tick": 301,
       "actual_policy": "ground_policy.player_drop.m1_fresh",
       "before_logout_expiry": 300,
       "controlled_component_random_draws": 12,
       "expected_expiry_after_offline_tick": 301,
+      "frozen_clock": "owner_online_ticks",
       "item": "item.coins",
       "offline_ticks_advanced": 1,
       "origin": "player_drop",
-      "passed": false,
+      "passed": true,
       "public_after": null,
       "quantity_conserved": true,
-      "required_contract": "Fresh manual drops use owner-online expiration like untradeables; GroundProducer::PlayerDrop must not lose lifetime while the owner is offline.",
+      "required_contract": "Fresh manual drops use an explicit frozen owner-online clock without changing their PlayerDrop origin.",
       "source": "research/m1-bindings/runtime3-policy.json#fresh_normal_manual_drop_profile"
     },
-    "passed": false,
+    "passed": true,
+    "played_time_drop_selection": {
+      "cases": [
+        {
+          "clock": "owner_online_ticks",
+          "passed": true,
+          "played_ticks": 119999,
+          "policy": "ground_policy.player_drop.m1_fresh",
+          "public_at_tick": 18446744073709551615
+        },
+        {
+          "clock": "world_ticks",
+          "passed": true,
+          "played_ticks": 120000,
+          "policy": "ground_policy.player_drop.ordinary",
+          "public_at_tick": 100
+        }
+      ],
+      "classification": "Native conformance to the source-supported20-hour conditional, not live-source observation.",
+      "passed": true
+    },
     "scope": "Isolated native component probes against unmodified strictly compiled source content. Controlled runtime inventory/stage boundaries and reproducible test-only randomness are not a fresh journey, observed odds or presentation acceptance.",
     "single_and_make_x_one": {
       "cases": [
         {
-          "actor_tile": {
-            "plane": 0,
-            "x": 3211,
-            "y": 3215
-          },
-          "atomic_refusal": true,
-          "error": {
-            "code": "out_of_reach",
-            "message": "Target is on another plane, out of range, or blocked."
-          },
-          "expected_next_tick": 1,
           "mode": "single",
-          "passed": false,
-          "quantity": 1,
-          "required_contract": "Contact a solid source facility from its allowed side without requiring movement/center-to-center sight through its own clipped footprint; keep real intervening walls and source access masks.",
-          "target": "spawn.range.lumbridge.3212.3215.p0.t10.r2"
+          "next_tick": 1,
+          "passed": true,
+          "quantity": 1
         },
         {
-          "actor_tile": {
-            "plane": 0,
-            "x": 3211,
-            "y": 3215
-          },
-          "atomic_refusal": true,
-          "error": {
-            "code": "out_of_reach",
-            "message": "Target is on another plane, out of range, or blocked."
-          },
-          "expected_next_tick": 3,
           "mode": "make_x",
-          "passed": false,
-          "quantity": 1,
-          "required_contract": "Contact a solid source facility from its allowed side without requiring movement/center-to-center sight through its own clipped footprint; keep real intervening walls and source access masks.",
-          "target": "spawn.range.lumbridge.3212.3215.p0.t10.r2"
+          "next_tick": 3,
+          "passed": true,
+          "quantity": 1
         }
       ],
-      "passed": false
+      "passed": true
     }
   },
   "presentation_approved": false,
@@ -135,8 +132,8 @@
   ],
   "source_status_occurrences": {
     "approved_adaptation": 1,
-    "inference": 3155,
-    "verified_reference": 11522
+    "inference": 3170,
+    "verified_reference": 11534
   },
   "structural_checks_passed": true
 }

@@ -1,5 +1,5 @@
 {
-  "aggregate_sha256": "95f50b40601a821f7beaed37b624da3cb61b5afb6b381f75375f35530a196c79",
+  "aggregate_sha256": "327d3a78f3bdad7cea50384fffe3eaf176c95b2c74e53a1047767d1e5d922c13",
   "inputs": [
     {
       "bytes": 845835,
@@ -8572,9 +8572,9 @@
       "sha256": "34e1a16d3f664d589da055772efc5cae89cb6b0a1bf57878ad146435b3881df2"
     },
     {
-      "bytes": 9675,
+      "bytes": 10240,
       "path": "crates/game-types/src/execution.rs",
-      "sha256": "8da35ab6de29ffa41f7c561d5a8a1be951121c6caad0341295694a3765bd0ee1"
+      "sha256": "d78b3f6ba8d503fa84d42938ce82671ab6e4ad4be7b85d5111f5f72b4c4eee76"
     },
     {
       "bytes": 4162,
@@ -8592,9 +8592,9 @@
       "sha256": "0692b0ae9f9dea5eb5aa379b83a56b3d7f14446f641af7041ae46ebf3376d6d6"
     },
     {
-      "bytes": 43352,
+      "bytes": 43635,
       "path": "crates/game-types/src/mechanics.rs",
-      "sha256": "50566f0f502085d787a160cabe0a9f5179e6cfdb4c4861f926c4b18dbdf34c9e"
+      "sha256": "3ece3f5491aa287c31dc31022b5f4b072b9d3dadf89f3480371f7b7583cd4809"
     },
     {
       "bytes": 4526,
@@ -8602,14 +8602,14 @@
       "sha256": "dade5ea9bf5b40bf88717ec93711a9277e8d56b14f30dec74634506549ac35f7"
     },
     {
-      "bytes": 25629,
+      "bytes": 26476,
       "path": "crates/game-types/src/runtime_state.rs",
-      "sha256": "2cef2f756195d9670f2fdea1fafb84bd3690dcb126a9106140488b67c91182cb"
+      "sha256": "1b82d963ebda39cd0755339532134c0f95a3673e1bd8fc9a513402bb15481c9f"
     },
     {
-      "bytes": 40934,
+      "bytes": 42272,
       "path": "crates/game-types/src/runtime_validation.rs",
-      "sha256": "02f74d752e765a94e139184e7bbe3a46f1e7676e6eb20a17966cd9bbcca0a454"
+      "sha256": "ac78f3c890161579bec25d47188b95b579f88d99a8533c7c2dd57d4d93fc339b"
     },
     {
       "bytes": 9751,
@@ -8747,9 +8747,9 @@
       "sha256": "87b2cf02a5a7e181ea18cc5730802481ce7fbe0bce460d678fc860e4b7268734"
     },
     {
-      "bytes": 4391,
+      "bytes": 4730,
       "path": "research/m1-bindings/runtime3-policy.json",
-      "sha256": "05031552cbd96aec54e15ee6075212212fffa165d913c476860bb2cfd222fc7b"
+      "sha256": "bc8cd2fbed9ce49ea1d1aeac40034894a01439266acf85adad4f6c111f426ec7"
     },
     {
       "bytes": 10945,
@@ -8922,14 +8922,14 @@
       "sha256": "cdb607a97da3a1227c2c136e01963bd77ca27bbb40d6c775600a2db6c8fce240"
     },
     {
-      "bytes": 9886,
+      "bytes": 12011,
       "path": "tools/m1-content/schema-check/src/probes.rs",
-      "sha256": "aadc2262acd972cc267adc24d392622d407b18e86ffd2d8d482589c3a6c80986"
+      "sha256": "b2182f1633fc95db6b418cc954224e4ce512e168a8ab8a19f7df042f4f254137"
     },
     {
-      "bytes": 21922,
+      "bytes": 22615,
       "path": "tools/m1-content/selectors3.py",
-      "sha256": "9deac92af379e5e3faf9c836b78eb4d4050c45c17edac7bcfc306bc52c7b489e"
+      "sha256": "74a3ccb50900cb41cf39fc162c39159ee00ee0129a689c545964c3b8b2a89a36"
     },
     {
       "bytes": 15187,
@@ -8952,9 +8952,9 @@
       "sha256": "60ea4a595e22e0fe9e83997f63dec28df2f9278118ffb193b4e92357c68a9ac2"
     },
     {
-      "bytes": 14987,
+      "bytes": 16071,
       "path": "tools/m1-content/test_runtime3.py",
-      "sha256": "9e1caa8ed41533e4fb742ef27aeaed6ef4d219f3dde92494bccd7666df0ede33"
+      "sha256": "12453407da26963bf40982b625f8934d9eda4572a6af9d799e615a929183baa0"
     },
     {
       "bytes": 7779,
@@ -8972,9 +8972,9 @@
       "sha256": "f7a0176dd033cb96288c1d2def3aaf0f88a86ec7d15d04f6ea66b2c8c6b259c0"
     },
     {
-      "bytes": 9018,
+      "bytes": 9277,
       "path": "tools/m1-content/validate.py",
-      "sha256": "94d7d7f5b599afd6b60375a631ac990fd3fce84fe9e574a68632ffe6b071313c"
+      "sha256": "ae66c9dde337a0c47d8ec4c9e6cb034d4851e53c2b3af487e6307bb8b12a20fe"
     },
     {
       "bytes": 16316,

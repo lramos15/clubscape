@@ -28,6 +28,8 @@ pub(crate) struct TargetShape {
     pub npc: Option<NpcId>,
     pub access: Option<Vec<Tile>>,
     pub blocked_access: u8,
+    pub solid_footprint: bool,
+    pub opaque_footprint: bool,
 }
 
 impl TargetShape {
@@ -389,6 +391,8 @@ impl WorldEngine {
                     .clip
                     .as_ref()
                     .map_or(0, |clip| clip.access_blocked_sides),
+                solid_footprint: definition.blocks_movement,
+                opaque_footprint: definition.blocks_projectiles,
             });
         }
         let WorldTarget::Spawn { spawn: id } = target else {
@@ -419,6 +423,10 @@ impl WorldEngine {
                     .placement
                     .as_ref()
                     .map_or(0, |placement| placement.quarter_turns);
+                let mut layer = spawn
+                    .placement
+                    .as_ref()
+                    .map(|placement| placement.layer.clone());
                 let states = match character.runtime.instance.as_ref() {
                     Some(id) => {
                         &world
@@ -451,6 +459,7 @@ impl WorldEngine {
                         source_tile = state.tile;
                         transformed = true;
                         rotation = state.placement.quarter_turns;
+                        layer = Some(state.placement.layer.clone());
                     }
                 }
                 let base = self
@@ -525,6 +534,17 @@ impl WorldEngine {
                             .map_or(0, |clip| clip.access_blocked_sides),
                         rotation,
                     ),
+                    solid_footprint: matches!(
+                        layer,
+                        Some(ObjectLayer::GameObject | ObjectLayer::FloorDecoration)
+                    ) && definition
+                        .clip
+                        .as_ref()
+                        .is_some_and(|clip| clip.blocks_movement),
+                    opaque_footprint: definition
+                        .clip
+                        .as_ref()
+                        .is_some_and(|clip| clip.blocks_projectiles),
                 })
             }
             SpawnKind::Npc { npc } => {
@@ -579,6 +599,8 @@ impl WorldEngine {
                     npc: Some(definition.id.clone()),
                     access,
                     blocked_access: 0,
+                    solid_footprint: false,
+                    opaque_footprint: false,
                 })
             }
             SpawnKind::Item { .. } => Ok(TargetShape {
@@ -589,6 +611,8 @@ impl WorldEngine {
                 npc: None,
                 access: None,
                 blocked_access: 0,
+                solid_footprint: false,
+                opaque_footprint: false,
             }),
         }
     }

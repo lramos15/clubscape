@@ -1,68 +1,5 @@
 {
-  "active_executor_failures": [
-    {
-      "evidence": {
-        "actual_expiry_after_offline_tick": 300,
-        "actual_policy": "ground_policy.player_drop.m1_fresh",
-        "before_logout_expiry": 300,
-        "controlled_component_random_draws": 12,
-        "expected_expiry_after_offline_tick": 301,
-        "item": "item.coins",
-        "offline_ticks_advanced": 1,
-        "origin": "player_drop",
-        "passed": false,
-        "public_after": null,
-        "quantity_conserved": true,
-        "required_contract": "Fresh manual drops use owner-online expiration like untradeables; GroundProducer::PlayerDrop must not lose lifetime while the owner is offline.",
-        "source": "research/m1-bindings/runtime3-policy.json#fresh_normal_manual_drop_profile"
-      },
-      "id": "fresh_manual_drop_offline_clock"
-    },
-    {
-      "evidence": {
-        "cases": [
-          {
-            "actor_tile": {
-              "plane": 0,
-              "x": 3211,
-              "y": 3215
-            },
-            "atomic_refusal": true,
-            "error": {
-              "code": "out_of_reach",
-              "message": "Target is on another plane, out of range, or blocked."
-            },
-            "expected_next_tick": 1,
-            "mode": "single",
-            "passed": false,
-            "quantity": 1,
-            "required_contract": "Contact a solid source facility from its allowed side without requiring movement/center-to-center sight through its own clipped footprint; keep real intervening walls and source access masks.",
-            "target": "spawn.range.lumbridge.3212.3215.p0.t10.r2"
-          },
-          {
-            "actor_tile": {
-              "plane": 0,
-              "x": 3211,
-              "y": 3215
-            },
-            "atomic_refusal": true,
-            "error": {
-              "code": "out_of_reach",
-              "message": "Target is on another plane, out of range, or blocked."
-            },
-            "expected_next_tick": 3,
-            "mode": "make_x",
-            "passed": false,
-            "quantity": 1,
-            "required_contract": "Contact a solid source facility from its allowed side without requiring movement/center-to-center sight through its own clipped footprint; keep real intervening walls and source access masks.",
-            "target": "spawn.range.lumbridge.3212.3215.p0.t10.r2"
-          }
-        ],
-        "passed": false
-      },
-      "id": "single_and_make_x_one"
-    }
-  ],
+  "active_executor_failures": [],
   "checks": [
     {
       "command": [
@@ -74,7 +11,7 @@
       "exit_code": 0,
       "name": "build_and_strict_runtime_compile",
       "stderr": "",
-      "stdout": "{\"runtime_compile_passed\": true, \"exit_code\": 0, \"diagnostic\": null, \"artifact\": {\"path\": \"content/m1/game-content.csc.gz\", \"bytes\": 502831, \"sha256\": \"59db342f4d41ea954ed8062b08c15dcc96a3cdddc43d3269d7455d7a1835a8d5\", \"uncompressed_bytes\": 11761569, \"uncompressed_sha256\": \"0181ec69456101defccbc8dd99b579ed849caae6301d801387732bea70fe98f5\", \"artifact_version\": 3, \"schema_version\": 3}, \"unresolved_binding_count\": 6, \"record\": \"research/m1-bindings/compiler-validation.json\"}\n{\"revision\": \"m1.source-backed.v3.95f50b40601a821f\", \"counts\": {\"items\": 118, \"skills\": 24, \"regions\": 29, \"spawns\": 536, \"objects\": 4837, \"npcs\": 26, \"recipes\": 13, \"dialogues\": 21, \"quests\": 2, \"interfaces\": 26, \"shops\": 1, \"mechanics\": {\"counters\": 134, \"grants\": 18, \"entitlements\": 13, \"reconciliations\": 1, \"object_transforms\": 68, \"temporary_objects\": 1, \"ground_policies\": 7, \"instances\": 1, \"travels\": 26, \"experiences\": 3, \"combat_styles\": 27, \"spells\": 2, \"projectiles\": 2, \"prayers\": 1, \"value_providers\": 1, \"traversal\": 9, \"collision_groups\": 49}, \"runtime_collision_cells\": 46358, \"runtime_walkable_cells\": 29814, \"runtime_blocked_cells\": 16544, \"equipment_slots\": 11, \"tutorial_states\": 71, \"tutorial_source_transitions\": 73, \"tutorial_projected_edges\": 73, \"tutorial_blocked_edges\": 0, \"cooks_states\": 10, \"cooks_source_transitions\": 22, \"cooks_projected_edges\": 22, \"death_source_states\": 4, \"death_source_transitions\": 6, \"source_transit_pairs\": 11, \"source_rules\": 52, \"normal_note_pairs\": 53}, \"runtime_ready\": false, \"structural_checks\": \"passed\", \"runtime_compile_passed\": true, \"unresolved_binding_count\": 6}\n"
+      "stdout": "{\"runtime_compile_passed\": true, \"exit_code\": 0, \"diagnostic\": null, \"artifact\": {\"path\": \"content/m1/game-content.csc.gz\", \"bytes\": 503156, \"sha256\": \"4c92b3c3cd27ee0eb7247457a6ddce703bb6323f127ccff83039b409afba2dcf\", \"uncompressed_bytes\": 11794799, \"uncompressed_sha256\": \"a200ca08c80f6a3fc812fe02ca95f52325e183084f83b12e8d470a1f37cc6d62\", \"artifact_version\": 3, \"schema_version\": 3}, \"unresolved_binding_count\": 6, \"record\": \"research/m1-bindings/compiler-validation.json\"}\n{\"revision\": \"m1.source-backed.v3.327d3a78f3bdad7c\", \"counts\": {\"items\": 118, \"skills\": 24, \"regions\": 29, \"spawns\": 536, \"objects\": 4837, \"npcs\": 26, \"recipes\": 13, \"dialogues\": 21, \"quests\": 2, \"interfaces\": 26, \"shops\": 1, \"mechanics\": {\"counters\": 134, \"grants\": 18, \"entitlements\": 13, \"reconciliations\": 1, \"object_transforms\": 68, \"temporary_objects\": 1, \"ground_policies\": 7, \"instances\": 1, \"travels\": 26, \"experiences\": 3, \"combat_styles\": 27, \"spells\": 2, \"projectiles\": 2, \"prayers\": 1, \"value_providers\": 1, \"traversal\": 9, \"collision_groups\": 49}, \"runtime_collision_cells\": 46358, \"runtime_walkable_cells\": 29814, \"runtime_blocked_cells\": 16544, \"equipment_slots\": 11, \"tutorial_states\": 71, \"tutorial_source_transitions\": 73, \"tutorial_projected_edges\": 73, \"tutorial_blocked_edges\": 0, \"cooks_states\": 10, \"cooks_source_transitions\": 22, \"cooks_projected_edges\": 22, \"death_source_states\": 4, \"death_source_transitions\": 6, \"source_transit_pairs\": 11, \"source_rules\": 52, \"normal_note_pairs\": 53}, \"runtime_ready\": false, \"structural_checks\": \"passed\", \"runtime_compile_passed\": true, \"unresolved_binding_count\": 6}\n"
     },
     {
       "command": [
@@ -90,7 +27,7 @@
       ],
       "exit_code": 0,
       "name": "content_tests",
-      "stderr": "----------------------------------------------------------------------\nRan 62 tests (elapsed time omitted)\n\nOK\n",
+      "stderr": "----------------------------------------------------------------------\nRan 63 tests (elapsed time omitted)\n\nOK\n",
       "stdout": "{\"prior_asset_closure\": \"preserved\", \"requested_resolved\": {\"item_definition_ids\": 72, \"model_ids\": 68, \"npc_definition_ids\": 6, \"interface_groups\": 13}, \"product_assets\": 5257, \"prior_request_missing\": [], \"new_verified_definition_publication_needed\": {\"interface_groups\": [], \"item_definition_ids\": [], \"model_ids\": [], \"npc_definition_ids\": []}, \"behavior_unchanged\": false, \"source_application_audited\": true, \"unresolved_behavior_bindings\": 6}\n{\"source_bindings_consumed\": 104, \"coupled_updates\": 7, \"loot_joint_vectors\": 8192, \"currency_vectors\": 5, \"active_residuals\": 0, \"inactive_full_target_dependencies\": 6}\n"
     },
     {
@@ -179,26 +116,24 @@
         "/usr/bin/python3",
         "tools/m1-content/check.py"
       ],
-      "exit_code": 1,
+      "exit_code": 0,
       "name": "strict_reload_and_native_source_probes",
       "stderr": "",
-      "stdout": "{\"structural_checks_passed\": true, \"strict_runtime_compiler_passed\": true, \"artifact_reloaded\": true, \"artifact_sha256\": \"0181ec69456101defccbc8dd99b579ed849caae6301d801387732bea70fe98f5\", \"engine_constructed\": true, \"native_source_policy_checks_passed\": false, \"unresolved_bindings\": 6, \"gameplay_executed\": false}\n"
+      "stdout": "{\"structural_checks_passed\": true, \"strict_runtime_compiler_passed\": true, \"artifact_reloaded\": true, \"artifact_sha256\": \"a200ca08c80f6a3fc812fe02ca95f52325e183084f83b12e8d470a1f37cc6d62\", \"engine_constructed\": true, \"native_source_policy_checks_passed\": true, \"unresolved_bindings\": 6, \"gameplay_executed\": false}\n"
     }
   ],
   "compiled_artifact": {
     "artifact_version": 3,
-    "bytes": 502831,
+    "bytes": 503156,
     "path": "content/m1/game-content.csc.gz",
     "schema_version": 3,
-    "sha256": "59db342f4d41ea954ed8062b08c15dcc96a3cdddc43d3269d7455d7a1835a8d5",
-    "uncompressed_bytes": 11761569,
-    "uncompressed_sha256": "0181ec69456101defccbc8dd99b579ed849caae6301d801387732bea70fe98f5"
+    "sha256": "4c92b3c3cd27ee0eb7247457a6ddce703bb6323f127ccff83039b409afba2dcf",
+    "uncompressed_bytes": 11794799,
+    "uncompressed_sha256": "a200ca08c80f6a3fc812fe02ca95f52325e183084f83b12e8d470a1f37cc6d62"
   },
-  "failed_checks": [
-    "strict_reload_and_native_source_probes"
-  ],
+  "failed_checks": [],
   "full_journey_executed": false,
-  "passed": false,
+  "passed": true,
   "repeatability_checked": true,
   "repeatable_outputs": true,
   "schema_version": 3,

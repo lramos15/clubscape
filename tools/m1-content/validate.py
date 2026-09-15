@@ -122,7 +122,8 @@ def main():
     if args.repeat:
         evidence["research/m1-bindings/repeatability.json"] = sha((BINDINGS / "repeatability.json").read_bytes())
     status = {
-        "schema_version": 3, "task": "m1-content-runtime3", "base": "6605b09", "branch": "task/m1-content-runtime3",
+        "schema_version": 3, "task": "m1-content-runtime3", "base": "2f6cdb7", "branch": "task/m1-contact-clocks",
+        "validation_task": "m1-facility-drop-fixes",
         "status": "done" if passed else "blocked", "fully_done": passed, "runtime_ready": passed,
         "declared_v3_selectors_authored": True, "bounded_source_application_complete": True,
         "revision": manifest["revision"], "compiled_artifact": manifest["compiled_artifact"], "counts": manifest["counts"],
@@ -139,9 +140,14 @@ def main():
                        "engine_constructed": schema["engine_constructed"],
                        "real_source_appearance_request_passed": schema["real_source_appearance_request_passed"]},
         "evidence_hashes": evidence,
-        "parent_action": "Resolve the exact native source-policy failures in contract-gaps.json without clearing source "
-                         "collision or changing private-drop semantics, then rerun python3 tools/m1-content/validate.py --repeat. "
-                         "No v2/decoder/vital/potion-asset blocker remains.",
+        "parent_action": (
+            "Run the complete legitimate fresh-account journey through the real backend and browsers, then "
+            "verify presentation/audio/performance and obtain final owner acceptance. Native component and "
+            "source-data conformance do not establish those gates."
+            if passed else
+            "Resolve the exact failed checks and native source-policy probes without changing the source "
+            "contract, then rerun python3 tools/m1-content/validate.py --repeat."
+        ),
         "full_journey_executed": False, "presentation_approved": False, "milestone_accepted": False,
     }
     write(BINDINGS / "status.json", status, True)

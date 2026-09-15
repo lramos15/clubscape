@@ -1050,6 +1050,9 @@ impl Validator<'_> {
             let path = format!("mechanics.ground_policies.{}", definition.id);
             let public = binding(&definition.public_after, &path)?;
             let expiry = binding(&definition.expires_after, &path)?;
+            if let Some(clock) = &definition.clock {
+                binding(clock, &format!("{path}.clock"))?;
+            }
             if expiry == Some(&Some(0)) {
                 return Err(invalid(
                     &path,

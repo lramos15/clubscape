@@ -181,6 +181,13 @@ pub struct PendingFire {
 
 #[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]
+pub struct PlayedTime {
+    pub ticks: u64,
+    pub through_world_tick: Option<u64>,
+}
+
+#[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
 pub struct CharacterRuntime {
     pub schema_version: u32,
     pub engine: EngineMetadata,
@@ -204,6 +211,8 @@ pub struct CharacterRuntime {
     pub last_active_tick: Option<u64>,
     #[serde(default)]
     pub presence: PresenceState,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub played_time: Option<PlayedTime>,
 }
 
 impl Default for CharacterRuntime {
@@ -230,13 +239,23 @@ impl Default for CharacterRuntime {
             death_coffer: 0,
             last_active_tick: None,
             presence: PresenceState::Untracked,
+            played_time: None,
         }
     }
 }
 
 impl CharacterRuntime {
     pub fn from_initial(content: &GameContent) -> Self {
-        Self::from_initial_definition(&content.initial_state.runtime)
+        let mut state = Self::from_initial_definition(&content.initial_state.runtime);
+        if content
+            .mechanics
+            .player_drop
+            .as_ref()
+            .is_none_or(|policy| policy.before_playtime.is_none())
+        {
+            state.played_time = None;
+        }
+        state
     }
 
     pub fn from_initial_definition(initial: &InitialRuntimeDefinition) -> Self {
@@ -244,6 +263,10 @@ impl CharacterRuntime {
             settings: initial.settings.clone(),
             counters: initial.counters.clone(),
             life: LifeState::Alive,
+            played_time: Some(PlayedTime {
+                ticks: 0,
+                through_world_tick: None,
+            }),
             ..Self::default()
         }
     }
@@ -287,6 +310,9 @@ impl CharacterRuntime {
                 .values()
                 .all(|value| tick(*value))
             && self.last_active_tick.is_none_or(tick)
+            && self.played_time.as_ref().is_none_or(|played| {
+                tick(played.ticks) && played.through_world_tick.is_none_or(tick)
+            })
             && self.pending_travel.as_ref().is_none_or(|travel| {
                 travel.started_at_tick <= travel.completes_at_tick && tick(travel.completes_at_tick)
             })

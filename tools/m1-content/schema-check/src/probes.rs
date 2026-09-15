@@ -205,6 +205,7 @@ fn fresh_drop_clock(engine: &WorldEngine) -> ProbeResult<Value> {
     if ground.public_at_tick != u64::MAX
         || ground.expires_at_tick != 300
         || provenance.policy.as_str() != "ground_policy.player_drop.m1_fresh"
+        || provenance.clock != Some(GroundClock::OwnerOnlineTicks)
         || !matches!(provenance.producer, GroundProducer::PlayerDrop { .. })
     {
         return Err("Native drop did not consume the explicit fresh-profile policy".into());
@@ -224,6 +225,7 @@ fn fresh_drop_clock(engine: &WorldEngine) -> ProbeResult<Value> {
         "item": "item.coins",
         "quantity_conserved": after.stack.quantity.get() == 25,
         "actual_policy": provenance.policy,
+        "frozen_clock": provenance.clock,
         "public_after": null,
         "before_logout_expiry": ground.expires_at_tick,
         "offline_ticks_advanced": 1,
@@ -231,19 +233,70 @@ fn fresh_drop_clock(engine: &WorldEngine) -> ProbeResult<Value> {
         "expected_expiry_after_offline_tick": expected_deadline,
         "actual_expiry_after_offline_tick": after.expires_at_tick,
         "source": "research/m1-bindings/runtime3-policy.json#fresh_normal_manual_drop_profile",
-        "required_contract": "Fresh manual drops use owner-online expiration like untradeables; GroundProducer::PlayerDrop must not lose lifetime while the owner is offline.",
+        "required_contract": "Fresh manual drops use an explicit frozen owner-online clock without changing their PlayerDrop origin.",
     }))
+}
+
+fn played_time_selection(engine: &WorldEngine) -> ProbeResult<Value> {
+    let mut results = Vec::new();
+    for (ticks, policy, public_at) in [
+        (119999, "ground_policy.player_drop.m1_fresh", u64::MAX),
+        (120000, "ground_policy.player_drop.ordinary", 100),
+    ] {
+        let (mut world, actor) = mainland_fixture(engine, "played_time")?;
+        let character = world.characters.get_mut(&actor).unwrap();
+        character
+            .runtime
+            .played_time
+            .as_mut()
+            .ok_or("New source character has no played-time clock")?
+            .ticks = ticks;
+        character.inventory.slots[0] = Some(ItemStack {
+            item: ItemId::new("item.coins")?,
+            quantity: Quantity::new(25)?,
+            instance: None,
+        });
+        engine.apply_intent(
+            &mut world,
+            &actor,
+            &GameIntent::Drop {
+                inventory_slot: 0,
+                quantity: Quantity::new(25)?,
+            },
+            &mut NoRandom,
+        )?;
+        let ground = world
+            .ground_items
+            .iter()
+            .find(|item| item.owner.as_ref() == Some(&actor))
+            .ok_or("Source manual drop is missing")?;
+        let provenance = &world.runtime.ground_provenance[&ground.id];
+        let passed = provenance.policy.as_str() == policy
+            && ground.public_at_tick == public_at
+            && ground.expires_at_tick == 300
+            && ground.stack.quantity.get() == 25;
+        results.push(
+            json!({"passed": passed, "played_ticks": ticks, "policy": provenance.policy,
+            "clock": provenance.clock, "public_at_tick": ground.public_at_tick}),
+        );
+    }
+    Ok(
+        json!({"passed": results.iter().all(|row| row["passed"] == true), "cases": results,
+        "classification": "Native conformance to the source-supported20-hour conditional, not live-source observation."}),
+    )
 }
 
 pub fn run(engine: &WorldEngine) -> ProbeResult<Value> {
     let burial = consume_only(engine)?;
     let production = production_modes(engine)?;
     let drop = fresh_drop_clock(engine)?;
+    let played = played_time_selection(engine)?;
     Ok(json!({
         "scope": "Isolated native component probes against unmodified strictly compiled source content. Controlled runtime inventory/stage boundaries and reproducible test-only randomness are not a fresh journey, observed odds or presentation acceptance.",
         "consume_only": burial,
         "single_and_make_x_one": production,
         "fresh_manual_drop_offline_clock": drop,
-        "passed": burial["passed"] == true && production["passed"] == true && drop["passed"] == true,
+        "played_time_drop_selection": played,
+        "passed": burial["passed"] == true && production["passed"] == true && drop["passed"] == true && played["passed"] == true,
     }))
 }

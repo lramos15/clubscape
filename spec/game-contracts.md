@@ -468,6 +468,42 @@ content placements. Ground capacity is bounded to 32768 entries; aggregate
 quantity/capacity failure rolls back defeat/XP/loot together. Pickup/expiry
 removes live provenance but never rewinds the identity counter.
 
+Ground policies may explicitly bind `clock` to `world_ticks` or
+`owner_online_ticks`. New drops freeze the selected clock in their persisted
+`GroundProvenance`; later playtime/profile changes do not change an existing
+drop's lifetime. Owner-online visibility and expiry deadlines both pause while
+the retained owner is mechanically offline. The source item's original
+player/activity/NPC/death origin is preserved. Legacy records without a clock
+are migrated from their declared policy, or retain the previous origin-based
+behavior when legacy content has no clock declaration (DeathSupply owner-online,
+other origins world ticks). No lifetime is reset or made infinite.
+
+Player-drop selection orders explicit tutorial-stage overrides, untradeable
+policy, bound `before_playtime` threshold, then ordinary policy. The source M1
+threshold is 120000 played ticks (20 hours at 600 ms); it is not a quest-point,
+total-level or trade/GE requirement. Fresh/private and untradeable drops use
+the private 300 owner-online-tick policy, while ordinary tradeable drops retain
+100/300 world-tick visibility/expiry. The threshold mapping is a source-supported
+inference, not an observed live boundary.
+
+`CharacterRuntime.played_time` records monotonic played ticks and the last
+accounted world tick. Newly created characters start at zero when the content
+uses the selector; legacy absence remains unknown and requires an explicit
+authority-backed migration before a playtime-dependent drop. Unknown history
+must not be silently reset to zero. Tracked playtime requires trusted presence,
+counts mechanically present disconnecting actors, pauses offline, and cannot
+be counted twice at the same processed tick. Ground provenance, deadlines and
+playtime are part of the same persisted world transaction and survive restart.
+M1 exposes one authoritative world; cross-world transfer of owner-private
+ground requires a separate transfer implementation before enabling world hopping.
+
+Solid rectangular source objects are reachable at their near cardinal face:
+the target's own solid/opaque footprint does not require center-to-center
+movement or sight. The source access-side mask, approaching tile's wall/sight
+edges, plane, distance, instance and target availability still apply. This
+query does not modify collision; a reachable cooking range remains nonwalkable.
+Wall-layer doors retain their explicit, separately validated face-query rules.
+
 Traversal guards apply while routing and again to every consumed walking/running
 step. A diagonal checks both cardinal routes. Instance rules map source edges
 through their chunk rotation; a shared open door never grants another actor

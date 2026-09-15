@@ -517,7 +517,8 @@ impl WorldEngine {
                     && ((map.line_of_sight(character.tile, tile)
                         && (interaction.reach > 1 || touch_edge(&map, character.tile, tile)))
                         || (interaction.reach == 1
-                            && self.door_face_reachable(world, character, target, tile)?))
+                            && (solid_face_reachable(&map, character.tile, tile, &shape)
+                                || self.door_face_reachable(world, character, target, tile)?)))
                 {
                     return Ok(());
                 }
@@ -599,6 +600,35 @@ impl WorldEngine {
         }
         Ok(false)
     }
+}
+
+fn solid_face_reachable(
+    map: &CollisionMap,
+    from: Tile,
+    to: Tile,
+    shape: &crate::navigation::TargetShape,
+) -> bool {
+    if !shape.solid_footprint || from.distance(to) != Some(1) {
+        return false;
+    }
+    let Some(direction) = Direction::ALL.into_iter().find(|direction| {
+        let (dx, dy) = direction.offset();
+        (dx == 0 || dy == 0) && from.offset(dx, dy) == Some(to)
+    }) else {
+        return false;
+    };
+    let (Some(near), Some(target)) = (map.cell(from), map.cell(to)) else {
+        return false;
+    };
+    // Contact stops at the near face, not inside the solid/opaque footprint. Source
+    // wall edges are bilateral, so the approaching tile still rejects intervening walls.
+    near.walkable
+        && near.blocked_movement & direction.mask() == 0
+        && near.blocked_sight & direction.mask() == 0
+        && ((!target.walkable && target.blocked_movement == u8::MAX)
+            || target.blocked_movement & direction.opposite().mask() == 0)
+        && ((shape.opaque_footprint && target.blocked_sight == u8::MAX)
+            || target.blocked_sight & direction.opposite().mask() == 0)
 }
 
 pub(crate) fn touch_edge(map: &CollisionMap, from: Tile, to: Tile) -> bool {

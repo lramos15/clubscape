@@ -41,7 +41,7 @@ currency-reset/false-auto-equip candidates are not silently used at runtime.
 `route-validation.json`, `state-oracle-validation.json`, `test-output.log` and
 `repeatability.json` record qualified verification. The compiler is Runtime,
 the artifact and actual source JSON are version3. `validation-run.json` records
-every exit code, including the current native failures. Run
+every exit code, including any native failure. Run
 `python3 tools/m1-content/validate.py --repeat`; it must not pass while a required
 native source-policy probe fails.
 `unresolved-bindings.json` is the exact compiler-checked list of unresolved
@@ -91,11 +91,14 @@ are explicit, not hidden inside arbitrary flags.
 
 The actual engine constructs from the artifact, validates fresh state and views,
 executes the real appearance request and consumes source bones with45XP tenths at
-two ticks. It nevertheless rejects the solid range from its valid allowed side
-and fails the fresh manual-drop offline pause. Both are persisted negative
-evidence, not waived checks or old v2 gaps. `contract-gaps.json` records exact
-source expectations and parent code/contract actions; both content SQL tasks
-remain blocked while those ordinary-path failures remain.
+two ticks. It now accepts the solid range's valid allowed face with the distinct
+Single/Make-X-one deadlines and pauses fresh manual-drop clocks offline.
+The source-supported120000-tick boundary selects ordinary tradeable drops;
+untradeables and tutorial-stage overrides remain distinct. Clock/provenance and
+authoritative playtime persist without resetting unknown legacy history.
+`contract-gaps.json` retains the historical failures and implemented contracts.
+The repeated source-data/native conformance gate passes, not the full M1
+headless/browser player journey or owner presentation gate.
 
 The original runtime-binding evidence stays read-only. Current application and
 validation records live in this directory. The exact upstream audio change is

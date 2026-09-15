@@ -171,12 +171,13 @@ deterministic. Source inference is not approval; successful compile, geometry
 and reference-model checks remain separate from executing the complete
 headless/server/browser journey and approving its presentation.
 
-## Current native failures
+## Native source-policy conformance
 
-`check.py` and the complete validation runner currently exit1 after recording
-successful strict compile/reload, engine construction, fresh-state/read-only API
-checks and native ConsumeOnly burial. The valid source west-side range contact
-is rejected for both selected production modes, and fresh manual drops lose an
-offline tick of lifetime. `research/m1-bindings/contract-gaps.json` identifies the
-two precise executor surfaces and expected behavior. No source wall is removed,
-timer made infinite, result event injected or type fork introduced to force pass.
+`check.py` and the repeated validation runner pass strict compile/reload,
+engine construction, fresh-state/read-only APIs, native ConsumeOnly burial,
+valid west-side range contact with distinct Single/Make-X-one deadlines, fresh
+manual-drop offline pauses, and the actual120000-tick playtime policy boundary.
+`research/m1-bindings/contract-gaps.json` retains the historical failures and
+their precise resolutions. No source wall is removed, timer made infinite,
+result event injected or type fork introduced to force pass. These component
+checks still do not execute the full legitimate journey or accept presentation.

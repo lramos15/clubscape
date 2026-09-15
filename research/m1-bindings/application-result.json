@@ -6830,7 +6830,7 @@
       ]
     }
   ],
-  "content_compressed_sha256": "b9364b8bb56a88779f57eee650bff032c424e862bc9737bbda558ae41802673b",
+  "content_compressed_sha256": "621a938508bc189eb78bca516fb750c42ad6fc8a91dbf194ad9a1ba3ac3d72d9",
   "coupled_profile_provenance": [
     {
       "notes": "The official2025-10-22 ALL-player default list explicitly enables Auto-equip Worn Items from Gravestone; replace the old false candidate. Supersedes the prior provisional creation-profile value. Snapshot SHA-256: 3fcc153d513507d9f2da93d96a80b74a601a4f2c73b2bd605008dfcbc6543aad. Documentary/code evidence, not a live observation.",
@@ -6985,7 +6985,8 @@
   "executor_conformance_requirements": "research/m1-bindings/contract-gaps.json",
   "full_target_follow_up": [
     "The retained beginner-clue/member-only tertiary candidates need their own full-target acquisition and ownership rules before enabling those outcomes; the potion approval does not certify them.",
-    "Reevaluate the six explicit inactive-dependency proofs before extending acquisition, depletion or the ordinary Office item universe."
+    "Reevaluate the six explicit inactive-dependency proofs before extending acquisition, depletion or the ordinary Office item universe.",
+    "Owner-private ground persists in the current authoritative world across logout and restart. Cross-world transfer remains outside the single-world M1 profile and must carry the owner, remaining lifetime and frozen clock without duplication before enabling world hopping."
   ],
   "gameplay_executed": false,
   "item_extensions": {
@@ -7118,9 +7119,7 @@
     "content/m1/geometry/13365.json.gz": "aab8341ed233c3151d1c395d1c98681c112c0c12a74cf5352e766db604da2639"
   },
   "presentation_approved": false,
-  "remaining_selector_hooks": [
-    "Fresh manual PlayerDrop ownership needs an explicit owner-online expiry/world-persistence policy. Current GroundItemPolicy only declares public_after/expires_after; the native source-clock probe records whether the engine honors this origin. Do not reuse DeathSupply or make expiry infinite."
-  ],
+  "remaining_selector_hooks": [],
   "residuals": {
     "active_or_conditionally_active": [],
     "active_or_conditionally_active_count": 0,
@@ -7202,7 +7201,7 @@
     "artifact_version": 3,
     "collision_groups": 49,
     "combined_collision_selections": 136,
-    "content_behavior_sha256": "68b9112835288bdcdde7d8ace86405fac33604b933c164d0f289abf77bccab79",
+    "content_behavior_sha256": "9ec6c175b0f9af817ef804a5a783f59ce8a9da8e7244292877fb1142e1db47d5",
     "content_schema_version": 3,
     "death_timing": {
       "source": [
@@ -7226,8 +7225,9 @@
       }
     },
     "fresh_normal_manual_drop_profile": {
-      "acceptance_impact": "A stage selector alone does not encode playtime release, offline-paused expiration or cross-world ownership. These semantics require real executor conformance, not merely matching private/expiry numbers.",
+      "acceptance_impact": "The executor uses persisted authoritative playtime, an explicit frozen owner-online clock and owner provenance. Unknown legacy playtime requires explicit migration instead of resetting to zero. M1 has one authoritative world; across-world ownership transfer must be implemented and verified before exposing world hopping. Numeric binding and component probes do not establish actual fresh-journey acceptance.",
       "documented_playtime_below_seconds": 72000,
+      "documented_playtime_below_ticks": 120000,
       "expiry_clock": "owner_online_ticks",
       "post_threshold_release_verified": false,
       "world_scope": "owner_across_worlds"
@@ -7288,7 +7288,7 @@
       "npc.tutorial_rat"
     ],
     "policy": "research/m1-bindings/runtime3-policy.json",
-    "policy_sha256": "cc9e2753bef8fe9ee9ea81ec7f7657297759df9c81ea0a5dfe1b8adf58b0eb53",
+    "policy_sha256": "cfc98f40e7e542b63afe514cf932692f96bbe9494c68b94e8b670d62418966ee",
     "presentation_approved": false,
     "recovery_interfaces": {
       "grave": "interface.grave",

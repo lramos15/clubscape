@@ -79,17 +79,16 @@ def apply_selectors(inputs, world, content, bindings):
     audit["content_behavior_sha256"] = sha(canonical(behavior_projection(content)))
     bindings["runtime3"] = audit
     bindings["application"]["runtime3"] = audit
-    bindings["application"]["remaining_selector_hooks"] = [
-        "Fresh manual PlayerDrop ownership needs an explicit owner-online expiry/world-persistence policy. "
-        "Current GroundItemPolicy only declares public_after/expires_after; the native source-clock probe "
-        "records whether the engine honors this origin. Do not reuse DeathSupply or make expiry infinite.",
-    ]
+    bindings["application"]["remaining_selector_hooks"] = []
     bindings["application"]["executor_conformance_requirements"] = "research/m1-bindings/contract-gaps.json"
     bindings["application"]["full_target_follow_up"] = [
         "The retained beginner-clue/member-only tertiary candidates need their own full-target acquisition "
         "and ownership rules before enabling those outcomes; the potion approval does not certify them.",
         "Reevaluate the six explicit inactive-dependency proofs before extending acquisition, depletion "
         "or the ordinary Office item universe.",
+        "Owner-private ground persists in the current authoritative world across logout and restart. "
+        "Cross-world transfer remains outside the single-world M1 profile and must carry the owner, "
+        "remaining lifetime and frozen clock without duplication before enabling world hopping.",
     ]
     return content
 
@@ -105,12 +104,18 @@ def ground_selectors(inputs, content, policy):
     ):
         mechanics["ground_policies"][identifier] = {
             "id": identifier, "public_after": bound(public, source), "expires_after": bound(expiry, source),
+            "clock": bound("owner_online_ticks" if identifier.endswith(".m1_fresh") else "world_ticks", source),
             "owner_can_take": True, "source": source,
         }
     mechanics["player_drop"] = {
         "ordinary": bound("ground_policy.player_drop.ordinary", source),
-        "stages": {stage: bound("ground_policy.player_drop.m1_fresh" if stage == "stage.tutorial.mainland" else
-                               "ground_policy.tutorial", source) for stage in content["tutorial"]},
+        "stages": {stage: bound("ground_policy.tutorial", source) for stage in content["tutorial"]
+                   if stage != "stage.tutorial.mainland"},
+        "untradeable": bound("ground_policy.player_drop.m1_fresh", source),
+        "before_playtime": bound({
+            "played_ticks_below": policy["fresh_normal_manual_drop_profile"]["documented_playtime_below_ticks"],
+            "ground_policy": "ground_policy.player_drop.m1_fresh",
+        }, source),
         "source": source,
     }
     source = evidence(inputs, ["wiki_drops"], policy["npc_loot_basis"])
@@ -118,8 +123,15 @@ def ground_selectors(inputs, content, policy):
         "id": "ground_policy.npc_loot",
         "public_after": bound(policy["npc_loot_ground"]["public_after"], source),
         "expires_after": bound(policy["npc_loot_ground"]["expires_after"], source),
+        "clock": bound("world_ticks", source),
         "owner_can_take": True, "source": source,
     }
+    for definition in mechanics["ground_policies"].values():
+        if "clock" not in definition:
+            definition["clock"] = bound(
+                "owner_online_ticks" if definition["id"] == "ground_policy.death_supplies" else "world_ticks",
+                definition["source"],
+            )
 
 
 def combat_selectors(inputs, content, bindings, policy):

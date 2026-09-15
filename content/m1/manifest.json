@@ -6,12 +6,12 @@
   "check_command": "python3 tools/m1-content/check.py",
   "compiled_artifact": {
     "artifact_version": 3,
-    "bytes": 502831,
+    "bytes": 503156,
     "path": "content/m1/game-content.csc.gz",
     "schema_version": 3,
-    "sha256": "59db342f4d41ea954ed8062b08c15dcc96a3cdddc43d3269d7455d7a1835a8d5",
-    "uncompressed_bytes": 11761569,
-    "uncompressed_sha256": "0181ec69456101defccbc8dd99b579ed849caae6301d801387732bea70fe98f5"
+    "sha256": "4c92b3c3cd27ee0eb7247457a6ddce703bb6323f127ccff83039b409afba2dcf",
+    "uncompressed_bytes": 11794799,
+    "uncompressed_sha256": "a200ca08c80f6a3fc812fe02ca95f52325e183084f83b12e8d470a1f37cc6d62"
   },
   "compiler_command": "python3 tools/m1-content/compile.py --compiler-manifest crates/content/Cargo.toml",
   "content_schema_version": 3,
@@ -65,36 +65,36 @@
   },
   "declared_v3_selectors_authored": true,
   "inactive_full_target_binding_count": 6,
-  "input_aggregate_sha256": "95f50b40601a821f7beaed37b624da3cb61b5afb6b381f75375f35530a196c79",
+  "input_aggregate_sha256": "327d3a78f3bdad7cea50384fffe3eaf176c95b2c74e53a1047767d1e5d922c13",
   "milestone_accepted": false,
   "outputs": [
     {
-      "bytes": 337607,
-      "json_bytes": 337607,
-      "json_sha256": "4a9b4368741487b8e9b34c2262310a63fa3ea359a6dcbeff28bdf0d9871ee2a9",
+      "bytes": 337609,
+      "json_bytes": 337609,
+      "json_sha256": "a8849a142a8e0bb6014fda106b8f9fdbe4ca4f1d4c43e2ccfd842da92f8da264",
       "path": "research/m1-bindings/input-lock.json",
-      "sha256": "4a9b4368741487b8e9b34c2262310a63fa3ea359a6dcbeff28bdf0d9871ee2a9"
+      "sha256": "a8849a142a8e0bb6014fda106b8f9fdbe4ca4f1d4c43e2ccfd842da92f8da264"
     },
     {
-      "bytes": 492531,
-      "json_bytes": 14096581,
-      "json_sha256": "02fc0f734a76c2fdbdd04abfc68b40d5db5ca7fa54c7d29a2ad5b72ea6a4aed2",
+      "bytes": 493005,
+      "json_bytes": 14130323,
+      "json_sha256": "6bf090a19fe1fe80b6a63d1be86bb0f94e513ea7f957ab0b9b091d2b4fb0cd40",
       "path": "content/m1/game-content.json.gz",
-      "sha256": "b9364b8bb56a88779f57eee650bff032c424e862bc9737bbda558ae41802673b"
+      "sha256": "621a938508bc189eb78bca516fb750c42ad6fc8a91dbf194ad9a1ba3ac3d72d9"
     },
     {
-      "bytes": 188851,
-      "json_bytes": 188851,
-      "json_sha256": "ec142de26dd327cbfa3de489ecca12a9ca58de52b4569252fb4c19557e166153",
+      "bytes": 189081,
+      "json_bytes": 189081,
+      "json_sha256": "4b8ea2bad71ce5cd708ec8da981ee11404d87b3c8ddf0ec02ea6d3ea5446a7e7",
       "path": "research/m1-bindings/application-result.json",
-      "sha256": "ec142de26dd327cbfa3de489ecca12a9ca58de52b4569252fb4c19557e166153"
+      "sha256": "4b8ea2bad71ce5cd708ec8da981ee11404d87b3c8ddf0ec02ea6d3ea5446a7e7"
     },
     {
-      "bytes": 3959,
-      "json_bytes": 3959,
-      "json_sha256": "182acad81b95eb28abd734d267130f54c9a0ba49499e4c32433a5a9f3d63e2d8",
+      "bytes": 4211,
+      "json_bytes": 4211,
+      "json_sha256": "4daf4f0c83d210d33e659163c6f972ee6040fbf9df4303397312dd579f348c24",
       "path": "research/m1-bindings/runtime3-selectors.json",
-      "sha256": "182acad81b95eb28abd734d267130f54c9a0ba49499e4c32433a5a9f3d63e2d8"
+      "sha256": "4daf4f0c83d210d33e659163c6f972ee6040fbf9df4303397312dd579f348c24"
     },
     {
       "bytes": 52366,
@@ -624,14 +624,14 @@
     {
       "bytes": 2139,
       "json_bytes": 2139,
-      "json_sha256": "86707f96ec63d2467fb9cc1ceabba3201e0c9a5664ba6aad143adacec741ace1",
+      "json_sha256": "7625a18f96306b2e5dd66ff295b876a5508eafb714d3ff1349a7c32e6676616e",
       "path": "research/m1-bindings/structural-validation.json",
-      "sha256": "86707f96ec63d2467fb9cc1ceabba3201e0c9a5664ba6aad143adacec741ace1"
+      "sha256": "7625a18f96306b2e5dd66ff295b876a5508eafb714d3ff1349a7c32e6676616e"
     }
   ],
   "presentation_approved": false,
   "readiness_dependency": "research/m1-bindings/contract-gaps.json",
-  "revision": "m1.source-backed.v3.95f50b40601a821f",
+  "revision": "m1.source-backed.v3.327d3a78f3bdad7c",
   "runtime_compile_passed": true,
   "runtime_ready": false,
   "runtime_schema_version": 1,
@@ -642,9 +642,7 @@
     "audit": "research/m1-bindings/application-result.json",
     "coupled_updates": 7,
     "executor_conformance": "research/m1-bindings/schema-validation.json#native_source_policy_probes",
-    "remaining_selector_hooks": [
-      "Fresh manual PlayerDrop ownership needs an explicit owner-online expiry/world-persistence policy. Current GroundItemPolicy only declares public_after/expires_after; the native source-clock probe records whether the engine honors this origin. Do not reuse DeathSupply or make expiry infinite."
-    ],
+    "remaining_selector_hooks": [],
     "residuals": {
       "active_or_conditionally_active": [],
       "active_or_conditionally_active_count": 0,

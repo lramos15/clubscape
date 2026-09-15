@@ -7,7 +7,86 @@ use crate::{
     progression::EffectFrame, runtime, unavailable, unknown,
 };
 
+fn ground_clock(policy: &GroundItemPolicy, producer: &GroundProducer) -> GameResult<GroundClock> {
+    if let Some(clock) = &policy.clock {
+        return clock.require().copied();
+    }
+    // Legacy content had one origin-based exception. New policies declare their
+    // clock explicitly; the selected value is frozen with each persisted drop.
+    Ok(if matches!(producer, GroundProducer::DeathSupply { .. }) {
+        GroundClock::OwnerOnlineTicks
+    } else {
+        GroundClock::WorldTicks
+    })
+}
+
 impl WorldEngine {
+    pub(crate) fn player_drop_policy(
+        &self,
+        character: &CharacterState,
+        item: &ItemId,
+    ) -> GameResult<&GroundPolicyId> {
+        let selector = self
+            .content
+            .mechanics
+            .player_drop
+            .as_ref()
+            .ok_or_else(|| unavailable("Player drop policy is not configured."))?;
+        if let Some(stage) = selector.stages.get(&character.tutorial_stage) {
+            return stage.require();
+        }
+        if !self
+            .content
+            .items
+            .get(item)
+            .ok_or_else(|| unknown("Unknown dropped item."))?
+            .tradable
+            && let Some(untradeable) = &selector.untradeable
+        {
+            return untradeable.require();
+        }
+        if let Some(before) = &selector.before_playtime {
+            let before = before.require()?;
+            let played = character.runtime.played_time.as_ref().ok_or_else(|| {
+                unavailable(
+                    "Player-drop selection requires explicitly migrated authoritative playtime.",
+                )
+            })?;
+            if played.ticks < before.played_ticks_below {
+                return Ok(&before.ground_policy);
+            }
+        }
+        selector.ordinary.require()
+    }
+
+    pub(crate) fn advance_playtime(
+        &self,
+        world: &mut WorldState,
+        context: &crate::TickContext,
+    ) -> GameResult<()> {
+        for (actor, character) in &mut world.characters {
+            let Some(played) = &mut character.runtime.played_time else {
+                continue;
+            };
+            let presence = context.actors.get(actor).ok_or_else(|| {
+                unavailable("Owner playtime requires authoritative actor presence.")
+            })?;
+            if played
+                .through_world_tick
+                .is_some_and(|tick| tick > world.tick)
+            {
+                return Err(invalid_state("Owner playtime clock is future-dated."));
+            }
+            if played.through_world_tick != Some(world.tick) {
+                if presence.online {
+                    played.ticks = runtime::deadline(played.ticks, 1)?;
+                }
+                played.through_world_tick = Some(world.tick);
+            }
+        }
+        Ok(())
+    }
+
     pub(crate) fn move_to(
         &self,
         world: &WorldState,
@@ -607,6 +686,7 @@ impl WorldEngine {
             Some(ticks) => runtime::deadline(world.tick, u64::from(*ticks))?,
             None => u64::MAX,
         };
+        let clock = ground_clock(policy, &producer)?;
         if world.ground_items.len() >= 32_768 {
             return Err(GameError::new(
                 GameErrorCode::InventoryFull,
@@ -623,6 +703,7 @@ impl WorldEngine {
             GroundProvenance {
                 policy: policy_id.clone(),
                 producer,
+                clock: Some(clock),
             },
         );
         world.ground_items.push(GroundItem {
@@ -643,15 +724,38 @@ impl WorldEngine {
         context: &crate::TickContext,
     ) -> GameResult<()> {
         for item in &mut world.ground_items {
-            if let Some(GroundProvenance {
-                producer: GroundProducer::DeathSupply { actor, .. },
-                ..
-            }) = world.runtime.ground_provenance.get(&item.id)
-            {
-                let presence = context.actors.get(actor).ok_or_else(|| {
-                    unavailable("Death-supply active clocks require authoritative owner presence.")
-                })?;
-                if !presence.online && item.expires_at_tick != u64::MAX {
+            let Some(provenance) = world.runtime.ground_provenance.get_mut(&item.id) else {
+                continue;
+            };
+            let clock = match provenance.clock {
+                Some(clock) => clock,
+                None => {
+                    let policy = self
+                        .content
+                        .mechanics
+                        .ground_policies
+                        .get(&provenance.policy)
+                        .ok_or_else(|| unknown("Unknown persisted ground policy."))?;
+                    let clock = ground_clock(policy, &provenance.producer)?;
+                    provenance.clock = Some(clock);
+                    clock
+                }
+            };
+            if clock != GroundClock::OwnerOnlineTicks {
+                continue;
+            }
+            let owner = item
+                .owner
+                .as_ref()
+                .ok_or_else(|| invalid_state("Owner clock has no owner."))?;
+            let presence = context.actors.get(owner).ok_or_else(|| {
+                unavailable("Ground-item active clocks require authoritative owner presence.")
+            })?;
+            if !presence.online {
+                if item.public_at_tick != u64::MAX {
+                    item.public_at_tick = runtime::deadline(item.public_at_tick, 1)?;
+                }
+                if item.expires_at_tick != u64::MAX {
                     item.expires_at_tick = runtime::deadline(item.expires_at_tick, 1)?;
                 }
             }

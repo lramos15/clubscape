@@ -1,6 +1,6 @@
 {"prior_asset_closure": "preserved", "requested_resolved": {"item_definition_ids": 72, "model_ids": 68, "npc_definition_ids": 6, "interface_groups": 13}, "product_assets": 5257, "prior_request_missing": [], "new_verified_definition_publication_needed": {"interface_groups": [], "item_definition_ids": [], "model_ids": [], "npc_definition_ids": []}, "behavior_unchanged": false, "source_application_audited": true, "unresolved_behavior_bindings": 6}
 {"source_bindings_consumed": 104, "coupled_updates": 7, "loot_joint_vectors": 8192, "currency_vectors": 5, "active_residuals": 0, "inactive_full_target_dependencies": 6}
 ----------------------------------------------------------------------
-Ran 62 tests (elapsed time omitted)
+Ran 63 tests (elapsed time omitted)
 
 OK

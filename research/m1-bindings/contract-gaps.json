@@ -44,24 +44,27 @@
   "native_execution_requirements": [
     {
       "id": "single_and_make_x_one",
+      "status": "resolved",
       "surface": "WorldEngine::require_world_target, touch_edge and solid-target contact/sight",
       "source_target": "spawn.range.lumbridge.3212.3215.p0.t10.r2",
       "actor_source_tile": {"x": 3211, "y": 3215, "plane": 0},
       "input": "ProduceSelected recipe.cooking.bread.lumbridge_range, quantity1, Single versus MakeX",
       "expected": "Accept from the walkable allowed west side and schedule source single1 versus first-MakeX3 ticks.",
-      "observed_executor_result": "Both requests return OutOfReach because the target footprint itself is movement/sight clipped. This is a native component result, not an OSRS observation.",
-      "parent_action": "Fix face-contact permission using original target shape/access-side/collision information. Do not clear source walls, relocate the range, bypass the facility requirement or alter source cooking timing.",
+      "historical_executor_result": "Both requests returned OutOfReach because the target footprint itself is movement/sight clipped. This was a native component result, not an OSRS observation.",
+      "resolution": "The near cardinal face of a declared solid source footprint is reachable while preserving approach-side walls/sight, source access masks, distance, plane, instance and availability. Native source Single1/Make-X-one3 deadlines pass with unchanged collision.",
       "new_content_field_required": false
     },
     {
       "id": "fresh_manual_drop_offline_clock",
+      "status": "resolved",
       "surface": "GroundItemPolicy and WorldEngine::advance_ground_clocks for GroundProducer::PlayerDrop",
       "source_policy": "ground_policy.player_drop.m1_fresh",
       "source": "research/m1-bindings/runtime3-policy.json#fresh_normal_manual_drop_profile",
       "expected": "A fresh manual drop's300 owner-online ticks pause offline; after one offline engine tick, absolute expiry moves300->301 and the25 coins remain owned.",
-      "observed_executor_result": "The correct private policy/origin is selected and quantity is conserved, but expiry remains300. Current pause dispatch covers DeathSupply only.",
-      "parent_action": "Represent/consume an explicit manual-origin owner-online clock and owner/world persistence. Existing public_after/expires_after numbers alone cannot express it. Reconcile source playtime release before claiming post20-hour profile parity.",
-      "new_content_field_required": "A typed clock/persistence/profile selector beyond current PlayerDropPolicy stage selection and GroundItemPolicy public_after/expires_after; shared owner chooses the exact field/enum names."
+      "historical_executor_result": "The correct private policy/origin was selected and quantity conserved, but expiry remained300 because pause dispatch covered DeathSupply only.",
+      "resolution": "GroundItemPolicy.clock and frozen GroundProvenance.clock explicitly select owner-online ticks without changing PlayerDrop origin. Persisted PlayedTime drives before_playtime selection at120000 ticks, with untradeable and tutorial overrides. Unknown legacy history is not silently zeroed. The native offline and boundary probes pass.",
+      "new_content_field_required": false,
+      "full_target_follow_up": "Owner-private ground transfer across worlds must carry remaining lifetime and identity before world hopping is exposed; M1 has one authoritative world. The live20-hour boundary remains source-supported inference, not an observed source test."
     }
   ],
   "current_native_evidence": "research/m1-bindings/schema-validation.json#native_source_policy_probes",
@@ -71,6 +74,7 @@
     "New engagement/leash/default/attribution policies remain source-supported reversible inferences, not live captures or owner-approved deviations."
   ],
   "currency_conservation": "Departure cleanup/provisions/entitlements/completed transport/acknowledgement are atomic and do not reset, relocate, duplicate or recreate coins.",
-  "runtime_success_claimed": false,
+  "native_source_policy_conformance_passed": true,
+  "full_journey_executed": false,
   "presentation_approved": false
 }

@@ -188,6 +188,7 @@ fn mechanic_fixture() -> GameContent {
         id: id("ground_policy.test.owned"),
         public_after: bound(None),
         expires_after: bound(Some(100)),
+        clock: None,
         owner_can_take: true,
         source: sources(),
     };
@@ -1844,6 +1845,8 @@ fn closure_fixture() -> GameContent {
             content.initial_state.tutorial_stage.clone(),
             bound(id("ground_policy.test.owned")),
         )]),
+        untradeable: None,
+        before_playtime: None,
         source: sources(),
     });
     content.mechanics.player_combat = Some(PlayerCombatPolicy {
@@ -1917,6 +1920,75 @@ fn closure_fixture() -> GameContent {
         respawn_ticks: 3,
     });
     content
+}
+
+#[test]
+fn optional_ground_clock_and_playtime_contracts_are_strict_and_backward_compatible() {
+    let mut content = closure_fixture();
+    content
+        .mechanics
+        .ground_policies
+        .get_mut(&id("ground_policy.test.owned"))
+        .unwrap()
+        .clock = Some(bound(GroundClock::OwnerOnlineTicks));
+    let selector = content.mechanics.player_drop.as_mut().unwrap();
+    selector.untradeable = Some(bound(id("ground_policy.test.owned")));
+    selector.before_playtime = Some(bound(PlayerDropPlaytimePolicy {
+        played_ticks_below: 120000,
+        ground_policy: id("ground_policy.test.owned"),
+    }));
+    let compiled = compile(content.clone());
+    let bytes = encode_compiled(&compiled).unwrap();
+    assert_eq!(
+        load_compiled(&bytes, ValidationMode::TestFixture)
+            .unwrap()
+            .definition(),
+        &content,
+    );
+    for (threshold, policy) in [
+        (0, "ground_policy.test.owned"),
+        (u64::MAX, "ground_policy.test.owned"),
+        (120000, "ground_policy.test.missing"),
+    ] {
+        let mut changed = content.clone();
+        changed
+            .mechanics
+            .player_drop
+            .as_mut()
+            .unwrap()
+            .before_playtime = Some(bound(PlayerDropPlaytimePolicy {
+            played_ticks_below: threshold,
+            ground_policy: id(policy),
+        }));
+        assert!(clubscape_content::compile_content(changed, ValidationMode::TestFixture).is_err());
+    }
+    let mut json = serde_json::to_value(&content).unwrap();
+    json["mechanics"]["ground_policies"]["ground_policy.test.owned"]["clock"]["value"] =
+        "unverified_clock".into();
+    assert!(read_content_json(&serde_json::to_vec(&json).unwrap()).is_err());
+    let mut legacy = serde_json::to_value(content).unwrap();
+    legacy["mechanics"]["ground_policies"]["ground_policy.test.owned"]
+        .as_object_mut()
+        .unwrap()
+        .remove("clock");
+    let selector = legacy["mechanics"]["player_drop"].as_object_mut().unwrap();
+    selector.remove("untradeable");
+    selector.remove("before_playtime");
+    let legacy = read_content_json(&serde_json::to_vec(&legacy).unwrap()).unwrap();
+    assert!(
+        legacy.mechanics.ground_policies[&id("ground_policy.test.owned")]
+            .clock
+            .is_none()
+    );
+    assert!(
+        legacy
+            .mechanics
+            .player_drop
+            .as_ref()
+            .unwrap()
+            .before_playtime
+            .is_none()
+    );
 }
 
 #[test]

@@ -63,8 +63,8 @@
   ],
   "source_status_occurrences": {
     "approved_adaptation": 1,
-    "inference": 3155,
-    "verified_reference": 11522
+    "inference": 3170,
+    "verified_reference": 11534
   },
   "structural_checks_passed": true
 }

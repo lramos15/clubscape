@@ -2,7 +2,7 @@
   "artifact_version": 3,
   "collision_groups": 49,
   "combined_collision_selections": 136,
-  "content_behavior_sha256": "68b9112835288bdcdde7d8ace86405fac33604b933c164d0f289abf77bccab79",
+  "content_behavior_sha256": "9ec6c175b0f9af817ef804a5a783f59ce8a9da8e7244292877fb1142e1db47d5",
   "content_schema_version": 3,
   "death_timing": {
     "source": [
@@ -26,8 +26,9 @@
     }
   },
   "fresh_normal_manual_drop_profile": {
-    "acceptance_impact": "A stage selector alone does not encode playtime release, offline-paused expiration or cross-world ownership. These semantics require real executor conformance, not merely matching private/expiry numbers.",
+    "acceptance_impact": "The executor uses persisted authoritative playtime, an explicit frozen owner-online clock and owner provenance. Unknown legacy playtime requires explicit migration instead of resetting to zero. M1 has one authoritative world; across-world ownership transfer must be implemented and verified before exposing world hopping. Numeric binding and component probes do not establish actual fresh-journey acceptance.",
     "documented_playtime_below_seconds": 72000,
+    "documented_playtime_below_ticks": 120000,
     "expiry_clock": "owner_online_ticks",
     "post_threshold_release_verified": false,
     "world_scope": "owner_across_worlds"
@@ -88,7 +89,7 @@
     "npc.tutorial_rat"
   ],
   "policy": "research/m1-bindings/runtime3-policy.json",
-  "policy_sha256": "cc9e2753bef8fe9ee9ea81ec7f7657297759df9c81ea0a5dfe1b8adf58b0eb53",
+  "policy_sha256": "cfc98f40e7e542b63afe514cf932692f96bbe9494c68b94e8b670d62418966ee",
   "presentation_approved": false,
   "recovery_interfaces": {
     "grave": "interface.grave",

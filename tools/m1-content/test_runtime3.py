@@ -65,20 +65,36 @@ class Runtime3Tests(unittest.TestCase):
 
     def test_stage_and_npc_ground_origins_are_not_conflated(self):
         selector = self.mechanics["player_drop"]
-        self.assertEqual(set(selector["stages"]), set(self.content["tutorial"]))
+        self.assertEqual(set(selector["stages"]), set(self.content["tutorial"]) - {"stage.tutorial.mainland"})
         for stage, selected in selector["stages"].items():
             self.assertEqual(selected["status"], "bound")
             policy = self.mechanics["ground_policies"][selected["value"]]
             self.assertIsNone(policy["public_after"]["value"])
-            self.assertEqual(policy["expires_after"]["value"], 300 if stage == "stage.tutorial.mainland" else 50)
+            self.assertEqual(policy["expires_after"]["value"], 50)
+            self.assertEqual(policy["clock"]["value"], "world_ticks")
         ordinary = self.mechanics["ground_policies"][selector["ordinary"]["value"]]
         self.assertEqual((ordinary["public_after"]["value"], ordinary["expires_after"]["value"]), (100, 300))
+        self.assertEqual(ordinary["clock"]["value"], "world_ticks")
+        fresh = self.mechanics["ground_policies"][selector["before_playtime"]["value"]["ground_policy"]]
+        self.assertIsNone(fresh["public_after"]["value"])
+        self.assertEqual(fresh["expires_after"]["value"], 300)
+        self.assertEqual(fresh["clock"]["value"], "owner_online_ticks")
+        self.assertEqual(selector["untradeable"]["value"], fresh["id"])
+        self.assertEqual(selector["before_playtime"]["value"]["played_ticks_below"] * 600, 72000 * 1000)
         for identifier in ("npc.tutorial_rat", "npc.tutorial_chicken", "npc.goblin.level_2"):
             policy = self.content["npcs"][identifier]["combat"]["mechanics"]["loot_ground_policy"]["value"]
             self.assertEqual(policy, "ground_policy.npc_loot" if identifier == "npc.goblin.level_2" else "ground_policy.tutorial")
         scope = self.policy["fresh_normal_manual_drop_profile"]
         self.assertEqual(scope["expiry_clock"], "owner_online_ticks")
         self.assertFalse(scope["post_threshold_release_verified"])
+
+    def test_every_ground_clock_is_explicit_and_distinguishes_owner_online_from_world_time(self):
+        for identifier, policy in self.mechanics["ground_policies"].items():
+            self.assertEqual(policy["clock"]["status"], "bound")
+            expected = "owner_online_ticks" if identifier in (
+                "ground_policy.death_supplies", "ground_policy.player_drop.m1_fresh",
+            ) else "world_ticks"
+            self.assertEqual(policy["clock"]["value"], expected)
 
     def test_typed_rat_eligibility_checks_actor_stage_method_position_and_prior_kill(self):
         pen = tuple(self.doors["rat_pen_cells"][0])

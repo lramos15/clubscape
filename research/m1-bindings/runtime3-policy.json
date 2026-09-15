@@ -29,13 +29,14 @@
     "ordinary_full_target_public_after": 100,
     "ordinary_full_target_expires_after": 300
   },
-  "fresh_normal_manual_drop_basis": "Items/Drop establish100/300 ordinary manual-drop ticks. Drop explicitly assigns the untradeable-item timers to accounts below20 hours of played time; Items says those timers pause offline and the items follow their owner across worlds. Bind the private300-tick fresh-normal M1 projection, not ordinary public drops. Account's10QP/100total/20hour restrictions concern trade/GE and are NOT proof of a drop-release condition. The stage-only projection after20 played hours is not source-certified and needs a playtime selector before claiming longer-lived profile parity.",
+  "fresh_normal_manual_drop_basis": "Items/Drop establish100/300 ordinary manual-drop ticks. Drop explicitly assigns the untradeable-item timers to accounts below20 hours of played time; Items says those timers pause offline and the items follow their owner across worlds. Bind private300-tick owner-online drops below the exact120000 played-tick boundary and for untradeable items; retain Tutorial Island's separate stage override. At or above the boundary, tradeable manual drops select the ordinary policy. This conditional is a source-supported interpretation, not a live boundary observation. Account's10QP/100total/20hour trade/GE restrictions are not additional manual-drop conditions.",
   "fresh_normal_manual_drop_profile": {
     "documented_playtime_below_seconds": 72000,
+    "documented_playtime_below_ticks": 120000,
     "expiry_clock": "owner_online_ticks",
     "world_scope": "owner_across_worlds",
     "post_threshold_release_verified": false,
-    "acceptance_impact": "A stage selector alone does not encode playtime release, offline-paused expiration or cross-world ownership. These semantics require real executor conformance, not merely matching private/expiry numbers."
+    "acceptance_impact": "The executor uses persisted authoritative playtime, an explicit frozen owner-online clock and owner provenance. Unknown legacy playtime requires explicit migration instead of resetting to zero. M1 has one authoritative world; across-world ownership transfer must be implemented and verified before exposing world hopping. Numeric binding and component probes do not establish actual fresh-journey acceptance."
   },
   "npc_loot_ground": {"public_after": 100, "expires_after": 200},
   "npc_loot_basis": "Drops explicitly gives tradeable monster loot100 private ticks and200 total ticks. Tutorial NPCs instead select the existing private50-tick Tutorial Island policy, a source-supported interpretation of the Island's ground-item rule. Ownership is the actual credited actor and source NPC life; identity/expiry are engine-owned. These are not manual-drop or death-supply origins.",

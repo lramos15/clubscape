@@ -10,7 +10,18 @@ use crate::*;
 pub struct PlayerDropPolicy {
     pub ordinary: SourceBinding<GroundPolicyId>,
     pub stages: BTreeMap<StageId, SourceBinding<GroundPolicyId>>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub untradeable: Option<SourceBinding<GroundPolicyId>>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub before_playtime: Option<SourceBinding<PlayerDropPlaytimePolicy>>,
     pub source: Vec<SourceRecord>,
+}
+
+#[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub struct PlayerDropPlaytimePolicy {
+    pub played_ticks_below: u64,
+    pub ground_policy: GroundPolicyId,
 }
 
 #[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
@@ -189,6 +200,8 @@ pub enum GroundProducer {
 pub struct GroundProvenance {
     pub policy: GroundPolicyId,
     pub producer: GroundProducer,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub clock: Option<GroundClock>,
 }
 
 #[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]

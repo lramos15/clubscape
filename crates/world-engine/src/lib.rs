@@ -326,6 +326,7 @@ impl WorldEngine {
         let mut lifecycle_events = self.advance_presence(draft)?;
         let effective = self.effective_context(draft, context)?;
         let context = &effective;
+        self.advance_playtime(draft, context)?;
         self.advance_entities(draft, random)?;
         self.expire_objects(draft)?;
         self.advance_ground_clocks(draft, context)?;

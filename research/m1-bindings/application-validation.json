@@ -1,5 +1,5 @@
 {
-  "content_compressed_sha256": "b9364b8bb56a88779f57eee650bff032c424e862bc9737bbda558ae41802673b",
+  "content_compressed_sha256": "621a938508bc189eb78bca516fb750c42ad6fc8a91dbf194ad9a1ba3ac3d72d9",
   "coupled_updates_checked": 7,
   "death_values_checked": 118,
   "departure": {
@@ -53,9 +53,7 @@
   },
   "original_source_numeric_oracles": "research/m1-bindings/application-source-validation.json",
   "presentation_approved": false,
-  "remaining_selector_hooks": [
-    "Fresh manual PlayerDrop ownership needs an explicit owner-online expiry/world-persistence policy. Current GroundItemPolicy only declares public_after/expires_after; the native source-clock probe records whether the engine honors this origin. Do not reuse DeathSupply or make expiry infinite."
-  ],
+  "remaining_selector_hooks": [],
   "residuals": {
     "active_or_conditionally_active": [],
     "active_or_conditionally_active_count": 0,

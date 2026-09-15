@@ -10,6 +10,8 @@ fn drops(content: &mut GameContent) {
     content.mechanics.player_drop = Some(PlayerDropPolicy {
         ordinary: v::bound(v::ground_policy()),
         stages: BTreeMap::new(),
+        untradeable: None,
+        before_playtime: None,
         source: source(),
     });
 }
@@ -161,6 +163,7 @@ fn stage_drop_override_is_private_and_expires_without_falling_back_to_ordinary_p
             id: private.clone(),
             public_after: v::bound(None),
             expires_after: v::bound(Some(3)),
+            clock: None,
             owner_can_take: true,
             source: source(),
         },

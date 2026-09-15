@@ -156,23 +156,13 @@ impl WorldEngine {
                 inventory_slot,
                 quantity,
             } => {
-                let selector = self
-                    .content
-                    .mechanics
-                    .player_drop
-                    .as_ref()
-                    .ok_or_else(|| unavailable("Player drop policy is not configured."))?;
-                let policy = selector
-                    .stages
-                    .get(&character.tutorial_stage)
-                    .unwrap_or(&selector.ordinary)
-                    .require()?;
                 let removed = inventory::remove_from_slot(
                     &mut character.inventory,
                     &self.content.items,
                     usize::from(*inventory_slot),
                     *quantity,
                 )?;
+                let policy = self.player_drop_policy(character, &removed.item)?;
                 self.put_ground_from(
                     world,
                     removed.clone(),

@@ -17,6 +17,25 @@ impl Validator<'_> {
                     self.ground_policy(id, "mechanics.player_drop.stages")?;
                 }
             }
+            if let Some(untradeable) = &policy.untradeable
+                && let Some(id) = binding(untradeable, "mechanics.player_drop.untradeable")?
+            {
+                self.ground_policy(id, "mechanics.player_drop.untradeable")?;
+            }
+            if let Some(before) = &policy.before_playtime
+                && let Some(before) = binding(before, "mechanics.player_drop.before_playtime")?
+            {
+                if before.played_ticks_below == 0 || before.played_ticks_below > i64::MAX as u64 {
+                    return Err(invalid(
+                        "mechanics.player_drop.before_playtime",
+                        "playtime threshold must be positive and within the persisted clock domain",
+                    ));
+                }
+                self.ground_policy(
+                    &before.ground_policy,
+                    "mechanics.player_drop.before_playtime",
+                )?;
+            }
         }
         if let Some(policy) = &self.content.mechanics.player_combat {
             if let Some(unarmed) = binding(&policy.unarmed, "mechanics.player_combat.unarmed")? {

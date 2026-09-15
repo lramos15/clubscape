@@ -1,11 +1,11 @@
 # Source-bound M1 content, schema 3
 
-**The actual content/artifact-3 pack strictly compiles and reloads, but native
-source-policy probes still block runtime readiness.** All declared v3 selectors
+**The actual content/artifact-3 pack strictly compiles, reloads and passes its
+native source-policy probes.** All declared v3 selectors
 and the conditional vital enum are authored. There are zero active
 `SourceBinding::Unresolved` values and six proof-scoped inactive dependencies,
-not an old v2/decoder/asset blocker. Native tests expose solid-target contact and
-fresh manual-drop offline-clock failures; see
+not an old v2/decoder/asset blocker. Source-solid contact and fresh manual-drop
+clocks now pass; the complete real player journey remains a separate gate. See
 [`contract-gaps.json`](../../research/m1-bindings/contract-gaps.json) and the
 current [`status.json`](../../research/m1-bindings/status.json).
 
@@ -210,24 +210,29 @@ The earlier 258-file audio export is explicitly historical: upstream75bfde1
 corrected native percussion and added cues before this task. Its exact current
 264-file manifest and files are hash-validated separately, without an
 unchanged-audio or playback-acceptance claim.
-Penguin NPC 2063/model 21547 remains a candidate, not an approved player.
+Penguin NPC2063/model21547 is the approved source base in the externally approved
+v1.3.0 reference pack; the actual rendered player/equipment still needs acceptance.
 Source captures, live mechanics execution, persistence, presentation/audio,
 browser performance, owner approval and RuneLite acceptance remain separate.
 
-## Native failures and integration paths
+## Native conformance and integration paths
 
 At the original Lumbridge range, the walkable allowed west-side tile
-`3211,3215,0` still returns `OutOfReach` for both selected Single and Make-X-of-one.
-The executor checks movement/sight through the solid target's own clipped
-footprint. Its contact query needs to distinguish the reachable face from
-walking/shooting through the object; source masks and walls must not be cleared.
+`3211,3215,0` accepts both selected Single and Make-X-of-one, preserving their
+one-tick and three-tick initial deadlines. The near-face contact query preserves
+source clipping, intervening walls, access-side masks, distance and plane.
+The range is not made walkable or transparent.
 
-Fresh manual drops select the correct private/300-tick policy and conserve the
-25 test coins, but an offline tick leaves expiry at300 instead of301.
-`GroundProducer::PlayerDrop` needs the source owner-online clock; only death
-supplies currently pause. Cross-world/manual-origin semantics and release after
-20 played hours must not be inferred from the unrelated10QP GE restriction.
-`runtime3-policy.json` retains that source-profile limit explicitly.
+Fresh manual drops select the explicit private/300 owner-online-tick policy.
+An offline tick moves their absolute expiry from300 to301 without changing the
+PlayerDrop origin or quantity. The selected clock is frozen in persisted ground
+provenance. Source-supported playtime selection changes tradeable manual drops
+at120000 played ticks (20 hours), while untradeables retain private owner-online
+clocks and tutorial-stage overrides remain separate. Unknown legacy playtime
+requires explicit migration, not a reset. Cross-world transfer is not exposed
+by the single-world M1 profile and remains a full-target obligation.
+`runtime3-policy.json` retains the source qualification and unobserved live
+boundary explicitly; no10QP GE condition is substituted.
 
 The raw compiled file is generated at
 `tools/m1-content/.local/compiler/m1.csc`; its committed reproducible gzip is

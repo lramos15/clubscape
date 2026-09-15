@@ -130,6 +130,7 @@ pub fn content() -> GameContent {
             id: ground_policy(),
             public_after: bound(Some(100)),
             expires_after: bound(Some(200)),
+            clock: None,
             owner_can_take: true,
             source: source(),
         },

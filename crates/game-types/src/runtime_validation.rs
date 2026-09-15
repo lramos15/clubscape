@@ -293,6 +293,18 @@ impl CharacterState {
 impl CharacterRuntime {
     /// Append-only reward accounting survives replay, close/reopen, death and restart.
     pub fn validate_ledger_successor(&self, successor: &Self) -> GameResult<()> {
+        if self.played_time.as_ref().is_some_and(|before| {
+            successor.played_time.as_ref().is_none_or(|after| {
+                after.ticks < before.ticks
+                    || before.through_world_tick.is_some_and(|tick| {
+                        after.through_world_tick.is_none_or(|after| after < tick)
+                    })
+            })
+        }) {
+            return Err(invalid(
+                "Acknowledged owner playtime regressed or was removed.",
+            ));
+        }
         for (id, previous) in &self.entitlements {
             let next = successor
                 .entitlements
@@ -563,6 +575,20 @@ impl WorldState {
                 return Err(invalid("Character map key and actor identity disagree."));
             }
             character.validate_runtime(content)?;
+            if character
+                .runtime
+                .played_time
+                .as_ref()
+                .is_some_and(|played| {
+                    played
+                        .through_world_tick
+                        .is_some_and(|tick| tick > self.tick)
+                })
+            {
+                return Err(invalid(
+                    "Owner playtime was recorded at a future world tick.",
+                ));
+            }
             match &character.runtime.life {
                 LifeState::Dying { death, at_tick } => {
                     let record = self
@@ -697,6 +723,14 @@ impl WorldState {
             if let Some(provenance) = self.runtime.ground_provenance.get(&ground.id) {
                 if !definitions.ground_policies.contains_key(&provenance.policy) {
                     return Err(invalid("Unknown live ground policy."));
+                }
+                if provenance.clock == Some(GroundClock::OwnerOnlineTicks)
+                    && ground
+                        .owner
+                        .as_ref()
+                        .is_none_or(|owner| !self.characters.contains_key(owner))
+                {
+                    return Err(invalid("Owner-online ground clock has no retained owner."));
                 }
                 let ordinal = ground
                     .id

@@ -645,8 +645,17 @@ pub struct GroundItemPolicy {
     pub id: GroundPolicyId,
     pub public_after: SourceBinding<Option<u32>>,
     pub expires_after: SourceBinding<Option<u32>>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub clock: Option<SourceBinding<GroundClock>>,
     pub owner_can_take: bool,
     pub source: Vec<SourceRecord>,
+}
+
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(rename_all = "snake_case")]
+pub enum GroundClock {
+    WorldTicks,
+    OwnerOnlineTicks,
 }
 
 #[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]

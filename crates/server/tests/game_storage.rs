@@ -564,7 +564,7 @@ fn assert_conflict(error: GameStorageError) {
 #[tokio::test(flavor = "multi_thread", worker_threads = 2)]
 #[ignore = "requires isolated PostgreSQL; run just test-integration"]
 async fn engine_processes_store_advanced_ticks_once_with_rollback_and_receipt_replay() {
-    use clubscape_world_engine::{RandomSource, WorldEngine};
+    use clubscape_world_engine::{LifecycleTransition, RandomSource, WorldEngine};
 
     struct Draw(u32);
     impl RandomSource for Draw {
@@ -628,9 +628,10 @@ async fn engine_processes_store_advanced_ticks_once_with_rollback_and_receipt_re
                 },
             },
             move |world, actor, intent| {
-                action_engine
-                    .apply_intent(world, actor, intent, &mut Draw(0))
-                    .map(|events| events.into_iter().map(|event| event.event).collect())
+                let mut events =
+                    action_engine.apply_lifecycle(world, actor, LifecycleTransition::Join)?;
+                events.extend(action_engine.apply_intent(world, actor, intent, &mut Draw(0))?);
+                Ok(events.into_iter().map(|event| event.event).collect())
             },
         )
         .await
@@ -706,6 +707,15 @@ async fn engine_processes_store_advanced_ticks_once_with_rollback_and_receipt_re
     assert_eq!(completed.state.tick, 2);
     assert_eq!(completed.state.characters[&actor].last_command_sequence, 1);
     assert_eq!(
+        completed.state.characters[&actor]
+            .runtime
+            .played_time
+            .as_ref()
+            .unwrap()
+            .ticks,
+        2,
+    );
+    assert_eq!(
         completed.state.characters[&actor].skills[&engine_content::id("skill.test.mining")]
             .xp_tenths,
         100
@@ -735,6 +745,7 @@ async fn engine_processes_store_advanced_ticks_once_with_rollback_and_receipt_re
 async fn typed_runtime_ledgers_and_deadlines_persist_without_replay_or_acknowledged_state_loss() {
     use clubscape_game_types::{
         CounterId, CounterValue, EntitlementId, EntitlementState, FractionalAccumulator,
+        GroundClock, GroundItem, GroundPolicyId, GroundProducer, GroundProvenance, PlayedTime,
     };
 
     let database = TestDatabase::reset().await;
@@ -759,12 +770,42 @@ async fn typed_runtime_ledgers_and_deadlines_persist_without_replay_or_acknowled
                     numerator: 1,
                     denominator: 60,
                 });
+                character.runtime.played_time = Some(PlayedTime {
+                    ticks: 119999,
+                    through_world_tick: Some(world.tick),
+                });
                 character.runtime.entitlements.insert(
                     EntitlementId::new("entitlement.fixture.reward")?,
                     EntitlementState::Claimed {
                         at_tick: world.tick,
                     },
                 );
+                let dropped_tile = character.tile;
+                world.runtime.next_ground_id = 1;
+                world.runtime.ground_provenance.insert(
+                    "ground.engine.1".into(),
+                    GroundProvenance {
+                        policy: GroundPolicyId::new("ground_policy.fixture.owner")?,
+                        producer: GroundProducer::PlayerDrop {
+                            actor: actor.clone(),
+                            at_tick: world.tick,
+                        },
+                        clock: Some(GroundClock::OwnerOnlineTicks),
+                    },
+                );
+                world.ground_items.push(GroundItem {
+                    id: "ground.engine.1".into(),
+                    tile: dropped_tile,
+                    stack: ItemStack {
+                        item: ItemId::new("item.fixture.dropped_coins")?,
+                        quantity: Quantity::new(25)?,
+                        instance: None,
+                    },
+                    owner: Some(actor.clone()),
+                    public_at_tick: u64::MAX,
+                    expires_at_tick: 301,
+                    instance: None,
+                });
                 Ok(vec![GameEvent::CounterChanged {
                     counter: CounterId::new("counter.fixture.flour")?,
                     value: CounterValue::Integer(30),
@@ -794,6 +835,21 @@ async fn typed_runtime_ledgers_and_deadlines_persist_without_replay_or_acknowled
     assert_eq!(restored.state, committed.receipt.character);
     assert_eq!(restored.state.runtime.food_ready, 17);
     assert_eq!(restored.state.runtime.combat.attack_ready, 19);
+    assert_eq!(
+        restored.state.runtime.played_time.as_ref().unwrap().ticks,
+        119999
+    );
+    let persisted_world = reader.load_world(database.world_id).await.unwrap().state;
+    assert_eq!(
+        persisted_world.runtime.ground_provenance["ground.engine.1"].clock,
+        Some(GroundClock::OwnerOnlineTicks),
+    );
+    assert_eq!(persisted_world.ground_items[0].expires_at_tick, 301);
+    assert_eq!(persisted_world.ground_items[0].stack.quantity.get(), 25);
+    assert_eq!(
+        persisted_world.ground_items[0].owner,
+        Some(restored.state.actor_id.clone())
+    );
     let duplicate = database
         .store
         .commit_command(&database.lease, &player.access(), operation, |_, _, _| {
@@ -804,7 +860,7 @@ async fn typed_runtime_ledgers_and_deadlines_persist_without_replay_or_acknowled
     assert!(duplicate.duplicate);
     assert_eq!(duplicate.receipt, committed.receipt);
     let before = database.store.load_world(database.world_id).await.unwrap();
-    for clear_ledger in [true, false] {
+    for invalid_change in ["entitlements", "prayer", "playtime"] {
         let failure = database
             .store
             .commit_command(
@@ -813,13 +869,16 @@ async fn typed_runtime_ledgers_and_deadlines_persist_without_replay_or_acknowled
                 command(2),
                 move |world, actor, _| {
                     let runtime = &mut world.characters.get_mut(actor).unwrap().runtime;
-                    if clear_ledger {
-                        runtime.entitlements.clear();
-                    } else {
-                        runtime.combat.prayer_drain = Some(FractionalAccumulator {
-                            numerator: 1,
-                            denominator: 0,
-                        });
+                    match invalid_change {
+                        "entitlements" => runtime.entitlements.clear(),
+                        "prayer" => {
+                            runtime.combat.prayer_drain = Some(FractionalAccumulator {
+                                numerator: 1,
+                                denominator: 0,
+                            })
+                        }
+                        "playtime" => runtime.played_time = None,
+                        _ => unreachable!(),
                     }
                     Ok(Vec::new())
                 },
@@ -912,6 +971,7 @@ async fn legacy_jsonb_runtime_defaults_preserve_pending_activity_inventory_xp_an
         restored.state.runtime.life,
         clubscape_game_types::LifeState::Legacy
     ));
+    assert_eq!(restored.state.runtime.played_time, None);
     assert_eq!(database.journal_count().await, 1);
     database.stop().await;
 }
