@@ -6,6 +6,8 @@
 //! activation routine is only called by unused draw variants), so `yi`/`zo`/`xg` are always
 //! false here exactly as in the source captures.
 
+// The nested flag/lookup `if`s mirror the original `ee` control flow one-to-one.
+#![allow(clippy::collapsible_if)]
 #![allow(clippy::too_many_arguments, clippy::cognitive_complexity)]
 
 use std::collections::{HashMap, VecDeque};
@@ -52,8 +54,17 @@ pub struct SceneView {
 /// What a triangle belongs to, for picking.
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 pub enum PickTarget {
-    Tile { plane: i32, x: i32, y: i32 },
-    Object { hash: i64, plane: i32, x: i32, y: i32 },
+    Tile {
+        plane: i32,
+        x: i32,
+        y: i32,
+    },
+    Object {
+        hash: i64,
+        plane: i32,
+        x: i32,
+        y: i32,
+    },
 }
 
 pub trait ModelSource {
@@ -62,7 +73,11 @@ pub trait ModelSource {
 
 impl ModelSource for Vec<Option<Model>> {
     fn model(&self, index: i32) -> Option<&Model> {
-        if index < 0 { None } else { self.get(index as usize).and_then(|m| m.as_ref()) }
+        if index < 0 {
+            None
+        } else {
+            self.get(index as usize).and_then(|m| m.as_ref())
+        }
     }
 }
 
@@ -179,7 +194,15 @@ impl SceneDrawer {
             dz: 0,
             dn: 0,
             paint_plane: 0,
-            tile_camera: TileCamera { x: 0, height: 0, z: 0, pitch_sin: 0.0, pitch_cos: 0.0, yaw_sin: 0.0, yaw_cos: 0.0 },
+            tile_camera: TileCamera {
+                x: 0,
+                height: 0,
+                z: 0,
+                pitch_sin: 0.0,
+                pitch_cos: 0.0,
+                yaw_sin: 0.0,
+                yaw_cos: 0.0,
+            },
             scene_camera: SceneCamera::from_angles(0, 0, far_clip),
             tile_scratch: TileScratch::default(),
             model_scratch: ModelScratch::default(),
@@ -207,7 +230,11 @@ impl SceneDrawer {
     #[inline]
     fn logical_plane(&self, scene: &SceneData, i: usize) -> i32 {
         let plane = (i as i32 >> scene.plane_shift) & 3;
-        if self.flags[i] & flag::FORCE_PLANE_0 != 0 { 0 } else { plane }
+        if self.flags[i] & flag::FORCE_PLANE_0 != 0 {
+            0
+        } else {
+            plane
+        }
     }
     /// `ez.xm`: plane adjusted by the bridge flag of the plane-0 tile.
     #[inline]
@@ -220,7 +247,11 @@ impl SceneDrawer {
     /// Static or temporary game object by combined id.
     #[inline]
     fn object<'s>(&'s self, scene: &'s SceneData, id: usize) -> &'s GameObject {
-        if id < scene.game_objects.len() { &scene.game_objects[id] } else { &self.temp_objects[id - scene.game_objects.len()] }
+        if id < scene.game_objects.len() {
+            &scene.game_objects[id]
+        } else {
+            &self.temp_objects[id - scene.game_objects.len()]
+        }
     }
 
     /// Restores the static object slots/links/counts before placing this frame's actors
@@ -232,7 +263,8 @@ impl SceneDrawer {
         self.slots.clone_from(&scene.slots);
         self.temp_objects.clear();
         self.objects.truncate(scene.game_objects.len());
-        self.objects.resize(scene.game_objects.len(), ObjectState::default());
+        self.objects
+            .resize(scene.game_objects.len(), ObjectState::default());
     }
 
     /// `ez.bo(..., temporary = true)`: registers an actor in every tile it spans for this frame.
@@ -346,14 +378,25 @@ impl SceneDrawer {
 
     /// `ez.dh` + `bh(true, ..)` + `ei`: draws the whole frame into `out`. Temporary entities must
     /// have been registered with [`Self::add_temporary`] after [`Self::begin_frame`].
-    pub fn draw<M: ModelSource>(&mut self, scene: &SceneData, models: &M, temp_models: &[Model], view: &SceneView, out: &mut Vec<Tri>) {
+    pub fn draw<M: ModelSource>(
+        &mut self,
+        scene: &SceneData,
+        models: &M,
+        temp_models: &[Model],
+        view: &SceneView,
+        out: &mut Vec<Tri>,
+    ) {
         let t = tables();
         self.picks.clear();
         self.missing_models.clear();
         // dh
-        self.cp = view.camera_x.clamp(scene.min_x << 7, (scene.max_x << 7) - 1);
+        self.cp = view
+            .camera_x
+            .clamp(scene.min_x << 7, (scene.max_x << 7) - 1);
         self.cq = view.camera_height;
-        self.cl = view.camera_z.clamp(scene.min_y << 7, (scene.max_y << 7) - 1);
+        self.cl = view
+            .camera_z
+            .clamp(scene.min_y << 7, (scene.max_y << 7) - 1);
         self.cd = (self.cp >> 7) + scene.offset;
         self.cv = (self.cl >> 7) + scene.offset;
         self.cs = (view.focal_x >> 7) + scene.offset;
@@ -377,8 +420,16 @@ impl SceneDrawer {
         // bh(true, kb)
         self.frame = self.frame.wrapping_add(1);
         let dd = scene.draw_distance;
-        let n3 = if view.center_on_camera { self.cd } else { self.cs };
-        let n = if view.center_on_camera { self.cv } else { self.cy };
+        let n3 = if view.center_on_camera {
+            self.cd
+        } else {
+            self.cs
+        };
+        let n = if view.center_on_camera {
+            self.cv
+        } else {
+            self.cy
+        };
         if scene.main_scene {
             self.cr = (n3 - dd).max(scene.min_x + scene.offset);
             self.cb = (n - dd).max(scene.min_y + scene.offset);
@@ -415,11 +466,17 @@ impl SceneDrawer {
                             self.dn,
                         )
                         || scene.height(plane, x, yy) - self.cq >= 2000;
-                    let drawn = (logical <= self.br || roof_hiding) && vis_ok && (!roof_hiding || world_plane >= logical || roof == 0);
+                    let drawn = (logical <= self.br || roof_hiding)
+                        && vis_ok
+                        && (!roof_hiding || world_plane >= logical || roof == 0);
                     if drawn {
                         let mut f = self.flags[i];
                         f |= 6;
-                        f |= if self.object_count[i] <= 0 && (f & 128) == 0 { 0 } else { 8 };
+                        f |= if self.object_count[i] <= 0 && (f & 128) == 0 {
+                            0
+                        } else {
+                            8
+                        };
                         f &= 0xFF00FFEFu32 as i32;
                         self.flags[i] = f;
                         self.remaining += 1;
@@ -493,7 +550,15 @@ impl SceneDrawer {
 
     /// `ez.zm` → `fx.xm`: draw a model at a scene position.
     fn draw_model<M: ModelSource>(
-        &mut self, models: &M, temp_models: &[Model], model_index: i32, orientation: i32, x: i32, height: i32, z: i32, pick: u32,
+        &mut self,
+        models: &M,
+        temp_models: &[Model],
+        model_index: i32,
+        orientation: i32,
+        x: i32,
+        height: i32,
+        z: i32,
+        pick: u32,
         out: &mut Vec<Tri>,
     ) {
         if model_index < 0 {
@@ -508,21 +573,68 @@ impl SceneDrawer {
             self.missing_models.push(model_index);
             return;
         };
-        let mut drawer = ModelDrawer { state: self.state, palette: &self.palette, scratch: &mut self.model_scratch, alpha_pass: 2 };
-        let _ = drawer.draw_scene(model, orientation, &self.scene_camera, x - self.cp, height - self.cq, z - self.cl, pick, out);
+        let mut drawer = ModelDrawer {
+            state: self.state,
+            palette: &self.palette,
+            scratch: &mut self.model_scratch,
+            alpha_pass: 2,
+        };
+        let _ = drawer.draw_scene(
+            model,
+            orientation,
+            &self.scene_camera,
+            x - self.cp,
+            height - self.cq,
+            z - self.cl,
+            pick,
+            out,
+        );
     }
 
-    fn draw_paint(&mut self, scene: &SceneData, tile_index: usize, plane: i32, x: i32, y: i32, out: &mut Vec<Tri>) {
+    fn draw_paint(
+        &mut self,
+        scene: &SceneData,
+        tile_index: usize,
+        plane: i32,
+        x: i32,
+        y: i32,
+        out: &mut Vec<Tri>,
+    ) {
         if let Some(paint) = scene.paints.get(&tile_index) {
             let pick = self.pick_tile(plane, x, y);
-            draw_tile_paint(scene, &self.state, &self.tile_camera, paint, plane, x, y, pick, out);
+            draw_tile_paint(
+                scene,
+                &self.state,
+                &self.tile_camera,
+                paint,
+                plane,
+                x,
+                y,
+                pick,
+                out,
+            );
         }
     }
 
-    fn draw_shaped(&mut self, scene: &SceneData, tile_index: usize, plane: i32, x: i32, y: i32, out: &mut Vec<Tri>) {
+    fn draw_shaped(
+        &mut self,
+        scene: &SceneData,
+        tile_index: usize,
+        plane: i32,
+        x: i32,
+        y: i32,
+        out: &mut Vec<Tri>,
+    ) {
         if let Some(model) = scene.tile_models.get(&tile_index) {
             let pick = self.pick_tile(plane, x, y);
-            draw_tile_model(&self.state, &self.tile_camera, model, &mut self.tile_scratch, pick, out);
+            draw_tile_model(
+                &self.state,
+                &self.tile_camera,
+                model,
+                &mut self.tile_scratch,
+                pick,
+                out,
+            );
         }
     }
 
@@ -539,7 +651,15 @@ impl SceneDrawer {
     }
 
     /// `ez.ee`: the per-tile linked draw.
-    fn draw_tile<M: ModelSource>(&mut self, scene: &SceneData, models: &M, temp_models: &[Model], start: usize, mut first_pass: bool, out: &mut Vec<Tri>) {
+    fn draw_tile<M: ModelSource>(
+        &mut self,
+        scene: &SceneData,
+        models: &M,
+        temp_models: &[Model],
+        start: usize,
+        mut first_pass: bool,
+        out: &mut Vec<Tri>,
+    ) {
         let oy = scene.offset;
         let gf = scene.plane_stride as usize;
         let mh = scene.x_stride as usize;
@@ -564,25 +684,37 @@ impl SceneDrawer {
                     }
                     if !defer && n21 <= self.cd && n21 > self.cr {
                         let n20 = n2 - mh;
-                        if self.exists(n20) && self.visible(n20) && (self.draw_primary(n20) || (self.link[n2] & 1) == 0) {
+                        if self.exists(n20)
+                            && self.visible(n20)
+                            && (self.draw_primary(n20) || (self.link[n2] & 1) == 0)
+                        {
                             defer = true;
                         }
                     }
                     if !defer && n21 >= self.cd && n21 < self.cu - 1 {
                         let n20 = n2 + mh;
-                        if self.exists(n20) && self.visible(n20) && (self.draw_primary(n20) || (self.link[n2] & 4) == 0) {
+                        if self.exists(n20)
+                            && self.visible(n20)
+                            && (self.draw_primary(n20) || (self.link[n2] & 4) == 0)
+                        {
                             defer = true;
                         }
                     }
                     if !defer && n22 <= self.cv && n22 > self.cb {
                         let n20 = n2 - 1;
-                        if self.exists(n20) && self.visible(n20) && (self.draw_primary(n20) || (self.link[n2] & 8) == 0) {
+                        if self.exists(n20)
+                            && self.visible(n20)
+                            && (self.draw_primary(n20) || (self.link[n2] & 8) == 0)
+                        {
                             defer = true;
                         }
                     }
                     if !defer && n22 >= self.cv && n22 < self.ct - 1 {
                         let n20 = n2 + 1;
-                        if self.exists(n20) && self.visible(n20) && (self.draw_primary(n20) || (self.link[n2] & 2) == 0) {
+                        if self.exists(n20)
+                            && self.visible(n20)
+                            && (self.draw_primary(n20) || (self.link[n2] & 2) == 0)
+                        {
                             defer = true;
                         }
                     }
@@ -605,7 +737,17 @@ impl SceneDrawer {
                     if n19 & flag::WALL != 0 {
                         if let Some(w) = scene.walls.get(&n20).cloned() {
                             let pick = self.pick_object(w.hash, 0, n26, n27);
-                            self.draw_model(models, temp_models, w.model_a, 0, w.x, w.height, w.z, pick, out);
+                            self.draw_model(
+                                models,
+                                temp_models,
+                                w.model_a,
+                                0,
+                                w.x,
+                                w.height,
+                                w.z,
+                                pick,
+                                out,
+                            );
                         }
                     }
                     let count = self.object_count[n20] as i32;
@@ -613,7 +755,17 @@ impl SceneDrawer {
                         if let Some(&id) = self.slots.get(&(n20 * 5 + slot as usize)) {
                             let o = self.object(scene, id).clone();
                             let pick = self.pick_object(o.hash, 0, n26, n27);
-                            self.draw_model(models, temp_models, o.model, o.orientation, o.x, o.height, o.z, pick, out);
+                            self.draw_model(
+                                models,
+                                temp_models,
+                                o.model,
+                                o.orientation,
+                                o.x,
+                                o.height,
+                                o.z,
+                                pick,
+                                out,
+                            );
                         }
                     }
                 }
@@ -665,11 +817,31 @@ impl SceneDrawer {
                         }
                         if w.orientation_a & n30 != 0 {
                             let pick = self.pick_object(w.hash, n23, n26, n27);
-                            self.draw_model(models, temp_models, w.model_a, 0, w.x, w.height, w.z, pick, out);
+                            self.draw_model(
+                                models,
+                                temp_models,
+                                w.model_a,
+                                0,
+                                w.x,
+                                w.height,
+                                w.z,
+                                pick,
+                                out,
+                            );
                         }
                         if w.orientation_b & n30 != 0 {
                             let pick = self.pick_object(w.hash, n23, n26, n27);
-                            self.draw_model(models, temp_models, w.model_b, 0, w.x, w.height, w.z, pick, out);
+                            self.draw_model(
+                                models,
+                                temp_models,
+                                w.model_b,
+                                0,
+                                w.x,
+                                w.height,
+                                w.z,
+                                pick,
+                                out,
+                            );
                         }
                     }
                 }
@@ -677,7 +849,17 @@ impl SceneDrawer {
                     if let Some(d) = scene.wall_decorations.get(&n2).cloned() {
                         if d.orientation & n30 != 0 {
                             let pick = self.pick_object(d.hash, n23, n26, n27);
-                            self.draw_model(models, temp_models, d.model_a, 0, d.x + d.offset_x, d.height, d.z + d.offset_z, pick, out);
+                            self.draw_model(
+                                models,
+                                temp_models,
+                                d.model_a,
+                                0,
+                                d.x + d.offset_x,
+                                d.height,
+                                d.z + d.offset_z,
+                                pick,
+                                out,
+                            );
                         } else if d.orientation == 256 {
                             let n16 = d.x - self.cp;
                             let n15 = d.z - self.cl;
@@ -686,10 +868,30 @@ impl SceneDrawer {
                             let n13 = if n14 != 2 && n14 != 3 { n15 } else { -n15 };
                             if n13 < n12 {
                                 let pick = self.pick_object(d.hash, n23, n26, n27);
-                                self.draw_model(models, temp_models, d.model_a, 0, d.x + d.offset_x, d.height, d.z + d.offset_z, pick, out);
+                                self.draw_model(
+                                    models,
+                                    temp_models,
+                                    d.model_a,
+                                    0,
+                                    d.x + d.offset_x,
+                                    d.height,
+                                    d.z + d.offset_z,
+                                    pick,
+                                    out,
+                                );
                             } else if d.model_b >= 0 {
                                 let pick = self.pick_object(d.hash, n23, n26, n27);
-                                self.draw_model(models, temp_models, d.model_b, 0, d.x + d.offset_x2, d.height, d.z + d.offset_z2, pick, out);
+                                self.draw_model(
+                                    models,
+                                    temp_models,
+                                    d.model_b,
+                                    0,
+                                    d.x + d.offset_x2,
+                                    d.height,
+                                    d.z + d.offset_z2,
+                                    pick,
+                                    out,
+                                );
                             }
                         }
                     }
@@ -698,7 +900,17 @@ impl SceneDrawer {
                     if self.flags[n2] & flag::FLOOR_DECOR != 0 {
                         if let Some(f) = scene.floor_decorations.get(&n2).cloned() {
                             let pick = self.pick_object(f.hash, n23, n26, n27);
-                            self.draw_model(models, temp_models, f.model, 0, f.x, f.height, f.z, pick, out);
+                            self.draw_model(
+                                models,
+                                temp_models,
+                                f.model,
+                                0,
+                                f.x,
+                                f.height,
+                                f.z,
+                                pick,
+                                out,
+                            );
                         }
                     }
                     // Item layers (ground items) are not part of static scene exports.
@@ -733,9 +945,13 @@ impl SceneDrawer {
                 let mut ready = true;
                 let count = self.object_count[n2] as usize;
                 for slot in 0..count {
-                    let Some(&id) = self.slots.get(&(n2 * 5 + slot)) else { continue };
+                    let Some(&id) = self.slots.get(&(n2 * 5 + slot)) else {
+                        continue;
+                    };
                     let n18 = self.object_flags[n2 * 5 + slot] as i32;
-                    if self.objects[id].drawn_frame != self.frame && (n18 & self.wall_cull_a(n2)) == self.wall_cull_b(n2) {
+                    if self.objects[id].drawn_frame != self.frame
+                        && (n18 & self.wall_cull_a(n2)) == self.wall_cull_b(n2)
+                    {
                         ready = false;
                         break;
                     }
@@ -743,7 +959,17 @@ impl SceneDrawer {
                 if ready {
                     if let Some(w) = scene.walls.get(&n2).cloned() {
                         let pick = self.pick_object(w.hash, n23, n26, n27);
-                        self.draw_model(models, temp_models, w.model_a, 0, w.x, w.height, w.z, pick, out);
+                        self.draw_model(
+                            models,
+                            temp_models,
+                            w.model_a,
+                            0,
+                            w.x,
+                            w.height,
+                            w.z,
+                            pick,
+                            out,
+                        );
                     }
                     self.flags[n2] &= !flag::WALL_DEFERRED;
                     n28 = self.flags[n2];
@@ -755,7 +981,9 @@ impl SceneDrawer {
                 self.scratch_objects.clear();
                 let count = self.object_count[n2] as usize;
                 'objects: for slot in 0..count {
-                    let Some(&id) = self.slots.get(&(n2 * 5 + slot)) else { continue };
+                    let Some(&id) = self.slots.get(&(n2 * 5 + slot)) else {
+                        continue;
+                    };
                     if self.objects[id].drawn_frame == self.frame {
                         continue;
                     }
@@ -797,17 +1025,24 @@ impl SceneDrawer {
                         }
                     }
                     self.scratch_objects.push(id);
-                    self.objects[id].distance = Self::object_distance(o, self.cd - oy, self.cv - oy);
+                    self.objects[id].distance =
+                        Self::object_distance(o, self.cd - oy, self.cv - oy);
                 }
                 if n28 & flag::ZONE_DYNAMIC != 0 {
                     if let Some(list) = scene.zone_dynamic.get(&(n21 >> 3, n22 >> 3)) {
                         for &id in list {
                             let o = &scene.game_objects[id];
-                            if !o.dynamic || self.objects[id].drawn_frame == self.frame || o.min_x != n26 || o.min_y != n27 || self.scratch_objects.len() >= 55 {
+                            if !o.dynamic
+                                || self.objects[id].drawn_frame == self.frame
+                                || o.min_x != n26
+                                || o.min_y != n27
+                                || self.scratch_objects.len() >= 55
+                            {
                                 continue;
                             }
                             self.scratch_objects.push(id);
-                            self.objects[id].distance = Self::object_distance(o, self.cd - oy, self.cv - oy);
+                            self.objects[id].distance =
+                                Self::object_distance(o, self.cd - oy, self.cv - oy);
                         }
                     }
                 }
@@ -844,7 +1079,17 @@ impl SceneDrawer {
                     self.objects[id].drawn_frame = self.frame;
                     let o = self.object(scene, id).clone();
                     let pick = self.pick_object(o.hash, n23, o.min_x, o.min_y);
-                    self.draw_model(models, temp_models, o.model, o.orientation, o.x, o.height, o.z, pick, out);
+                    self.draw_model(
+                        models,
+                        temp_models,
+                        o.model,
+                        o.orientation,
+                        o.x,
+                        o.height,
+                        o.z,
+                        pick,
+                        out,
+                    );
                     for n43 in o.min_x..=o.max_x {
                         for n16 in o.min_y..=o.max_y {
                             let n15 = n43 + oy;
@@ -904,7 +1149,17 @@ impl SceneDrawer {
                     if let Some(d) = scene.wall_decorations.get(&n2).cloned() {
                         if d.orientation & self.wall_direction(n2) != 0 {
                             let pick = self.pick_object(d.hash, n23, n26, n27);
-                            self.draw_model(models, temp_models, d.model_a, 0, d.x + d.offset_x, d.height, d.z + d.offset_z, pick, out);
+                            self.draw_model(
+                                models,
+                                temp_models,
+                                d.model_a,
+                                0,
+                                d.x + d.offset_x,
+                                d.height,
+                                d.z + d.offset_z,
+                                pick,
+                                out,
+                            );
                         } else if d.orientation == 256 {
                             let n48 = d.x - self.cp;
                             let n49 = d.z - self.cl;
@@ -913,10 +1168,30 @@ impl SceneDrawer {
                             let n16 = if n18 != 2 && n18 != 3 { n49 } else { -n49 };
                             if n16 >= n17 {
                                 let pick = self.pick_object(d.hash, n23, n26, n27);
-                                self.draw_model(models, temp_models, d.model_a, 0, d.x + d.offset_x, d.height, d.z + d.offset_z, pick, out);
+                                self.draw_model(
+                                    models,
+                                    temp_models,
+                                    d.model_a,
+                                    0,
+                                    d.x + d.offset_x,
+                                    d.height,
+                                    d.z + d.offset_z,
+                                    pick,
+                                    out,
+                                );
                             } else if d.model_b >= 0 {
                                 let pick = self.pick_object(d.hash, n23, n26, n27);
-                                self.draw_model(models, temp_models, d.model_b, 0, d.x + d.offset_x2, d.height, d.z + d.offset_z2, pick, out);
+                                self.draw_model(
+                                    models,
+                                    temp_models,
+                                    d.model_b,
+                                    0,
+                                    d.x + d.offset_x2,
+                                    d.height,
+                                    d.z + d.offset_z2,
+                                    pick,
+                                    out,
+                                );
                             }
                         }
                     }
@@ -926,11 +1201,31 @@ impl SceneDrawer {
                         let n50 = self.wall_direction(n2);
                         if w.orientation_b & n50 != 0 {
                             let pick = self.pick_object(w.hash, n23, n26, n27);
-                            self.draw_model(models, temp_models, w.model_b, 0, w.x, w.height, w.z, pick, out);
+                            self.draw_model(
+                                models,
+                                temp_models,
+                                w.model_b,
+                                0,
+                                w.x,
+                                w.height,
+                                w.z,
+                                pick,
+                                out,
+                            );
                         }
                         if w.orientation_a & n50 != 0 {
                             let pick = self.pick_object(w.hash, n23, n26, n27);
-                            self.draw_model(models, temp_models, w.model_a, 0, w.x, w.height, w.z, pick, out);
+                            self.draw_model(
+                                models,
+                                temp_models,
+                                w.model_a,
+                                0,
+                                w.x,
+                                w.height,
+                                w.z,
+                                pick,
+                                out,
+                            );
                         }
                     }
                 }

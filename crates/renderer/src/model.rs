@@ -72,7 +72,13 @@ impl Model {
         let face_count = header[1] as usize;
         let tex_count = header[2] as usize;
         let b = chunks.ints("BNDC")?;
-        let bounds = Bounds { bucket_offset: b[0], radius: b[1], bottom: b[2], height: b[3], bucket_range: b[4] };
+        let bounds = Bounds {
+            bucket_offset: b[0],
+            radius: b[1],
+            bottom: b[2],
+            height: b[3],
+            bucket_range: b[4],
+        };
         let mut model = Model {
             vertex_count,
             face_count,
@@ -117,11 +123,15 @@ impl Model {
             return Ok(());
         }
         if self.xs.len() < v || self.ys.len() < v || self.zs.len() < v {
-            return Err(RenderError::InvalidAsset("vertex arrays shorter than vertex count".into()));
+            return Err(RenderError::InvalidAsset(
+                "vertex arrays shorter than vertex count".into(),
+            ));
         }
         for arr in [&self.face_a, &self.face_b, &self.face_c] {
             if arr.len() < f {
-                return Err(RenderError::InvalidAsset("face index arrays shorter than face count".into()));
+                return Err(RenderError::InvalidAsset(
+                    "face index arrays shorter than face count".into(),
+                ));
             }
             if arr[..f].iter().any(|&i| i < 0 || i as usize >= v) {
                 return Err(RenderError::InvalidAsset("face index out of range".into()));
@@ -129,53 +139,70 @@ impl Model {
         }
         for arr in [&self.color_a, &self.color_b, &self.color_c] {
             if arr.len() < f {
-                return Err(RenderError::InvalidAsset("face color arrays shorter than face count".into()));
+                return Err(RenderError::InvalidAsset(
+                    "face color arrays shorter than face count".into(),
+                ));
             }
         }
         for arr in [&self.tex_p, &self.tex_m, &self.tex_n] {
             if arr.len() < tex_count {
-                return Err(RenderError::InvalidAsset("texture index arrays shorter than texture count".into()));
+                return Err(RenderError::InvalidAsset(
+                    "texture index arrays shorter than texture count".into(),
+                ));
             }
             if arr[..tex_count].iter().any(|&i| i < 0 || i as usize >= v) {
-                return Err(RenderError::InvalidAsset("texture vertex index out of range".into()));
+                return Err(RenderError::InvalidAsset(
+                    "texture vertex index out of range".into(),
+                ));
             }
         }
         if let Some(coords) = &self.texture_coords {
             if coords.len() < f {
-                return Err(RenderError::InvalidAsset("texture coord array short".into()));
+                return Err(RenderError::InvalidAsset(
+                    "texture coord array short".into(),
+                ));
             }
             for &c in &coords[..f] {
                 if c != -1 && (c as u8) as usize >= tex_count {
-                    return Err(RenderError::InvalidAsset("texture coord group out of range".into()));
+                    return Err(RenderError::InvalidAsset(
+                        "texture coord group out of range".into(),
+                    ));
                 }
             }
         }
         for arr in [&self.textures.as_deref().map(|_| ()), &None] {
             let _ = arr;
         }
-        if let Some(t) = &self.textures {
-            if t.len() < f {
-                return Err(RenderError::InvalidAsset("texture array short".into()));
-            }
+        if let Some(t) = &self.textures
+            && t.len() < f
+        {
+            return Err(RenderError::InvalidAsset("texture array short".into()));
         }
-        for opt in [&self.priorities, &self.alphas, &self.bias] {
-            if let Some(a) = opt {
-                if a.len() < f {
-                    return Err(RenderError::InvalidAsset("per-face byte array short".into()));
-                }
+        for a in [&self.priorities, &self.alphas, &self.bias]
+            .into_iter()
+            .flatten()
+        {
+            if a.len() < f {
+                return Err(RenderError::InvalidAsset(
+                    "per-face byte array short".into(),
+                ));
             }
         }
         if let Some(groups) = &self.vertex_groups {
             for g in groups {
                 if g.iter().any(|&i| i < 0 || i as usize >= v) {
-                    return Err(RenderError::InvalidAsset("vertex group index out of range".into()));
+                    return Err(RenderError::InvalidAsset(
+                        "vertex group index out of range".into(),
+                    ));
                 }
             }
         }
         if let Some(groups) = &self.face_groups {
             for g in groups {
                 if g.iter().any(|&i| i < 0 || i as usize >= f) {
-                    return Err(RenderError::InvalidAsset("face group index out of range".into()));
+                    return Err(RenderError::InvalidAsset(
+                        "face group index out of range".into(),
+                    ));
                 }
             }
         }
@@ -205,9 +232,20 @@ impl Model {
         let bottom_i = f64::from(bottom).ceil() as i32;
         let height_i = f64::from(top).ceil() as i32;
         let radius_i = f64::from(radius_sq).sqrt().ceil() as i32;
-        let bucket_offset = f64::from(radius_i * radius_i + height_i * height_i).sqrt().ceil() as i32;
-        let bucket_range = bucket_offset + f64::from(radius_i * radius_i + bottom_i * bottom_i).sqrt().ceil() as i32;
-        self.bounds = Bounds { bucket_offset, radius: radius_i, bottom: bottom_i, height: height_i, bucket_range };
+        let bucket_offset = f64::from(radius_i * radius_i + height_i * height_i)
+            .sqrt()
+            .ceil() as i32;
+        let bucket_range = bucket_offset
+            + f64::from(radius_i * radius_i + bottom_i * bottom_i)
+                .sqrt()
+                .ceil() as i32;
+        self.bounds = Bounds {
+            bucket_offset,
+            radius: radius_i,
+            bottom: bottom_i,
+            height: height_i,
+            bucket_range,
+        };
     }
 
     /// Exact port of `fx.bd`: sphere bounds used by the legacy `drawFrustum` path (`cf == 2`).
@@ -250,14 +288,17 @@ pub fn parse_model_pack(data: &[u8]) -> Result<Vec<(String, Model)>, RenderError
         if offset + 8 > data.len() {
             return Err(RenderError::Format("truncated model pack entry".into()));
         }
-        let key_len = u32::from_le_bytes(data[offset..offset + 4].try_into().expect("4 bytes")) as usize;
-        let data_len = u32::from_le_bytes(data[offset + 4..offset + 8].try_into().expect("4 bytes")) as usize;
+        let key_len =
+            u32::from_le_bytes(data[offset..offset + 4].try_into().expect("4 bytes")) as usize;
+        let data_len =
+            u32::from_le_bytes(data[offset + 4..offset + 8].try_into().expect("4 bytes")) as usize;
         offset += 8;
         let end = offset + key_len + data_len;
         if end > data.len() {
             return Err(RenderError::Format("truncated model pack payload".into()));
         }
-        let key = String::from_utf8(data[offset..offset + key_len].to_vec()).map_err(|e| RenderError::Format(e.to_string()))?;
+        let key = String::from_utf8(data[offset..offset + key_len].to_vec())
+            .map_err(|e| RenderError::Format(e.to_string()))?;
         let model = Model::from_chunks(&data[offset + key_len..end])?;
         out.push((key, model));
         offset = end;

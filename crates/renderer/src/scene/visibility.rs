@@ -31,19 +31,19 @@ pub struct Visibility {
 
 impl Visibility {
     /// `client.cw(width, height)` followed by `ez.dd(heights, 500, 800, width * 334 / height, 334)`.
-    pub fn new(viewport_width: i32, viewport_height: i32, far_clip: i32, draw_distance: i32) -> Self {
+    pub fn new(
+        viewport_width: i32,
+        viewport_height: i32,
+        far_clip: i32,
+        draw_distance: i32,
+    ) -> Self {
         let t = tables();
         let mut heights = [0i32; PITCH_BUCKETS];
         for (i, slot) in heights.iter_mut().enumerate() {
             let n3 = 1 + i as i32 * 256 + 127;
             let n4 = (n3 >> 3) * 3 + 600;
             let n5 = t.sin16384[n3 as usize];
-            let mut n6 = viewport_height - 334;
-            if n6 < 0 {
-                n6 = 0;
-            } else if n6 > 100 {
-                n6 = 100;
-            }
+            let n6 = (viewport_height - 334).clamp(0, 100);
             let n7 = (320 - 256) * n6 / 100 + 256;
             let n8 = n7 * n4 / 256;
             *slot = (n8.wrapping_mul(n5)) >> 16;
@@ -85,7 +85,15 @@ impl Visibility {
     }
 
     /// `ez.dy`: any height along the sweep visible for this tile corner offset.
-    fn corner_visible(&self, pitch_bucket: i32, yaw_bucket: i32, x: i32, y: i32, dz: i32, dn: i32) -> bool {
+    fn corner_visible(
+        &self,
+        pitch_bucket: i32,
+        yaw_bucket: i32,
+        x: i32,
+        y: i32,
+        dz: i32,
+        dn: i32,
+    ) -> bool {
         let Some(&height) = self.heights.get(pitch_bucket as usize) else {
             return false;
         };
@@ -104,13 +112,24 @@ impl Visibility {
     }
 
     /// `ez.dx`: tile offset `(x, y)` in `0..=2 * draw_distance` visible for the current buckets.
-    pub fn tile_visible(&mut self, pitch_bucket: i32, yaw_bucket: i32, x: i32, y: i32, dz: i32, dn: i32) -> bool {
+    pub fn tile_visible(
+        &mut self,
+        pitch_bucket: i32,
+        yaw_bucket: i32,
+        x: i32,
+        y: i32,
+        dz: i32,
+        dn: i32,
+    ) -> bool {
         let side = (2 * self.draw_distance + 1) as usize;
         if x < 0 || y < 0 || x as usize >= side || y as usize >= side {
             return false;
         }
         let key = (pitch_bucket, yaw_bucket);
-        let entry = self.cache.entry(key).or_insert_with(|| vec![0u8; side * side]);
+        let entry = self
+            .cache
+            .entry(key)
+            .or_insert_with(|| vec![0u8; side * side]);
         let slot = x as usize * side + y as usize;
         if entry[slot] != 0 {
             return entry[slot] == 2;

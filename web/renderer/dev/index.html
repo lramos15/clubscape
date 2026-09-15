@@ -1,0 +1,17 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>ClubScape renderer fixture (developer only)</title>
+  <style>
+    html, body { margin: 0; background: #000; overflow: hidden; }
+    canvas { display: block; }
+    #status { position: fixed; left: 8px; bottom: 8px; color: #9f9; font: 12px monospace; background: rgba(0,0,0,.6); padding: 4px 6px; white-space: pre; }
+  </style>
+</head>
+<body>
+  <canvas id="surface" data-clubscape-surface></canvas>
+  <div id="status" hidden></div>
+  <script type="module" src="/web/renderer/dist/renderer/dev/main.js"></script>
+</body>
+</html>

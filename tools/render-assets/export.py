@@ -8,6 +8,7 @@ original cache, writing chunked binary buffers plus a manifest under assets/comp
 from __future__ import annotations
 
 import argparse
+import gzip
 import hashlib
 import importlib.util
 import json
@@ -47,6 +48,67 @@ def normalize(value):
     return value
 
 
+# Raw scene buffers are large (5-15 MB each) and reproducible; only their gzip form is published.
+# A raw file may therefore be absent when its .gz twin verifies (see `unpack`).
+COMPRESSED_PREFIXES = ("scenes/",)
+
+
+def gzip_bytes(data: bytes) -> bytes:
+    """Deterministic gzip (no name, mtime 0) so the published .gz hashes are reproducible."""
+    return gzip.compress(data, compresslevel=9, mtime=0)
+
+
+def compress_scenes(output: Path) -> int:
+    manifest_path = output / "manifest.json"
+    manifest = json.loads(manifest_path.read_text())
+    written = 0
+    for name in sorted(manifest["files"]):
+        if not name.startswith(COMPRESSED_PREFIXES) or name.endswith(".gz"):
+            continue
+        raw = output / name
+        if not raw.is_file():
+            continue
+        data = raw.read_bytes()
+        compressed = gzip_bytes(data)
+        target = output / (name + ".gz")
+        target.write_bytes(compressed)
+        manifest["files"][name + ".gz"] = {
+            "sha256": hashlib.sha256(compressed).hexdigest(), "size_bytes": len(compressed),
+            "detail": {"encoding": "gzip", "decompressed": name, "decompressed_sha256": manifest["files"][name]["sha256"],
+                       "decompressed_size_bytes": len(data)},
+        }
+        written += 1
+    for scene in manifest.get("scenes", []):
+        for key in ("file", "models_file"):
+            if key in scene and (scene[key] + ".gz") in manifest["files"]:
+                scene[key + "_gz"] = scene[key] + ".gz"
+    manifest_path.write_text(json.dumps(manifest, indent=1) + "\n")
+    return written
+
+
+def unpack_scenes(output: Path) -> int:
+    """Restore raw scene buffers from their published .gz twins (native tests read the raw files)."""
+    manifest = json.loads((output / "manifest.json").read_text())
+    restored = 0
+    for name, record in manifest["files"].items():
+        if not name.endswith(".gz"):
+            continue
+        raw_name = record["detail"]["decompressed"]
+        raw = output / raw_name
+        if raw.is_file() and sha(raw) == record["detail"]["decompressed_sha256"]:
+            continue
+        compressed = (output / name).read_bytes()
+        if hashlib.sha256(compressed).hexdigest() != record["sha256"]:
+            raise ValueError(f"Published buffer changed: {name}")
+        data = gzip.decompress(compressed)
+        if hashlib.sha256(data).hexdigest() != record["detail"]["decompressed_sha256"]:
+            raise ValueError(f"Decompressed buffer hash mismatch: {name}")
+        raw.parent.mkdir(parents=True, exist_ok=True)
+        raw.write_bytes(data)
+        restored += 1
+    return restored
+
+
 def verify_manifest(output: Path) -> dict:
     manifest = json.loads((output / "manifest.json").read_text())
     if manifest["source_cache_id"] != 2695 or manifest["source_revision"] != 240 or manifest["brightness"] != 0.8:
@@ -57,6 +119,8 @@ def verify_manifest(output: Path) -> dict:
         path = output / name
         if not path.is_file():
             if name.startswith(optional_prefixes):
+                continue
+            if name.startswith(COMPRESSED_PREFIXES) and (name + ".gz") in manifest["files"]:
                 continue
             raise ValueError(f"Missing exported buffer {name}")
         if path.stat().st_size != record["size_bytes"] or sha(path) != record["sha256"]:
@@ -71,7 +135,7 @@ def main() -> int:
     parser.add_argument("--source", type=Path)
     parser.add_argument("--output", type=Path, default=DEFAULT_OUTPUT)
     parser.add_argument("--profile", default="all",
-                        choices=["all", "tables", "palette", "textures", "models", "npcs", "scenes", "prune-textures"])
+                        choices=["all", "tables", "palette", "textures", "models", "npcs", "scenes", "prune-textures", "compress", "unpack"])
     parser.add_argument("--verify-only", action="store_true")
     parser.add_argument("--java-home", type=Path, default=Path.home() / ".local/share/jdks/temurin-17.0.20.1+1")
     parser.add_argument("extra", nargs="*", help="Profile-specific arguments passed to the Java exporter")
@@ -79,6 +143,14 @@ def main() -> int:
     if not args.output.resolve().is_relative_to(ROOT):
         raise ValueError("Export output must stay inside this worktree")
     if args.verify_only:
+        print(json.dumps(verify_manifest(args.output), separators=(",", ":")))
+        return 0
+    if args.profile == "compress":
+        print(f"COMPRESS {compress_scenes(args.output)} buffers")
+        print(json.dumps(verify_manifest(args.output), separators=(",", ":")))
+        return 0
+    if args.profile == "unpack":
+        print(f"UNPACK {unpack_scenes(args.output)} buffers")
         print(json.dumps(verify_manifest(args.output), separators=(",", ":")))
         return 0
     capture = load_capture_module()
@@ -112,6 +184,8 @@ def main() -> int:
     manifest = normalize(json.loads(manifest_path.read_text()))
     manifest["brightness"] = 0.8
     manifest_path.write_text(json.dumps(manifest, indent=1) + "\n")
+    if args.profile in ("all", "scenes"):
+        print(f"COMPRESS {compress_scenes(args.output)} buffers")
     print(json.dumps(verify_manifest(args.output), separators=(",", ":")))
     return 0
 

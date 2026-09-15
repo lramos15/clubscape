@@ -6,7 +6,17 @@
 //! palette/texture/pixel accesses abort the current draw (`Err(Abort)`), mirroring the
 //! original `ArrayIndexOutOfBoundsException` swallowed by the model draw loop.
 
-#![allow(clippy::too_many_arguments, clippy::many_single_char_names, clippy::cognitive_complexity)]
+// The fills keep the original expression structure (operator order affects wrapping results);
+// precedence/assignment lints are suppressed so the transliteration stays diffable against the
+// decompiled source.
+#![allow(
+    clippy::too_many_arguments,
+    clippy::many_single_char_names,
+    clippy::cognitive_complexity,
+    clippy::precedence,
+    clippy::manual_clamp,
+    unused_assignments
+)]
 
 use std::num::Wrapping;
 
@@ -59,8 +69,21 @@ pub struct Software<'a, T: TextureSource> {
 }
 
 impl<'a, T: TextureSource> Software<'a, T> {
-    pub fn new(state: RasterState, pixels: &'a mut [i32], palette: &'a [i32], textures: &'a T) -> Self {
-        Self { state, pixels, palette, textures, clip_x: false, alpha: 0, tex_opaque: false }
+    pub fn new(
+        state: RasterState,
+        pixels: &'a mut [i32],
+        palette: &'a [i32],
+        textures: &'a T,
+    ) -> Self {
+        Self {
+            state,
+            pixels,
+            palette,
+            textures,
+            clip_x: false,
+            alpha: 0,
+            tex_opaque: false,
+        }
     }
 
     /// Executes one triangle command exactly as the original would.
@@ -70,18 +93,27 @@ impl<'a, T: TextureSource> Software<'a, T> {
         let [y1, y2, y3] = tri.y;
         let [x1, x2, x3] = tri.x;
         match tri.fill {
-            Fill::Gouraud { colors: [c1, c2, c3] } => self.gouraud(y1, y2, y3, x1, x2, x3, c1, c2, c3),
+            Fill::Gouraud {
+                colors: [c1, c2, c3],
+            } => self.gouraud(y1, y2, y3, x1, x2, x3, c1, c2, c3),
             Fill::Flat { rgb } => self.flat(y1, y2, y3, x1, x2, x3, rgb),
-            Fill::Textured { colors: [c1, c2, c3], px, py, pz, texture, model_variant } => {
+            Fill::Textured {
+                colors: [c1, c2, c3],
+                px,
+                py,
+                pz,
+                texture,
+                model_variant,
+            } => {
                 if model_variant {
                     self.textured_model(
-                        y1, y2, y3, x1, x2, x3, c1, c2, c3, px[0], px[1], px[2], py[0], py[1], py[2], pz[0], pz[1], pz[2],
-                        texture,
+                        y1, y2, y3, x1, x2, x3, c1, c2, c3, px[0], px[1], px[2], py[0], py[1],
+                        py[2], pz[0], pz[1], pz[2], texture,
                     )
                 } else {
                     self.textured_tile(
-                        y1, y2, y3, x1, x2, x3, c1, c2, c3, px[0], px[1], px[2], py[0], py[1], py[2], pz[0], pz[1], pz[2],
-                        texture,
+                        y1, y2, y3, x1, x2, x3, c1, c2, c3, px[0], px[1], px[2], py[0], py[1],
+                        py[2], pz[0], pz[1], pz[2], texture,
                     )
                 }
             }
@@ -118,7 +150,18 @@ impl<'a, T: TextureSource> Software<'a, T> {
     // ---------------------------------------------------------------- Gouraud (ft.ao / jm)
 
     /// `ft.ao`: arguments are (y1,y2,y3,x1,x2,x3,c1,c2,c3) already truncated to int.
-    pub fn gouraud(&mut self, y1: i32, y2: i32, y3: i32, x1: i32, x2: i32, x3: i32, c1: i32, c2: i32, c3: i32) -> Result<(), Abort> {
+    pub fn gouraud(
+        &mut self,
+        y1: i32,
+        y2: i32,
+        y3: i32,
+        x1: i32,
+        x2: i32,
+        x3: i32,
+        c1: i32,
+        c2: i32,
+        c3: i32,
+    ) -> Result<(), Abort> {
         let (var13, var14, var15) = (w(x1), w(x2), w(x3));
         let (mut var16, mut var17, mut var18) = (w(y1), w(y2), w(y3));
         let (mut var10, mut var11, mut var12) = (w(c1), w(c2), w(c3));
@@ -128,9 +171,21 @@ impl<'a, T: TextureSource> Software<'a, T> {
         let var22 = var18 - var16;
         let var23 = var11 - var10;
         let var24 = var12 - var10;
-        let var25 = if var18 != var17 { ((var15 - var14) << 14) / (var18 - var17) } else { w(0) };
-        let var26 = if var17 != var16 { (var19 << 14) / var20 } else { w(0) };
-        let var27 = if var18 != var16 { (var21 << 14) / var22 } else { w(0) };
+        let var25 = if var18 != var17 {
+            ((var15 - var14) << 14) / (var18 - var17)
+        } else {
+            w(0)
+        };
+        let var26 = if var17 != var16 {
+            (var19 << 14) / var20
+        } else {
+            w(0)
+        };
+        let var27 = if var18 != var16 {
+            (var21 << 14) / var22
+        } else {
+            w(0)
+        };
         let var28 = var19 * var22 - var21 * var20;
         if var28 == w(0) {
             return Ok(());
@@ -173,7 +228,13 @@ impl<'a, T: TextureSource> Software<'a, T> {
                             var17 -= 1;
                             var17 >= w(0)
                         } {
-                            self.gouraud_scanline(off.0, (var41 >> 14).0, (var15 >> 14).0, var10.0, var29.0)?;
+                            self.gouraud_scanline(
+                                off.0,
+                                (var41 >> 14).0,
+                                (var15 >> 14).0,
+                                var10.0,
+                                var29.0,
+                            )?;
                             var15 += var27;
                             var41 += var26;
                             var10 += var30;
@@ -183,7 +244,13 @@ impl<'a, T: TextureSource> Software<'a, T> {
                             var18 -= 1;
                             var18 >= w(0)
                         } {
-                            self.gouraud_scanline(off.0, (var14 >> 14).0, (var15 >> 14).0, var10.0, var29.0)?;
+                            self.gouraud_scanline(
+                                off.0,
+                                (var14 >> 14).0,
+                                (var15 >> 14).0,
+                                var10.0,
+                                var29.0,
+                            )?;
                             var15 += var27;
                             var14 += var25;
                             var10 += var30;
@@ -197,7 +264,13 @@ impl<'a, T: TextureSource> Software<'a, T> {
                             var17 -= 1;
                             var17 >= w(0)
                         } {
-                            self.gouraud_scanline(off.0, (var15 >> 14).0, (var41 >> 14).0, var10.0, var29.0)?;
+                            self.gouraud_scanline(
+                                off.0,
+                                (var15 >> 14).0,
+                                (var41 >> 14).0,
+                                var10.0,
+                                var29.0,
+                            )?;
                             var15 += var27;
                             var41 += var26;
                             var10 += var30;
@@ -207,7 +280,13 @@ impl<'a, T: TextureSource> Software<'a, T> {
                             var18 -= 1;
                             var18 >= w(0)
                         } {
-                            self.gouraud_scanline(off.0, (var15 >> 14).0, (var14 >> 14).0, var10.0, var29.0)?;
+                            self.gouraud_scanline(
+                                off.0,
+                                (var15 >> 14).0,
+                                (var14 >> 14).0,
+                                var10.0,
+                                var29.0,
+                            )?;
                             var15 += var27;
                             var14 += var25;
                             var10 += var30;
@@ -236,7 +315,13 @@ impl<'a, T: TextureSource> Software<'a, T> {
                             var18 -= 1;
                             var18 >= w(0)
                         } {
-                            self.gouraud_scanline(off.0, (var40 >> 14).0, (var14 >> 14).0, var10.0, var29.0)?;
+                            self.gouraud_scanline(
+                                off.0,
+                                (var40 >> 14).0,
+                                (var14 >> 14).0,
+                                var10.0,
+                                var29.0,
+                            )?;
                             var14 += var27;
                             var40 += var26;
                             var10 += var30;
@@ -246,7 +331,13 @@ impl<'a, T: TextureSource> Software<'a, T> {
                             var17 -= 1;
                             var17 >= w(0)
                         } {
-                            self.gouraud_scanline(off.0, (var40 >> 14).0, (var15 >> 14).0, var10.0, var29.0)?;
+                            self.gouraud_scanline(
+                                off.0,
+                                (var40 >> 14).0,
+                                (var15 >> 14).0,
+                                var10.0,
+                                var29.0,
+                            )?;
                             var15 += var25;
                             var40 += var26;
                             var10 += var30;
@@ -260,7 +351,13 @@ impl<'a, T: TextureSource> Software<'a, T> {
                             var18 -= 1;
                             var18 >= w(0)
                         } {
-                            self.gouraud_scanline(off.0, (var14 >> 14).0, (var40 >> 14).0, var10.0, var29.0)?;
+                            self.gouraud_scanline(
+                                off.0,
+                                (var14 >> 14).0,
+                                (var40 >> 14).0,
+                                var10.0,
+                                var29.0,
+                            )?;
                             var14 += var27;
                             var40 += var26;
                             var10 += var30;
@@ -270,7 +367,13 @@ impl<'a, T: TextureSource> Software<'a, T> {
                             var17 -= 1;
                             var17 >= w(0)
                         } {
-                            self.gouraud_scanline(off.0, (var15 >> 14).0, (var40 >> 14).0, var10.0, var29.0)?;
+                            self.gouraud_scanline(
+                                off.0,
+                                (var15 >> 14).0,
+                                (var40 >> 14).0,
+                                var10.0,
+                                var29.0,
+                            )?;
                             var15 += var25;
                             var40 += var26;
                             var10 += var30;
@@ -310,7 +413,13 @@ impl<'a, T: TextureSource> Software<'a, T> {
                             var18 -= 1;
                             var18 >= w(0)
                         } {
-                            self.gouraud_scanline(off.0, (var45 >> 14).0, (var13 >> 14).0, var11.0, var29.0)?;
+                            self.gouraud_scanline(
+                                off.0,
+                                (var45 >> 14).0,
+                                (var13 >> 14).0,
+                                var11.0,
+                                var29.0,
+                            )?;
                             var13 += var26;
                             var45 += var25;
                             var11 += var30;
@@ -320,7 +429,13 @@ impl<'a, T: TextureSource> Software<'a, T> {
                             var16 -= 1;
                             var16 >= w(0)
                         } {
-                            self.gouraud_scanline(off.0, (var15 >> 14).0, (var13 >> 14).0, var11.0, var29.0)?;
+                            self.gouraud_scanline(
+                                off.0,
+                                (var15 >> 14).0,
+                                (var13 >> 14).0,
+                                var11.0,
+                                var29.0,
+                            )?;
                             var13 += var26;
                             var15 += var27;
                             var11 += var30;
@@ -334,7 +449,13 @@ impl<'a, T: TextureSource> Software<'a, T> {
                             var18 -= 1;
                             var18 >= w(0)
                         } {
-                            self.gouraud_scanline(off.0, (var13 >> 14).0, (var45 >> 14).0, var11.0, var29.0)?;
+                            self.gouraud_scanline(
+                                off.0,
+                                (var13 >> 14).0,
+                                (var45 >> 14).0,
+                                var11.0,
+                                var29.0,
+                            )?;
                             var13 += var26;
                             var45 += var25;
                             var11 += var30;
@@ -344,7 +465,13 @@ impl<'a, T: TextureSource> Software<'a, T> {
                             var16 -= 1;
                             var16 >= w(0)
                         } {
-                            self.gouraud_scanline(off.0, (var13 >> 14).0, (var15 >> 14).0, var11.0, var29.0)?;
+                            self.gouraud_scanline(
+                                off.0,
+                                (var13 >> 14).0,
+                                (var15 >> 14).0,
+                                var11.0,
+                                var29.0,
+                            )?;
                             var13 += var26;
                             var15 += var27;
                             var11 += var30;
@@ -373,7 +500,13 @@ impl<'a, T: TextureSource> Software<'a, T> {
                             var16 -= 1;
                             var16 >= w(0)
                         } {
-                            self.gouraud_scanline(off.0, (var15 >> 14).0, (var44 >> 14).0, var11.0, var29.0)?;
+                            self.gouraud_scanline(
+                                off.0,
+                                (var15 >> 14).0,
+                                (var44 >> 14).0,
+                                var11.0,
+                                var29.0,
+                            )?;
                             var15 += var26;
                             var44 += var25;
                             var11 += var30;
@@ -383,7 +516,13 @@ impl<'a, T: TextureSource> Software<'a, T> {
                             var18 -= 1;
                             var18 >= w(0)
                         } {
-                            self.gouraud_scanline(off.0, (var13 >> 14).0, (var44 >> 14).0, var11.0, var29.0)?;
+                            self.gouraud_scanline(
+                                off.0,
+                                (var13 >> 14).0,
+                                (var44 >> 14).0,
+                                var11.0,
+                                var29.0,
+                            )?;
                             var13 += var27;
                             var44 += var25;
                             var11 += var30;
@@ -397,7 +536,13 @@ impl<'a, T: TextureSource> Software<'a, T> {
                             var16 -= 1;
                             var16 >= w(0)
                         } {
-                            self.gouraud_scanline(off.0, (var44 >> 14).0, (var15 >> 14).0, var11.0, var29.0)?;
+                            self.gouraud_scanline(
+                                off.0,
+                                (var44 >> 14).0,
+                                (var15 >> 14).0,
+                                var11.0,
+                                var29.0,
+                            )?;
                             var15 += var26;
                             var44 += var25;
                             var11 += var30;
@@ -407,7 +552,13 @@ impl<'a, T: TextureSource> Software<'a, T> {
                             var18 -= 1;
                             var18 >= w(0)
                         } {
-                            self.gouraud_scanline(off.0, (var44 >> 14).0, (var13 >> 14).0, var11.0, var29.0)?;
+                            self.gouraud_scanline(
+                                off.0,
+                                (var44 >> 14).0,
+                                (var13 >> 14).0,
+                                var11.0,
+                                var29.0,
+                            )?;
                             var13 += var27;
                             var44 += var25;
                             var11 += var30;
@@ -446,7 +597,13 @@ impl<'a, T: TextureSource> Software<'a, T> {
                         var16 -= 1;
                         var16 >= w(0)
                     } {
-                        self.gouraud_scanline(off.0, (var14 >> 14).0, (var49 >> 14).0, var12.0, var29.0)?;
+                        self.gouraud_scanline(
+                            off.0,
+                            (var14 >> 14).0,
+                            (var49 >> 14).0,
+                            var12.0,
+                            var29.0,
+                        )?;
                         var14 += var25;
                         var49 += var27;
                         var12 += var30;
@@ -456,7 +613,13 @@ impl<'a, T: TextureSource> Software<'a, T> {
                         var17 -= 1;
                         var17 >= w(0)
                     } {
-                        self.gouraud_scanline(off.0, (var14 >> 14).0, (var13 >> 14).0, var12.0, var29.0)?;
+                        self.gouraud_scanline(
+                            off.0,
+                            (var14 >> 14).0,
+                            (var13 >> 14).0,
+                            var12.0,
+                            var29.0,
+                        )?;
                         var14 += var25;
                         var13 += var26;
                         var12 += var30;
@@ -470,7 +633,13 @@ impl<'a, T: TextureSource> Software<'a, T> {
                         var16 -= 1;
                         var16 >= w(0)
                     } {
-                        self.gouraud_scanline(off.0, (var49 >> 14).0, (var14 >> 14).0, var12.0, var29.0)?;
+                        self.gouraud_scanline(
+                            off.0,
+                            (var49 >> 14).0,
+                            (var14 >> 14).0,
+                            var12.0,
+                            var29.0,
+                        )?;
                         var14 += var25;
                         var49 += var27;
                         var12 += var30;
@@ -480,7 +649,13 @@ impl<'a, T: TextureSource> Software<'a, T> {
                         var17 -= 1;
                         var17 >= w(0)
                     } {
-                        self.gouraud_scanline(off.0, (var13 >> 14).0, (var14 >> 14).0, var12.0, var29.0)?;
+                        self.gouraud_scanline(
+                            off.0,
+                            (var13 >> 14).0,
+                            (var14 >> 14).0,
+                            var12.0,
+                            var29.0,
+                        )?;
                         var14 += var25;
                         var13 += var26;
                         var12 += var30;
@@ -509,7 +684,13 @@ impl<'a, T: TextureSource> Software<'a, T> {
                         var17 -= 1;
                         var17 >= w(0)
                     } {
-                        self.gouraud_scanline(off.0, (var13 >> 14).0, (var48 >> 14).0, var12.0, var29.0)?;
+                        self.gouraud_scanline(
+                            off.0,
+                            (var13 >> 14).0,
+                            (var48 >> 14).0,
+                            var12.0,
+                            var29.0,
+                        )?;
                         var13 += var25;
                         var48 += var27;
                         var12 += var30;
@@ -519,7 +700,13 @@ impl<'a, T: TextureSource> Software<'a, T> {
                         var16 -= 1;
                         var16 >= w(0)
                     } {
-                        self.gouraud_scanline(off.0, (var14 >> 14).0, (var48 >> 14).0, var12.0, var29.0)?;
+                        self.gouraud_scanline(
+                            off.0,
+                            (var14 >> 14).0,
+                            (var48 >> 14).0,
+                            var12.0,
+                            var29.0,
+                        )?;
                         var14 += var26;
                         var48 += var27;
                         var12 += var30;
@@ -533,7 +720,13 @@ impl<'a, T: TextureSource> Software<'a, T> {
                         var17 -= 1;
                         var17 >= w(0)
                     } {
-                        self.gouraud_scanline(off.0, (var48 >> 14).0, (var13 >> 14).0, var12.0, var29.0)?;
+                        self.gouraud_scanline(
+                            off.0,
+                            (var48 >> 14).0,
+                            (var13 >> 14).0,
+                            var12.0,
+                            var29.0,
+                        )?;
                         var13 += var25;
                         var48 += var27;
                         var12 += var30;
@@ -543,7 +736,13 @@ impl<'a, T: TextureSource> Software<'a, T> {
                         var16 -= 1;
                         var16 >= w(0)
                     } {
-                        self.gouraud_scanline(off.0, (var48 >> 14).0, (var14 >> 14).0, var12.0, var29.0)?;
+                        self.gouraud_scanline(
+                            off.0,
+                            (var48 >> 14).0,
+                            (var14 >> 14).0,
+                            var12.0,
+                            var29.0,
+                        )?;
                         var14 += var26;
                         var48 += var27;
                         var12 += var30;
@@ -556,7 +755,14 @@ impl<'a, T: TextureSource> Software<'a, T> {
     }
 
     /// `ft.jm`: Gouraud scanline with palette lookup, 4-pixel banding and alpha blend.
-    fn gouraud_scanline(&mut self, offset: i32, x_start: i32, x_end: i32, color: i32, step: i32) -> Result<(), Abort> {
+    fn gouraud_scanline(
+        &mut self,
+        offset: i32,
+        x_start: i32,
+        x_end: i32,
+        color: i32,
+        step: i32,
+    ) -> Result<(), Abort> {
         let mut var5 = x_start;
         let mut var6 = x_end;
         if self.clip_x {
@@ -614,10 +820,13 @@ impl<'a, T: TextureSource> Software<'a, T> {
                         let idx = (var7.0 & !(var7.0 >> 31)) >> 8;
                         let mut var3 = w(self.pal(idx)?);
                         var7 += var8;
-                        var3 = (((var3 & w(16711935)) * var38 >> 8) & w(16711935)) + (((var3 & w(0xFF00)) * var38 >> 8) & w(0xFF00));
+                        var3 = (((var3 & w(16711935)) * var38 >> 8) & w(16711935))
+                            + (((var3 & w(0xFF00)) * var38 >> 8) & w(0xFF00));
                         for _ in 0..4 {
                             let var41 = w(self.get(var2.0)?);
-                            let out = var3 + (((var41 & w(16711935)) * var37 >> 8) & w(16711935)) + (((var41 & w(0xFF00)) * var37 >> 8) & w(0xFF00));
+                            let out = var3
+                                + (((var41 & w(16711935)) * var37 >> 8) & w(16711935))
+                                + (((var41 & w(0xFF00)) * var37 >> 8) & w(0xFF00));
                             self.put(var2.0, out.0)?;
                             var2 += 1;
                         }
@@ -631,10 +840,13 @@ impl<'a, T: TextureSource> Software<'a, T> {
                 if var4 > 0 {
                     let idx = (var7.0 & !(var7.0 >> 31)) >> 8;
                     let mut var3 = w(self.pal(idx)?);
-                    var3 = (((var3 & w(16711935)) * var38 >> 8) & w(16711935)) + (((var3 & w(0xFF00)) * var38 >> 8) & w(0xFF00));
+                    var3 = (((var3 & w(16711935)) * var38 >> 8) & w(16711935))
+                        + (((var3 & w(0xFF00)) * var38 >> 8) & w(0xFF00));
                     loop {
                         let var45 = w(self.get(var2.0)?);
-                        let out = var3 + (((var45 & w(16711935)) * var37 >> 8) & w(16711935)) + (((var45 & w(0xFF00)) * var37 >> 8) & w(0xFF00));
+                        let out = var3
+                            + (((var45 & w(16711935)) * var37 >> 8) & w(16711935))
+                            + (((var45 & w(0xFF00)) * var37 >> 8) & w(0xFF00));
                         self.put(var2.0, out.0)?;
                         var2 += 1;
                         var4 -= 1;
@@ -665,9 +877,12 @@ impl<'a, T: TextureSource> Software<'a, T> {
                     let idx = (var7.0 & !(var7.0 >> 31)) >> 8;
                     let mut var3 = w(self.pal(idx)?);
                     var7 += var8;
-                    var3 = (((var3 & w(16711935)) * var10 >> 8) & w(16711935)) + (((var3 & w(0xFF00)) * var10 >> 8) & w(0xFF00));
+                    var3 = (((var3 & w(16711935)) * var10 >> 8) & w(16711935))
+                        + (((var3 & w(0xFF00)) * var10 >> 8) & w(0xFF00));
                     let var12 = w(self.get(var2.0)?);
-                    let out = var3 + (((var12 & w(16711935)) * var34 >> 8) & w(16711935)) + (((var12 & w(0xFF00)) * var34 >> 8) & w(0xFF00));
+                    let out = var3
+                        + (((var12 & w(16711935)) * var34 >> 8) & w(16711935))
+                        + (((var12 & w(0xFF00)) * var34 >> 8) & w(0xFF00));
                     self.put(var2.0, out.0)?;
                     var2 += 1;
                     var4 -= 1;
@@ -683,12 +898,33 @@ impl<'a, T: TextureSource> Software<'a, T> {
     // ---------------------------------------------------------------- Flat (ft.al / px)
 
     /// `ft.al`: flat RGB triangle.
-    pub fn flat(&mut self, y1: i32, y2: i32, y3: i32, x1: i32, x2: i32, x3: i32, rgb: i32) -> Result<(), Abort> {
+    pub fn flat(
+        &mut self,
+        y1: i32,
+        y2: i32,
+        y3: i32,
+        x1: i32,
+        x2: i32,
+        x3: i32,
+        rgb: i32,
+    ) -> Result<(), Abort> {
         let (mut var11, mut var12, mut var13) = (w(x1), w(x2), w(x3));
         let (mut var14, mut var15, mut var16) = (w(y1), w(y2), w(y3));
-        let var17 = if var15 != var14 { ((var12 - var11) << 14) / (var15 - var14) } else { w(0) };
-        let var18 = if var16 != var15 { ((var13 - var12) << 14) / (var16 - var15) } else { w(0) };
-        let var19 = if var16 != var14 { ((var11 - var13) << 14) / (var14 - var16) } else { w(0) };
+        let var17 = if var15 != var14 {
+            ((var12 - var11) << 14) / (var15 - var14)
+        } else {
+            w(0)
+        };
+        let var18 = if var16 != var15 {
+            ((var13 - var12) << 14) / (var16 - var15)
+        } else {
+            w(0)
+        };
+        let var19 = if var16 != var14 {
+            ((var11 - var13) << 14) / (var14 - var16)
+        } else {
+            w(0)
+        };
         let var21 = w(self.state.height);
         let stride = w(self.state.stride);
         if var14 <= var15 && var14 <= var16 {
@@ -1072,7 +1308,13 @@ impl<'a, T: TextureSource> Software<'a, T> {
     }
 
     /// `ft.px`: flat scanline; alpha 254 reproduces the original's shift-copy quirk.
-    fn flat_scanline(&mut self, offset: i32, rgb: i32, x_start: i32, x_end: i32) -> Result<(), Abort> {
+    fn flat_scanline(
+        &mut self,
+        offset: i32,
+        rgb: i32,
+        x_start: i32,
+        x_end: i32,
+    ) -> Result<(), Abort> {
         let mut var5 = x_start;
         let mut var6 = x_end;
         if self.clip_x {
@@ -1100,11 +1342,14 @@ impl<'a, T: TextureSource> Software<'a, T> {
             } else {
                 let var7 = w(alpha);
                 let var8 = w(256 - alpha);
-                let var3 = (((w(rgb) & w(16711935)) * var8 >> 8) & w(16711935)) + (((w(rgb) & w(0xFF00)) * var8 >> 8) & w(0xFF00));
+                let var3 = (((w(rgb) & w(16711935)) * var8 >> 8) & w(16711935))
+                    + (((w(rgb) & w(0xFF00)) * var8 >> 8) & w(0xFF00));
                 let total = var4 * 4 + ((var6 - var5) & 3);
                 for _ in 0..total {
                     let var9 = w(self.get(var2.0)?);
-                    let out = var3 + (((var9 & w(16711935)) * var7 >> 8) & w(16711935)) + (((var9 & w(0xFF00)) * var7 >> 8) & w(0xFF00));
+                    let out = var3
+                        + (((var9 & w(16711935)) * var7 >> 8) & w(16711935))
+                        + (((var9 & w(0xFF00)) * var7 >> 8) & w(0xFF00));
                     self.put(var2.0, out.0)?;
                     var2 += 1;
                 }
@@ -1133,36 +1378,117 @@ impl<'a, T: TextureSource> Software<'a, T> {
     /// plane vertices. Without a loaded texture the original falls back to Gouraud with the
     /// average texture color merged into each shade (`fq.af`).
     pub fn textured_model(
-        &mut self, y1: i32, y2: i32, y3: i32, x1: i32, x2: i32, x3: i32, c1: i32, c2: i32, c3: i32, px1: i32, px2: i32, px3: i32,
-        py1: i32, py2: i32, py3: i32, pz1: i32, pz2: i32, pz3: i32, texture: i32,
+        &mut self,
+        y1: i32,
+        y2: i32,
+        y3: i32,
+        x1: i32,
+        x2: i32,
+        x3: i32,
+        c1: i32,
+        c2: i32,
+        c3: i32,
+        px1: i32,
+        px2: i32,
+        px3: i32,
+        py1: i32,
+        py2: i32,
+        py3: i32,
+        pz1: i32,
+        pz2: i32,
+        pz3: i32,
+        texture: i32,
     ) -> Result<(), Abort> {
         let Some(texels) = self.textures.texels(texture) else {
             let avg = self.textures.average(texture);
-            return self.gouraud(y1, y2, y3, x1, x2, x3, merge_texture_shade(avg, c1), merge_texture_shade(avg, c2), merge_texture_shade(avg, c3));
+            return self.gouraud(
+                y1,
+                y2,
+                y3,
+                x1,
+                x2,
+                x3,
+                merge_texture_shade(avg, c1),
+                merge_texture_shade(avg, c2),
+                merge_texture_shade(avg, c3),
+            );
         };
         let texels: Vec<i32> = texels.to_vec();
         self.tex_opaque = self.textures.opaque(texture);
-        self.textured_common(&texels, true, y1, y2, y3, x1, x2, x3, c1, c2, c3, px1, px2, px3, py1, py2, py3, pz1, pz2, pz3)
+        self.textured_common(
+            &texels, true, y1, y2, y3, x1, x2, x3, c1, c2, c3, px1, px2, px3, py1, py2, py3, pz1,
+            pz2, pz3,
+        )
     }
 
     /// `ft.ay`: tile textured triangle (affine texture across each scanline).
     pub fn textured_tile(
-        &mut self, y1: i32, y2: i32, y3: i32, x1: i32, x2: i32, x3: i32, c1: i32, c2: i32, c3: i32, px1: i32, px2: i32, px3: i32,
-        py1: i32, py2: i32, py3: i32, pz1: i32, pz2: i32, pz3: i32, texture: i32,
+        &mut self,
+        y1: i32,
+        y2: i32,
+        y3: i32,
+        x1: i32,
+        x2: i32,
+        x3: i32,
+        c1: i32,
+        c2: i32,
+        c3: i32,
+        px1: i32,
+        px2: i32,
+        px3: i32,
+        py1: i32,
+        py2: i32,
+        py3: i32,
+        pz1: i32,
+        pz2: i32,
+        pz3: i32,
+        texture: i32,
     ) -> Result<(), Abort> {
         let Some(texels) = self.textures.texels(texture) else {
             let avg = self.textures.average(texture);
-            return self.gouraud(y1, y2, y3, x1, x2, x3, merge_texture_shade(avg, c1), merge_texture_shade(avg, c2), merge_texture_shade(avg, c3));
+            return self.gouraud(
+                y1,
+                y2,
+                y3,
+                x1,
+                x2,
+                x3,
+                merge_texture_shade(avg, c1),
+                merge_texture_shade(avg, c2),
+                merge_texture_shade(avg, c3),
+            );
         };
         let texels: Vec<i32> = texels.to_vec();
         self.tex_opaque = self.textures.opaque(texture);
-        self.textured_common(&texels, false, y1, y2, y3, x1, x2, x3, c1, c2, c3, px1, px2, px3, py1, py2, py3, pz1, pz2, pz3)
+        self.textured_common(
+            &texels, false, y1, y2, y3, x1, x2, x3, c1, c2, c3, px1, px2, px3, py1, py2, py3, pz1,
+            pz2, pz3,
+        )
     }
 
     /// Shared edge walk of `aj`/`ay`; only the plane-step precision and scanline differ.
     fn textured_common(
-        &mut self, texels: &[i32], model: bool, y1: i32, y2: i32, y3: i32, x1: i32, x2: i32, x3: i32, c1: i32, c2: i32, c3: i32,
-        var13: i32, var14: i32, var15: i32, var16: i32, var17: i32, var18: i32, var19: i32, var20: i32, var21: i32,
+        &mut self,
+        texels: &[i32],
+        model: bool,
+        y1: i32,
+        y2: i32,
+        y3: i32,
+        x1: i32,
+        x2: i32,
+        x3: i32,
+        c1: i32,
+        c2: i32,
+        c3: i32,
+        var13: i32,
+        var14: i32,
+        var15: i32,
+        var16: i32,
+        var17: i32,
+        var18: i32,
+        var19: i32,
+        var20: i32,
+        var21: i32,
     ) -> Result<(), Abort> {
         let (mut var24, mut var25, mut var26) = (w(x1), w(x2), w(x3));
         let (mut var27, mut var28, mut var29) = (w(y1), w(y2), w(y3));
@@ -1173,9 +1499,21 @@ impl<'a, T: TextureSource> Software<'a, T> {
         let var33 = var29 - var27;
         let var34 = var11 - var10;
         let var35 = var12 - var10;
-        let var36 = if var28 != var27 { ((var25 - var24) << 14) / (var28 - var27) } else { w(0) };
-        let var37 = if var29 != var28 { ((var26 - var25) << 14) / (var29 - var28) } else { w(0) };
-        let var38 = if var29 != var27 { ((var24 - var26) << 14) / (var27 - var29) } else { w(0) };
+        let var36 = if var28 != var27 {
+            ((var25 - var24) << 14) / (var28 - var27)
+        } else {
+            w(0)
+        };
+        let var37 = if var29 != var28 {
+            ((var26 - var25) << 14) / (var29 - var28)
+        } else {
+            w(0)
+        };
+        let var38 = if var29 != var27 {
+            ((var24 - var26) << 14) / (var27 - var29)
+        } else {
+            w(0)
+        };
         let var39 = var30 * var33 - var32 * var31;
         if var39 == w(0) {
             return Ok(());
@@ -1183,9 +1521,9 @@ impl<'a, T: TextureSource> Software<'a, T> {
         let var40 = ((var34 * var33 - var35 * var31) << 9) / var39;
         let var41 = ((var35 * var30 - var34 * var32) << 9) / var39;
         let var42 = i64::from(self.state.zoom);
-        let (mut var13, mut var14, mut var15) = (w(var13), w(var14), w(var15));
-        let (mut var16, mut var17, mut var18) = (w(var16), w(var17), w(var18));
-        let (mut var19, mut var20, mut var21) = (w(var19), w(var20), w(var21));
+        let (var13, mut var14, mut var15) = (w(var13), w(var14), w(var15));
+        let (var16, mut var17, mut var18) = (w(var16), w(var17), w(var18));
+        let (var19, mut var20, mut var21) = (w(var19), w(var20), w(var21));
         var14 = var13 - var14;
         var17 = var16 - var17;
         var20 = var19 - var20;
@@ -1210,7 +1548,21 @@ impl<'a, T: TextureSource> Software<'a, T> {
         // Row emitter closure replaced by a macro-like helper to keep the six branches literal.
         macro_rules! row {
             ($off:expr, $xa:expr, $xb:expr, $shade:expr) => {
-                self.textured_scanline(texels, model, $off.0, ($xa >> 14).0, ($xb >> 14).0, $shade.0, var40.0, var43.0, var46.0, var49.0, var44.0, var47.0, var50.0)?;
+                self.textured_scanline(
+                    texels,
+                    model,
+                    $off.0,
+                    ($xa >> 14).0,
+                    ($xb >> 14).0,
+                    $shade.0,
+                    var40.0,
+                    var43.0,
+                    var46.0,
+                    var49.0,
+                    var44.0,
+                    var47.0,
+                    var50.0,
+                )?;
             };
         }
         if var27 <= var28 && var27 <= var29 {
@@ -1724,13 +2076,31 @@ impl<'a, T: TextureSource> Software<'a, T> {
 
     /// Dispatches to `bq` (model: perspective per 8 pixels) or `bf` (tile: affine per span).
     fn textured_scanline(
-        &mut self, texels: &[i32], model: bool, offset: i32, x_start: i32, x_end: i32, shade: i32, shade_step: i32, var10: i32,
-        var11: i32, var12: i32, var13: i32, var14: i32, var15: i32,
+        &mut self,
+        texels: &[i32],
+        model: bool,
+        offset: i32,
+        x_start: i32,
+        x_end: i32,
+        shade: i32,
+        shade_step: i32,
+        var10: i32,
+        var11: i32,
+        var12: i32,
+        var13: i32,
+        var14: i32,
+        var15: i32,
     ) -> Result<(), Abort> {
         if model {
-            self.textured_scanline_model(texels, offset, x_start, x_end, shade, shade_step, var10, var11, var12, var13, var14, var15)
+            self.textured_scanline_model(
+                texels, offset, x_start, x_end, shade, shade_step, var10, var11, var12, var13,
+                var14, var15,
+            )
         } else {
-            self.textured_scanline_tile(texels, offset, x_start, x_end, shade, shade_step, var10, var11, var12, var13, var14, var15)
+            self.textured_scanline_tile(
+                texels, offset, x_start, x_end, shade, shade_step, var10, var11, var12, var13,
+                var14, var15,
+            )
         }
     }
 
@@ -1742,21 +2112,40 @@ impl<'a, T: TextureSource> Software<'a, T> {
 
     #[inline]
     fn shade_texel(var4: W, var16: W) -> i32 {
-        ((((var4 & w(16711935)) * var16) & w(-16711936)) + (((var4 & w(0xFF00)) * var16) & w(0xFF0000)) >> 8 | w(0xFF000000u32 as i32)).0
+        ((((var4 & w(16711935)) * var16) & w(-16711936))
+            + (((var4 & w(0xFF00)) * var16) & w(0xFF0000))
+            >> 8
+            | w(0xFF000000u32 as i32))
+        .0
     }
 
     /// Alpha blend used by `bq`: `((texel * premultipliedShade) >> 8) + ((dst * alpha) >> 8) | 0xFF000000`.
     #[inline]
     fn blend_texel(var4: W, premul: W, dst: W, alpha: W) -> i32 {
-        let src = ((((var4 & w(16711935)) * premul) & w(-16711936)) | (((var4 & w(0xFF00)) * premul) & w(0xFF0000))) >> 8;
-        let d = ((((dst & w(16711935)) * alpha) & w(-16711936)) | (((dst & w(0xFF00)) * alpha) & w(0xFF0000))) >> 8;
+        let src = ((((var4 & w(16711935)) * premul) & w(-16711936))
+            | (((var4 & w(0xFF00)) * premul) & w(0xFF0000)))
+            >> 8;
+        let d = ((((dst & w(16711935)) * alpha) & w(-16711936))
+            | (((dst & w(0xFF00)) * alpha) & w(0xFF0000)))
+            >> 8;
         (src + d | w(0xFF000000u32 as i32)).0
     }
 
     /// `ft.bq`: model textured scanline, perspective-correct every 8 pixels.
     fn textured_scanline_model(
-        &mut self, texels: &[i32], offset: i32, x_start: i32, x_end: i32, shade: i32, shade_step: i32, var10: i32, var11: i32,
-        var12: i32, var13: i32, var14: i32, var15: i32,
+        &mut self,
+        texels: &[i32],
+        offset: i32,
+        x_start: i32,
+        x_end: i32,
+        shade: i32,
+        shade_step: i32,
+        var10: i32,
+        var11: i32,
+        var12: i32,
+        var13: i32,
+        var14: i32,
+        var15: i32,
     ) -> Result<(), Abort> {
         let mut var6 = x_start;
         let mut var7 = x_end;
@@ -1949,8 +2338,19 @@ impl<'a, T: TextureSource> Software<'a, T> {
 
     /// `ft.bf`: tile textured scanline, affine u/v across the span, shade per 8 pixels.
     fn textured_scanline_tile(
-        &mut self, texels: &[i32], offset: i32, x_start: i32, x_end: i32, shade: i32, shade_step: i32, var10: i32, var11: i32,
-        var12: i32, var13: i32, var14: i32, var15: i32,
+        &mut self,
+        texels: &[i32],
+        offset: i32,
+        x_start: i32,
+        x_end: i32,
+        shade: i32,
+        shade_step: i32,
+        var10: i32,
+        var11: i32,
+        var12: i32,
+        var13: i32,
+        var14: i32,
+        var15: i32,
     ) -> Result<(), Abort> {
         let mut var6 = x_start;
         let mut var7 = x_end;
@@ -1968,7 +2368,7 @@ impl<'a, T: TextureSource> Software<'a, T> {
         let mut var5 = w(offset) + w(var6);
         let mut var8 = w(shade) + w(shade_step) * w(var6);
         let mut var9 = w(shade_step);
-        let mut var18 = w(var7 - var6);
+        let var18 = w(var7 - var6);
         let var24 = w(var6 - self.state.center_x);
         let (mut var10, mut var11, mut var12) = (w(var10), w(var11), w(var12));
         let (var13, var14, var15) = (w(var13), w(var14), w(var15));
@@ -1976,12 +2376,20 @@ impl<'a, T: TextureSource> Software<'a, T> {
         var11 += var14 * var24;
         var12 += var15 * var24;
         let mut var23 = var12 >> 14;
-        let (var19, var20) = if var23 != w(0) { (var10 / var23, var11 / var23) } else { (w(0), w(0)) };
+        let (var19, var20) = if var23 != w(0) {
+            (var10 / var23, var11 / var23)
+        } else {
+            (w(0), w(0))
+        };
         var10 += var13 * var18;
         var11 += var14 * var18;
         var12 += var15 * var18;
         var23 = var12 >> 14;
-        let (var21, var22) = if var23 != w(0) { (var10 / var23, var11 / var23) } else { (w(0), w(0)) };
+        let (var21, var22) = if var23 != w(0) {
+            (var10 / var23, var11 / var23)
+        } else {
+            (w(0), w(0))
+        };
         let mut var3 = (var19 << 18) + var20;
         let var17 = (((var21 - var19) / var18) << 18) + (var22 - var20) / var18;
         let mut blocks = (var18 >> 3).0;

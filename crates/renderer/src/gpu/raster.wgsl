@@ -240,7 +240,7 @@ fn row_state(base: u32, py: i32, shift: u32) -> Row {
 }
 
 fn blend_channels(rgb: i32, weight: i32) -> i32 {
-    return (((rgb & 16711935) * weight >> 8u) & 16711935) + (((rgb & 65280) * weight >> 8u) & 65280);
+    return ((((rgb & 16711935) * weight) >> 8u) & 16711935) + ((((rgb & 65280) * weight) >> 8u) & 65280);
 }
 
 fn shade_texel(t: i32, shade: i32) -> i32 {

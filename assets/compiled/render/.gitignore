@@ -2,3 +2,6 @@
 /models/baked/
 /.capture-scratch/
 /tables.bin
+# Raw scene buffers (5-15 MB each) are published only as deterministic gzip twins (scenes/*.gz);
+# `tools/render-assets/export.py --profile unpack` restores them for the native tests.
+/scenes/*.bin

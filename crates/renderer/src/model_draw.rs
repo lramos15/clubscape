@@ -2,7 +2,12 @@
 //! projection, `fx.ja` culling, `si.av`/`fx.kx` depth and priority ordering, `fx.bz`/`fx.gb`
 //! fill dispatch and `fx.cb` near-plane clipping). Output is a [`Tri`] stream in draw order.
 
-#![allow(clippy::too_many_arguments)]
+// Projection arithmetic keeps the original operator order; see raster/software.rs.
+#![allow(
+    clippy::too_many_arguments,
+    clippy::precedence,
+    clippy::needless_range_loop
+)]
 
 use std::num::Wrapping;
 
@@ -103,17 +108,38 @@ impl<'a> ModelDrawer<'a> {
     /// `fx.be` / `Model.drawFrustum(rotX, yaw, rotZ, cameraPitch, x, y, z)` with 2048-unit angles.
     /// Emits triangles into `out`; returns `Err` where the original would abort the model.
     pub fn draw_legacy(
-        &mut self, model: &Model, rot_x: i32, yaw: i32, rot_z: i32, camera_pitch: i32, x: i32, y: i32, z: i32, pick: u32,
+        &mut self,
+        model: &Model,
+        rot_x: i32,
+        yaw: i32,
+        rot_z: i32,
+        camera_pitch: i32,
+        x: i32,
+        y: i32,
+        z: i32,
+        pick: u32,
         out: &mut Vec<Tri>,
     ) -> Result<(), DrawAbort> {
         let t = tables();
         self.scratch.ensure(model.vertex_count, model.face_count);
         let cx = self.state.center_x;
         let cy = self.state.center_y;
-        let (sin_x, cos_x) = (t.sin2048[(rot_x & 2047) as usize], t.cos2048[(rot_x & 2047) as usize]);
-        let (sin_y, cos_y) = (t.sin2048[(yaw & 2047) as usize], t.cos2048[(yaw & 2047) as usize]);
-        let (sin_z, cos_z) = (t.sin2048[(rot_z & 2047) as usize], t.cos2048[(rot_z & 2047) as usize]);
-        let (sin_p, cos_p) = (t.sin2048[(camera_pitch & 2047) as usize], t.cos2048[(camera_pitch & 2047) as usize]);
+        let (sin_x, cos_x) = (
+            t.sin2048[(rot_x & 2047) as usize],
+            t.cos2048[(rot_x & 2047) as usize],
+        );
+        let (sin_y, cos_y) = (
+            t.sin2048[(yaw & 2047) as usize],
+            t.cos2048[(yaw & 2047) as usize],
+        );
+        let (sin_z, cos_z) = (
+            t.sin2048[(rot_z & 2047) as usize],
+            t.cos2048[(rot_z & 2047) as usize],
+        );
+        let (sin_p, cos_p) = (
+            t.sin2048[(camera_pitch & 2047) as usize],
+            t.cos2048[(camera_pitch & 2047) as usize],
+        );
         let var27 = (y.wrapping_mul(sin_p).wrapping_add(z.wrapping_mul(cos_p))) >> 16;
         let zoom = self.state.zoom;
         let textured = model.textures.is_some();
@@ -145,8 +171,10 @@ impl<'a> ModelDrawer<'a> {
             if vz == 0 {
                 return Err(DrawAbort);
             }
-            self.scratch.screen_x[i] = (cx.wrapping_add(vx.wrapping_mul(zoom).wrapping_div(vz))) as f32;
-            self.scratch.screen_y[i] = (cy.wrapping_add(var41.wrapping_mul(zoom).wrapping_div(vz))) as f32;
+            self.scratch.screen_x[i] =
+                (cx.wrapping_add(vx.wrapping_mul(zoom).wrapping_div(vz))) as f32;
+            self.scratch.screen_y[i] =
+                (cy.wrapping_add(var41.wrapping_mul(zoom).wrapping_div(vz))) as f32;
             self.scratch.screen_z[i] = vz as f32;
             if textured {
                 self.scratch.cam_x[i] = vx;
@@ -161,7 +189,15 @@ impl<'a> ModelDrawer<'a> {
     /// `fx.xm`: scene model draw with 16384-unit camera angles and float projection. `x/y/z`
     /// are already camera-relative (`position - camera`). Returns `Ok(false)` when culled.
     pub fn draw_scene(
-        &mut self, model: &Model, orientation: i32, camera: &SceneCamera, x: i32, y: i32, z: i32, pick: u32, out: &mut Vec<Tri>,
+        &mut self,
+        model: &Model,
+        orientation: i32,
+        camera: &SceneCamera,
+        x: i32,
+        y: i32,
+        z: i32,
+        pick: u32,
+        out: &mut Vec<Tri>,
     ) -> Result<bool, DrawAbort> {
         let t = tables();
         self.scratch.ensure(model.vertex_count, model.face_count);
@@ -206,11 +242,19 @@ impl<'a> ModelDrawer<'a> {
         let cx = self.state.center_x;
         let cy = self.state.center_y;
         let (f5, f6) = if orientation != 0 {
-            (t.sinf2048[(orientation & 2047) as usize], t.cosf2048[(orientation & 2047) as usize])
+            (
+                t.sinf2048[(orientation & 2047) as usize],
+                t.cosf2048[(orientation & 2047) as usize],
+            )
         } else {
             (0.0f32, 0.0f32)
         };
-        let (f, f2, f3, f4) = (camera.pitch_sin_f, camera.pitch_cos_f, camera.yaw_sin_f, camera.yaw_cos_f);
+        let (f, f2, f3, f4) = (
+            camera.pitch_sin_f,
+            camera.pitch_cos_f,
+            camera.yaw_sin_f,
+            camera.yaw_cos_f,
+        );
         let zoom_f = zoom as f32;
         let mut any_clipped = false;
         for i in 0..model.vertex_count {
@@ -247,13 +291,26 @@ impl<'a> ModelDrawer<'a> {
                 any_clipped = true;
             }
         }
-        self.draw_faces(model, any_clipped, b.bucket_offset, b.bucket_range, pick, out)?;
+        self.draw_faces(
+            model,
+            any_clipped,
+            b.bucket_offset,
+            b.bucket_range,
+            pick,
+            out,
+        )?;
         Ok(true)
     }
 
     /// `fx.ja` + `si.av`/`fx.kx`: cull, order and emit faces.
     fn draw_faces(
-        &mut self, model: &Model, needs_clipping: bool, bucket_offset: i32, bucket_range: i32, pick: u32, out: &mut Vec<Tri>,
+        &mut self,
+        model: &Model,
+        needs_clipping: bool,
+        bucket_offset: i32,
+        bucket_range: i32,
+        pick: u32,
+        out: &mut Vec<Tri>,
     ) -> Result<(), DrawAbort> {
         if bucket_range >= 6000 {
             return Ok(());
@@ -298,8 +355,11 @@ impl<'a> ModelDrawer<'a> {
                 let dot = w(s.cam_x[b]) * var24 + w(s.cam_y[b]) * var25 + w(s.cam_z[b]) * var26;
                 s.culled[face] = dot.0 <= 0;
             } else {
-                s.culled[face] = (xa - xb) * (s.screen_y[c] - s.screen_y[b]) - (s.screen_y[a] - s.screen_y[b]) * (xc - xb) <= 0.0;
-                s.clip_x[face] = xa < 0.0 || xb < 0.0 || xc < 0.0 || xa > width || xb > width || xc > width;
+                s.culled[face] = (xa - xb) * (s.screen_y[c] - s.screen_y[b])
+                    - (s.screen_y[a] - s.screen_y[b]) * (xc - xb)
+                    <= 0.0;
+                s.clip_x[face] =
+                    xa < 0.0 || xb < 0.0 || xc < 0.0 || xa > width || xb > width || xc > width;
             }
         }
         // si.av(model, true): bucket by average depth (stable), far to near.
@@ -312,7 +372,8 @@ impl<'a> ModelDrawer<'a> {
             let a = model.face_a[face] as usize;
             let b = model.face_b[face] as usize;
             let c = model.face_c[face] as usize;
-            let depth = (Wrapping(s.depth[a]) + Wrapping(s.depth[b]) + Wrapping(s.depth[c])).0 / 3 + bucket_offset;
+            let depth = (Wrapping(s.depth[a]) + Wrapping(s.depth[b]) + Wrapping(s.depth[c])).0 / 3
+                + bucket_offset;
             if !(0..6000).contains(&depth) {
                 return Err(DrawAbort);
             }
@@ -320,7 +381,7 @@ impl<'a> ModelDrawer<'a> {
                 s.order.push((depth, face as u32));
             }
         }
-        s.order.sort_by(|l, r| r.0.cmp(&l.0));
+        s.order.sort_by_key(|entry| std::cmp::Reverse(entry.0));
         if let Some(priorities) = &model.priorities {
             // fx.kx
             for list in s.priority_lists.iter_mut() {
@@ -364,11 +425,20 @@ impl<'a> ModelDrawer<'a> {
             let mut using11 = list10.is_empty();
             let mut idx = 0usize;
             let current_depth = |using11: bool, idx: usize| -> i32 {
-                let (list, depths) = if using11 { (&list11, &d11) } else { (&list10, &d10) };
+                let (list, depths) = if using11 {
+                    (&list11, &d11)
+                } else {
+                    (&list10, &d10)
+                };
                 if idx < list.len() { depths[idx] } else { -1000 }
             };
             let mut var17 = current_depth(using11, idx);
-            let mut emit_dynamic = |this: &mut Self, using11: &mut bool, idx: &mut usize, var17: &mut i32, out: &mut Vec<Tri>| -> Result<(), DrawAbort> {
+            let emit_dynamic = |this: &mut Self,
+                                using11: &mut bool,
+                                idx: &mut usize,
+                                var17: &mut i32,
+                                out: &mut Vec<Tri>|
+             -> Result<(), DrawAbort> {
                 let face = if *using11 { list11[*idx] } else { list10[*idx] };
                 this.draw_face(model, face as usize, pick, out)?;
                 *idx += 1;
@@ -418,7 +488,13 @@ impl<'a> ModelDrawer<'a> {
     }
 
     /// `fx.bz`: per-face alpha, clip flag and dispatch.
-    fn draw_face(&mut self, model: &Model, face: usize, pick: u32, out: &mut Vec<Tri>) -> Result<(), DrawAbort> {
+    fn draw_face(
+        &mut self,
+        model: &Model,
+        face: usize,
+        pick: u32,
+        out: &mut Vec<Tri>,
+    ) -> Result<(), DrawAbort> {
         if model.transparency == -1 {
             return Ok(());
         }
@@ -443,27 +519,73 @@ impl<'a> ModelDrawer<'a> {
         let c = model.face_c[face] as usize;
         let clip_x = self.scratch.clip_x[face];
         let s = &self.scratch;
-        let y = [s.screen_y[a] as i32, s.screen_y[b] as i32, s.screen_y[c] as i32];
-        let x = [s.screen_x[a] as i32, s.screen_x[b] as i32, s.screen_x[c] as i32];
-        self.emit_face(model, face, y, x, [model.color_a[face], model.color_b[face], model.color_c[face]], alpha, clip_x, pick, out)
+        let y = [
+            s.screen_y[a] as i32,
+            s.screen_y[b] as i32,
+            s.screen_y[c] as i32,
+        ];
+        let x = [
+            s.screen_x[a] as i32,
+            s.screen_x[b] as i32,
+            s.screen_x[c] as i32,
+        ];
+        self.emit_face(
+            model,
+            face,
+            y,
+            x,
+            [
+                model.color_a[face],
+                model.color_b[face],
+                model.color_c[face],
+            ],
+            alpha,
+            clip_x,
+            pick,
+            out,
+        )
     }
 
     /// `fx.gb`: choose flat/Gouraud/textured fill for one triangle with given screen coords.
     fn emit_face(
-        &mut self, model: &Model, face: usize, y: [i32; 3], x: [i32; 3], colors: [i32; 3], alpha: i32, clip_x: bool, pick: u32,
+        &mut self,
+        model: &Model,
+        face: usize,
+        y: [i32; 3],
+        x: [i32; 3],
+        colors: [i32; 3],
+        alpha: i32,
+        clip_x: bool,
+        pick: u32,
         out: &mut Vec<Tri>,
     ) -> Result<(), DrawAbort> {
-        let texture = model.textures.as_ref().map(|t| t[face] as i32).unwrap_or(-1);
+        let texture = model
+            .textures
+            .as_ref()
+            .map(|t| t[face] as i32)
+            .unwrap_or(-1);
         if texture != -1 {
             let (p, m, n) = match &model.texture_coords {
                 Some(coords) if coords[face] != -1 => {
                     let g = (coords[face] as u8) as usize;
-                    (model.tex_p[g] as usize, model.tex_m[g] as usize, model.tex_n[g] as usize)
+                    (
+                        model.tex_p[g] as usize,
+                        model.tex_m[g] as usize,
+                        model.tex_n[g] as usize,
+                    )
                 }
-                _ => (model.face_a[face] as usize, model.face_b[face] as usize, model.face_c[face] as usize),
+                _ => (
+                    model.face_a[face] as usize,
+                    model.face_b[face] as usize,
+                    model.face_c[face] as usize,
+                ),
             };
             let s = &self.scratch;
-            let shades = if model.color_c[face] == -1 { [colors[0], colors[0], colors[0]] } else { colors };
+            let shades = if model.color_c[face] == -1 {
+                [colors[0], colors[0], colors[0]]
+            } else {
+                colors
+            };
             out.push(Tri {
                 y,
                 x,
@@ -480,16 +602,40 @@ impl<'a> ModelDrawer<'a> {
                 pick,
             });
         } else if model.color_c[face] == -1 {
-            let rgb = *self.palette.get((colors[0] & 0xffff) as usize).ok_or(DrawAbort)?;
-            out.push(Tri { y, x, fill: Fill::Flat { rgb }, alpha, clip_x, pick });
+            let rgb = *self
+                .palette
+                .get((colors[0] & 0xffff) as usize)
+                .ok_or(DrawAbort)?;
+            out.push(Tri {
+                y,
+                x,
+                fill: Fill::Flat { rgb },
+                alpha,
+                clip_x,
+                pick,
+            });
         } else {
-            out.push(Tri { y, x, fill: Fill::Gouraud { colors }, alpha, clip_x, pick });
+            out.push(Tri {
+                y,
+                x,
+                fill: Fill::Gouraud { colors },
+                alpha,
+                clip_x,
+                pick,
+            });
         }
         Ok(())
     }
 
     /// `fx.cb`: near-plane clipping producing one or two triangles.
-    fn draw_clipped_face(&mut self, model: &Model, face: usize, alpha: i32, pick: u32, out: &mut Vec<Tri>) -> Result<(), DrawAbort> {
+    fn draw_clipped_face(
+        &mut self,
+        model: &Model,
+        face: usize,
+        alpha: i32,
+        pick: u32,
+        out: &mut Vec<Tri>,
+    ) -> Result<(), DrawAbort> {
         let t = tables();
         let cx = self.state.center_x;
         let cy = self.state.center_y;
@@ -506,9 +652,15 @@ impl<'a> ModelDrawer<'a> {
         let mut bu = [0i32; 4];
         let mut ba = [0i32; 4];
         let mut n17 = 0usize;
-        let recip = |d: i32| -> Result<i32, DrawAbort> { t.reciprocal16.get(d as usize).copied().ok_or(DrawAbort) };
+        let recip = |d: i32| -> Result<i32, DrawAbort> {
+            t.reciprocal16.get(d as usize).copied().ok_or(DrawAbort)
+        };
         let project = |v: i32, zoom: i32| -> i32 { v.wrapping_mul(zoom) / 50 };
-        let colors = [model.color_a[face], model.color_b[face], model.color_c[face]];
+        let colors = [
+            model.color_a[face],
+            model.color_b[face],
+            model.color_c[face],
+        ];
         // vertex A
         if n18 >= NEAR_Z {
             bo[n17] = s.screen_x[n14] as i32;
@@ -521,15 +673,27 @@ impl<'a> ModelDrawer<'a> {
             let n9 = colors[0];
             if n20 >= NEAR_Z {
                 let n8 = (w(NEAR_Z - n18) * w(recip(n20 - n18)?)).0;
-                bo[n17] = cx.wrapping_add(project(n11.wrapping_add((w(s.cam_x[n12] - n11) * w(n8) >> 16).0), zoom));
-                bu[n17] = cy.wrapping_add(project(n10.wrapping_add((w(s.cam_y[n12] - n10) * w(n8) >> 16).0), zoom));
+                bo[n17] = cx.wrapping_add(project(
+                    n11.wrapping_add((w(s.cam_x[n12] - n11) * w(n8) >> 16).0),
+                    zoom,
+                ));
+                bu[n17] = cy.wrapping_add(project(
+                    n10.wrapping_add((w(s.cam_y[n12] - n10) * w(n8) >> 16).0),
+                    zoom,
+                ));
                 ba[n17] = n9.wrapping_add((w(colors[2] - n9) * w(n8) >> 16).0);
                 n17 += 1;
             }
             if n19 >= NEAR_Z {
                 let n8 = (w(NEAR_Z - n18) * w(recip(n19 - n18)?)).0;
-                bo[n17] = cx.wrapping_add(project(n11.wrapping_add((w(s.cam_x[n13] - n11) * w(n8) >> 16).0), zoom));
-                bu[n17] = cy.wrapping_add(project(n10.wrapping_add((w(s.cam_y[n13] - n10) * w(n8) >> 16).0), zoom));
+                bo[n17] = cx.wrapping_add(project(
+                    n11.wrapping_add((w(s.cam_x[n13] - n11) * w(n8) >> 16).0),
+                    zoom,
+                ));
+                bu[n17] = cy.wrapping_add(project(
+                    n10.wrapping_add((w(s.cam_y[n13] - n10) * w(n8) >> 16).0),
+                    zoom,
+                ));
                 ba[n17] = n9.wrapping_add((w(colors[1] - n9) * w(n8) >> 16).0);
                 n17 += 1;
             }
@@ -546,15 +710,27 @@ impl<'a> ModelDrawer<'a> {
             let n9 = colors[1];
             if n18 >= NEAR_Z {
                 let n8 = (w(NEAR_Z - n19) * w(recip(n18 - n19)?)).0;
-                bo[n17] = cx.wrapping_add(project(n11.wrapping_add((w(s.cam_x[n14] - n11) * w(n8) >> 16).0), zoom));
-                bu[n17] = cy.wrapping_add(project(n10.wrapping_add((w(s.cam_y[n14] - n10) * w(n8) >> 16).0), zoom));
+                bo[n17] = cx.wrapping_add(project(
+                    n11.wrapping_add((w(s.cam_x[n14] - n11) * w(n8) >> 16).0),
+                    zoom,
+                ));
+                bu[n17] = cy.wrapping_add(project(
+                    n10.wrapping_add((w(s.cam_y[n14] - n10) * w(n8) >> 16).0),
+                    zoom,
+                ));
                 ba[n17] = n9.wrapping_add((w(colors[0] - n9) * w(n8) >> 16).0);
                 n17 += 1;
             }
             if n20 >= NEAR_Z {
                 let n8 = (w(NEAR_Z - n19) * w(recip(n20 - n19)?)).0;
-                bo[n17] = cx.wrapping_add(project(n11.wrapping_add((w(s.cam_x[n12] - n11) * w(n8) >> 16).0), zoom));
-                bu[n17] = cy.wrapping_add(project(n10.wrapping_add((w(s.cam_y[n12] - n10) * w(n8) >> 16).0), zoom));
+                bo[n17] = cx.wrapping_add(project(
+                    n11.wrapping_add((w(s.cam_x[n12] - n11) * w(n8) >> 16).0),
+                    zoom,
+                ));
+                bu[n17] = cy.wrapping_add(project(
+                    n10.wrapping_add((w(s.cam_y[n12] - n10) * w(n8) >> 16).0),
+                    zoom,
+                ));
                 ba[n17] = n9.wrapping_add((w(colors[2] - n9) * w(n8) >> 16).0);
                 n17 += 1;
             }
@@ -571,15 +747,27 @@ impl<'a> ModelDrawer<'a> {
             let n9 = colors[2];
             if n19 >= NEAR_Z {
                 let n8 = (w(NEAR_Z - n20) * w(recip(n19 - n20)?)).0;
-                bo[n17] = cx.wrapping_add(project(n11.wrapping_add((w(s.cam_x[n13] - n11) * w(n8) >> 16).0), zoom));
-                bu[n17] = cy.wrapping_add(project(n10.wrapping_add((w(s.cam_y[n13] - n10) * w(n8) >> 16).0), zoom));
+                bo[n17] = cx.wrapping_add(project(
+                    n11.wrapping_add((w(s.cam_x[n13] - n11) * w(n8) >> 16).0),
+                    zoom,
+                ));
+                bu[n17] = cy.wrapping_add(project(
+                    n10.wrapping_add((w(s.cam_y[n13] - n10) * w(n8) >> 16).0),
+                    zoom,
+                ));
                 ba[n17] = n9.wrapping_add((w(colors[1] - n9) * w(n8) >> 16).0);
                 n17 += 1;
             }
             if n18 >= NEAR_Z {
                 let n8 = (w(NEAR_Z - n20) * w(recip(n18 - n20)?)).0;
-                bo[n17] = cx.wrapping_add(project(n11.wrapping_add((w(s.cam_x[n14] - n11) * w(n8) >> 16).0), zoom));
-                bu[n17] = cy.wrapping_add(project(n10.wrapping_add((w(s.cam_y[n14] - n10) * w(n8) >> 16).0), zoom));
+                bo[n17] = cx.wrapping_add(project(
+                    n11.wrapping_add((w(s.cam_x[n14] - n11) * w(n8) >> 16).0),
+                    zoom,
+                ));
+                bu[n17] = cy.wrapping_add(project(
+                    n10.wrapping_add((w(s.cam_y[n14] - n10) * w(n8) >> 16).0),
+                    zoom,
+                ));
                 ba[n17] = n9.wrapping_add((w(colors[0] - n9) * w(n8) >> 16).0);
                 n17 += 1;
             }
@@ -588,18 +776,36 @@ impl<'a> ModelDrawer<'a> {
         let outside = |v: i32| v < 0 || v > width;
         if n17 == 3 {
             let clip_x = outside(bo[0]) || outside(bo[1]) || outside(bo[2]);
-            return self.emit_face(model, face, [bu[0], bu[1], bu[2]], [bo[0], bo[1], bo[2]], [ba[0], ba[1], ba[2]], alpha, clip_x, pick, out);
+            return self.emit_face(
+                model,
+                face,
+                [bu[0], bu[1], bu[2]],
+                [bo[0], bo[1], bo[2]],
+                [ba[0], ba[1], ba[2]],
+                alpha,
+                clip_x,
+                pick,
+                out,
+            );
         }
         if n17 != 4 {
             return Ok(());
         }
         let clip_x = outside(bo[0]) || outside(bo[1]) || outside(bo[2]) || outside(bo[3]);
-        let texture = model.textures.as_ref().map(|t| t[face] as i32).unwrap_or(-1);
+        let texture = model
+            .textures
+            .as_ref()
+            .map(|t| t[face] as i32)
+            .unwrap_or(-1);
         if texture != -1 {
             let (p, m, n) = match &model.texture_coords {
                 Some(coords) if coords[face] != -1 => {
                     let g = (coords[face] as u8) as usize;
-                    (model.tex_p[g] as usize, model.tex_m[g] as usize, model.tex_n[g] as usize)
+                    (
+                        model.tex_p[g] as usize,
+                        model.tex_m[g] as usize,
+                        model.tex_n[g] as usize,
+                    )
                 }
                 _ => (n14, n13, n12),
             };
@@ -611,12 +817,27 @@ impl<'a> ModelDrawer<'a> {
             );
             let flat = model.color_c[face] == -1;
             let c0 = colors[0];
-            let shades1 = if flat { [c0, c0, c0] } else { [ba[0], ba[1], ba[2]] };
-            let shades2 = if flat { [c0, c0, c0] } else { [ba[0], ba[2], ba[3]] };
+            let shades1 = if flat {
+                [c0, c0, c0]
+            } else {
+                [ba[0], ba[1], ba[2]]
+            };
+            let shades2 = if flat {
+                [c0, c0, c0]
+            } else {
+                [ba[0], ba[2], ba[3]]
+            };
             out.push(Tri {
                 y: [bu[0], bu[1], bu[2]],
                 x: [bo[0], bo[1], bo[2]],
-                fill: Fill::Textured { colors: shades1, px: plane.0, py: plane.1, pz: plane.2, texture, model_variant: true },
+                fill: Fill::Textured {
+                    colors: shades1,
+                    px: plane.0,
+                    py: plane.1,
+                    pz: plane.2,
+                    texture,
+                    model_variant: true,
+                },
                 alpha,
                 clip_x,
                 pick,
@@ -624,7 +845,14 @@ impl<'a> ModelDrawer<'a> {
             out.push(Tri {
                 y: [bu[0], bu[2], bu[3]],
                 x: [bo[0], bo[2], bo[3]],
-                fill: Fill::Textured { colors: shades2, px: plane.0, py: plane.1, pz: plane.2, texture, model_variant: true },
+                fill: Fill::Textured {
+                    colors: shades2,
+                    px: plane.0,
+                    py: plane.1,
+                    pz: plane.2,
+                    texture,
+                    model_variant: true,
+                },
                 alpha,
                 clip_x,
                 pick,
@@ -632,12 +860,47 @@ impl<'a> ModelDrawer<'a> {
             return Ok(());
         }
         if model.color_c[face] == -1 {
-            let rgb = *self.palette.get((colors[0] & 0xffff) as usize).ok_or(DrawAbort)?;
-            out.push(Tri { y: [bu[0], bu[1], bu[2]], x: [bo[0], bo[1], bo[2]], fill: Fill::Flat { rgb }, alpha, clip_x, pick });
-            out.push(Tri { y: [bu[0], bu[2], bu[3]], x: [bo[0], bo[2], bo[3]], fill: Fill::Flat { rgb }, alpha, clip_x, pick });
+            let rgb = *self
+                .palette
+                .get((colors[0] & 0xffff) as usize)
+                .ok_or(DrawAbort)?;
+            out.push(Tri {
+                y: [bu[0], bu[1], bu[2]],
+                x: [bo[0], bo[1], bo[2]],
+                fill: Fill::Flat { rgb },
+                alpha,
+                clip_x,
+                pick,
+            });
+            out.push(Tri {
+                y: [bu[0], bu[2], bu[3]],
+                x: [bo[0], bo[2], bo[3]],
+                fill: Fill::Flat { rgb },
+                alpha,
+                clip_x,
+                pick,
+            });
         } else {
-            out.push(Tri { y: [bu[0], bu[1], bu[2]], x: [bo[0], bo[1], bo[2]], fill: Fill::Gouraud { colors: [ba[0], ba[1], ba[2]] }, alpha, clip_x, pick });
-            out.push(Tri { y: [bu[0], bu[2], bu[3]], x: [bo[0], bo[2], bo[3]], fill: Fill::Gouraud { colors: [ba[0], ba[2], ba[3]] }, alpha, clip_x, pick });
+            out.push(Tri {
+                y: [bu[0], bu[1], bu[2]],
+                x: [bo[0], bo[1], bo[2]],
+                fill: Fill::Gouraud {
+                    colors: [ba[0], ba[1], ba[2]],
+                },
+                alpha,
+                clip_x,
+                pick,
+            });
+            out.push(Tri {
+                y: [bu[0], bu[2], bu[3]],
+                x: [bo[0], bo[2], bo[3]],
+                fill: Fill::Gouraud {
+                    colors: [ba[0], ba[2], ba[3]],
+                },
+                alpha,
+                clip_x,
+                pick,
+            });
         }
         Ok(())
     }

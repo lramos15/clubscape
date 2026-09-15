@@ -366,7 +366,8 @@ final class SceneExport
         byte[] packBytes = pack.toByteArray();
         Files.write(export.output.resolve(packKey), packBytes);
         export.record(packKey, ChunkWriter.sha256(packBytes), packBytes.length, OriginalCapture.map("models", modelKeys.size(), "scene", name));
-        Map<String, Object> record = OriginalCapture.map("name", name, "file", fileKey, "sha256", sha, "base_x", baseX, "base_y", baseY,
+        Map<String, Object> record = OriginalCapture.map("name", name, "file", fileKey, "sha256", sha,
+            "models_file", packKey, "models_sha256", ChunkWriter.sha256(packBytes), "base_x", baseX, "base_y", baseY,
             "region_ids", squares, "tiles", tiles, "placed_object_tile_references", objects,
             "paints", counts[0], "tile_models", counts[1], "walls", counts[2], "wall_decorations", counts[3], "floor_decorations", counts[4],
             "game_object_slots", counts[5], "distinct_models", modelKeys.size(), "dynamic_renderables", dynamicNotes.size(),

@@ -24,5 +24,7 @@ pub mod raster;
 pub mod scene;
 pub mod tables;
 pub mod texture;
+#[cfg(all(feature = "web", target_arch = "wasm32"))]
+pub mod wasm;
 
 pub use error::RenderError;

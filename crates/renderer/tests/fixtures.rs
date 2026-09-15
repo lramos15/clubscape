@@ -10,8 +10,8 @@ use clubscape_renderer::model::Model;
 use clubscape_renderer::model_draw::{ModelDrawer, ModelScratch};
 use clubscape_renderer::palette::Palette;
 use clubscape_renderer::raster::software::Software;
-use clubscape_renderer::texture::{Texture, TextureSet};
 use clubscape_renderer::raster::{RasterState, Tri};
+use clubscape_renderer::texture::{Texture, TextureSet};
 
 fn repo_root() -> PathBuf {
     Path::new(env!("CARGO_MANIFEST_DIR")).join("../..")
@@ -37,7 +37,8 @@ fn read_png_rgb(path: &Path) -> (u32, u32, Vec<i32>) {
 }
 
 fn load_palette() -> Palette {
-    let data = std::fs::read(repo_root().join("assets/compiled/render/palette.bin")).expect("palette.bin");
+    let data =
+        std::fs::read(repo_root().join("assets/compiled/render/palette.bin")).expect("palette.bin");
     Palette::from_chunks(&data).expect("palette")
 }
 
@@ -55,7 +56,8 @@ fn load_textures() -> TextureSet {
 }
 
 fn load_model(name: &str) -> Model {
-    let data = std::fs::read(repo_root().join(format!("assets/compiled/render/models/{name}.bin"))).expect("model");
+    let data = std::fs::read(repo_root().join(format!("assets/compiled/render/models/{name}.bin")))
+        .expect("model");
     Model::from_chunks(&data).expect("model parse")
 }
 
@@ -66,7 +68,11 @@ struct Diff {
 }
 
 fn compare(width: usize, actual: &[i32], expected: &[i32]) -> Diff {
-    let mut diff = Diff { differing: 0, max_channel: 0, first: None };
+    let mut diff = Diff {
+        differing: 0,
+        max_channel: 0,
+        first: None,
+    };
     for (i, (&a, &e)) in actual.iter().zip(expected).enumerate() {
         let a = a & 0xffffff;
         let e = e & 0xffffff;
@@ -84,13 +90,27 @@ fn compare(width: usize, actual: &[i32], expected: &[i32]) -> Diff {
     diff
 }
 
-fn render_legacy(model: &Model, yaw: i32, y_camera: i32, z_camera: i32, palette: &Palette, textures: &TextureSet) -> Vec<i32> {
+fn render_legacy(
+    model: &Model,
+    yaw: i32,
+    y_camera: i32,
+    z_camera: i32,
+    palette: &Palette,
+    textures: &TextureSet,
+) -> Vec<i32> {
     let state = RasterState::new(1920, 1080, 1024);
     let mut pixels = vec![0x303030; 1920 * 1080];
     let mut scratch = ModelScratch::default();
     let mut tris: Vec<Tri> = Vec::new();
-    let mut drawer = ModelDrawer { state, palette: &palette.rgb, scratch: &mut scratch, alpha_pass: 2 };
-    drawer.draw_legacy(model, 0, yaw, 0, 128, 0, y_camera, z_camera, 0, &mut tris).expect("draw");
+    let mut drawer = ModelDrawer {
+        state,
+        palette: &palette.rgb,
+        scratch: &mut scratch,
+        alpha_pass: 2,
+    };
+    drawer
+        .draw_legacy(model, 0, yaw, 0, 128, 0, y_camera, z_camera, 0, &mut tris)
+        .expect("draw");
     assert!(!tris.is_empty(), "no triangles emitted");
     let mut raster = Software::new(state, &mut pixels, &palette.rgb, textures);
     for tri in &tris {
@@ -100,7 +120,8 @@ fn render_legacy(model: &Model, yaw: i32, y_camera: i32, z_camera: i32, palette:
 }
 
 fn assert_exact(name: &str, actual: &[i32]) {
-    let (w, h, expected) = read_png_rgb(&repo_root().join(format!("assets/reference/osrs240/models/{name}.png")));
+    let (w, h, expected) =
+        read_png_rgb(&repo_root().join(format!("assets/reference/osrs240/models/{name}.png")));
     assert_eq!((w, h), (1920, 1080));
     let diff = compare(w as usize, actual, &expected);
     assert_eq!(
@@ -164,27 +185,51 @@ fn baked_penguin_frames_match_source_pixels() {
 fn palette_build_matches_exported_palette() {
     let exported = load_palette();
     let built = Palette::build(0.8);
-    let mismatches = exported.rgb.iter().zip(&built.rgb).filter(|(a, b)| a != b).count();
-    assert_eq!(mismatches, 0, "palette computation differs from the original export in {mismatches} entries");
+    let mismatches = exported
+        .rgb
+        .iter()
+        .zip(&built.rgb)
+        .filter(|(a, b)| a != b)
+        .count();
+    assert_eq!(
+        mismatches, 0,
+        "palette computation differs from the original export in {mismatches} entries"
+    );
 }
 
 #[test]
 fn trig_tables_match_exported_hash() {
-    let manifest: serde_json::Value =
-        serde_json::from_str(&std::fs::read_to_string(repo_root().join("assets/compiled/render/manifest.json")).unwrap()).unwrap();
-    let expected = manifest["files"]["tables.bin"]["sha256"].as_str().expect("tables hash recorded");
+    let manifest: serde_json::Value = serde_json::from_str(
+        &std::fs::read_to_string(repo_root().join("assets/compiled/render/manifest.json")).unwrap(),
+    )
+    .unwrap();
+    let expected = manifest["files"]["tables.bin"]["sha256"]
+        .as_str()
+        .expect("tables hash recorded");
     let bytes = clubscape_renderer::tables::tables_csrc_bytes();
     let actual = sha256_hex(&bytes);
-    assert_eq!(actual, expected, "computed trig tables differ from the original runtime's Perspective tables");
+    assert_eq!(
+        actual, expected,
+        "computed trig tables differ from the original runtime's Perspective tables"
+    );
 }
 
 fn sha256_hex(bytes: &[u8]) -> String {
-    use std::process::{Command, Stdio};
     use std::io::Write;
-    let mut child = Command::new("sha256sum").stdin(Stdio::piped()).stdout(Stdio::piped()).spawn().expect("sha256sum");
+    use std::process::{Command, Stdio};
+    let mut child = Command::new("sha256sum")
+        .stdin(Stdio::piped())
+        .stdout(Stdio::piped())
+        .spawn()
+        .expect("sha256sum");
     child.stdin.take().unwrap().write_all(bytes).unwrap();
     let out = child.wait_with_output().unwrap();
-    String::from_utf8(out.stdout).unwrap().split_whitespace().next().unwrap().to_string()
+    String::from_utf8(out.stdout)
+        .unwrap()
+        .split_whitespace()
+        .next()
+        .unwrap()
+        .to_string()
 }
 
 // ---------------------------------------------------------------- scene fixtures
@@ -200,23 +245,73 @@ struct SceneFixture {
 }
 
 const SCENE_FIXTURES: &[SceneFixture] = &[
-    SceneFixture { scene: "tutorial-starting-house", capture: "tutorial-starting-house", camera: [5888, -2360, 4992], pitch: 2048, yaw: 0, focal_tile: [3094, 3103], base: [3048, 3056] },
-    SceneFixture { scene: "tutorial-survival-coast", capture: "tutorial-survival-coast", camera: [7296, 0, 5632], pitch: 2048, yaw: 1024, focal_tile: [3101, 3085], base: [3048, 3032] },
-    SceneFixture { scene: "lumbridge-castle-plaza", capture: "lumbridge-castle-plaza", camera: [6912, 0, 5120], pitch: 2048, yaw: 0, focal_tile: [3222, 3218], base: [3168, 3168] },
-    SceneFixture { scene: "lumbridge-river-bridge", capture: "lumbridge-river-bridge", camera: [8576, 0, 4736], pitch: 2048, yaw: 2048, focal_tile: [3223, 3217], base: [3168, 3168] },
-    SceneFixture { scene: "lumbridge-windmill-route", capture: "lumbridge-windmill-route", camera: [6912, 0, 7040], pitch: 2048, yaw: 1536, focal_tile: [3166, 3306], base: [3120, 3240] },
+    SceneFixture {
+        scene: "tutorial-starting-house",
+        capture: "tutorial-starting-house",
+        camera: [5888, -2360, 4992],
+        pitch: 2048,
+        yaw: 0,
+        focal_tile: [3094, 3103],
+        base: [3048, 3056],
+    },
+    SceneFixture {
+        scene: "tutorial-survival-coast",
+        capture: "tutorial-survival-coast",
+        camera: [7296, 0, 5632],
+        pitch: 2048,
+        yaw: 1024,
+        focal_tile: [3101, 3085],
+        base: [3048, 3032],
+    },
+    SceneFixture {
+        scene: "lumbridge-castle-plaza",
+        capture: "lumbridge-castle-plaza",
+        camera: [6912, 0, 5120],
+        pitch: 2048,
+        yaw: 0,
+        focal_tile: [3222, 3218],
+        base: [3168, 3168],
+    },
+    SceneFixture {
+        scene: "lumbridge-river-bridge",
+        capture: "lumbridge-river-bridge",
+        camera: [8576, 0, 4736],
+        pitch: 2048,
+        yaw: 2048,
+        focal_tile: [3223, 3217],
+        base: [3168, 3168],
+    },
+    SceneFixture {
+        scene: "lumbridge-windmill-route",
+        capture: "lumbridge-windmill-route",
+        camera: [6912, 0, 7040],
+        pitch: 2048,
+        yaw: 1536,
+        focal_tile: [3166, 3306],
+        base: [3120, 3240],
+    },
 ];
 
 fn load_scene(name: &str) -> (clubscape_renderer::scene::SceneData, Vec<Option<Model>>) {
-    let data = std::fs::read(repo_root().join(format!("assets/compiled/render/scenes/{name}.bin"))).expect("scene file");
+    let data = std::fs::read(repo_root().join(format!("assets/compiled/render/scenes/{name}.bin")))
+        .expect("scene file");
     let scene = clubscape_renderer::scene::SceneData::from_chunks(&data).expect("scene parse");
-    let pack = std::fs::read(repo_root().join(format!("assets/compiled/render/scenes/{name}.models.bin"))).expect("scene model pack");
+    let pack =
+        std::fs::read(repo_root().join(format!("assets/compiled/render/scenes/{name}.models.bin")))
+            .expect("scene model pack");
     let entries = clubscape_renderer::model::parse_model_pack(&pack).expect("model pack parse");
     assert_eq!(entries.len(), scene.model_keys.len());
-    let models = entries.into_iter().zip(&scene.model_keys).map(|((key, model), expected)| {
-        assert_eq!(&key, expected, "model pack order differs from scene model keys");
-        Some(model)
-    }).collect();
+    let models = entries
+        .into_iter()
+        .zip(&scene.model_keys)
+        .map(|((key, model), expected)| {
+            assert_eq!(
+                &key, expected,
+                "model pack order differs from scene model keys"
+            );
+            Some(model)
+        })
+        .collect();
     (scene, models)
 }
 
@@ -227,19 +322,29 @@ fn fixture_camera(fixture: &SceneFixture, manifest: &serde_json::Value) -> [i32;
         .iter()
         .find(|i| i["id"].as_str() == Some(&format!("original.scenes.{}", fixture.capture)))
         .expect("fixture record");
-    let cam = record["settings"]["camera_local_units"].as_array().expect("camera");
-    [cam[0].as_i64().unwrap() as i32, cam[1].as_i64().unwrap() as i32, cam[2].as_i64().unwrap() as i32]
+    let cam = record["settings"]["camera_local_units"]
+        .as_array()
+        .expect("camera");
+    [
+        cam[0].as_i64().unwrap() as i32,
+        cam[1].as_i64().unwrap() as i32,
+        cam[2].as_i64().unwrap() as i32,
+    ]
 }
 
 fn render_scene_fixture(fixture: &SceneFixture) -> (Vec<i32>, usize) {
-    let manifest: serde_json::Value =
-        serde_json::from_str(&std::fs::read_to_string(repo_root().join("research/reference-pack/v1/manifest.json")).unwrap()).unwrap();
+    let manifest: serde_json::Value = serde_json::from_str(
+        &std::fs::read_to_string(repo_root().join("research/reference-pack/v1/manifest.json"))
+            .unwrap(),
+    )
+    .unwrap();
     let camera = fixture_camera(fixture, &manifest);
     let palette = load_palette();
     let textures = load_textures();
     let (scene, models) = load_scene(fixture.scene);
     let state = RasterState::new(1920, 1080, 662);
-    let mut drawer = clubscape_renderer::scene::draw::SceneDrawer::new(&scene, state, &palette.rgb, 32768);
+    let mut drawer =
+        clubscape_renderer::scene::draw::SceneDrawer::new(&scene, state, &palette.rgb, 32768);
     let view = clubscape_renderer::scene::draw::SceneView {
         camera_x: camera[0],
         camera_height: camera[1],
@@ -255,15 +360,22 @@ fn render_scene_fixture(fixture: &SceneFixture) -> (Vec<i32>, usize) {
     let mut tris: Vec<Tri> = Vec::new();
     drawer.begin_frame(&scene);
     drawer.draw(&scene, &models, &[], &view, &mut tris);
-    assert!(drawer.missing_models.is_empty(), "missing models: {:?}", drawer.missing_models);
-    assert!(tris.len() > 10000, "scene emitted only {} triangles", tris.len());
+    assert!(
+        drawer.missing_models.is_empty(),
+        "missing models: {:?}",
+        drawer.missing_models
+    );
+    assert!(
+        tris.len() > 10000,
+        "scene emitted only {} triangles",
+        tris.len()
+    );
     let mut pixels = vec![0i32; 1920 * 1080];
     let mut raster = Software::new(state, &mut pixels, &palette.rgb, &textures);
-    let mut aborted = 0;
+    // Aborted fills mirror the original swallowed ArrayIndexOutOfBounds; the pixel comparison
+    // below is the check that matters.
     for tri in &tris {
-        if raster.draw(tri).is_err() {
-            aborted += 1;
-        }
+        let _ = raster.draw(tri);
     }
     let _ = fixture.camera;
     (pixels, tris.len())
@@ -277,23 +389,40 @@ fn write_debug_png(name: &str, width: u32, height: u32, pixels: &[i32]) {
     encoder.set_color(png::ColorType::Rgb);
     encoder.set_depth(png::BitDepth::Eight);
     let mut writer = encoder.write_header().unwrap();
-    let bytes: Vec<u8> = pixels.iter().flat_map(|p| [(p >> 16) as u8, (p >> 8) as u8, *p as u8]).collect();
+    let bytes: Vec<u8> = pixels
+        .iter()
+        .flat_map(|p| [(p >> 16) as u8, (p >> 8) as u8, *p as u8])
+        .collect();
     writer.write_image_data(&bytes).unwrap();
 }
 
 fn compare_scene(fixture: &SceneFixture) {
     let (pixels, tri_count) = render_scene_fixture(fixture);
-    let (w, h, expected) = read_png_rgb(&repo_root().join(format!("assets/reference/osrs240/scenes/{}.png", fixture.capture)));
+    let (w, h, expected) = read_png_rgb(&repo_root().join(format!(
+        "assets/reference/osrs240/scenes/{}.png",
+        fixture.capture
+    )));
     assert_eq!((w, h), (1920, 1080));
     let diff = compare(w as usize, &pixels, &expected);
     write_debug_png(&format!("{}-candidate", fixture.capture), w, h, &pixels);
     let mut diffmap = vec![0i32; pixels.len()];
     for (i, slot) in diffmap.iter_mut().enumerate() {
-        *slot = if (pixels[i] & 0xffffff) != (expected[i] & 0xffffff) { 0xff0000 } else { (expected[i] & 0xffffff) / 4 };
+        *slot = if (pixels[i] & 0xffffff) != (expected[i] & 0xffffff) {
+            0xff0000
+        } else {
+            (expected[i] & 0xffffff) / 4
+        };
     }
     write_debug_png(&format!("{}-diff", fixture.capture), w, h, &diffmap);
-    eprintln!("{}: {} triangles, {} differing pixels, max channel {}", fixture.capture, tri_count, diff.differing, diff.max_channel);
-    assert_eq!(diff.differing, 0, "{}: {} pixels differ (max channel error {}), first at {:?}", fixture.capture, diff.differing, diff.max_channel, diff.first);
+    eprintln!(
+        "{}: {} triangles, {} differing pixels, max channel {}",
+        fixture.capture, tri_count, diff.differing, diff.max_channel
+    );
+    assert_eq!(
+        diff.differing, 0,
+        "{}: {} pixels differ (max channel error {}), first at {:?}",
+        fixture.capture, diff.differing, diff.max_channel, diff.first
+    );
 }
 
 #[test]
@@ -335,7 +464,10 @@ fn scene_models_report_alpha_254_flat_faces() {
                     if alphas[f] != 0 {
                         total_alpha += 1;
                     }
-                    if alphas[f] == -2 && model.color_c[f] == -1 && model.textures.as_ref().map(|t| t[f] == -1).unwrap_or(true) {
+                    if alphas[f] == -2
+                        && model.color_c[f] == -1
+                        && model.textures.as_ref().map(|t| t[f] == -1).unwrap_or(true)
+                    {
                         flat_254 += 1;
                     }
                 }
@@ -359,18 +491,39 @@ fn core_places_world_view_entities_in_scene() {
     let palette = load_palette();
     let mut core = RendererCore::new(palette, 1920, 1080);
     for entry in std::fs::read_dir(root.join("assets/compiled/render/textures")).unwrap() {
-        core.add_texture(&std::fs::read(entry.unwrap().path()).unwrap()).unwrap();
+        core.add_texture(&std::fs::read(entry.unwrap().path()).unwrap())
+            .unwrap();
     }
-    core.load_npc_pack_as(3028, &std::fs::read(root.join("assets/compiled/render/models/npc-3028.pack.bin")).unwrap()).unwrap();
-    core.load_npc_pack_as(2063, &std::fs::read(root.join("assets/compiled/render/models/npc-2063.pack.bin")).unwrap()).unwrap();
+    core.load_npc_pack_as(
+        3028,
+        &std::fs::read(root.join("assets/compiled/render/models/npc-3028.pack.bin")).unwrap(),
+    )
+    .unwrap();
+    core.load_npc_pack_as(
+        2063,
+        &std::fs::read(root.join("assets/compiled/render/models/npc-2063.pack.bin")).unwrap(),
+    )
+    .unwrap();
     core.load_scene(
         "tutorial-starting-house",
         &std::fs::read(&scene_path).unwrap(),
-        &std::fs::read(root.join("assets/compiled/render/scenes/tutorial-starting-house.models.bin")).unwrap(),
+        &std::fs::read(
+            root.join("assets/compiled/render/scenes/tutorial-starting-house.models.bin"),
+        )
+        .unwrap(),
     )
     .unwrap();
     // Fixture camera expressed in world units (tile 3094,3095 base 3048,3056).
-    core.set_camera(Camera { x: 3048 * 128 + 5888, height: -2360, y: 3056 * 128 + 4992, pitch: 2048, yaw: 0, zoom: 662, far: 32768 }).unwrap();
+    core.set_camera(Camera {
+        x: 3048 * 128 + 5888,
+        height: -2360,
+        y: 3056 * 128 + 4992,
+        pitch: 2048,
+        yaw: 0,
+        zoom: 662,
+        far: 32768,
+    })
+    .unwrap();
     let baseline = core.build_frame(0.0).unwrap().triangles;
     let baseline_pixels = {
         let textures = load_textures();
@@ -391,9 +544,16 @@ fn core_places_world_view_entities_in_scene() {
     });
     core.update_world(&world.to_string(), 1000.0).unwrap();
     let summary = core.build_frame(1000.0).unwrap().clone();
-    eprintln!("summary: drawn {} skipped {:?} missing {}", summary.entities_drawn, summary.entities_skipped, summary.missing_models);
+    eprintln!(
+        "summary: drawn {} skipped {:?} missing {}",
+        summary.entities_drawn, summary.entities_skipped, summary.missing_models
+    );
     assert_eq!(summary.entities_drawn, 2, "{:?}", summary.entities_skipped);
-    assert_eq!(summary.entities_skipped.len(), 1, "unknown npc must be reported, not hidden");
+    assert_eq!(
+        summary.entities_skipped.len(),
+        1,
+        "unknown npc must be reported, not hidden"
+    );
     assert!(summary.triangles > baseline, "entities added no triangles");
     // Animation advances: walk frame index changes over time within the source frame lengths.
     let textures = load_textures();
@@ -414,52 +574,82 @@ fn core_places_world_view_entities_in_scene() {
         for (i, (&a, &b)) in frames[0].iter().zip(&baseline_pixels).enumerate() {
             if a != b {
                 let (x, y) = ((i % 1920) as i32, (i / 1920) as i32);
-                bbox = (bbox.0.min(x), bbox.1.min(y), bbox.2.max(x), bbox.3.max(y), bbox.4 + 1);
+                bbox = (
+                    bbox.0.min(x),
+                    bbox.1.min(y),
+                    bbox.2.max(x),
+                    bbox.3.max(y),
+                    bbox.4 + 1,
+                );
             }
         }
         eprintln!("visible entity pixels vs baseline: {bbox:?}");
     }
     write_debug_png("tutorial-starting-house-entities", 1920, 1080, &frames[0]);
     // Picking returns the entity under a pixel it covers and tiles elsewhere.
-    let mut boxes: std::collections::HashMap<i64, (i32, i32, i32, i32)> = std::collections::HashMap::new();
+    let mut boxes: std::collections::HashMap<i64, (i32, i32, i32, i32)> =
+        std::collections::HashMap::new();
     for y in 0..1080 {
         for x in 0..1920 {
-            if let Some(clubscape_renderer::scene::draw::PickTarget::Object { hash, .. }) = core.pick(x, y) {
-                if hash >= 0x1000_0000_0000 || hash < 0 {
-                    let b = boxes.entry(hash).or_insert((x, y, x, y));
-                    b.0 = b.0.min(x); b.1 = b.1.min(y); b.2 = b.2.max(x); b.3 = b.3.max(y);
-                }
+            if let Some(clubscape_renderer::scene::draw::PickTarget::Object { hash, .. }) =
+                core.pick(x, y)
+                && (!(0..0x1000_0000_0000).contains(&hash))
+            {
+                let b = boxes.entry(hash).or_insert((x, y, x, y));
+                b.0 = b.0.min(x);
+                b.1 = b.1.min(y);
+                b.2 = b.2.max(x);
+                b.3 = b.3.max(y);
             }
         }
     }
     eprintln!("entity pick boxes: {boxes:?}");
     {
         let picks = core.pick_targets().to_vec();
-        let mut per: std::collections::HashMap<i64, (usize, i32, i32, i32, i32)> = std::collections::HashMap::new();
+        let mut per: std::collections::HashMap<i64, (usize, i32, i32, i32, i32)> =
+            std::collections::HashMap::new();
         for tri in core.triangles() {
-            if tri.pick == 0 { continue; }
-            if let clubscape_renderer::scene::draw::PickTarget::Object { hash, .. } = picks[tri.pick as usize - 1] {
-                if hash >= 0x1000_0000_0000 || hash < 0 {
-                    let e = per.entry(hash).or_insert((0, i32::MAX, i32::MAX, i32::MIN, i32::MIN));
-                    e.0 += 1;
-                    for i in 0..3 { e.1 = e.1.min(tri.x[i]); e.2 = e.2.min(tri.y[i]); e.3 = e.3.max(tri.x[i]); e.4 = e.4.max(tri.y[i]); }
+            if tri.pick == 0 {
+                continue;
+            }
+            if let clubscape_renderer::scene::draw::PickTarget::Object { hash, .. } =
+                picks[tri.pick as usize - 1]
+                && (!(0..0x1000_0000_0000).contains(&hash))
+            {
+                let e = per
+                    .entry(hash)
+                    .or_insert((0, i32::MAX, i32::MAX, i32::MIN, i32::MIN));
+                e.0 += 1;
+                for i in 0..3 {
+                    e.1 = e.1.min(tri.x[i]);
+                    e.2 = e.2.min(tri.y[i]);
+                    e.3 = e.3.max(tri.x[i]);
+                    e.4 = e.4.max(tri.y[i]);
                 }
             }
         }
         eprintln!("entity triangles: {per:?}");
     }
     let pick_center = core.pick(960, 540);
-    assert!(pick_center.is_some(), "center pixel should resolve to scene geometry");
+    assert!(
+        pick_center.is_some(),
+        "center pixel should resolve to scene geometry"
+    );
     let mut found_entity = false;
     for y in (300..900).step_by(4) {
         for x in (600..1300).step_by(4) {
-            if let Some(clubscape_renderer::scene::draw::PickTarget::Object { hash, .. }) = core.pick(x, y) {
-                if hash >= 0x1000_0000_0000 || hash < 0 {
-                    found_entity = true;
-                }
+            if let Some(clubscape_renderer::scene::draw::PickTarget::Object { hash, .. }) =
+                core.pick(x, y)
+                && (!(0..0x1000_0000_0000).contains(&hash))
+            {
+                found_entity = true;
             }
         }
     }
     assert!(found_entity, "no pixel resolved to an entity");
-    assert_eq!(boxes.len(), 2, "both the goblin and the penguin player must be pickable on open ground: {boxes:?}");
+    assert_eq!(
+        boxes.len(),
+        2,
+        "both the goblin and the penguin player must be pickable on open ground: {boxes:?}"
+    );
 }

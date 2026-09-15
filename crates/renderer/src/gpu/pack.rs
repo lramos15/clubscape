@@ -51,16 +51,31 @@ pub fn pack_frame(state: &RasterState, tris: &[Tri], textures: &TextureSet) -> P
                 kind = KIND_FLAT;
                 colors[0] = rgb;
             }
-            Fill::Textured { colors: c, px, py, pz, texture: t, model_variant } => {
+            Fill::Textured {
+                colors: c,
+                px,
+                py,
+                pz,
+                texture: t,
+                model_variant,
+            } => {
                 if textures.get(t).is_some() {
-                    kind = if model_variant { KIND_TEX_MODEL } else { KIND_TEX_TILE };
+                    kind = if model_variant {
+                        KIND_TEX_MODEL
+                    } else {
+                        KIND_TEX_TILE
+                    };
                     colors = c;
                     texture = t;
                     plane = [px, py, pz];
                 } else {
                     fallbacks += 1;
                     let avg = textures.get(t).map(|x| x.average_rgb).unwrap_or(0);
-                    colors = [merge_texture_shade(avg, c[0]), merge_texture_shade(avg, c[1]), merge_texture_shade(avg, c[2])];
+                    colors = [
+                        merge_texture_shade(avg, c[0]),
+                        merge_texture_shade(avg, c[1]),
+                        merge_texture_shade(avg, c[2]),
+                    ];
                 }
             }
         }
@@ -77,13 +92,9 @@ pub fn pack_frame(state: &RasterState, tris: &[Tri], textures: &TextureSet) -> P
         let max_y = tri.y.iter().copied().max().unwrap().min(height);
         let mut min_x = tri.x.iter().copied().min().unwrap();
         let mut max_x = tri.x.iter().copied().max().unwrap();
-        if tri.clip_x {
-            min_x = min_x.max(0);
-            max_x = max_x.min(width);
-        } else {
-            min_x = min_x.max(0);
-            max_x = max_x.min(width);
-        }
+        // Both clipped and unclipped fills stay inside the target; the GPU bins ignore `clip_x`.
+        min_x = min_x.max(0);
+        max_x = max_x.min(width);
         if min_y >= max_y || min_x >= max_x {
             boxes.push((0, -1, 0, -1));
             continue;
@@ -117,5 +128,13 @@ pub fn pack_frame(state: &RasterState, tris: &[Tri], textures: &TextureSet) -> P
             }
         }
     }
-    PackedFrame { tris: packed, bin_offsets: offsets, bin_tris, bins_x, bins_y, triangle_count: tris.len(), texture_fallbacks: fallbacks }
+    PackedFrame {
+        tris: packed,
+        bin_offsets: offsets,
+        bin_tris,
+        bins_x,
+        bins_y,
+        triangle_count: tris.len(),
+        texture_fallbacks: fallbacks,
+    }
 }

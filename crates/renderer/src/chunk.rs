@@ -26,9 +26,12 @@ impl<'a> Chunks<'a> {
                 return Err(RenderError::Format("truncated chunk header".into()));
             }
             let tag: [u8; 4] = data[offset..offset + 4].try_into().expect("4 bytes");
-            let len = u32::from_le_bytes(data[offset + 4..offset + 8].try_into().expect("4 bytes")) as usize;
+            let len = u32::from_le_bytes(data[offset + 4..offset + 8].try_into().expect("4 bytes"))
+                as usize;
             let start = offset + 8;
-            let end = start.checked_add(len).ok_or_else(|| RenderError::Format("chunk overflow".into()))?;
+            let end = start
+                .checked_add(len)
+                .ok_or_else(|| RenderError::Format("chunk overflow".into()))?;
             if end > data.len() {
                 return Err(RenderError::Format(format!(
                     "truncated chunk {}",
@@ -55,39 +58,62 @@ impl<'a> Chunks<'a> {
     pub fn ints(&self, tag: &str) -> Result<Vec<i32>, RenderError> {
         let raw = self.raw(tag)?;
         if raw.len() % 4 != 0 {
-            return Err(RenderError::Format(format!("chunk {tag} is not i32 aligned")));
+            return Err(RenderError::Format(format!(
+                "chunk {tag} is not i32 aligned"
+            )));
         }
         Ok(raw
-            .chunks_exact(4)
-            .map(|b| i32::from_le_bytes([b[0], b[1], b[2], b[3]]))
+            .as_chunks::<4>()
+            .0
+            .iter()
+            .map(|b| i32::from_le_bytes(*b))
             .collect())
     }
 
     pub fn ints_opt(&self, tag: &str) -> Result<Option<Vec<i32>>, RenderError> {
-        if self.has(tag) { self.ints(tag).map(Some) } else { Ok(None) }
+        if self.has(tag) {
+            self.ints(tag).map(Some)
+        } else {
+            Ok(None)
+        }
     }
 
     pub fn floats(&self, tag: &str) -> Result<Vec<f32>, RenderError> {
         let raw = self.raw(tag)?;
         if raw.len() % 4 != 0 {
-            return Err(RenderError::Format(format!("chunk {tag} is not f32 aligned")));
+            return Err(RenderError::Format(format!(
+                "chunk {tag} is not f32 aligned"
+            )));
         }
         Ok(raw
-            .chunks_exact(4)
-            .map(|b| f32::from_bits(u32::from_le_bytes([b[0], b[1], b[2], b[3]])))
+            .as_chunks::<4>()
+            .0
+            .iter()
+            .map(|b| f32::from_bits(u32::from_le_bytes(*b)))
             .collect())
     }
 
     pub fn shorts(&self, tag: &str) -> Result<Vec<i16>, RenderError> {
         let raw = self.raw(tag)?;
         if raw.len() % 2 != 0 {
-            return Err(RenderError::Format(format!("chunk {tag} is not i16 aligned")));
+            return Err(RenderError::Format(format!(
+                "chunk {tag} is not i16 aligned"
+            )));
         }
-        Ok(raw.chunks_exact(2).map(|b| i16::from_le_bytes([b[0], b[1]])).collect())
+        Ok(raw
+            .as_chunks::<2>()
+            .0
+            .iter()
+            .map(|b| i16::from_le_bytes(*b))
+            .collect())
     }
 
     pub fn shorts_opt(&self, tag: &str) -> Result<Option<Vec<i16>>, RenderError> {
-        if self.has(tag) { self.shorts(tag).map(Some) } else { Ok(None) }
+        if self.has(tag) {
+            self.shorts(tag).map(Some)
+        } else {
+            Ok(None)
+        }
     }
 
     pub fn bytes(&self, tag: &str) -> Result<Vec<i8>, RenderError> {
@@ -95,17 +121,25 @@ impl<'a> Chunks<'a> {
     }
 
     pub fn bytes_opt(&self, tag: &str) -> Result<Option<Vec<i8>>, RenderError> {
-        if self.has(tag) { self.bytes(tag).map(Some) } else { Ok(None) }
+        if self.has(tag) {
+            self.bytes(tag).map(Some)
+        } else {
+            Ok(None)
+        }
     }
 
     pub fn longs(&self, tag: &str) -> Result<Vec<i64>, RenderError> {
         let raw = self.raw(tag)?;
         if raw.len() % 8 != 0 {
-            return Err(RenderError::Format(format!("chunk {tag} is not i64 aligned")));
+            return Err(RenderError::Format(format!(
+                "chunk {tag} is not i64 aligned"
+            )));
         }
         Ok(raw
-            .chunks_exact(8)
-            .map(|b| i64::from_le_bytes(b.try_into().expect("8 bytes")))
+            .as_chunks::<8>()
+            .0
+            .iter()
+            .map(|b| i64::from_le_bytes(*b))
             .collect())
     }
 
@@ -114,10 +148,16 @@ impl<'a> Chunks<'a> {
         let ints = self.ints(tag)?;
         let mut rows = Vec::new();
         let mut cursor = 0usize;
-        let count = *ints.first().ok_or_else(|| RenderError::Format(format!("empty jagged {tag}")))? as usize;
+        let count = *ints
+            .first()
+            .ok_or_else(|| RenderError::Format(format!("empty jagged {tag}")))?
+            as usize;
         cursor += 1;
         for _ in 0..count {
-            let len = *ints.get(cursor).ok_or_else(|| RenderError::Format(format!("truncated jagged {tag}")))? as usize;
+            let len = *ints
+                .get(cursor)
+                .ok_or_else(|| RenderError::Format(format!("truncated jagged {tag}")))?
+                as usize;
             cursor += 1;
             let end = cursor + len;
             if end > ints.len() {
@@ -130,7 +170,11 @@ impl<'a> Chunks<'a> {
     }
 
     pub fn jagged_opt(&self, tag: &str) -> Result<Option<Vec<Vec<i32>>>, RenderError> {
-        if self.has(tag) { self.jagged(tag).map(Some) } else { Ok(None) }
+        if self.has(tag) {
+            self.jagged(tag).map(Some)
+        } else {
+            Ok(None)
+        }
     }
 
     pub fn text(&self, tag: &str) -> Result<String, RenderError> {

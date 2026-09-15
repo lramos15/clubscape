@@ -29,14 +29,27 @@ pub struct TileScratch {
 
 impl Default for TileScratch {
     fn default() -> Self {
-        Self { screen_x: vec![0.0; 64], screen_y: vec![0.0; 64], cam_x: vec![0; 64], cam_y: vec![0; 64], cam_z: vec![0; 64] }
+        Self {
+            screen_x: vec![0.0; 64],
+            screen_y: vec![0.0; 64],
+            cam_x: vec![0; 64],
+            cam_y: vec![0; 64],
+            cam_z: vec![0; 64],
+        }
     }
 }
 
 /// `eu.qu`: transforms the four corners of a tile paint and emits its two triangles.
 #[allow(clippy::too_many_arguments)]
 pub fn draw_tile_paint(
-    scene: &SceneData, state: &RasterState, camera: &TileCamera, paint: &TilePaint, plane: i32, x: i32, y: i32, pick: u32,
+    scene: &SceneData,
+    state: &RasterState,
+    camera: &TileCamera,
+    paint: &TilePaint,
+    plane: i32,
+    x: i32,
+    y: i32,
+    pick: u32,
     out: &mut Vec<Tri>,
 ) {
     let ex = x + scene.offset;
@@ -53,7 +66,12 @@ pub fn draw_tile_paint(
     let f10 = (scene.height(plane, ex + 1, ey) - camera.height) as f32;
     let f11 = (scene.height(plane, ex + 1, ey + 1) - camera.height) as f32;
     let f12 = (scene.height(plane, ex, ey + 1) - camera.height) as f32;
-    let (aa, ac, ax, as_) = (camera.yaw_cos, camera.yaw_sin, camera.pitch_cos, camera.pitch_sin);
+    let (aa, ac, ax, as_) = (
+        camera.yaw_cos,
+        camera.yaw_sin,
+        camera.pitch_cos,
+        camera.pitch_sin,
+    );
     // corner 1
     let f13 = f5 * aa + f6 * ac;
     let f6 = f6 * aa - f5 * ac;
@@ -94,11 +112,27 @@ pub fn draw_tile_paint(
         return;
     }
     // fv.zw(f=x1c, f2=x2c, f3=x3c, f4=x4c, f5..f8 = y's, f9..f12 = depths)
-    emit_paint(state, paint, [f5, f7, f2, f4], [f9, f10, f11, f13], [f6, f3, f8, f], pick, out);
+    emit_paint(
+        state,
+        paint,
+        [f5, f7, f2, f4],
+        [f9, f10, f11, f13],
+        [f6, f3, f8, f],
+        pick,
+        out,
+    );
 }
 
 #[allow(clippy::too_many_arguments)]
-fn emit_paint(state: &RasterState, paint: &TilePaint, xc: [f32; 4], yc: [f32; 4], zc: [f32; 4], pick: u32, out: &mut Vec<Tri>) {
+fn emit_paint(
+    state: &RasterState,
+    paint: &TilePaint,
+    xc: [f32; 4],
+    yc: [f32; 4],
+    zc: [f32; 4],
+    pick: u32,
+    out: &mut Vec<Tri>,
+) {
     let zoom = state.zoom as f32;
     let cx = state.center_x as f32;
     let cy = state.center_y as f32;
@@ -111,25 +145,51 @@ fn emit_paint(state: &RasterState, paint: &TilePaint, xc: [f32; 4], yc: [f32; 4]
     let f19 = cy + yc[2] * zoom / zc[2];
     let f20 = cx + xc[3] * zoom / zc[3];
     let f21 = cy + yc[3] * zoom / zc[3];
-    let outside = |a: f32, b: f32, c: f32| a < 0.0 || b < 0.0 || c < 0.0 || a > width || b > width || c > width;
+    let outside = |a: f32, b: f32, c: f32| {
+        a < 0.0 || b < 0.0 || c < 0.0 || a > width || b > width || c > width
+    };
     if (f17 - f21) * (f18 - f20) - (f19 - f21) * (f16 - f20) > 0.0 {
         let clip_x = outside(f18, f20, f16);
         let y = [f19 as i32, f21 as i32, f17 as i32];
         let x = [f18 as i32, f20 as i32, f16 as i32];
         if paint.texture == -1 {
             if paint.ne != HIDDEN_COLOR {
-                out.push(Tri { y, x, fill: Fill::Gouraud { colors: [paint.ne, paint.nw, paint.se] }, alpha: 0, clip_x, pick });
+                out.push(Tri {
+                    y,
+                    x,
+                    fill: Fill::Gouraud {
+                        colors: [paint.ne, paint.nw, paint.se],
+                    },
+                    alpha: 0,
+                    clip_x,
+                    pick,
+                });
             }
         } else {
             let (px, py, pz) = if paint.flat {
-                ([xc[0] as i32, xc[1] as i32, xc[3] as i32], [yc[0] as i32, yc[1] as i32, yc[3] as i32], [zc[0] as i32, zc[1] as i32, zc[3] as i32])
+                (
+                    [xc[0] as i32, xc[1] as i32, xc[3] as i32],
+                    [yc[0] as i32, yc[1] as i32, yc[3] as i32],
+                    [zc[0] as i32, zc[1] as i32, zc[3] as i32],
+                )
             } else {
-                ([xc[2] as i32, xc[3] as i32, xc[1] as i32], [yc[2] as i32, yc[3] as i32, yc[1] as i32], [zc[2] as i32, zc[3] as i32, zc[1] as i32])
+                (
+                    [xc[2] as i32, xc[3] as i32, xc[1] as i32],
+                    [yc[2] as i32, yc[3] as i32, yc[1] as i32],
+                    [zc[2] as i32, zc[3] as i32, zc[1] as i32],
+                )
             };
             out.push(Tri {
                 y,
                 x,
-                fill: Fill::Textured { colors: [paint.ne, paint.nw, paint.se], px, py, pz, texture: paint.texture, model_variant: false },
+                fill: Fill::Textured {
+                    colors: [paint.ne, paint.nw, paint.se],
+                    px,
+                    py,
+                    pz,
+                    texture: paint.texture,
+                    model_variant: false,
+                },
                 alpha: 0,
                 clip_x,
                 pick,
@@ -142,7 +202,16 @@ fn emit_paint(state: &RasterState, paint: &TilePaint, xc: [f32; 4], yc: [f32; 4]
         let x = [f14 as i32, f16 as i32, f20 as i32];
         if paint.texture == -1 {
             if paint.sw != HIDDEN_COLOR {
-                out.push(Tri { y, x, fill: Fill::Gouraud { colors: [paint.sw, paint.se, paint.nw] }, alpha: 0, clip_x, pick });
+                out.push(Tri {
+                    y,
+                    x,
+                    fill: Fill::Gouraud {
+                        colors: [paint.sw, paint.se, paint.nw],
+                    },
+                    alpha: 0,
+                    clip_x,
+                    pick,
+                });
             }
         } else {
             out.push(Tri {
@@ -167,7 +236,12 @@ fn emit_paint(state: &RasterState, paint: &TilePaint, xc: [f32; 4], yc: [f32; 4]
 /// `eu.ae` + `ei.pv`: transforms and emits a shaped tile model.
 #[allow(clippy::too_many_arguments)]
 pub fn draw_tile_model(
-    state: &RasterState, camera: &TileCamera, model: &TileModel, scratch: &mut TileScratch, pick: u32, out: &mut Vec<Tri>,
+    state: &RasterState,
+    camera: &TileCamera,
+    model: &TileModel,
+    scratch: &mut TileScratch,
+    pick: u32,
+    out: &mut Vec<Tri>,
 ) {
     let count = model.xs.len();
     if scratch.screen_x.len() < count {
@@ -212,6 +286,8 @@ pub fn draw_tile_model(
         let f4 = scratch.screen_y[n5];
         let f5 = scratch.screen_y[n6];
         let f6 = scratch.screen_y[n7];
+        // Original `!(cross > 0)` keeps NaN faces (the compare is false for NaN → continue).
+        #[allow(clippy::neg_cmp_op_on_partial_ord)]
         if !((f - f2) * (f6 - f5) - (f4 - f5) * (f3 - f2) > 0.0) {
             continue;
         }
@@ -221,7 +297,11 @@ pub fn draw_tile_model(
         let colors = [model.color_a[i], model.color_b[i], model.color_c[i]];
         let texture = model.textures.as_ref().map(|t| t[i]).unwrap_or(-1);
         if texture != -1 {
-            let (p, m, n) = if model.flat { (0usize, 1usize, 3usize) } else { (n5, n6, n7) };
+            let (p, m, n) = if model.flat {
+                (0usize, 1usize, 3usize)
+            } else {
+                (n5, n6, n7)
+            };
             out.push(Tri {
                 y,
                 x,
@@ -242,6 +322,13 @@ pub fn draw_tile_model(
         if model.color_a[i] == HIDDEN_COLOR {
             continue;
         }
-        out.push(Tri { y, x, fill: Fill::Gouraud { colors }, alpha: 0, clip_x, pick });
+        out.push(Tri {
+            y,
+            x,
+            fill: Fill::Gouraud { colors },
+            alpha: 0,
+            clip_x,
+            pick,
+        });
     }
 }

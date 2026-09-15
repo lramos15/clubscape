@@ -217,16 +217,33 @@ impl SceneData {
             game_objects: Vec::new(),
             slots: HashMap::new(),
             zone_dynamic: HashMap::new(),
-            model_keys: chunks.text("MODL")?.lines().map(|s| s.to_string()).collect(),
+            model_keys: chunks
+                .text("MODL")?
+                .lines()
+                .map(|s| s.to_string())
+                .collect(),
         };
-        if scene.link.len() != tile_count || scene.object_count.len() != tile_count || scene.object_flags.len() != tile_count * 5 {
-            return Err(RenderError::InvalidAsset("scene per-tile arrays size".into()));
+        if scene.link.len() != tile_count
+            || scene.object_count.len() != tile_count
+            || scene.object_flags.len() != tile_count * 5
+        {
+            return Err(RenderError::InvalidAsset(
+                "scene per-tile arrays size".into(),
+            ));
         }
         let paints = chunks.ints("PANT")?;
-        for r in paints.chunks_exact(8) {
+        for r in paints.as_chunks::<8>().0 {
             scene.paints.insert(
                 r[0] as usize,
-                TilePaint { sw: r[1], se: r[2], ne: r[3], nw: r[4], texture: r[5], flat: r[6] != 0, rgb: r[7] },
+                TilePaint {
+                    sw: r[1],
+                    se: r[2],
+                    ne: r[3],
+                    nw: r[4],
+                    texture: r[5],
+                    flat: r[6] != 0,
+                    rgb: r[7],
+                },
             );
         }
         let tm = chunks.ints("TMOD")?;
@@ -273,13 +290,22 @@ impl SceneData {
             }
             scene.tile_models.insert(head[0] as usize, model);
         }
-        for r in chunks.ints("WALL")?.chunks_exact(10) {
+        for r in chunks.ints("WALL")?.as_chunks::<10>().0 {
             scene.walls.insert(
                 r[0] as usize,
-                Wall { model_a: r[1], model_b: r[2], orientation_a: r[3], orientation_b: r[4], x: r[5], height: r[6], z: r[7], hash: join(r[8], r[9]) },
+                Wall {
+                    model_a: r[1],
+                    model_b: r[2],
+                    orientation_a: r[3],
+                    orientation_b: r[4],
+                    x: r[5],
+                    height: r[6],
+                    z: r[7],
+                    hash: join(r[8], r[9]),
+                },
             );
         }
-        for r in chunks.ints("WDEC")?.chunks_exact(14) {
+        for r in chunks.ints("WDEC")?.as_chunks::<14>().0 {
             scene.wall_decorations.insert(
                 r[0] as usize,
                 WallDecoration {
@@ -298,14 +324,30 @@ impl SceneData {
                 },
             );
         }
-        for r in chunks.ints("FDEC")?.chunks_exact(7) {
-            scene.floor_decorations.insert(r[0] as usize, FloorDecoration { model: r[1], x: r[2], height: r[3], z: r[4], hash: join(r[5], r[6]) });
+        for r in chunks.ints("FDEC")?.as_chunks::<7>().0 {
+            scene.floor_decorations.insert(
+                r[0] as usize,
+                FloorDecoration {
+                    model: r[1],
+                    x: r[2],
+                    height: r[3],
+                    z: r[4],
+                    hash: join(r[5], r[6]),
+                },
+            );
         }
         // The same original object instance is referenced from every tile it spans; group the
         // per-slot records back into one object so draw-state (frame marker, distance) is shared.
         let mut identity: HashMap<(i64, i32, i32, i32, i32, i32), usize> = HashMap::new();
         let mut intern = |scene: &mut SceneData, object: GameObject| -> usize {
-            let key = (object.hash, object.x, object.z, object.height, object.orientation, object.model);
+            let key = (
+                object.hash,
+                object.x,
+                object.z,
+                object.height,
+                object.orientation,
+                object.model,
+            );
             if let Some(&id) = identity.get(&key) {
                 return id;
             }
@@ -314,7 +356,7 @@ impl SceneData {
             identity.insert(key, id);
             id
         };
-        for r in chunks.ints("GOBJ")?.chunks_exact(16) {
+        for r in chunks.ints("GOBJ")?.as_chunks::<16>().0 {
             let object = GameObject {
                 model: r[2],
                 orientation: r[3],
@@ -333,7 +375,7 @@ impl SceneData {
             let id = intern(&mut scene, object);
             scene.slots.insert(r[0] as usize * 5 + r[1] as usize, id);
         }
-        for r in chunks.ints("ZDYN")?.chunks_exact(14) {
+        for r in chunks.ints("ZDYN")?.as_chunks::<14>().0 {
             let object = GameObject {
                 model: r[2],
                 orientation: r[3],
@@ -355,7 +397,9 @@ impl SceneData {
         let model_count = scene.model_keys.len() as i32;
         let check = |m: i32| -> Result<(), RenderError> {
             if m < -1 || m >= model_count {
-                return Err(RenderError::InvalidAsset(format!("scene model reference {m} out of range")));
+                return Err(RenderError::InvalidAsset(format!(
+                    "scene model reference {m} out of range"
+                )));
             }
             Ok(())
         };

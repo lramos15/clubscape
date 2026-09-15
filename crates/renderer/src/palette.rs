@@ -18,7 +18,10 @@ impl Palette {
         let brightness = f32::from_bits(chunks.ints("BRGT")?[0] as u32);
         let rgb = chunks.ints("PLTE")?;
         if rgb.len() != 65536 {
-            return Err(RenderError::InvalidAsset(format!("palette has {} entries", rgb.len())));
+            return Err(RenderError::InvalidAsset(format!(
+                "palette has {} entries",
+                rgb.len()
+            )));
         }
         Ok(Self { brightness, rgb })
     }
@@ -36,7 +39,11 @@ impl Palette {
                 let mut g = lum;
                 let mut b = lum;
                 if sat != 0.0 {
-                    let q = if lum < 0.5 { lum * (1.0 + sat) } else { lum + sat - lum * sat };
+                    let q = if lum < 0.5 {
+                        lum * (1.0 + sat)
+                    } else {
+                        lum + sat - lum * sat
+                    };
                     let p = 2.0 * lum - q;
                     let mut hr = hue + 0.3333333333333333;
                     if hr > 1.0 {
@@ -73,7 +80,10 @@ impl Palette {
                 index += 1;
             }
         }
-        Self { brightness: brightness as f32, rgb }
+        Self {
+            brightness: brightness as f32,
+            rgb,
+        }
     }
 
     #[inline]

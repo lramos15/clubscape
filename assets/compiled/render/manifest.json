@@ -10,11 +10,48 @@
  "scene_angle_units_per_turn": 16384,
  "model_angle_units_per_turn": 2048,
  "classification": "Neutral buffers read from original runtime structures; not a candidate render and not a source reference image.",
+ "approved_reference_pack_sha256": "b62e19704e17d3d3e4e819f803ef49ba7cc54034ae407184b423427c65d9674d",
+ "textures": [
+  1,
+  2,
+  3,
+  4,
+  5,
+  6,
+  7,
+  8,
+  9,
+  11,
+  12,
+  13,
+  14,
+  15,
+  16,
+  17,
+  18,
+  19,
+  20,
+  22,
+  23,
+  25,
+  26,
+  30,
+  39,
+  43,
+  44,
+  46,
+  48,
+  60,
+  130,
+  131,
+  132
+ ],
  "npcs": [
   {
    "npc_id": 3028,
    "name": "Goblin",
    "base_model": "models/npc-3028-base.bin",
+   "pack": "models/npc-3028.pack.bin",
    "width_scale": 128,
    "height_scale": 128,
    "sequences": {
@@ -102,6 +139,7 @@
    "npc_id": 2063,
    "name": "Penguin",
    "base_model": "models/npc-2063-base.bin",
+   "pack": "models/npc-2063.pack.bin",
    "width_scale": 75,
    "height_scale": 75,
    "sequences": {
@@ -166,7 +204,665 @@
    }
   }
  ],
+ "scenes": [
+  {
+   "name": "lumbridge-castle-plaza",
+   "file": "scenes/lumbridge-castle-plaza.bin",
+   "sha256": "ec5a55a4d066b9efbe9bbe61c24e39f51fe283c58d57f00c47530c2a5701b30a",
+   "models_file": "scenes/lumbridge-castle-plaza.models.bin",
+   "models_sha256": "9d14816198fcb9efc7b419c6fa7f1e6bd6e424de50cd862764071386159fdf17",
+   "base_x": 3168,
+   "base_y": 3168,
+   "region_ids": [
+    12336,
+    12337,
+    12338,
+    12339,
+    12592,
+    12593,
+    12594,
+    12595,
+    12848,
+    12849,
+    12850,
+    12851,
+    13104,
+    13105,
+    13106,
+    13107
+   ],
+   "tiles": 36243,
+   "placed_object_tile_references": 3073,
+   "paints": 10542,
+   "tile_models": 1043,
+   "walls": 1699,
+   "wall_decorations": 493,
+   "floor_decorations": 4105,
+   "game_object_slots": 3092,
+   "distinct_models": 5185,
+   "dynamic_renderables": 269,
+   "source_pipeline": "Original rl4.fn map decoding, placement, floor blending, shadowing; live ez arrays serialized without re-rendering",
+   "file_gz": "scenes/lumbridge-castle-plaza.bin.gz",
+   "models_file_gz": "scenes/lumbridge-castle-plaza.models.bin.gz"
+  },
+  {
+   "name": "lumbridge-river-bridge",
+   "file": "scenes/lumbridge-river-bridge.bin",
+   "sha256": "ae1fb05bf80cba68b7ef8e3ad8fe52e1923209dd048656c1e1d5918903b7c857",
+   "models_file": "scenes/lumbridge-river-bridge.models.bin",
+   "models_sha256": "f3143c663ab2aaa04f0fe6ae262c8b0f0d0d400c8b0f1162b091fd4979506190",
+   "base_x": 3168,
+   "base_y": 3168,
+   "region_ids": [
+    12336,
+    12337,
+    12338,
+    12339,
+    12592,
+    12593,
+    12594,
+    12595,
+    12848,
+    12849,
+    12850,
+    12851,
+    13104,
+    13105,
+    13106,
+    13107
+   ],
+   "tiles": 36243,
+   "placed_object_tile_references": 3073,
+   "paints": 10542,
+   "tile_models": 1043,
+   "walls": 1699,
+   "wall_decorations": 493,
+   "floor_decorations": 4105,
+   "game_object_slots": 3092,
+   "distinct_models": 5188,
+   "dynamic_renderables": 269,
+   "source_pipeline": "Original rl4.fn map decoding, placement, floor blending, shadowing; live ez arrays serialized without re-rendering",
+   "file_gz": "scenes/lumbridge-river-bridge.bin.gz",
+   "models_file_gz": "scenes/lumbridge-river-bridge.models.bin.gz"
+  },
+  {
+   "name": "tutorial-starting-house",
+   "file": "scenes/tutorial-starting-house.bin",
+   "sha256": "397337c0f52b87478f773a6d64af3bbaf499b44df7babf4324e749c05807d0e9",
+   "models_file": "scenes/tutorial-starting-house.models.bin",
+   "models_sha256": "ce111087cd1760df61937c0c4d918478cd1b978654d80663909fc32d94e55e36",
+   "base_x": 3048,
+   "base_y": 3056,
+   "region_ids": [
+    12079,
+    12080,
+    12081,
+    12335,
+    12336,
+    12337,
+    12591,
+    12592,
+    12593
+   ],
+   "tiles": 36151,
+   "placed_object_tile_references": 2744,
+   "paints": 9863,
+   "tile_models": 1989,
+   "walls": 1112,
+   "wall_decorations": 378,
+   "floor_decorations": 2763,
+   "game_object_slots": 2756,
+   "distinct_models": 4105,
+   "dynamic_renderables": 258,
+   "source_pipeline": "Original rl4.fn map decoding, placement, floor blending, shadowing; live ez arrays serialized without re-rendering",
+   "file_gz": "scenes/tutorial-starting-house.bin.gz",
+   "models_file_gz": "scenes/tutorial-starting-house.models.bin.gz"
+  },
+  {
+   "name": "tutorial-survival-coast",
+   "file": "scenes/tutorial-survival-coast.bin",
+   "sha256": "7028fca569da6f4af25da758906f6ea867ab066a3272a2c6a2834d62fe4d5d26",
+   "models_file": "scenes/tutorial-survival-coast.models.bin",
+   "models_sha256": "21103894d5cc56a063b548a64cc04c1a8aac389ce50b46f81b4e54468cd9e035",
+   "base_x": 3048,
+   "base_y": 3032,
+   "region_ids": [
+    12078,
+    12079,
+    12080,
+    12081,
+    12334,
+    12335,
+    12336,
+    12337,
+    12590,
+    12591,
+    12592,
+    12593
+   ],
+   "tiles": 36061,
+   "placed_object_tile_references": 2712,
+   "paints": 9773,
+   "tile_models": 2050,
+   "walls": 1176,
+   "wall_decorations": 353,
+   "floor_decorations": 2696,
+   "game_object_slots": 2792,
+   "distinct_models": 3894,
+   "dynamic_renderables": 190,
+   "source_pipeline": "Original rl4.fn map decoding, placement, floor blending, shadowing; live ez arrays serialized without re-rendering",
+   "file_gz": "scenes/tutorial-survival-coast.bin.gz",
+   "models_file_gz": "scenes/tutorial-survival-coast.models.bin.gz"
+  },
+  {
+   "name": "lumbridge-windmill-route",
+   "file": "scenes/lumbridge-windmill-route.bin",
+   "sha256": "3e7c2f4cb9efc171dbe879678c28ba9a18d36d9928202571522283131ff4ec6b",
+   "models_file": "scenes/lumbridge-windmill-route.models.bin",
+   "models_sha256": "e70f73349dc7995ae41404b8cf0e19879f7a9848e14b81b470167bc3f7fcc05c",
+   "base_x": 3120,
+   "base_y": 3240,
+   "region_ids": [
+    12338,
+    12339,
+    12340,
+    12594,
+    12595,
+    12596,
+    12850,
+    12851,
+    12852
+   ],
+   "tiles": 34854,
+   "placed_object_tile_references": 3016,
+   "paints": 10193,
+   "tile_models": 855,
+   "walls": 985,
+   "wall_decorations": 98,
+   "floor_decorations": 4026,
+   "game_object_slots": 3016,
+   "distinct_models": 4974,
+   "dynamic_renderables": 435,
+   "source_pipeline": "Original rl4.fn map decoding, placement, floor blending, shadowing; live ez arrays serialized without re-rendering",
+   "file_gz": "scenes/lumbridge-windmill-route.bin.gz",
+   "models_file_gz": "scenes/lumbridge-windmill-route.models.bin.gz"
+  }
+ ],
+ "scene_texture_ids": [
+  1,
+  2,
+  3,
+  4,
+  5,
+  6,
+  7,
+  8,
+  9,
+  11,
+  12,
+  13,
+  14,
+  15,
+  16,
+  17,
+  18,
+  19,
+  20,
+  22,
+  23,
+  25,
+  26,
+  30,
+  39,
+  43,
+  44,
+  46,
+  48,
+  60,
+  130,
+  131,
+  132
+ ],
  "files": {
+  "tables.bin": {
+   "sha256": "954c4395b0b236169129950ce3c98cfdaa662de33b7ad67e7270757fc7c247c6",
+   "size_bytes": 303184,
+   "detail": {
+    "source": "net.runelite.api.Perspective tables bound into fh/gb/fx",
+    "unit_2048": 0.0030679615,
+    "unit_16384": 0.0003834951969714103
+   }
+  },
+  "palette.bin": {
+   "sha256": "9428d220ae38c881375efff2305c4992ce36ea00aaf743e8ffdef09e685dd350",
+   "size_bytes": 262172,
+   "detail": {
+    "brightness": 0.8,
+    "entries": 65536,
+    "source": "fh.ae after original fh.ae(0.8) HSL palette build"
+   }
+  },
+  "textures/1.bin": {
+   "sha256": "45bbb4a93decf7167e0cfaa78febe147c5702f1f78b2209219e9fb3e76c47e5b",
+   "size_bytes": 65588,
+   "detail": {
+    "texture_id": 1,
+    "average_rgb": 39103,
+    "transparent": true,
+    "animation_direction": 0,
+    "animation_speed": 0,
+    "sprite_group": 448
+   }
+  },
+  "textures/2.bin": {
+   "sha256": "a45fdcc9a93f5d54dcec613516debae968bd3c39e740a329e10ca5beb1fc1b6d",
+   "size_bytes": 65588,
+   "detail": {
+    "texture_id": 2,
+    "average_rgb": 6183,
+    "transparent": true,
+    "animation_direction": 0,
+    "animation_speed": 0,
+    "sprite_group": 449
+   }
+  },
+  "textures/3.bin": {
+   "sha256": "ff95c470dfe2b77bd7d13815695e67663f4dda8569d0b0d75f42601dee6b9c11",
+   "size_bytes": 65588,
+   "detail": {
+    "texture_id": 3,
+    "average_rgb": 4636,
+    "transparent": true,
+    "animation_direction": 0,
+    "animation_speed": 0,
+    "sprite_group": 450
+   }
+  },
+  "textures/4.bin": {
+   "sha256": "760554802efb41ccfd694e9a02c4247b8936d7f5305cdbc1ac4fad110170d689",
+   "size_bytes": 65588,
+   "detail": {
+    "texture_id": 4,
+    "average_rgb": 6678,
+    "transparent": true,
+    "animation_direction": 0,
+    "animation_speed": 0,
+    "sprite_group": 451
+   }
+  },
+  "textures/5.bin": {
+   "sha256": "8dba4627d34522ecde86a53c88aae90ab3561fbbff603c6d4f7e52f3b569ea20",
+   "size_bytes": 65588,
+   "detail": {
+    "texture_id": 5,
+    "average_rgb": 6024,
+    "transparent": true,
+    "animation_direction": 0,
+    "animation_speed": 0,
+    "sprite_group": 452
+   }
+  },
+  "textures/6.bin": {
+   "sha256": "b7bf92445f792ec81d23720ddd78139afa02ea77bc6b4514e9179d95a57bad24",
+   "size_bytes": 65588,
+   "detail": {
+    "texture_id": 6,
+    "average_rgb": 2473,
+    "transparent": true,
+    "animation_direction": 0,
+    "animation_speed": 0,
+    "sprite_group": 453
+   }
+  },
+  "textures/7.bin": {
+   "sha256": "62a46d0d65e5037457f7c2b132b88c540d4a03a278cfd35d60db1a998e982c4e",
+   "size_bytes": 65588,
+   "detail": {
+    "texture_id": 7,
+    "average_rgb": 7057,
+    "transparent": false,
+    "animation_direction": 0,
+    "animation_speed": 0,
+    "sprite_group": 454
+   }
+  },
+  "textures/8.bin": {
+   "sha256": "c4f6e99c19b98fca5d53eed429c5dc7e5f75fa59876e88d145682321e1ae97ef",
+   "size_bytes": 65588,
+   "detail": {
+    "texture_id": 8,
+    "average_rgb": 12818,
+    "transparent": false,
+    "animation_direction": 0,
+    "animation_speed": 0,
+    "sprite_group": 455
+   }
+  },
+  "textures/9.bin": {
+   "sha256": "11e4b7650a350257ad2176550c46cf6f4234a6a0cb737a6503230eacbfcedc5a",
+   "size_bytes": 65588,
+   "detail": {
+    "texture_id": 9,
+    "average_rgb": 5927,
+    "transparent": false,
+    "animation_direction": 0,
+    "animation_speed": 0,
+    "sprite_group": 456
+   }
+  },
+  "textures/11.bin": {
+   "sha256": "0546a219c6d383bcdf56dadb6a39a955dc9211ef8c343f006d4ee84f973b6a39",
+   "size_bytes": 65588,
+   "detail": {
+    "texture_id": 11,
+    "average_rgb": 5155,
+    "transparent": true,
+    "animation_direction": 0,
+    "animation_speed": 0,
+    "sprite_group": 457
+   }
+  },
+  "textures/12.bin": {
+   "sha256": "21229c36fd089a5e1f7bfc36ad764b31d3135f0c3dd6c7c2d340e48b66f50eb6",
+   "size_bytes": 65588,
+   "detail": {
+    "texture_id": 12,
+    "average_rgb": 18,
+    "transparent": false,
+    "animation_direction": 0,
+    "animation_speed": 0,
+    "sprite_group": 458
+   }
+  },
+  "textures/13.bin": {
+   "sha256": "d7bbe2baec47aea476683a0a83ed315a5a207ab10baf91e9471a0aa532468763",
+   "size_bytes": 65588,
+   "detail": {
+    "texture_id": 13,
+    "average_rgb": 32847,
+    "transparent": true,
+    "animation_direction": 0,
+    "animation_speed": 0,
+    "sprite_group": 459
+   }
+  },
+  "textures/14.bin": {
+   "sha256": "261c00af8184ed6d3962f5c2df1019e25f29c8682dd837394567a6d70d25e5f6",
+   "size_bytes": 65588,
+   "detail": {
+    "texture_id": 14,
+    "average_rgb": 5295,
+    "transparent": true,
+    "animation_direction": 0,
+    "animation_speed": 0,
+    "sprite_group": 460
+   }
+  },
+  "textures/15.bin": {
+   "sha256": "8bcf107a6ca4d623271adbe9de9d1fc192bb398b53a462b52a481569aa620d19",
+   "size_bytes": 65588,
+   "detail": {
+    "texture_id": 15,
+    "average_rgb": 47161,
+    "transparent": true,
+    "animation_direction": 0,
+    "animation_speed": 0,
+    "sprite_group": 461
+   }
+  },
+  "textures/16.bin": {
+   "sha256": "eb2a26720dd5b70cb54bbc16dda65a544796bb328214be26910017098a1097a1",
+   "size_bytes": 65588,
+   "detail": {
+    "texture_id": 16,
+    "average_rgb": 6934,
+    "transparent": true,
+    "animation_direction": 0,
+    "animation_speed": 0,
+    "sprite_group": 462
+   }
+  },
+  "textures/17.bin": {
+   "sha256": "34f5f150af8f7e800d8d911ae4018b0d040aae862446b99cd528732d768b80d7",
+   "size_bytes": 65588,
+   "detail": {
+    "texture_id": 17,
+    "average_rgb": 39640,
+    "transparent": false,
+    "animation_direction": 1,
+    "animation_speed": 2,
+    "sprite_group": 463
+   }
+  },
+  "textures/18.bin": {
+   "sha256": "697e5ac05e112df53db6d4c8a62bb019db6aa5f9c27b3b91936f48fbbdfa36d4",
+   "size_bytes": 65588,
+   "detail": {
+    "texture_id": 18,
+    "average_rgb": 9534,
+    "transparent": true,
+    "animation_direction": 0,
+    "animation_speed": 0,
+    "sprite_group": 464
+   }
+  },
+  "textures/19.bin": {
+   "sha256": "73e1745af236ce2949c92f4b470695f4593c59d52d99d15dea2fe86a156fbe35",
+   "size_bytes": 65588,
+   "detail": {
+    "texture_id": 19,
+    "average_rgb": 5405,
+    "transparent": false,
+    "animation_direction": 0,
+    "animation_speed": 0,
+    "sprite_group": 465
+   }
+  },
+  "textures/20.bin": {
+   "sha256": "167565cd3f145726564cae1bd1db2413d3426620f04f8b5029d87aeb9abc58eb",
+   "size_bytes": 65588,
+   "detail": {
+    "texture_id": 20,
+    "average_rgb": 5662,
+    "transparent": true,
+    "animation_direction": 0,
+    "animation_speed": 0,
+    "sprite_group": 466
+   }
+  },
+  "textures/22.bin": {
+   "sha256": "b82543222005995f125981798c323ef6b44c8b5c7e930ef8d06d0f4bbcfa666f",
+   "size_bytes": 65588,
+   "detail": {
+    "texture_id": 22,
+    "average_rgb": 4512,
+    "transparent": true,
+    "animation_direction": 0,
+    "animation_speed": 0,
+    "sprite_group": 468
+   }
+  },
+  "textures/23.bin": {
+   "sha256": "c2ca85720d135736a36c7b85f664e9770377072308565df964f1af49d2ae3492",
+   "size_bytes": 65588,
+   "detail": {
+    "texture_id": 23,
+    "average_rgb": 7446,
+    "transparent": true,
+    "animation_direction": 0,
+    "animation_speed": 0,
+    "sprite_group": 469
+   }
+  },
+  "textures/25.bin": {
+   "sha256": "40639ec2757bcc29e04f406a6ef46f46b1ab39c266a4b4e88683c29a2f4f897e",
+   "size_bytes": 65588,
+   "detail": {
+    "texture_id": 25,
+    "average_rgb": 29101,
+    "transparent": true,
+    "animation_direction": 0,
+    "animation_speed": 0,
+    "sprite_group": 470
+   }
+  },
+  "textures/26.bin": {
+   "sha256": "53c7197aa3cc20795d1749165bf40df29096ca4650a096d9b42b60bcb75acb4b",
+   "size_bytes": 65588,
+   "detail": {
+    "texture_id": 26,
+    "average_rgb": 81,
+    "transparent": false,
+    "animation_direction": 0,
+    "animation_speed": 0,
+    "sprite_group": 471
+   }
+  },
+  "textures/30.bin": {
+   "sha256": "aa4601bd0293f44e70a3b6f10dfe91cfea802ba4f86121eb884fda5a5e408644",
+   "size_bytes": 65588,
+   "detail": {
+    "texture_id": 30,
+    "average_rgb": 12698,
+    "transparent": false,
+    "animation_direction": 0,
+    "animation_speed": 0,
+    "sprite_group": 475
+   }
+  },
+  "textures/39.bin": {
+   "sha256": "14d018daff07be13475bbc65606889d20f2e2133dd692d69539ea0391f035892",
+   "size_bytes": 65588,
+   "detail": {
+    "texture_id": 39,
+    "average_rgb": 13482,
+    "transparent": true,
+    "animation_direction": 0,
+    "animation_speed": 0,
+    "sprite_group": 484
+   }
+  },
+  "textures/43.bin": {
+   "sha256": "7abe0e8d6149e4b10642d9ee2fa6a99eeb135e22c1e1580ea44b43e0658d025f",
+   "size_bytes": 65588,
+   "detail": {
+    "texture_id": 43,
+    "average_rgb": 10290,
+    "transparent": true,
+    "animation_direction": 0,
+    "animation_speed": 0,
+    "sprite_group": 487
+   }
+  },
+  "textures/44.bin": {
+   "sha256": "b7f79a84450a3d534b95ae011ef69e09a8922168cd0d2ed066f0ee1d8a53fefa",
+   "size_bytes": 65588,
+   "detail": {
+    "texture_id": 44,
+    "average_rgb": 41,
+    "transparent": true,
+    "animation_direction": 0,
+    "animation_speed": 0,
+    "sprite_group": 488
+   }
+  },
+  "textures/46.bin": {
+   "sha256": "3945bc52a141d5aaf8c5bccf283825725d3e7ef0b418e64f18444d5ffeb82614",
+   "size_bytes": 65588,
+   "detail": {
+    "texture_id": 46,
+    "average_rgb": 3119,
+    "transparent": true,
+    "animation_direction": 0,
+    "animation_speed": 0,
+    "sprite_group": 490
+   }
+  },
+  "textures/48.bin": {
+   "sha256": "98ceaf3e348172e512dbbd536a4e30dde5f3a5807406b10f16719e447fcde4cf",
+   "size_bytes": 65588,
+   "detail": {
+    "texture_id": 48,
+    "average_rgb": 6434,
+    "transparent": true,
+    "animation_direction": 0,
+    "animation_speed": 0,
+    "sprite_group": 492
+   }
+  },
+  "textures/60.bin": {
+   "sha256": "0119f4aa482006acebcc4e23bd87548d88ae8aa29ce13ea363839b58a95bb6b5",
+   "size_bytes": 65588,
+   "detail": {
+    "texture_id": 60,
+    "average_rgb": 12818,
+    "transparent": false,
+    "animation_direction": 0,
+    "animation_speed": 0,
+    "sprite_group": 1648
+   }
+  },
+  "textures/130.bin": {
+   "sha256": "37a460e0457ec10adfa85939e5a72d5f76cff5a5743eb88a42106eb6d43dfc6c",
+   "size_bytes": 65588,
+   "detail": {
+    "texture_id": 130,
+    "average_rgb": 38074,
+    "transparent": true,
+    "animation_direction": 0,
+    "animation_speed": 0,
+    "sprite_group": 7202
+   }
+  },
+  "textures/131.bin": {
+   "sha256": "d549522d39682049b1bf1028e5a90b997c6d3f9ec8d4fae84b33101c15508726",
+   "size_bytes": 65588,
+   "detail": {
+    "texture_id": 131,
+    "average_rgb": 39094,
+    "transparent": true,
+    "animation_direction": 0,
+    "animation_speed": 0,
+    "sprite_group": 7203
+   }
+  },
+  "textures/132.bin": {
+   "sha256": "8015e7b149f27ef04e95025cb3d5040d82da7366a8eef0164fa2d654efee49bd",
+   "size_bytes": 65588,
+   "detail": {
+    "texture_id": 132,
+    "average_rgb": 40115,
+    "transparent": true,
+    "animation_direction": 0,
+    "animation_speed": 0,
+    "sprite_group": 7204
+   }
+  },
+  "models/object-1277-model-1570-lit.bin": {
+   "sha256": "9d59979248be9c16cbc7167a6f74b889d171ff9e7a29cba4cd6079aa3388fe09",
+   "size_bytes": 4504,
+   "detail": {
+    "vertices": 90,
+    "faces": 110,
+    "textured_faces": 36,
+    "detail": {
+     "object_id": 1277,
+     "model_id": 1570,
+     "recolor": [
+      3470,
+      5029
+     ],
+     "lighting": [
+      64,
+      768,
+      -50,
+      -10,
+      -50
+     ],
+     "matches_fixture": "assets/reference/osrs240/models/tree-1277-yaw-*.png"
+    }
+   }
+  },
   "models/npc-3028-base.bin": {
    "sha256": "8b6e67c780dc06d6d30277e5c7d8d4d6662dce5901e969be89881546445cfeac",
    "size_bytes": 51396,
@@ -208,7 +904,7 @@
      "npc_id": 3028,
      "sequence_id": 6181,
      "frame": 0,
-     "classification": "Native original frame bake for validation of the Rust animation port; source scale already applied"
+     "classification": "Native original frame bake for validation; source scale already applied"
     }
    }
   },
@@ -223,7 +919,7 @@
      "npc_id": 3028,
      "sequence_id": 6181,
      "frame": 1,
-     "classification": "Native original frame bake for validation of the Rust animation port; source scale already applied"
+     "classification": "Native original frame bake for validation; source scale already applied"
     }
    }
   },
@@ -238,7 +934,7 @@
      "npc_id": 3028,
      "sequence_id": 6181,
      "frame": 2,
-     "classification": "Native original frame bake for validation of the Rust animation port; source scale already applied"
+     "classification": "Native original frame bake for validation; source scale already applied"
     }
    }
   },
@@ -253,7 +949,7 @@
      "npc_id": 3028,
      "sequence_id": 6181,
      "frame": 3,
-     "classification": "Native original frame bake for validation of the Rust animation port; source scale already applied"
+     "classification": "Native original frame bake for validation; source scale already applied"
     }
    }
   },
@@ -268,7 +964,7 @@
      "npc_id": 3028,
      "sequence_id": 6181,
      "frame": 4,
-     "classification": "Native original frame bake for validation of the Rust animation port; source scale already applied"
+     "classification": "Native original frame bake for validation; source scale already applied"
     }
    }
   },
@@ -283,7 +979,7 @@
      "npc_id": 3028,
      "sequence_id": 6181,
      "frame": 5,
-     "classification": "Native original frame bake for validation of the Rust animation port; source scale already applied"
+     "classification": "Native original frame bake for validation; source scale already applied"
     }
    }
   },
@@ -298,7 +994,7 @@
      "npc_id": 3028,
      "sequence_id": 6181,
      "frame": 6,
-     "classification": "Native original frame bake for validation of the Rust animation port; source scale already applied"
+     "classification": "Native original frame bake for validation; source scale already applied"
     }
    }
   },
@@ -313,7 +1009,7 @@
      "npc_id": 3028,
      "sequence_id": 6181,
      "frame": 7,
-     "classification": "Native original frame bake for validation of the Rust animation port; source scale already applied"
+     "classification": "Native original frame bake for validation; source scale already applied"
     }
    }
   },
@@ -328,7 +1024,7 @@
      "npc_id": 3028,
      "sequence_id": 6181,
      "frame": 8,
-     "classification": "Native original frame bake for validation of the Rust animation port; source scale already applied"
+     "classification": "Native original frame bake for validation; source scale already applied"
     }
    }
   },
@@ -343,7 +1039,7 @@
      "npc_id": 3028,
      "sequence_id": 6181,
      "frame": 9,
-     "classification": "Native original frame bake for validation of the Rust animation port; source scale already applied"
+     "classification": "Native original frame bake for validation; source scale already applied"
     }
    }
   },
@@ -358,7 +1054,7 @@
      "npc_id": 3028,
      "sequence_id": 6181,
      "frame": 10,
-     "classification": "Native original frame bake for validation of the Rust animation port; source scale already applied"
+     "classification": "Native original frame bake for validation; source scale already applied"
     }
    }
   },
@@ -373,7 +1069,7 @@
      "npc_id": 3028,
      "sequence_id": 6181,
      "frame": 11,
-     "classification": "Native original frame bake for validation of the Rust animation port; source scale already applied"
+     "classification": "Native original frame bake for validation; source scale already applied"
     }
    }
   },
@@ -388,7 +1084,7 @@
      "npc_id": 3028,
      "sequence_id": 6181,
      "frame": 12,
-     "classification": "Native original frame bake for validation of the Rust animation port; source scale already applied"
+     "classification": "Native original frame bake for validation; source scale already applied"
     }
    }
   },
@@ -403,7 +1099,7 @@
      "npc_id": 3028,
      "sequence_id": 6181,
      "frame": 13,
-     "classification": "Native original frame bake for validation of the Rust animation port; source scale already applied"
+     "classification": "Native original frame bake for validation; source scale already applied"
     }
    }
   },
@@ -418,7 +1114,7 @@
      "npc_id": 3028,
      "sequence_id": 6181,
      "frame": 14,
-     "classification": "Native original frame bake for validation of the Rust animation port; source scale already applied"
+     "classification": "Native original frame bake for validation; source scale already applied"
     }
    }
   },
@@ -433,7 +1129,7 @@
      "npc_id": 3028,
      "sequence_id": 6181,
      "frame": 15,
-     "classification": "Native original frame bake for validation of the Rust animation port; source scale already applied"
+     "classification": "Native original frame bake for validation; source scale already applied"
     }
    }
   },
@@ -448,7 +1144,7 @@
      "npc_id": 3028,
      "sequence_id": 6180,
      "frame": 0,
-     "classification": "Native original frame bake for validation of the Rust animation port; source scale already applied"
+     "classification": "Native original frame bake for validation; source scale already applied"
     }
    }
   },
@@ -463,7 +1159,7 @@
      "npc_id": 3028,
      "sequence_id": 6180,
      "frame": 1,
-     "classification": "Native original frame bake for validation of the Rust animation port; source scale already applied"
+     "classification": "Native original frame bake for validation; source scale already applied"
     }
    }
   },
@@ -478,7 +1174,7 @@
      "npc_id": 3028,
      "sequence_id": 6180,
      "frame": 2,
-     "classification": "Native original frame bake for validation of the Rust animation port; source scale already applied"
+     "classification": "Native original frame bake for validation; source scale already applied"
     }
    }
   },
@@ -493,7 +1189,7 @@
      "npc_id": 3028,
      "sequence_id": 6180,
      "frame": 3,
-     "classification": "Native original frame bake for validation of the Rust animation port; source scale already applied"
+     "classification": "Native original frame bake for validation; source scale already applied"
     }
    }
   },
@@ -508,7 +1204,7 @@
      "npc_id": 3028,
      "sequence_id": 6180,
      "frame": 4,
-     "classification": "Native original frame bake for validation of the Rust animation port; source scale already applied"
+     "classification": "Native original frame bake for validation; source scale already applied"
     }
    }
   },
@@ -523,7 +1219,7 @@
      "npc_id": 3028,
      "sequence_id": 6180,
      "frame": 5,
-     "classification": "Native original frame bake for validation of the Rust animation port; source scale already applied"
+     "classification": "Native original frame bake for validation; source scale already applied"
     }
    }
   },
@@ -538,7 +1234,7 @@
      "npc_id": 3028,
      "sequence_id": 6180,
      "frame": 6,
-     "classification": "Native original frame bake for validation of the Rust animation port; source scale already applied"
+     "classification": "Native original frame bake for validation; source scale already applied"
     }
    }
   },
@@ -553,7 +1249,7 @@
      "npc_id": 3028,
      "sequence_id": 6180,
      "frame": 7,
-     "classification": "Native original frame bake for validation of the Rust animation port; source scale already applied"
+     "classification": "Native original frame bake for validation; source scale already applied"
     }
    }
   },
@@ -568,7 +1264,7 @@
      "npc_id": 3028,
      "sequence_id": 6180,
      "frame": 8,
-     "classification": "Native original frame bake for validation of the Rust animation port; source scale already applied"
+     "classification": "Native original frame bake for validation; source scale already applied"
     }
    }
   },
@@ -583,7 +1279,7 @@
      "npc_id": 3028,
      "sequence_id": 6180,
      "frame": 9,
-     "classification": "Native original frame bake for validation of the Rust animation port; source scale already applied"
+     "classification": "Native original frame bake for validation; source scale already applied"
     }
    }
   },
@@ -598,7 +1294,7 @@
      "npc_id": 3028,
      "sequence_id": 6180,
      "frame": 10,
-     "classification": "Native original frame bake for validation of the Rust animation port; source scale already applied"
+     "classification": "Native original frame bake for validation; source scale already applied"
     }
    }
   },
@@ -613,7 +1309,7 @@
      "npc_id": 3028,
      "sequence_id": 6180,
      "frame": 11,
-     "classification": "Native original frame bake for validation of the Rust animation port; source scale already applied"
+     "classification": "Native original frame bake for validation; source scale already applied"
     }
    }
   },
@@ -628,7 +1324,7 @@
      "npc_id": 3028,
      "sequence_id": 6180,
      "frame": 12,
-     "classification": "Native original frame bake for validation of the Rust animation port; source scale already applied"
+     "classification": "Native original frame bake for validation; source scale already applied"
     }
    }
   },
@@ -643,7 +1339,7 @@
      "npc_id": 3028,
      "sequence_id": 6180,
      "frame": 13,
-     "classification": "Native original frame bake for validation of the Rust animation port; source scale already applied"
+     "classification": "Native original frame bake for validation; source scale already applied"
     }
    }
   },
@@ -658,7 +1354,7 @@
      "npc_id": 3028,
      "sequence_id": 6180,
      "frame": 14,
-     "classification": "Native original frame bake for validation of the Rust animation port; source scale already applied"
+     "classification": "Native original frame bake for validation; source scale already applied"
     }
    }
   },
@@ -673,8 +1369,21 @@
      "npc_id": 3028,
      "sequence_id": 6180,
      "frame": 15,
-     "classification": "Native original frame bake for validation of the Rust animation port; source scale already applied"
+     "classification": "Native original frame bake for validation; source scale already applied"
     }
+   }
+  },
+  "models/npc-3028.pack.bin": {
+   "sha256": "dc17c7c0383a85a80dd3cbc1968fb744a015e894460ac2c5a91c3f71f1e780c4",
+   "size_bytes": 177724,
+   "detail": {
+    "npc_id": 3028,
+    "sequences": [
+     "6181",
+     "6180"
+    ],
+    "frame_position_format": "int16 xyz per vertex per frame, int-truncated like fx.xm",
+    "scale_note": "Frames already include the source NPC scale; base model is unscaled"
    }
   },
   "models/npc-2063-base.bin": {
@@ -713,7 +1422,7 @@
      "npc_id": 2063,
      "sequence_id": 5668,
      "frame": 0,
-     "classification": "Native original frame bake for validation of the Rust animation port; source scale already applied"
+     "classification": "Native original frame bake for validation; source scale already applied"
     }
    }
   },
@@ -728,7 +1437,7 @@
      "npc_id": 2063,
      "sequence_id": 5668,
      "frame": 1,
-     "classification": "Native original frame bake for validation of the Rust animation port; source scale already applied"
+     "classification": "Native original frame bake for validation; source scale already applied"
     }
    }
   },
@@ -743,7 +1452,7 @@
      "npc_id": 2063,
      "sequence_id": 5668,
      "frame": 2,
-     "classification": "Native original frame bake for validation of the Rust animation port; source scale already applied"
+     "classification": "Native original frame bake for validation; source scale already applied"
     }
    }
   },
@@ -758,7 +1467,7 @@
      "npc_id": 2063,
      "sequence_id": 5668,
      "frame": 3,
-     "classification": "Native original frame bake for validation of the Rust animation port; source scale already applied"
+     "classification": "Native original frame bake for validation; source scale already applied"
     }
    }
   },
@@ -773,7 +1482,7 @@
      "npc_id": 2063,
      "sequence_id": 5668,
      "frame": 4,
-     "classification": "Native original frame bake for validation of the Rust animation port; source scale already applied"
+     "classification": "Native original frame bake for validation; source scale already applied"
     }
    }
   },
@@ -788,7 +1497,7 @@
      "npc_id": 2063,
      "sequence_id": 5668,
      "frame": 5,
-     "classification": "Native original frame bake for validation of the Rust animation port; source scale already applied"
+     "classification": "Native original frame bake for validation; source scale already applied"
     }
    }
   },
@@ -803,7 +1512,7 @@
      "npc_id": 2063,
      "sequence_id": 5668,
      "frame": 6,
-     "classification": "Native original frame bake for validation of the Rust animation port; source scale already applied"
+     "classification": "Native original frame bake for validation; source scale already applied"
     }
    }
   },
@@ -818,7 +1527,7 @@
      "npc_id": 2063,
      "sequence_id": 5668,
      "frame": 7,
-     "classification": "Native original frame bake for validation of the Rust animation port; source scale already applied"
+     "classification": "Native original frame bake for validation; source scale already applied"
     }
    }
   },
@@ -833,7 +1542,7 @@
      "npc_id": 2063,
      "sequence_id": 5668,
      "frame": 8,
-     "classification": "Native original frame bake for validation of the Rust animation port; source scale already applied"
+     "classification": "Native original frame bake for validation; source scale already applied"
     }
    }
   },
@@ -848,7 +1557,7 @@
      "npc_id": 2063,
      "sequence_id": 5668,
      "frame": 9,
-     "classification": "Native original frame bake for validation of the Rust animation port; source scale already applied"
+     "classification": "Native original frame bake for validation; source scale already applied"
     }
    }
   },
@@ -863,7 +1572,7 @@
      "npc_id": 2063,
      "sequence_id": 5668,
      "frame": 10,
-     "classification": "Native original frame bake for validation of the Rust animation port; source scale already applied"
+     "classification": "Native original frame bake for validation; source scale already applied"
     }
    }
   },
@@ -878,7 +1587,7 @@
      "npc_id": 2063,
      "sequence_id": 5668,
      "frame": 11,
-     "classification": "Native original frame bake for validation of the Rust animation port; source scale already applied"
+     "classification": "Native original frame bake for validation; source scale already applied"
     }
    }
   },
@@ -893,7 +1602,7 @@
      "npc_id": 2063,
      "sequence_id": 5668,
      "frame": 12,
-     "classification": "Native original frame bake for validation of the Rust animation port; source scale already applied"
+     "classification": "Native original frame bake for validation; source scale already applied"
     }
    }
   },
@@ -908,7 +1617,7 @@
      "npc_id": 2063,
      "sequence_id": 5668,
      "frame": 13,
-     "classification": "Native original frame bake for validation of the Rust animation port; source scale already applied"
+     "classification": "Native original frame bake for validation; source scale already applied"
     }
    }
   },
@@ -923,7 +1632,7 @@
      "npc_id": 2063,
      "sequence_id": 5666,
      "frame": 0,
-     "classification": "Native original frame bake for validation of the Rust animation port; source scale already applied"
+     "classification": "Native original frame bake for validation; source scale already applied"
     }
    }
   },
@@ -938,7 +1647,7 @@
      "npc_id": 2063,
      "sequence_id": 5666,
      "frame": 1,
-     "classification": "Native original frame bake for validation of the Rust animation port; source scale already applied"
+     "classification": "Native original frame bake for validation; source scale already applied"
     }
    }
   },
@@ -953,7 +1662,7 @@
      "npc_id": 2063,
      "sequence_id": 5666,
      "frame": 2,
-     "classification": "Native original frame bake for validation of the Rust animation port; source scale already applied"
+     "classification": "Native original frame bake for validation; source scale already applied"
     }
    }
   },
@@ -968,7 +1677,7 @@
      "npc_id": 2063,
      "sequence_id": 5666,
      "frame": 3,
-     "classification": "Native original frame bake for validation of the Rust animation port; source scale already applied"
+     "classification": "Native original frame bake for validation; source scale already applied"
     }
    }
   },
@@ -983,7 +1692,7 @@
      "npc_id": 2063,
      "sequence_id": 5666,
      "frame": 4,
-     "classification": "Native original frame bake for validation of the Rust animation port; source scale already applied"
+     "classification": "Native original frame bake for validation; source scale already applied"
     }
    }
   },
@@ -998,7 +1707,7 @@
      "npc_id": 2063,
      "sequence_id": 5666,
      "frame": 5,
-     "classification": "Native original frame bake for validation of the Rust animation port; source scale already applied"
+     "classification": "Native original frame bake for validation; source scale already applied"
     }
    }
   },
@@ -1013,7 +1722,7 @@
      "npc_id": 2063,
      "sequence_id": 5666,
      "frame": 6,
-     "classification": "Native original frame bake for validation of the Rust animation port; source scale already applied"
+     "classification": "Native original frame bake for validation; source scale already applied"
     }
    }
   },
@@ -1028,51 +1737,343 @@
      "npc_id": 2063,
      "sequence_id": 5666,
      "frame": 7,
-     "classification": "Native original frame bake for validation of the Rust animation port; source scale already applied"
+     "classification": "Native original frame bake for validation; source scale already applied"
     }
    }
   },
-  "tables.bin": {
-   "sha256": "954c4395b0b236169129950ce3c98cfdaa662de33b7ad67e7270757fc7c247c6",
-   "size_bytes": 303184,
+  "models/npc-2063.pack.bin": {
+   "sha256": "fabec359b1e1cc9c868df6d5c28b8dcf653050a09e0add68191b51778fdc4173",
+   "size_bytes": 42188,
    "detail": {
-    "source": "net.runelite.api.Perspective tables bound into fh/gb/fx",
-    "unit_2048": 0.0030679615,
-    "unit_16384": 0.0003834951969714103
+    "npc_id": 2063,
+    "sequences": [
+     "5668",
+     "5666"
+    ],
+    "frame_position_format": "int16 xyz per vertex per frame, int-truncated like fx.xm",
+    "scale_note": "Frames already include the source NPC scale; base model is unscaled"
    }
   },
-  "palette.bin": {
-   "sha256": "9428d220ae38c881375efff2305c4992ce36ea00aaf743e8ffdef09e685dd350",
-   "size_bytes": 262172,
+  "scenes/lumbridge-castle-plaza.models.bin": {
+   "sha256": "9d14816198fcb9efc7b419c6fa7f1e6bd6e424de50cd862764071386159fdf17",
+   "size_bytes": 14498252,
    "detail": {
-    "brightness": 0.8,
-    "entries": 65536,
-    "source": "fh.ae after original fh.ae(0.8) HSL palette build"
+    "models": 5185,
+    "scene": "lumbridge-castle-plaza"
    }
   },
-  "models/object-1277-model-1570-lit.bin": {
-   "sha256": "9d59979248be9c16cbc7167a6f74b889d171ff9e7a29cba4cd6079aa3388fe09",
-   "size_bytes": 4504,
+  "scenes/lumbridge-castle-plaza.bin": {
+   "sha256": "ec5a55a4d066b9efbe9bbe61c24e39f51fe283c58d57f00c47530c2a5701b30a",
+   "size_bytes": 5251271,
    "detail": {
-    "vertices": 90,
-    "faces": 110,
-    "textured_faces": 36,
-    "detail": {
-     "object_id": 1277,
-     "model_id": 1570,
-     "recolor": [
-      3470,
-      5029
-     ],
-     "lighting": [
-      64,
-      768,
-      -50,
-      -10,
-      -50
-     ],
-     "matches_fixture": "assets/reference/osrs240/models/tree-1277-yaw-*.png"
-    }
+    "name": "lumbridge-castle-plaza",
+    "file": "scenes/lumbridge-castle-plaza.bin",
+    "sha256": "ec5a55a4d066b9efbe9bbe61c24e39f51fe283c58d57f00c47530c2a5701b30a",
+    "base_x": 3168,
+    "base_y": 3168,
+    "region_ids": [
+     12336,
+     12337,
+     12338,
+     12339,
+     12592,
+     12593,
+     12594,
+     12595,
+     12848,
+     12849,
+     12850,
+     12851,
+     13104,
+     13105,
+     13106,
+     13107
+    ],
+    "tiles": 36243,
+    "placed_object_tile_references": 3073,
+    "paints": 10542,
+    "tile_models": 1043,
+    "walls": 1699,
+    "wall_decorations": 493,
+    "floor_decorations": 4105,
+    "game_object_slots": 3092,
+    "distinct_models": 5185,
+    "dynamic_renderables": 269,
+    "source_pipeline": "Original rl4.fn map decoding, placement, floor blending, shadowing; live ez arrays serialized without re-rendering"
+   }
+  },
+  "scenes/lumbridge-river-bridge.models.bin": {
+   "sha256": "f3143c663ab2aaa04f0fe6ae262c8b0f0d0d400c8b0f1162b091fd4979506190",
+   "size_bytes": 14500465,
+   "detail": {
+    "models": 5188,
+    "scene": "lumbridge-river-bridge"
+   }
+  },
+  "scenes/lumbridge-river-bridge.bin": {
+   "sha256": "ae1fb05bf80cba68b7ef8e3ad8fe52e1923209dd048656c1e1d5918903b7c857",
+   "size_bytes": 5251466,
+   "detail": {
+    "name": "lumbridge-river-bridge",
+    "file": "scenes/lumbridge-river-bridge.bin",
+    "sha256": "ae1fb05bf80cba68b7ef8e3ad8fe52e1923209dd048656c1e1d5918903b7c857",
+    "base_x": 3168,
+    "base_y": 3168,
+    "region_ids": [
+     12336,
+     12337,
+     12338,
+     12339,
+     12592,
+     12593,
+     12594,
+     12595,
+     12848,
+     12849,
+     12850,
+     12851,
+     13104,
+     13105,
+     13106,
+     13107
+    ],
+    "tiles": 36243,
+    "placed_object_tile_references": 3073,
+    "paints": 10542,
+    "tile_models": 1043,
+    "walls": 1699,
+    "wall_decorations": 493,
+    "floor_decorations": 4105,
+    "game_object_slots": 3092,
+    "distinct_models": 5188,
+    "dynamic_renderables": 269,
+    "source_pipeline": "Original rl4.fn map decoding, placement, floor blending, shadowing; live ez arrays serialized without re-rendering"
+   }
+  },
+  "scenes/tutorial-starting-house.models.bin": {
+   "sha256": "ce111087cd1760df61937c0c4d918478cd1b978654d80663909fc32d94e55e36",
+   "size_bytes": 10047473,
+   "detail": {
+    "models": 4105,
+    "scene": "tutorial-starting-house"
+   }
+  },
+  "scenes/tutorial-starting-house.bin": {
+   "sha256": "397337c0f52b87478f773a6d64af3bbaf499b44df7babf4324e749c05807d0e9",
+   "size_bytes": 5248064,
+   "detail": {
+    "name": "tutorial-starting-house",
+    "file": "scenes/tutorial-starting-house.bin",
+    "sha256": "397337c0f52b87478f773a6d64af3bbaf499b44df7babf4324e749c05807d0e9",
+    "base_x": 3048,
+    "base_y": 3056,
+    "region_ids": [
+     12079,
+     12080,
+     12081,
+     12335,
+     12336,
+     12337,
+     12591,
+     12592,
+     12593
+    ],
+    "tiles": 36151,
+    "placed_object_tile_references": 2744,
+    "paints": 9863,
+    "tile_models": 1989,
+    "walls": 1112,
+    "wall_decorations": 378,
+    "floor_decorations": 2763,
+    "game_object_slots": 2756,
+    "distinct_models": 4105,
+    "dynamic_renderables": 258,
+    "source_pipeline": "Original rl4.fn map decoding, placement, floor blending, shadowing; live ez arrays serialized without re-rendering"
+   }
+  },
+  "scenes/tutorial-survival-coast.models.bin": {
+   "sha256": "21103894d5cc56a063b548a64cc04c1a8aac389ce50b46f81b4e54468cd9e035",
+   "size_bytes": 9081638,
+   "detail": {
+    "models": 3894,
+    "scene": "tutorial-survival-coast"
+   }
+  },
+  "scenes/tutorial-survival-coast.bin": {
+   "sha256": "7028fca569da6f4af25da758906f6ea867ab066a3272a2c6a2834d62fe4d5d26",
+   "size_bytes": 5244733,
+   "detail": {
+    "name": "tutorial-survival-coast",
+    "file": "scenes/tutorial-survival-coast.bin",
+    "sha256": "7028fca569da6f4af25da758906f6ea867ab066a3272a2c6a2834d62fe4d5d26",
+    "base_x": 3048,
+    "base_y": 3032,
+    "region_ids": [
+     12078,
+     12079,
+     12080,
+     12081,
+     12334,
+     12335,
+     12336,
+     12337,
+     12590,
+     12591,
+     12592,
+     12593
+    ],
+    "tiles": 36061,
+    "placed_object_tile_references": 2712,
+    "paints": 9773,
+    "tile_models": 2050,
+    "walls": 1176,
+    "wall_decorations": 353,
+    "floor_decorations": 2696,
+    "game_object_slots": 2792,
+    "distinct_models": 3894,
+    "dynamic_renderables": 190,
+    "source_pipeline": "Original rl4.fn map decoding, placement, floor blending, shadowing; live ez arrays serialized without re-rendering"
+   }
+  },
+  "scenes/lumbridge-windmill-route.models.bin": {
+   "sha256": "e70f73349dc7995ae41404b8cf0e19879f7a9848e14b81b470167bc3f7fcc05c",
+   "size_bytes": 14835701,
+   "detail": {
+    "models": 4974,
+    "scene": "lumbridge-windmill-route"
+   }
+  },
+  "scenes/lumbridge-windmill-route.bin": {
+   "sha256": "3e7c2f4cb9efc171dbe879678c28ba9a18d36d9928202571522283131ff4ec6b",
+   "size_bytes": 5128450,
+   "detail": {
+    "name": "lumbridge-windmill-route",
+    "file": "scenes/lumbridge-windmill-route.bin",
+    "sha256": "3e7c2f4cb9efc171dbe879678c28ba9a18d36d9928202571522283131ff4ec6b",
+    "base_x": 3120,
+    "base_y": 3240,
+    "region_ids": [
+     12338,
+     12339,
+     12340,
+     12594,
+     12595,
+     12596,
+     12850,
+     12851,
+     12852
+    ],
+    "tiles": 34854,
+    "placed_object_tile_references": 3016,
+    "paints": 10193,
+    "tile_models": 855,
+    "walls": 985,
+    "wall_decorations": 98,
+    "floor_decorations": 4026,
+    "game_object_slots": 3016,
+    "distinct_models": 4974,
+    "dynamic_renderables": 435,
+    "source_pipeline": "Original rl4.fn map decoding, placement, floor blending, shadowing; live ez arrays serialized without re-rendering"
+   }
+  },
+  "scenes/lumbridge-castle-plaza.bin.gz": {
+   "sha256": "3436bbd43e86eb12a70ddabc106a8d20d57b2c7dc7974a9bd27dcb474897634c",
+   "size_bytes": 475674,
+   "detail": {
+    "encoding": "gzip",
+    "decompressed": "scenes/lumbridge-castle-plaza.bin",
+    "decompressed_sha256": "ec5a55a4d066b9efbe9bbe61c24e39f51fe283c58d57f00c47530c2a5701b30a",
+    "decompressed_size_bytes": 5251271
+   }
+  },
+  "scenes/lumbridge-castle-plaza.models.bin.gz": {
+   "sha256": "93fdc6e5c83d6437ff7f1fb46e609f2737d914c9ba1b3006772157a530f552b9",
+   "size_bytes": 2482364,
+   "detail": {
+    "encoding": "gzip",
+    "decompressed": "scenes/lumbridge-castle-plaza.models.bin",
+    "decompressed_sha256": "9d14816198fcb9efc7b419c6fa7f1e6bd6e424de50cd862764071386159fdf17",
+    "decompressed_size_bytes": 14498252
+   }
+  },
+  "scenes/lumbridge-river-bridge.bin.gz": {
+   "sha256": "95c08562cd27755c15e0febf88ea07ff159ed050db1cdaac9d8f8c825c86d702",
+   "size_bytes": 475788,
+   "detail": {
+    "encoding": "gzip",
+    "decompressed": "scenes/lumbridge-river-bridge.bin",
+    "decompressed_sha256": "ae1fb05bf80cba68b7ef8e3ad8fe52e1923209dd048656c1e1d5918903b7c857",
+    "decompressed_size_bytes": 5251466
+   }
+  },
+  "scenes/lumbridge-river-bridge.models.bin.gz": {
+   "sha256": "ade8d3c936eb35c3209cacaf9d432dd971e90a0ba0b34ad2e11df330842b039c",
+   "size_bytes": 2491441,
+   "detail": {
+    "encoding": "gzip",
+    "decompressed": "scenes/lumbridge-river-bridge.models.bin",
+    "decompressed_sha256": "f3143c663ab2aaa04f0fe6ae262c8b0f0d0d400c8b0f1162b091fd4979506190",
+    "decompressed_size_bytes": 14500465
+   }
+  },
+  "scenes/lumbridge-windmill-route.bin.gz": {
+   "sha256": "0ae97eead873bf1c0e7a02cae008a3d6d6b8e5d043b57b47950154d359b3674b",
+   "size_bytes": 448387,
+   "detail": {
+    "encoding": "gzip",
+    "decompressed": "scenes/lumbridge-windmill-route.bin",
+    "decompressed_sha256": "3e7c2f4cb9efc171dbe879678c28ba9a18d36d9928202571522283131ff4ec6b",
+    "decompressed_size_bytes": 5128450
+   }
+  },
+  "scenes/lumbridge-windmill-route.models.bin.gz": {
+   "sha256": "09a2d56c7d8333030179b834f3d1d2c1a3eb5f7f2dddb56cde5780f42d252234",
+   "size_bytes": 2579515,
+   "detail": {
+    "encoding": "gzip",
+    "decompressed": "scenes/lumbridge-windmill-route.models.bin",
+    "decompressed_sha256": "e70f73349dc7995ae41404b8cf0e19879f7a9848e14b81b470167bc3f7fcc05c",
+    "decompressed_size_bytes": 14835701
+   }
+  },
+  "scenes/tutorial-starting-house.bin.gz": {
+   "sha256": "4bef61f0db7590a975ad165683165204d89ba04758bf9fdd03d2bf4c7fea92d1",
+   "size_bytes": 405992,
+   "detail": {
+    "encoding": "gzip",
+    "decompressed": "scenes/tutorial-starting-house.bin",
+    "decompressed_sha256": "397337c0f52b87478f773a6d64af3bbaf499b44df7babf4324e749c05807d0e9",
+    "decompressed_size_bytes": 5248064
+   }
+  },
+  "scenes/tutorial-starting-house.models.bin.gz": {
+   "sha256": "d574301be539b7114a7e86c9feff2c9ee2df15142779ce4262a47dfc77375341",
+   "size_bytes": 1868394,
+   "detail": {
+    "encoding": "gzip",
+    "decompressed": "scenes/tutorial-starting-house.models.bin",
+    "decompressed_sha256": "ce111087cd1760df61937c0c4d918478cd1b978654d80663909fc32d94e55e36",
+    "decompressed_size_bytes": 10047473
+   }
+  },
+  "scenes/tutorial-survival-coast.bin.gz": {
+   "sha256": "c351d6db027368a5d7a31fdc49c701e0c7e631aaa3cfc99c00cf1edb7003e2be",
+   "size_bytes": 393016,
+   "detail": {
+    "encoding": "gzip",
+    "decompressed": "scenes/tutorial-survival-coast.bin",
+    "decompressed_sha256": "7028fca569da6f4af25da758906f6ea867ab066a3272a2c6a2834d62fe4d5d26",
+    "decompressed_size_bytes": 5244733
+   }
+  },
+  "scenes/tutorial-survival-coast.models.bin.gz": {
+   "sha256": "20b0b9c9f15d907be5156f109a7371d8674a9df0915cc6e641ece2e19ad70540",
+   "size_bytes": 1705766,
+   "detail": {
+    "encoding": "gzip",
+    "decompressed": "scenes/tutorial-survival-coast.models.bin",
+    "decompressed_sha256": "21103894d5cc56a063b548a64cc04c1a8aac389ce50b46f81b4e54468cd9e035",
+    "decompressed_size_bytes": 9081638
    }
   }
  }

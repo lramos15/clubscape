@@ -29,7 +29,11 @@ impl Texture {
         let pixels = chunks.ints("TXPX")?;
         let size = header[1];
         if size != 128 || pixels.len() != (size * size) as usize {
-            return Err(RenderError::InvalidAsset(format!("texture {} size {}", header[0], pixels.len())));
+            return Err(RenderError::InvalidAsset(format!(
+                "texture {} size {}",
+                header[0],
+                pixels.len()
+            )));
         }
         Ok(Self {
             id: header[0],

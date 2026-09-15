@@ -63,7 +63,14 @@ impl NpcPack {
             }
             let lengths = anim[cursor..cursor + frames].to_vec();
             cursor += frames;
-            let mut frame = Frame { lengths, xs: Vec::new(), ys: Vec::new(), zs: Vec::new(), bounds: Vec::new(), sphere_radius: Vec::new() };
+            let mut frame = Frame {
+                lengths,
+                xs: Vec::new(),
+                ys: Vec::new(),
+                zs: Vec::new(),
+                bounds: Vec::new(),
+                sphere_radius: Vec::new(),
+            };
             for _ in 0..frames {
                 let end = pos_cursor + vertex_count * 3;
                 if end > positions.len() || bounds_cursor + 6 > bounds.len() {
@@ -79,7 +86,13 @@ impl NpcPack {
                 }
                 pos_cursor = end;
                 let b = &bounds[bounds_cursor..bounds_cursor + 6];
-                frame.bounds.push(Bounds { bucket_offset: b[0], radius: b[1], bottom: b[2], height: b[3], bucket_range: b[4] });
+                frame.bounds.push(Bounds {
+                    bucket_offset: b[0],
+                    radius: b[1],
+                    bottom: b[2],
+                    height: b[3],
+                    bucket_range: b[4],
+                });
                 frame.sphere_radius.push(b[5]);
                 bounds_cursor += 6;
                 frame.xs.push(xs);
@@ -88,7 +101,12 @@ impl NpcPack {
             }
             sequences.insert(id, frame);
         }
-        Ok(Self { base, width_scale: scale[0], height_scale: scale[1], sequences })
+        Ok(Self {
+            base,
+            width_scale: scale[0],
+            height_scale: scale[1],
+            sequences,
+        })
     }
 
     /// Frame index for `elapsed_ms` since the animation started, looping like the original
@@ -99,7 +117,8 @@ impl NpcPack {
         if total <= 0 {
             return Some(0);
         }
-        let cycles = ((elapsed_ms / CLIENT_CYCLE_MS).floor().max(0.0) as i64 % i64::from(total)) as i32;
+        let cycles =
+            ((elapsed_ms / CLIENT_CYCLE_MS).floor().max(0.0) as i64 % i64::from(total)) as i32;
         let mut acc = 0;
         for (i, &len) in seq.lengths.iter().enumerate() {
             acc += len;
@@ -163,7 +182,6 @@ struct EntityState {
     id: String,
     npc: i32,
     tile: WorldTile,
-    previous_tile: Option<WorldTile>,
     orientation: i32,
     sequence: i32,
     sequence_started_ms: f64,
@@ -184,7 +202,15 @@ pub struct Camera {
 
 impl Default for Camera {
     fn default() -> Self {
-        Self { x: 0, height: -1000, y: 0, pitch: 2048, yaw: 0, zoom: 662, far: 3500 }
+        Self {
+            x: 0,
+            height: -1000,
+            y: 0,
+            pitch: 2048,
+            yaw: 0,
+            zoom: 662,
+            far: 3500,
+        }
     }
 }
 
@@ -257,7 +283,12 @@ impl RendererCore {
         self.npc_packs.contains_key(&npc_id)
     }
 
-    pub fn load_scene(&mut self, id: &str, scene_bytes: &[u8], pack_bytes: &[u8]) -> Result<(), RenderError> {
+    pub fn load_scene(
+        &mut self,
+        id: &str,
+        scene_bytes: &[u8],
+        pack_bytes: &[u8],
+    ) -> Result<(), RenderError> {
         let scene = SceneData::from_chunks(scene_bytes)?;
         let entries = parse_model_pack(pack_bytes)?;
         if entries.len() != scene.model_keys.len() {
@@ -270,7 +301,9 @@ impl RendererCore {
         let mut models = Vec::with_capacity(entries.len());
         for ((key, model), expected) in entries.into_iter().zip(&scene.model_keys) {
             if &key != expected {
-                return Err(RenderError::InvalidAsset(format!("scene {id} model pack order mismatch at {expected}")));
+                return Err(RenderError::InvalidAsset(format!(
+                    "scene {id} model pack order mismatch at {expected}"
+                )));
             }
             models.push(Some(model));
         }
@@ -278,21 +311,34 @@ impl RendererCore {
         for model in models.iter().flatten() {
             if let Some(t) = &model.textures {
                 for &tex in &t[..model.face_count] {
-                    if tex != -1 && self.textures.get(i32::from(tex)).is_none() && !missing_textures.contains(&tex) {
+                    if tex != -1
+                        && self.textures.get(i32::from(tex)).is_none()
+                        && !missing_textures.contains(&tex)
+                    {
                         missing_textures.push(tex);
                     }
                 }
             }
         }
         for paint in scene.paints.values() {
-            if paint.texture != -1 && self.textures.get(paint.texture).is_none() && !missing_textures.contains(&(paint.texture as i16)) {
+            if paint.texture != -1
+                && self.textures.get(paint.texture).is_none()
+                && !missing_textures.contains(&(paint.texture as i16))
+            {
                 missing_textures.push(paint.texture as i16);
             }
         }
         if !missing_textures.is_empty() {
-            return Err(RenderError::MissingAsset(format!("scene {id} needs textures {missing_textures:?} that are not loaded")));
+            return Err(RenderError::MissingAsset(format!(
+                "scene {id} needs textures {missing_textures:?} that are not loaded"
+            )));
         }
-        self.drawer = Some(SceneDrawer::new(&scene, self.state, &self.palette.rgb, self.camera.far.max(50)));
+        self.drawer = Some(SceneDrawer::new(
+            &scene,
+            self.state,
+            &self.palette.rgb,
+            self.camera.far.max(50),
+        ));
         self.scene = Some(scene);
         self.scene_models = models;
         self.scene_id = Some(id.to_string());
@@ -312,7 +358,12 @@ impl RendererCore {
         let zoom = self.state.zoom;
         self.state = RasterState::new(width, height, zoom);
         if let Some(scene) = &self.scene {
-            self.drawer = Some(SceneDrawer::new(scene, self.state, &self.palette.rgb, self.camera.far.max(50)));
+            self.drawer = Some(SceneDrawer::new(
+                scene,
+                self.state,
+                &self.palette.rgb,
+                self.camera.far.max(50),
+            ));
         }
         self.pick_buffer = None;
     }
@@ -322,50 +373,81 @@ impl RendererCore {
             return Err(RenderError::Scene("camera zoom must be positive".into()));
         }
         if camera.far < 50 {
-            return Err(RenderError::Scene("camera far clip must be at least the source near plane (50)".into()));
+            return Err(RenderError::Scene(
+                "camera far clip must be at least the source near plane (50)".into(),
+            ));
         }
         let far_changed = camera.far != self.camera.far;
         self.camera = camera;
         self.state.zoom = camera.zoom;
-        if far_changed {
-            if let Some(scene) = &self.scene {
-                self.drawer = Some(SceneDrawer::new(scene, self.state, &self.palette.rgb, camera.far));
-            }
+        if far_changed && let Some(scene) = &self.scene {
+            self.drawer = Some(SceneDrawer::new(
+                scene,
+                self.state,
+                &self.palette.rgb,
+                camera.far,
+            ));
         }
         Ok(())
     }
 
     /// Applies an authoritative world view: entity placement and animation identity only.
     pub fn update_world(&mut self, json: &str, now_ms: f64) -> Result<(), RenderError> {
-        let view: WorldViewInput = serde_json::from_str(json).map_err(|e| RenderError::Scene(format!("world view json: {e}")))?;
+        let view: WorldViewInput = serde_json::from_str(json)
+            .map_err(|e| RenderError::Scene(format!("world view json: {e}")))?;
         let mut next: Vec<EntityState> = Vec::new();
-        let mut apply = |id: &str, npc: i32, tile: &WorldTile, animation: &str, is_player: bool, previous: &[EntityState]| {
+        let apply = |id: &str,
+                     npc: i32,
+                     tile: &WorldTile,
+                     animation: &str,
+                     is_player: bool,
+                     previous: &[EntityState]| {
             let sequence = animation.trim().parse::<i32>().unwrap_or(-1);
             let old = previous.iter().find(|e| e.id == id);
             let mut orientation = old.map(|o| o.orientation).unwrap_or(0);
-            let mut previous_tile = old.map(|o| o.tile.clone());
-            if let Some(o) = old {
-                if o.tile.x != tile.x || o.tile.y != tile.y {
-                    orientation = facing(o.tile.x, o.tile.y, tile.x, tile.y);
-                    previous_tile = Some(o.tile.clone());
-                }
-            } else {
-                previous_tile = None;
+            if let Some(o) = old
+                && (o.tile.x != tile.x || o.tile.y != tile.y)
+            {
+                orientation = facing(o.tile.x, o.tile.y, tile.x, tile.y);
             }
             let started = match old {
                 Some(o) if o.sequence == sequence => o.sequence_started_ms,
                 _ => now_ms,
             };
-            EntityState { id: id.to_string(), npc, tile: tile.clone(), previous_tile, orientation, sequence, sequence_started_ms: started, is_player }
+            EntityState {
+                id: id.to_string(),
+                npc,
+                tile: tile.clone(),
+                orientation,
+                sequence,
+                sequence_started_ms: started,
+                is_player,
+            }
         };
         let previous = std::mem::take(&mut self.entities);
-        next.push(apply(&view.player.id, PLAYER_BASE_NPC, &view.player.tile, &view.player.animation, true, &previous));
+        next.push(apply(
+            &view.player.id,
+            PLAYER_BASE_NPC,
+            &view.player.tile,
+            &view.player.animation,
+            true,
+            &previous,
+        ));
         for entity in &view.entities {
             if entity.kind != "npc" && entity.kind != "player" {
                 continue;
             }
-            let Some(npc) = entity.source_id else { continue };
-            next.push(apply(&entity.id, npc, &entity.tile, &entity.animation, entity.kind == "player", &previous));
+            let Some(npc) = entity.source_id else {
+                continue;
+            };
+            next.push(apply(
+                &entity.id,
+                npc,
+                &entity.tile,
+                &entity.animation,
+                entity.kind == "player",
+                &previous,
+            ));
         }
         self.plane = view.player.tile.plane;
         self.entities = next;
@@ -376,7 +458,10 @@ impl RendererCore {
     /// available through [`Self::triangles`].
     pub fn build_frame(&mut self, now_ms: f64) -> Result<&FrameSummary, RenderError> {
         let start = now();
-        let scene = self.scene.as_ref().ok_or_else(|| RenderError::Scene("no scene loaded".into()))?;
+        let scene = self
+            .scene
+            .as_ref()
+            .ok_or_else(|| RenderError::Scene("no scene loaded".into()))?;
         let drawer = self.drawer.as_mut().expect("drawer follows scene");
         let base_x = scene.base_x;
         let base_y = scene.base_y;
@@ -386,7 +471,10 @@ impl RendererCore {
         let mut drawn = 0usize;
         for entity in &self.entities {
             let Some(pack) = self.npc_packs.get(&entity.npc) else {
-                skipped.push(format!("{}: no animation pack for npc {}", entity.id, entity.npc));
+                skipped.push(format!(
+                    "{}: no animation pack for npc {}",
+                    entity.id, entity.npc
+                ));
                 continue;
             };
             let sequence = if pack.sequences.contains_key(&entity.sequence) {
@@ -401,13 +489,20 @@ impl RendererCore {
                     continue;
                 };
                 if entity.sequence >= 0 {
-                    skipped.push(format!("{}: sequence {} not baked, using {}", entity.id, entity.sequence, first));
+                    skipped.push(format!(
+                        "{}: sequence {} not baked, using {}",
+                        entity.id, entity.sequence, first
+                    ));
                 }
                 first
             };
             let elapsed = now_ms - entity.sequence_started_ms;
-            let Some(frame) = pack.frame_index(sequence, elapsed) else { continue };
-            let Some(model) = pack.frame_model(sequence, frame) else { continue };
+            let Some(frame) = pack.frame_index(sequence, elapsed) else {
+                continue;
+            };
+            let Some(model) = pack.frame_model(sequence, frame) else {
+                continue;
+            };
             let local_x = entity.tile.x - base_x;
             let local_y = entity.tile.y - base_y;
             if local_x < 0 || local_y < 0 || local_x >= scene.max_x || local_y >= scene.max_y {
@@ -456,7 +551,13 @@ impl RendererCore {
         };
         drawer.state = self.state;
         self.tris.clear();
-        drawer.draw(scene, &self.scene_models, &temp_models, &view, &mut self.tris);
+        drawer.draw(
+            scene,
+            &self.scene_models,
+            &temp_models,
+            &view,
+            &mut self.tris,
+        );
         self.picks = drawer.picks.clone();
         let mut stats = DrawStats::default();
         for tri in &self.tris {
@@ -490,12 +591,19 @@ impl RendererCore {
         if self.pick_buffer.is_none() {
             let mut buffer = vec![0i32; (self.state.width * self.state.height) as usize];
             {
-                let mut raster = Software::new(self.state, &mut buffer, &self.palette.rgb, &NoTexels);
+                let mut raster =
+                    Software::new(self.state, &mut buffer, &self.palette.rgb, &NoTexels);
                 for tri in &self.tris {
                     if tri.pick == 0 {
                         continue;
                     }
-                    let id_tri = Tri { fill: Fill::Flat { rgb: tri.pick as i32 }, alpha: 0, ..*tri };
+                    let id_tri = Tri {
+                        fill: Fill::Flat {
+                            rgb: tri.pick as i32,
+                        },
+                        alpha: 0,
+                        ..*tri
+                    };
                     let _ = raster.draw(&id_tri);
                 }
             }
@@ -554,7 +662,8 @@ fn tile_height(scene: &SceneData, plane: i32, x: i32, z: i32) -> i32 {
         return 0;
     }
     let mut plane = plane;
-    if plane < 3 && scene.flags[scene.tile_index(0, ex, ez)] & crate::scene::flag::BRIDGE_BELOW != 0 {
+    if plane < 3 && scene.flags[scene.tile_index(0, ex, ez)] & crate::scene::flag::BRIDGE_BELOW != 0
+    {
         plane += 1;
     }
     let fx = x & 127;
@@ -569,7 +678,11 @@ fn tile_height(scene: &SceneData, plane: i32, x: i32, z: i32) -> i32 {
 }
 
 fn entity_hash(id: &str, is_player: bool) -> i64 {
-    let mut h: i64 = if is_player { 0x1000_0000_0000 } else { 0x2000_0000_0000 };
+    let mut h: i64 = if is_player {
+        0x1000_0000_0000
+    } else {
+        0x2000_0000_0000
+    };
     for b in id.bytes() {
         h = h.wrapping_mul(31).wrapping_add(i64::from(b));
     }
@@ -579,7 +692,10 @@ fn entity_hash(id: &str, is_player: bool) -> i64 {
 #[cfg(not(target_arch = "wasm32"))]
 fn now() -> f64 {
     use std::time::{SystemTime, UNIX_EPOCH};
-    SystemTime::now().duration_since(UNIX_EPOCH).map(|d| d.as_secs_f64() * 1000.0).unwrap_or(0.0)
+    SystemTime::now()
+        .duration_since(UNIX_EPOCH)
+        .map(|d| d.as_secs_f64() * 1000.0)
+        .unwrap_or(0.0)
 }
 
 #[cfg(all(target_arch = "wasm32", feature = "web"))]

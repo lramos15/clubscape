@@ -39,7 +39,14 @@ impl RasterState {
     }
 
     /// `fh.ai`: viewport rectangle inside a larger target.
-    pub fn with_viewport(target_stride: i32, x: i32, y: i32, width: i32, height: i32, zoom: i32) -> Self {
+    pub fn with_viewport(
+        target_stride: i32,
+        x: i32,
+        y: i32,
+        width: i32,
+        height: i32,
+        zoom: i32,
+    ) -> Self {
         Self {
             width,
             height,
