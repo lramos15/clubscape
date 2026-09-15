@@ -1,0 +1,4 @@
+# Reproducible validation bakes and unpruned texture dumps stay local; their hashes are in manifest.json.
+/models/baked/
+/.capture-scratch/
+/tables.bin

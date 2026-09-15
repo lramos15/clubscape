@@ -1,0 +1,1079 @@
+{
+ "schema_version": 1,
+ "kind": "clubscape_render_assets",
+ "source_runtime": "injected-client-1.12.38",
+ "source_revision": 240,
+ "source_cache_id": 2695,
+ "brightness": 0.8,
+ "texture_size": 128,
+ "units_per_tile": 128,
+ "scene_angle_units_per_turn": 16384,
+ "model_angle_units_per_turn": 2048,
+ "classification": "Neutral buffers read from original runtime structures; not a candidate render and not a source reference image.",
+ "npcs": [
+  {
+   "npc_id": 3028,
+   "name": "Goblin",
+   "base_model": "models/npc-3028-base.bin",
+   "width_scale": 128,
+   "height_scale": 128,
+   "sequences": {
+    "6181": {
+     "frame_count": 16,
+     "frame_lengths_client_cycles": [
+      3,
+      4,
+      4,
+      4,
+      4,
+      4,
+      4,
+      4,
+      4,
+      4,
+      4,
+      4,
+      4,
+      4,
+      4,
+      4
+     ],
+     "baked_frames": [
+      "models/baked/npc-3028-seq-6181-frame-0.bin",
+      "models/baked/npc-3028-seq-6181-frame-1.bin",
+      "models/baked/npc-3028-seq-6181-frame-2.bin",
+      "models/baked/npc-3028-seq-6181-frame-3.bin",
+      "models/baked/npc-3028-seq-6181-frame-4.bin",
+      "models/baked/npc-3028-seq-6181-frame-5.bin",
+      "models/baked/npc-3028-seq-6181-frame-6.bin",
+      "models/baked/npc-3028-seq-6181-frame-7.bin",
+      "models/baked/npc-3028-seq-6181-frame-8.bin",
+      "models/baked/npc-3028-seq-6181-frame-9.bin",
+      "models/baked/npc-3028-seq-6181-frame-10.bin",
+      "models/baked/npc-3028-seq-6181-frame-11.bin",
+      "models/baked/npc-3028-seq-6181-frame-12.bin",
+      "models/baked/npc-3028-seq-6181-frame-13.bin",
+      "models/baked/npc-3028-seq-6181-frame-14.bin",
+      "models/baked/npc-3028-seq-6181-frame-15.bin"
+     ]
+    },
+    "6180": {
+     "frame_count": 16,
+     "frame_lengths_client_cycles": [
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3
+     ],
+     "baked_frames": [
+      "models/baked/npc-3028-seq-6180-frame-0.bin",
+      "models/baked/npc-3028-seq-6180-frame-1.bin",
+      "models/baked/npc-3028-seq-6180-frame-2.bin",
+      "models/baked/npc-3028-seq-6180-frame-3.bin",
+      "models/baked/npc-3028-seq-6180-frame-4.bin",
+      "models/baked/npc-3028-seq-6180-frame-5.bin",
+      "models/baked/npc-3028-seq-6180-frame-6.bin",
+      "models/baked/npc-3028-seq-6180-frame-7.bin",
+      "models/baked/npc-3028-seq-6180-frame-8.bin",
+      "models/baked/npc-3028-seq-6180-frame-9.bin",
+      "models/baked/npc-3028-seq-6180-frame-10.bin",
+      "models/baked/npc-3028-seq-6180-frame-11.bin",
+      "models/baked/npc-3028-seq-6180-frame-12.bin",
+      "models/baked/npc-3028-seq-6180-frame-13.bin",
+      "models/baked/npc-3028-seq-6180-frame-14.bin",
+      "models/baked/npc-3028-seq-6180-frame-15.bin"
+     ]
+    }
+   }
+  },
+  {
+   "npc_id": 2063,
+   "name": "Penguin",
+   "base_model": "models/npc-2063-base.bin",
+   "width_scale": 75,
+   "height_scale": 75,
+   "sequences": {
+    "5668": {
+     "frame_count": 14,
+     "frame_lengths_client_cycles": [
+      6,
+      6,
+      6,
+      6,
+      6,
+      6,
+      6,
+      6,
+      6,
+      6,
+      6,
+      6,
+      6,
+      6
+     ],
+     "baked_frames": [
+      "models/baked/npc-2063-seq-5668-frame-0.bin",
+      "models/baked/npc-2063-seq-5668-frame-1.bin",
+      "models/baked/npc-2063-seq-5668-frame-2.bin",
+      "models/baked/npc-2063-seq-5668-frame-3.bin",
+      "models/baked/npc-2063-seq-5668-frame-4.bin",
+      "models/baked/npc-2063-seq-5668-frame-5.bin",
+      "models/baked/npc-2063-seq-5668-frame-6.bin",
+      "models/baked/npc-2063-seq-5668-frame-7.bin",
+      "models/baked/npc-2063-seq-5668-frame-8.bin",
+      "models/baked/npc-2063-seq-5668-frame-9.bin",
+      "models/baked/npc-2063-seq-5668-frame-10.bin",
+      "models/baked/npc-2063-seq-5668-frame-11.bin",
+      "models/baked/npc-2063-seq-5668-frame-12.bin",
+      "models/baked/npc-2063-seq-5668-frame-13.bin"
+     ]
+    },
+    "5666": {
+     "frame_count": 8,
+     "frame_lengths_client_cycles": [
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3
+     ],
+     "baked_frames": [
+      "models/baked/npc-2063-seq-5666-frame-0.bin",
+      "models/baked/npc-2063-seq-5666-frame-1.bin",
+      "models/baked/npc-2063-seq-5666-frame-2.bin",
+      "models/baked/npc-2063-seq-5666-frame-3.bin",
+      "models/baked/npc-2063-seq-5666-frame-4.bin",
+      "models/baked/npc-2063-seq-5666-frame-5.bin",
+      "models/baked/npc-2063-seq-5666-frame-6.bin",
+      "models/baked/npc-2063-seq-5666-frame-7.bin"
+     ]
+    }
+   }
+  }
+ ],
+ "files": {
+  "models/npc-3028-base.bin": {
+   "sha256": "8b6e67c780dc06d6d30277e5c7d8d4d6662dce5901e969be89881546445cfeac",
+   "size_bytes": 51396,
+   "detail": {
+    "vertices": 653,
+    "faces": 1340,
+    "textured_faces": 0,
+    "detail": {
+     "npc_id": 3028,
+     "models": [
+      24458,
+      24482,
+      24431,
+      24472,
+      24441,
+      24448
+     ],
+     "ambient_plus_64": 79,
+     "contrast_plus_850": 850,
+     "light_direction": [
+      -30,
+      -50,
+      -30
+     ],
+     "width_scale": 128,
+     "height_scale": 128,
+     "note": "Lit before animation and before source scale; scale applies after animation as in pl.ag"
+    }
+   }
+  },
+  "models/baked/npc-3028-seq-6181-frame-0.bin": {
+   "sha256": "a47f0c4602f19adebd40bfa9908334a9025129d190329370681638ff378e9e92",
+   "size_bytes": 51396,
+   "detail": {
+    "vertices": 653,
+    "faces": 1340,
+    "textured_faces": 0,
+    "detail": {
+     "npc_id": 3028,
+     "sequence_id": 6181,
+     "frame": 0,
+     "classification": "Native original frame bake for validation of the Rust animation port; source scale already applied"
+    }
+   }
+  },
+  "models/baked/npc-3028-seq-6181-frame-1.bin": {
+   "sha256": "911b2126d92a01a957208d472c4225f30eacc740c878f4a5d8c17c13b038f3eb",
+   "size_bytes": 51396,
+   "detail": {
+    "vertices": 653,
+    "faces": 1340,
+    "textured_faces": 0,
+    "detail": {
+     "npc_id": 3028,
+     "sequence_id": 6181,
+     "frame": 1,
+     "classification": "Native original frame bake for validation of the Rust animation port; source scale already applied"
+    }
+   }
+  },
+  "models/baked/npc-3028-seq-6181-frame-2.bin": {
+   "sha256": "9f50322c3fcdbf909056ed1977bf0f3514c6223bbf1dc6a6fecb88a56a5b2bce",
+   "size_bytes": 51396,
+   "detail": {
+    "vertices": 653,
+    "faces": 1340,
+    "textured_faces": 0,
+    "detail": {
+     "npc_id": 3028,
+     "sequence_id": 6181,
+     "frame": 2,
+     "classification": "Native original frame bake for validation of the Rust animation port; source scale already applied"
+    }
+   }
+  },
+  "models/baked/npc-3028-seq-6181-frame-3.bin": {
+   "sha256": "edf8ea42cf2ebdced63a0d302af9be164010e57a42f6f2189efb33b99a9149b0",
+   "size_bytes": 51396,
+   "detail": {
+    "vertices": 653,
+    "faces": 1340,
+    "textured_faces": 0,
+    "detail": {
+     "npc_id": 3028,
+     "sequence_id": 6181,
+     "frame": 3,
+     "classification": "Native original frame bake for validation of the Rust animation port; source scale already applied"
+    }
+   }
+  },
+  "models/baked/npc-3028-seq-6181-frame-4.bin": {
+   "sha256": "1343b0b9d3560f3aa0c8f1570f225979969ff672598b6759671d966bd1d6eeae",
+   "size_bytes": 51396,
+   "detail": {
+    "vertices": 653,
+    "faces": 1340,
+    "textured_faces": 0,
+    "detail": {
+     "npc_id": 3028,
+     "sequence_id": 6181,
+     "frame": 4,
+     "classification": "Native original frame bake for validation of the Rust animation port; source scale already applied"
+    }
+   }
+  },
+  "models/baked/npc-3028-seq-6181-frame-5.bin": {
+   "sha256": "f3b70ab7bb29f58a5c03cd01aa801d798a9ed0ad19f3caf93cd04df4f514dec0",
+   "size_bytes": 51396,
+   "detail": {
+    "vertices": 653,
+    "faces": 1340,
+    "textured_faces": 0,
+    "detail": {
+     "npc_id": 3028,
+     "sequence_id": 6181,
+     "frame": 5,
+     "classification": "Native original frame bake for validation of the Rust animation port; source scale already applied"
+    }
+   }
+  },
+  "models/baked/npc-3028-seq-6181-frame-6.bin": {
+   "sha256": "7abc439858543545e29a497d06ceb7cfa209846f3ce2a08822eef35d8c853960",
+   "size_bytes": 51396,
+   "detail": {
+    "vertices": 653,
+    "faces": 1340,
+    "textured_faces": 0,
+    "detail": {
+     "npc_id": 3028,
+     "sequence_id": 6181,
+     "frame": 6,
+     "classification": "Native original frame bake for validation of the Rust animation port; source scale already applied"
+    }
+   }
+  },
+  "models/baked/npc-3028-seq-6181-frame-7.bin": {
+   "sha256": "2cfd984839b8f7fb71b857720f7189c47f322b242d6139a5f325e00ee1e790c0",
+   "size_bytes": 51396,
+   "detail": {
+    "vertices": 653,
+    "faces": 1340,
+    "textured_faces": 0,
+    "detail": {
+     "npc_id": 3028,
+     "sequence_id": 6181,
+     "frame": 7,
+     "classification": "Native original frame bake for validation of the Rust animation port; source scale already applied"
+    }
+   }
+  },
+  "models/baked/npc-3028-seq-6181-frame-8.bin": {
+   "sha256": "1880d74230f0e1aeb595097f65f0a57803d79cb04c251f9147dd4b58591d2e98",
+   "size_bytes": 51396,
+   "detail": {
+    "vertices": 653,
+    "faces": 1340,
+    "textured_faces": 0,
+    "detail": {
+     "npc_id": 3028,
+     "sequence_id": 6181,
+     "frame": 8,
+     "classification": "Native original frame bake for validation of the Rust animation port; source scale already applied"
+    }
+   }
+  },
+  "models/baked/npc-3028-seq-6181-frame-9.bin": {
+   "sha256": "4984496d09a3a969b121a12c016baf0b075bda360b17c2a34fd0d486b3f54efe",
+   "size_bytes": 51396,
+   "detail": {
+    "vertices": 653,
+    "faces": 1340,
+    "textured_faces": 0,
+    "detail": {
+     "npc_id": 3028,
+     "sequence_id": 6181,
+     "frame": 9,
+     "classification": "Native original frame bake for validation of the Rust animation port; source scale already applied"
+    }
+   }
+  },
+  "models/baked/npc-3028-seq-6181-frame-10.bin": {
+   "sha256": "ac3e140ad6a978c9d346413d1f473f7052e6e31c437c5000609702ff299c6c25",
+   "size_bytes": 51396,
+   "detail": {
+    "vertices": 653,
+    "faces": 1340,
+    "textured_faces": 0,
+    "detail": {
+     "npc_id": 3028,
+     "sequence_id": 6181,
+     "frame": 10,
+     "classification": "Native original frame bake for validation of the Rust animation port; source scale already applied"
+    }
+   }
+  },
+  "models/baked/npc-3028-seq-6181-frame-11.bin": {
+   "sha256": "4c3461380a28d0ff550ffa7a176cb339b76e67c29442debd0baf4091841b021c",
+   "size_bytes": 51396,
+   "detail": {
+    "vertices": 653,
+    "faces": 1340,
+    "textured_faces": 0,
+    "detail": {
+     "npc_id": 3028,
+     "sequence_id": 6181,
+     "frame": 11,
+     "classification": "Native original frame bake for validation of the Rust animation port; source scale already applied"
+    }
+   }
+  },
+  "models/baked/npc-3028-seq-6181-frame-12.bin": {
+   "sha256": "4d61189fb243671bdf90791acb2866f46123ce92ca40f74dd1badfb92f15b3e0",
+   "size_bytes": 51396,
+   "detail": {
+    "vertices": 653,
+    "faces": 1340,
+    "textured_faces": 0,
+    "detail": {
+     "npc_id": 3028,
+     "sequence_id": 6181,
+     "frame": 12,
+     "classification": "Native original frame bake for validation of the Rust animation port; source scale already applied"
+    }
+   }
+  },
+  "models/baked/npc-3028-seq-6181-frame-13.bin": {
+   "sha256": "c7fd723d1973cf1fc82dca5412bab8c3d4ba05e6dfe0b5a41117528a5be58161",
+   "size_bytes": 51396,
+   "detail": {
+    "vertices": 653,
+    "faces": 1340,
+    "textured_faces": 0,
+    "detail": {
+     "npc_id": 3028,
+     "sequence_id": 6181,
+     "frame": 13,
+     "classification": "Native original frame bake for validation of the Rust animation port; source scale already applied"
+    }
+   }
+  },
+  "models/baked/npc-3028-seq-6181-frame-14.bin": {
+   "sha256": "e3fe6f49d6ad0b90fa97e76697be73df4b54397b561ccda52be37954f4ec6ddb",
+   "size_bytes": 51396,
+   "detail": {
+    "vertices": 653,
+    "faces": 1340,
+    "textured_faces": 0,
+    "detail": {
+     "npc_id": 3028,
+     "sequence_id": 6181,
+     "frame": 14,
+     "classification": "Native original frame bake for validation of the Rust animation port; source scale already applied"
+    }
+   }
+  },
+  "models/baked/npc-3028-seq-6181-frame-15.bin": {
+   "sha256": "37d5ddee028f52cf211825de35dcc36fcf9bd55724632c6d9bab08f31e1847a6",
+   "size_bytes": 51396,
+   "detail": {
+    "vertices": 653,
+    "faces": 1340,
+    "textured_faces": 0,
+    "detail": {
+     "npc_id": 3028,
+     "sequence_id": 6181,
+     "frame": 15,
+     "classification": "Native original frame bake for validation of the Rust animation port; source scale already applied"
+    }
+   }
+  },
+  "models/baked/npc-3028-seq-6180-frame-0.bin": {
+   "sha256": "e4b0459b09ca6bac46c7832d758e8e315fb672f9f2eafe3725368f4e492411aa",
+   "size_bytes": 51396,
+   "detail": {
+    "vertices": 653,
+    "faces": 1340,
+    "textured_faces": 0,
+    "detail": {
+     "npc_id": 3028,
+     "sequence_id": 6180,
+     "frame": 0,
+     "classification": "Native original frame bake for validation of the Rust animation port; source scale already applied"
+    }
+   }
+  },
+  "models/baked/npc-3028-seq-6180-frame-1.bin": {
+   "sha256": "4780d86b93fc370125edd015fd392210573cb60095fe40a012a3fb7bc1ec4296",
+   "size_bytes": 51396,
+   "detail": {
+    "vertices": 653,
+    "faces": 1340,
+    "textured_faces": 0,
+    "detail": {
+     "npc_id": 3028,
+     "sequence_id": 6180,
+     "frame": 1,
+     "classification": "Native original frame bake for validation of the Rust animation port; source scale already applied"
+    }
+   }
+  },
+  "models/baked/npc-3028-seq-6180-frame-2.bin": {
+   "sha256": "b161a8833e0ba5f0ff0fc025a6e8f5b3e746eb49da8f44f39a9ba8ad37829590",
+   "size_bytes": 51396,
+   "detail": {
+    "vertices": 653,
+    "faces": 1340,
+    "textured_faces": 0,
+    "detail": {
+     "npc_id": 3028,
+     "sequence_id": 6180,
+     "frame": 2,
+     "classification": "Native original frame bake for validation of the Rust animation port; source scale already applied"
+    }
+   }
+  },
+  "models/baked/npc-3028-seq-6180-frame-3.bin": {
+   "sha256": "de37a0e540a088ebe7de1b67ad40c9b2c3b29775692988fee54ccee1d49bcacf",
+   "size_bytes": 51396,
+   "detail": {
+    "vertices": 653,
+    "faces": 1340,
+    "textured_faces": 0,
+    "detail": {
+     "npc_id": 3028,
+     "sequence_id": 6180,
+     "frame": 3,
+     "classification": "Native original frame bake for validation of the Rust animation port; source scale already applied"
+    }
+   }
+  },
+  "models/baked/npc-3028-seq-6180-frame-4.bin": {
+   "sha256": "ef3a9ff4c04ab2ad3c9e9f6942a96d96759694d1676e6a876463ac5f49057806",
+   "size_bytes": 51396,
+   "detail": {
+    "vertices": 653,
+    "faces": 1340,
+    "textured_faces": 0,
+    "detail": {
+     "npc_id": 3028,
+     "sequence_id": 6180,
+     "frame": 4,
+     "classification": "Native original frame bake for validation of the Rust animation port; source scale already applied"
+    }
+   }
+  },
+  "models/baked/npc-3028-seq-6180-frame-5.bin": {
+   "sha256": "beebd853578865545eb357262443c78975a2a95c674d281be50c8933f3ddc4ab",
+   "size_bytes": 51396,
+   "detail": {
+    "vertices": 653,
+    "faces": 1340,
+    "textured_faces": 0,
+    "detail": {
+     "npc_id": 3028,
+     "sequence_id": 6180,
+     "frame": 5,
+     "classification": "Native original frame bake for validation of the Rust animation port; source scale already applied"
+    }
+   }
+  },
+  "models/baked/npc-3028-seq-6180-frame-6.bin": {
+   "sha256": "fd09446e263859ab9ed3e1b046b957fdfaac9433d8da04eb82df86b85cea70e7",
+   "size_bytes": 51396,
+   "detail": {
+    "vertices": 653,
+    "faces": 1340,
+    "textured_faces": 0,
+    "detail": {
+     "npc_id": 3028,
+     "sequence_id": 6180,
+     "frame": 6,
+     "classification": "Native original frame bake for validation of the Rust animation port; source scale already applied"
+    }
+   }
+  },
+  "models/baked/npc-3028-seq-6180-frame-7.bin": {
+   "sha256": "1d39cae5df89fc3e95542073d78bbc99a763a52ab8c9ac06dcb3c5f8b6df2edb",
+   "size_bytes": 51396,
+   "detail": {
+    "vertices": 653,
+    "faces": 1340,
+    "textured_faces": 0,
+    "detail": {
+     "npc_id": 3028,
+     "sequence_id": 6180,
+     "frame": 7,
+     "classification": "Native original frame bake for validation of the Rust animation port; source scale already applied"
+    }
+   }
+  },
+  "models/baked/npc-3028-seq-6180-frame-8.bin": {
+   "sha256": "1d0bd731917a024659fdeffda26f03b286ac5e34b4ed2bca95a10aad055d2588",
+   "size_bytes": 51396,
+   "detail": {
+    "vertices": 653,
+    "faces": 1340,
+    "textured_faces": 0,
+    "detail": {
+     "npc_id": 3028,
+     "sequence_id": 6180,
+     "frame": 8,
+     "classification": "Native original frame bake for validation of the Rust animation port; source scale already applied"
+    }
+   }
+  },
+  "models/baked/npc-3028-seq-6180-frame-9.bin": {
+   "sha256": "f8acf6be0cb3d33c997cc5b291be4991ef2e0a34eccc5e01b3bd01dc17a0047a",
+   "size_bytes": 51396,
+   "detail": {
+    "vertices": 653,
+    "faces": 1340,
+    "textured_faces": 0,
+    "detail": {
+     "npc_id": 3028,
+     "sequence_id": 6180,
+     "frame": 9,
+     "classification": "Native original frame bake for validation of the Rust animation port; source scale already applied"
+    }
+   }
+  },
+  "models/baked/npc-3028-seq-6180-frame-10.bin": {
+   "sha256": "bff70b8ac04edf2af00e26551512b4171328e9b269d312bbedd195084a945373",
+   "size_bytes": 51396,
+   "detail": {
+    "vertices": 653,
+    "faces": 1340,
+    "textured_faces": 0,
+    "detail": {
+     "npc_id": 3028,
+     "sequence_id": 6180,
+     "frame": 10,
+     "classification": "Native original frame bake for validation of the Rust animation port; source scale already applied"
+    }
+   }
+  },
+  "models/baked/npc-3028-seq-6180-frame-11.bin": {
+   "sha256": "79a2500b7b4a6e8a6dbbc5557d15ab423718f42efd53e8dd813b0fe331037d53",
+   "size_bytes": 51396,
+   "detail": {
+    "vertices": 653,
+    "faces": 1340,
+    "textured_faces": 0,
+    "detail": {
+     "npc_id": 3028,
+     "sequence_id": 6180,
+     "frame": 11,
+     "classification": "Native original frame bake for validation of the Rust animation port; source scale already applied"
+    }
+   }
+  },
+  "models/baked/npc-3028-seq-6180-frame-12.bin": {
+   "sha256": "0c78d6da71196a4d96512cd1da22ccbb67ab50235e25638a2d2fb1e66972e1e0",
+   "size_bytes": 51396,
+   "detail": {
+    "vertices": 653,
+    "faces": 1340,
+    "textured_faces": 0,
+    "detail": {
+     "npc_id": 3028,
+     "sequence_id": 6180,
+     "frame": 12,
+     "classification": "Native original frame bake for validation of the Rust animation port; source scale already applied"
+    }
+   }
+  },
+  "models/baked/npc-3028-seq-6180-frame-13.bin": {
+   "sha256": "ec87a2e55f300b1ecb9fdb64105ee4af37ded0b46cd59aebb26508919f4fb2e0",
+   "size_bytes": 51396,
+   "detail": {
+    "vertices": 653,
+    "faces": 1340,
+    "textured_faces": 0,
+    "detail": {
+     "npc_id": 3028,
+     "sequence_id": 6180,
+     "frame": 13,
+     "classification": "Native original frame bake for validation of the Rust animation port; source scale already applied"
+    }
+   }
+  },
+  "models/baked/npc-3028-seq-6180-frame-14.bin": {
+   "sha256": "75a991598a8dea84c4d9ed9d69b20e633157893cce6dd80672a5114a00c97060",
+   "size_bytes": 51396,
+   "detail": {
+    "vertices": 653,
+    "faces": 1340,
+    "textured_faces": 0,
+    "detail": {
+     "npc_id": 3028,
+     "sequence_id": 6180,
+     "frame": 14,
+     "classification": "Native original frame bake for validation of the Rust animation port; source scale already applied"
+    }
+   }
+  },
+  "models/baked/npc-3028-seq-6180-frame-15.bin": {
+   "sha256": "048b1ce86c314730ab0525f3cbe115f7b1bd590eb570e5f7eb7ab1c4ba26c985",
+   "size_bytes": 51396,
+   "detail": {
+    "vertices": 653,
+    "faces": 1340,
+    "textured_faces": 0,
+    "detail": {
+     "npc_id": 3028,
+     "sequence_id": 6180,
+     "frame": 15,
+     "classification": "Native original frame bake for validation of the Rust animation port; source scale already applied"
+    }
+   }
+  },
+  "models/npc-2063-base.bin": {
+   "sha256": "19068c4feb4a091157a6aa471f947c2dd1ab57ebe5a1b10deb3e5c751136c3d8",
+   "size_bytes": 15116,
+   "detail": {
+    "vertices": 200,
+    "faces": 396,
+    "textured_faces": 0,
+    "detail": {
+     "npc_id": 2063,
+     "models": [
+      21547
+     ],
+     "ambient_plus_64": 64,
+     "contrast_plus_850": 850,
+     "light_direction": [
+      -30,
+      -50,
+      -30
+     ],
+     "width_scale": 75,
+     "height_scale": 75,
+     "note": "Lit before animation and before source scale; scale applies after animation as in pl.ag"
+    }
+   }
+  },
+  "models/baked/npc-2063-seq-5668-frame-0.bin": {
+   "sha256": "1967cc82cd9a9c47bbfbf9c3b4d4476e87a1069e066cf983574d1b499401045d",
+   "size_bytes": 15116,
+   "detail": {
+    "vertices": 200,
+    "faces": 396,
+    "textured_faces": 0,
+    "detail": {
+     "npc_id": 2063,
+     "sequence_id": 5668,
+     "frame": 0,
+     "classification": "Native original frame bake for validation of the Rust animation port; source scale already applied"
+    }
+   }
+  },
+  "models/baked/npc-2063-seq-5668-frame-1.bin": {
+   "sha256": "7f5d7a43b0a4c4c0c25555b9ddfd0a8897148192bd8c26155d296e7ef7423716",
+   "size_bytes": 15116,
+   "detail": {
+    "vertices": 200,
+    "faces": 396,
+    "textured_faces": 0,
+    "detail": {
+     "npc_id": 2063,
+     "sequence_id": 5668,
+     "frame": 1,
+     "classification": "Native original frame bake for validation of the Rust animation port; source scale already applied"
+    }
+   }
+  },
+  "models/baked/npc-2063-seq-5668-frame-2.bin": {
+   "sha256": "09b01c551bc53b97a7d88a294fc7a73922a88a9627c120893d818fa222ed73c4",
+   "size_bytes": 15116,
+   "detail": {
+    "vertices": 200,
+    "faces": 396,
+    "textured_faces": 0,
+    "detail": {
+     "npc_id": 2063,
+     "sequence_id": 5668,
+     "frame": 2,
+     "classification": "Native original frame bake for validation of the Rust animation port; source scale already applied"
+    }
+   }
+  },
+  "models/baked/npc-2063-seq-5668-frame-3.bin": {
+   "sha256": "0e35e31acf643066710b4e8a684cb6697f3401d13b95bc7a71ef5a032322f445",
+   "size_bytes": 15116,
+   "detail": {
+    "vertices": 200,
+    "faces": 396,
+    "textured_faces": 0,
+    "detail": {
+     "npc_id": 2063,
+     "sequence_id": 5668,
+     "frame": 3,
+     "classification": "Native original frame bake for validation of the Rust animation port; source scale already applied"
+    }
+   }
+  },
+  "models/baked/npc-2063-seq-5668-frame-4.bin": {
+   "sha256": "534bc2829dc34c7b43e15eb5cb6fa97a3e72ad6ecc99474e908ef89e38997fa9",
+   "size_bytes": 15116,
+   "detail": {
+    "vertices": 200,
+    "faces": 396,
+    "textured_faces": 0,
+    "detail": {
+     "npc_id": 2063,
+     "sequence_id": 5668,
+     "frame": 4,
+     "classification": "Native original frame bake for validation of the Rust animation port; source scale already applied"
+    }
+   }
+  },
+  "models/baked/npc-2063-seq-5668-frame-5.bin": {
+   "sha256": "2a8d682722309b3083152479ccf9d7198ec17884233cb24bf04619e7613d7abf",
+   "size_bytes": 15116,
+   "detail": {
+    "vertices": 200,
+    "faces": 396,
+    "textured_faces": 0,
+    "detail": {
+     "npc_id": 2063,
+     "sequence_id": 5668,
+     "frame": 5,
+     "classification": "Native original frame bake for validation of the Rust animation port; source scale already applied"
+    }
+   }
+  },
+  "models/baked/npc-2063-seq-5668-frame-6.bin": {
+   "sha256": "396981e87a2916250b840421fba3513b68e4226d21eca9f313d4a9b39baa4612",
+   "size_bytes": 15116,
+   "detail": {
+    "vertices": 200,
+    "faces": 396,
+    "textured_faces": 0,
+    "detail": {
+     "npc_id": 2063,
+     "sequence_id": 5668,
+     "frame": 6,
+     "classification": "Native original frame bake for validation of the Rust animation port; source scale already applied"
+    }
+   }
+  },
+  "models/baked/npc-2063-seq-5668-frame-7.bin": {
+   "sha256": "694bd35867f2c1ddc4171d7fcb39472988b763490412998d0a84bd17c4c9ad79",
+   "size_bytes": 15116,
+   "detail": {
+    "vertices": 200,
+    "faces": 396,
+    "textured_faces": 0,
+    "detail": {
+     "npc_id": 2063,
+     "sequence_id": 5668,
+     "frame": 7,
+     "classification": "Native original frame bake for validation of the Rust animation port; source scale already applied"
+    }
+   }
+  },
+  "models/baked/npc-2063-seq-5668-frame-8.bin": {
+   "sha256": "da87c2aabdeb058f51a5b0ba1c69419705babacaf816879b6e6ab51f8740a20e",
+   "size_bytes": 15116,
+   "detail": {
+    "vertices": 200,
+    "faces": 396,
+    "textured_faces": 0,
+    "detail": {
+     "npc_id": 2063,
+     "sequence_id": 5668,
+     "frame": 8,
+     "classification": "Native original frame bake for validation of the Rust animation port; source scale already applied"
+    }
+   }
+  },
+  "models/baked/npc-2063-seq-5668-frame-9.bin": {
+   "sha256": "694bd35867f2c1ddc4171d7fcb39472988b763490412998d0a84bd17c4c9ad79",
+   "size_bytes": 15116,
+   "detail": {
+    "vertices": 200,
+    "faces": 396,
+    "textured_faces": 0,
+    "detail": {
+     "npc_id": 2063,
+     "sequence_id": 5668,
+     "frame": 9,
+     "classification": "Native original frame bake for validation of the Rust animation port; source scale already applied"
+    }
+   }
+  },
+  "models/baked/npc-2063-seq-5668-frame-10.bin": {
+   "sha256": "396981e87a2916250b840421fba3513b68e4226d21eca9f313d4a9b39baa4612",
+   "size_bytes": 15116,
+   "detail": {
+    "vertices": 200,
+    "faces": 396,
+    "textured_faces": 0,
+    "detail": {
+     "npc_id": 2063,
+     "sequence_id": 5668,
+     "frame": 10,
+     "classification": "Native original frame bake for validation of the Rust animation port; source scale already applied"
+    }
+   }
+  },
+  "models/baked/npc-2063-seq-5668-frame-11.bin": {
+   "sha256": "534bc2829dc34c7b43e15eb5cb6fa97a3e72ad6ecc99474e908ef89e38997fa9",
+   "size_bytes": 15116,
+   "detail": {
+    "vertices": 200,
+    "faces": 396,
+    "textured_faces": 0,
+    "detail": {
+     "npc_id": 2063,
+     "sequence_id": 5668,
+     "frame": 11,
+     "classification": "Native original frame bake for validation of the Rust animation port; source scale already applied"
+    }
+   }
+  },
+  "models/baked/npc-2063-seq-5668-frame-12.bin": {
+   "sha256": "0e35e31acf643066710b4e8a684cb6697f3401d13b95bc7a71ef5a032322f445",
+   "size_bytes": 15116,
+   "detail": {
+    "vertices": 200,
+    "faces": 396,
+    "textured_faces": 0,
+    "detail": {
+     "npc_id": 2063,
+     "sequence_id": 5668,
+     "frame": 12,
+     "classification": "Native original frame bake for validation of the Rust animation port; source scale already applied"
+    }
+   }
+  },
+  "models/baked/npc-2063-seq-5668-frame-13.bin": {
+   "sha256": "09b01c551bc53b97a7d88a294fc7a73922a88a9627c120893d818fa222ed73c4",
+   "size_bytes": 15116,
+   "detail": {
+    "vertices": 200,
+    "faces": 396,
+    "textured_faces": 0,
+    "detail": {
+     "npc_id": 2063,
+     "sequence_id": 5668,
+     "frame": 13,
+     "classification": "Native original frame bake for validation of the Rust animation port; source scale already applied"
+    }
+   }
+  },
+  "models/baked/npc-2063-seq-5666-frame-0.bin": {
+   "sha256": "a22d3024ce25bad497d4ec9c8b45b5714437da32146280332fd3b3a1e16f9934",
+   "size_bytes": 15116,
+   "detail": {
+    "vertices": 200,
+    "faces": 396,
+    "textured_faces": 0,
+    "detail": {
+     "npc_id": 2063,
+     "sequence_id": 5666,
+     "frame": 0,
+     "classification": "Native original frame bake for validation of the Rust animation port; source scale already applied"
+    }
+   }
+  },
+  "models/baked/npc-2063-seq-5666-frame-1.bin": {
+   "sha256": "ffaa9b924b8bb9ed1eb883951632d80130869494e080406bb56d279b1d603e9f",
+   "size_bytes": 15116,
+   "detail": {
+    "vertices": 200,
+    "faces": 396,
+    "textured_faces": 0,
+    "detail": {
+     "npc_id": 2063,
+     "sequence_id": 5666,
+     "frame": 1,
+     "classification": "Native original frame bake for validation of the Rust animation port; source scale already applied"
+    }
+   }
+  },
+  "models/baked/npc-2063-seq-5666-frame-2.bin": {
+   "sha256": "3a54b78cf2eb0e90987b47cec0adcd9dccbab17e1c7a07855561f144e1af5227",
+   "size_bytes": 15116,
+   "detail": {
+    "vertices": 200,
+    "faces": 396,
+    "textured_faces": 0,
+    "detail": {
+     "npc_id": 2063,
+     "sequence_id": 5666,
+     "frame": 2,
+     "classification": "Native original frame bake for validation of the Rust animation port; source scale already applied"
+    }
+   }
+  },
+  "models/baked/npc-2063-seq-5666-frame-3.bin": {
+   "sha256": "6d3e3a94fce1db4d5c26473ab185fdb2d603984f9ba73a4529ab0374b6e5e241",
+   "size_bytes": 15116,
+   "detail": {
+    "vertices": 200,
+    "faces": 396,
+    "textured_faces": 0,
+    "detail": {
+     "npc_id": 2063,
+     "sequence_id": 5666,
+     "frame": 3,
+     "classification": "Native original frame bake for validation of the Rust animation port; source scale already applied"
+    }
+   }
+  },
+  "models/baked/npc-2063-seq-5666-frame-4.bin": {
+   "sha256": "c84f82b5c0c36ef5887801d9bc2302fd5f75b49bbff0a704fa467e10e7752310",
+   "size_bytes": 15116,
+   "detail": {
+    "vertices": 200,
+    "faces": 396,
+    "textured_faces": 0,
+    "detail": {
+     "npc_id": 2063,
+     "sequence_id": 5666,
+     "frame": 4,
+     "classification": "Native original frame bake for validation of the Rust animation port; source scale already applied"
+    }
+   }
+  },
+  "models/baked/npc-2063-seq-5666-frame-5.bin": {
+   "sha256": "611530bdc026995f610b88324fa45dd7716f05ca4e0b914bd9018fbc99a3408e",
+   "size_bytes": 15116,
+   "detail": {
+    "vertices": 200,
+    "faces": 396,
+    "textured_faces": 0,
+    "detail": {
+     "npc_id": 2063,
+     "sequence_id": 5666,
+     "frame": 5,
+     "classification": "Native original frame bake for validation of the Rust animation port; source scale already applied"
+    }
+   }
+  },
+  "models/baked/npc-2063-seq-5666-frame-6.bin": {
+   "sha256": "58483686aff3d3a92e06593e0e0455baa738e075370009fb5e4a27902934263a",
+   "size_bytes": 15116,
+   "detail": {
+    "vertices": 200,
+    "faces": 396,
+    "textured_faces": 0,
+    "detail": {
+     "npc_id": 2063,
+     "sequence_id": 5666,
+     "frame": 6,
+     "classification": "Native original frame bake for validation of the Rust animation port; source scale already applied"
+    }
+   }
+  },
+  "models/baked/npc-2063-seq-5666-frame-7.bin": {
+   "sha256": "ab7e66213e6ec3c97f294bbfa8907e511729a47ba414ea06e8c3b3f5871864de",
+   "size_bytes": 15116,
+   "detail": {
+    "vertices": 200,
+    "faces": 396,
+    "textured_faces": 0,
+    "detail": {
+     "npc_id": 2063,
+     "sequence_id": 5666,
+     "frame": 7,
+     "classification": "Native original frame bake for validation of the Rust animation port; source scale already applied"
+    }
+   }
+  },
+  "tables.bin": {
+   "sha256": "954c4395b0b236169129950ce3c98cfdaa662de33b7ad67e7270757fc7c247c6",
+   "size_bytes": 303184,
+   "detail": {
+    "source": "net.runelite.api.Perspective tables bound into fh/gb/fx",
+    "unit_2048": 0.0030679615,
+    "unit_16384": 0.0003834951969714103
+   }
+  },
+  "palette.bin": {
+   "sha256": "9428d220ae38c881375efff2305c4992ce36ea00aaf743e8ffdef09e685dd350",
+   "size_bytes": 262172,
+   "detail": {
+    "brightness": 0.8,
+    "entries": 65536,
+    "source": "fh.ae after original fh.ae(0.8) HSL palette build"
+   }
+  },
+  "models/object-1277-model-1570-lit.bin": {
+   "sha256": "9d59979248be9c16cbc7167a6f74b889d171ff9e7a29cba4cd6079aa3388fe09",
+   "size_bytes": 4504,
+   "detail": {
+    "vertices": 90,
+    "faces": 110,
+    "textured_faces": 36,
+    "detail": {
+     "object_id": 1277,
+     "model_id": 1570,
+     "recolor": [
+      3470,
+      5029
+     ],
+     "lighting": [
+      64,
+      768,
+      -50,
+      -10,
+      -50
+     ],
+     "matches_fixture": "assets/reference/osrs240/models/tree-1277-yaw-*.png"
+    }
+   }
+  }
+ }
+}
