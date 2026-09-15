@@ -1,0 +1,548 @@
+{
+  "scope": "Additional ORIGINAL UI component/effect fixture comparisons, not live gameplay",
+  "sourcePackSha256": "b62e19704e17d3d3e4e819f803ef49ba7cc54034ae407184b423427c65d9674d",
+  "results": [
+    {
+      "case": "bounded-bank-placeholder-selected",
+      "kind": "bounded-source",
+      "size": [
+        1920,
+        1080
+      ],
+      "checked_pixels": 2073600,
+      "source_sha256": "50f50a83475f6e354c86d1f6ce59b989f5cfee030cd339df3f1071c41b21ecce",
+      "candidate_sha256": "de71d6e7ed83dc16f6fa71e9af28c56fd4645860d9f120d5de9bc72d4d0b01a8",
+      "different_pixels": 0,
+      "tolerance": 0,
+      "coverage": 1,
+      "passed": true
+    },
+    {
+      "case": "bounded-bank-selected-tab",
+      "kind": "bounded-source",
+      "size": [
+        1920,
+        1080
+      ],
+      "checked_pixels": 2073600,
+      "source_sha256": "371481f80bc2ba218321ae3a24d8e2c5ffcb74a3167fb888d71ff52b37c5c6a6",
+      "candidate_sha256": "0288c174d4b78419bb94db5e59022be02b560b43fee1b1d020513e412b2acda6",
+      "different_pixels": 0,
+      "tolerance": 0,
+      "coverage": 1,
+      "passed": true
+    },
+    {
+      "case": "bounded-bank-tabs",
+      "kind": "bounded-source",
+      "size": [
+        1920,
+        1080
+      ],
+      "checked_pixels": 2073600,
+      "source_sha256": "52fc26d96b149ad0dd50e1a19da64decc6a64adbd4098ccec2516a0bf93ae662",
+      "candidate_sha256": "2e6869093ef770a67fc76b08a5c95409feb0811f191b7866b03d378b5d1e9a73",
+      "different_pixels": 0,
+      "tolerance": 0,
+      "coverage": 1,
+      "passed": true
+    },
+    {
+      "case": "bounded-hud-hidden",
+      "kind": "bounded-source",
+      "size": [
+        1920,
+        1080
+      ],
+      "checked_pixels": 2073600,
+      "source_sha256": "38e30e9701cf6bbb266670f80daae679dcd288778ec71e9e96925ad6bcb1f96f",
+      "candidate_sha256": "89ff1d3de0334b366b59771a19aca45c6fc77ece9409e059abfe397ea21f913f",
+      "different_pixels": 0,
+      "tolerance": 0,
+      "coverage": 1,
+      "passed": true
+    },
+    {
+      "case": "bounded-hud-highlight",
+      "kind": "bounded-source",
+      "size": [
+        1920,
+        1080
+      ],
+      "checked_pixels": 2073600,
+      "source_sha256": "2708e01f6257621d4fbb56fb84a34e070d1f9fe74e737bf740b82fef094f2ae5",
+      "candidate_sha256": "79ac23c45a2d943973ceeb389cb83e1b0eb94f4c331ef98830135e0b8c408a39",
+      "different_pixels": 0,
+      "tolerance": 0,
+      "coverage": 1,
+      "passed": true
+    },
+    {
+      "case": "bounded-hud-locked",
+      "kind": "bounded-source",
+      "size": [
+        1920,
+        1080
+      ],
+      "checked_pixels": 2073600,
+      "source_sha256": "e45fd0762c58d746c3f51cca3fe4b21c7809c8cb5a59366dc0d0b48cb7a77470",
+      "candidate_sha256": "3163e2c6648c00f281b58df8d49ad7fac17f1e83ba321b9d403d3c3aa569acb6",
+      "different_pixels": 0,
+      "tolerance": 0,
+      "coverage": 1,
+      "passed": true
+    },
+    {
+      "case": "bounded-levelup-chat",
+      "kind": "bounded-source",
+      "size": [
+        1920,
+        1080
+      ],
+      "checked_pixels": 2073600,
+      "source_sha256": "298fc0762fe66279dd0fddefc7fbdf5a66699fda08c9e0bf1620372fc6b39929",
+      "candidate_sha256": "4202fd19e7313589ff42a88467c79cdf414b103cf20250215764f900e6633d58",
+      "different_pixels": 0,
+      "tolerance": 0,
+      "coverage": 1,
+      "passed": true
+    },
+    {
+      "case": "bounded-levelup-popup",
+      "kind": "bounded-source",
+      "size": [
+        1920,
+        1080
+      ],
+      "checked_pixels": 2073600,
+      "source_sha256": "cde65d22be2224be74215c0a8f7afc1a97be62abd2ec5a914d0d6a0d745f7d46",
+      "candidate_sha256": "f61ee52b9abd0e809f892913f694d66e14b66f78f4a34b323843bcd8dc2e134d",
+      "different_pixels": 0,
+      "tolerance": 0,
+      "coverage": 1,
+      "passed": true
+    },
+    {
+      "case": "bounded-settings-activities",
+      "kind": "bounded-source",
+      "size": [
+        1920,
+        1080
+      ],
+      "checked_pixels": 2073600,
+      "source_sha256": "998432552cafd8f065f2fa9b8572236e36c841779d5c9f7506672101087a84f8",
+      "candidate_sha256": "0670e5cec6e386fcde9de1218dddbd23a8b91ca4a190543298d50d1ed1982f6b",
+      "different_pixels": 0,
+      "tolerance": 0,
+      "coverage": 1,
+      "passed": true
+    },
+    {
+      "case": "bounded-settings-audio",
+      "kind": "bounded-source",
+      "size": [
+        1920,
+        1080
+      ],
+      "checked_pixels": 2073600,
+      "source_sha256": "cefcc908cffe253d9c94c3efb9740eb09c1213e55e3f2b60369b9e55a1c925d1",
+      "candidate_sha256": "2224e7d5698544bd8798a9ace11ce58cd84d666d981f7641c0ed9c24fb43a7ba",
+      "different_pixels": 0,
+      "tolerance": 0,
+      "coverage": 1,
+      "passed": true
+    },
+    {
+      "case": "bounded-settings-chat",
+      "kind": "bounded-source",
+      "size": [
+        1920,
+        1080
+      ],
+      "checked_pixels": 2073600,
+      "source_sha256": "0893b44cfad111b14f6301f20413b1698e03d5892a721d98a0390846b0f3ddc5",
+      "candidate_sha256": "54c7a21def4e1d72dc8ee25ca0b1bc5eef4609e86685a52ce40d7ecdd6132e94",
+      "different_pixels": 0,
+      "tolerance": 0,
+      "coverage": 1,
+      "passed": true
+    },
+    {
+      "case": "bounded-settings-controls",
+      "kind": "bounded-source",
+      "size": [
+        1920,
+        1080
+      ],
+      "checked_pixels": 2073600,
+      "source_sha256": "4ec04388b7acb540a10416827f77697fc8b6b5bd277ad50fc2fc38552b3634a8",
+      "candidate_sha256": "a1a2db7f4a89447ad859d490ac52e640d3cd469aff8b21e6b166dbd95a0dc7b9",
+      "different_pixels": 0,
+      "tolerance": 0,
+      "coverage": 1,
+      "passed": true
+    },
+    {
+      "case": "bounded-settings-display",
+      "kind": "bounded-source",
+      "size": [
+        1920,
+        1080
+      ],
+      "checked_pixels": 2073600,
+      "source_sha256": "22a5e2e03178d9772bf2c63d08c0a62419634427640b6ea0a672a9257fc849b0",
+      "candidate_sha256": "3443416d585c9926081201003289b4794d6f8aab9c966fc812b1537f0e38e6af",
+      "different_pixels": 0,
+      "tolerance": 0,
+      "coverage": 1,
+      "passed": true
+    },
+    {
+      "case": "bounded-settings-gameplay",
+      "kind": "bounded-source",
+      "size": [
+        1920,
+        1080
+      ],
+      "checked_pixels": 2073600,
+      "source_sha256": "0aaec6b1c49ece8d2d9a60fd49cbaf72676ba7995cb94276506b89680be15adc",
+      "candidate_sha256": "51e933460dc943fc1d77cf279f2e26f47824deed56c497b1f580f321e96d9c36",
+      "different_pixels": 0,
+      "tolerance": 0,
+      "coverage": 1,
+      "passed": true
+    },
+    {
+      "case": "bounded-settings-interfaces",
+      "kind": "bounded-source",
+      "size": [
+        1920,
+        1080
+      ],
+      "checked_pixels": 2073600,
+      "source_sha256": "285b680793e892fe5b271771b5434e8e7e4e3343034fe2a65b8afbf53bdf646e",
+      "candidate_sha256": "16c1f0b6dc8a300dbde874f674f21238efda00db51b93f68afe691578fdb9a08",
+      "different_pixels": 0,
+      "tolerance": 0,
+      "coverage": 1,
+      "passed": true
+    },
+    {
+      "case": "bounded-settings-search-empty",
+      "kind": "bounded-source",
+      "size": [
+        1920,
+        1080
+      ],
+      "checked_pixels": 2073600,
+      "source_sha256": "49c04ab6f1eda9175a562b4b6f2653ba3626f9e84641cb7f6ced5051ef736333",
+      "candidate_sha256": "ce2633527c46071cd36cdfce58c3893a80795fbd830dac69cf2420d6d570e08d",
+      "different_pixels": 0,
+      "tolerance": 0,
+      "coverage": 1,
+      "passed": true
+    },
+    {
+      "case": "bounded-settings-search-zoom",
+      "kind": "bounded-source",
+      "size": [
+        1920,
+        1080
+      ],
+      "checked_pixels": 2073600,
+      "source_sha256": "3893e0dd0fc84b270cff7cc1cf203ceaa447a731f49746a71eb8a12a8cb4105b",
+      "candidate_sha256": "4c422a96d45a78720adece60373195477a89f278e7edd5b3f9988bd8db40da40",
+      "different_pixels": 0,
+      "tolerance": 0,
+      "coverage": 1,
+      "passed": true
+    },
+    {
+      "case": "bounded-settings-warnings",
+      "kind": "bounded-source",
+      "size": [
+        1920,
+        1080
+      ],
+      "checked_pixels": 2073600,
+      "source_sha256": "816d9ee26f718fde458659787121ec7ec9b152ad10bfd25579fec1813e0b533e",
+      "candidate_sha256": "a4e39efec355e6fe4870eb97c7d40ed04f9cc96f521a907778f92a4c677c90b5",
+      "different_pixels": 0,
+      "tolerance": 0,
+      "coverage": 1,
+      "passed": true
+    },
+    {
+      "case": "bounded-bank-placeholder-selected",
+      "kind": "bounded-projections",
+      "size": [
+        1920,
+        1080
+      ],
+      "checked_pixels": 2073600,
+      "source_sha256": "50f50a83475f6e354c86d1f6ce59b989f5cfee030cd339df3f1071c41b21ecce",
+      "candidate_sha256": "de71d6e7ed83dc16f6fa71e9af28c56fd4645860d9f120d5de9bc72d4d0b01a8",
+      "different_pixels": 0,
+      "tolerance": 0,
+      "coverage": 1,
+      "passed": true
+    },
+    {
+      "case": "bounded-bank-selected-tab",
+      "kind": "bounded-projections",
+      "size": [
+        1920,
+        1080
+      ],
+      "checked_pixels": 2073600,
+      "source_sha256": "371481f80bc2ba218321ae3a24d8e2c5ffcb74a3167fb888d71ff52b37c5c6a6",
+      "candidate_sha256": "0288c174d4b78419bb94db5e59022be02b560b43fee1b1d020513e412b2acda6",
+      "different_pixels": 0,
+      "tolerance": 0,
+      "coverage": 1,
+      "passed": true
+    },
+    {
+      "case": "bounded-bank-tabs",
+      "kind": "bounded-projections",
+      "size": [
+        1920,
+        1080
+      ],
+      "checked_pixels": 2073600,
+      "source_sha256": "52fc26d96b149ad0dd50e1a19da64decc6a64adbd4098ccec2516a0bf93ae662",
+      "candidate_sha256": "2e6869093ef770a67fc76b08a5c95409feb0811f191b7866b03d378b5d1e9a73",
+      "different_pixels": 0,
+      "tolerance": 0,
+      "coverage": 1,
+      "passed": true
+    },
+    {
+      "case": "bounded-hud-hidden",
+      "kind": "bounded-projections",
+      "size": [
+        1920,
+        1080
+      ],
+      "checked_pixels": 2073600,
+      "source_sha256": "38e30e9701cf6bbb266670f80daae679dcd288778ec71e9e96925ad6bcb1f96f",
+      "candidate_sha256": "89ff1d3de0334b366b59771a19aca45c6fc77ece9409e059abfe397ea21f913f",
+      "different_pixels": 0,
+      "tolerance": 0,
+      "coverage": 1,
+      "passed": true
+    },
+    {
+      "case": "bounded-hud-highlight",
+      "kind": "bounded-projections",
+      "size": [
+        1920,
+        1080
+      ],
+      "checked_pixels": 2073600,
+      "source_sha256": "2708e01f6257621d4fbb56fb84a34e070d1f9fe74e737bf740b82fef094f2ae5",
+      "candidate_sha256": "79ac23c45a2d943973ceeb389cb83e1b0eb94f4c331ef98830135e0b8c408a39",
+      "different_pixels": 0,
+      "tolerance": 0,
+      "coverage": 1,
+      "passed": true
+    },
+    {
+      "case": "bounded-hud-locked",
+      "kind": "bounded-projections",
+      "size": [
+        1920,
+        1080
+      ],
+      "checked_pixels": 2073600,
+      "source_sha256": "e45fd0762c58d746c3f51cca3fe4b21c7809c8cb5a59366dc0d0b48cb7a77470",
+      "candidate_sha256": "3163e2c6648c00f281b58df8d49ad7fac17f1e83ba321b9d403d3c3aa569acb6",
+      "different_pixels": 0,
+      "tolerance": 0,
+      "coverage": 1,
+      "passed": true
+    },
+    {
+      "case": "bounded-levelup-chat",
+      "kind": "bounded-projections",
+      "size": [
+        1920,
+        1080
+      ],
+      "checked_pixels": 2073600,
+      "source_sha256": "298fc0762fe66279dd0fddefc7fbdf5a66699fda08c9e0bf1620372fc6b39929",
+      "candidate_sha256": "4202fd19e7313589ff42a88467c79cdf414b103cf20250215764f900e6633d58",
+      "different_pixels": 0,
+      "tolerance": 0,
+      "coverage": 1,
+      "passed": true
+    },
+    {
+      "case": "bounded-levelup-popup",
+      "kind": "bounded-projections",
+      "size": [
+        1920,
+        1080
+      ],
+      "checked_pixels": 2073600,
+      "source_sha256": "cde65d22be2224be74215c0a8f7afc1a97be62abd2ec5a914d0d6a0d745f7d46",
+      "candidate_sha256": "f61ee52b9abd0e809f892913f694d66e14b66f78f4a34b323843bcd8dc2e134d",
+      "different_pixels": 0,
+      "tolerance": 0,
+      "coverage": 1,
+      "passed": true
+    },
+    {
+      "case": "bounded-settings-activities",
+      "kind": "bounded-projections",
+      "size": [
+        1920,
+        1080
+      ],
+      "checked_pixels": 2073600,
+      "source_sha256": "998432552cafd8f065f2fa9b8572236e36c841779d5c9f7506672101087a84f8",
+      "candidate_sha256": "0670e5cec6e386fcde9de1218dddbd23a8b91ca4a190543298d50d1ed1982f6b",
+      "different_pixels": 0,
+      "tolerance": 0,
+      "coverage": 1,
+      "passed": true
+    },
+    {
+      "case": "bounded-settings-audio",
+      "kind": "bounded-projections",
+      "size": [
+        1920,
+        1080
+      ],
+      "checked_pixels": 2073600,
+      "source_sha256": "cefcc908cffe253d9c94c3efb9740eb09c1213e55e3f2b60369b9e55a1c925d1",
+      "candidate_sha256": "2224e7d5698544bd8798a9ace11ce58cd84d666d981f7641c0ed9c24fb43a7ba",
+      "different_pixels": 0,
+      "tolerance": 0,
+      "coverage": 1,
+      "passed": true
+    },
+    {
+      "case": "bounded-settings-chat",
+      "kind": "bounded-projections",
+      "size": [
+        1920,
+        1080
+      ],
+      "checked_pixels": 2073600,
+      "source_sha256": "0893b44cfad111b14f6301f20413b1698e03d5892a721d98a0390846b0f3ddc5",
+      "candidate_sha256": "54c7a21def4e1d72dc8ee25ca0b1bc5eef4609e86685a52ce40d7ecdd6132e94",
+      "different_pixels": 0,
+      "tolerance": 0,
+      "coverage": 1,
+      "passed": true
+    },
+    {
+      "case": "bounded-settings-controls",
+      "kind": "bounded-projections",
+      "size": [
+        1920,
+        1080
+      ],
+      "checked_pixels": 2073600,
+      "source_sha256": "4ec04388b7acb540a10416827f77697fc8b6b5bd277ad50fc2fc38552b3634a8",
+      "candidate_sha256": "a1a2db7f4a89447ad859d490ac52e640d3cd469aff8b21e6b166dbd95a0dc7b9",
+      "different_pixels": 0,
+      "tolerance": 0,
+      "coverage": 1,
+      "passed": true
+    },
+    {
+      "case": "bounded-settings-display",
+      "kind": "bounded-projections",
+      "size": [
+        1920,
+        1080
+      ],
+      "checked_pixels": 2073600,
+      "source_sha256": "22a5e2e03178d9772bf2c63d08c0a62419634427640b6ea0a672a9257fc849b0",
+      "candidate_sha256": "3443416d585c9926081201003289b4794d6f8aab9c966fc812b1537f0e38e6af",
+      "different_pixels": 0,
+      "tolerance": 0,
+      "coverage": 1,
+      "passed": true
+    },
+    {
+      "case": "bounded-settings-gameplay",
+      "kind": "bounded-projections",
+      "size": [
+        1920,
+        1080
+      ],
+      "checked_pixels": 2073600,
+      "source_sha256": "0aaec6b1c49ece8d2d9a60fd49cbaf72676ba7995cb94276506b89680be15adc",
+      "candidate_sha256": "51e933460dc943fc1d77cf279f2e26f47824deed56c497b1f580f321e96d9c36",
+      "different_pixels": 0,
+      "tolerance": 0,
+      "coverage": 1,
+      "passed": true
+    },
+    {
+      "case": "bounded-settings-interfaces",
+      "kind": "bounded-projections",
+      "size": [
+        1920,
+        1080
+      ],
+      "checked_pixels": 2073600,
+      "source_sha256": "285b680793e892fe5b271771b5434e8e7e4e3343034fe2a65b8afbf53bdf646e",
+      "candidate_sha256": "16c1f0b6dc8a300dbde874f674f21238efda00db51b93f68afe691578fdb9a08",
+      "different_pixels": 0,
+      "tolerance": 0,
+      "coverage": 1,
+      "passed": true
+    },
+    {
+      "case": "bounded-settings-search-empty",
+      "kind": "bounded-projections",
+      "size": [
+        1920,
+        1080
+      ],
+      "checked_pixels": 2073600,
+      "source_sha256": "49c04ab6f1eda9175a562b4b6f2653ba3626f9e84641cb7f6ced5051ef736333",
+      "candidate_sha256": "ce2633527c46071cd36cdfce58c3893a80795fbd830dac69cf2420d6d570e08d",
+      "different_pixels": 0,
+      "tolerance": 0,
+      "coverage": 1,
+      "passed": true
+    },
+    {
+      "case": "bounded-settings-search-zoom",
+      "kind": "bounded-projections",
+      "size": [
+        1920,
+        1080
+      ],
+      "checked_pixels": 2073600,
+      "source_sha256": "3893e0dd0fc84b270cff7cc1cf203ceaa447a731f49746a71eb8a12a8cb4105b",
+      "candidate_sha256": "4c422a96d45a78720adece60373195477a89f278e7edd5b3f9988bd8db40da40",
+      "different_pixels": 0,
+      "tolerance": 0,
+      "coverage": 1,
+      "passed": true
+    },
+    {
+      "case": "bounded-settings-warnings",
+      "kind": "bounded-projections",
+      "size": [
+        1920,
+        1080
+      ],
+      "checked_pixels": 2073600,
+      "source_sha256": "816d9ee26f718fde458659787121ec7ec9b152ad10bfd25579fec1813e0b533e",
+      "candidate_sha256": "a4e39efec355e6fe4870eb97c7d40ed04f9cc96f521a907778f92a4c677c90b5",
+      "different_pixels": 0,
+      "tolerance": 0,
+      "coverage": 1,
+      "passed": true
+    }
+  ],
+  "fullPanelsExcluded": 0,
+  "finalAcceptance": false
+}

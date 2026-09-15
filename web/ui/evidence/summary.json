@@ -1,17 +1,18 @@
 {
   "scope": "UI component and original-source validation only. No real-server journey, final visual/audio or hardware acceptance.",
   "status": "blocked",
-  "implementation_commit": "53ed974059e75adc9d42d81e8538be064b0c40bd",
+  "implementation_commit": "fa84bf3202090ecb632cc74bc9167677ce7835f2",
   "source_pack_sha256": "b62e19704e17d3d3e4e819f803ef49ba7cc54034ae407184b423427c65d9674d",
   "published_contract_upstream": "d1532d6fc063d2a02383a7b4bb1ca3c449e214ce",
+  "nullable_production_correction": "351847f3f5255f6de6e345d5217a7910eaa145a3",
   "contract_implementation_inferred_from_types": false,
   "typecheck": {
     "passed": true,
     "command": "pnpm exec tsc --noEmit"
   },
   "unit": {
-    "passed": 38,
-    "total": 38
+    "passed": 47,
+    "total": 47
   },
   "integrated_audio_policy_units": {
     "passed": 29,
@@ -19,9 +20,10 @@
   },
   "component_browser": {
     "legacy": 20,
-    "versioned": 15,
+    "versioned": 16,
     "source_audio_ui": 7,
     "source_music_ui": 6,
+    "all_settings_ui": 6,
     "browser": "153.0.8010.12"
   },
   "audio_contract": {
@@ -68,11 +70,16 @@
       "passed": 8,
       "total": 8,
       "tolerance": 0
+    },
+    "bounded_ui": {
+      "passed": 36,
+      "total": 36,
+      "tolerance": 0
     }
   },
   "original_frames": {
     "scope": "Original individual source frames/masks/offsets/alpha, no panel crops",
-    "checkedSpriteFrames": 1108,
+    "checkedSpriteFrames": 1116,
     "checkedFontGlyphs": 1024,
     "failures": [],
     "toleranceDifferentPixels": 0,
@@ -82,13 +89,13 @@
   },
   "strict_source_hashes_checked": 1307,
   "compiled_assets": {
-    "sprites": 760,
+    "sprites": 775,
     "fonts": 4,
     "items": 240,
-    "native_templates": 122,
+    "native_templates": 140,
     "static_model_contexts": 475,
     "static_model_images": 68,
-    "manifest_sha256": "b83d7b1b03ada3a1f1bf62baf4f0205e5ea73ffc3667ba86f39a083ad1686081"
+    "manifest_sha256": "344d68ba595b8f3b89870b63bbf81411ac91fe5c1b2e63999924c3eced3261fe"
   },
   "implementation_files": [
     {
@@ -102,6 +109,10 @@
     {
       "path": "tools/ui-assets/UiAudioCapture.java",
       "sha256": "42dffa92804999592c67e78151b004298a8917d820df6cbef1f112b1a71701df"
+    },
+    {
+      "path": "tools/ui-assets/UiBoundedCapture.java",
+      "sha256": "113f50704ab8e941ce6abfddcd4f99ede4a753538f0b85d59ee4d2436f038a30"
     },
     {
       "path": "tools/ui-assets/UiFlameCapture.java",
@@ -121,11 +132,11 @@
     },
     {
       "path": "tools/ui-assets/UiScriptDump.java",
-      "sha256": "70010ef400ae9a4b83f205c40b568c8c457e3235fe6c301826f996f366eec54f"
+      "sha256": "064df2770bddd26f37717e3005f2a6a00e1e70d42a7b126f7ba48bf35836ecd3"
     },
     {
       "path": "tools/ui-assets/archive_evidence.py",
-      "sha256": "380a4cf669e226e02b53eb53412f620f378253f0913837d5a43261c2d456992e"
+      "sha256": "72fa0f7d391566fcb8e24a797b7ee96203b5a5385bba0553be8ed642857141be"
     },
     {
       "path": "tools/ui-assets/compare.py",
@@ -133,7 +144,7 @@
     },
     {
       "path": "tools/ui-assets/compare_modes.py",
-      "sha256": "52730cbd0f940782facdb6682361c827c59d13ec0f08b24a25187c0bfa5fc70b"
+      "sha256": "c4a5178d02accf5df1b6e06a304e566784192e37b74df8f05a2d836efcf84215"
     },
     {
       "path": "tools/ui-assets/glyph_proof.py",
@@ -145,7 +156,11 @@
     },
     {
       "path": "tools/ui-assets/prepare.py",
-      "sha256": "d8648f133c6c80f2636daccf69a53c5b05af382b1f9afae071abde3dff92926b"
+      "sha256": "06c1d712a3192ca105222b83c7cbfed8368a36582e4ce0c5c746edae5759f281"
+    },
+    {
+      "path": "tools/ui-assets/settings_catalog.py",
+      "sha256": "9cf596411c5f27e973959902339dbfe1454293521ba1885372a1a1b36235b31c"
     },
     {
       "path": "web/audio/audio.test.ts",
@@ -205,11 +220,15 @@
     },
     {
       "path": "web/ui/assets.ts",
-      "sha256": "cfebff84490c24e973aebcaaaf91c990587135a24191a501074895a7b1e9e3d5"
+      "sha256": "93fdc749ab7b0cdfbae6a2cf0eaf74dcf52528f7a012513b0fa85d5538f00849"
     },
     {
       "path": "web/ui/audio-controls.ts",
       "sha256": "684662c202e51e4d0bcd2a44a1fc5377067d63795ad8593fcf69a6ac569269b4"
+    },
+    {
+      "path": "web/ui/bank.ts",
+      "sha256": "57d9fc73e87886811e7e2898aafa7577bba21462416b300e6a066fa1dcbeb75c"
     },
     {
       "path": "web/ui/death-preview.ts",
@@ -229,19 +248,27 @@
     },
     {
       "path": "web/ui/gameplay-ui.ts",
-      "sha256": "f18599ded5c838df4c4dbadf00a5f10f3896ecbecfb334ffe6b64d6ff6563abf"
+      "sha256": "8ce448845b5f97dc045b2ae62bec53e96a2d308ad4df87fae24dfd110f73fd62"
+    },
+    {
+      "path": "web/ui/hud.ts",
+      "sha256": "ef8496c2485817cc8e1c48f5d70404001a7ed9a61df1cfa1d70fc39b808aa142"
     },
     {
       "path": "web/ui/index.ts",
-      "sha256": "4edaaa36b88aacd50c378643e2c41ccd0b3f737f43f09dbe8358389f7bae4429"
+      "sha256": "f3cd09220cbdc2c45c0a2638d89e919c85925c2dc4c63ef3a0d703b8c4574c93"
     },
     {
       "path": "web/ui/input.ts",
-      "sha256": "de001e22c2dd83f149c79f9786794530353cafb1ef0ae42dd3d92f54849428dc"
+      "sha256": "abf9ea1d5b8bc2c8d3a01a6692dbf690a4804f65bab35f64c7f667f557bf7a04"
     },
     {
       "path": "web/ui/layout.ts",
       "sha256": "1f199694399600f01f5b4f3a4442dcb096fe4df7278b2d837b22aa6d48c4c7c0"
+    },
+    {
+      "path": "web/ui/level-up.ts",
+      "sha256": "6bc2404b44329dbdefb6581a7404129bd84c094630b4a8bf0305b5ae019c6397"
     },
     {
       "path": "web/ui/minimap.ts",
@@ -249,7 +276,7 @@
     },
     {
       "path": "web/ui/music-controls.ts",
-      "sha256": "736aec3ee903afe9fe09d4c2ce87d582175fd96245d060cd71c09e9b880c339a"
+      "sha256": "35bb4805db9be3b47d0911e6b6f7fde1b45f33d9116379b51930b0ee088163ba"
     },
     {
       "path": "web/ui/presentations.ts",
@@ -261,7 +288,7 @@
     },
     {
       "path": "web/ui/raster.ts",
-      "sha256": "bfd637b1be59f047ce0817c835ae61b0bd7ca1333b8d20a4b83fbc0c0ac8bcf4"
+      "sha256": "2efc9c721beea76236df7509a458cbef3568edeb9e569c6b4379a71a8bf29fc8"
     },
     {
       "path": "web/ui/recovery.ts",
@@ -270,6 +297,10 @@
     {
       "path": "web/ui/rewards.ts",
       "sha256": "58c4bb2f30ec1757f06ed8459410c36eb89257cf20004fb6f908bebe8f08e740"
+    },
+    {
+      "path": "web/ui/settings.ts",
+      "sha256": "66876d0bca26d3d76bc173f29c0f6f99b2768370f3c62b0959f7782979f6f6d8"
     },
     {
       "path": "web/ui/tests/audio-browser.mjs",
@@ -282,6 +313,14 @@
     {
       "path": "web/ui/tests/audio-fixture.ts",
       "sha256": "5fd45bf827d919802c1af2e0451204f403fbb08b2692cbadeed90156a2127fff"
+    },
+    {
+      "path": "web/ui/tests/bounded-browser.mjs",
+      "sha256": "83d83be51d7dd54c6a411dc38af671bbb8602aefdec3ebe86114900c0168ec4c"
+    },
+    {
+      "path": "web/ui/tests/bounded-fixture.ts",
+      "sha256": "b178810dfb180ef5e8f45af12e9a20603b74858495f496384f08a181e9ba4edd"
     },
     {
       "path": "web/ui/tests/browser-host.mjs",
@@ -297,11 +336,15 @@
     },
     {
       "path": "web/ui/tests/gameplay-ui-browser.mjs",
-      "sha256": "435781966f71f3bd26347c5c8a15e149dd7b5241f49f3587971011e0fc49ac1a"
+      "sha256": "fb4cea01533b64b2e23bdbee1917b490a62ea8bfc9458c3d4c5c5d64ec5b2d67"
     },
     {
       "path": "web/ui/tests/gameplay-ui.test.ts",
-      "sha256": "8f9dfd8da02b8de69abc649edbd588ea0f02c8759e06b44100273a1beb2accff"
+      "sha256": "3e2966e7968153d6a03e30f148868716f2faf8c1653d45d83065e36084969c13"
+    },
+    {
+      "path": "web/ui/tests/independent.test.ts",
+      "sha256": "ccd495b7d679283d2b21ac517285b488a9b328493c4eb4657b82af83379dd27b"
     },
     {
       "path": "web/ui/tests/modes-browser.mjs",
@@ -324,6 +367,10 @@
       "sha256": "6b373a763d0ed35a8526b170cd5e1935b3da0766b08fd5fe4c1e7de85fca8f8d"
     },
     {
+      "path": "web/ui/tests/settings-browser.mjs",
+      "sha256": "a4d489dec8893673949c7bc9f776354a9b3b01d6efef0f5571196a076638d19d"
+    },
+    {
       "path": "web/ui/tests/source-browser.mjs",
       "sha256": "e764d653751a8c687186490c1a3415e63689b9aef036f527cf9b4ebfbca84823"
     },
@@ -337,7 +384,7 @@
     },
     {
       "path": "web/ui/world-view.ts",
-      "sha256": "8ec1093b91f3845dbf24a23264e72828e8c19344011bea39a14b1801a7fa6e4f"
+      "sha256": "b4e40188cd99fc0f339f82313d80b65d870ec9745d51d76b03a08a143a4331e4"
     }
   ],
   "remaining": {
@@ -406,7 +453,9 @@
       "Declared body_type 0/1 permissions and confirmation, with local appearance/equipment preview descriptors. Human kit/colour/pronoun controls do not create new penguin variants.",
       "All shop buys still send displayed canonical expected_item; held menus/amounts never retarget a reused row.",
       "Native master/music/effects/area sliders and per-channel mute controls consume actual audio observations, preserve remembered in-session positions and source integer/nonlinear semantics; title audio uses explicit global mute rather than resetting all channel positions.",
-      "Player-scoped setUiMusicState delegates the exact published state to the audio engine. Native modes, canonical manual tracks, actual unlock coloring/counts, current playlist, loop flags, scrollbar and source dropdown cancellation are wired without fabricated music events or caller-selected next songs."
+      "Player-scoped setUiMusicState delegates the exact published state to the audio engine. Native modes, canonical manual tracks, actual unlock coloring/counts, current playlist, loop flags, scrollbar and source dropdown cancellation are wired without fabricated music events or caller-selected next songs.",
+      "Stock All Settings group134 opens as a real local interface with original category/search/info/locked-filter/scroll/choice controls and live audio/music/death plus existing UI input behavior. Missing required display/camera values remain explicit unknowns, not fixture defaults.",
+      "Native bank main-tab/section ordering, tab graphics, placeholder opacity120/quantity glyphs and true insert icon projection; original HUD hidden/locked states and two-border highlight styling."
     ],
     "requests": [
       {
@@ -450,9 +499,14 @@
         "reason": "SourceMusicState and UI controls now cover actual modes/unlocks/manual selection/current playlist/loop flags. It does not identify three saved slots, and identical-state idempotence is not a skip API. No mode-flipping workaround or caller-guessed next track is used."
       },
       {
-        "scope": "Native remembered mute values and full settings window",
-        "extension": "Expose the actual remembered mute percentages (source varbits14817/12426/12427/12428) when restoring persisted settings. Complete the separate All Settings window projection.",
-        "reason": "Current percentages/mixers and source sidebar sliders are wired. In-session Mute/Unmute preserves the observed previous value. A zero value whose saved restoration value was never supplied reports ui.audio.remembered_mute instead of inventing it. The broader All Settings button has explicit required feedback, not a silent open acknowledgement."
+        "scope": "Native remembered mute and versioned saved client preferences",
+        "extension": "Consume the audio owner's forthcoming typed preference helpers for remembered mute varbits14817/12426/12427/12428, direct Skip and saved Playlist1/2/3.",
+        "reason": "The All Settings window and available bindings are now implemented. In-session Mute/Unmute preserves its observed value. Unprovided saved values remain unknown; this UI does not fork the audio preference contract or invent defaults."
+      },
+      {
+        "scope": "Actual source display/camera preferences",
+        "extension": "Renderer/shell must expose the real camera FOV/follow-height preference state and limits, brightness and view distance through its approved adapter.",
+        "reason": "Native setting2734/operation14 uses varcs73/74,1338\u20131341 and source42 VIEWPORT_SETFOV plus CAM_SETFOLLOWHEIGHT; RenderCamera.zoom is not a safe substitute. Brightness2736/operation15 and distance3656/operation168 retain source placement and required feedback. No display values are copied from comparison fixtures."
       },
       {
         "scope": "Committed Cook reward/Widget153 close audio batches",
@@ -462,8 +516,8 @@
     ],
     "implementation_gaps_without_contract_extension": [
       "Complete source-selected/highlight/hidden/disabled projection coverage for every required current-source signature and live 71-state route. The existing 71 states/29 families/11 signatures are preserved, not reduced or declared accepted.",
-      "Complete native level-up chat and popup layouts once their canonical association is supplied; current explicit failure/continuation coverage is not visual completion.",
-      "Matched full-panel source comparisons for remaining live bank-tab/placeholder/highlight variants and their canonical data, beyond the preserved original bank replay and current versioned interaction tests.",
+      "Wire the now-derived native162 chat and233 levelup_display popup helpers to the backend's canonical interface IDs and authoritative text/event sequencing; no IDs or levels are invented.",
+      "Match final canonical/live bank data to the now-calibrated main-tab/section/placeholder/selection layouts, and cover any additional required variants. The three bounded bank cases and their data projections already pass at zero tolerance.",
       "Real-server startup-to-quest-completion journey, reconnect/restart/concurrent-state behavior and final visual/audio/hardware acceptance remain separate gates."
     ],
     "source_comparison_scope": {
@@ -492,6 +546,13 @@
         "total": 8,
         "tolerance": 0
       },
+      "bounded_independent_states": {
+        "total": 18,
+        "maximum": 18,
+        "source_and_projection_checks": 36,
+        "passed": 36,
+        "tolerance": 0
+      },
       "full_panels_excluded": 0,
       "source_fixture_balances_are_production_values": false,
       "component_double_is_live_gameplay": false
@@ -500,10 +561,5 @@
   },
   "full_panels_excluded": 0,
   "gameplay_acceptance": false,
-  "final_m1_acceptance": false,
-  "latest_bounded_followup": {
-    "path": "web/ui/evidence/production-correction/summary.json",
-    "implementation_commit": "0ef23449a42db521c6a9af9bdce95b102d12b175",
-    "scope": "Nullable-production correction; preceding complete-source evidence retains its recorded commit basis."
-  }
+  "final_m1_acceptance": false
 }

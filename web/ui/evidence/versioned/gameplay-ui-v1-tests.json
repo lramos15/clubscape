@@ -34,6 +34,10 @@
       "passed": true
     },
     {
+      "name": "inventory-only null target renders native controls and preserves authority on reject/cancel",
+      "passed": true
+    },
+    {
       "name": "death preview uses actual kept/lost rows and exact monetary strings, not fixture classifications",
       "passed": true
     },

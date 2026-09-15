@@ -1,0 +1,603 @@
+{
+  "scope": "Exactly eighteen original controlled independent UI states; no new acceptance or live account/progression assertions.",
+  "limit": 18,
+  "states": [
+    {
+      "case": "bounded-settings-activities",
+      "group": 134,
+      "inputs": {
+        "category": 0,
+        "moreInfo": true,
+        "hideLocked": false,
+        "search": null,
+        "sourceAudioPercentages": [
+          100,
+          100,
+          100,
+          100
+        ],
+        "sourceCameraVarcs": [
+          73,
+          74,
+          1338,
+          1339,
+          1340,
+          1341
+        ],
+        "explicitCameraValuesNotDefaults": [
+          300,
+          300,
+          200,
+          600,
+          200,
+          600
+        ]
+      },
+      "scope": "Explicit original controlled UI only; no live gameplay or acceptance."
+    },
+    {
+      "case": "bounded-settings-audio",
+      "group": 134,
+      "inputs": {
+        "category": 1,
+        "moreInfo": true,
+        "hideLocked": false,
+        "search": null,
+        "sourceAudioPercentages": [
+          100,
+          100,
+          100,
+          100
+        ],
+        "sourceCameraVarcs": [
+          73,
+          74,
+          1338,
+          1339,
+          1340,
+          1341
+        ],
+        "explicitCameraValuesNotDefaults": [
+          300,
+          300,
+          200,
+          600,
+          200,
+          600
+        ]
+      },
+      "scope": "Explicit original controlled UI only; no live gameplay or acceptance."
+    },
+    {
+      "case": "bounded-settings-chat",
+      "group": 134,
+      "inputs": {
+        "category": 2,
+        "moreInfo": true,
+        "hideLocked": false,
+        "search": null,
+        "sourceAudioPercentages": [
+          100,
+          100,
+          100,
+          100
+        ],
+        "sourceCameraVarcs": [
+          73,
+          74,
+          1338,
+          1339,
+          1340,
+          1341
+        ],
+        "explicitCameraValuesNotDefaults": [
+          300,
+          300,
+          200,
+          600,
+          200,
+          600
+        ]
+      },
+      "scope": "Explicit original controlled UI only; no live gameplay or acceptance."
+    },
+    {
+      "case": "bounded-settings-controls",
+      "group": 134,
+      "inputs": {
+        "category": 3,
+        "moreInfo": true,
+        "hideLocked": false,
+        "search": null,
+        "sourceAudioPercentages": [
+          100,
+          100,
+          100,
+          100
+        ],
+        "sourceCameraVarcs": [
+          73,
+          74,
+          1338,
+          1339,
+          1340,
+          1341
+        ],
+        "explicitCameraValuesNotDefaults": [
+          300,
+          300,
+          200,
+          600,
+          200,
+          600
+        ]
+      },
+      "scope": "Explicit original controlled UI only; no live gameplay or acceptance."
+    },
+    {
+      "case": "bounded-settings-display",
+      "group": 134,
+      "inputs": {
+        "category": 4,
+        "moreInfo": true,
+        "hideLocked": false,
+        "search": null,
+        "sourceAudioPercentages": [
+          100,
+          100,
+          100,
+          100
+        ],
+        "sourceCameraVarcs": [
+          73,
+          74,
+          1338,
+          1339,
+          1340,
+          1341
+        ],
+        "explicitCameraValuesNotDefaults": [
+          300,
+          300,
+          200,
+          600,
+          200,
+          600
+        ]
+      },
+      "scope": "Explicit original controlled UI only; no live gameplay or acceptance."
+    },
+    {
+      "case": "bounded-settings-gameplay",
+      "group": 134,
+      "inputs": {
+        "category": 5,
+        "moreInfo": true,
+        "hideLocked": false,
+        "search": null,
+        "sourceAudioPercentages": [
+          100,
+          100,
+          100,
+          100
+        ],
+        "sourceCameraVarcs": [
+          73,
+          74,
+          1338,
+          1339,
+          1340,
+          1341
+        ],
+        "explicitCameraValuesNotDefaults": [
+          300,
+          300,
+          200,
+          600,
+          200,
+          600
+        ]
+      },
+      "scope": "Explicit original controlled UI only; no live gameplay or acceptance."
+    },
+    {
+      "case": "bounded-settings-interfaces",
+      "group": 134,
+      "inputs": {
+        "category": 6,
+        "moreInfo": true,
+        "hideLocked": false,
+        "search": null,
+        "sourceAudioPercentages": [
+          100,
+          100,
+          100,
+          100
+        ],
+        "sourceCameraVarcs": [
+          73,
+          74,
+          1338,
+          1339,
+          1340,
+          1341
+        ],
+        "explicitCameraValuesNotDefaults": [
+          300,
+          300,
+          200,
+          600,
+          200,
+          600
+        ]
+      },
+      "scope": "Explicit original controlled UI only; no live gameplay or acceptance."
+    },
+    {
+      "case": "bounded-settings-warnings",
+      "group": 134,
+      "inputs": {
+        "category": 7,
+        "moreInfo": true,
+        "hideLocked": false,
+        "search": null,
+        "sourceAudioPercentages": [
+          100,
+          100,
+          100,
+          100
+        ],
+        "sourceCameraVarcs": [
+          73,
+          74,
+          1338,
+          1339,
+          1340,
+          1341
+        ],
+        "explicitCameraValuesNotDefaults": [
+          300,
+          300,
+          200,
+          600,
+          200,
+          600
+        ]
+      },
+      "scope": "Explicit original controlled UI only; no live gameplay or acceptance."
+    },
+    {
+      "case": "bounded-settings-search-zoom",
+      "group": 134,
+      "inputs": {
+        "category": 4,
+        "moreInfo": false,
+        "hideLocked": true,
+        "search": "zoom",
+        "sourceAudioPercentages": [
+          100,
+          100,
+          100,
+          100
+        ],
+        "sourceCameraVarcs": [
+          73,
+          74,
+          1338,
+          1339,
+          1340,
+          1341
+        ],
+        "explicitCameraValuesNotDefaults": [
+          300,
+          300,
+          200,
+          600,
+          200,
+          600
+        ]
+      },
+      "scope": "Explicit original controlled UI only; no live gameplay or acceptance."
+    },
+    {
+      "case": "bounded-settings-search-empty",
+      "group": 134,
+      "inputs": {
+        "category": 4,
+        "moreInfo": false,
+        "hideLocked": true,
+        "search": "no such setting",
+        "sourceAudioPercentages": [
+          100,
+          100,
+          100,
+          100
+        ],
+        "sourceCameraVarcs": [
+          73,
+          74,
+          1338,
+          1339,
+          1340,
+          1341
+        ],
+        "explicitCameraValuesNotDefaults": [
+          300,
+          300,
+          200,
+          600,
+          200,
+          600
+        ]
+      },
+      "scope": "Explicit original controlled UI only; no live gameplay or acceptance."
+    },
+    {
+      "case": "bounded-bank-tabs",
+      "group": 12,
+      "inputs": {
+        "selectedTab": 0,
+        "tabSizes": [
+          4,
+          4
+        ],
+        "sourceItems": [
+          995,
+          436,
+          438,
+          2349,
+          1265,
+          1351,
+          1927,
+          1933,
+          1944,
+          1947,
+          315,
+          1511
+        ],
+        "fixtureOnly": true
+      },
+      "scope": "Explicit original controlled UI only; no live gameplay or acceptance."
+    },
+    {
+      "case": "bounded-bank-selected-tab",
+      "group": 12,
+      "inputs": {
+        "selectedTab": 2,
+        "tabSizes": [
+          4,
+          4
+        ],
+        "sourceItems": [
+          995,
+          436,
+          438,
+          2349,
+          1265,
+          1351,
+          1927,
+          1933,
+          1944,
+          1947,
+          315,
+          1511
+        ],
+        "fixtureOnly": true
+      },
+      "scope": "Explicit original controlled UI only; no live gameplay or acceptance."
+    },
+    {
+      "case": "bounded-bank-placeholder-selected",
+      "group": 12,
+      "inputs": {
+        "selectedTab": 1,
+        "tabSizes": [
+          4,
+          4
+        ],
+        "placeholderSlot": 0,
+        "sourceItem": 1265,
+        "sourcePlaceholder": 14760,
+        "notes": true,
+        "insert": true,
+        "placeholders": true,
+        "amount": 5,
+        "fixtureOnly": true
+      },
+      "scope": "Explicit original controlled UI only; no live gameplay or acceptance."
+    },
+    {
+      "case": "bounded-hud-hidden",
+      "group": 116,
+      "inputs": {
+        "introducedTabs": [
+          10,
+          11
+        ],
+        "activeTab": 11,
+        "fixtureOnly": true
+      },
+      "scope": "Explicit original controlled UI only; no live gameplay or acceptance."
+    },
+    {
+      "case": "bounded-hud-locked",
+      "group": 218,
+      "inputs": {
+        "introducedTabs": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          10,
+          11
+        ],
+        "activeTab": 6,
+        "sourceMissingRuneSlots": [
+          9,
+          10
+        ],
+        "fixtureOnly": true
+      },
+      "scope": "Explicit original controlled UI only; no live gameplay or acceptance."
+    },
+    {
+      "case": "bounded-hud-highlight",
+      "group": 116,
+      "inputs": {
+        "introducedTabs": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          10,
+          11
+        ],
+        "activeTab": 11,
+        "flashsideVarbit3756": 4,
+        "highlightTab": 3,
+        "fixtureOnly": true
+      },
+      "scope": "Explicit original controlled UI only; no live gameplay or acceptance."
+    },
+    {
+      "case": "bounded-levelup-chat",
+      "group": 162,
+      "inputs": {
+        "chatType": "GAMEMESSAGE",
+        "text": "Source-only level-up chat notice.",
+        "scope": "Native chat styling only; text is an explicit fixture, not a fabricated canonical level-up message."
+      },
+      "scope": "Explicit original controlled UI only; no live gameplay or acceptance."
+    },
+    {
+      "case": "bounded-levelup-popup",
+      "group": 233,
+      "inputs": {
+        "gamevalName": "levelup_display",
+        "parent": 10617399,
+        "title": "Source-only level-up title.",
+        "detail": "Source-only level-up detail.",
+        "scope": "Original widget233 source style, not an invented canonical ClubScape interface ID."
+      },
+      "scope": "Explicit original controlled UI only; no live gameplay or acceptance."
+    }
+  ],
+  "references": [
+    {
+      "kind": "ui",
+      "name": "bounded-settings-activities.png",
+      "sha256": "998432552cafd8f065f2fa9b8572236e36c841779d5c9f7506672101087a84f8",
+      "bytes": 162013
+    },
+    {
+      "kind": "ui",
+      "name": "bounded-settings-audio.png",
+      "sha256": "cefcc908cffe253d9c94c3efb9740eb09c1213e55e3f2b60369b9e55a1c925d1",
+      "bytes": 161079
+    },
+    {
+      "kind": "ui",
+      "name": "bounded-settings-chat.png",
+      "sha256": "0893b44cfad111b14f6301f20413b1698e03d5892a721d98a0390846b0f3ddc5",
+      "bytes": 162975
+    },
+    {
+      "kind": "ui",
+      "name": "bounded-settings-controls.png",
+      "sha256": "4ec04388b7acb540a10416827f77697fc8b6b5bd277ad50fc2fc38552b3634a8",
+      "bytes": 161778
+    },
+    {
+      "kind": "ui",
+      "name": "bounded-settings-display.png",
+      "sha256": "22a5e2e03178d9772bf2c63d08c0a62419634427640b6ea0a672a9257fc849b0",
+      "bytes": 163019
+    },
+    {
+      "kind": "ui",
+      "name": "bounded-settings-gameplay.png",
+      "sha256": "0aaec6b1c49ece8d2d9a60fd49cbaf72676ba7995cb94276506b89680be15adc",
+      "bytes": 162005
+    },
+    {
+      "kind": "ui",
+      "name": "bounded-settings-interfaces.png",
+      "sha256": "285b680793e892fe5b271771b5434e8e7e4e3343034fe2a65b8afbf53bdf646e",
+      "bytes": 161978
+    },
+    {
+      "kind": "ui",
+      "name": "bounded-settings-warnings.png",
+      "sha256": "816d9ee26f718fde458659787121ec7ec9b152ad10bfd25579fec1813e0b533e",
+      "bytes": 161923
+    },
+    {
+      "kind": "ui",
+      "name": "bounded-settings-search-zoom.png",
+      "sha256": "3893e0dd0fc84b270cff7cc1cf203ceaa447a731f49746a71eb8a12a8cb4105b",
+      "bytes": 156140
+    },
+    {
+      "kind": "ui",
+      "name": "bounded-settings-search-empty.png",
+      "sha256": "49c04ab6f1eda9175a562b4b6f2653ba3626f9e84641cb7f6ced5051ef736333",
+      "bytes": 155538
+    },
+    {
+      "kind": "ui",
+      "name": "bounded-bank-tabs.png",
+      "sha256": "52fc26d96b149ad0dd50e1a19da64decc6a64adbd4098ccec2516a0bf93ae662",
+      "bytes": 158969
+    },
+    {
+      "kind": "ui",
+      "name": "bounded-bank-selected-tab.png",
+      "sha256": "371481f80bc2ba218321ae3a24d8e2c5ffcb74a3167fb888d71ff52b37c5c6a6",
+      "bytes": 151600
+    },
+    {
+      "kind": "ui",
+      "name": "bounded-bank-placeholder-selected.png",
+      "sha256": "50f50a83475f6e354c86d1f6ce59b989f5cfee030cd339df3f1071c41b21ecce",
+      "bytes": 150649
+    },
+    {
+      "kind": "ui",
+      "name": "bounded-hud-hidden.png",
+      "sha256": "38e30e9701cf6bbb266670f80daae679dcd288778ec71e9e96925ad6bcb1f96f",
+      "bytes": 110127
+    },
+    {
+      "kind": "ui",
+      "name": "bounded-hud-locked.png",
+      "sha256": "e45fd0762c58d746c3f51cca3fe4b21c7809c8cb5a59366dc0d0b48cb7a77470",
+      "bytes": 108648
+    },
+    {
+      "kind": "ui",
+      "name": "bounded-hud-highlight.png",
+      "sha256": "2708e01f6257621d4fbb56fb84a34e070d1f9fe74e737bf740b82fef094f2ae5",
+      "bytes": 113080
+    },
+    {
+      "kind": "ui",
+      "name": "bounded-levelup-chat.png",
+      "sha256": "298fc0762fe66279dd0fddefc7fbdf5a66699fda08c9e0bf1620372fc6b39929",
+      "bytes": 106410
+    },
+    {
+      "kind": "ui",
+      "name": "bounded-levelup-popup.png",
+      "sha256": "cde65d22be2224be74215c0a8f7afc1a97be62abd2ec5a914d0d6a0d745f7d46",
+      "bytes": 106887
+    }
+  ],
+  "sourcePackSha256": "b62e19704e17d3d3e4e819f803ef49ba7cc54034ae407184b423427c65d9674d",
+  "finalAcceptance": false
+}
