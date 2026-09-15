@@ -582,7 +582,7 @@ The original failed runs are retained, and the narrower diagnostic compares
 coordinated controls with direct native API calls without the preference
 coordinator. Both paths exceeded the unchanged native
 20.045351473922903ms dispatch tolerance (26.4399092970522ms observed in the
-profiling run); API-call durations were below0.5ms. That is evidence of a real
+profiling run); mean API-call durations were below0.5ms. That is evidence of a real
 native/host timing gap, not proof of its root cause or permission for a timing
 override. The runner records exact dispatches/failures and exits unsuccessfully
 when that gate fails, even when all storage/entry contracts passed.
