@@ -1,0 +1,183 @@
+{
+  "schema_version": 1,
+  "task": "m1-headless-journey",
+  "status": "blocked",
+  "full_original_journey_passed": false,
+  "milestone_accepted": false,
+  "ui_audio_performance_or_runelite_claims": false,
+  "source_data_geometry_rng_cadence_or_state_seeded": false,
+  "source_candidate": {
+    "revision": "m1.source-backed.v3.41555bd46c074d62",
+    "content_artifact_version": 3,
+    "raw_artifact_sha256": "bb99ad96add9669fd49c4162832fbd8e9cb151997a4e4c4682b33b1f1882e2e1",
+    "content_json_archive_sha256": "b803b160de90df921bd7bbe6e45b3fc612c4f73ff4159a488dfd887dc808d52f",
+    "manifest_sha256": "41e5cd10d3992084b52642cb59845b80a221d483fc8df65197da7f1ef35d494f",
+    "fresh_normal_candidate_not_repin_of_old_df3_world": true,
+    "artifact_preserved_through_within_run_restart": true,
+    "upcoming_ui4_integrated_or_assumed": false
+  },
+  "actual_run": {
+    "run_id": "656f0053f75e406f",
+    "recorded_at_unix_ms": 1789464918613,
+    "command": "python3 tools/journey-tests/run.py --report .local/evidence/m1-event-suffix-journey.json",
+    "server_revision_label": "f2b1870e02c07ebbb9dbb166e946e20cae4b6df8",
+    "world_id": "d05008cd-814a-4951-bb2f-dc06fb6d279d",
+    "account_id": "f6f45131-061a-4698-914e-443cb0f9e5aa",
+    "actor_id": "actor.0087e883011c4616a329c89ea0fe6aa0",
+    "registration_and_character_creation": "Real public Register/Login/CreateCharacter(empty options)/JoinWorld",
+    "source_checks_passed": 162,
+    "successful_tutorial_edges_in_one_account": 31,
+    "source_success_path_edges": 70,
+    "coverage_not_summed_across_accounts": true,
+    "completed_source_mechanics": [
+      "Source appearance, brand-new experience and Guide/Settings lessons",
+      "Real starting door crossing, Survival Expert net grant and Inventory lesson",
+      "Stochastic shrimp catch and exactly100 Fishing XP-tenths",
+      "Actual onboarding transport reconnect, logout/login, owned-server restart and durable grant replay",
+      "Exclusive Survival Expert primary tools lesson; oneaxe/onetinderbox, netretained",
+      "Actual log cutting, temporary fire ignition and shrimp cooking outcome",
+      "Source survival gate, Chef dialogue ingredients, dough and bread range cooking",
+      "Source doors, Run setting, Quest Guide/journal/explanation and underground ladder",
+      "Legitimate bronze pickaxe, tin and copper mining, furnace bronze smelting and hammer dialogue grant"
+    ],
+    "final_skill_xp_tenths": {
+      "skill.hitpoints": 11540,
+      "skill.fishing": 100,
+      "skill.woodcutting": 250,
+      "skill.firemaking": 400,
+      "skill.cooking": 700,
+      "skill.mining": 350,
+      "skill.smithing": 62,
+      "all_other_skills": 0
+    },
+    "source_numeric_checks": {
+      "fishing_xp_delta": {"expected": 100, "actual": 100},
+      "woodcutting_xp_delta": {"expected": 250, "actual": 250},
+      "firemaking_xp_delta": {"expected": 400, "actual": 400},
+      "shrimp_cooking_xp_delta": {"expected": 300, "actual": 300},
+      "bread_cooking_xp_delta": {"expected": 400, "actual": 400},
+      "tin_mining_xp_delta": {"expected": 175, "actual": 175},
+      "copper_mining_xp_delta": {"expected": 175, "actual": 175},
+      "bronze_smelting_xp_delta": {"expected": 62, "actual": 62},
+      "guaranteed_rng_or_generated_implementation_oracles": false
+    },
+    "final_inventory": [
+      {"slot": 0, "item": "item.fishing_net.small", "quantity": 1},
+      {"slot": 1, "item": "item.shrimps.cooked", "quantity": 1},
+      {"slot": 2, "item": "item.axe.bronze", "quantity": 1},
+      {"slot": 3, "item": "item.tinderbox", "quantity": 1},
+      {"slot": 4, "item": "item.bread", "quantity": 1},
+      {"slot": 5, "item": "item.pot", "quantity": 1},
+      {"slot": 6, "item": "item.bucket", "quantity": 1},
+      {"slot": 7, "item": "item.pickaxe.bronze", "quantity": 1},
+      {"slot": 8, "item": "item.bar.bronze", "quantity": 1},
+      {"slot": 9, "item": "item.hammer", "quantity": 1}
+    ],
+    "onboarding_recovery": {
+      "passed": true,
+      "same_isolated_postgresql_data": true,
+      "same_artifact_descriptor_and_binary": true,
+      "restart_request_id": "c0f6580d-ab5f-4477-bf59-e9b14c28171d",
+      "old_server_pid": 1021007,
+      "new_server_pid": 1021810,
+      "resume_tick": 133,
+      "resume_next_sequence": 30,
+      "transport_reconnect_tick": 129,
+      "logout_login_tick": 132,
+      "duplicate_grant_receipt_ticks": [125, 131, 133, 135],
+      "rejected_old_sequence_tick": 127,
+      "rejected_future_sequence_tick": 129,
+      "unearned_items_xp_stage_or_sequence_changes": 0
+    },
+    "source_service_exit_clean": true,
+    "owned_resources_cleaned": true
+  },
+  "new_precise_blocker": {
+    "source_stage": "stage.tutorial.anvil_open",
+    "required_source_transition": "transition.tutorial.smithing_menu to stage.tutorial.smith_dagger",
+    "actual_target": "spawn.anvil.tutorial.3075.9497.p0.t10.r0",
+    "source_object_definition": "object.anvil.tutorial",
+    "original_source_object_id": 2097,
+    "actor_tile": {"x": 3075, "y": 9498, "plane": 0},
+    "input": {"kind": "Interact", "action": "Smith"},
+    "sequence": 102,
+    "operation_id": "2eb81048-9337-495a-96ac-27a6d6f15fa6",
+    "acknowledged_tick": 500,
+    "acknowledged_revision": 608,
+    "next_sequence": 103,
+    "actual_events": [
+      {
+        "kind": "message",
+        "text": "Select a permitted source recipe.",
+        "event_id": "event:e017dc3775638ac86d9740ff5e11c1c5ad5c356f3ca88e0e5a05b4db3d6b3ed3"
+      },
+      {
+        "kind": "interacted",
+        "target": "spawn.anvil.tutorial.3075.9497.p0.t10.r0",
+        "event_id": "event:5370bbc49a2c51a66ec0da1c90118ab5da90aebd485ee61e2ebae696f295796e"
+      }
+    ],
+    "actual_interface_opened_or_presented_events": 0,
+    "bounded_observation": {
+      "source_ticks_waited": 40,
+      "final_tick": 540,
+      "final_stage": "stage.tutorial.anvil_open",
+      "final_activity": "idle",
+      "source_stage_advance_or_dagger_fabricated": false
+    },
+    "canonical_transition_hook": {
+      "event": "interface_opened",
+      "target": "interface.smithing",
+      "guard": "tutorial_stage == stage.tutorial.anvil_open",
+      "resulting_stage": "stage.tutorial.smith_dagger"
+    },
+    "canonical_interface": {"id": "interface.smithing", "access": "contextual", "source_ids": [312]},
+    "current_engine_contract": [
+      "actions.rs:464-470 InteractionAction::Production emits only the source-recipe-selection message.",
+      "No contextual production interface session/open event is created by that action.",
+      "actions.rs:87-90 generic OpenInterface rejects contextual interfaces, so using it as a successful tab open would be a false workaround."
+    ],
+    "required_parent_integration": "Real contextual production-menu opening/selection/event boundary and matching source bindings. Upcoming UI4 is a separate authorized integration, not presumed present. Do not inject an interface event, skip anvil_open or directly produce the dagger to fake the required lesson."
+  },
+  "event_continuity": {
+    "verified_input_suffix_overlaps": 31,
+    "acknowledged_inputs_replayed_for_history": 0,
+    "method": "The server publishes events chronologically and drops only an oldest prefix for limits. Require the exact last observed local event, including payload, once in a returned input suffix; then subsequent events are covered. Preserve original wire gap flag and record the proof.",
+    "first_live_proof": {
+      "prior_observed_revision": 426,
+      "acknowledged_revision": 428,
+      "server_history_floor": 172,
+      "last_observed_event_id": "event:9aff738b3456220cf62374c671a27f3c8ccf035f0c293ff08fd6b594e49df432"
+    },
+    "without_overlap": "Read-only PollWorld from actual observed cursor must return explicit no-gap history and consistent floor/revision/tick/sequence; otherwise stop.",
+    "genuine_event_gaps_silently_ignored_or_events_invented": false
+  },
+  "earlier_new_artifact_candidates": [
+    {"run_id": "a7af9401bc974a32", "source_edges": 24, "result": "Actual primary tools proof; conservative original input-history gap handling stopped at Quest Guide."},
+    {"run_id": "fcde94d74db84e5f", "source_edges": 10, "result": "Old eight-attempt mobile interaction limit exhausted; enlarged explicitly to32/600tick bound without modifying NPC movement."},
+    {"run_id": "8531f0c7cea34ab4", "source_edges": 22, "result": "Read-only history requery encountered a moving dialogue409; verified chronological suffix overlap avoids that extra query when continuity is already proved."}
+  ],
+  "validation": [
+    {"command": "cargo fmt --package clubscape-sim --check", "result": "passed"},
+    {"command": "cargo test --quiet --package clubscape-sim --package clubscape-protocol --all-features", "result": "passed", "passed_tests": 40},
+    {"command": "cargo test --quiet --package clubscape-server --test shop_intent_compatibility", "result": "passed", "passed_tests": 2},
+    {"command": "cargo clippy --quiet --package clubscape-sim --all-features --all-targets -- -D warnings", "result": "passed"},
+    {"command": "python3 -m unittest discover -s tools/journey-tests -p 'test_*.py' -q", "result": "passed", "passed_tests": 12}
+  ],
+  "exact_build_identity": {
+    "server_sha256": "00f0d35fced68e524e3cfa68290c9cdb79d50ce90ce05b0da5bfaf980be51250",
+    "simulator_sha256": "1ad06cc481b763e31c5dcd1c34f2c870254d4e7dfa8966bdc5b3c056ff1b6112",
+    "descriptor_sha256": "548245c9216d9f6a8b24180d82686e8b2b1ddd117d3c054bbd76a942329f953a",
+    "assets_manifest_sha256": "caeb977c6e583520bd91b0dfd1c41c0f58cfeec2be4fd9514014a5b7386bc057",
+    "generated_protocol_descriptor_sha256": "648448015cd056b77fdce0c7b9d1fb3dd7243f22236123eb0e3c5e8cb189c0eb"
+  },
+  "independent_source_oracle_hashes": {
+    "research/journey-rules/initial-state.json": "3f6cefa5f68f226878df5286d1689c1ebe5a2fa28b4d6c5d0fd34a7741447ad3",
+    "research/journey-rules/tutorial.json": "774789d1559f438f3db6036d831d4b341a093d77949d416ff9bc8bfe48d0087b",
+    "research/journey-rules/activities.json": "a0eb67f8615642161f7ba05ecfda99bd1ba62102f5fc23f335a340df4645f6f7",
+    "research/journey-rules/expected-scenarios.json": "c9dc703ab7ad139d6df90791d13bcb3cbfcdd518973517e3bdabcbc93ba29a68"
+  },
+  "remaining_unchecked": "The remaining39 source tutorial transitions including smithing-menu/dagger/equipment/combat/prayer/magic/HomeTeleport, Lumbridge mining/bank/shop/goblin/death/recovery, Cook acquisition/full rewards and post-quest restart/reconnect/replay.",
+  "sql_tools_dialogue_task": "done on actual exclusive primary lesson proof",
+  "sql_full_journey_task": "blocked on the new real contextual smithing-menu boundary"
+}

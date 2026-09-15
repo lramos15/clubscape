@@ -1,4 +1,6 @@
 mod evidence;
+#[cfg(test)]
+mod history_tests;
 mod plan;
 mod recovery;
 mod source;
@@ -443,10 +445,22 @@ impl Runner {
             snapshot.revision >= self.snapshot.revision && snapshot.tick >= self.snapshot.tick,
             "Server revision/tick went backwards"
         );
-        ensure!(
-            !snapshot.event_history_gap,
-            "Authoritative event history gap: acceptance evidence is incomplete"
-        );
+        if snapshot.event_history_gap {
+            ensure!(
+                reason == "action_ack_history_suffix"
+                    && Self::history_suffix_covered(self.events.last(), &snapshot.events),
+                "Authoritative event history gap: acceptance evidence is incomplete"
+            );
+            self.evidence.append("input_history_suffix_verified", json!({
+                "last_observed_event_id": self.events.last().map(|event| &event.event_id),
+                "prior_observed_revision": self.snapshot.revision,
+                "acknowledged_revision": snapshot.revision,
+                "server_history_floor": snapshot.event_history_floor_revision,
+                "wire_gap_preserved": true,
+                "proof": "The server returns a chronological suffix, dropping only its oldest events. An exact last-observed event is present, so no later event is omitted by that suffix truncation.",
+                "input_replayed": false
+            }))?;
+        }
         ensure!(
             snapshot.next_sequence > 0,
             "Snapshot omitted authoritative next_sequence"
@@ -589,10 +603,17 @@ impl Runner {
                     result.duplicate == duplicate,
                     "Server duplicate status does not match the submitted operation history"
                 );
-                self.capture(
-                    result.snapshot.context("Action result snapshot missing")?,
-                    "action_ack",
-                )?;
+                let snapshot = result.snapshot.context("Action result snapshot missing")?;
+                if snapshot.event_history_gap {
+                    if Self::history_suffix_covered(self.events.last(), &snapshot.events) {
+                        self.capture(snapshot, "action_ack_history_suffix")?;
+                    } else {
+                        self.reconcile_acknowledged_history(snapshot, receipt)
+                            .await?;
+                    }
+                } else {
+                    self.capture(snapshot, "action_ack")?;
+                }
                 let expected = if duplicate {
                     before_sequence
                 } else {
@@ -629,6 +650,51 @@ impl Runner {
         Ok(())
     }
 
+    async fn reconcile_acknowledged_history(
+        &mut self,
+        acknowledged: game::WorldSnapshot,
+        receipt: &Receipt,
+    ) -> Result<()> {
+        let observed_revision = self.snapshot.revision;
+        self.evidence.append("acknowledged_input_history_gap", json!({
+            "operation_id": receipt.operation_id,
+            "sequence": receipt.sequence,
+            "last_continuous_revision": observed_revision,
+            "acknowledged_state": public_snapshot(&acknowledged)?,
+            "server_event_floor": acknowledged.event_history_floor_revision,
+            "policy": "Successful input already acknowledged. Requery actual observed cursor read-only; do not replay the input or claim omitted events were observed."
+        }))?;
+        self.bound()?;
+        tokio::time::sleep(SOURCE_TICK).await;
+        let response = self
+            .rpc(
+                Command::PollWorld(game::PollWorld {
+                    world_session_id: self.world_session.clone(),
+                    after_revision: observed_revision,
+                    quote: None,
+                }),
+                true,
+            )
+            .await?;
+        let Outcome::WorldSnapshot(recovered) = response else {
+            bail!("History reconciliation poll returned no authoritative snapshot");
+        };
+        Self::validate_history_reconciliation(observed_revision, &acknowledged, &recovered)?;
+        self.evidence.append(
+            "input_history_reconciled_read_only",
+            json!({
+                "operation_id": receipt.operation_id,
+                "sequence": receipt.sequence,
+                "polled_after_revision": observed_revision,
+                "acknowledged_revision": acknowledged.revision,
+                "continuous_revision": recovered.revision,
+                "continuous_server_floor": recovered.event_history_floor_revision,
+                "input_replayed": false
+            }),
+        )?;
+        self.capture(recovered, "action_ack_continuous_cursor")
+    }
+
     async fn poll(&mut self) -> Result<()> {
         self.bound()?;
         tokio::time::sleep(SOURCE_TICK).await;
@@ -659,6 +725,44 @@ impl Runner {
             "Authoritative 600ms clock stalled for 20 polls"
         );
         self.capture(snapshot, "poll")
+    }
+
+    fn validate_history_reconciliation(
+        observed_revision: u64,
+        acknowledged: &game::WorldSnapshot,
+        recovered: &game::WorldSnapshot,
+    ) -> Result<()> {
+        ensure!(
+            !recovered.event_history_gap
+                && recovered.event_history_floor_revision <= observed_revision,
+            "The actual observed cursor has an event-history gap; acceptance evidence is incomplete"
+        );
+        ensure!(
+            recovered.revision >= acknowledged.revision
+                && acknowledged.revision >= observed_revision
+                && recovered.tick >= acknowledged.tick,
+            "Read-only history reconciliation moved behind the acknowledged input"
+        );
+        ensure!(
+            recovered.next_sequence == acknowledged.next_sequence && recovered.next_sequence > 0,
+            "History reconciliation changed the acknowledged input sequence"
+        );
+        Ok(())
+    }
+
+    fn history_suffix_covered(
+        last_observed: Option<&game::Event>,
+        received: &[game::Event],
+    ) -> bool {
+        last_observed.is_some_and(|last| {
+            !last.event_id.is_empty()
+                && received.iter().any(|event| event == last)
+                && received
+                    .iter()
+                    .filter(|event| event.event_id == last.event_id)
+                    .count()
+                    == 1
+        })
     }
 
     async fn quote(&mut self, request: game::quote_request::Request) -> Result<game::Quote> {

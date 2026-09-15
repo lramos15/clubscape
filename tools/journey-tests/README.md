@@ -360,6 +360,47 @@ contains the two normal-account reproductions, exact failed poll IDs and source
 guard/code evidence. Each reached ten source transitions and one verified
 onboarding restart; later gameplay and post-quest recovery remain unpassed.
 
+### Actual exclusive tools lesson and longer event history
+
+Authorized generator `2f775f79…` and validated product `435e27c5…` are integrated
+as `4677324`/`f2b1870`. A **fresh** normal candidate uses revision
+`m1.source-backed.v3.41555bd46c074d62` and raw artifact
+`bb99ad96add9669fd49c4162832fbd8e9cb151997a4e4c4682b33b1f1882e2e1`;
+no existing df3 world was repinned.
+
+[`evidence/exclusive-tools-f2b1870.json`](evidence/exclusive-tools-f2b1870.json)
+records the actual `woodcutting_firemaking_intro` choice at sequence35/tick162:
+exactly one axe and tinderbox, net/shrimp retained, stage `cut_logs`. SQL
+`m1-tutorial-dialogue-entries` is done separately. That account then performed
+real log cutting/fire/cooking, Chef production and Quest Guide/journal steps,
+reaching24 acknowledged transitions before a conservative client event-gap stop.
+
+Long-running input replies use the server's original join event floor.
+The runner reconciles a successful input's stale-floor gap by proving exact
+last-observed-event overlap in the server's chronological event suffix, or by
+one real read-only poll from its last observed revision requiring explicit
+no-gap continuity and matching acknowledgment sequence. The original wire flag
+and the chosen proof are recorded; no missing event is generated. It never
+resends that input, ignores a genuine gap, or counts an older stopped run as a
+complete journey. The overlap path also avoids introducing an unnecessary poll
+between a moving NPC's acknowledged dialogue open and the player's real choice.
+
+[`evidence/anvil-open-f2b1870.json`](evidence/anvil-open-f2b1870.json) records the
+latest actual candidate: **31 source transitions**, 162 source checks, real
+onboarding recovery and uninterrupted evidence through Chef production, tin/
+copper mining, bronze smelting and the hammer grant. Thirty-one input suffix
+overlap proofs preserved event continuity without replaying a successful input.
+
+The new blocker is `anvil_open`: source anvil2097 `Smith` is acknowledged at
+sequence102/tick500 but emits only “Select a permitted source recipe.” and
+`interacted`. No contextual `interface.smithing` opening is presented, so its
+source `interface_opened` transition does not fire through tick540. That
+interface is contextual, and generic `OpenInterface` cannot authorize it.
+The required actual production-menu boundary belongs to the upcoming integration,
+not an injected event, direct dagger-production bypass, or a fabricated stage.
+All old tools-dialogue/water/collision failures remain historical; none is
+reported as the current blocker.
+
 ```sh
 python3 -m unittest discover -s tools/journey-tests -p 'test_*.py' -q
 ```

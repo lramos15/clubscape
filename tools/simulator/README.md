@@ -114,10 +114,23 @@ one run. Writes with uncertain transport outcomes are not retried under new
 operation IDs. Explicit duplicate probes reuse the original operation ID,
 sequence and action; the current authenticated world session may change.
 
+Input responses can report a gap against the server's old join-event cursor
+even while this client continuously polls. Such an already successful input is
+**not replayed**. The server returns a chronological suffix, discarding only
+the oldest events. If the exact last locally observed event (identity **and**
+payload) occurs once in that suffix, it proves coverage of later events. The
+runner preserves the wire-gap flag and records this overlap proof.
+
+Without that proof, it requests a read-only `PollWorld` from the last actually
+observed revision. It continues only when the response explicitly has no gap,
+its history floor covers that cursor, its revision/tick cover the acknowledgment,
+and its next sequence agrees. Real history loss remains an error. Poll gaps are
+never silently ignored or replaced with inferred events.
+
 Moving NPC approaches prefer the actual evaluated interaction menu over the
 client's conservative geometry candidates. Approach replanning has a 12-attempt
 limit and a 240-source-tick guard between bounded walk plans; rejected interactions
-have an eight-attempt bound, and reopened
+have a 32-attempt bound with a 600-source-tick guard, and reopened
 dialogue choices a sixteen-attempt bound with a 600-source-tick pursuit guard.
 Retargeting stays on the same source NPC
 and choice. A definite conflict is reconciled through actual snapshots and

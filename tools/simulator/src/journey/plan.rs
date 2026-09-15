@@ -863,7 +863,12 @@ impl Runner {
     }
 
     async fn interact(&mut self, target: &str, action: &str) -> Result<Receipt> {
-        for attempt in 0..8 {
+        let started = self.snapshot.tick;
+        for attempt in 0..32 {
+            ensure!(
+                self.snapshot.tick.saturating_sub(started) < 600,
+                "Source interaction {target}/{action} exhausted its 600-tick mobile-target budget"
+            );
             self.approach(target, action).await?;
             let before = self.entities.get(target).cloned();
             match self.interact_here(target, action).await {
@@ -879,13 +884,15 @@ impl Runner {
                         "bounded_npc_reapproach",
                         json!({
                             "target": target, "action": action, "attempt": attempt + 1,
-                            "maximum_attempts": 8
+                            "maximum_attempts": 32
                         }),
                     )?;
                 }
             }
         }
-        bail!("Moving source target {target} remained out of reach after eight observed attempts")
+        bail!(
+            "Moving source target {target} remained out of reach after 32 bounded observed attempts"
+        )
     }
 
     async fn retry_moving_target(
