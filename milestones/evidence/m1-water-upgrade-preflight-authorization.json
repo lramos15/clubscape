@@ -91,7 +91,7 @@
     "guarded_database_cases_passed": 2,
     "strict_server_clippy_passed": true,
     "retained_failures": "Initial test-only error-code compilation mistake and Produced-versus-ProductionResolved assertion are retained with exact logs.",
-    "remaining_operator_scope": "Prepare genuine source-only asset deliveries for both exact pairs, without changing canonical files. Exercise real migrate-ui processes against two newly created character-free worlds in the owned disposable database; never a saved player world.",
+    "remaining_operator_scope": "Use the four already prepared and unchanged genuine source deliveries. Exercise the pinned real migrate-ui processes against the two named newly created character-free worlds in the owned disposable database; never a saved player world.",
     "independent_native_review_fix_still_required": false,
     "reviewed_native_repair": {
       "owned": "04a40ee84d0a95866264a3c087071e0f63904377",
@@ -101,12 +101,17 @@
       "final_native_tests_passed": 420,
       "final_source_pair_case_passed": true,
       "final_native_and_wasm_strict_clippy_passed": true,
-      "final_guarded_postgresql_rerun": "pending",
-      "final_native_evidence": ".worktrees/m1-water-integration/.local/water-upgrade-preflight/final-native-01/report.json"
+      "final_guarded_postgresql_rerun": "passed",
+      "final_guarded_postgresql_cases_passed": 2,
+      "final_native_evidence": ".worktrees/m1-water-integration/.local/water-upgrade-preflight/final-native-01/report.json",
+      "final_native_evidence_sha256": "b03347ee1674d77a063ccaceb13e2724a42286247e09cf6e79da02adc0ae3a20",
+      "final_database_evidence": ".worktrees/m1-water-integration/.local/water-upgrade-preflight/postgres-03/report.json",
+      "final_database_evidence_sha256": "a7ca773b185defd417cc800ef439f75da86f50b58a4a95857bced70076933347",
+      "final_database_and_credentials_removed": true
     }
   },
   "prepared_source_operator": {
-    "status": "reviewed_native_ready_final_database_check_pending",
+    "status": "exact_operator_execution_admitted",
     "candidate": "2cc6c45813a51bcd4a7ff5164975936a2caf36fc",
     "directory": ".worktrees/m1-water-integration/.local/water-source-operator-01",
     "preparation_sha256": "51caa7d2a14631bb56253b05b84e480898e318f4fdfdd9d17f63ae4c2c4fa39d",
@@ -120,7 +125,25 @@
     "verified_asset_mappings_per_delivery": 5015,
     "accounts_or_services_started_by_preparation": 0,
     "operator_invocations_used": 0,
-    "execution": null,
+    "execution": {
+      "status": "admitted",
+      "candidate_head": "6c47c3a7cb71d41a9b3e94904b36c75c084315de",
+      "binary": {
+        "path": "target/debug/clubscape-server",
+        "sha256": "83de4326673720f30143c175c3721071ddceb21100e7380b42a072cdca5d0b0a"
+      },
+      "runner_commit": "4340530c7184f4c2e03ec9982bbbfbfd82f57999",
+      "runner_sha256": "9ce5e3ebdc97d9463dbdf6c4184978ec6438a52e5a68003d4f0477814fe6bf30",
+      "review_record_sha256": "1b4c238979a07902a52ff147b8503bd732e7a62a454af52fd90a89188b09d40d",
+      "final_native_report_sha256": "b03347ee1674d77a063ccaceb13e2724a42286247e09cf6e79da02adc0ae3a20",
+      "final_database_report_sha256": "a7ca773b185defd417cc800ef439f75da86f50b58a4a95857bced70076933347",
+      "machinery_tests_passed": 32,
+      "pending_review_refusal_actually_exercised": true,
+      "source_process_allowance_already_used": false,
+      "profile_order": ["legacy5e", "current5b"],
+      "ordinary_shutdown": "Production SIGTERM handler, zero process exit, clean shutdown_complete event and released native world lease.",
+      "scope": "Only four source-server starts and ten migrate-ui invocations against the two prepared fresh character-free worlds. No account/gameplay command or saved-world access."
+    },
     "required_before_execution": [
       "Assess the independently found persisted-production repair04a40ee and validate the imported final native candidate.",
       "Rebuild/verify the exact final native executable and preserve these exact source-delivery pins.",

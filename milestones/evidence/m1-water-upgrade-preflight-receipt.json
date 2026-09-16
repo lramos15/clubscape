@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "task": "M1-WATER-UPGRADE-PREFLIGHT",
-  "status": "native_repair_reviewed_final_database_check_pending",
+  "status": "native_repair_reviewed_final_checks_passed_operator_admitted",
   "authority": "milestones/evidence/m1-water-upgrade-preflight-authorization.json",
   "worktree": ".worktrees/m1-water-integration",
   "branch": "integration/m1-water-main",
@@ -39,12 +39,16 @@
     "fix_scope": "Shared all-variant persisted-state restriction and future/due/overdue serialized regressions in the original worker tree.",
     "result_collected": true,
     "repair_commit": "04a40ee84d0a95866264a3c087071e0f63904377",
-    "repair_review_and_integrated_validation": "Independent static fix review passed; all six imported paths match,420native and one exact-source-pair case pass. Final guarded PostgreSQL and real-asset operator checks remain pending."
+    "repair_review_and_integrated_validation": "Independent static fix review passed; all six imported paths match,420native, one exact-source-pair case and both final guarded PostgreSQL cases pass. The real-asset operator check remains unexecuted."
   },
   "pending_execution": {
     "source_operator_calls_used": 0,
     "source_operator_calls_limit": 10,
     "source_operator_journal": ".worktrees/m1-water-integration/.local/water-upgrade-preflight/operator-authority-v1.json",
+    "source_operator_candidate": "6c47c3a7cb71d41a9b3e94904b36c75c084315de",
+    "source_operator_binary_sha256": "83de4326673720f30143c175c3721071ddceb21100e7380b42a072cdca5d0b0a",
+    "source_operator_runner_sha256": "9ce5e3ebdc97d9463dbdf6c4184978ec6438a52e5a68003d4f0477814fe6bf30",
+    "final_guarded_postgresql_cases_passed": 2,
     "shell_browser_calls_used": 0,
     "shell_browser_calls_limit": 1,
     "shell_browser_gate": "Renderer quiet-window confirmation is still required; exact b4f6304/5ea9e28 source pins remain unchanged."
