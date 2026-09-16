@@ -9,7 +9,7 @@
       {"id": "director", "task": "M1-FLEET-CONTRACTS"},
       {"id": "bb7f85f7-096a-4377-80cb-3e7eae196c6b", "task": "M1-BROWSER-RENDERER"},
       {"id": "78d01af9-70a4-4b02-8339-6a61eb377374", "task": "M1-BROWSER-SHELL"},
-      {"id": "cdfad64d-9162-439f-a525-58e1114dd7f4", "task": "M1-AUDIO-COMPOSED-TIMING"},
+      {"id": "cdfad64d-9162-439f-a525-58e1114dd7f4", "task": "M1-AUDIO-CONTROL-READINESS"},
       {"id": "ac0f0856-44af-445b-bd90-6db7a1f4fc74", "task": "M1-NATIVE-CAMERA-CONTROLLER"},
       {"id": "2766e089-44e5-4a1d-974e-7b03ad9c269d", "task": "M1-NATIVE-RECOVERY-CONTRACT"},
       {"id": "81ac9884-4f39-4f27-b516-6e9a42b09b51", "task": "M1-COOK-CONTINUATION"}
@@ -33,6 +33,24 @@
     "usage_accounting": "milestones/evidence/m1-usage-snapshot.json records the available delayed session snapshot; final project-wide credits/currency are unavailable."
   },
   "tasks": [
+    {
+      "id": "M1-AUDIO-CONTROL-READINESS",
+      "goal": "Make the actual active source2266 control input ready before its first native deadline, closing the retained cold-use loading/timing failure without changing source policy.",
+      "status": "IMPLEMENTING",
+      "specs": ["milestones/evidence/m1-audio-control-readiness-authorization.json", "milestones/evidence/m1-audio-composed-review.json", "web/audio/composed-timing.md", "web/audio/evidence/composed-timing.json"],
+      "dependencies": ["M1-SHELL-INTEGRATION"],
+      "allowed_paths": ["web/audio/**", "web/app/tests/real-player-audio.ts", "web/app/tests/real-audio.ts"],
+      "forbidden_paths": ["prompt.md", "crates/**", "content/**", "assets/**", "web/ui/**", "web/shared/**", "web/app/composition.ts", "web/app/tests/source-browser.ts", "research/reference-pack/**", "tools/reference-pack/**", "spec/**", "milestones/**", "Cargo.lock"],
+      "outputs": ["Source-bound one-input readiness with explicit errors/cancellation", "Deterministic cold/load/failure/re-entry tests", "Fresh normal production build and two bounded whole-client cold validation outcomes"],
+      "validation_commands": ["node --test web/audio/*.test.ts", "pnpm --dir web typecheck", "pnpm --dir web build", "pnpm --dir web test:isolated --game-root <owned exact source bundle>"],
+      "test_requirements": ["Continue existing clean66c6d87 worktree; no duplicate work or source changes", "Only two additional measured Chrome invocations under the new record, no extra pre-repair run", "First2266 decoded before enqueue/admission; unchanged18dispatches and20.045ms bound", "No test waits, special teardown, broad preload or timing/queue/source waiver", "Preserve and report both outcomes rather than an intermediate lucky pass"],
+      "acceptance": ["Cold and ready control paths meet the actual unchanged native timing contract in both bounded runs, or retain a precise failed gate"],
+      "reserved_namespaces": [],
+      "source_notes": ["Candidate66c6d87 corrects ready-cue coarse-device scheduling without advancing the native queue, but final old-budget run has one60ms-late cold2266 after62.53ms enqueue-to-decode. Old3/3 budget is exhausted; new2-run admission is separate. Parent48audio units/typecheck pass; no code has been integrated into root yet."],
+      "parity_entries": [],
+      "adaptations": [],
+      "evidence": []
+    },
     {
       "id": "M1-COOK-CONTINUATION",
       "goal": "Finish the already-accepted Cook journey and postquest persistence from the exact907 account after the reviewed source-ground-contact repair.",
@@ -144,7 +162,7 @@
     {
       "id": "M1-AUDIO-COMPOSED-TIMING",
       "goal": "Diagnose and repair actual source2266 cue lateness exposed after real production UI restart/re-entry, without relaxing original timing or changing source queues.",
-      "status": "IMPLEMENTING",
+      "status": "BLOCKED",
       "specs": ["spec/browser-implementation.md", "web/audio/README.md", "web/app/tests/real-player-audio.ts", "milestones/approvals/m1-reference-pack-v1.3.0.json"],
       "dependencies": ["M1-UI-INTEGRATION"],
       "allowed_paths": ["web/audio/**", "web/app/tests/real-player-audio.ts", "web/app/tests/real-audio.ts"],
@@ -157,7 +175,7 @@
       "source_notes": ["The prior dbeb1ac/f9e56a5 cue repair and parent45units/18dispatches-zero-overruns remain preserved historical evidence.", "Actual production2f3704d artifact63b21e3d5a357f13bc4518570c08f1682f8dfc55b09f5b684de2616e12ed1374 now passes21 source/browser control checks, including real signup/experience, bound native preferences/minimap, restart, logout/relogin and device loss, with zero unhandled browser errors. Separate native storage fixture passes6 contracts but2/18 source2266 cues are late: source-control/7=22.49433106575949ms; source-control/19=21.859410430838942ms. Evidence .worktrees/m1-ui-integration/.local/ui-composed-browser-5/result.json and failure.json. Overall browser check remains failed_native_audio_timing, not accepted."],
       "parity_entries": [],
       "adaptations": [],
-      "evidence": []
+      "evidence": ["Owned66c6d873603b423f856549363ca6acc4f282c564 remains isolated and unmerged. Measured40-46ms AudioContext cursor batches miss the existing20ms queue horizon; ready zero-delay non-positional cues are now pre-submitted at unchanged dueAt without advancing the source queue.", "All3post-repair invocations consumed. Run2 passes21source/6storage contracts and18dispatches with0overruns, but finalrun3 retains one60ms cold2266 failure after62.53ms enqueue-to-decode. Seventeen ready cues are on time; loading retries remain legitimate source1..10 behavior, not a timing waiver. Parent48units/typecheck pass; no new parent browser run. Evidence milestones/evidence/m1-audio-composed-review.json. New M1-AUDIO-CONTROL-READINESS separately admits only2additional measured whole-client runs."]
     },
     {
       "id": "M1-UI-INTEGRATION",

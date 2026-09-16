@@ -1,0 +1,73 @@
+{
+  "schema_version": 1,
+  "milestone": "m1-starter-journey",
+  "result": "ready_cue_scheduling_candidate_reviewed_cold_input_readiness_still_blocked",
+  "candidate_revision": "66c6d873603b423f856549363ca6acc4f282c564",
+  "base_revision": "2f3704d7132e02e15bf5c306549abcd3ccd21962",
+  "worktree": ".worktrees/m1-audio-composed",
+  "root_code_integrated": false,
+  "worker_record_archive": {
+    "path": "milestones/evidence/m1-audio-composed/candidate66c6d87.json.gz",
+    "sha256": "17c1dd95401f28e43de6f2b8252874aee8f217628a4c68c650ce16b96f5e272c",
+    "raw_sha256": "4152a0099072eb01ef3fc2d72959d751e4b864a8f339df50108e7abf94d8adac"
+  },
+  "reviewed_repair": {
+    "original_problem": "The actual22050Hz device exposes40-46ms currentTime steps even while5ms callbacks execute; a20ms source-cycle horizon alone misses ready zero-delay cue deadlines.",
+    "base_latency_ms": 42.675736961451244,
+    "output_latency_ms": 128,
+    "observed_cursor_steps_frames": [896, 1024],
+    "change": "Prepare already-decoded zero-delay non-positional one-shots at their unchanged dueAt within actual device latency plus one128-frame quantum. The logical source queue retains its own countdown, capacity, ordering and later dispatch receipt.",
+    "new_trace_kind": "effect_submitted",
+    "source_cycle_seconds_unchanged": 0.02,
+    "source_queue_capacity_unchanged": 50,
+    "delayed_or_positional_cues_not_speculatively_submitted": true,
+    "past_deadlines_not_backdated": true
+  },
+  "bounded_runs": {
+    "old_post_repair_ceiling": 3,
+    "old_post_repair_used": 3,
+    "additional_instrumented_before_runs": 1,
+    "after1": "Stopped at an overly broad new PCM assertion that failed to distinguish explicit stop/reset from natural completion.",
+    "after2": {"source_checks": 21, "native_storage_contracts": 6, "dispatches": 18, "overruns": 0, "maximum_late_ms": 0},
+    "after3": {"dispatches": 18, "ready_cues_on_time": 17, "overruns": 1, "maximum_late_ms": 60.00000000000006, "result": "failed_cold_source_readiness"},
+    "last_processing_count_audit_corrected_after_cap": true,
+    "composed_rerun_after_that_audit_correction": false,
+    "successful_intermediate_run_not_final_acceptance": true
+  },
+  "remaining_failure": {
+    "source_id": 2266,
+    "event_id": "source-control/4",
+    "enqueue_audio_time": 0.5979138321995465,
+    "unchanged_due_at": 0.6295691609977325,
+    "decoded_audio_time": 0.6849886621315193,
+    "enqueue_to_decoded_wall_ms": 62.53000020980835,
+    "source_processing_attempts": 4,
+    "timing_limit_ms": 20.045351473922903,
+    "failures": ["AUDIO_LOADING_LATE", "AUDIO_TIMING_LATE"],
+    "network_hash_decode_completion_split_isolated": false,
+    "required_fix": "Prepare only the active source2266 input before its first admitted control deadline, with explicit readiness/failure and unchanged logical cue timing."
+  },
+  "parent_checks": {
+    "audio_units_passed": 48,
+    "unit_log_sha256": "a528a80854bb59c18147497fdaf571a78df249d65b3cc6508ab7b3c9d27b689d",
+    "production_typescript": "passed",
+    "parent_additional_browser_invocations": 0,
+    "qualification": "Parent reviewed code/queue/timing diagnostics and repeated only units/typecheck; no unexecuted composed result is inferred."
+  },
+  "source_and_scope": {
+    "source_artifact_sha256": "5b3ba5f108ed3fec8f8b5f7f49b429c059e21b6f192ec99a0569616e08330059",
+    "source_bundle_world": "e550d3ed-37aa-487e-b67a-e0fa11bd540f",
+    "candidate_build_artifact_sha256": "311a088d30282b0e09348db29ee299f1347376c13013e9133831e712973e64f1",
+    "playable_audio_files_unchanged": 275,
+    "worker_strict_frozen_hashes": 1307,
+    "worker_reference_pack_tests": 85,
+    "pcm_qualification": "Passive post-gain output matches the actual submitted decoded buffer for naturally completed voices. This is not a new independent original-server timing capture or physical speaker acceptance.",
+    "original_worktree_and_source_data_changed": false,
+    "owned_services_cleaned": true,
+    "headless_source5e_checkpoint_touched": false
+  },
+  "followup_task": "M1-AUDIO-CONTROL-READINESS",
+  "presentation_accepted": false,
+  "milestone_accepted": false,
+  "later_milestone_authorized": false
+}
