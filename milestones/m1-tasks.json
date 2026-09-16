@@ -7,9 +7,10 @@
     "admissions_open": true,
     "active": [
       {"id": "director", "task": "M1-WATER-UPGRADE-PREFLIGHT"},
-      {"id": "bb7f85f7-096a-4377-80cb-3e7eae196c6b", "task": "M1-BROWSER-RENDERER"}
+      {"id": "bb7f85f7-096a-4377-80cb-3e7eae196c6b", "task": "M1-BROWSER-RENDERER"},
+      {"id": "0f5fd134-c7e3-4d93-ba2e-c5cd448e33a1", "task": "M1-WATER-ITEM-ON-REVIEW"}
     ],
-    "reserved": [{"id": "water-persisted-fix-review", "task": "M1-WATER-ITEM-ON-REVIEW", "count": 1}],
+    "reserved": [],
     "queued": [],
     "parked": [
       {"id": "e6925772-df1f-4ff7-9efc-219f800a5a14", "reason": "Runtime retired this completed camera/recovery reviewer. Attempted water-review resumption was rejected before any execution; prior completed reports remain valid. No automatic resumption."},
@@ -55,7 +56,7 @@
     {
       "id": "M1-WATER-ITEM-ON-REVIEW",
       "goal": "Independently assess the source-bound single item-on contract, retained menu guards and exact current/legacy water deltas before main adoption.",
-      "status": "BLOCKED",
+      "status": "IMPLEMENTING",
       "specs": ["milestones/evidence/m1-water-item-on-dispatch-authorization.json", "milestones/evidence/m1-water-item-on-review.json", "research/water-fill/facts.json", "research/water-fill/item-on-validation.json"],
       "dependencies": ["M1-WATER-ITEM-ON-DISPATCH"],
       "allowed_paths": [],

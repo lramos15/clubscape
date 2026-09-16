@@ -82,8 +82,8 @@
     "prior_forbidden_work_unchanged": true
   },
   "fix_review": {
-    "status": "replacement_reserved",
-    "reviewer": null,
+    "status": "admitted",
+    "reviewer": "0f5fd134-c7e3-4d93-ba2e-c5cd448e33a1",
     "reserved_reviewer_slot": "water-persisted-fix-review",
     "previous_reviewer": {
       "id": "619c994e-a208-4acf-8c2a-261ae52c892b",
