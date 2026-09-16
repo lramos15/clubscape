@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "milestone": "m1-starter-journey",
-  "status": "director_integration_admitted",
+  "status": "isolated_producers_passed_source_browser_waiting_for_quiet_gpu_window",
   "worker": "78d01af9-70a4-4b02-8339-6a61eb377374",
   "worker_read_through_turn": 39,
   "worker_worktree": ".worktrees/m1-browser-shell",
@@ -13,6 +13,25 @@
   "integration_worktree": ".worktrees/m1-shell-metadata",
   "integration_base": "212535a5a7e73a3a798dfbfe84d473736e6cfa5b",
   "excluded_import_path": "web/app/tests/source-browser.ts",
+  "candidate_revision": "b4f63046a75f90978afb432441316c70cf96f73b",
+  "candidate_mapping": [
+    {"owned":"b134136ad7b6260e539fe8009ee9bb7b0a425ea7","candidate":"d5dc29fa447e2e54e0c26081c3a8c19a5f3ae158"},
+    {"owned":"57f18f1b129c3968b9cf88de5cd094cc44b18b9e","candidate":"d3e3f204cc35e5f44ba32548653d73e963bcb762"}
+  ],
+  "parent_validation": {
+    "typescript": "passed",
+    "focused_tests": 38,
+    "complete_web_tests": 276,
+    "actual_source_inputs_fetched_and_verified": 65,
+    "controlled_source_emitters": 22,
+    "controlled_listener": {"x":396096,"y":397760},
+    "world_and_unknown_music_history_unchanged": true,
+    "metadata_probe": ".worktrees/m1-shell-metadata/.local/metadata-integration/source-inputs.json",
+    "normal_build_artifact_sha256": "4abc48d293d2855e1c0abfefe9ccd9eaa464ed5f8626a5e644ecec85d3528f76",
+    "content_configured_build_artifact_sha256": "5ea9e28efac39ebcf3237a9cf2d11ea1c2e7c778572bc3a1a4396fe4f4bfab1d",
+    "qualification": "Metadata-only source transport and controlled geometry, not actual audio playback. Browser expectations are strengthened in b4f6304 without new timing waits or threshold changes."
+  },
+  "source_browser_admission": "milestones/evidence/m1-shell-metadata-browser-authorization.json",
   "scope": "Only source preview/spatial metadata and related lifecycle/consumer tests. No modifications to the recovery candidate under independent review.",
   "worker_reported_evidence": {
     "handoff": ".worktrees/m1-browser-shell/.local/evidence/metadata-ui-candidate/HANDOFF.txt",
