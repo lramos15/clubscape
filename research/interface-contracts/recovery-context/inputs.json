@@ -35,6 +35,15 @@
     "sha256": "d277e223ffbe2f3c07838bbc7438a00e7e8904cf039035a8efc8188b769426eb",
     "scope": "Original component-only inventory/coffer/selection/fee inputs; no production balances or progression"
   },
+  "director_ui_regression": {
+    "commit": "31203c6354866cfc4237a09c74cb22f0e85fb2ff",
+    "path": "web/ui/tests/recovery-context.test.ts",
+    "root_evidence": "milestones/evidence/m1-recovery-context-review.json",
+    "before_result": {"passed": 1, "failed": 1},
+    "positive_control": "Legacy explicit native-input recoveryFeeText matches the complete retained35-arrow/1470 caption.",
+    "counterexample": "Current per-entry unitFee/fullStackFee extension changes the same selected-slot caption to7 arrows/294.",
+    "qualification": "This is Director-owned UI evidence, not a passed production UI fix or source-server selected-item All trace. It was read, not cherry-picked into the backend worktree."
+  },
   "native_scripts": {
     "path": "research/interface-contracts/control-bindings.json",
     "sha256": "02abc6c4deb8c1f3395f9358f7c7a77cd7bf2a221da1b212c370d8fa0f3c3758",

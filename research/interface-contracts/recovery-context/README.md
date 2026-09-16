@@ -96,6 +96,15 @@ native component facts; the16 distinct original types are a separate grouping
 of the explicit inputs. These are not a player journey or new source-server
 capture.
 
+Director regression `31203c6354866cfc4237a09c74cb22f0e85fb2ff` independently
+compares the complete original caption with `recoveryFeeText`: the explicit
+legacy-input positive control passes, while the current per-entry extension
+fails with7/294 instead of35/1,470. Its root review record is
+`milestones/evidence/m1-recovery-context-review.json`. This directly grounds the
+separate selected-type display field; it does not establish original-server
+selected-item All behavior or close the Director-owned UI/audio gates. The
+foreign UI regression was not cherry-picked into this worktree.
+
 Ordering across death records retains the existing engine's stable map/vector
 order; it is not a newly claimed original-server sorting algorithm. The
 canonical Office overflow action above120 remains unresolved and must surface
