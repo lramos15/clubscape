@@ -316,6 +316,7 @@ def database_identity(root, directory, owner, capsule, world_id, phase):
 
 def preserve_checkpoint(root, run_directory, report, server):
     """Capture after the simulator/server are reaped, before deleting owned PostgreSQL."""
+    from dying_observe import success_checkpoint_eligible
     run_id = report["run_id"]
     require(re.fullmatch(r"[0-9a-f]{16}", run_id), "ownership", "invalid_run_id")
     require(run_directory == root / ".local/journey-runs" / run_id,
@@ -335,8 +336,9 @@ def preserve_checkpoint(root, run_directory, report, server):
         status = scenario["private_client_checkpoint"]
         require(status["status"] == "captured" and digest(capsule_path) == status["sha256"],
                 phase, "client_capsule_not_completed")
+        preservable = scenario["status"] == "blocked" or success_checkpoint_eligible(scenario)
         require(capsule["schema_version"] == 1 and capsule["kind"] == "private_m1_client_checkpoint"
-                and capsule["scenario"] == "m1_fresh_account" and scenario["status"] == "blocked"
+                and capsule["scenario"] == "m1_fresh_account" and preservable
                 and capsule["report_path"] == report["journey_report"]
                 and capsule["actor_id"] == scenario["last_snapshot"]["player"]["actor_id"]
                 and capsule["private_authentication_do_not_publish"]["account_id"] == scenario["synthetic_account_id"]

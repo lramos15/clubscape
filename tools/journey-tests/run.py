@@ -183,8 +183,10 @@ def record_server_exit(report, code):
 
 
 def preserve_blocked_checkpoint(directory, report, server):
-    if (report.get("current_phase") != "real_m1_fresh_account_scenario"
-            or report.get("status") == "passed"):
+    observation = (report.get("current_phase") == "real_m1_dying_observation"
+                   and report.get("observation_only") is True)
+    if (not observation and (report.get("current_phase") != "real_m1_fresh_account_scenario"
+                            or report.get("status") == "passed")):
         return {
             "status": "not_attempted", "snapshot_available": False,
             "reason": "not_a_blocked_source_scenario", "resume_authorized": False,

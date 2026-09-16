@@ -363,8 +363,13 @@ impl Evidence {
 
     pub fn check(&mut self, label: &str, expected: Value, actual: Value) -> Result<()> {
         let passed = expected == actual;
+        let observation = self.report["observation_only"] == true;
         self.append(
-            "source_checkpoint",
+            if observation {
+                "observation_check"
+            } else {
+                "source_checkpoint"
+            },
             json!({
                 "label": label, "expected": expected, "actual": actual, "passed": passed
             }),
@@ -373,8 +378,12 @@ impl Evidence {
             passed,
             "Checkpoint {label}: expected {expected}, actual {actual}"
         );
-        self.report["checks_passed"] =
-            json!(self.report["checks_passed"].as_u64().unwrap_or(0) + 1);
+        let counter = if observation {
+            "observation_checks_passed"
+        } else {
+            "checks_passed"
+        };
+        self.report[counter] = json!(self.report[counter].as_u64().unwrap_or(0) + 1);
         Ok(())
     }
 

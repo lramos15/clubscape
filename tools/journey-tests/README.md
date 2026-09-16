@@ -190,6 +190,51 @@ explicit restores. Its latest private checkpoint is the genuine dying-state
 frontier, not a completed Death's Office/Cook journey; see the current evidence
 entry below.
 
+## Explicit dying observation only
+
+`--observe-dying` is a separate, non-gameplay mode of `resume.py`, pinned to
+Director authorization `bd33c742bad7be4ab244e1402cc840d89d3e427b`. It is not
+permission to continue the full journey or to use main's newer content.
+
+```sh
+python3 tools/journey-tests/resume.py --observe-dying \
+  --checkpoint .local/journey-checkpoints/7fa370e14c9b421e \
+  --expected-archive-sha256 d2e586a51f78ed36ab30443f0297b1273e984957ae5b8f78c73b86be53ca16e1 \
+  --report .local/evidence/<unique-observation-report>.json
+```
+
+The code must be committed first. This authority reserves only one actual
+invocation, enforced by an exclusive local authorization record. The existing
+empty-owned-database restore and complete pre-start private identity comparison
+are unchanged. Observation builds use a private workspace/lockfile mirror so
+the tracked root `Cargo.lock` is never updated.
+
+Native preflight decodes the original control through generated Protobuf. A
+failed control is admitted only if it is the specifically identified read-only
+`PollWorld`409; failed/unknown mutating controls remain refused. The actual7fa
+capsule retained a successful `JoinWorld` control, not the failed poll's wire
+bytes: that fact is recorded honestly, while its original public poll failure
+is retained unchanged. No fabricated replacement control is written.
+
+The client may issue only Hello, Login, CurrentAccount, JoinWorld and read-only
+PollWorld. Every WorldInput path, including duplicate probes and UI input, is
+blocked. HP0 is valid for the source-death observation; ordinary gameplay safety
+checks are unchanged. The historical public tick1613/HP1 remains distinct from
+private saved tick1616/HP0, and no healthy-state substitute is used on a failed
+observation. The original acknowledged gameplay request is carried, never replayed.
+
+Stop after the first successful public poll, at most180seconds after server
+readiness. Report the actual exposed HP, UI, style, action, instance and death
+facts; the protocol has no standalone life-phase enum, so private phase checks
+must not be relabeled as public observations. Normal lifecycle/style repair and
+source tick/death progression after startup are reported separately from exact
+pre-start identity.
+
+A successful `observed` stop is not a full-journey pass and is checkpointed just
+like a failure. Fresh private capture must succeed before this bounded task can
+be complete. All services are cleaned after capture; no Office dialogue, grave
+claim, Cook action, walking or further gameplay is authorized by this mode.
+
 ## Evidence and blockers
 
 The aggregate JSON differentiates infrastructure checks, negative readiness

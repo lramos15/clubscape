@@ -9,7 +9,7 @@ use std::{
 use anyhow::{Context, Result, ensure};
 use clubscape_protocol::{ClientMessage, PROTOCOL_VERSION, client_message::Command, game};
 use prost::Message;
-use serde::Serialize;
+use serde::{Deserialize, Serialize};
 use serde_json::{Value, json};
 
 use super::{Receipt, Runner, evidence, source};
@@ -22,10 +22,19 @@ pub(super) struct Resume {
     pub trace: PathBuf,
     pub event_ids: BTreeSet<String>,
     pub after_goblin_kill: bool,
+    pub observation_boundary: Option<Value>,
 }
 
 impl Resume {
     pub(super) fn load(path: &Path, source: &source::Source) -> Result<Self> {
+        Self::load_with_observation(path, source, false)
+    }
+
+    pub(super) fn load_with_observation(
+        path: &Path,
+        source: &source::Source,
+        observe: bool,
+    ) -> Result<Self> {
         let resolved = control_path(path, "resume-client-checkpoint.json")?;
         let capsule = source::read_json(&resolved)?;
         let report_path = path.with_file_name("resume-report.json");
@@ -49,9 +58,13 @@ impl Resume {
             && report["first_failure"]["reason"]
                 == "Ground-item permission is unavailable or denied"
             && report["segments"]["inventory_equipment_bank_shop"]["status"] == "passed";
+        let observation_boundary = observe
+            .then(|| super::observation::saved_boundary(&capsule, &report))
+            .transpose()?;
         ensure!(
             !edges.is_empty()
-                && (edges.len() < 70 || after_goblin_kill)
+                && edges.len() <= 70
+                && (edges.len() < 70 || after_goblin_kill || observation_boundary.is_some())
                 && report["segments"]["onboarding_recovery"]["status"] == "passed",
             "Checkpoint is outside the explicitly supported source continuation boundaries"
         );
@@ -121,6 +134,7 @@ impl Resume {
             trace,
             event_ids,
             after_goblin_kill,
+            observation_boundary,
         })
     }
 
@@ -192,7 +206,7 @@ fn control_path(path: &Path, filename: &str) -> Result<PathBuf> {
     Ok(resolved)
 }
 
-#[derive(Serialize)]
+#[derive(Serialize, Deserialize)]
 #[serde(tag = "kind", rename_all = "snake_case")]
 enum Response {
     Unresolved,
@@ -257,6 +271,31 @@ impl ControlAttempt {
 }
 
 impl Attempt {
+    pub(super) fn from_saved(value: &Value) -> Result<Self> {
+        let bytes: Vec<u8> = serde_json::from_value(value["world_input_protobuf"].clone())
+            .map_err(|_| anyhow::anyhow!("Invalid original request encoding"))?;
+        ensure!(
+            bytes.len() <= 16384,
+            "Original request exceeds protocol bounds"
+        );
+        let input = game::WorldInput::decode(bytes.as_slice())?;
+        let operation_id = value["operation_id"]
+            .as_str()
+            .context("Missing original operation ID")?
+            .to_owned();
+        ensure!(
+            uuid::Uuid::parse_str(&operation_id).is_ok() && value["sequence"] == input.sequence,
+            "Original request identity mismatch"
+        );
+        let response = serde_json::from_value(value["observed_response"].clone())
+            .map_err(|_| anyhow::anyhow!("Original request outcome cannot be decoded"))?;
+        Ok(Self {
+            operation_id,
+            input,
+            response,
+        })
+    }
+
     pub(super) fn new(operation_id: String, input: game::WorldInput) -> Self {
         Self {
             operation_id,
@@ -306,10 +345,22 @@ fn receipt_value(receipt: &Receipt) -> Value {
 }
 
 pub(super) fn capture(runner: &Runner, path: &Path) -> Result<Value> {
+    let observed = if runner.snapshot.player.is_some() {
+        evidence::public_snapshot(&runner.snapshot)?
+    } else {
+        ensure!(
+            runner.arguments.observe_dying,
+            "Private checkpoint has no new source observation"
+        );
+        runner
+            .historical_observation
+            .clone()
+            .context("Observation failure has no historical public checkpoint")?
+    };
     ensure!(
         !runner.account_id.is_empty()
             && !runner.actor_id.is_empty()
-            && runner.snapshot.player.is_some(),
+            && observed["player"]["actor_id"] == runner.actor_id,
         "Private checkpoint has no actually observed source character"
     );
     let value = json!({
@@ -330,7 +381,12 @@ pub(super) fn capture(runner: &Runner, path: &Path) -> Result<Value> {
         "trace_path": runner.evidence.report["trace_path"],
         "current_action": runner.evidence.report["current_action"],
         "expected_stage": runner.expected_stage,
-        "last_observed_state": evidence::public_snapshot(&runner.snapshot)?,
+        "last_observed_state": observed,
+        "last_observation_origin": if runner.snapshot.player.is_some() {
+            "actual_current_invocation"
+        } else {
+            "unchanged_historical_public_observation_no_new_snapshot"
+        },
         "latest_attempt": runner.private_attempt.as_ref().map(Attempt::value),
         "latest_control_request": runner.private_control.as_ref().map(ControlAttempt::value),
         "original_receipts": {

@@ -2,6 +2,7 @@ mod checkpoint;
 mod evidence;
 #[cfg(test)]
 mod history_tests;
+mod observation;
 mod plan;
 mod recovery;
 mod source;
@@ -47,6 +48,12 @@ pub struct Arguments {
     /// Explicit owner-verified restoration at a supported source continuation boundary.
     #[arg(long, requires = "recovery_control_dir")]
     resume_client_checkpoint: Option<PathBuf>,
+    /// Bounded observation only: no player WorldInput or full journey continuation.
+    #[arg(long, requires = "resume_client_checkpoint")]
+    observe_dying: bool,
+    /// Decode/verify an observation resume control without any network operation.
+    #[arg(long, requires = "observe_dying")]
+    validate_resume_only: bool,
     #[arg(long)]
     expected_server_build: Option<String>,
     #[arg(long, default_value_t = 5400, value_parser = clap::value_parser!(u64).range(30..=7200))]
@@ -110,18 +117,49 @@ struct Runner {
     private_attempt: Option<checkpoint::Attempt>,
     private_control: Option<checkpoint::ControlAttempt>,
     resume: Option<checkpoint::Resume>,
+    historical_observation: Option<Value>,
 }
 
 pub async fn run(arguments: Arguments) -> Result<()> {
-    let mut evidence = if arguments.resume_client_checkpoint.is_some() {
-        let source = Source::load(&arguments.source_root)?;
-        let resume = checkpoint::Resume::load(
-            arguments
-                .resume_client_checkpoint
-                .as_ref()
-                .context("Missing resume control")?,
-            &source,
-        )?;
+    let source = match Source::load(&arguments.source_root) {
+        Ok(source) => source,
+        Err(error) => {
+            let mut evidence = Evidence::new(&arguments.report)?;
+            evidence.report["status"] = json!("blocked");
+            evidence.report["first_failure"] =
+                json!({"phase":"source_inputs", "reason":format!("{error:#}")});
+            evidence.flush()?;
+            return Err(error);
+        }
+    };
+    let resume = arguments
+        .resume_client_checkpoint
+        .as_ref()
+        .map(|path| {
+            if arguments.observe_dying {
+                checkpoint::Resume::load_with_observation(path, &source, true)
+            } else {
+                checkpoint::Resume::load(path, &source)
+            }
+        })
+        .transpose()?;
+    if arguments.validate_resume_only {
+        let saved = resume
+            .as_ref()
+            .context("Observation validation requires a checkpoint")?;
+        ensure!(
+            arguments.observe_dying && saved.observation_boundary.is_some(),
+            "Not an authorized observation boundary"
+        );
+        checkpoint::Attempt::from_saved(&saved.capsule["latest_attempt"])?;
+        println!(
+            "{}",
+            json!({"status": "validated", "observation_boundary": saved.observation_boundary,
+            "network_operations": 0, "world_inputs": 0, "private_payloads_published": false})
+        );
+        return Ok(());
+    }
+    let mut evidence = if let Some(resume) = &resume {
         Evidence::resume(&arguments.report, &resume.report, &resume.trace)?
     } else {
         Evidence::new(&arguments.report)?
@@ -131,16 +169,7 @@ pub async fn run(arguments: Arguments) -> Result<()> {
         "poll_interval_ms": 600, "stalled_clock_polls": 20,
         "rng_override": false, "gameplay_sql": false
     });
-    let source = match Source::load(&arguments.source_root) {
-        Ok(source) => source,
-        Err(error) => {
-            evidence.report["status"] = json!("blocked");
-            evidence.report["first_failure"] =
-                json!({"phase":"source_inputs", "reason":format!("{error:#}")});
-            evidence.flush()?;
-            return Err(error);
-        }
-    };
+    evidence.report["observation_only"] = json!(arguments.observe_dying);
     evidence.report["identity"] = source.identity.clone();
     let connection = match Connection::new(&arguments.url) {
         Ok(connection) => connection,
@@ -153,11 +182,6 @@ pub async fn run(arguments: Arguments) -> Result<()> {
         }
     };
     let deadline = Instant::now() + Duration::from_secs(arguments.max_seconds);
-    let resume = arguments
-        .resume_client_checkpoint
-        .as_ref()
-        .map(|path| checkpoint::Resume::load(path, &source))
-        .transpose()?;
     let event_ids = resume
         .as_ref()
         .map(|value| value.event_ids.clone())
@@ -197,6 +221,7 @@ pub async fn run(arguments: Arguments) -> Result<()> {
         private_attempt: None,
         private_control: None,
         resume,
+        historical_observation: None,
     };
     let result = runner.execute().await;
     runner.evidence.report["input_count"] = json!(runner.input_count);
@@ -205,7 +230,19 @@ pub async fn run(arguments: Arguments) -> Result<()> {
     if runner.snapshot.player.is_some() {
         runner.evidence.report["last_snapshot"] = public_snapshot(&runner.snapshot)?;
     }
+    if runner.arguments.observe_dying {
+        runner.evidence.report["observation_snapshot_origin"] =
+            json!(if runner.snapshot.player.is_some() {
+                "actual_current_invocation"
+            } else {
+                "unchanged_historical_public_snapshot_no_new_observation"
+            });
+    }
     match &result {
+        Ok(()) if runner.arguments.observe_dying => {
+            runner.evidence.report["status"] = json!("observed");
+            runner.evidence.report["full_journey_passed"] = json!(false);
+        }
         Ok(()) => {
             ensure!(
                 evidence::SEGMENTS
@@ -230,7 +267,7 @@ pub async fn run(arguments: Arguments) -> Result<()> {
         }
     }
     runner.evidence.flush()?;
-    if result.is_err()
+    if (result.is_err() || runner.arguments.observe_dying)
         && let Some(path) = &runner.arguments.private_checkpoint_file
     {
         runner.evidence.report["private_client_checkpoint"] =
@@ -340,12 +377,26 @@ impl Runner {
 
     async fn rpc(&mut self, command: Command, token: bool) -> Result<Outcome> {
         self.bound()?;
+        ensure!(
+            !self.arguments.observe_dying || observation::allowed(&command),
+            "Observation-only mode forbids this RPC"
+        );
         let request_id = Uuid::new_v4().to_string();
+        let observed_command = observation::command_name(&command);
         let track = self.arguments.private_checkpoint_file.is_some()
-            && !matches!(
-                &command,
-                Command::Hello(_) | Command::CurrentAccount(_) | Command::PollWorld(_)
-            );
+            && (self.arguments.observe_dying
+                || !matches!(
+                    &command,
+                    Command::Hello(_) | Command::CurrentAccount(_) | Command::PollWorld(_)
+                ));
+        if self.arguments.observe_dying {
+            self.evidence.append(
+                "observation_rpc_request",
+                json!({
+                    "request_id": request_id, "command": observed_command, "world_input": false
+                }),
+            )?;
+        }
         if track {
             self.private_control = Some(checkpoint::ControlAttempt::new(
                 request_id.clone(),
@@ -357,6 +408,13 @@ impl Runner {
             .connection
             .request_with_id(command, token.then_some(self.token.as_str()), &request_id)
             .await?;
+        if self.arguments.observe_dying {
+            self.evidence.append("observation_rpc_response", json!({
+                "request_id": request_id, "command": observed_command,
+                "http_status": status.as_u16(),
+                "error_id": match &result { Outcome::Error(error) => Some(&error.error_id), _ => None }
+            }))?;
+        }
         if track && let Some(attempt) = &mut self.private_control {
             let error = match &result {
                 Outcome::Error(error) => Some((error.code, error.error_id.clone())),
@@ -659,6 +717,10 @@ impl Runner {
     }
 
     async fn input(&mut self, action: Action) -> Result<Receipt> {
+        ensure!(
+            !self.arguments.observe_dying,
+            "Observation-only mode forbids gameplay and UI input"
+        );
         if !matches!(action, Action::Ui(_)) {
             self.continue_source_presentations().await?;
         }
@@ -678,6 +740,10 @@ impl Runner {
 
     async fn submit(&mut self, receipt: &Receipt, duplicate: bool) -> Result<()> {
         self.bound()?;
+        ensure!(
+            !self.arguments.observe_dying,
+            "Observation-only mode forbids all WorldInput, including replay"
+        );
         ensure!(
             self.input_count < self.arguments.max_inputs,
             "Journey input budget exhausted"
@@ -1120,6 +1186,13 @@ impl Runner {
 
     async fn execute(&mut self) -> Result<()> {
         plan::validate_source_path(&self.source)?;
+        if self.arguments.observe_dying {
+            let saved = self
+                .resume
+                .take()
+                .context("Observation requires an explicit restored checkpoint")?;
+            return self.observe_dying(saved).await;
+        }
         let after_goblin_kill = self
             .resume
             .as_ref()

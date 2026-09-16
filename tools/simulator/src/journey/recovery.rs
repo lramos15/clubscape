@@ -37,6 +37,10 @@ impl Runner {
     async fn reject_sequence(&mut self, sequence: u64, label: &str) -> Result<()> {
         self.bound()?;
         ensure!(
+            !self.arguments.observe_dying,
+            "Observation-only mode forbids sequence probes"
+        );
+        ensure!(
             self.input_count < self.arguments.max_inputs,
             "Journey input budget exhausted"
         );

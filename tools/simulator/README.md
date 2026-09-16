@@ -71,6 +71,15 @@ simulator accepts only the documented tutorial/post-kill boundaries, preserves
 the old trace prefix, uses normal login/join and checks the original actor/state
 and receipt deduplication before continuing. Other boundary types are refused.
 
+The separately authorized `--observe-dying` mode never enters those continuation
+paths. It allows only capability/authentication/join/read-only polling, accepts
+actual0HP observations, and stops after a successful public poll. No WorldInput,
+UI action or duplicate gameplay receipt replay is permitted. Its
+`--validate-resume-only` preflight decodes protected original commands without
+creating a connection. Observation success and failure both write private
+checkpoint capsules; old public observations stay explicitly historical if no
+new public snapshot was received.
+
 ## What the plan executes
 
 * Real registration, login, empty-option `CreateCharacter`, and `JoinWorld`.

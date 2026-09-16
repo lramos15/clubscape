@@ -13,12 +13,18 @@ import uuid
 
 import private_checkpoint as PRIVATE
 import run as JOURNEY
+import build_workspace
+import dying_observe as OBSERVE
 
 
 ROOT = JOURNEY.ROOT
 
 
-def verify_checkpoint(relative, expected_archive):
+def verify_restored_identity(restored, expected):
+    PRIVATE.require(restored == expected, "restore", "restored_private_identity_mismatch")
+
+
+def verify_checkpoint(relative, expected_archive, *, observe_dying=False):
     directory = PRIVATE.project_path(ROOT, relative)
     parts = Path(relative).parts
     PRIVATE.require(len(parts) == 3 and parts[:2] == (".local", "journey-checkpoints")
@@ -59,7 +65,9 @@ def verify_checkpoint(relative, expected_archive):
         and scenario["first_failure"]["reason"] == "Ground-item permission is unavailable or denied"
         and scenario["segments"]["inventory_equipment_bank_shop"]["status"] == "passed"
     )
-    PRIVATE.require((0 < len(scenario["tutorial_edges_passed"]) < 70 or after_goblin_kill)
+    if observe_dying:
+        OBSERVE.boundary(ROOT, directory, available, capsule, scenario, identity)
+    PRIVATE.require((0 < len(scenario["tutorial_edges_passed"]) < 70 or after_goblin_kill or observe_dying)
                     and scenario["segments"]["onboarding_recovery"]["status"] == "passed"
                     and scenario["last_snapshot"] == capsule["last_observed_state"],
                     "resume", "unsupported_resume_boundary")
@@ -81,15 +89,18 @@ def verify_checkpoint(relative, expected_archive):
         raise PRIVATE.CheckpointError("resume", "unknown_attempt_requires_separate_reconciliation")
     control = capsule["latest_control_request"]
     if control is not None:
-        PRIVATE.require(isinstance(control["observed_http_status"], int)
-                        and 200 <= control["observed_http_status"] < 300
-                        and control["observed_error"] is None,
+        successful = (isinstance(control["observed_http_status"], int)
+                      and 200 <= control["observed_http_status"] < 300
+                      and control["observed_error"] is None)
+        PRIVATE.require(successful or observe_dying and OBSERVE.failed_control_candidate(control),
                         "resume", "unknown_control_request_requires_separate_reconciliation")
     return directory, available, capsule, original, identity
 
 
 def execute(args):
-    checkpoint, available, capsule, original, identity = verify_checkpoint(args.checkpoint, args.expected_archive_sha256)
+    observe = args.observe_dying
+    checkpoint, available, capsule, original, identity = verify_checkpoint(
+        args.checkpoint, args.expected_archive_sha256, observe_dying=observe)
     run_id = uuid.uuid4().hex[:16]
     directory = JOURNEY.private_directory(f".local/journey-runs/{run_id}")
     control = directory / "control"
@@ -106,6 +117,7 @@ def execute(args):
         "run_id": run_id, "recorded_at_unix_ms": int(time.time() * 1000),
         "status": "blocked", "full_journey_passed": False, "milestone_accepted": False,
         "source_state_seeded": False, "gameplay_sql_used": False,
+        "observation_only": observe,
         "database_image": JOURNEY.POSTGRES_IMAGE, "owned_container_name": owner,
         "server_entrypoint": original["server_entrypoint"],
         "restarts": list(original["restarts"]), "commands": [],
@@ -122,6 +134,7 @@ def execute(args):
         },
     }
     server = simulator = None
+    server_stopped = False
     env = os.environ.copy()
     try:
         for key in ("CLUBSCAPE_GAME_ROOT", "CLUBSCAPE_WEB_ROOT", "CLUBSCAPE_TEST_DATABASE_URL"):
@@ -131,16 +144,47 @@ def execute(args):
         revision = JOURNEY.bounded(["git", "rev-parse", "HEAD"]).stdout.strip()
         report["revision"] = revision
         report["workspace_dirty"] = bool(JOURNEY.bounded(["git", "status", "--porcelain"]).stdout.strip())
-        JOURNEY.bounded([
-            "cargo", "build", "--quiet", "-p", "clubscape-server", "-p", "clubscape-sim",
-            "--features", "clubscape-sim/journey-server",
-        ], env=env, timeout=900)
+        if observe:
+            PRIVATE.require(not report["workspace_dirty"], "observation_authorization",
+                            "adapter_must_be_committed_before_real_invocation")
+        build_arguments = ["build", "--offline", "--quiet", "-p", "clubscape-server", "-p", "clubscape-sim",
+                           "--features", "clubscape-sim/journey-server"]
+        root_lock = JOURNEY.sha(ROOT / "Cargo.lock")
+        if observe:
+            JOURNEY.bounded(build_workspace.command(build_arguments), env=env, timeout=900)
+            PRIVATE.require(JOURNEY.sha(ROOT / "Cargo.lock") == root_lock,
+                            "observation_build", "tracked_lock_changed")
+            report["private_build_workspace"] = str(build_workspace.MIRROR.relative_to(ROOT))
+        else:
+            JOURNEY.bounded(["cargo", *build_arguments], env=env, timeout=900)
         report["build_performed_by_orchestrator"] = True
-        report["cargo_lock_sha256_used_for_build"] = JOURNEY.sha(ROOT / "Cargo.lock")
+        report["cargo_lock_sha256_used_for_build"] = JOURNEY.sha(
+            build_workspace.MIRROR / "Cargo.lock" if observe else ROOT / "Cargo.lock")
         target = Path(env["CARGO_TARGET_DIR"]) / "debug"
         binary = target / ("clubscape-journey-server" if report["server_entrypoint"] == "public-api" else "clubscape-server")
         client = target / "clubscape-sim"
         report["binary_sha256"] = {"server": JOURNEY.sha(binary), "simulator": JOURNEY.sha(client)}
+        if observe:
+            report["current_phase"] = "observation_native_preflight"
+            for original_file, name in [
+                (checkpoint / "private-client.json", "resume-client-checkpoint.json"),
+                (checkpoint / "evidence/scenario.json", "resume-report.json"),
+                (checkpoint / "evidence/scenario.trace.jsonl", "resume-trace.jsonl"),
+            ]:
+                PRIVATE.copy_file(original_file, control / name, PRIVATE.MAX_EVIDENCE, secret=True)
+            checked = JOURNEY.bounded([
+                client, "scenario", "m1_fresh_account", "--observe-dying", "--validate-resume-only",
+                "--resume-client-checkpoint", (control / "resume-client-checkpoint.json").relative_to(ROOT),
+                "--recovery-control-dir", control.relative_to(ROOT), "--max-seconds", "180",
+            ], env=env, timeout=60)
+            decoded = json.loads(checked.stdout)
+            OBSERVE.validate_native_preflight(decoded)
+            report["observation_authorization"] = {
+                "revision": OBSERVE.AUTHORITY, "native_preflight": decoded,
+                "maximum_seconds_after_readiness": args.max_seconds,
+                "gameplay_world_inputs_permitted": False,
+            }
+            report["observation_authorization"]["single_attempt_reservation"] = OBSERVE.reserve_attempt(ROOT, run_id, revision)
         report["current_phase"] = "explicit_private_database_restore"
         env["DATABASE_URL"] = JOURNEY.start_database(directory, owner, report)
         inspection = '{"id":"{{.Id}}","labels":{{json .Config.Labels}}}'
@@ -172,7 +216,12 @@ def execute(args):
         restored = PRIVATE.database_identity(
             ROOT, restoration, owner, capsule, identity["game_root_identity"]["world_id"], "restored_identity",
         )
-        PRIVATE.require(restored == identity["database"], "restore", "restored_private_identity_mismatch")
+        verify_restored_identity(restored, identity["database"])
+        if observe:
+            saved = OBSERVE.saved_facts(ROOT, restoration, owner, capsule, identity, "before_startup")
+            PRIVATE.require(saved["world_tick"] == 1616 and saved["hitpoints"] == 0
+                            and saved["life"]["kind"] == "dying",
+                            "observation_restore", "actual_saved_dying_boundary_mismatch")
         report["restoration"].update({
             "fresh_owned_database_restored_from_actual_archive": True,
             "actual_world_actor_rng_and_receipts_identical_before_startup": True,
@@ -183,12 +232,13 @@ def execute(args):
         report["game_root_identity"] = JOURNEY.game_identity(game_root)
         PRIVATE.require(report["game_root_identity"] == identity["game_root_identity"],
                         "restore", "restored_game_root_identity_mismatch")
-        for original_file, name in [
-            (checkpoint / "private-client.json", "resume-client-checkpoint.json"),
-            (checkpoint / "evidence/scenario.json", "resume-report.json"),
-            (checkpoint / "evidence/scenario.trace.jsonl", "resume-trace.jsonl"),
-        ]:
-            PRIVATE.copy_file(original_file, control / name, PRIVATE.MAX_EVIDENCE, secret=True)
+        if not observe:
+            for original_file, name in [
+                (checkpoint / "private-client.json", "resume-client-checkpoint.json"),
+                (checkpoint / "evidence/scenario.json", "resume-report.json"),
+                (checkpoint / "evidence/scenario.trace.jsonl", "resume-trace.jsonl"),
+            ]:
+                PRIVATE.copy_file(original_file, control / name, PRIVATE.MAX_EVIDENCE, secret=True)
         env["CLUBSCAPE_GAME_ROOT"] = str(game_root)
         env["CLUBSCAPE_BIND"] = "127.0.0.1:0"
         env["CLUBSCAPE_BUILD_REVISION"] = revision
@@ -196,9 +246,10 @@ def execute(args):
         JOURNEY.write_json(report_path, report)
         server = JOURNEY.OwnedServer(binary, env.copy(), evidence / "product-server-0.jsonl")
         address = server.ready()
+        ready_at = time.monotonic()
         scenario_path = evidence / "m1-fresh-account.json"
         report["journey_report"] = str(scenario_path.relative_to(ROOT))
-        report["current_phase"] = "real_m1_fresh_account_scenario"
+        report["current_phase"] = "real_m1_dying_observation" if observe else "real_m1_fresh_account_scenario"
         JOURNEY.write_json(report_path, report)
         command = [
             client, "scenario", "m1_fresh_account", "--url", address,
@@ -208,13 +259,20 @@ def execute(args):
             "--private-checkpoint-file", (control / "private-client-checkpoint.json").relative_to(ROOT),
             "--resume-client-checkpoint", (control / "resume-client-checkpoint.json").relative_to(ROOT),
         ]
+        if observe:
+            command.append("--observe-dying")
         with (evidence / "simulator.log").open("w", encoding="utf-8") as log:
             simulator = subprocess.Popen([str(value) for value in command], cwd=ROOT, env=env,
                                          stdin=subprocess.DEVNULL, stdout=log, stderr=subprocess.STDOUT)
-            deadline = time.monotonic() + args.max_seconds + 60
+            deadline = ready_at + args.max_seconds if observe else time.monotonic() + args.max_seconds + 60
             handled = {row["checkpoint"] for row in report["restarts"]}
             while simulator.poll() is None:
                 JOURNEY.require(time.monotonic() < deadline, "Resumed journey deadline exceeded.")
+                if observe:
+                    JOURNEY.require(not any(control.glob("restart-*.request.json")),
+                                    "Observation-only client requested an unauthorized restart.")
+                    time.sleep(0.05)
+                    continue
                 for checkpoint_name in ("onboarding", "after_quest"):
                     request_path = control / f"restart-{checkpoint_name}.request.json"
                     if checkpoint_name in handled or not request_path.exists():
@@ -246,14 +304,29 @@ def execute(args):
                 time.sleep(0.25)
             code = simulator.wait(timeout=5)
             simulator = None
+        if observe:
+            report["observation_seconds_after_readiness"] = time.monotonic() - ready_at
+            JOURNEY.require(report["observation_seconds_after_readiness"] <= args.max_seconds,
+                            "Observation exceeded the post-readiness bound.")
+            JOURNEY.record_server_exit(report, server.stop())
+            server_stopped = True
+            JOURNEY.require(report["server_exit_clean"], "Observation server did not stop cleanly.")
         scenario = JOURNEY.read_json(scenario_path)
         report["scenario"] = scenario
         report["unchecked_segments"] = [name for name in JOURNEY.SEGMENTS if scenario["segments"][name]["status"] != "passed"]
-        JOURNEY.require(code == 0 and JOURNEY.full_journey_passed(scenario),
-                        f"Resumed real source journey blocked: {scenario.get('first_failure')}")
-        JOURNEY.require(len(report["restarts"]) == 2, "Original onboarding and post-quest restarts were not both proved.")
-        report["status"] = "passed"
-        report["full_journey_passed"] = True
+        if observe:
+            JOURNEY.require(code == 0, f"Observation failed: {scenario.get('first_failure')}")
+            OBSERVE.validate_observation_report(scenario, original["scenario"]["input_count"])
+            after = OBSERVE.saved_facts(ROOT, restoration, owner, capsule, identity, "after_observation")
+            report["observation_state_preservation"] = OBSERVE.compare_saved(saved, after)
+            report["status"] = "observed"
+            report["full_journey_passed"] = False
+        else:
+            JOURNEY.require(code == 0 and JOURNEY.full_journey_passed(scenario),
+                            f"Resumed real source journey blocked: {scenario.get('first_failure')}")
+            JOURNEY.require(len(report["restarts"]) == 2, "Original onboarding and post-quest restarts were not both proved.")
+            report["status"] = "passed"
+            report["full_journey_passed"] = True
     except (JOURNEY.JourneyError, PRIVATE.CheckpointError, OSError, ValueError, KeyError,
             subprocess.TimeoutExpired) as error:
         report["first_failure"] = {
@@ -270,19 +343,23 @@ def execute(args):
             except subprocess.TimeoutExpired:
                 simulator.kill()
                 simulator.wait(timeout=10)
-        if server is not None:
+        if server is not None and not server_stopped:
             try:
                 JOURNEY.record_server_exit(report, server.stop())
             except (JOURNEY.JourneyError, OSError, subprocess.TimeoutExpired) as error:
                 cleanup_errors.append(JOURNEY.redact(str(error), env))
         JOURNEY.preserve_and_cleanup(directory, owner, report, server, cleanup_errors, report_path)
+    if observe and (report["status"] != "observed" or report["private_checkpoint"].get("status") != "available"):
+        report["status"] = "blocked"
+        report.setdefault("first_failure", {"phase": "observation_checkpoint", "reason": "Fresh protected checkpoint is unavailable."})
+        JOURNEY.write_json(report_path, report)
     print(json.dumps({
         "status": report["status"], "full_journey_passed": report["full_journey_passed"],
         "restoration": report["restoration"], "first_failure": report.get("first_failure"),
         "private_checkpoint": report["private_checkpoint"], "cleanup_passed": report["cleanup_passed"],
         "evidence": str(report_path.relative_to(ROOT)), "milestone_accepted": False,
     }))
-    return 0 if report["status"] == "passed" and report["cleanup_passed"] else 1
+    return 0 if report["status"] in ("passed", "observed") and report["cleanup_passed"] else 1
 
 
 def main():
@@ -290,11 +367,15 @@ def main():
     parser.add_argument("--checkpoint", required=True)
     parser.add_argument("--expected-archive-sha256", required=True)
     parser.add_argument("--report", required=True)
-    parser.add_argument("--max-seconds", type=int, default=5400)
+    parser.add_argument("--max-seconds", type=int)
+    parser.add_argument("--observe-dying", action="store_true")
     args = parser.parse_args()
+    if args.max_seconds is None:
+        args.max_seconds = 180 if args.observe_dying else 5400
     JOURNEY.require(re.fullmatch(r"[0-9a-f]{64}", args.expected_archive_sha256) is not None,
                     "An explicit expected archive SHA-256 is required.")
     JOURNEY.require(30 <= args.max_seconds <= 7200, "Resume budget must be 30-7200 seconds.")
+    JOURNEY.require(not args.observe_dying or args.max_seconds <= 180, "Dying observation is bounded to180seconds.")
     signal.signal(signal.SIGTERM, JOURNEY.interrupted)
     signal.signal(signal.SIGINT, JOURNEY.interrupted)
     return execute(args)
