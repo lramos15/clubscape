@@ -230,17 +230,62 @@ export interface AudioAuthorityView {
 export type UiAmount = { kind: "quantity"; quantity: number } | { kind: "all" };
 export interface RecoveryItemAmount { id: string; amount: UiAmount }
 export interface RecoveryRecordSelection { death: string; items: string[] }
+export const RECOVERY_CONTEXT_VERSION = 1;
+export type RecoveryContextIdentity =
+  | { kind: "grave"; interface: string; death: string }
+  | { kind: "death_office"; interface: string; instance: string | null };
+/** Exact observation echo, not client-supplied items or an executable transfer plan. */
+export interface RecoveryContextSelection {
+  context: RecoveryContextIdentity;
+  records: Array<{
+    death: string;
+    entries: Array<{ id: string; quantity: number; current_storage: "grave" | "death_office" }>;
+  }>;
+}
+export interface RecoveryEntryControlView {
+  id: string; item: ItemView;
+  /** Current one-unit and whole-entry quotes, not selected-type source captions. */
+  unitFee: string; fullStackFee: string;
+  /** Executable quantities for this entry alone; not storage limits or additive capacities. */
+  inventoryCapacity: number; bankCapacity: number; take: UiPermission; bank: UiPermission;
+}
+export type RecoveryTypeCaption =
+  | { kind: "source"; sourceId: number; quantity: string; unitFee: string; totalFee: string }
+  | { kind: "unavailable"; reason: string };
+export interface RecoveryContextView {
+  version: 1;
+  identity: RecoveryContextIdentity;
+  counts: {
+    entries: number;
+    /** Distinct visible original item IDs; null means an original identity is unbound. */
+    nativeItemTypes: number | null;
+    capacity: number; capacityUnit: "entries" | "item_types_or_instances";
+    /** Physically stored count versus offered count, which includes still-grave Office rows. */
+    stored: number; offered: number;
+  };
+  slots: Array<{
+    slot: number; death: string; currentStorage: "grave" | "death_office";
+    entry: RecoveryEntryControlView;
+    /** Native INV_TOTAL and selected-unit-fee multiplication, not the request's total price. */
+    selectedTypeCaption: RecoveryTypeCaption;
+  }>;
+  takeAll: {
+    permission: UiPermission;
+    selection: RecoveryContextSelection;
+    plan: {
+      totalFee: string;
+      transfers: Array<{ death: string; id: string; quantity: number; fee: string }>;
+      partial: boolean;
+    } | null;
+  };
+}
 export interface RecoveryManagementView {
+  /** Additive read-only extension; absence is unsupported, not an empty Office. */
+  context?: RecoveryContextView;
   bankRevision: string;
   panels: Array<{
     death: string; storage: "grave" | "death_office";
-    entries: Array<{
-      id: string; item: ItemView;
-      /** Quotes for one unit and the full remaining entry; neither implies a UI pricing formula. */
-      unitFee: string; fullStackFee: string;
-      /** Per-entry executable quantities include funds/source permissions; they are not additive. */
-      inventoryCapacity: number; bankCapacity: number; take: UiPermission; bank: UiPermission;
-    }>;
+    entries: RecoveryEntryControlView[];
     fullSelectionFee: string; takeAll: UiPermission;
   }>;
   bankAll: UiPermission;
@@ -250,6 +295,7 @@ export type GameplayUiIntent = (
   | { kind: "production_select_all"; menu_id: string; recipe: string }
   | { kind: "bank_set_amount"; amount: UiAmount; noted: boolean }
   | { kind: "recovery_take"; death: string; storage: "grave" | "death_office"; items: RecoveryItemAmount[] }
+  | { kind: "recovery_take_all"; selection: RecoveryContextSelection }
   | { kind: "recovery_bank_all"; records: RecoveryRecordSelection[] }
   | { kind: "ui_document_page"; document_id: string; page: number }
   | { kind: "bank_placeholder"; entry_id: string }
