@@ -29,8 +29,16 @@ supplied `drawX`/`drawY` and source mask mode, without repeating sprite offsets
 or reconstructing icon rotation/placement. Source-empty sprites remain empty.
 Missing inputs, stale scope and malformed data remain explicit failures.
 
+During reconnect the UI retains only a copied, previously validated native icon
+projection for the exact surface, player position, camera angle and widget size.
+It does not call the unavailable live renderer, invent empty icons or fall back
+to a static source image. Scope, surface, sprite and projection-binding changes
+invalidate that retained projection. Actual minimap validation failures clear
+the failed surface and report the precise UI error instead of escaping from an
+animation frame.
+
 Current integration checks include58 UI units,17 versioned-control browser cases,
-9 actual native-preference cases and9 UI4/surface cases. The36 bounded and8
+9 actual native-preference cases and11 UI4/surface cases. The36 bounded and8
 document source comparisons are rerun at zero tolerance. Historical totals below
 retain their original evidence/revisions; no component result certifies source
 initial cameras, the complete server journey, speakers, Mac/Edge or M1 acceptance.

@@ -338,11 +338,11 @@ try {
   });
   await check("reconnect retains the matching copied native projection without querying an unavailable renderer or leaking it across scopes", async () => {
     await projectedMinimap();
-    const pixel = () => page.evaluate(() => {
-      const bounds = document.querySelector('[data-ui-control="minimap"]').getBoundingClientRect();
+    const bounds = await page.locator('[data-ui-control="minimap"]').boundingBox();
+    const pixel = () => page.evaluate(({ x, y }) => {
       return Array.from(document.querySelector("canvas").getContext("2d")
-        .getImageData(Math.floor(bounds.x + 30), Math.floor(bounds.y + 40), 1, 1).data);
-    });
+        .getImageData(x, y, 1, 1).data);
+    }, { x: Math.floor(bounds.x + 30), y: Math.floor(bounds.y + 40) });
     const calls = await page.evaluate(() => window.projectionCalls);
     assert.deepEqual(await pixel(), [217, 23, 71, 255]);
     await patch(() => {
@@ -352,14 +352,26 @@ try {
     });
     assert.equal(await page.evaluate(() => window.projectionCalls), calls);
     assert.deepEqual(await pixel(), [217, 23, 71, 255]);
-    assert.match(await page.locator('[data-ui-control="minimap"]').getAttribute("aria-description"), /paused/);
+    assert.match(await page.evaluate(() => window.getUiMinimapStatus(window.component.ui).uiIssues.join("\n")), /paused/);
+    await patch(() => {
+      const s = window.component.services, world = structuredClone(s.state().world);
+      world.player.tile.x++; s.patchWorld(world);
+    });
+    assert.equal(await page.evaluate(() => window.projectionCalls), calls);
+    assert.notDeepEqual(await pixel(), [217, 23, 71, 255]);
+    assert.match(await page.evaluate(() => window.getUiMinimapStatus(window.component.ui).uiIssues.join("\n")), /No matching/);
+    await patch(() => {
+      const s = window.component.services, world = structuredClone(s.state().world);
+      world.player.tile.x--; s.patchWorld(world);
+    });
+    assert.deepEqual(await pixel(), [217, 23, 71, 255]);
     await patch(() => {
       window.projectionReady = true;
       const s = window.component.services; s.publish({ ...s.state(), phase: "world" });
     });
     assert((await page.evaluate(() => window.projectionCalls)) > calls);
     assert.deepEqual(await pixel(), [217, 23, 71, 255]);
-    assert.doesNotMatch(await page.locator('[data-ui-control="minimap"]').getAttribute("aria-description"), /paused/);
+    assert.doesNotMatch(await page.evaluate(() => window.getUiMinimapStatus(window.component.ui).uiIssues.join("\n")), /paused/);
     await patch(() => {
       window.projectionReady = false;
       const s = window.component.services, world = structuredClone(s.state().world);

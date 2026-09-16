@@ -641,6 +641,7 @@ class UiController {
       if (this.notice?.retry) this.notice = null;
     }
     this.state = state;
+    this.minimap.suspend(state.phase !== "world");
     this.minimap.retainScope(minimapScope(state.world));
     if (old.world?.player.id !== state.world?.player.id) {
       this.local = emptyLocal(); this.chatSubmission = null; this.drag = null; this.bankDrag = null; this.scrollDrag = null; this.menu = null;
@@ -727,7 +728,13 @@ class UiController {
     this.scheduled = requestAnimationFrame(() => {
       this.scheduled = 0;
       if (!this.disposed) {
-        this.render();
+        try { this.render(); }
+        catch (error) {
+          if (!(error instanceof UiMinimapError)) throw error;
+          this.minimap.clear();
+          this.show(error.message, "error", error.errorId);
+          this.services.report(error, error.errorId);
+        }
         if (this.entryAnimationVisible()) this.renderSoon();
       }
     });

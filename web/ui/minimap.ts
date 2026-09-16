@@ -15,13 +15,19 @@ export class MinimapPainter {
   private readonly issues = new Set<string>();
   private iconSprites: ReadonlyMap<number, { sprite: MapIconSprite; canvas: HTMLCanvasElement }> | null = null;
   private iconProjection: UiMinimapProjection | null = null;
+  private retainedProjection: { frame: UiMinimapSurface; key: string; value: MinimapIconPlacements } | null = null;
+  private suspended = false;
   rotation = 0;
   enabled = true;
   private readonly raster: SourceRaster;
 
   constructor(raster: SourceRaster) { this.raster = raster; }
 
-  supply(surface: UiMinimapSurface, scope: string): boolean { return this.surfaces.set(surface, scope); }
+  supply(surface: UiMinimapSurface, scope: string): boolean {
+    const changed = this.surfaces.set(surface, scope);
+    if (changed) this.retainedProjection = null;
+    return changed;
+  }
   supplySprites(sprites: ReadonlyMap<number, MapIconSprite>): void {
     const copied = new Map<number, { sprite: MapIconSprite; canvas: HTMLCanvasElement }>();
     for (const [element, sprite] of sprites) {
@@ -46,13 +52,21 @@ export class MinimapPainter {
       copied.set(element, { sprite: { ...sprite, pixels }, canvas });
     }
     this.iconSprites = copied;
+    this.retainedProjection = null;
   }
   bindProjection(project: UiMinimapProjection): () => void {
     this.iconProjection = project;
-    return () => { if (this.iconProjection === project) this.iconProjection = null; };
+    this.retainedProjection = null;
+    return () => {
+      if (this.iconProjection === project) { this.iconProjection = null; this.retainedProjection = null; }
+    };
   }
-  retainScope(scope: string | null): void { this.surfaces.retainScope(scope); }
-  clear(): void { this.surfaces.clear(); this.issues.clear(); }
+  suspend(value: boolean): void { this.suspended = value; }
+  retainScope(scope: string | null): void {
+    this.surfaces.retainScope(scope);
+    if (this.surfaces.current() === null) this.retainedProjection = null;
+  }
+  clear(): void { this.surfaces.clear(); this.issues.clear(); this.retainedProjection = null; }
   dispose(): void { this.clear(); this.decoded.clear(); this.masks.clear(); this.iconSprites = null; this.iconProjection = null; }
   status(): UiMinimapStatus | null {
     const frame = this.surfaces.current();
@@ -151,24 +165,44 @@ export class MinimapPainter {
       image.naturalWidth, image.naturalHeight, (x, y) => { this.raster.image(id, x, y); });
   }
 
+  private unavailable(widget: NativeWidget): void {
+    this.mask(widget.sprite).forEach(([start, end], y) =>
+      this.raster.fill({ x: widget.x + start, y: widget.y + y, width: end - start, height: 1 }, 0));
+    this.raster.textBox("Map data unavailable", widget, { font: 494, xAlign: 1, yAlign: 1, color: 0xffff00 });
+  }
+
   private live(widget: NativeWidget, player: Tile, world: WorldView): void {
     this.issues.clear();
     const frame = this.surfaces.current();
     if (!frame || frame.plane !== player.plane) {
-      this.mask(widget.sprite).forEach(([start, end], y) =>
-        this.raster.fill({ x: widget.x + start, y: widget.y + y, width: end - start, height: 1 }, 0));
-      this.raster.textBox("Map data unavailable", widget, { font: 494, xAlign: 1, yAlign: 1, color: 0xffff00 });
+      this.unavailable(widget);
       return;
     }
-    this.project(widget, frame.pixels, frame.marginX + (player.x - frame.baseX) * frame.scale + 2,
-      frame.height - frame.marginY - (player.y - frame.baseY) * frame.scale - 2);
+    const projectionKey = [widget.width, widget.height, player.x, player.y, this.rotation & 16383].join("/");
+    let placement: MinimapIconPlacements | null = null;
     if (frame.icons.length) {
-      if (!this.iconProjection || !this.iconSprites)
-        throw new UiMinimapError("Bind the renderer's original map-icon sprites and placement projection.", "ui.minimap.binding");
-      const placement = this.iconProjection(widget.width, widget.height, frame.scale / 128);
+      if (this.suspended) {
+        this.issues.add("Live map-icon projection is paused until the world reconnects.");
+        const previous = this.retainedProjection;
+        if (previous?.frame !== frame || previous.key !== projectionKey) {
+          this.issues.add("No matching previously rendered native projection is available.");
+          this.unavailable(widget);
+          return;
+        }
+        placement = previous.value;
+      } else {
+        if (!this.iconProjection || !this.iconSprites)
+          throw new UiMinimapError("Bind the renderer's original map-icon sprites and placement projection.", "ui.minimap.binding");
+        this.retainedProjection = null;
+        placement = this.iconProjection(widget.width, widget.height, frame.scale / 128);
+      }
       if (placement.minimapAngle !== (this.rotation & 16383) || placement.scale !== frame.scale / 128 ||
           !Number.isSafeInteger(placement.missingSprites) || placement.missingSprites < 0 || !Array.isArray(placement.icons))
         throw new UiMinimapError("The renderer map-icon projection has a stale camera or invalid source scale.", "ui.minimap.projection");
+    }
+    this.project(widget, frame.pixels, frame.marginX + (player.x - frame.baseX) * frame.scale + 2,
+      frame.height - frame.marginY - (player.y - frame.baseY) * frame.scale - 2);
+    if (placement) {
       if (placement.missingSprites) this.issues.add(`${placement.missingSprites} original map-icon sprites are unavailable.`);
       const source = new Set(frame.icons.filter(icon => icon.plane === player.plane)
         .map(icon => JSON.stringify([icon.element, icon.x, icon.y])));
@@ -179,7 +213,7 @@ export class MinimapPainter {
             ![icon.x, icon.y, icon.drawX, icon.drawY, icon.dx, icon.dy].every(Number.isSafeInteger))
           throw new UiMinimapError("The renderer map-icon placement does not match the supplied surface.", "ui.minimap.identity");
         seen.add(identity);
-        const image = this.iconSprites.get(icon.element);
+        const image = this.iconSprites?.get(icon.element);
         if (!image) throw new UiMinimapError(`Original map-icon sprite ${icon.element} is unavailable.`, "ui.minimap.sprite");
         if (!(image.sprite.width && image.sprite.height)) continue;
         const x = widget.x + icon.drawX, y = widget.y + icon.drawY;
@@ -192,6 +226,7 @@ export class MinimapPainter {
             if (span) this.raster.clip({ x: widget.x + span[0], y: widget.y + row, width: span[1] - span[0], height: 1 }, paint);
           }
         }
+        if (!this.suspended) this.retainedProjection = { frame, key: projectionKey, value: structuredClone(placement) };
       }
     }
     const piles = new Set<string>();
