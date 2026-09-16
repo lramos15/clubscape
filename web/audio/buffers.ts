@@ -3,17 +3,19 @@ import { AudioFailure, failure, requireAudio } from "./errors.ts";
 import { SOURCE_RATE, verifiedBytes } from "./source.ts";
 import type { SourceAsset } from "./source.ts";
 
-export interface BufferNotice {
-  type: "fetch" | "decoded" | "evicted";
+export type BufferNotice = {
   assetId: string;
   bytes: number;
-}
+} & ({ type: "fetch" | "evicted" } | {
+  type: "decoded"; fetchAndVerifyMs: number; decodeMs: number; signalValidationMs: number;
+});
 
 export class BufferCache {
   private readonly assets: ClientAssets;
   private readonly context: AudioContext;
   private readonly notice: (notice: BufferNotice) => void;
   private readonly buffers = new Map<string, AudioBuffer>();
+  private readonly retained = new Set<string>();
   private readonly pending = new Map<string, { controller: AbortController; promise: Promise<AudioBuffer> }>();
   private readonly waiters: Array<() => void> = [];
   private active = 0;
@@ -50,9 +52,16 @@ export class BufferCache {
     return promise;
   }
 
+  async retain(asset: SourceAsset): Promise<AudioBuffer> {
+    requireAudio(!this.closed, "AUDIO_DISPOSED", "Audio has been disposed.");
+    this.retained.add(asset.id);
+    try { return await this.load(asset); }
+    catch (error) { this.retained.delete(asset.id); throw error; }
+  }
+
   cancelUnused(wanted: ReadonlySet<string>): void {
     for (const [id, pending] of this.pending) {
-      if (!wanted.has(id)) {
+      if (!wanted.has(id) && !this.retained.has(id)) {
         pending.controller.abort(new AudioFailure("AUDIO_CANCELLED", "Superseded audio load."));
         this.pending.delete(id);
       }
@@ -61,6 +70,7 @@ export class BufferCache {
 
   dispose(): void {
     this.closed = true;
+    this.retained.clear();
     this.cancelUnused(new Set());
     this.buffers.clear();
     this.bytes = 0;
@@ -76,8 +86,10 @@ export class BufferCache {
     try {
       controller.signal.throwIfAborted();
       this.notice({ type: "fetch", assetId: asset.id, bytes: asset.bytes });
+      const fetchStarted = performance.now();
       const data = await verifiedBytes(this.assets, asset.id, asset.bytes, asset.sha256, controller.signal);
       controller.signal.throwIfAborted();
+      const verifiedAt = performance.now();
       let buffer: AudioBuffer;
       try {
         buffer = await this.context.decodeAudioData(data);
@@ -85,6 +97,7 @@ export class BufferCache {
         throw failure(error, "AUDIO_DECODE", `Cannot decode original audio ${asset.id}`);
       }
       controller.signal.throwIfAborted();
+      const decodedAt = performance.now();
       requireAudio(buffer.sampleRate === SOURCE_RATE && buffer.length === asset.frames &&
         buffer.numberOfChannels === asset.channels,
       "AUDIO_DECODE_FORMAT", `Decoded source dimensions changed for ${asset.id}.`);
@@ -99,7 +112,9 @@ export class BufferCache {
         "AUDIO_DECODE_SIGNAL", `Decoded original signal exceeds its pinned float bound: ${asset.id}.`);
       const bytes = buffer.length * buffer.numberOfChannels * 4;
       while (this.bytes + bytes > this.budget && this.buffers.size) {
-        const [id, old] = this.buffers.entries().next().value!;
+        const evictable = Array.from(this.buffers).find(([id]) => !this.retained.has(id));
+        requireAudio(evictable, "AUDIO_CACHE_BUDGET", "The requested input cannot fit without evicting a required active control input.");
+        const [id, old] = evictable;
         this.buffers.delete(id);
         const oldBytes = old.length * old.numberOfChannels * 4;
         this.bytes -= oldBytes;
@@ -107,7 +122,9 @@ export class BufferCache {
       }
       this.buffers.set(asset.id, buffer);
       this.bytes += bytes;
-      this.notice({ type: "decoded", assetId: asset.id, bytes });
+      this.notice({ type: "decoded", assetId: asset.id, bytes,
+        fetchAndVerifyMs: verifiedAt - fetchStarted, decodeMs: decodedAt - verifiedAt,
+        signalValidationMs: performance.now() - decodedAt });
       return buffer;
     } catch (error) {
       if (controller.signal.aborted) throw controller.signal.reason;

@@ -3,7 +3,7 @@ import { mkdir, readFile, writeFile } from "node:fs/promises";
 import { resolve, sep } from "node:path";
 import { fileURLToPath } from "node:url";
 import type { Page } from "playwright-core";
-import type { SourceAudioPreferenceBinding, SourceMusicSkipResult } from "../../audio/index.ts";
+import type { AudioTrace, SourceAudioPreferenceBinding, SourceMusicSkipResult } from "../../audio/index.ts";
 import type { PlayerAudioControls } from "../player-audio.ts";
 import { audioFixtureWorld } from "./player-audio-fixture.ts";
 import { SOURCE_CYCLE_SECONDS, SOURCE_RATE } from "../../audio/source.ts";
@@ -45,6 +45,7 @@ interface PreferenceFixture {
   timing: NativeTimingInstrumentation;
   finishTiming(): NativeTimingInstrumentation;
   restoreTiming(): void;
+  inputReadiness: { decoded: AudioTrace; ready: AudioTrace; factoryContextState: string; playableFetches: string[] };
 }
 type PreferenceWindow = Window & { __clubscapePreferenceFixture?: PreferenceFixture };
 
@@ -170,6 +171,17 @@ export async function checkPlayerAudioPreferences(page: Page) {
       (error) => feedback.push({ kind: error.errorId, message: error.message }),
       (snapshot) => { if (observePreferences) composition?.changed(snapshot.preferences); })
       .catch((error: unknown) => { restoreTiming(); throw error; });
+    const initialized = audio.snapshot();
+    const controlId = "asset.source.osrs.cache2695.audio-runtime.sfx.2266";
+    const decodedControl = initialized.traces.find((trace) => trace.type === "decoded" && trace.data.assetId === controlId);
+    const readyControl = initialized.traces.find((trace) => trace.type === "control_input_ready");
+    if (initialized.controlInput?.phase !== "ready" || !decodedControl || !readyControl ||
+      initialized.queueSize !== 0 || initialized.voices.length !== 0 || initialized.unlocked || !initialized.pendingGesture) {
+      await audio.dispose(); restoreTiming();
+      throw new Error("The native control input must be ready before the factory admits controls, without claiming autoplay permission.");
+    }
+    const inputReadiness = { decoded: decodedControl, ready: readyControl, factoryContextState: initialized.contextState,
+      playableFetches: initialized.traces.filter((trace) => trace.type === "fetch").map((trace) => String(trace.data.assetId)) };
     const button = window.document.createElement("button");
     button.id = "native-player-preference-contract";
     button.textContent = "Native audio preference contract fixture (not game UI)";
@@ -178,7 +190,7 @@ export async function checkPlayerAudioPreferences(page: Page) {
     const state: PreferenceFixture = {
       audio, assets, controls: null, world, projected: null, reads: 0, writes: [], writing: 0, maxWriting: 0,
       preparing: Promise.resolve(), order, trusted: false, action: "unlock", pending: null, skip: null,
-      feedback, button, storageKey, timing, finishTiming, restoreTiming,
+      feedback, button, storageKey, timing, finishTiming, restoreTiming, inputReadiness,
       releaseRead: () => read.resolve(),
       holdWrites: () => { if (write) throw new Error("Fixture write gate already active."); write = Promise.withResolvers<void>(); },
       releaseWrites: () => { const held = write; write = null; held?.resolve(); },
@@ -392,8 +404,9 @@ export async function checkPlayerAudioPreferences(page: Page) {
       return { assets: state.audio.observations(), audio: state.audio.controls(), feedback: state.feedback,
         dispatches: state.audio.snapshot().traces.filter((trace) => trace.type === "effect_dispatched").map((trace) => trace.data),
         sourceTraces: state.audio.snapshot().traces.filter((trace) =>
-          ["queued", "effect_submitted", "effect_dispatched", "decoded", "error", "stopped", "ended"].includes(trace.type)),
-        instrumentation: state.finishTiming() };
+          ["queued", "effect_submitted", "effect_dispatched", "decoded", "error", "stopped", "ended",
+            "control_input_pending", "control_input_ready", "control_input_failed"].includes(trace.type)),
+        inputReadiness: state.inputReadiness, instrumentation: state.finishTiming() };
     });
     if (process.env.CLUBSCAPE_BROWSER_EVIDENCE) {
       const root = fileURLToPath(new URL("../../../", import.meta.url));
@@ -407,6 +420,14 @@ export async function checkPlayerAudioPreferences(page: Page) {
       ["AUDIO_LOADING_LATE", "AUDIO_TIMING_LATE", "AUDIO_CLOCK_LATE", "AUDIO_SOURCE_QUEUE_EXPIRED"].includes(item.kind));
     assert.equal(final.dispatches.length, 18, "All eighteen original source cue dispatches remain required.");
     for (const comparison of timingComparison) assert.equal(comparison.dispatches.length, 6);
+    const firstEnqueue = final.sourceTraces.find((trace) => trace.type === "queued" && trace.data.sourceId === 2266);
+    assert(firstEnqueue, "The first real control enqueue must remain observable.");
+    assert.deepEqual(final.inputReadiness.playableFetches, ["asset.source.osrs.cache2695.audio-runtime.sfx.2266"],
+      "Readiness may prepare only the bound active control input, not other effects/music.");
+    assert(final.inputReadiness.decoded.wallTime <= final.inputReadiness.ready.wallTime);
+    assert(final.inputReadiness.ready.wallTime < firstEnqueue.wallTime,
+      "The original control input must become ready BEFORE its first actual enqueue, not before a later retry.");
+    assert(final.inputReadiness.decoded.audioTime <= Number(firstEnqueue.data.requestedAt));
     const dispatchToleranceMs = (SOURCE_CYCLE_SECONDS + 1 / SOURCE_RATE) * 1000;
     const dispatchOverruns = final.dispatches.filter((dispatch) =>
       typeof dispatch.lateMs === "number" && dispatch.lateMs > dispatchToleranceMs).length;
@@ -441,6 +462,8 @@ export async function checkPlayerAudioPreferences(page: Page) {
         passed: timingFailures.length === 0 && dispatchOverruns === 0 && actualStartOverruns === 0, failures: timingFailures,
         dispatchToleranceMs, dispatchOverruns,
         actualStartOverruns, completedPcmComparisons: completedPcm.length,
+        firstInputReadiness: { ...final.inputReadiness, firstEnqueue,
+          decodedBeforeEnqueue: true, readyBeforeEnqueueMs: firstEnqueue.wallTime - final.inputReadiness.ready.wallTime },
         explicitlyStoppedPcm: final.instrumentation.pcm.filter((pcm) => pcm.stopCalledAt !== null),
         dispatches: final.dispatches, comparison: timingComparison,
         sourceTraces: final.sourceTraces, instrumentation: final.instrumentation,
@@ -465,10 +488,10 @@ export async function checkPlayerAudioPreferences(page: Page) {
       const snapshot = state.audio.snapshot();
       return { context: snapshot.contextState, voices: snapshot.voices.length, queue: snapshot.queueSize,
         cachedBytes: snapshot.cache.decodedBytes, pending: snapshot.cache.pending,
-        storageRemoved: localStorage.getItem(state.storageKey) === null };
+        storageRemoved: localStorage.getItem(state.storageKey) === null, controlInput: snapshot.controlInput?.phase };
     });
     if (cleanup) assert.deepEqual(cleanup, {
-      context: "closed", voices: 0, queue: 0, cachedBytes: 0, pending: 0, storageRemoved: true,
+      context: "closed", voices: 0, queue: 0, cachedBytes: 0, pending: 0, storageRemoved: true, controlInput: "disposed",
     });
   }
 }

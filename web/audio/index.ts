@@ -6,6 +6,8 @@ import { actionId, COOK, cueKey, LEARNING, OBSERVED_SELECTORS, stableId, validat
 import { AudioFailure, failure, integer, requireAudio, unit } from "./errors.ts";
 import { EventLedger, SourceQueue } from "./queue.ts";
 import { sourceSchedulingLookahead, sourceRenderReservationDue } from "./clock.ts";
+import { SOURCE_CONTROL_CUE, SourceControlInput } from "./control-input.ts";
+import type { SourceControlInputState } from "./control-input.ts";
 import {
   APPROVED_PACK, loadCatalog, regionalTrack, selectWeighted, SOURCE_CYCLE_SECONDS,
   SOURCE_RATE, sourceRandomBelow, sourceRoll, validTile, sourceAssetForLevel,
@@ -40,6 +42,7 @@ export * from "./preferences.ts";
 
 export { AudioFailure } from "./errors.ts";
 export { AUDIO_INPUTS } from "./source.ts";
+export type { SourceControlInputState } from "./control-input.ts";
 
 type Channel = "music" | "effects" | "area";
 type TraceValue = string | number | boolean | null;
@@ -72,6 +75,7 @@ export interface AudioSnapshot {
     assetId: string; renderedNativeLevel: number | null; appliedNativeLevel: number;
   }>[];
   readonly cache: Readonly<{ decodedBytes: number; cached: number; pending: number }>;
+  readonly controlInput?: SourceControlInputState;
   readonly policyLimits: readonly string[];
   readonly traces: readonly AudioTrace[];
 }
@@ -177,6 +181,7 @@ class Runtime implements AudioHandle {
   private readonly catalog: SourceCatalog;
   private readonly report: (error: Error) => void;
   private readonly cache: BufferCache;
+  private readonly controlInput: SourceControlInput<AudioBuffer>;
   private readonly master: GainNode;
   private readonly buses: Record<Channel, GainNode>;
   private readonly voices = new Map<number, Voice>();
@@ -258,6 +263,14 @@ class Runtime implements AudioHandle {
       this.trace(notice.type, { ...notice });
       this.publish();
     });
+    const control = this.asset("sfx", SOURCE_CONTROL_CUE, null);
+    this.controlInput = new SourceControlInput(() => deadline(this.cache.retain(control), 15_000,
+      new AudioFailure("AUDIO_CONTROL_INPUT_TIMEOUT",
+        "The required native control input did not become ready; no control deadline was admitted.")), (state) => {
+      this.trace(`control_input_${state.phase}`, { sourceId: SOURCE_CONTROL_CUE, assetId: control.id,
+        phase: state.phase, errorCode: state.errorCode });
+      this.publish();
+    });
     context.addEventListener("statechange", this.stateChanged);
     context.addEventListener("sinkchange", this.sinkChanged);
     this.trace("context_created", { state: context.state, destinationChannels: context.destination.channelCount });
@@ -287,7 +300,8 @@ class Runtime implements AudioHandle {
         loop: voice.source.loop, loopEnd: voice.source.loopEnd,
         assetId: voice.asset.id, renderedNativeLevel: voice.asset.nativeMixerLevel, appliedNativeLevel: voice.nativeVolume,
       }))),
-      cache: Object.freeze(this.cache.state), policyLimits: Object.freeze([...this.policyLimits]),
+      cache: Object.freeze(this.cache.state), controlInput: this.controlInput.state,
+      policyLimits: Object.freeze([...this.policyLimits]),
       traces: Object.freeze([...this.traces]),
     });
   }
@@ -296,6 +310,11 @@ class Runtime implements AudioHandle {
     this.observers.add(observer);
     observer(this.snapshot());
     return () => { this.observers.delete(observer); };
+  }
+
+  prepareControlInput(): Promise<void> {
+    this.requireOpen();
+    return this.controlInput.prepare();
   }
 
   async unlock(): Promise<void> {
@@ -314,6 +333,7 @@ class Runtime implements AudioHandle {
         this.requireOpen();
         requireAudio(this.context.state === "running", "AUDIO_CONTEXT_SUSPENDED",
           `AudioContext remains ${this.context.state}; sound is not ready.`);
+        this.controlInput.requireReady();
         this.hasUnlocked = true;
         this.pendingGesture = false;
         this.musicFailed = false;
@@ -753,6 +773,7 @@ class Runtime implements AudioHandle {
 
   selectPlaylist(playerId: string, slot: SourcePlaylistSelection): SourceAudioPreferenceBinding {
     const before = this.boundPreferences(playerId);
+    this.controlInput.requireReady();
     const next = sourceSelectPlaylist(before.music, slot, this.music.groups[this.music.cursor] ?? null);
     const result = this.setMusicPreferences(playerId, next);
     this.controlClick("playlist/9297");
@@ -774,11 +795,12 @@ class Runtime implements AudioHandle {
   }
 
   private controlClick(binding: string): void {
+    this.controlInput.requireReady();
     const id = `source-control/${++this.controlSequence}`;
-    const event: AudioEvent = { id, kind: "sound", sourceId: 2266, assetId: null,
+    const event: AudioEvent = { id, kind: "sound", sourceId: SOURCE_CONTROL_CUE, assetId: null,
       actorId: this.playerId, tile: null, sourceCycle: null, payload: { repeatCount: 1, delayCycles: 0 } };
-    this.enqueue(event, this.asset("sfx", 2266, null), id, 0, 1);
-    this.trace("source_control_click", { binding, eventId: id, sourceId: 2266 });
+    this.enqueue(event, this.asset("sfx", SOURCE_CONTROL_CUE, null), id, 0, 1);
+    this.trace("source_control_click", { binding, eventId: id, sourceId: SOURCE_CONTROL_CUE });
   }
 
   async skipMusic(playerId: string): Promise<SourceMusicSkipResult> {
@@ -972,6 +994,7 @@ class Runtime implements AudioHandle {
     this.resetPlaying();
     this.stopClock();
     this.cache.dispose();
+    this.controlInput.dispose();
     this.context.removeEventListener("statechange", this.stateChanged);
     this.context.removeEventListener("sinkchange", this.sinkChanged);
     for (const bus of Object.values(this.buses)) bus.disconnect();
@@ -1292,11 +1315,13 @@ class Runtime implements AudioHandle {
       if (!this.hasUnlocked || this.context.state !== "running") this.gestureFeedback();
       return;
     }
+    const controlBuffer = asset.kind === "sfx" && asset.sourceId === SOURCE_CONTROL_CUE
+      ? this.controlInput.requireReady() : null;
     const now = this.context.currentTime;
     const effect: Effect = {
       eventId: event.id, actionId: actionId(event), key, asset, channel, gain: position.gain,
       repeats, ambient, ambientRandom, spatial: position.spatial,
-      buffer: null, error: null, lateReported: false, requestedAt: now,
+      buffer: controlBuffer, error: null, lateReported: false, requestedAt: now,
       dueAt: Math.max(this.nextCycleAt, now + SOURCE_CYCLE_SECONDS) + delay * SOURCE_CYCLE_SECONDS,
       enqueuedCycle: this.processingCycle, initialDelay: delay, submitted: null, epoch: this.epoch,
     };
@@ -1330,6 +1355,10 @@ class Runtime implements AudioHandle {
     this.trace("queued", { eventId: event.id, sourceId: asset.sourceId, delay, dueAt: effect.dueAt, key,
       requestedAt: now, schedulingLookahead: this.schedulingLookahead });
     if (!asset.playable) return;
+    if (controlBuffer !== null) {
+      queueMicrotask(() => { if (effect.epoch === this.epoch) this.processCycle(); });
+      return;
+    }
     void this.cache.load(asset).then((buffer) => {
       effect.buffer = buffer;
       if (effect.epoch === this.epoch) this.processCycle();
@@ -2277,6 +2306,7 @@ class Runtime implements AudioHandle {
 /** Wire this exact factory into app orchestration; it never owns game outcomes. */
 export const createAudio: CreateAudio = async (assets, report): Promise<AudioHandle> => {
   let context: AudioContext | null = null;
+  let runtime: Runtime | null = null;
   const controller = new AbortController();
   const timeout = setTimeout(() => controller.abort(new AudioFailure(
     "AUDIO_LOAD_TIMEOUT", "Timed out loading the approved audio metadata.",
@@ -2286,15 +2316,23 @@ export const createAudio: CreateAudio = async (assets, report): Promise<AudioHan
       crypto.subtle !== undefined,
     "AUDIO_CAPABILITY", "Source audio requires WebAudio and secure-context integrity checking.");
     const catalog = await loadCatalog(assets, controller.signal);
+    clearTimeout(timeout);
     context = new AudioContext({ sampleRate: SOURCE_RATE, latencyHint: "interactive" });
     requireAudio(context.sampleRate === SOURCE_RATE, "AUDIO_DEVICE_FORMAT",
       "The device context did not accept the original 22050 Hz rendering rate.");
-    const runtime = new Runtime(context, catalog, assets, report);
+    runtime = new Runtime(context, catalog, assets, report);
+    await runtime.prepareControlInput();
     runtimes.set(runtime, runtime);
     return runtime;
   } catch (error) {
     controller.abort(error);
-    if (context && context.state !== "closed") await context.close().catch(() => undefined);
+    try {
+      if (runtime) await runtime.dispose();
+      else if (context && context.state !== "closed") await context.close();
+    } catch (cleanupError) {
+      try { report(failure(cleanupError, "AUDIO_INITIALIZATION_CLEANUP", "Cannot finish failed audio initialization cleanup")); }
+      catch { /* Preserve the initialization and cleanup failures if the host reporter fails. */ }
+    }
     const problem = failure(error, "AUDIO_INITIALIZATION", "Cannot initialize original browser audio");
     try { report(problem); } catch { /* Preserve the actual initialization failure. */ }
     throw problem;

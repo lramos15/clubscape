@@ -5,7 +5,7 @@
 playback engine; this revision binds independently executed original native
 policies into it. It does not implement UI or gameplay authority.
 
-**Current composed-timing admission: blocked on first-use cue readiness.**
+**Prior composed-timing admission: blocked on first-use cue readiness.**
 The `M1-AUDIO-COMPOSED-TIMING` candidate preserves the earlier `dbeb1ac`
 fix and repairs the measured ready-cue/device-batch boundary, but its final
 bounded composed run still reports a real cold2266 load/dispatch overrun.
@@ -13,6 +13,12 @@ Do not promote the intervening passing run to final acceptance. Exact retained
 results, the three-invocation limit and the remaining work are in
 [`composed-timing.md`](composed-timing.md) and
 `evidence/composed-timing.json`.
+
+The separately authorized `M1-AUDIO-CONTROL-READINESS` implementation prepares
+and retains only the bound2266 control input before `createAudio` resolves.
+Its readiness/failure contract and the new two-cold-run validation allowance
+are documented in [`control-readiness.md`](control-readiness.md). Previous
+failed outcomes and budgets are not overwritten or reclassified.
 
 For current UI/shell integration, use the
 [player-scoped preference controls](#player-scoped-preference-controls-v1).
@@ -130,7 +136,9 @@ through same-origin HTTP(S). Bytes, lengths, hashes, decoded dimensions,
 finite PCM and decoder peak bounds are checked. Metadata is deliberately
 fetched as bytes, not through `ClientAssets.json`. Cross-origin URLs, redirects,
 missing/corrupt/oversized data and decoder/device errors are explicit failures.
-Only metadata loads before a gesture; selected/current-next music and needed
+Metadata and the one required native control input2266 load before a gesture;
+no source is started and autoplay permission remains pending.
+Selected/current-next music and needed
 activity/emitter files load progressively through four load slots and a96MiB
 decoded LRU. No whole-game download, SoundFont, oscillator, limiter or
 normalization substitutes for original input.
