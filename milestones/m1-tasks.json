@@ -10,7 +10,7 @@
       {"id": "bb7f85f7-096a-4377-80cb-3e7eae196c6b", "task": "M1-BROWSER-RENDERER"},
       {"id": "cc864d7a-37cc-4869-a7b4-d484d01cede5", "task": "M1-BROWSER-UI"},
       {"id": "78d01af9-70a4-4b02-8339-6a61eb377374", "task": "M1-BROWSER-SHELL"},
-      {"id": "81ac9884-4f39-4f27-b516-6e9a42b09b51", "task": "M1-DYING-RESTORE-OBSERVE"}
+      {"id": "81ac9884-4f39-4f27-b516-6e9a42b09b51", "task": "M1-HEADLESS-JOURNEY"}
     ],
     "reserved": [],
     "queued": [],
@@ -36,7 +36,7 @@
     {
       "id": "M1-GEAR-METRIC-REVIEW",
       "goal": "Verify the new mesh-fitting candidate's actual geometric overlap and deformation claims before accepting its zero-failure metric.",
-      "status": "IMPLEMENTING",
+      "status": "BLOCKED",
       "specs": ["spec/m1-benchmark-contract.json", "milestones/approvals/m1-reference-pack-v1.3.0.json", "crates/renderer/README.md", "assets/compiled/render/gear/pose-fit-failures.json"],
       "dependencies": ["M1-BROWSER-RENDERER", "M1-TERRAIN-INPUTS"],
       "allowed_paths": ["crates/renderer/tests/gear_geometry.rs", "crates/renderer/README.md", "milestones/evidence/m1-gear-metric/**"],
@@ -49,7 +49,7 @@
       "source_notes": ["Worker candidatef705199 reports0/2034 after mesh fitting and a new winding/edge penetration measure, with37 deformation outliers. Parent review located endpoint-only crossing evaluation and per-pass displacement accumulation that require independent verification."],
       "parity_entries": [],
       "adaptations": ["Existing necessary-equipment-fitting approval only"],
-      "evidence": []
+      "evidence": ["Independent compiled-candidate regressionf1d50abda8c6aaeb7c435d0363c1af9abd757add:1 positive control passes,2 crossing cases FAIL. Closed meshes with all vertices outside overlap through face interiors at witnessed depths3 and2, but exact_penetration returns0 in both orientations. No threshold/base/material changes. Candidate0/2034 is not accepted; renderer owner received the concrete root-cause repair requirement and must rerun all legal poses with sound geometry coverage."]
     },
     {
       "id": "M1-SHELL-INTEGRATION",
@@ -72,7 +72,7 @@
     {
       "id": "M1-DYING-RESTORE-OBSERVE",
       "goal": "Verify readable public observation of the exact restored dying checkpoint through normal trusted lifecycle behavior, without resuming player gameplay.",
-      "status": "IMPLEMENTING",
+      "status": "DONE",
       "specs": ["milestones/evidence/m1-dying-observation-authorization.json", "tools/journey-tests/evidence/dying-ui-style-7fa370e14c9b421e.json", "tools/journey-tests/evidence/dying-repair-8897211.json", "spec/game-contracts.md"],
       "dependencies": ["M1-DYING-OBSERVATION"],
       "allowed_paths": ["tools/journey-tests/**", "tools/simulator/**", "tests/scenarios/**"],
@@ -85,7 +85,7 @@
       "source_notes": ["Actual cause is confirmed by immutable source5e queries at16152a8, integrated6c8db7c. Native repair and parent46PG/11account prerequisites pass; the old public1613HP1 snapshot must not be confused with saved1616HP0/Dying."],
       "parity_entries": [],
       "adaptations": [],
-      "evidence": ["milestones/evidence/m1-dying-observation-authorization.json"]
+      "evidence": ["One actual restored invocationc84c66094aaa4526 completed in3.989seconds after readiness, with5 allowed HTTP200 RPCs and0 WorldInputs/replays. Exact pre-start identity passed; normal phases already reached source Office. PublicJoin1621/Poll1622 showedHP10/style.unarmed.punch/actual source location and death ID; privatefirst_death_office phase is separately qualified, not a fabricated public Dying frame.", "Ownedc3e7c526/ba09eff7 integrate2655c8b/9d34ace; parent61Rust/38Python checks pass. Original7fa/source5e, owned progress/deathitems/receipts and trace prefix preserved. New protected archivea7cd1774144525c29efc694b5550f71a0e04052324bb59c3ab4fbccbe2d8b4af and inventory996a199f2d47d83add36ee9de22802774cb9aaecd06e9fd0c0ea2d1a0e394f6f retained before clean service removal. Full gameplay permission is now separately recorded in milestones/evidence/m1-mainland-continuation-authorization.json."]
     },
     {
       "id": "M1-TERRAIN-INPUTS",
@@ -108,7 +108,7 @@
     {
       "id": "M1-DYING-OBSERVATION",
       "goal": "Keep legitimate dying/respawn states observable through public world polling without changing source death outcomes or input refusals.",
-      "status": "VALIDATING",
+      "status": "DONE",
       "specs": ["tools/journey-tests/evidence/shop-goblin-dying-8ab279a.json", "spec/game-contracts.md", "crates/server/src/game_service/view.rs", "crates/world-engine/src/death.rs"],
       "dependencies": ["M1-CONTEXTUAL-SHOP-ENTRY"],
       "allowed_paths": ["crates/world-engine/src/death.rs", "crates/world-engine/src/combat.rs", "crates/world-engine/src/lifecycle.rs", "crates/world-engine/src/gameplay_ui/projections.rs", "crates/world-engine/tests/dying_observation.rs", "crates/server/src/game_service/tests/dying_observation.rs", "crates/server/src/game_service/tests.rs", "crates/world-engine/README.md", "spec/game-contracts.md"],
@@ -121,7 +121,7 @@
       "source_notes": ["Actual source5e cause is now confirmed: saved1616/HP0/Dying has no equipment and stale style.sword.bronze.stab.accurate; sword/dagger/pickaxe/shortbow are in the actual grave, while the retained axe is not equipped. Immutable ui_view -> equipped_weapon returns RequirementNotMet; other queries succeed and serialized state is unchanged. Last public snapshot remains1613/HP1."],
       "parity_entries": [],
       "adaptations": [],
-      "evidence": ["Owned634cff997ab290eb482c1a2923885ca25eea620a integratedf6f6adf refreshes derived style after death equipment retention and at trusted Join/Rejoin/CoordinatorRestart only in intermediate death states. Four native regressions and full engine/native/WASM checks pass; parent46 realPG/HTTP tests plus11 independent account checks pass. Query/input guards, death clocks, items, XP, RNG, receipts and source pins are preserved.", "Actual immutable diagnosis16152a88fddb55988e644869a827bb01ed94c367 integrates6c8db7c; headless repair adoption4350d7b integrates46d07fc without repicking duplicate8897211. Evidence dying-ui-style-7fa370e14c9b421e.json SHA0b8809f1747f6765473b13ab775b78775c52db897d80f1d3d68c775a82926486 confirms this exact saved-state cause, not the differently equipped native fixture. Protected original stays unchanged.", "M1-DYING-RESTORE-OBSERVE now admits only a tested/committed source-safe adapter and one real restored observation with normal lifecycle/ticks, then a new protected checkpoint. No player gameplay inputs or full continuation are yet authorized. See milestones/evidence/m1-dying-observation-authorization.json."]
+      "evidence": ["Owned634cff997ab290eb482c1a2923885ca25eea620a integratedf6f6adf refreshes derived style after death equipment retention and at trusted Join/Rejoin/CoordinatorRestart only in intermediate death states. Four native regressions and full engine/native/WASM checks pass; parent46 realPG/HTTP tests plus11 independent account checks pass. Query/input guards, death clocks, items, XP, RNG, receipts and source pins are preserved.", "Actual immutable diagnosis16152a88fddb55988e644869a827bb01ed94c367 integrates6c8db7c; headless repair adoption4350d7b integrates46d07fc without repicking duplicate8897211. Evidence dying-ui-style-7fa370e14c9b421e.json SHA0b8809f1747f6765473b13ab775b78775c52db897d80f1d3d68c775a82926486 confirms this exact saved-state cause, not the differently equipped native fixture.", "CLOSED on actual restored observation c84: all5 RPCs200 includingJoin/Poll, sourceunarmed style after normal lifecycle, originalarchive untouched and no WorldInput/reward/retention replay. Normal phases reached Office before first public snapshot; no public Dying-frame claim. Result tools/journey-tests/evidence/dying-restore-observe-c84c66094aaa4526.json. Full Office/grave/Cook recovery remains the headless journey's next separately authorized work."]
     },
     {
       "id": "M1-AUDIO-CUE-TIMING",
@@ -463,7 +463,7 @@
       "source_notes": ["Real server protobuf APIs and canonical source content"],
       "parity_entries": [],
       "adaptations": [],
-      "evidence": ["Historical31/66-edge and old6f unknown-operation records remain unchanged. The actual same source5e account now has70/70 tutorial transitions and321 checks through legitimate arrival, copper, bank/shop operations, goblin combat and loot, with two verified private restores. No coverage is summed across accounts or recreated trace events.", "Saved checkpoint7fa370e14c9b421e is1616/HP0/Dying after last public1613/HP1. Immutable diagnosis16152a8 confirms stale sword style with no equipment; codefix634cff9 is already adopted as8897211 and parent46PG/11account prerequisites pass. Original archiveSHAd2e586a51f78ed36ab30443f0297b1273e984957ae5b8f78c73b86be53ca16e1 and source5e remain unchanged.", "Current admission is ONLY M1-DYING-RESTORE-OBSERVE: tested/committed observation-only adapter, one exact original-archive restore, normal trusted lifecycle and read-only public polling, then a new protected checkpoint. No player WorldInput, Office/grave recovery, Cook or full journey continuation until Director reviews that boundary. Final browser/UI/source/performance/owner acceptance remains separate."]
+      "evidence": ["Historical31/66-edge and old6f unknown-operation records remain unchanged. Same original source5e account has70/70 tutorial transitions and321 source checks through arrival/copper/bank/shop/goblin/loot. Two earlier actual restores and the third boundedc84 observation preserve that one lineage; three new observation checks are counted separately.", "The original7fa dying failure is repaired and verified on a real restore: publicJoin1621/Poll1622 showHP10/unarmed at source Office, no new WorldInputs. Fresh protected c84 archivea7cd1774144525c29efc694b5550f71a0e04052324bb59c3ab4fbccbe2d8b4af/inventory996a199f2d47d83add36ee9de22802774cb9aaecd06e9fd0c0ea2d1a0e394f6f retained; original7fa andsource5e stayexact. Parent reviewed adapter and61Rust/38Python checks pass.", "Current full-M1 admission now resumes ONLY from c84 under milestones/evidence/m1-mainland-continuation-authorization.json: preserve exact pre-start identity and trace, continue existing Office/grave recovery without repeating death/kill, complete Cook and post-quest persistence/replay, then preserve a success or blocker checkpoint. One actual archive restore, existing5400second/input bounds, no source repin, state setter, unknown retry or later milestone. Full browser/UI/source/performance/owner acceptance remains separate."]
     },
     {
       "id": "M1-ENGINE-REVIEW",

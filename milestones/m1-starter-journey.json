@@ -13,7 +13,7 @@
     "verified_infrastructure_revision": "275d3cc83d6a7c2118d0afcf82490f364e5d2986",
     "infrastructure_evidence": "milestones/evidence/m1-account-foundations.json",
     "runtime_revision": "ab6ce6e8aab372b87dfb037a329789a28ad34e17",
-    "scope_note": "Exact27 shell-owned commits and two Director repairs are integrated;219web/40WASM and actual component builds pass, but NORMAL production build fails at5 unchanged UI-owned errors. Current5b source delivery is separately verified, not gameplay. Main terrain/clip fidelity evidence remains qualified; the new mesh candidate is unreviewed. Same source5e account remains at70/70 tutorial transitions and321 checks with confirmed dying cause; only one bounded restored observation is admitted. Full UI/metadata, actual continuation/Cook, source facts, frozen performance, Mac/Edge and owner acceptance remain pending. No old world is repinned."
+    "scope_note": "Shell foundation passes219web/40WASM checks, but normal production build still fails at5 UI-owned errors. New mesh candidate0/2034 is blocked by an independently reproduced non-vertex collision false negative; main renderer remains unchanged. Actual same-account5e restored observation succeeds:5 RPCs200,0 WorldInputs, source Office/HP10/unarmed after normal phases. Original70/70 tutorial transitions and321 source checks are preserved, with3 observation checks separate. Fresh protectedc84 now admits Office/grave/Cook/post-quest continuation; full UI/metadata, source facts, frozen performance and owner Mac/Edge acceptance remain pending. No old world is repinned."
   },
   "scope_approval": {
     "authority": "owner",
@@ -35,7 +35,7 @@
     {"id": "complete-tutorial", "status": "in_progress", "evidence": [], "blocker": "Headless normal-account source journey now completes70/70 with correct departure possessions/XP/1QP. Final reviewed-build browser journey and composed presentation checks remain separate and unexecuted."},
     {"id": "legitimate-lumbridge-arrival", "status": "in_progress", "evidence": [], "blocker": null},
     {"id": "lumbridge-activities", "status": "in_progress", "evidence": [], "blocker": null},
-    {"id": "death-and-recovery", "status": "in_progress", "evidence": [], "blocker": "Actual source5e dying cause is confirmed and its code repair passes native/PG prerequisites. A bounded restored observation is now authorized, but actual public recovery and player continuation are not yet verified. Ordinary-grave Bank-All permission remains a separate source gap; generic recovery controls do not close the real journey gate."},
+    {"id": "death-and-recovery", "status": "in_progress", "evidence": [], "blocker": "Actual source5e restored Join/Poll now succeeds at the source Office after normal death progression, with no player inputs or item/XP changes. Existing Office/grave recovery and remaining journey continuation from the preservedc84 checkpoint are authorized next, not yet completed. Ordinary-grave Bank-All permission remains a separate source gap."},
     {"id": "complete-cooks-assistant", "status": "in_progress", "evidence": [], "blocker": null},
     {"id": "shared-authoritative-headless-path", "status": "in_progress", "evidence": [], "blocker": null},
     {"id": "tutorial-and-quest-persistence", "status": "in_progress", "evidence": [], "blocker": null},

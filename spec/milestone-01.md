@@ -109,11 +109,14 @@ preserved at a dying-state `PollWorld409` failure. The
 now confirms the repaired stale-combat-style cause: no equipment remains, while
 the selected sword style refers to the sword in the actual grave. Native and
 PostgreSQL prerequisites pass. The
-[current bounded authorization](../milestones/evidence/m1-dying-observation-authorization.json)
-admits a tested observation-only adapter and one real restore/read-only public
-observation, followed by a new protected checkpoint. It does not yet authorize
-player gameplay continuation. Do not repin, heal, skip a death phase, replay
-retention, or recreate missing trace events.
+[bounded restored observation](../tools/journey-tests/evidence/dying-restore-observe-c84c66094aaa4526.json)
+has now completed: all five RPCs succeeded without player inputs, and the first
+public snapshots already showed the source Office, HP10 and unarmed style after
+normal death progression. No missing public death frame was fabricated. The
+[current continuation authorization](../milestones/evidence/m1-mainland-continuation-authorization.json)
+resumes the existing Office/grave/Cook/post-quest flow from the fresh protected
+`c84c66094aaa4526` archive, not by repeating the death or original account.
+Do not repin, heal, skip phases, replay retention, or recreate trace events.
 
 The newer [authority candidate](../milestones/evidence/m1-authority-controls.json)
 uses source 5b3; its controls, audio history and animation contracts are verified
