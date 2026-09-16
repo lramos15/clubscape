@@ -9,14 +9,14 @@
       {"id": "director", "task": "M1-FLEET-CONTRACTS"},
       {"id": "bb7f85f7-096a-4377-80cb-3e7eae196c6b", "task": "M1-BROWSER-RENDERER"},
       {"id": "cc864d7a-37cc-4869-a7b4-d484d01cede5", "task": "M1-BROWSER-UI"},
-      {"id": "78d01af9-70a4-4b02-8339-6a61eb377374", "task": "M1-BROWSER-SHELL"},
-      {"id": "2766e089-44e5-4a1d-974e-7b03ad9c269d", "task": "M1-GAMEPLAY-UI-CONTRACTS"}
+      {"id": "78d01af9-70a4-4b02-8339-6a61eb377374", "task": "M1-BROWSER-SHELL"}
     ],
     "reserved": [
       {"id": "81ac9884-4f39-4f27-b516-6e9a42b09b51", "task": "M1-HEADLESS-JOURNEY", "reason": "Actualsame5eaccount321checks passes70/70,shop,goblin andloot, withtwoverifiedprivate restores. DyingPollWorld409 isbeinglocalized; protectedcheckpoint7fa370e14c9b421e remainsunchanged andno gameplayresume isauthorized yet."}
     ],
     "queued": [],
     "parked": [
+      {"id": "2766e089-44e5-4a1d-974e-7b03ad9c269d", "reason": "Source-only57d4edd integrated664dde0 records three unverified facts after the bounded retained/native/public pass: normal-grave Bank-All permission, dough motion and seven Empty variants' motion or verified absence. All current5b3 contracts are already integrated; no more backend expansion, source guessing or automatic resumption without new evidence and admission."},
       {"id": "cdfad64d-9162-439f-a525-58e1114dd7f4", "reason": "Bounded cue-timing repairdbeb1ac integratedf9e56a5; parent45units and exactcomposedfixture6checks/18dispatches/zerooverrunspass. Wholeclient routing/sourceauthority/Mac/speakeracceptance remainseparate; no automatic resumption."},
       {"id": "ac0f0856-44af-445b-bd90-6db7a1f4fc74", "reason": "Original scenery phase supplement6c68672d integratedb9cdd0f; parent36tests and exact27-observation/index verification pass. Renderer received active4/3/2 phases and original clocks; no automatic resumption."},
       {"id": "e6925772-df1f-4ff7-9efc-219f800a5a14", "reason": "Bounded UI4 review complete: one medium source-travel interruption bypass in timed UI actions. Director repair M1-UI-TRAVEL-INTERRUPTION is active; this is not final candidate signoff."},
@@ -289,7 +289,7 @@
     {
       "id": "M1-GAMEPLAY-UI-CONTRACTS",
       "goal": "Close the actual source-backed engine/data/protocol contracts required by the approved M1 interface controls.",
-      "status": "IMPLEMENTING",
+      "status": "BLOCKED",
       "specs": ["spec/browser-implementation.md", "web/ui/contract-gaps.json", "spec/game-contracts.md", "spec/game-networking.md", "prompt.md sections30/3.3"],
       "dependencies": ["M1-FLEET-LIVE-SERVER", "M1-FLEET-BINDING-APPLICATION", "M1-SHOP-REVIEW-FIXES", "M1-ACTOR-REVIEW-FIXES"],
       "allowed_paths": ["crates/server/**", "crates/protocol/**", "crates/game-types/**", "crates/world-engine/**", "crates/simulation/**", "crates/content/**", "crates/client-core/tests/**", "content/m1/**", "tools/m1-content/**", "research/m1-bindings/**", "research/interface-contracts/**", "web/shared/contracts.ts", "spec/game-contracts.md", "spec/game-networking.md", "spec/browser-implementation.md"],
@@ -299,10 +299,10 @@
       "test_requirements": ["No speculative query mutations or fake state", "No duplicate rewards/coins/items across retry/restart", "Preserve source action timing and all repaired ownership/collision/style behavior", "Typed non-spendable placeholders and actual effective values", "New controls operate on legitimate current contexts", "No unrelated appearance/audio/renderer or content expansion"],
       "acceptance": ["SQL m1-gameplay-ui-contracts records implemented concrete contracts, exact ABI and executed positive/negative conformance, not the old missing-field list"],
       "reserved_namespaces": ["interface.*", "action.item.*", "action.bank.*", "action.recovery.*"],
-      "source_notes": ["The delivered UI has87/87 source raster checks but its listed authority/control gaps are real. Reuse current engine planners and canonical sources; routine stock behavior is not an adaptation."],
+      "source_notes": ["Source/runtime contracts are integrated; the remaining three source facts and exact unblock evidence are recorded in research/interface-contracts/remaining-source-questions.json. Missing documentation or an unconfigured native control does not prove deliberate no-animation or disabled permission."],
       "parity_entries": [],
       "adaptations": [],
-      "evidence": ["Passed candidate78fcec4 and complete owned UI4 sequence are integrated throughff37669; raw6fdb60e4740372c5e299fe385875cfac32e04f22ea26ad17b53049296256c1b3 / revisionm1.source-backed.v4.67e4f1fcc55d71d5. All four asset publication layers, nullable selected production, exclusive post-binding recovery entries and actual movement/action observers are present. Parent548 native,41 realPG+11account checks and71 source tests/full93-output repeat pass; artifact identity unchanged by regeneration.", "The real v3 journey's31/70 anvil boundary is fixed by the actual v4 production context/event path; controlled canonical legacy-protocol and authenticatedPG proofs pass without pre-selection inventory/XP changes or forged events. Fresh normal v4 journey is running. Remaining All/recovery/level-up controls and current-instance template observation continue in the same backend reservation; whole UI/M1 acceptance remains unclaimed. Parent UI4 consumer type errors are with the UI owner, not suppressed.", "Actual core has no explicit music/audio/native-variable state or projection. The same backend owner now owns minimal source-backed M1 unlock/history and native-variable facts, or proof of exact existing generic counter/event mappings. Client preferences exclude unlock authority; no all-unlocked defaults, reconstructed visit guesses or silent legacy history reset may stand in for persistence."]
+      "evidence": ["Historical UI4 integration throughff37669 repaired the anvil/context boundary and published complete versioned UI/observer contracts. The current13-commit authority sequence through49bf011 adds semantic All quantities, partial recovery/fees/capacities, original level-up associations, actual instance-template identity, persistent source music history/partial native-variable authority and qualified actor bindings. Current raw5b3ba5f108ed3fec8f8b5f7f49b429c059e21b6f192ec99a0569616e08330059. Parent588 native,46 realPG/HTTP+11account checks,94 source tests and95 repeated outputs pass; details in milestones/evidence/m1-authority-controls.json. Existing worlds are not repinned.", "Source-only57d4edd4039a98690c6ad52703ac33fee3d128eb integrates664dde0b9f6cc9c14a366d3109b47bcbdbc53cfa. Five retained local source hashes and unchanged5b3 raw/gzip pins verified. Seven revision-qualified public-page checks did not settle ordinary-grave Bank-All permission or dough/Empty motion/verified absence. Exact seven Empty variants and acceptable original-server evidence are recorded; no guessed permission,883/0 animation, interface substitution or data/runtime regeneration. Source worker is parked; these remain acceptance blockers, not source-disabled/no-animation claims.", "Director dying-style repair already exists on parentf6f6adf. Worker-local9a468d1 is the same authorized four-file repair and is not repicked. Parent46 realPG+11account results remain separate from the still-unconfirmed actual protected5e checkpoint cause/resume. Shell/UI consumption, the real journey, final presentation/performance and owner gates remain incomplete."]
     },
     {
       "id": "M1-GAME-ROOT-STARTUP",

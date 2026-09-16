@@ -116,6 +116,14 @@ fixture passes after the native cue-timing repair. That fixture is not the
 complete production browser client, a fresh browser journey, or owner audio
 acceptance.
 
+Three [source facts](../research/interface-contracts/remaining-source-questions.json)
+remain unverified: ordinary-grave Bank-All permission or deliberate disablement,
+inventory dough motion or deliberate absence, and Empty motion or deliberate
+absence for all seven bound variants. The source worker is parked after its
+bounded evidence pass. These are acceptance blockers, not permission to invent
+an animation, claim a source-disabled control, or waive a required interaction.
+The implemented contracts and source pins are unchanged; other M1 work continues.
+
 The [terrain/clip checkpoint](../milestones/evidence/m1-terrain-clips.json)
 integrates the original assembly-time terrain pass, exact outer-band minimaps
 and twelve additional actor clips. Missing or malformed terrain now fails
