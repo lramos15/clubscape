@@ -1,0 +1,80 @@
+{
+  "schema_version": 1,
+  "task": "M1-WATER-UPGRADE-PREFLIGHT",
+  "authority": "Director engineering validation within the owner-approved bounded water dependency",
+  "owner_approval": "milestones/approvals/m1-water-fill-upgrade-v1.json",
+  "status": "admitted_isolated_synthetic_validation_only",
+  "executor": "director",
+  "worktree": ".worktrees/m1-water-integration",
+  "branch": "integration/m1-water-main",
+  "candidate_imports": [
+    "eaa527a8f3d9d408d6bf1a4b8fdc47269abe0137",
+    "5c6c581136310b48e8043e7920199d7236f9b88c"
+  ],
+  "independent_contract_review": "milestones/evidence/m1-water-item-on-review.json",
+  "exact_source_pairs": [
+    {
+      "profile": "legacy5e",
+      "from_raw_sha256": "5e0aa8a28851752ae0b8b0a08c635c6c8d2979f509f3a3e564ee74e2abfc8e6f",
+      "to_raw_sha256": "b2a1be20a0e6c3e1968f6f7610198ce38212f196c005539b4ac5013d10ebc650",
+      "to_revision": "m1.source-backed.v4.3ff4292b311453cc.water.e337c77cc5ccd980",
+      "permitted_content_delta": ["/recipes/recipe.water.bucket", "/revision"]
+    },
+    {
+      "profile": "current5b",
+      "from_raw_sha256": "5b3ba5f108ed3fec8f8b5f7f49b429c059e21b6f192ec99a0569616e08330059",
+      "to_raw_sha256": "adb24c14f76181a76e2874e97be3e2743a4c475d3ff89a7720b70ae6f6981bbc",
+      "to_revision": "m1.source-backed.v4.71c86749d02088ee",
+      "permitted_content_delta": ["/recipes/recipe.water.bucket", "/revision", "/ui/actor_animations/recipes/recipe.water.bucket"]
+    }
+  ],
+  "boundary_to_verify": {
+    "operator": "migrate-ui --from <exact old raw hash>",
+    "entry": "migrate_game_ui",
+    "transaction": "GameStore::migrate_ui_content",
+    "callback": "target_engine.migrate_ui_state followed by target Readiness::validate_world",
+    "observed_existing_guards": [
+      "Exact old/new hashes, exclusive local world ownership and a current lease fence.",
+      "Full previous state comparison excluding only admitted revision/UI initialization; existing UI/audio history cannot change.",
+      "Atomic content pin, one world/character revision increment and an idempotent exact from/to audit.",
+      "No changes to private runtime key, acknowledged command journal or lifecycle receipts."
+    ],
+    "qualification": "The operator name is not proof of recipe compatibility. Verify the exact additive target, runtime validity and conservation with both real source profiles before proposing any saved-world execution."
+  },
+  "allowed_changes": [
+    "New focused server tests and their module registration.",
+    "Directly related migration documentation and bounded test tooling.",
+    "Exact owned candidate imports and durable integration evidence."
+  ],
+  "required_checks": [
+    "Load or deterministically compile the exact public old and new artifacts; assert exact hashes and semantic delta.",
+    "Validate source readiness and preserve complete existing UI/audio/gameplay state during the target callback.",
+    "Real disposable PostgreSQL: reject active/foreign/stale ownership, wrong old pin, changed gameplay and callback failure without partial state/audit updates.",
+    "Prove one revision/audit transition, idempotent duplicate migration, unchanged private key/receipts/sequences and a real replacement fence after restart.",
+    "Execute one native source water conversion through the journal on controlled test-owned inputs, resolve once, and replay known receipts without callback or RNG reuse.",
+    "Keep controlled source fixtures distinct from legitimate journey evidence; no saved account inputs or private archives are needed."
+  ],
+  "workload": {
+    "source_profiles": 2,
+    "maximum_concurrent_databases": 1,
+    "database": "clubscape_m1_test",
+    "database_bind": "random literal loopback only",
+    "database_image": "existing pinned postgres:16-alpine digest from tools/dev.py",
+    "database_cpus": 2,
+    "database_memory_mib": 512,
+    "database_ready_seconds": 60,
+    "focused_database_test_seconds": 180,
+    "build_seconds": 300,
+    "automatic_retry": false,
+    "cleanup": "Stop and verify removal of the exact owned disposable container and temporary credentials."
+  },
+  "forbidden": [
+    "Reading or restoring any protected saved checkpoint/account/private identity.",
+    "Migration of the saved52 world or any existing player world.",
+    "Network player journey, browser/GPU/RuneLite, original-source capture or source/frozen presentation changes.",
+    "Weakening validation, changing ordinary startup, resetting histories, importing82 unrelated metadata changes into the legacy target or treating unverified motion as absence.",
+    "Main adoption before the independent contract review and relevant validation pass."
+  ],
+  "saved_world_migration_or_continuation_admitted": false,
+  "milestone_accepted": false
+}

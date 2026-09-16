@@ -125,6 +125,24 @@
       "evidence": ["milestones/evidence/m1-native-recovery-integration.json", "milestones/evidence/m1-native-recovery-independent-review.json"]
     },
     {
+      "id": "M1-WATER-UPGRADE-PREFLIGHT",
+      "goal": "Prove exact old/current water compatibility and fenced conservation in disposable synthetic source fixtures before any saved-world migration admission.",
+      "status": "IMPLEMENTING",
+      "specs": ["milestones/evidence/m1-water-upgrade-preflight-authorization.json", "milestones/approvals/m1-water-fill-upgrade-v1.json", "spec/game-networking.md", "crates/server/README.md"],
+      "dependencies": ["M1-WATER-ITEM-ON-DISPATCH"],
+      "allowed_paths": ["crates/server/src/game_service/tests/**", "crates/server/src/game_service/tests.rs", "crates/server/tests/**", "crates/server/README.md", "spec/game-networking.md", "tools/journey-tests/**", "milestones/**"],
+      "forbidden_paths": ["prompt.md", "crates/server/src/game_storage/**", "crates/world-engine/**", "crates/game-types/**", "assets/**", "web/**", "research/reference-pack/**", "spec/art-style.md", "spec/interface-parity.md", "spec/adaptations.md", ".local/journey-checkpoints/**"],
+      "outputs": ["Exact reviewed target compatibility and source-state conservation tests", "Guarded PostgreSQL migration/idempotency/receipt/fencing evidence", "A precise saved-world plan only after candidate acceptance; no actual saved-world execution"],
+      "validation_commands": ["cargo test --locked -p clubscape-server --lib water_migration", "Focused ignored water migration cases in one guarded disposable PostgreSQL database"],
+      "test_requirements": ["Follow the committed preflight authorization and exact source pairs", "Do not mutate the worker candidate while its independent review runs", "Use isolated worktree-private Cargo targets and unchanged content during source-bearing tests", "Preserve every failed attempt and verify exact test counts and cleanup"],
+      "acceptance": ["Demonstrate exact compatible additive migration and durable source conversion without touching the saved account; separate execution admission remains mandatory"],
+      "reserved_namespaces": [],
+      "source_notes": ["Director inspected the real operator, transaction, source UI/audio initializer, readiness validator and existing migration regression. The existing guarded transaction is a candidate boundary, not yet proof of non-UI recipe compatibility."],
+      "parity_entries": [],
+      "adaptations": [],
+      "evidence": ["milestones/evidence/m1-water-upgrade-preflight-authorization.json"]
+    },
+    {
       "id": "M1-WATER-FILL-MIGRATION",
       "goal": "Perform only the owner-approved, source-pinned and reversible upgrade needed to continue the existing52 range/persistence frontier.",
       "status": "BLOCKED",
