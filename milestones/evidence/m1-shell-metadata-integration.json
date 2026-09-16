@@ -11,7 +11,7 @@
     "57f18f1b129c3968b9cf88de5cd094cc44b18b9e"
   ],
   "integration_worktree": ".worktrees/m1-shell-metadata",
-  "integration_base": "ba8397ff4f7e48e64db0d21c8e57e022d08ef0b8",
+  "integration_base": "212535a5a7e73a3a798dfbfe84d473736e6cfa5b",
   "excluded_import_path": "web/app/tests/source-browser.ts",
   "scope": "Only source preview/spatial metadata and related lifecycle/consumer tests. No modifications to the recovery candidate under independent review.",
   "worker_reported_evidence": {
@@ -27,6 +27,15 @@
     "Original equipment widget84:4 exists; old UI catalogueb83d7b1 had no request and renderer projection covered only679:73. The current UI catalogue is newer, so do not repeat the old UI-gap claim without current evidence.",
     "Source spatial metadata is not full source audio playback, timing, speaker or performance acceptance."
   ],
+  "current_equipment_input_check": {
+    "ui_manifest_sha256": "6601f1de45324ff23e88df577b3e467d74878f09b6f0f1759c52c6870452b329",
+    "template": "native-equipment-stats",
+    "type6_widget": 5505028,
+    "model_zoom": 550,
+    "template_content_type": 0,
+    "renderer_model_widget_ids": [44499017],
+    "result": "The old missing-UI-widget claim is obsolete. The current UI has84:4, but its matching native renderer projection is still unpublished. Cache default328 is not substituted for the current template's0."
+  },
   "source_raw_sha256": "5b3ba5f108ed3fec8f8b5f7f49b429c059e21b6f192ec99a0569616e08330059",
   "root_code_integrated": false,
   "private_journey_accessed": false,

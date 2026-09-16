@@ -67,8 +67,8 @@ Rust definitions are in `crates/game-types/src/recovery_context.rs`; exact
 TypeScript definitions are in `web/shared/contracts.ts`. The implementation publishes the public converter
 `clubscape_protocol::recovery_context_to_wire`.
 
-The existing production response encoder is outside this worker's permitted
-paths. Director must add only this initializer field in
+The publication left the production response encoder outside the worker's
+permitted paths. Director integration now supplies this field in
 `crates/server/src/game_service/ui_wire.rs::recovery_management`:
 
 ```rust
@@ -80,10 +80,17 @@ source regeneration or saved-world restart is authorized by this contract.
 Any UI exhaustive-switch adjustment is Director-owned; do not hide it with
 typecheck exclusions or casts. The implementation is in `93aefa6`, following
 API-first `155ac6f`. `verification.json` records owned native/controller
-coverage and the exact outstanding server/UI integration errors. The durable
-multi-record regression is added under `crates/server/tests/game_storage/`;
-it reuses the existing isolated PostgreSQL guard/harness and cannot run until
-the Director-owned server initializer is wired.
+coverage and the original blocked server/UI integration errors. They are
+historical evidence, not the current integration status.
+
+Director candidate `7f30a0a` and its bounded independent review are integrated
+through `efd4ce3`/`212535a`. The actual UI renders complete and empty contexts,
+consumes the source captions and echoes one exact Take-All selection. The
+guarded PostgreSQL regression now runs, retaining foreign-lease rejection and
+using a genuine higher replacement fence before replay after authentication
+renewal. Root native/web/build and persistence results are recorded in
+`milestones/evidence/m1-native-recovery-integration.json`. None closes the
+separate player-journey, presentation, performance or owner gates.
 
 ## Source evidence and retained qualifications
 

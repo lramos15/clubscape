@@ -6,7 +6,7 @@
     "effective_limit": 25,
     "admissions_open": true,
     "active": [
-      {"id": "director", "task": "M1-NATIVE-RECOVERY-INTEGRATION"},
+      {"id": "director", "task": "M1-SHELL-METADATA-INTEGRATION"},
       {"id": "bb7f85f7-096a-4377-80cb-3e7eae196c6b", "task": "M1-BROWSER-RENDERER"}
     ],
     "reserved": [],
@@ -54,7 +54,7 @@
     {
       "id": "M1-NATIVE-RECOVERY-INTEGRATION",
       "goal": "Wire the published full recovery context through the real server and UI, close the original caption/count regression, and verify atomic controls end to end.",
-      "status": "REVIEW",
+      "status": "DONE",
       "specs": ["research/interface-contracts/recovery-context/README.md", "web/shared/contracts.ts", "milestones/evidence/m1-recovery-context-review.json", "milestones/evidence/m1-ui-integration-review.json"],
       "dependencies": ["M1-SHELL-INTEGRATION"],
       "allowed_paths": ["web/ui/**", "crates/server/src/game_service/ui_wire.rs", "crates/server/tests/**", "web/app/tests/recovery-context.test.ts", "crates/world-engine/tests/recovery_context.rs", "crates/world-engine/tests/support/recovery_context.rs"],
@@ -67,7 +67,7 @@
       "source_notes": ["Backend publication is complete through234d9f9 but server initializer is outside its scope. Add context:value.context.map(clubscape_protocol::recovery_context_to_wire) in ui_wire::recovery_management, then validate the guarded PG case. Director's exact31203c6 caption regression is already preserved in m1-ui-recovery.", "Actual Director integration exposed two previously blocked test-harness defects: the PG restart fixture reused a lease from another repository, and strict server Clippy found the shared content helper loaded twice. Preserve the fence rejection and acquire a real replacement lease; admit only the two named world-engine test files to import the common helper once per test target. No production lease guard, recovery policy or source content may be weakened."],
       "parity_entries": [],
       "adaptations": [],
-      "evidence": ["milestones/evidence/m1-native-recovery-integration.json", "Candidate7f30a0a passes263web/402native/1encoder/1real guardedPG cases,7new recovery browser cases plus17versioned/20legacy controls and2original full-frame zero-tolerance comparisons. Strict Clippy/WASM and1307frozen hashes pass. Normal production artifact523e2ccd6d4bfef87c07b6d59f7e42cc93647be30c33a6680b8e990c640c52a0 is built after the implementation commit. Independent review and root adoption remain pending."]
+      "evidence": ["milestones/evidence/m1-native-recovery-integration.json", "Reviewed candidate7f30a0a passes263web/402native/1encoder/1real guardedPG cases,7new recovery browser cases plus17versioned/20legacy controls and2original full-frame zero-tolerance comparisons. Exact16 owned commits are now integrated212535a; all462 reviewed paths match. Fresh root403native-including-encoder/263web/1guardedPG, strict Clippy,1307frozen hashes and normal build03cd361cbcb6dd439b35ea516d04c131a738edd0aa4b0ae47ea60e70a68ff495 pass. Four actualroot source-bearing binaries contain5bnot5e. Complete M1 browser/presentation/performance/owner gates remain separate."]
     },
     {
       "id": "M1-NATIVE-RECOVERY-REVIEW",
@@ -216,7 +216,7 @@
     {
       "id": "M1-NATIVE-RECOVERY-CONTRACT",
       "goal": "Publish the authoritative native recovery context needed to display every owned Office record, exact selected-type source captions, actual storage limits and source whole-context Take-All without client-side transaction reconstruction.",
-      "status": "REVIEW",
+      "status": "DONE",
       "specs": ["research/interface-contracts/control-bindings.json", "research/interface-contracts/remaining-source-questions.json", "web/shared/contracts.ts", "web/ui/recovery.ts", "crates/world-engine/src/gameplay_ui/recovery_controls.rs"],
       "dependencies": ["M1-GAMEPLAY-UI-CONTRACTS"],
       "allowed_paths": ["crates/game-types/**", "crates/world-engine/**", "crates/client-core/**", "crates/protocol/**", "crates/wasm/**", "crates/server/tests/**", "web/shared/contracts.ts", "web/app/tests/recovery*.test.ts", "research/interface-contracts/recovery-context/**"],
@@ -229,7 +229,7 @@
       "source_notes": ["This is a new concrete integration gap, not a rerun of the closed bounded source-only pass. Existing recovery management already supplies every Office record, but the UI displays only the legacy matching record and the current inventory Take-All request can name only one death record.", "Original native-retrieval-scroll-669 readback from the unchanged80-item source fixture: selected slot7 has7 arrows but source3492 displays35 x Bronze arrow with42coins each and1470 total. Existing legacy display matches exactly; the current per-entry extension displays7 and294. Source original capacity caption16/120 is a controlled fixture input, not sufficient proof of the server policy.", "Director owns the new source-caption regression and subsequent UI wiring in separate m1-ui-recovery. No new schema is integrated into the production candidate before all consumers compile and the actual controls are verified."],
       "parity_entries": [],
       "adaptations": [],
-      "evidence": ["Owned155ac6f/93aefa6/5e32781 plusc379d1c/234d9f9 publish contextv1 atmanagement tag5 and one recovery_take_all request tag26. Complete ordered slots, counts/capacity,35-arrow/1470 native caption, separate selected-entry7/294 and combined executable plan are explicit.", "Worker396Rust/15controller tests and Clippy pass; three actualsource-bearing binaries contain5bnot5e. The guardedPG test remains unexecuted because the Director-owned server initializer lacks context. UI validators/permission/rendering still require consumption; no full UI/PG/M1 pass is claimed. Director integration is active; source5b/8da and lock are unchanged."]
+      "evidence": ["Owned155ac6f/93aefa6/5e32781 plusc379d1c/234d9f9 publish contextv1 atmanagement tag5 and one recovery_take_all request tag26. Complete ordered slots, counts/capacity,35-arrow/1470 native caption, separate selected-entry7/294 and combined executable plan are explicit.", "Director7f30a0a wires the real encoder and current UI, repairs the blocked PG fixture without weakening world fencing, and passes bounded independent review. Exact owned integration212535a passes fresh root403native-including-encoder/263web/1guardedPG and normal build03cd361c. Source5b/8da is unchanged; ordinary-grave Bank-All and original-server selected-item All/overflow qualifications remain. Evidence milestones/evidence/m1-native-recovery-integration.json; no M1 acceptance."]
     },
     {
       "id": "M1-NATIVE-RECOVERY-UI",
@@ -319,7 +319,7 @@
       "source_notes": ["Published fa84bf3/0ee025f/2cdbfac/94a5ecd contain source Settings/UI4 work not yet on main. Minimal c1f99a overlaps the full UI4 implementation and must not be blindly duplicated. The stopped worker also has twelve modified and four untracked UI/native-preference files; preserve and review them before selective integration."],
       "parity_entries": [],
       "adaptations": [],
-      "evidence": ["Isolated candidate2f3704d7132e02e15bf5c306549abcd3ccd21962 includes the four UI-owned commits, exact preserved pending patch and Director current-contract/native-port/minimap-lifetime repairs. Original16 pending worker files and1813 compiled UI assets are hash-verified unchanged; main UI is not yet integrated.", "Real normal build artifact63b21e3d5a357f13bc4518570c08f1682f8dfc55b09f5b684de2616e12ed1374 and238web/58includedUI/11UI4 browser cases pass. Actual source browser completes21 checks through signup, experience, native prefs/minimap, restart, logout/relogin and device loss with0unhandled errors. Its separate native audio fixture fails2/18 cue2266 deadlines; the complete check remains failed_native_audio_timing and M1-AUDIO-COMPOSED-TIMING owns the bounded repair. Durable record milestones/evidence/m1-ui-integration-review.json.", "New original-source regression31203c6354866cfc4237a09c74cb22f0e85fb2ff proves the current per-entry extension's duplicate-type caption mismatch: original35/1470 versus current7/294, with the legacy original-data control passing. Main integration remains held for the bounded native recovery contract/UI closure as well as the audio gate; no new original-server semantics are inferred. Evidence milestones/evidence/m1-recovery-context-review.json."]
+      "evidence": ["The exact eight-commit UI foundation through2f3704d is now integrated with reviewed native recovery through212535a. Original16 pending worker files remain preserved; all462 integration paths match the reviewed candidate and1813 compiled UI assets retain the current6601/provenance pins.", "Historical normal artifact63b21e3d5a357f13bc4518570c08f1682f8dfc55b09f5b684de2616e12ed1374 and238web/58includedUI/11UI4 browser cases pass. Its source browser completes21 checks with0unhandled errors but separately fails2/18cue2266 deadlines. That failed record remains retained; the independently admitted cold/ready audio repair is now integrated7a01cf2. See milestones/evidence/m1-ui-integration-review.json and m1-audio-readiness-integration.json.", "Original regression31203c6 remains evidence of35/1470 versus old7/294. The current native context and UI repair now pass and are integrated, without inferring original-server selected-item All semantics. Root403native-including-encoder/263web/1guardedPG and build03cd361c pass. This task remains blocked on required visible UI model/source bindings and broader live presentation, not on the old compiler, audio-control or recovery integration defects."]
     },
     {
       "id": "M1-SOURCE-CAMERA-CONTROLS",
