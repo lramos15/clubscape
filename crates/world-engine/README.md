@@ -317,6 +317,18 @@ ground-entry bound and aggregate stack checks prevent partial defeat/loot
 commits. `EntityRuntime.kill` records the same credited actor/method used for
 ground ownership and progression.
 
+Declared item-spawn pickups also support the clear cardinal face of their fully
+occupied source tile. This is not a generic adjacent pickup radius: ordinary
+drops/loot and walkable source spawns still require exact-tile contact. The
+source ground ID must resolve to its declared item stack and exact mapped
+spawn/entity position. The existing near-face predicate preserves walkable
+approach cells, movement barriers, both sight edges, planes and instances;
+it does not open collision or ignore an opaque target. Query and action share
+this admission, followed by the unchanged ownership, lifetime, inventory and
+source respawn rules. Current M1 geometry has two such source targets: the
+kitchen pot and cellar bucket. See `research/ground-contact/contract.json`;
+native controlled cases are not a restored-player journey.
+
 Death receipts retain `DeathArrival` phase deadlines and completion, and
 `GraveState.started_at_tick` prevents charging the arrival tick against active
 grave duration. Restart does not repeat retention, healing, supplies or

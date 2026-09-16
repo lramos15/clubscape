@@ -1,0 +1,68 @@
+{
+  "schema_version": 1,
+  "scope": "M1 declared item-spawn contact at occupied source scenery",
+  "source_basis": {
+    "pot_reference": "https://oldschool.runescape.wiki/w/Pot?oldid=15321421",
+    "pot_revision": 15321421,
+    "pot_reference_fact": "The frozen page identifies item-spawn pots on counters/tables, including the ground-floor Lumbridge Castle kitchen.",
+    "normal_route": "research/journey-rules/cooks-assistant.json#route.cooks.pot_spawn",
+    "normal_bucket_route": "research/journey-rules/cooks-assistant.json#route.cooks.bucket_spawn",
+    "inventory_rule": "research/journey-rules/activities.json#rule.inventory.capacity",
+    "rule_fact": "These source routes require reachable ordinary pickup; they do not require occupying an impassable counter tile.",
+    "original_server_pickup_distance_trace_obtained": false,
+    "qualification": "Source-supported minimal contact using the existing cardinal near-face primitive, not a newly observed universal OSRS ground-item pickup radius."
+  },
+  "actual_blocked_journey": {
+    "run": "907d84b817974f55",
+    "record": "tools/journey-tests/evidence/office-grave-pot-907d84b817974f55.json",
+    "player_tile": {"x": 3209, "y": 3213, "plane": 0},
+    "next_sequence": 356,
+    "pot_pickup_was_submitted": false,
+    "archive_restored_by_this_repair": false
+  },
+  "unchanged_source_targets": [
+    {
+      "spawn": "spawn.pot.3209.3214.p0",
+      "tile": {"x": 3209, "y": 3214, "plane": 0},
+      "cell": {"walkable": false, "blocked_movement": 255, "blocked_sight": 0},
+      "clear_cardinal_contacts": [{"x": 3209, "y": 3213, "plane": 0}, {"x": 3209, "y": 3215, "plane": 0}],
+      "respawn_ticks": 100
+    },
+    {
+      "spawn": "spawn.bucket.3216.9625.p0",
+      "tile": {"x": 3216, "y": 9625, "plane": 0},
+      "cell": {"walkable": false, "blocked_movement": 255, "blocked_sight": 19},
+      "clear_cardinal_contacts": [{"x": 3216, "y": 9624, "plane": 0}],
+      "qualification": "The target has north/east sight barriers. Only the clear south face is selected; sight19 is not treated as an entirely open tile."
+    }
+  ],
+  "admission": [
+    "Actual ground identity exists uniquely and passes unchanged owner/publicity/expiry/source-policy rules.",
+    "Actor and item belong to the same plane and live instance.",
+    "Exact-tile pickup remains the ordinary path, including all eight currently walkable source spawns.",
+    "A non-exact contact additionally requires an engine-issued source-spawn identity, its declared item stack, and exact mapped source/entity location.",
+    "The target cell must be nonwalkable with full movement occupancy255, and the actor must occupy a walkable cardinal neighbour at distance1.",
+    "Approach movement and both directional sight edges must be clear. The contact never clears collision, crosses a diagonal corner or treats an opaque target as transparent.",
+    "The same ground_access function governs the read-only can_take projection and actual pickup. Inventory transfer and source respawn remain unchanged.",
+    "The journey planner derives only these conservative source goals, then requires a fresh authoritative permission on the same observed ground ID/stack/tile before sending pickup."
+  ],
+  "not_changed": [
+    "Ground item positions, collision cells, object transforms and original source files",
+    "Walkability, source clocks, RNG, ownership, inventory limits or reward/progression rules",
+    "Ordinary dropped-item or NPC-loot pickup reach",
+    "Source5e protected account/checkpoints, its consumed db74895 authority or current source5b artifact",
+    "Any visual, audio, performance, review or milestone acceptance gate"
+  ],
+  "validation_scope": {
+    "declared_source_item_spawns": 10,
+    "walkable_same_tile_only_spawns": 8,
+    "occupied_counter_spawns": 2,
+    "native_query_and_action_cases": "crates/world-engine/tests/ground_contact.rs",
+    "shared_contact_regressions": ["crates/world-engine/tests/nonwalking_contact.rs", "crates/world-engine/tests/source_contact_clocks.rs"],
+    "journey_geometry_cases": "tools/simulator/src/journey/source.rs",
+    "controlled_fixture_state_is_not_gameplay": true,
+    "saved_player_continuation_still_requires_new_authority": true
+  },
+  "full_journey_verified": false,
+  "milestone_accepted": false
+}

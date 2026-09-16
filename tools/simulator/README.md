@@ -174,9 +174,16 @@ to the unchanged server/protocol journal contract, not a new-client fallback.
 After a definitively rejected mobile-NPC dialogue choice, bounded recovery can
 walk to another original legal contact tile instead of repeating the same failed
 face. It retains the same speaker/choice and the existing sixteen-attempt/
-600-source-tick bounds. Ground pickups likewise walk normally before checking
-the fresh permission for the **same** observed ground ID, stack and tile;
-an out-of-reach pre-walk view is not a pickup denial at the destination.
+600-source-tick bounds. Ordinary ground pickups walk normally before checking
+the fresh permission for the **same** observed ground ID, stack and tile.
+Declared item spawns use their exact walkable tile, or clear cardinal source
+faces when the source tile is fully occupied by nonwalking scenery. Sight
+masks remain mandatory. The kitchen pot and cellar bucket are the only two
+blocked item-spawn targets among the current ten; neither tile is made walkable.
+The runner requires actual post-approach permission and never submits a guessed
+ground ID, retargets a disappeared stack or moves onto a blocked counter after
+the server has already granted pickup at its face. An out-of-reach pre-walk
+view is not a pickup denial at the destination.
 
 Polls wait 600 ms. Gathering/combat/ignition waits and retries are bounded and
 observed; success probabilities are never modified or statistically certified by

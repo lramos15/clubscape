@@ -89,6 +89,23 @@ struct Cell {
     tile: Tile,
     walkable: bool,
     blocked_movement: u8,
+    blocked_sight: u8,
+}
+
+fn cardinal_masks(from: Tile, to: Tile) -> Option<(u8, u8)> {
+    if from.plane != to.plane {
+        return None;
+    }
+    match (
+        i64::from(to.x) - i64::from(from.x),
+        i64::from(to.y) - i64::from(from.y),
+    ) {
+        (0, 1) => Some((1, 4)),
+        (1, 0) => Some((2, 8)),
+        (0, -1) => Some((4, 1)),
+        (-1, 0) => Some((8, 2)),
+        _ => None,
+    }
 }
 
 #[derive(Clone)]
@@ -155,18 +172,27 @@ impl Navigation {
         {
             return false;
         }
-        let direction = match (
-            i64::from(to.x) - i64::from(from.x),
-            i64::from(to.y) - i64::from(from.y),
-        ) {
-            (0, 1) => (1, 4),
-            (1, 0) => (2, 8),
-            (0, -1) => (4, 1),
-            (-1, 0) => (8, 2),
-            _ => return false,
+        let Some(direction) = cardinal_masks(from, to) else {
+            return false;
         };
         self.cells[&from].blocked_movement & direction.0 == 0
             && self.cells[&to].blocked_movement & direction.1 == 0
+    }
+
+    fn blocked_spawn_contact(&self, from: Tile, to: Tile) -> bool {
+        let (Some(near), Some(target), Some((direction, opposite))) = (
+            self.cells.get(&from),
+            self.cells.get(&to),
+            cardinal_masks(from, to),
+        ) else {
+            return false;
+        };
+        near.walkable
+            && !target.walkable
+            && target.blocked_movement == u8::MAX
+            && near.blocked_movement & direction == 0
+            && near.blocked_sight & direction == 0
+            && target.blocked_sight & opposite == 0
     }
 
     // Cardinal routes are conservative input plans, not engine path/permission assertions.
@@ -379,6 +405,27 @@ impl Source {
             .iter()
             .find(|entry| entry["name"] == action)
             .with_context(|| format!("No source action {action} for {id}"))
+    }
+
+    pub fn ground_spawn_goals(&self, id: &str, navigation: &Navigation) -> Result<BTreeSet<Tile>> {
+        ensure!(
+            self.spawn(id)?["kind"]["kind"] == "item",
+            "Not a declared source item spawn"
+        );
+        let tile = self.spawn_tile(id)?;
+        if navigation.walkable(tile) {
+            return Ok(BTreeSet::from([tile]));
+        }
+        let goals: BTreeSet<_> = [(0, 1), (1, 0), (0, -1), (-1, 0)]
+            .into_iter()
+            .filter_map(|(x, y)| tile.offset(x, y))
+            .filter(|candidate| navigation.blocked_spawn_contact(*candidate, tile))
+            .collect();
+        ensure!(
+            !goals.is_empty(),
+            "No clear source ground-spawn contact for {id}"
+        );
+        Ok(goals)
     }
 
     pub fn target_goals(
@@ -595,9 +642,9 @@ mod tests {
 
     fn tiny_navigation() -> Navigation {
         Navigation::from_content(&json!({"regions":{"test":{"cells":[
-            {"tile":{"x":1,"y":1,"plane":0},"walkable":true,"blocked_movement":2},
-            {"tile":{"x":2,"y":1,"plane":0},"walkable":true,"blocked_movement":8},
-            {"tile":{"x":1,"y":2,"plane":0},"walkable":true,"blocked_movement":0}
+            {"tile":{"x":1,"y":1,"plane":0},"walkable":true,"blocked_movement":2,"blocked_sight":0},
+            {"tile":{"x":2,"y":1,"plane":0},"walkable":true,"blocked_movement":8,"blocked_sight":0},
+            {"tile":{"x":1,"y":2,"plane":0},"walkable":true,"blocked_movement":0,"blocked_sight":0}
         ]}}}))
         .unwrap()
     }
@@ -626,10 +673,100 @@ mod tests {
         let mut map = tiny_navigation();
         assert!(
             map.replace(&json!([{
-                "tile":{"x":500,"y":500,"plane":0},"walkable":true,"blocked_movement":0
+                "tile":{"x":500,"y":500,"plane":0},"walkable":true,"blocked_movement":0,"blocked_sight":0
             }]))
             .is_err()
         );
+    }
+
+    #[test]
+    fn ground_spawn_contact_requires_complete_directional_sight_and_clear_cardinal_land() {
+        let from = Tile::new(1, 1, 0);
+        let to = Tile::new(2, 1, 0);
+        let original = Navigation::from_content(&json!({"regions":{"test":{"cells":[
+            {"tile":from,"walkable":true,"blocked_movement":0,"blocked_sight":0},
+            {"tile":to,"walkable":false,"blocked_movement":255,"blocked_sight":0}
+        ]}}}))
+        .unwrap();
+        assert!(original.blocked_spawn_contact(from, to));
+        assert!(!original.step(from, to));
+        for case in [
+            "movement",
+            "near_sight",
+            "target_sight",
+            "partial",
+            "walkable",
+            "blocked_near",
+        ] {
+            let mut map = original.clone();
+            match case {
+                "movement" => map.cells.get_mut(&from).unwrap().blocked_movement = 2,
+                "near_sight" => map.cells.get_mut(&from).unwrap().blocked_sight = 2,
+                "target_sight" => map.cells.get_mut(&to).unwrap().blocked_sight = 8,
+                "partial" => map.cells.get_mut(&to).unwrap().blocked_movement = 8,
+                "walkable" => map.cells.get_mut(&to).unwrap().walkable = true,
+                "blocked_near" => map.cells.get_mut(&from).unwrap().walkable = false,
+                _ => unreachable!(),
+            }
+            assert!(!map.blocked_spawn_contact(from, to), "{case}");
+        }
+        let mut unrelated_wall = original.clone();
+        unrelated_wall.cells.get_mut(&to).unwrap().blocked_sight = 1;
+        assert!(unrelated_wall.blocked_spawn_contact(from, to));
+        for elsewhere in [Tile::new(0, 1, 0), Tile::new(1, 2, 0), Tile::new(1, 1, 1)] {
+            assert!(!original.blocked_spawn_contact(elsewhere, to));
+        }
+        assert!(
+            Navigation::from_content(&json!({"regions":{"test":{"cells":[
+                {"tile":from,"walkable":true,"blocked_movement":0}
+            ]}}}))
+            .is_err(),
+            "Missing source sight is not an open edge"
+        );
+    }
+
+    #[test]
+    fn all_ten_source_ground_spawns_use_walkable_tiles_or_exact_counter_faces() {
+        let source = Source::load(&Path::new(env!("CARGO_MANIFEST_DIR")).join("../..")).unwrap();
+        let map = source
+            .navigation_with_states(&BTreeMap::new(), false)
+            .unwrap();
+        let mut total = 0;
+        let mut blocked = BTreeMap::new();
+        for (id, spawn) in source.content["spawns"].as_object().unwrap() {
+            if spawn["kind"]["kind"] != "item" {
+                continue;
+            }
+            total += 1;
+            let tile = source.spawn_tile(id).unwrap();
+            let goals = source.ground_spawn_goals(id, &map).unwrap();
+            assert!(goals.iter().all(|goal| map.walkable(*goal)));
+            if map.walkable(tile) {
+                assert_eq!(goals, BTreeSet::from([tile]));
+            } else {
+                assert!(!goals.contains(&tile));
+                for goal in &goals {
+                    assert!(!map.step(*goal, tile));
+                    assert_eq!(map.route(*goal, &goals).unwrap(), vec![*goal]);
+                }
+                blocked.insert(id.as_str(), goals);
+            }
+        }
+        assert_eq!(total, 10);
+        assert_eq!(
+            blocked,
+            BTreeMap::from([
+                (
+                    "spawn.pot.3209.3214.p0",
+                    BTreeSet::from([Tile::new(3209, 3213, 0), Tile::new(3209, 3215, 0),])
+                ),
+                (
+                    "spawn.bucket.3216.9625.p0",
+                    BTreeSet::from([Tile::new(3216, 9624, 0)])
+                ),
+            ])
+        );
+        assert!(source.ground_spawn_goals("spawn.cook", &map).is_err());
     }
 
     #[test]

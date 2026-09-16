@@ -1929,7 +1929,9 @@ impl Runner {
             .as_ref()
             .context("Missing real ground item")?
             .clone();
-        self.walk(tile).await?;
+        if !ground.can_take {
+            self.walk(tile).await?;
+        }
         let current = self
             .snapshot
             .ground_items
@@ -1999,7 +2001,11 @@ impl Runner {
 
     async fn take_spawn(&mut self, spawn: &str, item: &str) -> Result<()> {
         let tile = self.source.spawn_tile(spawn)?;
-        self.walk(tile).await?;
+        let navigation = self
+            .source
+            .navigation_with_states(&self.observed_states, true)?;
+        let goals = self.source.ground_spawn_goals(spawn, &navigation)?;
+        self.go_to(goals).await?;
         self.wait_for("source_ground_spawn_respawn", 120, |runner| {
             Ok(runner.snapshot.ground_items.iter().any(|ground| {
                 ground.tile.as_ref().map(Tile::from) == Some(tile)
@@ -2027,6 +2033,7 @@ impl Runner {
             candidates.len() == 1,
             "Source item-spawn selector is ambiguous; ground IDs cannot be guessed"
         );
+        Self::verify_ground_after_approach(&candidates[0], &candidates[0])?;
         self.evidence.append("source_item_spawn", json!({
             "source_identity": self.source.source_identity(spawn)?, "actual_ground_id": candidates[0].id
         }))?;

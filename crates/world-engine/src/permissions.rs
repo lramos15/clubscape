@@ -618,7 +618,19 @@ fn interaction_face_reachable(
             .access
             .as_ref()
             .is_some_and(|access| access.contains(&from));
-    if !(shape.solid_footprint || declared_anchor) || from.distance(to) != Some(1) {
+    if !(shape.solid_footprint || declared_anchor) {
+        return false;
+    }
+    clear_source_face(map, from, to, shape.opaque_footprint)
+}
+
+pub(crate) fn clear_source_face(
+    map: &CollisionMap,
+    from: Tile,
+    to: Tile,
+    opaque_footprint: bool,
+) -> bool {
+    if from.distance(to) != Some(1) {
         return false;
     }
     let Some(direction) = Direction::ALL.into_iter().find(|direction| {
@@ -630,14 +642,14 @@ fn interaction_face_reachable(
     let (Some(near), Some(target)) = (map.cell(from), map.cell(to)) else {
         return false;
     };
-    // Contact stops at a solid object's or explicitly declared stationary actor's
-    // near face. Water/scenery stays blocked; bilateral approach walls still apply.
+    // Callers establish the source footprint/spawn. Contact does not open its
+    // occupied tile; approach movement and bilateral sight edges still apply.
     near.walkable
         && near.blocked_movement & direction.mask() == 0
         && near.blocked_sight & direction.mask() == 0
         && ((!target.walkable && target.blocked_movement == u8::MAX)
             || target.blocked_movement & direction.opposite().mask() == 0)
-        && ((shape.opaque_footprint && target.blocked_sight == u8::MAX)
+        && ((opaque_footprint && target.blocked_sight == u8::MAX)
             || target.blocked_sight & direction.opposite().mask() == 0)
 }
 

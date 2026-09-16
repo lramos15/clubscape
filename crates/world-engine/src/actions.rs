@@ -915,13 +915,73 @@ impl WorldEngine {
                 ));
             }
         }
-        if character.tile != item.tile || character.runtime.instance != item.instance {
+        if character.runtime.instance != item.instance {
             return Err(GameError::new(
                 GameErrorCode::OutOfReach,
-                "Walk onto this ground item's tile in its instance.",
+                "Ground item is in another instance.",
             ));
         }
+        let source = self.source_ground_origin(item)?;
+        if let Some((spawn, _)) = source
+            && (runtime::entity(world, item.instance.as_ref(), spawn)?.tile != item.tile
+                || self.map_instance_tile(
+                    world,
+                    item.instance.as_ref(),
+                    self.content.spawns[spawn].tile,
+                )? != item.tile)
+        {
+            return Err(invalid_state(
+                "Source ground item moved away from its spawn.",
+            ));
+        }
+        if character.tile != item.tile {
+            let face = if source.is_some() {
+                let map = self.collision_for(world, item.instance.as_ref())?;
+                map.cell(item.tile)
+                    .is_some_and(|cell| !cell.walkable && cell.blocked_movement == u8::MAX)
+                    && crate::permissions::clear_source_face(&map, character.tile, item.tile, false)
+            } else {
+                false
+            };
+            if !face {
+                return Err(GameError::new(
+                    GameErrorCode::OutOfReach,
+                    "Ground item is outside its allowed source contact.",
+                ));
+            }
+        }
         Ok((index, item))
+    }
+
+    fn source_ground_origin<'a>(
+        &'a self,
+        item: &GroundItem,
+    ) -> GameResult<Option<(&'a SpawnId, u32)>> {
+        let Some(source) = item.id.strip_prefix("source:") else {
+            return Ok(None);
+        };
+        let id = SpawnId::new(
+            source
+                .split(':')
+                .next()
+                .ok_or_else(|| invalid_state("Malformed spawn ground identity."))?,
+        )?;
+        let (spawn, definition) = self
+            .content
+            .spawns
+            .get_key_value(&id)
+            .ok_or_else(|| unknown("Unknown source ground spawn."))?;
+        let SpawnKind::Item {
+            respawn_ticks,
+            stack,
+        } = &definition.kind
+        else {
+            return Err(invalid_state("Source ground item has another kind."));
+        };
+        if stack != &item.stack {
+            return Err(invalid_state("Source ground stack changed."));
+        }
+        Ok(Some((spawn, *respawn_ticks)))
     }
 
     fn take_ground_item(
@@ -932,31 +992,11 @@ impl WorldEngine {
     ) -> GameResult<ItemStack> {
         let (index, item) = self.ground_access(world, character, id)?;
         let stack = item.stack.clone();
+        let source = self.source_ground_origin(item)?;
         inventory::add(&mut character.inventory, &self.content.items, &stack)?;
-        if let Some(source) = id.strip_prefix("source:") {
-            let spawn = SpawnId::new(
-                source
-                    .split(':')
-                    .next()
-                    .ok_or_else(|| invalid_state("Malformed spawn ground identity."))?,
-            )?;
-            let definition = self
-                .content
-                .spawns
-                .get(&spawn)
-                .ok_or_else(|| unknown("Unknown source ground spawn."))?;
-            let SpawnKind::Item {
-                respawn_ticks,
-                stack: source_stack,
-            } = &definition.kind
-            else {
-                return Err(invalid_state("Source ground item has another kind."));
-            };
-            if source_stack != &stack {
-                return Err(invalid_state("Source ground stack changed."));
-            }
-            runtime::entity_mut(world, character.runtime.instance.as_ref(), &spawn)?
-                .available_at_tick = runtime::deadline(world.tick, u64::from(*respawn_ticks))?;
+        if let Some((spawn, respawn_ticks)) = source {
+            runtime::entity_mut(world, character.runtime.instance.as_ref(), spawn)?
+                .available_at_tick = runtime::deadline(world.tick, u64::from(respawn_ticks))?;
         }
         world.ground_items.remove(index);
         world.runtime.ground_provenance.remove(id);
