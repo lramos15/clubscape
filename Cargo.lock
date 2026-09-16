@@ -485,6 +485,21 @@ dependencies = [
 ]
 
 [[package]]
+name = "clubscape-wasm"
+version = "0.1.0"
+dependencies = [
+ "clubscape-client-core",
+ "clubscape-content",
+ "clubscape-game-types",
+ "clubscape-protocol",
+ "prost",
+ "serde",
+ "serde_json",
+ "uuid",
+ "wasm-bindgen",
+]
+
+[[package]]
 name = "clubscape-world-engine"
 version = "0.1.0"
 dependencies = [
