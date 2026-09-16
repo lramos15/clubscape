@@ -3,7 +3,7 @@
   "task": "M1-WATER-UPGRADE-PREFLIGHT",
   "authority": "Director engineering validation within the owner-approved bounded water dependency",
   "owner_approval": "milestones/approvals/m1-water-fill-upgrade-v1.json",
-  "status": "admitted_isolated_synthetic_validation_only",
+  "status": "completed_isolated_synthetic_validation_only",
   "executor": "director",
   "worktree": ".worktrees/m1-water-integration",
   "branch": "integration/m1-water-main",
@@ -111,7 +111,7 @@
     }
   },
   "prepared_source_operator": {
-    "status": "exact_operator_execution_admitted",
+    "status": "operator_preflight_passed_allowance_consumed",
     "candidate": "2cc6c45813a51bcd4a7ff5164975936a2caf36fc",
     "directory": ".worktrees/m1-water-integration/.local/water-source-operator-01",
     "preparation_sha256": "51caa7d2a14631bb56253b05b84e480898e318f4fdfdd9d17f63ae4c2c4fa39d",
@@ -124,9 +124,12 @@
     "genuine_source_only_deliveries": 4,
     "verified_asset_mappings_per_delivery": 5015,
     "accounts_or_services_started_by_preparation": 0,
-    "operator_invocations_used": 0,
+    "operator_invocations_used": 10,
+    "source_server_starts_used": 4,
     "execution": {
-      "status": "admitted",
+      "status": "consumed_passed",
+      "execution_authority_commit": "1190a8acc8c94b1af016ab81a85e1cb76a703f0c",
+      "execution_authority_sha256": "b34be1f99002fcf03c0182a7045a90cbbc7eb9a15f9504479a6779e6efd33b0a",
       "candidate_head": "6c47c3a7cb71d41a9b3e94904b36c75c084315de",
       "binary": {
         "path": "target/debug/clubscape-server",
@@ -139,7 +142,13 @@
       "final_database_report_sha256": "a7ca773b185defd417cc800ef439f75da86f50b58a4a95857bced70076933347",
       "machinery_tests_passed": 32,
       "pending_review_refusal_actually_exercised": true,
-      "source_process_allowance_already_used": false,
+      "source_process_allowance_already_used": true,
+      "source_operator_report_sha256": "312d9ae5c10a17cb07aa801afd81dbb9ab759d96abc4b0176a585654224ad07c",
+      "all_ten_operator_cases_passed": true,
+      "all_four_source_servers_ready_and_cleanly_stopped": true,
+      "owned_database_and_credentials_removed": true,
+      "remaining_invocations": 0,
+      "evidence_commit": "a162eb7818639c2babcf4ad09ec21dd68c15f2ea",
       "profile_order": ["legacy5e", "current5b"],
       "ordinary_shutdown": "Production SIGTERM handler, zero process exit, clean shutdown_complete event and released native world lease.",
       "scope": "Only four source-server starts and ten migrate-ui invocations against the two prepared fresh character-free worlds. No account/gameplay command or saved-world access."

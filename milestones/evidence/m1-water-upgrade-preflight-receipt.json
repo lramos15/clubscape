@@ -1,16 +1,19 @@
 {
   "schema_version": 1,
   "task": "M1-WATER-UPGRADE-PREFLIGHT",
-  "status": "native_repair_reviewed_final_checks_passed_operator_admitted",
+  "status": "reviewed_final_native_database_and_real_source_operator_preflight_passed",
   "authority": "milestones/evidence/m1-water-upgrade-preflight-authorization.json",
   "worktree": ".worktrees/m1-water-integration",
   "branch": "integration/m1-water-main",
-  "candidate_head": "2cc6c45813a51bcd4a7ff5164975936a2caf36fc",
+  "candidate_head": "a162eb7818639c2babcf4ad09ec21dd68c15f2ea",
+  "clean_tested_code_head": "6c47c3a7cb71d41a9b3e94904b36c75c084315de",
   "owned_code_commits": [
     "de7b66f5ead59b53012e7d7a9752cdb6a58ad03c",
-    "037067d1cefc56a51562cf4235f71842ba400654"
+    "037067d1cefc56a51562cf4235f71842ba400654",
+    "4340530c7184f4c2e03ec9982bbbfbfd82f57999",
+    "6c47c3a7cb71d41a9b3e94904b36c75c084315de"
   ],
-  "full_evidence": "2cc6c45813a51bcd4a7ff5164975936a2caf36fc:milestones/evidence/m1-water-upgrade-preflight.json",
+  "full_evidence": "a162eb7818639c2babcf4ad09ec21dd68c15f2ea:milestones/evidence/m1-water-upgrade-preflight.json",
   "actual_results": {
     "native_cases_passed": 1,
     "exact_source_pairs_covered": 2,
@@ -25,7 +28,7 @@
     "source": "Exact original5e/current5b and their minimal water targets; raw/gzip and semantic differences are asserted rather than relabeled.",
     "database": "Controlled test-owned actors, real authentication, full state/key/journal conservation, failure atomicity, migration idempotency, actual replacement fences and one persisted water resolution.",
     "packaging": "Reuses the existing original-asset GameRoot packager with optional explicit manifest/world selectors. Ordinary journey defaults remain canonical; no current source file was replaced.",
-    "operator": "The GameStore boundary and real target engine/readiness callback passed. The ten-call real-asset process check is prepared but unexecuted.",
+    "operator": "Both exact source pairs pass the actual ten-call production CLI program with four ready/clean source-server starts, one audit per migration and zero accounts/gameplay commands. The allowance is consumed and all owned resources are removed.",
     "journey": "No protected archive, identity or saved account was read, restored, reset or migrated."
   },
   "retained_failures": [
@@ -39,16 +42,17 @@
     "fix_scope": "Shared all-variant persisted-state restriction and future/due/overdue serialized regressions in the original worker tree.",
     "result_collected": true,
     "repair_commit": "04a40ee84d0a95866264a3c087071e0f63904377",
-    "repair_review_and_integrated_validation": "Independent static fix review passed; all six imported paths match,420native, one exact-source-pair case and both final guarded PostgreSQL cases pass. The real-asset operator check remains unexecuted."
+    "repair_review_and_integrated_validation": "Resolved: independent static fix review,420native, one exact-source-pair case, two final actual PostgreSQL cases, strict native/WASM Clippy and the full real-asset operator check pass."
   },
   "pending_execution": {
-    "source_operator_calls_used": 0,
+    "source_operator_calls_used": 10,
     "source_operator_calls_limit": 10,
     "source_operator_journal": ".worktrees/m1-water-integration/.local/water-upgrade-preflight/operator-authority-v1.json",
     "source_operator_candidate": "6c47c3a7cb71d41a9b3e94904b36c75c084315de",
     "source_operator_binary_sha256": "83de4326673720f30143c175c3721071ddceb21100e7380b42a072cdca5d0b0a",
     "source_operator_runner_sha256": "9ce5e3ebdc97d9463dbdf6c4184978ec6438a52e5a68003d4f0477814fe6bf30",
     "final_guarded_postgresql_cases_passed": 2,
+    "source_operator_result": "passed_allowance_consumed",
     "shell_browser_calls_used": 0,
     "shell_browser_calls_limit": 1,
     "shell_browser_gate": "Renderer quiet-window confirmation is still required; exact b4f6304/5ea9e28 source pins remain unchanged."

@@ -6,7 +6,7 @@
     "effective_limit": 25,
     "admissions_open": true,
     "active": [
-      {"id": "director", "task": "M1-WATER-UPGRADE-PREFLIGHT"},
+      {"id": "director", "task": "M1-WATER-MAIN-INTEGRATION"},
       {"id": "bb7f85f7-096a-4377-80cb-3e7eae196c6b", "task": "M1-BROWSER-RENDERER"}
     ],
     "reserved": [],
@@ -38,7 +38,7 @@
     {
       "id": "M1-WATER-ITEM-ON-DISPATCH",
       "goal": "Close the explicit source item-on-only recipe authorization/reach seam without manufacturing an object menu operation or changing old recipe behavior.",
-      "status": "BLOCKED",
+      "status": "VERIFIED",
       "specs": ["milestones/evidence/m1-water-item-on-dispatch-authorization.json", "research/water-fill/handoff.json", "research/water-fill/facts.json", "crates/world-engine/src/activities.rs", "crates/world-engine/src/permissions.rs"],
       "dependencies": ["M1-NATIVE-RECOVERY-INTEGRATION"],
       "allowed_paths": ["crates/game-types/**", "crates/content/**", "crates/world-engine/**", "crates/server/src/game_service/tests/ui.rs", "tools/m1-content/**", "tools/simulator/src/journey/plan.rs", "tools/simulator/src/journey/source.rs", "content/m1/**", "research/water-fill/**", "research/m1-bindings/**"],
@@ -51,7 +51,7 @@
       "source_notes": ["eaa527a correctly stopped with0/4 positive native cases. Director inspected use_item, check_recipe_target, production start/tick/projection and require_world_target; target_objects alone has no reach/channel authority. The explicit optional rule is the narrow data-driven continuation under the already-approved water dependency.", "Independent review of5c6c581 found that game-types runtime validation accepts persisted multi-conversion/MakeX item-on activities and misses legacy Producing. The due-time mode error then aborts a whole tick. Readmit only a shared predicate and all-variant serialized-state regressions; keep source pins and every prior exclusion unchanged."],
       "parity_entries": [],
       "adaptations": [],
-      "evidence": ["milestones/evidence/m1-water-fill-dispatch-blocker.json", "milestones/evidence/m1-water-item-on-dispatch-authorization.json", "milestones/evidence/m1-water-item-on-review.json", "Clean append04a40ee received with five new serialized-state regressions and420 reported native tests; independent fix-delta assessment and integration validation are pending."]
+      "evidence": ["milestones/evidence/m1-water-fill-dispatch-blocker.json", "milestones/evidence/m1-water-item-on-dispatch-authorization.json", "milestones/evidence/m1-water-item-on-review.json", "Reviewed04a40ee passes Director420 native tests and exact source-pair/native/PostgreSQL/real-asset operator checks in6c47c3a. Main integration remains a separate task."]
     },
     {
       "id": "M1-WATER-ITEM-ON-REVIEW",
@@ -128,7 +128,7 @@
     {
       "id": "M1-WATER-UPGRADE-PREFLIGHT",
       "goal": "Prove exact old/current water compatibility and fenced conservation in disposable synthetic source fixtures before any saved-world migration admission.",
-      "status": "IMPLEMENTING",
+      "status": "VERIFIED",
       "specs": ["milestones/evidence/m1-water-upgrade-preflight-authorization.json", "milestones/approvals/m1-water-fill-upgrade-v1.json", "spec/game-networking.md", "crates/server/README.md"],
       "dependencies": ["M1-WATER-ITEM-ON-DISPATCH"],
       "allowed_paths": ["crates/server/src/game_service/tests/**", "crates/server/src/game_service/tests.rs", "crates/server/tests/**", "crates/server/README.md", "spec/game-networking.md", "tools/journey-tests/**", "milestones/**"],
@@ -141,14 +141,32 @@
       "source_notes": ["Director inspected the real operator, transaction, source UI/audio initializer, readiness validator and existing migration regression. The existing guarded transaction is a candidate boundary, not yet proof of non-UI recipe compatibility."],
       "parity_entries": [],
       "adaptations": [],
-      "evidence": ["milestones/evidence/m1-water-upgrade-preflight-authorization.json", "milestones/evidence/m1-water-upgrade-preflight-receipt.json", "Candidate2cc6c45 preserves de7b66f migration tests and037067d explicit source packaging. One native two-profile case, two real PostgreSQL cases, strict server Clippy and17 machinery cases pass; four genuine5015-mapping source deliveries are prepared. Retained failures, the native persisted-mode repair, unspent ten-call operator check and separately gated saved-world execution remain explicit."]
+      "evidence": ["milestones/evidence/m1-water-upgrade-preflight-authorization.json", "milestones/evidence/m1-water-upgrade-preflight-receipt.json", "milestones/evidence/m1-water-main-integration.json", "Candidatea162eb7 preserves all original failures plus clean6c47c3a results:420native, one exact-source-pair case, two actual PostgreSQL cases, strict native/WASM Clippy and32 machinery tests. All ten real migrate-ui checks and four original-asset source-server starts pass; the allowance is consumed. Main adoption/root checks and separately gated saved52 execution remain open."]
+    },
+    {
+      "id": "M1-WATER-MAIN-INTEGRATION",
+      "goal": "Selectively adopt only the reviewed and fully preflighted water dependency, then verify the root native/web consumers without repinning any existing world.",
+      "status": "IMPLEMENTING",
+      "specs": ["milestones/evidence/m1-water-main-integration.json", "milestones/evidence/m1-water-item-on-review.json", "milestones/evidence/m1-water-upgrade-preflight-receipt.json"],
+      "dependencies": ["M1-WATER-ITEM-ON-DISPATCH", "M1-WATER-ITEM-ON-REVIEW", "M1-WATER-UPGRADE-PREFLIGHT"],
+      "allowed_paths": ["content/m1/**", "crates/game-types/**", "crates/content/**", "crates/world-engine/**", "crates/server/src/game_service/tests/**", "crates/server/src/game_service/tests.rs", "crates/server/README.md", "tools/m1-content/**", "tools/simulator/src/journey/**", "tools/journey-tests/**", "research/water-fill/**", "research/m1-bindings/**", "spec/game-networking.md", "milestones/**"],
+      "forbidden_paths": ["prompt.md", "Cargo.lock", "crates/server/src/game_storage/**", "assets/**", "research/reference-pack/**", "spec/art-style.md", "spec/interface-parity.md", "spec/adaptations.md", ".local/journey-checkpoints/**"],
+      "outputs": ["Byte-identical owned candidate integration", "Affected root regression and production-build evidence", "Preserved minimal legacy target and explicit saved-world execution gate"],
+      "validation_commands": ["Focused native/source-pair/guarded PostgreSQL checks", "Existing web/native consumer tests and production build"],
+      "test_requirements": ["Import only enumerated owned commits; do not merge stale milestone/review/approval records", "Keep source-bearing targets worktree-private and verify actual artifact identity", "No renewed operator/browser/RuneLite allowance or saved checkpoint access"],
+      "acceptance": ["Reviewed content/native changes and related consumers pass on main without weakening existing-world pinning or M1 acceptance gates"],
+      "reserved_namespaces": [],
+      "source_notes": ["The independent persisted-state finding is resolved and all ten real source operator cases pass. Their character-free proof and controlled-character PostgreSQL proof remain distinct from the saved52 journey."],
+      "parity_entries": [],
+      "adaptations": [],
+      "evidence": ["milestones/evidence/m1-water-main-integration.json"]
     },
     {
       "id": "M1-WATER-FILL-MIGRATION",
       "goal": "Perform only the owner-approved, source-pinned and reversible upgrade needed to continue the existing52 range/persistence frontier.",
       "status": "BLOCKED",
       "specs": ["milestones/approvals/m1-water-fill-upgrade-v1.json", "milestones/evidence/m1-cook-reward-frontier.json", "crates/server/README.md", "tools/journey-tests/README.md"],
-      "dependencies": ["M1-WATER-FILL-CLOSURE"],
+      "dependencies": ["M1-WATER-FILL-CLOSURE", "M1-WATER-MAIN-INTEGRATION", "M1-WATER-UPGRADE-PREFLIGHT"],
       "allowed_paths": ["crates/server/src/game_storage/**", "crates/server/src/game_service/**", "crates/server/tests/**", "tools/journey-tests/**", "tools/simulator/**"],
       "forbidden_paths": ["prompt.md", "assets/source/**", "assets/manifests/**", "research/reference-pack/**", "tools/reference-pack/**", ".local/journey-checkpoints/**"],
       "outputs": ["Reviewed exact old/new artifact and migration plan", "Fenced compatibility/conservation/idempotency evidence", "Separately admitted same-account remaining range/postquest continuation with new protected checkpoint"],

@@ -1,0 +1,44 @@
+{
+  "schema_version": 1,
+  "status": "admitted_selective_integration",
+  "owner_approval": "milestones/approvals/m1-water-fill-upgrade-v1.json",
+  "scope": "Only the passing reviewed water dependency, required native repair, focused migration tests, source packaging/operator tooling and exact evidence.",
+  "candidate": "a162eb7818639c2babcf4ad09ec21dd68c15f2ea",
+  "clean_tested_code": "6c47c3a7cb71d41a9b3e94904b36c75c084315de",
+  "independent_review": "milestones/evidence/m1-water-item-on-review.json",
+  "preflight": "milestones/evidence/m1-water-upgrade-preflight-receipt.json",
+  "owned_commits_in_order": [
+    "21d9485dbf794ea652a9ee1a8fc29784a60bf2f3",
+    "ee81bbf0501584e22550845666c7dd690acf991f",
+    "de7b66f5ead59b53012e7d7a9752cdb6a58ad03c",
+    "b66a0c7f326a5bf11421ff6a332acb1aa8d890c5",
+    "037067d1cefc56a51562cf4235f71842ba400654",
+    "2cc6c45813a51bcd4a7ff5164975936a2caf36fc",
+    "4340530c7184f4c2e03ec9982bbbfbfd82f57999",
+    "6c47c3a7cb71d41a9b3e94904b36c75c084315de",
+    "a162eb7818639c2babcf4ad09ec21dd68c15f2ea"
+  ],
+  "source_transition": {
+    "main_from_raw_sha256": "5b3ba5f108ed3fec8f8b5f7f49b429c059e21b6f192ec99a0569616e08330059",
+    "main_to_raw_sha256": "adb24c14f76181a76e2874e97be3e2743a4c475d3ff89a7720b70ae6f6981bbc",
+    "separate_minimal_legacy_target_raw_sha256": "b2a1be20a0e6c3e1968f6f7610198ce38212f196c005539b4ac5013d10ebc650",
+    "existing_worlds_silently_repinned": false
+  },
+  "integration_requirements": [
+    "Import only the enumerated owned commits; never merge stale candidate task, review or approval records over canonical main.",
+    "Require the entire imported owned path set to match the passing candidate byte-for-byte, retaining the independent review and original failures.",
+    "Run affected root native/source-pair tests, strict checks, guarded database regressions and web/native consumer validation after integration.",
+    "Preserve all frozen inputs, empty sink menu, one-conversion constraints and ordinary production behavior."
+  ],
+  "execution_limits": {
+    "source_operator_allowance_remaining": 0,
+    "saved_checkpoint_access_or_restore": 0,
+    "saved_world_migration_or_continuation": 0,
+    "browser_gpu_or_runelite_invocations": 0
+  },
+  "main_code_commit": null,
+  "root_validation": "pending",
+  "saved_world_migration_or_continuation_admitted": false,
+  "milestone_accepted": false,
+  "later_milestone_authorized": false
+}
