@@ -1,0 +1,69 @@
+{
+  "schema_version": 1,
+  "milestone": "m1-starter-journey",
+  "result": "source_counter_pickup_and_conservative_driver_repaired",
+  "owned_revision": "3480b6f85865827637ea0de9c30cb410f38f85c8",
+  "integrated_revision": "50e33e31ce2342b138af8433b1a731188821bbaf",
+  "source5e_validation_revision": "87af7f6a44baae7c7287fedc20ca232ad87142e4",
+  "contract": {
+    "path": "research/ground-contact/contract.json",
+    "sha256": "dbce2a8bfce7fa698f91996a3a1bcf8ee0f1b854a3374b1b1c433b1592baaadf",
+    "qualification": "Source-supported minimal cardinal contact for declared counter spawns; no universal original-server pickup-radius claim."
+  },
+  "repair": [
+    "Keep all source item placements and collision unchanged; the pot and cellar bucket remain nonwalkable.",
+    "A declared source-spawn ID must match its item stack, actual entity and exact mapped source location.",
+    "Only fully occupied source-spawn cells gain clear cardinal near-face contact; ordinary drops/loot and eight walkable spawns retain exact-tile pickup.",
+    "Reuse the existing source-face predicate, preserving approach movement, bilateral sight, cardinal distance, plane/instance, ownership, expiry and inventory rules.",
+    "Query and pickup share ground_access; source respawn scheduling remains unchanged.",
+    "The driver chooses conservative source access goals and checks the same observed ground ID/stack/tile and actual permission before pickup."
+  ],
+  "source_coverage": {
+    "declared_item_spawns": 10,
+    "ordinary_same_tile": 8,
+    "occupied_spawns": 2,
+    "pot_contacts": [[3209,3213,0],[3209,3215,0]],
+    "cellar_bucket_contacts": [[3216,9624,0]],
+    "all10_source5e_and5b_definitions_and_cardinal_cells_identical": true,
+    "source5e_raw": "5e0aa8a28851752ae0b8b0a08c635c6c8d2979f509f3a3e564ee74e2abfc8e6f",
+    "source5e_gzip": "7d49e8f85b7b229bb0fc9f6f3cb9665aaf9d287f6a873ac42701e3d77cc6e69f",
+    "source5b_raw": "5b3ba5f108ed3fec8f8b5f7f49b429c059e21b6f192ec99a0569616e08330059",
+    "source5b_gzip": "8da1e85a1e2ebb0355e29e7a15a0ca7cdab2f2751bc1341dd5efd5322b925ca6",
+    "source_artifacts_or_checkpoint_changed": false
+  },
+  "validation": {
+    "before": {"passed": 2, "failed": 3, "log_sha256": "c860b433f20e94c2ff4a06beededa08231fcd6d1743b1eaf24bcb1ad4ae328d4"},
+    "ground_regressions": 6,
+    "ground_and_existing_contact_regressions": 20,
+    "simulator_regressions": 40,
+    "full_current_engine_tests": 290,
+    "full_engine_log_sha256": "8b38bc54c357c0fe14cd324cc6bbe9010043631bdb4dafc677511877d4bbf0fe",
+    "strict_clippy": "passed",
+    "clippy_log_sha256": "5ccb01b12ac3beb9a3a8acf1d81c8c0cf4498b0080b74a645465143e8732c27c",
+    "root_rebuilt_command": "cargo test --locked -p clubscape-world-engine -p clubscape-protocol -p clubscape-sim --all-features",
+    "root_rebuilt_tests": 355,
+    "root_rebuilt_log_sha256": "a3ddaf288dd0dd380a3e2c4dad5e5cfc62051bcbb3e3fcd894c912ec635a6479",
+    "root_actual_test_executable_embeds5b_not5e": true,
+    "source5e_private_target_contact_checks": 20,
+    "source5e_private_target_simulator_checks": 40,
+    "source5e_contact_log_sha256": "327c06fbe6ab1c4a58133594a210f6bbc8a39c786356938def41d117790460ee",
+    "source5e_simulator_log_sha256": "8267966923d48198f1c33a71f6bb3d24bf623973ea7434d8c3131511285918ee",
+    "source5e_actual_test_executable_embeds5e_not5b": true,
+    "source5e_tracked_lock_and_manifests_unchanged": true,
+    "source5e_private_resolved_lock_sha256": "e393273d1fd61beee80b414ad8b53ba194f7ffed1dbd50d6ac2616a3c7d02882",
+    "counts_overlap_and_are_not_additional_gameplay": true
+  },
+  "validation_isolation_correction": {
+    "problem": "Director temporarily reused root CARGO_TARGET_DIR for the old-source worktree. Cargo later marked root tests fresh while the executable still embedded5e.",
+    "excluded_apparent_root_results": [".local/ground-contact-root.log", ".local/ground-contact-root-simulator.log"],
+    "repair": "Removed only the seven affected project packages' generated artifacts with cargo clean -p, rebuilt root, and separately rebuilt source5e with its own private target. Source/checkpoint paths were untouched.",
+    "corrected_root_executable": "target/debug/deps/ground_contact-821dfa2e9aae9e55",
+    "corrected_source5e_executable": ".worktrees/m1-ground-source5e/.local/journey-target/debug/deps/ground_contact-79ccf20a16cf3e5c",
+    "future_rule": "Never share build targets across source-pinned worktrees/profiles; verify actual fixture/executable identity."
+  },
+  "actual907_restore_or_pickup_executed_by_this_repair": false,
+  "remaining": "A separately admitted same-account907 continuation must verify actual ingredient acquisition, Cook rewards and postquest persistence. Native fixtures are not that journey.",
+  "full_m1_journey_verified": false,
+  "milestone_accepted": false,
+  "later_milestone_authorized": false
+}

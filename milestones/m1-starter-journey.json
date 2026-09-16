@@ -9,11 +9,11 @@
   "candidate_revision": null,
   "accepted_revision": null,
   "checkpoint": {
-    "report": "milestones/evidence/m1-mainland-frontier.json",
+    "report": "milestones/evidence/m1-ground-contact.json",
     "verified_infrastructure_revision": "275d3cc83d6a7c2118d0afcf82490f364e5d2986",
     "infrastructure_evidence": "milestones/evidence/m1-account-foundations.json",
-    "runtime_revision": "2ccfab88940c1d04ff9998f2cfced16961d23166",
-    "scope_note": "Same-account source5e now has70/70 tutorial edges and336source checks plus3separate observations. One db74895 restore completes the existing Office/grave recovery and accepts Cook, with54new acknowledged inputs and exact item/XP/quest conservation. New protected907 frontier stops before any pot pickup: its source tile is nonwalkable while the engine requires exact-tile pickup. No further restore is authorized. Parent63Rust/44Python machinery checks and all58private files for each907/c84/7fa checkpoint verify. Main UI remains unintegrated: isolated2f3704d builds and completes21 recorded-camera browser checks, but source2266 timing and native recovery-caption/context/model gates remain open. Camera initialization alone is owner-approved; native runtime/normal entry remain required. Main gear fitting remains931/2034 and the new zero metric is rejected. Complete Cook/postquest/browser/fidelity/performance and owner Mac/Edge acceptance remain pending. No old world is repinned."
+    "runtime_revision": "50e33e31ce2342b138af8433b1a731188821bbaf",
+    "scope_note": "Same-account source5e remains at protected907 with70/70 tutorial edges,336source checks and3separate observations after actual Office/grave recovery and Cook acceptance. Source pot/cellar bucket contact is now repaired at50e33e3 without changing placement/collision or ordinary pickup:355genuine current-root native tests and isolated5e20contact/40simulator tests pass with executable source identity checked. A newly bounded one-shot907 Cook/postquest continuation is admitted; no new actual run result exists yet. Main UI remains unintegrated: isolated2f3704d builds and completes21 recorded-camera browser checks, but source2266 timing and native recovery-caption/context/model gates remain open. Camera initialization alone is owner-approved; native runtime/normal entry remain required. Main gear fitting remains931/2034 and the new zero metric is rejected. Complete Cook/postquest/browser/fidelity/performance and owner Mac/Edge acceptance remain pending. No old world is repinned."
   },
   "scope_approval": {
     "authority": "owner",
@@ -41,7 +41,7 @@
     {"id": "legitimate-lumbridge-arrival", "status": "in_progress", "evidence": [], "blocker": null},
     {"id": "lumbridge-activities", "status": "in_progress", "evidence": [], "blocker": null},
     {"id": "death-and-recovery", "status": "in_progress", "evidence": [{"path": "tools/journey-tests/evidence/office-grave-pot-907d84b817974f55.json"}], "blocker": "Actual same-account source5e Office introduction/topics/portal and original grave recovery now pass, conserving20 item kinds/all24skill XP/bothquests and source fee0. Complete browser recovery, ordinary-grave Bank-All source permission and native recovery presentation remain separate open gates."},
-    {"id": "complete-cooks-assistant", "status": "in_progress", "evidence": [], "blocker": "Actual Cook acceptance reaches stage.cooks.delivered.none, but legitimate pot acquisition is blocked by exact-tile-only ground access at a nonwalkable source tile. Protected907 frontier has no submitted pot pickup; ingredients/reward/range and postquest checks are not reached."},
+    {"id": "complete-cooks-assistant", "status": "in_progress", "evidence": [], "blocker": "Actual Cook acceptance reaches stage.cooks.delivered.none. The source counter-contact defect is now repaired and validated on5b/5e, but its newly authorized907 continuation has not yet produced actual ingredient/reward/range or postquest evidence."},
     {"id": "shared-authoritative-headless-path", "status": "in_progress", "evidence": [], "blocker": null},
     {"id": "tutorial-and-quest-persistence", "status": "in_progress", "evidence": [], "blocker": null},
     {"id": "content-compilation-and-stable-ids", "status": "implemented", "evidence": [{"path": "milestones/evidence/m1-engine-review-repairs.json", "sha256": "b46eed3abaafe59c06c139edc095872fce97fcbfa7fd3548ad162ee1a6d12593"}], "blocker": "Strict source/native conformance and all reported engine review repairs pass; complete live journey and final candidate validation remain separate."},

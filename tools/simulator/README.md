@@ -185,6 +185,12 @@ ground ID, retargets a disappeared stack or moves onto a blocked counter after
 the server has already granted pickup at its face. An out-of-reach pre-walk
 view is not a pickup denial at the destination.
 
+Keep a distinct Cargo target directory for each source-pinned worktree/profile.
+Sharing one target can leave a different worktree's embedded fixture executable
+under an apparently fresh test result. Use the worktree default target or the
+journey builder's worktree-local private target, and retain actual source/binary
+identities for old-artifact validation.
+
 Polls wait 600 ms. Gathering/combat/ignition waits and retries are bounded and
 observed; success probabilities are never modified or statistically certified by
 one run. Writes with uncertain transport outcomes are not retried under new
