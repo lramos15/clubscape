@@ -1,0 +1,35 @@
+{
+  "schema_version": 1,
+  "milestone": "m1-starter-journey",
+  "status": "director_integration_admitted",
+  "worker": "78d01af9-70a4-4b02-8339-6a61eb377374",
+  "worker_read_through_turn": 39,
+  "worker_worktree": ".worktrees/m1-browser-shell",
+  "preserved_worker_revision": "4a205bf476d0f6c43ab360ae4066f72c72e30f6b",
+  "owned_commits": [
+    "b134136ad7b6260e539fe8009ee9bb7b0a425ea7",
+    "57f18f1b129c3968b9cf88de5cd094cc44b18b9e"
+  ],
+  "integration_worktree": ".worktrees/m1-shell-metadata",
+  "integration_base": "ba8397ff4f7e48e64db0d21c8e57e022d08ef0b8",
+  "excluded_import_path": "web/app/tests/source-browser.ts",
+  "scope": "Only source preview/spatial metadata and related lifecycle/consumer tests. No modifications to the recovery candidate under independent review.",
+  "worker_reported_evidence": {
+    "handoff": ".worktrees/m1-browser-shell/.local/evidence/metadata-ui-candidate/HANDOFF.txt",
+    "source_inputs": 65,
+    "source_input_record_sha256": "00b375e5565030bc1b054193746f971844263f83d44e385e2e996f512258dd46",
+    "metadata_handoff_sha256": "7715dd67cfe10d532fdd70e23bc2dd82a077742fc05a8bd74f1b0bf9ad86ce55",
+    "completion_fence_handoff_sha256": "85ad27b97f0b75d67e39cbc1227d80f453e3609cc1650898da79026b24dbb98a",
+    "qualification": "Worker45 focused,14 completion and232 prior composed tests overlap and do not constitute fresh parent or gameplay evidence."
+  },
+  "historical_limits_to_recheck": [
+    "Independent uncreated/draft actor selection is absent from PlayerPreviewRequest; current player_gear is not an independent preview actor.",
+    "Original equipment widget84:4 exists; old UI catalogueb83d7b1 had no request and renderer projection covered only679:73. The current UI catalogue is newer, so do not repeat the old UI-gap claim without current evidence.",
+    "Source spatial metadata is not full source audio playback, timing, speaker or performance acceptance."
+  ],
+  "source_raw_sha256": "5b3ba5f108ed3fec8f8b5f7f49b429c059e21b6f192ec99a0569616e08330059",
+  "root_code_integrated": false,
+  "private_journey_accessed": false,
+  "milestone_accepted": false,
+  "later_milestone_authorized": false
+}

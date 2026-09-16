@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "milestone": "m1-starter-journey",
-  "result": "isolated_consumer_candidate_passed_independent_review_pending",
+  "result": "isolated_consumer_candidate_and_independent_review_passed_root_integration_pending",
   "candidate_revision": "7f30a0aa5a1dabd89e890f16781f70f0b3d51045",
   "candidate_evidence_revision": "ba8397ff4f7e48e64db0d21c8e57e022d08ef0b8",
   "worktree": ".worktrees/m1-ui-recovery",
@@ -83,6 +83,7 @@
     "Shared recovery/content fixture imports needed one inclusion per test target to satisfy strict Clippy."
   ],
   "independent_review_task": "M1-NATIVE-RECOVERY-REVIEW",
+  "independent_review": "milestones/evidence/m1-native-recovery-independent-review.json",
   "preserved": {
     "original_ui_worktree_unchanged": true,
     "actual_saved_journey_checkpoint": "52f32d29b5dc4f1a",
@@ -93,7 +94,7 @@
     "owned_fixture_services_cleaned": true
   },
   "remaining_gates": [
-    "Independent recovery review and selective root integration with post-integration checks.",
+    "Selective root integration with post-integration checks; bounded independent recovery review has no high-confidence findings.",
     "Source camera production consumers, required visible UI models and actual approach-and-act.",
     "Sound equipment-penetration measurement and all2034 required poses.",
     "Reviewed water target and separately admitted fenced continuation of the same52 account.",

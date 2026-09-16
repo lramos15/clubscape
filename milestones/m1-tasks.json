@@ -7,14 +7,14 @@
     "admissions_open": true,
     "active": [
       {"id": "director", "task": "M1-NATIVE-RECOVERY-INTEGRATION"},
-      {"id": "bb7f85f7-096a-4377-80cb-3e7eae196c6b", "task": "M1-BROWSER-RENDERER"},
-      {"id": "78d01af9-70a4-4b02-8339-6a61eb377374", "task": "M1-BROWSER-SHELL"},
-      {"id": "fdda1fb0-1135-4cf8-8cff-3db550e48f54", "task": "M1-WATER-FILL-CLOSURE"},
-      {"id": "e6925772-df1f-4ff7-9efc-219f800a5a14", "task": "M1-NATIVE-RECOVERY-REVIEW"}
+      {"id": "bb7f85f7-096a-4377-80cb-3e7eae196c6b", "task": "M1-BROWSER-RENDERER"}
     ],
     "reserved": [],
     "queued": [],
     "parked": [
+      {"id": "fdda1fb0-1135-4cf8-8cff-3db550e48f54", "reason": "Publishedeaa527a with strict current/legacy water candidates and preserved source qualifications. Both have0/4 positive native cases because the shared recipe-target guard has no item-on-only authorization for operation-less sink14868. Neither target is migration-ready. Director owns the next bounded shared-contract repair; no private-state access, migration or automatic resumption."},
+      {"id": "e6925772-df1f-4ff7-9efc-219f800a5a14", "reason": "Bounded recovery review of7f30a0a at evidenceba8397f completed with no high-confidence findings. Native context/planner/transport/UI/fencing assessed against source contract and original caption regression; no tests/edits/captures/private-state access or M1 acceptance. No automatic resumption."},
+      {"id": "78d01af9-70a4-4b02-8339-6a61eb377374", "reason": "Completed bounded preview/spatial producers in b134136 and57f18f1; current original worktree4a205bf is clean and unchanged. Director owns isolated integration against current UI/recovery/audio, preserving source-browser.ts and rechecking historical preview limits. No new work, captures or automatic resumption."},
       {"id": "2766e089-44e5-4a1d-974e-7b03ad9c269d", "reason": "Published native context/Take-All through155ac6f/93aefa6/5e32781 plus evidencec379d1c/234d9f9, with396Rust/15controller checks. Director owns the missing one-line server encoder and complete UI consumption/PG validation; no more worker edits, source repin or automatic resumption."},
       {"id": "cdfad64d-9162-439f-a525-58e1114dd7f4", "reason": "Completed56audio units and two fresh full-source cold checks with18/18on-time cues each. Owned66c6d87/6557c57/b5a46f3 integrate2a7727d/693d573/7a01cf2; parent249candidateweb and103rootaudio-consumer checks pass. Both bounded allowances exhausted, GPU window released. Full journey/spatial/speaker/Mac/frozen performance/owner gates remain separate; no automatic resumption."},
       {"id": "ac0f0856-44af-445b-bd90-6db7a1f4fc74", "reason": "Native camera2401e98 completed in owned crates/camera plus local-member lock entry. Parent32native tests, Clippy, WASM check and byte-identical14/354 conformance pass. Independent review and actual renderer/WASM/browser providers remain separate; no automatic consumer edits or resumption."},
@@ -33,6 +33,24 @@
     "usage_accounting": "milestones/evidence/m1-usage-snapshot.json records the available delayed session snapshot; final project-wide credits/currency are unavailable."
   },
   "tasks": [
+    {
+      "id": "M1-SHELL-METADATA-INTEGRATION",
+      "goal": "Integrate only the completed source preview/spatial metadata producers against the current committed UI/recovery/audio candidate without changing the candidate under independent review.",
+      "status": "IMPLEMENTING",
+      "specs": ["milestones/evidence/m1-shell-metadata-integration.json", "web/app/README.md", "web/app/ui-preview-request.ts", "web/app/spatial-metadata.ts"],
+      "dependencies": ["M1-SHELL-INTEGRATION"],
+      "allowed_paths": ["web/app/**"],
+      "forbidden_paths": ["prompt.md", "crates/**", "web/shared/**", "web/ui/**", "web/audio/**", "content/**", "assets/**", "research/reference-pack/**", "spec/art-style.md", "spec/interface-parity.md", "spec/adaptations.md", ".local/journey-checkpoints/**"],
+      "outputs": ["Only b134136 and57f18f1 imported into a new isolated m1-shell-metadata worktree", "Current source metadata and lifecycle/routing evidence", "Precise current preview source/renderer gaps, not stale catalogue assumptions"],
+      "validation_commands": ["pnpm --dir web typecheck", "pnpm --dir web test", "pnpm --dir web build"],
+      "test_requirements": ["Preserve current Director source-browser.ts; the old two-line assertion is excluded from the import and may change only from current observed behavior", "Do not modify m1-ui-recovery during its independent review or repick earlier foundation/lock/subscriber/audio/ground changes", "No native audio distance/gain/morph policy duplication, guessed original variables, fake actor/loadout, scene or unlocks", "Verify accepted renderer snapshot, async preview completion and real source placement/instance metadata lifetimes", "No new saved-world restore, migration, content/bundle repin, RuneLite or inherited audio-budget run"],
+      "acceptance": ["Producer integration is correct and persistent, with unsupported preview contracts and M1 acceptance gaps still explicit"],
+      "reserved_namespaces": [],
+      "source_notes": ["Worker handoff is complete through turn39: b134136 metadata producers,57f18f1 completion fences. Original worktree4a205bf remains preserved. Historical handoff used older UI catalogueb83d7b1; current6601 UI must be inspected before carrying its equipment-request gap forward."],
+      "parity_entries": [],
+      "adaptations": [],
+      "evidence": ["milestones/evidence/m1-shell-metadata-integration.json"]
+    },
     {
       "id": "M1-NATIVE-RECOVERY-INTEGRATION",
       "goal": "Wire the published full recovery context through the real server and UI, close the original caption/count regression, and verify atomic controls end to end.",
@@ -54,7 +72,7 @@
     {
       "id": "M1-NATIVE-RECOVERY-REVIEW",
       "goal": "Independently review the complete published recovery contract/planner/transport and its committed server/UI consumers before selective root integration.",
-      "status": "IMPLEMENTING",
+      "status": "DONE",
       "specs": ["research/interface-contracts/recovery-context/README.md", "web/ui/evidence/native-recovery-context/validation.json", "milestones/evidence/m1-native-recovery-integration.json"],
       "dependencies": ["M1-NATIVE-RECOVERY-CONTRACT"],
       "allowed_paths": [],
@@ -67,7 +85,7 @@
       "source_notes": ["Reuse the existing independently completed native camera reviewer for a separate bounded recovery review. Candidate source and all saved-journey/approval gates remain unchanged."],
       "parity_entries": [],
       "adaptations": [],
-      "evidence": ["milestones/evidence/m1-native-recovery-integration.json"]
+      "evidence": ["milestones/evidence/m1-native-recovery-integration.json", "milestones/evidence/m1-native-recovery-independent-review.json"]
     },
     {
       "id": "M1-WATER-FILL-MIGRATION",
@@ -90,7 +108,7 @@
     {
       "id": "M1-WATER-FILL-CLOSURE",
       "goal": "Close the absent source mainland water-filling dependency and correct the sink approach before the remaining range/persistence proof.",
-      "status": "IMPLEMENTING",
+      "status": "BLOCKED",
       "specs": ["milestones/evidence/m1-cook-reward-frontier.json", "research/journey-rules/cooks-assistant.json", "tools/m1-content/README.md", "content/m1/README.md"],
       "dependencies": ["M1-SOURCE-GROUND-CONTACT"],
       "allowed_paths": ["tools/m1-content/**", "research/m1-bindings/**", "research/water-fill/**", "content/m1/**", "tools/simulator/src/journey/plan.rs", "tools/simulator/src/journey/source.rs"],
@@ -828,7 +846,7 @@
     {
       "id": "M1-BROWSER-SHELL",
       "goal": "Deliver real browser/WASM transport, input and asset orchestration composing renderer, source UI and audio.",
-      "status": "IMPLEMENTING",
+      "status": "REVIEW",
       "specs": ["spec/browser-implementation.md", "web/shared/contracts.ts", "spec/web-delivery.md", "spec/networking.md"],
       "dependencies": ["M1-REFERENCE-APPROVAL"],
       "allowed_paths": ["web/app/**", "web/package.json", "web/pnpm-lock.yaml", "web/tsconfig.json", "web/index.html", "web/vite.config.ts", "web/generated/**", "crates/wasm/**", "tools/web-build/**"],
