@@ -293,6 +293,32 @@ overall result blocked rather than deleting the only completed frontier and
 claiming completion. Source blockers are preserved with the same owned cleanup
 and privacy rules. Any next restore or later milestone requires new authority.
 
+The single authorized continuation executed from committed adapter `5856343`.
+[Run907d84b817974f55](evidence/office-grave-pot-907d84b817974f55.json) completed the
+existing Office introduction, all three topics, portal, actual grave opening and
+recovery of17 opaque entries at zero source fee. The original20 owned item kinds,
+24 skill XP values, quest states and sword equipment matched their real
+pre-death conservation baseline. This account now has336 source checks and the
+same70 tutorial transitions; its three observation checks remain separate.
+
+Cook's Assistant acceptance acknowledged at sequence355/tick1886 after legitimate
+banking left the inventory empty. The first ingredient-container acquisition then
+blocked **before a pickup input**: source pot `spawn.pot.3209.3214.p0` is on
+unwalkable cell `(3209,3214,0)` with movement mask255, while the engine's
+`ground_access` requires the actor to occupy the item's exact tile. No declared
+door/transform collision override unblocks that cell. The runner did not
+no-clip, relocate the pot, bypass pickup reach or substitute a banked pot.
+The source/backend owner must supply legitimate access for this source location;
+Cook ingredients/rewards and post-quest recovery remain unexecuted.
+
+Protected checkpoint `.local/journey-checkpoints/907d84b817974f55` is retained:
+archive SHA `4f3cbf8148ef6d9334da8cbffeb4a405924018ba603cdf4ac9aebc997b53fa0d`,
+private-inventory SHA
+`b3c7ee44921e67a182d3a017d818d5953beacfcabef5213906b0f08a7b28da40`.
+All original checkpoint/trace hashes remain exact, all owned services are
+cleaned, and this one-restore admission is consumed. The full headless journey
+is still blocked, not accepted or automatically retried.
+
 ## Evidence and blockers
 
 The aggregate JSON differentiates infrastructure checks, negative readiness

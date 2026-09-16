@@ -1,0 +1,235 @@
+{
+  "schema_version": 1,
+  "task": "M1-HEADLESS-JOURNEY",
+  "status": "blocked",
+  "full_original_journey_passed": false,
+  "milestone_accepted": false,
+  "presentation_fidelity_audio_performance_or_runelite_acceptance": false,
+  "authority": "db74895cd5d9f109d292eea20f07f5c2a57e3343",
+  "adapter_commit_before_execution": "5856343b0a252e95fbb871331f06d9e40a557063",
+  "actual_restore_invocations": 1,
+  "actual_run": {
+    "run_id": "907d84b817974f55",
+    "command": "python3 tools/journey-tests/resume.py --continue-mainland --checkpoint .local/journey-checkpoints/c84c66094aaa4526 --expected-archive-sha256 a7cd1774144525c29efc694b5550f71a0e04052324bb59c3ab4fbccbe2d8b4af --report .local/evidence/m1-mainland-db74895-continuation.json",
+    "exit_code": 1,
+    "same_account_id": "f43da325-ffcc-4753-a823-7a345dfce33b",
+    "same_actor_id": "actor.05a9c9bae95142fabe29d3ec35e8cf9e",
+    "same_world_id": "95acc818-e1d6-4ad3-805f-d323623d2933",
+    "same_active_death_id": "death.engine.1615.0",
+    "source_tutorial_edges": 70,
+    "source_checks_passed": 336,
+    "new_source_checks": 15,
+    "separate_observation_checks": 3,
+    "new_acknowledged_gameplay_inputs": 54,
+    "new_sequences": [302, 355],
+    "new_rejected_or_replayed_inputs": 0,
+    "total_historical_input_count": 452,
+    "last_acknowledged_sequence": 355,
+    "next_sequence": 356,
+    "unique_events_observed": 1581,
+    "signup_character_creation_new_kill_or_retention_replay": false
+  },
+  "exact_restore": {
+    "checkpoint": ".local/journey-checkpoints/c84c66094aaa4526",
+    "archive_sha256": "a7cd1774144525c29efc694b5550f71a0e04052324bb59c3ab4fbccbe2d8b4af",
+    "private_inventory_sha256": "996a199f2d47d83add36ee9de22802774cb9aaecd06e9fd0c0ea2d1a0e394f6f",
+    "restored_private_identity_sha256": "ab320fbab5f8bcdf7646e86d23acf3ebaad03af6f228718b9f6dc037b5e4aaba",
+    "world_actor_rng_account_receipts_and_game_root_exact_before_startup": true,
+    "original_observed_status_capsule_or_trace_rewritten": false,
+    "old_7fa_restored_again": false,
+    "consumed_bd33_observation_authorization_reused": false,
+    "source_repinned_or_content_migrated": false,
+    "unknown_input_retried": false
+  },
+  "actual_existing_office_flow": {
+    "introduction": {
+      "sequence": 304,
+      "operation_id": "ef17a50f-821a-4a43-8259-c8c9dcd05efe",
+      "choice": "first_item_loss_intro",
+      "tick": 1636
+    },
+    "topics": [
+      {"sequence": 305, "operation_id": "4c1f0da4-da78-443b-8f3d-59b0c37d774c", "choice": "fees", "tick": 1637},
+      {"sequence": 306, "operation_id": "60a06914-56b5-4259-8a6e-04052b511479", "choice": "timer", "tick": 1638},
+      {"sequence": 307, "operation_id": "dc2471ce-c3ec-4d26-ade1-a0e602ec5b21", "choice": "kept_items", "tick": 1639}
+    ],
+    "done": {
+      "sequence": 308,
+      "operation_id": "bd4f09c5-73c4-4f01-89be-5baaaf2c28e3",
+      "tick": 1640,
+      "choice_offered_after_all_topics": true
+    },
+    "source_portal": {
+      "target": "spawn.death.portal.3169.5726.p0.t10.r3",
+      "action": "Use",
+      "sequence": 310,
+      "operation_id": "0cc4c3d0-b938-4e1c-b00d-9aad07443aca",
+      "tick": 1650
+    },
+    "return_to_actual_death_origin": {"x": 3245, "y": 3235, "plane": 0},
+    "forced_arrival_or_new_death": false
+  },
+  "actual_grave_recovery": {
+    "open": {
+      "sequence": 315,
+      "operation_id": "7f561f00-b1f8-4df3-85bf-69bfa44a9351",
+      "tick": 1718,
+      "revision": 2047
+    },
+    "reclaim": {
+      "sequence": 316,
+      "operation_id": "08158a47-003d-4162-b6dc-f6bbf8d1641a",
+      "tick": 1720,
+      "revision": 2050,
+      "next_sequence": 317,
+      "storage": "GRAVE",
+      "selected_actual_opaque_entry_ids": [
+        "recovery_item.engine.1615.0.lost.5",
+        "recovery_item.engine.1615.0.lost.6",
+        "recovery_item.engine.1615.0.lost.2",
+        "recovery_item.engine.1615.0.lost.14",
+        "recovery_item.engine.1615.0.lost.19",
+        "recovery_item.engine.1615.0.lost.8",
+        "recovery_item.engine.1615.0.lost.7",
+        "recovery_item.engine.1615.0.lost.4",
+        "recovery_item.engine.1615.0.lost.13",
+        "recovery_item.engine.1615.0.lost.18",
+        "recovery_item.engine.1615.0.lost.10",
+        "recovery_item.engine.1615.0.lost.15",
+        "recovery_item.engine.1615.0.lost.16",
+        "recovery_item.engine.1615.0.lost.9",
+        "recovery_item.engine.1615.0.lost.17",
+        "recovery_item.engine.1615.0.lost.11",
+        "recovery_item.engine.1615.0.lost.1"
+      ]
+    },
+    "observed_grave_active_ticks_remaining_before_reclaim": 1444,
+    "source_expected_fee_and_actual_fee": 0,
+    "legitimate_item_kinds_conserved": 20,
+    "all_24_skill_xp_values_preserved": true,
+    "both_quest_states_preserved": true,
+    "original_bronze_sword_equipment_restored": true,
+    "conservation_baseline": "Exact original public pre-death tick1613 frame in the historical trace, not reconstructed inventory or a new death.",
+    "ordinary_grave_bank_all_used": false,
+    "source_death_office_grave_recovery_segment": "passed"
+  },
+  "actual_cook_progress": {
+    "inventory_emptied_through_actual_bank_deposits": true,
+    "precollected_starter_ingredients_substituted": false,
+    "accept": {
+      "sequence": 355,
+      "operation_id": "3b97702c-f9f2-4b14-8517-69d5035dfd07",
+      "choice": "transition.cooks.accept",
+      "tick": 1886,
+      "revision": 2255,
+      "next_sequence": 356
+    },
+    "actual_quest_stage": "stage.cooks.delivered.none",
+    "actual_inventory_after_accept": [],
+    "actual_quest_points": 1,
+    "ingredient_acquisition_partial_delivery_or_reward_passed": false
+  },
+  "exact_blocker": {
+    "action": "cooks.actual_pot_cellar_bucket_dairy_milk",
+    "type": "Client source-route preflight, with a canonical source/engine ground-contact mismatch; not an invented server pickup response.",
+    "reason": "No bounded source route from Tile { x: 3209, y: 3213, plane: 0 } to {Tile { x: 3209, y: 3214, plane: 0 }}; missing travel/collision is not a teleport",
+    "last_public_tick": 1886,
+    "last_public_revision": 2255,
+    "next_sequence": 356,
+    "actor_position": {"x": 3209, "y": 3213, "plane": 0},
+    "source_pot_spawn": "spawn.pot.3209.3214.p0",
+    "source_pot_position": {"x": 3209, "y": 3214, "plane": 0},
+    "source_pot_region": "region.osrs.12850",
+    "source_pot_cell": {"walkable": false, "blocked_movement": 255, "blocked_sight": 0},
+    "source_pot_interactions": [],
+    "declared_transform_or_collision_group_overrides_for_that_cell": [],
+    "engine_ground_access_contract": {
+      "location": "crates/world-engine/src/actions.rs:918-927",
+      "predicate": "character.tile == item.tile and character.runtime.instance == item.instance",
+      "otherwise": "OutOfReach: Walk onto this ground item's tile in its instance."
+    },
+    "pot_walk_or_pickup_input_submitted": false,
+    "server_pickup_rejection_or_unknown_write_claimed": false,
+    "source_geometry_or_pickup_permission_changed": false,
+    "teleport_no_clip_item_relocation_seed_or_bank_substitution_used": false,
+    "parent_integration_needed": "Provide source-correct ground-item access for this blocked source pot location, or an independently justified source placement correction. The current same-tile-only pickup requirement cannot reach the unwalkable cell; do not fix it by removing collision or granting arbitrary remote/adjacent access."
+  },
+  "historical_lineage": {
+    "exact_c84_trace_prefix_bytes_preserved": true,
+    "historical_prefix_records": 2842,
+    "new_trace_records": 3158,
+    "new_source_checkpoint_records": 15,
+    "new_gameplay_input_records": 54,
+    "new_authoritative_snapshot_records": 189,
+    "old_70_edges_and_321_checks_preserved": true,
+    "old_3_observation_checks_separately_retained": true,
+    "no_new_source_kill_or_retention_event_fabricated": true
+  },
+  "recovery_scope": {
+    "historical_onboarding_reconnect_logout_restart_and_replay": "preserved as previously executed",
+    "original_onboarding_restart_request_id": "21cead59-28ec-488c-af4d-7c35ee4c8965",
+    "new_postquest_logout_reconnect_restart_or_reward_replay": "not reached",
+    "new_server_restarts": 0,
+    "known_gameplay_operation_replays_in_this_invocation": 0
+  },
+  "source_and_binary_identity": {
+    "source_revision": "m1.source-backed.v4.3ff4292b311453cc",
+    "raw_artifact_sha256": "5e0aa8a28851752ae0b8b0a08c635c6c8d2979f509f3a3e564ee74e2abfc8e6f",
+    "compressed_artifact_sha256": "7d49e8f85b7b229bb0fc9f6f3cb9665aaf9d287f6a873ac42701e3d77cc6e69f",
+    "content_artifact_version": 4,
+    "state_runtime_ui_versions": 1,
+    "server_sha256": "9e7229a79f40e40455eb4255d08246e98fde1078c5e3240655f728ffc8223557",
+    "simulator_sha256": "58a92117d50580784bb8ab23557097355c5fd01eb3741c1010e1d53deb5e5b10",
+    "generated_protocol_descriptor_sha256": "d66a326fa3c02c493efbd636bcaaa31c7fe94d0246dba377123a32efefc44614",
+    "descriptor_sha256": "b354112321e37c3d347dfce0882a3d468f15c09ea798dddcda76a877dffaa4d6",
+    "assets_manifest_sha256": "bb4ce31e660b14bb24477c9419f5778776cbc5f110711805d98e8691808aed1f",
+    "private_resolved_build_lock_sha256": "e393273d1fd61beee80b414ad8b53ba194f7ffed1dbd50d6ac2616a3c7d02882",
+    "tracked_root_lock_or_manifests_changed": false,
+    "source_oracles": "research/journey-rules and tests/scenarios/m1_fresh_account.json, with complete source/protocol file hashes in the actual report."
+  },
+  "protected_blocker_checkpoint": {
+    "directory": ".local/journey-checkpoints/907d84b817974f55",
+    "archive_bytes": 175919,
+    "archive_sha256": "4f3cbf8148ef6d9334da8cbffeb4a405924018ba603cdf4ac9aebc997b53fa0d",
+    "private_inventory_sha256": "b3c7ee44921e67a182d3a017d818d5953beacfcabef5213906b0f08a7b28da40",
+    "directory_mode": "0700",
+    "files_mode": "0600",
+    "complete_archive_read_and_private_before_after_identity_checks_passed": true,
+    "original_c84_and_7fa_checkpoint_inventories_unchanged": true,
+    "original_bd33_one_attempt_record_intact": true,
+    "private_payloads_published_or_committed": false,
+    "future_restore_authorized": false
+  },
+  "completed_segments": [
+    "registration_login", "source_initial_character", "onboarding_recovery",
+    "full_tutorial_learning_the_ropes", "lumbridge_copper",
+    "inventory_equipment_bank_shop", "goblin_combat",
+    "source_death_office_grave_recovery"
+  ],
+  "remaining_unchecked": [
+    "Cook ingredient acquisition and full mill/partial-delivery flow",
+    "Cook full reward and actual range recipe",
+    "Postquest logout/login, transport reconnect, owned server restart and known completion replay"
+  ],
+  "validation_before_actual_restore": {
+    "client_protocol_rust_tests": 61,
+    "python_orchestration_tests": 44,
+    "format_and_strict_clippy": "passed",
+    "native_actual_observed_checkpoint_preflight": "passed with zero RPCs before commit/execution",
+    "full_success_checkpoint_capture": "Implemented and covered by controlled machinery tests; not falsely claimed executed on this blocked journey."
+  },
+  "cleanup": {
+    "server_exit_clean": true,
+    "owned_game_server_and_postgresql_removed": true,
+    "transient_run_credentials_and_game_root_removed": true,
+    "protected_blocker_archive_retained": true,
+    "cleanup_passed": true
+  },
+  "public_evidence_hashes": [
+    {"path": ".local/evidence/m1-mainland-db74895-continuation.json", "bytes": 82858, "sha256": "172321456785a05f97985cfcd9f852130a621a9f51431b6f7f1f4001779af9bd"},
+    {"path": ".local/evidence/journey-907d84b817974f55/m1-fresh-account.json", "bytes": 71009, "sha256": "666c09f24178326968f925a6ef5dc6856ca59adff69ad5f37020b0d02fb66a10"},
+    {"path": ".local/evidence/journey-907d84b817974f55/m1-fresh-account.trace.jsonl", "bytes": 25082556, "sha256": "ba2bb4c9d2460a644fb637e56d6cb1fbb5de4a0a274122e461929329279e7a78"},
+    {"path": ".local/evidence/journey-907d84b817974f55/product-server-0.jsonl", "bytes": 49986, "sha256": "3ebf7b4b80632ce7d3bcf5628b51c2451f51ecb2a380f199657c2a3afa4fc07d"},
+    {"path": ".local/evidence/journey-907d84b817974f55/simulator.log", "bytes": 359, "sha256": "f8f22f4053f14b5b743f411e9e6aca1c8a8c110fa1bfee588aba5f533f14e293"}
+  ]
+}
