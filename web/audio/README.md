@@ -5,6 +5,15 @@
 playback engine; this revision binds independently executed original native
 policies into it. It does not implement UI or gameplay authority.
 
+**Current composed-timing admission: blocked on first-use cue readiness.**
+The `M1-AUDIO-COMPOSED-TIMING` candidate preserves the earlier `dbeb1ac`
+fix and repairs the measured ready-cue/device-batch boundary, but its final
+bounded composed run still reports a real cold2266 load/dispatch overrun.
+Do not promote the intervening passing run to final acceptance. Exact retained
+results, the three-invocation limit and the remaining work are in
+[`composed-timing.md`](composed-timing.md) and
+`evidence/composed-timing.json`.
+
 For current UI/shell integration, use the
 [player-scoped preference controls](#player-scoped-preference-controls-v1).
 The legacy composition example below does not identify saved playlists or

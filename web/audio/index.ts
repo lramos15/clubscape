@@ -5,7 +5,7 @@ import { BufferCache, repeatedEffect } from "./buffers.ts";
 import { actionId, COOK, cueKey, LEARNING, OBSERVED_SELECTORS, stableId, validateEvent } from "./events.ts";
 import { AudioFailure, failure, integer, requireAudio, unit } from "./errors.ts";
 import { EventLedger, SourceQueue } from "./queue.ts";
-import { sourceSchedulingLookahead } from "./clock.ts";
+import { sourceSchedulingLookahead, sourceRenderReservationDue } from "./clock.ts";
 import {
   APPROVED_PACK, loadCatalog, regionalTrack, selectWeighted, SOURCE_CYCLE_SECONDS,
   SOURCE_RATE, sourceRandomBelow, sourceRoll, validTile, sourceAssetForLevel,
@@ -110,6 +110,8 @@ interface Effect {
   requestedAt: number;
   dueAt: number;
   enqueuedCycle: number;
+  initialDelay: number;
+  submitted: Voice | null;
   epoch: number;
 }
 interface Voice {
@@ -180,6 +182,7 @@ class Runtime implements AudioHandle {
   private readonly voices = new Map<number, Voice>();
   private readonly representationLoads = new Map<number, { asset: SourceAsset; token: number }>();
   private readonly queue = new SourceQueue<Effect>();
+  private readonly submittedEffects = new Map<Effect, Voice>();
   private readonly ambientPending = new Map<string, Effect>();
   private readonly traces: AudioTrace[] = [];
   private readonly policyLimits = new Set<string>();
@@ -513,6 +516,7 @@ class Runtime implements AudioHandle {
       this.volumes[channel] = current[channel] / 100;
       this.nativeMixer[channel] = sourceSliderToMixer(channel, current[channel], current.master);
     }
+    this.refreshSubmittedEffects();
     if (this.preferences) this.preferences = parseSourceAudioPreferences({
       ...this.preferences, volumes: { ...this.preferences.volumes, current },
     });
@@ -1294,7 +1298,7 @@ class Runtime implements AudioHandle {
       repeats, ambient, ambientRandom, spatial: position.spatial,
       buffer: null, error: null, lateReported: false, requestedAt: now,
       dueAt: Math.max(this.nextCycleAt, now + SOURCE_CYCLE_SECONDS) + delay * SOURCE_CYCLE_SECONDS,
-      enqueuedCycle: this.processingCycle, epoch: this.epoch,
+      enqueuedCycle: this.processingCycle, initialDelay: delay, submitted: null, epoch: this.epoch,
     };
     if (ambient) {
       this.ambientPending.set(key, effect);
@@ -1365,6 +1369,45 @@ class Runtime implements AudioHandle {
         voice.level = position.gain;
         voice.gain.gain.setValueAtTime(position.gain * asset.inputGain, this.context.currentTime);
         this.trace("emitter_gain", { eventId: event.id, voiceId: voice.id, gain: position.gain });
+      }
+    }
+  }
+
+  private submitReadyEffects(): void {
+    const now = this.context.currentTime;
+    for (const effect of this.queue.values()) {
+      if (effect.submitted || effect.spatial !== null || effect.initialDelay !== 0 || effect.buffer === null ||
+        effect.error !== null || !effect.asset.playable || effect.epoch !== this.epoch ||
+        this.muted || this.nativeMixer[effect.channel] === 0 ||
+        !sourceRenderReservationDue(now, effect.dueAt, this.context.baseLatency)) continue;
+      try {
+        const buffer = repeatedEffect(this.context, effect.buffer, effect.asset, effect.repeats);
+        const voice = this.startVoice(effect.asset, buffer, effect.channel, effect.eventId, effect.actionId,
+          effect.key, effect.gain, effect.dueAt, null, false, 0);
+        effect.submitted = voice;
+        this.submittedEffects.set(effect, voice);
+        this.trace("effect_submitted", { eventId: effect.eventId, sourceId: effect.asset.sourceId,
+          requestedAt: effect.requestedAt, dueAt: effect.dueAt, when: voice.when,
+          submittedAt: this.context.currentTime, nativeDelay: effect.initialDelay,
+          enqueuedCycle: effect.enqueuedCycle, processingCycle: this.processingCycle });
+      } catch (error) {
+        effect.error = failure(error, "AUDIO_PLAYBACK", "Cannot submit the ready source cue");
+      }
+    }
+  }
+
+  private refreshSubmittedEffects(): void {
+    const now = this.context.currentTime;
+    for (const [effect, voice] of this.submittedEffects) {
+      if (voice.stopped || voice.when <= now) continue;
+      const volume = this.nativeMixer[effect.channel];
+      if (volume === 0) {
+        this.stopVoice(voice, "pending_source_volume_zero");
+        effect.submitted = null;
+      } else {
+        voice.nativeVolume = volume;
+        voice.calibrationGain = sourceMixerToAssetGain(volume, effect.asset.nativeMixerLevel ?? 128);
+        voice.gain.gain.setValueAtTime(effect.gain * effect.asset.inputGain * voice.calibrationGain, voice.when);
       }
     }
   }
@@ -1831,6 +1874,7 @@ class Runtime implements AudioHandle {
     }
     source.connect(gain);
     gain.connect(this.buses[channel]);
+    when = Math.max(when, this.context.currentTime);
     const voice: Voice = {
       id: ++this.voiceId, asset, source, gain, channel, eventId, actionId: action, key,
       when, level, spatial, ambient, ambientRandom, musicToken, stopped: false, calibrationGain,
@@ -1864,6 +1908,7 @@ class Runtime implements AudioHandle {
     source.disconnect();
     voice.gain.disconnect();
     this.voices.delete(voice.id);
+    for (const [effect, submitted] of this.submittedEffects) if (submitted === voice) this.submittedEffects.delete(effect);
     this.representationLoads.delete(voice.id);
     this.trace("ended", { voiceId: voice.id, sourceId: voice.asset.sourceId, assetId: voice.asset.id,
       eventId: voice.eventId, natural: !voice.retiring });
@@ -1955,6 +2000,7 @@ class Runtime implements AudioHandle {
     voice.source.disconnect();
     voice.gain.disconnect();
     this.voices.delete(voice.id);
+    for (const [effect, submitted] of this.submittedEffects) if (submitted === voice) this.submittedEffects.delete(effect);
     this.representationLoads.delete(voice.id);
     this.trace("stopped", { voiceId: voice.id, sourceId: voice.asset.sourceId, eventId: voice.eventId, reason });
   }
@@ -2046,11 +2092,14 @@ class Runtime implements AudioHandle {
           "The browser stopped servicing source cycles; stale effects were discarded rather than burst after a stalled tab.",
           true, { lateMs: (now - this.nextCycleAt) * 1000 }));
         this.queue.clear();
+        for (const voice of this.submittedEffects.values()) if (voice.when > now) this.stopVoice(voice, "source_clock_late");
+        this.submittedEffects.clear();
         changed = true;
         this.cancelUnusedLoads();
       }
       this.nextCycleAt = now + SOURCE_CYCLE_SECONDS;
     }
+    this.submitReadyEffects();
     // The device may publish several render quanta at once. Cover that cursor
     // step, but never schedule more than one native client cycle ahead.
     while (this.nextCycleAt <= now + this.schedulingLookahead) {
@@ -2061,7 +2110,11 @@ class Runtime implements AudioHandle {
       this.processingCycle++;
       this.queue.process((effect) => {
         changed = true;
-        if (effect.epoch !== this.epoch || this.muted || this.nativeMixer[effect.channel] === 0) return true;
+        this.submittedEffects.delete(effect);
+        if (effect.epoch !== this.epoch || this.muted || this.nativeMixer[effect.channel] === 0) {
+          if (effect.submitted && effect.submitted.when > this.context.currentTime) this.stopVoice(effect.submitted, "source_dispatch_gated");
+          return true;
+        }
         if (!effect.asset.playable) {
           this.trace("source_silence", {
             eventId: effect.eventId, sourceId: 2411, when: Math.max(now, cycleAt), frames: 110,
@@ -2091,15 +2144,19 @@ class Runtime implements AudioHandle {
             const position = this.nativePosition(effect.spatial);
             effect.gain = this.nativeMixer.area ? position.volume / this.nativeMixer.area : 0;
           }
-          const buffer = effect.ambient ? effect.buffer : repeatedEffect(this.context, effect.buffer, effect.asset, effect.repeats);
-          const when = Math.max(this.context.currentTime, cycleAt, effect.dueAt);
+          let voice = effect.submitted;
+          if (voice === null) {
+            const buffer = repeatedEffect(this.context, effect.buffer, effect.asset, effect.repeats);
+            voice = this.startVoice(effect.asset, buffer, effect.channel, effect.eventId,
+              effect.actionId, effect.key, effect.gain, Math.max(this.context.currentTime, cycleAt, effect.dueAt),
+              effect.spatial, effect.ambient, 0);
+          }
+          const when = voice.when;
           if (when - effect.dueAt > SOURCE_CYCLE_SECONDS + 1 / SOURCE_RATE) {
             this.notifyError(new AudioFailure("AUDIO_TIMING_LATE",
               `Cue ${effect.asset.sourceId} missed its source-cycle timing tolerance.`,
               true, { eventId: effect.eventId, lateMs: (when - effect.dueAt) * 1000 }));
           }
-          this.startVoice(effect.asset, buffer, effect.channel, effect.eventId, effect.actionId, effect.key,
-            effect.gain, when, effect.spatial, effect.ambient, 0);
           this.trace("effect_dispatched", {
             eventId: effect.eventId, sourceId: effect.asset.sourceId, dueAt: effect.dueAt, when,
             requestedAt: effect.requestedAt, sourceCycleAt: cycleAt,
@@ -2107,6 +2164,7 @@ class Runtime implements AudioHandle {
               : when + effect.asset.firstNonzeroFrame / SOURCE_RATE,
             lateMs: Math.max(0, when - effect.dueAt) * 1000,
             processingCalls: this.processingCycle - effect.enqueuedCycle,
+            submittedBeforeDispatch: effect.submitted !== null,
           });
         } catch (error) {
           this.notifyError(failure(error, "AUDIO_PLAYBACK", "Cannot start source effect"));
