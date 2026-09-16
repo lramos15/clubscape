@@ -143,6 +143,12 @@ fresh browser journey. The explicit equipment-fitting gate still fails
 931 of 2,034 legal item-frames; permitted gear fitting, turned scenery and
 frozen-window performance remain unfinished.
 
+The newer fitting candidate's claimed zero-failure metric is
+[not accepted](../milestones/evidence/m1-gear-metric-review.json): independent
+closed-mesh crossings with real two- and three-unit penetration report zero
+when all vertices lie outside. Its geometric coverage must be corrected and
+all legal poses remeasured before it replaces the current main version.
+
 The [browser-shell foundation](../milestones/evidence/m1-shell-integration.json)
 is now integrated with the actual WASM bridge, current authoritative contracts
 and source delivery. A subscriber-error repair preserves acknowledged writes
