@@ -29,6 +29,11 @@
     "sha256": "f7f1ce92826fb1bafc1e17ecbbaace34e0851c4e5044cbcfafa86817ac3539e1",
     "scope": "Initialization-only adaptation; actual original account defaults remain unobserved and production integration remains required."
   },
+  "water_fill_upgrade_approval": {
+    "path": "milestones/approvals/m1-water-fill-upgrade-v1.json",
+    "sha256": "438ba1e44c35f3ad7ebbe8e4c099b02f594df851bd2092a7f767bc4928b4c9d1",
+    "scope": "Source-backed water dependency and a later exact, tested, fenced upgrade of the same saved world. No migration or further restore has executed."
+  },
   "presentation_acceptance": null,
   "later_milestone_authorized": false,
   "gates": [

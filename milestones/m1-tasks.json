@@ -46,7 +46,7 @@
       "test_requirements": ["No migration or restore before exact target hashes, state invariants and execution bounds are committed", "Keep all old archives immutable; source5e history is not rewritten as if it ran on the new artifact", "Verify owned items/XP/quests/RNG/receipts unchanged, with explicit source/UI history qualification", "Do not replay completed Cook reward or acquire substitute test inputs", "No reuse of consumed prior allowances or silent migration during ordinary startup"],
       "acceptance": ["Actual old/new compatibility and source conservation are verified before the separately recorded live continuation"],
       "reserved_namespaces": [],
-      "source_notes": ["Owner approved approve_bounded_water_fill_upgrade. This blocked task admits no worker or database operation until the content target and exact plan exist."],
+      "source_notes": ["Owner approved approve_bounded_water_fill_upgrade. This blocked task admits no worker or database operation until the content target and exact plan exist.", "Existing GameStore::migrate_ui_content and migrate-ui operator already provide exclusive fencing, exact old/new hash checks, gameplay-state preservation, revision/audit updates and idempotency without replacing receipts/RNG. Reuse and validate that boundary where appropriate rather than introduce an unfenced swap. Exact legacy/current metadata compatibility still depends on the new target artifact; no migration was run during this inspection."],
       "parity_entries": [],
       "adaptations": [],
       "evidence": ["milestones/approvals/m1-water-fill-upgrade-v1.json"]

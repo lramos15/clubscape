@@ -6,6 +6,7 @@
   "authority": "a913bb79d79e555e9c50b710e360810d95eccf4f",
   "assignment": "225045533911ed7cd326217ebff020d1e5aa7b7e",
   "authority_consumed": true,
+  "subsequent_source_upgrade_approval": "milestones/approvals/m1-water-fill-upgrade-v1.json",
   "actual_archive_restore_invocations": 1,
   "commit_mapping": [
     {"owned": "3ea0b21ad3d1c3d5ff0a490188dfb915281a9538", "integrated": "202b555876c1efdf1baf94708c3da610442ce15a"},
