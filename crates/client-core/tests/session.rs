@@ -4,6 +4,9 @@ use clubscape_protocol::{
     client_message::Command, game, server_message::Result as Outcome,
 };
 
+#[path = "../../protocol/tests/support/recovery_context.rs"]
+mod recovery_fixture;
+
 fn id(number: u32) -> String {
     format!("00000000-0000-4000-8000-{number:012x}")
 }
@@ -124,6 +127,130 @@ fn poll(
     )
     .unwrap();
     core.handle_response(response(request, Outcome::WorldSnapshot(state)))
+}
+
+fn recovery_snapshot(revision: u64) -> game::WorldSnapshot {
+    let mut snapshot = snapshot(revision);
+    snapshot.ui = Some(game::GameplayUiView {
+        version: 1,
+        recovery: Some(game::UiRecoveryControls {
+            management: Some(game::UiRecoveryManagement {
+                context: Some(clubscape_protocol::recovery_context_to_wire(
+                    recovery_fixture::context(42),
+                )),
+                ..Default::default()
+            }),
+            ..Default::default()
+        }),
+        ..Default::default()
+    });
+    snapshot
+}
+
+fn recovery_all() -> game::world_input::Action {
+    game::world_input::Action::Ui(game::GameplayUiRequest {
+        expected_bank_revision: None,
+        request: Some(game::gameplay_ui_request::Request::RecoveryTakeAll(
+            game::UiRecoveryTakeAll {
+                selection: Some(clubscape_protocol::recovery_context_selection_to_wire(
+                    recovery_fixture::context(42).take_all.selection,
+                )),
+            },
+        )),
+    })
+}
+
+#[test]
+fn full_recovery_context_is_lossless_and_one_unknown_operation_retries_across_rejoin() {
+    let mut core = joined();
+    let source = recovery_snapshot(11);
+    let expected = source
+        .ui
+        .as_ref()
+        .unwrap()
+        .recovery
+        .as_ref()
+        .unwrap()
+        .management
+        .as_ref()
+        .unwrap()
+        .context
+        .as_ref()
+        .unwrap()
+        .clone();
+    poll(&mut core, 4, source).unwrap();
+    assert_eq!(core.recovery_context(), Some(&expected));
+    let original = core.submit_action(&id(5), recovery_all()).unwrap();
+    assert!(core.submit_action(&id(6), recovery_all()).is_err());
+    core.transport_lost();
+    join(&mut core, 6, 101, 1, 12);
+    let retry = core.retry_uncertain_input().unwrap();
+    assert_eq!(retry.request_id, original.request_id);
+    let (Some(Command::WorldInput(original)), Some(Command::WorldInput(retry))) =
+        (original.command, retry.command)
+    else {
+        panic!("one world operation expected")
+    };
+    assert_eq!(retry.sequence, original.sequence);
+    assert_eq!(retry.action, original.action);
+    assert_eq!(retry.world_session_id, id(101));
+}
+
+#[test]
+fn malformed_recovery_projection_does_not_replace_an_acknowledged_context() {
+    let mut core = joined();
+    poll(&mut core, 4, recovery_snapshot(11)).unwrap();
+    let before = core.snapshot().cloned();
+    let mut malformed = recovery_snapshot(12);
+    malformed
+        .ui
+        .as_mut()
+        .unwrap()
+        .recovery
+        .as_mut()
+        .unwrap()
+        .management
+        .as_mut()
+        .unwrap()
+        .context
+        .as_mut()
+        .unwrap()
+        .counts
+        .as_mut()
+        .unwrap()
+        .stored = 2;
+    assert!(poll(&mut core, 5, malformed).is_err());
+    assert_eq!(core.snapshot(), before.as_ref());
+    assert_eq!(core.next_sequence(), Some(1));
+}
+
+#[test]
+fn unsupported_full_context_is_not_fabricated_and_legacy_recovery_still_submits() {
+    let mut core = joined();
+    assert!(core.recovery_context().is_none());
+    assert!(core.submit_action(&id(4), recovery_all()).is_err());
+    assert_eq!(core.next_sequence(), Some(1));
+    let action = game::world_input::Action::Ui(game::GameplayUiRequest {
+        expected_bank_revision: None,
+        request: Some(game::gameplay_ui_request::Request::RecoveryTake(
+            game::UiRecoveryTake {
+                death: "death.fixture.one".into(),
+                storage: game::RecoveryStorage::DeathOffice as i32,
+                items: vec![game::UiRecoveryItemAmount {
+                    id: "recovery_item.fixture.one".into(),
+                    amount: Some(game::UiAmount {
+                        selection: Some(game::ui_amount::Selection::All(game::Empty {})),
+                    }),
+                }],
+            },
+        )),
+    });
+    let accepted = core.submit_action(&id(4), action.clone()).unwrap();
+    let Some(Command::WorldInput(input)) = accepted.command else {
+        panic!("world input")
+    };
+    assert_eq!(input.action, Some(action));
+    assert_eq!(input.sequence, 1);
 }
 
 #[test]

@@ -3,7 +3,12 @@ mod generated {
 }
 
 mod game_input;
+mod recovery_context;
 mod ui_input;
+pub use recovery_context::{
+    recovery_context_from_wire, recovery_context_selection_from_wire,
+    recovery_context_selection_to_wire, recovery_context_to_wire,
+};
 pub use ui_input::{ui_bank_revision, ui_request};
 
 pub use game_input::{

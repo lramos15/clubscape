@@ -128,6 +128,9 @@ impl ClientCore {
     pub fn snapshot(&self) -> Option<&game::WorldSnapshot> {
         self.snapshot.as_ref()
     }
+    pub fn recovery_context(&self) -> Option<&game::UiRecoveryContext> {
+        self.snapshot.as_ref().and_then(recovery_context)
+    }
     pub fn next_sequence(&self) -> Option<u64> {
         self.next_sequence
     }
@@ -221,6 +224,14 @@ impl ClientCore {
         if self.uncertain_input.is_some() {
             return Err(ClientError::InvalidState(
                 "Resolve the outstanding game operation before submitting another.",
+            ));
+        }
+        if matches!(&action, game::world_input::Action::Ui(ui)
+            if matches!(ui.request, Some(game::gameplay_ui_request::Request::RecoveryTakeAll(_))))
+            && self.recovery_context().is_none()
+        {
+            return Err(ClientError::InvalidState(
+                "The server has not published a current full recovery context.",
             ));
         }
         let input = game::WorldInput {
@@ -623,7 +634,24 @@ fn validate_account(account: Option<&Account>) -> Result<(), ClientError> {
     Ok(())
 }
 
+fn recovery_context(snapshot: &game::WorldSnapshot) -> Option<&game::UiRecoveryContext> {
+    snapshot
+        .ui
+        .as_ref()?
+        .recovery
+        .as_ref()?
+        .management
+        .as_ref()?
+        .context
+        .as_ref()
+}
+
 fn validate_snapshot(snapshot: &game::WorldSnapshot) -> Result<(), ClientError> {
+    if let Some(context) = recovery_context(snapshot) {
+        clubscape_protocol::recovery_context_from_wire(context).map_err(|_| {
+            ClientError::InvalidResponse("The authoritative recovery context is inconsistent.")
+        })?;
+    }
     let player = snapshot
         .player
         .as_ref()

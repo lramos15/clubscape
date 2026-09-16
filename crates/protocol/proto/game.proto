@@ -393,6 +393,7 @@ message GameplayUiRequest {
     UiBankAmount bank_amount = 23;
     UiRecoveryTake recovery_take = 24;
     UiRecoveryBankAll recovery_bank_all = 25;
+    UiRecoveryTakeAll recovery_take_all = 26;
   }
 }
 message UiIdentity { string id = 1; }
@@ -406,6 +407,24 @@ message UiRecoveryItemAmount { string id = 1; UiAmount amount = 2; }
 message UiRecoveryRecordSelection { string death = 1; repeated string items = 2; }
 message UiRecoveryTake { string death = 1; RecoveryStorage storage = 2; repeated UiRecoveryItemAmount items = 3; }
 message UiRecoveryBankAll { repeated UiRecoveryRecordSelection records = 1; }
+message UiRecoveryGraveContext { string interface = 1; string death = 2; }
+message UiRecoveryOfficeContext { string interface = 1; optional string instance = 2; }
+message UiRecoveryContextIdentity {
+  oneof context {
+    UiRecoveryGraveContext grave = 1;
+    UiRecoveryOfficeContext death_office = 2;
+  }
+}
+message UiRecoveryContextEntrySelection {
+  string id = 1; uint32 quantity = 2; RecoveryStorage current_storage = 3;
+}
+message UiRecoveryContextRecordSelection {
+  string death = 1; repeated UiRecoveryContextEntrySelection entries = 2;
+}
+message UiRecoveryContextSelection {
+  UiRecoveryContextIdentity context = 1; repeated UiRecoveryContextRecordSelection records = 2;
+}
+message UiRecoveryTakeAll { UiRecoveryContextSelection selection = 1; }
 message UiItemAction { uint32 inventory_slot = 1; string expected_item = 2; optional string expected_instance = 3; string action = 4; }
 message UiBankMove { string entry_id = 1; optional string before_entry_id = 2; uint32 tab = 3; }
 message UiBankWithdrawal { string entry_id = 1; uint32 quantity = 2; bool noted = 3; }
@@ -462,6 +481,43 @@ message UiRecoveryPanelControl {
 message UiRecoveryManagement {
   string bank_revision = 1; repeated UiRecoveryPanelControl panels = 2;
   Permission bank_all = 3; repeated UiRecoveryRecordSelection bank_all_records = 4;
+  UiRecoveryContext context = 5;
+}
+enum UiRecoveryCapacityUnit {
+  RECOVERY_CAPACITY_UNSPECIFIED = 0;
+  RECOVERY_CAPACITY_ENTRIES = 1;
+  RECOVERY_CAPACITY_ITEM_TYPES_OR_INSTANCES = 2;
+}
+message UiRecoveryContextCounts {
+  uint32 entries = 1; optional uint32 native_item_types = 2; uint32 capacity = 3;
+  UiRecoveryCapacityUnit capacity_unit = 4; uint32 stored = 5; uint32 offered = 6;
+}
+message UiRecoverySourceTypeCaption {
+  uint32 source_id = 1; string quantity = 2; string unit_fee = 3; string total_fee = 4;
+}
+message UiRecoveryTypeCaption {
+  oneof caption {
+    UiRecoverySourceTypeCaption source = 1;
+    string unavailable_reason = 2;
+  }
+}
+message UiRecoveryContextSlot {
+  uint32 slot = 1; string death = 2; RecoveryStorage current_storage = 3;
+  UiRecoveryEntryControl entry = 4; UiRecoveryTypeCaption selected_type_caption = 5;
+}
+message UiRecoveryPlannedItem {
+  string death = 1; string id = 2; uint32 quantity = 3; string fee = 4;
+}
+message UiRecoveryExecution {
+  string total_fee = 1; repeated UiRecoveryPlannedItem transfers = 2; bool partial = 3;
+}
+message UiRecoveryTakeAllControl {
+  Permission permission = 1; UiRecoveryContextSelection selection = 2; UiRecoveryExecution plan = 3;
+}
+message UiRecoveryContext {
+  uint32 version = 1; UiRecoveryContextIdentity identity = 2;
+  UiRecoveryContextCounts counts = 3; repeated UiRecoveryContextSlot slots = 4;
+  UiRecoveryTakeAllControl take_all = 5;
 }
 message UiAppearanceChoice { uint32 value = 1; optional string label = 2; Permission permission = 3; }
 message UiAppearanceParameter { string key = 1; repeated UiAppearanceChoice choices = 2; }

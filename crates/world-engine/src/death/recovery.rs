@@ -30,9 +30,29 @@ pub(crate) struct RecoveryPlan {
     pub character: CharacterState,
     pub records: BTreeMap<DeathId, DeathRecord>,
     pub events: Vec<GameEvent>,
+    pub transfers: Vec<RecoveryPlannedItemView>,
+    pub partial: bool,
 }
 
 impl RecoveryPlan {
+    pub fn preview(&self) -> GameResult<RecoveryExecutionView> {
+        let mut total = 0_u64;
+        for transfer in &self.transfers {
+            let fee = transfer
+                .fee
+                .parse::<u64>()
+                .map_err(|_| invalid_state("Recovery plan contains an invalid fee."))?;
+            total = total
+                .checked_add(fee)
+                .ok_or_else(|| invalid_state("Combined recovery fee overflow."))?;
+        }
+        Ok(RecoveryExecutionView {
+            total_fee: total.to_string(),
+            transfers: self.transfers.clone(),
+            partial: self.partial,
+        })
+    }
+
     pub fn install(self, world: &mut WorldState, character: &mut CharacterState) -> Vec<GameEvent> {
         *character = self.character;
         world.runtime.deaths.extend(self.records);
@@ -196,6 +216,7 @@ impl WorldEngine {
             .ok_or_else(|| unavailable("Recovery policy is not bound."))?;
         let mut candidate = character.clone();
         let mut events = Vec::new();
+        let mut transfers = Vec::new();
         let mut prior_error = None;
         for batch in batches {
             let rule = match batch.storage {
@@ -271,6 +292,12 @@ impl WorldEngine {
                     remaining.fee_paid = remaining.fee_paid.saturating_sub(applied_credit);
                 }
                 recovered.push(selected.id.clone());
+                transfers.push(RecoveryPlannedItemView {
+                    death: batch.death.clone(),
+                    id: selected.id.clone(),
+                    quantity: Quantity::new(plan.quantity)?,
+                    fee: plan.value.fee.to_string(),
+                });
                 stacks.push(plan.value.stack);
             }
             if !recovered.is_empty() {
@@ -301,6 +328,7 @@ impl WorldEngine {
                 GameError::new(GameErrorCode::NotOwned, "Nothing can be reclaimed.")
             }));
         }
+        let partial = prior_error.is_some();
         if let Some(error) = prior_error {
             events.push(GameEvent::Message {
                 text: format!("Some recovery items remain: {}", error.message),
@@ -310,6 +338,8 @@ impl WorldEngine {
             character: candidate,
             records,
             events,
+            transfers,
+            partial,
         })
     }
 }

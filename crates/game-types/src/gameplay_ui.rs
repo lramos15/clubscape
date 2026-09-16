@@ -276,6 +276,9 @@ pub enum GameplayUiRequest {
         storage: RecoveryStorage,
         items: Vec<crate::RecoveryItemAmount>,
     },
+    RecoveryTakeAll {
+        selection: crate::RecoveryContextSelection,
+    },
     RecoveryBankAll {
         records: Vec<crate::RecoveryRecordSelection>,
     },

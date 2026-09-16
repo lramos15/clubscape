@@ -50,6 +50,65 @@ fn inventory_actions(values: &[InventoryActionsUiView]) -> Vec<Value> {
     })).collect()
 }
 
+fn recovery_entry(
+    entry: &clubscape_game_types::RecoveryEntryControlView,
+) -> Result<Value, BridgeError> {
+    Ok(json!({
+        "id":entry.id,"item":item(&entry.item)?,
+        "unitFee":decimal(&entry.unit_fee, false)?,
+        "fullStackFee":decimal(&entry.full_stack_fee, false)?,
+        "inventoryCapacity":entry.inventory_capacity,"bankCapacity":entry.bank_capacity,
+        "take":entry.take,"bank":entry.bank,
+    }))
+}
+
+fn recovery_context(
+    value: &clubscape_game_types::RecoveryContextView,
+) -> Result<Value, BridgeError> {
+    value.validate_shape().map_err(|_| {
+        BridgeError::protocol("The authoritative recovery context is incomplete or inconsistent.")
+    })?;
+    let slots = value
+        .slots
+        .iter()
+        .map(|slot| {
+            let caption = match &slot.selected_type_caption {
+                clubscape_game_types::RecoveryTypeCaption::Source {
+                    source_id,
+                    quantity,
+                    unit_fee,
+                    total_fee,
+                } => json!({
+                    "kind":"source","sourceId":source_id,"quantity":quantity,
+                    "unitFee":unit_fee,"totalFee":total_fee,
+                }),
+                clubscape_game_types::RecoveryTypeCaption::Unavailable { reason } => {
+                    json!({"kind":"unavailable","reason":reason})
+                }
+            };
+            Ok(json!({
+                "slot":slot.slot,"death":slot.death,"currentStorage":slot.current_storage,
+                "entry":recovery_entry(&slot.entry)?,"selectedTypeCaption":caption,
+            }))
+        })
+        .collect::<Result<Vec<_>, BridgeError>>()?;
+    Ok(json!({
+        "version":value.version,"identity":value.identity,
+        "counts":{
+            "entries":value.counts.entries,"nativeItemTypes":value.counts.native_item_types,
+            "capacity":value.counts.capacity,"capacityUnit":value.counts.capacity_unit,
+            "stored":value.counts.stored,"offered":value.counts.offered,
+        },
+        "slots":slots,
+        "takeAll":{
+            "permission":value.take_all.permission,"selection":value.take_all.selection,
+            "plan":value.take_all.plan.as_ref().map(|plan| json!({
+                "totalFee":plan.total_fee,"transfers":plan.transfers,"partial":plan.partial,
+            })),
+        },
+    }))
+}
+
 fn recovery_management(
     value: &clubscape_game_types::RecoveryManagementView,
 ) -> Result<Value, BridgeError> {
@@ -68,13 +127,7 @@ fn recovery_management(
             if !entries.insert(&entry.id) {
                 return Err(BridgeError::protocol("Duplicate authoritative recovery entry identity."));
             }
-            Ok(json!({
-                "id":entry.id,"item":item(&entry.item)?,
-                "unitFee":decimal(&entry.unit_fee, false)?,
-                "fullStackFee":decimal(&entry.full_stack_fee, false)?,
-                "inventoryCapacity":entry.inventory_capacity,"bankCapacity":entry.bank_capacity,
-                "take":entry.take,"bank":entry.bank,
-            }))
+            recovery_entry(entry)
         }).collect::<Result<Vec<_>, BridgeError>>()?;
         Ok(json!({
             "death":panel.death,"storage":panel.storage,"entries":rows,
@@ -92,10 +145,14 @@ fn recovery_management(
             ));
         }
     }
-    Ok(json!({
+    let mut result = json!({
         "bankRevision":decimal(&value.bank_revision, false)?,"panels":projected,
         "bankAll":value.bank_all,"bankAllRecords":value.bank_all_records,
-    }))
+    });
+    if let Some(context) = &value.context {
+        result["context"] = recovery_context(context)?;
+    }
+    Ok(result)
 }
 
 /// Pure shared-Rust-DTO to shared-TypeScript-DTO projection.

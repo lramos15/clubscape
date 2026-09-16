@@ -76,6 +76,8 @@ pub struct RecoveryPanelControlView {
 #[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]
 pub struct RecoveryManagementView {
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub context: Option<crate::RecoveryContextView>,
     pub bank_revision: String,
     pub panels: Vec<RecoveryPanelControlView>,
     pub bank_all: UiPermission,

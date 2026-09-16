@@ -3,7 +3,7 @@ use super::*;
 use crate::RecoveryView;
 use crate::death::{RecoveryBatch, RecoveryDestination, RecoveryTransfer, recovery_fee};
 
-fn all_items(view: &RecoveryView) -> Vec<RecoveryItemAmount> {
+pub(super) fn all_items(view: &RecoveryView) -> Vec<RecoveryItemAmount> {
     view.entries
         .iter()
         .map(|entry| RecoveryItemAmount {
@@ -14,7 +14,7 @@ fn all_items(view: &RecoveryView) -> Vec<RecoveryItemAmount> {
 }
 
 impl WorldEngine {
-    fn recovery_ui_permission(
+    pub(super) fn recovery_ui_permission(
         &self,
         world: &WorldState,
         character: &CharacterState,
@@ -74,7 +74,7 @@ impl WorldEngine {
         Ok(plan.install(world, character))
     }
 
-    fn recovery_context_panels(
+    pub(super) fn recovery_context_panels(
         &self,
         world: &WorldState,
         character: &CharacterState,
@@ -290,6 +290,7 @@ impl WorldEngine {
                     .map(|_| ())
             });
         Ok(RecoveryManagementView {
+            context: Some(self.current_recovery_context(world, character, views, &panels)?),
             bank_revision: character
                 .runtime
                 .ui

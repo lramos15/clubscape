@@ -2,6 +2,7 @@ mod bank_controls;
 mod inventory_actions;
 mod production;
 mod projections;
+mod recovery_context;
 mod recovery_controls;
 mod validation;
 
@@ -344,6 +345,9 @@ impl WorldEngine {
             GameplayUiRequest::RecoveryBankAll { records } => {
                 events.extend(self.bank_all_recovery_ui(&mut draft, &mut character, records)?);
             }
+            GameplayUiRequest::RecoveryTakeAll { selection } => {
+                events.extend(self.take_all_recovery_ui(&mut draft, &mut character, selection)?);
+            }
             GameplayUiRequest::RequestRecoveryDiscard {
                 death,
                 storage,
@@ -414,6 +418,7 @@ impl WorldEngine {
             GameplayUiRequest::ProductionSelect { .. }
             | GameplayUiRequest::ProductionSelectAll { .. }
             | GameplayUiRequest::RecoveryTake { .. }
+            | GameplayUiRequest::RecoveryTakeAll { .. }
             | GameplayUiRequest::RecoveryBankAll { .. }
             | GameplayUiRequest::BankDepositEquipment
             | GameplayUiRequest::BankPlaceholder { .. }

@@ -25,7 +25,9 @@ pub(crate) fn capability(request: &GameplayUiRequest) -> Option<&'static str> {
         GameplayUiRequest::ProductionSelectAll { .. } | GameplayUiRequest::BankSetAmount { .. } => {
             Some(crate::gameplay_ui::AMOUNTS_CAPABILITY)
         }
-        GameplayUiRequest::RecoveryTake { .. } | GameplayUiRequest::RecoveryBankAll { .. } => {
+        GameplayUiRequest::RecoveryTake { .. }
+        | GameplayUiRequest::RecoveryTakeAll { .. }
+        | GameplayUiRequest::RecoveryBankAll { .. } => {
             Some(crate::gameplay_ui::RECOVERY_CAPABILITY)
         }
         _ => None,
@@ -103,6 +105,13 @@ pub(crate) fn wire(
                         items: record.items.into_iter().map(|id| id.to_string()).collect(),
                     })
                     .collect(),
+            })
+        }
+        GameplayUiRequest::RecoveryTakeAll { selection } => {
+            R::RecoveryTakeAll(game::UiRecoveryTakeAll {
+                selection: Some(clubscape_protocol::recovery_context_selection_to_wire(
+                    selection,
+                )),
             })
         }
         GameplayUiRequest::UiDocumentPage { document_id, page } => {
@@ -247,6 +256,7 @@ mod tests {
             json!({"kind":"bank_set_amount","amount":{"kind":"all"},"noted":false}),
             json!({"kind":"recovery_take","death":"death.fixture","storage":"grave","items":[{"id":"recovery_item.fixture","amount":{"kind":"quantity","quantity":2}}]}),
             json!({"kind":"recovery_bank_all","records":[{"death":"death.fixture","items":["recovery_item.fixture"]}]}),
+            json!({"kind":"recovery_take_all","selection":{"context":{"kind":"death_office","interface":"interface.fixture","instance":"instance.fixture"},"records":[{"death":"death.fixture","entries":[{"id":"recovery_item.fixture","quantity":7,"current_storage":"grave"}]}]}}),
             json!({"kind":"ui_document_page","document_id":"document.fixture","page":1}),
             json!({"kind":"bank_placeholder","entry_id":"9007199254740993"}),
             json!({"kind":"ui_dismiss","presentation_id":"presentation.fixture"}),
@@ -268,7 +278,7 @@ mod tests {
             json!({"kind":"ui_confirm","confirmation_id":"confirmation.fixture","accept":true}),
             json!({"kind":"public_chat","channel":"public","text":"Exact source public text"}),
         ];
-        assert_eq!(requests.len(), 24);
+        assert_eq!(requests.len(), 25);
         for mut input in requests {
             let request: GameplayUiRequest = serde_json::from_value(input.clone()).unwrap();
             if request.requires_bank_revision() {

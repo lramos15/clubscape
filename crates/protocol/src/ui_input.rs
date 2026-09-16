@@ -166,6 +166,20 @@ pub fn ui_request(value: &game::GameplayUiRequest) -> Result<GameplayUiRequest, 
             }
             GameplayUiRequest::RecoveryBankAll { records }
         }
+        R::RecoveryTakeAll(value) => {
+            let selection = crate::recovery_context_selection_from_wire(
+                value
+                    .selection
+                    .as_ref()
+                    .ok_or_else(|| invalid("An exact recovery context selection is required."))?,
+            )?;
+            if selection.records.is_empty() {
+                return Err(invalid(
+                    "A whole-context request requires owned recovery entries.",
+                ));
+            }
+            GameplayUiRequest::RecoveryTakeAll { selection }
+        }
         R::ItemAction(value) => GameplayUiRequest::ItemAction {
             inventory_slot: inventory_slot(value.inventory_slot)?,
             expected_item: item(&value.expected_item)?,

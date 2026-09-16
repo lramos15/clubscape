@@ -7,6 +7,10 @@ use serde_json::Value;
 
 use crate::{BridgeError, gameplay_ui, ui_input};
 
+#[cfg(test)]
+#[path = "../../protocol/tests/support/recovery_context.rs"]
+mod recovery_fixture;
+
 pub(crate) fn validate_capabilities(
     value: &game::GameplayUiView,
     capabilities: &std::collections::BTreeSet<String>,
@@ -58,6 +62,12 @@ fn recovery_management(
     value: &game::UiRecoveryManagement,
 ) -> Result<types::RecoveryManagementView, BridgeError> {
     Ok(types::RecoveryManagementView {
+        context: value
+            .context
+            .as_ref()
+            .map(clubscape_protocol::recovery_context_from_wire)
+            .transpose()
+            .map_err(|_| invalid())?,
         bank_revision: value.bank_revision.clone(),
         panels: value
             .panels
@@ -817,6 +827,103 @@ mod tests {
     }
 
     #[test]
+    fn full_recovery_context_is_lossless_from_wire_to_camel_case_without_legacy_selection() {
+        let context = recovery_fixture::context(9_007_199_254_740_993);
+        let mut original = fixture();
+        original.recovery.as_mut().unwrap().management = Some(game::UiRecoveryManagement {
+            context: Some(clubscape_protocol::recovery_context_to_wire(
+                context.clone(),
+            )),
+            bank_revision: "9007199254742993".into(),
+            panels: Vec::new(),
+            bank_all: allowed(),
+            bank_all_records: Vec::new(),
+        });
+        let bytes = original.encode_to_vec();
+        let projected = decode(&game::GameplayUiView::decode(bytes.as_slice()).unwrap()).unwrap();
+        let view = &projected["recovery"]["management"]["context"];
+        assert_eq!(view["identity"], serde_json::json!(context.identity));
+        assert_eq!(view["counts"]["entries"], 2);
+        assert_eq!(view["counts"]["nativeItemTypes"], 1);
+        assert_eq!(view["counts"]["capacity"], 120);
+        assert_eq!(view["slots"][0]["entry"]["unitFee"], "9007199254740993");
+        assert_eq!(view["slots"][1]["slot"], 1);
+        assert_eq!(view["slots"][1]["entry"]["item"]["sourceId"], 882);
+        assert_eq!(view["slots"][0]["selectedTypeCaption"]["quantity"], "14");
+        assert_eq!(
+            view["takeAll"]["selection"],
+            serde_json::json!(context.take_all.selection)
+        );
+        assert_eq!(
+            view["takeAll"]["plan"]["totalFee"],
+            context.take_all.plan.unwrap().total_fee
+        );
+        assert!(view.get("take_all").is_none());
+
+        let mut malformed = original.clone();
+        malformed
+            .recovery
+            .as_mut()
+            .unwrap()
+            .management
+            .as_mut()
+            .unwrap()
+            .context
+            .as_mut()
+            .unwrap()
+            .slots[1]
+            .slot = 0;
+        assert!(decode(&malformed).is_err());
+        original
+            .recovery
+            .as_mut()
+            .unwrap()
+            .management
+            .as_mut()
+            .unwrap()
+            .context = None;
+        assert!(
+            decode(&original).unwrap()["recovery"]["management"]
+                .get("context")
+                .is_none()
+        );
+    }
+
+    #[test]
+    fn empty_office_identity_survives_wire_projection_without_a_fake_death_record() {
+        let mut context = recovery_fixture::context(42);
+        context.slots.clear();
+        context.counts.entries = 0;
+        context.counts.native_item_types = Some(0);
+        context.counts.stored = 0;
+        context.counts.offered = 0;
+        context.take_all.selection.records.clear();
+        context.take_all.permission = types::UiPermission {
+            allowed: false,
+            code: Some(types::GameErrorCode::NotOwned),
+            reason: Some("There are no recovery items to take.".into()),
+        };
+        context.take_all.plan = None;
+        let mut original = fixture();
+        original.recovery.as_mut().unwrap().management = Some(game::UiRecoveryManagement {
+            context: Some(clubscape_protocol::recovery_context_to_wire(
+                context.clone(),
+            )),
+            bank_revision: "0".into(),
+            panels: Vec::new(),
+            bank_all: allowed(),
+            bank_all_records: Vec::new(),
+        });
+        let projected = decode(&original).unwrap();
+        let result = &projected["recovery"]["management"]["context"];
+        assert_eq!(result["identity"], serde_json::json!(context.identity));
+        assert_eq!(result["slots"], serde_json::json!([]));
+        assert_eq!(result["counts"]["capacity"], 120);
+        assert_eq!(result["takeAll"]["permission"]["allowed"], false);
+        assert!(result["takeAll"]["plan"].is_null());
+    }
+
+    #[test]
     fn semantic_amount_and_recovery_controls_keep_distinct_fees_capacities_and_opaque_selections() {
         let mut original = fixture();
         original.production.as_mut().unwrap().recipes[0].all = allowed();
@@ -833,6 +940,7 @@ mod tests {
         let mut stack = item();
         stack.stack.as_mut().unwrap().quantity = 7;
         original.recovery.as_mut().unwrap().management = Some(game::UiRecoveryManagement {
+            context: None,
             bank_revision: "9007199254742993".into(),
             panels: vec![game::UiRecoveryPanelControl {
                 death: "death.fixture".into(),
