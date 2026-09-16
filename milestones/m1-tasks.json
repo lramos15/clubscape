@@ -34,6 +34,24 @@
   },
   "tasks": [
     {
+      "id": "M1-WORLD-ACTION-ROUTING",
+      "goal": "Make one-click required world actions approach a valid source contact and execute the same selected action without manual walk-then-click workarounds or client-owned gameplay.",
+      "status": "BLOCKED",
+      "specs": ["prompt.md sections3.3/13/30", "spec/browser-implementation.md", "research/journey-rules/activities.json", "milestones/evidence/m1-world-action-routing-gap.json"],
+      "dependencies": ["M1-NATIVE-RECOVERY-CONTRACT", "M1-CAMERA-INTEGRATION"],
+      "allowed_paths": ["crates/client-core/**", "crates/game-types/**", "crates/protocol/**", "crates/wasm/**", "crates/world-engine/**", "web/shared/**", "web/app/**", "web/ui/**"],
+      "forbidden_paths": ["prompt.md", "content/**", "assets/source/**", "assets/manifests/**", "research/reference-pack/**", "tools/reference-pack/**", "spec/art-style.md", "spec/interface-parity.md", "spec/adaptations.md", ".local/journey-checkpoints/**"],
+      "outputs": ["Reviewed typed approach/execute/cancel contract before overlapping implementation", "Real source-target routing and deferred execution with complete consumer wiring", "Actual browser-control and authoritative interruption/replay regressions"],
+      "validation_commands": ["cargo test --locked -p clubscape-client-core -p clubscape-protocol -p clubscape-wasm -p clubscape-world-engine", "pnpm --dir web typecheck", "pnpm --dir web test", "pnpm --dir web test:isolated --game-root <owned exact source bundle>"],
+      "test_requirements": ["Serialize shared schemas with the active recovery/camera integration owners; this blocked task admits no worker yet", "Do not enable a denied action by ignoring source guards or parsing error prose", "Preserve exact target/item identities, source contact/collision/sight/instance and action cadence", "Queued movement is not a successful interaction; no optimistic inventory/XP/reward changes", "Cover source objects, NPCs, ground items and selected item/spell interactions, including moving/expired/blocked targets and superseding input", "Retain existing low-level/direct intent behavior unless an explicit reviewed typed extension replaces it"],
+      "acceptance": ["The actual normal browser can request required world actions from a distance and receive source-correct approach/execution or explicit genuine failure; full M1 acceptance remains separate"],
+      "reserved_namespaces": [],
+      "source_notes": ["Current2f3704d worldPointer disables immediate out-of-range actions and only shows a notice on primary click. InputController forwards the pick without a pending action, and the inspected ordinary engine interaction path enforces immediate range. Headless prewalking does not certify browser source behavior."],
+      "parity_entries": [],
+      "adaptations": [],
+      "evidence": ["milestones/evidence/m1-world-action-routing-gap.json"]
+    },
+    {
       "id": "M1-AUDIO-CONTROL-READINESS",
       "goal": "Make the actual active source2266 control input ready before its first native deadline, closing the retained cold-use loading/timing failure without changing source policy.",
       "status": "IMPLEMENTING",

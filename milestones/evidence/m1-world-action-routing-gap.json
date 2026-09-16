@@ -1,0 +1,42 @@
+{
+  "schema_version": 1,
+  "milestone": "m1-starter-journey",
+  "result": "required_one_click_world_action_approach_not_wired",
+  "ui_candidate_revision": "2f3704d7132e02e15bf5c306549abcd3ccd21962",
+  "engine_revision": "50e33e31ce2342b138af8433b1a731188821bbaf",
+  "scope": "Direct trace of world pointer handling, app input forwarding and the current low-level interaction dispatcher; no new browser invocation.",
+  "observed_code": [
+    {
+      "path": "web/ui/index.ts",
+      "surface": "UiController.worldPointer",
+      "finding": "Entity actions are disabled when their current immediate permission is false. A primary click on the disabled first action only calls show; it sends neither movement nor a deferred interaction. Ground Take is similarly disabled by current canTake."
+    },
+    {
+      "path": "web/app/input.ts",
+      "surface": "InputController pointer forwarding",
+      "finding": "The shell forwards the picked world target to the UI. It does not retain an approach-and-act request."
+    },
+    {
+      "path": "crates/world-engine/src/actions.rs",
+      "surface": "WorldEngine::interact",
+      "finding": "Ordinary low-level interactions require the current source target/range before applying the interaction. Direct in-range requests work; this inspected path does not queue the requested action after movement."
+    }
+  ],
+  "qualification": [
+    "Current immediate permission is not a substitute for the source menu behavior that approaches an interactable before executing its requested action.",
+    "The headless runner explicitly approaches targets with separate observed walk/door steps; its success does not prove the missing single-click browser behavior.",
+    "No new runtime click, renderer pick or original-server observation was performed for this code-trace record.",
+    "Existing low-level range/guard rejection is not itself permission to weaken authority or invent a client success."
+  ],
+  "required_work": [
+    "A typed source approach-and-act path preserving the selected target/action/item identity and all non-range source permissions.",
+    "Rust/WASM interaction-state ownership and authoritative geometry/guards; do not parse denial prose or recreate game rules in UI TypeScript.",
+    "Recheck identity, eligibility, range, sight and instance at execution; handle moving/disappearing targets, blocked paths, interruption, logout/reconnect and superseding input.",
+    "Keep queued/approaching acceptance distinct from actual gameplay completion and receipts; no optimistic grants or duplicate action replay.",
+    "Verify actual far-target and blocked-target browser controls rather than requiring an undocumented manual walk-then-click workaround."
+  ],
+  "task": "M1-WORLD-ACTION-ROUTING",
+  "implementation_started": false,
+  "shared_schema_edits_authorized_by_this_record": false,
+  "milestone_accepted": false
+}
