@@ -9,7 +9,8 @@ UI_INTERFACES = {"interface.level_up", "interface.level_up_notification", "inter
 
 def legacy_content(content):
     """Remove only this versioned extension so the retained v3 behavior fingerprint remains a gate."""
-    result = deepcopy(content)
+    from water_fill import without_water
+    result = without_water(content)
     if result.get("ui") is None:
         return result
     result.pop("ui")

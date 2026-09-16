@@ -1,0 +1,43 @@
+
+running 4 tests
+
+thread 'persisted::ordinary_recipe_batches_retain_their_serialized_count_mode_behavior' (3896981) panicked at crates/world-engine/tests/item_on_target.rs:389:21:
+assertion `left == right` failed: legacy/remaining=0/deadline=9
+  left: true
+ right: false
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+thread 'persisted::malformed_serialized_work_is_rejected_before_repeated_due_ticks' (3896980) panicked at crates/world-engine/tests/item_on_target.rs:371:13:
+legacy: accepted serialized work then repeatedly failed its due tick: first=GameError { code: Unavailable, message: "Item-on-only production permits one single conversion, not Make-X or batching." }, repeated=GameError { code: Unavailable, message: "Item-on-only production permits one single conversion, not Make-X or batching." }
+persisted::malformed_serialized_work_is_rejected_before_repeated_due_ticks --- FAILED
+persisted::ordinary_recipe_batches_retain_their_serialized_count_mode_behavior --- FAILED
+.
+thread 'persisted::serialized_item_on_counts_and_modes_are_checked_at_every_deadline' (3896982) panicked at crates/world-engine/tests/item_on_target.rs:352:9:
+legacy/remaining=0/deadline=9: expected_valid=false, character=Ok(()), world=Ok(())
+selected_make_x/remaining=1/deadline=9: expected_valid=false, character=Ok(()), world=Ok(())
+legacy/remaining=2/deadline=9: expected_valid=false, character=Ok(()), world=Ok(())
+world_target/remaining=2/deadline=9: expected_valid=false, character=Ok(()), world=Ok(())
+selected_make_x/remaining=2/deadline=9: expected_valid=false, character=Ok(()), world=Ok(())
+legacy/remaining=0/deadline=10: expected_valid=false, character=Ok(()), world=Ok(())
+selected_make_x/remaining=1/deadline=10: expected_valid=false, character=Ok(()), world=Ok(())
+legacy/remaining=2/deadline=10: expected_valid=false, character=Ok(()), world=Ok(())
+world_target/remaining=2/deadline=10: expected_valid=false, character=Ok(()), world=Ok(())
+selected_make_x/remaining=2/deadline=10: expected_valid=false, character=Ok(()), world=Ok(())
+legacy/remaining=0/deadline=11: expected_valid=false, character=Ok(()), world=Ok(())
+selected_make_x/remaining=1/deadline=11: expected_valid=false, character=Ok(()), world=Ok(())
+legacy/remaining=2/deadline=11: expected_valid=false, character=Ok(()), world=Ok(())
+world_target/remaining=2/deadline=11: expected_valid=false, character=Ok(()), world=Ok(())
+selected_make_x/remaining=2/deadline=11: expected_valid=false, character=Ok(()), world=Ok(())
+ 3/4
+persisted::serialized_item_on_counts_and_modes_are_checked_at_every_deadline --- FAILED
+
+failures:
+
+failures:
+    persisted::malformed_serialized_work_is_rejected_before_repeated_due_ticks
+    persisted::ordinary_recipe_batches_retain_their_serialized_count_mode_behavior
+    persisted::serialized_item_on_counts_and_modes_are_checked_at_every_deadline
+
+test result: FAILED. 1 passed; 3 failed; 0 ignored; 0 measured; 5 filtered out; finished in 0.05s
+
+error: test failed, to rerun pass `-p clubscape-world-engine --test item_on_target`

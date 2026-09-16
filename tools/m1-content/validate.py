@@ -9,6 +9,7 @@ import subprocess
 import sys
 
 from common import BINDINGS, CONTENT, ROOT, load, sha, write
+from water_fill import DIRECTORY as WATER
 
 
 BUILD = [sys.executable, "tools/m1-content/build.py", "--json-output", "tools/m1-content/.local/game-content.json"]
@@ -26,9 +27,10 @@ def normalized(text):
 def command(name, arguments):
     work = ROOT / "tools/m1-content/.local"
     work.mkdir(parents=True, exist_ok=True)
+    target = work / "water-fill/driver-current/target" if name == "water_driver_source_tests" else work / "schema-target"
     result = subprocess.run(arguments, cwd=ROOT, text=True, capture_output=True, env={
         **os.environ, "PYTHONDONTWRITEBYTECODE": "1",
-        "CARGO_TARGET_DIR": str(work / "schema-target"), "TMPDIR": str(work),
+        "CARGO_TARGET_DIR": str(target), "TMPDIR": str(work),
     })
     record = {"name": name, "command": arguments, "exit_code": result.returncode,
               "stdout": normalized(result.stdout), "stderr": normalized(result.stderr)}
@@ -39,9 +41,10 @@ def command(name, arguments):
 def run():
     results = [command("build_and_strict_runtime_compile", BUILD)]
     if results[0]["exit_code"]:
-        write(BINDINGS / "validation-run.json", {"schema_version": 3, "passed": False, "checks": results}, True)
+        write(BINDINGS / "validation-run.json", {"schema_version": 4, "passed": False, "checks": results}, True)
         raise SystemExit(results[0]["exit_code"])
     checks = [
+        ("legacy5e_water_strict_artifact", [sys.executable, "tools/m1-content/build_water_legacy.py"]),
         ("content_tests", [sys.executable, "-m", "unittest", "discover", "-s", "tools/m1-content", "-p", "test_*.py", "-q"]),
         ("source_asset_closure", [sys.executable, "tools/m1-content/verify_assets.py"]),
         ("source_application", [sys.executable, "tools/m1-content/verify_runtime_bindings.py"]),
@@ -51,7 +54,10 @@ def run():
         ("rust_format", ["cargo", "fmt", "--manifest-path", "tools/m1-content/schema-check/Cargo.toml", "--check"]),
         ("rust_typecheck", ["cargo", "check", "--quiet", "--locked", "--offline", "--manifest-path",
                             "tools/m1-content/schema-check/Cargo.toml"]),
+        ("water_driver_source_tests", ["cargo", "test", "--quiet", "--locked", "--offline",
+                                      "--manifest-path", "tools/simulator/Cargo.toml", "water_fill_", "--", "--nocapture"]),
         ("strict_reload_and_native_source_probes", [sys.executable, "tools/m1-content/check.py"]),
+        ("both_water_profile_native_probes", [sys.executable, "tools/m1-content/verify_water_fill.py"]),
     ]
     for name, arguments in checks:
         record = command(name, arguments)
@@ -60,7 +66,7 @@ def run():
             (BINDINGS / "test-output.log").write_text(record["stdout"] + record["stderr"])
         if name == "original_source_oracles" and record["exit_code"] == 0:
             write(BINDINGS / "application-source-validation.json", {
-                "schema_version": 3, "command": arguments,
+                "schema_version": 4, "command": arguments,
                 "source_evidence_rewritten": False,
                 "resolutions_sha256": sha((ROOT / "research/runtime-bindings/resolutions.json").read_bytes()),
                 "result": json.loads(record["stdout"]),
@@ -73,6 +79,12 @@ def output_hashes():
     paths = {ROOT / record["path"] for record in manifest["outputs"]}
     paths.update((CONTENT / "manifest.json", CONTENT / "game-content.csc.gz"))
     paths.update(BINDINGS / name for name in REPORTS)
+    paths.update(CONTENT / "legacy5e-water" / name for name in ("game-content.json.gz", "game-content.csc.gz", "manifest.json"))
+    paths.update(WATER / name for name in (
+        "legacy5e-application.json", "consumer-baseline-differences.json",
+        "current5b-water-native.json", "legacy5e-water-native.json", "validation.json", "handoff.json",
+        "item-on-compatibility.json",
+    ))
     return {str(path.relative_to(ROOT)): sha(path.read_bytes()) for path in sorted(paths)}
 
 
@@ -89,7 +101,7 @@ def main():
         changed = sorted(path for path in first.keys() | second.keys() if first.get(path) != second.get(path))
         repeatable = not changed
         write(BINDINGS / "repeatability.json", {
-            "schema_version": 3, "command": BUILD, "full_validation_repeated": True,
+            "schema_version": 4, "command": BUILD, "full_validation_repeated": True,
             "identical_outputs": repeatable, "compared_outputs": len(first), "changed_outputs": changed,
             "output_hashes": second, "compiled_artifact": load(CONTENT / "manifest.json")["compiled_artifact"],
             "native_failures_are_not_waived": True, "gameplay_executed": False, "presentation_approved": False,
@@ -97,7 +109,10 @@ def main():
     manifest = load(CONTENT / "manifest.json")
     application = load(BINDINGS / "application-result.json")
     schema = load(BINDINGS / "schema-validation.json")
+    if schema["artifact_sha256"] != manifest["compiled_artifact"]["uncompressed_sha256"]:
+        raise ValueError("Native validation describes a different artifact; no stale success can be reused")
     probes = schema["native_source_policy_probes"]
+    water = load(WATER / "validation.json")
     failed = [record["name"] for record in results if record["exit_code"]]
     if repeatable is False:
         failed.append("repeatability")
@@ -106,12 +121,19 @@ def main():
         for name, value in probes.items()
         if isinstance(value, dict) and value.get("passed") is False
     ]
+    if not water["passed"]:
+        active_executor.append({
+            "id": "source_water_item_on_only_facility",
+            "evidence": "research/water-fill/validation.json",
+            "reason": "A declared item-on-only water conversion failed its actual native admission, guard or cadence proof; "
+                      "inspect the exact profile result without a menu or reach fallback.",
+        })
     tests = next(record for record in results if record["name"] == "content_tests")
     test_match = re.search(r"Ran (\d+) tests", tests["stderr"])
     residuals = application["residuals"]
     passed = not failed and residuals["active_or_conditionally_active_count"] == 0
     report = {
-        "schema_version": 3, "passed": passed, "failed_checks": failed, "checks": results,
+        "schema_version": 4, "passed": passed, "failed_checks": failed, "checks": results,
         "compiled_artifact": manifest["compiled_artifact"], "active_executor_failures": active_executor,
         "source_binding_residuals": residuals, "repeatability_checked": args.repeat,
         "repeatable_outputs": repeatable, "full_journey_executed": False,
@@ -122,8 +144,9 @@ def main():
     if args.repeat:
         evidence["research/m1-bindings/repeatability.json"] = sha((BINDINGS / "repeatability.json").read_bytes())
     status = {
-        "schema_version": 3, "task": "m1-content-runtime3", "base": "2f6cdb7", "branch": "task/m1-contact-clocks",
-        "validation_task": "m1-facility-drop-fixes",
+        "schema_version": 4, "task": "M1-WATER-ITEM-ON-DISPATCH",
+        "base": "cba2016f5f403ea793f875a40ec7c5191c9521cd", "branch": "fix/m1-water-item-on",
+        "validation_task": "bounded-source-item-on-dispatch",
         "status": "done" if passed else "blocked", "fully_done": passed, "runtime_ready": passed,
         "declared_v3_selectors_authored": True, "bounded_source_application_complete": True,
         "revision": manifest["revision"], "compiled_artifact": manifest["compiled_artifact"], "counts": manifest["counts"],
@@ -133,6 +156,9 @@ def main():
                                "vital_policy": application["vital_policy"], "approved_loot": application["approved_loot"]["adaptation"]},
         "residuals": residuals, "active_executor_failure_count": len(active_executor),
         "active_executor_failures": active_executor,
+        "water_profiles": [{"profile": row["profile"], "artifact": row["artifact"], "passed": row["passed"]}
+                           for row in water["profiles"]],
+        "migration_admitted": False, "actual_account_read_or_changed": False,
         "validation": {"content_tests": int(test_match[1]) if test_match else None,
                        "content_tests_passed": tests["exit_code"] == 0,
                        "failed_checks": failed, "repeatability_checked": args.repeat, "repeatability_passed": repeatable,
@@ -141,12 +167,12 @@ def main():
                        "real_source_appearance_request_passed": schema["real_source_appearance_request_passed"]},
         "evidence_hashes": evidence,
         "parent_action": (
-            "Run the complete legitimate fresh-account journey through the real backend and browsers, then "
-            "verify presentation/audio/performance and obtain final owner acceptance. Native component and "
-            "source-data conformance do not establish those gates."
+            "Director must review the exact old/new pins and semantic deltas before a separately tested and fenced "
+            "same-world upgrade. This source task admits no migration or gameplay and must not repeat the saved account's progress."
             if passed else
-            "Resolve the exact failed checks and native source-policy probes without changing the source "
-            "contract, then rerun python3 tools/m1-content/validate.py --repeat."
+            "Close the exact item-on-only facility authorization seam without adding a source-absent Fill/Use object menu "
+            "or clearing source geometry, then rerun the complete repeated source/native gates. Director alone reviews "
+            "the minimal legacy target and separately fences any migration/continuation; no old progress is repeated."
         ),
         "full_journey_executed": False, "presentation_approved": False, "milestone_accepted": False,
     }

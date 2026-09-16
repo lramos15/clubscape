@@ -261,6 +261,7 @@ def main():
     report["engine_constructed"] = schema["engine_constructed"]
     report["native_source_policy_probes"] = schema["native_source_policy_probes"]
     report["native_ui_control_probes"] = schema["native_ui_control_probes"]
+    report["native_water_fill_probes"] = schema["native_water_fill_probes"]
     report["native_source_policy_checks_passed"] = schema["native_source_policy_probes"]["passed"]
     report["engine_validation_exit_code"] = result.returncode
     report["engine_validation_diagnostic"] = result.stderr
@@ -271,8 +272,10 @@ def main():
                       "artifact_reloaded": True, "artifact_sha256": artifact["uncompressed_sha256"],
                       "engine_constructed": schema["engine_constructed"],
                       "native_source_policy_checks_passed": schema["native_source_policy_probes"]["passed"],
+                      "native_water_fill_passed": schema["native_water_fill_probes"]["passed"],
                       "unresolved_bindings": len(schema["unresolved_bindings"]), "gameplay_executed": False}))
-    if result.returncode or not schema["native_source_policy_probes"]["passed"] or not schema["native_ui_control_probes"]["passed"]:
+    if (result.returncode or not schema["native_source_policy_probes"]["passed"]
+            or not schema["native_ui_control_probes"]["passed"] or not schema["native_water_fill_probes"]["passed"]):
         raise SystemExit(result.returncode or 1)
     require(report["asset_closure_passed"],
             f"Source/engine checks do not waive missing published assets: {report['unpublished_asset_ids']}")

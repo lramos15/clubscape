@@ -435,14 +435,24 @@ impl Source {
         live: Option<&game::Entity>,
         navigation: &Navigation,
     ) -> Result<BTreeSet<Tile>> {
+        let reach = self.interaction(id, action)?["reach"]
+            .as_u64()
+            .context("Missing source reach")?;
+        self.target_goals_with_reach(id, reach, live, navigation)
+    }
+
+    fn target_goals_with_reach(
+        &self,
+        id: &str,
+        reach: u64,
+        live: Option<&game::Entity>,
+        navigation: &Navigation,
+    ) -> Result<BTreeSet<Tile>> {
         let spawn = self.spawn(id)?;
         let tile = live
             .and_then(|entity| entity.tile.as_ref())
             .map(Tile::from)
             .unwrap_or(self.spawn_tile(id)?);
-        let reach = self.interaction(id, action)?["reach"]
-            .as_u64()
-            .context("Missing source reach")?;
         ensure!((1..=32).contains(&reach), "Unexpected interaction reach");
         let (mut width, mut height, mut blocked) = (1, 1, 0);
         match spawn["kind"]["kind"].as_str() {
@@ -555,6 +565,111 @@ impl Source {
             }
         }
         ensure!(!goals.is_empty(), "No source access candidate for {id}");
+        Ok(goals)
+    }
+
+    pub fn item_use_goals(
+        &self,
+        id: &str,
+        recipe: &str,
+        navigation: &Navigation,
+    ) -> Result<BTreeSet<Tile>> {
+        let definition = self.content["recipes"]
+            .get(recipe)
+            .context("Required source item-on-object recipe is absent")?;
+        let spawn = self.spawn(id)?;
+        let object = spawn["kind"]["object"]
+            .as_str()
+            .context("Item-on-object planning requires an actual source object")?;
+        ensure!(
+            definition["target_objects"]
+                .as_array()
+                .context("Missing recipe facility identities")?
+                .iter()
+                .any(|target| target == object),
+            "The exact recipe does not permit this source object"
+        );
+        let entries: Vec<_> = spawn["interactions"]
+            .as_array()
+            .context("Missing source facility declarations")?
+            .iter()
+            .filter(|entry| {
+                entry["action"]["kind"] == "production"
+                    && entry["action"]["recipes"]
+                        .as_array()
+                        .is_some_and(|recipes| recipes.iter().any(|value| value == recipe))
+            })
+            .collect();
+        let reach = if let Some(binding) = definition.get("item_on_target") {
+            ensure!(
+                entries.is_empty(),
+                "Item-on-only source rule conflicts with a menu Production declaration"
+            );
+            ensure!(
+                binding["status"] == "bound"
+                    && binding["source"]
+                        .as_array()
+                        .is_some_and(|source| !source.is_empty())
+                    && binding["value"]["guard"]["kind"].as_str().is_some(),
+                "Source item-on-only reach/guard must be explicitly bound, not absent or unresolved"
+            );
+            ensure!(
+                definition["mechanics"]["lifecycle"]["kind"] == "inventory_conversion"
+                    && definition["mechanics"]["cadence"]["single"]["status"] == "bound"
+                    && definition["mechanics"]["cadence"]["single"]["value"]
+                        .as_u64()
+                        .is_some_and(|ticks| ticks > 0)
+                    && definition["mechanics"]["cadence"]["menu_delay"]["status"] == "bound"
+                    && definition["mechanics"]["cadence"]["menu_delay"]["value"] == 0,
+                "Item-on-only planning requires one source conversion without menu delay"
+            );
+            binding["value"]["reach"]
+                .as_u64()
+                .context("Source item-use reach is missing")?
+        } else {
+            ensure!(
+                entries.len() == 1,
+                "Source item-on-only facility authorization/reach is not represented; do not invent a Fill/Use menu or guess a sink side"
+            );
+            entries[0]["reach"]
+                .as_u64()
+                .context("Source item-use reach is missing")?
+        };
+        ensure!(
+            reach == 1,
+            "This bounded source item-use contact requires one-tile reach"
+        );
+        let mut goals = self.target_goals_with_reach(id, reach, None, navigation)?;
+        let base = self.spawn_tile(id)?;
+        let source = &self.content["objects"][object];
+        let (mut width, mut height) = (
+            u32::try_from(source["size_x"].as_u64().context("Missing source width")?)?,
+            u32::try_from(source["size_y"].as_u64().context("Missing source height")?)?,
+        );
+        if spawn["placement"]["quarter_turns"]
+            .as_u64()
+            .context("Missing source rotation")?
+            % 2
+            == 1
+        {
+            (width, height) = (height, width);
+        }
+        if source["clip"]["blocks_movement"] == true
+            && source["clip"]["blocks_projectiles"] == false
+        {
+            goals.retain(|point| {
+                let contact = Tile::new(
+                    point.x.clamp(base.x, base.x + width - 1),
+                    point.y.clamp(base.y, base.y + height - 1),
+                    base.plane,
+                );
+                navigation.blocked_spawn_contact(*point, contact)
+            });
+        }
+        ensure!(
+            !goals.is_empty(),
+            "No source-clear item-use contact remains"
+        );
         Ok(goals)
     }
 
@@ -842,5 +957,64 @@ mod tests {
                 .all(|point| point.distance(Tile::new(3099, 3090, 0)) <= 1)
         );
         assert!(!goals.is_empty());
+    }
+
+    #[test]
+    fn water_fill_plan_refuses_missing_dispatch_before_guessing_a_sink_side() {
+        let mut source =
+            Source::load(&Path::new(env!("CARGO_MANIFEST_DIR")).join("../..")).unwrap();
+        let original = source.content["recipes"]["recipe.water.bucket"].clone();
+        for binding in [
+            None,
+            Some(json!({"status":"unresolved","reason":"Explicit test gap","source":[]})),
+            Some(json!({"status":"bound","value":{"reach":1},"source":[{"reference":"test"}]})),
+        ] {
+            source.content["recipes"]["recipe.water.bucket"] = original.clone();
+            let recipe = source.content["recipes"]["recipe.water.bucket"]
+                .as_object_mut()
+                .unwrap();
+            if let Some(binding) = binding {
+                recipe.insert("item_on_target".into(), binding);
+            } else {
+                recipe.remove("item_on_target");
+            }
+            let error = source
+                .item_use_goals(
+                    "spawn.water_source.3205.3215.p0.t10.r0",
+                    "recipe.water.bucket",
+                    &source.navigation,
+                )
+                .unwrap_err();
+            assert!(error.to_string().contains("item-on-only"));
+        }
+        assert!(!source.navigation.walkable(Tile::new(3206, 3215, 0)));
+    }
+
+    #[test]
+    fn water_fill_contact_geometry_uses_both_tiles_and_preserves_west_wall() {
+        let source = Source::load(&Path::new(env!("CARGO_MANIFEST_DIR")).join("../..")).unwrap();
+        let sink = "spawn.water_source.3205.3215.p0.t10.r0";
+        assert_eq!(source.content["spawns"][sink]["interactions"], json!([]));
+        assert_eq!(
+            source.content["recipes"]["recipe.water.bucket"]["item_on_target"]["status"],
+            "bound"
+        );
+        let goals = source
+            .item_use_goals(sink, "recipe.water.bucket", &source.navigation)
+            .unwrap();
+        assert_eq!(
+            goals,
+            BTreeSet::from([
+                Tile::new(3205, 3214, 0),
+                Tile::new(3205, 3217, 0),
+                Tile::new(3206, 3216, 0),
+            ])
+        );
+        assert!(
+            source
+                .navigation
+                .route(Tile::new(3207, 3214, 0), &goals)
+                .is_some()
+        );
     }
 }

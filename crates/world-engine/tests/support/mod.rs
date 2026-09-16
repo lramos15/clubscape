@@ -408,6 +408,7 @@ pub fn content() -> GameContent {
                 ticks: Some(ticks),
                 success: certain(),
                 target_objects: target,
+                item_on_target: None,
                 mechanics: None,
                 source: source(),
             },

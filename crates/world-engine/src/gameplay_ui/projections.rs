@@ -421,9 +421,7 @@ impl WorldEngine {
             .get(id)
             .ok_or_else(|| unknown("Unknown source recipe."))?;
         Quantity::new(quantity)?;
-        if mode == ProductionMode::Single && quantity != 1 {
-            return Err(invalid_state("Invalid production selection mode/quantity."));
-        }
+        recipe.validate_production_mode(quantity, Some(mode))?;
         self.check_recipe_target(world, character, recipe, target)?;
         self.check_recipe(world, character, recipe, false)?;
         self.recipe_delay(recipe, mode == ProductionMode::Single, false)?;

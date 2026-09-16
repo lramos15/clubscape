@@ -1,0 +1,50 @@
+{
+  "schema_version": 1,
+  "task": "M1-WATER-ITEM-ON-DISPATCH",
+  "code_commit": "cba2016f5f403ea793f875a40ec7c5191c9521cd",
+  "source_append": "eaa527a8f3d9d408d6bf1a4b8fdc47269abe0137",
+  "actual_before_execution": true,
+  "profiles": [
+    {
+      "profile": "current5b-water",
+      "raw_artifact_sha256": "08b3787487a734af8e201e00ca290566aa510c1611346b2b68e505274cff6f67",
+      "target": ".local/water-dispatch/before/current5b-water/target",
+      "executable_sha256": "713cb1613a75f98f3d73f0babd64b314b0ae9f6c0526f4ab96ccc3d9deca1f52",
+      "positive_passed": 0,
+      "positive_cases": 4,
+      "negative_passed": 5,
+      "negative_cases": 6,
+      "log": ".local/water-dispatch/before/current5b-water/evidence.json"
+    },
+    {
+      "profile": "legacy5e-water",
+      "raw_artifact_sha256": "2b13ad7accbcde88a04baf71d5eb8ec75d421968726c657cad596c00affd4b3d",
+      "target": ".local/water-dispatch/before/legacy5e-water/target",
+      "executable_sha256": "713cb1613a75f98f3d73f0babd64b314b0ae9f6c0526f4ab96ccc3d9deca1f52",
+      "positive_passed": 0,
+      "positive_cases": 4,
+      "negative_passed": 5,
+      "negative_cases": 6,
+      "log": ".local/water-dispatch/before/legacy5e-water/evidence.json"
+    }
+  ],
+  "causal_path": [
+    "UseItem finds the water recipe from the owned empty bucket and declared target object.",
+    "check_recipe_target requires a menu-visible Production interaction for reach/guard authority.",
+    "The original sink has no interactions, so all four positive cases are refused before conversion.",
+    "The wrong-plane request is also refused at missing dispatch rather than exercising the intended geometry guard."
+  ],
+  "wrong_plane": {
+    "actual_code": "requirement_not_met",
+    "actual_message": "Facility does not offer the recipe.",
+    "required_code": "out_of_reach",
+    "required_message_fragment": "another plane",
+    "intended_guard_exercised": false,
+    "atomic_refusal": true
+  },
+  "before_conversion_cadence_or_repeat_assertions_executed": false,
+  "source_menu_unchanged": true,
+  "shared_cargo_target": false,
+  "private_state_network_or_migration_used": false,
+  "milestone_accepted": false
+}

@@ -7,12 +7,12 @@
   "check_command": "python3 tools/m1-content/check.py",
   "compiled_artifact": {
     "artifact_version": 4,
-    "bytes": 527455,
+    "bytes": 528842,
     "path": "content/m1/game-content.csc.gz",
     "schema_version": 4,
-    "sha256": "8da1e85a1e2ebb0355e29e7a15a0ca7cdab2f2751bc1341dd5efd5322b925ca6",
-    "uncompressed_bytes": 13213366,
-    "uncompressed_sha256": "5b3ba5f108ed3fec8f8b5f7f49b429c059e21b6f192ec99a0569616e08330059"
+    "sha256": "3b258ec2f23fd0942b99a8e20910b2d6ec2feb54a1ae11b71736a805b4754a7d",
+    "uncompressed_bytes": 13222639,
+    "uncompressed_sha256": "adb24c14f76181a76e2874e97be3e2743a4c475d3ff89a7720b70ae6f6981bbc"
   },
   "compiler_command": "python3 tools/m1-content/compile.py --compiler-manifest crates/content/Cargo.toml",
   "content_schema_version": 4,
@@ -49,7 +49,7 @@
     "npcs": 26,
     "objects": 4837,
     "quests": 2,
-    "recipes": 13,
+    "recipes": 14,
     "regions": 29,
     "runtime_blocked_cells": 16544,
     "runtime_collision_cells": 46358,
@@ -66,29 +66,29 @@
   },
   "declared_v3_selectors_authored": true,
   "inactive_full_target_binding_count": 6,
-  "input_aggregate_sha256": "bdbf8a3788b842bef7f9fd0a32d167ed5ee73eaf8db45cbf6bfea3ff51d8195a",
+  "input_aggregate_sha256": "71c86749d02088eee216c9b5ebb6defdd6d443ffea2506bd93730c5067d3a8c0",
   "milestone_accepted": false,
   "outputs": [
     {
-      "bytes": 349446,
-      "json_bytes": 349446,
-      "json_sha256": "53170523376b33cf480385eddb5e4deee9d8fa34b92d634859d7fa659c5fdc2e",
+      "bytes": 352690,
+      "json_bytes": 352690,
+      "json_sha256": "efdc963b5b04077bd02d5330276c327e1e391341f97f090037a4961fa643c20c",
       "path": "research/m1-bindings/input-lock.json",
-      "sha256": "53170523376b33cf480385eddb5e4deee9d8fa34b92d634859d7fa659c5fdc2e"
+      "sha256": "efdc963b5b04077bd02d5330276c327e1e391341f97f090037a4961fa643c20c"
     },
     {
-      "bytes": 516778,
-      "json_bytes": 15701685,
-      "json_sha256": "93b751c10f49842bdaa3cb4d49ff3edb6818e5e62660e57a3b55002d25d912c5",
+      "bytes": 517495,
+      "json_bytes": 15711538,
+      "json_sha256": "842ca4d1f44d035a4f2ece936c78182e0f75bfe1438c1c7777fd726feaf1e115",
       "path": "content/m1/game-content.json.gz",
-      "sha256": "2782a2fbb164ca4c11a964778adf0ca544986f6b2e17aa9bb9bd55f730092ed2"
+      "sha256": "ce3b2448455595b0e0f65ab67c9670ff08ff7f89d02b965f083f8e24cac91255"
     },
     {
-      "bytes": 191936,
-      "json_bytes": 191936,
-      "json_sha256": "31990726e2c57110802b33e78e3a3c9c0b977c961026f13ea09e6239bd465bfb",
+      "bytes": 194514,
+      "json_bytes": 194514,
+      "json_sha256": "d7e65c92f9c5e5873bc9f70cc516c40ba43164f76e35f5c7df667cf75c6f5592",
       "path": "research/m1-bindings/application-result.json",
-      "sha256": "31990726e2c57110802b33e78e3a3c9c0b977c961026f13ea09e6239bd465bfb"
+      "sha256": "d7e65c92f9c5e5873bc9f70cc516c40ba43164f76e35f5c7df667cf75c6f5592"
     },
     {
       "bytes": 6686,
@@ -112,11 +112,18 @@
       "sha256": "36856ec5b1b1bdcf72d71c80e996c710b8ba108b8a6e9eb17d3e24c3d4582dc1"
     },
     {
-      "bytes": 2621,
-      "json_bytes": 2621,
-      "json_sha256": "8b6da1f6247f05e8b7b87726d2200c89c7f2a88cd0414393252f205fda4e7ff3",
+      "bytes": 3226,
+      "json_bytes": 3226,
+      "json_sha256": "7cc9418f0434d18916791089d03c970cd7c67470d62e66a7687fa186f1cb5add",
       "path": "research/m1-bindings/actor-animation-bindings.json",
-      "sha256": "8b6da1f6247f05e8b7b87726d2200c89c7f2a88cd0414393252f205fda4e7ff3"
+      "sha256": "7cc9418f0434d18916791089d03c970cd7c67470d62e66a7687fa186f1cb5add"
+    },
+    {
+      "bytes": 2453,
+      "json_bytes": 2453,
+      "json_sha256": "b86864c13a53193327aa0b33adca40b8fcf9ef4d88d159e875d42f04f3ac292f",
+      "path": "research/m1-bindings/water-fill-application.json",
+      "sha256": "b86864c13a53193327aa0b33adca40b8fcf9ef4d88d159e875d42f04f3ac292f"
     },
     {
       "bytes": 52366,
@@ -646,14 +653,14 @@
     {
       "bytes": 2209,
       "json_bytes": 2209,
-      "json_sha256": "1cf59a50ccb2bbdf7bbf36b56d0b45597bd5a42ff2a02c9166a6b8e7356be594",
+      "json_sha256": "c47c86f5feb3597520b26db88c099450647f8501ba1bacb34404947a9dd4bfcc",
       "path": "research/m1-bindings/structural-validation.json",
-      "sha256": "1cf59a50ccb2bbdf7bbf36b56d0b45597bd5a42ff2a02c9166a6b8e7356be594"
+      "sha256": "c47c86f5feb3597520b26db88c099450647f8501ba1bacb34404947a9dd4bfcc"
     }
   ],
   "presentation_approved": false,
   "readiness_dependency": "research/m1-bindings/contract-gaps.json",
-  "revision": "m1.source-backed.v4.bdbf8a3788b842be",
+  "revision": "m1.source-backed.v4.71c86749d02088ee",
   "runtime_compile_passed": true,
   "runtime_ready": false,
   "runtime_schema_version": 1,

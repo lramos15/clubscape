@@ -5,6 +5,11 @@ use clubscape_simulation::{bank, inventory, navigation::CollisionMap, skills};
 
 use crate::{WorldEngine, invalid_content, invalid_state, unknown};
 
+pub(crate) struct TargetAdmission<'a> {
+    pub reach: u16,
+    pub guard: &'a Guard,
+}
+
 impl WorldEngine {
     pub(crate) fn authorize_intent(
         &self,
@@ -479,7 +484,25 @@ impl WorldEngine {
         target: &WorldTarget,
         interaction: &InteractionDefinition,
     ) -> GameResult<()> {
-        self.require_guard(world, character, &interaction.guard)?;
+        self.require_world_target_rule(
+            world,
+            character,
+            target,
+            TargetAdmission {
+                reach: interaction.reach,
+                guard: &interaction.guard,
+            },
+        )
+    }
+
+    pub(crate) fn require_world_target_rule(
+        &self,
+        world: &WorldState,
+        character: &CharacterState,
+        target: &WorldTarget,
+        rule: TargetAdmission<'_>,
+    ) -> GameResult<()> {
+        self.require_guard(world, character, rule.guard)?;
         let shape = self.target_shape(world, character, target)?;
         let map = self.collision_for(world, character.runtime.instance.as_ref())?;
         let mut side = 0;
@@ -518,10 +541,10 @@ impl WorldEngine {
                 if character
                     .tile
                     .distance(tile)
-                    .is_some_and(|distance| distance <= interaction.reach)
+                    .is_some_and(|distance| distance <= rule.reach)
                     && ((map.line_of_sight(character.tile, tile)
-                        && (interaction.reach > 1 || touch_edge(&map, character.tile, tile)))
-                        || (interaction.reach == 1
+                        && (rule.reach > 1 || touch_edge(&map, character.tile, tile)))
+                        || (rule.reach == 1
                             && (interaction_face_reachable(&map, character.tile, tile, &shape)
                                 || self.door_face_reachable(world, character, target, tile)?)))
                 {

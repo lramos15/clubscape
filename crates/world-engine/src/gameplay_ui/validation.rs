@@ -151,10 +151,14 @@ impl WorldEngine {
             }
         }
         if let Some(menu) = &ui.production
-            && menu
-                .recipes
-                .iter()
-                .any(|recipe| definition.production_interfaces.get(recipe) != Some(&menu.interface))
+            && menu.recipes.iter().any(|recipe| {
+                definition.production_interfaces.get(recipe) != Some(&menu.interface)
+                    || self
+                        .content
+                        .recipes
+                        .get(recipe)
+                        .is_some_and(|recipe| recipe.item_on_target.is_some())
+            })
         {
             return Err(invalid_state(
                 "Production context disagrees with its source menu binding.",

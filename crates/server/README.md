@@ -64,10 +64,19 @@ of an existing world or a reconstruction of unknowable past visits.
 
 Use `cargo run --locked -p clubscape-server -- migrate-ui --from <old-raw-sha256>`
 with `DATABASE_URL` and a complete target `CLUBSCAPE_GAME_ROOT` for an explicit
-UI-only content upgrade. It requires exclusive world ownership and audits the
+UI-preserving content upgrade. It requires exclusive world ownership and audits the
 artifact swap in migration0005. It never resets inventory/XP/claims, restarts
 sequences, replaces private RNG or fabricates lost UI history. See the live-world
 specification for exact caller mappings and current source-asset prerequisites.
+
+The same exact-pin boundary can support a separately reviewed additive recipe
+when the target retains the existing UI profile and all existing state remains
+valid and unchanged. Its name and hash checks do not establish semantic content
+compatibility: record the precise definition delta and exercise target runtime
+validation, fencing, conservation and old receipt replay first. The water
+migration regressions use exact public old/current source pairs and controlled
+test-owned inputs in an isolated database; they neither restore the saved
+journey nor authorize a player-world upgrade.
 
 ## Running locally
 

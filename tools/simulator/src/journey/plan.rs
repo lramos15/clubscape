@@ -2427,38 +2427,52 @@ impl Runner {
     }
 
     async fn prove_range_access(&mut self) -> Result<()> {
+        let sink = "spawn.water_source.3205.3215.p0.t10.r0";
+        self.source
+            .item_use_goals(sink, "recipe.water.bucket", &self.source.navigation)?;
         self.label("cooks.reward_range_actual_recipe")?;
-        self.take_spawn("spawn.pot.3209.3214.p0", "item.pot")
+        if self.count("item.flour.pot")? == 0 {
+            if self.count("item.pot")? == 0 {
+                self.take_spawn("spawn.pot.3209.3214.p0", "item.pot")
+                    .await?;
+            }
+            self.make_flour().await?;
+        }
+        if self.count("item.water.bucket")? == 0 {
+            if self.count("item.bucket")? == 0 {
+                self.travel(
+                    "spawn.lumbridge.kitchen_trapdoor.3209.3216.p0.t22.r0",
+                    "Climb-down",
+                )
+                .await?;
+                self.take_spawn("spawn.bucket.3216.9625.p0", "item.bucket")
+                    .await?;
+                self.travel(
+                    "spawn.lumbridge.cellar_ladder.3209.9616.p0.t10.r3",
+                    "Climb-up",
+                )
+                .await?;
+            }
+            let navigation = self
+                .source
+                .navigation_with_states(&self.observed_states, true)?;
+            let goals = self
+                .source
+                .item_use_goals(sink, "recipe.water.bucket", &navigation)?;
+            self.go_to(goals).await?;
+            let empty = self.count("item.bucket")?;
+            let water = self.count("item.water.bucket")?;
+            self.input(Action::UseItem(game::UseItem {
+                inventory_slot: self.slot("item.bucket")?,
+                target: Some(game::use_item::Target::WorldSpawn(sink.into())),
+            }))
             .await?;
-        self.make_flour().await?;
-        self.travel(
-            "spawn.lumbridge.kitchen_trapdoor.3209.3216.p0.t22.r0",
-            "Climb-down",
-        )
-        .await?;
-        self.take_spawn("spawn.bucket.3216.9625.p0", "item.bucket")
+            self.wait_for("actual_source_sink_bucket_fill", 80, |runner| {
+                Ok(runner.count("item.water.bucket")? == water + 1
+                    && runner.count("item.bucket")? == empty - 1)
+            })
             .await?;
-        self.travel(
-            "spawn.lumbridge.cellar_ladder.3209.9616.p0.t10.r3",
-            "Climb-up",
-        )
-        .await?;
-        // The source sink is not a grain/pot shortcut or a grant; unsupported item-use is a blocker.
-        let sink = self
-            .source
-            .spawn_tile("spawn.water_source.3205.3215.p0.t10.r0")?;
-        self.walk(Tile::new(sink.x + 1, sink.y, sink.plane)).await?;
-        self.input(Action::UseItem(game::UseItem {
-            inventory_slot: self.slot("item.bucket")?,
-            target: Some(game::use_item::Target::WorldSpawn(
-                "spawn.water_source.3205.3215.p0.t10.r0".into(),
-            )),
-        }))
-        .await?;
-        self.wait_for("actual_source_sink_bucket_fill", 80, |runner| {
-            Ok(runner.count("item.water.bucket")? == 1)
-        })
-        .await?;
+        }
         self.dough().await?;
         self.cook(
             "recipe.cooking.bread.lumbridge_range",

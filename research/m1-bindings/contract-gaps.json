@@ -1,6 +1,6 @@
 {
-  "content_schema_version": 3,
-  "artifact_version": 3,
+  "content_schema_version": 4,
+  "artifact_version": 4,
   "runtime_schema_version": 1,
   "former_v1_representation_gap_count": 17,
   "former_v1_gaps_resolved_by_shared_contracts": true,
@@ -36,9 +36,11 @@
     "models": [2697],
     "placeholder": 19365,
     "source": "research/m1-bindings/application-item-definitions.json.gz",
-    "current_product_asset_references": 5257,
+    "prior_potion_closure_references": 5257,
+    "current_product_asset_references": 5266,
     "missing_requested_ids": [],
-    "publication": "assets/manifests/osrs/cache2695-potions-published.json"
+    "publication": "assets/manifests/osrs/cache2695-consumables-published.json",
+    "water_fill_asset_additions": []
   },
   "declared_v3_selectors_authored": true,
   "native_execution_requirements": [
@@ -68,6 +70,20 @@
     }
   ],
   "current_native_evidence": "research/m1-bindings/schema-validation.json#native_source_policy_probes",
+  "water_fill": {
+    "status": "blocked_on_item_on_only_binding",
+    "source_recipe": "recipe.water.bucket",
+    "source_object": 14868,
+    "source_object_menu_operations": [],
+    "data": "research/water-fill/facts.json",
+    "profiles_and_hashes": "research/water-fill/handoff.json",
+    "native_evidence": "research/water-fill/validation.json",
+    "precise_seam": "UseItem matches the exact source recipe, but check_recipe_target requires a Production interaction. InteractionDefinition has no item-on-only channel, and interaction_options publishes every entry. A synthetic Fill/Use object menu would violate the original empty operation table.",
+    "required_action": "Shared owner must provide/document item-on-only facility authorization and source contact without changing source geometry or allowing anywhere-water conversion. Re-run positive replacement/cadence/duplicate-outcome cases before Director reviews any fenced same-world upgrade.",
+    "three_prior_source_unknowns_preserved": ["normal_grave_bank_all", "recipe.cooking.dough.motion", "empty_container.motion"],
+    "additional_water_motion": "Explicitly unverified; no sequence or deliberate silence selected.",
+    "migration_or_actual_gameplay_admitted": false
+  },
   "validation_command": "python3 tools/m1-content/validate.py --repeat",
   "unverified_full_target_follow_up": [
     "Retained beginner-clue/member-only tertiary acquisition and ownership families are not certified by the potion approval.",

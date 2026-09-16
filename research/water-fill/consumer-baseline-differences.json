@@ -1,0 +1,1437 @@
+{
+  "difference_count": 82,
+  "differences": [
+    {
+      "after": {
+        "present": true,
+        "sha256": "2807005a887ea32e01ae0657b0d56e03f13d641d9330c82e2e395128248726db",
+        "value": "Exact original233 chat and660 notification widget/style associations. Default chat remains233; generic notification metadata does not create an additional reward or force a second modal."
+      },
+      "before": {
+        "present": true,
+        "sha256": "1588a5a9934f8b815515ce8afdf6cb5bd08b09f0f23b25c148ecfb75d5bfb5b7",
+        "value": "Pinned original interface/style metadata and approved semantic-state references; no invented varp281 state."
+      },
+      "json_pointer": "/interfaces/interface.level_up/source/0/notes",
+      "operation": "replace",
+      "pointer": [
+        "interfaces",
+        "interface.level_up",
+        "source",
+        0,
+        "notes"
+      ]
+    },
+    {
+      "after": {
+        "present": true,
+        "sha256": "d0f710aa803b6fe4fde088a5949baf3173e311629b963f1bc854371667ee0c32",
+        "value": "research/interface-contracts/level-up-native.json"
+      },
+      "before": {
+        "present": true,
+        "sha256": "b82ceedfb7a9c15ca3f580ed23ad3933e1c0ac92fdca5f7f3d91de5499785cf2",
+        "value": "research/interface-contracts/native-ui.json"
+      },
+      "json_pointer": "/interfaces/interface.level_up/source/0/reference",
+      "operation": "replace",
+      "pointer": [
+        "interfaces",
+        "interface.level_up",
+        "source",
+        0,
+        "reference"
+      ]
+    },
+    {
+      "after": {
+        "present": true,
+        "sha256": "3aac1db32a7290c50f44ef64733f3c88037aa55615bcbec7b1737d390c8ac64a",
+        "value": "3e365d99664a9987d4ea1e468e62f035d24a7db4e3fbee23a7a6482d55d06706"
+      },
+      "before": {
+        "present": true,
+        "sha256": "65d1e3b2285c7455312e666cf2e00c53c7aafc3b87008422628caaec0a1ed95b",
+        "value": "0fd28137bd73a6da31f58e62638b0a9c546a34d5b9f95750e4ce1755907999a0"
+      },
+      "json_pointer": "/interfaces/interface.level_up/source/0/revision",
+      "operation": "replace",
+      "pointer": [
+        "interfaces",
+        "interface.level_up",
+        "source",
+        0,
+        "revision"
+      ]
+    },
+    {
+      "after": {
+        "present": true,
+        "sha256": "c3ecd87d328895a59b3513cf241955f678ff67a8f9a348f4f78a0a135a26b419"
+      },
+      "before": {
+        "present": false
+      },
+      "json_pointer": "/interfaces/interface.level_up_notification",
+      "operation": "add",
+      "pointer": [
+        "interfaces",
+        "interface.level_up_notification"
+      ]
+    },
+    {
+      "after": {
+        "present": true,
+        "sha256": "809968c2d835f3577aeee973eb1a592269efbdd326fd58cb14f3f4667c916f12",
+        "value": "m1.source-backed.v4.bdbf8a3788b842be"
+      },
+      "before": {
+        "present": true,
+        "sha256": "e4a1bcb5f5893586ee3c69622ff940197f1d4db137eef37a4ab63aa816d5ae65",
+        "value": "m1.source-backed.v4.3ff4292b311453cc"
+      },
+      "json_pointer": "/revision",
+      "operation": "replace",
+      "pointer": [
+        "revision"
+      ]
+    },
+    {
+      "after": {
+        "present": true,
+        "sha256": "be0c8b2e078450bea40fb871dd42c84c93b08a20fc728cfd90059da4a86ac6f0"
+      },
+      "before": {
+        "present": false
+      },
+      "json_pointer": "/ui/actor_animations",
+      "operation": "add",
+      "pointer": [
+        "ui",
+        "actor_animations"
+      ]
+    },
+    {
+      "after": {
+        "present": true,
+        "sha256": "b15c8ba2cad5e84ac1db5aa326d5cd6a0b02362c192a793ce584f0af44118402"
+      },
+      "before": {
+        "present": false
+      },
+      "json_pointer": "/ui/audio_authority",
+      "operation": "add",
+      "pointer": [
+        "ui",
+        "audio_authority"
+      ]
+    },
+    {
+      "after": {
+        "present": true,
+        "sha256": "2807005a887ea32e01ae0657b0d56e03f13d641d9330c82e2e395128248726db",
+        "value": "Exact original233 chat and660 notification widget/style associations. Default chat remains233; generic notification metadata does not create an additional reward or force a second modal."
+      },
+      "before": {
+        "present": true,
+        "sha256": "1588a5a9934f8b815515ce8afdf6cb5bd08b09f0f23b25c148ecfb75d5bfb5b7",
+        "value": "Pinned original interface/style metadata and approved semantic-state references; no invented varp281 state."
+      },
+      "json_pointer": "/ui/level_up/source/0/notes",
+      "operation": "replace",
+      "pointer": [
+        "ui",
+        "level_up",
+        "source",
+        0,
+        "notes"
+      ]
+    },
+    {
+      "after": {
+        "present": true,
+        "sha256": "d0f710aa803b6fe4fde088a5949baf3173e311629b963f1bc854371667ee0c32",
+        "value": "research/interface-contracts/level-up-native.json"
+      },
+      "before": {
+        "present": true,
+        "sha256": "b82ceedfb7a9c15ca3f580ed23ad3933e1c0ac92fdca5f7f3d91de5499785cf2",
+        "value": "research/interface-contracts/native-ui.json"
+      },
+      "json_pointer": "/ui/level_up/source/0/reference",
+      "operation": "replace",
+      "pointer": [
+        "ui",
+        "level_up",
+        "source",
+        0,
+        "reference"
+      ]
+    },
+    {
+      "after": {
+        "present": true,
+        "sha256": "3aac1db32a7290c50f44ef64733f3c88037aa55615bcbec7b1737d390c8ac64a",
+        "value": "3e365d99664a9987d4ea1e468e62f035d24a7db4e3fbee23a7a6482d55d06706"
+      },
+      "before": {
+        "present": true,
+        "sha256": "65d1e3b2285c7455312e666cf2e00c53c7aafc3b87008422628caaec0a1ed95b",
+        "value": "0fd28137bd73a6da31f58e62638b0a9c546a34d5b9f95750e4ce1755907999a0"
+      },
+      "json_pointer": "/ui/level_up/source/0/revision",
+      "operation": "replace",
+      "pointer": [
+        "ui",
+        "level_up",
+        "source",
+        0,
+        "revision"
+      ]
+    },
+    {
+      "after": {
+        "present": true,
+        "sha256": "c28b7e6764c7990b29a63597d410c2b7c64d359588545fbeec79b8ff13dd9d29"
+      },
+      "before": {
+        "present": false
+      },
+      "json_pointer": "/ui/recovery",
+      "operation": "add",
+      "pointer": [
+        "ui",
+        "recovery"
+      ]
+    },
+    {
+      "after": {
+        "present": true,
+        "sha256": "75cdf4841989355da89ea85bcedb9eb04b67cd7eb1420357ab40c111d2d513a7"
+      },
+      "before": {
+        "present": true,
+        "sha256": "361acbe9397014efe455690bd8714c5addbe38f9e519707d6ad7191b83e12224"
+      },
+      "json_pointer": "/ui/stage_interfaces/stage.tutorial.account_entry",
+      "operation": "replace",
+      "pointer": [
+        "ui",
+        "stage_interfaces",
+        "stage.tutorial.account_entry"
+      ]
+    },
+    {
+      "after": {
+        "present": true,
+        "sha256": "75cdf4841989355da89ea85bcedb9eb04b67cd7eb1420357ab40c111d2d513a7"
+      },
+      "before": {
+        "present": true,
+        "sha256": "361acbe9397014efe455690bd8714c5addbe38f9e519707d6ad7191b83e12224"
+      },
+      "json_pointer": "/ui/stage_interfaces/stage.tutorial.account_exit",
+      "operation": "replace",
+      "pointer": [
+        "ui",
+        "stage_interfaces",
+        "stage.tutorial.account_exit"
+      ]
+    },
+    {
+      "after": {
+        "present": true,
+        "sha256": "75cdf4841989355da89ea85bcedb9eb04b67cd7eb1420357ab40c111d2d513a7"
+      },
+      "before": {
+        "present": true,
+        "sha256": "361acbe9397014efe455690bd8714c5addbe38f9e519707d6ad7191b83e12224"
+      },
+      "json_pointer": "/ui/stage_interfaces/stage.tutorial.account_explanation",
+      "operation": "replace",
+      "pointer": [
+        "ui",
+        "stage_interfaces",
+        "stage.tutorial.account_explanation"
+      ]
+    },
+    {
+      "after": {
+        "present": true,
+        "sha256": "75cdf4841989355da89ea85bcedb9eb04b67cd7eb1420357ab40c111d2d513a7"
+      },
+      "before": {
+        "present": true,
+        "sha256": "361acbe9397014efe455690bd8714c5addbe38f9e519707d6ad7191b83e12224"
+      },
+      "json_pointer": "/ui/stage_interfaces/stage.tutorial.account_greeting",
+      "operation": "replace",
+      "pointer": [
+        "ui",
+        "stage_interfaces",
+        "stage.tutorial.account_greeting"
+      ]
+    },
+    {
+      "after": {
+        "present": true,
+        "sha256": "21282561da92a85811f8f8d6de09ae906b7dddbdeca3ff3fb7bd6757628a2cbf"
+      },
+      "before": {
+        "present": true,
+        "sha256": "ff08941b3825fb0bed99e73657deeebac2018acf24149ccfe7a2a7db64e08dcc"
+      },
+      "json_pointer": "/ui/stage_interfaces/stage.tutorial.account_open",
+      "operation": "replace",
+      "pointer": [
+        "ui",
+        "stage_interfaces",
+        "stage.tutorial.account_open"
+      ]
+    },
+    {
+      "after": {
+        "present": true,
+        "sha256": "75cdf4841989355da89ea85bcedb9eb04b67cd7eb1420357ab40c111d2d513a7"
+      },
+      "before": {
+        "present": true,
+        "sha256": "361acbe9397014efe455690bd8714c5addbe38f9e519707d6ad7191b83e12224"
+      },
+      "json_pointer": "/ui/stage_interfaces/stage.tutorial.anvil_open",
+      "operation": "replace",
+      "pointer": [
+        "ui",
+        "stage_interfaces",
+        "stage.tutorial.anvil_open"
+      ]
+    },
+    {
+      "after": {
+        "present": true,
+        "sha256": "e88627c6bd5046ec961305d032b9bc57db8d2e719a173436bf59312a4663a11c"
+      },
+      "before": {
+        "present": true,
+        "sha256": "30ef0349ae14d125a22b4b6b22c342871008610ab816ddc59c85f350d8dab097"
+      },
+      "json_pointer": "/ui/stage_interfaces/stage.tutorial.appearance",
+      "operation": "replace",
+      "pointer": [
+        "ui",
+        "stage_interfaces",
+        "stage.tutorial.appearance"
+      ]
+    },
+    {
+      "after": {
+        "present": true,
+        "sha256": "c337f8c548240ac167ba2d894aa5700bf24beb6e9e26d94f3040a626da4f835e"
+      },
+      "before": {
+        "present": true,
+        "sha256": "1790aa1ce79ce73671c99fdff0311a220d10f34c82446cedc3e85200b248897b"
+      },
+      "json_pointer": "/ui/stage_interfaces/stage.tutorial.bake_bread",
+      "operation": "replace",
+      "pointer": [
+        "ui",
+        "stage_interfaces",
+        "stage.tutorial.bake_bread"
+      ]
+    },
+    {
+      "after": {
+        "present": true,
+        "sha256": "75cdf4841989355da89ea85bcedb9eb04b67cd7eb1420357ab40c111d2d513a7"
+      },
+      "before": {
+        "present": true,
+        "sha256": "361acbe9397014efe455690bd8714c5addbe38f9e519707d6ad7191b83e12224"
+      },
+      "json_pointer": "/ui/stage_interfaces/stage.tutorial.bank_close",
+      "operation": "replace",
+      "pointer": [
+        "ui",
+        "stage_interfaces",
+        "stage.tutorial.bank_close"
+      ]
+    },
+    {
+      "after": {
+        "present": true,
+        "sha256": "75cdf4841989355da89ea85bcedb9eb04b67cd7eb1420357ab40c111d2d513a7"
+      },
+      "before": {
+        "present": true,
+        "sha256": "361acbe9397014efe455690bd8714c5addbe38f9e519707d6ad7191b83e12224"
+      },
+      "json_pointer": "/ui/stage_interfaces/stage.tutorial.bank_open",
+      "operation": "replace",
+      "pointer": [
+        "ui",
+        "stage_interfaces",
+        "stage.tutorial.bank_open"
+      ]
+    },
+    {
+      "after": {
+        "present": true,
+        "sha256": "75cdf4841989355da89ea85bcedb9eb04b67cd7eb1420357ab40c111d2d513a7"
+      },
+      "before": {
+        "present": true,
+        "sha256": "361acbe9397014efe455690bd8714c5addbe38f9e519707d6ad7191b83e12224"
+      },
+      "json_pointer": "/ui/stage_interfaces/stage.tutorial.catch_shrimp",
+      "operation": "replace",
+      "pointer": [
+        "ui",
+        "stage_interfaces",
+        "stage.tutorial.catch_shrimp"
+      ]
+    },
+    {
+      "after": {
+        "present": true,
+        "sha256": "75cdf4841989355da89ea85bcedb9eb04b67cd7eb1420357ab40c111d2d513a7"
+      },
+      "before": {
+        "present": true,
+        "sha256": "361acbe9397014efe455690bd8714c5addbe38f9e519707d6ad7191b83e12224"
+      },
+      "json_pointer": "/ui/stage_interfaces/stage.tutorial.chapel_entry",
+      "operation": "replace",
+      "pointer": [
+        "ui",
+        "stage_interfaces",
+        "stage.tutorial.chapel_entry"
+      ]
+    },
+    {
+      "after": {
+        "present": true,
+        "sha256": "75cdf4841989355da89ea85bcedb9eb04b67cd7eb1420357ab40c111d2d513a7"
+      },
+      "before": {
+        "present": true,
+        "sha256": "361acbe9397014efe455690bd8714c5addbe38f9e519707d6ad7191b83e12224"
+      },
+      "json_pointer": "/ui/stage_interfaces/stage.tutorial.chapel_exit",
+      "operation": "replace",
+      "pointer": [
+        "ui",
+        "stage_interfaces",
+        "stage.tutorial.chapel_exit"
+      ]
+    },
+    {
+      "after": {
+        "present": true,
+        "sha256": "75cdf4841989355da89ea85bcedb9eb04b67cd7eb1420357ab40c111d2d513a7"
+      },
+      "before": {
+        "present": true,
+        "sha256": "361acbe9397014efe455690bd8714c5addbe38f9e519707d6ad7191b83e12224"
+      },
+      "json_pointer": "/ui/stage_interfaces/stage.tutorial.chef_entry",
+      "operation": "replace",
+      "pointer": [
+        "ui",
+        "stage_interfaces",
+        "stage.tutorial.chef_entry"
+      ]
+    },
+    {
+      "after": {
+        "present": true,
+        "sha256": "75cdf4841989355da89ea85bcedb9eb04b67cd7eb1420357ab40c111d2d513a7"
+      },
+      "before": {
+        "present": true,
+        "sha256": "361acbe9397014efe455690bd8714c5addbe38f9e519707d6ad7191b83e12224"
+      },
+      "json_pointer": "/ui/stage_interfaces/stage.tutorial.chef_exit",
+      "operation": "replace",
+      "pointer": [
+        "ui",
+        "stage_interfaces",
+        "stage.tutorial.chef_exit"
+      ]
+    },
+    {
+      "after": {
+        "present": true,
+        "sha256": "75cdf4841989355da89ea85bcedb9eb04b67cd7eb1420357ab40c111d2d513a7"
+      },
+      "before": {
+        "present": true,
+        "sha256": "361acbe9397014efe455690bd8714c5addbe38f9e519707d6ad7191b83e12224"
+      },
+      "json_pointer": "/ui/stage_interfaces/stage.tutorial.chef_greeting",
+      "operation": "replace",
+      "pointer": [
+        "ui",
+        "stage_interfaces",
+        "stage.tutorial.chef_greeting"
+      ]
+    },
+    {
+      "after": {
+        "present": true,
+        "sha256": "75cdf4841989355da89ea85bcedb9eb04b67cd7eb1420357ab40c111d2d513a7"
+      },
+      "before": {
+        "present": true,
+        "sha256": "361acbe9397014efe455690bd8714c5addbe38f9e519707d6ad7191b83e12224"
+      },
+      "json_pointer": "/ui/stage_interfaces/stage.tutorial.combat_exit",
+      "operation": "replace",
+      "pointer": [
+        "ui",
+        "stage_interfaces",
+        "stage.tutorial.combat_exit"
+      ]
+    },
+    {
+      "after": {
+        "present": true,
+        "sha256": "75cdf4841989355da89ea85bcedb9eb04b67cd7eb1420357ab40c111d2d513a7"
+      },
+      "before": {
+        "present": true,
+        "sha256": "361acbe9397014efe455690bd8714c5addbe38f9e519707d6ad7191b83e12224"
+      },
+      "json_pointer": "/ui/stage_interfaces/stage.tutorial.combat_greeting",
+      "operation": "replace",
+      "pointer": [
+        "ui",
+        "stage_interfaces",
+        "stage.tutorial.combat_greeting"
+      ]
+    },
+    {
+      "after": {
+        "present": true,
+        "sha256": "46ae8c4d81f7e494e36363a5ba6f835bae10ec0cec4d9bb6e6dc90b1759a6455"
+      },
+      "before": {
+        "present": true,
+        "sha256": "6b481fde1e36d54290eb9d7a7fdcaa0f79255b84baefa3656a650d26d593411c"
+      },
+      "json_pointer": "/ui/stage_interfaces/stage.tutorial.combat_open",
+      "operation": "replace",
+      "pointer": [
+        "ui",
+        "stage_interfaces",
+        "stage.tutorial.combat_open"
+      ]
+    },
+    {
+      "after": {
+        "present": true,
+        "sha256": "75cdf4841989355da89ea85bcedb9eb04b67cd7eb1420357ab40c111d2d513a7"
+      },
+      "before": {
+        "present": true,
+        "sha256": "361acbe9397014efe455690bd8714c5addbe38f9e519707d6ad7191b83e12224"
+      },
+      "json_pointer": "/ui/stage_interfaces/stage.tutorial.cook_shrimp",
+      "operation": "replace",
+      "pointer": [
+        "ui",
+        "stage_interfaces",
+        "stage.tutorial.cook_shrimp"
+      ]
+    },
+    {
+      "after": {
+        "present": true,
+        "sha256": "75cdf4841989355da89ea85bcedb9eb04b67cd7eb1420357ab40c111d2d513a7"
+      },
+      "before": {
+        "present": true,
+        "sha256": "361acbe9397014efe455690bd8714c5addbe38f9e519707d6ad7191b83e12224"
+      },
+      "json_pointer": "/ui/stage_interfaces/stage.tutorial.cut_logs",
+      "operation": "replace",
+      "pointer": [
+        "ui",
+        "stage_interfaces",
+        "stage.tutorial.cut_logs"
+      ]
+    },
+    {
+      "after": {
+        "present": true,
+        "sha256": "75cdf4841989355da89ea85bcedb9eb04b67cd7eb1420357ab40c111d2d513a7"
+      },
+      "before": {
+        "present": true,
+        "sha256": "361acbe9397014efe455690bd8714c5addbe38f9e519707d6ad7191b83e12224"
+      },
+      "json_pointer": "/ui/stage_interfaces/stage.tutorial.departure_confirmation",
+      "operation": "replace",
+      "pointer": [
+        "ui",
+        "stage_interfaces",
+        "stage.tutorial.departure_confirmation"
+      ]
+    },
+    {
+      "after": {
+        "present": true,
+        "sha256": "75cdf4841989355da89ea85bcedb9eb04b67cd7eb1420357ab40c111d2d513a7"
+      },
+      "before": {
+        "present": true,
+        "sha256": "361acbe9397014efe455690bd8714c5addbe38f9e519707d6ad7191b83e12224"
+      },
+      "json_pointer": "/ui/stage_interfaces/stage.tutorial.departure_offer",
+      "operation": "replace",
+      "pointer": [
+        "ui",
+        "stage_interfaces",
+        "stage.tutorial.departure_offer"
+      ]
+    },
+    {
+      "after": {
+        "present": true,
+        "sha256": "75cdf4841989355da89ea85bcedb9eb04b67cd7eb1420357ab40c111d2d513a7"
+      },
+      "before": {
+        "present": true,
+        "sha256": "361acbe9397014efe455690bd8714c5addbe38f9e519707d6ad7191b83e12224"
+      },
+      "json_pointer": "/ui/stage_interfaces/stage.tutorial.enter_rat_pen",
+      "operation": "replace",
+      "pointer": [
+        "ui",
+        "stage_interfaces",
+        "stage.tutorial.enter_rat_pen"
+      ]
+    },
+    {
+      "after": {
+        "present": true,
+        "sha256": "75cdf4841989355da89ea85bcedb9eb04b67cd7eb1420357ab40c111d2d513a7"
+      },
+      "before": {
+        "present": true,
+        "sha256": "361acbe9397014efe455690bd8714c5addbe38f9e519707d6ad7191b83e12224"
+      },
+      "json_pointer": "/ui/stage_interfaces/stage.tutorial.equip_dagger",
+      "operation": "replace",
+      "pointer": [
+        "ui",
+        "stage_interfaces",
+        "stage.tutorial.equip_dagger"
+      ]
+    },
+    {
+      "after": {
+        "present": true,
+        "sha256": "75cdf4841989355da89ea85bcedb9eb04b67cd7eb1420357ab40c111d2d513a7"
+      },
+      "before": {
+        "present": true,
+        "sha256": "361acbe9397014efe455690bd8714c5addbe38f9e519707d6ad7191b83e12224"
+      },
+      "json_pointer": "/ui/stage_interfaces/stage.tutorial.equip_melee",
+      "operation": "replace",
+      "pointer": [
+        "ui",
+        "stage_interfaces",
+        "stage.tutorial.equip_melee"
+      ]
+    },
+    {
+      "after": {
+        "present": true,
+        "sha256": "75cdf4841989355da89ea85bcedb9eb04b67cd7eb1420357ab40c111d2d513a7"
+      },
+      "before": {
+        "present": true,
+        "sha256": "361acbe9397014efe455690bd8714c5addbe38f9e519707d6ad7191b83e12224"
+      },
+      "json_pointer": "/ui/stage_interfaces/stage.tutorial.equip_ranged",
+      "operation": "replace",
+      "pointer": [
+        "ui",
+        "stage_interfaces",
+        "stage.tutorial.equip_ranged"
+      ]
+    },
+    {
+      "after": {
+        "present": true,
+        "sha256": "f53cf24aac1e077ec26e34dc458dee006e1662c9ced80c5f560f0b53fefcdbc1"
+      },
+      "before": {
+        "present": true,
+        "sha256": "84c76f13805eb6ba5cce2b5e9ea16bd1238a0b0a84166b3377102949301eb5dd"
+      },
+      "json_pointer": "/ui/stage_interfaces/stage.tutorial.equipment_open",
+      "operation": "replace",
+      "pointer": [
+        "ui",
+        "stage_interfaces",
+        "stage.tutorial.equipment_open"
+      ]
+    },
+    {
+      "after": {
+        "present": true,
+        "sha256": "75cdf4841989355da89ea85bcedb9eb04b67cd7eb1420357ab40c111d2d513a7"
+      },
+      "before": {
+        "present": true,
+        "sha256": "361acbe9397014efe455690bd8714c5addbe38f9e519707d6ad7191b83e12224"
+      },
+      "json_pointer": "/ui/stage_interfaces/stage.tutorial.equipment_stats_open",
+      "operation": "replace",
+      "pointer": [
+        "ui",
+        "stage_interfaces",
+        "stage.tutorial.equipment_stats_open"
+      ]
+    },
+    {
+      "after": {
+        "present": true,
+        "sha256": "08a2d5bf07ca7ab65ae989fa2fd8f0636935cabca65e79d36976d53153a27e70"
+      },
+      "before": {
+        "present": true,
+        "sha256": "c0b5844b7f4219424cc4671990c06ee9477cf70d0204c9969603e60f77e0b92c"
+      },
+      "json_pointer": "/ui/stage_interfaces/stage.tutorial.experience",
+      "operation": "replace",
+      "pointer": [
+        "ui",
+        "stage_interfaces",
+        "stage.tutorial.experience"
+      ]
+    },
+    {
+      "after": {
+        "present": true,
+        "sha256": "75cdf4841989355da89ea85bcedb9eb04b67cd7eb1420357ab40c111d2d513a7"
+      },
+      "before": {
+        "present": true,
+        "sha256": "361acbe9397014efe455690bd8714c5addbe38f9e519707d6ad7191b83e12224"
+      },
+      "json_pointer": "/ui/stage_interfaces/stage.tutorial.guide_greeting",
+      "operation": "replace",
+      "pointer": [
+        "ui",
+        "stage_interfaces",
+        "stage.tutorial.guide_greeting"
+      ]
+    },
+    {
+      "after": {
+        "present": true,
+        "sha256": "75cdf4841989355da89ea85bcedb9eb04b67cd7eb1420357ab40c111d2d513a7"
+      },
+      "before": {
+        "present": true,
+        "sha256": "361acbe9397014efe455690bd8714c5addbe38f9e519707d6ad7191b83e12224"
+      },
+      "json_pointer": "/ui/stage_interfaces/stage.tutorial.guide_settings",
+      "operation": "replace",
+      "pointer": [
+        "ui",
+        "stage_interfaces",
+        "stage.tutorial.guide_settings"
+      ]
+    },
+    {
+      "after": {
+        "present": true,
+        "sha256": "75cdf4841989355da89ea85bcedb9eb04b67cd7eb1420357ab40c111d2d513a7"
+      },
+      "before": {
+        "present": true,
+        "sha256": "361acbe9397014efe455690bd8714c5addbe38f9e519707d6ad7191b83e12224"
+      },
+      "json_pointer": "/ui/stage_interfaces/stage.tutorial.home_teleport",
+      "operation": "replace",
+      "pointer": [
+        "ui",
+        "stage_interfaces",
+        "stage.tutorial.home_teleport"
+      ]
+    },
+    {
+      "after": {
+        "present": true,
+        "sha256": "5d0e11083647f8ea908a78a9bab5675af24a6eb3c70bdf913015316703c64c72"
+      },
+      "before": {
+        "present": true,
+        "sha256": "a83803baf50f178b6a591ed57a2f4e0aef9e1efdd27e246dab9f5afde2e09fe0"
+      },
+      "json_pointer": "/ui/stage_interfaces/stage.tutorial.inventory_open",
+      "operation": "replace",
+      "pointer": [
+        "ui",
+        "stage_interfaces",
+        "stage.tutorial.inventory_open"
+      ]
+    },
+    {
+      "after": {
+        "present": true,
+        "sha256": "adc227d71e9e253021316debcc100f2c8b421889b588831842451f91a6fd2d3c"
+      },
+      "before": {
+        "present": true,
+        "sha256": "b8cea5c2bf48a9c9d3bb722c21fa7710f78207c09845d9df0a19e2a4b0e41c14"
+      },
+      "json_pointer": "/ui/stage_interfaces/stage.tutorial.journal_open",
+      "operation": "replace",
+      "pointer": [
+        "ui",
+        "stage_interfaces",
+        "stage.tutorial.journal_open"
+      ]
+    },
+    {
+      "after": {
+        "present": true,
+        "sha256": "75cdf4841989355da89ea85bcedb9eb04b67cd7eb1420357ab40c111d2d513a7"
+      },
+      "before": {
+        "present": true,
+        "sha256": "361acbe9397014efe455690bd8714c5addbe38f9e519707d6ad7191b83e12224"
+      },
+      "json_pointer": "/ui/stage_interfaces/stage.tutorial.leave_rat_pen",
+      "operation": "replace",
+      "pointer": [
+        "ui",
+        "stage_interfaces",
+        "stage.tutorial.leave_rat_pen"
+      ]
+    },
+    {
+      "after": {
+        "present": true,
+        "sha256": "75cdf4841989355da89ea85bcedb9eb04b67cd7eb1420357ab40c111d2d513a7"
+      },
+      "before": {
+        "present": true,
+        "sha256": "361acbe9397014efe455690bd8714c5addbe38f9e519707d6ad7191b83e12224"
+      },
+      "json_pointer": "/ui/stage_interfaces/stage.tutorial.light_fire",
+      "operation": "replace",
+      "pointer": [
+        "ui",
+        "stage_interfaces",
+        "stage.tutorial.light_fire"
+      ]
+    },
+    {
+      "after": {
+        "present": true,
+        "sha256": "75cdf4841989355da89ea85bcedb9eb04b67cd7eb1420357ab40c111d2d513a7"
+      },
+      "before": {
+        "present": true,
+        "sha256": "361acbe9397014efe455690bd8714c5addbe38f9e519707d6ad7191b83e12224"
+      },
+      "json_pointer": "/ui/stage_interfaces/stage.tutorial.magic_entry",
+      "operation": "replace",
+      "pointer": [
+        "ui",
+        "stage_interfaces",
+        "stage.tutorial.magic_entry"
+      ]
+    },
+    {
+      "after": {
+        "present": true,
+        "sha256": "75cdf4841989355da89ea85bcedb9eb04b67cd7eb1420357ab40c111d2d513a7"
+      },
+      "before": {
+        "present": true,
+        "sha256": "361acbe9397014efe455690bd8714c5addbe38f9e519707d6ad7191b83e12224"
+      },
+      "json_pointer": "/ui/stage_interfaces/stage.tutorial.magic_greeting",
+      "operation": "replace",
+      "pointer": [
+        "ui",
+        "stage_interfaces",
+        "stage.tutorial.magic_greeting"
+      ]
+    },
+    {
+      "after": {
+        "present": true,
+        "sha256": "33a364e6716856279a7551632e43c23cc52c6938718c140e7ed89976dd60f3fc"
+      },
+      "before": {
+        "present": true,
+        "sha256": "5557cbaf2a9a5c8c564e31e04e1cfb160793fd52e586ae89b0509dccbbae4f40"
+      },
+      "json_pointer": "/ui/stage_interfaces/stage.tutorial.magic_open",
+      "operation": "replace",
+      "pointer": [
+        "ui",
+        "stage_interfaces",
+        "stage.tutorial.magic_open"
+      ]
+    },
+    {
+      "after": {
+        "present": true,
+        "sha256": "75cdf4841989355da89ea85bcedb9eb04b67cd7eb1420357ab40c111d2d513a7"
+      },
+      "before": {
+        "present": true,
+        "sha256": "361acbe9397014efe455690bd8714c5addbe38f9e519707d6ad7191b83e12224"
+      },
+      "json_pointer": "/ui/stage_interfaces/stage.tutorial.magic_supply",
+      "operation": "replace",
+      "pointer": [
+        "ui",
+        "stage_interfaces",
+        "stage.tutorial.magic_supply"
+      ]
+    },
+    {
+      "after": {
+        "present": true,
+        "sha256": "75cdf4841989355da89ea85bcedb9eb04b67cd7eb1420357ab40c111d2d513a7"
+      },
+      "before": {
+        "present": true,
+        "sha256": "361acbe9397014efe455690bd8714c5addbe38f9e519707d6ad7191b83e12224"
+      },
+      "json_pointer": "/ui/stage_interfaces/stage.tutorial.mainland",
+      "operation": "replace",
+      "pointer": [
+        "ui",
+        "stage_interfaces",
+        "stage.tutorial.mainland"
+      ]
+    },
+    {
+      "after": {
+        "present": true,
+        "sha256": "75cdf4841989355da89ea85bcedb9eb04b67cd7eb1420357ab40c111d2d513a7"
+      },
+      "before": {
+        "present": true,
+        "sha256": "361acbe9397014efe455690bd8714c5addbe38f9e519707d6ad7191b83e12224"
+      },
+      "json_pointer": "/ui/stage_interfaces/stage.tutorial.make_dough",
+      "operation": "replace",
+      "pointer": [
+        "ui",
+        "stage_interfaces",
+        "stage.tutorial.make_dough"
+      ]
+    },
+    {
+      "after": {
+        "present": true,
+        "sha256": "75cdf4841989355da89ea85bcedb9eb04b67cd7eb1420357ab40c111d2d513a7"
+      },
+      "before": {
+        "present": true,
+        "sha256": "361acbe9397014efe455690bd8714c5addbe38f9e519707d6ad7191b83e12224"
+      },
+      "json_pointer": "/ui/stage_interfaces/stage.tutorial.melee_rat",
+      "operation": "replace",
+      "pointer": [
+        "ui",
+        "stage_interfaces",
+        "stage.tutorial.melee_rat"
+      ]
+    },
+    {
+      "after": {
+        "present": true,
+        "sha256": "75cdf4841989355da89ea85bcedb9eb04b67cd7eb1420357ab40c111d2d513a7"
+      },
+      "before": {
+        "present": true,
+        "sha256": "361acbe9397014efe455690bd8714c5addbe38f9e519707d6ad7191b83e12224"
+      },
+      "json_pointer": "/ui/stage_interfaces/stage.tutorial.melee_supply",
+      "operation": "replace",
+      "pointer": [
+        "ui",
+        "stage_interfaces",
+        "stage.tutorial.melee_supply"
+      ]
+    },
+    {
+      "after": {
+        "present": true,
+        "sha256": "75cdf4841989355da89ea85bcedb9eb04b67cd7eb1420357ab40c111d2d513a7"
+      },
+      "before": {
+        "present": true,
+        "sha256": "361acbe9397014efe455690bd8714c5addbe38f9e519707d6ad7191b83e12224"
+      },
+      "json_pointer": "/ui/stage_interfaces/stage.tutorial.mine_first",
+      "operation": "replace",
+      "pointer": [
+        "ui",
+        "stage_interfaces",
+        "stage.tutorial.mine_first"
+      ]
+    },
+    {
+      "after": {
+        "present": true,
+        "sha256": "75cdf4841989355da89ea85bcedb9eb04b67cd7eb1420357ab40c111d2d513a7"
+      },
+      "before": {
+        "present": true,
+        "sha256": "361acbe9397014efe455690bd8714c5addbe38f9e519707d6ad7191b83e12224"
+      },
+      "json_pointer": "/ui/stage_interfaces/stage.tutorial.mine_second",
+      "operation": "replace",
+      "pointer": [
+        "ui",
+        "stage_interfaces",
+        "stage.tutorial.mine_second"
+      ]
+    },
+    {
+      "after": {
+        "present": true,
+        "sha256": "75cdf4841989355da89ea85bcedb9eb04b67cd7eb1420357ab40c111d2d513a7"
+      },
+      "before": {
+        "present": true,
+        "sha256": "361acbe9397014efe455690bd8714c5addbe38f9e519707d6ad7191b83e12224"
+      },
+      "json_pointer": "/ui/stage_interfaces/stage.tutorial.mining_exit",
+      "operation": "replace",
+      "pointer": [
+        "ui",
+        "stage_interfaces",
+        "stage.tutorial.mining_exit"
+      ]
+    },
+    {
+      "after": {
+        "present": true,
+        "sha256": "75cdf4841989355da89ea85bcedb9eb04b67cd7eb1420357ab40c111d2d513a7"
+      },
+      "before": {
+        "present": true,
+        "sha256": "361acbe9397014efe455690bd8714c5addbe38f9e519707d6ad7191b83e12224"
+      },
+      "json_pointer": "/ui/stage_interfaces/stage.tutorial.mining_greeting",
+      "operation": "replace",
+      "pointer": [
+        "ui",
+        "stage_interfaces",
+        "stage.tutorial.mining_greeting"
+      ]
+    },
+    {
+      "after": {
+        "present": true,
+        "sha256": "75cdf4841989355da89ea85bcedb9eb04b67cd7eb1420357ab40c111d2d513a7"
+      },
+      "before": {
+        "present": true,
+        "sha256": "361acbe9397014efe455690bd8714c5addbe38f9e519707d6ad7191b83e12224"
+      },
+      "json_pointer": "/ui/stage_interfaces/stage.tutorial.mining_hammer",
+      "operation": "replace",
+      "pointer": [
+        "ui",
+        "stage_interfaces",
+        "stage.tutorial.mining_hammer"
+      ]
+    },
+    {
+      "after": {
+        "present": true,
+        "sha256": "75cdf4841989355da89ea85bcedb9eb04b67cd7eb1420357ab40c111d2d513a7"
+      },
+      "before": {
+        "present": true,
+        "sha256": "361acbe9397014efe455690bd8714c5addbe38f9e519707d6ad7191b83e12224"
+      },
+      "json_pointer": "/ui/stage_interfaces/stage.tutorial.poll_inspect",
+      "operation": "replace",
+      "pointer": [
+        "ui",
+        "stage_interfaces",
+        "stage.tutorial.poll_inspect"
+      ]
+    },
+    {
+      "after": {
+        "present": true,
+        "sha256": "75cdf4841989355da89ea85bcedb9eb04b67cd7eb1420357ab40c111d2d513a7"
+      },
+      "before": {
+        "present": true,
+        "sha256": "361acbe9397014efe455690bd8714c5addbe38f9e519707d6ad7191b83e12224"
+      },
+      "json_pointer": "/ui/stage_interfaces/stage.tutorial.prayer_explanation",
+      "operation": "replace",
+      "pointer": [
+        "ui",
+        "stage_interfaces",
+        "stage.tutorial.prayer_explanation"
+      ]
+    },
+    {
+      "after": {
+        "present": true,
+        "sha256": "75cdf4841989355da89ea85bcedb9eb04b67cd7eb1420357ab40c111d2d513a7"
+      },
+      "before": {
+        "present": true,
+        "sha256": "361acbe9397014efe455690bd8714c5addbe38f9e519707d6ad7191b83e12224"
+      },
+      "json_pointer": "/ui/stage_interfaces/stage.tutorial.prayer_greeting",
+      "operation": "replace",
+      "pointer": [
+        "ui",
+        "stage_interfaces",
+        "stage.tutorial.prayer_greeting"
+      ]
+    },
+    {
+      "after": {
+        "present": true,
+        "sha256": "de3761cacb4fbcab0965acb9269a5fe4d48dc414251b00ef1ce61486a48b2098"
+      },
+      "before": {
+        "present": true,
+        "sha256": "451523233ea49f738bf94dcfda19adc9740d84be2ad9662b47f005d19efd710e"
+      },
+      "json_pointer": "/ui/stage_interfaces/stage.tutorial.prayer_open",
+      "operation": "replace",
+      "pointer": [
+        "ui",
+        "stage_interfaces",
+        "stage.tutorial.prayer_open"
+      ]
+    },
+    {
+      "after": {
+        "present": true,
+        "sha256": "75cdf4841989355da89ea85bcedb9eb04b67cd7eb1420357ab40c111d2d513a7"
+      },
+      "before": {
+        "present": true,
+        "sha256": "361acbe9397014efe455690bd8714c5addbe38f9e519707d6ad7191b83e12224"
+      },
+      "json_pointer": "/ui/stage_interfaces/stage.tutorial.quest_entry",
+      "operation": "replace",
+      "pointer": [
+        "ui",
+        "stage_interfaces",
+        "stage.tutorial.quest_entry"
+      ]
+    },
+    {
+      "after": {
+        "present": true,
+        "sha256": "75cdf4841989355da89ea85bcedb9eb04b67cd7eb1420357ab40c111d2d513a7"
+      },
+      "before": {
+        "present": true,
+        "sha256": "361acbe9397014efe455690bd8714c5addbe38f9e519707d6ad7191b83e12224"
+      },
+      "json_pointer": "/ui/stage_interfaces/stage.tutorial.quest_explanation",
+      "operation": "replace",
+      "pointer": [
+        "ui",
+        "stage_interfaces",
+        "stage.tutorial.quest_explanation"
+      ]
+    },
+    {
+      "after": {
+        "present": true,
+        "sha256": "75cdf4841989355da89ea85bcedb9eb04b67cd7eb1420357ab40c111d2d513a7"
+      },
+      "before": {
+        "present": true,
+        "sha256": "361acbe9397014efe455690bd8714c5addbe38f9e519707d6ad7191b83e12224"
+      },
+      "json_pointer": "/ui/stage_interfaces/stage.tutorial.quest_greeting",
+      "operation": "replace",
+      "pointer": [
+        "ui",
+        "stage_interfaces",
+        "stage.tutorial.quest_greeting"
+      ]
+    },
+    {
+      "after": {
+        "present": true,
+        "sha256": "75cdf4841989355da89ea85bcedb9eb04b67cd7eb1420357ab40c111d2d513a7"
+      },
+      "before": {
+        "present": true,
+        "sha256": "361acbe9397014efe455690bd8714c5addbe38f9e519707d6ad7191b83e12224"
+      },
+      "json_pointer": "/ui/stage_interfaces/stage.tutorial.quest_ladder",
+      "operation": "replace",
+      "pointer": [
+        "ui",
+        "stage_interfaces",
+        "stage.tutorial.quest_ladder"
+      ]
+    },
+    {
+      "after": {
+        "present": true,
+        "sha256": "75cdf4841989355da89ea85bcedb9eb04b67cd7eb1420357ab40c111d2d513a7"
+      },
+      "before": {
+        "present": true,
+        "sha256": "361acbe9397014efe455690bd8714c5addbe38f9e519707d6ad7191b83e12224"
+      },
+      "json_pointer": "/ui/stage_interfaces/stage.tutorial.ranged_rat",
+      "operation": "replace",
+      "pointer": [
+        "ui",
+        "stage_interfaces",
+        "stage.tutorial.ranged_rat"
+      ]
+    },
+    {
+      "after": {
+        "present": true,
+        "sha256": "75cdf4841989355da89ea85bcedb9eb04b67cd7eb1420357ab40c111d2d513a7"
+      },
+      "before": {
+        "present": true,
+        "sha256": "361acbe9397014efe455690bd8714c5addbe38f9e519707d6ad7191b83e12224"
+      },
+      "json_pointer": "/ui/stage_interfaces/stage.tutorial.ranged_supply",
+      "operation": "replace",
+      "pointer": [
+        "ui",
+        "stage_interfaces",
+        "stage.tutorial.ranged_supply"
+      ]
+    },
+    {
+      "after": {
+        "present": true,
+        "sha256": "f0fd32f6b8db2e851ca2651f9a321ec5cf1413c96a676c0010dba5e9155e0339"
+      },
+      "before": {
+        "present": true,
+        "sha256": "4a5e248509b87939ce6937e1fac4abb18905ed7228afcce999481d2993afacd9"
+      },
+      "json_pointer": "/ui/stage_interfaces/stage.tutorial.run_toggle",
+      "operation": "replace",
+      "pointer": [
+        "ui",
+        "stage_interfaces",
+        "stage.tutorial.run_toggle"
+      ]
+    },
+    {
+      "after": {
+        "present": true,
+        "sha256": "37830f9c0f2776fbc5d8fa7e798a176120beb0f04104640181fd2aa33b628cb9"
+      },
+      "before": {
+        "present": true,
+        "sha256": "0e6b63c8f5e1a782224a4fa875e42eb561acb48a3357911db358cba59d805d32"
+      },
+      "json_pointer": "/ui/stage_interfaces/stage.tutorial.settings_open",
+      "operation": "replace",
+      "pointer": [
+        "ui",
+        "stage_interfaces",
+        "stage.tutorial.settings_open"
+      ]
+    },
+    {
+      "after": {
+        "present": true,
+        "sha256": "7dfcb81c1bf9c148896686c6ced1e15ba5b71030e6cfd2f788dbd7a4df237e52"
+      },
+      "before": {
+        "present": true,
+        "sha256": "e36ae431ef9b03a99d7ec45e4ca9241efdf8c192d042447f53836b29eadb3bdb"
+      },
+      "json_pointer": "/ui/stage_interfaces/stage.tutorial.skills_open",
+      "operation": "replace",
+      "pointer": [
+        "ui",
+        "stage_interfaces",
+        "stage.tutorial.skills_open"
+      ]
+    },
+    {
+      "after": {
+        "present": true,
+        "sha256": "75cdf4841989355da89ea85bcedb9eb04b67cd7eb1420357ab40c111d2d513a7"
+      },
+      "before": {
+        "present": true,
+        "sha256": "361acbe9397014efe455690bd8714c5addbe38f9e519707d6ad7191b83e12224"
+      },
+      "json_pointer": "/ui/stage_interfaces/stage.tutorial.smelt_bronze",
+      "operation": "replace",
+      "pointer": [
+        "ui",
+        "stage_interfaces",
+        "stage.tutorial.smelt_bronze"
+      ]
+    },
+    {
+      "after": {
+        "present": true,
+        "sha256": "75cdf4841989355da89ea85bcedb9eb04b67cd7eb1420357ab40c111d2d513a7"
+      },
+      "before": {
+        "present": true,
+        "sha256": "361acbe9397014efe455690bd8714c5addbe38f9e519707d6ad7191b83e12224"
+      },
+      "json_pointer": "/ui/stage_interfaces/stage.tutorial.smith_dagger",
+      "operation": "replace",
+      "pointer": [
+        "ui",
+        "stage_interfaces",
+        "stage.tutorial.smith_dagger"
+      ]
+    },
+    {
+      "after": {
+        "present": true,
+        "sha256": "75cdf4841989355da89ea85bcedb9eb04b67cd7eb1420357ab40c111d2d513a7"
+      },
+      "before": {
+        "present": true,
+        "sha256": "361acbe9397014efe455690bd8714c5addbe38f9e519707d6ad7191b83e12224"
+      },
+      "json_pointer": "/ui/stage_interfaces/stage.tutorial.starting_exit",
+      "operation": "replace",
+      "pointer": [
+        "ui",
+        "stage_interfaces",
+        "stage.tutorial.starting_exit"
+      ]
+    },
+    {
+      "after": {
+        "present": true,
+        "sha256": "75cdf4841989355da89ea85bcedb9eb04b67cd7eb1420357ab40c111d2d513a7"
+      },
+      "before": {
+        "present": true,
+        "sha256": "361acbe9397014efe455690bd8714c5addbe38f9e519707d6ad7191b83e12224"
+      },
+      "json_pointer": "/ui/stage_interfaces/stage.tutorial.survival_exit",
+      "operation": "replace",
+      "pointer": [
+        "ui",
+        "stage_interfaces",
+        "stage.tutorial.survival_exit"
+      ]
+    },
+    {
+      "after": {
+        "present": true,
+        "sha256": "75cdf4841989355da89ea85bcedb9eb04b67cd7eb1420357ab40c111d2d513a7"
+      },
+      "before": {
+        "present": true,
+        "sha256": "361acbe9397014efe455690bd8714c5addbe38f9e519707d6ad7191b83e12224"
+      },
+      "json_pointer": "/ui/stage_interfaces/stage.tutorial.survival_greeting",
+      "operation": "replace",
+      "pointer": [
+        "ui",
+        "stage_interfaces",
+        "stage.tutorial.survival_greeting"
+      ]
+    },
+    {
+      "after": {
+        "present": true,
+        "sha256": "75cdf4841989355da89ea85bcedb9eb04b67cd7eb1420357ab40c111d2d513a7"
+      },
+      "before": {
+        "present": true,
+        "sha256": "361acbe9397014efe455690bd8714c5addbe38f9e519707d6ad7191b83e12224"
+      },
+      "json_pointer": "/ui/stage_interfaces/stage.tutorial.survival_tools",
+      "operation": "replace",
+      "pointer": [
+        "ui",
+        "stage_interfaces",
+        "stage.tutorial.survival_tools"
+      ]
+    },
+    {
+      "after": {
+        "present": true,
+        "sha256": "75cdf4841989355da89ea85bcedb9eb04b67cd7eb1420357ab40c111d2d513a7"
+      },
+      "before": {
+        "present": true,
+        "sha256": "361acbe9397014efe455690bd8714c5addbe38f9e519707d6ad7191b83e12224"
+      },
+      "json_pointer": "/ui/stage_interfaces/stage.tutorial.teleport_channel",
+      "operation": "replace",
+      "pointer": [
+        "ui",
+        "stage_interfaces",
+        "stage.tutorial.teleport_channel"
+      ]
+    },
+    {
+      "after": {
+        "present": true,
+        "sha256": "75cdf4841989355da89ea85bcedb9eb04b67cd7eb1420357ab40c111d2d513a7"
+      },
+      "before": {
+        "present": true,
+        "sha256": "361acbe9397014efe455690bd8714c5addbe38f9e519707d6ad7191b83e12224"
+      },
+      "json_pointer": "/ui/stage_interfaces/stage.tutorial.wind_strike",
+      "operation": "replace",
+      "pointer": [
+        "ui",
+        "stage_interfaces",
+        "stage.tutorial.wind_strike"
+      ]
+    }
+  ],
+  "exact_value_policy": "Small values are inline. Every larger value is available at its exact pointer in the two committed public source inputs and is content-hashed; nothing is silently normalized.",
+  "from": {
+    "compressed_artifact_sha256": "7d49e8f85b7b229bb0fc9f6f3cb9665aaf9d287f6a873ac42701e3d77cc6e69f",
+    "input": "research/water-fill/inputs/legacy5e-source.json.gz",
+    "public_supplied_copy": ".local/source5e-input/game-content.json.gz",
+    "raw_artifact_sha256": "5e0aa8a28851752ae0b8b0a08c635c6c8d2979f509f3a3e564ee74e2abfc8e6f",
+    "revision": "m1.source-backed.v4.3ff4292b311453cc",
+    "semantic_sha256_without_revision": "00f994caf1320993c69d96b833254a5684dbf235cf3bb71f812cff3ad72671a5",
+    "source_sha256": "294ede7e3d8e08633051338385f189c0d420000e74cd2344ce54b13bbfa28706"
+  },
+  "migration_admitted": false,
+  "schema_version": 1,
+  "to": {
+    "commit": "00229843ab08b724b33eae29e92917f12dc86a53",
+    "compressed_artifact_sha256": "8da1e85a1e2ebb0355e29e7a15a0ca7cdab2f2751bc1341dd5efd5322b925ca6",
+    "input": "research/water-fill/inputs/current5b-source.json.gz",
+    "raw_artifact_sha256": "5b3ba5f108ed3fec8f8b5f7f49b429c059e21b6f192ec99a0569616e08330059",
+    "repository_path": "content/m1/game-content.json.gz",
+    "revision": "m1.source-backed.v4.bdbf8a3788b842be",
+    "semantic_sha256_without_revision": "fc0f4fb5e73c6d9800b88bb62001b3acfc058c8c37321947f58fc5058835fc74",
+    "source_sha256": "2782a2fbb164ca4c11a964778adf0ca544986f6b2e17aa9bb9bd55f730092ed2"
+  }
+}

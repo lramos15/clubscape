@@ -64,6 +64,48 @@ bindings. Startup still enforces descriptor size, artifact/source readiness,
 asset membership and engine construction. Compact JSON does not remove or relax
 any startup check.
 
+Operator/preflight tooling can call the source-only `publish_product_root`
+helper with an explicit worktree-relative `source_manifest` and canonical
+non-nil `world_id`. The helper records the selected manifest hash, still verifies
+both archive hashes and every genuine compiler-required asset, and creates a
+new GameRoot rather than rewriting an existing delivery. This supports the
+separately pinned legacy water target without replacing canonical content or
+importing unrelated newer UI/audio metadata. The ordinary journey command keeps
+its canonical defaults and source-identity check; preparing a directory does
+not authorize restoring or migrating a saved world.
+
+### Bounded empty-world water operator preflight
+
+`water_operator.py` is separate from the account journey. It can consume only
+the Director's exact main water-preflight admission, the four already prepared
+source deliveries and a passed independent persisted-state fix review. Its
+`prepared_source_operator.execution` admission must explicitly pin the candidate
+HEAD, native `binary.path`/`binary.sha256`, `runner_sha256` and
+`review_record_sha256`, with `status: "admitted"`. Preparation alone is refused.
+No executable identity is inferred from a build label.
+
+The program exclusively reserves the fixed `operator-authority-v1.json` journal
+before creating a database or starting a source process. It owns one capped
+`clubscape_m1_test` database, four source-server starts and ten production
+`migrate-ui` calls, each with a 35-second deadline. Each profile exercises active
+ownership refusal, wrong pin, one exact migration, idempotent retry, wrong-origin
+retry and normal target startup. It uses the production launcher's SIGTERM
+shutdown and requires the real clean-shutdown event and released lease.
+
+Only the two admitted newly created character-free worlds may exist. Snapshots
+are read-only and remain in memory, including the private native random key;
+neither values nor complete snapshot/error payloads are evidence output.
+Conservation removes only lease fields, with the exact new fence checked
+separately. A successful first migration may additionally change only the
+exact content pin, revision and one audited transition. The normal ticking
+server's active-owner check does not pretend NPC state is stationary.
+
+There are no account/gameplay commands, saved-checkpoint reads, browser builds
+or automatic retries. Both passed and failed attempts keep the same permanent
+reservation; changing an output directory never renews the allowance.
+`test_water_operator.py` exercises machinery/oracles only, not the actual CLI
+or a legitimate player journey.
+
 ## Isolation and sequence
 
 1. Build the real account/game server and simulator.

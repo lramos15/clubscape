@@ -387,11 +387,17 @@ impl Validator<'_> {
                             ("failure", &mechanics.failure_effects),
                         ] {
                             if !effects.is_empty() {
+                                let mut guards = vec![&mechanics.guard];
+                                if let Some(SourceBinding::Bound { value, .. }) =
+                                    &recipe.item_on_target
+                                {
+                                    guards.push(&value.guard);
+                                }
                                 sites.push(Site {
                                     path: format!("recipes.{}.{}", recipe.id, outcome),
                                     tutorial_owner: None,
                                     quest_owner: None,
-                                    guards: vec![&mechanics.guard],
+                                    guards,
                                     effects,
                                     transition: None,
                                 });

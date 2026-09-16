@@ -59,10 +59,24 @@
     12526
   ],
   "schema_version": 1,
-  "source_binding_sha256": "be0c8b2e078450bea40fb871dd42c84c93b08a20fc728cfd90059da4a86ac6f0",
+  "source_binding_sha256": "27a42ea306aa02b7fcfcb3b5c970a908bda21d0b21dbc2c609b419becae104d3",
   "unknowns": {
     "empty_container": "No numeric actor sequence or deliberate silence has been verified; keep the actual item action identity.",
     "recipe.cooking.dough": "No numeric actor sequence or deliberate silence has been verified; original potter-wheel883 is not a dough substitute."
+  },
+  "water_extension": {
+    "rule": {
+      "kind": "unverified",
+      "reason": "Scenery animationID=-1 is not actor dispatch evidence. No filling sequence or deliberate absence was verified; do not use a similarly named vial, fountain or construction sequence."
+    },
+    "source": [
+      {
+        "notes": "Water-specific source motion is explicitly unverified, not silence or a similarly named sequence.",
+        "reference": "research/water-fill/facts.json",
+        "revision": "9dc44a36c88538605e9d66a408966ff623a392d2e9927fda9dc28d949e14d47d",
+        "status": "inference"
+      }
+    ]
   },
   "weapon_styles": {
     "item.axe.bronze": {

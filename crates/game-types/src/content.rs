@@ -214,8 +214,75 @@ pub struct RecipeDefinition {
     pub ticks: Option<u16>,
     pub success: ChanceRule,
     pub target_objects: Vec<ObjectId>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub item_on_target: Option<SourceBinding<ItemOnTargetRule>>,
     pub mechanics: Option<RecipeMechanics>,
     pub source: Vec<SourceRecord>,
+}
+
+#[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub struct ItemOnTargetRule {
+    pub reach: u16,
+    pub guard: Guard,
+}
+
+impl RecipeDefinition {
+    /// Shared admission and persisted-state invariant; independent of a pending deadline.
+    pub fn validate_production_mode(
+        &self,
+        quantity: u32,
+        mode: Option<ProductionMode>,
+    ) -> GameResult<()> {
+        if quantity == 0 {
+            return Err(GameError::new(
+                GameErrorCode::InvalidInput,
+                "Production quantity is zero.",
+            ));
+        }
+        if mode == Some(ProductionMode::Single) && quantity != 1 {
+            return Err(GameError::new(
+                GameErrorCode::InvalidInput,
+                "Single production must request exactly one operation.",
+            ));
+        }
+        if self.item_on_target.is_some() && (quantity != 1 || mode == Some(ProductionMode::MakeX)) {
+            return Err(GameError::new(
+                GameErrorCode::Unavailable,
+                "Item-on-only production permits one single conversion, not Make-X or batching.",
+            ));
+        }
+        Ok(())
+    }
+
+    /// A bound non-menu facility rule admits one inventory conversion, never a batch.
+    pub fn item_on_target_rule(&self) -> GameResult<Option<&ItemOnTargetRule>> {
+        let Some(binding) = &self.item_on_target else {
+            return Ok(None);
+        };
+        let rule = binding.require()?;
+        let invalid = || {
+            GameError::new(
+                GameErrorCode::InvalidContent,
+                "Item-on-only recipes need source evidence, positive reach, explicit object targets and single inventory-conversion timing without menu delay.",
+            )
+        };
+        let SourceBinding::Bound { source, .. } = binding else {
+            return Err(invalid());
+        };
+        let mechanics = self.mechanics.as_ref().ok_or_else(invalid)?;
+        if source.is_empty()
+            || rule.reach == 0
+            || self.target_objects.is_empty()
+            || self.ticks.is_some()
+            || !matches!(mechanics.lifecycle, RecipeLifecycle::InventoryConversion)
+            || *mechanics.cadence.single.require()? == 0
+            || *mechanics.cadence.menu_delay.require()? != 0
+        {
+            return Err(invalid());
+        }
+        Ok(Some(rule))
+    }
 }
 
 #[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]

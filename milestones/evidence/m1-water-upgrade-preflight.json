@@ -1,0 +1,186 @@
+{
+  "schema_version": 1,
+  "task": "M1-WATER-UPGRADE-PREFLIGHT",
+  "status": "reviewed_native_and_real_source_operator_preflight_passed",
+  "authority": "milestones/evidence/m1-water-upgrade-preflight-authorization.json",
+  "worktree": ".worktrees/m1-water-integration",
+  "code_commit": "6c47c3a7cb71d41a9b3e94904b36c75c084315de",
+  "initial_test_code_commit": "de7b66f5ead59b53012e7d7a9752cdb6a58ad03c",
+  "owned_imports": [
+    {"owned": "eaa527a8f3d9d408d6bf1a4b8fdc47269abe0137", "candidate": "21d9485"},
+    {"owned": "5c6c581136310b48e8043e7920199d7236f9b88c", "candidate": "ee81bbf0501584e22550845666c7dd690acf991f"},
+    {"owned": "04a40ee84d0a95866264a3c087071e0f63904377", "candidate": "6c47c3a7cb71d41a9b3e94904b36c75c084315de"}
+  ],
+  "source_pairs": [
+    {
+      "profile": "legacy5e",
+      "from_raw_sha256": "5e0aa8a28851752ae0b8b0a08c635c6c8d2979f509f3a3e564ee74e2abfc8e6f",
+      "to_raw_sha256": "b2a1be20a0e6c3e1968f6f7610198ce38212f196c005539b4ac5013d10ebc650",
+      "to_gzip_sha256": "12432ec116f050d1edc42e4853ab38215d3aadd499e9fefad893ffbd6cf92232",
+      "exact_semantic_delta": ["/recipes/recipe.water.bucket", "/revision"]
+    },
+    {
+      "profile": "current5b",
+      "from_raw_sha256": "5b3ba5f108ed3fec8f8b5f7f49b429c059e21b6f192ec99a0569616e08330059",
+      "to_raw_sha256": "adb24c14f76181a76e2874e97be3e2743a4c475d3ff89a7720b70ae6f6981bbc",
+      "to_gzip_sha256": "3b258ec2f23fd0942b99a8e20910b2d6ec2feb54a1ae11b71736a805b4754a7d",
+      "exact_semantic_delta": ["/recipes/recipe.water.bucket", "/revision", "/ui/actor_animations/recipes/recipe.water.bucket"]
+    }
+  ],
+  "actual_validation": {
+    "native_command": "env -u CARGO_TARGET_DIR cargo test --locked --offline --quiet -p clubscape-server --lib water_migration -- --nocapture",
+    "native_cases_passed": 1,
+    "native_case_profiles": 2,
+    "database_cases_ignored_by_native_command": 2,
+    "database_cases_actually_executed_and_passed_separately": 2,
+    "database_runtime_seconds": 22.93,
+    "database_image": "postgres:16-alpine@sha256:cf78e76683b9ca8c5733cbbdce6c9262b45b6767934dd0a95e671f9a0fc20685",
+    "strict_clippy_command": "env -u CARGO_TARGET_DIR cargo clippy --locked --offline --quiet -p clubscape-server --all-targets -- -D warnings",
+    "strict_clippy_exit_code": 0,
+    "cargo_fmt_and_diff_check_passed": true,
+    "source_artifacts_regenerated_by_these_tests": false,
+    "source_pins_rechecked_after_tests": true
+  },
+  "tested_code_identity": {
+    "test_path": "crates/server/src/game_service/tests/water_migration.rs",
+    "test_sha256": "c2d2392d94423128eb0a3a180be8e1f93bea10784fbbc481a892d1252d54e29c",
+    "executable": "target/debug/deps/clubscape_server-edd05d8cb1a2fada",
+    "executable_sha256": "a31577100151e3a3f4dff2f7d5a9bda937b80cfd4af61989730ab5a7865a2944",
+    "build_record_qualification": "Reports retain the actual ee81bbf plus dirty working-tree build. The exact tested test-file bytes are now committed in de7b66f; no clean-tree build is retroactively claimed.",
+    "source_loading": "Each executed case loads both named public gzip inputs, strictly compiles the old source, reloads the new artifact and asserts its exact raw hash; no cross-worktree source-bearing executable is reused."
+  },
+  "final_native_validation": {
+    "code_commit": "6c47c3a7cb71d41a9b3e94904b36c75c084315de",
+    "workspace_clean_at_build_and_execution": true,
+    "reviewed_owned_fix": "04a40ee84d0a95866264a3c087071e0f63904377",
+    "all_six_imported_paths_byte_identical": true,
+    "independent_reviewer": "0f5fd134-c7e3-4d93-ba2e-c5cd448e33a1",
+    "independent_result": "Original MEDIUM persisted-production finding resolved; no significant new correctness regression found by static inspection. Reviewer ran no builds or tests.",
+    "native_tests_passed": 420,
+    "native_test_binaries": 37,
+    "exact_source_pair_native_cases_passed": 1,
+    "profiles_covered_by_native_case": 2,
+    "actual_guarded_postgresql_cases_passed": 2,
+    "postgres_test_executable_sha256": "c9ee3dca1284edeeb372e176d784c246a77eea42dafba458067a60254af82116",
+    "native_and_wasm_strict_clippy_passed": true,
+    "formatting_passed": true,
+    "native_report_sha256": "b03347ee1674d77a063ccaceb13e2724a42286247e09cf6e79da02adc0ae3a20",
+    "postgres_report_sha256": "a7ca773b185defd417cc800ef439f75da86f50b58a4a95857bced70076933347",
+    "qualification": "These final clean-candidate results are separate from the retained original dirty-tree preflight provenance."
+  },
+  "source_delivery": {
+    "code_commit": "037067d1cefc56a51562cf4235f71842ba400654",
+    "packager_sha256": "ba7a9952d6ff5ee2d9c41a21e3e957250d702fef19534a70e0b85a86df3506af",
+    "machinery_tests_passed": 17,
+    "preparation_directory": ".local/water-source-operator-01",
+    "preparation_sha256": "51caa7d2a14631bb56253b05b84e480898e318f4fdfdd9d17f63ae4c2c4fa39d",
+    "genuine_source_only_deliveries": 4,
+    "verified_original_asset_mappings_per_delivery": 5015,
+    "canonical_manifest_unchanged": true,
+    "old_raw_and_gzip_recompiled_exactly": true,
+    "worlds": [
+      {"profile": "legacy5e", "world_id": "029e1354-cdf4-43c3-b442-7f68433aec12"},
+      {"profile": "current5b", "world_id": "16ceca3e-9b0c-43cd-9e9f-0382e5a190ad"}
+    ],
+    "services_started_by_preparation": 0,
+    "accounts_created_by_preparation": 0,
+    "operator_invocations_used": 10,
+    "operator_execution_status": "passed_after_independent_fix_review_and_final_native_database_checks",
+    "scope": "Server-validatable original source bytes, not browser-renderer/audio composition or player journey evidence."
+  },
+  "source_operator": {
+    "status": "passed_allowance_consumed",
+    "authority_commit": "1190a8acc8c94b1af016ab81a85e1cb76a703f0c",
+    "authority_sha256": "b34be1f99002fcf03c0182a7045a90cbbc7eb9a15f9504479a6779e6efd33b0a",
+    "candidate_commit": "6c47c3a7cb71d41a9b3e94904b36c75c084315de",
+    "binary_sha256": "83de4326673720f30143c175c3721071ddceb21100e7380b42a072cdca5d0b0a",
+    "runner_commit": "4340530c7184f4c2e03ec9982bbbfbfd82f57999",
+    "runner_sha256": "9ce5e3ebdc97d9463dbdf6c4184978ec6438a52e5a68003d4f0477814fe6bf30",
+    "report_sha256": "312d9ae5c10a17cb07aa801afd81dbb9ab759d96abc4b0176a585654224ad07c",
+    "permanent_journal": ".local/water-upgrade-preflight/operator-authority-v1.json",
+    "machinery_cases_passed": 32,
+    "pending_native_review_refusal_exercised_before_admission": true,
+    "prepared_source_worlds": 2,
+    "source_server_starts_used": 4,
+    "source_operator_invocations_used": 10,
+    "first_migrations_passed": 2,
+    "idempotent_retries_passed": 2,
+    "expected_refusals_passed": 6,
+    "maximum_operator_seconds": 4.032950864173472,
+    "operator_deadline_seconds": 35,
+    "accounts_or_gameplay_commands": 0,
+    "all_original_asset_deliveries_accepted_by_real_native_server": true,
+    "all_four_source_servers_ready_and_cleanly_stopped": true,
+    "private_runtime_keys_compared_only_in_memory": true,
+    "state_and_receipts_preserved_except_exact_content_revision_and_one_audit": true,
+    "owned_database_and_temporary_credentials_removed": true,
+    "automatic_retry_or_allowance_remaining": false,
+    "qualification": "Actual production migrate-ui loading/fencing/transition/retry and target-startup proof on character-free worlds. This complements the controlled-character repository proof; it is not a saved-world migration or browser/gameplay acceptance."
+  },
+  "proved_per_profile": [
+    "Exact old artifact recompilation and only the admitted definition delta.",
+    "Existing whole runtime, UI and audio metadata preserved by the real target initializer/readiness validator.",
+    "Actual account authentication and nonempty gameplay/lifecycle journals in a controlled disposable database.",
+    "Active owner, foreign lease, wrong old pin, callback failure and changed gameplay are rejected without partial state, key, journal or audit mutation.",
+    "Exactly one world/character revision increment, unchanged tick/sequence/owned state, one exact audit and idempotent migration retries.",
+    "Real higher replacement fences after repository restarts; old/foreign fencing capabilities remain rejected.",
+    "Original acknowledged receipt recovered without re-executing its callback under new content.",
+    "One source bucket1925 to water1929 conversion using controlled owned inputs; pending work survives repository reload and resolves once in one tick.",
+    "Exact inventory replacement and unchanged skills, quests, quest points and entitlements; known command/tick replay cannot grant or rewind state."
+  ],
+  "retained_failures": [
+    {
+      "kind": "first_test_compile",
+      "cause": "The new test used nonexistent GameErrorCode::InvalidState; corrected to the existing InvalidInput callback rejection.",
+      "production_change": false,
+      "evidence": "m1-water-upgrade-preflight/native-first-compile-failure.log"
+    },
+    {
+      "kind": "first_database_attempt",
+      "result": "0/2 cases passed",
+      "cause": "The new assertion counted legacy Produced rather than the source mechanic's ProductionResolved event. Both cases reached resolution after the migration/fence checks.",
+      "repair": "Use the existing source event contract, retaining exactly one event, exact one-tick conversion, inventory conservation and all replay assertions.",
+      "production_change": false,
+      "evidence": "m1-water-upgrade-preflight/postgres-first-report.json"
+    },
+    {
+      "kind": "independent_persisted_state_finding_reproduced",
+      "result": "The worker's original5c6c581 reproduction has1passing/3failing selected regressions, including repeated Unavailable ticks.",
+      "repair": "Shared content-aware mode/count validation across all three serialized production forms, independent of deadline. The full native suite now contains five new regressions.",
+      "evidence": "m1-water-upgrade-preflight/worker-repair-before.json"
+    }
+  ],
+  "evidence": [
+    {"path": "m1-water-upgrade-preflight/native-first-compile-failure.log", "sha256": "342cfc890107ed9453ed26067643ac5b1bb4e0e12545ca8a77508edea50da104"},
+    {"path": "m1-water-upgrade-preflight/native-source-pairs.log", "sha256": "66fced4b72c60b38e19942e2aadc35920ad1b1201b76fdaf7e7728b5970beb0d"},
+    {"path": "m1-water-upgrade-preflight/postgres-first-report.json", "sha256": "7a5140f35e79f3398ea9953faa551079a03417faab96a548b20bae81001f7fa6"},
+    {"path": "m1-water-upgrade-preflight/postgres-first-failure.log", "sha256": "2c17fe69e676e388742916ec0199ea80de0a6a653dbfc0a051ac36d1a40ebee3"},
+    {"path": "m1-water-upgrade-preflight/postgres-report.json", "sha256": "8e64df8fc229dd773eb3a0abd84b1b96c1bcd24e32562808f2e8291630e3e647"},
+    {"path": "m1-water-upgrade-preflight/postgres-tests.log", "sha256": "93739234687b2e0e7143821bd4190d4896f3f9824e0c52626fb774149c0c1109"},
+    {"path": "m1-water-upgrade-preflight/clippy.log", "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"},
+    {"path": "m1-water-upgrade-preflight/source-delivery.json", "sha256": "51caa7d2a14631bb56253b05b84e480898e318f4fdfdd9d17f63ae4c2c4fa39d"},
+    {"path": "m1-water-upgrade-preflight/source-selection-tests.log", "sha256": "a115624924fd80947cf50dfad96b5674af653bb005a473bdf80285aa3ad644ad"},
+    {"path": "m1-water-upgrade-preflight/source-packager.log", "sha256": "6bd93dcfa1738313da47e21f8ba8eca2b67842dcb5c97b6c02761823522c431d"},
+    {"path": "m1-water-upgrade-preflight/operator-build.log", "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"},
+    {"path": "m1-water-upgrade-preflight/final-evidence-index.json", "sha256": "a7c0ca5eb71d16431dbce6038101e7f6d007338b455f06cb13d7e74d7fafa4cd"}
+  ],
+  "cleanup": {
+    "both_attempt_databases_removed": true,
+    "both_attempt_temporary_credentials_removed": true,
+    "final_native_database_attempt_removed": true,
+    "source_operator_database_removed": true,
+    "all_four_source_server_processes_reaped_cleanly": true,
+    "source_operator_temporary_credentials_removed": true,
+    "running_server_or_browser_left_by_preflight": false
+  },
+  "remaining_gates": [
+    "Selectively adopt the passing reviewed content/native repair, tests, tooling and evidence on main, without importing stale candidate approval/task records; run affected post-integration checks.",
+    "Prepare and pin the minimal legacy5e-water delivery for the actual saved world, with a separate bounded execution admission before any protected archive read, restore or migration. None of the82unrelated5e-to5b metadata changes is implicitly admitted.",
+    "Water motion and source cadence qualifications, full journey/browser/presentation/performance and owner acceptance remain unchanged."
+  ],
+  "main_integrated": false,
+  "saved_checkpoint_accessed": false,
+  "actual_saved_world_migrated": false,
+  "saved_world_migration_or_continuation_admitted": false,
+  "milestone_accepted": false
+}

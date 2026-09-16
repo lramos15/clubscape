@@ -246,6 +246,12 @@ impl Validator<'_> {
                     return Err(invalid(&path, format!("undefined target object {object}")));
                 }
             }
+            if let Some(rule) = recipe
+                .item_on_target_rule()
+                .map_err(|error| invalid(&format!("{path}.item_on_target"), error.message))?
+            {
+                self.state_guard(&rule.guard, &format!("{path}.item_on_target.guard"))?;
+            }
         }
         Ok(())
     }

@@ -1,0 +1,192 @@
+[
+  {
+    "path": "m1-water-upgrade-preflight/final-native-report.json",
+    "sha256": "b03347ee1674d77a063ccaceb13e2724a42286247e09cf6e79da02adc0ae3a20",
+    "bytes": 4153
+  },
+  {
+    "path": "m1-water-upgrade-preflight/final-postgres-report.json",
+    "sha256": "a7ca773b185defd417cc800ef439f75da86f50b58a4a95857bced70076933347",
+    "bytes": 1305
+  },
+  {
+    "path": "m1-water-upgrade-preflight/final-postgres-tests.log",
+    "sha256": "7ce7b74d3324613dbfa06d55797445633e855feb412d15eac59c7630c691f36b",
+    "bytes": 378
+  },
+  {
+    "path": "m1-water-upgrade-preflight/operator-machinery-tests.log",
+    "sha256": "e7251860b8a2013e8df30ae9073260b7c5983f34307c684012edd0b763d62c72",
+    "bytes": 131
+  },
+  {
+    "path": "m1-water-upgrade-preflight/operator-admission-refusal.log",
+    "sha256": "7cc97db647884f5dc6b3e4db2b4fca16ee0073af97021722f535541c9d878248",
+    "bytes": 109
+  },
+  {
+    "path": "m1-water-upgrade-preflight/source-operator-report.json",
+    "sha256": "312d9ae5c10a17cb07aa801afd81dbb9ab759d96abc4b0176a585654224ad07c",
+    "bytes": 8431
+  },
+  {
+    "path": "m1-water-upgrade-preflight/source-operator-authority-journal.json",
+    "sha256": "312d9ae5c10a17cb07aa801afd81dbb9ab759d96abc4b0176a585654224ad07c",
+    "bytes": 8431
+  },
+  {
+    "path": "m1-water-upgrade-preflight/final-native.log",
+    "sha256": "a0d7af85e6ea2a744902edae1cae3ddc3d23b27f923e9236d6bfa5906ff82a52",
+    "bytes": 4646
+  },
+  {
+    "path": "m1-water-upgrade-preflight/final-source-pairs.log",
+    "sha256": "e4ff1677bb5314a20864ea901d76e34873381287b84d981c4e3007e364107721",
+    "bytes": 118
+  },
+  {
+    "path": "m1-water-upgrade-preflight/final-clippy.log",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+  },
+  {
+    "path": "m1-water-upgrade-preflight/final-wasm-clippy.log",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+  },
+  {
+    "path": "m1-water-upgrade-preflight/final-format.log",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+  },
+  {
+    "path": "m1-water-upgrade-preflight/final-operator-build.log",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+  },
+  {
+    "path": "m1-water-upgrade-preflight/operator-legacy5e-from-server.log",
+    "sha256": "f7b0cd5beacc51bb64ef793e5aeddf518995cfb5a821523b37569aac3cd3c8a3",
+    "bytes": 1868
+  },
+  {
+    "path": "m1-water-upgrade-preflight/operator-legacy5e-to-server.log",
+    "sha256": "512d5ad3174bf226d016cbf6635f2c7f1c35046685235f778b2a136330ea8070",
+    "bytes": 1868
+  },
+  {
+    "path": "m1-water-upgrade-preflight/operator-current5b-from-server.log",
+    "sha256": "6c1d647e0d52f17c33429644ad0a0f653c63e02fe1c23e7e9f155c9bb2939448",
+    "bytes": 1868
+  },
+  {
+    "path": "m1-water-upgrade-preflight/operator-current5b-to-server.log",
+    "sha256": "5c2737464962cd24bbb4de5c4e555f07ce6a29d47fbaf7c33417f88550044ec1",
+    "bytes": 1868
+  },
+  {
+    "path": "m1-water-upgrade-preflight/operator-legacy5e-active-owner.log",
+    "sha256": "c247394bc4855cf7679c6bbd01ef34c3240cc3938a6ed700a3b76745004e85d5",
+    "bytes": 1870
+  },
+  {
+    "path": "m1-water-upgrade-preflight/operator-legacy5e-wrong-pin.log",
+    "sha256": "3dbc9f414c59bcb2c1b963c105652cd5fc0fcabde1bc5465ec501bc4becbe27a",
+    "bytes": 1860
+  },
+  {
+    "path": "m1-water-upgrade-preflight/operator-legacy5e-migrate.log",
+    "sha256": "53a36ddcc2abd61c122312eb09b334b1073ea5b564166f7565a32ad2085537ef",
+    "bytes": 1515
+  },
+  {
+    "path": "m1-water-upgrade-preflight/operator-legacy5e-idempotent-retry.log",
+    "sha256": "c5fba1696982d96b2be0110d0a34a79a89a90362802727c72a9cfe6ad90a19f6",
+    "bytes": 1515
+  },
+  {
+    "path": "m1-water-upgrade-preflight/operator-legacy5e-wrong-origin-retry.log",
+    "sha256": "62522d985b7c813454fc5642a3093706a5e675c13d9455558e0b060bb48f9222",
+    "bytes": 1860
+  },
+  {
+    "path": "m1-water-upgrade-preflight/operator-current5b-active-owner.log",
+    "sha256": "bd96278209cfa1b4f3d27797736427fb7db6797e8ec17853df9aeb0202c3c765",
+    "bytes": 1870
+  },
+  {
+    "path": "m1-water-upgrade-preflight/operator-current5b-wrong-pin.log",
+    "sha256": "74bcbea324fa0b2ab3a7fcbfaad5cadfeeb7c73e7e9593d854a6194c23ff5e4b",
+    "bytes": 1860
+  },
+  {
+    "path": "m1-water-upgrade-preflight/operator-current5b-migrate.log",
+    "sha256": "5fffcc154019ac2c0b193e3014643c847f05539a0900449d930f671216c1fcab",
+    "bytes": 1515
+  },
+  {
+    "path": "m1-water-upgrade-preflight/operator-current5b-idempotent-retry.log",
+    "sha256": "41d037a7fbf17b0e9f39f849b775fbc0701c77d438f085bd1e90f64277ee5c91",
+    "bytes": 1515
+  },
+  {
+    "path": "m1-water-upgrade-preflight/operator-current5b-wrong-origin-retry.log",
+    "sha256": "5863bdf5c2ab8e809929e5927275bf96b45be006235c7ca1a207f1801b36c488",
+    "bytes": 1860
+  },
+  {
+    "path": "m1-water-upgrade-preflight/worker-repair-before.json",
+    "sha256": "f53529212d436013f7aa17242e35fc3d4c78c15b5fe8f5b5d50e03d57f23c5bc",
+    "bytes": 530
+  },
+  {
+    "path": "m1-water-upgrade-preflight/worker-repair-before.log",
+    "sha256": "e5c59928fc2991727ed4d86879f619326d08746e4ccc8508d01ba18334dd5f44",
+    "bytes": 3061
+  },
+  {
+    "path": "m1-water-upgrade-preflight/worker-repair-after.json",
+    "sha256": "9742d60b1abf11ca505bda785406f1943c93a3c186e782631fbea83d373f085d",
+    "bytes": 465
+  },
+  {
+    "path": "m1-water-upgrade-preflight/worker-repair-after.log",
+    "sha256": "a832c88c4c782bd0373ea921cb8412f21dae19e7c774ab663381a1329352282c",
+    "bytes": 117
+  },
+  {
+    "path": "m1-water-upgrade-preflight/worker-repair-validation.json",
+    "sha256": "20c9d9d75b60cb461d035adf2a63afea5a112a2eb0cae7f1fbf78b228e03af5b",
+    "bytes": 1955
+  },
+  {
+    "path": "m1-water-upgrade-preflight/worker-repair-focused.log",
+    "sha256": "14f9609e02a053ff9e6cbe5ab8d6fd09deaa19d83dfe2121f54a51527aa331fe",
+    "bytes": 125
+  },
+  {
+    "path": "m1-water-upgrade-preflight/worker-repair-full.log",
+    "sha256": "708aa5aaf283fe0a25cf4a30a384622d39b29b416319d9a23ea13ca7356d2c1e",
+    "bytes": 4646
+  },
+  {
+    "path": "m1-water-upgrade-preflight/worker-repair-clippy.log",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+  },
+  {
+    "path": "m1-water-upgrade-preflight/worker-repair-wasm-clippy.log",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+  },
+  {
+    "path": "m1-water-upgrade-preflight/worker-repair-format.log",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+  },
+  {
+    "path": "m1-water-upgrade-preflight/worker-repair-compatibility.json",
+    "sha256": "033e248b6a055be52f5fe691c82f17ac742a029937ebbd521bde301bb882eeda",
+    "bytes": 1645
+  }
+]

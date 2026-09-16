@@ -33,7 +33,7 @@
     "npcs": 26,
     "objects": 4837,
     "quests": 2,
-    "recipes": 13,
+    "recipes": 14,
     "regions": 29,
     "runtime_blocked_cells": 16544,
     "runtime_collision_cells": 46358,
@@ -64,8 +64,8 @@
   ],
   "source_status_occurrences": {
     "approved_adaptation": 4,
-    "inference": 3352,
-    "verified_reference": 16017
+    "inference": 3357,
+    "verified_reference": 16035
   },
   "structural_checks_passed": true,
   "unpublished_asset_references": []

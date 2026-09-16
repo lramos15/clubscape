@@ -295,6 +295,15 @@ from real old bank slots; old reward/chat history is not invented. Migration
 failure/timeout does not claim rollback; retrying the same exact target checks
 the committed pin/audit state.
 
+A separately admitted additive source recipe may reuse this transaction only
+after exact old/new definitions and runtime compatibility are verified. Existing
+UI/audio history must remain identical; the target callback cannot rewrite
+gameplay to make a new definition fit. This is not a general-purpose migration
+engine or permission to combine unrelated source revisions. Controlled
+source-pair and PostgreSQL tests in `game_service::tests::water_migration` cover
+that boundary without accessing any protected player checkpoint. An actual
+saved-world upgrade still requires its own exact pins and execution admission.
+
 Additive intents include `ProduceSelected` with explicit `Single`/`MakeX`
 (including Make-X-of-one), `OpenGrave` and `OpenDeathOffice`. A generic
 `OpenInterface` cannot manufacture contextual grave/bank/shop/Office access.

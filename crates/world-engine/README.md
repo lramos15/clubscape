@@ -48,6 +48,22 @@ Timed UI actions use the same source travel interruption/refusal policy as
 ordinary actions, with invalid requests rolling back any tentative interruption.
 Read-only UI, continuations and chat leave pending travel and its phase intact.
 
+An optional source-bound `RecipeDefinition.item_on_target` supplies only reach
+and guard for one item-on-facility inventory conversion. It reuses the same
+typed target admission as ordinary interactions, including availability,
+instance, footprint, source access sides, collision/sight and near-face checks.
+Start, projection, pending execution and content-aware persisted validation
+share `RecipeDefinition::validate_production_mode`; Make-X,
+Make-All, automatic batches and production menus are not permitted for this
+channel. Canonical low-level Produce can still request one matching conversion.
+Recipes without the field retain their original Production interaction guards.
+The field does not create a visible object operation or infer actor animation.
+Persisted checks cover legacy `Producing`, `ProducingAt` and
+`ProducingSelected` regardless of whether their deadline is future, due or
+overdue. Malformed count/mode is rejected before world acceptance, not cleared,
+normalized or deferred to a failing world tick. Ordinary source batches retain
+their supported count/mode semantics.
+
 Bank entries refer to the actual persistent bank. Placeholders reserve capacity
 without quantity/value; entry IDs survive reorder/refill, and stale selections
 fail. Reward dismissal never grants anything. `WorldRuntime.ui_version` makes

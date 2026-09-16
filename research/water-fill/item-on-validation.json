@@ -1,0 +1,212 @@
+{
+  "schema_version": 1,
+  "task": "M1-WATER-ITEM-ON-DISPATCH",
+  "authority_commit": "36a190a9673a64bd1e3c8d10966d3fd4c3a7c15a",
+  "base": "cba2016f5f403ea793f875a40ec7c5191c9521cd",
+  "branch": "fix/m1-water-item-on",
+  "worktree": ".worktrees/m1-water-dispatch",
+  "status": "ready_for_independent_code_and_candidate_review",
+  "api": {
+    "field": "RecipeDefinition.item_on_target",
+    "type": "Option<SourceBinding<ItemOnTargetRule>>",
+    "rule_fields": ["reach", "guard"],
+    "absence": "Omitted on serialization, not a new null field in old artifacts",
+    "mode": "Exactly one inventory conversion; no Production menu, Make-X, Make-All or automatic batch",
+    "shared_contact": "permissions::TargetAdmission / require_world_target_rule",
+    "same_checks_at": ["start", "projection", "pending_tick"],
+    "existing_production_menu_guards_preserved": true,
+    "mixed_menu_or_direct_declarations_rejected": true,
+    "source_provenance_and_bounded_guard_preflight": true,
+    "new_protocol_or_runtime_schema": false,
+    "content_artifact_versions": [4, 4]
+  },
+  "targets": [
+    {
+      "profile": "current5b-water",
+      "revision": "m1.source-backed.v4.71c86749d02088ee",
+      "manifest": "content/m1/manifest.json",
+      "raw_sha256": "adb24c14f76181a76e2874e97be3e2743a4c475d3ff89a7720b70ae6f6981bbc",
+      "compressed_sha256": "3b258ec2f23fd0942b99a8e20910b2d6ec2feb54a1ae11b71736a805b4754a7d",
+      "raw_bytes": 13222639,
+      "compressed_bytes": 528842,
+      "delta_from_old5b": [
+        "/recipes/recipe.water.bucket",
+        "/revision",
+        "/ui/actor_animations/recipes/recipe.water.bucket"
+      ]
+    },
+    {
+      "profile": "legacy5e-water",
+      "revision": "m1.source-backed.v4.3ff4292b311453cc.water.e337c77cc5ccd980",
+      "manifest": "content/m1/legacy5e-water/manifest.json",
+      "raw_sha256": "b2a1be20a0e6c3e1968f6f7610198ce38212f196c005539b4ac5013d10ebc650",
+      "compressed_sha256": "12432ec116f050d1edc42e4853ab38215d3aadd499e9fefad893ffbd6cf92232",
+      "raw_bytes": 13125018,
+      "compressed_bytes": 521255,
+      "delta_from_old5e": ["/recipes/recipe.water.bucket", "/revision"],
+      "current_profile_ui_audio_or_actor_blocks_imported": false
+    }
+  ],
+  "both_target_deltas_from_admitted_water_candidates": [
+    "/recipes/recipe.water.bucket/item_on_target",
+    "/revision"
+  ],
+  "compatibility": {
+    "evidence": "research/water-fill/item-on-compatibility.json",
+    "old5b_raw_and_gzip_recompile_exact": true,
+    "old5e_raw_and_gzip_recompile_exact": true,
+    "old_source_archives_changed": false,
+    "new_water_bytes_require_item_on_aware_code": true
+  },
+  "actual_native_after_per_profile": {
+    "source_positive_cases": 4,
+    "source_positive_passed": 4,
+    "negative_cases": 15,
+    "negative_passed": 15,
+    "legacy_single_produce_passed": true,
+    "pending_target_guard_cases_passed": 2,
+    "explicit_absent_unresolved_definition_variants_passed": 2,
+    "plane_guard_now_exercised": true,
+    "single_conversion_ticks": 1,
+    "input_bucket_1925": 1,
+    "output_water_bucket_1929": 1,
+    "xp_or_byproducts": false,
+    "full_inventory_replacement": true,
+    "pending_state_json_round_trip": true,
+    "exactly_one_resolution_event": true,
+    "consumed_input_repeat_rejected": true,
+    "durable_server_receipt_replay_tested": false
+  },
+  "validation": {
+    "native_tests_passed": 415,
+    "native_test_binaries": 37,
+    "focused_new_content_tests": 5,
+    "focused_new_engine_tests": 5,
+    "source_tests_passed": 104,
+    "repeated_source_outputs": 106,
+    "repeated_source_outputs_changed": [],
+    "full_source_repeat_passed": true,
+    "active_executor_failures": 0,
+    "strict_native_and_wasm_clippy": true,
+    "strict_native_probe_and_driver_clippy": true,
+    "server_test_targets_compile": true,
+    "server_or_database_tests_executed": false,
+    "offline_driver_water_tests": 2,
+    "rust_format": true,
+    "source_run": "research/m1-bindings/validation-run.json",
+    "source_repeat": "research/m1-bindings/repeatability.json",
+    "native_log": ".local/water-dispatch/rust-validation/summary.json",
+    "source_executable_identity": ".local/water-dispatch/source-executable-identity.json"
+  },
+  "profile_private_native_executables": [
+    {
+      "profile": "current5b-water",
+      "path": "tools/m1-content/.local/water-fill/native-current5b-water/target/debug/examples/water_fill",
+      "sha256": "590bde66db3292e44a67fa0a3b3aadd6461426298af3d4077aaf978160eb598d",
+      "directly_executed_exact_profile_input": true
+    },
+    {
+      "profile": "legacy5e-water",
+      "path": "tools/m1-content/.local/water-fill/native-legacy5e-water/target/debug/examples/water_fill",
+      "sha256": "590bde66db3292e44a67fa0a3b3aadd6461426298af3d4077aaf978160eb598d",
+      "directly_executed_exact_profile_input": true
+    }
+  ],
+  "embedded_current_source_test_audit": {
+    "targets": [
+      {
+        "name": "ui_travel_interruption",
+        "sha256": "fa6fe67e8e5a443d1034d58a527fd11af634e41a2f616656d65e54421aa3cb9d",
+        "passed": 5
+      },
+      {
+        "name": "dying_observation",
+        "sha256": "0d1c393b18e0a64b6cd46bf878d5a53636fb89ca07a727d7063280878f9df06c",
+        "passed": 4
+      },
+      {
+        "name": "contextual_shop_entry",
+        "sha256": "53627ca55acc7f071af5dc6e560c0a5544401535762ae406f7f10108ac187cce",
+        "passed": 5
+      }
+    ],
+    "exact_current_artifact_bytes_found_in_actual_executables": true,
+    "same_paths_executed_directly": true,
+    "qualification": "14 existing tests revalidated, not14 additional unique tests or a player journey"
+  },
+  "unchanged_lockfiles": {
+    "Cargo.lock": "eb443059216fdd402c6c94e8aa76ed84dd1b5678f37aa0540533fc4f4008f70c",
+    "tools/m1-content/schema-check/Cargo.lock": "39d826dd8ecbcf515c08c87b7d29c0873956e0c198228cd808917de63b87bf84"
+  },
+  "changed_paths": [
+    "content/m1/game-content.csc.gz",
+    "content/m1/game-content.json.gz",
+    "content/m1/legacy5e-water/game-content.csc.gz",
+    "content/m1/legacy5e-water/game-content.json.gz",
+    "content/m1/legacy5e-water/manifest.json",
+    "content/m1/manifest.json",
+    "crates/content/README.md",
+    "crates/content/src/validation/definitions.rs",
+    "crates/content/src/validation/graphs.rs",
+    "crates/content/src/validation/mechanics.rs",
+    "crates/content/src/validation/rules.rs",
+    "crates/content/src/validation/ui.rs",
+    "crates/content/src/validation/world.rs",
+    "crates/content/tests/common/item_on.rs",
+    "crates/content/tests/common/mod.rs",
+    "crates/content/tests/item_on_target.rs",
+    "crates/game-types/src/content.rs",
+    "crates/world-engine/README.md",
+    "crates/world-engine/src/activities.rs",
+    "crates/world-engine/src/gameplay_ui.rs",
+    "crates/world-engine/src/gameplay_ui/projections.rs",
+    "crates/world-engine/src/gameplay_ui/validation.rs",
+    "crates/world-engine/src/permissions.rs",
+    "crates/world-engine/src/validation.rs",
+    "crates/world-engine/tests/item_on_target.rs",
+    "crates/world-engine/tests/support/mod.rs",
+    "research/m1-bindings/application-result.json",
+    "research/m1-bindings/application-validation.json",
+    "research/m1-bindings/asset-refresh-validation.json",
+    "research/m1-bindings/check-result.json",
+    "research/m1-bindings/compiler-validation.json",
+    "research/m1-bindings/input-lock.json",
+    "research/m1-bindings/repeatability.json",
+    "research/m1-bindings/route-validation.json",
+    "research/m1-bindings/schema-validation.json",
+    "research/m1-bindings/state-oracle-validation.json",
+    "research/m1-bindings/status.json",
+    "research/m1-bindings/structural-validation.json",
+    "research/m1-bindings/unresolved-bindings.json",
+    "research/m1-bindings/validation-run.json",
+    "research/m1-bindings/water-fill-application.json",
+    "research/water-fill/README.md",
+    "research/water-fill/current5b-water-native.json",
+    "research/water-fill/handoff.json",
+    "research/water-fill/item-on-before.json",
+    "research/water-fill/item-on-compatibility.json",
+    "research/water-fill/item-on-validation.json",
+    "research/water-fill/legacy5e-application.json",
+    "research/water-fill/legacy5e-water-native.json",
+    "research/water-fill/validation.json",
+    "tools/m1-content/build_water_legacy.py",
+    "tools/m1-content/schema-check/src/water_probes.rs",
+    "tools/m1-content/test_water_fill.py",
+    "tools/m1-content/validate.py",
+    "tools/m1-content/verify_water_fill.py",
+    "tools/m1-content/water_fill.py",
+    "tools/simulator/src/journey/source.rs"
+  ],
+  "source_limitations": [
+    "Water actor motion remains unverified, not deliberate no-animation.",
+    "First/repeat1-tick entries remain source-supported interpretations, not observed batching or startup phases; they cannot authorize batches.",
+    "One-tile contact remains a source-qualified interpretation constrained by existing source geometry, not an original-server capture.",
+    "Normal-grave Bank-All, inventory dough motion and the seven Empty variants remain independently unverified.",
+    "Native repeated consumed-input refusal does not establish durable network operation replay."
+  ],
+  "no_database_migration_checkpoint_network_gpu_browser_or_source_recapture": true,
+  "no_asset_placement_collision_or_menu_change": true,
+  "no_peer_subagent_or_factory": true,
+  "independent_review_and_any_fenced_upgrade_remain_director_owned": true,
+  "milestone_or_presentation_accepted": false
+}

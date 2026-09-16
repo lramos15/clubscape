@@ -34,6 +34,11 @@ def bind_actor_animations(content):
             recipes[id] = sequence(number, f"Exact source recipe/method binding for {id}, not an adjacent object.")
         elif id == "recipe.cooking.dough":
             recipes[id] = unknown(inputs["unknowns"][id])
+        elif id == "recipe.water.bucket":
+            from water_fill import motion_binding, recipe_definition
+            if recipe != recipe_definition():
+                raise ValueError("Water recipe differs from its explicitly qualified source addition")
+            recipes[id] = motion_binding()
         else:
             raise ValueError(f"New source recipe requires animation qualification: {id}")
 
@@ -121,4 +126,6 @@ def bind_actor_animations(content):
         "source_binding_sha256": sha(canonical(definition)),
         "worlds_repin_attempted": False, "avatar_or_source_assets_modified": False, "milestone_accepted": False,
     }
+    if "recipe.water.bucket" in recipes:
+        proof["water_extension"] = recipes["recipe.water.bucket"]
     return definition, proof

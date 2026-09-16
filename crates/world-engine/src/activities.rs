@@ -495,14 +495,7 @@ impl WorldEngine {
             .recipes
             .get(recipe_id)
             .ok_or_else(|| unknown("Unknown recipe."))?;
-        if remaining == 0 {
-            return Err(invalid_state("Production quantity is zero."));
-        }
-        if mode == Some(ProductionMode::Single) && remaining != 1 {
-            return Err(invalid_state(
-                "Single production must request exactly one operation.",
-            ));
-        }
+        recipe.validate_production_mode(remaining, mode)?;
         self.check_recipe_target(world, character, recipe, target.as_ref())?;
         self.check_recipe(world, character, recipe, false)?;
         let single = mode.map_or(remaining == 1, |mode| mode == ProductionMode::Single);
@@ -582,6 +575,7 @@ impl WorldEngine {
         recipe: &RecipeDefinition,
         target: Option<&WorldTarget>,
     ) -> GameResult<()> {
+        let item_on_rule = recipe.item_on_target_rule()?;
         let Some(target) = target else {
             return if recipe.target_objects.is_empty() {
                 Ok(())
@@ -603,6 +597,24 @@ impl WorldEngine {
                 GameErrorCode::RequirementNotMet,
                 "Wrong source facility.",
             ));
+        }
+        if let Some(rule) = item_on_rule {
+            if self.target_interactions(world, target)?.iter().any(|interaction| {
+                matches!(&interaction.action, InteractionAction::Production { recipes } if recipes.contains(&recipe.id))
+            }) {
+                return Err(invalid_content(
+                    "An item-on-only recipe cannot also be offered by a Production menu.",
+                ));
+            }
+            return self.require_world_target_rule(
+                world,
+                character,
+                target,
+                crate::permissions::TargetAdmission {
+                    reach: rule.reach,
+                    guard: &rule.guard,
+                },
+            );
         }
         let mut refusal = None;
         for interaction in self.target_interactions(world, target)? {
@@ -629,6 +641,11 @@ impl WorldEngine {
         single: bool,
         repeat: bool,
     ) -> GameResult<u64> {
+        if recipe.item_on_target.is_some() && (!single || repeat) {
+            return Err(unavailable(
+                "Item-on-only production has no first-batch or repeat phase.",
+            ));
+        }
         match &recipe.mechanics {
             Some(mechanics) => runtime::cadence(&mechanics.cadence, single, repeat),
             None => runtime::legacy_ticks(recipe.ticks),
@@ -770,9 +787,7 @@ impl WorldEngine {
             .recipes
             .get(id)
             .ok_or_else(|| unknown("Unknown pending recipe."))?;
-        if remaining == 0 {
-            return Err(invalid_state("Pending production has zero work."));
-        }
+        recipe.validate_production_mode(remaining, mode)?;
         if let Some(selection) = character
             .runtime
             .ui

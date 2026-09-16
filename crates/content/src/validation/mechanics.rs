@@ -156,6 +156,13 @@ impl Validator<'_> {
         }
         for recipe in self.content.recipes.values() {
             source_tree(
+                &recipe.item_on_target,
+                &format!("recipes.{}.item_on_target", recipe.id),
+                mode,
+                counts,
+                unresolved,
+            )?;
+            source_tree(
                 &recipe.mechanics,
                 &format!("recipes.{}.mechanics", recipe.id),
                 mode,
@@ -1023,7 +1030,8 @@ impl Validator<'_> {
                         unique(recipes.iter(), &path)?;
                         for recipe in recipes {
                             if self.content.recipes.get(recipe).is_none_or(|recipe| {
-                                !recipe.target_objects.contains(&definition.object)
+                                recipe.item_on_target.is_some()
+                                    || !recipe.target_objects.contains(&definition.object)
                             }) {
                                 return Err(invalid(
                                     &path,
@@ -2276,7 +2284,9 @@ impl Validator<'_> {
                 }
                 if let Some(facility) = facility {
                     let spawn = self.spawn_definition(facility, path)?;
-                    if !spawn.interactions.iter().any(|interaction| matches!(&interaction.action, InteractionAction::Production { recipes } if recipes.contains(&recipe.id))) {
+                    let item_on = recipe.item_on_target.is_some()
+                        && matches!(&spawn.kind, SpawnKind::Object { object } if recipe.target_objects.contains(object));
+                    if !item_on && !spawn.interactions.iter().any(|interaction| matches!(&interaction.action, InteractionAction::Production { recipes } if recipes.contains(&recipe.id))) {
                         return Err(invalid(path, "production event facility does not offer the recipe"));
                     }
                 }

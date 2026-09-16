@@ -65,6 +65,17 @@ tools and intentional `null`/empty declarations. Only an ordinary stack's
 absent `instance` has the same meaning as explicit `null`; a charged stack
 cannot use that default. Missing source inputs are never supplied by parsing.
 
+`RecipeDefinition.item_on_target` is a deliberate additive exception: absence
+is omitted on serialization, preserving the exact old content4 artifacts.
+A present `SourceBinding<ItemOnTargetRule>` must bind source evidence, positive
+reach and a state guard for one inventory conversion with explicit single
+timing and zero menu delay. It requires nonempty actual object targets.
+Unresolved/malformed rules and mixed Production interactions, source menus or
+one-click Production declarations are rejected. Its guard participates in
+source auditing, iterative depth/work preflight, safe rejection/drop and
+effect-reachability analysis. No new object operation or batching permission
+is derived from this field.
+
 The full extension API and migration contract are in
 [`spec/game-contracts.md`](../../spec/game-contracts.md#mechanics-extension-content-3-persisted-state-1runtime-1).
 New registry definitions are available through `definition().mechanics`.

@@ -1,5 +1,5 @@
 {
-  "aggregate_sha256": "bdbf8a3788b842bef7f9fd0a32d167ed5ee73eaf8db45cbf6bfea3ff51d8195a",
+  "aggregate_sha256": "71c86749d02088eee216c9b5ebb6defdd6d443ffea2506bd93730c5067d3a8c0",
   "inputs": [
     {
       "bytes": 845835,
@@ -8702,9 +8702,9 @@
       "sha256": "aab2e79941fa6116a10b60f05123d167edddb84856b37134514a727fa9b4e532"
     },
     {
-      "bytes": 14810,
+      "bytes": 16333,
       "path": "crates/game-types/src/content.rs",
-      "sha256": "6d28f930d86d27175b916eb21fc39d7dedf38650e5cb775607fdd369be5667f1"
+      "sha256": "fb336de624c862544287b36dc7888dd5b70a3ed0c0d4db770c3376bf4aa9802f"
     },
     {
       "bytes": 826,
@@ -8717,9 +8717,9 @@
       "sha256": "d78b3f6ba8d503fa84d42938ce82671ab6e4ad4be7b85d5111f5f72b4c4eee76"
     },
     {
-      "bytes": 10836,
+      "bytes": 10917,
       "path": "crates/game-types/src/gameplay_ui.rs",
-      "sha256": "eeb5e5d86da2e81f4cbd41174ef46ac3caacd7c53ba94166adbac3b169e12cf4"
+      "sha256": "6ec2e539b514edca42c690dca436770137baedbdb2e968c804595e957ff1a0e6"
     },
     {
       "bytes": 4162,
@@ -8732,9 +8732,9 @@
       "sha256": "cbcfd32620681acb6ab0552e3470926dc9e26da4e7737bfa7b103e011bf74a8c"
     },
     {
-      "bytes": 976,
+      "bytes": 1027,
       "path": "crates/game-types/src/lib.rs",
-      "sha256": "fcd044a0c33e589a8ff5290994b514ab67c7a7f4c6c53dbbd4624184d0221aeb"
+      "sha256": "cb6991ad0855742c14b1a997c4c56cfb2204b3f7024d63c31058d0019c9eb787"
     },
     {
       "bytes": 43635,
@@ -8752,6 +8752,11 @@
       "sha256": "509dc123d53f9942535bbbfc29a9c3d732f5dbba37dbbc1ac06173843d7c135d"
     },
     {
+      "bytes": 12888,
+      "path": "crates/game-types/src/recovery_context.rs",
+      "sha256": "10e01cd45ef27affee5afd910c6da0d41cb0da02f4116917053431f0b12a9ed9"
+    },
+    {
       "bytes": 27766,
       "path": "crates/game-types/src/runtime_state.rs",
       "sha256": "61432b2f9fece62b04a971d23491b8e84b10624c0bb0d5c0036b2ce77a859d68"
@@ -8767,14 +8772,19 @@
       "sha256": "4421ac1ed3dedd3eb01065a13a13126526650198b1126551a9004d21cb4f44c7"
     },
     {
-      "bytes": 4622,
+      "bytes": 4738,
       "path": "crates/game-types/src/ui_amounts.rs",
-      "sha256": "e1e1d8ad58e871dabf4a0ad575597e34b690200653fb94d04270b656c4940a80"
+      "sha256": "456b3e8828dc5b27462f064afe8c38e693486c8b7ea8414ddbe801b94c9c57bc"
     },
     {
       "bytes": 15616,
       "path": "crates/game-types/src/ui_state.rs",
       "sha256": "c9af9dde899c9b4cd8e099f0ff05e726702d4cc84a208f56427ff681250a9507"
+    },
+    {
+      "bytes": 2870,
+      "path": "milestones/approvals/m1-water-fill-upgrade-v1.json",
+      "sha256": "438ba1e44c35f3ad7ebbe8e4c099b02f594df851bd2092a7f767bc4928b4c9d1"
     },
     {
       "bytes": 1512,
@@ -9032,6 +9042,31 @@
       "sha256": "732d3bf9ced13aea68baf00a232d3911ba18b96d61be9cf6794d7606e2b065f8"
     },
     {
+      "bytes": 1750,
+      "path": "research/water-fill/baselines.json",
+      "sha256": "fa15c24742905d6ca25260b6ff4081d153bb592099560b3ac25f6d823da5b785"
+    },
+    {
+      "bytes": 3258,
+      "path": "research/water-fill/facts.json",
+      "sha256": "9dc44a36c88538605e9d66a408966ff623a392d2e9927fda9dc28d949e14d47d"
+    },
+    {
+      "bytes": 516778,
+      "path": "research/water-fill/inputs/current5b-source.json.gz",
+      "sha256": "2782a2fbb164ca4c11a964778adf0ca544986f6b2e17aa9bb9bd55f730092ed2"
+    },
+    {
+      "bytes": 510511,
+      "path": "research/water-fill/inputs/legacy5e-source.json.gz",
+      "sha256": "294ede7e3d8e08633051338385f189c0d420000e74cd2344ce54b13bbfa28706"
+    },
+    {
+      "bytes": 2262,
+      "path": "research/water-fill/sources.json",
+      "sha256": "053237b8370fb5c4905f870e7ceacbd76dab86c842ed5da5ee96a70c6058358c"
+    },
+    {
       "bytes": 2333,
       "path": "spec/adaptations.md",
       "sha256": "9d15bfb9b6d67b7f0105dd2c3751cb07132b5dc79af112b588fb908e6044373b"
@@ -9072,9 +9107,9 @@
       "sha256": "8c2996fca8bcb17c4a9aa57a2610a5e53bed97653653ff162b5aad91e9a55105"
     },
     {
-      "bytes": 7527,
+      "bytes": 7937,
       "path": "tools/m1-content/actor_animation4.py",
-      "sha256": "7bc2f47a9087af8bc47529fc5f0e778726b52abcfadf633939b73ef0145c8a4b"
+      "sha256": "97af1528bdff893772574310b0edf1b94e4b0abafbf1e4644663212af85b3e36"
     },
     {
       "bytes": 9776,
@@ -9087,9 +9122,14 @@
       "sha256": "3ccf42326831b8d396fed6b843c9ace2cdc298a36b85323cc0bc91490b5c0898"
     },
     {
-      "bytes": 32687,
+      "bytes": 33206,
       "path": "tools/m1-content/build.py",
-      "sha256": "fff00acd5652ce59854800161049e2c9af50e3510957638ddce973d173ec51f3"
+      "sha256": "9f22cca36b6cbe1454aa470f623858c1bac6972359aed0757bdc498ab55c2299"
+    },
+    {
+      "bytes": 6438,
+      "path": "tools/m1-content/build_water_legacy.py",
+      "sha256": "ec1d3e0abdb7d9a898bfed5a13fd9e5efe3bf5f302252b28b31b37c1f35fab45"
     },
     {
       "bytes": 5508,
@@ -9097,9 +9137,9 @@
       "sha256": "3d71b2b91e7a40cd0c2c5e1bfbabb28645284b272c822fed17994c1b7faa97dd"
     },
     {
-      "bytes": 18333,
+      "bytes": 18571,
       "path": "tools/m1-content/check.py",
-      "sha256": "0422eafab6bd10cb5b3af489bdc7b1bff686cafe365580f060ec65c393d194ee"
+      "sha256": "fe458654fca235c0139390a8a81ddb0aba6bcadf8bb9914f8f78048363a44ee4"
     },
     {
       "bytes": 13154,
@@ -9167,6 +9207,11 @@
       "sha256": "e41283a30b1958d598e18ed8f15e05b7d580ed105a06051bcf440cb95019466e"
     },
     {
+      "bytes": 8732,
+      "path": "tools/m1-content/import_water_sources.py",
+      "sha256": "d57427997ddfcf8669fc1480b0668b9d7984626f9742a11ad2d9a293cb05f6ba"
+    },
+    {
       "bytes": 20542,
       "path": "tools/m1-content/mechanics.py",
       "sha256": "b5472c22c109db346a8cda64347a03f353b94a59022c026c47acf027dd09453a"
@@ -9197,9 +9242,34 @@
       "sha256": "54aefc57e22fbdb17baaca58b671f256c38d5d46b06368239ce9fa8117d3376a"
     },
     {
-      "bytes": 5742,
+      "bytes": 4649,
+      "path": "tools/m1-content/schema-check/examples/collision_profile.rs",
+      "sha256": "ffe607d43377170eb48a2a30773704428248c3384902d6fb3d0396395545c276"
+    },
+    {
+      "bytes": 7014,
+      "path": "tools/m1-content/schema-check/examples/departure_entries.rs",
+      "sha256": "7796d131e3aecf6f53af45edcc270c93ecfd8c4110894bbd1027ea0b2c98030f"
+    },
+    {
+      "bytes": 6116,
+      "path": "tools/m1-content/schema-check/examples/dialogue_entries.rs",
+      "sha256": "e6e275ec4d5f30cc76004bdd6e4e0e4dffb0383159a1a87c1b72b399066fac1f"
+    },
+    {
+      "bytes": 3754,
+      "path": "tools/m1-content/schema-check/examples/nonwalking_contact.rs",
+      "sha256": "f985249750361f0e1c2dd468ef4308b0b06410cf1da782e8222752e691c81868"
+    },
+    {
+      "bytes": 1441,
+      "path": "tools/m1-content/schema-check/examples/water_fill.rs",
+      "sha256": "ba401a3fa153b9074c4dbcbfe89e3d2854d802a903a92dd35f4ffad33475e9ab"
+    },
+    {
+      "bytes": 5900,
       "path": "tools/m1-content/schema-check/src/main.rs",
-      "sha256": "8a20f7e9e91e23540751c36b5c8058639ff3841dca89a776211d9e1bb9287b6c"
+      "sha256": "27293357d70a3d59a3238342a485c9b68c3beb44a7f345197f196193f5942e5a"
     },
     {
       "bytes": 12055,
@@ -9210,6 +9280,11 @@
       "bytes": 11844,
       "path": "tools/m1-content/schema-check/src/ui_probes.rs",
       "sha256": "cc621e0304d720571bf9fe5e7e2a88cf27136b6c7755ad1bca4b30cdc880d95c"
+    },
+    {
+      "bytes": 21342,
+      "path": "tools/m1-content/schema-check/src/water_probes.rs",
+      "sha256": "0df47df0c5fd6514be34607aac2f2e48063a2098ee08361d6483f83d0f30737c"
     },
     {
       "bytes": 22923,
@@ -9272,6 +9347,11 @@
       "sha256": "4da33907aff4166c58eca0c168797f217eb502be9c169b9cc86d1d7de2686143"
     },
     {
+      "bytes": 7939,
+      "path": "tools/m1-content/test_water_fill.py",
+      "sha256": "b725c1b14b7e27106605d50ca02adc5c15fe160fb08380a65b9d2dc85a855f29"
+    },
+    {
       "bytes": 9439,
       "path": "tools/m1-content/travel.py",
       "sha256": "79c1eab16a4c3b292f5a750b9f0f09a2fff6ac392bdc997298390c8693895d94"
@@ -9282,14 +9362,14 @@
       "sha256": "f7a0176dd033cb96288c1d2def3aaf0f88a86ec7d15d04f6ea66b2c8c6b259c0"
     },
     {
-      "bytes": 20638,
+      "bytes": 20684,
       "path": "tools/m1-content/ui4.py",
-      "sha256": "a2d88086e70e1c1d0b3e0fcb6d0939361bfbc510feda5f78f2fd0e1d78ad2e10"
+      "sha256": "895821ef6d4bcb6aab206f837d2a5a3b12de2f084eba823c9eca1102c8beabce"
     },
     {
-      "bytes": 9277,
+      "bytes": 11338,
       "path": "tools/m1-content/validate.py",
-      "sha256": "ae66c9dde337a0c47d8ec4c9e6cb034d4851e53c2b3af487e6307bb8b12a20fe"
+      "sha256": "f5b64833e9b292737660eabd3a8b51456cc397190432002517ab71651a6bdbdc"
     },
     {
       "bytes": 19581,
@@ -9315,6 +9395,16 @@
       "bytes": 5384,
       "path": "tools/m1-content/verify_ui4.py",
       "sha256": "54d14e54d204e19c90a9ccb4e0277fe93c20a064246163d863af948b9cb995c5"
+    },
+    {
+      "bytes": 8616,
+      "path": "tools/m1-content/verify_water_fill.py",
+      "sha256": "2967af0749950512b1ce2c1908f197358b3030f32b807b802f561cd52f2c3ab0"
+    },
+    {
+      "bytes": 11564,
+      "path": "tools/m1-content/water_fill.py",
+      "sha256": "5a0f20a8abce27388e23f1f60687f21b4e2bae8f7a9930df0420a9b6993e18eb"
     },
     {
       "bytes": 21043,

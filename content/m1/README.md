@@ -1,18 +1,23 @@
 # Source-bound M1 content, schema 4
 
-**The actual content/artifact-4 pack strictly compiles, reloads and passes its
-native source-policy, UI and actor-observer probes.** All prior source selectors
+**The actual content/artifact-4 candidate strictly compiles; bounded water-filling
+conformance is still blocked on item-on-only facility authorization.** All prior source selectors
 and the conditional vital enum are retained. There are zero active
 `SourceBinding::Unresolved` values and six proof-scoped inactive dependencies,
 not an old decoder/asset blocker. Source-solid contact and fresh manual-drop
-clocks pass; the complete real player journey remains a separate gate. See
+clocks pass. The new source recipe does not fabricate a visible sink operation
+to bypass the remaining seam. See the
+[water-fill handoff](../../research/water-fill/README.md),
 [`contract-gaps.json`](../../research/m1-bindings/contract-gaps.json) and the
 current [`status.json`](../../research/m1-bindings/status.json), plus the
 [UI4 candidate and remaining control work](../../research/interface-contracts/verification.json).
 
-The current revision is `m1.source-backed.v4.bdbf8a3788b842be`, raw artifact
+The preserved current-profile **baseline** is `m1.source-backed.v4.bdbf8a3788b842be`, raw artifact
 `5b3ba5f108ed3fec8f8b5f7f49b429c059e21b6f192ec99a0569616e08330059`.
-Persisted state/runtime remain version1, with explicit UI state version1.
+The new candidate's exact revision/hash is in `manifest.json`; the independently
+derived legacy5e+water target is in `legacy5e-water/manifest.json`. No migration
+or actual continuation is admitted. Persisted state/runtime remain version1,
+with explicit UI state version1.
 An existing world must keep its exact artifact unless the operator performs
 the documented fenced `migrate-ui --from <old-raw-sha256>` upgrade; do not
 silently repin it or recreate missing UI history. Fresh journey candidates
@@ -65,7 +70,7 @@ compressed/uncompressed hashes. Gzip timestamps/filenames are normalized.
 | Skills / normal equipment slots | 24 / 11 |
 | NPC / object definitions | 26 / 4,837 |
 | Runtime spawns: NPC / object / item | 166 / 360 / 10 |
-| Recipes / dialogues / interfaces / shops | 13 / 21 / 30 / 1 |
+| Recipes / dialogues / interfaces / shops | 14 / 21 / 31 / 1 |
 | Typed counters / grants / entitlements | 134 / 18 / 13 |
 | Physical door transforms / source door groups | 68 / 49 |
 | Complete combined collision selections / mixed-leaf states | 136 / 38 |
@@ -164,6 +169,11 @@ source varbit 5325 and the actual empty/full flour-bin variants. Loading consume
 grain; controls process only a filled hopper; collecting consumes a pot and one
 flour unit. Its original three floors and both ladders remain connected. There is
 no grain-plus-pot-to-flour shortcut.
+The additive `recipe.water.bucket` records the source one-tick, zero-XP
+empty-bucket-to-water replacement at sink14868. Its original empty object menu
+and geometry are unchanged; current types still lack non-menu item-on facility
+authorization. Current actor metadata marks its motion unverified, while the
+minimal legacy target preserves its absent actor-authority block.
 Every valid morph selector maps to an original equal-clipping variant; invalid
 counter values reject. The unreachable runtime fallback names the actual empty
 variant, while the original absent fallback remains in the source records.
@@ -222,7 +232,7 @@ retained, with current resolution provenance rather than rewritten history.
 
 Six residuals are inactive under explicit ordinary-route proof preconditions:
 two unacquired rare conditional alternatives, three never-depleted fishing
-respawns and Office overflow below the current118-key/120-entry bound.
+respawns and Office overflow within the published ordinary-key/capacity proof.
 Never require these policies before their reachable branch, and recheck the
 proof if acquisitions, item universe or instance/merge rules change.
 
@@ -236,13 +246,14 @@ not an unresolved field or a constant
 max hit.
 
 The completed source closure is now connected through the validated merged
-`cache2695-potions-bundle.json.gz` catalog and all three publication layers.
-All **5,257 requested product asset references** resolve, including the formerly
+`cache2695-consumables-bundle.json.gz` catalog and all four publication layers.
+All **5,266 requested product asset references** resolve, including the formerly
 missing 72 item definitions, 68 requested models, six NPC definitions (Cook4626)
 and 13 interface groups. Original definitions3010/3011, model2697 and dependent
 placeholder19365 are now published. The two additive layers supply 272 original
 assets and 1,137 outputs. No requested closure list remains nonempty, and no
-model or icon link is fabricated.
+model or icon link is fabricated. Later original vial/beer-glass publications
+are preserved; water filling creates no new asset or guessed animation link.
 
 `asset-refresh-validation.json` records the exact source/output hashes and the
 unchanged original asset/geometry boundary. The audited source application

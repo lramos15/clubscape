@@ -28,6 +28,7 @@ from world_mechanics import build_doors, wire_world
 from runtime_application import apply_source_bindings
 from selectors3 import apply_selectors
 from ui4 import apply_ui
+from water_fill import apply_water_fill
 
 
 def input_lock(inputs):
@@ -71,6 +72,9 @@ def input_lock(inputs):
     paths += [ROOT / "research/interface-contracts/audio-authority/inputs.json",
               ROOT / "research/interface-contracts/audio-authority/pre-freeze-pages.json"]
     paths += [ROOT / "research/interface-contracts/animation-authority/inputs.json"]
+    paths += [ROOT / "research/water-fill" / name for name in ("baselines.json", "facts.json", "sources.json")]
+    paths += sorted((ROOT / "research/water-fill/inputs").glob("*.json.gz"))
+    paths += [ROOT / "milestones/approvals/m1-water-fill-upgrade-v1.json"]
     paths += [ROOT / "research/current-source/m1-consumable-validation.json",
               ROOT / "tools/cache-import/CONSUMABLE_ASSETS.md"]
     paths += [ROOT / "research/runtime-bindings" / name for name in (
@@ -82,6 +86,7 @@ def input_lock(inputs):
     paths += sorted((ROOT / "tools/m1-content").glob("*.py"))
     paths += sorted((ROOT / "tools/m1-content").glob("*.java"))
     paths += sorted((ROOT / "tools/m1-content/schema-check/src").glob("*.rs"))
+    paths += sorted((ROOT / "tools/m1-content/schema-check/examples").glob("*.rs"))
     paths += [ROOT / "tools/m1-content/schema-check" / name for name in ("Cargo.toml", "Cargo.lock")]
     records = []
     for path in sorted(set(paths)):
@@ -154,6 +159,7 @@ def assemble(inputs, world, revision):
     bindings["application"] = application
     content = apply_selectors(inputs, world, content, bindings)
     content = apply_ui(inputs, content, bindings)
+    content = apply_water_fill(content, bindings)
     return content, bindings
 
 
@@ -334,6 +340,7 @@ def build(args):
     emit(BINDINGS / "ui-bindings.json", bindings["ui"], True)
     emit(BINDINGS / "audio-authority-bindings.json", bindings["audio_authority"], True)
     emit(BINDINGS / "actor-animation-bindings.json", bindings["actor_animations"], True)
+    emit(BINDINGS / "water-fill-application.json", bindings["water_fill"], True)
     geometry_records = []
     for number in sorted(world.raw):
         geometry_records.append(emit(CONTENT / f"geometry/{number}.json.gz", world.region(number, full=True)))

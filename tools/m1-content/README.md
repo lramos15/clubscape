@@ -5,10 +5,10 @@ The product and counts are documented in
 binding/generation and bounded reference checks, not shared types or the
 production executor.
 
-`build.py` generates actual `GameContent` schema 3 and typed mechanics from the
+`build.py` generates actual `GameContent` schema 4 and typed mechanics from the
 committed cache/source contracts, checks source geometry/IDs and invokes the real
 strict Runtime compiler. `compile.py` preserves compiler diagnostics, the
-version-3 compressed artifact and the exact unresolved-binding paths/reasons.
+version-4 compressed artifact and the exact unresolved-binding paths/reasons.
 `check.py` uses `schema-check/` to run `read_content_json`, `compile_content`,
 `encode_compiled` and `load_compiled` against the actual shared library. It is
 not a replacement validator. It also constructs the real engine, checks fresh
@@ -20,7 +20,10 @@ python3 tools/m1-content/validate.py --repeat
 ```
 
 The complete runner repeats all gates and records hashes/status without rewriting
-the original runtime-binding source evidence. Individual gates are:
+the original runtime-binding source evidence. It also builds the independently
+pinned legacy5e+water candidate, runs both water profiles with separate Cargo
+targets, and runs the two offline driver-planning tests. Generation finishes
+before any Rust tests that read/embed generated content. Individual gates are:
 
 ```sh
 python3 tools/m1-content/build.py
@@ -30,6 +33,8 @@ python3 tools/m1-content/verify_runtime_bindings.py
 python3 -m unittest discover -s tools/m1-content -p 'test_*.py' -q
 python3 tools/m1-content/verify_routes.py
 python3 tools/m1-content/verify_state_oracles.py
+python3 tools/m1-content/build_water_legacy.py
+python3 tools/m1-content/verify_water_fill.py
 ```
 
 All normal build inputs are committed and generation is offline. Read the
@@ -66,6 +71,14 @@ authored source graph vectors to actual content IDs and source events.
   origins/eligibility/traversal/collision/recovery and ConsumeOnly burial.
 - `schema-check/src/probes.rs`: isolated native checks using the unmodified
   source pack. Controlled test state/RNG boundaries are not a fresh journey.
+- `ui4.py`, `audio_authority4.py`, `actor_animation4.py`: retained current v4
+  metadata. Frozen source/reference authority inputs are not rewritten.
+- `water_fill.py`: only the approved water recipe plus its explicitly unverified
+  motion entry when that profile already has actor authority. Exact inverse
+  projection preserves the immutable v3/UI4 fingerprints; full-profile hashes
+  additionally prove that no other current or legacy field changes.
+- `build_water_legacy.py`: exact old5e recompile and narrowly derived legacy target;
+  it never imports current5b UI/audio/actor metadata into the saved-world profile.
 
 ## Canonical source application
 
@@ -104,6 +117,7 @@ python3 tools/m1-content/bind_wiki.py
 python3 tools/m1-content/import_code_references.py
 python3 tools/m1-content/import_runtime_sources.py
 python3 tools/m1-content/import_execution_sources.py
+python3 tools/m1-content/import_water_sources.py
 ```
 
 The runtime importer replays pinned Fire, Shop and Bottomless milk bucket pages.
@@ -112,6 +126,10 @@ public reconstruction remains inference. Raw prose stays in
 owned ignored storage; factual revisions/hashes remain committed. `--discover`
 on the earlier importer is for explicit new research, not routine freshness
 checks.
+The water importer queries only its five named pages at/before the existing
+source-selection cutoff, then replays their immutable revisions. It interprets
+the source Recipe module's quantity and empty skill/XP list. POH sink
+construction and Lunar Humidify sources are explicitly excluded from the rule.
 
 To reproduce the bounded additional original definitions:
 
@@ -132,7 +150,8 @@ same command plus:
 
 This uses original verified cache bytes, not regenerated model/asset data.
 Original model2697 and definitions3010/3011 now resolve through the additive
-potion publication, including source placeholder19365; all5257 references close.
+potion publication, including source placeholder19365. The later immutable
+consumables publication remains loaded; all5266 current product references close.
 
 The importer reads JS5 sectors with `rb`, checks selected group SHA/CRC/revision
 and every pinned library hash, and never opens a writable cache `Store`. It
@@ -146,14 +165,14 @@ item/NPC supplement. New definition provenance points at the actual
 `content-v2/collections/{kind}.json.gz#asset_id`, never the unchanged old
 collection. No source-worker file is overwritten or reaggregated.
 
-`asset-references.json` identifies the merged catalog and all three publication
+`asset-references.json` identifies the merged catalog and all four publication
 manifests. Its asset output records keep canonical extraction-relative paths;
 consumers resolve committed extension files through the additive publication's
 `published_files[].extraction_path -> path` mapping. All original item/NPC model
 references and interface groups are included without invented mesh links.
 
 `verify_assets.py` checks the frozen parent behavior/geometry/graph hashes,
-the exact72/68/6/13 requested closure roots, all5257 product references and shard
+the exact72/68/6/13 requested closure roots, all5266 product references and shard
 provenance. When canonical source application is present, it accepts only the
 audited before/after behavior fingerprints, exact source/coupled changes and the
 two verified approved item identities. It does not skip old asset or geometry
@@ -173,7 +192,7 @@ headless/server/browser journey and approving its presentation.
 
 ## Native source-policy conformance
 
-`check.py` and the repeated validation runner pass strict compile/reload,
+The retained source-policy and UI components pass strict compile/reload,
 engine construction, fresh-state/read-only APIs, native ConsumeOnly burial,
 valid west-side range contact with distinct Single/Make-X-one deadlines, fresh
 manual-drop offline pauses, and the actual120000-tick playtime policy boundary.
@@ -181,3 +200,11 @@ manual-drop offline pauses, and the actual120000-tick playtime policy boundary.
 their precise resolutions. No source wall is removed, timer made infinite,
 result event injected or type fork introduced to force pass. These component
 checks still do not execute the full legitimate journey or accept presentation.
+
+The current bounded water addition is separately blocked: its four positive
+native cases per profile cannot pass item-on-only facility admission without a
+source-absent object operation. Both profiles' six negative requests reject
+atomically, but only five reach the intended guard; the missing dispatch masks
+the plane guard. `check.py` and the complete repeated runner therefore exit nonzero.
+No validator is softened to hide this seam; see
+[`research/water-fill/README.md`](../../research/water-fill/README.md).

@@ -65,6 +65,9 @@ pub(crate) fn discard_rules(mut content: GameContent) {
         }
     }
     for recipe in content.recipes.values_mut() {
+        if let Some(SourceBinding::Bound { value, .. }) = &mut recipe.item_on_target {
+            guards.push(std::mem::replace(&mut value.guard, Guard::Always));
+        }
         if let Some(mechanics) = &mut recipe.mechanics {
             guards.push(std::mem::replace(&mut mechanics.guard, Guard::Always));
             effects.extend(std::mem::take(&mut mechanics.success_effects));
@@ -225,6 +228,9 @@ pub(super) fn scan(content: &GameContent) -> GameResult<Scan> {
         }
     }
     for recipe in content.recipes.values() {
+        if let Some(SourceBinding::Bound { value, .. }) = &recipe.item_on_target {
+            pending.push(Work::Guard(&value.guard, 1));
+        }
         if let Some(mechanics) = &recipe.mechanics {
             pending.push(Work::Guard(&mechanics.guard, 1));
             push_effects(&mut pending, &mechanics.success_effects, 1)?;

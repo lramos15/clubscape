@@ -24,6 +24,33 @@ class OrchestratorTests(unittest.TestCase):
                 RUN.project_path(path)
         self.assertEqual(RUN.project_path(".local/evidence/run.json"), RUN.ROOT / ".local/evidence/run.json")
 
+    def test_product_source_defaults_remain_canonical_and_choose_a_new_world(self):
+        manifest, world = RUN.product_source_selection()
+        self.assertEqual(manifest, RUN.ROOT / "content/m1/manifest.json")
+        self.assertEqual(str(uuid.UUID(world)), world)
+        self.assertNotEqual(uuid.UUID(world).int, 0)
+        self.assertNotEqual(RUN.product_source_selection()[1], world)
+
+    def test_explicit_product_source_retains_the_named_profile_and_world(self):
+        world = "01234567-89ab-4cde-8f01-23456789abcd"
+        path = "content/m1/legacy5e-water/manifest.json"
+        self.assertEqual(
+            RUN.product_source_selection(path, world),
+            (RUN.ROOT / path, world),
+        )
+
+    def test_product_source_rejects_escaping_inputs_and_noncanonical_worlds(self):
+        for path in ["/tmp/source.json", "../source.json", ".local/../source.json"]:
+            with self.subTest(path=path), self.assertRaises(RUN.JourneyError):
+                RUN.product_source_selection(path)
+        for world in [
+            "", "not-a-world", 1, str(uuid.UUID(int=0)),
+            "01234567-89AB-4CDE-8F01-23456789ABCD",
+            "{01234567-89ab-4cde-8f01-23456789abcd}",
+        ]:
+            with self.subTest(world=world), self.assertRaises(RUN.JourneyError):
+                RUN.product_source_selection(world_id=world)
+
     def test_origin_is_literal_loopback_without_credentials_or_path(self):
         self.assertEqual(RUN.origin("http://127.0.0.1:43123/"), "http://127.0.0.1:43123")
         for url in [

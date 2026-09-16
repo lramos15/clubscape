@@ -320,11 +320,28 @@ def verified_collection_locations(references):
         sys.dont_write_bytecode = prior_bytecode
 
 
-def publish_product_root(directory, report, inspector, env):
+def product_source_selection(source_manifest="content/m1/manifest.json", world_id=None):
+    manifest = project_path(source_manifest)
+    if world_id is None:
+        selected_world = str(uuid.uuid4())
+    else:
+        require(isinstance(world_id, str), "Source world identity must be a canonical UUID string.")
+        try:
+            parsed = uuid.UUID(world_id)
+        except ValueError:
+            raise JourneyError("Source world identity must be a canonical UUID string.") from None
+        require(parsed.int != 0 and str(parsed) == world_id,
+                "Source world identity must be a canonical non-nil UUID.")
+        selected_world = world_id
+    return manifest, selected_world
+
+
+def publish_product_root(directory, report, inspector, env, *,
+                         source_manifest="content/m1/manifest.json", world_id=None):
     """Expose genuine original bytes for every asset required by the real strict compiler."""
+    content_manifest_path, selected_world = product_source_selection(source_manifest, world_id)
     game_root = directory / "game-root"
     game_root.mkdir(mode=0o700)
-    content_manifest_path = ROOT / "content/m1/manifest.json"
     content_manifest = read_json(content_manifest_path)
     compiled = content_manifest["compiled_artifact"]
     archive_path = project_path(compiled["path"])
@@ -339,6 +356,8 @@ def publish_product_root(directory, report, inspector, env):
         inspector, "inspect-artifact", game_root / "world.csc",
     ], env=env, timeout=120).stdout)
     require(inspected["artifact_sha256"] == artifact_sha, "Strict compiler inspected a different artifact.")
+    require(inspected["content_revision"] == content_manifest["revision"],
+            "Selected manifest revision differs from the strictly inspected artifact.")
     required_assets = set(inspected["referenced_assets"])
     require(0 < len(required_assets) <= 20000, "Unbounded/empty actual compiler asset-reference set.")
     references = read_json(ROOT / "content/m1/asset-references.json")
@@ -402,7 +421,7 @@ def publish_product_root(directory, report, inspector, env):
         "content_type": "application/json",
     })
     descriptor = {
-        "schema_version": 1, "world_id": str(uuid.uuid4()), "artifact": "world.csc",
+        "schema_version": 1, "world_id": selected_world, "artifact": "world.csc",
         "sha256": artifact_sha, "content_manifest_path": "/content/manifest.json",
         "assets": assets,
         "readiness_profile": {
@@ -414,6 +433,10 @@ def publish_product_root(directory, report, inspector, env):
     write_json(game_root / "clubscape-game-assets.json", {"schema_version": 1, "files": files})
     report["product_root_preparation"] = {
         "artifact": compiled, "source_revision": content_manifest["revision"],
+        "source_manifest": {
+            "path": str(content_manifest_path.relative_to(ROOT)),
+            "sha256": sha(content_manifest_path),
+        },
         "actual_source_asset_mappings": len(assets),
         "actual_compiler_referenced_assets": len(required_assets),
         "all_compiler_referenced_assets_mapped": len(assets) == len(required_assets),

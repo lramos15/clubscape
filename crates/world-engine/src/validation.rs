@@ -109,6 +109,24 @@ pub(crate) fn content(content: &GameContent) -> GameResult<()> {
             ));
         }
         recipe.success.validate()?;
+        if let Some(rule) = recipe.item_on_target_rule()? {
+            guard(content, &rule.guard, 0)?;
+            if recipe
+                .target_objects
+                .iter()
+                .any(|object| !content.objects.contains_key(object))
+                || content.spawns.values().flat_map(|spawn| &spawn.interactions)
+                    .chain(content.mechanics.temporary_objects.values().flat_map(|object| &object.interactions))
+                    .any(|interaction| matches!(&interaction.action, InteractionAction::Production { recipes } if recipes.contains(id)))
+                || content.ui.as_ref().is_some_and(|ui| {
+                    ui.production_interfaces.contains_key(id) || ui.direct_production.contains(id)
+                })
+            {
+                return Err(invalid_content(
+                    "Item-on-only recipes require actual objects and cannot mix menu or one-click Production declarations.",
+                ));
+            }
+        }
         for stack in recipe
             .inputs
             .iter()

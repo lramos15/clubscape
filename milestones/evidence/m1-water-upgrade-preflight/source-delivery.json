@@ -1,0 +1,251 @@
+{
+  "account_created": false,
+  "canonical_manifest_sha256": "faf9437a395a73955b8f03d498a8e90c080e0df95feeadc13d641c79befaee03",
+  "canonical_manifest_unchanged": true,
+  "code_revision": "b66a0c7f326a5bf11421ff6a332acb1aa8d890c5",
+  "compiler_sha256": "48295a55efd84202a22d5eb95ead779d4e1fb7281c3be864cad60b8ed8edf9d9",
+  "inspector_sha256": "6145878e7370676d0bbc6fc9b18b4e8e2b7e6572bf0af7df0e1aae9bacc641da",
+  "milestone_accepted": false,
+  "packager_sha256": "ba7a9952d6ff5ee2d9c41a21e3e957250d702fef19534a70e0b85a86df3506af",
+  "phase": "complete",
+  "profiles": [
+    {
+      "from": {
+        "game_root": ".local/water-source-operator-01/legacy5e/from/game-root",
+        "identity": {
+          "artifact_sha256": "5e0aa8a28851752ae0b8b0a08c635c6c8d2979f509f3a3e564ee74e2abfc8e6f",
+          "assets_manifest_sha256": "940d38e06a1b6b6e1097e77b49d9d6a0cde0d7d3f57daa9d52a36f2c2b7e8329",
+          "descriptor_sha256": "e3b2673e6ae69bf13b54d1f3a6a1879827ceeba712e20e32732b89e7ecd9b21f",
+          "world_id": "029e1354-cdf4-43c3-b442-7f68433aec12"
+        },
+        "preparation": {
+          "actual_compiler_referenced_assets": 5015,
+          "actual_source_asset_mappings": 5015,
+          "all_compiler_referenced_assets_mapped": true,
+          "artifact": {
+            "artifact_version": 4,
+            "bytes": 520392,
+            "path": ".local/water-source-operator-01/legacy5e/from/game-content.csc.gz",
+            "schema_version": 4,
+            "sha256": "7d49e8f85b7b229bb0fc9f6f3cb9665aaf9d287f6a873ac42701e3d77cc6e69f",
+            "uncompressed_bytes": 13116201,
+            "uncompressed_sha256": "5e0aa8a28851752ae0b8b0a08c635c6c8d2979f509f3a3e564ee74e2abfc8e6f"
+          },
+          "collection_delivery": "Original hash-validated shard bytes, keyed by the unchanged original asset ID; no placeholder or regenerated model/definition.",
+          "compiler_unresolved_binding_paths": [
+            "items.item.ensouled_goblin_head.stackable.rule",
+            "items.item.milk.bottomless_bucket.stackable.rule",
+            "mechanics.death.office_overflow",
+            "spawns.spawn.tutorial.fishing_spot.3099.3090.p0.interactions[0].action.rule.mechanics.respawn",
+            "spawns.spawn.tutorial.fishing_spot.3101.3092.p0.interactions[0].action.rule.mechanics.respawn",
+            "spawns.spawn.tutorial.fishing_spot.3103.3092.p0.interactions[0].action.rule.mechanics.respawn"
+          ],
+          "descriptor_bytes": 272691,
+          "descriptor_sha256": "e3b2673e6ae69bf13b54d1f3a6a1879827ceeba712e20e32732b89e7ecd9b21f",
+          "game_assets_manifest_sha256": "940d38e06a1b6b6e1097e77b49d9d6a0cde0d7d3f57daa9d52a36f2c2b7e8329",
+          "known_descriptor_limit_at_bcc0de9_bytes": 262144,
+          "original_collection_deliveries": 4986,
+          "original_payload_files": 36,
+          "policy": "Real server still enforces descriptor limits, strict artifact/source-profile readiness, actual assets and engine initialization. Original asset bytes are not UI/gameplay acceptance.",
+          "readiness_profile": {
+            "excluded_items": [
+              "item.ensouled_goblin_head",
+              "item.milk.bottomless_bucket"
+            ],
+            "id": "ordinary_normal_f2p"
+          },
+          "source_manifest": {
+            "path": ".local/water-source-operator-01/legacy5e/from/manifest.json",
+            "sha256": "4e985a5969bc60dbf9a680422d27e61155dfe1d25c705cd2d4ed2cd2801ba439"
+          },
+          "source_publication_validation": "passed",
+          "source_revision": "m1.source-backed.v4.3ff4292b311453cc",
+          "unmapped_are_not_placeholders": true,
+          "unmapped_original_asset_ids_count": 0,
+          "unmapped_original_asset_ids_first_24": [],
+          "world_id": "029e1354-cdf4-43c3-b442-7f68433aec12"
+        }
+      },
+      "profile": "legacy5e",
+      "to": {
+        "game_root": ".local/water-source-operator-01/legacy5e/to/game-root",
+        "identity": {
+          "artifact_sha256": "b2a1be20a0e6c3e1968f6f7610198ce38212f196c005539b4ac5013d10ebc650",
+          "assets_manifest_sha256": "95d7afc9d2740299c6e5091b547dbcfbc1b7b2c6f5614eca0b2251adc60abf08",
+          "descriptor_sha256": "e5e16ee2361cbd0aa44a1d3545755b9d49239acae71ecfe7835aa07838225fd2",
+          "world_id": "029e1354-cdf4-43c3-b442-7f68433aec12"
+        },
+        "preparation": {
+          "actual_compiler_referenced_assets": 5015,
+          "actual_source_asset_mappings": 5015,
+          "all_compiler_referenced_assets_mapped": true,
+          "artifact": {
+            "artifact_version": 4,
+            "bytes": 521255,
+            "path": "content/m1/legacy5e-water/game-content.csc.gz",
+            "schema_version": 4,
+            "sha256": "12432ec116f050d1edc42e4853ab38215d3aadd499e9fefad893ffbd6cf92232",
+            "uncompressed_bytes": 13125018,
+            "uncompressed_sha256": "b2a1be20a0e6c3e1968f6f7610198ce38212f196c005539b4ac5013d10ebc650"
+          },
+          "collection_delivery": "Original hash-validated shard bytes, keyed by the unchanged original asset ID; no placeholder or regenerated model/definition.",
+          "compiler_unresolved_binding_paths": [
+            "items.item.ensouled_goblin_head.stackable.rule",
+            "items.item.milk.bottomless_bucket.stackable.rule",
+            "mechanics.death.office_overflow",
+            "spawns.spawn.tutorial.fishing_spot.3099.3090.p0.interactions[0].action.rule.mechanics.respawn",
+            "spawns.spawn.tutorial.fishing_spot.3101.3092.p0.interactions[0].action.rule.mechanics.respawn",
+            "spawns.spawn.tutorial.fishing_spot.3103.3092.p0.interactions[0].action.rule.mechanics.respawn"
+          ],
+          "descriptor_bytes": 272691,
+          "descriptor_sha256": "e5e16ee2361cbd0aa44a1d3545755b9d49239acae71ecfe7835aa07838225fd2",
+          "game_assets_manifest_sha256": "95d7afc9d2740299c6e5091b547dbcfbc1b7b2c6f5614eca0b2251adc60abf08",
+          "known_descriptor_limit_at_bcc0de9_bytes": 262144,
+          "original_collection_deliveries": 4986,
+          "original_payload_files": 36,
+          "policy": "Real server still enforces descriptor limits, strict artifact/source-profile readiness, actual assets and engine initialization. Original asset bytes are not UI/gameplay acceptance.",
+          "readiness_profile": {
+            "excluded_items": [
+              "item.ensouled_goblin_head",
+              "item.milk.bottomless_bucket"
+            ],
+            "id": "ordinary_normal_f2p"
+          },
+          "source_manifest": {
+            "path": "content/m1/legacy5e-water/manifest.json",
+            "sha256": "718d50eb2134f76b9bb2d34ba2b99f162cb2ec6666b392aba52ce2a03477cdf4"
+          },
+          "source_publication_validation": "passed",
+          "source_revision": "m1.source-backed.v4.3ff4292b311453cc.water.e337c77cc5ccd980",
+          "unmapped_are_not_placeholders": true,
+          "unmapped_original_asset_ids_count": 0,
+          "unmapped_original_asset_ids_first_24": [],
+          "world_id": "029e1354-cdf4-43c3-b442-7f68433aec12"
+        }
+      },
+      "world_id": "029e1354-cdf4-43c3-b442-7f68433aec12"
+    },
+    {
+      "from": {
+        "game_root": ".local/water-source-operator-01/current5b/from/game-root",
+        "identity": {
+          "artifact_sha256": "5b3ba5f108ed3fec8f8b5f7f49b429c059e21b6f192ec99a0569616e08330059",
+          "assets_manifest_sha256": "5e9eab29912ffc914a61d5c0774e4db0c40c14373d31a97dcd71d418b0f51dff",
+          "descriptor_sha256": "408e25f148f76a3010bfbd7f4bc315b97ee1a90fab5d5c00094c2c942a2d3c6e",
+          "world_id": "16ceca3e-9b0c-43cd-9e9f-0382e5a190ad"
+        },
+        "preparation": {
+          "actual_compiler_referenced_assets": 5015,
+          "actual_source_asset_mappings": 5015,
+          "all_compiler_referenced_assets_mapped": true,
+          "artifact": {
+            "artifact_version": 4,
+            "bytes": 527455,
+            "path": ".local/water-source-operator-01/current5b/from/game-content.csc.gz",
+            "schema_version": 4,
+            "sha256": "8da1e85a1e2ebb0355e29e7a15a0ca7cdab2f2751bc1341dd5efd5322b925ca6",
+            "uncompressed_bytes": 13213366,
+            "uncompressed_sha256": "5b3ba5f108ed3fec8f8b5f7f49b429c059e21b6f192ec99a0569616e08330059"
+          },
+          "collection_delivery": "Original hash-validated shard bytes, keyed by the unchanged original asset ID; no placeholder or regenerated model/definition.",
+          "compiler_unresolved_binding_paths": [
+            "items.item.ensouled_goblin_head.stackable.rule",
+            "items.item.milk.bottomless_bucket.stackable.rule",
+            "mechanics.death.office_overflow",
+            "spawns.spawn.tutorial.fishing_spot.3099.3090.p0.interactions[0].action.rule.mechanics.respawn",
+            "spawns.spawn.tutorial.fishing_spot.3101.3092.p0.interactions[0].action.rule.mechanics.respawn",
+            "spawns.spawn.tutorial.fishing_spot.3103.3092.p0.interactions[0].action.rule.mechanics.respawn"
+          ],
+          "descriptor_bytes": 272691,
+          "descriptor_sha256": "408e25f148f76a3010bfbd7f4bc315b97ee1a90fab5d5c00094c2c942a2d3c6e",
+          "game_assets_manifest_sha256": "5e9eab29912ffc914a61d5c0774e4db0c40c14373d31a97dcd71d418b0f51dff",
+          "known_descriptor_limit_at_bcc0de9_bytes": 262144,
+          "original_collection_deliveries": 4986,
+          "original_payload_files": 36,
+          "policy": "Real server still enforces descriptor limits, strict artifact/source-profile readiness, actual assets and engine initialization. Original asset bytes are not UI/gameplay acceptance.",
+          "readiness_profile": {
+            "excluded_items": [
+              "item.ensouled_goblin_head",
+              "item.milk.bottomless_bucket"
+            ],
+            "id": "ordinary_normal_f2p"
+          },
+          "source_manifest": {
+            "path": ".local/water-source-operator-01/current5b/from/manifest.json",
+            "sha256": "e9105d48acda70fa6c19a707b91689b1c8a809c4b28ee7a88da0f284c028b5c1"
+          },
+          "source_publication_validation": "passed",
+          "source_revision": "m1.source-backed.v4.bdbf8a3788b842be",
+          "unmapped_are_not_placeholders": true,
+          "unmapped_original_asset_ids_count": 0,
+          "unmapped_original_asset_ids_first_24": [],
+          "world_id": "16ceca3e-9b0c-43cd-9e9f-0382e5a190ad"
+        }
+      },
+      "profile": "current5b",
+      "to": {
+        "game_root": ".local/water-source-operator-01/current5b/to/game-root",
+        "identity": {
+          "artifact_sha256": "adb24c14f76181a76e2874e97be3e2743a4c475d3ff89a7720b70ae6f6981bbc",
+          "assets_manifest_sha256": "de52d9c014e1e7f6bddc032700af190d49609e23b5255a17c2607e32845d8a47",
+          "descriptor_sha256": "199ece543d61a986846e85c986f1535de720f50882d44672727c5cbbfb8d4873",
+          "world_id": "16ceca3e-9b0c-43cd-9e9f-0382e5a190ad"
+        },
+        "preparation": {
+          "actual_compiler_referenced_assets": 5015,
+          "actual_source_asset_mappings": 5015,
+          "all_compiler_referenced_assets_mapped": true,
+          "artifact": {
+            "artifact_version": 4,
+            "bytes": 528842,
+            "path": "content/m1/game-content.csc.gz",
+            "schema_version": 4,
+            "sha256": "3b258ec2f23fd0942b99a8e20910b2d6ec2feb54a1ae11b71736a805b4754a7d",
+            "uncompressed_bytes": 13222639,
+            "uncompressed_sha256": "adb24c14f76181a76e2874e97be3e2743a4c475d3ff89a7720b70ae6f6981bbc"
+          },
+          "collection_delivery": "Original hash-validated shard bytes, keyed by the unchanged original asset ID; no placeholder or regenerated model/definition.",
+          "compiler_unresolved_binding_paths": [
+            "items.item.ensouled_goblin_head.stackable.rule",
+            "items.item.milk.bottomless_bucket.stackable.rule",
+            "mechanics.death.office_overflow",
+            "spawns.spawn.tutorial.fishing_spot.3099.3090.p0.interactions[0].action.rule.mechanics.respawn",
+            "spawns.spawn.tutorial.fishing_spot.3101.3092.p0.interactions[0].action.rule.mechanics.respawn",
+            "spawns.spawn.tutorial.fishing_spot.3103.3092.p0.interactions[0].action.rule.mechanics.respawn"
+          ],
+          "descriptor_bytes": 272691,
+          "descriptor_sha256": "199ece543d61a986846e85c986f1535de720f50882d44672727c5cbbfb8d4873",
+          "game_assets_manifest_sha256": "de52d9c014e1e7f6bddc032700af190d49609e23b5255a17c2607e32845d8a47",
+          "known_descriptor_limit_at_bcc0de9_bytes": 262144,
+          "original_collection_deliveries": 4986,
+          "original_payload_files": 36,
+          "policy": "Real server still enforces descriptor limits, strict artifact/source-profile readiness, actual assets and engine initialization. Original asset bytes are not UI/gameplay acceptance.",
+          "readiness_profile": {
+            "excluded_items": [
+              "item.ensouled_goblin_head",
+              "item.milk.bottomless_bucket"
+            ],
+            "id": "ordinary_normal_f2p"
+          },
+          "source_manifest": {
+            "path": "content/m1/manifest.json",
+            "sha256": "faf9437a395a73955b8f03d498a8e90c080e0df95feeadc13d641c79befaee03"
+          },
+          "source_publication_validation": "passed",
+          "source_revision": "m1.source-backed.v4.71c86749d02088ee",
+          "unmapped_are_not_placeholders": true,
+          "unmapped_original_asset_ids_count": 0,
+          "unmapped_original_asset_ids_first_24": [],
+          "world_id": "16ceca3e-9b0c-43cd-9e9f-0382e5a190ad"
+        }
+      },
+      "world_id": "16ceca3e-9b0c-43cd-9e9f-0382e5a190ad"
+    }
+  ],
+  "saved_checkpoint_accessed": false,
+  "saved_world_migrated": false,
+  "schema_version": 1,
+  "scope": "Original-asset source-only delivery, not a browser bundle or player journey",
+  "service_started": false,
+  "status": "passed"
+}

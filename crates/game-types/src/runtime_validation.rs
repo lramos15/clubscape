@@ -228,23 +228,42 @@ impl CharacterState {
                 "Pending firemaking definition is missing; do not clear the operation.",
             ));
         }
-        if let Activity::ProducingAt {
-            recipe,
-            remaining,
-            next_tick,
-            ..
-        }
-        | Activity::ProducingSelected {
-            recipe,
-            remaining,
-            next_tick,
-            ..
-        } = &self.activity
-            && (!content.recipes.contains_key(recipe)
-                || *remaining == 0
-                || *next_tick > i64::MAX as u64)
-        {
-            return Err(invalid("Invalid pending dynamic-facility production."));
+        let production = match &self.activity {
+            Activity::Producing {
+                recipe,
+                remaining,
+                next_tick,
+                ..
+            }
+            | Activity::ProducingAt {
+                recipe,
+                remaining,
+                next_tick,
+                ..
+            } => Some((recipe, *remaining, *next_tick, None)),
+            Activity::ProducingSelected {
+                recipe,
+                remaining,
+                next_tick,
+                mode,
+                ..
+            } => Some((recipe, *remaining, *next_tick, Some(*mode))),
+            _ => None,
+        };
+        if let Some((recipe, remaining, next_tick, mode)) = production {
+            if next_tick > i64::MAX as u64 {
+                return Err(invalid(
+                    "Pending production deadline exceeds its persisted tick bound.",
+                ));
+            }
+            let recipe = content.recipes.get(recipe).ok_or_else(|| {
+                invalid("Pending production definition is missing; do not clear the operation.")
+            })?;
+            recipe
+                .validate_production_mode(remaining, mode)
+                .map_err(|error| {
+                    invalid(&format!("Invalid pending production: {}", error.message))
+                })?;
         }
         if let Activity::InventoryAction {
             slot,
@@ -265,12 +284,6 @@ impl CharacterState {
                     }))
         {
             return Err(invalid("Invalid pending selected inventory action."));
-        }
-        if matches!(&self.activity, Activity::ProducingSelected { mode: ProductionMode::Single, remaining, .. } if *remaining != 1)
-        {
-            return Err(invalid(
-                "A single production cannot contain multiple operations.",
-            ));
         }
         for prayer in &runtime.combat.active_prayers {
             if definitions.prayers[prayer]

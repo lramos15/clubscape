@@ -162,6 +162,12 @@ impl Validator<'_> {
                             let recipe = self.content.recipes.get(recipe).ok_or_else(|| {
                                 invalid(&path, format!("undefined recipe {recipe}"))
                             })?;
+                            if recipe.item_on_target.is_some() {
+                                return Err(invalid(
+                                    &path,
+                                    "item-on-only recipe cannot also be offered by a Production menu",
+                                ));
+                            }
                             if !recipe.target_objects.is_empty() {
                                 let SpawnKind::Object { object } = &spawn.kind else {
                                     return Err(invalid(

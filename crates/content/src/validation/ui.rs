@@ -100,7 +100,13 @@ impl Validator<'_> {
             }
         }
         for (recipe, interface) in &ui.production_interfaces {
-            if !self.content.recipes.contains_key(recipe) || ui.direct_production.contains(recipe) {
+            if self
+                .content
+                .recipes
+                .get(recipe)
+                .is_none_or(|recipe| recipe.item_on_target.is_some())
+                || ui.direct_production.contains(recipe)
+            {
                 return Err(invalid(
                     "ui.production",
                     "unknown recipe or conflicting direct/menu source behavior",
@@ -114,11 +120,12 @@ impl Validator<'_> {
                 ));
             }
         }
-        if ui
-            .direct_production
-            .iter()
-            .any(|recipe| !self.content.recipes.contains_key(recipe))
-        {
+        if ui.direct_production.iter().any(|recipe| {
+            self.content
+                .recipes
+                .get(recipe)
+                .is_none_or(|recipe| recipe.item_on_target.is_some())
+        }) {
             return Err(invalid(
                 "ui.direct_production",
                 "unknown one-click source recipe",

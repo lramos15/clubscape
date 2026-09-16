@@ -11,6 +11,7 @@ use clubscape_world_engine::{LifecycleTransition, RandomSource, WorldEngine};
 
 mod probes;
 mod ui_probes;
+mod water_probes;
 
 struct NoRandom;
 
@@ -109,6 +110,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     }
     let native = probes::run(&engine)?;
     let ui_native = ui_probes::run(&engine)?;
+    let water_native = water_probes::run(&engine)?;
     println!(
         "{}",
         serde_json::json!({
@@ -125,6 +127,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
             "real_source_appearance_request_passed": true,
             "native_source_policy_probes": native,
             "native_ui_control_probes": ui_native,
+            "native_water_fill_probes": water_native,
             "engine_api_scope": "Construction, authenticated-lifecycle boundary, read-only views and first source input only; not a full journey or browser/presentation acceptance.",
             "gameplay_executed": false,
             "revision": content.revision,
@@ -136,7 +139,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
             "recipes": content.recipes.len(),
         })
     );
-    if native["passed"] != true || ui_native["passed"] != true {
+    if native["passed"] != true || ui_native["passed"] != true || water_native["passed"] != true {
         return Err("Native source-policy conformance failed; see the exact probe result.".into());
     }
     Ok(())

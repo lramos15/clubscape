@@ -1,4 +1,5 @@
 #![allow(dead_code)]
+pub mod item_on;
 pub mod ui;
 
 use std::collections::BTreeMap;
@@ -255,6 +256,7 @@ pub fn fixture() -> GameContent {
         ticks: Some(3),
         success: chance(1, 1),
         target_objects: vec![id("object.test.furnace")],
+        item_on_target: None,
         mechanics: None,
         source: sources(),
     };

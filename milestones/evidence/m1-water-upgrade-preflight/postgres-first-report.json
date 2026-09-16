@@ -1,0 +1,22 @@
+{
+  "schema_version": 1,
+  "scope": "Exact source-pair migration/receipt components using controlled test-owned state",
+  "code_revision": "ee81bbf0501584e22550845666c7dd690acf991f",
+  "workspace_dirty": true,
+  "executable": "target/debug/deps/clubscape_server-edd05d8cb1a2fada",
+  "executable_sha256": "1beca6df23e22b1c0e0d12bdd09307f6719b8c8128949eadcdce4c9bff249f3b",
+  "test_source_sha256": "1c1961242ef0a273ae459e9ac36f1771281796d3d676fcaf10a3a383c7e0f906",
+  "database_image": "postgres:16-alpine@sha256:cf78e76683b9ca8c5733cbbdce6c9262b45b6767934dd0a95e671f9a0fc20685",
+  "selected_tests": [
+    "game_service::tests::water_migration::current_water_migration_preserves_fences_journals_and_resolves_once_after_restart",
+    "game_service::tests::water_migration::legacy_water_migration_preserves_fences_journals_and_resolves_once_after_restart"
+  ],
+  "result": "failed",
+  "passed_tests": 0,
+  "saved_checkpoint_accessed": false,
+  "actual_saved_world_migrated": false,
+  "milestone_accepted": false,
+  "error": "/home/lramos15/clubscape/.worktrees/m1-water-integration/target/debug/deps/clubscape_server-edd05d8cb1a2fada failed (exit 101):\n\nrunning 2 tests\ntest game_service::tests::water_migration::current_water_migration_preserves_fences_journals_and_resolves_once_after_restart ... FAILED\ntest game_service::tests::water_migration::legacy_water_migration_preserves_fences_journals_and_resolves_once_after_restart ... FAILED\n\nfailures:\n\nfailures:\n    game_service::tests::water_migration::current_water_migration_preserves_fences_journals_and_resolves_once_after_restart\n    game_service::tests::water_migration::legacy_water_migration_preserves_fences_journals_and_resolves_once_after_restart\n\ntest result: FAILED. 0 passed; 2 failed; 0 ignored; 0 measured; 83 filtered out; finished in 42.01s\n\n\nthread 'game_service::tests::water_migration::current_water_migration_preserves_fences_journals_and_resolves_once_after_restart' (3846753) panicked at crates/server/src/game_service/tests/water_migration.rs:503:5:\nassertion `left == right` failed\n  left: 0\n right: 1\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n\nthread 'game_service::tests::water_migration::legacy_water_migration_preserves_fences_journals_and_resolves_once_after_restart' (3846938) panicked at crates/server/src/game_service/tests/water_migration.rs:503:5:\nassertion `left == right` failed\n  left: 0\n right: 1\n",
+  "owned_database_removed": true,
+  "temporary_credentials_removed": true
+}

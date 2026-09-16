@@ -10,6 +10,7 @@ mod fixtures;
 mod observer;
 mod production;
 mod ui;
+mod water_migration;
 
 use std::{env, fs, path::PathBuf, str::FromStr, sync::Arc, time::Duration};
 

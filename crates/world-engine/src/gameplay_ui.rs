@@ -468,6 +468,16 @@ impl WorldEngine {
         action: &str,
         recipes: &[RecipeId],
     ) -> GameResult<Vec<GameEvent>> {
+        if recipes.iter().any(|id| {
+            self.content
+                .recipes
+                .get(id)
+                .is_some_and(|recipe| recipe.item_on_target.is_some())
+        }) {
+            return Err(invalid_content(
+                "An item-on-only recipe has no Production menu.",
+            ));
+        }
         let definition = self
             .content
             .ui
