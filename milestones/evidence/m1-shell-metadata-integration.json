@@ -32,6 +32,16 @@
     "qualification": "Metadata-only source transport and controlled geometry, not actual audio playback. Browser expectations are strengthened in b4f6304 without new timing waits or threshold changes."
   },
   "source_browser_admission": "milestones/evidence/m1-shell-metadata-browser-authorization.json",
+  "durable_candidate_evidence": [
+    {"path":"milestones/evidence/m1-shell-metadata/normal-build.log.gz","sha256":"7a9f67ca30e6cfef7930671c010b4f693e94ae39843d8ac21c62fa8988d2f18a"},
+    {"path":"milestones/evidence/m1-shell-metadata/web-tests.log.gz","sha256":"11e0f01aa0ca59a68d658285d0e115ef3e58ff68b2c50946b2962e2d28a31135"},
+    {"path":"milestones/evidence/m1-shell-metadata/source-inputs.json.gz","sha256":"87f858c99ed167615879254e77ea4a3643da45dc82ff24285c513bc81921ca35"},
+    {"path":"milestones/evidence/m1-shell-metadata/source-build-before.log.gz","sha256":"a2516807a098d1d470f20e4f0aa9c2c30dd4a817bfff8a28cd3086055bd6130e"},
+    {"path":"milestones/evidence/m1-shell-metadata/source-build.log.gz","sha256":"85ce9bfc5790d92da5d65cb3aaf32ba9c8d7eafe385774330074c8d625890e88"},
+    {"path":"milestones/evidence/m1-shell-metadata/source-run-pin.json.gz","sha256":"f0e27533d63446121b5e4bae45368b180dcb2ab419016296dd065e3d5d627a4a"},
+    {"path":"milestones/evidence/m1-shell-metadata/source-build-artifact.json","sha256":"5ea9e28efac39ebcf3237a9cf2d11ea1c2e7c778572bc3a1a4396fe4f4bfab1d"}
+  ],
+  "retained_preflight_failure": "The first content-configured build used an invalid output-directory shape and was rejected by the existing Vite guard. Only the caller path was corrected to .local/web-builds/shell-metadata-01; no guard, source pin or browser allowance was changed.",
   "scope": "Only source preview/spatial metadata and related lifecycle/consumer tests. No modifications to the recovery candidate under independent review.",
   "worker_reported_evidence": {
     "handoff": ".worktrees/m1-browser-shell/.local/evidence/metadata-ui-candidate/HANDOFF.txt",
