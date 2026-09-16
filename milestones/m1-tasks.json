@@ -11,13 +11,13 @@
       {"id": "78d01af9-70a4-4b02-8339-6a61eb377374", "task": "M1-BROWSER-SHELL"},
       {"id": "81ac9884-4f39-4f27-b516-6e9a42b09b51", "task": "M1-HEADLESS-JOURNEY"},
       {"id": "cdfad64d-9162-439f-a525-58e1114dd7f4", "task": "M1-AUDIO-COMPOSED-TIMING"},
-      {"id": "ac0f0856-44af-445b-bd90-6db7a1f4fc74", "task": "M1-NATIVE-CAMERA-CONTROLLER"}
+      {"id": "ac0f0856-44af-445b-bd90-6db7a1f4fc74", "task": "M1-NATIVE-CAMERA-CONTROLLER"},
+      {"id": "2766e089-44e5-4a1d-974e-7b03ad9c269d", "task": "M1-NATIVE-RECOVERY-CONTRACT"}
     ],
     "reserved": [],
     "queued": [],
     "parked": [
       {"id": "cc864d7a-37cc-4869-a7b4-d484d01cede5", "reason": "Latest turns delivered no current-contract completion. Four published UI commits and pending native-preference work are preserved unchanged in m1-ui; Director takes the bounded UI integration/current-contract/native-port completion directly. No automatic resumption or duplicate UI edits."},
-      {"id": "2766e089-44e5-4a1d-974e-7b03ad9c269d", "reason": "Source-only57d4edd integrated664dde0 records three unverified facts after the bounded retained/native/public pass: normal-grave Bank-All permission, dough motion and seven Empty variants' motion or verified absence. All current5b3 contracts are already integrated; no more backend expansion, source guessing or automatic resumption without new evidence and admission."},
       {"id": "e6925772-df1f-4ff7-9efc-219f800a5a14", "reason": "Bounded UI4 review complete: one medium source-travel interruption bypass in timed UI actions. Director repair M1-UI-TRAVEL-INTERRUPTION is active; this is not final candidate signoff."},
       {"id": "2a0ae699-6af8-45d5-90c7-3addfc56ee53", "reason": "Renewed five-invocation assessment complete; live creation/scene/window/baseline work, firstXP unverified after driverOutOfReach. No sixth invocation or automatic resumption."},
       {"id": "aab1ae0f-0238-4254-bff3-b7c046349c6b", "reason": "Shop capacity/identity fixes integrated as3310032+af75e17 with18 passing regressions; no automatic resumption."},
@@ -33,6 +33,42 @@
     "usage_accounting": "milestones/evidence/m1-usage-snapshot.json records the available delayed session snapshot; final project-wide credits/currency are unavailable."
   },
   "tasks": [
+    {
+      "id": "M1-NATIVE-RECOVERY-CONTRACT",
+      "goal": "Publish the authoritative native recovery context needed to display every owned Office record, exact selected-type source captions, actual storage limits and source whole-context Take-All without client-side transaction reconstruction.",
+      "status": "IMPLEMENTING",
+      "specs": ["research/interface-contracts/control-bindings.json", "research/interface-contracts/remaining-source-questions.json", "web/shared/contracts.ts", "web/ui/recovery.ts", "crates/world-engine/src/gameplay_ui/recovery_controls.rs"],
+      "dependencies": ["M1-GAMEPLAY-UI-CONTRACTS"],
+      "allowed_paths": ["crates/game-types/**", "crates/world-engine/**", "crates/client-core/**", "crates/protocol/**", "crates/wasm/**", "crates/server/tests/**", "web/shared/contracts.ts", "web/app/tests/recovery*.test.ts", "research/interface-contracts/recovery-context/**"],
+      "forbidden_paths": ["prompt.md", "Cargo.lock", "Cargo.toml", "content/**", "assets/**", "crates/renderer/**", "crates/camera/**", "tools/journey-tests/**", "tools/simulator/**", "web/ui/**", "web/audio/**", "web/app/composition.ts", "web/app/tests/source-browser.ts", "web/app/tests/real-player-audio.ts", "research/reference-pack/**", "tools/reference-pack/**", "spec/**", "milestones/**"],
+      "outputs": ["Typed current-context storage/count/capacity and source-selected caption data, retaining exact record/item identity", "One authoritative source whole-context Take-All path reusing the existing multi-record recovery planner where needed", "Complete protocol/client-core/WASM/shared contract forwarding and native regressions without changing source gameplay rules"],
+      "validation_commands": ["cargo test --locked -p clubscape-world-engine", "cargo test --locked -p clubscape-protocol -p clubscape-client-core -p clubscape-wasm", "cargo clippy --locked -p clubscape-world-engine -p clubscape-protocol -p clubscape-client-core -p clubscape-wasm --all-targets -- -D warnings"],
+      "test_requirements": ["Use isolated .worktrees/m1-recovery-context from2f3704d and preserve the original backend worktree", "Original source669 scroll fixture selects slot7 but INV_TOTAL displays35 bronze arrows, not the current per-entry7; retain selected-slot outline and exact native caption semantics", "Do not infer capacity from the controlled120-slot fixture or sum per-entry executable capacities", "Do not infer unseen server selected-All semantics from INV_TOTAL alone; retain any real source gap explicitly", "No client-side request loops or additive fee/permission inference for one source whole-context action", "Preserve source5b artifact, current fees/overflow/ownership/atomic receipts and older single-entry requests", "Ordinary-grave Bank-All, dough and Empty source unknowns remain unchanged; no fresh-account journey or protected-checkpoint mutation"],
+      "acceptance": ["Publish a complete source-grounded contract and passing native forwarding/planner evidence for UI consumption, or identify a precise irreducible source gap; UI and full M1 integration remain separate"],
+      "reserved_namespaces": [],
+      "source_notes": ["This is a new concrete integration gap, not a rerun of the closed bounded source-only pass. Existing recovery management already supplies every Office record, but the UI displays only the legacy matching record and the current inventory Take-All request can name only one death record.", "Original native-retrieval-scroll-669 readback from the unchanged80-item source fixture: selected slot7 has7 arrows but source3492 displays35 x Bronze arrow with42coins each and1470 total. Existing legacy display matches exactly; the current per-entry extension displays7 and294. Source original capacity caption16/120 is a controlled fixture input, not sufficient proof of the server policy.", "Director owns the new source-caption regression and subsequent UI wiring in separate m1-ui-recovery. No new schema is integrated into the production candidate before all consumers compile and the actual controls are verified."],
+      "parity_entries": [],
+      "adaptations": [],
+      "evidence": []
+    },
+    {
+      "id": "M1-NATIVE-RECOVERY-UI",
+      "goal": "Render the complete source-native recovery context and dispatch its exact identity-bound selected/whole-context controls using the published authoritative data.",
+      "status": "BLOCKED",
+      "specs": ["research/interface-contracts/control-bindings.json", "web/shared/contracts.ts", "web/ui/recovery.ts", "web/ui/world-view.ts"],
+      "dependencies": ["M1-NATIVE-RECOVERY-CONTRACT"],
+      "allowed_paths": ["web/ui/**"],
+      "forbidden_paths": ["prompt.md", "crates/**", "web/shared/**", "web/app/**", "web/audio/**", "content/**", "assets/**", "research/reference-pack/**", "tools/reference-pack/**", "spec/art-style.md", "spec/interface-parity.md", "spec/adaptations.md"],
+      "outputs": ["Exact source-grounded duplicate-type caption regression", "All owned visible records, real capacity/count and stable source selection without invented tabs or fees", "Real control tests and original native comparisons"],
+      "validation_commands": ["node --test web/ui/tests/recovery-context.test.ts", "pnpm --dir web typecheck", "node web/ui/tests/gameplay-ui-browser.mjs"],
+      "test_requirements": ["Prepare the failing original-source regression in isolated m1-ui-recovery; wait for the backend contract before production UI changes", "No summed fees/capacities, hidden records, request fan-out or ordinary-grave permission inference", "Preserve original selected-slot geometry and existing partial request semantics unless new original evidence explicitly requires otherwise"],
+      "acceptance": ["Exact native caption/context/control behavior works with current authoritative data; complete M1/fidelity/owner acceptance remains separate"],
+      "reserved_namespaces": [],
+      "source_notes": ["Current2f3704d source-caption probe has one passing original-data control and a reproduced current-contract mismatch:35/1470 versus7/294. This does not waive the independent two-cue timing failure or other UI gates."],
+      "parity_entries": [],
+      "adaptations": [],
+      "evidence": []
+    },
     {
       "id": "M1-CAMERA-INTEGRATION",
       "goal": "Wire the tested native camera into the real renderer/WASM/browser path and verify normal source entry without a diagnostic camera query.",
