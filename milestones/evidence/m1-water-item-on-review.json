@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "task": "M1-WATER-ITEM-ON-REVIEW",
-  "status": "admitted_read_only",
+  "status": "changes_required",
   "authority": "Director bounded independent review within approved M1",
   "implementation_authority": "milestones/evidence/m1-water-item-on-dispatch-authorization.json",
   "owner_approval": "milestones/approvals/m1-water-fill-upgrade-v1.json",
@@ -57,7 +57,30 @@
     "Private checkpoint/account reads, restore, network journey or database migration.",
     "Nested agents/factory, acceptance claims or changes to source/frozen presentation gates."
   ],
-  "review_result": null,
+  "review_result": {
+    "execution": "Static independent code review; no tests or builds executed by the reviewer.",
+    "findings": [
+      {
+        "id": "persisted-item-on-batch",
+        "severity": "MEDIUM",
+        "path": "crates/game-types/src/runtime_validation.rs",
+        "lines": [231, 273],
+        "trigger": "An otherwise valid deserialized item-on Producing activity with remaining2, or ProducingSelected with remaining1 and MakeX, passes persisted-state validation.",
+        "effect": "The due-time check in activities.rs returns Unavailable; the error is not an ordinary interruption and propagates to abort the whole tick.",
+        "required_fix": "Reuse one content-aware single-conversion predicate for start, projection, execution and persisted validation of all three production activity variants, regardless of deadline. Reject malformed pending work; never normalize or discard it.",
+        "status": "assigned_to_original_implementer"
+      }
+    ]
+  },
+  "bounded_fix_admission": {
+    "worker": "2766e089-44e5-4a1d-974e-7b03ad9c269d",
+    "worktree": ".worktrees/m1-water-dispatch",
+    "base": "5c6c581136310b48e8043e7920199d7236f9b88c",
+    "scope": "Only the reported persisted-state gap, shared restriction predicate and complete serialized-state regressions in the original allowed game-types/world-engine paths.",
+    "required_cases": "All three activity variants at future, due and overdue deadlines; invalid count/mode rejected before ticks, valid single work round-trips, ordinary recipes preserve supported behavior.",
+    "source_artifact_change_expected": false,
+    "prior_forbidden_work_unchanged": true
+  },
   "main_integrated": false,
   "saved_world_migration_or_continuation_admitted": false,
   "milestone_accepted": false
