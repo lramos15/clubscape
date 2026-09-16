@@ -7,12 +7,14 @@
     "admissions_open": true,
     "active": [
       {"id": "director", "task": "M1-SHELL-METADATA-INTEGRATION"},
-      {"id": "bb7f85f7-096a-4377-80cb-3e7eae196c6b", "task": "M1-BROWSER-RENDERER"},
-      {"id": "e6925772-df1f-4ff7-9efc-219f800a5a14", "task": "M1-WATER-ITEM-ON-REVIEW"}
+      {"id": "bb7f85f7-096a-4377-80cb-3e7eae196c6b", "task": "M1-BROWSER-RENDERER"}
     ],
-    "reserved": [],
+    "reserved": [
+      {"id": "water-item-on-review", "task": "M1-WATER-ITEM-ON-REVIEW", "reason": "Prior reviewer e692 was retired by the runtime; its attempted resumption performed no review. One replacement read-only reviewer is reserved."}
+    ],
     "queued": [],
     "parked": [
+      {"id": "e6925772-df1f-4ff7-9efc-219f800a5a14", "reason": "Runtime retired this completed camera/recovery reviewer. Attempted water-review resumption was rejected before any execution; prior completed reports remain valid. No automatic resumption."},
       {"id": "fdda1fb0-1135-4cf8-8cff-3db550e48f54", "reason": "Publishedeaa527a with strict current/legacy water candidates and preserved source qualifications. Both have0/4 positive native cases because the shared recipe-target guard has no item-on-only authorization for operation-less sink14868. Neither target is migration-ready. Director owns the next bounded shared-contract repair; no private-state access, migration or automatic resumption."},
       {"id": "2766e089-44e5-4a1d-974e-7b03ad9c269d", "reason": "Published source-bound single item-on repair5c6c581 at a clean stop. Both exact water profiles now pass4/4 positive and15/15 negative native cases; old5b/5e recompile exactly. Independent review, main integration, guarded database replay and any separately admitted migration remain Director-owned. No private state, journey, browser or automatic resumption."},
       {"id": "78d01af9-70a4-4b02-8339-6a61eb377374", "reason": "Completed bounded preview/spatial producers in b134136 and57f18f1; current original worktree4a205bf is clean and unchanged. Director owns isolated integration against current UI/recovery/audio, preserving source-browser.ts and rechecking historical preview limits. No new work, captures or automatic resumption."},
