@@ -1,0 +1,39 @@
+{
+  "schema_version": 1,
+  "task": "M1-WATER-ITEM-ON-DISPATCH",
+  "authority": "Director engineering continuation within the owner-approved M1 water dependency",
+  "owner_approval": "milestones/approvals/m1-water-fill-upgrade-v1.json",
+  "source_candidate": "eaa527a8f3d9d408d6bf1a4b8fdc47269abe0137",
+  "worktree": ".worktrees/m1-water-dispatch",
+  "status": "admitted_native_and_content_only",
+  "observed_root_cause": "check_recipe_target requires a menu Production entry to provide reach/guard. Recipe.target_objects names the sink but does not authorize contact. Source sink14868 has no menu operations.",
+  "bounded_design": {
+    "field": "An explicit optional source-bound item-on target rule on RecipeDefinition, absent and omitted from serialization for existing recipes.",
+    "rule": "A typed reach and guard for a single item-on facility conversion, not an InteractionDefinition with an invented menu name.",
+    "water": "Only recipe.water.bucket gains the source-qualified1-tile rule and existing mainland guard; target_objects must remain nonempty and source-bound.",
+    "contact": "Extract/reuse require_world_target's existing guard, target availability/instance, footprint, source access-side, collision/sight and near-face contact logic. Do not duplicate a weaker radius implementation.",
+    "legacy": "Existing recipes without the rule retain their exact menu Production admission and guards. Legacy explicit Produce may perform one matching source conversion as its existing canonical engine primitive, but it must not create a menu or authorize batching.",
+    "quantity": "Item-on-only bindings admit exactly one conversion and no Make-X/All menu or automatic batch; the worker's inferred first/repeat cadence must not become batching evidence.",
+    "ambiguity": "Compiler validation must reject ambiguous mixed menu/item-on-only declarations and malformed, unresolved, empty-target or unsupported rules instead of silently choosing one.",
+    "lifecycle": "Start, projection and pending-tick checks must agree; ordinary source target changes still interrupt atomically."
+  },
+  "required_evidence": [
+    "Actual failing-before and passing-after positive native water cases on both explicit current and legacy profiles.",
+    "All negative guards, including the previously masked plane case, now exercise the intended boundary and preserve state.",
+    "No synthetic Fill/Use object operation; the original sink menu remains empty.",
+    "Reject unavailable rule, wrong target/input/instance/plane, blocked contact, absent ingredients and unsupported multi-conversion modes.",
+    "Old5b and5e artifacts recompile exactly when the new optional rule is absent; no changed source identity may be called unchanged.",
+    "Regenerated water targets have exact semantic differences and hashes, with original archives and all motion qualifications retained.",
+    "Strict compiler/runtime/format/type checks in worktree-private targets; no cross-worktree Cargo cache."
+  ],
+  "forbidden": [
+    "Private saved-account/checkpoint reads, resets, restores, world migration or network journey execution",
+    "New browser/GPU/RuneLite or original-source capture",
+    "Frozen source assets, reference images, tolerances or approval changes",
+    "Hardcoded water recipe IDs in generic engine logic, guessed menu actions, guard bypasses or anywhere-water fallback",
+    "Claiming unverified water/dough/Empty animation or source batching as verified"
+  ],
+  "migration_admitted": false,
+  "milestone_accepted": false,
+  "later_milestone_authorized": false
+}

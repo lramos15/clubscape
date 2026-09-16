@@ -7,7 +7,8 @@
     "admissions_open": true,
     "active": [
       {"id": "director", "task": "M1-SHELL-METADATA-INTEGRATION"},
-      {"id": "bb7f85f7-096a-4377-80cb-3e7eae196c6b", "task": "M1-BROWSER-RENDERER"}
+      {"id": "bb7f85f7-096a-4377-80cb-3e7eae196c6b", "task": "M1-BROWSER-RENDERER"},
+      {"id": "2766e089-44e5-4a1d-974e-7b03ad9c269d", "task": "M1-WATER-ITEM-ON-DISPATCH"}
     ],
     "reserved": [],
     "queued": [],
@@ -15,7 +16,6 @@
       {"id": "fdda1fb0-1135-4cf8-8cff-3db550e48f54", "reason": "Publishedeaa527a with strict current/legacy water candidates and preserved source qualifications. Both have0/4 positive native cases because the shared recipe-target guard has no item-on-only authorization for operation-less sink14868. Neither target is migration-ready. Director owns the next bounded shared-contract repair; no private-state access, migration or automatic resumption."},
       {"id": "e6925772-df1f-4ff7-9efc-219f800a5a14", "reason": "Bounded recovery review of7f30a0a at evidenceba8397f completed with no high-confidence findings. Native context/planner/transport/UI/fencing assessed against source contract and original caption regression; no tests/edits/captures/private-state access or M1 acceptance. No automatic resumption."},
       {"id": "78d01af9-70a4-4b02-8339-6a61eb377374", "reason": "Completed bounded preview/spatial producers in b134136 and57f18f1; current original worktree4a205bf is clean and unchanged. Director owns isolated integration against current UI/recovery/audio, preserving source-browser.ts and rechecking historical preview limits. No new work, captures or automatic resumption."},
-      {"id": "2766e089-44e5-4a1d-974e-7b03ad9c269d", "reason": "Published native context/Take-All through155ac6f/93aefa6/5e32781 plus evidencec379d1c/234d9f9, with396Rust/15controller checks. Director owns the missing one-line server encoder and complete UI consumption/PG validation; no more worker edits, source repin or automatic resumption."},
       {"id": "cdfad64d-9162-439f-a525-58e1114dd7f4", "reason": "Completed56audio units and two fresh full-source cold checks with18/18on-time cues each. Owned66c6d87/6557c57/b5a46f3 integrate2a7727d/693d573/7a01cf2; parent249candidateweb and103rootaudio-consumer checks pass. Both bounded allowances exhausted, GPU window released. Full journey/spatial/speaker/Mac/frozen performance/owner gates remain separate; no automatic resumption."},
       {"id": "ac0f0856-44af-445b-bd90-6db7a1f4fc74", "reason": "Native camera2401e98 completed in owned crates/camera plus local-member lock entry. Parent32native tests, Clippy, WASM check and byte-identical14/354 conformance pass. Independent review and actual renderer/WASM/browser providers remain separate; no automatic consumer edits or resumption."},
       {"id": "81ac9884-4f39-4f27-b516-6e9a42b09b51", "reason": "Turn24 returned empty with HEAD9289baf unchanged, no pending code, no cook attempt journal or new run evidence. Director takes over a913bb7's UNUSED one-restore allowance in the same protected source5e worktree, with a new isolated branch; no automatic resumption or duplicate allowance. Assignment record milestones/evidence/m1-cook-director-takeover.json."},
@@ -33,6 +33,24 @@
     "usage_accounting": "milestones/evidence/m1-usage-snapshot.json records the available delayed session snapshot; final project-wide credits/currency are unavailable."
   },
   "tasks": [
+    {
+      "id": "M1-WATER-ITEM-ON-DISPATCH",
+      "goal": "Close the explicit source item-on-only recipe authorization/reach seam without manufacturing an object menu operation or changing old recipe behavior.",
+      "status": "IMPLEMENTING",
+      "specs": ["milestones/evidence/m1-water-item-on-dispatch-authorization.json", "research/water-fill/handoff.json", "research/water-fill/facts.json", "crates/world-engine/src/activities.rs", "crates/world-engine/src/permissions.rs"],
+      "dependencies": ["M1-NATIVE-RECOVERY-INTEGRATION"],
+      "allowed_paths": ["crates/game-types/**", "crates/content/**", "crates/world-engine/**", "crates/server/src/game_service/tests/ui.rs", "tools/m1-content/**", "tools/simulator/src/journey/plan.rs", "tools/simulator/src/journey/source.rs", "content/m1/**", "research/water-fill/**", "research/m1-bindings/**"],
+      "forbidden_paths": ["prompt.md", "Cargo.lock", "crates/protocol/**", "crates/wasm/**", "crates/camera/**", "crates/renderer/**", "crates/server/src/game_storage/**", "web/**", "assets/**", "research/reference-pack/**", "spec/**", "milestones/**", ".local/journey-checkpoints/**"],
+      "outputs": ["Source-bound optional single-conversion target rule and shared geometry guard reuse", "Complete positive/negative native and content compatibility regressions", "Exact regenerated current/legacy water candidates and qualified handoff"],
+      "validation_commands": ["cargo test --locked -p clubscape-game-types -p clubscape-content -p clubscape-world-engine", "python3 tools/m1-content/validate.py --repeat"],
+      "test_requirements": ["Implement only the committed bounded design; no fake menu, source motion or batching inference", "Preserve existing recipes and old-profile artifact bytes when the new rule is absent", "Only the named server test fixture may change for a necessary new optional struct-literal field; no production server change", "Use worktree-local Cargo targets and do not generate embedded content concurrently with its tests", "No private state, migration, actual journey, GPU/browser, new sources, peers/subagents or factory"],
+      "acceptance": ["Both water profiles execute the actual single source conversion while all meaningful guards and no-menu invariants pass; no migration or M1 acceptance follows automatically"],
+      "reserved_namespaces": [],
+      "source_notes": ["eaa527a correctly stopped with0/4 positive native cases. Director inspected use_item, check_recipe_target, production start/tick/projection and require_world_target; target_objects alone has no reach/channel authority. The explicit optional rule is the narrow data-driven continuation under the already-approved water dependency."],
+      "parity_entries": [],
+      "adaptations": [],
+      "evidence": ["milestones/evidence/m1-water-fill-dispatch-blocker.json", "milestones/evidence/m1-water-item-on-dispatch-authorization.json"]
+    },
     {
       "id": "M1-SHELL-METADATA-INTEGRATION",
       "goal": "Integrate only the completed source preview/spatial metadata producers against the current committed UI/recovery/audio candidate without changing the candidate under independent review.",
