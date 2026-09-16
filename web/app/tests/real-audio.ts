@@ -122,6 +122,10 @@ export async function checkTitleAudio(page: Page): Promise<unknown> {
       audioEnabled: () => audio?.enabled() === true,
       volume: (channel, value) => audio?.volume(channel, value),
       disconnected: () => audio?.disconnected(),
+      componentFailure(error) {
+        errors.push({ message: error.message, recoverable: error.recoverable });
+        app.report(error);
+      },
     });
     audio = await api.SourceAudioSession.create(assets, manifest.assets,
       (error) => { errors.push({ message: error.message, recoverable: error.recoverable }); app.report(error); },

@@ -84,6 +84,7 @@ function hooks(): ClientHooks {
     content: async () => ({ contentRevision: "fixture", items: {}, skills: {}, entities: {}, quests: {}, equipmentSlots: [] }),
     prepareWorld: async () => {},
     events: () => {}, unlockAudio: async () => {}, volume: () => {}, disconnected: () => {},
+    componentFailure(error) { throw error; },
   };
 }
 
@@ -269,6 +270,58 @@ test("a terminal device/component failure cannot be cleared by a later poll", as
   assert(!bridge.operations.includes("poll"));
   await assert.rejects(app.send({ kind: "cancel_activity" }), /Reload/);
   await app.dispose();
+});
+
+test("subscriber failure reports a safe component error without retrying an acknowledged input", async (t) => {
+  const bridge = new FixtureBridge();
+  const failures: AppError[] = [];
+  let app: BrowserApp;
+  const clientHooks = {
+    ...hooks(),
+    componentFailure(error: AppError) { failures.push(error); app.report(error); },
+  };
+  app = new BrowserApp(bridge, new RpcTransport((async () =>
+    new Response(new Uint8Array([1]), { headers: { "content-type": "application/x-protobuf" } })) as Fetch), clientHooks);
+  t.after(() => app.dispose());
+  await app.enterWorld();
+  let notifications = 0;
+  app.subscribe(state => {
+    if (state.phase === "world" && bridge.intents.length > 0) {
+      notifications++;
+      throw new Error("private-form-value-must-not-be-published");
+    }
+  });
+  const outcomes = await Promise.allSettled([
+    app.send({ kind: "cancel_activity" }),
+    app.send({ kind: "walk", destination: { x: 2, y: 1, plane: 0 }, running: false }),
+  ]);
+  assert.equal(outcomes[0]?.status, "fulfilled", "The first input was acknowledged before presentation failed.");
+  assert.equal(outcomes[1]?.status, "rejected", "Unsent queued input must stop after the component failure.");
+  assert.deepEqual(bridge.intents, [{ kind: "cancel_activity" }]);
+  assert.equal(bridge.pending, false);
+  assert.equal(failures.length, 1);
+  assert.equal(notifications, 1, "The failed subscriber must be removed.");
+  assert.equal(failures[0]?.kind, "component");
+  assert.equal(failures[0]?.recoverable, false);
+  assert.equal(app.state().phase, "error");
+  assert.equal(app.state().error?.errorId, failures[0]?.errorId);
+  assert(!JSON.stringify(app.state()).includes("private-form-value"));
+  await assert.rejects(app.send({ kind: "cancel_activity" }), /Reload/);
+});
+
+test("an initially throwing subscriber is removed while its registration failure stays explicit", async (t) => {
+  const bridge = new FixtureBridge();
+  const app = new BrowserApp(bridge, new RpcTransport((async () =>
+    new Response(new Uint8Array([1]), { headers: { "content-type": "application/x-protobuf" } })) as Fetch), hooks());
+  t.after(() => app.dispose());
+  let calls = 0;
+  assert.throws(() => app.subscribe(() => {
+    calls++;
+    throw new Error("initial subscriber failed");
+  }), /initial subscriber failed/);
+  await app.enterWorld();
+  assert.equal(calls, 1);
+  assert.equal(app.state().phase, "world");
 });
 
 test("shop purchase selection identity reaches WASM unchanged and never becomes an index-only write", async () => {

@@ -184,6 +184,12 @@ time; its separate observer updates only renderer/benchmark state.
 
 ## Input and lifecycle
 
+State subscribers that throw are removed and reported through the required
+`ClientHooks.componentFailure` hook outside the request promise. Composition
+shows a terminal, locally correlated presentation error and stops unsent work;
+an already acknowledged operation is not retried or relabeled as uncertain.
+Raw subscriber exceptions are not exposed as public diagnostics.
+
 * UI pointer capture/default prevention is checked before world picking.
   A press captured by UI cannot become a world action on release. Right-click
   only requests a context menu; middle drag only changes the camera.

@@ -61,6 +61,7 @@ export interface ClientHooks {
   audioPreferenceStatus?(): Readonly<PlayerAudioCompositionStatus> | null;
   volume(channel: AudioChannel, value: number): void;
   disconnected(): void;
+  componentFailure(error: AppError): void;
 }
 
 export function bridgeState(json: string): Readonly<BridgeState> {
@@ -125,7 +126,11 @@ export class BrowserApp implements AppServices {
   audioPreferenceStatus(): Readonly<PlayerAudioCompositionStatus> | null { return this.#hooks.audioPreferenceStatus?.() ?? null; }
   subscribe(listener: (state: Readonly<AppState>) => void): () => void {
     this.#listeners.add(listener);
-    listener(this.#state);
+    try { listener(this.#state); }
+    catch (error) {
+      this.#listeners.delete(listener);
+      throw error;
+    }
     return () => this.#listeners.delete(listener);
   }
 
@@ -133,8 +138,15 @@ export class BrowserApp implements AppServices {
     if (this.#disposed || (this.#terminal && patch.phase !== "error")) return;
     this.#state = deepFreeze({ ...this.#state, ...patch });
     for (const listener of this.#listeners) {
-      // A renderer/UI exception must not turn an acknowledged write into a retry.
-      try { listener(this.#state); } catch { /* Composition owns component-error reporting. */ }
+      try { listener(this.#state); }
+      catch {
+        this.#listeners.delete(listener);
+        const error = new AppError("A source presentation subscriber could not apply the authoritative state.", {
+          kind: "component", recoverable: false,
+        });
+        // Report off the request stack so an acknowledged write never becomes a retry.
+        queueMicrotask(() => { if (!this.#disposed) this.#hooks.componentFailure(error); });
+      }
     }
   }
 

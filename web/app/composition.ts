@@ -121,7 +121,18 @@ export async function mountApplication(options: {
     if (!disposed && generation === hashGeneration) benchmark.settings(hash);
   }
 
+  function componentFailure(error: AppError): void {
+    if (disposed || componentFailed) return;
+    componentFailed = true;
+    sceneLoaded = false;
+    benchmark.worldReady(false);
+    status.hidden = false;
+    status.textContent = `${error.message} Reload after checking its build and source assets. Error ID: ${error.errorId}`;
+    app.report(error);
+  }
+
   const app = new BrowserApp(bridge, transport, {
+    componentFailure,
     async content(revision, path) {
       invariant(assets && build.content && path === build.content.path
         && revision === assets.manifest.contentRevision,
@@ -250,6 +261,7 @@ export async function mountApplication(options: {
     required = [...assets.manifest.bootstrap];
     await assets.preload(required);
     ui = await components.createUi(uiCanvas, app, assets);
+    if (componentFailed) return { app, dispose };
     unsubscribe = app.subscribe((state) => {
       if (componentFailed) return;
       try {
@@ -268,11 +280,9 @@ export async function mountApplication(options: {
           void settingsHash().catch(() => app.report(new AppError("Player-scoped applied settings could not be hashed.", { kind: "benchmark" })));
         }
       } catch {
-        componentFailed = true;
-        sceneLoaded = false;
-        status.hidden = false;
-        status.textContent = "The source presentation component failed. Reload after checking its build and source assets.";
-        queueMicrotask(() => app.report(new AppError("The source UI/renderer could not apply the authoritative view.", { kind: "component", recoverable: false })));
+        queueMicrotask(() => componentFailure(new AppError(
+          "The source UI/renderer could not apply the authoritative view.", { kind: "component", recoverable: false },
+        )));
       }
     });
     status.hidden = true;

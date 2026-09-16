@@ -90,6 +90,7 @@ export async function browserCheck(): Promise<void> {
       const app = new BrowserApp(wasm, new RpcTransport(), {
         content: sourceUnavailable, prepareWorld: sourceUnavailable,
         events() {}, unlockAudio: sourceUnavailable, volume() {}, disconnected() {},
+        componentFailure(error) { app.report(error); },
       });
       const random = (): string => Array.from(crypto.getRandomValues(new Uint8Array(18)), (byte) => byte.toString(16).padStart(2, "0")).join("");
       const loginName = `browser_${random().slice(0, 10)}`;
