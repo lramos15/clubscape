@@ -8,7 +8,6 @@
     "active": [
       {"id": "director", "task": "M1-FLEET-CONTRACTS"},
       {"id": "bb7f85f7-096a-4377-80cb-3e7eae196c6b", "task": "M1-BROWSER-RENDERER"},
-      {"id": "cc864d7a-37cc-4869-a7b4-d484d01cede5", "task": "M1-BROWSER-UI"},
       {"id": "78d01af9-70a4-4b02-8339-6a61eb377374", "task": "M1-BROWSER-SHELL"},
       {"id": "81ac9884-4f39-4f27-b516-6e9a42b09b51", "task": "M1-HEADLESS-JOURNEY"},
       {"id": "ac0f0856-44af-445b-bd90-6db7a1f4fc74", "task": "M1-SOURCE-CAMERA-CONTROLS"}
@@ -16,6 +15,7 @@
     "reserved": [],
     "queued": [],
     "parked": [
+      {"id": "cc864d7a-37cc-4869-a7b4-d484d01cede5", "reason": "Latest turns delivered no current-contract completion. Four published UI commits and pending native-preference work are preserved unchanged in m1-ui; Director takes the bounded UI integration/current-contract/native-port completion directly. No automatic resumption or duplicate UI edits."},
       {"id": "2766e089-44e5-4a1d-974e-7b03ad9c269d", "reason": "Source-only57d4edd integrated664dde0 records three unverified facts after the bounded retained/native/public pass: normal-grave Bank-All permission, dough motion and seven Empty variants' motion or verified absence. All current5b3 contracts are already integrated; no more backend expansion, source guessing or automatic resumption without new evidence and admission."},
       {"id": "cdfad64d-9162-439f-a525-58e1114dd7f4", "reason": "Bounded cue-timing repairdbeb1ac integratedf9e56a5; parent45units and exactcomposedfixture6checks/18dispatches/zerooverrunspass. Wholeclient routing/sourceauthority/Mac/speakeracceptance remainseparate; no automatic resumption."},
       {"id": "e6925772-df1f-4ff7-9efc-219f800a5a14", "reason": "Bounded UI4 review complete: one medium source-travel interruption bypass in timed UI actions. Director repair M1-UI-TRAVEL-INTERRUPTION is active; this is not final candidate signoff."},
@@ -33,6 +33,24 @@
     "usage_accounting": "milestones/evidence/m1-usage-snapshot.json records the available delayed session snapshot; final project-wide credits/currency are unavailable."
   },
   "tasks": [
+    {
+      "id": "M1-UI-INTEGRATION",
+      "goal": "Integrate existing source UI work and complete the actual current-contract adapter/native bindings without discarding the stopped worker's pending changes.",
+      "status": "IMPLEMENTING",
+      "specs": ["spec/browser-implementation.md", "web/shared/contracts.ts", "web/app/components.ts", "web/app/player-audio-composition.ts", "research/interface-contracts/remaining-source-questions.json", "milestones/approvals/m1-reference-pack-v1.3.0.json"],
+      "dependencies": ["M1-BROWSER-UI", "M1-SHELL-INTEGRATION"],
+      "allowed_paths": ["web/ui/**", "tools/ui-assets/**", "assets/compiled/ui/**", "web/app/components.ts", "web/app/ui-adapter.ts", "web/app/tests/**", "milestones/evidence/m1-ui-integration/**"],
+      "forbidden_paths": ["prompt.md", "crates/**", "web/shared/**", "web/audio/**", "web/renderer/**", "content/**", "assets/source/**", "assets/manifests/**", "research/reference-pack/**", "tools/reference-pack/**", "spec/art-style.md", "spec/interface-parity.md"],
+      "outputs": ["Preserved original pending patch and exact owned commit lineage", "All24 current UI intents/projections and fixtures compile without casts or dropped fields", "Actual shell-owned preference/minimap control ports consumed", "Source controls and retained comparisons remain qualified and reproducible"],
+      "validation_commands": ["pnpm --dir web typecheck", "pnpm --dir web test", "pnpm --dir web build"],
+      "test_requirements": ["Original m1-ui worktree and all pending edits remain untouched", "Do not duplicate shell-owned persistence or audio authority", "Use semantic All, identity-bound recovery and exact bank revisions", "Unknown source facts remain unknown, not disabled/no-animation claims", "Native minimap placement comes from renderer helpers, not copied or guessed math", "No frozen input/tolerance changes or M1 acceptance shortcut"],
+      "acceptance": ["Actual production typecheck/build and required UI/native-port behavior are verified; source/fidelity/gameplay/performance/owner gates remain separate"],
+      "reserved_namespaces": [],
+      "source_notes": ["Published fa84bf3/0ee025f/2cdbfac/94a5ecd contain source Settings/UI4 work not yet on main. Minimal c1f99a overlaps the full UI4 implementation and must not be blindly duplicated. The stopped worker also has twelve modified and four untracked UI/native-preference files; preserve and review them before selective integration."],
+      "parity_entries": [],
+      "adaptations": [],
+      "evidence": []
+    },
     {
       "id": "M1-SOURCE-CAMERA-CONTROLS",
       "goal": "Establish executable original-client camera/control mechanics and initial-camera provenance needed for normal M1 entry without a diagnostic camera.",
