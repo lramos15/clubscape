@@ -1,0 +1,76 @@
+{
+  "schema_version": 1,
+  "recorded_at": "2026-09-16T16:18:04.304903+00:00",
+  "checked_commit": "c379d1c0323a0d705ced3cdf8848139f270cfafe",
+  "worktree": ".worktrees/m1-recovery-context",
+  "resolved_target": "/home/lramos15/clubscape/.worktrees/m1-recovery-context/target",
+  "CARGO_TARGET_DIR": null,
+  "target_inside_worktree": true,
+  "toolchain": {
+    "cargo": "1.98.1 (797e8a9bc 2026-08-05)",
+    "rustc": "1.98.1 (48a229cea 2026-09-01)"
+  },
+  "method": {
+    "artifact_selection": "Cargo JSON --no-run artifacts for the three test sources that include the canonical compiled content",
+    "source_identity": "Read each actual ELF executable; locate the exact current compressed artifact bytes and independently decompress/hash its embedded gzip payload.",
+    "negative_check": "Scan gzip headers in the executable, fully decode bounded valid streams and reject the known old5e raw digest.",
+    "gzip_scan_max_input_bytes": 4194304,
+    "gzip_scan_max_output_bytes": 33554432,
+    "test_execution": "Invoke the same verified executable path directly with --quiet, not another Cargo-selected binary.",
+    "cargo_cwd_or_freshness_alone_is_proof": false
+  },
+  "current_source": {
+    "raw_sha256": "5b3ba5f108ed3fec8f8b5f7f49b429c059e21b6f192ec99a0569616e08330059",
+    "compressed_sha256": "8da1e85a1e2ebb0355e29e7a15a0ca7cdab2f2751bc1341dd5efd5322b925ca6",
+    "raw_bytes": 13213366,
+    "compressed_bytes": 527455
+  },
+  "excluded_old_raw_sha256": "5e0aa8a28851752ae0b8b0a08c635c6c8d2979f509f3a3e564ee74e2abfc8e6f",
+  "executables": [
+    {
+      "test_target": "contextual_shop_entry",
+      "source": "crates/world-engine/tests/contextual_shop_entry.rs",
+      "executable": "target/debug/deps/contextual_shop_entry-f86432eff7bb2938",
+      "executable_sha256": "aa73656cd5ea4035026f62c4ce7e9a4f8328b561fa69e4e7c157c881e68a9ae3",
+      "executable_bytes": 197220952,
+      "cargo_reported_fresh": false,
+      "exact_current_blob_offset": 18395454,
+      "valid_gzip_payloads": 1,
+      "only_payload_matches_current_source": true,
+      "old_source_digest_found": false,
+      "direct_tests_passed": 5
+    },
+    {
+      "test_target": "dying_observation",
+      "source": "crates/world-engine/tests/dying_observation.rs",
+      "executable": "target/debug/deps/dying_observation-5b7fd0daab1fe074",
+      "executable_sha256": "83d9ebc0131b5f418891dd56e2f0ff3cab9ffc250be3c47b5a0ee5d04612b261",
+      "executable_bytes": 199071680,
+      "cargo_reported_fresh": false,
+      "exact_current_blob_offset": 18695432,
+      "valid_gzip_payloads": 1,
+      "only_payload_matches_current_source": true,
+      "old_source_digest_found": false,
+      "direct_tests_passed": 4
+    },
+    {
+      "test_target": "ui_travel_interruption",
+      "source": "crates/world-engine/tests/ui_travel_interruption.rs",
+      "executable": "target/debug/deps/ui_travel_interruption-31646ae09432e275",
+      "executable_sha256": "326dcdb176ecbd0aaf770bd8ab11ca7f170e60e5ced30b3769117cad0c4e0e1e",
+      "executable_bytes": 208426032,
+      "cargo_reported_fresh": false,
+      "exact_current_blob_offset": 19303657,
+      "valid_gzip_payloads": 1,
+      "only_payload_matches_current_source": true,
+      "old_source_digest_found": false,
+      "direct_tests_passed": 5
+    }
+  ],
+  "direct_tests_passed": 14,
+  "count_qualification": "Source-component subset revalidation of existing tests, not14 additional unique tests or a player journey.",
+  "local_detailed_report": ".local/evidence/recovery-context-executable-identity.json",
+  "shared_root_or_headless_target_used_or_cleaned": false,
+  "root_lockfile_artifact_or_checkpoint_changed": false,
+  "ui_gameplay_or_milestone_accepted": false
+}

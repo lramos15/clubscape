@@ -118,3 +118,15 @@ The unchanged artifact pin is raw
 `5b3ba5f108ed3fec8f8b5f7f49b429c059e21b6f192ec99a0569616e08330059`,
 gzip `8da1e85a1e2ebb0355e29e7a15a0ca7cdab2f2751bc1341dd5efd5322b925ca6`.
 This work does not accept UI, presentation, performance or M1.
+
+## Validation isolation
+
+Never share `CARGO_TARGET_DIR` across worktrees or source profiles. This
+worktree uses its own default `target` directory with no environment override.
+`executable-identity.json` records actual ELF hashes and embedded content
+payloads for all three source-bearing engine test binaries. Each contains the
+exact current5b artifact; the bounded gzip scans find no old5e payload.
+Those same executable paths were invoked directly and passed14 existing
+component tests. This strengthens the source identity evidence, not the
+unique-test count or any journey/UI/PG acceptance claim. Cargo's cwd or
+reported freshness alone is not sufficient proof.

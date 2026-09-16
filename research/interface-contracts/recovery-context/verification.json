@@ -35,6 +35,15 @@
     "owned_rust_format": "passed",
     "local_logs": ".local/evidence/recovery-context-validation.json"
   },
+  "executable_identity_audit": {
+    "record": "research/interface-contracts/recovery-context/executable-identity.json",
+    "source_bearing_binaries": 3,
+    "direct_source_component_tests_rerun": 14,
+    "exact_current_source_embedded": true,
+    "old5e_payload_found": false,
+    "worktree_private_default_target": true,
+    "qualification": "This is subset revalidation, not an increase to the396 unique-test count. The actual ELF payloads and executable hashes establish source identity independently of Cargo freshness."
+  },
   "numerical_controls": [
     "80 occupied source slots,16 distinct original types, selected slot7 still7 arrows, selected-type quantity35, unit42, display1470, entry294; native title80/120.",
     "Two seven-arrow records priced42 and44: source display for the first selection588, combined executable fee602, one operation, receipts294 and308.",
