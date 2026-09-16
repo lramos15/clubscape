@@ -325,11 +325,18 @@ The unused `a913bb7` allowance now has a Director-only assignment recorded at
 `2250455`; it retains the **same one-attempt key**, not another restore budget.
 The exact source-ground repair is adopted as `9cab1e9` without changing source5e
 or any protected checkpoint. The narrow `--continue-cook` reader verifies the
-original907 archive/private inventory/identity, successful typed poll and
+original907 archive/private inventory/identity, successful typed JoinWorld and
 acknowledged sequence355 `DialogueChoice` for Cook acceptance. All eight completed
 segments must remain passed and the three remaining Cook/postquest segments
 unchecked. The retained active-death pointer is not permission to replay the
 already completed Office/grave flow.
+
+The ordinary runner excludes nonmutating polls from its private control journal.
+Its actual last recorded control is the successful empty JoinWorld request,
+not a poll. The first Director preflight correctly stopped before reserving an
+attempt or restoring a database when the initial reader expected a poll; that
+setup failure is retained. The corrected reader accepts only the actual typed
+successful join, with no failed-control exception or expanded restore budget.
 
 ```sh
 python3 tools/journey-tests/resume.py --continue-cook \

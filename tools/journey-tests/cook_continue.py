@@ -110,7 +110,7 @@ def validate_native_preflight(value):
                     and value["cook_boundary"]["authority"] == AUTHORITY
                     and value["cook_boundary"]["latest_acknowledged_sequence"] == 355
                     and value["cook_boundary"]["completed_segments_replayed"] is False
-                    and value["cook_boundary"]["decoded_original_control"]["decoded_command"] == "poll_world"
+                    and value["cook_boundary"]["decoded_original_control"]["decoded_command"] == "join_world"
                     and value["cook_boundary"]["decoded_original_control"]["observed_http_status"] == 200
                     and value["cook_boundary"]["decoded_original_control"]["failed_control_exception_used"] is False,
                     "cook_preflight", "original_successful_control_or_acceptance_missing")

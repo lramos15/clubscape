@@ -104,7 +104,7 @@ class CookContinuationTests(unittest.TestCase):
             "cook_boundary": {
                 "authority": COOK.AUTHORITY, "latest_acknowledged_sequence": 355,
                 "completed_segments_replayed": False,
-                "decoded_original_control": {"decoded_command": "poll_world",
+                "decoded_original_control": {"decoded_command": "join_world",
                     "observed_http_status": 200, "failed_control_exception_used": False},
             },
         }

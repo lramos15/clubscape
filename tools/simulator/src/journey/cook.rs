@@ -68,10 +68,10 @@ pub(super) fn admitted(capsule: &Value, report: &Value) -> Result<Continuation> 
     )?;
     let control = observation::validate_control(&capsule["latest_control_request"], false)?;
     ensure!(
-        control["decoded_command"] == "poll_world"
+        control["decoded_command"] == "join_world"
             && control["observed_http_status"] == 200
             && control["failed_control_exception_used"] == false,
-        "Cook continuation requires the recorded successful typed poll"
+        "Cook continuation requires the recorded successful typed join"
     );
     Ok(Continuation {
         baseline: Baseline {
@@ -115,7 +115,7 @@ mod tests {
         let control = ClientMessage {
             protocol_version: PROTOCOL_VERSION,
             request_id: operation.into(),
-            command: Some(Command::PollWorld(Default::default())),
+            command: Some(Command::JoinWorld(Default::default())),
         };
         let state = json!({
             "tick":1886,"revision":2255,"next_sequence":356,
@@ -206,7 +206,7 @@ mod tests {
     }
 
     #[test]
-    fn cook_continuation_requires_the_original_acknowledged_acceptance_and_successful_poll() {
+    fn cook_continuation_requires_the_original_acknowledged_acceptance_and_successful_join() {
         for case in [
             "unresolved",
             "duplicate",
@@ -214,6 +214,7 @@ mod tests {
             "different_action",
             "failed_control",
             "wrong_control",
+            "unrecorded_poll",
         ] {
             let (mut capsule, report) = fixture();
             match case {
@@ -246,6 +247,18 @@ mod tests {
                             .unwrap()
                             .into(),
                         command: Some(Command::Logout(Default::default())),
+                    };
+                    capsule["latest_control_request"]["client_message_protobuf"] =
+                        json!(control.encode_to_vec());
+                }
+                "unrecorded_poll" => {
+                    let control = ClientMessage {
+                        protocol_version: PROTOCOL_VERSION,
+                        request_id: capsule["latest_control_request"]["operation_id"]
+                            .as_str()
+                            .unwrap()
+                            .into(),
+                        command: Some(Command::PollWorld(Default::default())),
                     };
                     capsule["latest_control_request"]["client_message_protobuf"] =
                         json!(control.encode_to_vec());

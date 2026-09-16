@@ -89,7 +89,7 @@ frame in that trace, not a new kill or seeded inventory. Full successful journey
 also write a private capsule before owned cleanup, including after logout.
 
 `--continue-cook` is a different, narrow mode for the accepted907 Cook boundary.
-It requires the original successful poll and acknowledged acceptance action,
+It requires the original recorded successful JoinWorld and acknowledged acceptance action,
 336 historical source checks,70 tutorial edges and3 separate observations.
 The completed Office/grave segment stays completed even though the actor retains
 its historical death-record pointer. Only remaining ingredient acquisition,
