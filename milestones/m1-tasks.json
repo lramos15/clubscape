@@ -9,12 +9,12 @@
       {"id": "director", "task": "M1-FLEET-CONTRACTS"},
       {"id": "bb7f85f7-096a-4377-80cb-3e7eae196c6b", "task": "M1-BROWSER-RENDERER"},
       {"id": "78d01af9-70a4-4b02-8339-6a61eb377374", "task": "M1-BROWSER-SHELL"},
-      {"id": "81ac9884-4f39-4f27-b516-6e9a42b09b51", "task": "M1-HEADLESS-JOURNEY"},
-      {"id": "ac0f0856-44af-445b-bd90-6db7a1f4fc74", "task": "M1-SOURCE-CAMERA-CONTROLS"}
+      {"id": "81ac9884-4f39-4f27-b516-6e9a42b09b51", "task": "M1-HEADLESS-JOURNEY"}
     ],
     "reserved": [],
     "queued": [],
     "parked": [
+      {"id": "ac0f0856-44af-445b-bd90-6db7a1f4fc74", "reason": "Source camerac59ce337 integrated852a35f; original14 scenarios/354readbacks verified,1307frozen hashes unchanged. Stateful controller contract is published, but authenticated initial focus/overrides/FOV configuration/mouse preference remain unobserved. Source-only scope complete, no production or automatic resumption."},
       {"id": "cc864d7a-37cc-4869-a7b4-d484d01cede5", "reason": "Latest turns delivered no current-contract completion. Four published UI commits and pending native-preference work are preserved unchanged in m1-ui; Director takes the bounded UI integration/current-contract/native-port completion directly. No automatic resumption or duplicate UI edits."},
       {"id": "2766e089-44e5-4a1d-974e-7b03ad9c269d", "reason": "Source-only57d4edd integrated664dde0 records three unverified facts after the bounded retained/native/public pass: normal-grave Bank-All permission, dough motion and seven Empty variants' motion or verified absence. All current5b3 contracts are already integrated; no more backend expansion, source guessing or automatic resumption without new evidence and admission."},
       {"id": "cdfad64d-9162-439f-a525-58e1114dd7f4", "reason": "Bounded cue-timing repairdbeb1ac integratedf9e56a5; parent45units and exactcomposedfixture6checks/18dispatches/zerooverrunspass. Wholeclient routing/sourceauthority/Mac/speakeracceptance remainseparate; no automatic resumption."},
@@ -54,20 +54,20 @@
     {
       "id": "M1-SOURCE-CAMERA-CONTROLS",
       "goal": "Establish executable original-client camera/control mechanics and initial-camera provenance needed for normal M1 entry without a diagnostic camera.",
-      "status": "IMPLEMENTING",
+      "status": "DONE",
       "specs": ["prompt.md sections13/30.1/30.2", "spec/browser-implementation.md", "web/app/input.ts", "web/app/manifest.ts", "tools/source-capture/README.md", "milestones/approvals/m1-reference-pack-v1.3.0.json"],
       "dependencies": ["M1-REFERENCE-APPROVAL", "M1-SCENERY-PHASE-EVIDENCE"],
       "allowed_paths": ["tools/camera-source/**", "research/camera-source/**"],
       "forbidden_paths": ["prompt.md", "crates/**", "web/**", "content/**", "assets/**", "tools/source-capture/**", "tools/source-layer-capture/**", "research/reference-pack/**", "tools/reference-pack/**", "spec/**", "milestones/**", "Cargo.lock"],
       "outputs": ["Additive unchanged-original native probes and reproducible camera traces", "Source-bound orbit/follow/smoothing/input/zoom/state-reset contract", "Explicit distinction between client defaults, chosen fixtures and unknown server-controlled initial state"],
-      "validation_commands": [],
+      "validation_commands": ["python3 tools/camera-source/probe_camera.py --verify-only", "python3 -m unittest discover -s tools/camera-source -p 'test_*.py' -q"],
       "test_requirements": ["Original injected1.12.38/build240/cache2695 hashes unchanged", "No external game account/login/credentials or network pump", "Keyboard/middle-drag/wheel/follow and source20ms clocks measured, not inferred from the shell scaffold", "Viewport projection zoom and orbit distance are not conflated", "No chosen reference camera relabeled as verified spawn camera", "No production code, frozen input, tolerance or data pin changes"],
       "acceptance": ["Publish exact source observations/contract or a precise irreducible source gap; do not fill missing camera/control fields with guesses"],
       "reserved_namespaces": [],
       "source_notes": ["Normal source:bundle emits camera:null/controls:null and BrowserApp refuses normal world entry. Existing TS InputController changes orientation in place, follows XY tiles directly and treats wheel as projection zoom; this is not evidence for original orbit/smoothing semantics. The frozen source captures explicitly call their cameras chosen fixture controls, not verified spawn/arrival defaults."],
       "parity_entries": [],
       "adaptations": [],
-      "evidence": []
+      "evidence": ["Ownedc59ce3375d42510d11cade379d3f863afbdec8b2 integrated852a35f. Contract research/camera-source/contract.json SHA745dda42fcd53d3225b9f2714e2ebbad7dbf60a76c070da1438a7289e5e0a602. Parent verify-only passes14original scenarios/354state readbacks; source-only unchanged runtime/cache and1307frozen hashes.", "Fixed20ms input motor and separate render-frame updates, source acceleration/damping/middle smoothing, orbit, ground-aware follow, strict>500snap, rebasing/resizing and wheel39->42 behavior are measured. Wheel changes logical FOV/follow height, not scalar pixel zoom. Initial account focus/camera overrides, startup FOV bounds/current configuration and mouse-camera preference are NOT observed; constructor/preset626/chosen fixture cameras cannot become account defaults. Stateful Rust/WASM production work and justified initial-state inputs remain required."]
     },
     {
       "id": "M1-GEAR-METRIC-REVIEW",
