@@ -159,10 +159,10 @@ compiler over stdin. Region scene-asset IDs must match that
 compiled content. Files reside under `asset-root` at their public URL paths
 without the leading slash. No entire cache is copied.
 
-Current canonical artifact4 is `m1.source-backed.v4.3ff4292b311453cc`, raw SHA-256
-`5e0aa8a28851752ae0b8b0a08c635c6c8d2979f509f3a3e564ee74e2abfc8e6f`,
+Current canonical artifact4 is `m1.source-backed.v4.bdbf8a3788b842be`, raw SHA-256
+`5b3ba5f108ed3fec8f8b5f7f49b429c059e21b6f192ec99a0569616e08330059`,
 compressed SHA-256
-`7d49e8f85b7b229bb0fc9f6f3cb9665aaf9d287f6a873ac42701e3d77cc6e69f`.
+`8da1e85a1e2ebb0355e29e7a15a0ca7cdab2f2751bc1341dd5efd5322b925ca6`.
 `readArtifact` reads the explicitly supplied gzip, and `projectArtifact` passes
 those actual bytes to the rebuilt native Runtime validator over stdin.
 Stale `.local/compiler/game-content.csc` output is never the identity of a
@@ -305,10 +305,11 @@ positions, with native defaults255/127/127 and nonlinear lookup inside audio.
 The shell uses a v2 preference-semantic marker instead of reinterpreting old
 linear values, delegates typed source-scene/music-state inputs, preserves
 coherent before/after committed reward batches, and exposes actual native
-control observations. No source gain/distance/varp/next-song math is duplicated.
-The current bridge still lacks actual128-unit listener, all placed emitters,
-bound original varps and actual manual/unlock-state preferences; no dummy values
-are supplied. Native source-bound next-track selection needs no caller callback.
+control observations. No source gain/distance/next-song math is duplicated.
+The current bridge now maps source-owned audio history/unlocks and partial
+native-varp facts. Actual128-unit listener/owner/all-placed-emitter scene inputs
+remain required; no dummy values are supplied. Native next-track selection
+needs no caller callback.
 
 The native preference/helper closure `64bd3257` is integrated as well.
 Player storage uses the exact audio-owned v1 serializer and a separate real
@@ -320,20 +321,19 @@ control/Skip/save fencing are implemented in `web/app/player-audio*.ts`.
 Global v2 slider preferences remain device/title-only and are not silently
 migrated into player records. No new asset or audio metadata route is needed.
 
-Current runtime configuration still needs genuine
-`mountApplication.sourceAudio.unlockedGroups(world)` (and source scene/varp/
-committed-event inputs), plus the UI owner's actual rich native-control
+Current runtime consumes `WorldView.audioAuthority` directly and still needs
+real scene/committed-event inputs plus the UI owner's actual rich native-control
 adapter connected through `Components.bindUiAudioPreferences`. The existing
 legacy UI setter/mute map is not that adapter. Missing inputs are visible via
 `audioPreferenceStatus()` and keep world audio/controls disconnected, without
 inventing unlocks or blocking acknowledged server state.
 
-No proven generic backend counter/event adapter currently supplies the missing
-music unlock/history or native-varp facts. The optional shell source hooks are
-injection ports only; the default entrypoint supplies none. Current tiles,
-quest/tutorial state and visible interfaces cannot reconstruct past visits or
-be persisted as client-owned grants. Await the actual backend projection and
-source bindings rather than guessing wire fields or varp values.
+The published `game.audio.authority.v1` projection closes the old missing
+authority gap without a generic counter inference. Unknown legacy history is
+not locked or a fresh client record. Only source-calibrated known masks may
+feed actual emitter consumers; the remaining bits of491 are not assumed zero.
+Current tiles, quest/tutorial state and visible interfaces still cannot
+reconstruct visits or be persisted as client-owned grants.
 
 Package tests cover all41 native audio unit cases plus owned storage/
 entry/transport/input/delivery checks. A separate real Chrome fixture verifies
@@ -509,7 +509,7 @@ matches the final published handoff; shared UI/nullable/observer prerequisites
 were already present and were not replaced by older copies. Source phase
 `6c68672d` is present once, without duplicating `5b2d8ac`.
 `render-assets.ts` pins manifest
-`2d228d79f526cb4d84a444118c9e8f3961d2f08213f56ffe5f8a81af17b9cceb`.
+`e635ed1dd82e717d44b58716d9d6c06aabee68632fbca0854f60753fd849dc1e`.
 The runtime graph includes the 61 blocks, source textures, sequences, NPC
 definitions, penguin/human-retarget inputs, equipment, dynamic objects,
 ground-item models, the real per-pose fit table, original map-icon sprites,
@@ -529,7 +529,7 @@ CLUBSCAPE_RENDER_BLOCK_PACKAGE=.local/render-packages/clubscape-render-blocks-dd
 pnpm --dir web render:inputs
 ```
 
-The verified input directory is `.local/render-inputs-2d228d79`.
+The verified input directory is `.local/render-inputs-e635ed1d`.
 This path uses Python's actual unpack/verify profiles, not a source JDK/cache,
 partial index rewrite or hand-written tar extraction. Common published files
 are copied only after their manifest hashes/lengths match. Evidence is
@@ -548,18 +548,20 @@ Classic HUD modes (410/292/547 at the published primary/minimum/maximum sizes),
 deduplicates resize/camera notifications, and keeps the old662 helper only for
 standalone viewport fixtures. Real `observerV1`/running/unknown-motion results
 are observable; no activity/nearest-object fallback is enabled. Map icon pixels
-and offsets are delivered unchanged, but the pending source-unit/radius helper
-is not guessed and actual UI icon projection remains unaccepted. Per-pose
-surface-clearance success is not the frozen attachment-gap criterion.
+and offsets are delivered unchanged. The exact native icon-placement helpers
+are available through a guarded UI callback, but the UI sink/adapter remains
+required. No world128 clipping implementation is used. The current legal
+gear sweep is honestly unmet671/1587 frames; old surface-clearance success is
+not the frozen attachment-gap criterion.
 
 `project-content` exposes only compiler-validated instance geometry as
-`ContentManifest.instanceLayouts`. Actual instance membership still needs a
-separately supplied backend template identity. The shell never derives it from
+`ContentManifest.instanceLayouts`. Actual `WorldView.scene.instanceTemplate`
+now supplies the backend identity. The shell never derives it from
 an opaque instance ID, matching region/tile or a death hint. Known8x8 layouts are
 passed before source-square assembly; unknown identities and unsupported turns
 block rendering rather than showing an ordinary map.
 
-Current fresh candidate `.local/source-renderer-2d228d79-5e0aa8a2-v2` keeps the
+The retained renderer candidate `.local/source-renderer-2d228d79-5e0aa8a2-v2` keeps the
 actual5e artifact but has a new world UUID
 `7e2d3d85-6691-4524-996b-2f354871715a`,7,692 assets and210,199,052 public bytes.
 The old5e world remains untouched, with its code at
@@ -569,6 +571,35 @@ The first unserved22f2a10e candidate is retained as a failed delivery diagnostic
 its pose-fit JSON had the binary MIME default. Renderer packaging now uses the
 shared public MIME table, so JSON remains `application/json` and gzip carriers
 remain `application/octet-stream`; neither hash nor MIME validation was relaxed.
+
+The current authoritative All/recovery/scene/audio/animation candidate is
+`.local/source-authority-bdbf8a37`, world
+`5553c4d3-72f5-4744-ac58-787977e65b0f`,7,695 assets/210,248,339 public bytes.
+It was created from the exact final raw5b3ba5f1/gzip8da1 artifact, not by
+repinning any5e/6f world. Director travel0575/menu-e8/shopf0 fixes are retained.
+
+Preserve the503 audio reproduction code and evidence: `web/dist` remains its
+original delivered bundle, also archived at `.local/web-shell-503d897-bbe6f5a5`.
+New builds use a separately validated output root, consistently across Vite,
+delivery, server start and the isolated restart runner:
+
+```sh
+export CLUBSCAPE_WEB_OUTPUT=.local/web-builds/authority-bdbf8a37
+GAME=.local/source-authority-bdbf8a37
+CLUBSCAPE_CLIENT_MANIFEST="$GAME/content/manifest.json" \
+CLUBSCAPE_CLIENT_ASSET_ROOT="$GAME" CLUBSCAPE_CONTENT_OWNER=game \
+pnpm --dir web build
+CLUBSCAPE_GAME_ROOT="$PWD/$GAME" pnpm --dir web serve
+```
+
+The output override only accepts a bounded `.local/web-builds/<candidate>`
+directory and rejects symlink/non-directory traversal. It cannot redirect the
+bundler's cleanup into repository sources or an old game root. Normal build
+still honors the UI-owner typecheck gate; diagnostic bundling remains explicitly
+separate. Current source capabilities require complete All/recovery projections,
+including nonadditive capacities/fees and unavailable source Bank-All permission.
+The twelve newly required source animation clips remain an asset-owner
+dependency, not a source substitution.
 
 The retained pre-UI-handoff native255 candidate has7,181 declared assets
 (221,090,292 public bytes including its content manifest); the newer UI handoff

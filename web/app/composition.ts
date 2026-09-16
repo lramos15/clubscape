@@ -20,7 +20,7 @@ import { SourceAudioSession, audioProblem, playbackEnabled, sourceAudioAdapter }
 import { fullHudZoomForViewport } from "./renderer.ts";
 import type { AudioSnapshot, SourceAudioPreferences } from "../audio/index.ts";
 import type { UiPreviewRequest } from "../ui/index.ts";
-import type { MapIconSprite, MinimapSurface } from "../renderer/src/index.ts";
+import type { MapIconSprite, MinimapIconPlacements, MinimapSurface } from "../renderer/src/index.ts";
 import { ModelPreview } from "./preview.ts";
 import { MinimapRelay } from "./minimap.ts";
 import { sourceUiAudioAdapter, sourceUiPreviewAdapter } from "./ui-adapter.ts";
@@ -39,6 +39,7 @@ export interface ObservedRenderer extends RendererHandle {
   frameUiPreview?(request: Readonly<UiPreviewRequest>): Promise<ImageData | null>;
   minimapSurface?(): MinimapSurface;
   mapIconSprites?(): Map<number, MapIconSprite>;
+  minimapIconPlacements?(playerTileX: number, playerTileY: number, scale: number, width: number, height: number): MinimapIconPlacements;
 }
 export interface ApplicationHandle { app: BrowserApp; dispose(): Promise<void> }
 
@@ -54,9 +55,6 @@ export async function mountApplication(options: {
   recordedCamera?: string | null;
   sourceAudio?: PlayerAudioSources;
   playerAudioStorage?: PlayerAudioStorage;
-  sourceRenderer?: {
-    instanceTemplate?(world: WorldView): string | null | undefined;
-  };
 }): Promise<ApplicationHandle> {
   const { build, components, bridge, benchmark, worldCanvas, uiCanvas, status } = options;
   const earlyScene = options.earlyScene ?? null;
@@ -85,6 +83,7 @@ export async function mountApplication(options: {
   let sceneLoaded = false;
   let disposed = false;
   let stopDevice: (() => void) | null = null;
+  let stopMinimapProjection: (() => void) | null = null;
   let unsubscribe: (() => void) | null = null;
   let resize: ResizeObserver | null = null;
   let hashGeneration = 0;
@@ -135,8 +134,7 @@ export async function mountApplication(options: {
       invariant(region, `No compiled source presentation exists for ${world.player.region}.`, "integration");
       sceneLoaded = false;
       benchmark.worldReady(false);
-      const renderWorld = rendererWorldView(world, assets.manifest.instanceLayouts,
-        options.sourceRenderer?.instanceTemplate?.(world));
+      const renderWorld = rendererWorldView(world, assets.manifest.instanceLayouts);
       const fixture = presentationCamera === null ? null : assets.manifest.renderer?.fixtures[presentationCamera];
       if (presentationCamera !== null && !fixture) throw new AppError("The explicitly requested source fixture/camera is not exported.", { kind: "region_unavailable" });
       const sceneId = earlyScene ?? region.sceneId;
@@ -222,6 +220,7 @@ export async function mountApplication(options: {
     input?.dispose();
     preview?.dispose();
     renderer?.dispose();
+    stopMinimapProjection?.();
     stopDevice?.();
     try { await app.dispose(); }
     finally {
@@ -256,14 +255,13 @@ export async function mountApplication(options: {
       try {
         // createUi owns its state subscription; this observer drives only the renderer/benchmark.
         if (state.world && state.world !== appliedWorld && renderer && sceneLoaded) {
-          renderer.update(rendererWorldView(state.world, assets?.manifest.instanceLayouts,
-            options.sourceRenderer?.instanceTemplate?.(state.world)));
+          renderer.update(rendererWorldView(state.world, assets?.manifest.instanceLayouts));
           appliedWorld = state.world;
           rendererHadWorld = true;
         }
         const presence = presenceOf(state.world);
         benchmark.worldReady(state.phase === "world" && sceneLoaded && presence?.connected === true && presence.presentInWorld
-          && app.gameplayUi().available);
+          && app.gameplayUi().complete);
         const actor = state.world?.player.id ?? null;
         if (actor !== settingsActor) {
           settingsActor = actor;
@@ -321,9 +319,19 @@ export async function mountApplication(options: {
         sourcePackSha256: SOURCE_PACK_SHA256, width: worldCanvas.width, height: worldCanvas.height,
       });
       const previewRenderer = renderer;
+      if (components.bindUiMinimapProjection && renderer.minimapIconPlacements) {
+        const project = renderer.minimapIconPlacements.bind(renderer);
+        stopMinimapProjection = components.bindUiMinimapProjection(ui, (width, height, scale) => {
+          const world = app.state().world;
+          invariant(world && sceneLoaded && app.state().phase === "world",
+            "The native minimap has no current authoritative scene/player.", "minimap_integration");
+          return project(world.player.tile.x, world.player.tile.y, scale, width, height);
+        });
+      }
       minimap = new MinimapRelay(components.setUiMinimap ? (surface) => components.setUiMinimap!(ui!, surface) : null,
         (error) => app.report(error),
-        components.setUiMapIconSprites ? (sprites) => components.setUiMapIconSprites!(ui!, sprites) : null);
+        components.setUiMapIconSprites ? (sprites) => components.setUiMapIconSprites!(ui!, sprites) : null,
+        stopMinimapProjection !== null);
       if (previewRenderer.frameUiPreview) {
         preview = new ModelPreview({
           request: () => sourceUiPreviewAdapter.request(ui!),

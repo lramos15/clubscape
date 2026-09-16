@@ -5,6 +5,7 @@ import { AppError, deepFreeze } from "./errors.ts";
 import { PlayerAudioPreferences } from "./player-audio.ts";
 import type { PlayerAudioControls, PlayerAudioPreferenceStatus, PlayerAudioRuntime } from "./player-audio.ts";
 import type { PlayerAudioPreferenceStore } from "./player-audio-store.ts";
+import { authoritativeMusicUnlocks, sourceSceneAuthority } from "./authority.ts";
 
 export interface PlayerAudioSources {
   scene?(world: WorldView): SourceAudioScene | undefined;
@@ -21,6 +22,7 @@ export interface PlayerAudioCompositionStatus {
   preferences: Readonly<PlayerAudioPreferenceStatus>;
   uiPreferencesBound: boolean;
   sourceUnlocksSupplied: boolean;
+  sourceAuthority: "absent" | "complete" | "partial_history";
   appliedWorld: { playerId: string; revision: string; tick: string } | null;
   issues: readonly { errorId: string; message: string }[];
 }
@@ -56,6 +58,7 @@ export class PlayerAudioComposition {
   #stopPreferences: (() => void) | null = null;
   #binding: Promise<void> = Promise.resolve();
   #sourceUnlocks = false;
+  #authority: PlayerAudioCompositionStatus["sourceAuthority"] = "absent";
   #applied: PlayerAudioCompositionStatus["appliedWorld"] = null;
   #issues = new Map<string, AppError>();
   #reported = new Set<string>();
@@ -70,7 +73,8 @@ export class PlayerAudioComposition {
   observe(): Readonly<PlayerAudioCompositionStatus> {
     return deepFreeze({
       preferences: this.#preferences.observe(), uiPreferencesBound: this.#stopPreferences !== null,
-      sourceUnlocksSupplied: this.#sourceUnlocks, appliedWorld: this.#applied === null ? null : { ...this.#applied },
+      sourceUnlocksSupplied: this.#sourceUnlocks, sourceAuthority: this.#authority,
+      appliedWorld: this.#applied === null ? null : { ...this.#applied },
       issues: [...this.#issues.values()].map(({ errorId, message }) => ({ errorId, message })),
     });
   }
@@ -105,7 +109,7 @@ export class PlayerAudioComposition {
     if (this.#disposed) throw cancelled();
     this.#unbind();
     this.#preferences.invalidate(true);
-    this.#player = null; this.#sourceUnlocks = false; this.#applied = null;
+    this.#player = null; this.#sourceUnlocks = false; this.#authority = "absent"; this.#applied = null;
     this.#issues.clear(); this.#reported.clear();
     this.#runtime.update(null, []);
     await this.#bind(false);
@@ -118,15 +122,24 @@ export class PlayerAudioComposition {
       this.#unbind();
       this.#preferences.invalidate(true);
       this.#player = world.player.id;
-      this.#issues.clear(); this.#reported.clear(); this.#applied = null; this.#sourceUnlocks = false;
+      this.#issues.clear(); this.#reported.clear(); this.#applied = null; this.#sourceUnlocks = false; this.#authority = "absent";
     }
     const generation = this.#generation;
     try {
       await this.#preferences.prepare(world.player.id);
       if (generation !== this.#generation || this.#disposed) throw cancelled();
       this.#issues.clear();
-      const unlocked = this.#sources.unlockedGroups ? this.#sources.unlockedGroups(world)
+      this.#authority = world.audioAuthority === undefined ? "absent"
+        : world.audioAuthority.music.complete ? "complete" : "partial_history";
+      const authoritative = authoritativeMusicUnlocks(world);
+      const supplied = this.#sources.unlockedGroups ? this.#sources.unlockedGroups(world)
         : this.#sources.music?.(world)?.unlockedGroups;
+      if (authoritative !== undefined && supplied !== undefined
+        && JSON.stringify([...authoritative].sort((a, b) => a - b)) !== JSON.stringify([...supplied].sort((a, b) => a - b))) {
+        throw new AppError("A supplied music selector cannot override authoritative track unlocks.",
+          { kind: "audio_authority", errorId: "audio.authority.unlock_conflict" });
+      }
+      const unlocked = authoritative ?? supplied;
       this.#sourceUnlocks = unlocked !== undefined;
       const ready = this.#preferences.readyFor(world.player.id, unlocked);
       if (!ready && unlocked === undefined) this.#issue(missingUnlocks());
@@ -136,7 +149,9 @@ export class PlayerAudioComposition {
         if (ready) this.#preferences.block(missingUi());
         return;
       }
-      const scene = this.#sources.scene?.(world);
+      const providedScene = this.#sources.scene?.(world);
+      const scene = providedScene !== undefined && world.audioAuthority !== undefined
+        ? sourceSceneAuthority(world, providedScene) : providedScene;
       if (this.#stopPreferences === null) await this.#bind(true);
       if (generation !== this.#generation || this.#disposed) throw cancelled();
       this.#prepared = { world, scene, unlocked: Object.freeze([...unlocked]) };

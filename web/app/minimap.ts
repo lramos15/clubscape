@@ -7,7 +7,7 @@ export interface MinimapObservation {
   complete: boolean; notes: string[]; stats: MinimapSurface["stats"]; icons: MinimapSurface["icons"];
   sourceIconMismatches: number | null;
   iconSprites: { available: boolean; count: number; bytes: number; delivered: boolean };
-  iconProjection: "awaiting-exact-unit-helper";
+  iconProjection: "native-helper-available-ui-unbound" | "native-helper-bound";
   delivered: boolean; fullSurfaceFidelityAccepted: false;
 }
 
@@ -23,10 +23,11 @@ export class MinimapRelay {
   #iconEpoch = "";
   #iconState = { available: false, count: 0, bytes: 0, delivered: false };
   #iconsReported = false;
+  #projectionBound: boolean;
 
   constructor(apply: ((surface: MinimapSurface) => void) | null, report: (error: AppError) => void,
-    applyIcons: ((sprites: ReadonlyMap<number, MapIconSprite>) => void) | null = null) {
-    this.#apply = apply; this.#report = report; this.#applyIcons = applyIcons;
+    applyIcons: ((sprites: ReadonlyMap<number, MapIconSprite>) => void) | null = null, projectionBound = false) {
+    this.#apply = apply; this.#report = report; this.#applyIcons = applyIcons; this.#projectionBound = projectionBound;
   }
 
   update(surface: MinimapSurface, deviceEpoch: string, sprites?: ReadonlyMap<number, MapIconSprite>): void {
@@ -52,7 +53,7 @@ export class MinimapRelay {
       width: surface.width, height: surface.height, scale: surface.scale, marginX: surface.marginX, marginY: surface.marginY,
       complete: surface.complete, notes: [...surface.notes], stats: { ...surface.stats },
       icons: surface.icons.map((icon) => ({ ...icon })), sourceIconMismatches: surface.sourceIconMismatches,
-      iconSprites: { ...this.#iconState }, iconProjection: "awaiting-exact-unit-helper",
+      iconSprites: { ...this.#iconState }, iconProjection: this.#projectionBound ? "native-helper-bound" : "native-helper-available-ui-unbound",
       delivered: this.#apply !== null, fullSurfaceFidelityAccepted: false,
     });
     this.#key = key;
@@ -81,7 +82,7 @@ export class MinimapRelay {
     if (this.#applyIcons) this.#applyIcons(new Map(sprites));
     else if (!this.#iconsReported) {
       this.#iconsReported = true;
-      this.#report(new AppError("Original map-icon sprites are decoded, but the UI icon sink and exact native offset-unit helper are not integrated. No world128 radius or clipping rule was guessed.",
+      this.#report(new AppError("Original map-icon sprites and exact native placement helpers are available, but the UI icon sink is not integrated. No world128 radius or clipping rule was guessed.",
         { kind: "minimap_integration", errorId: "renderer.minimap_icon_integration_required" }));
     }
     this.#icons = sprites; this.#iconEpoch = epoch;

@@ -1,8 +1,36 @@
-use clubscape_game_types::{GameplayUiRequest, ProductionMode, RecoveryStorage};
+use clubscape_game_types::{GameplayUiRequest, ProductionMode, RecoveryStorage, UiAmount};
 use clubscape_protocol::game;
 use serde_json::{Value, json};
 
 use crate::BridgeError;
+
+fn storage(value: RecoveryStorage) -> i32 {
+    (match value {
+        RecoveryStorage::Grave => game::RecoveryStorage::Grave,
+        RecoveryStorage::DeathOffice => game::RecoveryStorage::DeathOffice,
+    }) as i32
+}
+
+fn amount(value: UiAmount) -> game::UiAmount {
+    game::UiAmount {
+        selection: Some(match value {
+            UiAmount::Quantity { quantity } => game::ui_amount::Selection::Quantity(quantity.get()),
+            UiAmount::All {} => game::ui_amount::Selection::All(game::Empty {}),
+        }),
+    }
+}
+
+pub(crate) fn capability(request: &GameplayUiRequest) -> Option<&'static str> {
+    match request {
+        GameplayUiRequest::ProductionSelectAll { .. } | GameplayUiRequest::BankSetAmount { .. } => {
+            Some(crate::gameplay_ui::AMOUNTS_CAPABILITY)
+        }
+        GameplayUiRequest::RecoveryTake { .. } | GameplayUiRequest::RecoveryBankAll { .. } => {
+            Some(crate::gameplay_ui::RECOVERY_CAPABILITY)
+        }
+        _ => None,
+    }
+}
 
 pub(crate) fn parse(
     input: &str,
@@ -38,6 +66,45 @@ pub(crate) fn wire(
 ) -> Result<game::GameplayUiRequest, BridgeError> {
     use game::gameplay_ui_request::Request as R;
     let request = match request {
+        GameplayUiRequest::ProductionSelectAll { menu_id, recipe } => {
+            R::ProductionAll(game::UiProductionAll {
+                menu_id,
+                recipe: recipe.to_string(),
+            })
+        }
+        GameplayUiRequest::BankSetAmount {
+            amount: selected,
+            noted,
+        } => R::BankAmount(game::UiBankAmount {
+            amount: Some(amount(selected)),
+            noted,
+        }),
+        GameplayUiRequest::RecoveryTake {
+            death,
+            storage: location,
+            items,
+        } => R::RecoveryTake(game::UiRecoveryTake {
+            death: death.to_string(),
+            storage: storage(location),
+            items: items
+                .into_iter()
+                .map(|entry| game::UiRecoveryItemAmount {
+                    id: entry.id.to_string(),
+                    amount: Some(amount(entry.amount)),
+                })
+                .collect(),
+        }),
+        GameplayUiRequest::RecoveryBankAll { records } => {
+            R::RecoveryBankAll(game::UiRecoveryBankAll {
+                records: records
+                    .into_iter()
+                    .map(|record| game::UiRecoveryRecordSelection {
+                        death: record.death.to_string(),
+                        items: record.items.into_iter().map(|id| id.to_string()).collect(),
+                    })
+                    .collect(),
+            })
+        }
         GameplayUiRequest::UiDocumentPage { document_id, page } => {
             R::DocumentPage(game::UiDocumentPage {
                 id: document_id,
@@ -176,6 +243,10 @@ mod tests {
     #[test]
     fn every_current_ui_request_round_trips_with_exact_generated_tags_and_bank_identity() {
         let requests = [
+            json!({"kind":"production_select_all","menu_id":"menu.fixture","recipe":"recipe.fixture"}),
+            json!({"kind":"bank_set_amount","amount":{"kind":"all"},"noted":false}),
+            json!({"kind":"recovery_take","death":"death.fixture","storage":"grave","items":[{"id":"recovery_item.fixture","amount":{"kind":"quantity","quantity":2}}]}),
+            json!({"kind":"recovery_bank_all","records":[{"death":"death.fixture","items":["recovery_item.fixture"]}]}),
             json!({"kind":"ui_document_page","document_id":"document.fixture","page":1}),
             json!({"kind":"bank_placeholder","entry_id":"9007199254740993"}),
             json!({"kind":"ui_dismiss","presentation_id":"presentation.fixture"}),
@@ -197,7 +268,7 @@ mod tests {
             json!({"kind":"ui_confirm","confirmation_id":"confirmation.fixture","accept":true}),
             json!({"kind":"public_chat","channel":"public","text":"Exact source public text"}),
         ];
-        assert_eq!(requests.len(), 20);
+        assert_eq!(requests.len(), 24);
         for mut input in requests {
             let request: GameplayUiRequest = serde_json::from_value(input.clone()).unwrap();
             if request.requires_bank_revision() {

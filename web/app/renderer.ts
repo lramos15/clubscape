@@ -1,5 +1,5 @@
 import { createRenderer, fullHudViewport, fullHudZoomForViewport, regionSceneId, sourceZoomForViewportHeight } from "../renderer/src/index.ts";
-import type { ClubscapeRendererHandle, MapIconSprite, MinimapSurface, PlayerFitReport, PlayerPoseFit, PlayerPreviewRequest, RenderAssetManifest, RendererDiagnostics, RendererWorldExtensions, ScenePlacement } from "../renderer/src/index.ts";
+import type { ClubscapeRendererHandle, MapIconSprite, MinimapIconPlacements, MinimapSurface, PlayerFitReport, PlayerPoseFit, PlayerPreviewRequest, RenderAssetManifest, RendererDiagnostics, RendererWorldExtensions, ScenePlacement, UnboundAction } from "../renderer/src/index.ts";
 import wasmUrl from "../renderer/pkg/clubscape_renderer_bg.wasm?url";
 import type { RenderCamera, RendererConfig, RenderFrame, RendererHandle, WorldView } from "../shared/contracts.ts";
 import type { RendererObservation } from "./benchmark.ts";
@@ -29,6 +29,8 @@ export interface ShellRenderer extends RendererHandle {
   observerV1(): boolean;
   playerRunning(): boolean;
   unknownMotions(): string[];
+  unboundActions(): UnboundAction[];
+  minimapIconPlacements(playerTileX: number, playerTileY: number, scale: number, width: number, height: number): MinimapIconPlacements;
 }
 
 /** Exact adapter composition: real factory, real diagnostics, and the actual canvas queue clock. */
@@ -57,11 +59,12 @@ export async function createShellRenderer(canvas: HTMLCanvasElement, config: Ren
   }
   let camera: RenderCamera | null = null;
   let world: WorldView | null = null;
+  let instanceTemplate: string | null = null;
   let disposed = false;
   let lastFrame: RenderFrame | null = null;
   const placement = (state: RendererDiagnostics) => {
     const raw = native.scenePlacement();
-    const value = sourceScenePlacement(state, raw);
+    const value = sourceScenePlacement(state, raw, instanceTemplate);
     if (value?.blocks && raw?.blocks === false) {
       report("The renderer's legacy scenePlacement.blocks flag disagrees with its completed blocks@ scene. The shell normalizes only that flag from actual assembly diagnostics; this is not dynamic-minimap fidelity.");
     }
@@ -75,6 +78,7 @@ export async function createShellRenderer(canvas: HTMLCanvasElement, config: Ren
     },
     update(value: WorldView & RendererWorldExtensions) {
       world = value;
+      instanceTemplate = value.instanceLayout?.template ?? null;
       // Extra validated fields (including dynamicObjects) survive the shared type boundary.
       native.update(value);
       if (value.player.running === undefined || value.player.action === undefined) report("The authoritative movement/action observer is unavailable. The shell does not infer it from settings or nearby objects.");
@@ -111,6 +115,8 @@ export async function createShellRenderer(canvas: HTMLCanvasElement, config: Ren
     observerV1() { return native.observerV1(); },
     playerRunning() { return native.playerRunning(); },
     unknownMotions() { return native.unknownMotions(); },
+    unboundActions() { return native.unboundActions(); },
+    minimapIconPlacements(x, y, scale, width, height) { return native.minimapIconPlacements(x, y, scale, width, height); },
     scenePlacement() { return placement(native.diagnostics()).value; },
     minimapSurface() { return native.minimapSurface(); },
     mapIconSprites() { return native.mapIconSprites(); },
@@ -121,7 +127,8 @@ export async function createShellRenderer(canvas: HTMLCanvasElement, config: Ren
         ready: state.sceneId !== null && state.deviceLostReason === null,
         sceneId: state.sceneId ?? "unloaded", assets: residentRendererAssets(manifest, state),
         scenePlacement: scene.value, nativeScenePlacement: scene.raw, loadedSquares: state.loadedSquares,
-        actorObserver: { observerV1: native.observerV1(), running: native.playerRunning(), unknownMotions: native.unknownMotions() },
+        actorObserver: { observerV1: native.observerV1(), running: native.playerRunning(),
+          unknownMotions: native.unknownMotions(), unboundActions: native.unboundActions() },
         // The public adapter still discards raw entities_drawn; never substitute server counts.
         entities: {}, gpuTimestampPassScope: state.timestampsSupported ? "original integer fill compute pass" : null,
         settings: camera ? { backend: "webgpu", sourceManifestSha256: state.manifestSha256, brightness: manifest.brightness,

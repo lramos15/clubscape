@@ -163,7 +163,7 @@ implemented by this bridge; the source engine remains exclusively server-owned.
 `BridgeState.capabilities` records the actual validated ServerHello values.
 `gameplayUiWireSupported` is **true**, but admission still requires actual
 `game.ui.v1` negotiation and its complete version-1 view. `ui_input.rs` maps
-all20 current flat request variants, including document-page and placeholder,
+all24 current flat request variants, including semantic All and identity-bound recovery,
 through generated Protobuf and the existing protocol validator before client-core
 allocates a sequence. Requests are never downgraded to old quantity/index
 operations or accepted as arbitrary client state. Missing/unnegotiated views,
@@ -188,7 +188,8 @@ an unavailable capability or a reason to fabricate a facility. Menu/recipe/
 permission identities remain intact.
 
 Production target field3 remains naturally optional. Bank request field21
-must echo the exact decimal `ui.bank.revision`. The browser captures it before
+must echo the exact decimal `ui.bank.revision`, or
+`ui.recovery.management.bankRevision` for recovery Bank-All. The browser captures it before
 queueing; direct WASM callers supply it explicitly. No character/world tick or
 newer row state substitutes for an explicitly captured precondition. Client-core
 retains the original full UI wire request across uncertain retries. The server
@@ -202,3 +203,29 @@ false, null, final-idle/exhausted running and supplied values are not inferred
 from a checkbox, activity or nearby scenery. The complete dynamic-object list
 still uses validated canonical object metadata for optional `sourceId`.
 Ordinary `WorldView.bank.banker` remains alongside `ui.bank`.
+
+## Current amount, recovery, scene and audio authority
+
+The authorized `c7f3578e` through `3609a511` chain is integrated, retaining
+Director travel/menu/shop fixes. Current artifact identity is raw
+`5b3ba5f108ed3fec8f8b5f7f49b429c059e21b6f192ec99a0569616e08330059`,
+gzip `8da1e85a1e2ebb0355e29e7a15a0ca7cdab2f2751bc1341dd5efd5322b925ca6`,
+revision `m1.source-backed.v4.bdbf8a3788b842be`; old worlds are not repinned.
+
+`game.ui.amounts.v1` and `game.ui.recovery.v1` are negotiated independently
+above the base UI capability. The generated request oneof retains bank revision21
+and adds productionAll22, bankAmount23, recoveryTake24 and recoveryBankAll25.
+`UiAmount` uses quantity1 or explicit All2, never a sentinel. Every required
+projection field is checked when its capability is advertised; legacy absence
+stays absent. Unit/full-stack/full-selection fees and per-entry capacities
+are not derived from one another. Opaque selected records are retained, with
+source permissions unchanged.
+
+`scene.rs` maps actual `WorldSnapshot.scene21` and validates its region/opaque
+instance/template pair against the player. `audio_authority.rs` maps field22
+only with `game.audio.authority.v1`. Unknown legacy history, first-confirmed
+rule/time and exact decimal clocks/revisions are preserved. Native varp words
+retain their `knownBits` mask;491/value0/knownBits20 is not a complete zero word.
+Both projections are validated before client-core accepts the snapshot.
+Numeric/qualified actor animations and their stable source clocks are forwarded
+unchanged. Missing renderer clips cannot be replaced with a guessed animation.

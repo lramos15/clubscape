@@ -51,7 +51,7 @@ test("original icon pixels and offsets are relayed independently without guessin
   assert.equal(delivered[0]!.get(456)!.offsetX, 1);
   assert.equal(relay.observe()?.sourceIconMismatches, null);
   assert.deepEqual(relay.observe()?.iconSprites, { available: true, count: 1, bytes: 24, delivered: true });
-  assert.equal(relay.observe()?.iconProjection, "awaiting-exact-unit-helper");
+  assert.equal(relay.observe()?.iconProjection, "native-helper-available-ui-unbound");
   assert.equal(relay.observe()?.fullSurfaceFidelityAccepted, false);
 });
 

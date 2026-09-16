@@ -6,6 +6,8 @@ use serde_json::{Value, json};
 use crate::BridgeError;
 
 pub const CAPABILITY: &str = "game.ui.v1";
+pub const AMOUNTS_CAPABILITY: &str = "game.ui.amounts.v1";
+pub const RECOVERY_CAPABILITY: &str = "game.ui.recovery.v1";
 pub const WIRE_SUPPORTED: bool = true;
 
 pub(crate) fn decimal(value: &str, signed: bool) -> Result<&str, BridgeError> {
@@ -48,6 +50,54 @@ fn inventory_actions(values: &[InventoryActionsUiView]) -> Vec<Value> {
     })).collect()
 }
 
+fn recovery_management(
+    value: &clubscape_game_types::RecoveryManagementView,
+) -> Result<Value, BridgeError> {
+    use std::collections::BTreeSet;
+    let mut panels = BTreeSet::new();
+    let projected = value.panels.iter().map(|panel| {
+        let storage_key = match panel.storage {
+            clubscape_game_types::RecoveryStorage::Grave => 0,
+            clubscape_game_types::RecoveryStorage::DeathOffice => 1,
+        };
+        if !panels.insert((panel.death.to_string(), storage_key)) {
+            return Err(BridgeError::protocol("Duplicate authoritative recovery panel identity."));
+        }
+        let mut entries = BTreeSet::new();
+        let rows = panel.entries.iter().map(|entry| {
+            if !entries.insert(&entry.id) {
+                return Err(BridgeError::protocol("Duplicate authoritative recovery entry identity."));
+            }
+            Ok(json!({
+                "id":entry.id,"item":item(&entry.item)?,
+                "unitFee":decimal(&entry.unit_fee, false)?,
+                "fullStackFee":decimal(&entry.full_stack_fee, false)?,
+                "inventoryCapacity":entry.inventory_capacity,"bankCapacity":entry.bank_capacity,
+                "take":entry.take,"bank":entry.bank,
+            }))
+        }).collect::<Result<Vec<_>, BridgeError>>()?;
+        Ok(json!({
+            "death":panel.death,"storage":panel.storage,"entries":rows,
+            "fullSelectionFee":decimal(&panel.full_selection_fee, false)?,"takeAll":panel.take_all,
+        }))
+    }).collect::<Result<Vec<_>, BridgeError>>()?;
+    let mut records = BTreeSet::new();
+    for record in &value.bank_all_records {
+        if !records.insert(&record.death)
+            || record.items.is_empty()
+            || record.items.iter().collect::<BTreeSet<_>>().len() != record.items.len()
+        {
+            return Err(BridgeError::protocol(
+                "Invalid authoritative Bank-All record selection.",
+            ));
+        }
+    }
+    Ok(json!({
+        "bankRevision":decimal(&value.bank_revision, false)?,"panels":projected,
+        "bankAll":value.bank_all,"bankAllRecords":value.bank_all_records,
+    }))
+}
+
 /// Pure shared-Rust-DTO to shared-TypeScript-DTO projection.
 /// No JS setter or RPC accepts these values.
 pub fn project(value: &GameplayUiView) -> Result<Value, BridgeError> {
@@ -61,10 +111,14 @@ pub fn project(value: &GameplayUiView) -> Result<Value, BridgeError> {
             .production
             .as_ref()
             .map(|view| {
-                let recipes = view.recipes.iter().map(|recipe| Ok(json!({
-            "recipe":recipe.recipe,"name":recipe.name,"outputs":items(&recipe.outputs)?,
-            "single":recipe.single,"makeX":recipe.make_x,
-        }))).collect::<Result<Vec<_>, BridgeError>>()?;
+                let recipes = view.recipes.iter().map(|recipe| {
+                    let mut value = json!({
+                        "recipe":recipe.recipe,"name":recipe.name,"outputs":items(&recipe.outputs)?,
+                        "single":recipe.single,"makeX":recipe.make_x,
+                    });
+                    if let Some(all) = &recipe.all { value["all"] = json!(all); }
+                    Ok(value)
+                }).collect::<Result<Vec<_>, BridgeError>>()?;
                 Ok::<_, BridgeError>(json!({
                     "id":view.id,"interface":view.interface,"target":view.target,"recipes":recipes,
                 }))
@@ -97,12 +151,14 @@ pub fn project(value: &GameplayUiView) -> Result<Value, BridgeError> {
                 "value":entry.value.as_ref().map(item).transpose()?,"placeholder":entry.placeholder,
             }))
         }).collect::<Result<Vec<_>, BridgeError>>()?;
-        Ok::<_, BridgeError>(json!({
+        let mut result = json!({
             "revision":decimal(&view.revision, false)?,"capacity":view.capacity,"selectedTab":view.selected_tab,
             "insertMode":view.insert_mode,"placeholders":view.placeholders,"amount":view.amount,"noted":view.noted,
             "tabs":view.tabs.iter().map(|tab| json!({"tab":tab.tab,"firstEntry":tab.first_entry,"entries":tab.entries})).collect::<Vec<_>>(),
             "entries":values,"depositEquipment":view.deposit_equipment,"unavailableContainers":view.unavailable_containers,
-        }))
+        });
+        if let Some(amount) = &view.amount_selection { result["amountSelection"] = json!(amount); }
+        Ok::<_, BridgeError>(result)
     }).transpose()?;
     let death = value
         .kept_on_death
@@ -121,10 +177,14 @@ pub fn project(value: &GameplayUiView) -> Result<Value, BridgeError> {
             }))
         })
         .transpose()?;
-    let recovery = value.recovery.as_ref().map(|view| Ok::<_, BridgeError>(json!({
-        "cofferBalance":decimal(&view.coffer_balance, false)?,"discard":view.discard,"cofferOffer":view.coffer_offer,
-        "cofferItems":inventory_actions(&view.coffer_items),
-    }))).transpose()?;
+    let recovery = value.recovery.as_ref().map(|view| {
+        let mut result = json!({
+            "cofferBalance":decimal(&view.coffer_balance, false)?,"discard":view.discard,"cofferOffer":view.coffer_offer,
+            "cofferItems":inventory_actions(&view.coffer_items),
+        });
+        if let Some(management) = &view.management { result["management"] = recovery_management(management)?; }
+        Ok::<_, BridgeError>(result)
+    }).transpose()?;
     if value.public_chat.channel != "public"
         || value
             .public_chat

@@ -1,11 +1,12 @@
 import { defineConfig } from "vite";
 import { fileURLToPath } from "node:url";
+import { webOutputDirectory } from "../tools/web-build/output.ts";
 
 export default defineConfig({
   publicDir: false,
   build: {
     target: "es2024",
-    outDir: "dist",
+    outDir: webOutputDirectory(),
     emptyOutDir: true,
     assetsDir: "client",
     assetsInlineLimit: 0,

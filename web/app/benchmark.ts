@@ -7,6 +7,7 @@ import { isHash } from "./identity.ts";
 import type { AudioSnapshot } from "../audio/index.ts";
 import type { PreviewObservation } from "./preview.ts";
 import type { MinimapObservation } from "./minimap.ts";
+import type { UnboundAction } from "../renderer/src/index.ts";
 
 export interface RendererObservation {
   ready: boolean;
@@ -19,7 +20,7 @@ export interface RendererObservation {
   scenePlacement?: { baseX: number; baseY: number; sizeTiles: number; blocks: boolean } | null;
   nativeScenePlacement?: { baseX: number; baseY: number; sizeTiles: number; blocks: boolean } | null;
   loadedSquares?: number[];
-  actorObserver?: { observerV1: boolean; running: boolean; unknownMotions: string[] };
+  actorObserver?: { observerV1: boolean; running: boolean; unknownMotions: string[]; unboundActions: UnboundAction[] };
 }
 
 export class Benchmark implements ClubscapeBenchmarkV1 {

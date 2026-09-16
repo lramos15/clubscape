@@ -2,6 +2,7 @@ import type { Tile, WorldView } from "../shared/contracts.ts";
 import type { RendererInstanceLayout, RendererWorldExtensions } from "../renderer/src/index.ts";
 import { AppError, deepFreeze, invariant } from "./errors.ts";
 import { assetId } from "./identity.ts";
+import { validateScene } from "./authority.ts";
 
 export interface SourceInstanceChunk {
   sourceRegion: string;
@@ -79,6 +80,14 @@ export function rendererInstanceLayout(world: WorldView, layouts: SourceInstance
 }
 
 export function rendererWorldView(world: WorldView, layouts: SourceInstanceLayouts | undefined,
-  actualTemplate: string | null | undefined): WorldView & RendererWorldExtensions {
+  actualTemplate?: string | null): WorldView & RendererWorldExtensions {
+  if (world.scene !== undefined) {
+    validateScene(world.scene, world);
+    if (actualTemplate !== undefined && actualTemplate !== world.scene.instanceTemplate) {
+      throw new AppError("A supplied renderer template cannot override the authoritative scene identity.",
+        { kind: "instance_unavailable", errorId: "renderer.instance_template_conflict" });
+    }
+    actualTemplate = world.scene.instanceTemplate;
+  }
   return deepFreeze({ ...world, instanceLayout: rendererInstanceLayout(world, layouts, actualTemplate) });
 }

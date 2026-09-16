@@ -9,6 +9,7 @@ import { captureUiBankRevision, gameplayUiSupport, validateActorObservers } from
 import type { GameplayUiSupport } from "./gameplay-ui.ts";
 import type { SourceAudioSession } from "./audio.ts";
 import type { PlayerAudioCompositionStatus } from "./player-audio-composition.ts";
+import { validateWorldAuthority } from "./authority.ts";
 
 export interface WasmClient {
   prepare(requestId: string, operation: string, input: string): Uint8Array;
@@ -69,6 +70,7 @@ export function bridgeState(json: string): Readonly<BridgeState> {
     && typeof state.gameplayUiWireSupported === "boolean", "Invalid WASM capability negotiation state.", "protocol");
   const support = gameplayUiSupport(state.capabilities, state.gameplayUiWireSupported, state.world);
   validateActorObservers(state.capabilities, state.world);
+  validateWorldAuthority(state.capabilities, state.world);
   if (state.world !== null && support.reason === "view_missing") {
     throw new AppError(support.message!, { kind: "unsupported_protocol" });
   }

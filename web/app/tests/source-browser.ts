@@ -15,6 +15,7 @@ import type { PreviewObservation } from "../preview.ts";
 import { presentationOptions } from "../presentation.ts";
 import type { MinimapObservation } from "../minimap.ts";
 import { checkPlayerAudioPreferences } from "./real-player-audio.ts";
+import { webOutputDirectory } from "../../../tools/web-build/output.ts";
 
 const root = resolve(fileURLToPath(new URL("../../../", import.meta.url)));
 type SecretWindow = Window & { __sourceUiCredentials?: { name: string; password: string } };
@@ -104,7 +105,7 @@ async function restartSource(origin: string, pin: SourceRunPin, gameRoot: string
   const child = spawn(binary, [], {
     cwd: root, stdio: ["ignore", "pipe", "pipe"],
     env: { ...process.env, DATABASE_URL: database, CLUBSCAPE_GAME_ROOT: gameRoot,
-      CLUBSCAPE_WEB_ROOT: resolve(root, "web/dist"), CLUBSCAPE_BIND: new URL(origin).host },
+      CLUBSCAPE_WEB_ROOT: webOutputDirectory(), CLUBSCAPE_BIND: new URL(origin).host },
   });
   try {
     await new Promise<void>((resolvePromise, reject) => {
@@ -316,11 +317,24 @@ export async function sourceBrowserCheck(): Promise<void> {
     checks.push("empty source creation, real join and separate sequenced appearance confirmation from UI");
     const gameplayUi = await page.evaluate(() => window.__clubscapeClientStateV1!.gameplayUi());
     assert.equal(gameplayUi.available, true);
+    assert.equal(gameplayUi.complete, true);
+    assert.equal(gameplayUi.amounts, true);
+    assert.equal(gameplayUi.recovery, true);
     assert.equal(gameplayUi.reason, null);
     assert.equal(first.ui?.version, 1);
     assert.equal(typeof first.player.running, "boolean");
     assert(Object.hasOwn(first.player, "movementTick") && Object.hasOwn(first.player, "action"));
-    checks.push("real game.ui.v1 and actor observer fields arrive through generated WASM wire without an empty legacy fallback");
+    assert.deepEqual(first.scene, { region: first.player.region, instance: first.player.instance, instanceTemplate: null });
+    assert(first.audioAuthority);
+    assert.equal(first.audioAuthority.version, 1);
+    assert.equal(first.audioAuthority.music.history, "from_creation");
+    assert.equal(first.audioAuthority.music.complete, true);
+    assert.deepEqual(first.audioAuthority.music.unlockedGroups, [62]);
+    assert(first.audioAuthority.music.tracks.every((track) => track.group !== 0 && track.status !== "unknown"));
+    const varp491 = first.audioAuthority.varps.find((variable) => variable.id === 491);
+    assert.equal(varp491?.knownBits, 20);
+    assert.equal(varp491?.value, 0);
+    checks.push("complete UI amount/recovery capabilities, actual scene and source-owned music/partial-varp authority arrive through generated WASM");
     await dismissNotices(page);
     await page.locator('[data-ui-control="experience-experience.brand_new"]').click();
     await page.waitForFunction(() => {
@@ -375,14 +389,14 @@ export async function sourceBrowserCheck(): Promise<void> {
     assert(audioPreferenceStatus);
     assert.equal(audioPreferenceStatus.preferences.playerId, first.player.id);
     assert.equal(audioPreferenceStatus.preferences.origin, "confirmed_absent");
-    assert.equal(audioPreferenceStatus.preferences.phase, "waiting_unlocks");
+    assert.equal(audioPreferenceStatus.preferences.phase, "failed");
     assert.equal(audioPreferenceStatus.uiPreferencesBound, false);
-    assert.equal(audioPreferenceStatus.sourceUnlocksSupplied, false);
+    assert.equal(audioPreferenceStatus.sourceUnlocksSupplied, true);
     assert.equal(audioPreferenceStatus.appliedWorld, null);
     assert.deepEqual(audioPreferenceStatus.issues.map((issue) => issue.errorId).sort(),
-      ["audio.preferences.source_unlocks_required", "audio.preferences.ui_adapter_required"]);
+      ["audio.preferences.ui_adapter_required"]);
     assert.equal(await page.evaluate(() => window.__clubscapeClientStateV1!.read().soundEnabled), false);
-    checks.push("genuine player preference absence is distinguished from failure; unavailable source unlocks/UI adapter explicitly block world audio without a legacy-control fallback");
+    checks.push("real source unlocks are available without client grants; the still-unrelayed native UI preference adapter remains an explicit separate blocker");
     let renderPixels: unknown = null;
     if (earlyScene !== null || recordedCamera !== null) {
       await page.waitForFunction(() => (window.__clubscapeBenchmarkV1?.read(null).renderedFrames ?? 0) >= 8, undefined, { timeout: 30_000 });
@@ -424,7 +438,7 @@ export async function sourceBrowserCheck(): Promise<void> {
       assert.equal(end.diagnostics.minimapSurface?.iconSprites.count, 386);
       assert.equal(end.diagnostics.minimapSurface?.iconSprites.available, true);
       assert.equal(end.diagnostics.minimapSurface?.iconSprites.delivered, false);
-      assert.equal(end.diagnostics.minimapSurface?.iconProjection, "awaiting-exact-unit-helper");
+      assert.equal(end.diagnostics.minimapSurface?.iconProjection, "native-helper-available-ui-unbound");
       const fps = frames.length * 1000 / elapsed;
       timing = {
         kind: "sparky-canonical-onboarding-engineering-only", measuredWindowMs: elapsed, completedFrames: frames.length,
@@ -520,7 +534,7 @@ export async function sourceBrowserCheck(): Promise<void> {
       kind: earlyScene ? "early-render-ui-canonical-source-entry" : "real-streamed-render-ui-canonical-source-entry",
       result: audioPreferenceFixture.nativeCueTiming.passed ? "passed" : "failed_native_audio_timing",
       recordedAt: new Date().toISOString(),
-      checks, gameplayUi, experience, publicChat: chatProof,
+      checks, gameplayUi, experience, publicChat: chatProof, sourceScene: first.scene, audioAuthority: first.audioAuthority,
       audioControls, audioPreferenceStatus, audioPreferenceFixture, sourceRunPin: pin, browser: version, sandbox: { namespaceAndSeccomp: true, gpuProcessSandboxed: system.gpu.auxAttributes?.sandboxed ?? null },
       titlePixels: title, build: benchmark.identity, rendererReady: benchmark.ready, renderedFrames: benchmark.renderedFrames,
       actualUiSignup: true, actualCanonicalWorld: true, actualServerRestart: true, actualDeviceLossHandled: true,

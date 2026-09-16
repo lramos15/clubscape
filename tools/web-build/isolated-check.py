@@ -129,7 +129,8 @@ def main():
         env.pop("CLUBSCAPE_GAME_ROOT", None)
         env["DATABASE_URL"] = f"postgresql://clubscape:{password}@127.0.0.1:{match[1]}/clubscape_browser"
         env["CLUBSCAPE_BIND"] = "127.0.0.1:0"
-        env["CLUBSCAPE_WEB_ROOT"] = str(ROOT / "web/dist")
+        web_root = Path(command(["node", "tools/web-build/output.ts"]))
+        env["CLUBSCAPE_WEB_ROOT"] = str(web_root)
         env["CLUBSCAPE_BUILD_REVISION"] = command(["git", "rev-parse", "HEAD"])
         env["TMPDIR"] = str(runtime)
         if game_root:
@@ -137,7 +138,7 @@ def main():
             if game_root == ROOT or not game_root.is_relative_to(ROOT):
                 raise RuntimeError("The source run must use an owned worktree bundle.")
             source_pin = json.loads(command(["node", "tools/web-build/run-pins.ts", str(game_root)]))
-            build = json.loads((ROOT / "web/dist/client/build.json").read_text())
+            build = json.loads((web_root / "client/build.json").read_text())
             if not build.get("content") or build["content"]["owner"] != "game" or build["content"]["sha256"] != source_pin["contentManifestSha256"]:
                 raise RuntimeError("Build this exact source manifest with CLUBSCAPE_CONTENT_OWNER=game before real world integration; overlapping web/game assets are not allowed.")
             env["CLUBSCAPE_GAME_ROOT"] = str(game_root)

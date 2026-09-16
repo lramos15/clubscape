@@ -35,7 +35,7 @@ cannot enable it. `BrowserApp.gameplayUi()` and the observation-only
 wire unavailable and missing versioned view; legacy world state never receives
 a fabricated empty UI object.
 
-All20 current `GameplayUiIntent` variants go through the shared Rust request
+All24 current `GameplayUiIntent` variants go through the shared Rust request
 enum, generated Protobuf and protocol validators. Document pages, placeholders,
 stable entry/menu/reward/confirmation identities and exact bank preconditions
 are not approximated with legacy quantity/index operations.
@@ -73,6 +73,46 @@ Diagnostic Vite bundling is explicitly separate from a passing production
 typecheck. Real UI4 entry/experience/source-lock/reconnect checks can run, but
 do not prove complete UI consumption or final acceptance.
 
+The current authoritative handoff through `3609a511` adds
+`game.ui.amounts.v1`, `game.ui.recovery.v1` and `game.audio.authority.v1`.
+WASM maps the exact new requests (`production_select_all`, `bank_set_amount`,
+`recovery_take`, `recovery_bank_all`) and every current projection. `UiAmount`
+is a real tagged quantity/All oneof, never a sentinel. The source `all`
+permission, `bank.amountSelection` and full recovery management are mandatory
+when their capabilities are advertised; absent legacy extensions are not
+manufactured. `gameplayUi().complete` distinguishes the full current contract
+from base `game.ui.v1` support.
+
+Recovery `unitFee`, `fullStackFee`, `fullSelectionFee`, independent per-entry
+inventory/bank capacities, source permissions and opaque Bank-All record/item
+identities stay separate and unchanged. Capacities are not summed, fees are
+not multiplied, and a visible Bank-All button does not grant permission.
+Recovery Bank-All captures `ui.recovery.management.bankRevision`; other bank
+mutations capture `ui.bank.revision`. Explicit retry preconditions remain
+unchanged for backend validation after durable deduplication.
+
+`WorldSnapshot.scene21` now supplies the actual region/opaque-instance/template
+pair. The bridge checks it against the player and passes that template to the
+compiler-validated chunk lookup; there is no ID/region/tile inference.
+`WorldSnapshot.audio_authority22` carries version1 source history, exact decimal
+clocks/revision and track rule/time/status. `from_creation`, `legacy_untracked`
+and `unknown` are retained. Incomplete legacy history cannot become a new
+preference record or a list of locked tracks.
+
+Native varp491 value0 with `knownBits:20` means only bits2/4 are known.
+`calibratedNativeVarpBits` reads only masks present in the audio owner's original
+varbit metadata. `sourceSceneAuthority` supplies only those required by actual
+calibrated emitters; client-supplied full words never replace authority.
+The original partial word/mask remains in immutable `WorldView.audioAuthority`.
+Source listener/owner/placed-emitter inputs still require real scene data.
+The UI-owned native preference/surface adapters remain separate dependencies.
+
+Actor animation strings/numeric bindings and `ActorActionView` clock identities
+are forwarded unchanged. The newly required twelve original clips are an asset
+owner dependency, not permission to substitute another motion. Original
+level233/notification660 use the existing reward projection; the shell creates
+no additional XP or synthetic level event.
+
 The retained initial5e candidate `.local/source-ui4-5e0aa8a2` uses raw artifact
 `5e0aa8a28851752ae0b8b0a08c635c6c8d2979f509f3a3e564ee74e2abfc8e6f`,
 revision `m1.source-backed.v4.3ff4292b311453cc`, and a different world UUID from
@@ -82,13 +122,22 @@ payloads and order, with repeated identical primary predicates collapsed in
 the supply-recovery exclusions. No UI/protocol/persisted-state version changes
 or client-side dialogue merge/priority rule is introduced.
 
-Current renderer delivery uses a separate candidate,
+The preceding renderer delivery used a separate candidate,
 `.local/source-renderer-2d228d79-5e0aa8a2-v2`, world
 `7e2d3d85-6691-4524-996b-2f354871715a`, with the same exact5e game artifact.
 The earlier5e code/data pair is retained rather than receiving new renderer
 assets in place. The first unserved22f2a10e candidate is retained separately
 after strict delivery caught its pose-fit JSON MIME mismatch; the shared MIME
 mapping is now used, without relaxing byte/hash checks.
+
+Current native content is
+`5b3ba5f108ed3fec8f8b5f7f49b429c059e21b6f192ec99a0569616e08330059`,
+revision `m1.source-backed.v4.bdbf8a3788b842be`; `.local/source-authority-bdbf8a37`
+is a fresh candidate, not an upgrade of any5e/6f world. The old503 repro's
+`web/dist` is preserved and also archived at `.local/web-shell-503d897-bbe6f5a5`.
+New builds set `CLUBSCAPE_WEB_OUTPUT=.local/web-builds/authority-bdbf8a37`;
+the same bounded output selection is used by Vite, delivery, serving and the
+isolated restart runner. No original repro source/code pin is rewritten.
 
 The previous `.local/source-ui4-6fdb60e4` remains byte-pinned, with its matching
 11-file public code bundle archived at `.local/web-ui4-6f-bd4a693e`.
@@ -254,7 +303,7 @@ Source phase `6c68672d` was imported once; its duplicate `5b2d8ac` was not.
 The shell does not implement a rasterizer, animation policy or gear fit.
 Build output uses wasm-bindgen0.2.128; actual build hashes are recorded in
 `.local/evidence/renderer-build.json`. The current original renderer manifest is
-`2d228d79f526cb4d84a444118c9e8f3961d2f08213f56ffe5f8a81af17b9cceb`.
+`e635ed1dd82e717d44b58716d9d6c06aabee68632fbca0854f60753fd849dc1e`.
 All 122 compressed buffers for its 61 blocks were reproduced byte-exactly from
 the pinned original inputs and are included in browser/server delivery.
 
@@ -367,7 +416,7 @@ forwarded with exact absence/null/string semantics. The shell never chooses a
 pose from a run checkbox or nearby object. The new renderer consumes those
 fields, including stable action/cycle anchors and explicit null animation.
 `diagnostics.actorObserver` exposes its actual `observerV1()`, `playerRunning()`
-and `unknownMotions()` results; absent numeric binding remains unknown, not a
+and `unknownMotions()`/`unboundActions()` results; absent numeric binding remains unknown, not a
 guessed action or a blanket animation-ready flag. `developerMotionFallback`
 is explicitly false. Per-pose fit reports are available without claiming the
 surface-clearance metric proves the frozen attachment-anchor gap; that gate
@@ -381,18 +430,20 @@ by a static PNG or claimed delivered. It also retains `sourceIconMismatches`
 and forwards original `mapIconSprites()` pixels/offsets through the optional
 `Components.setUiMapIconSprites` sink, independently of raster revision.
 Decoded counts are actual native map entries, not guessed entity counts.
-No icon offset,80-radius or clipping math is implemented: the relayed world128
-description awaits the owner's exact unit/helper correction. Sprite delivery
-is not icon-projection acceptance. Edge-five-tile limitations remain explicit
+The exact `minimapIconPlacements` helper is now exposed through the optional
+UI projection binding: original4px/tile conversion,80px radius,50px masked blit,
+source16384 tables and sprite-offset modes remain renderer-owned. No world128
+radius implementation is retained. The UI sink/API adapter is still required.
+Sprite/helper availability is not icon-projection acceptance. Edge-five-tile limitations remain explicit
 and `complete` is not full-surface fidelity.
 
 `ContentManifest.instanceLayouts` is projected by the native Runtime compiler
 from `mechanics.instances`: chunk size and original source/destination region,
 tile, plane and rotation, not a separate world definition. The renderer accepts
-the declared8x8 mappings only after the actual backend template identity is
-supplied through `sourceRenderer.instanceTemplate(world)`. Current wire views
-still expose only an opaque instance ID; no template is guessed from that ID,
-matching region/tile or a death hint. Missing identity/layout and unsupported
+the declared8x8 mappings using the actual `WorldView.scene.instanceTemplate`
+published by the backend; no template is guessed from the opaque ID,
+matching region/tile or a death hint. Actual native scene IDs retain their
+`#instance_template...` suffix. Missing identity/layout and unsupported
 turns fail explicitly before world rendering. The source layout is primed before
 scene loading, so the native adapter requests/copies only its declared squares.
 Ordinary worlds explicitly pass `instanceLayout:null`; rotated unsupported
@@ -484,23 +535,18 @@ The existing UI's legacy mute map and different legacy `setSourceMusicState`
 cannot represent rich bound preferences, so world controls remain detached
 rather than silently using them. `onUiMusicStateChange` persistence is installed
 only with the real new adapter and requires the current entry's actual native
-binding. The default host also lacks authoritative music unlock inputs.
-It reports `audio.preferences.ui_adapter_required` and
-`audio.preferences.source_unlocks_required`, keeping world audio disconnected
+binding. The default host now consumes real `WorldView.audioAuthority` unlock
+inputs; it does not need a generic counter/history adapter. It still reports
+`audio.preferences.ui_adapter_required` while that UI adapter is absent, keeping world audio disconnected
 without blocking real server/renderer/UI progress. It never invents `[]` or
 grants a region's tracks, buffers old events for replay, or claims audio ready.
 
-There is **no proven generic backend facts adapter** for music unlock/history
-or source-native varps in this client. `main.ts` supplies no `sourceAudio`
-producer; `PlayerAudioSources` is an injection boundary, not an implemented
-projection. Current tile/region/instance, tutorial/quest state, visible music
-or settings tabs, and client-saved track selections are not substitutes for
-durable source unlock/history or exact native-varp facts. Revisiting a current
-tile after restart cannot reconstruct past visits. The separately owned backend
-closure must publish its actual fields/source bindings before wiring them here;
-no speculative wire tags, counter mappings or quest-to-varp conversions are added.
-An explicit unlock producer returning `undefined` remains unavailable even if
-a legacy music callback is also supplied.
+The previous missing-authority gap is closed by the published versioned
+backend projection, not a client inference. Current tile/region, quest state,
+visible interfaces and saved selections still cannot reconstruct history or
+varps. A supplied legacy music callback cannot override actual authority, and
+partial history is reported explicitly as `partial_history`, not merely absent
+or locked. No speculative counter mapping or quest-to-varp conversion is added.
 
 `window.__clubscapeClientStateV1.audioPreferenceStatus()` is observation-only:
 load origin, entry/phase/save/error state, actual UI binding/source-input
@@ -563,9 +609,9 @@ not proof that every emitter/asset is ready. `providedMusicState` is an immutabl
 last accepted input, not an unlock grant or an echo of guessed source defaults.
 The player coordinator retains only the same actor's genuine loaded record;
 title/actor changes clear it and different actors never inherit it.
-Current renderer/protocol exports still lack the real listener/scenery/varp
-projection and authoritative unlock input. Internal native selection is
-implemented, but does not establish those supplied facts or authorize playback
+Current scene composition still lacks the complete real listener/scenery/owner
+input. Backend unlocks and partial varp observations are now mapped. Internal
+native selection does not establish missing scene facts or authorize playback
 with unbound constructor preferences. No caller selector is required.
 
 Native policies are now calibrated, not the earlier generic gain/distance/fade

@@ -21,6 +21,7 @@ export type { PlayerAudioStorage } from "./player-audio-store.ts";
 export { PlayerAudioPreferences } from "./player-audio.ts";
 export type { PlayerAudioControls } from "./player-audio.ts";
 export { PlayerAudioComposition } from "./player-audio-composition.ts";
+export { validateAudioAuthority, authoritativeMusicUnlocks, calibratedNativeVarpBits } from "./authority.ts";
 export type { PublicWorld, PublicRecovery, QuoteRequest, QuoteView, ShopPurchaseIntent } from "./public-state.ts";
 
 /** Programmatic bridge entry; not a UI, fixture world, or account bypass. */

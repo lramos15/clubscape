@@ -1,8 +1,8 @@
 import assert from "node:assert/strict";
 import { test } from "node:test";
-import { GAMEPLAY_UI_CAPABILITY } from "../../shared/contracts.ts";
+import { GAMEPLAY_UI_CAPABILITY, UI_AMOUNTS_CAPABILITY, UI_RECOVERY_CAPABILITY } from "../../shared/contracts.ts";
 import type { GameplayUiView, WorldView } from "../../shared/contracts.ts";
-import { captureUiBankRevision, gameplayUiSupport, validateActorObservers, validateGameplayUi } from "../gameplay-ui.ts";
+import { captureUiBankRevision, gameplayUiSupport, validateActorObservers, validateGameplayUi, validateUiAmount } from "../gameplay-ui.ts";
 import { deepFreeze } from "../errors.ts";
 
 // Version/projection fixtures only. They are never attached to the real browser/server world.
@@ -153,4 +153,39 @@ test("actual final-step running and explicit nullable observer state are not inf
   Reflect.deleteProperty(world.player, "running");
   assert.throws(() => validateActorObservers(["game.observer.v1"], world), /actual movement/);
   validateActorObservers([], world);
+});
+
+test("semantic All and recovery views are negotiated separately and never become sentinel quantities or additive fees", () => {
+  const current = view();
+  const denied = { allowed: false, code: "unavailable", reason: "Source permission is not verified." };
+  current.bank!.amountSelection = { kind: "all" };
+  current.recovery!.management = {
+    bankRevision: "9007199254743333",
+    panels: [{ death: "death.actual", storage: "grave", entries: [{
+      id: "recovery_item.actual", item: { id: "item.fixture", name: "Fixture", quantity: 7,
+        sourceId: 1, iconAsset: null, instanceId: null, charges: null, actions: [] },
+      unitFee: "3", fullStackFee: "17", inventoryCapacity: 3, bankCapacity: 2, take: denied, bank: denied,
+    }], fullSelectionFee: "18446744073709551615", takeAll: denied }],
+    bankAll: denied, bankAllRecords: [{ death: "death.actual", items: ["recovery_item.actual"] }],
+  };
+  const world = { ui: current } as WorldView;
+  const capabilities = [GAMEPLAY_UI_CAPABILITY, UI_AMOUNTS_CAPABILITY, UI_RECOVERY_CAPABILITY];
+  assert.equal(gameplayUiSupport(capabilities, true, world).complete, true);
+  assert.throws(() => gameplayUiSupport([GAMEPLAY_UI_CAPABILITY], true, world), /amount negotiation/);
+  const before = JSON.stringify(current);
+  validateGameplayUi(current);
+  assert.equal(JSON.stringify(current), before);
+  const request = captureUiBankRevision({ kind: "recovery_bank_all", records: current.recovery!.management.bankAllRecords }, world);
+  assert.equal(request.kind, "recovery_bank_all");
+  if (request.kind !== "recovery_bank_all") throw new Error("Wrong captured request kind.");
+  assert.equal(request.expected_bank_revision, "9007199254743333");
+  assert.notEqual(request.expected_bank_revision, current.bank!.revision);
+  current.recovery!.management.bankRevision = "9007199254743334";
+  const retry = captureUiBankRevision(request, world);
+  if (retry.kind !== "recovery_bank_all") throw new Error("Wrong retry request kind.");
+  assert.equal(retry.expected_bank_revision, "9007199254743333");
+  assert.equal(current.recovery!.management.bankAll.allowed, false);
+  validateUiAmount({ kind: "all" });
+  assert.throws(() => validateUiAmount({ kind: "quantity", quantity: 0 }), /positive quantity or All/);
+  assert.equal(current.bank!.amount, 1);
 });

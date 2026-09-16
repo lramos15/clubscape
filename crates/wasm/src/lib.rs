@@ -1,9 +1,11 @@
+mod audio_authority;
 pub mod catalog;
 mod context;
 pub mod gameplay_ui;
 mod intent;
 mod observer;
 mod quote;
+mod scene;
 mod ui_input;
 mod ui_wire;
 mod view;
@@ -123,12 +125,41 @@ impl Bridge {
             ));
         }
         if let Some(ui) = &snapshot.ui {
+            ui_wire::validate_capabilities(ui, &self.capabilities)?;
             ui_wire::decode(ui)?;
+        }
+        if !self.capabilities.contains(gameplay_ui::CAPABILITY)
+            && (self.capabilities.contains(gameplay_ui::AMOUNTS_CAPABILITY)
+                || self.capabilities.contains(gameplay_ui::RECOVERY_CAPABILITY))
+        {
+            return Err(BridgeError::protocol(
+                "UI extensions require the versioned base UI capability.",
+            ));
         }
         let player = snapshot
             .player
             .as_ref()
             .ok_or_else(|| BridgeError::protocol("A world snapshot has no local player."))?;
+        if self.capabilities.contains(audio_authority::CAPABILITY)
+            != snapshot.audio_authority.is_some()
+        {
+            return Err(BridgeError::protocol(
+                "Audio authority requires exact capability/version negotiation; absence is not new history.",
+            ));
+        }
+        if let Some(authority) = &snapshot.audio_authority {
+            audio_authority::project(authority)?;
+        }
+        if let Some(scene) = &snapshot.scene {
+            scene::project(scene, player)?;
+        } else if self.capabilities.contains(audio_authority::CAPABILITY)
+            || self.capabilities.contains(gameplay_ui::AMOUNTS_CAPABILITY)
+            || self.capabilities.contains(gameplay_ui::RECOVERY_CAPABILITY)
+        {
+            return Err(BridgeError::protocol(
+                "The current server omitted its authoritative scene identity.",
+            ));
+        }
         let observer = self.capabilities.contains(observer::CAPABILITY);
         if observer && player.running.is_none() {
             return Err(BridgeError::protocol(
@@ -283,6 +314,16 @@ impl Bridge {
                 return Err(BridgeError::new(
                     "unsupported_capability",
                     "This server has not advertised game.ui.v1. No UI request was sent.",
+                ));
+            }
+            if let Some(capability) = ui_input::capability(&request)
+                && !self.capabilities.contains(capability)
+            {
+                return Err(BridgeError::new(
+                    "unsupported_capability",
+                    format!(
+                        "This server has not advertised {capability}. No substitute request was sent."
+                    ),
                 ));
             }
             if self
@@ -836,4 +877,80 @@ pub fn request_id(bytes: &[u8]) -> Result<String, BridgeError> {
     ClientMessage::decode(bytes)
         .map(|message| message.request_id)
         .map_err(|_| BridgeError::protocol("Invalid encoded request."))
+}
+
+#[cfg(test)]
+mod authority_contract_tests {
+    use super::*;
+
+    fn snapshot() -> game::WorldSnapshot {
+        game::WorldSnapshot {
+            player: Some(game::Player {
+                actor_id: "actor.fixture".into(),
+                region: "region.fixture".into(),
+                ..Default::default()
+            }),
+            scene: Some(game::CurrentScene {
+                region: "region.fixture".into(),
+                instance: None,
+                instance_template: None,
+            }),
+            audio_authority: Some(game::AudioAuthority {
+                version: 1,
+                profile: "source.audio.fixture".into(),
+                music: Some(game::MusicAuthority {
+                    history: game::MusicHistoryStatus::FromCreation as i32,
+                    tracked_from_tick: "0".into(),
+                    revision: "1".into(),
+                    complete: true,
+                    unlocked_groups: vec![62],
+                    tracks: vec![game::MusicUnlock {
+                        group: 62,
+                        status: game::MusicUnlockStatus::Unlocked as i32,
+                        confirmed_at_tick: Some("0".into()),
+                        rule: Some("source.62".into()),
+                    }],
+                }),
+                varps: vec![],
+            }),
+            ..Default::default()
+        }
+    }
+
+    #[test]
+    fn audio_authority_and_scene_are_validated_before_accepting_a_snapshot() {
+        let mut bridge = Bridge::default();
+        let mut world = snapshot();
+        assert!(bridge.validate_snapshot_contract(&world).is_err());
+        bridge
+            .capabilities
+            .insert(audio_authority::CAPABILITY.into());
+        bridge.validate_snapshot_contract(&world).unwrap();
+        world.audio_authority = None;
+        assert!(bridge.validate_snapshot_contract(&world).is_err());
+        world = snapshot();
+        world.scene = None;
+        assert!(bridge.validate_snapshot_contract(&world).is_err());
+        world = snapshot();
+        world.scene.as_mut().unwrap().region = "region.other".into();
+        assert!(bridge.validate_snapshot_contract(&world).is_err());
+    }
+
+    #[test]
+    fn current_extension_requests_refuse_unadvertised_capabilities_without_preparing_wire() {
+        let mut bridge = Bridge::default();
+        bridge.capabilities.insert(gameplay_ui::CAPABILITY.into());
+        for input in [
+            r#"{"kind":"production_select_all","menu_id":"menu.fixture","recipe":"recipe.fixture"}"#,
+            r#"{"kind":"bank_set_amount","amount":{"kind":"all"},"noted":false,"expected_bank_revision":"7"}"#,
+            r#"{"kind":"recovery_take","death":"death.fixture","storage":"grave","items":[{"id":"recovery_item.fixture","amount":{"kind":"all"}}]}"#,
+            r#"{"kind":"recovery_bank_all","records":[{"death":"death.fixture","items":["recovery_item.fixture"]}],"expected_bank_revision":"7"}"#,
+        ] {
+            let error = bridge
+                .submit("00000000-0000-4000-8000-000000000001", input)
+                .unwrap_err();
+            assert_eq!(error.kind, "unsupported_capability");
+            assert!(error.message.contains("has not advertised"));
+        }
+    }
 }

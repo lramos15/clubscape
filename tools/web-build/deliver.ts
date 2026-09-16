@@ -8,6 +8,7 @@ import { canonicalJson, publicPath } from "../../web/app/identity.ts";
 import { parseContentManifest } from "../../web/app/manifest.ts";
 import type { AssetRecord } from "../../web/app/manifest.ts";
 import { verifyReferenceIntegrity } from "./reference.ts";
+import { webOutputDirectory } from "./output.ts";
 
 export interface PublicFile { url: string; path: string; sha256: string; content_type: string }
 const digest = (bytes: Uint8Array | string): string => createHash("sha256").update(bytes).digest("hex");
@@ -76,7 +77,7 @@ function repoInput(value: string): string {
 }
 
 export async function deliver(): Promise<void> {
-  const dist = resolve(root, "web/dist");
+  const dist = webOutputDirectory();
   const referenceIntegrity = await verifyReferenceIntegrity();
   const contractBytes = await readFile(resolve(root, "spec/m1-benchmark-contract.json"));
   const contract = JSON.parse(contractBytes.toString("utf8")) as { visual_settings: Record<string, unknown> };

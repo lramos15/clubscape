@@ -5,6 +5,7 @@ import { fileURLToPath } from "node:url";
 import { join } from "node:path";
 import { createHash, randomUUID } from "node:crypto";
 import { collectBuild, publicAssetPath, publicFile } from "../deliver.ts";
+import { webOutputDirectory } from "../output.ts";
 
 test("delivery is explicit, hash-pinned and rejects private extensions/traversal/symlinks", async () => {
   const root = fileURLToPath(new URL("../../../.local/web-delivery-checks/", import.meta.url));
@@ -33,4 +34,20 @@ test("all packaging entrypoints use the same byte-preserving public gzip carrier
   assert.equal(publicAssetPath("/assets/ui/minimaps/dot-1.png"), "assets/ui/minimaps/dot-1.png");
   assert.throws(() => publicAssetPath("/assets/../private"));
   assert.throws(() => publicAssetPath("https://outside.example/asset.bin.gz"));
+});
+
+test("candidate output roots stay separate and cannot erase source trees or follow symlinks", async () => {
+  const name = `output-${randomUUID()}`;
+  const root = fileURLToPath(new URL("../../../", import.meta.url));
+  const parent = join(root, ".local/web-builds");
+  await mkdir(parent, { recursive: true });
+  const link = join(parent, name);
+  try {
+    assert.equal(webOutputDirectory(`.local/web-builds/${name}`), link);
+    for (const bad of [".", ".local", "web", "crates", ".local/web-builds/../source", "/tmp/output"]) {
+      assert.throws(() => webOutputDirectory(bad), /bounded/);
+    }
+    await symlink(root, link);
+    assert.throws(() => webOutputDirectory(`.local/web-builds/${name}`), /symlink/);
+  } finally { await rm(link, { force: true }); }
 });

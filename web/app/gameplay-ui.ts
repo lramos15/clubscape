@@ -1,5 +1,5 @@
-import { ACTOR_OBSERVER_CAPABILITY, GAMEPLAY_UI_CAPABILITY } from "../shared/contracts.ts";
-import type { ActorActionView, GameIntent, GameplayUiIntent, GameplayUiView, WorldView } from "../shared/contracts.ts";
+import { ACTOR_OBSERVER_CAPABILITY, GAMEPLAY_UI_CAPABILITY, UI_AMOUNTS_CAPABILITY, UI_RECOVERY_CAPABILITY } from "../shared/contracts.ts";
+import type { ActorActionView, GameIntent, GameplayUiIntent, GameplayUiView, RecoveryManagementView, UiAmount, UiPermission, WorldView } from "../shared/contracts.ts";
 import { AppError, invariant } from "./errors.ts";
 
 export interface GameplayUiSupport {
@@ -7,13 +7,16 @@ export interface GameplayUiSupport {
   available: boolean;
   reason: "not_advertised" | "wire_unavailable" | "view_missing" | null;
   message: string | null;
+  amounts: boolean;
+  recovery: boolean;
+  complete: boolean;
 }
 const requiredFields = [
   "activeTab", "activeInterface", "production", "reward", "confirmation", "document", "interfaces", "combatStyle", "combatStyles",
   "prayers", "spells", "equipment", "inventoryActions", "bank", "keptOnDeath", "recovery", "appearance", "publicChat",
 ] as const satisfies readonly (keyof GameplayUiView)[];
 
-function decimal(value: unknown, signed = false): void {
+export function decimal(value: unknown, signed = false): void {
   invariant(typeof value === "string" && (signed ? /^-?\d+$/ : /^\d+$/).test(value)
     && BigInt(value.startsWith("-") ? value.slice(1) : value) <= 18446744073709551615n,
   "Authoritative gameplay UI numeric values must remain exact decimal strings.", "protocol");
@@ -23,6 +26,7 @@ const bankKinds: ReadonlySet<string> = new Set([
   "bank_select_tab", "bank_create_tab", "bank_move", "bank_collapse_tab", "bank_set_insert",
   "bank_set_placeholders", "bank_release_placeholder", "bank_placeholder", "bank_deposit_equipment",
   "bank_withdraw_entry", "bank_set_options",
+  "bank_set_amount", "recovery_bank_all",
 ] satisfies GameplayUiIntent["kind"][]);
 
 export function isBankUiRequest(intent: GameIntent): intent is GameplayUiIntent {
@@ -32,10 +36,68 @@ export function isBankUiRequest(intent: GameIntent): intent is GameplayUiIntent 
 /** Capture the displayed bank revision before request queuing; never retarget an explicit retry. */
 export function captureUiBankRevision(intent: GameIntent, world: WorldView | null): GameIntent {
   if (!isBankUiRequest(intent)) return intent;
-  const revision = intent.expected_bank_revision ?? world?.ui?.bank?.revision;
+  const revision = intent.expected_bank_revision ?? (intent.kind === "recovery_bank_all"
+    ? world?.ui?.recovery?.management?.bankRevision : world?.ui?.bank?.revision);
   if (revision === undefined) throw new AppError("The source bank revision is unavailable; no bank control request was sent.", { kind: "state" });
   decimal(revision);
   return { ...intent, expected_bank_revision: revision };
+}
+
+export function validateUiAmount(value: UiAmount): void {
+  invariant(value && typeof value === "object" && !Array.isArray(value)
+    && ((value.kind === "all" && Object.keys(value).length === 1)
+      || (value.kind === "quantity" && Object.keys(value).length === 2 && Number.isSafeInteger(value.quantity)
+        && value.quantity > 0 && value.quantity <= 0xffffffff)),
+  "A source UI amount must be an explicit positive quantity or All, never a numeric sentinel.", "protocol");
+}
+
+function permission(value: UiPermission): void {
+  invariant(value && typeof value.allowed === "boolean"
+    && (value.allowed ? value.code === null && value.reason === null
+      : typeof value.code === "string" && value.code.length > 0 && typeof value.reason === "string" && value.reason.length > 0),
+  "The authoritative source permission is incomplete.", "protocol");
+}
+
+function recoveryManagement(value: RecoveryManagementView): void {
+  invariant(value && Array.isArray(value.panels) && Array.isArray(value.bankAllRecords),
+    "The recovery management projection is incomplete.", "protocol");
+  decimal(value.bankRevision);
+  permission(value.bankAll);
+  const panels = new Set<string>();
+  for (const panel of value.panels) {
+    invariant(panel && typeof panel.death === "string" && panel.death.length > 0
+      && ["grave", "death_office"].includes(panel.storage) && Array.isArray(panel.entries)
+      && !panels.has(`${panel.death}/${panel.storage}`), "Invalid recovery panel identity.", "protocol");
+    panels.add(`${panel.death}/${panel.storage}`);
+    decimal(panel.fullSelectionFee); permission(panel.takeAll);
+    const entries = new Set<string>();
+    for (const entry of panel.entries) {
+      invariant(entry && typeof entry.id === "string" && entry.id.length > 0 && !entries.has(entry.id)
+        && entry.item && typeof entry.item.id === "string" && Number.isSafeInteger(entry.item.quantity) && entry.item.quantity > 0
+        && [entry.inventoryCapacity, entry.bankCapacity].every((count) => Number.isSafeInteger(count) && count >= 0 && count <= 0xffffffff),
+      "Invalid identity-bound recovery entry/capacity.", "protocol");
+      entries.add(entry.id);
+      decimal(entry.unitFee); decimal(entry.fullStackFee); permission(entry.take); permission(entry.bank);
+    }
+  }
+  const records = new Set<string>();
+  for (const record of value.bankAllRecords) {
+    invariant(record && typeof record.death === "string" && record.death.length > 0 && !records.has(record.death)
+      && Array.isArray(record.items) && record.items.length > 0 && new Set(record.items).size === record.items.length
+      && record.items.every((id) => typeof id === "string" && id.length > 0),
+    "Invalid opaque recovery Bank-All record selection.", "protocol");
+    records.add(record.death);
+  }
+}
+
+function validateUiExtensions(view: GameplayUiView, capabilities: readonly string[]): void {
+  const amounts = capabilities.includes(UI_AMOUNTS_CAPABILITY), recovery = capabilities.includes(UI_RECOVERY_CAPABILITY);
+  invariant(view.production === null || view.production.recipes.every((recipe) => (recipe.all !== undefined) === amounts),
+    "UI amount negotiation requires each source recipe's explicit All permission.", "protocol");
+  invariant(view.bank === null || (view.bank.amountSelection !== undefined) === amounts,
+    "UI amount negotiation requires the source bank's semantic amount selection.", "protocol");
+  invariant(view.recovery === null || (view.recovery.management !== undefined) === recovery,
+    "UI recovery negotiation requires the complete management projection.", "protocol");
 }
 
 /** Validates the published shared view boundary, without deriving permissions, prices or defaults. */
@@ -67,6 +129,7 @@ export function validateGameplayUi(view: GameplayUiView): void {
   if (view.confirmation?.credit !== null && view.confirmation !== null) decimal(view.confirmation.credit);
   if (view.bank !== null) {
     decimal(view.bank.revision);
+    if (view.bank.amountSelection !== undefined) validateUiAmount(view.bank.amountSelection);
     invariant(Array.isArray(view.bank.entries) && new Set(view.bank.entries.map((entry) => entry.id)).size === view.bank.entries.length
       && view.bank.entries.every((entry) => entry.placeholder === (entry.value === null)
         && (entry.value === null || entry.value.id === entry.item)),
@@ -76,7 +139,10 @@ export function validateGameplayUi(view: GameplayUiView): void {
     invariant(view.keptOnDeath.scope === "normal_unsafe_non_pvp", "Unsupported authoritative death-preview scope.", "protocol");
     decimal(view.keptOnDeath.fullGraveFee); decimal(view.keptOnDeath.fullOfficeFee); decimal(view.keptOnDeath.valueRevision);
   }
-  if (view.recovery !== null) decimal(view.recovery.cofferBalance);
+  if (view.recovery !== null) {
+    decimal(view.recovery.cofferBalance);
+    if (view.recovery.management !== undefined) recoveryManagement(view.recovery.management);
+  }
   if (view.production !== null) {
     invariant(Object.hasOwn(view.production, "target") && view.production.target !== undefined,
       "The authoritative production target field is missing; inventory-only production must carry explicit null.", "protocol");
@@ -85,6 +151,8 @@ export function validateGameplayUi(view: GameplayUiView): void {
       && ((target.kind === "spawn" && typeof target.spawn === "string" && target.spawn.length > 0)
         || (target.kind === "temporary_object" && typeof target.object === "string" && target.object.length > 0))),
     "The authoritative production target is neither null nor a typed world target.", "protocol");
+    invariant(Array.isArray(view.production.recipes), "Missing authoritative production choices.", "protocol");
+    for (const recipe of view.production.recipes) if (recipe.all !== undefined) permission(recipe.all);
   }
 }
 
@@ -116,6 +184,8 @@ export function gameplayUiSupport(
   capabilities: readonly string[], wireSupported: boolean, world: WorldView | null,
 ): Readonly<GameplayUiSupport> {
   const advertised = capabilities.includes(GAMEPLAY_UI_CAPABILITY);
+  const amounts = capabilities.includes(UI_AMOUNTS_CAPABILITY), recovery = capabilities.includes(UI_RECOVERY_CAPABILITY);
+  invariant(advertised || (!amounts && !recovery), "UI extensions require the versioned base UI capability.", "protocol");
   if (world?.ui !== undefined) {
     if (!advertised || !wireSupported) {
       throw new AppError("An authoritative UI view was returned without negotiated game.ui.v1 and a supported generated wire decoder.", {
@@ -123,6 +193,7 @@ export function gameplayUiSupport(
       });
     }
     validateGameplayUi(world.ui);
+    validateUiExtensions(world.ui, capabilities);
   }
   const reason = !advertised ? "not_advertised" : !wireSupported ? "wire_unavailable" : world?.ui === undefined ? "view_missing" : null;
   const message = reason === "not_advertised"
@@ -132,5 +203,6 @@ export function gameplayUiSupport(
       : reason === "view_missing"
         ? "The negotiated game.ui.v1 server did not return WorldView.ui version 1."
         : null;
-  return Object.freeze({ capability: GAMEPLAY_UI_CAPABILITY, available: reason === null, reason, message });
+  return Object.freeze({ capability: GAMEPLAY_UI_CAPABILITY, available: reason === null, reason, message,
+    amounts, recovery, complete: reason === null && amounts && recovery });
 }

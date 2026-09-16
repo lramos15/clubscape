@@ -7,8 +7,102 @@ use serde_json::Value;
 
 use crate::{BridgeError, gameplay_ui, ui_input};
 
+pub(crate) fn validate_capabilities(
+    value: &game::GameplayUiView,
+    capabilities: &std::collections::BTreeSet<String>,
+) -> Result<(), BridgeError> {
+    let amounts = capabilities.contains(gameplay_ui::AMOUNTS_CAPABILITY);
+    let recovery = capabilities.contains(gameplay_ui::RECOVERY_CAPABILITY);
+    if value.production.as_ref().is_some_and(|menu| {
+        menu.recipes
+            .iter()
+            .any(|recipe| recipe.all.is_some() != amounts)
+    }) || value
+        .bank
+        .as_ref()
+        .is_some_and(|bank| bank.amount_selection.is_some() != amounts)
+        || value
+            .recovery
+            .as_ref()
+            .is_some_and(|controls| controls.management.is_some() != recovery)
+    {
+        return Err(BridgeError::protocol(
+            "Negotiated UI amount/recovery capabilities require their complete exact projections.",
+        ));
+    }
+    Ok(())
+}
+
 fn invalid() -> BridgeError {
     BridgeError::protocol("The versioned gameplay UI wire view is incomplete or invalid.")
+}
+
+fn amount(value: &game::UiAmount) -> Result<types::UiAmount, BridgeError> {
+    Ok(match required(value.selection.as_ref())? {
+        game::ui_amount::Selection::Quantity(value) => types::UiAmount::Quantity {
+            quantity: types::Quantity::new(*value).map_err(|_| invalid())?,
+        },
+        game::ui_amount::Selection::All(_) => types::UiAmount::All {},
+    })
+}
+
+fn storage(value: i32) -> Result<types::RecoveryStorage, BridgeError> {
+    match game::RecoveryStorage::try_from(value).map_err(|_| invalid())? {
+        game::RecoveryStorage::Grave => Ok(types::RecoveryStorage::Grave),
+        game::RecoveryStorage::DeathOffice => Ok(types::RecoveryStorage::DeathOffice),
+        game::RecoveryStorage::RecoveryUnspecified => Err(invalid()),
+    }
+}
+
+fn recovery_management(
+    value: &game::UiRecoveryManagement,
+) -> Result<types::RecoveryManagementView, BridgeError> {
+    Ok(types::RecoveryManagementView {
+        bank_revision: value.bank_revision.clone(),
+        panels: value
+            .panels
+            .iter()
+            .map(|panel| {
+                Ok(types::RecoveryPanelControlView {
+                    death: identity(&panel.death)?,
+                    storage: storage(panel.storage)?,
+                    entries: panel
+                        .entries
+                        .iter()
+                        .map(|entry| {
+                            Ok(types::RecoveryEntryControlView {
+                                id: identity(&entry.id)?,
+                                item: item(required(entry.item.as_ref())?)?,
+                                unit_fee: entry.unit_fee.clone(),
+                                full_stack_fee: entry.full_stack_fee.clone(),
+                                inventory_capacity: entry.inventory_capacity,
+                                bank_capacity: entry.bank_capacity,
+                                take: permission(entry.take.as_ref())?,
+                                bank: permission(entry.bank.as_ref())?,
+                            })
+                        })
+                        .collect::<Result<_, BridgeError>>()?,
+                    full_selection_fee: panel.full_selection_fee.clone(),
+                    take_all: permission(panel.take_all.as_ref())?,
+                })
+            })
+            .collect::<Result<_, BridgeError>>()?,
+        bank_all: permission(value.bank_all.as_ref())?,
+        bank_all_records: value
+            .bank_all_records
+            .iter()
+            .map(|record| {
+                Ok(types::RecoveryRecordSelection {
+                    death: identity(&record.death)?,
+                    items: record
+                        .items
+                        .iter()
+                        .map(|id| identity(id))
+                        .collect::<Result<_, _>>()?,
+                })
+            })
+            .collect::<Result<_, BridgeError>>()?,
+    })
 }
 
 fn required<T>(value: Option<&T>) -> Result<&T, BridgeError> {
@@ -201,6 +295,11 @@ pub(crate) fn decode(value: &game::GameplayUiView) -> Result<Value, BridgeError>
                                 outputs: items(&recipe.outputs)?,
                                 single: permission(recipe.single.as_ref())?,
                                 make_x: permission(recipe.make_x.as_ref())?,
+                                all: recipe
+                                    .all
+                                    .as_ref()
+                                    .map(|value| permission(Some(value)))
+                                    .transpose()?,
                             })
                         })
                         .collect::<Result<_, BridgeError>>()?,
@@ -339,6 +438,7 @@ pub(crate) fn decode(value: &game::GameplayUiView) -> Result<Value, BridgeError>
                     insert_mode: bank.insert_mode,
                     placeholders: bank.placeholders,
                     amount: bank.amount,
+                    amount_selection: bank.amount_selection.as_ref().map(amount).transpose()?,
                     noted: bank.noted,
                     tabs: bank
                         .tabs
@@ -401,6 +501,11 @@ pub(crate) fn decode(value: &game::GameplayUiView) -> Result<Value, BridgeError>
                         .iter()
                         .map(inventory)
                         .collect::<Result<_, _>>()?,
+                    management: recovery
+                        .management
+                        .as_ref()
+                        .map(recovery_management)
+                        .transpose()?,
                 })
             })
             .transpose()?,
@@ -489,6 +594,7 @@ mod tests {
                     outputs: vec![item()],
                     single: allowed(),
                     make_x: allowed(),
+                    all: None,
                 }],
             }),
             reward: Some(game::UiReward {
@@ -569,6 +675,7 @@ mod tests {
                 insert_mode: true,
                 placeholders: true,
                 amount: 5,
+                amount_selection: None,
                 noted: false,
                 tabs: vec![game::UiBankTab {
                     tab: 1,
@@ -609,6 +716,7 @@ mod tests {
                 discard: allowed(),
                 coffer_offer: allowed(),
                 coffer_items: vec![inventory()],
+                management: None,
             }),
             appearance: Some(game::UiAppearance {
                 choices: vec![game::UiAppearanceParameter {
@@ -706,5 +814,84 @@ mod tests {
                 amount: 4,
             });
         assert!(decode(&value).is_err());
+    }
+
+    #[test]
+    fn semantic_amount_and_recovery_controls_keep_distinct_fees_capacities_and_opaque_selections() {
+        let mut original = fixture();
+        original.production.as_mut().unwrap().recipes[0].all = allowed();
+        original.bank.as_mut().unwrap().amount_selection = Some(game::UiAmount {
+            selection: Some(game::ui_amount::Selection::All(game::Empty {})),
+        });
+        let denied = Some(game::Permission {
+            allowed: false,
+            denial: Some(game::RuleDenial {
+                code: game::RuleErrorCode::Unavailable as i32,
+                message: "Source normal-grave Bank-All permission is not verified.".into(),
+            }),
+        });
+        let mut stack = item();
+        stack.stack.as_mut().unwrap().quantity = 7;
+        original.recovery.as_mut().unwrap().management = Some(game::UiRecoveryManagement {
+            bank_revision: "9007199254742993".into(),
+            panels: vec![game::UiRecoveryPanelControl {
+                death: "death.fixture".into(),
+                storage: game::RecoveryStorage::Grave as i32,
+                entries: vec![game::UiRecoveryEntryControl {
+                    id: "recovery_item.fixture".into(),
+                    item: Some(stack),
+                    unit_fee: "3".into(),
+                    full_stack_fee: "17".into(),
+                    inventory_capacity: 3,
+                    bank_capacity: 2,
+                    take: allowed(),
+                    bank: denied.clone(),
+                }],
+                full_selection_fee: u64::MAX.to_string(),
+                take_all: allowed(),
+            }],
+            bank_all: denied,
+            bank_all_records: vec![game::UiRecoveryRecordSelection {
+                death: "death.fixture".into(),
+                items: vec!["recovery_item.fixture".into()],
+            }],
+        });
+        let capabilities = [
+            gameplay_ui::CAPABILITY,
+            gameplay_ui::AMOUNTS_CAPABILITY,
+            gameplay_ui::RECOVERY_CAPABILITY,
+        ]
+        .into_iter()
+        .map(str::to_owned)
+        .collect();
+        validate_capabilities(&original, &capabilities).unwrap();
+        let bytes = original.encode_to_vec();
+        let value = decode(&game::GameplayUiView::decode(bytes.as_slice()).unwrap()).unwrap();
+        assert_eq!(value["bank"]["amountSelection"], json!({"kind":"all"}));
+        assert_eq!(
+            value["bank"]["amount"], 5,
+            "The legacy quantity is not an All sentinel."
+        );
+        assert_eq!(value["production"]["recipes"][0]["all"]["allowed"], true);
+        let management = &value["recovery"]["management"];
+        assert_eq!(management["bankRevision"], "9007199254742993");
+        assert_eq!(management["panels"][0]["entries"][0]["unitFee"], "3");
+        assert_eq!(management["panels"][0]["entries"][0]["fullStackFee"], "17");
+        assert_eq!(
+            management["panels"][0]["entries"][0]["inventoryCapacity"],
+            3
+        );
+        assert_eq!(management["panels"][0]["entries"][0]["bankCapacity"], 2);
+        assert_eq!(
+            management["panels"][0]["fullSelectionFee"],
+            u64::MAX.to_string()
+        );
+        assert_eq!(management["bankAll"]["allowed"], false);
+        assert_eq!(
+            management["bankAllRecords"],
+            json!([{"death":"death.fixture","items":["recovery_item.fixture"]}])
+        );
+        original.bank.as_mut().unwrap().amount_selection = None;
+        assert!(validate_capabilities(&original, &capabilities).is_err());
     }
 }

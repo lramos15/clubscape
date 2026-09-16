@@ -154,6 +154,58 @@ test("valid authority cannot activate the UI's old mute/playlist implementation 
   await source.dispose();
 });
 
+test("the real complete source authority drives native binding without an inferred unlock producer", async () => {
+  const runtime = new FixturePreferenceRuntime(), ui = fixtureUi(runtime), base = audioFixtureWorld();
+  const world = {
+    ...base,
+    audioAuthority: {
+      version: 1 as const, profile: "source.audio.fixture",
+      music: {
+        history: "from_creation" as const, trackedFromTick: "0", revision: "2", complete: true,
+        unlockedGroups: [62, 76],
+        tracks: [62, 76].map((group) => ({ group, status: "unlocked" as const, confirmedAtTick: "0", rule: `source.${group}` })),
+      },
+      varps: [],
+    },
+  };
+  const source = new PlayerAudioComposition(store(), runtime, ui.ui, {}, (error) => { throw error; });
+  await source.prepare(world);
+  source.events(world, []);
+  assert.equal(source.observe().preferences.phase, "ready");
+  assert.equal(source.observe().sourceUnlocksSupplied, true);
+  assert.equal(source.observe().sourceAuthority, "complete");
+  assert.deepEqual(runtime.binding?.unlockedGroups, [62, 76]);
+  await source.dispose();
+});
+
+test("unknown legacy source history cannot use client selection or a legacy producer as an unlock grant", async () => {
+  const runtime = new FixturePreferenceRuntime(), ui = fixtureUi(runtime), base = audioFixtureWorld();
+  const errors: AppError[] = [];
+  const world = {
+    ...base,
+    audioAuthority: {
+      version: 1 as const, profile: "source.audio.fixture",
+      music: {
+        history: "legacy_untracked" as const, trackedFromTick: "20", revision: "1", complete: false,
+        unlockedGroups: [62],
+        tracks: [
+          { group: 62, status: "unlocked" as const, confirmedAtTick: "20", rule: "source.62" },
+          { group: 76, status: "unknown" as const, confirmedAtTick: null, rule: null },
+        ],
+      },
+      varps: [],
+    },
+  };
+  const source = new PlayerAudioComposition(store(), runtime, ui.ui, { unlockedGroups: () => [62, 76] }, (error) => errors.push(error));
+  await source.prepare(world); source.events(world, []);
+  assert.equal(source.observe().preferences.errorId, "audio.authority.history_unknown");
+  assert.equal(source.observe().sourceAuthority, "partial_history");
+  assert.equal(world.audioAuthority.music.tracks[1]!.status, "unknown");
+  assert(!runtime.calls.some((call) => call.kind === "world" || call.kind === "apply"));
+  assert.equal(errors.length, 1);
+  await source.dispose();
+});
+
 test("the earlier source-music producer supplies only actual unlocks, never guessed saved slots or native flags", async () => {
   const runtime = new FixturePreferenceRuntime(), world = audioFixtureWorld(), ui = fixtureUi(runtime);
   const record = audioFixtureRecord(21);

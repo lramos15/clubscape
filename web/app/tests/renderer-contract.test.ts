@@ -111,6 +111,10 @@ test("the legacy placement flag is adapted only when actual completed block-asse
   assert.equal(raw.blocks, false, "the native observation remains intact");
   assert.throws(() => sourceScenePlacement({ ...state, loadedSquares: [] }, raw), /disagrees/);
   assert.throws(() => sourceScenePlacement(state, { ...raw, baseX: 3056 }), /disagrees/);
+  assert.deepEqual(sourceScenePlacement({ ...state, sceneId: `${state.sceneId}#instance_template.death.office` }, raw,
+    "instance_template.death.office"), { ...raw, blocks: true });
+  assert.throws(() => sourceScenePlacement({ ...state, sceneId: `${state.sceneId}#instance_template.other` }, raw,
+    "instance_template.death.office"), /disagrees/);
   assert.equal(sourceScenePlacement({ ...state, sceneBase: null, sceneId: "fixture" }, raw), raw);
 });
 

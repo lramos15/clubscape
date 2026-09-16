@@ -1,11 +1,11 @@
 import type { RenderAssetManifest, RendererDiagnostics, ScenePlacement } from "../renderer/src/index.ts";
 import { invariant } from "./errors.ts";
 
-export function sourceScenePlacement(state: RendererDiagnostics, raw: ScenePlacement | null): ScenePlacement | null {
+export function sourceScenePlacement(state: RendererDiagnostics, raw: ScenePlacement | null, instanceTemplate: string | null = null): ScenePlacement | null {
   if (state.sceneBase === null) return raw;
   const { x, y } = state.sceneBase;
   invariant(raw !== null && raw.baseX === x && raw.baseY === y && raw.sizeTiles === 104
-    && state.sceneId === `blocks@${x},${y}` && state.loadedSquares.length > 0,
+    && state.sceneId === `blocks@${x},${y}${instanceTemplate === null ? "" : `#${instanceTemplate}`}` && state.loadedSquares.length > 0,
   "Native scene placement disagrees with the completed streamed-scene assembly.", "renderer");
   // The relayed WASM tests scene_id().is_none() for this flag, although assembled scenes
   // have a blocks@ ID. Use the public adapter's actual completed-assembly diagnostics.

@@ -45,6 +45,15 @@ test("opaque instance identifiers, matching region and tile never imply an unpro
   assert.throws(() => rendererInstanceLayout(audioFixtureWorld(), definitions, template), /ordinary-world/);
 });
 
+test("the real scene projection supplies the active template and cannot be overridden by an adapter", () => {
+  const current = world();
+  const observed = { ...current, scene: { region, instance: current.player.instance, instanceTemplate: template } };
+  const rendered = rendererWorldView(observed, layouts());
+  assert.equal(rendered.instanceLayout?.template, template);
+  assert.equal(rendered.player.instance, "instance.opaque.fixture");
+  assert.throws(() => rendererWorldView(observed, layouts(), "instance_template.other"), /cannot override/);
+});
+
 test("unsupported turns, chunk geometry and mismatched actor locations fail explicitly instead of drawing a normal scene", () => {
   const definitions = layouts(), current = world();
   definitions[template]!.chunks[0]!.quarterTurns = 1;

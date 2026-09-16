@@ -2,7 +2,7 @@ import { isDeepStrictEqual } from "node:util";
 import type { RenderAssetManifest } from "../../web/renderer/src/index.ts";
 import { publicPath } from "../../web/app/identity.ts";
 
-export const DEFAULT_RENDER_INPUTS = ".local/render-inputs-2d228d79";
+export const DEFAULT_RENDER_INPUTS = ".local/render-inputs-e635ed1d";
 
 export function renderRuntimeFiles(manifest: RenderAssetManifest): {
   common: string[]; scenes: Map<string, string[]>; blocks: Map<number, string[]>; files: string[];

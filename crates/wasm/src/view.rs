@@ -1,7 +1,9 @@
 use clubscape_protocol::game;
 use serde_json::{Value, json};
 
-use crate::{BridgeError, catalog::DisplayCatalog, context, observer, ui_wire};
+use crate::{
+    BridgeError, audio_authority, catalog::DisplayCatalog, context, observer, scene, ui_wire,
+};
 
 fn missing() -> BridgeError {
     BridgeError::protocol("The public state is missing required source display metadata.")
@@ -277,6 +279,12 @@ pub(crate) fn world(
         )?);
     if let Some(ui) = &value.ui {
         result["ui"] = ui_wire::decode(ui)?;
+    }
+    if let Some(scene) = &value.scene {
+        result["scene"] = scene::project(scene, player)?;
+    }
+    if let Some(authority) = &value.audio_authority {
+        result["audioAuthority"] = audio_authority::project(authority)?;
     }
     Ok(result)
 }
