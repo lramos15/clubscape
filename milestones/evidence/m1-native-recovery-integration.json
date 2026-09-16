@@ -52,6 +52,28 @@
     "source_identity": "Exact5b embedded in each actual ELF; no decoded old5e payload.",
     "count_qualification": "12 final fixture checks and20 direct source checks are overlapping subsets, not additions to402. The browser cases are controlled components and the PostgreSQL case uses synthetic content, not a saved-account journey."
   },
+  "prepared_source_delivery": {
+    "directory": ".worktrees/m1-ui-recovery/.local/recovery-source-bundle",
+    "world_id": "7b7dc1aa-5d0c-46b1-aa97-7afc1d26b457",
+    "raw_sha256": "5b3ba5f108ed3fec8f8b5f7f49b429c059e21b6f192ec99a0569616e08330059",
+    "content_revision": "m1.source-backed.v4.bdbf8a3788b842be",
+    "public_assets": 7894,
+    "public_files_individually_hash_verified": 7895,
+    "public_bytes": 216569244,
+    "descriptor_bytes": 406966,
+    "descriptor_byte_limit": 524288,
+    "descriptor_sha256": "f1dc98320d5b7e668715d03ef820f20138edab3ad0cdf5fbf010bb11be88dcaf",
+    "content_manifest_sha256": "996434524e3b711b70590cbef04f4670f23d5d20f32dd9a98a42d11622ff252a",
+    "source_pin_archive": "milestones/evidence/m1-native-recovery/source-run-pin.json.gz",
+    "source_pin_archive_sha256": "7712192ecc27949108238667eea1492fbaf75b889d5161421b08466d427ea4dd",
+    "render_inputs_archive": "milestones/evidence/m1-native-recovery/render-inputs.json.gz",
+    "render_inputs_archive_sha256": "f30f2e4a4b3b1b08eb639334047f4d412ffbac9f1b86565e2f94e6198bc563d9",
+    "published_render_package_sha256": "880924edb755f3613a58d60b62d91c7507da968071998d2aaef91b77d7739b49",
+    "render_package_members": 183,
+    "render_squares": 61,
+    "original_exporter_invoked": false,
+    "qualification": "New local source delivery only, not a running world/account, migration or browser journey. The descriptor is within the byte limit; normal source camera and presentation remain unaccepted."
+  },
   "integration_findings_repaired": [
     "Missing production server context initializer.",
     "Per-entry7/294 incorrectly standing in for the original selected-type35/1470 caption.",
