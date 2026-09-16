@@ -6,6 +6,7 @@
   "base_revision": "2f3704d7132e02e15bf5c306549abcd3ccd21962",
   "worktree": ".worktrees/m1-audio-composed",
   "root_code_integrated": false,
+  "later_successful_integration": "milestones/evidence/m1-audio-readiness-integration.json",
   "worker_record_archive": {
     "path": "milestones/evidence/m1-audio-composed/candidate66c6d87.json.gz",
     "sha256": "17c1dd95401f28e43de6f2b8252874aee8f217628a4c68c650ce16b96f5e272c",

@@ -1,0 +1,66 @@
+{
+  "schema_version": 1,
+  "milestone": "m1-starter-journey",
+  "result": "source2266_ready_and_cold_deadlines_verified_and_integrated",
+  "commit_mapping": [
+    {"owned": "66c6d873603b423f856549363ca6acc4f282c564", "integrated": "2a7727d5f45fdf772bd35f8717c4cae79a46cfa3"},
+    {"owned": "6557c57e9edf1628f8afa448d928d8157a734e15", "integrated": "693d57306b25d8ab27fb613a904e0c2074c0f170"},
+    {"owned": "b5a46f344397c0e768c4651ee5df5214f7d14bbb", "integrated": "7a01cf29e467a89da800c0848cae2c40b321a874"}
+  ],
+  "subtrees_match_tested_candidate": ["web/audio", "web/app/tests/real-player-audio.ts"],
+  "record": {
+    "path": "web/audio/evidence/control-readiness.json",
+    "sha256": "8dddf3ce7cf2d165dfacc98f1e29e99886b18d64f34fb0915b22cdefbe9b396b"
+  },
+  "implementation": [
+    "The existing async audio factory verifies, decodes and retains only the active source2266 input before returning a usable handle.",
+    "Required-input pending/failure/disposal is explicit; failed initialization rejects and cleans the native graph/context/cache.",
+    "Control enqueue uses the already-verified buffer synchronously, retaining requestedAt/dueAt and native volume/mute ordering.",
+    "Ready zero-delay non-positional reservations use unchanged deadlines across the measured coarse device cursor without advancing the logical source queue.",
+    "Trusted resume ordering, original queue capacity/loading grace, original waveform/gain and source authority stay unchanged."
+  ],
+  "normal_production_build": {
+    "implementation_committed_before_build": "6557c57e9edf1628f8afa448d928d8157a734e15",
+    "artifact_sha256": "c05aa1175432ac6c97ac181c2ee6b58ed1c539c574a3abe517a76ddbbd4ba4e2",
+    "protocol_renderer_typecheck_vite_delivery_all_executed": true,
+    "worktree_local_cargo_target": true,
+    "root_ui_not_yet_integrated": true
+  },
+  "bounded_cold_runs": {
+    "authorized": 2,
+    "used": 2,
+    "additional_parent_browser_runs": 0,
+    "old_failed_three_run_evidence_preserved": true,
+    "runs": [
+      {"number": 1, "result": "passed", "source_ui_checks": 21, "native_storage_contracts": 6, "source2266_dispatches": 18, "loading_timing_clock_expiry_and_actual_start_overruns": 0, "ready_before_first_enqueue_ms": 592, "natural_pcm_comparisons": 14},
+      {"number": 2, "result": "passed", "source_ui_checks": 21, "native_storage_contracts": 6, "source2266_dispatches": 18, "loading_timing_clock_expiry_and_actual_start_overruns": 0, "ready_before_first_enqueue_ms": 530.8150000572205, "natural_pcm_comparisons": 14}
+    ],
+    "unchanged_tolerance_ms": 20.045351473922903,
+    "parent_reverified_both_full_report_hashes": true,
+    "owned_services_cleaned": true,
+    "recorded_camera_not_normal_entry": "tutorial-starting-house",
+    "pcm_qualification": "Actual natural post-gain output compared to the submitted decoded buffer, not a new independent original-server trace or speaker acceptance."
+  },
+  "parent_validation": {
+    "candidate_audio_units": 56,
+    "candidate_unit_log_sha256": "f437491bcb7d1f7093003082622780c97e5697370d7b9a8b4cbb2926278f3887",
+    "candidate_full_web_tests": 249,
+    "candidate_web_log_sha256": "3894606a8723c7d94b313780e3386af21fba0899a618da3b653d9ba2854a150a",
+    "candidate_production_typecheck": "passed",
+    "root_audio_and_consumer_tests": 103,
+    "root_log_sha256": "88d2a8af73152b511bddac8efbd5f37e81ad2d8bdc0a6c3c75d79d19ebdea9e3",
+    "counts_overlap": true,
+    "source_audio_files_unchanged": 275,
+    "worker_frozen_hash_checks": 1307,
+    "worker_reference_tests": 85
+  },
+  "remaining": [
+    "Complete live source spatial/audio metadata and full player-journey cue timing",
+    "Root current UI/recovery/model and normal-camera integration",
+    "Frozen workload performance, Mac Chrome/Edge, physical speakers and owner acceptance"
+  ],
+  "full_m1_journey_verified": false,
+  "presentation_accepted": false,
+  "milestone_accepted": false,
+  "later_milestone_authorized": false
+}

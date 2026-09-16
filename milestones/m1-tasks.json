@@ -6,16 +6,16 @@
     "effective_limit": 25,
     "admissions_open": true,
     "active": [
-      {"id": "director", "task": "M1-COOK-CONTINUATION"},
+      {"id": "director", "task": "M1-FLEET-CONTRACTS"},
       {"id": "bb7f85f7-096a-4377-80cb-3e7eae196c6b", "task": "M1-BROWSER-RENDERER"},
       {"id": "78d01af9-70a4-4b02-8339-6a61eb377374", "task": "M1-BROWSER-SHELL"},
-      {"id": "cdfad64d-9162-439f-a525-58e1114dd7f4", "task": "M1-AUDIO-CONTROL-READINESS"},
       {"id": "e6925772-df1f-4ff7-9efc-219f800a5a14", "task": "M1-NATIVE-CAMERA-REVIEW"},
       {"id": "2766e089-44e5-4a1d-974e-7b03ad9c269d", "task": "M1-NATIVE-RECOVERY-CONTRACT"}
     ],
     "reserved": [],
     "queued": [],
     "parked": [
+      {"id": "cdfad64d-9162-439f-a525-58e1114dd7f4", "reason": "Completed56audio units and two fresh full-source cold checks with18/18on-time cues each. Owned66c6d87/6557c57/b5a46f3 integrate2a7727d/693d573/7a01cf2; parent249candidateweb and103rootaudio-consumer checks pass. Both bounded allowances exhausted, GPU window released. Full journey/spatial/speaker/Mac/frozen performance/owner gates remain separate; no automatic resumption."},
       {"id": "ac0f0856-44af-445b-bd90-6db7a1f4fc74", "reason": "Native camera2401e98 completed in owned crates/camera plus local-member lock entry. Parent32native tests, Clippy, WASM check and byte-identical14/354 conformance pass. Independent review and actual renderer/WASM/browser providers remain separate; no automatic consumer edits or resumption."},
       {"id": "81ac9884-4f39-4f27-b516-6e9a42b09b51", "reason": "Turn24 returned empty with HEAD9289baf unchanged, no pending code, no cook attempt journal or new run evidence. Director takes over a913bb7's UNUSED one-restore allowance in the same protected source5e worktree, with a new isolated branch; no automatic resumption or duplicate allowance. Assignment record milestones/evidence/m1-cook-director-takeover.json."},
       {"id": "cc864d7a-37cc-4869-a7b4-d484d01cede5", "reason": "Latest turns delivered no current-contract completion. Four published UI commits and pending native-preference work are preserved unchanged in m1-ui; Director takes the bounded UI integration/current-contract/native-port completion directly. No automatic resumption or duplicate UI edits."},
@@ -33,6 +33,24 @@
     "usage_accounting": "milestones/evidence/m1-usage-snapshot.json records the available delayed session snapshot; final project-wide credits/currency are unavailable."
   },
   "tasks": [
+    {
+      "id": "M1-WATER-FILL-CLOSURE",
+      "goal": "Close the absent source mainland water-filling dependency and correct the sink approach before the remaining range/persistence proof.",
+      "status": "BLOCKED",
+      "specs": ["milestones/evidence/m1-cook-reward-frontier.json", "research/journey-rules/cooks-assistant.json", "tools/m1-content/README.md", "content/m1/README.md"],
+      "dependencies": ["M1-SOURCE-GROUND-CONTACT"],
+      "allowed_paths": ["tools/m1-content/**", "research/m1-bindings/**", "research/water-fill/**", "content/m1/**", "tools/simulator/src/journey/plan.rs", "tools/simulator/src/journey/source.rs"],
+      "forbidden_paths": ["prompt.md", "assets/source/**", "assets/manifests/**", "research/reference-pack/**", "tools/reference-pack/**", "spec/art-style.md", "spec/interface-parity.md", "spec/adaptations.md", ".local/journey-checkpoints/**"],
+      "outputs": ["Qualified source water-fill behavior/data and repeatable content validation", "Source-derived item-use contact instead of a guessed east offset", "Reviewed explicit source-upgrade/continuation plan retaining the same account and all old checkpoints"],
+      "validation_commands": ["python3 tools/m1-content/validate.py --repeat", "cargo test --locked -p clubscape-sim --all-features"],
+      "test_requirements": ["Do not patch missing data into a supposedly unchanged5e artifact or silently repin the saved world", "No banked starter input substitution, source checkpoint rewrite, field setter or invented recipe/animation/timing", "Preserve completed Cook reward/duplicate evidence and exact owned state/RNG/receipts through any separately approved fenced upgrade", "No additional archive restore under consumed a913bb7"],
+      "acceptance": ["A source-grounded range input path and safe explicit continuation are available; do not count route-only fixes or content compilation as actual range/persistence evidence"],
+      "reserved_namespaces": [],
+      "source_notes": ["Actual52f32d29b5dc4f1a has already completed Cook, received300CookingXP/1QP and verified the same reward receipt duplicate. It owns newly acquired flour and bucket, but the selected sink has no interactions and neither5e nor5b has a water-bucket producer; no mainland shrimp source or retained raw range input exists. A content revision is required, not merely navigation.", "Awaiting explicit decision on a narrowly validated source-data upgrade of the same preserved world. No implementation worker or migration is admitted by this blocked task."],
+      "parity_entries": [],
+      "adaptations": [],
+      "evidence": ["milestones/evidence/m1-cook-reward-frontier.json"]
+    },
     {
       "id": "M1-NATIVE-CAMERA-REVIEW",
       "goal": "Independently review the complete native camera implementation and original conformance oracles before consumer integration.",
@@ -72,7 +90,7 @@
     {
       "id": "M1-AUDIO-CONTROL-READINESS",
       "goal": "Make the actual active source2266 control input ready before its first native deadline, closing the retained cold-use loading/timing failure without changing source policy.",
-      "status": "IMPLEMENTING",
+      "status": "DONE",
       "specs": ["milestones/evidence/m1-audio-control-readiness-authorization.json", "milestones/evidence/m1-audio-composed-review.json", "web/audio/composed-timing.md", "web/audio/evidence/composed-timing.json"],
       "dependencies": ["M1-SHELL-INTEGRATION"],
       "allowed_paths": ["web/audio/**", "web/app/tests/real-player-audio.ts", "web/app/tests/real-audio.ts"],
@@ -85,12 +103,12 @@
       "source_notes": ["Candidate66c6d87 corrects ready-cue coarse-device scheduling without advancing the native queue, but final old-budget run has one60ms-late cold2266 after62.53ms enqueue-to-decode. Old3/3 budget is exhausted; new2-run admission is separate. Parent48audio units/typecheck pass; no code has been integrated into root yet."],
       "parity_entries": [],
       "adaptations": [],
-      "evidence": []
+      "evidence": ["Owned6557c57e9edf1628f8afa448d928d8157a734e15+b5a46f344397c0e768c4651ee5df5214f7d14bbb complete the prior66c6d87 scheduling candidate. Full normal artifactc05aa1175432ac6c97ac181c2ee6b58ed1c539c574a3abe517a76ddbbd4ba4e2 was built after the implementation commit. Both2/2cold whole-source invocations pass21source/6storage checks and18cue dispatches with0loading/timing/clock/expiry/start overruns; source2266 ready592ms and530.815ms before first enqueue.", "Integrated2a7727d/693d573/7a01cf2 matches the tested audio subtrees. Parent56audio/249candidateweb/103rootaudio-consumer checks pass (overlapping). All275source files/1307frozen hashes remain unchanged, oldfailedruns retained, no extra browser attempt. Evidence milestones/evidence/m1-audio-readiness-integration.json; complete spatial/gameplay/speaker/Mac/owner gates remain open."]
     },
     {
       "id": "M1-COOK-CONTINUATION",
       "goal": "Finish the already-accepted Cook journey and postquest persistence from the exact907 account after the reviewed source-ground-contact repair.",
-      "status": "IMPLEMENTING",
+      "status": "BLOCKED",
       "specs": ["milestones/evidence/m1-cook-continuation-authorization.json", "milestones/evidence/m1-ground-contact.json", "tools/journey-tests/evidence/office-grave-pot-907d84b817974f55.json", "research/journey-rules/cooks-assistant.json"],
       "dependencies": ["M1-SOURCE-GROUND-CONTACT"],
       "allowed_paths": ["tools/journey-tests/**", "tools/simulator/**", "tests/scenarios/**"],
@@ -103,7 +121,7 @@
       "source_notes": ["Explicit authority is milestones/evidence/m1-cook-continuation-authorization.json; exact source-ground repair3480b6f is tested on both current5b and old5e without repinning data. Main355current native tests and isolated5e20contact/40simulator tests pass with actual executable artifact identities verified.", "Director now owns execution after empty worker turn24 and a verified unchanged9289baf worktree with no attempt. The a913bb7 one-attempt key and all limits remain unchanged; this is not a new restore allowance. See milestones/evidence/m1-cook-director-takeover.json."],
       "parity_entries": [],
       "adaptations": [],
-      "evidence": []
+      "evidence": ["Director adopted groundrepair9cab1e9 and committed reader3ea0b21/typed-control correction3b2c3cf before execution; integrated202b555/0e404c2. Firstsetup failed in zero-network preflight because actual recorded control was JoinWorld rather than a poll; no attempt was reserved. The corrected original a913 allowance restored907 exactly once at52f32d29b5dc4f1a.", "Actual377source checks/70tutorial edges plus3separate observations. New151input records comprise143acknowledged nonduplicates,7definitive rejections handled by existing bounded source reapproach and1known reward replay. Real pot/bucket/dairy/egg/three-floor-mill acquisition and all partial deliveries pass; Cook completes atsequence461/tick2918 with300CookingXP,1QP, no coins and correct energy. Same reward replay does not grant again.", "Range proof stops before sink UseItem atnext499/tick3280/revision3794, after another legitimate flour/bucket acquisition. The driver guessed blocked east tile3206,3215; separate content inspection also proves sink interactions/water-production are absent in both5e/5b. Newprotected52 archivea90bf263bcaa89dcbd4773154a5c0ff27a62de42f9762b2d6e6dfce810be6860/inventorya384a9ac7f8036214eb4e4bbe14a82976e33140def7a4f3239ec0079d98f570c and all older58file inventories verifyunchanged. a913 is consumed; no further restore authorized.", "Parent49Python/68current native and49Python/66retained-source native checks pass; actualownedservicescleaned. Evidence milestones/evidence/m1-cook-reward-frontier.json. Range andpostquest/finalbrowser gatesremainopen."]
     },
     {
       "id": "M1-SOURCE-GROUND-CONTACT",
@@ -198,7 +216,7 @@
     {
       "id": "M1-AUDIO-COMPOSED-TIMING",
       "goal": "Diagnose and repair actual source2266 cue lateness exposed after real production UI restart/re-entry, without relaxing original timing or changing source queues.",
-      "status": "BLOCKED",
+      "status": "DONE",
       "specs": ["spec/browser-implementation.md", "web/audio/README.md", "web/app/tests/real-player-audio.ts", "milestones/approvals/m1-reference-pack-v1.3.0.json"],
       "dependencies": ["M1-UI-INTEGRATION"],
       "allowed_paths": ["web/audio/**", "web/app/tests/real-player-audio.ts", "web/app/tests/real-audio.ts"],
@@ -211,7 +229,7 @@
       "source_notes": ["The prior dbeb1ac/f9e56a5 cue repair and parent45units/18dispatches-zero-overruns remain preserved historical evidence.", "Actual production2f3704d artifact63b21e3d5a357f13bc4518570c08f1682f8dfc55b09f5b684de2616e12ed1374 now passes21 source/browser control checks, including real signup/experience, bound native preferences/minimap, restart, logout/relogin and device loss, with zero unhandled browser errors. Separate native storage fixture passes6 contracts but2/18 source2266 cues are late: source-control/7=22.49433106575949ms; source-control/19=21.859410430838942ms. Evidence .worktrees/m1-ui-integration/.local/ui-composed-browser-5/result.json and failure.json. Overall browser check remains failed_native_audio_timing, not accepted."],
       "parity_entries": [],
       "adaptations": [],
-      "evidence": ["Owned66c6d873603b423f856549363ca6acc4f282c564 remains isolated and unmerged. Measured40-46ms AudioContext cursor batches miss the existing20ms queue horizon; ready zero-delay non-positional cues are now pre-submitted at unchanged dueAt without advancing the source queue.", "All3post-repair invocations consumed. Run2 passes21source/6storage contracts and18dispatches with0overruns, but finalrun3 retains one60ms cold2266 failure after62.53ms enqueue-to-decode. Seventeen ready cues are on time; loading retries remain legitimate source1..10 behavior, not a timing waiver. Parent48units/typecheck pass; no new parent browser run. Evidence milestones/evidence/m1-audio-composed-review.json. New M1-AUDIO-CONTROL-READINESS separately admits only2additional measured whole-client runs."]
+      "evidence": ["The subsequent M1-AUDIO-CONTROL-READINESS repair closes the cold path with both2/2whole-client runs passing18/18cues. Complete66c6d87/6557c57/b5a46f3 is integrated2a7727d/693d573/7a01cf2; old bounded failures below remain historical, not erased. See milestones/evidence/m1-audio-readiness-integration.json.", "Owned66c6d873603b423f856549363ca6acc4f282c564 initially remained isolated. Measured40-46ms AudioContext cursor batches miss the existing20ms queue horizon; ready zero-delay non-positional cues are pre-submitted at unchanged dueAt without advancing the source queue.", "All3original post-repair invocations were consumed. Run2 passed21source/6storage contracts and18dispatches with0overruns, but finalrun3 retained one60ms cold2266 failure after62.53ms enqueue-to-decode. Seventeen ready cues were on time; loading retries remain legitimate source1..10 behavior, not a timing waiver. Parent48units/typecheck passed. Historical evidence milestones/evidence/m1-audio-composed-review.json is preserved separately from the later successful two-run readiness closure."]
     },
     {
       "id": "M1-UI-INTEGRATION",
@@ -666,7 +684,7 @@
     {
       "id": "M1-HEADLESS-JOURNEY",
       "goal": "Implement and execute the complete legitimate M1 protocol journey with real account/world/persistence boundaries, not seeded states.",
-      "status": "IMPLEMENTING",
+      "status": "BLOCKED",
       "specs": ["prompt.md section 30.1", "research/journey-rules/**", "spec/game-networking.md", "content/m1/README.md"],
       "dependencies": ["M1-FLEET-ENGINE-CLOSURE"],
       "allowed_paths": ["tools/simulator/**", "tools/journey-tests/**", "tests/scenarios/**"],
@@ -679,7 +697,7 @@
       "source_notes": ["Real server protobuf APIs and canonical source content"],
       "parity_entries": [],
       "adaptations": [],
-      "evidence": ["Historical31/66-edge and old6f unknown-operation records remain unchanged. Same original source5e account has70/70 tutorial transitions; three observation checks are counted separately from source checks.", "Consumed db74895 continuation restored c84 exactly once. Actual907 run executes54 acknowledged inputs302..355 with0new rejected/replayed inputs, completes existing Office topics/portal/grave recovery, conserves20 item kinds/all24skills/bothquests and original sword, then accepts Cook through actual dialogue. Source checks are now336,15new; source death/recovery segment passes. No new account, kill, death retention, source repin or precollected ingredients.", "At907 the local pot preflight stops before any pickup; nextsequence356/publictick1886/revision2255. Reviewed3480b6f/50e33e3 now fixes declared counter contact without changing source data. New M1-COOK-CONTINUATION admits one907 restore only, remaining ingredients/reward/range and postquest checks; old authorities remain consumed.", "Owned5856343/9289baf integratef6154eb/2ccfab8. Parent63Rust/44Python checks pass and58private files per907/c84/7fa checkpoint are hash/mode verified. New protected907 archive4f3cbf8148ef6d9334da8cbffeb4a405924018ba603cdf4ac9aebc997b53fa0d/inventoryb3c7ee44921e67a182d3a017d818d5953beacfcabef5213906b0f08a7b28da40 remains exact; original7fa/c84 unchanged and owned services cleaned. Full Cook/postquest/browser/source/performance/owner gates remain open. Evidence milestones/evidence/m1-mainland-frontier.json."]
+      "evidence": ["LATEST: Director's single a913 restore from907 reaches377source checks/70edges plus3separate observations, completes all actual Cook ingredients/partial deliveries and the exact300XP/1QP reward with known-operation duplicate proof. Protected52f32d29b5dc4f1a stops before the range sink use; no water-fill producer exists in retained5e or current5b. Range/postquest and browser/owner gates remain open; no additional restore is authorized. Evidence milestones/evidence/m1-cook-reward-frontier.json.", "Historical31/66-edge and old6f unknown-operation records remain unchanged. Same original source5e account has70/70 tutorial transitions; three observation checks are counted separately from source checks.", "Consumed db74895 continuation restored c84 exactly once. Actual907 run executes54 acknowledged inputs302..355 with0new rejected/replayed inputs, completes existing Office topics/portal/grave recovery, conserves20 item kinds/all24skills/bothquests and original sword, then accepts Cook through actual dialogue. That checkpoint had336source checks. No new account, kill, death retention, source repin or precollected ingredients.", "The original907 pot blocker was repaired by3480b6f/50e33e3 without source changes, then the separately admitted a913 Cook continuation consumed its single restore. All58private files in52/907/c84/7fa and their source5e archives verify; old checkpoints remain immutable. No earlier authority is reusable."]
     },
     {
       "id": "M1-ENGINE-REVIEW",
