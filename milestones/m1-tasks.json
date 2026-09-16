@@ -34,6 +34,24 @@
   },
   "tasks": [
     {
+      "id": "M1-SHELL-INTEGRATION",
+      "goal": "Integrate the exact27 owned browser/WASM/build commits against the current verified parent contracts without importing foreign histories or weakening production gates.",
+      "status": "IMPLEMENTING",
+      "specs": ["milestones/evidence/m1-shell-owned-sequence.json", "spec/browser-implementation.md", "spec/game-networking.md", "web/shared/contracts.ts", "tools/web-build/README.md"],
+      "dependencies": ["M1-BROWSER-SHELL", "M1-TERRAIN-INPUTS"],
+      "allowed_paths": ["web/app/**", "web/package.json", "web/pnpm-lock.yaml", "web/tsconfig.json", "web/index.html", "web/vite.config.ts", "web/generated/**", "crates/wasm/**", "tools/web-build/**", "Cargo.lock", "spec/browser-implementation.md", "milestones/evidence/m1-shell-integration/**"],
+      "forbidden_paths": ["prompt.md", "crates/world-engine/**", "crates/server/**", "crates/game-types/**", "crates/protocol/**", "crates/renderer/**", "web/shared/**", "web/ui/**", "web/audio/**", "assets/**", "content/**", "research/reference-pack/**", "tools/reference-pack/**"],
+      "outputs": ["Exact owned/main commit mapping", "Current source/wire/asset adapters and explicit dependency lock changes", "Real web/WASM/build validation with UI failures kept visible", "Durable integration checkpoint without repinning historical worlds"],
+      "validation_commands": ["pnpm --dir web test", "pnpm --dir web typecheck", "cargo test --locked -p clubscape-wasm", "cargo clippy --locked -p clubscape-wasm --all-targets -- -D warnings"],
+      "test_requirements": ["No whole-branch merge or duplicate foreign picks", "Binary same-origin transport and memory-only auth preserved", "All current source5b UI/amount/recovery/audio/scene fields forwarded losslessly", "Current78fed renderer/880924ed package and native audio repair retained", "No UI casts, ignored fields, fake adapters or diagnostic build reported as production success", "No source repin or new acceptance claims"],
+      "acceptance": ["Record the integrated app foundation and exact remaining UI/composition blockers; full M1 gates remain separate"],
+      "reserved_namespaces": [],
+      "source_notes": ["Worker26 confirms27 owned commits and no missing backend API dependency. Root integration is isolated from its next bounded preview/spatial metadata work."],
+      "parity_entries": [],
+      "adaptations": [],
+      "evidence": ["milestones/evidence/m1-shell-owned-sequence.json"]
+    },
+    {
       "id": "M1-DYING-RESTORE-OBSERVE",
       "goal": "Verify readable public observation of the exact restored dying checkpoint through normal trusted lifecycle behavior, without resuming player gameplay.",
       "status": "IMPLEMENTING",
@@ -517,7 +535,7 @@
       "source_notes": ["Owner-approved pack; final Mac acceptance still separate"],
       "parity_entries": [],
       "adaptations": [],
-      "evidence": []
+      "evidence": ["Exact foundation25 plus014e9582 current-renderer delivery andee5cd0a5 source-unknown guards are handed off for Director integration; see milestones/evidence/m1-shell-owned-sequence.json. Foreign backend/UI/renderer/audio/source picks are excluded. Worker216 web tests and current renderer build pass; the actual source5b bundle has7711 assets and785 selected renderer buffers. These are recorded worker checks, not a new parent production pass.", "Five UI-owned type errors and actual bindUiAudioPreferences/setUiMinimap/setUiMapIconSprites/bindUiMinimapProjection ports remain unresolved; backend contracts are ready. Whole-client source preview/spatial metadata, live-camera/fidelity, fitting931/2034 and frozen performance/Mac/Edge/owner acceptance remain open. Same shell reservation is limited next to its owned preview/spatial metadata producers, or exact new source/contract blockers, without editing UI or foreign implementations."]
     },
     {
       "id": "M1-FLEET-POTION-ASSETS",
