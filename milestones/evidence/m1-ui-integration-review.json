@@ -14,6 +14,7 @@
     "current_contract_test_passed": false,
     "new_source_or_golden_created": false
   },
+  "visible_ui_model_inputs": "milestones/evidence/m1-native-ui-model-gaps.json",
   "owned_lineage": [
     {"owner": "ui", "original": "fa84bf3202090ecb632cc74bc9167677ce7835f2", "isolated": "7c55fa519be3a717fda16435ee61f1291def1846"},
     {"owner": "ui", "original": "0ee025fa897a3db93d73831e25295915f40985b1", "isolated": "9e3927356555d31617ab9a0bf245659ccaf4bebd"},

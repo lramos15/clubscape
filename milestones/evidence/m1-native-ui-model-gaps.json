@@ -1,0 +1,59 @@
+{
+  "schema_version": 1,
+  "milestone": "m1-starter-journey",
+  "result": "required_visible_ui_model_inputs_still_missing",
+  "checked_revision": "2f3704d7132e02e15bf5c306549abcd3ccd21962",
+  "ui_manifest_sha256": "6601f1de45324ff23e88df577b3e467d74878f09b6f0f1759c52c6870452b329",
+  "ui_provenance_sha256": "2fe20ff58e8cb5bf8299f86ac6879a8125e6c2c06a7787c63b12ebae78988042",
+  "method": "Read the actual current catalogue through web/ui/assets.ts::decodeUiCatalogue, then inspect exact source233 template children, presentation associations and registered static-model identities.",
+  "level_up": {
+    "original_contract": "research/interface-contracts/level-up-native.json",
+    "current_canonical_default": "interface.level_up",
+    "source_group": 233,
+    "source_style": "chatbox_level_up",
+    "current_template": "bounded-levelup-popup",
+    "current233_widget_ids": [15269888, 15269889, 15269890, 15269891],
+    "current_template_has_required_skill_model_children": false,
+    "example_original_skill_children": {
+      "mining_container": 15269924,
+      "mining_model": 15269925,
+      "prayer_container": 15269926,
+      "prayer_model": 15269927
+    },
+    "qualification": "The prior bounded fixture explicitly supplied text and left the native skill containers hidden. Its exact text/frame comparison does not prove the required visible skill-specific model representation.",
+    "notification_association": {
+      "canonical_id": "interface.level_up_notification",
+      "source_group": 660,
+      "source_script": 3343,
+      "source_contract_published": true,
+      "current_ui_catalogue_association_present": false,
+      "qualification": "The generic notification association does not authorize a second reward or imply every level gain displays both interfaces."
+    }
+  },
+  "newcomer_map": {
+    "source_group": 615,
+    "source_position_script": 2043,
+    "marker_widget_id": 40304640,
+    "marker_dynamic_index": 0,
+    "marker_model": 3062,
+    "marker_animation": 646,
+    "marker_dimensions": [32, 32],
+    "marker_zoom": 1526,
+    "marker_rotation": [512, 0, 68],
+    "registered_static_model_count": 485,
+    "registered3062_or_marker_widget_assets": 0,
+    "current_runtime": "projectDocument appends the marker at source2043-derived coordinates, but SourceRaster's missing staticModels key does not draw a model or report the missing binding.",
+    "qualification": "The four original document comparisons deliberately have a hidden source marker. The isolated marker metadata was written after setOriginalX/Y plus revalidate, without a subsequent complete native layout/readback; it records canvas x/y=-1. No actual registered model3062 pixels or animated646 representation is proved by that metadata.",
+    "visible_marker_or_animation_accepted": false
+  },
+  "handoff": {
+    "renderer_worker": "bb7f85f7-096a-4377-80cb-3e7eae196c6b",
+    "scope": "Existing original widget-model capture lane after sound gear metric repair, with exact original frames/clip/model/animation evidence.",
+    "director_scope": "Consume reviewed native widget inputs in the UI, update current artifact presentation mappings and make required missing-model failures explicit; do not fabricate a marker or source skill icon.",
+    "gpu_measurement_windows": "Coordinate with the admitted source2266 timing repair; no overlapping frozen performance claim."
+  },
+  "source_references_changed": false,
+  "new_captures_performed": false,
+  "presentation_accepted": false,
+  "milestone_accepted": false
+}
