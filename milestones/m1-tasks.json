@@ -10,7 +10,8 @@
       {"id": "bb7f85f7-096a-4377-80cb-3e7eae196c6b", "task": "M1-BROWSER-RENDERER"},
       {"id": "78d01af9-70a4-4b02-8339-6a61eb377374", "task": "M1-BROWSER-SHELL"},
       {"id": "e6925772-df1f-4ff7-9efc-219f800a5a14", "task": "M1-NATIVE-CAMERA-REVIEW"},
-      {"id": "2766e089-44e5-4a1d-974e-7b03ad9c269d", "task": "M1-NATIVE-RECOVERY-CONTRACT"}
+      {"id": "2766e089-44e5-4a1d-974e-7b03ad9c269d", "task": "M1-NATIVE-RECOVERY-CONTRACT"},
+      {"id": "fdda1fb0-1135-4cf8-8cff-3db550e48f54", "task": "M1-WATER-FILL-CLOSURE"}
     ],
     "reserved": [],
     "queued": [],
@@ -22,7 +23,6 @@
       {"id": "2a0ae699-6af8-45d5-90c7-3addfc56ee53", "reason": "Renewed five-invocation assessment complete; live creation/scene/window/baseline work, firstXP unverified after driverOutOfReach. No sixth invocation or automatic resumption."},
       {"id": "aab1ae0f-0238-4254-bff3-b7c046349c6b", "reason": "Shop capacity/identity fixes integrated as3310032+af75e17 with18 passing regressions; no automatic resumption."},
       {"id": "0f5ddddf-0aa0-4908-b0d3-1ffc6b1f7a20", "reason": "Actor presence/cadence fixes integrated as62a003c+e1076a8 with15 passing regressions; no automatic resumption."},
-      {"id": "fdda1fb0-1135-4cf8-8cff-3db550e48f54", "reason": "Canonical v3 content and both demonstrated executor repairs are integrated and source-native conformance passes; no automatic resumption."},
       {"id": "598d83d0-6ce2-40ac-b6d5-01d566c68b99", "reason": "Reference research complete; no automatic resumption."},
       {"id": "20a115ef-0586-4ca1-9505-c1840fc02365", "reason": "Account implementation and deadline repair complete; no automatic resumption."},
       {"id": "31d6526b-89a8-4bad-bf54-15ccc64ab410", "reason": "Both scoped review turns complete; no automatic resumption."}
@@ -34,9 +34,27 @@
   },
   "tasks": [
     {
+      "id": "M1-WATER-FILL-MIGRATION",
+      "goal": "Perform only the owner-approved, source-pinned and reversible upgrade needed to continue the existing52 range/persistence frontier.",
+      "status": "BLOCKED",
+      "specs": ["milestones/approvals/m1-water-fill-upgrade-v1.json", "milestones/evidence/m1-cook-reward-frontier.json", "crates/server/README.md", "tools/journey-tests/README.md"],
+      "dependencies": ["M1-WATER-FILL-CLOSURE"],
+      "allowed_paths": ["crates/server/src/game_storage/**", "crates/server/src/game_service/**", "crates/server/tests/**", "tools/journey-tests/**", "tools/simulator/**"],
+      "forbidden_paths": ["prompt.md", "assets/source/**", "assets/manifests/**", "research/reference-pack/**", "tools/reference-pack/**", ".local/journey-checkpoints/**"],
+      "outputs": ["Reviewed exact old/new artifact and migration plan", "Fenced compatibility/conservation/idempotency evidence", "Separately admitted same-account remaining range/postquest continuation with new protected checkpoint"],
+      "validation_commands": [],
+      "test_requirements": ["No migration or restore before exact target hashes, state invariants and execution bounds are committed", "Keep all old archives immutable; source5e history is not rewritten as if it ran on the new artifact", "Verify owned items/XP/quests/RNG/receipts unchanged, with explicit source/UI history qualification", "Do not replay completed Cook reward or acquire substitute test inputs", "No reuse of consumed prior allowances or silent migration during ordinary startup"],
+      "acceptance": ["Actual old/new compatibility and source conservation are verified before the separately recorded live continuation"],
+      "reserved_namespaces": [],
+      "source_notes": ["Owner approved approve_bounded_water_fill_upgrade. This blocked task admits no worker or database operation until the content target and exact plan exist."],
+      "parity_entries": [],
+      "adaptations": [],
+      "evidence": ["milestones/approvals/m1-water-fill-upgrade-v1.json"]
+    },
+    {
       "id": "M1-WATER-FILL-CLOSURE",
       "goal": "Close the absent source mainland water-filling dependency and correct the sink approach before the remaining range/persistence proof.",
-      "status": "BLOCKED",
+      "status": "IMPLEMENTING",
       "specs": ["milestones/evidence/m1-cook-reward-frontier.json", "research/journey-rules/cooks-assistant.json", "tools/m1-content/README.md", "content/m1/README.md"],
       "dependencies": ["M1-SOURCE-GROUND-CONTACT"],
       "allowed_paths": ["tools/m1-content/**", "research/m1-bindings/**", "research/water-fill/**", "content/m1/**", "tools/simulator/src/journey/plan.rs", "tools/simulator/src/journey/source.rs"],
@@ -46,7 +64,7 @@
       "test_requirements": ["Do not patch missing data into a supposedly unchanged5e artifact or silently repin the saved world", "No banked starter input substitution, source checkpoint rewrite, field setter or invented recipe/animation/timing", "Preserve completed Cook reward/duplicate evidence and exact owned state/RNG/receipts through any separately approved fenced upgrade", "No additional archive restore under consumed a913bb7"],
       "acceptance": ["A source-grounded range input path and safe explicit continuation are available; do not count route-only fixes or content compilation as actual range/persistence evidence"],
       "reserved_namespaces": [],
-      "source_notes": ["Actual52f32d29b5dc4f1a has already completed Cook, received300CookingXP/1QP and verified the same reward receipt duplicate. It owns newly acquired flour and bucket, but the selected sink has no interactions and neither5e nor5b has a water-bucket producer; no mainland shrimp source or retained raw range input exists. A content revision is required, not merely navigation.", "Awaiting explicit decision on a narrowly validated source-data upgrade of the same preserved world. No implementation worker or migration is admitted by this blocked task."],
+      "source_notes": ["Actual52f32d29b5dc4f1a has already completed Cook, received300CookingXP/1QP and verified the same reward receipt duplicate. It owns newly acquired flour and bucket, but the selected sink has no interactions and neither5e nor5b has a water-bucket producer; no mainland shrimp source or retained raw range input exists. A content revision is required, not merely navigation.", "Owner approved approve_bounded_water_fill_upgrade, recorded in milestones/approvals/m1-water-fill-upgrade-v1.json. Source/content worker is admitted only in new m1-water-fill; exact migration/continuation remains separately blocked until reviewed hashes and invariants are published. No private checkpoint access or actual database migration belongs to this source task."],
       "parity_entries": [],
       "adaptations": [],
       "evidence": ["milestones/evidence/m1-cook-reward-frontier.json"]

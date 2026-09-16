@@ -1,0 +1,42 @@
+{
+  "schema_version": 1,
+  "kind": "bounded_source_content_upgrade",
+  "authority": "owner",
+  "decision": "approved",
+  "recorded_at": "2026-09-16T17:50:29Z",
+  "owner_record": "approve_bounded_water_fill_upgrade",
+  "owner_question": "Cook\u2019s Assistant and its exact reward are complete on the saved account. The remaining cooking-range check exposed missing water-filling content in both pinned packs. May I implement that source-backed M1 dependency and then perform an explicit, tested, fenced content upgrade of the same saved world? The original checkpoints would remain immutable, with items, XP, quests, RNG and acknowledged receipts verified unchanged\u2014no account reset, grants, repeated quest or acceptance waiver. This changes ClubScape\u2019s content revision, not the frozen OSRS baseline.",
+  "scope": [
+    "Source-backed M1 water-filling content needed by the existing cooking-range validation path.",
+    "Source-correct item-use approach rather than the failed arbitrary east-of-sink position.",
+    "A separately tested, reviewed and explicitly fenced content upgrade of the same saved account/world.",
+    "Preserve all original archives and verify unchanged owned items, XP, quests, RNG and acknowledged receipts.",
+    "Publish exact old/new artifact hashes and semantic differences before admitting migration or further gameplay."
+  ],
+  "protected_start": {
+    "checkpoint": "52f32d29b5dc4f1a",
+    "archive_sha256": "a90bf263bcaa89dcbd4773154a5c0ff27a62de42f9762b2d6e6dfce810be6860",
+    "private_inventory_sha256": "a384a9ac7f8036214eb4e4bbe14a82976e33140def7a4f3239ec0079d98f570c",
+    "source_artifact_sha256": "5e0aa8a28851752ae0b8b0a08c635c6c8d2979f509f3a3e564ee74e2abfc8e6f",
+    "account_id": "f43da325-ffcc-4753-a823-7a345dfce33b",
+    "actor_id": "actor.05a9c9bae95142fabe29d3ec35e8cf9e",
+    "world_id": "95acc818-e1d6-4ad3-805f-d323623d2933",
+    "last_sequence": 498,
+    "next_sequence": 499,
+    "cook_completed": true,
+    "source_checks": 377,
+    "tutorial_edges": 70,
+    "separate_observation_checks": 3
+  },
+  "does_not_approve": [
+    "Changing the frozen OSRS build240/cache2695 baseline or presentation reference pack.",
+    "Invented source timing, animation, rewards, permission or unqualified source facts.",
+    "Silent artifact repinning, source/checkpoint rewriting, resetting the account, gameplay setters or grants.",
+    "Repeating Cook acceptance/reward, completed tutorial/death/ingredient progression or an unknown operation.",
+    "Reusing consumed bd33/db74895/a913 restore allowances; any migration/continuation execution requires its own exact bounded record.",
+    "Final browser, visual/audio, performance, owner acceptance, later milestones or release."
+  ],
+  "implementation_verified": false,
+  "migration_or_further_gameplay_admitted_by_this_record": false,
+  "milestone_accepted": false
+}
