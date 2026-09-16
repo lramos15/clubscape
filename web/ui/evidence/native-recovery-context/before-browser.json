@@ -1,0 +1,25 @@
+{
+  "scope": "Native recovery UI component and original-source projection checks; controlled services, not a player journey",
+  "cases": [
+    {
+      "name": "full Office includes every record and selected partial requests retain Office rather than physical grave storage",
+      "passed": true
+    },
+    {
+      "name": "whole-context Take-All sends exactly one unchanged observation, not entry or record fan-out",
+      "passed": true
+    },
+    {
+      "name": "a held Take-All menu does not silently rebind after the same context changes quantities",
+      "passed": true
+    },
+    {
+      "name": "semantic context identity retains local selection, while a different Office cancels selection and amount entry",
+      "passed": false,
+      "error": "locator.getAttribute: Timeout 30000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('[data-ui-control=\"recovery-item-entry.two\"]')\u001b[22m\n"
+    }
+  ],
+  "errors": [],
+  "browser": "153.0.8010.12",
+  "finalAcceptance": false
+}

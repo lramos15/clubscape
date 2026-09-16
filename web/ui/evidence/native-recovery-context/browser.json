@@ -1,0 +1,36 @@
+{
+  "scope": "Native recovery UI component and original-source projection checks; controlled services, not a player journey",
+  "cases": [
+    {
+      "name": "full Office includes every record and selected partial requests retain Office rather than physical grave storage",
+      "passed": true
+    },
+    {
+      "name": "whole-context Take-All sends exactly one unchanged observation, not entry or record fan-out",
+      "passed": true
+    },
+    {
+      "name": "a held Take-All menu does not silently rebind after the same context changes quantities",
+      "passed": true
+    },
+    {
+      "name": "semantic context identity retains local selection, while a different Office cancels selection and amount entry",
+      "passed": true
+    },
+    {
+      "name": "empty Office remains open with zero actual rows and source-denied Take-All even without a legacy recovery",
+      "passed": true
+    },
+    {
+      "name": "a mismatched Office projection is explicit and cannot fall through to a singular legacy panel",
+      "passed": true
+    },
+    {
+      "name": "native selected-type caption data preserves the original short and 80-slot Office images",
+      "passed": true
+    }
+  ],
+  "errors": [],
+  "browser": "153.0.8010.12",
+  "finalAcceptance": false
+}

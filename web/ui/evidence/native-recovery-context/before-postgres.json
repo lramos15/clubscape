@@ -1,0 +1,14 @@
+{
+  "schema_version": 1,
+  "scope": "Guarded real PostgreSQL recovery component fixture; not a player journey",
+  "recorded_at": "2026-09-16T18:51:57.751125+00:00",
+  "base_commit": "67724cd4c019eff856201e9fe055f10665b14b85",
+  "executable": "target/debug/deps/game_storage-34c5e8afcd171cc3",
+  "executable_sha256": "20392337405cda933572c4cd254ffcad397b9bb254ee08c47d8e44086b90740f",
+  "encoder_sha256": "19392cecccd90f4c0aef152b85129f95048548c58b053323f67cf648832a3328",
+  "database_image": "postgres:16-alpine@sha256:cf78e76683b9ca8c5733cbbdce6c9262b45b6767934dd0a95e671f9a0fc20685",
+  "result": "failed",
+  "milestone_accepted": false,
+  "private_journey_accessed": false,
+  "owned_database_removed": true
+}

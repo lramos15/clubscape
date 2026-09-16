@@ -1,0 +1,58 @@
+{
+  "scope": "Source-bearing component subset, not additional unique tests or a journey",
+  "raw_sha256": "5b3ba5f108ed3fec8f8b5f7f49b429c059e21b6f192ec99a0569616e08330059",
+  "gzip_sha256": "8da1e85a1e2ebb0355e29e7a15a0ca7cdab2f2751bc1341dd5efd5322b925ca6",
+  "private_worktree_target": true,
+  "executables": [
+    {
+      "target": "contextual_shop_entry",
+      "path": "target/debug/deps/contextual_shop_entry-f86432eff7bb2938",
+      "sha256": "f80b414e1a35c60c1f16ac33bdf24a3f9cf6d2d4543d61e7896465f60157292d",
+      "bytes": 197232536,
+      "source_blob_offset": 18398078,
+      "valid_gzip_payload_hashes": [
+        "5b3ba5f108ed3fec8f8b5f7f49b429c059e21b6f192ec99a0569616e08330059"
+      ],
+      "old_source_found": false,
+      "direct_tests_passed": 5
+    },
+    {
+      "target": "dying_observation",
+      "path": "target/debug/deps/dying_observation-5b7fd0daab1fe074",
+      "sha256": "c2220e0cc24889436e0c4c768f88a90ba6d85a802b990d853dc4ae16bb436fde",
+      "bytes": 199083568,
+      "source_blob_offset": 18698184,
+      "valid_gzip_payload_hashes": [
+        "5b3ba5f108ed3fec8f8b5f7f49b429c059e21b6f192ec99a0569616e08330059"
+      ],
+      "old_source_found": false,
+      "direct_tests_passed": 4
+    },
+    {
+      "target": "ground_contact",
+      "path": "target/debug/deps/ground_contact-79ccf20a16cf3e5c",
+      "sha256": "aca06b3884a9a8b301895cc210e1457880cdbde7e374f886d9567b4640515ae2",
+      "bytes": 186191664,
+      "source_blob_offset": 16226122,
+      "valid_gzip_payload_hashes": [
+        "5b3ba5f108ed3fec8f8b5f7f49b429c059e21b6f192ec99a0569616e08330059"
+      ],
+      "old_source_found": false,
+      "direct_tests_passed": 6
+    },
+    {
+      "target": "ui_travel_interruption",
+      "path": "target/debug/deps/ui_travel_interruption-31646ae09432e275",
+      "sha256": "fb96ba0a3b36f9a7a5ff4062c9945b5a4e68ea1a4b827e8140db2e990bcfa67c",
+      "bytes": 208437608,
+      "source_blob_offset": 19306345,
+      "valid_gzip_payload_hashes": [
+        "5b3ba5f108ed3fec8f8b5f7f49b429c059e21b6f192ec99a0569616e08330059"
+      ],
+      "old_source_found": false,
+      "direct_tests_passed": 5
+    }
+  ],
+  "direct_tests_passed": 20,
+  "milestone_accepted": false
+}
