@@ -9,7 +9,6 @@
       {"id": "director", "task": "M1-FLEET-CONTRACTS"},
       {"id": "bb7f85f7-096a-4377-80cb-3e7eae196c6b", "task": "M1-BROWSER-RENDERER"},
       {"id": "78d01af9-70a4-4b02-8339-6a61eb377374", "task": "M1-BROWSER-SHELL"},
-      {"id": "81ac9884-4f39-4f27-b516-6e9a42b09b51", "task": "M1-HEADLESS-JOURNEY"},
       {"id": "cdfad64d-9162-439f-a525-58e1114dd7f4", "task": "M1-AUDIO-COMPOSED-TIMING"},
       {"id": "ac0f0856-44af-445b-bd90-6db7a1f4fc74", "task": "M1-NATIVE-CAMERA-CONTROLLER"},
       {"id": "2766e089-44e5-4a1d-974e-7b03ad9c269d", "task": "M1-NATIVE-RECOVERY-CONTRACT"}
@@ -17,6 +16,7 @@
     "reserved": [],
     "queued": [],
     "parked": [
+      {"id": "81ac9884-4f39-4f27-b516-6e9a42b09b51", "reason": "Actual db74895 restore consumed once at907d84b817974f55. Owned5856343/9289baf integratef6154eb/2ccfab8; existing Office/grave recovery passes and Cook is accepted,336source checks/70edges plus3separate observations. Pot source tile is nonwalkable but ground_access requires same tile; no pickup was submitted. Protected907/7fa/c84 hashes and modes verified. No further restore, gameplay or automatic resumption before Director source-contact repair and a fresh bounded continuation admission."},
       {"id": "cc864d7a-37cc-4869-a7b4-d484d01cede5", "reason": "Latest turns delivered no current-contract completion. Four published UI commits and pending native-preference work are preserved unchanged in m1-ui; Director takes the bounded UI integration/current-contract/native-port completion directly. No automatic resumption or duplicate UI edits."},
       {"id": "e6925772-df1f-4ff7-9efc-219f800a5a14", "reason": "Bounded UI4 review complete: one medium source-travel interruption bypass in timed UI actions. Director repair M1-UI-TRAVEL-INTERRUPTION is active; this is not final candidate signoff."},
       {"id": "2a0ae699-6af8-45d5-90c7-3addfc56ee53", "reason": "Renewed five-invocation assessment complete; live creation/scene/window/baseline work, firstXP unverified after driverOutOfReach. No sixth invocation or automatic resumption."},
@@ -33,6 +33,24 @@
     "usage_accounting": "milestones/evidence/m1-usage-snapshot.json records the available delayed session snapshot; final project-wide credits/currency are unavailable."
   },
   "tasks": [
+    {
+      "id": "M1-SOURCE-GROUND-CONTACT",
+      "goal": "Establish and implement source-correct access to the blocked kitchen pot without changing source placement/collision or granting arbitrary remote/adjacent pickup.",
+      "status": "IMPLEMENTING",
+      "specs": ["tools/journey-tests/evidence/office-grave-pot-907d84b817974f55.json", "research/journey-rules/cooks-assistant.json", "research/journey-rules/activities.json", "crates/world-engine/src/actions.rs", "crates/world-engine/src/permissions.rs"],
+      "dependencies": ["M1-DYING-RESTORE-OBSERVE"],
+      "allowed_paths": ["crates/world-engine/src/actions.rs", "crates/world-engine/src/permissions.rs", "crates/world-engine/src/navigation.rs", "crates/world-engine/tests/**", "crates/world-engine/README.md", "tools/simulator/src/journey/plan.rs", "tools/simulator/src/journey/source.rs", "tools/simulator/README.md", "research/ground-contact/**"],
+      "forbidden_paths": ["prompt.md", "Cargo.lock", "crates/game-types/**", "crates/protocol/**", "crates/server/**", "crates/renderer/**", "crates/camera/**", "content/**", "assets/**", "web/**", "research/reference-pack/**", "tools/reference-pack/**", ".local/journey-checkpoints/**"],
+      "outputs": ["Qualified source contact evidence and exact before regression", "Shared authoritative permission/action behavior and matching conservative journey approach", "Explicit geometric/ownership/lifetime/instance regressions and unchanged source artifacts"],
+      "validation_commands": ["cargo test --locked -p clubscape-world-engine --test ground_contact", "cargo test --locked -p clubscape-sim --all-features"],
+      "test_requirements": ["No source item relocation, collision removal, teleport, inventory grant, precollected ingredient substitution or source5e repin", "Keep ownership/visibility/expiry/source respawn/instance and inventory conservation checks intact", "Do not use minimum route success as proof of a generic pickup radius or bypass walls", "Actual query and input must agree, with original walkable-ground behavior preserved", "Do not execute another archive restore or saved-account input under consumed db74895; new admission follows reviewed repair"],
+      "acceptance": ["The actual blocked source pot has a justified reachable interaction while negative contact cases remain rejected; if source facts are insufficient, keep the precise blocker rather than invent permission"],
+      "reserved_namespaces": [],
+      "source_notes": ["Actual907 frontier is actor3209,3213 nextsequence356, with pot3209,3214 on a source cell walkable=false/movement255/sight0. Failure was local preflight, not a server rejection.", "The frozen route.cooks.pot_spawn requires reachable pickup but does not prescribe the engine's hardcoded same-tile-only rule. Original source placement and complete collision remain unchanged."],
+      "parity_entries": [],
+      "adaptations": [],
+      "evidence": ["milestones/evidence/m1-mainland-frontier.json"]
+    },
     {
       "id": "M1-NATIVE-RECOVERY-CONTRACT",
       "goal": "Publish the authoritative native recovery context needed to display every owned Office record, exact selected-type source captions, actual storage limits and source whole-context Take-All without client-side transaction reconstruction.",
@@ -576,20 +594,20 @@
     {
       "id": "M1-HEADLESS-JOURNEY",
       "goal": "Implement and execute the complete legitimate M1 protocol journey with real account/world/persistence boundaries, not seeded states.",
-      "status": "IMPLEMENTING",
+      "status": "BLOCKED",
       "specs": ["prompt.md section 30.1", "research/journey-rules/**", "spec/game-networking.md", "content/m1/README.md"],
       "dependencies": ["M1-FLEET-ENGINE-CLOSURE"],
       "allowed_paths": ["tools/simulator/**", "tools/journey-tests/**", "tests/scenarios/**"],
       "forbidden_paths": ["prompt.md", "crates/**", "content/**", "assets/**", "web/**", "spec/**", "milestones/**"],
       "outputs": ["Actual fresh-account tutorial/Lumbridge/Cook/death/recovery runner and checkpoints"],
-      "validation_commands": [],
+      "validation_commands": ["python3 -m unittest discover -s tools/journey-tests -p 'test_*.py' -q", "cargo test --locked -p clubscape-sim -p clubscape-protocol --all-features"],
       "test_requirements": ["No direct DB/item/XP/quest mutation", "Full source action ordering and acquisition", "Reconnect/restart/duplicate completion evidence"],
       "acceptance": ["SQL m1-headless-journey reports actual executed full-scope results or precise backend/content blockers"],
       "reserved_namespaces": [],
       "source_notes": ["Real server protobuf APIs and canonical source content"],
       "parity_entries": [],
       "adaptations": [],
-      "evidence": ["Historical31/66-edge and old6f unknown-operation records remain unchanged. Same original source5e account has70/70 tutorial transitions and321 source checks through arrival/copper/bank/shop/goblin/loot. Two earlier actual restores and the third boundedc84 observation preserve that one lineage; three new observation checks are counted separately.", "The original7fa dying failure is repaired and verified on a real restore: publicJoin1621/Poll1622 showHP10/unarmed at source Office, no new WorldInputs. Fresh protected c84 archivea7cd1774144525c29efc694b5550f71a0e04052324bb59c3ab4fbccbe2d8b4af/inventory996a199f2d47d83add36ee9de22802774cb9aaecd06e9fd0c0ea2d1a0e394f6f retained; original7fa andsource5e stayexact. Parent reviewed adapter and61Rust/38Python checks pass.", "Current full-M1 admission now resumes ONLY from c84 under milestones/evidence/m1-mainland-continuation-authorization.json: preserve exact pre-start identity and trace, continue existing Office/grave recovery without repeating death/kill, complete Cook and post-quest persistence/replay, then preserve a success or blocker checkpoint. One actual archive restore, existing5400second/input bounds, no source repin, state setter, unknown retry or later milestone. Full browser/UI/source/performance/owner acceptance remains separate."]
+      "evidence": ["Historical31/66-edge and old6f unknown-operation records remain unchanged. Same original source5e account has70/70 tutorial transitions; three observation checks are counted separately from source checks.", "Consumed db74895 continuation restored c84 exactly once. Actual907 run executes54 acknowledged inputs302..355 with0new rejected/replayed inputs, completes existing Office topics/portal/grave recovery, conserves20 item kinds/all24skills/bothquests and original sword, then accepts Cook through actual dialogue. Source checks are now336,15new; source death/recovery segment passes. No new account, kill, death retention, source repin or precollected ingredients.", "At actor3209,3213, source pot3209,3214 is nonwalkable and the engine still requires exact-tile pickup. Local path preflight stops before any pot walk/pickup input; nextsequence356/publictick1886/revision2255. Source-ground-contact repair is active, and NO further restore/gameplay is authorized yet.", "Owned5856343/9289baf integratef6154eb/2ccfab8. Parent63Rust/44Python checks pass and58private files per907/c84/7fa checkpoint are hash/mode verified. New protected907 archive4f3cbf8148ef6d9334da8cbffeb4a405924018ba603cdf4ac9aebc997b53fa0d/inventoryb3c7ee44921e67a182d3a017d818d5953beacfcabef5213906b0f08a7b28da40 remains exact; original7fa/c84 unchanged and owned services cleaned. Full Cook/postquest/browser/source/performance/owner gates remain open. Evidence milestones/evidence/m1-mainland-frontier.json."]
     },
     {
       "id": "M1-ENGINE-REVIEW",
