@@ -1,0 +1,82 @@
+{
+  "schema_version": 1,
+  "milestone": "m1-starter-journey",
+  "result": "isolated_consumer_candidate_passed_independent_review_pending",
+  "candidate_revision": "7f30a0aa5a1dabd89e890f16781f70f0b3d51045",
+  "candidate_evidence_revision": "ba8397ff4f7e48e64db0d21c8e57e022d08ef0b8",
+  "worktree": ".worktrees/m1-ui-recovery",
+  "branch": "fix/m1-ui-native-recovery",
+  "candidate_evidence": ".worktrees/m1-ui-recovery/web/ui/evidence/native-recovery-context/validation.json",
+  "root_code_integrated": false,
+  "ui_foundation_owned_commits": [
+    "7c55fa519be3a717fda16435ee61f1291def1846",
+    "9e3927356555d31617ab9a0bf245659ccaf4bebd",
+    "50856cb1b718fdc8680f30f943c7ac00e616ff9d",
+    "5b2b06e87e254c5f06b4ef87be58817f2d9ef552",
+    "d6673fd3435aaef047ac9759f36093aa8428eab9",
+    "a1b076cf655b291094dfdd42c1e12d82305347ac",
+    "67d57f36e7704d52db4821a651907fd44f162d2b",
+    "2f3704d7132e02e15bf5c306549abcd3ccd21962"
+  ],
+  "backend_owned_commits": [
+    "155ac6ff8a43a5b60492f464ebb9c340c6da886f",
+    "93aefa6a7e0415cc29474c67770be30246ffbcde",
+    "5e327819a6a86939a190de9be2b86d75f73c66d9",
+    "c379d1c0323a0d705ced3cdf8848139f270cfafe",
+    "234d9f9afa911ac15ceef7d17cee7cbc374fd141"
+  ],
+  "original_caption_regression": "31203c6354866cfc4237a09c74cb22f0e85fb2ff",
+  "already_main_prerequisites_not_to_repick": [
+    "66c6d87 audio scheduling",
+    "6557c57 audio readiness",
+    "b5a46f3 audio readiness evidence",
+    "3480b6f source-ground contact"
+  ],
+  "verified_candidate": {
+    "web_tests": 263,
+    "native_tests": 402,
+    "server_encoder_tests": 1,
+    "real_guarded_postgres_tests": 1,
+    "recovery_browser_cases": 7,
+    "existing_versioned_browser_cases": 17,
+    "existing_legacy_browser_cases": 20,
+    "unhandled_browser_errors": 0,
+    "original_full_frame_comparisons": 2,
+    "different_pixels": 0,
+    "tolerance": 0,
+    "frozen_hashes_checked": 1307,
+    "strict_clippy_and_wasm32_check": "passed",
+    "normal_production_artifact_sha256": "523e2ccd6d4bfef87c07b6d59f7e42cc93647be30c33a6680b8e990c640c52a0",
+    "production_build_content_configured": false,
+    "source_bearing_executables": 4,
+    "source_identity": "Exact5b embedded in each actual ELF; no decoded old5e payload.",
+    "count_qualification": "12 final fixture checks and20 direct source checks are overlapping subsets, not additions to402. The browser cases are controlled components and the PostgreSQL case uses synthetic content, not a saved-account journey."
+  },
+  "integration_findings_repaired": [
+    "Missing production server context initializer.",
+    "Per-entry7/294 incorrectly standing in for the original selected-type35/1470 caption.",
+    "Singular legacy recovery could not render a complete or empty Office.",
+    "Whole-context Take-All needed one exact selection rather than per-panel requests.",
+    "Previously unexecuted PG fixture reused the old repository lease after restart; actual guard remains intact and the corrected fixture proves rejection plus renewed fencing.",
+    "Shared recovery/content fixture imports needed one inclusion per test target to satisfy strict Clippy."
+  ],
+  "independent_review_task": "M1-NATIVE-RECOVERY-REVIEW",
+  "preserved": {
+    "original_ui_worktree_unchanged": true,
+    "actual_saved_journey_checkpoint": "52f32d29b5dc4f1a",
+    "saved_journey_access_restore_or_migration": false,
+    "consumed_a913_authority_reused": false,
+    "source_content_or_frozen_references_changed": false,
+    "audio_or_runelite_execution_allowance_consumed": false,
+    "owned_fixture_services_cleaned": true
+  },
+  "remaining_gates": [
+    "Independent recovery review and selective root integration with post-integration checks.",
+    "Source camera production consumers, required visible UI models and actual approach-and-act.",
+    "Sound equipment-penetration measurement and all2034 required poses.",
+    "Reviewed water target and separately admitted fenced continuation of the same52 account.",
+    "Full browser journey, postquest persistence, presentation/animation/audio, frozen performance and owner Mac/Chrome/Edge/speaker acceptance."
+  ],
+  "milestone_accepted": false,
+  "later_milestone_authorized": false
+}
