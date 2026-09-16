@@ -127,7 +127,7 @@
     {
       "id": "M1-WATER-UPGRADE-PREFLIGHT",
       "goal": "Prove exact old/current water compatibility and fenced conservation in disposable synthetic source fixtures before any saved-world migration admission.",
-      "status": "IMPLEMENTING",
+      "status": "BLOCKED",
       "specs": ["milestones/evidence/m1-water-upgrade-preflight-authorization.json", "milestones/approvals/m1-water-fill-upgrade-v1.json", "spec/game-networking.md", "crates/server/README.md"],
       "dependencies": ["M1-WATER-ITEM-ON-DISPATCH"],
       "allowed_paths": ["crates/server/src/game_service/tests/**", "crates/server/src/game_service/tests.rs", "crates/server/tests/**", "crates/server/README.md", "spec/game-networking.md", "tools/journey-tests/**", "milestones/**"],
@@ -140,7 +140,7 @@
       "source_notes": ["Director inspected the real operator, transaction, source UI/audio initializer, readiness validator and existing migration regression. The existing guarded transaction is a candidate boundary, not yet proof of non-UI recipe compatibility."],
       "parity_entries": [],
       "adaptations": [],
-      "evidence": ["milestones/evidence/m1-water-upgrade-preflight-authorization.json", "Candidate de7b66f/b66a0c7 passes one native case over both exact source pairs and two real guarded PostgreSQL cases, with strict server Clippy. All failed test attempts are retained. Independent persisted-mode repair, real-asset operator checks, main adoption and saved-world admission remain separate."]
+      "evidence": ["milestones/evidence/m1-water-upgrade-preflight-authorization.json", "milestones/evidence/m1-water-upgrade-preflight-receipt.json", "Candidate2cc6c45 preserves de7b66f migration tests and037067d explicit source packaging. One native two-profile case, two real PostgreSQL cases, strict server Clippy and17 machinery cases pass; four genuine5015-mapping source deliveries are prepared. Retained failures, the native persisted-mode repair, unspent ten-call operator check and separately gated saved-world execution remain explicit."]
     },
     {
       "id": "M1-WATER-FILL-MIGRATION",

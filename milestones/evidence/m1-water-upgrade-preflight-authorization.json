@@ -72,6 +72,7 @@
     "source_operator_timeout_seconds": 35,
     "source_operator_accounts_or_gameplay_commands": 0,
     "source_only_asset_limit_mib_per_bundle": 512,
+    "source_operator_journal": ".worktrees/m1-water-integration/.local/water-upgrade-preflight/operator-authority-v1.json",
     "automatic_retry": false,
     "cleanup": "Stop and verify removal of the exact owned disposable container and temporary credentials."
   },
@@ -91,6 +92,27 @@
     "retained_failures": "Initial test-only error-code compilation mistake and Produced-versus-ProductionResolved assertion are retained with exact logs.",
     "remaining_operator_scope": "Prepare genuine source-only asset deliveries for both exact pairs, without changing canonical files. Exercise real migrate-ui processes against two newly created character-free worlds in the owned disposable database; never a saved player world.",
     "independent_native_review_fix_still_required": true
+  },
+  "prepared_source_operator": {
+    "status": "prepared_pending_native_fix_and_review",
+    "candidate": "2cc6c45813a51bcd4a7ff5164975936a2caf36fc",
+    "directory": ".worktrees/m1-water-integration/.local/water-source-operator-01",
+    "preparation_sha256": "51caa7d2a14631bb56253b05b84e480898e318f4fdfdd9d17f63ae4c2c4fa39d",
+    "source_packager_commit": "037067d1cefc56a51562cf4235f71842ba400654",
+    "source_packager_sha256": "ba7a9952d6ff5ee2d9c41a21e3e957250d702fef19534a70e0b85a86df3506af",
+    "worlds": [
+      {"profile": "legacy5e", "world_id": "029e1354-cdf4-43c3-b442-7f68433aec12"},
+      {"profile": "current5b", "world_id": "16ceca3e-9b0c-43cd-9e9f-0382e5a190ad"}
+    ],
+    "genuine_source_only_deliveries": 4,
+    "verified_asset_mappings_per_delivery": 5015,
+    "accounts_or_services_started_by_preparation": 0,
+    "operator_invocations_used": 0,
+    "required_before_execution": [
+      "Resolve and assess the independently found persisted-production restriction gap.",
+      "Rebuild/verify the exact final native executable and preserve these exact source-delivery pins.",
+      "Reserve the fixed operator journal exclusively before the first invocation; directories do not renew the ten-call allowance."
+    ]
   },
   "saved_world_migration_or_continuation_admitted": false,
   "milestone_accepted": false
