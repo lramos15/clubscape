@@ -1,11 +1,19 @@
 {
   "schema_version": 1,
   "milestone": "m1-starter-journey",
-  "result": "isolated_production_ui_boundary_verified_separate_native_audio_gate_failed",
+  "result": "isolated_production_ui_checks_passed_native_audio_and_recovery_gates_open",
   "execution_root": ".worktrees/m1-ui-integration",
   "branch": "integration/m1-ui-current",
   "candidate_revision": "2f3704d7132e02e15bf5c306549abcd3ccd21962",
   "root_ui_integrated": false,
+  "followup_source_caption_regression": {
+    "path": "milestones/evidence/m1-recovery-context-review.json",
+    "revision": "31203c6354866cfc4237a09c74cb22f0e85fb2ff",
+    "before": "Original duplicate-type Office caption is35 arrows/1470 coins; the current per-entry extension displays7/294.",
+    "original_control_passed": true,
+    "current_contract_test_passed": false,
+    "new_source_or_golden_created": false
+  },
   "owned_lineage": [
     {"owner": "ui", "original": "fa84bf3202090ecb632cc74bc9167677ce7835f2", "isolated": "7c55fa519be3a717fda16435ee61f1291def1846"},
     {"owner": "ui", "original": "0ee025fa897a3db93d73831e25295915f40985b1", "isolated": "9e3927356555d31617ab9a0bf245659ccaf4bebd"},
