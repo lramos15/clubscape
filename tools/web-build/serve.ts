@@ -2,7 +2,7 @@ import { spawn } from "node:child_process";
 import { fileURLToPath } from "node:url";
 import { resolve } from "node:path";
 import { access } from "node:fs/promises";
-import { webOutputDirectory } from "./output.ts";
+import { webOutputDirectory } from "./output.mts";
 
 const root = fileURLToPath(new URL("../../", import.meta.url));
 const webRoot = webOutputDirectory();

@@ -1,6 +1,6 @@
 import { defineConfig } from "vite";
 import { fileURLToPath } from "node:url";
-import { webOutputDirectory } from "../tools/web-build/output.ts";
+import { webOutputDirectory } from "../tools/web-build/output.mts";
 
 export default defineConfig({
   publicDir: false,

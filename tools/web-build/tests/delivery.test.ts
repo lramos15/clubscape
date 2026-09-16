@@ -5,7 +5,7 @@ import { fileURLToPath } from "node:url";
 import { join } from "node:path";
 import { createHash, randomUUID } from "node:crypto";
 import { collectBuild, publicAssetPath, publicFile } from "../deliver.ts";
-import { webOutputDirectory } from "../output.ts";
+import { webOutputDirectory } from "../output.mts";
 
 test("delivery is explicit, hash-pinned and rejects private extensions/traversal/symlinks", async () => {
   const root = fileURLToPath(new URL("../../../.local/web-delivery-checks/", import.meta.url));

@@ -9,7 +9,9 @@ performance and owner acceptance are unchanged.
 
 The owned UI4/WASM mapping and fresh FINAL4 delivery work, but the current
 UI-owner schema/dispatch tables lack `activeTab`, `document`,
-`bank_placeholder` and `ui_document_page`, and its component fixture is stale.
+`bank_placeholder`, `ui_document_page`, `production_select_all`,
+`bank_set_amount`, `recovery_take` and `recovery_bank_all`, and its component
+fixture is stale.
 Its audio fixture also lacks the new native `AudioSnapshot.preferences` field.
 These are five current UI-owner compile errors.
 Those UI files have not been edited outside ownership. Normal `pnpm typecheck`
@@ -594,7 +596,9 @@ CLUBSCAPE_GAME_ROOT="$PWD/$GAME" pnpm --dir web serve
 
 The output override only accepts a bounded `.local/web-builds/<candidate>`
 directory and rejects symlink/non-directory traversal. It cannot redirect the
-bundler's cleanup into repository sources or an old game root. Normal build
+bundler's cleanup into repository sources or an old game root. Its shared
+`output.mts` helper is explicitly ESM and works with Vite's native config loader
+without warning suppression or an enclosing package-type override. Normal build
 still honors the UI-owner typecheck gate; diagnostic bundling remains explicitly
 separate. Current source capabilities require complete All/recovery projections,
 including nonadditive capacities/fees and unavailable source Bank-All permission.

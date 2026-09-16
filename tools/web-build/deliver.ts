@@ -8,7 +8,7 @@ import { canonicalJson, publicPath } from "../../web/app/identity.ts";
 import { parseContentManifest } from "../../web/app/manifest.ts";
 import type { AssetRecord } from "../../web/app/manifest.ts";
 import { verifyReferenceIntegrity } from "./reference.ts";
-import { webOutputDirectory } from "./output.ts";
+import { webOutputDirectory } from "./output.mts";
 
 export interface PublicFile { url: string; path: string; sha256: string; content_type: string }
 const digest = (bytes: Uint8Array | string): string => createHash("sha256").update(bytes).digest("hex");

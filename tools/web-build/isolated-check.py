@@ -129,7 +129,7 @@ def main():
         env.pop("CLUBSCAPE_GAME_ROOT", None)
         env["DATABASE_URL"] = f"postgresql://clubscape:{password}@127.0.0.1:{match[1]}/clubscape_browser"
         env["CLUBSCAPE_BIND"] = "127.0.0.1:0"
-        web_root = Path(command(["node", "tools/web-build/output.ts"]))
+        web_root = Path(command(["node", "tools/web-build/output.mts"]))
         env["CLUBSCAPE_WEB_ROOT"] = str(web_root)
         env["CLUBSCAPE_BUILD_REVISION"] = command(["git", "rev-parse", "HEAD"])
         env["TMPDIR"] = str(runtime)

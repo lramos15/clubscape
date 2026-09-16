@@ -15,7 +15,7 @@ import type { PreviewObservation } from "../preview.ts";
 import { presentationOptions } from "../presentation.ts";
 import type { MinimapObservation } from "../minimap.ts";
 import { checkPlayerAudioPreferences } from "./real-player-audio.ts";
-import { webOutputDirectory } from "../../../tools/web-build/output.ts";
+import { webOutputDirectory } from "../../../tools/web-build/output.mts";
 
 const root = resolve(fileURLToPath(new URL("../../../", import.meta.url)));
 type SecretWindow = Window & { __sourceUiCredentials?: { name: string; password: string } };
