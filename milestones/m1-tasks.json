@@ -10,15 +10,15 @@
       {"id": "bb7f85f7-096a-4377-80cb-3e7eae196c6b", "task": "M1-BROWSER-RENDERER"},
       {"id": "78d01af9-70a4-4b02-8339-6a61eb377374", "task": "M1-BROWSER-SHELL"},
       {"id": "cdfad64d-9162-439f-a525-58e1114dd7f4", "task": "M1-AUDIO-CONTROL-READINESS"},
-      {"id": "ac0f0856-44af-445b-bd90-6db7a1f4fc74", "task": "M1-NATIVE-CAMERA-CONTROLLER"},
+      {"id": "e6925772-df1f-4ff7-9efc-219f800a5a14", "task": "M1-NATIVE-CAMERA-REVIEW"},
       {"id": "2766e089-44e5-4a1d-974e-7b03ad9c269d", "task": "M1-NATIVE-RECOVERY-CONTRACT"}
     ],
     "reserved": [],
     "queued": [],
     "parked": [
+      {"id": "ac0f0856-44af-445b-bd90-6db7a1f4fc74", "reason": "Native camera2401e98 completed in owned crates/camera plus local-member lock entry. Parent32native tests, Clippy, WASM check and byte-identical14/354 conformance pass. Independent review and actual renderer/WASM/browser providers remain separate; no automatic consumer edits or resumption."},
       {"id": "81ac9884-4f39-4f27-b516-6e9a42b09b51", "reason": "Turn24 returned empty with HEAD9289baf unchanged, no pending code, no cook attempt journal or new run evidence. Director takes over a913bb7's UNUSED one-restore allowance in the same protected source5e worktree, with a new isolated branch; no automatic resumption or duplicate allowance. Assignment record milestones/evidence/m1-cook-director-takeover.json."},
       {"id": "cc864d7a-37cc-4869-a7b4-d484d01cede5", "reason": "Latest turns delivered no current-contract completion. Four published UI commits and pending native-preference work are preserved unchanged in m1-ui; Director takes the bounded UI integration/current-contract/native-port completion directly. No automatic resumption or duplicate UI edits."},
-      {"id": "e6925772-df1f-4ff7-9efc-219f800a5a14", "reason": "Bounded UI4 review complete: one medium source-travel interruption bypass in timed UI actions. Director repair M1-UI-TRAVEL-INTERRUPTION is active; this is not final candidate signoff."},
       {"id": "2a0ae699-6af8-45d5-90c7-3addfc56ee53", "reason": "Renewed five-invocation assessment complete; live creation/scene/window/baseline work, firstXP unverified after driverOutOfReach. No sixth invocation or automatic resumption."},
       {"id": "aab1ae0f-0238-4254-bff3-b7c046349c6b", "reason": "Shop capacity/identity fixes integrated as3310032+af75e17 with18 passing regressions; no automatic resumption."},
       {"id": "0f5ddddf-0aa0-4908-b0d3-1ffc6b1f7a20", "reason": "Actor presence/cadence fixes integrated as62a003c+e1076a8 with15 passing regressions; no automatic resumption."},
@@ -33,6 +33,24 @@
     "usage_accounting": "milestones/evidence/m1-usage-snapshot.json records the available delayed session snapshot; final project-wide credits/currency are unavailable."
   },
   "tasks": [
+    {
+      "id": "M1-NATIVE-CAMERA-REVIEW",
+      "goal": "Independently review the complete native camera implementation and original conformance oracles before consumer integration.",
+      "status": "IMPLEMENTING",
+      "specs": ["crates/camera/README.md", "research/camera-source/contract.json", "milestones/approvals/m1-camera-initialization-v1.json", "crates/camera/initialization.json", "crates/camera/conformance.json"],
+      "dependencies": ["M1-SOURCE-CAMERA-CONTROLS"],
+      "allowed_paths": [],
+      "forbidden_paths": ["**"],
+      "outputs": ["Bounded high-confidence findings with exact source/code evidence, or a qualified no-findings review"],
+      "validation_commands": [],
+      "test_requirements": ["Read-only review of owned2401e98 and immutable source evidence; no new captures, builds, files or agents", "Check original integer/float paths, input/follow/terrain/FOV/rebase semantics and transactional validation", "Check that conformance computes actual results independently rather than replaying expected rows", "Review initialization provenance within the approved policy, not as original account evidence", "Do not certify unwired browser/renderer integration, WASM execution, pixels, performance or M1"],
+      "acceptance": ["Record independently assessed native implementation risks before root adoption and consumer wiring"],
+      "reserved_namespaces": [],
+      "source_notes": ["Candidate has4526 added lines across implementation/tests/records. Parent32tests plus Clippy/WASM check pass;14scenarios/354rows,39438integer and6210float-bit comparisons are byte-identical with0differences. Production must supply real rendered-surface triangles/decoration raises and actual focus snapshots; no bilinear or zero-focus fallback."],
+      "parity_entries": [],
+      "adaptations": ["adaptation.m1.source_based_camera_initialization"],
+      "evidence": ["milestones/evidence/m1-native-camera-candidate.json"]
+    },
     {
       "id": "M1-WORLD-ACTION-ROUTING",
       "goal": "Make one-click required world actions approach a valid source contact and execute the same selected action without manual walk-then-click workarounds or client-owned gameplay.",
@@ -162,7 +180,7 @@
     {
       "id": "M1-NATIVE-CAMERA-CONTROLLER",
       "goal": "Implement the complete stateful original camera mechanics as a reusable Rust/WASM-compatible controller, with exact original trace conformance and the separately approved initialization policy.",
-      "status": "IMPLEMENTING",
+      "status": "REVIEW",
       "specs": ["research/camera-source/contract.json", "research/camera-source/validation.json", "milestones/approvals/m1-camera-initialization-v1.json", "spec/browser-implementation.md"],
       "dependencies": ["M1-SOURCE-CAMERA-CONTROLS", "M1-REFERENCE-APPROVAL"],
       "allowed_paths": ["crates/camera/**", "Cargo.lock"],
@@ -175,7 +193,7 @@
       "source_notes": ["The source-only c59ce337 handoff integrated852a35f is complete and its14 scenarios/354 original state readbacks remain immutable.", "Owner accepted approve_source_based_initialization after the exact structured question recorded in milestones/approvals/m1-camera-initialization-v1.json. This is initialization only and not final presentation acceptance.", "Renderer gear/terrain and shell preview/spatial paths are independently owned. Publish narrow terrain/focus and state/input/output contracts before touching those consumers; Director will serialize the end-to-end integration in M1."],
       "parity_entries": [],
       "adaptations": ["adaptation.m1.source_based_camera_initialization"],
-      "evidence": []
+      "evidence": ["Owned2401e98ef2a75f7e1252ae1816fde06e7f2230db changes only newcrates/camera and the local-member lock entry. Parent32tests/Clippy/WASM-check pass in worktree-local target; conformance report0fc3e1a4f3d8d8a21980bc35f1b031a6bdac9f0170a8c5fd65e9c6230ef53609 repeats byte-identically:14original scenarios/354rows plus336intervening fixed-tick readbacks,39438integer and6210float-bit comparisons,0differences.", "Independent native review is active; no root integration or consumers changed yet. Actual focus/render coordinates, source surface triangles and decoration raises are required. Approved constructor FOV computes662 at1080, distinct from controlled full-HUD helper410; no hardcoded fixture projection or authenticated-default claim. Evidence milestones/evidence/m1-native-camera-candidate.json."]
     },
     {
       "id": "M1-AUDIO-COMPOSED-TIMING",

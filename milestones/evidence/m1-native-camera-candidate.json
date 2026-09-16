@@ -1,0 +1,62 @@
+{
+  "schema_version": 1,
+  "milestone": "m1-starter-journey",
+  "result": "native_controller_conformance_verified_independent_review_pending",
+  "owned_revision": "2401e98ef2a75f7e1252ae1816fde06e7f2230db",
+  "worktree": ".worktrees/m1-camera-runtime",
+  "root_code_integrated": false,
+  "implementation_scope": {
+    "crate": "clubscape-camera",
+    "paths": ["crates/camera/**", "Cargo.lock"],
+    "lock_change": "Only the new local member and existing dependency edges; no existing package versions changed.",
+    "browser_renderer_or_protocol_consumers_changed": false
+  },
+  "conformance": {
+    "original_scenarios": 14,
+    "original_rows": 354,
+    "intervening_fixed_tick_readbacks": 336,
+    "integer_scalar_comparisons": 39438,
+    "float_bit_comparisons": 6210,
+    "differences": 0,
+    "parent_report_byte_identical": true,
+    "report": "crates/camera/conformance.json",
+    "report_sha256": "0fc3e1a4f3d8d8a21980bc35f1b031a6bdac9f0170a8c5fd65e9c6230ef53609",
+    "archive": "milestones/evidence/m1-native-camera/conformance.json.gz",
+    "archive_sha256": "2697514d7821191c050866b5140c17376e76ca3649e446f294be3e793df735d1",
+    "qualification": "Immutable controlled original readbacks, including repeated native/decoded aliases; not authenticated camera defaults or live browser acceptance."
+  },
+  "parent_validation": {
+    "native_tests": 32,
+    "tests_log_sha256": "700d69a21bbe581b504a1fe3d51cb294de3fb5ed6fb2a9c62a9dca1a5d801e10",
+    "clippy": "passed",
+    "clippy_log_sha256": "8c233a54790c4800d3dd585436af679aa838da259bfdb129412e2d51cdb75cdc",
+    "wasm32_check": "passed",
+    "wasm_log_sha256": "59639588a6f1826f129cbcd121edc07279dab94786f5fa5bde6b3439b2e845cc",
+    "worktree_local_target": true,
+    "native_compilation_is_not_wasm_execution": true
+  },
+  "required_production_inputs": [
+    "Actual source focus identity, logical and rendered coordinates, footprint and plane",
+    "Original height corners, tile settings, bridge semantics and rendered-surface triangles",
+    "Original ground-decoration raise for fixed-tick surface queries; bilinear height is not a substitute",
+    "Separate20ms logical input and elapsed-nanosecond frame clocks",
+    "Actual source effect activation/phase/random inputs if effects are active"
+  ],
+  "initialization": {
+    "record": "crates/camera/initialization.json",
+    "owner_approval": "milestones/approvals/m1-camera-initialization-v1.json",
+    "selected_native_angles": {"yaw": 0, "pitch": 2048, "units_per_turn": 16384},
+    "fixture_eye_copied": false,
+    "constructor_fov": [256, 205],
+    "constructor_projection_at1080": 662,
+    "controlled_full_hud_helper_projection_at1080": 410,
+    "projection_values_are_not_interchangeable": true,
+    "original_authenticated_initialization_observed": false
+  },
+  "review_task": "M1-NATIVE-CAMERA-REVIEW",
+  "consumer_integration_task": "M1-CAMERA-INTEGRATION",
+  "normal_entry_verified": false,
+  "presentation_or_performance_accepted": false,
+  "milestone_accepted": false,
+  "later_milestone_authorized": false
+}
