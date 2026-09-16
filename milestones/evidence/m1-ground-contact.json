@@ -61,6 +61,26 @@
     "corrected_source5e_executable": ".worktrees/m1-ground-source5e/.local/journey-target/debug/deps/ground_contact-79ccf20a16cf3e5c",
     "future_rule": "Never share build targets across source-pinned worktrees/profiles; verify actual fixture/executable identity."
   },
+  "durable_validation_archives": [
+    {"path": "milestones/evidence/m1-ground-contact/before.log.gz", "sha256": "f8a62df7051006df546c6f7ddae9a4d48b862e0e006ed1e4bcb8512cafd696d7"},
+    {"path": "milestones/evidence/m1-ground-contact/current-root-rebuilt.log.gz", "sha256": "ec3d39eb7176af7d8aa29daa905ce474dc79a603c93c4943bd02d753fde36fba"},
+    {"path": "milestones/evidence/m1-ground-contact/source5e-contact.log.gz", "sha256": "0a33938f791ab219749e45511786bae05344226dc7b81aa8604d129639119481"},
+    {"path": "milestones/evidence/m1-ground-contact/source5e-simulator.log.gz", "sha256": "bcc7182d562754e506fb58d9363a90dfa9d15fd624075b49757aa8ace9153fd1"}
+  ],
+  "checked_executables": [
+    {
+      "path": "target/debug/deps/ground_contact-821dfa2e9aae9e55",
+      "sha256": "8188ca91d74b25a52e3efc7f17efe82323629fc177f5af06a05e78bfde67ccc8",
+      "embedded_source": "5b3ba5f108ed3fec8f8b5f7f49b429c059e21b6f192ec99a0569616e08330059",
+      "other_source_absent": true
+    },
+    {
+      "path": ".worktrees/m1-ground-source5e/.local/journey-target/debug/deps/ground_contact-79ccf20a16cf3e5c",
+      "sha256": "e92cb11028ea2e096665e7b90fd52e4d0f859107b1c8558120e87864f4731793",
+      "embedded_source": "5e0aa8a28851752ae0b8b0a08c635c6c8d2979f509f3a3e564ee74e2abfc8e6f",
+      "other_source_absent": true
+    }
+  ],
   "actual907_restore_or_pickup_executed_by_this_repair": false,
   "remaining": "A separately admitted same-account907 continuation must verify actual ingredient acquisition, Cook rewards and postquest persistence. Native fixtures are not that journey.",
   "full_m1_journey_verified": false,
