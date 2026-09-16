@@ -1,0 +1,58 @@
+{
+  "schema_version": 1,
+  "task": "M1-WATER-ITEM-ON-REVIEW",
+  "status": "admitted_read_only",
+  "authority": "Director bounded independent review within approved M1",
+  "implementation_authority": "milestones/evidence/m1-water-item-on-dispatch-authorization.json",
+  "owner_approval": "milestones/approvals/m1-water-fill-upgrade-v1.json",
+  "reviewer": "e6925772-df1f-4ff7-9efc-219f800a5a14",
+  "worktree": ".worktrees/m1-water-dispatch",
+  "base_content_owned_commit": "eaa527a8f3d9d408d6bf1a4b8fdc47269abe0137",
+  "base_content_candidate_commit": "cba2016f5f403ea793f875a40ec7c5191c9521cd",
+  "implementation_commit": "5c6c581136310b48e8043e7920199d7236f9b88c",
+  "handoff": "research/water-fill/item-on-validation.json",
+  "reported_evidence_not_director_reruns": {
+    "both_profiles_positive_before": "0/4",
+    "both_profiles_positive_after": "4/4",
+    "both_profiles_negative_after": "15/15",
+    "native_tests": 415,
+    "source_tests": 104,
+    "identical_repeated_outputs": 106,
+    "old5b_and_old5e_raw_and_gzip_recompile_exact": true,
+    "guarded_database_or_durable_receipt_tests": false
+  },
+  "current5b_water": {
+    "revision": "m1.source-backed.v4.71c86749d02088ee",
+    "raw_sha256": "adb24c14f76181a76e2874e97be3e2743a4c475d3ff89a7720b70ae6f6981bbc",
+    "gzip_sha256": "3b258ec2f23fd0942b99a8e20910b2d6ec2feb54a1ae11b71736a805b4754a7d",
+    "delta": ["/recipes/recipe.water.bucket", "/revision", "/ui/actor_animations/recipes/recipe.water.bucket"]
+  },
+  "legacy5e_water": {
+    "revision": "m1.source-backed.v4.3ff4292b311453cc.water.e337c77cc5ccd980",
+    "raw_sha256": "b2a1be20a0e6c3e1968f6f7610198ce38212f196c005539b4ac5013d10ebc650",
+    "gzip_sha256": "12432ec116f050d1edc42e4853ab38215d3aadd499e9fefad893ffbd6cf92232",
+    "delta": ["/recipes/recipe.water.bucket", "/revision"],
+    "unrelated_current_ui_audio_actor_metadata_imported": false
+  },
+  "review_scope": [
+    "Optional omitted-when-absent SourceBinding<ItemOnTargetRule> and strict malformed/unresolved/mixed-declaration rejection.",
+    "Reuse of existing target availability, ownership, instance, plane, footprint, access-side, collision, sight and contact rules.",
+    "Exactly one conversion through item use and canonical Produce; start, projection, pending tick and saved pending state agree.",
+    "Ordinary Production-menu behavior and old-profile artifact serialization remain unchanged.",
+    "Source-bound empty sink menu, ingredient conservation, actual meaningful positive/negative probes and exact source deltas."
+  ],
+  "source_limitations_retained": [
+    "Water actor motion remains unverified.",
+    "One-tick first/repeat values are qualified interpretations, not batching authority.",
+    "Ordinary-grave Bank-All, dough and seven Empty motion questions remain open."
+  ],
+  "forbidden": [
+    "Edits, tests, builds, GPU/browser/RuneLite or original-source capture.",
+    "Private checkpoint/account reads, restore, network journey or database migration.",
+    "Nested agents/factory, acceptance claims or changes to source/frozen presentation gates."
+  ],
+  "review_result": null,
+  "main_integrated": false,
+  "saved_world_migration_or_continuation_admitted": false,
+  "milestone_accepted": false
+}
