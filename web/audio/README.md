@@ -14,11 +14,14 @@ results, the three-invocation limit and the remaining work are in
 [`composed-timing.md`](composed-timing.md) and
 `evidence/composed-timing.json`.
 
-The separately authorized `M1-AUDIO-CONTROL-READINESS` implementation prepares
-and retains only the bound2266 control input before `createAudio` resolves.
-Its readiness/failure contract and the new two-cold-run validation allowance
-are documented in [`control-readiness.md`](control-readiness.md). Previous
-failed outcomes and budgets are not overwritten or reclassified.
+The separately authorized `M1-AUDIO-CONTROL-READINESS` follow-up now passes
+both fresh whole-client cold validations. Implementation `6557c57` prepares
+and retains only the bound2266 control input before `createAudio` resolves;
+normal production build `c05aa117...ba4e2` retains all18 dispatches with zero
+timing/loading/actual-start overruns in each run. Exact readiness/failure
+semantics and both results are in [`control-readiness.md`](control-readiness.md)
+and `evidence/control-readiness.json`. Previous failed outcomes and their
+exhausted budget are unchanged; no owner/M1 acceptance is implied.
 
 For current UI/shell integration, use the
 [player-scoped preference controls](#player-scoped-preference-controls-v1).

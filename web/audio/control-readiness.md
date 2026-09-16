@@ -6,6 +6,45 @@ This is the new bounded admission
 cause, not another attempt under the exhausted earlier three-run budget.
 The original failed reports and ready-cue scheduling repair remain intact.
 
+**Bounded validation completed:** implementation
+`6557c57e9edf1628f8afa448d928d8157a734e15` was committed before the normal
+protocol/renderer/typecheck/Vite/delivery build. Its artifact is
+`c05aa1175432ac6c97ac181c2ee6b58ed1c539c574a3abe517a76ddbbd4ba4e2`.
+Both newly authorized fresh-profile/native-context invocations passed the
+whole21-check source/UI/restart/device-loss path, six native storage/control
+contracts and all18 original2266 dispatches. There were zero loading,
+timing, clock, expiry and actual-start overruns in both runs. The allowance is
+fully used: **2 of2**, no pre-repair/standalone invocation and no third run.
+Exact retained report hashes and measurements are in
+`evidence/control-readiness.json`.
+
+| Measurement | Cold1 | Cold2 |
+| --- | ---: | ---: |
+| Ready before first actual enqueue | 592ms | 530.815ms |
+| Fetch plus byte/hash verification | 10.205ms | 10.105ms |
+| Decoder await | 0.560ms | 12.475ms |
+| Signal validation/cache insertion | 0.185ms | 0.175ms |
+| Decoded notification to ready | 0.020ms | 0.025ms |
+| Maximum native dispatch lateness | 0ms | 0ms |
+| Natural post-gain PCM comparisons | 14 | 14 |
+| Maximum natural PCM sample error / clips | 0 / 0 | 0 / 0 |
+
+The measured device retained42.675736961451244ms base latency and128ms output
+latency. Readiness was not achieved by changing the device or slowing the
+control cadence. Both contexts could already be browser-running at factory
+resolution, which is recorded honestly; the adapter still had no unlocked
+permission claim, voices or admitted queue entries. The real user handler
+still called `resume()` before awaiting.
+
+Typecheck and56 audio unit tests pass, including eight new deterministic
+readiness/failure/cancellation/reservation regressions. The strict frozen
+validator rechecked1,307 hashes and all85 pack tests pass. All275 playable
+files, source/renderer/world pins, source queue/deadline policy, `Cargo.lock`
+and all three old composed outcomes remain unchanged. Both wrappers and
+fixture cleanup assertions confirmed closed contexts, zero voices/queue/
+cache/pending loads, removed fixture storage and cleaned owned
+server/PostgreSQL/Xvfb/Chrome/profile/scratch resources.
+
 ## Lifecycle and admission
 
 `createAudio(ClientAssets, report)` keeps its existing asynchronous ABI. After
