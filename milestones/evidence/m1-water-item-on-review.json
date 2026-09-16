@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "task": "M1-WATER-ITEM-ON-REVIEW",
-  "status": "fix_review_pending",
+  "status": "passed",
   "authority": "Director bounded independent review within approved M1",
   "implementation_authority": "milestones/evidence/m1-water-item-on-dispatch-authorization.json",
   "owner_approval": "milestones/approvals/m1-water-fill-upgrade-v1.json",
@@ -68,7 +68,8 @@
         "trigger": "An otherwise valid deserialized item-on Producing activity with remaining2, or ProducingSelected with remaining1 and MakeX, passes persisted-state validation.",
         "effect": "The due-time check in activities.rs returns Unavailable; the error is not an ordinary interruption and propagates to abort the whole tick.",
         "required_fix": "Reuse one content-aware single-conversion predicate for start, projection, execution and persisted validation of all three production activity variants, regardless of deadline. Reject malformed pending work; never normalize or discard it.",
-        "status": "assigned_to_original_implementer"
+        "status": "resolved_in_reviewed_append",
+        "resolved_by": "04a40ee84d0a95866264a3c087071e0f63904377"
       }
     ]
   },
@@ -82,7 +83,7 @@
     "prior_forbidden_work_unchanged": true
   },
   "fix_review": {
-    "status": "admitted",
+    "status": "passed",
     "reviewer": "0f5fd134-c7e3-4d93-ba2e-c5cd448e33a1",
     "reserved_reviewer_slot": "water-persisted-fix-review",
     "previous_reviewer": {
@@ -103,7 +104,17 @@
       "logs": ".worktrees/m1-water-dispatch/.local/water-dispatch/persisted-repair/"
     },
     "forbidden_work_unchanged": true,
-    "result": null
+    "result": {
+      "execution": "Independent static inspection only; no tests or builds executed by the reviewer.",
+      "original_finding": "Resolved in04a40ee.",
+      "new_significant_correctness_findings": [],
+      "evidence": [
+        "runtime_validation.rs231-267 rejects invalid modes/counts for all three production variants without a deadline-dependent bypass.",
+        "content.rs232-257 shares the former execution checks; activities.rs498/790 and gameplay_ui/projections.rs424 use the same predicate.",
+        "item_on_target.rs316-483 serializes/deserializes actual WorldState JSON across future/due/overdue deadlines and preserves ordinary completions at ticks3 and6."
+      ],
+      "normalization_activity_clearing_or_tick_error_swallowing_added": false
+    }
   },
   "main_integrated": false,
   "saved_world_migration_or_continuation_admitted": false,

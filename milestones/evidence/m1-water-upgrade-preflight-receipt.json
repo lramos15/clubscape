@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "task": "M1-WATER-UPGRADE-PREFLIGHT",
-  "status": "candidate_components_verified_native_review_blocked",
+  "status": "native_repair_reviewed_final_database_check_pending",
   "authority": "milestones/evidence/m1-water-upgrade-preflight-authorization.json",
   "worktree": ".worktrees/m1-water-integration",
   "branch": "integration/m1-water-main",
@@ -39,7 +39,7 @@
     "fix_scope": "Shared all-variant persisted-state restriction and future/due/overdue serialized regressions in the original worker tree.",
     "result_collected": true,
     "repair_commit": "04a40ee84d0a95866264a3c087071e0f63904377",
-    "repair_review_and_integrated_validation": "pending"
+    "repair_review_and_integrated_validation": "Independent static fix review passed; all six imported paths match,420native and one exact-source-pair case pass. Final guarded PostgreSQL and real-asset operator checks remain pending."
   },
   "pending_execution": {
     "source_operator_calls_used": 0,
