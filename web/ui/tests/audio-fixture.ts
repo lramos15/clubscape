@@ -1,8 +1,10 @@
 import type { AudioSnapshot } from "../../audio/index.ts";
-import { createAudio, readAudioState, sourceSliderToMixer, setSourceMasterVolume } from "../../audio/index.ts";
+import { createAudio, readAudioState, sourceSliderToMixer, setSourceMasterVolume,
+  applySourceAudioPreferences, readSourceAudioPreferences } from "../../audio/index.ts";
 import type { SourceMusicState } from "../../audio/index.ts";
 import { SOURCE_PACK_SHA256 } from "../../shared/contracts.ts";
-import { bindUiAudio, getUiMusicState, onUiMusicStateChange, setUiMusicState } from "../index.ts";
+import { bindUiAudio, bindUiAudioPreferencePersistence, getUiMusicState, onUiMusicStateChange, setUiMusicState } from "../index.ts";
+import type { UiAudioPreferencePersistence } from "../audio-preference-storage.ts";
 import { observedAudio, projectAudioControls } from "../audio-controls.ts";
 import { projectMusicControls } from "../music-controls.ts";
 import { UiAssets } from "../assets.ts";
@@ -14,17 +16,20 @@ import { testAssets } from "./source-fixture.ts";
 
 let disposeAudio: (() => Promise<void>) | null = null;
 
-export async function mountAudio(phase: "world" | "title" = "world"): Promise<void> {
+export async function mountAudio(phase: "world" | "title" = "world",
+  preferences?: { persistence: UiAudioPreferencePersistence; unlockedGroups: readonly number[] }): Promise<void> {
   await disposeAudio?.();
   const component = await mount(phase);
   if (!component) throw new Error("Component mount failed.");
   if (phase === "world") component.services.enableUi();
+  const record = preferences ? await preferences.persistence.load(component.services.state().world!.player.id) : null;
   const failures: Error[] = [];
   const handle = await createAudio({
     ...testAssets, baseUrl: location.origin,
     url: id => location.origin + "/audio-asset/" + encodeURIComponent(id),
   }, error => { failures.push(error); });
   const stop = await bindUiAudio(component.ui, handle);
+  const stopPersistence = preferences ? bindUiAudioPreferencePersistence(component.ui, preferences.persistence) : null;
   component.services.audioVolume = (channel, value) => {
     component.services.calls.push({ method: "audioVolume", args: [channel, value] });
     handle.volume(channel, value);
@@ -33,16 +38,24 @@ export async function mountAudio(phase: "world" | "title" = "world"): Promise<vo
     component.services.calls.push({ method: "unlockAudio", args: [] });
     return handle.unlock();
   };
-  if (phase === "world") handle.update(component.services.state().world, []);
+  if (phase === "world") {
+    const world = component.services.state().world!;
+    handle.update(world, []);
+    if (preferences && record) {
+      const binding = applySourceAudioPreferences(handle, world.player.id, record, preferences.unlockedGroups);
+      setUiMusicState(component.ui, binding.playerId, binding.musicState);
+    }
+  }
   else handle.update(null, []);
   const musicChanges: Array<{ playerId: string; state: SourceMusicState }> = [];
   onUiMusicStateChange(component.ui, (playerId, state) => { musicChanges.push({ playerId, state }); });
-  disposeAudio = () => handle.dispose();
+  disposeAudio = async () => { stopPersistence?.(); await handle.dispose(); };
   Object.assign(window, { audioComponent: {
     handle, failures, state: () => readAudioState(handle), stop,
     master: (percent: number) => setSourceMasterVolume(handle, percent),
     music: (state: SourceMusicState, playerId = component.services.state().world!.player.id) => setUiMusicState(component.ui, playerId, state),
     musicState: () => getUiMusicState(component.ui), musicChanges,
+    preferences: () => readSourceAudioPreferences(handle),
     dispose: () => handle.dispose(), uiDispose: () => component.ui.dispose(),
   } });
 }
@@ -57,7 +70,7 @@ export function snapshotFor(percentages: readonly number[]): AudioSnapshot {
     volumes: { music: music / 100, effects: effects / 100, area: area / 100 },
     nativeMixer: { music: sourceSliderToMixer("music", music, master), effects: sourceSliderToMixer("effects", effects, master),
       area: sourceSliderToMixer("area", area, master) },
-    masterPercent: master, queueSize: 0, background: { groups: [], cursor: 0, mode: "once", exhausted: false, failed: false },
+    masterPercent: master, preferences: null, queueSize: 0, background: { groups: [], cursor: 0, mode: "once", exhausted: false, failed: false },
     voices: [], cache: { decodedBytes: 0, cached: 0, pending: 0 }, policyLimits: [], traces: [],
   };
 }

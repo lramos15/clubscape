@@ -118,7 +118,7 @@ try {
     await page.getByRole("button", { name: "Disable looping", exact: true }).click(); await frame();
     assert.equal((await music()).loopEnabled, false);
     await click("music-list-filter"); await click("music-filter-2");
-    assert.match(await page.getByRole("status").innerText(), /numbered_music_playlists/);
+    assert.match(await page.getByRole("status").innerText(), /ui.audio.preference.binding/);
     assert.deepEqual((await music()).playlistGroups, [327]);
     await click("notice-close"); await page.locator("canvas").press("Escape"); await frame();
     await page.screenshot({ path: resolve(results, "music-components/current-playlist.png") });
@@ -151,8 +151,15 @@ try {
     assert.equal(await scroll.getAttribute("aria-valuenow"), "4");
     assert.equal(await page.locator('[data-ui-control="music-skip"]').isDisabled(), true);
     await click("music-mode-1"); await click("music-skip");
-    assert.match(await page.getByRole("status").innerText(), /native_music_skip_request/);
-    await click("notice-close"); await click("music-list-filter");
+    assert.equal(await page.evaluate(() => window.audioComponent.state().traces.some(trace =>
+      trace.type === "source_control_click" && trace.data.binding === "skip/9292")), true);
+    await page.waitForFunction(() => {
+      const state = window.audioComponent.state();
+      return state.queueSize === 0 && state.cache.pending === 0;
+    });
+    await frame();
+    if (await page.locator('[data-ui-control="notice-close"]').count()) await click("notice-close");
+    await click("music-list-filter");
     await page.locator("canvas").press("Escape"); await frame();
     assert.equal(await page.locator('[data-ui-control="music-filter-0"]').count(), 0);
   });

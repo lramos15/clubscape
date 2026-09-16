@@ -42,7 +42,14 @@ def build_settings_catalog(definitions, templates):
         for index, row in enumerate(rows):
             end = rows[index + 1]["top"] if index + 1 < len(rows) else root["y"] + root["height"]
             row["height"] = end - row["top"]
-            row["widgets"] = [w for w in body if row["top"] <= w["y"] < end]
+            siblings = [other for other in rows if other["top"] == row["top"]]
+            group_end = next((other["top"] for other in rows[index + 1:] if other["top"] > row["top"]), root["y"] + root["height"])
+            action = next((w for w in body if w["onOp"] and len(w["onOp"]) > 1 and w["onOp"][1] == row["id"]), None)
+            if len(siblings) > 1 and action is not None and row["params"].get("1078") == 6:
+                row["widgets"] = [w for w in body if row["top"] <= w["y"] < group_end and
+                                  action["x"] <= w["x"] < action["x"] + action["width"]]
+            else:
+                row["widgets"] = [w for w in body if row["top"] <= w["y"] < end]
             row["descriptionIndices"] = [w["index"] for w in row["widgets"] if w["id"] == root["id"] and
                                          w["type"] == 4 and w["font"] == 495 and w["color"] == 0x9F9F9F]
             row["sourceSha256"] = definitions["settings"][str(row["id"])]["sourceSha256"]

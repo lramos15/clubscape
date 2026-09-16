@@ -40,6 +40,13 @@ export function currentSettingValues(catalogue: UiCatalogue, world: WorldView, a
     known(6393, music.mode === "area" ? 0 : music.mode === "single" ? 2 : 1);
     known(2974, music.areaMode === "modern" ? 0 : 1);
   }
+  const preferences = audio?.preferences?.playerId === world.player.id ? audio.preferences.preferences.music : null;
+  if (preferences) {
+    known(6394, preferences.currentPlaylist);
+    known(6395, !preferences.rememberModeOnLogin);
+    known(6397, !preferences.keepPlayingOnPlaylistChange);
+    known(6405, null); known(6406, null); known(6407, null);
+  }
   known(2769, input.singleMouse); known(1104, input.shiftDrop); known(2775, input.escapeCloses);
   known(2732, 1); known(2852, 0); known(2853, null);
   const supplies = world.player.settings.find(setting => setting.setting === "death_supply_piles");
@@ -105,15 +112,28 @@ export function projectAllSettings(catalogue: UiCatalogue, state: SettingsPageSt
     selected = [];
     top = viewport.height;
   }
+  let buttonColumn = -1, buttonTop = 0, buttonEnd = 0;
+  const reflow = search || !state.moreInfo || state.hideLocked;
   for (const row of selected) {
     const kind = settingKind(row);
+    if (kind !== 6 && buttonColumn >= 0) { top = buttonEnd; buttonColumn = -1; }
+    const button = kind === 6 ? row.widgets.find(widget => widget.onOp && widget.type === 3) : undefined;
+    let deltaX = 0, placedTop = top;
+    if (button && reflow) {
+      if (buttonColumn < 0) { buttonTop = top; buttonEnd = top; }
+      buttonColumn = Math.max(buttonColumn + 1, Number(row.params["1093"] ?? 0));
+      const padding = row.params["1100"] === undefined ? 5 : Math.max(0, Math.trunc((Number(row.params["1100"]) - button.height) / 2));
+      placedTop = buttonTop + padding;
+      deltaX = root.x + 5 + buttonColumn * Math.trunc(root.width / 3) - button.x;
+      buttonEnd = Math.max(buttonEnd, buttonTop + padding * 2 + button.height);
+    }
     const descriptions = row.widgets.filter(widget => widget.id === root.id && row.descriptionIndices.includes(widget.index));
     const removedHeight = state.moreInfo ? 0 : descriptions.reduce((height, widget) => height + widget.height, 0);
     const backdrop = row.widgets.find(widget => widget.id === root.id && widget.type === 3 && widget.color === 0 &&
       widget.width >= root.width - 10 && [200, 220].includes(widget.opacity));
     const fullHeight = backdrop?.height ?? row.height;
     const height = Math.max(1, fullHeight - removedHeight);
-    const delta = root.y + top - row.top;
+    const delta = root.y + placedTop - row.top;
     const value = values?.get(row.id);
     const colourControl = kind === 9 ? row.widgets.find(widget => widget.onOp && widget.type === 3) : undefined;
     for (const original of row.widgets) {
@@ -125,6 +145,7 @@ export function projectAllSettings(catalogue: UiCatalogue, state: SettingsPageSt
       nodes.set(widgetKey(widget), row);
       widget.y += delta;
       widget.originalY += delta;
+      widget.x += deltaX; widget.originalX += deltaX;
       if (original === backdrop) {
         widget.height = height;
         if (search || !state.moreInfo) widget.opacity = stripe;
@@ -162,9 +183,12 @@ export function projectAllSettings(catalogue: UiCatalogue, state: SettingsPageSt
       }
       widgets.push(widget);
     }
-    top += search || !state.moreInfo ? height + Number(row.params["1079"] ?? 0) : row.height;
+    if (button && reflow) {
+      if (buttonColumn === 2 || row.params["1094"] === 1) { top = buttonEnd; buttonColumn = -1; }
+    } else top += search || !state.moreInfo ? height + Number(row.params["1079"] ?? 0) : row.height;
     if (backdrop) stripe = stripe === 200 ? 220 : 200;
   }
+  if (buttonColumn >= 0) top = buttonEnd;
   const scroll = Math.min(Math.max(0, state.scroll), Math.max(0, top - viewport.height));
   for (const widget of widgets) {
     if (widget.id >> 16 !== 134) continue;

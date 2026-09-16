@@ -193,6 +193,7 @@ def native(items, source, tooling):
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--native", action="store_true", help="Re-run pinned original runtime, no accounts or network")
+    parser.add_argument("--refactor-settings", action="store_true", help="Refactor existing hash-bound widget readbacks only; no new captures")
     parser.add_argument("--source", type=Path, default=ROOT.parent / "m1-runtime-inputs/.local/current-source/cache-2695")
     parser.add_argument("--tooling", type=Path, default=ROOT.parent / "m1-source-captures/.local/source-capture/tooling")
     args = parser.parse_args()
@@ -202,6 +203,28 @@ def main():
         raise ValueError("Exact owner-approved source pack is required")
     pack = read(pack_path)
     validation = validate_frozen_pack()
+    if args.refactor_settings:
+        if args.native:
+            raise ValueError("Settings refactoring does not create new native captures")
+        manifest = read(OUT / "manifest.json")
+        provenance = read(OUT / "provenance.json")
+        recorded = next(row for row in provenance["assets"] if row["path"] == "ui/manifest.json")
+        if recorded["sha256"] != sha(OUT / "manifest.json"):
+            raise ValueError("Existing compiled source readbacks do not match their provenance")
+        if manifest["templateEncoding"] != "native-widget-pool-v1":
+            raise ValueError("Expected original pooled widget readbacks")
+        pool = manifest["widgetPool"]
+        templates = {name: [pool[index] for index in indices] for name, indices in manifest["templates"].items()}
+        manifest["settingsRows"] = build_settings_catalog(manifest["settingsDefinitions"], templates)
+        write(OUT / "manifest.json", manifest)
+        recorded.update(sha256=sha(OUT / "manifest.json"), bytes=(OUT / "manifest.json").stat().st_size)
+        provenance["settingsRefactoring"] = {
+            "scope": "Same original readbacks; source3865 button columns retain their individual operation identities.",
+            "tool": "tools/ui-assets/settings_catalog.py", "sha256": sha(TOOL / "settings_catalog.py"),
+        }
+        write(OUT / "provenance.json", provenance)
+        print(json.dumps({"settingsRows": len(manifest["settingsRows"]), "newNativeCaptures": 0}))
+        return
     items = collections("item")
     for capture in read(ROOT / "assets/reference/osrs240/native-hud/captures.json")["captures"]:
         for widget in capture["source"]["visible_widgets"]:

@@ -23,12 +23,20 @@ import { rewardDetails } from "./rewards.ts";
 import { audioSliderPercent, observedAudio } from "./audio-controls.ts";
 import type { UiAudioChannel, UiAudioView } from "./audio-controls.ts";
 import type { SourceMusicState } from "../audio/native-scene.ts";
-import { musicRequest, musicStateProblem, musicScrollPosition } from "./music-controls.ts";
+import { applyNativeMusicControl, musicRequest, musicStateProblem, musicScrollPosition } from "./music-controls.ts";
 import type { MusicUiAction } from "./music-controls.ts";
 import { defaultSettingsPage } from "./settings.ts";
 import type { SettingsPageState, ClientInputSettings } from "./settings.ts";
+import type { SourceAudioPreferenceBinding, SourceMusicSkipResult } from "../audio/preferences.ts";
+import { UiAudioPreferencePersistence } from "./audio-preference-storage.ts";
+import type { UiAudioPreferenceSaveStatus } from "./audio-preference-storage.ts";
+export { UiAudioPreferencePersistence } from "./audio-preference-storage.ts";
+export type { UiAudioPreferenceStorage, UiAudioPreferenceSaveResult, UiAudioPreferenceSaveStatus } from "./audio-preference-storage.ts";
 
-export interface UiNotice { message: string; errorId: string | null; recoverable: boolean; scope: "error" | "unavailable" | "information" }
+export interface UiNotice {
+  message: string; errorId: string | null; recoverable: boolean; scope: "error" | "unavailable" | "information";
+  retry?: () => void;
+}
 export interface AmountPrompt { label: string; value: string; confirm: (quantity: number) => void; pending?: boolean }
 export interface ItemSelection { slot: number; id: string; instanceId: string | null; name: string }
 export interface UiPreviewRequest {
@@ -205,7 +213,35 @@ export async function bindUiAudio(handle: UiHandle, audio: AudioHandle): Promise
   const module = await import("../audio/index.ts");
   const controller = controllers.get(handle);
   if (!controller) throw new Error("UI handle has been disposed.");
-  return controller.bindAudio(audio, module.observeAudioState, module.setSourceMasterVolume, module.setSourceMusicState, module.readAudioState);
+  return controller.bindAudio(audio, module);
+}
+
+export function bindUiAudioPreferencePersistence(handle: UiHandle, persistence: UiAudioPreferencePersistence): () => void {
+  const controller = controllers.get(handle);
+  if (!controller) throw new Error("UI handle has been disposed.");
+  controller.preferencePersistence = persistence;
+  controller.renderSoon();
+  return () => {
+    if (controller.preferencePersistence === persistence) { controller.preferencePersistence = null; controller.renderSoon(); }
+  };
+}
+
+export function getUiAudioPreferences(handle: UiHandle): SourceAudioPreferenceBinding | null {
+  return controllers.get(handle)?.readAudioPreferences() ?? null;
+}
+
+export function getUiAudioPreferenceSaveStatus(handle: UiHandle): UiAudioPreferenceSaveStatus | null {
+  return controllers.get(handle)?.audioPreferenceSaveStatus() ?? null;
+}
+
+export function getUiMusicSkipResult(handle: UiHandle): SourceMusicSkipResult | null {
+  return controllers.get(handle)?.readMusicSkipResult() ?? null;
+}
+
+export function retryUiAudioPreferenceSave(handle: UiHandle): void {
+  const controller = controllers.get(handle);
+  if (!controller) throw new Error("UI handle has been disposed.");
+  controller.retryAudioPreferenceSave();
 }
 
 /** Apply the same published music state to audio and UI, scoped to the actual current player. */
@@ -282,6 +318,11 @@ class UiController {
   private entryErrorPage = 0;
   private chatSubmission: { text: string; messageIds: Set<string>; accepted: boolean } | null = null;
   private audioHandle: AudioHandle | null = null;
+  private audioApi: typeof import("../audio/index.ts") | null = null;
+  private audioEpoch = 0;
+  private audioControlSequence = 0;
+  private lastMusicSkip: { player: string; epoch: number; result: SourceMusicSkipResult } | null = null;
+  preferencePersistence: UiAudioPreferencePersistence | null = null;
   private audioView: UiAudioView | null = null;
   private stopAudio: (() => void) | null = null;
   private masterVolume: ((percent: number) => void) | null = null;
@@ -357,15 +398,21 @@ class UiController {
     });
   }
 
-  bindAudio(handle: AudioHandle, observe: typeof import("../audio/index.ts").observeAudioState,
-    master: typeof import("../audio/index.ts").setSourceMasterVolume,
-    music: typeof import("../audio/index.ts").setSourceMusicState,
-    read: typeof import("../audio/index.ts").readAudioState): () => void {
+  bindAudio(handle: AudioHandle, api: typeof import("../audio/index.ts")): () => void {
     this.stopAudio?.();
+    this.audioEpoch++;
     this.mutedPercentages.clear();
     this.audioTrace = null;
+    this.audioHandle = handle; this.audioApi = api;
     const receive = (snapshot: import("../audio/index.ts").AudioSnapshot) => {
       if (this.disposed) return;
+      const previousPlayer = this.audioView?.preferences?.playerId ?? null;
+      const nextPlayer = snapshot.preferences?.playerId ?? null;
+      if (previousPlayer !== nextPlayer || snapshot.disposed) {
+        this.audioEpoch++; this.menu = null; this.sliderDrag = null;
+        if (this.notice?.retry) this.notice = null;
+        if (previousPlayer !== null) this.musicState = null;
+      }
       const result = observedAudio(snapshot);
       if (result.problem) {
         this.audioView = null;
@@ -373,24 +420,30 @@ class UiController {
       } else if (JSON.stringify(result.value) !== JSON.stringify(this.audioView)) {
         this.audioView = result.value; this.renderSoon();
       }
+      if (snapshot.preferences && snapshot.preferences.playerId === this.state.world?.player.id)
+        this.musicState = { playerId: snapshot.preferences.playerId, value: snapshot.preferences.musicState };
       const failure = snapshot.traces.findLast(trace => trace.type === "error");
       if (failure && failure !== this.audioTrace) {
         this.audioTrace = failure;
         const message = failure.data.message, code = failure.data.code;
         if (typeof message === "string" && typeof code === "string") {
           if (code === "AUDIO_GESTURE_REQUIRED") this.surface.announce(`${message} Error ID: ${code}`);
-          else this.show(message, "error", code);
+          else if (this.notice?.retry && this.notice.errorId !== code) {
+            const previous = this.notice, retry = this.notice.retry;
+            this.show(`${previous.message}\nError ID: ${previous.errorId ?? "unavailable"}\n${message}`, "error", code);
+            if (this.notice) this.notice.retry = retry;
+          } else this.show(message, "error", code);
         }
       }
     };
-    const stop = observe(handle, receive);
-    this.audioHandle = handle;
-    this.masterVolume = percent => master(handle, percent);
-    this.sourceMusic = state => { music(handle, state); receive(read(handle)); };
+    this.masterVolume = percent => api.setSourceMasterVolume(handle, percent);
+    this.sourceMusic = state => { api.setSourceMusicState(handle, state); receive(api.readAudioState(handle)); };
+    const stop = api.observeAudioState(handle, receive);
     const cleanup = () => {
       stop();
       if (this.stopAudio === cleanup) {
-        this.stopAudio = null; this.audioHandle = null; this.audioView = null; this.masterVolume = null; this.sliderDrag = null; this.audioTrace = null;
+        this.audioEpoch++;
+        this.stopAudio = null; this.audioHandle = null; this.audioApi = null; this.audioView = null; this.masterVolume = null; this.sliderDrag = null; this.audioTrace = null;
         this.musicState = null; this.sourceMusic = null;
         this.renderSoon();
       }
@@ -405,7 +458,7 @@ class UiController {
         throw Object.assign(new Error("The supplied music state belongs to a different player snapshot."), { errorId: "ui.music.owner" });
       if (!this.sourceMusic || !this.audioView || this.audioView.disposed)
         throw Object.assign(new Error("Bind the actual audio handle before supplying music state."), { errorId: "ui.music.binding" });
-      const problem = musicStateProblem(value);
+      const problem = musicStateProblem(value, this.audioView.preferences?.playerId === playerId);
       if (problem) throw Object.assign(new Error(problem), { errorId: "ui.music.state" });
       const state = Object.freeze({ ...value, unlockedGroups: Object.freeze([...value.unlockedGroups]),
         playlistGroups: Object.freeze([...value.playlistGroups]) });
@@ -423,11 +476,104 @@ class UiController {
     return this.musicState ? structuredClone(this.musicState.value) : null;
   }
 
-  private changeMusic(action: MusicUiAction): void {
+  readAudioPreferences(): SourceAudioPreferenceBinding | null {
+    const value = this.audioView?.preferences;
+    return value && value.playerId === this.state.world?.player.id ? structuredClone(value) : null;
+  }
+
+  audioPreferenceSaveStatus(): UiAudioPreferenceSaveStatus | null {
+    const player = this.readAudioPreferences()?.playerId;
+    return player && this.preferencePersistence ? this.preferencePersistence.status(player) : null;
+  }
+
+  readMusicSkipResult(): SourceMusicSkipResult | null {
+    const value = this.lastMusicSkip;
+    return value && this.audioControlCurrent(value.player, value.epoch) ? { ...value.result } : null;
+  }
+
+  private audioControlCurrent(player: string, epoch: number): boolean {
+    return !this.disposed && epoch === this.audioEpoch && this.state.world?.player.id === player &&
+      (this.state.phase === "world" || this.state.phase === "character");
+  }
+
+  private audioControlFailure(error: unknown, player: string, epoch: number): void {
+    const details = errorDetails(error);
+    if (this.audioControlCurrent(player, epoch)) {
+      this.show(details.message, "error", details.errorId);
+      const status = this.preferencePersistence?.status(player);
+      if (status?.state === "failed" && status.dirty && this.notice) this.notice.retry = () => {
+        if (this.audioControlCurrent(player, epoch)) this.retryAudioPreferenceSave();
+        else this.show("That save retry belongs to a previous player session.", "error", "ui.audio.control.stale");
+      };
+    } else this.services.report(error instanceof Error ? error : new Error(String(error)), details.errorId ?? undefined);
+  }
+
+  private permissionForAudioControl(player: string, epoch: number): Promise<{ ok: true } | { ok: false; error: unknown }> {
+    return this.services.unlockAudio().then(() => ({ ok: true }), error => {
+      this.audioControlFailure(error, player, epoch);
+      return { ok: false, error };
+    });
+  }
+
+  private async saveAudioPreferences(binding: SourceAudioPreferenceBinding, epoch: number): Promise<void> {
+    const persistence = this.preferencePersistence;
+    if (!persistence) throw Object.assign(new Error("The shell has not bound real player audio preference storage."), { errorId: "ui.audio.storage.unbound" });
+    try { await persistence.save(binding.playerId, binding.preferences); }
+    catch (error) { this.audioControlFailure(error, binding.playerId, epoch); throw error; }
+  }
+
+  retryAudioPreferenceSave(): void {
+    const binding = this.readAudioPreferences(), persistence = this.preferencePersistence, epoch = this.audioEpoch;
+    if (!binding || !persistence) { this.show("Player audio preference storage is not bound.", "error", "ui.audio.storage.unbound"); return; }
+    this.notice = null;
+    void this.request(`audio-save-retry:${binding.playerId}:${epoch}`, async () => {
+      try { await persistence.retry(binding.playerId); }
+      catch (error) { this.audioControlFailure(error, binding.playerId, epoch); throw error; }
+    }, false, () => this.audioControlCurrent(binding.playerId, epoch));
+  }
+
+  private nativeAudioControl(key: string, expectedEpoch: number,
+    change: (api: typeof import("../audio/index.ts"), handle: AudioHandle, binding: SourceAudioPreferenceBinding) => SourceAudioPreferenceBinding): void {
+    const binding = this.readAudioPreferences(), api = this.audioApi, handle = this.audioHandle, epoch = this.audioEpoch;
+    if (expectedEpoch !== epoch || !binding || !api || !handle) {
+      this.show("This audio control has no current player preference binding.", "error", "ui.audio.preference.binding"); return;
+    }
+    if (!this.preferencePersistence) { this.show("The shell has not bound real player audio preference storage.", "error", "ui.audio.storage.unbound"); return; }
+    void this.request(`native-audio:${binding.playerId}:${epoch}:${++this.audioControlSequence}:${key}`, async () => {
+      const permission = this.permissionForAudioControl(binding.playerId, epoch);
+      const next = change(api, handle, binding);
+      this.supplyMusicState(next.playerId, next.musicState);
+      const [access] = await Promise.all([permission, this.saveAudioPreferences(next, epoch)]);
+      if (!access.ok) throw access.error;
+    }, false, () => this.audioControlCurrent(binding.playerId, epoch));
+  }
+
+  private changeMusic(action: MusicUiAction, expectedEpoch = this.audioEpoch): void {
+    if (expectedEpoch !== this.audioEpoch) { this.show("That audio control belongs to a previous player session.", "error", "ui.audio.control.stale"); return; }
     const current = this.musicState, player = this.state.world?.player.id;
     if (!current || current.playerId !== player) {
       this.show("Supply the current player's SourceMusicState through setUiMusicState before using music controls.",
         "error", "ui.music.binding"); return;
+    }
+    if (action.kind === "skip") {
+      const api = this.audioApi, handle = this.audioHandle, epoch = this.audioEpoch;
+      if (!api || !handle) { this.show("The real audio handle is not bound.", "error", "ui.audio.observer_binding"); return; }
+      void this.request(`music-skip:${player}:${epoch}`, async () => {
+        const result = await api.requestSourceMusicSkip(handle, player);
+        if (!this.audioControlCurrent(player, epoch)) return;
+        this.lastMusicSkip = { player, epoch, result };
+        if (result.status === "requested" || result.status === "pending")
+          this.surface.announce(`Source Skip Track ${result.status}; playback permission and device output remain observable.`);
+        else this.show(result.status === "disabled_mode" ? "Skip Track is available only in Shuffle Mode."
+          : result.status === "muted" ? "Music is muted; no next selection was consumed."
+            : "No alternative source-unlocked track is available.", "information", `ui.music.skip.${result.status}`);
+      }, false, () => this.audioControlCurrent(player, epoch));
+      return;
+    }
+    if (this.audioView?.preferences) {
+      this.nativeAudioControl(JSON.stringify(action), expectedEpoch,
+        (api, handle, binding) => applyNativeMusicControl(api, handle, binding, action, this.audioView?.plannedGroup ?? null));
+      return;
     }
     const next = musicRequest(current.value, action, this.audioView?.plannedGroup ?? null);
     if (!next.state) { this.show(next.problem, "error", "ui.music.selection"); return; }
@@ -467,6 +613,11 @@ class UiController {
   update(state: Readonly<AppState>): void {
     if (this.disposed) return;
     const old = this.state;
+    if (old.world?.player.id !== state.world?.player.id ||
+        old.phase !== state.phase && !["world", "character"].includes(state.phase)) {
+      this.audioEpoch++;
+      if (this.notice?.retry) this.notice = null;
+    }
     this.state = state;
     this.minimap.retainScope(minimapScope(state.world));
     if (old.world?.player.id !== state.world?.player.id) {
@@ -546,7 +697,7 @@ class UiController {
     this.scrollDrag = null;
     this.chatSubmission = null;
     this.preview = null; this.previewBounds = null; this.previewRequest = null; this.cameraRequest = null; this.abilityVisuals = null;
-    this.musicChanged = null;
+    this.musicChanged = null; this.preferencePersistence = null; this.audioEpoch++;
   }
 
   renderSoon(): void {
@@ -593,24 +744,27 @@ class UiController {
       "error", `ui.contract.${field}`);
   }
 
-  private async request(key: string, action: () => Promise<void>, selection = false): Promise<boolean> {
+  private async request(key: string, action: () => Promise<void>, selection = false, current?: () => boolean): Promise<boolean> {
     if (this.disposed || this.pending.has(key)) return false;
     if (this.state.phase === "reconnecting") { this.show("Connection lost. Please wait - attempting to reestablish.", "error"); return false; }
     const revision = this.state.world?.revision ?? null;
     this.pending.add(key); this.renderSoon();
     try {
       await action();
-      if (this.disposed) return false;
+      if (this.disposed || current && !current()) return false;
       if (selection) {
         if (this.state.world?.revision !== revision) { this.local.selectedItem = null; this.local.selectedSpell = null; }
         else this.awaitingSelectionRevision = revision;
       }
       return true;
     } catch (error) {
-      if (!this.disposed) {
+      if (!this.disposed && (!current || current())) {
         const details = errorDetails(error);
         if (this.local.amount) this.local.amount.pending = false;
         this.show(details.message, "error", details.errorId);
+      } else if (current) {
+        const details = errorDetails(error);
+        this.services.report(error instanceof Error ? error : new Error(String(error)), details.errorId ?? undefined);
       }
       return false;
     } finally { this.pending.delete(key); this.renderSoon(); }
@@ -745,12 +899,18 @@ class UiController {
     });
   }
 
-  private audioPercent(channel: UiAudioChannel, percent: number): void {
+  private audioPercent(channel: UiAudioChannel, percent: number, expectedEpoch = this.audioEpoch): void {
+    if (expectedEpoch !== this.audioEpoch) { this.show("That audio control belongs to a previous player session.", "error", "ui.audio.control.stale"); return; }
     if (!this.audioView || this.audioView.disposed || !this.audioHandle) {
       this.show("Actual source audio settings are unavailable.", "error", "ui.audio.observer_binding"); return;
     }
     if (!Number.isInteger(percent) || percent < 0 || percent > 100) {
       this.show("Source slider positions must be integer percentages from 0 to 100.", "error", "ui.audio.slider"); return;
+    }
+    if (this.audioView.preferences) {
+      this.nativeAudioControl(`volume:${channel}:${percent}`, expectedEpoch,
+        (api, handle, binding) => api.setSourceAudioPercent(handle, binding.playerId, channel, percent));
+      return;
     }
     void this.request(`audio-${channel}-${percent}`, async () => {
       if (channel === "master") this.masterVolume!(percent);
@@ -758,9 +918,15 @@ class UiController {
     });
   }
 
-  private audioMute(channel: UiAudioChannel): void {
+  private audioMute(channel: UiAudioChannel, expectedEpoch = this.audioEpoch): void {
+    if (expectedEpoch !== this.audioEpoch) { this.show("That audio control belongs to a previous player session.", "error", "ui.audio.control.stale"); return; }
     if (!this.audioView || this.audioView.disposed) {
       this.show("Actual source audio settings are unavailable.", "error", "ui.audio.observer_binding"); return;
+    }
+    if (this.audioView.preferences) {
+      this.nativeAudioControl(`mute:${channel}`, expectedEpoch,
+        (api, handle, binding) => api.toggleSourceAudioMute(handle, binding.playerId, channel));
+      return;
     }
     const current = this.audioView.percentages[channel];
     if (current > 0) {
@@ -847,6 +1013,7 @@ class UiController {
     if (this.notice || (this.state.error && this.state.error !== this.dismissedError)) {
       if (event.key === " " || event.key === "Enter") {
         event.preventDefault();
+        if (this.notice?.retry) { this.controls.find(control => control.id === "notice-close")?.actions[0]?.run(); return; }
         const next = this.controls.find(control => control.id === "entry-error-next");
         if (next) next.actions[0]?.run(); else this.cancel();
       }
@@ -1393,6 +1560,7 @@ class UiController {
         unavailable: name => this.unavailable(name),
       }, controls, inputs, this.titleFlames);
     } else {
+      const audioEpoch = this.audioEpoch;
       paintGame(this.raster, {
         state: this.state, world, local: this.local, controls, inputs, minimap: this.minimap,
         abilityVisuals: this.abilityVisuals?.revision === world.revision ? this.abilityVisuals.values : {},
@@ -1425,12 +1593,12 @@ class UiController {
           if (!matches) this.show("That presentation changed. Review the current interface.", "error", "ui.presentation.stale");
           return matches;
         },
-        audio: this.audioView, audioPercent: (channel, percent) => this.audioPercent(channel, percent),
+        audio: this.audioView, audioPercent: (channel, percent) => this.audioPercent(channel, percent, audioEpoch),
         audioValue: channel => this.audioView?.percentages[channel] ?? null,
-        audioMute: channel => this.audioMute(channel),
+        audioMute: channel => this.audioMute(channel, audioEpoch),
         audioToggle: () => this.audio(),
         music: this.musicState?.playerId === world.player.id ? this.musicState.value : null,
-        musicAction: action => this.changeMusic(action),
+        musicAction: action => this.changeMusic(action, audioEpoch),
         focusInput: id => requestAnimationFrame(() => { if (!this.disposed) this.surface.focus(id); }),
         capture: bounds => this.panelBounds.push(bounds),
         preview: (bounds, model) => {
@@ -1501,7 +1669,8 @@ class UiController {
     const overlay = this.notice || (world || character ? visibleError : null);
     if (overlay && (world || character || this.notice?.scope !== "error")) {
       controls.length = 0; inputs.length = 0;
-      if (world) this.paintChatOverlay(overlay.errorId ? `${overlay.message}\nError ID: ${overlay.errorId}` : overlay.message, "Click here to continue", controls);
+      if (world) this.paintChatOverlay(overlay.errorId ? `${overlay.message}\nError ID: ${overlay.errorId}` : overlay.message,
+        this.notice?.retry ? "Click here to retry saving" : "Click here to continue", controls, this.notice?.retry);
       else {
         const pad = Math.floor((this.canvas.width - 765) / 2), x = pad + 202;
         this.raster.sprite(499, x, 171);
@@ -1556,7 +1725,7 @@ class UiController {
     };
   }
 
-  private paintChatOverlay(message: string, continuation: string, controls: Control[]): void {
+  private paintChatOverlay(message: string, continuation: string, controls: Control[], resume?: () => void): void {
     const chat = frameRegions(this.canvas.width, this.canvas.height).chat;
     this.raster.sprite(1017, chat.x, chat.y);
     const lines = entryErrorLines(message, 472, this.assets.catalogue.fonts[495]!);
@@ -1567,9 +1736,9 @@ class UiController {
     if (continuation) {
       const more = (page + 1) * pageSize < lines.length;
       this.raster.center(more ? "Click here to continue" : continuation, chat.x + 259, chat.y + 121, 495, 0x0000ff, null);
-      controls.push({ id: "notice-close", label: more ? "Continue message" : "Continue", x: chat.x + 8, y: chat.y + 100, width: 506, height: 29,
+      controls.push({ id: "notice-close", label: more ? "Continue message" : resume ? "Retry saving audio preferences" : "Continue", x: chat.x + 8, y: chat.y + 100, width: 506, height: 29,
         actions: [{ label: "Continue", run: () => {
-          if (more) this.local.dialoguePage++; else { this.local.dialoguePage = 0; this.cancel(); }
+          if (more) this.local.dialoguePage++; else { this.local.dialoguePage = 0; if (resume) resume(); else this.cancel(); }
           this.renderSoon();
         } }] });
     }

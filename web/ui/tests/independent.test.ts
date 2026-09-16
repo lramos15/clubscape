@@ -31,6 +31,13 @@ test("All Settings rows preserve native struct IDs and exact source search alias
   assert.equal(settingsMatches(row(6389), "loud"), true);
   assert.ok(projectAllSettings(catalogue, { ...defaultSettingsPage(), search: "loud" }).rowIds.includes(4503));
   assert.equal(settingsMatches(row(2734), "no such setting"), false);
+  for (const id of [6405, 6406, 6407]) {
+    const projection = projectAllSettings(catalogue, { ...defaultSettingsPage(), search: row(id).label });
+    const controls = [...projection.controls.values()].filter(control => control.row.id === id);
+    assert.equal(controls.length, 1);
+    assert.equal(controls[0]!.source.onOp![1], id);
+    assert.ok(!row(id).widgets.some(widget => widget.onOp && widget.onOp[1] !== id));
+  }
 });
 
 test("settings search compacts source row geometry without discarding required unknown controls", () => {

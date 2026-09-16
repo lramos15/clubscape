@@ -1,4 +1,5 @@
 import type { AudioSnapshot } from "../audio/index.ts";
+import type { SourceAudioPreferenceBinding } from "../audio/preferences.ts";
 import { sourceAudioDefaults, sourceSliderToMixer, sourceMixerToAssetGain } from "../audio/native-policy.ts";
 import type { SourceAudioChannel } from "../audio/native-policy.ts";
 import { SOURCE_PACK_SHA256 } from "../shared/contracts.ts";
@@ -26,11 +27,14 @@ export interface UiAudioView {
   readonly enabled: boolean;
   readonly playingGroup: number | null;
   readonly plannedGroup: number | null;
+  readonly preferences: SourceAudioPreferenceBinding | null;
 }
 
 export function observedAudio(snapshot: AudioSnapshot): { value: UiAudioView; problem: null } | { value: null; problem: string } {
   if (snapshot.sourcePackSha256 !== SOURCE_PACK_SHA256)
     return { value: null, problem: "The audio observer does not match the approved source pack." };
+  if (snapshot.preferences === undefined)
+    return { value: null, problem: "The audio observer omitted its player-preference binding state." };
   const percentages = { master: snapshot.masterPercent, music: Math.round(snapshot.volumes.music * 100),
     effects: Math.round(snapshot.volumes.effects * 100), area: Math.round(snapshot.volumes.area * 100) };
   if (Object.values(percentages).some(value => !Number.isInteger(value) || value < 0 || value > 100))
@@ -58,6 +62,7 @@ export function observedAudio(snapshot: AudioSnapshot): { value: UiAudioView; pr
     enabled, muted: snapshot.muted, pendingGesture: snapshot.pendingGesture, disposed: snapshot.disposed,
     outputEnabled: snapshot.outputEnabled, playingGroup: voice?.sourceId ?? null,
     plannedGroup: snapshot.background.groups[snapshot.background.cursor] ?? null,
+    preferences: snapshot.preferences,
   } };
 }
 
