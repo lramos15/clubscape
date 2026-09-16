@@ -5,8 +5,8 @@
   "authority": "Director bounded independent review within approved M1",
   "implementation_authority": "milestones/evidence/m1-water-item-on-dispatch-authorization.json",
   "owner_approval": "milestones/approvals/m1-water-fill-upgrade-v1.json",
-  "reviewer": null,
-  "reserved_reviewer_slot": "water-item-on-review",
+  "reviewer": "619c994e-a208-4acf-8c2a-261ae52c892b",
+  "reserved_reviewer_slot_consumed": "water-item-on-review",
   "previous_reviewer": {
     "id": "e6925772-df1f-4ff7-9efc-219f800a5a14",
     "resumption": "Rejected by runtime because the completed agent was retired; no water review executed.",

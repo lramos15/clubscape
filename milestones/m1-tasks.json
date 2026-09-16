@@ -7,11 +7,10 @@
     "admissions_open": true,
     "active": [
       {"id": "director", "task": "M1-SHELL-METADATA-INTEGRATION"},
-      {"id": "bb7f85f7-096a-4377-80cb-3e7eae196c6b", "task": "M1-BROWSER-RENDERER"}
+      {"id": "bb7f85f7-096a-4377-80cb-3e7eae196c6b", "task": "M1-BROWSER-RENDERER"},
+      {"id": "619c994e-a208-4acf-8c2a-261ae52c892b", "task": "M1-WATER-ITEM-ON-REVIEW"}
     ],
-    "reserved": [
-      {"id": "water-item-on-review", "task": "M1-WATER-ITEM-ON-REVIEW", "reason": "Prior reviewer e692 was retired by the runtime; its attempted resumption performed no review. One replacement read-only reviewer is reserved."}
-    ],
+    "reserved": [],
     "queued": [],
     "parked": [
       {"id": "e6925772-df1f-4ff7-9efc-219f800a5a14", "reason": "Runtime retired this completed camera/recovery reviewer. Attempted water-review resumption was rejected before any execution; prior completed reports remain valid. No automatic resumption."},
@@ -66,7 +65,7 @@
       "test_requirements": ["Review only the published eaa527a content append as pickedcba2016 and5c6c581 implementation plus directly necessary surrounding code", "Check optional-field serialization, strict source/content validation, shared target geometry and unchanged ordinary Production guards", "Check single-conversion admission across direct/item use, UI projection, start, pending ticks and persisted pending state; no synthetic menu or batching", "Assess positive/negative probe coverage, exact old5b/5e compatibility and minimal current/legacy source deltas without treating reported runs as independently rerun", "No edits, builds, tests, GPU/browser, source capture, private state, database migration, nested agents or acceptance claims"],
       "acceptance": ["Resolve high-confidence contract/content regressions before selective integration; review does not admit saved-world migration or M1 acceptance"],
       "reserved_namespaces": [],
-      "source_notes": ["Reuse the independent camera/recovery reviewer for this distinct bounded contract review. Director independently inspects only the existing server migration boundary and owns validation/integration."],
+      "source_notes": ["The previous camera/recovery reviewer was retired by the runtime before resumption; reserved replacement619c994 is the sole water reviewer. Director independently inspects only the existing server migration boundary and owns validation/integration."],
       "parity_entries": [],
       "adaptations": [],
       "evidence": ["milestones/evidence/m1-water-item-on-review.json"]
