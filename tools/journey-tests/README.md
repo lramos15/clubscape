@@ -235,6 +235,25 @@ like a failure. Fresh private capture must succeed before this bounded task can
 be complete. All services are cleaned after capture; no Office dialogue, grave
 claim, Cook action, walking or further gameplay is authorized by this mode.
 
+The single authorized invocation is complete:
+[`evidence/dying-restore-observe-c84c66094aaa4526.json`](evidence/dying-restore-observe-c84c66094aaa4526.json).
+Committed adapter `c3e7c52` restored the exact private state before startup and
+issued only Hello/Login/CurrentAccount/JoinWorld/PollWorld. All five returned200;
+there were **zero WorldInputs** and no gameplay receipt changes. The first public
+join at1621 and poll at1622 already showed HP10, unarmed style and the source
+Office location/instance/active-death ID. Private inspection separately confirms
+natural progression from saved1616/HP0/Dying to1622/FirstDeathOffice; no public
+Dying or Respawning frame is invented.
+
+The observation stopped in3.989seconds after readiness. A fresh mode0600
+checkpoint was captured at `.local/journey-checkpoints/c84c66094aaa4526`,
+archive SHA `a7cd1774144525c29efc694b5550f71a0e04052324bb59c3ab4fbccbe2d8b4af`,
+private-inventory SHA
+`996a199f2d47d83add36ee9de22802774cb9aaecd06e9fd0c0ea2d1a0e394f6f`.
+The original7fa archive and trace prefix remain exact; all owned services are
+cleaned. The authorization has been consumed. Further Office/grave/Cook or
+post-quest gameplay requires a separate director review and admission.
+
 ## Evidence and blockers
 
 The aggregate JSON differentiates infrastructure checks, negative readiness
