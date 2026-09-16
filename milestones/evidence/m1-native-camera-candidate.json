@@ -1,7 +1,8 @@
 {
   "schema_version": 1,
   "milestone": "m1-starter-journey",
-  "result": "native_controller_conformance_verified_independent_review_pending",
+  "result": "native_controller_conformance_and_bounded_independent_review_passed",
+  "independent_review": "milestones/evidence/m1-native-camera-independent-review.json",
   "owned_revision": "2401e98ef2a75f7e1252ae1816fde06e7f2230db",
   "worktree": ".worktrees/m1-camera-runtime",
   "root_code_integrated": false,

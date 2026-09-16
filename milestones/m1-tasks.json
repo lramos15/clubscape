@@ -6,16 +6,16 @@
     "effective_limit": 25,
     "admissions_open": true,
     "active": [
-      {"id": "director", "task": "M1-FLEET-CONTRACTS"},
+      {"id": "director", "task": "M1-NATIVE-RECOVERY-INTEGRATION"},
       {"id": "bb7f85f7-096a-4377-80cb-3e7eae196c6b", "task": "M1-BROWSER-RENDERER"},
       {"id": "78d01af9-70a4-4b02-8339-6a61eb377374", "task": "M1-BROWSER-SHELL"},
-      {"id": "e6925772-df1f-4ff7-9efc-219f800a5a14", "task": "M1-NATIVE-CAMERA-REVIEW"},
-      {"id": "2766e089-44e5-4a1d-974e-7b03ad9c269d", "task": "M1-NATIVE-RECOVERY-CONTRACT"},
       {"id": "fdda1fb0-1135-4cf8-8cff-3db550e48f54", "task": "M1-WATER-FILL-CLOSURE"}
     ],
     "reserved": [],
     "queued": [],
     "parked": [
+      {"id": "e6925772-df1f-4ff7-9efc-219f800a5a14", "reason": "Independent read-only2401e98 native camera review completed with no high-confidence findings. Original conformance not feedback/pruned; documented diagnostic multiplier not used in production height. No consumer/GPU/private-state work or M1 acceptance; no automatic resumption."},
+      {"id": "2766e089-44e5-4a1d-974e-7b03ad9c269d", "reason": "Published native context/Take-All through155ac6f/93aefa6/5e32781 plus evidencec379d1c/234d9f9, with396Rust/15controller checks. Director owns the missing one-line server encoder and complete UI consumption/PG validation; no more worker edits, source repin or automatic resumption."},
       {"id": "cdfad64d-9162-439f-a525-58e1114dd7f4", "reason": "Completed56audio units and two fresh full-source cold checks with18/18on-time cues each. Owned66c6d87/6557c57/b5a46f3 integrate2a7727d/693d573/7a01cf2; parent249candidateweb and103rootaudio-consumer checks pass. Both bounded allowances exhausted, GPU window released. Full journey/spatial/speaker/Mac/frozen performance/owner gates remain separate; no automatic resumption."},
       {"id": "ac0f0856-44af-445b-bd90-6db7a1f4fc74", "reason": "Native camera2401e98 completed in owned crates/camera plus local-member lock entry. Parent32native tests, Clippy, WASM check and byte-identical14/354 conformance pass. Independent review and actual renderer/WASM/browser providers remain separate; no automatic consumer edits or resumption."},
       {"id": "81ac9884-4f39-4f27-b516-6e9a42b09b51", "reason": "Turn24 returned empty with HEAD9289baf unchanged, no pending code, no cook attempt journal or new run evidence. Director takes over a913bb7's UNUSED one-restore allowance in the same protected source5e worktree, with a new isolated branch; no automatic resumption or duplicate allowance. Assignment record milestones/evidence/m1-cook-director-takeover.json."},
@@ -33,6 +33,24 @@
     "usage_accounting": "milestones/evidence/m1-usage-snapshot.json records the available delayed session snapshot; final project-wide credits/currency are unavailable."
   },
   "tasks": [
+    {
+      "id": "M1-NATIVE-RECOVERY-INTEGRATION",
+      "goal": "Wire the published full recovery context through the real server and UI, close the original caption/count regression, and verify atomic controls end to end.",
+      "status": "IMPLEMENTING",
+      "specs": ["research/interface-contracts/recovery-context/README.md", "web/shared/contracts.ts", "milestones/evidence/m1-recovery-context-review.json", "milestones/evidence/m1-ui-integration-review.json"],
+      "dependencies": ["M1-SHELL-INTEGRATION"],
+      "allowed_paths": ["web/ui/**", "crates/server/src/game_service/ui_wire.rs", "crates/server/tests/**", "web/app/tests/recovery-context.test.ts"],
+      "forbidden_paths": ["prompt.md", "content/**", "assets/**", "crates/renderer/**", "crates/camera/**", "research/reference-pack/**", "tools/reference-pack/**", "spec/art-style.md", "spec/interface-parity.md", "spec/adaptations.md", ".local/journey-checkpoints/**"],
+      "outputs": ["Exact owned contract/audio/ground prerequisite picks in isolated m1-ui-recovery", "Real server context encoder and all25 UI validators/requests", "Full native slots/counts/captions with identity-bound partial and one-request Take-All controls", "Original zero-tolerance caption/geometry and real PG/replay evidence"],
+      "validation_commands": ["pnpm --dir web typecheck", "pnpm --dir web test", "cargo test --locked -p clubscape-world-engine --test recovery_context", "cargo test --locked -p clubscape-server --test game_storage recovery_context"],
+      "test_requirements": ["Only exact published owned picks may touch upstream contract/planner/protocol paths; do not silently redesign source recovery", "Use counts.entries, selectedTypeCaption and takeAll.selection/plan without client fee/capacity aggregation", "Complete empty/multiple-record Office presentation; do not use singular legacy recovery as the current context", "Selected partial operations retain death/item and context storage identity; currentStorage is not the requested destination", "Take-All echoes one source selection, never a client request loop or automatically rebound held selection", "Ordinary-grave Bank-All and original-server selected-item All cross-record semantics remain qualified", "No source artifact changes or protected-world gameplay/migration"],
+      "acceptance": ["Complete source-native recovery UI/transport/atomic behavior passes, with no missing-field or source-caption workaround; other M1 gates remain separate"],
+      "reserved_namespaces": [],
+      "source_notes": ["Backend publication is complete through234d9f9 but server initializer is outside its scope. Add context:value.context.map(clubscape_protocol::recovery_context_to_wire) in ui_wire::recovery_management, then validate the guarded PG case. Director's exact31203c6 caption regression is already preserved in m1-ui-recovery."],
+      "parity_entries": [],
+      "adaptations": [],
+      "evidence": []
+    },
     {
       "id": "M1-WATER-FILL-MIGRATION",
       "goal": "Perform only the owner-approved, source-pinned and reversible upgrade needed to continue the existing52 range/persistence frontier.",
@@ -72,7 +90,7 @@
     {
       "id": "M1-NATIVE-CAMERA-REVIEW",
       "goal": "Independently review the complete native camera implementation and original conformance oracles before consumer integration.",
-      "status": "IMPLEMENTING",
+      "status": "DONE",
       "specs": ["crates/camera/README.md", "research/camera-source/contract.json", "milestones/approvals/m1-camera-initialization-v1.json", "crates/camera/initialization.json", "crates/camera/conformance.json"],
       "dependencies": ["M1-SOURCE-CAMERA-CONTROLS"],
       "allowed_paths": [],
@@ -85,7 +103,7 @@
       "source_notes": ["Candidate has4526 added lines across implementation/tests/records. Parent32tests plus Clippy/WASM check pass;14scenarios/354rows,39438integer and6210float-bit comparisons are byte-identical with0differences. Production must supply real rendered-surface triangles/decoration raises and actual focus snapshots; no bilinear or zero-focus fallback."],
       "parity_entries": [],
       "adaptations": ["adaptation.m1.source_based_camera_initialization"],
-      "evidence": ["milestones/evidence/m1-native-camera-candidate.json"]
+      "evidence": ["milestones/evidence/m1-native-camera-candidate.json", "Independent read-only review of2401e98 found no high-confidence issues in the native controller or conformance harness. No expected-output feedback/skipped rows found; nr.decoded diagnostic remains separate from production height. No extra builds/GPU/private-state access or whole-client acceptance. Record milestones/evidence/m1-native-camera-independent-review.json."]
     },
     {
       "id": "M1-WORLD-ACTION-ROUTING",
@@ -162,7 +180,7 @@
     {
       "id": "M1-NATIVE-RECOVERY-CONTRACT",
       "goal": "Publish the authoritative native recovery context needed to display every owned Office record, exact selected-type source captions, actual storage limits and source whole-context Take-All without client-side transaction reconstruction.",
-      "status": "IMPLEMENTING",
+      "status": "REVIEW",
       "specs": ["research/interface-contracts/control-bindings.json", "research/interface-contracts/remaining-source-questions.json", "web/shared/contracts.ts", "web/ui/recovery.ts", "crates/world-engine/src/gameplay_ui/recovery_controls.rs"],
       "dependencies": ["M1-GAMEPLAY-UI-CONTRACTS"],
       "allowed_paths": ["crates/game-types/**", "crates/world-engine/**", "crates/client-core/**", "crates/protocol/**", "crates/wasm/**", "crates/server/tests/**", "web/shared/contracts.ts", "web/app/tests/recovery*.test.ts", "research/interface-contracts/recovery-context/**"],
@@ -175,12 +193,12 @@
       "source_notes": ["This is a new concrete integration gap, not a rerun of the closed bounded source-only pass. Existing recovery management already supplies every Office record, but the UI displays only the legacy matching record and the current inventory Take-All request can name only one death record.", "Original native-retrieval-scroll-669 readback from the unchanged80-item source fixture: selected slot7 has7 arrows but source3492 displays35 x Bronze arrow with42coins each and1470 total. Existing legacy display matches exactly; the current per-entry extension displays7 and294. Source original capacity caption16/120 is a controlled fixture input, not sufficient proof of the server policy.", "Director owns the new source-caption regression and subsequent UI wiring in separate m1-ui-recovery. No new schema is integrated into the production candidate before all consumers compile and the actual controls are verified."],
       "parity_entries": [],
       "adaptations": [],
-      "evidence": []
+      "evidence": ["Owned155ac6f/93aefa6/5e32781 plusc379d1c/234d9f9 publish contextv1 atmanagement tag5 and one recovery_take_all request tag26. Complete ordered slots, counts/capacity,35-arrow/1470 native caption, separate selected-entry7/294 and combined executable plan are explicit.", "Worker396Rust/15controller tests and Clippy pass; three actualsource-bearing binaries contain5bnot5e. The guardedPG test remains unexecuted because the Director-owned server initializer lacks context. UI validators/permission/rendering still require consumption; no full UI/PG/M1 pass is claimed. Director integration is active; source5b/8da and lock are unchanged."]
     },
     {
       "id": "M1-NATIVE-RECOVERY-UI",
       "goal": "Render the complete source-native recovery context and dispatch its exact identity-bound selected/whole-context controls using the published authoritative data.",
-      "status": "BLOCKED",
+      "status": "IMPLEMENTING",
       "specs": ["research/interface-contracts/control-bindings.json", "web/shared/contracts.ts", "web/ui/recovery.ts", "web/ui/world-view.ts"],
       "dependencies": ["M1-NATIVE-RECOVERY-CONTRACT"],
       "allowed_paths": ["web/ui/**"],
@@ -216,7 +234,7 @@
     {
       "id": "M1-NATIVE-CAMERA-CONTROLLER",
       "goal": "Implement the complete stateful original camera mechanics as a reusable Rust/WASM-compatible controller, with exact original trace conformance and the separately approved initialization policy.",
-      "status": "REVIEW",
+      "status": "DONE",
       "specs": ["research/camera-source/contract.json", "research/camera-source/validation.json", "milestones/approvals/m1-camera-initialization-v1.json", "spec/browser-implementation.md"],
       "dependencies": ["M1-SOURCE-CAMERA-CONTROLS", "M1-REFERENCE-APPROVAL"],
       "allowed_paths": ["crates/camera/**", "Cargo.lock"],
@@ -229,7 +247,7 @@
       "source_notes": ["The source-only c59ce337 handoff integrated852a35f is complete and its14 scenarios/354 original state readbacks remain immutable.", "Owner accepted approve_source_based_initialization after the exact structured question recorded in milestones/approvals/m1-camera-initialization-v1.json. This is initialization only and not final presentation acceptance.", "Renderer gear/terrain and shell preview/spatial paths are independently owned. Publish narrow terrain/focus and state/input/output contracts before touching those consumers; Director will serialize the end-to-end integration in M1."],
       "parity_entries": [],
       "adaptations": ["adaptation.m1.source_based_camera_initialization"],
-      "evidence": ["Owned2401e98ef2a75f7e1252ae1816fde06e7f2230db changes only newcrates/camera and the local-member lock entry. Parent32tests/Clippy/WASM-check pass in worktree-local target; conformance report0fc3e1a4f3d8d8a21980bc35f1b031a6bdac9f0170a8c5fd65e9c6230ef53609 repeats byte-identically:14original scenarios/354rows plus336intervening fixed-tick readbacks,39438integer and6210float-bit comparisons,0differences.", "Independent native review is active; no root integration or consumers changed yet. Actual focus/render coordinates, source surface triangles and decoration raises are required. Approved constructor FOV computes662 at1080, distinct from controlled full-HUD helper410; no hardcoded fixture projection or authenticated-default claim. Evidence milestones/evidence/m1-native-camera-candidate.json."]
+      "evidence": ["Owned2401e98ef2a75f7e1252ae1816fde06e7f2230db changes only newcrates/camera and the local-member lock entry. Parent32tests/Clippy/WASM-check pass in worktree-local target; conformance report0fc3e1a4f3d8d8a21980bc35f1b031a6bdac9f0170a8c5fd65e9c6230ef53609 repeats byte-identically:14original scenarios/354rows plus336intervening fixed-tick readbacks,39438integer and6210float-bit comparisons,0differences.", "Independent read-only native review completed without high-confidence findings; implementation is ready for serialized root/consumer integration. Actual focus/render coordinates, source surface triangles and decoration raises remain required. Approved constructor FOV computes662 at1080, distinct from controlled full-HUD helper410; no hardcoded fixture projection or authenticated-default claim. Evidence milestones/evidence/m1-native-camera-candidate.json and m1-native-camera-independent-review.json."]
     },
     {
       "id": "M1-AUDIO-COMPOSED-TIMING",

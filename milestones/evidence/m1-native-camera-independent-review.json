@@ -1,0 +1,33 @@
+{
+  "schema_version": 1,
+  "milestone": "m1-starter-journey",
+  "task": "M1-NATIVE-CAMERA-REVIEW",
+  "reviewer": "e6925772-df1f-4ff7-9efc-219f800a5a14",
+  "candidate_revision": "2401e98ef2a75f7e1252ae1816fde06e7f2230db",
+  "result": "no_high_confidence_findings_in_bounded_native_scope",
+  "reviewed": [
+    "Separate source input/frame clocks, native/legacy motors and gates",
+    "Terrain, footprint, bridge, original surface and decoration sampling",
+    "Orbit, projection, FOV/distance separation and explicit effects",
+    "Rebase, snapshot/restore and transactional rejection",
+    "Original conformance replay and initialization provenance"
+  ],
+  "oracle_review": {
+    "expected_camera_output_fed_back_into_controller": false,
+    "skipped_original_source_rows_found": false,
+    "incorrect_nr_decoded_diagnostic_used_for_production_height": false,
+    "report_matches_pinned_hash_and_implementation_inputs": true
+  },
+  "review_limits": {
+    "read_only": true,
+    "reviewer_tests_or_builds_run": false,
+    "gpu_or_private_checkpoint_access": false,
+    "active_effects_have_original_observation_evidence": false,
+    "initialization_reviewed_only_under_owner_approval": true,
+    "production_consumers_or_whole_client_reviewed": false
+  },
+  "candidate_changed_by_reviewer": false,
+  "native_integration_may_proceed_subject_to_parent_validation": true,
+  "normal_browser_entry_accepted": false,
+  "presentation_performance_or_milestone_accepted": false
+}
