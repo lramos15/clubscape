@@ -62,13 +62,13 @@ remain unchanged; the backend performs mutable bank checks after durable
 deduplication. No character revision, hand-written wire or progression bypass
 substitutes for this contract.
 
-The current UI-owner module predates the added active-tab/document and
-placeholder/document-page cases. Its exhaustive TypeScript schema/dispatch
-tables and component fixture do not yet compile against FINAL4. Its audio
-fixture also lacks the native snapshot's required `preferences` field; these
-are five current UI-owner compile errors, and those files
-remain outside this worker's edit scope. Normal `pnpm build` is therefore
-blocked on the UI-owner follow-up, not on the implemented WASM/API mapping.
+The backend contracts above are implemented, not pending field/API handoffs.
+The actual UI module's schema/dispatch/fixture implementations still need to
+consume that complete contract; the corresponding parent UI files at `664dde0`
+match this worktree. Normal `pnpm build` remains gated by those UI-owned
+implementations, not by missing backend APIs. `Components` also has explicit
+native preference/minimap binding ports for the real UI owner; unbound ports
+are not replaced with a parallel UI or source-variable guesses.
 Diagnostic Vite bundling is explicitly separate from a passing production
 typecheck. Real UI4 entry/experience/source-lock/reconnect checks can run, but
 do not prove complete UI consumption or final acceptance.
@@ -108,10 +108,39 @@ Source listener/owner/placed-emitter inputs still require real scene data.
 The UI-owned native preference/surface adapters remain separate dependencies.
 
 Actor animation strings/numeric bindings and `ActorActionView` clock identities
-are forwarded unchanged. The newly required twelve original clips are an asset
-owner dependency, not permission to substitute another motion. Original
+are forwarded unchanged. All39 required source sequences and the twelve
+additional clips are delivered with renderer78fed3ca; asset existence does not
+authorize a binding for a different action. Original
 level233/notification660 use the existing reward projection; the shell creates
 no additional XP or synthetic level event.
+
+### Source-only acceptance facts
+
+The completed, parked source-only follow-up is
+`research/interface-contracts/remaining-source-questions.json`, SHA-256
+`7aa22cfda20d2c2dbc9251b0c3dbddccfb3c5a107d5a8ea486cb902f513c08c4`.
+It changes no runtime API, source5b artifact, gameplay cadence or world pin.
+Only these three source facts remain unverified:
+
+* Ordinary-grave Bank-All permission or deliberate disablement. Native602's
+  conditional IF3 flag is not a global entitlement; Office669 uses IF3 as a
+  fee. Preserve the actual context, opaque records, permission code and reason.
+  Do not substitute another layout or describe missing evidence as
+  "source disabled".
+* Inventory dough motion or deliberate absence. Keep the actual recipe/action,
+  null facility target and existing cadence. Pottery883, animation0 and a nearby
+  cooking facility are not bindings.
+* Empty motion or deliberate absence for energy potion3008/3010/3012/3014 to229,
+  flour1933 to1931, and milk1927/water1929 to1925. Preserve the selected-item
+  identity and actual result; drinking, pickup, pottery or milking motion is
+  not Empty evidence.
+
+These are acceptance blockers, not approved exclusions or unfinished backend
+implementation requests. A null observer animation means its source action
+is known but motion is unbound; it does not prove deliberate no-animation.
+Bridge fixtures cover null motion for dough/seven Empty variants and preserve
+the unverified Bank-All reason without executing or claiming those journeys.
+Actual UI/renderer/audio composition remains separate implementation work.
 
 The retained initial5e candidate `.local/source-ui4-5e0aa8a2` uses raw artifact
 `5e0aa8a28851752ae0b8b0a08c635c6c8d2979f509f3a3e564ee74e2abfc8e6f`,
@@ -279,8 +308,9 @@ for this boundary; it exposes no credential, mutation or outcome setter.
 The source title and actual streamed starting region are visibly rendered;
 logical/backing resize boundaries are tested. Earlier native-size penguin
 preview receipts predate the richer UI request contract and are historical.
-The current legacy server lacks its authoritative preview base metadata;
-that absence is explicit rather than an invented base/loadout.
+The current UI preview request leaves its base/equipment binding unresolved;
+that composition gap is explicit rather than an invented base/loadout or a
+claim that the published backend UI contract is still awaiting implementation.
 The current real run receives ten dynamic object records through WASM.
 Their `object_id` must be a valid canonical ObjectId with source metadata in
 the validated content catalog. `sourceId` is never parsed from an ID suffix or
@@ -403,14 +433,14 @@ match the renderer's actual actor; unsupported widgets or local appearance
 edits that the current renderer cannot apply independently fail explicitly.
 No world snapshot is rewritten to render a tentative UI selection. Null
 equipment/base is unavailable, never a dummy empty loadout or guessed base.
-The current legacy-v3 initial request is 480x315/widget679:73 with unavailable
+The retained initial UI request is 480x315/widget679:73 with unavailable
 base/equipment, so it is reported unavailable and publishes no substitute.
 
 Successful RGBA readbacks still use a same-sized canvas/`putImageData` followed
 by `setUiPreview`, with one pending preview independent of two world frames.
 There is no source PNG, human preview, UI scaling or world-FPS credit. Full
 base/local-appearance/equipment preview alignment and actor reset remain
-renderer/final-v4 dependencies.
+component-integration dependencies, not a pending final-v4 API handoff.
 
 The adapter's diagnostics currently expose actual loaded assets/scene/device/
 timestamps, but discard the raw WASM `entities_drawn` field and do not expose

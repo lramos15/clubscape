@@ -185,6 +185,11 @@ test("semantic All and recovery views are negotiated separately and never become
   if (retry.kind !== "recovery_bank_all") throw new Error("Wrong retry request kind.");
   assert.equal(retry.expected_bank_revision, "9007199254743333");
   assert.equal(current.recovery!.management.bankAll.allowed, false);
+  assert.deepEqual(current.recovery!.management.bankAll, denied,
+    "An unverified source permission remains unavailable, not a grant or a claim of deliberate source disablement.");
+  assert.equal(current.recovery!.management.panels[0]!.storage, "grave");
+  assert.equal(current.recovery!.management.panels[0]!.entries[0]!.bankCapacity, 2,
+    "A positive capacity does not authorize Bank-All.");
   validateUiAmount({ kind: "all" });
   assert.throws(() => validateUiAmount({ kind: "quantity", quantity: 0 }), /positive quantity or All/);
   assert.equal(current.bank!.amount, 1);

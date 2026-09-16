@@ -3,6 +3,10 @@ import { test } from "node:test";
 import { rendererInstanceLayout, rendererWorldView, validateInstanceLayouts } from "../instance-layout.ts";
 import type { SourceInstanceLayouts } from "../instance-layout.ts";
 import { audioFixtureWorld } from "./player-audio-fixture.ts";
+import { ACTOR_OBSERVER_CAPABILITY } from "../../shared/contracts.ts";
+import type { ActorActionView, WorldView } from "../../shared/contracts.ts";
+import { validateActorObservers } from "../gameplay-ui.ts";
+import { deepFreeze } from "../errors.ts";
 
 const template = "instance_template.death.office";
 const region = "region.osrs.12633";
@@ -16,6 +20,35 @@ function world() {
   const value = audioFixtureWorld();
   return { ...value, player: { ...value.player, instance: "instance.opaque.fixture", region, tile: { x: 3169, y: 5721, plane: 0 } } };
 }
+
+test("unverified inventory motion remains null through immutable renderer composition, not another source action", () => {
+  const dough: ActorActionView = {
+    version: 1, id: "observer.fixture.dough", activity: "producing",
+    actionId: "action.cooking.dough", target: null, recipeId: "recipe.cooking.dough",
+    styleId: null, spellId: null, animation: null,
+    startedAtTick: "9007199254740993", cycleStartedAtTick: "9007199254740994",
+    nextActionTick: "9007199254740995", observedAtTick: "9007199254740994",
+  };
+  const cases: ActorActionView[] = [dough, ...[3008, 3010, 3012, 3014, 1933, 1927, 1929].map((item) => ({
+    ...dough, id: `observer.fixture.empty.${item}`, activity: "using_item", actionId: null, recipeId: null,
+  }))];
+  for (const action of cases) {
+    const original = audioFixtureWorld();
+    const current: WorldView = deepFreeze({
+      ...original, player: { ...original.player, running: false, movementTick: null, action, activity: action.activity },
+    });
+    const before = JSON.stringify(current);
+    validateActorObservers([ACTOR_OBSERVER_CAPABILITY], current);
+    const rendered = rendererWorldView(current, {});
+    assert.equal(rendered.player, current.player);
+    assert.equal(rendered.player.action?.id, action.id);
+    assert.equal(rendered.player.action?.animation, null);
+    assert.equal(rendered.player.animation, "", "No pottery, drink, milking or animation0 fallback is installed.");
+    assert.equal(rendered.player.action?.nextActionTick, "9007199254740995");
+    assert.equal(rendered.player.action?.recipeId, action.recipeId);
+    assert.equal(JSON.stringify(current), before);
+  }
+});
 
 test("only a separately supplied actual template selects compiler-validated instance chunks", () => {
   const definitions = layouts(), current = world();

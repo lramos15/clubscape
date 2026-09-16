@@ -57,6 +57,44 @@ pub(crate) fn fields(
 #[cfg(test)]
 mod tests {
     use super::*;
+    use prost::Message;
+
+    #[test]
+    fn unverified_inventory_motion_survives_wire_roundtrip_without_a_sequence_default() {
+        let dough = game::ActorAction {
+            version: 1,
+            id: "observer.fixture.dough".into(),
+            activity: "producing".into(),
+            action_id: Some("action.cooking.dough".into()),
+            recipe_id: Some("recipe.cooking.dough".into()),
+            animation: None,
+            started_at_tick: "9007199254740993".into(),
+            cycle_started_at_tick: "9007199254740994".into(),
+            next_action_tick: Some("9007199254740995".into()),
+            observed_at_tick: "9007199254740994".into(),
+            ..Default::default()
+        };
+        let cases = std::iter::once(dough.clone()).chain(
+            [3008, 3010, 3012, 3014, 1933, 1927, 1929].map(|item| game::ActorAction {
+                id: format!("observer.fixture.empty.{item}"),
+                activity: "using_item".into(),
+                action_id: None,
+                recipe_id: None,
+                ..dough.clone()
+            }),
+        );
+        for original in cases {
+            let decoded = game::ActorAction::decode(original.encode_to_vec().as_slice()).unwrap();
+            let projected = Value::Object(fields(Some(false), &None, Some(&decoded)).unwrap());
+            assert_eq!(projected["action"]["id"], original.id);
+            assert_eq!(projected["action"]["actionId"], json!(original.action_id));
+            assert_eq!(projected["action"]["recipeId"], json!(original.recipe_id));
+            assert!(projected["action"]["animation"].is_null());
+            assert!(projected["action"]["target"].is_null());
+            assert_eq!(projected["action"]["nextActionTick"], "9007199254740995");
+            assert_eq!(projected["action"]["observedAtTick"], "9007199254740994");
+        }
+    }
 
     #[test]
     fn optional_movement_and_action_identity_remain_exact_not_derived_from_activity() {

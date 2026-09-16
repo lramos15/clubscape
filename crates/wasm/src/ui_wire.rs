@@ -888,6 +888,10 @@ mod tests {
         );
         assert_eq!(management["bankAll"]["allowed"], false);
         assert_eq!(
+            management["bankAll"]["reason"],
+            "Source normal-grave Bank-All permission is not verified."
+        );
+        assert_eq!(
             management["bankAllRecords"],
             json!([{"death":"death.fixture","items":["recovery_item.fixture"]}])
         );
