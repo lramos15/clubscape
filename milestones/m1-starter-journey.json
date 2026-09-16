@@ -9,11 +9,11 @@
   "candidate_revision": null,
   "accepted_revision": null,
   "checkpoint": {
-    "report": "milestones/evidence/m1-terrain-clips.json",
+    "report": "milestones/evidence/m1-shell-integration.json",
     "verified_infrastructure_revision": "275d3cc83d6a7c2118d0afcf82490f364e5d2986",
     "infrastructure_evidence": "milestones/evidence/m1-account-foundations.json",
-    "runtime_revision": "aca4ea28bb88d3c43c0f18279d5970b90cc02bb8",
-    "scope_note": "Terrain/clip component evidence remains qualified separately:50 native tests,22 overlapping root checks and Chrome5-scene/58-model comparisons pass; fitting fails931/2034. The same source5e account remains at70/70 tutorial transitions and321 checks. Its actual dying PollWorld409 cause is now confirmed: stale sword style after loss of all equipment. Native repair and46PG/11account prerequisites pass. Only a tested source-safe adapter and one restored read-only observation are admitted next; full gameplay/Cook recovery, complete client, source facts, frozen performance, Mac/Edge and owner acceptance remain pending. No existing world is repinned."
+    "runtime_revision": "ab6ce6e8aab372b87dfb037a329789a28ad34e17",
+    "scope_note": "Exact27 shell-owned commits and two Director repairs are integrated;219web/40WASM and actual component builds pass, but NORMAL production build fails at5 unchanged UI-owned errors. Current5b source delivery is separately verified, not gameplay. Main terrain/clip fidelity evidence remains qualified; the new mesh candidate is unreviewed. Same source5e account remains at70/70 tutorial transitions and321 checks with confirmed dying cause; only one bounded restored observation is admitted. Full UI/metadata, actual continuation/Cook, source facts, frozen performance, Mac/Edge and owner acceptance remain pending. No old world is repinned."
   },
   "scope_approval": {
     "authority": "owner",

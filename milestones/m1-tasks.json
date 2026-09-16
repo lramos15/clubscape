@@ -34,9 +34,27 @@
   },
   "tasks": [
     {
+      "id": "M1-GEAR-METRIC-REVIEW",
+      "goal": "Verify the new mesh-fitting candidate's actual geometric overlap and deformation claims before accepting its zero-failure metric.",
+      "status": "IMPLEMENTING",
+      "specs": ["spec/m1-benchmark-contract.json", "milestones/approvals/m1-reference-pack-v1.3.0.json", "crates/renderer/README.md", "assets/compiled/render/gear/pose-fit-failures.json"],
+      "dependencies": ["M1-BROWSER-RENDERER", "M1-TERRAIN-INPUTS"],
+      "allowed_paths": ["crates/renderer/tests/gear_geometry.rs", "crates/renderer/README.md", "milestones/evidence/m1-gear-metric/**"],
+      "forbidden_paths": ["prompt.md", "crates/world-engine/**", "crates/server/**", "content/**", "web/ui/**", "assets/source/**", "assets/manifests/**", "research/reference-pack/**", "tools/reference-pack/**", "spec/m1-benchmark-contract.json"],
+      "outputs": ["Isolated exact nine-commit renderer candidate, excluding duplicate c7b771e", "Independent crossing/attachment/deformation regression evidence", "Explicit candidate acceptance or precise geometric defect handoff without a threshold waiver"],
+      "validation_commands": ["cargo test --release --locked -p clubscape-renderer --test gear_geometry -- --nocapture"],
+      "test_requirements": ["Penetration must not report zero merely because crossing geometry has no embedded endpoints", "Reported per-vertex deformation must reflect actual net displacement", "Preserve source base, faces/materials and all predeclared thresholds", "Do not count0/2034 or unchanged face indices as complete style/composed acceptance"],
+      "acceptance": ["Record actual geometry evidence before the new metric/fitting candidate replaces the currently validated main version"],
+      "reserved_namespaces": [],
+      "source_notes": ["Worker candidatef705199 reports0/2034 after mesh fitting and a new winding/edge penetration measure, with37 deformation outliers. Parent review located endpoint-only crossing evaluation and per-pass displacement accumulation that require independent verification."],
+      "parity_entries": [],
+      "adaptations": ["Existing necessary-equipment-fitting approval only"],
+      "evidence": []
+    },
+    {
       "id": "M1-SHELL-INTEGRATION",
       "goal": "Integrate the exact27 owned browser/WASM/build commits against the current verified parent contracts without importing foreign histories or weakening production gates.",
-      "status": "IMPLEMENTING",
+      "status": "DONE",
       "specs": ["milestones/evidence/m1-shell-owned-sequence.json", "spec/browser-implementation.md", "spec/game-networking.md", "web/shared/contracts.ts", "tools/web-build/README.md"],
       "dependencies": ["M1-BROWSER-SHELL", "M1-TERRAIN-INPUTS"],
       "allowed_paths": ["web/app/**", "web/package.json", "web/pnpm-lock.yaml", "web/tsconfig.json", "web/index.html", "web/vite.config.ts", "web/generated/**", "crates/wasm/**", "tools/web-build/**", "Cargo.lock", "spec/browser-implementation.md", "milestones/evidence/m1-shell-integration/**"],
@@ -49,7 +67,7 @@
       "source_notes": ["Worker26 confirms27 owned commits and no missing backend API dependency. Root integration is isolated from its next bounded preview/spatial metadata work."],
       "parity_entries": [],
       "adaptations": [],
-      "evidence": ["milestones/evidence/m1-shell-owned-sequence.json"]
+      "evidence": ["Exact27 owned commits plus Director lock15d35a54 and subscriber repaird77ee887 integrate throughab6ce6e8aab372b87dfb037a329789a28ad34e17, with no foreign history or existing dependency-version changes. Isolated/root219web and40WASM checks pass (overlapping runs), native/WASMClippy and actual protocol/renderer builds pass.", "NORMAL root pnpm build still FAILS at exactly5 UI-owned type errors; no exclusion/cast/diagnostic-bundle waiver. Fresh source5b delivery has7711assets/212473305publicbytes/406966-byte descriptor; no oldworld/bundle repins or gameplay. Subscriber failures now surface without disputing an acknowledged input or sending queued work. Evidence milestones/evidence/m1-shell-integration.json; full UI/composition/camera/source/performance/owner gates remain open."]
     },
     {
       "id": "M1-DYING-RESTORE-OBSERVE",
@@ -535,7 +553,7 @@
       "source_notes": ["Owner-approved pack; final Mac acceptance still separate"],
       "parity_entries": [],
       "adaptations": [],
-      "evidence": ["Exact foundation25 plus014e9582 current-renderer delivery andee5cd0a5 source-unknown guards are handed off for Director integration; see milestones/evidence/m1-shell-owned-sequence.json. Foreign backend/UI/renderer/audio/source picks are excluded. Worker216 web tests and current renderer build pass; the actual source5b bundle has7711 assets and785 selected renderer buffers. These are recorded worker checks, not a new parent production pass.", "Five UI-owned type errors and actual bindUiAudioPreferences/setUiMinimap/setUiMapIconSprites/bindUiMinimapProjection ports remain unresolved; backend contracts are ready. Whole-client source preview/spatial metadata, live-camera/fidelity, fitting931/2034 and frozen performance/Mac/Edge/owner acceptance remain open. Same shell reservation is limited next to its owned preview/spatial metadata producers, or exact new source/contract blockers, without editing UI or foreign implementations."]
+      "evidence": ["Exact foundation25 plus014e9582 andee5cd0a5 are now integrated throughab6ce6e with separate Director dependency-lock and subscriber-error repairs. Parent219web/40WASM, native/WASMClippy and actual component builds pass; normal production build remains blocked at the unchanged5 UI-owned errors. Current5b source delivery has7711 assets and785 selected renderer buffers, not a real gameplay or whole-client acceptance run. See milestones/evidence/m1-shell-integration.json and its exact29-commit mapping.", "Four actual UI preference/minimap binding ports, source-bound live camera/controls and full composition remain unfinished despite ready backend APIs. Same shell reservation continues only owned preview/spatial metadata producers or exact new source/contract blockers. Main renderer still has931/2034 failures; its newer0-claim candidate awaits independent geometry/metric validation. Source facts, frozen performance, Mac/Edge and owner acceptance remain open."]
     },
     {
       "id": "M1-FLEET-POTION-ASSETS",

@@ -140,6 +140,15 @@ fresh browser journey. The explicit equipment-fitting gate still fails
 931 of 2,034 legal item-frames; permitted gear fitting, turned scenery and
 frozen-window performance remain unfinished.
 
+The [browser-shell foundation](../milestones/evidence/m1-shell-integration.json)
+is now integrated with the actual WASM bridge, current authoritative contracts
+and source delivery. A subscriber-error repair preserves acknowledged writes
+while surfacing failed presentation updates and stopping unsent input. The
+normal production build still stops at five existing UI-owned type errors;
+native preference/minimap ports, live camera/control bindings and other
+composition work remain incomplete. Passing component checks or producing a
+source bundle does not close those gates.
+
 The [native UI comparisons](../milestones/evidence/m1-ui-controls.json),
 [renderer/audio results](../milestones/evidence/m1-render-audio-integration.json)
 and [reviewed travel repair](../milestones/evidence/m1-ui-travel-interruption.json)
