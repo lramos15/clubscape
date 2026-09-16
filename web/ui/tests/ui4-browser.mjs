@@ -15,6 +15,31 @@ const mount = async () => {
   await page.evaluate(async () => { const fixture = await import("/web/ui/tests/component-fixture.ts"); await fixture.mount("world"); window.component.services.enableUi(); });
   await frame(); await reset();
 };
+const projectedMinimap = async () => {
+  await mount();
+  await page.evaluate(async () => {
+    const { bindUiMinimapProjection, setUiMapIconSprites } = await import("/web/ui/index.ts");
+    const w = window.component.services.state().world, f = window.componentMinimap(w, 2);
+    const pixels = new ImageData(3, 3);
+    for (let i = 0; i < pixels.data.length; i += 4) pixels.data.set([217, 23, 71, 255], i);
+    const sprite = { element: 777, width: 3, height: 3, maxWidth: 15, maxHeight: 17,
+      offsetX: 5, offsetY: 6, category: -1, pixels };
+    window.suppliedIcon = { element: 777, tileX: w.player.tile.x + 4, tileY: w.player.tile.y + 3,
+      x: 25, y: 34, drawX: 30, drawY: 40, dx: 16, dy: 12, clipped: false };
+    window.projectionReady = true; window.projectionCalls = 0;
+    setUiMapIconSprites(window.component.ui, new Map([[777, sprite]]));
+    pixels.data.fill(0);
+    bindUiMinimapProjection(window.component.ui, (_width, _height, scale) => {
+      window.projectionCalls++;
+      if (!window.projectionReady) throw new Error("The fixture renderer has no current authoritative scene/player.");
+      window.lastIconProjection = { minimapAngle: 0, scale, missingSprites: 0, icons: [{ ...window.suppliedIcon }] };
+      return window.lastIconProjection;
+    });
+    f.icons = [{ x: w.player.tile.x + 4, y: w.player.tile.y + 3, plane: w.player.tile.plane, element: 777 }];
+    window.setUiMinimap(window.component.ui, f);
+  });
+  await frame();
+};
 const capture = async name => {
   await page.mouse.move(600, 100); await page.waitForLoadState("networkidle"); await frame();
   await page.screenshot({ path: resolve(results, "ui4-components", name + ".png") });
@@ -287,28 +312,11 @@ try {
     await capture("original-map-element-component-icons");
   });
   await check("renderer-owned trim positions are used directly, copied sprites stay immutable and masked blits stay inside the source aperture", async () => {
-    await mount();
+    await projectedMinimap();
     const bounds = await page.locator('[data-ui-control="minimap"]').boundingBox();
     const pixel = (x, y) => page.evaluate(({ x, y }) => Array.from(document.querySelector("canvas")
       .getContext("2d").getImageData(x, y, 1, 1).data), { x: Math.floor(bounds.x + x), y: Math.floor(bounds.y + y) });
     const corner = await pixel(1, 1);
-    await page.evaluate(async () => {
-      const { bindUiMinimapProjection, setUiMapIconSprites } = await import("/web/ui/index.ts");
-      const w = window.component.services.state().world, f = window.componentMinimap(w, 2);
-      const pixels = new ImageData(3, 3);
-      for (let i = 0; i < pixels.data.length; i += 4) pixels.data.set([217, 23, 71, 255], i);
-      const sprite = { element: 777, width: 3, height: 3, maxWidth: 15, maxHeight: 17,
-        offsetX: 5, offsetY: 6, category: -1, pixels };
-      window.suppliedIcon = { element: 777, tileX: w.player.tile.x + 4, tileY: w.player.tile.y + 3,
-        x: 25, y: 34, drawX: 30, drawY: 40, dx: 16, dy: 12, clipped: false };
-      setUiMapIconSprites(window.component.ui, new Map([[777, sprite]]));
-      pixels.data.fill(0);
-      bindUiMinimapProjection(window.component.ui, (_width, _height, scale) => ({
-        minimapAngle: 0, scale, missingSprites: 0, icons: [{ ...window.suppliedIcon }],
-      }));
-      f.icons = [{ x: w.player.tile.x + 4, y: w.player.tile.y + 3, plane: w.player.tile.plane, element: 777 }];
-      window.setUiMinimap(window.component.ui, f);
-    }); await frame();
     assert.deepEqual(await pixel(30, 40), [217, 23, 71, 255]);
     await page.evaluate(() => {
       window.suppliedIcon.clipped = true;
@@ -327,6 +335,51 @@ try {
         offsetX: 5, offsetY: 6, category: -1, pixels: new ImageData(2, 2),
       }]])); } catch (error) { return error.errorId; }
     }), "ui.minimap.sprite");
+  });
+  await check("reconnect retains the matching copied native projection without querying an unavailable renderer or leaking it across scopes", async () => {
+    await projectedMinimap();
+    const pixel = () => page.evaluate(() => {
+      const bounds = document.querySelector('[data-ui-control="minimap"]').getBoundingClientRect();
+      return Array.from(document.querySelector("canvas").getContext("2d")
+        .getImageData(Math.floor(bounds.x + 30), Math.floor(bounds.y + 40), 1, 1).data);
+    });
+    const calls = await page.evaluate(() => window.projectionCalls);
+    assert.deepEqual(await pixel(), [217, 23, 71, 255]);
+    await patch(() => {
+      window.projectionReady = false;
+      window.lastIconProjection.icons[0].drawX = 0;
+      const s = window.component.services; s.publish({ ...s.state(), phase: "reconnecting" });
+    });
+    assert.equal(await page.evaluate(() => window.projectionCalls), calls);
+    assert.deepEqual(await pixel(), [217, 23, 71, 255]);
+    assert.match(await page.locator('[data-ui-control="minimap"]').getAttribute("aria-description"), /paused/);
+    await patch(() => {
+      window.projectionReady = true;
+      const s = window.component.services; s.publish({ ...s.state(), phase: "world" });
+    });
+    assert((await page.evaluate(() => window.projectionCalls)) > calls);
+    assert.deepEqual(await pixel(), [217, 23, 71, 255]);
+    assert.doesNotMatch(await page.locator('[data-ui-control="minimap"]').getAttribute("aria-description"), /paused/);
+    await patch(() => {
+      window.projectionReady = false;
+      const s = window.component.services, world = structuredClone(s.state().world);
+      world.player.instance = "instance.reconnect.other";
+      s.publish({ ...s.state(), phase: "reconnecting", world });
+    });
+    assert.equal(await page.evaluate(() => window.getUiMinimapStatus(window.component.ui)), null);
+    assert.notDeepEqual(await pixel(), [217, 23, 71, 255]);
+    assert.equal((await intents()).length, 0);
+  });
+  await check("an invalid live native projection clears its failed surface and reports its precise UI error rather than throwing from animation frames", async () => {
+    await projectedMinimap();
+    await patch(() => {
+      window.suppliedIcon.tileX++;
+      window.component.ui.resize(1920, 1080);
+    });
+    assert.equal(await page.evaluate(() => window.getUiMinimapStatus(window.component.ui)), null);
+    assert.match(await page.getByRole("status").innerText(), /ui.minimap.identity/);
+    assert.deepEqual(await page.evaluate(() => window.component.services.errors.map(error => error.errorId)), ["ui.minimap.identity"]);
+    assert.equal((await intents()).length, 0);
   });
   assert.deepEqual(errors, []);
 } finally {

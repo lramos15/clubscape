@@ -9,7 +9,7 @@ import type { BrowserContext, Page } from "playwright-core";
 import { assertSourceRunPin, captureSourceRunPin } from "../../../tools/web-build/run-pins.ts";
 import type { SourceRunPin } from "../../../tools/web-build/run-pins.ts";
 import type { PublicWorld } from "../public-state.ts";
-import { sourceAudioDefaults } from "../../audio/index.ts";
+import { sourceAudioDefaults, sourceAudioPreferenceDefaults } from "../../audio/index.ts";
 import type { RenderSnapshot } from "../../../tools/browser-harness/src/protocol.ts";
 import type { PreviewObservation } from "../preview.ts";
 import { presentationOptions } from "../presentation.ts";
@@ -159,6 +159,7 @@ export async function sourceBrowserCheck(): Promise<void> {
   let page: Page | undefined;
   let restarted: ChildProcess | null = null;
   const checks: string[] = [];
+  const unhandledPageErrors: { name: string; frames: string[]; after: string | null }[] = [];
   try {
     context = await chromium.launchPersistentContext(resolve(evidence, "profile"), {
       executablePath: executable, chromiumSandbox: true, headless: false, env,
@@ -193,8 +194,12 @@ export async function sourceBrowserCheck(): Promise<void> {
     const unexpected = new Set<string>();
     const renderRequests = new Set<string>();
     const failedAssets = new Set<string>();
-    let unhandledPageErrors = 0;
-    page.on("pageerror", () => { unhandledPageErrors++; });
+    page.on("pageerror", (error) => {
+      unhandledPageErrors.push({
+        name: error.name, frames: (error.stack ?? "").split("\n").filter((line) => /^\s+at /.test(line)).slice(0, 8),
+        after: checks.at(-1) ?? null,
+      });
+    });
     page.on("response", (response) => {
       const path = new URL(response.url()).pathname;
       if (response.status() >= 400 && (path.startsWith("/assets/") || path.startsWith("/content/"))) failedAssets.add(path);
@@ -372,7 +377,18 @@ export async function sourceBrowserCheck(): Promise<void> {
       chatProof = { available: false, permission: selected.ui!.publicChat.permission, bypassed: false };
       checks.push("actual source public-chat permission remains locked; no unlock or message is fabricated");
     }
-    const audioControls = await page.evaluate(() => window.__clubscapeClientStateV1!.audioControls());
+    await page.waitForFunction(() => {
+      const status = window.__clubscapeClientStateV1!.audioPreferenceStatus();
+      return status?.preferences.phase === "ready" && status.preferences.save === "stored";
+    }, undefined, { timeout: 10_000 });
+    const audioObservation = await page.evaluate(() => {
+      const client = window.__clubscapeClientStateV1!, state = client.read(), world = state.world;
+      return {
+        controls: client.audioControls(), preferences: client.audioPreferenceStatus(), soundEnabled: state.soundEnabled,
+        world: world === null ? null : { playerId: world.player.id, revision: world.revision, tick: world.tick },
+      };
+    });
+    const audioControls = audioObservation.controls, audioPreferenceStatus = audioObservation.preferences;
     assert(audioControls);
     assert.equal(audioControls.semantics, "native-source-slider-v1");
     assert.equal(audioControls.masterPercent, sourceAudioDefaults().sliders.master);
@@ -381,22 +397,28 @@ export async function sourceBrowserCheck(): Promise<void> {
       assert.equal(audioControls.channels[channel].nativeMixer, sourceAudioDefaults().mixer[channel]);
     }
     assert.equal(audioControls.sourceSceneSupplied, false);
-    assert.equal(audioControls.sourceMusicStateSupplied, false);
-    assert.equal(audioControls.providedMusicState, null);
+    assert.equal(audioControls.sourceMusicStateSupplied, true);
+    assert(audioControls.providedMusicState);
     assert.equal(audioControls.musicContinuation, "native-bound");
-    assert.equal(audioControls.preferences, null);
-    const audioPreferenceStatus = await page.evaluate(() => window.__clubscapeClientStateV1!.audioPreferenceStatus());
+    assert(audioControls.preferences);
+    assert.equal(audioControls.preferences.playerId, first.player.id);
+    assert.deepEqual(audioControls.preferences.preferences, sourceAudioPreferenceDefaults());
+    assert.deepEqual(audioControls.preferences.unlockedGroups, first.audioAuthority.music.unlockedGroups);
+    assert.deepEqual(audioControls.providedMusicState, audioControls.preferences.musicState);
     assert(audioPreferenceStatus);
     assert.equal(audioPreferenceStatus.preferences.playerId, first.player.id);
     assert.equal(audioPreferenceStatus.preferences.origin, "confirmed_absent");
-    assert.equal(audioPreferenceStatus.preferences.phase, "failed");
-    assert.equal(audioPreferenceStatus.uiPreferencesBound, false);
+    assert.equal(audioPreferenceStatus.preferences.phase, "ready");
+    assert.equal(audioPreferenceStatus.preferences.save, "stored");
+    assert.equal(audioPreferenceStatus.preferences.errorId, null);
+    assert.equal(audioPreferenceStatus.uiPreferencesBound, true);
     assert.equal(audioPreferenceStatus.sourceUnlocksSupplied, true);
-    assert.equal(audioPreferenceStatus.appliedWorld, null);
-    assert.deepEqual(audioPreferenceStatus.issues.map((issue) => issue.errorId).sort(),
-      ["audio.preferences.ui_adapter_required"]);
-    assert.equal(await page.evaluate(() => window.__clubscapeClientStateV1!.read().soundEnabled), false);
-    checks.push("real source unlocks are available without client grants; the still-unrelayed native UI preference adapter remains an explicit separate blocker");
+    assert.equal(audioPreferenceStatus.sourceAuthority, "complete");
+    assert(audioObservation.world);
+    assert.deepEqual(audioPreferenceStatus.appliedWorld, audioObservation.world);
+    assert.deepEqual(audioPreferenceStatus.issues, []);
+    assert.equal(audioObservation.soundEnabled, false, "The earlier title mute remains active independently of stored native slider preferences.");
+    checks.push("real source unlocks, native UI preferences and actor-scoped storage bind to the exact applied world; missing spatial scene and physical output remain separate gates");
     let renderPixels: unknown = null;
     if (earlyScene !== null || recordedCamera !== null) {
       await page.waitForFunction(() => (window.__clubscapeBenchmarkV1?.read(null).renderedFrames ?? 0) >= 8, undefined, { timeout: 30_000 });
@@ -437,8 +459,10 @@ export async function sourceBrowserCheck(): Promise<void> {
       assert.equal(end.diagnostics.minimapSurface?.sourceIconMismatches, 0);
       assert.equal(end.diagnostics.minimapSurface?.iconSprites.count, 386);
       assert.equal(end.diagnostics.minimapSurface?.iconSprites.available, true);
-      assert.equal(end.diagnostics.minimapSurface?.iconSprites.delivered, false);
-      assert.equal(end.diagnostics.minimapSurface?.iconProjection, "native-helper-available-ui-unbound");
+      assert.equal(end.diagnostics.minimapSurface?.iconSprites.delivered, true);
+      assert.equal(end.diagnostics.minimapSurface?.iconProjection, "native-helper-bound");
+      assert.equal(end.diagnostics.minimapSurface?.delivered, true);
+      assert.equal(end.diagnostics.minimapSurface?.fullSurfaceFidelityAccepted, false);
       const fps = frames.length * 1000 / elapsed;
       timing = {
         kind: "sparky-canonical-onboarding-engineering-only", measuredWindowMs: elapsed, completedFrames: frames.length,
@@ -470,7 +494,7 @@ export async function sourceBrowserCheck(): Promise<void> {
     await page.keyboard.press("Escape");
     await dismissNotices(page);
     await page.getByRole("button", { name: "Logout", exact: true }).first().click();
-    await page.getByRole("button", { name: "Logout", exact: true }).last().click();
+    await page.locator('[data-ui-control="logout"]').click();
     await page.waitForFunction(() => window.__clubscapeClientStateV1?.read().phase === "title", undefined, { timeout: 20_000 });
     await page.keyboard.press("Escape");
     await page.getByRole("button", { name: "Existing user", exact: true }).click();
@@ -478,10 +502,29 @@ export async function sourceBrowserCheck(): Promise<void> {
     await page.getByRole("button", { name: "Login", exact: true }).click();
     await page.waitForFunction(() => window.__clubscapeClientStateV1?.read().phase === "world", undefined, { timeout: 30_000 });
     assert.deepEqual(publicProgress(await page.evaluate(() => window.__clubscapeClientStateV1!.read().world) as PublicWorld), progress);
-    const reenteredAudio = await page.evaluate(() => window.__clubscapeClientStateV1!.audioPreferenceStatus());
-    assert.equal(reenteredAudio?.preferences.playerId, first.player.id);
-    assert.equal(reenteredAudio?.preferences.origin, "confirmed_absent");
-    assert.equal(reenteredAudio?.uiPreferencesBound, false);
+    await page.waitForFunction(() => {
+      const status = window.__clubscapeClientStateV1!.audioPreferenceStatus();
+      return status?.preferences.phase === "ready" && status.preferences.save === "stored";
+    }, undefined, { timeout: 10_000 });
+    const reenteredAudio = await page.evaluate(() => {
+      const client = window.__clubscapeClientStateV1!, world = client.read().world!;
+      return {
+        status: client.audioPreferenceStatus(), controls: client.audioControls(),
+        world: { playerId: world.player.id, revision: world.revision, tick: world.tick },
+      };
+    });
+    assert.equal(reenteredAudio.status?.preferences.playerId, first.player.id);
+    assert.equal(reenteredAudio.status?.preferences.origin, "stored");
+    assert.equal(reenteredAudio.status?.preferences.phase, "ready");
+    assert.equal(reenteredAudio.status?.preferences.save, "stored");
+    assert.equal(reenteredAudio.status?.preferences.errorId, null);
+    assert.equal(reenteredAudio.status?.uiPreferencesBound, true);
+    assert.equal(reenteredAudio.status?.sourceUnlocksSupplied, true);
+    assert.equal(reenteredAudio.status?.sourceAuthority, "complete");
+    assert.deepEqual(reenteredAudio.status?.appliedWorld, reenteredAudio.world);
+    assert.deepEqual(reenteredAudio.status?.issues, []);
+    assert.deepEqual(reenteredAudio.controls?.preferences, audioControls.preferences);
+    assert.deepEqual(reenteredAudio.controls?.providedMusicState, audioControls.providedMusicState);
     checks.push("actual UI logout/relogin resumes the same source character without repeating creation");
     const privacy = await page.evaluate(() => {
       const secret = (window as SecretWindow).__sourceUiCredentials!;
@@ -495,7 +538,7 @@ export async function sourceBrowserCheck(): Promise<void> {
     assert(privacy);
     assert.equal(unexpected.size, 0);
     assert.deepEqual([...failedAssets], [], "real source/component requests must not hide missing delivery assets");
-    assert.equal(unhandledPageErrors, 0);
+    assert.deepEqual(unhandledPageErrors, [], "Real source composition must not produce unhandled browser errors.");
     checks.push("actual component asset routes have no failed responses or unhandled page errors");
     const projection = await page.evaluate(() => window.__clubscapePresentationV1);
     assert.equal(projection?.projection, "renderer-native-full-hud-helper");
@@ -535,7 +578,7 @@ export async function sourceBrowserCheck(): Promise<void> {
       result: audioPreferenceFixture.nativeCueTiming.passed ? "passed" : "failed_native_audio_timing",
       recordedAt: new Date().toISOString(),
       checks, gameplayUi, experience, publicChat: chatProof, sourceScene: first.scene, audioAuthority: first.audioAuthority,
-      audioControls, audioPreferenceStatus, audioPreferenceFixture, sourceRunPin: pin, browser: version, sandbox: { namespaceAndSeccomp: true, gpuProcessSandboxed: system.gpu.auxAttributes?.sandboxed ?? null },
+      audioControls, audioPreferenceStatus, reenteredAudio, audioPreferenceFixture, sourceRunPin: pin, browser: version, sandbox: { namespaceAndSeccomp: true, gpuProcessSandboxed: system.gpu.auxAttributes?.sandboxed ?? null },
       titlePixels: title, build: benchmark.identity, rendererReady: benchmark.ready, renderedFrames: benchmark.renderedFrames,
       actualUiSignup: true, actualCanonicalWorld: true, actualServerRestart: true, actualDeviceLossHandled: true,
       browserLocalOutputMuted: true, physicalSpeakersAccepted: false,
@@ -555,13 +598,17 @@ export async function sourceBrowserCheck(): Promise<void> {
     const diagnostic = await page?.evaluate(() => {
       const state = window.__clubscapeClientStateV1?.read();
       return { phase: state?.phase, error: state?.error, worldPresent: Boolean(state?.world),
+        audioControls: window.__clubscapeClientStateV1?.audioControls(),
+        audioPreferenceStatus: window.__clubscapeClientStateV1?.audioPreferenceStatus(),
         renderer: window.__clubscapeBenchmarkV1?.read(null),
         unlockedInterfaces: state?.world?.player.unlockedInterfaces,
         uiFeedback: document.querySelector('[data-clubscape-ui] [aria-live]')?.textContent,
         controls: Array.from(document.querySelectorAll<HTMLElement>("[data-ui-control]"), (element) => element.dataset.uiControl),
         inputs: Array.from(document.querySelectorAll<HTMLElement>("[data-ui-input]"), (element) => element.dataset.uiInput) };
     }).catch(() => null);
-    await writeFile(resolve(evidence, "failure.json"), JSON.stringify({ kind: "source-ui-integration-failure", checksPassed: checks, diagnostic }, null, 2) + "\n");
+    await writeFile(resolve(evidence, "failure.json"), JSON.stringify({
+      kind: "source-ui-integration-failure", checksPassed: checks, unhandledPageErrors, diagnostic,
+    }, null, 2) + "\n");
     throw error;
   } finally {
     try { await context?.close(); }
