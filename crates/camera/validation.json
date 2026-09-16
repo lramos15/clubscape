@@ -1,0 +1,104 @@
+{
+  "schema_version": 1,
+  "task": "M1-NATIVE-CAMERA-CONTROLLER",
+  "result": "passed_bounded_camera_controller_validation",
+  "base_commit": "7c0561b84a59ddf82973480c2f634a05f1a84d68",
+  "owned_paths": ["crates/camera/**", "Cargo.lock"],
+  "host": {
+    "architecture": "aarch64",
+    "rustc": "1.98.1 (48a229cea 2026-09-01)",
+    "wasm_target": "wasm32-unknown-unknown"
+  },
+  "conformance": {
+    "path": "crates/camera/conformance.json",
+    "size_bytes": 32401,
+    "sha256": "0fc3e1a4f3d8d8a21980bc35f1b031a6bdac9f0170a8c5fd65e9c6230ef53609",
+    "original_scenarios": 14,
+    "original_state_rows": 354,
+    "intervening_fixed_tick_readbacks": 336,
+    "comparison_stages": 690,
+    "integer_scalar_comparisons": 39438,
+    "float_bit_comparisons": 6210,
+    "integer_mismatches": 0,
+    "float_bit_mismatches": 0,
+    "maximum_float_absolute_error": 0,
+    "repeated_report_byte_identical": true,
+    "per_scenario_and_field_counts": "conformance.json#scenarios"
+  },
+  "initialization_provenance": {
+    "path": "crates/camera/initialization.json",
+    "sha256": "4177da23008708f51d7532bd7fa36bb7179cff569363a5f2dc0aa4ef2996e049",
+    "approval_sha256": "f7f1ce92826fb1bafc1e17ecbbaace34e0851c4e5044cbcfafa86817ac3539e1",
+    "classification": "Owner-approved ClubScape initialization defaults, not authenticated OSRS account facts."
+  },
+  "source_interpretation": {
+    "path": "crates/camera/source-readbacks.json",
+    "sha256": "8c7fa382021652de47e0eed481e4235a66596a51cfd72a8e608245ed3574adc3",
+    "original_traces_changed": false,
+    "active_effect_original_readback_scenarios": 0,
+    "additional_edge_tests": "Bytecode-derived assertions; not new original-runtime or authenticated-source observations."
+  },
+  "commands": [
+    {
+      "command": "cargo test --locked -p clubscape-camera",
+      "result": "passed",
+      "unit_tests": 1,
+      "boundary_tests": 29,
+      "source_conformance_and_initialization_tests": 2
+    },
+    {
+      "command": "cargo clippy --locked -p clubscape-camera --all-targets -- -D warnings",
+      "result": "passed"
+    },
+    {
+      "command": "cargo check --locked -p clubscape-camera --target wasm32-unknown-unknown",
+      "result": "passed",
+      "qualification": "Compilation/type checking, not browser execution."
+    },
+    {
+      "command": "cargo fmt -p clubscape-camera -- --check",
+      "result": "passed"
+    },
+    {
+      "command": "cargo test --locked -p clubscape-camera --test conformance --quiet && cmp target/camera-conformance.json crates/camera/conformance.json",
+      "result": "passed_byte_identical_repeat"
+    },
+    {
+      "command": "PYTHONDONTWRITEBYTECODE=1 python3 tools/camera-source/probe_camera.py --verify-only",
+      "result": "passed",
+      "original_scenarios": 14,
+      "original_state_rows": 354
+    },
+    {
+      "command": "PYTHONDONTWRITEBYTECODE=1 python3 tools/reference-pack/validate.py --require-complete",
+      "result": "passed_source_input_integrity_and_case_index",
+      "hash_bound_files_checked": 1307,
+      "required_cases_checked": 126,
+      "original_images_decoded": 93,
+      "native_hud_images_decoded": 16,
+      "audio_files_decoded": 264,
+      "audio_reencoded_files": 0
+    }
+  ],
+  "lockfile": {
+    "sha256": "eb443059216fdd402c6c94e8aa76ed84dd1b5678f37aa0540533fc4f4008f70c",
+    "added_local_package": "clubscape-camera",
+    "existing_package_records_unchanged": 380,
+    "existing_package_versions_or_edges_changed": false,
+    "root_manifest_changed": false
+  },
+  "frozen_pack_sha256": "b62e19704e17d3d3e4e819f803ef49ba7cc54034ae407184b423427c65d9674d",
+  "remaining_integration_owner": "Director: M1-CAMERA-INTEGRATION",
+  "remaining_integration": [
+    "Wire the Rust crate through the existing WASM/client/renderer/browser paths; replace the scalar-rate shell instead of assigning fixture constants.",
+    "Provide actual logical/render focus coordinates, footprint, plane, source terrain, native rendered-surface triangles and decoration raises, with coherent world bases and readiness.",
+    "Normalize browser events to the native input units/routing and preserve independent20ms logical cycles and elapsed-nanosecond frame updates.",
+    "Bind approved initialization provenance and source projection rather than copying a reference eye or pixel zoom; preserve normal rebase/follow state.",
+    "Supply source-controlled phase/configuration and explicit random inputs if camera effects are active; do not infer original packet/session facts.",
+    "Execute live Rust/WASM/renderer/browser conformance and all unchanged visual, player-journey, performance and owner-acceptance gates."
+  ],
+  "source_session_initialization_observed": false,
+  "production_consumers_modified": false,
+  "browser_or_gpu_work_executed": false,
+  "normal_entry_or_milestone_acceptance": false
+}
