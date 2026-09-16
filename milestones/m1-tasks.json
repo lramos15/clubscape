@@ -6,17 +6,17 @@
     "effective_limit": 25,
     "admissions_open": true,
     "active": [
-      {"id": "director", "task": "M1-FLEET-CONTRACTS"},
+      {"id": "director", "task": "M1-COOK-CONTINUATION"},
       {"id": "bb7f85f7-096a-4377-80cb-3e7eae196c6b", "task": "M1-BROWSER-RENDERER"},
       {"id": "78d01af9-70a4-4b02-8339-6a61eb377374", "task": "M1-BROWSER-SHELL"},
       {"id": "cdfad64d-9162-439f-a525-58e1114dd7f4", "task": "M1-AUDIO-CONTROL-READINESS"},
       {"id": "ac0f0856-44af-445b-bd90-6db7a1f4fc74", "task": "M1-NATIVE-CAMERA-CONTROLLER"},
-      {"id": "2766e089-44e5-4a1d-974e-7b03ad9c269d", "task": "M1-NATIVE-RECOVERY-CONTRACT"},
-      {"id": "81ac9884-4f39-4f27-b516-6e9a42b09b51", "task": "M1-COOK-CONTINUATION"}
+      {"id": "2766e089-44e5-4a1d-974e-7b03ad9c269d", "task": "M1-NATIVE-RECOVERY-CONTRACT"}
     ],
     "reserved": [],
     "queued": [],
     "parked": [
+      {"id": "81ac9884-4f39-4f27-b516-6e9a42b09b51", "reason": "Turn24 returned empty with HEAD9289baf unchanged, no pending code, no cook attempt journal or new run evidence. Director takes over a913bb7's UNUSED one-restore allowance in the same protected source5e worktree, with a new isolated branch; no automatic resumption or duplicate allowance. Assignment record milestones/evidence/m1-cook-director-takeover.json."},
       {"id": "cc864d7a-37cc-4869-a7b4-d484d01cede5", "reason": "Latest turns delivered no current-contract completion. Four published UI commits and pending native-preference work are preserved unchanged in m1-ui; Director takes the bounded UI integration/current-contract/native-port completion directly. No automatic resumption or duplicate UI edits."},
       {"id": "e6925772-df1f-4ff7-9efc-219f800a5a14", "reason": "Bounded UI4 review complete: one medium source-travel interruption bypass in timed UI actions. Director repair M1-UI-TRAVEL-INTERRUPTION is active; this is not final candidate signoff."},
       {"id": "2a0ae699-6af8-45d5-90c7-3addfc56ee53", "reason": "Renewed five-invocation assessment complete; live creation/scene/window/baseline work, firstXP unverified after driverOutOfReach. No sixth invocation or automatic resumption."},
@@ -82,7 +82,7 @@
       "test_requirements": ["One newly authorized907 archive restore,5400seconds and existing input bounds; db74895 and bd33 remain consumed", "Do not repeat completed Tutorial/Lumbridge/Office/grave/Cook acceptance or substitute precollected ingredients", "Require actual source pot/bucket permission after conservative approach", "Preserve336 historical source checks/70edges and3separate observations with exact trace prefix", "Use worktree-local private Cargo target and unchanged source5e/lock/manifests", "No unknown retry, source repin, gameplay setters/grants/RNG changes, or success without protected capture"],
       "acceptance": ["Return actual complete remaining journey or first concrete blocker with exact receipts and a protected checkpoint; full browser/presentation/performance/owner gates remain separate"],
       "reserved_namespaces": [],
-      "source_notes": ["Explicit authority is milestones/evidence/m1-cook-continuation-authorization.json; exact source-ground repair3480b6f is tested on both current5b and old5e without repinning data. Main355current native tests and isolated5e20contact/40simulator tests pass with actual executable artifact identities verified."],
+      "source_notes": ["Explicit authority is milestones/evidence/m1-cook-continuation-authorization.json; exact source-ground repair3480b6f is tested on both current5b and old5e without repinning data. Main355current native tests and isolated5e20contact/40simulator tests pass with actual executable artifact identities verified.", "Director now owns execution after empty worker turn24 and a verified unchanged9289baf worktree with no attempt. The a913bb7 one-attempt key and all limits remain unchanged; this is not a new restore allowance. See milestones/evidence/m1-cook-director-takeover.json."],
       "parity_entries": [],
       "adaptations": [],
       "evidence": []
