@@ -23,20 +23,13 @@ import urllib.request
 import uuid
 
 from private_checkpoint import CheckpointError, preserve_checkpoint
+from journey_contract import SEGMENTS, full_journey_passed
 
 
 ROOT = Path(__file__).resolve().parents[2]
 POSTGRES_IMAGE = (
     "postgres:16-alpine@sha256:"
     "cf78e76683b9ca8c5733cbbdce6c9262b45b6767934dd0a95e671f9a0fc20685"
-)
-SEGMENTS = (
-    "registration_login", "source_initial_character",
-    "full_tutorial_learning_the_ropes", "onboarding_recovery", "lumbridge_copper",
-    "inventory_equipment_bank_shop", "goblin_combat",
-    "source_death_office_grave_recovery",
-    "cooks_legitimate_acquisition_partial_delivery", "cooks_reward_and_range",
-    "after_quest_recovery",
 )
 MAX_SOURCE_BYTES = 64 * 1024 * 1024
 
@@ -152,19 +145,6 @@ def tail(path, maximum=9000):
         return source.read(maximum).decode("utf-8", errors="replace")
 
 
-def full_journey_passed(report):
-    return (
-        report.get("scenario") == "m1_fresh_account"
-        and report.get("status") == "passed"
-        and report.get("full_journey_passed") is True
-        and report.get("milestone_accepted") is False
-        and len(report.get("tutorial_edges_passed", [])) == 70
-        and all(
-            report.get("segments", {}).get(segment, {}).get("status") == "passed"
-            for segment in SEGMENTS
-        )
-    )
-
 def payload_locations(index):
     require(type(index) is int and 0 <= index < 20000, "Invalid bounded payload index.")
     return f"/assets/{index:x}", f"assets/{index:x}.bin"
@@ -185,8 +165,11 @@ def record_server_exit(report, code):
 def preserve_blocked_checkpoint(directory, report, server):
     observation = (report.get("current_phase") == "real_m1_dying_observation"
                    and report.get("observation_only") is True)
+    completed = (report.get("status") == "passed"
+                 and report.get("full_journey_passed") is True
+                 and full_journey_passed(report.get("scenario", {})))
     if (not observation and (report.get("current_phase") != "real_m1_fresh_account_scenario"
-                            or report.get("status") == "passed")):
+                            or report.get("status") == "passed" and not completed)):
         return {
             "status": "not_attempted", "snapshot_available": False,
             "reason": "not_a_blocked_source_scenario", "resume_authorized": False,
@@ -229,6 +212,13 @@ def preserve_and_cleanup(directory, name, report, server, cleanup_errors, report
         if cleanup_errors:
             report["status"] = "blocked"
             report["full_journey_passed"] = False
+        if report.get("status") == "passed" and report["private_checkpoint"].get("status") != "available":
+            report["status"] = "blocked"
+            report["full_journey_passed"] = False
+            report.setdefault("first_failure", {
+                "phase": "full_success_checkpoint",
+                "reason": "Completed gameplay did not produce a fresh protected checkpoint.",
+            })
         report["milestone_accepted"] = False
         write_json(report_path, report)
 

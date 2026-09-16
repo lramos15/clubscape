@@ -2,6 +2,7 @@ mod checkpoint;
 mod evidence;
 #[cfg(test)]
 mod history_tests;
+mod mainland;
 mod observation;
 mod plan;
 mod recovery;
@@ -51,8 +52,15 @@ pub struct Arguments {
     /// Bounded observation only: no player WorldInput or full journey continuation.
     #[arg(long, requires = "resume_client_checkpoint")]
     observe_dying: bool,
+    /// Explicit continuation of the accepted same-account Office observation.
+    #[arg(
+        long,
+        requires = "resume_client_checkpoint",
+        conflicts_with = "observe_dying"
+    )]
+    continue_mainland: bool,
     /// Decode/verify an observation resume control without any network operation.
-    #[arg(long, requires = "observe_dying")]
+    #[arg(long, requires = "resume_client_checkpoint")]
     validate_resume_only: bool,
     #[arg(long)]
     expected_server_build: Option<String>,
@@ -136,7 +144,9 @@ pub async fn run(arguments: Arguments) -> Result<()> {
         .resume_client_checkpoint
         .as_ref()
         .map(|path| {
-            if arguments.observe_dying {
+            if arguments.continue_mainland {
+                checkpoint::Resume::load_modes(path, &source, false, true)
+            } else if arguments.observe_dying {
                 checkpoint::Resume::load_with_observation(path, &source, true)
             } else {
                 checkpoint::Resume::load(path, &source)
@@ -148,13 +158,15 @@ pub async fn run(arguments: Arguments) -> Result<()> {
             .as_ref()
             .context("Observation validation requires a checkpoint")?;
         ensure!(
-            arguments.observe_dying && saved.observation_boundary.is_some(),
+            arguments.observe_dying && saved.observation_boundary.is_some()
+                || arguments.continue_mainland && saved.mainland_boundary.is_some(),
             "Not an authorized observation boundary"
         );
         checkpoint::Attempt::from_saved(&saved.capsule["latest_attempt"])?;
         println!(
             "{}",
             json!({"status": "validated", "observation_boundary": saved.observation_boundary,
+                "mainland_boundary": saved.mainland_boundary,
             "network_operations": 0, "world_inputs": 0, "private_payloads_published": false})
         );
         return Ok(());
@@ -170,6 +182,7 @@ pub async fn run(arguments: Arguments) -> Result<()> {
         "rng_override": false, "gameplay_sql": false
     });
     evidence.report["observation_only"] = json!(arguments.observe_dying);
+    evidence.report["mainland_continuation"] = json!(arguments.continue_mainland);
     evidence.report["identity"] = source.identity.clone();
     let connection = match Connection::new(&arguments.url) {
         Ok(connection) => connection,
@@ -267,9 +280,7 @@ pub async fn run(arguments: Arguments) -> Result<()> {
         }
     }
     runner.evidence.flush()?;
-    if (result.is_err() || runner.arguments.observe_dying)
-        && let Some(path) = &runner.arguments.private_checkpoint_file
-    {
+    if let Some(path) = &runner.arguments.private_checkpoint_file {
         runner.evidence.report["private_client_checkpoint"] =
             match checkpoint::capture(&runner, path) {
                 Ok(status) => status,
@@ -1197,7 +1208,14 @@ impl Runner {
             .resume
             .as_ref()
             .is_some_and(|resume| resume.after_goblin_kill);
+        let mut existing_death = None;
         if let Some(resume) = self.resume.take() {
+            if self.arguments.continue_mainland {
+                self.evidence.report["mainland_continuation_boundary"] = resume
+                    .mainland_boundary
+                    .clone()
+                    .context("Missing authorized mainland boundary")?;
+            }
             self.account_id = resume.string("/private_authentication_do_not_publish/account_id")?;
             self.login_name = resume.string("/private_authentication_do_not_publish/login_name")?;
             self.password = resume.string("/private_authentication_do_not_publish/password")?;
@@ -1233,17 +1251,27 @@ impl Runner {
                 Value::Object(expected),
                 actual,
             )?;
-            self.input(Action::CloseInterface(game::Empty {})).await?;
-            let receipt = self
-                .onboarding_receipt
-                .clone()
-                .context("Missing original source grant receipt")?;
-            self.verify_duplicate(&receipt, "restored_original_grant_deduplicated")
-                .await?;
+            if self.arguments.continue_mainland {
+                existing_death = Some(
+                    resume
+                        .existing_death
+                        .context("Missing original death baseline")?,
+                );
+            } else {
+                self.input(Action::CloseInterface(game::Empty {})).await?;
+                let receipt = self
+                    .onboarding_receipt
+                    .clone()
+                    .context("Missing original source grant receipt")?;
+                self.verify_duplicate(&receipt, "restored_original_grant_deduplicated")
+                    .await?;
+            }
         } else {
             self.register_and_join().await?;
         }
-        if after_goblin_kill {
+        if let Some(death) = existing_death {
+            self.continue_existing_death(death).await?;
+        } else if after_goblin_kill {
             self.resume_goblin_loot().await?;
         } else {
             self.tutorial().await?;

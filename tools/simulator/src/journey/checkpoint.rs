@@ -23,6 +23,8 @@ pub(super) struct Resume {
     pub event_ids: BTreeSet<String>,
     pub after_goblin_kill: bool,
     pub observation_boundary: Option<Value>,
+    pub mainland_boundary: Option<Value>,
+    pub existing_death: Option<super::mainland::ExistingDeath>,
 }
 
 impl Resume {
@@ -35,6 +37,15 @@ impl Resume {
         source: &source::Source,
         observe: bool,
     ) -> Result<Self> {
+        Self::load_modes(path, source, observe, false)
+    }
+
+    pub(super) fn load_modes(
+        path: &Path,
+        source: &source::Source,
+        observe: bool,
+        mainland: bool,
+    ) -> Result<Self> {
         let resolved = control_path(path, "resume-client-checkpoint.json")?;
         let capsule = source::read_json(&resolved)?;
         let report_path = path.with_file_name("resume-report.json");
@@ -46,7 +57,7 @@ impl Resume {
                 && capsule["kind"] == "private_m1_client_checkpoint"
                 && capsule["source_identity"] == source.identity
                 && report["identity"] == source.identity
-                && report["status"] == "blocked"
+                && (report["status"] == "blocked" || mainland && report["status"] == "observed")
                 && report["last_snapshot"] == capsule["last_observed_state"],
             "Resume capsule/source/report identity mismatch"
         );
@@ -61,10 +72,16 @@ impl Resume {
         let observation_boundary = observe
             .then(|| super::observation::saved_boundary(&capsule, &report))
             .transpose()?;
+        let mainland_boundary = mainland
+            .then(|| super::mainland::observed_boundary(&capsule, &report))
+            .transpose()?;
         ensure!(
             !edges.is_empty()
                 && edges.len() <= 70
-                && (edges.len() < 70 || after_goblin_kill || observation_boundary.is_some())
+                && (edges.len() < 70
+                    || after_goblin_kill
+                    || observation_boundary.is_some()
+                    || mainland_boundary.is_some())
                 && report["segments"]["onboarding_recovery"]["status"] == "passed",
             "Checkpoint is outside the explicitly supported source continuation boundaries"
         );
@@ -93,6 +110,7 @@ impl Resume {
         let mut event_ids = BTreeSet::new();
         let mut records = 0u64;
         let mut credited_goblin_kill = false;
+        let mut existing_death = None;
         for line in BufReader::new(File::open(evidence::local_path(&trace)?)?).lines() {
             let row: Value = serde_json::from_str(&line?)?;
             records += 1;
@@ -101,6 +119,10 @@ impl Resume {
                 "Historical trace order is incomplete"
             );
             if row["kind"] == "authoritative_snapshot" {
+                if mainland && row["data"]["state"]["tick"] == 1613 {
+                    existing_death =
+                        Some(super::mainland::predeath_baseline(&row["data"]["state"])?);
+                }
                 for event in row["data"]["new_events"]
                     .as_array()
                     .context("Historical event batch is missing")?
@@ -125,6 +147,10 @@ impl Resume {
             "Historical trace count/event identity bound differs"
         );
         ensure!(
+            !mainland || existing_death.is_some(),
+            "The original pre-death public conservation baseline is absent"
+        );
+        ensure!(
             !after_goblin_kill || credited_goblin_kill,
             "The source goblin kill and XP were not actually recorded"
         );
@@ -135,6 +161,8 @@ impl Resume {
             event_ids,
             after_goblin_kill,
             observation_boundary,
+            mainland_boundary,
+            existing_death,
         })
     }
 

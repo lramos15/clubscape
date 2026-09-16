@@ -148,8 +148,11 @@ public errors disclose only a phase and sanitized failure code.
 
 The aggregate report's `private_checkpoint` and the checkpoint's
 `availability.json` contain only sanitized availability/hash metadata.
-An available archive is not a validated restore, authorized resume, or journey
-pass. Failed/incomplete capture is explicit and never claims a recoverable
+An available archive is not itself a validated restore, authorized resume, or
+journey pass. A full scenario success is preservable only when all required
+segments and all70 source transitions passed; it records
+`captured_full_journey_passed` separately from the archive's own scope.
+Failed/incomplete capture is explicit and never claims a recoverable
 checkpoint; partial files remain private. Cleanup still reaps/removes only the
 owned services. Existing checkpoint directories are never overwritten.
 
@@ -253,6 +256,42 @@ private-inventory SHA
 The original7fa archive and trace prefix remain exact; all owned services are
 cleaned. The authorization has been consumed. Further Office/grave/Cook or
 post-quest gameplay requires a separate director review and admission.
+
+## Authorized remaining mainland gameplay
+
+Director authorization `db74895cd5d9f109d292eea20f07f5c2a57e3343` permits a
+separate `--continue-mainland` invocation, not reuse of the consumed observation
+authorization:
+
+```sh
+python3 tools/journey-tests/resume.py --continue-mainland \
+  --checkpoint .local/journey-checkpoints/c84c66094aaa4526 \
+  --expected-archive-sha256 a7cd1774144525c29efc694b5550f71a0e04052324bb59c3ab4fbccbe2d8b4af \
+  --report .local/evidence/<unique-mainland-report>.json
+```
+
+Only this exact accepted observed-success checkpoint is admitted. The reader
+preserves its `observed` status and original capsule/trace, verifies the
+successful typed PollWorld control and exact pre-start private identity, and
+keeps321 historical source checks separate from the three observation checks.
+Adapter code must be committed before the one actual restore. The existing
+5400-second and input bounds remain in effect.
+
+Continuation starts at the existing source Office/death record. The recovery
+conservation baseline is the actual pre-death public frame retained in the
+historical trace, not a recreated inventory or a new death. Source topics,
+portal, grave opening and selected opaque recovery IDs use ordinary public
+operations. No ordinary-grave Bank-All, extra kill, retention replay, forced
+arrival or guessed motion is introduced. Cook acquisition/rewards and the
+existing post-quest recovery/replay plan follow only if these source operations
+actually pass.
+
+Full success now captures the actual private client/world checkpoint too,
+including after legitimate logout. All source segments must be passed before
+that status is eligible; a missing or failed full-success capture makes the
+overall result blocked rather than deleting the only completed frontier and
+claiming completion. Source blockers are preserved with the same owned cleanup
+and privacy rules. Any next restore or later milestone requires new authority.
 
 ## Evidence and blockers
 

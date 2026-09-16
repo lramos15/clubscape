@@ -290,12 +290,14 @@ impl Evidence {
         evidence.report["status"] = json!("running");
         evidence.report["full_journey_passed"] = json!(false);
         evidence.report["trace_path"] = json!(path.with_extension("trace.jsonl"));
-        evidence.report["prior_failure"] = evidence.report["first_failure"].take();
-        evidence
+        if let Some(failure) = evidence
             .report
             .as_object_mut()
             .context("Invalid report")?
-            .remove("first_failure");
+            .remove("first_failure")
+        {
+            evidence.report["prior_failure"] = failure;
+        }
         evidence
             .report
             .as_object_mut()
@@ -431,6 +433,42 @@ mod tests {
         assert_eq!(fs::read(local_path(&old_trace).unwrap()).unwrap(), original);
         assert!(Evidence::resume(&new_path, &old.report, &old_trace).is_err());
         drop(resumed);
+        drop(old);
+        fs::remove_dir_all(local_path(&directory).unwrap()).unwrap();
+    }
+
+    #[test]
+    fn observed_success_reader_preserves_source_and_observation_check_labels() {
+        let directory =
+            PathBuf::from(".local/evidence-resume-tests").join(uuid::Uuid::new_v4().to_string());
+        let old_path = directory.join("observed.json");
+        let next_path = directory.join("continued.json");
+        let mut old = Evidence::new(&old_path).unwrap();
+        old.report["status"] = json!("observed");
+        old.report["checks_passed"] = json!(321);
+        old.report["observation_checks_passed"] = json!(3);
+        old.report["observation_only"] = json!(true);
+        old.report["prior_failure"] = json!({"reason": "original historical refusal"});
+        old.append("observation_check", json!({"passed": true}))
+            .unwrap();
+        old.flush().unwrap();
+        let mut next = Evidence::resume(
+            &next_path,
+            &old.report,
+            &old_path.with_extension("trace.jsonl"),
+        )
+        .unwrap();
+        next.report["observation_only"] = json!(false);
+        next.check("new_source_checkpoint", json!(1), json!(1))
+            .unwrap();
+        assert_eq!(next.report["checks_passed"], 322);
+        assert_eq!(next.report["observation_checks_passed"], 3);
+        assert_eq!(
+            next.report["prior_failure"]["reason"],
+            "original historical refusal"
+        );
+        assert_eq!(old.report["status"], "observed");
+        drop(next);
         drop(old);
         fs::remove_dir_all(local_path(&directory).unwrap()).unwrap();
     }

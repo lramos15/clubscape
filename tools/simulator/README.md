@@ -80,6 +80,14 @@ creating a connection. Observation success and failure both write private
 checkpoint capsules; old public observations stay explicitly historical if no
 new public snapshot was received.
 
+The separate `--continue-mainland` admission accepts only the verified c84
+observed-success checkpoint under Director `db74895`. It retains the original
+70-edge trace prefix and321 source checks, while the three observation checks
+stay separate. Normal authentication rejoins the existing Office/death record;
+the source recovery conservation baseline comes from the actual pre-death public
+frame in that trace, not a new kill or seeded inventory. Full successful journeys
+also write a private capsule before owned cleanup, including after logout.
+
 ## What the plan executes
 
 * Real registration, login, empty-option `CreateCharacter`, and `JoinWorld`.

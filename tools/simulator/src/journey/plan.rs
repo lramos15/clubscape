@@ -2084,6 +2084,47 @@ impl Runner {
             .active_death
             .clone()
             .context("Missing authoritative death identity")?;
+        self.finish_existing_death(&death, death_tile, &before, &inventory_before)
+            .await
+    }
+
+    pub(super) async fn continue_existing_death(
+        &mut self,
+        saved: super::mainland::ExistingDeath,
+    ) -> Result<()> {
+        self.label("lumbridge.existing_first_death_office")?;
+        ensure!(
+            self.player()?.active_death.as_deref() == Some(saved.id.as_str())
+                && self.player()?.region == "region.osrs.12633"
+                && self.player()?.instance.is_some(),
+            "The restored source Office/death identity is not the accepted one"
+        );
+        self.evidence.append(
+            "continuing_existing_source_death",
+            json!({
+                "death_id": saved.id,
+                "historical_predeath_tick": 1613,
+                "origin": saved.origin,
+                "new_kill_retention_or_arrival": false,
+                "baseline_is_original_public_history": true
+            }),
+        )?;
+        self.finish_existing_death(
+            &saved.id,
+            saved.origin,
+            &saved.baseline,
+            &saved.owned_before,
+        )
+        .await
+    }
+
+    async fn finish_existing_death(
+        &mut self,
+        death: &str,
+        death_tile: Tile,
+        before: &Value,
+        inventory_before: &BTreeMap<String, u64>,
+    ) -> Result<()> {
         self.evidence.check(
             "death_preserves_xp",
             before["skills"].clone(),
@@ -2116,7 +2157,7 @@ impl Runner {
             "clubscape.game.v1.WorldSnapshot",
             &self.snapshot,
         )?;
-        let entries = recovery_entries(&panel, &death)?;
+        let entries = recovery_entries(&panel, death)?;
         ensure!(
             !entries.is_empty(),
             "Item-losing death has no authorized grave entries"
@@ -2125,7 +2166,7 @@ impl Runner {
         self.evidence
             .check("source_low_value_grave_fee", json!(0), json!(fee))?;
         self.input(Action::Reclaim(game::Reclaim {
-            death,
+            death: death.to_owned(),
             storage: game::RecoveryStorage::Grave as i32,
             items: entries.into_iter().map(|(id, _)| id).collect(),
         }))

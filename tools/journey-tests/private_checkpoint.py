@@ -13,6 +13,7 @@ import subprocess
 import time
 import urllib.parse
 import uuid
+from journey_contract import full_journey_passed
 
 
 MAX_METADATA = 8 * 1024 * 1024
@@ -336,7 +337,8 @@ def preserve_checkpoint(root, run_directory, report, server):
         status = scenario["private_client_checkpoint"]
         require(status["status"] == "captured" and digest(capsule_path) == status["sha256"],
                 phase, "client_capsule_not_completed")
-        preservable = scenario["status"] == "blocked" or success_checkpoint_eligible(scenario)
+        preservable = (scenario["status"] == "blocked"
+                       or success_checkpoint_eligible(scenario) or full_journey_passed(scenario))
         require(capsule["schema_version"] == 1 and capsule["kind"] == "private_m1_client_checkpoint"
                 and capsule["scenario"] == "m1_fresh_account" and preservable
                 and capsule["report_path"] == report["journey_report"]
@@ -476,6 +478,8 @@ def preserve_checkpoint(root, run_directory, report, server):
             "receipt_state_reconciliation_required": True,
             "recoverability": "Requires explicit restore validation and actual receipt/state reconciliation.",
             "private_payloads_published": False, "full_journey_passed": False,
+            "captured_scenario_status": scenario["status"],
+            "captured_full_journey_passed": full_journey_passed(scenario),
         }
         write_json(directory / "availability.json", available)
         sync_directory(directory)
