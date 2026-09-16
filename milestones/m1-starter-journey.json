@@ -9,11 +9,11 @@
   "candidate_revision": null,
   "accepted_revision": null,
   "checkpoint": {
-    "report": "milestones/evidence/m1-shell-integration.json",
+    "report": "milestones/evidence/m1-ui-integration-review.json",
     "verified_infrastructure_revision": "275d3cc83d6a7c2118d0afcf82490f364e5d2986",
     "infrastructure_evidence": "milestones/evidence/m1-account-foundations.json",
     "runtime_revision": "ab6ce6e8aab372b87dfb037a329789a28ad34e17",
-    "scope_note": "Shell foundation passes219web/40WASM checks, but normal production build still fails at5 UI-owned errors. New mesh candidate0/2034 is blocked by an independently reproduced non-vertex collision false negative; main renderer remains unchanged. Actual same-account5e restored observation succeeds:5 RPCs200,0 WorldInputs, source Office/HP10/unarmed after normal phases. Original70/70 tutorial transitions and321 source checks are preserved, with3 observation checks separate. Fresh protectedc84 now admits Office/grave/Cook/post-quest continuation; full UI/metadata, source facts, frozen performance and owner Mac/Edge acceptance remain pending. No old world is repinned."
+    "scope_note": "Main UI remains unintegrated. Isolated2f3704d fixes current24-intent/native UI bindings and the actual reconnect minimap error; normal production artifact63b21e3d passes build/typecheck and238web/58includedUI/11UI4 cases. Actual recorded-camera source browser completes21 checks through signup, native preferences/minimap, restart, logout/relogin and device loss with0unhandled errors, but its separate native cue fixture fails2/18 source2266 deadlines and remains failed. Camera initialization is now owner-approved only as the bounded source-based adaptation; native runtime and normal entry are still required. Main gear fitting remains931/2034; the new zero metric is rejected by independent crossing counterexamples. Actual same-account5e c84 Office checkpoint,70/70 tutorial transitions,321 source checks and3 separate observations remain preserved; authorized Office/grave/Cook/post-quest continuation is active. Source facts, complete composed journey/fidelity, frozen performance and owner Mac/Edge acceptance remain pending. No old world is repinned."
   },
   "scope_approval": {
     "authority": "owner",
@@ -23,6 +23,11 @@
   "reference_pack_approval": {
     "path": "milestones/approvals/m1-reference-pack-v1.3.0.json",
     "sha256": "e910cb02b6984a94be542af1c56e29dc67bfe2e1cd14b72deda8b4b369feeb70"
+  },
+  "camera_initialization_approval": {
+    "path": "milestones/approvals/m1-camera-initialization-v1.json",
+    "sha256": "f7f1ce92826fb1bafc1e17ecbbaace34e0851c4e5044cbcfafa86817ac3539e1",
+    "scope": "Initialization-only adaptation; actual original account defaults remain unobserved and production integration remains required."
   },
   "presentation_acceptance": null,
   "later_milestone_authorized": false,
@@ -42,13 +47,14 @@
     {"id": "content-compilation-and-stable-ids", "status": "implemented", "evidence": [{"path": "milestones/evidence/m1-engine-review-repairs.json", "sha256": "b46eed3abaafe59c06c139edc095872fce97fcbfa7fd3548ad162ee1a6d12593"}], "blocker": "Strict source/native conformance and all reported engine review repairs pass; complete live journey and final candidate validation remain separate."},
     {"id": "asset-manifest-validation", "status": "in_progress", "evidence": [], "blocker": null},
     {"id": "interface-controls-and-resizing", "status": "in_progress", "evidence": [], "blocker": null},
+    {"id": "normal-source-camera", "status": "in_progress", "evidence": [], "blocker": "Owner approved explicitly recorded source-based initialization only. Complete stateful Rust/WASM controller, actual renderer terrain/focus, native input/settings and normal browser entry remain unimplemented/unverified; fixed diagnostic cameras do not close this gate."},
     {"id": "capability-feedback", "status": "in_progress", "evidence": [], "blocker": null},
     {"id": "migration-and-extension-validation", "status": "in_progress", "evidence": [], "blocker": null},
     {"id": "chrome-fresh-account-journey", "status": "not_started", "evidence": [], "blocker": null},
     {"id": "edge-fresh-account-journey", "status": "not_started", "evidence": [], "blocker": null},
     {"id": "source-visual-comparisons", "status": "in_progress", "evidence": [], "blocker": "Original terrain, 15 full minimaps and Chrome 5-scene/58-model comparisons are exact; 11/12 native dynamic source cases render exactly, with the turned case still unsupported. Complete composed UI/player comparisons and actual gear fitting remain open; the explicit fit gate fails 931/2034 legal frames."},
     {"id": "runtime-animation-evidence", "status": "in_progress", "evidence": [], "blocker": "Required original clips are exported, but final composed motion/fitting remains incomplete. Inventory dough and all seven bound Empty variants still lack verified actor motion or deliberate-absence evidence; unrelated sequences or animation0 are not substitutes."},
-    {"id": "runtime-audio-evidence", "status": "in_progress", "evidence": [], "blocker": null},
+    {"id": "runtime-audio-evidence", "status": "in_progress", "evidence": [], "blocker": "Real native UI preferences now bind in isolated production2f3704d, but its separate composed native fixture records2/18 cue2266 dispatches above the unchanged20.045ms threshold. M1-AUDIO-COMPOSED-TIMING is active. Actual spatial metadata, whole-journey source timing, speakers and owner acceptance remain separate."},
     {"id": "chrome-integrated-gpu-performance", "status": "blocked", "evidence": [], "blocker": "Owner will run the final candidate on an M-series Mac; exact hardware/Chrome attestation and frozen-workload results remain unrun. Sparky engineering measured59.85FPS/p95 completion gap about28ms, not the required60FPS/20ms."},
     {"id": "edge-integrated-gpu-performance", "status": "blocked", "evidence": [], "blocker": "Owner Mac/Edge handoff is planned, but exact platform attestation and real frozen-workload results remain unrun; no native Linux ARM64 Edge is available."},
     {"id": "independent-style-review", "status": "not_started", "evidence": [], "blocker": null},

@@ -90,7 +90,7 @@
     {
       "id": "M1-UI-INTEGRATION",
       "goal": "Integrate existing source UI work and complete the actual current-contract adapter/native bindings without discarding the stopped worker's pending changes.",
-      "status": "IMPLEMENTING",
+      "status": "VALIDATING",
       "specs": ["spec/browser-implementation.md", "web/shared/contracts.ts", "web/app/components.ts", "web/app/player-audio-composition.ts", "research/interface-contracts/remaining-source-questions.json", "milestones/approvals/m1-reference-pack-v1.3.0.json"],
       "dependencies": ["M1-BROWSER-UI", "M1-SHELL-INTEGRATION"],
       "allowed_paths": ["web/ui/**", "tools/ui-assets/**", "assets/compiled/ui/**", "web/app/components.ts", "web/app/ui-adapter.ts", "web/app/tests/**", "milestones/evidence/m1-ui-integration/**"],
@@ -103,7 +103,7 @@
       "source_notes": ["Published fa84bf3/0ee025f/2cdbfac/94a5ecd contain source Settings/UI4 work not yet on main. Minimal c1f99a overlaps the full UI4 implementation and must not be blindly duplicated. The stopped worker also has twelve modified and four untracked UI/native-preference files; preserve and review them before selective integration."],
       "parity_entries": [],
       "adaptations": [],
-      "evidence": []
+      "evidence": ["Isolated candidate2f3704d7132e02e15bf5c306549abcd3ccd21962 includes the four UI-owned commits, exact preserved pending patch and Director current-contract/native-port/minimap-lifetime repairs. Original16 pending worker files and1813 compiled UI assets are hash-verified unchanged; main UI is not yet integrated.", "Real normal build artifact63b21e3d5a357f13bc4518570c08f1682f8dfc55b09f5b684de2616e12ed1374 and238web/58includedUI/11UI4 browser cases pass. Actual source browser completes21 checks through signup, experience, native prefs/minimap, restart, logout/relogin and device loss with0unhandled errors. Its separate native audio fixture fails2/18 cue2266 deadlines; the complete check remains failed_native_audio_timing and M1-AUDIO-COMPOSED-TIMING owns the bounded repair. Durable record milestones/evidence/m1-ui-integration-review.json."]
     },
     {
       "id": "M1-SOURCE-CAMERA-CONTROLS",
