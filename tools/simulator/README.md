@@ -88,6 +88,15 @@ the source recovery conservation baseline comes from the actual pre-death public
 frame in that trace, not a new kill or seeded inventory. Full successful journeys
 also write a private capsule before owned cleanup, including after logout.
 
+`--continue-cook` is a different, narrow mode for the accepted907 Cook boundary.
+It requires the original successful poll and acknowledged acceptance action,
+336 historical source checks,70 tutorial edges and3 separate observations.
+The completed Office/grave segment stays completed even though the actor retains
+its historical death-record pointer. Only remaining ingredient acquisition,
+partial deliveries, reward/range and postquest recovery execute; the ordinary
+fresh journey still follows its original complete plan. The Python orchestrator
+owns the unchanged a913 one-attempt key and exact archive/receipt reconciliation.
+
 ## What the plan executes
 
 * Real registration, login, empty-option `CreateCharacter`, and `JoinWorld`.

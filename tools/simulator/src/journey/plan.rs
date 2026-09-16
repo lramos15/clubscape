@@ -2228,6 +2228,38 @@ impl Runner {
         let initial_qp = self.player()?.quest_points;
         let initial_coins = self.count("item.coins")?;
 
+        self.finish_cooks_acquisition(initial_xp, initial_qp, initial_coins)
+            .await
+    }
+
+    pub(super) async fn continue_accepted_cook(
+        &mut self,
+        baseline: super::cook::Baseline,
+    ) -> Result<()> {
+        ensure!(
+            self.quest("quest.cooks_assistant")? == "stage.cooks.delivered.none"
+                && self.player()?.inventory.is_empty()
+                && self.xp("skill.cooking")? == baseline.cooking_xp
+                && self.player()?.quest_points == baseline.quest_points
+                && self.count("item.coins")? == baseline.coins,
+            "The actual restored Cook starting state differs from its acknowledged baseline"
+        );
+        self.evidence.append("continuing_accepted_cook", json!({
+            "authority": super::cook::AUTHORITY,
+            "accepted_sequence": 355,
+            "repeating_bank_emptying_acceptance_or_death": false,
+            "source_baseline": {"cooking_xp": baseline.cooking_xp, "quest_points": baseline.quest_points, "coins": baseline.coins}
+        }))?;
+        self.finish_cooks_acquisition(baseline.cooking_xp, baseline.quest_points, baseline.coins)
+            .await
+    }
+
+    async fn finish_cooks_acquisition(
+        &mut self,
+        initial_xp: u64,
+        initial_qp: u32,
+        initial_coins: u64,
+    ) -> Result<()> {
         self.label("cooks.actual_pot_cellar_bucket_dairy_milk")?;
         self.take_spawn("spawn.pot.3209.3214.p0", "item.pot")
             .await?;

@@ -16,6 +16,7 @@ import run as JOURNEY
 import build_workspace
 import dying_observe as OBSERVE
 import mainland_continue as MAINLAND
+import cook_continue as COOK
 
 
 ROOT = JOURNEY.ROOT
@@ -25,7 +26,8 @@ def verify_restored_identity(restored, expected):
     PRIVATE.require(restored == expected, "restore", "restored_private_identity_mismatch")
 
 
-def verify_checkpoint(relative, expected_archive, *, observe_dying=False, continue_mainland=False):
+def verify_checkpoint(relative, expected_archive, *, observe_dying=False, continue_mainland=False,
+                      continue_cook=False):
     directory = PRIVATE.project_path(ROOT, relative)
     parts = Path(relative).parts
     PRIVATE.require(len(parts) == 3 and parts[:2] == (".local", "journey-checkpoints")
@@ -70,7 +72,10 @@ def verify_checkpoint(relative, expected_archive, *, observe_dying=False, contin
         OBSERVE.boundary(ROOT, directory, available, capsule, scenario, identity)
     if continue_mainland:
         MAINLAND.boundary(ROOT, directory, available, capsule, scenario, identity)
-    PRIVATE.require((0 < len(scenario["tutorial_edges_passed"]) < 70 or after_goblin_kill or observe_dying or continue_mainland)
+    if continue_cook:
+        COOK.boundary(ROOT, directory, available, capsule, scenario, identity)
+    PRIVATE.require((0 < len(scenario["tutorial_edges_passed"]) < 70 or after_goblin_kill
+                     or observe_dying or continue_mainland or continue_cook)
                     and scenario["segments"]["onboarding_recovery"]["status"] == "passed"
                     and scenario["last_snapshot"] == capsule["last_observed_state"],
                     "resume", "unsupported_resume_boundary")
@@ -103,10 +108,11 @@ def verify_checkpoint(relative, expected_archive, *, observe_dying=False, contin
 def execute(args):
     observe = args.observe_dying
     mainland = args.continue_mainland
-    bounded_authority = observe or mainland
+    cook = args.continue_cook
+    bounded_authority = observe or mainland or cook
     checkpoint, available, capsule, original, identity = verify_checkpoint(
         args.checkpoint, args.expected_archive_sha256,
-        observe_dying=observe, continue_mainland=mainland)
+        observe_dying=observe, continue_mainland=mainland, continue_cook=cook)
     run_id = uuid.uuid4().hex[:16]
     directory = JOURNEY.private_directory(f".local/journey-runs/{run_id}")
     control = directory / "control"
@@ -125,6 +131,7 @@ def execute(args):
         "source_state_seeded": False, "gameplay_sql_used": False,
         "observation_only": observe,
         "mainland_continuation": mainland,
+        "cook_continuation": cook,
         "database_image": JOURNEY.POSTGRES_IMAGE, "owned_container_name": owner,
         "server_entrypoint": original["server_entrypoint"],
         "restarts": list(original["restarts"]), "commands": [],
@@ -181,7 +188,8 @@ def execute(args):
                 PRIVATE.copy_file(original_file, control / name, PRIVATE.MAX_EVIDENCE, secret=True)
             checked = JOURNEY.bounded([
                 client, "scenario", "m1_fresh_account",
-                "--observe-dying" if observe else "--continue-mainland", "--validate-resume-only",
+                "--observe-dying" if observe else "--continue-mainland" if mainland else "--continue-cook",
+                "--validate-resume-only",
                 "--resume-client-checkpoint", (control / "resume-client-checkpoint.json").relative_to(ROOT),
                 "--recovery-control-dir", control.relative_to(ROOT), "--max-seconds", "180",
             ], env=env, timeout=60)
@@ -194,12 +202,20 @@ def execute(args):
                     "gameplay_world_inputs_permitted": False,
                     "single_attempt_reservation": OBSERVE.reserve_attempt(ROOT, run_id, revision),
                 }
-            else:
+            elif mainland:
                 MAINLAND.validate_native_preflight(decoded)
                 report["mainland_authorization"] = {
                     "revision": MAINLAND.AUTHORITY, "native_preflight": decoded,
                     "scenario_seconds": args.max_seconds,
                     "single_attempt_reservation": MAINLAND.reserve_attempt(ROOT, run_id, revision),
+                }
+            else:
+                COOK.validate_native_preflight(decoded)
+                report["cook_authorization"] = {
+                    "revision": COOK.AUTHORITY, "assignment": COOK.TAKEOVER,
+                    "executor": "director", "native_preflight": decoded,
+                    "scenario_seconds": args.max_seconds,
+                    "single_attempt_reservation": COOK.reserve_attempt(ROOT, run_id, revision),
                 }
         report["current_phase"] = "explicit_private_database_restore"
         env["DATABASE_URL"] = JOURNEY.start_database(directory, owner, report)
@@ -285,6 +301,8 @@ def execute(args):
             command.append("--observe-dying")
         elif mainland:
             command.append("--continue-mainland")
+        elif cook:
+            command.append("--continue-cook")
         with (evidence / "simulator.log").open("w", encoding="utf-8") as log:
             simulator = subprocess.Popen([str(value) for value in command], cwd=ROOT, env=env,
                                          stdin=subprocess.DEVNULL, stdout=log, stderr=subprocess.STDOUT)
@@ -392,19 +410,19 @@ def main():
     parser.add_argument("--expected-archive-sha256", required=True)
     parser.add_argument("--report", required=True)
     parser.add_argument("--max-seconds", type=int)
-    parser.add_argument("--observe-dying", action="store_true")
-    parser.add_argument("--continue-mainland", action="store_true")
+    continuation = parser.add_mutually_exclusive_group()
+    continuation.add_argument("--observe-dying", action="store_true")
+    continuation.add_argument("--continue-mainland", action="store_true")
+    continuation.add_argument("--continue-cook", action="store_true")
     args = parser.parse_args()
-    JOURNEY.require(not (args.observe_dying and args.continue_mainland),
-                    "Observation and full mainland continuation are separate authorities.")
     if args.max_seconds is None:
         args.max_seconds = 180 if args.observe_dying else 5400
     JOURNEY.require(re.fullmatch(r"[0-9a-f]{64}", args.expected_archive_sha256) is not None,
                     "An explicit expected archive SHA-256 is required.")
     JOURNEY.require(30 <= args.max_seconds <= 7200, "Resume budget must be 30-7200 seconds.")
     JOURNEY.require(not args.observe_dying or args.max_seconds <= 180, "Dying observation is bounded to180seconds.")
-    JOURNEY.require(not args.continue_mainland or args.max_seconds <= 5400,
-                    "Mainland continuation retains the5400-second bound.")
+    JOURNEY.require(not (args.continue_mainland or args.continue_cook) or args.max_seconds <= 5400,
+                    "Gameplay continuation retains the5400-second bound.")
     signal.signal(signal.SIGTERM, JOURNEY.interrupted)
     signal.signal(signal.SIGINT, JOURNEY.interrupted)
     return execute(args)

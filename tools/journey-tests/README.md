@@ -319,6 +319,34 @@ All original checkpoint/trace hashes remain exact, all owned services are
 cleaned, and this one-restore admission is consumed. The full headless journey
 is still blocked, not accepted or automatically retried.
 
+## Director accepted-Cook continuation
+
+The unused `a913bb7` allowance now has a Director-only assignment recorded at
+`2250455`; it retains the **same one-attempt key**, not another restore budget.
+The exact source-ground repair is adopted as `9cab1e9` without changing source5e
+or any protected checkpoint. The narrow `--continue-cook` reader verifies the
+original907 archive/private inventory/identity, successful typed poll and
+acknowledged sequence355 `DialogueChoice` for Cook acceptance. All eight completed
+segments must remain passed and the three remaining Cook/postquest segments
+unchecked. The retained active-death pointer is not permission to replay the
+already completed Office/grave flow.
+
+```sh
+python3 tools/journey-tests/resume.py --continue-cook \
+  --checkpoint .local/journey-checkpoints/907d84b817974f55 \
+  --expected-archive-sha256 4f3cbf8148ef6d9334da8cbffeb4a405924018ba603cdf4ac9aebc997b53fa0d \
+  --report .local/evidence/m1-cook-a913-director.json
+```
+
+This command is admitted only while the a913 attempt record is absent.
+The committed adapter performs a zero-network native preflight before reserving
+that key, restoring one fresh owned database and checking exact private identity.
+It continues the existing ingredient/partial-delivery/reward/range plan without
+repeating bank emptying, acceptance, tutorial, combat or recovery. Postquest
+logout/reconnect/restart/known-reward replay and protected success-or-blocker
+capture remain mandatory. The private build target stays worktree-local.
+No actual continuation or milestone acceptance is implied by reader validation.
+
 ## Evidence and blockers
 
 The aggregate JSON differentiates infrastructure checks, negative readiness

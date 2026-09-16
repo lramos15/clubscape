@@ -1,4 +1,5 @@
 mod checkpoint;
+mod cook;
 mod evidence;
 #[cfg(test)]
 mod history_tests;
@@ -59,6 +60,13 @@ pub struct Arguments {
         conflicts_with = "observe_dying"
     )]
     continue_mainland: bool,
+    /// Continue only the already-accepted Cook acquisition from its protected checkpoint.
+    #[arg(
+        long,
+        requires = "resume_client_checkpoint",
+        conflicts_with_all = ["observe_dying", "continue_mainland"]
+    )]
+    continue_cook: bool,
     /// Decode/verify an observation resume control without any network operation.
     #[arg(long, requires = "resume_client_checkpoint")]
     validate_resume_only: bool,
@@ -144,13 +152,20 @@ pub async fn run(arguments: Arguments) -> Result<()> {
         .resume_client_checkpoint
         .as_ref()
         .map(|path| {
-            if arguments.continue_mainland {
-                checkpoint::Resume::load_modes(path, &source, false, true)
+            let mode = if arguments.continue_cook {
+                ensure!(
+                    arguments.max_seconds <= 5400,
+                    "Cook continuation exceeds its source budget"
+                );
+                checkpoint::ResumeMode::ContinueCook
+            } else if arguments.continue_mainland {
+                checkpoint::ResumeMode::ContinueMainland
             } else if arguments.observe_dying {
-                checkpoint::Resume::load_with_observation(path, &source, true)
+                checkpoint::ResumeMode::ObserveDying
             } else {
-                checkpoint::Resume::load(path, &source)
-            }
+                checkpoint::ResumeMode::Standard
+            };
+            checkpoint::Resume::load_mode(path, &source, mode)
         })
         .transpose()?;
     if arguments.validate_resume_only {
@@ -159,7 +174,8 @@ pub async fn run(arguments: Arguments) -> Result<()> {
             .context("Observation validation requires a checkpoint")?;
         ensure!(
             arguments.observe_dying && saved.observation_boundary.is_some()
-                || arguments.continue_mainland && saved.mainland_boundary.is_some(),
+                || arguments.continue_mainland && saved.mainland_boundary.is_some()
+                || arguments.continue_cook && saved.cook.is_some(),
             "Not an authorized observation boundary"
         );
         checkpoint::Attempt::from_saved(&saved.capsule["latest_attempt"])?;
@@ -167,6 +183,7 @@ pub async fn run(arguments: Arguments) -> Result<()> {
             "{}",
             json!({"status": "validated", "observation_boundary": saved.observation_boundary,
                 "mainland_boundary": saved.mainland_boundary,
+                "cook_boundary": saved.cook.as_ref().map(|cook| &cook.verification),
             "network_operations": 0, "world_inputs": 0, "private_payloads_published": false})
         );
         return Ok(());
@@ -183,6 +200,7 @@ pub async fn run(arguments: Arguments) -> Result<()> {
     });
     evidence.report["observation_only"] = json!(arguments.observe_dying);
     evidence.report["mainland_continuation"] = json!(arguments.continue_mainland);
+    evidence.report["cook_continuation"] = json!(arguments.continue_cook);
     evidence.report["identity"] = source.identity.clone();
     let connection = match Connection::new(&arguments.url) {
         Ok(connection) => connection,
@@ -1209,12 +1227,21 @@ impl Runner {
             .as_ref()
             .is_some_and(|resume| resume.after_goblin_kill);
         let mut existing_death = None;
+        let mut accepted_cook = None;
         if let Some(resume) = self.resume.take() {
             if self.arguments.continue_mainland {
                 self.evidence.report["mainland_continuation_boundary"] = resume
                     .mainland_boundary
                     .clone()
                     .context("Missing authorized mainland boundary")?;
+            }
+            if self.arguments.continue_cook {
+                self.evidence.report["cook_continuation_boundary"] = resume
+                    .cook
+                    .as_ref()
+                    .context("Missing authorized Cook boundary")?
+                    .verification
+                    .clone();
             }
             self.account_id = resume.string("/private_authentication_do_not_publish/account_id")?;
             self.login_name = resume.string("/private_authentication_do_not_publish/login_name")?;
@@ -1257,6 +1284,13 @@ impl Runner {
                         .existing_death
                         .context("Missing original death baseline")?,
                 );
+            } else if self.arguments.continue_cook {
+                accepted_cook = Some(
+                    resume
+                        .cook
+                        .context("Missing accepted Cook baseline")?
+                        .baseline,
+                );
             } else {
                 self.input(Action::CloseInterface(game::Empty {})).await?;
                 let receipt = self
@@ -1269,15 +1303,19 @@ impl Runner {
         } else {
             self.register_and_join().await?;
         }
-        if let Some(death) = existing_death {
-            self.continue_existing_death(death).await?;
-        } else if after_goblin_kill {
-            self.resume_goblin_loot().await?;
+        if let Some(baseline) = accepted_cook {
+            self.continue_accepted_cook(baseline).await?;
         } else {
-            self.tutorial().await?;
-            self.lumbridge().await?;
+            if let Some(death) = existing_death {
+                self.continue_existing_death(death).await?;
+            } else if after_goblin_kill {
+                self.resume_goblin_loot().await?;
+            } else {
+                self.tutorial().await?;
+                self.lumbridge().await?;
+            }
+            self.cooks_assistant().await?;
         }
-        self.cooks_assistant().await?;
         let receipt = self
             .reward_receipt
             .clone()

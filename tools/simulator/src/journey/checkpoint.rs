@@ -16,6 +16,14 @@ use super::{Receipt, Runner, evidence, source};
 
 const MAX_CAPSULE_BYTES: usize = 2 * 1024 * 1024;
 
+#[derive(Clone, Copy, PartialEq, Eq)]
+pub(super) enum ResumeMode {
+    Standard,
+    ObserveDying,
+    ContinueMainland,
+    ContinueCook,
+}
+
 pub(super) struct Resume {
     pub capsule: Value,
     pub report: Value,
@@ -25,27 +33,17 @@ pub(super) struct Resume {
     pub observation_boundary: Option<Value>,
     pub mainland_boundary: Option<Value>,
     pub existing_death: Option<super::mainland::ExistingDeath>,
+    pub cook: Option<super::cook::Continuation>,
 }
 
 impl Resume {
-    pub(super) fn load(path: &Path, source: &source::Source) -> Result<Self> {
-        Self::load_with_observation(path, source, false)
-    }
-
-    pub(super) fn load_with_observation(
+    pub(super) fn load_mode(
         path: &Path,
         source: &source::Source,
-        observe: bool,
+        mode: ResumeMode,
     ) -> Result<Self> {
-        Self::load_modes(path, source, observe, false)
-    }
-
-    pub(super) fn load_modes(
-        path: &Path,
-        source: &source::Source,
-        observe: bool,
-        mainland: bool,
-    ) -> Result<Self> {
+        let observe = mode == ResumeMode::ObserveDying;
+        let mainland = mode == ResumeMode::ContinueMainland;
         let resolved = control_path(path, "resume-client-checkpoint.json")?;
         let capsule = source::read_json(&resolved)?;
         let report_path = path.with_file_name("resume-report.json");
@@ -75,13 +73,17 @@ impl Resume {
         let mainland_boundary = mainland
             .then(|| super::mainland::observed_boundary(&capsule, &report))
             .transpose()?;
+        let cook = (mode == ResumeMode::ContinueCook)
+            .then(|| super::cook::admitted(&capsule, &report))
+            .transpose()?;
         ensure!(
             !edges.is_empty()
                 && edges.len() <= 70
                 && (edges.len() < 70
                     || after_goblin_kill
                     || observation_boundary.is_some()
-                    || mainland_boundary.is_some())
+                    || mainland_boundary.is_some()
+                    || cook.is_some())
                 && report["segments"]["onboarding_recovery"]["status"] == "passed",
             "Checkpoint is outside the explicitly supported source continuation boundaries"
         );
@@ -163,6 +165,7 @@ impl Resume {
             observation_boundary,
             mainland_boundary,
             existing_death,
+            cook,
         })
     }
 
@@ -299,6 +302,25 @@ impl ControlAttempt {
 }
 
 impl Attempt {
+    pub(super) fn require_acknowledged_action(
+        &self,
+        sequence: u64,
+        action: &game::world_input::Action,
+    ) -> Result<()> {
+        let next_sequence = sequence
+            .checked_add(1)
+            .context("Original sequence overflow")?;
+        ensure!(
+            self.input.sequence == sequence
+                && self.input.action.as_ref() == Some(action)
+                && matches!(self.response, Response::AcknowledgmentReceived {
+                    duplicate: false, next_sequence: Some(next),
+                } if next == next_sequence),
+            "The original accepted action/receipt is not the required continuation boundary"
+        );
+        Ok(())
+    }
+
     pub(super) fn from_saved(value: &Value) -> Result<Self> {
         let bytes: Vec<u8> = serde_json::from_value(value["world_input_protobuf"].clone())
             .map_err(|_| anyhow::anyhow!("Invalid original request encoding"))?;
