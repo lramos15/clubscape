@@ -13,7 +13,7 @@
     "verified_infrastructure_revision": "275d3cc83d6a7c2118d0afcf82490f364e5d2986",
     "infrastructure_evidence": "milestones/evidence/m1-account-foundations.json",
     "runtime_revision": "aca4ea28bb88d3c43c0f18279d5970b90cc02bb8",
-    "scope_note": "Original assembly-time terrain, complete outer-band minimaps and 12 additional actor clips are integrated; missing or malformed terrain now fails without replacing the prior scene. Fifty native tests, a 22-test overlapping root subset, and actual Chrome comparisons of 5 source scenes and 58 models pass; equipment fitting explicitly fails 931/2034 legal frames. This is not full UI/client or frozen-performance acceptance. The same source-5e account remains preserved after 70/70 tutorial transitions and 321 checks at Dying PollWorld409; actual cause confirmation and source-safe continuation, Cook/post-quest recovery, Mac/Edge and owner acceptance remain pending. No existing world is repinned."
+    "scope_note": "Terrain/clip component evidence remains qualified separately:50 native tests,22 overlapping root checks and Chrome5-scene/58-model comparisons pass; fitting fails931/2034. The same source5e account remains at70/70 tutorial transitions and321 checks. Its actual dying PollWorld409 cause is now confirmed: stale sword style after loss of all equipment. Native repair and46PG/11account prerequisites pass. Only a tested source-safe adapter and one restored read-only observation are admitted next; full gameplay/Cook recovery, complete client, source facts, frozen performance, Mac/Edge and owner acceptance remain pending. No existing world is repinned."
   },
   "scope_approval": {
     "authority": "owner",
@@ -35,7 +35,7 @@
     {"id": "complete-tutorial", "status": "in_progress", "evidence": [], "blocker": "Headless normal-account source journey now completes70/70 with correct departure possessions/XP/1QP. Final reviewed-build browser journey and composed presentation checks remain separate and unexecuted."},
     {"id": "legitimate-lumbridge-arrival", "status": "in_progress", "evidence": [], "blocker": null},
     {"id": "lumbridge-activities", "status": "in_progress", "evidence": [], "blocker": null},
-    {"id": "death-and-recovery", "status": "in_progress", "evidence": [], "blocker": "The same-account source5e dying checkpoint remains preserved pending actual cause confirmation and a source-safe continuation. Ordinary-grave Bank-All permission or verified disablement also remains a documented source gap; native repair and generic recovery controls do not close the real journey gate."},
+    {"id": "death-and-recovery", "status": "in_progress", "evidence": [], "blocker": "Actual source5e dying cause is confirmed and its code repair passes native/PG prerequisites. A bounded restored observation is now authorized, but actual public recovery and player continuation are not yet verified. Ordinary-grave Bank-All permission remains a separate source gap; generic recovery controls do not close the real journey gate."},
     {"id": "complete-cooks-assistant", "status": "in_progress", "evidence": [], "blocker": null},
     {"id": "shared-authoritative-headless-path", "status": "in_progress", "evidence": [], "blocker": null},
     {"id": "tutorial-and-quest-persistence", "status": "in_progress", "evidence": [], "blocker": null},

@@ -653,6 +653,14 @@ remain unchanged. Wait for the director's PostgreSQL confirmation and explicit
 source-safe dying-resume adapter authorization before starting a service or
 continuing gameplay.
 
+The Director has now confirmed the actual-state diagnosis and PostgreSQL
+prerequisites. The current
+[bounded authorization](../../milestones/evidence/m1-dying-observation-authorization.json)
+admits a tested, committed observation-only adapter and one real restored
+observation with normal lifecycle/ticks. Preserve the original archive and
+trace, stop before player gameplay inputs, and capture a fresh private checkpoint
+before cleanup. Full Office/grave/Cook continuation remains separately gated.
+
 ```sh
 python3 -m unittest discover -s tools/journey-tests -p 'test_*.py' -q
 ```

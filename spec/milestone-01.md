@@ -104,10 +104,16 @@ journey. That same source-5e account has completed all 70 tutorial transitions,
 Learning the Ropes' 1QP reward, legitimate Lumbridge arrival, copper mining,
 bank/shop operations, goblin combat and loot: 321 checks across three
 invocations, including two verified private database restores. It is now
-preserved at a dying-state `PollWorld409` failure. A native stale-combat-style
-reproduction and repair pass, but the actual checkpoint cause and source-safe
-continuation still need confirmation. Do not repin, heal, skip a death phase,
-replay retention, or recreate missing trace events to resume it.
+preserved at a dying-state `PollWorld409` failure. The
+[immutable actual-state diagnosis](../tools/journey-tests/evidence/dying-ui-style-7fa370e14c9b421e.json)
+now confirms the repaired stale-combat-style cause: no equipment remains, while
+the selected sword style refers to the sword in the actual grave. Native and
+PostgreSQL prerequisites pass. The
+[current bounded authorization](../milestones/evidence/m1-dying-observation-authorization.json)
+admits a tested observation-only adapter and one real restore/read-only public
+observation, followed by a new protected checkpoint. It does not yet authorize
+player gameplay continuation. Do not repin, heal, skip a death phase, replay
+retention, or recreate missing trace events.
 
 The newer [authority candidate](../milestones/evidence/m1-authority-controls.json)
 uses source 5b3; its controls, audio history and animation contracts are verified
