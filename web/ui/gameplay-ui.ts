@@ -1,5 +1,6 @@
 import { GAMEPLAY_UI_CAPABILITY } from "../shared/contracts.ts";
-import type { GameIntent, GameplayUiIntent, GameplayUiView, ItemView, UiAmount, UiPermission, WorldView } from "../shared/contracts.ts";
+import type { GameIntent, GameplayUiIntent, GameplayUiView, ItemView, RecoveryContextSelection, RecoveryContextView, UiAmount, UiPermission, WorldView } from "../shared/contracts.ts";
+import { MAX_RECOVERY_SELECTION_ENTRIES, recoverySelectionProblem, sameRecoveryContext, sameRecoverySelection } from "./recovery-context.ts";
 
 export interface UiContractProblem { message: string; code: string }
 
@@ -35,9 +36,10 @@ function object(fields: Record<string, Validator>, exact = false): Validator {
     return null;
   };
 }
-function array(check: Validator, unique?: string): Validator {
+function array(check: Validator, unique?: string, maximum = Number.MAX_SAFE_INTEGER): Validator {
   return (value, path) => {
     if (!Array.isArray(value)) return `${path}: expected an array`;
+    if (value.length > maximum) return `${path}: exceeds the ${maximum}-entry bound`;
     const seen = new Set<unknown>();
     for (let index = 0; index < value.length; index++) {
       const problem = check(value[index], `${path}[${index}]`);
@@ -81,10 +83,52 @@ const amount: Validator = (value, path) => {
     : object({ kind: oneOf("quantity"), quantity }, true))(value, path);
 };
 const recoveryRecord = object({ death: identity, items: array(identity) }, true);
+const recoveryIdentity: Validator = (value, path) => {
+  if (!isRecord(value)) return `${path}: expected a recovery context identity`;
+  return (value.kind === "grave"
+    ? object({ kind: oneOf("grave"), interface: identity, death: identity }, true)
+    : object({ kind: oneOf("death_office"), interface: identity, instance: nullable(identity) }, true))(value, path);
+};
+const recoverySelection = object({
+  context: recoveryIdentity,
+  records: array(object({
+    death: identity,
+    entries: array(object({ id: identity, quantity, current_storage: storage }, true), "id", MAX_RECOVERY_SELECTION_ENTRIES),
+  }, true), "death", MAX_RECOVERY_SELECTION_ENTRIES),
+}, true);
+const recoveryEntry = object({
+  id: identity, item, unitFee: decimal(), fullStackFee: decimal(),
+  inventoryCapacity: u32, bankCapacity: u32, take: permission, bank: permission,
+});
+const recoveryCaption: Validator = (value, path) => {
+  if (!isRecord(value)) return `${path}: expected source caption data`;
+  return (value.kind === "source" ? object({
+    kind: oneOf("source"), sourceId: u32, quantity: decimal(), unitFee: decimal(), totalFee: decimal(),
+  }, true) : object({ kind: oneOf("unavailable"), reason: identity }, true))(value, path);
+};
+const recoveryContext = object({
+  version: oneOf(1), identity: recoveryIdentity,
+  counts: object({
+    entries: integer(0, MAX_RECOVERY_SELECTION_ENTRIES), nativeItemTypes: nullable(u32), capacity: integer(1, 65535),
+    capacityUnit: oneOf("entries", "item_types_or_instances"), stored: u32, offered: u32,
+  }),
+  slots: array(object({
+    slot: integer(0, MAX_RECOVERY_SELECTION_ENTRIES - 1), death: identity, currentStorage: storage,
+    entry: recoveryEntry, selectedTypeCaption: recoveryCaption,
+  }), "slot", MAX_RECOVERY_SELECTION_ENTRIES),
+  takeAll: object({
+    permission, selection: recoverySelection,
+    plan: nullable(object({
+      totalFee: decimal(), partial: bool,
+      transfers: array(object({ death: identity, id: identity, quantity, fee: decimal() }), "id", MAX_RECOVERY_SELECTION_ENTRIES),
+    })),
+  }),
+} satisfies Record<keyof RecoveryContextView, Validator>);
 const intentFields: Record<GameplayUiIntent["kind"], Record<string, Validator>> = {
   production_select_all: { menu_id: identity, recipe: identity },
   bank_set_amount: { amount, noted: bool },
   recovery_take: { death: identity, storage, items: array(object({ id: identity, amount }, true)) },
+  recovery_take_all: { selection: recoverySelection },
   recovery_bank_all: { records: array(recoveryRecord) },
   ui_document_page: { document_id: identity, page: integer(0, 65535) },
   bank_placeholder: { entry_id: identity },
@@ -178,13 +222,11 @@ const projectionCheck = object({
   recovery: nullable(object({
     cofferBalance: decimal(), discard: permission, cofferOffer: permission, cofferItems: array(inventoryActions, "slot"),
     management: optional(object({
+      context: optional(recoveryContext),
       bankRevision: decimal(),
       panels: array(object({
         death: identity, storage,
-        entries: array(object({
-          id: identity, item, unitFee: decimal(), fullStackFee: decimal(),
-          inventoryCapacity: u32, bankCapacity: u32, take: permission, bank: permission,
-        }), "id"),
+        entries: array(recoveryEntry, "id"),
         fullSelectionFee: decimal(), takeAll: permission,
       })),
       bankAll: permission, bankAllRecords: array(recoveryRecord, "death"),
@@ -206,6 +248,9 @@ export function gameplayUiProblem(world: WorldView): UiContractProblem | null {
   const ui = world.ui;
   if (!ui || ui.version !== 1)
     return { message: `This server does not provide ${GAMEPLAY_UI_CAPABILITY}. Required gameplay interfaces are unsupported.`, code: "ui.capability.game.ui.v1" };
+  const context = ui.recovery?.management?.context;
+  if (context?.identity?.kind === "death_office" && context.identity.instance !== world.player.instance)
+    return { message: "The recovery context belongs to a different source instance.", code: "ui.recovery.context.invalid" };
   if (Object.isFrozen(ui)) {
     const known = validatedProjections.get(ui);
     if (known !== undefined) return known;
@@ -243,6 +288,47 @@ function validateProjection(ui: GameplayUiView): UiContractProblem | null {
     for (const record of management.bankAllRecords) {
       if (record.items.length === 0 || new Set(record.items).size !== record.items.length)
         return invalid("ui.recovery.management.bankAllRecords: empty or duplicate item identities");
+    }
+    const context = management.context;
+    if (context) {
+      const selectionProblem = recoverySelectionProblem(context.takeAll.selection);
+      if (selectionProblem) return invalid(`ui.recovery.management.context: ${selectionProblem}`);
+      const office = context.identity.kind === "death_office";
+      if (context.identity.interface !== ui.activeInterface || context.counts.entries !== context.slots.length
+          || context.counts.stored > context.counts.capacity
+          || context.counts.capacityUnit !== (office ? "item_types_or_instances" : "entries")
+          || context.counts.nativeItemTypes !== null && context.counts.nativeItemTypes > context.counts.entries
+          || !sameRecoveryContext(context.identity, context.takeAll.selection.context)
+          || context.takeAll.permission.allowed !== (context.takeAll.plan !== null)
+          || context.takeAll.plan && (!context.takeAll.plan.transfers.length || context.takeAll.plan.transfers.length > context.slots.length))
+        return invalid("ui.recovery.management.context: inconsistent identity, count or plan availability");
+      const records: RecoveryContextSelection["records"] = [], seen = new Set<string>();
+      for (const [index, slot] of context.slots.entries()) {
+        if (slot.slot !== index || seen.has(slot.entry.id) ||
+            slot.entry.inventoryCapacity > slot.entry.item.quantity || slot.entry.bankCapacity > slot.entry.item.quantity)
+          return invalid("ui.recovery.management.context: invalid or duplicate source slot");
+        seen.add(slot.entry.id);
+        if (context.identity.kind === "grave" &&
+            (slot.death !== context.identity.death || slot.currentStorage !== "grave"))
+          return invalid("ui.recovery.management.context: a grave contains a foreign record or storage");
+        const caption = slot.selectedTypeCaption;
+        if (caption.kind === "source" && (!office || caption.sourceId !== slot.entry.item.sourceId
+            || BigInt(caption.quantity) < BigInt(slot.entry.item.quantity) || caption.unitFee !== slot.entry.unitFee))
+          return invalid("ui.recovery.management.context: the source caption belongs to another item or fee");
+        let record = records.at(-1);
+        if (!record || record.death !== slot.death) {
+          record = { death: slot.death, entries: [] };
+          records.push(record);
+        }
+        record.entries.push({ id: slot.entry.id, quantity: slot.entry.item.quantity, current_storage: slot.currentStorage });
+      }
+      if (!sameRecoverySelection({ context: context.identity, records }, context.takeAll.selection))
+        return invalid("ui.recovery.management.context: the supplied observation selection differs from its slots");
+      for (const transfer of context.takeAll.plan?.transfers ?? []) {
+        const slot = context.slots.find(slot => slot.death === transfer.death && slot.entry.id === transfer.id);
+        if (!slot || transfer.quantity > slot.entry.item.quantity)
+          return invalid("ui.recovery.management.context: the executable plan names an invalid entry quantity");
+      }
     }
   }
   return null;
@@ -379,6 +465,14 @@ export function checkUiIntent(world: WorldView, intent: GameplayUiIntent): UiCon
         if (problem) return problem;
       }
       return null;
+    }
+    case "recovery_take_all": {
+      const problem = recoverySelectionProblem(intent.selection);
+      if (problem) return { message: problem, code: "ui.request.invalid" };
+      const context = ui.recovery?.management?.context;
+      if (!context || !sameRecoverySelection(intent.selection, context.takeAll.selection))
+        return stale("That full recovery context or item selection changed. Review it before taking items.");
+      return denied(context.takeAll.permission, "Take-All");
     }
     case "recovery_bank_all": {
       const management = ui.recovery?.management;

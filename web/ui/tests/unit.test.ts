@@ -194,12 +194,15 @@ test("recovery display uses explicit fee/coffer inputs and native controls witho
     "Local fee inspection does not retrieve an item.");
   assert.equal(lockedControls.find(control => control.id === "recovery-item-recovery-source-1")!.tooltip, "Authoritative source rejection");
   assert.equal(lockedControls.find(control => control.label === "Retrieve 5")!.disabled, "Authoritative source rejection");
-  const current = { ...view, unitFee: null, items: [{ ...view.items[0]!,
-    unitFee: "9007199254740993", fullStackFee: "9007199254741001", inventoryCapacity: 2, bankCapacity: 4 }] };
+  const current: RecoveryDisplay = { ...view, unitFee: null, items: [{ ...view.items[0]!,
+    unitFee: "9007199254740993", fullStackFee: "9007199254741001", inventoryCapacity: 2, bankCapacity: 4,
+    selectedTypeCaption: { kind: "source", sourceId: item.sourceId!, quantity: "7",
+      unitFee: "9007199254740993", totalFee: "63050394783186951" } }] };
   assert.match(recoveryFeeText(current), /9,007,199,254,740,993/);
-  assert.match(recoveryFeeText(current), /9,007,199,254,741,001/);
-  assert.doesNotMatch(recoveryFeeText(current), /63,050,394,783,186,951/,
-    "The supplied full-entry fee is not reconstructed by multiplying the unit quote.");
+  assert.match(recoveryFeeText(current), /63,050,394,783,186,951/);
+  assert.doesNotMatch(recoveryFeeText(current), /9,007,199,254,741,001/,
+    "The native type display is separate from the executable full-entry fee.");
+  assert.equal(current.items[0]!.fullStackFee, "9007199254741001");
 });
 
 test("source production model replacement preserves widget identity and native choice coordinates", () => {

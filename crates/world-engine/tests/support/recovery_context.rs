@@ -1,8 +1,7 @@
 #[path = "mod.rs"]
 pub mod source;
-#[path = "../../../content/tests/common/mod.rs"]
-mod ui_source;
 
+use crate::engine_content as ui_source;
 use clubscape_game_types::*;
 use clubscape_world_engine::{ActorEvent, LifecycleTransition, RandomSource, WorldEngine};
 use std::collections::{BTreeMap, BTreeSet};

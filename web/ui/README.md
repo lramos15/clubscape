@@ -8,12 +8,38 @@ Final source/composed acceptance remains **incomplete**.
 
 ## Current integration boundary
 
-The current adapter validates all24 UI intents, explicit quantity/All selections,
+The current adapter validates all25 UI intents, explicit quantity/All selections,
 independent bank/recovery revisions, full recovery permissions/capacities and
 lossless fees. Production All, persistent bank All and partial recovery now
 dispatch their actual typed requests; no numeric sentinel, local price formula
 or optimistic ownership change is used. The current production TypeScript
 check passes; that is not a live-journey or final presentation pass.
+
+The optional version1 `ui.recovery.management.context` supplies the complete
+native container, including an open empty Office when `world.recovery` is null.
+Its contiguous slots preserve each death/entry and physical storage identity.
+The native title uses `counts.entries` and the supplied capacity, not distinct
+item types or sums of executable capacities. `selectedTypeCaption` is separate
+from both a selected entry's full-stack fee and the combined Take-All plan:
+the original 80-slot Office selects seven arrows but displays 35 arrows and
+1,470 at 42 each. An unavailable source caption stays explicitly unavailable.
+
+Whole-context Take-All sends one `recovery_take_all` with an unchanged copy of
+`takeAll.selection`; the UI never builds a transaction plan or loops over death
+records. Held selections are rejected after any context, order, quantity or
+physical-storage change. Partial 1/5/X/All retains the selected record and uses
+the context's storage kind, which can be Office even for a still-grave item.
+Inventory retrieval adds no bank revision; Bank-All keeps its separate exact
+revision. Semantic context changes cancel local selection, menus and quantity
+entry, while equivalent copied identities do not reset them. Missing extensions
+retain the explicitly supported legacy path; malformed current contexts cannot
+fall through to a legacy recovery panel.
+
+`tests/recovery-context.test.ts` and `tests/recovery-browser.mjs` cover this
+consumer boundary. The browser fixture uses controlled services, not a saved
+account, and reprojects original short/80-slot Office images without replacing
+goldens. Native/server atomicity, actual player journeys and presentation
+acceptance remain separate evidence.
 
 `bindUiAudioPreferences(ui, controls)` consumes the shell's real
 `PlayerAudioControls`. All native mode, numbered playlist, mute, volume, Skip and
@@ -37,7 +63,7 @@ invalidate that retained projection. Actual minimap validation failures clear
 the failed surface and report the precise UI error instead of escaping from an
 animation frame.
 
-Current integration checks include58 UI units,17 versioned-control browser cases,
+The preceding integration checks include58 UI units,17 versioned-control browser cases,
 9 actual native-preference cases and11 UI4/surface cases. The36 bounded and8
 document source comparisons are rerun at zero tolerance. Historical totals below
 retain their original evidence/revisions; no component result certifies source

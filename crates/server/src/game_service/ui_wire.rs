@@ -94,6 +94,9 @@ fn storage(value: types::RecoveryStorage) -> i32 {
 
 fn recovery_management(value: types::RecoveryManagementView) -> game::UiRecoveryManagement {
     game::UiRecoveryManagement {
+        context: value
+            .context
+            .map(clubscape_protocol::recovery_context_to_wire),
         bank_revision: value.bank_revision,
         panels: value
             .panels
@@ -366,4 +369,65 @@ pub(super) fn view(value: types::GameplayUiView) -> Result<game::GameplayUiView,
             native_map: document.native_map,
         }),
     })
+}
+
+#[cfg(test)]
+mod recovery_context_tests {
+    use super::*;
+    use prost::Message;
+
+    #[test]
+    fn response_encoder_preserves_empty_office_and_unsupported_context_distinctly() {
+        let identity = types::RecoveryContextIdentity::DeathOffice {
+            interface: types::InterfaceId::new("interface.death_retrieval").unwrap(),
+            instance: Some(types::InstanceId::new("instance.office.test").unwrap()),
+        };
+        let denied = types::UiPermission {
+            allowed: false,
+            code: Some(types::GameErrorCode::NotOwned),
+            reason: Some("There are no recovery items to take.".into()),
+        };
+        let empty = types::RecoveryContextView {
+            version: types::RECOVERY_CONTEXT_VERSION,
+            identity: identity.clone(),
+            counts: types::RecoveryContextCounts {
+                entries: 0,
+                native_item_types: Some(0),
+                capacity: 120,
+                capacity_unit: types::RecoveryCapacityUnit::ItemTypesOrInstances,
+                stored: 0,
+                offered: 0,
+            },
+            slots: Vec::new(),
+            take_all: types::RecoveryTakeAllControlView {
+                permission: denied.clone(),
+                selection: types::RecoveryContextSelection {
+                    context: identity,
+                    records: Vec::new(),
+                },
+                plan: None,
+            },
+        };
+        for context in [None, Some(empty)] {
+            let encoded = recovery_management(types::RecoveryManagementView {
+                context: context.clone(),
+                bank_revision: "9007199254740997".into(),
+                panels: Vec::new(),
+                bank_all: denied.clone(),
+                bank_all_records: Vec::new(),
+            })
+            .encode_to_vec();
+            let decoded = game::UiRecoveryManagement::decode(encoded.as_slice()).unwrap();
+            assert_eq!(decoded.bank_revision, "9007199254740997");
+            assert_eq!(
+                decoded
+                    .context
+                    .as_ref()
+                    .map(clubscape_protocol::recovery_context_from_wire)
+                    .transpose()
+                    .unwrap(),
+                context
+            );
+        }
+    }
 }

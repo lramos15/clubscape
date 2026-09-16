@@ -1,3 +1,5 @@
+#[path = "../../content/tests/common/mod.rs"]
+mod engine_content;
 #[path = "support/recovery_context.rs"]
 mod fixture;
 

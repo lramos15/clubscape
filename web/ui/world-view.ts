@@ -10,7 +10,7 @@ import type { ItemView, SkillView } from "../shared/contracts.ts";
 import type { AbilityUiView, GameplayUiView } from "../shared/contracts.ts";
 import { FILTER_OPTIONS, filterOptionEnabled, projectAbilityGrid, projectFilterPanel } from "./filters.ts";
 import type { AbilityVisualTruth } from "./filters.ts";
-import { projectRecovery, recoveryControls, recoveryTemplate } from "./recovery.ts";
+import { projectRecovery, recoveryContextItems, recoveryControls, recoveryTemplate } from "./recovery.ts";
 import type { RecoveryDisplay, RecoveryUiCommand } from "./recovery.ts";
 import { bankAmountRequest, bankDefaultAmount, formatUiFixed, formatUiInteger, gameplayUi, gameplayUiProblem, permissionReason } from "./gameplay-ui.ts";
 import { productionChoiceLabel, productionSource, projectProduction } from "./production.ts";
@@ -206,17 +206,22 @@ export function paintGame(raster: SourceRaster, ui: GameViewContext): void {
   const settingsValues = modal === "all-settings" ? currentSettingValues(catalogue, world, ui.audio, ui.music, local.clientInput) : null;
   const settingsProjection = settingsValues ? projectAllSettings(catalogue, local.settings, settingsValues.values) : null;
   if (settingsProjection) local.settings.scroll = settingsProjection.scroll;
-  const recoveryOpen = world.recovery !== null && (!authoritative || ["interface.grave", "interface.death_retrieval"].includes(authoritative.activeInterface ?? ""));
-  if (recoveryOpen) modal = world.recovery!.storage === "grave" ? "grave" : "recovery";
   const management = authoritative?.recovery?.management;
+  const recoveryContext = management?.context;
+  const recoveryOpen = (!world.ui || authoritative !== null) && (recoveryContext
+    ? authoritative?.activeInterface === recoveryContext.identity.interface
+    : world.recovery !== null && (!authoritative || ["interface.grave", "interface.death_retrieval"].includes(authoritative.activeInterface ?? "")));
+  const recoveryStorage = recoveryContext?.identity.kind ?? world.recovery?.storage;
+  if (recoveryOpen) modal = recoveryStorage === "grave" ? "grave" : "recovery";
   const recoveryPanel = management?.panels.find(panel =>
     panel.death === world.recovery?.death && panel.storage === world.recovery?.storage);
   const discardReason = permissionReason(authoritative?.recovery?.discard, "Discard recovery items");
   const bankAllReason = permissionReason(management?.bankAll, "Bank-All");
-  const takeAllReason = permissionReason(recoveryPanel?.takeAll, "Take-All");
-  const recovery: RecoveryDisplay | null = recoveryOpen ? {
-    storage: world.recovery!.storage,
-    items: world.recovery!.items.map((row, slot) => {
+  const takeAllPermission = recoveryContext?.takeAll.permission ?? recoveryPanel?.takeAll;
+  const takeAllReason = permissionReason(takeAllPermission, "Take-All");
+  const fullSelectionFee = recoveryContext ? recoveryContext.takeAll.plan?.totalFee : recoveryPanel?.fullSelectionFee;
+  const recoveryItems = recoveryContext ? recoveryContextItems(recoveryContext)
+    : world.recovery?.items.map((row, slot) => {
       const entry = recoveryPanel?.entries.find(entry => entry.id === row.id);
       return entry ? {
         id: entry.id, slot, item: entry.item, allowed: entry.take.allowed,
@@ -224,14 +229,19 @@ export function paintGame(raster: SourceRaster, ui: GameViewContext): void {
         unitFee: entry.unitFee, fullStackFee: entry.fullStackFee,
         inventoryCapacity: entry.inventoryCapacity, bankCapacity: entry.bankCapacity,
       } : { id: row.id, slot, item: row.item, allowed: null, reason: null };
-    }),
-    selectedId: world.recovery!.items.some(row => row.id === local.recoverySelected) ? local.recoverySelected : null,
-    coffer: authoritative?.recovery?.cofferBalance ?? null, unitFee: null, capacity: null,
+    }) ?? [];
+  const recovery: RecoveryDisplay | null = recoveryOpen ? {
+    storage: recoveryStorage!,
+    items: recoveryItems,
+    selectedId: recoveryItems.some(row => row.id === local.recoverySelected) ? local.recoverySelected : null,
+    coffer: authoritative?.recovery?.cofferBalance ?? null, unitFee: null,
+    capacity: recoveryContext?.counts.capacity ?? null,
+    ...(recoveryContext ? { entryCount: recoveryContext.counts.entries } : {}),
     bankAll: management?.bankAll.allowed ?? false,
     ...(bankAllReason ? { bankAllReason } : {}),
-    ...(recoveryPanel ? {
-      takeAll: recoveryPanel.takeAll.allowed, ...(takeAllReason ? { takeAllReason } : {}),
-      fullSelectionFee: recoveryPanel.fullSelectionFee,
+    ...(takeAllPermission ? {
+      takeAll: takeAllPermission.allowed, ...(takeAllReason ? { takeAllReason } : {}),
+      ...(fullSelectionFee === undefined ? {} : { fullSelectionFee }),
     } : {}),
     discardAll: authoritative?.recovery?.discard.allowed ?? false,
     ...(discardReason ? { discardReason } : {}),
@@ -1282,30 +1292,47 @@ export function paintGame(raster: SourceRaster, ui: GameViewContext): void {
       }
     }
   }
-  if (recovery && world.recovery) {
+  if (recovery) {
     const snapshot = world.recovery;
     const dispatch = (command: RecoveryUiCommand) => {
       if (command.kind === "select") ui.change(() => { local.recoverySelected = command.id; });
       else if (command.kind === "close") ui.send({ kind: "close_interface" });
       else if (command.kind === "examine") {
-        const item = snapshot.items.find(row => row.id === command.id)?.item;
+        const item = recovery.items.find(row => row.id === command.id)?.item;
         if (item) ui.notice(item.sourceId === null ? item.name : catalogue.items[item.sourceId]?.examine || item.name);
       } else if (command.kind === "take_all") {
-        if (recoveryPanel) ui.sendUi({ kind: "recovery_take", death: recoveryPanel.death, storage: recoveryPanel.storage,
+        if (recoveryContext) ui.sendUi({ kind: "recovery_take_all", selection: structuredClone(recoveryContext.takeAll.selection) });
+        else if (recoveryPanel) ui.sendUi({ kind: "recovery_take", death: recoveryPanel.death, storage: recoveryPanel.storage,
           items: recoveryPanel.entries.map(row => ({ id: row.id, amount: { kind: "all" } })) });
-        else ui.send({ kind: "reclaim", death: snapshot.death, storage: snapshot.storage, items: snapshot.items.map(row => row.id) });
+        else if (snapshot) ui.send({ kind: "reclaim", death: snapshot.death, storage: snapshot.storage, items: snapshot.items.map(row => row.id) });
+        else ui.required("Take-All", "recovery_context");
       }
-      else if (command.kind === "discard_all") ui.sendUi({ kind: "request_recovery_discard",
-        death: snapshot.death, storage: snapshot.storage, items: snapshot.items.map(row => row.id) });
+      else if (command.kind === "discard_all") {
+        if (recoveryContext) {
+          const records = recoveryContext.takeAll.selection.records;
+          if (records.length !== 1) { ui.required("Discard-All", "recovery_discard_context"); return; }
+          ui.sendUi({ kind: "request_recovery_discard", death: records[0]!.death, storage: recoveryContext.identity.kind,
+            items: records[0]!.entries.map(entry => entry.id) });
+        } else if (snapshot) ui.sendUi({ kind: "request_recovery_discard",
+          death: snapshot.death, storage: snapshot.storage, items: snapshot.items.map(row => row.id) });
+        else ui.required("Discard-All", "recovery_context");
+      }
       else if (command.kind === "retrieve") {
-        const item = snapshot.items.find(row => row.id === command.id);
-        if (recoveryPanel) {
+        const item = recovery.items.find(row => row.id === command.id);
+        const current = recoveryContext?.slots.find(row => row.entry.id === command.id);
+        if (current && recoveryContext) {
+          const take = (amount: import("../shared/contracts.ts").UiAmount) => ui.sendUi({
+            kind: "recovery_take", death: current.death, storage: recoveryContext.identity.kind, items: [{ id: command.id, amount }],
+          });
+          if (command.amount === "x") ui.prompt("Retrieve how many?", quantity => take({ kind: "quantity", quantity }));
+          else take(command.amount === "all" ? { kind: "all" } : { kind: "quantity", quantity: command.amount });
+        } else if (recoveryPanel) {
           const take = (amount: import("../shared/contracts.ts").UiAmount) => ui.sendUi({
             kind: "recovery_take", death: recoveryPanel.death, storage: recoveryPanel.storage, items: [{ id: command.id, amount }],
           });
           if (command.amount === "x") ui.prompt("Retrieve how many?", quantity => take({ kind: "quantity", quantity }));
           else take(command.amount === "all" ? { kind: "all" } : { kind: "quantity", quantity: command.amount });
-        } else if (item && (command.amount === "all" || typeof command.amount === "number" && command.amount >= item.item.quantity))
+        } else if (snapshot && item && (command.amount === "all" || typeof command.amount === "number" && command.amount >= item.item.quantity))
           ui.send({ kind: "reclaim", death: snapshot.death, storage: snapshot.storage, items: [command.id] });
         else ui.required("Partial-quantity retrieval", "reclaim_quantity");
       } else if (management) ui.sendUi({ kind: "recovery_bank_all", records: structuredClone(management.bankAllRecords) });

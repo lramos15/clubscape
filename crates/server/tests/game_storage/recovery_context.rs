@@ -254,9 +254,26 @@ async fn whole_context_recovery_is_one_durable_operation_across_records_restart_
         .context
         .unwrap();
     assert!(empty.slots.is_empty() && !empty.take_all.permission.allowed);
+    assert_conflict(
+        restarted
+            .commit_command(
+                &lease,
+                &renewed_session.access(auth),
+                operation.clone(),
+                |_, _, _| panic!("A different repository cannot reuse the old world lease"),
+            )
+            .await
+            .unwrap_err(),
+    );
+    database.store.release_world_lease(&lease).await.unwrap();
+    let replacement = restarted
+        .acquire_world_lease(world_id, MAX_WORLD_LEASE)
+        .await
+        .unwrap();
+    assert!(replacement.fence > lease.fence);
     let duplicate = restarted
         .commit_command(
-            &lease,
+            &replacement,
             &renewed_session.access(auth),
             operation,
             |_, _, _| {
@@ -269,6 +286,7 @@ async fn whole_context_recovery_is_one_durable_operation_across_records_restart_
     assert_eq!(duplicate.receipt, committed.receipt);
     assert_eq!(restarted.load_world(world_id).await.unwrap(), durable);
     assert_eq!(database.journal_count().await, 1);
+    restarted.release_world_lease(&replacement).await.unwrap();
     restarted.close().await.unwrap();
     database.stop().await;
 }

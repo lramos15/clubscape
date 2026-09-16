@@ -1,4 +1,4 @@
-import type { ItemView } from "../shared/contracts.ts";
+import type { ItemView, RecoveryContextView, RecoveryTypeCaption } from "../shared/contracts.ts";
 import type { NativeWidget, UiCatalogue } from "./assets.ts";
 import type { Control } from "./input.ts";
 import { intersect } from "./assets.ts";
@@ -8,6 +8,7 @@ import { escapeText } from "./raster.ts";
 export interface RecoveryDisplayItem {
   id: string; item: ItemView; slot: number; allowed: boolean | null; reason: string | null;
   unitFee?: string; fullStackFee?: string; inventoryCapacity?: number; bankCapacity?: number;
+  selectedTypeCaption?: RecoveryTypeCaption;
 }
 /** Explicit display inputs: null is unknown, never a fabricated zero balance or fee. */
 export interface RecoveryDisplay {
@@ -17,6 +18,7 @@ export interface RecoveryDisplay {
   coffer: string | null;
   unitFee: number | null;
   capacity: number | null;
+  entryCount?: number;
   bankAll: boolean;
   bankAllReason?: string;
   takeAll?: boolean;
@@ -32,6 +34,16 @@ export type RecoveryUiCommand =
   | { kind: "take_all" | "bank_all" | "discard_all" | "close" }
   | { kind: "examine"; id: string };
 
+export function recoveryContextItems(context: RecoveryContextView): RecoveryDisplayItem[] {
+  return context.slots.map(({ slot, entry, selectedTypeCaption }) => ({
+    id: entry.id, slot, item: entry.item, allowed: entry.take.allowed,
+    reason: entry.take.reason,
+    unitFee: entry.unitFee, fullStackFee: entry.fullStackFee,
+    inventoryCapacity: entry.inventoryCapacity, bankCapacity: entry.bankCapacity,
+    selectedTypeCaption,
+  }));
+}
+
 export function recoveryTemplate(catalogue: UiCatalogue, view: RecoveryDisplay): NativeWidget[] {
   const key = view.storage === "grave" ? view.bankAll ? "native-retrieval-602-35-0-1" : "native-retrieval-602-34-0-0"
     : view.selectedId === null ? "native-retrieval-669-12345--1-0" : "native-retrieval-669-12345-7-42";
@@ -44,27 +56,33 @@ export function recoveryFeeText(view: RecoveryDisplay): string {
   const selected = view.items.find(row => row.id === view.selectedId);
   const coffer = view.coffer === null ? "Unavailable" : BigInt(view.coffer).toLocaleString("en-US");
   if (!selected) return `Select an item to retrieve.<br>Death's Coffer: <col=ffffff>${coffer}</col>`;
-  // Source3492 uses INV_TOTAL for the selected item type, while the outline remains on its selected slot.
-  const quantity = selected.unitFee === undefined ? view.items.filter(row => row.item.id === selected.item.id)
-    .reduce((total, row) => total + row.item.quantity, 0) : selected.item.quantity;
   const name = escapeText(selected.item.name);
-  const fee = selected.unitFee !== undefined ? BigInt(selected.unitFee) : view.unitFee === null ? null : BigInt(view.unitFee);
+  const caption = selected.selectedTypeCaption;
+  if (caption?.kind === "unavailable" || !caption && selected.unitFee !== undefined)
+    return `${name}:<br>Source fee display unavailable.<br>Death's Coffer: <col=ffffff>${coffer}${view.coffer === null ? "" : " coins"}</col>`;
+  // Only controlled legacy source inputs use the native formula here. Live
+  // selected-type display values are supplied independently of entry/plan fees.
+  const quantity = caption?.kind === "source" ? BigInt(caption.quantity)
+    : view.items.filter(row => row.item.id === selected.item.id)
+      .reduce((total, row) => total + BigInt(row.item.quantity), 0n);
+  const fee = caption?.kind === "source" ? BigInt(caption.unitFee) : view.unitFee === null ? null : BigInt(view.unitFee);
   let feeText = fee === null ? "Fee: unavailable" : `Fee: <col=ffffff>${fee.toLocaleString("en-US")} ${fee === 1n ? "coin" : "coins"}</col>`;
-  if (quantity > 1 && fee !== null) {
+  if (quantity > 1n && fee !== null) {
     feeText += " each";
-    if (fee !== 1n && (selected.fullStackFee !== undefined || fee === 0n || BigInt(quantity) <= 2147483647n / fee)) {
-      const total = selected.fullStackFee !== undefined ? BigInt(selected.fullStackFee) : BigInt(quantity) * fee;
+    if (fee !== 1n && (caption?.kind === "source" || fee === 0n || quantity <= 2147483647n / fee)) {
+      const total = caption?.kind === "source" ? BigInt(caption.totalFee) : quantity * fee;
       feeText += ` (<col=ffffff>${total.toLocaleString("en-US")}</col>)`;
     }
   }
-  return `${quantity > 1 ? quantity.toLocaleString("en-US") + " x " : ""}${name}:<br>${feeText}<br>Death's Coffer: <col=ffffff>${coffer}${view.coffer === null ? "" : " coins"}</col>`;
+  return `${quantity > 1n ? quantity.toLocaleString("en-US") + " x " : ""}${name}:<br>${feeText}<br>Death's Coffer: <col=ffffff>${coffer}${view.coffer === null ? "" : " coins"}</col>`;
 }
 
 export function projectRecovery(widgets: NativeWidget[], view: RecoveryDisplay): NativeWidget[] {
   const group = view.storage === "grave" ? 602 : 669;
-  const grid = widgets.find(widget => widget.id === widgetId(group, 3) && widget.index === -1)!;
-  const prototype = widgets.find(widget => widget.id === grid.id && widget.index >= 0 && widget.item >= 0)!;
-  if (!grid || !prototype) throw new Error("Native populated retrieval item geometry is missing.");
+  const grid = widgets.find(widget => widget.id === widgetId(group, 3) && widget.index === -1);
+  if (!grid) throw new Error("Native populated retrieval grid geometry is missing.");
+  const prototype = widgets.find(widget => widget.id === grid.id && widget.index >= 0 && widget.item >= 0);
+  if (!prototype) throw new Error("Native populated retrieval item geometry is missing.");
   const columns = view.storage === "grave" ? 8 : 9, pitchX = view.storage === "grave" ? 46 : 50;
   const pitchY = view.storage === "grave" ? 40 : 42;
   const firstX = view.storage === "grave" ? 1 : 2, firstY = view.storage === "grave" ? 3 : 0;
@@ -81,7 +99,7 @@ export function projectRecovery(widgets: NativeWidget[], view: RecoveryDisplay):
     if (widget.id >> 16 !== group) continue;
     const child = widget.id & 65535;
     if (child === 1 && widget.index === 1) widget.text = view.storage === "grave" ? "Gravestone"
-      : `Death's Office Item Retrieval <col=ffb83f>(${view.items.length}/${view.capacity === null ? "?" : view.capacity})</col>`;
+      : `Death's Office Item Retrieval <col=ffb83f>(${view.entryCount ?? view.items.length}/${view.capacity === null ? "?" : view.capacity})</col>`;
     if (group === 669 && child === 11) widget.text = recoveryFeeText(view);
   }
   projectScrollbar(output, widgetId(group, 4), grid.id, extent, scroll);
@@ -102,10 +120,13 @@ export function recoveryControls(widgets: readonly NativeWidget[], width: number
       if (!row) continue;
       const select = view.storage === "death_office";
       const label = `${select ? "Select" : "Take-All"} ${row.item.name}`;
+      const captionProblem = row.selectedTypeCaption?.kind === "unavailable" ? row.selectedTypeCaption.reason
+        : row.unitFee !== undefined && !row.selectedTypeCaption ? "The authoritative selected-type caption has not been supplied." : null;
       controls.push({ ...rect, id: `recovery-item-${row.id}`, label, pressed: row.id === view.selectedId,
         ...(!select && row.allowed === false ? { disabled: row.reason ?? "This item is currently unavailable." } : {}),
         ...(select && row.allowed === false ? { tooltip: row.reason ?? "This item is currently unavailable." } : {}),
         ...(row.allowed === null ? { tooltip: "Retrieval permission and affordability are not projected; the server validates this request." } : {}),
+        ...(select && captionProblem ? { tooltip: captionProblem } : {}),
         actions: [{ label, run: () => dispatch(select ? { kind: "select", id: row.id } : { kind: "retrieve", id: row.id, amount: "all" }) },
           { label: `Examine ${row.item.name}`, run: () => dispatch({ kind: "examine", id: row.id }) }] });
       continue;

@@ -31,6 +31,7 @@ import { defaultSettingsPage } from "./settings.ts";
 import type { SettingsPageState, ClientInputSettings } from "./settings.ts";
 import type { SourceAudioPreferenceBinding, SourceMusicSkipResult } from "../audio/preferences.ts";
 import type { PlayerAudioControls, PlayerAudioPreferenceStatus } from "../app/player-audio.ts";
+import { sameRecoveryContext } from "./recovery-context.ts";
 
 export interface UiNotice {
   message: string; errorId: string | null; recoverable: boolean; scope: "error" | "unavailable" | "information";
@@ -655,6 +656,14 @@ class UiController {
     if (old.world?.shop?.id !== state.world?.shop?.id) { this.local.scroll = 0; this.local.amount = null; }
     const projection = state.world ? gameplayUi(state.world) : null;
     const previousProjection = old.world ? gameplayUi(old.world) : null;
+    const recovery = projection?.recovery?.management?.context?.identity;
+    const previousRecovery = previousProjection?.recovery?.management?.context?.identity;
+    if (recovery !== previousRecovery && (!recovery || !previousRecovery || !sameRecoveryContext(recovery, previousRecovery))) {
+      this.local.recoverySelected = null;
+      this.local.scroll = 0;
+      this.local.amount = null;
+      this.menu = null;
+    }
     if (projection) this.local.tab = TABS.findIndex(tab => tab.interface === projection.activeTab);
     if (projection?.document?.id !== previousProjection?.document?.id ||
         projection?.document?.page !== previousProjection?.document?.page) this.local.documentPart = 0;

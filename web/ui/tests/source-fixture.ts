@@ -8,6 +8,7 @@ import { projectAbilityGrid, projectFilterPanel } from "../filters.ts";
 import type { AbilityKind, AbilityVisualTruth } from "../filters.ts";
 import { projectRecovery, recoveryTemplate } from "../recovery.ts";
 import type { RecoveryDisplay } from "../recovery.ts";
+import type { RecoveryTypeCaption } from "../../shared/contracts.ts";
 import type { ClientAssets } from "../../shared/contracts.ts";
 
 export const testAssets: ClientAssets = {
@@ -112,7 +113,7 @@ export async function filterProjection(kind: AbilityKind, mask: number, open: bo
   paintNativeTree(raster, widgets, 1920, 1080, w => w.contentType === 1337 || minimap.draw(w, { x: 3222, y: 3218, plane: 0 }));
 }
 
-export async function recoveryProjection(name: string): Promise<void> {
+export async function recoveryProjection(name: string, caption?: RecoveryTypeCaption): Promise<void> {
   const canvas = document.querySelector("canvas")!;
   canvas.width = 1920; canvas.height = 1080;
   const assets = await fixtureAssets(), source = assets.catalogue.templates[name]!;
@@ -131,6 +132,12 @@ export async function recoveryProjection(name: string): Promise<void> {
     capacity: 120, bankAll: name === "native-retrieval-602-35-0-1", discardAll: false, scroll: scrolling?.[1] === "scroll" ? 60 : 0,
   };
   if (name.includes("--1-")) { display.selectedId = null; display.unitFee = 0; }
+  if (caption) {
+    const selected = display.items.find(row => row.id === display.selectedId);
+    if (!selected) throw new Error("The controlled native caption fixture needs a selected source slot.");
+    selected.selectedTypeCaption = caption;
+    display.unitFee = null;
+  }
   const widgets = projectRecovery(recoveryTemplate(assets.catalogue, display), display);
   await assets.preloadItems([...widgets.filter(w => w.item >= 0).map(w => w.item)]);
   await Promise.all(["ui/minimaps/compass.png", "ui/minimaps/3168-3168-0.png"].map(id => assets.require(id)));
