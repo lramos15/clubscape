@@ -133,6 +133,14 @@ impl WorldEngine {
             RecoveryContextIdentity::Grave { .. } => RecoveryStorage::Grave,
             RecoveryContextIdentity::DeathOffice { .. } => RecoveryStorage::DeathOffice,
         };
+        let native_caption = match &identity {
+            RecoveryContextIdentity::DeathOffice { interface, .. } => self
+                .content
+                .interfaces
+                .get(interface)
+                .is_some_and(|definition| definition.source_ids.contains(&669)),
+            RecoveryContextIdentity::Grave { .. } => false,
+        };
         let policy = self
             .content
             .mechanics
@@ -184,12 +192,17 @@ impl WorldEngine {
                     current_storage: item.current_storage,
                     entry: entry.clone(),
                     selected_type_caption: RecoveryTypeCaption::Unavailable {
-                        reason: "Complete original recovery item identities are not bound.".into(),
+                        reason: if native_caption {
+                            "Complete original recovery item identities are not bound."
+                        } else {
+                            "Selected-type caption is not bound for this recovery interface."
+                        }
+                        .into(),
                     },
                 });
             }
         }
-        if source_complete {
+        if source_complete && native_caption {
             for slot in &mut slots {
                 let source_id =
                     slot.entry.item.source_id.ok_or_else(|| {
@@ -245,7 +258,7 @@ impl WorldEngine {
             Ok(plan) => (permission(Ok(()))?, Some(plan.preview()?)),
             Err(error) => (permission(Err(error))?, None),
         };
-        Ok(RecoveryContextView {
+        let result = RecoveryContextView {
             version: RECOVERY_CONTEXT_VERSION,
             identity,
             counts,
@@ -255,6 +268,8 @@ impl WorldEngine {
                 selection: selected,
                 plan,
             },
-        })
+        };
+        result.validate_shape()?;
+        Ok(result)
     }
 }

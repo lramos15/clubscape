@@ -379,3 +379,237 @@ fn incoming_grave_counts_are_not_stored_capacity_and_overflow_refusal_does_not_m
     );
     assert_eq!(world, before);
 }
+
+#[test]
+fn paid_credit_stays_per_entry_and_never_becomes_a_type_wide_discount() {
+    let (engine, mut world) = setup(definition(), 1000);
+    let mut credited = entry("credited", "arrow", 7, 840);
+    credited.fee_paid = 84;
+    add_record(&engine, &mut world, "one", vec![credited]);
+    add_record(
+        &engine,
+        &mut world,
+        "two",
+        vec![entry("unpaid", "arrow", 7, 840)],
+    );
+    let context = view(&engine, &world);
+    assert_eq!(context.slots[0].entry.unit_fee, "0");
+    assert_eq!(context.slots[0].entry.full_stack_fee, "210");
+    assert_eq!(context.slots[1].entry.unit_fee, "42");
+    assert_eq!(context.slots[1].entry.full_stack_fee, "294");
+    assert_eq!(context.take_all.plan.as_ref().unwrap().total_fee, "504");
+    assert_eq!(
+        context.slots[0].selected_type_caption,
+        RecoveryTypeCaption::Source {
+            source_id: 882,
+            quantity: "14".into(),
+            unit_fee: "0".into(),
+            total_fee: "0".into(),
+        }
+    );
+    next(&engine, &mut world);
+    apply(&engine, &mut world, all(&context)).unwrap();
+    assert_eq!(world.characters[&source::actor()].runtime.death_coffer, 496);
+}
+
+#[test]
+fn combined_stack_limit_is_not_the_sum_of_independent_entry_capacities() {
+    let (engine, mut world) = setup(definition(), 1000);
+    add_record(
+        &engine,
+        &mut world,
+        "one",
+        vec![entry("one", "arrow", 7, 840)],
+    );
+    add_record(
+        &engine,
+        &mut world,
+        "two",
+        vec![entry("two", "arrow", 7, 840)],
+    );
+    let inventory = &mut world
+        .characters
+        .get_mut(&source::actor())
+        .unwrap()
+        .inventory;
+    inventory.slots.fill(Some(source::stack("ore", 1)));
+    inventory.slots[0] = Some(source::stack("arrow", MAX_STACK_QUANTITY - 9));
+    let context = view(&engine, &world);
+    assert!(
+        context
+            .slots
+            .iter()
+            .all(|slot| slot.entry.inventory_capacity == 7)
+    );
+    let plan = context.take_all.plan.as_ref().unwrap();
+    assert_eq!(plan.total_fee, "378");
+    assert_eq!(
+        plan.transfers
+            .iter()
+            .map(|item| item.quantity.get())
+            .collect::<Vec<_>>(),
+        vec![7, 2]
+    );
+    assert!(plan.partial);
+    next(&engine, &mut world);
+    apply(&engine, &mut world, all(&context)).unwrap();
+    assert_eq!(
+        world.characters[&source::actor()].inventory.slots[0]
+            .as_ref()
+            .unwrap()
+            .quantity
+            .get(),
+        MAX_STACK_QUANTITY
+    );
+    assert_eq!(world.characters[&source::actor()].runtime.death_coffer, 622);
+}
+
+#[test]
+fn total_capacity_refusal_leaves_every_record_credit_and_balance_unchanged() {
+    let (engine, mut world) = setup(definition(), 1000);
+    add_record(
+        &engine,
+        &mut world,
+        "one",
+        vec![entry("one", "arrow", 7, 840)],
+    );
+    add_record(
+        &engine,
+        &mut world,
+        "two",
+        vec![entry("two", "arrow", 7, 840)],
+    );
+    world
+        .characters
+        .get_mut(&source::actor())
+        .unwrap()
+        .inventory
+        .slots
+        .fill(Some(source::stack("ore", 1)));
+    let before = world.clone();
+    let context = view(&engine, &world);
+    assert_eq!(world, before);
+    assert!(!context.take_all.permission.allowed);
+    assert!(context.take_all.plan.is_none());
+    assert!(
+        context
+            .slots
+            .iter()
+            .all(|slot| slot.entry.inventory_capacity == 0)
+    );
+    next(&engine, &mut world);
+    let before = world.clone();
+    assert_eq!(
+        apply(&engine, &mut world, all(&context)).unwrap_err().code,
+        GameErrorCode::InventoryFull
+    );
+    assert_eq!(world, before);
+}
+
+#[test]
+fn grave_counts_keep_entry_units_and_never_claim_the_office_caption_or_bank_permission() {
+    let mut content = definition();
+    content.mechanics.death.as_mut().unwrap().grave_capacity = 8;
+    content
+        .ui
+        .as_mut()
+        .unwrap()
+        .recovery
+        .as_mut()
+        .unwrap()
+        .grave_bank = RecoveryBankRule::Unavailable {
+        reason: "Normal-grave Bank-All remains source-unverified.".into(),
+        source: source::source(),
+    };
+    let (engine, mut world) = setup(content, 1000);
+    let death = add_record(
+        &engine,
+        &mut world,
+        "grave",
+        vec![
+            entry("one", "ore", 1, 840),
+            entry("two", "ore", 1, 840),
+            entry("three", "ore", 1, 840),
+        ],
+    );
+    let record = world.runtime.deaths.get_mut(&death).unwrap();
+    record.grave = Some(GraveState {
+        location: record.origin.clone(),
+        active_ticks_remaining: 1500,
+        clock_started: false,
+        started_at_tick: None,
+        paused: Default::default(),
+        items: std::mem::take(&mut record.office),
+    });
+    let character = world.characters.get_mut(&source::actor()).unwrap();
+    character.runtime.instance = None;
+    character.tile = engine.content().initial_state.tile;
+    character.region = engine.content().initial_state.region.clone();
+    next(&engine, &mut world);
+    engine
+        .apply_intent(
+            &mut world,
+            &source::actor(),
+            &GameIntent::OpenGrave {
+                death: death.clone(),
+            },
+            &mut fixture::NoRandom,
+        )
+        .unwrap();
+    let context = view(&engine, &world);
+    assert_eq!(context.counts.capacity, 8);
+    assert_eq!(context.counts.entries, 3);
+    assert_eq!(context.counts.stored, 3);
+    assert_eq!(context.counts.offered, 3);
+    assert_eq!(context.counts.native_item_types, Some(1));
+    assert_eq!(context.counts.capacity_unit, RecoveryCapacityUnit::Entries);
+    for slot in &context.slots {
+        assert!(matches!(
+            slot.selected_type_caption,
+            RecoveryTypeCaption::Unavailable { .. }
+        ));
+        assert_eq!(slot.entry.bank_capacity, 0);
+        assert!(!slot.entry.bank.allowed);
+    }
+    next(&engine, &mut world);
+    apply(&engine, &mut world, all(&context)).unwrap();
+    assert!(
+        world.runtime.deaths[&death]
+            .grave
+            .as_ref()
+            .unwrap()
+            .items
+            .is_empty()
+    );
+}
+
+#[test]
+fn unbound_original_identity_remains_explicit_without_guessing_a_display_total() {
+    let mut content = definition();
+    content
+        .items
+        .get_mut(&source::item("ore"))
+        .unwrap()
+        .source_id = None;
+    let (engine, mut world) = setup(content, 1000);
+    add_record(
+        &engine,
+        &mut world,
+        "one",
+        vec![entry("one", "arrow", 7, 840)],
+    );
+    add_record(
+        &engine,
+        &mut world,
+        "two",
+        vec![entry("two", "ore", 1, 840)],
+    );
+    let context = view(&engine, &world);
+    assert_eq!(context.counts.native_item_types, None);
+    assert_eq!(context.counts.entries, 2);
+    assert!(context.slots.iter().all(|slot| matches!(
+        slot.selected_type_caption,
+        RecoveryTypeCaption::Unavailable { .. }
+    )));
+    assert!(context.take_all.permission.allowed);
+}

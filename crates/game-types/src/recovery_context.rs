@@ -94,7 +94,7 @@ pub enum RecoveryCapacityUnit {
 #[serde(deny_unknown_fields)]
 pub struct RecoveryContextCounts {
     pub entries: u32,
-    /// Distinct original item IDs in the visible container; absent if any ID is unbound.
+    /// Distinct original item IDs, not the occupied-slot title count; absent if any ID is unbound.
     pub native_item_types: Option<u32>,
     pub capacity: u16,
     pub capacity_unit: RecoveryCapacityUnit,
@@ -294,7 +294,7 @@ impl RecoveryContextView {
                     quantity,
                     unit_fee,
                     total_fee,
-                } if all_source_ids && slot.entry.item.source_id == Some(*source_id) => {
+                } if office && all_source_ids && slot.entry.item.source_id == Some(*source_id) => {
                     let quantity = decimal(quantity)?;
                     let unit = decimal(unit_fee)?;
                     if Some(&quantity) != native.get(source_id)
@@ -304,8 +304,7 @@ impl RecoveryContextView {
                         return Err(invalid_context());
                     }
                 }
-                RecoveryTypeCaption::Unavailable { reason }
-                    if !all_source_ids && !reason.is_empty() => {}
+                RecoveryTypeCaption::Unavailable { reason } if !reason.is_empty() => {}
                 _ => return Err(invalid_context()),
             }
         }

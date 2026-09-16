@@ -46,6 +46,8 @@ use uuid::Uuid;
 
 #[path = "../../content/tests/common/mod.rs"]
 mod engine_content;
+#[path = "game_storage/recovery_context.rs"]
+mod recovery_context;
 
 const TEST_DATABASE: &str = "clubscape_m1_test";
 const FIXTURE_REVISION: &str = "synthetic-storage-fixture-v2-not-gameplay-evidence";

@@ -257,7 +257,7 @@ export interface RecoveryContextView {
   identity: RecoveryContextIdentity;
   counts: {
     entries: number;
-    /** Distinct visible original item IDs; null means an original identity is unbound. */
+    /** Distinct original item IDs, not the native title count; null means an ID is unbound. */
     nativeItemTypes: number | null;
     capacity: number; capacityUnit: "entries" | "item_types_or_instances";
     /** Physically stored count versus offered count, which includes still-grave Office rows. */

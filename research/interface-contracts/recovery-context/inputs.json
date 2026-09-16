@@ -1,0 +1,79 @@
+{
+  "schema_version": 1,
+  "scope": "Retained native recovery component evidence and unchanged canonical policy; no new source capture",
+  "native_catalogue": {
+    "path": "assets/compiled/ui/manifest.json",
+    "sha256": "6601f1de45324ff23e88df577b3e467d74878f09b6f0f1759c52c6870452b329",
+    "decoder": "web/ui/assets.ts::decodeUiCatalogue",
+    "scroll_case": {
+      "name": "native-retrieval-scroll-669",
+      "selected_slot": 7,
+      "selected_slot_quantity": 7,
+      "matching_type_slots": 5,
+      "selected_type_quantity": 35,
+      "unit_fee_input": 42,
+      "source_display_total": 1470,
+      "selected_entry_total": 294,
+      "coffer_input": 12345,
+      "caption_widget": {"group": 669, "child": 11, "index": -1},
+      "caption": "35 x Bronze arrow:<br>Fee: <col=ffffff>42 coins</col> each (<col=ffffff>1,470</col>)<br>Death's Coffer: <col=ffffff>12,345 coins</col>",
+      "title_widget": {"group": 669, "child": 1, "index": 1},
+      "title": "Death's Office Item Retrieval <col=ffb83f>(80/120)</col>",
+      "occupied_slots": 80,
+      "distinct_original_types": 16,
+      "allocated_fixture_slots": 120
+    },
+    "short_case": {
+      "name": "native-retrieval-669-12345-7-42",
+      "title": "Death's Office Item Retrieval <col=ffb83f>(16/120)</col>",
+      "occupied_slots": 16
+    },
+    "qualification": "The title counts occupied native slots, not distinct item types. The denominator is controlled fixture allocation, not evidence for server storage policy."
+  },
+  "fixture_builder": {
+    "path": "tools/ui-assets/UiModeCapture.java",
+    "sha256": "d277e223ffbe2f3c07838bbc7438a00e7e8904cf039035a8efc8188b769426eb",
+    "scope": "Original component-only inventory/coffer/selection/fee inputs; no production balances or progression"
+  },
+  "native_scripts": {
+    "path": "research/interface-contracts/control-bindings.json",
+    "sha256": "02abc6c4deb8c1f3395f9358f7c7a77cd7bf2a221da1b212c370d8fa0f3c3758",
+    "3490": {
+      "sha256": "ce88ed570774a3ee8498e05294eab4c540d126fff5c3aefc7a2460d0b0c1ae72",
+      "controls": ["1", "5", "X", "All", "Take-All"],
+      "qualification": "Whole-context Take-All is a distinct control; this does not establish original-server selected-item All dispatch across records."
+    },
+    "3492": {
+      "sha256": "217cc9f74d5975f0d63c20ae11139405642c71843e971dc6d6b7c0f044543d84",
+      "selected_slot_variable": 262,
+      "unit_fee_variable": 263,
+      "coffer_variable": 261,
+      "inventory": 636,
+      "quantity_opcode": 3303,
+      "quantity_instruction": 118,
+      "qualification": "INV_TOTAL sums the visible selected original type. Native formatting and its integer-display branches remain UI-owned; these values are not an executable transaction quote."
+    }
+  },
+  "canonical_policy": {
+    "raw_sha256": "5b3ba5f108ed3fec8f8b5f7f49b429c059e21b6f192ec99a0569616e08330059",
+    "compressed_sha256": "8da1e85a1e2ebb0355e29e7a15a0ca7cdab2f2751bc1341dd5efd5322b925ca6",
+    "grave_capacity": 120,
+    "grave_capacity_unit": "entries",
+    "office_capacity": 120,
+    "office_capacity_unit": "item_types_or_instances",
+    "office_key_helper": "crates/game-types/src/execution.rs::recovery_slot_key",
+    "enforcement": "crates/world-engine/src/death.rs::enforce_office_records",
+    "office_overflow": "unresolved; preserve the existing source refusal above the configured limit",
+    "fee_transfer_planner": "crates/world-engine/src/death/recovery.rs::plan_recovery",
+    "qualification": "Capacity/count/fee/transfer semantics reuse the existing canonical engine and helpers unchanged. Visible entries include still-grave Office offers; read-only projection does not migrate those items or run overflow."
+  },
+  "preserved_unknowns": [
+    "Original-server selected-item All dispatch across separate death records is not established by INV_TOTAL.",
+    "Cross-record presentation order preserves the current engine's stable map/vector order, not a newly verified original-server sort.",
+    "Normal-grave Bank-All permission or deliberate disablement remains unverified.",
+    "Inventory dough and the seven Empty variants' motion or deliberate absence remain unverified."
+  ],
+  "assets_reference_content_or_live_world_changed": false,
+  "new_gpu_browser_or_source_capture": false,
+  "milestone_accepted": false
+}

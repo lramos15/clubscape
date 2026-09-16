@@ -1,0 +1,81 @@
+{
+  "schema_version": 1,
+  "task": "M1-NATIVE-RECOVERY-CONTRACT",
+  "status": "owned_core_validated_server_and_ui_integration_pending",
+  "worktree": ".worktrees/m1-recovery-context",
+  "branch": "fix/m1-native-recovery-context",
+  "base": "2f3704d7132e02e15bf5c306549abcd3ccd21962",
+  "api_first_commit": "155ac6ff8a43a5b60492f464ebb9c340c6da886f",
+  "core_implementation_commit": "93aefa6a7e0415cc29474c67770be30246ffbcde",
+  "contract": {
+    "existing_capability": "game.ui.recovery.v1",
+    "additive_field": "ui.recovery.management.context",
+    "context_version": 1,
+    "protocol_context_tag": 5,
+    "protocol_request_tag": 26,
+    "request": "recovery_take_all",
+    "public_server_converter": "clubscape_protocol::recovery_context_to_wire",
+    "old_single_record_partial_requests_changed": false,
+    "bank_revision_after_dedup_semantics_changed": false,
+    "content_state_runtime_or_base_ui_version_changed": false
+  },
+  "validation": {
+    "owned_native_tests": 396,
+    "owned_native_binaries": 38,
+    "native_recovery_context_tests": 12,
+    "new_protocol_recovery_tests": 4,
+    "new_client_recovery_tests": 3,
+    "new_wasm_context_tests": 2,
+    "wasm_ui_request_variants_round_tripped": 25,
+    "node_controller_tests": 15,
+    "new_node_recovery_tests": 4,
+    "strict_shared_typescript": "passed",
+    "strict_native_all_target_clippy": "passed",
+    "strict_wasm_target_clippy": "passed",
+    "owned_rust_format": "passed",
+    "local_logs": ".local/evidence/recovery-context-validation.json"
+  },
+  "numerical_controls": [
+    "80 occupied source slots,16 distinct original types, selected slot7 still7 arrows, selected-type quantity35, unit42, display1470, entry294; native title80/120.",
+    "Two seven-arrow records priced42 and44: source display for the first selection588, combined executable fee602, one operation, receipts294 and308.",
+    "420 funds with two independently seven-unit-capable entries: combined plan7+3 units, partial=true, fee420, unchanged remaining identity with4 units.",
+    "Only9 units of stack headroom with two independently seven-unit-capable entries: combined plan7+2, fee378, never additive capacity14.",
+    "84 paid credit remains on its entry: entry210 plus unrelated entry294 yields combined504, not a type-wide discount.",
+    "Empty Office retains actual interface/opaque instance and configured capacity with zero slots and explicit denied Take-All.",
+    "Grave counts entries; Office capacity counts the existing item/instance keys. Still-grave offers do not become physically stored items in a query.",
+    "Wrong context, foreign records, changed quantities, missing selections, capacity/overflow refusal and stale repeats are atomic.",
+    "Large decimal amounts survive Rust/protobuf/client/WASM projection; unknown original IDs and non-Office669 captions stay explicitly unavailable."
+  ],
+  "pending_server_integration": {
+    "excluded_path": "crates/server/src/game_service/ui_wire.rs",
+    "function": "recovery_management",
+    "required_initializer": "context: value.context.map(clubscape_protocol::recovery_context_to_wire),",
+    "compile_attempt": "cargo check --locked --offline --quiet -p clubscape-server --tests",
+    "observed_error": "E0063 missing field context in UiRecoveryManagement initializer at line96",
+    "worker_changed_excluded_source": false,
+    "durable_test": "crates/server/tests/game_storage/recovery_context.rs::whole_context_recovery_is_one_durable_operation_across_records_restart_and_auth_renewal",
+    "guard": "Existing game_storage.rs isolated literal-loopback clubscape_m1_test harness; only owned tables in FK order",
+    "postgresql_execution": "not run; blocked before server compilation by the excluded initializer",
+    "postgresql_pass_claimed": false
+  },
+  "pending_director_ui_integration": {
+    "full_typecheck_attempted_with_existing_dependencies": true,
+    "errors": [
+      "web/ui/gameplay-ui.ts:84 TS2741: exhaustive validator map lacks recovery_take_all",
+      "web/ui/gameplay-ui.ts:287 TS2366: exhaustive request-permission function needs the new variant"
+    ],
+    "worker_changed_web_ui": false,
+    "typecheck_exclusions_casts_or_success_fallbacks_added": false,
+    "consumer_instructions": "Use the present context independently of singular WorldView.recovery; native title numerator is counts.entries, not nativeItemTypes. Preserve selected slot identity. Render selectedTypeCaption, not entry/full-plan fee arithmetic. Echo takeAll.selection once; retain old selected-entry requests and exact bank revision handling."
+  },
+  "preserved": {
+    "raw_sha256": "5b3ba5f108ed3fec8f8b5f7f49b429c059e21b6f192ec99a0569616e08330059",
+    "compressed_sha256": "8da1e85a1e2ebb0355e29e7a15a0ca7cdab2f2751bc1341dd5efd5322b925ca6",
+    "root_cargo_lock_sha256": "08191b7a7dc0f3d43675a0c36e162e0df3645ecb311571d13af0eaf6c141cc73",
+    "original_backend_worktree_untouched": true,
+    "source_5e_c84_journey_access_restart_or_repin": false,
+    "source_content_assets_frozen_reference_root_metadata_changed": false,
+    "subagents_or_factories": false
+  },
+  "ui_m1_visual_performance_acceptance": false
+}
