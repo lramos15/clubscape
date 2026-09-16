@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "task": "M1-WATER-ITEM-ON-REVIEW",
-  "status": "changes_required",
+  "status": "fix_review_pending",
   "authority": "Director bounded independent review within approved M1",
   "implementation_authority": "milestones/evidence/m1-water-item-on-dispatch-authorization.json",
   "owner_approval": "milestones/approvals/m1-water-fill-upgrade-v1.json",
@@ -80,6 +80,23 @@
     "required_cases": "All three activity variants at future, due and overdue deadlines; invalid count/mode rejected before ticks, valid single work round-trips, ordinary recipes preserve supported behavior.",
     "source_artifact_change_expected": false,
     "prior_forbidden_work_unchanged": true
+  },
+  "fix_review": {
+    "status": "admitted",
+    "reviewer": "619c994e-a208-4acf-8c2a-261ae52c892b",
+    "previous_park_acknowledged": true,
+    "base": "5c6c581136310b48e8043e7920199d7236f9b88c",
+    "implementation_commit": "04a40ee84d0a95866264a3c087071e0f63904377",
+    "clean_worker_head_confirmed": true,
+    "scope": "Assess only the six-file append and necessary callers for the original persisted-item-on finding: shared production-mode predicate, all three serialized activity forms and unchanged ordinary completion timing.",
+    "worker_reported_not_director_rerun": {
+      "before": "One passing and three failing regressions reproduced malformed-state acceptance and repeated Unavailable ticks.",
+      "after": "Five new regressions and420 full native tests pass; strict native/WASM Clippy and formatting pass.",
+      "source": "Both water profiles retain4/4 positive and15/15 negative cases; both water and both old profiles recompile to exact raw/gzip identities.",
+      "logs": ".worktrees/m1-water-dispatch/.local/water-dispatch/persisted-repair/"
+    },
+    "forbidden_work_unchanged": true,
+    "result": null
   },
   "main_integrated": false,
   "saved_world_migration_or_continuation_admitted": false,

@@ -9,7 +9,8 @@
   "branch": "integration/m1-water-main",
   "candidate_imports": [
     "eaa527a8f3d9d408d6bf1a4b8fdc47269abe0137",
-    "5c6c581136310b48e8043e7920199d7236f9b88c"
+    "5c6c581136310b48e8043e7920199d7236f9b88c",
+    "04a40ee84d0a95866264a3c087071e0f63904377"
   ],
   "independent_contract_review": "milestones/evidence/m1-water-item-on-review.json",
   "exact_source_pairs": [
@@ -108,8 +109,9 @@
     "verified_asset_mappings_per_delivery": 5015,
     "accounts_or_services_started_by_preparation": 0,
     "operator_invocations_used": 0,
+    "execution": null,
     "required_before_execution": [
-      "Resolve and assess the independently found persisted-production restriction gap.",
+      "Assess the independently found persisted-production repair04a40ee and validate the imported final native candidate.",
       "Rebuild/verify the exact final native executable and preserve these exact source-delivery pins.",
       "Reserve the fixed operator journal exclusively before the first invocation; directories do not renew the ten-call allowance."
     ]

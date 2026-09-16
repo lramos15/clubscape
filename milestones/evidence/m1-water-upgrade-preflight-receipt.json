@@ -37,7 +37,9 @@
     "finding": "Persisted item-on batches/modes pass game-types validation and can later abort an entire tick.",
     "worker": "2766e089-44e5-4a1d-974e-7b03ad9c269d",
     "fix_scope": "Shared all-variant persisted-state restriction and future/due/overdue serialized regressions in the original worker tree.",
-    "result_collected": false
+    "result_collected": true,
+    "repair_commit": "04a40ee84d0a95866264a3c087071e0f63904377",
+    "repair_review_and_integrated_validation": "pending"
   },
   "pending_execution": {
     "source_operator_calls_used": 0,

@@ -6,16 +6,16 @@
     "effective_limit": 25,
     "admissions_open": true,
     "active": [
-      {"id": "director", "task": "M1-SHELL-METADATA-INTEGRATION"},
+      {"id": "director", "task": "M1-WATER-UPGRADE-PREFLIGHT"},
       {"id": "bb7f85f7-096a-4377-80cb-3e7eae196c6b", "task": "M1-BROWSER-RENDERER"},
-      {"id": "2766e089-44e5-4a1d-974e-7b03ad9c269d", "task": "M1-WATER-ITEM-ON-DISPATCH"}
+      {"id": "619c994e-a208-4acf-8c2a-261ae52c892b", "task": "M1-WATER-ITEM-ON-REVIEW"}
     ],
     "reserved": [],
     "queued": [],
     "parked": [
       {"id": "e6925772-df1f-4ff7-9efc-219f800a5a14", "reason": "Runtime retired this completed camera/recovery reviewer. Attempted water-review resumption was rejected before any execution; prior completed reports remain valid. No automatic resumption."},
       {"id": "fdda1fb0-1135-4cf8-8cff-3db550e48f54", "reason": "Publishedeaa527a with strict current/legacy water candidates and preserved source qualifications. Both have0/4 positive native cases because the shared recipe-target guard has no item-on-only authorization for operation-less sink14868. Neither target is migration-ready. Director owns the next bounded shared-contract repair; no private-state access, migration or automatic resumption."},
-      {"id": "619c994e-a208-4acf-8c2a-261ae52c892b", "reason": "Completed one bounded water review with a MEDIUM persisted-production validation finding. Backend is separately readmitted to fix that exact bug; reviewer has no automatic resumption. No tests, edits, private-state access or M1 acceptance."},
+      {"id": "2766e089-44e5-4a1d-974e-7b03ad9c269d", "reason": "Published clean six-file persisted-state repair04a40ee over5c6c581. Reports failing-before/passing-after serialized regressions,420 native tests and exact old/water profile bytes. Reviewer619 is separately readmitted for the narrow fix delta; no automatic worker resumption, private state, migration or further implementation."},
       {"id": "78d01af9-70a4-4b02-8339-6a61eb377374", "reason": "Completed bounded preview/spatial producers in b134136 and57f18f1; current original worktree4a205bf is clean and unchanged. Director owns isolated integration against current UI/recovery/audio, preserving source-browser.ts and rechecking historical preview limits. No new work, captures or automatic resumption."},
       {"id": "cdfad64d-9162-439f-a525-58e1114dd7f4", "reason": "Completed56audio units and two fresh full-source cold checks with18/18on-time cues each. Owned66c6d87/6557c57/b5a46f3 integrate2a7727d/693d573/7a01cf2; parent249candidateweb and103rootaudio-consumer checks pass. Both bounded allowances exhausted, GPU window released. Full journey/spatial/speaker/Mac/frozen performance/owner gates remain separate; no automatic resumption."},
       {"id": "ac0f0856-44af-445b-bd90-6db7a1f4fc74", "reason": "Native camera2401e98 completed in owned crates/camera plus local-member lock entry. Parent32native tests, Clippy, WASM check and byte-identical14/354 conformance pass. Independent review and actual renderer/WASM/browser providers remain separate; no automatic consumer edits or resumption."},
@@ -37,7 +37,7 @@
     {
       "id": "M1-WATER-ITEM-ON-DISPATCH",
       "goal": "Close the explicit source item-on-only recipe authorization/reach seam without manufacturing an object menu operation or changing old recipe behavior.",
-      "status": "IMPLEMENTING",
+      "status": "BLOCKED",
       "specs": ["milestones/evidence/m1-water-item-on-dispatch-authorization.json", "research/water-fill/handoff.json", "research/water-fill/facts.json", "crates/world-engine/src/activities.rs", "crates/world-engine/src/permissions.rs"],
       "dependencies": ["M1-NATIVE-RECOVERY-INTEGRATION"],
       "allowed_paths": ["crates/game-types/**", "crates/content/**", "crates/world-engine/**", "crates/server/src/game_service/tests/ui.rs", "tools/m1-content/**", "tools/simulator/src/journey/plan.rs", "tools/simulator/src/journey/source.rs", "content/m1/**", "research/water-fill/**", "research/m1-bindings/**"],
@@ -50,12 +50,12 @@
       "source_notes": ["eaa527a correctly stopped with0/4 positive native cases. Director inspected use_item, check_recipe_target, production start/tick/projection and require_world_target; target_objects alone has no reach/channel authority. The explicit optional rule is the narrow data-driven continuation under the already-approved water dependency.", "Independent review of5c6c581 found that game-types runtime validation accepts persisted multi-conversion/MakeX item-on activities and misses legacy Producing. The due-time mode error then aborts a whole tick. Readmit only a shared predicate and all-variant serialized-state regressions; keep source pins and every prior exclusion unchanged."],
       "parity_entries": [],
       "adaptations": [],
-      "evidence": ["milestones/evidence/m1-water-fill-dispatch-blocker.json", "milestones/evidence/m1-water-item-on-dispatch-authorization.json", "milestones/evidence/m1-water-item-on-review.json"]
+      "evidence": ["milestones/evidence/m1-water-fill-dispatch-blocker.json", "milestones/evidence/m1-water-item-on-dispatch-authorization.json", "milestones/evidence/m1-water-item-on-review.json", "Clean append04a40ee received with five new serialized-state regressions and420 reported native tests; independent fix-delta assessment and integration validation are pending."]
     },
     {
       "id": "M1-WATER-ITEM-ON-REVIEW",
       "goal": "Independently assess the source-bound single item-on contract, retained menu guards and exact current/legacy water deltas before main adoption.",
-      "status": "BLOCKED",
+      "status": "IMPLEMENTING",
       "specs": ["milestones/evidence/m1-water-item-on-dispatch-authorization.json", "milestones/evidence/m1-water-item-on-review.json", "research/water-fill/facts.json", "research/water-fill/item-on-validation.json"],
       "dependencies": ["M1-WATER-ITEM-ON-DISPATCH"],
       "allowed_paths": [],
@@ -65,7 +65,7 @@
       "test_requirements": ["Review only the published eaa527a content append as pickedcba2016 and5c6c581 implementation plus directly necessary surrounding code", "Check optional-field serialization, strict source/content validation, shared target geometry and unchanged ordinary Production guards", "Check single-conversion admission across direct/item use, UI projection, start, pending ticks and persisted pending state; no synthetic menu or batching", "Assess positive/negative probe coverage, exact old5b/5e compatibility and minimal current/legacy source deltas without treating reported runs as independently rerun", "No edits, builds, tests, GPU/browser, source capture, private state, database migration, nested agents or acceptance claims"],
       "acceptance": ["Resolve high-confidence contract/content regressions before selective integration; review does not admit saved-world migration or M1 acceptance"],
       "reserved_namespaces": [],
-      "source_notes": ["The previous camera/recovery reviewer was retired by the runtime before resumption; reserved replacement619c994 is the sole water reviewer. Director independently inspects only the existing server migration boundary and owns validation/integration."],
+      "source_notes": ["The previous camera/recovery reviewer was retired by the runtime before resumption; reserved replacement619c994 is the sole water reviewer. Director independently inspects only the existing server migration boundary and owns validation/integration.", "Separately readmit the same reviewer only for the six-file04a40ee append and original persisted-state finding. The initial park was explicitly acknowledged; no new reviewer, builds, tests or private-state work is admitted."],
       "parity_entries": [],
       "adaptations": [],
       "evidence": ["milestones/evidence/m1-water-item-on-review.json"]
@@ -127,7 +127,7 @@
     {
       "id": "M1-WATER-UPGRADE-PREFLIGHT",
       "goal": "Prove exact old/current water compatibility and fenced conservation in disposable synthetic source fixtures before any saved-world migration admission.",
-      "status": "BLOCKED",
+      "status": "IMPLEMENTING",
       "specs": ["milestones/evidence/m1-water-upgrade-preflight-authorization.json", "milestones/approvals/m1-water-fill-upgrade-v1.json", "spec/game-networking.md", "crates/server/README.md"],
       "dependencies": ["M1-WATER-ITEM-ON-DISPATCH"],
       "allowed_paths": ["crates/server/src/game_service/tests/**", "crates/server/src/game_service/tests.rs", "crates/server/tests/**", "crates/server/README.md", "spec/game-networking.md", "tools/journey-tests/**", "milestones/**"],
