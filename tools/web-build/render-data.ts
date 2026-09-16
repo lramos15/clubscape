@@ -2,13 +2,20 @@ import { isDeepStrictEqual } from "node:util";
 import type { RenderAssetManifest } from "../../web/renderer/src/index.ts";
 import { publicPath } from "../../web/app/identity.ts";
 
-export const DEFAULT_RENDER_INPUTS = ".local/render-inputs-e635ed1d";
+export const DEFAULT_RENDER_INPUTS = ".local/render-inputs-78fed3ca";
 
 export function renderRuntimeFiles(manifest: RenderAssetManifest): {
   common: string[]; scenes: Map<string, string[]>; blocks: Map<number, string[]>; files: string[];
 } {
+  const floors = manifest.floor_definitions;
+  if ((manifest.blocks?.length ?? 0) > 0 && !floors) {
+    throw new Error("Runtime renderer block scenes require source floor definitions.");
+  }
+  if (floors && floors.sha256 !== manifest.files[floors.file]?.sha256) {
+    throw new Error("Runtime renderer floor definitions have no matching published pin.");
+  }
   const common = new Set([
-    "palette.bin", ...manifest.textures.map((id) => `textures/${id}.bin`),
+    "palette.bin", ...(floors ? [floors.file] : []), ...manifest.textures.map((id) => `textures/${id}.bin`),
     ...(manifest.files["minimap/mapscenes.bin"] ? ["minimap/mapscenes.bin"] : []),
     ...(manifest.files["minimap/mapicons.bin"] ? ["minimap/mapicons.bin"] : []),
     ...(manifest.gear_pose_fits ? [manifest.gear_pose_fits.file] : []),

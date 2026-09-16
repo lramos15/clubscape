@@ -303,9 +303,16 @@ Source phase `6c68672d` was imported once; its duplicate `5b2d8ac` was not.
 The shell does not implement a rasterizer, animation policy or gear fit.
 Build output uses wasm-bindgen0.2.128; actual build hashes are recorded in
 `.local/evidence/renderer-build.json`. The current original renderer manifest is
-`e635ed1dd82e717d44b58716d9d6c06aabee68632fbca0854f60753fd849dc1e`.
+`78fed3ca6b1549b329d6a48a47b35b68e912303b7d4698bb4cc0a8bdd2c34455`.
 All 122 compressed buffers for its 61 blocks were reproduced byte-exactly from
 the pinned original inputs and are included in browser/server delivery.
+The current runtime graph also requires `terrain/floors.bin`; the renderer
+loads its definitions before block assembly and rejects missing/malformed
+definitions or raw terrain before replacing a live scene. All39 required
+actor sequences, including the12 additional clips and native1925/5732/9702
+hand models, are delivered without inventing observer phases. Native minimap
+outer-band closure does not prove UI composition; the pose gate still fails
+931/2034 legal frames. Retained older bundles keep their original manifest pins.
 
 `renderer.ts` validates that exact manifest, passes the compiled WASM URL and
 actual asset base, forwards source `WorldView` including `dynamicObjects`, and

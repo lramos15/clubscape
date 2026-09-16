@@ -511,27 +511,32 @@ matches the final published handoff; shared UI/nullable/observer prerequisites
 were already present and were not replaced by older copies. Source phase
 `6c68672d` is present once, without duplicating `5b2d8ac`.
 `render-assets.ts` pins manifest
-`e635ed1dd82e717d44b58716d9d6c06aabee68632fbca0854f60753fd849dc1e`.
+`78fed3ca6b1549b329d6a48a47b35b68e912303b7d4698bb4cc0a8bdd2c34455`.
 The runtime graph includes the 61 blocks, source textures, sequences, NPC
 definitions, penguin/human-retarget inputs, equipment, dynamic objects,
 ground-item models, the real per-pose fit table, original map-icon sprites,
-preview metadata and explicit diagnostic scenes.
+preview metadata and explicit diagnostic scenes. The authorized `aa2cb197`,
+`16e91308`, `eacb826c`, `6e849ea1` and Director `d2298b92` corrections add
+mandatory floor definitions and assembly-time raw terrain. Missing definitions,
+missing raw terrain and malformed data reject before a live scene is replaced.
+The shell includes the published floor file in common runtime assets and
+requires its metadata/file hash binding; it does not reimplement terrain.
 
 The current published archive is
-`clubscape-render-blocks-dde248f04ea70392.tar`,56,381,440 bytes, SHA-256
-`3a16edb732bba6ea5aa1e5f0468bf85ed07e9395b52624ba7df43f58fafe9d73`.
-Its183 members are the122 unchanged gzip twins (55,720,421 bytes) plus61 new
-MICN-bearing minimap sidecars. Old packs cannot supply those sidecars.
+`clubscape-render-blocks-ffa5b7d7089c4a90.tar`,58,030,080 bytes, SHA-256
+`880924edb755f3613a58d60b62d91c7507da968071998d2aaef91b77d7739b49`.
+Its183 members are122 gzip twins (57,357,774 bytes) plus61 MICN-bearing
+minimap sidecars. Old packages cannot substitute for the current raw terrain.
 `render-package.ts` validates the complete member order, raw/gzip hashes,
 sizes, source-pack identity, content digest and whole-manifest binding before
 the current `export.py --profile unpack-blocks` installs anything.
 
 ```sh
-CLUBSCAPE_RENDER_BLOCK_PACKAGE=.local/render-packages/clubscape-render-blocks-dde248f04ea70392.tar \
+CLUBSCAPE_RENDER_BLOCK_PACKAGE=.local/render-packages/clubscape-render-blocks-ffa5b7d7089c4a90.tar \
 pnpm --dir web render:inputs
 ```
 
-The verified input directory is `.local/render-inputs-e635ed1d`.
+The current input directory is `.local/render-inputs-78fed3ca`.
 This path uses Python's actual unpack/verify profiles, not a source JDK/cache,
 partial index rewrite or hand-written tar extraction. Common published files
 are copied only after their manifest hashes/lengths match. Evidence is
@@ -553,7 +558,7 @@ are observable; no activity/nearest-object fallback is enabled. Map icon pixels
 and offsets are delivered unchanged. The exact native icon-placement helpers
 are available through a guarded UI callback, but the UI sink/adapter remains
 required. No world128 clipping implementation is used. The current legal
-gear sweep is honestly unmet671/1587 frames; old surface-clearance success is
+gear sweep is honestly unmet931/2034 frames; old surface-clearance success is
 not the frozen attachment-gap criterion.
 
 `project-content` exposes only compiler-validated instance geometry as
@@ -574,7 +579,7 @@ its pose-fit JSON had the binary MIME default. Renderer packaging now uses the
 shared public MIME table, so JSON remains `application/json` and gzip carriers
 remain `application/octet-stream`; neither hash nor MIME validation was relaxed.
 
-The current authoritative All/recovery/scene/audio/animation candidate is
+The retained authoritative All/recovery/scene/audio/animation candidate is
 `.local/source-authority-bdbf8a37`, world
 `5553c4d3-72f5-4744-ac58-787977e65b0f`,7,695 assets/210,248,339 public bytes.
 It was created from the exact final raw5b3ba5f1/gzip8da1 artifact, not by
@@ -586,8 +591,9 @@ New builds use a separately validated output root, consistently across Vite,
 delivery, server start and the isolated restart runner:
 
 ```sh
-export CLUBSCAPE_WEB_OUTPUT=.local/web-builds/authority-bdbf8a37
-GAME=.local/source-authority-bdbf8a37
+export CLUBSCAPE_WEB_OUTPUT=.local/web-builds/renderer-78fed3ca
+GAME=.local/source-renderer-78fed3ca-5b3ba5f1
+pnpm --dir web source:bundle "$GAME"
 CLUBSCAPE_CLIENT_MANIFEST="$GAME/content/manifest.json" \
 CLUBSCAPE_CLIENT_ASSET_ROOT="$GAME" CLUBSCAPE_CONTENT_OWNER=game \
 pnpm --dir web build
@@ -602,8 +608,10 @@ without warning suppression or an enclosing package-type override. Normal build
 still honors the UI-owner typecheck gate; diagnostic bundling remains explicitly
 separate. Current source capabilities require complete All/recovery projections,
 including nonadditive capacities/fees and unavailable source Bank-All permission.
-The twelve newly required source animation clips remain an asset-owner
-dependency, not a source substitution.
+The twelve newly required source animation clips and native milking/Home hand
+models are now in the runtime graph (all39 required sequences). Actual backend
+observer phases remain authoritative. Native terrain/minimap and asset closure
+do not accept the UI adapter, pose fit, whole-current-client or performance gates.
 
 The retained pre-UI-handoff native255 candidate has7,181 declared assets
 (221,090,292 public bytes including its content manifest); the newer UI handoff

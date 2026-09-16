@@ -22,8 +22,16 @@ test("delivery follows the published runtime dependency graph and ships all 61 o
   assert(runtime.blocks.has(12336));
   const blocks = [...runtime.blocks.values()].flat().filter((path) => path.endsWith(".gz"));
   assert.equal(blocks.length, 122);
-  assert.equal(blocks.reduce((sum, path) => sum + manifest.files[path]!.size_bytes, 0), 55_720_421);
+  assert.equal(blocks.reduce((sum, path) => sum + manifest.files[path]!.size_bytes, 0), 57_357_774);
   assert(blocks.every((path) => path.endsWith(".gz")));
+  assert(manifest.floor_definitions);
+  assert(runtime.common.includes(manifest.floor_definitions.file));
+  assert.equal(renderAssetContentType(manifest.floor_definitions.file), "application/octet-stream");
+  assert.equal(manifest.gear_pose_fits?.sequences, 39);
+  for (const sequence of [2305, 4847, 4850, 4853, 4855, 4857, 395, 400, 401, 428, 429, 440]) {
+    assert(runtime.common.includes(`anim/seq-${sequence}.bin`));
+  }
+  for (const item of [1925, 5732, 9702]) assert(runtime.common.includes(`models/item-${item}-equip.bin`));
   assert(runtime.common.includes("minimap/mapscenes.bin"));
   assert(runtime.common.includes("minimap/mapicons.bin"));
   assert(runtime.common.includes(manifest.gear_pose_fits!.file));
@@ -43,9 +51,9 @@ test("the current package binds all122 gzip twins and61 MICN sidecars to the ent
   const index = JSON.parse(await readFile(new URL("../../../assets/compiled/render/blocks.index.json", import.meta.url), "utf8"));
   const result = validateRenderBlockPackage(index, manifest, RENDER_MANIFEST_SHA256);
   assert.equal(result.files.length, 183);
-  assert.equal(result.pack.file, "clubscape-render-blocks-dde248f04ea70392.tar");
-  assert.equal(result.pack.size_bytes, 56_381_440);
-  assert.equal(result.pack.sha256, "3a16edb732bba6ea5aa1e5f0468bf85ed07e9395b52624ba7df43f58fafe9d73");
+  assert.equal(result.pack.file, "clubscape-render-blocks-ffa5b7d7089c4a90.tar");
+  assert.equal(result.pack.size_bytes, 58_030_080);
+  assert.equal(result.pack.sha256, "880924edb755f3613a58d60b62d91c7507da968071998d2aaef91b77d7739b49");
   assert.throws(() => validateRenderBlockPackage({ ...index, manifest_sha256: "0".repeat(64) }, manifest, RENDER_MANIFEST_SHA256),
     /current manifest/);
   const missing = structuredClone(index);
@@ -57,6 +65,23 @@ test("the current package binds all122 gzip twins and61 MICN sidecars to the ent
   const raw = structuredClone(index);
   raw.files[0].decompressed_sha256 = "0".repeat(64);
   assert.throws(() => validateRenderBlockPackage(raw, manifest, RENDER_MANIFEST_SHA256), /raw\/gzip identity/);
+});
+
+test("block delivery requires the source floor definitions and their exact metadata/file pin", async () => {
+  const original = await published();
+  assert(original.floor_definitions);
+  const missing = structuredClone(original);
+  delete missing.floor_definitions;
+  assert.throws(() => renderRuntimeFiles(missing), /require source floor definitions/);
+  const unpinned = structuredClone(original);
+  delete unpinned.files[original.floor_definitions.file];
+  assert.throws(() => renderRuntimeFiles(unpinned), /floor definitions have no matching published pin/);
+  const changed = structuredClone(original);
+  changed.floor_definitions = { ...original.floor_definitions, sha256: "0".repeat(64) };
+  assert.throws(() => renderRuntimeFiles(changed), /floor definitions have no matching published pin/);
+  const omitted = structuredClone(original);
+  delete omitted.files[original.floor_definitions.file];
+  assert.throws(() => verifyReproductionManifest(original, omitted), /omitted a required published input/);
 });
 
 test("exporter inventory omission is allowed only for exact validation/raw twins, never changed metadata or runtime hashes", async () => {
