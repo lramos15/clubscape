@@ -642,6 +642,17 @@ succeed. No world input, tick, restore, healing or style/equipment change was
 performed. This diagnosis adds no journey progress and does not authorize
 continuation of the preserved dying checkpoint.
 
+The authorized four-file repair `634cff9` is integrated as `8897211`:
+equipment retention refreshes derived style, and trusted lifecycle reconciliation
+handles preexisting dying/respawning/first-Office records. It does not mutate a
+query or the frozen checkpoint. The
+[integration record](evidence/dying-repair-8897211.json) separates four native
+regressions and client compatibility checks from an actual resumed journey.
+The checkpoint, exact pre-start identity comparison and narrow resume boundaries
+remain unchanged. Wait for the director's PostgreSQL confirmation and explicit
+source-safe dying-resume adapter authorization before starting a service or
+continuing gameplay.
+
 ```sh
 python3 -m unittest discover -s tools/journey-tests -p 'test_*.py' -q
 ```
