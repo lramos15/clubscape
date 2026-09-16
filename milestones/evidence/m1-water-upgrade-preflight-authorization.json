@@ -44,6 +44,7 @@
   "allowed_changes": [
     "New focused server tests and their module registration.",
     "Directly related migration documentation and bounded test tooling.",
+    "Optional explicit manifest/world selectors on the existing source-only publish_product_root helper, with unchanged canonical defaults and strict worktree containment.",
     "Exact owned candidate imports and durable integration evidence."
   ],
   "required_checks": [
@@ -65,6 +66,12 @@
     "database_ready_seconds": 60,
     "focused_database_test_seconds": 180,
     "build_seconds": 300,
+    "source_only_disposable_worlds": 2,
+    "source_server_starts": 4,
+    "source_operator_invocations": 10,
+    "source_operator_timeout_seconds": 35,
+    "source_operator_accounts_or_gameplay_commands": 0,
+    "source_only_asset_limit_mib_per_bundle": 512,
     "automatic_retry": false,
     "cleanup": "Stop and verify removal of the exact owned disposable container and temporary credentials."
   },
@@ -75,6 +82,16 @@
     "Weakening validation, changing ordinary startup, resetting histories, importing82 unrelated metadata changes into the legacy target or treating unverified motion as absence.",
     "Main adoption before the independent contract review and relevant validation pass."
   ],
+  "component_progress": {
+    "candidate_code": "de7b66f5ead59b53012e7d7a9752cdb6a58ad03c",
+    "candidate_evidence": "b66a0c7f326a5bf11421ff6a332acb1aa8d890c5:milestones/evidence/m1-water-upgrade-preflight.json",
+    "exact_source_pair_native_case_passed": true,
+    "guarded_database_cases_passed": 2,
+    "strict_server_clippy_passed": true,
+    "retained_failures": "Initial test-only error-code compilation mistake and Produced-versus-ProductionResolved assertion are retained with exact logs.",
+    "remaining_operator_scope": "Prepare genuine source-only asset deliveries for both exact pairs, without changing canonical files. Exercise real migrate-ui processes against two newly created character-free worlds in the owned disposable database; never a saved player world.",
+    "independent_native_review_fix_still_required": true
+  },
   "saved_world_migration_or_continuation_admitted": false,
   "milestone_accepted": false
 }

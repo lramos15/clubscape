@@ -132,7 +132,7 @@
       "dependencies": ["M1-WATER-ITEM-ON-DISPATCH"],
       "allowed_paths": ["crates/server/src/game_service/tests/**", "crates/server/src/game_service/tests.rs", "crates/server/tests/**", "crates/server/README.md", "spec/game-networking.md", "tools/journey-tests/**", "milestones/**"],
       "forbidden_paths": ["prompt.md", "crates/server/src/game_storage/**", "crates/world-engine/**", "crates/game-types/**", "assets/**", "web/**", "research/reference-pack/**", "spec/art-style.md", "spec/interface-parity.md", "spec/adaptations.md", ".local/journey-checkpoints/**"],
-      "outputs": ["Exact reviewed target compatibility and source-state conservation tests", "Guarded PostgreSQL migration/idempotency/receipt/fencing evidence", "A precise saved-world plan only after candidate acceptance; no actual saved-world execution"],
+      "outputs": ["Exact reviewed target compatibility and source-state conservation tests", "Guarded PostgreSQL migration/idempotency/receipt/fencing evidence", "Explicit source-only real-asset deliveries and bounded operator checks on two fresh character-free worlds", "A precise saved-world plan only after candidate acceptance; no actual saved-world execution"],
       "validation_commands": ["cargo test --locked -p clubscape-server --lib water_migration", "Focused ignored water migration cases in one guarded disposable PostgreSQL database"],
       "test_requirements": ["Follow the committed preflight authorization and exact source pairs", "Do not mutate the worker candidate while its independent review runs", "Use isolated worktree-private Cargo targets and unchanged content during source-bearing tests", "Preserve every failed attempt and verify exact test counts and cleanup"],
       "acceptance": ["Demonstrate exact compatible additive migration and durable source conversion without touching the saved account; separate execution admission remains mandatory"],
@@ -140,7 +140,7 @@
       "source_notes": ["Director inspected the real operator, transaction, source UI/audio initializer, readiness validator and existing migration regression. The existing guarded transaction is a candidate boundary, not yet proof of non-UI recipe compatibility."],
       "parity_entries": [],
       "adaptations": [],
-      "evidence": ["milestones/evidence/m1-water-upgrade-preflight-authorization.json"]
+      "evidence": ["milestones/evidence/m1-water-upgrade-preflight-authorization.json", "Candidate de7b66f/b66a0c7 passes one native case over both exact source pairs and two real guarded PostgreSQL cases, with strict server Clippy. All failed test attempts are retained. Independent persisted-mode repair, real-asset operator checks, main adoption and saved-world admission remain separate."]
     },
     {
       "id": "M1-WATER-FILL-MIGRATION",
