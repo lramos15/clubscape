@@ -10,12 +10,12 @@
       {"id": "bb7f85f7-096a-4377-80cb-3e7eae196c6b", "task": "M1-BROWSER-RENDERER"},
       {"id": "78d01af9-70a4-4b02-8339-6a61eb377374", "task": "M1-BROWSER-SHELL"},
       {"id": "81ac9884-4f39-4f27-b516-6e9a42b09b51", "task": "M1-HEADLESS-JOURNEY"},
-      {"id": "cdfad64d-9162-439f-a525-58e1114dd7f4", "task": "M1-AUDIO-COMPOSED-TIMING"}
+      {"id": "cdfad64d-9162-439f-a525-58e1114dd7f4", "task": "M1-AUDIO-COMPOSED-TIMING"},
+      {"id": "ac0f0856-44af-445b-bd90-6db7a1f4fc74", "task": "M1-NATIVE-CAMERA-CONTROLLER"}
     ],
     "reserved": [],
     "queued": [],
     "parked": [
-      {"id": "ac0f0856-44af-445b-bd90-6db7a1f4fc74", "reason": "Source camerac59ce337 integrated852a35f; original14 scenarios/354readbacks verified,1307frozen hashes unchanged. Stateful controller contract is published, but authenticated initial focus/overrides/FOV configuration/mouse preference remain unobserved. Source-only scope complete, no production or automatic resumption."},
       {"id": "cc864d7a-37cc-4869-a7b4-d484d01cede5", "reason": "Latest turns delivered no current-contract completion. Four published UI commits and pending native-preference work are preserved unchanged in m1-ui; Director takes the bounded UI integration/current-contract/native-port completion directly. No automatic resumption or duplicate UI edits."},
       {"id": "2766e089-44e5-4a1d-974e-7b03ad9c269d", "reason": "Source-only57d4edd integrated664dde0 records three unverified facts after the bounded retained/native/public pass: normal-grave Bank-All permission, dough motion and seven Empty variants' motion or verified absence. All current5b3 contracts are already integrated; no more backend expansion, source guessing or automatic resumption without new evidence and admission."},
       {"id": "e6925772-df1f-4ff7-9efc-219f800a5a14", "reason": "Bounded UI4 review complete: one medium source-travel interruption bypass in timed UI actions. Director repair M1-UI-TRAVEL-INTERRUPTION is active; this is not final candidate signoff."},
@@ -33,6 +33,42 @@
     "usage_accounting": "milestones/evidence/m1-usage-snapshot.json records the available delayed session snapshot; final project-wide credits/currency are unavailable."
   },
   "tasks": [
+    {
+      "id": "M1-CAMERA-INTEGRATION",
+      "goal": "Wire the tested native camera into the real renderer/WASM/browser path and verify normal source entry without a diagnostic camera query.",
+      "status": "BLOCKED",
+      "specs": ["research/camera-source/contract.json", "milestones/approvals/m1-camera-initialization-v1.json", "spec/browser-implementation.md", "web/shared/contracts.ts"],
+      "dependencies": ["M1-NATIVE-CAMERA-CONTROLLER", "M1-UI-INTEGRATION", "M1-BROWSER-RENDERER"],
+      "allowed_paths": ["crates/camera/**", "crates/renderer/**", "crates/wasm/**", "web/app/**", "web/renderer/**", "web/ui/**", "tools/web-build/**", "Cargo.lock"],
+      "forbidden_paths": ["prompt.md", "crates/world-engine/**", "crates/server/**", "content/**", "assets/source/**", "assets/manifests/**", "research/reference-pack/**", "tools/reference-pack/**", "spec/art-style.md", "spec/interface-parity.md"],
+      "outputs": ["Real source terrain/focus and fixed-cycle/frame input providers bound to the native controller", "Source-native controls and initialized player-follow camera in ordinary production entry", "Current renderer/UI camera settings and safe lifecycle/reconnect/rebase handling"],
+      "validation_commands": ["pnpm --dir web typecheck", "pnpm --dir web test", "pnpm --dir web build", "pnpm --dir web test:isolated --game-root <owned exact source bundle>"],
+      "test_requirements": ["Wait for reviewed native API and serialize shared renderer/WASM/shell edits with their owners", "No diagnostic camera query or scalar TS rates in normal entry", "No inferred actor source coordinates, bridge heights, projection scaling or account settings", "Retain input guards, authoritative gameplay, source music/spatial metadata and all frozen references", "Pure native conformance and short onboarding checks do not replace full browser journey, comparison or performance gates"],
+      "acceptance": ["Actual normal entry, source camera controls and lifecycle behavior work through the production browser/renderer; final M1 journey and owner gates remain separate"],
+      "reserved_namespaces": [],
+      "source_notes": ["Owner initialization adaptation is approved; native controller and consumer integration are not yet implemented. No worker is admitted to these overlapping paths by this blocked task."],
+      "parity_entries": [],
+      "adaptations": ["adaptation.m1.source_based_camera_initialization"],
+      "evidence": []
+    },
+    {
+      "id": "M1-NATIVE-CAMERA-CONTROLLER",
+      "goal": "Implement the complete stateful original camera mechanics as a reusable Rust/WASM-compatible controller, with exact original trace conformance and the separately approved initialization policy.",
+      "status": "IMPLEMENTING",
+      "specs": ["research/camera-source/contract.json", "research/camera-source/validation.json", "milestones/approvals/m1-camera-initialization-v1.json", "spec/browser-implementation.md"],
+      "dependencies": ["M1-SOURCE-CAMERA-CONTROLS", "M1-REFERENCE-APPROVAL"],
+      "allowed_paths": ["crates/camera/**", "Cargo.lock"],
+      "forbidden_paths": ["prompt.md", "crates/renderer/**", "crates/wasm/**", "crates/client-core/**", "crates/world-engine/**", "crates/server/**", "crates/game-types/**", "crates/protocol/**", "web/**", "content/**", "assets/**", "research/**", "tools/source-capture/**", "tools/camera-source/**", "spec/**", "milestones/**", "Cargo.toml"],
+      "outputs": ["Complete clubscape-camera controller using separate source logical/render clocks and terrain-provider inputs", "Original14-scenario/354-readback conformance with numerical differences reported rather than hidden", "Typed integration API and source-bound initialization profile; no browser readiness claim before consumer wiring"],
+      "validation_commands": ["cargo test --locked -p clubscape-camera", "cargo clippy --locked -p clubscape-camera --all-targets -- -D warnings", "cargo check --locked -p clubscape-camera --target wasm32-unknown-unknown"],
+      "test_requirements": ["Use isolated .worktrees/m1-camera-runtime; preserve original source worktree and source files", "Cargo.lock may add only the new local member and existing dependency edges; no existing package versions or unrelated manifests", "No RAF-only scalar motor, duplicated source velocities, fixed camera, guessed terrain/focus or projection/orbit zoom conflation", "Preserve source integer truncation, float intermediates, strict>500 snap, bridge/footprint heights, source9x9 pitch floor and native FOV conversion", "Keep authenticated original initialization unknown; apply only the exact owner-approved bounded policy", "No GPU test or full-client/headless acceptance from pure controller conformance"],
+      "acceptance": ["A complete tested native controller and explicit consumer contract are ready for the separately tracked renderer/WASM/browser integration; M1 remains incomplete until that integration and normal entry are verified"],
+      "reserved_namespaces": ["clubscape-camera"],
+      "source_notes": ["The source-only c59ce337 handoff integrated852a35f is complete and its14 scenarios/354 original state readbacks remain immutable.", "Owner accepted approve_source_based_initialization after the exact structured question recorded in milestones/approvals/m1-camera-initialization-v1.json. This is initialization only and not final presentation acceptance.", "Renderer gear/terrain and shell preview/spatial paths are independently owned. Publish narrow terrain/focus and state/input/output contracts before touching those consumers; Director will serialize the end-to-end integration in M1."],
+      "parity_entries": [],
+      "adaptations": ["adaptation.m1.source_based_camera_initialization"],
+      "evidence": []
+    },
     {
       "id": "M1-AUDIO-COMPOSED-TIMING",
       "goal": "Diagnose and repair actual source2266 cue lateness exposed after real production UI restart/re-entry, without relaxing original timing or changing source queues.",

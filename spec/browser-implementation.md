@@ -6,7 +6,8 @@ The exact pack approved by the owner is
 No output from the new client becomes a source reference. Final visual/audio
 and Mac Chrome/Edge acceptance remain unexecuted.
 
-The pack hash-locks `spec/art-style.md` and `spec/interface-parity.md` as
+The pack hash-locks `spec/art-style.md`, `spec/interface-parity.md` and the
+original `spec/adaptations.md` as
 pre-approval context documents. They deliberately retain their original bytes,
 including historical status text; they do not revoke the later external owner
 approval. Current implementation authority and status live in this document,
@@ -55,6 +56,16 @@ Failed authoritative actions show their actual reason/error ID and reconcile
 the resulting state; they do not optimistically grant items or advance stages.
 Genuine source-locked tutorial controls stay locked. Out-of-scope controls
 retain their approved placement and explicit feedback, not fake success.
+
+The bounded initialization approval
+`milestones/approvals/m1-camera-initialization-v1.json` permits explicitly
+recorded ClubScape initial camera angles/preferences from the approved views
+and measured original presets. It does not make the original authenticated
+defaults known, authorize guessed focus coordinates or replace the required
+stateful Rust/WASM controller. The exact mechanics remain in
+`research/camera-source/contract.json`; normal entry still requires their real
+runtime and renderer/terrain/input integration. The current adaptation register
+adds `spec/adaptations-m1-addendum.md` without rewriting the frozen base.
 
 Use original source font masks/advances/ascent, sprite offsets/alpha, native
 HUD anchors, material transforms, HSL palette/lighting and animation timing
