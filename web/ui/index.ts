@@ -10,13 +10,15 @@ import { SourceRaster, escapeText, plainText, sourceLines } from "./raster.ts";
 import { entryErrorLines, paintEntry, paintReconnect } from "./entry.ts";
 import { frameRegions, TABS } from "./layout.ts";
 import { MinimapPainter } from "./minimap.ts";
+import type { UiMinimapProjection } from "./minimap.ts";
+import type { MapIconSprite } from "../renderer/src/index.ts";
 import { minimapSurfaceProblem, UiMinimapError } from "./minimap-surface.ts";
 import type { UiMinimapSurface, UiMinimapStatus } from "./minimap-surface.ts";
 export type { UiMinimapSurface, UiMinimapStatus } from "./minimap-surface.ts";
 import { paintCharacter, paintGame } from "./world-view.ts";
 import { TitleFlames } from "./flames.ts";
 import type { AbilityKind, AbilityVisualTruth } from "./filters.ts";
-import { bindBankRevision, checkUiIntent, gameplayUi, gameplayUiProblem, isGameplayUiIntent, permissionReason } from "./gameplay-ui.ts";
+import { bankDefaultAmount, bankRevisionForIntent, bindBankRevision, checkUiIntent, gameplayUi, gameplayUiProblem, isGameplayUiIntent, permissionReason } from "./gameplay-ui.ts";
 import { paintConfirmation } from "./presentations.ts";
 import type { ProductionAmount } from "./production.ts";
 import { rewardDetails } from "./rewards.ts";
@@ -28,10 +30,7 @@ import type { MusicUiAction } from "./music-controls.ts";
 import { defaultSettingsPage } from "./settings.ts";
 import type { SettingsPageState, ClientInputSettings } from "./settings.ts";
 import type { SourceAudioPreferenceBinding, SourceMusicSkipResult } from "../audio/preferences.ts";
-import { UiAudioPreferencePersistence } from "./audio-preference-storage.ts";
-import type { UiAudioPreferenceSaveStatus } from "./audio-preference-storage.ts";
-export { UiAudioPreferencePersistence } from "./audio-preference-storage.ts";
-export type { UiAudioPreferenceStorage, UiAudioPreferenceSaveResult, UiAudioPreferenceSaveStatus } from "./audio-preference-storage.ts";
+import type { PlayerAudioControls, PlayerAudioPreferenceStatus } from "../app/player-audio.ts";
 
 export interface UiNotice {
   message: string; errorId: string | null; recoverable: boolean; scope: "error" | "unavailable" | "information";
@@ -176,6 +175,21 @@ export function getUiMinimapStatus(handle: UiHandle): UiMinimapStatus | null {
   return controllers.get(handle)?.minimapStatus() ?? null;
 }
 
+export function setUiMapIconSprites(handle: UiHandle, sprites: ReadonlyMap<number, MapIconSprite>): void {
+  const controller = controllers.get(handle);
+  if (!controller) throw new UiMinimapError("The UI handle is not live.", "ui.minimap.disposed");
+  controller.minimap.supplySprites(sprites);
+  controller.renderSoon();
+}
+
+export function bindUiMinimapProjection(handle: UiHandle, project: UiMinimapProjection): () => void {
+  const controller = controllers.get(handle);
+  if (!controller) throw new UiMinimapError("The UI handle is not live.", "ui.minimap.disposed");
+  const stop = controller.minimap.bindProjection(project);
+  controller.renderSoon();
+  return () => { stop(); controller.renderSoon(); };
+}
+
 function minimapScope(world: WorldView | null): string | null {
   return world ? JSON.stringify([world.player.id, world.player.instance, world.player.tile.plane]) : null;
 }
@@ -216,21 +230,17 @@ export async function bindUiAudio(handle: UiHandle, audio: AudioHandle): Promise
   return controller.bindAudio(audio, module);
 }
 
-export function bindUiAudioPreferencePersistence(handle: UiHandle, persistence: UiAudioPreferencePersistence): () => void {
+export function bindUiAudioPreferences(handle: UiHandle, controls: PlayerAudioControls): () => void {
   const controller = controllers.get(handle);
   if (!controller) throw new Error("UI handle has been disposed.");
-  controller.preferencePersistence = persistence;
-  controller.renderSoon();
-  return () => {
-    if (controller.preferencePersistence === persistence) { controller.preferencePersistence = null; controller.renderSoon(); }
-  };
+  return controller.bindPreferences(controls);
 }
 
 export function getUiAudioPreferences(handle: UiHandle): SourceAudioPreferenceBinding | null {
   return controllers.get(handle)?.readAudioPreferences() ?? null;
 }
 
-export function getUiAudioPreferenceSaveStatus(handle: UiHandle): UiAudioPreferenceSaveStatus | null {
+export function getUiAudioPreferenceSaveStatus(handle: UiHandle): Readonly<PlayerAudioPreferenceStatus> | null {
   return controllers.get(handle)?.audioPreferenceSaveStatus() ?? null;
 }
 
@@ -318,11 +328,10 @@ class UiController {
   private entryErrorPage = 0;
   private chatSubmission: { text: string; messageIds: Set<string>; accepted: boolean } | null = null;
   private audioHandle: AudioHandle | null = null;
-  private audioApi: typeof import("../audio/index.ts") | null = null;
   private audioEpoch = 0;
   private audioControlSequence = 0;
   private lastMusicSkip: { player: string; epoch: number; result: SourceMusicSkipResult } | null = null;
-  preferencePersistence: UiAudioPreferencePersistence | null = null;
+  private preferenceControls: PlayerAudioControls | null = null;
   private audioView: UiAudioView | null = null;
   private stopAudio: (() => void) | null = null;
   private masterVolume: ((percent: number) => void) | null = null;
@@ -403,7 +412,7 @@ class UiController {
     this.audioEpoch++;
     this.mutedPercentages.clear();
     this.audioTrace = null;
-    this.audioHandle = handle; this.audioApi = api;
+    this.audioHandle = handle;
     const receive = (snapshot: import("../audio/index.ts").AudioSnapshot) => {
       if (this.disposed) return;
       const previousPlayer = this.audioView?.preferences?.playerId ?? null;
@@ -443,7 +452,7 @@ class UiController {
       stop();
       if (this.stopAudio === cleanup) {
         this.audioEpoch++;
-        this.stopAudio = null; this.audioHandle = null; this.audioApi = null; this.audioView = null; this.masterVolume = null; this.sliderDrag = null; this.audioTrace = null;
+        this.stopAudio = null; this.audioHandle = null; this.audioView = null; this.masterVolume = null; this.sliderDrag = null; this.audioTrace = null;
         this.musicState = null; this.sourceMusic = null;
         this.renderSoon();
       }
@@ -481,9 +490,23 @@ class UiController {
     return value && value.playerId === this.state.world?.player.id ? structuredClone(value) : null;
   }
 
-  audioPreferenceSaveStatus(): UiAudioPreferenceSaveStatus | null {
-    const player = this.readAudioPreferences()?.playerId;
-    return player && this.preferencePersistence ? this.preferencePersistence.status(player) : null;
+  bindPreferences(controls: PlayerAudioControls): () => void {
+    this.audioEpoch++;
+    this.preferenceControls = controls;
+    this.menu = null; this.sliderDrag = null;
+    this.renderSoon();
+    return () => {
+      if (this.preferenceControls === controls) {
+        this.audioEpoch++;
+        this.preferenceControls = null;
+        this.menu = null; this.sliderDrag = null;
+        this.renderSoon();
+      }
+    };
+  }
+
+  audioPreferenceSaveStatus(): Readonly<PlayerAudioPreferenceStatus> | null {
+    return this.preferenceControls?.observe() ?? null;
   }
 
   readMusicSkipResult(): SourceMusicSkipResult | null {
@@ -500,8 +523,8 @@ class UiController {
     const details = errorDetails(error);
     if (this.audioControlCurrent(player, epoch)) {
       this.show(details.message, "error", details.errorId);
-      const status = this.preferencePersistence?.status(player);
-      if (status?.state === "failed" && status.dirty && this.notice) this.notice.retry = () => {
+      const saveFailure = typeof error === "object" && error !== null && "kind" in error && error.kind === "audio_preferences_save";
+      if (saveFailure && this.preferenceControls && this.notice) this.notice.retry = () => {
         if (this.audioControlCurrent(player, epoch)) this.retryAudioPreferenceSave();
         else this.show("That save retry belongs to a previous player session.", "error", "ui.audio.control.stale");
       };
@@ -516,32 +539,31 @@ class UiController {
   }
 
   private async saveAudioPreferences(binding: SourceAudioPreferenceBinding, epoch: number): Promise<void> {
-    const persistence = this.preferencePersistence;
-    if (!persistence) throw Object.assign(new Error("The shell has not bound real player audio preference storage."), { errorId: "ui.audio.storage.unbound" });
-    try { await persistence.save(binding.playerId, binding.preferences); }
+    const controls = this.preferenceControls;
+    if (!controls) throw Object.assign(new Error("The shell has not bound current player audio controls."), { errorId: "ui.audio.preferences.unbound" });
+    try { await controls.persistCurrent(binding.playerId); }
     catch (error) { this.audioControlFailure(error, binding.playerId, epoch); throw error; }
   }
 
   retryAudioPreferenceSave(): void {
-    const binding = this.readAudioPreferences(), persistence = this.preferencePersistence, epoch = this.audioEpoch;
-    if (!binding || !persistence) { this.show("Player audio preference storage is not bound.", "error", "ui.audio.storage.unbound"); return; }
+    const binding = this.readAudioPreferences(), controls = this.preferenceControls, epoch = this.audioEpoch;
+    if (!binding || !controls) { this.show("Player audio preference controls are not bound.", "error", "ui.audio.preferences.unbound"); return; }
     this.notice = null;
     void this.request(`audio-save-retry:${binding.playerId}:${epoch}`, async () => {
-      try { await persistence.retry(binding.playerId); }
+      try { await controls.persistCurrent(binding.playerId); }
       catch (error) { this.audioControlFailure(error, binding.playerId, epoch); throw error; }
     }, false, () => this.audioControlCurrent(binding.playerId, epoch));
   }
 
   private nativeAudioControl(key: string, expectedEpoch: number,
-    change: (api: typeof import("../audio/index.ts"), handle: AudioHandle, binding: SourceAudioPreferenceBinding) => SourceAudioPreferenceBinding): void {
-    const binding = this.readAudioPreferences(), api = this.audioApi, handle = this.audioHandle, epoch = this.audioEpoch;
-    if (expectedEpoch !== epoch || !binding || !api || !handle) {
+    change: (controls: PlayerAudioControls, binding: SourceAudioPreferenceBinding) => SourceAudioPreferenceBinding): void {
+    const binding = this.readAudioPreferences(), controls = this.preferenceControls, epoch = this.audioEpoch;
+    if (expectedEpoch !== epoch || !binding || !controls || !this.audioHandle) {
       this.show("This audio control has no current player preference binding.", "error", "ui.audio.preference.binding"); return;
     }
-    if (!this.preferencePersistence) { this.show("The shell has not bound real player audio preference storage.", "error", "ui.audio.storage.unbound"); return; }
     void this.request(`native-audio:${binding.playerId}:${epoch}:${++this.audioControlSequence}:${key}`, async () => {
       const permission = this.permissionForAudioControl(binding.playerId, epoch);
-      const next = change(api, handle, binding);
+      const next = change(controls, binding);
       this.supplyMusicState(next.playerId, next.musicState);
       const [access] = await Promise.all([permission, this.saveAudioPreferences(next, epoch)]);
       if (!access.ok) throw access.error;
@@ -556,10 +578,10 @@ class UiController {
         "error", "ui.music.binding"); return;
     }
     if (action.kind === "skip") {
-      const api = this.audioApi, handle = this.audioHandle, epoch = this.audioEpoch;
-      if (!api || !handle) { this.show("The real audio handle is not bound.", "error", "ui.audio.observer_binding"); return; }
+      const controls = this.preferenceControls, epoch = this.audioEpoch;
+      if (!controls) { this.show("Current player audio controls are not bound.", "error", "ui.audio.preference.binding"); return; }
       void this.request(`music-skip:${player}:${epoch}`, async () => {
-        const result = await api.requestSourceMusicSkip(handle, player);
+        const result = await controls.skip(player);
         if (!this.audioControlCurrent(player, epoch)) return;
         this.lastMusicSkip = { player, epoch, result };
         if (result.status === "requested" || result.status === "pending")
@@ -572,7 +594,7 @@ class UiController {
     }
     if (this.audioView?.preferences) {
       this.nativeAudioControl(JSON.stringify(action), expectedEpoch,
-        (api, handle, binding) => applyNativeMusicControl(api, handle, binding, action, this.audioView?.plannedGroup ?? null));
+        (controls, binding) => applyNativeMusicControl(controls, binding, action, this.audioView?.plannedGroup ?? null));
       return;
     }
     const next = musicRequest(current.value, action, this.audioView?.plannedGroup ?? null);
@@ -697,7 +719,7 @@ class UiController {
     this.scrollDrag = null;
     this.chatSubmission = null;
     this.preview = null; this.previewBounds = null; this.previewRequest = null; this.cameraRequest = null; this.abilityVisuals = null;
-    this.musicChanged = null; this.preferencePersistence = null; this.audioEpoch++;
+    this.musicChanged = null; this.preferenceControls = null; this.audioEpoch++;
   }
 
   renderSoon(): void {
@@ -909,7 +931,7 @@ class UiController {
     }
     if (this.audioView.preferences) {
       this.nativeAudioControl(`volume:${channel}:${percent}`, expectedEpoch,
-        (api, handle, binding) => api.setSourceAudioPercent(handle, binding.playerId, channel, percent));
+        (controls, binding) => controls.setPercent(binding.playerId, channel, percent));
       return;
     }
     void this.request(`audio-${channel}-${percent}`, async () => {
@@ -925,7 +947,7 @@ class UiController {
     }
     if (this.audioView.preferences) {
       this.nativeAudioControl(`mute:${channel}`, expectedEpoch,
-        (api, handle, binding) => api.toggleSourceAudioMute(handle, binding.playerId, channel));
+        (controls, binding) => controls.toggleMute(binding.playerId, channel));
       return;
     }
     const current = this.audioView.percentages[channel];
@@ -1235,7 +1257,7 @@ class UiController {
       options.push({ label: `Deposit-X ${label}`, run: () => this.prompt("Enter amount:", deposit) },
         { label: `Deposit-All ${label}`, run: this.validSlot(slot, item => deposit(item.quantity)) },
         { label: `Examine ${label}`, run: () => this.examine(item) });
-      const selected = projection?.bank ? projection.bank.amount : this.local.bankAmount;
+      const selected = projection?.bank ? bankDefaultAmount(projection.bank) : this.local.bankAmount;
       return [{ label: `Deposit-${selected === "all" ? "All" : selected} ${label}`,
         run: this.validSlot(slot, item => deposit(selected === "all" ? item.quantity : selected)) },
       ...options.filter(o => !o.label.startsWith(`Deposit-${selected} `))];
@@ -1347,11 +1369,16 @@ class UiController {
       const value = current();
       if (value) this.sendUi({ kind: "bank_withdraw_entry", entry_id: entryId, quantity, noted: bank.noted }, bank.revision);
     };
+    const selected = bankDefaultAmount(bank);
+    const withdrawSelected = () => {
+      const value = current();
+      if (value?.row.value) withdraw(selected === "all" ? value.row.value.quantity : selected);
+    };
     const actions: UiAction[] = entry.placeholder ? [{
       label: `Release placeholder ${label}`, run: () => { if (current()) this.sendUi({ kind: "bank_release_placeholder", entry_id: entryId }, bank.revision); },
     }] : [
-      { label: `Withdraw-${bank.amount} ${label}`, run: () => withdraw(bank.amount) },
-      ...[1, 5, 10].filter(quantity => quantity !== bank.amount).map(quantity => ({ label: `Withdraw-${quantity} ${label}`, run: () => withdraw(quantity) })),
+      { label: `Withdraw-${selected === "all" ? "All" : selected} ${label}`, run: withdrawSelected },
+      ...[1, 5, 10].filter(quantity => quantity !== selected).map(quantity => ({ label: `Withdraw-${quantity} ${label}`, run: () => withdraw(quantity) })),
       { label: `Withdraw-X ${label}`, run: () => this.prompt("Enter amount:", withdraw) },
       { label: `Withdraw-All ${label}`, run: () => { const value = current(); if (value?.row.value) withdraw(value.row.value.quantity); } },
       { label: `Withdraw-All-but-1 ${label}`, run: () => {
@@ -1564,7 +1591,9 @@ class UiController {
       paintGame(this.raster, {
         state: this.state, world, local: this.local, controls, inputs, minimap: this.minimap,
         abilityVisuals: this.abilityVisuals?.revision === world.revision ? this.abilityVisuals.values : {},
-        send: intent => this.send(intent), sendUi: intent => this.sendUi(intent, world.ui?.bank?.revision), openTab: tab => this.openTab(tab),
+        send: intent => this.send(intent),
+        sendUi: intent => this.sendUi(intent, world.ui ? bankRevisionForIntent(world.ui, intent) : undefined),
+        openTab: tab => this.openTab(tab),
         change: change => { change(); this.renderSoon(); },
         notice: (message, scope = "information", id) => this.show(message, scope, id),
         unavailable: name => this.unavailable(name), required: (name, field) => this.required(name, field),

@@ -3,7 +3,7 @@ import { SOURCE_MUSIC_MODE_IDS } from "../audio/native-scene.ts";
 import type { MusicTrackAsset, NativeWidget, UiCatalogue } from "./assets.ts";
 import { projectScrollbar, widgetId } from "./layout.ts";
 import { escapeText } from "./raster.ts";
-import type { AudioHandle } from "../shared/contracts.ts";
+import type { PlayerAudioControls } from "../app/player-audio.ts";
 import { sourceSavedPlaylist, SOURCE_PLAYLIST_LABELS, SOURCE_PLAYLIST_CAPACITY } from "../audio/preferences.ts";
 import type { SourceAudioPreferenceBinding, SourceMusicPreferences, SourcePlaylistSelection, SourcePlaylistSlot } from "../audio/preferences.ts";
 
@@ -65,10 +65,10 @@ export function musicRequest(state: SourceMusicState, action: MusicUiAction, pla
   return problem ? { state: null, problem } : { state: next, problem: null };
 }
 
-export function applyNativeMusicControl(api: typeof import("../audio/index.ts"), handle: AudioHandle,
+export function applyNativeMusicControl(controls: PlayerAudioControls,
   binding: SourceAudioPreferenceBinding, action: Exclude<MusicUiAction, { kind: "skip" }>, plannedGroup: number | null): SourceAudioPreferenceBinding {
   const music = binding.preferences.music, player = binding.playerId;
-  const update = (patch: Partial<SourceMusicPreferences>) => api.setSourceMusicPreferences(handle, player, { ...music, ...patch });
+  const update = (patch: Partial<SourceMusicPreferences>) => controls.setMusic(player, { ...music, ...patch });
   switch (action.kind) {
     case "mode": {
       if (action.mode === "playlist" && music.currentPlaylist === 0)
@@ -79,13 +79,13 @@ export function applyNativeMusicControl(api: typeof import("../audio/index.ts"),
     case "play": return update({ mode: "single", selectedGroup: action.group });
     case "area_mode": return update({ areaMode: action.mode });
     case "flag": return update({ [action.flag]: action.enabled });
-    case "select_playlist": return api.selectSourcePlaylist(handle, player, action.selection);
-    case "edit_playlist": return api.editSourceSavedPlaylist(handle, player, action.slot, { kind: action.edit, group: action.group });
-    case "clear_playlist": return api.setSourceSavedPlaylist(handle, player, action.slot, Array.from({ length: SOURCE_PLAYLIST_CAPACITY }, () => null));
+    case "select_playlist": return controls.selectPlaylist(player, action.selection);
+    case "edit_playlist": return controls.editSavedPlaylist(player, action.slot, { kind: action.edit, group: action.group });
+    case "clear_playlist": return controls.setSavedPlaylist(player, action.slot, Array.from({ length: SOURCE_PLAYLIST_CAPACITY }, () => null));
     case "add": case "remove":
       if (music.currentPlaylist === 0)
         throw Object.assign(new Error("All music is not a saved playlist. Choose Playlist 1, 2 or 3."), { errorId: "ui.music.playlist.selection" });
-      return api.editSourceSavedPlaylist(handle, player, music.currentPlaylist, { kind: action.kind, group: action.group });
+      return controls.editSavedPlaylist(player, music.currentPlaylist, { kind: action.kind, group: action.group });
     case "loop":
       throw Object.assign(new Error("Native preferences use repeatInAreaShuffle; the legacy loop flag is not that setting."), { errorId: "ui.music.native_repeat" });
   }

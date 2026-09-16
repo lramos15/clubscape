@@ -4,7 +4,36 @@ This is an actual Canvas2D/DOM interface implementation, **not a complete M1
 client or an accepted presentation**. The owner-approved pack is
 `b62e19704e17d3d3e4e819f803ef49ba7cc54034ae407184b423427c65d9674d`.
 `evidence/` records component-only results and remaining implementation gaps.
-The `m1-ui` task remains **blocked**, not done.
+Final source/composed acceptance remains **incomplete**.
+
+## Current integration boundary
+
+The current adapter validates all24 UI intents, explicit quantity/All selections,
+independent bank/recovery revisions, full recovery permissions/capacities and
+lossless fees. Production All, persistent bank All and partial recovery now
+dispatch their actual typed requests; no numeric sentinel, local price formula
+or optimistic ownership change is used. The current production TypeScript
+check passes; that is not a live-journey or final presentation pass.
+
+`bindUiAudioPreferences(ui, controls)` consumes the shell's real
+`PlayerAudioControls`. All native mode, numbered playlist, mute, volume, Skip and
+save-retry operations use that bound manager. The UI does not own another
+persistence queue, initialize unlock history or call an independent preference
+loader. The stopped worker's uncommitted queue remains preserved in its original
+worktree and the integration handoff, not in production. Component preference
+checks now exercise the same shell manager/store with explicit test storage.
+
+`setUiMinimap`, `setUiMapIconSprites` and `bindUiMinimapProjection` consume copied
+renderer surfaces/sprites and exact placement payloads. Live map icons use the
+supplied `drawX`/`drawY` and source mask mode, without repeating sprite offsets
+or reconstructing icon rotation/placement. Source-empty sprites remain empty.
+Missing inputs, stale scope and malformed data remain explicit failures.
+
+Current integration checks include58 UI units,17 versioned-control browser cases,
+9 actual native-preference cases and9 UI4/surface cases. The36 bounded and8
+document source comparisons are rerun at zero tolerance. Historical totals below
+retain their original evidence/revisions; no component result certifies source
+initial cameras, the complete server journey, speakers, Mac/Edge or M1 acceptance.
 
 The authorized parent integrity repair `9bf6969` is preserved in branch ancestry.
 Strict verification passes all 1,307 frozen input hashes and the 85 reference-pack
@@ -74,9 +103,7 @@ ui.resize(innerWidth, innerHeight);
 // The same camera supplied to the actual renderer:
 setUiCamera(ui, camera);
 const stopCameraCommands = onUiCameraRequest(ui, yaw => {
-  camera = { ...camera, yaw };
-  renderer.camera(camera);
-  setUiCamera(ui, camera);
+  onSourceCameraYawRequest(yaw);
 });
 
 // On the shell's world-input path; do not dispatch the same action twice.
@@ -93,6 +120,11 @@ const bounds = getUiPreviewBounds(ui);
 // Render an RGBA model-only surface at bounds.width × bounds.height, then:
 setUiPreview(ui, modelPreviewSurface);
 ```
+
+`onSourceCameraYawRequest` above is the caller's source-camera command sink, not
+a supplied implementation. The original stateful orbit/follow/input contract is
+in `research/camera-source/contract.json`; changing yaw in place or treating
+scroll as a linear projection-zoom increment is not a source-camera controller.
 
 `createUi(canvas, AppServices, ClientAssets): Promise<UiHandle>` implements the
 unchanged shared contract. The canvas must already have a parent. Keep world and
@@ -683,8 +715,11 @@ python3 tools/ui-assets/compare_modes.py --documents
 
 The browser tests use sandboxed **headful** Chrome under Xvfb. Set
 `CLUBSCAPE_CHROME` for a different approved executable. Browser work files use
-the short owned `web/ui/.s/` path because Chromium Unix socket names have a
+the short owned `.s/` path because Chromium Unix socket names have a
 length limit. Test servers bind random loopback ports and close on completion.
+Set `CLUBSCAPE_UI_TEST_RESULTS` to a fresh worktree-relative directory to preserve
+each run. `compare_modes.py --results <directory>` compares those captures against
+the same unchanged original inputs.
 
 The component double is deliberately not a server simulator: requests are
 recorded, rejected or acknowledged. Its explicit tab-reply mode publishes only

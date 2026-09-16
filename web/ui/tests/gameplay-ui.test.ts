@@ -23,6 +23,26 @@ function bankWorld() {
   return world;
 }
 
+function recoveryWorld() {
+  const world = worldWithUi();
+  const item = { ...world.player.inventory[0]!.item!, quantity: 10 };
+  world.recovery = { death: "death-A", storage: "grave", remainingTicks: 40,
+    items: [{ id: "recovery-A", item, cost: null }] };
+  world.ui.recovery = {
+    cofferBalance: "9007199254740993", discard: allowed, cofferOffer: allowed, cofferItems: [],
+    management: {
+      bankRevision: "9007199254740997",
+      panels: [{
+        death: "death-A", storage: "grave", fullSelectionFee: "9007199254740995", takeAll: allowed,
+        entries: [{ id: "recovery-A", item, unitFee: "9007199254740993", fullStackFee: "9007199254740995",
+          inventoryCapacity: 2, bankCapacity: 8, take: allowed, bank: allowed }],
+      }],
+      bankAll: allowed, bankAllRecords: [{ death: "death-A", items: ["recovery-A"] }],
+    },
+  };
+  return world;
+}
+
 test("game.ui.v1 requires the exact complete projection, never a fabricated empty success", () => {
   assert.equal(gameplayUi(fixtureWorld()), null);
   const world = worldWithUi();
@@ -121,6 +141,75 @@ test("bank requests retain stable entries, placeholders and tab identities", () 
   assert.equal(check({ kind: "bank_move", entry_id: "opaque-entry", before_entry_id: "opaque-placeholder", tab: 1 }), null);
   assert.equal(check({ kind: "bank_move", entry_id: "opaque-entry", before_entry_id: null, tab: 9 })?.code, "ui.identity.stale");
   assert.equal(check({ kind: "bank_set_options", amount: 0, noted: false })?.code, "ui.bank.amount.unsupported");
+});
+
+test("source semantic All remains distinct from literal bank and production quantities", () => {
+  const world = bankWorld();
+  world.ui.bank!.amountSelection = { kind: "all" };
+  const bank: GameplayUiIntent = { kind: "bank_set_amount", amount: { kind: "all" }, noted: true };
+  assert(isGameplayUiIntent(bank));
+  assert.equal(checkUiIntent(world, bindBankRevision(bank, world.ui.bank!.revision)), null);
+  assert.equal(checkUiIntent(world, bank)?.code, "ui.bank.revision.required");
+  const invalid = { kind: "bank_set_amount", amount: { kind: "quantity", quantity: 0 }, noted: false } as const;
+  assert.equal(checkUiIntent(world, bindBankRevision(invalid, world.ui.bank!.revision))?.code, "ui.request.invalid");
+  Reflect.set(world.ui.bank!, "amountSelection", { kind: "all", quantity: 1 });
+  assert.equal(gameplayUiProblem(world)?.code, "ui.projection.invalid");
+  world.ui.bank!.amountSelection = { kind: "all" };
+  world.ui.production = { id: "menu-A", interface: "interface.cooking", target: null,
+    recipes: [{ recipe: "recipe-A", name: "Dough", outputs: [], single: allowed, makeX: allowed, all: allowed }] };
+  const production: GameplayUiIntent = { kind: "production_select_all", menu_id: "menu-A", recipe: "recipe-A" };
+  assert(isGameplayUiIntent(production));
+  assert.equal(checkUiIntent(world, production), null);
+  world.ui.production.recipes[0]!.all = { allowed: false, code: "SourceSingle", reason: "The source currently permits only one." };
+  assert.equal(checkUiIntent(world, production)?.code, "SourceSingle");
+});
+
+test("current recovery retains exact fees and forwards selected partial quantities without a pricing formula", () => {
+  const world = recoveryWorld();
+  const before = JSON.stringify(world);
+  const request: GameplayUiIntent = { kind: "recovery_take", death: "death-A", storage: "grave",
+    items: [{ id: "recovery-A", amount: { kind: "quantity", quantity: 5 } }] };
+  assert(isGameplayUiIntent(request));
+  assert.equal(gameplayUiProblem(world), null);
+  assert.equal(checkUiIntent(world, request), null);
+  assert.equal(checkUiIntent(world, { ...request, storage: "death_office" })?.code, "ui.identity.stale");
+  assert.equal(checkUiIntent(world, { ...request, items: [] })?.code, "ui.identity.stale");
+  assert.equal(checkUiIntent(world, { ...request, items: [request.items[0]!, request.items[0]!] })?.code, "ui.identity.stale");
+  assert.equal(JSON.stringify(world), before);
+  world.ui.recovery!.management!.panels[0]!.entries[0]!.take =
+    { allowed: false, code: "SourceFee", reason: "The source fee is not affordable." };
+  assert.equal(checkUiIntent(world, request)?.code, "SourceFee");
+  assert.equal(checkUiIntent(world, { ...request, items: [{ id: "recovery-A", amount: { kind: "all" } }] }), null,
+    "The exact whole-panel request uses its separately supplied source Take-All permission.");
+});
+
+test("recovery Bank-All binds its own bank revision and never creates a source permission", () => {
+  const world = recoveryWorld();
+  assert.equal(world.ui.bank, null);
+  const management = world.ui.recovery!.management!;
+  const request: GameplayUiIntent = { kind: "recovery_bank_all", records: management.bankAllRecords };
+  assert(isGameplayUiIntent(request));
+  assert.equal(checkUiIntent(world, bindBankRevision(request, management.bankRevision)), null);
+  assert.equal(checkUiIntent(world, request)?.code, "ui.bank.revision.required");
+  assert.equal(checkUiIntent(world, bindBankRevision(request, "1"))?.code, "ui.bank.revision.stale");
+  assert.equal(checkUiIntent(world, bindBankRevision({ ...request,
+    records: [{ death: "different-death", items: ["recovery-A"] }] }, management.bankRevision))?.code, "ui.identity.stale");
+  management.bankAll = { allowed: false, code: "source_permission_unverified", reason: "Ordinary-grave Bank-All is not source-verified." };
+  const problem = checkUiIntent(world, bindBankRevision(request, management.bankRevision));
+  assert.equal(problem?.code, "source_permission_unverified");
+  assert.match(problem!.message, /not source-verified/);
+});
+
+test("malformed new authority fields do not become ignored successful projections", () => {
+  for (const change of [
+    (world: ReturnType<typeof recoveryWorld>) => Reflect.set(world.ui.recovery!.management!, "bankRevision", 1),
+    (world: ReturnType<typeof recoveryWorld>) => Reflect.set(world.ui.recovery!.management!.panels[0]!.entries[0]!, "unitFee", "18446744073709551616"),
+    (world: ReturnType<typeof recoveryWorld>) => Reflect.set(world.ui.recovery!.management!.panels[0]!.entries[0]!, "inventoryCapacity", -1),
+    (world: ReturnType<typeof recoveryWorld>) => world.ui.recovery!.management!.panels.push(world.ui.recovery!.management!.panels[0]!),
+  ]) {
+    const world = recoveryWorld(); change(world);
+    assert.equal(gameplayUiProblem(world)?.code, "ui.projection.invalid");
+  }
 });
 
 test("placeholder zero-quantity objects, mismatched item IDs and duplicate source slots are not valid bank views", () => {

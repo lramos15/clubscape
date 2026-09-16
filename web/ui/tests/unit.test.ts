@@ -188,8 +188,18 @@ test("recovery display uses explicit fee/coffer inputs and native controls witho
   assert.deepEqual(calls, [{ kind: "retrieve", id: "recovery-source-1", amount: 5 }]);
   assert.equal(view.items[0]!.item.quantity, 7);
   const locked = { ...view, items: [{ ...view.items[0]!, allowed: false, reason: "Authoritative source rejection" }] };
-  assert.equal(recoveryControls(projectRecovery(recoveryTemplate(catalogue, locked), locked), 1920, 1080, locked, command => calls.push(command))
-    .find(control => control.id === "recovery-item-recovery-source-1")!.disabled, "Authoritative source rejection");
+  const lockedControls = recoveryControls(projectRecovery(recoveryTemplate(catalogue, locked), locked),
+    1920, 1080, locked, command => calls.push(command));
+  assert.equal(lockedControls.find(control => control.id === "recovery-item-recovery-source-1")!.disabled, undefined,
+    "Local fee inspection does not retrieve an item.");
+  assert.equal(lockedControls.find(control => control.id === "recovery-item-recovery-source-1")!.tooltip, "Authoritative source rejection");
+  assert.equal(lockedControls.find(control => control.label === "Retrieve 5")!.disabled, "Authoritative source rejection");
+  const current = { ...view, unitFee: null, items: [{ ...view.items[0]!,
+    unitFee: "9007199254740993", fullStackFee: "9007199254741001", inventoryCapacity: 2, bankCapacity: 4 }] };
+  assert.match(recoveryFeeText(current), /9,007,199,254,740,993/);
+  assert.match(recoveryFeeText(current), /9,007,199,254,741,001/);
+  assert.doesNotMatch(recoveryFeeText(current), /63,050,394,783,186,951/,
+    "The supplied full-entry fee is not reconstructed by multiplying the unit quote.");
 });
 
 test("source production model replacement preserves widget identity and native choice coordinates", () => {

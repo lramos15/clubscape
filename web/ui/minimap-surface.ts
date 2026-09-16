@@ -4,6 +4,7 @@ export interface UiMinimapSurface {
   baseX: number; baseY: number; plane: number; revision: number; complete: boolean;
   stats: { terrainTiles: number; wallMarks: number; diagonalMarks: number; mapScenes: number; unresolved: number };
   notes: string[]; icons: UiMinimapIcon[]; pixels: ImageData; mask: Uint8Array;
+  sourceIconMismatches?: number | null;
 }
 export interface UiMinimapStatus extends Omit<UiMinimapSurface, "pixels" | "mask"> {
   sourceMaskPixels: number;
@@ -30,6 +31,8 @@ export function minimapSurfaceProblem(value: UiMinimapSurface): string | null {
     return "The renderer must supply its actual minimap completeness and notes.";
   if (!value.stats || ![value.stats.terrainTiles, value.stats.wallMarks, value.stats.diagonalMarks,
     value.stats.mapScenes, value.stats.unresolved].every(nonnegative)) return "The renderer minimap statistics are invalid.";
+  if (value.sourceIconMismatches !== undefined && value.sourceIconMismatches !== null && !nonnegative(value.sourceIconMismatches))
+    return "The renderer source-icon comparison count is invalid.";
   if (!value.pixels || value.pixels.width !== value.width || value.pixels.height !== value.height ||
       !(value.pixels.data instanceof Uint8ClampedArray) || value.pixels.data.length !== value.width * value.height * 4)
     return "The renderer minimap requires complete RGBA8 pixel data.";
@@ -49,6 +52,7 @@ function metadata(value: UiMinimapSurface): Omit<UiMinimapSurface, "pixels" | "m
     width: value.width, height: value.height, scale: value.scale, marginX: value.marginX, marginY: value.marginY,
     baseX: value.baseX, baseY: value.baseY, plane: value.plane, revision: value.revision, complete: value.complete,
     stats: { ...value.stats }, notes: [...value.notes], icons: value.icons.map(icon => ({ ...icon })),
+    ...(value.sourceIconMismatches === undefined ? {} : { sourceIconMismatches: value.sourceIconMismatches }),
   };
 }
 function equalBytes(a: Uint8Array | Uint8ClampedArray, b: Uint8Array | Uint8ClampedArray): boolean {

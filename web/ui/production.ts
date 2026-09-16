@@ -4,7 +4,7 @@ import { widgetId, projectScrollbar } from "./layout.ts";
 import { escapeText } from "./raster.ts";
 
 export type ProductionView = NonNullable<GameplayUiView["production"]>;
-export type ProductionAmount = number | "x";
+export type ProductionAmount = number | "x" | "all";
 export interface ProductionProjection {
   widgets: NativeWidget[];
   choices: Map<number, ProductionView["recipes"][number]>;
@@ -38,7 +38,7 @@ export function projectProduction(catalogue: UiCatalogue, view: ProductionView, 
       if (label) { label.color = recipe.single.allowed || recipe.makeX.allowed ? 0xffffff : 0; label.shadow = label.color !== 0; }
     }
     const quantity = widgets.find(widget => widget.id === widgetId(312, 7) && widget.type === 4);
-    if (quantity) quantity.text = `<col=ffffff>${amount === "x" ? "X" : amount}</col>`;
+    if (quantity) quantity.text = `<col=ffffff>${amount === "x" ? "X" : amount === "all" ? "All" : amount}</col>`;
     return { widgets, choices, problems };
   }
   for (let index = 0; index < view.recipes.length; index++) {
@@ -75,7 +75,7 @@ export function projectProduction(catalogue: UiCatalogue, view: ProductionView, 
     const heading = widgets.find(widget => widget.id === widgetId(group, 4))!;
     heading.text = "The server has supplied no production choices.";
   }
-  const chosen = amount === "x" ? 11 : amount === 1 ? 7 : amount === 5 ? 8 : amount === 10 ? 9 : 11;
+  const chosen = amount === "all" ? 12 : amount === "x" ? 11 : amount === 1 ? 7 : amount === 5 ? 8 : amount === 10 ? 9 : 11;
   for (const widget of widgets) {
     const child = widget.id & 65535;
     if (widget.id >> 16 !== group || ![7, 8, 9, 11, 12].includes(child) || widget.index < 0) continue;

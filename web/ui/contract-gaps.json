@@ -2,6 +2,28 @@
   "status": "blocked",
   "source_pack_sha256": "b62e19704e17d3d3e4e819f803ef49ba7cc54034ae407184b423427c65d9674d",
   "shared_contract_changed_by_ui": false,
+  "current_contract_status": {
+    "source_artifact_sha256": "5b3ba5f108ed3fec8f8b5f7f49b429c059e21b6f192ec99a0569616e08330059",
+    "all24_current_ui_intents_validated_and_dispatched": true,
+    "semantic_all_bank_revision_and_partial_recovery_consumed": true,
+    "fees_and_nonadditive_capacities_not_recomputed": true,
+    "native_preference_controls_use_shell_manager_and_store": true,
+    "parallel_ui_persistence_queue_shipped": false,
+    "renderer_minimap_surface_sprite_and_projection_ports_bound": true,
+    "production_typescript_passed": true,
+    "source_only_unknowns": "research/interface-contracts/remaining-source-questions.json",
+    "source_camera_contract": "research/camera-source/contract.json",
+    "full_ui_or_m1_acceptance": false
+  },
+  "requests_below_are_historical_handoff_requirements": true,
+  "current_open_work": [
+    "Actual complete same-account browser/server journey and full composed source/fidelity/persistence checks.",
+    "Stateful source camera/display controls and justified initial source-session configuration; constructor or chosen-fixture values are not account defaults.",
+    "Remaining source233/660 level-up presentation variants and original newcomer-map646 visible-marker motion/placement.",
+    "Source-native presentation/selection across multiple simultaneously supplied recovery panels and storage-capacity information where required; no panel or fee aggregation is invented.",
+    "Ordinary-grave Bank-All permission and dough/seven Empty motion or verified-absence facts remain unverified, not source-disabled/no-animation claims.",
+    "Actual scene/spatial-audio/model-preview metadata composition, runtime source audio and final hardware/owner review."
+  ],
   "published_contract": {
     "capability": "game.ui.v1",
     "upstream_commit": "d1532d6fc063d2a02383a7b4bb1ca3c449e214ce",

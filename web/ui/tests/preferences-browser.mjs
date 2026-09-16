@@ -11,7 +11,8 @@ page.on("pageerror", error => errors.push(error.message));
 const frame = () => page.evaluate(() => new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve))));
 const click = async id => { await page.locator(`[data-ui-control="${id}"]`).click(); await frame(); };
 const binding = () => page.evaluate(() => window.audioComponent.preferences());
-const flush = () => page.evaluate(() => window.preferenceFixture.persistence.flush(window.preferenceFixture.player));
+const flush = () => page.evaluate(() => window.audioComponent.preferenceStore.flush(window.preferenceFixture.player));
+const saveCalls = () => page.evaluate(() => window.preferenceFixture.state.calls.filter(call => call.kind === "save").length);
 const acknowledgeSettledAudio = async () => {
   await page.waitForFunction(() => {
     const state = window.audioComponent.state();
@@ -73,7 +74,9 @@ try {
     assert.equal((await binding()).preferences.version, 1);
     assert.equal((await binding()).preferences.music.savedPlaylist1.length, 100);
     assert.equal(await page.evaluate(() => window.preferenceFixture.state.calls[0].kind), "load");
-    assert.equal(await page.evaluate(() => window.preferenceFixture.state.calls.filter(call => call.kind === "save").length), 0);
+    await flush();
+    assert.equal(await page.evaluate(() => window.preferenceFixture.state.calls.filter(call => call.kind === "save").length), 1);
+    assert.deepEqual(await saved(), (await binding()).preferences, "The actual manager persists its applied native record, not a UI default.");
     const failed = await page.evaluate(async () => {
       const fixture = await import("/web/ui/tests/preference-fixture.ts");
       try { await fixture.mountPreferenceAudio(null, true); return null; }
@@ -83,9 +86,9 @@ try {
     const corrupt = await page.evaluate(async () => {
       const fixture = await import("/web/ui/tests/preference-fixture.ts");
       try { await fixture.mountPreferenceAudio("{invalid"); return null; }
-      catch (error) { return { id: error.code, ready: window.preferenceFixture.ready }; }
+      catch (error) { return { id: error.errorId, ready: window.preferenceFixture.ready }; }
     });
-    assert.deepEqual(corrupt, { id: "AUDIO_PREFERENCES", ready: false });
+    assert.deepEqual(corrupt, { id: "audio.preferences.invalid_record", ready: false });
   });
 
   await check("native first-use Unmute restores100/20/45/25 with real-gesture unlock and source mixer9/18/8", async () => {
@@ -177,10 +180,12 @@ try {
 
   await check("direct Skip uses the native command without mode flips or playhead persistence and reports muted requests explicitly", async () => {
     await mount(record({ mode: "shuffle" })); await musicTab();
+    await flush();
+    const beforeSaves = await saveCalls();
     await click("music-skip");
     await page.waitForFunction(() => window.audioComponent.state().traces.some(trace => trace.type === "source_control_click" && trace.data.binding === "skip/9292"));
     assert.equal((await binding()).preferences.music.mode, "shuffle");
-    assert.equal(await page.evaluate(() => window.preferenceFixture.state.calls.filter(call => call.kind === "save").length), 0);
+    assert.equal(await saveCalls(), beforeSaves);
     assert.ok((await page.evaluate(() => window.preferenceGestures.calls)).every(call => call.trustedStack));
     await acknowledgeSettledAudio();
     await audioTab();
@@ -196,6 +201,8 @@ try {
 
   await check("rapid sliders coalesce per character and repeated in-flight values still become the latest real preference", async () => {
     await mount(record()); await audioTab();
+    await flush();
+    const beforeSaves = await saveCalls();
     await page.evaluate(() => { window.preferenceFixture.state.holdSaves = true; });
     const slider = page.getByRole("slider", { name: "Music Volume", exact: true });
     await slider.focus(); await slider.press("Home"); await frame();
@@ -207,7 +214,7 @@ try {
     await page.evaluate(() => { window.preferenceFixture.state.holdSaves = false; window.preferenceFixture.state.pending.shift().resolve(); });
     await flush();
     assert.equal((await saved()).volumes.current.music, 0);
-    assert.equal(await page.evaluate(() => window.preferenceFixture.state.calls.filter(call => call.kind === "save").length), 2);
+    assert.equal(await saveCalls(), beforeSaves + 2);
   });
 
   await check("actual persistence rejection keeps current values and dirty state with a working native retry control", async () => {
@@ -217,10 +224,10 @@ try {
     await slider.focus(); await slider.press("Home"); await frame();
     assert.equal((await binding()).preferences.volumes.current.music, 0);
     assert.match(await page.getByRole("status").innerText(), /preference.storage.actual/);
-    assert.equal(await page.evaluate(() => window.preferenceFixture.persistence.status(window.preferenceFixture.player).dirty), true);
+    assert.equal(await page.evaluate(() => window.audioComponent.preferenceManager.observe().save), "failed");
     await page.getByRole("button", { name: "Retry saving audio preferences", exact: true }).click(); await frame(); await flush();
     assert.equal((await saved()).volumes.current.music, 0);
-    assert.equal(await page.evaluate(() => window.preferenceFixture.persistence.status(window.preferenceFixture.player).dirty), false);
+    assert.equal(await page.evaluate(() => window.audioComponent.preferenceManager.observe().save), "stored");
   });
 
   await check("pending Skip cannot execute after logout/re-entry with the same character identity", async () => {
@@ -230,26 +237,22 @@ try {
     });
     await click("music-skip");
     await page.evaluate(async () => {
-      const { applySourceAudioPreferences } = await import("/web/audio/index.ts");
-      const { setUiMusicState } = await import("/web/ui/index.ts");
       const s = window.component.services, world = structuredClone(s.state().world), audio = window.audioComponent.handle;
       s.publish({ ...s.state(), phase: "title", world: null }); audio.update(null, []);
-      const preferences = await window.preferenceFixture.persistence.load(world.player.id);
       s.publish({ ...s.state(), phase: "world", world });
-      audio.update(world, []);
-      const next = applySourceAudioPreferences(audio, world.player.id, preferences, [2, 62, 64, 76, 144, 145, 163, 327]);
-      setUiMusicState(window.component.ui, next.playerId, next.musicState);
+      await window.audioComponent.enter(world);
     }); await frame();
     const before = await binding();
     await page.evaluate(() => { window.preferenceGestures.hold = null; window.releaseOldPreferenceGesture(); });
     await frame(); await frame();
     assert.deepEqual(await binding(), before);
-    assert.equal(await page.evaluate(() => window.component.services.errors.some(error => error.errorId === "AUDIO_CONTROL_SUPERSEDED")), true);
+    assert.equal(await page.evaluate(() => window.component.services.errors.some(error =>
+      error.errorId === "AUDIO_CONTROL_SUPERSEDED" || error.errorId === "audio.preferences.entry_superseded")), true);
   });
   assert.deepEqual(errors, []);
 } finally {
   await writeFile(resolve(results, "preference-component-tests.json"), JSON.stringify({
-    scope: "Real WebAudio/native preference UI controls with deterministic player-storage callbacks only; no live account storage, world-scene or speaker/M1 acceptance.",
+    scope: "Real WebAudio/native preference UI controls through the actual shell preference manager/store with deterministic storage callbacks; no live account, world-scene or speaker/M1 acceptance.",
     browser: browser.version(), browserOutputMuted: true, cases, errors, finalAcceptance: false,
   }, null, 2) + "\n");
   await page.evaluate(() => window.audioComponent?.dispose()).catch(error => errors.push(error.message));

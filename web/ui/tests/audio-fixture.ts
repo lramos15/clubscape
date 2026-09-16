@@ -1,10 +1,14 @@
 import type { AudioSnapshot } from "../../audio/index.ts";
 import { createAudio, readAudioState, sourceSliderToMixer, setSourceMasterVolume,
   applySourceAudioPreferences, readSourceAudioPreferences } from "../../audio/index.ts";
+import * as nativeAudio from "../../audio/index.ts";
 import type { SourceMusicState } from "../../audio/index.ts";
 import { SOURCE_PACK_SHA256 } from "../../shared/contracts.ts";
-import { bindUiAudio, bindUiAudioPreferencePersistence, getUiMusicState, onUiMusicStateChange, setUiMusicState } from "../index.ts";
-import type { UiAudioPreferencePersistence } from "../audio-preference-storage.ts";
+import { bindUiAudio, bindUiAudioPreferences, getUiMusicState, onUiMusicStateChange, setUiMusicState } from "../index.ts";
+import { PlayerAudioPreferences } from "../../app/player-audio.ts";
+import { PlayerAudioPreferenceStore } from "../../app/player-audio-store.ts";
+import type { PlayerAudioStorage } from "../../app/player-audio-store.ts";
+import type { WorldView } from "../../shared/contracts.ts";
 import { observedAudio, projectAudioControls } from "../audio-controls.ts";
 import { projectMusicControls } from "../music-controls.ts";
 import { UiAssets } from "../assets.ts";
@@ -17,19 +21,48 @@ import { testAssets } from "./source-fixture.ts";
 let disposeAudio: (() => Promise<void>) | null = null;
 
 export async function mountAudio(phase: "world" | "title" = "world",
-  preferences?: { persistence: UiAudioPreferencePersistence; unlockedGroups: readonly number[] }): Promise<void> {
+  preferences?: { playerId: string; storage: PlayerAudioStorage; unlockedGroups: readonly number[] }): Promise<void> {
   await disposeAudio?.();
   const component = await mount(phase);
   if (!component) throw new Error("Component mount failed.");
   if (phase === "world") component.services.enableUi();
-  const record = preferences ? await preferences.persistence.load(component.services.state().world!.player.id) : null;
+  if (preferences) {
+    const state = component.services.state(), world = state.world;
+    if (!world) throw new Error("Player preference fixtures require an explicit component world.");
+    component.services.publish({ ...state, world: { ...world, player: { ...world.player, id: preferences.playerId } } });
+  }
   const failures: Error[] = [];
   const handle = await createAudio({
     ...testAssets, baseUrl: location.origin,
     url: id => location.origin + "/audio-asset/" + encodeURIComponent(id),
   }, error => { failures.push(error); });
   const stop = await bindUiAudio(component.ui, handle);
-  const stopPersistence = preferences ? bindUiAudioPreferencePersistence(component.ui, preferences.persistence) : null;
+  const store = preferences ? new PlayerAudioPreferenceStore(preferences.storage) : null;
+  const manager = store ? new PlayerAudioPreferences(store, {
+    update: (world, events) => handle.update(world, [...events]),
+    disconnected: () => handle.disconnected(),
+    preferences: {
+      read: () => readSourceAudioPreferences(handle),
+      apply: (player, value, unlocked) => applySourceAudioPreferences(handle, player, value, unlocked),
+      music: (player, value) => nativeAudio.setSourceMusicPreferences(handle, player, value),
+      playlist: (player, slot) => nativeAudio.selectSourcePlaylist(handle, player, slot),
+      replace: (player, slot, entries) => nativeAudio.setSourceSavedPlaylist(handle, player, slot, entries),
+      edit: (player, slot, edit) => nativeAudio.editSourceSavedPlaylist(handle, player, slot, edit),
+      toggle: (player, channel) => nativeAudio.toggleSourceAudioMute(handle, player, channel),
+      percent: (player, channel, value) => nativeAudio.setSourceAudioPercent(handle, player, channel, value),
+      skip: (player) => nativeAudio.requestSourceMusicSkip(handle, player),
+    },
+  }, binding => setUiMusicState(component.ui, binding.playerId, binding.musicState),
+  error => { failures.push(error); component.services.report(error, error.errorId); }) : null;
+  let stopPreferences: (() => void) | null = null;
+  const stopPreferencesObserver = manager ? nativeAudio.observeAudioState(handle, value => manager.changed(value.preferences)) : null;
+  const enter = async (world: WorldView) => {
+    if (!manager || !preferences) throw new Error("The actual preference manager is not part of this fixture.");
+    stopPreferences?.(); manager.invalidate(true);
+    await manager.prepare(world.player.id);
+    stopPreferences = bindUiAudioPreferences(component.ui, manager.controls());
+    manager.commit(world, [], undefined, preferences.unlockedGroups);
+  };
   component.services.audioVolume = (channel, value) => {
     component.services.calls.push({ method: "audioVolume", args: [channel, value] });
     handle.volume(channel, value);
@@ -38,24 +71,33 @@ export async function mountAudio(phase: "world" | "title" = "world",
     component.services.calls.push({ method: "unlockAudio", args: [] });
     return handle.unlock();
   };
-  if (phase === "world") {
-    const world = component.services.state().world!;
-    handle.update(world, []);
-    if (preferences && record) {
-      const binding = applySourceAudioPreferences(handle, world.player.id, record, preferences.unlockedGroups);
-      setUiMusicState(component.ui, binding.playerId, binding.musicState);
+  disposeAudio = async () => {
+    stopPreferences?.(); stopPreferencesObserver?.(); stop();
+    manager?.invalidate(true);
+    try { await store?.flush(); }
+    finally { await handle.dispose(); }
+  };
+  try {
+    if (phase === "world") {
+      const world = component.services.state().world!;
+      if (manager) await enter(world);
+      else handle.update(world, []);
     }
+    else handle.update(null, []);
+  } catch (error) {
+    await disposeAudio();
+    disposeAudio = null;
+    throw error;
   }
-  else handle.update(null, []);
   const musicChanges: Array<{ playerId: string; state: SourceMusicState }> = [];
   onUiMusicStateChange(component.ui, (playerId, state) => { musicChanges.push({ playerId, state }); });
-  disposeAudio = async () => { stopPersistence?.(); await handle.dispose(); };
   Object.assign(window, { audioComponent: {
     handle, failures, state: () => readAudioState(handle), stop,
     master: (percent: number) => setSourceMasterVolume(handle, percent),
     music: (state: SourceMusicState, playerId = component.services.state().world!.player.id) => setUiMusicState(component.ui, playerId, state),
     musicState: () => getUiMusicState(component.ui), musicChanges,
     preferences: () => readSourceAudioPreferences(handle),
+    preferenceManager: manager, preferenceStore: store, enter,
     dispose: () => handle.dispose(), uiDispose: () => component.ui.dispose(),
   } });
 }

@@ -1,5 +1,5 @@
 import type { CreateAudio, CreateRenderer, CreateUi } from "../shared/contracts.ts";
-import { createUi } from "../ui/index.ts";
+import { bindUiAudioPreferences, bindUiMinimapProjection, createUi, setUiMapIconSprites, setUiMinimap } from "../ui/index.ts";
 import { createAudio } from "../audio/index.ts";
 import { createShellRenderer } from "./renderer.ts";
 import type { MapIconSprite, MinimapIconPlacements, MinimapSurface } from "../renderer/src/index.ts";
@@ -16,5 +16,6 @@ export interface Components {
 }
 
 export async function loadComponents(): Promise<Components> {
-  return { createRenderer: createShellRenderer, createUi, createAudio };
+  return { createRenderer: createShellRenderer, createUi, createAudio,
+    setUiMinimap, setUiMapIconSprites, bindUiMinimapProjection, bindUiAudioPreferences };
 }

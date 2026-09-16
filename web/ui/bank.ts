@@ -1,6 +1,7 @@
 import type { GameplayUiView } from "../shared/contracts.ts";
 import type { NativeWidget, UiCatalogue } from "./assets.ts";
 import { projectScrollbar, widgetId } from "./layout.ts";
+import { bankDefaultAmount } from "./gameplay-ui.ts";
 
 export type BankUiView = NonNullable<GameplayUiView["bank"]>;
 export interface BankProjection {
@@ -85,8 +86,9 @@ export function projectBank(catalogue: UiCatalogue, view: BankUiView, search: st
     if (child === 25) widget.sprite = view.noted ? 179 : 170;
     if (child === 40) widget.sprite = view.placeholders ? 179 : 170;
     if ([29, 31, 33, 35, 37].includes(child)) {
-      const selected = child === 29 ? view.amount === 1 : child === 31 ? view.amount === 5 : child === 33 ? view.amount === 10
-        : child === 35 ? ![1,5,10].includes(view.amount) : false;
+      const amount = bankDefaultAmount(view);
+      const selected = child === 29 ? amount === 1 : child === 31 ? amount === 5 : child === 33 ? amount === 10
+        : child === 37 ? amount === "all" : typeof amount === "number" && ![1, 5, 10].includes(amount);
       widget.sprite = selected ? 179 : 170;
     }
   }

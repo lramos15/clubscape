@@ -121,6 +121,16 @@ try {
     await click("bank-tab-1");
     assert.deepEqual(await last(), { kind: "bank_select_tab", tab: 1, expected_bank_revision: bankRevision });
     assert.equal(await page.evaluate(() => window.component.services.state().world.ui.bank.selectedTab), 0);
+    await patch(() => {
+      const s = window.component.services, w = structuredClone(s.state().world);
+      w.ui.bank.amountSelection = { kind: "all" }; s.patchWorld(w);
+    });
+    await click("bank-entry-entry-A");
+    assert.deepEqual(await last(), { kind: "bank_withdraw_entry", entry_id: "entry-A", quantity: 12, noted: true, expected_bank_revision: bankRevision });
+    await click("bank-control-25--1");
+    assert.deepEqual(await last(), { kind: "bank_set_amount", amount: { kind: "all" }, noted: false, expected_bank_revision: bankRevision });
+    await click("bank-control-31--1");
+    assert.deepEqual(await last(), { kind: "bank_set_amount", amount: { kind: "quantity", quantity: 5 }, noted: true, expected_bank_revision: bankRevision });
     await capture("bank-v1-stable-entries");
   });
   await check("bank drag reorders by entry identity and cancels cleanly on blur or outside release", async () => {
@@ -235,8 +245,13 @@ try {
     await click("notice-close");
     await click("production-amount-All");
     assert.equal((await intents()).length, 0);
-    assert.match(await page.getByRole("status").innerText(), /production_all_quantity_encoding/);
-    await click("notice-close");
+    assert.equal(await page.locator('[data-ui-control="production-recipe.opaque.shrimps"]').isDisabled(), true);
+    await patch(() => {
+      const s = window.component.services, w = structuredClone(s.state().world);
+      w.ui.production.recipes[0].all = { allowed: true, code: null, reason: null }; s.patchWorld(w);
+    });
+    await click("production-recipe.opaque.shrimps");
+    assert.deepEqual(await last(), { kind: "production_select_all", menu_id: "menu.replaced", recipe: "recipe.opaque.shrimps" });
     await page.mouse.move(600, 600); await frame();
     await capture("production-v1-original-choice-geometry");
   });
@@ -344,6 +359,46 @@ try {
     assert.deepEqual(await last(), { kind: "ui_confirm", confirmation_id: "coffer.confirmation", accept: false });
     assert.equal(await page.evaluate(() => window.component.services.state().world.ui.recovery.cofferBalance), "9007199254740993");
     await capture("recovery-v1-discard-coffer");
+  });
+  await check("current recovery sends partial and All quantities with exact source records, fees and independent bank revision", async () => {
+    await mount();
+    await patch(() => {
+      const s = window.component.services, w = structuredClone(s.state().world), yes = { allowed: true, code: null, reason: null };
+      const item = { ...w.player.inventory[0].item, quantity: 7 };
+      w.recovery = { death: "death.current", storage: "death_office", remainingTicks: null,
+        items: [{ id: "entry.current", item, cost: null }] };
+      w.ui.activeInterface = "interface.death_retrieval";
+      w.ui.recovery = { cofferBalance: "9007199254740993", discard: yes, cofferOffer: yes, cofferItems: [],
+        management: { bankRevision: "9007199254740997", panels: [{
+          death: "death.current", storage: "death_office", fullSelectionFee: "17", takeAll: yes,
+          entries: [{ id: "entry.current", item, unitFee: "3", fullStackFee: "17",
+            inventoryCapacity: 2, bankCapacity: 7, take: yes, bank: yes }],
+        }], bankAll: yes, bankAllRecords: [{ death: "death.current", items: ["entry.current"] }] } };
+      s.patchWorld(w);
+    });
+    await click("recovery-item-entry.current");
+    await reset();
+    await page.getByRole("button", { name: "Retrieve 5", exact: true }).click(); await frame();
+    assert.deepEqual(await last(), { kind: "recovery_take", death: "death.current", storage: "death_office",
+      items: [{ id: "entry.current", amount: { kind: "quantity", quantity: 5 } }] });
+    await page.getByRole("button", { name: "Retrieve X", exact: true }).click(); await frame();
+    await page.getByRole("textbox", { name: "Retrieve how many?", exact: true }).fill("3");
+    await page.getByRole("textbox", { name: "Retrieve how many?", exact: true }).press("Enter"); await frame();
+    assert.deepEqual(await last(), { kind: "recovery_take", death: "death.current", storage: "death_office",
+      items: [{ id: "entry.current", amount: { kind: "quantity", quantity: 3 } }] });
+    await page.keyboard.press("Escape"); await frame();
+    await page.getByRole("button", { name: "Take-All", exact: true }).click(); await frame();
+    assert.deepEqual(await last(), { kind: "recovery_take", death: "death.current", storage: "death_office",
+      items: [{ id: "entry.current", amount: { kind: "all" } }] });
+    await patch(() => {
+      const s = window.component.services, w = structuredClone(s.state().world);
+      w.recovery.storage = "grave"; w.ui.recovery.management.panels[0].storage = "grave";
+      w.ui.activeInterface = "interface.grave"; s.patchWorld(w);
+    });
+    await page.getByRole("button", { name: "Bank-All", exact: true }).click(); await frame();
+    assert.deepEqual(await last(), { kind: "recovery_bank_all", records: [{ death: "death.current", items: ["entry.current"] }],
+      expected_bank_revision: "9007199254740997" });
+    assert.equal(await page.evaluate(() => window.component.services.state().world.recovery.items[0].item.quantity), 7);
   });
   await check("malformed nested projections surface errors and cannot dispatch through legacy fallbacks", async () => {
     await mount(); await reset();

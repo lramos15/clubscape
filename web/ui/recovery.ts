@@ -5,7 +5,10 @@ import { intersect } from "./assets.ts";
 import { nativeTree, projectScrollbar, widgetId, widgetKey } from "./layout.ts";
 import { escapeText } from "./raster.ts";
 
-export interface RecoveryDisplayItem { id: string; item: ItemView; slot: number; allowed: boolean | null; reason: string | null }
+export interface RecoveryDisplayItem {
+  id: string; item: ItemView; slot: number; allowed: boolean | null; reason: string | null;
+  unitFee?: string; fullStackFee?: string; inventoryCapacity?: number; bankCapacity?: number;
+}
 /** Explicit display inputs: null is unknown, never a fabricated zero balance or fee. */
 export interface RecoveryDisplay {
   storage: "grave" | "death_office";
@@ -15,6 +18,10 @@ export interface RecoveryDisplay {
   unitFee: number | null;
   capacity: number | null;
   bankAll: boolean;
+  bankAllReason?: string;
+  takeAll?: boolean;
+  takeAllReason?: string;
+  fullSelectionFee?: string;
   discardAll: boolean;
   discardReason?: string;
   scroll: number;
@@ -38,14 +45,17 @@ export function recoveryFeeText(view: RecoveryDisplay): string {
   const coffer = view.coffer === null ? "Unavailable" : BigInt(view.coffer).toLocaleString("en-US");
   if (!selected) return `Select an item to retrieve.<br>Death's Coffer: <col=ffffff>${coffer}</col>`;
   // Source3492 uses INV_TOTAL for the selected item type, while the outline remains on its selected slot.
-  const quantity = view.items.filter(row => row.item.id === selected.item.id)
-    .reduce((total, row) => total + row.item.quantity, 0), name = escapeText(selected.item.name);
-  const fee = view.unitFee;
-  let feeText = fee === null ? "Fee: unavailable" : `Fee: <col=ffffff>${fee.toLocaleString("en-US")} ${fee === 1 ? "coin" : "coins"}</col>`;
+  const quantity = selected.unitFee === undefined ? view.items.filter(row => row.item.id === selected.item.id)
+    .reduce((total, row) => total + row.item.quantity, 0) : selected.item.quantity;
+  const name = escapeText(selected.item.name);
+  const fee = selected.unitFee !== undefined ? BigInt(selected.unitFee) : view.unitFee === null ? null : BigInt(view.unitFee);
+  let feeText = fee === null ? "Fee: unavailable" : `Fee: <col=ffffff>${fee.toLocaleString("en-US")} ${fee === 1n ? "coin" : "coins"}</col>`;
   if (quantity > 1 && fee !== null) {
     feeText += " each";
-    if (fee !== 1 && (fee === 0 || quantity <= Math.floor(2147483647 / fee)))
-      feeText += ` (<col=ffffff>${(quantity * fee).toLocaleString("en-US")}</col>)`;
+    if (fee !== 1n && (selected.fullStackFee !== undefined || fee === 0n || BigInt(quantity) <= 2147483647n / fee)) {
+      const total = selected.fullStackFee !== undefined ? BigInt(selected.fullStackFee) : BigInt(quantity) * fee;
+      feeText += ` (<col=ffffff>${total.toLocaleString("en-US")}</col>)`;
+    }
   }
   return `${quantity > 1 ? quantity.toLocaleString("en-US") + " x " : ""}${name}:<br>${feeText}<br>Death's Coffer: <col=ffffff>${coffer}${view.coffer === null ? "" : " coins"}</col>`;
 }
@@ -93,7 +103,8 @@ export function recoveryControls(widgets: readonly NativeWidget[], width: number
       const select = view.storage === "death_office";
       const label = `${select ? "Select" : "Take-All"} ${row.item.name}`;
       controls.push({ ...rect, id: `recovery-item-${row.id}`, label, pressed: row.id === view.selectedId,
-        ...(row.allowed === false ? { disabled: row.reason ?? "This item is currently unavailable." } : {}),
+        ...(!select && row.allowed === false ? { disabled: row.reason ?? "This item is currently unavailable." } : {}),
+        ...(select && row.allowed === false ? { tooltip: row.reason ?? "This item is currently unavailable." } : {}),
         ...(row.allowed === null ? { tooltip: "Retrieval permission and affordability are not projected; the server validates this request." } : {}),
         actions: [{ label, run: () => dispatch(select ? { kind: "select", id: row.id } : { kind: "retrieve", id: row.id, amount: "all" }) },
           { label: `Examine ${row.item.name}`, run: () => dispatch({ kind: "examine", id: row.id }) }] });
@@ -110,7 +121,8 @@ export function recoveryControls(widgets: readonly NativeWidget[], width: number
       command = { kind: "retrieve", id: selected.id, amount: child === 6 ? 1 : child === 7 ? 5 : child === 8 ? "x" : "all" };
     if (!command) continue;
     const disabled = command.kind === "discard_all" && !view.discardAll ? view.discardReason ?? "Discard permission has not been supplied."
-      : command.kind === "bank_all" && !view.bankAll ? "Bank-All is not enabled."
+      : command.kind === "bank_all" && !view.bankAll ? view.bankAllReason ?? "Bank-All permission has not been supplied."
+      : command.kind === "take_all" && view.takeAll === false ? view.takeAllReason ?? "Take-All is not currently permitted."
       : command.kind === "retrieve" && selected?.allowed === false ? selected.reason ?? "This item is currently unavailable."
       : command.kind !== "close" && view.items.length === 0 ? "There are no items to retrieve." : undefined;
     controls.push({ ...rect, id: `recovery-option-${widgetKey(widget)}`, label: command.kind === "retrieve" ? `Retrieve ${operation}` : operation,

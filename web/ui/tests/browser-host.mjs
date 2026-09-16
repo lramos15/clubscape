@@ -5,7 +5,8 @@ import { stripTypeScriptTypes } from "node:module";
 import { pathToFileURL } from "node:url";
 
 const root = resolve(import.meta.dirname, "../../..");
-export const results = resolve(root, "web/ui/test-results");
+export const results = resolve(root, process.env.CLUBSCAPE_UI_TEST_RESULTS ?? "web/ui/test-results");
+if (!results.startsWith(root + sep)) throw new Error("UI evidence must stay in the current worktree.");
 
 export async function browserHost({ audioAssets = false } = {}) {
   await mkdir(results, { recursive: true });
@@ -46,7 +47,8 @@ export async function browserHost({ audioAssets = false } = {}) {
       return;
     }
     const directories = { "/assets/": resolve(root, "assets/compiled"), "/web/ui/": resolve(root, "web/ui"),
-      "/web/shared/": resolve(root, "web/shared"), "/web/audio/": resolve(root, "web/audio") };
+      "/web/shared/": resolve(root, "web/shared"), "/web/audio/": resolve(root, "web/audio"),
+      "/web/app/": resolve(root, "web/app") };
     const entry = Object.entries(directories).find(([prefix]) => url.pathname.startsWith(prefix));
     if (!entry) { response.writeHead(404).end(); return; }
     const path = resolve(entry[1], "." + url.pathname.slice(entry[0].length - 1));
@@ -69,7 +71,7 @@ export async function browserHost({ audioAssets = false } = {}) {
 export async function launchBrowser({ muteAudio = false } = {}) {
   const { chromium } = await import("playwright-core");
   // Chromium's Unix socket path must fit sockaddr_un, including its generated suffix.
-  const scratch = resolve(root, "web/ui/.s");
+  const scratch = resolve(root, ".s");
   await mkdir(scratch, { recursive: true });
   process.env.TMPDIR = scratch; process.env.TEMP = scratch; process.env.TMP = scratch;
   return chromium.launch({

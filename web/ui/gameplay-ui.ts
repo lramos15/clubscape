@@ -1,5 +1,5 @@
 import { GAMEPLAY_UI_CAPABILITY } from "../shared/contracts.ts";
-import type { GameIntent, GameplayUiIntent, GameplayUiView, ItemView, UiPermission, WorldView } from "../shared/contracts.ts";
+import type { GameIntent, GameplayUiIntent, GameplayUiView, ItemView, UiAmount, UiPermission, WorldView } from "../shared/contracts.ts";
 
 export interface UiContractProblem { message: string; code: string }
 
@@ -15,7 +15,12 @@ const integer = (minimum: number, maximum: number): Validator => scalar(`an inte
   value => typeof value === "number" && Number.isInteger(value) && value >= minimum && value <= maximum);
 const u32 = integer(0, 4294967295), quantity = integer(1, 4294967295);
 const decimal = (signed = false): Validator => scalar("lossless decimal integer text",
-  value => typeof value === "string" && (signed ? /^-?\d+$/ : /^\d+$/).test(value));
+  value => {
+    if (typeof value !== "string" || !(signed ? /^(0|-?[1-9]\d{0,18})$/ : /^(0|[1-9]\d{0,19})$/).test(value)) return false;
+    const number = BigInt(value);
+    return signed ? number >= -9223372036854775808n && number <= 9223372036854775807n
+      : number <= 18446744073709551615n;
+  });
 const oneOf = (...values: readonly unknown[]): Validator => scalar(values.map(String).join(" | "), value => values.includes(value));
 const nullable = (check: Validator): Validator => (value, path) => value === null ? null : check(value, path);
 const optional = (check: Validator): Validator => (value, path) => value === undefined ? null : check(value, path);
@@ -70,7 +75,17 @@ const target: Validator = (value, path) => {
     : object({ kind: oneOf("temporary_object"), object: identity }, true))(value, path);
 };
 const storage = oneOf("grave", "death_office");
+const amount: Validator = (value, path) => {
+  if (!isRecord(value)) return `${path}: expected a source quantity or All selection`;
+  return (value.kind === "all" ? object({ kind: oneOf("all") }, true)
+    : object({ kind: oneOf("quantity"), quantity }, true))(value, path);
+};
+const recoveryRecord = object({ death: identity, items: array(identity) }, true);
 const intentFields: Record<GameplayUiIntent["kind"], Record<string, Validator>> = {
+  production_select_all: { menu_id: identity, recipe: identity },
+  bank_set_amount: { amount, noted: bool },
+  recovery_take: { death: identity, storage, items: array(object({ id: identity, amount }, true)) },
+  recovery_bank_all: { records: array(recoveryRecord) },
   ui_document_page: { document_id: identity, page: integer(0, 65535) },
   bank_placeholder: { entry_id: identity },
   ui_dismiss: { presentation_id: identity },
@@ -95,11 +110,25 @@ const intentFields: Record<GameplayUiIntent["kind"], Record<string, Validator>> 
 const bankRequests = new Set<GameplayUiIntent["kind"]>([
   "bank_placeholder", "bank_select_tab", "bank_create_tab", "bank_move", "bank_collapse_tab", "bank_set_insert",
   "bank_set_placeholders", "bank_release_placeholder", "bank_deposit_equipment", "bank_withdraw_entry", "bank_set_options",
+  "bank_set_amount", "recovery_bank_all",
 ]);
 export function requiresBankRevision(intent: GameplayUiIntent): boolean { return bankRequests.has(intent.kind); }
+export function bankRevisionForIntent(ui: GameplayUiView, intent: GameplayUiIntent): string | undefined {
+  return intent.kind === "recovery_bank_all" ? ui.recovery?.management?.bankRevision : ui.bank?.revision;
+}
 export function bindBankRevision(intent: GameplayUiIntent, revision: string): GameplayUiIntent {
   return requiresBankRevision(intent) && !Object.hasOwn(intent, "expected_bank_revision")
     ? { ...intent, expected_bank_revision: revision } : intent;
+}
+export function bankDefaultAmount(bank: NonNullable<GameplayUiView["bank"]>): number | "all" {
+  return bank.amountSelection?.kind === "all" ? "all"
+    : bank.amountSelection?.quantity ?? bank.amount;
+}
+export function bankAmountRequest(bank: NonNullable<GameplayUiView["bank"]>, selected: UiAmount,
+  noted = bank.noted): GameplayUiIntent {
+  return bank.amountSelection === undefined && selected.kind === "quantity"
+    ? { kind: "bank_set_options", amount: selected.quantity, noted }
+    : { kind: "bank_set_amount", amount: selected, noted };
 }
 const intentChecks = new Map(Object.entries(intentFields).map(([kind, fields]) => [kind, object({
   kind: oneOf(kind), ...fields, expected_bank_revision: optional(decimal()),
@@ -112,7 +141,7 @@ const projectionCheck = object({
   version: oneOf(1), activeTab: nullable(identity), activeInterface: nullable(identity),
   production: nullable(object({
     id: identity, interface: identity, target: nullable(target),
-    recipes: array(object({ recipe: identity, name: text, outputs: array(item), single: permission, makeX: permission }), "recipe"),
+    recipes: array(object({ recipe: identity, name: text, outputs: array(item), single: permission, makeX: permission, all: optional(permission) }), "recipe"),
   })),
   reward: nullable(object({
     id: identity, kind: oneOf("quest", "level_up"), interface: identity, title: text, lines: array(text),
@@ -137,7 +166,7 @@ const projectionCheck = object({
   inventoryActions: array(inventoryActions, "slot"),
   bank: nullable(object({
     revision: decimal(), capacity: integer(0, 65535), selectedTab: integer(0, 255),
-    insertMode: bool, placeholders: bool, amount: u32, noted: bool,
+    insertMode: bool, placeholders: bool, amount: u32, amountSelection: optional(amount), noted: bool,
     tabs: array(object({ tab: integer(0, 255), firstEntry: nullable(identity), entries: u32 }), "tab"),
     entries: array(object({ id: identity, slot: integer(0, 65535), tab: integer(0, 255), item: identity, value: nullable(item), placeholder: bool }), "id"),
     depositEquipment: permission, unavailableContainers: array(object({ id: identity, label: text, permission }), "id"),
@@ -146,7 +175,21 @@ const projectionCheck = object({
     scope: oneOf("normal_unsafe_non_pvp"), kept: array(item), lost: array(item),
     fullGraveFee: decimal(), fullOfficeFee: decimal(), valueRevision: decimal(),
   })),
-  recovery: nullable(object({ cofferBalance: decimal(), discard: permission, cofferOffer: permission, cofferItems: array(inventoryActions, "slot") })),
+  recovery: nullable(object({
+    cofferBalance: decimal(), discard: permission, cofferOffer: permission, cofferItems: array(inventoryActions, "slot"),
+    management: optional(object({
+      bankRevision: decimal(),
+      panels: array(object({
+        death: identity, storage,
+        entries: array(object({
+          id: identity, item, unitFee: decimal(), fullStackFee: decimal(),
+          inventoryCapacity: u32, bankCapacity: u32, take: permission, bank: permission,
+        }), "id"),
+        fullSelectionFee: decimal(), takeAll: permission,
+      })),
+      bankAll: permission, bankAllRecords: array(recoveryRecord, "death"),
+    })),
+  })),
   appearance: object({
     choices: dictionary(array(object({ value: u32, label: nullable(text), permission }), "value")),
     base: nullable(object({ asset: identity, sourceNpc: u32, adaptation: identity })), confirmed: bool,
@@ -187,6 +230,19 @@ function validateProjection(ui: GameplayUiView): UiContractProblem | null {
       slots.add(entry.slot);
       if (entry.placeholder !== (entry.value === null) || entry.value && entry.value.id !== entry.item)
         return invalid(`ui.bank.entries[${entry.id}]: inconsistent placeholder or canonical item identity`);
+    }
+  }
+  const management = ui.recovery?.management;
+  if (management) {
+    const panels = new Set<string>();
+    for (const panel of management.panels) {
+      const key = JSON.stringify([panel.death, panel.storage]);
+      if (panels.has(key)) return invalid("ui.recovery.management.panels: duplicate death/storage identity");
+      panels.add(key);
+    }
+    for (const record of management.bankAllRecords) {
+      if (record.items.length === 0 || new Set(record.items).size !== record.items.length)
+        return invalid("ui.recovery.management.bankAllRecords: empty or duplicate item identities");
     }
   }
   return null;
@@ -236,10 +292,11 @@ export function checkUiIntent(world: WorldView, intent: GameplayUiIntent): UiCon
   const invalid = intentCheck(intent, "request");
   if (invalid) return { message: invalid, code: "ui.request.invalid" };
   if (requiresBankRevision(intent)) {
-    if (!ui.bank) return stale("The bank has closed. Open the current bank again.");
+    const revision = bankRevisionForIntent(ui, intent);
+    if (revision === undefined) return stale("The source bank or recovery context has closed.");
     if (intent.expected_bank_revision === undefined)
       return { message: "The displayed bank revision is required for this request.", code: "ui.bank.revision.required" };
-    if (intent.expected_bank_revision !== ui.bank.revision)
+    if (intent.expected_bank_revision !== revision)
       return { message: "The displayed bank changed. Review its current entries and choose again.", code: "ui.bank.revision.stale" };
   }
   switch (intent.kind) {
@@ -254,6 +311,11 @@ export function checkUiIntent(world: WorldView, intent: GameplayUiIntent): UiCon
       if (!menu || menu.id !== intent.menu_id) return stale("That production menu has changed or closed.");
       const choice = menu.recipes.find(row => row.recipe === intent.recipe);
       return denied(intent.mode === "single" ? choice?.single : choice?.makeX, "Production");
+    }
+    case "production_select_all": {
+      const menu = ui.production;
+      if (!menu || menu.id !== intent.menu_id) return stale("That production menu has changed or closed.");
+      return denied(menu.recipes.find(row => row.recipe === intent.recipe)?.all, "Make-All");
     }
     case "ui_dismiss":
       return ui.reward?.id === intent.presentation_id || ui.document?.id === intent.presentation_id
@@ -292,11 +354,47 @@ export function checkUiIntent(world: WorldView, intent: GameplayUiIntent): UiCon
       return denied(ui.bank?.depositEquipment, "Deposit worn items");
     case "bank_set_options":
       if (!Number.isInteger(intent.amount) || intent.amount < 1 || intent.amount > 4294967295)
-        return { message: "A positive bank amount is required; no All sentinel has been published.", code: "ui.bank.amount.unsupported" };
+        return { message: "A legacy bank amount must be a positive literal quantity, never an All sentinel.", code: "ui.bank.amount.unsupported" };
       return ui.bank ? null : stale("The bank is closed.");
+    case "bank_set_amount":
+      return ui.bank?.amountSelection ? null
+        : { message: "The current bank has not supplied semantic quantity/All support.", code: "ui.bank.amount.unsupported" };
     case "bank_set_insert":
     case "bank_set_placeholders":
       return ui.bank ? null : stale("The bank is closed.");
+    case "recovery_take": {
+      const panel = ui.recovery?.management?.panels.find(row =>
+        row.death === intent.death && row.storage === intent.storage);
+      if (!panel || intent.items.length === 0 || new Set(intent.items.map(row => row.id)).size !== intent.items.length)
+        return stale("Those recovery identities changed. Review the current source panel.");
+      for (const selected of intent.items) {
+        const entry = panel.entries.find(row => row.id === selected.id);
+        if (!entry) return stale("That recovery item is not in the current source panel.");
+      }
+      if (intent.items.length === panel.entries.length && intent.items.every(row => row.amount.kind === "all"))
+        return denied(panel.takeAll, "Take-All");
+      for (const selected of intent.items) {
+        const entry = panel.entries.find(row => row.id === selected.id)!;
+        const problem = denied(entry.take, "Retrieve item");
+        if (problem) return problem;
+      }
+      return null;
+    }
+    case "recovery_bank_all": {
+      const management = ui.recovery?.management;
+      if (!management) return stale("The source recovery context has closed.");
+      const permission = denied(management.bankAll, "Bank-All");
+      if (permission) return permission;
+      if (intent.records.length === 0 || new Set(intent.records.map(row => row.death)).size !== intent.records.length)
+        return stale("Those Bank-All records changed. Review the current source selection.");
+      for (const record of intent.records) {
+        const actual = management.bankAllRecords.find(row => row.death === record.death);
+        if (!actual || record.items.length === 0 || new Set(record.items).size !== record.items.length ||
+            record.items.some(id => !actual.items.includes(id)))
+          return stale("Those Bank-All item identities are not in the supplied source selection.");
+      }
+      return null;
+    }
     case "request_recovery_discard": {
       const recovery = world.recovery;
       if (!recovery || recovery.death !== intent.death || recovery.storage !== intent.storage ||

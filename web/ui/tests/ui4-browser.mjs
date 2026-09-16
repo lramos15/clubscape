@@ -241,6 +241,7 @@ try {
     await mount();
     await page.evaluate(async () => {
       const { decodeUiCatalogue } = await import("/web/ui/assets.ts");
+      const { bindUiMinimapProjection, setUiMapIconSprites } = await import("/web/ui/index.ts");
       const c = decodeUiCatalogue(await (await fetch("/assets/ui/manifest.json")).json());
       const element = Object.values(c.mapElements).find(value => value.sprite >= 0 && c.sprites[value.sprite]);
       const sprite = c.sprites[element.sprite], shape = sprite.frames[0];
@@ -258,6 +259,20 @@ try {
         colour: Array.from(pixels.slice(sample * 4, sample * 4 + 4)),
       };
       const w = window.component.services.state().world, f = window.componentMinimap(w, 2);
+      setUiMapIconSprites(window.component.ui, new Map([[element.sourceId, {
+        element: element.sourceId, width: shape.width, height: shape.height,
+        maxWidth: shape.canvasWidth, maxHeight: shape.canvasHeight,
+        offsetX: shape.offsetX, offsetY: shape.offsetY, category: -1,
+        pixels: new ImageData(pixels.slice(), shape.width, shape.height),
+      }]]));
+      bindUiMinimapProjection(window.component.ui, (width, height, scale) => {
+        const x = (width >> 1) + 16 - Math.trunc(shape.canvasWidth / 2);
+        const y = (height >> 1) - 12 - Math.trunc(shape.canvasHeight / 2);
+        return { minimapAngle: 0, scale, missingSprites: 1, icons: [{
+          element: element.sourceId, tileX: w.player.tile.x + 4, tileY: w.player.tile.y + 3,
+          x, y, drawX: x + shape.offsetX, drawY: y + shape.offsetY, dx: 16, dy: 12, clipped: false,
+        }] };
+      });
       f.icons = [{ x: w.player.tile.x + 4, y: w.player.tile.y + 3, plane: w.player.tile.plane, element: element.sourceId },
         { x: w.player.tile.x - 3, y: w.player.tile.y - 4, plane: w.player.tile.plane, element: 999999 }];
       window.setUiMinimap(window.component.ui, f); window.expectedMapElement = element.sourceId;
@@ -270,6 +285,48 @@ try {
       return Array.from(document.querySelector("canvas").getContext("2d").getImageData(sample.x, sample.y, 1, 1).data);
     }), await page.evaluate(() => window.expectedIconPixel.colour));
     await capture("original-map-element-component-icons");
+  });
+  await check("renderer-owned trim positions are used directly, copied sprites stay immutable and masked blits stay inside the source aperture", async () => {
+    await mount();
+    const bounds = await page.locator('[data-ui-control="minimap"]').boundingBox();
+    const pixel = (x, y) => page.evaluate(({ x, y }) => Array.from(document.querySelector("canvas")
+      .getContext("2d").getImageData(x, y, 1, 1).data), { x: Math.floor(bounds.x + x), y: Math.floor(bounds.y + y) });
+    const corner = await pixel(1, 1);
+    await page.evaluate(async () => {
+      const { bindUiMinimapProjection, setUiMapIconSprites } = await import("/web/ui/index.ts");
+      const w = window.component.services.state().world, f = window.componentMinimap(w, 2);
+      const pixels = new ImageData(3, 3);
+      for (let i = 0; i < pixels.data.length; i += 4) pixels.data.set([217, 23, 71, 255], i);
+      const sprite = { element: 777, width: 3, height: 3, maxWidth: 15, maxHeight: 17,
+        offsetX: 5, offsetY: 6, category: -1, pixels };
+      window.suppliedIcon = { element: 777, tileX: w.player.tile.x + 4, tileY: w.player.tile.y + 3,
+        x: 25, y: 34, drawX: 30, drawY: 40, dx: 16, dy: 12, clipped: false };
+      setUiMapIconSprites(window.component.ui, new Map([[777, sprite]]));
+      pixels.data.fill(0);
+      bindUiMinimapProjection(window.component.ui, (_width, _height, scale) => ({
+        minimapAngle: 0, scale, missingSprites: 0, icons: [{ ...window.suppliedIcon }],
+      }));
+      f.icons = [{ x: w.player.tile.x + 4, y: w.player.tile.y + 3, plane: w.player.tile.plane, element: 777 }];
+      window.setUiMinimap(window.component.ui, f);
+    }); await frame();
+    assert.deepEqual(await pixel(30, 40), [217, 23, 71, 255]);
+    await page.evaluate(() => {
+      window.suppliedIcon.clipped = true;
+      window.component.ui.resize(1920, 1080);
+    }); await frame();
+    assert.deepEqual(await pixel(30, 40), [217, 23, 71, 255], "No second sprite trim offset is applied.");
+    await page.evaluate(() => {
+      window.suppliedIcon.drawX = 0; window.suppliedIcon.drawY = 0;
+      window.component.ui.resize(1920, 1080);
+    }); await frame();
+    assert.deepEqual(await pixel(1, 1), corner, "The original aperture clips even a supplied in-widget corner placement.");
+    assert.equal(await page.evaluate(async () => {
+      const { setUiMapIconSprites } = await import("/web/ui/index.ts");
+      try { setUiMapIconSprites(window.component.ui, new Map([[777, {
+        element: 777, width: 3, height: 3, maxWidth: 15, maxHeight: 17,
+        offsetX: 5, offsetY: 6, category: -1, pixels: new ImageData(2, 2),
+      }]])); } catch (error) { return error.errorId; }
+    }), "ui.minimap.sprite");
   });
   assert.deepEqual(errors, []);
 } finally {

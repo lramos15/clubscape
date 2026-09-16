@@ -12,7 +12,7 @@ import { FILTER_OPTIONS, filterOptionEnabled, projectAbilityGrid, projectFilterP
 import type { AbilityVisualTruth } from "./filters.ts";
 import { projectRecovery, recoveryControls, recoveryTemplate } from "./recovery.ts";
 import type { RecoveryDisplay, RecoveryUiCommand } from "./recovery.ts";
-import { formatUiFixed, formatUiInteger, gameplayUi, gameplayUiProblem, permissionReason } from "./gameplay-ui.ts";
+import { bankAmountRequest, bankDefaultAmount, formatUiFixed, formatUiInteger, gameplayUi, gameplayUiProblem, permissionReason } from "./gameplay-ui.ts";
 import { productionChoiceLabel, productionSource, projectProduction } from "./production.ts";
 import { deathPreviewDetails, projectDeathPreview } from "./death-preview.ts";
 import { projectQuestReward, rewardDetails } from "./rewards.ts";
@@ -208,12 +208,31 @@ export function paintGame(raster: SourceRaster, ui: GameViewContext): void {
   if (settingsProjection) local.settings.scroll = settingsProjection.scroll;
   const recoveryOpen = world.recovery !== null && (!authoritative || ["interface.grave", "interface.death_retrieval"].includes(authoritative.activeInterface ?? ""));
   if (recoveryOpen) modal = world.recovery!.storage === "grave" ? "grave" : "recovery";
+  const management = authoritative?.recovery?.management;
+  const recoveryPanel = management?.panels.find(panel =>
+    panel.death === world.recovery?.death && panel.storage === world.recovery?.storage);
   const discardReason = permissionReason(authoritative?.recovery?.discard, "Discard recovery items");
+  const bankAllReason = permissionReason(management?.bankAll, "Bank-All");
+  const takeAllReason = permissionReason(recoveryPanel?.takeAll, "Take-All");
   const recovery: RecoveryDisplay | null = recoveryOpen ? {
     storage: world.recovery!.storage,
-    items: world.recovery!.items.map((row, slot) => ({ id: row.id, slot, item: row.item, allowed: null, reason: null })),
+    items: world.recovery!.items.map((row, slot) => {
+      const entry = recoveryPanel?.entries.find(entry => entry.id === row.id);
+      return entry ? {
+        id: entry.id, slot, item: entry.item, allowed: entry.take.allowed,
+        reason: permissionReason(entry.take, "Retrieve item") ?? null,
+        unitFee: entry.unitFee, fullStackFee: entry.fullStackFee,
+        inventoryCapacity: entry.inventoryCapacity, bankCapacity: entry.bankCapacity,
+      } : { id: row.id, slot, item: row.item, allowed: null, reason: null };
+    }),
     selectedId: world.recovery!.items.some(row => row.id === local.recoverySelected) ? local.recoverySelected : null,
-    coffer: authoritative?.recovery?.cofferBalance ?? null, unitFee: null, capacity: null, bankAll: false,
+    coffer: authoritative?.recovery?.cofferBalance ?? null, unitFee: null, capacity: null,
+    bankAll: management?.bankAll.allowed ?? false,
+    ...(bankAllReason ? { bankAllReason } : {}),
+    ...(recoveryPanel ? {
+      takeAll: recoveryPanel.takeAll.allowed, ...(takeAllReason ? { takeAllReason } : {}),
+      fullSelectionFee: recoveryPanel.fullSelectionFee,
+    } : {}),
     discardAll: authoritative?.recovery?.discard.allowed ?? false,
     ...(discardReason ? { discardReason } : {}),
     scroll: local.scroll,
@@ -512,20 +531,23 @@ export function paintGame(raster: SourceRaster, ui: GameViewContext): void {
       if (recipe && widget.index === -1) {
         const verb = productionChoiceLabel(productionProjection.widgets, widget.id);
         const singleReason = permissionReason(recipe.single, recipe.name), manyReason = permissionReason(recipe.makeX, recipe.name);
+        const allReason = permissionReason(recipe.all, "Make-All");
         const make = (quantity: number, mode: "single" | "make_x") =>
           ui.sendUi({ kind: "production_select", menu_id: production.id, recipe: recipe.recipe, quantity, mode });
         const multiple = (quantity: number) => make(quantity, "make_x");
+        const all = () => ui.sendUi({ kind: "production_select_all", menu_id: production.id, recipe: recipe.recipe });
         const output = recipe.outputs.map(item => `${item.quantity.toLocaleString("en-US")} x ${item.name}`).join("\n");
-        const defaultMany = local.productionAmount !== 1;
+        const defaultReason = local.productionAmount === "all" ? allReason : local.productionAmount !== 1 ? manyReason : singleReason;
         const actions: UiAction[] = [{ label: `${verb} ${escapeText(recipe.name)}`,
-          run: () => local.productionAmount === "x" ? ui.prompt(`${verb} how many?`, multiple)
+          run: () => local.productionAmount === "all" ? all() : local.productionAmount === "x" ? ui.prompt(`${verb} how many?`, multiple)
             : make(local.productionAmount, local.productionAmount === 1 ? "single" : "make_x"),
-          ...((defaultMany ? manyReason : singleReason) ? { disabled: (defaultMany ? manyReason : singleReason)! } : {}) },
+          ...(defaultReason ? { disabled: defaultReason } : {}) },
         { label: `${verb}-1 ${escapeText(recipe.name)}`, run: () => make(1, "single"), ...(singleReason ? { disabled: singleReason } : {}) },
         ...[5, 10].map(quantity => ({ label: `${verb}-${quantity} ${escapeText(recipe.name)}`, run: () => multiple(quantity),
           ...(manyReason ? { disabled: manyReason } : {}) })),
         { label: `${verb}-X ${escapeText(recipe.name)}`, run: () => ui.prompt(`${verb} how many?`, multiple),
           ...(manyReason ? { disabled: manyReason } : {}) },
+        { label: `${verb}-All ${escapeText(recipe.name)}`, run: all, ...(allReason ? { disabled: allReason } : {}) },
         { label: "View outputs", run: () => ui.notice(output || "The projection supplies no item outputs.") }];
         const order = [...productionProjection.choices.keys()].indexOf(widget.id);
         const shortcut = group === 270 ? ["space", "2", "3", "4", "5", "6", "7", "8", "9", "0", "a", "b", "c", "d", "e", "f", "g", "h"][order] : undefined;
@@ -533,18 +555,16 @@ export function paintGame(raster: SourceRaster, ui: GameViewContext): void {
           { productionRecipe: recipe.recipe, tooltip: `${recipe.name}${output ? "\n" + output : ""}${singleReason ? "\n" + singleReason : ""}`,
             ...(shortcut ? { shortcut } : {}) });
       } else if (widget.index === -1 && group === 270 && [7, 8, 9, 11, 12].includes(child)) {
-        const amount = child === 7 ? 1 : child === 8 ? 5 : child === 9 ? 10 : "x";
+        const amount = child === 12 ? "all" : child === 7 ? 1 : child === 8 ? 5 : child === 9 ? 10 : "x";
         const label = child === 12 ? "All" : String(amount).toUpperCase();
         register(widget, `production-amount-${label}`, `Production quantity ${label}`, [{
-          label: `Quantity: ${label}`, run: () => child === 12
-            ? ui.required("Make-All", "production_all_quantity_encoding")
-            : ui.change(() => { local.productionAmount = amount; }),
-        }], { pressed: child !== 12 && local.productionAmount === amount });
+          label: `Quantity: ${label}`, run: () => ui.change(() => { local.productionAmount = amount; }),
+        }], { pressed: local.productionAmount === amount });
       } else if (widget.index === -1 && group === 312 && child === 7) {
         register(widget, "production-quantity", "Production quantity", [
           ...[1, 5, 10].map(amount => ({ label: `Quantity: ${amount}`, run: () => ui.change(() => { local.productionAmount = amount; }) })),
           { label: "Quantity: X", run: () => ui.change(() => { local.productionAmount = "x"; }) },
-          { label: "Quantity: All", run: () => ui.required("Make-All", "production_all_quantity_encoding") },
+          { label: "Quantity: All", run: () => ui.change(() => { local.productionAmount = "all"; }) },
         ]);
       } else if (widget.index === -1 && group === 312 && op) {
         register(widget, `production-source-${child}`, label, [{ label: `${op} ${escapeText(label)}`,
@@ -657,10 +677,10 @@ export function paintGame(raster: SourceRaster, ui: GameViewContext): void {
           if (child === 10) return;
           const reason = child === 49 ? permissionReason(bankView.depositEquipment, "Deposit worn items") : undefined;
           register(widget, `bank-control-${child}-${widget.index}`, op, [{ label: op, run: () => {
-            if (child === 25) ui.sendUi({ kind: "bank_set_options", amount: bankView.amount, noted: !bankView.noted });
-            else if ([29, 31, 33].includes(child)) ui.sendUi({ kind: "bank_set_options", amount: child === 29 ? 1 : child === 31 ? 5 : 10, noted: bankView.noted });
-            else if (child === 35) ui.prompt("Set custom quantity:", amount => ui.sendUi({ kind: "bank_set_options", amount, noted: bankView.noted }));
-            else if (child === 37) ui.required("All as a persistent bank default", "bank_amount_all_encoding");
+            if (child === 25) ui.sendUi(bankAmountRequest(bankView, bankView.amountSelection ?? { kind: "quantity", quantity: bankView.amount }, !bankView.noted));
+            else if ([29, 31, 33].includes(child)) ui.sendUi(bankAmountRequest(bankView, { kind: "quantity", quantity: child === 29 ? 1 : child === 31 ? 5 : 10 }));
+            else if (child === 35) ui.prompt("Set custom quantity:", quantity => ui.sendUi(bankAmountRequest(bankView, { kind: "quantity", quantity })));
+            else if (child === 37) ui.sendUi(bankAmountRequest(bankView, { kind: "all" }));
             else if (child === 42) ui.change(() => { local.bankSearchOpen = !local.bankSearchOpen; });
             else if (child === 47) ui.depositAll();
             else if (child === 49) ui.sendUi({ kind: "bank_deposit_equipment" });
@@ -1038,7 +1058,7 @@ export function paintGame(raster: SourceRaster, ui: GameViewContext): void {
       if (bankView && child === 24) widget.sprite = bankView.insertMode ? 2820 : 2821;
       if (bankView && child === 40) widget.sprite = bankView.placeholders ? 179 : 170;
       if ([29, 31, 33, 35, 37].includes(child)) {
-        const amount = bankView ? bankView.amount : local.bankAmount;
+        const amount = bankView ? bankDefaultAmount(bankView) : local.bankAmount;
         const selected = child === 29 ? amount === 1 : child === 31 ? amount === 5 : child === 33 ? amount === 10
           : child === 37 ? amount === "all" : typeof amount === "number" && ![1, 5, 10].includes(amount);
         widget.sprite = selected ? 179 : 170;
@@ -1270,15 +1290,26 @@ export function paintGame(raster: SourceRaster, ui: GameViewContext): void {
       else if (command.kind === "examine") {
         const item = snapshot.items.find(row => row.id === command.id)?.item;
         if (item) ui.notice(item.sourceId === null ? item.name : catalogue.items[item.sourceId]?.examine || item.name);
-      } else if (command.kind === "take_all") ui.send({ kind: "reclaim", death: snapshot.death, storage: snapshot.storage, items: snapshot.items.map(row => row.id) });
+      } else if (command.kind === "take_all") {
+        if (recoveryPanel) ui.sendUi({ kind: "recovery_take", death: recoveryPanel.death, storage: recoveryPanel.storage,
+          items: recoveryPanel.entries.map(row => ({ id: row.id, amount: { kind: "all" } })) });
+        else ui.send({ kind: "reclaim", death: snapshot.death, storage: snapshot.storage, items: snapshot.items.map(row => row.id) });
+      }
       else if (command.kind === "discard_all") ui.sendUi({ kind: "request_recovery_discard",
         death: snapshot.death, storage: snapshot.storage, items: snapshot.items.map(row => row.id) });
       else if (command.kind === "retrieve") {
         const item = snapshot.items.find(row => row.id === command.id);
-        if (item && (command.amount === "all" || typeof command.amount === "number" && command.amount >= item.item.quantity))
+        if (recoveryPanel) {
+          const take = (amount: import("../shared/contracts.ts").UiAmount) => ui.sendUi({
+            kind: "recovery_take", death: recoveryPanel.death, storage: recoveryPanel.storage, items: [{ id: command.id, amount }],
+          });
+          if (command.amount === "x") ui.prompt("Retrieve how many?", quantity => take({ kind: "quantity", quantity }));
+          else take(command.amount === "all" ? { kind: "all" } : { kind: "quantity", quantity: command.amount });
+        } else if (item && (command.amount === "all" || typeof command.amount === "number" && command.amount >= item.item.quantity))
           ui.send({ kind: "reclaim", death: snapshot.death, storage: snapshot.storage, items: [command.id] });
         else ui.required("Partial-quantity retrieval", "reclaim_quantity");
-      } else ui.required("Bank-All", "recovery_bank_all");
+      } else if (management) ui.sendUi({ kind: "recovery_bank_all", records: structuredClone(management.bankAllRecords) });
+      else ui.required("Bank-All", "recovery_bank_all");
     };
     controls.push(...recoveryControls(widgets, width, height, recovery, dispatch));
   }

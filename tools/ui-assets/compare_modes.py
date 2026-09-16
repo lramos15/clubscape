@@ -17,9 +17,12 @@ def main():
     parser.add_argument("--music-ui", action="store_true", help="Compare original music mode/list widgets, not audio outcomes")
     parser.add_argument("--bounded-ui", action="store_true", help="Compare the owner-bounded independent native UI states")
     parser.add_argument("--documents", action="store_true", help="Compare original UI4 book/map widget and model fixtures")
+    parser.add_argument("--results", default="web/ui/test-results", help="Owned candidate capture directory")
     args = parser.parse_args()
     results = []
-    directory = ROOT / "web/ui/test-results"
+    directory = (ROOT / args.results).resolve()
+    if not directory.is_relative_to(ROOT):
+        raise ValueError("UI comparison evidence must stay in the current worktree")
     lanes = [
         ("flames", ROOT / "tools/ui-assets/.cache/native/flames", "*.png"),
         ("modes", ROOT / "tools/ui-assets/.cache/native/ui-only", "native-*.png"),
