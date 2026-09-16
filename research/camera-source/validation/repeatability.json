@@ -1,0 +1,9 @@
+{
+  "result": "passed",
+  "byte_identical_scenarios": 14,
+  "byte_identical_native_states": 354,
+  "source_script_discovery_outputs_identical": 2,
+  "nondeterministic_log_timing_or_addresses_not_compared": true,
+  "original_camera_algorithms_executed": true,
+  "original_account_or_network_pump_used": false
+}

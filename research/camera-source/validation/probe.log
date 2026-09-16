@@ -1,0 +1,14 @@
+{"scenario":"initial","states":2,"trace":{"path":"research/camera-source/traces/initial.json","size_bytes":11052,"sha256":"3005124064d8bcaba6c7733e374409c904f80ebc3b170d2b57f39d3bc79ee314"}}
+{"scenario":"keyboard","states":42,"trace":{"path":"research/camera-source/traces/keyboard.json","size_bytes":134569,"sha256":"46271de198f81195ff195711a5fcddbbfb2c280e10f60ccba5f90b5a80b934a6"}}
+{"scenario":"clamps","states":181,"trace":{"path":"research/camera-source/traces/clamps.json","size_bytes":558630,"sha256":"e768189aa9177922aa688ae8480022b1946f78416ebd0b914d5081748e842809"}}
+{"scenario":"mouse","states":16,"trace":{"path":"research/camera-source/traces/mouse.json","size_bytes":54269,"sha256":"1defa7fb4bf05cb1a649e319e4fa0a025a52dc492ccdde68af7154b0823715dc"}}
+{"scenario":"follow","states":20,"trace":{"path":"research/camera-source/traces/follow.json","size_bytes":65617,"sha256":"79d253cbbac585b6c6439903cb3bb49712eb6c648db7ce52181415fd28fae489"}}
+{"scenario":"follow-threshold","states":6,"trace":{"path":"research/camera-source/traces/follow-threshold.json","size_bytes":23157,"sha256":"2f4623c17f28274f3f4839048d08c62bd02a9575acd6f4ade937254d7497fe07"}}
+{"scenario":"frame-rates","states":5,"trace":{"path":"research/camera-source/traces/frame-rates.json","size_bytes":20259,"sha256":"d701138dbab5c20259d54a0ef87d510006f73722b356821f7587a940b7f2ed2e"}}
+{"scenario":"resize","states":6,"trace":{"path":"research/camera-source/traces/resize.json","size_bytes":23152,"sha256":"eede69eb48b64e83d65b62a3c45444f948cc848ffc72031ddd73a994e089ef0a"}}
+{"scenario":"terrain","states":22,"trace":{"path":"research/camera-source/traces/terrain.json","size_bytes":71608,"sha256":"4cbf25e71adbe69382b6ee32d13d016d2abf45aa523c0d80bfe1a2574645ab91"}}
+{"scenario":"wheel","states":22,"trace":{"path":"research/camera-source/traces/wheel.json","size_bytes":83465,"sha256":"e218a06efe919807fac905b535c31be25b3af1d5f6158c68d2c0ed6d1f0ae065"}}
+{"scenario":"orbit","states":22,"trace":{"path":"research/camera-source/traces/orbit.json","size_bytes":72193,"sha256":"9db271a87fd3c6904f491717a6e945b3757f8f8759691bb51793b8c4b722f4d8"}}
+{"scenario":"region-shift","states":5,"trace":{"path":"research/camera-source/traces/region-shift.json","size_bytes":15971,"sha256":"dd9bc3806e16a825d58dde37ed4d86690b579a9c6f15ef5a0627654480616e7e"}}
+{"scenario":"zoom-separation","states":4,"trace":{"path":"research/camera-source/traces/zoom-separation.json","size_bytes":17128,"sha256":"3acd8a7e23ba608f328a4d9e71b091ae964387b77404b8a79685ce8c15bf36b1"}}
+{"scenario":"script-init-scan","states":1,"trace":{"path":"research/camera-source/traces/script-init-scan.json","size_bytes":8088,"sha256":"736a2c4315e86d4b046c5f2b8c3c8c8b30d0faebde92b28acc6b86d58d858d7a"}}

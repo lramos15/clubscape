@@ -1,0 +1,159 @@
+{
+  "schema_version": 1,
+  "source_method_inventory": {
+    "path": "research/camera-source/native-methods.json.gz",
+    "size_bytes": 30241,
+    "sha256": "d94d1778f0fe4773c713daadf84156f1398010d6f4bf437be8831660bb60fb48"
+  },
+  "method_identities": [
+    {
+      "owner": "tq",
+      "signature": "public void run();",
+      "class_sha256": "847b97e3ab7d942081fd90554f4f06d3bf9d8a6241d08a4cb5b0cf1fe4a5c116",
+      "javap_sha256": "67eaefa896d7f17b904b9fc18c31ee1dfa5ba04cd9d5e02999dae448bb9ba504"
+    },
+    {
+      "owner": "client",
+      "signature": "public void ds(boolean);",
+      "class_sha256": "64572a858d28474c74964ecc820eeacb035986ab5b3749b074c04bb7c95d14c6",
+      "javap_sha256": "7ff24b92e0b4a29b9afc7eb2691f12fc243d8e6c9b3a5d80fe9fa832740e827b"
+    },
+    {
+      "owner": "client",
+      "signature": "public void ft(long);",
+      "class_sha256": "64572a858d28474c74964ecc820eeacb035986ab5b3749b074c04bb7c95d14c6",
+      "javap_sha256": "6dbad535bc505f26705e66d8d3a3a852ecfd26b1bc2f765b9ef51adfd596e4b4"
+    },
+    {
+      "owner": "client",
+      "signature": "public void dq(long);",
+      "class_sha256": "64572a858d28474c74964ecc820eeacb035986ab5b3749b074c04bb7c95d14c6",
+      "javap_sha256": "8cff114596471e44456771d0b77744d9ac3bc47d08e03015257d3cba78fa485c"
+    },
+    {
+      "owner": "client",
+      "signature": "public static float rn(int, long);",
+      "class_sha256": "64572a858d28474c74964ecc820eeacb035986ab5b3749b074c04bb7c95d14c6",
+      "javap_sha256": "d10aa01d9f5484a0e539e8dfd12cb7487b6502d66f164df80d664281a5c9fb6f"
+    },
+    {
+      "owner": "client",
+      "signature": "public static void tz();",
+      "class_sha256": "64572a858d28474c74964ecc820eeacb035986ab5b3749b074c04bb7c95d14c6",
+      "javap_sha256": "8971b5995b85e8c63c84de0b191d06820eb0e83789733c13f21b9335aff5ec55"
+    },
+    {
+      "owner": "client",
+      "signature": "public static float fa(dz, float, float, int, int);",
+      "class_sha256": "64572a858d28474c74964ecc820eeacb035986ab5b3749b074c04bb7c95d14c6",
+      "javap_sha256": "4ce8ce855c184b03ec5b9c35dd05f3ac6b7e8fbb92e03a1e2e8367708b95fe01"
+    },
+    {
+      "owner": "client",
+      "signature": "public static float yq(dz, float, float, int);",
+      "class_sha256": "64572a858d28474c74964ecc820eeacb035986ab5b3749b074c04bb7c95d14c6",
+      "javap_sha256": "4a7e21d4793f45fc333e8303ff1b41fbcd8b8a5ce01280e45e79246042688429"
+    },
+    {
+      "owner": "client",
+      "signature": "public static void yk(rl4);",
+      "class_sha256": "64572a858d28474c74964ecc820eeacb035986ab5b3749b074c04bb7c95d14c6",
+      "javap_sha256": "1693f6dc8b01c967cea0a4e339263d05f1247d7a5e27d2552925bdf25ec4d750"
+    },
+    {
+      "owner": "client",
+      "signature": "public static void vx(int);",
+      "class_sha256": "64572a858d28474c74964ecc820eeacb035986ab5b3749b074c04bb7c95d14c6",
+      "javap_sha256": "2a6b9a63bb35365cbf5863f449a124585da5f0d3ce02981186cdbba242f1a136"
+    },
+    {
+      "owner": "client",
+      "signature": "public static void bg(int);",
+      "class_sha256": "64572a858d28474c74964ecc820eeacb035986ab5b3749b074c04bb7c95d14c6",
+      "javap_sha256": "7b616ebfaea63a264e98b29c07365adf4b8c4d8942f29f110a764c694f8f5b05"
+    },
+    {
+      "owner": "client",
+      "signature": "public static void fk(int);",
+      "class_sha256": "64572a858d28474c74964ecc820eeacb035986ab5b3749b074c04bb7c95d14c6",
+      "javap_sha256": "588e41ddec0a0ca5ea40139a3985d17bd61e841855ed65ea55b87822c5d4fe20"
+    },
+    {
+      "owner": "client",
+      "signature": "public static void pm(int);",
+      "class_sha256": "64572a858d28474c74964ecc820eeacb035986ab5b3749b074c04bb7c95d14c6",
+      "javap_sha256": "4fc3064a7464687f8f944be0e5d833f11a56d2db971ef955d2dd9f7f08267768"
+    },
+    {
+      "owner": "zj",
+      "signature": "static final void be(int);",
+      "class_sha256": "4ca5a94f0fb35ba7c6ccd674b19c09516f3fd8af8c23c76786ff63246e09cc03",
+      "javap_sha256": "7a3763de6bf89f4c04d6103a1ae7fa7f4c962808f854915506ac1e723c2ed8f5"
+    },
+    {
+      "owner": "tc",
+      "signature": "public synchronized void mouseWheelMoved(java.awt.event.MouseWheelEvent);",
+      "class_sha256": "b73161f4ebc9b0ca4b03130e201aa15cee2b28ca08d47390e2065b7f3c8bef12",
+      "javap_sha256": "157eeaffc5d6d9daf954bc786a89c7169878d81809e805040aa43587d284b2a1"
+    },
+    {
+      "owner": "tc",
+      "signature": "public synchronized int az(int);",
+      "class_sha256": "b73161f4ebc9b0ca4b03130e201aa15cee2b28ca08d47390e2065b7f3c8bef12",
+      "javap_sha256": "70ceb6cb7bf912698832d30390e5f43cfd299e97e9d7db69abf4ef5b27e4bb01"
+    },
+    {
+      "owner": "eg",
+      "signature": "public static int ax(int, byte);",
+      "class_sha256": "ac3d75b9e3ef4e280c42c8dc5805ace7c39c490a3a9f770a3ec8ac54a935ce93",
+      "javap_sha256": "4ccecc9ef0a8379005d590181c213ee5fa21b3e267683c03451a480232418b63"
+    },
+    {
+      "owner": "kc",
+      "signature": "static final int bk(int, int);",
+      "class_sha256": "661ec7070f203e1f79d67b57b8766e579fbe64254b5d1db3f236fa5bfa19c449",
+      "javap_sha256": "5b5659cec46915322203f86755b470304b222a41b232ed5c506fced0b2037e97"
+    },
+    {
+      "owner": "ez",
+      "signature": "public static int ax(boolean);",
+      "class_sha256": "28583af7820431969b78ff98d1042518f51dccc3dd6b74d9190bf3a0cc183a19",
+      "javap_sha256": "6101e37b44ae85bdf452beb87c1283693a1b7fed2629132089f7f52278947e23"
+    },
+    {
+      "owner": "ez",
+      "signature": "public static int ac(boolean);",
+      "class_sha256": "28583af7820431969b78ff98d1042518f51dccc3dd6b74d9190bf3a0cc183a19",
+      "javap_sha256": "2fe5efea17f71dbaea994a9a265a0189edb1387336797828183f9514078a0c1a"
+    },
+    {
+      "owner": "rl",
+      "signature": "static final void cu(int, int, int, int, boolean, int);",
+      "class_sha256": "7166ffbf0d7e2cb08b29e3189f3fa008e753a77db82560b44556080facb17b97",
+      "javap_sha256": "1d73750f963754a96e45e4f33d26903d21affe3d470adf3f90deb4784775b100"
+    },
+    {
+      "owner": "lo",
+      "signature": "static int bv(int, bl, boolean, int);",
+      "class_sha256": "30929546f36f240e8217ad9339aa5795ed5a6bb54ccc325da0c1dd07c4d6374e",
+      "javap_sha256": "d3f2b965b994499e0f4bf23dbeff227d739606110c0aff5ba8284528268c91f5"
+    }
+  ],
+  "script_inventory": "traces/wheel.json#camera_script_evidence",
+  "original_camera_bound_writer_scan": "traces/camera-script-initializers.json",
+  "short_original_script_payloads": "traces/short-script-inputs.json",
+  "source_paths": {
+    "fixed_logic": "tq.run -> client cycle -> zj.be(1161256214)",
+    "render_frame": "client.ds -> client.ft/dq, then original cz.az/ez.dh/client.tz rendering",
+    "wheel": "tc -> pq.as/ad -> original root161:1 listener39 ->42",
+    "rebase": "client.yk(rl4)"
+  },
+  "qualifications": [
+    "Uncalled mr/mx/na camera aliases contain incorrect obfuscator arithmetic; the live zj.be caller is used.",
+    "Original RuneLite source hooks override integer focal writes with float frame state in normal mode. Both phases must be driven and preserved.",
+    "Controlled actor logical/render coordinates are input fixtures, not a player movement implementation.",
+    "Original native follow offset constructor50 differs from partial helper UI state25.",
+    "Source scripts603/604 accept external configuration arguments. A source-coded626 preset is not proof of authenticated startup execution."
+  ],
+  "source_gameplay_or_initial_account_camera_observed": false
+}
