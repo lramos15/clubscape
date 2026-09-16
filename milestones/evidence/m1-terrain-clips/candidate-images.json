@@ -1,0 +1,943 @@
+{
+  "execution_root": ".worktrees/m1-terrain-inputs",
+  "capture_root": ".local/evidence/terrain-browser",
+  "raw_report_sha256": "fa89305d72465d436ec76b5ee03c41da15dfc80623e6b24d7f299d51fb560162",
+  "images": [
+    {
+      "path": "lumbridge-castle-plaza-1024x768.png",
+      "bytes": 614557,
+      "sha256": "82099080b1191cdafd03460807758cf826464da23cc835c8e77a0d86002e04f1",
+      "size": [
+        1024,
+        768
+      ]
+    },
+    {
+      "path": "lumbridge-castle-plaza-1280x720.png",
+      "bytes": 685812,
+      "sha256": "ff755c2fd59eace75e35d088fbc46b3b5303995cd2061afaa329705fa5d1f86e",
+      "size": [
+        1280,
+        720
+      ]
+    },
+    {
+      "path": "lumbridge-castle-plaza-2560x1440.png",
+      "bytes": 2192159,
+      "sha256": "4740b36f01237133965dfe937ea2c8e0ddd25ae7642cce0e7f5089756f5f244f",
+      "size": [
+        2560,
+        1440
+      ]
+    },
+    {
+      "path": "lumbridge-castle-plaza.png",
+      "bytes": 1364078,
+      "sha256": "33540a58564906086b6376e6fabf8feed30c4d9a47f76e5f06f87717d02b6e6d",
+      "size": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "path": "lumbridge-river-bridge.png",
+      "bytes": 1449604,
+      "sha256": "2e469292588703d0635e84437b79ba9baeda3a52ad3e2db0828e95ea3c17eb70",
+      "size": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "path": "lumbridge-windmill-route.png",
+      "bytes": 935609,
+      "sha256": "468075ca08fb662441f36aa6c85c2a104e861b995a37a61790083033f11ef46b",
+      "size": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "path": "models/npc-2063-sequence-5666-frame-0.png",
+      "bytes": 21593,
+      "sha256": "7b68eb5ec500b73e1a08046223c1d4c2db855bb60bcfe87b9a60d325b84a40e5",
+      "size": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "path": "models/npc-2063-sequence-5666-frame-1.png",
+      "bytes": 22439,
+      "sha256": "8da56aba714e15be7fad2f6a2c0ec9ad8901272b9990dcc6aef372d46cac9c62",
+      "size": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "path": "models/npc-2063-sequence-5666-frame-2.png",
+      "bytes": 21405,
+      "sha256": "9df1dcec33d72939721ec9d06a0a4ed92e92b0eb2b03985c096a8ee3f040d3fb",
+      "size": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "path": "models/npc-2063-sequence-5666-frame-3.png",
+      "bytes": 20710,
+      "sha256": "e9846ffab5a9f19a52c1ae87b8a393aa4ec0fc5a5bbeee9a294966d691bc195b",
+      "size": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "path": "models/npc-2063-sequence-5666-frame-4.png",
+      "bytes": 19642,
+      "sha256": "ae4358d5738d71bff9c71d69ceca400fcffdc7d72ea91026356e9de5110c9e9f",
+      "size": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "path": "models/npc-2063-sequence-5666-frame-5.png",
+      "bytes": 20993,
+      "sha256": "6331b87a26f03d990f622f84eef481519684223ed358be63c3e8a5a6a484816f",
+      "size": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "path": "models/npc-2063-sequence-5666-frame-6.png",
+      "bytes": 20896,
+      "sha256": "6d3ad9e5ba1f46a1dcceb05eb65e4d0ad646f9185ca11eaa20bc099fd9cae4f5",
+      "size": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "path": "models/npc-2063-sequence-5666-frame-7.png",
+      "bytes": 21690,
+      "sha256": "12f7ac34aa426d6344b179033e28ddde20e7f23d050e143543c515602106585f",
+      "size": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "path": "models/npc-2063-sequence-5668-frame-0.png",
+      "bytes": 21046,
+      "sha256": "2efbb2aae531c90a53ef029f07634ba9090e8da0bfd21049aeee5705bf5e0934",
+      "size": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "path": "models/npc-2063-sequence-5668-frame-1.png",
+      "bytes": 20674,
+      "sha256": "98468a92dbeadf157c72ffb4c061771e99a1f4a6d83d08ec35c598a805f63ec0",
+      "size": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "path": "models/npc-2063-sequence-5668-frame-10.png",
+      "bytes": 21342,
+      "sha256": "9376b3d8c1f9447cb32c512ee43b2f38d98a0f4fa6fe7629e1825ec687feae2b",
+      "size": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "path": "models/npc-2063-sequence-5668-frame-11.png",
+      "bytes": 21074,
+      "sha256": "55a266c18058c72923b58af8795c7f6096e40f15a8b2e12e3bd9f9772904402d",
+      "size": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "path": "models/npc-2063-sequence-5668-frame-12.png",
+      "bytes": 20854,
+      "sha256": "63358b783b2993144e78e37926ad45dc16830d4f380ae6dc6430763f5511d937",
+      "size": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "path": "models/npc-2063-sequence-5668-frame-13.png",
+      "bytes": 21028,
+      "sha256": "3d5c6b386ac37c3e42f189d5747cc20c2e4a354db784954ab50289ed5e80b3b3",
+      "size": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "path": "models/npc-2063-sequence-5668-frame-2.png",
+      "bytes": 21028,
+      "sha256": "3d5c6b386ac37c3e42f189d5747cc20c2e4a354db784954ab50289ed5e80b3b3",
+      "size": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "path": "models/npc-2063-sequence-5668-frame-3.png",
+      "bytes": 20854,
+      "sha256": "63358b783b2993144e78e37926ad45dc16830d4f380ae6dc6430763f5511d937",
+      "size": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "path": "models/npc-2063-sequence-5668-frame-4.png",
+      "bytes": 21074,
+      "sha256": "55a266c18058c72923b58af8795c7f6096e40f15a8b2e12e3bd9f9772904402d",
+      "size": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "path": "models/npc-2063-sequence-5668-frame-5.png",
+      "bytes": 21253,
+      "sha256": "5e37ba23f94775c032513b2e2988a673cf739869161e91393e03fb32138f3af6",
+      "size": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "path": "models/npc-2063-sequence-5668-frame-6.png",
+      "bytes": 21342,
+      "sha256": "9376b3d8c1f9447cb32c512ee43b2f38d98a0f4fa6fe7629e1825ec687feae2b",
+      "size": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "path": "models/npc-2063-sequence-5668-frame-7.png",
+      "bytes": 21097,
+      "sha256": "2fc0026b39a48e10c357e872ab77c6876aa2023126ba37f1dea611068d01aeea",
+      "size": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "path": "models/npc-2063-sequence-5668-frame-8.png",
+      "bytes": 21443,
+      "sha256": "2e4af40eff28da0177cc015070c0029590d8872dfb4f1b6166ad86c75dc96d51",
+      "size": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "path": "models/npc-2063-sequence-5668-frame-9.png",
+      "bytes": 21097,
+      "sha256": "2fc0026b39a48e10c357e872ab77c6876aa2023126ba37f1dea611068d01aeea",
+      "size": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "path": "models/npc-3028-sequence-6180-frame-0.png",
+      "bytes": 26259,
+      "sha256": "dd4d61b593d18716c5924505cd0db05d522057f6874a2676c655adda55428561",
+      "size": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "path": "models/npc-3028-sequence-6180-frame-1.png",
+      "bytes": 25812,
+      "sha256": "c7bfccc62452e8e50be79da1e1823f9c15944ee8e0a8df36181f20c5819591ec",
+      "size": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "path": "models/npc-3028-sequence-6180-frame-10.png",
+      "bytes": 26879,
+      "sha256": "ae27a8b31ba8d2eeeb9bfc730b18b3652195acfb160d51dfcc929d7e668c08d2",
+      "size": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "path": "models/npc-3028-sequence-6180-frame-11.png",
+      "bytes": 27217,
+      "sha256": "36fded96cea4fc81c10a755d7edffc46b0136d0840f7b4f008ba0aa38bf4f023",
+      "size": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "path": "models/npc-3028-sequence-6180-frame-12.png",
+      "bytes": 27623,
+      "sha256": "a682e0152aae3e4b96626dc818890f96836a169a708bd7efe4bd0e40f5002765",
+      "size": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "path": "models/npc-3028-sequence-6180-frame-13.png",
+      "bytes": 28441,
+      "sha256": "7cd6dc0b74bd0c819dc44449b5e0077dc2dbe4c342ce93a80b2c1abdf59e7fd9",
+      "size": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "path": "models/npc-3028-sequence-6180-frame-14.png",
+      "bytes": 27764,
+      "sha256": "7794ff84e259cd783d257938234abd129f7157b7b1341dc02562869c3644a515",
+      "size": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "path": "models/npc-3028-sequence-6180-frame-15.png",
+      "bytes": 26777,
+      "sha256": "52c3dada116d0e87059551991e3fddd90b8b4e2ab8998c2a406c87c77d5ae8d3",
+      "size": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "path": "models/npc-3028-sequence-6180-frame-2.png",
+      "bytes": 25337,
+      "sha256": "742ab101d2ad0a06f007429ab7aebe4a063ca767a702e7f436b51fb508b23be7",
+      "size": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "path": "models/npc-3028-sequence-6180-frame-3.png",
+      "bytes": 25168,
+      "sha256": "b04b5e001f5bad07e5f75ecfec4a45d48b57e5d1be11bcc3ebfdc99c575288c5",
+      "size": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "path": "models/npc-3028-sequence-6180-frame-4.png",
+      "bytes": 25312,
+      "sha256": "5762d99bd69c207b6bafcd4f2f0d6e410ab6df4c040cd56f4960849560b4fba2",
+      "size": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "path": "models/npc-3028-sequence-6180-frame-5.png",
+      "bytes": 25606,
+      "sha256": "bd74f43d15218bb4013e2ec656a7a22adf26734621d8967a04a5d269a9f4e836",
+      "size": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "path": "models/npc-3028-sequence-6180-frame-6.png",
+      "bytes": 25914,
+      "sha256": "7ba7a8c0049a6b8e3b3f735182e03eccbf943c407b79c785e44ecc9a00717890",
+      "size": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "path": "models/npc-3028-sequence-6180-frame-7.png",
+      "bytes": 26278,
+      "sha256": "91f9f38e2a8cadc5bfa4150465e1ae8c1409db5b8cbb15f5e50d17087396f557",
+      "size": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "path": "models/npc-3028-sequence-6180-frame-8.png",
+      "bytes": 26545,
+      "sha256": "c0be0e958008c4d0eae7cd02697a7e7bacb3c9907e7c3afee54b9490ce757802",
+      "size": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "path": "models/npc-3028-sequence-6180-frame-9.png",
+      "bytes": 25982,
+      "sha256": "3c3ff7a39bf7ae4aa984b0e1e9e175d6ca08710a20f6415d43eb4f6bc43d2d1f",
+      "size": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "path": "models/npc-3028-sequence-6181-frame-0.png",
+      "bytes": 28115,
+      "sha256": "87dfb6f17418f811b392bedb5ee665b02fd5ef39ea2634c6a02a07694151caba",
+      "size": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "path": "models/npc-3028-sequence-6181-frame-1.png",
+      "bytes": 28225,
+      "sha256": "f085e05a731ec83c5091014ef331f9ed8633cf24c1bdaa0686f643c13030fdd6",
+      "size": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "path": "models/npc-3028-sequence-6181-frame-10.png",
+      "bytes": 28854,
+      "sha256": "c3bb780d0a1a626077b957e681b86771f1e9fdd1219d00a10df43dd5ecdf5f78",
+      "size": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "path": "models/npc-3028-sequence-6181-frame-11.png",
+      "bytes": 28836,
+      "sha256": "c2c2e1bece1a8c869fa755749b184b3b34b5e37c4b65c9ceaf2c41bef214bdd2",
+      "size": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "path": "models/npc-3028-sequence-6181-frame-12.png",
+      "bytes": 28309,
+      "sha256": "e75d1e1f6fdfe79808cce9d31b9d3ebaa5cc2c1d97253d425b318d9502cb5139",
+      "size": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "path": "models/npc-3028-sequence-6181-frame-13.png",
+      "bytes": 28543,
+      "sha256": "23b70943133b4b605d6b9e9aaf7f4529513a3e5e6c22eb6430daf4a7067d4c2a",
+      "size": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "path": "models/npc-3028-sequence-6181-frame-14.png",
+      "bytes": 28344,
+      "sha256": "7a353fa41a26d8b27111bf215ac44172feae30e8806ca8fe3f6c2dfab49a72ea",
+      "size": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "path": "models/npc-3028-sequence-6181-frame-15.png",
+      "bytes": 28020,
+      "sha256": "c6c34049d3781e83901b3f4e505531bc92d14c9a9a717d9366406d2c16c4bc2b",
+      "size": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "path": "models/npc-3028-sequence-6181-frame-2.png",
+      "bytes": 28571,
+      "sha256": "7b20168a186f16c8ef33ddb0c3f7fce6ee30cb7df7a7352cbb78f8a31374f6e4",
+      "size": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "path": "models/npc-3028-sequence-6181-frame-3.png",
+      "bytes": 28546,
+      "sha256": "ef23214b44b635ddf27fa2623602c50f740124c90b2db2f8d728db18d1a6feb4",
+      "size": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "path": "models/npc-3028-sequence-6181-frame-4.png",
+      "bytes": 28710,
+      "sha256": "c1b6ae4359a37cbc5d68d549b0c2470eae105da4c8f71df73a5c2ec58bed3cc9",
+      "size": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "path": "models/npc-3028-sequence-6181-frame-5.png",
+      "bytes": 28972,
+      "sha256": "5bfd429d07da1820fe1d7bf7ec513a200502bcc92dcf7f29622c2d6ebf962881",
+      "size": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "path": "models/npc-3028-sequence-6181-frame-6.png",
+      "bytes": 29275,
+      "sha256": "de2ee566d70f7a1a45377da8a0f561a376301878e9055ea47acbc853d6a36ee6",
+      "size": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "path": "models/npc-3028-sequence-6181-frame-7.png",
+      "bytes": 29120,
+      "sha256": "531feb4e6ef4f0c83fc2af72ccadc4fe022c659743c97db416c13aee228b0a02",
+      "size": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "path": "models/npc-3028-sequence-6181-frame-8.png",
+      "bytes": 29452,
+      "sha256": "9ed887c15b5e3f1188713967d552ec45b53212b539cf38437802e54566cd57ac",
+      "size": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "path": "models/npc-3028-sequence-6181-frame-9.png",
+      "bytes": 29149,
+      "sha256": "e48a8ec7c9722cf71ef0991743e63b5ac59f8426c6f84172ef1b024cc262ed3b",
+      "size": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "path": "models/tree-1277-yaw-0.png",
+      "bytes": 103273,
+      "sha256": "8b624478e498824817073e06eb03bcc9c70208722f4991a1ceff93cf6131f938",
+      "size": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "path": "models/tree-1277-yaw-1024.png",
+      "bytes": 90881,
+      "sha256": "491029fd11fe8db6b987da6c95fcf59a4797051f2f7ee1879be1612f4fe036ef",
+      "size": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "path": "models/tree-1277-yaw-256.png",
+      "bytes": 92709,
+      "sha256": "b7d15ee627ee50e033cc0670fd88fa37fc8efbb805255f53c470390d79f8000a",
+      "size": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "path": "models/tree-1277-yaw-512.png",
+      "bytes": 77627,
+      "sha256": "f9bd9f91f80d8bec7768f37de6f163948d5547ba406ffea19cdaa9b1f431fd5e",
+      "size": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "path": "region-after-recenter-3160-3280.png",
+      "bytes": 781866,
+      "sha256": "268999aa0534042963e4325ac8fbe2abb5fafeb374777864d4ee94d0e10c9823",
+      "size": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "path": "region-instance-death-office.png",
+      "bytes": 108074,
+      "sha256": "979cf16f12b2150b22ae045f2c6fd29de8ca77affcfcc7163662b39949056f6b",
+      "size": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "path": "region-lumbridge-castle-3222-3218.png",
+      "bytes": 1690775,
+      "sha256": "383d537c8008673120989e44c1d5a94450ef90ba44c3f8fa3b48b46de9c0313c",
+      "size": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "path": "region-minimap-death-office.png",
+      "bytes": 2470,
+      "sha256": "0c3916e90d7c8e0b9aff8814915514dc3ce5117b0a2965f0c7db88eeb441cbb1",
+      "size": [
+        512,
+        512
+      ]
+    },
+    {
+      "path": "region-minimap-lumbridge-3200-3168.png",
+      "bytes": 56878,
+      "sha256": "d14c06d43b8175483235d1d353e9fdf3f14c9e229b89634dcb732cb9ca53592b",
+      "size": [
+        512,
+        512
+      ]
+    },
+    {
+      "path": "region-minimap-lumbridge-door-closed.png",
+      "bytes": 56878,
+      "sha256": "d14c06d43b8175483235d1d353e9fdf3f14c9e229b89634dcb732cb9ca53592b",
+      "size": [
+        512,
+        512
+      ]
+    },
+    {
+      "path": "region-minimap-lumbridge-door-open.png",
+      "bytes": 56894,
+      "sha256": "a29c0457b3b8ecc3b8ae8e98375d978d208a9edcf8d3c1156d8525a750d7de4d",
+      "size": [
+        512,
+        512
+      ]
+    },
+    {
+      "path": "region-minimap-tutorial-island.png",
+      "bytes": 37606,
+      "sha256": "3e57bdf4c8701f8aae4b09a777f5f5f7e79a3c20749281dffeccd017e2f4af70",
+      "size": [
+        512,
+        512
+      ]
+    },
+    {
+      "path": "region-tutorial-island-3096-3105.png",
+      "bytes": 397472,
+      "sha256": "93c3d024943ca84c5981fbbc2b666d1006b51f4e26a438115d1ce379bec27326",
+      "size": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "path": "scenarios/axe-hack-t0.png",
+      "bytes": 1460852,
+      "sha256": "3ccbac70b8622ac9fc6a6bea1e83df311f1bc2a74cbd703ba13b237addf6397a",
+      "size": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "path": "scenarios/axe-hack-t1.png",
+      "bytes": 1460844,
+      "sha256": "1b8750d3a926d6fb5756bc428be069e32f9c8e8a97a3e4461a8f23675cfe6d8b",
+      "size": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "path": "scenarios/home-teleport-1-t0.png",
+      "bytes": 1458157,
+      "sha256": "06791b72001c80679a482446c36ad466f191a5d180f50910674be90e6fea3d69",
+      "size": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "path": "scenarios/home-teleport-1-t1.png",
+      "bytes": 1457973,
+      "sha256": "4b96d6186a3b752420567ec34112223a1d33d746e88aedd30f04ef7922609df5",
+      "size": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "path": "scenarios/home-teleport-2-t0.png",
+      "bytes": 1457945,
+      "sha256": "264a07943cd02cd085d4e2f4cbae8fb7691af6e510df6a75de9d50b7c31b9ace",
+      "size": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "path": "scenarios/home-teleport-2-t1.png",
+      "bytes": 1457687,
+      "sha256": "872163877b5e5d4b59de90d17e210d6451e13df4dbf6c1d409b52dce2b8d5e79",
+      "size": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "path": "scenarios/home-teleport-3-t0.png",
+      "bytes": 1457976,
+      "sha256": "70f4f7c1b61542275c1a5f20675cf144690c569293ec8506a165ba7d49620074",
+      "size": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "path": "scenarios/home-teleport-3-t1.png",
+      "bytes": 1457848,
+      "sha256": "daffb6208e1a1f7186d8cc26c2449b9a035904e7c61f012cbbeee1aa8720042a",
+      "size": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "path": "scenarios/home-teleport-4-t0.png",
+      "bytes": 1458148,
+      "sha256": "b8fe3c871bee2ea9c266d9a382747aee814f3622e873c03f31cff8a91b565d78",
+      "size": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "path": "scenarios/home-teleport-4-t1.png",
+      "bytes": 1458191,
+      "sha256": "6391a397d24ed41ef8a4b65af8c85f84e79649997dad332dae74ab7dfba0d08e",
+      "size": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "path": "scenarios/home-teleport-5-t0.png",
+      "bytes": 1458344,
+      "sha256": "b554ebd7f29c26d47ed6f0fa5d084c6c63bfd1472f80e771a36a2c22114a237c",
+      "size": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "path": "scenarios/home-teleport-5-t1.png",
+      "bytes": 1458344,
+      "sha256": "b554ebd7f29c26d47ed6f0fa5d084c6c63bfd1472f80e771a36a2c22114a237c",
+      "size": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "path": "scenarios/milking-t0.png",
+      "bytes": 1458745,
+      "sha256": "bd726ba0d4613f9a4ee91337c0f7103fcb1b7d381657acc47ca84a33a729b1ec",
+      "size": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "path": "scenarios/milking-t1.png",
+      "bytes": 1458699,
+      "sha256": "2a5cffc237c85d2ef4e2edbc2e145d146e9e08530bd89a061337efe8a380ffbd",
+      "size": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "path": "scenarios/source-door-closed-t0.png",
+      "bytes": 872417,
+      "sha256": "d78b33b34df3a34615059a9338c70e933c847a116dbffd8f7435c6a4faf39034",
+      "size": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "path": "scenarios/source-door-closed-t1.png",
+      "bytes": 872417,
+      "sha256": "d78b33b34df3a34615059a9338c70e933c847a116dbffd8f7435c6a4faf39034",
+      "size": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "path": "scenarios/source-door-open-t0.png",
+      "bytes": 872739,
+      "sha256": "13e191e4856dc4269bd05021617c825330d9d3adc3f954c2112518632a06eee2",
+      "size": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "path": "scenarios/source-door-open-t1.png",
+      "bytes": 872739,
+      "sha256": "13e191e4856dc4269bd05021617c825330d9d3adc3f954c2112518632a06eee2",
+      "size": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "path": "scenarios/source-roofs-hidden-t0.png",
+      "bytes": 872417,
+      "sha256": "d78b33b34df3a34615059a9338c70e933c847a116dbffd8f7435c6a4faf39034",
+      "size": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "path": "scenarios/source-roofs-hidden-t1.png",
+      "bytes": 872417,
+      "sha256": "d78b33b34df3a34615059a9338c70e933c847a116dbffd8f7435c6a4faf39034",
+      "size": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "path": "scenarios/source-roofs-inside-t0.png",
+      "bytes": 976220,
+      "sha256": "3f6c12296ffb047c043ecd910c1d87f17349e0450f8bec2d8e8f8097a5214805",
+      "size": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "path": "scenarios/source-roofs-inside-t1.png",
+      "bytes": 976220,
+      "sha256": "3f6c12296ffb047c043ecd910c1d87f17349e0450f8bec2d8e8f8097a5214805",
+      "size": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "path": "scenarios/source-roofs-outside-t0.png",
+      "bytes": 976220,
+      "sha256": "3f6c12296ffb047c043ecd910c1d87f17349e0450f8bec2d8e8f8097a5214805",
+      "size": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "path": "scenarios/source-roofs-outside-t1.png",
+      "bytes": 976220,
+      "sha256": "3f6c12296ffb047c043ecd910c1d87f17349e0450f8bec2d8e8f8097a5214805",
+      "size": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "path": "scenarios/spear-lunge-t0.png",
+      "bytes": 1460412,
+      "sha256": "1f00e5e0b93005a5110451654c34d3ec03dd550347af07f9d1be36c77af49152",
+      "size": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "path": "scenarios/spear-lunge-t1.png",
+      "bytes": 1460572,
+      "sha256": "3ccffe3972de60648b7873438ec3010abdeb9003bbd12dd5891e2fb960315109",
+      "size": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "path": "tutorial-starting-house-actors-live-resize-1280x720.png",
+      "bytes": 636363,
+      "sha256": "fed9acc905a7063c89b7a444b122c783494d86e0919a492e65e469e52e3fc41e",
+      "size": [
+        1280,
+        720
+      ]
+    },
+    {
+      "path": "tutorial-starting-house-actors-t0.png",
+      "bytes": 1271536,
+      "sha256": "cdba3f00e1f8e5d2fb0feca639fa8a5d3db6c4c3fd1756f0d143a2a21ed6910d",
+      "size": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "path": "tutorial-starting-house-actors-t1.png",
+      "bytes": 1271350,
+      "sha256": "207f5de6e808c79212aa0c7752650eb184677ecf15eda6ca7055807f2db3d027",
+      "size": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "path": "tutorial-starting-house.png",
+      "bytes": 1265389,
+      "sha256": "599403cbbfe7b23bc232b9fa8ba680bb1448c7de0c3dc32ac03aa246265ddea4",
+      "size": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "path": "tutorial-survival-coast.png",
+      "bytes": 953310,
+      "sha256": "aaf697dcdcd4725b13f621039e6c5275e3eeafe1c4f6b049a542ce3b02d292fc",
+      "size": [
+        1920,
+        1080
+      ]
+    }
+  ]
+}

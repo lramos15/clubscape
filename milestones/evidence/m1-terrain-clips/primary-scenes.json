@@ -1,0 +1,132 @@
+[
+ {
+  "candidate": ".local/evidence/terrain-browser/lumbridge-castle-plaza.png",
+  "source": "assets/reference/osrs240/scenes/lumbridge-castle-plaza.png",
+  "size": [
+   1920,
+   1080
+  ],
+  "source_size": [
+   1920,
+   1080
+  ],
+  "pixels": 2073600,
+  "identical_pixels": 2073600,
+  "changed_pixels": 0,
+  "source_edge_band_pixels": 516521,
+  "interior_pixels": 1557079,
+  "interior_max_channel_error": 0,
+  "interior_mean_abs_channel_error": 0.0,
+  "interior_changed_pixels": 0,
+  "edge_band_changed_pixels": 0,
+  "edge_band_changed_fraction_of_full_image": 0.0,
+  "max_channel_error_anywhere": 0,
+  "profile": "native_scene_model",
+  "edge_step_used_for_source_edges": 24,
+  "passed": true
+ },
+ {
+  "candidate": ".local/evidence/terrain-browser/lumbridge-river-bridge.png",
+  "source": "assets/reference/osrs240/scenes/lumbridge-river-bridge.png",
+  "size": [
+   1920,
+   1080
+  ],
+  "source_size": [
+   1920,
+   1080
+  ],
+  "pixels": 2073600,
+  "identical_pixels": 2073600,
+  "changed_pixels": 0,
+  "source_edge_band_pixels": 452429,
+  "interior_pixels": 1621171,
+  "interior_max_channel_error": 0,
+  "interior_mean_abs_channel_error": 0.0,
+  "interior_changed_pixels": 0,
+  "edge_band_changed_pixels": 0,
+  "edge_band_changed_fraction_of_full_image": 0.0,
+  "max_channel_error_anywhere": 0,
+  "profile": "native_scene_model",
+  "edge_step_used_for_source_edges": 24,
+  "passed": true
+ },
+ {
+  "candidate": ".local/evidence/terrain-browser/lumbridge-windmill-route.png",
+  "source": "assets/reference/osrs240/scenes/lumbridge-windmill-route.png",
+  "size": [
+   1920,
+   1080
+  ],
+  "source_size": [
+   1920,
+   1080
+  ],
+  "pixels": 2073600,
+  "identical_pixels": 2073600,
+  "changed_pixels": 0,
+  "source_edge_band_pixels": 338903,
+  "interior_pixels": 1734697,
+  "interior_max_channel_error": 0,
+  "interior_mean_abs_channel_error": 0.0,
+  "interior_changed_pixels": 0,
+  "edge_band_changed_pixels": 0,
+  "edge_band_changed_fraction_of_full_image": 0.0,
+  "max_channel_error_anywhere": 0,
+  "profile": "native_scene_model",
+  "edge_step_used_for_source_edges": 24,
+  "passed": true
+ },
+ {
+  "candidate": ".local/evidence/terrain-browser/tutorial-starting-house.png",
+  "source": "assets/reference/osrs240/scenes/tutorial-starting-house.png",
+  "size": [
+   1920,
+   1080
+  ],
+  "source_size": [
+   1920,
+   1080
+  ],
+  "pixels": 2073600,
+  "identical_pixels": 2073600,
+  "changed_pixels": 0,
+  "source_edge_band_pixels": 453519,
+  "interior_pixels": 1620081,
+  "interior_max_channel_error": 0,
+  "interior_mean_abs_channel_error": 0.0,
+  "interior_changed_pixels": 0,
+  "edge_band_changed_pixels": 0,
+  "edge_band_changed_fraction_of_full_image": 0.0,
+  "max_channel_error_anywhere": 0,
+  "profile": "native_scene_model",
+  "edge_step_used_for_source_edges": 24,
+  "passed": true
+ },
+ {
+  "candidate": ".local/evidence/terrain-browser/tutorial-survival-coast.png",
+  "source": "assets/reference/osrs240/scenes/tutorial-survival-coast.png",
+  "size": [
+   1920,
+   1080
+  ],
+  "source_size": [
+   1920,
+   1080
+  ],
+  "pixels": 2073600,
+  "identical_pixels": 2073600,
+  "changed_pixels": 0,
+  "source_edge_band_pixels": 309879,
+  "interior_pixels": 1763721,
+  "interior_max_channel_error": 0,
+  "interior_mean_abs_channel_error": 0.0,
+  "interior_changed_pixels": 0,
+  "edge_band_changed_pixels": 0,
+  "edge_band_changed_fraction_of_full_image": 0.0,
+  "max_channel_error_anywhere": 0,
+  "profile": "native_scene_model",
+  "edge_step_used_for_source_edges": 24,
+  "passed": true
+ }
+]

@@ -98,7 +98,7 @@ unblocked milestone work where possible, then report the milestone as
 incomplete with a durable checkpoint. Never relabel that checkpoint as an
 accepted slice.
 
-The current [repair checkpoint](../milestones/evidence/m1-dying-audio-repairs.json)
+The [recovery/audio checkpoint](../milestones/evidence/m1-dying-audio-repairs.json)
 preserves the distinction between native repairs and the actual normal-account
 journey. That same source-5e account has completed all 70 tutorial transitions,
 Learning the Ropes' 1QP reward, legitimate Lumbridge arrival, copper mining,
@@ -115,6 +115,16 @@ separately, without repinning existing worlds. The exact composed audio/storage
 fixture passes after the native cue-timing repair. That fixture is not the
 complete production browser client, a fresh browser journey, or owner audio
 acceptance.
+
+The [terrain/clip checkpoint](../milestones/evidence/m1-terrain-clips.json)
+integrates the original assembly-time terrain pass, exact outer-band minimaps
+and twelve additional actor clips. Missing or malformed terrain now fails
+without replacing the previous scene. All 15 native minimaps and the actual
+Chrome comparisons of five source scenes and 58 models are pixel-exact.
+These component results do not establish a complete composed interface or
+fresh browser journey. The explicit equipment-fitting gate still fails
+931 of 2,034 legal item-frames; permitted gear fitting, turned scenery and
+frozen-window performance remain unfinished.
 
 The [native UI comparisons](../milestones/evidence/m1-ui-controls.json),
 [renderer/audio results](../milestones/evidence/m1-render-audio-integration.json)

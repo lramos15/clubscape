@@ -9,11 +9,11 @@
   "candidate_revision": null,
   "accepted_revision": null,
   "checkpoint": {
-    "report": "milestones/evidence/m1-dying-audio-repairs.json",
+    "report": "milestones/evidence/m1-terrain-clips.json",
     "verified_infrastructure_revision": "275d3cc83d6a7c2118d0afcf82490f364e5d2986",
     "infrastructure_evidence": "milestones/evidence/m1-account-foundations.json",
-    "runtime_revision": "f9e56a577b2aa6d56521d025536c972d8691d860",
-    "scope_note": "The current 5b3 authority candidate and native dying-observation repair are verified separately from the actual source-5e journey. That same account reached 70/70 tutorial transitions and 321 checks through shops, goblin combat and loot, with two verified private restores, then stopped at Dying PollWorld409. Its protected checkpoint remains unchanged; actual cause confirmation and source-safe continuation are pending. The exact composed audio/storage fixture passes after the cue-timing repair, not the whole production client. Cook/post-quest recovery, complete client/fidelity/performance and owner acceptance remain incomplete."
+    "runtime_revision": "aca4ea28bb88d3c43c0f18279d5970b90cc02bb8",
+    "scope_note": "Original assembly-time terrain, complete outer-band minimaps and 12 additional actor clips are integrated; missing or malformed terrain now fails without replacing the prior scene. Fifty native tests, a 22-test overlapping root subset, and actual Chrome comparisons of 5 source scenes and 58 models pass; equipment fitting explicitly fails 931/2034 legal frames. This is not full UI/client or frozen-performance acceptance. The same source-5e account remains preserved after 70/70 tutorial transitions and 321 checks at Dying PollWorld409; actual cause confirmation and source-safe continuation, Cook/post-quest recovery, Mac/Edge and owner acceptance remain pending. No existing world is repinned."
   },
   "scope_approval": {
     "authority": "owner",
@@ -46,7 +46,7 @@
     {"id": "migration-and-extension-validation", "status": "in_progress", "evidence": [], "blocker": null},
     {"id": "chrome-fresh-account-journey", "status": "not_started", "evidence": [], "blocker": null},
     {"id": "edge-fresh-account-journey", "status": "not_started", "evidence": [], "blocker": null},
-    {"id": "source-visual-comparisons", "status": "in_progress", "evidence": [], "blocker": "Source UI/model component proofs and12 additional original dynamic cases exist; matched complete composed-client cases, raw gear-fit, roofs and full-HUD projection still require closure."},
+    {"id": "source-visual-comparisons", "status": "in_progress", "evidence": [], "blocker": "Original terrain, 15 full minimaps and Chrome 5-scene/58-model comparisons are exact; 11/12 native dynamic source cases render exactly, with the turned case still unsupported. Complete composed UI/player comparisons and actual gear fitting remain open; the explicit fit gate fails 931/2034 legal frames."},
     {"id": "runtime-animation-evidence", "status": "in_progress", "evidence": [], "blocker": null},
     {"id": "runtime-audio-evidence", "status": "in_progress", "evidence": [], "blocker": null},
     {"id": "chrome-integrated-gpu-performance", "status": "blocked", "evidence": [], "blocker": "Owner will run the final candidate on an M-series Mac; exact hardware/Chrome attestation and frozen-workload results remain unrun. Sparky engineering measured59.85FPS/p95 completion gap about28ms, not the required60FPS/20ms."},
