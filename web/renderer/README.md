@@ -163,8 +163,8 @@ plus:
   80-unit radius). The call throws when no scene, no map-scene asset or — with `complete: false`
   and `notes` — when a square's sidecar is missing; it never returns a blank, static or
   approximate map. Native comparison: all 15 approved minimap rasters match pixel-exactly over
-  the scene interior and in their icon lists; the outer 5-tile band of a scene differs
-  (base-dependent floor blending, see `crates/renderer/README.md`, "Known deviations").
+  the full 512x512 surface, including the outer five-tile band, with identical icon lists.
+  Assembly-time source terrain blending preserves the scene-dependent edge colours.
 
 ## Building
 
@@ -291,9 +291,10 @@ figures (59.60–59.77) reaches 60.
 * Terrain: with the first world block the adapter also loads `terrain/floors.bin`
   (`manifest.floor_definitions`); every block scene is then rebuilt by the original terrain
   pass at its own base (`diagnostics().terrainRebuilt` reports the paint / shaped-tile counts;
-  `null` plus a diagnostic when definitions or a block's raw terrain are missing and the
-  exported lit tiles stay in use). Without it the outer five tiles of a scene carry colours
-  blended with the squares' real neighbours instead of the live scene's truncated blend.
+  `null` means no block scene is loaded). Missing definitions, referenced floors or a block's
+  raw terrain fail explicitly without replacing the current scene. Legacy lit-only blocks
+  cannot be used to substitute known-inexact edge colours. Floor definitions load independently
+  of the optional fixture minimap sprites.
 * Minimap: call `minimapSurface()` when the UI paints its minimap widget (cheap when the
   `revision` is unchanged) and give `pixels`, `baseX`, `baseY`, `plane` and `mask` to the
   UI's painter in place of the static `ui/minimaps/<base>-<plane>.png` catalogue raster. The

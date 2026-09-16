@@ -760,3 +760,50 @@ fn terrain_pass_reproduces_the_direct_scene_tiles() {
         "terrain pass: {compared_paints} paints and {compared_models} tile models identical to the direct exports over the five bases"
     );
 }
+
+#[test]
+#[ignore = "needs all manifest-pinned world blocks (export.py --profile unpack-blocks <pack.tar>)"]
+fn every_source_block_satisfies_raw_terrain_admission() {
+    use clubscape_renderer::chunk::Chunks;
+    use clubscape_renderer::scene::terrain::{FloorDefs, RawTerrain};
+
+    let manifest: serde_json::Value =
+        serde_json::from_slice(&common::read_asset("manifest.json")).unwrap();
+    let blocks = manifest["blocks"].as_array().unwrap();
+    assert_eq!(blocks.len(), 61);
+    let floors = FloorDefs::from_chunks(&common::read_asset("terrain/floors.bin")).unwrap();
+    let mut tiles = 0;
+    let mut shadows = 0;
+    for entry in blocks {
+        let key = entry["file"].as_str().unwrap();
+        let bytes = common::read_local_export(key, REPRODUCE_BLOCKS);
+        let raw = RawTerrain::from_block_chunks(&Chunks::parse(&bytes).unwrap())
+            .unwrap()
+            .unwrap_or_else(|| panic!("{key} has no raw terrain"));
+        for &underlay in &raw.underlay {
+            let id = i32::from(underlay) & 32767;
+            assert!(
+                id == 0 || floors.underlays.contains_key(&(id - 1)),
+                "{key}: missing underlay {}",
+                id - 1
+            );
+        }
+        for &overlay in &raw.overlay {
+            let id = i32::from(overlay) & 32767;
+            assert!(
+                id == 0 || floors.overlays.contains_key(&(id - 1)),
+                "{key}: missing overlay {}",
+                id - 1
+            );
+        }
+        assert_eq!(
+            u64::try_from(raw.shadows.len()).unwrap(),
+            entry["shadow_writes"].as_u64().unwrap(),
+            "{key}: shadow count"
+        );
+        tiles += raw.heights.len();
+        shadows += raw.shadows.len();
+    }
+    assert_eq!(tiles, 999424);
+    eprintln!("61 source blocks: {tiles} valid raw tiles and {shadows} valid shadow writes");
+}

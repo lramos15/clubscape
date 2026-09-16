@@ -326,9 +326,8 @@ export class WasmRenderer {
     squares_needed(base_x: number, base_y: number): Int32Array;
     /**
      * Statistics of the terrain pass of the current block scene (JSON `{paints, tileModels,
-     * missingOverlays, missingUnderlays}`), or `undefined` when the scene's tiles are the
-     * exported lit ones (fixture scenes, or blocks/definitions without raw terrain — then
-     * `unknown_motions()` carries the reason).
+     * missingOverlays, missingUnderlays}`), or `undefined` when no block scene is loaded.
+     * Missing raw terrain or floor definitions are assembly errors, not approximate scenes.
      */
     terrain_rebuilt(): string | undefined;
     timestamps_supported(): boolean;

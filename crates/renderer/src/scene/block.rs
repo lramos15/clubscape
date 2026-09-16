@@ -982,18 +982,22 @@ pub fn assemble_mapped(
 /// The live loader's raw terrain arrays for a scene at `base` from the present blocks (their
 /// declared chunks only under a layout): every tile of the 104×104 scene that a loaded square
 /// covers, its south-west corner height, and the shadows the loaded squares' scenery casts.
-/// `None` when a present block was exported without raw terrain — the exported lit tiles then
-/// stay in use and the caller reports it.
+/// Every present block must carry raw terrain; legacy lit-only buffers are refused.
 pub fn scene_terrain(
     base_x: i32,
     base_y: i32,
     blocks: &[(&Block, &[(String, Model)])],
     layout: Option<&InstanceLayout>,
-) -> Option<super::terrain::SceneTerrain> {
+) -> Result<super::terrain::SceneTerrain, RenderError> {
     use super::terrain::SceneTerrain;
     let mut terrain = SceneTerrain::empty();
     for (block, _) in blocks {
-        let raw = block.raw_terrain.as_ref()?;
+        let raw = block.raw_terrain.as_ref().ok_or_else(|| {
+            RenderError::MissingAsset(format!(
+                "block {} lacks BTER/BSHD raw terrain; re-export with the current blocks profile",
+                block.square
+            ))
+        })?;
         let dx = block.origin_x - base_x;
         let dy = block.origin_y - base_y;
         let placements = |plane: i32, wx: i32, wy: i32| -> Vec<(i32, i32, i32, i32)> {
@@ -1052,7 +1056,7 @@ pub fn scene_terrain(
             }
         }
     }
-    Some(terrain)
+    Ok(terrain)
 }
 
 #[inline]

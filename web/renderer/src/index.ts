@@ -382,9 +382,8 @@ export interface RendererDiagnostics {
   sceneBase: { x: number; y: number } | null;
   loadedSquares: number[];
   /**
-   * The current block scene's terrain pass (paints / shaped tile models rebuilt from raw block
-   * terrain at this base by the original `rl4.ad` port), or `null` when the scene's tiles are the
-   * exported lit ones (fixture scenes; blocks or definitions without raw terrain — reported).
+   * The current block scene's terrain pass, or `null` when no block scene is loaded.
+   * Missing raw terrain or floor definitions are assembly errors, never approximate scenes.
    */
   terrainRebuilt: { paints: number; tileModels: number; missingOverlays: number; missingUnderlays: number } | null;
   timestampsSupported: boolean;
@@ -669,17 +668,16 @@ export const createRenderer: (canvas: HTMLCanvasElement, config: RendererConfig,
      * (for the assembly-time terrain pass), fetched once with the first world block.
      */
     const ensureMapScenes = (): Promise<void> => {
-      if (!manifest.files["minimap/mapscenes.bin"]) return Promise.resolve();
       mapScenes ??= (async () => {
-        if (manifest.floor_definitions) {
-          const floors = await fetchAsset(manifest.floor_definitions.file);
-          if (!disposed) {
-            const [underlays, overlays] = renderer.load_floor_defs(floors);
-            diagnostic(`terrain: ${underlays} underlay / ${overlays} overlay definitions loaded; block scenes run the original terrain pass at their own base`);
-          }
-        } else {
-          diagnostic("terrain: manifest lists no floor_definitions; block scenes keep the exported lit tiles (outer-edge floor colours are not the live scene's)");
+        if (!manifest.floor_definitions) {
+          throw new Error("terrain: manifest has no required floor_definitions for block scenes");
         }
+        const floors = await fetchAsset(manifest.floor_definitions.file);
+        if (!disposed) {
+          const [underlays, overlays] = renderer.load_floor_defs(floors);
+          diagnostic(`terrain: ${underlays} underlay / ${overlays} overlay definitions loaded; block scenes run the original terrain pass at their own base`);
+        }
+        if (!manifest.files["minimap/mapscenes.bin"]) return;
         const bytes = await fetchAsset("minimap/mapscenes.bin");
         if (!disposed) renderer.load_map_scenes(bytes);
         if (manifest.files["minimap/mapicons.bin"]) {

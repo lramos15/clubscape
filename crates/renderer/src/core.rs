@@ -1532,6 +1532,13 @@ impl RendererCore {
                 "no blocks loaded for scene base {base_x},{base_y} (needs {wanted:?})"
             )));
         }
+        let defs = self.floor_defs.as_ref().ok_or_else(|| {
+            RenderError::MissingAsset(
+                "terrain/floors.bin must be loaded before assembling a block scene".into(),
+            )
+        })?;
+        let terrain =
+            block::scene_terrain(base_x, base_y, &present, self.instance_layout.as_ref())?;
         let (mut scene, models) = block::assemble_mapped(
             base_x,
             base_y,
@@ -1539,44 +1546,11 @@ impl RendererCore {
             randomize_phases,
             self.instance_layout.as_ref(),
         )?;
-        // The live terrain pass over the assembled scene: blend, light and shape every tile from
-        // the squares' raw terrain exactly as `rl4.ad` does for a scene at this base (the outer
-        // tiles see nothing beyond the scene edge). Needs the floor definitions and raw terrain
-        // in every present block; otherwise the exported lit tiles stay and the gap is reported.
-        match (
-            self.floor_defs.as_ref(),
-            block::scene_terrain(base_x, base_y, &present, self.instance_layout.as_ref()),
-        ) {
-            (Some(defs), Some(terrain)) => {
-                let textures = &self.textures;
-                let stats = crate::scene::terrain::apply(
-                    &mut scene,
-                    &terrain,
-                    defs,
-                    &self.palette,
-                    &|id| textures.average_rgb(id),
-                );
-                scene.terrain_rebuilt = Some(stats);
-            }
-            (defs, terrain) => {
-                let note = format!(
-                    "scene {base_x},{base_y}: terrain not rebuilt from raw block terrain ({}{}); exported lit tiles in use — outer-edge floor colours are not the live scene's",
-                    if defs.is_none() {
-                        "terrain/floors.bin not loaded"
-                    } else {
-                        ""
-                    },
-                    if terrain.is_none() {
-                        " a present block carries no BTER raw terrain"
-                    } else {
-                        ""
-                    }
-                );
-                if !self.unknown_motions.contains(&note) {
-                    self.unknown_motions.push(note);
-                }
-            }
-        }
+        let stats =
+            crate::scene::terrain::apply(&mut scene, &terrain, defs, &self.palette, &|id| {
+                self.textures.average_rgb(id)
+            })?;
+        scene.terrain_rebuilt = Some(stats);
         let id = match &self.instance_layout {
             Some(layout) => format!("blocks@{base_x},{base_y}#{}", layout.template),
             None => format!("blocks@{base_x},{base_y}"),
@@ -2657,8 +2631,6 @@ impl RendererCore {
         &self.unbound_actions
     }
 
-    /// Kit ids present in the source cache (manifest `sequence_hand_overrides.values` with
-    /// `kind: kit, kit_exists: true`), consulted when a sequence puts a kit into a hand slot.
     /// Loads `terrain/floors.bin` (every underlay/overlay definition of the source cache); block
     /// scenes assembled afterwards run the live terrain pass from their raw terrain.
     pub fn load_floor_defs(&mut self, bytes: &[u8]) -> Result<(usize, usize), RenderError> {
@@ -2672,12 +2644,13 @@ impl RendererCore {
         self.floor_defs.as_ref()
     }
 
-    /// Statistics of the terrain pass of the current block scene (`None`: fixture scene or the
-    /// exported lit tiles are in use).
+    /// Statistics of the current block scene's terrain pass (`None`: no block scene loaded).
     pub fn terrain_rebuilt(&self) -> Option<&crate::scene::terrain::TerrainStats> {
         self.scene.as_ref().and_then(|s| s.terrain_rebuilt.as_ref())
     }
 
+    /// Kit ids present in the source cache (manifest `sequence_hand_overrides.values` with
+    /// `kind: kit, kit_exists: true`), consulted when a sequence puts a kit into a hand slot.
     pub fn set_hand_override_kits(&mut self, kits: &[i32]) {
         self.hand_override_kits = kits.iter().copied().collect();
         self.player_assembled = None;

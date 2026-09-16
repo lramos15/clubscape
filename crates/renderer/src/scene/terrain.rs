@@ -54,33 +54,76 @@ pub struct FloorDefs {
 impl FloorDefs {
     pub fn from_chunks(data: &[u8]) -> Result<Self, RenderError> {
         let chunks = Chunks::parse(data)?;
-        let mut defs = FloorDefs::default();
-        for r in chunks.ints("FUND")?.as_chunks::<5>().0 {
-            defs.underlays.insert(
-                r[0],
-                Underlay {
-                    hue: r[1],
-                    saturation: r[2],
-                    lightness: r[3],
-                    hue_multiplier: r[4],
-                },
-            );
+        let underlays = chunks.ints("FUND")?;
+        let overlays = chunks.ints("FOVL")?;
+        if underlays.len() % 5 != 0 || overlays.len() % 10 != 0 {
+            return Err(RenderError::InvalidAsset(
+                "terrain floor definitions require complete FUND/FOVL records".into(),
+            ));
         }
-        for r in chunks.ints("FOVL")?.as_chunks::<10>().0 {
-            defs.overlays.insert(
-                r[0],
-                Overlay {
-                    texture: r[1],
-                    rgb: r[2],
-                    hue: r[3],
-                    saturation: r[4],
-                    lightness: r[5],
-                    secondary_rgb: r[6],
-                    secondary_hue: r[7],
-                    secondary_saturation: r[8],
-                    secondary_lightness: r[9],
-                },
-            );
+        let mut defs = FloorDefs::default();
+        for r in underlays.as_chunks::<5>().0 {
+            if r[0] < 0 || !valid_hsl(r[1], r[2], r[3]) || !(1..=256).contains(&r[4]) {
+                return Err(RenderError::InvalidAsset(format!(
+                    "FUND floor {} has invalid HSL or hue multiplier",
+                    r[0]
+                )));
+            }
+            if defs
+                .underlays
+                .insert(
+                    r[0],
+                    Underlay {
+                        hue: r[1],
+                        saturation: r[2],
+                        lightness: r[3],
+                        hue_multiplier: r[4],
+                    },
+                )
+                .is_some()
+            {
+                return Err(RenderError::InvalidAsset(format!(
+                    "duplicate FUND floor {}",
+                    r[0]
+                )));
+            }
+        }
+        for r in overlays.as_chunks::<10>().0 {
+            if r[0] < 0
+                || !(-1..=i32::from(u16::MAX)).contains(&r[1])
+                || !(0..=0xFF_FFFF).contains(&r[2])
+                || !valid_hsl(r[3], r[4], r[5])
+                || !(-1..=0xFF_FFFF).contains(&r[6])
+                || !valid_hsl(r[7], r[8], r[9])
+            {
+                return Err(RenderError::InvalidAsset(format!(
+                    "FOVL floor {} has invalid texture, colour or HSL",
+                    r[0]
+                )));
+            }
+            if defs
+                .overlays
+                .insert(
+                    r[0],
+                    Overlay {
+                        texture: r[1],
+                        rgb: r[2],
+                        hue: r[3],
+                        saturation: r[4],
+                        lightness: r[5],
+                        secondary_rgb: r[6],
+                        secondary_hue: r[7],
+                        secondary_saturation: r[8],
+                        secondary_lightness: r[9],
+                    },
+                )
+                .is_some()
+            {
+                return Err(RenderError::InvalidAsset(format!(
+                    "duplicate FOVL floor {}",
+                    r[0]
+                )));
+            }
         }
         if defs.underlays.is_empty() || defs.overlays.is_empty() {
             return Err(RenderError::InvalidAsset(
@@ -89,6 +132,10 @@ impl FloorDefs {
         }
         Ok(defs)
     }
+}
+
+fn valid_hsl(hue: i32, saturation: i32, lightness: i32) -> bool {
+    (-256..=256).contains(&hue) && (0..=255).contains(&saturation) && (0..=255).contains(&lightness)
 }
 
 /// Raw terrain of one 64×64 map square as the live loader stores it (`rl4.xl`), per plane:
@@ -114,12 +161,18 @@ pub const SQUARE: i32 = 64;
 const PLANES: i32 = 4;
 
 impl RawTerrain {
-    /// Parses the `BTER` (6 ints per plane × tile) and `BSHD` (4 ints per entry) chunks of a
-    /// block; `None` for blocks exported before the raw terrain was carried.
+    /// Parses the paired `BTER` (6 ints per plane × tile) and `BSHD` (6 ints per entry)
+    /// chunks. Legacy buffers with neither can be inspected, but cannot build a live scene.
     pub fn from_block_chunks(chunks: &Chunks) -> Result<Option<Self>, RenderError> {
         let Some(terrain) = chunks.ints_opt("BTER")? else {
+            if chunks.has("BSHD") {
+                return Err(RenderError::InvalidAsset(
+                    "BSHD shadows require the matching BTER raw terrain".into(),
+                ));
+            }
             return Ok(None);
         };
+        let shadows = chunks.ints("BSHD")?;
         let tiles = (PLANES * SQUARE * SQUARE) as usize;
         if terrain.len() != tiles * 6 {
             return Err(RenderError::InvalidAsset(format!(
@@ -137,22 +190,53 @@ impl RawTerrain {
             heights: Vec::with_capacity(tiles),
             shadows: Vec::new(),
         };
-        for r in terrain.as_chunks::<6>().0 {
-            raw.underlay.push(r[0] as i16);
-            raw.overlay.push(r[1] as i16);
-            raw.overlay_path.push(r[2] as i8);
-            raw.overlay_rotation.push(r[3] as i8);
-            raw.settings.push(r[4] as i8);
+        for (tile, r) in terrain.as_chunks::<6>().0.iter().enumerate() {
+            let (Ok(underlay), Ok(overlay), Ok(path), Ok(rotation), Ok(settings)) = (
+                i16::try_from(r[0]),
+                i16::try_from(r[1]),
+                i8::try_from(r[2]),
+                i8::try_from(r[3]),
+                i8::try_from(r[4]),
+            ) else {
+                return Err(RenderError::InvalidAsset(format!(
+                    "BTER tile {tile} contains an out-of-range short or byte"
+                )));
+            };
+            // rl4.xl accumulates at most four unsigned-byte height deltas, in units of 8.
+            if !(0..=11).contains(&path)
+                || !(0..=3).contains(&rotation)
+                || !(-PLANES * 255 * 8..=0).contains(&r[5])
+                || r[5] % 8 != 0
+            {
+                return Err(RenderError::InvalidAsset(format!(
+                    "BTER tile {tile} has an invalid shape, rotation or height"
+                )));
+            }
+            raw.underlay.push(underlay);
+            raw.overlay.push(overlay);
+            raw.overlay_path.push(path);
+            raw.overlay_rotation.push(rotation);
+            raw.settings.push(settings);
             raw.heights.push(r[5]);
         }
-        let shadows = chunks.ints_opt("BSHD")?.unwrap_or_default();
         if shadows.len() % 6 != 0 {
             return Err(RenderError::InvalidAsset(format!(
                 "BSHD holds {} ints, not a multiple of 6 (plane, origin x/y, tile x/y, value)",
                 shadows.len()
             )));
         }
-        for r in shadows.as_chunks::<6>().0 {
+        for (entry, r) in shadows.as_chunks::<6>().0.iter().enumerate() {
+            if !(0..PLANES).contains(&r[0])
+                || !(0..SQUARE).contains(&r[1])
+                || !(0..SQUARE).contains(&r[2])
+                || !(-SQUARE..2 * SQUARE).contains(&r[3])
+                || !(-SQUARE..2 * SQUARE).contains(&r[4])
+                || !(0..=50).contains(&r[5])
+            {
+                return Err(RenderError::InvalidAsset(format!(
+                    "BSHD entry {entry} has an invalid plane, origin, coordinate or shadow value"
+                )));
+            }
             raw.shadows.push((r[0], r[1], r[2], r[3], r[4], r[5]));
         }
         Ok(Some(raw))
@@ -276,6 +360,26 @@ impl SceneTerrain {
     pub fn height(&self, plane: i32, sx: i32, sy: i32) -> i32 {
         self.heights[Self::c(plane, sx + MARGIN, sy + MARGIN)]
     }
+
+    fn validate_floors(&self, defs: &FloorDefs) -> Result<(), RenderError> {
+        for (&underlay, &overlay) in self.underlay.iter().zip(&self.overlay) {
+            let underlay = i32::from(underlay) & 32767;
+            let overlay = i32::from(overlay) & 32767;
+            if underlay > 0 && !defs.underlays.contains_key(&(underlay - 1)) {
+                return Err(RenderError::MissingAsset(format!(
+                    "terrain underlay {} has no floor definition",
+                    underlay - 1
+                )));
+            }
+            if overlay > 0 && !defs.overlays.contains_key(&(overlay - 1)) {
+                return Err(RenderError::MissingAsset(format!(
+                    "terrain overlay {} has no floor definition",
+                    overlay - 1
+                )));
+            }
+        }
+        Ok(())
+    }
 }
 
 /// `rl4.qr`: packs hue/saturation/lightness into the 16-bit HSL index.
@@ -329,7 +433,7 @@ pub enum BuiltTile {
 pub struct TerrainStats {
     pub paints: usize,
     pub tile_models: usize,
-    /// Overlay ids without a definition (drawn as the original would not: skipped).
+    /// Kept for diagnostic ABI compatibility; a successful pass has no missing definitions.
     pub missing_overlays: usize,
     pub missing_underlays: usize,
 }
@@ -343,7 +447,8 @@ pub fn build(
     palette: &Palette,
     texture_average: &dyn Fn(i32) -> i32,
     mut emit: impl FnMut(i32, i32, i32, BuiltTile),
-) -> TerrainStats {
+) -> Result<TerrainStats, RenderError> {
+    terrain.validate_floors(defs)?;
     let mut stats = TerrainStats::default();
     let xa = GRID as i32;
     let ch = GRID as i32;
@@ -461,11 +566,7 @@ pub fn build(
                 ];
                 let mut under_hsl = -1;
                 if underlay > 0 {
-                    if defs.underlays.contains_key(&(underlay - 1)) {
-                        under_hsl = pack_hsl(hue * 256 / mult, sat / n, lig / n);
-                    } else {
-                        stats.missing_underlays += 1;
-                    }
+                    under_hsl = pack_hsl(hue * 256 / mult, sat / n, lig / n);
                 }
                 let under_rgb = if under_hsl != -1 {
                     palette.lookup(light_underlay(under_hsl, 96))
@@ -492,10 +593,12 @@ pub fn build(
                     );
                     continue;
                 }
-                let Some(def) = defs.overlays.get(&(overlay - 1)) else {
-                    stats.missing_overlays += 1;
-                    continue;
-                };
+                let def = defs.overlays.get(&(overlay - 1)).ok_or_else(|| {
+                    RenderError::MissingAsset(format!(
+                        "terrain overlay {} has no floor definition",
+                        overlay - 1
+                    ))
+                })?;
                 let shape = i32::from(terrain.overlay_path[t]) + 1;
                 let rotation = i32::from(terrain.overlay_rotation[t]);
                 let mut texture = def.texture;
@@ -563,7 +666,7 @@ pub fn build(
             }
         }
     }
-    stats
+    Ok(stats)
 }
 
 /// `fn.af`: per shape, the face list as (overlay flag, vertex a, vertex b, vertex c).
@@ -786,7 +889,20 @@ pub fn apply(
     defs: &FloorDefs,
     palette: &Palette,
     texture_average: &dyn Fn(i32) -> i32,
-) -> TerrainStats {
+) -> Result<TerrainStats, RenderError> {
+    let offset = scene.offset;
+    let mut built: Vec<Option<BuiltTile>> =
+        (0..(PLANES * MAIN * MAIN) as usize).map(|_| None).collect();
+    let slot = |plane: i32, sx: i32, sy: i32| ((plane * MAIN + sx) * MAIN + sy) as usize;
+    let stats = build(
+        terrain,
+        defs,
+        palette,
+        texture_average,
+        |plane, sx, sy, tile| {
+            built[slot(plane, sx, sy)] = Some(tile);
+        },
+    )?;
     for plane in 0..PLANES {
         for sx in 0..MAIN {
             for sy in 0..MAIN {
@@ -809,19 +925,6 @@ pub fn apply(
             }
         }
     }
-    let offset = scene.offset;
-    let mut built: Vec<Option<BuiltTile>> =
-        (0..(PLANES * MAIN * MAIN) as usize).map(|_| None).collect();
-    let slot = |plane: i32, sx: i32, sy: i32| ((plane * MAIN + sx) * MAIN + sy) as usize;
-    let stats = build(
-        terrain,
-        defs,
-        palette,
-        texture_average,
-        |plane, sx, sy, tile| {
-            built[slot(plane, sx, sy)] = Some(tile);
-        },
-    );
     // `rl4.ad` → `ez.bm`/`ez.xe`: on a bridge tile (plane-1 setting bit 2) the tile stack turns —
     // plane 0 (the ground under the bridge) moves to plane 3 and planes 1..3 move down one.
     for sx in 0..MAIN {
@@ -858,5 +961,5 @@ pub fn apply(
             }
         }
     }
-    stats
+    Ok(stats)
 }
