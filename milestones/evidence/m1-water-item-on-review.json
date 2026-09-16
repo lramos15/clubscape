@@ -82,8 +82,15 @@
     "prior_forbidden_work_unchanged": true
   },
   "fix_review": {
-    "status": "admitted",
-    "reviewer": "619c994e-a208-4acf-8c2a-261ae52c892b",
+    "status": "replacement_reserved",
+    "reviewer": null,
+    "reserved_reviewer_slot": "water-persisted-fix-review",
+    "previous_reviewer": {
+      "id": "619c994e-a208-4acf-8c2a-261ae52c892b",
+      "resumption": "Runtime retired the initial reviewer after its park acknowledgement; the explicit fix-delta request was rejected before execution.",
+      "initial_finding_remains_valid": true,
+      "fix_delta_assessment_executed": false
+    },
     "previous_park_acknowledged": true,
     "base": "5c6c581136310b48e8043e7920199d7236f9b88c",
     "implementation_commit": "04a40ee84d0a95866264a3c087071e0f63904377",
