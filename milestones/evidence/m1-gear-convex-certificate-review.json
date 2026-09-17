@@ -60,6 +60,8 @@
   },
   "required_resolution": "Prove a genuinely convex/simple coplanar union or keep separate convex triangles/conservative unresolved bounds. Do not fix by adding only this sample, pruning cases or relaxing thresholds. Repair must precede a trusted whole-denominator result.",
   "worker_notified": true,
+  "subsequent_repair_candidate": "milestones/evidence/m1-renderer-handoff-0665f94.json",
+  "repair_review_state": "Worker report6/6 focused passes collected; independent repair assessment remains pending. Both full-table allowances are spent and no corrected2034-pose remeasurement is admitted.",
   "existing_full_pose_recomputation_budget_increased": false,
   "actual_source_poses_recomputed": 0,
   "source_artifacts_or_metric_implementation_changed_by_director": false,

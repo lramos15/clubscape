@@ -1,0 +1,40 @@
+{
+  "schema_version": 1,
+  "task": "M1-SAVED-WATER-BOOTSTRAP-REVIEW",
+  "status": "admitted_read_only_bootstrap_delta_resume_pending",
+  "authority": "director",
+  "reviewer": "22b898a4-8850-4fc0-be15-af0b7440e32a",
+  "implementation_author": "director",
+  "base_revision": "4526d0d25716c2f453782ba42c09788839ae1810",
+  "candidate_revision": "76971ee95040130ddd2084f7fa7c9fd275982e2c",
+  "worktree": ".worktrees/m1-saved-water-continuation",
+  "candidate_record": "milestones/evidence/m1-saved-water-bootstrap-candidate.json",
+  "consumed_attempt": "milestones/evidence/m1-saved-water-execution-result.json",
+  "scope": "Independently assess the exact six-path canonical-module bootstrap append and directly necessary public callers. The prior4526 deadline review remains separate. Do not repeat the full historical continuation or presentation review.",
+  "source_paths": [
+    "tools/journey-tests/saved_water.py",
+    "tools/journey-tests/saved_water_gate.py",
+    "tools/journey-tests/saved_water_runtime.py",
+    "tools/journey-tests/test_saved_water.py",
+    "tools/journey-tests/test_saved_water_runtime.py",
+    "tools/journey-tests/SAVED_WATER.md"
+  ],
+  "required_checks": [
+    "Actual script and runtime must share one nominal Admission/Reservation identity without weakening equality, source/executor containment or journal ownership.",
+    "Compare old gate declarations/checks/main dispatch with the canonical module; review the changed exception/exit wrapper and all import/caller sites.",
+    "Assess the actual-script synthetic regression, real runtime-reader handoff, fixture isolation and second-launch refusal rather than treating import-only tests as CLI proof.",
+    "Preserve pre-I/O authorization, exclusive consumed journal, native claims, absolute deadline and checkpoint-before-cleanup behavior. The actualce09 attempt remains consumed1/remaining0.",
+    "Report high-confidence actionable correctness findings with paths/lines/conditions, or a qualified no-findings delta assessment. Supplied96-test evidence is precommit qualification, not an independent rerun."
+  ],
+  "read_only": true,
+  "edits_builds_tests_or_dependency_changes": 0,
+  "real_entrypoint_invocations": 0,
+  "protected_checkpoint_path_stat_reads_or_hashes": 0,
+  "databases_services_gameplay_operators_or_source_capture": 0,
+  "browser_gpu_or_runelite": 0,
+  "nested_agents_or_factories": 0,
+  "remaining_saved_entrypoint_attempts": 0,
+  "new_execution_authority_granted": false,
+  "milestone_accepted": false,
+  "automatic_continuation": false
+}

@@ -19,6 +19,7 @@
     "tools/journey-tests/SAVED_WATER.md"
   ],
   "python": {
+    "qualification_stage": "Precommit run on the exact subsequently committed edits; no separate clean769 or root bootstrap rerun yet.",
     "command": "PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=tools/journey-tests timeout 120 python3 -m unittest test_saved_water test_saved_water_runtime test_private_checkpoint test_resume test_run test_cook_continue test_mainland_continue test_dying_observe",
     "tests_passed": 96,
     "exit_code": 0,
@@ -35,6 +36,7 @@
   "real_failed_report_sha256_unchanged": "ee0b31a6431f10831df979e483028bcfaf81046971eb7071c177096ade52689b",
   "main_integration": false,
   "independent_review": "pending",
+  "independent_review_admission": "milestones/evidence/m1-saved-water-bootstrap-review-admission.json",
   "actual_saved_entrypoint_repeated": false,
   "protected_checkpoint_accesses": 0,
   "actual_databases_services_restores_migrations_or_gameplay": 0,

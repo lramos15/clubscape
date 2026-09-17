@@ -7,12 +7,12 @@
     "admissions_open": true,
     "active": [
       {"id": "director", "task": "M1-SAVED-WATER-CONTINUATION-IMPLEMENTATION"},
-      {"id": "bb7f85f7-096a-4377-80cb-3e7eae196c6b", "task": "M1-BROWSER-RENDERER"}
+      {"id": "22b898a4-8850-4fc0-be15-af0b7440e32a", "task": "M1-SAVED-WATER-BOOTSTRAP-REVIEW"}
     ],
     "reserved": [],
     "queued": [],
     "parked": [
-      {"id": "22b898a4-8850-4fc0-be15-af0b7440e32a", "reason": "Completed the reserved independent read-only4526d0d deadline delta review. The reproduced native-lifetime defect is resolved by static inspection; no significant new issue found. No tests/builds/protected data or execution. No automatic continuation."},
+      {"id": "bb7f85f7-096a-4377-80cb-3e7eae196c6b", "reason": "Collected turns28-30 and verified0665f94 plus retained Cargo.lock. Both full2034-pose runs consumed (498/451seconds);3/2034 was measured under the retired certificate. e001b66/0665f94 report repaired focused6/6 cases, not a corrected whole-table result or independent review. No third run or automatic resumption; receipt m1-renderer-handoff-0665f94.json."},
       {"id": "115554cb-8e25-40c8-854a-4f9dc8936166", "reason": "Delivered2fbf5afa/b958cc44 code-only continuation;15 owned paths integrateddd043bce with existing83Python/53native main regressions passing. Director's additional actual-process deadline regression fails. Runtime retired the worker and rejected its first repair follow-up before processing; Director owns that code-only append, with no saved execution or new allowance."},
       {"id": "23749cd0-cc24-4565-9b37-e057b4823867", "reason": "Delivered53f478d7/93979df1 bounded camera consumers and stopped without automatic resumption. Reported59native/5actual-WASM/289Node passes retain original conformance; one streamed-buffer case is blocked and real fine focus/footprint/effect producers are absent. Candidate is unintegrated and awaits Director review; normal entry and all browser/GPU/presentation gates remain closed."},
       {"id": "2766e089-44e5-4a1d-974e-7b03ad9c269d", "reason": "Runtime retired the completed native water implementer. The fresh code-only saved52-continuation request was rejected before processing; no implementation/test/protected operation occurred. Preserve its completed04a40ee repair; one replacement is reserved for the new, unexecuted task only."},
@@ -38,6 +38,24 @@
     "usage_accounting": "milestones/evidence/m1-usage-snapshot.json records the available delayed session snapshot; final project-wide credits/currency are unavailable."
   },
   "tasks": [
+    {
+      "id": "M1-SAVED-WATER-BOOTSTRAP-REVIEW",
+      "goal": "Independently assess the Director-authored canonical CLI bootstrap repair without renewing saved execution.",
+      "status": "CLAIMED",
+      "specs": ["milestones/evidence/m1-saved-water-bootstrap-review-admission.json", "milestones/evidence/m1-saved-water-bootstrap-candidate.json"],
+      "dependencies": ["M1-SAVED-WATER-CONTINUATION-IMPLEMENTATION"],
+      "allowed_paths": [],
+      "forbidden_paths": ["**"],
+      "outputs": ["High-confidence findings or a qualified independent bootstrap-delta assessment"],
+      "validation_commands": [],
+      "test_requirements": ["Read-only76971ee versus4526 and directly necessary public context", "No tests/builds/entrypoint/private state/services or nested agents", "Assess shared authority types, unchanged guards and native claims, error/exit semantics and synthetic actual-script/no-retry coverage"],
+      "acceptance": ["A reviewer other than the author assesses the append; resolve blocking findings before integration", "Keep the supplied96-test precommit run separate from independent static review and future committed-root qualification"],
+      "reserved_namespaces": [],
+      "source_notes": ["The sole actualce09 entrypoint failed before protected access because of nominal module identity and consumed its entire attempt. Fixing code does not renew it."],
+      "parity_entries": [],
+      "adaptations": [],
+      "evidence": ["milestones/evidence/m1-saved-water-bootstrap-review-admission.json", "milestones/evidence/m1-saved-water-bootstrap-candidate.json"]
+    },
     {
       "id": "M1-SAVED-WATER-EXECUTION",
       "goal": "Consume only the exact one-shot reviewed saved52 minimal-water upgrade and remaining range/postquest attempt.",
@@ -959,7 +977,7 @@
     {
       "id": "M1-BROWSER-RENDERER",
       "goal": "Implement actual source-faithful Rust/WASM WebGPU world/model/animation rendering and picking.",
-      "status": "IMPLEMENTING",
+      "status": "BLOCKED",
       "specs": ["spec/browser-implementation.md", "web/shared/contracts.ts", "spec/m1-benchmark-contract.json", "milestones/approvals/m1-reference-pack-v1.3.0.json", "milestones/evidence/m1-renderer-residual-gear-admission.json"],
       "dependencies": ["M1-REFERENCE-APPROVAL"],
       "allowed_paths": ["crates/renderer/**", "web/renderer/**", "tools/render-assets/**", "assets/compiled/render/**"],
@@ -972,7 +990,8 @@
       "source_notes": ["research/reference-pack/v1/manifest.json"],
       "parity_entries": [],
       "adaptations": ["Approved penguin base and equipment-fit criteria"],
-      "evidence": ["Historical through9fd9434: attachment-aware b4b563a/a33945b/6854a9b/784f164, actual source hand overrides and icon/u64 helpers. Its671/1587 fitting failure and package3a16edb remain preserved in milestones/evidence/m1-attachment-aware-renderer.json, not current acceptance.", "Current aa2cb19/16e9130/eacb826/6e849ea plus Director d2298b9 integrate through aca4ea2. Exact original assembly-time terrain closes the outer band:15 full512 minimaps and5-base50913 paints/6980 models exact. Real Chrome5 scenes+58 models pixel-exact;50 native tests and22 overlapping root checks pass. Current package880924edb755f3613a58d60b62d91c7507da968071998d2aaef91b77d7739b49,61 squares/183members/920verifiedfiles; source1307 frozen inputs unchanged.", "Required source clips now39, including all12 newly bound actor clips and native5732/1925/9702 hand models. Source-qualified style legality gives2034 legal frames (1801worn/233override),497illegal-style/4863hidden/942not-equippable. Actual explicit gate FAILS931/2034 (926penetration/8surface-gap/0attachment, overlapping categories), not a source-human-overlap waiver. Unchanged penguin base and numeric bounds; same worker continues ACTUAL permitted gear-mesh fitting, not only provenance.", "Turned scenery, source widget icon capture, full HUD/player/UI composition and frozen-window performance remain open. Known source-hidden Home hands still produce misleading repeated motion-unknown diagnostics; the owner has the follow-up, not a missing backend binding. Mac/Edge/owner and full M1 acceptance remain separate. Current evidence milestones/evidence/m1-terrain-clips.json."]
+      "evidence": ["Historical through9fd9434: attachment-aware b4b563a/a33945b/6854a9b/784f164, actual source hand overrides and icon/u64 helpers. Its671/1587 fitting failure and package3a16edb remain preserved in milestones/evidence/m1-attachment-aware-renderer.json, not current acceptance.", "Current aa2cb19/16e9130/eacb826/6e849ea plus Director d2298b9 integrate through aca4ea2. Exact original assembly-time terrain closes the outer band:15 full512 minimaps and5-base50913 paints/6980 models exact. Real Chrome5 scenes+58 models pixel-exact;50 native tests and22 overlapping root checks pass. Current package880924edb755f3613a58d60b62d91c7507da968071998d2aaef91b77d7739b49,61 squares/183members/920verifiedfiles; source1307 frozen inputs unchanged.", "Required source clips now39, including all12 newly bound actor clips and native5732/1925/9702 hand models. Source-qualified style legality gives2034 legal frames (1801worn/233override),497illegal-style/4863hidden/942not-equippable. Actual explicit gate FAILS931/2034 (926penetration/8surface-gap/0attachment, overlapping categories), not a source-human-overlap waiver. Unchanged penguin base and numeric bounds; same worker continues ACTUAL permitted gear-mesh fitting, not only provenance.",       "Turned scenery, source widget icon capture, full HUD/player/UI composition and frozen-window performance remain open. Known source-hidden Home hands still produce misleading repeated motion-unknown diagnostics; the owner has the follow-up, not a missing backend binding. Mac/Edge/owner and full M1 acceptance remain separate. Current evidence milestones/evidence/m1-terrain-clips.json.",
+      "milestones/evidence/m1-renderer-handoff-0665f94.json"]
     },
     {
       "id": "M1-BROWSER-UI",
