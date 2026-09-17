@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "task": "M1-SAVED-WATER-CONTINUATION-IMPLEMENTATION",
-  "status": "reviewed_repair_main_regression_pending",
+  "status": "verified_code_only_no_saved_execution",
   "worker": "director",
   "candidate_implementer": "115554cb-8e25-40c8-854a-4f9dc8936166",
   "retired_predecessor": "2766e089-44e5-4a1d-974e-7b03ad9c269d",
@@ -81,6 +81,7 @@
     "repair_revision": "4526d0d25716c2f453782ba42c09788839ae1810",
     "repair_qualification": "milestones/evidence/m1-saved-water-deadline-repair-candidate.json",
     "independent_delta_review": "milestones/evidence/m1-saved-water-deadline-review.json",
+    "main_repair_qualification": "milestones/evidence/m1-saved-water-deadline-root-qualification.json",
     "independent_delta_review_required": true,
     "new_agent_or_execution_allowance": false
   },

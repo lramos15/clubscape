@@ -1,0 +1,110 @@
+{
+  "schema_version": 1,
+  "kind": "m1_saved52_water_execution",
+  "status": "admitted",
+  "authority": "director",
+  "milestone": "m1-starter-journey",
+  "owner_approval": "milestones/approvals/m1-water-fill-upgrade-v1.json",
+  "saved_execution_admitted": true,
+  "checkpoint_access_admitted": true,
+  "automatic_resume": false,
+  "milestone_accepted": false,
+  "later_milestone_authorized": false,
+  "canonical_git_root": "/home/lramos15/clubscape",
+  "executor": {
+    "id": "director",
+    "root": "/home/lramos15/clubscape/.worktrees/m1-saved-water-continuation",
+    "worktree": ".worktrees/m1-saved-water-continuation",
+    "branch": "task/m1-saved-water-continuation",
+    "code_revision": "4526d0d25716c2f453782ba42c09788839ae1810"
+  },
+  "start": {
+    "source_root": "/home/lramos15/clubscape/.worktrees/m1-headless-journey",
+    "checkpoint_root": "/home/lramos15/clubscape/.worktrees/m1-headless-journey/.local/journey-checkpoints/52f32d29b5dc4f1a",
+    "run_id": "52f32d29b5dc4f1a",
+    "archive_sha256": "a90bf263bcaa89dcbd4773154a5c0ff27a62de42f9762b2d6e6dfce810be6860",
+    "private_inventory_sha256": "a384a9ac7f8036214eb4e4bbe14a82976e33140def7a4f3239ec0079d98f570c",
+    "private_identity_sha256": "3eb17ef511523a44a01e3d18a13fa00e2872e3b0a74bada5534b8eccdc511bb1",
+    "source_artifact_sha256": "5e0aa8a28851752ae0b8b0a08c635c6c8d2979f509f3a3e564ee74e2abfc8e6f",
+    "world_id": "95acc818-e1d6-4ad3-805f-d323623d2933",
+    "account_id": "f43da325-ffcc-4753-a823-7a345dfce33b",
+    "actor_id": "actor.05a9c9bae95142fabe29d3ec35e8cf9e",
+    "next_sequence": 499
+  },
+  "target": {
+    "world_id": "95acc818-e1d6-4ad3-805f-d323623d2933",
+    "artifact_sha256": "b2a1be20a0e6c3e1968f6f7610198ce38212f196c005539b4ac5013d10ebc650",
+    "descriptor_sha256": "24fec6e152cf5e5a899248bfe302fc12f6f080b71d43f9c0052264f1d9fcbc6e",
+    "assets_manifest_sha256": "95d7afc9d2740299c6e5091b547dbcfbc1b7b2c6f5614eca0b2251adc60abf08",
+    "game_root": "/home/lramos15/clubscape/.local/saved-water-delivery-01/game-root",
+    "manifest": "content/m1/legacy5e-water/manifest.json",
+    "manifest_sha256": "718d50eb2134f76b9bb2d34ba2b99f162cb2ec6666b392aba52ce2a03477cdf4",
+    "delivery_index_sha256": "a7b09591841ecda261b76d5ab4612d3ad1c15ea649da02bb39506513e07f898b",
+    "delivery_inventory_sha256": "b4eeee21e9bf45db2a104ca1110305155069632bb371c8a563d9cb7ee7b75cb8"
+  },
+  "bounds": {
+    "attempts": 1,
+    "restores": 1,
+    "migrate_ui_invocations": 1,
+    "databases": 1,
+    "server_starts": 2,
+    "postquest_restarts": 1,
+    "native_preflights": 1,
+    "native_gameplay_invocations": 1,
+    "native_preflight_seconds": 60,
+    "scenario_seconds": 600,
+    "new_world_inputs_including_duplicates": 128,
+    "migration_seconds": 35,
+    "restore_seconds": 300,
+    "database_command_seconds": 90,
+    "archive_command_seconds": 300,
+    "total_seconds": 2400,
+    "preservation_cleanup_seconds": 960,
+    "builds": 0,
+    "source_generation": 0,
+    "operator_preflight_invocations": 0,
+    "browser_gpu_runelite_invocations": 0
+  },
+  "journal": "/home/lramos15/clubscape/.worktrees/m1-saved-water-continuation/.local/saved-water-continuation-01/authority-v1.json",
+  "output": "/home/lramos15/clubscape/.worktrees/m1-saved-water-continuation/.local/saved-water-continuation-01",
+  "independent_review": {
+    "path": "milestones/evidence/m1-saved-water-continuation-review.json",
+    "revision": "b95b1d9a60b8e6837182528c43fa55eb8795679c",
+    "sha256": "f6d233364a010a7348f38d6de3d4d3a783a38986f5a76926cc966be4296f1c6f"
+  },
+  "main_qualification": {
+    "path": "milestones/evidence/m1-saved-water-deadline-root-qualification.json",
+    "sha256": "2582f204e10a6f4b91ceb0ac38a2d250d9aad0b353f261dbfd05f8a57624c30f",
+    "root_code_revision": "b95b1d9a60b8e6837182528c43fa55eb8795679c"
+  },
+  "public_inputs": {
+    "milestones/approvals/m1-water-fill-upgrade-v1.json": "438ba1e44c35f3ad7ebbe8e4c099b02f594df851bd2092a7f767bc4928b4c9d1",
+    "milestones/evidence/m1-cook-reward-frontier.json": "15580e3f0bc847041dd7a91054b1112db513a887855b55333d5429408e0241f9",
+    "milestones/evidence/m1-saved-water-delivery-preparation.json": "61dd02d35aed1ff96afc58a246d4217d82bad59d6774f2002b892ce8c7aba3e9",
+    "milestones/evidence/m1-water-main-integration.json": "75d198665ab7added070bf26b7bf6f227f64f9428e7b76ba306f516ef61038dc",
+    "milestones/evidence/m1-water-upgrade-preflight-receipt.json": "c6c9908f66960c5f53b96ee981a1077576773a14e1ea1a6de542085e4478a3a0",
+    "milestones/evidence/m1-water-main-integration/root-qualification/index.json": "879e0789563c0239860f641faa483c8b288052dba8f0cdfb7c21950d27b78b6f",
+    "milestones/evidence/m1-saved-water-delivery/index.json": "a7b09591841ecda261b76d5ab4612d3ad1c15ea649da02bb39506513e07f898b",
+    "milestones/evidence/m1-saved-water-delivery/delivery-files.json": "b4eeee21e9bf45db2a104ca1110305155069632bb371c8a563d9cb7ee7b75cb8",
+    "milestones/evidence/m1-cook-reward/52f32d29b5dc4f1a.json.gz": "8e1d2bb00d120b178dcb2247cae661d151b72325d5d9813ef1217149122bb308"
+  },
+  "binaries": {
+    "migrator": {"path": ".local/saved-water-target/debug/clubscape-server", "sha256": "ccfd9f1bd084a2483e5d6238154b037a18453ea9e84c4788e18a8fe6462620b3"},
+    "server": {"path": ".local/saved-water-target/debug/clubscape-journey-server", "sha256": "c82915e8a5c20bbb2853ffbfe955f4cf6c996ffc30e0e4cc590cb858521af749"},
+    "simulator": {"path": ".local/saved-water-target/debug/clubscape-sim", "sha256": "f1416752b87390b1954c63967cb13f93c11e6c86aad4802b07e3e67ceb0a267b"}
+  },
+  "execution_requirements": [
+    "Only this committed record and its exact CLI revision/hash may reserve the fixed journal before protected I/O. One entrypoint attempt only; failures consume it and never authorize another path or run.",
+    "Use the existing public immutable40-file minimal-b2 delivery. No preparation/operator/source-generation/browser/audio/GPU/RuneLite allowance is renewed.",
+    "Use only the verified local default Docker context at unix:///var/run/docker.sock and the existing pinned native ARM64 PostgreSQL image. No image pull, install, alternate endpoint or supplied database URL.",
+    "Restore the same original world/account once into the verified owned empty database. Prove complete original private identity before the one existing production migrate-ui invocation.",
+    "Continue only the existing bucket/flour sink conversion, dough/range and postquest lifecycle. Keep actual success or burn; never replay the old quest reward, tutorial/death/reacquisition or an unknown operation.",
+    "Preserve a fresh exact success/failure snapshot and original lineage before cleanup. Unknown restore/migration/capture/cleanup outcomes are not rollback or retry permission; capture failure retains owned database and credentials.",
+    "A2400-second external hard controller limit may terminate a stuck orchestrator. Such termination is an unknown outcome requiring reconciliation of the fixed journal and owned resources, not a fresh attempt or permission to delete them."
+  ],
+  "external_controller_timeout_seconds": 2400,
+  "external_timeout_signal": "KILL",
+  "new_worlds_or_accounts": 0,
+  "actual_execution_performed_by_this_record": false,
+  "acceptance_scope": "Remaining headless water/range/persistence evidence only. No browser, presentation, performance, RuneLite, M1 acceptance or later milestone."
+}

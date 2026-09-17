@@ -6,7 +6,7 @@
     "effective_limit": 25,
     "admissions_open": true,
     "active": [
-      {"id": "director", "task": "M1-SAVED-WATER-CONTINUATION-IMPLEMENTATION"},
+      {"id": "director", "task": "M1-SAVED-WATER-EXECUTION"},
       {"id": "bb7f85f7-096a-4377-80cb-3e7eae196c6b", "task": "M1-BROWSER-RENDERER"}
     ],
     "reserved": [],
@@ -39,6 +39,24 @@
   },
   "tasks": [
     {
+      "id": "M1-SAVED-WATER-EXECUTION",
+      "goal": "Consume only the exact one-shot reviewed saved52 minimal-water upgrade and remaining range/postquest attempt.",
+      "status": "IMPLEMENTING",
+      "specs": ["milestones/evidence/m1-saved-water-execution.json", "milestones/evidence/m1-saved-water-deadline-root-qualification.json", "tools/journey-tests/SAVED_WATER.md"],
+      "dependencies": ["M1-SAVED-WATER-CONTINUATION-IMPLEMENTATION", "M1-SAVED-WATER-DEADLINE-REVIEW", "M1-SAVED-WATER-DELIVERY-PREPARATION", "M1-WATER-MAIN-INTEGRATION", "M1-WATER-UPGRADE-PREFLIGHT"],
+      "allowed_paths": [".worktrees/m1-saved-water-continuation/.local/saved-water-continuation-01/**", ".worktrees/m1-saved-water-continuation/.local/journey-runs/**", ".worktrees/m1-saved-water-continuation/.local/journey-checkpoints/**", "milestones/**"],
+      "forbidden_paths": ["Original checkpoint writes", "All other checkpoint access", "Source-code or frozen source changes", "New output roots or retry journals", "Unrelated user data"],
+      "outputs": ["One committed-admission/fixed-journal execution result", "Actual conserved migration and remaining-only result or explicit failure", "Fresh protected checkpoint before cleanup, or retained owned resources with reconciliation required"],
+      "validation_commands": ["One exact saved_water.py entrypoint using this committed admission revision/hash and director executor identity"],
+      "test_requirements": ["Public authority and exclusive journal precede original protected reads", "Respect the unchanged600/2400-second and128-input bounds", "No reset, grant, old reward replay, substituted ingredients or invented rollback", "Keep success or burn and unknown outcomes; never clean up after failed capture", "No renewed operator/preparation/browser/audio/GPU/RuneLite/source-capture allowance"],
+      "acceptance": ["Record the actual one-attempt result without claiming complete browser/presentation/M1 acceptance"],
+      "reserved_namespaces": [],
+      "source_notes": ["Original52 access is a read-only exception granted only by the separate exact execution record after its public gate/reservation; no prior consumed restore admission applies."],
+      "parity_entries": [],
+      "adaptations": [],
+      "evidence": ["milestones/evidence/m1-saved-water-execution.json"]
+    },
+    {
       "id": "M1-SAVED-WATER-DEADLINE-REVIEW",
       "goal": "Independently review the exact Director-authored deadline repair before integration or any saved52 execution admission.",
       "status": "VERIFIED",
@@ -59,7 +77,7 @@
     {
       "id": "M1-SAVED-WATER-CONTINUATION-IMPLEMENTATION",
       "goal": "Implement and test the exact migration-aware saved52 continuation without reading or executing protected state.",
-      "status": "REVIEW",
+      "status": "VERIFIED",
       "specs": ["milestones/evidence/m1-saved-water-continuation-implementation.json", "milestones/evidence/m1-saved-water-delivery-preparation.json", "milestones/approvals/m1-water-fill-upgrade-v1.json"],
       "dependencies": ["M1-SAVED-WATER-DELIVERY-PREPARATION", "M1-WATER-MAIN-INTEGRATION"],
       "allowed_paths": ["tools/journey-tests/**", "tools/simulator/src/journey/**", "tools/simulator/src/main.rs", "tools/simulator/tests/**"],
