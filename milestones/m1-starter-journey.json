@@ -9,7 +9,8 @@
   "candidate_revision": null,
   "accepted_revision": null,
   "checkpoint": {
-    "report": "milestones/evidence/m1-cook-reward-frontier.json",
+    "report": "milestones/evidence/m1-saved-water-execution-02-result.json",
+    "original_cook_frontier": "milestones/evidence/m1-cook-reward-frontier.json",
     "integration_report": "milestones/evidence/m1-native-recovery-integration.json",
     "verified_infrastructure_revision": "275d3cc83d6a7c2118d0afcf82490f364e5d2986",
     "infrastructure_evidence": "milestones/evidence/m1-account-foundations.json",
@@ -32,6 +33,8 @@
     "saved_water_successor_integration_admission": "milestones/evidence/m1-saved-water-binding-02-integration-admission.json",
     "saved_water_successor_root_qualification": "milestones/evidence/m1-saved-water-binding-02-root-qualification.json",
     "saved_water_successor_exact_execution_admission": "milestones/evidence/m1-saved-water-execution-02.json",
+    "saved_water_successor_actual_result": "milestones/evidence/m1-saved-water-execution-02-result.json",
+    "saved_water_successor_actual_evidence": "milestones/evidence/m1-saved-water-execution-02/index.json",
     "camera_consumer_handoff": "milestones/evidence/m1-camera-consumers-implementation.json",
     "camera_consumer_strict_cpu_admission": "milestones/evidence/m1-camera-consumers-director-cpu-admission.json",
     "camera_consumer_strict_cpu_result": "milestones/evidence/m1-camera-consumers-director-cpu-result.json",
@@ -41,7 +44,7 @@
     "camera_height_presence_review": "milestones/evidence/m1-camera-height-presence-review.json",
     "renderer_numeric_blocker": "milestones/evidence/m1-gear-convex-certificate-review.json",
     "renderer_residual_handoff": "milestones/evidence/m1-renderer-handoff-0665f94.json",
-    "scope_note": "M1 remains unaccepted. Immutable52 retains the legitimate tutorial/Cook frontier;ce09 remains consumed before protected access. Bootstrap769/2ed/96-case root qualification is preserved. Owner approved one separate successor; fixed0b is independently reviewed, integrated3c9c43d and qualified by98 synthetic tests on committed root. Exact executable02 admission now binds the current883d review/qualification, unchanged public delivery, retained2fb native binaries and original limits; it must be committed before its sole invocation. No actual successor/protected operation has yet occurred. Camera44's independent delta assessment statically resolves the preserved939 unloaded-height failure, with7 precommit passes and strict Clippy; camera integration/root qualification and live fine-focus/footprint/effects remain open. Reviewer is parked. Renderer0665 is parked with2/2 full recomputations spent; historical3/2034 predates its certificate repair and root remains931/2034. Browser/composed presentation/animation/audio/performance and owner Mac/Chrome/Edge/speaker gates remain open. No old allowance is refunded or unrelated allowance/later milestone authorized."
+    "scope_note": "M1 remains unaccepted. The separately approved02 attempt ran once on reviewed0b under3a52/dd631 and passed exit0 in53.78seconds. Actual4282 proves original52 private identity, one conserved5e-to-b2 migration, source sink/dough/range with one natural burn and four new-water duplicates across reconnect/logout-login/graceful restart. Only11new inputs and39new checks were added; all70 tutorial edges and4547 historical trace rows remain intact, with416checks/614submissions/4633rows and all11segment records passed across the legitimate historical chain. Fresh protected4282 capture precedes verified owned cleanup; the phase checkpoint is not automatic resume authority. Both01 and02 are consumed, no further original access or retry. Camera44 is independently reviewed but consumer integration/root qualification and live fine-focus/footprint/effects remain open. Renderer0665 is parked with2/2 full recomputations spent; historical3/2034 predates its certificate repair and root remains931/2034. Full-journey/browser/composed presentation/animation/audio/performance and owner Mac/Chrome/Edge/speaker acceptance flags remain false. No unrelated allowance or later milestone is authorized."
   },
   "scope_approval": {
     "authority": "owner",
@@ -60,7 +63,7 @@
   "water_fill_upgrade_approval": {
     "path": "milestones/approvals/m1-water-fill-upgrade-v1.json",
     "sha256": "438ba1e44c35f3ad7ebbe8e4c099b02f594df851bd2092a7f767bc4928b4c9d1",
-    "scope": "Source-backed water dependency and a later exact, tested, fenced upgrade of the same saved world. No migration or further restore has executed."
+    "scope": "Source-backed water dependency and exact fenced upgrade of the same saved world. The separately approved4282 attempt now proves one restore, conserved5e-to-b2 migration and source water/dough/natural-range-burn/postquest continuation; no further restore or execution is admitted."
   },
   "presentation_acceptance": null,
   "later_milestone_authorized": false,
@@ -74,9 +77,9 @@
     {"id": "legitimate-lumbridge-arrival", "status": "in_progress", "evidence": [], "blocker": null},
     {"id": "lumbridge-activities", "status": "in_progress", "evidence": [], "blocker": null},
     {"id": "death-and-recovery", "status": "in_progress", "evidence": [{"path": "tools/journey-tests/evidence/office-grave-pot-907d84b817974f55.json"}], "blocker": "Actual same-account source5e Office introduction/topics/portal and original grave recovery now pass, conserving20 item kinds/all24skill XP/bothquests and source fee0. Complete browser recovery, ordinary-grave Bank-All source permission and native recovery presentation remain separate open gates."},
-    {"id": "complete-cooks-assistant", "status": "in_progress", "evidence": [{"path":"milestones/evidence/m1-cook-reward-frontier.json"}, {"path":"milestones/evidence/m1-saved-water-continuation-review.json"}, {"path":"milestones/evidence/m1-saved-water-execution-result.json"}, {"path":"milestones/evidence/m1-saved-water-bootstrap-root-qualification.json"}, {"path":"milestones/evidence/m1-saved-water-binding-02-review.json"}, {"path":"milestones/evidence/m1-saved-water-binding-02-root-qualification.json"}, {"path":"milestones/evidence/m1-saved-water-execution-02.json"}], "blocker": "Actual same-account quest and300XP/1QP reward/known duplicate are verified atsequence461. Priorce09 remains consumed. Separately approved successor0b is reviewed and integrated3c9c43d with98 committed-root synthetic passes; exact02 admission is prepared for commit before the one invocation. Actual water/range/postquest and full browser evidence remain unexecuted."},
-    {"id": "shared-authoritative-headless-path", "status": "in_progress", "evidence": [], "blocker": null},
-    {"id": "tutorial-and-quest-persistence", "status": "in_progress", "evidence": [], "blocker": null},
+    {"id": "complete-cooks-assistant", "status": "in_progress", "evidence": [{"path":"milestones/evidence/m1-cook-reward-frontier.json"}, {"path":"milestones/evidence/m1-saved-water-continuation-review.json"}, {"path":"milestones/evidence/m1-saved-water-execution-result.json"}, {"path":"milestones/evidence/m1-saved-water-binding-02-root-qualification.json"}, {"path":"milestones/evidence/m1-saved-water-execution-02-result.json"}], "blocker": "Same-account quest/reward and the remaining water/dough/range/postquest chain are verified. Actual4282 preserves a natural burn, Cooking300XP/level4 and2QP without old reward replay; four new-water duplicates pass recovery. Both saved attempts are consumed. Complete browser/presentation and final reviewed-candidate acceptance remain open."},
+    {"id": "shared-authoritative-headless-path", "status": "in_progress", "evidence": [{"path":"milestones/evidence/m1-saved-water-execution-02-result.json"}], "blocker": "The legitimate same-account historical5e/b2 chain now has all11segment records passed,416source checks and70tutorial edges. This remaining-only run does not relabel historical work as current-target execution; full_journey_passed remains false pending complete-candidate acceptance evidence."},
+    {"id": "tutorial-and-quest-persistence", "status": "in_progress", "evidence": [{"path":"milestones/evidence/m1-saved-water-execution-02-result.json"}], "blocker": "Historical onboarding recovery is retained and actual postquest reconnect/logout-login/same-target graceful restart pass with four identical new-water duplicates and nextsequence506. Browser and final reviewed-build persistence gates remain separate."},
     {"id": "content-compilation-and-stable-ids", "status": "implemented", "evidence": [{"path": "milestones/evidence/m1-engine-review-repairs.json", "sha256": "b46eed3abaafe59c06c139edc095872fce97fcbfa7fd3548ad162ee1a6d12593"}], "blocker": "Strict source/native conformance and all reported engine review repairs pass; complete live journey and final candidate validation remain separate."},
     {"id": "asset-manifest-validation", "status": "in_progress", "evidence": [], "blocker": null},
     {"id": "interface-controls-and-resizing", "status": "in_progress", "evidence": [{"path":"milestones/evidence/m1-native-recovery-integration.json"}], "blocker": "Reviewed UI/native recovery is integrated212535a with complete/empty contexts, original captions/counts and atomic Take-All. Required visible UI models and independent preview projection remain incomplete. Current world primary clicks still only report immediate out-of-range permission; M1-WORLD-ACTION-ROUTING remains separately open."},

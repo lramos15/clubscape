@@ -1,0 +1,375 @@
+{
+  "current_capture": ".worktrees/m1-saved-water-continuation/.local/journey-checkpoints/4282ed4b806b4be4",
+  "current_trace_bytes": 38745207,
+  "current_trace_sha256": "70ad63c58866b598fb53b166889ffcb8e99c25d27fb20b78e28130b92db35bfd",
+  "historical_rows": 4547,
+  "kind": "read_only_actual_trace_projection",
+  "new_inputs": [
+    {
+      "input": {
+        "walk": {
+          "destination": {
+            "x": 3206,
+            "y": 3216
+          }
+        }
+      },
+      "observed_character_revision": 3807,
+      "operation_id": "6ee85597-e80a-4f72-8f3d-576f9e3089df",
+      "retry_of_same_operation": false,
+      "sequence": 499,
+      "trace_index": 4555
+    },
+    {
+      "input": {
+        "useItem": {
+          "inventorySlot": 1,
+          "worldSpawn": "spawn.water_source.3205.3215.p0.t10.r0"
+        }
+      },
+      "observed_character_revision": 3813,
+      "operation_id": "5469d258-df7e-4fff-842c-19a739e5e4e0",
+      "retry_of_same_operation": false,
+      "sequence": 500,
+      "trace_index": 4560
+    },
+    {
+      "input": {
+        "useItem": {
+          "otherInventorySlot": 1
+        }
+      },
+      "observed_character_revision": 3816,
+      "operation_id": "886fc376-95cc-489e-bc38-1f952b5a4aab",
+      "retry_of_same_operation": false,
+      "sequence": 501,
+      "trace_index": 4564
+    },
+    {
+      "input": {
+        "ui": {
+          "production": {
+            "menuId": "ui.8",
+            "mode": "SINGLE",
+            "quantity": 1,
+            "recipe": "recipe.cooking.dough"
+          }
+        }
+      },
+      "observed_character_revision": 3819,
+      "operation_id": "2ae5e84f-fe3c-40bc-9cdc-b9ac603c0196",
+      "retry_of_same_operation": false,
+      "sequence": 502,
+      "trace_index": 4569
+    },
+    {
+      "input": {
+        "walk": {
+          "destination": {
+            "x": 3211,
+            "y": 3215
+          }
+        }
+      },
+      "observed_character_revision": 3823,
+      "operation_id": "9de86abb-e1b7-4aa6-8b6b-7d7a7adfc882",
+      "retry_of_same_operation": false,
+      "sequence": 503,
+      "trace_index": 4580
+    },
+    {
+      "input": {
+        "interact": {
+          "action": "Cook",
+          "target": "spawn.range.lumbridge.3212.3215.p0.t10.r2"
+        }
+      },
+      "observed_character_revision": 3832,
+      "operation_id": "55936e30-33a5-44ce-97b1-c09840de509e",
+      "retry_of_same_operation": false,
+      "sequence": 504,
+      "trace_index": 4588
+    },
+    {
+      "input": {
+        "ui": {
+          "production": {
+            "menuId": "ui.9",
+            "mode": "SINGLE",
+            "quantity": 1,
+            "recipe": "recipe.cooking.bread.lumbridge_range"
+          }
+        }
+      },
+      "observed_character_revision": 3835,
+      "operation_id": "4c9d690d-d1c8-4aca-849b-f26f369fbe54",
+      "retry_of_same_operation": false,
+      "sequence": 505,
+      "trace_index": 4591
+    },
+    {
+      "input": {
+        "useItem": {
+          "inventorySlot": 1,
+          "worldSpawn": "spawn.water_source.3205.3215.p0.t10.r0"
+        }
+      },
+      "observed_character_revision": 3813,
+      "operation_id": "5469d258-df7e-4fff-842c-19a739e5e4e0",
+      "retry_of_same_operation": true,
+      "sequence": 500,
+      "trace_index": 4598
+    },
+    {
+      "input": {
+        "useItem": {
+          "inventorySlot": 1,
+          "worldSpawn": "spawn.water_source.3205.3215.p0.t10.r0"
+        }
+      },
+      "observed_character_revision": 3813,
+      "operation_id": "5469d258-df7e-4fff-842c-19a739e5e4e0",
+      "retry_of_same_operation": true,
+      "sequence": 500,
+      "trace_index": 4608
+    },
+    {
+      "input": {
+        "useItem": {
+          "inventorySlot": 1,
+          "worldSpawn": "spawn.water_source.3205.3215.p0.t10.r0"
+        }
+      },
+      "observed_character_revision": 3813,
+      "operation_id": "5469d258-df7e-4fff-842c-19a739e5e4e0",
+      "retry_of_same_operation": true,
+      "sequence": 500,
+      "trace_index": 4618
+    },
+    {
+      "input": {
+        "useItem": {
+          "inventorySlot": 1,
+          "worldSpawn": "spawn.water_source.3205.3215.p0.t10.r0"
+        }
+      },
+      "observed_character_revision": 3813,
+      "operation_id": "5469d258-df7e-4fff-842c-19a739e5e4e0",
+      "retry_of_same_operation": true,
+      "sequence": 500,
+      "trace_index": 4630
+    }
+  ],
+  "new_row_kinds": {
+    "authoritative_snapshot": 24,
+    "bounded_wait_completed": 5,
+    "input": 11,
+    "owned_restart_acknowledgment": 1,
+    "owned_restart_requested": 1,
+    "saved_water_source_contact_candidates": 1,
+    "source_checkpoint": 39,
+    "source_production_selection": 2,
+    "source_target": 1,
+    "target_observation": 1
+  },
+  "new_rows": 86,
+  "new_source_checks": [
+    {
+      "label": "exact_server_build",
+      "passed": true,
+      "trace_index": 4548
+    },
+    {
+      "label": "server_request_budget",
+      "passed": true,
+      "trace_index": 4549
+    },
+    {
+      "label": "joined_content_revision",
+      "passed": true,
+      "trace_index": 4550
+    },
+    {
+      "label": "saved_water_original_next_sequence",
+      "passed": true,
+      "trace_index": 4552
+    },
+    {
+      "label": "saved_water_lifecycle_entry_preserved_player",
+      "passed": true,
+      "trace_index": 4553
+    },
+    {
+      "label": "inventory_menu_open_does_not_consume_items",
+      "passed": true,
+      "trace_index": 4566
+    },
+    {
+      "label": "inventory_only_production_target",
+      "passed": true,
+      "trace_index": 4567
+    },
+    {
+      "label": "recipe.cooking.dough",
+      "passed": true,
+      "trace_index": 4573
+    },
+    {
+      "label": "recipe.cooking.dough",
+      "passed": true,
+      "trace_index": 4574
+    },
+    {
+      "label": "recipe.cooking.dough",
+      "passed": true,
+      "trace_index": 4575
+    },
+    {
+      "label": "recipe.cooking.dough",
+      "passed": true,
+      "trace_index": 4576
+    },
+    {
+      "label": "recipe.cooking.dough",
+      "passed": true,
+      "trace_index": 4577
+    },
+    {
+      "label": "production_source_xp",
+      "passed": true,
+      "trace_index": 4578
+    },
+    {
+      "label": "one_real_cooking_outcome",
+      "passed": true,
+      "trace_index": 4595
+    },
+    {
+      "label": "cooking_consumed_raw_item",
+      "passed": true,
+      "trace_index": 4596
+    },
+    {
+      "label": "success_or_burn_source_xp",
+      "passed": true,
+      "trace_index": 4597
+    },
+    {
+      "label": "saved_water.before_reconnect",
+      "passed": true,
+      "trace_index": 4600
+    },
+    {
+      "label": "duplicate_did_not_consume_sequence",
+      "passed": true,
+      "trace_index": 4601
+    },
+    {
+      "label": "exact_server_build",
+      "passed": true,
+      "trace_index": 4602
+    },
+    {
+      "label": "server_request_budget",
+      "passed": true,
+      "trace_index": 4603
+    },
+    {
+      "label": "joined_content_revision",
+      "passed": true,
+      "trace_index": 4604
+    },
+    {
+      "label": "saved_water.transport_reconnect",
+      "passed": true,
+      "trace_index": 4606
+    },
+    {
+      "label": "recovered_next_sequence",
+      "passed": true,
+      "trace_index": 4607
+    },
+    {
+      "label": "saved_water.after_reconnect",
+      "passed": true,
+      "trace_index": 4610
+    },
+    {
+      "label": "duplicate_did_not_consume_sequence",
+      "passed": true,
+      "trace_index": 4611
+    },
+    {
+      "label": "exact_server_build",
+      "passed": true,
+      "trace_index": 4612
+    },
+    {
+      "label": "server_request_budget",
+      "passed": true,
+      "trace_index": 4613
+    },
+    {
+      "label": "joined_content_revision",
+      "passed": true,
+      "trace_index": 4614
+    },
+    {
+      "label": "saved_water.logout_login",
+      "passed": true,
+      "trace_index": 4616
+    },
+    {
+      "label": "recovered_next_sequence",
+      "passed": true,
+      "trace_index": 4617
+    },
+    {
+      "label": "saved_water.after_logout_login",
+      "passed": true,
+      "trace_index": 4620
+    },
+    {
+      "label": "duplicate_did_not_consume_sequence",
+      "passed": true,
+      "trace_index": 4621
+    },
+    {
+      "label": "exact_server_build",
+      "passed": true,
+      "trace_index": 4624
+    },
+    {
+      "label": "server_request_budget",
+      "passed": true,
+      "trace_index": 4625
+    },
+    {
+      "label": "joined_content_revision",
+      "passed": true,
+      "trace_index": 4626
+    },
+    {
+      "label": "saved_water.same_target_restart",
+      "passed": true,
+      "trace_index": 4628
+    },
+    {
+      "label": "recovered_next_sequence",
+      "passed": true,
+      "trace_index": 4629
+    },
+    {
+      "label": "saved_water.after_restart",
+      "passed": true,
+      "trace_index": 4632
+    },
+    {
+      "label": "duplicate_did_not_consume_sequence",
+      "passed": true,
+      "trace_index": 4633
+    }
+  ],
+  "original_checkpoint_accessed_by_collection": false,
+  "original_public_trace_prefix_sha256": "77626dce598e8293d68ba27fe8dcb3b4ec49169b91e3c94ef583faa9b60e0d4f"
+}

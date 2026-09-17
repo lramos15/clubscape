@@ -1,0 +1,144 @@
+{
+  "actual_entrypoint_attempts_consumed": 1,
+  "admission_revision": "3a52aabf674a6e88a932f8b2affc5d11c5d8e285",
+  "admission_sha256": "dd631f975c73e5e1bbcfcb850e2503eaf767b5561636d75ac0acaf703ec53b26",
+  "attempts_remaining": 0,
+  "collection_diagnostic": "The first read-only collector stopped before publication because it compared the public envelope hash with the nested native report hash. Corrected the envelope selection and verified the exact native serialization; no gameplay rerun or original checkpoint access.",
+  "files": [
+    {
+      "bytes": 2924,
+      "path": "milestones/evidence/m1-saved-water-execution-02/authority-v1.json",
+      "sha256": "47b7695da4834de297df4d70006d9cc7d63f99c0a945a1f6b2d1a970140f655f"
+    },
+    {
+      "bytes": 444,
+      "path": "milestones/evidence/m1-saved-water-execution-02/controls_prepared.json",
+      "sha256": "0df3b5fbf5777ee17e718f063785cd13912a2f680679040a60e5034401a3a542"
+    },
+    {
+      "bytes": 2,
+      "path": "milestones/evidence/m1-saved-water-execution-02/entrypoint.exit",
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+    },
+    {
+      "bytes": 0,
+      "path": "milestones/evidence/m1-saved-water-execution-02/entrypoint.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "bytes": 1088,
+      "path": "milestones/evidence/m1-saved-water-execution-02/entrypoint.stdout",
+      "sha256": "563111dca984a3a4a459ac518230445a2b77eac33101bbdf14c3706ce2d7bfd4"
+    },
+    {
+      "bytes": 61,
+      "path": "milestones/evidence/m1-saved-water-execution-02/entrypoint.time",
+      "sha256": "c429faed3d3adb4f9978559a6638012570912d9902ef7608755c3f8ade9566f2"
+    },
+    {
+      "bytes": 542,
+      "path": "milestones/evidence/m1-saved-water-execution-02/migration_proved.json",
+      "sha256": "16c747057c3379537a45efa1b12a9900b23d36ad120bbaf671cdb0e9b93cb22d"
+    },
+    {
+      "bytes": 247,
+      "path": "milestones/evidence/m1-saved-water-execution-02/migration_started.json",
+      "sha256": "d7d4c794139dcef2af1a340639f5eb853d88b04529a02999bedf5cc852debcee"
+    },
+    {
+      "bytes": 879,
+      "path": "milestones/evidence/m1-saved-water-execution-02/native-preflight.json",
+      "sha256": "19da2435aaa9e915f000330a578d36ec7b55e24bf16465b49bf478bc34427fdc"
+    },
+    {
+      "bytes": 106690,
+      "path": "milestones/evidence/m1-saved-water-execution-02/native-scenario.json",
+      "sha256": "79947617fc1f6eecd0a28755db6a9327cdfa0b691175ab4c12bab98c1fdc6245"
+    },
+    {
+      "bytes": 175,
+      "path": "milestones/evidence/m1-saved-water-execution-02/native_gameplay_claimed.json",
+      "sha256": "6815a1f6295e9178fe3e1ed5770e44b8f720ab904f1ccdbbd539a2d16e57e302"
+    },
+    {
+      "bytes": 147,
+      "path": "milestones/evidence/m1-saved-water-execution-02/native_gameplay_started.json",
+      "sha256": "3ee2a3ed286328e30e39edd293809924010f954de766c9fa4d34428dbf1b62e5"
+    },
+    {
+      "bytes": 176,
+      "path": "milestones/evidence/m1-saved-water-execution-02/native_preflight_claimed.json",
+      "sha256": "dfea33ae5c887abf22e4b7ec017a404e517842a0779914d439eab77abd203e7e"
+    },
+    {
+      "bytes": 148,
+      "path": "milestones/evidence/m1-saved-water-execution-02/native_preflight_started.json",
+      "sha256": "4d628db5ccad520171fc6fc29d8ed8ad1134100dd36052376e43015f40aab127"
+    },
+    {
+      "bytes": 167,
+      "path": "milestones/evidence/m1-saved-water-execution-02/protected_read_started.json",
+      "sha256": "85088ee39b9d23835324362658f464291b4208a6ea809ad90126298b04c9c19d"
+    },
+    {
+      "bytes": 325,
+      "path": "milestones/evidence/m1-saved-water-execution-02/protected_read_verified.json",
+      "sha256": "a1ecd7cab193cf5540a60195bd19666dee0e37fc0ceb81fe5d012f10238b1a4e"
+    },
+    {
+      "bytes": 4799,
+      "path": "milestones/evidence/m1-saved-water-execution-02/report.json",
+      "sha256": "d39535a59bc4663a480d100d8e5c23361fe72cc05018070eb1d097e4da88cc45"
+    },
+    {
+      "bytes": 111,
+      "path": "milestones/evidence/m1-saved-water-execution-02/restore_started.json",
+      "sha256": "ab8bc329dad6d411719072341a13baf84d00388703dc61df315e49a3601ae204"
+    },
+    {
+      "bytes": 2638,
+      "path": "milestones/evidence/m1-saved-water-execution-02/source-readiness.jsonl",
+      "sha256": "159734fe97474aef4faf014a146bd8ca1444e00308f060a0c79fcc2df6b34b99"
+    },
+    {
+      "bytes": 9021,
+      "path": "milestones/evidence/m1-saved-water-execution-02/trace-proof.json",
+      "sha256": "00d90fbf47c3b5d1626057258fb5fe154548b867819e8ba2aef1d979350988a3"
+    }
+  ],
+  "full_journey_passed": false,
+  "inactive_source_bindings": {
+    "items.item.ensouled_goblin_head.stackable.rule": "No initial, ground, shop, grant, reconciliation, recipe, transformation or non-members loot introduction.",
+    "items.item.milk.bottomless_bucket.stackable.rule": "No initial, ground, shop, grant, reconciliation, recipe, transformation or non-members loot introduction.",
+    "mechanics.death.office_overflow": "At most 112 ordinary item keys, no introduced item instances, within 120 Office slots.",
+    "spawns.spawn.tutorial.fishing_spot.3099.3090.p0.interactions[0].action.rule.mechanics.respawn": "Source depletion is exactly zero; relocation is independently validated, not waived.",
+    "spawns.spawn.tutorial.fishing_spot.3101.3092.p0.interactions[0].action.rule.mechanics.respawn": "Source depletion is exactly zero; relocation is independently validated, not waived.",
+    "spawns.spawn.tutorial.fishing_spot.3103.3092.p0.interactions[0].action.rule.mechanics.respawn": "Source depletion is exactly zero; relocation is independently validated, not waived."
+  },
+  "kind": "saved52_successor_read_only_result_collection",
+  "milestone_accepted": false,
+  "native_or_gameplay_operations_during_collection": 0,
+  "original_checkpoint_or_old01_accesses_during_collection": 0,
+  "private_payloads_published": false,
+  "public_original_comparison": "Decompressed only the pinned committed public52 orchestrator envelope, not the original checkpoint. Its nested scenario, serialized with sorted keys/indent2/trailing newline, reproduces the exact original native report SHA. All previously passed segment records and70 tutorial edges remain exact; all24 skills, quests, QP and equipment are unchanged after the natural burn.",
+  "recorded_at": "2026-09-17T11:57:45.802175+00:00",
+  "run_id": "4282ed4b806b4be4",
+  "schema_version": 1,
+  "source_readiness_inputs": [
+    {
+      "bytes": 9454,
+      "path": ".worktrees/m1-saved-water-continuation/.local/journey-checkpoints/4282ed4b806b4be4/evidence/server-1.jsonl",
+      "readiness_timestamp": "2026-09-17T11:45:10.635801Z",
+      "sha256": "48033f3c1b3a1d8a2652555504d1f897c5667897370a8b9efabee417ea5dfde0"
+    },
+    {
+      "bytes": 3410,
+      "path": ".worktrees/m1-saved-water-continuation/.local/journey-checkpoints/4282ed4b806b4be4/evidence/server-2.jsonl",
+      "readiness_timestamp": "2026-09-17T11:45:42.414546Z",
+      "sha256": "f5b7b318c17933f10e6d94a426acb9c9e3072f24d7fbebaa669730085ad1699f"
+    }
+  ],
+  "source_readiness_projection": "Exact game_readiness line from each of the two retained server logs; no other log rows are published.",
+  "status": "verified_actual_remainder",
+  "trace_projection": "Exact11 input payloads and39 source-check labels/statuses from only the86 new trace rows. Full trace stays in the protected capture; its4547-row prefix matches the public original hash."
+}

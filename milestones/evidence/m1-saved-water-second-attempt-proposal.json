@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "kind": "saved52_separate_execution_authority_proposal",
-  "status": "qualified_exact_successor_admission_prepared",
+  "status": "successor_consumed_remaining_only_execution_passed",
   "requested_by": "director",
   "prior_attempt": "ce09f751c0814633",
   "prior_result": "milestones/evidence/m1-saved-water-execution-result.json",
@@ -56,8 +56,11 @@
   "binding_root_qualification": "milestones/evidence/m1-saved-water-binding-02-root-qualification.json",
   "new_execution_admitted": true,
   "execution_admission": "milestones/evidence/m1-saved-water-execution-02.json",
-  "protected_state_access_admitted": true,
-  "protected_access_condition": "Only through the one exact committed02 admission after its exclusive reservation and protected-read marker; no preparatory original checkpoint access or old01 reuse.",
+  "execution_result": "milestones/evidence/m1-saved-water-execution-02-result.json",
+  "new_attempts_consumed": 1,
+  "new_attempts_remaining": 0,
+  "protected_state_access_admitted": false,
+  "protected_access_condition": "The sole02 attempt is consumed by successful4282ed4b806b4be4. No further original checkpoint access, restore, migration, alternative journal or retry is admitted.",
   "milestone_accepted": false,
   "later_milestone_authorized": false
 }

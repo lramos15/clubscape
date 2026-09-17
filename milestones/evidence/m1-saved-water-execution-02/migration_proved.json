@@ -1,0 +1,14 @@
+{
+  "character_revision_increment": 1,
+  "complete_private_conservation": true,
+  "from_artifact": "5e0aa8a28851752ae0b8b0a08c635c6c8d2979f509f3a3e564ee74e2abfc8e6f",
+  "lease_fence_increment": 1,
+  "lease_released": true,
+  "new_audits": 1,
+  "private_values_published": false,
+  "restored_private_identity_equal": true,
+  "status": "proved",
+  "tick_rng_receipts_items_bank_equipment_xp_quests_ui_audio_unchanged": true,
+  "to_artifact": "b2a1be20a0e6c3e1968f6f7610198ce38212f196c005539b4ac5013d10ebc650",
+  "world_revision_increment": 1
+}

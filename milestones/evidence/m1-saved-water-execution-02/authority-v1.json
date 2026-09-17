@@ -1,0 +1,63 @@
+{
+  "admission_revision": "3a52aabf674a6e88a932f8b2affc5d11c5d8e285",
+  "admission_sha256": "dd631f975c73e5e1bbcfcb850e2503eaf767b5561636d75ac0acaf703ec53b26",
+  "automatic_resume": false,
+  "automatic_retry": false,
+  "bounds_reserved": {
+    "archive_command_seconds": 300,
+    "attempts": 1,
+    "browser_gpu_runelite_invocations": 0,
+    "builds": 0,
+    "database_command_seconds": 90,
+    "databases": 1,
+    "migrate_ui_invocations": 1,
+    "migration_seconds": 35,
+    "native_gameplay_invocations": 1,
+    "native_preflight_seconds": 60,
+    "native_preflights": 1,
+    "new_world_inputs_including_duplicates": 128,
+    "operator_preflight_invocations": 0,
+    "postquest_restarts": 1,
+    "preservation_cleanup_seconds": 960,
+    "restore_seconds": 300,
+    "restores": 1,
+    "scenario_seconds": 600,
+    "server_starts": 2,
+    "source_generation": 0,
+    "total_seconds": 2400
+  },
+  "executor": {
+    "branch": "task/m1-saved-water-continuation",
+    "code_revision": "0b6105d66a615fcaf47886cc97f094d6063320e8",
+    "id": "director",
+    "root": "/home/lramos15/clubscape/.worktrees/m1-saved-water-continuation",
+    "worktree": ".worktrees/m1-saved-water-continuation"
+  },
+  "kind": "permanent_saved52_water_reservation",
+  "run_id": "4282ed4b806b4be4",
+  "schema_version": 1,
+  "start": {
+    "account_id": "f43da325-ffcc-4753-a823-7a345dfce33b",
+    "actor_id": "actor.05a9c9bae95142fabe29d3ec35e8cf9e",
+    "archive_sha256": "a90bf263bcaa89dcbd4773154a5c0ff27a62de42f9762b2d6e6dfce810be6860",
+    "checkpoint_root": "/home/lramos15/clubscape/.worktrees/m1-headless-journey/.local/journey-checkpoints/52f32d29b5dc4f1a",
+    "next_sequence": 499,
+    "private_identity_sha256": "3eb17ef511523a44a01e3d18a13fa00e2872e3b0a74bada5534b8eccdc511bb1",
+    "private_inventory_sha256": "a384a9ac7f8036214eb4e4bbe14a82976e33140def7a4f3239ec0079d98f570c",
+    "run_id": "52f32d29b5dc4f1a",
+    "source_artifact_sha256": "5e0aa8a28851752ae0b8b0a08c635c6c8d2979f509f3a3e564ee74e2abfc8e6f",
+    "source_root": "/home/lramos15/clubscape/.worktrees/m1-headless-journey",
+    "world_id": "95acc818-e1d6-4ad3-805f-d323623d2933"
+  },
+  "target": {
+    "artifact_sha256": "b2a1be20a0e6c3e1968f6f7610198ce38212f196c005539b4ac5013d10ebc650",
+    "assets_manifest_sha256": "95d7afc9d2740299c6e5091b547dbcfbc1b7b2c6f5614eca0b2251adc60abf08",
+    "delivery_index_sha256": "a7b09591841ecda261b76d5ab4612d3ad1c15ea649da02bb39506513e07f898b",
+    "delivery_inventory_sha256": "b4eeee21e9bf45db2a104ca1110305155069632bb371c8a563d9cb7ee7b75cb8",
+    "descriptor_sha256": "24fec6e152cf5e5a899248bfe302fc12f6f080b71d43f9c0052264f1d9fcbc6e",
+    "game_root": "/home/lramos15/clubscape/.local/saved-water-delivery-01/game-root",
+    "manifest": "content/m1/legacy5e-water/manifest.json",
+    "manifest_sha256": "718d50eb2134f76b9bb2d34ba2b99f162cb2ec6666b392aba52ce2a03477cdf4",
+    "world_id": "95acc818-e1d6-4ad3-805f-d323623d2933"
+  }
+}

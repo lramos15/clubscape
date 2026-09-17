@@ -53,8 +53,10 @@
   "director_root_qualification": "milestones/evidence/m1-saved-water-binding-02-root-qualification.json",
   "executable_admission_created": true,
   "executable_admission": "milestones/evidence/m1-saved-water-execution-02.json",
-  "owner_conditionally_authorized_new_attempts_unconsumed": 1,
+  "separate_actual_execution_result": "milestones/evidence/m1-saved-water-execution-02-result.json",
+  "activity_count_scope": "Zero-operation counts above describe binding implementation/qualification only. Separate actual4282 execution is recorded in its own result and consumes the new allowance.",
+  "owner_conditionally_authorized_new_attempts_unconsumed": 0,
   "prior_attempts_remaining": 0,
-  "pre_execution_requirement": "Independent0b review and exact3c9c43d root integration/98-case qualification are complete. Commit an exact executable02 admission binding the reviewed0b executor, current public review/prerequisite hashes and unchanged binaries/limits. No protected access before admission and exclusive reservation/marker.",
+  "pre_execution_requirement": "Completed by reviewed0b, root3c9c43d/98cases and exact admission3a52. Actual4282 remaining-only continuation passed and consumed02. No further protected access or retry is admitted.",
   "milestone_accepted": false
 }
