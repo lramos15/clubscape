@@ -10,12 +10,10 @@ Use the **[M1 delivery checklist](milestones/m1-checklist.md)** to track complet
 checkpoints and remaining browser, presentation, deployment and acceptance work.
 Keep it updated alongside the machine-readable milestone/task records.
 
-The [native runtime checkpoint](milestones/evidence/m1-engine-review-repairs.json)
-records the strictly compiled source content, authoritative backend and
-persistence results. The [task ledger](milestones/m1-tasks.json) tracks active
-browser/journey integration; all four reported engine review findings are
-repaired. The earlier
-[account-only checkpoint](docs/checkpoints/2026-09-13-m1-blocked.md) is historical.
+The [task ledger](milestones/m1-tasks.json) records ownership and dependencies.
+Earlier progress is retained in the
+[archived execution notes](docs/checkpoints/2026-09-17-m1-execution-history.md)
+and [other checkpoints](docs/checkpoints/).
 
 Read [AGENTS.md](AGENTS.md), the [machine setup](docs/machines/sparky.md) and
 [active milestone](spec/milestone-01.md) before working. The fixed source
