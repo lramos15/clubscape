@@ -7,12 +7,11 @@
     "admissions_open": true,
     "active": [
       {"id": "director", "task": "M1-SAVED-WATER-CONTINUATION-IMPLEMENTATION"},
-      {"id": "bb7f85f7-096a-4377-80cb-3e7eae196c6b", "task": "M1-BROWSER-RENDERER"}
+      {"id": "bb7f85f7-096a-4377-80cb-3e7eae196c6b", "task": "M1-BROWSER-RENDERER"},
+      {"id": "115554cb-8e25-40c8-854a-4f9dc8936166", "task": "M1-SAVED-WATER-CONTINUATION-IMPLEMENTATION"},
+      {"id": "23749cd0-cc24-4565-9b37-e057b4823867", "task": "M1-CAMERA-CONSUMER-IMPLEMENTATION"}
     ],
-    "reserved": [
-      {"id": "saved-water-continuation-replacement", "task": "M1-SAVED-WATER-CONTINUATION-IMPLEMENTATION", "replaces_retired": "2766e089-44e5-4a1d-974e-7b03ad9c269d"},
-      {"id": "camera-consumer-replacement", "task": "M1-CAMERA-CONSUMER-IMPLEMENTATION", "replaces_retired": "ac0f0856-44af-445b-bd90-6db7a1f4fc74"}
-    ],
+    "reserved": [],
     "queued": [],
     "parked": [
       {"id": "2766e089-44e5-4a1d-974e-7b03ad9c269d", "reason": "Runtime retired the completed native water implementer. The fresh code-only saved52-continuation request was rejected before processing; no implementation/test/protected operation occurred. Preserve its completed04a40ee repair; one replacement is reserved for the new, unexecuted task only."},
