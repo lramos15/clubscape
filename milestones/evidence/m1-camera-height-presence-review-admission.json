@@ -1,7 +1,9 @@
 {
   "schema_version": 1,
   "task": "M1-CAMERA-HEIGHT-PRESENCE-REVIEW",
-  "status": "in_progress_read_only_delta",
+  "status": "completed_read_only_delta",
+  "result": "milestones/evidence/m1-camera-height-presence-review.json",
+  "response_turn": 2,
   "authority": "director",
   "reviewer": "ce4d0723-ee8e-45fa-8219-94a7210fa308",
   "implementation_author": "director",

@@ -6,14 +6,12 @@
     "effective_limit": 25,
     "admissions_open": true,
     "active": [
-      {"id": "director", "task": "M1-SAVED-WATER-BINDING-02"},
-      {"id": "ce4d0723-ee8e-45fa-8219-94a7210fa308", "task": "M1-CAMERA-HEIGHT-PRESENCE-REVIEW"}
+      {"id": "director", "task": "M1-SAVED-WATER-BINDING-02-INTEGRATION"}
     ],
     "reserved": [],
-    "queued": [
-      {"id": "saved-water-binding-02-review", "task": "M1-SAVED-WATER-BINDING-02-REVIEW", "worker": "ce4d0723-ee8e-45fa-8219-94a7210fa308", "after": "M1-CAMERA-HEIGHT-PRESENCE-REVIEW", "uses_same_existing_slot": true}
-    ],
+    "queued": [],
     "parked": [
+      {"id": "ce4d0723-ee8e-45fa-8219-94a7210fa308", "reason": "Collected completed turns2/3: exact44 camera height-presence and exact0b successor-binding delta assessments report no significant issues and explicit static/provenance limits. No tests/builds/private access or integration authority. Reviewer stopped after the two serial assignments; no automatic resumption without fresh admission."},
       {"id": "22b898a4-8850-4fc0-be15-af0b7440e32a", "reason": "Completed the independent4526 deadline delta review. Runtime rejected the separately admitted769 bootstrap follow-up before processing because this worker was retired; no bootstrap assessment/tests/private operation occurred. One replacement slot is reserved for the unexecuted append only."},
       {"id": "bb7f85f7-096a-4377-80cb-3e7eae196c6b", "reason": "Collected turns28-30 and verified0665f94 plus retained Cargo.lock. Both full2034-pose runs consumed (498/451seconds);3/2034 was measured under the retired certificate. e001b66/0665f94 report repaired focused6/6 cases, not a corrected whole-table result or independent review. No third run or automatic resumption; receipt m1-renderer-handoff-0665f94.json."},
       {"id": "115554cb-8e25-40c8-854a-4f9dc8936166", "reason": "Delivered2fbf5afa/b958cc44 code-only continuation;15 owned paths integrateddd043bce with existing83Python/53native main regressions passing. Director's additional actual-process deadline regression fails. Runtime retired the worker and rejected its first repair follow-up before processing; Director owns that code-only append, with no saved execution or new allowance."},
@@ -42,9 +40,27 @@
   },
   "tasks": [
     {
+      "id": "M1-SAVED-WATER-BINDING-02-INTEGRATION",
+      "goal": "Integrate only the independently reviewed fixed successor source and qualify the exact committed root without saved execution.",
+      "status": "INTEGRATION",
+      "specs": ["milestones/evidence/m1-saved-water-binding-02-integration-admission.json", "milestones/evidence/m1-saved-water-binding-02-review.json"],
+      "dependencies": ["M1-SAVED-WATER-BINDING-02-REVIEW"],
+      "allowed_paths": ["tools/journey-tests/saved_water_gate.py", "tools/journey-tests/test_saved_water.py", "tools/journey-tests/SAVED_WATER.md", "milestones/**"],
+      "forbidden_paths": ["Actual checkpoint/control/old-journal access", "Native source/binaries/dependencies", "Source generation, services and browser/GPU/operator work", "Unrelated user data"],
+      "outputs": ["Exact three-path committed root integration", "Retained code-only root qualification with revision and byte identities"],
+      "validation_commands": ["One existing eight-module Python suite on the committed root,120seconds, synthetic fixtures only"],
+      "test_requirements": ["Byte-identical reviewed0b import with unchanged native/runtime inputs", "Keep precommit98, independent static review and committed-root results separate", "No real entrypoint or protected operation"],
+      "acceptance": ["Exact successor source is reviewed, committed and root-qualified before executable admission"],
+      "reserved_namespaces": [],
+      "source_notes": ["Separate Director integration scope under the existing conditional owner grant; independent review itself grants no execution authority."],
+      "parity_entries": [],
+      "adaptations": [],
+      "evidence": ["milestones/evidence/m1-saved-water-binding-02-integration-admission.json", "milestones/evidence/m1-saved-water-binding-02-review.json"]
+    },
+    {
       "id": "M1-SAVED-WATER-BINDING-02-REVIEW",
       "goal": "Independently assess the fixed owner-approved successor binding without actual execution.",
-      "status": "READY",
+      "status": "VERIFIED",
       "specs": ["milestones/evidence/m1-saved-water-binding-02-review-admission.json", "milestones/evidence/m1-saved-water-binding-02-candidate.json"],
       "dependencies": ["M1-SAVED-WATER-BINDING-02"],
       "allowed_paths": [],
@@ -54,15 +70,15 @@
       "test_requirements": ["Read-only exact0b versus769 and necessary public caller/owner context", "No tests/builds/private state/native/service or source/GPU/operator work", "Assess fixed paths/owner pin, unchanged canonical authority/deadline/native claims and synthetic no-retry/old-journal isolation"],
       "acceptance": ["A different reviewer assesses the Director-authored successor before exact executable admission or protected access"],
       "reserved_namespaces": [],
-      "source_notes": ["Queued serially to the same existing reviewer after the camera delta; no extra or nested agent slot."],
+      "source_notes": ["Completed serially after the camera delta in the same reviewer slot; turn3 independently assessed exact0b with no significant findings or actual execution."],
       "parity_entries": [],
       "adaptations": [],
-      "evidence": ["milestones/evidence/m1-saved-water-binding-02-review-admission.json", "milestones/evidence/m1-saved-water-binding-02-candidate.json"]
+      "evidence": ["milestones/evidence/m1-saved-water-binding-02-review-admission.json", "milestones/evidence/m1-saved-water-binding-02-candidate.json", "milestones/evidence/m1-saved-water-binding-02-review.json"]
     },
     {
       "id": "M1-SAVED-WATER-BINDING-02",
       "goal": "Prepare only the fixed owner-approved successor binding without accessing or executing saved state.",
-      "status": "REVIEW",
+      "status": "INTEGRATION",
       "specs": ["milestones/approvals/m1-saved-water-continuation-02.json", "milestones/evidence/m1-saved-water-binding-02-implementation.json"],
       "dependencies": ["M1-SAVED-WATER-CONTINUATION-IMPLEMENTATION", "M1-SAVED-WATER-BOOTSTRAP-REVIEW"],
       "allowed_paths": ["tools/journey-tests/saved_water_gate.py", "tools/journey-tests/saved_water_runtime.py", "tools/journey-tests/test_saved_water.py", "tools/journey-tests/test_saved_water_runtime.py", "tools/journey-tests/SAVED_WATER.md"],
@@ -80,7 +96,7 @@
     {
       "id": "M1-CAMERA-HEIGHT-PRESENCE-REVIEW",
       "goal": "Independently assess the Director-authored source-height availability repair before camera integration.",
-      "status": "REVIEW",
+      "status": "VERIFIED",
       "specs": ["milestones/evidence/m1-camera-height-presence-review-admission.json", "milestones/evidence/m1-camera-height-presence-repair-candidate.json"],
       "dependencies": ["M1-CAMERA-CONSUMER-IMPLEMENTATION"],
       "allowed_paths": [],
@@ -93,7 +109,7 @@
       "source_notes": ["The unchanged939 strict streamed test reached real source surfaces but failed because terrain rebuilding marked unloaded zero heights present."],
       "parity_entries": [],
       "adaptations": [],
-      "evidence": ["milestones/evidence/m1-camera-height-presence-review-admission.json", "milestones/evidence/m1-camera-height-presence-repair-candidate.json"]
+      "evidence": ["milestones/evidence/m1-camera-height-presence-review-admission.json", "milestones/evidence/m1-camera-height-presence-repair-candidate.json", "milestones/evidence/m1-camera-height-presence-review.json"]
     },
     {
       "id": "M1-SAVED-WATER-BOOTSTRAP-REVIEW",
